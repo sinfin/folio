@@ -2,6 +2,15 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2024-03-20
+### Changed
+  - changed how leads work - set `Rails.application.config.folio_leads_from_component_class_name` to enable them - use `"Folio::Leads::FormComponent"` or your own
+
+## 2024-02-15
+### Added
+  - added aliased action `:do_anything` (same as `:manage`), into Folio::Ability.
+  - added `user.currently_allowed_actions_with(subject, ability_class = nil)`
+
 ## 2024-02-15
 ### Added
 - added `Folio::TogglableFieldsComponent`

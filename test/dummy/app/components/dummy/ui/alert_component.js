@@ -14,11 +14,26 @@ window.Dummy.Ui.Alert.iconKey = (variant) => {
   return iconKey
 }
 
+window.Dummy.Ui.Alert.close = (alert) => {
+  alert.remove()
+}
+
 window.Dummy.Ui.Alert.create = (data) => {
+  const duplicates = []
+  let count = 1
+
   const variant = data.variant || 'info'
 
+  for (const existing of document.querySelectorAll('.d-ui-alert')) {
+    if (existing.dataset.variant === variant && existing.dataset.content === data.content) {
+      duplicates.push(existing)
+      count += parseInt(existing.dataset.count)
+      window.Dummy.Ui.Alert.close(existing)
+    }
+  }
+
   const container = document.createElement('div')
-  container.className = "d-ui-alert__container container-fluid"
+  container.className = 'd-ui-alert__container container-fluid'
 
   if (variant === 'loader') {
     const loaderWrap = document.createElement('div')
@@ -35,8 +50,13 @@ window.Dummy.Ui.Alert.create = (data) => {
   }
 
   const content = document.createElement('div')
-  content.className = "d-ui-alert__content"
+  content.className = 'd-ui-alert__content'
   content.innerHTML = data.content
+
+  if (count > 1) {
+    content.innerHTML += ` (${count})`
+  }
+
   container.appendChild(content)
 
   const closeBtn = document.createElement('button')
@@ -53,7 +73,7 @@ window.Dummy.Ui.Alert.create = (data) => {
   const alert = document.createElement('div')
   alert.className = className
   alert.role = 'alert'
-  alert.dataset.controller = "d-ui-alert"
+  alert.dataset.controller = 'd-ui-alert'
 
   if (data.data) {
     Object.keys(data.data).forEach((key) => {
@@ -62,6 +82,10 @@ window.Dummy.Ui.Alert.create = (data) => {
   }
 
   alert.appendChild(container)
+
+  alert.dataset.content = data.content
+  alert.dataset.variant = variant
+  alert.dataset.count = count
 
   return alert
 }

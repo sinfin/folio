@@ -12,3 +12,4 @@ cs:
       dictCancelUploadConfirmation: "Zrušit nahrávání?"
       dictMaxFilesExceeded: "Nelze nahrát více souborů."
       destroy_failure: "Soubor se nepodařilo odstranit."
+      upload_failure: "Soubor se nepodařilo nahrát."

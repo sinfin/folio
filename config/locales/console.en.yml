@@ -199,17 +199,17 @@ en:
           confirm_de: Do you want to translate the page to German?
           confirm_en: Do you want to translate the page to English?
       partials:
-        tabs:
-          analytics: Analytics
-          contacts: Emails and contacts
-          content: Content
-          documents: Documents
-          gallery: Gallery
-          settings: Settings
-          site_social_links: Links
         simple_form_with_atoms:
           editor: Editor
           settings: Settings
+      tabs:
+        analytics: Analytics
+        contacts: Emails and contacts
+        content: Content
+        documents: Documents
+        gallery: Gallery
+        settings: Settings
+        site_social_links: Links
       file:
         picker:
           add_file: Add file
@@ -304,6 +304,8 @@ en:
         published_dates:
           from: From
           until: To
+      form_modal_component:
+        title/state: State change
       aasm:
         email_modal:
           title: Change the state to "{STATE_NAME}"?
@@ -313,7 +315,7 @@ en:
             text: E-mail content
 
       react:
-        modal:
+        modal_component:
           title: Pick a file
           title/image: Pick an image
           title/video: Pick a video

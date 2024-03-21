@@ -39,6 +39,9 @@ button_pointer:
 calendar_range:
   width: 24
   height: 24
+camera:
+  width: 24
+  height: 24
 camera_alt:
   width: 24
   height: 24
@@ -49,6 +52,9 @@ cellphone_text:
   width: 24
   height: 24
 check:
+  width: 24
+  height: 24
+check_circle:
   width: 24
   height: 24
 check_circle_outline:
@@ -78,6 +84,9 @@ chevron_right:
 chevron_up:
   width: 24
   height: 24
+clock_outline:
+  width: 24
+  height: 24
 close:
   width: 24
   height: 24
@@ -85,6 +94,9 @@ cog:
   width: 24
   height: 24
 content_copy:
+  width: 24
+  height: 24
+credit_card_scan_outline:
   width: 24
   height: 24
 crop:

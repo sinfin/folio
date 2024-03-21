@@ -224,6 +224,8 @@ class Dummy::SeedGenerator
     def scaffold(key)
       Dir[Rails.root.join("app/cells/**/dummy/#{key}/**/*.*"),
           Rails.root.join("app/cells/**/dummy/*/#{key}/**/*.*"),
+          Rails.root.join("app/components/**/dummy/#{key}/**/*.*"),
+          Rails.root.join("app/components/**/dummy/*/#{key}/**/*.*"),
           Rails.root.join("app/controllers/**/dummy/#{key}/**/*.rb"),
           Rails.root.join("app/controllers/**/dummy/#{key}_controller.rb"),
           Rails.root.join("app/models/dummy/#{key}/**/*.rb"),

@@ -5,6 +5,7 @@ class Folio::DropzoneComponent < Folio::ApplicationComponent
                  file_type:,
                  file_human_type:,
                  max_file_size: nil,
+                 index_url: nil,
                  destroy_url: nil,
                  prompt: nil,
                  hint: nil)
@@ -15,6 +16,7 @@ class Folio::DropzoneComponent < Folio::ApplicationComponent
     @prompt = prompt
     @hint = hint
     @destroy_url = destroy_url
+    @index_url = index_url
   end
 
   def dict
@@ -30,6 +32,8 @@ class Folio::DropzoneComponent < Folio::ApplicationComponent
       dictCancelUploadConfirmation: t(".dictCancelUploadConfirmation"),
       dictRemoveFile: "",
       dictMaxFilesExceeded: t(".dictMaxFilesExceeded"),
+      destroy_failure: t(".destroy_failure"),
+      upload_failure: t(".upload_failure"),
     }
   end
 
@@ -50,7 +54,9 @@ class Folio::DropzoneComponent < Folio::ApplicationComponent
                           max_file_size: @max_file_size,
                           dict: dict.to_json,
                           destroy_url: @destroy_url,
+                          index_url: @index_url,
                           persisted_file_count:,
+                          pending_file_count: 0,
                         })
   end
 

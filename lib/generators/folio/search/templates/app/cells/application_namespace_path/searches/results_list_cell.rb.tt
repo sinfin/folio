@@ -1,7 +1,0 @@
-# frozen_string_literal: true
-
-class <%= application_namespace %>::Searches::ResultsListCell < ApplicationCell
-  def show
-    render if model.present?
-  end
-end

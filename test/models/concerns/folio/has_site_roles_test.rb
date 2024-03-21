@@ -59,7 +59,7 @@ class Folio::HasSiteRolesTest < ActiveSupport::TestCase
     user.set_roles_for(site:, roles: ["spy", "manager"])
 
     assert_not user.valid?
-    assert_includes user.errors[:site_roles], "Role [\"spy\"] nejsou dostupné pro web '#{site.domain}'."
+    assert_includes user.errors[:site_roles], "Role [\"spy\"] nejsou všechny dostupné pro web '#{site.domain}'."
   end
 
   test "can use agregate checks" do

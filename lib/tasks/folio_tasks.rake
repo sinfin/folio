@@ -3,14 +3,18 @@
 namespace :folio do
   task seed_test_account: :environment do
     if Rails.env.development?
-      if Folio::User.find_by(email: "test@test.test")
+      if user = Folio::User.find_by(email: "test@test.test")
+        user.update!(confirmed_at: Time.current) unless user.confirmed_at?
+
         puts "Account test@test.test already exists."
       else
         Folio::User.create!(email: "test@test.test",
-                               password: "test@test.test",
-                               superadmin: true,
-                               first_name: "Test",
-                               last_name: "Dummy")
+                            password: "test@test.test",
+                            superadmin: true,
+                            first_name: "Test",
+                            last_name: "Dummy",
+                            confirmed_at: Time.current)
+
         puts "Created test@test.test account."
       end
     end

@@ -30,6 +30,10 @@ class Folio::Users::ImpersonatingBarComponent < Folio::ApplicationComponent
             data: { turbo: false })
   end
 
+  def console?
+    controller.request && controller.request.path.starts_with?("/console")
+  end
+
   def alert_component_klass
     "#{::Rails.application.class.name.deconstantize}::Ui::AlertComponent".safe_constantize
   end
@@ -49,5 +53,14 @@ class Folio::Users::ImpersonatingBarComponent < Folio::ApplicationComponent
                                 message: label,
                                 button:)
     end
+  end
+
+  def console_alert(&block)
+    cell("folio/console/ui/alert",
+         capture(&block),
+         icon: :user,
+         variant: :danger,
+         closable: false,
+         class_name: "m-0")
   end
 end

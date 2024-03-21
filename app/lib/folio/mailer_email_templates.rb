@@ -25,7 +25,7 @@ module Folio::MailerEmailTemplates
 
     @data[:ROOT_URL] = site.env_aware_root_url
     @data[:SITE_TITLE] = site.title
-    @data[:DOMAIN] = site.domain
+    @data[:DOMAIN] = site.env_aware_domain
 
     opts[:subject] = @email_template.render_subject(@data)
     opts[:to] ||= system_email
@@ -45,7 +45,7 @@ module Folio::MailerEmailTemplates
       @data ||= {}
       @data[:ROOT_URL] = site.env_aware_root_url
       @data[:SITE_TITLE] = site.title
-      @data[:DOMAIN] = site.domain
+      @data[:DOMAIN] = site.env_aware_domain
       @data[:USER_EMAIL] = record.email
 
       opts[:subject] = @email_template.render_subject(@data)

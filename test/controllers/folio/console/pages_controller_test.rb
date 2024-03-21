@@ -35,14 +35,18 @@ class Folio::Console::PagesControllerTest < Folio::Console::BaseControllerTest
   end
 
   test "revision" do
-    page = create(:folio_page)
+    page = Audited.stub(:auditing_enabled, true) {  create(:folio_page) }
+
     get url_for([:revision, :console, page, version: 1])
+
     assert_response :success
   end
 
   test "revive" do
-    page = create(:folio_page)
+    page = Audited.stub(:auditing_enabled, true) {  create(:folio_page) }
+
     post url_for([:restore, :console, page, version: 1])
+
     assert_redirected_to url_for([:edit, :console, page])
   end
 end

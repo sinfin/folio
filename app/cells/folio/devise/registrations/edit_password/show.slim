@@ -1,8 +1,8 @@
 .f-devise-registrations-edit-password
-  .f-devise__narrow
-    = form do |f|
-      h1 = t('.title')
+  = form do |f|
+    h1 = t('.title')
 
+    .f-devise__narrow
       - unless resource.has_generated_password?
         == password_input(f,
                           :current_password,

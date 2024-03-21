@@ -1,1 +1,1 @@
-== cell('<%= application_namespace_path %>/searches/show', @search)
+= render(<%= application_namespace %>::Searches::ShowComponent.new(search: @search))

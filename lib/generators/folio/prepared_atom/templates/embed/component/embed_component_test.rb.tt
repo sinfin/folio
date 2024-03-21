@@ -1,0 +1,13 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= application_namespace %>::Atom::EmbedComponentTest < Folio::ComponentTest
+  def test_render
+    atom = create_atom(<%= application_namespace %>::Atom::Embed, :embed_code)
+
+    render_inline(<%= application_namespace %>::Atom::EmbedComponent.new(atom:))
+
+    assert_selector(".<%= classname_prefix %>-atom-embed")
+  end
+end

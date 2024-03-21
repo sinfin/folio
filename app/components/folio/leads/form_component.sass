@@ -1,0 +1,25 @@
+.f-leads-form
+  position: relative
+
+  &__form
+    position: relative
+
+  &__message
+    position: absolute
+    inset: 0
+    display: flex
+    align-items: center
+    flex-direction: column
+    gap: $grid-gutter-width / 3
+    justify-content: center
+    padding: $grid-gutter-width
+    text-align: center
+
+  &__message + &__form
+    visibility: hidden
+
+  &__message-ico
+    color: $success
+
+  &[data-f-leads-form-loading-value="false"] &__loader
+    display: none

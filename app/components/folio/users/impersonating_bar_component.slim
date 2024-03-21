@@ -1,5 +1,15 @@
 .f-users-impersonating-bar
-  - if alert_component
+  - if console?
+    == console_alert
+      .d-flex.gap-g.align-items-center
+        .flex-grow-1 = label
+
+        == cell('folio/console/ui/button',
+                label: t(".stop_impersonation"),
+                href:,
+                size: :sm)
+
+  - elsif alert_component
     = render(alert_component)
 
   - else

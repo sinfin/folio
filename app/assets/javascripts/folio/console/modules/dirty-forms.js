@@ -17,6 +17,8 @@ window.FolioConsole.DirtyForms.onChange = (e) => {
   const simpleForm = e.target.closest('.simple_form')
 
   if (simpleForm) {
+    if (simpleForm.closest('.modal')) return
+
     window.FolioConsole.DirtyForms.handle(simpleForm)
   }
 }

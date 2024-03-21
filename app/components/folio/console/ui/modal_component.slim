@@ -1,0 +1,31 @@
+.modal.f-c-ui-modal[
+  role="dialog"
+  tabindex="-1"
+  class=@class_name
+  data=stimulus_merge_data(stimulus_controller('f-modal'), @data)
+]
+  .modal-dialog[
+    role="document"
+    class="f-c-ui-modal__dialog"
+    class=(@size ? "modal-#{@size}" : nil)
+  ]
+    .modal-content.f-c-ui-modal__content
+      - if header?
+        .modal-header.f-c-ui-modal__header
+          = header
+          = close_button
+      - elsif @title.present?
+        .modal-header.f-c-ui-modal__header
+          .modal-title.f-c-ui-modal__title = @title
+          = close_button
+
+      .modal-body.f-c-ui-modal__body
+        = content
+        = close_button if !header? && @title.blank?
+
+      - if footer?
+        .modal-footer.f-c-ui-modal__footer
+          = footer
+      - elsif @buttons_model
+        .modal-footer.f-c-ui-modal__footer
+          == cell('folio/console/ui/buttons', @buttons_model)

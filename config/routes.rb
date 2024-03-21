@@ -67,7 +67,7 @@ Folio::Engine.routes.draw do
         end
       end
 
-      if ::Rails.application.config.folio_leads
+      if ::Rails.application.config.folio_leads_from_component_class_name
         resources :leads, only: %i[index show edit update destroy] do
           collection { post :mass_handle }
           member { post :event }
@@ -188,7 +188,7 @@ Folio::Engine.routes.draw do
 
   resource :csrf, only: %i[show], controller: :csrf
 
-  if ::Rails.application.config.folio_leads
+  if ::Rails.application.config.folio_leads_from_component_class_name
     resources :leads, only: %i[create]
   end
 

@@ -55,7 +55,7 @@ class Folio::Devise::ApplicationCell < Folio::ApplicationCell
                                input_html: {
                                 autofocus: opts[:autofocus].nil? ? true : opts[:autofocus],
                                 autocomplete: "email",
-                                value: f.object.email.presence || "@",
+                                value: f.object.email.presence,
                                 id: nil,
                               })
   end

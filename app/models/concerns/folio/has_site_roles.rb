@@ -48,7 +48,7 @@ module Folio::HasSiteRoles
 
   def set_roles_for(site:, roles:)
     ulf = user_link_for(site:) || build_site_link(site:)
-    ulf.roles = roles.collect(&:to_s)
+    ulf.roles = roles.collect(&:to_s).uniq
 
     if ulf.valid?
       ulf.save if ulf.persisted?
@@ -57,6 +57,11 @@ module Folio::HasSiteRoles
       self.errors.add(:site_roles, ulf.errors.full_messages)
       false
     end
+  end
+
+  def set_roles_for!(site:, roles:)
+    set_roles_for(site:, roles:)
+    save!
   end
 
   def destroy_site_link(site:)

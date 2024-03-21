@@ -1,14 +1,16 @@
-= simple_form_for([:console, @user]) do |f|
+/ not really required, but is used in /console/ui/modals demo
+div class=Folio::Console::FormModalComponent::TARGET_FORM_CLASS_NAME
+  = simple_form_for([:console, @user]) do |f|
 
-  - if @user.invitation_created_at && !@user.invitation_accepted_at
-    .alert.alert-warning.mt-n3.mb-4
-      p == t('.invitation_not_accepted_1',
-             created_at: l(@user.invitation_created_at, format: :short))
+    - if @user.invitation_created_at && !@user.invitation_accepted_at
+      .alert.alert-warning.mt-n3.mb-4
+        p == t('.invitation_not_accepted_1',
+               created_at: l(@user.invitation_created_at, format: :short))
 
-      p == t('.invitation_not_accepted_2',
-             created_at: l(@user.invitation_created_at, format: :short))
+        p == t('.invitation_not_accepted_2',
+               created_at: l(@user.invitation_created_at, format: :short))
 
-      == cell('folio/console/users/invite_and_copy',
-              @user)
+        == cell('folio/console/users/invite_and_copy',
+                @user)
 
-  = render 'form', f: f
+    = render 'form', f: f

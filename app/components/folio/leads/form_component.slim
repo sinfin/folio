@@ -1,0 +1,29 @@
+.f-leads-form data=data
+  - if @lead.persisted?
+    .f-leads-form__message
+      = folio_icon(:check_circle,
+                   height: 48,
+                   class: "f-leads-form__message-ico")
+
+      = t('.success')
+
+  = form do |f|
+    = f.input :name, input_html: { id: nil }
+
+    .row
+      .col-lg-6
+        = f.input :email, input_html: { id: nil }, required: email_required?
+      .col-lg-6
+        = f.input :phone, input_html: { id: nil }
+
+    = f.input :note, input_html: { id: nil }, required: note_required?
+
+    = render(Folio::RecaptchaFieldComponent.new(f:))
+
+    button.btn.btn-primary.f-leads-form__submit[
+      type="submit"
+      disabled=@lead.persisted?
+    ]
+      = t('.submit')
+
+    span.folio-loader.f-leads-form__loader

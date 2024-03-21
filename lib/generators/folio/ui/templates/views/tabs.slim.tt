@@ -6,8 +6,4 @@
     .bg-body.p-g.mt-g.border.rounded data-bs-theme=theme
       h2.mt-0 Tabs - #{theme}
 
-      = <%= application_namespace_path %>_ui_tabs(tabs: [ \
-        { href: "#", active: true, label: "Current tab" }, \
-        { href: "#", label: "Another tab" }, \
-        { href: "#", label: "Another tab" }, \
-      ])
+      = <%= application_namespace_path %>_ui_tabs(tabs: @tabs)

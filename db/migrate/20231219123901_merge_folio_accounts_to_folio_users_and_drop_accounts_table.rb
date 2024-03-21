@@ -35,6 +35,12 @@ class MergeFolioAccountsToFolioUsersAndDropAccountsTable < ActiveRecord::Migrati
         end
 
         sites.each do |site|
+          missing_site_roles = (roles_to_pass - site.available_user_roles)
+          if missing_site_roles.present?
+            site.available_user_roles += missing_site_roles
+            site.save!
+          end
+
           user.set_roles_for(site:, roles: roles_to_pass)
           raise "errors on user ##{user.id}[#{user.email}; #{account["roles"]}; #{site.domain}]: #{user.errors.full_messages}" unless user.save
         end

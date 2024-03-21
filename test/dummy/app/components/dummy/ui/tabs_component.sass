@@ -79,7 +79,10 @@
     padding: $grid-gutter-base 0
     position: relative
     overflow: hidden
-    display: block
+    display: flex
+    flex-wrap: nowrap
+    align-items: center
+    justify-content: center
     z-index: 2
     white-space: nowrap
 
@@ -109,3 +112,22 @@
     &, &:hover, &:focus
       color: $shade-black-contrast
       text-decoration: none
+
+    &--disabled
+      opacity: 0.5
+      pointer-events: none
+
+  &__count
+    +font-size-text-m
+    background: $transparent-100
+    color: $shade-700
+    line-height: 1
+    height: px-to-rem(24px)
+    min-width: px-to-rem(24px)
+    border-radius: $border-radius-pill
+    display: flex
+    align-items: center
+    justify-content: center
+    font-weight: $font-weight-normal
+    margin: 0 0 0 $grid-gutter-base
+    padding: 3px 6px

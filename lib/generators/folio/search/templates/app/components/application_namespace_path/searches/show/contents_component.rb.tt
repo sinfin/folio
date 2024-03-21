@@ -1,0 +1,9 @@
+# frozen_string_literal: true
+
+class <%= application_namespace %>::Searches::Show::ContentsComponent < ApplicationComponent
+  include Pagy::Frontend
+
+  def initialize(search:)
+    @search = search
+  end
+end

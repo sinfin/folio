@@ -27,6 +27,8 @@ class Folio::SiteUserLink < Folio::ApplicationRecord
   scope :by_site, -> (site) { where(site:) }
   scope :by_user, -> (site) { where(user:) }
 
+  audited associated_with: :user
+
   def self.non_nillifiable_fields
     %w[roles]
   end

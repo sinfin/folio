@@ -24,7 +24,7 @@ class Folio::DeviseMailer < Devise::Mailer
     @data[:USER_CHANGE_PASSWORD_URL] = scoped_url_method(record,
                                                          :edit_password_url,
                                                          reset_password_token: token,
-                                                         host: @site.domain)
+                                                         host: @site.env_aware_domain)
 
     super(record, token, opts)
   end
@@ -38,7 +38,7 @@ class Folio::DeviseMailer < Devise::Mailer
     @data[:USER_ACCEPT_INVITATION_URL] = scoped_url_method(record,
                                                            :accept_invitation_url,
                                                            invitation_token: token,
-                                                           host: @site.domain)
+                                                           host: @site.env_aware_domain)
     super(record, token, opts)
   end
 
@@ -51,7 +51,7 @@ class Folio::DeviseMailer < Devise::Mailer
     @data[:USER_CONFIRMATION_URL] = scoped_url_method(record,
                                                       :confirmation_url,
                                                       confirmation_token: @token,
-                                                      host: @site.domain)
+                                                      host: @site.env_aware_domain)
 
     super(record, token, opts)
   end
@@ -83,7 +83,11 @@ class Folio::DeviseMailer < Devise::Mailer
       end
 
       if Rails.application.config.folio_crossdomain_devise && Folio.site_for_crossdomain_devise
-        extra = { only_path: false, host: Folio.site_for_crossdomain_devise.env_aware_domain, protocol: "https" }
+        extra = {
+          only_path: false,
+          host: Folio.site_for_crossdomain_devise.env_aware_domain,
+          protocol: (Rails.env.development? && !ENV["FORCE_SSL"]) ? "http" : "https"
+        }
 
         if args.present?
           args[0].merge!(extra)

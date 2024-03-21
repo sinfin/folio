@@ -96,6 +96,8 @@ class Folio::Console::UsersControllerTest < Folio::Console::BaseControllerTest
   test "impersonate" do
     site.update(available_user_roles: [:administrator, :author])
 
+    # superadmin is created in setup
+
     site_admin = create(:folio_user, first_name: "Admin", email: "admin@#{site.domain}")
     site_admin.set_roles_for(site:, roles: [:administrator])
     site_admin.save!
@@ -108,8 +110,12 @@ class Folio::Console::UsersControllerTest < Folio::Console::BaseControllerTest
     user.set_roles_for(site:, roles: [])
     user.save!
 
-    assert site_admin.can_now?(:impersonate, user, site:)
+    assert superadmin.can_now?(:impersonate, user, site:)
+    assert superadmin.can_now?(:stop_impersonating, Folio::User, site:)
+
+    assert_not site_admin.can_now?(:impersonate, user, site:)
     assert site_admin.can_now?(:stop_impersonating, Folio::User, site:)
+
     assert_not user_author.can_now?(:impersonate, user, site:)
     assert user_author.can_now?(:stop_impersonating, Folio::User, site:)
 
@@ -125,13 +131,13 @@ class Folio::Console::UsersControllerTest < Folio::Console::BaseControllerTest
       get url_for([:impersonate, :console, user])
     end
 
-    # admin do the impersonation
-    sign_in site_admin
+    # superadmin do the impersonation
+    sign_in superadmin
 
     get url_for([:console, Folio::User])
 
     assert_response :success
-    assert_equal site_admin, controller.current_user
+    assert_equal superadmin, controller.current_user
 
     get url_for([:impersonate, :console, user])
 
@@ -153,7 +159,7 @@ class Folio::Console::UsersControllerTest < Folio::Console::BaseControllerTest
     assert_redirected_to url_for([:console, user])
     follow_redirect!
     assert_response :success
-    assert_equal site_admin, controller.current_user
+    assert_equal superadmin, controller.current_user
   end
 
   test "invite_and_copy" do

@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class Folio::Page < Folio::ApplicationRecord
+  if Rails.application.config.folio_pages_ancestry
+    include Folio::Positionable
+  end
+
   if Rails.application.config.folio_using_traco
     include Folio::BelongsToSite
     const_set(:FRIENDLY_ID_SCOPE, :site_id)

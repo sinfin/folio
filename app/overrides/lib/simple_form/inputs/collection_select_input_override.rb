@@ -7,7 +7,9 @@ SimpleForm::Inputs::CollectionSelectInput.class_eval do
     if options[:remote]
       reflection_class_name = options[:reflection_class_name] || reflection.try(:class_name)
 
-      options[:collection] = autocomplete_collection(options[:force_collection] ? options[:collection] : nil, reflection_class_name: options[:reflection_class_name])
+      options[:collection] = autocomplete_collection(options[:force_collection] ? options[:collection] : nil,
+                                                     reflection_class_name:)
+
       input_html_classes << "f-input" if input_html_classes.exclude?("f-input")
 
       stimulus_opts = {}
