@@ -42,6 +42,8 @@ module Folio::HasAttachments
     has_one_placement(:og_image,
                       placement_key: :og_image_placement,
                       placement: "Folio::FilePlacement::OgImage")
+
+    attr_accessor :dont_run_file_placements_after_save
   end
 
   class_methods do
@@ -119,6 +121,7 @@ module Folio::HasAttachments
 
   private
     def run_file_placements_after_save!
+      return if dont_run_file_placements_after_save
       file_placements.find_each(&:run_after_save_job!)
     end
 end

@@ -16,6 +16,8 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
   after_create :run_file_after_save_job!
   after_destroy :run_file_after_save_job!
 
+  attr_accessor :dont_run_after_save_jobs
+
   def to_label
     title.presence || file.try(:file_name) || "error: empty file"
   end
@@ -42,10 +44,16 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
   end
 
   def run_after_save_job!
+    return if dont_run_after_save_jobs
+    return if ENV["SKIP_FOLIO_FILE_AFTER_SAVE_JOB"]
+
     Folio::FilePlacements::AfterSaveJob.perform_later(self)
   end
 
   def run_file_after_save_job!
+    return if dont_run_after_save_jobs
+    return if ENV["SKIP_FOLIO_FILE_AFTER_SAVE_JOB"]
+
     if file
       file.run_after_save_job
     elsif changed_attributes && changed_attributes["file_id"]
