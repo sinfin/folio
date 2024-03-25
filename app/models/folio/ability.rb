@@ -25,6 +25,7 @@ class Folio::Ability
     if user.superadmin?
       can :do_anything, :all
       can :access_console, Folio::Site
+      can :multisearch_console, Folio::Site
       cannot [:create, :new, :destroy], Folio::Site
       return
     end
@@ -33,6 +34,7 @@ class Folio::Ability
 
     if user.has_any_roles?(site:, roles: [:administrator, :manager])
       can :access_console, site
+      can :multisearch_console, site
       can :display_ui, site
       can [:new], Folio::User # new user do not belong to site yet
       # can :display_miniprofiler, site

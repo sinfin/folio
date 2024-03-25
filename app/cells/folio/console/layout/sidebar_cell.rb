@@ -224,7 +224,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
   end
 
   def show_search?
-    true
+    can_now?(:multisearch_console, current_site)
   end
 
   private
