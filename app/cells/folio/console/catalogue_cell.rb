@@ -133,10 +133,15 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
     resource_link(through_aware_console_url_for(record), attr, sanitize:, &block)
   end
 
-  def date(attr = nil, small: false, alert_threshold: nil)
+  def date(attr = nil, small: false, alert_threshold: nil, &block)
     attribute(attr, small:) do
-      val = record.send(attr)
-      cell("folio/console/catalogue/date", val, small:, alert_threshold:)
+      value = if block_given?
+        yield(record)
+      else
+        record.send(attr)
+      end
+
+      cell("folio/console/catalogue/date", value, small:, alert_threshold:)
     end
   end
 
