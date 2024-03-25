@@ -16,7 +16,7 @@
 
         .d-blog-articles-show-body__recommended-articles
           - if @recommended_articles.present?
-            = render(Dummy::Blog::Articles::CardsComponent.new( /
+            = render(Dummy::Blog::Articles::CardsComponent.new( \
                      size: :sm,
                      hero_size: :md,
                      container_classes: "col-12 col-sm-6 col-lg-12 sm-mt-1",
