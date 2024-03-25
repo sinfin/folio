@@ -1,4 +1,7 @@
-.d-blog-topics-list
+.d-blog-topics-list[
+  class=(@topics.length >= MAX_ITEMS_UNCOLLAPSED_MOBILE ? "d-blog-topics-list--collapsible-mobile" : nil)
+  class=(@topics.length >= MAX_ITEMS_UNCOLLAPSED_DESKTOP ? "d-blog-topics-list--collapsible-desktop" : nil)
+]
   input[
     hidden=true
     class="d-blog-topics-list__toggle-input"
@@ -6,7 +9,11 @@
     type="checkbox"
   ]
 
-  label.d-blog-topics-list__toggle-text for="d-blog-topics-list__toggle-input"
+  label.d-blog-topics-list__toggle-text[
+    for="d-blog-topics-list__toggle-input"
+    class=(@topics.length >= MAX_ITEMS_UNCOLLAPSED_MOBILE ? "d-block" : "d-none")
+    class=(@topics.length >= MAX_ITEMS_UNCOLLAPSED_DESKTOP ? nil : "d-md-none")
+  ]
     span.d-blog-topics-list__toggle-expand
       =t('.expand')
 

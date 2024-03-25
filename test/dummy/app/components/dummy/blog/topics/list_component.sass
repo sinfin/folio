@@ -6,7 +6,6 @@
     gap: $grid-gutter-base
     padding-right: px-to-rem(100px)
     overflow: hidden
-    max-height: 1.75rem
   &__item
     display: flex
     padding: 0
@@ -71,10 +70,20 @@
       color: $brand-200
       background-color: $shade-light-contrast
 
+  &--collapsible-mobile
+    .d-blog-topics-list__list
+      +media-breakpoint-down(md)
+        max-height: 1.75rem
+
+  &--collapsible-desktop
+    .d-blog-topics-list__list
+      max-height: 1.75rem
+
   &__toggle-text
     display: inline-block
     position: absolute
     right: 0
+    top: $grid-gutter-base/2
     color: $brand-200
     padding-right: px-to-rem(30px)
     font-weight: $font-weight-semibold
@@ -113,5 +122,13 @@
         &__toggle-expand
           display: none
 
-    &__list
-      max-height: none
+  &--collapsible-mobile
+    .d-blog-topics-list__toggle-input:checked ~ .d-blog-topics-list
+      &__list
+        max-height: none
+
+  &--collapsible-desktop
+    .d-blog-topics-list__toggle-input:checked ~ .d-blog-topics-list
+      &__list
+        +media-breakpoint-up(md)
+          max-height: none
