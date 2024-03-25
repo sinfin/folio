@@ -1,6 +1,8 @@
 .d-blog-topics-list[
-  class=(@topics.length >= MAX_ITEMS_UNCOLLAPSED_MOBILE ? "d-blog-topics-list--collapsible-mobile" : nil)
-  class=(@topics.length >= MAX_ITEMS_UNCOLLAPSED_DESKTOP ? "d-blog-topics-list--collapsible-desktop" : nil)
+  class=(@topics.length >= MAX_ITEMS_UNCOLLAPSED_MOBILE ? \
+         "d-blog-topics-list--collapsible-mobile" : nil)
+  class=(@topics.length >= MAX_ITEMS_UNCOLLAPSED_DESKTOP ? \
+         "d-blog-topics-list--collapsible-desktop" : nil)
 ]
   input[
     hidden=true
