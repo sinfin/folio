@@ -13,8 +13,10 @@
 
   label.d-blog-topics-list__toggle-text[
     for="d-blog-topics-list__toggle-input"
-    class=(@topics.length >= MAX_ITEMS_UNCOLLAPSED_MOBILE ? "d-block" : "d-none")
-    class=(@topics.length >= MAX_ITEMS_UNCOLLAPSED_DESKTOP ? nil : "d-md-none")
+    class=(@topics.length >= MAX_ITEMS_UNCOLLAPSED_MOBILE ? \
+           "d-block" : "d-none")
+    class=(@topics.length >= MAX_ITEMS_UNCOLLAPSED_DESKTOP ? \
+           nil : "d-md-none")
   ]
     span.d-blog-topics-list__toggle-expand
       =t('.expand')
