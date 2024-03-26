@@ -22,5 +22,5 @@ div[
                           class_name: 'd-ui-share__icon')
 
       .d-ui-share__item
-        //TODO: change to new component
-        == cell('dummy/ui/clipboard', @url, height: 22)
+        = render(Dummy::Ui::ClipboardComponent.new(text: url_with_fallback,
+                                                   height: 22))

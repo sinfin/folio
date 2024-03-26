@@ -39,23 +39,27 @@ class Dummy::Ui::ShareComponent < ApplicationComponent
     ]
   end
 
+  def url_with_fallback
+    @url_with_fallback ||= @url || controller.request.url
+  end
+
   def facebook_url
-    h = { u: @url, src: "sdkpreparse" }
+    h = { u: url_with_fallback, src: "sdkpreparse" }
     "https://www.facebook.com/sharer/sharer.php?#{h.to_query}"
   end
 
   def messenger_url
-    h = { u: @url }
+    h = { u: url_with_fallback }
     "messenger://share/?#{h.to_query}"
   end
 
   def twitter_url
-    h = { u: @url }
+    h = { u: url_with_fallback }
     "https://twitter.com/share?#{h.to_query}"
   end
 
   def mail_url
-    h = { body: @url }
+    h = { body: url_with_fallback }
     "mailto:?#{h.to_query}"
   end
 end
