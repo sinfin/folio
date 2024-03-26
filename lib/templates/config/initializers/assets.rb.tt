@@ -9,6 +9,7 @@ Rails.application.config.assets.version = '1.0'
 # Rails.application.config.assets.paths << Emoji.images_path
 # Add Yarn node_modules folder to the asset load path.
 Rails.application.config.assets.paths << Rails.root.join('app/cells')
+Rails.application.config.assets.paths << Rails.root.join('app/components')
 Rails.application.config.assets.paths << Rails.root.join('vendor/assets/bower_components')
 
 Rails.application.config.assets.configure do |env|

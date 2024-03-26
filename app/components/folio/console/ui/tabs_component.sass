@@ -1,0 +1,28 @@
+.f-c-ui-tabs
+  &__count
+    font-size: $font-size-sm
+    background: $f-c-state-colors-default
+    color: $white
+    line-height: 1
+    height: 24px
+    min-width: 24px
+    border-radius: 12px
+    display: flex
+    align-items: center
+    justify-content: center
+    font-weight: $font-weight-normal
+    margin: -5px 0
+    padding: 3px 6px
+
+    @each $name, $color in $f-c-state-colors
+      &--#{$name}
+        background: $color
+
+  &__nav-link
+    display: flex
+    align-items: center
+    gap: $grid-gutter-base
+
+    @each $name, $color in $f-c-state-colors
+      &--color-#{$name}
+        color: $color !important

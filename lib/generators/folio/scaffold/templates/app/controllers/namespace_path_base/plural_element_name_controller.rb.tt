@@ -4,24 +4,12 @@ class <%= controller_name %> < ApplicationController
   before_action :find_<%= element_name %>, only: [:show, :preview]
 
   def show
-    if @<%= element_name %>.published?
-      force_correct_path(url_for(@<%= element_name %>))
-    else
-      redirect_to action: :preview
-    end
-  end
-
-  def preview
-    if @<%= element_name %>.published?
-      redirect_to action: :show
-    else
-      render :show
-    end
+    force_correct_path(url_for(@<%= element_name %>))
   end
 
   private
     def find_<%= element_name %>
-      @<%= element_name %> = <%= class_name %>.published_or_admin(account_signed_in?)
+      @<%= element_name %> = <%= class_name %>.published_or_preview_token(params[Folio::Publishable::PREVIEW_PARAM_NAME])
           <%= element_name.gsub(/./, " ") + class_name_spacing %>.friendly.find(params[:id])
 
       set_meta_variables(@<%= element_name %>)

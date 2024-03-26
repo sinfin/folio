@@ -6,6 +6,8 @@ require Folio::Engine.root.join("lib/generators/folio/generator_base")
 class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
   include Folio::GeneratorBase
 
+  class_option :class_name, type: :string, default: nil
+
   source_root File.expand_path("../templates", __FILE__)
 
   hook_for :orm, as: :scaffold
@@ -49,8 +51,7 @@ class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
   end
 
   def form_tabs
-    base = [:content]
-    base
+    "%i[content]"
   end
 
   def index_scope
@@ -76,7 +77,15 @@ class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
     end
 
     def class_name
-      super.gsub("Folio::Folio::", "Folio::")
+      options["class_name"] || super.gsub("Folio::Folio::", "Folio::")
+    end
+
+    def table_name
+      if options["class_name"]
+        options["class_name"].constantize.table_name
+      else
+        super
+      end
     end
 
     def attributes_names
@@ -142,14 +151,6 @@ class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
         super.gsub(/\A#{base_namespace}/, "#{base_namespace}::#{options[:through].demodulize.pluralize}")
       else
         super
-      end
-    end
-
-    def form_url_for_array_string
-      if options[:through]
-        "[:console, @#{options[:through].demodulize.underscore}, @#{instance_variable_name}]"
-      else
-        "[:console, @#{instance_variable_name}]"
       end
     end
 

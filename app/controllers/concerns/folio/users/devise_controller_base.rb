@@ -46,6 +46,12 @@ module Folio::Users::DeviseControllerBase
   def sign_in(resource_or_scope, *args)
     super
     acquire_orphan_records!
+    create_site_user_link
+  end
+
+  def email_belongs_to_invited_pending_user?(email)
+    user = Folio::User.find_by(email:)
+    user && user.invitation_created_at? && user.invitation_accepted_at.nil? && user.sign_in_count == 0
   end
 
   protected
@@ -58,6 +64,12 @@ module Folio::Users::DeviseControllerBase
     def acquire_orphan_records!
       if resource && session && session.id && session.id.public_id
         resource.acquire_orphan_records!(old_session_id: session.id.public_id)
+      end
+    end
+
+    def create_site_user_link
+      if resource && resource.respond_to?(:site_user_links)
+        resource.create_site_links_for([current_site])
       end
     end
 end

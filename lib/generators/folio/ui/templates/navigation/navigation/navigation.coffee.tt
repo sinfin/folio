@@ -1,4 +1,0 @@
-$(document).on 'change', '.<%= classname_prefix %>-ui-navigation__select-input', ->
-  $this = $(this)
-  $this.siblings('.<%= classname_prefix %>-ui-navigation__select-overlay').remove()
-  Turbolinks.visit($this.val())

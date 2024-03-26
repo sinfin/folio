@@ -8,8 +8,10 @@ html[
     = render partial: 'layouts/folio/favicon'
 
     - if !Rails.env.test? || ENV['TEST_WITH_ASSETS'].present?
-      = preload_link_tag font_path('IBMPlexSans-Bold.woff2')
-      = preload_link_tag font_path('OpenSans-Regular.woff2')
+      = preload_link_tag '/fonts/Figtree-Regular.woff2'
+      = preload_link_tag '/fonts/Figtree-Medium.woff2'
+      = preload_link_tag '/fonts/Figtree-Bold.woff2'
+      = preload_link_tag '/fonts/SpaceGrotesk-Bold.woff2'
 
   body
     .<%= project_classnames_prefix %>-layout-main
@@ -17,6 +19,6 @@ html[
 
     == cell('folio/sensitive_content_modal')
 
-    - if Rails.application.config.folio_users
-      == cell('folio/devise/modal')
-      == cell('folio/devise/omniauth/forms')
+    = yield :modals
+    == cell('folio/devise/modal')
+    == cell('folio/devise/omniauth/forms')

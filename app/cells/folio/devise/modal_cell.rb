@@ -10,12 +10,14 @@ class Folio::Devise::ModalCell < Folio::ApplicationCell
         resource: Folio::User.new,
         resource_name: :user,
         modal: true,
+        modal_non_get_request: controller.request.method != "GET",
       }.merge(model)
     else
       {
         resource: Folio::User.new,
         resource_name: :user,
         modal: true,
+        modal_non_get_request: controller.request.method != "GET",
       }
     end
   end

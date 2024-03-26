@@ -1,0 +1,15 @@
+.d-ui-tabs
+  .d-ui-tabs__inner
+    ul.d-ui-tabs__ul
+      - @tabs.each do |tab|
+        li.d-ui-tabs__li
+          a.d-ui-tabs__a[
+            href=tab[:href]
+            class=(tab[:active] ? "d-ui-tabs__a--active" : nil)
+            class=(tab[:disabled] ? "d-ui-tabs__a--disabled" : nil)
+          ]
+            = tab[:label]
+
+            - if tab[:count]
+              span.d-ui-tabs__count
+                = tab[:count]

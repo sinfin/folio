@@ -20,7 +20,7 @@ class Folio::PageSingletonGenerator < Rails::Generators::NamedBase
 
   def add_to_i18n
     I18n.available_locales.each do |locale|
-      path = Rails.root.join("config/locales/page.#{locale}.yml")
+      path = folio_generators_root.join("config/locales/page.#{locale}.yml")
       i18n_key = "#{application_namespace_path}/page/#{name}"
       page_label = locale == :cs ? "Stránka" : "Page"
 

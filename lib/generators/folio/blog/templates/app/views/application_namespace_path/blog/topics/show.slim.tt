@@ -6,6 +6,6 @@
 
 == cell('<%= application_namespace_path %>/ui/article_card_list', @articles, medium: true)
 
-- if @pagy && @pagy.pages > 1
-  .mt-4
-    == cell('<%= application_namespace_path %>/ui/pagy', @pagy)
+/ - if @pagy && @pagy.pages > 1
+/   .mt-4
+/     == cell('<%= application_namespace_path %>/ui/pagy', @pagy)

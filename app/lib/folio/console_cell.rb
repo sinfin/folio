@@ -1,8 +1,13 @@
 # frozen_string_literal: true
 
 class Folio::ConsoleCell < Folio::ApplicationCell
-  include Folio::Console::CellsHelper
   include Folio::Cell::HtmlSafeFieldsFor
+  include Folio::Console::CellsHelper
+  include Folio::Console::ReportsHelper
+
+  delegate :safe_url_for,
+           :through_aware_console_url_for,
+           to: :controller
 
   def url_for(*args)
     controller.url_for(*args)
@@ -21,5 +26,20 @@ class Folio::ConsoleCell < Folio::ApplicationCell
     else
       str
     end
+  end
+
+  def preview_url_for(record)
+    args = {}
+
+    if record.respond_to?(:published?) && token = record.try(:preview_token)
+      args[Folio::Publishable::PREVIEW_PARAM_NAME] = token
+    end
+
+    if record.respond_to?(:locale)
+      args[:locale] = record.locale
+    end
+
+    url_for([record, args])
+  rescue NoMethodError
   end
 end

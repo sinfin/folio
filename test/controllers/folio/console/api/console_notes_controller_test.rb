@@ -3,8 +3,14 @@
 require "test_helper"
 
 class Folio::Console::Api::ConsoleNotesControllerTest < Folio::Console::BaseControllerTest
+  attr_reader :site
+
   class ::Folio::Console::Api::ConsoleNotesControllerTest::PageWithConsoleNotes < Folio::Page
     include Folio::HasConsoleNotes
+  end
+
+  setup do
+    @site = (Folio::Site.first || create(:folio_site))
   end
 
   test "toggle_closed_at - invalid" do
@@ -16,12 +22,13 @@ class Folio::Console::Api::ConsoleNotesControllerTest < Folio::Console::BaseCont
       closed: true,
     }
 
-    assert_response :bad_request
+    assert_response :bad_request, response.body
     assert_equal "ActiveRecord::RecordInvalid", response.parsed_body["errors"][0]["title"]
   end
 
   test "toggle_closed_at - valid" do
-    page = ::Folio::Console::Api::ConsoleNotesControllerTest::PageWithConsoleNotes.create!(title: "::Folio::Console::Api::ConsoleNotesControllerTest::PageWithConsoleNotes")
+    page = ::Folio::Console::Api::ConsoleNotesControllerTest::PageWithConsoleNotes.create!(title: "::Folio::Console::Api::ConsoleNotesControllerTest::PageWithConsoleNotes",
+                                                                                           site:)
     note = create(:folio_console_note, target: page)
     another_note = create(:folio_console_note, target: page)
 
@@ -53,7 +60,8 @@ class Folio::Console::Api::ConsoleNotesControllerTest < Folio::Console::BaseCont
   end
 
   test "react_update_target" do
-    page = ::Folio::Console::Api::ConsoleNotesControllerTest::PageWithConsoleNotes.create!(title: "react_update_target")
+    page = ::Folio::Console::Api::ConsoleNotesControllerTest::PageWithConsoleNotes.create!(title: "react_update_target", site:)
+
 
     assert_equal(0, page.console_notes.count)
 

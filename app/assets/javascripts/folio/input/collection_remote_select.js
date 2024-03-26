@@ -1,25 +1,18 @@
-//= require folio/input/_framework
-
 window.Folio = window.Folio || {}
 window.Folio.Input = window.Folio.Input || {}
 
 window.Folio.Input.CollectionRemoteSelect = {}
 
-window.Folio.Input.CollectionRemoteSelect.SELECTOR = '.f-input--collection-remote-select'
-
-window.Folio.Input.CollectionRemoteSelect.bind = (input) => {
+window.Folio.Input.CollectionRemoteSelect.bind = (input, { includeBlank, url }) => {
   const $input = $(input)
 
   $input.select2({
     width: '100%',
     language: document.documentElement.lang,
     allowClear: true,
-    placeholder: {
-      id: '',
-      text: $input.data('placeholder')
-    },
+    placeholder: { id: '', text: includeBlank },
     ajax: {
-      url: $input.data('url'),
+      url: url || $input.data('url'),
       dataType: 'JSON',
       minimumInputLength: 0,
       cache: false,
@@ -56,11 +49,29 @@ window.Folio.Input.CollectionRemoteSelect.bind = (input) => {
 
       return data.text
     }
+  }).on('change.select2', (e) => {
+    e.target.dispatchEvent(new window.CustomEvent('folio_select2_change', { bubbles: true }))
   })
 }
 
 window.Folio.Input.CollectionRemoteSelect.unbind = (input) => {
-  $(input).select2('destroy')
+  $(input).select2('destroy').off('change.select2')
 }
 
-window.Folio.Input.framework(window.Folio.Input.CollectionRemoteSelect)
+window.Folio.Stimulus.register('f-input-collection-remote-select', class extends window.Stimulus.Controller {
+  static values = {
+    includeBlank: { type: String, default: '' },
+    url: { type: String, default: '' }
+  }
+
+  connect () {
+    window.Folio.Input.CollectionRemoteSelect.bind(this.element, {
+      includeBlank: this.includeBlankValue,
+      url: this.urlValue
+    })
+  }
+
+  disconnect () {
+    window.Folio.Input.CollectionRemoteSelect.unbind(this.element)
+  }
+})

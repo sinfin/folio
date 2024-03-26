@@ -1,90 +1,101 @@
-//= require folio/input/_framework
-
 window.Folio = window.Folio || {}
 window.Folio.Input = window.Folio.Input || {}
 
 window.Folio.Input.ContentTemplates = {}
 
-window.Folio.Input.ContentTemplates.SELECTOR = '.f-input--content-templates'
+window.Folio.Input.ContentTemplates.I18n = {
+  cs: {
+    title: 'Šablony',
+  },
+  en: {
+    remove: 'Templates'
+  }
+}
 
-window.Folio.Input.ContentTemplates.bind = (input) => {
-  const $input = $(input)
-  let $wrap = $input.closest('.f-c-translated-inputs')
+window.Folio.Input.ContentTemplates.bind = (input, { templates, editUrl, title }) => {
+  if (templates.length === 0) return
 
-  if ($wrap.length === 0) $wrap = $input.closest('.form-group')
+  let wrap = input.closest('.f-c-translated-inputs') || input.closest('.form-group')
 
-  if ($wrap.hasClass('f-input--content-templates-bound')) return
+  if (wrap.classList.contains('f-input-content-templates-bound')) return
 
-  $wrap.addClass('f-input--content-templates-bound')
+  wrap.classList.add('f-input-content-templates-bound')
 
-  let $label = $wrap.find('label')
+  let label = wrap.querySelector('label')
 
-  if ($label.length === 0) {
-    $label = $(`<label for="${$input.prop('id')}">&nbsp;</label>`)
-    $input.before($label)
+  if (!label) {
+    label = document.createElement('label')
+    label.for = input.id
+    label.innerHTML = '&nbsp;'
+    input.insertAdjacentElement('beforebegin', label)
   }
 
-  const $menu = $('<div class="dropdown-menu f-input-content-templates-dropdown__menu" />')
+  let menuHtml = ""
 
-  const url = $input.data('content-templates-url')
+  if (editUrl && title) {
+    const iconHtml = window.Folio.Ui.Icon.create('edit', { class: "f-input-content-templates-dropdown__header-ico ms-2" }).outerHTML
 
-  const title = $input.data('content-templates-title')
-
-  if (url && title) {
-    $menu.append($(`<a class="dropdown-header f-input-content-templates-dropdown__header" href="${url}">
-      <span class="f-input-content-templates-dropdown__header-text">${title}</span>
-      <span class="f-input-content-templates-dropdown__header-ico mi ml-2">edit</span>
-    </a>`))
+    menuHtml += `<a class="dropdown-header f-input-content-templates-dropdown__header" href="${editUrl}">
+      <span class="f-input-content-templates-dropdown__header-text">${title}</span>${iconHtml}</a>`
   }
 
-  $input.data('content-templates').forEach((hash) => {
-    const $a = $('<a href="#" class="dropdown-item f-input-content-templates-dropdown__item"></a>')
-    $a.text(hash.label)
-    $a.data('value', hash.contents)
-    $menu.append($a)
+  templates.forEach((hash) => {
+    menuHtml += `<a href="#" class="dropdown-item f-input-content-templates-dropdown__item" data-action="f-input-content-templates-menu#onItemClick" data-f-input-content-templates-menu-contents-param="${window.encodeURIComponent(JSON.stringify(hash.contents))}">${hash.label}</a>`
   })
 
-  const $flex = $(`<div class="f-input-content-templates-dropdown">
-    <span class="ml-3 small f-input-content-templates-dropdown__toggle dropdown-toggle" data-toggle="dropdown">${window.FolioConsole.translations.contentTemplates}
-    </span>
-  </div>`)
+  const flexHtml = `<div class="f-input-content-templates-dropdown">
+    <span class="ml-3 small f-input-content-templates-dropdown__toggle dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown">${window.Folio.i18n(window.Folio.Input.ContentTemplates.I18n, 'title')}</span>
 
-  $label.before($flex)
-  $flex.prepend($label)
-  $flex.append($menu)
+    <div class="dropdown-menu f-input-content-templates-dropdown__menu" data-controller="f-input-content-templates-menu">${menuHtml}</div>
+  </div>`
 
-  $menu.on('click', '.f-input-content-templates-dropdown__item', (e) => {
-    e.preventDefault()
-
-    const $this = $(e.currentTarget)
-
-    const data = $this.data('value')
-
-    if (!data) return
-
-    if (!data.length) return
-
-    $this
-      .closest('.form-group, .f-c-translated-inputs')
-      .find(window.Folio.Input.ContentTemplates.SELECTOR)
-      .each((i, el) => {
-        if (data[i]) {
-          $(el).val(data[i]).trigger('change')
-          if (el.dispatchEvent) {
-            el.dispatchEvent(new Event('autosize:update'))
-          }
-        }
-      })
-  })
+  label.insertAdjacentHTML('beforebegin', flexHtml)
+  const flex = wrap.querySelector('.f-input-content-templates-dropdown')
+  flex.insertAdjacentElement('afterbegin', label)
 }
 
 window.Folio.Input.ContentTemplates.unbind = (input) => {
-  const $input = $(input)
-
-  $input
-    .closest('.form-group, .f-c-translated-inputs')
-    .find('.f-input-content-templates-dropdown__menu')
-    .off('click', '.f-input-content-templates-dropdown__item')
+  // no action needed
 }
 
-window.Folio.Input.framework(window.Folio.Input.ContentTemplates)
+window.Folio.Stimulus.register('f-input-content-templates-menu', class extends window.Stimulus.Controller {
+  onItemClick (e) {
+    e.preventDefault()
+    const values = JSON.parse(window.decodeURIComponent(e.params.contents))
+    const wrap = this.element.closest('.f-input-content-templates-bound')
+    const inputs = wrap.querySelectorAll('[data-controller="f-input-content-templates"]')
+
+    inputs.forEach((input, i) => {
+      if (values[i]) {
+        input.value = values[i]
+        input.dispatchEvent(new window.Event('change', { bubbles: true }))
+      }
+    })
+  }
+})
+
+window.Folio.Stimulus.register('f-input-content-templates', class extends window.Stimulus.Controller {
+  static values = {
+    templates: String,
+    editUrl: String,
+    title: String,
+  }
+
+  connect () {
+    if (this.templatesValue) {
+      const templates = JSON.parse(this.templatesValue)
+
+      window.Folio.Input.ContentTemplates.bind(this.element, {
+        templates,
+        editUrl: this.editUrlValue,
+        title: this.titleValue,
+      })
+    }
+  }
+
+  disconnect () {
+    if (this.templatesValue) {
+      window.Folio.Input.ContentTemplates.unbind(this.element)
+    }
+  }
+})

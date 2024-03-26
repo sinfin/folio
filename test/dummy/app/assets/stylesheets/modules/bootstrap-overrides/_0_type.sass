@@ -1,0 +1,137 @@
+@import 'mixins/type'
+
+html
+  font-family: $font-family-base
+  -webkit-font-smoothing: antialiased
+  font-size: 100%
+
+body
+  font-size: $font-size-base
+
+  +media-breakpoint-down($font-size-media-breakpoint-s)
+    font-size: $font-size-base-s
+
+h1, .h1
+  +font-h1
+  display: block
+  margin: $h1-margin-top 0 $h1-margin-bottom
+
+  +media-breakpoint-down($font-size-media-breakpoint-s)
+    margin: $h1-margin-top-s 0 $h1-margin-bottom-s
+
+h2, .h2
+  +font-h2
+  display: block
+  margin: $h2-margin-top 0 $h2-margin-bottom
+
+  +media-breakpoint-down($font-size-media-breakpoint-s)
+    margin: $h2-margin-top-s 0 $h2-margin-bottom-s
+
+h3, .h3
+  +font-h3
+  display: block
+  margin: $h3-margin-top 0 $h3-margin-bottom
+
+  +media-breakpoint-down($font-size-media-breakpoint-s)
+    margin: $h3-margin-top-s 0 $h3-margin-bottom-s
+
+h4, .h4
+  +font-h4
+  display: block
+  margin: $headings-margin-top 0 $headings-margin-bottom
+
+  +media-breakpoint-down($font-size-media-breakpoint-s)
+    margin: $headings-margin-top-s 0 $headings-margin-bottom-s
+
+h5, .h5,
+h6, .h6
+  +font-h5
+  display: block
+  margin: $headings-margin-top 0 $headings-margin-bottom
+
+  +media-breakpoint-down($font-size-media-breakpoint-s)
+    margin: $headings-margin-top-s 0 $headings-margin-bottom-s
+
+.font-size-mini
+  +font-size-mini
+
+small,
+.font-size-sm,
+.small
+  +font-size-sm
+
+.font-size-lg,
+.lead
+  +font-size-lg
+
+ul
+  +unlist
+
+.fs-base
+  +font-size-base
+
+.fs-mini
+  +font-size-mini
+
+.fs-sm
+  +font-size-sm
+
+.fs-lg
+  +font-size-lg
+
+.fs-display-2xl
+  +font-size-display-2xl
+
+.fs-display-xl
+  +font-size-display-xl
+
+.fs-display-l
+  +font-size-display-l
+
+.fs-display-m
+  +font-size-display-m
+
+.fs-display-s
+  +font-size-display-s
+
+.fs-display-xs
+  +font-size-display-xs
+
+.fs-text-3xl
+  +font-size-text-3xl
+
+.fs-text-2xl
+  +font-size-text-2xl
+
+.fs-text-xl
+  +font-size-text-xl
+
+.fs-text-l
+  +font-size-text-l
+
+.fs-text-m
+  +font-size-text-m
+
+.fs-text-s
+  +font-size-text-s
+
+.fs-text-xs
+  +font-size-text-xs
+
+@for $lines from 1 to 5
+  .text-line-clamp-#{$lines}
+    +line-clamp($lines)
+
+.d-unlink
+  &, &:hover, &:focus
+    text-decoration: none
+    color: inherit
+
+.text-success
+  color: $success !important
+
+.text-muted
+  color: $text-muted !important
+
+.text-danger
+  color: $danger !important

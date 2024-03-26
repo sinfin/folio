@@ -1,0 +1,21 @@
+.container-fluid
+  h1
+    a.<%= classname_prefix %>-unlink href=<%= application_namespace_path %>_ui_path UI kit
+
+  h2 Inputs
+
+  h3 Input with icon - submit with label
+
+  = simple_form_for "", method: :get, url: inputs_<%= application_namespace_path %>_ui_path do |f|
+    - input_options = { id: false }
+    = render(<%= application_namespace %>::Ui::Input::WithIconComponent.new(f:,
+                                                     name: :q,
+                                                     input_options:))
+
+  h3 Input with icon - submit without label
+
+  = simple_form_for "", method: :get, url: inputs_<%= application_namespace_path %>_ui_path do |f|
+    - input_options = { id: false, label: false }
+    = render(<%= application_namespace %>::Ui::Input::WithIconComponent.new(f:,
+                                                     name: :q,
+                                                     input_options:))

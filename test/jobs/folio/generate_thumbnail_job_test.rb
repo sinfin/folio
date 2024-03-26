@@ -4,7 +4,7 @@ require "test_helper"
 
 class Folio::GenerateThumbnailJobTest < ActiveJob::TestCase
   test "thumb" do
-    image = create(:folio_image)
+    image = create(:folio_file_image)
 
     assert_nil image.thumbnail_sizes["100x100#"]
 

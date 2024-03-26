@@ -1,0 +1,14 @@
+---
+cs:
+  folio:
+    console:
+      report:
+        title: Statistiky
+        missing_data: Pro zvolené období nejsou k dispozici žádná data.
+        group_by:
+          day: Den
+          week: Týden
+          month: Měsíc
+        box:
+          total: Celkem
+        invalid_date_range: Vybrané období je příliš dlouhé. Zvolte maximálně %{max} měsíců.

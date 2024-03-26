@@ -11,6 +11,13 @@ module Folio::HasSanitizedFields
         fields
       end
     end
+
+    def sanitize_field_arguments
+      {
+        tags: [],
+        attributes: []
+      }
+    end
   end
 
   private
@@ -22,7 +29,7 @@ module Folio::HasSanitizedFields
       value = send(field)
 
       if value.present? && value.is_a?(String)
-        send("#{field}=", ActionController::Base.helpers.sanitize(value, tags: [], attributes: []))
+        send("#{field}=", ActionController::Base.helpers.sanitize(value, self.class.sanitize_field_arguments))
       end
     end
 end

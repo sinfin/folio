@@ -10,10 +10,12 @@ module Folio::Console::IndexHelper
   end
 
   def catalogue(records, options = {}, &block)
-    model = options.merge(records:,
-                          block:,
-                          klass: @klass,
-                          merge: @folio_console_merge)
+    model = {
+      records:,
+      block:,
+      klass: @klass,
+      merge: @folio_console_merge,
+    }.merge(options)
 
     model[:collection_actions] ||= controller.try(:folio_console_controller_for_catalogue_collection_actions) unless options[:no_collection_actions]
 

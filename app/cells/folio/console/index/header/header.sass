@@ -1,14 +1,13 @@
 .f-c-index-header
-  margin: 0 0 2 * $spacer
+  margin: 0 0 $grid-gutter-width
   position: relative
+  display: flex
+  gap: $grid-gutter-half
+  align-items: center
+  flex-wrap: wrap
 
   &__btn
     margin-left: $grid-gutter-half
-
-  &__h1-a
-    +plain-hover-focus
-      color: inherit
-      text-decoration: none
 
   &__new-dropdown
     margin-left: $grid-gutter-half
@@ -16,22 +15,12 @@
     .dropdown-toggle:after
       display: none
 
-  &__pagy
-    margin: $spacer 0
-
-    .f-c-pagination
-      margin: 0
-      padding: 0
+  &__h1
+    margin: 0 auto 0 0
 
   +mq-desktop-menu
-    display: flex
-    align-items: center
-
     &__h1
-      margin: 0 $grid-gutter-half 0 0
       flex: 2 1 auto
-      min-width: 0
-      width: 50%
 
     &__btn
       flex: 0 0 auto
@@ -39,13 +28,10 @@
     &__form
       flex: 3 1 auto
       min-width: 0
-      max-width: 600px
+      max-width: 320px
       width: 50%
 
   +mq-mobile-menu
-    &__h1
-      margin: 0 120px $spacer 0
-
     &__btn--new
       position: absolute
       top: 5px

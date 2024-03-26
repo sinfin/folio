@@ -1,15 +1,3 @@
 .f-c-index-tabs
-  ul.nav.nav-tabs
-    - model.each do |tab|
-      li.nav-item
-        a.nav-link.d-flex.align-items-center[
-          href=href(tab)
-          class=class_name(tab)
-        ]
-          = tab[:label]
-
-          - if tab[:count]
-            span.f-c-index-tabs__count.badge.badge-pill.ml-2[
-              class=count_class_name(tab[:color])
-            ]
-              = tab[:count]
+  .f-c-anti-container-fluid.f-c-anti-container-fluid--padded
+    = render_view_component(Folio::Console::Ui::TabsComponent.new(tabs:))

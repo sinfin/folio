@@ -3,10 +3,13 @@
 module Folio::ApiControllerBase
   extend ActiveSupport::Concern
 
+  include Folio::RenderComponentJson
+
   included do
     respond_to :json
     rescue_from StandardError, with: :render_error
     skip_before_action :handle_crossdomain_devise
+    layout false
   end
 
   private
@@ -14,11 +17,15 @@ module Folio::ApiControllerBase
       render json: { data: }, root: false
     end
 
-    def render_error(e)
+    def render_error(e, status: nil)
+      if ENV["FOLIO_API_DONT_RESCUE_ERRORS"] && (Rails.env.development? || Rails.env.test?)
+        raise e
+      end
+
       Raven.capture_exception(e) if defined?(Raven)
 
       responses = Rails.configuration.action_dispatch.rescue_responses
-      status = responses[e.class.name] || 500
+      status ||= (responses[e.class.name] || 500)
 
       errors = [
         {
@@ -84,7 +91,13 @@ module Folio::ApiControllerBase
 
     def render_select2_options(models, label_method: nil, id_method: nil, meta: nil)
       label_method ||= :to_console_label
-      id_method ||= params[:slug] ? :slug : :id
+      id_method ||= if params[:id_method] && models.present? && models.first.class.column_names.include?(params[:id_method])
+        params[:id_method]
+      elsif params[:slug]
+        :slug
+      else
+        :id
+      end
 
       ary = models.map do |model|
         h = { id: model.send(id_method), text: model.send(label_method) }
@@ -112,6 +125,7 @@ module Folio::ApiControllerBase
         from: pagy_data.from,
         to: pagy_data.to,
         count: pagy_data.count,
+        next: pagy_data.next,
       }
     end
 end

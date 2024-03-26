@@ -1,0 +1,119 @@
+.<%= classname_prefix %>-ui-footer
+  position: relative
+  z-index: 1
+  flex: 0 0 auto
+  background: $shade-100
+  margin-top: map-get($spacers, gg)
+  padding: px-to-rem(56px) 0
+
+  &__row
+    position: relative
+    display: flex
+    justify-content: space-between
+    flex-wrap: wrap
+    gap: px-to-rem(40px) map-get($spacers, gg)
+
+  &__row:not(:first-child)
+    border-top: 1px solid $transparent-300
+    padding-top: map-get($spacers, g)
+
+  &__row:not(:last-child)
+    padding-bottom: map-get($spacers, g)
+
+  &__row:last-child
+    justify-content: flex-start
+    gap: map-get($spacers, 3)
+    align-items: center
+
+  &__left
+    flex: 1 0 600px
+    display: flex
+    justify-content: space-between
+    flex-wrap: wrap
+    gap: px-to-rem(40px) map-get($spacers, gg)
+
+  &__social-links
+    flex: 0 0 256px
+
+  &__col
+    flex: 1 0 calc(50% - #{map-get($spacers, g)})
+    max-width: 385px
+    min-width: 268px
+
+  &__social-link
+    +social-sites-hover-color
+    text-decoration: none
+
+  &__social-ico
+    margin: map-get($spacers, 2)
+
+  &__menu
+    display: flex
+    flex-wrap: wrap
+    gap: map-get($spacers, 4)
+    min-width: 475px
+
+  &__menu-link
+    text-decoration: none
+    +font-size-sm
+    color: $shade-600
+
+    &:hover
+      color: $shade-600
+      text-decoration: underline
+
+  &__copyright
+    +font-size-sm
+    color: $shade-400
+    padding-right: calc(108px + #{map-get($spacers, 3)})
+
+  &__author
+    position: absolute
+    right: 0
+    min-width: 108px
+    bottom: 0
+    display: flex
+    justify-content: flex-end
+
+  &__author-signature
+    +font-size-sm
+    align-items: center
+    color: $shade-600
+    display: inline-flex
+    font-weight: $font-weight-medium
+    justify-content: flex-end
+
+  &__author-name, &__slash-symbol
+    display: inline-flex
+
+  &__slash-symbol:first-child
+    padding-right: 3px
+
+  &__author-name
+    width: 0
+    transition: width 0.15s ease-in-out
+    overflow: hidden
+    white-space: nowrap
+
+  &__author-link:hover > &__author-signature > &__author-name
+    width: 100%
+
+  +media-breakpoint-down(md)
+    padding: map-get($spacers, g) 0
+
+    &__row:not(:first-child)
+      padding-top: px-to-rem(40px)
+
+    &__row:not(:last-child)
+      padding-bottom: px-to-rem(40px)
+
+    &__left
+      flex: 0 0 100%
+
+    &__menu
+      min-width: 0
+      width: 100%
+      gap: px-to-rem(12px)
+
+    &__copyright
+      +font-size-base

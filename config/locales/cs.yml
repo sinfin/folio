@@ -7,6 +7,15 @@ cs:
     invalid_format: Nepodporovaný formát
   'false': Ne
   folio:
+    nested_fields_component:
+      add: Přidat
+
+    root_breadcrumb: Úvodní stránka
+    chart:
+      js_load_error: Nepodařilo se načíst javascript pro tvorbu grafů.
+    price:
+      default_currency: 'Kč'
+      free: "Zdarma"
     errors:
       show:
         back_to_home: zpět na homepage
@@ -14,6 +23,10 @@ cs:
           text_line_1: Chybný požadavek
           text_line_2: Špatně formulovaný požadavek. Ověřte parametry v adrese.
           title: '400'
+        error_403:
+          text_line_1: Přístup odepřen
+          text_line_2: Omlouváme se, ale nemáte oprávnění k přístupu na tuto stránku. Pokud si myslíte, že jde o chybu, kontaktujte prosím správce webu.
+          title: '403'
         error_404:
           text_line_1: Stránka, kterou hledáte, neexistuje.
           text_line_2: Buďto máte špatný odkaz, nebo byla přesunuta.
@@ -41,17 +54,20 @@ cs:
         en: angličtina
         es: španělština
     newsletter_subscriptions:
-      form:
-        message: Odesláno!
-        submit: Odeslat
+      form_component:
+        message: Přihlášeno!
+        submit: Přihlásit se
+        label: Váš e-mail
     photoswipe:
       error: <div class="pswp__error-msg"><a href="%url%" target="_blank">Obrázek</a> se nepodařilo načíst.</div>
     site:
       settings:
         title: Nastavení
         title_long: Nastavení stránky %{site}
+
     publishable_hint:
       hint: Stránka je až do publikování viditelná jen pro přihlášené administrátory.
+      preview_token_hint: Stránka je až do publikování viditelná jen na této adrese.
     image:
       sensitive_content_title: Tento obrázek obsahuje citlivý obsah, který je možné zobrazit až po ověření věku.
     sensitive_content_modal:
@@ -59,6 +75,8 @@ cs:
       content: Tato stránka obsahuje citlivý obsah, který je možné zobrazit až po ověření věku. Je Vám více než 18 let?
       accept: Ano
       cancel: Ne
+    confirmation: Určitě?
+
   head:
     description: ''
     title:

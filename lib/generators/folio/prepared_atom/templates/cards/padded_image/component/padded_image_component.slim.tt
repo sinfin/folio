@@ -1,0 +1,4 @@
+.<%= classname_prefix %>-molecule.<%= classname_prefix %>-molecule-cards-padded-image
+  = render(<%= application_namespace %>::Molecule::Cards::ImageComponent.new(atoms: @atoms,
+                                                      atom_options: @atom_options,
+                                                      padded: true))

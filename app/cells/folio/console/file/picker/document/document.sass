@@ -1,0 +1,52 @@
+$medium-gray: #E8E8E8 !default
+$gray-medium-dark: #6F7172 !default
+
+.f-c-file-picker-document
+  min-height: 84px
+  background: $medium-gray
+  border-radius: $border-radius
+  overflow: hidden
+  position: relative
+  font-size: $font-size-sm
+  padding: 24px
+  color: $gray-medium-dark
+  display: flex
+  align-items: center
+
+  &__document
+    display: flex
+    align-items: center
+    flex-wrap: wrap
+    gap: 24px
+    flex: 0 0 100%
+
+  &__ext
+    background: $white
+    border-radius: 16px
+    padding: 4px 8px
+    display: inline-block
+
+  &__btns
+    display: flex
+    align-items: center
+    gap: 10px
+    margin-left: auto
+
+  &__btn
+    width: 24px
+    height: 24px
+    border: 0
+    cursor: pointer
+    display: flex
+    align-items: center
+    justify-content: center
+    background: transparent
+
+    &:focus
+      outline: 0
+
+    &--destroy
+      color: $red
+
+    &--modal
+      color: $black

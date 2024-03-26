@@ -1,0 +1,63 @@
+footer.<%= classname_prefix %>-ui-footer
+  .container-fluid
+    .<%= classname_prefix %>-ui-footer__row
+      .<%= classname_prefix %>-ui-footer__left
+        - if ::Rails.application.config.folio_newsletter_subscriptions
+          .<%= classname_prefix %>-ui-footer__col
+            .h5.mt-0 = t('.newsletter')
+
+            = render(Folio::NewsletterSubscriptions::FormComponent.new(view_options: { input_label: "E-mail" }))
+
+            == cell('<%= application_namespace_path %>/ui/disclaimer')
+
+        - if contact_details.present?
+          .<%= classname_prefix %>-ui-footer__col
+            .h5.mt-0 = t('.contact')
+
+            .d-flex.flex-column.gap-1
+              - contact_details.each do |key, value|
+                span.<%= classname_prefix %>-ui-footer__contact-item
+                  = value
+
+      - if social_links.present?
+        .<%= classname_prefix %>-ui-footer__social-links
+          .h5.mt-0 = t('.follow_us')
+
+          .mx-n2.mt-n2.mb-n2.d-flex.flex-wrap.gap-2
+            - social_links.each do |key, link|
+              a.<%= classname_prefix %>-ui-footer__social-link[
+                href=link
+                title=key
+                class="<%= classname_prefix %>-ui-footer__social-link--#{key}"
+              ]
+                = <%= application_namespace_path %>_ui_icon(key.to_sym,
+                                class_name: '<%= classname_prefix %>-ui-footer__social-ico')
+
+    .<%= classname_prefix %>-ui-footer__row
+      - if menu
+        .<%= classname_prefix %>-ui-footer__menu
+          - menu.menu_items.includes(:page).each do |menu_item|
+            a.<%= classname_prefix %>-ui-footer__menu-link[
+              href=menu_url_for(menu_item)
+              title=menu_item.to_label
+            ]
+              = menu_item.to_label
+
+      .<%= classname_prefix %>-ui-footer__copyright
+        = current_site.copyright_info
+
+      .<%= classname_prefix %>-ui-footer__author
+        a.<%= classname_prefix %>-ui-footer__author-link[
+          href='https://sinfin.digital/'
+          target='_blank'
+          title=author_link_title
+        ]
+          .<%= classname_prefix %>-ui-footer__author-signature
+            span.<%= classname_prefix %>-ui-footer__slash-symbol
+              | /
+
+            span.<%= classname_prefix %>-ui-footer__author-name
+              | * sinfin.digital *
+
+            span.<%= classname_prefix %>-ui-footer__slash-symbol
+              | /

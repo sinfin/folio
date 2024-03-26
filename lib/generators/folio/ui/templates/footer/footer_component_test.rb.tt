@@ -1,0 +1,13 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= application_namespace %>::Ui::FooterComponentTest < Folio::ComponentTest
+  def test_render
+    create_and_host_site
+
+    render_inline(<%= application_namespace %>::Ui::FooterComponent.new)
+
+    assert_selector(".<%= classname_prefix %>-ui-footer")
+  end
+end

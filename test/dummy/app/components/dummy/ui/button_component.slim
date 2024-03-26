@@ -1,0 +1,22 @@
+*tag
+  - if @icon
+    = dummy_ui_icon(@icon,
+                    height: icon_height,
+                    class_name: "d-ui-button__icon")
+
+  - if @loader
+    span.d-ui-button__loader-wrap
+      span.d-ui-button__loader[
+        class="folio-loader"
+        class="folio-loader--transparent"
+        class="folio-loader--tiny"
+        class="folio-loader--white"
+      ]
+
+  - if @label
+    span.d-ui-button__label = @label
+
+  - if @right_icon
+    = dummy_ui_icon(@icon,
+                    height: icon_height,
+                    class_name: "d-ui-button__right-icon")

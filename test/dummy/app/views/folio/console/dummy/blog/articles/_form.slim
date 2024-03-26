@@ -4,12 +4,12 @@
 
 .tab-content
   = tab :content
+    = publishable_inputs(f)
+
     .row
       .col-md-auto
-        = react_picker(f, :cover_placement, atom_setting: :cover_placement)
+        = file_picker_for_cover(f)
       .col-md
-        == cell('folio/console/publishable_inputs', f, atom_setting: true)
-
         = f.input :title, atom_setting: :title
         = f.input :slug
         = f.input :perex, character_counter: true,

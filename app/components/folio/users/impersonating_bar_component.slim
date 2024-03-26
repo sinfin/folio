@@ -1,0 +1,23 @@
+.f-users-impersonating-bar
+  - if console?
+    == console_alert
+      .d-flex.gap-g.align-items-center
+        .flex-grow-1 = label
+
+        == cell('folio/console/ui/button',
+                label: t(".stop_impersonation"),
+                href:,
+                size: :sm)
+
+  - elsif alert_component
+    = render(alert_component)
+
+  - else
+    .bg-warning.text-white
+      .container-fluid.py-2.text-center.fw-bold.fs-text-s
+        = folio_icon(:user)
+
+        span<>
+          = label
+
+        = stop_link

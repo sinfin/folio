@@ -3,12 +3,15 @@ h1 = t('.title', class_label: @record.model_name.human)
 h2 = @record.to_label
 
 .my-4.d-flex
-  .mr-g
+  .me-g
     == cell('folio/console/clipboard_copy', h(@yaml), as_button: true)
 
-  a.btn.btn-secondary href=download_console_transport_path target="_blank"
-    span.mi get_app
-    = t('.download')
+  == cell('folio/console/ui/button',
+          label: t('.download'),
+          icon: :download,
+          href: download_console_transport_path,
+          target: "_blank",
+          variant: :secondary)
 
 pre
   code

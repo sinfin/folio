@@ -16,13 +16,17 @@ module Dummy
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
 
-    Rails.application.config.folio_users = true
+    Rails.application.config.folio_leads_from_component_class_name = "Folio::Leads::FormComponent"
+    Rails.application.config.folio_newsletter_subscriptions = true
+
 
     I18n.available_locales = [:cs, :en]
     I18n.default_locale = :cs
 
     # Custom error pages
     config.exceptions_app = self.routes
+
+    config.action_mailer.deliver_later_queue_name = "mailers"
 
     config.folio_console_locale = I18n.default_locale
     config.time_zone = "Prague"

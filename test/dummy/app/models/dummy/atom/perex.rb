@@ -4,21 +4,13 @@ class Dummy::Atom::Perex < Folio::Atom::Base
   ATTACHMENTS = %i[]
 
   STRUCTURE = {
-    text: :text,
+    content: :richtext
   }
 
   ASSOCIATIONS = {}
 
-  validates :text,
+  validates :content,
             presence: true
-
-  def self.cell_name
-    "dummy/atom/perex"
-  end
-
-  def self.console_icon
-    :format_align_left
-  end
 end
 
 # == Schema Information

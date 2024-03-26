@@ -3,6 +3,7 @@
 class Folio::Users::InvitationsController < Devise::InvitationsController
   include Folio::Users::DeviseControllerBase
 
+  prepend_before_action :require_no_authentication, only: %i[create new]
   before_action :disallow_public_invitations_if_needed, only: %i[create new]
 
   def show
@@ -17,7 +18,11 @@ class Folio::Users::InvitationsController < Devise::InvitationsController
     self.resource = invite_resource
     resource_invited = resource.errors.empty?
 
-    resource.update_column(:source_site_id, source_site_for_user.id) if resource_invited
+    if source_site_for_user.present? && resource_invited
+      resource.update_column(:source_site_id, source_site_for_user.id)
+      resource.create_site_links_for([current_site, source_site_for_user])
+    end
+
 
     respond_to do |format|
       # need to override devise invitable here with devise default
@@ -53,7 +58,19 @@ class Folio::Users::InvitationsController < Devise::InvitationsController
               }
             }
           else
-            store_location_for(:user, request.referrer) if request.referrer
+            if request.referrer
+              if params[:modal_non_get_request].blank?
+                store_location_for(:user, request.referrer)
+              elsif path = Rails.application.config.folio_users_non_get_referrer_rewrite_proc.call(request.referrer)
+                store_location_for(:user, path)
+              else
+                # remove stored
+                stored_location_for(:user)
+              end
+            else
+              # remove stored
+              stored_location_for(:user)
+            end
 
             json = {
               data: {
@@ -74,7 +91,8 @@ class Folio::Users::InvitationsController < Devise::InvitationsController
                       resource:,
                       resource_name: :user,
                       modal: true,
-                      flash: cell_flash).show
+                      flash: cell_flash,
+                      modal_non_get_request: params[:modal_non_get_request].present?).show
 
           render json: { errors:, data: html }, status: 401
         end
@@ -89,10 +107,10 @@ class Folio::Users::InvitationsController < Devise::InvitationsController
 
   private
     def update_resource_params
-      params.require(:user)
-            .permit(*Folio::User.controller_strong_params_for_create)
-            .to_h
-            .merge(super)
+      h = params.require(:user)
+                .permit(*Folio::User.controller_strong_params_for_create)
+                .to_h
+      super.merge(h)
     end
 
     def disallow_public_invitations_if_needed
@@ -101,10 +119,19 @@ class Folio::Users::InvitationsController < Devise::InvitationsController
     end
 
     def source_site_for_user
-      if session && session[Folio::Devise::CrossdomainHandler::SESSION_KEY] && site_slug = session[Folio::Devise::CrossdomainHandler::SESSION_KEY][:target_site_slug]
+      if site_slug = session&.dig(Folio::Devise::CrossdomainHandler::SESSION_KEY, :target_site_slug)
         return Folio::Site.find(site_slug)
       end
 
       current_site
+    end
+
+    def require_no_authentication
+      super
+
+      if resource.nil? && current_user
+        set_flash_message(:alert, "already_authenticated", scope: "devise.failure")
+        redirect_to after_sign_in_path_for(resource)
+      end
     end
 end

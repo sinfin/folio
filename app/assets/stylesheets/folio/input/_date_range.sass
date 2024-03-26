@@ -1,0 +1,19 @@
+$gray-medium-dark: #6F7172 !default
+
+.form-group.date_range
+  position: relative
+
+.f-input--date-range
+  padding-right: 34px
+
+.f-input-date-range-icon
+  position: absolute
+  margin-top: px-to-rem(-12px)
+  top: calc(#{$input-height / 2})
+  right: px-to-rem(6px)
+  z-index: 6
+  pointer-events: none
+  color: $gray-medium-dark
+
+  .input-group--filled &
+    margin-right: $input-height

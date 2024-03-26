@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class Folio::Console::Pages::TranslationsCell < Folio::ConsoleCell
-  include Folio::Console::FlagHelper
   include ActionView::Helpers::UrlHelper
 
   def show
@@ -17,7 +16,6 @@ class Folio::Console::Pages::TranslationsCell < Folio::ConsoleCell
   end
 
   def ul_class
-    return "nav nav-pills" if options[:as_pills]
     "folio-console-pages-translations-inline"
   end
 
@@ -49,11 +47,7 @@ class Folio::Console::Pages::TranslationsCell < Folio::ConsoleCell
   end
 
   def label(locale)
-    if options[:as_pills]
-      locale_to_label(locale, short: true)
-    else
-      country_flag(locale)
-    end
+    country_flag(locale)
   end
 
   def translate_message(locale)

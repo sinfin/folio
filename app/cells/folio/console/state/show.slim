@@ -1,20 +1,19 @@
-div class=class_name class=(options[:small] ? 'small' : nil)
+div class=class_name data=data
   - if events.present? && active?
     - localizer = AASM::Localizer.new
 
     .dropdown
-      button.f-c-state__state.dropdown-toggle data-toggle="dropdown"
+      button.f-c-state__state.dropdown-toggle data-bs-toggle="dropdown"
         = state_square(state)
-        = model.aasm.human_state
+        = options[:state_label] || model.aasm.human_state
 
       .dropdown-menu
         - if options[:remote] == false
           - events.each do |event|
             - next if event.options[:private]
             = form do |f|
-              = f.input :aasm_event, \
-                        as: :hidden, \
-                        input_html: { value: event.name, id: nil }
+              = f.hidden_field :aasm_event, value: event.name
+
               button.f-c-state__state.dropdown-item[
                 type="submit"
                 data-confirm=confirm(event)
@@ -33,4 +32,4 @@ div class=class_name class=(options[:small] ? 'small' : nil)
   - else
     .f-c-state__state
       = state_square(state)
-      = model.aasm.human_state
+      = options[:state_label] || model.aasm.human_state

@@ -11,6 +11,7 @@ import {
 import { fileUsageSelector } from 'ducks/app'
 
 import TagsInput from 'components/TagsInput'
+import FolioConsoleUiButton from 'components/FolioConsoleUiButton'
 import InputWithSearchIcon from 'components/InputWithSearchIcon'
 
 import Wrap from './styled/Wrap'
@@ -41,10 +42,10 @@ class FileFilter extends Component {
   }
 
   render () {
-    const { filters, margined, fileUsage } = this.props
+    const { filters, margined, fileUsage, taggable, className } = this.props
 
     return (
-      <Wrap margined={margined} className='bg-100'>
+      <Wrap margined={margined} className={`f-c-r-file-filter-wrap ${className}`}>
         <div className='row'>
           <div className='col-12 col-sm-6 col-xl-3'>
             <FormGroup className='mb-2 mb-sm-2 mb-xl-0'>
@@ -79,7 +80,7 @@ class FileFilter extends Component {
                   onChange={this.onInputChange}
                   placeholder={window.FolioConsole.translations.usagePlaceholder}
                   name='used'
-                  className='form-control--select'
+                  className='form-control--select select'
                   required
                 >
                   <option value=''>{window.FolioConsole.translations.usagePlaceholder}</option>
@@ -90,25 +91,23 @@ class FileFilter extends Component {
             </div>
           )}
 
-          <div className='col-12 col-sm-6 col-xl-3'>
-            <FormGroup className='mb-0 mb-xl-0 form-group--react-select'>
-              <TagsInput
-                value={filters.tags}
-                onTagsChange={this.onTagsChange}
-                noAutofocus
-                notCreatable
-              />
-            </FormGroup>
-          </div>
+          {taggable && (
+            <div className='col-12 col-sm-6 col-xl-3'>
+              <FormGroup className='mb-0 mb-xl-0 form-group--react-select'>
+                <TagsInput
+                  value={filters.tags}
+                  onTagsChange={this.onTagsChange}
+                  noAutofocus
+                  notCreatable
+                />
+              </FormGroup>
+            </div>
+          )}
 
           {filters.active && (
             <div className='col-12 col-xl-1'>
-              <FormGroup className='mb-0 mt-2 mt-sm-0 form-group--react-reset ml-auto text-center text-xl-right'>
-                <button
-                  type='button'
-                  className='btn btn-danger fa fa-times'
-                  onClick={this.onReset}
-                />
+              <FormGroup className='mb-0 mt-2 mt-sm-0 form-group--react-reset ms-auto text-center text-xl-right'>
+                <FolioConsoleUiButton onClick={this.onReset} variant='danger' icon='close' />
               </FormGroup>
             </div>
           )}

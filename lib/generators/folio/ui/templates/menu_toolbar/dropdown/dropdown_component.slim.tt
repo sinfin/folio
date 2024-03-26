@@ -1,0 +1,46 @@
+.<%= classname_prefix %>-ui-menu-toolbar-dropdown data=data
+  - if dropdown_title
+    .<%= classname_prefix %>-ui-menu-toolbar-dropdown__title-wrapper[
+      data=stimulus_action(click: "titleClick")
+    ]
+      .<%= classname_prefix %>-ui-menu-toolbar-dropdown__title-inner
+        - if dropdown_title[:icon]
+          = <%= application_namespace_path %>_ui_icon(dropdown_title[:icon],
+                          class_name: "<%= classname_prefix %>-ui-menu-toolbar-dropdown__title-icon",
+                          height: dropdown_title[:icon_height] || 24)
+
+        - if dropdown_title[:username]
+          = render(<%= application_namespace %>::Ui::UserAvatarComponent.new(link: false))
+
+        span.<%= classname_prefix %>-ui-menu-toolbar-dropdown__title
+          = dropdown_title[:username] || dropdown_title[:title]
+
+      = <%= application_namespace_path %>_ui_icon(:chevron_down,
+                class_name: "<%= classname_prefix %>-ui-menu-toolbar-dropdown__chevron",
+                height: 16)
+
+  - if items.present?
+    ul.<%= classname_prefix %>-ui-menu-toolbar-dropdown__ul
+      - items.each do |item|
+        li.<%= classname_prefix %>-ui-menu-toolbar-dropdown__li
+          a.<%= classname_prefix %>-ui-menu-toolbar-dropdown__a[
+            href=item[:href]
+            data=item[:data]
+            class=(item[:disabled] ? "<%= classname_prefix %>-ui-menu-toolbar-dropdown__a--disabled" : nil)
+            class=(item[:class_modifier] ? "<%= classname_prefix %>-ui-menu-toolbar-dropdown__a--#{item[:class_modifier]}" : nil)
+            tabindex=(item[:disabled] ? "-1" : "0")
+          ]
+            .<%= classname_prefix %>-ui-menu-toolbar-dropdown__span-wrapper
+              - if item[:icon]
+                = <%= application_namespace_path %>_ui_icon(item[:icon],
+                                class_name: "<%= classname_prefix %>-ui-menu-toolbar-dropdown__icon",
+                                height: item[:icon_height] || 24)
+
+              span.<%= classname_prefix %>-ui-menu-toolbar-dropdown__span
+                = item[:label]
+
+            - if item[:shopped_items_count]
+              = render(<%= application_namespace %>::Ui::MenuToolbar::ShoppedItemsCountComponent.new)
+
+            - if item[:wish_items_count]
+              = render(<%= application_namespace %>::Ui::MenuToolbar::ShoppedItemsCountComponent.new(wishlist: true))

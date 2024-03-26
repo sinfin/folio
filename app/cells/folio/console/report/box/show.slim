@@ -1,0 +1,20 @@
+.f-c-report-box
+  - if model[:title]
+    h3.f-c-report-box__title
+      = model[:title]
+
+  - if model[:stats]
+    ul.f-c-report-box__stats.small.text-muted
+      - model[:stats].each do |label, value|
+        li.f-c-report-box__stat
+          span.f-c-report-box__stat-label<> = "#{label}:"
+          span.f-c-report-box__stat-value<>
+            = value.zero? ? '&ndash;' : value
+
+  - if total_value
+    .f-c-report-box__total
+      .f-c-report-box__total-label.small.text-muted
+        = t('.total')
+
+      .f-c-report-box__total-value class=total_value_classes
+        = formatted_total_value

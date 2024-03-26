@@ -1,0 +1,44 @@
+.<%= classname_prefix %>-ui-user-avatar
+  cursor: pointer
+
+  &__avatar
+    width: 32px
+    height: 32px
+    background: $shade-black-contrast
+    color: $shade-light-contrast
+    font-size: $ui-typo-text-s-font-size
+    font-weight: $font-weight-bold
+    border-radius: 50%
+    display: flex
+    justify-content: center
+    align-items: center
+
+  &:not(&--not-link):hover &__avatar
+    background: $shade-400
+
+  &:not(&--not-link):hover &__icon
+    color: $shade-400
+
+  &--active &__avatar
+    background: $shade-400
+
+  &--active &__icon
+    color: $shade-400
+
+  &--not-link
+    cursor: default
+
+  &__mq
+    position: absolute
+    top: 0
+    right: 0
+    width: 0
+    height: 0
+    pointer-events: none
+
+  +mq-mobile-menu
+    &--signed-out
+      display: none
+
+    &__mq--desktop
+      display: none

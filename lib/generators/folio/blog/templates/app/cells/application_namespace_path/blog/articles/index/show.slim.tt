@@ -20,6 +20,6 @@
             @small_articles,
             small: true)
 
-- if options[:pagy] && options[:pagy].pages > 1
-  .mt-4
-    == cell('<%= application_namespace_path %>/ui/pagy', options[:pagy])
+/ - if options[:pagy] && options[:pagy].pages > 1
+/   .mt-4
+/     == cell('<%= application_namespace_path %>/ui/pagy', options[:pagy])

@@ -5,7 +5,7 @@ class Dummy::Atom::Text < Folio::Atom::Base
 
   STRUCTURE = {
     content: :richtext,
-    highlight: [nil, "red", "gray"],
+    highlight: [nil, "gray", "success", "neutral", "caution", "error"],
   }
 
   ASSOCIATIONS = {}
@@ -13,20 +13,8 @@ class Dummy::Atom::Text < Folio::Atom::Base
   validates :content,
             presence: true
 
-  def self.cell_name
-    "dummy/atom/text"
-  end
-
-  def self.console_icon
-    :format_align_left
-  end
-
   def self.console_insert_row
     0
-  end
-
-  def self.splittable_by_attribute
-    :content
   end
 end
 

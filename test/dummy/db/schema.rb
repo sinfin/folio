@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_10_062852) do
+ActiveRecord::Schema[7.0].define(version: 2024_02_13_061842) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -47,6 +47,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_10_062852) do
     t.string "slug"
     t.text "perex"
     t.string "locale", default: "cs"
+    t.string "preview_token"
     t.string "meta_title"
     t.text "meta_description"
     t.boolean "featured"
@@ -80,6 +81,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_10_062852) do
     t.boolean "featured"
     t.integer "articles_count", default: 0
     t.integer "position"
+    t.string "preview_token"
     t.string "meta_title"
     t.text "meta_description"
     t.datetime "created_at", null: false
@@ -89,45 +91,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_10_062852) do
     t.index ["position"], name: "index_dummy_blog_topics_on_position"
     t.index ["published"], name: "index_dummy_blog_topics_on_published"
     t.index ["slug"], name: "index_dummy_blog_topics_on_slug"
-  end
-
-  create_table "folio_accounts", force: :cascade do |t|
-    t.string "email", default: "", null: false
-    t.string "encrypted_password", default: "", null: false
-    t.string "reset_password_token"
-    t.datetime "reset_password_sent_at", precision: nil
-    t.datetime "remember_created_at", precision: nil
-    t.integer "sign_in_count", default: 0, null: false
-    t.datetime "current_sign_in_at", precision: nil
-    t.datetime "last_sign_in_at", precision: nil
-    t.string "current_sign_in_ip"
-    t.string "last_sign_in_ip"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
-    t.string "first_name"
-    t.string "last_name"
-    t.boolean "is_active", default: true
-    t.string "invitation_token"
-    t.datetime "invitation_created_at", precision: nil
-    t.datetime "invitation_sent_at", precision: nil
-    t.datetime "invitation_accepted_at", precision: nil
-    t.integer "invitation_limit"
-    t.string "invited_by_type"
-    t.bigint "invited_by_id"
-    t.integer "invitations_count", default: 0
-    t.string "crossdomain_devise_token"
-    t.datetime "crossdomain_devise_set_at"
-    t.string "sign_out_salt_part"
-    t.jsonb "roles", default: []
-    t.string "console_path"
-    t.datetime "console_path_updated_at"
-    t.index ["crossdomain_devise_token"], name: "index_folio_accounts_on_crossdomain_devise_token"
-    t.index ["email"], name: "index_folio_accounts_on_email", unique: true
-    t.index ["invitation_token"], name: "index_folio_accounts_on_invitation_token", unique: true
-    t.index ["invitations_count"], name: "index_folio_accounts_on_invitations_count"
-    t.index ["invited_by_id"], name: "index_folio_accounts_on_invited_by_id"
-    t.index ["invited_by_type", "invited_by_id"], name: "index_folio_accounts_on_invited_by"
-    t.index ["reset_password_token"], name: "index_folio_accounts_on_reset_password_token", unique: true
   end
 
   create_table "folio_addresses", force: :cascade do |t|
@@ -248,12 +211,19 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_10_062852) do
     t.boolean "sensitive_content", default: false
     t.string "file_mime_type"
     t.string "default_gravity"
+    t.integer "file_track_duration"
+    t.string "aasm_state"
+    t.json "remote_services_data", default: {}
+    t.integer "preview_track_duration_in_seconds"
+    t.string "alt"
+    t.bigint "site_id", null: false
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((author)::text, ''::text)))", name: "index_folio_files_on_by_author", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name)::text, ''::text)))", name: "index_folio_files_on_by_file_name", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text)))", name: "index_folio_files_on_by_file_name_for_search", using: :gin
     t.index ["created_at"], name: "index_folio_files_on_created_at"
     t.index ["file_name"], name: "index_folio_files_on_file_name"
     t.index ["hash_id"], name: "index_folio_files_on_hash_id"
+    t.index ["site_id"], name: "index_folio_files_on_site_id"
     t.index ["type"], name: "index_folio_files_on_type"
     t.index ["updated_at"], name: "index_folio_files_on_updated_at"
   end
@@ -339,7 +309,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_10_062852) do
     t.text "meta_description"
     t.string "ancestry"
     t.string "type"
-    t.boolean "featured"
     t.integer "position"
     t.boolean "published"
     t.datetime "published_at", precision: nil
@@ -350,9 +319,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_10_062852) do
     t.string "ancestry_slug"
     t.bigint "site_id"
     t.text "atoms_data_for_search"
+    t.string "preview_token"
     t.index "(((setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((title)::text, ''::text))), 'A'::\"char\") || setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE(perex, ''::text))), 'B'::\"char\")) || setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE(atoms_data_for_search, ''::text))), 'C'::\"char\")))", name: "index_folio_pages_on_by_query", using: :gin
     t.index ["ancestry"], name: "index_folio_pages_on_ancestry"
-    t.index ["featured"], name: "index_folio_pages_on_featured"
     t.index ["locale"], name: "index_folio_pages_on_locale"
     t.index ["original_id"], name: "index_folio_pages_on_original_id"
     t.index ["position"], name: "index_folio_pages_on_position"
@@ -406,6 +375,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_10_062852) do
     t.index ["web_session_id"], name: "index_folio_session_attachments_on_web_session_id"
   end
 
+  create_table "folio_site_user_links", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "site_id", null: false
+    t.jsonb "roles", default: []
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["site_id"], name: "index_folio_site_user_links_on_site_id"
+    t.index ["user_id"], name: "index_folio_site_user_links_on_user_id"
+  end
+
   create_table "folio_sites", force: :cascade do |t|
     t.string "title"
     t.string "domain"
@@ -432,6 +411,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_10_062852) do
     t.string "slug"
     t.integer "position"
     t.string "copyright_info_source"
+    t.jsonb "available_user_roles", default: ["administrator", "manager"]
     t.index ["domain"], name: "index_folio_sites_on_domain"
     t.index ["position"], name: "index_folio_sites_on_position"
     t.index ["slug"], name: "index_folio_sites_on_slug"
@@ -477,6 +457,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_10_062852) do
     t.datetime "crossdomain_devise_set_at"
     t.string "sign_out_salt_part"
     t.bigint "source_site_id"
+    t.boolean "superadmin", default: false, null: false
+    t.string "console_path"
+    t.datetime "console_path_updated_at"
+    t.string "degree_pre", limit: 32
+    t.string "degree_post", limit: 32
+    t.string "phone_secondary"
+    t.date "born_at"
+    t.string "bank_account_number"
     t.index ["confirmation_token"], name: "index_folio_users_on_confirmation_token", unique: true
     t.index ["crossdomain_devise_token"], name: "index_folio_users_on_crossdomain_devise_token"
     t.index ["email"], name: "index_folio_users_on_email"
@@ -537,4 +525,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_10_062852) do
     t.index ["name"], name: "index_tags_on_name", unique: true
   end
 
+  add_foreign_key "folio_files", "folio_sites", column: "site_id"
+  add_foreign_key "folio_site_user_links", "folio_sites", column: "site_id"
+  add_foreign_key "folio_site_user_links", "folio_users", column: "user_id"
 end

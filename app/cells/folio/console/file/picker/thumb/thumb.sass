@@ -1,0 +1,66 @@
+$medium-gray: #E8E8E8 !default
+
+.f-c-file-picker-thumb
+  width: 168px
+  height: 168px
+  background: $medium-gray
+  border-radius: $border-radius
+  overflow: hidden
+  position: relative
+  display: flex
+  align-items: center
+  justify-content: center
+
+  &__img
+    max-width: 100%
+    max-height: 100%
+    position: relative
+    z-index: 1
+
+  &__action
+    display: block
+    position: absolute
+    top: 0
+    right: 0
+    bottom: 0
+    left: 0
+    z-index: 2
+    cursor: pointer
+    display: flex
+    align-items: center
+    justify-content: center
+
+  &__action-btn
+    flex: 0 0 auto
+    opacity: 0.5
+    pointer-events: none
+    transition: $transition-base
+
+  &__action:hover &__action-btn
+    opacity: 1
+
+  &__btn
+    position: absolute
+    right: 0
+    background: rgba(255, 255, 255, 0.3)
+    width: 24px
+    height: 24px
+    border: 0
+    cursor: pointer
+    display: flex
+    align-items: center
+    justify-content: center
+    z-index: 3
+
+    &:focus
+      outline: 0
+
+    &--destroy
+      top: 0
+      color: $red
+      border-top-right-radius: $border-radius
+
+    &--modal
+      bottom: 0
+      color: $black
+      border-bottom-right-radius: $border-radius

@@ -2,10 +2,8 @@
 cs:
   activerecord:
     attributes:
-      folio/account:
-        full_name: Jméno
+      folio/site_user_link:
         roles: Uživatelská role
-        roles/superuser: Superuser
         roles/administrator: Administrátor
         roles/manager: Manažer
       folio/atom/base:
@@ -20,6 +18,7 @@ cs:
         content: Obsah
       folio/file:
         author: Autor
+        preview_duration: Kolik vteřin je zdarma?
         default_gravity: Výchozí ořez
         default_gravity/center: Uprostřed
         default_gravity/east: Vpravo
@@ -27,7 +26,7 @@ cs:
         default_gravity/south: Dole
         default_gravity/west: Vlevo
         description: Popis
-      folio/image:
+      folio/file/image:
         file_placements: Použití
         thumbnail_sizes: Vygenerované verze
       folio/lead:
@@ -48,6 +47,7 @@ cs:
         target: Odkaz
         type: Druh
       folio/newsletter_subscription:
+        active: Aktivní
         created_at: Zapsáno dne
         email: E-mailová adresa
       folio/page:
@@ -65,9 +65,16 @@ cs:
         google_analytics_tracking_code: Google analytics - trackovací kód
         google_analytics_tracking_code_v4: Google analytics - trackovací kód V4
         header_message: Oznámení v hlavičce webu
+        header_message_published: Zapnuto
+        mailchimp_list_id: MailChimp - Audience ID
         locales: Jazyky
         system_email: Systémová e-mailová adresa
         system_email_copy: Systémová e-mailová adresa (kopie)
+        roles: Uživatelské role
+        roles/administrator: Administrátor
+        roles/manager: Manažer
+        roles/user: Uživatel
+
       folio/email_template:
         missing_keyword: neobsahuje povinné klíčové slovo {%{keyword}}
         subject: Předmět
@@ -92,16 +99,22 @@ cs:
         keyword/SITE_TITLE: Název webu
         keyword/USER_ACCEPT_INVITATION_URL: Adresa pro dokončení registrace
         keyword/USER_CHANGE_PASSWORD_URL: Adresa pro nastavení nového hesla
+        keyword/USER_CONFIRMATION_URL: Adresa pro potvrzení změn
         keyword/USER_EMAIL: E-mail uživatele
       folio/user:
         address_identification_number: IČO
         addresses: Adresa
-        admin_note: Poznámka (viditelná jen adminstrátory)
+        admin_note: Poznámka (viditelná jen administrátory)
         authentications: Propojení
+        bank_account_number: Číslo bankovního účtu
+        born_at: Datum narození
         confirmed_at: Potvrzen
         created_at: Vytvořen
+        degree_post: Titul za
+        degree_pre: Titul před
         full_name: Jméno
         nickname: Přezdívka
+        subscribed_to_newsletter: Přihlášení do newsletteru
       folio/address/base:
         address_line_1: Ulice
         address_line_2: Číslo
@@ -119,7 +132,7 @@ cs:
     errors:
       messages:
         indestructible: Záznam není možné odstranit.
-        file_format: 'není povolen. Povolené typy: %{types}'
+        file_format: '%{file_mime_type} není povolen. Povolené typy: %{types}'
         wrong_namespace: Typ záznamu neodpovídá typu webové stránky.
       models:
         folio/atom/base:
@@ -144,11 +157,11 @@ cs:
               invalid: nemá správný formát. Zadejte prosím celé číslo včetně předvolby. Např. +420604123456
             password:
               weak_password: je příliš slabé. Zkuste alespoň 8 znaků namíchaných z velkých a malých písmen, číslic a symbolů.
+        folio/site_user_link:
+          attributes:
+            roles:
+              not_available_for_site: "Role %{roles} nejsou všechny dostupné pro web '%{site}'."
     models:
-      folio/account:
-        few: Administrátoři
-        one: Administrátor
-        other: Administrátorů
       folio/atom:
         few: Kapitoly
         one: Kapitola
@@ -163,7 +176,7 @@ cs:
         few: Kategorie
         one: Kategorie
         other: Kategorií
-      folio/document:
+      folio/file/document:
         few: Soubory
         one: Soubor
         other: Souborů
@@ -171,7 +184,15 @@ cs:
         few: Soubory
         one: Soubor
         other: Souborů
-      folio/image:
+      folio/file/audio:
+        one: Audio stopa
+        few: Audio stopy
+        other: Audio stop
+      folio/file/video:
+        one: Video stopa
+        few: Video stopy
+        other: Video stop
+      folio/file/image:
         few: Obrázky
         one: Obrázek
         other: Obrázků
@@ -239,7 +260,9 @@ cs:
   attributes:
     aasm_state: Stav
     article: Článek
+    audio_cover_placement: Audio stopa
     button_label: Text tlačítka
+    button_url: Odkaz tlačítka
     console_notes: Poznámky (interní údaj)
     content: Obsah
     count: Počet
@@ -259,6 +282,8 @@ cs:
     is_active: Aktivní
     last_name: Příjmení
     last_sign_in_at: Poslední přihlášení
+    link_label: Text odkazu
+    link_url: URL odkazu
     locale: Jazyková verze
     meta_description: Alternativní popis (SEO - Meta Description)
     meta_title: Alternativní titulek (SEO - Meta Title)
@@ -269,6 +294,7 @@ cs:
     password_confirmation: Heslo (kontrola)
     perex: Perex
     phone: Telefon
+    phone_secondary: Druhé telefonní číslo
     position: Pořadí
     primary_address: Adresa - hlavní
     private_attachments: Soubory
@@ -276,7 +302,10 @@ cs:
     published/true: Zveřejněno
     published: Zveřejněno
     published_at: Zveřejněno k datu
+    published_dates: Datum
     secondary_address: Adresa - doplňková
+    secondary_button_label: Text druhého tlačítka
+    secondary_button_url: Odkaz druhého tlačítka
     sensitive_content: Obsahuje citlivý obsah
     sign_in_count: Počet přihlášení
     slug: Varianta názvu pro odkazy
@@ -286,20 +315,22 @@ cs:
     social_links/instagram: Instagram
     social_links/linkedin: LinkedIn
     social_links/messenger: Messenger
-    social_links/pinterest: Pinterest
     social_links/tiktok: TikTok
     social_links/twitter: Twitter
     social_links/youtube: Youtube
     state: Stav
+    subtitle: Podtitulek
     tag_list: Klíčová slova
     title: Název
     to_label: Název
     url: URL
     use_secondary_address: Použít doplňkovou adresu
+    video_cover_placement: Video stopa
 
   errors:
     messages:
       at_least_one: Vyplňte alespoň jedno políčko.
+      invalid_count: musí být přesně %{count}
 
     attributes:
       verified_captcha:
@@ -308,3 +339,4 @@ cs:
         already_exists_with_locale: "Je povolen jen jeden záznam '%{class}' pro stránky."
         already_exists_with_locale: "Je povolen jen jeden záznam '%{class}' s 'locale = \"%{rec_locale}\"'."
         already_exists: "Je povolen jen jeden záznam '%{class}'."
+

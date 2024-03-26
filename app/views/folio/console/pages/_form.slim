@@ -5,12 +5,13 @@
 
 .tab-content
   = tab :content
-    == cell('folio/console/publishable_inputs', f)
+    = publishable_inputs(f)
 
-    .d-md-flex
-      = react_picker(f, :cover_placement, atom_setting: :cover_placement)
+    .f-c-with-file-picker.row
+      .col-md-auto
+        = file_picker_for_cover(f)
 
-      .ml-md-g
+      .col-md
         == translated_inputs f, :title, folio_label: true
         == translated_inputs f, :slug
 
@@ -24,7 +25,7 @@
       .row
         - if Rails.application.config.folio_pages_locales
           - locales = Rails.application.config.folio_pages_locales
-          - locales = I18n.available_locales unless locales.is_a?(Array)
+          - locales = current_site.locales unless locales.is_a?(Array)
 
           .col
             = f.input :locale,
@@ -52,7 +53,6 @@
                            character_counter: true,
                            folio_perex: true
 
-    == cell('folio/console/tagsinput', f)
     = translated_inputs f, :meta_title, character_counter: true
     = translated_inputs f, :meta_description, autosize: true,
                                               character_counter: true

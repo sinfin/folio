@@ -1,0 +1,21 @@
+.container-fluid
+  h1
+    a.d-unlink href=dummy_ui_path UI kit
+
+  - %w[light dark].each do |theme|
+    .bg-body.p-g.mt-g.border.rounded data-bs-theme=theme
+      h2.mt-0 Clipboard - #{theme}
+
+      h3 Default
+
+      = render(Dummy::Ui::ClipboardComponent.new(text: 'Hello world default'))
+
+      h3 Colored - text-danger
+
+      .text-danger
+        = render(Dummy::Ui::ClipboardComponent.new(text: 'Hello world danger'))
+
+      h3 With height: 24
+
+      = render(Dummy::Ui::ClipboardComponent.new(text: 'Hello world 24',
+                                                 height: 24))

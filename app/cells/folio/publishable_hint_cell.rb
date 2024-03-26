@@ -2,10 +2,18 @@
 
 class Folio::PublishableHintCell < Folio::ApplicationCell
   def show
-    render if model && visible_to_admins_only?
+    render if model && forced_or_unpublished?
   end
 
-  def visible_to_admins_only?
-    model == true || (!model.published? && controller.account_signed_in?)
+  def forced_or_unpublished?
+    model == true || !model.published?
+  end
+
+  def default_hint
+    if controller.params[Folio::Publishable::PREVIEW_PARAM_NAME]
+      t(".preview_token_hint")
+    else
+      t(".hint")
+    end
   end
 end

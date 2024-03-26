@@ -1,0 +1,59 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/27074358
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Date:
+      - Wed, 17 Jan 2024 13:05:29 GMT
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Vary:
+      - Access-Control-Request-Headers
+      - Access-Control-Request-Method
+      - Origin
+      Access-Control-Allow-Origin:
+      - "*"
+      Referrer-Policy:
+      - strict-origin-when-cross-origin
+      Permissions-Policy:
+      - microphone=(), payment=(), sync-xhr=(self), geolocation=(self)
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      X-Xss-Protection:
+      - 1; mode=block
+      Content-Security-Policy:
+      - default-src 'self'; font-src 'self' data:; style-src 'self'; script-src 'self';img-src
+        'self' data:;
+      X-Azure-Ref:
+      - 20240117T130529Z-s0zk4h2x650q92mutfbs3auypw00000004c00000000002gm
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        eyJpY28iOiIyNzA3NDM1OCIsIm9iY2hvZG5pSm1lbm8iOiJBc3NlY28gQ2VudHJhbCBFdXJvcGUsIGEucy4iLCJzaWRsbyI6eyJrb2RTdGF0dSI6IkNaIiwibmF6ZXZTdGF0dSI6IsSMZXNrw6EgcmVwdWJsaWthIiwia29kS3JhamUiOjE5LCJuYXpldktyYWplIjoiSGxhdm7DrSBtxJtzdG8gUHJhaGEiLCJrb2RPYmNlIjo1NTQ3ODIsIm5hemV2T2JjZSI6IlByYWhhIiwia29kU3ByYXZuaWhvT2J2b2R1Ijo0MywibmF6ZXZTcHJhdm5paG9PYnZvZHUiOiJQcmFoYSA0Iiwia29kTWVzdHNrZWhvT2J2b2R1Ijo0MywibmF6ZXZNZXN0c2tlaG9PYnZvZHUiOiJQcmFoYSA0Iiwia29kTWVzdHNrZUNhc3RpT2J2b2R1Ijo1MDAxMTksImtvZFVsaWNlIjo0NDQzNzUsIm5hemV2TWVzdHNrZUNhc3RpT2J2b2R1IjoiUHJhaGEgNCIsIm5hemV2VWxpY2UiOiJCdWTEm2pvdmlja8OhIiwiY2lzbG9Eb21vdm5pIjo3NzgsImtvZENhc3RpT2JjZSI6NDkwMTMwLCJjaXNsb09yaWVudGFjbmkiOjMsImNpc2xvT3JpZW50YWNuaVBpc21lbm8iOiJhIiwibmF6ZXZDYXN0aU9iY2UiOiJNaWNobGUiLCJrb2RBZHJlc25paG9NaXN0YSI6NDE0MDU2MDksInBzYyI6MTQwMDAsInRleHRvdmFBZHJlc2EiOiJCdWTEm2pvdmlja8OhIDc3OC8zYSwgTWljaGxlLCAxNDAwMCBQcmFoYSA0In0sInByYXZuaUZvcm1hIjoiMTIxIiwiZmluYW5jbmlVcmFkIjoiMDA0IiwiZGF0dW1Wem5pa3UiOiIyMDAzLTA4LTA2IiwiZGF0dW1Ba3R1YWxpemFjZSI6IjIwMjMtMTItMTMiLCJkaWMiOiJDWjI3MDc0MzU4IiwiaWNvSWQiOiIyNzA3NDM1OCIsImFkcmVzYURvcnVjb3ZhY2kiOnt9LCJzZXpuYW1SZWdpc3RyYWNpIjp7InN0YXZaZHJvamVWciI6IkFLVElWTkkiLCJzdGF2WmRyb2plUmVzIjoiQUtUSVZOSSIsInN0YXZaZHJvamVSenAiOiJBS1RJVk5JIiwic3Rhdlpkcm9qZU5ycHpzIjoiTkVFWElTVFVKSUNJIiwic3Rhdlpkcm9qZVJwc2giOiJORUVYSVNUVUpJQ0kiLCJzdGF2WmRyb2plUmNucyI6Ik5FRVhJU1RVSklDSSIsInN0YXZaZHJvamVTenIiOiJORUVYSVNUVUpJQ0kiLCJzdGF2WmRyb2plRHBoIjoiQUtUSVZOSSIsInN0YXZaZHJvamVTZCI6Ik5FRVhJU1RVSklDSSIsInN0YXZaZHJvamVJciI6Ik5FRVhJU1RVSklDSSIsInN0YXZaZHJvamVDZXUiOiJORUVYSVNUVUpJQ0kiLCJzdGF2WmRyb2plUnMiOiJORUVYSVNUVUpJQ0kiLCJzdGF2WmRyb2plUmVkIjoiTkVFWElTVFVKSUNJIn0sInByaW1hcm5pWmRyb2oiOiJ2ciIsImN6TmFjZSI6WyI3NCIsIjc0MzAwIiwiODAiLCI4MDIwMCIsIjg1NTkiLCI2ODIwIiwiNjkyMDAiLCI3MTEiLCI3MTIwIiwiNzMxMjAiLCI3MzIwMCIsIjQ3IiwiNTIyOTAiLCI1NTkwIiwiNjEiLCI2MjAiLCI2MyIsIjE4MSIsIjI2MSIsIjI2MzAwIiwiNDMyMTAiLCI0NjEiLCI0NjkwMCJdLCJzdWJSZWdpc3RyU3pyIjoic3pyIiwiZGljU2tEcGgiOiJOL0EifQ==
+  recorded_at: Wed, 17 Jan 2024 13:05:29 GMT
+recorded_with: VCR 6.2.0

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class Folio::Console::CatalogueCell < Folio::ConsoleCell
-  include Folio::Console::FlagHelper
   include SimpleForm::ActionViewExtensions::FormHelper
 
   attr_reader :record
@@ -17,15 +16,22 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
 
   def header_html
     return @header_html if @header_html
-    @record = model[:records].first
+
+    if model[:ancestry]
+      @record, _children = model[:records].first
+    else
+      @record = model[:records].first
+    end
+
     @header_html = ""
     instance_eval(&model[:block])
     @header_html
   end
 
-  def record_html(rec)
+  def record_html(rec, html_to_first_cell: nil)
     @header_html = nil
 
+    @html_to_first_cell = html_to_first_cell
     @record = rec
     @record_html = ""
     instance_eval(&model[:block])
@@ -47,7 +53,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
   end
 
   # every method call should use the attribute method
-  def attribute(name = nil, value = nil, class_name: nil, spacey: false, compact: false, media_query: nil, skip_desktop_header: false, small: false, aligned: false, sanitize: false, &block)
+  def attribute(name = nil, value = nil, class_name: nil, spacey: false, compact: false, media_query: nil, skip_desktop_header: false, small: false, aligned: false, sanitize: false, hidden: false, &block)
     content = nil
 
     full_class_name = cell_class_name(name,
@@ -62,7 +68,8 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
     if rendering_header?
       @header_html += content_tag(:div,
                                   label_for(name, skip_desktop_header:, allow_sorting: true),
-                                  class: full_class_name)
+                                  class: full_class_name,
+                                  hidden: hidden ? "" : nil)
     else
       if block_given?
         content = block.call(self.record)
@@ -74,11 +81,17 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
         content = sanitize_string(content)
       end
 
+      if @html_to_first_cell
+        content = "#{@html_to_first_cell} #{content}"
+        @html_to_first_cell = nil
+      end
+
       value_div = content_tag(:div, content, class: "f-c-catalogue__cell-value")
 
       @record_html += content_tag(:div,
                                   "#{tbody_label_for(name)}#{value_div}",
-                                  class: full_class_name)
+                                  class: full_class_name,
+                                  hidden: hidden ? "" : nil)
     end
   end
 
@@ -113,24 +126,35 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
   end
 
   def edit_link(attr = nil, sanitize: false, &block)
-    resource_link([:edit, :console, record], attr, sanitize:, &block)
+    resource_link(through_aware_console_url_for(record, action: :edit), attr, sanitize:, &block)
   end
 
   def show_link(attr = nil, sanitize: false, &block)
-    resource_link([:console, record], attr, sanitize:, &block)
+    resource_link(through_aware_console_url_for(record), attr, sanitize:, &block)
   end
 
-  def date(attr = nil, small: false)
+  def date(attr = nil, small: false, alert_threshold: nil, &block)
     attribute(attr, small:) do
-      val = record.send(attr)
-      l(val, format: :short) if val.present?
+      value = if block_given?
+        yield(record)
+      else
+        record.send(attr)
+      end
+
+      cell("folio/console/catalogue/date", value, small:, alert_threshold:)
+    end
+  end
+
+  def published_dates
+    attribute(:published_dates, compact: true) do
+      cell("folio/console/catalogue/published_dates", record)
     end
   end
 
   def locale_flag(locale_attr = :locale)
     attribute(locale_attr, compact: true, aligned: true, skip_desktop_header: true) do
       if record.send(locale_attr)
-        country_flag(record.send(locale_attr))
+        cell("folio/console/ui/flag", record.send(locale_attr))
       end
     end
   end
@@ -148,8 +172,21 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
   end
 
   def toggle(attr, opts = {})
-    attribute(attr, class_name: "toggle") do
-      cell("folio/console/boolean_toggle", record, opts.merge(attribute: attr))
+    attribute(attr, class_name: "toggle", aligned: true) do
+      render_view_component(Folio::Console::Ui::BooleanToggleComponent.new(**opts.merge(record:,
+                                                                                        attribute: attr)))
+    end
+  end
+
+  def price(attr, price_opts = {}, &block)
+    attribute(attr) do
+      value = if block_given?
+        yield(record)
+      else
+        record.send(attr)
+      end
+
+      folio_price(value, { nowrap: true }.merge(price_opts))
     end
   end
 
@@ -164,15 +201,33 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
   end
 
   def email(attr = :email, sanitize: false)
-    attribute(attr, spacey: true) do
-      e = record.public_send(attr)
+    attr_parts = attr.to_s.split(".")
+
+    safe_attr = if attr_parts.size > 1
+      attr_parts.last.to_sym
+    else
+      attr
+    end
+
+    attribute(safe_attr, spacey: true) do
+      e = if attr_parts.size > 1
+        runner = record
+
+        attr_parts.each do |part|
+          runner = runner.try(part)
+        end
+
+        runner
+      else
+        record.public_send(safe_attr)
+      end
 
       if sanitize
         e = sanitize_string(e)
       end
 
       if e.present?
-        icon = mail_to(e, "", class: "fa fa--small ml-1 fa-envelope")
+        icon = mail_to(e, folio_icon(:mail_outline, height: 16))
         "#{e} #{icon}"
       end
     end
@@ -198,8 +253,14 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
     end
   end
 
-  def boolean(name)
-    attribute(name, I18n.t("folio.console.boolean.#{record.send(name)}"))
+  def boolean(name, &block)
+    bool = if block_given?
+      yield(record)
+    else
+      record.send(name)
+    end
+
+    attribute(name, I18n.t("folio.console.boolean.#{bool}"))
   end
 
   def id
@@ -235,7 +296,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
   end
 
   private
-    def resource_link(url_for_args, attr = nil, sanitize: false)
+    def resource_link(url_or_args, attr = nil, sanitize: false)
       attribute(attr, spacey: true) do
         if block_given?
           content = yield(record)
@@ -249,7 +310,12 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
           content = sanitize_string(content)
         end
 
-        url = controller.url_for(url_for_args)
+        url = if url_or_args.is_a?(String)
+          url_or_args
+        else
+          controller.url_for(url_or_args)
+        end
+
         link_to(content, url)
       end
     end
@@ -409,8 +475,12 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
             class_name += " #{row_class_lambda.call(child)}"
           end
 
+          ancestry_icon = folio_icon(:subdirectory_arrow_right,
+                                     class: "f-c-catalogue__ancestry-icon",
+                                     height: 18)
+
           html += content_tag(:div,
-                              record_html(child),
+                              record_html(child, html_to_first_cell: ancestry_icon),
                               class: class_name,
                               "data-depth" => depth)
 
@@ -423,22 +493,23 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
 
     def collection_action_for(action)
       opts = {
-        type: "submit",
-        class: "f-c-catalogue__collection-actions-bar-button f-c-catalogue__collection-actions-bar-button--#{action}",
+        class: "f-c-catalogue__collection-actions-bar-button f-c-catalogue__collection-actions-bar-button--#{action}}",
+        label: t(".actions.#{action}"),
+        variant: :secondary,
       }
 
       if %i[destroy discard undiscard].include?(action)
+        opts[:type] = :submit
+
         if action == :destroy
-          opts[:class] += " btn btn-danger"
-          icon = '<span class="fa fa-trash-alt"></span>'
+          opts[:variant] = :danger
+          opts[:icon] = :delete
           method = :delete
         elsif action == :discard
-          opts[:class] += " btn btn-secondary"
-          icon = '<span class="fa fa-trash-alt"></span>'
+          opts[:icon] = :delete
           method = :delete
         else
-          opts[:class] += " btn btn-secondary"
-          icon = '<span class="fa fa-redo-alt"></span>'
+          opts[:icon] = :arrow_u_left_top
           method = :post
         end
 
@@ -448,18 +519,15 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
                         url: url_for(["collection_#{action}".to_sym, :console, model[:klass]]),
                         method:,
                         html: { class: "f-c-catalogue__collection-actions-bar-form" }) do |f|
-          button_tag("#{icon} #{t(".actions.#{action}")}", opts)
+          cell("folio/console/ui/button", opts)
         end
       elsif action == :csv
-        opts[:class] += " btn btn-secondary"
-        icon = '<span class="fa fa-download"></span>'
-        url = url_for([:collection_csv, :console, model[:klass]])
+        opts[:icon] = :download
+        opts[:href] = url_for([:collection_csv, :console, model[:klass]])
+        opts[:target] = "_blank"
+        opts["data-url-base"] = opts[:href]
 
-        link_to("#{icon} #{t(".actions.#{action}")}",
-                url,
-                class: opts[:class],
-                target: "_blank",
-                "data-url-base" => url)
+        cell("folio/console/ui/button", opts)
       else
         nil
       end

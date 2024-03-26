@@ -7,6 +7,15 @@ en:
     invalid_format: Invalid format
   'false': "No"
   folio:
+    nested_fields_component:
+      add: Add
+
+    root_breadcrumb: Homepage
+    chart:
+      js_load_error: Failed to load javascript needed for charts.
+    price:
+      default_currency: 'CZK'
+      free: "Free"
     errors:
       show:
         back_to_home: back to the homepage
@@ -14,6 +23,10 @@ en:
           text_line_1: Bad Request.
           text_line_2: Request cannot be fulfilled due to bad syntax.
           title: '400'
+        error_403:
+          text_line_1: Access Denied
+          text_line_2: We're sorry, but you don't have permission to access this page. If you think this is a mistake, please contact the website administrator.
+          title: '403'
         error_404:
           text_line_1: The page you are looking for does not exist.
           text_line_2: You entered a wrong URL or the page was moved.
@@ -41,9 +54,10 @@ en:
         en: english
         es: spanish
     newsletter_subscriptions:
-      form:
-        message: Submitted!
-        submit: Submit
+      form_component:
+        message: Signed up!
+        submit: Sign up
+        label: Your e-mail
     photoswipe:
       error: <div class="pswp__error-msg"><a href="%url%" target="_blank">Obrázek</a> se nepodařilo načíst.</div>
     site:
@@ -52,6 +66,7 @@ en:
         title_long: Settings for site %{site}
     publishable_hint:
       hint: Until publishing, this page is visible to logged in administrators only.
+      preview_token_hint: Until publishing, this page is visible on this URL only.
     image:
       sensitive_content_title: This image contains sensitive content. To see it, verify your age.
     sensitive_content_modal:
@@ -59,9 +74,11 @@ en:
       content: This image contains sensitive content. To see it, verify your age. Are you over 18?
       accept: Yes
       cancel: No
+
   head:
     description: ''
     title:
       default: ''
       separator: "|"
   'true': "Yes"
+  confirmation: Are you sure?

@@ -15,6 +15,9 @@ import {
   updateNote
 } from 'ducks/notesFields'
 
+import FolioUiIcon from 'components/FolioUiIcon'
+
+import I18N from './i18n'
 import Form from './Form'
 import Table from './Table'
 import Serialized from './Serialized'
@@ -25,7 +28,7 @@ class NotesFields extends React.Component {
   }
 
   removeAll = () => {
-    if (window.confirm(window.FolioConsole.translations.confirmation)) {
+    if (window.confirm(window.Folio.i18n(I18N, 'confirmation'))) {
       this.props.dispatch(removeAll())
     }
   }
@@ -51,7 +54,7 @@ class NotesFields extends React.Component {
   }
 
   removeNote = (note) => {
-    if (window.confirm(window.FolioConsole.translations.confirmation)) {
+    if (window.confirm(window.Folio.i18n(I18N, 'confirmation'))) {
       this.props.dispatch(removeNote(note))
     }
   }
@@ -84,12 +87,14 @@ class NotesFields extends React.Component {
 
           {notesFields.notes.length ? (
             <div className='f-c-r-notes-fields-app__header-buttons'>
-              <button type='button' className='btn btn-sm btn-info' onClick={this.toggleShowChecked}>
-                {notesFields.showChecked ? window.FolioConsole.translations.notesFieldsHide : window.FolioConsole.translations.notesFieldsShow}
+              <button type='button' className='f-c-r-notes-fields-app__button f-c-r-notes-fields-app__button--show' onClick={this.toggleShowChecked}>
+                <FolioUiIcon name={notesFields.showChecked ? 'visibility_off' : 'eye'} height={16} />
+                {window.Folio.i18n(I18N, notesFields.showChecked ? 'notesFieldsHide' : 'notesFieldsShow')}
               </button>
 
-              <button type='button' className='btn btn-sm btn-info ml-2' onClick={this.removeAll}>
-                {window.FolioConsole.translations.notesFieldsDelete}
+              <button type='button' className='f-c-r-notes-fields-app__button f-c-r-notes-fields-app__button--delete' onClick={this.removeAll}>
+                <FolioUiIcon name='delete' height={16} />
+                {window.Folio.i18n(I18N, 'notesFieldsDelete')}
               </button>
             </div>
           ) : null}
@@ -106,12 +111,13 @@ class NotesFields extends React.Component {
             changeDueDate={this.changeDueDate}
           />
 
-          <div className='mt-2'>
+          <div className='mt-3'>
             {notesFields.form ? (
               <Form content={notesFields.form.content} save={this.saveForm} close={this.closeForm} />
             ) : (
-              <button type='button' className='btn btn-sm btn-secondary' onClick={this.initNewNote}>
-                {window.FolioConsole.translations.notesFieldsAdd}
+              <button type='button' className='f-c-r-notes-fields-app__button f-c-r-notes-fields-app__button--add' onClick={this.initNewNote}>
+                <FolioUiIcon name='plus' />
+                {window.Folio.i18n(I18N, 'notesFieldsAdd')}
               </button>
             )}
           </div>

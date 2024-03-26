@@ -1,0 +1,29 @@
+.<%= classname_prefix %>-atom.<%= classname_prefix %>-atom-images-gallery.my-g data=data
+  .container-fluid
+    .<%= classname_prefix %>-atom-images-gallery__wrap[
+      data=stimulus_target('wrap')
+    ]
+      - image_placements.each do |image_placement|
+        - data = dynamic_item_data(image_placement)
+        .<%= classname_prefix %>-atom-images-gallery__item[
+          style="width: #{data[:width]}px"
+          data=stimulus_target('item').merge(ratio: data[:ratio])
+        ]
+          = <%= application_namespace_path %>_ui_image(image_placement,
+                           THUMB_SIZE,
+                           class_name: "<%= classname_prefix %>-atom-images-gallery__image",
+                           lightbox: true,
+                           hover_zoom: true,
+                           border_radius: true)
+
+    .<%= classname_prefix %>-atom-images-gallery__loader-wrap data=stimulus_target("loaderWrap")
+      span.folio-loader.<%= classname_prefix %>-atom-images-gallery__loader
+
+    - if @atom.title.present?
+      .<%= classname_prefix %>-atom-images-gallery__caption.fs-text-s
+        span.<%= classname_prefix %>-atom-images-gallery__title
+          = cstypo @atom.title
+
+        - if @atom.subtitle.present?
+          span.<%= classname_prefix %>-atom-images-gallery__subtitle
+            = cstypo @atom.subtitle

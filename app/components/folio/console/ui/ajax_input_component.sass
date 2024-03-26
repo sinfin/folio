@@ -1,0 +1,120 @@
+.f-c-ui-ajax-input
+  display: flex
+  align-items: center
+  position: relative
+  gap: $grid-gutter-half
+
+  &--150 &__input
+    width: 150px
+
+  &--180 &__input
+    width: 180px
+
+  &--disabled
+    color: $text-muted
+    cursor: not-allowed
+
+    &[title]::before
+      content: ''
+      position: absolute
+      top: 0
+      right: 0
+      bottom: 0
+      left: 0
+      z-index: 2
+      cursor: help
+
+  &--disabled &__inner
+    pointer-events: none
+
+  &__inner
+    position: relative
+
+  &__input
+    position: relative
+    z-index: 1
+    padding-right: px-to-rem(2 * 28px + 2 * 4px)
+
+    &[type='number']
+      -moz-appearance: textfield
+
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button
+        -webkit-appearance: none
+
+  &__right
+    position: absolute
+    z-index: 2
+    top: 0
+    right: px-to-rem(4px)
+    height: 100%
+    display: flex
+
+  &__button
+    height: 100%
+    width: px-to-rem(28px)
+    align-items: center
+    justify-content: center
+    cursor: pointer
+    display: none
+
+  &--dirty &__button
+    display: flex
+
+  &__icon
+    height: 100%
+    width: px-to-rem(28px)
+    display: none
+    align-items: center
+    justify-content: center
+
+  &--success &__icon--success,
+  &--failure &__icon--failure
+    display: flex
+
+  &__loader-wrap
+    width: px-to-rem(28px)
+    height: 100%
+    display: none
+    position: relative
+
+  &--loading &__loader-wrap
+    display: block
+
+  &--loading &__button,
+  &--loading &__icon
+    display: none
+
+  &--loading
+    pointer-events: none
+
+  &__failure-tooltip
+    position: absolute
+    bottom: 100%
+    margin-bottom: 10px
+    left: 0
+    right: 0
+    background: $danger
+    color: $white
+    padding: 10px
+    z-index: 3
+    display: none
+
+    &::after
+      content: ''
+      width: 0
+      height: 0
+      border-style: solid
+      border-width: 5px 5px 0 5px
+      border-color: $danger transparent transparent transparent
+      position: absolute
+      top: 100%
+      left: 50%
+      margin-left: -2.5px
+
+  &--failure &__failure-tooltip
+    display: block
+
+  &__label
+    min-width: 55px
+    padding-right: 10px

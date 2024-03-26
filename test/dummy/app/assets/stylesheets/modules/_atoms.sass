@@ -1,23 +1,35 @@
+$my-atom: $grid-gutter-width
+$my-atom-mobile: map-get($spacers, bb)
 $my-atom-lg: 2 * $grid-gutter-width
 $my-atom-lg-mobile: 50px
 
 .d-atoms
-  .d-atom:first-child,
-  .d-molecule:first-child
+  > .d-atom:first-child,
+  > .d-molecule:first-child
     margin-top: 0 !important
 
-  .d-atom:last-child,
-  .d-molecule:last-child
+  > .d-atom:last-child,
+  > .d-molecule:last-child
     margin-bottom: 0 !important
 
-  .f-ui-atoms &
-    padding-top: $grid-gutter-width
-    padding-bottom: $grid-gutter-width
+.my-atom
+  margin-top: $my-atom
+  margin-bottom: $my-atom
+
+  +media-breakpoint-down($font-size-media-breakpoint-s)
+    margin-top: $my-atom-mobile
+    margin-bottom: $my-atom-mobile
+
+.mb-atom
+  margin-bottom: $my-atom
+
+  +media-breakpoint-down($font-size-media-breakpoint-s)
+    margin-bottom: $my-atom-mobile
 
 .my-atom-lg
   margin-top: $my-atom-lg
   margin-bottom: $my-atom-lg
 
-  +media-breakpoint-down($font-size-media-breakpoint)
+  +media-breakpoint-down($font-size-media-breakpoint-s)
     margin-top: $my-atom-lg-mobile
     margin-bottom: $my-atom-lg-mobile

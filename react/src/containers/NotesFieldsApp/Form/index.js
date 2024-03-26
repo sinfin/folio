@@ -1,6 +1,9 @@
 import React from 'react'
 import TextareaAutosize from 'react-autosize-textarea'
 
+import FolioUiIcon from 'components/FolioUiIcon'
+import I18N from '../i18n'
+
 class Form extends React.Component {
   state = { content: '', originalContent: '' }
 
@@ -25,7 +28,7 @@ class Form extends React.Component {
 
   close = () => {
     if (this.state.content !== this.state.originalContent) {
-      if (window.confirm(window.FolioConsole.translations.cancelChanges)) {
+      if (window.confirm(window.Folio.i18n(I18N, 'cancelChanges'))) {
         this.props.close()
       }
     } else {
@@ -43,24 +46,28 @@ class Form extends React.Component {
           type='text'
           className='form-control f-c-r-notes-fields-app-form__textarea'
           rows={1}
-          placeholder={window.FolioConsole.translations.notesFieldsAdd}
+          placeholder={window.Folio.i18n(I18N, 'notesFieldsAdd')}
           async
           autoFocus
         />
 
-        <button
-          type='button'
-          className='btn btn-sm btn-primary f-c-r-notes-fields-app-form__button'
-          onClick={this.save}
-        >
-          {window.FolioConsole.translations.save}
-        </button>
+        <div className='f-c-r-notes-fields-app-form__buttons'>
+          <span
+            className='f-c-r-notes-fields-app-form__button f-c-r-notes-fields-app-form__button--save text-success'
+            onClick={this.save}
+            label={window.Folio.i18n(I18N, 'save')}
+          >
+            <FolioUiIcon name='checkbox_marked' height={24} />
+          </span>
 
-        <button
-          type='button'
-          className='fa fa-times text-danger f-c-r-notes-fields-app-form__close'
-          onClick={this.close}
-        />
+          <span
+            className='f-c-r-notes-fields-app-form__button f-c-r-notes-fields-app-form__button--close text-danger'
+            icon='close'
+            onClick={this.close}
+          >
+            <FolioUiIcon name='close' height={24} />
+          </span>
+        </div>
       </div>
     )
   }

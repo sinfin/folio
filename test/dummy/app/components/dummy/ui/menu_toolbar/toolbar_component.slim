@@ -1,0 +1,8 @@
+.d-ui-menu-toolbar-toolbar
+  = render(Dummy::Ui::MenuToolbar::HeaderSearchComponent.new)
+  = render(Dummy::Ui::MenuToolbar::ShoppingCartComponent.new)
+  = render(Dummy::Ui::UserAvatarComponent.new)
+
+  .d-ui-menu-toolbar-toolbar__selects-container
+    = render(Dummy::Ui::MiniSelectComponent.new(type: :language))
+    = render(Dummy::Ui::MiniSelectComponent.new(type: :currency))

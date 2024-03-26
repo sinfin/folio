@@ -6,10 +6,10 @@
           class="f-c-simple-form-with-atoms__title"
           class='f-c-simple-form-with-atoms__title--clickable'
         ]
-          .f-c-with-icon
-            span.mi.f-c-simple-form-with-atoms__title-ico settings
-            = t('.settings')
-            .f-c-simple-form-with-atoms__title-arrow
+          == cell('folio/console/ui/with_icon',
+                  t('.settings'),
+                  icon: :cog,
+                  html: content_tag(:div, "", class: "f-c-simple-form-with-atoms__title-arrow"))
 
         .f-c-simple-form-with-atoms__form-scroll[
           class="f-c-simple-form-with-atoms__dirty-wrap"
@@ -23,14 +23,28 @@
         .f-c-simple-form-with-atoms__form-toggle
           .container-fluid
             .position-relative.f-c-simple-form-with-atoms__form-toggle-inner
-              button.f-c-simple-form-with-atoms__form-toggle-button.mi[
+              button.f-c-simple-form-with-atoms__form-toggle-button[
                 type="button"
               ]
-                .mi.f-c-simple-form-with-atoms__form-toggle-icon arrow_drop_down
+                = folio_icon(:menu_down,
+                             height: 16,
+                             class: "f-c-simple-form-with-atoms__form-toggle-icon")
 
       .f-c-simple-form-with-atoms__atoms
         .f-c-simple-form-with-atoms__previews
-          - keys = f.object.class.try(:atom_locales) || [nil]
+          ruby:
+            keys = if f.object.class.try(:atom_locales)
+              filtered = f.object.class.atom_locales & current_site.locales_as_sym
+
+              if filtered.present?
+                filtered
+              else
+                [nil]
+              end
+            else
+              [nil]
+            end
+
           - keys.first(2).each_with_index do |key, index|
             .f-c-simple-form-with-atoms__preview[
               class="f-c-simple-form-with-atoms__preview--initializing"
@@ -44,9 +58,10 @@
               .f-c-simple-form-with-atoms__title.container-fluid[
                 class=(index > 0 ? 'invisible' : nil)
               ]
-                .f-c-with-icon
-                  span.mi.f-c-simple-form-with-atoms__title-ico line_style
-                  = t('.editor')
+                == cell('folio/console/ui/with_icon',
+                        t('.editor'),
+                        icon: :view_dashboard_variant_outline)
+
 
               iframe[
                 class="f-c-simple-form-with-atoms__iframe"
@@ -58,9 +73,9 @@
 
         .f-c-simple-form-with-atoms__overlay-dismiss
 
-        = form_footer(f, form_footer_options)
-
         .f-c-simple-form-with-atoms__overlay
           = console_form_atoms(f)
+
+    = form_footer(f, form_footer_options)
 
     span.folio-loader

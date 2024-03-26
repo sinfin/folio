@@ -1,56 +1,38 @@
 # frozen_string_literal: true
 
 class Folio::LeadsController < Folio::ApplicationController
-  REMEMBER_OPTION_KEYS = [
-    :note,
-    :message,
-    :name,
-    :note_label,
-    :note_rows,
-    :layout,
-    :next_to_submit,
-    :above_form,
-    :under_form,
-  ]
+  include Folio::RenderComponentJson
 
   def create
     lead = Folio::Lead.new(lead_params.merge(url: request.referrer))
 
     @lead = check_recaptcha_if_needed(lead)
-
-    if !Rails.application.config.folio_site_is_a_singleton
-      @lead.site = current_site
-    end
+    @lead.site = current_site
 
     success = @lead.save
 
     Folio::LeadMailer.notification_email(@lead).deliver_later if success
 
-    render html: cell("folio/leads/form", @lead, cell_options_params)
+    respond_to do |format|
+      format.html do
+        redirect_back fallback_location: main_app.root_path,
+                      flash: success ? { success: t(".success") } : { alert: t(".failure") }
+      end
+
+      format.json do
+        component = Rails.application.config.folio_leads_from_component_class_name.constantize
+        render_component_json(component.new(lead: @lead))
+      end
+    end
   end
 
   private
     def lead_params
-      params.require(:lead).permit(:name,
-                                   :email,
-                                   :phone,
-                                   :note,
-                                   :additional_data).tap do |obj|
-        if obj[:additional_data].present?
-          obj[:additional_data] = JSON.parse(obj[:additional_data])
-        else
-          obj[:additional_data] = nil
-        end
-      end
-    end
-
-    def cell_options_params
-      cell_options = params[:cell_options]
-      if cell_options
-        cell_options.permit(*REMEMBER_OPTION_KEYS)
-      else
-        {}
-      end
+      params.require(:lead)
+            .permit(:name,
+                    :email,
+                    :phone,
+                    :note)
     end
 
     def check_recaptcha_if_needed(lead)

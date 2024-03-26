@@ -1,0 +1,44 @@
+.f-dropzone data=data
+  = trigger_button
+
+  .f-dropzone__previews[
+    data=stimulus_target('previews')
+  ]
+
+  - if @hint.present?
+    p.fs-text-xs.mt-3.mb-0.text-shade-700 = @hint
+
+  template.f-dropzone__preview-template[
+    data=stimulus_target('previewTemplate')
+    hidden=true
+  ]
+    .f-dropzone__preview[
+      class="dz-preview dz-file-preview"
+    ]
+      .dz-image
+        img data-dz-thumbnail=true
+
+        = folio_icon(:file_document,
+                     class: "f-dropzone__preview-file-ico")
+
+      .dz-details
+        .dz-size
+          span data-dz-size=true
+        .dz-filename
+          span data-dz-name=true
+
+      .dz-progress
+        span.dz-upload data-dz-uploadprogress=true
+
+      .dz-error-message
+        span data-dz-errormessage=true
+
+      .dz-success-mark
+        = folio_icon(:check)
+
+      .dz-error-mark
+        = folio_icon(:close)
+
+      - if @destroy_url
+        .f-dropzone__preview-remove data-dz-remove=true
+          = folio_icon(:close)

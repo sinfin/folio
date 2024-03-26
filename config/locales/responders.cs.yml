@@ -4,25 +4,41 @@ cs:
     actions:
       create:
         alert: "%{resource_name} nelze vytvořit."
+        error: "%{resource_name} nelze vytvořit."
         notice: "%{resource_name} vytvořen(a)."
+        success: "%{resource_name} vytvořen(a)."
       destroy:
         alert: "%{resource_name} nelze smazat."
+        error: "%{resource_name} nelze smazat."
         notice: "%{resource_name} smazán(a)."
+        success: "%{resource_name} smazán(a)."
       discard:
         alert: "%{resource_name} nelze archivovat."
+        error: "%{resource_name} nelze archivovat."
         notice: "%{resource_name} archivován(a)."
+        success: "%{resource_name} archivován(a)."
       undiscard:
         alert: "%{resource_name} nelze odarchivovat."
+        error: "%{resource_name} nelze odarchivovat."
         notice: "%{resource_name} odarchivován(a)."
+        success: "%{resource_name} odarchivován(a)."
       update:
         alert: "%{resource_name} nelze upravit."
+        error: "%{resource_name} nelze upravit."
         notice: "%{resource_name} upraven(a)."
+        success: "%{resource_name} upraven(a)."
       cancel:
         alert: "%{resource_name} nelze stornovat."
+        error: "%{resource_name} nelze stornovat."
         notice: "%{resource_name} stornován(a)."
+        success: "%{resource_name} stornován(a)."
       event:
         alert: "Stav záznamu se nepodařilo upravit."
+        error: "Stav záznamu se nepodařilo upravit."
         notice: "Stav záznamu upraven."
+        success: "Stav záznamu upraven."
       confirm:
         alert: "%{resource_name} nelze potvrdit."
+        error: "%{resource_name} nelze potvrdit."
         notice: "%{resource_name} potvrzen(a)."
+        success: "%{resource_name} potvrzen(a)."

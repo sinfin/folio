@@ -1,0 +1,132 @@
+#redactor-modal
+  display: flex
+  align-items: center
+  justify-content: center
+
+.f-input--redactor
+  min-height: 124px
+  border: 1px solid rgba(0, 0, 0, 0.075)
+
+.redactor-modal
+  width: 100vw !important
+  max-width: 970px !important
+  margin: 0 !important
+  left: auto !important
+  top: auto !important
+
+  label.checkbox
+    @extend .form-label
+    font-size: inherit
+    line-height: inherit
+    padding-left: $form-check-padding-start
+
+  input
+    @extend .form-control
+    font-size: $input-font-size
+    line-height: $input-line-height
+    height: auto
+    padding: $input-padding-y $input-padding-x
+
+    &[type="checkbox"]
+      @extend .form-check-input
+      font-size: inherit
+      float: left
+      margin-left: -1 * $form-check-padding-start
+      position: static
+      width: 1em !important
+      height: 1em !important
+      display: inline-block
+      margin-right: 0
+      padding: 0
+      margin-top: ($line-height-base - $form-check-input-width) * .5
+
+      &:hover:checked,
+      &:focus:checked
+        background-color: $black
+        border-color: $black
+
+  .redactor-modal-header
+    padding: $modal-inner-padding $modal-inner-padding 0
+    border: 0
+
+  .redactor-modal-body
+    overflow: hidden
+    padding: $modal-inner-padding
+    border: 0
+
+  .redactor-modal-footer
+    padding: 0 $modal-inner-padding $modal-inner-padding
+    border: 0
+
+  .redactor-modal-tab
+    height: 75vh !important
+
+.redactor-box
+  transition: box-shadow .2s
+
+.redactor-styles img
+  max-height: 300px
+
+.redactor-focus.redactor-styles-on,
+.redactor-focus:focus.redactor-styles-on
+  box-shadow: $input-focus-box-shadow
+  border-color: $input-focus-border-color
+
+.redactor-blur.redactor-styles-on,
+.redactor-focus.redactor-styles-on,
+.redactor-focus:focus.redactor-styles-on
+  .form-group-invalid &
+    border-color: $form-feedback-invalid-color
+
+.redactor-styles .folio-redactor-button,
+.redactor-blur.redactor-styles-on .folio-redactor-button.redactor-component-active
+  outline: 0 !important
+
+.redactor-styles .folio-redactor-button
+  display: inline-block
+
+  + .folio-redactor-button
+    display: block
+
+  .font-size-sm
+    font-size: $font-size-sm
+
+  .font-size-lg
+    font-size: $font-size-lg
+
+.form-group.redactor
+  position: relative
+
+  .form-text
+    padding-right: 90px
+
+.redactor-box .redactor-statusbar
+  position: absolute
+  top: 100%
+  right: 0
+  background: transparent
+  font-family: inherit
+  font-size: inherit
+  padding: 0
+  margin: $spacer / 2 0 0
+
+  li
+    list-style: none
+    padding: 0
+    float: none
+    font-size: 80%
+    border: 0
+    color: inherit
+    line-height: inherit
+
+.re-button-tooltip
+  display: none !important
+
+.redactor-styles
+  ol[type="a"],
+  ol[type="A"],
+  ol[type="i"],
+  ol[type="I"],
+  ol[type="1"]
+    li
+      list-style-type: inherit

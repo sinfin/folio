@@ -1,0 +1,22 @@
+h1 Folio Console UI
+
+h2 Modal
+
+h3 Form modal
+
+p Try editing user's name. Current: #{current_user.full_name}
+
+== cell('folio/console/ui/buttons', @button_model_for_form_modals)
+
+h3 Notification modal
+
+h4 Message
+
+== cell('folio/console/ui/button', @button_model_for_notifications_message)
+
+h4 Message with form
+
+= simple_form_for("", url: request.path, method: :get) do |f|
+  = f.input :test_field, input_html: { value: params[:test_field] }
+
+  == cell('folio/console/ui/buttons', @button_model_for_notifications_form)

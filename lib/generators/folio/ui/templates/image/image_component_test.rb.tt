@@ -1,0 +1,12 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= application_namespace %>::Ui::ImageComponentTest < Folio::ComponentTest
+  def test_render
+    render_inline(<%= application_namespace %>::Ui::ImageComponent.new(placement: create(:folio_cover_placement),
+                                                size: "100x100"))
+
+    assert_selector(".<%= classname_prefix %>-ui-image")
+  end
+end

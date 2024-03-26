@@ -1,46 +1,47 @@
 = form do |f|
-  .container-fluid
-    .f-c-index-filters__wrap
-      strong.f-c-index-filters__title = t('.title')
+  .f-c-index-filters__wrap
+    .f-c-index-filters__filters
+      - index_filters_hash.each do |key, config|
+        - if config[:as] == :hidden
+          = hidden_input(f, key, config)
+        - else
+          - filtered = filtered_by?(key)
 
-      .f-c-index-filters__filters
-        - index_filters.each do |key, config|
-          - if config[:as] == :hidden
-            = hidden_input(f, key)
-          - else
-            .f-c-index-filters__filter[
-              class=collapsible_class_name(config)
-              style=filter_style(config)
-            ]
-              - if config[:as] == :numeric_range
-                .f-c-index-filters__numeric-range.input-group
-                  .input-group-prepend
-                    = f.label "#{key}_from", label_for_key(key)
+          .f-c-index-filters__filter[
+            class=collapsible_class_name(config)
+            style=filter_style(config, filtered:)
+          ]
+            - if config[:as] == :numeric_range
+              .f-c-index-filters__numeric-range.input-group
+                .input-group-prepend
+                  = f.label "#{key}_from", label_for_key(key)
 
-                  = numeric_range_input(f, key, type: "from")
+                = numeric_range_input(f, key, type: "from")
 
-                  = numeric_range_input(f, key, type: "to")
+                = numeric_range_input(f, key, type: "to")
 
-                  - if filtered_by?(key)
-                    .input-group-append
-                      = input_group_append
+                - if filtered
+                  .input-group-append
+                    = input_group_append
 
-              - else
-                = input(f, key)
+            - else
+              = input(f, key)
 
-      - if has_collapsible?
-        .f-c-index-filters__toggle-wrap
-          .f-c-index-filters__toggle.f-c-with-icon.f-c-with-icon--reversed
-            = t('.collapsible_toggle')
-            .f-c-index-filters__toggle-ico.fa.fa-caret-down
+    - if has_collapsible?
+      .f-c-index-filters__toggle-wrap
+        == cell('folio/console/ui/with_icon',
+                t('.collapsible_toggle'),
+                class: 'f-c-index-filters__toggle',
+                right_icon: :menu_down)
 
-      .f-c-index-filters__cancel-wrap[
-        class=(filtered? ? nil : "f-c-index-filters__cancel-wrap--hidden")
-      ]
-        == cell('folio/console/cancel',
-                cancel_url,
-                label: t('.cancel'),
-                class_name: "f-c-index-filters__cancel")
+    .f-c-index-filters__cancel-wrap[
+      class=(filtered? ? nil : "f-c-index-filters__cancel-wrap--hidden")
+    ]
+      == cell('folio/console/ui/with_icon',
+              t('.cancel'),
+              href: cancel_url,
+              icon: :close,
+              class: "text-danger f-c-index-filters__cancel")
 
-      = f.input :by_query, as: :hidden,
-                           input_html: { value: controller.params[:by_query] }
+    = f.input :by_query, as: :hidden,
+                         input_html: { value: controller.params[:by_query] }

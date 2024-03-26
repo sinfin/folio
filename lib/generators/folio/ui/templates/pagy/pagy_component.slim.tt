@@ -1,0 +1,83 @@
+- if @pagy && @pagy.try(:pages) && @pagy.pages > 1
+  .<%= classname_prefix %>-ui-pagy
+    nav.<%= classname_prefix %>-ui-pagy__nav role="navigation" aria-label="pager"
+      ul.<%= classname_prefix %>-ui-pagy__pages
+        - if @pagy.prev
+          li.<%= classname_prefix %>-ui-pagy__page[
+            class="<%= classname_prefix %>-ui-pagy__page--with-ico"
+            class="<%= classname_prefix %>-ui-pagy__page--first"
+            class="<%= classname_prefix %>-ui-pagy__page--hide-on-mobile"
+          ]
+            == link.call(1,
+                        <%= application_namespace_path %>_ui_icon(:arrow_left_from_line),
+                        'aria-label="first" class="<%= classname_prefix %>-ui-pagy__page-link"')
+
+          li.<%= classname_prefix %>-ui-pagy__page[
+            class="<%= classname_prefix %>-ui-pagy__page--with-ico"
+            class="<%= classname_prefix %>-ui-pagy__page--prev"
+          ]
+            == link.call(@pagy.prev,
+                        <%= application_namespace_path %>_ui_icon(:arrow_left),
+                      'aria-label="previous" class="<%= classname_prefix %>-ui-pagy__page-link"')
+        - else
+          li.<%= classname_prefix %>-ui-pagy__page[
+            class="<%= classname_prefix %>-ui-pagy__page--with-ico"
+            class="<%= classname_prefix %>-ui-pagy__page--first"
+            class="<%= classname_prefix %>-ui-pagy__page--hide-on-mobile"
+            class="<%= classname_prefix %>-ui-pagy__page--disabled"
+          ]
+            span.<%= classname_prefix %>-ui-pagy__page-item
+              = <%= application_namespace_path %>_ui_icon(:arrow_left_from_line)
+
+          li.<%= classname_prefix %>-ui-pagy__page[
+            class="<%= classname_prefix %>-ui-pagy__page--with-ico"
+            class="<%= classname_prefix %>-ui-pagy__page--prev"
+            class="<%= classname_prefix %>-ui-pagy__page--disabled"
+          ]
+            span.<%= classname_prefix %>-ui-pagy__page-item
+              = <%= application_namespace_path %>_ui_icon(:arrow_left)
+
+        / list of page numbers
+        - series_as_hashes.each do |h|
+          li.<%= classname_prefix %>-ui-pagy__page class=h[:class_name]
+            - if h[:link]
+              == h[:link]
+            - else
+              span.<%= classname_prefix %>-ui-pagy__page-item
+                == h[:label]
+
+        - if @pagy.next
+          li.<%= classname_prefix %>-ui-pagy__page[
+            class="<%= classname_prefix %>-ui-pagy__page--with-ico"
+            class="<%= classname_prefix %>-ui-pagy__page--next"
+          ]
+            == link.call(@pagy.next,
+                        <%= application_namespace_path %>_ui_icon(:arrow_right),
+                        'aria-label="next" class="<%= classname_prefix %>-ui-pagy__page-link"')
+
+          li.<%= classname_prefix %>-ui-pagy__page[
+            class="<%= classname_prefix %>-ui-pagy__page--with-ico"
+            class="<%= classname_prefix %>-ui-pagy__page--last"
+            class="<%= classname_prefix %>-ui-pagy__page--hide-on-mobile"
+          ]
+            == link.call(@pagy.last,
+                        <%= application_namespace_path %>_ui_icon(:arrow_right_to_line),
+                        'aria-label="last" class="<%= classname_prefix %>-ui-pagy__page-link"')
+
+        - else
+          li.<%= classname_prefix %>-ui-pagy__page[
+            class="<%= classname_prefix %>-ui-pagy__page--with-ico"
+            class="<%= classname_prefix %>-ui-pagy__page--next"
+            class="<%= classname_prefix %>-ui-pagy__page--disabled"
+          ]
+            span.<%= classname_prefix %>-ui-pagy__page-item
+              = <%= application_namespace_path %>_ui_icon(:arrow_right)
+
+          li.<%= classname_prefix %>-ui-pagy__page[
+            class="<%= classname_prefix %>-ui-pagy__page--with-ico"
+            class="<%= classname_prefix %>-ui-pagy__page--last"
+            class="<%= classname_prefix %>-ui-pagy__page--hide-on-mobile"
+            class="<%= classname_prefix %>-ui-pagy__page--disabled"
+          ]
+            span.<%= classname_prefix %>-ui-pagy__page-item
+              = <%= application_namespace_path %>_ui_icon(:arrow_right_to_line)

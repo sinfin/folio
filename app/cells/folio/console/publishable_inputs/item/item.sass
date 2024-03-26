@@ -1,0 +1,82 @@
+.f-c-publishable-inputs-item
+  display: flex
+  align-items: center
+  gap: $grid-gutter-width / 3
+
+  &__inner
+    padding: 0 (( $grid-gutter-width / 2 )) 0 calc(#{3 * $grid-gutter-width / 4} + #{$form-check-input-width})
+    display: flex
+    flex-wrap: wrap
+    gap: 0 $grid-gutter-width / 2
+    align-items: center
+    position: relative
+    background: $medium-gray
+    min-height: $input-height
+    border-radius: 18px
+
+  .form-check
+    margin: 0
+    padding: 0
+
+  .form-check-label
+    min-height: $input-height
+    display: flex
+    align-items: center
+    margin: 0
+
+  .form-check-input
+    float: none
+    margin: 0
+    position: absolute
+    top: 50%
+    left: $grid-gutter-width / 2
+    transform: translate(0, -50%)
+
+  &--active &__inner
+    background: $green-background
+
+  &--active &__warning-ribbon
+    display: none
+
+  &__group
+    margin-bottom: 0
+
+  &__date
+    position: relative
+    display: flex
+    align-items: center
+    cursor: pointer
+
+    &:not(:last-child)
+      margin-right: $grid-gutter-width
+
+  .form-group.date .d-flex:after,
+  .form-group.datetime .d-flex:after
+    top: 50%
+    margin-top: -1px
+    transform: translate(0, -50%)
+    color: $black
+    opacity: 1
+    left: 0
+    right: auto
+    width: 22px
+
+  &__wrapper
+    margin: 0
+
+  &__input
+    font-size: inherit
+
+    .simple_form .form-group.datetime &.f-input--date-time
+      padding-left: calc(#{$input-height} - 10px)
+      padding-right: 0
+      box-shadow: none !important
+      border: none !important
+      background: none !important
+      cursor: pointer
+      max-width: 135px
+      padding-top: 9px
+
+    &.form-control::placeholder
+      color: rgba($input-color, .7)
+      opacity: 1

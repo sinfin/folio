@@ -1,19 +1,18 @@
 import React from 'react'
 
-import SingleSelectTrigger from 'components/SingleSelectTrigger'
+import FolioConsoleFilePicker from 'components/FolioConsoleFilePicker'
 
-export default function SingleAttachments ({ attachments, atom, remove, index, openFileModal }) {
+export default function SingleAttachments ({ index, attachments, atom, updateFormAtomAttachment, removeFormAtomAttachment }) {
   return (
     <React.Fragment>
       {attachments.map((attachmentType) => (
         attachmentType.plural ? null : (
-          <SingleSelectTrigger
+          <FolioConsoleFilePicker
             key={attachmentType.key}
             attachmentType={attachmentType}
-            data={atom[attachmentType.key]}
-            index={index}
-            remove={() => remove(index, attachmentType.key)}
-            openFileModal={openFileModal}
+            file={atom[attachmentType.key] ? atom[attachmentType.key].file : undefined}
+            update={(file) => updateFormAtomAttachment(index, attachmentType.key, file)}
+            remove={() => removeFormAtomAttachment(index, attachmentType.key)}
           />
         )
       ))}

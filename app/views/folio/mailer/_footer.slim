@@ -1,9 +1,11 @@
 - if @console_link
   p
-    = t('.sent_from')
+    a.text-decoration-none target="_blank" href=t('.sent_from_url')
+      = t('.sent_from')
 
   a href=folio.console_root_url target="_blank"
     = t('.console')
 
 - else
-  = t('.sent_from')
+  a.text-decoration-none target="_blank" href=t('.sent_from_url')
+    = t('.sent_from')

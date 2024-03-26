@@ -2,9 +2,10 @@
 disclaimer:
   text: By submitting you agree to our %{link}.
   link: privacy policy
-footer:
-  follow_us: Follow us
+footer_component:
   newsletter: Newsletter signup
+  contact: Contact
+  follow_us: Follow us
 share:
   title: 'Share:'
   facebook: Share on Facebook
@@ -12,5 +13,24 @@ share:
   twitter: Share on Twitter
   email: Share via e-mail
   clipboard: Copy link
-header_search:
-  placeholder: Search term
+menu_toolbar:
+  header_search_component:
+    placeholder: Search term
+    autocomplete_none: No results
+  dropdown_component:
+    user_menu/sign_up: Sign up
+    user_menu/sign_in: Sign in
+    user_menu/sign_out: Sign out
+    user_menu/title: Login
+    eshop_menu/title: Shop
+mini_select_component:
+  language/verbose/cs: Čeština
+  language/verbose/en: English
+  language/default/cs: CZ
+  language/default/en: EN
+  currency/verbose/czk: Kč
+  currency/verbose/eur: EUR
+  currency/verbose/usd: USD
+  currency/default/czk: Kč
+  currency/default/eur: "€"
+  currency/default/usd: "$"

@@ -1,0 +1,7 @@
+.d-ui-embed.d-rich-text.d-rich-text--chomp
+  figure
+    == @html
+
+    - if @caption.present?
+      figcaption.d-ui-embed__caption.mt-bb
+        = cstypo @caption

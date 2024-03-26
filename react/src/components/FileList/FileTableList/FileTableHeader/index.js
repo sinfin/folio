@@ -6,7 +6,7 @@ const FileTableHeader = ({ fileTypeIsImage, massSelect }) => {
   return (
     <div className={className}>
       {massSelect && (
-        <div className='f-c-file-table__td f-c-file-table__td--mass-select pl-0' />
+        <div className='f-c-file-table__td f-c-file-table__td--mass-select ps-0' />
       )}
 
       {fileTypeIsImage ? (

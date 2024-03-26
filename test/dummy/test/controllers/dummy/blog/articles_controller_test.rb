@@ -27,22 +27,7 @@ class Dummy::Blog::ArticlesControllerTest < ActionDispatch::IntegrationTest
 
     assert_raises(ActiveRecord::RecordNotFound) { get url_for(article) }
 
-    sign_in create(:folio_admin_account)
-    get url_for(article)
-    assert_redirected_to url_for([:preview, article])
-  end
-
-  test "preview" do
-    article = create(:dummy_blog_article, published: false)
-    assert_raises(ActiveRecord::RecordNotFound) { get url_for([:preview, article]) }
-
-    admin = create(:folio_admin_account)
-    sign_in admin
-    get url_for([:preview, article])
-
-    article.update!(published: true)
-    sign_in admin
-    get url_for([:preview, article])
-    assert_redirected_to url_for(article)
+    get url_for([article, Folio::Publishable::PREVIEW_PARAM_NAME => article.preview_token])
+    assert_response(:ok)
   end
 end

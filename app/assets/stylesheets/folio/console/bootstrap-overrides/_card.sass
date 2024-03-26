@@ -1,42 +1,10 @@
 .card
+  &--medium-gray
+    border: 0
+    background: $medium-gray
+
+.card-text
   margin-bottom: $grid-gutter-half
 
-  .card-body
-    position: relative
-    z-index: 1
-
-  .card-header--flexy
-    display: flex
-    align-items: center
-
-  .card-header__button
-    padding-left: $grid-gutter-width
-    margin-left: auto
-    margin-top: - $spacer / 2
-    margin-bottom: - $spacer / 2
-
-  .list-group
-    position: relative
-    z-index: 2
-
-  .list-group-item
-    padding: $card-spacer-y / 2 $card-spacer-x
-
-  .list-group:first-child .list-group-item
-    border-bottom: 0
-
-  &--highlighted
-    border: 0
-
-    .card-header
-      background: $success
-      color: white
-
-    .card-body
-      background: rgba($success, 0.2)
-
-  &--fresh
-    border-color: rgba($blue, 0.25)
-
-    .card-body
-      background: rgba($blue, 0.1)
+  &:last-child
+    margin-bottom: 0

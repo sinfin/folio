@@ -3,23 +3,41 @@
 require "test_helper"
 
 class Folio::UserTest < ActiveSupport::TestCase
-  test "newsletter subscription" do
-    user = Folio::User.invite!(email: "email@email.email",
-                               first_name: "John",
-                               last_name: "Doe",
-                               subscribed_to_newsletter: true) do |u|
-      u.skip_invitation = true
+  test "newsletter subscriptions / single site" do
+    create_list(:folio_site, 2)
+    subscribable_sites = Folio::NewsletterSubscription.subscribable_sites # Folio::Site.all by default
+    assert_equal 2, subscribable_sites.count
+
+    [true, false].each_with_index do |subscribed_to_newsletter, i|
+      user = Folio::User.invite!(email: "email-#{i}@email.email",
+                                 first_name: "John",
+                                 last_name: "Doe",
+                                 subscribed_to_newsletter:) do |u|
+        u.skip_invitation = true
+      end
+      assert_empty user.newsletter_subscriptions.reload
+
+      assert_difference("Folio::NewsletterSubscription.count",
+                         subscribable_sites.size) do
+        assert_difference("Folio::NewsletterSubscription.active.count",
+                          subscribed_to_newsletter ? subscribable_sites.size : 0) do
+          user.accept_invitation!
+        end
+      end
+
+      assert_equal subscribed_to_newsletter, user.newsletter_subscriptions.active.present?
+
+      if subscribed_to_newsletter
+        subscribable_sites.each do |site|
+          assert_equal 1, Folio::NewsletterSubscription.by_site(site).active.count
+        end
+      else
+        assert_equal 0, Folio::NewsletterSubscription.active.count
+      end
+
+      user.destroy!
+      assert_equal 0, Folio::NewsletterSubscription.count
     end
-    assert_not user.newsletter_subscription
-
-    token = user.instance_variable_get(:@raw_invitation_token)
-    user = Folio::User.accept_invitation!(invitation_token: token, password: "12345678", password_confirmation: "12345678")
-    assert user.newsletter_subscription
-    assert user.newsletter_subscription.active?
-
-    assert_equal 1, Folio::NewsletterSubscription.count
-    user.destroy!
-    assert_equal 0, Folio::NewsletterSubscription.count
   end
 
   test "do not store second address if it is not in use" do

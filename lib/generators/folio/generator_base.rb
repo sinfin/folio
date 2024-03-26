@@ -6,8 +6,20 @@ module Folio::GeneratorBase
       @atom_name || name
     end
 
+    def class_name
+      super.delete_prefix("::")
+    end
+
+    def application_class
+      Rails.application.config.try(:folio_generators_engine_class) || Rails.application.class
+    end
+
     def classname_prefix
-      Rails.application.class.name[0].downcase
+      if respond_to?(:name) && name.start_with?("/")
+        nil
+      else
+        application_class.name[0].downcase
+      end
     end
 
     def plural_dashed_resource_name
@@ -39,16 +51,20 @@ module Folio::GeneratorBase
     end
 
     def application_namespace
-      Rails.application.class.name.deconstantize
+      application_class.name.deconstantize
     end
 
     def application_namespace_spacing
       @application_namespace_spacing ||= application_namespace.to_s.gsub(/\w/, " ")
     end
 
+    def folio_generators_root
+      Rails.application.config.try(:folio_generators_root) || Rails.root
+    end
+
     def add_atom_to_i18n_ymls(values = {})
       I18n.available_locales.each do |locale|
-        path = Rails.root.join("config/locales/atom.#{locale}.yml")
+        path = folio_generators_root.join("config/locales/atom.#{locale}.yml")
         i18n_key = "#{application_namespace_path}/atom/#{atom_name}"
         i18n_value = values[locale] || values[locale.to_s] || values[:en]
 
@@ -100,5 +116,12 @@ module Folio::GeneratorBase
           f.write hash.to_yaml(line_width: -1)
         end
       end
+    end
+
+    def convert_known_class_name_parts_to_letters(str)
+      str.gsub("folio-console-", "f-c-")
+         .gsub("folio-", "f-")
+         .gsub("boutique-", "b-")
+         .gsub("auctify-", "a-")
     end
 end

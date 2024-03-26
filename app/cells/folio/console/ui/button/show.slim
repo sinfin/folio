@@ -1,0 +1,24 @@
+*tag
+  == model[:html_left]
+
+  - if model[:icon]
+    = folio_icon(model[:icon],
+                 height: icon_height,
+                 class: "f-c-ui-button__icon")
+
+  - if model[:loader]
+    span.f-c-ui-button__loader-wrap
+      span.f-c-ui-button__loader[
+        class="folio-loader"
+        class="folio-loader--transparent"
+        class="folio-loader--tiny"
+        class="folio-loader--white"
+      ]
+
+  - if model[:label]
+    span.f-c-ui-button__label = model[:label]
+
+  - if model[:right_icon]
+    = folio_icon(model[:right_icon],
+                 height: 24,
+                 class: "f-c-ui-button__right-icon")

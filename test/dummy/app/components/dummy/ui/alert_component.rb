@@ -1,0 +1,32 @@
+# frozen_string_literal: true
+
+class Dummy::Ui::AlertComponent < ApplicationComponent
+  bem_class_name :flash, :closable, :margin
+
+  def initialize(message: nil, variant: :info, flash: false, margin: true, closable: true, icon: nil, button: nil)
+    @message = message
+    @variant = variant
+    @flash = flash
+    @closable = closable
+    @margin = margin
+    @icon = icon
+    @button = button
+  end
+
+  def render?
+    @message.present? || content?
+  end
+
+  def icon_key
+    return @icon if @icon
+
+    case @variant
+    when :success
+      :check
+    when :warning, :danger
+      :alert_triangle
+    else
+      :info
+    end
+  end
+end

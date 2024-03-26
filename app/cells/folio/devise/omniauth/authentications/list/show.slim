@@ -25,8 +25,7 @@
 
           .f-devise-omniauth-authentications-list__action
             button.f-devise-omniauth-authentications-list__link-btn[
-              class=Folio::Devise::Omniauth::FormsCell::TRIGGER_CLASS_NAME
               type="button"
-              data-provider=key
+              data=button_data(key)
             ]
               = t('.link')

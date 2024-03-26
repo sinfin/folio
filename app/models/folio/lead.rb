@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::Lead < Folio::ApplicationRecord
-  include AASM
+  include Folio::HasAasmStates
   include Folio::BelongsToSite
   include PgSearch::Model
 

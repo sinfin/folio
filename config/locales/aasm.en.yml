@@ -4,6 +4,11 @@ en:
     attributes:
       aasm_state: State
 
+      folio/file:
+        aasm_state/unprocessed: Unprocessed
+        aasm_state/processing: Processing
+        aasm_state/ready: Ready
+
       folio/lead:
         aasm_state/handled: Handled
         aasm_state/pending: Pending

@@ -5,6 +5,7 @@ module Folio::ApplicationControllerBase
   include Folio::SetMetaVariables
   include Folio::HasCurrentSite
   include Folio::Devise::CrossdomainController
+  include Folio::RenderComponentJson
 
   included do
     include Pagy::Backend
@@ -17,7 +18,13 @@ module Folio::ApplicationControllerBase
 
     before_action :set_cookies_for_log
 
+    before_action :add_root_breadcrumb
+
     helper_method :current_site
+
+    add_flash_types :success, :warning, :info
+
+    rescue_from CanCan::AccessDenied, with: :handle_can_can_access_denied
   end
 
   def set_i18n_locale
@@ -42,18 +49,39 @@ module Folio::ApplicationControllerBase
     end
   end
 
+  def can_now?(action, object = nil)
+    object ||= current_site
+    (current_user || Folio::User.new).can_now_by_ability?(current_ability, action, object)
+  end
+
+  def true_user
+    if session[:true_user_id].present?
+      Folio::User.find_by(id: session[:true_user_id])
+    else
+      current_user
+    end
+  end
+
+
   private
+    def authenticate_account! # backward compatibility method, do not use
+      authenticate_user!
+      can_now?(:access_console) || raise(CanCan::AccessDenied)
+    end
+
     def nested_page_path(page)
       return nil unless main_app.respond_to?(:page_path)
       main_app.page_path(path: page.ancestry_url)
     end
 
-    def force_correct_path(correct_path_or_url)
+    def force_correct_path(correct_path_or_url, ignore_get_params: true)
       # If an old id or a numeric id was used to find the record, then
       # the request path will not match the post_path, and we should do
       # a 301 redirect that uses the current friendly id.
-      if request.fullpath != correct_path_or_url &&
-         request.url != correct_path_or_url
+      if ignore_get_params && request.path != correct_path_or_url && request.url.split("?")[0] != correct_path_or_url.split("?")[0]
+        redirect_to(correct_path_or_url, status: :moved_permanently)
+        true
+      elsif !ignore_get_params && request.fullpath != correct_path_or_url && request.url != correct_path_or_url
         redirect_to(correct_path_or_url, status: :moved_permanently)
         true
       else
@@ -94,5 +122,28 @@ module Folio::ApplicationControllerBase
 
     def authenticate_inviter!
       # allow anonymous invites
+    end
+
+    def current_ability
+      @current_ability ||= Folio::Ability.new(current_user, current_site)
+    end
+
+    def add_root_breadcrumb
+      add_breadcrumb_on_rails(t("folio.root_breadcrumb"), "/")
+    end
+
+    def handle_can_can_access_denied(e)
+      if Rails.application.config.consider_all_requests_local
+        raise e
+      end
+
+      Raven.capture_exception(e) if defined?(Raven)
+
+      if request.path.starts_with?("/console") && !can_now?(:access_console)
+        redirect_to "/403"
+      else
+        @error_code = 403
+        render "folio/errors/show", status: @error_code
+      end
     end
 end

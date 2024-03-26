@@ -4,14 +4,14 @@ module Folio::Console::DefaultActions
   extend ActiveSupport::Concern
 
   def index
+    records = folio_console_records.accessible_by(current_ability, self.class.cancancan_accessible_by_action)
+
     unless @sorted_by_param
-      if folio_console_records.respond_to?(:ordered)
-        records = folio_console_records.ordered
+      if records.respond_to?(:ordered)
+        records = records.ordered
       else
-        records = folio_console_records.order(id: :desc)
+        records = records.order(id: :desc)
       end
-    else
-      records = folio_console_records
     end
 
     if self.folio_console_controller_for_handle_csv
@@ -21,6 +21,7 @@ module Folio::Console::DefaultActions
           instance_variable_set("@pagy", pagy)
           instance_variable_set(folio_console_record_variable_name(plural: true),
                                 records)
+          render :index
         end
         format.csv do
           render_csv(records)
@@ -31,6 +32,7 @@ module Folio::Console::DefaultActions
       instance_variable_set("@pagy", pagy)
       instance_variable_set(folio_console_record_variable_name(plural: true),
                             records)
+      render :index
     end
   end
 
@@ -45,7 +47,7 @@ module Folio::Console::DefaultActions
   end
 
   def new
-    if !Rails.application.config.folio_site_is_a_singleton && @klass.try(:has_belongs_to_site?)
+    if @klass.try(:has_belongs_to_site?)
       folio_console_record.site = current_site
     end
   end
@@ -75,7 +77,7 @@ module Folio::Console::DefaultActions
       end
       format.json do
         if folio_console_record.valid?
-          render json: response_json_for_valid_update, status: 200
+          response_with_json_for_valid_update
         else
           errors = [
             {
@@ -241,7 +243,7 @@ module Folio::Console::DefaultActions
     end
 
     def folio_console_params_with_site
-      if !Rails.application.config.folio_site_is_a_singleton && @klass.try(:has_belongs_to_site?)
+      if @klass.try(:add_site_to_console_params?)
         folio_console_params.merge(site: current_site)
       else
         folio_console_params
@@ -250,13 +252,7 @@ module Folio::Console::DefaultActions
 
     def respond_with_location(prevalidate: nil)
       if folio_console_record.destroyed?
-        if folio_console_controller_for_through
-          through_klass = folio_console_controller_for_through.constantize
-          through_record = instance_variable_get("@#{through_klass.model_name.element}")
-          index_url = console_show_or_edit_path(through_record)
-        else
-          index_url = url_for([:console, @klass])
-        end
+        index_url = through_aware_console_url_for(@klass)
 
         if !request.referrer || request.referrer.include?(index_url)
           index_url
@@ -265,31 +261,17 @@ module Folio::Console::DefaultActions
         end
       else
         if folio_console_record.persisted?
-          if folio_console_controller_for_through
-            through_klass = folio_console_controller_for_through.constantize
-            through_record = instance_variable_get("@#{through_klass.model_name.element}")
-          else
-            through_record = nil
-          end
-
           begin
             if action_name == "create"
               console_show_or_edit_path(folio_console_record,
-                                        through: through_record,
                                         other_params: { prevalidate: prevalidate ? 1 : nil })
             else
-              if through_record
-                url_for([:edit, :console, through_record, folio_console_record, prevalidate: prevalidate ? 1 : nil])
-              else
-                url_for([:edit, :console, folio_console_record, prevalidate: prevalidate ? 1 : nil])
-              end
+              through_aware_console_url_for(folio_console_record,
+                                            action: :edit,
+                                            hash: prevalidate ? { prevalidate: 1 } : nil)
             end
           rescue ActionController::UrlGenerationError, NoMethodError
-            if try(:through_record)
-              console_show_or_edit_path(through_record)
-            else
-              url_for([:console, @klass])
-            end
+            url_for([:console, @klass])
           end
         end
       end
@@ -301,7 +283,20 @@ module Folio::Console::DefaultActions
       messages.join(" ")
     end
 
-    def response_json_for_valid_update
-      {}
+    def response_with_json_for_valid_update
+      if params[:_trigger] == "f-c-ui-boolean-toggle"
+        render json: {
+          data: {
+            f_c_catalogue_published_dates: cell("folio/console/catalogue/published_dates", folio_console_record).show,
+          },
+          meta: {
+            flash: {
+              success: t("flash.actions.update.success", resource_name: @klass.model_name.human)
+            },
+          }
+        }, status: 200
+      else
+        render json: {}, status: 200
+      end
     end
 end

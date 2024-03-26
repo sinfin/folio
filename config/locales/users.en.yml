@@ -1,0 +1,7 @@
+---
+en:
+  folio:
+    users:
+      impersonating_bar_component:
+        label: You (%{true_user}), are signed in as a different user (%{impersonated_user}).
+        stop_impersonation: Stop impersonation

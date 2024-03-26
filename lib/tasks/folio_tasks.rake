@@ -3,14 +3,18 @@
 namespace :folio do
   task seed_test_account: :environment do
     if Rails.env.development?
-      if Folio::Account.find_by(email: "test@test.test")
+      if user = Folio::User.find_by(email: "test@test.test")
+        user.update!(confirmed_at: Time.current) unless user.confirmed_at?
+
         puts "Account test@test.test already exists."
       else
-        Folio::Account.create!(email: "test@test.test",
-                               password: "test@test.test",
-                               roles: %w[superuser],
-                               first_name: "Test",
-                               last_name: "Dummy")
+        Folio::User.create!(email: "test@test.test",
+                            password: "test@test.test",
+                            superadmin: true,
+                            first_name: "Test",
+                            last_name: "Dummy",
+                            confirmed_at: Time.current)
+
         puts "Created test@test.test account."
       end
     end
@@ -24,22 +28,5 @@ namespace :folio do
 
     FileUtils.mkdir_p to_folder
     FileUtils.cp_r(from_folder, to_folder)
-  end
-
-  namespace :upgrade do
-    task atom_document_placements: :environment do
-      ids = []
-
-      Folio::Atom.types.each do |type|
-        if type::STRUCTURE[:document] && !type::STRUCTURE[:documents]
-          type.includes(:document_placements).each do |atom|
-            ids << atom.document_placements.pluck(:id)
-          end
-        end
-      end
-
-      Folio::FilePlacement::Document.where(id: ids)
-                                    .update_all(type: "Folio::FilePlacement::SingleDocument")
-    end
   end
 end

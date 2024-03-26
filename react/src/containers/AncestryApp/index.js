@@ -15,7 +15,12 @@ import AncestryItem from './AncestryItem'
 
 function AncestryApp ({ ancestry, onChange }) {
   const onChangeWithDirty = (treeData) => {
-    window.jQuery('.f-c-react-ancestry').trigger('change.folioDirtyForms')
+    const wrap = document.querySelector('.f-c-react-ancestry')
+
+    if (wrap) {
+      wrap.dispatchEvent(new window.Event('change', { bubbles: true }))
+    }
+
     return onChange(treeData)
   }
 

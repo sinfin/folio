@@ -1,24 +1,17 @@
 .form-group class=class_name
+  - if handle_position?
+    = f.hidden_field :position,
+                     class: 'f-c-nested-model-controls__position-input'
+
+  - if handle_destroy? && f.object.id && !options[:single]
+    = f.hidden_field :_destroy,
+                     value: 0,
+                     class: 'f-c-nested-model-controls__destroy-input'
+
   - if options[:label]
-    label.control-label.d-block
+    label.form-label.d-block
       = options[:label] == true ? '&nbsp;' : options[:label]
 
-  - if handle_position? || (handle_destroy? && options[:vertical])
-    div class=btn_group_class_name
-      - if handle_position?
-        - %w(up down).each do |direction|
-          button.btn.btn-outline-secondary[
-            class="f-c-nested-model-controls__position-button"
-            class="fa fa-arrow-#{direction}"
-            data-direction=direction
-            type="button"
-          ]
-
-        = f.hidden_field :position, \
-                         class: 'f-c-nested-model-controls__position-input'
-
-      - if handle_destroy? && options[:vertical]
-        = render(:button_destroy)
-
-  - if handle_destroy? && !options[:vertical]
-    = render(:button_destroy)
+  == cell('folio/console/ui/buttons',
+          buttons_model,
+          vertical: options[:vertical])

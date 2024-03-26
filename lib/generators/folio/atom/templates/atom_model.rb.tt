@@ -6,13 +6,12 @@ class <%= application_namespace %>::Atom::<%= class_name %> < Folio::Atom::Base
   STRUCTURE = {}
 
   ASSOCIATIONS = {}
+  <%- if options[:cell] -%>
 
   def self.cell_name
     "<%= atom_cell_name %>"
   end
-
-  def self.console_icon
-  end
+  <%- end -%>
 end
 
 # == Schema Information

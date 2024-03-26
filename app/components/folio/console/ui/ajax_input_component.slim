@@ -1,0 +1,54 @@
+.f-c-ui-ajax-input[
+  class=(@width ? "f-c-ui-ajax-input--#{@width}" : nil)
+  class=(@disabled ? "f-c-ui-ajax-input--disabled" : nil)
+  title=(@disabled.is_a?(String) ? @disabled : nil)
+  data=data
+]
+  - if @label
+    .f-c-ui-ajax-input__label.small
+      = "#{@label}:"
+
+  .f-c-ui-ajax-input__inner
+    *input_tag
+      - if @textarea
+        = @value
+
+    .f-c-ui-ajax-input__right
+      span.text-success[
+        class="f-c-ui-ajax-input__button"
+        class="f-c-ui-ajax-input__button--save"
+        data=stimulus_action(click: :save)
+      ]
+        = folio_icon(:checkbox_marked, height: 24)
+
+      span.text-danger[
+        class="f-c-ui-ajax-input__button"
+        class="f-c-ui-ajax-input__button--cancel"
+        data=stimulus_action(click: :cancel)
+      ]
+        = folio_icon(:close, height: 24)
+
+      span.text-success[
+        class="f-c-ui-ajax-input__icon"
+        class="f-c-ui-ajax-input__icon--success"
+      ]
+        = folio_icon(:check, height: 24)
+
+      span.text-danger[
+        class="f-c-ui-ajax-input__icon"
+        class="f-c-ui-ajax-input__icon--failure"
+      ]
+        = folio_icon(:alert, height: 24)
+
+      .f-c-ui-ajax-input__loader-wrap
+        span.folio-loader.folio-loader--small
+
+    .f-c-ui-ajax-input__failure-tooltip data=stimulus_target("tooltip")
+
+  - if @affix
+    .f-c-ui-ajax-input__affix
+      = @affix
+
+  - if @small_affix
+    .f-c-ui-ajax-input__affix.small
+      = @small_affix

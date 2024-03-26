@@ -8,30 +8,34 @@ html[
     = render partial: 'layouts/folio/favicon'
 
     - if !Rails.env.test? || ENV['TEST_WITH_ASSETS'].present?
-      = preload_link_tag font_path('IBMPlexSans-Bold.woff2')
-      = preload_link_tag font_path('OpenSans-Regular.woff2')
+      = render(Dummy::Ui::IconComponent.new(head_html: true))
+
+      = preload_link_tag '/fonts/Figtree-Regular.woff2'
+      = preload_link_tag '/fonts/Figtree-Medium.woff2'
+      = preload_link_tag '/fonts/Figtree-Bold.woff2'
+      = preload_link_tag '/fonts/SpaceGrotesk-Bold.woff2'
 
   body
-    == cell('dummy/ui/header')
+    = render(Folio::Users::ImpersonatingBarComponent.new)
 
-    == cell('dummy/ui/header_message', current_site)
+    = render(Dummy::Ui::HeaderComponent.new)
 
-    == cell('dummy/ui/flash', flash)
+    = render(Dummy::Ui::HeaderMessageComponent.new)
+
+    - unless @hide_flash_messages
+      = render(Dummy::Ui::FlashComponent.new(flash:))
 
     = yield :publishable_hint
 
     - unless @hide_breadcrumbs
-      == cell('dummy/ui/breadcrumbs',
-              @breadcrumbs_on_rails,
-              share: @breadcrumbs_share_bar)
+      == render(Dummy::Ui::BreadcrumbsComponent.new(breadcrumbs: @breadcrumbs_on_rails,
+                                                    share: @breadcrumbs_share_bar))
 
     .d-layout-main
       = yield
 
-    == cell('dummy/ui/footer')
+    = render(Dummy::Ui::FooterComponent.new)
 
-    == cell('folio/sensitive_content_modal')
-
-    - if Rails.application.config.folio_users
-      == cell('folio/devise/modal')
-      == cell('folio/devise/omniauth/forms')
+    = yield :modals
+    == cell('folio/devise/modal')
+    == cell('folio/devise/omniauth/forms')

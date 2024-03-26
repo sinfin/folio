@@ -1,0 +1,25 @@
+// fixes inherit/css variable color names
+
+@function to-rgb($value)
+  @if type-of($value) != color
+    @return $value
+  @else
+    @return red($value), green($value), blue($value)
+
+@function tint-color($color, $weight)
+  @if type-of($color) != color
+    @return $color
+  @else
+    @return mix(white, $color, $weight)
+
+@function shade-color($color, $weight)
+  @if type-of($color) != color
+    @return $color
+  @else
+    @return mix(black, $color, $weight)
+
+@function shift-color($color, $weight)
+  @if type-of($color) != color
+    @return $color
+  @else
+    @return if($weight > 0, shade-color($color, $weight), tint-color($color, -$weight))

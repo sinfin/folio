@@ -1,0 +1,15 @@
+.<%= classname_prefix %>-ui-tabs
+  .<%= classname_prefix %>-ui-tabs__inner
+    ul.<%= classname_prefix %>-ui-tabs__ul
+      - @tabs.each do |tab|
+        li.<%= classname_prefix %>-ui-tabs__li
+          a.<%= classname_prefix %>-ui-tabs__a[
+            href=tab[:href]
+            class=(tab[:active] ? "<%= classname_prefix %>-ui-tabs__a--active" : nil)
+            class=(tab[:disabled] ? "<%= classname_prefix %>-ui-tabs__a--disabled" : nil)
+          ]
+            = tab[:label]
+
+            - if tab[:count]
+              span.<%= classname_prefix %>-ui-tabs__count
+                = tab[:count]

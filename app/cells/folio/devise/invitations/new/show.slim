@@ -1,6 +1,8 @@
-.f-devise-invitations-new
+.f-devise-invitations-new[
+  data=(options[:modal] ? stimulus_controller('f-devise-modal-form') : nil)
+]
   = form do |f|
-    = title
+    = title model[:title]
 
     - if invitations_perex
       p.f-devise__perex = invitations_perex
@@ -18,9 +20,11 @@
     = render(:_top)
 
     .f-devise__narrow
-      == email_input(f, autofocus: false, label: t('.email_label'))
+      == email_input(f, autofocus: true, label: t('.email_label'))
 
     = render(:_bottom)
+
+    .f-devise__errors
 
     = submit_button(f, t('.sign_up'))
 
@@ -29,11 +33,16 @@
     - unless omniauth_above?
       == cell('folio/devise/omniauth', 'registrations')
 
+    - if model[:modal_non_get_request]
+      input name="modal_non_get_request" value="1" type="hidden"
+
     span.folio-loader.f-devise__loader
 
   .f-devise__bottom-action-wrap
     = t("folio.devise.sign_in_link")
+
     a.f-devise-modal-aware-link<>[
       href=controller.new_session_path(resource_name)
+      data=(options[:modal] ? stimulus_action('signInClick') : nil)
     ]
       = t("folio.devise.sign_in_link_inner")

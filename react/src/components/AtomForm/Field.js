@@ -3,8 +3,6 @@ import { FormGroup, FormText, Label } from 'reactstrap'
 
 import formGroupClassName from './utils/formGroupClassName'
 import AtomInput from './AtomInput'
-import CharacterCounter from './CharacterCounter'
-import EmptyFormText from './EmptyFormText'
 import SplittableButton from './SplittableButton'
 
 export default function Field ({ atom, field, index, onChange, onValueChange, startSplittingAtom }) {
@@ -18,6 +16,7 @@ export default function Field ({ atom, field, index, onChange, onValueChange, st
       check={isCheck}
     >
       <Label
+        className='form-label'
         check={isCheck}
       >
         {isCheck && (
@@ -42,6 +41,7 @@ export default function Field ({ atom, field, index, onChange, onValueChange, st
           index={index}
           onChange={onChange}
           onValueChange={onValueChange}
+          characterCounter={meta.structure[field].character_counter}
         />
       )}
 
@@ -58,10 +58,6 @@ export default function Field ({ atom, field, index, onChange, onValueChange, st
       {meta.structure[field].splittable && (
         <SplittableButton startSplittingAtom={() => { startSplittingAtom(atom, field) }} />
       )}
-
-      <EmptyFormText hasErrors={atom.errors[field]} structure={meta.structure[field]} />
-
-      {meta.structure[field].character_counter && <CharacterCounter value={atom.record.data[field]} />}
     </FormGroup>
   )
 }

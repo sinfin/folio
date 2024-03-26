@@ -1,0 +1,20 @@
+.<%= classname_prefix %>-searches-show data=data
+  .container-fluid
+    = form do |f|
+      h1.<%= classname_prefix %>-searches-show__title
+        a.<%= classname_prefix %>-unlink href=controller.main_app.<%= application_namespace_path %>_search_path
+          = "#{t('.title')}: "
+
+      .<%= classname_prefix %>-searches-show__input-and-submit
+        = query_input(f)
+
+        button.<%= classname_prefix %>-searches-show__submit type="submit"
+          = <%= application_namespace_path %>_ui_icon(:search,
+                          class_name: '<%= classname_prefix %>-searches-show__submit-ico',
+                          height: 32)
+
+    .<%= classname_prefix %>-searches-show__inner
+      .<%= classname_prefix %>-searches-show__contents-wrap data=stimulus_target('contentsWrap')
+        = render(<%= application_namespace %>::Searches::Show::ContentsComponent.new(search: @search))
+
+      span.folio-loader.folio-loader--transparent.<%= classname_prefix %>-searches-show__loader

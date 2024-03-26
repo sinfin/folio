@@ -1,0 +1,35 @@
+.<%= classname_prefix %>-ui-chips
+  &__ul
+    display: flex
+    align-items: stretch
+    gap: $grid-gutter-base
+    flex-wrap: wrap
+
+  &__li
+    flex: 0 0 auto
+
+  &__a
+    color: $shade-black-contrast
+    background: $shade-200
+    display: block
+    text-decoration: none
+    transition: $transition-base
+    padding: px-to-rem(7px) $grid-gutter-half
+    border-radius: $border-radius-lg
+
+    &:hover
+      background: $shade-300
+
+    &--active
+      color: $shade-light-contrast
+
+      &, &:hover
+        background: $shade-black-contrast
+
+  &--small &__a
+    border-radius: $border-radius
+    padding: px-to-rem(3px) $grid-gutter-base
+
+  &--large &__a
+    padding: 1.5 * $grid-gutter-base 2 * $grid-gutter-base
+    border-radius: $border-radius-lg

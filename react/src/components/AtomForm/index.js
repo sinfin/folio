@@ -1,9 +1,12 @@
 import React from 'react'
-import { Button, Input } from 'reactstrap'
+import { Input } from 'reactstrap'
 import { isEqual } from 'lodash'
 import ReactModal from 'react-modal'
 
 import NestedModelControls from 'components/NestedModelControls'
+import FolioConsoleUiButtons from 'components/FolioConsoleUiButtons'
+import FolioConsoleUiButton from 'components/FolioConsoleUiButton'
+import FolioUiIcon from 'components/FolioUiIcon'
 
 import splitAtomValueToParts from './utils/splitAtomValueToParts'
 
@@ -64,14 +67,12 @@ class AtomForm extends React.PureComponent {
   }
 
   componentDidMount () {
+    window.jQuery('.f-c-simple-form-with-atoms').on('submit', this.handleGlobalFormSubmission)
+    window.jQuery(document).on('keydown.fcAtomForm', this.onKeydown)
+
     if (this.autofocusRef.current) {
       setTimeout(() => { this.autofocusRef.current.focus() }, 0)
     }
-  }
-
-  componentWillMount () {
-    window.jQuery('.f-c-simple-form-with-atoms').on('submit', this.handleGlobalFormSubmission)
-    window.jQuery(document).on('keydown.fcAtomForm', this.onKeydown)
   }
 
   componentWillUnmount () {
@@ -145,7 +146,7 @@ class AtomForm extends React.PureComponent {
   renderHint (text, molecule) {
     return (
       <AtomFormHint molecule={molecule}>
-        <span className='mi'>info</span>
+        <FolioUiIcon name='info' />
         {text.split(/\n/).map((part, i) => <p key={i} dangerouslySetInnerHTML={{ __html: part }} />)}
       </AtomFormHint>
     )
@@ -186,38 +187,48 @@ class AtomForm extends React.PureComponent {
       })
     }
 
+    const usedTypes = this.props.form.atoms.map((atom) => atom.record.type)
+    const typeForValue = this.props.atomTypes.find(({ key }) => usedTypes.indexOf(key) !== -1)
+    const typeValue = typeForValue ? typeForValue.key : undefined
+
+    if (addButtons.length) {
+      addButtons.sort((a, b) => a.title.localeCompare(b.title))
+    }
+
     return (
       <AtomFormWrap>
         <div className='f-c-r-atoms-settings-header'>
           <div className='f-c-r-atoms-settings-header__title'>
-            <Input
-              type='select'
-              value={this.props.form.atoms[0].record.type}
-              name={`${prefix}[type]`}
-              onChange={this.onTypeChange}
-              className='folio-console-atom-type-select'
-            >
-              {this.props.atomTypes.map(({ key, title }) => (
-                <option key={key} value={key}>{title}</option>
-              ))}
-            </Input>
+            {molecule ? null : (
+              <Input
+                type='select'
+                value={typeValue}
+                name={`${prefix}[type]`}
+                onChange={this.onTypeChange}
+                className='folio-console-atom-type-select select'
+              >
+                {this.props.atomTypes.map(({ key, title }) => (
+                  <option key={key} value={key}>{title}</option>
+                ))}
+              </Input>
+            )}
           </div>
 
           <div className='f-c-r-atoms-settings-header__controls'>
-            <button
+            <FolioConsoleUiButton
               type='button'
-              className='btn btn-primary f-c-r-atoms-settings-header__button'
+              variant='primary'
+              className='f-c-r-atoms-settings-header__button'
               onClick={this.saveFormAtoms}
-            >
-              {window.FolioConsole.translations.done}
-            </button>
+              label={window.FolioConsole.translations.done}
+            />
 
             <button
               type='button'
-              className='f-c-r-atoms-settings-header__close mi'
+              className='f-c-r-atoms-settings-header__close'
               onClick={this.props.closeFormAtom}
             >
-              close
+              <FolioUiIcon name='close' />
             </button>
           </div>
         </div>
@@ -265,7 +276,25 @@ class AtomForm extends React.PureComponent {
               } else {
                 zIndex -= 1
 
-                if (input === 'ASSOCIATIONS') {
+                if (input === 'aside_attachments') {
+                  return (
+                    <AtomFormCardColumns data-debug='columns' style={makeStyle()}>
+                      <AtomFormCardColumn data-debug='column' dontGrow>
+                        {fillOutput('ATTACHMENTS')}
+                      </AtomFormCardColumn>
+                      <AtomFormCardColumn data-debug='column'>
+                        <AtomFormCardRows data-debug='rows' style={makeStyle()}>
+                          <AtomFormCardRow data-debug='row' style={makeStyle()}>
+                            {fillOutput('ASSOCIATIONS')}
+                          </AtomFormCardRow>
+                          <AtomFormCardRow data-debug='row' style={makeStyle()}>
+                            {fillOutput('STRUCTURE')}
+                          </AtomFormCardRow>
+                        </AtomFormCardRows>
+                      </AtomFormCardColumn>
+                    </AtomFormCardColumns>
+                  )
+                } else if (input === 'ASSOCIATIONS') {
                   return (
                     <Associations
                       atom={atom}
@@ -298,8 +327,8 @@ class AtomForm extends React.PureComponent {
                       attachments={atom.record.meta.attachments}
                       atom={atom.record}
                       index={index}
-                      remove={this.props.removeFormAtomAttachment}
-                      openFileModal={this.props.openFileModal}
+                      updateFormAtomAttachment={this.props.updateFormAtomAttachment}
+                      removeFormAtomAttachment={this.props.removeFormAtomAttachment}
                       style={makeStyle()}
                     />
                   )
@@ -325,14 +354,17 @@ class AtomForm extends React.PureComponent {
             return (
               <AtomFormCardOuter
                 key={atom.record.id || atom.record.lodashId}
-                className={asMolecule ? 'card-outer' : undefined}
+                asMolecule={asMolecule}
                 focused={index === this.state.focusedIndex || atom.record.meta.molecule_singleton}
               >
-                <div className={asMolecule ? 'card' : undefined}>
+                <div className={asMolecule ? 'card' : undefined} style={asMolecule ? { minHeight: '124px' } : null}>
                   <div className={asMolecule ? 'card-body mb-n3' : undefined}>
+                    {asMolecule && typeForValue ? (
+                      <p className='fw-bold'>{typeForValue.title}</p>
+                    ) : null}
                     {atom.messages.length > 0 && (
-                      <div className='my-3 alert alert-danger'>
-                        <div className='font-weight-bold'>{window.FolioConsole.translations.errorNotification}</div>
+                      <div className={`${asMolecule ? 'mt-0 mb-g' : 'my-g'} alert alert-danger`}>
+                        <div className='fw-bold'>{window.FolioConsole.translations.errorNotification}</div>
 
                         <ul>
                           {atom.messages.map((message) => (
@@ -368,12 +400,17 @@ class AtomForm extends React.PureComponent {
             )
           })}
 
-          {addButtons.map((type) => (
-            <Button color='success' type='button' className='mr-2' onClick={() => { this.props.addAtom(type.type) }} key={type.type}>
-              <i className='fa fa-plus' />
-              {type.title}
-            </Button>
-          ))}
+          <FolioConsoleUiButtons>
+            {addButtons.map((type) => (
+              <FolioConsoleUiButton
+                variant='success'
+                onClick={() => { this.props.addAtom(type.type) }}
+                key={type.type}
+                label={type.title}
+                icon='plus'
+              />
+            ))}
+          </FolioConsoleUiButtons>
         </div>
 
         <ReactModal

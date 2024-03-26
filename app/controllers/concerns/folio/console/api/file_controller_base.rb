@@ -66,36 +66,6 @@ module Folio::Console::Api::FileControllerBase
     render json: { error: t(".failure", msg: e.message), status: 400 }
   end
 
-  def change_file
-    old_thumbnail_versions = folio_console_record.thumbnail_sizes.dup
-
-    if folio_console_record.update(file_params.to_h.merge(thumbnail_sizes: {}))
-      if folio_console_record.is_a?(Folio::Image)
-        Folio::DeleteThumbnailsJob.perform_later(old_thumbnail_versions)
-
-        old_thumbnail_versions.keys.each do |version|
-          folio_console_record.thumb(version)
-        end
-      end
-
-      meta = {
-        flash: {
-          success: t("flash.actions.update.notice", resource_name: @klass.model_name.human)
-        }
-      }
-    else
-      meta = {
-        flash: {
-          alert: t("flash.actions.update.alert", resource_name: @klass.model_name.human)
-        }
-      }
-    end
-
-    render_record(folio_console_record,
-                  Folio::Console::FileSerializer,
-                  meta:)
-  end
-
   def mass_download
     ids = params.require(:ids).split(",")
     files = @klass.where(id: ids)
@@ -124,17 +94,31 @@ module Folio::Console::Api::FileControllerBase
       params.permit(:by_file_name, :by_placement, :by_tags, :by_used)
     end
 
+    def file_params_whitelist
+      ary = [
+        :tag_list,
+        :type,
+        :file,
+        :author,
+        :description,
+        :sensitive_content,
+        :default_gravity,
+        :alt,
+      ]
+
+      if @klass.new.respond_to?("preview_duration=")
+        ary << :preview_duration
+      end
+
+      ary << { tags: [] }
+
+      ary
+    end
+
     def file_params
       p = params.require(:file)
                 .require(:attributes)
-                .permit(:tag_list,
-                        :type,
-                        :file,
-                        :author,
-                        :description,
-                        :sensitive_content,
-                        :default_gravity,
-                        tags: [])
+                .permit(*file_params_whitelist)
 
       if p[:tags].present? && p[:tag_list].blank?
         p[:tag_list] = p.delete(:tags).join(",")
@@ -145,12 +129,20 @@ module Folio::Console::Api::FileControllerBase
 
     def index_json
       pagination, records = pagy(folio_console_records.ordered, items: 60)
-      meta = meta_from_pagy(pagination).merge(react_type: @klass.react_type)
+      meta = meta_from_pagy(pagination).merge(human_type: @klass.human_type)
 
       json_from_records(records, Folio::Console::FileSerializer, meta:)
     end
 
     def index_cache_key
-      "folio/console/api/file/#{@klass.model_name.plural}/index/#{@klass.count}/#{@klass.maximum(:updated_at)}"
+      "folio/console/api/site/#{current_site.id}/file/#{@klass.model_name.plural}/index/#{@klass.count}/#{@klass.maximum(:updated_at)}"
+    end
+
+    def allowed_record_sites
+      if Rails.application.config.folio_shared_files_between_sites
+        [Folio.main_site, current_site]
+      else
+        [current_site]
+      end
     end
 end

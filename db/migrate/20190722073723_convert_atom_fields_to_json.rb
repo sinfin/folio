@@ -7,10 +7,10 @@ class ConvertAtomFieldsToJson < ActiveRecord::Migration[5.2]
 
     Folio::Atom::Base.find_each do |atom|
       data = {
-        title: atom.title,
-        perex: atom.perex,
-        content: atom.content,
-      }
+        title: atom.title.presence,
+        perex: atom.perex.presence,
+        content: atom.content.presence,
+      }.compact
 
       associations = {}
       if atom.model_type && atom.model_id

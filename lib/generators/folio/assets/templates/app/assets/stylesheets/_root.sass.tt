@@ -1,0 +1,90 @@
+= light-mode
+  --<%= application_namespace_path %>-accent-200: #{$blue-300}
+  --<%= application_namespace_path %>-accent-300: #{$mint-400}
+  --<%= application_namespace_path %>-brand-100: #{$blue-500}
+  --<%= application_namespace_path %>-brand-200: #{$purple-300}
+  --<%= application_namespace_path %>-brand-300: #{$cloud-900}
+  --<%= application_namespace_path %>-brand-400: #{$cloud-100}
+  --<%= application_namespace_path %>-color-over-brand-100: #{$white}
+  --<%= application_namespace_path %>-color-over-brand-200: #{$white}
+  --<%= application_namespace_path %>-link-default: #{$blue-400}
+  --<%= application_namespace_path %>-shade-100: #{$cloud-100}
+  --<%= application_namespace_path %>-shade-200: #{$cloud-200}
+  --<%= application_namespace_path %>-shade-300: #{$cloud-300}
+  --<%= application_namespace_path %>-shade-400: #{$cloud-400}
+  --<%= application_namespace_path %>-shade-500: #{$cloud-500}
+  --<%= application_namespace_path %>-shade-600: #{$cloud-600}
+  --<%= application_namespace_path %>-shade-700: #{$cloud-700}
+  --<%= application_namespace_path %>-shade-800: #{$cloud-800}
+  --<%= application_namespace_path %>-shade-black-contrast: #{$primary-black}
+  --<%= application_namespace_path %>-shade-light-contrast: #{$primary-white}
+  --<%= application_namespace_path %>-status-caution: #{$orange-400}
+  --<%= application_namespace_path %>-status-disabled-100: #{$cloud-300}
+  --<%= application_namespace_path %>-status-error: #{$red-400}
+  --<%= application_namespace_path %>-status-neutral: #{$blue-500}
+  --<%= application_namespace_path %>-status-success: #{$emerald-500}
+  --<%= application_namespace_path %>-transparent-100: #0000000d
+  --<%= application_namespace_path %>-transparent-200: #0000001a
+  --<%= application_namespace_path %>-transparent-300: #00000026
+  --<%= application_namespace_path %>-transparent-400: #00000033
+  --<%= application_namespace_path %>-transparent-500: #00000040
+  --<%= application_namespace_path %>-transparent-600: #0000004d
+  --<%= application_namespace_path %>-box-shadow-overlay: 2px 2px 40px 0px rgba(0, 0, 0, 0.20), 0px 1px 4px 0px rgba(0, 0, 0, 0.10)
+  --#{$prefix}body-color: #{$primary-black}
+  --#{$prefix}body-color-rgb: #{to-rgb($primary-black)}
+  --#{$prefix}body-bg: #{$primary-white}
+  --#{$prefix}body-bg-rgb: #{to-rgb($primary-white)}
+  color-scheme: light
+  background: var(--#{$prefix}body-bg)
+  color: var(--#{$prefix}body-color)
+
+= dark-mode
+  --<%= application_namespace_path %>-accent-200: #{$blue-300}
+  --<%= application_namespace_path %>-accent-300: #{$mint-500}
+  --<%= application_namespace_path %>-brand-100: #{$blue-500}
+  --<%= application_namespace_path %>-brand-200: #{$purple-300}
+  --<%= application_namespace_path %>-brand-300: #{$cloud-900}
+  --<%= application_namespace_path %>-brand-400: #{$cloud-900}
+  --<%= application_namespace_path %>-color-over-brand-100: #{$white}
+  --<%= application_namespace_path %>-color-over-brand-200: #{$white}
+  --<%= application_namespace_path %>-link-default: #{$blue-300}
+  --<%= application_namespace_path %>-shade-100: #{$cloud-800}
+  --<%= application_namespace_path %>-shade-200: #{$cloud-700}
+  --<%= application_namespace_path %>-shade-300: #{$cloud-600}
+  --<%= application_namespace_path %>-shade-400: #{$cloud-500}
+  --<%= application_namespace_path %>-shade-500: #{$cloud-400}
+  --<%= application_namespace_path %>-shade-600: #{$cloud-300}
+  --<%= application_namespace_path %>-shade-700: #{$cloud-200}
+  --<%= application_namespace_path %>-shade-800: #{$cloud-100}
+  --<%= application_namespace_path %>-shade-black-contrast: #{$primary-white}
+  --<%= application_namespace_path %>-shade-light-contrast: #{$cloud-900}
+  --<%= application_namespace_path %>-status-caution: #{$orange-400}
+  --<%= application_namespace_path %>-status-disabled-100: #{$cloud-500}
+  --<%= application_namespace_path %>-status-error: #{$red-300}
+  --<%= application_namespace_path %>-status-neutral: #{$blue-300}
+  --<%= application_namespace_path %>-status-success: #{$emerald-400}
+  --<%= application_namespace_path %>-transparent-100: #ffffff0d
+  --<%= application_namespace_path %>-transparent-200: #ffffff1a
+  --<%= application_namespace_path %>-transparent-300: #ffffff26
+  --<%= application_namespace_path %>-transparent-400: #ffffff33
+  --<%= application_namespace_path %>-transparent-500: #ffffff40
+  --<%= application_namespace_path %>-transparent-600: #ffffff4d
+  --<%= application_namespace_path %>-box-shadow-overlay: 2px 2px 40px 0px rgba(255, 255, 255, 0.25), 0px 1px 2px 0px rgba(255, 255, 255, 0.20)
+  --#{$prefix}body-color: #{$primary-white}
+  --#{$prefix}body-color-rgb: #{to-rgb($primary-white)}
+  --#{$prefix}body-bg: #{$cloud-900}
+  --#{$prefix}body-bg-rgb: #{to-rgb($cloud-900)}
+  color-scheme: dark
+  background: var(--#{$prefix}body-bg)
+  color: var(--#{$prefix}body-color)
+
+#{":root"},
+[data-bs-theme="light"]
+  +light-mode
+
+[data-bs-theme="dark"]
+  +dark-mode
+
+@media (prefers-color-scheme: dark)
+  #{":root"}
+    +dark-mode

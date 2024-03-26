@@ -30,6 +30,17 @@ Dragonfly.app.configure do
     end.chomp
   end
 
+  processor :convert_grayscale_to_srgb do |content, *args|
+    image = Vips::Image.new_from_file(content.file.path)
+
+    if image.interpretation == :"b-w"
+      name, ext = File.basename(content.file.path).split(".")
+      path = "#{Dir.tmpdir}/#{name}-srgb.#{ext}"
+      image.colourspace("srgb").jpegsave(path)
+      content.update(File.open(path))
+    end
+  end
+
   processor :normalize_profiles_via_liblcms2 do |content, *args|
     if shell("which", "jpgicc").blank?
       msg = "Missing jpgicc binary. Profiles not normalized."
@@ -67,6 +78,12 @@ Dragonfly.app.configure do
     size = raw_size.match(/\d+x\d+/)[0] # get rid of resize options which gifsicle doesn't understand
     content.shell_update do |old_path, new_path|
       "gifsicle --resize-fit #{size} #{old_path} --output #{new_path}"
+    end
+  end
+
+  processor :ffmpeg_screenshot_to_jpg do |content, screenshot_time_in_ffmpeg_format, *args|
+    content.shell_update ext: "jpg" do |old_path, new_path|
+      "ffmpeg -y -i #{old_path} -ss #{screenshot_time_in_ffmpeg_format} -frames:v 1 #{new_path}"
     end
   end
 
@@ -109,6 +126,7 @@ Dragonfly.app.configure do
               bucket_name: ENV.fetch("S3_BUCKET_NAME"),
               access_key_id: ENV.fetch("AWS_ACCESS_KEY_ID"),
               secret_access_key: ENV.fetch("AWS_SECRET_ACCESS_KEY"),
+              session_token: ENV.fetch("AWS_SESSION_TOKEN", nil),
               url_scheme: ENV.fetch("S3_SCHEME"),
               region: ENV.fetch("S3_REGION"),
               root_path: "#{ENV.fetch('PROJECT_NAME')}/#{ENV.fetch('DRAGONFLY_RAILS_ENV') { Rails.env }}/files",

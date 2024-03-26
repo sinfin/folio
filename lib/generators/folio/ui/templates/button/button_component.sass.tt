@@ -1,0 +1,17 @@
+.<%= classname_prefix %>-ui-button
+  &__icon
+    &:only-child
+      margin: 0 (( - $btn-padding-x ))
+
+  &__loader-wrap
+    width: 16px
+    height: 16px
+    flex: 0 0 16px
+    position: relative
+
+  +media-breakpoint-down(sm)
+    &--hide-label-on-mobile &__label
+      display: none
+
+    &--hide-label-on-mobile &__icon
+      margin: 0 (( - 1 * px-to-rem(4px) ))

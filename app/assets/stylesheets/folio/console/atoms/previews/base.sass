@@ -4,18 +4,13 @@
 // in app/assets/stylesheets/folio/console/base.sass
 // otherwise
 
-$fa-font-path: 'font-awesome/webfonts' !default
-
-@import 'font-awesome/scss/fontawesome'
-@import 'folio/console/variables'
-@import 'folio-bootstrap/scss/functions'
-@import 'folio-bootstrap/scss/variables'
-@import 'folio-bootstrap/scss/mixins'
-@import 'folio/console/plugin-overrides/font-awesome'
-@import 'folio/console/modules/font-awesome'
-@import 'folio/material-icons'
-@import 'folio/console/with_icon/with_icon'
 @import 'folio/utilities'
+
+@import 'folio/console/variables'
+@import 'folio-bootstrap-5/scss/functions'
+@import 'folio-bootstrap-5/scss/variables'
+@import 'folio-bootstrap-5/scss/mixins'
+@import 'folio/console/ui/with_icon/with_icon'
 
 = button-style
   +unbutton
@@ -32,11 +27,15 @@ $fa-font-path: 'font-awesome/webfonts' !default
 
 .f-c-layout-atoms__html
   overflow-y: auto
+  overflow-x: hidden
 
 .f-c-atoms-previews
   $insert-bg: #6C757E
 
-  padding: calc(#{$grid-gutter-width + 10px} + #{$input-btn-focus-width}) $grid-gutter-width (( 105px + $grid-gutter-width ))
+  @if is-px($grid-gutter-width)
+    padding: calc(#{$grid-gutter-width + 10px} + #{$input-btn-focus-width}) $grid-gutter-width (( 105px + $grid-gutter-width ))
+  @else
+    padding: calc(#{$grid-gutter-width + px-to-rem(10px)} + #{$input-btn-focus-width}) $grid-gutter-width (( px-to-rem(105px) + $grid-gutter-width ))
 
   &--non-interactive
     padding: $grid-gutter-width / 2
@@ -112,34 +111,29 @@ $fa-font-path: 'font-awesome/webfonts' !default
     display: flex
     height: 24px + 10px
     z-index: 2
+    gap: $grid-gutter-half
 
   &__button
-    +button-style
-    margin-left: 15px
+    border: 1px solid $dark
+    background: $white
+    color: $dark
+    cursor: pointer
+    padding: 0
+    display: flex
+    align-items: center
+    justify-content: center
+    width: 24px
+    height: 24px
 
-    &--edit
-      +button-variant($secondary, $secondary)
+    &--secondary
+      color: $white
+      background: $secondary
+      border-color: $secondary
 
-      .f-c-atoms-previews__preview[data-contentable="false"] &
-        display: none
-
-    &--settings
-      +button-variant($secondary, $secondary)
-      margin-right: 20px
-
-    &--arrow
-      +button-variant($white, $white)
-      +plain-hover-focus
-        border-color: #BFC4C4
-
-    &--handle
-      +button-variant($white, $white)
-      cursor: move
-      +plain-hover-focus
-        border-color: #BFC4C4
-
-    &--remove
-      +button-variant($danger, $danger)
+    &--danger
+      color: $white
+      background: $danger
+      border-color: $danger
 
   &__controls-overlay
     position: absolute
@@ -190,6 +184,7 @@ $fa-font-path: 'font-awesome/webfonts' !default
     width: 100%
     height: 20px
     cursor: pointer
+    color: $white
 
     &:before
       content: ''
@@ -203,7 +198,9 @@ $fa-font-path: 'font-awesome/webfonts' !default
 
   &__insert-hint-btn
     +button-style
-    +button-variant($secondary, $secondary)
+    background: #6c757d
+    border-color: #6c757d
+    color: $white
     width: 20px
     height: 20px
     flex: 0 0 20px
@@ -217,7 +214,9 @@ $fa-font-path: 'font-awesome/webfonts' !default
 
   &__insert-hint-big-btn
     +button-style
-    +button-variant($secondary, $secondary)
+    background: #6c757d
+    border-color: #6c757d
+    color: $white
     display: none
     height: 35px
     min-width: 140px
@@ -228,9 +227,6 @@ $fa-font-path: 'font-awesome/webfonts' !default
     z-index: 2
     transform: translate(-50%, -50%)
     font-size: 14px
-
-    .mi
-      font-size: 16px
 
   &__insert--last &__insert-hint-btn
     display: none
@@ -247,9 +243,6 @@ $fa-font-path: 'font-awesome/webfonts' !default
 
     & + &
       border-top: 1px solid rgba($white, 0.3)
-
-    &, .mi, .fa
-      font-size: 14px
 
   &__insert-li
     flex: 0 0 100%
@@ -273,14 +266,11 @@ $fa-font-path: 'font-awesome/webfonts' !default
     align-items: center
     flex: 1 0 auto
 
-    .mi, .fa
-      margin-right: 7px
-
-    +plain-hover-focus
+    &, &:hover, &:focus
       color: $white
       text-decoration: none
 
-    +hover-focus
+    &:hover, &:focus
       background: darken($secondary, 7.5%)
 
   &__insert--active
@@ -349,14 +339,6 @@ $fa-font-path: 'font-awesome/webfonts' !default
       visibility: visible
 
     &__button
-      width: 40px
-      height: 40px
-      flex: 0 0 40px
-      font-size: 20px
-
-      &:first-child
-        margin-left: 0
-
       &--handle
         display: none
 

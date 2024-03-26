@@ -1,0 +1,12 @@
+.<%= classname_prefix %>-ui-menu-toolbar-shopping-cart data=data
+  a.<%= classname_prefix %>-ui-menu-toolbar-shopping-cart__a[
+    href="#"
+    data=stimulus_action(click: :clicked, "keydown.enter": :clicked, "keydown.esc": :clicked)
+  ]
+    = <%= application_namespace_path %>_ui_icon(:shopping_cart,
+                    height: 32,
+                    class_name: "<%= classname_prefix %>-ui-menu-toolbar-shopping-cart__icon")
+
+    = render(<%= application_namespace %>::Ui::MenuToolbar::ShoppedItemsCountComponent.new(class_name: "<%= classname_prefix %>-ui-menu-toolbar-shopped-items-count--shopping-cart"))
+
+  span.<%= classname_prefix %>-ui-menu-toolbar-shopping-cart__mq.<%= classname_prefix %>-ui-menu-toolbar-shopping-cart__mq--desktop data=stimulus_target('mq')

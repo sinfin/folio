@@ -1,0 +1,45 @@
+h1 Folio Console UI
+
+h2 Input date time
+
+h3 Date time
+
+= simple_form_for "", method: :get, url: request.path do |f|
+  = f.input :default, as: :date_time
+
+  = f.input :min,
+            as: :date_time,
+            min: Time.current,
+            hint: 'min: Time.current'
+
+  = f.input :max,
+            as: :date_time,
+            max: Time.current,
+            hint: 'max: Time.current'
+
+  = f.input :min_and_max,
+            as: :date_time,
+            min: 1.week.ago,
+            max: 1.week.from_now,
+            hint: 'min: 1.week.ago, max: 1.week.from_now'
+
+h3 Date
+
+= simple_form_for "", method: :get, url: request.path do |f|
+  = f.input :default, as: :date
+
+  = f.input :min,
+            as: :date,
+            min: Time.current,
+            hint: 'min: Time.current'
+
+  = f.input :max,
+            as: :date,
+            max: Time.current,
+            hint: 'max: Time.current'
+
+  = f.input :min_and_max,
+            as: :date,
+            min: 1.week.ago,
+            max: 1.week.from_now,
+            hint: 'min: 1.week.ago, max: 1.week.from_now'

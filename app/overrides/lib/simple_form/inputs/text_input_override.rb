@@ -3,8 +3,7 @@
 SimpleForm::Inputs::TextInput.class_eval do
   def input(wrapper_options = nil)
     if options[:autosize]
-      input_html_classes << "f-input"
-      input_html_classes << "f-input--autosize"
+      register_stimulus("f-input-autosize")
     end
 
     if options[:locale]
@@ -12,27 +11,21 @@ SimpleForm::Inputs::TextInput.class_eval do
     end
 
     if options[:character_counter]
-      input_html_classes << "f-input" if input_html_classes.exclude?("f-input")
-      input_html_classes << "f-input--character-counter"
-      input_html_options["data-character-counter"] = options[:character_counter]
+      register_stimulus("f-input-character-counter",
+                        options[:character_counter].is_a?(Numeric) ? { max: options[:character_counter] } : {})
+      input_html_options["data-action"] = "f-input-character-counter#onInput"
     end
 
-    if options[:folio_label]
-      input_html_classes << "f-c-js-atoms-placement-label"
-    elsif options[:folio_perex]
-      input_html_classes << "f-c-js-atoms-placement-perex"
-    elsif options[:atom_setting]
-      input_html_classes << "f-c-js-atoms-placement-setting"
-      input_html_options["data-atom-setting"] = options[:atom_setting]
-    end
+    register_atom_settings
 
     if options[:content_templates]
       ct_klass = options[:content_templates].constantize
-      input_html_options["data-content-templates"] = ct_klass.to_data_attribute
-      input_html_options["data-content-templates-url"] = Folio::Engine.app.url_helpers.edit_console_content_templates_path(type: options[:content_templates])
-      input_html_options["data-content-templates-title"] = ct_klass.model_name.human(count: 2)
-      input_html_classes << "f-input" if input_html_classes.exclude?("f-input")
-      input_html_classes << "f-input--content-templates"
+      edit_url = if ::Rails.application.config.folio_content_templates_editable
+        Folio::Engine.app.url_helpers.edit_console_content_templates_path(type: options[:content_templates])
+      end
+
+      register_stimulus("f-input-content-templates",
+                        { edit_url:, title: ct_klass.model_name.human(count: 2), templates: ct_klass.to_data_attribute })
     end
 
     merged_input_options = merge_wrapper_options(input_html_options, wrapper_options)

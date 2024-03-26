@@ -1,0 +1,7 @@
+- if @page
+  .container-fluid
+    h1 = @page.title
+
+  = render_atoms_in_molecules(@page.atoms_in_molecules)
+
+  == cell('folio/publishable_hint', @page)

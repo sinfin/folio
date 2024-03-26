@@ -1,0 +1,8 @@
+# frozen_string_literal: true
+
+class <%= application_namespace %>::HomeController < ApplicationController
+  def index
+    @page = current_page_singleton(<%= application_namespace %>::Page::Homepage)
+    set_meta_variables(@page)
+  end
+end

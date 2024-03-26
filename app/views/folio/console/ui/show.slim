@@ -1,0 +1,17 @@
+h1 Folio Console UI
+
+h2 UI
+
+ul.lead.fw-bold
+  - @actions.each do |action|
+    li.my-3
+      a href=send("#{action}_console_ui_path")
+        = action.to_s.capitalize.gsub("_", " ")
+
+h2 Inputs
+
+ul.lead.fw-bold
+  - @inputs.each do |input|
+    li.my-3
+      a href=send("input_#{input}_console_ui_path")
+        = input.to_s.capitalize.gsub("_", " ")

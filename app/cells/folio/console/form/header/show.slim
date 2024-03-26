@@ -1,16 +1,17 @@
 .f-c-form-header
   .f-c-form-header__inner
-    = render(:_title)
+    .f-c-form-header__title-wrap
+      div
+        = render(:_title)
 
-    - if options[:translations]
-      .f-c-form-header__right
-        == translations
+        - if options[:subtitle].present?
+          h2.f-c-form-header__h2
+            = sanitize_string(options[:subtitle])
 
-    - elsif options[:destroy]
-      .f-c-form-header__right
-        == cell('folio/console/destroy_button', record)
+      - if options[:sti_badge] && model.try(:object)
+        == cell('folio/console/ui/sti_badge', model.object)
 
-    - elsif options[:right]
+    - if options[:right]
       .f-c-form-header__right
         = options[:right]
 

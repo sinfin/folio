@@ -1,0 +1,18 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= application_namespace %>::Ui::FlashComponentTest < Folio::ComponentTest
+  def test_render
+    render_inline(<%= application_namespace %>::Ui::FlashComponent.new(flash: nil))
+    assert_selector(".<%= classname_prefix %>-ui-flash")
+    assert_no_selector(".<%= classname_prefix %>-ui-alert")
+
+    flash_hash = ActionDispatch::Flash::FlashHash.new
+    flash_hash[:error] = "foo"
+
+    render_inline(<%= application_namespace %>::Ui::FlashComponent.new(flash: flash_hash))
+    assert_selector(".<%= classname_prefix %>-ui-flash")
+    assert_selector(".<%= classname_prefix %>-ui-alert")
+  end
+end

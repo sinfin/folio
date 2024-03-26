@@ -1,0 +1,23 @@
+.container-fluid
+  h1
+    a.<%= classname_prefix %>-unlink href=<%= application_namespace_path %>_ui_path UI kit
+
+  - %w[light dark].each do |theme|
+    .bg-body.p-g.mt-g.border.rounded data-bs-theme=theme
+      h2.mt-0 Alerts - #{theme}
+
+      = render(<%= application_namespace %>::Ui::FlashComponent.new(flash:))
+
+      .mt-g
+        = render(<%= application_namespace %>::Ui::ButtonsComponent.new(buttons: @buttons_model))
+
+      h3 Regular
+
+      - %i[info success warning danger loader].each do |variant|
+        - message = "#{variant.capitalize} #{@lorem_ipsum}"
+
+        = render(<%= application_namespace %>::Ui::AlertComponent.new(variant:, message:))
+
+        - message = "#{variant.capitalize} #{@lorem_ipsum[0..30]}"
+
+        = render(<%= application_namespace %>::Ui::AlertComponent.new(variant:, message:))

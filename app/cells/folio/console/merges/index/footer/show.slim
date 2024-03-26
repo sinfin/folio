@@ -1,7 +1,6 @@
-.f-c-form-footer-spacer
 .f-c-merges-index-footer.f-c-merges-index-footer.f-c-form-footer
   .container-fluid.d-flex.align-items-center
-    a.btn.btn-primary.f-c-form-footer__btn.mr-g[
+    a.btn.btn-primary.f-c-form-footer__btn.me-g[
       href=""
       class="f-c-merges-index-footer__btn"
       class="f-c-merges-index-footer__btn--link"
@@ -13,14 +12,15 @@
     .f-c-merges-index-footer__labels.small
       - %w[original duplicate].each do |key|
         .f-c-merges-index-footer__label hidden=true
-          .mr-1 = t(".#{key}")
+          .me-1 = t(".#{key}")
           .f-c-merges-index-footer__label-inner
             strong.f-c-merges-index-footer__label-content[
               class="f-c-merges-index-footer__label-content--#{key}"
             ]
               ' Hunter George
 
-            .fa.fa-times.fa--14.text-danger[
-              class="f-c-merges-index-footer__label-remove"
-              data-key=key
-            ]
+            = folio_icon(:close,
+                         height: 16,
+                         class: "text-danger \
+                                 f-c-merges-index-footer__label-remove",
+                         data: { key: })

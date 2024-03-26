@@ -1,92 +1,129 @@
-@import 'folio-bootstrap/scss/dropdown'
-@import 'eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker'
+$folio-input-date-time-icon: true !default
+$folio-input-date-time-icon-background-url: image-url("folio/input/date_time/input-background-ico.svg") !default
+$folio-input-date-time-icon-background-size: 18px 18px !default
+$folio-input-date-time-icon-opacity: 1 !default
+$folio-input-date-time-widget-padding: $grid-gutter-width / 3 !default
+$folio-input-date-time-widget-box-shadow: $box-shadow !default
 
-$folio-input-date-time-icon: false !default
+$td-light: $white !default
+$td-widget-background: $td-light
+$td-font-color: $body-color
+$td-timepicker-font-size: inherit
+$td-active-bg: $blue
+$td-active-color: $white
+$td-active-border-color: $td-active-color
+$td-border-radius: $border-radius
+$td-btn-hover-bg: $medium-gray !default
+$td-disabled-color: $medium-gray !default
+$td-alternate-color: rgba(0, 0, 0, 0.38) !default
+$td-secondary-border-color: #ccc
+$td-secondary-border-color-rgba: rgba(0, 0, 0, 0.2)
+$td-primary-border-color: $td-light
+$td-text-shadow: none
+$td-days-of-week-color: rgba(0, 0, 0, 0.5) !default
 
-.bootstrap-datetimepicker-widget
-  &.dropdown-menu
-    max-width: 275px
-    padding: 0
+@import 'tempus-dominus-scss/src/scss/tempus-dominus'
 
-    &.bottom:before
-      border-bottom-color: $border-color
+.tempus-dominus-widget
+  box-shadow: $folio-input-date-time-widget-box-shadow
+  width: 250px !important
+  padding: 0 !important
 
-    &.top:before
-      border-top-color: $border-color
+  .date-container-days
+    grid-auto-rows: 30px
+    .dow.no-highlight
+      color: $td-days-of-week-color
 
-  a[data-action]
-    padding: 0
+  svg
+    width: 2em
+    height: 2em
 
-  thead
-    th
-      padding-top: 0.25 * $spacer
-      padding-bottom: 0.25 * $spacer
+  & &__clear-icon
+    width: 1.6em
+    height: 1.6em
 
-  &__reset-wrap
-    border-top: 1px solid $border-color
-    padding: $spacer $spacer / 4
-    text-align: center
-    cursor: pointer
+  &.timepicker-sbs .td-row
+    flex-direction: column
 
-  .timepicker
-    border-top: 1px solid $border-color
+  .date-container,
+  .time-container,
+  .clear-container
+    width: 100% !important
+    padding: $folio-input-date-time-widget-padding
 
-  .timepicker-picker
-    table
-      width: auto
-      margin-left: auto
-      margin-right: auto
+    &:not(:first-child)
+      border-top: 1px solid $border-color
 
-      td, td span
-        height: 30px
-        width: 30px
-        line-height: 30px
+  .calendar-header
+    display: flex
+    align-items: center
 
-  .timepicker-hour,
-  .timepicker-minute,
-  .timepicker-second
-    width: 30px
+    .picker-switch
+      flex: 1 1 auto
 
-  .row
-    display: block
+  .time-container
     margin: 0
 
-  .datepicker,
-  .timepicker
-    max-width: none !important
-    padding: $grid-gutter-half
-
-  .fa
-    display: inline-flex
+  .time-container-clock
+    display: flex !important
     align-items: center
     justify-content: center
-    margin: 0 !important
+    flex-wrap: wrap
+    width: 85px
+    margin: 0 auto
 
-  &__reset .fa
-    margin-right: 7px !important
-    margin-bottom: -1px !important
+    &[style*="none"]
+      display: none !important
+
+    .separator
+      flex: 0 0 5px
+      width: 5px
+      height: 20px
+      margin: 0 5px
+
+    div[data-action]
+      flex: 0 0 30px
+      width: 30px
+      height: 25px
+
+    div[data-time-component]
+      flex: 0 0 30px
+      width: 30px
+      height: 30px
+      margin: 10px 0
+
+  &__clear
+    display: flex
+    align-items: center
+    justify-content: center
+
+    &:hover
+      background: $td-btn-hover-bg
+
+  &__clear-icon
+    margin-right: 7px
+    color: $danger
 
 @if $folio-input-date-time-icon
   .simple_form .form-group
     &.date,
-    &.datetime
+    &.datetime,
+    &.date_time
       .d-flex
         position: relative
 
         &:after
-          +material-icon-style
-          content: 'date_range'
           position: absolute
           top: 0
           right: 0
           width: $input-height
           height: $input-height
           pointer-events: none
-          font-size: 18px
-          display: flex
-          align-items: center
-          justify-content: center
-          color: $gray-600
+          display: block
+          background: $folio-input-date-time-icon-background-url center center no-repeat
+          background-size: $folio-input-date-time-icon-background-size
+          opacity: $folio-input-date-time-icon-opacity
+          content: ""
 
-      .f-input--date
+      .f-input--date-time
         padding-right: $input-height

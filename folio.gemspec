@@ -39,7 +39,7 @@ Gem::Specification.new do |s|
   # s.add_dependency "discard"
   s.add_dependency "dotenv-rails"
   # s.add_dependency "dragonfly_libvips" # we have our version in Gemfile
-  s.add_dependency "dragonfly-s3_data_store"
+  # s.add_dependency "dragonfly-s3_data_store" # we have our version in Gemfile
   # s.add_dependency "dragonfly"
   s.add_dependency "dropzonejs-rails"
   s.add_dependency "fast_jsonapi"
@@ -47,12 +47,15 @@ Gem::Specification.new do |s|
   s.add_dependency "gibbon" # for mailchimp requests
   s.add_dependency "invisible_captcha"
   s.add_dependency "jquery-rails"
+  s.add_dependency "jwt"
   s.add_dependency "message_bus"
   s.add_dependency "multi_exiftool"
+  s.add_dependency "mux_ruby", "~> 3.9.0"
   s.add_dependency "nokogiri"
   s.add_dependency "omniauth-facebook"
   s.add_dependency "omniauth-google-oauth2"
   s.add_dependency "omniauth-twitter2"
+  s.add_dependency "omniauth-apple"
   s.add_dependency "omniauth-rails_csrf_protection"
   s.add_dependency "omniauth"
   s.add_dependency "pagy"
@@ -67,8 +70,10 @@ Gem::Specification.new do |s|
   s.add_dependency "rubyzip"
   s.add_dependency "sass-rails"
   s.add_dependency "show_for"
-  s.add_dependency "sidekiq-cron"
-  s.add_dependency "sidekiq"
+  s.add_dependency "httpparty"
+  s.add_dependency "sidekiq-cron", "~> 1.10.1"
+  s.add_dependency "sidekiq", "~> 6.5"
+
   s.add_dependency "simple_form"
   s.add_dependency "sitemap_generator"
   # s.add_dependency "cells-slim", "~> 0.1.1" # need to be in Gemfile
@@ -80,6 +85,8 @@ Gem::Specification.new do |s|
   s.add_dependency "uglifier"
   s.add_dependency "whenever"
   s.add_dependency "redis"
+  s.add_dependency "terser"
+  s.add_dependency "view_component"
 
   s.add_development_dependency "better_errors"
   s.add_development_dependency "binding_of_caller" # used by BetterErrors
@@ -92,9 +99,12 @@ Gem::Specification.new do |s|
   s.add_development_dependency "pry-byebug"
   s.add_development_dependency "pry-rails"
   s.add_development_dependency "rubocop-minitest"
+  s.add_development_dependency "rubocop-packaging"
   s.add_development_dependency "rubocop-performance"
-  s.add_development_dependency "rubocop-rails_config"
   s.add_development_dependency "rubocop-rails"
   s.add_development_dependency "rubocop-rake"
   s.add_development_dependency "rubocop"
+  s.add_development_dependency "vcr"
+  s.add_development_dependency "webmock"
+  s.add_development_dependency "selenium-webdriver"
 end

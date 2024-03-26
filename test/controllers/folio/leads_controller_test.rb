@@ -9,27 +9,49 @@ class Folio::LeadsControllerTest < ActionDispatch::IntegrationTest
     create_and_host_site
   end
 
-  test "invalid" do
-    post url_for(Folio::Lead), params: {
+  test "invalid html" do
+    assert_difference("Folio::Lead.count", 0) do
+      post url_for(Folio::Lead), params: {
+        lead: {
+          name: "foo",
+        }
+      }
+
+      assert_redirected_to main_app.root_path
+    end
+  end
+
+  test "valid html" do
+    assert_difference("Folio::Lead.count", 1) do
+      post url_for(Folio::Lead), params: {
+        lead: {
+          email: "foo@bar.baz",
+          note: "foo",
+        }
+      }
+
+      assert_redirected_to main_app.root_path
+    end
+  end
+
+  test "invalid json" do
+    post url_for([Folio::Lead, format: :json]), params: {
       lead: {
         name: "foo",
       }
     }
     assert_response(:success)
-    html = Nokogiri::HTML(response.body)
-    assert_equal 0, html.css(".f-leads-form--submitted").size
-    assert_equal 1, html.css(".form-group-invalid #lead_email").size
+    assert response.parsed_body["data"]
   end
 
-  test "valid" do
-    post url_for(Folio::Lead), params: {
+  test "valid json" do
+    post url_for([Folio::Lead, format: :json]), params: {
       lead: {
         email: "foo@bar.baz",
         note: "foo",
       }
     }
     assert_response(:success)
-    html = Nokogiri::HTML(response.body)
-    assert_equal 1, html.css(".f-leads-form--submitted").size
+    assert response.parsed_body["data"]
   end
 end

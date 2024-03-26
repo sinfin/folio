@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Folio::ImageCell < Folio::ApplicationCell
+  # this cell is obsolete - generate a ui image component and use one per-project
+
   include Folio::CellLightbox
 
   class_name "f-image", :centered,
@@ -58,13 +60,13 @@ class Folio::ImageCell < Folio::ApplicationCell
       h = {
         normal:,
         src: normal.url,
-        alt: options[:alt] || file.try(:description) || "",
+        alt: options[:alt] || file.try(:alt) || file.try(:description) || "",
         title: options[:title],
         width: normal[:width],
         height: normal[:height],
       }
 
-      unless /svg/.match?(file.file_mime_type)
+      unless file.file_mime_type.include?("svg")
         retina_size = size.gsub(/\d+/) { |n| n.to_i * retina_multiplier }
 
         retina = file.thumb(retina_size)

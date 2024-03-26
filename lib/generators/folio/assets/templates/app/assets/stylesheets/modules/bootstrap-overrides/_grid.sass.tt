@@ -3,15 +3,15 @@
   padding-left: map-get($spacers, gg)
   padding-right: map-get($spacers, gg)
 
-  & &
+  & &:not(.container-fluid--forced-padding)
     padding-left: 0
     padding-right: 0
     max-width: 100%
 
-  +media-breakpoint-down(lg)
-    padding-left: $grid-gutter-width
-    padding-right: $grid-gutter-width
+  +media-breakpoint-down(xl)
+    padding-left: map-get($spacers, 5)
+    padding-right: map-get($spacers, 5)
 
-  +media-breakpoint-down(sm)
+  +media-breakpoint-down(md)
     padding-left: $grid-gutter-half
     padding-right: $grid-gutter-half

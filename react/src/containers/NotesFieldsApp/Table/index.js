@@ -2,6 +2,8 @@ import React from 'react'
 
 import DueDate from './DueDate'
 
+import FolioUiIcon from 'components/FolioUiIcon'
+
 export default function Table ({
   notesForTable,
   editNote,
@@ -20,32 +22,40 @@ export default function Table ({
         >
           <input
             type='checkbox'
-            className='f-c-r-notes-fields-app-table__checkbox mr-3'
+            className='f-c-r-notes-fields-app-table__checkbox'
             checked={note.attributes.closed_at !== null}
             onChange={() => toggleClosedAt(note)}
           />
 
           <div
-            className='f-c-r-notes-fields-app-table__content mr-3'
+            className='f-c-r-notes-fields-app-table__content'
             dangerouslySetInnerHTML={{ __html: note.attributes.content.replace(/\n/g, '<br>') }}
             onClick={() => editNote(note)}
           />
 
-          <DueDate
-            className='f-c-r-notes-fields-app-table__action mr-2'
-            dueAt={note.attributes.due_at}
-            onChange={(dueAt) => changeDueDate(note, dueAt)}
-          />
+          <div
+            className='f-c-r-notes-fields-app-table__actions'
+          >
+            <DueDate
+              className='f-c-r-notes-fields-app-table__action'
+              dueAt={note.attributes.due_at}
+              onChange={(dueAt) => changeDueDate(note, dueAt)}
+            />
 
-          <span
-            className='f-c-r-notes-fields-app-table__action fa fa--12 fa-edit mr-2'
-            onClick={() => editNote(note)}
-          />
+            <FolioUiIcon
+              class='f-c-r-notes-fields-app-table__action'
+              name='edit_box'
+              onClick={() => editNote(note)}
+              height={18}
+            />
 
-          <span
-            className='f-c-r-notes-fields-app-table__action fa fa-times text-danger'
-            onClick={() => removeNote(note)}
-          />
+            <FolioUiIcon
+              class='f-c-r-notes-fields-app-table__action text-danger'
+              name='close'
+              onClick={() => removeNote(note)}
+              height={18}
+            />
+          </div>
         </div>
       ))}
     </div>

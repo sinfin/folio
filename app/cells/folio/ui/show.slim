@@ -147,19 +147,19 @@
             p.small.mt-3.mb-0 btn btn-#{variant} #{size}
 
             .d-flex.flex-wrap
-              .mr-g.mt-3
+              .me-g.mt-3
                 p.small Normal
 
                 button.btn class="btn-#{variant} #{size}" type="button"
                   ' Button label
 
-              .mr-g.mt-3
+              .me-g.mt-3
                 p.small Hover / Pressed
 
                 button.btn.active class="btn-#{variant} #{size}" type="button"
                   ' Button active
 
-              .mr-g.mt-3
+              .me-g.mt-3
                 p.small Disabled
 
                 button.btn class="btn-#{variant} #{size}" type="button" disabled=true
@@ -169,108 +169,20 @@
         p.small.mt-3.mb-0 btn btn-tag
 
         .d-flex.flex-wrap
-          .mr-g.mt-3
+          .me-g.mt-3
             p.small Normal
 
             button.btn.btn-tag type="button"
               ' Button label
 
-          .mr-g.mt-3
+          .me-g.mt-3
             p.small Hover / Pressed
 
             button.btn.btn-tag.active type="button"
               ' Button active
 
-          .mr-g.mt-3
+          .me-g.mt-3
             p.small Disabled
 
             button.btn.btn-tag type="button" disabled=true
               ' Button disabled
-
-    h3 Icons
-
-    .f-ui__icons.d-flex.flex-wrap
-      - if icons.present?
-        - icons.each do |key|
-          .mr-3.mb-3 title=key
-            == cell("#{application_namespace_path}/ui/icon", key, height: 24)
-      - else
-        ' No icons found in app/assets/stylesheets/_icons.scss
-
-    h3 Pagination
-
-    - if "#{application_namespace}::Ui::PagyCell".safe_constantize
-      == cell("#{application_namespace_path}/ui/pagy", pagy_model)
-    - else
-      = missing_cell("pagy")
-
-    h3 Tabs
-
-    - if "#{application_namespace}::Ui::TabsCell".safe_constantize
-      == cell("#{application_namespace_path}/ui/tabs", tabs_model)
-    - else
-      = missing_cell("tabs")
-
-    h3 Flash
-
-    - if "#{application_namespace}::Ui::FlashCell".safe_constantize
-      .row.f-ui__flash
-        - flash_models.each do |flash_model|
-          .col-md-6.mb-g
-            == cell("#{application_namespace_path}/ui/flash", flash_model)
-    - else
-      = missing_cell("flash")
-
-    h3 Navigation
-
-    - if "#{application_namespace}::Ui::NavigationCell".safe_constantize
-      - if navigation_model
-        == cell("#{application_namespace_path}/ui/navigation", navigation_model)
-      - else
-        p.text-danger Missing menu - create a Folio::Menu to preview
-    - else
-      = missing_cell("navigation")
-
-    h3 Documents
-
-    - if "#{application_namespace}::Ui::DocumentsCell".safe_constantize
-      - if documents_model.present?
-        == cell("#{application_namespace_path}/ui/documents", documents_model)
-      - else
-        p.text-danger No documents - upload some to preview
-    - else
-      = missing_cell("documents")
-
-    h3 Share
-
-    p Regular
-
-    .my-4
-      == cell("#{application_namespace_path}/ui/share")
-
-    p Collapsible on mobile
-
-    .my-4
-      == cell("#{application_namespace_path}/ui/share",
-              nil,
-              mobile_collapsible: true)
-
-    h3 Clipboard
-
-    == cell("#{application_namespace_path}/ui/clipboard", "text in clipboard")
-
-    h3 Cards
-
-    h4 Large
-
-    == cell("#{application_namespace_path}/ui/card_list", card_variants)
-
-    h4 Medium
-
-    == cell("#{application_namespace_path}/ui/card_list", card_variants(medium: true))
-
-    h4 Small
-
-    == cell("#{application_namespace_path}/ui/card_list", card_variants(small: true))
-
-    == render(:_show_more)

@@ -296,7 +296,7 @@ function * updateAtomPreviews (action) {
         $body.html(html)
         $body.find('.f-c-atoms-previews__locale').each((_i, el) => {
           const $el = iframe.contentWindow.jQuery(el)
-          $el.prop('hidden', $el.data('locale') && $el.data('locale') !== visibleLocale)
+          $el.prop('hidden', visibleLocale ? ($el.data('locale') && $el.data('locale') !== visibleLocale) : false)
         })
         iframe.contentWindow.postMessage({ type: 'replacedHtml' }, window.origin)
         $(iframe).parent().removeClass('f-c-simple-form-with-atoms__preview--initializing f-c-simple-form-with-atoms__preview--loading')

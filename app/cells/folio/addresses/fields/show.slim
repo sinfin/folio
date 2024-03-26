@@ -1,13 +1,21 @@
 .f-addresses-fields
-  *title_tag
-    = options[:title] || t('.title')
+  - unless options[:title] == false
+    *title_tag
+      = options[:title] || t('.title')
 
   .row
-    .col-lg-6
-      = model.input :first_name, required: true, input_html: { id: nil }
+    - unless options[:names] == false
+      div class=column_size_class_name(6)
+        = model.input :first_name,
+                      required: true,
+                      disabled: options[:disabled],
+                      input_html: { id: nil }
 
-    .col-lg-6
-      = model.input :last_name, required: true, input_html: { id: nil }
+      div class=column_size_class_name(6)
+        = model.input :last_name,
+                      required: true,
+                      disabled: options[:disabled],
+                      input_html: { id: nil }
 
   - if show_primary_address_fields?
     .f-addresses-fields__fields-wrap[
@@ -17,34 +25,53 @@
       - model.simple_fields_for :primary_address do |g|
         - required = required?(:primary_address, g.object.attributes)
 
-        .row
-          .col-lg-7.f-addresses-fields__address-line-1
-            = address_line_input g, :address_line_1, required: required
-
-          .col-lg-5.f-addresses-fields__address-line-2
-            = address_line_input g, :address_line_2, required: required
+        - if options[:primary_address_name]
+          = g.input :name,
+                    required: required,
+                    disabled: options[:disabled]
 
         .row
-          .col-lg-5
-            = g.input :zip, required: required, input_html: { id: nil }
+          .f-addresses-fields__address-line-1 class=column_size_class_name(7)
+            = address_line_input g,
+                                 :address_line_1,
+                                 required: required,
+                                 disabled: options[:disabled]
 
-          .col-lg-7
-            = g.input :city, required: required, input_html: { id: nil }
+          .f-addresses-fields__address-line-2 class=column_size_class_name(5)
+            = address_line_input g,
+                                 :address_line_2,
+                                 required: required,
+                                 disabled: options[:disabled]
 
         .row
-          .col-lg-7
-            = country_code_input(g)
+          div class=column_size_class_name(5)
+            = g.input :zip,
+                      required: required,
+                      disabled: options[:disabled],
+                      input_html: { id: nil }
+
+          div class=column_size_class_name(7)
+            = g.input :city,
+                      required: required,
+                      disabled: options[:disabled],
+                      input_html: { id: nil }
 
         .row
-          .col-lg-7
+          div class=column_size_class_name(7)
+            = country_code_input(g, disabled: options[:disabled])
+
+        .row
+          div class=column_size_class_name(7)
             = g.input :phone,
                       as: :phone,
                       default_country_code: data_country_code(:primary_address),
+                      disabled: options[:disabled],
+                      required: options[:phone_required],
                       input_html: { id: nil }
 
   - if show_secondary_address_fields?
     .f-addresses-fields__nested
-      = togglable_fields model, :use_secondary_address
+      = togglable_fields model, :use_secondary_address, label: options[:use_secondary_address_label]
         .f-addresses-fields__nested-content
           .f-addresses-fields__fields-wrap[
             class="f-addresses-fields__fields-wrap--secondary-address"
@@ -53,32 +80,49 @@
             - model.simple_fields_for :secondary_address do |g|
               - required = required?(:secondary_address, g.object.attributes)
 
-              = g.input :name, input_html: { id: nil }
+              = g.input :name,
+                        disabled: options[:disabled],
+                        input_html: { id: nil }
 
-              = g.input :company_name, input_html: { id: nil }
-
-              .row
-                .col-lg-7
-                  = g.input :identification_number, input_html: { id: nil }
-
-              .row
-                .col-lg-7
-                  = g.input :vat_identification_number, input_html: { id: nil }
+              = g.input :company_name,
+                        disabled: options[:disabled],
+                        input_html: { id: nil }
 
               .row
-                .col-lg-7.f-addresses-fields__address-line-1
-                  = address_line_input g, :address_line_1, required: required
+                div class=column_size_class_name(6)
+                  = g.input :identification_number,
+                            disabled: options[:disabled],
+                            input_html: { id: nil }
 
-                .col-lg-5.f-addresses-fields__address-line-2
-                  = address_line_input g, :address_line_2, required: required
-
-              .row
-                .col-lg-5
-                  = g.input :zip, required: required, input_html: { id: nil }
-
-                .col-lg-7
-                  = g.input :city, required: required, input_html: { id: nil }
+                div class=column_size_class_name(6)
+                  = g.input :vat_identification_number,
+                            disabled: options[:disabled],
+                            input_html: { id: nil }
 
               .row
-                .col-lg-7
-                  = country_code_input(g)
+                .f-addresses-fields__address-line-1 class=column_size_class_name(7)
+                  = address_line_input g,
+                                       :address_line_1,
+                                       required: required,
+                                       disabled: options[:disabled]
+
+                .f-addresses-fields__address-line-2 class=column_size_class_name(5)
+                  = address_line_input g,
+                                       :address_line_2,
+                                       required: required,
+                                       disabled: options[:disabled]
+
+              .row
+                div class=column_size_class_name(5)
+                  = g.input :zip, required: required,
+                            disabled: options[:disabled],
+                            input_html: { id: nil }
+
+                div class=column_size_class_name(7)
+                  = g.input :city, required: required,
+                            disabled: options[:disabled],
+                            input_html: { id: nil }
+
+              .row
+                div class=column_size_class_name(7)
+                  = country_code_input(g, disabled: options[:disabled])

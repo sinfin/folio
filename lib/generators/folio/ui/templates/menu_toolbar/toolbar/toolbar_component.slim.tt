@@ -1,0 +1,8 @@
+.<%= classname_prefix %>-ui-menu-toolbar-toolbar
+  = render(<%= application_namespace %>::Ui::MenuToolbar::HeaderSearchComponent.new)
+  = render(<%= application_namespace %>::Ui::MenuToolbar::ShoppingCartComponent.new)
+  = render(<%= application_namespace %>::Ui::UserAvatarComponent.new)
+
+  .<%= classname_prefix %>-ui-menu-toolbar-toolbar__selects-container
+    = render(<%= application_namespace %>::Ui::MiniSelectComponent.new(type: :language))
+    = render(<%= application_namespace %>::Ui::MiniSelectComponent.new(type: :currency))

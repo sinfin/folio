@@ -1,6 +1,13 @@
 .select2-container--default
   outline: 0
 
+  .select2-selection
+    background-color: $form-select-bg
+    background-image: escape-svg($form-select-indicator)
+    background-repeat: no-repeat
+    background-position: $form-select-bg-position
+    background-size: $form-select-bg-size
+
   .select2-selection--single
     border-radius: $border-radius
     border-color: $input-border-color
@@ -12,29 +19,31 @@
       padding: 0 $input-padding-x
 
     .select2-selection__arrow
-      height: $input-height
+      display: none
 
     .select2-selection__clear
       width: 20px
       text-align: center
-      font-size: 20px
+      font-size: $font-size-base
       color: $danger
-      line-height: $input-height
-      height: $input-height
-      margin: 0 3px
+      line-height: $input-height-inner
+      margin: 0 $grid-gutter-half
       display: inline-flex
       align-items: center
       justify-content: center
-      padding-bottom: 2px
+      text-indent: -9999px
+
+      &::after
+        content: "×"
+        display: inline
+        text-indent: 0
+        font-size: px-to-rem(20px)
 
       .input-group &
         display: none
 
     .select2-selection__placeholder
       color: inherit
-
-      .input-group--empty &
-        color: $input-placeholder-color
 
   .select2-search--dropdown
     .select2-search__field
@@ -57,3 +66,6 @@
     width: 1% !important
     min-width: 0
     margin-bottom: 0
+
+.select2-container--open
+  z-index: $zindex-modal + 1

@@ -1,0 +1,60 @@
+- if @page.present?
+  = render_atoms_in_molecules @page.atoms_in_molecules
+- else
+  .container-fluid
+    h1 home#index
+
+    - if user_signed_in?
+      .mt-5
+        = show_for current_user do |s|
+          = s.attribute(:email)
+          = s.attribute(:nickname)
+          = s.attribute(:authentications)
+            == cell('folio/devise/omniauth/authentications/list',
+                    current_user)
+
+        - if can_now?(:access_console)
+          .mt-4.row
+            .col-auto
+              = "You are allowed to use the #{ link_to "Console", folio.console_root_path}".html_safe
+
+        .mt-4.row
+          / .col-auto
+          /   a.btn.btn-secondary href=edit_user_registration_path
+          /     ' Edit name
+
+          / .col-auto
+          /   a.btn.btn-secondary href=edit_user_registration_path(pw: 1)
+          /     ' Change password
+
+          / .col-auto
+          /   a.btn.btn-secondary href=edit_user_registration_path(em: 1)
+          /     ' Change e-mail
+
+          .col-auto
+            a.btn.btn-danger href=destroy_user_session_path
+              ' Sign out
+
+    - else
+      .mt-5
+        ruby:
+          @buttons = [
+            {
+              href: new_user_session_path,
+              label: "Sign in",
+            },
+            {
+              href: new_user_invitation_path,
+              label: "Sign up",
+            },
+            {
+              data: stimulus_modal_toggle(Folio::Devise::ModalCell::CLASS_NAME, dialog: ".f-devise-modal__dialog--sessions"),
+              label: "Sign in (modal)",
+            },
+            {
+              data: stimulus_modal_toggle(Folio::Devise::ModalCell::CLASS_NAME, dialog: ".f-devise-modal__dialog--registrations"),
+              label: "Sign up (modal)",
+            }
+          ]
+
+        = dummy_ui_buttons buttons: @buttons

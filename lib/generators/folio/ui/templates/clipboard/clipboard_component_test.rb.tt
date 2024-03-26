@@ -1,0 +1,11 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= application_namespace %>::Ui::ClipboardComponentTest < Folio::ComponentTest
+  def test_render
+    render_inline(<%= application_namespace %>::Ui::ClipboardComponent.new(text: "Hello world", height: 22))
+
+    assert_selector(".<%= classname_prefix %>-ui-clipboard")
+  end
+end

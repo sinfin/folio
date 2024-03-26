@@ -1,47 +1,28 @@
 import React from 'react'
 import { SortableElement } from 'react-sortable-hoc'
-import { FormGroup, FormText } from 'reactstrap'
-import TextareaAutosize from 'react-autosize-textarea'
 
 import NestedModelControls from 'components/NestedModelControls'
 import FileHoverButtons from 'components/FileHoverButtons'
 import Picture from 'components/Picture'
 
-import preventLineBreaks from 'utils/preventLineBreaks'
-
-import filePlacementInputName from '../utils/filePlacementInputName'
 import HiddenInputs from './HiddenInputs'
 
+const I18N = {
+  cs: {
+    alt: 'Alt',
+    altMissing: 'Alt nevyplněn',
+    description: 'Popis',
+    descriptionMissing: 'Popis nevyplněn'
+  },
+  en: {
+    alt: 'Alt',
+    altMissing: 'Alt missing',
+    description: 'Title',
+    descriptionMissing: 'Title missing'
+  }
+}
+
 class FilePlacement extends React.Component {
-  state = {
-    alt: '',
-    title: ''
-  }
-
-  constructor (props) {
-    super(props)
-    this.state = {
-      alt: props.filePlacement.alt,
-      title: props.filePlacement.title
-    }
-  }
-
-  onTitleChange = (e) => {
-    this.setState({ ...this.state, title: e.target.value })
-  }
-
-  onAltChange = (e) => {
-    this.setState({ ...this.state, alt: e.target.value })
-  }
-
-  onTitleBlur = (e) => {
-    this.props.onTitleChange(this.props.fileType, this.props.filePlacement, e.target.value)
-  }
-
-  onAltBlur = (e) => {
-    this.props.onAltChange(this.props.fileType, this.props.filePlacement, e.target.value)
-  }
-
   unselect = () => {
     this.props.unselectFilePlacement(this.props.fileType, this.props.filePlacement)
   }
@@ -75,6 +56,7 @@ class FilePlacement extends React.Component {
     } = this.props
 
     let className
+
     if (fileTypeIsImage) {
       className = 'f-c-file-placement f-c-file-placement--image'
     } else {
@@ -92,6 +74,7 @@ class FilePlacement extends React.Component {
             <a
               className='f-c-file-placement__img-a'
               href={filePlacement.file.attributes.source_url}
+              style={{ background: filePlacement.file.attributes.dominant_color }}
               target='_blank'
               rel='noopener noreferrer'
               onClick={(e) => e.stopPropagation()}
@@ -103,46 +86,14 @@ class FilePlacement extends React.Component {
           </div>
         )}
 
-        <div className='f-c-file-placement__inputs'>
-          <div className='f-c-file-placement__title'>
-            <FormGroup>
-              <TextareaAutosize
-                placeholder={filePlacement.file.attributes.file_name}
-                value={this.state.title || ''}
-                onChange={this.onTitleChange}
-                onBlur={this.onTitleBlur}
-                onKeyPress={preventLineBreaks}
-                name={filePlacementInputName('title', filePlacement, attachmentable, placementType)}
-                rows={1}
-                className='form-control'
-                async
-              />
-
-              <FormText>{window.FolioConsole.translations.fileTitleHint}</FormText>
-
-              <span className='fa fa-edit text-muted f-c-file-placement__edit-ico' />
-            </FormGroup>
+        <div className='f-c-file-placement__inputs' onClick={onEdit}>
+          <div className='f-c-file-placement__description'>
+            {filePlacement.file.attributes.description ? `${window.Folio.i18n(I18N, 'description')}: ${filePlacement.file.attributes.description}` : <span className='text-muted'>{window.Folio.i18n(I18N, 'descriptionMissing')}</span>}
           </div>
 
           {fileTypeIsImage && (
             <div className='f-c-file-placement__alt'>
-              <FormGroup>
-                <TextareaAutosize
-                  placeholder='alt'
-                  value={this.state.alt || ''}
-                  onChange={this.onAltChange}
-                  onBlur={this.onAltBlur}
-                  onKeyPress={preventLineBreaks}
-                  name={filePlacementInputName('alt', filePlacement, attachmentable, placementType)}
-                  rows={1}
-                  className='form-control'
-                  async
-                />
-
-                <FormText>{window.FolioConsole.translations.altHint}</FormText>
-
-                <span className='fa fa-edit text-muted f-c-file-placement__edit-ico' />
-              </FormGroup>
+              {filePlacement.file.attributes.alt ? `${window.Folio.i18n(I18N, 'alt')}: ${filePlacement.file.attributes.alt}` : <span className='text-danger'>{window.Folio.i18n(I18N, 'altMissing')}</span>}
             </div>
           )}
         </div>
@@ -152,6 +103,7 @@ class FilePlacement extends React.Component {
           moveUp={this.moveUp}
           moveDown={this.moveDown}
           edit={onEdit}
+          handleClassName='f-c-file-placement__handle'
         />
 
         {!this.props.nested && (
@@ -162,10 +114,6 @@ class FilePlacement extends React.Component {
             position={position}
           />
         )}
-
-        <div className='f-c-file-placement__handle'>
-          <i className='fa fa-arrows-alt' />
-        </div>
       </div>
     )
   }

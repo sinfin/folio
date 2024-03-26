@@ -7,59 +7,50 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
   end
 
   def default_actions
-    if I18n.available_locales.size > 1
-      locale = model.try(:locale) || I18n.default_locale
-    else
-      locale = nil
-    end
-
     @default_actions ||= {
       destroy: {
         name: :destroy,
-        icon: "trash-alt",
-        button: "danger",
+        icon: :delete,
+        variant: :danger,
         method: :delete,
         confirm: true,
-        url: -> (record) { safe_url_for([:console, record]) },
+        url: -> (record) { through_aware_console_url_for(record, safe: true) },
       },
       discard: {
         name: :discard,
-        icon: "trash-alt",
-        button: "secondary",
+        icon: :archive,
+        variant: :danger,
         method: :delete,
         confirm: true,
-        url: -> (record) { safe_url_for([:discard, :console, record]) },
+        url: -> (record) { through_aware_console_url_for(record, action: :discard, safe: true) },
       },
       undiscard: {
         name: :undiscard,
-        icon: "redo-alt",
-        button: "secondary",
+        icon: :arrow_u_left_top,
         method: :post,
-        url: -> (record) { safe_url_for([:undiscard, :console, record]) },
+        url: -> (record) { through_aware_console_url_for(record, action: :undiscard, safe: true) },
       },
       edit: {
         name: :edit,
-        icon: "edit",
-        button: "secondary",
-        url: -> (record) { safe_url_for([:edit, :console, record]) },
+        icon: :edit_box,
+        url: -> (record) { through_aware_console_url_for(record, action: :edit, safe: true) },
       },
       show: {
         name: :show,
-        icon: "eye",
-        button: "light",
-        url: -> (record) { safe_url_for([:console, record]) },
+        icon: :eye,
+        url: -> (record) { through_aware_console_url_for(record, safe: true) },
       },
       preview: {
         name: :preview,
-        icon: "external-link-alt",
-        button: "light",
+        icon: :open_in_new,
         target: "_blank",
-        url: -> (record) { safe_url_for([record, locale:]) },
+        url: -> (record) do
+          preview_url_for(record)
+        end
       },
       arrange: {
         name: :arrange,
-        icon: "list",
-        button: "light",
+        icon: :format_list_bulleted,
         url: nil,
       },
     }
@@ -69,15 +60,15 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
     acts = []
     with_default = (options[:actions].presence || %i[edit destroy])
 
-    sort_array_hashes_first(with_default).each do |sym_or_hash|
+    with_default.each do |sym_or_hash|
       if sym_or_hash.is_a?(Symbol)
         next if sym_or_hash == :destroy && model.class.try(:indestructible?)
-        next unless controller.can?(sym_or_hash, model)
+        next if !options[:skip_can_now] && !controller.can_now?(sym_or_hash, model)
         acts << default_actions[sym_or_hash]
       elsif sym_or_hash.is_a?(Hash)
         sym_or_hash.each do |name, obj|
           next if name == :destroy && model.class.try(:indestructible?)
-          next unless controller.can?(name, model)
+          next if !options[:skip_can_now] && !controller.can_now?(name, model)
           base = default_actions[name].presence || {}
           if obj.is_a?(Hash)
             acts << base.merge(obj)
@@ -89,40 +80,33 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
     end
 
     acts.filter_map do |action|
+      data = action[:data] || {}
+
       if action[:confirm]
         if action[:confirm].is_a?(String)
-          confirmation = action[:confirm]
+          data[:confirm] = action[:confirm]
         else
-          confirmation = t("folio.console.confirmation")
+          data[:confirm] = t("folio.console.confirmation")
         end
       else
-        confirmation = nil
+        data[:confirm] = nil
       end
 
       opts = {
         title: t("folio.console.actions.#{action[:name]}"),
-        class: "btn btn-#{action[:button]} fa fa-#{action[:icon]}",
         method: action[:method],
         target: action[:target],
-        'data-confirm': confirmation,
+        class: "f-c-index-actions__link text-#{action[:variant] || "reset"}#{action[:class_name] ? " #{action[:class_name]}" : ""}#{action[:cursor] ? " f-c-index-actions__link--cursor-#{action[:cursor]}" : ""}",
+        data:
       }
 
-      begin
-        url = action[:url].is_a?(Proc) ? action[:url].call(model) : action[:url]
-        link_to("", url, opts)
-      rescue ActionController::UrlGenerationError
-      end
-    end
-  end
+      ico = folio_icon(action[:icon], height: action[:icon_height])
 
-  def sort_array_hashes_first(ary)
-    ary.sort do |a, b|
-      if a.is_a?(Hash) && default_actions.exclude?(a.keys.first)
-        -1
-      elsif b.is_a?(Hash) && default_actions.exclude?(b.keys.first)
-        1
+      if action[:url]
+        url = action[:url].is_a?(Proc) ? action[:url].call(model) : action[:url]
+        link_to(ico, url, opts)
       else
-        0
+        content_tag(:span, ico, opts)
       end
     end
   end

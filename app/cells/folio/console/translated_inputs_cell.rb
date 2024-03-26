@@ -10,14 +10,24 @@ class Folio::Console::TranslatedInputsCell < Folio::ConsoleCell
   end
 
   def args
-    model[:args]
+    if translations.size == 1
+      label_hash = { label: f.object.class.human_attribute_name(key) }
+
+      if model[:args].present? && first = model[:args].first.presence
+        [label_hash.merge(first)] + model[:args][1..-1]
+      else
+        [label_hash]
+      end
+    else
+      model[:args]
+    end
   end
 
   def translations
     @translations ||= if options[:locales]
       options[:locales]
     elsif ::Rails.application.config.folio_using_traco
-      I18n.available_locales
+      current_site.locales
     else
       []
     end
@@ -27,9 +37,7 @@ class Folio::Console::TranslatedInputsCell < Folio::ConsoleCell
     common = { wrapper: :with_flag, flag: locale, hint: false, locale: }
 
     if args.present? && first = args.first.presence
-      [
-        first.merge(common)
-      ] + args[1..-1]
+      [first.merge(common)] + args[1..-1]
     else
       [common]
     end

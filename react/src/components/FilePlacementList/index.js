@@ -13,7 +13,7 @@ const FilePlacementList = (props) => (
         {...props}
       />
     ) : (
-      <div className='f-c-file-placement-list__empty'>{window.FolioConsole.translations.filePlacementsEmpty}</div>
+      <p className='f-c-file-placement-list__empty'>{window.FolioConsole.translations.filePlacementsEmpty}</p>
     )}
 
     {!props.nested && props.filePlacements.deleted.map((filePlacement) => (

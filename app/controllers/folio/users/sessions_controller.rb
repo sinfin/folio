@@ -6,7 +6,12 @@ class Folio::Users::SessionsController < Devise::SessionsController
   protect_from_forgery prepend: true
 
   def destroy
-    current_user.sign_out_everywhere! if Rails.application.config.folio_crossdomain_devise && current_user
+    if current_user
+      if Rails.application.config.folio_crossdomain_devise || Rails.application.config.folio_users_sign_out_everywhere
+        current_user.sign_out_everywhere!
+      end
+    end
+
     super
   end
 
@@ -40,7 +45,17 @@ class Folio::Users::SessionsController < Devise::SessionsController
         end
 
         format.json do
-          store_location_for(:user, request.referrer) if request.referrer
+          if request.referrer
+            if params[:modal_non_get_request].blank?
+              store_location_for(:user, request.referrer)
+            elsif path = Rails.application.config.folio_users_non_get_referrer_rewrite_proc.call(request.referrer)
+              store_location_for(:user, path)
+            else
+              store_location_for(:user, main_app.send(Rails.application.config.folio_users_after_sign_in_path))
+            end
+          else
+            store_location_for(:user, main_app.send(Rails.application.config.folio_users_after_sign_in_path))
+          end
 
           warden_exception_or_user = catch :warden do
             self.resource = warden.authenticate(auth_options)
@@ -51,7 +66,7 @@ class Folio::Users::SessionsController < Devise::SessionsController
 
             @force_flash = true
             set_flash_message!(:notice, :signed_in)
-            render json: {}, status: 200
+            render json: { data: { url: after_sign_in_path_for(resource) } }, status: 200
           else
             message = get_failure_flash_message(warden_exception_or_user)
 
@@ -63,7 +78,8 @@ class Folio::Users::SessionsController < Devise::SessionsController
                         resource: resource || Folio::User.new(email: params[:user][:email]),
                         resource_name: :user,
                         modal: true,
-                        flash: cell_flash).show
+                        flash: cell_flash,
+                        modal_non_get_request: params[:modal_non_get_request].present?).show
 
             render json: { errors:, data: html }, status: 401
           end
@@ -106,10 +122,5 @@ class Folio::Users::SessionsController < Devise::SessionsController
         super
       end
     end
-  end
-
-  def email_belongs_to_invited_pending_user?(email)
-    user = Folio::User.find_by(email:)
-    user && user.invitation_created_at? && user.invitation_accepted_at.nil? && user.sign_in_count == 0
   end
 end

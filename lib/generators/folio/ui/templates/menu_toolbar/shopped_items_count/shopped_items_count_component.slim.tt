@@ -1,0 +1,5 @@
+.<%= classname_prefix %>-ui-menu-toolbar-shopped-items-count[
+  class=@class_name
+  class=(@wishlist ? "<%= classname_prefix %>-ui-menu-toolbar-shopped-items-count--wishlist" : nil)
+]
+  = count

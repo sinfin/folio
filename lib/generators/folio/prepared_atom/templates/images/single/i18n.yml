@@ -1,0 +1,13 @@
+---
+cs:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/images/single: 
+    models:
+      application_namespace_path/atom/images/single: Obrázek
+en:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/images/single: 
+    models:
+      application_namespace_path/atom/images/single: Image

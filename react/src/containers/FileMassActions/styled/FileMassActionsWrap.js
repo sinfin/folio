@@ -3,6 +3,11 @@ import styled from 'styled-components'
 export default styled.div`
   position: sticky;
   top: 0;
-  box-shadow: 0 0 0 1rem #ffffff;
+  padding: 1rem;
   z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
 `

@@ -6,7 +6,7 @@ class Folio::Console::FilePlacements::ListCell < Folio::ConsoleCell
   end
 
   def images?
-    model && model.all? { |p| p.try(:file).is_a?(Folio::Image) }
+    model && model.all? { |p| p.try(:file).is_a?(Folio::File::Image) }
   end
 
   def src(placement)

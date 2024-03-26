@@ -6,30 +6,33 @@ class Folio::Site < Folio::ApplicationRecord
   include Folio::HasHeaderMessage
   include Folio::Positionable
 
-  if Rails.application.config.folio_site_is_a_singleton
-    include Folio::Singleton
-  else
-    # use specific STI types if site is not a singleton
-    validates :type,
-              presence: true
+  # use specific STI types if site is not a singleton
+  validates :type,
+            presence: true
 
-    [
-      [:email_templates, "Folio::EmailTemplate"],
-      [:leads, "Folio::Lead"],
-      [:menus, "Folio::Menu"],
-      [:newsletter_subscriptions, "Folio::NewsletterSubscription"],
-      [:pages, "Folio::Page"],
-    ].each do |key, class_name|
-      has_many key, class_name:,
-                    foreign_key: :site_id,
-                    dependent: :nullify
-    end
+  [
+    [:email_templates, "Folio::EmailTemplate"],
+    [:leads, "Folio::Lead"],
+    [:menus, "Folio::Menu"],
+    [:newsletter_subscriptions, "Folio::NewsletterSubscription"],
+    [:pages, "Folio::Page"],
+  ].each do |key, class_name|
+    has_many key, class_name:,
+                  foreign_key: :site_id,
+                  dependent: :nullify
   end
 
   has_many :source_users, class_name: "Folio::User",
                           foreign_key: :source_site_id,
                           inverse_of: :source_site,
                           dependent: :nullify
+  has_many :site_user_links, class_name: "Folio::SiteUserLink",
+                             foreign_key: :site_id,
+                             inverse_of: :site,
+                             dependent: :destroy
+  has_many :users, through: :site_user_links,
+                          source: :user
+
 
   # Validations
   validates :title, :email, :locale, :locales,
@@ -59,7 +62,6 @@ class Folio::Site < Folio::ApplicationRecord
        youtube
        appstore
        google_play
-       pinterest
        messenger]
   end
 
@@ -77,6 +79,9 @@ class Folio::Site < Folio::ApplicationRecord
 
   def env_aware_domain
     if Rails.env.development?
+      return "lvh.me:3000" if domain == "lvh.me"
+      return "#{domain}:3000" if domain.end_with?("localhost")
+
       "dev-#{domain}:3000"
     else
       domain
@@ -95,6 +100,14 @@ class Folio::Site < Folio::ApplicationRecord
 
   def layout_assets_path
     "application"
+  end
+
+  def layout_assets_javascripts_path
+    layout_assets_path
+  end
+
+  def layout_assets_stylesheets_path
+    layout_assets_path
   end
 
   def i18n_key_base
@@ -128,6 +141,14 @@ class Folio::Site < Folio::ApplicationRecord
     console_form_tabs_base
   end
 
+  def console_locale
+    locale
+  end
+
+  def locales_as_sym
+    locales.map(&:to_sym)
+  end
+
   def og_image_with_fallback
     Rails.cache.fetch(["site#og_image_with_fallback", id, updated_at, ENV["CURRENT_RELEASE_COMMIT_HASH"]]) do
       if og_image
@@ -143,13 +164,21 @@ class Folio::Site < Folio::ApplicationRecord
   end
 
   def console_dashboard_redirect_path_name
-    Rails.application.config.folio_console_dashboard_redirect
+    Rails.application.config.folio_console_report_redirect
   end
 
   def copyright_info
     if copyright_info_source
       copyright_info_source.gsub("{YEAR}", Time.current.year.to_s)
     end
+  end
+
+  def folio_console_sidebar_title_image_path
+    ::Rails.application.config.folio_console_sidebar_title_image_path
+  end
+
+  def available_user_roles_ary
+    available_user_roles.presence || []
   end
 
   private
@@ -195,6 +224,7 @@ end
 #  slug                              :string
 #  position                          :integer
 #  copyright_info_source             :string
+#  available_user_roles              :jsonb
 #
 # Indexes
 #

@@ -1,4 +1,0 @@
-# frozen_string_literal: true
-
-Folio::Ui::AtomsCell.class_eval do
-end

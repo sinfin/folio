@@ -1,0 +1,15 @@
+h1 Folio Console UI
+
+h2 Tabs
+
+h3 Links
+
+= render(Folio::Console::Ui::TabsComponent.new(tabs: @links_tabs)) do
+  ' #{@links_tabs.find { |tab| tab[:active] }[:label]} selected.
+
+h3 Javascript
+
+= render(Folio::Console::Ui::TabsComponent.new(tabs: @javascript_tabs)) do |c|
+  - @javascript_tabs.each do |tab|
+    = c.tab_pane(tab)
+      = tab[:key]

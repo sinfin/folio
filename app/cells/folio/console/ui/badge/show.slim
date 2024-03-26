@@ -1,0 +1,9 @@
+.f-c-ui-badge[
+  class="badge"
+  class="bg-#{variant}"
+  class="f-c-ui-badge--#{variant}"
+]
+  - if options[:icon]
+    = folio_icon(options[:icon], height: 16)
+
+  = model

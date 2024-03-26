@@ -8,7 +8,8 @@ class Folio::DeviseMailer < Devise::Mailer
 
   layout "folio/mailer"
 
-  default from: ->(*) { site.email }
+  default from: ->(*) { site.email },
+          bcc: Rails.application.config.folio_mailer_global_bcc
 
   def devise_mail(record, action, opts = {}, &block)
     full_opts = devise_opts_from_template(opts, action, record)
@@ -16,19 +17,41 @@ class Folio::DeviseMailer < Devise::Mailer
   end
 
   def reset_password_instructions(record, token, opts = {})
-    @data = {
-      USER_CHANGE_PASSWORD_URL: scoped_url_method(record,
-                                                  :edit_password_url,
-                                                  reset_password_token: token)
-    }
+    @site = Folio.site_instance_for_mailers
+    opts = { site: @site }.merge(opts)
+
+    @data ||= {}
+    @data[:USER_CHANGE_PASSWORD_URL] = scoped_url_method(record,
+                                                         :edit_password_url,
+                                                         reset_password_token: token,
+                                                         host: @site.env_aware_domain)
+
     super(record, token, opts)
   end
 
   def invitation_instructions(record, token, opts = {})
+    @site = (record.site_user_links.order(id: :asc).last&.site || Folio.main_site)
+    opts = { site: @site }.merge(opts)
+
+
     @data ||= {}
     @data[:USER_ACCEPT_INVITATION_URL] = scoped_url_method(record,
                                                            :accept_invitation_url,
-                                                           invitation_token: token)
+                                                           invitation_token: token,
+                                                           host: @site.env_aware_domain)
+    super(record, token, opts)
+  end
+
+  def confirmation_instructions(record, token, opts = {})
+    @token = token
+    @site = (record.site_user_links.order(id: :asc).last&.site || Folio.main_site)
+    opts = { site: @site }.merge(opts)
+
+    @data ||= {}
+    @data[:USER_CONFIRMATION_URL] = scoped_url_method(record,
+                                                      :confirmation_url,
+                                                      confirmation_token: @token,
+                                                      host: @site.env_aware_domain)
 
     super(record, token, opts)
   end
@@ -45,21 +68,26 @@ class Folio::DeviseMailer < Devise::Mailer
     }
 
     email_template_mail template_data,
-                        headers_for(:omniauth_conflict, opts).merge(subject: t("devise.mailer.omniauth_conflict.subject"))
+                        headers_for(:omniauth_conflict, opts).merge(subject: t("devise.mailer.omniauth_conflict.subject"),
+                                                                    mailer: "Devise::Mailer")
   end
 
   private
     def scoped_url_method(record, method, *args)
-      if record.is_a?(Folio::Account)
-        scoped = "account"
+      scoped = "user"
+
+      method_name = if method.to_s.include?("confirmation")
+        "#{scoped}_#{method}"
       else
-        scoped = "user"
+        method.to_s.gsub(/\A([a-z]+)_/, "\\1_#{scoped}_")
       end
 
-      method_name = method.to_s.gsub(/\A([a-z]+)_/, "\\1_#{scoped}_")
-
       if Rails.application.config.folio_crossdomain_devise && Folio.site_for_crossdomain_devise
-        extra = { only_path: false, host: Folio.site_for_crossdomain_devise.env_aware_domain }
+        extra = {
+          only_path: false,
+          host: Folio.site_for_crossdomain_devise.env_aware_domain,
+          protocol: (Rails.env.development? && !ENV["FORCE_SSL"]) ? "http" : "https"
+        }
 
         if args.present?
           args[0].merge!(extra)

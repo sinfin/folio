@@ -1,0 +1,11 @@
+.container-fluid
+  h1
+    a.d-unlink href=dummy_ui_path UI kit
+
+  - %w[light dark].each do |theme|
+    .bg-body.p-g.mt-g.border.rounded data-bs-theme=theme
+      h2.mt-0 Breadcrumbs - #{theme}
+
+      = render(Dummy::Ui::BreadcrumbsComponent.new(breadcrumbs: @breadcrumbs_on_rails, single: true))
+      = render(Dummy::Ui::BreadcrumbsComponent.new(breadcrumbs: @breadcrumbs_on_rails))
+      = render(Dummy::Ui::BreadcrumbsComponent.new(breadcrumbs: @breadcrumbs_on_rails, share: true))

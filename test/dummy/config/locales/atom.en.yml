@@ -2,31 +2,27 @@
 en:
   activerecord:
     attributes:
-      dummy/atom/card/large:
-        button_label: Button label
-        href: Link
-      dummy/atom/card/medium:
-        button_label: Button label
-        href: Link
-      dummy/atom/card/small:
-        href: Link
-      dummy/atom/hero:
-        color: Text color
-        color/light: Light
-        color/dark: Dark
-        primary_button_label: Primary button text
-        primary_button_url: Primary button link
-        secondary_button_label: Secondary button text
-        secondary_button_url: Secondary button link
-      dummy/atom/images:
-        same_width: Align to grid
-        title: Caption under the gallery
-      dummy/atom/map:
-        latlng: GPS coordiations (i.e. 50.091254894762635, 14.401627227698018)
+      dummy/atom/cards/person:
+        large: Big image
+      dummy/atom/divider:
+        variant: Variant
+        variant/default: Default
+        variant/thin: Thin line
+        variant/thick: Thick line
+        variant/invisible: Space only
+      dummy/atom/image_and_content:
+        image_side: Image
+        image_side/left: On the left
+        image_side/right: On the right
+      dummy/atom/quotation:
+        large: Bigger font
       dummy/atom/text:
         highlight: Highlight
         highlight/nil: None
-        highlight/red: Red
+        highlight/error: Red
+        highlight/caution: Orange
+        highlight/success: Green
+        highlight/neutral: Blue
         highlight/gray: Gray
       dummy/atom/title:
         tag: Tag
@@ -36,27 +32,25 @@ en:
         tag/H4: H4
         tag/H5: H5
     models:
-      dummy/atom/card: 
-      dummy/atom/card/large: Card (big)
-      dummy/atom/card/medium: Card (medium)
-      dummy/atom/card/small: Card (small)
-      dummy/atom/contact_form: Contact form
-      dummy/atom/documents: Documents (list)
-      dummy/atom/embed/html: HTML (embed)
-      dummy/atom/embed/podcast: Podcast (embed)
-      dummy/atom/embed/video: Video (embed)
-      dummy/atom/hero: Card (big cover, carousel)
-      dummy/atom/hr: Line (horizontal)
-      dummy/atom/image: Image
-      dummy/atom/images: Images (gallery)
-      dummy/atom/logo: Company logo
-      dummy/atom/map: Map
-      dummy/atom/margin: Margin
-      dummy/atom/navigation: Navigation
+      dummy/atom/cards/extra_small: Card - extra small
+      dummy/atom/cards/full_width: Card - full width
+      dummy/atom/cards/image: Card - image
+      dummy/atom/cards/large: Card - large
+      dummy/atom/cards/logo: Card - logo
+      dummy/atom/cards/medium: Card - medium
+      dummy/atom/cards/padded_image: Card - image with padding
+      dummy/atom/cards/person: Card - person
+      dummy/atom/cards/small: Card - small
+      dummy/atom/divider: Divider
+      dummy/atom/embed: Embed
+      dummy/atom/image_and_content: Image & content
+      dummy/atom/images/gallery: Images - gallery
+      dummy/atom/images/grid_gallery: Images - gallery (grid)
+      dummy/atom/images/masonry_gallery: Images - gallery (masonry)
+      dummy/atom/images/one_and_two: Images - 1 & 2
+      dummy/atom/images/single: Image
+      dummy/atom/leads/form: Contact form
       dummy/atom/perex: Perex
-      dummy/atom/person: Person
       dummy/atom/quotation: Quotation
-      dummy/atom/share: Sharing
-      dummy/atom/text: Text (paragraphs, tables, etc.)
-      dummy/atom/text_with_image: Text with image
+      dummy/atom/text: Text
       dummy/atom/title: Title

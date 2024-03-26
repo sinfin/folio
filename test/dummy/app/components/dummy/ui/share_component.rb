@@ -1,0 +1,65 @@
+# frozen_string_literal: true
+
+class Dummy::Ui::ShareComponent < ApplicationComponent
+  bem_class_name :mobile_collapsible
+
+  def initialize(url: nil,
+                 icon: nil,
+                 mobile_collapsible: false)
+    @mobile_collapsible = mobile_collapsible
+    @url = url
+    @icon = icon
+  end
+
+  def share_links
+    [
+      {
+        icon: :facebook,
+        title: t(".facebook"),
+        url: facebook_url,
+        target: "_blank",
+      },
+      {
+        icon: :facebook_messenger,
+        title: t(".messenger"),
+        url: messenger_url,
+        target: "_blank",
+      },
+      {
+        icon: :twitter,
+        title: t(".twitter"),
+        url: twitter_url,
+        target: "_blank",
+      },
+      {
+        icon: :mail,
+        title: t(".email"),
+        url: mail_url,
+      },
+    ]
+  end
+
+  def url_with_fallback
+    @url_with_fallback ||= @url || controller.request.url
+  end
+
+  def facebook_url
+    h = { u: url_with_fallback, src: "sdkpreparse" }
+    "https://www.facebook.com/sharer/sharer.php?#{h.to_query}"
+  end
+
+  def messenger_url
+    h = { u: url_with_fallback }
+    "messenger://share/?#{h.to_query}"
+  end
+
+  def twitter_url
+    h = { u: url_with_fallback }
+    "https://twitter.com/share?#{h.to_query}"
+  end
+
+  def mail_url
+    h = { body: url_with_fallback }
+    "mailto:?#{h.to_query}"
+  end
+end

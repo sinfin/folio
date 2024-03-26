@@ -1,0 +1,41 @@
+.d-atom-quotation
+  &__inner
+    display: flex
+    gap: 0 $grid-gutter-width
+
+  &__symbol
+    flex: 0 0 48px
+
+  &__body
+    flex: 1 1 auto
+
+  &__meta
+    display: flex
+    flex-wrap: wrap
+    margin-top: px-to-rem(10px)
+    gap: px-to-rem(5px) px-to-rem(10px)
+
+  &__title
+    color: $shade-600
+    font-weight: $font-weight-semibold
+
+  &__subtitle
+    color: $transparent-600
+
+  +media-breakpoint-up(sm)
+    &--large &__body
+      +font-size-text-l
+
+  +media-breakpoint-up(lg)
+    &--large &__text
+      +font-size-text-xl
+
+  +media-breakpoint-down(sm)
+    &__body
+      +font-size-text-s
+
+    &--large &__body
+      +font-size-text-m
+
+    &--large &__meta
+      +font-size-text-s

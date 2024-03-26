@@ -2,10 +2,8 @@
 en:
   activerecord:
     attributes:
-      folio/account:
-        full_name: Name
+      folio/site_user_link:
         roles: Role
-        roles/superuser: Superuser
         roles/administrator: Administrator
         roles/manager: Manager
       folio/atom/base:
@@ -16,13 +14,14 @@ en:
         content: Content
       folio/file:
         mime_type: File type
+        preview_duration: How many seconds are free?
         default_gravity: Default crop
         default_gravity/center: Center
         default_gravity/east: East
         default_gravity/north: North
         default_gravity/south: South
         default_gravity/west: West
-      folio/image:
+      folio/file/image:
         file_placements: Placements
         thumbnail_sizes: Generated versions
       folio/lead:
@@ -59,7 +58,12 @@ en:
         google_analytics_tracking_code: Google analytics - tracking code
         google_analytics_tracking_code_v4: Google analytics - tracking code - V4
         header_message: Header message
+        header_message_published: Enabled
         locales: Languages
+        roles: Roles
+        roles/administrator: Administrator
+        roles/manager: Manager
+        roles/user: User
       folio/email_template:
         missing_keyword: does not contain the {%{keyword}} keyword
         subject: Subject
@@ -84,14 +88,19 @@ en:
         keyword/SITE_TITLE: Name of the website
         keyword/USER_ACCEPT_INVITATION_URL: URL used to finish the registration
         keyword/USER_CHANGE_PASSWORD_URL: URL used to set new password
+        keyword/USER_CONFIRMATION_URL: URL used to confirm changes
         keyword/USER_EMAIL: User e-mail
       folio/user:
         address_identification_number: Indentification number
+        bank_account_number: Bank account number
+        born_at: Birth date
         confirmed_at: Confirmed at
+        degree_post: Degree after
+        degree_pre: Degree before
     errors:
       messages:
         indestructible: The record cannot be removed.
-        file_format: 'is invalid. Allowed types: %{types}'
+        file_format: '%{file_mime_type} is invalid. Allowed types: %{types}'
         wrong_namespace: The record type does not match the site type.
       models:
         folio/lead:
@@ -108,10 +117,12 @@ en:
               invalid: is invalid. Please enter a full number including country code, i.e. +420604123456
             password:
               weak_password: is weak.Try at least 8 characters from lowercase and uppercase letters, numbers and symbols.
+        folio/site_user_link:
+          attributes:
+            roles:
+              not_available_for_site: "Roles %{roles} are not completelly available for site '%{site}'."
+
     models:
-      folio/account:
-        one: Account
-        other: Accounts
       folio/atom:
         one: Atom
         other: Atoms
@@ -120,13 +131,19 @@ en:
         other: Content templates
       folio/content_template/aasm_email_subject: State upddate - email subject
       folio/content_template/aasm_email_text: State upddate - email content
-      folio/document:
+      folio/file/document:
         one: Document
         other: Documents
       folio/file:
         one: File
         other: Files
-      folio/image:
+      folio/file/audio:
+        one: Audio
+        other: Audios
+      folio/file/video:
+        one: Video
+        other: Videos
+      folio/file/image:
         one: Image
         other: Images
       folio/lead:
@@ -171,7 +188,9 @@ en:
   attributes:
     aasm_state: State
     article: Article
+    audio_cover_placement: Audio
     button_label: Button label
+    button_url: Button URL
     console_notes: Notes (internal)
     content: Content
     count: Count
@@ -185,6 +204,8 @@ en:
     is_active: Active
     last_name: Last name
     last_sign_in_at: Last sign in
+    link_label: Link label
+    link_url: Link URL
     locale: Locale
     meta_description: SEO - Meta Description
     meta_title: SEO - Meta Title
@@ -193,10 +214,14 @@ en:
     og_image_placement: OG image
     perex: Perex
     phone: Phone
+    phone_secondary: Secondary phone
     position: Position
     private_attachments: Files
     published: Published
     published_at: Published at
+    published_dates: Date
+    secondary_button_label: Secondary button label
+    secondary_button_url: Secondary button URL
     sensitive_content: Contains sensitive content
     sign_in_count: Sign in count
     slug: Slug
@@ -206,19 +231,21 @@ en:
     social_links/instagram: Instagram
     social_links/linkedin: LinkedIn
     social_links/messenger: Messenger
-    social_links/pinterest: Pinterest
     social_links/tiktok: TikTok
     social_links/twitter: Twitter
     social_links/youtube: Youtube
     state: State
+    subtitle: Subtitle
     tag_list: Keywords
     title: Title
     to_label: Label
     url: URL
+    video_cover_placement: Video
 
   errors:
     messages:
       at_least_one: Fill at least one of the fields.
+      invalid_count: must be exactly %{count}
 
     attributes:
       verified_captcha:
@@ -227,3 +254,4 @@ en:
         already_exists_for_site: "Only one record of '%{class}' for each site is allowed."
         already_exists_with_locale: "Only one record of '%{class}' with 'locale = \"%{rec_locale}\"' is allowed."
         already_exists: "Only one record of '%{class}' is allowed."
+

@@ -1,0 +1,13 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= application_namespace %>::Ui::ButtonComponentTest < ViewComponent::TestCase
+  def test_render
+    label = "hello"
+
+    render_inline(<%= application_namespace %>::Ui::ButtonComponent.new(label:))
+
+    assert_selector(".<%= classname_prefix %>-ui-button", text: label)
+  end
+end

@@ -1,0 +1,19 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= application_namespace %>::Ui::TabsComponentTest < Folio::ComponentTest
+  def test_render
+    render_inline(<%= application_namespace %>::Ui::TabsComponent.new(tabs: nil))
+    assert_no_selector(".<%= classname_prefix %>-ui-tabs")
+
+    tabs = [
+      { href: "#", active: true, label: "Current tab" },
+      { href: "#", label: "Another tab" },
+      { href: "#", label: "Another tab" },
+    ]
+
+    render_inline(<%= application_namespace %>::Ui::TabsComponent.new(tabs:))
+    assert_selector(".<%= classname_prefix %>-ui-tabs")
+  end
+end

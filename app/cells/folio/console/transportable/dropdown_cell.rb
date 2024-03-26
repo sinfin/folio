@@ -15,6 +15,6 @@ class Folio::Console::Transportable::DropdownCell < Folio::ConsoleCell
   end
 
   def title
-    content_tag(:span, "more_vert", class: "mi f-c-transportable-dropdown__ico")
+    folio_icon(:more_vert, class: "f-c-transportable-dropdown__ico")
   end
 end

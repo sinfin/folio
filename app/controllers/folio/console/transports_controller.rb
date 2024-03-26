@@ -21,7 +21,7 @@ class Folio::Console::TransportsController < Folio::Console::BaseController
   def transport
     @yaml_string = params.require(:yaml_string)
 
-    @importer = Folio::Transportable::Importer.new(@yaml_string, @record)
+    @importer = Folio::Transportable::Importer.new(@yaml_string, current_site.domain, @record)
 
     if @importer.import!
       url = url_for([:edit, :console, @importer.record])

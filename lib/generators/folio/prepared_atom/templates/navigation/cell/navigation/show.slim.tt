@@ -1,3 +1,0 @@
-.<%= classname_prefix %>-atom.<%= classname_prefix %>-atom-navigation
-  .container-fluid
-    == cell('<%= application_namespace_path %>/ui/navigation', model.menu)

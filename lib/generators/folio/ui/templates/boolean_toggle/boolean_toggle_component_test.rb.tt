@@ -1,0 +1,13 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= application_namespace %>::Ui::BooleanToggleComponentTest < Folio::ComponentTest
+  def test_render
+    record = create(:folio_page, published: true)
+
+    render_inline(<%= application_namespace %>::Ui::BooleanToggleComponent.new(record:, attribute: :published, url: "#"))
+
+    assert_selector(".<%= classname_prefix %>-ui-boolean-toggle")
+  end
+end

@@ -21,14 +21,11 @@
     flex: 0 0 auto
     position: relative
     z-index: 1
-    background: #f2f2f2
+    background: $light-gray
     overflow: hidden
 
-    .text-muted
-      color: inherit !important
-
     .nav-tabs .nav-link.active
-      background: #f2f2f2
+      background: $light-gray
 
   &--expanded-form &__form
     max-height: none
@@ -53,7 +50,7 @@
 
   &--expanded-form &__form-toggle
     height: $grid-gutter-width
-    background: #f2f2f2
+    background: $light-gray
     border-bottom: 1px solid #DBDBDB
 
     &:after
@@ -61,7 +58,8 @@
 
   &__form-toggle-button
     +unbutton
-    background: #495057
+    background: $gray-medium-dark
+    color: $white
     height: 28px
     width: 36px
     display: block
@@ -153,7 +151,7 @@
     overflow-y: auto
     -webkit-overflow-scrolling: touch
     margin: 0 (( - $grid-gutter-width )) 0
-    padding: 0 $grid-gutter-width (( $grid-gutter-width + 95px ))
+    padding: 0 $grid-gutter-width (( $grid-gutter-width + px-to-rem(95px) ))
     flex: 1 1 auto
 
   &--editing-atom
@@ -175,9 +173,6 @@
 
     &--clickable
       cursor: pointer
-
-  &__title-ico
-    font-size: 16px
 
   &__title-arrow
     width: 0
@@ -232,23 +227,6 @@
       display: flex
       flex-direction: column
       flex: 1 1 auto
-      overflow: auto
-      overflow-y: scroll
-      -webkit-overflow-scrolling: touch
-
-    &--editing-atom &__scroll
-      overflow: visible
-
-    &--layout-horizontal
-      .f-c-form-footer-spacer
-        display: none
-
-  +mq-mobile-menu
-    overflow-y: scroll
-    -webkit-overflow-scrolling: touch
-
-    .f-c-form-footer-spacer
-      display: none
 
   @media screen and (max-width: 1699px)
     .f-c-atoms-layout-switch

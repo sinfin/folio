@@ -1,0 +1,54 @@
+legend
+  float: none
+
+.form-group
+  margin-bottom: $f-c-form-group-spacer
+
+  &.hidden
+    display: none !important
+
+  &--with-flag
+    position: relative
+
+    .form-control
+      padding-left: 39px
+      position: relative
+      z-index: 1
+
+    .redactor-box.redactor-styles-on
+      padding-left: 27px
+
+  &__flag
+    position: absolute
+    top: 11px
+    left: 11px
+    z-index: 2
+    pointer-events: none
+
+    .redactor-box ~ &
+      top: 29px
+
+  &.has-danger-blink
+    .form-control,
+    .folio-console-react-picker__button .btn,
+    .redactor-box
+      box-shadow: 0 0 12px 2px $red !important
+
+.form-control,
+.form-select,
+.form-check-input
+.redactor-modal .form-item input
+  box-shadow: none !important
+
+  &.form-control--hinted
+    box-shadow: 0 0 12px 2px $blue !important
+
+.form-control.select
+  @extend .form-select
+
+.form-text
+  display: block
+
+.invalid-feedback + .form-text,
+.form-text + .form-text
+  margin-top: $form-text-margin-top / 2

@@ -10,17 +10,35 @@ class Folio::Console::Addresses::FieldsCell < Folio::ConsoleCell
     ]
   end
 
-  def input(g, key, required: false)
+  def fields_layout(g, key)
+    options[:fields_layout] && options[:fields_layout][key] || g.object.class.fields_layout
+  end
+
+  def input(g, key, address_required: true, disabled: false)
+    required = address_required ? nil : false
+
+    # FIXME: address doesn't know it's placement at this moment, can't change validation according to the placement class
+    if options[:required] && options[:required].include?(key)
+      required = true
+    end
+
     if key == :country_code
-      g.input(key, priority: g.object.class.priority_countries, required:)
+      g.input(key, only: g.object.class.countries_whitelist,
+                   priority: g.object.class.priority_countries(locale: I18n.locale),
+                   include_blank: false,
+                   disabled:)
     else
-      g.input(key, required:)
+      g.input(key, required:, disabled:)
     end
   end
 
-  def required?(key, attributes)
+  def address_required?(key, attributes)
     return true if model.object.send("should_validate_#{key}?")
     all_blank = attributes.all? { |attr, val| attr == "type" || val.blank? }
     !all_blank
+  end
+
+  def data
+    stimulus_controller("f-c-addresses-fields")
   end
 end

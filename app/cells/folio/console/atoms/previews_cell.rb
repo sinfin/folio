@@ -37,12 +37,8 @@ class Folio::Console::Atoms::PreviewsCell < Folio::ConsoleCell
   end
 
   def sorted_types
-    ary = Folio::Atom.types
+    ary = Folio::Atom.klasses_for(klass: options[:klass])
                      .reject { |klass| klass.molecule_secondary }
-
-    if options[:klass]
-      ary = ary.select { |klass| klass.valid_for_placement_class?(options[:klass]) }
-    end
 
     ary = ary.sort_by { |klass| I18n.transliterate(klass.model_name.human) }
 
@@ -66,12 +62,7 @@ class Folio::Console::Atoms::PreviewsCell < Folio::ConsoleCell
   end
 
   def default_locale
-    options[:default_locale].try(:to_sym) || I18n.default_locale
-  end
-
-  def atom_cell(atom)
-    opts = (atom.cell_options.presence || {}).merge(atom_additional_options)
-    cell(atom.class.cell_name, atom, opts)
+    options[:default_locale].try(:to_sym) || current_site.locale || ::Rails.application.config.folio_console_locale
   end
 
   def atom_additional_options
@@ -83,6 +74,29 @@ class Folio::Console::Atoms::PreviewsCell < Folio::ConsoleCell
 
     if field && atoms[atom_index + 1] && atoms[atom_index + 1].class.splittable_by_attribute == field
       "f-c-atoms-previews__preview--splittable-can-be-joined"
+    end
+  end
+
+  def render_molecule(atoms)
+    atom_class = atoms.first.class
+
+    if atom_class.molecule_component_class
+      capture { render_view_component(atom_class.molecule_component_class.new(atoms:, atom_options: atom_additional_options)) }
+    else
+      cell(atom_class.molecule_cell_name,
+           atoms,
+           atom_additional_options)
+    end
+  end
+
+  def render_atom(atom)
+    atom_class = atom.class
+
+    if atom_class.component_class
+      capture { render_view_component(atom_class.component_class.new(atom:, atom_options: atom_additional_options)) }
+    else
+      opts = (atom.cell_options.presence || {}).merge(atom_additional_options)
+      cell(atom_class.cell_name, atom, opts)
     end
   end
 end

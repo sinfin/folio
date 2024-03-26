@@ -46,7 +46,7 @@ class Folio::Devise::CrossdomainHandler
   def handle_before_action!
     return Result.new(action: :noop) unless supports_crossdomain_devise?
 
-    if current_site == master_site
+    if current_site.id == master_site.id # can be different instances of same site
       handle_on_master_site!
     else
       handle_on_slave_site!
@@ -97,10 +97,7 @@ class Folio::Devise::CrossdomainHandler
 
           clear_session!
 
-          target_site = Folio::Site.find_by_slug(target_site_slug)
-
-          # be able to test in folio dummy app with singleton sites
-          target_site ||= Folio::Site.instance if Rails.env.test?
+          target_site = Folio::Site.find_by_slug(target_site_slug) || Folio.main_site
 
           Result.new(action: :sign_in_on_target_site,
                      resource_name:,
@@ -111,7 +108,7 @@ class Folio::Devise::CrossdomainHandler
                       only_path: false,
                     })
         else
-          did_redirect_before = session[SESSION_KEY] && session[SESSION_KEY]["redirected_to_sessions_new"]
+          did_rebefore = session[SESSION_KEY] && session[SESSION_KEY]["redirected_to_sessions_new"]
 
           session[SESSION_KEY] = {
             target_site_slug:,
@@ -120,7 +117,7 @@ class Folio::Devise::CrossdomainHandler
             redirected_to_sessions_new: true,
           }
 
-          if devise_controller || did_redirect_before
+          if devise_controller || did_rebefore
             Result.new(action: :noop)
           else
             Result.new(action: :redirect_to_sessions_new, resource_name:)

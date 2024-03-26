@@ -18,7 +18,7 @@ class Associations extends React.PureComponent {
       <React.Fragment>
         {Object.keys(associations).map((key) => (
           <FormGroup key={key} className={formGroupClassName(key, atom.errors)}>
-            <Label>{associations[key].label}</Label>
+            <Label className='form-label'>{associations[key].label}</Label>
 
             <Select
               async={associations[key].url}

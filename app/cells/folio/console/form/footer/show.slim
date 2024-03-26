@@ -1,30 +1,37 @@
 .f-c-form-footer-spacer
 .f-c-form-footer
-  .container-fluid.d-flex.align-items-center
+  .container-fluid.f-c-form-footer__container
     - if back_path
-      a.btn.btn-outline.mr-2.f-c-form-footer__btn href=back_path
-        i.mi.mi--14 undo
-        = t('folio.console.actions.cancel')
+      == cell('folio/console/ui/button',
+              href: back_path,
+              class: 'f-c-form-footer__btn',
+              variant: :gray,
+              label: t('folio.console.actions.back'),
+              hide_label_on_mobile: true,
+              icon: :arrow_u_left_top)
 
     - if preview_path
-      a.btn.btn-outline.mr-2.f-c-form-footer__btn[
-        href=preview_path
-        target="_blank"
-      ]
-        i.mi.mi--14 visibility
-        = t('folio.console.actions.preview')
+      == cell('folio/console/ui/button',
+              href: preview_path,
+              class: 'f-c-form-footer__btn',
+              variant: :gray,
+              label: t('folio.console.actions.preview'),
+              hide_label_on_mobile: true,
+              icon: :open_in_new,
+              target: "_blank")
 
     = options[:pre_submit_content]
 
     - if model
-      = model.button :submit, \
-                     submit_label, \
-                     class: 'f-c-form-footer__btn '\
-                            'f-c-form-footer__btn--submit '\
-                            'mr-2'
+      == cell('folio/console/ui/button',
+              type: :submit,
+              class: 'f-c-form-footer__btn f-c-form-footer__btn--submit',
+              variant: :primary,
+              label: submit_label,
+              icon: :check)
 
-    .f-c-form-footer__ribbon.text-danger.f-c-with-icon
-      span.mi.f-c-form-footer__ribbon-icon warning
-      span = t('.dirty_forms')
+    == cell('folio/console/ui/warning_ribbon',
+            t('.dirty_forms'),
+            class: "f-c-form-footer__ribbon")
 
     = options[:post_submit_content]

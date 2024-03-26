@@ -109,7 +109,73 @@
     With kind regards,
     {SITE_TITLE}
 
-- mailer: Folio::DeviseMailer
+- mailer: Devise::Mailer
+  action: confirmation_instructions
+  optional_keywords:
+    - USER_EMAIL
+    - ROOT_URL
+    - DOMAIN
+    - SITE_TITLE
+  required_keywords:
+    - USER_CONFIRMATION_URL
+  title_cs: Uživatelské účty - potvrzení
+  title_en: Users - confirmation
+  subject_cs: Potvrzení e-mailové adresy
+  subject_en: Account e-mail confirmation
+  body_html_cs: |
+    <p>Dobrý den,</p>
+
+    <p>Potvďte prosím vaší e-mailovou adresu kliknutím na tlačítko:</p>
+
+    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{USER_CONFIRMATION_URL}">Potvrdit e-mail</a></p>
+
+    <p class="small"><a class="text-muted" href="{USER_CONFIRMATION_URL}">{USER_CONFIRMATION_URL}</a></p>
+
+    <p>Pokud jste si toto nevyžádali, ignorujte tento e-mail.</p>
+
+    <p>S přátelským pozdravem</p>
+
+    <p>{SITE_TITLE}</p>
+  body_html_en: |
+    <p>Hello,</p>
+
+    <p>kindly confirm your e-mail address by clicking the button bellow:</p>
+
+    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{USER_CONFIRMATION_URL}">Confirm e-mail</a></p>
+
+    <p class="small"><a class="text-muted" href="{USER_CONFIRMATION_URL}">{USER_CONFIRMATION_URL}</a></p>
+
+    <p>If you did not request this, please ignore this email.</p>
+
+    <p>With kind regards,</p>
+
+    <p>{SITE_TITLE}</p>
+  body_text_cs: |
+    Dobrý den,
+
+    Potvďte prosím vaší e-mailovou adresu kliknutím na odkaz:
+
+    {USER_CONFIRMATION_URL}
+
+    Pokud jste si toto nevyžádali, ignorujte tento e-mail.
+
+    S přátelským pozdravem
+
+    {SITE_TITLE}
+  body_text_en: |
+    Hello,
+
+    kindly confirm your e-mail address by clicking the link bellow:
+
+    {USER_CONFIRMATION_URL}
+
+    If you did not request this, please ignore this email.
+
+    With kind regards,
+
+    {SITE_TITLE}
+
+- mailer: Devise::Mailer
   action: omniauth_conflict
   optional_keywords:
     - USER_EMAIL

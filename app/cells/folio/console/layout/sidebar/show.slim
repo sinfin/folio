@@ -1,25 +1,27 @@
-aside#f-c-layout-sidebar.f-c-layout-sidebar
+aside#f-c-layout-sidebar.f-c-layout-sidebar data-controller="f-c-layout-sidebar"
   .f-c-layout-sidebar__part
-    a.f-c-layout-sidebar__title href=controller.console_root_path
-      = current_site.pretty_domain
+    == cell('folio/console/layout/sidebar/title')
 
-  .f-c-layout-sidebar__part
-    = cell('folio/console/layout/sidebar/search')
+  - if show_search?
+    .f-c-layout-sidebar__part
+      = cell('folio/console/layout/sidebar/search')
 
   .f-c-layout-sidebar__part.f-c-layout-sidebar__part--overflowable
     = render(:_prepended)
 
-    - link_groups.each do |group|
+    - filtered_link_groups_with_links.each do |group|
       - if group && group[:links].present?
         - I18n.with_locale(group[:locale] || I18n.locale)
           .f-c-layout-sidebar__group class=group_class_name(group)
             - if group[:title]
-              .f-c-layout-sidebar__part-title
+              .f-c-layout-sidebar__part-title[
+                data-action="click->f-c-layout-sidebar#onTitleClick"
+              ]
                 = group[:title]
 
             ul.f-c-layout-sidebar__ul
-              - group[:links].each do |link_source|
+              - group[:links].each do |link|
                 li.f-c-layout-sidebar__li
-                  = link_from(link_source)
+                  == link
 
     = render(:_appended)

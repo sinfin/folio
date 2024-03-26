@@ -1,0 +1,103 @@
+$blue-100: #edf3ff
+$blue-200: #c3d6fe
+$blue-300: #88adfe
+$blue-400: #4c84fd
+$blue-500: #295dc2
+$cloud-100: #f5f5f5
+$cloud-200: #e8e8e8
+$cloud-300: #cbcbcb
+$cloud-400: #8d8d8d
+$cloud-500: #696969
+$cloud-600: #555555
+$cloud-700: #3e3e3e
+$cloud-800: #2b2b2b
+$cloud-900: #191919
+$copper-100: #f9f3ea
+$copper-200: #ead6b9
+$copper-300: #d6ae72
+$copper-400: #c1852c
+$copper-500: #81591d
+$copper-600: #402c0f
+$emerald-100: #eafdf4
+$emerald-200: #baf8db
+$emerald-300: #76f2b6
+$emerald-400: #31eb92
+$emerald-500: #219d70
+$emerald-600: #104e31
+$gold-100: #fbf7ee
+$gold-200: #f0e4c5
+$gold-300: #e2ca8b
+$gold-400: #d3af51
+$gold-500: #b18839
+$gold-600: #584a26
+$mint-100: #e6f8f4
+$mint-200: #aae6db
+$mint-300: #55ceb8
+$mint-400: #00b594
+$mint-500: #007963
+$mint-600: #003c31
+$orange-100: #fff5ee
+$orange-200: #ffddc5
+$orange-300: #ffbc8c
+$orange-400: #ff9a52
+$orange-500: #aa6737
+$orange-600: #55331b
+$primary-black: #000000
+$primary-white: #ffffff
+$purple-100: #efe9f3
+$purple-200: #c9b6d5
+$purple-300: #936cac
+$purple-400: #5d2382
+$purple-500: #3e1757
+$purple-600: #1f0c2b
+$red-100: #fef0ef
+$red-200: #faccc9
+$red-300: #f59893
+$red-400: #f0655d
+$red-500: #a0433e
+$red-600: #50221f
+$yellow-100: #fffcea
+$yellow-200: #fdf6b9
+$yellow-300: #fcee72
+$yellow-400: #fae52c
+$yellow-500: #a7991d
+$yellow-600: #544c0f
+$transparent-white-W200: rgba(255, 255, 255, 0.10)
+$transparent-white-W300: rgba(255, 255, 255, 0.15)
+
+$accent-200: var(--<%= application_namespace_path %>-accent-200)
+$accent-300: var(--<%= application_namespace_path %>-accent-300)
+$brand-100: var(--<%= application_namespace_path %>-brand-100)
+$brand-200: var(--<%= application_namespace_path %>-brand-200)
+$brand-300: var(--<%= application_namespace_path %>-brand-300)
+$brand-400: var(--<%= application_namespace_path %>-brand-400)
+$color-over-brand-100: var(--<%= application_namespace_path %>-color-over-brand-100)
+$color-over-brand-200: var(--<%= application_namespace_path %>-color-over-brand-200)
+$link-default: var(--<%= application_namespace_path %>-link-default)
+$note: var(--<%= application_namespace_path %>-note)
+$shade-100: var(--<%= application_namespace_path %>-shade-100)
+$shade-200: var(--<%= application_namespace_path %>-shade-200)
+$shade-300: var(--<%= application_namespace_path %>-shade-300)
+$shade-400: var(--<%= application_namespace_path %>-shade-400)
+$shade-500: var(--<%= application_namespace_path %>-shade-500)
+$shade-600: var(--<%= application_namespace_path %>-shade-600)
+$shade-700: var(--<%= application_namespace_path %>-shade-700)
+$shade-800: var(--<%= application_namespace_path %>-shade-800)
+$shade-black-contrast: var(--<%= application_namespace_path %>-shade-black-contrast)
+$shade-light-contrast: var(--<%= application_namespace_path %>-shade-light-contrast)
+$status-caution: var(--<%= application_namespace_path %>-status-caution)
+$status-disabled-100: var(--<%= application_namespace_path %>-status-disabled-100)
+$status-error: var(--<%= application_namespace_path %>-status-error)
+$status-neutral: var(--<%= application_namespace_path %>-status-neutral)
+$status-success: var(--<%= application_namespace_path %>-status-success)
+$transparent-100: var(--<%= application_namespace_path %>-transparent-100)
+$transparent-200: var(--<%= application_namespace_path %>-transparent-200)
+$transparent-300: var(--<%= application_namespace_path %>-transparent-300)
+$transparent-400: var(--<%= application_namespace_path %>-transparent-400)
+$transparent-500: var(--<%= application_namespace_path %>-transparent-500)
+$transparent-600: var(--<%= application_namespace_path %>-transparent-600)
+$button-background-primary: var(--<%= application_namespace_path %>-button-background-primary)
+$button-background-primary-hover: var(--<%= application_namespace_path %>-button-background-primary-hover)
+$button-foreground-primary: var(--<%= application_namespace_path %>-button-foreground-primary)
+
+$dark: $shade-700

@@ -5,4 +5,5 @@ cs:
 
       footer:
         sent_from: Odesláno z CMS systému Folio
+        sent_from_url: "https://sinfin.digital/"
         console: Vstup do administrace

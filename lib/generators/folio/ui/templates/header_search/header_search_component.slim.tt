@@ -1,0 +1,19 @@
+.<%= classname_prefix %>-ui-header-search data=data
+  a.<%= classname_prefix %>-ui-header-search__a[
+    href=controller.main_app.<%= application_namespace_path %>_search_path
+    data=stimulus_action("aClick")
+  ]
+    = <%= application_namespace_path %>_ui_icon(:search, height: 32)
+
+  = form do |f|
+    = query_input(f)
+
+    .<%= classname_prefix %>-ui-header-search__autocomplete
+      .<%= classname_prefix %>-ui-header-search__autocomplete-results[
+        data=stimulus_target("autocompleteResults")
+      ]
+      span.folio-loader.<%= classname_prefix %>-ui-header-search__loader
+
+  .<%= classname_prefix %>-ui-header-search__overlay data=stimulus_action(click: "overlayClick")
+
+  span.<%= classname_prefix %>-ui-header-search__mq data=stimulus_target("mq")

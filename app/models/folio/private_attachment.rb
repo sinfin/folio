@@ -18,13 +18,19 @@ class Folio::PrivateAttachment < Folio::ApplicationRecord
   validates :file,
             presence: true
 
+  scope :ordered, -> { order(id: :asc) }
+
+  def self.human_type
+    "document"
+  end
+
   def title
     super.presence || file_name
   end
 
   def file_extension
-    if /msword/.match?(file_mime_type)
-      /docx/.match?(file_name) ? :docx : :doc
+    if file_mime_type.include?("msword")
+      file_name.include?("docx") ? :docx : :doc
     else
       Mime::Type.lookup(file_mime_type).symbol
     end
@@ -32,6 +38,15 @@ class Folio::PrivateAttachment < Folio::ApplicationRecord
 
   def self.hash_id_additional_classes
     [Folio::File]
+  end
+
+  def to_h
+    {
+      file_size:,
+      file_name:,
+      type:,
+      id:,
+    }
   end
 end
 

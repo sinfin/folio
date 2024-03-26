@@ -1,0 +1,17 @@
+# frozen_string_literal: true
+
+class Dummy::Molecule::Cards::PersonComponent < ApplicationComponent
+  include Folio::Molecule::CoverPlacements
+
+  THUMB_SIZE = "120x120#"
+  LARGE_THUMB_SIZE = "200x264#"
+
+  def initialize(atoms:, atom_options: {})
+    @atoms = atoms
+    @atom_options = atom_options
+  end
+
+  def image_thumb_size(atom)
+    atom.large ? LARGE_THUMB_SIZE : THUMB_SIZE
+  end
+end

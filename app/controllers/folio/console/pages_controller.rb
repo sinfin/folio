@@ -7,9 +7,9 @@ class Folio::Console::PagesController < Folio::Console::BaseController
     @catalogue_options = {}
 
     if Rails.application.config.folio_pages_ancestry
-      @catalogue_model = Folio::Page.filter_by_params(filter_params)
-                                    .arrange(order: :position)
+      @pages = @pages.accessible_by(current_ability, self.class.cancancan_accessible_by_action)
 
+      @catalogue_model = @pages.arrange(order: :position)
       @catalogue_options = { ancestry: true }
     else
       super
@@ -20,7 +20,7 @@ class Folio::Console::PagesController < Folio::Console::BaseController
   private
     def index_filters
       {
-        by_locale: Rails.application.config.folio_pages_locales ? I18n.available_locales : nil,
+        by_locale: Rails.application.config.folio_pages_locales ? current_site.locales : nil,
         by_type: Folio::Page.recursive_subclasses.map do |klass|
                    [klass.model_name.human, klass]
                  end,

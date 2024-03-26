@@ -13,7 +13,6 @@ class Folio::Devise::FlashCellTest < Cell::TestCase
     flash_hash = ActionDispatch::Flash::FlashHash.new
     flash_hash[:error] = "foo"
     html = cell("folio/devise/flash", flash_hash).(:show)
-    assert html.has_css?(".alert-danger")
-    assert html.has_css?(".d-ui-icon--warning")
+    assert html.has_css?(".f-c-ui-alert--danger")
   end
 end

@@ -1,4 +1,7 @@
 .f-c-state
+  font-size: $font-size-sm
+  line-height: 1
+
   &--loading
     cursor: wait
 
@@ -11,23 +14,21 @@
     display: flex
     align-items: center
     white-space: nowrap
+    gap: $grid-gutter-base
 
     &.dropdown-item
       padding: $dropdown-item-padding-y $dropdown-item-padding-x
 
   &__state-square
-    width: 12px
-    height: 12px
+    width: 16px
+    height: 16px
     display: block
-    background: $background-color-default
-    margin: 0 10px 0 0
+    background: $f-c-state-colors-default
+    border-radius: 8px
 
-    @each $name, $color in $background-colors
+    @each $name, $color in $f-c-state-colors
       &--color-#{$name}
         background: $color
-
-  &--small &__state-square
-    margin-right: 5px
 
   .dropdown-menu
     margin-left: -25px

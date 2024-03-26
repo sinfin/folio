@@ -1,11 +1,54 @@
 # frozen_string_literal: true
 
 module Folio::Console::ReactHelper
+  def file_picker(f:, placement_key:, file_type:, hint: nil)
+    raw cell("folio/console/file/picker",
+             f:,
+             placement_key:,
+             file_type:,
+             hint:)
+  end
+
+  def file_picker_for_cover(f, hint: nil)
+    file_picker(f:,
+                placement_key: :cover_placement,
+                file_type: "Folio::File::Image",
+                hint:)
+  end
+
+  def file_picker_for_og_image(f, hint: nil)
+    file_picker(f:,
+                placement_key: :og_image_placement,
+                file_type: "Folio::File::Image",
+                hint:)
+  end
+
+  def file_picker_for_document(f, hint: nil)
+    file_picker(f:,
+                placement_key: :document_placement,
+                file_type: "Folio::File::Document",
+                hint:)
+  end
+
+  def file_picker_for_audio_cover(f, hint: nil)
+    file_picker(f:,
+                placement_key: :audio_cover_placement,
+                file_type: "Folio::File::Audio",
+                hint:)
+  end
+
+  def file_picker_for_video_cover(f, hint: nil)
+    file_picker(f:,
+                placement_key: :video_cover_placement,
+                file_type: "Folio::File::Video",
+                hint:)
+  end
+
   def react_images(selected_placements = nil,
                    attachmentable: "page",
                    type: :image_placements,
                    atom_setting: nil)
-    react_files("Folio::Image",
+    react_files("Folio::File::Image",
                 selected_placements,
                 attachmentable:,
                 type:,
@@ -16,48 +59,17 @@ module Folio::Console::ReactHelper
                       attachmentable: "page",
                       type: :document_placements,
                       atom_setting: nil)
-    react_files("Folio::Document",
+    react_files("Folio::File::Document",
                 selected_placements,
                 attachmentable:,
                 type:,
                 atom_setting:)
   end
 
-  def react_picker(f, placement_key, file_type: "Folio::Image", title: nil, atom_setting: nil)
-    raw cell("folio/console/react_picker", f, placement_key:,
-                                              title:,
-                                              file_type:,
-                                              atom_setting:)
-  end
-
   def react_ancestry(klass, max_nesting_depth: 2)
     raw cell("folio/console/react_ancestry",
              klass,
              max_nesting_depth:)
-  end
-
-  def react_modal_for(file_type)
-    if ["new", "edit", "create", "update"].include?(action_name)
-      klass = file_type.constantize
-
-      begin
-        url = url_for([:console, :api, klass])
-      rescue StandardError
-        if file_type.start_with?("Folio::")
-          url = folio.url_for([:console, :api, klass])
-        else
-          url = main_app.url_for([:console, :api, klass])
-        end
-      end
-
-      content_tag(:div,
-                  nil,
-                  "class" => "folio-react-wrap",
-                  "data-file-type" => file_type,
-                  "data-files-url" => url,
-                  "data-react-type" => klass.react_type,
-                  "data-mode" => "modal-single-select")
-    end
   end
 
   def console_form_atoms(f)
@@ -101,7 +113,7 @@ module Folio::Console::ReactHelper
       atoms:,
       destroyedIds: destroyed_ids,
       namespace:,
-      structures: Folio::Atom.structures,
+      structures: Folio::Atom.structures_for(klass: f.object.class),
       placementType: f.object.class.to_s,
       className: f.object.class.to_s,
     }
@@ -146,12 +158,12 @@ module Folio::Console::ReactHelper
       "data-original-placements" => placements,
       "data-file-type" => file_type,
       "data-files-url" => url,
-      "data-react-type" => klass.react_type,
+      "data-react-type" => klass.human_type,
       "data-mode" => "multi-select",
       "data-attachmentable" => attachmentable,
       "data-placement-type" => type,
       "data-atom-setting" => atom_setting,
-      "data-can-destroy-files" => can?(:destroy, Folio::File) ? "1" : nil,
+      "data-can-destroy-files" => can_now?(:destroy, Folio::File) ? "1" : nil,
     )
   end
 
@@ -172,7 +184,7 @@ module Folio::Console::ReactHelper
 
     through_klass = reflection.class_name.constantize
 
-    param_base = "#{klass.model_name.param_key}[#{through}_attributes]"
+    param_base = "#{f.object_name}[#{through}_attributes]"
     items = f.object.send(through).map do |record|
       through_record = through_klass.find(record.send(reflection.foreign_key))
 
@@ -248,7 +260,7 @@ module Folio::Console::ReactHelper
       hash = {
         "class" => class_name,
         "data-notes" => data.to_json,
-        "data-account-id" => current_account.id,
+        "data-account-id" => current_user.id,
         "data-param-base" => param_base,
         "data-label" => Folio::ConsoleNote.model_name.human(count: 2),
       }

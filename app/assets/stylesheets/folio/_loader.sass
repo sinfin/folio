@@ -64,9 +64,27 @@ $folio-loader-inverse-foreground: white !default
   &--transparent
     background-color: transparent
 
-  .folio-inversed-loader &
+  &--white
+    &:before
+      border-color: rgba($folio-loader-inverse-foreground, 0.2)
+      border-left-color: $folio-loader-inverse-foreground
+
+  = inversed-loader-style
     background: $folio-loader-inverse-background
 
     &:before
       border-color: rgba($folio-loader-inverse-foreground, 0.2)
       border-left-color: $folio-loader-inverse-foreground
+
+  .folio-inversed-loader &,
+  [data-bs-theme="dark"] &
+    +inversed-loader-style
+
+    &--transparent
+      background-color: transparent
+
+  @media (prefers-color-scheme: dark)
+    +inversed-loader-style
+
+    &--transparent
+      background-color: transparent

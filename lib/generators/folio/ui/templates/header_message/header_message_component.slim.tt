@@ -1,0 +1,15 @@
+- if message
+  .<%= classname_prefix %>-ui-header-message[
+    role="alert"
+    data=stimulus_controller('<%= classname_prefix %>-ui-header-message', values: { cookie: })
+  ]
+    .container-fluid
+      .<%= classname_prefix %>-ui-header-message__inner
+        .<%= classname_prefix %>-rich-text.<%= classname_prefix %>-rich-text--chomp
+          == message
+
+        button.<%= classname_prefix %>-ui-header-message__close[
+          type="button"
+          data=stimulus_action('close')
+        ]
+          = <%= application_namespace_path %>_ui_icon(:close, height: 22)

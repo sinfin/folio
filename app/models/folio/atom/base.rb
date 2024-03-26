@@ -28,6 +28,8 @@ class Folio::Atom::Base < Folio::ApplicationRecord
 
   VALID_PLACEMENT_TYPES = nil
 
+  MOLECULE = false
+
   FORM_LAYOUT = {
     rows: [
       "ATTACHMENTS",
@@ -54,15 +56,24 @@ class Folio::Atom::Base < Folio::ApplicationRecord
   validate :validate_placement
 
   def self.cell_name
-    nil
+  end
+
+  def self.component_class
+    if cell_name.nil?
+      "#{self}Component".constantize
+    end
+  end
+
+  def self.molecule_component_class
+    if self::MOLECULE && molecule_cell_name.nil?
+      "#{self}Component".gsub("::Atom::", "::Molecule::").constantize
+    end
   end
 
   def self.splittable_by_attribute
-    nil
   end
 
   def cell_options
-    nil
   end
 
   def partial_name
@@ -134,6 +145,12 @@ class Folio::Atom::Base < Folio::ApplicationRecord
   end
 
   def valid_for_placement?(placement)
+    if placement.class.atom_class_names_whitelist.present?
+      if placement.class.atom_class_names_whitelist.exclude?(type)
+        return false
+      end
+    end
+
     if self.class::VALID_PLACEMENT_TYPES.present?
       if self.class::VALID_PLACEMENT_TYPES.none? { |type| placement.is_a?(type.constantize) }
         return false
@@ -166,7 +183,6 @@ class Folio::Atom::Base < Folio::ApplicationRecord
   end
 
   def self.molecule_cell_name
-    molecule.try(:cell_name)
   end
 
   def self.molecule_singleton
@@ -194,6 +210,10 @@ class Folio::Atom::Base < Folio::ApplicationRecord
     self::ATTACHMENTS.present? ||
     self::STRUCTURE.present? ||
     self::ASSOCIATIONS.present?
+  end
+
+  def self.molecule?
+    self::MOLECULE || !molecule_cell_name.nil? || !molecule_component_class.nil?
   end
 
   def self.sti_paths

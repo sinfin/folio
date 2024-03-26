@@ -1,0 +1,18 @@
+.<%= classname_prefix %>-ui-user-avatar[
+  data=data
+  class=user_class_name
+  class=link_class_name
+  tabindex=(@link ? "0" : nil)
+]
+  - if current_user_with_test_fallback
+    .<%= classname_prefix %>-ui-user-avatar__avatar
+      = letters
+
+  - else
+    = <%= application_namespace_path %>_ui_icon(:user_circle_2,
+                    height: 32,
+                    class_name: '<%= classname_prefix %>-ui-user-avatar__icon')
+
+  span.<%= classname_prefix %>-ui-user-avatar__mq.<%= classname_prefix %>-ui-user-avatar__mq--desktop[
+    data=(@link ? stimulus_target('mq') : nil)
+  ]

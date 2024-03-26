@@ -19,7 +19,7 @@ class Select extends React.Component {
   state = { key: 0 }
 
   // changing key force the select to reload options based on atom settings
-  componentWillMount () {
+  componentDidMount () {
     window.jQuery(document).on('folioAtomSettingChanged.folioReactSelect', () => {
       this.setState({ key: this.state.key + 1 })
     })

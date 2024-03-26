@@ -1,0 +1,47 @@
+.d-ui-pagy
+  &__pages
+    display: flex
+    align-items: center
+    justify-content: center
+    flex-wrap: wrap
+    gap: map-get($spacers, 1)
+
+  &__page-item, &__page-link
+    display: block
+    font-weight: $font-weight-bold
+    padding: map-get($spacers, 1) px-to-rem(12px)
+    border-radius: px-to-rem(16px)
+
+  &__page-link
+    color: $shade-black-contrast
+    text-decoration: none
+
+    &:hover
+      color: $shade-black-contrast
+      background: $shade-200
+      text-decoration: none
+
+    &:focus
+      color: $shade-light-contrast
+      background: $shade-300
+      text-decoration: none
+      outline: none
+
+  &__page--with-ico > &__page-item,
+  &__page--with-ico > &__page-link
+    padding: map-get($spacers, 1)
+
+  &__page--current > &__page-item
+    background: $shade-black-contrast
+    color: $shade-light-contrast
+
+  &__page--disabled > &__page-item
+    color: $shade-400
+
+  +media-breakpoint-down(md)
+    &__page--hide-on-tablet
+      display: none
+
+  +media-breakpoint-down(sm)
+    &__page--hide-on-mobile
+      display: none

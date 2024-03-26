@@ -3,38 +3,42 @@
     .f-c-atoms-previews__controls
       .f-c-atoms-previews__controls-overlay
       .f-c-atoms-previews__buttons
-        button.mi[
+        button[
           type="button"
           class="f-c-atoms-previews__button"
+          class="f-c-atoms-previews__button--secondary"
           class="f-c-atoms-previews__button--edit"
         ]
-          ' edit
+          = folio_icon(:edit, height: 16)
 
-        button.mi[
+        button[
           type="button"
           class="f-c-atoms-previews__button"
           class="f-c-atoms-previews__button--arrow"
           class="f-c-atoms-previews__button--arrow-up"
         ]
-          ' arrow_upward
+          = folio_icon(:arrow_up, height: 16)
 
-        button.mi[
+        button[
           type="button"
           class="f-c-atoms-previews__button"
           class="f-c-atoms-previews__button--arrow"
           class="f-c-atoms-previews__button--arrow-down"
         ]
-          ' arrow_downward
+          = folio_icon(:arrow_down, height: 16)
 
-        span.fa.fa-arrows-alt-v[
+        span[
           class="f-c-atoms-previews__button"
           class="f-c-atoms-previews__button--handle"
         ]
+          = folio_icon(:arrow_up_down, height: 16)
 
-        button.mi[
+        button[
           type="button"
           class="f-c-atoms-previews__button"
+          class="f-c-atoms-previews__button--danger"
           class="f-c-atoms-previews__button--remove"
         ]
-          ' delete
+          = folio_icon(:delete, height: 16)
+
       .f-c-atoms-previews__controls-mobile-overlay

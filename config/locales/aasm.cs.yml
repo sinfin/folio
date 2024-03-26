@@ -4,6 +4,11 @@ cs:
     attributes:
       aasm_state: Stav
 
+      folio/file:
+        aasm_state/unprocessed: Nezpracováno
+        aasm_state/processing: Zpracováváno
+        aasm_state/ready: Připraveno
+
       folio/lead:
         aasm_state/handled: Vyřízeno
         aasm_state/pending: Vyřizováno

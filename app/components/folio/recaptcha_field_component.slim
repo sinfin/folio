@@ -1,0 +1,5 @@
+.f-recaptcha-field.form-group[
+  data=stimulus_controller("f-recaptcha-field")
+]
+  = recaptcha_tags(script: false)
+  = @f.error :verified_captcha, class: 'invalid-feedback d-block'

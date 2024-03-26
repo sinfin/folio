@@ -1,11 +1,25 @@
-.form-control
-  font-size: $input-font-size
+legend
+  float: none
 
-.form-control-sm
-  font-size: $input-font-size-sm
-
-.form-control-lg
-  font-size: $input-font-size-lg
-
-.form-group abbr
+abbr[title]
   text-decoration: none
+
+.form-group
+  margin-bottom: $form-group-spacer
+
+.form-control.select
+  @extend .form-select
+
+.form-control.form-control--reverse
+  color: $shade-light-contrast
+  background-color: $shade-light-contrast
+  border: 1px solid $shade-400
+
+  &:focus
+    border: 1px solid $shade-light-contrast
+
+.form-control,
+.form-select,
+.form-check-input
+  &--hinted
+    box-shadow: 0 0 12px 2px $brand-100 !important

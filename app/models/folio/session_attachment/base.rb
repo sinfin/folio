@@ -29,7 +29,6 @@ class Folio::SessionAttachment::Base < Folio::ApplicationRecord
   validates :web_session_id, :file,
             presence: true
 
-  belongs_to :user, optional: true
   belongs_to :placement, polymorphic: true,
                          optional: true,
                          touch: true
@@ -47,8 +46,8 @@ class Folio::SessionAttachment::Base < Folio::ApplicationRecord
   end
 
   def file_extension
-    if /msword/.match?(file_mime_type)
-      /docx/.match?(file_name) ? :docx : :doc
+    if file_mime_type.include?("msword")
+      file_name.include?("docx") ? :docx : :doc
     else
       Mime::Type.lookup(file_mime_type).symbol
     end
@@ -59,7 +58,7 @@ class Folio::SessionAttachment::Base < Folio::ApplicationRecord
 
   def thumbnail_store_options
     {
-      path: "session_attachments/#{hash_id}",
+      path_base: "session_attachments/#{hash_id}",
       headers: { "x-amz-acl" => "private" },
       private: true,
     }
@@ -67,6 +66,10 @@ class Folio::SessionAttachment::Base < Folio::ApplicationRecord
 
   def self.hash_id_length
     16
+  end
+
+  def self.human_type
+    "document"
   end
 
   def self.model_name
@@ -98,7 +101,7 @@ class Folio::SessionAttachment::Base < Folio::ApplicationRecord
   private
     def validate_type
       return errors.add(:type, :blank) if type.blank?
-      return errors.add(:type, :invalid) if type.start_with?("Folio::")
+      errors.add(:type, :invalid) if type.start_with?("Folio::")
     end
 
     def pregenerate_thumbnails

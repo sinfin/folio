@@ -1,0 +1,5 @@
+type: Dummy::Menu::Header
+title: Menu v hlavičce
+links:
+  - rails_path: root_path
+    title: Úvodní stránka

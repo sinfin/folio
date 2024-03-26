@@ -1,108 +1,78 @@
 .f-c-with-aside
+  width: 100%
+  display: flex
+  align-items: stretch
+  height: auto
+  min-height: 0
+  position: relative
+  overflow: hidden
+  overflow-x: auto
+  flex: 1 1 100%
+
+  &__main,
   &__aside
-    background: $aside-bg
-
-  +mq-desktop-menu
     display: flex
-    align-items: stretch
-    height: auto
-    min-height: 0
+    flex-direction: column
+    height: 100%
     position: relative
-    overflow: hidden
-    flex: 1 1 100%
+    min-height: 0
 
-    &__main,
-    &__aside
-      display: flex
-      flex-direction: column
-      height: 100%
-      position: relative
-      min-height: 0
+  &__main
+    width: percentage(2 / 3)
+    min-width: 1060px * 2 / 3
+    flex: 1 0 percentage(2 / 3)
+    z-index: 1
 
-    &__main
-      width: percentage(2 / 3)
-      flex: 1 0 percentage(2 / 3)
-      z-index: 1
+  &__aside
+    width: percentage(1 / 3)
+    min-width: 1060px * 1 / 3
+    flex: 0 0 percentage(1 / 3)
+    max-width: 390px
+    z-index: 2
+    background: $light-gray
 
-    &__aside
-      width: percentage(1 / 3)
-      flex: 0 0 percentage(1 / 3)
-      max-width: 390px
-      z-index: 2
+    .folio-loader
+      background: rgba($light-gray, 0.9)
 
-    &__fixed
-      padding: $grid-gutter-half $grid-gutter-width
+  &__fixed
+    padding: $grid-gutter-half $grid-gutter-width
 
-    &__scroll
-      overflow-y: scroll
-      -webkit-overflow-scrolling: touch
-      padding: $grid-gutter-half $grid-gutter-half $grid-gutter-half $grid-gutter-width
-      flex: 0 1 100%
-      min-height: 0
-      position: relative
-
-    &__toggle
-      text-transform: lowercase
-      height: 35px
-      flex: 0 0 35px
-      background: $info
-      display: flex
-      align-items: center
-      justify-content: flex-end
-      padding: 5px 0
-      cursor: pointer
-      position: static
-
-      &::before
-        content: "hide"
-        display: block
-        padding-left: 10px
-
-        html[lang="cs"] &
-          content: "skrýt"
-
-      &::after
-        +pseudo-font-awesome-icon($fa-var-chevron-right)
-        width: 28px
-        display: flex
-        align-items: center
-        justify-content: center
-
-    &--aside-collapsed &__aside
-      width: 28px
-      flex-basis: 28px
-      position: relative
-
-    &--aside-collapsed &__aside > *:not(&__toggle)
-      display: none
-
-    &--aside-collapsed &__toggle
-      text-align: center
-
-      &::before
-        content: '' !important
-        position: absolute
-        top: 0
-        right: 0
-        bottom: 0
-        left: 0
-
-      &::after
-        transform: rotate(180deg)
-        margin-left: 0
-
-  +mq-mobile-menu
+  &__scroll
     overflow-y: scroll
     -webkit-overflow-scrolling: touch
+    padding: $grid-gutter-width
+    flex: 0 1 100%
+    min-height: 0
+    position: relative
 
-    &__main
-      padding: $grid-gutter-half
+  &__aside &__fixed,
+  &__aside &__scroll
+    padding: $grid-gutter-half
 
-    &__aside
-      padding-bottom: 65px
+  &__toggle
+    height: 35px
+    flex: 0 0 35px
+    background: $medium-gray
+    display: flex
+    align-items: center
+    justify-content: flex-end
+    cursor: pointer
+    position: static
+    padding: 0 $grid-gutter-half
 
-      .f-c-with-aside__scroll
-        padding: $grid-gutter-half $grid-gutter-width
+  &--aside-collapsed &__aside
+    min-width: 28px
+    width: 28px
+    flex-basis: 28px
+    position: relative
 
-    &__toggle
-      display: none
+  &--aside-collapsed &__aside > *:not(&__toggle),
+  &--aside-collapsed &__toggle-label
+    display: none
+
+  &--aside-collapsed &__toggle
+    padding: 0
+    justify-content: center
+
+    .f-c-with-aside__toggle-icon
+      transform: rotate(180deg)

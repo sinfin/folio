@@ -1,13 +1,13 @@
 .f-c-index-filters
-  background: #f2f2f2
-  margin-top: - $spacer
-  margin-bottom: $spacer
+  background: $light-gray
+  margin-top: $grid-gutter-width
+  margin-bottom: $grid-gutter-width
 
   .input-group
     margin-bottom: $spacer
 
   .f-c-index-header__tabs-wrap ~ &
-    margin-top: - $nav-tabs-margin
+    margin-top: - $nav-tabs-margin-bottom
 
   &__numeric-range
     background: #DBDBDB
@@ -35,11 +35,6 @@
   &__filters
     flex: 1 1 auto
 
-  &__title
-    flex: 0 0 auto
-    padding: $spacer 0
-    display: block
-
   &__cancel
     min-height: 35px
     display: flex
@@ -57,18 +52,19 @@
   &__autocomplete-wrap
     position: relative
 
-    &:before
-      +pseudo-font-awesome-icon($fa-var-chevron-down)
-      position: absolute
-      top: 0
-      right: 0
-      width: 30px
-      height: $input-height
-      pointer-events: none
-      z-index: 2
-      display: flex
-      align-items: center
-      justify-content: center
+    // TODO @mreq pseudo-font-awesome-icon
+    // &:before
+    //   +pseudo-font-awesome-icon($fa-var-chevron-down)
+    //   position: absolute
+    //   top: 0
+    //   right: 0
+    //   width: 30px
+    //   height: $input-height
+    //   pointer-events: none
+    //   z-index: 2
+    //   display: flex
+    //   align-items: center
+    //   justify-content: center
 
     &:after
       content: ''
@@ -90,30 +86,15 @@
     &:not(:focus)
       cursor: pointer
 
-  &__date-range-input-wrap
-    position: relative
-
-  &__date-range-input
-    padding-left: 33px
-
-  &__date-range-input-ico
-    position: absolute
-    top: 0
-    left: 10px
-    height: 100%
-    display: flex
-    align-items: center
-    z-index: 3
-
-  &__reset-input
-    background: $input-bg
+  &__wrap
+    padding: $grid-gutter-width / 2 0
 
   .form-group,
   .input-group
     width: 100%
     margin: 0
 
-  +media-breakpoint-up(md)
+  +media-breakpoint-up(sm)
     &__wrap
       display: flex
       align-items: flex-start
@@ -122,20 +103,15 @@
       display: flex
       align-items: flex-start
       flex-wrap: wrap
-      padding: $grid-gutter-half / 4 0
+      gap: $grid-gutter-width / 3
+      flex: 1 1 auto
 
-    &__title,
     &__cancel-wrap,
     &__toggle-wrap
       line-height: $input-height
       display: flex
       align-items: center
-      margin: $grid-gutter-half / 4 0
-      padding: 4px 0 0
       flex: 0 0 auto
-
-    &__title
-      margin-right: $grid-gutter-half
 
     &__cancel-wrap,
     &__toggle-wrap
@@ -148,21 +124,22 @@
     &__filter
       flex: 0 0 auto
       width: 235px
-      margin: $grid-gutter-half / 4 $grid-gutter-half / 2 $grid-gutter-half / 4 0
 
   +media-breakpoint-down(sm)
-    &__filters
-      padding-bottom: 3 * $grid-gutter-half / 4
-
     &__filter
-      margin-bottom: $grid-gutter-half / 2
       width: 100% !important
+
+      & + &
+        margin-top: $grid-gutter-half / 2
+
+    &__cancel-wrap,
+    &__toggle-wrap
+      margin-top: $grid-gutter-half / 2
 
     &__cancel-wrap
       flex: 0 0 100%
       width: 100% !important
       text-align: center
-      padding-bottom: $grid-gutter-half
 
       &--hidden
         display: none
@@ -171,10 +148,8 @@
     &__toggle-wrap + &__cancel-wrap
       flex: 0 0 50%
       width: 50% !important
-      margin-bottom: $grid-gutter-half / 2
       text-align: left
       display: inline-flex
-      padding-bottom: $grid-gutter-half
 
     &__toggle-wrap + &__cancel-wrap
       text-align: right

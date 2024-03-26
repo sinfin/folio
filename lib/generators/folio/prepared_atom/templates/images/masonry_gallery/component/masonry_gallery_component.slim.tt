@@ -1,0 +1,18 @@
+.<%= classname_prefix %>-atom.<%= classname_prefix %>-atom-images-masonry-gallery.my-g data=stimulus_lightbox
+  .container-fluid
+    - if @atom.title.present?
+      .<%= classname_prefix %>-atom-images-masonry-gallery__caption.fs-text-s
+        span.<%= classname_prefix %>-atom-images-masonry-gallery__title
+          = cstypo @atom.title
+
+        - if @atom.subtitle.present?
+          span.<%= classname_prefix %>-atom-images-masonry-gallery__subtitle
+            = cstypo @atom.subtitle
+
+    .<%= classname_prefix %>-atom-images-masonry-gallery__wrap
+      - image_placements.each do |image_placement|
+        = <%= application_namespace_path %>_ui_image(image_placement,
+                         THUMB_SIZE,
+                         class_name: "<%= classname_prefix %>-atom-images-masonry-gallery__image",
+                         lightbox: true,
+                         border_radius: true)

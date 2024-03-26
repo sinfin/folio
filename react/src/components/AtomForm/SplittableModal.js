@@ -2,6 +2,8 @@ import React from 'react'
 import { Button, Input } from 'reactstrap'
 import { without } from 'lodash'
 
+import FolioUiIcon from 'components/FolioUiIcon'
+
 import SplittableModalPartsWrap from './styled/SplittableModalPartsWrap'
 import SplittableModalPart from './styled/SplittableModalPart'
 import SplittableModalDivider from './styled/SplittableModalDivider'
@@ -21,8 +23,11 @@ class SplittableModal extends React.PureComponent {
     return (
       <div className='modal-content'>
         <div className='modal-header'>
-          <strong className='modal-title'>{window.FolioConsole.translations.atomSplittingTitle}</strong>
-          <button type='button' className='close' onClick={this.props.cancel}>×</button>
+          <h3 className='modal-title'>{window.FolioConsole.translations.atomSplittingTitle}</h3>
+
+          <button class='f-c-modal__close' type='button' onClick={this.props.cancel}>
+            <FolioUiIcon name='close' class='f-c-modal__close-icon' />
+          </button>
         </div>
 
         <div className='modal-body'>

@@ -1,0 +1,77 @@
+.container-fluid
+  h1
+    a.d-unlink href=dummy_ui_path UI kit
+
+  - %w[light dark].each do |theme|
+    .bg-body.p-g.mt-g.border.rounded data-bs-theme=theme
+      h2.mt-0 Boolean toggles - #{theme}
+
+      h3 No label
+
+      - page = Folio::Page.last
+
+      = render(Dummy::Ui::BooleanToggleComponent.new(record: page,
+                                                     url: controller.folio.url_for([:console, page]),
+                                                     attribute: :published))
+
+      h3 Label
+
+      = render(Dummy::Ui::BooleanToggleComponent.new(record: page,
+                                                     url: controller.folio.url_for([:console, page]),
+                                                     attribute: :published,
+                                                     label: true))
+
+      h3 Small label
+
+      = render(Dummy::Ui::BooleanToggleComponent.new(record: page,
+                                                     url: controller.folio.url_for([:console, page]),
+                                                     attribute: :published,
+                                                     label: true,
+                                                     small_label: true))
+
+      h3 Custom label
+
+      = render(Dummy::Ui::BooleanToggleComponent.new(record: page,
+                                                     url: controller.folio.url_for([:console, page]),
+                                                     attribute: :published,
+                                                     label: "Foo"))
+
+      h3 Verbose labels
+
+      = render(Dummy::Ui::BooleanToggleComponent.new(record: page,
+                                                     url: controller.folio.url_for([:console, page]),
+                                                     attribute: :published,
+                                                     verbose: true))
+
+      h3 Confirmation
+
+      = render(Dummy::Ui::BooleanToggleComponent.new(record: page,
+                                                     url: controller.folio.url_for([:console, page]),
+                                                     attribute: :published,
+                                                     label: "Needs confirmation",
+                                                     confirm: true))
+
+      h3 Custom confirmation
+
+      = render(Dummy::Ui::BooleanToggleComponent.new(record: page,
+                                                     url: controller.folio.url_for([:console, page]),
+                                                     attribute: :published,
+                                                     label: "Needs custom confirmation",
+                                                     confirm: "Custom confirmation msg?"))
+
+      h3 Disabled
+
+      = render(Dummy::Ui::BooleanToggleComponent.new(record: Folio::Page.last,
+                                                     url: controller.folio.url_for([:console, page]),
+                                                     attribute: :published,
+                                                     disabled: true))
+
+      h3 Without url and record
+
+      = render(Dummy::Ui::BooleanToggleComponent.new(attribute: :published,
+                                                     checked: false))
+
+      h3 Without url and record - checked
+
+      = render(Dummy::Ui::BooleanToggleComponent.new(attribute: :published,
+                                                     checked: true))

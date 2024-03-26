@@ -1,5 +1,0 @@
-# frozen_string_literal: true
-
-class <%= application_namespace %>::Molecule::HeroCell < ApplicationCell
-  THUMB_SIZE = "2560x500#"
-end

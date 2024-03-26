@@ -1,0 +1,13 @@
+window.Folio.Stimulus.register('<%= classname_prefix %>-ui-header', class extends window.Stimulus.Controller {
+  toggleDropdownExpandedClass ({ detail: { value } }) {
+    if (value) {
+      this.element.classList.add("<%= classname_prefix %>-ui-header--toolbar-expanded")
+    } else {
+      this.element.classList.remove("<%= classname_prefix %>-ui-header--toolbar-expanded")
+    }
+  }
+
+  toggleMenuOpenedClass () {
+    this.element.classList.toggle("<%= classname_prefix %>-ui-header--menu-opened")
+  }
+})

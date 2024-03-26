@@ -1,0 +1,36 @@
+.d-ui-breadcrumbs
+  margin: 0 0 2 * $grid-gutter-base
+  position: relative
+  z-index: 3
+  flex: 0 0 auto
+
+  // .d-ui-header ~ &
+  //   margin-top: - $grid-gutter-half
+
+  &__container
+    display: flex
+    align-items: center
+    flex-wrap: wrap
+    gap: map-get($spacers, 1)
+
+  &__link
+    display: inline-flex
+    align-items: center
+    gap: 4px
+    color: $shade-500
+
+  &__icon
+    color: $shade-300
+
+  .d-with-icon &__icon
+    margin-right: 0
+
+  &--share &__link:last-of-type
+    margin-right: $grid-gutter-width
+
+  &__share
+    margin-left: auto
+
+  .d-ui-share__items
+    padding-left: 0 !important
+    padding-right: 0 !important

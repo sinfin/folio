@@ -1,0 +1,12 @@
+$<%= classname_prefix %>-ui-buttons-gap: $grid-gutter-half !default
+
+.<%= classname_prefix %>-ui-buttons
+  display: flex
+  flex-wrap: wrap
+  gap: $<%= classname_prefix %>-ui-buttons-gap
+
+  &--nowrap
+    flex-wrap: nowrap
+
+  &--vertical
+    flex-direction: column

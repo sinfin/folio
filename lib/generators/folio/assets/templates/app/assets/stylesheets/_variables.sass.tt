@@ -1,217 +1,301 @@
-$enable-responsive-font-sizes: false
+$enable-negative-margins: true
+$enable-rfs: false
+$enable-validation-icons: false
+$enable-dark-mode: false
+$color-mode-type: media-query
 
-$font-size-base-px: 16px
-$mobile-font-size-base-px: 14px
-
-@function strip-unit($number)
-  @if type-of($number) == 'number' and not unitless($number)
-    @return $number / ($number * 0 + 1)
-  @return $number
-
-@function px-to-rem($px)
-  @return 1rem * strip-unit($px) / strip-unit($font-size-base-px)
-
-@function mobile-px-to-rem($px)
-  @return 1rem * strip-unit($px) / strip-unit($mobile-font-size-base-px)
-
-$black: #000000
-$white: #ffffff
-
-$blue: #4C84FD
-$red: #F0655D
-$purple: #5D2382
-$green: #589E92
-$orange: #FF9A52
-$yellow: #FAE52C
-
-$light-gray: #F3F6F6
-$medium-gray: #EBEEEE
-$gray: #C7CBCC
-$dark-gray: #3B4548
-
-$dark: #434343
-$primary: $black
-$info: $purple
-$warning: $orange
-$text-muted: $gray
-
-$theme-colors: ( blue: $blue, red: $red, purple: $purple, green: $green, orange: $orange, yellow: $yellow, light-gray: $light-gray, medium-gray: $medium-gray, gray: $gray, dark-gray: $dark-gray, black: $black, white: $white )
-
-$spacer: 1rem
-$grid-gutter-width: 30px
+$grid-gutter-base: px-to-rem(8px)
+$grid-gutter-width: 3 * $grid-gutter-base
 $grid-gutter-half: $grid-gutter-width / 2
-$spacers: ( h: $grid-gutter-half, g: $grid-gutter-width, gg: 2 * $grid-gutter-width, s: 40px, a: $grid-gutter-width, ma: 20px )
 
-$body-color: $dark
+$spacer: $grid-gutter-half
+
+$spacers: ( 0: 0, 1: $grid-gutter-base / 2, 2: $grid-gutter-base, 3: $grid-gutter-half, 4: $grid-gutter-width, 5: 2 * $grid-gutter-width, b: $grid-gutter-base, bb: 2 * $grid-gutter-base,  h: $grid-gutter-half, g: $grid-gutter-width, gg: 2 * $grid-gutter-width )
+
+@import './variables-colors'
+
+$white: $primary-white
+$black: #000000
+$dark-gray: #3B4548
+$gray-medium-dark: #6F7172
+$gray: #C9CBCC
+$light-gray: #F5F5F5
+$medium-gray: #E8E8E8
+$blue: #4C84FD
+$orange: #FF9A52
+$green: #219D61
+$yellow: #F1CA45
+$red: #F0655D
+$violet: #5D2382
+$copper: #C1852C
+$gold: #D3AF51
+$antracite: #212529
+
+$gray-100: #f8f9fa
+$gray-600: #6c757d
+$gray-900: $antracite
+
+$cyan: #0dcaf0 !default
+
+$body-bg: $shade-light-contrast
+$body-color: $shade-black-contrast
+
+$primary: $black
+$success: $status-success
+$info: $shade-200
+$warning: $status-caution
+$danger: $status-error
+$text-muted: $shade-400
+
+$gradient-100: linear-gradient(180deg, rgba($black, 0) 0%, $black 100%)
+
+$container-fluid-max-width: 1280px
+$font-size-media-breakpoint-s: sm
+$font-size-media-breakpoint-m: lg
+
+$grid-breakpoints-md-for-ipad-mini: 744px !default
+$grid-breakpoints: ( xs: 0, sm: 576px, md: $grid-breakpoints-md-for-ipad-mini, lg: 992px, xl: 1200px, xxl: 1400px ) !default
+
+$font-family-sans-serif: "Figtree", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"
+
+$font-weight-lighter: lighter
+$font-weight-light: 300
 $font-weight-normal: 400
 $font-weight-medium: 500
+$font-weight-semibold: 600
 $font-weight-bold: 700
+$font-weight-bolder: bolder
 
-$font-family-sans-serif-default: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"
-$font-family-sans-serif: "Open Sans", $font-family-sans-serif-default
+$ui-typo-display-line-height: 1.2
 
-$headings-color: $black
-$headings-font-weight: $font-weight-bold
-$headings-letter-spacing: normal
-$headings-line-height: normal
-$headings-margin-top: $spacer / 2
-$headings-margin-bottom: $spacer
-$mobile-headings-margin-top: $spacer / 2
-$mobile-headings-margin-bottom: $spacer
-$headings-font-family: "IBM Plex Sans", $font-family-sans-serif
+$ui-typo-display-2xl-font-size: px-to-rem(64px)
+$ui-typo-display-2xl-line-height: $ui-typo-display-line-height
+$ui-typo-display-2xl-letter-spacing: -0.5px
 
-$paragraph-margin-bottom: $spacer
+$ui-typo-display-xl-font-size: px-to-rem(56px)
+$ui-typo-display-xl-line-height: $ui-typo-display-line-height
+$ui-typo-display-xl-letter-spacing: -0.5px
+
+$ui-typo-display-l-font-size: px-to-rem(48px)
+$ui-typo-display-l-line-height: $ui-typo-display-line-height
+$ui-typo-display-l-letter-spacing: -0.5px
+
+$ui-typo-display-m-font-size: px-to-rem(36px)
+$ui-typo-display-m-line-height: $ui-typo-display-line-height
+$ui-typo-display-m-letter-spacing: -0.5px
+
+$ui-typo-display-s-font-size: px-to-rem(24px)
+$ui-typo-display-s-line-height: $ui-typo-display-line-height
+$ui-typo-display-s-letter-spacing: -0.5px
+
+$ui-typo-display-xs-font-size: px-to-rem(18px)
+$ui-typo-display-xs-line-height: $ui-typo-display-line-height
+$ui-typo-display-xs-letter-spacing: -0.5px
+
+$ui-typo-display-2xs-font-size: px-to-rem(16px)
+$ui-typo-display-2xs-line-height: $ui-typo-display-line-height
+$ui-typo-display-2xs-letter-spacing: -0.5px
+
+$ui-typo-display-3xs-font-size: px-to-rem(14px)
+$ui-typo-display-3xs-line-height: $ui-typo-display-line-height
+$ui-typo-display-3xs-letter-spacing: -0.5px
+
+$ui-typo-text-line-height: 1.5
+
+$ui-typo-text-3xl-font-size: px-to-rem(32px)
+$ui-typo-text-3xl-line-height: $ui-typo-text-line-height
+
+$ui-typo-text-2xl-font-size: px-to-rem(24px)
+$ui-typo-text-2xl-line-height: $ui-typo-text-line-height
+
+$ui-typo-text-xl-font-size: px-to-rem(20px)
+$ui-typo-text-xl-line-height: $ui-typo-text-line-height
+
+$ui-typo-text-l-font-size: px-to-rem(18px)
+$ui-typo-text-l-line-height: $ui-typo-text-line-height
+
+$ui-typo-text-m-font-size: px-to-rem(16px)
+$ui-typo-text-m-line-height: $ui-typo-text-line-height
+
+$ui-typo-text-s-font-size: px-to-rem(14px)
+$ui-typo-text-s-line-height: 1.571429
+
+$ui-typo-text-xs-font-size: px-to-rem(12px)
+$ui-typo-text-xs-line-height: $ui-typo-text-line-height
 
 $link-color: inherit
 $link-decoration: underline
 $link-hover-color: inherit
 $link-hover-decoration: none
 
-$font-size-media-breakpoint: md
+$btn-link-focus-shadow-rgb: none
 
-$font-size-base: px-to-rem($font-size-base-px)
-$mobile-font-size-base: mobile-px-to-rem($mobile-font-size-base-px)
-$line-height-base: 22 / 16
+$headings-font-family: "Space Grotesk", $font-family-sans-serif
+$headings-font-weight: $font-weight-bold
+$headings-margin-top: $spacer / 2
+$headings-margin-bottom: $spacer
+$headings-margin-top-s: $headings-margin-top
+$headings-margin-bottom-s: $headings-margin-bottom
 
-$font-size-lg-px: 19px
-$font-size-lg: px-to-rem($font-size-lg-px)
-$mobile-font-size-lg: mobile-px-to-rem(17px)
-$line-height-lg: 28 / 19
-$mobile-line-height-lg: 25 / 17
+$font-size-base: $ui-typo-text-m-font-size
+$line-height-base: $ui-typo-text-m-line-height
+$font-size-base-s: $font-size-base
+$line-height-base-s: $line-height-base
 
-$font-size-sm-px: 14px
-$font-size-sm: px-to-rem($font-size-sm-px)
-$mobile-font-size-sm: mobile-px-to-rem(13px)
-$line-height-sm: 18 / 14
-$mobile-line-height-sm: 17 / 13
+$font-size-sm: $ui-typo-text-s-font-size
+$line-height-sm: $ui-typo-text-s-line-height
 
-$h1-font-size: px-to-rem(44px)
-$h1-line-height: 50 / 44
-$h1-margin-top: $grid-gutter-width
+$font-size-lg: $ui-typo-text-l-font-size
+$line-height-lg: $ui-typo-text-l-line-height
+
+$h0-font-size: $ui-typo-display-2xl-font-size
+$h0-line-height: $ui-typo-display-2xl-line-height
+$h0-letter-spacing: $ui-typo-display-2xl-letter-spacing
+$h0-margin-top: $grid-gutter-width
+$h0-margin-bottom: $spacer
+$h0-font-size-s: $h0-font-size
+$h0-line-height-s: $h0-line-height
+$h0-margin-top-s: $h0-margin-top
+$h0-margin-bottom-s: $h0-margin-bottom
+
+$h1-margin-top: 0
 $h1-margin-bottom: $spacer
-$mobile-h1-font-size: mobile-px-to-rem(30px)
-$mobile-h1-line-height: 41 / 30
-$mobile-h1-margin-top: 0
-$mobile-h1-margin-bottom: $spacer
+$h1-margin-top-s: 0
+$h1-margin-bottom-s: $h1-margin-bottom
 
-$h2-font-size: px-to-rem(32px)
-$h2-line-height: 44 / 32
 $h2-margin-top: 2 * $spacer
 $h2-margin-bottom: $spacer
-$mobile-h2-font-size: mobile-px-to-rem(24px)
-$mobile-h2-line-height: 33 / 24
-$mobile-h2-margin-top: 2 * $spacer
-$mobile-h2-margin-bottom: $spacer
+$h2-margin-top-s: 2 * $spacer
+$h2-margin-bottom-s: $spacer
 
-$h3-font-size: px-to-rem(20px)
-$h3-line-height: 30 / 20
 $h3-margin-top: 2 * $spacer
 $h3-margin-bottom: $spacer
-$mobile-h3-font-size: mobile-px-to-rem(19px)
-$mobile-h3-line-height: 26 / 19
-$mobile-h3-margin-top: 2 * $spacer
-$mobile-h3-margin-bottom: $spacer
+$h3-margin-top-s: 2 * $spacer
+$h3-margin-bottom-s: $spacer
 
-$h4-font-size: px-to-rem(19px)
-$h4-line-height: 26 / 19
 $h4-margin-top: 2 * $spacer
 $h4-margin-bottom: $spacer
-$mobile-h4-font-size: mobile-px-to-rem(17px)
-$mobile-h4-line-height: 24 / 17
-$mobile-h4-margin-top: 2 * $spacer
-$mobile-h4-margin-bottom: $spacer
+$h4-margin-top-s: 2 * $spacer
+$h4-margin-bottom-s: $spacer
 
-$h5-font-size: px-to-rem(18px)
-$h5-line-height: 22 / 18
 $h5-margin-top: 2 * $spacer
 $h5-margin-bottom: $spacer
-$mobile-h5-font-size: mobile-px-to-rem(16px)
-$mobile-h5-line-height: 19 / 16
-$mobile-h5-margin-top: 2 * $spacer
-$mobile-h5-margin-bottom: $spacer
+$h5-margin-top-s: 2 * $spacer
+$h5-margin-bottom-s: $spacer
 
-$lead-font-size: $font-size-lg
-$lead-font-weight: $font-weight-normal
+$theme-colors: ( "black": #000000 )
+$social-sites-colors: ( facebook: #3B5998, facebook_messenger: #0078FF, twitter: #00ACED, pinterest: #CB2027, mail: $violet, linkedin: #007BB6, youtube: #FF0000, instagram: #C13584 )
 
-$enable-validation-icons: false
+$form-group-spacer: $grid-gutter-half
+$form-text-font-size: $ui-typo-text-xs-font-size
+$form-text-color: $shade-400
+$input-placeholder-color: $shade-400
 
-$border-color: rgba(0, 0, 0, 0.3)
+$transition-base: all .2s ease-in-out
 
-$border-radius: 0
-$border-radius-lg: 0
-$border-radius-sm: 0
+$border-color: $shade-300
 
-$input-btn-focus-box-shadow: none
-$input-border-color: $gray
-$input-focus-border-color: $black
+$border-radius: px-to-rem(12px)
+$border-radius-lg: px-to-rem(24px)
+$border-radius-sm: $border-radius
 
-$input-btn-padding-y: 10px
-$input-btn-padding-x: 40px
-$input-btn-font-size: 14px
-$input-btn-line-height: 1.29
-
-$input-btn-padding-y-sm: 3px
-$input-btn-padding-x-sm: 6px
-$input-btn-font-size-sm: 12px
-$input-btn-line-height-sm: 17 / 12
-
-$input-btn-padding-y-lg: 17px
-$input-btn-padding-x-lg: 55px
-$input-btn-font-size-lg: 18px
-$input-btn-line-height-lg: 23 / 18
-
-$btn-border-radius: $border-radius
-$btn-border-radius-lg: $border-radius-lg
-$btn-border-radius-sm: $border-radius-sm
-$btn-font-weight: $font-weight-bold
-
-$input-color: $body-color
-$input-placeholder-color: rgba($body-color, 0.5)
-$input-font-size: 16px
-
-$input-padding-x: 10px
-$input-padding-y: 5px
-
-$input-border-width: 1px
-$input-height-border: 2px
-
-$input-height-inner: 38px
-$input-height: $input-height-inner + $input-height-border
-
-$input-height-inner-sm: round($input-btn-font-size-sm * $input-btn-line-height-sm) + $input-btn-padding-y-sm * 2
-$input-height-sm: $input-height-inner-sm + $input-height-border
-
-$input-height-inner-lg: round($input-btn-font-size-lg * $input-btn-line-height) + $input-btn-padding-y-lg * 2
-$input-height-lg: $input-height-inner-lg + $input-height-border
-
-$btn-disabled-opacity: 0.15
-
-$custom-select-indicator-padding: 18px
-
-$transition-easing: ease-in-out
-$transition-duration: .15s
-$transition-base: all $transition-duration $transition-easing
-
-$btn-transition: none
-
-$container-max-widths: ( sm: 540px, md: 720px, lg: 960px, xl: 1105px, xxl: 1440px)
-$container-fluid-max-width: 1920px
-
-$hr-border-color: #EAEAEA
-
-$modal-inner-padding: px-to-rem(30px)
-
-$modal-footer-margin-between: .5rem
-$modal-content-border-width: 0
-$modal-content-border-radius: 0
-$modal-content-inner-border-radius: 0
-
+$modal-sm: px-to-rem(500px)
+$modal-md: px-to-rem(640px)
+$modal-inner-padding: px-to-rem(32px)
+$modal-inner-padding-mobile: px-to-rem(16px)
+$modal-header-padding-y: $modal-inner-padding
 $modal-header-border-width: 0
-$modal-footer-border-width: 0
-$modal-header-padding: $modal-inner-padding $modal-inner-padding 0
+$modal-backdrop-bg: $shade-black-contrast
+$modal-backdrop-opacity: .15
+$modal-content-box-shadow-xs: var(--<%= application_namespace_path %>-box-shadow-overlay)
+$modal-content-box-shadow-sm-up: $modal-content-box-shadow-xs
+$modal-content-border-width: 0
+$modal-content-border-radius: 12px
+$modal-footer-margin-between: 0
+$modal-content-bg: $shade-100
 
-$alert-bg-level: 0
-$alert-border-level: 0
-$alert-color-level: 0
+$input-btn-focus-width: 0
 
-$social-sites-colors: ( facebook: #3B5998, messenger: #0078FF, twitter: #00ACED, pinterest: #CB2027, mail: $purple, linkedin: #007BB6, youtube: #FF0000, instagram: #C13584 )
+$btn-opacity: 1
+$btn-hover-opacity: 0.59
+$btn-disabled-opacity: 0.2
+$btn-outline-hover-opacity: $btn-opacity
+$btn-outline-hover-background-color: $shade-200
+
+$input-btn-border-width: 1px
+$input-btn-padding-x: px-to-rem(10px)
+$input-btn-padding-y: px-to-rem(8px)
+$input-btn-font-size: $ui-typo-text-s-font-size
+$input-btn-line-height: 1.5
+
+$btn-border-width: 2px
+$btn-border-radius: px-to-rem(24px)
+$btn-border-radius-lg: px-to-rem(32px)
+$btn-border-radius-sm: px-to-rem(24px)
+$btn-min-size: px-to-rem(40px)
+$btn-font-size: px-to-rem(14px)
+$btn-line-height: 21 / 14
+$btn-font-weight: $font-weight-semibold
+$btn-text-transform-uppercase: true
+$btn-padding-x: px-to-rem(16px)
+$btn-padding-y: px-to-rem(6px)
+$btn-transition: $transition-base
+
+$btn-min-size-sm: px-to-rem(34px)
+$btn-font-size-sm: px-to-rem(12px)
+$btn-line-height-sm: 18 / 12
+$btn-padding-x-sm: $btn-padding-x
+$btn-padding-y-sm: px-to-rem(6px)
+
+$btn-min-size-lg: px-to-rem(48px)
+$btn-font-size-lg: px-to-rem(16px)
+$btn-line-height-lg: 24 / 16
+$btn-border-radius-lg: px-to-rem(32px)
+$btn-padding-x-lg: px-to-rem(14px)
+$btn-padding-y-lg: px-to-rem(10px)
+
+$input-padding-y: px-to-rem(7px)
+$input-padding-x: px-to-rem(12px)
+$input-border-radius: px-to-rem(24px)
+$input-bg: $shade-light-contrast
+$input-color: $shade-black-contrast
+$input-border-color: $transparent-300
+$input-focus-border-color: $shade-black-contrast
+$input-font-size: $ui-typo-text-m-font-size
+$input-box-shadow: none
+$input-focus-box-shadow: none
+$input-disabled-bg: $shade-100
+
+$form-label-margin-bottom: map-get($spacers, 1)
+$form-label-font-size: $ui-typo-text-s-font-size
+$form-label-font-weight: $font-weight-medium
+
+$table-variants: ( )
+
+$hr-border-color: $shade-300
+$hr-opacity: 1
+
+$folio-addresses-fields-background: $shade-100
+$folio-addresses-fields-nested-background: $shade-light-contrast
+
+$folio-cookie-consent-btn-primary-text: $shade-light-contrast
+$folio-cookie-consent-btn-primary-bg: $shade-black-contrast
+$folio-cookie-consent-btn-primary-hover-bg: $shade-800
+$folio-cookie-consent-btn-secondary-text: $shade-black-contrast
+$folio-cookie-consent-btn-secondary-bg: $shade-100
+$folio-cookie-consent-btn-secondary-hover-bg: $shade-100
+$folio-cookie-consent-block-text: $shade-black-contrast
+$folio-cookie-consent-cookie-category-block-bg: $shade-100
+$folio-cookie-consent-cookie-category-block-bg-hover: $shade-200
+$folio-cookie-consent-cookie-table-border: $shade-200
+$folio-cookie-consent-toggle-bg-readonly: $shade-400
+$folio-cookie-consent-toggle-knob-bg: $shade-200
+$folio-cookie-consent-webkit-scrollbar-bg: $shade-300
+$folio-cookie-consent-webkit-scrollbar-bg-hover: $shade-400
+
+// datepicker
+$td-light: $shade-light-contrast
+$td-disabled-color: $shade-200
+$td-alternate-color: $shade-300
+$td-btn-hover-bg: $shade-100
+$td-days-of-week-color: $shade-500

@@ -1,3 +1,0 @@
-.<%= classname_prefix %>-atom.<%= classname_prefix %>-atom-share.my-g
-  .container-fluid
-    == cell('<%= application_namespace_path %>/ui/share')

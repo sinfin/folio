@@ -14,7 +14,7 @@ class Folio::AasmMailer < Folio::ApplicationMailer
   end
 
   def bcc_email
-    Rails.application.config.folio_aasm_mailer_config.try(:[], :bcc)
+    Rails.application.config.folio_aasm_mailer_config.try(:[], :bcc) || Rails.application.config.folio_mailer_global_bcc
   end
 
   def reply_to_email

@@ -16,6 +16,8 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
   after_create :run_file_after_save_job!
   after_destroy :run_file_after_save_job!
 
+  attr_accessor :dont_run_after_save_jobs
+
   def to_label
     title.presence || file.try(:file_name) || "error: empty file"
   end
@@ -33,20 +35,31 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
 
   def self.folio_image_placement(name = nil)
     include Folio::PregenerateThumbnails
-    folio_file_placement("Folio::Image", name)
+    folio_file_placement("Folio::File::Image", name)
     self.class_eval { alias :image :file }
   end
 
   def self.folio_document_placement(name = nil)
-    folio_file_placement("Folio::Document", name)
+    folio_file_placement("Folio::File::Document", name)
   end
 
   def run_after_save_job!
+    return if dont_run_after_save_jobs
+    return if ENV["SKIP_FOLIO_FILE_AFTER_SAVE_JOB"]
+
     Folio::FilePlacements::AfterSaveJob.perform_later(self)
   end
 
   def run_file_after_save_job!
-    file.run_after_save_job! if file
+    return if dont_run_after_save_jobs
+    return if ENV["SKIP_FOLIO_FILE_AFTER_SAVE_JOB"]
+
+    if file
+      file.run_after_save_job
+    elsif changed_attributes && changed_attributes["file_id"]
+      file_before_destroy = Folio::File.find_by(id: changed_attributes["file_id"])
+      file_before_destroy.run_after_save_job if file_before_destroy
+    end
   end
 end
 

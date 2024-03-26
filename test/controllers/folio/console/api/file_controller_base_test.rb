@@ -3,7 +3,18 @@
 require "test_helper"
 
 class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControllerTest
-  [Folio::Document, Folio::Image].each do |klass|
+  attr_reader :site
+
+  setup do
+    @site = build(:folio_file_document).site # (Folio::Site.first || create(:folio_site))
+  end
+
+  [
+    Folio::File::Document,
+    Folio::File::Image,
+    Folio::File::Video,
+    Folio::File::Audio,
+  ].each do |klass|
     test "#{klass} - index" do
       get url_for([:console, :api, klass])
       assert_response :success
@@ -15,6 +26,7 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
         file: {
           attributes: {
             tags: ["foo"],
+            site_id: site.id,
           }
         }
       }
@@ -25,7 +37,9 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
     test "#{klass} - destroy" do
       file = create(klass.model_name.singular)
       assert klass.exists?(file.id)
+
       delete url_for([:console, :api, file])
+
       assert_response(:success)
       assert_not klass.exists?(file.id)
     end
@@ -50,20 +64,6 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
       ids = files.first(2).map(&:id).join(",")
       delete url_for([:mass_destroy, :console, :api, klass, ids:])
       assert_equal(1, klass.count)
-    end
-
-    test "#{klass} - change_file" do
-      file = create(klass.model_name.singular)
-      assert_not_equal("test-black.gif", file.file_name)
-      post url_for([:change_file, :console, :api, file]), params: {
-        file: {
-          attributes: {
-            file: fixture_file_upload("test/fixtures/folio/test-black.gif"),
-          }
-        }
-      }
-      assert_response(:success)
-      assert_equal("test-black.gif", response.parsed_body["data"]["attributes"]["file_name"])
     end
 
     test "#{klass} - mass_download" do

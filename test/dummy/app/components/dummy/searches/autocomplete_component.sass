@@ -1,0 +1,50 @@
+.d-searches-autocomplete
+  &__title
+    font-weight: $font-weight-semibold
+    text-decoration: none
+    padding: map-get($spacers, 3) map-get($spacers, 3) map-get($spacers, 2)
+    display: block
+    font-size: $ui-typo-text-xs-font-size
+
+  &__record
+    padding: map-get($spacers, 2) map-get($spacers, 3)
+    text-decoration: none
+    border-top: 1px solid transparent
+    border-bottom: 1px solid transparent
+    display: block
+
+    &:hover,
+    &--focused
+      background: $shade-100
+      border-top: 1px solid $transparent-300
+      border-bottom: 1px solid $transparent-300
+
+  &__no-results
+    padding: $spacer $grid-gutter-half
+
+  &__more
+    padding: map-get($spacers, 2) map-get($spacers, 3)
+    border-top: 1px solid $transparent-300
+    display: flex
+    align-items: center
+    justify-content: flex-end
+
+  &__more-link
+    text-decoration: none
+    color: $shade-500
+    display: flex
+    gap: map-get($spacers, 2)
+    align-items: center
+
+  &__more-text
+    font-size: $ui-typo-text-s-font-size
+    font-weight: $font-weight-medium
+
+  &__more-link:hover &__more-text,
+  &__more-link:focus &__more-text
+    text-decoration: underline
+
+  &__klass a:last-child,
+  &__klass a:last-child:hover,
+  &__klass a:last-child:focus
+    border-bottom: 0

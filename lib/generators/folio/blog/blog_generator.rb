@@ -21,18 +21,14 @@ class Folio::BlogGenerator < Rails::Generators::Base
   end
 
   def add_routes
-    return if File.read(Rails.root.join("config/routes.rb")).include?("namespace :blog")
+    return if File.read(folio_generators_root.join("config/routes.rb")).include?("namespace :blog")
     inject_into_file "config/routes.rb", after: "scope module: :#{application_namespace_path}, as: :#{application_namespace_path} do\n" do <<~'RUBY'
       namespace :blog do
-        resources :articles, only: %i[show] do
-          member { get :preview }
-        end
+        resources :articles, only: %i[show]
 
         get "/", to: "articles#index", as: :articles
 
-        resources :topics, only: %i[show] do
-          member { get :preview }
-        end
+        resources :topics, only: %i[show]
       end
 
     RUBY
@@ -51,7 +47,7 @@ class Folio::BlogGenerator < Rails::Generators::Base
   end
 
   def add_atoms_to_showcase
-    return if File.read(Rails.root.join("data/atoms_showcase.yml")).include?("::Atom::Blog::Articles::Card::Large")
+    return if File.read(folio_generators_root.join("data/atoms_showcase.yml")).include?("::Atom::Blog::Articles::Card::Large")
     append_file "data/atoms_showcase.yml" do <<~'YAML'
       - type: Redside::Atom::Blog::Articles::Card::Large
         article: true
@@ -66,7 +62,7 @@ class Folio::BlogGenerator < Rails::Generators::Base
   end
 
   def add_console_sidebar_links
-    path = Rails.root.join("config/initializers/folio.rb")
+    path = folio_generators_root.join("config/initializers/folio.rb")
     return unless File.exist?(path)
     return if File.read(path).include?("Blog::Article")
 
@@ -86,7 +82,7 @@ class Folio::BlogGenerator < Rails::Generators::Base
 
   def add_factories
     return if application_namespace == "Dummy"
-    return if File.read(Rails.root.join("test/factories.rb")).include?("#{application_namespace_path}_blog_article")
+    return if File.read(folio_generators_root.join("test/factories.rb")).include?("#{application_namespace_path}_blog_article")
 
     content = <<~'RUBY'
       factory :application_namespace_path_blog_article, class: "application_namespace::Blog::Article" do

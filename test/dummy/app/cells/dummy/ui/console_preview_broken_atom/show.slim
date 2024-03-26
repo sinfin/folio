@@ -1,0 +1,17 @@
+.d-ui-console-preview-broken-atom
+  .container-fluid
+    .bg-red.p-g.text-center
+      = icon(:warning, height: 40, class: "text-white")
+
+      h3.text-center.text-white.my-3
+        = model.class.model_name.human
+
+      .text-center.text-white.font-family-headings
+        - if I18n.locale == :cs
+          ' Špatně nastavený atom. Veřejně nebude zobrazen.
+        - else
+          ' Invalid atom. Will not be show publicly.
+
+        - if options[:message]
+          br
+          = options[:message]

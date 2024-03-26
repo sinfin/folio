@@ -1,0 +1,17 @@
+- if @head_html
+  javascript:
+    window.Dummy = window.Dummy || {};
+    window.Dummy.Ui = window.Dummy.Ui || {};
+    window.Dummy.Ui.Icon = window.Dummy.Ui.Icon || {};
+    window.Dummy.Ui.Icon.svgSpritePath = "#{image_path('ui_icons_sprite.svg')}";
+    window.Dummy.Ui.Icon.defaultSizes = #{ICONS.to_json.html_safe};
+
+- else
+  svg[
+    viewBox="0 0 #{default_size[:width]} #{default_size[:height]}"
+    style=style
+    class=class_names
+    data=@data
+    title=@title
+  ]
+    use xlink:href="#{image_path('ui_icons_sprite.svg')}##{@name}"

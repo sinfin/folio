@@ -1,0 +1,22 @@
+.f-chart
+  position: relative
+
+  &--error
+    color: $danger
+    padding: $grid-gutter-half
+    display: flex
+    align-items: center
+    justify-content: center
+    text-align: center
+
+  &--border-bottom-radius &,
+  &--border-bottom-radius &__canvas
+    border-bottom-left-radius: $border-radius
+    border-bottom-right-radius: $border-radius
+
+  &--overlay
+    position: absolute
+    top: 0
+    right: 0
+    bottom: 0
+    left: 0

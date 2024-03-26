@@ -4,7 +4,8 @@ class Folio::User < Folio::ApplicationRecord
   include Folio::Devise::DeliverLater
   include Folio::Filterable
   include Folio::HasAddresses
-  include Folio::HasNewsletterSubscription
+  include Folio::HasNewsletterSubscriptions
+  include Folio::HasSiteRoles
 
   has_sanitized_fields :email, :first_name, :last_name, :nickname
 
@@ -26,7 +27,16 @@ class Folio::User < Folio::ApplicationRecord
     invitable
   ]
 
-  selected_device_modules << :confirmable if Rails.application.config.folio_users_confirmable
+  if Rails.application.config.folio_users_confirmable
+    selected_device_modules << :confirmable
+  elsif Rails.application.config.folio_users_confirm_email_change
+    selected_device_modules << :confirmable
+
+    def self.should_confirm_email_change?
+      true
+    end
+  end
+
   selected_device_modules << :omniauthable if Rails.application.config.folio_users_omniauth_providers.present?
 
   devise_options = {
@@ -40,15 +50,31 @@ class Folio::User < Folio::ApplicationRecord
                              inverse_of: :user,
                              dependent: :destroy
 
+
+  has_many :created_console_notes, class_name: "Folio::ConsoleNote",
+                                   inverse_of: :created_by,
+                                   foreign_key: :created_by_id,
+                                   dependent: :nullify
+
+  has_many :closed_console_notes, class_name: "Folio::ConsoleNote",
+                                  inverse_of: :closed_by,
+                                  foreign_key: :closed_by_id,
+                                  dependent: :nullify
+
+
   validates :first_name, :last_name,
             presence: true,
             if: :validate_first_name_and_last_name?
+
+  validates :email,
+            format: { with: Folio::EMAIL_REGEXP },
+            if: :email?
 
   validates :phone,
             phone: true,
             if: :validate_phone?
 
-  after_invitation_accepted :update_newsletter_subscription
+  after_invitation_accepted :create_newsletter_subscriptions
 
   before_update :update_has_generated_password
 
@@ -58,11 +84,17 @@ class Folio::User < Folio::ApplicationRecord
                   using: { tsearch: { prefix: true } }
 
   scope :ordered, -> { order(id: :desc) }
+  scope :superadmins, -> { where(superadmin: true) }
+  scope :by_role, -> (role) { role == "superadmin" ? superadmins : where(id: Folio::SiteUserLink.by_roles([role]).select(:user_id)) }
 
   scope :by_address_identification_number_query, -> (q) {
     subselect = Folio::Address::Base.where("identification_number LIKE ?", "%#{q}%").select(:id)
     where(primary_address_id: subselect).or(where(secondary_address_id: subselect))
   }
+
+  scope :currently_editing_path, -> (path) do
+    where(console_path: path).where("console_path_updated_at > ?", 5.minutes.ago)
+  end
 
   pg_search_scope :by_full_name_query,
                   against: %i[last_name first_name],
@@ -94,6 +126,9 @@ class Folio::User < Folio::ApplicationRecord
       by_email_query_trigram(email)
     end
   }
+
+  audited only: %i[email unconfirmed_email first_name last_name nickname phone subscribed_to_newsletter superadmin bank_account_number]
+  has_associated_audits
 
   def full_name
     if first_name.present? || last_name.present?
@@ -164,6 +199,10 @@ class Folio::User < Folio::ApplicationRecord
 
     user.email = auth.email
 
+    if Rails.application.config.folio_users_confirm_email_change
+      user.confirmed_at = Time.current
+    end
+
     if auth.nickname.present?
       ary = auth.nickname.split(/\s+/, 2)
       user.first_name = ary[0]
@@ -216,6 +255,51 @@ class Folio::User < Folio::ApplicationRecord
   def acquire_orphan_records!(old_session_id:)
   end
 
+  def create_site_links_for(sites)
+    sites.compact.uniq.each do |site|
+      su_links = site_user_links.by_site(site)
+      su_links.create!(roles: []) if su_links.blank?
+    end
+  end
+
+  def update_console_path!(console_path)
+    update_columns(console_path:,
+                   console_path_updated_at: Time.current)
+  end
+
+  def can_manage_sidekiq?
+    can_now?(:manage, :sidekiq, site: Folio.main_site)
+  end
+
+  def can_now?(action, subject = nil, site: nil)
+    site ||= subject&.try(:site)
+    subject = site if subject.blank?
+    ability = Folio::Ability.new(self, site)
+    can_now_by_ability?(ability, action, subject)
+  end
+
+  def can_now_by_ability?(ability, action, subject)
+    return false if self.new_record?
+    return false unless ability.can?(action, subject)
+
+    # user is able to do action, but can it be triggered now?
+    if subject.respond_to?(:currently_available_actions)
+      subject.currently_available_actions(self).include?(action)
+    else
+      true
+    end
+  end
+
+  def currently_allowed_actions_with(subject, site: nil)
+    return [] unless subject.respond_to?(:currently_available_actions)
+
+    site ||= subject&.try(:site)
+    subject = site if subject.blank?
+    ability = Folio::Ability.new(self, site)
+
+    subject.currently_available_actions(self).select { |action| ability.can?(action, subject) }
+  end
+
   private
     def validate_first_name_and_last_name?
       invitation_accepted_at?
@@ -225,14 +309,18 @@ class Folio::User < Folio::ApplicationRecord
       Rails.application.config.folio_users_require_phone
     end
 
-    def should_subscribe_to_newsletter?
+    def newsletter_subscriptions_enabled?
       # skip users that
-      # - haven't accepted invitaton
+      # - haven't accepted invitation
       # - haven't confirmed their email address
-      return if created_by_invite? && !invitation_accepted_at?
-      return if !confirmed_at? && confirmation_required_for_invited?
+      return false if created_by_invite? && !invitation_accepted_at?
+      return false if !confirmed_at? && confirmation_required_for_invited?
 
-      subscribed_to_newsletter?
+      true
+    end
+
+    def should_subscribe_to_newsletter?
+      newsletter_subscriptions_enabled? && subscribed_to_newsletter?
     end
 
     def subscription_email
@@ -296,6 +384,14 @@ end
 #  crossdomain_devise_set_at :datetime
 #  sign_out_salt_part        :string
 #  source_site_id            :bigint(8)
+#  superadmin                :boolean          default(FALSE), not null
+#  console_path              :string
+#  console_path_updated_at   :datetime
+#  degree_pre                :string(32)
+#  degree_post               :string(32)
+#  phone_secondary           :string
+#  born_at                   :date
+#  bank_account_number       :string
 #
 # Indexes
 #

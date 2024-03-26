@@ -4,25 +4,41 @@ en:
     actions:
       create:
         alert: "%{resource_name} could not be created."
+        error: "%{resource_name} could not be created."
         notice: "%{resource_name} was successfully created."
+        success: "%{resource_name} was successfully created."
       destroy:
         alert: "%{resource_name} could not be destroyed."
+        error: "%{resource_name} could not be destroyed."
         notice: "%{resource_name} was successfully destroyed."
+        success: "%{resource_name} was successfully destroyed."
       discard:
         alert: "%{resource_name} could not be archived."
+        error: "%{resource_name} could not be archived."
         notice: "%{resource_name} was successfully archived."
+        success: "%{resource_name} was successfully archived."
       undiscard:
         alert: "%{resource_name} could not be unarchived."
+        error: "%{resource_name} could not be unarchived."
         notice: "%{resource_name} was successfully unarchived."
+        success: "%{resource_name} was successfully unarchived."
       update:
         alert: "%{resource_name} could not be updated."
+        error: "%{resource_name} could not be updated."
         notice: "%{resource_name} was successfully updated."
+        success: "%{resource_name} was successfully updated."
       cancel:
         alert: "%{resource_name} could not be cancelled."
+        error: "%{resource_name} could not be cancelled."
         notice: "%{resource_name} was successfully cancelled."
+        success: "%{resource_name} was successfully cancelled."
       event:
         alert: "%{resource_name} state could not be updated."
+        error: "%{resource_name} state could not be updated."
         notice: "%{resource_name} state was successfully updated."
+        success: "%{resource_name} state was successfully updated."
       confirm:
         alert: "%{resource_name} could not be confirmed."
+        error: "%{resource_name} could not be confirmed."
         notice: "%{resource_name} was successfully confirmed."
+        success: "%{resource_name} was successfully confirmed."

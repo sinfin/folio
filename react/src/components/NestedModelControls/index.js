@@ -1,56 +1,61 @@
 import React from 'react'
 
 import { makeConfirmed } from 'utils/confirmed'
+import FolioConsoleUiButtons from 'components/FolioConsoleUiButtons'
+import FolioConsoleUiButton from 'components/FolioConsoleUiButton'
 
-const NestedModelControls = ({ moveUp, moveDown, remove, edit, vertical }) => {
-  let btnGroupClassName = 'btn-group mr-1'
-
-  if (vertical) {
-    btnGroupClassName = 'btn-group btn-group-vertical align-items-center'
-  }
-
+const NestedModelControls = ({ moveUp, moveDown, remove, edit, vertical, handleClassName }) => {
   const destroyButton = remove && (
-    <button
-      className='btn btn-danger fa fa-times'
-      type='button'
+    <FolioConsoleUiButton
+      variant='danger'
+      icon='close'
       onClick={makeConfirmed(remove)}
     />
   )
 
   const editButton = edit && (
-    <button
-      className={`btn btn-secondary f-c-nested-model-controls__edit fa fa-edit ${vertical ? '' : 'mr-1'}`}
-      type='button'
+    <FolioConsoleUiButton
+      variant='secondary'
+      class='f-c-nested-model-controls__edit'
+      icon='edit'
       onClick={edit}
     />
   )
 
+  let className = 'f-c-nested-model-controls'
+
+  if (vertical) className += ` ${className}--vertical`
+
   return (
-    <div className='f-c-nested-model-controls'>
-      <div className={btnGroupClassName}>
-        {moveUp && (
-          <button
-            className='btn btn-outline-secondary fa fa-arrow-up'
-            type='button'
-            onClick={moveUp}
-          />
-        )}
+    <FolioConsoleUiButtons className={className}>
+      {moveUp && (
+        <FolioConsoleUiButton
+          variant='secondary'
+          icon='arrow_up'
+          onClick={moveUp}
+        />
+      )}
 
-        {moveDown && (
-          <button
-            className='btn btn-outline-secondary fa fa-arrow-down'
-            type='button'
-            onClick={moveDown}
-          />
-        )}
+      {moveDown && (
+        <FolioConsoleUiButton
+          variant='secondary'
+          icon='arrow_down'
+          onClick={moveDown}
+        />
+      )}
 
-        {vertical && editButton}
-        {vertical && destroyButton}
-      </div>
+      {editButton}
+      {destroyButton}
 
-      {!vertical && editButton}
-      {!vertical && destroyButton}
-    </div>
+      {handleClassName && (
+        <FolioConsoleUiButton
+          className={handleClassName}
+          icon='arrow_up_down'
+          variant='tertiary'
+          tag='span'
+        />
+      )}
+    </FolioConsoleUiButtons>
   )
 }
 

@@ -1,0 +1,9 @@
+.container-fluid
+  h1
+    a.d-unlink href=dummy_ui_path UI kit
+
+  ul.lead.fw-bold
+    - @actions.each do |action|
+      li.my-3
+        a href=send("#{action}_dummy_ui_path")
+          = action.to_s.capitalize.gsub("_", " ")

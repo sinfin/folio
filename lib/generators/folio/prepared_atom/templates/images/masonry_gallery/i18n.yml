@@ -1,0 +1,13 @@
+---
+cs:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/images/masonry_gallery: 
+    models:
+      application_namespace_path/atom/images/masonry_gallery: Obrázek - galerie masonry
+en:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/images/masonry_gallery: 
+    models:
+      application_namespace_path/atom/images/masonry_gallery: Images - gallery (masonry)

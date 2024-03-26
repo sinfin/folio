@@ -7,6 +7,7 @@ class Folio::Users::OmniauthCallbacksControllerTest < ActionDispatch::Integratio
 
   def setup
     skip if Rails.application.config.folio_users_omniauth_providers.blank?
+    skip if Rails.application.config.folio_users_omniauth_providers.exclude?(:facebook)
 
     super
     create_and_host_site

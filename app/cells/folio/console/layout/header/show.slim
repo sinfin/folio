@@ -1,20 +1,48 @@
-.f-c-layout-header
-  button.f-c-layout-header__toggle[
-    type="button"
-    class="fa fa-bars"
-    class="f-c-js-sidebar-toggle"
-  ]
+.f-c-layout-header.small
+  == cell('folio/console/ui/button',
+          variant: :transparent,
+          icon: :menu,
+          class: "f-c-layout-header__toggle f-c-js-sidebar-toggle")
 
   .container-fluid
     .f-c-layout-header__inner
-      = model
+      - if model[:breadcrumbs_on_rails]
+        .f-c-layout-header__breadcrumbs
+          - model[:breadcrumbs_on_rails].each_with_index do |breadcrumb, i|
+            .f-c-layout-header__breadcrumb[
+              class=breadcrumb_position_class_name(i)
+            ]
+              - if breadcrumb.path
+                a.f-c-layout-header__breadcrumb-inner[
+                  class="f-c-layout-header__breadcrumb-inner--a"
+                  class="text-reset"
+                  href=breadcrumb.path
+                ]
+                  - if i.zero? && breadcrumb.path == "/console"
+                    = folio_icon(:home,
+                                 class: 'f-c-layout-header__breadcrumb-home-ico',
+                                 height: 16)
+                  - else
+                    = cstypo breadcrumb.name
+
+              - else
+                span.f-c-layout-header__breadcrumb-inner[
+                  class="f-c-layout-header__breadcrumb-inner--span"
+                ]
+                  = cstypo breadcrumb.name
+
+              - if model[:breadcrumbs_on_rails].size - 1 > i
+                = folio_icon(:chevron_right,
+                             class: "f-c-layout-header__breadcrumb-delimiter",
+                             height: 16)
 
       == cell('folio/console/layout/audited_dropdown', \
-              options[:audited_revisions],
-              audited_revision: options[:audited_revision])
+              model[:audited_revisions],
+              audited_revision: model[:audited_revision])
 
-      = link_to log_out_path, \
-                method: Devise.sign_out_via, \
-                class: 'f-c-layout-header__sign-out-link f-c-with-icon'
-        i.fa.fa-sign-out-alt.f-c-layout-header__sign-out-link-icon
-        span.f-c-layout-header__sign-out-link__label = t('.sign_out')
+      == cell('folio/console/ui/with_icon',
+              t('.sign_out', user: current_user.email),
+              href: log_out_path,
+              icon: :logout_variant,
+              icon_options: { height: 14 },
+              class: 'f-c-layout-header__sign-out-link text-reset')

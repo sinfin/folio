@@ -16,4 +16,12 @@ class Folio::Console::Form::ErrorsCell < Folio::ConsoleCell
       error.full_message
     end
   end
+
+  def button_data(error)
+    {
+      "error-field" => error.attribute,
+      "f-c-form-errors-target" => "button",
+      "action" => "f-c-form-errors#onButtonClick"
+    }
+  end
 end

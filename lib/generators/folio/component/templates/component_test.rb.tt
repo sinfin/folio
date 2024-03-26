@@ -1,0 +1,13 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= component_class_name %>Test < <%= test_class_name %>
+  def test_render
+    model = "hello"
+
+    render_inline(<%= component_class_name %>.new(model:))
+
+    assert_selector(".<%= css_class_name %>")
+  end
+end

@@ -14,7 +14,6 @@
   = f.input :event_email_subject,
             as: :string,
             label: false,
-            content_templates: "Folio::ContentTemplate::AasmEmailSubject",
             input_html: { \
               class: 'f-c-aasm-email-modal__subject', \
               placeholder: t('.placeholders.subject'), \
@@ -24,7 +23,6 @@
             autosize: true,
             as: :text,
             label: false,
-            content_templates: "Folio::ContentTemplate::AasmEmailText",
             input_html: { \
               class: 'f-c-aasm-email-modal__text', \
               placeholder: t('.placeholders.text'), \
@@ -35,10 +33,10 @@
     = key_hidden_field(f, key)
 
   .d-flex
-    .mr-2
+    .me-2
       button.btn.btn-outline.f-c-aasm-email-modal__cancel[
         type="button"
-        data-dismiss="modal"
+        data-bs-dismiss="modal"
       ]
         = t('folio.console.actions.cancel')
 

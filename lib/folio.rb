@@ -36,6 +36,7 @@ require "fast_jsonapi"
 require "traco"
 require "aws-sdk-s3"
 require "message_bus"
+require "terser"
 
 require "dragonfly"
 require "dragonfly/s3_data_store"
@@ -55,27 +56,32 @@ module Folio
   EMAIL_REGEXP = /[^@]+@[^@]+\.[^@]+/
   OG_IMAGE_DIMENSIONS = "1200x630#"
 
-  # respect app/assets/javascripts/folio/_message-bus.js
+  # respect app/assets/javascripts/folio/message_bus.js
   MESSAGE_BUS_CHANNEL = "folio_messagebus_channel"
+
+  LIGHTBOX_IMAGE_SIZE = "2560x2048>"
 
   def self.table_name_prefix
     "folio_"
   end
 
-  def self.current_site(request: nil)
-    if Rails.application.config.folio_site_is_a_singleton
-      Folio::Site.instance
+  # overide if needed
+  def self.current_site(request: nil, controller: nil)
+    return Folio.main_site if request.nil?
+
+    Folio::Site.find_by(domain: normalize_request_host(request.host)) || Folio.main_site
+  end
+
+  def self.normalize_request_host(host)
+    if Rails.env.development?
+      host.to_s.downcase.gsub("dev-", "").gsub(/\Adev\./, "www.")
     else
-      fail "You must implement :current_site yourself"
+      host.to_s.downcase
     end
   end
 
   def self.site_instance_for_mailers
-    if Rails.application.config.folio_site_is_a_singleton
-      Folio::Site.instance
-    else
-      Folio::Site.ordered.first
-    end
+    Folio.main_site
   end
 
   # set to force authentication via a site
@@ -83,11 +89,12 @@ module Folio
     nil
   end
 
+  # override me at project level
+  def self.main_site
+    @main_site ||= Folio::Site.ordered.first
+  end
+
   def self.atoms_previews_stylesheet_path(site:, class_name:)
     site.layout_assets_path
   end
 end
-
-# only `folio/lib` directory is loaded when processing Rails `config/environments/*`
-require "uglifier"
-require_relative "../app/lib/folio/selective_uglifier.rb"

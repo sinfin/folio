@@ -1,16 +1,18 @@
-- I18n.with_locale(::Rails.application.config.folio_console_locale)
+- I18n.with_locale(default_locale)
   .f-c-atoms-previews__insert-hint
-    span.f-c-atoms-previews__insert-splittable-join-trigger.fa.fa-link
+    span.f-c-atoms-previews__insert-splittable-join-trigger
+      = folio_icon(:link)
 
-    span.f-c-atoms-previews__insert-hint-big-btn.f-c-with-icon
-      span.mi add
-      = t('.add_atom')
+    span.f-c-atoms-previews__insert-hint-big-btn
+      == cell('folio/console/ui/with_icon',
+              t('.add_atom'),
+              icon: :plus)
 
-    span.f-c-atoms-previews__insert-hint-btn.mi
-      ' add
+    span.f-c-atoms-previews__insert-hint-btn
+      = folio_icon(:plus)
 
   .f-c-atoms-previews__insert-inner
-    .container
+    .container.small
       - sorted_types.each do |_key, items|
         - if items.present?
           ul.f-c-atoms-previews__insert-ul.list-unstyled
@@ -21,10 +23,5 @@
                   data-type=klass.to_s
                   data-contentable=klass.contentable?.to_s
                 ]
-                  - if klass.console_icon
-                    - if klass.console_icon.to_s.starts_with?('fa-')
-                      span.fa class=klass.console_icon
-                    - else
-                      span.mi = klass.console_icon
-
+                  / TODO icon
                   = klass.model_name.human

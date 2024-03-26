@@ -2,6 +2,8 @@ import React from 'react'
 import { FormGroup, Input, Label } from 'reactstrap'
 import { makeConfirmed } from 'utils/confirmed'
 import Select from 'components/Select'
+import FolioConsoleUiButton from 'components/FolioConsoleUiButton'
+import FolioUiIcon from 'components/FolioUiIcon'
 
 import { MENU_ITEM_URL } from 'ducks/menus'
 
@@ -61,9 +63,9 @@ function MenuItem ({ node, path, onChange, linkOptions, styleOptions, remove }) 
   const onChangeFn = makeOnChange(path, node, onChange)
 
   return (
-    <div className='form-inline f-c-menus-form__form'>
+    <div className='f-c-menus-form__form'>
       <div className='f-c-menus-form__form-item'>
-        <span className='fa fa--18 fa-font mr-2' />
+        <FolioUiIcon name='format_align_left' />
 
         <Input
           value={node.title || ''}
@@ -73,7 +75,7 @@ function MenuItem ({ node, path, onChange, linkOptions, styleOptions, remove }) 
       </div>
 
       <div className='f-c-menus-form__form-item'>
-        <span className='fa fa--18 fa-link mr-2' />
+        <FolioUiIcon name='link' />
 
         <Select
           value={linkValueHash}
@@ -87,7 +89,7 @@ function MenuItem ({ node, path, onChange, linkOptions, styleOptions, remove }) 
 
       {node.url !== null && (
         <div className='f-c-menus-form__form-item'>
-          <span className='fa fa--18 fa-external-link-alt mr-2' />
+          <FolioUiIcon name='open_in_new' />
 
           <Input
             type='string'
@@ -100,13 +102,14 @@ function MenuItem ({ node, path, onChange, linkOptions, styleOptions, remove }) 
 
       {styleOptions.length > 0 && (
         <div className={`f-c-menus-form__form-item f-c-menus-form__form-item--style-${node.style || ''}`}>
-          <span className='fa fa--18 fa-palette mr-2' />
+          <FolioUiIcon name='cog' />
 
           <Input
             type='select'
             value={node.style || ''}
             onChange={onChangeFn}
             name='style'
+            className='select'
           >
             {styleOptions}
           </Input>
@@ -115,7 +118,7 @@ function MenuItem ({ node, path, onChange, linkOptions, styleOptions, remove }) 
 
       <div className='f-c-menus-form__form-item px-h'>
         <FormGroup check>
-          <Label check>
+          <Label className='form-label' check>
             <Input
               type='checkbox'
               checked={!!node.open_in_new}
@@ -129,9 +132,9 @@ function MenuItem ({ node, path, onChange, linkOptions, styleOptions, remove }) 
       </div>
 
       <div className='f-c-menus-form__form-item f-c-menus-form__form-item--destroy'>
-        <button
-          className='btn btn-danger fa fa-times'
-          type='button'
+        <FolioConsoleUiButton
+          icon='close'
+          variant='danger'
           onClick={makeConfirmed(() => remove(path, node))}
         />
       </div>

@@ -1,0 +1,32 @@
+.container-fluid
+  h1
+    a.d-unlink href=dummy_ui_path UI kit
+
+  h2 Modals
+
+  = dummy_ui_buttons(buttons: [ \
+    { data: stimulus_modal_toggle('.d-ui-demo-body-only-modal'), label: "body only" }, \
+    { data: stimulus_modal_toggle('.d-ui-demo-with-title-modal'), label: "title" }, \
+    { data: stimulus_modal_toggle('.d-ui-demo-with-header-modal'), label: "header html" }, \
+    { data: stimulus_modal_toggle('.d-ui-demo-with-buttons-modal'), label: "buttons" }, \
+    { data: stimulus_modal_toggle('.d-ui-demo-with-title-and-buttons-modal'), label: "title and buttons" }, \
+  ])
+
+- content_for :modals
+  = render(Dummy::Ui::ModalComponent.new(class_name: "d-ui-demo-body-only-modal")) do |c|
+    ' body only content
+
+  = render(Dummy::Ui::ModalComponent.new(class_name: "d-ui-demo-with-header-modal")) do |c|
+    - c.with_header
+      ' header html
+
+    ' with header content
+
+  = render(Dummy::Ui::ModalComponent.new(class_name: "d-ui-demo-with-title-modal", title: 'title')) do |c|
+    ' with title
+
+  = render(Dummy::Ui::ModalComponent.new(class_name: "d-ui-demo-with-buttons-modal", buttons_model: [{ label: "foo", href: "#foo" }])) do |c|
+    ' with buttons
+
+  = render(Dummy::Ui::ModalComponent.new(class_name: "d-ui-demo-with-title-and-buttons-modal", title: "title", buttons_model: [{ label: "foo", href: "#foo" }, { label: "close", data: stimulus_modal_close, variant: :secondary }])) do |c|
+    ' with buttons

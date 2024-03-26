@@ -1,0 +1,13 @@
+# frozen_string_literal: true
+
+class <%= application_namespace %>::Searches::ResultsListComponent < ApplicationComponent
+  THUMB_SIZE = "150x100#"
+
+  def initialize(data:)
+    @data = data
+  end
+
+  def shows
+    render if @data.present? && @data[:records].present?
+  end
+end

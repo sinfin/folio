@@ -13,7 +13,7 @@ class Folio::FilePlacementTest < ActiveSupport::TestCase
     perform_enqueued_jobs do
       I18n.with_locale(:cs) do
         page = create(:folio_page, title: "foo")
-        page.cover = create(:folio_image)
+        page.cover = create(:folio_file_image)
 
         # works
         assert_equal("Stránka - foo", page.cover_placement.reload.placement_title)

@@ -96,19 +96,26 @@ class Folio::Console::StateCell < Folio::ConsoleCell
     state ? state.human_name : to
   end
 
+  def data
+    stimulus_controller("f-c-state")
+  end
+
   def data_for_event(event)
+    raise "FIXME Not implemented yet" if event.options[:email_modal]
+
     {
       "confirmation" => confirm(event),
       "url" => remote_url_for(event),
       "aasm-email-modal" => event.options[:email_modal],
-      "modal" => event.options[:modal],
+      "modal-url" => event.options[:modal] ? controller.send(event.options[:modal][:path_name], model, _ajax: "1") : nil,
+      "modal-title" => event.options[:modal] ? t("folio.console.form_modal_component.title/state") : nil,
       "event-name" => event.name,
       "event-target-human-name" => event_target_human_name(event),
       "klass" => klass,
       "id" => model.id,
       "email" => model.try(:email),
-      "email-subject" => model.class.try(:aasm_email_default_subject, event),
-      "email-text" => model.class.try(:aasm_email_default_text, event),
-    }.compact
+      "email-subject" => model.try(:aasm_email_default_subject, event) || model.class.try(:aasm_email_default_subject, event),
+      "email-text" => model.try(:aasm_email_default_text, event) || model.class.try(:aasm_email_default_text, event),
+    }.compact.merge(stimulus_action(click: "onTriggerClick"))
   end
 end

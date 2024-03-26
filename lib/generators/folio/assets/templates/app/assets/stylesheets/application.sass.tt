@@ -1,26 +1,28 @@
-@import 'custom_bootstrap'
-@import 'slick-carousel/slick/slick'
-@import 'fonts'
 @import 'folio/utilities'
+
+@import 'custom_bootstrap'
+@import 'fonts'
+
 @import 'modules/turbolinks'
-@import 'modules/bootstrap-overrides'
+@import 'modules/bootstrap-overrides/**/*'
 @import 'modules/atoms'
 @import 'modules/rich-text'
 @import 'modules/with-icon'
 
-<%- if Rails.application.config.folio_users -%>@import 'folio/devise'
-<%- end -%>
 @import 'folio/cookie_consent/cookie_consent'
+@import 'folio/devise'
 @import 'folio/loader'
 @import 'folio/lazyload'
 @import 'folio/lightbox'
-@import 'folio/togglable-fields'
+@import 'folio/togglable_fields_component'
+@import 'folio/dropzone_component'
 @import 'folio/image/image'
-@import 'folio/leads/form/form'
-@import 'folio/newsletter_subscriptions/form/form'
+@import 'folio/input/phone'
+@import 'folio/leads/form_component'
+@import 'folio/newsletter_subscriptions/form_component'
 @import 'folio/publishable_hint/publishable_hint'
 @import 'folio/ui/ui'
-@import 'folio/ui/atoms/atoms'
+@import 'folio/nested_fields_component'
 
 html
   height: 100%
@@ -33,19 +35,17 @@ body
   display: flex
   flex-direction: column
 
-.<%= classname_prefix %>-layout-main
+.d-layout-main
   position: relative
   z-index: 2
   flex: 1 0 auto
 
 .f-devise
   @extend .container-fluid
-  max-width: 730px
-  margin-left: 0
-  margin-right: 0
 
 @import '../../cells/folio/**/*'
 @import '../../cells/<%= application_namespace_path %>/**/*'
+@import '../../components/<%= application_namespace_path %>/**/*'
 
 @media print
   @import 'print'

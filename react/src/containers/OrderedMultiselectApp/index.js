@@ -18,17 +18,17 @@ import Serialized from './Serialized'
 
 class OrderedMultiselectApp extends React.Component {
   onSelect = (item) => {
-    window.jQuery('.f-c-r-ordered-multiselect-app').trigger('change.folioDirtyForms')
+    document.querySelector('.f-c-r-ordered-multiselect-app').dispatchEvent(new window.Event('change', { bubbles: true }))
     this.props.dispatch(addItem(item))
   }
 
   update = (items) => {
-    window.jQuery('.f-c-r-ordered-multiselect-app').trigger('change.folioDirtyForms')
+    document.querySelector('.f-c-r-ordered-multiselect-app').dispatchEvent(new window.Event('change', { bubbles: true }))
     this.props.dispatch(updateItems(items))
   }
 
   removeItem = (item) => {
-    window.jQuery('.f-c-r-ordered-multiselect-app').trigger('change.folioDirtyForms')
+    document.querySelector('.f-c-r-ordered-multiselect-app').dispatchEvent(new window.Event('change', { bubbles: true }))
     this.props.dispatch(removeItem(item))
   }
 

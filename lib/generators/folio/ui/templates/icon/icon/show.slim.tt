@@ -3,4 +3,4 @@ svg[
   style=style
   class=class_names
 ]
-  use xlink:href="#{image_path('svg_sprite.svg')}##{model}"
+  use xlink:href="#{image_path('ui_icons_sprite.svg')}##{model}"

@@ -1,27 +1,42 @@
 //= require jquery3
 //= require rails-ujs
 //= require turbolinks
-//= require justified-layout
-//= require slick-carousel/slick/slick.min
-//= require js-cookie/src/js.cookie
-//= require clipboard/dist/clipboard
 
-//= require folio-bootstrap/js/dist/util
-//= require folio-bootstrap/js/dist/modal
+//= require folio/api
+//= require folio/stimulus
+//= require folio/message_bus
+//= require folio/remote_scripts
 
-<%- if Rails.application.config.folio_users -%>//= require folio/devise
-<%- end -%>
-//= require folio/_message-bus
-//= require folio/addresses
-//= require folio/atoms
+//= require folio/confirm
 //= require folio/cookie_consent/cookie_consent
-//= require folio/csrf
-//= require folio/debounce
-//= require folio/input/phone
+//= require folio/devise
+//= require folio/i18n
+//= require folio/form_to_hash
 //= require folio/lazyload
 //= require folio/lightbox
+//= require folio/modal
+//= require folio/nested_fields_component
+//= require folio/newsletter_subscriptions/form_component
+//= require folio/leads/form_component
+//= require folio/recaptcha_field_component
+//= require folio/dropzone_component
 
 //= require folio/image/image
-//= require folio/leads/form/form
-//= require folio/sensitive_content_modal/sensitive_content_modal
-//= require folio/newsletter_subscriptions/form/form
+
+//= require <%= application_namespace_path %>/searches/show_component
+//= require <%= application_namespace_path %>/ui/alert_component
+//= require <%= application_namespace_path %>/ui/boolean_toggle_component
+//= require <%= application_namespace_path %>/ui/clipboard_component
+//= require <%= application_namespace_path %>/ui/flash_component
+//= require <%= application_namespace_path %>/ui/header_message_component
+//= require <%= application_namespace_path %>/ui/icon_component
+//= require <%= application_namespace_path %>/ui/header_component
+//= require <%= application_namespace_path %>/ui/menu_component
+//= require <%= application_namespace_path %>/ui/mini_select_component
+//= require <%= application_namespace_path %>/ui/user_avatar_component
+//= require <%= application_namespace_path %>/ui/menu_toolbar/header_search_component
+//= require <%= application_namespace_path %>/ui/menu_toolbar/dropdown_component
+//= require <%= application_namespace_path %>/ui/menu_toolbar/shopping_cart_component
+
+//= require <%= application_namespace_path %>/atom/images/gallery_component
+//= require <%= application_namespace_path %>/molecule/cards/full_width_component

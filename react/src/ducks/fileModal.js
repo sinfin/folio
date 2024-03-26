@@ -1,8 +1,10 @@
 import { call, takeEvery, put, select } from 'redux-saga/effects'
 import { omit } from 'lodash'
 
+import urlWithAffix from 'utils/urlWithAffix'
 import { apiGet, apiPost, apiXhrFilePut } from 'utils/api'
-import { UPDATE_FILE_SUCCESS, UPDATE_FILE_FAILURE, MESSAGE_BUS_THUMBNAIL_GENERATED } from 'ducks/files'
+import { UPDATE_FILE_SUCCESS, UPDATE_FILE_FAILURE, MESSAGE_BUS_FILE_UPDATED } from 'ducks/files'
+import { indexUrlSelector } from 'ducks/app'
 
 // Constants
 
@@ -22,8 +24,8 @@ const CHANGE_FILE_PLACEMENTS_PAGE = 'fileModal/CHANGE_FILE_PLACEMENTS_PAGE'
 
 // Actions
 
-export function openFileModal (fileType, filesUrl, file) {
-  return { type: OPEN_FILE_MODAL, fileType, filesUrl, file }
+export function openFileModal (fileType, filesUrl, file, autoFocusField) {
+  return { type: OPEN_FILE_MODAL, fileType, filesUrl, file, autoFocusField }
 }
 
 export function closeFileModal () {
@@ -80,10 +82,10 @@ export const fileModalSelector = (state) => state.fileModal
 
 // Sagas
 function * destroyFileThumbnailPerform (action) {
-  if (action.file.attributes.react_type !== 'image') return
+  if (action.file.attributes.human_type !== 'image') return
 
   try {
-    const url = `${action.filesUrl}/${action.file.id}/destroy_file_thumbnail`
+    const url = urlWithAffix(action.filesUrl, `/${action.file.id}/destroy_file_thumbnail`)
     yield call(apiPost, url, { ...action.params, thumb_key: action.thumbKey })
   } catch (e) {
     window.FolioConsole.Flash.alert(e.message)
@@ -96,10 +98,10 @@ function * destroyFileThumbnailSaga () {
 }
 
 function * updateFileThumbnailPerform (action) {
-  if (action.file.attributes.react_type !== 'image') return
+  if (action.file.attributes.human_type !== 'image') return
 
   try {
-    const url = `${action.filesUrl}/${action.file.id}/update_file_thumbnail`
+    const url = urlWithAffix(action.filesUrl, `/${action.file.id}/update_file_thumbnail`)
     const response = yield call(apiPost, url, { ...action.params, thumb_key: action.thumbKey })
     yield put(updatedFileModalFile(response.data))
   } catch (e) {
@@ -113,16 +115,15 @@ function * updateFileThumbnailSaga () {
 
 function * uploadNewFileInsteadPerform (action) {
   try {
-    const result = yield call(window.FolioConsole.S3Upload.newUpload, {
+    const result = yield call(window.Folio.S3Upload.newUpload, {
       filesUrl: action.filesUrl,
       file: action.fileIo
     })
 
     yield call(apiXhrFilePut, result.s3_url, action.fileIo)
 
-    yield call(window.FolioConsole.S3Upload.finishedUpload, {
-      filesUrl: action.filesUrl,
-      s3_path: result.s3_path,
+    yield call(window.Folio.S3Upload.finishedUpload, {
+      s3Path: result.s3_path,
       type: action.fileType,
       existingId: action.file.id
     })
@@ -152,6 +153,12 @@ function * handleFileUpdateSaga () {
 
 function * openFileModalPerform (action) {
   try {
+    const indexUrl = yield select(indexUrlSelector)
+
+    if (indexUrl) {
+      window.history.replaceState(null, '', urlWithAffix(indexUrl, `/${action.file.id}`))
+    }
+
     const url = `/console/api/files/${action.file.id}/file_placements`
     const response = yield call(apiGet, url)
     yield put(loadedFileModalPlacements(action.file, response.data, response.meta))
@@ -162,6 +169,22 @@ function * openFileModalPerform (action) {
 
 function * openFileModalSaga () {
   yield takeEvery(OPEN_FILE_MODAL, openFileModalPerform)
+}
+
+function * closeFileModalPerform (action) {
+  try {
+    const indexUrl = yield select(indexUrlSelector)
+
+    if (indexUrl) {
+      window.history.replaceState(null, '', indexUrl)
+    }
+  } catch (e) {
+    window.FolioConsole.Flash.alert(e.message)
+  }
+}
+
+function * closeFileModalSaga () {
+  yield takeEvery(CLOSE_FILE_MODAL, closeFileModalPerform)
 }
 
 function * changeFilePlacementsPagePerform (action) {
@@ -183,6 +206,7 @@ export const fileModalSagas = [
   uploadNewFileInsteadSaga,
   handleFileUpdateSaga,
   openFileModalSaga,
+  closeFileModalSaga,
   changeFilePlacementsPageSaga,
   destroyFileThumbnailSaga
 ]
@@ -214,6 +238,7 @@ function modalReducer (state = initialState, action) {
         file: action.file,
         fileType: action.fileType,
         filesUrl: action.filesUrl,
+        autoFocusField: action.autoFocusField,
         filePlacements: {
           ...initialState.filePlacements,
           loading: true
@@ -360,20 +385,11 @@ function modalReducer (state = initialState, action) {
       }
     }
 
-    case MESSAGE_BUS_THUMBNAIL_GENERATED: {
-      if (state.file && Number(state.file.id) === Number(action.data.id)) {
+    case MESSAGE_BUS_FILE_UPDATED: {
+      if (state.file && Number(state.file.id) === Number(action.file.id)) {
         return {
           ...state,
-          file: {
-            ...state.file,
-            attributes: {
-              ...state.file.attributes,
-              thumbnail_sizes: {
-                ...state.file.attributes.thumbnail_sizes,
-                [action.data.thumb_key]: action.data.thumb
-              }
-            }
-          }
+          file: action.file
         }
       } else {
         return state

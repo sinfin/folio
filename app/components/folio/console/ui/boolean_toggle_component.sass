@@ -1,0 +1,84 @@
+.f-c-ui-boolean-toggle
+  position: relative
+  transition: $transition-base
+  display: block
+  margin: 0
+  cursor: pointer
+
+  &__label
+    display: flex
+    gap: px-to-rem(6px)
+    align-items: center
+
+  &__label-visual
+    position: relative
+    min-width: px-to-rem(24px)
+    min-height: px-to-rem(24px)
+    display: inline-flex
+    align-items: center
+
+    &::before
+      content: ''
+      display: block
+      position: absolute
+      top: calc(50% - #{px-to-rem(8px / 2)})
+      left: 0
+      height: px-to-rem(8px)
+      width: px-to-rem(24px)
+      border-radius: $border-radius
+      background: $gray
+
+    &::after
+      content: ''
+      display: block
+      position: absolute
+      top: calc(50% - #{px-to-rem(16px / 2)})
+      left: 0
+      width: px-to-rem(16px)
+      height: px-to-rem(16px)
+      border-radius: 100%
+      transition: $transition-base
+      background: $gray-medium-dark
+
+  &--disabled
+    cursor: not-allowed
+
+  &--disabled &__label-visual
+    &::before, &::after
+      opacity: 0.5
+
+  &__input
+    display: none
+
+  &__label-text
+    position: relative
+
+  &__label-text-spacer
+    visibility: hidden
+    font-weight: bold
+
+  &__label-text-content
+    position: absolute
+    top: 0
+    left: 0
+
+  &__input:checked ~ &__label &__label-visual
+    &::after
+      transform: translate(#{px-to-rem(24px - 16px)}, 0)
+
+  &__input:checked ~ &__label &__label-visual,
+  &--off-label &__label-visual
+    &::after
+      background: $blue
+
+  &--off-label &__input:checked ~ &__label &__label-text--on,
+  &--off-label &__input:not(:checked) ~ &__label &__label-text--off
+    font-weight: $font-weight-bold
+
+  &--loading
+    cursor: wait
+    opacity: 0.2
+
+  &--verbose &__input:not(:checked) ~ &__label &__label-text--on,
+  &--verbose &__input:checked ~ &__label &__label-text--off
+    display: none

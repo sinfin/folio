@@ -21,24 +21,12 @@ class <%= application_namespace %>::Blog::ArticlesController < ApplicationContro
   end
 
   def show
-    if @article.published?
-      force_correct_path(url_for(@article))
-    else
-      redirect_to action: :preview
-    end
-  end
-
-  def preview
-    if @article.published?
-      redirect_to action: :show
-    else
-      render :show
-    end
+    force_correct_path(url_for(@article))
   end
 
   private
     def find_article
-      @article = @klass.published_or_admin(account_signed_in?)
+      @article = @klass.published_or_preview_token(params[Folio::Publishable::PREVIEW_PARAM_NAME])
                        .by_locale(I18n.locale)
                        .includes(cover_placement: :file)
                        .friendly.find(params[:id])

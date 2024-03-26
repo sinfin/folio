@@ -12,13 +12,10 @@ cs:
         atomSplittingSubmit: Rozdělit
         atomSplittingText: Vyberte, kde bude text rozdělen
         atomSplittingTitle: Opravdu si přejete rozdělit text na části?
-        availableDocuments: Dostupné dokumenty
-        availableImages: Dostupné obrázky
         cancel: Zrušit
         cancelChanges: Zahodit změny?
         clearDate: Vymazat datum
         close: Zavřít
-        contentTemplates: Šablony
         create: Vytvořit
         destroy: Smazat
         download: Stáhnout
@@ -31,7 +28,6 @@ cs:
         fileTableHeaderTags: Klíčová slova
         fileTableHeaderType: Typ
         fileTitleHint: Název zobrazovaný na webu (v případě nevyplnění se zobrazí název souboru).
-        finalizing: Dokončuji
         indestructibleFile: Soubor má aktivní použití. Použité soubory nelze mazat.
         indestructibleFiles: Některé z vybraných souborů jsou použité. Použité soubory nelze mazat.
         link: Odkaz
@@ -39,10 +35,6 @@ cs:
         menuItemUrl: Volný odkaz
         newFilesAttributes: 'Nastavení nahraných souborů (nepovinné):'
         noResults: Žádné výsledky
-        notesFieldsAdd: Přidat položku
-        notesFieldsDelete: Smazat poznámky
-        notesFieldsHide: Skrýt zaškrtnuté
-        notesFieldsShow: Zobrazit zaškrtnuté
         paginationEmpty: Žádné záznamy
         paginationInfo: Zobrazuji záznamy <b>%{from}-%{to}</b> z <b>%{count}</b> celkem
         placementsLabel: Použití
@@ -52,13 +44,11 @@ cs:
         selectable: Volitelné
         selectDocument: Zvolte dokument
         selected: Vybrané
-        selectedDocuments: Vybrané dokumenty
-        selectedImages: Vybrané obrázky
         selectImage: Zvolte obrázek
         selectPlaceholder: Vybrat...
-        shortForCharacter: zn.
         split: Rozdělit
         startSplittingAtom: Rozdělit na části
+        state: Stav
         thumbnailSizes: Vygenerované verze
         title: Název
         usage: Použití

@@ -10,6 +10,7 @@ module Folio
 
         model.where(id: set_position_params.keys).each do |record|
           position = set_position_params[record.id.to_s]["position"]
+          authorize!(:update, record)
           record.positionable_sql_update(position)
         end
 

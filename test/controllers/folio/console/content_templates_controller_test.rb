@@ -3,6 +3,10 @@
 require "test_helper"
 
 class Folio::Console::ContentTemplatesControllerTest < Folio::Console::BaseControllerTest
+  def setup
+    skip unless ::Rails.application.config.folio_content_templates_editable
+  end
+
   test "index" do
     get url_for([:console, Folio::ContentTemplate])
     assert_response :success

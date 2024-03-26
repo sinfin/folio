@@ -1,0 +1,46 @@
+$medium-gray: #E8E8E8 !default
+
+.f-c-file-picker
+  &__btn
+    position: static
+    flex: 0 0 auto
+
+    &::before
+      content: ''
+      display: block
+      position: absolute
+      top: 0
+      right: 0
+      bottom: 0
+      left: 0
+
+  &__btn-wrap
+    background: $medium-gray
+    border-radius: $border-radius
+    padding: 24px
+    position: relative
+    min-height: 84px
+
+  &[data-f-c-file-picker-has-file-value="false"] &__content,
+  &[data-f-c-file-picker-has-file-value="true"] &__btn-wrap
+    display: none
+
+  &--as-image
+    width: 168px
+
+  &--as-image &__btn-wrap
+    height: 168px
+    display: flex
+    align-items: center
+    justify-content: center
+
+  &__alt-ico
+    cursor: pointer
+    position: relative
+    top: -1px
+
+    &:hover
+      color: $black
+
+  &[data-f-c-file-picker-has-file-value="false"] &__alt
+    display: none

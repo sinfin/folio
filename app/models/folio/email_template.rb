@@ -30,11 +30,7 @@ class Folio::EmailTemplate < Folio::ApplicationRecord
 
         next if raw["site_class"] && raw["site_class"] != site.class.to_s
 
-        find_by = { mailer: raw["mailer"], action: raw["action"] }
-
-        unless Rails.application.config.folio_site_is_a_singleton
-          find_by[:site] = site
-        end
+        find_by = { mailer: raw["mailer"], action: raw["action"], site: }
 
         if em = Folio::EmailTemplate.find_by(find_by)
           if raw["destroy"]
@@ -62,10 +58,7 @@ class Folio::EmailTemplate < Folio::ApplicationRecord
         default_locale = Rails.application.config.folio_console_locale
         data["title"] = raw["title_#{default_locale}"].presence
         data["title"] ||= data["title_en"]
-
-        unless Rails.application.config.folio_site_is_a_singleton
-          data["site"] = site
-        end
+        data["site"] = site
 
         Folio::EmailTemplate.create!(data)
       end
@@ -167,6 +160,11 @@ class Folio::EmailTemplate < Folio::ApplicationRecord
       result = str
 
       data.each do |keyword, value|
+        # strip extra redactor js <p></p>
+        if keyword.ends_with?("_HTML")
+          result = result.gsub("<p>{#{keyword}}</p>", value.to_s)
+        end
+
         result = result.gsub("{#{keyword}}", value.to_s)
       end
 

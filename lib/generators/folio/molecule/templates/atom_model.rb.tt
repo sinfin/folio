@@ -7,12 +7,13 @@ class <%= application_namespace %>::Atom::<%= class_name %> < Folio::Atom::Base
 
   ASSOCIATIONS = {}
 
+  <%- if options[:cell] -%>
   def self.molecule_cell_name
     "<%= molecule_cell_name %>"
   end
-
-  def self.console_icon
-  end
+  <%- else -%>
+  MOLECULE = true
+  <%- end -%>
 end
 
 # == Schema Information

@@ -4,6 +4,15 @@ import DropzoneTrigger from './DropzoneTrigger'
 import FileTableHeader from './FileTableHeader'
 import FileTableRow from './FileTableRow'
 
+const I18N = {
+  cs: {
+    mass_select: 'Hromadný výběr'
+  },
+  en: {
+    mass_select: 'Select all'
+  }
+}
+
 class FileTableList extends React.Component {
   state = { enabledMassSelect: false }
 
@@ -75,7 +84,7 @@ class FileTableList extends React.Component {
         {files.length > 1 && (
           <div className='text-center mt-4 mb-n2'>
             <button type='button' className='btn btn-light btn-sm' onClick={this.toggleMassSelect}>
-              Hromadný výběr
+              {window.Folio.i18n(I18N, 'mass_select')}
             </button>
           </div>
         )}

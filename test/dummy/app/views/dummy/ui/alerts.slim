@@ -1,0 +1,23 @@
+.container-fluid
+  h1
+    a.d-unlink href=dummy_ui_path UI kit
+
+  - %w[light dark].each do |theme|
+    .bg-body.p-g.mt-g.border.rounded data-bs-theme=theme
+      h2.mt-0 Alerts - #{theme}
+
+      = render(Dummy::Ui::FlashComponent.new(flash:))
+
+      .mt-g
+        = render(Dummy::Ui::ButtonsComponent.new(buttons: @buttons_model))
+
+      h3 Regular
+
+      - %i[info success warning danger loader].each do |variant|
+        - message = "#{variant.capitalize} #{@lorem_ipsum}"
+
+        = render(Dummy::Ui::AlertComponent.new(variant:, message:))
+
+        - message = "#{variant.capitalize} #{@lorem_ipsum[0..30]}"
+
+        = render(Dummy::Ui::AlertComponent.new(variant:, message:))

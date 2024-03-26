@@ -1,0 +1,3 @@
+div class=bem_class_name class=@class_name
+  - @buttons.each do |button|
+    = render(Dummy::Ui::ButtonComponent.new(**button))

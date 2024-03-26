@@ -4,6 +4,8 @@ import numberToHumanSize from 'utils/numberToHumanSize'
 import Tags from 'containers/Tags'
 import Picture from 'components/Picture'
 
+import FolioConsoleUiButtons from 'components/FolioConsoleUiButtons'
+import FolioConsoleUiButton from 'components/FolioConsoleUiButton'
 import FileUploadProgress from 'components/FileUploadProgress'
 
 const FileTableRow = ({
@@ -59,7 +61,7 @@ const FileTableRow = ({
 
       {fileTypeIsImage ? (
         <div className='f-c-file-table__td f-c-file-table__td--image py-0'>
-          <FileUploadProgress progress={file.attributes.progress} />
+          <FileUploadProgress progress={file.attributes.progress} progressText={file.attributes.progressText} />
 
           <div className='f-c-file-table__img-wrap'>
             {(file.attributes.thumb || file.attributes.dataThumbnail) && (
@@ -73,7 +75,7 @@ const FileTableRow = ({
         </div>
       ) : (
         <div className='f-c-file-table__td f-c-file-table__td--extension'>
-          <FileUploadProgress progress={file.attributes.progress} />
+          <FileUploadProgress progress={file.attributes.progress} progressText={file.attributes.progressText} />
           <span className='f-c-file-table__extension'>{file.attributes.extension}</span>
         </div>
       )}
@@ -86,7 +88,7 @@ const FileTableRow = ({
 
       <div className='f-c-file-table__td f-c-file-table__td--size'>
         <div className='f-c-file-table__td-min-height'>
-          {numberToHumanSize(file.attributes.file_size)}
+          {file.attributes.uploading && file.attributes.progress === 100 ? null : numberToHumanSize(file.attributes.file_size)}
         </div>
       </div>
 
@@ -106,23 +108,25 @@ const FileTableRow = ({
 
       <div className='f-c-file-table__td f-c-file-table__td--actions'>
         {file.attributes.uploading ? null : (
-          <React.Fragment>
+          <FolioConsoleUiButtons nowrap>
             {openFileModal ? (
-              <span
+              <FolioConsoleUiButton
+                icon='edit'
                 onClick={(e) => { e.stopPropagation(); openFileModal(file) }}
-                className={`btn fa ${readOnly ? 'btn-light fa-eye' : 'btn-secondary fa-edit'}`}
-                rel='noopener noreferrer'
+                variant='secondary'
               />
             ) : undefined}
 
-            <a // eslint-disable-line
+            <FolioConsoleUiButton
               href={file.attributes.source_url}
-              className='btn btn-secondary fa fa-download ml-2'
+              class='ml-2'
               target='_blank'
               rel='noopener noreferrer'
               download={download}
+              variant='primary'
+              icon='download'
             />
-          </React.Fragment>
+          </FolioConsoleUiButtons>
         )}
       </div>
     </div>

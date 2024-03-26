@@ -1,6 +1,7 @@
 import { takeEvery, call, select, put } from 'redux-saga/effects'
 import { without, omit } from 'lodash'
 
+import urlWithAffix from 'utils/urlWithAffix'
 import { apiPost } from 'utils/api'
 import { updatedFiles } from 'ducks/files'
 import { filesUrlSelector } from 'ducks/app'
@@ -57,7 +58,7 @@ function * setUploadAttributesPerform (action) {
   if (uploadedIds.length) {
     // TODO check that we can do this
     const filesUrl = yield select(filesUrlSelector)
-    const url = `${filesUrl}/tag`
+    const url = urlWithAffix(filesUrl, '/tag')
     const response = yield call(apiPost, url, { ...uploadAttributes, file_ids: uploadedIds })
     yield put(updatedFiles(action.fileType, response.data))
     yield put(clearUploadedIds(action.fileType, uploadedIds))

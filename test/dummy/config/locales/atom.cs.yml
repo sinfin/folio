@@ -2,31 +2,28 @@
 cs:
   activerecord:
     attributes:
-      dummy/atom/card/large:
-        button_label: Text tlačítka
-        href: Odkaz
-      dummy/atom/card/medium:
-        button_label: Text tlačítka
-        href: Odkaz
-      dummy/atom/card/small:
-        href: Odkaz
-      dummy/atom/hero:
-        color/dark: Tmavá
-        color/light: Světlá
-        color: Barva textu
-        primary_button_label: Text hlavního tlačítka
-        primary_button_url: Odkaz hlavního tlačítka
-        secondary_button_label: Text vedlejšího tlačítka
-        secondary_button_url: Odkaz vedlejšího tlačítka
-      dummy/atom/images:
-        same_width: Zarovnat do mřížky
-        title: Popisek pod galerií
-      dummy/atom/map:
-        latlng: GPS souřadnice ve formátu 50.091254894762635, 14.401627227698018
+      dummy/atom/cards/person:
+        large: Velký obrázek
+        job: Pozice
+      dummy/atom/divider:
+        variant: Varianta
+        variant/default: Výchozí
+        variant/thin: Tenká linka
+        variant/thick: Tlustá linka
+        variant/invisible: Pouze mezera
+      dummy/atom/image_and_content:
+        image_side: Obrázek
+        image_side/left: Nalevo
+        image_side/right: Napravo
+      dummy/atom/quotation:
+        large: Velké písmo
       dummy/atom/text:
         highlight: Zvýraznění
         highlight/nil: Žádné
-        highlight/red: Červené
+        highlight/error: Červené
+        highlight/caution: Oranžové
+        highlight/success: Zelené
+        highlight/neutral: Modré
         highlight/gray: Šedé
       dummy/atom/title:
         tag: Tag
@@ -36,27 +33,25 @@ cs:
         tag/H4: H4
         tag/H5: H5
     models:
-      dummy/atom/card: 
-      dummy/atom/card/large: Karta s odkazem (velká)
-      dummy/atom/card/medium: Karta s odkazem (střední)
-      dummy/atom/card/small: Karta s odkazem (malá)
-      dummy/atom/contact_form: Formulář (kontakt)
-      dummy/atom/documents: Soubory (výpis)
-      dummy/atom/embed/html: HTML (vložený kód)
-      dummy/atom/embed/podcast: Podcast (vložený kód)
-      dummy/atom/embed/video: Video (vložený kód)
-      dummy/atom/hero: Karta s odkazem (velký cover, karusel)
-      dummy/atom/hr: Linka (vodorovná)
-      dummy/atom/image: Obrázek
-      dummy/atom/images: Obrázky (galerie)
-      dummy/atom/logo: Logo společnosti
-      dummy/atom/map: Mapa
-      dummy/atom/margin: Odsazení
-      dummy/atom/navigation: Menu
+      dummy/atom/cards/extra_small: Karta - extra malá
+      dummy/atom/cards/full_width: Karta - na celou šířku
+      dummy/atom/cards/image: Karta - obrázek
+      dummy/atom/cards/large: Karta - velká
+      dummy/atom/cards/logo: Karta - logo
+      dummy/atom/cards/medium: Karta - střední
+      dummy/atom/cards/padded_image: Karta - obrázek s odsazením
+      dummy/atom/cards/person: Karta - osoba
+      dummy/atom/cards/small: Karta - malá
+      dummy/atom/divider: Oddělovač
+      dummy/atom/embed: Embed
+      dummy/atom/image_and_content: Obrázek a obsah
+      dummy/atom/images/gallery: Obrázky - galerie
+      dummy/atom/images/grid_gallery: Obrázky - galerie v mřížce
+      dummy/atom/images/masonry_gallery: Obrázek - galerie masonry
+      dummy/atom/images/one_and_two: Obrázky - 1 & 2
+      dummy/atom/images/single: Obrázek
+      dummy/atom/leads/form: Kontaktní formulář
       dummy/atom/perex: Perex
-      dummy/atom/person: Osoba (karta střední)
-      dummy/atom/quotation: Zvýrazněná citace
-      dummy/atom/share: Sdílení
-      dummy/atom/text: Text (odstavce, tabulky, apod.)
-      dummy/atom/text_with_image: Text s obrázkem
+      dummy/atom/quotation: Citace
+      dummy/atom/text: Text
       dummy/atom/title: Nadpis

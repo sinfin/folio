@@ -1,0 +1,9 @@
+div class=bem_class_name
+  ul.d-ui-chips__ul.fw-medium class=ul_class_name
+    - @links.each do |link|
+      li.d-ui-chips__li
+        a.d-ui-chips__a[
+          href=link[:href]
+          class=(link[:current] ? 'd-ui-chips__a--active' : nil)
+        ]
+          = link[:label]

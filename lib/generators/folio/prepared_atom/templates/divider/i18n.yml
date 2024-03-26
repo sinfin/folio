@@ -1,0 +1,23 @@
+---
+cs:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/divider:
+        variant: Varianta
+        variant/default: Výchozí
+        variant/thin: Tenká linka
+        variant/thick: Tlustá linka
+        variant/invisible: Pouze mezera
+    models:
+      application_namespace_path/atom/divider: Oddělovač
+en:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/divider:
+        variant: Variant
+        variant/default: Default
+        variant/thin: Thin line
+        variant/thick: Thick line
+        variant/invisible: Space only
+    models:
+      application_namespace_path/atom/divider: Divider

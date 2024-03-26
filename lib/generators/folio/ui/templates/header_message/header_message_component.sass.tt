@@ -1,0 +1,21 @@
+.<%= classname_prefix %>-ui-header-message
+  background: $yellow
+
+  &__inner
+    padding: 0.945rem (( px-to-rem(60px) + $grid-gutter-half )) 0.945rem 0
+    position: relative
+
+  &__close
+    +unbutton
+    position: absolute
+    top: 0
+    bottom: 0
+    right: 0
+    color: inherit
+    width: 60px
+    display: none
+    justify-content: flex-end
+    align-items: center
+
+  &[data-<%= classname_prefix %>-ui-header-message-loaded-value="true"] &__close
+    display: flex

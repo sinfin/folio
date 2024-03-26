@@ -1,0 +1,21 @@
+$f-togglable-fields-input-top: 0.3em !default
+$f-togglable-fields-gap: $form-group-spacer !default
+
+.f-togglable-fields
+  position: relative
+
+  &__input
+    position: absolute
+    top: $f-togglable-fields-input-top
+
+  &__label
+    padding-left: $form-check-padding-start
+
+  &__content
+    display: none
+
+  &__input:checked ~ &__label
+    margin-bottom: $f-togglable-fields-gap
+
+  &__input:checked ~ &__content
+    display: block

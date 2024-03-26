@@ -12,13 +12,10 @@ en:
         atomSplittingSubmit: Split
         atomSplittingText: Select where the text will be split
         atomSplittingTitle: Do you really wish to split the text into parts?
-        availableDocuments: Available documents
-        availableImages: Available images
         cancel: Cancel
         cancelChanges: Cancel changes?
         clearDate: Clear date
         close: Close
-        contentTemplates: Templates
         create: Create
         destroy: Destroy
         download: Download
@@ -31,7 +28,6 @@ en:
         fileTableHeaderTags: Keywords
         fileTableHeaderType: Type
         fileTitleHint: File title as displayed on the web (fallback to file name).
-        finalizing: Finalizing
         indestructibleFile: Files has active placements and therefore cannot be destroyed.
         indestructibleFiles: Some of the selected files have active placements and therefore cannot be destroyed.
         link: Link
@@ -39,10 +35,6 @@ en:
         menuItemUrl: Custom URL
         newFilesAttributes: 'Uploaded files settings (optional):'
         noResults: No results
-        notesFieldsAdd: Add note
-        notesFieldsDelete: Delete notes
-        notesFieldsHide: Hide checked
-        notesFieldsShow: Show checked
         paginationEmpty: No records
         paginationInfo: Showing records <b>%{from}-%{to}</b> of <b>%{count}</b> total
         placementsLabel: Usage
@@ -52,13 +44,11 @@ en:
         selectable: Selectable
         selectDocument: Select document
         selected: Selected
-        selectedDocuments: Selected documents
-        selectedImages: Selected images
         selectImage: Select image
         selectPlaceholder: Select...
-        shortForCharacter: chr.
         split: Split
         startSplittingAtom: Split into parts
+        state: State
         thumbnailSizes: Generated thumbnails
         title: Title
         usage: Usage

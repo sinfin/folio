@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Folio::Console::Index::TabsCell < Folio::ConsoleCell
-  include Folio::ActiveClass
-
   def show
     render if model.present?
   end
@@ -31,17 +29,9 @@ class Folio::Console::Index::TabsCell < Folio::ConsoleCell
     end
   end
 
-  def count_class_name(color = nil)
-    if color
-      "f-c-index-tabs__count--#{color}"
-    end
-  end
-
-  def class_name(tab)
-    if tab[:force_active].nil?
-      active_class(tab[:href], start_with: false)
-    elsif tab[:force_active]
-      "active"
+  def tabs
+    model.map do |tab|
+      tab.merge(href: href(tab))
     end
   end
 end

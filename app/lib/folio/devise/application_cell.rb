@@ -29,13 +29,14 @@ class Folio::Devise::ApplicationCell < Folio::ApplicationCell
   end
 
   def invite_button_class_name
-    "btn btn-outline-primary"
+    "btn btn-secondary"
   end
 
   def invite_button
     link_to(t("folio.devise.invite_button"),
             controller.new_invitation_path(resource_name),
-            class: "f-devise-modal-aware-link #{invite_button_class_name}")
+            class: "f-devise-modal-aware-link #{invite_button_class_name}",
+            data: (options[:modal] ? stimulus_action("inviteClick") : nil))
   end
 
   def submit_button(f, label)
@@ -54,7 +55,7 @@ class Folio::Devise::ApplicationCell < Folio::ApplicationCell
                                input_html: {
                                 autofocus: opts[:autofocus].nil? ? true : opts[:autofocus],
                                 autocomplete: "email",
-                                value: f.object.email.presence || "@",
+                                value: f.object.email.presence,
                                 id: nil,
                               })
   end
@@ -81,7 +82,7 @@ class Folio::Devise::ApplicationCell < Folio::ApplicationCell
   end
 
   def omniauth_button_class_name
-    "btn btn-outline-primary btn-xs-block"
+    "btn btn-secondary btn-xs-block"
   end
 
   def invitations_perex

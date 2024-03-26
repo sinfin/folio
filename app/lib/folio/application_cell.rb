@@ -4,6 +4,10 @@ class Folio::ApplicationCell < Cell::ViewModel
   include ::Cell::Translation
   include ActionView::Helpers::TranslationHelper
   include Folio::CstypoHelper
+  include Folio::IconHelper
+  include Folio::ImageHelper
+  include Folio::PriceHelper
+  include Folio::StimulusHelper
 
   self.view_paths << "#{Folio::Engine.root}/app/cells"
 
@@ -29,12 +33,9 @@ class Folio::ApplicationCell < Cell::ViewModel
     controller.main_app.url_for(options)
   end
 
-  def current_site
-    options[:current_site] || controller.current_site
-  end
 
   def image(placement, size, opts = {})
-    cell("folio/image", placement, opts.merge(size:))
+    folio_image(placement, size, opts)
   end
 
   def menu_url_for(menu_item)
@@ -62,6 +63,48 @@ class Folio::ApplicationCell < Cell::ViewModel
       end
 
       concat(content_tag(:div, class: "f-togglable-fields__content", &block))
+    end
+  end
+
+  # same as in Folio::ApplicationControllerBase but using "options hacks"
+  def can_now?(action, object = nil)
+    object ||= current_site
+    (current_user || Folio::User.new).can_now_by_ability?(current_ability, action, object)
+  end
+
+  def current_site
+    get_from_options_or_controller(:current_site)
+  end
+
+  def current_user
+    get_from_options_or_controller(:current_user)
+  end
+
+  def current_ability
+    options[:current_ability] || Folio::Ability.new(current_user, current_site)
+  end
+
+  def user_signed_in?
+    get_from_options_or_controller(:user_signed_in?)
+  end
+
+  def get_from_options_or_controller(method_sym)
+    if options.has_key?(method_sym)
+      options[method_sym]
+    else
+      begin
+        controller.try(method_sym)
+      rescue Devise::MissingWarden
+        nil
+      end
+    end
+  end
+
+  def render_view_component(component)
+    if view = context[:view] || context[:controller].try(:view_context)
+      view.render(component)
+    else
+      fail "Missing both context[:view] and context[:controller] - cannot render_view_component"
     end
   end
 end

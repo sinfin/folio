@@ -1,7 +1,13 @@
 # frozen_string_literal: true
 
 class Folio::Page < Folio::ApplicationRecord
+  if Rails.application.config.folio_pages_ancestry
+    include Folio::Positionable
+  end
+
   if Rails.application.config.folio_using_traco
+    include Folio::BelongsToSite
+    const_set(:FRIENDLY_ID_SCOPE, :site_id)
     include Folio::FriendlyIdForTraco
 
     if Rails.application.config.folio_pages_ancestry
@@ -9,18 +15,11 @@ class Folio::Page < Folio::ApplicationRecord
       include Folio::HasAncestrySlugForTraco
     end
   else
-    if Rails.application.config.folio_using_traco
-      include Folio::FriendlyIdWithLocale
+    include Folio::BelongsToSiteAndFriendlyId
 
-      validates :locale,
-                inclusion: { in: I18n.available_locales.map(&:to_s) }
-    else
-      include Folio::BelongsToSiteAndFriendlyId
-
-      if Rails.application.config.folio_pages_ancestry
-        include Folio::HasAncestry
-        include Folio::HasAncestrySlug
-      end
+    if Rails.application.config.folio_pages_ancestry
+      include Folio::HasAncestry
+      include Folio::HasAncestrySlug
     end
   end
 
@@ -57,10 +56,7 @@ class Folio::Page < Folio::ApplicationRecord
 
     translates :title, :perex, :slug, :meta_title, :meta_description
 
-    I18n.available_locales.each do |locale|
-      validates "title_#{locale}".to_sym,
-                presence: true
-    end
+    validate :validate_title_for_site_locales
   else
     include Folio::HasAtoms::Basic
 
@@ -141,7 +137,6 @@ class Folio::Page < Folio::ApplicationRecord
   end
 
   def self.view_name
-    "folio/pages/show"
   end
 
   def self.public_rails_path
@@ -160,6 +155,19 @@ class Folio::Page < Folio::ApplicationRecord
     def set_atoms_data_for_search
       self.atoms_data_for_search = all_atoms_in_array.filter_map { |a| a.data_for_search }.join(" ").presence
     end
+
+    def validate_title_for_site_locales
+      if site.blank?
+        errors.add(:site, :blank)
+      else
+        site.locales.each do |locale|
+          title_attr = "title_#{locale}"
+          if send(title_attr).blank?
+            errors.add(title_attr, :blank)
+          end
+        end
+      end
+    end
 end
 
 # == Schema Information
@@ -174,7 +182,6 @@ end
 #  meta_description      :text
 #  ancestry              :string
 #  type                  :string
-#  featured              :boolean
 #  position              :integer
 #  published             :boolean
 #  published_at          :datetime
@@ -185,12 +192,12 @@ end
 #  ancestry_slug         :string
 #  site_id               :bigint(8)
 #  atoms_data_for_search :text
+#  preview_token         :string
 #
 # Indexes
 #
 #  index_folio_pages_on_ancestry      (ancestry)
 #  index_folio_pages_on_by_query      ((((setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((title)::text, ''::text))), 'A'::"char") || setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE(perex, ''::text))), 'B'::"char")) || setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE(atoms_data_for_search, ''::text))), 'C'::"char")))) USING gin
-#  index_folio_pages_on_featured      (featured)
 #  index_folio_pages_on_locale        (locale)
 #  index_folio_pages_on_original_id   (original_id)
 #  index_folio_pages_on_position      (position)

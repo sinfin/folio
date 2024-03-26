@@ -142,7 +142,10 @@ function * triggerDirtyFormOrSubmit (action) {
   } else {
     const $wrap = window.jQuery('.folio-react-wrap--notes-fields')
     $wrap.trigger('folioCustomChange')
-    $wrap.closest('.f-c-simple-form-with-atoms__form, .f-c-dirty-simple-form').trigger('change')
+
+    const form = $wrap.closest('.f-c-simple-form-with-atoms__form, .f-c-dirty-simple-form')[0]
+    if (form) form.dispatchEvent(new window.Event('change', { bubbles: true }))
+
     yield $wrap
   }
 }

@@ -1,12 +1,14 @@
 import React from 'react'
 
-const FileUploadProgress = ({ progress }) => {
+const FileUploadProgress = ({ progress, progressText }) => {
   if (typeof progress === 'undefined') return null
 
   let message
 
-  if (progress === 100) {
-    message = `${window.FolioConsole.translations.finalizing}…`
+  if (progressText) {
+    message = progressText
+  } else if (progress === 100) {
+    message = window.Folio.i18n(window.Folio.S3Upload.i18n, 'finalizing')
   } else {
     message = `${progress || 0}%`
   }

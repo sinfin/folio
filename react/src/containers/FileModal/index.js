@@ -31,13 +31,23 @@ class FileModal extends Component {
     if (props.fileModal.file) {
       this.state = {
         author: props.fileModal.file.attributes.author,
+        default_gravity: props.fileModal.file.attributes.default_gravity,
+        alt: props.fileModal.file.attributes.alt,
         description: props.fileModal.file.attributes.description,
+        preview_duration: props.fileModal.file.attributes.preview_duration,
         sensitive_content: props.fileModal.file.attributes.sensitive_content,
-        tags: props.fileModal.file.attributes.tags,
-        default_gravity: props.fileModal.file.attributes.default_gravity
+        tags: props.fileModal.file.attributes.tags
       }
     } else {
-      this.state = { author: null, description: null, sensitive_content: false, default_gravity: '', tags: [] }
+      this.state = {
+        author: null,
+        default_gravity: '',
+        alt: null,
+        description: null,
+        preview_duration: 30,
+        sensitive_content: false,
+        tags: []
+      }
     }
   }
 
@@ -55,10 +65,12 @@ class FileModal extends Component {
         this.setState({
           ...this.state,
           author: this.props.fileModal.file.attributes.author,
+          alt: this.props.fileModal.file.attributes.alt,
+          default_gravity: this.props.fileModal.file.attributes.default_gravity,
           description: this.props.fileModal.file.attributes.description,
+          preview_duration: this.props.fileModal.file.attributes.preview_duration,
           sensitive_content: this.props.fileModal.file.attributes.sensitive_content,
-          tags: this.props.fileModal.file.attributes.tags,
-          default_gravity: this.props.fileModal.file.attributes.default_gravity
+          tags: this.props.fileModal.file.attributes.tags
         })
       }
     }
@@ -73,7 +85,7 @@ class FileModal extends Component {
       if (!msg) return
       if (!this.props.fileModal.file) return
 
-      if (msg.type === 'Folio::CreateFileFromS3Job' && msg.data.file) {
+      if (msg.type === 'Folio::S3::CreateFileJob' && msg.data.file) {
         if (Number(msg.data.file.id) === Number(this.props.fileModal.file.id)) {
           if (msg.data.type === 'replace-success') {
             this.props.dispatch(updatedFileModalFile(msg.data.file))
@@ -144,7 +156,7 @@ class FileModal extends Component {
   }
 
   render () {
-    const { fileModal, readOnly, canDestroyFiles } = this.props
+    const { fileModal, readOnly, canDestroyFiles, taggable } = this.props
     const isOpen = fileModal.file !== null
 
     return (
@@ -156,6 +168,7 @@ class FileModal extends Component {
         {fileModal.file && (
           <FileModalFile
             fileModal={fileModal}
+            taggable={taggable}
             onTagsChange={this.onTagsChange}
             saveModal={this.saveModal}
             closeFileModal={this.closeFileModal}
@@ -168,6 +181,7 @@ class FileModal extends Component {
             formState={this.state}
             changeFilePlacementsPage={this.changeFilePlacementsPage}
             readOnly={readOnly}
+            autoFocusField={fileModal.autoFocusField}
           />
         )}
       </ReactModal>

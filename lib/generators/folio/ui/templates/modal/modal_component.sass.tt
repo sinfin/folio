@@ -1,0 +1,18 @@
+.<%= classname_prefix %>-ui-modal
+  &__close
+    +unbutton
+    display: flex
+    align-items: center
+    justify-content: center
+
+  &__body
+    position: relative
+
+  &__body &__close
+    position: absolute
+    top: $modal-inner-padding
+    right: $modal-inner-padding
+
+    +media-breakpoint-down(md)
+      top: $modal-inner-padding-mobile
+      right: $modal-inner-padding-mobile

@@ -1,0 +1,18 @@
+.d-ui-user-avatar[
+  data=data
+  class=user_class_name
+  class=link_class_name
+  tabindex=(@link ? "0" : nil)
+]
+  - if current_user_with_test_fallback
+    .d-ui-user-avatar__avatar
+      = letters
+
+  - else
+    = dummy_ui_icon(:user_circle_2,
+                    height: 32,
+                    class_name: 'd-ui-user-avatar__icon')
+
+  span.d-ui-user-avatar__mq.d-ui-user-avatar__mq--desktop[
+    data=(@link ? stimulus_target('mq') : nil)
+  ]

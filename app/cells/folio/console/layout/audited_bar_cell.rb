@@ -11,7 +11,7 @@ class Folio::Console::Layout::AuditedBarCell < Folio::ConsoleCell
             url_for([:restore, :console, model, version: model.audit_version]),
             method: :post,
             "data-confirm" => t("folio.console.confirmation"),
-            class: "btn btn-secondary font-weight-bold mr-g my-1")
+            class: "btn btn-secondary font-weight-bold me-g my-1")
   end
 
   def show_url

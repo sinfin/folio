@@ -1,0 +1,13 @@
+---
+cs:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/cards/image: 
+    models:
+      application_namespace_path/atom/cards/image: Karta - obrázek
+en:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/cards/image: 
+    models:
+      application_namespace_path/atom/cards/image: Card - image

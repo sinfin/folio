@@ -3,8 +3,9 @@
 class Folio::Console::Api::BaseController < Folio::Console::BaseController
   include Folio::ApiControllerBase
 
-  skip_before_action :custom_authenticate_account!
-  before_action :api_authenticate_account!
+  skip_before_action :authenticate_user!
+  skip_before_action :custom_authorize_user!
+  before_action :api_authorize_user!
 
   private
     def serializer_for(model)
@@ -15,7 +16,7 @@ class Folio::Console::Api::BaseController < Folio::Console::BaseController
       serializer
     end
 
-    def api_authenticate_account!
-      fail CanCan::AccessDenied if current_account.blank?
+    def api_authorize_user!
+      fail CanCan::AccessDenied unless can_now?(:access_console, current_site)
     end
 end

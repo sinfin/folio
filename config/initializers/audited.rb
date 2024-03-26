@@ -1,3 +1,5 @@
 # frozen_string_literal: true
 
-Audited.current_user_method = :current_account
+# when in impersonation, still use real user
+Audited.current_user_method = :true_user
+Audited.auditing_enabled = !(Rails.env.test?)

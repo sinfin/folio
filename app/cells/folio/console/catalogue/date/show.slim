@@ -1,0 +1,13 @@
+div class=class_name
+  .f-c-catalogue-date__flex
+    .f-c-catalogue-date__content
+      - if model.is_a?(Time)
+        .f-c-catalogue-date__date
+          = l(model, format: :console_short_date)
+        .f-c-catalogue-date__time.small
+          = l(model, format: :console_short_time)
+      - else
+        = l(model, format: :console_short_date)
+
+    - if alert?
+      = folio_icon(:alert, class: "f-c-catalogue-date__ico", height: 16)

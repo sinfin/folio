@@ -7,10 +7,7 @@ module Folio
 
       def flag(wrapper_options = nil)
         @flag ||= if options[:flag].present?
-          if code = ::Folio::LANGUAGES[options[:flag].to_sym]
-            src = "#{CDN}/4x3/#{code.downcase}.svg"
-            %{<img src="#{src}" alt="#{code}" class="folio-console-flag">}.html_safe
-          end
+          Folio::Console::Ui::FlagCell.new(options[:flag]).show.html_safe
         end
       end
     end

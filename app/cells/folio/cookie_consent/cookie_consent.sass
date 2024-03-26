@@ -3,7 +3,7 @@
 $folio-cookie-consent-bg: $body-bg !default
 $folio-cookie-consent-text: $body-color !default
 $folio-cookie-consent-btn-primary-bg: $primary !default
-$folio-cookie-consent-btn-primary-text: color-yiq($primary) !default
+$folio-cookie-consent-btn-primary-text: $white !default
 $folio-cookie-consent-btn-primary-hover-bg: darken($primary, 7.5%) !default
 $folio-cookie-consent-btn-secondary-bg: #eaeff2 !default
 $folio-cookie-consent-btn-secondary-text: $folio-cookie-consent-text !default
@@ -49,3 +49,6 @@ $folio-cookie-consent-button-border-radius: $btn-border-radius !default
   .c-bn
     border-radius: $folio-cookie-consent-button-border-radius
     outline: 0 !important
+
+  #s-hdr, #s-bns
+    --cc-section-border: #{$folio-cookie-consent-cookie-table-border}

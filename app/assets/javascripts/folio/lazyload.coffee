@@ -1,4 +1,5 @@
 #= require vanilla-lazyload/dist/lazyload
+# TODO jQuery -> stimulus
 
 window.makeFolioLazyLoad = (selector, containerSelector = null, options = {}) ->
   window.folioLazyloadInstances ?= []

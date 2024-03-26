@@ -1,9 +1,17 @@
 .f-c-index-actions
   display: flex
+  align-items: center
+  justify-content: flex-end
+  gap: $grid-gutter-width / 3
+  color: $dark-gray
 
-  .btn + .btn
-    margin-left: $table-cell-padding
+  &__link
+    flex: 0 0 auto
+    transition: $transition-base
+    cursor: pointer
 
-  +mq-desktop-catalogue
-    justify-content: flex-end
-    text-align: right
+    &--cursor-move
+      cursor: move
+
+    &:hover
+      opacity: $f-c-btn-hover-opacity

@@ -1,4 +1,6 @@
-.f-devise-sessions-new
+.f-devise-sessions-new[
+  data=(options[:modal] ? stimulus_controller('f-devise-modal-form') : nil)
+]
   = form do |f|
     = title
 
@@ -8,9 +10,11 @@
       == cell('folio/devise/omniauth', 'sessions')
 
     .f-devise__narrow
-      == email_input(f)
+      == email_input(f, autofocus: true)
 
       == password_input(f, :password, autocomplete: 'current-password')
+
+    .f-devise__errors
 
     = submit_button(f, t('.sign_in'))
 
@@ -19,6 +23,9 @@
 
     .f-devise__under-submit-links
       = forgotten_password_link
+
+    - if model[:modal_non_get_request]
+      input name="modal_non_get_request" value="1" type="hidden"
 
     span.folio-loader.f-devise__loader
 

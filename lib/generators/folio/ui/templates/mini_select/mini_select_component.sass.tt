@@ -1,0 +1,103 @@
+.<%= classname_prefix %>-ui-mini-select
+  position: relative
+
+  &__selected-value
+    display: flex
+    justify-content: space-between
+    align-items: center
+    gap: 0 map-get($spacers, 1)
+    padding: map-get($spacers, 1) map-get($spacers, 2)
+    background-color: $shade-200
+    border-radius: $border-radius-lg
+
+  &--toggle &__selected-value
+    justify-content: center
+
+  &__selected-value-text, &__option
+    font-size: $ui-typo-text-s-font-size
+    font-weight: $font-weight-medium
+
+  &__selected-value, &__option
+    cursor: pointer
+
+    &:hover, &:focus
+      background-color: $shade-300
+
+  &__options
+    display: none
+    position: absolute
+    top: 29px
+    left: 0
+    width: 100%
+    background-color: $shade-200
+    border-radius: 0 0 $border-radius $border-radius
+    overflow: hidden
+
+  &__option
+    &--selected
+      display: none
+
+  &__option--last-visible &__option-a
+    padding-bottom: map-get($spacers, 1)
+
+  &__option-a
+    display: block
+    text-decoration: none !important
+    padding: 0 map-get($spacers, 2)
+
+  &--expanded &__selected-value
+    border-radius: $border-radius $border-radius 0 0
+
+  &--expanded &__options
+    display: block
+
+  &--expanded &__chevron
+    transform: rotate(180deg)
+
+  &--language
+    min-width: 59px
+
+    &.<%= classname_prefix %>-ui-mini-select--verbose
+      min-width: 87px
+
+    &.<%= classname_prefix %>-ui-mini-select--toggle
+      min-width: 36px
+
+      &.<%= classname_prefix %>-ui-mini-select--verbose
+        min-width: 67px
+
+  &--currency
+    min-width: 53px
+
+    &.<%= classname_prefix %>-ui-mini-select--verbose
+      min-width: 70px
+
+    &.<%= classname_prefix %>-ui-mini-select--toggle
+      min-width: 26px
+
+      &.<%= classname_prefix %>-ui-mini-select--verbose
+        min-width: 50px
+
+  +mq-mobile-menu
+    .<%= classname_prefix %>-ui-menu-toolbar-toolbar &__selected-value,
+    .<%= classname_prefix %>-ui-menu-toolbar-toolbar &__option-a
+      background: $shade-200
+      color: $shade-black-contrast
+
+      &:hover, &:focus
+        background: $shade-200
+
+    .<%= classname_prefix %>-ui-menu-toolbar-toolbar &__options
+      background: $cloud-700
+      top: unset
+      bottom: 100%
+      border-radius: $border-radius $border-radius 0 0
+
+    .<%= classname_prefix %>-ui-menu-toolbar-toolbar &--expanded &__selected-value
+      border-radius: 0 0 $border-radius $border-radius
+
+    .<%= classname_prefix %>-ui-menu-toolbar-toolbar &__option--last-visible &__option-a
+      padding-bottom: 0
+
+    .<%= classname_prefix %>-ui-menu-toolbar-toolbar &__option--first-visible &__option-a
+      padding-top: map-get($spacers, 1)

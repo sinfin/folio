@@ -5,11 +5,13 @@ module Folio::HasHashId
 
   included do
     extend ::FriendlyId
-    before_create :set_hash_id
+    before_validation :set_hash_id
     friendly_id :hash_id
 
     validates :hash_id,
-              presence: true
+              presence: true,
+              uniqueness: true,
+              format: { with: /[0-9a-zA-Z-]+/ }
   end
 
   def hash_id

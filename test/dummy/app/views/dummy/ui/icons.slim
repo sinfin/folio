@@ -1,0 +1,12 @@
+.container-fluid
+  h1
+    a.d-unlink href=dummy_ui_path UI kit
+
+  h2 Icons
+
+  .d-flex.flex-wrap.gap-3[
+    onmouseenter="this.style.color = 'red'"
+    onmouseleave="this.style.color = 'inherit'"
+  ]
+    - Dummy::Ui::IconComponent::ICONS.each do |name, _h|
+      = dummy_ui_icon(name, title: name)

@@ -74,7 +74,7 @@ class Scroller extends React.Component {
         <div className='mt-2 pt-1 small'>{this.props.thumbKey}</div>
 
         <div className='d-flex flex-wrap'>
-          <button className='btn btn-sm btn-secondary mt-2 mr-2' onClick={this.props.close}>{window.FolioConsole.translations.cancel}</button>
+          <button className='btn btn-sm btn-secondary mt-2 me-2' onClick={this.props.close}>{window.FolioConsole.translations.cancel}</button>
           <button className='btn btn-sm btn-primary mt-2' onClick={this.save}>{window.FolioConsole.translations.saveOffset}</button>
         </div>
       </div>

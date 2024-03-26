@@ -1,18 +1,35 @@
 import styled from 'styled-components'
 
 export default styled.div`
+  position: relative;
+  display: flex;
   align-items: center;
-  justify-content: end;
+  gap: 1.5rem;
   flex-wrap: wrap;
+  min-height: 18px;
 
-  .card-body > &:first-child,
-  .f-c-r-dropzone > &:first-child {
-    margin-bottom: 1rem;
+  .f-c-pagination {
+    margin: 0;
   }
 
-  .card-body > &:last-child,
-  .f-c-r-dropzone > &:last-child {
-    margin-top: 1rem;
-    ${(props) => props.single ? 'display: none;' : ''}
+  @media screen and (max-width: 779px) {
+    display: block;
+
+    .f-c-pagination__nav {
+      margin-left: auto;
+    }
+  }
+
+  @media screen and (min-width: 780px) {
+    padding: 0 215px;
+    justify-content: center;
+    ${(props) => props.single ? '' : 'min-height: 36px;'}
+
+    .f-c-pagination__info {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translate(0, -50%);
+    }
   }
 `

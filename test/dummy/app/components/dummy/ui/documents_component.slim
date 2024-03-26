@@ -1,0 +1,15 @@
+.d-ui-documents
+  - if @title.present?
+    h3 = cstypo(@title)
+
+  - if @document_placements.present?
+    ul.d-ui-documents__ul
+      - @document_placements.each do |placement|
+        li.d-ui-documents__li
+          a.d-ui-documents__a.d-with-icon.d-with-icon--underlined[
+            href=href(placement)
+            target="_blank"
+          ]
+            = dummy_ui_icon(:file)
+            span
+              = label(placement)

@@ -1,0 +1,59 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/x27074358x
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 400
+      message: ''
+    headers:
+      Date:
+      - Wed, 17 Jan 2024 13:05:29 GMT
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Vary:
+      - Access-Control-Request-Headers
+      - Access-Control-Request-Method
+      - Origin
+      Access-Control-Allow-Origin:
+      - "*"
+      Referrer-Policy:
+      - strict-origin-when-cross-origin
+      Permissions-Policy:
+      - microphone=(), payment=(), sync-xhr=(self), geolocation=(self)
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      X-Xss-Protection:
+      - 1; mode=block
+      Content-Security-Policy:
+      - default-src 'self'; font-src 'self' data:; style-src 'self'; script-src 'self';img-src
+        'self' data:;
+      X-Azure-Ref:
+      - 20240117T130529Z-tqewde3vbx1x9dhaqd8hz5envc0000000470000000019gm4
+      X-Cache:
+      - CONFIG_NOCACHE
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        eyJrb2QiOiJDSFlCQV9WU1RVUFUiLCJwb3BpcyI6IlBvbG/FvmthICdpY28nIDogbmVzcGzFiHVqZSByZWd1bMOhcm7DrSB2w71yYXogWzAtOV17OH18TmVuw60gdnlwbG7Em24gc3Byw6F2bsO9IGZvcm3DoXQgScSMTy4gVXByYXZ0ZSBwYXJhbWV0cnkgdnlobGVkw6F2w6Fuw60ufENoeWJhIHZzdHVwdSIsInN1YktvZCI6IlZTVFVQX05FVkFMSUROSV9GT1JNQVRfSUNPIn0=
+  recorded_at: Wed, 17 Jan 2024 13:05:29 GMT
+recorded_with: VCR 6.2.0

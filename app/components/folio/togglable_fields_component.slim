@@ -1,0 +1,13 @@
+.f-togglable-fields
+  = @f.check_box(@attribute, class: "f-togglable-fields__input")
+
+  - if @label
+    = @f.label(@attribute,
+               @label,
+               class: "f-togglable-fields__label form-label")
+  - else
+    = @f.label(@attribute,
+               class: "f-togglable-fields__label form-label")
+
+  .f-togglable-fields__content
+    = content

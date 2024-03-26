@@ -11,6 +11,10 @@ class Folio::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksContr
     bind_user_and_redirect
   end
 
+  def apple
+    bind_user_and_redirect
+  end
+
   def google_oauth2
     bind_user_and_redirect
   end
@@ -45,6 +49,8 @@ class Folio::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksContr
 
       if @user.save
         session.delete(:pending_folio_authentication)
+
+        @user.create_site_links_for([current_site, source_site])
 
         sign_in(resource_name, @user)
         set_flash_message!(:notice, :signed_in) if is_flashing_format?
@@ -178,5 +184,16 @@ class Folio::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksContr
       params.require(:user)
             .permit(:email,
                     *Folio::User.controller_strong_params_for_create)
+    end
+
+    def verified_request?
+      # fix of `ERROR -- omniauth: (apple) Authentication failure! csrf_detected: OmniAuth::Strategies::OAuth2::CallbackError, csrf_detected | CSRF detected`
+      # see https://github.com/nhosoya/omniauth-apple/issues/54#issuecomment-1409644107
+      action_name == "apple" || super
+    end
+
+    def source_site
+      slug = session&.dig(Folio::Devise::CrossdomainHandler::SESSION_KEY, :target_site_slug)
+      slug.present? ? Folio::Site.find_by(slug:) : nil
     end
 end

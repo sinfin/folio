@@ -7,7 +7,17 @@ module Folio::Console::TabsHelper
         @folio_active_tab = params[:tab].try(:to_sym)
       end
 
-      render "folio/console/partials/tabs", keys:
+      ary = keys.map do |key|
+        @folio_active_tab ||= key
+
+        {
+          label: t("folio.console.tabs.#{key}", default: @klass.try(:human_attribute_name, key)),
+          active: @folio_active_tab == key,
+          key:,
+        }
+      end
+
+      render(Folio::Console::Ui::TabsComponent.new(tabs: ary, remember: "console"))
     end
   end
 

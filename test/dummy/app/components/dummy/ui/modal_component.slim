@@ -1,0 +1,31 @@
+.modal.d-ui-modal[
+  role="dialog"
+  tabindex="-1"
+  class=@class_name
+  data=stimulus_merge_data(stimulus_controller('f-modal'), @data)
+]
+  .modal-dialog[
+    role="document"
+    class="d-ui-modal__dialog"
+    class=(@size ? "modal-#{@size}" : nil)
+  ]
+    .modal-content.d-ui-modal__content
+      - if header?
+        .modal-header.d-ui-modal__header
+          = header
+          = close_button
+      - elsif @title.present?
+        .modal-header.d-ui-modal__header
+          .modal-title.d-ui-modal__title = @title
+          = close_button
+
+      .modal-body.d-ui-modal__body
+        = content
+        = close_button if !header? && @title.blank?
+
+      - if footer?
+        .modal-footer.d-ui-modal__footer
+          = footer
+      - elsif @buttons_model
+        .modal-footer.d-ui-modal__footer
+          = dummy_ui_buttons(buttons: @buttons_model)

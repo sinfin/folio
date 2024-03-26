@@ -1,0 +1,8 @@
+.<%= classname_prefix %>-ui-clipboard data=data data-clipboard-text=@text
+  = <%= application_namespace_path %>_ui_icon(:copy,
+                  class_name: '<%= classname_prefix %>-ui-clipboard__copy',
+                  height: @height || 16)
+
+  = <%= application_namespace_path %>_ui_icon(:check,
+                  class_name: '<%= classname_prefix %>-ui-clipboard__check',
+                  height: @height || 16)

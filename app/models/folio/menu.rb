@@ -16,7 +16,7 @@ class Folio::Menu < Folio::ApplicationRecord
 
   validates :title,
             presence: true,
-            uniqueness: Rails.application.config.folio_site_is_a_singleton ? true : { scope: :site_id }
+            uniqueness: { scope: :site_id }
 
   alias_attribute :items, :menu_items
   before_validation :set_default_title
@@ -54,7 +54,7 @@ class Folio::Menu < Folio::ApplicationRecord
     []
   end
 
-  def self.styles_for_react_select
+  def self.styles_for_react_select(site:, locale:)
     if self.styles.present?
       nil_ary = [[human_attribute_name("style/nil"), ""]]
       nil_ary + self.styles.without(:nil).map do |style|

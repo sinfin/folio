@@ -6,15 +6,31 @@ class Folio::NewsletterSubscription < Folio::ApplicationRecord
   has_sanitized_fields :email
 
   belongs_to :subscribable, polymorphic: true,
-                            optional: true
+                            optional: true,
+                            inverse_of: :newsletter_subscriptions
 
   validates :email,
             format: { with: Folio::EMAIL_REGEXP }
 
   validates :email,
-            uniqueness: true
+            uniqueness: { scope: :site_id }
+
+  validate :validate_belongs_to_subscribable_site
 
   default_scope { order(id: :desc) }
+
+  scope :active, -> { where(active: true) }
+  scope :inactive, -> { where(active: false) }
+  scope :by_active, -> (bool) {
+    case bool
+    when true, "true"
+      active
+    when false, "false"
+      inactive
+    else
+      all
+    end
+  }
 
   pg_search_scope :by_query,
                   against: %i[email],
@@ -33,7 +49,7 @@ class Folio::NewsletterSubscription < Folio::ApplicationRecord
         update_mailchimp_subscription(email_before_last_save)
       end
 
-      update_mailchimp_subscription
+      update_mailchimp_subscription(email)
     end
   end
 
@@ -44,7 +60,7 @@ class Folio::NewsletterSubscription < Folio::ApplicationRecord
   end
 
   def self.csv_attribute_names
-    %i[id email created_at]
+    %i[id email active created_at]
   end
 
   def csv_attributes(controller = nil)
@@ -53,15 +69,27 @@ class Folio::NewsletterSubscription < Folio::ApplicationRecord
     end
   end
 
+  def self.subscribable_sites
+    Folio::Site.all
+  end
+
   def self.clears_page_cache_on_save?
     false
   end
 
   private
-    def update_mailchimp_subscription(email_for_subscription = nil)
-      if Rails.env.production? || ENV["DEV_MAILCHIMP"]
-        Folio::Mailchimp::CreateOrUpdateSubscriptionJob.perform_later(email_for_subscription || email)
+    def update_mailchimp_subscription(email_for_subscription)
+      return unless Rails.application.config.folio_newsletter_subscription_service == :mailchimp
+      return unless Rails.env.production? || ENV["DEV_MAILCHIMP"]
+
+      # TODO: multiple mailchimp lists not implemented yet
+      if Folio::Site.count == 1
+        Folio::Mailchimp::CreateOrUpdateSubscriptionJob.perform_later(email_for_subscription)
       end
+    end
+
+    def validate_belongs_to_subscribable_site
+      errors.add(:site, :invalid) unless site.in?(self.class.subscribable_sites)
     end
 end
 

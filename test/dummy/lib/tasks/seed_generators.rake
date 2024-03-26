@@ -3,6 +3,7 @@
 class Dummy::SeedGenerator
   def initialize(templates_path:)
     puts "I = identical, W = (over)write, M = missing\n"
+    FileUtils.mkdir_p templates_path.to_s
     @templates_path = templates_path
   end
 
@@ -28,30 +29,47 @@ class Dummy::SeedGenerator
     end
   end
 
+  def from_component_path(component_path)
+    name = component_path.split("app/components/dummy/ui/", 2)
+                         .last
+                         .gsub("_component.rb", "")
+
+    template_component_dir = @templates_path.join(name)
+    FileUtils.mkdir_p template_component_dir
+
+    Dir[Rails.root.join("app/components/dummy/ui/#{name}_component.*")].each do |path|
+      copy_file(path, template_component_dir.join("#{File.basename(path)}.tt"))
+    end
+
+    test_path = Rails.root.join("test/components/dummy/ui/#{name}_component_test.rb")
+    if File.exist?(test_path)
+      copy_file(test_path, template_component_dir.join("#{name}_component_test.rb.tt"))
+    else
+      puts "M #{relative_path(test_path)}"
+    end
+  end
+
   def from_atom_path(atom_path)
     name = atom_path.gsub(%r{.*app/models/dummy/atom/(.*).rb}, '\1')
 
     template_atom_dir = @templates_path.join(name)
     FileUtils.mkdir_p template_atom_dir
 
-    copy_file(atom_path, template_atom_dir.join("#{name}.rb.tt"))
+    copy_file(atom_path, template_atom_dir.join("#{File.basename(name)}.rb.tt"))
 
-    template_atom_cell_dir = template_atom_dir.join("cell")
+    template_atom_component_dir = template_atom_dir.join("component")
 
-    FileUtils.mkdir_p template_atom_cell_dir
+    FileUtils.mkdir_p template_atom_component_dir
 
     unless File.read(atom_path).include?("self.abstract_class = true")
       %w[atom molecule].each do |key|
-        Dir[Rails.root.join("app/cells/dummy/#{key}/#{name}_cell.rb")].each do |path|
-          copy_file(path, template_atom_dir.join("cell/#{name}_cell.rb.tt"))
+        Dir[Rails.root.join("app/components/dummy/#{key}/#{name}_component.*")].each do |path|
+          file_name = File.basename(path)
+          copy_file(path, template_atom_dir.join("component/#{file_name}.tt"))
         end
 
-        Dir[Rails.root.join("app/cells/dummy/#{key}/#{name}/*")].each do |path|
-          copy_file(path, template_atom_cell_dir.join(name, "#{File.basename(path)}.tt"))
-        end
-
-        Dir[Rails.root.join("test/cells/dummy/#{key}/#{name}_cell_test.rb")].each do |path|
-          copy_file(path, template_atom_dir.join("cell/#{name}_cell_test.rb.tt"))
+        Dir[Rails.root.join("test/components/dummy/#{key}/#{name}_component_test.rb")].each do |path|
+          copy_file(path, template_atom_dir.join("component/#{name}_component_test.rb.tt"))
         end
       end
     end
@@ -107,6 +125,52 @@ class Dummy::SeedGenerator
     end
   end
 
+  def atoms_controllers(path)
+    copy_file(path, @templates_path.join("atoms_controller.rb.tt"))
+
+    copy_file(Rails.root.join("data/atoms_showcase.yml"), @templates_path.join("data/atoms_showcase.yml.tt"))
+
+    Dir[Rails.root.join("app/views/dummy/atoms/show.slim")].each do |path|
+      name = File.basename(path)
+      copy_file(path, @templates_path.join("#{name}.tt"))
+    end
+  end
+
+  def ui_controllers(path)
+    copy_file(path, @templates_path.join("ui_controller.rb.tt"))
+
+    Dir[Rails.root.join("app/views/dummy/ui/*.slim")].each do |path|
+      name = File.basename(path)
+      copy_file(path, @templates_path.join("views/#{name}.tt"))
+    end
+  end
+
+  def ui_helper(path)
+    copy_file(path, @templates_path.join("ui_helper.rb.tt"))
+  end
+
+  def ui_routes(path)
+    copy_file(path, @templates_path.join("ui-routes.rb.tt"))
+  end
+
+  def copy_file(from, to)
+    text = File.read(from)
+
+    replaced = if to.to_s.include?("public/")
+      text
+    else
+      replace_names(text)
+    end
+
+    if File.exist?(to) && File.read(to) == replaced
+      puts "I #{relative_path(to)}"
+    else
+      FileUtils.mkdir_p File.dirname(to)
+      File.write(to, replaced)
+      puts "W #{relative_path(to)}"
+    end
+  end
+
   private
     def root
       Folio::Engine.root.to_s
@@ -128,9 +192,16 @@ class Dummy::SeedGenerator
       str.gsub("Dummy::", "<%= application_namespace %>::")
          .gsub("dummy_", "<%= application_namespace_path %>_")
          .gsub("dummy.search", "<%= application_namespace_path %>.search")
+         .gsub("dummy_search", "<%= application_namespace_path %>_search")
+         .gsub("dummy_ui_", "<%= application_namespace_path %>_ui_")
+         .gsub("dummy_atoms_", "<%= application_namespace_path %>_atoms_")
          .gsub("dummy:", "<%= application_namespace_path %>:")
+         .gsub(":dummy", ":<%= application_namespace_path %>")
+         .gsub("--dummy-", "--<%= application_namespace_path %>-")
          .gsub("window.dummy", "window.<%= application_namespace_path %>")
+         .gsub("window.Dummy", "window.<%= application_namespace %>")
          .gsub("d-ui", "<%= classname_prefix %>-ui")
+         .gsub("d-atoms", "<%= classname_prefix %>-atoms")
          .gsub("d-unlink", "<%= classname_prefix %>-unlink")
          .gsub("d-atom", "<%= classname_prefix %>-atom")
          .gsub("d-blog", "<%= classname_prefix %>-blog")
@@ -140,32 +211,21 @@ class Dummy::SeedGenerator
          .gsub("d-with-icon", "<%= classname_prefix %>-with-icon")
          .gsub("dAtom", "<%= classname_prefix %>Atom")
          .gsub("dSearch", "<%= classname_prefix %>Search")
+         .gsub("cells/dummy", "cells/<%= application_namespace_path %>")
+         .gsub("components/dummy", "components/<%= application_namespace_path %>")
          .gsub("dummy/ui", "<%= application_namespace_path %>/ui")
          .gsub("dummy/blog", "<%= application_namespace_path %>/blog")
          .gsub("dummy/search", "<%= application_namespace_path %>/search")
-         .gsub("dummy/atom/blog", "<%= application_namespace_path %>/atom/blog")
-         .gsub("dummy/molecule/blog", "<%= application_namespace_path %>/molecule/blog")
+         .gsub("dummy/atom", "<%= application_namespace_path %>/atom")
+         .gsub("dummy/molecule", "<%= application_namespace_path %>/molecule")
          .gsub("dummy_menu", "<%= application_namespace_path %>_menu")
-         .gsub(%r{dummy/atom/[\w/]+}, "<%= atom_cell_name %>")
-         .gsub(%r{"dummy/molecule/.*"}, '"<%= molecule_cell_name %>"')
-    end
-
-    def copy_file(from, to)
-      text = File.read(from)
-      replaced = replace_names(text)
-
-      if File.exist?(to) && File.read(to) == replaced
-        puts "I #{relative_path(to)}"
-      else
-        FileUtils.mkdir_p File.dirname(to)
-        File.write(to, replaced)
-        puts "W #{relative_path(to)}"
-      end
     end
 
     def scaffold(key)
       Dir[Rails.root.join("app/cells/**/dummy/#{key}/**/*.*"),
           Rails.root.join("app/cells/**/dummy/*/#{key}/**/*.*"),
+          Rails.root.join("app/components/**/dummy/#{key}/**/*.*"),
+          Rails.root.join("app/components/**/dummy/*/#{key}/**/*.*"),
           Rails.root.join("app/controllers/**/dummy/#{key}/**/*.rb"),
           Rails.root.join("app/controllers/**/dummy/#{key}_controller.rb"),
           Rails.root.join("app/models/dummy/#{key}/**/*.rb"),
@@ -187,10 +247,32 @@ end
 namespace :dummy do
   namespace :seed_generators do
     task all: :environment do
+      Rake::Task["dummy:seed_generators:assets"].invoke
       Rake::Task["dummy:seed_generators:ui"].invoke
       Rake::Task["dummy:seed_generators:prepared_atom"].invoke
       Rake::Task["dummy:seed_generators:blog"].invoke
       Rake::Task["dummy:seed_generators:search"].invoke
+    end
+
+    task assets: :environment do
+      require_relative "../../../../lib/generators/folio/assets/assets_generator"
+
+      templates_path = Folio::Engine.root.join("lib/generators/folio/assets/templates")
+      gen = Dummy::SeedGenerator.new(templates_path:)
+
+      {
+        Folio::AssetsGenerator::TEMPLATES => ".tt",
+        ["app/assets/stylesheets/modules/bootstrap-overrides/**/*.sass"] => ".tt",
+        Folio::AssetsGenerator::FILES => "",
+      }.each do |paths, affix|
+        paths.each do |path|
+          Dir[Rails.root.join(path)].each do |glob_path|
+            next if File.directory?(glob_path)
+            path = glob_path.to_s.gsub(/\A#{Folio::Engine.root}\/test\/dummy\//, "")
+            gen.copy_file(glob_path, templates_path.join("#{path}#{affix}"))
+          end
+        end
+      end
     end
 
     task ui: :environment do
@@ -200,7 +282,17 @@ namespace :dummy do
         gen.from_cell_path(cell_path)
       end
 
+      Dir[Rails.root.join("app/components/dummy/ui/**/*_component.rb")].each do |component_path|
+        gen.from_component_path(component_path)
+      end
+
       gen.ui_i18n_yamls(Rails.root.join("config/locales/ui.*.yml"))
+
+      gen.ui_controllers(Rails.root.join("app/controllers/dummy/ui_controller.rb"))
+
+      gen.ui_helper(Rails.root.join("app/helpers/dummy/ui_helper.rb"))
+
+      gen.ui_routes(Rails.root.join("config/routes/dummy/ui.rb"))
     end
 
     task prepared_atom: :environment do
@@ -210,6 +302,8 @@ namespace :dummy do
         next if atom_path.include?("/blog/")
         gen.from_atom_path(atom_path)
       end
+
+      gen.atoms_controllers(Rails.root.join("app/controllers/dummy/atoms_controller.rb"))
     end
 
     task blog: :environment do
