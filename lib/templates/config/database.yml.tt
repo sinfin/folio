@@ -1,12 +1,11 @@
 default: &default
   adapter: postgresql
   encoding: unicode
-  pool: 5
+  pool: <%= ENV.fetch('DB_POOL', 50) %>
 
 development:
   <<: *default
   database: <%= project_name %>_development
-  pool: 50
 
 test:
   <<: *default
@@ -26,5 +25,4 @@ production:
   encoding: utf8
   collation: cs_CZ.UTF8
   min_messages: warning
-  pool: 10
   timeout: 3000

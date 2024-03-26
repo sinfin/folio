@@ -18,7 +18,6 @@ class Folio::Menu < Folio::ApplicationRecord
             presence: true,
             uniqueness: { scope: :site_id }
 
-  alias_attribute :items, :menu_items
   before_validation :set_default_title
 
   scope :ordered, -> { order(type: :asc, locale: :asc) }
