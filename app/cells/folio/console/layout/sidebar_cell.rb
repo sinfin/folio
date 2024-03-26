@@ -207,7 +207,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
   end
 
   def show_leads?
-    ::Rails.application.config.folio_leads
+    ::Rails.application.config.folio_leads_from_component_class_name
   end
 
   def show_newsletter_subscriptions?
@@ -224,7 +224,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
   end
 
   def show_search?
-    true
+    can_now?(:multisearch_console, current_site)
   end
 
   private

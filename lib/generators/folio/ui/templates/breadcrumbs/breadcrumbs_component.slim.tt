@@ -29,4 +29,4 @@ div[
 
       - if @share
         .<%= classname_prefix %>-ui-breadcrumbs__share
-          == cell('<%= application_namespace_path %>/ui/share', nil, mobile_collapsible: true)
+          == render(<%= application_namespace %>::Ui::ShareComponent.new(mobile_collapsible: true))

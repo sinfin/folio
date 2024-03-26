@@ -111,7 +111,7 @@ Dragonfly.app.configure do
     end
   end
 
-  secret Rails.application.secrets.dragonfly_secret
+  secret ENV.fetch("DRAGONFLY_SECRET", "4ergbu7gheriufgle78osferyufler78f8oelgfyegfia34g7fsey,fghr.fguiye4.gfu.dgfja,sgfuielgfiuagwekf,guyrawilfguireal")
 
   url_format "/media/:job/:sha/:name"
 

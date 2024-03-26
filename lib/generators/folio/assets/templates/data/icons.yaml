@@ -99,6 +99,9 @@ cookie:
 copy:
   width: 24
   height: 24
+content_copy:
+  width: 24
+  height: 24
 credit_card:
   width: 24
   height: 24
@@ -124,6 +127,9 @@ eye_off:
   width: 24
   height: 24
 facebook:
+  width: 32
+  height: 33
+facebook_messenger:
   width: 32
   height: 33
 file:
@@ -348,4 +354,3 @@ x_square:
 youtube:
   width: 32
   height: 33
-

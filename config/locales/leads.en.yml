@@ -2,11 +2,11 @@
 en:
   folio:
     leads:
-      form:
-        email: E-mail
+      create:
         failure: Failed to send the message. Please try again later.
-        message: Thanks for your message!
-        name: Name
-        note: Message
-        phone: Phone
+        success: Message was submitted successfully.
+
+      form_component:
+        failure: :folio.leads.create.failure
         submit: Submit
+        success: :folio.leads.create.success

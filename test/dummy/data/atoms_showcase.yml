@@ -464,6 +464,14 @@ atoms:
     - variant: thick
     - variant: invisible
 
+  Dummy::Atom::Embed:
+    - embed_code: <iframe width="560" height="315" src="https://www.youtube.com/embed/8DPcXHMGMBc?si=zAACDW5cS002TE3c" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    - embed_code: <iframe style="border-radius:12px" src="https://open.spotify.com/embed/episode/5qMXTXTJ5YKnoBWWcndNcH?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+
+  Dummy::Atom::Leads::Form:
+    -
+    - title: with title
+
 values_for_true:
   title: Polaroid cray austin muggle magic humblebrag aesthetic
   content: |

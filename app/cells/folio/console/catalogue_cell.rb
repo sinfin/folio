@@ -133,10 +133,15 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
     resource_link(through_aware_console_url_for(record), attr, sanitize:, &block)
   end
 
-  def date(attr = nil, small: false, alert_threshold: nil)
+  def date(attr = nil, small: false, alert_threshold: nil, &block)
     attribute(attr, small:) do
-      val = record.send(attr)
-      cell("folio/console/catalogue/date", val, small:, alert_threshold:)
+      value = if block_given?
+        yield(record)
+      else
+        record.send(attr)
+      end
+
+      cell("folio/console/catalogue/date", value, small:, alert_threshold:)
     end
   end
 
@@ -196,8 +201,26 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
   end
 
   def email(attr = :email, sanitize: false)
-    attribute(attr, spacey: true) do
-      e = record.public_send(attr)
+    attr_parts = attr.to_s.split(".")
+
+    safe_attr = if attr_parts.size > 1
+      attr_parts.last.to_sym
+    else
+      attr
+    end
+
+    attribute(safe_attr, spacey: true) do
+      e = if attr_parts.size > 1
+        runner = record
+
+        attr_parts.each do |part|
+          runner = runner.try(part)
+        end
+
+        runner
+      else
+        record.public_send(safe_attr)
+      end
 
       if sanitize
         e = sanitize_string(e)

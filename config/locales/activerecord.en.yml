@@ -117,6 +117,11 @@ en:
               invalid: is invalid. Please enter a full number including country code, i.e. +420604123456
             password:
               weak_password: is weak.Try at least 8 characters from lowercase and uppercase letters, numbers and symbols.
+        folio/site_user_link:
+          attributes:
+            roles:
+              not_available_for_site: "Roles %{roles} are not completelly available for site '%{site}'."
+
     models:
       folio/atom:
         one: Atom
@@ -250,8 +255,3 @@ en:
         already_exists_with_locale: "Only one record of '%{class}' with 'locale = \"%{rec_locale}\"' is allowed."
         already_exists: "Only one record of '%{class}' is allowed."
 
-    models:
-      folio/site_user_link:
-        attributes:
-         roles:
-           not_available_for_site: "Roles %{roles} are not completelly availablefor site '%{site}'."

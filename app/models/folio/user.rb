@@ -127,6 +127,9 @@ class Folio::User < Folio::ApplicationRecord
     end
   }
 
+  audited only: %i[email unconfirmed_email first_name last_name nickname phone subscribed_to_newsletter superadmin bank_account_number]
+  has_associated_audits
+
   def full_name
     if first_name.present? || last_name.present?
       "#{first_name} #{last_name}".strip
@@ -281,12 +284,21 @@ class Folio::User < Folio::ApplicationRecord
 
     # user is able to do action, but can it be triggered now?
     if subject.respond_to?(:currently_available_actions)
-      subject.currently_available_actions.include?(action)
+      subject.currently_available_actions(self).include?(action)
     else
       true
     end
   end
 
+  def currently_allowed_actions_with(subject, site: nil)
+    return [] unless subject.respond_to?(:currently_available_actions)
+
+    site ||= subject&.try(:site)
+    subject = site if subject.blank?
+    ability = Folio::Ability.new(self, site)
+
+    subject.currently_available_actions(self).select { |action| ability.can?(action, subject) }
+  end
 
   private
     def validate_first_name_and_last_name?

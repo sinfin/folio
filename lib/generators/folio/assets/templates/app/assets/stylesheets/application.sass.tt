@@ -18,7 +18,7 @@
 @import 'folio/dropzone_component'
 @import 'folio/image/image'
 @import 'folio/input/phone'
-@import 'folio/leads/form/form'
+@import 'folio/leads/form_component'
 @import 'folio/newsletter_subscriptions/form_component'
 @import 'folio/publishable_hint/publishable_hint'
 @import 'folio/ui/ui'
@@ -42,8 +42,6 @@ body
 
 .f-devise
   @extend .container-fluid
-  margin-left: 0
-  margin-right: 0
 
 @import '../../cells/folio/**/*'
 @import '../../cells/<%= application_namespace_path %>/**/*'

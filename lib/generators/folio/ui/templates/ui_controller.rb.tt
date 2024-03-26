@@ -9,6 +9,7 @@ class <%= application_namespace %>::UiController < ApplicationController
       boolean_toggles
       breadcrumbs
       buttons
+      documents
       chips
       clipboard
       embed
@@ -19,6 +20,7 @@ class <%= application_namespace %>::UiController < ApplicationController
       modals
       pagination
       tabs
+      share
       typo
     ]
   end
@@ -106,6 +108,35 @@ class <%= application_namespace %>::UiController < ApplicationController
       { links: },
       { links:, large: true },
     ]
+  end
+
+  def tabs
+    @tabs = [
+      {
+        href: tabs_<%= application_namespace_path %>_ui_path(tab: "1"),
+        active: %w[2 3].exclude?(params[:tab]),
+        label: "Tab 1"
+      },
+      {
+        href: tabs_<%= application_namespace_path %>_ui_path(tab: "2"),
+        active: params[:tab] == "2",
+        label: "Tab 2",
+        count: 123
+      },
+      {
+        href: tabs_<%= application_namespace_path %>_ui_path(tab: "3"),
+        active: params[:tab] == "3",
+        label: "Tab 3",
+        disabled: true,
+        count: 2
+      }
+    ]
+  end
+
+  def documents
+    @document_placements = Folio::File::Document.last(5).map do |doc|
+      Folio::FilePlacement::Document.new(file: doc)
+    end
   end
 
   private

@@ -66,7 +66,7 @@ class Dummy::AtomsController < ApplicationController
     end
 
     def attrs_from_hash(hash)
-      attrs = hash.deep_symbolize_keys.without(:_screenshot)
+      attrs = hash ? hash.deep_symbolize_keys.without(:_screenshot) : {}
 
       if attrs[:cover] == true
         attrs[:cover] = images_for_attrs.sample

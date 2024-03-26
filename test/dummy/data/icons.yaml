@@ -93,6 +93,9 @@ clock_3:
 close:
   width: 24
   height: 24
+content_copy:
+  width: 24
+  height: 24
 cookie:
   width: 24
   height: 24
@@ -126,6 +129,9 @@ eye_off:
 facebook:
   width: 32
   height: 33
+facebook_messenger:
+  width: 24
+  height: 24
 file:
   width: 24
   height: 24

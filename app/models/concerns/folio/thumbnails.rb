@@ -11,18 +11,29 @@ module Folio::Thumbnails
                         image/svg
                         image/svg+xml]
 
+  class_methods do
+    def should_serialize_thumbnail_sizes?
+      if defined?(Folio::SessionAttachment::Base) && self <= Folio::SessionAttachment::Base
+        false
+      else
+        true
+      end
+    end
+
+    def immediate_thumbnails
+      false
+    end
+  end
+
   included do
-    serialize :thumbnail_sizes, Hash
+    if should_serialize_thumbnail_sizes?
+      serialize :thumbnail_sizes, type: Hash
+    end
+
     before_validation :reset_thumbnails
 
     after_save :run_set_additional_data_job
     before_destroy :delete_thumbnails
-  end
-
-  class_methods do
-    def immediate_thumbnails
-      false
-    end
   end
 
   # Use w_x_h = 400x250# or similar

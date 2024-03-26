@@ -2,6 +2,7 @@ $.widget('ui.autocomplete', $.ui.autocomplete, {
   _renderMenu: function ($ul, items) {
     $ul.attr('class', 'dropdown-menu ui-menu f-c-autocomplete-input-menu')
     return $.each(items, (index, item) => {
+      if (index >= 9) return
       return this._renderItemData($ul, item)
     })
   },

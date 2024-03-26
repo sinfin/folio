@@ -8,27 +8,6 @@ class ApplicationCell < Folio::ApplicationCell
   if ::Rails.env.test?
     include Dummy::CurrentMethods
 
-    # for simple cell tests we pass it in options, not doing `sign_in user`
-    def current_user
-      get_from_options_or_controller(:current_user)
-    end
-
-    def user_signed_in?
-      get_from_options_or_controller(:user_signed_in?)
-    end
-
-    def get_from_options_or_controller(method_sym)
-      if options.has_key?(method_sym)
-        options[method_sym]
-      else
-        begin
-          controller.try(method_sym)
-        rescue Devise::MissingWarden
-          nil
-        end
-      end
-    end
-
     def cache_key_base
       []
     end

@@ -79,7 +79,7 @@ class Folio::Console::BaseControllerTest < ActionDispatch::IntegrationTest
   attr_reader :superadmin, :site
 
   def setup
-    create_site
+    create_and_host_site
     @superadmin = create(:folio_user, :superadmin)
     sign_in @superadmin
   end
@@ -88,10 +88,6 @@ class Folio::Console::BaseControllerTest < ActionDispatch::IntegrationTest
     super(options)
   rescue NoMethodError
     main_app.url_for(options)
-  end
-
-  def create_site
-    create_and_host_site
   end
 end
 

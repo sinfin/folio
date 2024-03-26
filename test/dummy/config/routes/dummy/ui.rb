@@ -6,6 +6,7 @@ scope module: :dummy, as: :dummy do
     get :boolean_toggles
     get :breadcrumbs
     get :buttons
+    get :documents
     get :chips
     get :clipboard
     get :embed
@@ -16,6 +17,7 @@ scope module: :dummy, as: :dummy do
     get :modals
     get :pagination
     get :tabs
+    get :share
     get :typo
   end
 end

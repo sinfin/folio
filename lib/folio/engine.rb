@@ -10,9 +10,6 @@ module Folio
       g.helper false
     end
 
-    # fix deprecation warning - Using legacy connection handling is deprecated
-    config.active_record.legacy_connection_handling = false
-
     # can remove this once we get rid of "serialize" in app/models/concerns/folio/thumbnails.rb and app/models/folio/newsletter_subscription.rb
     config.active_record.yaml_column_permitted_classes = [Symbol, ActiveSupport::TimeWithZone, Time, ActiveSupport::TimeZone]
 
@@ -83,7 +80,7 @@ module Folio
 
     config.folio_content_templates_editable = false
 
-    config.folio_leads = false
+    config.folio_leads_from_component_class_name = nil
     config.folio_newsletter_subscriptions = false
 
     config.folio_users_use_phone = false
@@ -91,7 +88,7 @@ module Folio
     config.folio_users_sign_out_everywhere = true
     config.folio_users_confirmable = false
     config.folio_users_confirm_email_change = true
-    config.folio_users_publicly_invitable = true
+    config.folio_users_publicly_invitable = false
     config.folio_users_use_address = true
     config.folio_users_omniauth_providers = %i[facebook google_oauth2 twitter2 apple]
     config.folio_users_after_ajax_sign_up_redirect = false

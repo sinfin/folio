@@ -3,8 +3,7 @@ default: &default
   encoding: unicode
   # For details on connection pooling, see rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
-  pool: 50
-
+  pool: <%= ENV.fetch('DB_POOL', 50) %>
 
 development:
   <<: *default
@@ -13,7 +12,6 @@ development:
 test:
   <<: *default
   database: folio_test_<%= (branch = `git rev-parse --abbrev-ref HEAD 2>/dev/null`.chomp).empty? ? 'default' : branch.gsub(/\W/, '_') %>
-  pool: 2
 
 staging:
   <<: *default
