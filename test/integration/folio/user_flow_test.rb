@@ -4,6 +4,8 @@ require "test_helper"
 
 class Folio::UserFlowTest < Folio::CapybaraTest
   test "standard via e-mail" do
+    skip unless Rails.application.config.folio_users_publicly_invitable
+
     create_and_host_site
 
     visit main_app.new_user_invitation_url
@@ -56,6 +58,8 @@ class Folio::UserFlowTest < Folio::CapybaraTest
   end
 
   test "omniauth - new user" do
+    skip unless Rails.application.config.folio_users_publicly_invitable
+
     skip "Skippinng: No Facebook Omniauth enabled" if (Rails.application.config.folio_users_omniauth_providers || []).exclude?(:facebook)
 
     create_and_host_site
