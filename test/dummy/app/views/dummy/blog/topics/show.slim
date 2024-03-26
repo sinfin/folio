@@ -2,10 +2,16 @@
   h1 = cstypo @topic.title
 
   - if @topic.perex.present?
-    .lead == cstypo simple_format @topic.perex
+    .lead.mb-4 == cstypo simple_format @topic.perex
 
-== cell('dummy/ui/article_card_list', @articles, medium: true)
+  / TODO: add a custom content as in figma
+  / = render_atoms_in_molecules(@topic.atoms_in_molecules)
+  .mt-4
+    = render(Dummy::Blog::Articles::CardsComponent.new( \
+             size: :md,
+             hero_size: :lg,
+             container_classes: "mt-sm-2",
+             column_classes: "col-12 col-sm-6 col-lg-4",
+             articles: @articles))
 
-/ - if @pagy && @pagy.pages > 1
-/   .mt-4
-/     == cell('dummy/ui/pagy', @pagy)
+    = render(Dummy::Ui::PagyComponent.new(pagy: @pagy))
