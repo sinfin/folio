@@ -9,6 +9,7 @@ class Dummy::UiController < ApplicationController
       boolean_toggles
       breadcrumbs
       buttons
+      documents
       chips
       clipboard
       embed
@@ -129,6 +130,12 @@ class Dummy::UiController < ApplicationController
         count: 2
       }
     ]
+  end
+
+  def documents
+    @document_placements = Folio::File::Document.last(5).map do |doc|
+      Folio::FilePlacement::Document.new(file: doc)
+    end
   end
 
   private
