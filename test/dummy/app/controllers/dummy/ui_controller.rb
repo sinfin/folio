@@ -133,9 +133,7 @@ class Dummy::UiController < ApplicationController
   end
 
   def documents
-    @documents = Folio::File::Document.last(3)
-
-    @documents.map do |doc|
+    @document_placements = Folio::File::Document.last(5).map do |doc|
       Folio::FilePlacement::Document.new(file: doc)
     end
   end

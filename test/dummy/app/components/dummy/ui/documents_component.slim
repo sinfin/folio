@@ -1,15 +1,15 @@
 .d-ui-documents
   - if @title.present?
-    .h4.mt-0 = cstypo(@title)
+    h3 = cstypo(@title)
 
-  ul.d-ui-documents__ul
-    - @placement.each do |placement|
-      - doc = placement.file
-      li.d-ui-documents__li
-        a.d-ui-documents__a.d-with-icon.d-with-icon--underlined.text-black[
-          href=download_path(doc, doc.file_name, locale: :cs)
-          target="_blank"
-        ]
-          = icon(:file)
-          span
-            = label(placement)
+  - if @document_placements.present?
+    ul.d-ui-documents__ul
+      - @document_placements.each do |placement|
+        li.d-ui-documents__li
+          a.d-ui-documents__a.d-with-icon.d-with-icon--underlined[
+            href=href(placement)
+            target="_blank"
+          ]
+            = dummy_ui_icon(:file)
+            span
+              = label(placement)

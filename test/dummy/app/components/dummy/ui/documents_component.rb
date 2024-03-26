@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
 class Dummy::Ui::DocumentsComponent < ApplicationComponent
-
-  def initialize(placement, title: nil)
-    @placement = placement
+  def initialize(document_placements:, title: nil)
+    @document_placements = document_placements
     @title = title
    end
+
+  def render?
+    @document_placements.present? || @title.present?
+  end
 
   include ActionView::Helpers::NumberHelper
 
@@ -26,5 +29,9 @@ class Dummy::Ui::DocumentsComponent < ApplicationComponent
 
   def download_path(*args)
     controller.folio.download_path(*args)
+  end
+
+  def href(placement)
+    download_path(placement.file, placement.file.file_name)
   end
 end
