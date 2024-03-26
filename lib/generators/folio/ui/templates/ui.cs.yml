@@ -6,7 +6,7 @@ footer_component:
   newsletter: Přihlášení k newsletteru
   contact: Kontakt
   follow_us: Sledujte nás
-share:
+share_component:
   title: 'Sdílejte:'
   facebook: Sdílejte na Facebooku
   messenger: Sdílejte na Messengeru

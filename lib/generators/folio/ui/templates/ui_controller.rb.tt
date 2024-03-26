@@ -19,6 +19,7 @@ class <%= application_namespace %>::UiController < ApplicationController
       modals
       pagination
       tabs
+      share
       typo
     ]
   end

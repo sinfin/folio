@@ -1,0 +1,26 @@
+div[
+  class=bem_class_name
+]
+  .<%= classname_prefix %>-ui-share__inner
+    - if @mobile_collapsible
+      = <%= application_namespace_path %>_ui_icon(:share_2,
+                      height: 22,
+                      class_name: 'dropdown-toggle <%= classname_prefix %>-ui-share__toggle')
+
+    .<%= classname_prefix %>-ui-share__items
+      span.<%= classname_prefix %>-ui-share__title.small.fw-bold = t('.title')
+
+      - share_links.each do |link|
+        a.<%= classname_prefix %>-ui-share__item[
+          title=link[:title]
+          href=link[:url]
+          target=link[:target]
+          class="<%= classname_prefix %>-ui-share__item--#{link[:icon]}"
+        ]
+          = <%= application_namespace_path %>_ui_icon(link[:icon],
+                          height: 22,
+                          class_name: '<%= classname_prefix %>-ui-share__icon')
+
+      .<%= classname_prefix %>-ui-share__item
+        = render(<%= application_namespace %>::Ui::ClipboardComponent.new(text: url_with_fallback,
+                                                   height: 22))
