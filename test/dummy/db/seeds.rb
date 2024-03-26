@@ -20,7 +20,6 @@ def force_destroy_all(klass)
 end
 
 destroy_all Folio::Atom::Base
-# destroy_all Folio::Account
 destroy_all Folio::FilePlacement::Base
 destroy_all Folio::File
 destroy_all Folio::Lead
