@@ -1,7 +1,15 @@
 # frozen_string_literal: true
 
-class Dummy::Ui::ShareCell < ApplicationCell
-  class_name "d-ui-share", :mobile_collapsible
+class <%= application_namespace %>::Ui::ShareComponent < ApplicationComponent
+  bem_class_name :mobile_collapsible
+
+  def initialize(url: nil,
+                 icon: nil,
+                 mobile_collapsible: false)
+    @mobile_collapsible = mobile_collapsible
+    @url = url
+    @icon = icon
+  end
 
   def share_links
     [
@@ -12,7 +20,7 @@ class Dummy::Ui::ShareCell < ApplicationCell
         target: "_blank",
       },
       {
-        icon: :messenger,
+        icon: :facebook_messenger,
         title: t(".messenger"),
         url: messenger_url,
         target: "_blank",
@@ -31,27 +39,27 @@ class Dummy::Ui::ShareCell < ApplicationCell
     ]
   end
 
-  def url
-    @url ||= model.presence || request.url
+  def url_with_fallback
+    @url_with_fallback ||= @url || controller.request.url
   end
 
   def facebook_url
-    h = { u: url, src: "sdkpreparse" }
+    h = { u: url_with_fallback, src: "sdkpreparse" }
     "https://www.facebook.com/sharer/sharer.php?#{h.to_query}"
   end
 
   def messenger_url
-    h = { u: url }
+    h = { u: url_with_fallback }
     "messenger://share/?#{h.to_query}"
   end
 
   def twitter_url
-    h = { url: }
+    h = { u: url_with_fallback }
     "https://twitter.com/share?#{h.to_query}"
   end
 
   def mail_url
-    h = { body: url }
+    h = { body: url_with_fallback }
     "mailto:?#{h.to_query}"
   end
 end

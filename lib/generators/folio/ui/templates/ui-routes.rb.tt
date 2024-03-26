@@ -17,6 +17,7 @@ scope module: :<%= application_namespace_path %>, as: :<%= application_namespace
     get :modals
     get :pagination
     get :tabs
+    get :share
     get :typo
   end
 end
