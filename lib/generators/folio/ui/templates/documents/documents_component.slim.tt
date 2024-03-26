@@ -1,0 +1,15 @@
+.<%= classname_prefix %>-ui-documents
+  - if @title.present?
+    h3 = cstypo(@title)
+
+  - if @document_placements.present?
+    ul.<%= classname_prefix %>-ui-documents__ul
+      - @document_placements.each do |placement|
+        li.<%= classname_prefix %>-ui-documents__li
+          a.<%= classname_prefix %>-ui-documents__a.<%= classname_prefix %>-with-icon.<%= classname_prefix %>-with-icon--underlined[
+            href=href(placement)
+            target="_blank"
+          ]
+            = <%= application_namespace_path %>_ui_icon(:file)
+            span
+              = label(placement)
