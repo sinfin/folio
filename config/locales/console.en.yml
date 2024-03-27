@@ -108,6 +108,9 @@ en:
           download_original: Download original
           file_hint: Do not input anything to keep the original file.
       index:
+        no_records:
+          create_defaults: Create defaults
+          or: or
         checkboxes:
           check_all: Check all
           handle_selected: Handle selected

@@ -108,6 +108,9 @@ cs:
           download_original: Stáhnout originál
           file_hint: Pokud chcete ponechat původní soubor, tak nic nevyplňujte.
       index:
+        no_records:
+          create_defaults: Vytvořit výchozí
+          or: nebo
         checkboxes:
           check_all: Vybrat vše
           handle_selected: Vyřídit vybrané
