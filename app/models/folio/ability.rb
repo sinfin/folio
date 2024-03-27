@@ -11,7 +11,7 @@ class Folio::Ability
     @site = site
 
     alias_action :manage, to: :do_anything
-    alias_action :read, :show, :new, :create, :edit, :update, :destroy, to: :crud
+    alias_action :read, :show, :new, :create, :edit, :update, :destroy, :set_positions, :create_defaults, to: :crud
 
     ability_rules
   end
