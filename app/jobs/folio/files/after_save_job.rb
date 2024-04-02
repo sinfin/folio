@@ -9,6 +9,8 @@ class Folio::Files::AfterSaveJob < Folio::ApplicationJob
   # use SQL commands only!
   # save/update would cause an infinite loop as this is hooked in after_save
   def perform(file)
+    return if Rails.env.test? && !Rails.application.config.try(:folio_testing_after_save_job)
+
     placements = file.file_placements
 
     file.update_column(:file_placements_size, placements.size)

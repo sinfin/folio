@@ -46,6 +46,7 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
   def run_after_save_job!
     return if dont_run_after_save_jobs
     return if ENV["SKIP_FOLIO_FILE_AFTER_SAVE_JOB"]
+    return if Rails.env.test? && !Rails.application.config.try(:folio_testing_after_save_job)
 
     Folio::FilePlacements::AfterSaveJob.perform_later(self)
   end
