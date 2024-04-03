@@ -8,7 +8,7 @@ class Dummy::Ui::PagyComponent < ApplicationComponent
   end
 
   def link
-    @link ||= pagy_link_proc(@pagy)
+    @link ||= pagy_anchor(@pagy)
   end
 
   def series_as_hashes

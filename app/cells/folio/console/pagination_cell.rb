@@ -8,7 +8,7 @@ class Folio::Console::PaginationCell < Folio::ConsoleCell
   end
 
   def link
-    @link ||= pagy_link_proc(model)
+    @link ||= pagy_anchor(model)
   end
 
   def icon(code)
