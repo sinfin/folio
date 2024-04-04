@@ -51,6 +51,9 @@ class MergeFolioAccountsToFolioUsersAndDropAccountsTable < ActiveRecord::Migrati
 
         Folio::ConsoleNote.where(created_by_id: account["id"]).update_all(created_by_id: user.id)
         Folio::ConsoleNote.where(closed_by_id: account["id"]).update_all(closed_by_id: user.id)
+        if defined?(Audited::Audit)
+          Audited::Audit.where(user_type: "Folio::Account", user_id: account["id"]).update_all(user_type: "Folio::User", user_id: user.id)
+        end
       end
       puts("Accounts merged; droping table folio_accounts")
       drop_table :folio_accounts
