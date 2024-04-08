@@ -12,6 +12,7 @@ $dummy-mailer-styles: false !default
 
     p.font-size-sm
       +mailer-font-size-text-s
+      line-height: 1.5
 
     a
       color: $blue
@@ -25,8 +26,11 @@ $dummy-mailer-styles: false !default
       margin: $mailer-gap-g 0 $mailer-gap-g 0
       padding: 0
 
-    p + hr
-      margin-top: 44px
-
     .d-mailer-cards-extra-small-container + hr
       margin: $mailer-gap-b 0 $mailer-gap-g 0
+
+    .folio-redactor-button
+      margin: $mailer-gap-b 0 $mailer-gap-b 0
+
+    p + .folio-redactor-button
+      margin: $mailer-gap-e 0 $mailer-gap-b 0
