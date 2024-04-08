@@ -3,9 +3,7 @@ $dummy-mailer-styles: false !default
 @if $dummy-mailer-styles
   .d-mailer-cards-medium
     width: 100%
-
-    &__wrapper
-      padding: $mailer-gap-g 0 0 0
+    margin: $mailer-gap-g 0 0 0
 
     &__inner
       width: 100%
@@ -14,7 +12,7 @@ $dummy-mailer-styles: false !default
 
     &__inner-wrapper
       font-size: 0
-      padding: $mailer-gap-g 0 0 0
+      padding: $mailer-gap-d
 
     &__image-wrapper, &__content-wrapper
       display: inline-block
@@ -28,7 +26,7 @@ $dummy-mailer-styles: false !default
       text-align: left
 
     &__image-inner
-      padding: 0 0 $mailer-gap-g $mailer-gap-g
+      padding: $mailer-gap-d
 
     &__image
       border-radius: $mailer-border-radius-sm
@@ -42,7 +40,7 @@ $dummy-mailer-styles: false !default
       max-width: 100%
 
     &__content-inner
-      padding: 0 $mailer-gap-g $mailer-gap-g $mailer-gap-g
+      padding: $mailer-gap-d
       text-align: left
 
     a.d-mailer-cards-medium__link
