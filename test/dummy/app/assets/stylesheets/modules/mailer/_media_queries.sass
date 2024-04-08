@@ -1,6 +1,7 @@
 $dummy-mailer-styles: false !default
 
 @if $dummy-mailer-styles
+  // headings
   h3, .h3
     +mailer-media-breakpoint-down($mailer-breakpoint-mobile)
       margin: $mailer-gap-g 0 $mailer-gap-b 0 !important
@@ -13,3 +14,112 @@ $dummy-mailer-styles: false !default
   h6, .h6
     +mailer-media-breakpoint-down($mailer-breakpoint-mobile)
       margin: $mailer-gap-a 0 $mailer-gap-a 0 !important
+
+  // header
+  .d-mailer-header
+    +mailer-media-breakpoint-down($mailer-breakpoint-mobile)
+      &__logo-img
+        width: 130px
+
+      &__inner
+        padding: $mailer-gap-f 0 !important
+
+  // layout
+  .d-mailer-layout__content-inner
+    +mailer-media-breakpoint-down($mailer-breakpoint-mobile)
+      padding: 0 0 $mailer-gap-k !important
+
+  // button
+  .d-mailer-button
+    +mailer-media-breakpoint-down($mailer-breakpoint-mobile)
+      margin: $mailer-gap-b 0 0 0 !important
+
+  // order summary
+  .d-mailer-order-summary
+    +mailer-media-breakpoint-down($mailer-breakpoint-mobile)
+      &__title-wrapper
+        padding: 0 0 $mailer-gap-f !important
+
+      &__order-wrapper
+        padding: 0 $mailer-gap-d $mailer-gap-d $mailer-gap-d !important
+
+      &__info-wrapper
+        padding: $mailer-gap-f 0 $mailer-gap-a !important
+
+      &__title
+        font-size: $mailer-ui-typo-display-xs-font-size !important
+        line-height: $ui-typo-display-xs-line-height !important
+        letter-spacing: $ui-typo-display-xs-letter-spacing !important
+
+      &__payment-regulation,
+      &__instruction
+        font-size: $mailer-ui-typo-text-xs-font-size !important
+        line-height: $ui-typo-text-s-line-height !important
+
+  // cards
+  .d-mailer-cards-extra-small-container__wrapper
+    +mailer-media-breakpoint-down($mailer-breakpoint-mobile)
+      padding: $mailer-gap-f 0 0 !important
+
+  .d-mailer-cards-medium
+    +mailer-media-breakpoint-down($mailer-breakpoint-mobile)
+      margin: $mailer-gap-f 0 0 !important
+
+      &__inner-wrapper
+        padding: $mailer-gap-b !important
+
+      &__image-inner
+        padding: $mailer-gap-b !important
+
+      &__content-inner
+        padding: $mailer-gap-b !important
+
+    +mailer-media-breakpoint-down(sm)
+      &__content-inner
+        padding: $mailer-gap-d $mailer-gap-b $mailer-gap-a !important
+
+  .d-mailer-cards-lot
+    +mailer-media-breakpoint-down($mailer-breakpoint-mobile)
+      margin: $mailer-gap-f 0 0 !important
+
+      &__inner-wrapper
+        padding: $mailer-gap-d 0 0 !important
+
+      &__hr
+        margin: $mailer-gap-d 0 !important
+
+      &__image-inner
+        padding: 0 0 $mailer-gap-f $mailer-gap-d !important
+
+      &__content-inner
+        padding: 0 $mailer-gap-d $mailer-gap-d $mailer-gap-d !important
+
+      &__author
+        font-size: $mailer-ui-typo-display-xs-font-size !important
+        line-height: $ui-typo-display-xs-line-height !important
+        letter-spacing: $ui-typo-display-xs-letter-spacing !important
+
+      &__name
+        font-size: $mailer-ui-typo-text-l-font-size !important
+        line-height: $ui-typo-text-l-line-height !important
+
+  // rich text
+  .d-mailer-layout__content
+    +mailer-media-breakpoint-down($mailer-breakpoint-mobile)
+      p
+        font-size: $mailer-ui-typo-text-s-font-size !important
+        line-height: $ui-typo-text-s-line-height !important
+
+      p.font-size-lg
+        font-size: $mailer-ui-typo-text-m-font-size !important
+        line-height: $ui-typo-text-m-line-height !important
+
+      p.font-size-sm
+        font-size: $mailer-ui-typo-text-xs-font-size !important
+        line-height: $ui-typo-text-xs-line-height !important
+
+      hr
+        margin: $mailer-gap-f 0 $mailer-gap-f 0 !important
+
+      .d-mailer-cards-extra-small-container + hr
+        margin: 0 0 $mailer-gap-f 0 !important
