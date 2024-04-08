@@ -1,133 +1,131 @@
-table.d-mailer-order-summary[
-  role="presentation"
-]
-  tr
-    td.d-mailer-order-summary__wrapper
-      table.d-mailer-order-summary__wrapper-inner
-        - if @title.present?
-          tr
-            td.d-mailer-order-summary__title-wrapper[
-              align="left"
-              valign="top"
-            ]
-              .d-mailer-order-summary__title = @title
+.d-mailer-order-summary
+  table.d-mailer-order-summary__inner
+    - if @title.present?
+      tr
+        td.d-mailer-order-summary__title-wrapper[
+          align="left"
+          valign="top"
+        ]
+          .d-mailer-order-summary__title = @title
 
-        tr
-          td.d-mailer-order-summary__order-wrapper[
-            align="left"
-            valign="top"
-          ]
-            table.d-mailer-order-summary__order[
-              role="presentation"
-            ]
-              - @items.each do |item|
-                tr.d-mailer-order-summary__order-item
-                  td.d-mailer-order-summary__order-item-wrapper[
-                    align="left"
-                    valign="top"
-                  ]
-                    /[if mso]
-                      <table role="presentation" width="100%">
-                      <tr>
+    tr
+      td.d-mailer-order-summary__order-wrapper[
+        align="left"
+        valign="top"
+      ]
+        table.d-mailer-order-summary__order[
+          role="presentation"
+        ]
+          - @items.each do |item|
+            tr.d-mailer-order-summary__order-item-row
+              td.d-mailer-order-summary__order-item-wrapper[
+                align="left"
+                valign="top"
+              ]
+                /[if mso]
+                  <table role="presentation" width="100%">
+                  <tr>
 
-                    - if item[:folio_image].present?
-                      /[if mso]
-                        <td style="width:86px;padding:0 16px 0 0;" align="left" valign="top">
+                /[if mso]
+                  <td style="width:86px;padding:0 16px 0 0;" align="left" valign="top">
 
-                      .d-mailer-order-summary__order-image-wrapper
-                        img.d-mailer-order-summary__order-image[
-                          src="#{item[:folio_image].thumb(THUMB_SIZE, immediate: true).url}"
-                          alt=""
-                          width="70"
-                        ]
+                .d-mailer-order-summary__order-image-wrapper
+                  - if item[:folio_image].present?
+                    img.d-mailer-order-summary__order-image[
+                      src="#{item[:folio_image].thumb(THUMB_SIZE, immediate: true).url}"
+                      alt=""
+                    ]
 
-                      /[if mso]
-                        </td>
+                  - else
+                    .d-mailer-order-summary__order-image-placeholder
 
-                    /[if mso]
-                      <td style="width:404px;padding:4px 32px 0 0;" align="left" valign="top">
+                /[if mso]
+                  </td>
 
-                    .d-mailer-order-summary__order-title-wrapper
-                      - if item[:title].present?
-                        .d-mailer-order-summary__order-title = item[:title]
+                /[if mso]
+                  <td style="width:414px;padding:4px 8px 0 0;" align="left" valign="top">
 
-                      - if item[:subtitle].present?
-                        .d-mailer-order-summary__order-subtitle[
-                          style="line-height:1.5;"
-                        ]
-                          = item[:subtitle]
+                .d-mailer-order-summary__order-title-wrapper
+                  - if item[:title].present?
+                    .d-mailer-order-summary__order-title = item[:title]
 
-                    /[if mso]
-                      </td>
-                      <td style="width:110px;padding:4px 0 0 0;" align="left" valign="top">
+                  - if item[:subtitle].present?
+                    .d-mailer-order-summary__order-subtitle[
+                      style="line-height:1.5;"
+                    ]
+                      = item[:subtitle]
 
-                    .d-mailer-order-summary__order-price-wrapper
-                      - if item[:total_price].present?
-                        .d-mailer-order-summary__total-price
-                          = item[:total_price]
-                          | &nbsp;
-                          | Kč
+                /[if mso]
+                  </td>
+                  <td style="width:100px;padding:4px 0 0 0;" align="left" valign="top">
 
-                      - if item[:unit_price].present?
-                        .d-mailer-order-summary__unit-price
-                          = item[:unit_price]
-                          | &nbsp;
-                          | Kč
-
-                      - if item[:count].present?
-                        .d-mailer-order-summary__count
-                          ' x
-                          = item[:count]
-
-                    /[if mso]
-                      </td>
-                      </tr>
-                      </table>
-
-              - if @total.present?
-                tr
-                  td.d-mailer-order-summary__order-total-price-title-wrapper[
-                    align="left"
-                    valign="top"
-                  ]
-                    /[if mso]
-                      <table role="presentation" width="100%">
-                      <tr>
-                      <td style="width:490px;padding:0 32px 0 0;" align="left" valign="top">
-
-                    .d-mailer-order-summary__order-total-price-title
-                      | Celková cena (vč. provize)
-
-                    /[if mso]
-                      </td>
-                      <td style="width:110px;padding:0;" align="left" valign="top">
-
-                    .d-mailer-order-summary__order-total-price
-                      = @total
+                .d-mailer-order-summary__order-price-wrapper
+                  - if item[:total_price].present?
+                    .d-mailer-order-summary__total-price
+                      = item[:total_price]
                       | &nbsp;
                       | Kč
 
-                    /[if mso]
-                      </td>
-                      </tr>
-                      </table>
+                  - if item[:unit_price].present?
+                    .d-mailer-order-summary__unit-price
+                      = item[:unit_price]
+                      | &nbsp;
+                      | Kč
 
-        tr
-          td.d-mailer-order-summary__info-wrapper[
-            align="left"
-            valign="top"
-          ]
-            - if @status == :unpaid
-              .d-mailer-order-summary__payment-regulation
-                ' Instrukce pro uhrazení objednávky jsou součástí
+                  - if item[:count].present?
+                    .d-mailer-order-summary__count
+                      ' x
+                      = item[:count]
 
-                a.d-mailer-order-summary__payment-regulation-link[
-                  href="https://www.auctea.com/"
-                  style="font-weight: 400;"
-                ]
-                  | předpisů k úhradě
+                /[if mso]
+                  </td>
+                  </tr>
+                  </table>
 
-                ' .
+          - if @total.present?
+            tr
+              td.d-mailer-order-summary__order-total-price-title-wrapper[
+                align="left"
+                valign="top"
+              ]
+                /[if mso]
+                  <table role="presentation" width="100%">
+                  <tr>
+                  <td style="padding:0 32px 0 0;" align="left" valign="top" colspan="2">
 
-              .d-mailer-order-summary__instruction
-                ' Vydražené položky prosím uhraďte a vyzvedněte nejdéle do 14 dnů od ukončení aukce.
+                .d-mailer-order-summary__order-total-price-title
+                  | Celková cena (vč. provize)
+
+                /[if mso]
+                  </td>
+                  <td style="padding:0;" align="left" valign="top">
+
+                .d-mailer-order-summary__order-total-price
+                  = @total
+                  | &nbsp;
+                  | Kč
+
+                /[if mso]
+                  </td>
+                  </tr>
+                  </table>
+
+    tr
+      td.d-mailer-order-summary__info-wrapper[
+        align="left"
+        valign="top"
+      ]
+        - if @status == :unpaid
+          .d-mailer-order-summary__payment-regulation
+            ' Instrukce pro uhrazení objednávky jsou součástí
+
+            a.d-mailer-order-summary__payment-regulation-link[
+              href="https://www.auctea.com/"
+              style="font-weight: 400;"
+            ]
+              | předpisů k úhradě
+
+            ' .
+
+          .d-mailer-order-summary__instruction
+            ' Vydražené položky prosím uhraďte a vyzvedněte nejdéle do 14 dnů od ukončení aukce.
