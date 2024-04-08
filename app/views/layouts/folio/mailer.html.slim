@@ -10,7 +10,7 @@ html.d-mailer-html[
   lang=I18n.locale
 ]
   head
-    title = ""
+    title = "Mail template"
     meta content=("text/html; charset=UTF-8") http-equiv="Content-Type" /
     meta content="width=device-width, initial-scale=1.0" name="viewport" /
     meta name="x-apple-disable-message-reformatting" /
@@ -24,7 +24,7 @@ html.d-mailer-html[
       type="text/css"
       data-premailer="ignore"
     ]
-      = Rails.application.assets.find_asset('mailer_utilities.css').to_s.html_safe
+      = Rails.application.assets.find_asset('mailer_extras.css').to_s.html_safe
 
     /[if mso]
       style type="text/css"
