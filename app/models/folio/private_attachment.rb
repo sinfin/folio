@@ -62,7 +62,7 @@ end
 #  file_name           :string
 #  title               :text
 #  alt                 :string
-#  thumbnail_sizes     :text
+#  thumbnail_sizes     :text             default("--- {}\n")
 #  position            :integer
 #  file_width          :integer
 #  file_height         :integer

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_02_13_061842) do
+ActiveRecord::Schema[7.1].define(version: 2024_04_10_094212) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -187,7 +187,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_13_061842) do
     t.index ["file_id"], name: "index_folio_file_placements_on_file_id"
     t.index ["placement_title"], name: "index_folio_file_placements_on_placement_title"
     t.index ["placement_title_type"], name: "index_folio_file_placements_on_placement_title_type"
-    t.index ["placement_type", "placement_id"], name: "index_folio_file_placements_on_placement"
+    t.index ["placement_type", "placement_id"], name: "index_folio_file_placements_on_placement_type_and_placement_id"
     t.index ["type"], name: "index_folio_file_placements_on_type"
   end
 
@@ -340,7 +340,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_13_061842) do
     t.string "file_name"
     t.text "title"
     t.string "alt"
-    t.text "thumbnail_sizes"
+    t.text "thumbnail_sizes", default: "--- {}\n"
     t.integer "position"
     t.integer "file_width"
     t.integer "file_height"
@@ -496,7 +496,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_13_061842) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE(content, ''::text)))", name: "index_pg_search_documents_on_public_search", using: :gin
-    t.index ["searchable_type", "searchable_id"], name: "index_pg_search_documents_on_searchable"
+    t.index ["searchable_type", "searchable_id"], name: "index_pg_search_documents_on_searchable_type_and_searchable_id"
   end
 
   create_table "taggings", id: :serial, force: :cascade do |t|
