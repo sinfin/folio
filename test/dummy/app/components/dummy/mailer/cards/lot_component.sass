@@ -12,7 +12,7 @@ $dummy-mailer-styles: false !default
 
     &__inner-wrapper
       font-size: 0
-      padding: $mailer-gap-f 0 0 0
+      padding: $mailer-gap-c
 
     &__image-wrapper, &__content-wrapper
       display: inline-block
@@ -26,22 +26,28 @@ $dummy-mailer-styles: false !default
       text-align: left
 
     &__image-inner
-      padding: 0 0 $mailer-gap-f $mailer-gap-f
+      padding: $mailer-gap-c
 
     &__image
       box-shadow: $mailer-box-shadow
+      margin: 0 auto
 
     &__content-wrapper
       width: 100%
-      max-width: 392px
-      vertical-align: top
+      max-width: 368px
 
     &__content-wrapper.col-full
       max-width: 100%
 
     &__content-inner
-      padding: $mailer-gap-d $mailer-gap-f $mailer-gap-g $mailer-gap-g
+      padding: $mailer-gap-c
       text-align: left
+
+    &__title-block
+      margin: $mailer-gap-b 0 0 0
+
+    &__auction-data-block
+      margin: 0 0 $mailer-gap-b
 
     &__author
       +mailer-font-size-display-s

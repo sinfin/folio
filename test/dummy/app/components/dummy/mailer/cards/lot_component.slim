@@ -10,7 +10,7 @@
 
         - if @folio_image.present?
           /[if mso]
-            <td style="width:256px;padding:0 0 24px 24px;" align="left" valign="top">
+            <td style="width:232px;padding:12px;" align="left" valign="top">
 
           .d-mailer-cards-lot__image-wrapper[
             class="lot-col-sm"
@@ -19,7 +19,6 @@
               img.d-mailer-cards-lot__image[
                 src="#{@folio_image.thumb(THUMB_SIZE, immediate: true).url}"
                 alt=""
-                width="232"
               ]
 
           /[if mso]
@@ -27,10 +26,11 @@
 
         - if @folio_image.present?
           /[if mso]
-            <td style="width:392px;padding:16px 24px 32px 32px;" valign="top">
+            <td style="width:344px;padding:12px;" valign="top">
+
         - else
           /[if mso]
-            <td style="padding:16px 24px 32px 32px;" valign="top">
+            <td style="padding:12px;" valign="top">
 
         .d-mailer-cards-lot__content-wrapper[
           class=(@folio_image.present? ? "lot-col-lg" : "col-full")
