@@ -9,106 +9,85 @@
           .d-mailer-order-summary__title = @title
 
     tr
-      td.d-mailer-order-summary__order-wrapper[
-        align="left"
-        valign="top"
-      ]
+      td.d-mailer-order-summary__order-wrapper
         table.d-mailer-order-summary__order[
           role="presentation"
         ]
           - @items.each do |item|
             tr.d-mailer-order-summary__order-item-row
-              td.d-mailer-order-summary__order-item-wrapper[
-                align="left"
-                valign="top"
-              ]
-                /[if mso]
-                  <table role="presentation" width="100%">
-                  <tr>
-
-                /[if mso]
-                  <td style="width:86px;padding:0 16px 0 0;" align="left" valign="top">
-
-                .d-mailer-order-summary__order-image-wrapper
-                  - if item[:folio_image].present?
-                    img.d-mailer-order-summary__order-image[
-                      src="#{item[:folio_image].thumb(THUMB_SIZE, immediate: true).url}"
-                      alt=""
+              td.d-mailer-order-summary__item-wrapper
+                table.d-mailer-order-summary__item
+                  tr
+                    td.d-mailer-order-summary__order-item-column[
+                      class="d-mailer-order-summary__order-item-column--image"
+                      align="left"
+                      valign="top"
                     ]
+                      - if item[:folio_image].present?
+                        img.d-mailer-order-summary__order-image[
+                          src="#{item[:folio_image].thumb(THUMB_SIZE, immediate: true).url}"
+                          alt=""
+                        ]
 
-                  - else
-                    .d-mailer-order-summary__order-image-placeholder
+                      - else
+                        .d-mailer-order-summary__order-image-placeholder
 
-                /[if mso]
-                  </td>
-
-                /[if mso]
-                  <td style="width:414px;padding:4px 8px 0 0;" align="left" valign="top">
-
-                .d-mailer-order-summary__order-title-wrapper
-                  - if item[:title].present?
-                    .d-mailer-order-summary__order-title = item[:title]
-
-                  - if item[:subtitle].present?
-                    .d-mailer-order-summary__order-subtitle[
-                      style="line-height:1.5;"
+                    td.d-mailer-order-summary__order-item-column[
+                      class="d-mailer-order-summary__order-item-column--title"
+                      align="left"
+                      valign="top"
                     ]
-                      = item[:subtitle]
+                      - if item[:title].present?
+                        .d-mailer-order-summary__order-title = item[:title]
 
-                /[if mso]
-                  </td>
-                  <td style="width:100px;padding:4px 0 0 0;" align="left" valign="top">
+                      - if item[:subtitle].present?
+                        .d-mailer-order-summary__order-subtitle[
+                          style="line-height:1.5;"
+                        ]
+                          = item[:subtitle]
 
-                .d-mailer-order-summary__order-price-wrapper
-                  - if item[:total_price].present?
-                    .d-mailer-order-summary__total-price
-                      = item[:total_price]
-                      | &nbsp;
-                      | Kč
+                    td.d-mailer-order-summary__order-item-column[
+                      class="d-mailer-order-summary__order-item-column--price"
+                      align="left"
+                      valign="top"
+                    ]
+                      - if item[:total_price].present?
+                        .d-mailer-order-summary__total-price
+                          = item[:total_price]
+                          | &nbsp;
+                          | Kč
 
-                  - if item[:unit_price].present?
-                    .d-mailer-order-summary__unit-price
-                      = item[:unit_price]
-                      | &nbsp;
-                      | Kč
+                      - if item[:unit_price].present?
+                        .d-mailer-order-summary__unit-price
+                          = item[:unit_price]
+                          | &nbsp;
+                          | Kč
 
-                  - if item[:count].present?
-                    .d-mailer-order-summary__count
-                      ' x
-                      = item[:count]
-
-                /[if mso]
-                  </td>
-                  </tr>
-                  </table>
+                      - if item[:count].present?
+                        .d-mailer-order-summary__count
+                          ' x
+                          = item[:count]
 
           - if @total.present?
             tr
-              td.d-mailer-order-summary__order-total-price-title-wrapper[
-                align="left"
-                valign="top"
-              ]
-                /[if mso]
-                  <table role="presentation" width="100%">
-                  <tr>
-                  <td style="padding:0 32px 0 0;" align="left" valign="top" colspan="2">
+              td.d-mailer-order-summary__order-total-price-wrapper
+                table.d-mailer-order-summary__order-price
+                  tr
+                    td.d-mailer-order-summary__order-total-price-title-column[
+                      align="left"
+                      valign="center"
+                    ]
+                      .d-mailer-order-summary__order-total-price-title
+                        | Celková cena (vč. provize)
 
-                .d-mailer-order-summary__order-total-price-title
-                  | Celková cena (vč. provize)
-
-                /[if mso]
-                  </td>
-                  <td style="padding:0;" align="left" valign="top">
-
-                .d-mailer-order-summary__order-total-price
-                  = @total
-                  | &nbsp;
-                  | Kč
-
-                /[if mso]
-                  </td>
-                  </tr>
-                  </table>
+                    td.d-mailer-order-summary__order-total-price-column[
+                      align="left"
+                      valign="center"
+                    ]
+                      .d-mailer-order-summary__order-total-price
+                        = @total
+                        | &nbsp;
+                        | Kč
 
     tr
       td.d-mailer-order-summary__info-wrapper[
