@@ -1,9 +1,5 @@
-.d-mailer-layout__hidden-preview-text
-  | Insert hidden preheader text here.
-
-/ Insert &#847;&zwnj;&nbsp; hack after hidden preview text
-.d-mailer-layout__hidden-preview-hack
-  == "&#847; &zwnj; &nbsp; &#8199; &shy; &#847; &zwnj; &nbsp; &#8199; &shy; &#847; &zwnj; &nbsp; &#8199; &shy; &#847; &zwnj; &nbsp; &#8199; &shy; &#847; &zwnj; &nbsp; &#8199; &shy; &#847; &zwnj; &nbsp; &#8199; &shy; &#847; &zwnj; &nbsp; &#8199; &shy; &#847; &zwnj; &nbsp; &#8199; &shy; &#847; &zwnj; &nbsp; &#8199; &shy;"
+/ Preview text (is hidden in template)
+= render(Dummy::Mailer::PreviewTextComponent.new)
 
 .d-mailer-layout[
   aria-roledescription="email"
