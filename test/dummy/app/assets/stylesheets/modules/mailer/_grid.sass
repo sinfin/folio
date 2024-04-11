@@ -11,6 +11,12 @@ $dummy-mailer-styles: false !default
     .card-col-lg
       max-width: 62.4% !important
 
+    .xs-card-even-col
+      max-width: 51.85% !important
+
+    .xs-card-odd-col
+      max-width: 48.15% !important
+
     .lot-col-sm
       max-width: 41.7% !important
 
@@ -24,11 +30,15 @@ $dummy-mailer-styles: false !default
     .card-col-lg
       max-width: 58% !important
 
+    .xs-card-even-col,
+    .xs-card-odd-col
+      max-width: 100% !important
+
     .lot-col-sm
-      max-width: 42% !important
+      max-width: 45% !important
 
     .lot-col-lg
-      max-width: 58% !important
+      max-width: 55% !important
 
   +mailer-media-breakpoint-down(sm)
     .card-col-lg, .lot-col-lg,
