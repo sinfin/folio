@@ -57,9 +57,15 @@ $dummy-mailer-styles: false !default
         line-height: $ui-typo-text-s-line-height !important
 
   // cards
-  .d-mailer-cards-extra-small-container__wrapper
+  .d-mailer-cards-extra-small-container
     +mailer-media-breakpoint-down($mailer-breakpoint-mobile)
-      padding: $mailer-gap-f 0 0 !important
+      &__wrapper
+        padding: $mailer-gap-f 0 0 !important
+
+  .d-mailer-cards-extra-small
+    +mailer-media-breakpoint-down($mailer-breakpoint-mobile)
+      &__wrapper
+        padding-right: 0 !important
 
   .d-mailer-cards-medium
     +mailer-media-breakpoint-down($mailer-breakpoint-mobile)
