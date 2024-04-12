@@ -85,6 +85,7 @@ namespace :developer_tools do
     end
   end
 
+  desc "Seed menus from data/seed/menus/*.yml"
   task idp_seed_singleton_menus: :environment do
     create_menu_item = Proc.new do |menu, item_data, parent, position|
       mi = menu.menu_items.build(title: item_data["title"],
