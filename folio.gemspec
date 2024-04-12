@@ -58,7 +58,7 @@ Gem::Specification.new do |s|
   s.add_dependency "omniauth-apple"
   s.add_dependency "omniauth-rails_csrf_protection"
   s.add_dependency "omniauth"
-  s.add_dependency "pagy"
+  s.add_dependency "pagy", "~> 8.0"
   s.add_dependency "pg_search", "= 2.3.2"
   s.add_dependency "pg"
   s.add_dependency "phonelib"
