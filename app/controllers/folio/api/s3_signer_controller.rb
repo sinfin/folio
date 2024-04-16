@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::Api::S3SignerController < Folio::Api::BaseController
-  include Folio::S3Client
+  include Folio::S3::Client
 
   before_action :authenticate_s3_signer!
 

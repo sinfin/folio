@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::CreateFileFromS3Job < ApplicationJob
-  include Folio::S3Client
+  include Folio::S3::Client
   include Folio::Shell
 
   queue_as :default
