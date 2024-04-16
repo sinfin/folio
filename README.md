@@ -16,6 +16,9 @@ Add this line to your application's Gemfile:
 
 ```ruby
 gem 'folio', github: 'sinfin/folio'
+gem "dragonfly_libvips", github: "sinfin/dragonfly_libvips", branch: "more_geometry"
+gem "dragonfly-s3_data_store", github: "sinfin/dragonfly-s3_data_store"
+gem "view_component"
 ```
 
 And then execute:
