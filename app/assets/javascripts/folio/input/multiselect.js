@@ -49,7 +49,10 @@ window.Folio.Input.Multiselect.onChange = (input, value) => {
 
   for (let i = 0; i < value.length; i++) {
     const item = input.tomselect.control.querySelector(`.item[data-value="${value[i]}"]`)
-    input.tomselect.control.insertAdjacentElement('afterbegin', item)
+
+    if (item) {
+      input.tomselect.control.insertAdjacentElement('afterbegin', item)
+    }
   }
 }
 

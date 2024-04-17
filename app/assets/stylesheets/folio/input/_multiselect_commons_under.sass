@@ -1,0 +1,62 @@
+.#{$select-ns}-dropdown,
+.#{$select-ns}-dropdown.form-control,
+.#{$select-ns}-dropdown.form-select
+  box-shadow: $dropdown-box-shadow
+
+.#{$select-ns}-wrapper
+  &.multi
+    background-image: none
+
+    .#{$select-ns}-dropdown-content
+      padding-top: 0
+
+    .#{$select-ns}-control
+      gap: 7px
+      padding: $grid-gutter-half !important
+
+      .item
+        margin: 0
+        padding: 0
+        flex: 0 0 100%
+
+      > input
+        &::placeholder,
+        &::placeholder,
+          color: $folio-input-multiselect-placeholder-color
+          font-weight: $font-weight-bold
+
+  &.plugin-remove_button
+    .item
+      .remove
+        border: 0
+        padding: 0
+        color: $danger
+        background: transparent
+        width: 16px
+        height: 16px
+        display: flex
+        align-items: center
+        justify-content: center
+
+        &:hover
+          background: transparent
+
+  &.plugin-dropdown_input
+    .items-placeholder
+      display: block !important
+      cursor: pointer
+
+    .dropdown-input-wrap
+      padding: $grid-gutter-half
+
+    .dropdown-input
+      border: $input-border-width solid $input-border-color
+      border-radius: $input-border-radius
+
+      &:focus
+        border-color: $input-border-color
+
+.#{$select-ns}-dropdown,
+.#{$select-ns}-dropdown.form-control,
+.#{$select-ns}-dropdown.form-select
+  border-radius: $select-border-radius
