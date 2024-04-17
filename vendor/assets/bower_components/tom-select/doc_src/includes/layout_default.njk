@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>{% if title %} {{ title }} - {% endif %} Tom Select</title>
+		<meta name="description" content="{% if description %}{{ description }}{% endif %}">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="/css/stylesheet.css">
+		<link href="https://unpkg.com/prismjs@1.20.0/themes/prism.css" rel="stylesheet" media="print" id="prism-css">
+		{{ style | safe }}
+
+		{% block tomselectjs %}
+		<script src="/js/tom-select.complete.min.js"></script>
+		{% endblock %}
+
+		<script src="/js/index.bundle.js"></script>
+		{{ script | safe }}
+
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+	</head>
+    <body>
+
+		{# offcanvas button #}
+		<a id="toggle-offcanvas" aria-label="Toggle Off-Canvas Menu">
+			<i class="ib feather-menu"></i>
+		</a>
+
+
+
+
+		{# offcanvas #}
+		<div id="offcanvas" class="d-flex flex-column px-0">
+
+			<div id="docsearch-div" class="px-4">
+				<input type="text" class="form-control" placeholder="Search" id="docsearch-input"/>
+			</div>
+
+			<div id="offcanvas-inner">
+				<div class="d-flex flex-column">
+					{% include "nav.njk" %}
+				</div>
+			</div>
+		</div>
+
+		{# main-col #}
+		<div class="px-3 main-col">
+			<div class="container pt-4 mt-3" id="main-container">
+				{% if title %}
+				<h1 class="display-4 mt-0">{{ title }}</h1>
+				{% endif %}
+
+				{{ content | safe }}
+				{% block content_foot %}
+				{% endblock %}
+			</div>
+		</div>
+
+		<script src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+		<script csp-hash> docsearch({
+			apiKey: '662e3a3a9d206ebad6d19f341b85acbd',
+			indexName: 'tom-select',
+			inputSelector: '#docsearch-input',
+			debug: false // Set debug to true if you want to inspect the dropdown
+		});
+		</script>
+
+
+		{#
+		<!-- Yandex.Metrika counter -->
+		<script csp-hash>
+		   (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+		   m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+		   (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+		   ym(77752060, "init", {
+		        clickmap:true,
+		        trackLinks:true,
+		        accurateTrackBounce:true
+		   });
+		</script>
+		<noscript><div><img src="https://mc.yandex.ru/watch/77752060" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+		<!-- /Yandex.Metrika counter -->
+		#}
+	</body>
+</html>

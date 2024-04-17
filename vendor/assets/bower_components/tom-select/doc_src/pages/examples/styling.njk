@@ -1,0 +1,216 @@
+---
+title: Styling Examples
+nav_title: Styling
+tags: demo
+script: <script>themes = ['bootstrap5','bootstrap4'];</script>
+---
+
+
+<h2 class="mt-5">Bootstrap Forms</h2>
+<p class="lead">Examples of using Tom Select with Bootstrap 4 &amp; Bootstrap 5 form elements.</p>
+
+{% from "demo.njk" import demo_col %}
+
+
+
+{% set left_col %}
+<input type="text" class="form-control form-control-lg" value="awesome,neat" placeholder="How cool is this?">
+{% endset %}
+
+{% set html %}
+<input type="text" class="form-control form-control-lg" id="form-control-lg" value="awesome,neat" placeholder="How cool is this?">
+{% endset %}
+
+<script>
+{% set script %}
+new TomSelect('#form-control-lg',{create:true});
+{% endset %}
+</script>
+
+{{ demo_col('form-control-lg', left_col, html, script) }}
+
+
+
+
+{% set left_col %}
+<input type="text" class="form-control" value="awesome,neat" placeholder="How cool is this?">
+{% endset %}
+
+{% set html %}
+<input type="text" class="form-control" id="form-control" value="awesome,neat" placeholder="How cool is this?">
+{% endset %}
+
+<script csp-hash>
+{% set script %}
+new TomSelect('#form-control',{create:true});
+{% endset %}
+</script>
+
+{{ demo_col('form-control', left_col, html, script) }}
+
+
+
+
+{% set left_col %}
+<input type="text" class="form-control form-control-sm" value="awesome,neat" placeholder="How cool is this?">
+{% endset %}
+
+{% set html %}
+<input type="text" class="form-control form-control-sm" id="form-control-sm" value="awesome,neat" placeholder="How cool is this?">
+{% endset %}
+
+<script>
+{% set script %}
+new TomSelect('#form-control-sm',{create:true});
+{% endset %}
+</script>
+
+{{ demo_col('form-control-sm', left_col, html, script) }}
+
+
+
+
+{% set left_col %}
+<input type="text" class="form-control form-control-sm" value="awesome,neat" placeholder="How cool is this?">
+{% endset %}
+
+{% set html %}
+<input type="text" class="form-control form-control-sm" id="form-control-sm-single" value="awesome,neat" placeholder="How cool is this?">
+{% endset %}
+
+<script>
+{% set script %}
+new TomSelect('#form-control-sm-single',{create:true,maxItems:1});
+{% endset %}
+</script>
+
+{{ demo_col('form-control-sm (single)', left_col, html, script) }}
+
+
+
+
+{% set left_col %}
+<div class="input-group input-group-lg">
+	<span class="input-group-text">Text</span>
+	<input type="text" value="awesome,neat" class="form-control" placeholder="How cool is this?">
+	<button class="btn btn btn-success">Go</button>
+</div>
+{% endset %}
+
+
+{% set html %}
+<div class="input-group input-group-lg">
+	<span class="input-group-text">Text</span>
+	<input type="text" value="awesome,neat" id="input-group-lg" placeholder="How cool is this?">
+	<button class="btn btn btn-success">Go</button>
+</div>
+{% endset %}
+
+<script>
+{% set script %}
+new TomSelect('#input-group-lg',{create:true});
+{% endset %}
+</script>
+
+{{ demo_col('input-group-lg', left_col, html, script) }}
+
+
+
+
+{% set left_col %}
+<div class="input-group input-group">
+	<span class="input-group-text">Text</span>
+	<input type="text" value="awesome,neat" class="form-control" placeholder="How cool is this?">
+	<button class="btn btn btn-success">Go</button>
+</div>
+{% endset %}
+
+
+{% set html %}
+<div class="input-group input-group">
+	<span class="input-group-text">Text</span>
+	<input type="text" value="awesome,neat" id="input-group" placeholder="How cool is this?">
+	<button class="btn btn btn-success">Go</button>
+</div>
+{% endset %}
+
+<script>
+{% set script %}
+new TomSelect('#input-group',{create:true});
+{% endset %}
+</script>
+
+{{ demo_col('input-group', left_col, html, script) }}
+
+
+
+
+
+{% set left_col %}
+<div class="input-group input-group-sm">
+	<span class="input-group-text">Text</span>
+	<input type="text" value="awesome,neat" class="form-control" placeholder="How cool is this?">
+	<button class="btn btn btn-success">Go</button>
+</div>
+{% endset %}
+
+
+
+{% set html %}
+<div class="input-group input-group-sm">
+	<span class="input-group-text">Text</span>
+	<input type="text" value="awesome,neat" id="input-group-sm" placeholder="How cool is this?">
+	<button class="btn btn btn-success">Go</button>
+</div>
+{% endset %}
+
+<script>
+{% set script %}
+new TomSelect('#input-group-sm',{create:true});
+{% endset %}
+</script>
+
+{{ demo_col('input-group-sm', left_col, html, script) }}
+
+
+
+{% set html %}
+<div class="input-group input-group-sm">
+	<span class="input-group-text">Text</span>
+	<input type="text" value="awesome,neat" id="input-group-sm-single" placeholder="How cool is this?">
+	<button class="btn btn btn-success">Go</button>
+</div>
+{% endset %}
+
+<script>
+{% set script %}
+new TomSelect('#input-group-sm-single',{create:true,maxItems:1});
+{% endset %}
+</script>
+
+{{ demo_col('input-group-sm (single)', left_col, html, script) }}
+
+
+
+{% set left_col %}
+<div class="input-group input-group">
+	<input type="text" value="awesome,neat" class="form-control" placeholder="How cool is this?">
+	<button class="btn btn btn-success">Go</button>
+</div>
+{% endset %}
+
+
+{% set html %}
+<div class="input-group input-group">
+	<input type="text" value="awesome,neat" id="input-group-first" placeholder="How cool is this?">
+	<button class="btn btn btn-success">Go</button>
+</div>
+{% endset %}
+
+<script>
+{% set script %}
+new TomSelect('#input-group-first',{create:true});
+{% endset %}
+</script>
+
+{{ demo_col('input-group', left_col, html, script) }}

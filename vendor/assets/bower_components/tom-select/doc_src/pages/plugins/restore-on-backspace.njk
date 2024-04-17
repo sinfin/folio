@@ -1,0 +1,47 @@
+---
+title: Restore on Backspace
+nav_title: Restore on Backspace
+tags: demo
+---
+
+
+{% from "demo.njk" import demo %}
+{% from "macro_config.njk" import config_table %}
+
+
+
+{% set label %}
+<label class="h2 mb-3">
+	Example
+</label>
+{% endset %}
+
+{% set html %}
+<input type="text" id="input-tags6" value="awesome,neat" autocomplete="off">
+{% endset %}
+
+<script>
+{% set script %}
+new TomSelect('#input-tags6',{
+	plugins: ['restore_on_backspace'],
+	persist: false,
+	create: true
+});
+{% endset %}
+</script>
+
+{{ demo( label, html, script) }}
+
+
+<h2>Plugin Configuration</h2>
+
+{{ config_table([
+		{
+			name:'html',
+			desc:'<p>A function taking option data as an argument and returning a text string that will be assigned to the control input value</p>',
+			type:'callback',
+			default:'function(option){\n		return option[self.settings.labelField];\n}',
+			highlight:true
+		}
+	])
+}}

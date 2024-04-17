@@ -1,0 +1,202 @@
+{% set demo_count = [] %}
+
+
+{# output inline code and add hash to csp header #}
+{% macro demo_code( type, code ) %}
+
+	{% if code %}
+		{# <style>{{ style | safe }}</style> #}
+		<{{ type }} csp-hash>{{ code | safe }}</{{ type }}>
+	{% endif %}
+
+{% endmacro %}
+
+
+{% macro sandbox_links( script ) %}
+
+		<a class="nav-link dropdown-toggle text-muted" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Edit</a>
+		<ul class="dropdown-menu dropdown-menu-end">
+		<li>
+			<a class="dropdown-item opensandbox">JSFiddle</a>
+			<form action="https://jsfiddle.net/api/post/library/pure/" method="POST" target="_blank">
+				<input class="jsfiddle-html" type="hidden" name="html" value=""/>
+				<input class="jsfiddle-js" type="hidden" name="js" value=""/>
+				<input class="jsfiddle-css" type="hidden" name="css" value=""/>
+				<input class="jsfiddle-resources" type="hidden" name="resources" value=""/>
+			</form>
+		</li>
+      	<li>
+			<a class="opensandbox dropdown-item">CodePen</a>
+			<form action="https://codepen.io/pen/define" method="POST" target="_blank">
+				<input class="codepen" type="hidden" name="data" value=""/>
+			</form>
+		</li>
+		</ul>
+	{#
+	<li class="nav-item" role="presentation">
+	<form action="https://codesandbox.io/api/v1/sandboxes/define" method="POST" target="_blank">
+		<input class="codesandbox" type="hidden" name="parameters" value="" />
+			<a class="nav-link opensandbox">CodeSandbox</a>
+	</form>
+	</li>
+	#}
+
+{% endmacro %}
+
+
+{% macro demo( label, html, script, style ) %}
+	{% set dd = demo_count.push('a') %}
+
+	<div class="demo py-4">
+
+		{{ label | safe }}
+	<div>
+		<div>
+			<div class="demo-html">
+				{{ html | safe }}
+			</div>
+
+			{# for codepen #}
+			<textarea hidden>{{html}}</textarea>
+			{{ demo_code('script', script ) }}
+			{{ demo_code('style', style ) }}
+
+		</div>
+		<div class="mt-4">
+
+			<ul class="nav nav-tabs" role="tablist" id="demoTab-{{ demo_count | length }}">
+				{% if script %}
+				<li class="nav-item" role="presentation">
+					<a class="nav-link active" data-bs-toggle="tab" data-bs-target="#javascript-tab-{{ demo_count | length }}" role="tab" aria-controls="home" aria-selected="true">JavaScript</a>
+				</li>
+				{% endif %}
+				<li class="nav-item" role="presentation">
+					<a class="nav-link {% if not script %} active {% endif %}" data-bs-toggle="tab" data-bs-target="#html-tab-{{ demo_count | length }}" role="tab" aria-controls="profile" aria-selected="false">HTML</a>
+				</li>
+				{% if style %}
+				<li class="nav-item" role="presentation">
+					<a class="nav-link" data-bs-toggle="tab" data-bs-target="#style-tab-{{ demo_count | length }}" role="tab" aria-controls="profile" aria-selected="false">CSS</a>
+				</li>
+				{% endif %}
+
+				{% if script %}
+				<li class="nav-item dropdown ms-auto">
+				{{ sandbox_links(script) }}
+				</li>
+				{% endif %}
+
+			</ul>
+
+			<div class="tab-content" id="demoTabContent-{{ demo_count | length }}">
+				{% if script %}
+				<div class="tab-pane fade show active" id="javascript-tab-{{ demo_count | length }}" role="tabpanel" aria-labelledby="home-tab">
+					{% highlight "js" %}
+					{{ script | safe }}
+					{% endhighlight %}
+				</div>
+				{% endif %}
+
+				<div class="tab-pane fade {% if not script %} show active {% endif %}" id="html-tab-{{ demo_count | length }}" role="tabpanel" aria-labelledby="profile-tab">
+					{% highlight "html" %}
+					{{ html | safe }}
+					{% endhighlight %}
+				</div>
+
+				{% if style %}
+				<div class="tab-pane fade" id="style-tab-{{ demo_count | length }}" role="tabpanel" aria-labelledby="profile-tab">
+					{% highlight "css" %}
+					{{ style | safe }}
+					{% endhighlight %}
+				</div>
+				{% endif %}
+
+			</div>
+		</div>
+	</div>
+	</div>
+{% endmacro %}
+
+{% macro demo_small( html, script, style ) %}
+
+	<div class="demo demo-small">
+		<div class="d-flex align-items-end flex-wrap">
+			<ul class="nav nav-tabs ms-auto flex-nowrap" role="tablist">
+				{% if script %}
+				<li class="nav-item dropdown ms-auto">
+				{{ sandbox_links(script) }}
+				</li>
+				{% endif %}
+			</ul>
+		</div>
+
+
+		<div class="demo-html">
+			{{ html | safe }}
+		</div>
+
+		{# for codepen #}
+		<textarea hidden>{{html}}</textarea>
+		{{ demo_code('script', script ) }}
+		{{ demo_code('style', style ) }}
+	</div>
+{% endmacro %}
+
+
+{% macro demo_mini( label, html, script, style ) %}
+
+	<div class="demo demo-mini">
+	<div>
+		<div>
+			<ul class="nav nav-tabs" role="tablist">
+				<li class="nav-item">
+					<a class="nav-link disabled">{{ label | safe }}</a>
+				</li>
+				{% if script %}
+				<li class="nav-item dropdown ms-auto">
+					{{ sandbox_links(script) }}
+				</li>
+				{% endif %}
+			</ul>
+
+
+			<div class="demo-html">
+				{{ html | safe }}
+			</div>
+
+			{# for codepen #}
+			<textarea hidden>{{html}}</textarea>
+			{{ demo_code('script', script ) }}
+			{{ demo_code('style', style ) }}
+
+		</div>
+	</div>
+	</div>
+{% endmacro %}
+
+{% macro demo_col( label, left_col, html, script, style ) %}
+	<div class="demo demo-col mt-5">
+		<div class="d-flex">
+			<h4 class="my-0" id="ex-{{label}}">
+				{{ label | safe }}
+			</h4>
+			<div class="ms-auto">
+			{{ sandbox_links(script) }}
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-6 mb-2">
+				{{ left_col | safe }}
+			</div>
+			<div class="col-md-6 mb-2">
+
+				{{ html | safe }}
+				{# for codepen #}
+				<textarea hidden>{{html}}</textarea>
+				{{ demo_code('script', script ) }}
+				{{ demo_code('style', style ) }}
+
+			</div>
+		</div>
+	</div>
+{% endmacro %}

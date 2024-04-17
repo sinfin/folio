@@ -1,0 +1,55 @@
+---
+title: Locking Example
+nav_title: Locking
+tags: demo
+---
+
+
+{% from "demo.njk" import demo %}
+
+
+{% set label %}
+<label class="h2 mb-3">
+	Locked (single)
+</label>
+<p>Controls can be locked to prevent user interaction.</p>
+{% endset %}
+
+{% set html %}
+<select id="select-locked-single" placeholder="No input allowed...">
+	<option value="A">Option A</option>
+	<option value="B" selected>Option B</option>
+	<option value="C">Option C</option>
+</select>
+{% endset %}
+
+<script>
+{% set script %}
+(new TomSelect('#select-locked-single')).lock();
+{% endset %}
+</script>
+
+{{ demo( label, html, script) }}
+
+
+{% set label %}
+<label class="h2 mb-3">
+	Locked (multiple)
+</label>
+{% endset %}
+
+{% set html %}
+<select id="select-locked" multiple placeholder="No input allowed...">
+	<option value="A">Option A</option>
+	<option value="B" selected>Option B</option>
+	<option value="C" selected>Option C</option>
+</select>
+{% endset %}
+
+<script>
+{% set script %}
+(new TomSelect('#select-locked')).lock();
+{% endset %}
+</script>
+
+{{ demo( label, html, script) }}

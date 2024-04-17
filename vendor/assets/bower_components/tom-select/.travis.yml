@@ -1,0 +1,18 @@
+language: node_js
+env:
+  matrix:
+    - TARGET=HeadlessFirefox
+    - TARGET=HeadlessChrome
+    - TARGET=browserstack
+node_js:
+  - 14
+addons:
+  firefox: latest
+before_script:
+  - npm install -g grunt-cli
+  - npm install
+  - grunt
+script:
+  - export COMMIT_MESSAGE=$(git show -s --format=%B $TRAVIS_COMMIT | tr -d '\n')
+  - export TRAVIS_CI=1
+  - npm test;

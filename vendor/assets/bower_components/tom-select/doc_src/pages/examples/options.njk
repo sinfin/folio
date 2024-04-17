@@ -1,0 +1,73 @@
+---
+title: Options Array Examples
+nav_title: Options Array
+tags: demo
+---
+
+{% from "demo.njk" import demo %}
+
+
+{% set label %}
+<label class="h2 mb-3">
+	JavaScript Array
+</label>
+<p>The options are created from an array in JavaScript.</p>
+{% endset %}
+
+{% set html %}
+<select id="select-tools" placeholder="Pick a tool..."></select>
+{% endset %}
+
+
+<script>
+{% set script %}
+
+new TomSelect('#select-tools',{
+	maxItems: null,
+	valueField: 'id',
+	labelField: 'title',
+	searchField: 'title',
+	options: [
+		{id: 1, title: 'Spectrometer', url: 'http://en.wikipedia.org/wiki/Spectrometers'},
+		{id: 2, title: 'Star Chart', url: 'http://en.wikipedia.org/wiki/Star_chart'},
+		{id: 3, title: 'Electrical Tape', url: 'http://en.wikipedia.org/wiki/Electrical_tape'}
+	],
+	create: false
+});
+{% endset %}
+</script>
+
+{{ demo( label, html, script) }}
+
+
+
+{% set label %}
+<label class="h2 mb-3">Data-* Attributes</label>
+<p>Images can be added to option and item elements with custom render templates and data-* attributes</p>
+{% endset %}
+
+{% set html %}
+<select id="data-attr">
+    <option value="chrome" data-src="https://cdn1.iconfinder.com/data/icons/logotypes/32/chrome-32.png">Google Chrome</option>
+    <option value="ffox" data-src="https://cdn0.iconfinder.com/data/icons/flat-round-system/512/firefox-32.png">Mozilla Firefox</option>
+    <option value="ie" data-src="https://cdn0.iconfinder.com/data/icons/flat-round-system/512/internet_explorer-32.png">Internet Explorer</option>
+</select>
+{% endset %}
+
+
+<script>
+{% set script %}
+new TomSelect('#data-attr',{
+    render: {
+        option: function (data, escape) {
+            return `<div><img class="me-2" src="${data.src}">${data.text}</div>`;
+        },
+        item: function (item, escape) {
+			return `<div><img class="me-2" src="${item.src}">${item.text}</div>`;
+        }
+    }
+});
+{% endset %}
+</script>
+
+{{ demo( label, html, script) }}

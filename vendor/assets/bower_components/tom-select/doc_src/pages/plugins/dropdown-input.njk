@@ -1,0 +1,42 @@
+---
+title: Dropdown Input
+nav_title: Dropdown Input
+tags: demo
+---
+
+
+{% from "demo.njk" import demo %}
+
+
+{% set label %}
+<label class="h2 mb-3">
+	Example
+</label>
+{% endset %}
+
+{% set html %}
+<select id="ex-dropdown-input" autocomplete="off" placeholder="How cool is this?">
+	<option>amazing</option>
+	<option selected>awesome</option>
+	<option>cool</option>
+	<option>excellent</option>
+	<option>great</option>
+	<option>neat</option>
+	<option>superb</option>
+	<option>wonderful</option>
+</select>
+{% endset %}
+
+<script>
+{% set script %}
+new TomSelect('#ex-dropdown-input',{
+	plugins: ['dropdown_input'],
+});
+{% endset %}
+</script>
+
+{{ demo( label, html, script) }}
+
+
+<h2>Plugin Configuration</h2>
+<p>No additional configuration settings for this plugin</p>

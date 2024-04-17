@@ -1,0 +1,17 @@
+{
+	"presets":
+	[
+		[
+			"@babel/preset-env",
+			{
+				"loose": true,
+				"bugfixes": true,
+				"modules": false
+			}
+		],
+		"@babel/typescript"
+	],
+	"plugins": [
+		["@babel/plugin-transform-class-properties", { "loose": true }]
+    ]
+}

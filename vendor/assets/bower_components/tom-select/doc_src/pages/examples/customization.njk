@@ -1,0 +1,132 @@
+---
+title: Customizing
+nav_title: Customizing
+tags: demo
+---
+
+<p class="lead">
+	Nearly every piece of Tom Select is customizable.
+	<a href="/docs/#render-templates">Render templates</a> allow you to customize the HTML of rendered options, items, dropdown menu, optgroups and more.
+</p>
+
+{% from "demo.njk" import demo %}
+
+{% set label %}
+<label class="h2 mb-3">
+	Custom Option and Item HTML
+</label>
+<p>
+	This example provides a simple demonstration of how to override the default templates for options and items along with proper use of the <kbd>escape()</kbd> method.
+</p>
+{% endset %}
+
+{% set html %}
+<select id="select-links" multiple placeholder="Pick some links..."></select>
+{% endset %}
+
+<style type="text/css">
+{% set style %}
+.ts-wrapper .option .title {
+	display: block;
+}
+.ts-wrapper .option .url {
+	font-size: 12px;
+	display: block;
+	color: #a0a0a0;
+}
+{% endset %}
+</style>
+
+
+<script>
+{% set script %}
+
+new TomSelect('#select-links',{
+	valueField: 'id',
+	searchField: 'title',
+	options: [
+		{id: 1, title: 'DIY', url: 'https://diy.org'},
+		{id: 2, title: 'Google', url: 'http://google.com'},
+		{id: 3, title: 'Yahoo', url: 'http://yahoo.com'},
+	],
+	render: {
+		option: function(data, escape) {
+			return '<div>' +
+					'<span class="title">' + escape(data.title) + '</span>' +
+					'<span class="url">' + escape(data.url) + '</span>' +
+				'</div>';
+		},
+		item: function(data, escape) {
+			return '<div title="' + escape(data.url) + '">' + escape(data.title) + '</div>';
+		}
+	}
+});
+{% endset %}
+</script>
+
+
+{{ demo( label, html, script, style) }}
+
+
+
+
+
+{% set label %}
+<label class="h2 mb-3">
+	Custom JavaScript
+</label>
+<p>
+	There are a number of ways to customize the JavaScript functionality.
+	<a href="/plugins/">Plugins</a> are a great example but sometimes you just want to add some functionality to items or options.
+	The example below shows how to add a clickable button within an option but the same concept can be applied to items.
+</p>
+{% endset %}
+
+{% set html %}
+<select id="custom_js" multiple>
+	<option value="">How cool is this?</option>
+	<option selected>amazing</option>
+	<option selected>awesome</option>
+	<option>cool</option>
+	<option>excellent</option>
+	<option>great</option>
+	<option>neat</option>
+	<option>superb</option>
+	<option>wonderful</option></select>
+{% endset %}
+
+
+<script>
+{% set script %}
+
+new TomSelect('#custom_js',{
+	create: true,
+	render:{
+		option: function(data) {
+
+			const div = document.createElement('div');
+			div.className = 'd-flex align-items-center';
+
+			const span = document.createElement('span');
+			span.className = 'flex-grow-1';
+			span.innerText = data.text;
+			div.append(span);
+
+			const a = document.createElement('a');
+			a.innerText = '#';
+			a.className = 'btn btn-sm btn-light';
+			div.append(a);
+			a.addEventListener('click',function(evt){
+				evt.stopPropagation();
+				alert(`You clicked # within the "${data.text}" option`);
+			});
+
+			return div;
+		},
+	}
+});
+{% endset %}
+</script>
+
+
+{{ demo( label, html, script, style) }}

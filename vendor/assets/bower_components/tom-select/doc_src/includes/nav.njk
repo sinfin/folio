@@ -1,0 +1,55 @@
+
+
+	<a href="/" class="h5 my-0 px-4 py-3 d-block">Home</a>
+
+	{# print a navigation link, add active/text-dark class if the current nav item is the current page
+	 # https://www.11ty.dev/docs/data-eleventy-supplied/#page-variable-contents
+	 #}
+
+
+	<a href="/examples/" class="h5 px-4 py-3 my-0 d-block">Examples</a>
+	{% if 'examples' in page.filePathStem %}
+	<div>
+		{% for item in collections.demosAlpha %}
+ 			{% nav_link item %}
+		{% endfor %}
+	</div>
+	{% endif %}
+
+	<a href="/plugins/" class="h5 px-4 py-3 my-0 d-block">Plugins</a>
+	{% if '/plugins/' in page.filePathStem %}
+	<div>
+		{% for item in collections.plugins %}
+			{% nav_link item %}
+		{% endfor %}
+	</div>
+	{% endif %}
+
+
+	<a href="/docs" class="h5 px-4 py-3 my-0 d-block">Docs</a>
+	{% if 'docs' in page.filePathStem %}
+	<div>
+		{% nav_link {url:'/docs/',title:'Usage'} %}
+		{% nav_link {url:'/docs/api/',title:'API'} %}
+		{% nav_link {url:'/docs/plugins/',title:'Plugins'} %}
+		{% nav_link {url:'/docs/events/',title:'Events'} %}
+		{% nav_link {url:'/docs/contribute/',title:'Contribute'} %}
+		{% nav_link {url:'/docs/migration/',title:'Migration'} %}
+		{% nav_link {url:'/docs/selectize.js/',title:'selectize.js'} %}
+	</div>
+	{% endif %}
+
+	<hr class="m-4"/>
+
+	<a href="https://github.com/orchidjs/tom-select" class="h5 px-4 py-3 my-0 d-block">GitHub</a>
+	<a href="https://www.npmjs.com/package/tom-select" class="h5 px-4 py-3 my-0 d-block">NPM</a>
+
+
+	<div class="mt-auto"></div>
+
+	<br class="mx-4 mb-2 mt-4"/>
+
+	<div class="p-4 badges small">
+		<a href="https://github.com/orchidjs/tom-select/blob/master/{{ page.inputPath }}">Edit this page on GitHub</a>
+		<div class="mt-2"><a href="https://github.com/orchidjs/tom-select/graphs/contributors">© {{ helpers.currentYear() }} Contributors</a></div>
+	</div>

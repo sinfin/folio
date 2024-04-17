@@ -15,7 +15,7 @@
     "js-cookie": "^2.2.0",
     "balloon.css": "^1.0.0",
     "jquery.kinetic": "https://raw.githubusercontent.com/davetayls/jquery.kinetic/master/jquery.kinetic.js",
-    "dropzone": "^5.5.0",
+    "tom-select": "orchidjs/tom-select",
     "cleave.js": "^1.5.3",
     "select2": "^4.0.13",
     "clipboard": "^2.0.6",
