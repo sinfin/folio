@@ -9,6 +9,7 @@
 //= require folio-bootstrap/js/dist/util
 //= require folio-bootstrap/js/dist/modal
 
+//= require folio/remote_scripts
 //= require folio/message-bus
 //= require folio/addresses
 //= require folio/atoms
