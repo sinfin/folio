@@ -16,7 +16,7 @@ class Dummy::Mailer::Cards::ExtraSmallComponent < ApplicationComponent
     base_class = "d-mailer-cards-extra-small__link"
 
     if @card[:href].present?
-      { tag: :a, href: @href, class: base_class, rel: "noopener", target: "_blank" }
+      { tag: :a, href: @card[:href], class: base_class, rel: "noopener", target: "_blank" }
     else
       {}
     end

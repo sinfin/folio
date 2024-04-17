@@ -1,50 +1,54 @@
-.d-mailer-cards-medium
-  table.d-mailer-cards-medium__inner[
-    role="presentation"
-  ]
-    tr
-      td.d-mailer-cards-medium__inner-wrapper
-        /[if mso]
-          <table role="presentation" width="100%">
-          <tr>
+table.d-mailer-cards-medium[
+  role="presentation"
+]
+  tr
+    td.d-mailer-cards-medium__wrapper
+      table.d-mailer-cards-medium__inner[
+        role="presentation"
+      ]
+        tr
+          td.d-mailer-cards-medium__inner-wrapper
+            /[if mso]
+              <table role="presentation" width="100%">
+              <tr>
 
-        - if @folio_image.present?
-          /[if mso]
-            <td style="width:200px;padding:16px;" align="left" valign="top">
+            - if @folio_image.present?
+              /[if mso]
+                <td style="width:200px;padding:16px;" align="left" valign="top">
 
-          .d-mailer-cards-medium__image-wrapper[
-            class="card-col-sm"
-          ]
-            .d-mailer-cards-medium__image-inner
-              img.d-mailer-cards-medium__image[
-                src="#{@folio_image.thumb(THUMB_SIZE, immediate: true).url}"
-                alt="image"
+              .d-mailer-cards-medium__image-wrapper[
+                class="card-col-sm"
               ]
+                .d-mailer-cards-medium__image-inner
+                  img.d-mailer-cards-medium__image[
+                    src="#{@folio_image.thumb(THUMB_SIZE, immediate: true).url}"
+                    alt="image"
+                  ]
 
-          /[if mso]
-            </td>
+              /[if mso]
+                </td>
 
-        - if @folio_image.present?
-          /[if mso]
-            <td style="width:352px;padding:16px;" valign="top">
-        - else
-          /[if mso]
-            <td style="padding:16px;" valign="top">
+            - if @folio_image.present?
+              /[if mso]
+                <td style="width:352px;padding:16px;" valign="top">
+            - else
+              /[if mso]
+                <td style="padding:16px;" valign="top">
 
-        .d-mailer-cards-medium__content-wrapper[
-          class=(@folio_image.present? ? "card-col-lg" : "col-full")
-        ]
-          .d-mailer-cards-medium__content-inner
-            - if @title.present?
-              *link_with_fallback_tag
-                h2.d-mailer-cards-medium__title = @title
+            .d-mailer-cards-medium__content-wrapper[
+              class=(@folio_image.present? ? "card-col-lg" : "col-full")
+            ]
+              .d-mailer-cards-medium__content-inner
+                - if @title.present?
+                  *link_with_fallback_tag
+                    h2.d-mailer-cards-medium__title = @title
 
-            = content
+                = content
 
-            - if @button_label && @button_href
-              = render(Dummy::Mailer::ButtonComponent.new(label: @button_label, href: @button_href, type: :primary, size: :sm))
+                - if @button_label && @button_href
+                  = render(Dummy::Mailer::ButtonComponent.new(label: @button_label, href: @button_href, type: :primary, size: :sm))
 
-        /[if mso]
-          </td>
-          </tr>
-          </table>
+            /[if mso]
+              </td>
+              </tr>
+              </table>
