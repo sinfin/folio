@@ -29,6 +29,13 @@ SimpleForm::Inputs::CollectionSelectInput.class_eval do
       register_stimulus("f-input-collection-remote-select", stimulus_opts)
       iho[:id] = nil unless iho[:id].present?
     elsif input_options[:input_html] && input_options[:input_html][:multiple]
+      if collection && collection.first.is_a?(ActiveRecord::Base)
+        i = -1
+        collection.map! do |record|
+          [record.to_label, record.id, "data-index" => i += 1]
+        end
+      end
+
       register_stimulus("f-input-multiselect")
     end
 

@@ -30,30 +30,33 @@ window.Folio.Input.Multiselect.removeIconHtml = () => {
   return window.Folio.Input.Multiselect.savedRemoveIconHtml
 }
 
+window.Folio.Input.Multiselect.sort = (input) => {
+  const value = input.tomselect.getValue()
+
+  if (!value || value.length < 2) return
+
+  const items = input.tomselect.control.querySelectorAll('.item')
+  const itemsArray = Array.from(items)
+
+  itemsArray.sort((a, b) => {
+    if (a.dataset.optionIndex && b.dataset.optionIndex) {
+      return parseInt(a.dataset.optionIndex) - parseInt(b.dataset.optionIndex)
+    } else {
+      return 0
+    }
+  })
+
+  const sortedValues = itemsArray.map((item) => item.dataset.value)
+
+  input.tomselect.setValue(sortedValues, true)
+}
+
+window.Folio.Input.Multiselect.renderItem = (data, escape) => (
+  `<div data-option-index="${data.$option.dataset.index}">${escape(data.text)}</div>`
+)
+
 window.Folio.Input.Multiselect.onChange = (input, value) => {
-  if (value.length < 2) return
-
-  let orderedCorrectly = true
-
-  for (let i = 1; i < value.length; i++) {
-    if (parseInt(value[i - 1]) > parseInt(value[i])) {
-      orderedCorrectly = false
-      break
-    }
-  }
-
-  if (orderedCorrectly) return
-
-  // sort value by reverse order
-  value.sort((a, b) => parseInt(b) - parseInt(a))
-
-  for (let i = 0; i < value.length; i++) {
-    const item = input.tomselect.control.querySelector(`.item[data-value="${value[i]}"]`)
-
-    if (item) {
-      input.tomselect.control.insertAdjacentElement('afterbegin', item)
-    }
-  }
+  window.Folio.Input.Multiselect.sort(input)
 }
 
 window.Folio.Input.Multiselect.bind = (input) => {
@@ -61,13 +64,17 @@ window.Folio.Input.Multiselect.bind = (input) => {
     placeholder: window.Folio.i18n(window.Folio.Input.Multiselect.I18n, 'placeholder'),
     plugins: {
       dropdown_input: true,
-      no_active_items: true,
       remove_button: {
         title: window.Folio.i18n(window.Folio.Input.Multiselect.I18n, 'remove'),
         label: window.Folio.Input.Multiselect.removeIconHtml()
       }
+    },
+    render: {
+      item: window.Folio.Input.Multiselect.renderItem
     }
   })
+
+  window.Folio.Input.Multiselect.sort(input)
 
   tomselect.on('change', (value) => {
     window.Folio.Input.Multiselect.onChange(input, value)
