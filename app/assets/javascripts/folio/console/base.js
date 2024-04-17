@@ -2,7 +2,6 @@
 //= require rails-ujs
 //= require popper.min
 //= require folio-bootstrap-5/dist/js/bootstrap.min
-//= require multiselect/js/jquery.multi-select
 //= require js-cookie/src/js.cookie
 //= require jquery.kinetic/index
 //= require clipboard/dist/clipboard
