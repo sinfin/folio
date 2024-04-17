@@ -16,17 +16,31 @@ $dummy-mailer-styles: false !default
     p, p.font-size-lg, p.font-size-sm
       color: $cloud-200 !important
 
-    a
-      color: $blue !important
-
     hr
       border-top: 1px solid $cloud-600 !important
+
+    .d-mailer-layout
+      background-color: $primary-black !important
+      color: $primary-white !important
 
     .d-mailer-order-summary__order-subtitle,
     .d-mailer-order-summary__total-price,
     .d-mailer-cards-lot__event-type,
-    .d-mailer-cards-lot__description-row
+    .d-mailer-cards-lot__description-row,
+    .d-mailer-cards-lot__price,
+    .d-mailer-cards-lot__currency
       color: $cloud-200 !important
+
+    .d-mailer-footer-menu__menu-link
+      color: $cloud-300 !important
+
+    .d-mailer-cards-lot__event-name,
+    .d-mailer-cards-lot__auction-date-label,
+    .d-mailer-cards-lot__limiting-end-label
+      color: $cloud-400 !important
+
+    .d-mailer-footer__legal-wrapper
+      border-top-color: $cloud-500 !important
 
     .d-mailer-order-summary__unit-price,
     .d-mailer-order-summary__count,
@@ -36,38 +50,21 @@ $dummy-mailer-styles: false !default
     .d-mailer-cards-lot__limiting-end
       color: $cloud-500 !important
 
-    .d-mailer-cards-lot__event-name,
-    .d-mailer-cards-lot__auction-date-label,
-    .d-mailer-cards-lot__limiting-end-label
-      color: $cloud-400 !important
-
-    .d-mailer-layout__main-wrapper,
-    .d-mailer-header
-      background-color: $primary-black !important
+    .d-mailer-footer-menu__menu-wrapper
+      border-top-color: $cloud-700 !important
 
     .d-mailer-cards-medium__inner,
     .d-mailer-order-summary__order-wrapper,
     .d-mailer-cards-lot__inner,
     .d-mailer-layout__footer
       background-color: $cloud-800 !important
-
-    .d-mailer-cards-lot__price,
-    .d-mailer-cards-lot__currency
-      color: $mailer-brand-200 !important
-
-    .d-mailer-footer-menu__menu-wrapper
-      border-top-color: $cloud-700 !important
-
-    .d-mailer-footer-menu__menu-link
-      color: $cloud-300 !important
-
-    .d-mailer-footer__legal-wrapper
-      border-top-color: $cloud-500 !important
     
     .btn-primary,
     .btn-redactor--fill
-      color: $mailer-secure-primary-black !important
-      background-color: $mailer-secure-primary-white !important
+      //color: $mailer-secure-primary-black !important
+      //background-color: $mailer-secure-primary-white !important
+      color: $primary-black !important
+      background-color: $primary-white !important
 
     .btn-primary:hover,
     .btn-primary:focus,
@@ -77,9 +74,11 @@ $dummy-mailer-styles: false !default
       text-underline-color: $cloud-200 !important
 
     .btn-secondary
-      border: 2px solid $mailer-secure-primary-white !important
+      //border: 2px solid $mailer-secure-primary-white !important
       background-color: transparent !important
-      color: $mailer-secure-primary-white !important
+      //color: $mailer-secure-primary-white !important
+      color: $primary-white !important
+      border: 2px solid $primary-white !important
 
     .btn-secondary:hover,
     .btn-secondary:focus
@@ -91,6 +90,3 @@ $dummy-mailer-styles: false !default
 
     .d-mailer-cards-lot__hr
       background-color: $cloud-700 !important
-
-    .d-mailer-footer__contact-detail > a
-      color: $mailer-secure-primary-white !important
