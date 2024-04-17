@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Dummy::Mailer::Cards::LotComponent < ApplicationComponent
+  include Dummy::MailerHelper
+
   THUMB_SIZE = "232x322#"
 
   EVENT_TYPES = {

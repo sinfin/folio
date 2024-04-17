@@ -52,14 +52,14 @@
                       valign="top"
                     ]
                       - if item[:total_price].present?
-                        .d-mailer-order-summary__total-price
-                          = item[:total_price]
+                        .d-mailer-order-summary__total-price.text-no-wrap
+                          = insert_html_entity(item[:total_price])
                           | &nbsp;
                           | Kč
 
                       - if item[:unit_price].present?
-                        .d-mailer-order-summary__unit-price
-                          = item[:unit_price]
+                        .d-mailer-order-summary__unit-price.text-no-wrap
+                          = insert_html_entity(item[:unit_price])
                           | &nbsp;
                           | Kč
 
@@ -84,8 +84,8 @@
                       align="left"
                       valign="center"
                     ]
-                      .d-mailer-order-summary__order-total-price
-                        = @total
+                      .d-mailer-order-summary__order-total-price.text-no-wrap
+                        = insert_html_entity(@total)
                         | &nbsp;
                         | Kč
 

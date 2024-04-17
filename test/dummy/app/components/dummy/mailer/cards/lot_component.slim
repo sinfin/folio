@@ -83,7 +83,8 @@
                   span.d-mailer-cards-lot__price-label
                     ' Aktuální cena:
 
-                  span.d-mailer-cards-lot__price = @price
+                  span.d-mailer-cards-lot__price.text-no-wrap
+                    = insert_html_entity(@price)
 
                   span.d-mailer-cards-lot__whitespace-m
                     | &nbsp;
@@ -96,14 +97,16 @@
                   span.d-mailer-cards-lot__auction-date-label
                     ' Živá aukce začíná
 
-                  span.d-mailer-cards-lot__auction-date = @auction_date
+                  span.d-mailer-cards-lot__auction-date.text-no-wrap
+                    = insert_html_entity(@auction_date)
 
               - if @limiting_end.present?
                 .d-mailer-cards-lot__limiting-end-wrapper
                   span.d-mailer-cards-lot__limiting-end-label
                     ' Konec limitování
 
-                  span.d-mailer-cards-lot__limiting-end = @limiting_end
+                  span.d-mailer-cards-lot__limiting-end.text-no-wrap
+                    = insert_html_entity(@limiting_end)
 
               - if @button_label && @button_href
                 = render(Dummy::Mailer::ButtonComponent.new(label: @button_label, href: @button_href, type: :secondary, size: :md))

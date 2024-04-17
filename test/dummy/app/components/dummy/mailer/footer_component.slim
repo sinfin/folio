@@ -5,41 +5,60 @@ table.d-mailer-footer[
     tr
       td.d-mailer-footer__logo-wrapper
         a[
-          href="#"
+          href="https://www.auctea.com/"
           class="d-unlink"
           class="d-mailer-footer__logo-link"
+          class="light-img-parent"
         ]
           img[
-            src="https://auctea-com.s3.amazonaws.com/auctea/mailer/auctify_logo.svg"
-            alt="logo"
-            width="100"
+            src="https://sinfin.davidduben.cz/img/auctify-logo.png"
+            alt=@site.title
+            width="107"
+          ]
+
+        // Logo for dark mode
+        a[
+          href="https://www.auctea.com/"
+          class="d-unlink"
+          class="d-mailer-footer__logo-link"
+          class="dark-img-parent"
+          style="display:none;"
+        ]
+          img[
+            src="https://sinfin.davidduben.cz/img/auctify-logo-white.png"
+            alt=@site.title
+            width="107"
           ]
 
   - if contact_details.present?
     tr
       td.d-mailer-footer__contact-wrapper
-        span.d-mailer-footer__contact-title.fw-bold
-          = t('.contact')
+        .d-mailer-footer__contact-title.fw-bold
+          | Kontakt
 
         - contact_details.each do |key, value|
-          span.d-mailer-footer__contact-detail
-            = value
+          .d-mailer-footer__contact-detail-wrapper
+            *contact_link_with_fallback_tag(key, value)
+              = value
 
   - if @site.social_links.present?
     tr
       td.d-mailer-footer__socials-title-wrapper
-        span.d-mailer-footer__socials-title.fw-bold
-          = t('.follow_us')
+        .d-mailer-footer__socials-title.fw-bold
+          | Sledujte nás
 
     tr
       td.d-mailer-footer__socials-table-wrapper
         = render(Dummy::Mailer::SocialsComponent.new(site: @site))
 
-  - if menu
+  - if current_footer_menu?
     tr
       td.d-mailer-footer__menu-wrapper
-        = render(Dummy::Mailer::FooterMenuComponent.new(site: @site))
+        = render(Dummy::Mailer::FooterMenuComponent.new(site: @site, menu: @menu))
 
   tr
     td.d-mailer-footer__legal-wrapper
-      = @site.copyright_info
+      a.d-mailer-footer__legal-wrapper-link[
+        href="https://sinfin.digital/"
+      ]
+        = @site.copyright_info
