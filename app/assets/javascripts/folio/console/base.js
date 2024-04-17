@@ -96,7 +96,6 @@
 //= require folio/console/lazy_dom/lazy_dom
 //= require folio/console/merges/form/row/row
 //= require folio/console/merges/index/radios/radios
-//= require folio/console/modules/_multiselect
 //= require folio/console/modules/simple-form-with-atoms
 //= require folio/console/nested_model_controls/nested_model_controls
 //= require folio/console/new_record_modal/new_record_modal

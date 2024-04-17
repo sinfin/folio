@@ -28,6 +28,8 @@ SimpleForm::Inputs::CollectionSelectInput.class_eval do
 
       register_stimulus("f-input-collection-remote-select", stimulus_opts)
       iho[:id] = nil unless iho[:id].present?
+    elsif input_options[:input_html] && input_options[:input_html][:multiple]
+      register_stimulus("f-input-multiselect")
     end
 
     if options[:atom_setting]
