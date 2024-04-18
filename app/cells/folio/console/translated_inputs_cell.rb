@@ -9,6 +9,11 @@ class Folio::Console::TranslatedInputsCell < Folio::ConsoleCell
     model[:key]
   end
 
+  def compact
+    args_hash = model[:args]&.find { |arg| arg.is_a?(Hash) && arg.key?(:compact) }
+    args_hash ? args_hash[:compact] : true
+  end
+
   def args
     if translations.size == 1
       label_hash = { label: f.object.class.human_attribute_name(key) }
