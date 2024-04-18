@@ -25,7 +25,8 @@ class Dummy::Mailer::FooterComponent < ApplicationComponent
     if key == :email
       { tag: :a, href: "mailto:#{value}", class: base_class }
     elsif key == :phone
-      { tag: :a, href: "tel:#{value}", class: base_class }
+      value_without_spaces = value.gsub(/\s+/, "")
+      { tag: :a, href: "tel:#{value_without_spaces}", class: base_class }
     else
       { class: base_class }
     end
