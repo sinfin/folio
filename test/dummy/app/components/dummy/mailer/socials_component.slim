@@ -3,12 +3,29 @@ table.d-mailer-socials[
 ]
   tr
     - if social_links.present?
-      - social_links.each do |key, link|
-        td.d-mailer-socials__social-link-wrapper
+      - social_links.each_with_index do |(key, link), index|
+        td.d-mailer-socials__social-link-wrapper[
+          align=(index == 0 ? "left" : index == social_links.size - 1 ? "right" : "center")
+        ]
           a.d-mailer-socials__social-link[
             href=link
-            title=key
             class="d-mailer-socials__social-link--#{key}"
+            class="light-img-parent"
           ]
-            = dummy_ui_icon(key.to_sym,
-                            class_name: 'd-mailer-socials__social-ico')
+            img[
+              src="https://sinfin.davidduben.cz/img/icons/#{key}.png"
+              alt=key
+              width="32"
+            ]
+
+          a.d-mailer-socials__social-link[
+            href=link
+            class="d-mailer-socials__social-link--#{key}"
+            class="dark-img-parent"
+            style="display:none;"
+          ]
+            img[
+              src="https://sinfin.davidduben.cz/img/icons/#{key}-white.png"
+              alt=key
+              width="32"
+            ]

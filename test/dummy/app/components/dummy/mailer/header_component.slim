@@ -4,12 +4,35 @@ table.d-mailer-header[
   tr
     td.d-mailer-header__inner
       a[
-        href="#"
+        href="https://www.auctea.com/"
         class="d-unlink"
         class="d-mailer-header__logo-link"
       ]
-        img[
-          src="https://auctea-com.s3.amazonaws.com/auctea/mailer/auctify_logo.svg"
-          alt="logo"
-          width="170"
-        ]
+        h1.d-mailer-header__logo
+          - if @logo
+            .d-mailer-header__logo-img-wrapper[
+              class="light-img-parent"
+            ]
+              img[
+                src="https://sinfin.davidduben.cz/img/auctify-logo.png"
+                class="d-mailer-header__logo-img"
+                alt=@site.title
+                width="200"
+              ]
+
+            // Logo for dark mode
+            // We won't use a custom dark mode, so we can remove this
+            // In case of invisible logo, we can add fixed white background for header
+            .d-mailer-header__logo-img-wrapper[
+              class="dark-img-parent"
+              style="display:none;"
+            ]
+              img[
+                src="https://sinfin.davidduben.cz/img/auctify-logo-white.png"
+                class="d-mailer-header__logo-img"
+                alt=@site.title
+                width="200"
+              ]
+
+          - else
+            = @site.title
