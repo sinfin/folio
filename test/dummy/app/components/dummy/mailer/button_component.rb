@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Dummy::Mailer::ButtonComponent < ApplicationComponent
-  def initialize(label:, href: nil, type: nil, size: nil)
+  def initialize(label: nil, href: nil, type: nil, size: nil)
     @label = label
     @href = href
     @type = type
