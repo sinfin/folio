@@ -1,8 +1,11 @@
-// overrides for additional blue links
-.d-mailer-body a
-  color: inherit
-  text-decoration: none
-  font-size: inherit
-  font-family: inherit
-  font-weight: inherit
-  line-height: inherit
+$dummy-mailer-styles: false !default
+
+@if $dummy-mailer-styles
+  // overrides for additional blue links
+  .d-mailer-body a
+    color: inherit
+    text-decoration: none
+    font-size: inherit
+    font-family: inherit
+    font-weight: inherit
+    line-height: inherit
