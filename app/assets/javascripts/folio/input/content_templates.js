@@ -63,7 +63,7 @@ window.Folio.Stimulus.register('f-input-content-templates-menu', class extends w
     e.preventDefault()
     const values = JSON.parse(window.decodeURIComponent(e.params.contents))
     const wrap = this.element.closest('.f-input-content-templates-bound')
-    const inputs = wrap.querySelectorAll('[data-controller="f-input-content-templates"]')
+    const inputs = wrap.querySelectorAll('input[data-controller*="f-input-content-templates"]');
 
     inputs.forEach((input, i) => {
       if (values[i]) {
