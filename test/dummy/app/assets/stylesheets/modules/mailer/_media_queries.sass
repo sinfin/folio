@@ -15,6 +15,11 @@ $dummy-mailer-styles: false !default
     +mailer-media-breakpoint-down($mailer-breakpoint-mobile)
       margin: $mailer-gap-a 0 $mailer-gap-a 0 !important
 
+  // layout
+  .d-mailer-layout__content-inner
+    +mailer-media-breakpoint-down($mailer-breakpoint-mobile)
+      padding: 0 0 $mailer-gap-k !important
+
   // header
   .d-mailer-header
     +mailer-media-breakpoint-down($mailer-breakpoint-mobile)
@@ -23,11 +28,6 @@ $dummy-mailer-styles: false !default
 
       &__inner
         padding: $mailer-gap-f 0 !important
-
-  // layout
-  .d-mailer-layout__content-inner
-    +mailer-media-breakpoint-down($mailer-breakpoint-mobile)
-      padding: 0 0 $mailer-gap-k !important
 
   // button
   .d-mailer-button
