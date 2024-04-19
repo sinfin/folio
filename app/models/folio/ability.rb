@@ -11,7 +11,7 @@ class Folio::Ability
     @site = site
 
     alias_action :manage, to: :do_anything
-    alias_action :read, :show, :new, :create, :edit, :update, :destroy, :set_positions, :create_defaults, to: :crud
+    alias_action :index, :show, :new, :create, :edit, :update, :destroy, :set_positions, :create_defaults, to: :crud
 
     ability_rules
   end
@@ -25,6 +25,8 @@ class Folio::Ability
     if user.superadmin?
       can :do_anything, :all
       can :access_console, Folio::Site
+      can :impersonate, Folio::User
+      can :set_superadmin, Folio::User
       can :multisearch_console, Folio::Site
       cannot [:create, :new, :destroy], Folio::Site
       return
@@ -39,6 +41,7 @@ class Folio::Ability
       can [:new], Folio::User # new user do not belong to site yet
       # can :display_miniprofiler, site
 
+
       if user.has_role?(site:, role: :administrator)
         can :do_anything, Folio::User, site_user_links: { site: }
         can :read_administrators, Folio::User
@@ -52,6 +55,7 @@ class Folio::Ability
         can :do_anything, Folio::User, Folio::User.without_site_roles(site:, roles: [:administrator]) do |user|
           !user.has_role?(site:, role: :administrator) && !user.superadmin?
         end
+        cannot :set_administrator, Folio::User
       end
 
       can :do_anything, Folio::File, { site: }
@@ -62,7 +66,8 @@ class Folio::Ability
       can :do_anything, Folio::EmailTemplate, { site: }
       can [:read, :update], Folio::Site, { id: site.id }
 
-      cannot :impersonate, Folio::User
+      cannot :impersonate, Folio::User # `can :do_anything` enabled it, so we must deny it here
+      cannot :set_superadmin, Folio::User
     end
   end
 end
