@@ -103,7 +103,7 @@ class Folio::Console::MenusController < Folio::Console::BaseController
       @menu.class.rails_paths.each do |path, title|
         serialized_menu_paths << {
           title:,
-          label: "#{t('folio.console.menus.link')} - #{title}",
+          label: "#{t('folio.console.menus.link')} / #{title}",
           rails_path: path,
         }
       end
