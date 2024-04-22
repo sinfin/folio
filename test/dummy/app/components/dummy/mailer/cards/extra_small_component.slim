@@ -31,10 +31,7 @@ table.d-mailer-cards-extra-small[
             .d-mailer-cards-extra-small__content-inner
               - if @card[:title].present?
                 *link_with_fallback_tag
-                  .d-mailer-cards-extra-small__title[
-                    style="margin:0;"
-                  ]
-                    = @card[:title]
+                  = @card[:title]
 
               - if @card[:text].present?
                 .d-mailer-cards-extra-small__text[

@@ -12,12 +12,12 @@ class Dummy::Mailer::Cards::MediumComponent < ApplicationComponent
   end
 
   def link_with_fallback_tag
-    base_class = "d-mailer-cards-medium__link"
+    base_class = "d-mailer-cards-medium__title h2"
 
     if @href.present?
       { tag: :a, href: @href, class: base_class, rel: "noopener", target: "_blank" }
     else
-      {}
+      { class: base_class }
     end
   end
 end
