@@ -33,13 +33,19 @@ table.d-mailer-footer[
   - if contact_details.present?
     tr
       td.d-mailer-footer__contact-wrapper
-        .d-mailer-footer__contact-title.fw-bold
-          | Kontakt
+        table.d-mailer-footer__contact-table[
+          role="presentation"
+        ]
+          tr
+            td.d-mailer-footer__contact-title-wrapper
+              .d-mailer-footer__contact-title.fw-bold
+                | Kontakt
 
-        - contact_details.each do |key, value|
-          .d-mailer-footer__contact-detail-wrapper
-            *contact_link_with_fallback_tag(key, value)
-              = value
+          - contact_details.each do |key, value|
+            tr
+              td.d-mailer-footer__contact-detail-wrapper
+                *contact_link_with_fallback_tag(key, value)
+                  = value
 
   - if @site.social_links.present?
     tr
