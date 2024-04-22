@@ -5,10 +5,10 @@
   .row
     - unless options[:use_primary_address_name]
       .col-lg-6
-        = model.input :first_name, required: true, input_html: { id: nil }
+        = model.input :first_name, required: true, input_html: default_input_html(id: nil)
 
       .col-lg-6
-        = model.input :last_name, required: true, input_html: { id: nil }
+        = model.input :last_name, required: true, input_html: default_input_html(id: nil)
 
   - if show_primary_address_fields?
     .f-addresses-fields__fields-wrap[
@@ -19,10 +19,10 @@
         - required = required?(:primary_address, g.object.attributes)
 
         - if options[:use_primary_address_name]
-          = g.input :name, required: required
+          = g.input :name, required: required, input_html: default_input_html
 
         - if options[:use_primary_address_company_name]
-          = g.input :company_name
+          = g.input :company_name, input_html: default_input_html
 
         .row
           .col-lg-7.f-addresses-fields__address-line-1
@@ -33,10 +33,10 @@
 
         .row
           .col-lg-5
-            = g.input :zip, required: required, input_html: { id: nil }
+            = g.input :zip, required: required, input_html: default_input_html(id: nil)
 
           .col-lg-7
-            = g.input :city, required: required, input_html: { id: nil }
+            = g.input :city, required: required, input_html: default_input_html(id: nil)
 
         .row
           .col-lg-7
@@ -48,7 +48,7 @@
                       as: :phone,
                       default_country_code: data_country_code(:primary_address),
                       required: required && required_phone?(g),
-                      input_html: { id: nil }
+                      input_html: default_input_html(id: nil)
 
   - if show_secondary_address_fields?
     .f-addresses-fields__nested
@@ -61,17 +61,17 @@
             - model.simple_fields_for :secondary_address do |g|
               - required = required?(:secondary_address, g.object.attributes)
 
-              = g.input :name, input_html: { id: nil }
+              = g.input :name, input_html: default_input_html(id: nil)
 
-              = g.input :company_name, input_html: { id: nil }
-
-              .row
-                .col-lg-7
-                  = g.input :identification_number, input_html: { id: nil }
+              = g.input :company_name, input_html: default_input_html(id: nil)
 
               .row
                 .col-lg-7
-                  = g.input :vat_identification_number, input_html: { id: nil }
+                  = g.input :identification_number, input_html: default_input_html(id: nil)
+
+              .row
+                .col-lg-7
+                  = g.input :vat_identification_number, input_html: default_input_html(id: nil)
 
               .row
                 .col-lg-7.f-addresses-fields__address-line-1
@@ -82,10 +82,10 @@
 
               .row
                 .col-lg-5
-                  = g.input :zip, required: required, input_html: { id: nil }
+                  = g.input :zip, required: required, input_html: default_input_html(id: nil)
 
                 .col-lg-7
-                  = g.input :city, required: required, input_html: { id: nil }
+                  = g.input :city, required: required, input_html: default_input_html(id: nil)
 
               .row
                 .col-lg-7

@@ -57,7 +57,10 @@ class Folio::Addresses::FieldsCell < Folio::ApplicationCell
             disabled:,
             only:,
             priority:,
-            input_html: { class: "f-addresses-fields__country-code-input", id: nil },
+            input_html: {
+              **default_input_html(id: nil),
+              class: "f-addresses-fields__country-code-input",
+            },
             include_blank: false
   end
 
@@ -65,8 +68,17 @@ class Folio::Addresses::FieldsCell < Folio::ApplicationCell
     g.input key,
             disabled:,
             required:,
-            input_html: { id: nil },
+            input_html: default_input_html(id: nil),
             label: "<span class=\"f-addresses-fields__address-line-label f-addresses-fields__address-line-label--regular\">#{t(".#{key}_regular")}</span> \
                     <span class=\"f-addresses-fields__address-line-label f-addresses-fields__address-line-label--inline\">#{t(".#{key}_inline")}</span>".html_safe
+  end
+
+  def default_input_html(id: false)
+    h = {}
+
+    h[:id] = id unless id == false
+    h[:autocomplete] = "no" if options[:disable_autocomplete]
+
+    h
   end
 end
