@@ -30,90 +30,114 @@ table.d-mailer-cards-lot[
 
             - if @folio_image.present?
               /[if mso]
-                <td style="width:336px;padding:16px;" valign="top">
+                <td style="width:368px;" valign="top">
 
             - else
               /[if mso]
-                <td style="padding:16px;" valign="top">
+                <td valign="top">
 
             .d-mailer-cards-lot__content-wrapper[
               class=(@folio_image.present? ? "lot-col-lg" : "col-full")
             ]
-              .d-mailer-cards-lot__content-inner
-                .d-mailer-cards-lot__title-block
-                  - if @author.present?
-                    .d-mailer-cards-lot__author = @author
+              table.d-mailer-cards-lot__content-table[
+                role="presentation"
+              ]
+                tr
+                  td.d-mailer-cards-lot__content-table-wrapper
+                    table.d-mailer-cards-lot__content-table-wrapper-inner
+                      tr
+                        td.d-mailer-cards-lot__title-block
+                          - if @author.present?
+                            .d-mailer-cards-lot__author = @author
 
-                  - if @name.present?
-                    .d-mailer-cards-lot__name = @name
+                          - if @name.present?
+                            .d-mailer-cards-lot__name = @name
 
-                  .d-mailer-cards-lot__event
-                    - if @event[:type].present?
-                      span.d-mailer-cards-lot__event-type
-                        = event_type
+                          .d-mailer-cards-lot__event
+                            - if @event[:type].present?
+                              span.d-mailer-cards-lot__event-type
+                                = event_type
 
-                      span.d-mailer-cards-lot__whitespace-s
-                        | &nbsp;
+                              span.d-mailer-cards-lot__whitespace-s
+                                | &nbsp;
 
-                    - if @event[:name].present?
-                      span.d-mailer-cards-lot__event-name
-                        = @event[:name]
+                            - if @event[:name].present?
+                              span.d-mailer-cards-lot__event-name
+                                = @event[:name]
 
-                .d-mailer-cards-lot__hr
+                      tr.d-mailer-cards-lot__divider-row
+                        td.d-mailer-cards-lot__divider-wrapper
+                          table[
+                            role="presentation"
+                            width="100%"
+                          ]
+                            tr
+                              td.d-mailer-cards-lot__divider
 
-                .d-mailer-cards-lot__description-block
-                  - if description
-                    - description.each_with_index do |value, index|
-                      .d-mailer-cards-lot__description-row[
-                        style="line-height: 1.5;"
-                      ]
-                        = value
+                      tr
+                        td.d-mailer-cards-lot__description-block
+                          - if description
+                            - description.each_with_index do |value, index|
+                              .d-mailer-cards-lot__description-row[
+                                style="line-height: 1.5;"
+                              ]
+                                = value
 
-                  - if @id.present?
-                    .d-mailer-cards-lot__id-wrapper
-                      span.d-mailer-cards-lot__id-prefix
-                        ' #
+                          - if @id.present?
+                            .d-mailer-cards-lot__id-wrapper
+                              span.d-mailer-cards-lot__id-prefix
+                                ' #
 
-                      span.d-mailer-cards-lot__id = @id
+                              span.d-mailer-cards-lot__id = @id
 
-                .d-mailer-cards-lot__hr
+                      tr.d-mailer-cards-lot__divider-row
+                        td.d-mailer-cards-lot__divider-wrapper
+                          table[
+                            role="presentation"
+                            width="100%"
+                          ]
+                            tr
+                              td.d-mailer-cards-lot__divider
 
-                .d-mailer-cards-lot__auction-data-block
-                  - if auction_status
-                    .d-mailer-cards-lot__auction-status = auction_status
+                      tr
+                        td.d-mailer-cards-lot__auction-data-block
+                          - if auction_status
+                            .d-mailer-cards-lot__auction-status = auction_status
 
-                  - if @price.present?
-                    .d-mailer-cards-lot__current-price
-                      span.d-mailer-cards-lot__price-label
-                        ' Aktuální cena:
+                          - if @price.present?
+                            .d-mailer-cards-lot__current-price
+                              span.d-mailer-cards-lot__price-label
+                                ' Aktuální cena:
 
-                      span.d-mailer-cards-lot__price.text-no-wrap
-                        = insert_html_entity(@price)
+                              span.d-mailer-cards-lot__price.text-no-wrap
+                                = insert_html_entity(@price)
 
-                      span.d-mailer-cards-lot__whitespace-m
-                        | &nbsp;
+                              span.d-mailer-cards-lot__whitespace-m
+                                | &nbsp;
 
-                      span.d-mailer-cards-lot__currency
-                        | Kč
+                              span.d-mailer-cards-lot__currency
+                                | Kč
 
-                  - if @auction_date.present?
-                    .d-mailer-cards-lot__auction-date-wrapper
-                      span.d-mailer-cards-lot__auction-date-label
-                        ' Živá aukce začíná
+                          - if @auction_date.present?
+                            .d-mailer-cards-lot__auction-date-wrapper
+                              span.d-mailer-cards-lot__auction-date-label
+                                ' Živá aukce začíná
 
-                      span.d-mailer-cards-lot__auction-date.text-no-wrap
-                        = insert_html_entity(@auction_date)
+                              span.d-mailer-cards-lot__auction-date.text-no-wrap
+                                = insert_html_entity(@auction_date)
 
-                  - if @limiting_end.present?
-                    .d-mailer-cards-lot__limiting-end-wrapper
-                      span.d-mailer-cards-lot__limiting-end-label
-                        ' Konec limitování
+                          - if @limiting_end.present?
+                            .d-mailer-cards-lot__limiting-end-wrapper
+                              span.d-mailer-cards-lot__limiting-end-label
+                                ' Konec limitování
 
-                      span.d-mailer-cards-lot__limiting-end.text-no-wrap
-                        = insert_html_entity(@limiting_end)
+                              span.d-mailer-cards-lot__limiting-end.text-no-wrap
+                                = insert_html_entity(@limiting_end)
 
-                  - if @button_label && @button_href
-                    = render(Dummy::Mailer::ButtonComponent.new(label: @button_label, href: @button_href, type: :secondary, size: :md))
+                      tr
+                        td.d-mailer-cards-lot__button-block
+                          - if @button_label && @button_href
+                            = render(Dummy::Mailer::ButtonComponent.new(label: @button_label, href: @button_href, type: :secondary, size: :md))
 
             /[if mso]
               </td>

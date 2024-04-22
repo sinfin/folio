@@ -7,14 +7,25 @@ $dummy-mailer-styles: false !default
     &__wrapper
       padding: $mailer-gap-g 0 0 0
 
-    &__inner
+    &__inner,
+    &__content-table,
+    &__content-table-wrapper-inner
       width: 100%
+
+    &__inner
       background-color: $cloud-100
       border-radius: $mailer-border-radius
 
-    &__inner-wrapper
+    &__wrapper,
+    &__inner-wrapper,
+    &__content-table-wrapper
       font-size: 0
+
+    &__inner-wrapper
       padding: $mailer-gap-b
+
+    &__content-table-wrapper
+      padding: $mailer-gap-d
 
     &__image-wrapper, &__content-wrapper
       display: inline-block
@@ -41,15 +52,22 @@ $dummy-mailer-styles: false !default
     &__content-wrapper.col-full
       max-width: 100%
 
-    &__content-inner
-      padding: $mailer-gap-d
-      text-align: left
+    &__divider,
+    &__description-block,
+    &__auction-data-block
+      font-size: 0
+      padding: 0
 
     &__title-block
-      margin: $mailer-gap-d 0 0 0
+      font-size: 0
+      padding: $mailer-gap-d 0 0 0
 
-    &__auction-data-block
-      margin: 0 0 $mailer-gap-b
+    &__button-block
+      font-size: 0
+      padding: $mailer-gap-e 0 $mailer-gap-b 0
+
+    &__button-block > .d-mailer-button
+      margin: 0
 
     &__author
       +mailer-font-size-display-s
@@ -121,9 +139,11 @@ $dummy-mailer-styles: false !default
     &__whitespace-m
       +mailer-font-size-text-m
 
-    &__hr
+    &__divider-wrapper
+      font-size: 0
+      padding: $mailer-gap-e 0
+
+    &__divider
       height: 1px
       width: 100%
       background-color: $cloud-200
-      margin: $mailer-gap-e 0
-      padding: 0
