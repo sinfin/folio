@@ -7,7 +7,9 @@ table.d-mailer-cards-extra-small[
       align="center"
       valign="top"
     ]
-      table
+      table[
+        role="presentation"
+      ]
         tr
           - if @card[:image].present?
             td.d-mailer-cards-extra-small__image-wrapper[

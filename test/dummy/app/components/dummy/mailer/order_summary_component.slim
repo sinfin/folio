@@ -1,5 +1,7 @@
 .d-mailer-order-summary
-  table.d-mailer-order-summary__inner
+  table.d-mailer-order-summary__inner[
+    role="presentation"
+  ]
     - if @title.present?
       tr
         td.d-mailer-order-summary__title-wrapper[
@@ -16,7 +18,9 @@
           - @items.each do |item|
             tr.d-mailer-order-summary__order-item-row
               td.d-mailer-order-summary__item-wrapper
-                table.d-mailer-order-summary__item
+                table.d-mailer-order-summary__item[
+                  role="presentation"
+                ]
                   tr
                     td.d-mailer-order-summary__order-item-column[
                       class="d-mailer-order-summary__order-item-column--image"
@@ -74,7 +78,9 @@
           - if @total.present?
             tr
               td.d-mailer-order-summary__order-total-price-wrapper
-                table.d-mailer-order-summary__order-price
+                table.d-mailer-order-summary__order-price[
+                  role="presentation"
+                ]
                   tr
                     td.d-mailer-order-summary__order-total-price-title-column[
                       align="left"
