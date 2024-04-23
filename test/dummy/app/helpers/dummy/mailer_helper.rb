@@ -4,7 +4,9 @@ module Dummy::MailerHelper
   ALLOWED_SEPARATORS = [" ", ".", ":"]
   HTML_ENTITY = "&#173;"
 
-  # function for prevent automatic conversion to link
+  # Function for prevent automatic conversion to link
+  # Some mobile clients make this automatic conversion, eg. for amounts
+  # Without this hack, eg. the amount 100 000 would be converted to a (broken) link
   def insert_html_entity(string)
     sanitized_string = sanitize(string)
 
