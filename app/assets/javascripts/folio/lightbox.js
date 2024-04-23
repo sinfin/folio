@@ -6,7 +6,12 @@ window.Folio.Stimulus.register('f-lightbox', class extends window.Stimulus.Contr
 
   onItemClick (e) {
     e.preventDefault()
-    this.startPhotoSwipe(this.itemTargets.indexOf(e.currentTarget))
+
+    if (e.currentTarget.dataset.fLightboxIndex) {
+      this.startPhotoSwipe(parseInt(e.currentTarget.dataset.fLightboxIndex))
+    } else {
+      this.startPhotoSwipe(this.itemTargets.indexOf(e.currentTarget))
+    }
   }
 
   dataSource () {
