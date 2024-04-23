@@ -54,6 +54,14 @@ Due usage of `dragonfly_libvips` gem from on-fly processing images, You need to 
 
 To run tests successfully, you need to have installed `ffmpeg` on your system.
 
+## `Current` singleton
+
+We use `Current` per request singleton to store few interesting data (`.site` , `.user` ...).
+Using `current_user` and `current_site` is now deprecated.
+Aplication should implement it's own `Current` class (no namespace!) inheriting from `Folio::Current`.
+If your `ApplicationController` do not include `Folio::ApplicationControllerBase` you have to fill data for yourself (or include at least `Folio::SetCurrentRequestDetails`).
+
+
 ## Attachments
 
 ### Image metadata module

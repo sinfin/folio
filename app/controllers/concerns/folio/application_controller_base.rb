@@ -2,6 +2,7 @@
 
 module Folio::ApplicationControllerBase
   extend ActiveSupport::Concern
+  include Folio::SetCurrentRequestDetails
   include Folio::SetMetaVariables
   include Folio::HasCurrentSite
   include Folio::Devise::CrossdomainController
