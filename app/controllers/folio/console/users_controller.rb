@@ -19,7 +19,9 @@ class Folio::Console::UsersController < Folio::Console::BaseController
     @user.sign_out_everywhere! if @user == current_user
     session[:true_user_id] = current_user.id
     bypass_sign_in @user, scope: :user
+
     redirect_to after_impersonate_path,
+                allow_other_host: true,
                 flash: { success: t(".success", label: @user.to_label) }
   end
 
