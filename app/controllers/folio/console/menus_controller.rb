@@ -114,11 +114,9 @@ class Folio::Console::MenusController < Folio::Console::BaseController
                       record.try(:title) ||
                       record.model_name.human
 
-        label = [record.model_name.human, record_name].compact.join(" / ")
-
         serialized_menu_paths << {
           title: record_name,
-          label: ActionController::Base.helpers.truncate(label, length: 50),
+          label: [record.model_name.human, record_name].compact.join(" / "),
           target_type: record.class.base_class.to_s,
           target_id: record.id,
         }
