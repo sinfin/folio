@@ -12,6 +12,8 @@ en:
     omniauth_callbacks:
       signed_in: Signed in successfully.
       signed_up: Signed up successfully.
+    failure:
+      user_locked: Your account was locked. Please contact the site administrator.
 
   folio:
     devise:

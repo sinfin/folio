@@ -79,9 +79,16 @@ class Folio::Console::BaseControllerTest < ActionDispatch::IntegrationTest
   attr_reader :superadmin, :site
 
   def setup
+    ::Current.original_reset
     create_and_host_site
     @superadmin = create(:folio_user, :superadmin)
     sign_in @superadmin
+  end
+
+  def sign_in(resource, scope: nil)
+    ::Current.user = resource
+    ::Current.site = @site
+    super
   end
 
   def url_for(options = nil)

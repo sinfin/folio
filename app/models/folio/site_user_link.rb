@@ -68,6 +68,7 @@ end
 #  roles      :jsonb
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  locked_at  :datetime
 #
 # Indexes
 #

@@ -21,6 +21,8 @@ cs:
         instructions: "pro dokončení %{provider} přihlášení klikněte na odkaz níže:"
         button: Dokončit přihlášení
         footer: Pokud jste si toto nevyžádali, ignorujte tento e-mail. Váš účet se nezmění dokud neotevřete výše uvedený odkaz.
+    failure:
+      user_locked: Váš účet byl zamknutý. Prosím kontaktujte správce.
 
   folio:
     devise:

@@ -4,7 +4,11 @@ module Folio::SetCurrentRequestDetails
   extend ActiveSupport::Concern
 
   included do
-    before_action do
+    prepend_before_action :set_up_current_from_request
+  end
+
+  private
+    def set_up_current_from_request
       if defined?(::Current)
         ::Current.request_id = request.uuid
         ::Current.user_agent = request.user_agent
@@ -14,5 +18,4 @@ module Folio::SetCurrentRequestDetails
         ::Current.user = current_user
       end
     end
-  end
 end

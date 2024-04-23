@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_10_094212) do
+ActiveRecord::Schema[7.1].define(version: 2024_04_23_114227) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -187,7 +187,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_10_094212) do
     t.index ["file_id"], name: "index_folio_file_placements_on_file_id"
     t.index ["placement_title"], name: "index_folio_file_placements_on_placement_title"
     t.index ["placement_title_type"], name: "index_folio_file_placements_on_placement_title_type"
-    t.index ["placement_type", "placement_id"], name: "index_folio_file_placements_on_placement_type_and_placement_id"
+    t.index ["placement_type", "placement_id"], name: "index_folio_file_placements_on_placement"
     t.index ["type"], name: "index_folio_file_placements_on_type"
   end
 
@@ -381,6 +381,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_10_094212) do
     t.jsonb "roles", default: []
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "locked_at"
     t.index ["site_id"], name: "index_folio_site_user_links_on_site_id"
     t.index ["user_id"], name: "index_folio_site_user_links_on_user_id"
   end
@@ -496,7 +497,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_10_094212) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE(content, ''::text)))", name: "index_pg_search_documents_on_public_search", using: :gin
-    t.index ["searchable_type", "searchable_id"], name: "index_pg_search_documents_on_searchable_type_and_searchable_id"
+    t.index ["searchable_type", "searchable_id"], name: "index_pg_search_documents_on_searchable"
   end
 
   create_table "taggings", id: :serial, force: :cascade do |t|

@@ -45,6 +45,8 @@ class Folio::User < Folio::ApplicationRecord
 
   devise(*selected_device_modules, devise_options)
 
+  include Folio::IsSiteLockable # must be after Devise
+
   has_many :authentications, class_name: "Folio::Omniauth::Authentication",
                              foreign_key: :folio_user_id,
                              inverse_of: :user,
