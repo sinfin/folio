@@ -5,7 +5,7 @@ module Folio::IsSiteLockable
   include Folio::HasSiteRoles
 
   def locked?
-    locked_for?(::Current.site || Folio.main_site)
+    locked_for?(Folio::Current.site || Folio.main_site)
   end
 
   def locked_for?(site)

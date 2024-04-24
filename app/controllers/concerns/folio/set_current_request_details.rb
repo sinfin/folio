@@ -9,13 +9,13 @@ module Folio::SetCurrentRequestDetails
 
   private
     def set_up_current_from_request
-      if defined?(::Current) && ::Current.request_id.nil?
-        ::Current.request_id = request.uuid
-        ::Current.user_agent = request.user_agent
-        ::Current.ip_address = request.ip
-        ::Current.url = request.url
-        ::Current.site = current_site # TODO merge Folio::HasCurrentSite ?
-        ::Current.user = current_user
+      if Folio::Current.request_id.nil?
+        Folio::Current.request_id = request.uuid
+        Folio::Current.user_agent = request.user_agent
+        Folio::Current.ip_address = request.ip
+        Folio::Current.url = request.url
+        Folio::Current.site = current_site # TODO merge Folio::HasCurrentSite ?
+        Folio::Current.user = current_user
       end
     end
 end
