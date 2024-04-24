@@ -98,6 +98,14 @@ class Folio::User < Folio::ApplicationRecord
     where(console_path: path).where("console_path_updated_at > ?", 5.minutes.ago)
   end
 
+  scope :locked_for, -> (site) {
+    joins(:site_user_links).merge(Folio::SiteUserLink.by_site(site).locked)
+  }
+
+  scope :unlocked_for, -> (site) {
+    joins(:site_user_links).merge(Folio::SiteUserLink.by_site(site).unlocked)
+  }
+
   pg_search_scope :by_full_name_query,
                   against: %i[last_name first_name],
                   ignoring: :accents,

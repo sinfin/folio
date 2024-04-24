@@ -27,6 +27,9 @@ class Folio::SiteUserLink < Folio::ApplicationRecord
   scope :by_site, -> (site) { where(site:) }
   scope :by_user, -> (site) { where(user:) }
 
+  scope :locked, -> { where(["locked_at < ?", Time.current]) }
+  scope :unlocked, -> { where(locked_at: nil) }
+
   audited associated_with: :user
 
   def self.non_nillifiable_fields

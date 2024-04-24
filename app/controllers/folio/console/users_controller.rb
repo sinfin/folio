@@ -7,6 +7,23 @@ class Folio::Console::UsersController < Folio::Console::BaseController
 
   before_action :skip_email_reconfirmation, only: [:update]
 
+  def index
+    @tabs = [
+      {
+        href: url_for([:console, Folio::User, params: { tab: :active }]),
+        active: params[:tab].to_s == "active",
+        label: t(".active_users_tab")
+        # Folio::User.unlocked_for(site).
+      },
+      {
+        href: url_for([:console, Folio::User, params: { tab: :locked }]),
+        active: params[:tab].to_s == "locked",
+        label: t(".locked_users_tab")
+        # Folio::User.locked_for(site)
+      },
+    ]
+  end
+
   def send_reset_password_email
     @user.send_reset_password_instructions
     redirect_back fallback_location: url_for([:console, @user]),
