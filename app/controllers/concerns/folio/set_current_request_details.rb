@@ -9,7 +9,7 @@ module Folio::SetCurrentRequestDetails
 
   private
     def set_up_current_from_request
-      if defined?(::Current)
+      if defined?(::Current) && ::Current.request_id.nil?
         ::Current.request_id = request.uuid
         ::Current.user_agent = request.user_agent
         ::Current.ip_address = request.ip

@@ -112,6 +112,8 @@ class Folio::Users::SessionsController < Devise::SessionsController
   end
 
   def require_no_authentication
+    safe_set_up_current_from_request
+
     result = handle_crossdomain_devise
 
     if result && result.action == :noop

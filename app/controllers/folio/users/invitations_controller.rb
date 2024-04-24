@@ -127,6 +127,8 @@ class Folio::Users::InvitationsController < Devise::InvitationsController
     end
 
     def require_no_authentication
+      safe_set_up_current_from_request
+
       super
 
       if resource.nil? && current_user
