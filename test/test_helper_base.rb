@@ -15,6 +15,8 @@ require Folio::Engine.root.join("test/support/action_mailer_test_helper")
 require Folio::Engine.root.join("test/support/method_invoking_matchers_helper")
 require Folio::Engine.root.join("test/support/sites_helper")
 
+Rails.application.config.active_job.queue_adapter = :test
+
 # Filter out Minitest backtrace while allowing backtrace from other libraries
 # to be shown.
 Minitest.backtrace_filter = Minitest::BacktraceFilter.new

@@ -24,6 +24,8 @@ Rails.application.configure do
   config.consider_all_requests_local       = true
   config.action_controller.perform_caching = false
 
+  config.active_job.queue_adapter = :test
+
   # Raise exceptions instead of rendering exception templates.
   config.action_dispatch.show_exceptions = :none
 
