@@ -285,6 +285,7 @@ cs:
     link_label: Text odkazu
     link_url: URL odkazu
     locale: Jazyková verze
+    locked: Uzamčen
     meta_description: Alternativní popis (SEO - Meta Description)
     meta_title: Alternativní titulek (SEO - Meta Title)
     name: Jméno
