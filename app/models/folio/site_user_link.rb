@@ -56,6 +56,20 @@ class Folio::SiteUserLink < Folio::ApplicationRecord
   def to_s
     "#{user.email} - #{site.domain} - #{roles}"
   end
+
+  def locked=(bool)
+    return if bool == locked?
+
+    self.locked_at = bool ? Time.current : nil
+  end
+
+  def locked?
+    locked_at.present?
+  end
+
+  def locked
+    locked?
+  end
 end
 
 # == Schema Information

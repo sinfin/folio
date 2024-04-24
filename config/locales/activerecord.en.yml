@@ -207,6 +207,7 @@ en:
     link_label: Link label
     link_url: Link URL
     locale: Locale
+    locked: Locked
     meta_description: SEO - Meta Description
     meta_title: SEO - Meta Title
     name: Name

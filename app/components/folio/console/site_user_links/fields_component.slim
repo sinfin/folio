@@ -24,6 +24,9 @@
               = g.label(:site_id,
                         site_link.site.domain,
                         class: "form-check-label form-label m-0")
+            .locked-toggle
+              = "TODO: locked toggle with `disabled: can_now?(:set_locked, site_link)`"
+
 
           .f-c-site-user-links-fields__link-roles
             - roles_for(site_link).each do |role_label, role_key|
@@ -40,7 +43,7 @@
                             for: id,
                             class: "form-check-label form-label m-0")
   - elsif @user
-    - if can_now?(:manage, :all)
+    - if can_now?(:set_superadmin, @user)
       strong.f-c-site-user-links-fields__status.mb-g
         = status_icon(@user.superadmin)
         = @user.class.human_attribute_name(:superadmin)
@@ -52,6 +55,9 @@
             .f-c-site-user-links-fields__status
               = status_icon(site_link.persisted?)
               = site_link.site.domain
+
+            .f-c-site-user-links-fields__locked-toggle
+              = "TODO: locked toggle"
 
           .f-c-site-user-links-fields__link-roles
             - roles_for(site_link).each do |role_label, role_key|
