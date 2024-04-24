@@ -52,6 +52,16 @@ Folio::Site.create!(title: "Sinfin.digital",
                     })
 puts "Created Folio::Site"
 
+puts "Creating Folio::User test@test.test (superadmin)"
+puts("Should call folio:seed_test_account task")
+Folio::User.create!(first_name: "Test",
+                    last_name: "Test",
+                    email: "test@test.test",
+                    password: "test@test.test",
+                    confirmed_at: Time.current,
+                    superadmin: true)
+puts "Created Folio::User test@test.test (superadmin)"
+
 puts "Creating Dummy::Menu::Nestable"
 menu = Dummy::Menu::Nestable.create!(locale: :cs, title: "Nestable", site: ::Folio.main_site)
 
@@ -176,3 +186,6 @@ menu = Dummy::Menu::Footer.create!(locale: :cs, title: "Footer", site: ::Folio.m
 end
 
 puts "Created Dummy::Menu::Footer"
+
+puts "Creating Dummy::HomePage"
+

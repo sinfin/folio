@@ -9,6 +9,7 @@
       h3 No label
 
       - page = Folio::Page.last
+      - raise "No Folio::Page found!" if page.blank?
 
       = render(Dummy::Ui::BooleanToggleComponent.new(record: page,
                                                      url: controller.folio.url_for([:console, page]),

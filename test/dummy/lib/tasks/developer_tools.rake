@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 namespace :developer_tools do
+  task idp_seed_all: %i[idp_seed_singleton_pages
+                        idp_seed_page_titles
+                        idp_seed_singleton_menus]
+                        #idp_seed_dummy_images]
+
   task idp_seed_singleton_pages: :environment do
     Rails.logger.silence do
       Dir.glob(Rails.root.join("data/seed/pages/*.yml")).each do |yaml_path|
@@ -12,6 +17,7 @@ namespace :developer_tools do
 
           klass.create!(title: data["title"],
                         perex: data["perex"],
+                        site: Folio.main_site,
                         published: true,
                         published_at: 1.minute.ago)
 
@@ -36,6 +42,7 @@ namespace :developer_tools do
             record = Folio::Page.create!(title: attrs["title"],
                                          perex: attrs["perex"],
                                          published: true,
+                                         site: Folio.main_site,
                                          published_at: 1.minute.ago)
 
             if attrs["atoms"].present?
@@ -83,7 +90,9 @@ namespace :developer_tools do
         if !klass.exists? || ENV["FORCE"] || ENV["FORCE_SINGLETON"] == klass.to_s
           klass.find_each { |o| o.try(:force_destroy=, true); o.destroy! }
 
-          menu = klass.create!(title: data["title"], locale: "en")
+          menu = klass.create!(title: data["title"],
+                               locale: "en",
+                               site: Folio.main_site)
 
           if data["links"].present?
             count = 0
