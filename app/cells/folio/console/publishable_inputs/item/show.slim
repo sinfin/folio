@@ -1,41 +1,35 @@
 div class=class_name data=data
   .f-c-publishable-inputs-item__inner
-    - if can_field?
-      = f.input field,
-                hint: false,
-                input_html: input_html('checkbox', checkbox: true),
-                wrapper_html: { class: 'f-c-publishable-inputs-item__group' },
-                atom_setting: field
+    = f.input field,
+              hint: false,
+              input_html: input_html('checkbox', checkbox: true),
+              wrapper_html: { class: 'f-c-publishable-inputs-item__group' },
+              atom_setting: field
 
-      - if date_at?
-        .f-c-publishable-inputs-item__date.small
-          = f.input "#{field}_at",
-                    label: false,
-                    hint: false,
-                    wrapper_html:,
-                    input_html: input_html('input', placeholder: t('.at')),
-                    atom_setting: "#{field}_at"
+    - if date_at?
+      .f-c-publishable-inputs-item__date.small
+        = f.input "#{field}_at",
+                  label: false,
+                  hint: false,
+                  wrapper_html:,
+                  input_html: input_html('input', placeholder: t('.at')),
+                  atom_setting: "#{field}_at"
 
-      - elsif date_between?
-        .f-c-publishable-inputs-item__date.small
-          = f.input "#{field}_from",
-                    label: false,
-                    hint: false,
-                    wrapper_html:,
-                    input_html: input_html('input', placeholder: t('.from')),
-                    atom_setting: "#{field}_from"
+    - elsif date_between?
+      .f-c-publishable-inputs-item__date.small
+        = f.input "#{field}_from",
+                  label: false,
+                  hint: false,
+                  wrapper_html:,
+                  input_html: input_html('input', placeholder: t('.from')),
+                  atom_setting: "#{field}_from"
 
-          = f.input "#{field}_until",
-                    label: false,
-                    hint: false,
-                    wrapper_html:,
-                    input_html: input_html('input', placeholder: t('.to')),
-                    atom_setting: "#{field}_until"
-
-    - else
-      .f-c-publishable-inputs-item__group
-        ' #{f.object.class.human_attribute_name(field)}:
-        ' #{t(f.object.send(field))}
+        = f.input "#{field}_until",
+                  label: false,
+                  hint: false,
+                  wrapper_html:,
+                  input_html: input_html('input', placeholder: t('.to')),
+                  atom_setting: "#{field}_until"
 
   - if field == :published
     == cell('folio/console/ui/warning_ribbon',

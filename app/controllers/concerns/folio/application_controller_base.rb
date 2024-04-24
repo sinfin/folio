@@ -63,7 +63,6 @@ module Folio::ApplicationControllerBase
     end
   end
 
-
   private
     def authenticate_account! # backward compatibility method, do not use
       authenticate_user!
