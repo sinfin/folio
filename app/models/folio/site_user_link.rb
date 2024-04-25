@@ -61,9 +61,16 @@ class Folio::SiteUserLink < Folio::ApplicationRecord
   end
 
   def locked=(bool)
-    return if bool == locked?
+    proper_bool = case bool
+                  when String
+                    bool != "0"
+                  else
+                    bool
+    end
 
-    self.locked_at = bool ? Time.current : nil
+    return if proper_bool == locked?
+
+    self.locked_at = proper_bool ? Time.current : nil
   end
 
   def locked?

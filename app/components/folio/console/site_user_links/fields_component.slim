@@ -24,9 +24,6 @@
               = g.label(:site_id,
                         site_link.site.domain,
                         class: "form-check-label form-label m-0")
-            .locked-toggle
-              = "TODO: locked toggle with `disabled: can_now?(:set_locked, site_link)`"
-
 
           .f-c-site-user-links-fields__link-roles
             - roles_for(site_link).each do |role_label, role_key|
@@ -42,6 +39,14 @@
                             role_label,
                             for: id,
                             class: "form-check-label form-label m-0")
+
+          .f-c-site-user-links-fields__link-toggle-wrap
+            = render(Folio::Console::Ui::BooleanToggleComponent.new(record: site_link,
+                                                                    attribute: :locked,
+                                                                    f: g,
+                                                                    label: true,
+                                                                    disabled: !can_now?(:set_locked, site_link)))
+
   - elsif @user
     - if can_now?(:set_superadmin, @user)
       strong.f-c-site-user-links-fields__status.mb-g
@@ -56,12 +61,15 @@
               = status_icon(site_link.persisted?)
               = site_link.site.domain
 
-            .f-c-site-user-links-fields__locked-toggle
-              = "TODO: locked toggle"
-
           .f-c-site-user-links-fields__link-roles
             - roles_for(site_link).each do |role_label, role_key|
               .f-c-users__site-link__role
                 .f-c-site-user-links-fields__status
                   = status_icon(site_link.roles.present? && site_link.roles.include?(role_key))
                   = role_label
+
+          / .f-c-site-user-links-fields__link-toggle-wrap
+          /   = render(Folio::Console::Ui::BooleanToggleComponent.new(record: site_link,
+          /                                                           attribute: :locked,
+          /                                                           label: true,
+          /                                                           disabled: !can_now?(:set_locked, site_link)))

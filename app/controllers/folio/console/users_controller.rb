@@ -140,7 +140,7 @@ class Folio::Console::UsersController < Folio::Console::BaseController
     end
 
     def site_user_links_params
-      [ site_user_links_attributes: [:site_id, roles: []] ]
+      [ site_user_links_attributes: [:site_id, :locked, roles: []] ]
     end
 
     def additional_user_params

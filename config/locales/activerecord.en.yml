@@ -6,6 +6,7 @@ en:
         roles: Role
         roles/administrator: Administrator
         roles/manager: Manager
+        locked: Locked
       folio/atom/base:
         content: Content
         perex: Perex
