@@ -37,8 +37,22 @@ window.Folio.Input.DateRange.i18n = {
   },
   en: {
     config: {
-      format: 'DD. MM. YYYY',
-      separator: ' - '
+      locale: {
+        format: 'DD. MM. YYYY',
+        separator: ' - '
+      },
+      showCustomRangeLabel: true,
+      ranges: {
+        Today: [window.moment(), window.moment()],
+        Yesterday: [window.moment().subtract(1, 'days'), window.moment().subtract(1, 'days')],
+        'This week': [window.moment().startOf('week'), window.moment().endOf('week')],
+        'Last week': [window.moment().subtract(1, 'week').startOf('week'), window.moment().subtract(1, 'week').endOf('week')],
+        'Last 30 days': [window.moment().subtract(29, 'days'), window.moment()],
+        'This month': [window.moment().startOf('month'), window.moment().endOf('month')],
+        'Last month': [window.moment().subtract(1, 'month').startOf('month'), window.moment().subtract(1, 'month').endOf('month')],
+        'This year': [window.moment().startOf('year'), window.moment().endOf('year')],
+        'Last year': [window.moment().subtract(1, 'year').startOf('year'), window.moment().subtract(1, 'year').endOf('year')]
+      }
     }
   }
 }
@@ -53,12 +67,12 @@ window.Folio.Input.DateRange.bindDatepicker = (el, opts) => {
   const $element = $(el)
 
   el.insertAdjacentElement('afterend',
-                           window.Folio.Ui.Icon.create('calendar_range', { class: "f-input-date-range-icon" }))
+    window.Folio.Ui.Icon.create('calendar_range', { class: 'f-input-date-range-icon' }))
 
   $element.daterangepicker({
     ...window.Folio.Input.DateRange.OPTIONS,
     ...Folio.i18n(window.Folio.Input.DateRange.i18n, 'config'),
-    ...opts,
+    ...opts
   })
 
   $element.on('apply.daterangepicker', function (e, picker) {
@@ -82,7 +96,7 @@ window.Folio.Input.DateRange.unbindDatepicker = (el) => {
 }
 
 window.Folio.Stimulus.register('f-input-date-range', class extends window.Stimulus.Controller {
-  static values = { maxDate: { type: String, default: '' }  }
+  static values = { maxDate: { type: String, default: '' } }
 
   connect () {
     window.Folio.Input.DateRange.bindDatepicker(this.element, { maxDate: this.maxDateValue })
