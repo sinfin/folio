@@ -236,6 +236,9 @@ cs:
           header_message:
             header_message: Text oznámení
       users:
+        index:
+          index_tabs/locked: Zablokovaní
+          index_tabs/unlocked: Aktivní
         send_reset_password_email:
           success: Instrukce pro reset hesla odeslány e-mailem
         impersonate:

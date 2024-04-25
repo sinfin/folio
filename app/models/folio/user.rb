@@ -103,7 +103,18 @@ class Folio::User < Folio::ApplicationRecord
   }
 
   scope :unlocked_for, -> (site) {
-    joins(:site_user_links).merge(Folio::SiteUserLink.by_site(site).unlocked)
+    where.not(id: Folio::SiteUserLink.by_site(site).locked.select(:user_id))
+  }
+
+  scope :by_locked, -> (locked_param) {
+    case locked_param
+    when true, "true"
+      locked_for(Folio::Current.site)
+    when false, "false"
+      where(featured: nil)
+    else
+      all
+    end
   }
 
   pg_search_scope :by_full_name_query,

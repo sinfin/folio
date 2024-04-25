@@ -8,20 +8,11 @@ class Folio::Console::UsersController < Folio::Console::BaseController
   before_action :skip_email_reconfirmation, only: [:update]
 
   def index
-    @tabs = [
-      {
-        href: url_for([:console, Folio::User, params: { tab: :active }]),
-        active: params[:tab].to_s == "active",
-        label: t(".active_users_tab")
-        # Folio::User.unlocked_for(site).
-      },
-      {
-        href: url_for([:console, Folio::User, params: { tab: :locked }]),
-        active: params[:tab].to_s == "locked",
-        label: t(".locked_users_tab")
-        # Folio::User.locked_for(site)
-      },
-    ]
+    if params[:by_locked].blank?
+      @users = @users.unlocked_for(Folio::Current.site)
+    end
+
+    super
   end
 
   def send_reset_password_email
@@ -96,6 +87,9 @@ class Folio::Console::UsersController < Folio::Console::BaseController
 
     def default_index_filters
       {
+        by_locked: {
+          as: :hidden,
+        },
         by_full_name_query: {
           as: :text,
           autocomplete_attribute: :last_name,
@@ -149,5 +143,31 @@ class Folio::Console::UsersController < Folio::Console::BaseController
 
     def skip_email_reconfirmation
       @user.skip_reconfirmation! if Rails.application.config.folio_users_confirm_email_change
+    end
+
+    def index_tabs
+      locked_users = Folio::User.where(id: locked_user_ids_subselect)
+      unlocked_users = Folio::User.where.not(id: locked_user_ids_subselect)
+
+      [
+        {
+          label: t(".index_tabs/unlocked"),
+          force_href: url_for([:console, @klass]),
+          count: unlocked_users.count || 0,
+          active: params[:by_locked] != "true",
+        },
+        {
+          label: t(".index_tabs/locked"),
+          force_href: url_for([:console, @klass, by_locked: "true"]),
+          count: locked_users.count || 0,
+          active: params[:by_locked] == "true",
+        }
+      ]
+    end
+
+    def locked_user_ids_subselect
+      @locked_user_ids_subselect ||= Folio::SiteUserLink.by_site(Folio::Current.site)
+                                                        .locked
+                                                        .select(:user_id)
     end
 end

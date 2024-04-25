@@ -233,6 +233,9 @@ en:
           header_message:
             header_message: Message text
       users:
+        index:
+          index_tabs/locked: Blocked
+          index_tabs/unlocked: Active
         send_reset_password_email:
           success: Email with instructions for password reset has been sent
         impersonate:
