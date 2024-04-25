@@ -58,8 +58,5 @@ class Folio::UsersTest < Folio::Console::BaseControllerTest
 
     assert_select ".folio-console-users-tab", text: "Active"
     assert_select ".folio-console-users__user_mail", text: @auth_allowed_user.email
-
-
-
   end
 end
