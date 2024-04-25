@@ -100,6 +100,9 @@ en:
         confirmed_at: Confirmed at
         degree_post: Degree after
         degree_pre: Degree before
+        locked: :activerecord.attributes.folio/site_user_link.locked
+        locked/true: :activerecord.attributes.folio/site_user_link.locked/true
+        locked/false: :activerecord.attributes.folio/site_user_link.locked/false
     errors:
       messages:
         indestructible: The record cannot be removed.

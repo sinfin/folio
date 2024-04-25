@@ -118,6 +118,9 @@ cs:
         full_name: Jméno
         nickname: Přezdívka
         subscribed_to_newsletter: Přihlášení do newsletteru
+        locked: :activerecord.attributes.folio/site_user_link.locked
+        locked/true: :activerecord.attributes.folio/site_user_link.locked/true
+        locked/false: :activerecord.attributes.folio/site_user_link.locked/false
       folio/address/base:
         address_line_1: Ulice
         address_line_2: Číslo
