@@ -37,10 +37,10 @@ cs:
           invalid_record_detail: Záznam nelze uložit. Před změnou stavu jej opravte.
         site_user_links:
           set_locked:
-            success/locked: Přihlašování uživatele uzamčeno.
-            success/unlocked: Přihlašování uživatele odemčeno.
-            error/still_locked: Přihlašování uživatele se nepodařilo odemknout.
-            error/still_unlocked: Přihlašování uživatele se nepodařilo uzamknout.
+            success/locked: Uživatel byl zablokován.
+            success/unlocked: Uživatele byl odblokován.
+            error/still_locked: Uživatele se nepodařilo odblokovat.
+            error/still_unlocked: Uživatele se nepodařilo zablokovat.
       atoms:
         form_header:
           settings: Nastavení

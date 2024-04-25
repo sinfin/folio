@@ -6,9 +6,9 @@ cs:
         roles: Uživatelská role
         roles/administrator: Administrátor
         roles/manager: Manažer
-        locked: Uzamčeno
-        locked/true: Uzamčeno
-        locked/false: Odemčeno
+        locked: Zablokovaný
+        locked/true: Zablokovaný
+        locked/false: Aktivní
       folio/atom/base:
         content: Obsah
         perex: Perex

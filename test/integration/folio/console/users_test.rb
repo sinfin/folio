@@ -33,7 +33,7 @@ class Folio::UsersTest < Folio::Console::BaseControllerTest
 
     assert_redirected_to new_user_session_url
     follow_redirect!
-    assert_select ".d-ui-flash", text: "Váš účet byl uzamčen. Prosím kontaktujte správce."
+    assert_select ".d-ui-flash", text: "Váš účet byl zablokován. Prosím kontaktujte správce."
     assert_select ".user_email", text: "E-mail#{auth_forbidden_user.email}", count: 0
   end
 

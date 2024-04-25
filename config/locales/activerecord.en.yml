@@ -6,9 +6,9 @@ en:
         roles: Role
         roles/administrator: Administrator
         roles/manager: Manager
-        locked: Locked
-        locked/true: Locked
-        locked/false: Unlocked
+        locked: Blocked
+        locked/true: Blocked
+        locked/false: Active
       folio/atom/base:
         content: Content
         perex: Perex

@@ -37,10 +37,10 @@ en:
           invalid_record_detail: Record cannot be saved. Correct it before changing state.
         site_user_links:
           set_locked:
-            success/locked: User login locked.
-            success/unlocked: User login unlocked.
-            error/still_locked: Failed to unlock user login.
-            error/still_unlocked: Failed to lock user login.
+            success/locked: User blocked.
+            success/unlocked: User unblocked.
+            error/still_locked: Failed to unblock user.
+            error/still_unlocked: Failed to block user.
       atoms:
         form_header:
           settings: Settings
