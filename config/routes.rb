@@ -114,6 +114,12 @@ Folio::Engine.routes.draw do
 
         resources :links, only: %i[index]
 
+        resources :site_user_links, only: %i[] do
+          member do
+            patch :set_locked
+          end
+        end
+
         resource :current_user, only: [] do
           post :console_path_ping
         end

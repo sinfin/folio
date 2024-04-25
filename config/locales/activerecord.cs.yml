@@ -6,7 +6,9 @@ cs:
         roles: Uživatelská role
         roles/administrator: Administrátor
         roles/manager: Manažer
-        locked: Uzamčen
+        locked: Uzamčeno
+        locked/true: Uzamčeno
+        locked/false: Odemčeno
       folio/atom/base:
         content: Obsah
         perex: Perex
@@ -251,6 +253,11 @@ cs:
         few: Poznámky (interní údaj)
         one: Poznámka (interní údaj)
         other: Poznámek (interní údaj)
+      folio/site_user_link:
+        few: Uživatelé pro daný web
+        one: Uživatel pro daný web
+        other: Uživatelů pro daný web
+
     state_machines:
       folio/lead:
         state:

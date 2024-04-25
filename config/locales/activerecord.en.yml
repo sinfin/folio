@@ -7,6 +7,8 @@ en:
         roles/administrator: Administrator
         roles/manager: Manager
         locked: Locked
+        locked/true: Locked
+        locked/false: Unlocked
       folio/atom/base:
         content: Content
         perex: Perex
@@ -179,6 +181,9 @@ en:
       folio/console_note:
         one: Note (internal)
         other: Notes (internal)
+      folio/site_user_link:
+        one: User for site
+        other: Users for site
     state_machines:
       folio/lead:
         state:

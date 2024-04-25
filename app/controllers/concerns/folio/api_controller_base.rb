@@ -38,12 +38,22 @@ module Folio::ApiControllerBase
       render json: { errors: }, status:
     end
 
-    def render_record(model, serializer = nil, include: [], meta: nil)
+    def render_record(model, serializer = nil, include: [], meta: nil, flash: nil)
       serializer ||= serializer_for(model)
 
       if model.valid?
-        render json: serializer.new(model, include:, meta:)
-                               .serializable_hash
+        hash = serializer.new(model, include:)
+                         .serializable_hash
+
+        if meta || flash
+          hash[:meta] = meta || {}
+
+          if flash
+            hash[:meta] = hash[:meta].merge(flash:)
+          end
+        end
+
+        render json: hash
       else
         render_invalid model
       end
