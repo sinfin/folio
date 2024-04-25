@@ -7,6 +7,10 @@ class Folio::Current < ActiveSupport::CurrentAttributes
 
   # resets { Time.zone = nil }
 
+  def site
+    super || master_site
+  end
+
   def user=(user)
     super
     # Time.zone = user.time_zone
@@ -24,5 +28,13 @@ class Folio::Current < ActiveSupport::CurrentAttributes
 
   def to_h
     attributes
+  end
+
+  def master_site
+    @master_site ||= Folio.main_site
+  end
+
+  def site_is_master?
+    master_site.id == site.try(:id)
   end
 end

@@ -9,7 +9,7 @@ module Folio::IsSiteLockable
   end
 
   def locked?
-    locked_for?(Folio::Current.site || Folio.main_site)
+    locked_for?(Folio::Current.site)
   end
 
   def locked_for?(site)
@@ -17,7 +17,7 @@ module Folio::IsSiteLockable
   end
 
   def locked=(bool)
-    site = Folio::Current.site || Folio.main_site
+    site = Folio::Current.site
 
     hash = { locked: bool, site:, site_id: site.id }
 
