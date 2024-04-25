@@ -188,4 +188,3 @@ end
 puts "Created Dummy::Menu::Footer"
 
 puts "Creating Dummy::HomePage"
-

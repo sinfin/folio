@@ -3,8 +3,8 @@
 namespace :developer_tools do
   task idp_seed_all: %i[idp_seed_singleton_pages
                         idp_seed_page_titles
-                        idp_seed_singleton_menus]
-                        #idp_seed_dummy_images]
+                        idp_seed_singleton_menus
+                        idp_seed_dummy_images]
 
   task idp_seed_singleton_pages: :environment do
     Rails.logger.silence do
