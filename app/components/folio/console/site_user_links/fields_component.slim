@@ -45,6 +45,7 @@
                                                                     attribute: :locked,
                                                                     f: g,
                                                                     label: true,
+                                                                    verbose: true,
                                                                     disabled: !can_now?(:set_locked, site_link)))
 
   - elsif @user
@@ -68,8 +69,10 @@
                   = status_icon(site_link.roles.present? && site_link.roles.include?(role_key))
                   = role_label
 
-          / .f-c-site-user-links-fields__link-toggle-wrap
-          /   = render(Folio::Console::Ui::BooleanToggleComponent.new(record: site_link,
-          /                                                           attribute: :locked,
-          /                                                           label: true,
-          /                                                           disabled: !can_now?(:set_locked, site_link)))
+          .f-c-site-user-links-fields__link-toggle-wrap
+            = render(Folio::Console::Ui::BooleanToggleComponent.new(record: site_link,
+                                                                    attribute: :locked,
+                                                                    label: true,
+                                                                    verbose: true,
+                                                                    url: url_for([:set_locked, :console, :api, site_link]),
+                                                                    disabled: !can_now?(:set_locked, site_link)))
