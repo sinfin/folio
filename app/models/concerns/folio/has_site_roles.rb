@@ -11,6 +11,11 @@ module Folio::HasSiteRoles
                                foreign_key: :user_id,
                                inverse_of: :user,
                                dependent: :destroy
+
+    accepts_nested_attributes_for :site_user_links,
+                                  allow_destroy: true,
+                                  reject_if: :all_blank
+
     has_many :sites, through: :site_user_links,
                      source: :site
 
@@ -41,14 +46,17 @@ module Folio::HasSiteRoles
       if link_attributes["site_id"].to_i < 0
         destroy_site_link(site:)
       else
-        set_roles_for(site:, roles: link_attributes["roles"] || [])
+        set_roles_for(site:,
+                      roles: link_attributes["roles"] || [],
+                      locked: link_attributes["locked"])
       end
     end
   end
 
-  def set_roles_for(site:, roles:)
+  def set_roles_for(site:, roles:, locked: false)
     ulf = user_link_for(site:) || build_site_link(site:)
     ulf.roles = roles.collect(&:to_s).uniq
+    ulf.locked = locked
 
     if ulf.valid?
       ulf.save if ulf.persisted?

@@ -82,6 +82,7 @@ class Folio::Console::UsersController < Folio::Console::BaseController
     def user_params
       params.require(:user)
             .permit(*(@klass.column_names - user_params_blacklist),
+                    :locked,
                     *site_user_links_params,
                     *addresses_strong_params,
                     *file_placements_strong_params,
