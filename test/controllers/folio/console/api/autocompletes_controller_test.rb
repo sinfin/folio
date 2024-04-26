@@ -3,10 +3,6 @@
 require "test_helper"
 
 class Folio::Console::Api::AutocompletesControllerTest < Folio::Console::BaseControllerTest
-  setup do
-    create_and_host_site
-  end
-
   test "show" do
     get console_api_autocomplete_path(klass: "Folio::Page", q: "foo")
     json = JSON.parse(response.body)

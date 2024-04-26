@@ -2,13 +2,7 @@
 
 require "test_helper"
 
-class <%= application_namespace %>::Blog::ArticlesControllerTest < Folio::IntegrationTest
-  include Devise::Test::IntegrationHelpers
-
-  def setup
-    create_and_host_site
-  end
-
+class <%= application_namespace %>::Blog::ArticlesControllerTest < Folio::BaseControllerTest
   test "index" do
     get url_for(<%= application_namespace %>::Blog::Article)
     assert_response :ok

@@ -2,11 +2,10 @@
 
 require "test_helper"
 
-class Folio::Users::RegistrationsControllerTest < Folio::IntegrationTest
-  include Devise::Test::IntegrationHelpers
-
+class Folio::Users::RegistrationsControllerTest < Folio::BaseControllerTest
   def setup
-    create_and_host_site
+    super
+    sign_out(superadmin)
 
     @password = "Complex@Password.123"
 

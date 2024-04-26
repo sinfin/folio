@@ -2,13 +2,7 @@
 
 require "test_helper"
 
-class Folio::Api::AresControllerTest < Folio::IntegrationTest
-  include Folio::Engine.routes.url_helpers
-
-  def setup
-    create_and_host_site
-  end
-
+class Folio::Api::AresControllerTest < Folio::BaseControllerTest
   test "valid" do
     VCR.use_cassette("folio/api/ares/valid") do
       post subject_folio_api_ares_path, params: {

@@ -10,7 +10,8 @@ class Folio::Mux::FileProcessingTest < ActiveSupport::TestCase
     include Folio::Mux::FileProcessing
   end
 
-  setup do
+  def setup
+    super
     @tv_file = TestMediaFile.new(site: get_any_site)
     @tv_file.file = Folio::Engine.root.join("test/fixtures/folio/test_7secs.mp3")
 

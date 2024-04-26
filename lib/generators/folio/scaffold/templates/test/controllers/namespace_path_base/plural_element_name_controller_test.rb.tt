@@ -2,13 +2,7 @@
 
 require "test_helper"
 
-class <%= controller_name %>Test < Folio::IntegrationTest
-  include Devise::Test::IntegrationHelpers
-
-  def setup
-    create(:folio_site)
-  end
-
+class <%= controller_name %>Test < Folio::BaseControllerTest
   test "show" do
     <%= element_name %> = create(:<%= model_resource_name %>)
     get url_for(<%= element_name %>)

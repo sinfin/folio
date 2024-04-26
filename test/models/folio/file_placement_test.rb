@@ -9,7 +9,8 @@ class Folio::FilePlacementTest < ActiveSupport::TestCase
     ATTACHMENTS = %i[cover]
   end
 
-  setup do
+  def setup
+    super
     Rails.application.config.folio_testing_after_save_job = true
   end
 

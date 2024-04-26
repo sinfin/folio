@@ -2,13 +2,7 @@
 
 require "test_helper"
 
-class Folio::Api::NewsletterSubscriptionsControllerTest < Folio::IntegrationTest
-  include Folio::Engine.routes.url_helpers
-
-  def setup
-    create_and_host_site
-  end
-
+class Folio::Api::NewsletterSubscriptionsControllerTest < Folio::BaseControllerTest
   test "invalid" do
     assert_no_difference("Folio::NewsletterSubscription.count") do
       post folio_api_newsletter_subscriptions_path(format: :json), params: {

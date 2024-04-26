@@ -23,7 +23,8 @@ class Folio::AbilityTest < ActiveSupport::TestCase
                       email_templates: [:manage],
                       sites: [:read, :modify] }.freeze # C+U are done by rails console (?)
 
-  setup do
+  def setup
+    super
     @site1 = Folio::Site.first || create(:folio_site, domain: "first.com")
     @site2 = Folio::Site.second || create(:folio_site, domain: "second.com")
   end

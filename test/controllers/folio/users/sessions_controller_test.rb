@@ -2,11 +2,10 @@
 
 require "test_helper"
 
-class Folio::Users::SessionsControllerTest < Folio::IntegrationTest
-  include Devise::Test::IntegrationHelpers
-
+class Folio::Users::SessionsControllerTest < Folio::BaseControllerTest
   def setup
-    create_and_host_site
+    super
+    sign_out(superadmin)
 
     @params = {
       email: "email@email.email",

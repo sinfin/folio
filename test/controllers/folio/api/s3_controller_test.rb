@@ -2,16 +2,7 @@
 
 require "test_helper"
 
-class Folio::Api::S3ControllerTest < Folio::IntegrationTest
-  include Devise::Test::IntegrationHelpers
-  include Folio::Engine.routes.url_helpers
-
-  def setup
-    create_and_host_site
-    @superadmin = create(:folio_user, :superadmin)
-    sign_in @superadmin
-  end
-
+class Folio::Api::S3ControllerTest < Folio::BaseControllerTest
   [Folio::File::Document, Folio::File::Image, Folio::PrivateAttachment].each do |klass|
     test "#{klass} - before" do
       # #before returns settings for S3 file upload

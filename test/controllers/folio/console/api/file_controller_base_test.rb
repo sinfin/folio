@@ -5,10 +5,6 @@ require "test_helper"
 class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControllerTest
   attr_reader :site
 
-  setup do
-    @site = build(:folio_file_document).site # (Folio::Site.first || create(:folio_site))
-  end
-
   [
     Folio::File::Document,
     Folio::File::Image,

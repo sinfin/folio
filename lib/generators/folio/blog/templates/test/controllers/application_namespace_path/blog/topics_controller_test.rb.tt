@@ -2,13 +2,7 @@
 
 require "test_helper"
 
-class <%= application_namespace %>::Blog::TopicsControllerTest < Folio::IntegrationTest
-  include Devise::Test::IntegrationHelpers
-
-  def setup
-    create_and_host_site
-  end
-
+class <%= application_namespace %>::Blog::TopicsControllerTest < Folio::BaseControllerTest
   test "show" do
     topic = create(:<%= application_namespace_path %>_blog_topic)
     get url_for(topic)

@@ -5,6 +5,7 @@ require "test_helper"
 class Folio::Console::ContentTemplatesControllerTest < Folio::Console::BaseControllerTest
   def setup
     skip unless ::Rails.application.config.folio_content_templates_editable
+    super
   end
 
   test "index" do

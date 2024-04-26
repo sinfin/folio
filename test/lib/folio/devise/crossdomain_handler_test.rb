@@ -3,7 +3,9 @@
 require "test_helper"
 
 class Folio::Devise::CrossdomainHandlerTest < ActiveSupport::TestCase
-  setup do
+  def setup
+    super
+
     create(:sinfin_local_site) # as it it Folio.main_site
   end
 
