@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class Dummy::UiControllerTest < ActionDispatch::IntegrationTest
+class Dummy::UiControllerTest < Folio::IntegrationTest
   # test "the truth" do
   #   assert true
   # end

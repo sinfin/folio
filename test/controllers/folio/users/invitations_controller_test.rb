@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class Folio::Users::InvitationsControllerTest < ActionDispatch::IntegrationTest
+class Folio::Users::InvitationsControllerTest < Folio::IntegrationTest
   include Devise::Test::IntegrationHelpers
 
   test "new" do

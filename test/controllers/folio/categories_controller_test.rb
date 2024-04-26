@@ -3,7 +3,7 @@
 require "test_helper"
 
 module Folio
-  class CategoriesControllerTest < ActionDispatch::IntegrationTest
+  class CategoriesControllerTest < Folio::IntegrationTest
     include Engine.routes.url_helpers
 
     # test "the truth" do

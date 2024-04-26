@@ -3,7 +3,7 @@
 require "test_helper"
 
 module Folio
-  class ErrorsControllerTest < ActionDispatch::IntegrationTest
+  class ErrorsControllerTest < Folio::IntegrationTest
     include Engine.routes.url_helpers
 
     # test 'should get not_found' do

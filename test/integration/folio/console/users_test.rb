@@ -6,8 +6,9 @@ class Folio::UsersTest < Folio::Console::BaseControllerTest
   attr_reader :auth_allowed_user, :auth_forbidden_user
 
   def setup
-    Folio::Current.original_reset
-    create_and_host_site
+    super
+    sign_out superadmin
+
     @auth_allowed_user = create(:folio_user, password: "password")
     @auth_forbidden_user = create(:folio_user, password: "password")
     create(:folio_site_user_link, site: @site, locked_at: Time.current, user: auth_forbidden_user)

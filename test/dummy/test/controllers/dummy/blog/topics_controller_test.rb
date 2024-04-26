@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class Dummy::Blog::TopicsControllerTest < ActionDispatch::IntegrationTest
+class Dummy::Blog::TopicsControllerTest < Folio::IntegrationTest
   include Devise::Test::IntegrationHelpers
 
   def setup

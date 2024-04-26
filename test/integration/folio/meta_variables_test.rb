@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class Folio::MetaVariablesTest < ActionDispatch::IntegrationTest
+class Folio::MetaVariablesTest < Folio::IntegrationTest
   test "meta variables" do
     create_and_host_site(attributes: {
       title: "SITE",

@@ -3,7 +3,7 @@
 require "test_helper"
 
 module Folio
-  class CsrfControllerTest < ActionDispatch::IntegrationTest
+  class CsrfControllerTest < Folio::IntegrationTest
     include Engine.routes.url_helpers
 
     test "show" do

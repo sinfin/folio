@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class <%= application_namespace %>::HomeControllerTest < ActionDispatch::IntegrationTest
+class <%= application_namespace %>::HomeControllerTest < Folio::IntegrationTest
   test "index" do
     create_and_host_site
     create_page_singleton(<%= application_namespace %>::Page::Homepage)

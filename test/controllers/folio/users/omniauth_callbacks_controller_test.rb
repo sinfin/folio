@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class Folio::Users::OmniauthCallbacksControllerTest < ActionDispatch::IntegrationTest
+class Folio::Users::OmniauthCallbacksControllerTest < Folio::IntegrationTest
   include Devise::Test::IntegrationHelpers
 
   def setup

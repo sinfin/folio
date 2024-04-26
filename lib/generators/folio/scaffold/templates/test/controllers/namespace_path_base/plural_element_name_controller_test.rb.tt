@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class <%= controller_name %>Test < ActionDispatch::IntegrationTest
+class <%= controller_name %>Test < Folio::IntegrationTest
   include Devise::Test::IntegrationHelpers
 
   def setup

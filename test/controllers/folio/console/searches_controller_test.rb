@@ -3,7 +3,7 @@
 require "test_helper"
 
 module Folio
-  class Console::SearchesControllerTest < ActionDispatch::IntegrationTest
+  class Console::SearchesControllerTest < Folio::IntegrationTest
     include Engine.routes.url_helpers
 
     # test "the truth" do

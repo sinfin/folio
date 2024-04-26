@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class Folio::Users::PasswordsControllerTest < ActionDispatch::IntegrationTest
+class Folio::Users::PasswordsControllerTest < Folio::IntegrationTest
   include Devise::Test::IntegrationHelpers
 
   def setup

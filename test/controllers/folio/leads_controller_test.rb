@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class Folio::LeadsControllerTest < ActionDispatch::IntegrationTest
+class Folio::LeadsControllerTest < Folio::IntegrationTest
   include Folio::Engine.routes.url_helpers
 
   def setup

@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class Folio::Api::S3ControllerTest < ActionDispatch::IntegrationTest
+class Folio::Api::S3ControllerTest < Folio::IntegrationTest
   include Devise::Test::IntegrationHelpers
   include Folio::Engine.routes.url_helpers
 
