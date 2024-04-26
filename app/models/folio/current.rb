@@ -28,4 +28,14 @@ class Folio::Current < ActiveSupport::CurrentAttributes
     return @site_is_master unless @site_is_master.nil?
     @site_is_master = master_site.id == site.try(:id)
   end
+
+  if Rails.env.test?
+    alias :original_reset :reset
+
+    def reset
+      run_callbacks :reset do
+        # self.attributes = {}
+      end
+    end
+  end
 end

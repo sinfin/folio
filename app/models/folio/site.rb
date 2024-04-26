@@ -181,6 +181,10 @@ class Folio::Site < Folio::ApplicationRecord
     available_user_roles.presence || []
   end
 
+  def site # for Ability checks
+    self
+  end
+
   private
     def system_emails_should_be_valid
       %i[system_email system_email_copy].each do |attr|
