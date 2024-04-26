@@ -87,7 +87,7 @@ class Folio::IntegrationTest < ActionDispatch::IntegrationTest
     super
   end
 
-  def sign_out(user)
+  def sign_out(user = nil)
     super if user
     Folio::Current.user = nil
     get destroy_user_session_path

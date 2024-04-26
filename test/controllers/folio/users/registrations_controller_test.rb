@@ -5,7 +5,7 @@ require "test_helper"
 class Folio::Users::RegistrationsControllerTest < Folio::BaseControllerTest
   def setup
     super
-    sign_out(superadmin)
+    sign_out
 
     @password = "Complex@Password.123"
 

@@ -5,7 +5,7 @@ require "test_helper"
 class Folio::Users::SessionsControllerTest < Folio::BaseControllerTest
   def setup
     super
-    sign_out(superadmin)
+    sign_out
 
     @params = {
       email: "email@email.email",

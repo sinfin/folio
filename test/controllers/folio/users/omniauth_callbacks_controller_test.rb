@@ -8,7 +8,7 @@ class Folio::Users::OmniauthCallbacksControllerTest < Folio::BaseControllerTest
     skip if Rails.application.config.folio_users_omniauth_providers.exclude?(:facebook)
 
     super
-    sign_out(superadmin)
+    sign_out
   end
 
   test "#bind_user_and_redirect - signed in" do
