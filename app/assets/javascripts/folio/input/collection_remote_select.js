@@ -11,6 +11,7 @@ window.Folio.Input.CollectionRemoteSelect.bind = (input, { includeBlank, url }) 
     language: document.documentElement.lang,
     allowClear: true,
     placeholder: { id: '', text: includeBlank },
+    dropdownCssClass: $input.data('dropdown-class') || '',
     ajax: {
       url: url || $input.data('url'),
       dataType: 'JSON',
@@ -48,6 +49,22 @@ window.Folio.Input.CollectionRemoteSelect.bind = (input, { includeBlank, url }) 
       })
 
       return data.text
+    },
+    templateResult: (data, container) => {
+      if (!data.imageUrl) {
+        return data.text
+      }
+
+      const $result = $(
+        `<div class="select2-results__option-inner-wrap">
+           <div class="select2-results__option-img-container">
+              <img src="${data.imageUrl}"/>
+           </div>
+           <div>${data.text}</div>
+         </div>`
+      );
+    
+      return $result;
     }
   }).on('change.select2', (e) => {
     e.target.dispatchEvent(new window.CustomEvent('folio_select2_change', { bubbles: true }))

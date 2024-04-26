@@ -99,7 +99,7 @@ module Folio::ApiControllerBase
       render json: { data: ary }
     end
 
-    def render_select2_options(models, label_method: nil, id_method: nil, meta: nil)
+    def render_select2_options(models, label_method: nil, group_method: nil, id_method: nil, meta: nil)
       label_method ||= :to_console_label
       id_method ||= if params[:id_method] && models.present? && models.first.class.column_names.include?(params[:id_method])
         params[:id_method]
@@ -109,13 +109,28 @@ module Folio::ApiControllerBase
         :id
       end
 
-      ary = models.map do |model|
-        h = { id: model.send(id_method), text: model.send(label_method) }
+      ary = if params[:group_method].present? && !params[:q].blank?
+        models.group_by(&params[:group_method].to_sym).map do |group_name, group_items|
+          children = group_items.map do |child|
+            h = { id: child.send(id_method), text: child.send(label_method) }
+            if form_select_data = child.try(:form_select_data)
+              h.merge(form_select_data)
+            else
+              h
+            end
+          end
 
-        if form_select_data = model.try(:form_select_data)
-          h.merge(form_select_data)
-        else
-          h
+          { text: group_name, children: }
+        end
+      else
+        models.map do |model|
+          h = { id: model.send(id_method), text: model.send(label_method) }
+
+          if form_select_data = model.try(:form_select_data)
+            h.merge(form_select_data)
+          else
+            h
+          end
         end
       end
 

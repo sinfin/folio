@@ -153,6 +153,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
 
       render_select2_options(records,
                              label_method: params[:label_method],
+                             group_method: params[:group_method],
                              meta: meta_from_pagy(pagination))
     else
       render_select2_options([])
