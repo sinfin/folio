@@ -2,40 +2,46 @@
   &__inner
     position: relative
 
+  &__row
+    display: flex
+    flex-wrap: wrap
+
   &__image-wrap
-    border-radius: $grid-gutter-half
     overflow: hidden
-    max-height: 450px
     width: 100%
     display: flex
     align-items: center
 
   &__image
+    border-radius: $border-radius
     width: 100%
 
   &__content
     display: flex
     flex-direction: column
     align-items: flex-start
-    padding-top: $grid-gutter-base * 7
-    padding-bottom: $grid-gutter-width
+    padding-top: $gap-e
+
+  &--centered-content &__content
+    justify-content: center
 
   &__title
-    margin: 0
+    margin: 0 0 $gap-b 0
+
+  &__subtitle
+    font-weight: $font-weight-semibold
+    margin-bottom: $gap-b
 
   &__text
+    margin-bottom: $gap-d
     position: relative
     z-index: 11
 
     p:last-child
       margin-bottom: 0
 
-    &:not(:first-child)
-      margin-top: $grid-gutter-base
-
   &__btn
-    &:not(:first-child)
-      margin-top: px-to-rem(20px)
+    margin: $gap-a 0
 
     &::before
       content: ''
@@ -44,38 +50,37 @@
       inset: 0
       z-index: 10
 
-  +media-breakpoint-down(xl)
-    &__image-wrap
-      max-height: 580px
-
-    &__title
-      +font-size-display-m
-
-  +media-breakpoint-down(lg)
-    &__content
-      padding-top: $grid-gutter-width
-
-    &__title
-      +font-size-display-s
-
-  +media-breakpoint-down(sm)
-    &__content
-      padding-top: px-to-rem(20px)
-      padding-bottom: 0
-
   +media-breakpoint-up(sm)
     &:not(&--image-right) &__content
-      padding-left: $grid-gutter-width
+      padding: $gap-f $gap-b $gap-f px-to-rem(36px)
 
     &--image-right &__row
       flex-direction: row-reverse
 
     &--image-right &__content
-      padding-right: $grid-gutter-width
+      padding: $gap-f px-to-rem(36px) $gap-f $gap-b
+
+    &__image-wrap
+      padding-right: $gap-c
 
   +media-breakpoint-up(md)
     &:not(&--image-right) &__content
-      padding-left: $grid-gutter-base * 4
+      padding: $gap-j $gap-b $gap-f px-to-rem(44px)
 
     &--image-right &__content
-      padding-right: $grid-gutter-base * 4
+      padding: $gap-j px-to-rem(44px) $gap-f $gap-b
+
+    &--centered-content &__content
+      padding-top: $gap-f
+
+    &__title
+      +font-size-display-m
+
+    &--background &__inner
+      background-color: $transparent-100
+      border-radius: $border-radius
+      padding: $gap-l 0
+
+  +media-breakpoint-up(xxl)
+    &__title
+      +font-size-display-l
