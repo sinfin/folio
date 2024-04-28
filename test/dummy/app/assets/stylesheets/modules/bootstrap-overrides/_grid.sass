@@ -1,7 +1,6 @@
 .container-fluid
   max-width: $container-fluid-max-width
-  padding-left: map-get($spacers, gg)
-  padding-right: map-get($spacers, gg)
+  padding: 0 $gap-k
 
   & &:not(.container-fluid--forced-padding)
     padding-left: 0
@@ -9,9 +8,11 @@
     max-width: 100%
 
   +media-breakpoint-down(xl)
-    padding-left: map-get($spacers, 5)
-    padding-right: map-get($spacers, 5)
+    padding: 0 $gap-i
 
   +media-breakpoint-down(md)
-    padding-left: $grid-gutter-half
-    padding-right: $grid-gutter-half
+    padding: 0 $gap-d
+
+.container-narrow
+  max-width: $container-narrow-max-width
+  margin: 0 auto
