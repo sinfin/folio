@@ -1,14 +1,31 @@
 # frozen_string_literal: true
 
 class Dummy::Atom::ImageAndContent < Folio::Atom::Base
+  ALLOWED_THUMB_SIZES = {
+    "origin" => "648x",
+    "1x1" => "648x648#",
+    "3x2" => "648x432#",
+    "16x9" => "648x365#",
+    "4x3" => "648x486#",
+    "9x16" => "365x648#",
+    "3x4" => "486x648#",
+    "2x3" => "432x648#",
+  }
+
   ATTACHMENTS = %i[cover]
 
   STRUCTURE = {
     title: :string,
+    subtitle: :string,
     content: :richtext,
+    image_ratio: ALLOWED_THUMB_SIZES.keys,
+    vertically_centered_content: :boolean,
     button_label: :string,
     url: :url,
-    image_side: %w[left right]
+    open_in_new_tab: :boolean,
+    image_side: %w[left right],
+    wrapper: %w[none background outline],
+    color_mode: %w[light dark],
   }
 
   ASSOCIATIONS = {}
@@ -18,8 +35,22 @@ class Dummy::Atom::ImageAndContent < Folio::Atom::Base
 
   validate :validate_one_of_contents
 
+  validate :validate_color_mode
+
   def image_side_with_fallback
     image_side.presence || "left"
+  end
+
+  def wrapper_with_fallback
+    wrapper.presence || "none"
+  end
+
+  def color_mode_with_fallback
+    color_mode.presence || "light"
+  end
+
+  def thumb_size_with_fallback
+    ALLOWED_THUMB_SIZES[image_ratio.presence || "1x1"]
   end
 
   private
@@ -28,6 +59,12 @@ class Dummy::Atom::ImageAndContent < Folio::Atom::Base
         errors.add(:content, :blank)
       elsif button_label.present? && url.blank?
         errors.add(:url, :blank)
+      end
+    end
+
+    def validate_color_mode
+      if wrapper == "none" && color_mode == "dark"
+        errors.add(:color_mode, "is not allowed without wrapper")
       end
     end
 end
