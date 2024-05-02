@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class Folio::DownloadsControllerTest < Folio::IntegrationTest
+class Folio::DownloadsControllerTest < ActionDispatch::IntegrationTest
   include Folio::Engine.routes.url_helpers
 
   test "show" do

@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class Dummy::SearchesControllerTest < Folio::IntegrationTest
+class Dummy::SearchesControllerTest < ActionDispatch::IntegrationTest
   test "show" do
     create_and_host_site
 

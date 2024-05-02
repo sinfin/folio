@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class Folio::PublishableHintCellTest < Folio::IntegrationTest
+class Folio::PublishableHintCellTest < ActionDispatch::IntegrationTest
   include Warden::Test::Helpers
 
   test "publishable_hint" do

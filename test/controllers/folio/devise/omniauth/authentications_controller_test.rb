@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class Folio::Devise::Omniauth::AuthenticationsControllerTest < Folio::IntegrationTest
+class Folio::Devise::Omniauth::AuthenticationsControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
 
   test "destroy" do

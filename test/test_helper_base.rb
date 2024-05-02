@@ -76,7 +76,7 @@ class Folio::Console::CellTest < Cell::TestCase
   controller Folio::Console::BaseController
 end
 
-class Folio::IntegrationTest < ActionDispatch::IntegrationTest
+class ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
   include Folio::Engine.routes.url_helpers
   attr_reader :site
@@ -103,7 +103,7 @@ class Folio::IntegrationTest < ActionDispatch::IntegrationTest
   end
 end
 
-class Folio::CapybaraTest < Folio::IntegrationTest
+class Folio::CapybaraTest < ActionDispatch::IntegrationTest
   include Capybara::DSL
   include Capybara::Minitest::Assertions
 
@@ -114,7 +114,7 @@ class Folio::CapybaraTest < Folio::IntegrationTest
   end
 end
 
-class Folio::BaseControllerTest < Folio::IntegrationTest
+class Folio::BaseControllerTest < ActionDispatch::IntegrationTest
   attr_reader :superadmin
 
   def setup

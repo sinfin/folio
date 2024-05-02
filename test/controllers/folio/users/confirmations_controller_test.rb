@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class Folio::Users::ConfirmationsControllerTest < Folio::IntegrationTest
+class Folio::Users::ConfirmationsControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
 
   # test "the truth" do

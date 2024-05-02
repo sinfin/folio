@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class Folio::Users::ComebacksControllerTest < Folio::IntegrationTest
+class Folio::Users::ComebacksControllerTest < ActionDispatch::IntegrationTest
   test "show" do
     create_and_host_site
 

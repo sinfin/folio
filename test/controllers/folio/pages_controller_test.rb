@@ -3,7 +3,6 @@
 require "test_helper"
 
 class Folio::PagesControllerTest < Folio::BaseControllerTest
-
   def setup
     super
     @page = create(:folio_page)
