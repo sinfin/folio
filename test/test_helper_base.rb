@@ -52,6 +52,7 @@ class Cell::TestCase # do not inherit from ActiveSupport::TestCase
   include SitesHelper
 
   require Folio::Engine.root.join("test/support/create_atom_helper")
+  require Folio::Engine.root.join("test/support/create_page_singleton_helper")
 
   attr_reader :site
 
@@ -92,15 +93,7 @@ class ActionDispatch::IntegrationTest
     Folio::Current.user = nil
     get destroy_user_session_path
   end
-
-  def create_page_singleton(klass, attrs = {})
-    default_hash = @site ? { site: @site, locale: @site.locale } : {}
-
-    page = create(:folio_page, default_hash.merge(attrs)).becomes!(klass)
-    page.save!
-
-    page
-  end
+  require Folio::Engine.root.join("test/support/create_page_singleton_helper")
 end
 
 class Folio::CapybaraTest < ActionDispatch::IntegrationTest
@@ -144,6 +137,7 @@ end
 
 class Folio::ComponentTest < ViewComponent::TestCase
   require Folio::Engine.root.join("test/support/create_atom_helper")
+  require Folio::Engine.root.join("test/support/create_page_singleton_helper")
 end
 
 class Folio::Console::ComponentTest < Folio::ComponentTest
