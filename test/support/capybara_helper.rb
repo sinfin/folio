@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Capybara::Node::Element
   def html
     native.to_html
