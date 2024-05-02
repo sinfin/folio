@@ -9,7 +9,10 @@ module Folio::IsSiteLockable
   end
 
   def locked?
-    locked_for?(Folio::Current.site)
+    # TODO: because this is called from Warden::Managerbefore Folio::Current is set,
+    # it will always check against the main site
+    # we need somehow prebend Warden
+    locked_for?(Folio::Current.site || Folio.main_site)
   end
 
   def locked_for?(site)
