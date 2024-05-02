@@ -6,7 +6,7 @@ class Folio::Console::Layout::AuditedBarCell < Folio::ConsoleCell
   end
 
   def restore_link
-    return unless model.class.audited_restorable?
+    return unless model.class.audited_console_restorable?
     link_to(t(".restore"),
             url_for([:restore, :console, model, version: model.audit_version]),
             method: :post,
@@ -15,6 +15,6 @@ class Folio::Console::Layout::AuditedBarCell < Folio::ConsoleCell
   end
 
   def show_url
-    url_for([:console, model, action: model.class.audited_view_name])
+    url_for([:console, model, action: model.class.audited_console_view_name])
   end
 end

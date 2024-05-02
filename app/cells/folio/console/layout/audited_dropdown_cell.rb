@@ -21,10 +21,10 @@ class Folio::Console::Layout::AuditedDropdownCell < Folio::ConsoleCell
 
   def version_url(version, i)
     if i == 0
-      if version.class.audited_view_name == :show
+      if version.class.audited_console_view_name == :show
         url_for([:console, version])
       else
-        url_for([version.class.audited_view_name, :console, version])
+        url_for([version.class.audited_console_view_name, :console, version])
       end
     else
       url_for([:revision, :console, version, version: version.audit_version])
