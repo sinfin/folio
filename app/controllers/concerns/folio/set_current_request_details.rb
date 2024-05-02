@@ -11,6 +11,7 @@ module Folio::SetCurrentRequestDetails
     def set_up_current_from_request
       if Folio::Current.request_id.nil?
         Folio::Current.request_id = request.uuid
+        Folio::Current.session = session
         Folio::Current.user_agent = request.user_agent
         Folio::Current.ip_address = request.ip
         Folio::Current.url = request.url

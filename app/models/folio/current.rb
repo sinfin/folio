@@ -6,7 +6,8 @@ class Folio::Current < ActiveSupport::CurrentAttributes
             :request_id,
             :user_agent,
             :ip_address,
-            :url
+            :url,
+            :session
 
   def to_h
     attributes
