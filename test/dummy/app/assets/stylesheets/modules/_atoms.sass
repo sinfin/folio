@@ -1,5 +1,6 @@
-$my-atom: $grid-gutter-width
-$my-atom-mobile: map-get($spacers, bb)
+$my-atom: map-get($gaps, g)
+$my-atom-tablet: map-get($gaps, f)
+$my-atom-mobile: map-get($gaps, d)
 $my-atom-lg: 2 * $grid-gutter-width
 $my-atom-lg-mobile: 50px
 
@@ -15,6 +16,10 @@ $my-atom-lg-mobile: 50px
 .my-atom
   margin-top: $my-atom
   margin-bottom: $my-atom
+
+  +media-breakpoint-down(xl)
+    margin-top: $my-atom-tablet
+    margin-bottom: $my-atom-tablet
 
   +media-breakpoint-down($font-size-media-breakpoint-s)
     margin-top: $my-atom-mobile
