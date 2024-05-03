@@ -1,14 +1,16 @@
-.d-atom.my-atom-lg[
+.d-atom.my-atom[
   data-bs-theme=(@dark_mode ? "dark" : nil)
   class=bem_class_name
   data=data
 ]
-  .container-fluid
+  .container-fluid[
+    class=(@wrapper ? "container-fluid--with-narrow" : nil)
+  ]
     .d-atom-image-and-content__inner[
       class="d-ui-image-hover-zoom-wrap"
     ]
       .d-atom-image-and-content__row[
-        class=(@background ? "container-narrow" : nil)
+        class=(@wrapper ? inner_narrow_container_class : nil)
       ]
         .col-12.col-sm-6
           .d-atom-image-and-content__image-wrap

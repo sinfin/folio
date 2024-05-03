@@ -343,6 +343,7 @@ cs:
     messages:
       at_least_one: Vyplňte alespoň jedno políčko.
       invalid_count: musí být přesně %{count}
+      color_mode_without_wrapper: nelze nastavit na tmavý bez zvolení obalu
 
     attributes:
       verified_captcha:

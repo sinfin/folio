@@ -1,6 +1,13 @@
 .d-atom-image-and-content
+  &[data-bs-theme="dark"]
+    background: transparent
+
   &__inner
     position: relative
+
+  &--background &__inner
+    background-color: $shade-100
+    padding: map-get($gaps, d) 0
 
   &__row
     display: flex
@@ -20,20 +27,20 @@
     display: flex
     flex-direction: column
     align-items: flex-start
-    padding-top: $gap-e
+    padding-top: map-get($gaps, e)
 
   &--centered-content &__content
     justify-content: center
 
   &__title
-    margin: 0 0 $gap-b 0
+    margin: 0 0 map-get($gaps, b) 0
 
   &__subtitle
     font-weight: $font-weight-semibold
-    margin-bottom: $gap-b
+    margin-bottom: map-get($gaps, b)
 
   &__text
-    margin-bottom: $gap-d
+    margin-bottom: map-get($gaps, d)
     position: relative
     z-index: 11
 
@@ -41,7 +48,7 @@
       margin-bottom: 0
 
   &__btn
-    margin: $gap-a 0
+    margin: map-get($gaps, a) 0
 
     &::before
       content: ''
@@ -52,35 +59,40 @@
 
   +media-breakpoint-up(sm)
     &:not(&--image-right) &__content
-      padding: $gap-f $gap-b $gap-f px-to-rem(36px)
+      padding: map-get($gaps, f) map-get($gaps, b) map-get($gaps, f) px-to-rem(36px)
 
     &--image-right &__row
       flex-direction: row-reverse
 
     &--image-right &__content
-      padding: $gap-f px-to-rem(36px) $gap-f $gap-b
+      padding: map-get($gaps, f) px-to-rem(20px) map-get($gaps, f) 0
 
-    &__image-wrap
-      padding-right: $gap-c
+    &:not(&--image-right) &__image-wrap
+      padding-right: map-get($gaps, c)
 
-  +media-breakpoint-up(md)
+    &--image-right &__image-wrap
+      padding-left: map-get($gaps, c)
+
+    &--background &__inner
+      border-radius: $border-radius
+      padding: map-get($gaps, g) 0
+
+  +media-breakpoint-up(xl)
     &:not(&--image-right) &__content
-      padding: $gap-j $gap-b $gap-f px-to-rem(44px)
+      padding: map-get($gaps, j) map-get($gaps, b) map-get($gaps, f) px-to-rem(44px)
 
     &--image-right &__content
-      padding: $gap-j px-to-rem(44px) $gap-f $gap-b
+      padding: map-get($gaps, j) px-to-rem(20px) map-get($gaps, f) 0
 
     &--centered-content &__content
-      padding-top: $gap-f
+      padding-top: map-get($gaps, f)
+
+    &--background &__inner
+      padding: map-get($gaps, l) 0
 
     &__title
       +font-size-display-m
 
-    &--background &__inner
-      background-color: $transparent-100
-      border-radius: $border-radius
-      padding: $gap-l 0
-
   +media-breakpoint-up(xxl)
-    &__title
+    &:not(&--background) &__title
       +font-size-display-l

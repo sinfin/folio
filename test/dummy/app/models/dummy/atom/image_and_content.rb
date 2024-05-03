@@ -7,9 +7,9 @@ class Dummy::Atom::ImageAndContent < Folio::Atom::Base
     "3x2" => "648x432#",
     "16x9" => "648x365#",
     "4x3" => "648x486#",
-    "9x16" => "365x648#",
-    "3x4" => "486x648#",
-    "2x3" => "432x648#",
+    "9x16" => "648x1152#",
+    "3x4" => "648x864#",
+    "2x3" => "648x972#",
   }
 
   ATTACHMENTS = %i[cover]
@@ -37,20 +37,12 @@ class Dummy::Atom::ImageAndContent < Folio::Atom::Base
 
   validate :validate_color_mode
 
-  def image_side_with_fallback
-    image_side.presence || "left"
-  end
-
-  def wrapper_with_fallback
-    wrapper.presence || "none"
-  end
-
-  def color_mode_with_fallback
-    color_mode.presence || "light"
-  end
-
   def thumb_size_with_fallback
     ALLOWED_THUMB_SIZES[image_ratio.presence || "1x1"]
+  end
+
+  def self.default_atom_values
+    { image_ratio: "1x1" }
   end
 
   private
@@ -64,7 +56,7 @@ class Dummy::Atom::ImageAndContent < Folio::Atom::Base
 
     def validate_color_mode
       if wrapper == "none" && color_mode == "dark"
-        errors.add(:color_mode, "is not allowed without wrapper")
+        errors.add(:color_mode, :color_mode_without_wrapper)
       end
     end
 end
