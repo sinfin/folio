@@ -32,6 +32,7 @@ Gem::Specification.new do |s|
   s.add_dependency "coffee-rails", "~> 5.0"
   s.add_dependency "countries"
   s.add_dependency "country_select"
+  s.add_dependency "deepl-rb"
   s.add_dependency "devise_invitable"
   s.add_dependency "devise-bootstrap-views"
   s.add_dependency "devise-i18n"

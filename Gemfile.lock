@@ -33,6 +33,7 @@ PATH
       coffee-rails (~> 5.0)
       countries
       country_select
+      deepl-rb
       devise
       devise-bootstrap-views
       devise-i18n
@@ -269,6 +270,7 @@ GEM
     declarative-builder (0.1.0)
       declarative-option (< 0.2.0)
     declarative-option (0.1.0)
+    deepl-rb (2.5.3)
     devise (4.9.4)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
