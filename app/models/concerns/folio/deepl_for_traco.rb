@@ -12,6 +12,24 @@ module Folio::DeeplForTraco
     end
 
     before_validation :translate_slugs_if_new_record
+
+    private
+      def translate_slugs_if_new_record
+        return unless new_record?
+
+        current_locale = I18n.locale
+        I18n.available_locales.each do |l|
+          next if l == current_locale
+
+          candidate_methods = send(friendly_id_config.base).reject { |c| c == :slug }
+
+          I18n.with_locale(l) do
+            candidates = FriendlyId::Candidates.new(self, candidate_methods)
+            slug = slug_generator.generate(candidates) || resolve_friendly_id_conflict(candidates)
+            send "#{friendly_id_config.slug_column}=", slug
+          end
+        end
+      end
   end
 
   class_methods do
@@ -30,17 +48,6 @@ module Folio::DeeplForTraco
           end
         end
       end
-    end
-  end
-
-  def translate_slugs_if_new_record
-    return unless new_record?
-
-    current_locale = I18n.locale
-    I18n.available_locales.each do |l|
-      next if l == current_locale
-
-      I18n.with_locale(l) { set_slug }
     end
   end
 end
