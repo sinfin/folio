@@ -2,7 +2,7 @@
 
 require "deepl"
 
-module Folio::AutoTranslateForTraco
+module Folio::DeeplForTraco
   extend ActiveSupport::Concern
 
   included do
@@ -10,6 +10,8 @@ module Folio::AutoTranslateForTraco
       config.auth_key = ENV.fetch("DEEPL_API_KEY", nil)
       config.host = ENV.fetch("DEEPL_API_HOST", "https://api-free.deepl.com")
     end
+
+    before_validation :translate_slugs_if_new_record
   end
 
   class_methods do
@@ -26,8 +28,6 @@ module Folio::AutoTranslateForTraco
             Rails.logger.error("DeepL error: #{e.message}")
             send("#{attribute}_#{l}=", val)
           end
-
-          translate_slugs_if_new_record
         end
       end
     end
