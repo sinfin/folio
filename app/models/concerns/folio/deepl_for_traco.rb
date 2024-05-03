@@ -15,7 +15,7 @@ module Folio::DeeplForTraco
   end
 
   class_methods do
-    def auto_translates(*attributes)
+    def deepl_translates(*attributes)
       attributes.each do |attribute|
         define_method("#{attribute}=") do |val|
           I18n.available_locales.each do |l|
