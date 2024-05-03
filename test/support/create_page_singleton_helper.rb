@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 def create_page_singleton(klass, attrs = {})
   default_hash = @site ? { site: @site, locale: @site.locale } : {}
 
