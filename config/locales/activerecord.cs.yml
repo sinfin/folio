@@ -112,6 +112,7 @@ cs:
         bank_account_number: Číslo bankovního účtu
         born_at: Datum narození
         confirmed_at: Potvrzen
+        company_name: Název společnosti
         created_at: Vytvořen
         degree_post: Titul za
         degree_pre: Titul před

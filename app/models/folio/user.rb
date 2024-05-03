@@ -7,7 +7,7 @@ class Folio::User < Folio::ApplicationRecord
   include Folio::HasNewsletterSubscriptions
   include Folio::HasSiteRoles
 
-  has_sanitized_fields :email, :first_name, :last_name, :nickname
+  has_sanitized_fields :email, :first_name, :last_name, :company_name, :nickname
 
   # used to validate before inviting from console in /console/users/new
   attribute :skip_password_validation, :boolean, default: false
@@ -63,10 +63,7 @@ class Folio::User < Folio::ApplicationRecord
                                   foreign_key: :closed_by_id,
                                   dependent: :nullify
 
-
-  validates :first_name, :last_name,
-            presence: true,
-            if: :validate_first_name_and_last_name?
+  validate :validate_one_of_names
 
   validates :email,
             format: { with: Folio::EMAIL_REGEXP },
@@ -81,7 +78,7 @@ class Folio::User < Folio::ApplicationRecord
   before_update :update_has_generated_password
 
   pg_search_scope :by_query,
-                  against: [:email, :last_name, :first_name, :nickname],
+                  against: [:email, :last_name, :first_name, :company_name, :nickname],
                   ignoring: :accents,
                   using: { tsearch: { prefix: true } }
 
@@ -118,7 +115,7 @@ class Folio::User < Folio::ApplicationRecord
   }
 
   pg_search_scope :by_full_name_query,
-                  against: %i[last_name first_name],
+                  against: %i[last_name first_name company_name],
                   ignoring: :accents,
                   using: { trigram: { word_similarity: true } }
 
@@ -148,12 +145,14 @@ class Folio::User < Folio::ApplicationRecord
     end
   }
 
-  audited only: %i[email unconfirmed_email first_name last_name nickname phone subscribed_to_newsletter superadmin bank_account_number]
+  audited only: %i[email unconfirmed_email first_name last_name company_name nickname phone subscribed_to_newsletter superadmin bank_account_number]
   has_associated_audits
 
   def full_name
     if first_name.present? || last_name.present?
       "#{first_name} #{last_name}".strip
+    elsif company_name.present?
+      company_name
     else
       email
     end
@@ -162,6 +161,8 @@ class Folio::User < Folio::ApplicationRecord
   def to_label
     if first_name.present? || last_name.present?
       full_name
+    elsif company_name.present?
+      company_name
     elsif nickname.present?
       nickname
     else
@@ -201,7 +202,7 @@ class Folio::User < Folio::ApplicationRecord
   end
 
   def self.csv_attribute_names
-    %i[id first_name last_name nickname email phone created_at sign_in_count last_sign_in_at admin_note]
+    %i[id first_name last_name company_name nickname email phone created_at sign_in_count last_sign_in_at admin_note]
   end
 
   def csv_attributes(controller = nil)
@@ -252,6 +253,7 @@ class Folio::User < Folio::ApplicationRecord
     [
       :first_name,
       :last_name,
+      :company_name,
       :nickname,
       :phone,
       :subscribed_to_newsletter,
@@ -322,12 +324,21 @@ class Folio::User < Folio::ApplicationRecord
   end
 
   private
-    def validate_first_name_and_last_name?
+    def validate_names?
       invitation_accepted_at?
     end
 
     def validate_phone?
       Rails.application.config.folio_users_require_phone
+    end
+
+    def validate_one_of_names
+      return unless validate_names?
+
+      if first_name.blank? && last_name.blank? && company_name.blank?
+        errors.add(:first_name, :blank)
+        errors.add(:last_name, :blank)
+      end
     end
 
     def newsletter_subscriptions_enabled?
@@ -413,6 +424,7 @@ end
 #  phone_secondary           :string
 #  born_at                   :date
 #  bank_account_number       :string
+#  company_name              :string
 #
 # Indexes
 #

@@ -98,6 +98,7 @@ en:
         bank_account_number: Bank account number
         born_at: Birth date
         confirmed_at: Confirmed at
+        company_name: Company name
         degree_post: Degree after
         degree_pre: Degree before
         locked: :activerecord.attributes.folio/site_user_link.locked

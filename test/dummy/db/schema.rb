@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_23_114227) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_03_061049) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -466,6 +466,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_23_114227) do
     t.string "phone_secondary"
     t.date "born_at"
     t.string "bank_account_number"
+    t.string "company_name"
     t.index ["confirmation_token"], name: "index_folio_users_on_confirmation_token", unique: true
     t.index ["crossdomain_devise_token"], name: "index_folio_users_on_crossdomain_devise_token"
     t.index ["email"], name: "index_folio_users_on_email"
