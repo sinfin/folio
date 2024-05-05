@@ -2,6 +2,30 @@
 en:
   activerecord:
     attributes:
+      image_and_content_atoms_attributes: &image_and_content_atoms_attributes
+        image_ratio: Image ratio
+        image_ratio/origin: Original ratio
+        image_ratio/1x1: "1:1"
+        image_ratio/3x2: "3:2"
+        image_ratio/16x9: "16:9"
+        image_ratio/4x3: "4:3"
+        image_ratio/9x16: "9:16"
+        image_ratio/3x4: "3:4"
+        image_ratio/2x3: "2:3"
+        verticaly_centered_content: Vertically centered content
+        open_in_new_tab: Open link in new tab
+        image_side: Image side
+        image_side/left: Left
+        image_side/right: Right
+        wrapper: Wrapper
+        wrapper/none: None
+        wrapper/background: Background
+        wrapper/outline: Outline
+        color_mode: Color mode
+        color_mode/light: Light
+        color_mode/dark: Dark
+      dummy/atom/image_and_content:
+        <<: *image_and_content_atoms_attributes
       dummy/atom/cards/person:
         large: Big image
       dummy/atom/divider:
