@@ -11,7 +11,7 @@
     color: $shade-black-contrast
     text-decoration: none
     background: $shade-200
-    padding: map-get($spacers, b) map-get($spacers, bb)
+    padding: map-get($spacers, b) map-get($spacers, d)
     align-self: center
     border-radius: $btn-border-radius-lg
     font-size: $ui-typo-display-s-font-size
@@ -100,12 +100,12 @@
     &__text-logo
       font-size: $ui-typo-display-xs-font-size
       line-height: $ui-typo-display-xs-line-height
-      padding: map-get($spacers, b) map-get($spacers, bb)
+      padding: map-get($spacers, b) map-get($spacers, d)
       min-height: 38px
 
     &__inner
       flex-wrap: wrap
-      gap: map-get($spacers, 2) map-get($spacers, bb)
+      gap: map-get($spacers, 2) map-get($spacers, d)
       padding: px-to-rem(8px) 0
       justify-content: flex-start
 
@@ -153,7 +153,7 @@
       width: calc(100% + #{$grid-gutter-width})
 
     &__toolbar
-      max-width: calc(100% - (#{map-get($spacers, bb)} + 32px))
+      max-width: calc(100% - (#{map-get($spacers, d)} + 32px))
 
     &__toolbar-dropdowns
       margin-left: - $grid-gutter-half

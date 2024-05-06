@@ -1,6 +1,6 @@
 .container-fluid
   max-width: $container-fluid-max-width
-  padding: 0 map-get($gaps, k)
+  padding: 0 map-get($spacers, k)
 
   & &:not(.container-fluid--forced-padding)
     padding-left: 0
@@ -8,14 +8,14 @@
     max-width: 100%
 
   +media-breakpoint-down(xl)
-    padding: 0 map-get($gaps, i)
+    padding: 0 map-get($spacers, i)
 
     .container-narrow
-      padding: 0 map-get($gaps, j)
+      padding: 0 map-get($spacers, j)
 
   +media-breakpoint-down(sm)
     &:not(.container-fluid--with-narrow)
-      padding: 0 map-get($gaps, d)
+      padding: 0 map-get($spacers, d)
 
     &--with-narrow
       padding: 0
