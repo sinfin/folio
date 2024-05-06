@@ -1,15 +1,11 @@
 # frozen_string_literal: true
 
 class Dummy::Atom::ImageAndContentComponent < ApplicationComponent
-  THUMB_SIZE = "648x450#"
-
-  bem_class_name :image_right, :with_link
   bem_class_name :image_right, :with_link, :centered_content, :background
 
   def initialize(atom:, atom_options: {})
     @atom = atom
     @atom_options = atom_options
-    @image_right = @atom.image_side_with_fallback == "right"
     @image_right = @atom.image_side == "right"
     @with_link = @atom.url.present?
     @thumb_size = @atom.thumb_size_with_fallback
