@@ -11,7 +11,7 @@ class Dummy::Blog::ArticlesController < ApplicationController
                      .includes(:published_topics,
                                cover_placement: :file)
 
-    @pagy, @articles = pagy(articles, items: 10)
+    @pagy, @articles = pagy(articles, items: 12)
 
     @topics = Dummy::Blog::Topic.published
                                 .by_locale(I18n.locale)
@@ -22,6 +22,14 @@ class Dummy::Blog::ArticlesController < ApplicationController
 
   def show
     force_correct_path(url_for(@article))
+
+    articles = @klass.published
+                     .ordered
+                     .by_locale(I18n.locale)
+                     .includes(:published_topics,
+                               cover_placement: :file)
+
+    @articles = pagy(articles, items: 3)
   end
 
   private

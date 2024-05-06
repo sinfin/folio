@@ -1,0 +1,10 @@
+ul.d-blog-articles-topic-tags[
+  class=(@size? "d-blog-articles-topic-tags--#{@size}" : nil)
+]
+  / TODO: add topic primary or not data
+  - @topics.each do |topic|
+    li.d-blog-articles-topic-tags__item[
+      class=([true, false].sample ? 'd-blog-articles-topic-tags__item--primary' : nil)
+    ]
+      a.d-blog-articles-topic-tags__link href=url_for(topic)
+        = topic.title
