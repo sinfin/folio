@@ -73,7 +73,7 @@ $dummy-mailer-styles: false !default
         padding: $mailer-gap-f 0 0 !important
 
       &__inner-wrapper
-        padding: $mailer-gap-b !important
+        padding: $mailer-gap-b $mailer-gap-b $mailer-gap-e !important
 
       &__image-inner
         padding: $mailer-gap-b !important
@@ -81,10 +81,6 @@ $dummy-mailer-styles: false !default
       &__image
         width: 100% !important
 
-      &__content-inner
-        padding: $mailer-gap-b !important
-
-    +mailer-media-breakpoint-down(sm)
       &__content-inner
         padding: $mailer-gap-d $mailer-gap-b $mailer-gap-a !important
 
@@ -102,6 +98,12 @@ $dummy-mailer-styles: false !default
       &__divider-wrapper
         margin: $mailer-gap-d 0 !important
 
+      &__inner-wrapper
+        padding: 0 !important
+  
+      &__content-inner
+        padding: $mailer-gap-b 0 0 0 !important
+
       &__author
         font-size: $mailer-ui-typo-display-xs-font-size !important
         line-height: $ui-typo-display-xs-line-height !important
@@ -110,16 +112,6 @@ $dummy-mailer-styles: false !default
       &__name
         font-size: $mailer-ui-typo-text-l-font-size !important
         line-height: $ui-typo-text-l-line-height !important
-
-    +mailer-media-breakpoint-down(sm)
-      &__inner-wrapper
-        padding: $mailer-gap-d !important
-
-      &__image-inner
-        padding: 0 !important
-
-      &__content-inner
-        padding: $mailer-gap-b 0 0 0 !important
 
   // rich text
   .d-mailer-layout__content

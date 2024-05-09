@@ -9,7 +9,7 @@
 =mailer-media-breakpoint-down($name, $breakpoints: $mailer-breakpoints)
   $max: mailer-breakpoint-max($name, $breakpoints)
   @if $max
-    @media (max-width: $max)
+    @media (max-width:$max)
       @content
   @else
     @content
@@ -17,7 +17,7 @@
 =mailer-media-breakpoint-up($name, $breakpoints: $mailer-breakpoints)
   $min: mailer-breakpoint-min($name, $breakpoints)
   @if $min
-    @media (min-width: $min)
+    @media (min-width:$min)
       @content
   @else
     @content
