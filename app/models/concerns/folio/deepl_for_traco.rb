@@ -6,9 +6,11 @@ module Folio::DeeplForTraco
   extend ActiveSupport::Concern
 
   included do
-    DeepL.configure do |config|
-      config.auth_key = ENV.fetch("DEEPL_API_KEY", nil)
-      config.host = ENV.fetch("DEEPL_API_HOST", "https://api-free.deepl.com")
+    if ENV["DEEPL_API_KEY"]
+      DeepL.configure do |config|
+        config.auth_key = ENV["DEEPL_API_KEY"]
+        config.host = ENV.fetch("DEEPL_API_HOST", "https://api-free.deepl.com")
+      end
     end
 
     before_validation :translate_slugs_if_new_record
@@ -39,7 +41,11 @@ module Folio::DeeplForTraco
           I18n.available_locales.each do |l|
             return if send("#{attribute}_#{l}").present?
 
-            translated = ::DeepL.translate(val, I18n.locale, l).text
+            if ENV["DEEPL_API_KEY"]
+              translated = ::DeepL.translate(val, I18n.locale, l).text
+            else
+              translated = "#{val}(#{l.upcase})"
+            end
             send("#{attribute}_#{l}=", translated)
 
           rescue ::DeepL::Exceptions::RequestError, ::DeepL::Exceptions::NotSupported, DeepL::Exceptions::Error => e
