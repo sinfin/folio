@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_03_061049) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_13_100651) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -136,8 +136,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_03_061049) do
     t.integer "position"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "site_id", null: false
     t.index ["closed_by_id"], name: "index_folio_console_notes_on_closed_by_id"
     t.index ["created_by_id"], name: "index_folio_console_notes_on_created_by_id"
+    t.index ["site_id"], name: "index_folio_console_notes_on_site_id"
     t.index ["target_type", "target_id"], name: "index_folio_console_notes_on_target"
   end
 
@@ -527,6 +529,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_03_061049) do
     t.index ["name"], name: "index_tags_on_name", unique: true
   end
 
+  add_foreign_key "folio_console_notes", "folio_sites", column: "site_id"
   add_foreign_key "folio_files", "folio_sites", column: "site_id"
   add_foreign_key "folio_site_user_links", "folio_sites", column: "site_id"
   add_foreign_key "folio_site_user_links", "folio_users", column: "user_id"
