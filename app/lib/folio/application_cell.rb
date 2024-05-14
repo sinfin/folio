@@ -81,7 +81,7 @@ class Folio::ApplicationCell < Cell::ViewModel
   end
 
   def current_ability
-    options[:current_ability] || Folio::Ability.new(current_user, current_site)
+    options[:current_ability] || ::Folio::Current.ability
   end
 
   def user_signed_in?

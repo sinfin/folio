@@ -52,7 +52,7 @@ module Folio::ApplicationControllerBase
 
   def can_now?(action, object = nil)
     object ||= current_site
-    (current_user || Folio::User.new).can_now_by_ability?(current_ability, action, object)
+    (current_user || Folio::User.new).can_now_by_ability?(::Folio::Current.ability, action, object)
   end
 
   def true_user
@@ -124,8 +124,8 @@ module Folio::ApplicationControllerBase
       # allow anonymous invites
     end
 
-    def current_ability
-      @current_ability ||= Folio::Ability.new(current_user, current_site)
+    def current_ability # so CanCanCan can use it
+      @current_ability ||= ::Folio::Current.ability
     end
 
     def add_root_breadcrumb

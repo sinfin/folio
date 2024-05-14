@@ -22,7 +22,7 @@ class ApplicationController < ActionController::Base
       add_breadcrumb_on_rails(t("homepage"), "/")
     end
 
-    def current_ability
-      @current_ability ||= Folio::Ability.new(current_user)
+    def current_ability # so CanCanCan can use it
+      @current_ability ||= ::Folio::Current.ability
     end
 end
