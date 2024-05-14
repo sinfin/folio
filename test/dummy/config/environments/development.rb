@@ -44,7 +44,7 @@ Rails.application.configure do
     password:        ENV["SMTP_PASSWORD"],
     authentication:  ENV["SMTP_AUTHENTICATION"] }
 
-  # Skip MiniProfiler for mailer 
+  # Skip MiniProfiler for mailer
   # Some clients show its output in the body of the email
   # It breaks the email preview, which makes debugging harder
   if defined?(Rack::MiniProfiler)
