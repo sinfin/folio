@@ -9,7 +9,7 @@ module Folio::SetCurrentRequestDetails
 
   private
     def set_up_current_from_request
-      if Folio::Current.request_id.nil?
+      if Folio::Current.request_id.nil? || (request && request.uuid != Folio::Current.request_id)
         Folio::Current.setup!(request:, site: current_site, user: current_user, session:)
       end
     end
