@@ -13,6 +13,7 @@ class Dummy::DeveloperMailer < ApplicationMailer
 
     # Denis
     # @recipients << "denis@sinfin.cz"
+    @rich_text = '<p class="redactor-component folio-redactor-button"><a class="btn btn-redactor btn-redactor--fill" href="https://github.com/sinfin/folio/">button label</a></p>'
 
     mail to: @recipients, from: "Folio Test", subject: "Test"
   end

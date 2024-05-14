@@ -7,7 +7,7 @@ class Dummy::Mailer::ButtonComponentTest < Folio::ComponentTest
     label = "hello"
     href = "#"
 
-    render_inline(Dummy::Mailer::ButtonComponent.new(label: label, href: href))
+    render_inline(Dummy::Mailer::ButtonComponent.new(label:, href:))
 
     assert_selector(".d-mailer-button")
   end
