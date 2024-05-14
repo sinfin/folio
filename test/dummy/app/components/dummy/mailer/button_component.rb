@@ -1,23 +1,11 @@
 # frozen_string_literal: true
 
 class Dummy::Mailer::ButtonComponent < ApplicationComponent
-  def initialize(label: nil, href: nil, type: nil, size: nil)
+  def initialize(label:, href:, variant: "primary", size: "md")
     @label = label
     @href = href
-    @type = type
+    @variant = variant
     @size = size
-  end
-
-  def type
-    @type.to_s || "primary"
-  end
-
-  def size
-    @size || :md
-  end
-
-  def label
-    @label.present? ? @label : "Button label"
   end
 
   def mso_padding_start

@@ -1,14 +1,14 @@
 .d-mailer-button
   a.d-mailer-button__btn[
     href=(@href.present? ? @href : "#")
-    class="btn btn-#{type} btn-#{size}"
+    class="btn btn-#{variant} btn-#{size}"
     target="_blank"
     rel="noopener"
   ]
     /[if mso]
       = mso_padding_start
 
-    = label
+    = @label
 
     /[if mso]
       = mso_padding_end

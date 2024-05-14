@@ -47,7 +47,7 @@ table.d-mailer-cards-medium[
                 = content
 
                 - if @button_label && @button_href
-                  = render(Dummy::Mailer::ButtonComponent.new(label: @button_label, href: @button_href, type: :primary, size: :sm))
+                  = render(Dummy::Mailer::ButtonComponent.new(label: @button_label, href: @button_href, size: "sm"))
 
             /[if mso]
               </td>

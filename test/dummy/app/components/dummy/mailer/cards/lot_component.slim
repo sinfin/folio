@@ -140,7 +140,7 @@ table.d-mailer-cards-lot[
                       tr
                         td.d-mailer-cards-lot__button-block
                           - if @button_label && @button_href
-                            = render(Dummy::Mailer::ButtonComponent.new(label: @button_label, href: @button_href, type: :secondary, size: :md))
+                            = render(Dummy::Mailer::ButtonComponent.new(label: @button_label, href: @button_href, type: "secondary"))
 
             /[if mso]
               </td>
