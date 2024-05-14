@@ -10,8 +10,6 @@ class Folio::LeadMailerPreview < ActionMailer::Preview
                           site: Folio::Site.first)
     end
 
-    Folio::LeadMailer.notification_email(Folio::Lead.first).tap do |email|
-      Premailer::Rails::Hook.perform(email)
-    end
+    Folio::LeadMailer.notification_email(Folio::Lead.first)
   end
 end
