@@ -18,23 +18,17 @@ class Folio::Ability
 
   # override to extend
   def ability_rules
-    folio_console_rules
-    non_console_rules
+    folio_rules
+    sidekiq_rules
   end
 
-  def non_console_rules
-    unless Rails.env.test?
-      puts("Override Folio::Ability.non_console_rules method to define rules for non-console actions.")
-      puts("Even superadmin should be forced to use impersonation for non-admin usage.")
-      puts("Or overide Folio::Ability.ability_rules method to not call `non_console_rulles`.")
-    end
-
+  def sidekiq_rules
     if user.superadmin?
-      can :do_anything, :all # this is kinda overkill
+      can :do_anything, :sidekiq
     end
   end
 
-  def folio_console_rules
+  def folio_rules
     can [:stop_impersonating], Folio::User # anyone must be able to stop impersonating
 
     if user.superadmin?
@@ -70,6 +64,8 @@ class Folio::Ability
       cannot :set_superadmin, Folio::User
     end
   end
+  alias_method :folio_console_rules, :folio_rules
+
   def console_common_admin_rules
     can :access_console, site
     can :multisearch_console, site
