@@ -17,7 +17,7 @@ table.d-mailer-cards-medium[
                 <td style="width:200px;padding:16px;" align="left" valign="top">
 
               .d-mailer-cards-medium__image-wrapper[
-                class="card-col-sm"
+                class="d-mailer-cards-medium__sm-column"
               ]
                 .d-mailer-cards-medium__image-inner
                   img.d-mailer-cards-medium__image[
@@ -37,7 +37,7 @@ table.d-mailer-cards-medium[
                 <td style="padding:16px;" valign="top">
 
             .d-mailer-cards-medium__content-wrapper[
-              class=(@folio_image.present? ? "card-col-lg" : "col-full")
+              class=(@folio_image.present? ? "d-mailer-cards-medium__lg-column" : "col-full")
             ]
               .d-mailer-cards-medium__content-inner
                 - if @title.present?

@@ -5,26 +5,26 @@ $dummy-mailer-styles: false !default
     max-width: 100% !important
 
   +mailer-media-breakpoint-up($mailer-breakpoint-mobile)
-    .card-col-sm
+    .d-mailer-cards-medium__sm-column
       max-width: 37.6% !important
 
-    .card-col-lg
+    .d-mailer-cards-medium__lg-column
       max-width: 62.4% !important
 
-    .xs-card-even-col
+    .d-mailer-cards-extra-small-container__even-column
       max-width: 51.85% !important
 
-    .xs-card-odd-col
+    .d-mailer-cards-extra-small-container__odd-column
       max-width: 48.15% !important
 
-    .lot-col-sm
+    .d-mailer-cards-medium__sm-column
       max-width: 41.7% !important
 
-    .lot-col-lg
+    .d-mailer-cards-medium__lg-column
       max-width: 58.3% !important
 
   +mailer-media-breakpoint-down($mailer-breakpoint-mobile)
-    .card-col-lg, .lot-col-lg,
-    .card-col-sm, .lot-col-sm,
-    .xs-card-even-col, .xs-card-odd-col
+    .d-mailer-cards-medium__lg-column, .d-mailer-cards-medium__lg-column,
+    .d-mailer-cards-medium__sm-column, .d-mailer-cards-medium__sm-column,
+    .d-mailer-cards-extra-small-container__even-column, .d-mailer-cards-extra-small-container__odd-column
       max-width: 100% !important
