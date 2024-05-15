@@ -5,19 +5,6 @@ class Dummy::Mailer::Cards::LotComponent < ApplicationComponent
 
   THUMB_SIZE = "232x322#"
 
-  EVENT_TYPES = {
-    auction: "Aukce",
-    internet_auction: "Internetová aukce",
-    gallery: "Galerijní prodej"
-  }
-
-  AUCTION_STATUS = {
-    not: "Nevydraženo",
-    active: "Draží se",
-    finished: "Vydraženo",
-    upcoming: "Bude se dražit"
-  }
-
   def initialize(folio_image: nil,
                  author: nil,
                  name: nil,
@@ -44,19 +31,7 @@ class Dummy::Mailer::Cards::LotComponent < ApplicationComponent
     @button_href = button_href
   end
 
-  def event_type
-    if @event[:type].present?
-      EVENT_TYPES[@event[:type]] || @event[:type].to_s
-    end
-  end
-
   def description
     @description.present? ? @description.values : nil
-  end
-
-  def auction_status
-    if @auction_status.present?
-      AUCTION_STATUS[@auction_status] || @auction_status.to_s
-    end
   end
 end

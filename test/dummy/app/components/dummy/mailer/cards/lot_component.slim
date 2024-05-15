@@ -59,7 +59,7 @@ table.d-mailer-cards-lot[
                           .d-mailer-cards-lot__event
                             - if @event[:type].present?
                               span.d-mailer-cards-lot__event-type
-                                = event_type
+                                = @event[:type]
 
                               span.d-mailer-cards-lot__whitespace-s
                                 | &nbsp;
@@ -104,8 +104,8 @@ table.d-mailer-cards-lot[
 
                       tr
                         td.d-mailer-cards-lot__auction-data-block
-                          - if auction_status
-                            .d-mailer-cards-lot__auction-status = auction_status
+                          - if @auction_status
+                            .d-mailer-cards-lot__auction-status = @auction_status
 
                           - if @price.present?
                             .d-mailer-cards-lot__current-price
