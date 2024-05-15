@@ -1,5 +1,6 @@
 / Preview text (is hidden in template)
-= render(Dummy::Mailer::PreviewTextComponent.new)
+- if preview_text.present?
+  = render(Dummy::Mailer::PreviewTextComponent.new(text: preview_text))
 
 .d-mailer-layout[
   aria-roledescription="email"
