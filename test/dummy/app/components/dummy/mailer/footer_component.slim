@@ -1,34 +1,33 @@
 table.d-mailer-footer[
   role="presentation"
 ]
-  - if @logo
-    tr
-      td.d-mailer-footer__logo-wrapper
-        a[
-          href="https://www.auctea.com/"
-          class="d-unlink"
-          class="d-mailer-footer__logo-link"
-          class="light-img-parent"
+  tr
+    td.d-mailer-footer__logo-wrapper
+      a[
+        href="https://www.auctea.com/"
+        class="d-unlink"
+        class="d-mailer-footer__logo-link"
+        class="light-img-parent"
+      ]
+        img[
+          src="https://sinfin.davidduben.cz/img/auctify-logo.png"
+          alt=@site.title
+          width="107"
         ]
-          img[
-            src="https://sinfin.davidduben.cz/img/auctify-logo.png"
-            alt=@site.title
-            width="107"
-          ]
 
-        // Logo for dark mode
-        a[
-          href="https://www.auctea.com/"
-          class="d-unlink"
-          class="d-mailer-footer__logo-link"
-          class="dark-img-parent"
-          style="display:none;"
+      // Logo for dark mode
+      a[
+        href="https://www.auctea.com/"
+        class="d-unlink"
+        class="d-mailer-footer__logo-link"
+        class="dark-img-parent"
+        style="display:none;"
+      ]
+        img[
+          src="https://sinfin.davidduben.cz/img/auctify-logo-white.png"
+          alt=@site.title
+          width="107"
         ]
-          img[
-            src="https://sinfin.davidduben.cz/img/auctify-logo-white.png"
-            alt=@site.title
-            width="107"
-          ]
 
   - if contact_details.present?
     tr

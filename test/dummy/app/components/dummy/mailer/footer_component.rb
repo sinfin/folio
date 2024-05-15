@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 class Dummy::Mailer::FooterComponent < ApplicationComponent
-  def initialize(site:, logo: false, menu: nil)
+  def initialize(site:, menu: nil)
     @site = site
-    @logo = logo
     @menu = menu
   end
 

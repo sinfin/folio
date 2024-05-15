@@ -9,29 +9,25 @@ table.d-mailer-header[
         class="d-mailer-header__logo-link"
       ]
         h1.d-mailer-header__logo
-          - if @logo
-            .d-mailer-header__logo-img-wrapper[
-              class="light-img-parent"
+          .d-mailer-header__logo-img-wrapper[
+            class="light-img-parent"
+          ]
+            img[
+              src="https://sinfin.davidduben.cz/img/auctify-logo.png"
+              class="d-mailer-header__logo-img"
+              alt=@site.title
+              width="200"
             ]
-              img[
-                src="https://sinfin.davidduben.cz/img/auctify-logo.png"
-                class="d-mailer-header__logo-img"
-                alt=@site.title
-                width="200"
-              ]
 
-            // Logo for dark mode
-            // In case of invisible logo, we can add fixed white background for header
-            .d-mailer-header__logo-img-wrapper[
-              class="dark-img-parent"
-              style="display:none;"
+          // Logo for dark mode
+          // In case of invisible logo, we can add fixed white background for header
+          .d-mailer-header__logo-img-wrapper[
+            class="dark-img-parent"
+            style="display:none;"
+          ]
+            img[
+              src="https://sinfin.davidduben.cz/img/auctify-logo-white.png"
+              class="d-mailer-header__logo-img"
+              alt=@site.title
+              width="200"
             ]
-              img[
-                src="https://sinfin.davidduben.cz/img/auctify-logo-white.png"
-                class="d-mailer-header__logo-img"
-                alt=@site.title
-                width="200"
-              ]
-
-          - else
-            = @site.title
