@@ -297,7 +297,7 @@ class Folio::User < Folio::ApplicationRecord
   def can_now?(action, subject = nil, site: nil)
     site ||= subject&.try(:site)
     subject = site if subject.blank?
-    ability = Folio::Ability.new(self, site)
+    ability = ::Folio::Current.ability || Folio::Ability.new(self, site)
     can_now_by_ability?(ability, action, subject)
   end
 
