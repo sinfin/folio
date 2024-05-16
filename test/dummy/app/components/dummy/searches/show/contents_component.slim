@@ -1,11 +1,11 @@
 .d-searches-show-contents
-  .d-searches-show-contents__tabs.mb-g
+  .d-searches-show-contents__tabs.mb-f
     - if @search[:tabs].present? && @search[:count] > 0
       = render(Dummy::Ui::TabsComponent.new(tabs: @search[:tabs]))
 
   .d-searches-show-contents__results-wrap
     - if @search[:count] == 0
-      .d-searches-show-contents__no-results.mt-g
+      .d-searches-show-contents__no-results.mt-f
         p
           - if params[:q].present?
             = cstypo t('.no_results')
@@ -21,7 +21,7 @@
 
           = render(@search[:active_results][:results_component].new(data: @search[:active_results]))
 
-          .mt-h.mt-lg-g
+          .mt-c.mt-lg-f
             = render(Dummy::Ui::PagyComponent.new(pagy: @search[:active_results][:pagy]))
 
         - else
@@ -35,6 +35,6 @@
             = render(data[:results_component].new(data:))
 
             - if data[:pagy] && data[:pagy].pages > 1
-              .mt-h.mt-lg-g
+              .mt-c.mt-lg-f
                 a.btn.btn-primary href=data[:href]
                   = t('.more_results')

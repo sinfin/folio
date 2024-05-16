@@ -3,12 +3,12 @@
     a.d-unlink href=dummy_ui_path UI kit
 
   - %w[light dark].each do |theme|
-    .bg-body.p-g.mt-g.border.rounded data-bs-theme=theme
+    .bg-body.p-f.mt-f.border.rounded data-bs-theme=theme
       h2.mt-0 Alerts - #{theme}
 
       = render(Dummy::Ui::FlashComponent.new(flash:))
 
-      .mt-g
+      .mt-f
         = render(Dummy::Ui::ButtonsComponent.new(buttons: @buttons_model))
 
       h3 Regular

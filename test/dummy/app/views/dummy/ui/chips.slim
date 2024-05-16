@@ -3,9 +3,9 @@
     a.d-unlink href=dummy_ui_path UI kit
 
   - %w[light dark].each do |theme|
-    .bg-body.p-g.mt-g.border.rounded data-bs-theme=theme
+    .bg-body.p-f.mt-g.border.rounded data-bs-theme=theme
       h2.mt-0 Chips - #{theme}
 
       - @chips.each do |hash|
-        .my-g
+        .my-f
           = render(Dummy::Ui::ChipsComponent.new(**hash))

@@ -56,10 +56,10 @@
       .container-fluid
         h2 = @atom_klass.model_name.human
 
-        h3.mb-gg = @atom_klass
+        h3.mb-i = @atom_klass
 
       - %w[light dark].each do |theme|
-        .bg-body.border-top.border-bottom.py-gg data-bs-theme=theme
+        .bg-body.border-top.border-bottom.py-i data-bs-theme=theme
           .d-atoms__atoms
             - @atom_data.each do |attrs, atoms|
               .d-atoms__atom title=attrs.to_json
