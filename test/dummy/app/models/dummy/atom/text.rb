@@ -1,17 +1,40 @@
 # frozen_string_literal: true
 
 class Dummy::Atom::Text < Folio::Atom::Base
+  ALLOWED_ALIGNS = %w[left center]
+  ALLOWED_THEMES = %w[light dark]
+  ALLOWED_OUTLINES = [nil, "gray", "blue", "red", "green", "orange"]
+  ALLOWED_HIGHLIGHTS = [nil, "background"]
+
   ATTACHMENTS = %i[]
 
   STRUCTURE = {
     content: :richtext,
-    highlight: [nil, "gray", "success", "neutral", "caution", "error"],
+    alignment: ALLOWED_ALIGNS,
+    theme: ALLOWED_THEMES,
+    outline: ALLOWED_OUTLINES,
+    highlight: ALLOWED_HIGHLIGHTS,
   }
 
   ASSOCIATIONS = {}
 
   validates :content,
             presence: true
+
+  def alignment_with_fallback
+    alignment.presence || "left"
+  end
+
+  def theme_with_fallback
+    theme.presence || "light"
+  end
+
+  def self.default_atom_values
+    {
+      alignment: "left",
+      theme: "light",
+    }
+  end
 
   def self.console_insert_row
     0
