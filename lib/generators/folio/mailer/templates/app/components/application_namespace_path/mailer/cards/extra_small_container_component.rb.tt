@@ -1,0 +1,19 @@
+# frozen_string_literal: true
+
+class <%= application_namespace %>::Mailer::Cards::ExtraSmallContainerComponent < <%= application_namespace %>::Mailer::BaseComponent
+  def initialize(cards:)
+    @cards = cards
+  end
+
+  def render?
+    @cards.present?
+  end
+
+  def card_wrapper_class(index)
+    if index.even?
+      "<%= classname_prefix %>-mailer-cards-extra-small-container__even-column"
+    else
+      "<%= classname_prefix %>-mailer-cards-extra-small-container__odd-column"
+    end
+  end
+end

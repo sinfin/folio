@@ -1,0 +1,13 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= application_namespace %>::Mailer::Cards::ExtraSmallComponentTest < Folio::ComponentTest
+  def test_render
+    card = { title: "Card headline", text: "Subtitle" }
+
+    render_inline(<%= application_namespace %>::Mailer::Cards::ExtraSmallComponent.new(card:))
+
+    assert_selector(".<%= classname_prefix %>-mailer-cards-extra-small")
+  end
+end

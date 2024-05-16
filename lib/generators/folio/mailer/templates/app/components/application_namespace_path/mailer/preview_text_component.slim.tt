@@ -1,0 +1,11 @@
+.<%= classname_prefix %>-mailer-preview-text
+  / Preview text must be at least 90 characters long
+  = @text
+
+/ Hack for not adding other distracting text or characters
+.<%= classname_prefix %>-mailer-preview-text__hack
+  == "&#847; &zwnj; &nbsp; &#8199; &shy; &#847; &zwnj; &nbsp; &#8199; &shy; " \
+     "&#847; &zwnj; &nbsp; &#8199; &shy; &#847; &zwnj; &nbsp; &#8199; &shy; " \
+     "&#847; &zwnj; &nbsp; &#8199; &shy; &#847; &zwnj; &nbsp; &#8199; &shy; " \
+     "&#847; &zwnj; &nbsp; &#8199; &shy; &#847; &zwnj; &nbsp; &#8199; &shy; " \
+     "&#847; &zwnj; &nbsp; &#8199; &shy; &#847; &zwnj; &nbsp; &#8199; &shy;"

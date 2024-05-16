@@ -5,8 +5,6 @@ class Folio::AasmMailerPreview < ActionMailer::Preview
   def event
     Folio::AasmMailer.event("test@test.test",
                             "test subject",
-                            "text content\n\nwith new lines").tap do |email|
-      Premailer::Rails::Hook.perform(email)
-    end
+                            "text content\n\nwith new lines")
   end
 end

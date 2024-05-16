@@ -77,6 +77,7 @@ module Folio
       def copy_templates
         [
           ".env.sample",
+          "app/assets/config/manifest.js",
           "app/controllers/application_controller.rb",
           "app/controllers/application_namespace_path/home_controller.rb",
           "app/controllers/application_namespace_path/pages_controller.rb",
@@ -127,7 +128,6 @@ module Folio
           ".gitignore",
           ".rubocop.yml",
           ".slim-lint.yml",
-          "app/assets/config/manifest.js",
           "app/views/devise/invitations/edit.slim",
           "bin/bower",
           "config/secrets.yml",
@@ -240,6 +240,10 @@ module Folio
         ].each do |file|
           ::File.chmod(0775, Rails.root.join(file))
         end
+      end
+
+      def generate_mailer
+        generate "folio:mailer"
       end
 
       private

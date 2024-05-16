@@ -1,0 +1,55 @@
+table.<%= classname_prefix %>-mailer-cards-medium[
+  role="presentation"
+]
+  tr
+    td.<%= classname_prefix %>-mailer-cards-medium__wrapper
+      table.<%= classname_prefix %>-mailer-cards-medium__inner[
+        role="presentation"
+      ]
+        tr
+          td.<%= classname_prefix %>-mailer-cards-medium__inner-wrapper
+            /[if mso]
+              <table role="presentation" width="100%">
+              <tr>
+
+            - if @folio_image.present?
+              /[if mso]
+                <td style="width:200px;padding:16px;" align="left" valign="top">
+
+              .<%= classname_prefix %>-mailer-cards-medium__image-wrapper[
+                class="<%= classname_prefix %>-mailer-cards-medium__sm-column"
+              ]
+                .<%= classname_prefix %>-mailer-cards-medium__image-inner
+                  img.<%= classname_prefix %>-mailer-cards-medium__image[
+                    src="#{@folio_image.thumb(THUMB_SIZE, immediate: true).url}"
+                    alt="image"
+                    width="200"
+                  ]
+
+              /[if mso]
+                </td>
+
+            - if @folio_image.present?
+              /[if mso]
+                <td style="width:352px;padding:16px;" valign="top">
+            - else
+              /[if mso]
+                <td style="padding:16px;" valign="top">
+
+            .<%= classname_prefix %>-mailer-cards-medium__content-wrapper[
+              class=(@folio_image.present? ? "<%= classname_prefix %>-mailer-cards-medium__lg-column" : "col-full")
+            ]
+              .<%= classname_prefix %>-mailer-cards-medium__content-inner
+                - if @title.present?
+                  *link_with_fallback_tag
+                    = @title
+
+                = content
+
+                - if @button_label && @button_href
+                  = render(<%= application_namespace %>::Mailer::ButtonComponent.new(label: @button_label, href: @button_href, size: "sm"))
+
+            /[if mso]
+              </td>
+              </tr>
+              </table>

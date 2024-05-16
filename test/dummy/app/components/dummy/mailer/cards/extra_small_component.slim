@@ -1,0 +1,40 @@
+table.d-mailer-cards-extra-small[
+  role="presentation"
+  class=parent_class
+]
+  tr
+    td.d-mailer-cards-extra-small__wrapper[
+      align="center"
+      valign="top"
+    ]
+      table[
+        role="presentation"
+      ]
+        tr
+          - if @card[:image].present?
+            td.d-mailer-cards-extra-small__image-wrapper[
+              align="left"
+              valign="top"
+            ]
+              .d-mailer-cards-extra-small__image-inner
+                img.d-mailer-cards-extra-small__image[
+                  src="#{@card[:image].thumb(THUMB_SIZE, immediate: true).url}"
+                  alt=""
+                  width="80"
+                ]
+
+          td.d-mailer-cards-extra-small__content-wrapper[
+            class=content_wrapper_class
+            align="left"
+            valign="top"
+          ]
+            .d-mailer-cards-extra-small__content-inner
+              - if @card[:title].present?
+                *link_with_fallback_tag
+                  = @card[:title]
+
+              - if @card[:text].present?
+                .d-mailer-cards-extra-small__text[
+                  style="margin:0;"
+                ]
+                  = @card[:text]

@@ -28,12 +28,31 @@ Rails.application.configure do
     config.cache_store = :null_store
   end
 
-  # Don't care if the mailer can't send.
-  config.action_mailer.raise_delivery_errors = false
-  config.action_mailer.delivery_method = :letter_opener
+  # ActionMailer Config
+  config.action_mailer.raise_delivery_errors = true
   config.action_mailer.perform_deliveries = true
-
   config.action_mailer.perform_caching = false
+
+  # config.action_mailer.delivery_method = :letter_opener
+  config.action_mailer.delivery_method = :smtp
+
+  config.action_mailer.smtp_settings = {
+    address:         ENV["SMTP_ADDRESS"],
+    port:            ENV["SMTP_PORT"],
+    domain:          ENV["SMTP_DOMAIN"],
+    user_name:       ENV["SMTP_USERNAME"],
+    password:        ENV["SMTP_PASSWORD"],
+    authentication:  ENV["SMTP_AUTHENTICATION"] }
+
+  # Skip MiniProfiler for mailer
+  # Some clients show its output in the body of the email
+  # It breaks the email preview, which makes debugging harder
+  if defined?(Rack::MiniProfiler)
+    Rack::MiniProfiler.config.skip_paths ||= []
+    Rack::MiniProfiler.config.skip_paths << "/rails/mailers/dummy/developer_mailer/debug"
+  end
+
+  config.action_mailer.default_url_options = { host: "localhost", port: ENV["PORT"].presence || 3000, protocol: "http" }
 
   if ENV["DEV_QUEUE_ADAPTER"].present?
     config.active_job.queue_adapter = ENV["DEV_QUEUE_ADAPTER"]
@@ -55,7 +74,6 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
-  config.action_mailer.default_url_options = { host: "localhost", port: ENV["PORT"].presence || 3000 }
 
   # Use an evented file watcher to asynchronously detect changes in source code,
   # routes, locales, etc. This feature depends on the listen gem.

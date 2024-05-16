@@ -1,0 +1,138 @@
+table.d-mailer-cards-lot[
+  role="presentation"
+]
+  tr
+    td.d-mailer-cards-lot__wrapper
+      table.d-mailer-cards-lot__inner[
+        role="presentation"
+      ]
+        tr
+          td.d-mailer-cards-lot__inner-wrapper
+            /[if mso]
+              <table role="presentation" width="100%">
+              <tr>
+
+            - if @folio_image.present?
+              /[if mso]
+                <td style="width:232px;padding:16px;" align="left" valign="top">
+
+              .d-mailer-cards-lot__image-wrapper[
+                class="d-mailer-cards-lot__sm-column"
+              ]
+                .d-mailer-cards-lot__image-inner
+                  img.d-mailer-cards-lot__image[
+                    src="#{@folio_image.thumb(THUMB_SIZE, immediate: true).url}"
+                    alt=""
+                    width="232"
+                  ]
+
+              /[if mso]
+                </td>
+
+            - if @folio_image.present?
+              /[if mso]
+                <td style="width:368px;" valign="top">
+
+            - else
+              /[if mso]
+                <td valign="top">
+
+            .d-mailer-cards-lot__content-wrapper[
+              class=(@folio_image.present? ? "d-mailer-cards-lot__lg-column" : "col-full")
+            ]
+              table.d-mailer-cards-lot__content-table[
+                role="presentation"
+              ]
+                tr
+                  td.d-mailer-cards-lot__content-table-wrapper
+                    table.d-mailer-cards-lot__content-table-wrapper-inner[
+                      role="presentation"
+                    ]
+                      tr
+                        td.d-mailer-cards-lot__title-block
+                          - if @author.present?
+                            .d-mailer-cards-lot__author = @author
+
+                          - if @name.present?
+                            .d-mailer-cards-lot__name = @name
+
+                          - if @sales_pack_title.present?
+                            .d-mailer-cards-lot__event
+                              span.d-mailer-cards-lot__event-type
+                                = @sales_pack_title
+
+                      tr.d-mailer-cards-lot__divider-row
+                        td.d-mailer-cards-lot__divider-wrapper
+                          table[
+                            role="presentation"
+                            width="100%"
+                          ]
+                            tr
+                              td.d-mailer-cards-lot__divider
+
+                      tr
+                        td.d-mailer-cards-lot__description-block
+                          - if @description.present?
+                            - @description.each do |description_row|
+                              .d-mailer-cards-lot__description-row[
+                                style="line-height: 1.5;"
+                              ]
+                                = description_row
+
+                          - if @number.present?
+                            .d-mailer-cards-lot__id-wrapper
+                              span.d-mailer-cards-lot__id-prefix
+                                ' #
+
+                              span.d-mailer-cards-lot__id = @number
+
+                      tr.d-mailer-cards-lot__divider-row
+                        td.d-mailer-cards-lot__divider-wrapper
+                          table[
+                            role="presentation"
+                            width="100%"
+                          ]
+                            tr
+                              td.d-mailer-cards-lot__divider
+
+                      tr
+                        td.d-mailer-cards-lot__auction-data-block
+                          - if @auction_status.present?
+                            .d-mailer-cards-lot__auction-status
+                              = @auction_status
+
+                          - if @price.present?
+                            .d-mailer-cards-lot__current-price
+                              span.d-mailer-cards-lot__price-label
+                                ' #{t('.current_price')}
+
+                              span.d-mailer-cards-lot__price.text-no-wrap
+                                = insert_html_entity(folio_price(@price))
+
+                          - if @live_part_starts_at.present?
+                            .d-mailer-cards-lot__auction-date-wrapper
+                              span.d-mailer-cards-lot__auction-date-label
+                                ' #{t('.live_part_starts_at')}
+
+                              span.d-mailer-cards-lot__auction-date.text-no-wrap
+                                = insert_html_entity(l(@live_part_starts_at))
+
+                          - if @online_bidding_ends_at.present?
+                            .d-mailer-cards-lot__limiting-end-wrapper
+                              span.d-mailer-cards-lot__limiting-end-label
+                                ' #{t('.online_bidding_ends_at')}
+
+                              span.d-mailer-cards-lot__limiting-end.text-no-wrap
+                                = insert_html_entity(l(@online_bidding_ends_at))
+
+                      tr
+                        td.d-mailer-cards-lot__button-block
+                          - if @button_label && @button_href
+                            = render(Dummy::Mailer::ButtonComponent.new(label: @button_label,
+                                                                        href: @button_href,
+                                                                        variant: "secondary"))
+
+            /[if mso]
+              </td>
+              </tr>
+              </table>

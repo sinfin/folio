@@ -110,6 +110,21 @@ class Dummy::SeedGenerator
     scaffold("searches")
   end
 
+  def mailer
+    scaffold("mailer")
+
+    Dir[Rails.root.join("app/assets/stylesheets/dummy/mailer/**/*.sass"),
+        Rails.root.join("app/assets/stylesheets/dummy/mailer_extras/**/*.sass"),
+        Rails.root.join("app/assets/stylesheets/dummy/mailer*.sass")].each do |path|
+      target_path = "#{relative_application_path(path).gsub('dummy', "application_namespace_path")}.tt"
+      copy_file(path, @templates_path.join(target_path))
+    end
+
+    copy_file(Folio::Engine.root.join("app/views/layouts/folio/mailer.html.slim"), @templates_path.join("app/views/layouts/folio/mailer.html.slim.tt"))
+
+    ui_i18n_yamls(Rails.root.join("config/locales/dummy/mailer*.yml"))
+  end
+
   def ui_i18n_yamls(path)
     Dir[path].each do |yaml_path|
       hash = YAML.load_file(yaml_path)
@@ -206,6 +221,7 @@ class Dummy::SeedGenerator
          .gsub("d-atom", "<%= classname_prefix %>-atom")
          .gsub("d-blog", "<%= classname_prefix %>-blog")
          .gsub("d-search", "<%= classname_prefix %>-search")
+         .gsub("d-mailer", "<%= classname_prefix %>-mailer")
          .gsub("d-molecule", "<%= classname_prefix %>-molecule")
          .gsub("d-rich-text", "<%= classname_prefix %>-rich-text")
          .gsub("d-with-icon", "<%= classname_prefix %>-with-icon")
@@ -216,6 +232,7 @@ class Dummy::SeedGenerator
          .gsub("dummy/ui", "<%= application_namespace_path %>/ui")
          .gsub("dummy/blog", "<%= application_namespace_path %>/blog")
          .gsub("dummy/search", "<%= application_namespace_path %>/search")
+         .gsub("dummy/mailer", "<%= application_namespace_path %>/mailer")
          .gsub("dummy/atom", "<%= application_namespace_path %>/atom")
          .gsub("dummy/molecule", "<%= application_namespace_path %>/molecule")
          .gsub("dummy_menu", "<%= application_namespace_path %>_menu")
@@ -252,6 +269,7 @@ namespace :dummy do
       Rake::Task["dummy:seed_generators:prepared_atom"].invoke
       Rake::Task["dummy:seed_generators:blog"].invoke
       Rake::Task["dummy:seed_generators:search"].invoke
+      Rake::Task["dummy:seed_generators:mailer"].invoke
     end
 
     task assets: :environment do
@@ -314,6 +332,11 @@ namespace :dummy do
     task search: :environment do
       gen = Dummy::SeedGenerator.new(templates_path: Folio::Engine.root.join("lib/generators/folio/search/templates"))
       gen.search
+    end
+
+    task mailer: :environment do
+      gen = Dummy::SeedGenerator.new(templates_path: Folio::Engine.root.join("lib/generators/folio/mailer/templates"))
+      gen.mailer
     end
   end
 end

@@ -1,0 +1,31 @@
+table.d-mailer-socials[
+  role="presentation"
+]
+  tr
+    - if social_links.present?
+      - social_links.each_with_index do |(key, link), index|
+        td.d-mailer-socials__social-link-wrapper[
+          align=(index == 0 ? "left" : index == social_links.size - 1 ? "right" : "center")
+        ]
+          a.d-mailer-socials__social-link[
+            href=link
+            class="d-mailer-socials__social-link--#{key}"
+            class="light-img-parent"
+          ]
+            img[
+              src="https://sinfin-folio.s3.eu-central-1.amazonaws.com/mailer/icons/#{key}.png"
+              alt=key
+              width="32"
+            ]
+
+          a.d-mailer-socials__social-link[
+            href=link
+            class="d-mailer-socials__social-link--#{key}"
+            class="dark-img-parent"
+            style="display:none;"
+          ]
+            img[
+              src="https://sinfin-folio.s3.eu-central-1.amazonaws.com/mailer/icons/#{key}-white.png"
+              alt=key
+              width="32"
+            ]

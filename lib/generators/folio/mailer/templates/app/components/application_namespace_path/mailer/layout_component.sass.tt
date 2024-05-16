@@ -1,0 +1,33 @@
+$<%= classname_prefix %>-mailer-styles: false !default
+
+@if $<%= classname_prefix %>-mailer-styles
+  .<%= classname_prefix %>-mailer-layout
+    text-size-adjust: 100%
+    -webkit-text-size-adjust: 100%
+    -ms-text-size-adjust: 100%
+    background-color: $primary-white
+    color: $primary-black
+
+    &__table
+      width: 100%
+
+    &__main-wrapper, &__footer-wrapper
+      padding: 0
+
+    &__footer
+      background: $cloud-100
+
+    &__container
+      width: 100%
+      max-width: 744px
+      text-align: left
+
+    &__wrapper
+      padding: 0 $mailer-gap-d 0 $mailer-gap-d
+
+    &__content
+      width: 100%
+      max-width: 648px
+
+    &__content-inner
+      padding: 0 0 80px 0

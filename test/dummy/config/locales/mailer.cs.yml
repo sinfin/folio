@@ -1,0 +1,18 @@
+---
+cs:
+  dummy:
+    mailer:
+      footer_component:
+        contact: Kontakt
+        follow_us: Sledujte nás
+
+      order_summary_component:
+        invoice_text: Instrukce pro uhrazení objednávky jsou součástí %{link}.
+        invoice_text_link: předpisů k úhradě
+        info: Vydražené položky prosím uhraďte a vyzvedněte nejdéle do 14 dnů od ukončení aukce.
+
+      cards:
+        lot_component:
+          current_price: "Aktuální cena:"
+          live_part_starts_at: "Živá aukce začíná:"
+          online_bidding_ends_at: "Konec limitování:"

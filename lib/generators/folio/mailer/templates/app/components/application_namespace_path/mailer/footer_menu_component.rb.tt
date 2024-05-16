@@ -1,0 +1,12 @@
+# frozen_string_literal: true
+
+class <%= application_namespace %>::Mailer::FooterMenuComponent < <%= application_namespace %>::Mailer::BaseComponent
+  def initialize(site:, menu: nil)
+    @site = site
+    @menu = menu || <%= application_namespace %>::Menu::Footer.find_by(site: @site)
+  end
+
+  def render?
+    @menu.present?
+  end
+end

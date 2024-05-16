@@ -1,0 +1,69 @@
+/ Preview text (is hidden in template)
+- if @preview_text.present?
+  = render(<%= application_namespace %>::Mailer::PreviewTextComponent.new(text: @preview_text))
+
+.<%= classname_prefix %>-mailer-layout[
+  aria-roledescription="email"
+  role="presentation"
+  lang=I18n.locale
+]
+  table.<%= classname_prefix %>-mailer-layout__table[
+    role="presentation"
+  ]
+    tr
+      td.<%= classname_prefix %>-mailer-layout__main-wrapper[
+        align="center"
+      ]
+        /[if mso]
+          <table role="presentation" align="center" style="width:744px;">
+          <tr>
+          <td>
+
+        table.<%= classname_prefix %>-mailer-layout__container[
+          role="presentation"
+        ]
+          tr
+            td.<%= classname_prefix %>-mailer-layout__wrapper[
+              align="center"
+            ]
+              = render(<%= application_namespace %>::Mailer::HeaderComponent.new(site: @site))
+
+          tr
+            td.<%= classname_prefix %>-mailer-layout__wrapper[
+              align="center"
+            ]
+              table.<%= classname_prefix %>-mailer-layout__content[
+                role="presentation"
+              ]
+                tr
+                  td.<%= classname_prefix %>-mailer-layout__content-inner
+                    = content
+
+        /[if mso]
+          </td>
+          </tr>
+          </table>
+
+    tr
+      td.<%= classname_prefix %>-mailer-layout__footer-wrapper[
+        class="<%= classname_prefix %>-mailer-layout__footer"
+        align="center"
+      ]
+        /[if mso]
+          <table role="presentation" align="center" style="width:744px;">
+          <tr>
+          <td>
+
+        table.<%= classname_prefix %>-mailer-layout__container[
+          role="presentation"
+        ]
+          tr
+            td.<%= classname_prefix %>-mailer-layout__wrapper[
+              align="center"
+            ]
+              = render(<%= application_namespace %>::Mailer::FooterComponent.new(site: @site))
+
+        /[if mso]
+          </td>
+          </tr>
+          </table>

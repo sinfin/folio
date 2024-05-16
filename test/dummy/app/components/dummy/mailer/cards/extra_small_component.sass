@@ -1,0 +1,52 @@
+$d-mailer-styles: false !default
+
+@if $d-mailer-styles
+  .d-mailer-cards-extra-small
+    width: 100%
+
+    &__wrapper
+      width: 100%
+      padding: 0
+      font-size: 0
+
+    &--even &__wrapper
+      padding: 0 $mailer-gap-f $mailer-gap-f 0
+
+    &--odd &__wrapper
+      padding: 0 0 $mailer-gap-f 0
+
+    &__image-wrapper
+      width: 80px
+      padding: 0
+
+    &__content-wrapper--with-image
+      padding: 0 0 0 $mailer-gap-d
+
+    &__content-wrapper--full
+      padding: 0
+
+    &__image-inner
+      padding: 0
+
+    &__image
+      width: 80px
+      border-radius: $mailer-border-radius-sm
+
+    &__content-inner
+      padding: 0
+      text-align: left
+
+    &__title
+      +mailer-font-size-display-xs
+      font-weight: $font-weight-bold
+      text-align: left
+      margin: 0 !important
+
+    // This type of notation is used because of the Premailer
+    // to override the default styles of the links
+    a.d-mailer-cards-extra-small__title
+      color: $primary-black
+      font-weight: $font-weight-bold
+
+    &__text
+      +mailer-font-size-text-xs

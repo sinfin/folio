@@ -1,0 +1,13 @@
+$<%= classname_prefix %>-mailer-styles: false !default
+
+@if $<%= classname_prefix %>-mailer-styles
+  .<%= classname_prefix %>-unlink
+    &, &:hover, &:focus
+      text-decoration: none
+      color: inherit
+
+  .fw-bold
+    font-weight: $font-weight-bold
+
+  .text-no-wrap
+    white-space: nowrap

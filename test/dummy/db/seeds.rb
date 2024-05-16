@@ -46,7 +46,7 @@ Folio::Site.create!(title: "Sinfin.digital",
                     social_links: {
                       facebook: "https://www.facebook.com/",
                       instagram: "https://www.instagram.com/",
-                      twitter: "https://www.twitter.com/",
+                      twitter: "https://twitter.com/",
                       linkedin: "https://www.linkedin.com/",
                       youtube: "https://www.youtube.com/",
                     })
