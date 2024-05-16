@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Dummy::Mailer::LayoutComponent < ApplicationComponent
+class Dummy::Mailer::LayoutComponent < Dummy::Mailer::BaseComponent
   def initialize(site:)
     @site = site
   end

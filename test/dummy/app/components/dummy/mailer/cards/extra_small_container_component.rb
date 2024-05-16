@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Dummy::Mailer::Cards::ExtraSmallContainerComponent < ApplicationComponent
+class Dummy::Mailer::Cards::ExtraSmallContainerComponent < Dummy::Mailer::BaseComponent
   def initialize(cards:)
     @cards = cards
   end

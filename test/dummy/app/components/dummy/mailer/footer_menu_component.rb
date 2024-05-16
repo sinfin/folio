@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Dummy::Mailer::FooterMenuComponent < ApplicationComponent
+class Dummy::Mailer::FooterMenuComponent < Dummy::Mailer::BaseComponent
   def initialize(site:, menu: nil)
     @site = site
     @menu = menu

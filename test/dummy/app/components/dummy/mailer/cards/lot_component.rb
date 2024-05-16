@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-class Dummy::Mailer::Cards::LotComponent < ApplicationComponent
-  include Dummy::MailerHelper
-
+class Dummy::Mailer::Cards::LotComponent < Dummy::Mailer::BaseComponent
   THUMB_SIZE = "232x322#"
 
   def initialize(folio_image: nil,

@@ -1,7 +1,3 @@
-ruby:
-  app_namespace = ::Rails.application.class.name.deconstantize
-  component = "#{app_namespace}::Mailer::LayoutComponent".constantize
-
 doctype html
 html.d-mailer-html[
   xmlns="http://www.w3.org/1999/xhtml"
@@ -17,13 +13,13 @@ html.d-mailer-html[
     meta name="color-scheme" content="light dark" /
     meta name="supported-color-schemes" content="light dark" /
 
-    = stylesheet_link_tag('mailer', media: 'all')
+    = stylesheet_link_tag('dummy/mailer', media: 'all')
 
     style[
       type="text/css"
       data-premailer="ignore"
     ]
-      = Rails.application.assets.find_asset('mailer_extras.css').to_s.html_safe
+      == Rails.application.assets.find_asset('dummy/mailer_extras.css').to_s
 
     /[if mso]
       style type="text/css"
@@ -37,5 +33,5 @@ html.d-mailer-html[
                 ' 96
 
   body.d-mailer-body
-    = render(component.new(site:))
+    = render(Dummy::Mailer::LayoutComponent.new(site:))
        = yield

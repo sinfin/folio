@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Dummy::MailerHelper
+class Dummy::Mailer::BaseComponent < ApplicationComponent
   ALLOWED_SEPARATORS = [" ", ".", ":"]
   HTML_ENTITY = "&#173;"
 

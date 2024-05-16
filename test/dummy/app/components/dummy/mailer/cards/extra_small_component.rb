@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Dummy::Mailer::Cards::ExtraSmallComponent < ApplicationComponent
+class Dummy::Mailer::Cards::ExtraSmallComponent < Dummy::Mailer::BaseComponent
   THUMB_SIZE = "80x80#"
 
   def initialize(card:, even: false)

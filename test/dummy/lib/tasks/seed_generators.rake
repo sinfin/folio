@@ -112,6 +112,7 @@ class Dummy::SeedGenerator
 
   def mailer
     scaffold("mailer")
+    copy_file(Folio::Engine.root.join("app/views/layouts/folio/mailer.html.slim"), @templates_path.join("app/views/layouts/folio/mailer.html.slim.tt"))
   end
 
   def ui_i18n_yamls(path)
@@ -210,6 +211,7 @@ class Dummy::SeedGenerator
          .gsub("d-atom", "<%= classname_prefix %>-atom")
          .gsub("d-blog", "<%= classname_prefix %>-blog")
          .gsub("d-search", "<%= classname_prefix %>-search")
+         .gsub("d-mailer", "<%= classname_prefix %>-mailer")
          .gsub("d-molecule", "<%= classname_prefix %>-molecule")
          .gsub("d-rich-text", "<%= classname_prefix %>-rich-text")
          .gsub("d-with-icon", "<%= classname_prefix %>-with-icon")
@@ -220,6 +222,7 @@ class Dummy::SeedGenerator
          .gsub("dummy/ui", "<%= application_namespace_path %>/ui")
          .gsub("dummy/blog", "<%= application_namespace_path %>/blog")
          .gsub("dummy/search", "<%= application_namespace_path %>/search")
+         .gsub("dummy/mailer", "<%= application_namespace_path %>/mailer")
          .gsub("dummy/atom", "<%= application_namespace_path %>/atom")
          .gsub("dummy/molecule", "<%= application_namespace_path %>/molecule")
          .gsub("dummy_menu", "<%= application_namespace_path %>_menu")
