@@ -5,5 +5,5 @@
 //= link application.js
 //= link application.css
 
-//= link mailer.css
-//= link mailer_extras.css
+//= link dummy/mailer.css
+//= link dummy/mailer_extras.css

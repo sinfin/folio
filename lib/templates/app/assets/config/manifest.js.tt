@@ -1,0 +1,9 @@
+//= link folio_manifest.js
+
+//= link_tree ../images
+
+//= link application.js
+//= link application.css
+
+//= link <%= application_namespace_path %>/mailer.css
+//= link <%= application_namespace_path %>/mailer_extras.css
