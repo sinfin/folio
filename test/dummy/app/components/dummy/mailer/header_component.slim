@@ -4,7 +4,7 @@ table.d-mailer-header[
   tr
     td.d-mailer-header__inner
       a[
-        href="https://www.auctea.com/"
+        href=@site.env_aware_root_url
         class="d-unlink"
         class="d-mailer-header__logo-link"
       ]
@@ -13,10 +13,11 @@ table.d-mailer-header[
             class="light-img-parent"
           ]
             img[
-              src="https://sinfin-folio.s3.eu-central-1.amazonaws.com/mailer/logos/folio_logo.png"
+              src=@site.mailer_logo_data[:png_src]
               class="d-mailer-header__logo-img"
               alt=@site.title
-              width="119"
+              width=@site.mailer_logo_data[:width]
+              height=@site.mailer_logo_data[:height]
             ]
 
           // Logo for dark mode
@@ -26,8 +27,9 @@ table.d-mailer-header[
             style="display:none;"
           ]
             img[
-              src="https://sinfin-folio.s3.eu-central-1.amazonaws.com/mailer/logos/folio_logo_white.png"
+              src=@site.mailer_logo_data[:light_png_src]
               class="d-mailer-header__logo-img"
               alt=@site.title
-              width="119"
+              width=@site.mailer_logo_data[:width]
+              height=@site.mailer_logo_data[:height]
             ]

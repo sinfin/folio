@@ -185,6 +185,15 @@ class Folio::Site < Folio::ApplicationRecord
     self
   end
 
+  def mailer_logo_data
+    {
+      png_src: "https://sinfin-folio.s3.eu-central-1.amazonaws.com/mailer/logos/folio_logo.png",
+      light_png_src: "https://sinfin-folio.s3.eu-central-1.amazonaws.com/mailer/logos/folio_logo_white.png",
+      width: 119,
+      height: 60,
+    }
+  end
+
   private
     def system_emails_should_be_valid
       %i[system_email system_email_copy].each do |attr|

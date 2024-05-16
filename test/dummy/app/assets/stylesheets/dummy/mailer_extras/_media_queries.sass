@@ -23,9 +23,6 @@ $d-mailer-styles: false !default
   // header
   .d-mailer-header
     +mailer-media-breakpoint-down($mailer-breakpoint-mobile)
-      &__logo-img
-        width: 130px
-
       &__inner
         padding: $mailer-gap-f 0 !important
 
@@ -48,13 +45,13 @@ $d-mailer-styles: false !default
 
       &__title
         font-size: $mailer-ui-typo-display-xs-font-size !important
-        line-height: $ui-typo-display-xs-line-height !important
-        letter-spacing: $ui-typo-display-xs-letter-spacing !important
+        line-height: $mailer-ui-typo-display-xs-line-height !important
+        letter-spacing: $mailer-ui-typo-display-xs-letter-spacing !important
 
       &__payment-regulation,
       &__instruction
         font-size: $mailer-ui-typo-text-xs-font-size !important
-        line-height: $ui-typo-text-s-line-height !important
+        line-height: $mailer-ui-typo-text-s-line-height !important
 
   // cards
   .d-mailer-cards-extra-small-container
@@ -106,27 +103,27 @@ $d-mailer-styles: false !default
 
       &__author
         font-size: $mailer-ui-typo-display-xs-font-size !important
-        line-height: $ui-typo-display-xs-line-height !important
-        letter-spacing: $ui-typo-display-xs-letter-spacing !important
+        line-height: $mailer-ui-typo-display-xs-line-height !important
+        letter-spacing: $mailer-ui-typo-display-xs-letter-spacing !important
 
       &__name
         font-size: $mailer-ui-typo-text-l-font-size !important
-        line-height: $ui-typo-text-l-line-height !important
+        line-height: $mailer-ui-typo-text-l-line-height !important
 
   // rich text
   .d-mailer-layout__content
     +mailer-media-breakpoint-down($mailer-breakpoint-mobile)
       p
         font-size: $mailer-ui-typo-text-s-font-size !important
-        line-height: $ui-typo-text-s-line-height !important
+        line-height: $mailer-ui-typo-text-s-line-height !important
 
       p.font-size-lg
         font-size: $mailer-ui-typo-text-m-font-size !important
-        line-height: $ui-typo-text-m-line-height !important
+        line-height: $mailer-ui-typo-text-m-line-height !important
 
       p.font-size-sm
         font-size: $mailer-ui-typo-text-xs-font-size !important
-        line-height: $ui-typo-text-xs-line-height !important
+        line-height: $mailer-ui-typo-text-xs-line-height !important
 
       hr
         margin: $mailer-gap-f 0 $mailer-gap-f 0 !important
