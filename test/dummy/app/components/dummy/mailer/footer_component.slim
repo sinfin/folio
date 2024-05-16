@@ -38,7 +38,7 @@ table.d-mailer-footer[
           tr
             td.d-mailer-footer__contact-title-wrapper
               .d-mailer-footer__contact-title.fw-bold
-                | Kontakt
+                = t('.contact')
 
           - contact_details.each do |key, value|
             tr
@@ -50,7 +50,7 @@ table.d-mailer-footer[
     tr
       td.d-mailer-footer__socials-title-wrapper
         .d-mailer-footer__socials-title.fw-bold
-          | Sledujte nás
+          = t('.follow_us')
 
     tr
       td.d-mailer-footer__socials-table-wrapper
@@ -63,7 +63,4 @@ table.d-mailer-footer[
 
   tr
     td.d-mailer-footer__legal-wrapper
-      a.d-mailer-footer__legal-wrapper-link[
-        href="https://sinfin.digital/"
-      ]
-        = @site.copyright_info
+      = @site.copyright_info

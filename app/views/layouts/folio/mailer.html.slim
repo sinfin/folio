@@ -33,5 +33,5 @@ html.d-mailer-html[
                 ' 96
 
   body.d-mailer-body
-    = render(Dummy::Mailer::LayoutComponent.new(site:))
+    = render(Dummy::Mailer::LayoutComponent.new(site:, preview_text: @preview_text))
        = yield

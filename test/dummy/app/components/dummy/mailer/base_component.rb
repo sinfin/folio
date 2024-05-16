@@ -16,4 +16,14 @@ class Dummy::Mailer::BaseComponent < ApplicationComponent
 
     sanitized_string.html_safe
   end
+
+  def menu_url_for(menu_item)
+    string = super
+
+    if string.start_with?("/")
+      "#{@site.env_aware_root_url}#{string[1..]}"
+    else
+      string
+    end
+  end
 end

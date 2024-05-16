@@ -1,12 +1,8 @@
 # frozen_string_literal: true
 
 class Dummy::Mailer::LayoutComponent < Dummy::Mailer::BaseComponent
-  def initialize(site:)
+  def initialize(site:, preview_text: nil)
     @site = site
-  end
-
-  def preview_text
-    # Preview text must be at least 90 characters long
-    "Some hidden preview text. Should be minimal 90 characters long. Lorem ipsum dolor sit amet, lorem ipsum"
+    @preview_text = preview_text
   end
 end

@@ -119,6 +119,10 @@ class Dummy::SeedGenerator
       target_path = "#{relative_application_path(path).gsub('dummy', "application_namespace_path")}.tt"
       copy_file(path, @templates_path.join(target_path))
     end
+
+    copy_file(Folio::Engine.root.join("app/views/layouts/folio/mailer.html.slim"), @templates_path.join("app/views/layouts/folio/mailer.html.slim.tt"))
+
+    ui_i18n_yamls(Rails.root.join("config/locales/dummy/mailer*.yml"))
   end
 
   def ui_i18n_yamls(path)

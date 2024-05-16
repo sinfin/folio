@@ -57,17 +57,13 @@
                     ]
                       - if item[:total_price].present?
                         .d-mailer-order-summary__total-price.text-no-wrap
-                          = insert_html_entity(item[:total_price])
-                          | &nbsp;
-                          | Kč
+                          = insert_html_entity(folio_price(item[:total_price]))
 
-                      - if item[:unit_price].present?
+                      - if item[:comission].present?
                         .d-mailer-order-summary__unit-price.text-no-wrap
-                          = insert_html_entity(item[:unit_price])
-                          | &nbsp;
-                          | Kč
+                          = insert_html_entity(folio_price(item[:comission]))
 
-                      - if item[:count].present?
+                      - if item[:count].present? && item[:count] > 1
                         .d-mailer-order-summary__count
                           ' x
                           = item[:count]
@@ -94,26 +90,16 @@
                       valign="center"
                     ]
                       .d-mailer-order-summary__order-total-price.text-no-wrap
-                        = insert_html_entity(@total)
-                        | &nbsp;
-                        | Kč
+                        = insert_html_entity(folio_price(@total))
 
-    tr
-      td.d-mailer-order-summary__info-wrapper[
-        align="left"
-        valign="top"
-      ]
-        - if @status == :unpaid
+    - if @invoice_url
+      tr
+        td.d-mailer-order-summary__info-wrapper[
+          align="left"
+          valign="top"
+        ]
           .d-mailer-order-summary__payment-regulation
-            ' Instrukce pro uhrazení objednávky jsou součástí
-
-            a.d-mailer-order-summary__payment-regulation-link[
-              href="#"
-              style="font-weight: 400;"
-            ]
-              | předpisů k úhradě
-
-            ' .
+            = invoice_text
 
           .d-mailer-order-summary__instruction
-            ' Vydražené položky prosím uhraďte a vyzvedněte nejdéle do 14 dnů od ukončení aukce.
+            = t('.info')

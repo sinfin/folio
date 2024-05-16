@@ -3,10 +3,10 @@
 class Dummy::Mailer::FooterMenuComponent < Dummy::Mailer::BaseComponent
   def initialize(site:, menu: nil)
     @site = site
-    @menu = menu
+    @menu = menu || Dummy::Menu::Footer.find_by(site: @site)
   end
 
-  def menu
-    @menu ||= Folio::Menu.where(type: "Dummy::Menu::Footer").first
+  def render?
+    @menu.present?
   end
 end

@@ -1,35 +1,33 @@
 # frozen_string_literal: true
 
 class Dummy::Mailer::Cards::LotComponent < Dummy::Mailer::BaseComponent
+  include Folio::PriceHelper
+
   THUMB_SIZE = "232x322#"
 
   def initialize(folio_image: nil,
                  author: nil,
                  name: nil,
-                 event: nil,
+                 sales_pack_title: nil,
                  description: nil,
-                 id: nil,
+                 number: nil,
                  auction_status: nil,
                  price: nil,
-                 auction_date: nil,
-                 limiting_end: nil,
+                 live_part_starts_at: nil,
+                 online_bidding_ends_at: nil,
                  button_label: nil,
                  button_href: nil)
     @folio_image = folio_image
     @author = author
     @name = name
-    @event = event
+    @sales_pack_title = sales_pack_title
     @description = description
-    @id = id
+    @number = number
     @auction_status = auction_status
     @price = price
-    @auction_date = auction_date
-    @limiting_end = limiting_end
+    @live_part_starts_at = live_part_starts_at
+    @online_bidding_ends_at = online_bidding_ends_at
     @button_label = button_label
     @button_href = button_href
-  end
-
-  def description
-    @description.present? ? @description.values : nil
   end
 end

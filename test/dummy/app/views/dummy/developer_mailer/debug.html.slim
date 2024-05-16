@@ -36,23 +36,49 @@ p.font-size-sm Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultr
 
 hr
 
-= render(Dummy::Mailer::OrderSummaryComponent.new(title: "Vážený dražiteli, děkujeme, přijali jsme Vaši objednávku.",
-                                        items:[ {title: "Beulah Erickson", subtitle: "Pacific Railroad Survey - Hot Spring Mound, in the 'Deer Lodge' Prairie", total_price: "10 000 000", unit_price: "15 700", count: 2, folio_image: Folio::File::Image.first},
-                                                {title: "František Kupka", subtitle: "Hot Spring Mound", total_price: "10 000 000", unit_price: "15 000", count: 2, folio_image: Folio::File::Image.first},
-                                                {title: "Josef Velčovský", subtitle: "Pacific Railroad Survey", total_price: "10 000 000", unit_price: "15 000", count: 2, folio_image: Folio::File::Image.first},
-                                              ],
-                                        total: "30 000 000",
-                                        status: :unpaid))
+ruby:
+  summary_model = {
+    title: "Vážený dražiteli, děkujeme, přijali jsme Vaši objednávku.",
+    items: [
+      {
+        title: "Beulah Erickson",
+        subtitle: "Pacific Railroad Survey - Hot Spring Mound, in the 'Deer Lodge' Prairie",
+        total_price: "10 000 000",
+        comission: "15 700",
+        count: 2,
+        folio_image: Folio::File::Image.first
+      },
+      {
+        title: "František Kupka",
+        subtitle: "Hot Spring Mound",
+        total_price: "10 000 000",
+        comission: "15 000",
+        count: 1,
+        folio_image: Folio::File::Image.first
+      },
+      {
+        title: "Josef Velčovský",
+        subtitle: "Pacific Railroad Survey",
+        total_price: "10 000 000",
+        comission: "15 000",
+        count: nil,
+        folio_image: Folio::File::Image.first
+      }
+    ],
+    total: "30 000 000",
+    invoice_url: "/"
+  }
+
+= render(Dummy::Mailer::OrderSummaryComponent.new(**summary_model))
 
 = render(Dummy::Mailer::Cards::LotComponent.new(folio_image: Folio::File::Image.first,
-                                      author: "Karel Malich",
-                                      name: "Název díla lorem ipsum",
-                                      event: {type: "Aukce", name: "Day Sale 2025"},
-                                      description: {date: "40. léta 20. stol. lorem ipsum text", technique: "Olej, plátno", size: "š 70 ✕ v 77 cm"},
-                                      id: "12345",
-                                      auction_status: "Nevydraženo",
-                                      price: "1 100 000",
-                                      auction_date: "Út 9. října 2024, 17:50:00 CET",
-                                      limiting_end: "Út 9. října 2024, 17:50:00 CET",
-                                      button_label: "Zobrazit dílo",
-                                      button_href: "https://www.auctea.com/"))
+                                                author: "Karel Malich",
+                                                name: "Název díla lorem ipsum",
+                                                sales_pack_title: "Aukce Day Sale 2025",
+                                                description: ["40. léta 20. stol. lorem ipsum text", "Olej, plátno", "š 70 ✕ v 77 cm"],
+                                                number: "12345",
+                                                auction_status: "Nevydraženo",
+                                                price: 1_100_000,
+                                                live_part_starts_at: 3.days.from_now,
+                                                online_bidding_ends_at: 2.days.from_now,
+                                                button_href: "https://www.auctea.com/"))

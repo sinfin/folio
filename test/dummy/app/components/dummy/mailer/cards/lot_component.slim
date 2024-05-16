@@ -56,17 +56,10 @@ table.d-mailer-cards-lot[
                           - if @name.present?
                             .d-mailer-cards-lot__name = @name
 
-                          .d-mailer-cards-lot__event
-                            - if @event[:type].present?
+                          - if @sales_pack_title.present?
+                            .d-mailer-cards-lot__event
                               span.d-mailer-cards-lot__event-type
-                                = @event[:type]
-
-                              span.d-mailer-cards-lot__whitespace-s
-                                | &nbsp;
-
-                            - if @event[:name].present?
-                              span.d-mailer-cards-lot__event-name
-                                = @event[:name]
+                                = @sales_pack_title
 
                       tr.d-mailer-cards-lot__divider-row
                         td.d-mailer-cards-lot__divider-wrapper
@@ -79,19 +72,19 @@ table.d-mailer-cards-lot[
 
                       tr
                         td.d-mailer-cards-lot__description-block
-                          - if description
-                            - description.each_with_index do |value, index|
+                          - if @description.present?
+                            - @description.each do |description_row|
                               .d-mailer-cards-lot__description-row[
                                 style="line-height: 1.5;"
                               ]
-                                = value
+                                = description_row
 
-                          - if @id.present?
+                          - if @number.present?
                             .d-mailer-cards-lot__id-wrapper
                               span.d-mailer-cards-lot__id-prefix
                                 ' #
 
-                              span.d-mailer-cards-lot__id = @id
+                              span.d-mailer-cards-lot__id = @number
 
                       tr.d-mailer-cards-lot__divider-row
                         td.d-mailer-cards-lot__divider-wrapper
@@ -104,43 +97,40 @@ table.d-mailer-cards-lot[
 
                       tr
                         td.d-mailer-cards-lot__auction-data-block
-                          - if @auction_status
-                            .d-mailer-cards-lot__auction-status = @auction_status
+                          - if @auction_status.present?
+                            .d-mailer-cards-lot__auction-status
+                              = @auction_status
 
                           - if @price.present?
                             .d-mailer-cards-lot__current-price
                               span.d-mailer-cards-lot__price-label
-                                ' Aktuální cena:
+                                ' #{t('.current_price')}
 
                               span.d-mailer-cards-lot__price.text-no-wrap
-                                = insert_html_entity(@price)
+                                = insert_html_entity(folio_price(@price))
 
-                              span.d-mailer-cards-lot__whitespace-m
-                                | &nbsp;
-
-                              span.d-mailer-cards-lot__currency
-                                | Kč
-
-                          - if @auction_date.present?
+                          - if @live_part_starts_at.present?
                             .d-mailer-cards-lot__auction-date-wrapper
                               span.d-mailer-cards-lot__auction-date-label
-                                ' Živá aukce začíná
+                                ' #{t('.live_part_starts_at')}
 
                               span.d-mailer-cards-lot__auction-date.text-no-wrap
-                                = insert_html_entity(@auction_date)
+                                = insert_html_entity(l(@live_part_starts_at))
 
-                          - if @limiting_end.present?
+                          - if @online_bidding_ends_at.present?
                             .d-mailer-cards-lot__limiting-end-wrapper
                               span.d-mailer-cards-lot__limiting-end-label
-                                ' Konec limitování
+                                ' #{t('.online_bidding_ends_at')}
 
                               span.d-mailer-cards-lot__limiting-end.text-no-wrap
-                                = insert_html_entity(@limiting_end)
+                                = insert_html_entity(l(@online_bidding_ends_at))
 
                       tr
                         td.d-mailer-cards-lot__button-block
                           - if @button_label && @button_href
-                            = render(Dummy::Mailer::ButtonComponent.new(label: @button_label, href: @button_href, variant: "secondary"))
+                            = render(Dummy::Mailer::ButtonComponent.new(label: @button_label,
+                                                                        href: @button_href,
+                                                                        variant: "secondary"))
 
             /[if mso]
               </td>
