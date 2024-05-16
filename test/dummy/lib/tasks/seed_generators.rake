@@ -112,7 +112,13 @@ class Dummy::SeedGenerator
 
   def mailer
     scaffold("mailer")
-    copy_file(Folio::Engine.root.join("app/views/layouts/folio/mailer.html.slim"), @templates_path.join("app/views/layouts/folio/mailer.html.slim.tt"))
+
+    Dir[Rails.root.join("app/assets/stylesheets/dummy/mailer/**/*.sass"),
+        Rails.root.join("app/assets/stylesheets/dummy/mailer_extras/**/*.sass"),
+        Rails.root.join("app/assets/stylesheets/dummy/mailer*.sass")].each do |path|
+      target_path = "#{relative_application_path(path).gsub('dummy', "application_namespace_path")}.tt"
+      copy_file(path, @templates_path.join(target_path))
+    end
   end
 
   def ui_i18n_yamls(path)

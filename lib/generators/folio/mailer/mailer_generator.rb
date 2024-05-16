@@ -2,7 +2,7 @@
 
 require Folio::Engine.root.join("lib/generators/folio/generator_base")
 
-class Folio::MailerGenerator < Rails::Generators::NamedBase
+class Folio::MailerGenerator < Rails::Generators::Base
   include Folio::GeneratorBase
 
   source_root File.expand_path("templates", __dir__)
