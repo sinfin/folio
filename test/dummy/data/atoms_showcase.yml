@@ -20,7 +20,25 @@ atoms:
       title: H4 Pug lumbersexual wayfarers brunch butcher biodiesel skateboard fashion axe.
     - tag: H5
       title: H5 Mixtape gastropub pitchfork wayfarers.
-
+    - tag: H2
+      title: H2 (alignment:center) Polaroid cray austin muggle magic humblebrag aesthetic
+      alignment: center
+    - tag: H2
+      title: H2 (hightlight:background) Polaroid cray austin muggle magic humblebrag aesthetic
+      highlight: background
+    - tag: H2
+      title: H2 (hightlight:background, theme:dark) Polaroid cray austin muggle magic humblebrag aesthetic
+      theme: dark
+      highlight: background
+    - tag: H2
+      title: Adaptive Polaroid cray
+      font_size: adaptive
+    - tag: H2
+      title: Adaptive Polaroid cray austin muggle magic humblebrag aesthetic
+      font_size: adaptive
+    - tag: H2
+      title: Adaptive Polaroid cray austin muggle magic humblebrag aesthetic Adaptive Polaroid cray austin muggle magic austin
+      font_size: adaptive
 
   Dummy::Atom::Perex:
     - content: true
