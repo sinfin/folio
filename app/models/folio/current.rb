@@ -26,9 +26,13 @@ class Folio::Current < ActiveSupport::CurrentAttributes
     self.url = request.url
     self.site = site
     self.user = user
-    self.session = session
     self.ability = Folio::Ability.new(user, site)
+    self.session = session
     self.master_site = Folio.main_site
+  end
+
+  def reset_ability!
+    self.ability = Folio::Ability.new(user, site)
   end
 
   def site_is_master?
