@@ -1,0 +1,15 @@
+$<%= classname_prefix %>-mailer-styles: false !default
+
+@if $<%= classname_prefix %>-mailer-styles
+  .<%= classname_prefix %>-mailer-socials
+    &__social-link-wrapper
+      width: 56px
+
+      &:first-child
+        width: 44px
+
+      &:last-child
+        width: 44px
+
+    &__social-link
+      color: $primary-black

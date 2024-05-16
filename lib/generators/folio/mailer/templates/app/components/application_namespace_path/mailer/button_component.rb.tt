@@ -1,0 +1,10 @@
+# frozen_string_literal: true
+
+class <%= application_namespace %>::Mailer::ButtonComponent < <%= application_namespace %>::Mailer::BaseComponent
+  def initialize(label:, href:, variant: "primary", size: "md")
+    @label = label
+    @href = href
+    @variant = variant
+    @size = size
+  end
+end

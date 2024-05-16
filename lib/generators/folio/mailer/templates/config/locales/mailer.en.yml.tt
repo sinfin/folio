@@ -1,0 +1,18 @@
+---
+en:
+  <%= application_namespace_path %>:
+    mailer:
+      footer_component:
+        contact: Contact
+        follow_us: Follow us
+
+      order_summary_component:
+        invoice_text: Instructions for paying the order are part of %{link}.
+        invoice_text_link: the payment documents
+        info: Please pay for and pick up the auctioned items no later than 14 days after the auction ends.
+
+      cards:
+        lot_component:
+          current_price: "Current price:"
+          live_part_starts_at: "Live part starts at:"
+          online_bidding_ends_at: "Online bidding ends at:"

@@ -1,0 +1,30 @@
+$<%= classname_prefix %>-mailer-styles: false !default
+
+@if $<%= classname_prefix %>-mailer-styles
+  .col-full
+    max-width: 100% !important
+
+  +mailer-media-breakpoint-up($mailer-breakpoint-mobile)
+    .<%= classname_prefix %>-mailer-cards-medium__sm-column
+      max-width: 37.6% !important
+
+    .<%= classname_prefix %>-mailer-cards-medium__lg-column
+      max-width: 62.4% !important
+
+    .<%= classname_prefix %>-mailer-cards-extra-small-container__even-column
+      max-width: 51.85% !important
+
+    .<%= classname_prefix %>-mailer-cards-extra-small-container__odd-column
+      max-width: 48.15% !important
+
+    .<%= classname_prefix %>-mailer-cards-medium__sm-column
+      max-width: 41.7% !important
+
+    .<%= classname_prefix %>-mailer-cards-medium__lg-column
+      max-width: 58.3% !important
+
+  +mailer-media-breakpoint-down($mailer-breakpoint-mobile)
+    .<%= classname_prefix %>-mailer-cards-medium__lg-column, .<%= classname_prefix %>-mailer-cards-medium__lg-column,
+    .<%= classname_prefix %>-mailer-cards-medium__sm-column, .<%= classname_prefix %>-mailer-cards-medium__sm-column,
+    .<%= classname_prefix %>-mailer-cards-extra-small-container__even-column, .<%= classname_prefix %>-mailer-cards-extra-small-container__odd-column
+      max-width: 100% !important

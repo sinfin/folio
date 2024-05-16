@@ -1,0 +1,58 @@
+$<%= classname_prefix %>-mailer-styles: false !default
+
+@if $<%= classname_prefix %>-mailer-styles
+  .<%= classname_prefix %>-mailer-cards-medium
+    width: 100%
+
+    &__wrapper
+      padding: $mailer-gap-g 0 0 0
+
+    &__inner
+      width: 100%
+      background-color: $cloud-100
+      border-radius: $mailer-border-radius
+
+    &__inner-wrapper
+      font-size: 0
+      padding: $mailer-gap-d
+
+    &__image-wrapper, &__content-wrapper
+      display: inline-block
+      vertical-align: top
+
+    &__image-wrapper
+      padding: 0
+      width: 100%
+      max-width: 232px
+      vertical-align: top
+      text-align: left
+
+    &__image-inner
+      padding: $mailer-gap-d
+
+    &__image
+      border-radius: $mailer-border-radius-sm
+
+    &__content-wrapper
+      width: 100%
+      max-width: 384px
+      vertical-align: top
+
+    &__content-wrapper.col-full
+      max-width: 100%
+
+    &__content-inner
+      padding: $mailer-gap-d
+      text-align: left
+
+    &__title
+      text-align: left
+
+    // This type of notation is used because of the Premailer
+    // to override the default styles of the links
+    a.<%= classname_prefix %>-mailer-cards-medium__title
+      color: $primary-black
+      font-weight: $font-weight-bold
+
+    &__content-inner p
+      +mailer-font-size-text-s

@@ -1,0 +1,14 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= application_namespace %>::Mailer::ButtonComponentTest < Folio::ComponentTest
+  def test_render
+    label = "hello"
+    href = "#"
+
+    render_inline(<%= application_namespace %>::Mailer::ButtonComponent.new(label:, href:))
+
+    assert_selector(".<%= classname_prefix %>-mailer-button")
+  end
+end

@@ -1,0 +1,91 @@
+$<%= classname_prefix %>-mailer-styles: false !default
+
+@if $<%= classname_prefix %>-mailer-styles
+  @media (prefers-color-scheme: dark )
+    // show dark-mode-only images
+    .dark-img-parent
+      display: block !important
+
+    // hide light-mode-only images
+    .light-img-parent
+      display: none !important
+
+    h1, h2, span, div
+      color: $primary-white !important
+
+    p, p.font-size-lg, p.font-size-sm
+      color: $cloud-200 !important
+
+    hr
+      border-top: 1px solid $cloud-600 !important
+
+    .<%= classname_prefix %>-mailer-layout
+      background-color: $primary-black !important
+      color: $primary-white !important
+
+    .<%= classname_prefix %>-mailer-order-summary__order-subtitle,
+    .<%= classname_prefix %>-mailer-order-summary__total-price,
+    .<%= classname_prefix %>-mailer-cards-lot__event-type,
+    .<%= classname_prefix %>-mailer-cards-lot__description-row,
+    .<%= classname_prefix %>-mailer-cards-lot__price,
+    .<%= classname_prefix %>-mailer-cards-lot__currency
+      color: $cloud-200 !important
+
+    .<%= classname_prefix %>-mailer-footer-menu__menu-link
+      color: $cloud-300 !important
+
+    .<%= classname_prefix %>-mailer-cards-lot__event-name,
+    .<%= classname_prefix %>-mailer-cards-lot__auction-date-label,
+    .<%= classname_prefix %>-mailer-cards-lot__limiting-end-label
+      color: $cloud-400 !important
+
+    .<%= classname_prefix %>-mailer-footer__legal-wrapper
+      border-top-color: $cloud-500 !important
+
+    .<%= classname_prefix %>-mailer-order-summary__unit-price,
+    .<%= classname_prefix %>-mailer-order-summary__count,
+    .<%= classname_prefix %>-mailer-cards-lot__id-prefix,
+    .<%= classname_prefix %>-mailer-cards-lot__id,
+    .<%= classname_prefix %>-mailer-cards-lot__auction-date,
+    .<%= classname_prefix %>-mailer-cards-lot__limiting-end
+      color: $cloud-500 !important
+
+    .<%= classname_prefix %>-mailer-footer-menu__wrapper
+      border-top-color: $cloud-700 !important
+
+    .<%= classname_prefix %>-mailer-cards-medium__inner,
+    .<%= classname_prefix %>-mailer-order-summary__order-wrapper,
+    .<%= classname_prefix %>-mailer-cards-lot__inner,
+    .<%= classname_prefix %>-mailer-layout__footer
+      background-color: $cloud-800 !important
+    
+    .btn-primary,
+    .btn-redactor--fill
+      color: $primary-black !important
+      background-color: $primary-white !important
+
+    .btn-primary:hover,
+    .btn-primary:focus,
+    .btn-redactor--fill:hover,
+    .btn-redactor--fill:focus
+      background-color: $cloud-200 !important
+      text-underline-color: $cloud-200 !important
+
+    .btn-secondary
+      background-color: transparent !important
+      color: $primary-white !important
+      border: 2px solid $primary-white !important
+
+    .btn-secondary:hover,
+    .btn-secondary:focus
+      background-color: $cloud-800 !important
+      text-underline-color: $cloud-800 !important
+
+    .<%= classname_prefix %>-mailer-order-summary__divider,
+    .<%= classname_prefix %>-mailer-cards-lot__divider
+      background: $cloud-700 !important
+
+    .<%= classname_prefix %>-mailer-footer__contact-detail,
+    .<%= classname_prefix %>-mailer-cards-medium__title,
+    .<%= classname_prefix %>-mailer-cards-extra-small__title
+      color: $primary-white !important

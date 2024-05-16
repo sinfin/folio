@@ -1,0 +1,37 @@
+doctype html
+html.<%= classname_prefix %>-mailer-html[
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:o="urn:schemas-microsoft-com:office:office"
+  xmlns:v="urn:schemas-microsoft-com:vml"
+  lang=I18n.locale
+]
+  head
+    title = "Mail template"
+    meta content=("text/html; charset=UTF-8") http-equiv="Content-Type" /
+    meta content="width=device-width, initial-scale=1.0" name="viewport" /
+    meta name="x-apple-disable-message-reformatting" /
+    meta name="color-scheme" content="light dark" /
+    meta name="supported-color-schemes" content="light dark" /
+
+    = stylesheet_link_tag('<%= application_namespace_path %>/mailer', media: 'all')
+
+    style[
+      type="text/css"
+      data-premailer="ignore"
+    ]
+      == Rails.application.assets.find_asset('<%= application_namespace_path %>/mailer_extras.css').to_s
+
+    /[if mso]
+      style type="text/css"
+        | table {border-collapse:collapse;border-spacing:0;border:0;margin:0;}
+        | div, td {padding:0;}
+        | div {margin:0 !important;}
+      noscript
+        xml
+          o:OfficeDocumentSettings
+              o:PixelsPerInch
+                ' 96
+
+  body.<%= classname_prefix %>-mailer-body
+    = render(<%= application_namespace %>::Mailer::LayoutComponent.new(site:, preview_text: @preview_text))
+       = yield

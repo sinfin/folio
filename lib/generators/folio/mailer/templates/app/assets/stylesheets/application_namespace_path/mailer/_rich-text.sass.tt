@@ -1,0 +1,36 @@
+$<%= classname_prefix %>-mailer-styles: false !default
+
+@if $<%= classname_prefix %>-mailer-styles
+  .<%= classname_prefix %>-mailer-layout__content
+    p
+      +mailer-font-size-text-m
+      margin: 0 0 $mailer-gap-c 0
+      color: $cloud-700
+
+    p.font-size-lg
+      +mailer-font-size-text-l
+
+    p.font-size-sm
+      +mailer-font-size-text-s
+      line-height: 1.5
+
+    a
+      color: $blue
+      text-decoration: none
+      font-weight: $font-weight-semibold
+      cursor: pointer
+
+    hr
+      border-top: 1px solid $cloud-300
+      border-bottom: 0
+      margin: $mailer-gap-g 0 $mailer-gap-g 0
+      padding: 0
+
+    .<%= classname_prefix %>-mailer-cards-extra-small-container + hr
+      margin: $mailer-gap-b 0 $mailer-gap-g 0
+
+    .folio-redactor-button
+      margin: $mailer-gap-b 0 $mailer-gap-b 0
+
+    p + .folio-redactor-button
+      margin: $mailer-gap-e 0 $mailer-gap-b 0

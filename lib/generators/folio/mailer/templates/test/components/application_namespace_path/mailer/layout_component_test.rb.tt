@@ -1,0 +1,13 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= application_namespace %>::Mailer::LayoutComponentTest < Folio::ComponentTest
+  def test_render
+    site = create(:folio_site)
+
+    render_inline(<%= application_namespace %>::Mailer::LayoutComponent.new(site:))
+
+    assert_selector(".<%= classname_prefix %>-mailer-layout")
+  end
+end

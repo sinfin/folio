@@ -1,0 +1,132 @@
+$<%= classname_prefix %>-mailer-styles: false !default
+
+@if $<%= classname_prefix %>-mailer-styles
+  // headings
+  h3, .h3
+    +mailer-media-breakpoint-down($mailer-breakpoint-mobile)
+      margin: $mailer-gap-g 0 $mailer-gap-b 0 !important
+
+  h4, .h4
+    +mailer-media-breakpoint-down($mailer-breakpoint-mobile)
+     margin: $mailer-gap-b 0 $mailer-gap-b 0 !important
+
+  h5, .h5,
+  h6, .h6
+    +mailer-media-breakpoint-down($mailer-breakpoint-mobile)
+      margin: $mailer-gap-a 0 $mailer-gap-a 0 !important
+
+  // layout
+  .<%= classname_prefix %>-mailer-layout__content-inner
+    +mailer-media-breakpoint-down($mailer-breakpoint-mobile)
+      padding: 0 0 $mailer-gap-k !important
+
+  // header
+  .<%= classname_prefix %>-mailer-header
+    +mailer-media-breakpoint-down($mailer-breakpoint-mobile)
+      &__inner
+        padding: $mailer-gap-f 0 !important
+
+  // button
+  .<%= classname_prefix %>-mailer-button
+    +mailer-media-breakpoint-down($mailer-breakpoint-mobile)
+      margin: $mailer-gap-b 0 0 0 !important
+
+  // order summary
+  .<%= classname_prefix %>-mailer-order-summary
+    +mailer-media-breakpoint-down($mailer-breakpoint-mobile)
+      &__title-wrapper
+        padding: 0 0 $mailer-gap-f !important
+
+      &__order-wrapper
+        padding: 0 $mailer-gap-d $mailer-gap-d $mailer-gap-d !important
+
+      &__info-wrapper
+        padding: $mailer-gap-f 0 $mailer-gap-a !important
+
+      &__title
+        font-size: $mailer-ui-typo-display-xs-font-size !important
+        line-height: $mailer-ui-typo-display-xs-line-height !important
+        letter-spacing: $mailer-ui-typo-display-xs-letter-spacing !important
+
+      &__payment-regulation,
+      &__instruction
+        font-size: $mailer-ui-typo-text-xs-font-size !important
+        line-height: $mailer-ui-typo-text-s-line-height !important
+
+  // cards
+  .<%= classname_prefix %>-mailer-cards-extra-small-container
+    +mailer-media-breakpoint-down($mailer-breakpoint-mobile)
+      &__wrapper
+        padding: $mailer-gap-f 0 0 !important
+
+  .<%= classname_prefix %>-mailer-cards-extra-small
+    +mailer-media-breakpoint-down($mailer-breakpoint-mobile)
+      &__wrapper
+        padding-right: 0 !important
+
+  .<%= classname_prefix %>-mailer-cards-medium
+    +mailer-media-breakpoint-down($mailer-breakpoint-mobile)
+      &__wrapper
+        padding: $mailer-gap-f 0 0 !important
+
+      &__inner-wrapper
+        padding: $mailer-gap-b $mailer-gap-b $mailer-gap-e !important
+
+      &__image-inner
+        padding: $mailer-gap-b !important
+
+      &__image
+        width: 100% !important
+
+      &__content-inner
+        padding: $mailer-gap-d $mailer-gap-b $mailer-gap-a !important
+
+  .<%= classname_prefix %>-mailer-cards-lot
+    +mailer-media-breakpoint-down($mailer-breakpoint-mobile)
+      &__wrapper
+        padding: $mailer-gap-f 0 0 !important
+
+      &__image-inner
+        padding: $mailer-gap-c !important
+
+      &__content-table-wrapper
+        padding: $mailer-gap-c !important
+
+      &__divider-wrapper
+        margin: $mailer-gap-d 0 !important
+
+      &__inner-wrapper
+        padding: 0 !important
+  
+      &__content-inner
+        padding: $mailer-gap-b 0 0 0 !important
+
+      &__author
+        font-size: $mailer-ui-typo-display-xs-font-size !important
+        line-height: $mailer-ui-typo-display-xs-line-height !important
+        letter-spacing: $mailer-ui-typo-display-xs-letter-spacing !important
+
+      &__name
+        font-size: $mailer-ui-typo-text-l-font-size !important
+        line-height: $mailer-ui-typo-text-l-line-height !important
+
+  // rich text
+  .<%= classname_prefix %>-mailer-layout__content
+    +mailer-media-breakpoint-down($mailer-breakpoint-mobile)
+      p
+        font-size: $mailer-ui-typo-text-s-font-size !important
+        line-height: $mailer-ui-typo-text-s-line-height !important
+
+      p.font-size-lg
+        font-size: $mailer-ui-typo-text-m-font-size !important
+        line-height: $mailer-ui-typo-text-m-line-height !important
+
+      p.font-size-sm
+        font-size: $mailer-ui-typo-text-xs-font-size !important
+        line-height: $mailer-ui-typo-text-xs-line-height !important
+
+      hr
+        margin: $mailer-gap-f 0 $mailer-gap-f 0 !important
+
+      .<%= classname_prefix %>-mailer-cards-extra-small-container + hr
+        margin: 0 0 $mailer-gap-f 0 !important

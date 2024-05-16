@@ -1,0 +1,11 @@
+$<%= classname_prefix %>-mailer-styles: false !default
+
+@if $<%= classname_prefix %>-mailer-styles
+  // Overrides for additional blue links
+  .<%= classname_prefix %>-mailer-body a
+    color: inherit
+    text-decoration: none
+    font-size: inherit
+    font-family: inherit
+    font-weight: inherit
+    line-height: inherit
