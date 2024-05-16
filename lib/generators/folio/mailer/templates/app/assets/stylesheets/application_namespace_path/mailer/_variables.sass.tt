@@ -81,3 +81,5 @@ $cloud-800: #2b2b2b !default
 $mailer-brand-200: $purple-300 !default
 $primary-black: #000000 !default
 $primary-white: #ffffff !default
+
+$primary: $primary-black !default
