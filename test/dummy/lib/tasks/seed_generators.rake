@@ -110,6 +110,10 @@ class Dummy::SeedGenerator
     scaffold("searches")
   end
 
+  def mailer
+    scaffold("mailer")
+  end
+
   def ui_i18n_yamls(path)
     Dir[path].each do |yaml_path|
       hash = YAML.load_file(yaml_path)
@@ -252,6 +256,7 @@ namespace :dummy do
       Rake::Task["dummy:seed_generators:prepared_atom"].invoke
       Rake::Task["dummy:seed_generators:blog"].invoke
       Rake::Task["dummy:seed_generators:search"].invoke
+      Rake::Task["dummy:seed_generators:mailer"].invoke
     end
 
     task assets: :environment do
@@ -314,6 +319,11 @@ namespace :dummy do
     task search: :environment do
       gen = Dummy::SeedGenerator.new(templates_path: Folio::Engine.root.join("lib/generators/folio/search/templates"))
       gen.search
+    end
+
+    task mailer: :environment do
+      gen = Dummy::SeedGenerator.new(templates_path: Folio::Engine.root.join("lib/generators/folio/mailer/templates"))
+      gen.mailer
     end
   end
 end
