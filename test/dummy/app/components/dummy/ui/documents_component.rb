@@ -4,7 +4,7 @@ class Dummy::Ui::DocumentsComponent < ApplicationComponent
   def initialize(document_placements:, title: nil)
     @document_placements = document_placements
     @title = title
-   end
+  end
 
   def render?
     @document_placements.present? || @title.present?
@@ -16,10 +16,8 @@ class Dummy::Ui::DocumentsComponent < ApplicationComponent
     ext = placement.file.file_extension.presence.try(:upcase)
 
     if ext.blank?
-      if placement.file.file_name.include?(".")
-        ext = placement.file.file_name.split(".").last.try(:upcase)
-      else
-        ext = nil
+      ext = if placement.file.file_name.include?(".")
+        placement.file.file_name.split(".").last.try(:upcase)
       end
     end
 
@@ -27,8 +25,8 @@ class Dummy::Ui::DocumentsComponent < ApplicationComponent
     "#{placement.to_label} (#{[ext, size].compact.join(', ')})"
   end
 
-  def download_path(*args)
-    controller.folio.download_path(*args)
+  def download_path(*)
+    controller.folio.download_path(*)
   end
 
   def href(placement)
