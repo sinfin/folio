@@ -35,6 +35,7 @@ exclude:
   - app/views/folio/console/partials/_translations.slim
   - app/views/folio/console/ui/*.slim
   - app/views/folio/console/users/_form.slim
+  - app/views/folio/console/users/_show_basic_data.slim
   - app/views/folio/console/users/show.slim
   - app/views/layouts/folio/_analytics.slim
   - app/views/layouts/folio/_cookieconsent.slim

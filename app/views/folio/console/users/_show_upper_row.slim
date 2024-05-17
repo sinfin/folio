@@ -1,0 +1,9 @@
+.row
+  .col-lg-8
+    = render partial: "folio/console/users/show_basic_data"
+  - if @user.admin_note.present?
+    .col-lg-4
+      .card
+        .card-body.bg-postit-note
+          .mb-n3
+            = simple_format @user.admin_note
