@@ -12,7 +12,6 @@
 
     .#{$select-ns}-control
       gap: 7px
-      padding: $grid-gutter-half !important
 
       .item
         margin: 0
@@ -26,6 +25,10 @@
         &::placeholder,
           color: $folio-input-multiselect-placeholder-color
           font-weight: $font-weight-bold
+
+    &.has-items .#{$select-ns}-control
+      padding-top: $grid-gutter-half
+      padding-bottom: $grid-gutter-half
 
   &.plugin-remove_button
     .item

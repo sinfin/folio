@@ -61,7 +61,7 @@ window.Folio.Input.Multiselect.onChange = (input, value) => {
 
 window.Folio.Input.Multiselect.bind = (input) => {
   const tomselect = new window.TomSelect(input, {
-    placeholder: window.Folio.i18n(window.Folio.Input.Multiselect.I18n, 'placeholder'),
+    placeholder: input.getAttribute('placeholder') || input.dataset.placeholder || window.Folio.i18n(window.Folio.Input.Multiselect.I18n, 'placeholder'),
     plugins: {
       dropdown_input: true,
       remove_button: {
