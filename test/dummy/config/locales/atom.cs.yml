@@ -20,11 +20,20 @@ cs:
       dummy/atom/text:
         highlight: Zvýraznění
         highlight/nil: Žádné
-        highlight/error: Červené
-        highlight/caution: Oranžové
-        highlight/success: Zelené
-        highlight/neutral: Modré
-        highlight/gray: Šedé
+        highlight/background: Pozadí
+        alignment: Zarovnání
+        alignment/left: Vlevo
+        alignment/center: Na střed
+        theme: Barvy
+        theme/light: Světlé
+        theme/dark: Tmavé
+        outline: Ohraničení
+        outline/nil: Žádné
+        outline/blue: Modré
+        outline/gray: Šedé
+        outline/red: Červené
+        outline/green: Zelené
+        outline/orange: Oranžové
       dummy/atom/title:
         tag: Tag
         tag/H1: H1
@@ -32,6 +41,18 @@ cs:
         tag/H3: H3
         tag/H4: H4
         tag/H5: H5
+        font_size: Velikost písma
+        font_size/fixed: Pevná
+        font_size/adaptive: Adaptivní
+        alignment: Zarovnání
+        alignment/left: Vlevo
+        alignment/center: Na střed
+        highlight: Zvýraznění
+        highlight/nil: Žádné
+        highlight/background: Pozadí
+        theme: Barvy
+        theme/light: Světlé
+        theme/dark: Tmavé
       dummy/atom/documents:
         size: Velikost
         size/small: Malá

@@ -19,11 +19,20 @@ en:
       dummy/atom/text:
         highlight: Highlight
         highlight/nil: None
-        highlight/error: Red
-        highlight/caution: Orange
-        highlight/success: Green
-        highlight/neutral: Blue
-        highlight/gray: Gray
+        highlight/background: Background
+        alignment: Alignment
+        alignment/left: Left
+        alignment/center: Center
+        theme: Theme
+        theme/light: Light
+        theme/dark: Dark
+        outline: Outline
+        outline/nil: None
+        outline/blue: Blue
+        outline/gray: Gray
+        outline/red: Red
+        outline/green: Green
+        outline/orange: Orange
       dummy/atom/title:
         tag: Tag
         tag/H1: H1
@@ -31,6 +40,18 @@ en:
         tag/H3: H3
         tag/H4: H4
         tag/H5: H5
+        font_size: Font size
+        font_size/fixed: Fixed
+        font_size/adaptive: Adaptive
+        alignment: Alignment
+        alignment/left: Left
+        alignment/center: Center
+        highlight: Highlight
+        highlight/nil: None
+        highlight/background: Background
+        theme: Theme
+        theme/light: Light
+        theme/dark: Dark
       dummy/atom/documents:
         size: Size
         size/small: Small
