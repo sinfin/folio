@@ -11,6 +11,11 @@ cs:
         variant/thin: Tenká linka
         variant/thick: Tlustá linka
         variant/invisible: Pouze mezera
+        margin: Mezera kolem
+        margin/small: Malá
+        margin/medium: Střední (Výchozí)
+        margin/large: Velká
+        margin/extra-large: Extra velká
       dummy/atom/image_and_content:
         image_side: Obrázek
         image_side/left: Nalevo

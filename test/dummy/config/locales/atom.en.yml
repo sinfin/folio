@@ -10,6 +10,11 @@ en:
         variant/thin: Thin line
         variant/thick: Thick line
         variant/invisible: Space only
+        margin: Space around divider
+        margin/small: Small
+        margin/medium: Medium (Default)
+        margin/large: Large
+        margin/extra-large: Extra Large
       dummy/atom/image_and_content:
         image_side: Image
         image_side/left: On the left
