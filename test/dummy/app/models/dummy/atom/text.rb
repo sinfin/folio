@@ -18,6 +18,11 @@ class Dummy::Atom::Text < Folio::Atom::Base
 
   ASSOCIATIONS = {}
 
+  after_initialize do
+    self.alignment ||= "left"
+    self.theme ||= "light"
+  end
+
   validates :content,
             presence: true
 

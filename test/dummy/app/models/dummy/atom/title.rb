@@ -24,7 +24,6 @@ class Dummy::Atom::Title < Folio::Atom::Base
     self.tag ||= "H2"
     self.font_size ||= "fixed"
     self.alignment ||= "left"
-    self.highlight ||= "none"
     self.theme ||= "light"
   end
 
@@ -52,7 +51,6 @@ class Dummy::Atom::Title < Folio::Atom::Base
       tag: "H2",
       font_size: "fixed",
       alignment: "left",
-      highlight: "none",
       theme: "light",
     }
   end
