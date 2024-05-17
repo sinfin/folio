@@ -7,9 +7,7 @@ en:
         follow_us: Follow us
 
       order_summary_component:
-        invoice_text: Instructions for paying the order are part of %{link}.
-        invoice_text_link: the payment documents
-        info: Please pay for and pick up the auctioned items no later than 14 days after the auction ends.
+        total_price: Total price (including commission)
 
       cards:
         lot_component:

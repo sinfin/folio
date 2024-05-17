@@ -4,8 +4,8 @@ $d-mailer-styles: false !default
   .d-mailer-order-summary
     width: 100%
 
-    &__title-wrapper, &__order-wrapper,
-    &__info-wrapper, &__item-wrapper,
+    &__order-wrapper,
+    &__item-wrapper,
     &__divider
       padding: 0
       font-size: 0
@@ -13,22 +13,10 @@ $d-mailer-styles: false !default
     &__inner, &__order, &__item, &__order-price
       width: 100%
 
-    &__title-wrapper
-      padding: 0 0 $mailer-gap-g 0
-
-    &__title
-      +mailer-font-size-display-s
-      font-weight: $font-weight-bold
-      margin: 0 0 $mailer-gap-b 0
-
     &__order-wrapper
       padding: $mailer-gap-b $mailer-gap-f $mailer-gap-f $mailer-gap-f
       background: $cloud-100
       border-radius: $mailer-border-radius
-
-    &__info-wrapper
-      padding: $mailer-gap-g 0 $mailer-gap-b 0
-      font-size: 0
 
     &__divider
       width: 100%
@@ -118,15 +106,3 @@ $d-mailer-styles: false !default
       max-width: 100px
       text-align: right
       padding: 0
-
-    &__payment-regulation,
-    &__instruction
-      +mailer-font-size-text-s
-      margin: 0
-      color: $cloud-700
-
-    &__payment-regulation-link
-      font-weight: $font-weight-normal
-
-    &__instruction
-      font-weight: $font-weight-bold
