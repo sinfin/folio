@@ -10,7 +10,7 @@ $grid-gutter-half: $grid-gutter-width / 2
 
 $spacer: $grid-gutter-half
 
-$spacers: ( 0: 0, 1: $grid-gutter-base / 2, 2: $grid-gutter-base, 3: $grid-gutter-half, 4: $grid-gutter-width, 5: 2 * $grid-gutter-width, b: $grid-gutter-base, bb: 2 * $grid-gutter-base,  h: $grid-gutter-half, g: $grid-gutter-width, gg: 2 * $grid-gutter-width )
+$spacers: ( 0: 0, 1: $grid-gutter-base / 2, 2: $grid-gutter-base, 3: $grid-gutter-half, 4: $grid-gutter-width, 5: 2 * $grid-gutter-width, a: $grid-gutter-base/2, b: $grid-gutter-base, c: $grid-gutter-base*1.5, d: $grid-gutter-base*2, e: $grid-gutter-base*2.5, f: $grid-gutter-base*3, g: $grid-gutter-base*4, h: $grid-gutter-base*5, i: $grid-gutter-base*6, j: $grid-gutter-base*7, k: $grid-gutter-base*8, l: $grid-gutter-base*10 )
 
 @import './variables-colors'
 
@@ -49,7 +49,8 @@ $text-muted: $shade-400
 
 $gradient-100: linear-gradient(180deg, rgba($black, 0) 0%, $black 100%)
 
-$container-fluid-max-width: 1280px
+$container-fluid-max-width: 1398px // 1270px (+ 2 * 64px paddings)
+$container-narrow-max-width: 1000px
 $font-size-media-breakpoint-s: sm
 $font-size-media-breakpoint-m: lg
 

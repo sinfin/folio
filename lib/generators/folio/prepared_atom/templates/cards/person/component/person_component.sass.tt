@@ -45,7 +45,7 @@
       flex: 0 0 200px
 
     &__card--large &__card-body
-      padding: map-get($spacers, gg) $grid-gutter-base*4
+      padding: map-get($spacers, i) $grid-gutter-base*4
 
   +media-breakpoint-down(lg)
     &__card--large &__card-image
@@ -53,7 +53,7 @@
 
   +media-breakpoint-down(sm)
     &__col
-      padding-bottom: map-get($spacers, bb)
+      padding-bottom: map-get($spacers, d)
 
       &:last-child
         padding-bottom: 0

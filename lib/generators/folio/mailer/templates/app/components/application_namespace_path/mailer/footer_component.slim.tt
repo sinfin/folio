@@ -46,7 +46,7 @@ table.<%= classname_prefix %>-mailer-footer[
                 *contact_link_with_fallback_tag(key, value)
                   == value
 
-  - if @site.social_links.present?
+  - if @site.social_links.present? && @site.social_links.any? { |_k, v| v.present? }
     tr
       td.<%= classname_prefix %>-mailer-footer__socials-title-wrapper
         .<%= classname_prefix %>-mailer-footer__socials-title.fw-bold
@@ -55,6 +55,9 @@ table.<%= classname_prefix %>-mailer-footer[
     tr
       td.<%= classname_prefix %>-mailer-footer__socials-table-wrapper
         = render(<%= application_namespace %>::Mailer::SocialsComponent.new(site: @site))
+  - else
+    tr
+      td.a-mailer-footer__socials-table-wrapper
 
   - if current_footer_menu?
     tr

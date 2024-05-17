@@ -2,14 +2,6 @@
   table.<%= classname_prefix %>-mailer-order-summary__inner[
     role="presentation"
   ]
-    - if @title.present?
-      tr
-        td.<%= classname_prefix %>-mailer-order-summary__title-wrapper[
-          align="left"
-          valign="top"
-        ]
-          .<%= classname_prefix %>-mailer-order-summary__title = @title
-
     tr
       td.<%= classname_prefix %>-mailer-order-summary__order-wrapper
         table.<%= classname_prefix %>-mailer-order-summary__order[
@@ -71,7 +63,7 @@
             tr.<%= classname_prefix %>-mailer-order-summary__divider-row
               td.<%= classname_prefix %>-mailer-order-summary__divider
 
-          - if @total.present?
+          - if @total_price.present?
             tr
               td.<%= classname_prefix %>-mailer-order-summary__order-total-price-wrapper
                 table.<%= classname_prefix %>-mailer-order-summary__order-price[
@@ -83,23 +75,11 @@
                       valign="center"
                     ]
                       .<%= classname_prefix %>-mailer-order-summary__order-total-price-title
-                        | Celková cena (vč. provize)
+                        = t('.total_price')
 
                     td.<%= classname_prefix %>-mailer-order-summary__order-total-price-column[
                       align="left"
                       valign="center"
                     ]
                       .<%= classname_prefix %>-mailer-order-summary__order-total-price.text-no-wrap
-                        = insert_html_entity(folio_price(@total))
-
-    - if @invoice_url
-      tr
-        td.<%= classname_prefix %>-mailer-order-summary__info-wrapper[
-          align="left"
-          valign="top"
-        ]
-          .<%= classname_prefix %>-mailer-order-summary__payment-regulation
-            = invoice_text
-
-          .<%= classname_prefix %>-mailer-order-summary__instruction
-            = t('.info')
+                        = insert_html_entity(folio_price(@total_price))

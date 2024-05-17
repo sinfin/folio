@@ -1,6 +1,6 @@
 header.<%= classname_prefix %>-blog-articles-show-header
   .container-fluid
-    .<%= classname_prefix %>-blog-articles-show-header__inner.mt-g.mb-a
+    .<%= classname_prefix %>-blog-articles-show-header__inner.mt-f.mb-a
       - if model.cover_placement.present?
         = image(model.cover_placement,
                 THUMB_SIZE,
