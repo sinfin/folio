@@ -31,6 +31,11 @@ en:
         tag/H3: H3
         tag/H4: H4
         tag/H5: H5
+      dummy/atom/documents:
+        size: Size
+        size/small: Small
+        size/medium: Medium
+        size/large: Large
     models:
       dummy/atom/cards/extra_small: Card - extra small
       dummy/atom/cards/full_width: Card - full width
@@ -42,6 +47,7 @@ en:
       dummy/atom/cards/person: Card - person
       dummy/atom/cards/small: Card - small
       dummy/atom/divider: Divider
+      dummy/atom/documents: Documents
       dummy/atom/embed: Embed
       dummy/atom/image_and_content: Image & content
       dummy/atom/images/gallery: Images - gallery

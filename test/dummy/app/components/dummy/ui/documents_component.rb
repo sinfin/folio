@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 class Dummy::Ui::DocumentsComponent < ApplicationComponent
-  def initialize(document_placements:, title: nil)
+  def initialize(document_placements:, title: nil, size: nil)
     @document_placements = document_placements
     @title = title
+    @size = size
   end
 
   def render?
@@ -25,11 +26,28 @@ class Dummy::Ui::DocumentsComponent < ApplicationComponent
     "#{placement.to_label} (#{[ext, size].compact.join(', ')})"
   end
 
+  def size_class
+    "d-ui-documents--#{@size}" if @size.present?
+  end
+
   def download_path(*)
     controller.folio.download_path(*)
   end
 
   def href(placement)
     download_path(placement.file, placement.file.file_name)
+  end
+
+  def document_icon
+    size = case @size
+           when "small"
+             20
+           when "medium"
+             24
+           when "large"
+             28
+    end
+
+    dummy_ui_icon(:file, height: size, class_name: "d-ui-documents__icon")
   end
 end

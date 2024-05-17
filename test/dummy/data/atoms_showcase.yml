@@ -115,6 +115,14 @@ atoms:
 
     - content: true
 
+  Dummy::Atom::Documents:
+    - documents: true
+      size: small
+    - documents: true
+      size: medium
+    - documents: true
+      size: large
+
   Dummy::Atom::ImageAndContent:
     - title: Headline dolor amet consectetur
       content: <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis</p>
