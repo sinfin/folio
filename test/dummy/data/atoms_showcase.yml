@@ -58,6 +58,57 @@ atoms:
       outline: gray
       theme: dark
 
+  Dummy::Atom::TwoColumnsText:
+    - title: "<h3>Title</h3>"
+      column_1: |
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis, ultrices non diam. Aenean bibendum sollicitudin tortor quis hendrerit. Donec vel porttitor</p>
+      column_2: |
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis, ultrices non diam. Aenean bibendum sollicitudin tortor quis hendrerit. Donec vel porttitor</p>
+    - title: "<h3>Title</h3>"
+      column_1_title: Column 1 title
+      column_1: |
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis, ultrices non diam. Aenean bibendum sollicitudin tortor quis hendrerit. Donec vel porttitor</p>
+      column_2_title: Column 2 title
+      column_2: |
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis, ultrices non diam. Aenean bibendum sollicitudin tortor quis hendrerit. Donec vel porttitor</p>
+    - title: "<h3>Title</h3>"
+      column_1_title: Column 1 title
+      column_1: |
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis, ultrices non diam. Aenean bibendum sollicitudin tortor quis hendrerit. Donec vel porttitor</p>
+      column_2: |
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis, ultrices non diam. Aenean bibendum sollicitudin tortor quis hendrerit. Donec vel porttitor</p>
+    - column_1: |
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis, ultrices non diam. Aenean bibendum sollicitudin tortor quis hendrerit. Donec vel porttitor</p>
+      column_2: |
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis, ultrices non diam. Aenean bibendum sollicitudin tortor quis hendrerit. Donec vel porttitor</p>
+    - title: "<h3>Title</h3>"
+      column_1: |
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis, ultrices non diam. Aenean bibendum sollicitudin tortor quis hendrerit. Donec vel porttitor</p>
+      column_2: |
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis, ultrices non diam. Aenean bibendum sollicitudin tortor quis hendrerit. Donec vel porttitor</p>
+      wrapper: background
+    - title: "<h3>Title</h3>"
+      column_1_title: Column 1 title
+      column_1: |
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis, ultrices non diam. Aenean bibendum sollicitudin tortor quis hendrerit. Donec vel porttitor</p>
+      column_2_title: Column 2 title
+      column_2: |
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis, ultrices non diam. Aenean bibendum sollicitudin tortor quis hendrerit. Donec vel porttitor</p>
+      wrapper: background
+    - title: "<h3>Title</h3>"
+      column_1: |
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis, ultrices non diam. Aenean bibendum sollicitudin tortor quis hendrerit. Donec vel porttitor</p>
+      column_2: |
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis, ultrices non diam. Aenean bibendum sollicitudin tortor quis hendrerit. Donec vel porttitor</p>
+      wrapper: background
+      color_mode: dark
+    - title: "<h3>Title</h3>"
+      column_1: |
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis, ultrices non diam. Aenean bibendum sollicitudin tortor quis hendrerit. Donec vel porttitor</p>
+      column_2: |
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis, ultrices non diam. Aenean bibendum sollicitudin tortor quis hendrerit. Donec vel porttitor</p>
+      mobile_layout: two
+
   Dummy::Atom::Title:
     - tag: H1
       title: H1 Goth squid xoxo sustainable fashion axe

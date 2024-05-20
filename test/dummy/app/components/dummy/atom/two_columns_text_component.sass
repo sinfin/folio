@@ -1,0 +1,46 @@
+.d-atom-two-columns-text
+  &[data-bs-theme="dark"]
+    background: transparent
+
+  &__wrapper
+    border-radius: $border-radius
+
+  &--background &__wrapper
+    background: $shade-100
+    padding: map-get($spacers, l) 0
+
+  &__title
+    margin-bottom: map-get($spacers, f)
+
+  &__column-title
+    +font-size-display-s
+    position: relative
+    font-weight: $font-weight-semibold
+    padding-bottom: map-get($spacers, b)
+    margin-bottom: map-get($spacers, c)
+
+    &::after
+      content: ''
+      display: block
+      position: absolute
+      bottom: 0
+      left: 0
+      width: 100%
+      height: 1px
+      background: $transparent-300
+      border-radius: map-get($spacers, a)
+
+  &__columns-container
+    display: flex
+    flex-wrap: wrap
+    gap: map-get($spacers, f)
+
+  &__column
+    flex: 0 0 calc(50% - #{map-get($spacers, f)} / 2)
+
+  +media-breakpoint-down(sm)
+    &:not(&--two-columns-on-mobile) &__column
+      flex: 0 0 100%
+
+    &--two-columns-on-mobile &__columns-container
+      gap: map-get($spacers, d)

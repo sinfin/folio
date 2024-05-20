@@ -1,0 +1,29 @@
+.d-atom.my-atom[
+  data-bs-theme=(@dark_mode ? "dark" : nil)
+  class=bem_class_name
+]
+  .container-fluid.container-fluid--with-narrow
+    .d-atom-two-columns-text__wrapper
+      *inner_narrow_container_tag
+        .d-atom-two-columns-text__inner
+          - if @atom.title.present?   
+            .d-atom-two-columns-text__title
+              .d-rich-text
+                == cstypo @atom.title
+
+          .d-atom-two-columns-text__columns-container
+            .d-atom-two-columns-text__column
+              - if @atom.column_1_title.present?
+                .d-atom-two-columns-text__column-title
+                  = @atom.column_1_title
+
+              .d-rich-text
+                == cstypo @atom.column_1
+
+            .d-atom-two-columns-text__column
+              - if @atom.column_2_title.present?
+                .d-atom-two-columns-text__column-title
+                  = @atom.column_2_title
+
+              .d-rich-text
+                == cstypo @atom.column_2

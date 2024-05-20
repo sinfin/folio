@@ -38,6 +38,21 @@ en:
         outline/red: Red
         outline/green: Green
         outline/orange: Orange
+      dummy/atom/two_columns_text:
+        column_1_title: Column 1 title
+        column_1: Column 1
+        column_2_title: Column 2 title
+        column_2: Column 2
+        mobile_layout: Mobile layout
+        mobile_layout/one: One column
+        mobile_layout/two: Two columns
+        wrapper: Wrapper
+        wrapper/none: None
+        wrapper/background: Background
+        wrapper/outline: Outline
+        color_mode: Color mode
+        color_mode/light: Light
+        color_mode/dark: Dark
       dummy/atom/title:
         tag: Tag
         tag/H1: H1
@@ -86,3 +101,4 @@ en:
       dummy/atom/quotation: Quotation
       dummy/atom/text: Text
       dummy/atom/title: Title
+      dummy/atom/two_columns_text: Two columns text

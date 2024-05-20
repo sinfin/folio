@@ -39,6 +39,21 @@ cs:
         outline/red: Červené
         outline/green: Zelené
         outline/orange: Oranžové
+      dummy/atom/two_columns_text:
+        column_1_title: Nadpis sloupce 1
+        column_1: Sloupec 1
+        column_2_title: Nadpis sloupce 2
+        column_2: Sloupec 2
+        mobile_layout: Mobilní layout
+        mobile_layout/one: Jeden sloupec
+        mobile_layout/two: Dva sloupce
+        wrapper: Obal
+        wrapper/none: Žádný
+        wrapper/background: Pozadí
+        wrapper/outline: Ohraničení
+        color_mode: Barevný režim
+        color_mode/light: Světlý
+        color_mode/dark: Tmavý
       dummy/atom/title:
         tag: Tag
         tag/H1: H1
@@ -87,3 +102,4 @@ cs:
       dummy/atom/quotation: Citace
       dummy/atom/text: Text
       dummy/atom/title: Nadpis
+      dummy/atom/two_columns_text: Text ve dvou sloupcích
