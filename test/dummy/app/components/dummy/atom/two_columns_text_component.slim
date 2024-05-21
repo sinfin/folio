@@ -11,19 +11,29 @@
               .d-rich-text
                 == cstypo @atom.title
 
-          .d-atom-two-columns-text__columns-container
-            .d-atom-two-columns-text__column
-              - if @atom.column_1_title.present?
-                .d-atom-two-columns-text__column-title
-                  = @atom.column_1_title
+          .d-atom-two-columns-text__grid-container
+            - if @atom.column_1_title.present?
+              .d-atom-two-columns-text__column-title[
+                class="d-atom-two-columns-text__column-title--left"
+                class="fs-text-s"
+              ]
+                = @atom.column_1_title
 
-              .d-rich-text
-                == cstypo @atom.column_1
+            .d-atom-two-columns-text__content[
+              class="d-atom-two-columns-text__content--left"
+              class="d-rich-text"
+            ]
+              == cstypo @atom.column_1
 
-            .d-atom-two-columns-text__column
-              - if @atom.column_2_title.present?
-                .d-atom-two-columns-text__column-title
-                  = @atom.column_2_title
-
-              .d-rich-text
-                == cstypo @atom.column_2
+            - if @atom.column_2_title.present?
+              .d-atom-two-columns-text__column-title[
+                class="d-atom-two-columns-text__column-title--right"
+                class="fs-text-s"
+              ]
+                = @atom.column_2_title
+            
+            .d-atom-two-columns-text__content[
+              class="d-atom-two-columns-text__content--right"
+              class="d-rich-text"
+            ]
+              == cstypo @atom.column_2

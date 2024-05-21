@@ -65,7 +65,7 @@ atoms:
       column_2: |
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis, ultrices non diam. Aenean bibendum sollicitudin tortor quis hendrerit. Donec vel porttitor</p>
     - title: "<h3>Title</h3>"
-      column_1_title: Column 1 title
+      column_1_title: Title of the first column, which is very long and overflows to the second line
       column_1: |
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis, ultrices non diam. Aenean bibendum sollicitudin tortor quis hendrerit. Donec vel porttitor</p>
       column_2_title: Column 2 title
