@@ -1,0 +1,81 @@
+.d-atom-two-columns-text
+  &[data-bs-theme="dark"]
+    background: transparent
+
+  &__wrapper
+    border-radius: $border-radius
+
+  &--background &__wrapper
+    background: $shade-100
+    padding: map-get($spacers, l) 0
+
+  &__title
+    margin-bottom: map-get($spacers, f)
+
+  &__column-title
+    position: relative
+    font-weight: $font-weight-semibold
+    padding-bottom: map-get($spacers, b)
+    align-self: end
+
+    &--left
+      grid-column: 1
+      grid-row: 1
+
+    &--right
+      grid-column: 2
+      grid-row: 1
+
+    &::after
+      content: ''
+      display: block
+      position: absolute
+      bottom: 0
+      left: 0
+      width: 100%
+      height: 1px
+      background: $transparent-300
+      border-radius: map-get($spacers, a)
+
+  &__grid-container
+    display: grid
+    grid-template-columns: 1fr 1fr
+    gap: map-get($spacers, c) map-get($spacers, f)
+
+  &__content
+    &--left
+      grid-column: 1
+      grid-row: 2
+
+    &--right
+      grid-column: 2
+      grid-row: 2
+
+  +media-breakpoint-down(xl)
+    &--background &__wrapper
+      padding: map-get($spacers, g) 0
+
+    &__grid-container
+      gap: px-to-rem(10px)
+
+    &__column-title
+      +font-size-text-xs
+
+  +media-breakpoint-down(sm)
+    &--background &__wrapper
+      padding: map-get($spacers, d) 0
+
+    &:not(&--two-columns-on-mobile) &__grid-container
+      grid-template-columns: 1fr
+      grid-auto-flow: row
+
+    &:not(&--two-columns-on-mobile) &__column-title,
+    &:not(&--two-columns-on-mobile) &__content
+      grid-column: 1
+      grid-row: auto
+
+    &--two-columns-on-mobile &__grid-container
+      gap: px-to-rem(10px) map-get($spacers, d)
+
+    &__wrapper
+      border-radius: 0
