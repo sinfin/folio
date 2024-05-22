@@ -68,7 +68,7 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
       elsif sym_or_hash.is_a?(Hash)
         sym_or_hash.each do |name, obj|
           next if name == :destroy && model.class.try(:indestructible?)
-          next if (!options[:skip_can_now] && !obj[:skip_can_now]) && !controller.can_now?(name, model)
+          next if should_check_can_now?(obj) && !controller.can_now?(name, model)
           base = default_actions[name].presence || {}
           if obj.is_a?(Hash)
             acts << base.merge(obj)
@@ -109,5 +109,11 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
         content_tag(:span, ico, opts)
       end
     end
+  end
+
+  def should_check_can_now?(obj)
+    return false if options && options[:skip_can_now]
+    return false if obj.is_a?(Hash) && obj[:skip_can_now]
+    true
   end
 end
