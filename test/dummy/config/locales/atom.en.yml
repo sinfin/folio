@@ -15,6 +15,11 @@ en:
         margin/medium: Medium (Default)
         margin/large: Large
         margin/extra-large: Extra Large
+      dummy/atom/documents:
+        size: Size
+        size/small: Small
+        size/medium: Medium
+        size/large: Large
       dummy/atom/image_and_content:
         image_side: Image
         image_side/left: On the left
@@ -38,21 +43,6 @@ en:
         outline/red: Red
         outline/green: Green
         outline/orange: Orange
-      dummy/atom/two_columns_text:
-        column_1_title: Column 1 title
-        column_1: Column 1
-        column_2_title: Column 2 title
-        column_2: Column 2
-        mobile_layout: Mobile layout
-        mobile_layout/one: One column
-        mobile_layout/two: Two columns
-        wrapper: Wrapper
-        wrapper/none: None
-        wrapper/background: Background
-        wrapper/outline: Outline
-        color_mode: Color mode
-        color_mode/light: Light
-        color_mode/dark: Dark
       dummy/atom/title:
         tag: Tag
         tag/H1: H1
@@ -72,11 +62,21 @@ en:
         theme: Theme
         theme/light: Light
         theme/dark: Dark
-      dummy/atom/documents:
-        size: Size
-        size/small: Small
-        size/medium: Medium
-        size/large: Large
+      dummy/atom/two_columns_text:
+        column_1_title: Column 1 title
+        column_1: Column 1
+        column_2_title: Column 2 title
+        column_2: Column 2
+        mobile_layout: Mobile layout
+        mobile_layout/one: One column
+        mobile_layout/two: Two columns
+        wrapper: Wrapper
+        wrapper/none: None
+        wrapper/background: Background
+        wrapper/outline: Outline
+        color_mode: Color mode
+        color_mode/light: Light
+        color_mode/dark: Dark
     models:
       dummy/atom/cards/extra_small: Card - extra small
       dummy/atom/cards/full_width: Card - full width
@@ -100,5 +100,6 @@ en:
       dummy/atom/perex: Perex
       dummy/atom/quotation: Quotation
       dummy/atom/text: Text
+      dummy/atom/three_columns_text: Three_columns_text
       dummy/atom/title: Title
       dummy/atom/two_columns_text: Two columns text

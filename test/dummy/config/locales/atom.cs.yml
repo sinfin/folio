@@ -16,6 +16,11 @@ cs:
         margin/medium: Střední (Výchozí)
         margin/large: Velká
         margin/extra-large: Extra velká
+      dummy/atom/documents:
+        size: Velikost
+        size/small: Malá
+        size/medium: Střední
+        size/large: Velká
       dummy/atom/image_and_content:
         image_side: Obrázek
         image_side/left: Nalevo
@@ -39,21 +44,6 @@ cs:
         outline/red: Červené
         outline/green: Zelené
         outline/orange: Oranžové
-      dummy/atom/two_columns_text:
-        column_1_title: Nadpis sloupce 1
-        column_1: Sloupec 1
-        column_2_title: Nadpis sloupce 2
-        column_2: Sloupec 2
-        mobile_layout: Mobilní layout
-        mobile_layout/one: Jeden sloupec
-        mobile_layout/two: Dva sloupce
-        wrapper: Obal
-        wrapper/none: Žádný
-        wrapper/background: Pozadí
-        wrapper/outline: Ohraničení
-        color_mode: Barevný režim
-        color_mode/light: Světlý
-        color_mode/dark: Tmavý
       dummy/atom/title:
         tag: Tag
         tag/H1: H1
@@ -73,11 +63,21 @@ cs:
         theme: Barvy
         theme/light: Světlé
         theme/dark: Tmavé
-      dummy/atom/documents:
-        size: Velikost
-        size/small: Malá
-        size/medium: Střední
-        size/large: Velká
+      dummy/atom/two_columns_text:
+        column_1_title: Nadpis sloupce 1
+        column_1: Sloupec 1
+        column_2_title: Nadpis sloupce 2
+        column_2: Sloupec 2
+        mobile_layout: Mobilní layout
+        mobile_layout/one: Jeden sloupec
+        mobile_layout/two: Dva sloupce
+        wrapper: Obal
+        wrapper/none: Žádný
+        wrapper/background: Pozadí
+        wrapper/outline: Ohraničení
+        color_mode: Barevný režim
+        color_mode/light: Světlý
+        color_mode/dark: Tmavý
     models:
       dummy/atom/cards/extra_small: Karta - extra malá
       dummy/atom/cards/full_width: Karta - na celou šířku
@@ -101,5 +101,6 @@ cs:
       dummy/atom/perex: Perex
       dummy/atom/quotation: Citace
       dummy/atom/text: Text
+      dummy/atom/three_columns_text: Three_columns_text
       dummy/atom/title: Nadpis
       dummy/atom/two_columns_text: Text ve dvou sloupcích
