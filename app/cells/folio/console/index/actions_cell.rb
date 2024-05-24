@@ -43,6 +43,7 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
       preview: {
         name: :preview,
         icon: :open_in_new,
+        skip_can_now: true,
         target: "_blank",
         url: -> (record) do
           preview_url_for(record)
@@ -63,8 +64,10 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
     with_default.each do |sym_or_hash|
       if sym_or_hash.is_a?(Symbol)
         next if sym_or_hash == :destroy && model.class.try(:indestructible?)
-        next if !options[:skip_can_now] && !controller.can_now?(sym_or_hash, model)
-        acts << default_actions[sym_or_hash]
+        obj = default_actions[sym_or_hash]
+        next if obj.blank?
+        next if should_check_can_now?(obj) && !controller.can_now?(sym_or_hash, model)
+        acts << obj
       elsif sym_or_hash.is_a?(Hash)
         sym_or_hash.each do |name, obj|
           next if name == :destroy && model.class.try(:indestructible?)
