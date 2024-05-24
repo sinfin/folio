@@ -42,6 +42,7 @@ window.Folio.Stimulus.register('f-input-character-counter', class extends window
 
   addElementToFormGroup () {
     const formGroup = this.element.closest('.form-group')
+    const input = formGroup.querySelector('input, textarea')
 
     if (!formGroup) {
       throw new Error('Missing parent form-group element.')
@@ -84,6 +85,8 @@ window.Folio.Stimulus.register('f-input-character-counter', class extends window
       }
     }
 
+    this.bindChangeEventListener(input)
+
     wrap.appendChild(document.createTextNode(` ${Folio.i18n(window.Folio.Input.CharacterCounter.i18n, 'shortForCharacter')}`))
 
     this.element.insertAdjacentElement('afterend', wrap)
@@ -96,5 +99,11 @@ window.Folio.Stimulus.register('f-input-character-counter', class extends window
     if (!wrap) return
     if (!wrap.parentNode) return
     wrap.parentNode.removeChild(wrap)
+  }
+
+  bindChangeEventListener (input) {
+    if (input) {
+      input.addEventListener('change', this.onInput.bind(this))
+    }
   }
 })
