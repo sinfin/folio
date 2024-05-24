@@ -19,7 +19,7 @@ html.d-mailer-html[
       type="text/css"
       data-premailer="ignore"
     ]
-      == Rails.application.assets.find_asset('dummy/mailer_extras.css').to_s
+      == compiled_asset_contents('dummy/mailer_extras.css')
 
     /[if mso]
       style type="text/css"

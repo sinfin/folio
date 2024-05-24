@@ -6,7 +6,6 @@ class Dummy::Mailer::OrderSummaryComponent < Dummy::Mailer::BaseComponent
   THUMB_SIZE = "70x70"
 
   def initialize(items:, total_price: nil)
-    @title = title
     @items = items
     @total_price = total_price
   end

@@ -38,7 +38,6 @@ hr
 
 ruby:
   summary_model = {
-    title: "Vážený dražiteli, děkujeme, přijali jsme Vaši objednávku.",
     items: [
       {
         title: "Beulah Erickson",
@@ -65,8 +64,7 @@ ruby:
         folio_image: Folio::File::Image.first
       }
     ],
-    total: "30 000 000",
-    invoice_url: "/"
+    total_price: 30_000_000,
   }
 
 = render(Dummy::Mailer::OrderSummaryComponent.new(**summary_model))
