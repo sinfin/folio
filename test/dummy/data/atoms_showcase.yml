@@ -150,6 +150,70 @@ atoms:
     - content: <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis</p>
       cover: true
 
+  Dummy::Atom::TextAroundImage:
+    - content: |
+        <h2>Lorem ipsum dolor</h2>
+        <p> Modernism, the idealistic search for truth, gave way in the latter half of the 20th century to a realization of its unattainability. Theodor W. Adorno said in 1970, "It is now taken for granted that nothing which concerns art can be taken for granted any more: neither art itself, nor art in relationship to the whole, nor even the right of art to exist." Relativism was accepted as an unavoidable truth, which led to the period of contemporary art and postmodern criticism, where cultures of the world and of history are seen as changing forms, which can be appreciated  </p>
+        <p> and drawn from only with skepticism and irony. Furthermore, the separation of cultures is increasingly blurred and some argue it is now more appropriate to think in terms of a global culture, rather than of regional ones. In The Origin of the Work of Art, Martin Heidegger, a German philosopher and seminal thinker, describes the essence of art in terms of the concepts of being and truth.</p>
+        <p> He argues that art is not only a way of expressing the element of truth in a culture, but the means of creating it and providing a springboard from which "that which is" can be revealed. Works of art are not merely representations of the way things are, but actually produce a</p>
+      cover: true
+    - content: |
+        <h2>Lorem ipsum dolor</h2>
+        <p> Modernism, the idealistic search for truth, gave way in the latter half of the 20th century to a realization of its unattainability. Theodor W. Adorno said in 1970, "It is now taken for granted that nothing which concerns art can be taken for granted any more: neither art itself, nor art in relationship to the whole, nor even the right of art to exist." Relativism was accepted as an unavoidable truth, which led to the period of contemporary art and postmodern criticism, where cultures of the world and of history are seen as changing forms, which can be appreciated  </p>
+        <p> and drawn from only with skepticism and irony. Furthermore, the separation of cultures is increasingly blurred and some argue it is now more appropriate to think in terms of a global culture, rather than of regional ones. In The Origin of the Work of Art, Martin Heidegger, a German philosopher and seminal thinker, describes the essence of art in terms of the concepts of being and truth.</p>
+        <p> He argues that art is not only a way of expressing the element of truth in a culture, but the means of creating it and providing a springboard from which "that which is" can be revealed. Works of art are not merely representations of the way things are, but actually produce a</p>
+      cover: true
+      image_side: right
+    - content: |
+        <h2>Lorem ipsum dolor</h2>
+        <p> Modernism, the idealistic search for truth, gave way in the latter half of the 20th century to a realization of its unattainability. Theodor W. Adorno said in 1970, "It is now taken for granted that nothing which concerns art can be taken for granted any more: neither art itself, nor art in relationship to the whole, nor even the right of art to exist." Relativism was accepted as an unavoidable truth, which led to the period of contemporary art and postmodern criticism, where cultures of the world and of history are seen as changing forms, which can be appreciated  </p>
+        <p> and drawn from only with skepticism and irony. Furthermore, the separation of cultures is increasingly blurred and some argue it is now more appropriate to think in terms of a global culture, rather than of regional ones. In The Origin of the Work of Art, Martin Heidegger, a German philosopher and seminal thinker, describes the essence of art in terms of the concepts of being and truth.</p>
+        <p> He argues that art is not only a way of expressing the element of truth in a culture, but the means of creating it and providing a springboard from which "that which is" can be revealed. Works of art are not merely representations of the way things are, but actually produce a</p>
+      cover: true
+      highlight: background
+      theme: dark
+    - content: |
+        <h2>Lorem ipsum dolor</h2>
+        <p> Modernism, the idealistic search for truth, gave way in the latter half of the 20th century to a realization of its unattainability. Theodor W. Adorno said in 1970, "It is now taken for granted that nothing which concerns art can be taken for granted any more: neither art itself, nor art in relationship to the whole, nor even the right of art to exist." Relativism was accepted as an unavoidable truth, which led to the period of contemporary art and postmodern criticism, where cultures of the world and of history are seen as changing forms, which can be appreciated  </p>
+        <p> and drawn from only with skepticism and irony. Furthermore, the separation of cultures is increasingly blurred and some argue it is now more appropriate to think in terms of a global culture, rather than of regional ones. In The Origin of the Work of Art, Martin Heidegger, a German philosopher and seminal thinker, describes the essence of art in terms of the concepts of being and truth.</p>
+        <p> He argues that art is not only a way of expressing the element of truth in a culture, but the means of creating it and providing a springboard from which "that which is" can be revealed. Works of art are not merely representations of the way things are, but actually produce a</p>
+      cover: true
+      image_side: right
+      highlight: background
+      theme: light
+    - content: |
+        <h2>Ratio: Origin</h2>
+      cover: true
+      cover_ratio: origin
+    - content: |
+        <h2>Ratio: 1x1</h2>
+      cover: true
+      cover_ratio: 1x1
+    - content: |
+        <h2>Ratio: 3x2</h2>
+      cover: true
+      cover_ratio: 3x2
+    - content: |
+        <h2>Ratio: 16x9</h2>
+      cover: true
+      cover_ratio: 16x9
+    - content: |
+        <h2>Ratio: 4x3</h2>
+      cover: true
+      cover_ratio: 4x3
+    - content: |
+        <h2>Ratio: 2x3</h2>
+      cover: true
+      cover_ratio: 2x3
+    - content: |
+        <h2>Ratio: 9x16</h2>
+      cover: true
+      cover_ratio: 9x16
+    - content: |
+        <h2>Ratio: 3x4</h2>
+      cover: true
+      cover_ratio: 3x4
+
   Dummy::Atom::Images::Gallery:
     - title: Gallery title
       subtitle: Subtitle
