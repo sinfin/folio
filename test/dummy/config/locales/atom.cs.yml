@@ -16,12 +16,17 @@ cs:
         margin/medium: Střední (Výchozí)
         margin/large: Velká
         margin/extra-large: Extra velká
+      dummy/atom/documents:
+        size: Velikost
+        size/small: Malá
+        size/medium: Střední
+        size/large: Velká
       dummy/atom/image_and_content:
-        image_side: Obrázek
+        image_side: Pozice obrázku
         image_side/left: Nalevo
         image_side/right: Napravo
       dummy/atom/text_around_image:
-        image_side: Obrázek
+        image_side: Pozice obrázku
         image_side/left: Nalevo
         image_side/right: Napravo
         theme: Barvy
@@ -96,11 +101,6 @@ cs:
         theme: Barvy
         theme/light: Světlé
         theme/dark: Tmavé
-      dummy/atom/documents:
-        size: Velikost
-        size/small: Malá
-        size/medium: Střední
-        size/large: Velká
     models:
       dummy/atom/cards/extra_small: Karta - extra malá
       dummy/atom/cards/full_width: Karta - na celou šířku

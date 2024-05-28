@@ -15,12 +15,17 @@ en:
         margin/medium: Medium (Default)
         margin/large: Large
         margin/extra-large: Extra Large
+      dummy/atom/documents:
+        size: Size
+        size/small: Small
+        size/medium: Medium
+        size/large: Large
       dummy/atom/image_and_content:
-        image_side: Image
+        image_side: Image position
         image_side/left: On the left
         image_side/right: On the right
       dummy/atom/text_around_image:
-        image_side: Image side
+        image_side: Image position
         image_side/left: On the left
         image_side/right: On the right
         theme: Theme
@@ -95,11 +100,6 @@ en:
         theme: Theme
         theme/light: Light
         theme/dark: Dark
-      dummy/atom/documents:
-        size: Size
-        size/small: Small
-        size/medium: Medium
-        size/large: Large
     models:
       dummy/atom/cards/extra_small: Card - extra small
       dummy/atom/cards/full_width: Card - full width
