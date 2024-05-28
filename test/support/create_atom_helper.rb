@@ -8,6 +8,8 @@ def create_atom(klass, *fill_attrs, **data_attrs)
     attrs[field] = case field
                    when :cover
                      create(:folio_file_image)
+                   when :video_cover
+                     create(:folio_file_video)
                    when :images
                      create_list(:folio_file_image, 1)
                    when :document
