@@ -1,0 +1,16 @@
+.d-atom.my-atom-lg.d-atom-text-around-video class=atom_class_name
+  .container-fluid
+    .d-atom-text-around-video__wrap
+      .container-narrow
+        .d-atom-text-around-video__inner
+          - if @atom.video_cover_placement.present?
+            .d-atom-text-around-video__video-wrap
+              = render(video_component)
+
+          .d-atom-text-around-video__content
+            - if @atom.content.present?
+              .d-atom-text-around-video__text [
+                class='d-rich-text fs-text-l'
+                class='d-rich-text--chomp'
+              ]
+                = cstypo @atom.content

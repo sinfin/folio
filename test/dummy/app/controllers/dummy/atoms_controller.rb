@@ -65,6 +65,10 @@ class Dummy::AtomsController < ApplicationController
       @images_for_attrs ||= (Folio::File::Image.tagged_with("unsplash").limit(10).presence || Folio::File::Image.limit(10)).to_a
     end
 
+    def videos_for_attrs
+      @videos_for_attrs ||= Folio::File::Video.limit(10).to_a
+    end
+
     def documents_for_attrs
       @documents_for_attrs ||= Folio::File::Document.limit(10).presence.to_a
     end
@@ -80,6 +84,10 @@ class Dummy::AtomsController < ApplicationController
         attrs[:images] = images_for_attrs
       elsif attrs[:images].is_a?(Numeric)
         attrs[:images] = images_for_attrs.first(attrs[:images])
+      end
+
+      if attrs[:video_cover] == true
+        attrs[:video_cover] = videos_for_attrs.sample
       end
 
       if attrs[:documents] == true
