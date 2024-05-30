@@ -124,4 +124,5 @@ en:
       dummy/atom/quotation: Quotation
       dummy/atom/text: Text
       dummy/atom/text_around_image: Text around image
+      dummy/atom/text_around_video: Text around video
       dummy/atom/title: Title

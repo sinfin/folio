@@ -125,4 +125,5 @@ cs:
       dummy/atom/quotation: Citace
       dummy/atom/text: Text
       dummy/atom/text_around_image: Text okolo obrázku
+      dummy/atom/text_around_video: Text okolo videa
       dummy/atom/title: Nadpis
