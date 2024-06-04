@@ -59,8 +59,7 @@ module Folio::HasSiteRoles
     ulf.locked = locked
 
     if ulf.valid?
-      ulf.save if ulf.persisted?
-      true
+      ulf.persisted? ? ulf.save : true
     else
       self.errors.add(:site_roles, ulf.errors.full_messages)
       false
