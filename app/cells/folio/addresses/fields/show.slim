@@ -17,6 +17,14 @@
                       disabled: options[:disabled],
                       input_html: { id: nil }
 
+  - if show_born_at_fields?
+    .row
+      div class=column_size_class_name(6)
+        = model.input :born_at,
+                      required: false,
+                      disabled: options[:disabled],
+                      input_html: { id: nil }    
+
   - if show_primary_address_fields?
     .f-addresses-fields__fields-wrap[
       class="f-addresses-fields__fields-wrap--primary-address"
@@ -57,12 +65,11 @@
                       input_html: { id: nil }
 
         .row
-          div class=column_size_class_name(7)
+          div class=column_size_class_name(6)
             = country_code_input(g, disabled: options[:disabled])
 
-        .row
-          div class=column_size_class_name(7)
-            = g.input :phone,
+          div class=column_size_class_name(6)
+            = model.input :phone,
                       as: :phone,
                       default_country_code: data_country_code(:primary_address),
                       disabled: options[:disabled],
@@ -79,11 +86,6 @@
           ]
             - model.simple_fields_for :secondary_address do |g|
               - required = required?(:secondary_address, g.object.attributes)
-
-              = g.input :name,
-                        disabled: options[:disabled],
-                        input_html: { id: nil }
-
               = g.input :company_name,
                         disabled: options[:disabled],
                         input_html: { id: nil }
