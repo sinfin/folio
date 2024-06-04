@@ -30,8 +30,8 @@ class Dummy::Ui::DocumentsComponent < ApplicationComponent
     "d-ui-documents--#{@size}" if @size.present?
   end
 
-  def download_path(*)
-    controller.folio.download_path(*)
+  def download_path(...)
+    controller.folio.download_path(...)
   end
 
   def href(placement)
