@@ -85,4 +85,8 @@ class Folio::Addresses::FieldsCell < Folio::ApplicationCell
 
     "col-#{mq}-#{size}"
   end
+
+  def show_born_at_fields?
+    false
+  end
 end

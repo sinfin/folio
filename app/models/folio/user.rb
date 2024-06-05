@@ -264,7 +264,7 @@ class Folio::User < Folio::ApplicationRecord
   end
 
   def self.additional_controller_strong_params_for_create
-    []
+    [:born_at]
   end
 
   def authenticatable_salt
