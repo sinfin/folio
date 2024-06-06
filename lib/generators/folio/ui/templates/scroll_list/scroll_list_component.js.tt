@@ -1,0 +1,106 @@
+//= require vanilla.kinetic
+//= require folio/debounce
+
+window.<%= application_namespace %> = window.<%= application_namespace %> || {}
+window.<%= application_namespace %>.Ui = window.<%= application_namespace %>.Ui || {}
+window.<%= application_namespace %>.Ui.ScrollList = window.<%= application_namespace %>.Ui.ScrollList || {}
+window.<%= application_namespace %>.Ui.ScrollList.touch = false
+
+window.addEventListener('touchstart', () => {
+  window.<%= application_namespace %>.Ui.ScrollList.touch = true
+
+  for (const scrollList of document.querySelectorAll('.<%= classname_prefix %>-ui-scroll-list[data-<%= classname_prefix %>-ui-scroll-list-touch-value="false"]')) {
+    scrollList.setAttribute('data-<%= classname_prefix %>-ui-scroll-list-touch-value', 'true')
+  }
+}, { once: true })
+
+window.Folio.Stimulus.register('<%= classname_prefix %>-ui-scroll-list', class extends window.Stimulus.Controller {
+  static targets = ["outer", "controlPrev", "controlNext", "ul", "li"]
+
+  static values = { touch: Boolean }
+
+  connect () {
+    if (window.<%= application_namespace %>.Ui.ScrollList.touch) return
+    this.bind()
+  }
+
+  disconnect () {
+    this.unbind()
+  }
+
+  bind () {
+    this.debouncedOnScroll = window.Folio.debounce(this.onScroll.bind(this))
+
+    this.vanillaKinetic = new window.VanillaKinetic(this.outerTarget, {
+      y: false,
+      moved: this.debouncedOnScroll,
+    })
+  }
+
+  unbind () {
+    if (this.vanillaKinetic) {
+      this.vanillaKinetic.detach()
+      delete this.vanillaKinetic
+    }
+  }
+
+  touchValueChanged () {
+    if (this.touchValue) {
+      this.unbind()
+    } else {
+      this.bind()
+    }
+  }
+
+  onScroll () {
+    this.toggleControlsClassNames()
+  }
+
+  toggleControlsClassNames () {
+    this.controlPrevTarget.classList.toggle('<%= classname_prefix %>-ui-scroll-list__control--disabled',
+                                            this.outerTarget.scrollLeft === 0)
+
+    const maxScrollLeft = this.outerTarget.scrollWidth - this.outerTarget.clientWidth
+
+    this.controlNextTarget.classList.toggle('<%= classname_prefix %>-ui-scroll-list__control--disabled',
+                                            this.outerTarget.scrollLeft === maxScrollLeft)
+  }
+
+  onControlClick(e, direction) {
+    e.preventDefault()
+
+    const baseLeft = this.outerTarget.scrollLeft + (direction * window.innerWidth * 2 / 3)
+
+    // align li
+    let targetLeft = null
+
+    if (baseLeft > 0) {
+      this.liTargets.forEach(li => {
+        if (targetLeft !== null) return
+
+        if (li.offsetLeft <= baseLeft && baseLeft < li.offsetLeft + li.offsetWidth) {
+          targetLeft = li.offsetLeft
+
+          // shift by gap
+          const computedGap = window.getComputedStyle(this.ulTarget).gap
+          if (computedGap && typeof computedGap === "string" && computedGap.indexOf("px") !== -1) {
+            targetLeft -= parseFloat(computedGap)
+          }
+        }
+      })
+    }
+
+    this.outerTarget.scrollTo({
+      left: targetLeft === null ? baseLeft : targetLeft,
+      behavior: 'smooth'
+    })
+  }
+
+  onNextClick (e) {
+    this.onControlClick(e, 1)
+  }
+
+  onPrevClick (e) {
+    this.onControlClick(e, -1)
+  }
+})

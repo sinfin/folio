@@ -1,0 +1,54 @@
+.<%= classname_prefix %>-ui-scroll-list
+  position: relative
+
+  &__outer
+    overflow: hidden
+    position: relative
+    z-index: 1
+    -webkit-overflow-scrolling: touch
+
+  &__ul
+    display: flex
+    gap: map-get($spacers, 3)
+
+    &::after
+      content: ''
+      display: list-item
+      width: 0px
+      visibility: hidden
+
+  &__li
+    flex: 0 0 auto
+
+  &__control
+    align-items: center
+    appearance: none
+    background: $shade-100
+    border: 0
+    box-shadow: $box-shadow-overlay
+    color: $shade-black-contrast
+    cursor: pointer
+    display: flex
+    height: px-to-rem(40px)
+    justify-content: center
+    outline: 0
+    padding: 0
+    position: absolute
+    top: 50%
+    transform: translate(0, -50%)
+    width: px-to-rem(40px)
+    z-index: 2
+
+    &--disabled
+      color: $shade-300
+      pointer-events: none
+
+    &--prev
+      left: $grid-gutter-half
+
+    &--next
+      right: $grid-gutter-half
+
+  +mq-mobile-menu
+    &__control
+      display: none

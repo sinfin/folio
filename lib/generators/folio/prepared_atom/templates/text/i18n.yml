@@ -5,11 +5,20 @@ cs:
       application_namespace_path/atom/text:
         highlight: Zvýraznění
         highlight/nil: Žádné
-        highlight/error: Červené
-        highlight/caution: Oranžové
-        highlight/success: Zelené
-        highlight/neutral: Modré
-        highlight/gray: Šedé
+        highlight/background: Pozadí
+        alignment: Zarovnání
+        alignment/left: Vlevo
+        alignment/center: Na střed
+        theme: Barvy
+        theme/light: Světlé
+        theme/dark: Tmavé
+        outline: Ohraničení
+        outline/nil: Žádné
+        outline/blue: Modré
+        outline/gray: Šedé
+        outline/red: Červené
+        outline/green: Zelené
+        outline/orange: Oranžové
     models:
       application_namespace_path/atom/text: Text
 en:
@@ -18,10 +27,19 @@ en:
       application_namespace_path/atom/text:
         highlight: Highlight
         highlight/nil: None
-        highlight/error: Red
-        highlight/caution: Orange
-        highlight/success: Green
-        highlight/neutral: Blue
-        highlight/gray: Gray
+        highlight/background: Background
+        alignment: Alignment
+        alignment/left: Left
+        alignment/center: Center
+        theme: Theme
+        theme/light: Light
+        theme/dark: Dark
+        outline: Outline
+        outline/nil: None
+        outline/blue: Blue
+        outline/gray: Gray
+        outline/red: Red
+        outline/green: Green
+        outline/orange: Orange
     models:
       application_namespace_path/atom/text: Text

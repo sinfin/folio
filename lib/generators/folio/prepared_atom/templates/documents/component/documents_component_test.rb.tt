@@ -1,0 +1,15 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= application_namespace %>::Atom::DocumentsComponentTest < Folio::ComponentTest
+  def test_render
+    document_placements = create_list(:folio_document_placement, 1)
+
+    atom = create_atom(<%= application_namespace %>::Atom::Documents, document_placements:)
+
+    render_inline(<%= application_namespace %>::Atom::DocumentsComponent.new(atom:))
+
+    assert_selector(".<%= classname_prefix %>-atom-document")
+  end
+end

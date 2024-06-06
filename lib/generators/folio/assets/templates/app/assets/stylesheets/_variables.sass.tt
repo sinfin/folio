@@ -50,7 +50,7 @@ $text-muted: $shade-400
 $gradient-100: linear-gradient(180deg, rgba($black, 0) 0%, $black 100%)
 
 $container-fluid-max-width: 1398px // 1270px (+ 2 * 64px paddings)
-$container-narrow-max-width: 1000px
+$container-narrow-max-width: 872px
 $font-size-media-breakpoint-s: sm
 $font-size-media-breakpoint-m: lg
 
@@ -200,6 +200,8 @@ $border-radius: px-to-rem(12px)
 $border-radius-lg: px-to-rem(24px)
 $border-radius-sm: $border-radius
 
+$box-shadow-overlay: var(--<%= application_namespace_path %>-box-shadow-overlay)
+
 $modal-sm: px-to-rem(500px)
 $modal-md: px-to-rem(640px)
 $modal-inner-padding: px-to-rem(32px)
@@ -208,7 +210,7 @@ $modal-header-padding-y: $modal-inner-padding
 $modal-header-border-width: 0
 $modal-backdrop-bg: $shade-black-contrast
 $modal-backdrop-opacity: .15
-$modal-content-box-shadow-xs: var(--<%= application_namespace_path %>-box-shadow-overlay)
+$modal-content-box-shadow-xs: $box-shadow-overlay
 $modal-content-box-shadow-sm-up: $modal-content-box-shadow-xs
 $modal-content-border-width: 0
 $modal-content-border-radius: 12px

@@ -9,6 +9,9 @@
     margin: 0
     margin-bottom: $spacer
 
+  p
+    color: $shade-700
+
   hr
     margin-top: map-get($spacers, i)
     margin-bottom: map-get($spacers, i)

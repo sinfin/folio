@@ -10,9 +10,6 @@
   +media-breakpoint-down(xl)
     padding: 0 map-get($spacers, i)
 
-    .container-narrow
-      padding: 0 map-get($spacers, j)
-
   +media-breakpoint-down(sm)
     &:not(.container-fluid--with-narrow)
       padding: 0 map-get($spacers, d)
@@ -22,3 +19,10 @@
 
 .container-narrow
   max-width: $container-narrow-max-width
+  margin: 0 auto
+
+  +media-breakpoint-down(xl)
+    padding: 0 map-get($spacers, i)
+
+  +media-breakpoint-down(sm)
+    padding: 0 map-get($spacers, d)

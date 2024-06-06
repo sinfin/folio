@@ -1,0 +1,58 @@
+.<%= classname_prefix %>-atom-text-around-image
+  &--highlight-background
+    margin: map-get($spacers, e) 0
+
+  &--highlight-background &__wrap
+    padding: map-get($spacers, g) 0
+
+  &--highlight-background.<%= classname_prefix %>-atom-text-around-image--theme-light &__wrap
+    background: $shade-100
+
+  &--highlight-background.<%= classname_prefix %>-atom-text-around-image--theme-dark &__wrap
+    background: $shade-800
+    color: $shade-light-contrast
+
+    .<%= classname_prefix %>-rich-text p
+      color: $shade-300
+
+  &__image
+    border-radius: $border-radius
+
+  +media-breakpoint-up(sm)
+    &__inner
+      +clearfix
+
+    &__image-wrap
+      width: percentage(368/760)
+      max-width: 368px
+      margin: map-get($spacers, f)
+      margin-top: .3rem
+
+    &--image-left &__image-wrap
+      float: left
+      margin-left: 0
+
+    &--image-right &__image-wrap
+      float: right
+      margin-right: 0
+
+  +media-breakpoint-up(md)
+    &--highlight-background
+      margin: map-get($spacers, g) 0
+
+    &--highlight-background &__wrap
+      padding: map-get($spacers, i) 0
+      border-radius: $border-radius
+
+  +media-breakpoint-up(xl)
+    &--highlight-background &__wrap
+      padding: map-get($spacers, k) 0
+
+  +media-breakpoint-down(md)
+    &__container
+      padding-left: 0 !important
+      padding-right: 0 !important
+
+  +media-breakpoint-down(sm)
+    &__text
+      margin-top: map-get($spacers, e)

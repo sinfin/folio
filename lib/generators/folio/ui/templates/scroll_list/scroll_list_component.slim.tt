@@ -1,0 +1,37 @@
+.<%= classname_prefix %>-ui-scroll-list[
+  data=data
+  class="<%= classname_prefix %>-ui-scroll-list--gap-#{@gap}"
+]
+  .<%= classname_prefix %>-ui-scroll-list__outer data=data_for_outer
+    .container-fluid.<%= classname_prefix %>-ui-scroll-list__container
+      ul.<%= classname_prefix %>-ui-scroll-list__ul[
+        class="gap-#{@mobile_gap} gap-lg-#{@gap}"
+        data=stimulus_target("ul")
+      ]
+        - if @components.present?
+          - @components.each do |component|
+            li.<%= classname_prefix %>-ui-scroll-list__li data=stimulus_target('li')
+              = render(component)
+        - elsif @html.present?
+          - @html.each do |html|
+            li.<%= classname_prefix %>-ui-scroll-list__li data=stimulus_target('li')
+              == html
+        - else
+          p.text-danger No components or html to render.
+
+  button[
+    type="button"
+    class="<%= classname_prefix %>-ui-scroll-list__control"
+    class="<%= classname_prefix %>-ui-scroll-list__control--prev"
+    class="<%= classname_prefix %>-ui-scroll-list__control--disabled"
+    data=stimulus_data(action: 'onPrevClick', target: 'controlPrev')
+  ]
+    = <%= application_namespace_path %>_ui_icon(:chevron_left)
+
+  button[
+    type="button"
+    class="<%= classname_prefix %>-ui-scroll-list__control"
+    class="<%= classname_prefix %>-ui-scroll-list__control--next"
+    data=stimulus_data(action: 'onNextClick', target: 'controlNext')
+  ]
+    = <%= application_namespace_path %>_ui_icon(:chevron_right)
