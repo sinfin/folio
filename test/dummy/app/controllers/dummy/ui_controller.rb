@@ -19,6 +19,7 @@ class Dummy::UiController < ApplicationController
       inputs
       modals
       pagination
+      slide_lists
       tabs
       share
       typo
@@ -108,6 +109,9 @@ class Dummy::UiController < ApplicationController
       { links: },
       { links:, large: true },
     ]
+  end
+
+  def slide_lists
   end
 
   def tabs

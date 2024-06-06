@@ -17,6 +17,8 @@ class Dummy::Ui::ImageComponent < ApplicationComponent
                  alt: nil,
                  title: nil,
                  cap_width: false,
+                 force_width: false,
+                 force_aspect_ratio: false,
                  style: nil,
                  spacer_background: true,
                  round: false,
@@ -32,6 +34,8 @@ class Dummy::Ui::ImageComponent < ApplicationComponent
     @alt = alt
     @title = title
     @cap_width = cap_width
+    @force_width = force_width
+    @force_aspect_ratio = force_aspect_ratio
     @style = style
     @spacer_background = spacer_background || ::Rails.application.config.folio_image_spacer_background_fallback
     @additional_html = additional_html
@@ -122,7 +126,7 @@ class Dummy::Ui::ImageComponent < ApplicationComponent
       max_width = @size.split("x").first
     end
 
-    if max_width.present?
+    if max_width.present? && !@force_aspect_ratio
       unless max_width.to_s.match?(/%|none/)
         file = @data && @data[:file]
 
@@ -142,10 +146,18 @@ class Dummy::Ui::ImageComponent < ApplicationComponent
       end
 
       styles << "max-width: #{max_width}"
+
+      if @force_width
+        styles << "width: #{max_width}"
+      end
     end
 
-    if max_height.present?
+    if max_height.present? && !@force_aspect_ratio
       styles << "max-height: #{max_height}"
+    end
+
+    if thumbnail_width && thumbnail_height && @force_aspect_ratio
+      styles << "aspect-ratio: #{thumbnail_width}/#{thumbnail_height}"
     end
 
     styles << @style if @style.present?

@@ -1,0 +1,37 @@
+.d-ui-scroll-list[
+  data=data
+  class="d-ui-scroll-list--gap-#{@gap}"
+]
+  .d-ui-scroll-list__outer data=data_for_outer
+    .container-fluid.d-ui-scroll-list__container
+      ul.d-ui-scroll-list__ul[
+        class="gap-#{@mobile_gap} gap-lg-#{@gap}"
+        data=stimulus_target("ul")
+      ]
+        - if @components.present?
+          - @components.each do |component|
+            li.d-ui-scroll-list__li data=stimulus_target('li')
+              = render(component)
+        - elsif @html.present?
+          - @html.each do |html|
+            li.d-ui-scroll-list__li data=stimulus_target('li')
+              == html
+        - else
+          p.text-danger No components or html to render.
+
+  button[
+    type="button"
+    class="d-ui-scroll-list__control"
+    class="d-ui-scroll-list__control--prev"
+    class="d-ui-scroll-list__control--disabled"
+    data=stimulus_data(action: 'onPrevClick', target: 'controlPrev')
+  ]
+    = dummy_ui_icon(:chevron_left)
+
+  button[
+    type="button"
+    class="d-ui-scroll-list__control"
+    class="d-ui-scroll-list__control--next"
+    data=stimulus_data(action: 'onNextClick', target: 'controlNext')
+  ]
+    = dummy_ui_icon(:chevron_right)
