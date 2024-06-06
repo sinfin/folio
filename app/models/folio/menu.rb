@@ -39,9 +39,9 @@ class Folio::Menu < Folio::ApplicationRecord
   def available_targets
     if Rails.application.config.folio_using_traco ||
        !Rails.application.config.folio_pages_locales
-      Folio::Page.all
+      Folio::Page.by_site(site)
     else
-      Folio::Page.by_locale(locale)
+      Folio::Page.by_site(site).by_locale(locale)
     end
   end
 

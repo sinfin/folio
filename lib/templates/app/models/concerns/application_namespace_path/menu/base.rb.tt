@@ -10,6 +10,6 @@ module <%= application_namespace %>::Menu::Base
   end
 
   def available_targets
-    Folio::Page.all.to_a.select { |p| p.class.public? }
+    Folio::Page.by_site(site).to_a.select { |p| p.class.public? }
   end
 end
