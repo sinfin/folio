@@ -280,6 +280,7 @@ cs:
     count: Počet
     cover: Obrázek
     cover_placement: Obrázek
+    background_cover_placement: Obrázek do pozadí
     current_password: Aktuální heslo pro kontrolu
     description: Popisek
     document_placement: Dokument
