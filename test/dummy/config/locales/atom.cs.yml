@@ -25,6 +25,25 @@ cs:
         image_side: Pozice obrázku
         image_side/left: Nalevo
         image_side/right: Napravo
+      dummy/atom/quotation:
+        large: Velké písmo
+      dummy/atom/text:
+        highlight: Zvýraznění
+        highlight/nil: Žádné
+        highlight/background: Pozadí
+        alignment: Zarovnání
+        alignment/left: Vlevo
+        alignment/center: Na střed
+        theme: Barvy
+        theme/light: Světlé
+        theme/dark: Tmavé
+        outline: Ohraničení
+        outline/nil: Žádné
+        outline/blue: Modré
+        outline/gray: Šedé
+        outline/red: Červené
+        outline/green: Zelené
+        outline/orange: Oranžové
       dummy/atom/text_around_image:
         image_side: Pozice obrázku
         image_side/left: Nalevo
@@ -63,25 +82,6 @@ cs:
         cover_ratio/2x3: "2:3"
         cover_ratio/9x16: "9:16"
         cover_ratio/3x4: "3:4"
-      dummy/atom/quotation:
-        large: Velké písmo
-      dummy/atom/text:
-        highlight: Zvýraznění
-        highlight/nil: Žádné
-        highlight/background: Pozadí
-        alignment: Zarovnání
-        alignment/left: Vlevo
-        alignment/center: Na střed
-        theme: Barvy
-        theme/light: Světlé
-        theme/dark: Tmavé
-        outline: Ohraničení
-        outline/nil: Žádné
-        outline/blue: Modré
-        outline/gray: Šedé
-        outline/red: Červené
-        outline/green: Zelené
-        outline/orange: Oranžové
       dummy/atom/title:
         tag: Tag
         tag/H1: H1
@@ -101,6 +101,23 @@ cs:
         theme: Barvy
         theme/light: Světlé
         theme/dark: Tmavé
+      dummy/atom/hero:
+        date: Datum
+        author: Autor
+        image_size: Velikost obrázku
+        image_size/container: V kontejneru
+        image_size/full_width: Na celou šířku
+        image_size/extra_large: Extra velký
+        image_size/large: Velký
+        image_size/medium: Střední
+        image_size/small: Malý
+        theme: Barvy
+        theme/dark: Tmavé
+        theme/light: Světlé
+        background_overlay: Překrytí pozadí
+        background_overlay/nil: Žádné
+        background_overlay/dark: Tmavé
+        background_overlay/light: Světlé
     models:
       dummy/atom/cards/extra_small: Karta - extra malá
       dummy/atom/cards/full_width: Karta - na celou šířku
@@ -114,6 +131,7 @@ cs:
       dummy/atom/divider: Oddělovač
       dummy/atom/documents: Documenty
       dummy/atom/embed: Embed
+      dummy/atom/hero: Hero
       dummy/atom/image_and_content: Obrázek a obsah
       dummy/atom/images/gallery: Obrázky - galerie
       dummy/atom/images/grid_gallery: Obrázky - galerie v mřížce

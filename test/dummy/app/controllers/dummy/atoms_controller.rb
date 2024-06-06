@@ -80,6 +80,10 @@ class Dummy::AtomsController < ApplicationController
         attrs[:cover] = images_for_attrs.sample
       end
 
+      if attrs[:background_cover] == true
+        attrs[:background_cover] = images_for_attrs.sample
+      end
+
       if attrs[:images] == true
         attrs[:images] = images_for_attrs
       elsif attrs[:images].is_a?(Numeric)

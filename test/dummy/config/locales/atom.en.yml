@@ -24,6 +24,25 @@ en:
         image_side: Image position
         image_side/left: On the left
         image_side/right: On the right
+      dummy/atom/quotation:
+        large: Bigger font
+      dummy/atom/text:
+        highlight: Highlight
+        highlight/nil: None
+        highlight/background: Background
+        alignment: Alignment
+        alignment/left: Left
+        alignment/center: Center
+        theme: Theme
+        theme/light: Light
+        theme/dark: Dark
+        outline: Outline
+        outline/nil: None
+        outline/blue: Blue
+        outline/gray: Gray
+        outline/red: Red
+        outline/green: Green
+        outline/orange: Orange
       dummy/atom/text_around_image:
         image_side: Image position
         image_side/left: On the left
@@ -62,25 +81,6 @@ en:
         cover_ratio/2x3: "2:3"
         cover_ratio/9x16: "9:16"
         cover_ratio/3x4: "3:4"
-      dummy/atom/quotation:
-        large: Bigger font
-      dummy/atom/text:
-        highlight: Highlight
-        highlight/nil: None
-        highlight/background: Background
-        alignment: Alignment
-        alignment/left: Left
-        alignment/center: Center
-        theme: Theme
-        theme/light: Light
-        theme/dark: Dark
-        outline: Outline
-        outline/nil: None
-        outline/blue: Blue
-        outline/gray: Gray
-        outline/red: Red
-        outline/green: Green
-        outline/orange: Orange
       dummy/atom/title:
         tag: Tag
         tag/H1: H1
@@ -100,6 +100,23 @@ en:
         theme: Theme
         theme/light: Light
         theme/dark: Dark
+      dummy/atom/hero:
+        date: Date
+        author: Author
+        image_size: Image size
+        image_size/container: Container
+        image_size/full_width: Full width
+        image_size/extra_large: Extra large
+        image_size/large: Large
+        image_size/medium: Medium
+        image_size/small: Small
+        theme: Theme
+        theme/dark: Dark
+        theme/light: Light
+        background_overlay: Background overlay
+        background_overlay/nil: None
+        background_overlay/dark: Dark
+        background_overlay/light: Light
     models:
       dummy/atom/cards/extra_small: Card - extra small
       dummy/atom/cards/full_width: Card - full width
@@ -113,6 +130,7 @@ en:
       dummy/atom/divider: Divider
       dummy/atom/documents: Documents
       dummy/atom/embed: Embed
+      dummy/atom/hero: Hero
       dummy/atom/image_and_content: Image & content
       dummy/atom/images/gallery: Images - gallery
       dummy/atom/images/grid_gallery: Images - gallery (grid)

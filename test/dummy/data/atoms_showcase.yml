@@ -297,6 +297,74 @@ atoms:
       subtitle: Subtitle
       images: 3
 
+  Dummy::Atom::Hero:
+    - cover: true
+      title: One and two gallery title
+      content: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis
+      show_divider: true
+    - cover: true
+      title: One and two gallery title
+      content: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis
+      image_size: extra_large
+      show_divider: true
+    - cover: true
+      title: One and two gallery title
+      content: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis
+      image_size: large
+      show_divider: true
+    - cover: true
+      title: One and two gallery title
+      content: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis
+      image_size: medium
+      show_divider: true
+    - cover: true
+      title: One and two gallery title
+      content: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis
+      image_size: small
+    - cover: true
+      title: One and two gallery title
+      content: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis
+      image_size: full_width
+    - cover: true
+      background_color: "#D4E6C9"
+      title: One and two gallery title
+      content: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis
+      show_divider: true
+    - cover: true
+      background_color: "#D4E6C9"
+      title: One and two gallery title
+      content: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis
+      image_size: medium
+      show_divider: true
+    - background_color: "#D4E6C9"
+      title: One and two gallery title
+      content: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis
+    - background_cover: true
+      title: One and two gallery title
+      content: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis
+    - cover: true
+      background_cover: true
+      title: One and two gallery title
+      content: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis
+      image_size: small
+    - background_cover: true
+      title: One and two gallery title
+      content: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis
+      background_overlay: light
+    - background_cover: true
+      title: One and two gallery title
+      content: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis
+      background_overlay: dark
+      theme: dark
+    - background_cover: true
+      title: One and two gallery title
+      content: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis
+      background_overlay: dark
+      theme: dark
+      author: John Doe
+    - title: One and two gallery title
+      content: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis
+
   Dummy::Atom::Cards::FullWidth:
     - title: Card headline lorem ipsum dolor sit amet, consectetur adipiscing
       content: true
