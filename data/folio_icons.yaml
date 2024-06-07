@@ -252,6 +252,9 @@ plus_circle_multiple_outline:
 podcast:
   width: 24
   height: 24
+print:
+  width: 24
+  height: 24
 quote:
   width: 48
   height: 48
