@@ -15,7 +15,7 @@ window.addEventListener('touchstart', () => {
 }, { once: true })
 
 window.Folio.Stimulus.register('d-ui-scroll-list', class extends window.Stimulus.Controller {
-  static targets = ["outer", "controlPrev", "controlNext", "ul", "li"]
+  static targets = ['outer', 'controlPrev', 'controlNext', 'ul', 'li']
 
   static values = { touch: Boolean }
 
@@ -34,6 +34,7 @@ window.Folio.Stimulus.register('d-ui-scroll-list', class extends window.Stimulus
     this.vanillaKinetic = new window.VanillaKinetic(this.outerTarget, {
       y: false,
       moved: this.debouncedOnScroll,
+      maxvelocity: 1
     })
   }
 
@@ -41,6 +42,12 @@ window.Folio.Stimulus.register('d-ui-scroll-list', class extends window.Stimulus
     if (this.vanillaKinetic) {
       this.vanillaKinetic.detach()
       delete this.vanillaKinetic
+    }
+  }
+
+  liTargetConnected (element) {
+    for (const draggable of element.querySelectorAll('a, img')) {
+      draggable.draggable = false
     }
   }
 
@@ -58,15 +65,15 @@ window.Folio.Stimulus.register('d-ui-scroll-list', class extends window.Stimulus
 
   toggleControlsClassNames () {
     this.controlPrevTarget.classList.toggle('d-ui-scroll-list__control--disabled',
-                                            this.outerTarget.scrollLeft === 0)
+      this.outerTarget.scrollLeft === 0)
 
     const maxScrollLeft = this.outerTarget.scrollWidth - this.outerTarget.clientWidth
 
     this.controlNextTarget.classList.toggle('d-ui-scroll-list__control--disabled',
-                                            this.outerTarget.scrollLeft === maxScrollLeft)
+      this.outerTarget.scrollLeft === maxScrollLeft)
   }
 
-  onControlClick(e, direction) {
+  onControlClick (e, direction) {
     e.preventDefault()
 
     const baseLeft = this.outerTarget.scrollLeft + (direction * window.innerWidth * 2 / 3)
@@ -83,7 +90,7 @@ window.Folio.Stimulus.register('d-ui-scroll-list', class extends window.Stimulus
 
           // shift by gap
           const computedGap = window.getComputedStyle(this.ulTarget).gap
-          if (computedGap && typeof computedGap === "string" && computedGap.indexOf("px") !== -1) {
+          if (computedGap && typeof computedGap === 'string' && computedGap.indexOf('px') !== -1) {
             targetLeft -= parseFloat(computedGap)
           }
         }
