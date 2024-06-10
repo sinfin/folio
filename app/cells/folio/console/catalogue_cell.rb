@@ -66,8 +66,9 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
                                       skip_desktop_header:)
 
     if rendering_header?
+      allow_sorting = model.fetch(:allow_sorting, true)
       @header_html += content_tag(:div,
-                                  label_for(name, skip_desktop_header:, allow_sorting: true),
+                                  label_for(name, skip_desktop_header:, allow_sorting:),
                                   class: full_class_name,
                                   hidden: hidden ? "" : nil)
     else
