@@ -273,6 +273,9 @@ send_lock:
 square_outline:
   width: 24
   height: 24
+stacked_email_outline:
+  width: 24
+  height: 24
 star:
   width: 24
   height: 24
