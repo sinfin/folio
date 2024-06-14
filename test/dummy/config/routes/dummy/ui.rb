@@ -11,6 +11,7 @@ scope module: :dummy, as: :dummy do
     get :documents
     get :embed
     get :forms
+    get :hero
     get :icons
     get :images
     get :inputs
