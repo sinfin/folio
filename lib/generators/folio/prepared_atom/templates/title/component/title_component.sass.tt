@@ -6,7 +6,7 @@
     padding: map-get($spacers, d) 0
 
   &--highlight-background.<%= classname_prefix %>-atom-title--theme-light &__inner
-    background: $transparent-100
+    background: $transparent-b100
 
   &--highlight-background.<%= classname_prefix %>-atom-title--theme-dark &__inner
     background: $shade-800

@@ -49,7 +49,7 @@ $text-muted: $shade-400
 
 $gradient-100: linear-gradient(180deg, rgba($black, 0) 0%, $black 100%)
 
-$container-fluid-max-width: 1398px // 1270px (+ 2 * 64px paddings)
+$container-fluid-max-width: 1448px // 1320 (+ 2 * 64px paddings)
 $container-narrow-max-width: 872px
 $font-size-media-breakpoint-s: sm
 $font-size-media-breakpoint-m: lg
@@ -262,7 +262,7 @@ $input-padding-x: px-to-rem(12px)
 $input-border-radius: px-to-rem(24px)
 $input-bg: $shade-light-contrast
 $input-color: $shade-black-contrast
-$input-border-color: $transparent-300
+$input-border-color: $transparent-b300
 $input-focus-border-color: $shade-black-contrast
 $input-font-size: $ui-typo-text-m-font-size
 $input-box-shadow: none
@@ -305,7 +305,7 @@ $td-days-of-week-color: $shade-500
 
 $table-color: $shade-black-contrast
 $table-bg: $shade-light-contrast
-$table-border-color: $transparent-100
+$table-border-color: $transparent-b100
 $table-accent-bg: transparent
 $table-striped-color: $shade-black-contrast
 $table-striped-bg: rgba($shade-black-contrast, 0.05)

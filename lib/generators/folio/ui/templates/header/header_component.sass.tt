@@ -49,7 +49,7 @@
       left: 0
       height: 1px
       width: 100%
-      background: $transparent-200
+      background: $transparent-b200
 
   +mq-desktop-menu
     &__inner

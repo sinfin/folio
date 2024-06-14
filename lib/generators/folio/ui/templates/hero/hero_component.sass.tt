@@ -1,0 +1,110 @@
+.<%= classname_prefix %>-ui-hero
+  position: relative
+
+  &--background-overlay-dark::before,
+  &--background-overlay-light::before
+    content: ''
+    display: block
+    position: absolute
+    inset: 0
+    width: 100%
+    height: 100%
+    z-index: 3
+
+  &--background-overlay-dark::before
+    background: $transparent-b700
+
+  &--background-overlay-light::before
+    background: $transparent-w700
+
+  &--theme-light
+    color: $shade-black-contrast
+
+  &--theme-dark
+    color: $shade-light-contrast
+
+  &--top-spacing
+    padding-top: map-get($spacers, g)
+
+  &__wrap
+    position: relative
+    z-index: 10
+
+  &__image
+    margin: 0 auto
+
+  &__image--contained
+    border-radius: $border-radius
+    overflow: hidden
+
+  &__content
+    text-align: center
+    padding-top: map-get($spacers, g)
+    padding-bottom: map-get($spacers, k)
+    
+  &--show-divider &__content
+    border-bottom: 1px solid $transparent-b300
+
+  &__title
+    margin: 0 0 map-get($spacers, c)
+
+  &__text
+    max-width: 800px
+    margin: 0 auto
+
+  &__article-meta
+    display: flex
+    align-items: center
+    justify-content: center
+    gap: map-get($spacers, c)
+    font-weight: $font-weight-medium
+    margin-top: map-get($spacers, d)
+
+  &__article-meta-author
+    text-decoration: none
+    color: $brand-200
+
+    &:hover
+      text-decoration: underline
+
+  +media-breakpoint-up(lg)
+    &__image--contained
+      min-height: 470px
+      .<%= classname_prefix %>-ui-image__img
+        height: 100%
+        width: auto
+        left: 50%
+        transform: translateX(-50%)
+
+  +media-breakpoint-up(lg)
+    &__image--mobile
+      display: none !important
+
+  +media-breakpoint-down(lg)
+    &__image--mobile
+      display: block !important
+
+    &__image--mobile + &__image
+      display: none !important
+
+  +media-breakpoint-down(md)
+    &__content
+      padding-bottom: map-get($spacers, h)
+
+    &__title
+      +font-size-display-s
+
+    &__text
+      +font-size-text-m
+
+  +media-breakpoint-down(sm)
+    &__content
+      padding-top: map-get($spacers, f)
+      padding-bottom: map-get($spacers, f)
+
+    &__title
+      +font-size-display-xs
+
+    &__text
+      +font-size-text-s
+

@@ -1,0 +1,32 @@
+div [
+  class=bem_class_name
+  style=atom_styles
+]
+  - if @background_cover.present?
+    = <%= application_namespace_path %>_ui_image @background_cover,
+                     THUMB_SIZES[:background],
+                     class_name: '<%= classname_prefix %>-ui-hero__background-image',
+                     cover: true
+
+  .<%= classname_prefix %>-ui-hero__wrap
+    == cover_tag
+
+    .container-fluid
+      .<%= classname_prefix %>-ui-hero__content
+        - if @title.present?
+          h1.<%= classname_prefix %>-ui-hero__title.fs-display-m
+            = @title
+
+        - if @perex.present?
+          .<%= classname_prefix %>-ui-hero__text.fs-text-l
+            p.mb-0 = cstypo @perex
+
+        - if @date.present? || @author.present?
+          .<%= classname_prefix %>-ui-hero__article-meta.fs-text-s
+            - if @date.present?
+              .<%= classname_prefix %>-ui-hero__article-meta-date
+                = @date.strftime("%d. %m. %y")
+
+            - if @author.present?
+              a.<%= classname_prefix %>-ui-hero__article-meta-author href="#"
+                = @author
