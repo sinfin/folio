@@ -25,6 +25,25 @@ cs:
         image_side: Pozice obrázku
         image_side/left: Nalevo
         image_side/right: Napravo
+      dummy/atom/quotation:
+        large: Velké písmo
+      dummy/atom/text:
+        highlight: Zvýraznění
+        highlight/nil: Žádné
+        highlight/background: Pozadí
+        alignment: Zarovnání
+        alignment/left: Vlevo
+        alignment/center: Na střed
+        theme: Barvy
+        theme/light: Světlé
+        theme/dark: Tmavé
+        outline: Ohraničení
+        outline/nil: Žádné
+        outline/blue: Modré
+        outline/gray: Šedé
+        outline/red: Červené
+        outline/green: Zelené
+        outline/orange: Oranžové
       dummy/atom/text_around_image:
         image_side: Pozice obrázku
         image_side/left: Nalevo
@@ -63,25 +82,6 @@ cs:
         cover_ratio/2x3: "2:3"
         cover_ratio/9x16: "9:16"
         cover_ratio/3x4: "3:4"
-      dummy/atom/quotation:
-        large: Velké písmo
-      dummy/atom/text:
-        highlight: Zvýraznění
-        highlight/nil: Žádné
-        highlight/background: Pozadí
-        alignment: Zarovnání
-        alignment/left: Vlevo
-        alignment/center: Na střed
-        theme: Barvy
-        theme/light: Světlé
-        theme/dark: Tmavé
-        outline: Ohraničení
-        outline/nil: Žádné
-        outline/blue: Modré
-        outline/gray: Šedé
-        outline/red: Červené
-        outline/green: Zelené
-        outline/orange: Oranžové
       dummy/atom/title:
         tag: Tag
         tag/H1: H1
