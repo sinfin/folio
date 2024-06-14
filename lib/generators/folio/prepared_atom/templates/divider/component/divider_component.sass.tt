@@ -11,7 +11,7 @@ $margin-classes: (small: $margins-small, medium: $margins-medium, large: $margin
     margin-bottom: 0
 
   &--thin &__hr
-    border-color: $transparent-100
+    border-color: $transparent-b100
 
   &--thick &__hr
     --bs-border-width: 2px

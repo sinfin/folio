@@ -14,6 +14,7 @@ class <%= application_namespace %>::UiController < ApplicationController
       clipboard
       embed
       forms
+      hero
       icons
       images
       inputs
@@ -70,12 +71,18 @@ class <%= application_namespace %>::UiController < ApplicationController
     end
 
     @buttons_model = [
-      { variant: :dark, label: "Add dark flash", onclick: "window.<%= application_namespace %>.Ui.Flash.flash({ content: 'New dark message!', variant: 'dark' })" },
-      { variant: :info, label: "Add info flash", onclick: "window.<%= application_namespace %>.Ui.Flash.flash({ content: 'New info message!', variant: 'info' })" },
-      { variant: :warning, label: "Add warning flash", onclick: "window.<%= application_namespace %>.Ui.Flash.flash({ content: 'New warning message!', variant: 'warning' })" },
-      { variant: :success, label: "Add success flash", onclick: "window.<%= application_namespace %>.Ui.Flash.flash({ content: 'New success message!', variant: 'success' })" },
-      { variant: :danger, label: "Add danger flash", onclick: "window.<%= application_namespace %>.Ui.Flash.flash({ content: 'New danger message!', variant: 'danger' })" },
-      { variant: :info, loader: true, label: "Add loader flash", onclick: "window.<%= application_namespace %>.Ui.Flash.flash({ content: 'New loader message!', variant: 'loader' })" },
+      { variant: :dark, label: "Add dark flash",
+        onclick: "window.<%= application_namespace %>.Ui.Flash.flash({ content: 'New dark message!', variant: 'dark' })" },
+      { variant: :info, label: "Add info flash",
+        onclick: "window.<%= application_namespace %>.Ui.Flash.flash({ content: 'New info message!', variant: 'info' })" },
+      { variant: :warning, label: "Add warning flash",
+        onclick: "window.<%= application_namespace %>.Ui.Flash.flash({ content: 'New warning message!', variant: 'warning' })" },
+      { variant: :success, label: "Add success flash",
+        onclick: "window.<%= application_namespace %>.Ui.Flash.flash({ content: 'New success message!', variant: 'success' })" },
+      { variant: :danger, label: "Add danger flash",
+        onclick: "window.<%= application_namespace %>.Ui.Flash.flash({ content: 'New danger message!', variant: 'danger' })" },
+      { variant: :info, loader: true, label: "Add loader flash",
+        onclick: "window.<%= application_namespace %>.Ui.Flash.flash({ content: 'New loader message!', variant: 'loader' })" },
     ]
   end
 
@@ -111,29 +118,121 @@ class <%= application_namespace %>::UiController < ApplicationController
     ]
   end
 
-  def slide_lists
+  def hero
+    # TODO: tag images with dark/light theme
+    images = Folio::File::Image.tagged_with("unsplash").presence || Folio::File::Image
+
+    cover = images.first
+    background_cover = images.second
+
+    @hero_variants = [
+      {
+        cover:,
+        title: "One and two gallery title",
+        perex: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis",
+        show_divider: true,
+      }, {
+        cover:,
+        title: "One and two gallery title",
+        perex: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis",
+        image_size: "extra_large",
+        show_divider: true,
+      }, {
+        cover:,
+        title: "One and two gallery title",
+        perex: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis",
+        image_size: "large",
+        show_divider: true,
+      }, {
+        cover:,
+        title: "One and two gallery title",
+        perex: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis",
+        image_size: "medium",
+        show_divider: true,
+      }, {
+        cover:,
+        title: "One and two gallery title",
+        perex: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis",
+        image_size: "small",
+      }, {
+        cover:,
+        title: "One and two gallery title",
+        perex: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis",
+        image_size: "full_width",
+      }, {
+        cover:,
+        background_color: "#D4E6C9",
+        title: "One and two gallery title",
+        perex: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis",
+        show_divider: true,
+      }, {
+        cover:,
+        background_color: "#D4E6C9",
+        title: "One and two gallery title",
+        perex: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis",
+        image_size: "medium",
+        show_divider: true,
+      }, {
+        title: "One and two gallery title",
+        perex: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis",
+        background_color: "#D4E6C9",
+      }, {
+        background_cover:,
+        title: "One and two gallery title",
+        perex: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis",
+      }, {
+        cover:,
+        background_cover:,
+        title: "One and two gallery title",
+        perex: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis",
+        image_size: "small",
+      }, {
+        background_cover:,
+        title: "One and two gallery title",
+        perex: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis",
+        background_overlay: "light",
+      }, {
+        background_cover:,
+        title: "One and two gallery title",
+        perex: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis",
+        background_overlay: "dark",
+        theme: "dark",
+      }, {
+        background_cover:,
+        title: "One and two gallery title",
+        perex: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis",
+        background_overlay: "dark",
+        theme: "dark",
+        author: "John Doe",
+      }, {
+        title: "One and two gallery title",
+        perex: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis",
+      }
+    ]
   end
+
+  def slide_lists; end
 
   def tabs
     @tabs = [
       {
         href: tabs_<%= application_namespace_path %>_ui_path(tab: "1"),
         active: %w[2 3].exclude?(params[:tab]),
-        label: "Tab 1"
+        label: "Tab 1",
       },
       {
         href: tabs_<%= application_namespace_path %>_ui_path(tab: "2"),
         active: params[:tab] == "2",
         label: "Tab 2",
-        count: 123
+        count: 123,
       },
       {
         href: tabs_<%= application_namespace_path %>_ui_path(tab: "3"),
         active: params[:tab] == "3",
         label: "Tab 3",
         disabled: true,
-        count: 2
-      }
+        count: 2,
+      },
     ]
   end
 
