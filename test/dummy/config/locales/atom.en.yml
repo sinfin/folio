@@ -24,6 +24,25 @@ en:
         image_side: Image position
         image_side/left: On the left
         image_side/right: On the right
+      dummy/atom/quotation:
+        large: Bigger font
+      dummy/atom/text:
+        highlight: Highlight
+        highlight/nil: None
+        highlight/background: Background
+        alignment: Alignment
+        alignment/left: Left
+        alignment/center: Center
+        theme: Theme
+        theme/light: Light
+        theme/dark: Dark
+        outline: Outline
+        outline/nil: None
+        outline/blue: Blue
+        outline/gray: Gray
+        outline/red: Red
+        outline/green: Green
+        outline/orange: Orange
       dummy/atom/text_around_image:
         image_side: Image position
         image_side/left: On the left
@@ -62,25 +81,6 @@ en:
         cover_ratio/2x3: "2:3"
         cover_ratio/9x16: "9:16"
         cover_ratio/3x4: "3:4"
-      dummy/atom/quotation:
-        large: Bigger font
-      dummy/atom/text:
-        highlight: Highlight
-        highlight/nil: None
-        highlight/background: Background
-        alignment: Alignment
-        alignment/left: Left
-        alignment/center: Center
-        theme: Theme
-        theme/light: Light
-        theme/dark: Dark
-        outline: Outline
-        outline/nil: None
-        outline/blue: Blue
-        outline/gray: Gray
-        outline/red: Red
-        outline/green: Green
-        outline/orange: Orange
       dummy/atom/title:
         tag: Tag
         tag/H1: H1
