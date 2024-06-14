@@ -1,0 +1,14 @@
+.container-fluid
+  h1
+    a.d-unlink href=dummy_ui_path UI kit
+
+  - page = Folio::Page.new(slug: "slug")
+  - page.valid?
+
+  - %w[light dark].each do |theme|
+    .bg-body.p-f.mt-f.border.rounded data-bs-theme=theme
+      h2.mt-0 Hero - #{theme}
+
+      - @hero_variants.each do |variant|
+        .mb-g
+          == render(Dummy::Ui::HeroComponent.new(**variant))
