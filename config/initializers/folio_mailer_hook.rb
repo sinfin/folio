@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "folio/mailer_hook"
+load Folio::Engine.root.join("app/lib/folio/mailer_hook.rb")
 
 ActionMailer::Base.register_interceptor(Folio::MailerHook)
 
