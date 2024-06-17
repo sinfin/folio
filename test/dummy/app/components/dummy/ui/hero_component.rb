@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Dummy::Ui::HeroComponent < ApplicationComponent
   include Folio::Molecule::CoverPlacements
 
