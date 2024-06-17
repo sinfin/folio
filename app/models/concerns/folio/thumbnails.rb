@@ -27,7 +27,7 @@ module Folio::Thumbnails
 
   included do
     if should_serialize_thumbnail_sizes?
-      serialize :thumbnail_sizes, type: Hash
+      serialize :thumbnail_sizes, type: Hash, coder: YAML
     end
 
     before_validation :reset_thumbnails
