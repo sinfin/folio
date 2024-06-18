@@ -12,9 +12,15 @@ module MethodInvokingMatchersHelper
       mock_of_method = Minitest::Mock.new
       mock_of_method.expect :call, return_value, args, **kwargs
 
-      result = object.stub(method, mock_of_method, &block)
-      mock_of_method.verify
-      result
+      begin
+        result = object.stub(method, mock_of_method, &block)
+        mock_of_method.verify
+        result
+      rescue MockExpectationError => e
+        puts(e.message)
+        puts("Expected args: #{args}, kwargs: #{kwargs}")
+        raise e
+      end
     end
 
     def expect_no_method_called_on(obj, method, &block)
