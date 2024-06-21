@@ -26,6 +26,8 @@ module Folio::HasSanitizedFields
     end
 
     def sanitize_field(field)
+      return unless respond_to?(field)
+
       value = send(field)
 
       if value.present? && value.is_a?(String)
