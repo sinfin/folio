@@ -37,6 +37,8 @@ class Folio::ConsoleCell < Folio::ApplicationCell
 
     if record.respond_to?(:locale)
       args[:locale] = record.locale
+    elsif Rails.application.config.folio_console_add_locale_to_preview_links
+      args[:locale] = I18n.locale
     end
 
     url_for([record, args])

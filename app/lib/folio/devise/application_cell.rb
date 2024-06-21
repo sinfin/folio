@@ -50,7 +50,7 @@ class Folio::Devise::ApplicationCell < Folio::ApplicationCell
   end
 
   def email_input(f, opts = {})
-    # rubocop:disable RuboCopLayout/CommentIndentation
+    # rubocop:disable Layout/CommentIndentation
     f.input :email, opts.merge(required: true,
                                disabled: opts[:disabled],
                                input_html: {
@@ -61,7 +61,7 @@ class Folio::Devise::ApplicationCell < Folio::ApplicationCell
                                                                     # but there can be more same inputs on page
                                                                     # so we need to generate unique ID
                               })
-    # rubocop:enable RuboCopLayout/CommentIndentation
+    # rubocop:enable Layout/CommentIndentation
   end
 
   def phone_input(f, opts = {})
