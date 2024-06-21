@@ -56,7 +56,7 @@ module Folio::HasSiteRoles
   def set_roles_for(site:, roles:, locked: false)
     ulf = user_link_for(site:) || build_site_link(site:)
     ulf.roles = roles.collect(&:to_s).uniq
-    ulf.locked = locked
+    ulf.locked = locked if ulf.respond_to?(:locked_at)
 
     if ulf.valid?
       ulf.persisted? ? ulf.save : true
