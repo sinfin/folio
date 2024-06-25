@@ -9,48 +9,61 @@ class DateInput extends React.PureComponent {
     this.inputRef = React.createRef()
   }
 
-  onChange = () => {
-    const that = this
-    setTimeout(() => {
-      let val = that.inputRef.current.dataset.date
-      if (val === '' || val === 'null') val = null
-      that.props.onChange(val)
-    }, 0)
+  componentDidMount () {
+    if (this.unbindInput) this.unbindInput()
+
+    this.inputRef.current.addEventListener('change', this.onChange)
+
+    this.unbindInput = () => {
+      this.inputRef.current.removeEventListener('change', this.onChange)
+      delete this.unbindInput
+    }
+  }
+
+  componentWillUnmount () {
+    if (this.unbindInput) this.unbindInput()
+  }
+
+  formatDate (date, delimiter = '-') {
+    const options = { day: "2-digit", month: "2-digit", year: "numeric"}
+    const dateObj = new Date(date)
+
+    return dateObj.toLocaleDateString("cs-CZ", options)
+  }
+
+  onChange = (event) => {
+    let date = event.target.folioInputTempusDominus.viewDate
+
+    date = this.formatDate(date)
+    date = date.split('. ').reverse().join('-')
+
+    this.props.onChange(date)
   }
 
   focus () {
     this.inputRef.current.focus()
   }
 
-  componentDidMount () {
-    if (this.props.type === 'date' && window.folioConsoleInitDatePicker) {
-      window.folioConsoleInitDatePicker(this.inputRef.current)
-    } else if (this.props.type === 'datetime' && window.folioConsoleInitDateTimePicker) {
-      window.folioConsoleInitDateTimePicker(this.inputRef.current)
-    }
-
-    window.jQuery(this.inputRef.current).on('dp.change', this.onChange)
-  }
-
-  componentWillUnmount () {
-    window.jQuery(this.inputRef.current).off('dp.change', this.onChange)
-    if (window.folioConsoleUnbindDatePicker) {
-      window.folioConsoleUnbindDatePicker(this.inputRef.current)
-    }
-  }
-
   render () {
+    let defaultValue
+
+    if (this.props.defaultValue && this.props.defaultValue !== '') {
+      defaultValue = this.formatDate(this.props.defaultValue)
+    }
+
     return (
       <div className='d-flex flex-row justify-content-between align-items-center'>
         <Input
           type='text'
           name={this.props.name}
           onKeyPress={preventEnterSubmit}
+          onChange={this.props.onChange}
           placeholder={this.props.placeholder}
           innerRef={this.inputRef}
           invalid={this.props.invalid}
-          defaultValue={this.props.defaultValue || ''}
-          data-date={this.props.defaultValue}
+          defaultValue={defaultValue || ''}
+          data-controller='f-input-date-time'
+          data-f-input-date-time-type-value={this.props.type}
         />
       </div>
     )
