@@ -16,7 +16,7 @@ class <%= application_namespace %>::Ui::MiniSelectComponent < ApplicationCompone
       @options = if @type == :language
         current_site.locales.map do |locale|
           label = t(".language/#{@verbose ? "verbose" : "default"}/#{locale}")
-          { href: controller.main_app.root_path(locale:), label:, selected: locale == I18n.locale }
+          { href: controller.main_app.root_path(locale:), label:, selected: locale == I18n.locale.to_s }
         end
       elsif @type == :currency
         %w[czk usd eur].each_with_index.map do |currency, i|
