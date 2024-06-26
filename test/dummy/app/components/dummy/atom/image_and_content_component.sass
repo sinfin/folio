@@ -1,41 +1,54 @@
 .d-atom-image-and-content
+  &[data-bs-theme="dark"]
+    background: transparent
+
   &__inner
     position: relative
 
+  &--background &__inner
+    background-color: $shade-100
+    padding: map-get($spacers, d) 0
+
+  &__row
+    display: flex
+    flex-wrap: wrap
+
   &__image-wrap
-    border-radius: $grid-gutter-half
     overflow: hidden
-    max-height: 450px
     width: 100%
     display: flex
     align-items: center
 
   &__image
+    border-radius: $border-radius
     width: 100%
 
   &__content
     display: flex
     flex-direction: column
     align-items: flex-start
-    padding-top: $grid-gutter-base * 7
-    padding-bottom: $grid-gutter-width
+    padding-top: map-get($spacers, e)
+
+  &--centered-content &__content
+    justify-content: center
 
   &__title
-    margin: 0
+    margin: 0 0 map-get($spacers, b) 0
+
+  &__subtitle
+    font-weight: $font-weight-semibold
+    margin-bottom: map-get($spacers, b)
 
   &__text
+    margin-bottom: map-get($spacers, d)
     position: relative
     z-index: 11
 
     p:last-child
       margin-bottom: 0
 
-    &:not(:first-child)
-      margin-top: $grid-gutter-base
-
   &__btn
-    &:not(:first-child)
-      margin-top: px-to-rem(20px)
+    margin: map-get($spacers, a) 0
 
     &::before
       content: ''
@@ -44,38 +57,42 @@
       inset: 0
       z-index: 10
 
-  +media-breakpoint-down(xl)
-    &__image-wrap
-      max-height: 580px
-
-    &__title
-      +font-size-display-m
-
-  +media-breakpoint-down(lg)
-    &__content
-      padding-top: $grid-gutter-width
-
-    &__title
-      +font-size-display-s
-
-  +media-breakpoint-down(sm)
-    &__content
-      padding-top: px-to-rem(20px)
-      padding-bottom: 0
-
   +media-breakpoint-up(sm)
     &:not(&--image-right) &__content
-      padding-left: $grid-gutter-width
+      padding: map-get($spacers, f) map-get($spacers, b) map-get($spacers, f) px-to-rem(36px)
 
     &--image-right &__row
       flex-direction: row-reverse
 
     &--image-right &__content
-      padding-right: $grid-gutter-width
+      padding: map-get($spacers, f) px-to-rem(20px) map-get($spacers, f) 0
 
-  +media-breakpoint-up(md)
+    &:not(&--image-right) &__image-wrap
+      padding-right: map-get($spacers, c)
+
+    &--image-right &__image-wrap
+      padding-left: map-get($spacers, c)
+
+    &--background &__inner
+      border-radius: $border-radius
+      padding: map-get($spacers, g) 0
+
+  +media-breakpoint-up(xl)
     &:not(&--image-right) &__content
-      padding-left: $grid-gutter-base * 4
+      padding: map-get($spacers, j) map-get($spacers, b) map-get($spacers, f) px-to-rem(44px)
 
     &--image-right &__content
-      padding-right: $grid-gutter-base * 4
+      padding: map-get($spacers, j) px-to-rem(20px) map-get($spacers, f) 0
+
+    &--centered-content &__content
+      padding-top: map-get($spacers, f)
+
+    &--background &__inner
+      padding: map-get($spacers, l) 0
+
+    &__title
+      +font-size-display-m
+
+  +media-breakpoint-up(xxl)
+    &:not(&--background) &__title
+      +font-size-display-l
