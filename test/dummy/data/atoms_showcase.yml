@@ -125,17 +125,53 @@ atoms:
 
   Dummy::Atom::ImageAndContent:
     - title: Headline dolor amet consectetur
-      content: <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis</p>
+      subtitle: Subtitle
+      content: <p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis</p>
       button_label: Button label
       url: "#url"
       cover: true
     - title: Headline dolor amet consectetur
       content: <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis</p>
       button_label: Button label
+      image_ratio: 16x9
       url: "#url"
       cover: true
       image_side: right
     - title: Headline dolor amet consectetur
+      subtitle: Subtitle
+      content: <p>Sed ultricies nulla nisl, nec semper enim varius</p>
+      button_label: Button label
+      url: "#url"
+      vertically_centered_content: true
+      cover: true
+    - title: Headline dolor amet consectetur
+      subtitle: Subtitle
+      content: <p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis</p>
+      button_label: Button label
+      url: "#url"
+      image_ratio: 9x16
+      cover: true
+    - title: Headline dolor amet consectetur
+      button_label: Button label
+      url: "#url"
+      wrapper: "background"
+      cover: true
+    - title: Headline dolor amet consectetur
+      subtitle: Subtitle
+      content: <p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis</p>
+      button_label: Button label
+      url: "#url"
+      wrapper: "background"
+      color_mode: "dark"
+      image_side: right
+      cover: true
+    - title: Headline dolor amet consectetur
+      subtitle: Subtitle
+      content: <p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis</p>
+      button_label: Button label
+      url: "#url"
+      wrapper: "background"
+      color_mode: "dark"
       cover: true
     - title: Headline dolor amet consectetur
       content: <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis</p>
