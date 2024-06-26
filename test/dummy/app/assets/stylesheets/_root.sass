@@ -106,9 +106,10 @@
 [data-bs-theme="light"]
   +light-mode
 
-[data-bs-theme="dark"]
-  +dark-mode
-
-@media (prefers-color-scheme: dark)
-  #{":root"}
+@if $enable-dark-mode
+  [data-bs-theme="dark"]
     +dark-mode
+
+  @media (prefers-color-scheme: dark)
+    #{":root"}
+      +dark-mode

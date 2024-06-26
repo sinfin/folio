@@ -14,14 +14,14 @@ class <%= application_namespace %>::Atom::TextComponent < ApplicationComponent
     ary << "#{base}--align-#{@atom.alignment_with_fallback}"
     ary << "#{base}--theme-#{@atom.theme_with_fallback}"
 
-    ary << "#{base}--outline #{base}--outline-#{@atom.outline}" if @atom.outline
+    ary << "#{base}--outline #{base}--outline-#{@atom.outline}" if @atom.outline.present?
 
-    ary << "#{base}--highlight-#{@atom.highlight}" if @atom.highlight
+    ary << "#{base}--highlight-#{@atom.highlight}" if @atom.highlight.present?
 
     ary.join(" ")
   end
 
   def rich_text_chomp_class
-    "<%= classname_prefix %>-rich-text--chomp" if @atom.highlight || @atom.outline
+    "<%= classname_prefix %>-rich-text--chomp" if @atom.highlight.present? || @atom.outline.present?
   end
 end

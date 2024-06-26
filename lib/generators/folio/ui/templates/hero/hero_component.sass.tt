@@ -76,7 +76,6 @@
         left: 50%
         transform: translateX(-50%)
 
-  +media-breakpoint-up(lg)
     &__image--mobile
       display: none !important
 

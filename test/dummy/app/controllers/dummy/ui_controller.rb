@@ -91,7 +91,7 @@ class Dummy::UiController < ApplicationController
   end
 
   def images
-    @image = Folio::File::Image.tagged_with("unsplash").first
+    @image = (Folio::File::Image.tagged_with("unsplash").presence || Folio::File::Image).first
 
     @variants = [
       { size: "100x100#" },
