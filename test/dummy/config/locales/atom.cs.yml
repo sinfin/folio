@@ -2,7 +2,7 @@
 cs:
   activerecord:
     attributes:
-      image_and_content_atoms_attributes: &image_and_content_atoms_attributes
+      dummy/atom/image_and_content:
         image_ratio: Poměr stran obrázku
         image_ratio/origin: Originální poměr
         image_ratio/1x1: "1:1"
@@ -12,7 +12,7 @@ cs:
         image_ratio/9x16: "9:16"
         image_ratio/3x4: "3:4"
         image_ratio/2x3: "2:3"
-        verticaly_centered_content: Vertikálně vycentrovaný obsah
+        vertically_centered_content: Vertikálně vycentrovaný obsah
         open_in_new_tab: Otevřít odkaz v novém okně
         image_side: Obrázek
         image_side/left: Nalevo
@@ -24,8 +24,6 @@ cs:
         color_mode: Barevný režim
         color_mode/light: Světlý
         color_mode/dark: Tmavý
-      dummy/atom/image_and_content:
-        <<: *image_and_content_atoms_attributes
       dummy/atom/cards/person:
         large: Velký obrázek
         job: Pozice
@@ -45,10 +43,6 @@ cs:
         size/small: Malá
         size/medium: Střední
         size/large: Velká
-      dummy/atom/image_and_content:
-        image_side: Pozice obrázku
-        image_side/left: Nalevo
-        image_side/right: Napravo
       dummy/atom/quotation:
         large: Velké písmo
       dummy/atom/text:

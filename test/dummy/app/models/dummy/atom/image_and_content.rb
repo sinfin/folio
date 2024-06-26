@@ -55,9 +55,9 @@ class Dummy::Atom::ImageAndContent < Folio::Atom::Base
     end
 
     def validate_color_mode
-      if wrapper == "none" && color_mode == "dark"
-        errors.add(:color_mode, :color_mode_without_wrapper)
-      end
+      return unless wrapper == "none" && color_mode == "dark"
+
+      errors.add(:color_mode, :color_mode_without_wrapper)
     end
 end
 
