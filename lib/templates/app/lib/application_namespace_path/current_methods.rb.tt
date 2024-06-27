@@ -4,11 +4,9 @@ module <%= application_namespace %>::CurrentMethods
   extend ActiveSupport::Concern
 
   def current_menus
-    @current_menus ||= Rails.cache.fetch(["current_menus"] + cache_key_base) do
-      Folio::Menu.where(type: %w[<%= application_namespace %>::Menu::Header
-                                 <%= application_namespace %>::Menu::Footer])
-                 .to_a
-    end
+    @current_menus ||= Folio::Menu.where(type: %w[<%= application_namespace %>::Menu::Header
+                                                  <%= application_namespace %>::Menu::Footer])
+                                  .to_a
   end
 
   def current_header_menu
@@ -20,7 +18,7 @@ module <%= application_namespace %>::CurrentMethods
   end
 
   def current_page_singleton(klass, fail_on_missing: false)
-    @current_page_singletons ||= Rails.cache.fetch(["current_page_singleton"] + cache_key_base) do
+    @current_page_singletons ||= begin
       h = {}
 
       Folio::Page.where(type: %w[
@@ -30,6 +28,6 @@ module <%= application_namespace %>::CurrentMethods
       h
     end
 
-    @current_page_singletons[klass.to_s] ||= klass.instance(fail_on_missing: fail_on_missing)
+    @current_page_singletons[klass.to_s] ||= klass.instance(fail_on_missing:)
   end
 end

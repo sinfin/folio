@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
   include Folio::ApplicationControllerBase
   helper Folio::Engine.helpers
 
+  include Dummy::CacheKeys
   include Dummy::CurrentMethods
   include Folio::CacheMethods
 
