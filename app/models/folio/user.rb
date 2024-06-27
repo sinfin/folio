@@ -425,6 +425,7 @@ end
 #  born_at                   :date
 #  bank_account_number       :string
 #  company_name              :string
+#  time_zone                 :string           default("Prague")
 #
 # Indexes
 #

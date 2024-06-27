@@ -66,6 +66,12 @@ Rails.application.routes.draw do
       get :dropzone
       get :lead_form
       get :gallery
+      get :timezones
+    end
+
+    scope module: :current_user do
+      get :settings
+      patch :update_settings
     end
 
     resource :search, only: %i[show] do
