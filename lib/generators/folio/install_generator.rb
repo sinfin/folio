@@ -127,6 +127,7 @@ module Folio
         [
           ".gitignore",
           ".rubocop.yml",
+          ".editorconfig",
           ".slim-lint.yml",
           "app/views/devise/invitations/edit.slim",
           "bin/bower",
