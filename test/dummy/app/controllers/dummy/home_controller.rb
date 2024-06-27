@@ -24,4 +24,7 @@ class Dummy::HomeController < ApplicationController
       "GRID 1" => Dummy::Atom::Images.new(images: images.where("file_width >= 570").first(1), same_width: true),
     }
   end
+
+  def timezones
+  end
 end

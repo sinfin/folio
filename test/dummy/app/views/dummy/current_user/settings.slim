@@ -1,0 +1,4 @@
+= form_with url: dummy_update_settings_url, method: :patch do |form|
+  = form.label :time_zone, "Preffered time zone:"
+  = time_zone_select(:user, :time_zone)
+  = form.submit "Submit"

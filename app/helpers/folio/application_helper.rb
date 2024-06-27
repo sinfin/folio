@@ -48,4 +48,10 @@ module Folio::ApplicationHelper
   def true_user
     controller.true_user
   end
+
+  # override!
+  def l(object, **options)
+    object = object.in_time_zone if object.respond_to?(:utc) # Time, DateTime, ActiveSupport::TimeWithZone
+    I18n.localize(object, **options)
+  end
 end

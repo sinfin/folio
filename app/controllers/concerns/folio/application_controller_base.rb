@@ -21,6 +21,8 @@ module Folio::ApplicationControllerBase
 
     before_action :add_root_breadcrumb
 
+    around_action :set_time_zone, if: :current_user
+
     helper_method :current_site
 
     add_flash_types :success, :warning, :info
@@ -126,6 +128,10 @@ module Folio::ApplicationControllerBase
 
     def current_ability # so CanCanCan can use it
       @current_ability ||= ::Folio::Current.ability
+    end
+
+    def set_time_zone(&block)
+      Time.use_zone(current_user.time_zone, &block)
     end
 
     def add_root_breadcrumb
