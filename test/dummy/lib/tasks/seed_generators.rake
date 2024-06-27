@@ -110,6 +110,12 @@ class Dummy::SeedGenerator
     scaffold("searches")
   end
 
+  def install
+    Dir[Rails.root.join("app/controllers/application_controller.rb")].each do |path|
+      copy_file(path, @templates_path.join("#{relative_application_path(path)}.tt"))
+    end
+  end
+
   def mailer
     scaffold("mailer")
 
@@ -265,6 +271,7 @@ end
 namespace :dummy do
   namespace :seed_generators do
     task all: :environment do
+      Rake::Task["dummy:seed_generators:install"].invoke
       Rake::Task["dummy:seed_generators:assets"].invoke
       Rake::Task["dummy:seed_generators:ui"].invoke
       Rake::Task["dummy:seed_generators:prepared_atom"].invoke
@@ -340,6 +347,11 @@ namespace :dummy do
     task mailer: :environment do
       gen = Dummy::SeedGenerator.new(templates_path: Folio::Engine.root.join("lib/generators/folio/mailer/templates"))
       gen.mailer
+    end
+
+    task install: :environment do
+      gen = Dummy::SeedGenerator.new(templates_path: Folio::Engine.root.join("lib/templates"))
+      gen.install
     end
   end
 end
