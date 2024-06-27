@@ -43,7 +43,6 @@ class Folio::Atom::Base < Folio::ApplicationRecord
   audited associated_with: :placement,
           if: :placement_has_audited_atoms?
 
-  attr_readonly :type
   after_initialize :validate_structure
 
   belongs_to :placement,
