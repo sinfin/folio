@@ -114,6 +114,10 @@ class Dummy::SeedGenerator
     Dir[Rails.root.join("app/controllers/application_controller.rb")].each do |path|
       copy_file(path, @templates_path.join("#{relative_application_path(path)}.tt"))
     end
+
+    Dir[Folio::Engine.root.join(".editorconfig")].each do |path|
+      copy_file(path, @templates_path.join(relative_path(path)))
+    end
   end
 
   def mailer
