@@ -18,7 +18,7 @@
 
           - if atom.content.present?
             .<%= classname_prefix %>-molecule-cards-large__card-text[
-              class="<%= classname_prefix %>-rich-text <%= classname_prefix %>-rich-text--chomp"
+              class="<%= classname_prefix %>-rich-text <%= classname_prefix %>-rich-text--chomp fs-text-l"
             ]
               = cstypo atom.content
 

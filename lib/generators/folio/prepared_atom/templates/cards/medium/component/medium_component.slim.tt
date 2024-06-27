@@ -27,6 +27,6 @@
                   = atom.title
 
             .<%= classname_prefix %>-molecule-cards-medium__card-text[
-              class="<%= classname_prefix %>-rich-text <%= classname_prefix %>-rich-text--chomp"
+              class="<%= classname_prefix %>-rich-text <%= classname_prefix %>-rich-text--chomp fs-text-s"
             ]
               == cstypo atom.content
