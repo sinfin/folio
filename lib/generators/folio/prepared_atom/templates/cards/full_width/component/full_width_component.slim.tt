@@ -22,7 +22,7 @@
               = atom.title
 
             - if atom.content.present?
-              .<%= classname_prefix %>-molecule-cards-full-width__card-text
+              .<%= classname_prefix %>-molecule-cards-full-width__card-text.fs-text-l
                 .<%= classname_prefix %>-rich-text.<%= classname_prefix %>-rich-text--chomp
                   = cstypo atom.content
 
