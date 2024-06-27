@@ -20,7 +20,6 @@ module Folio
         gem "rack-mini-profiler"
         gem "show_for"
         gem "sprockets", "~> 4.0"
-        gem "sentry-raven"
         gem "omniauth"
         gem "omniauth-facebook"
         gem "omniauth-google-oauth2"
@@ -241,10 +240,6 @@ module Folio
         ].each do |file|
           ::File.chmod(0775, Rails.root.join(file))
         end
-      end
-
-      def generate_mailer
-        generate "folio:mailer"
       end
 
       private
