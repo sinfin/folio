@@ -2,12 +2,12 @@
 cs:
   activerecord:
     attributes:
-      application_namespace_path/atom/images/gallery: 
+      application_namespace_path/atom/images/gallery:
     models:
       application_namespace_path/atom/images/gallery: Obrázky - galerie
 en:
   activerecord:
     attributes:
-      application_namespace_path/atom/images/gallery: 
+      application_namespace_path/atom/images/gallery:
     models:
       application_namespace_path/atom/images/gallery: Images - gallery

@@ -2,12 +2,12 @@
 cs:
   activerecord:
     attributes:
-      application_namespace_path/atom/cards/padded_image: 
+      application_namespace_path/atom/cards/padded_image:
     models:
       application_namespace_path/atom/cards/padded_image: Karta - obrázek s odsazením
 en:
   activerecord:
     attributes:
-      application_namespace_path/atom/cards/padded_image: 
+      application_namespace_path/atom/cards/padded_image:
     models:
       application_namespace_path/atom/cards/padded_image: Card - image with padding
