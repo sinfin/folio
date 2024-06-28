@@ -2,7 +2,7 @@
 
 class Dummy::HomeController < ApplicationController
   def index
-    @page = Dummy::Page::Homepage.instance(fail_on_missing: false)
+    @page = Dummy::Page::Homepage.instance(fail_on_missing: false, site: Folio::Current.site)
     set_meta_variables(@page) if @page
   end
 

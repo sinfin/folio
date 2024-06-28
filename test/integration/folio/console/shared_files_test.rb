@@ -7,8 +7,8 @@ class Folio::SharedFilesTest < Folio::Console::BaseControllerTest
 
   def setup
     # not calling `super` for reason
-    @main_site = create(:folio_site, domain: "sinfin.localhost")
-    @site_lvh = create(:folio_site, domain: "lvh.me", locale: "en")
+    @main_site = create_site(attributes: { domain: "sinfin.localhost" })
+    @site_lvh = create_site(attributes: { domain: "lvh.me", locale: "en" }, force: true)
     Folio.instance_variable_set(:@main_site, nil) # to clear the cached version from other tests
     @superadmin = create(:folio_user, :superadmin)
 
