@@ -107,8 +107,6 @@ module Folio
 
     config.folio_users_non_get_referrer_rewrite_proc = -> (referrer) { }
 
-    config.folio_console_ability_lambda = -> (ability, account) { }
-
     config.folio_console_react_modal_types = config.folio_file_types_for_routes
 
     config.folio_component_generator_parent_component_class_name_proc = -> (class_name) do
