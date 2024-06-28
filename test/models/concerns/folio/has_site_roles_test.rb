@@ -10,12 +10,12 @@ class Folio::HasSiteRolesTest < ActiveSupport::TestCase
 
     I18n.locale = :cs
 
-    @site = create(:folio_site, available_user_roles: ["administrator", "manager"])
+    @site = create(Rails.application.config.folio_site_default_test_factory, available_user_roles: ["administrator", "manager"])
     @user = create(:folio_user) # includes Folio::HasSiteRoles
   end
 
   test "differentiate roles against different sites" do
-    site2 = build(:folio_site, available_user_roles: ["administrator", "manager"])
+    site2 = build(Rails.application.config.folio_site_default_test_factory, available_user_roles: ["administrator", "manager"])
     def site2.validate_singularity
     end # hack to allow 2 sites after Folio::Site class initialization
     site2.save!
@@ -107,7 +107,7 @@ class Folio::HasSiteRolesTest < ActiveSupport::TestCase
     user.save
     assert_equal 1, user.site_user_links.count
 
-    site2 = create(:folio_site, available_user_roles: ["aaa", "bbb"])
+    site2 = create_site(attributes: { available_user_roles: ["aaa", "bbb"] }, force: true)
 
     params = {
       "site_user_links_attributes" => {

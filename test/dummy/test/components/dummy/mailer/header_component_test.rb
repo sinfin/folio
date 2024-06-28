@@ -4,7 +4,7 @@ require "test_helper"
 
 class Dummy::Mailer::HeaderComponentTest < Folio::ComponentTest
   def test_render
-    site = create(:folio_site)
+    site = create_site
 
     render_inline(Dummy::Mailer::HeaderComponent.new(site:))
 

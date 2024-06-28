@@ -86,6 +86,7 @@ module Folio
           "app/lib/application_namespace_path/cache_keys.rb",
           "app/lib/application_namespace_path/current_methods.rb",
           "app/models/application_namespace_path.rb",
+          "app/models/application_namespace_path/site.rb",
           "app/models/application_namespace_path/menu/footer.rb",
           "app/models/application_namespace_path/menu/header.rb",
           "app/models/application_namespace_path/page/homepage.rb",
@@ -161,7 +162,7 @@ module Folio
         return if ::File.readlines(Rails.root.join("config/application.rb")).grep('Rails.root.join("lib")').any?
 
 # cannot use <<~'RUBY' here, because ALL lines need to be 4 spaces intended
-        inject_into_file "config/application.rb", after: /config\.load_defaults.+\n/ do <<-'RUBY'
+        inject_into_file "config/application.rb", after: /config\.load_defaults.+\n/ do <<-'RUBY'.gsub("application_namespace_path", application_namespace_path)
     config.exceptions_app = self.routes
 
     config.action_mailer.deliver_later_queue_name = "mailers"
@@ -179,6 +180,7 @@ module Folio
     I18n.default_locale = :cs
 
     config.folio_console_locale = I18n.default_locale
+    config.folio_site_default_test_factory = :application_namespace_path_site
     config.autoload_paths << Rails.root.join("app/lib")
     config.eager_load_paths << Rails.root.join("app/lib")
 

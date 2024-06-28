@@ -4,7 +4,7 @@ require "test_helper"
 
 class <%= application_namespace %>::Mailer::FooterComponentTest < Folio::ComponentTest
   def test_render
-    site = create(:folio_site)
+    site = create_site
     create(:<%= application_namespace_path %>_menu_footer)
 
     render_inline(<%= application_namespace %>::Mailer::FooterComponent.new(site:))

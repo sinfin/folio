@@ -112,6 +112,7 @@ class Dummy::SeedGenerator
 
   def install
     Dir[Rails.root.join("app/controllers/application_controller.rb"),
+        Rails.root.join("app/models/dummy/site.rb"),
         Rails.root.join("app/lib/application_component.rb"),
         Rails.root.join("app/lib/dummy/cache_keys.rb"),
         Rails.root.join("app/lib/dummy/current_methods.rb")].each do |path|
