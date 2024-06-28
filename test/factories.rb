@@ -10,7 +10,6 @@ FactoryBot.define do
     phone { "+420 123456789" }
     locale { I18n.default_locale }
     locales { [I18n.default_locale] }
-    type { "Folio::Site" }
   end
 
   factory :sinfin_local_site, parent: :folio_site do
