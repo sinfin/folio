@@ -2,12 +2,12 @@
 cs:
   activerecord:
     attributes:
-      application_namespace_path/atom/embed: 
+      application_namespace_path/atom/embed:
     models:
       application_namespace_path/atom/embed: Embed
 en:
   activerecord:
     attributes:
-      application_namespace_path/atom/embed: 
+      application_namespace_path/atom/embed:
     models:
       application_namespace_path/atom/embed: Embed

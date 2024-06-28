@@ -33,6 +33,13 @@ class <%= application_namespace %>::Ui::MenuToolbar::DropdownComponent < Applica
       @items = if current_user_with_test_fallback
         [
           {
+            label: t(".user_menu/settings"),
+            icon: nil,
+            icon_height: 16,
+            class_modifier: "settings",
+            href: controller.main_app.try(:<%= application_namespace_path %>_settings_path),
+          },
+          {
             label: t(".user_menu/sign_out"),
             icon: :log_out,
             icon_height: 16,
