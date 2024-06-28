@@ -2,9 +2,9 @@
 
 class <%= application_namespace %>::Menu::Footer < Folio::Menu
   include <%= application_namespace %>::Menu::Base
-  include Folio::Singleton
+  include Folio::PerSiteSingleton
 
   def self.max_nesting_depth
-    1
+    2
   end
 end
