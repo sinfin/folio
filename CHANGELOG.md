@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ## 2022-06-28
 ### Removed
 - removed `Rails.application.config.folio_console_ability_lambda`. Use `app/overrides/models/folio/ability_override.rb` in your project instead.
+- removed obsolete `Rails.application.config.folio_site_validate_belongs_to_namespace`
 ### Changed
 - changed how sites in tests work. Folio expects your project to have a `ApplicationName::Site` class and `Rails.application.folio_site_default_test_factory` set.
 
