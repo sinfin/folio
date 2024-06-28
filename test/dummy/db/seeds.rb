@@ -33,7 +33,7 @@ destroy_all Dummy::Blog::Article
 destroy_all Dummy::Blog::Topic
 
 puts "Creating Folio::Site"
-Folio::Site.create!(title: "Sinfin.digital",
+Dummy::Site.create!(title: "Sinfin.digital",
                     domain: "sinfin.localhost",
                     locale: "cs",
                     locales: ["cs", "en", "de"],
