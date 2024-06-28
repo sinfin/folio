@@ -4,7 +4,7 @@ class Dummy::Menu::Navigation < Folio::Menu
   include Dummy::Menu::Base
 
   def self.max_nesting_depth
-    2
+    1
   end
 end
 

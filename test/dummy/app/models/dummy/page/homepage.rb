@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Dummy::Page::Homepage < Folio::Page
-  include Folio::Singleton
+  include Folio::PerSiteSingleton
 
   def self.public_rails_path
     :root_path
