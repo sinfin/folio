@@ -8,7 +8,8 @@ prefix_letter = File.basename(app_root)[0]
 svg_sprite = "#{app_root}/node_modules/.bin/svg-sprite"
 
 unless File.exist?(svg_sprite)
-  `cd #{__dir__}; ./yarn install`
+  puts "Please run npm install to install the svg-sprite package first."
+  exit 1
 end
 
 Dir.mktmpdir do |tmp|
