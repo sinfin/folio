@@ -5,7 +5,7 @@ require "test_helper"
 class Dummy::Mailer::FooterMenuComponentTest < Folio::ComponentTest
   def test_render
     site = create_site
-    create(:economia_menu_footer)
+    create(:dummy_menu_footer)
 
     render_inline(Dummy::Mailer::FooterMenuComponent.new(site:))
 
