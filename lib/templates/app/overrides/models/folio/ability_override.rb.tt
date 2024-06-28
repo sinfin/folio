@@ -5,9 +5,9 @@ Folio::Ability.class_eval do
   def ability_rules
     folio_rules
     sidekiq_rules
-    dummy_rules
+    <%= application_namespace_path %>_rules
   end
 
-  def dummy_rules
+  def <%= application_namespace_path %>_rules
   end
 end

@@ -111,11 +111,18 @@ class Dummy::SeedGenerator
   end
 
   def install
-    Dir[Rails.root.join("app/controllers/application_controller.rb"),
-        Rails.root.join("app/models/dummy/site.rb"),
-        Rails.root.join("app/lib/application_component.rb"),
-        Rails.root.join("app/lib/dummy/cache_keys.rb"),
-        Rails.root.join("app/lib/dummy/current_methods.rb")].each do |path|
+    paths = %w[
+      app/overrides/folio_override.rb
+      app/overrides/models/folio/ability_override.rb
+      app/controllers/application_controller.rb
+      app/models/dummy/site.rb
+      app/models/dummy/site.rb
+      app/lib/application_component.rb
+      app/lib/dummy/cache_keys.rb
+      app/lib/dummy/current_methods.rb
+    ].map { |str| Rails.root.join(str) }
+
+    Dir[*paths].each do |path|
       copy_file(path, @templates_path.join("#{relative_application_path(path).gsub('dummy', 'application_namespace_path')}.tt"))
     end
 
