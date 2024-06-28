@@ -2,6 +2,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2022-06-28
+### Removed
+- removed `Rails.application.config.folio_console_ability_lambda`. Use `app/overrides/models/folio/ability_override.rb` in your project instead.
+
 ## 2024-06-21
 ### Added
   - added `Rails.application.config.folio_console_add_locale_to_preview_links` to be used when your app routes are scoped with `scope "/:locale", locale: /#{I18n.available_locales.join('|')}/`
