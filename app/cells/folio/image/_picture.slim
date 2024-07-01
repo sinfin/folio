@@ -1,14 +1,6 @@
-- if not_lazy?
-  picture.f-image__picture
-    source[
-      srcset=data[:webp_srcset]
-      type="image/webp"
-    ]
-    = render(:_image)
-- else
-  picture.f-image__picture
-    source[
-      data-srcset=data[:webp_srcset]
-      type="image/webp"
-    ]
-    = render(:_image)
+picture.f-image__picture
+  source[
+    srcset=data[:webp_srcset]
+    type="image/webp"
+  ]
+  = render(:_image)
