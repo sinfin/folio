@@ -97,6 +97,6 @@ module Folio
   end
 
   def self.atoms_previews_stylesheet_path(site:, class_name:)
-    site.layout_assets_path
+    site.layout_assets_stylesheets_path
   end
 end
