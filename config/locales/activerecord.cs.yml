@@ -141,6 +141,7 @@ cs:
         indestructible: Záznam není možné odstranit.
         file_format: '%{file_mime_type} není povolen. Povolené typy: %{types}'
         wrong_namespace: Typ záznamu neodpovídá typu webové stránky.
+        not_from_same_site: není ze stejné stránky
       models:
         folio/atom/base:
           attributes:
