@@ -109,6 +109,7 @@ en:
         indestructible: The record cannot be removed.
         file_format: '%{file_mime_type} is invalid. Allowed types: %{types}'
         wrong_namespace: The record type does not match the site type.
+        not_from_same_site: is not from the same site
       models:
         folio/lead:
           attributes:
