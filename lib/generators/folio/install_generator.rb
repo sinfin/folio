@@ -17,6 +17,7 @@ module Folio
         gem "premailer-rails"
         gem "rubyzip"
 
+        gem "dotenv-rails"
         gem "rack-mini-profiler"
         gem "show_for"
         gem "sprockets", "~> 4.0"
