@@ -117,6 +117,13 @@ module Folio::StimulusHelper
     }.compact
   end
 
+  def stimulus_scroll_link(selector)
+    stimulus_controller("f-scroll-link",
+                        values: { selector: },
+                        action: { click: "click" },
+                        inline: true)
+  end
+
   def stimulus_modal_toggle(target, dialog: nil)
     stimulus_controller("f-modal-toggle",
                         values: { target:, dialog: },
