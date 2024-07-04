@@ -1,0 +1,42 @@
+ruby:
+  buttons = [
+    {
+      variant: :primary,
+      label: "window.Folio.Api.apiGet",
+      class: "f-c-dummy-playgrounds-api-button"
+    },
+    {
+      variant: :warning,
+      label: "window.Folio.Api.apiGet and abort",
+      class: "f-c-dummy-playgrounds-api-button f-c-dummy-playgrounds-api-button--abort"
+    }
+  ]
+
+h1 API
+
+== cell('folio/console/ui/buttons', buttons)
+
+pre.rounded.bg-medium-gray.p-5.mt-5
+  code.f-c-dummy-playgrounds-api-code
+    ' foo
+
+javascript:
+  document.addEventListener('DOMContentLoaded', function() {
+    for (const button of document.querySelectorAll('.f-c-dummy-playgrounds-api-button')) {
+      button.addEventListener('click', (e) => {
+        document.querySelector('.f-c-dummy-playgrounds-api-code').innerText = "..."
+
+        const abortController = new AbortController()
+
+        window.Folio.Api.apiGet('/console/dummy/playground/api.json', null, abortController.signal).then((response) => {
+          document.querySelector('.f-c-dummy-playgrounds-api-code').innerText = JSON.stringify(response)
+        }).catch((error) => {
+          document.querySelector('.f-c-dummy-playgrounds-api-code').innerText = `Error: ${error.name} - ${error.message}`
+        })
+
+        if (button.classList.contains('f-c-dummy-playgrounds-api-button--abort')) {
+          abortController.abort()
+        }
+      });
+    }
+  });

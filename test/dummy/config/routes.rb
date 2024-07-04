@@ -33,6 +33,7 @@ Rails.application.routes.draw do
           get :modals
           get :multiselect
           get :console_notes
+          get :api
           patch :update_console_notes
         end
 

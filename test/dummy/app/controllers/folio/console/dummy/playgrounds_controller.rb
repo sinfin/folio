@@ -16,6 +16,18 @@ class Folio::Console::Dummy::PlaygroundsController < Folio::Console::BaseControl
   def alerts
   end
 
+  def api
+    respond_to do |format|
+      format.html do
+        render
+      end
+      format.json do
+        sleep(1)
+        render json: { data: "1s delayed" }
+      end
+    end
+  end
+
   def console_notes
     @page = Dummy::Page::WithConsoleNotes.last || Dummy::Page::WithConsoleNotes.create!(site: current_site, title: "Page with console notes")
   end
