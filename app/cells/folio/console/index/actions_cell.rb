@@ -95,17 +95,34 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
         data[:confirm] = nil
       end
 
+      class_names = [
+        "f-c-index-actions__link",
+        "text-#{action[:variant] || "reset"}",
+      ]
+
+      if action[:class_name]
+        class_names << action[:class_name]
+      end
+
+      if action[:cursor]
+        class_names << "f-c-index-actions__link--cursor-#{action[:cursor]}"
+      end
+
+      if action[:disabled]
+        class_names << "f-c-index-actions__link--disabled"
+      end
+
       opts = {
         title: t("folio.console.actions.#{action[:name]}"),
         method: action[:method],
         target: action[:target],
-        class: "f-c-index-actions__link text-#{action[:variant] || "reset"}#{action[:class_name] ? " #{action[:class_name]}" : ""}#{action[:cursor] ? " f-c-index-actions__link--cursor-#{action[:cursor]}" : ""}",
+        class: class_names.join(" "),
         data:
       }
 
       ico = folio_icon(action[:icon], height: action[:icon_height])
 
-      if action[:url]
+      if action[:url] && !action[:disabled]
         url = action[:url].is_a?(Proc) ? action[:url].call(model) : action[:url]
         link_to(ico, url, opts)
       else
