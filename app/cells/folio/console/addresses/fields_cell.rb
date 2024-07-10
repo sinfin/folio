@@ -26,7 +26,7 @@ class Folio::Console::Addresses::FieldsCell < Folio::ConsoleCell
       g.input(key, priority: g.object.class.priority_countries,
                    include_blank: false)
     else
-      g.input(key, required:)
+      g.input(key, required:, disabled: options[:disabled])
     end
   end
 
