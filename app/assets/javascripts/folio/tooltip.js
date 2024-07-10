@@ -1,20 +1,3 @@
-window.Folio.Stimulus.register('f-tooltip', class extends window.Stimulus.Controller {
-  static values = {
-    title: String,
-    placement: { type: String, default: 'auto' },
-    trigger: { type: String, default: 'hover' },
-  }
+//= require folio/base_tooltip_controller
 
-  connect () {
-    this.tooltip = new window.bootstrap.Tooltip(this.element, {
-      title: this.titleValue,
-      placement: this.placementValue,
-      trigger: this.triggerValue,
-    })
-  }
-
-  disconnect () {
-    this.tooltip.dispose()
-    delete this.tooltip
-  }
-})
+window.Folio.Stimulus.register('f-tooltip', class extends BaseTooltipController {})
