@@ -44,7 +44,7 @@ window.Folio.Input.Phone.onChangeForInput = (input) => {
     value = value.replace(dialCode, '')
   }
 
-  input.folioInputPhoneHiddenInput.value = value ? `${dialCode} ${value}` : ""
+  input.folioInputPhoneHiddenInput.value = value ? `${dialCode}${value}` : ""
 }
 
 window.Folio.Input.Phone.onChange = (e) => {
