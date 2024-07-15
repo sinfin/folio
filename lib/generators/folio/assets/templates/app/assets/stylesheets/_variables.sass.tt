@@ -313,3 +313,12 @@ $table-active-color: $shade-black-contrast
 $table-active-bg: rgba($shade-black-contrast, 0.1)
 $table-hover-color: $shade-black-contrast
 $table-hover-bg: rgba($shade-black-contrast, 0.075)
+
+$tooltip-font-size: $ui-typo-text-xs-font-size
+$tooltip-max-width: px-to-rem(200px)
+$tooltip-color: $shade-black-contrast
+$tooltip-bg: $shade-200
+$tooltip-border-radius: px-to-rem(8px)
+$tooltip-opacity: 1
+$tooltip-padding-y: map-get($spacers, a)
+$tooltip-padding-x: map-get($spacers, b)

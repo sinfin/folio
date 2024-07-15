@@ -42,10 +42,12 @@
             {
               href: new_user_session_path,
               label: "Sign in",
+              data: stimulus_tooltip('top tooltip test', placement: "top")
             },
             {
               href: new_user_invitation_path,
               label: "Sign up",
+              data: stimulus_tooltip('auto tooltip test')
             },
             {
               data: stimulus_modal_toggle(Folio::Devise::ModalCell::CLASS_NAME, dialog: ".f-devise-modal__dialog--sessions"),
