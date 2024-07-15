@@ -166,4 +166,11 @@ module Folio::StimulusHelper
                         action: { click: "click" },
                         inline: true)
   end
+
+  def stimulus_tooltip(title, placement: "auto", trigger: "hover")
+    stimulus_controller("f-tooltip",
+                        values: { title:, placement:, trigger:, open: false },
+                        action: { mouseenter: "mouseenter", mouseleave: "mouseleave" },
+                        inline: true)
+  end
 end
