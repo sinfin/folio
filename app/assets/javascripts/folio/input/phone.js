@@ -77,7 +77,7 @@ window.Folio.Input.Phone.bind = (input) => {
   input.addEventListener('countrychange', window.Folio.Input.Phone.onChange)
   input.addEventListener('blur', window.Folio.Input.Phone.onBlur)
 
-  const fullOpts = $.extend({}, window.Folio.Input.Phone.intlTelInputOptions, { dropdownContainer: document.body })
+  const fullOpts = Object.assign({}, window.Folio.Input.Phone.intlTelInputOptions, { dropdownContainer: document.body });
   if (input.dataset.defaultCountryCode) fullOpts.initialCountry = input.dataset.defaultCountryCode
 
   if (document.documentElement.lang == "cs" || document.documentElement.lang == "sk") {
