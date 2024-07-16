@@ -21,17 +21,21 @@ module Folio::RecursiveSubclasses
       include_self ? [self] + subs.compact : subs.compact
     end
 
-    def recursive_subclasses_for_select(include_self: true, exclude_singletons: true, preload_sti: true)
-      type_collection_for_select(
-        recursive_subclasses(include_self:,
-                             exclude_singletons:,
-                             preload_sti:)
-      )
+    def recursive_subclasses_for_select(include_self: true, exclude_singletons: true, preload_sti: true, base_as_empty_string: true)
+      klass_collection = recursive_subclasses(include_self:,
+                                             exclude_singletons:,
+                                             preload_sti:)
+
+      type_collection_for_select(klass_collection, base_as_empty_string:)
     end
 
-    def type_collection_for_select(type_collection)
-      type_collection.map do |type|
-        [type.model_name.human, type]
+    def type_collection_for_select(klass_collection, base_as_empty_string: true)
+      klass_collection.map do |klass|
+        if base_as_empty_string && klass.base_class?
+          [klass.model_name.human, ""]
+        else
+          [klass.model_name.human, klass.to_s]
+        end
       end
     end
   end
