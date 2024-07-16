@@ -6,8 +6,8 @@ module SitesHelper
       ::Folio::Site.first || create_site
     end
 
-    def create_and_host_site(key: nil, attributes: {})
-      site = create_site(key:, attributes:)
+    def create_and_host_site(key: nil, attributes: {}, force: false)
+      site = create_site(key:, attributes:, force:)
       host_site(site)
       site
     end
