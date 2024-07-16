@@ -74,9 +74,9 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
           base = default_actions[name].presence || {}
 
           rich_obj = if obj.is_a?(Hash)
-            acts << base.merge(obj)
+            base.merge(obj)
           else
-            acts << base.merge(url: obj)
+            base.merge(url: obj)
           end
 
           next if should_check_can_now?(rich_obj) && !controller.can_now?(name, model)
