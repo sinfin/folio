@@ -15,6 +15,15 @@ class Folio::Users::SessionsController < Devise::SessionsController
     super
   end
 
+  def new
+    self.resource = resource_class.new(sign_in_params)
+    self.resource.email = session[:user_email] if session[:user_email].present?
+    clean_up_passwords(resource)
+    session.delete(:user_email)
+    yield resource if block_given?
+    respond_with(resource, serialize_options(resource))
+  end
+
   def create
     if Rails.application.config.folio_users_publicly_invitable &&
        params[:user] &&
@@ -40,6 +49,7 @@ class Folio::Users::SessionsController < Devise::SessionsController
             respond_with resource, location: after_sign_in_path_for(resource)
           else
             message = get_failure_flash_message(warden_exception_or_user)
+            session[:user_email] = params[:user][:email]
             redirect_to main_app.new_user_session_path, flash: { alert: message }
           end
         end
