@@ -17,7 +17,7 @@ $folio-loader-inverse-foreground: white !default
   left: 0
   right: 0
   bottom: 0
-  background: $folio-loader-background
+  background: var(--folio-loader-background)
   z-index: 2
 
   &:before,
@@ -32,10 +32,10 @@ $folio-loader-inverse-foreground: white !default
     margin: -1.5em
     font-size: 10px
     text-indent: -9999em
-    border-top: 0.45em solid rgba($folio-loader-foreground, .2)
-    border-right: 0.45em solid rgba($folio-loader-foreground, .2)
-    border-bottom: 0.45em solid rgba($folio-loader-foreground, .2)
-    border-left: 0.45em solid $folio-loader-foreground
+    border-top: 0.45em solid var(--folio-loader-foreground-transparent)
+    border-right: 0.45em solid var(--folio-loader-foreground-transparent)
+    border-bottom: 0.45em solid var(--folio-loader-foreground-transparent)
+    border-left: 0.45em solid var(--folio-loader-foreground)
     transform: translateZ(0)
     transform-origin: center center
     animation: load8 1.1s infinite linear
@@ -66,25 +66,24 @@ $folio-loader-inverse-foreground: white !default
 
   &--white
     &:before
-      border-color: rgba($folio-loader-inverse-foreground, 0.2)
-      border-left-color: $folio-loader-inverse-foreground
+      border-color: var(--folio-loader-foreground-transparent)
+      border-left-color: var(--folio-loader-foreground)
 
-  = inversed-loader-style
-    background: $folio-loader-inverse-background
+#{":root"},
+[data-bs-theme="light"]
+  --folio-loader-background: #{$folio-loader-background}
+  --folio-loader-foreground: #{$folio-loader-foreground}
+  --folio-loader-foreground-transparent: #{rgba($folio-loader-foreground, 0.2)}
 
-    &:before
-      border-color: rgba($folio-loader-inverse-foreground, 0.2)
-      border-left-color: $folio-loader-inverse-foreground
-
-  .folio-inversed-loader &,
-  [data-bs-theme="dark"] &
-    +inversed-loader-style
-
-    &--transparent
-      background-color: transparent
+@if $enable-dark-mode
+  [data-bs-theme="dark"],
+  .folio-inversed-loader
+    --folio-loader-background: #{$folio-loader-inverse-background}
+    --folio-loader-foreground: #{$folio-loader-inverse-foreground}
+    --folio-loader-foreground-transparent: #{rgba($folio-loader-inverse-foreground, 0.2)}
 
   @media (prefers-color-scheme: dark)
-    +inversed-loader-style
-
-    &--transparent
-      background-color: transparent
+    #{":root"}
+      --folio-loader-background: #{$folio-loader-inverse-background}
+      --folio-loader-foreground: #{$folio-loader-inverse-foreground}
+      --folio-loader-foreground-transparent: #{rgba($folio-loader-inverse-foreground, 0.2)}
