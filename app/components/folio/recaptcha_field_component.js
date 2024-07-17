@@ -1,6 +1,6 @@
 window.Folio.Stimulus.register('f-recaptcha-field', class extends window.Stimulus.Controller {
   connect () {
-    if (window.grecaptcha) {
+    if (window.grecaptcha && window.grecaptcha.render) {
       const target = this.element.querySelector('.g-recaptcha')
 
       if (target && target.innerHTML === "") {
