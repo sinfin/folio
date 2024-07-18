@@ -11,10 +11,26 @@ h1 Input - phone
           type: :submit,
           label: t('folio.console.actions.submit'))
 
-
 .mt-5
   == cell('folio/console/ui/button',
           type: :button,
           variant: :warning,
           label: 'replace form html',
-          onclick: "var form = document.querySelector('.f-c-d-playgrounds-input-phone-form'); form.innerHTML = form.innerHTML;")
+          onclick: "window.fcdPlaygroundsInputPhoneFormReplace()")
+
+javascript:
+  window.fcdPlaygroundsInputPhoneFormHtml = document.querySelector('.f-c-d-playgrounds-input-phone-form').innerHTML
+
+  window.fcdPlaygroundsInputPhoneFormReplace = () => {
+    document.querySelector('.f-c-d-playgrounds-input-phone-form').innerHTML = window.fcdPlaygroundsInputPhoneFormHtml
+    document.querySelector('.f-c-d-playgrounds-input-phone-form .phone.form-label').innerText += ` (${Number(new Date())})`
+  }
+
+  var form = document.querySelector('.f-c-d-playgrounds-input-phone-form'); form.innerHTML = form.innerHTML;
+  document.querySelector('.f-c-layout-main-container').addEventListener('input', (e) => {
+    const input = e.currentTarget.querySelector('input[name="phone"]')
+
+    e.currentTarget
+     .querySelector('.f-c-d-playgrounds-input-phone-form pre code')
+     .innerHTML = `{"${input.name}":"${input.value}"}`
+  })

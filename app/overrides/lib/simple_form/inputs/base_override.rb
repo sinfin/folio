@@ -1,18 +1,32 @@
 # frozen_string_literal: true
 
 SimpleForm::Inputs::Base.class_eval do
-  def register_stimulus(name, values: {})
-    if input_html_options["data-controller"]
-      input_html_options["data-controller"] += " #{name}"
+  def register_stimulus(name, values: {}, wrapper: false)
+    h = if wrapper
+      options[:wrapper_html] ||= {}
     else
-      input_html_options["data-controller"] = name
+      input_html_options
     end
 
-    input_html_classes << "f-input" if input_html_classes.exclude?("f-input")
-    input_html_classes << "f-input--#{name.to_s.delete_prefix("f-input-")}"
+    if h["data-controller"]
+      h["data-controller"] += " #{name}"
+    else
+      h["data-controller"] = name
+    end
+
+    if wrapper
+      h[:class] ||= []
+      h[:class] << "f-input-form-group" if h[:class].exclude?("f-input-form-group")
+      h[:class] << "f-input-form-group--#{name.to_s.delete_prefix("f-input-form-group-")}"
+
+      input_html_options["data-#{name}-target"] = "input"
+    else
+      input_html_classes << "f-input" if input_html_classes.exclude?("f-input")
+      input_html_classes << "f-input--#{name.to_s.delete_prefix("f-input-")}"
+    end
 
     values.each do |key, value|
-      input_html_options["data-#{name}-#{key.to_s.tr('_', '-')}-value"] = value
+      h["data-#{name}-#{key.to_s.tr('_', '-')}-value"] = value
     end
   end
 
