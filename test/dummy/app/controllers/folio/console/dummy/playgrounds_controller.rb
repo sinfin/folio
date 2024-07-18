@@ -7,6 +7,7 @@ class Folio::Console::Dummy::PlaygroundsController < Folio::Console::BaseControl
     @actions = %w[
       api
       console_notes
+      input_phone
       modals
       multiselect
       pickers

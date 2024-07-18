@@ -27,6 +27,7 @@ Rails.application.routes.draw do
         resource :playground, only: %i[show] do
           get :api
           get :console_notes
+          get :input_phone
           get :modals
           get :multiselect
           get :pickers
