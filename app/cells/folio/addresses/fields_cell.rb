@@ -89,4 +89,9 @@ class Folio::Addresses::FieldsCell < Folio::ApplicationCell
   def show_born_at_fields?
     false
   end
+
+  def data
+    stimulus_controller("f-addresses-fields",
+                        action: { change: "onChange" })
+  end
 end
