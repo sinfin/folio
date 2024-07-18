@@ -49,10 +49,8 @@ class Folio::Devise::ApplicationCell < Folio::ApplicationCell
     ""
   end
 
-  def email_input(f, field, opts = {})
-    cell("folio/devise/email_input",
-         f,
-         opts.merge(field:))
+  def email_input(f, opts = {})
+    cell("folio/devise/email_input", f)
   end
 
   def phone_input(f, opts = {})
