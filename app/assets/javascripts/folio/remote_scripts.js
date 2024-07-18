@@ -7,11 +7,15 @@ window.Folio.RemoteScripts.Data = {
     successCallbacks: [],
     errorCallbacks: []
   },
-  'bootstrap': {
+  bootstrap: {
     urls: ['https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.1/js/bootstrap.bundle.js']
   },
   'cleave-js': {
     urls: ['https://cdnjs.cloudflare.com/ajax/libs/cleave.js/1.0.2/cleave.min.js']
+  },
+  'intl-tel-input': {
+    urls: ['https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/23.5.0/js/intlTelInput.min.js'],
+    cssUrls: ['https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/23.5.0/css/intlTelInput.css']
   }
 }
 
@@ -52,6 +56,20 @@ window.Folio.RemoteScripts.load = (key) => {
   }
 
   data.loading = true
+
+  data.stylesheets = (data.cssUrls || []).map((url) => {
+    const link = document.createElement('link')
+
+    link.rel = 'stylesheet'
+    link.crossorigin = 'anonymous'
+    link.referrerpolicy = 'no-referrer'
+    link.href = url
+
+    document.head.appendChild(link)
+
+    return link
+  })
+
   data.scripts = data.urls.map((url) => {
     const script = document.createElement('script')
 
