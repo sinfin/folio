@@ -1,0 +1,9 @@
+.container-fluid
+  h1
+    a.f-c-unlink href=main_app.console_dummy_playground_path Playground
+
+  ul.lead.fw-bold
+    - @actions.each do |action|
+      li.my-3
+        a href=main_app.send("#{action}_console_dummy_playground_path")
+          = action

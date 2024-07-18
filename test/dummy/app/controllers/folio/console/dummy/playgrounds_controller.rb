@@ -1,6 +1,21 @@
 # frozen_string_literal: true
 
 class Folio::Console::Dummy::PlaygroundsController < Folio::Console::BaseController
+  before_action :add_playground_breadcrumb
+
+  def show
+    @actions = %w[
+      api
+      console_notes
+      modals
+      multiselect
+      pickers
+      players
+      private_attachments
+      report
+    ]
+  end
+
   def players
   end
 
@@ -57,4 +72,13 @@ class Folio::Console::Dummy::PlaygroundsController < Folio::Console::BaseControl
   def force_use_react_modals?
     true
   end
+
+  private
+    def add_playground_breadcrumb
+      add_breadcrumb("Playground", main_app.console_dummy_playground_path)
+
+      if action_name != "show"
+        add_breadcrumb(action_name, main_app.send("#{action_name}_console_dummy_playground_path"))
+      end
+    end
 end
