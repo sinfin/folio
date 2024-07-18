@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 SimpleForm::Inputs::Base.class_eval do
-  def register_stimulus(name, opts = {})
+  def register_stimulus(name, values: {})
     if input_html_options["data-controller"]
       input_html_options["data-controller"] += " #{name}"
     else
@@ -11,8 +11,8 @@ SimpleForm::Inputs::Base.class_eval do
     input_html_classes << "f-input" if input_html_classes.exclude?("f-input")
     input_html_classes << "f-input--#{name.to_s.delete_prefix("f-input-")}"
 
-    opts.each do |opt, value|
-      input_html_options["data-#{name}-#{opt.to_s.tr('_', '-')}-value"] = value
+    values.each do |key, value|
+      input_html_options["data-#{name}-#{key.to_s.tr('_', '-')}-value"] = value
     end
   end
 
