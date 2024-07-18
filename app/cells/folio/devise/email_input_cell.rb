@@ -12,11 +12,11 @@ class Folio::Devise::EmailInputCell < Folio::Devise::ApplicationCell
                   autocomplete: "email",
                   value: model.object.email.presence,
                   id: input_id, # need ID for generating "<label for",
-                                # but there can be more same inputs on page
-                                # so we need to generate unique ID
+                  # but there can be more same inputs on page
+                  # so we need to generate unique ID
                 }
   end
-  
+
   def input_id
     @input_id ||= "email_#{SecureRandom.hex(4)}"
   end
