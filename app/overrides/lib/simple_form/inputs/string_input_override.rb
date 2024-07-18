@@ -42,7 +42,7 @@ SimpleForm::Inputs::StringInput.class_eval do
 
     if options[:character_counter]
       register_stimulus("f-input-character-counter",
-                        options[:character_counter].is_a?(Numeric) ? { max: options[:character_counter] } : {})
+                        values: options[:character_counter].is_a?(Numeric) ? { max: options[:character_counter] } : {})
       input_html_options["data-action"] = "f-input-character-counter#onInput"
     end
 
@@ -54,7 +54,7 @@ SimpleForm::Inputs::StringInput.class_eval do
       end
 
       register_stimulus("f-input-content-templates",
-                        { edit_url:, title: ct_klass.model_name.human(count: 2), templates: ct_klass.to_data_attribute })
+                        values: { edit_url:, title: ct_klass.model_name.human(count: 2), templates: ct_klass.to_data_attribute })
     end
 
     if options[:locale]

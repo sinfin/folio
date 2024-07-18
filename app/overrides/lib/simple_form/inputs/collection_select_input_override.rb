@@ -12,21 +12,21 @@ SimpleForm::Inputs::CollectionSelectInput.class_eval do
 
       input_html_classes << "f-input" if input_html_classes.exclude?("f-input")
 
-      stimulus_opts = {}
+      values = {}
 
       if options[:include_blank].is_a?(String)
-        stimulus_opts[:include_blank] = options[:include_blank]
+        values[:include_blank] = options[:include_blank]
       end
 
       if options[:remote] == true
-        stimulus_opts[:url] = autocomplete_url(reflection_class_name:)
+        values[:url] = autocomplete_url(reflection_class_name:)
       elsif options[:remote].is_a?(Hash)
-        stimulus_opts[:url] = autocomplete_url(options[:remote])
+        values[:url] = autocomplete_url(options[:remote])
       else
-        stimulus_opts[:url] = options[:remote]
+        values[:url] = options[:remote]
       end
 
-      register_stimulus("f-input-collection-remote-select", stimulus_opts)
+      register_stimulus("f-input-collection-remote-select", values:)
       iho[:id] = nil unless iho[:id].present?
     elsif input_options[:input_html] && input_options[:input_html][:multiple]
       if collection && collection.first.is_a?(ActiveRecord::Base)
