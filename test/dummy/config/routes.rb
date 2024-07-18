@@ -24,17 +24,18 @@ Rails.application.routes.draw do
   scope module: :folio do
     namespace :console do
       namespace :dummy do
-        resource :playground, only: %i[] do
-          get :private_attachments
-          patch :update_private_attachments
-          get :players
-          get :pickers
-          get :report
+        resource :playground, only: %i[show] do
+          get :api
+          get :console_notes
           get :modals
           get :multiselect
-          get :console_notes
-          get :api
+          get :pickers
+          get :players
+          get :private_attachments
+          get :report
+
           patch :update_console_notes
+          patch :update_private_attachments
         end
 
         namespace :blog do
