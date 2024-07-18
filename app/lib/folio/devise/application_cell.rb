@@ -49,19 +49,10 @@ class Folio::Devise::ApplicationCell < Folio::ApplicationCell
     ""
   end
 
-  def email_input(f, opts = {})
-    # rubocop:disable Layout/CommentIndentation
-    f.input :email, opts.merge(required: true,
-                               disabled: opts[:disabled],
-                               input_html: {
-                                autofocus: opts[:autofocus].nil? ? true : opts[:autofocus],
-                                autocomplete: "email",
-                                value: f.object.email.presence,
-                                id: "email_#{SecureRandom.hex(4)}", # need ID for generating "<label for",
-                                                                    # but there can be more same inputs on page
-                                                                    # so we need to generate unique ID
-                              })
-    # rubocop:enable Layout/CommentIndentation
+  def email_input(f, field, opts = {})
+    cell("folio/devise/email_input",
+         f,
+         opts.merge(field:))
   end
 
   def phone_input(f, opts = {})
