@@ -33,7 +33,7 @@
             .d-atom-image-and-content__text [
               class="d-rich-text"
             ]
-              = cstypo @atom.content
+              == cstypo @atom.content
 
           - if @atom.url.present?
             a.d-atom-image-and-content__btn [

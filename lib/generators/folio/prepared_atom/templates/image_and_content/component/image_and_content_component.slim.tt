@@ -33,7 +33,7 @@
             .<%= classname_prefix %>-atom-image-and-content__text [
               class="<%= classname_prefix %>-rich-text"
             ]
-              = cstypo @atom.content
+              == cstypo @atom.content
 
           - if @atom.url.present?
             a.<%= classname_prefix %>-atom-image-and-content__btn [
