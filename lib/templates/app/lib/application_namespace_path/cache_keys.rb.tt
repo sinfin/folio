@@ -50,7 +50,8 @@ module <%= application_namespace %>::CacheKeys
 
   def cache_key_base
     @cache_key_base ||= begin
-      cached_hash = Rails.cache.read(CACHE_KEY_BASE_KEY)
+      full_cache_key = "#{CACHE_KEY_BASE_KEY}_#{request.host}"
+      cached_hash = Rails.cache.read(full_cache_key)
 
       if !cached_hash || !cached_hash[:set_at] || cached_hash[:set_at] < CACHE_KEY_BASE_TIMER.ago
         cached_hash = {
@@ -62,7 +63,7 @@ module <%= application_namespace %>::CacheKeys
           ],
           set_at: Time.zone.now,
         }
-        Rails.cache.write(CACHE_KEY_BASE_KEY, cached_hash)
+        Rails.cache.write(full_cache_key, cached_hash)
       end
 
       cached_hash[:value]
