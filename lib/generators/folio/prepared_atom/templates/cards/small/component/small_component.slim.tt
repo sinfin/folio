@@ -22,7 +22,7 @@
                 .<%= classname_prefix %>-molecule-cards-small__card-text[
                   class="<%= classname_prefix %>-rich-text <%= classname_prefix %>-rich-text--chomp fs-text-s mt-2"
                 ]
-                  = cstypo atom.content
+                  == cstypo atom.content
 
               - if atom.button_url.present? || atom.link_url.present?
                 .<%= classname_prefix %>-molecule-cards-small__card-btns
