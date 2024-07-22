@@ -6,16 +6,16 @@ class Folio::Console::Api::TagsController < Folio::Console::Api::BaseController
     context = params[:context].presence || "tags"
 
     scope = ActsAsTaggableOn::Tag.joins(:taggings)
-                                 .where(taggings: { context: })
+                                 .where(taggings: { context:, tenant: current_site.id })
 
     if q.present?
       scope = scope.by_query(q)
     end
 
-    scope = scope.unscope(:order).most_used
+    scope = scope.unscope(:order).most_used(7)
 
     response = scope.limit(7)
-                    .select("DISTINCT(tags.name), tags.taggings_count")
+                    .select("DISTINCT(tags.name), tags.taggings_count, tags.id")
                     .map(&:name)
 
     render json: { data: response }
