@@ -3,7 +3,7 @@
 class DateRangeInput < SimpleForm::Inputs::StringInput
   def input(wrapper_options = nil)
     register_stimulus("f-input-date-range",
-                      options[:max_date] ? { max_date: I18n.l(options[:max_date].to_date, format: :console_short) } : {})
+                      values: options[:max_date] ? { max_date: I18n.l(options[:max_date].to_date, format: :console_short) } : {})
 
     input_html_options["autocomplete"] = "off"
 

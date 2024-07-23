@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 class <%= application_namespace %>::Ui::DocumentsComponent < ApplicationComponent
-  def initialize(document_placements:, title: nil)
+  def initialize(document_placements:, title: nil, size: nil)
     @document_placements = document_placements
     @title = title
-   end
+    @size = size
+  end
 
   def render?
     @document_placements.present? || @title.present?
@@ -16,10 +17,8 @@ class <%= application_namespace %>::Ui::DocumentsComponent < ApplicationComponen
     ext = placement.file.file_extension.presence.try(:upcase)
 
     if ext.blank?
-      if placement.file.file_name.include?(".")
-        ext = placement.file.file_name.split(".").last.try(:upcase)
-      else
-        ext = nil
+      ext = if placement.file.file_name.include?(".")
+        placement.file.file_name.split(".").last.try(:upcase)
       end
     end
 
@@ -27,11 +26,28 @@ class <%= application_namespace %>::Ui::DocumentsComponent < ApplicationComponen
     "#{placement.to_label} (#{[ext, size].compact.join(', ')})"
   end
 
-  def download_path(*args)
-    controller.folio.download_path(*args)
+  def size_class
+    "<%= classname_prefix %>-ui-documents--#{@size}" if @size.present?
+  end
+
+  def download_path(...)
+    controller.folio.download_path(...)
   end
 
   def href(placement)
     download_path(placement.file, placement.file.file_name)
+  end
+
+  def document_icon
+    size = case @size
+           when "small"
+             20
+           when "medium"
+             24
+           when "large"
+             28
+    end
+
+    <%= application_namespace_path %>_ui_icon(:file, height: size, class_name: "<%= classname_prefix %>-ui-documents__icon")
   end
 end

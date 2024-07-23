@@ -7,7 +7,7 @@ class Folio::User < Folio::ApplicationRecord
   include Folio::HasNewsletterSubscriptions
   include Folio::HasSiteRoles
 
-  has_sanitized_fields :email, :first_name, :last_name, :nickname
+  has_sanitized_fields :email, :first_name, :last_name, :company_name, :nickname
 
   # used to validate before inviting from console in /console/users/new
   attribute :skip_password_validation, :boolean, default: false
@@ -45,6 +45,8 @@ class Folio::User < Folio::ApplicationRecord
 
   devise(*selected_device_modules, devise_options)
 
+  include Folio::IsSiteLockable # must be after Devise
+
   has_many :authentications, class_name: "Folio::Omniauth::Authentication",
                              foreign_key: :folio_user_id,
                              inverse_of: :user,
@@ -61,10 +63,7 @@ class Folio::User < Folio::ApplicationRecord
                                   foreign_key: :closed_by_id,
                                   dependent: :nullify
 
-
-  validates :first_name, :last_name,
-            presence: true,
-            if: :validate_first_name_and_last_name?
+  validate :validate_one_of_names
 
   validates :email,
             format: { with: Folio::EMAIL_REGEXP },
@@ -79,7 +78,7 @@ class Folio::User < Folio::ApplicationRecord
   before_update :update_has_generated_password
 
   pg_search_scope :by_query,
-                  against: [:email, :last_name, :first_name, :nickname],
+                  against: [:email, :last_name, :first_name, :company_name, :nickname],
                   ignoring: :accents,
                   using: { tsearch: { prefix: true } }
 
@@ -96,8 +95,27 @@ class Folio::User < Folio::ApplicationRecord
     where(console_path: path).where("console_path_updated_at > ?", 5.minutes.ago)
   end
 
+  scope :locked_for, -> (site) {
+    joins(:site_user_links).merge(Folio::SiteUserLink.by_site(site).locked)
+  }
+
+  scope :unlocked_for, -> (site) {
+    where.not(id: Folio::SiteUserLink.by_site(site).locked.select(:user_id))
+  }
+
+  scope :by_locked, -> (locked_param) {
+    case locked_param
+    when true, "true"
+      locked_for(Folio::Current.site)
+    when false, "false"
+      where(featured: nil)
+    else
+      all
+    end
+  }
+
   pg_search_scope :by_full_name_query,
-                  against: %i[last_name first_name],
+                  against: %i[last_name first_name company_name],
                   ignoring: :accents,
                   using: { trigram: { word_similarity: true } }
 
@@ -127,12 +145,14 @@ class Folio::User < Folio::ApplicationRecord
     end
   }
 
-  audited only: %i[email unconfirmed_email first_name last_name nickname phone subscribed_to_newsletter superadmin bank_account_number]
+  audited only: %i[email unconfirmed_email first_name last_name company_name nickname phone subscribed_to_newsletter superadmin bank_account_number]
   has_associated_audits
 
   def full_name
     if first_name.present? || last_name.present?
       "#{first_name} #{last_name}".strip
+    elsif company_name.present?
+      company_name
     else
       email
     end
@@ -141,6 +161,8 @@ class Folio::User < Folio::ApplicationRecord
   def to_label
     if first_name.present? || last_name.present?
       full_name
+    elsif company_name.present?
+      company_name
     elsif nickname.present?
       nickname
     else
@@ -180,7 +202,7 @@ class Folio::User < Folio::ApplicationRecord
   end
 
   def self.csv_attribute_names
-    %i[id first_name last_name nickname email phone created_at sign_in_count last_sign_in_at admin_note]
+    %i[id first_name last_name company_name nickname email phone created_at sign_in_count last_sign_in_at admin_note]
   end
 
   def csv_attributes(controller = nil)
@@ -231,6 +253,7 @@ class Folio::User < Folio::ApplicationRecord
     [
       :first_name,
       :last_name,
+      :company_name,
       :nickname,
       :phone,
       :subscribed_to_newsletter,
@@ -241,7 +264,7 @@ class Folio::User < Folio::ApplicationRecord
   end
 
   def self.additional_controller_strong_params_for_create
-    []
+    [:born_at]
   end
 
   def authenticatable_salt
@@ -272,9 +295,9 @@ class Folio::User < Folio::ApplicationRecord
   end
 
   def can_now?(action, subject = nil, site: nil)
-    site ||= subject&.try(:site)
+    site ||= (subject&.try(:site) || ::Folio.main_site)
     subject = site if subject.blank?
-    ability = Folio::Ability.new(self, site)
+    ability = ::Folio::Current.ability || Folio::Ability.new(self, site)
     can_now_by_ability?(ability, action, subject)
   end
 
@@ -301,12 +324,21 @@ class Folio::User < Folio::ApplicationRecord
   end
 
   private
-    def validate_first_name_and_last_name?
+    def validate_names?
       invitation_accepted_at?
     end
 
     def validate_phone?
       Rails.application.config.folio_users_require_phone
+    end
+
+    def validate_one_of_names
+      return unless validate_names?
+
+      if first_name.blank? && last_name.blank? && company_name.blank?
+        errors.add(:first_name, :blank)
+        errors.add(:last_name, :blank)
+      end
     end
 
     def newsletter_subscriptions_enabled?
@@ -392,6 +424,8 @@ end
 #  phone_secondary           :string
 #  born_at                   :date
 #  bank_account_number       :string
+#  company_name              :string
+#  time_zone                 :string           default("Prague")
 #
 # Indexes
 #

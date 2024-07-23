@@ -1,0 +1,183 @@
+---
+title: Option Group Examples
+nav_title: Option Groups
+tags: demo
+---
+
+
+{% from "demo.njk" import demo %}
+
+
+{% set label %}
+<label class="h2 mb-3">
+	Simple
+</label>
+{% endset %}
+
+{% set html %}
+<select id="select-gear" multiple placeholder="Select gear...">
+	<option value="">Select gear...</option>
+	<optgroup label="Climbing">
+		<option value="pitons">Pitons</option>
+		<option value="cams">Cams</option>
+		<option value="nuts">Nuts</option>
+		<option value="bolts">Bolts</option>
+		<option value="stoppers">Stoppers</option>
+		<option value="sling">Sling</option>
+	</optgroup>
+	<optgroup label="Skiing">
+		<option value="skis">Skis</option>
+		<option value="skins">Skins</option>
+		<option value="poles">Poles</option>
+	</optgroup>
+</select>
+{% endset %}
+
+<script>
+{% set script %}
+new TomSelect('#select-gear',{
+	sortField: 'text'
+});
+{% endset %}
+</script>
+
+{{ demo( label, html, script) }}
+
+
+
+{% set label %}
+<label class="h2 mb-3">
+	Disabled Group
+</label>
+{% endset %}
+
+{% set html %}
+<select id="select-gear-disabled" multiple placeholder="Select gear...">
+	<option value="">Select gear...</option>
+	<optgroup label="Climbing">
+		<option value="pitons">Pitons</option>
+		<option value="cams">Cams</option>
+		<option value="nuts">Nuts</option>
+		<option value="bolts">Bolts</option>
+		<option value="stoppers">Stoppers</option>
+		<option value="sling">Sling</option>
+	</optgroup>
+	<optgroup label="Skiing" disabled>
+		<option value="skis">Skis</option>
+		<option value="skins">Skins</option>
+		<option value="poles">Poles</option>
+	</optgroup>
+</select>
+{% endset %}
+
+<script>
+{% set script %}
+new TomSelect('#select-gear-disabled',{
+	sortField: 'text'
+});
+{% endset %}
+</script>
+
+{{ demo( label, html, script) }}
+
+
+
+{% set label %}
+<label class="h2 mb-3">
+	Repeated Options
+</label>
+{% endset %}
+
+{% set html %}
+<select id="select-repeated-options" multiple>
+	<option value="">Select...</option>
+	<optgroup label="Group 1">
+		<option value="a">Item A</option>
+		<option value="b">Item B</option>
+	</optgroup>
+	<optgroup label="Group 2">
+		<option value="a">Item A</option>
+		<option value="b">Item B</option>
+	</optgroup>
+</select>
+{% endset %}
+
+<script>
+{% set script %}
+new TomSelect('#select-repeated-options',{
+	sortField: 'text',
+	hideSelected: false,
+	duplicates: true,
+});
+{% endset %}
+</script>
+
+{{ demo( label, html, script) }}
+
+
+
+
+{% set label %}
+<label class="h2 mb-3">
+	Programmatic
+</label>
+{% endset %}
+
+
+{% set html %}
+<select id="select-animal" class="demo-animals" placeholder="Select animal..."></select>
+{% endset %}
+
+<script>
+{% set script %}
+new TomSelect('#select-animal',{
+	options: [
+		{class: 'mammal', value: "dog", name: "Dog" },
+		{class: 'mammal', value: "cat", name: "Cat" },
+		{class: 'mammal', value: "horse", name: "Horse" },
+		{class: 'mammal', value: "kangaroo", name: "Kangaroo" },
+		{class: 'bird', value: 'duck', name: 'Duck'},
+		{class: 'bird', value: 'chicken', name: 'Chicken'},
+		{class: 'bird', value: 'ostrich', name: 'Ostrich'},
+		{class: 'bird', value: 'seagull', name: 'Seagull'},
+		{class: 'reptile', value: 'snake', name: 'Snake'},
+		{class: 'reptile', value: 'lizard', name: 'Lizard'},
+		{class: 'reptile', value: 'alligator', name: 'Alligator'},
+		{class: 'reptile', value: 'turtle', name: 'Turtle'}
+	],
+	optgroups: [
+		{value: 'mammal', label: 'Mammal', label_scientific: 'Mammalia'},
+		{value: 'bird', label: 'Bird', label_scientific: 'Aves'},
+		{value: 'reptile', label: 'Reptile', label_scientific: 'Reptilia'}
+	],
+	optgroupField: 'class',
+	labelField: 'name',
+	searchField: ['name'],
+	render: {
+		optgroup_header: function(data, escape) {
+			return '<div class="optgroup-header">' + escape(data.label) + ' <span class="scientific">' + escape(data.label_scientific) + '</span></div>';
+		}
+	}
+});
+{% endset %}
+</script>
+
+
+<style type="text/css">
+{% set style %}
+.demo-animals .scientific {
+	font-weight: normal;
+	opacity: 0.3;
+	margin: 0 0 0 2px;
+}
+.demo-animals .scientific::before {
+	content: '(';
+}
+.demo-animals .scientific::after {
+	content: ')';
+}
+{% endset %}
+</style>
+
+
+{{ demo( label, html, script, style) }}

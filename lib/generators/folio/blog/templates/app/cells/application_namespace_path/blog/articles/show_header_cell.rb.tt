@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
 class <%= application_namespace %>::Blog::Articles::ShowHeaderCell < ApplicationCell
-  THUMB_SIZE = <%= application_namespace %>::Ui::ArticleCardCell::THUMB_SIZE
+  THUMB_SIZE = "70x70"
 end

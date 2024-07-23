@@ -9,6 +9,11 @@ class Folio::FileTest < ActiveSupport::TestCase
     ATTACHMENTS = %i[cover]
   end
 
+  def setup
+    super
+    Rails.application.config.folio_testing_after_save_job = true
+  end
+
   test "touches placement placements" do
     page = create(:folio_page)
     updated_at = page.updated_at

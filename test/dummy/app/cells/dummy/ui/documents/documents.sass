@@ -1,3 +1,41 @@
 .d-ui-documents
-  &__li:nth-child(n + 2)
-    margin-top: map-get($spacers, 2)
+  &__ul
+    display: flex
+    flex-wrap: wrap
+
+  &--medium &__ul
+    gap: map-get($spacers, a)
+
+  &--large &__ul
+    gap: map-get($spacers, b)
+
+  &__li
+    width: 100%
+
+  &__a
+    display: flex
+    align-items: flex-start
+    gap: map-get($spacers, b)
+    color: $link-default
+    text-decoration: none
+    padding: map-get($spacers, a) 0
+    font-weight: $font-weight-semibold
+
+    .i-ui-icon
+      margin: 0
+
+  &__icon
+    color: $shade-black-contrast
+
+  &--small &__icon
+    margin-top: 3px
+
+  &--medium &__icon
+    margin-top: 2px
+
+  &--large &__icon
+    margin-top: -1px
+
+  +media-breakpoint-down(sm)
+    &__label
+      +font-size-text-s

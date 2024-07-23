@@ -16,9 +16,9 @@ module Dummy
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
 
-    Rails.application.config.folio_leads_from_component_class_name = "Folio::Leads::FormComponent"
-    Rails.application.config.folio_newsletter_subscriptions = true
-
+    config.folio_leads_from_component_class_name = "Folio::Leads::FormComponent"
+    config.folio_newsletter_subscriptions = true
+    config.folio_site_default_test_factory = :dummy_site
 
     I18n.available_locales = [:cs, :en]
     I18n.default_locale = :cs

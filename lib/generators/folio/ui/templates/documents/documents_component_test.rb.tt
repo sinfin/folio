@@ -4,9 +4,9 @@ require "test_helper"
 
 class <%= application_namespace %>::Ui::DocumentsComponentTest < Folio::ComponentTest
   def test_render
-    model = "hello"
+    document_placements = create_list(:folio_document_placement, 1)
 
-    render_inline(<%= application_namespace %>::Ui::DocumentsComponent.new(model:))
+    render_inline(<%= application_namespace %>::Ui::DocumentsComponent.new(document_placements:))
 
     assert_selector(".<%= classname_prefix %>-ui-documents")
   end

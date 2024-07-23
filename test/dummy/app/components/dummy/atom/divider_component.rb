@@ -7,6 +7,10 @@ class Dummy::Atom::DividerComponent < ApplicationComponent
   end
 
   def variant_class_name
-    "d-atom-divider--#{@atom.variant_with_default}"
+    "d-atom-divider--#{@atom.variant_with_fallback}"
+  end
+
+  def margin_class_name
+    "d-atom-divider--margin-#{@atom.margin_with_fallback}"
   end
 end

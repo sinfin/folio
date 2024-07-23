@@ -54,9 +54,17 @@ module Folio::Users::DeviseControllerBase
     user && user.invitation_created_at? && user.invitation_accepted_at.nil? && user.sign_in_count == 0
   end
 
+  private
+    def safe_set_up_current_from_request
+      if respond_to?(:set_up_current_from_request, true)
+        set_up_current_from_request
+      end
+    end
+
   protected
     # override devise signed in check - redirect to source site if needed
     def require_no_authentication
+      safe_set_up_current_from_request
       result = handle_crossdomain_devise
       super if result && result.action == :noop
     end

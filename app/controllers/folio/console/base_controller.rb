@@ -82,9 +82,9 @@ class Folio::Console::BaseController < Folio::ApplicationController
                                       parent: (false if as.present?))
     end
 
-    if klass.respond_to?(:audited_view_name)
-      before_action :load_revisions, only: [klass.audited_view_name, :revision]
-      before_action :find_revision, only: [:revision, :restore]
+    if klass.try(:audited_console_enabled?)
+      before_action :load_revisions, only: [klass.audited_console_view_name, :revision]
+      before_action :find_revision, only: %i[revision restore]
     end
 
     # keep this under load_and_authorize_resource
@@ -127,7 +127,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
   def through_aware_console_url_for(record, action: nil, hash: {}, safe: false)
     through_record = if try(:folio_console_controller_for_through)
       through_record_name = folio_console_controller_for_through.constantize.model_name.element
-      instance_variable_get("@#{through_record_name}")
+      instance_variable_get(:"@#{through_record_name}")
     end
 
     hash ||= {}
@@ -148,10 +148,10 @@ class Folio::Console::BaseController < Folio::ApplicationController
   helper_method :through_aware_console_url_for
 
   def set_i18n_locale
-    if params[:locale] && current_site.locales.include?(params[:locale])
-      I18n.locale = params[:locale]
+    I18n.locale = if params[:locale] && current_site.locales.include?(params[:locale])
+      params[:locale]
     else
-      I18n.locale = current_site.console_locale
+      current_site.console_locale
     end
   end
 
@@ -166,8 +166,8 @@ class Folio::Console::BaseController < Folio::ApplicationController
 
         index_filters.each do |key, config|
           if config.is_a?(Hash) && config[:as] == :numeric_range
-            ary << "#{key}_from".to_sym
-            ary << "#{key}_to".to_sym
+            ary << :"#{key}_from"
+            ary << :"#{key}_to"
           else
             ary << key
           end
@@ -190,20 +190,21 @@ class Folio::Console::BaseController < Folio::ApplicationController
     end
 
     def file_placements_strong_params
-      commons = [:id,
-                 :title,
-                 :alt,
-                 :tag_list,
-                 :file_id,
-                 :position,
-                 :type,
-                 :_destroy]
+      commons = %i[id
+                   title
+                   alt
+                   tag_list
+                   file_id
+                   position
+                   type
+                   _destroy]
 
       hash = {}
 
       (additional_file_placements_strong_params_keys + %i[
         og_image_placement_attributes
         cover_placement_attributes
+        background_cover_placement_attributes
         document_placement_attributes
         document_placements_attributes
         image_placements_attributes
@@ -211,7 +212,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
         hash[key] = commons
       end
 
-      [ hash ]
+      [hash]
     end
 
     def private_attachments_strong_params
@@ -222,7 +223,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
         hash[key] = commons
       end
 
-      [ hash ]
+      [hash]
     end
 
     def atoms_strong_params
@@ -235,7 +236,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
 
       [{ atoms_attributes: base }] + current_site.locales.map do |locale|
         {
-          "#{locale}_atoms_attributes": base
+          "#{locale}_atoms_attributes": base,
         }
       end
     end
@@ -250,8 +251,8 @@ class Folio::Console::BaseController < Folio::ApplicationController
                                        due_at
                                        closed_by_id
                                        created_by_id
-                                       _destroy]
-        }
+                                       _destroy],
+        },
       ]
     end
 
@@ -276,26 +277,26 @@ class Folio::Console::BaseController < Folio::ApplicationController
     end
 
     def addresses_strong_params
-      [{ primary_address_attributes: base_address_attributes, secondary_address_attributes: base_address_attributes }]
+      [{ primary_address_attributes: base_address_attributes,
+         secondary_address_attributes: base_address_attributes }]
     end
 
     def sti_hack(params, nested_name, relation_name)
       params.tap do |obj|
         # STI hack
         if obj[nested_name]
-          relation_type = "#{relation_name}_type".to_sym
-          relation_id = "#{relation_name}_id".to_sym
+          relation_type = :"#{relation_name}_type"
+          relation_id = :"#{relation_name}_id"
 
           obj[nested_name].each do |key, value|
             next if value[relation_name].nil?
+
             type, id = value[relation_name].split(TYPE_ID_DELIMITER)
             obj[nested_name][key][relation_type] = type
             obj[nested_name][key][relation_id] = id
             obj[nested_name][key].delete(relation_name)
           end
         end
-
-        obj
       end
     end
 
@@ -309,7 +310,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
         records.each { |rec| csv << rec.csv_attributes(self) }
       end
 
-      name = name || klass.model_name.human(count: 2)
+      name ||= klass.model_name.human(count: 2)
 
       filename = "#{name}-#{Date.today}.csv".split(".")
                                             .map(&:parameterize)
@@ -317,15 +318,14 @@ class Folio::Console::BaseController < Folio::ApplicationController
       send_data data, filename:
     end
 
-    def index_tabs
-    end
+    def index_tabs; end
 
     helper_method :index_tabs
 
     def load_revisions
-      if folio_console_record && folio_console_record.respond_to?(:revisions)
-        @audited_revisions = folio_console_record.revisions.reverse
-      end
+      return unless folio_console_record && folio_console_record.respond_to?(:revisions)
+
+      @audited_revisions = folio_console_record.revisions.reverse
     end
 
     def find_revision
@@ -333,23 +333,25 @@ class Folio::Console::BaseController < Folio::ApplicationController
       @audited_revision = audit.revision
       @audited_revision.audit = audit
 
-      if @audited_revision.class.try(:has_audited_atoms?)
-        @audited_revision.reconstruct_atoms
-      end
+      return unless @audited_revision.class.try(:has_audited_atoms?)
+
+      @audited_revision.reconstruct_atoms
     end
 
     def add_through_breadcrumbs
       return unless folio_console_controller_for_through
+
       through_klass = folio_console_controller_for_through.constantize
 
       add_breadcrumb(through_klass.model_name.human(count: 2),
                      url_for([:console, through_klass]))
 
-      through_record = instance_variable_get("@#{through_klass.model_name.element}")
+      through_record = instance_variable_get(:"@#{through_klass.model_name.element}")
 
-      if through_record
-        add_breadcrumb(through_record.to_label, console_show_or_edit_path(through_record, include_through_record: false))
-      end
+      return unless through_record
+
+      add_breadcrumb(through_record.to_label,
+                     console_show_or_edit_path(through_record, include_through_record: false))
     end
 
     def add_collection_breadcrumbs
@@ -371,14 +373,12 @@ class Folio::Console::BaseController < Folio::ApplicationController
     end
 
     def custom_authorize_user!
-      if self.respond_to?(:custom_authenticate_account!)
+      if respond_to?(:custom_authenticate_account!)
         custom_authenticate_account! # includes authorization
+      elsif respond_to?(:custom_authenticate_user!)
+        custom_authenticate_user!
       else
-        if self.respond_to?(:custom_authenticate_user!)
-          custom_authenticate_user!
-        else
-          authenticate_user!
-        end
+        authenticate_user!
       end
 
       if params[:action].to_sym == :stop_impersonating
@@ -403,7 +403,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
 
       valid_routes_parent = nil
 
-      [ Folio::Engine, main_app ].each do |routes_parent|
+      [Folio::Engine, main_app].each do |routes_parent|
         recognized = routes_parent.routes.recognize_path(url, method: :get)
 
         if recognized && recognized[:controller].include?("/console/")
@@ -423,7 +423,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
     end
 
     def folio_console_record_variable_name(plural: false)
-      "@#{folio_console_name_base(plural:)}".to_sym
+      :"@#{folio_console_name_base(plural:)}"
     end
 
     def folio_console_record
@@ -436,13 +436,14 @@ class Folio::Console::BaseController < Folio::ApplicationController
 
     def filter_records_by_belongs_to_site
       if folio_console_records
-        records = folio_console_records.accessible_by(current_ability, self.class.cancancan_accessible_by_action)
+        records = folio_console_records.accessible_by(current_ability,
+                                                      self.class.cancancan_accessible_by_action)
 
         instance_variable_set(folio_console_record_variable_name(plural: true),
                               records.by_site(allowed_record_sites))
       elsif record = folio_console_record
         if record.persisted? && !allowed_record_sites.map(&:id).include?(record.site.id)
-          fail ActiveRecord::RecordNotFound
+          raise ActiveRecord::RecordNotFound
         end
       end
     end
@@ -453,13 +454,13 @@ class Folio::Console::BaseController < Folio::ApplicationController
 
     def load_belongs_to_site_resource
       # setting i.e. @page makes cancancan skip the load
-      if params[:id].present?
-        name = folio_console_record_variable_name(plural: false)
-        if @klass.respond_to?(:friendly)
-          instance_variable_set(name, @klass.by_site(allowed_record_sites).friendly.find(params[:id]))
-        else
-          instance_variable_set(name, @klass.by_site(allowed_record_sites).find(params[:id]))
-        end
+      return unless params[:id].present?
+
+      name = folio_console_record_variable_name(plural: false)
+      if @klass.respond_to?(:friendly)
+        instance_variable_set(name, @klass.by_site(allowed_record_sites).friendly.find(params[:id]))
+      else
+        instance_variable_set(name, @klass.by_site(allowed_record_sites).find(params[:id]))
       end
     end
 
@@ -474,7 +475,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
       end
 
       if filter_params.present? &&
-        instance_variable_get(name).respond_to?(:filter_by_params)
+         instance_variable_get(name).respond_to?(:filter_by_params)
         filtered = instance_variable_get(name).filter_by_params(filter_params)
         instance_variable_set(name, filtered)
       end
@@ -493,21 +494,22 @@ class Folio::Console::BaseController < Folio::ApplicationController
         end
       end
 
-      if params[:sort].instance_variable_get(name).respond_to?(:sort_by_params)
-        filtered = instance_variable_get(name).filter_by_params(filter_params)
-        instance_variable_set(name, filtered)
-      end
+      return unless params[:sort].instance_variable_get(name).respond_to?(:sort_by_params)
+
+      filtered = instance_variable_get(name).filter_by_params(filter_params)
+      instance_variable_set(name, filtered)
     end
 
     def update_current_user_console_path
       return unless can_now?(:access_console)
       return if request.path.start_with?("/console/api")
       return if request.path.start_with?("/console/atoms")
+
       current_user.update_console_path!(request.path)
     end
 
     def set_show_current_user_console_path_bar
-      @show_current_user_console_path_bar = ["edit", "update"].include?(action_name)
+      @show_current_user_console_path_bar = %w[edit update].include?(action_name)
     end
 
     def self.cancancan_accessible_by_action
@@ -516,11 +518,13 @@ class Folio::Console::BaseController < Folio::ApplicationController
 
     def member_action?
       return @member_action unless @member_action.nil?
+
       @member_action = %w[new create].include?(action_name) || params[:id].present?
     end
 
     def collection_action?
       return @collection_action unless @collection_action.nil?
+
       @collection_action = !member_action?
     end
 end

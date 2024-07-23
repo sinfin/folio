@@ -78,11 +78,13 @@ class Folio::Site < Folio::ApplicationRecord
   end
 
   def env_aware_domain
-    if Rails.env.development?
-      return "lvh.me:3000" if domain == "lvh.me"
-      return "#{domain}:3000" if domain.end_with?("localhost")
+    if Rails.env.development? || ENV["DEV_TESTING_PRODUCTION"]
+      port = if Folio::Current.url.present?
+        uri = URI.parse(Folio::Current.url)
+        uri.port
+      end
 
-      "dev-#{domain}:3000"
+      "#{slug}.localhost:#{port || "3000"}"
     else
       domain
     end
@@ -179,6 +181,19 @@ class Folio::Site < Folio::ApplicationRecord
 
   def available_user_roles_ary
     available_user_roles.presence || []
+  end
+
+  def site # for Ability checks
+    self
+  end
+
+  def mailer_logo_data
+    {
+      png_src: "https://sinfin-folio.s3.eu-central-1.amazonaws.com/mailer/logos/folio_logo.png",
+      light_png_src: "https://sinfin-folio.s3.eu-central-1.amazonaws.com/mailer/logos/folio_logo_white.png",
+      width: 119,
+      height: 60,
+    }
   end
 
   private

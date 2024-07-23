@@ -2,12 +2,12 @@
 cs:
   activerecord:
     attributes:
-      application_namespace_path/atom/cards/large: 
+      application_namespace_path/atom/cards/large:
     models:
       application_namespace_path/atom/cards/large: Karta - velká
 en:
   activerecord:
     attributes:
-      application_namespace_path/atom/cards/large: 
+      application_namespace_path/atom/cards/large:
     models:
       application_namespace_path/atom/cards/large: Card - large

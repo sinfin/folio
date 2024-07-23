@@ -5,6 +5,7 @@ module Folio::MailerBase
 
   included do
     helper_method :site
+    helper_method :compiled_asset_contents
   end
 
   def site
@@ -21,5 +22,14 @@ module Folio::MailerBase
 
   def system_email_copy
     site.system_email_copy_array if site.system_email_copy.present?
+  end
+
+  def compiled_asset_contents(key)
+    if Rails.application.assets
+      Rails.application.assets.find_asset(key).to_s
+    else
+      manifest_file = Rails.application.assets_manifest.assets[key]
+      File.read(File.join(Rails.application.assets_manifest.directory, manifest_file))
+    end
   end
 end

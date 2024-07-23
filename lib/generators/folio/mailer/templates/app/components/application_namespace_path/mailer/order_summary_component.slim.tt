@@ -1,0 +1,85 @@
+.<%= classname_prefix %>-mailer-order-summary
+  table.<%= classname_prefix %>-mailer-order-summary__inner[
+    role="presentation"
+  ]
+    tr
+      td.<%= classname_prefix %>-mailer-order-summary__order-wrapper
+        table.<%= classname_prefix %>-mailer-order-summary__order[
+          role="presentation"
+        ]
+          - @items.each do |item|
+            tr.<%= classname_prefix %>-mailer-order-summary__order-item-row
+              td.<%= classname_prefix %>-mailer-order-summary__item-wrapper
+                table.<%= classname_prefix %>-mailer-order-summary__item[
+                  role="presentation"
+                ]
+                  tr
+                    td.<%= classname_prefix %>-mailer-order-summary__order-item-column[
+                      class="<%= classname_prefix %>-mailer-order-summary__order-item-column--image"
+                      align="left"
+                      valign="top"
+                    ]
+                      - if item[:folio_image].present?
+                        img.<%= classname_prefix %>-mailer-order-summary__order-image[
+                          src="#{item[:folio_image].thumb(THUMB_SIZE, immediate: true).url}"
+                          alt=""
+                        ]
+
+                      - else
+                        .<%= classname_prefix %>-mailer-order-summary__order-image-placeholder
+
+                    td.<%= classname_prefix %>-mailer-order-summary__order-item-column[
+                      class="<%= classname_prefix %>-mailer-order-summary__order-item-column--title"
+                      align="left"
+                      valign="top"
+                    ]
+                      - if item[:title].present?
+                        .<%= classname_prefix %>-mailer-order-summary__order-title = item[:title]
+
+                      - if item[:subtitle].present?
+                        .<%= classname_prefix %>-mailer-order-summary__order-subtitle[
+                          style="line-height:1.5;"
+                        ]
+                          = item[:subtitle]
+
+                    td.<%= classname_prefix %>-mailer-order-summary__order-item-column[
+                      class="<%= classname_prefix %>-mailer-order-summary__order-item-column--price"
+                      align="left"
+                      valign="top"
+                    ]
+                      - if item[:total_price].present?
+                        .<%= classname_prefix %>-mailer-order-summary__total-price.text-no-wrap
+                          = insert_html_entity(folio_price(item[:total_price]))
+
+                      - if item[:comission].present?
+                        .<%= classname_prefix %>-mailer-order-summary__unit-price.text-no-wrap
+                          = insert_html_entity(folio_price(item[:comission]))
+
+                      - if item[:count].present? && item[:count] > 1
+                        .<%= classname_prefix %>-mailer-order-summary__count
+                          ' x
+                          = item[:count]
+
+            tr.<%= classname_prefix %>-mailer-order-summary__divider-row
+              td.<%= classname_prefix %>-mailer-order-summary__divider
+
+          - if @total_price.present?
+            tr
+              td.<%= classname_prefix %>-mailer-order-summary__order-total-price-wrapper
+                table.<%= classname_prefix %>-mailer-order-summary__order-price[
+                  role="presentation"
+                ]
+                  tr
+                    td.<%= classname_prefix %>-mailer-order-summary__order-total-price-title-column[
+                      align="left"
+                      valign="center"
+                    ]
+                      .<%= classname_prefix %>-mailer-order-summary__order-total-price-title
+                        = t('.total_price')
+
+                    td.<%= classname_prefix %>-mailer-order-summary__order-total-price-column[
+                      align="left"
+                      valign="center"
+                    ]
+                      .<%= classname_prefix %>-mailer-order-summary__order-total-price.text-no-wrap
+                        = insert_html_entity(folio_price(@total_price))

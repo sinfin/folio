@@ -2,13 +2,7 @@
 
 require "test_helper"
 
-class Folio::LeadsControllerTest < ActionDispatch::IntegrationTest
-  include Folio::Engine.routes.url_helpers
-
-  def setup
-    create_and_host_site
-  end
-
+class Folio::LeadsControllerTest < Folio::BaseControllerTest
   test "invalid html" do
     assert_difference("Folio::Lead.count", 0) do
       post url_for(Folio::Lead), params: {

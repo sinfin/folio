@@ -1,0 +1,12 @@
+$<%= classname_prefix %>-mailer-styles: false !default
+
+@if $<%= classname_prefix %>-mailer-styles
+  .<%= classname_prefix %>-mailer-header
+    width: 100%
+    max-width: 648px
+
+    &__inner
+      padding: $mailer-gap-g 0 $mailer-gap-g 0
+
+    &__logo-link
+      display: inline-block

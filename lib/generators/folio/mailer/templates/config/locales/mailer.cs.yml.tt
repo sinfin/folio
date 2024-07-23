@@ -1,0 +1,16 @@
+---
+cs:
+  <%= application_namespace_path %>:
+    mailer:
+      footer_component:
+        contact: Kontakt
+        follow_us: Sledujte nás
+
+      order_summary_component:
+        total_price: Celková cena (vč. provize)
+
+      cards:
+        lot_component:
+          current_price: "Aktuální cena:"
+          live_part_starts_at: "Živá aukce začíná:"
+          online_bidding_ends_at: "Konec limitování:"

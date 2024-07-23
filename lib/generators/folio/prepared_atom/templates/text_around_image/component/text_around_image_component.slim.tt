@@ -1,0 +1,19 @@
+.<%= classname_prefix %>-atom.my-atom-lg.<%= classname_prefix %>-atom-text-around-image class=atom_class_name
+  .container-fluid.<%= classname_prefix %>-atom-text-around-image__container
+    .<%= classname_prefix %>-atom-text-around-image__wrap
+      .container-narrow
+        .<%= classname_prefix %>-atom-text-around-image__inner
+          *{ tag: :div, class: image_wrap_class}
+            = <%= application_namespace_path %>_ui_image(atom_cover_placement,
+                             cover_thumb_size,
+                             class_name: '<%= classname_prefix %>-atom-text-around-image__image',
+                             lightbox: true,
+                             hover_zoom: true)
+
+          .<%= classname_prefix %>-atom-text-around-image__content
+            - if @atom.content.present?
+              .<%= classname_prefix %>-atom-text-around-image__text [
+                class='<%= classname_prefix %>-rich-text fs-text-l'
+                class='<%= classname_prefix %>-rich-text--chomp'
+              ]
+                = cstypo @atom.content

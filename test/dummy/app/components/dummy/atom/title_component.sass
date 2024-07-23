@@ -1,0 +1,51 @@
+.d-atom-title
+  &--highlight-background
+    margin: map-get($spacers, e) 0
+
+  &--highlight-background &__inner
+    padding: map-get($spacers, d) 0
+
+  &--highlight-background.d-atom-title--theme-light &__inner
+    background: $transparent-b100
+
+  &--highlight-background.d-atom-title--theme-dark &__inner
+    background: $shade-800
+    color: $shade-light-contrast
+
+  &--align-left
+    text-align: left
+
+  &--align-center
+    text-align: center
+
+  &__content-container
+    padding: 0 map-get($spacers, f)
+    margin: 0 auto
+
+  &--font-size-adaptive &__title
+    $large: (xs: 1.5rem, sm: 2rem, md: 2.5rem, lg: 3rem, xxl: 4rem)
+    $medium: (xs: 1.25rem, sm: 1.5rem, md: 2rem, lg: 2.7rem, xl: 3rem)
+    $small: (xs: 1.25rem, md: 1.5rem, lg: 2.25rem, xl: 2.5rem)
+    +adaptive-title-font-size($large, $medium, $small)
+
+  +media-breakpoint-up(md)
+    &__content-container
+      max-width: 808px
+
+    &--highlight-background
+      margin: map-get($spacers, g) 0
+
+    &--highlight-background &__inner
+      padding: map-get($spacers, g) 0
+      border-radius: $border-radius
+
+  +media-breakpoint-up(xl)
+    &__content-container
+      max-width: 920px
+
+    &--highlight-background &__inner
+      padding: map-get($spacers, l) 0
+
+  +media-breakpoint-down(md)
+    &__container
+      padding: 0 !important

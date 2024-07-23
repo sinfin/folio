@@ -10,7 +10,7 @@ $grid-gutter-half: $grid-gutter-width / 2
 
 $spacer: $grid-gutter-half
 
-$spacers: ( 0: 0, 1: $grid-gutter-base / 2, 2: $grid-gutter-base, 3: $grid-gutter-half, 4: $grid-gutter-width, 5: 2 * $grid-gutter-width, b: $grid-gutter-base, bb: 2 * $grid-gutter-base,  h: $grid-gutter-half, g: $grid-gutter-width, gg: 2 * $grid-gutter-width )
+$spacers: ( 0: 0, 1: $grid-gutter-base / 2, 2: $grid-gutter-base, 3: $grid-gutter-half, 4: $grid-gutter-width, 5: 2 * $grid-gutter-width, a: $grid-gutter-base/2, b: $grid-gutter-base, c: $grid-gutter-base*1.5, d: $grid-gutter-base*2, e: $grid-gutter-base*2.5, f: $grid-gutter-base*3, g: $grid-gutter-base*4, h: $grid-gutter-base*5, i: $grid-gutter-base*6, j: $grid-gutter-base*7, k: $grid-gutter-base*8, l: $grid-gutter-base*10 )
 
 @import './variables-colors'
 
@@ -49,7 +49,8 @@ $text-muted: $shade-400
 
 $gradient-100: linear-gradient(180deg, rgba($black, 0) 0%, $black 100%)
 
-$container-fluid-max-width: 1280px
+$container-fluid-max-width: 1448px // 1320 (+ 2 * 64px paddings)
+$container-narrow-max-width: 872px
 $font-size-media-breakpoint-s: sm
 $font-size-media-breakpoint-m: lg
 
@@ -199,6 +200,8 @@ $border-radius: px-to-rem(12px)
 $border-radius-lg: px-to-rem(24px)
 $border-radius-sm: $border-radius
 
+$box-shadow-overlay: var(--<%= application_namespace_path %>-box-shadow-overlay)
+
 $modal-sm: px-to-rem(500px)
 $modal-md: px-to-rem(640px)
 $modal-inner-padding: px-to-rem(32px)
@@ -207,7 +210,7 @@ $modal-header-padding-y: $modal-inner-padding
 $modal-header-border-width: 0
 $modal-backdrop-bg: $shade-black-contrast
 $modal-backdrop-opacity: .15
-$modal-content-box-shadow-xs: var(--<%= application_namespace_path %>-box-shadow-overlay)
+$modal-content-box-shadow-xs: $box-shadow-overlay
 $modal-content-box-shadow-sm-up: $modal-content-box-shadow-xs
 $modal-content-border-width: 0
 $modal-content-border-radius: 12px
@@ -259,7 +262,7 @@ $input-padding-x: px-to-rem(12px)
 $input-border-radius: px-to-rem(24px)
 $input-bg: $shade-light-contrast
 $input-color: $shade-black-contrast
-$input-border-color: $transparent-300
+$input-border-color: $transparent-b300
 $input-focus-border-color: $shade-black-contrast
 $input-font-size: $ui-typo-text-m-font-size
 $input-box-shadow: none
@@ -299,3 +302,23 @@ $td-disabled-color: $shade-200
 $td-alternate-color: $shade-300
 $td-btn-hover-bg: $shade-100
 $td-days-of-week-color: $shade-500
+
+$table-color: $shade-black-contrast
+$table-bg: $shade-light-contrast
+$table-border-color: $transparent-b100
+$table-accent-bg: transparent
+$table-striped-color: $shade-black-contrast
+$table-striped-bg: rgba($shade-black-contrast, 0.05)
+$table-active-color: $shade-black-contrast
+$table-active-bg: rgba($shade-black-contrast, 0.1)
+$table-hover-color: $shade-black-contrast
+$table-hover-bg: rgba($shade-black-contrast, 0.075)
+
+$tooltip-font-size: $ui-typo-text-xs-font-size
+$tooltip-max-width: px-to-rem(200px)
+$tooltip-color: $shade-black-contrast
+$tooltip-bg: $shade-200
+$tooltip-border-radius: px-to-rem(8px)
+$tooltip-opacity: 1
+$tooltip-padding-y: map-get($spacers, a)
+$tooltip-padding-x: map-get($spacers, b)

@@ -1,0 +1,8 @@
+# frozen_string_literal: true
+
+class <%= application_namespace %>::Mailer::LayoutComponent < <%= application_namespace %>::Mailer::BaseComponent
+  def initialize(site:, preview_text: nil)
+    @site = site
+    @preview_text = preview_text
+  end
+end

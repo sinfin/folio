@@ -1,13 +1,27 @@
+$margins-small: (xs: 0, md: map-get($spacers, a), xl: map-get($spacers, b))
+$margins-medium: (xs: map-get($spacers, a), md: map-get($spacers, c), xl: map-get($spacers, d))
+$margins-large: (xs: map-get($spacers, b), md: map-get($spacers, d), xl: map-get($spacers, e))
+$margins-extra-large: (xs: map-get($spacers, d), md: map-get($spacers, e), xl: map-get($spacers, f))
+
+$margin-classes: (small: $margins-small, medium: $margins-medium, large: $margins-large, extra-large: $margins-extra-large)
+
 .d-atom-divider
   &__hr
     margin-top: 0
     margin-bottom: 0
 
   &--thin &__hr
-    border-color: $transparent-100
+    border-color: $transparent-b100
 
   &--thick &__hr
     --bs-border-width: 2px
 
   &--invisible &__hr
     visibility: hidden
+
+  @each $mq in (xs, md, xl)
+    +media-breakpoint-up($mq)
+      @each $name, $margin-map in $margin-classes
+        &--margin-#{$name}
+          margin-top: map-get($margin-map, $mq)
+          margin-bottom: map-get($margin-map, $mq)

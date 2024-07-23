@@ -8,15 +8,23 @@ class <%= application_namespace %>::Ui::PagyComponent < ApplicationComponent
   end
 
   def link
-    @link ||= pagy_link_proc(@pagy)
+    @link ||= pagy_anchor(@pagy)
+  end
+
+  def build_link(item, label, aria: nil)
+    link.call(item,
+              label,
+              aria_label: aria,
+              classes: "<%= classname_prefix %>-ui-pagy__page-link")
   end
 
   def series_as_hashes
     @pagy.series.map do |item|
       h = { item: }
 
-      if item.is_a?(Integer) # page link
-        h[:link] = link.call(item, item, 'class="<%= classname_prefix %>-ui-pagy__page-link"')
+      case item
+      when Integer # page link
+        h[:link] = build_link(item, item)
         if item != 1 && item != @pagy.last && @pagy.page != item
           h[:class_name] = "<%= classname_prefix %>-ui-pagy__page--hide-on-mobile"
 
@@ -24,10 +32,10 @@ class <%= application_namespace %>::Ui::PagyComponent < ApplicationComponent
             h[:class_name] += " <%= classname_prefix %>-ui-pagy__page--hide-on-tablet"
           end
         end
-      elsif item.is_a?(String) # current page
+      when String # current page
         h[:class_name] = "<%= classname_prefix %>-ui-pagy__page--current"
         h[:label] = item
-      elsif item == :gap # page gap
+      when :gap # page gap
         h[:class_name] = "<%= classname_prefix %>-ui-pagy__page--gap"
         h[:label] = "&hellip;"
       end

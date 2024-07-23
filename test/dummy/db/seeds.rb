@@ -20,7 +20,6 @@ def force_destroy_all(klass)
 end
 
 destroy_all Folio::Atom::Base
-# destroy_all Folio::Account
 destroy_all Folio::FilePlacement::Base
 destroy_all Folio::File
 destroy_all Folio::Lead
@@ -34,11 +33,10 @@ destroy_all Dummy::Blog::Article
 destroy_all Dummy::Blog::Topic
 
 puts "Creating Folio::Site"
-Folio::Site.create!(title: "Sinfin.digital",
+Dummy::Site.create!(title: "Sinfin.digital",
                     domain: "sinfin.localhost",
                     locale: "cs",
                     locales: ["cs", "en", "de"],
-                    type: "Folio::Site",
                     email: "info@sinfin.cz",
                     phone: "+420 123 456 789",
                     address: "Ulice 100, 14000 Praha 4",
@@ -47,11 +45,21 @@ Folio::Site.create!(title: "Sinfin.digital",
                     social_links: {
                       facebook: "https://www.facebook.com/",
                       instagram: "https://www.instagram.com/",
-                      twitter: "https://www.twitter.com/",
+                      twitter: "https://twitter.com/",
                       linkedin: "https://www.linkedin.com/",
                       youtube: "https://www.youtube.com/",
                     })
 puts "Created Folio::Site"
+
+puts "Creating Folio::User test@test.test (superadmin)"
+puts("Should call folio:seed_test_account task")
+Folio::User.create!(first_name: "Test",
+                    last_name: "Test",
+                    email: "test@test.test",
+                    password: "test@test.test",
+                    confirmed_at: Time.current,
+                    superadmin: true)
+puts "Created Folio::User test@test.test (superadmin)"
 
 puts "Creating Dummy::Menu::Nestable"
 menu = Dummy::Menu::Nestable.create!(locale: :cs, title: "Nestable", site: ::Folio.main_site)
@@ -177,3 +185,5 @@ menu = Dummy::Menu::Footer.create!(locale: :cs, title: "Footer", site: ::Folio.m
 end
 
 puts "Created Dummy::Menu::Footer"
+
+puts "Creating Dummy::HomePage"

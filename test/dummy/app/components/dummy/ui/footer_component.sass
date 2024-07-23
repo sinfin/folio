@@ -3,7 +3,7 @@
   z-index: 1
   flex: 0 0 auto
   background: $shade-100
-  margin-top: map-get($spacers, gg)
+  margin-top: map-get($spacers, i)
   padding: px-to-rem(56px) 0
 
   &__row
@@ -11,14 +11,14 @@
     display: flex
     justify-content: space-between
     flex-wrap: wrap
-    gap: px-to-rem(40px) map-get($spacers, gg)
+    gap: px-to-rem(40px) map-get($spacers, i)
 
   &__row:not(:first-child)
-    border-top: 1px solid $transparent-300
-    padding-top: map-get($spacers, g)
+    border-top: 1px solid $transparent-b300
+    padding-top: map-get($spacers, f)
 
   &__row:not(:last-child)
-    padding-bottom: map-get($spacers, g)
+    padding-bottom: map-get($spacers, f)
 
   &__row:last-child
     justify-content: flex-start
@@ -30,13 +30,13 @@
     display: flex
     justify-content: space-between
     flex-wrap: wrap
-    gap: px-to-rem(40px) map-get($spacers, gg)
+    gap: px-to-rem(40px) map-get($spacers, i)
 
   &__social-links
     flex: 0 0 256px
 
   &__col
-    flex: 1 0 calc(50% - #{map-get($spacers, g)})
+    flex: 1 0 calc(50% - #{map-get($spacers, f)})
     max-width: 385px
     min-width: 268px
 
@@ -99,7 +99,7 @@
     width: 100%
 
   +media-breakpoint-down(md)
-    padding: map-get($spacers, g) 0
+    padding: map-get($spacers, f) 0
 
     &__row:not(:first-child)
       padding-top: px-to-rem(40px)

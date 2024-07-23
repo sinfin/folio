@@ -73,32 +73,34 @@ class Folio::ApplicationCell < Cell::ViewModel
   end
 
   def current_site
-    get_from_options_or_controller(:current_site)
+    get_from_options_or_current_or_controller(:current_site)
   end
 
   def current_user
-    get_from_options_or_controller(:current_user)
+    get_from_options_or_current_or_controller(:current_user)
   end
 
   def current_ability
-    options[:current_ability] || Folio::Ability.new(current_user, current_site)
+    get_from_options_or_current_or_controller(:current_ability)
   end
 
   def user_signed_in?
-    get_from_options_or_controller(:user_signed_in?)
+    get_from_options_or_current_or_controller(:user_signed_in?)
   end
 
-  def get_from_options_or_controller(method_sym)
+  def get_from_options_or_current_or_controller(method_sym)
     if options.has_key?(method_sym)
       options[method_sym]
     else
       begin
-        controller.try(method_sym)
+        method_base = method_sym.to_s.gsub("current_", "")
+        ::Folio::Current.try(method_base.to_sym) || controller.try(method_sym)
       rescue Devise::MissingWarden
         nil
       end
     end
   end
+  alias_method :get_from_options_or_controller, :get_from_options_or_current_or_controller
 
   def render_view_component(component)
     if view = context[:view] || context[:controller].try(:view_context)

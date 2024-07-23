@@ -1,0 +1,151 @@
+$d-mailer-styles: false !default
+
+@if $d-mailer-styles
+  .d-mailer-cards-lot
+    width: 100%
+
+    &__wrapper
+      padding: $mailer-gap-g 0 0 0
+
+    &__inner,
+    &__content-table,
+    &__content-table-wrapper-inner
+      width: 100%
+
+    &__inner
+      background-color: $cloud-100
+      border-radius: $mailer-border-radius
+
+    &__wrapper,
+    &__inner-wrapper,
+    &__content-table-wrapper
+      font-size: 0
+
+    &__inner-wrapper
+      padding: $mailer-gap-b
+
+    &__content-table-wrapper
+      padding: $mailer-gap-d
+
+    &__image-wrapper, &__content-wrapper
+      display: inline-block
+      vertical-align: top
+
+    &__image-wrapper
+      padding: 0
+      width: 100%
+      max-width: 264px
+      vertical-align: top
+      text-align: left
+
+    &__image-inner
+      padding: $mailer-gap-d
+
+    &__image
+      box-shadow: $mailer-box-shadow
+      width: 232px
+      margin: 0 auto
+
+    &__content-wrapper
+      width: 100%
+      max-width: 368px
+
+    &__content-wrapper.col-full
+      max-width: 100%
+
+    &__divider,
+    &__description-block,
+    &__auction-data-block
+      font-size: 0
+      padding: 0
+
+    &__title-block
+      font-size: 0
+      padding: 0
+
+    &__button-block
+      font-size: 0
+      padding: $mailer-gap-e 0 $mailer-gap-b 0
+
+    &__button-block > .d-mailer-button
+      margin: 0
+
+    &__author
+      +mailer-font-size-display-s
+      font-weight: $font-weight-bold
+      margin: $mailer-gap-d 0 0 0
+
+    &__name
+      +mailer-font-size-text-xl
+
+    &__event
+      margin: $mailer-gap-a 0 0 0
+
+    &__event-type, &__event-name
+      +mailer-font-size-text-s
+
+    &__event-type
+      color: $cloud-700
+
+    &__event-name
+      color: $cloud-500
+
+    &__description-row
+      +mailer-font-size-text-s
+      color: $cloud-700
+
+    &__id-wrapper
+      margin: $mailer-gap-b 0 0 0
+
+    &__id, &__id-prefix
+      +mailer-font-size-text-xs
+      color: $cloud-400
+
+    &__auction-status
+      +mailer-font-size-text-m
+      font-weight: $font-weight-medium
+      margin: 0 0 $mailer-gap-a 0
+
+    &__current-price
+      margin: 0 0 $mailer-gap-b 0
+
+    &__price-label, &__price, &__currency
+      +mailer-font-size-text-m
+
+    &__price-label
+      font-weight: $font-weight-medium
+
+    &__price, &__currency
+      font-weight: $font-weight-bold
+      color: $mailer-brand-200
+
+    &__limiting-end-wrapper
+      margin: $mailer-gap-a 0 0 0
+
+    &__auction-date-label, &__auction-date,
+    &__limiting-end-label, &__limiting-end
+      +mailer-font-size-text-xs
+
+    &__auction-date-label,
+    &__limiting-end-label
+      font-weight: $font-weight-medium
+      color: $cloud-500
+
+    &__auction-date,
+    &__limiting-end
+      color: $cloud-400
+
+    &__whitespace-s
+      +mailer-font-size-text-s
+
+    &__whitespace-m
+      +mailer-font-size-text-m
+
+    &__divider-wrapper
+      font-size: 0
+      padding: $mailer-gap-e 0
+
+    &__divider
+      height: 1px
+      width: 100%
+      background-color: $cloud-200

@@ -9,6 +9,11 @@ class Folio::FilePlacementTest < ActiveSupport::TestCase
     ATTACHMENTS = %i[cover]
   end
 
+  def setup
+    super
+    Rails.application.config.folio_testing_after_save_job = true
+  end
+
   test "placement_title" do
     perform_enqueued_jobs do
       I18n.with_locale(:cs) do

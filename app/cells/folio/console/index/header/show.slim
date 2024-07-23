@@ -1,7 +1,13 @@
-.f-c-index-header
-  h1.f-c-index-header__h1
-    a.text-reset.text-decoration-none href=title_url
-      = title
+div class=class_name
+  .f-c-index-header__titles
+    h1.f-c-index-header__h1
+      a.text-reset.text-decoration-none href=title_url
+        = title
+
+    - if options[:subtitle].present?
+      h2.f-c-index-header__h2
+        a.text-reset.text-decoration-none href=title_url
+          = options[:subtitle]
 
   - if model.respond_to?(:by_query) && options[:by_query] != false
     = query_form do |f|

@@ -6,29 +6,31 @@ window.Folio.Input.framework = (hash) => {
     return console.error("Missing SELECTOR/bind/unbind. Cannot use input framework.")
   }
 
-  hash.bindAll = ($wrap) => {
-    $wrap = $wrap || $(document.body)
-    $wrap.find(hash.SELECTOR).each((i, input) => { hash.bind(input) })
+  hash.bindAll = (wrap) => {
+    wrap = wrap || document.body;
+    wrap.querySelectorAll(hash.SELECTOR).forEach((input) => {
+      hash.bind(input)
+    })
   }
 
-  hash.unbindAll = ($wrap) => {
-    $wrap = $wrap || $(document.body)
-    $wrap.find(hash.SELECTOR).each((i, input) => { hash.unbind(input) })
+  hash.unbindAll = (wrap) => {
+    wrap = wrap || document.body;
+    wrap.querySelectorAll(hash.SELECTOR).forEach((input) => {
+      hash.unbind(input)
+    })
   }
 
   if (typeof Turbolinks === 'undefined') {
-    $(() => { hash.bindAll() })
+    document.addEventListener('DOMContentLoaded', () => { hash.bindAll(); });
   } else {
-    $(document)
-      .on('turbolinks:load', () => { hash.bindAll() })
-      .on('turbolinks:before-render', () => { hash.unbindAll() })
+    document.addEventListener('turbolinks:load', () => hash.bindAll());
+    document.addEventListener('turblolinks:before-render', () => hash.bindAll());
   }
 
-  $(document)
-    .on('cocoon:after-insert', (e, insertedItem) => {
-      hash.bindAll(insertedItem)
-    })
-    .on('cocoon:before-remove', (e, item) => {
-      hash.unbindAll(item)
-    })
-}
+  document.body.addEventListener('cocoon:after-insert', (insertedItem) => {
+    hash.bindAll(insertedItem);
+  });
+  document.body.addEventListener('cocoon:before-remove', (item) => {
+    hash.unbindAll(item);
+  });
+};

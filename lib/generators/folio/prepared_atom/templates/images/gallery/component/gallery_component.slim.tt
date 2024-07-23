@@ -1,4 +1,4 @@
-.<%= classname_prefix %>-atom.<%= classname_prefix %>-atom-images-gallery.my-g data=data
+.<%= classname_prefix %>-atom.<%= classname_prefix %>-atom-images-gallery.my-f data=data
   .container-fluid
     .<%= classname_prefix %>-atom-images-gallery__wrap[
       data=stimulus_target('wrap')

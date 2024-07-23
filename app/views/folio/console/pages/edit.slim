@@ -1,10 +1,10 @@
 ruby:
+  locale = (current_site.locales.size > 1 || Rails.application.config.folio_console_add_locale_to_preview_links) ? I18n.locale : nil
+
   if @page.class.public_rails_path
-    locale = current_site.locales.size > 1 ? I18n.locale : nil
     preview_path = main_app.send(@page.class.public_rails_path,
                                  locale: locale)
   elsif @page.class.public?
-    locale = current_site.locales.size > 1 ? I18n.locale : nil
     preview_path = controller.main_app.page_path(@page.to_preview_param,
                                                  locale: locale,
                                                  Folio::Publishable::PREVIEW_PARAM_NAME => @page.preview_token)

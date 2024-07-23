@@ -128,7 +128,7 @@ class Folio::Console::UiController < Folio::Console::BaseController
       error
       loader
     ].each do |variant|
-      flash.now[variant] = "#{variant.to_s.capitalize} #{@lorem_ipsum[0..44]}."
+      flash.now[variant] = "#{variant.to_s.capitalize} #{@lorem_ipsum[0..15]} <a href=\"#{request.path}\">#{@lorem_ipsum[16..21]}</a> #{@lorem_ipsum[22..44]}."
     end
 
     @buttons_model = [

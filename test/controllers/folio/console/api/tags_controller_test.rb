@@ -4,6 +4,7 @@ require "test_helper"
 
 class Folio::Console::Api::TagsControllerTest < Folio::Console::BaseControllerTest
   test "react_select" do
+    create_and_host_site
     page = create(:folio_page)
 
     get url_for([:console, :api, :tags])
@@ -19,7 +20,8 @@ class Folio::Console::Api::TagsControllerTest < Folio::Console::BaseControllerTe
 
     ActsAsTaggableOn::Tagging.create!(taggable: page,
                                       tag: one,
-                                      context: "tags")
+                                      context: "tags",
+                                      tenant: @site.id)
 
     get url_for([:console, :api, :tags])
     assert_response :success
@@ -31,7 +33,8 @@ class Folio::Console::Api::TagsControllerTest < Folio::Console::BaseControllerTe
 
     ActsAsTaggableOn::Tagging.create!(taggable: page,
                                       tag: two,
-                                      context: "custom")
+                                      context: "custom",
+                                      tenant: @site.id)
 
     get url_for([:console, :api, :tags, context: "custom"])
     assert_response :success

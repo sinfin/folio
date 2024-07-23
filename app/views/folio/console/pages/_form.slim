@@ -15,10 +15,11 @@
         == translated_inputs f, :title, folio_label: true
         == translated_inputs f, :slug
 
-    - collection = Folio::Page.recursive_subclasses_for_select
-    - if collection.size > 1
-      = f.input :type, collection: collection, \
-                       include_blank: false
+    - unless f.object.class.try(:singleton?)
+      - collection = Folio::Page.recursive_subclasses_for_select
+      - if collection.size > 1
+        = f.input :type, collection: collection, \
+                         include_blank: false
 
     - if Rails.application.config.folio_pages_locales || \
          Rails.application.config.folio_pages_ancestry

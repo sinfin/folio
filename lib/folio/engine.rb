@@ -35,6 +35,7 @@ module Folio
     config.folio_console_sidebar_title_new_item = -> (sidebar_cell) { nil }
     config.folio_console_sidebar_title_image_path = nil
     config.folio_console_default_routes_contstraints = {}
+    config.folio_console_add_locale_to_preview_links = false
 
     config.folio_newsletter_subscription_service = :mailchimp
     config.folio_server_names = []
@@ -45,7 +46,6 @@ module Folio
     config.folio_mailer_global_bcc = nil
     config.folio_aasm_mailer_config = {}
     config.folio_site_cache_current_site = true
-    config.folio_site_validate_belongs_to_namespace = false
     config.folio_site_default_test_factory = nil
     config.folio_generators_root = Rails.root
     config.folio_cell_generator_class_name_prefixes = {}
@@ -105,8 +105,6 @@ module Folio
     }
 
     config.folio_users_non_get_referrer_rewrite_proc = -> (referrer) { }
-
-    config.folio_console_ability_lambda = -> (ability, account) { }
 
     config.folio_console_react_modal_types = config.folio_file_types_for_routes
 

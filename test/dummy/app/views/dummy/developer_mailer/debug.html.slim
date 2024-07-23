@@ -1,0 +1,82 @@
+h2 H2 headline lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+p.font-size-lg Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, <a href="https://www.auctea.com/">congue a suscipit quis</a>, ultrices non diam. Aenean bibendum sollicitudin tortor quis hendrerit. Donec vel porttitor ipsum, a laoreet nulla. Mauris orci tortor, imperdiet et purus sed, bibendum porta lectus. <strong>Proin et dui at augue condimentum</strong> ultrices imperdiet malesuada arcu. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per <i>inceptos himenaeos</i>.
+
+== @rich_text
+
+= render(Dummy::Mailer::Cards::MediumComponent.new(folio_image: Folio::File::Image.first,
+                                          title: "Card headline lorem ipsum dolor sit amet, consectetur adipiscing",
+                                          href: "https://www.auctea.com/"))
+  p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin id orci ornare lectus tincidunt porttitor. Phasellus nibh elit, varius et diam eu, bibendum posuere nulla
+
+= render(Dummy::Mailer::Cards::MediumComponent.new(title: "Card headline lorem ipsum dolor sit amet, consectetur adipiscing"))
+  p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin id orci ornare lectus tincidunt porttitor. Phasellus nibh elit, varius et diam eu, bibendum posuere nulla
+
+= render(Dummy::Mailer::Cards::MediumComponent.new(folio_image: Folio::File::Image.first,
+                                          title: "Card headline lorem ipsum dolor sit amet, consectetur adipiscing",
+                                          href: "https://www.auctea.com/",
+                                          button_label: "Button label",
+                                          button_href: "https://www.auctea.com/"))
+  p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin id orci ornare lectus tincidunt porttitor. Phasellus nibh elit, varius et diam eu, bibendum posuere nulla
+
+h3 H3 headline lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, <a href="https://www.auctea.com/">congue a suscipit quis</a>, ultrices non diam. Aenean bibendum sollicitudin tortor quis hendrerit. Donec vel porttitor ipsum, a laoreet nulla. Mauris orci tortor, imperdiet et purus sed, bibendum porta lectus. <strong>Proin et dui at augue condimentum</strong> ultrices imperdiet malesuada arcu. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per <i>inceptos himenaeos</i>.
+
+= render(Dummy::Mailer::Cards::ExtraSmallContainerComponent.new(cards: [{ title: "Card headline lorem ipsum dolor sit amet, consectetur adipiscing",
+                                                                          text: "Subtitle",
+                                                                          href: "https://www.auctea.com/",
+                                                                          image: Folio::File::Image.first},
+                                                                        { title: "Card headline lorem ipsum dolor sit amet, consectetur adipiscing",
+                                                                          text: "Subtitle"}]))
+
+hr
+
+p.font-size-sm Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, <a href="https://www.auctea.com/">congue a suscipit quis</a>, ultrices non diam. Aenean bibendum sollicitudin tortor quis hendrerit. Donec vel porttitor ipsum, a laoreet nulla. Mauris orci tortor, imperdiet et purus sed, bibendum porta lectus. <strong>Proin et dui at augue condimentum</strong> ultrices imperdiet malesuada arcu. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per <i>inceptos himenaeos</i>.
+
+hr
+
+ruby:
+  summary_model = {
+    items: [
+      {
+        title: "Beulah Erickson",
+        subtitle: "Pacific Railroad Survey - Hot Spring Mound, in the 'Deer Lodge' Prairie",
+        total_price: "10 000 000",
+        comission: "15 700",
+        count: 2,
+        folio_image: Folio::File::Image.first
+      },
+      {
+        title: "František Kupka",
+        subtitle: "Hot Spring Mound",
+        total_price: "10 000 000",
+        comission: "15 000",
+        count: 1,
+        folio_image: Folio::File::Image.first
+      },
+      {
+        title: "Josef Velčovský",
+        subtitle: "Pacific Railroad Survey",
+        total_price: "10 000 000",
+        comission: "15 000",
+        count: nil,
+        folio_image: Folio::File::Image.first
+      }
+    ],
+    total_price: 30_000_000,
+  }
+
+= render(Dummy::Mailer::OrderSummaryComponent.new(**summary_model))
+
+= render(Dummy::Mailer::Cards::LotComponent.new(folio_image: Folio::File::Image.first,
+                                                author: "Karel Malich",
+                                                name: "Název díla lorem ipsum",
+                                                sales_pack_title: "Aukce Day Sale 2025",
+                                                description: ["40. léta 20. stol. lorem ipsum text", "Olej, plátno", "š 70 ✕ v 77 cm"],
+                                                number: "12345",
+                                                auction_status: "Nevydraženo",
+                                                price: 1_100_000,
+                                                live_part_starts_at: 3.days.from_now,
+                                                online_bidding_ends_at: 2.days.from_now,
+                                                button_href: "https://www.auctea.com/"))

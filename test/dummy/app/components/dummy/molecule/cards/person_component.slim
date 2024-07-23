@@ -26,7 +26,7 @@
               - if atom.content.present?
                 .d-molecule-cards-person__card-text.mt-2
                   .fs-text-s.d-rich-text.d-rich-text--chomp
-                    = cstypo atom.content
+                    == cstypo atom.content
 
               - if atom.link_url.present?
                 a.d-molecule-cards-person__card-link[

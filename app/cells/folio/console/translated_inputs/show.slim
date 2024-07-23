@@ -1,13 +1,16 @@
 - if translations.present?
+  - compact_row_class = compact ? 'f-c-translated-inputs__row--compact' : ''
+  - compact_col_class = compact ? 'f-c-translated-inputs__col--compact' : ''
+
   - if translations.size == 1
     = f.input "#{key}_#{translations.first}", *args
   - else
     .f-c-translated-inputs
       = f.label key
 
-      .row.f-c-translated-inputs__row
+      .row.f-c-translated-inputs__row class=compact_row_class
         - translations.each do |locale|
-          .col-md.f-c-translated-inputs__col
+          .col-md.f-c-translated-inputs__col class=compact_col_class
             = f.input "#{key}_#{locale}".to_sym, *args_with_locale(locale)
 
       = f.hint key

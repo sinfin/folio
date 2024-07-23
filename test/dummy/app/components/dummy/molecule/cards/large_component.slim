@@ -20,7 +20,7 @@
             .d-molecule-cards-large__card-text[
               class="d-rich-text d-rich-text--chomp fs-text-l"
             ]
-              = cstypo atom.content
+              == cstypo atom.content
 
           - if atom.button_url.present? || atom.link_url.present?
             .d-molecule-cards-large__card-btns

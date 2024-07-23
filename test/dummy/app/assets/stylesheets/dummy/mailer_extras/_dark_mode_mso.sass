@@ -1,0 +1,95 @@
+$d-mailer-styles: false !default
+
+@if $d-mailer-styles
+  // show dark-mode-only images
+  [data-ogsc] .dark-img-parent
+    display: block !important
+
+  // hide light-mode-only images
+  [data-ogsc] .light-img-parent
+    display: none !important
+
+  [data-ogsc] h1,
+  [data-ogsc] h2,
+  [data-ogsc] span,
+  [data-ogsc] div
+    color: $primary-white !important
+
+  [data-ogsc] p,
+  [data-ogsc] p.font-size-lg,
+  [data-ogsc] p.font-size-sm
+    color: $cloud-200 !important
+
+  [data-ogsc] hr
+    border-top: 1px solid $cloud-600 !important
+
+  [data-ogsc] .d-mailer-layout
+    background-color: $primary-black !important
+    color: $primary-white !important
+
+  [data-ogsc] .d-mailer-order-summary__order-subtitle,
+  [data-ogsc] .d-mailer-order-summary__total-price,
+  [data-ogsc] .d-mailer-cards-lot__event-type,
+  [data-ogsc] .d-mailer-cards-lot__description-row,
+  [data-ogsc] .d-mailer-cards-lot__price,
+  [data-ogsc] .d-mailer-cards-lot__currency
+    color: $cloud-200 !important
+
+  [data-ogsc] .d-mailer-footer-menu__menu-link
+    color: $cloud-300 !important
+
+  [data-ogsc] .d-mailer-cards-lot__event-name,
+  [data-ogsc] .d-mailer-cards-lot__auction-date-label,
+  [data-ogsc] .d-mailer-cards-lot__limiting-end-label
+    color: $cloud-400 !important
+
+  [data-ogsc] .d-mailer-footer__legal-wrapper
+    border-top-color: $cloud-500 !important
+
+  [data-ogsc] .d-mailer-order-summary__unit-price,
+  [data-ogsc] .d-mailer-order-summary__count,
+  [data-ogsc] .d-mailer-cards-lot__id-prefix,
+  [data-ogsc] .d-mailer-cards-lot__id,
+  [data-ogsc] .d-mailer-cards-lot__auction-date,
+  [data-ogsc] .d-mailer-cards-lot__limiting-end
+    color: $cloud-500 !important
+
+  [data-ogsc] .d-mailer-footer-menu__wrapper
+    border-top-color: $cloud-700 !important
+
+  [data-ogsc] .d-mailer-cards-medium__inner,
+  [data-ogsc] .d-mailer-order-summary__order-wrapper,
+  [data-ogsc] .d-mailer-cards-lot__inner,
+  [data-ogsc] .d-mailer-layout__footer
+    background-color: $cloud-800 !important
+  
+  [data-ogsc] .btn-primary,
+  [data-ogsc] .btn-redactor--fill
+    color: $primary-black !important
+    background-color: $primary-white !important
+
+  [data-ogsc] .btn-primary:hover,
+  [data-ogsc] .btn-primary:focus,
+  [data-ogsc] .btn-redactor--fill:hover,
+  [data-ogsc] .btn-redactor--fill:focus
+    background-color: $cloud-200 !important
+    text-underline-color: $cloud-200 !important
+
+  [data-ogsc] .btn-secondary
+    background-color: transparent !important
+    color: $primary-white !important
+    border: 2px solid $primary-white !important
+
+  [data-ogsc] .btn-secondary:hover,
+  [data-ogsc] .btn-secondary:focus
+    background-color: $cloud-800 !important
+    text-underline-color: $cloud-800 !important
+
+  [data-ogsc] .d-mailer-order-summary__divider
+  [data-ogsc] .d-mailer-cards-lot__divider-wrapper
+    background: $cloud-700 !important
+
+  [data-ogsc] .d-mailer-footer__contact-detail,
+  [data-ogsc] .d-mailer-cards-medium__title,
+  [data-ogsc] .d-mailer-cards-extra-small__title
+    color: $primary-white !important

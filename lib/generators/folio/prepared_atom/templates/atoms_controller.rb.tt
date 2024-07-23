@@ -56,13 +56,21 @@ class <%= application_namespace %>::AtomsController < ApplicationController
 
       authenticate_user!
 
-      unless current_user.can_now?(:display_ui)
-        redirect_to root_path
-      end
+      return if current_user.can_now?(:display_ui)
+
+      redirect_to root_path
     end
 
     def images_for_attrs
       @images_for_attrs ||= (Folio::File::Image.tagged_with("unsplash").limit(10).presence || Folio::File::Image.limit(10)).to_a
+    end
+
+    def videos_for_attrs
+      @videos_for_attrs ||= Folio::File::Video.limit(10).to_a
+    end
+
+    def documents_for_attrs
+      @documents_for_attrs ||= Folio::File::Document.limit(10).presence.to_a
     end
 
     def attrs_from_hash(hash)
@@ -76,6 +84,16 @@ class <%= application_namespace %>::AtomsController < ApplicationController
         attrs[:images] = images_for_attrs
       elsif attrs[:images].is_a?(Numeric)
         attrs[:images] = images_for_attrs.first(attrs[:images])
+      end
+
+      if attrs[:video_cover] == true
+        attrs[:video_cover] = videos_for_attrs.sample
+      end
+
+      if attrs[:documents] == true
+        attrs[:documents] = documents_for_attrs
+      elsif attrs[:documents].is_a?(Numeric)
+        attrs[:documents] = documents_for_attrs.first(attrs[:documents])
       end
 
       @root_data["values_for_true"].symbolize_keys.each do |key, value|

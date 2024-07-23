@@ -2,4 +2,6 @@
 
 FactoryBot.define do
   factory :<%= application_namespace_path %>_menu, class: "<%= application_namespace %>::Menu::Navigation", parent: :folio_menu
+  factory :<%= application_namespace_path %>_menu_header, class: "<%= application_namespace %>::Menu::Header", parent: :<%= application_namespace_path %>_menu
+  factory :<%= application_namespace_path %>_menu_footer, class: "<%= application_namespace %>::Menu::Footer", parent: :<%= application_namespace_path %>_menu
 end

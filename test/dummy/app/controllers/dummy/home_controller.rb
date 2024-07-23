@@ -2,7 +2,7 @@
 
 class Dummy::HomeController < ApplicationController
   def index
-    @page = Dummy::Page::Homepage.instance(fail_on_missing: false)
+    @page = Dummy::Page::Homepage.instance(fail_on_missing: false, site: Folio::Current.site)
     set_meta_variables(@page) if @page
   end
 
@@ -23,5 +23,8 @@ class Dummy::HomeController < ApplicationController
       "GRID 2" => Dummy::Atom::Images.new(images: images.where("file_width >= 570").first(2), same_width: true),
       "GRID 1" => Dummy::Atom::Images.new(images: images.where("file_width >= 570").first(1), same_width: true),
     }
+  end
+
+  def timezones
   end
 end

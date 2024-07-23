@@ -12,3 +12,4 @@ class Dummy::Blog::Articles::ShowBodyComponentTest < Folio::ComponentTest
 
     assert_selector(".d-blog-articles-show-body")
   end
+end

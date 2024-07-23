@@ -1,0 +1,11 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= application_namespace %>::Mailer::Cards::MediumComponentTest < Folio::ComponentTest
+  def test_render
+    render_inline(<%= application_namespace %>::Mailer::Cards::MediumComponent.new(title: "foo") { "<p>bar</p>" })
+
+    assert_selector(".<%= classname_prefix %>-mailer-cards-medium")
+  end
+end

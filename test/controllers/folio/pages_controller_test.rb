@@ -2,11 +2,9 @@
 
 require "test_helper"
 
-class Folio::PagesControllerTest < ActionDispatch::IntegrationTest
-  include Folio::Engine.routes.url_helpers
-
-  setup do
-    create_and_host_site
+class Folio::PagesControllerTest < Folio::BaseControllerTest
+  def setup
+    super
     @page = create(:folio_page)
   end
 

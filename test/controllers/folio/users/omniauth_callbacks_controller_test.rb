@@ -2,15 +2,13 @@
 
 require "test_helper"
 
-class Folio::Users::OmniauthCallbacksControllerTest < ActionDispatch::IntegrationTest
-  include Devise::Test::IntegrationHelpers
-
+class Folio::Users::OmniauthCallbacksControllerTest < Folio::BaseControllerTest
   def setup
     skip if Rails.application.config.folio_users_omniauth_providers.blank?
     skip if Rails.application.config.folio_users_omniauth_providers.exclude?(:facebook)
 
     super
-    create_and_host_site
+    sign_out
   end
 
   test "#bind_user_and_redirect - signed in" do

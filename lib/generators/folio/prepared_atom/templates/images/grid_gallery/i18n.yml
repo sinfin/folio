@@ -2,12 +2,12 @@
 cs:
   activerecord:
     attributes:
-      application_namespace_path/atom/images/grid_gallery: 
+      application_namespace_path/atom/images/grid_gallery:
     models:
       application_namespace_path/atom/images/grid_gallery: Obrázky - galerie v mřížce
 en:
   activerecord:
     attributes:
-      application_namespace_path/atom/images/grid_gallery: 
+      application_namespace_path/atom/images/grid_gallery:
     models:
       application_namespace_path/atom/images/grid_gallery: Images - gallery (grid)

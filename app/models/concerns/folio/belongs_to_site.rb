@@ -27,12 +27,6 @@ module Folio::BelongsToSite
 
   private
     def validate_belongs_to_site
-      return errors.add(:site, :blank) if site.nil?
-
-      if Rails.application.config.folio_site_validate_belongs_to_namespace
-        unless self.class.name.deconstantize.starts_with?(site.class.name.deconstantize)
-          errors.add(:base, :wrong_namespace)
-        end
-      end
+      errors.add(:site, :blank) if site.nil?
     end
 end

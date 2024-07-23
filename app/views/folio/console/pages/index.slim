@@ -14,9 +14,9 @@
 
     position_controls if model && model[:ancestry]
 
-    if record.is_a?(Folio::Page) && record.class.try(:public?)
-      locale = current_site.locales.size > 1 ? I18n.locale : nil
+    locale = (current_site.locales.size > 1 || Rails.application.config.folio_console_add_locale_to_preview_links) ? I18n.locale : nil
 
+    if record.is_a?(Folio::Page) && record.class.try(:public?)
       preview = if record.published? && !model[:ancestry]
         controller.main_app.page_path(record.to_preview_param,
                                       locale: locale)
@@ -28,8 +28,6 @@
 
       actions({ preview: }, :edit, :destroy)
     elsif record.is_a?(Folio::Page) && record.class.try(:public_rails_path)
-      locale = current_site.locales.size > 1 ? I18n.locale : nil
-
       actions({ preview: controller.main_app.send(record.class.public_rails_path, locale: locale) },
               :edit,
               :destroy)

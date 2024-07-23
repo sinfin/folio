@@ -1,0 +1,115 @@
+---
+title: Clear Button
+nav_title: Clear Button
+tags: demo
+---
+
+
+{% from "demo.njk" import demo %}
+{% from "macro_config.njk" import config_table %}
+
+
+{% set label %}
+<label class="h2 mb-3">
+	Select Multiple
+</label>
+{% endset %}
+
+
+{% set html %}
+<input type="text" id="ex-clear-button" value="awesome,neat" autocomplete="off" placeholder="How cool is this?" />
+{% endset %}
+
+<script>
+{% set script %}
+new TomSelect('#ex-clear-button',{
+	plugins: {
+		'clear_button':{
+			'title':'Remove all selected options',
+		}
+	},
+	persist: false,
+	create: true,
+});
+{% endset %}
+</script>
+
+
+{{ demo( label, html, script) }}
+
+
+{% set label %}
+<label class="h2 mb-3">
+	Select Single
+</label>
+{% endset %}
+
+
+{% set html %}
+<select type="text" id="clear-button-single" autocomplete="off">
+	<option value="">How cool is this?</option>
+	<option selected>awesome</option>
+	<option>neat</option>
+</select>
+{% endset %}
+
+<script>
+{% set script %}
+new TomSelect('#clear-button-single',{
+	maxItems:1,
+	plugins: ['clear_button'],
+	persist: false,
+	create: true,
+});
+{% endset %}
+</script>
+
+
+{{ demo( label, html, script) }}
+
+
+{% set label %}
+<label class="h2 mb-3">
+	Select Single with Empty Option
+</label>
+{% endset %}
+
+
+{% set html %}
+<select type="text" id="clear-button-empty" autocomplete="off">
+	<option value="">How cool is this?</option>
+	<option>awesome</option>
+	<option>neat</option>
+</select>
+{% endset %}
+
+<script>
+{% set script %}
+new TomSelect('#clear-button-empty',{
+	allowEmptyOption: true,
+	maxItems:1,
+	plugins: ['clear_button'],
+	persist: false,
+	create: true,
+});
+{% endset %}
+</script>
+
+
+{{ demo( label, html, script) }}
+
+
+<h2>Plugin Configuration</h2>
+
+{{ config_table([
+		{
+			name:'html',
+			desc:'<p>A callback that returns an html string used to create the button</p>',
+			type:'callback',
+			default:'function(data){\n	return `<div class="${data.className}" title="${data.title}">&times;</div>`;\n}',
+			highlight:true
+		},
+		{name:'title',desc:'<p>The value of the title attribute on the close button</p>',type:'string',default:'Clear All'},
+		{name:'className',desc:'<p>The CSS class name of the close button</p>',type:'string',default:'clear-button'}
+	])
+}}

@@ -94,7 +94,7 @@ module Folio::StimulusHelper
     stimulus_controller(LIGHTBOX_CONTROLLER, inline: true)
   end
 
-  def stimulus_lightbox_item(placement_or_file, title: nil)
+  def stimulus_lightbox_item(placement_or_file, title: nil, cloned: false, index: nil)
     file = if placement_or_file.is_a?(Folio::FilePlacement::Base)
       placement_or_file.file
     else
@@ -105,7 +105,8 @@ module Folio::StimulusHelper
 
     {
       "action" => "click->f-lightbox#onItemClick",
-      "f-lightbox-target" => "item",
+      "f-lightbox-target" => cloned ? "clone" : "item",
+      "f-lightbox-index" => index,
       "photoswipe" => {
         "src" => thumb.webp_url || thumb.url,
         "w" => thumb.width,
@@ -113,7 +114,14 @@ module Folio::StimulusHelper
         "author" => file.try(:author).presence || "",
         "caption" => title || file.try(:description).presence || "",
       }.to_json
-    }
+    }.compact
+  end
+
+  def stimulus_scroll_link(selector)
+    stimulus_controller("f-scroll-link",
+                        values: { selector: },
+                        action: { click: "click" },
+                        inline: true)
   end
 
   def stimulus_modal_toggle(target, dialog: nil)
@@ -156,6 +164,13 @@ module Folio::StimulusHelper
     stimulus_controller("f-c-form-modal-trigger",
                         values: { url:, title: },
                         action: { click: "click" },
+                        inline: true)
+  end
+
+  def stimulus_tooltip(title, placement: "auto", trigger: "hover")
+    stimulus_controller("f-tooltip",
+                        values: { title:, placement:, trigger:, open: false },
+                        action: { mouseenter: "mouseenter", mouseleave: "mouseleave" },
                         inline: true)
   end
 end

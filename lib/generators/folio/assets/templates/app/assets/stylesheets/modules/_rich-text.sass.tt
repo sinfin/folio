@@ -9,9 +9,12 @@
     margin: 0
     margin-bottom: $spacer
 
+  p
+    color: $shade-700
+
   hr
-    margin-top: map-get($spacers, gg)
-    margin-bottom: map-get($spacers, gg)
+    margin-top: map-get($spacers, i)
+    margin-bottom: map-get($spacers, i)
 
   &.small,
   &--compact
@@ -19,7 +22,7 @@
       margin: 0 0 $spacer / 2
 
     hr
-      margin: map-get($spacers, g) 0 map-get($spacers, g)
+      margin: map-get($spacers, f) 0 map-get($spacers, f)
 
   figcaption
     +font-size-sm

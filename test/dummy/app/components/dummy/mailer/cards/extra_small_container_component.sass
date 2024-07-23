@@ -1,0 +1,21 @@
+$d-mailer-styles: false !default
+
+@if $d-mailer-styles
+  .d-mailer-cards-extra-small-container
+    width: 100%
+
+    &__wrapper
+      padding: $mailer-gap-g 0 0 0
+      font-size: 0
+
+    &__card-wrapper
+      width: 100%
+      padding: 0
+      display: inline-block
+      vertical-align: top
+
+    &__even-column
+      max-width: 336px
+
+    &__odd-column
+      max-width: 312px

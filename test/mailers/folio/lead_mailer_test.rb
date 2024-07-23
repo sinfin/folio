@@ -3,7 +3,8 @@
 require "test_helper"
 
 class Folio::LeadMailerTest < ActionMailer::TestCase
-  setup do
+  def setup
+    super
     create_and_host_site
     Rails.application.load_tasks
     Rake::Task["folio:email_templates:idp_seed"].reenable

@@ -1,5 +1,5 @@
 - if @pagy && @pagy.try(:pages) && @pagy.pages > 1
-  .<%= classname_prefix %>-ui-pagy
+  .<%= classname_prefix %>-ui-pagy.fs-display-2xs
     nav.<%= classname_prefix %>-ui-pagy__nav role="navigation" aria-label="pager"
       ul.<%= classname_prefix %>-ui-pagy__pages
         - if @pagy.prev
@@ -8,17 +8,15 @@
             class="<%= classname_prefix %>-ui-pagy__page--first"
             class="<%= classname_prefix %>-ui-pagy__page--hide-on-mobile"
           ]
-            == link.call(1,
-                        <%= application_namespace_path %>_ui_icon(:arrow_left_from_line),
-                        'aria-label="first" class="<%= classname_prefix %>-ui-pagy__page-link"')
+            == build_link(1, <%= application_namespace_path %>_ui_icon(:arrow_left_from_line), aria: :last)
 
           li.<%= classname_prefix %>-ui-pagy__page[
             class="<%= classname_prefix %>-ui-pagy__page--with-ico"
             class="<%= classname_prefix %>-ui-pagy__page--prev"
           ]
-            == link.call(@pagy.prev,
-                        <%= application_namespace_path %>_ui_icon(:arrow_left),
-                      'aria-label="previous" class="<%= classname_prefix %>-ui-pagy__page-link"')
+            == build_link(@pagy.prev,
+                          <%= application_namespace_path %>_ui_icon(:arrow_left),
+                          aria: :previous)
         - else
           li.<%= classname_prefix %>-ui-pagy__page[
             class="<%= classname_prefix %>-ui-pagy__page--with-ico"
@@ -51,18 +49,18 @@
             class="<%= classname_prefix %>-ui-pagy__page--with-ico"
             class="<%= classname_prefix %>-ui-pagy__page--next"
           ]
-            == link.call(@pagy.next,
-                        <%= application_namespace_path %>_ui_icon(:arrow_right),
-                        'aria-label="next" class="<%= classname_prefix %>-ui-pagy__page-link"')
+            == build_link(@pagy.next,
+                          <%= application_namespace_path %>_ui_icon(:arrow_right),
+                          aria: :next)
 
           li.<%= classname_prefix %>-ui-pagy__page[
             class="<%= classname_prefix %>-ui-pagy__page--with-ico"
             class="<%= classname_prefix %>-ui-pagy__page--last"
             class="<%= classname_prefix %>-ui-pagy__page--hide-on-mobile"
           ]
-            == link.call(@pagy.last,
-                        <%= application_namespace_path %>_ui_icon(:arrow_right_to_line),
-                        'aria-label="last" class="<%= classname_prefix %>-ui-pagy__page-link"')
+            == build_link(@pagy.last,
+                          <%= application_namespace_path %>_ui_icon(:arrow_right_to_line),
+                          aria: :last)
 
         - else
           li.<%= classname_prefix %>-ui-pagy__page[

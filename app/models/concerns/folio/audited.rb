@@ -11,11 +11,15 @@ module Folio::Audited
     def audited(opts = {})
       super(opts)
 
-      define_singleton_method(:audited_view_name) do
-        opts[:view_name] || :show
+      define_singleton_method(:audited_console_enabled?) do
+        !!opts[:console]
       end
 
-      define_singleton_method(:audited_restorable?) do
+      define_singleton_method(:audited_console_view_name) do
+        opts[:console_view_name] || :show
+      end
+
+      define_singleton_method(:audited_console_restorable?) do
         opts[:restore] == false ? false : true
       end
 

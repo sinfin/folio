@@ -2,8 +2,9 @@
 
 module Folio::ApplicationControllerBase
   extend ActiveSupport::Concern
-  include Folio::SetMetaVariables
   include Folio::HasCurrentSite
+  include Folio::SetCurrentRequestDetails
+  include Folio::SetMetaVariables
   include Folio::Devise::CrossdomainController
   include Folio::RenderComponentJson
 
@@ -19,6 +20,8 @@ module Folio::ApplicationControllerBase
     before_action :set_cookies_for_log
 
     before_action :add_root_breadcrumb
+
+    around_action :set_time_zone, if: :current_user
 
     helper_method :current_site
 
@@ -51,7 +54,7 @@ module Folio::ApplicationControllerBase
 
   def can_now?(action, object = nil)
     object ||= current_site
-    (current_user || Folio::User.new).can_now_by_ability?(current_ability, action, object)
+    (current_user || Folio::User.new).can_now_by_ability?(::Folio::Current.ability, action, object)
   end
 
   def true_user
@@ -61,7 +64,6 @@ module Folio::ApplicationControllerBase
       current_user
     end
   end
-
 
   private
     def authenticate_account! # backward compatibility method, do not use
@@ -124,8 +126,12 @@ module Folio::ApplicationControllerBase
       # allow anonymous invites
     end
 
-    def current_ability
-      @current_ability ||= Folio::Ability.new(current_user, current_site)
+    def current_ability # so CanCanCan can use it
+      @current_ability ||= ::Folio::Current.ability
+    end
+
+    def set_time_zone(&block)
+      Time.use_zone(current_user.time_zone, &block)
     end
 
     def add_root_breadcrumb

@@ -4,7 +4,7 @@ require "test_helper"
 
 class Folio::UserTest < ActiveSupport::TestCase
   test "newsletter subscriptions / single site" do
-    create_list(:folio_site, 2)
+    2.times { create_site(force: true) }
     subscribable_sites = Folio::NewsletterSubscription.subscribable_sites # Folio::Site.all by default
     assert_equal 2, subscribable_sites.count
 

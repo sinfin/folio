@@ -1,0 +1,21 @@
+ruby:
+  images = Folio::File::Image.by_site(Folio::Current.site)
+                             .tagged_with('unsplash')
+                             .to_a
+
+  components = Array.new(20) do
+    <%= application_namespace %>::Ui::ImageComponent.new(placement: images.sample,
+                                  size: "350x240#",
+                                  force_width: true)
+  end
+
+.container-fluid
+  h1
+    a.<%= classname_prefix %>-unlink href=<%= application_namespace_path %>_ui_path UI kit
+
+- %w[light dark].each do |theme|
+  .bg-body.py-f.mt-f.border-top data-bs-theme=theme
+    .container-fluid
+      h2.mt-0 Slide lists - #{theme}
+
+    = render(<%= application_namespace %>::Ui::ScrollListComponent.new(components:))

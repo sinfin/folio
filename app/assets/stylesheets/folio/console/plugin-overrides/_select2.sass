@@ -58,6 +58,21 @@
   .select2-results__option--highlighted[aria-selected]
     background: $blue
 
+  .select2-results__option-inner-wrap
+    display: flex
+    
+    align-items: center
+    gap: 10px
+
+    .select2-results__option-img-container
+      width: 50px
+      height: 50px
+
+      img
+        width: 50px
+        height: 50px
+        margin: 0 auto
+
   .input-group &:not(:last-child)
     border-top-right-radius: 0
     border-bottom-right-radius: 0
@@ -69,3 +84,9 @@
 
 .select2-container--open
   z-index: $zindex-modal + 1
+
+.f-c-select2-larger
+  .select2-results > .select2-results__options
+    min-height: 300px
+    height: 60vh
+    max-height: 600px

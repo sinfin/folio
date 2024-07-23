@@ -35,6 +35,12 @@ en:
           invalid_event_detail: Such a change cannot be done
           invalid_record_title: Invalid record
           invalid_record_detail: Record cannot be saved. Correct it before changing state.
+        site_user_links:
+          set_locked:
+            success/locked: User blocked.
+            success/unlocked: User unblocked.
+            error/still_locked: Failed to unblock user.
+            error/still_unlocked: Failed to block user.
       atoms:
         form_header:
           settings: Settings
@@ -108,6 +114,9 @@ en:
           download_original: Download original
           file_hint: Do not input anything to keep the original file.
       index:
+        no_records:
+          create_defaults: Create defaults
+          or: or
         checkboxes:
           check_all: Check all
           handle_selected: Handle selected
@@ -224,6 +233,9 @@ en:
           header_message:
             header_message: Message text
       users:
+        index:
+          index_tabs/locked: Blocked
+          index_tabs/unlocked: Active
         send_reset_password_email:
           success: Email with instructions for password reset has been sent
         impersonate:

@@ -1,0 +1,295 @@
+---
+title: Remote Data Examples
+nav_title: Remote Data
+tags: demo
+---
+
+<p class="lead">
+	Tom Select works with a variety of data sources including data hosted on remote servers.
+	Our examples below use JavaScript's Fetch API but you can just as easily use jQuery.ajax(), XMLHttpRequest, or any other method of retrieving data from a server.
+</p>
+
+{% from "demo.njk" import demo %}
+
+<style type="text/css">
+{% set style %}
+.icon{
+	width: 3rem;
+}
+.item{
+	width: 100%;
+}
+{% endset %}
+</style>
+
+{% set label %}
+<label class="h2 mb-3">
+	Ajax Loading
+</label>
+<p>We use JavaScript's native Fetch API in this example to retrieve remote data from GitHub</p>
+{% endset %}
+
+
+{% set html %}
+<select id="select-repo" placeholder="Pick a repository..." multiple></select>
+{% endset %}
+
+
+<script>
+{% set script %}
+new TomSelect('#select-repo',{
+		valueField: 'url',
+		labelField: 'name',
+		searchField: 'name',
+		// fetch remote data
+		load: function(query, callback) {
+
+			var url = 'https://api.github.com/search/repositories?q=' + encodeURIComponent(query);
+			fetch(url)
+				.then(response => response.json())
+				.then(json => {
+					callback(json.items);
+				}).catch(()=>{
+					callback();
+				});
+
+		},
+		// custom rendering functions for options and items
+		render: {
+			option: function(item, escape) {
+				return `<div class="py-2 d-flex">
+							<div class="icon me-3">
+								<img class="img-fluid" src="${item.owner.avatar_url}" />
+							</div>
+							<div>
+								<div class="mb-1">
+									<span class="h4">
+										${ escape(item.name) }
+									</span>
+									<span class="text-muted">by ${ escape(item.owner.login) }</span>
+								</div>
+						 		<div class="description">${ escape(item.description) }</div>
+							</div>
+						</div>`;
+			},
+			item: function(item, escape) {
+				return `<div class="py-2 d-flex">
+							<div class="icon me-3">
+								<img class="img-fluid" src="${item.owner.avatar_url}" />
+							</div>
+							<div>
+								<div class="mb-1">
+									<span class="h4">
+										${ escape(item.name) }
+									</span>
+									<span class="text-muted">by ${ escape(item.owner.login) }</span>
+								</div>
+						 		<div class="description">${ escape(item.description) }</div>
+							</div>
+						</div>`;
+			}
+		},
+	});
+{% endset %}
+</script>
+
+{{ demo( label, html, script, style) }}
+
+
+
+<style type="text/css">
+{% set style %}
+.icon{
+	width: 3rem;
+}
+{% endset %}
+</style>
+
+{% set label %}
+<label class="h2 mb-3">Load Once</label>
+<p>Load a list of web technologies once</p>
+{% endset %}
+
+
+{% set html %}
+<select id="select-state" placeholder="Software: WordPress, Apache ..." multiple></select>
+{% endset %}
+
+
+<script>
+{% set script %}
+new TomSelect('#select-state',{
+		valueField: 'label',
+		labelField: 'label',
+		searchField: ['label','type'],
+		// fetch remote data
+		load: function(query, callback) {
+			var self = this;
+			if( self.loading > 1 ){
+				callback();
+				return;
+			}
+
+			var url = 'https://whatcms.org/API/List';
+			fetch(url)
+				.then(response => response.json())
+				.then(json => {
+					callback(json.result.list);
+					self.settings.load = null;
+				}).catch(()=>{
+					callback();
+				});
+
+		},
+		// custom rendering function for options
+		render: {
+			option: function(item, escape) {
+				return `<div class="py-2 d-flex">
+							<div class="mb-1">
+								<span class="h5">
+									${ escape(item.label) }
+								</span>
+							</div>
+					 		<div class="ms-auto">${ escape(item.type.join(', ')) }</div>
+						</div>`;
+			}
+		},
+	});
+{% endset %}
+</script>
+
+{{ demo( label, html, script, style) }}
+
+
+
+
+<style type="text/css">
+{% set style %}
+#select-repo-inline .ts-dropdown {
+	position: relative !important;
+	top: 0 !important;
+	left: 0 !important;
+	width: auto !important;
+	box-shadow: none;
+	height: auto !important;
+}
+#select-repo-inline .ts-dropdown-content {
+	overflow: auto !important;
+	max-height: none !important;
+
+}
+#select-repo-inline .ts-wrapper{
+	position: sticky;
+	top: 2rem;
+	z-index:2000;
+}
+#select-repo-inline .option{
+	margin: 0;
+}
+.icon{
+	width: 3rem;
+}
+.item{
+	width: 100%;
+}
+{% endset %}
+</style>
+
+{% set label %}
+<label class="h2 mb-3">
+	Ajax Loading, Custom Scoring, and Inline Display
+</label>
+{% endset %}
+
+
+{% set html %}
+<div id="select-repo-inline">
+<select id="select-repo2" placeholder="Pick a repository..." multiple></select>
+</div>
+{% endset %}
+
+<script>
+{% set script %}
+
+// a small plugin to prevent results from closing
+TomSelect.define('no_close',function(){
+	this.close = function(){};
+});
+
+new TomSelect('#select-repo2',{
+		valueField: 'url',
+		labelField: 'name',
+		searchField: ['name','description'],
+		options: [],
+		create: false,
+		maxOptions: 10,
+		dropdownParent: '#select-repo-inline',
+		plugins:['no_close'],
+		// minimum query length
+		shouldLoad:function(query){
+			return query.length > 1;
+		},
+		// custom scoring
+		score: function(search) {
+			var score = this.getScoreFunction(search);
+			return function(item) {
+				return score(item) * (1 + Math.min(item.watchers / 100, 1));
+			};
+		},
+		// fetch remote data
+		load: function(query, callback) {
+
+			var url = 'https://api.github.com/search/repositories?q=' + encodeURIComponent(query);
+			fetch(url)
+				.then(response => response.json())
+				.then(json => {
+					callback(json.items);
+				}).catch(()=>{
+					callback();
+				});
+
+		},
+		// custom rendering functions for options and items
+		render: {
+			option: function(item, escape) {
+				return `<div class="row border-bottom py-2">
+							<div class="col-md-1">
+								<img class="img-fluid" src="${item.owner.avatar_url}" />
+							</div>
+							<div class="col-md-11">
+								<div class="mt-0">${escape(item.name)}
+									<span class="small text-muted">by ${escape(item.owner.login)}</span>
+								</div>
+								<div class="mb-1">${escape(item.description)}</div>
+								<div class="d-flex text-muted">
+									<div class="me-3"><i class="ib fa-code"></i> ${escape(item.language)}</div>
+									<div class="me-3"><i class="ib fa-flash"></i> ${escape(item.forks_count)} Forks</div>
+									<div class="me-3"><i class="ib fa-star"></i> ${escape(item.stargazers_count)} Stars</div>
+									<div class="me-3"><i class="ib fa-eye"></i> ${item.watchers_count} Watchers</div>
+								</div>
+							</div>
+						</div>`;
+			},
+			item: function(item, escape) {
+				return `<div class="py-2 d-flex">
+							<div class="icon me-3">
+								<img class="img-fluid" src="${item.owner.avatar_url}" />
+							</div>
+							<div>
+								<div class="mb-1">
+									<span class="h4">
+										${ escape(item.name) }
+									</span>
+									<span class="text-muted">by ${ escape(item.owner.login) }</span>
+								</div>
+						 		<div class="description">${ escape(item.description) }</div>
+							</div>
+						</div>`;
+			}
+
+		}
+	});
+{% endset %}
+</script>
+
+{{ demo( label, html, script, style) }}

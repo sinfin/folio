@@ -1,0 +1,37 @@
+
+{% macro config_table(data,heading='Setting') %}
+	<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>{{ heading }}</th>
+			<th>Description</th>
+		</tr>
+	</thead>
+	{% for row in data %}
+		{{ config_row( row.name, row.desc, row.type, row.default, row.highlight) }}
+	{% endfor %}
+	</table>
+{% endmacro %}
+
+{% macro config_row( setting, desc, type, default, highlight ) %}
+
+	<tr>
+	<td><code>{{ setting }}</code></td>
+	<td>
+		<div>{{ desc | safe }}</div>
+		<div class="mt-2">
+			<span class="me-3">Type: <code>{{ type }}</code></span>
+			<span>Default:</span>
+
+			{% if highlight %}
+				{% highlight "js" %}
+				{{ default | safe }}
+				{% endhighlight %}
+			{% else %}
+				<code>{{ default }}</code>
+			{% endif %}
+		</div>
+	</td>
+	</tr>
+
+{% endmacro %}

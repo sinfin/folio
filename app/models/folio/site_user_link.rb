@@ -27,6 +27,9 @@ class Folio::SiteUserLink < Folio::ApplicationRecord
   scope :by_site, -> (site) { where(site:) }
   scope :by_user, -> (site) { where(user:) }
 
+  scope :locked, -> { where(["locked_at < ?", Time.current]) }
+  scope :unlocked, -> { where(locked_at: nil) }
+
   audited associated_with: :user
 
   def self.non_nillifiable_fields
@@ -56,6 +59,27 @@ class Folio::SiteUserLink < Folio::ApplicationRecord
   def to_s
     "#{user.email} - #{site.domain} - #{roles}"
   end
+
+  def locked=(bool)
+    proper_bool = case bool
+                  when String
+                    bool != "0"
+                  else
+                    bool
+    end
+
+    return if proper_bool == locked?
+
+    self.locked_at = proper_bool ? Time.current : nil
+  end
+
+  def locked?
+    locked_at.present?
+  end
+
+  def locked
+    locked?
+  end
 end
 
 # == Schema Information
@@ -68,6 +92,7 @@ end
 #  roles      :jsonb
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  locked_at  :datetime
 #
 # Indexes
 #

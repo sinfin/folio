@@ -1,0 +1,91 @@
+$d-mailer-styles: false !default
+
+@if $d-mailer-styles
+  @media (prefers-color-scheme: dark )
+    // show dark-mode-only images
+    .dark-img-parent
+      display: block !important
+
+    // hide light-mode-only images
+    .light-img-parent
+      display: none !important
+
+    h1, h2, span, div
+      color: $primary-white !important
+
+    p, p.font-size-lg, p.font-size-sm
+      color: $cloud-200 !important
+
+    hr
+      border-top: 1px solid $cloud-600 !important
+
+    .d-mailer-layout
+      background-color: $primary-black !important
+      color: $primary-white !important
+
+    .d-mailer-order-summary__order-subtitle,
+    .d-mailer-order-summary__total-price,
+    .d-mailer-cards-lot__event-type,
+    .d-mailer-cards-lot__description-row,
+    .d-mailer-cards-lot__price,
+    .d-mailer-cards-lot__currency
+      color: $cloud-200 !important
+
+    .d-mailer-footer-menu__menu-link
+      color: $cloud-300 !important
+
+    .d-mailer-cards-lot__event-name,
+    .d-mailer-cards-lot__auction-date-label,
+    .d-mailer-cards-lot__limiting-end-label
+      color: $cloud-400 !important
+
+    .d-mailer-footer__legal-wrapper
+      border-top-color: $cloud-500 !important
+
+    .d-mailer-order-summary__unit-price,
+    .d-mailer-order-summary__count,
+    .d-mailer-cards-lot__id-prefix,
+    .d-mailer-cards-lot__id,
+    .d-mailer-cards-lot__auction-date,
+    .d-mailer-cards-lot__limiting-end
+      color: $cloud-500 !important
+
+    .d-mailer-footer-menu__wrapper
+      border-top-color: $cloud-700 !important
+
+    .d-mailer-cards-medium__inner,
+    .d-mailer-order-summary__order-wrapper,
+    .d-mailer-cards-lot__inner,
+    .d-mailer-layout__footer
+      background-color: $cloud-800 !important
+    
+    .btn-primary,
+    .btn-redactor--fill
+      color: $primary-black !important
+      background-color: $primary-white !important
+
+    .btn-primary:hover,
+    .btn-primary:focus,
+    .btn-redactor--fill:hover,
+    .btn-redactor--fill:focus
+      background-color: $cloud-200 !important
+      text-underline-color: $cloud-200 !important
+
+    .btn-secondary
+      background-color: transparent !important
+      color: $primary-white !important
+      border: 2px solid $primary-white !important
+
+    .btn-secondary:hover,
+    .btn-secondary:focus
+      background-color: $cloud-800 !important
+      text-underline-color: $cloud-800 !important
+
+    .d-mailer-order-summary__divider,
+    .d-mailer-cards-lot__divider
+      background: $cloud-700 !important
+
+    .d-mailer-footer__contact-detail,
+    .d-mailer-cards-medium__title,
+    .d-mailer-cards-extra-small__title
+      color: $primary-white !important

@@ -4,25 +4,12 @@ class ApplicationController < ActionController::Base
   include Folio::ApplicationControllerBase
   helper Folio::Engine.helpers
 
-  include Folio::CacheMethods
   include <%= application_namespace %>::CacheKeys
   include <%= application_namespace %>::CurrentMethods
-
-  before_action :handle_rmp
-  before_action :add_homepage_breadcrumb
+  include Folio::CacheMethods
 
   private
-    def handle_rmp
-      if (params[:rmp] && account_signed_in?) || ENV['FORCE_MINI_PROFILER']
-        Rack::MiniProfiler.authorize_request
-      end
-    end
-
-    def add_homepage_breadcrumb
-      add_breadcrumb_on_rails(t("homepage"), "/")
-    end
-
-    def current_ability
-      @current_ability ||= Folio::Ability.new(current_user)
+    def current_ability # so CanCanCan can use it
+      @current_ability ||= ::Folio::Current.ability
     end
 end

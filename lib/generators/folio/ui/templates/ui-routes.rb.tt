@@ -6,18 +6,20 @@ scope module: :<%= application_namespace_path %>, as: :<%= application_namespace
     get :boolean_toggles
     get :breadcrumbs
     get :buttons
-    get :documents
     get :chips
     get :clipboard
+    get :documents
     get :embed
     get :forms
+    get :hero
     get :icons
     get :images
     get :inputs
     get :modals
     get :pagination
-    get :tabs
     get :share
+    get :slide_lists
+    get :tabs
     get :typo
   end
 end

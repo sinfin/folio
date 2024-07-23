@@ -3,8 +3,10 @@
 require "test_helper"
 
 class Folio::Devise::CrossdomainHandlerTest < ActiveSupport::TestCase
-  setup do
-    create(:sinfin_local_site) # as it it Folio.main_site
+  def setup
+    super
+
+    create(:dummy_site) # as it it Folio.main_site
   end
 
   test "always noop with nil master_site" do
@@ -306,7 +308,7 @@ class Folio::Devise::CrossdomainHandlerTest < ActiveSupport::TestCase
     end
 
     def create_current_site
-      create(:folio_site)
+      create_site
     end
 
     def new_result(request: nil,

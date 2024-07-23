@@ -8,6 +8,55 @@ atoms:
         <p>Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, <a href="#congue">congue a suscipit quis</a>, ultrices non diam. Aenean bibendum sollicitudin tortor quis hendrerit. Donec vel porttitor ipsum, a laoreet nulla. Mauris orci tortor, imperdiet et purus sed, bibendum porta lectus. <strong>Proin et dui at augue condimentum</strong> ultrices imperdiet malesuada arcu. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</p>
         <h3>Lorem ipsum dolor</h3>
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, <a href="#congue">congue a suscipit quis</a>, ultrices non diam. Aenean bibendum sollicitudin tortor quis hendrerit. Donec vel porttitor ipsum, a laoreet nulla. Mauris orci tortor, imperdiet et purus sed, bibendum porta lectus. <strong>Proin et dui at augue condimentum</strong> ultrices imperdiet malesuada arcu. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</p>
+    - content: |
+        <h2>Lorem ipsum dolor</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, <a href="#congue">congue a suscipit quis</a>, ultrices non diam. Aenean bibendum sollicitudin tortor quis hendrerit. Donec vel porttitor ipsum, a laoreet nulla. Mauris orci tortor, imperdiet et purus sed, bibendum porta lectus. <strong>Proin et dui at augue condimentum</strong> ultrices imperdiet malesuada arcu. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</p>
+      alignment: center
+    - content: |
+        <h2>Lorem ipsum dolor</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, <a href="#congue">congue a suscipit quis</a>, ultrices non diam. Aenean bibendum sollicitudin tortor quis hendrerit. Donec vel porttitor ipsum, a laoreet nulla. Mauris orci tortor, imperdiet et purus sed, bibendum porta lectus. <strong>Proin et dui at augue condimentum</strong> ultrices imperdiet malesuada arcu. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</p>
+      theme: dark
+    - content: |
+        <h2>Lorem ipsum dolor</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, <a href="#congue">congue a suscipit quis</a>, ultrices non diam. Aenean bibendum sollicitudin tortor quis hendrerit. Donec vel porttitor ipsum, a laoreet nulla. Mauris orci tortor, imperdiet et purus sed, bibendum porta lectus. <strong>Proin et dui at augue condimentum</strong> ultrices imperdiet malesuada arcu. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</p>
+      outline: gray
+      alignment: center
+    - content: |
+        <h2>Lorem ipsum dolor</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, <a href="#congue">congue a suscipit quis</a>, ultrices non diam. Aenean bibendum sollicitudin tortor quis hendrerit. Donec vel porttitor ipsum, a laoreet nulla. Mauris orci tortor, imperdiet et purus sed, bibendum porta lectus. <strong>Proin et dui at augue condimentum</strong> ultrices imperdiet malesuada arcu. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</p>
+      outline: blue
+    - content: |
+        <h2>Lorem ipsum dolor</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, <a href="#congue">congue a suscipit quis</a>, ultrices non diam. Aenean bibendum sollicitudin tortor quis hendrerit. Donec vel porttitor ipsum, a laoreet nulla. Mauris orci tortor, imperdiet et purus sed, bibendum porta lectus. <strong>Proin et dui at augue condimentum</strong> ultrices imperdiet malesuada arcu. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</p>
+      outline: red
+    - content: |
+        <h2>Lorem ipsum dolor</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, <a href="#congue">congue a suscipit quis</a>, ultrices non diam. Aenean bibendum sollicitudin tortor quis hendrerit. Donec vel porttitor ipsum, a laoreet nulla. Mauris orci tortor, imperdiet et purus sed, bibendum porta lectus. <strong>Proin et dui at augue condimentum</strong> ultrices imperdiet malesuada arcu. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</p>
+      outline: green
+    - content: |
+        <h2>Lorem ipsum dolor</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, <a href="#congue">congue a suscipit quis</a>, ultrices non diam. Aenean bibendum sollicitudin tortor quis hendrerit. Donec vel porttitor ipsum, a laoreet nulla. Mauris orci tortor, imperdiet et purus sed, bibendum porta lectus. <strong>Proin et dui at augue condimentum</strong> ultrices imperdiet malesuada arcu. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</p>
+      outline: orange
+    - content: |
+        <h2>Lorem ipsum dolor</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, <a href="#congue">congue a suscipit quis</a>, ultrices non diam. Aenean bibendum sollicitudin tortor quis hendrerit. Donec vel porttitor ipsum, a laoreet nulla. Mauris orci tortor, imperdiet et purus sed, bibendum porta lectus. <strong>Proin et dui at augue condimentum</strong> ultrices imperdiet malesuada arcu. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</p>
+      highlight: background
+    - content: |
+        <h2>Lorem ipsum dolor</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, <a href="#congue">congue a suscipit quis</a>, ultrices non diam. Aenean bibendum sollicitudin tortor quis hendrerit. Donec vel porttitor ipsum, a laoreet nulla. Mauris orci tortor, imperdiet et purus sed, bibendum porta lectus. <strong>Proin et dui at augue condimentum</strong> ultrices imperdiet malesuada arcu. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</p>
+      highlight: background
+      outline: gray
+    - content: |
+        <h2>Lorem ipsum dolor</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, <a href="#congue">congue a suscipit quis</a>, ultrices non diam. Aenean bibendum sollicitudin tortor quis hendrerit. Donec vel porttitor ipsum, a laoreet nulla. Mauris orci tortor, imperdiet et purus sed, bibendum porta lectus. <strong>Proin et dui at augue condimentum</strong> ultrices imperdiet malesuada arcu. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</p>
+      highlight: background
+      theme: dark
+    - content: |
+        <h2>Lorem ipsum dolor</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, <a href="#congue">congue a suscipit quis</a>, ultrices non diam. Aenean bibendum sollicitudin tortor quis hendrerit. Donec vel porttitor ipsum, a laoreet nulla. Mauris orci tortor, imperdiet et purus sed, bibendum porta lectus. <strong>Proin et dui at augue condimentum</strong> ultrices imperdiet malesuada arcu. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</p>
+      highlight: background
+      outline: gray
+      theme: dark
 
   Dummy::Atom::Title:
     - tag: H1
@@ -20,7 +69,25 @@ atoms:
       title: H4 Pug lumbersexual wayfarers brunch butcher biodiesel skateboard fashion axe.
     - tag: H5
       title: H5 Mixtape gastropub pitchfork wayfarers.
-
+    - tag: H2
+      title: H2 (alignment:center) Polaroid cray austin muggle magic humblebrag aesthetic
+      alignment: center
+    - tag: H2
+      title: H2 (hightlight:background) Polaroid cray austin muggle magic humblebrag aesthetic
+      highlight: background
+    - tag: H2
+      title: H2 (hightlight:background, theme:dark) Polaroid cray austin muggle magic humblebrag aesthetic
+      theme: dark
+      highlight: background
+    - tag: H2
+      title: Adaptive Polaroid cray
+      font_size: adaptive
+    - tag: H2
+      title: Adaptive Polaroid cray austin muggle magic humblebrag aesthetic
+      font_size: adaptive
+    - tag: H2
+      title: Adaptive Polaroid cray austin muggle magic humblebrag aesthetic Adaptive Polaroid cray austin muggle magic austin
+      font_size: adaptive
 
   Dummy::Atom::Perex:
     - content: true
@@ -48,19 +115,63 @@ atoms:
 
     - content: true
 
+  Dummy::Atom::Documents:
+    - documents: true
+      size: small
+    - documents: true
+      size: medium
+    - documents: true
+      size: large
+
   Dummy::Atom::ImageAndContent:
     - title: Headline dolor amet consectetur
-      content: <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis</p>
+      subtitle: Subtitle
+      content: <p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis</p>
       button_label: Button label
       url: "#url"
       cover: true
     - title: Headline dolor amet consectetur
       content: <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis</p>
       button_label: Button label
+      image_ratio: 16x9
       url: "#url"
       cover: true
       image_side: right
     - title: Headline dolor amet consectetur
+      subtitle: Subtitle
+      content: <p>Sed ultricies nulla nisl, nec semper enim varius</p>
+      button_label: Button label
+      url: "#url"
+      vertically_centered_content: true
+      cover: true
+    - title: Headline dolor amet consectetur
+      subtitle: Subtitle
+      content: <p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis</p>
+      button_label: Button label
+      url: "#url"
+      image_ratio: 9x16
+      cover: true
+    - title: Headline dolor amet consectetur
+      button_label: Button label
+      url: "#url"
+      wrapper: "background"
+      cover: true
+    - title: Headline dolor amet consectetur
+      subtitle: Subtitle
+      content: <p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis</p>
+      button_label: Button label
+      url: "#url"
+      wrapper: "background"
+      color_mode: "dark"
+      image_side: right
+      cover: true
+    - title: Headline dolor amet consectetur
+      subtitle: Subtitle
+      content: <p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis</p>
+      button_label: Button label
+      url: "#url"
+      wrapper: "background"
+      color_mode: "dark"
       cover: true
     - title: Headline dolor amet consectetur
       content: <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis</p>
@@ -74,6 +185,133 @@ atoms:
       cover: true
     - content: <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis</p>
       cover: true
+
+  Dummy::Atom::TextAroundImage:
+    - content: |
+        <h2>Lorem ipsum dolor</h2>
+        <p> Modernism, the idealistic search for truth, gave way in the latter half of the 20th century to a realization of its unattainability. Theodor W. Adorno said in 1970, "It is now taken for granted that nothing which concerns art can be taken for granted any more: neither art itself, nor art in relationship to the whole, nor even the right of art to exist." Relativism was accepted as an unavoidable truth, which led to the period of contemporary art and postmodern criticism, where cultures of the world and of history are seen as changing forms, which can be appreciated  </p>
+        <p> and drawn from only with skepticism and irony. Furthermore, the separation of cultures is increasingly blurred and some argue it is now more appropriate to think in terms of a global culture, rather than of regional ones. In The Origin of the Work of Art, Martin Heidegger, a German philosopher and seminal thinker, describes the essence of art in terms of the concepts of being and truth.</p>
+        <p> He argues that art is not only a way of expressing the element of truth in a culture, but the means of creating it and providing a springboard from which "that which is" can be revealed. Works of art are not merely representations of the way things are, but actually produce a</p>
+      cover: true
+    - content: |
+        <h2>Lorem ipsum dolor</h2>
+        <p> Modernism, the idealistic search for truth, gave way in the latter half of the 20th century to a realization of its unattainability. Theodor W. Adorno said in 1970, "It is now taken for granted that nothing which concerns art can be taken for granted any more: neither art itself, nor art in relationship to the whole, nor even the right of art to exist." Relativism was accepted as an unavoidable truth, which led to the period of contemporary art and postmodern criticism, where cultures of the world and of history are seen as changing forms, which can be appreciated  </p>
+        <p> and drawn from only with skepticism and irony. Furthermore, the separation of cultures is increasingly blurred and some argue it is now more appropriate to think in terms of a global culture, rather than of regional ones. In The Origin of the Work of Art, Martin Heidegger, a German philosopher and seminal thinker, describes the essence of art in terms of the concepts of being and truth.</p>
+        <p> He argues that art is not only a way of expressing the element of truth in a culture, but the means of creating it and providing a springboard from which "that which is" can be revealed. Works of art are not merely representations of the way things are, but actually produce a</p>
+      cover: true
+      image_side: right
+    - content: |
+        <h2>Lorem ipsum dolor</h2>
+        <p> Modernism, the idealistic search for truth, gave way in the latter half of the 20th century to a realization of its unattainability. Theodor W. Adorno said in 1970, "It is now taken for granted that nothing which concerns art can be taken for granted any more: neither art itself, nor art in relationship to the whole, nor even the right of art to exist." Relativism was accepted as an unavoidable truth, which led to the period of contemporary art and postmodern criticism, where cultures of the world and of history are seen as changing forms, which can be appreciated  </p>
+        <p> and drawn from only with skepticism and irony. Furthermore, the separation of cultures is increasingly blurred and some argue it is now more appropriate to think in terms of a global culture, rather than of regional ones. In The Origin of the Work of Art, Martin Heidegger, a German philosopher and seminal thinker, describes the essence of art in terms of the concepts of being and truth.</p>
+        <p> He argues that art is not only a way of expressing the element of truth in a culture, but the means of creating it and providing a springboard from which "that which is" can be revealed. Works of art are not merely representations of the way things are, but actually produce a</p>
+      cover: true
+      highlight: background
+      theme: dark
+    - content: |
+        <h2>Lorem ipsum dolor</h2>
+        <p> Modernism, the idealistic search for truth, gave way in the latter half of the 20th century to a realization of its unattainability. Theodor W. Adorno said in 1970, "It is now taken for granted that nothing which concerns art can be taken for granted any more: neither art itself, nor art in relationship to the whole, nor even the right of art to exist." Relativism was accepted as an unavoidable truth, which led to the period of contemporary art and postmodern criticism, where cultures of the world and of history are seen as changing forms, which can be appreciated  </p>
+        <p> and drawn from only with skepticism and irony. Furthermore, the separation of cultures is increasingly blurred and some argue it is now more appropriate to think in terms of a global culture, rather than of regional ones. In The Origin of the Work of Art, Martin Heidegger, a German philosopher and seminal thinker, describes the essence of art in terms of the concepts of being and truth.</p>
+        <p> He argues that art is not only a way of expressing the element of truth in a culture, but the means of creating it and providing a springboard from which "that which is" can be revealed. Works of art are not merely representations of the way things are, but actually produce a</p>
+      cover: true
+      image_side: right
+      highlight: background
+      theme: light
+    - content: |
+        <h2>Ratio: Origin</h2>
+      cover: true
+      cover_ratio: origin
+    - content: |
+        <h2>Ratio: 1x1</h2>
+      cover: true
+      cover_ratio: 1x1
+    - content: |
+        <h2>Ratio: 3x2</h2>
+      cover: true
+      cover_ratio: 3x2
+    - content: |
+        <h2>Ratio: 16x9</h2>
+      cover: true
+      cover_ratio: 16x9
+    - content: |
+        <h2>Ratio: 4x3</h2>
+      cover: true
+      cover_ratio: 4x3
+    - content: |
+        <h2>Ratio: 2x3</h2>
+      cover: true
+      cover_ratio: 2x3
+    - content: |
+        <h2>Ratio: 9x16</h2>
+      cover: true
+      cover_ratio: 9x16
+    - content: |
+        <h2>Ratio: 3x4</h2>
+      cover: true
+      cover_ratio: 3x4
+  Dummy::Atom::TextAroundVideo:
+    - content: |
+        <h2>Lorem ipsum dolor</h2>
+        <p> Modernism, the idealistic search for truth, gave way in the latter half of the 20th century to a realization of its unattainability. Theodor W. Adorno said in 1970, "It is now taken for granted that nothing which concerns art can be taken for granted any more: neither art itself, nor art in relationship to the whole, nor even the right of art to exist." Relativism was accepted as an unavoidable truth, which led to the period of contemporary art and postmodern criticism, where cultures of the world and of history are seen as changing forms, which can be appreciated  </p>
+        <p> and drawn from only with skepticism and irony. Furthermore, the separation of cultures is increasingly blurred and some argue it is now more appropriate to think in terms of a global culture, rather than of regional ones. In The Origin of the Work of Art, Martin Heidegger, a German philosopher and seminal thinker, describes the essence of art in terms of the concepts of being and truth.</p>
+        <p> He argues that art is not only a way of expressing the element of truth in a culture, but the means of creating it and providing a springboard from which "that which is" can be revealed. Works of art are not merely representations of the way things are, but actually produce a</p>
+      video_cover: true
+    - content: |
+        <h2>Lorem ipsum dolor</h2>
+        <p> Modernism, the idealistic search for truth, gave way in the latter half of the 20th century to a realization of its unattainability. Theodor W. Adorno said in 1970, "It is now taken for granted that nothing which concerns art can be taken for granted any more: neither art itself, nor art in relationship to the whole, nor even the right of art to exist." Relativism was accepted as an unavoidable truth, which led to the period of contemporary art and postmodern criticism, where cultures of the world and of history are seen as changing forms, which can be appreciated  </p>
+        <p> and drawn from only with skepticism and irony. Furthermore, the separation of cultures is increasingly blurred and some argue it is now more appropriate to think in terms of a global culture, rather than of regional ones. In The Origin of the Work of Art, Martin Heidegger, a German philosopher and seminal thinker, describes the essence of art in terms of the concepts of being and truth.</p>
+        <p> He argues that art is not only a way of expressing the element of truth in a culture, but the means of creating it and providing a springboard from which "that which is" can be revealed. Works of art are not merely representations of the way things are, but actually produce a</p>
+      video_cover: true
+      video_side: right
+    - content: |
+        <h2>Lorem ipsum dolor</h2>
+        <p> Modernism, the idealistic search for truth, gave way in the latter half of the 20th century to a realization of its unattainability. Theodor W. Adorno said in 1970, "It is now taken for granted that nothing which concerns art can be taken for granted any more: neither art itself, nor art in relationship to the whole, nor even the right of art to exist." Relativism was accepted as an unavoidable truth, which led to the period of contemporary art and postmodern criticism, where cultures of the world and of history are seen as changing forms, which can be appreciated  </p>
+        <p> and drawn from only with skepticism and irony. Furthermore, the separation of cultures is increasingly blurred and some argue it is now more appropriate to think in terms of a global culture, rather than of regional ones. In The Origin of the Work of Art, Martin Heidegger, a German philosopher and seminal thinker, describes the essence of art in terms of the concepts of being and truth.</p>
+        <p> He argues that art is not only a way of expressing the element of truth in a culture, but the means of creating it and providing a springboard from which "that which is" can be revealed. Works of art are not merely representations of the way things are, but actually produce a</p>
+      video_cover: true
+      highlight: background
+      theme: dark
+    - content: |
+        <h2>Lorem ipsum dolor</h2>
+        <p> Modernism, the idealistic search for truth, gave way in the latter half of the 20th century to a realization of its unattainability. Theodor W. Adorno said in 1970, "It is now taken for granted that nothing which concerns art can be taken for granted any more: neither art itself, nor art in relationship to the whole, nor even the right of art to exist." Relativism was accepted as an unavoidable truth, which led to the period of contemporary art and postmodern criticism, where cultures of the world and of history are seen as changing forms, which can be appreciated  </p>
+        <p> and drawn from only with skepticism and irony. Furthermore, the separation of cultures is increasingly blurred and some argue it is now more appropriate to think in terms of a global culture, rather than of regional ones. In The Origin of the Work of Art, Martin Heidegger, a German philosopher and seminal thinker, describes the essence of art in terms of the concepts of being and truth.</p>
+        <p> He argues that art is not only a way of expressing the element of truth in a culture, but the means of creating it and providing a springboard from which "that which is" can be revealed. Works of art are not merely representations of the way things are, but actually produce a</p>
+      video_cover: true
+      video_side: right
+      highlight: background
+      theme: light
+    - content: |
+        <h2>Ratio: Origin</h2>
+      video_cover: true
+      cover_ratio: origin
+    - content: |
+        <h2>Ratio: 1x1</h2>
+      video_cover: true
+      cover_ratio: 1x1
+    - content: |
+        <h2>Ratio: 3x2</h2>
+      video_cover: true
+      cover_ratio: 3x2
+    - content: |
+        <h2>Ratio: 16x9</h2>
+      video_cover: true
+      cover_ratio: 16x9
+    - content: |
+        <h2>Ratio: 4x3</h2>
+      video_cover: true
+      cover_ratio: 4x3
+    - content: |
+        <h2>Ratio: 2x3</h2>
+      video_cover: true
+      cover_ratio: 2x3
+    - content: |
+        <h2>Ratio: 9x16</h2>
+      video_cover: true
+      cover_ratio: 9x16
+    - content: |
+        <h2>Ratio: 3x4</h2>
+      video_cover: true
+      cover_ratio: 3x4
 
   Dummy::Atom::Images::Gallery:
     - title: Gallery title
@@ -463,6 +701,14 @@ atoms:
     - variant: thin
     - variant: thick
     - variant: invisible
+    - variant: default
+      margin: small
+    - variant: default
+      margin: medium
+    - variant: default
+      margin: large
+    - variant: default
+      margin: extra-large
 
   Dummy::Atom::Embed:
     - embed_code: <iframe width="560" height="315" src="https://www.youtube.com/embed/8DPcXHMGMBc?si=zAACDW5cS002TE3c" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>

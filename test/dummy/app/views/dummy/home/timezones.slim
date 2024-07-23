@@ -1,0 +1,61 @@
+/ 31.3.2024 Prague(+0200) DST change 2:00 -> 3:00
+- time_before_dst  = Time.utc(2024,3,31,0,59,0)
+- time_after_dst  = Time.utc(2024,3,31,1,0,0)
+
+h1 Timezone test
+
+table
+  tr
+    th
+      | Timezone
+    th
+      | Time before DST change
+    th
+      | Time after DST change
+  tr
+    td
+      | UTC
+    td
+      = I18n.l(time_before_dst)
+    td
+      = I18n.l(time_after_dst)
+  tr
+    td
+      | Prague
+    td
+      = I18n.l(time_before_dst.in_time_zone("Prague"))
+    td
+      = I18n.l(time_after_dst.in_time_zone("Prague"))
+  tr
+    td
+      = "User explicit: #{current_user.time_zone}"
+    td
+      = I18n.l(time_before_dst.in_time_zone(current_user.time_zone))
+    td
+      = I18n.l(time_after_dst.in_time_zone(current_user.time_zone))
+  tr
+    td
+      = "Application config: #{Rails.configuration.time_zone}"
+    td
+      = I18n.l(time_before_dst.in_time_zone(Rails.configuration.time_zone))
+    td
+      = I18n.l(time_after_dst.in_time_zone(Rails.configuration.time_zone))
+
+  tr
+    td
+      = "Loaded for request: #{Time.zone.name}"
+    td
+      = I18n.l(time_before_dst.in_time_zone)
+    td
+      = I18n.l(time_after_dst.in_time_zone)
+
+  tr
+    td
+      = "Loaded for request with `l_tz` helper "
+    td
+      = l_tz(time_before_dst)
+    td
+      = l_tz(time_after_dst)
+
+  p
+   = "Current time in #{Time.zone}: #{Time.zone.now}"

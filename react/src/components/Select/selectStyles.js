@@ -44,8 +44,7 @@ export default {
       ...base,
       color,
       backgroundColor,
-      textOverflow: 'ellipsis',
-      overflow: 'hidden'
+      whiteSpace: 'normal'
     })
   }
 }

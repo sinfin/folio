@@ -1,0 +1,19 @@
+.d-atom.my-atom-lg.d-atom-text-around-image class=atom_class_name
+  .container-fluid.d-atom-text-around-image__container
+    .d-atom-text-around-image__wrap
+      .container-narrow
+        .d-atom-text-around-image__inner
+          *{ tag: :div, class: image_wrap_class}
+            = dummy_ui_image(atom_cover_placement,
+                             cover_thumb_size,
+                             class_name: 'd-atom-text-around-image__image',
+                             lightbox: true,
+                             hover_zoom: true)
+
+          .d-atom-text-around-image__content
+            - if @atom.content.present?
+              .d-atom-text-around-image__text [
+                class='d-rich-text fs-text-l'
+                class='d-rich-text--chomp'
+              ]
+                = cstypo @atom.content

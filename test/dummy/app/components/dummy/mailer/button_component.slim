@@ -1,0 +1,10 @@
+.d-mailer-button
+  a.d-mailer-button__btn[
+    href=@href
+    class="btn btn-#{@variant} btn-#{@size}"
+    target="_blank"
+    rel="noopener"
+  ]
+    = Folio::MailerHook::MSO_PADDING_START
+    = @label
+    = Folio::MailerHook::MSO_PADDING_END

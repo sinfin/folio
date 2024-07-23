@@ -1,0 +1,26 @@
+$d-mailer-styles: false !default
+
+@if $d-mailer-styles
+  .d-mailer-footer-menu
+    width: 100%
+
+    &__wrapper
+      padding: $mailer-gap-f 0 0 0
+      border-top: 1px solid $cloud-300
+
+    &__menu-link-wrapper
+      display: inline-block
+      margin: 0 $mailer-gap-c 0 0
+
+      &:last-child
+        margin: 0
+
+    &__menu-link
+      +mailer-font-size-text-s
+      color: $cloud-600
+      font-weight: $font-weight-normal
+      text-decoration: none
+
+    // rule for vertical space between links
+    &__menu-link-wrapper > &__menu-link
+      line-height: 2.4

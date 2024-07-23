@@ -37,6 +37,8 @@ require "traco"
 require "aws-sdk-s3"
 require "message_bus"
 require "terser"
+require "premailer"
+require "premailer/rails"
 
 require "dragonfly"
 require "dragonfly/s3_data_store"
@@ -53,7 +55,7 @@ module Folio
     en_US: "US"
   }
 
-  EMAIL_REGEXP = /[^@]+@[^@]+\.[^@]+/
+  EMAIL_REGEXP = Devise.email_regexp
   OG_IMAGE_DIMENSIONS = "1200x630#"
 
   # respect app/assets/javascripts/folio/message_bus.js
@@ -95,6 +97,6 @@ module Folio
   end
 
   def self.atoms_previews_stylesheet_path(site:, class_name:)
-    site.layout_assets_path
+    site.layout_assets_stylesheets_path
   end
 end

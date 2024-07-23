@@ -6,6 +6,9 @@ en:
         roles: Role
         roles/administrator: Administrator
         roles/manager: Manager
+        locked: Blocked
+        locked/true: Blocked
+        locked/false: Active
       folio/atom/base:
         content: Content
         perex: Perex
@@ -95,13 +98,18 @@ en:
         bank_account_number: Bank account number
         born_at: Birth date
         confirmed_at: Confirmed at
+        company_name: Company name
         degree_post: Degree after
         degree_pre: Degree before
+        locked: :activerecord.attributes.folio/site_user_link.locked
+        locked/true: :activerecord.attributes.folio/site_user_link.locked/true
+        locked/false: :activerecord.attributes.folio/site_user_link.locked/false
     errors:
       messages:
         indestructible: The record cannot be removed.
         file_format: '%{file_mime_type} is invalid. Allowed types: %{types}'
         wrong_namespace: The record type does not match the site type.
+        not_from_same_site: is not from the same site
       models:
         folio/lead:
           attributes:
@@ -178,6 +186,9 @@ en:
       folio/console_note:
         one: Note (internal)
         other: Notes (internal)
+      folio/site_user_link:
+        one: User for site
+        other: Users for site
     state_machines:
       folio/lead:
         state:
@@ -207,6 +218,7 @@ en:
     link_label: Link label
     link_url: Link URL
     locale: Locale
+    locked: Locked
     meta_description: SEO - Meta Description
     meta_title: SEO - Meta Title
     name: Name
@@ -238,7 +250,7 @@ en:
     subtitle: Subtitle
     tag_list: Keywords
     title: Title
-    to_label: Label
+    to_label: Title
     url: URL
     video_cover_placement: Video
 
@@ -246,6 +258,7 @@ en:
     messages:
       at_least_one: Fill at least one of the fields.
       invalid_count: must be exactly %{count}
+      color_mode_without_wrapper: cannot be set to dark without selecting a wrapper
 
     attributes:
       verified_captcha:

@@ -2,6 +2,17 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2022-06-28
+### Removed
+- removed `Rails.application.config.folio_console_ability_lambda`. Use `app/overrides/models/folio/ability_override.rb` in your project instead.
+- removed obsolete `Rails.application.config.folio_site_validate_belongs_to_namespace`
+### Changed
+- changed how sites in tests work. Folio expects your project to have a `ApplicationName::Site` class and `Rails.application.folio_site_default_test_factory` set.
+
+## 2024-06-21
+### Added
+  - added `Rails.application.config.folio_console_add_locale_to_preview_links` to be used when your app routes are scoped with `scope "/:locale", locale: /#{I18n.available_locales.join('|')}/`
+
 ## 2024-03-20
 ### Changed
   - changed how leads work - set `Rails.application.config.folio_leads_from_component_class_name` to enable them - use `"Folio::Leads::FormComponent"` or your own

@@ -2,7 +2,7 @@
   h2 = t('.title')
 
   - if @f
-    - if can_now?(:manage, :all)
+    - if can_now?(:set_superadmin, @f.object)
       = @f.input :superadmin
 
     .f-c-site-user-links-fields__links
@@ -39,8 +39,17 @@
                             role_label,
                             for: id,
                             class: "form-check-label form-label m-0")
+
+          .f-c-site-user-links-fields__link-toggle-wrap
+            = render(Folio::Console::Ui::BooleanToggleComponent.new(record: site_link,
+                                                                    attribute: :locked,
+                                                                    f: g,
+                                                                    label: true,
+                                                                    verbose: true,
+                                                                    disabled: !can_now?(:set_locked, site_link)))
+
   - elsif @user
-    - if can_now?(:manage, :all)
+    - if can_now?(:set_superadmin, @user)
       strong.f-c-site-user-links-fields__status.mb-g
         = status_icon(@user.superadmin)
         = @user.class.human_attribute_name(:superadmin)
@@ -59,3 +68,19 @@
                 .f-c-site-user-links-fields__status
                   = status_icon(site_link.roles.present? && site_link.roles.include?(role_key))
                   = role_label
+
+          - if site_link.persisted? || site_link.site == Folio.main_site
+            .f-c-site-user-links-fields__link-toggle-wrap
+              - if site_link.persisted?
+                = render(Folio::Console::Ui::BooleanToggleComponent.new(record: site_link,
+                                                                        attribute: :locked,
+                                                                        label: true,
+                                                                        verbose: true,
+                                                                        url: url_for([:set_locked, :console, :api, site_link]),
+                                                                        disabled: !can_now?(:set_locked, site_link)))
+              - else
+                = render(Folio::Console::Ui::BooleanToggleComponent.new(record: @user,
+                                                                        attribute: :locked,
+                                                                        label: true,
+                                                                        verbose: true,
+                                                                        disabled: !can_now?(:update, @user)))

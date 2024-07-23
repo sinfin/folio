@@ -1,0 +1,49 @@
+---
+title: Input Autogrow
+nav_title: Input Autogrow
+tags: demo
+---
+
+
+{% from "demo.njk" import demo %}
+
+
+
+
+{% set label %}
+<label class="h2 mb-3">
+	Example
+</label>
+<p>
+	The input_autogrow plugin will increase the width of the input as users type.
+</p>
+{% endset %}
+
+{% set html %}
+<div class="d-inline-block">
+<select id="ex-input-autogrow" multiple autocomplete="off" placeholder="How cool is this?">
+	<option>amazing</option>
+	<option>awesome</option>
+	<option>cool</option>
+	<option>excellent</option>
+	<option>great</option>
+	<option>neat</option>
+	<option>superb</option>
+	<option>wonderful</option>
+</select>
+</div>
+{% endset %}
+
+<script>
+{% set script %}
+new TomSelect('#ex-input-autogrow',{
+	plugins: ['input_autogrow'],
+});
+{% endset %}
+</script>
+
+{{ demo( label, html, script) }}
+
+
+<h2>Plugin Configuration</h2>
+<p>No additional configuration settings for this plugin</p>

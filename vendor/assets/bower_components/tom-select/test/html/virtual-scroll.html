@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+	<meta charset="utf-8">
+	<head>
+		<link rel="stylesheet" href="../../build/css/tom-select.bootstrap5.css">
+		<script src="../../build/js/tom-select.complete.js"></script>
+	</head>
+	<body>
+		<div style="margin:3rem auto;width:50vw">
+			<select id="reddit-search" placeholder="Search Reddit ..." multiple></select>	</body>
+		</div>
+	<script>
+
+
+
+	class TestSelect extends TomSelect{
+		close(){}
+	}
+
+	new TestSelect('#reddit-search',{
+		valueField: 'permalink',
+		labelField: 'title',
+		searchField: ['title'],
+		plugins:['virtual_scroll'],
+		maxOptions: 200,
+
+		// fetch remote data
+		firstUrl: function(query){
+			return 'https://api.reddit.com/search?q=' + encodeURIComponent(query);
+		},
+		load: function(query, callback) {
+
+			const url = this.getUrl(query);
+
+			fetch(url)
+				.then(response => response.json())
+				.then(json => {
+
+					// prepare the next url that will be loaded when the dropdown is scrolled to the bottom
+					// !! set before invoking callback()
+					const next_url = 'https://api.reddit.com/search?q=' + encodeURIComponent(query)+'&after='+json.data.after;
+					this.setNextUrl(query, next_url);
+
+					// add data to the results
+					let data = json.data.children.map(row => row.data);
+					callback(data);
+
+				}).catch((e)=>{
+					callback();
+				});
+
+		},
+		render: {
+			option: function(data, escape) {
+				return `<div>${ escape(data.$order) } - ${ escape(data.title) }</div>`;
+			}
+		},
+	});
+
+
+	</script>
+</html>

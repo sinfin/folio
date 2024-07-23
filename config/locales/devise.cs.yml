@@ -6,8 +6,8 @@ cs:
       signed_out: Odhlášení proběhlo úspěšně.
     registrations:
       signed_up: Registrace proběhla úspěšně.
-      signed_up_but_inactive: Registrace proběhla úspěšně.. Bohužel se nemůžete přihlásit, protože Váš účet ještě není aktivován.
-      signed_up_but_locked: Registrace proběhla úspěšně.. Bohužel se nemůžete přihlásit, protože Váš účet je zamknutý.
+      signed_up_but_inactive: Registrace proběhla úspěšně. Bohužel se nemůžete přihlásit, protože Váš účet ještě není aktivován.
+      signed_up_but_locked: Registrace proběhla úspěšně. Bohužel se nemůžete přihlásit, protože Váš účet je zablokovaný.
       signed_up_but_unconfirmed: Byl vám zaslán potvrzovací e-mail. Pro dokončení klikněte na aktivační odkaz zaslaný na Váš e-mail.
       update_needs_confirmation: Úspěšně jste aktualizovali svůj účet, ale ještě musíte ověřit svou novou e-mailovou adresu. Zkontrolujte svou schránku a klikněte na odkaz pro dokončení ověření Vaší nové e-mailové adresy.
       updated: Váš účet byl úspěšně aktualizován.
@@ -21,6 +21,8 @@ cs:
         instructions: "pro dokončení %{provider} přihlášení klikněte na odkaz níže:"
         button: Dokončit přihlášení
         footer: Pokud jste si toto nevyžádali, ignorujte tento e-mail. Váš účet se nezmění dokud neotevřete výše uvedený odkaz.
+    failure:
+      user_locked: Váš účet byl zablokován. Prosím kontaktujte správce.
 
   folio:
     devise:

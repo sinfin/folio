@@ -1,0 +1,17 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= application_namespace %>::Ui::ScrollListComponentTest < Folio::ComponentTest
+  def test_render
+    html = [
+      '<div class="<%= classname_prefix %>-ui-scroll-list__test-item">foo</div>',
+      '<div class="<%= classname_prefix %>-ui-scroll-list__test-item">bar</div>',
+    ]
+
+    render_inline(<%= application_namespace %>::Ui::ScrollListComponent.new(html:))
+
+    assert_selector(".<%= classname_prefix %>-ui-scroll-list")
+    assert_selector(".<%= classname_prefix %>-ui-scroll-list__test-item")
+  end
+end

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::Console::Index::NoRecordsCell < Folio::ConsoleCell
+  include SimpleForm::ActionViewExtensions::FormHelper
   include Folio::Console::Cell::IndexFilters
 
   def new_link

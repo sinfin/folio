@@ -42,6 +42,14 @@ class Folio::Console::Ui::TabsComponent < Folio::Console::ApplicationComponent
       tag[:data][:href] = "##{ID_PREFIX}#{tab[:key]}"
     end
 
+    if tab[:data]
+      tag[:data].merge!(tab[:data])
+    end
+
+    if tab[:class]
+      tag[:class] += " #{tab[:class]}"
+    end
+
     if tab[:active]
       tag[:class] += " active"
       tag["aria-selected"] = "true"

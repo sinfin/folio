@@ -50,21 +50,14 @@ class Folio::Devise::ApplicationCell < Folio::ApplicationCell
   end
 
   def email_input(f, opts = {})
-    f.input :email, opts.merge(required: true,
-                               disabled: opts[:disabled],
-                               input_html: {
-                                autofocus: opts[:autofocus].nil? ? true : opts[:autofocus],
-                                autocomplete: "email",
-                                value: f.object.email.presence,
-                                id: nil,
-                              })
+    cell("folio/devise/email_input", f)
   end
 
   def phone_input(f, opts = {})
     f.input :phone, opts.merge(required: true,
                                input_html: {
                                 autocomplete: "phone",
-                                id: nil,
+                                id: "phone_#{SecureRandom.hex(4)}",
                               })
   end
 
@@ -77,7 +70,7 @@ class Folio::Devise::ApplicationCell < Folio::ApplicationCell
   def attribute_input(f, field, opts = {})
     f.input field, opts.merge(input_html: {
       value: f.object.send(field).presence || params[resource_name].try(:[], field),
-      id: nil,
+      id: "#{field}_#{SecureRandom.hex(6)}",
     })
   end
 

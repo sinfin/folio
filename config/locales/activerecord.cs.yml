@@ -6,6 +6,9 @@ cs:
         roles: Uživatelská role
         roles/administrator: Administrátor
         roles/manager: Manažer
+        locked: Zablokovaný
+        locked/true: Zablokovaný
+        locked/false: Aktivní
       folio/atom/base:
         content: Obsah
         perex: Perex
@@ -109,12 +112,16 @@ cs:
         bank_account_number: Číslo bankovního účtu
         born_at: Datum narození
         confirmed_at: Potvrzen
+        company_name: Název společnosti
         created_at: Vytvořen
         degree_post: Titul za
         degree_pre: Titul před
         full_name: Jméno
         nickname: Přezdívka
         subscribed_to_newsletter: Přihlášení do newsletteru
+        locked: :activerecord.attributes.folio/site_user_link.locked
+        locked/true: :activerecord.attributes.folio/site_user_link.locked/true
+        locked/false: :activerecord.attributes.folio/site_user_link.locked/false
       folio/address/base:
         address_line_1: Ulice
         address_line_2: Číslo
@@ -134,6 +141,7 @@ cs:
         indestructible: Záznam není možné odstranit.
         file_format: '%{file_mime_type} není povolen. Povolené typy: %{types}'
         wrong_namespace: Typ záznamu neodpovídá typu webové stránky.
+        not_from_same_site: není ze stejné stránky
       models:
         folio/atom/base:
           attributes:
@@ -250,6 +258,11 @@ cs:
         few: Poznámky (interní údaj)
         one: Poznámka (interní údaj)
         other: Poznámek (interní údaj)
+      folio/site_user_link:
+        few: Uživatelé pro daný web
+        one: Uživatel pro daný web
+        other: Uživatelů pro daný web
+
     state_machines:
       folio/lead:
         state:
@@ -285,6 +298,7 @@ cs:
     link_label: Text odkazu
     link_url: URL odkazu
     locale: Jazyková verze
+    locked: Uzamčen
     meta_description: Alternativní popis (SEO - Meta Description)
     meta_title: Alternativní titulek (SEO - Meta Title)
     name: Jméno
@@ -331,6 +345,7 @@ cs:
     messages:
       at_least_one: Vyplňte alespoň jedno políčko.
       invalid_count: musí být přesně %{count}
+      color_mode_without_wrapper: nelze nastavit na tmavý bez zvolení obalu
 
     attributes:
       verified_captcha:

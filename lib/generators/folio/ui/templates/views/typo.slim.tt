@@ -7,14 +7,14 @@
   table.table.align-middle
     - %w[h0 h1 h2 h3 h4 h5].each do |heading|
       tr
-        td.py-h.text-muted = heading.upcase
-        td.py-h
+        td.py-c.text-muted = heading.upcase
+        td.py-c
           .m-0 class=heading Heading #{heading.upcase}
 
     - %w[lg base sm mini].each do |size|
       tr
-        td.py-h.text-muted = size
-        td.py-h
+        td.py-c.text-muted = size
+        td.py-c
           p.m-0 class="fs-#{size}"
             ' Lorem ipsum dolor sit amet, consectetur adipisicing elit,
             ' sed

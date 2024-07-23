@@ -1,0 +1,20 @@
+$<%= classname_prefix %>-mailer-styles: false !default
+
+@if $<%= classname_prefix %>-mailer-styles
+  a:hover,
+  a:focus,
+    text-decoration: underline !important
+
+  .btn-primary:hover,
+  .btn-primary:focus,
+  .btn-redactor--fill:hover,
+  .btn-redactor--fill:focus
+    text-decoration: none !important
+    background-color: $cloud-500 !important
+    text-underline-color: $cloud-500 !important
+
+  .btn-secondary:hover,
+  .btn-secondary:focus
+    text-decoration: none !important
+    background-color: $cloud-200 !important
+    text-underline-color: $cloud-200 !important

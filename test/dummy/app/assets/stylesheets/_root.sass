@@ -23,12 +23,24 @@
   --dummy-status-error: #{$red-400}
   --dummy-status-neutral: #{$blue-500}
   --dummy-status-success: #{$emerald-500}
-  --dummy-transparent-100: #0000000d
-  --dummy-transparent-200: #0000001a
-  --dummy-transparent-300: #00000026
-  --dummy-transparent-400: #00000033
-  --dummy-transparent-500: #00000040
-  --dummy-transparent-600: #0000004d
+  --dummy-transparent-b100: #0000000D
+  --dummy-transparent-b200: #0000001A
+  --dummy-transparent-b300: #00000026
+  --dummy-transparent-b400: #00000033
+  --dummy-transparent-b500: #00000040
+  --dummy-transparent-b600: #0000004D
+  --dummy-transparent-b700: #00000059
+  --dummy-transparent-b800: #00000066
+  --dummy-transparent-b900: #00000073
+  --dummy-transparent-w100: #FFFFFF0D
+  --dummy-transparent-w200: #FFFFFF1A
+  --dummy-transparent-w300: #FFFFFF26
+  --dummy-transparent-w400: #FFFFFF33
+  --dummy-transparent-w500: #FFFFFF40
+  --dummy-transparent-w600: #FFFFFF4D
+  --dummy-transparent-w700: #FFFFFF59
+  --dummy-transparent-w800: #FFFFFF66
+  --dummy-transparent-w900: #FFFFFF73
   --dummy-box-shadow-overlay: 2px 2px 40px 0px rgba(0, 0, 0, 0.20), 0px 1px 4px 0px rgba(0, 0, 0, 0.10)
   --#{$prefix}body-color: #{$primary-black}
   --#{$prefix}body-color-rgb: #{to-rgb($primary-black)}
@@ -63,12 +75,24 @@
   --dummy-status-error: #{$red-300}
   --dummy-status-neutral: #{$blue-300}
   --dummy-status-success: #{$emerald-400}
-  --dummy-transparent-100: #ffffff0d
-  --dummy-transparent-200: #ffffff1a
-  --dummy-transparent-300: #ffffff26
-  --dummy-transparent-400: #ffffff33
-  --dummy-transparent-500: #ffffff40
-  --dummy-transparent-600: #ffffff4d
+  --dummy-transparent-b100: #FFFFFF0D
+  --dummy-transparent-b200: #FFFFFF1A
+  --dummy-transparent-b300: #FFFFFF26
+  --dummy-transparent-b400: #FFFFFF33
+  --dummy-transparent-b500: #FFFFFF40
+  --dummy-transparent-b600: #FFFFFF4D
+  --dummy-transparent-b700: #FFFFFF59
+  --dummy-transparent-b800: #FFFFFF66
+  --dummy-transparent-b900: #FFFFFF73
+  --dummy-transparent-w100: #0000000D
+  --dummy-transparent-w200: #0000001A
+  --dummy-transparent-w300: #00000026
+  --dummy-transparent-w400: #00000033
+  --dummy-transparent-w500: #00000040
+  --dummy-transparent-w600: #0000004D
+  --dummy-transparent-w700: #00000059
+  --dummy-transparent-w800: #00000066
+  --dummy-transparent-w900: #00000073
   --dummy-box-shadow-overlay: 2px 2px 40px 0px rgba(255, 255, 255, 0.25), 0px 1px 2px 0px rgba(255, 255, 255, 0.20)
   --#{$prefix}body-color: #{$primary-white}
   --#{$prefix}body-color-rgb: #{to-rgb($primary-white)}
@@ -82,9 +106,10 @@
 [data-bs-theme="light"]
   +light-mode
 
-[data-bs-theme="dark"]
-  +dark-mode
-
-@media (prefers-color-scheme: dark)
-  #{":root"}
+@if $enable-dark-mode
+  [data-bs-theme="dark"]
     +dark-mode
+
+  @media (prefers-color-scheme: dark)
+    #{":root"}
+      +dark-mode

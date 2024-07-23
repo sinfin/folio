@@ -3,12 +3,13 @@
     a.<%= classname_prefix %>-unlink href=<%= application_namespace_path %>_ui_path UI kit
 
   - %w[light dark].each do |theme|
-    .bg-body.p-g.mt-g.border.rounded data-bs-theme=theme
+    .bg-body.p-f.mt-g.border.rounded data-bs-theme=theme
       h2.mt-0 Boolean toggles - #{theme}
 
       h3 No label
 
       - page = Folio::Page.last
+      - raise "No Folio::Page found!" if page.blank?
 
       = render(<%= application_namespace %>::Ui::BooleanToggleComponent.new(record: page,
                                                      url: controller.folio.url_for([:console, page]),

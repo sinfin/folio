@@ -1,0 +1,14 @@
+{
+  "name": "tom-select",
+  "homepage": "https://github.com/orchidjs/tom-select",
+  "version": "2.3.1",
+  "_release": "2.3.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "v2.3.1",
+    "commit": "69180fa9e79060060f1824fbde85537579d0005d"
+  },
+  "_source": "https://github.com/orchidjs/tom-select.git",
+  "_target": "*",
+  "_originalSource": "orchidjs/tom-select"
+}

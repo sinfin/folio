@@ -4,6 +4,8 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
   include SimpleForm::ActionViewExtensions::FormHelper
   include Folio::Console::Cell::IndexFilters
 
+  class_name "f-c-index-header", :subtitle
+
   def title
     options[:title] || model.model_name.human(count: 2)
   end
@@ -55,8 +57,9 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
       end
     end
 
-    if options[:query_url]
-      send(options[:query_url], h)
+    if query_url
+      joiner = query_url.include?("?") ? "&" : "?"
+      "#{query_url}#{joiner}#{h.to_query}"
     elsif options[:folio_console_merge]
       through_aware_console_url_for(model, action: :merge, hash: h)
     else
@@ -84,7 +87,7 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
   end
 
   def title_url
-    options[:query_url] ? send(options[:query_url]) : through_aware_console_url_for(model)
+    query_url
   end
 
   def show_transportable_dropdown?

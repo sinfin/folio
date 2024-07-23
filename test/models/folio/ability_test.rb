@@ -23,9 +23,10 @@ class Folio::AbilityTest < ActiveSupport::TestCase
                       email_templates: [:manage],
                       sites: [:read, :modify] }.freeze # C+U are done by rails console (?)
 
-  setup do
-    @site1 = Folio::Site.first || create(:folio_site, domain: "first.com")
-    @site2 = Folio::Site.second || create(:folio_site, domain: "second.com")
+  def setup
+    super
+    @site1 = Folio::Site.find_by(domain: "first.com") || create_site(attributes: { domain: "first.com" }, force: true)
+    @site2 = Folio::Site.find_by(domain: "second.com") || create_site(attributes: { domain: "second.com" }, force: true)
   end
 
   test "superadmin on site1" do

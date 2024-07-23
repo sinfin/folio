@@ -33,6 +33,13 @@ class Dummy::Ui::MenuToolbar::DropdownComponent < ApplicationComponent
       @items = if current_user_with_test_fallback
         [
           {
+            label: t(".user_menu/settings"),
+            icon: nil,
+            icon_height: 16,
+            class_modifier: "settings",
+            href: controller.main_app.try(:dummy_settings_path),
+          },
+          {
             label: t(".user_menu/sign_out"),
             icon: :log_out,
             icon_height: 16,

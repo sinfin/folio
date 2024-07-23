@@ -1,23 +1,51 @@
 # frozen_string_literal: true
 
 namespace :developer_tools do
+  task idp_seed_all: %i[idp_seed_singleton_pages
+                        idp_seed_page_titles
+                        idp_seed_singleton_menus
+                        idp_seed_dummy_images]
+
   task idp_seed_singleton_pages: :environment do
     Rails.logger.silence do
       Dir.glob(Rails.root.join("data/seed/pages/*.yml")).each do |yaml_path|
         data = YAML.load_file(yaml_path)
         klass = data["type"].constantize
 
-        if !klass.exists? || ENV["FORCE"] || ENV["FORCE_SINGLETON"] == klass.to_s
-          klass.find_each { |o| o.try(:force_destroy=, true); o.destroy! }
+        Folio::Site.find_each do |site|
+          if klass == Folio::Page || !klass.exists?(site:) || ENV["FORCE"] || ENV["FORCE_SINGLETON"] == klass.to_s
+            unless klass == Folio::Page
+              klass.where(site:).find_each do |o|
+                o.try(:force_destroy=, true); o.destroy!
+              end
+            end
 
-          klass.create!(title: data["title"],
-                        perex: data["perex"],
-                        published: true,
-                        published_at: 1.minute.ago)
+            if data["cover"].present?
+              data["cover"] = create_folio_image(data["cover"], site)
+            end
 
-          puts "Created #{klass}"
-        else
-          puts "Skipping existing #{klass}"
+            record = klass.create!(title: data["title"],
+                                   perex: data["perex"],
+                                   slug: data["slug"],
+                                   cover: data["cover"],
+                                   published: true,
+                                   published_at: 1.minute.ago,
+                                   site:)
+
+            if data["atoms"].present?
+              data["atoms"].each do |attrs|
+                if attrs["cover"].present?
+                  attrs["cover"] = create_folio_image(attrs["cover"], site)
+                end
+
+                record.atoms.create!(attrs)
+              end
+            end
+
+            puts "Created #{klass}"
+          else
+            puts "Skipping existing #{klass}"
+          end
         end
       end
     end
@@ -36,6 +64,7 @@ namespace :developer_tools do
             record = Folio::Page.create!(title: attrs["title"],
                                          perex: attrs["perex"],
                                          published: true,
+                                         site: Folio.main_site,
                                          published_at: 1.minute.ago)
 
             if attrs["atoms"].present?
@@ -83,7 +112,9 @@ namespace :developer_tools do
         if !klass.exists? || ENV["FORCE"] || ENV["FORCE_SINGLETON"] == klass.to_s
           klass.find_each { |o| o.try(:force_destroy=, true); o.destroy! }
 
-          menu = klass.create!(title: data["title"], locale: "en")
+          menu = klass.create!(title: data["title"],
+                               locale: "en",
+                               site: Folio.main_site)
 
           if data["links"].present?
             count = 0
@@ -242,5 +273,20 @@ namespace :developer_tools do
 
       driver.quit
     end
+  end
+
+  def create_folio_image(cover_slug, site)
+    image = Folio::File::Image.tagged_with("seed")
+                              .find_by(file_name: cover_slug)
+
+    Dir.glob(Rails.root.join("data/seed/images/**/*")).each do |image_path|
+      if image_path.include?(cover_slug)
+        cover_slug = image_path.split("/images/").last
+        break
+      end
+    end
+
+    image || Folio::File::Image.create!(file: Rails.root.join("data/seed/images/#{cover_slug}"),
+                                        tag_list: "seed", site_id: site.id)
   end
 end

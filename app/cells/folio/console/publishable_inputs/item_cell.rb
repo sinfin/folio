@@ -29,10 +29,6 @@ class Folio::Console::PublishableInputs::ItemCell < Folio::ConsoleCell
     !!f.object.send(field)
   end
 
-  def can_field?
-    field != :published || controller.can_now?(:publish, f.object)
-  end
-
   def input_html(class_name_element = nil, placeholder: nil, checkbox: false)
     b = { class: class_name_element ? "f-c-publishable-inputs-item__#{class_name_element}" : nil }
 

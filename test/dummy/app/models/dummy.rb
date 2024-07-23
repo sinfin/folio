@@ -7,7 +7,7 @@ module Dummy
     %i[
       root_path
     ].each do |key|
-      h[key] = I18n.t("dummy.menu.base.#{key}")
+      h[key] = I18n.t("dummy.menu.base.#{key}", default: key.to_s)
     end
 
     h

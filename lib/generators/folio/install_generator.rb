@@ -17,10 +17,10 @@ module Folio
         gem "premailer-rails"
         gem "rubyzip"
 
+        gem "dotenv-rails"
         gem "rack-mini-profiler"
         gem "show_for"
         gem "sprockets", "~> 4.0"
-        gem "sentry-raven"
         gem "omniauth"
         gem "omniauth-facebook"
         gem "omniauth-google-oauth2"
@@ -77,6 +77,7 @@ module Folio
       def copy_templates
         [
           ".env.sample",
+          "app/assets/config/manifest.js",
           "app/controllers/application_controller.rb",
           "app/controllers/application_namespace_path/home_controller.rb",
           "app/controllers/application_namespace_path/pages_controller.rb",
@@ -86,11 +87,14 @@ module Folio
           "app/lib/application_namespace_path/cache_keys.rb",
           "app/lib/application_namespace_path/current_methods.rb",
           "app/models/application_namespace_path.rb",
+          "app/models/application_namespace_path/site.rb",
           "app/models/application_namespace_path/menu/footer.rb",
           "app/models/application_namespace_path/menu/header.rb",
           "app/models/application_namespace_path/page/homepage.rb",
           "app/models/application_record.rb",
           "app/models/concerns/application_namespace_path/menu/base.rb",
+          "app/overrides/folio_override.rb",
+          "app/overrides/models/folio/ability_override.rb",
           "app/overrides/controllers/folio/console/api/links_controller_override.rb",
           "app/views/application_namespace_path/home/index.slim",
           "app/views/application_namespace_path/pages/show.slim",
@@ -126,8 +130,8 @@ module Folio
         [
           ".gitignore",
           ".rubocop.yml",
+          ".editorconfig",
           ".slim-lint.yml",
-          "app/assets/config/manifest.js",
           "app/views/devise/invitations/edit.slim",
           "bin/bower",
           "config/secrets.yml",
@@ -161,7 +165,7 @@ module Folio
         return if ::File.readlines(Rails.root.join("config/application.rb")).grep('Rails.root.join("lib")').any?
 
 # cannot use <<~'RUBY' here, because ALL lines need to be 4 spaces intended
-        inject_into_file "config/application.rb", after: /config\.load_defaults.+\n/ do <<-'RUBY'
+        inject_into_file "config/application.rb", after: /config\.load_defaults.+\n/ do <<-'RUBY'.gsub("application_namespace_path", application_namespace_path)
     config.exceptions_app = self.routes
 
     config.action_mailer.deliver_later_queue_name = "mailers"
@@ -179,6 +183,7 @@ module Folio
     I18n.default_locale = :cs
 
     config.folio_console_locale = I18n.default_locale
+    config.folio_site_default_test_factory = :application_namespace_path_site
     config.autoload_paths << Rails.root.join("app/lib")
     config.eager_load_paths << Rails.root.join("app/lib")
 

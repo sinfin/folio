@@ -1,0 +1,28 @@
+table.<%= classname_prefix %>-mailer-footer-menu[
+  role="presentation"
+]
+  tr
+    td.<%= classname_prefix %>-mailer-footer-menu__wrapper
+      table.<%= classname_prefix %>-mailer-footer-menu__menu[
+        role="presentation"
+      ]
+        tr
+          td.<%= classname_prefix %>-mailer-footer-menu__inner
+            /[if mso]
+              <table role="presentation" width="100%">
+              <tr>
+
+            - @menu.menu_items.includes(:page).each do |menu_item|
+              /[if mso]
+                <td style="padding:0 12px 0 0;" align="left" valign="top">
+
+              .<%= classname_prefix %>-mailer-footer-menu__menu-link-wrapper
+                / href placeholder is for development purpose
+                / will be replaced by href=menu_url_for(menu_item)
+                a.<%= classname_prefix %>-mailer-footer-menu__menu-link[
+                  href=menu_url_for(menu_item)
+                ]
+                  = menu_item.to_label
+
+              /[if mso]
+                </td>

@@ -7,12 +7,12 @@ class TagsInput < SimpleForm::Inputs::StringInput
 
     register_atom_settings
 
-    stimulus_opts = options.slice(:tags_context, :url)
-    stimulus_opts[:url] ||= Folio::Engine.routes
+    values = options.slice(:tags_context, :url)
+    values[:url] ||= Folio::Engine.routes
                                          .url_helpers
-                                         .console_api_tags_path(context: stimulus_opts[:tags_context])
+                                         .console_api_tags_path(context: values[:tags_context])
 
-    register_stimulus("f-input-tags", stimulus_opts)
+    register_stimulus("f-input-tags", values:)
 
     value = object.send(attribute_name)
 

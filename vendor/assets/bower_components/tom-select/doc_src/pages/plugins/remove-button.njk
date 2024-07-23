@@ -1,0 +1,89 @@
+---
+title: Remove Button
+nav_title: Remove Button
+tags: demo
+---
+
+
+{% from "demo.njk" import demo %}
+{% from "macro_config.njk" import config_table %}
+
+
+
+
+
+{% set label %}
+<label class="h2 mb-3">
+	Example - Multiple
+</label>
+{% endset %}
+
+{% set html %}
+<input type="text" id="input-tags" value="awesome,neat" autocomplete="off">
+{% endset %}
+
+<script>
+{% set script %}
+new TomSelect('#input-tags',{
+	plugins: {
+		remove_button:{
+			title:'Remove this item',
+		}
+	},
+	persist: false,
+	create: true,
+	onDelete: function(values) {
+		return confirm(values.length > 1 ? 'Are you sure you want to remove these ' + values.length + ' items?' : 'Are you sure you want to remove "' + values[0] + '"?');
+	}
+});
+{% endset %}
+</script>
+
+{{ demo( label, html, script) }}
+
+
+
+
+
+
+
+
+{% set label %}
+<label class="h2 mb-3">
+	Example - Single
+</label>
+<p>
+	For single selects, you may prefer the <a href="/plugins/clear-button">Clear Button</a> plugin
+</p>
+{% endset %}
+
+{% set html %}
+<select id="input-tags2" value="awesome" autocomplete="off">
+	<option>awesome</option>
+	<option>neat</option>
+</select>
+{% endset %}
+
+<script>
+{% set script %}
+new TomSelect('#input-tags2',{
+	plugins: ['remove_button'],
+	persist: false,
+	create: true,
+	maxItems: 1,
+});
+{% endset %}
+</script>
+
+{{ demo( label, html, script) }}
+
+
+
+<h2>Plugin Configuration</h2>
+
+{{ config_table([
+		{name:'label',desc:'<p>The text that will be displayed in each button</p>',type:'string',default:'&times;'},
+		{name:'title',desc:'<p>The value of the title attribute on each button</p>',type:'string',default:'Remove'},
+		{name:'className',desc:'<p>The CSS class name of each button</p>',type:'string',default:'remove'}
+	])
+}}

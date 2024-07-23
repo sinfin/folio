@@ -1,0 +1,14 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= application_namespace %>::Mailer::FooterMenuComponentTest < Folio::ComponentTest
+  def test_render
+    site = create_site
+    create(:<%= application_namespace_path %>_menu_footer)
+
+    render_inline(<%= application_namespace %>::Mailer::FooterMenuComponent.new(site:))
+
+    assert_selector(".<%= classname_prefix %>-mailer-footer-menu")
+  end
+end

@@ -24,15 +24,19 @@ Rails.application.routes.draw do
   scope module: :folio do
     namespace :console do
       namespace :dummy do
-        resource :playground, only: %i[] do
-          get :private_attachments
-          patch :update_private_attachments
-          get :players
-          get :pickers
-          get :report
-          get :modals
+        resource :playground, only: %i[show] do
+          get :api
           get :console_notes
+          get :input_phone
+          get :modals
+          get :multiselect
+          get :pickers
+          get :players
+          get :private_attachments
+          get :report
+
           patch :update_console_notes
+          patch :update_private_attachments
         end
 
         namespace :blog do
@@ -65,6 +69,12 @@ Rails.application.routes.draw do
       get :dropzone
       get :lead_form
       get :gallery
+      get :timezones
+    end
+
+    scope module: :current_user do
+      get :settings
+      patch :update_settings
     end
 
     resource :search, only: %i[show] do

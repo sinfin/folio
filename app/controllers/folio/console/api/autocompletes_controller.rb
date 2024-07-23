@@ -11,7 +11,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
        klass.respond_to?(:by_query) &&
        klass.new.respond_to?(:to_autocomplete_label)
 
-      scope = klass.all
+      scope = klass.accessible_by(Folio::Current.ability)
 
       scope = scope.by_site(current_site) if scope.respond_to?(:by_site)
       scope = apply_param_scope(scope)
@@ -52,6 +52,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
 
     if klass && klass.column_names.include?(field)
       scope = klass.unscope(:order).where.not(field => nil)
+      scope = scope.accessible_by(Folio::Current.ability)
 
       scope = scope.by_site(current_site) if scope.respond_to?(:by_site)
       scope = apply_param_scope(scope)
@@ -102,7 +103,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
     p_without = params[:without]
 
     if klass && klass < ActiveRecord::Base && klass.respond_to?(:by_query)
-      scope = klass.all
+      scope = klass.accessible_by(Folio::Current.ability)
 
       scope = scope.by_site(current_site) if scope.respond_to?(:by_site)
       scope = apply_param_scope(scope)
@@ -132,7 +133,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
     p_without = params[:without]
 
     if klass && klass < ActiveRecord::Base && klass.respond_to?(:by_query)
-      scope = klass.all
+      scope = klass.accessible_by(Folio::Current.ability)
 
       scope = scope.by_site(current_site) if scope.respond_to?(:by_site)
       scope = apply_param_scope(scope)
@@ -153,6 +154,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
 
       render_select2_options(records,
                              label_method: params[:label_method],
+                             group_method: params[:group_method],
                              meta: meta_from_pagy(pagination))
     else
       render_select2_options([])
@@ -173,7 +175,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
       class_names.each do |class_name|
         klass = class_name.safe_constantize
         if klass && klass < ActiveRecord::Base
-          scope = klass.all
+          scope = klass.accessible_by(Folio::Current.ability)
 
           scope = scope.by_site(current_site) if scope.respond_to?(:by_site)
           scope = apply_param_scope(scope)

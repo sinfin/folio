@@ -1,0 +1,21 @@
+ruby:
+  images = Folio::File::Image.by_site(Folio::Current.site)
+                             .tagged_with('unsplash')
+                             .to_a
+
+  components = Array.new(20) do
+    Dummy::Ui::ImageComponent.new(placement: images.sample,
+                                  size: "350x240#",
+                                  force_width: true)
+  end
+
+.container-fluid
+  h1
+    a.d-unlink href=dummy_ui_path UI kit
+
+- %w[light dark].each do |theme|
+  .bg-body.py-f.mt-f.border-top data-bs-theme=theme
+    .container-fluid
+      h2.mt-0 Slide lists - #{theme}
+
+    = render(Dummy::Ui::ScrollListComponent.new(components:))

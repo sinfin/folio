@@ -1,0 +1,39 @@
+---
+title: Drag 'n Drop
+nav_title: Drag 'n Drop
+tags: demo
+
+---
+
+
+{% from "demo.njk" import demo %}
+
+
+
+
+{% set label %}
+<label class="h2 mb-3">
+	Example
+</label>
+<p>Drag 'n drop selected items</p>
+{% endset %}
+
+{% set html %}
+<input type="text" id="input-sortable" value="drag,these,items,around" autocomplete="off">
+{% endset %}
+
+<script>
+{% set script %}
+new TomSelect('#input-sortable',{
+	plugins: ['drag_drop'],
+	persist: false,
+	create: true
+});
+{% endset %}
+</script>
+
+{{ demo( label, html, script,'') }}
+
+
+<h2>Plugin Configuration</h2>
+<p>No additional configuration settings for this plugin</p>

@@ -1,0 +1,6 @@
+h1 Multiselect
+
+= simple_form_for(current_site, url: "#") do |f|
+  = f.association :pages,
+                  collection: current_site.pages,
+                  selected: current_site.pages.first(2).pluck(:id)

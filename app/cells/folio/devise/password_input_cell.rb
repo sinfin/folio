@@ -9,8 +9,12 @@ class Folio::Devise::PasswordInputCell < Folio::Devise::ApplicationCell
                 input_html: {
                   autocomplete: options[:autocomplete],
                   class: "f-devise-password-input__input",
-                  id: nil,
+                  id: input_id,
                   value: options[:keep_password] ? model.object.send(options[:field]) : nil,
                 }
+  end
+
+  def input_id
+    @input_id ||= "#{options[:field]}_#{SecureRandom.hex(4)}"
   end
 end

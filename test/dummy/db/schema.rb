@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_02_13_061842) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_22_084811) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -136,8 +136,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_13_061842) do
     t.integer "position"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "site_id", null: false
     t.index ["closed_by_id"], name: "index_folio_console_notes_on_closed_by_id"
     t.index ["created_by_id"], name: "index_folio_console_notes_on_created_by_id"
+    t.index ["site_id"], name: "index_folio_console_notes_on_site_id"
     t.index ["target_type", "target_id"], name: "index_folio_console_notes_on_target"
   end
 
@@ -187,7 +189,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_13_061842) do
     t.index ["file_id"], name: "index_folio_file_placements_on_file_id"
     t.index ["placement_title"], name: "index_folio_file_placements_on_placement_title"
     t.index ["placement_title_type"], name: "index_folio_file_placements_on_placement_title_type"
-    t.index ["placement_type", "placement_id"], name: "index_folio_file_placements_on_placement"
+    t.index ["placement_type", "placement_id"], name: "index_folio_file_placements_on_placement_type_and_placement_id"
     t.index ["type"], name: "index_folio_file_placements_on_type"
   end
 
@@ -340,7 +342,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_13_061842) do
     t.string "file_name"
     t.text "title"
     t.string "alt"
-    t.text "thumbnail_sizes"
+    t.text "thumbnail_sizes", default: "--- {}\n"
     t.integer "position"
     t.integer "file_width"
     t.integer "file_height"
@@ -381,6 +383,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_13_061842) do
     t.jsonb "roles", default: []
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "locked_at"
     t.index ["site_id"], name: "index_folio_site_user_links_on_site_id"
     t.index ["user_id"], name: "index_folio_site_user_links_on_user_id"
   end
@@ -465,6 +468,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_13_061842) do
     t.string "phone_secondary"
     t.date "born_at"
     t.string "bank_account_number"
+    t.string "company_name"
+    t.string "time_zone", default: "Prague"
     t.index ["confirmation_token"], name: "index_folio_users_on_confirmation_token", unique: true
     t.index ["crossdomain_devise_token"], name: "index_folio_users_on_crossdomain_devise_token"
     t.index ["email"], name: "index_folio_users_on_email"
@@ -496,7 +501,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_13_061842) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE(content, ''::text)))", name: "index_pg_search_documents_on_public_search", using: :gin
-    t.index ["searchable_type", "searchable_id"], name: "index_pg_search_documents_on_searchable"
+    t.index ["searchable_type", "searchable_id"], name: "index_pg_search_documents_on_searchable_type_and_searchable_id"
   end
 
   create_table "taggings", id: :serial, force: :cascade do |t|
@@ -507,6 +512,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_13_061842) do
     t.integer "tagger_id"
     t.string "context", limit: 128
     t.datetime "created_at", precision: nil
+    t.string "tenant", limit: 128
     t.index ["context"], name: "index_taggings_on_context"
     t.index ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true
     t.index ["tag_id"], name: "index_taggings_on_tag_id"
@@ -516,6 +522,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_13_061842) do
     t.index ["taggable_type"], name: "index_taggings_on_taggable_type"
     t.index ["tagger_id", "tagger_type"], name: "index_taggings_on_tagger_id_and_tagger_type"
     t.index ["tagger_id"], name: "index_taggings_on_tagger_id"
+    t.index ["tenant"], name: "index_taggings_on_tenant"
   end
 
   create_table "tags", id: :serial, force: :cascade do |t|
@@ -525,6 +532,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_13_061842) do
     t.index ["name"], name: "index_tags_on_name", unique: true
   end
 
+  add_foreign_key "folio_console_notes", "folio_sites", column: "site_id"
   add_foreign_key "folio_files", "folio_sites", column: "site_id"
   add_foreign_key "folio_site_user_links", "folio_sites", column: "site_id"
   add_foreign_key "folio_site_user_links", "folio_users", column: "user_id"

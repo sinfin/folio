@@ -27,7 +27,7 @@ module Folio::Thumbnails
 
   included do
     if should_serialize_thumbnail_sizes?
-      serialize :thumbnail_sizes, type: Hash
+      serialize :thumbnail_sizes, type: Hash, coder: YAML
     end
 
     before_validation :reset_thumbnails
@@ -230,7 +230,7 @@ module Folio::Thumbnails
         begin
           development_safe_file_debug(logger, "Trying production S3 file - #{production_s3_url}")
 
-          open(production_s3_url) do |s3_file|
+          URI.open(production_s3_url) do |s3_file|
             datastore.storage.put_object(datastore.bucket_name,
                                          datastore.send(:full_path, file_uid),
                                          s3_file,
@@ -245,7 +245,7 @@ module Folio::Thumbnails
 
           placeholder_url = "https://via.placeholder.com/1000x750.png?text=Missing+production+image"
 
-          open(placeholder_url) do |s3_file|
+          URI.open(placeholder_url) do |s3_file|
             datastore.storage.put_object(datastore.bucket_name,
                                          datastore.send(:full_path, file_uid),
                                          s3_file,

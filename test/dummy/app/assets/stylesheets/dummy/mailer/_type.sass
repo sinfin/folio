@@ -1,0 +1,38 @@
+@import 'mixins/type'
+
+$d-mailer-styles: false !default
+
+@if $d-mailer-styles
+  html
+    font-family: $mailer-font-family-base
+    -webkit-font-smoothing: antialiased
+    font-size: 100%
+
+  body
+    font-size: $mailer-font-size-base
+
+  h1, .h1
+    +mailer-font-h1
+    display: block
+    margin: 0
+
+  h2, .h2
+    +mailer-font-h2
+    display: block
+    margin: 0 0 $mailer-gap-b 0
+
+  h3, .h3
+    +mailer-font-h3
+    display: block
+    margin: $mailer-gap-g 0 $mailer-gap-b 0
+
+  h4, .h4
+    +mailer-font-h4
+    display: block
+    margin: $mailer-gap-b 0 $mailer-gap-b 0
+
+  h5, .h5,
+  h6, .h6
+    +mailer-font-h5
+    display: block
+    margin: $mailer-gap-b 0 $mailer-gap-b 0

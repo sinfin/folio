@@ -9,10 +9,6 @@ class Folio::Console::Api::ConsoleNotesControllerTest < Folio::Console::BaseCont
     include Folio::HasConsoleNotes
   end
 
-  setup do
-    @site = (Folio::Site.first || create(:folio_site))
-  end
-
   test "toggle_closed_at - invalid" do
     note = create(:folio_console_note)
 

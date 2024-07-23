@@ -1,0 +1,69 @@
+table.d-mailer-footer[
+  role="presentation"
+]
+  tr
+    td.d-mailer-footer__logo-wrapper
+      a[
+        href=@site.env_aware_root_url
+        class="d-unlink"
+        class="d-mailer-footer__logo-link"
+        class="light-img-parent"
+      ]
+        img[
+          src=@site.mailer_logo_data[:png_src]
+          alt=@site.title
+          width="80"
+        ]
+
+      // Logo for dark mode
+      a[
+        href=@site.env_aware_root_url
+        class="d-unlink"
+        class="d-mailer-footer__logo-link"
+        class="dark-img-parent"
+        style="display:none;"
+      ]
+        img[
+          src=@site.mailer_logo_data[:light_png_src]
+          alt=@site.title
+          width="80"
+        ]
+
+  - if contact_details.present?
+    tr
+      td.d-mailer-footer__contact-wrapper
+        table.d-mailer-footer__contact-table[
+          role="presentation"
+        ]
+          tr
+            td.d-mailer-footer__contact-title-wrapper
+              .d-mailer-footer__contact-title.fw-bold
+                = t('.contact')
+
+          - contact_details.each do |key, value|
+            tr
+              td.d-mailer-footer__contact-detail-wrapper
+                *contact_link_with_fallback_tag(key, value)
+                  == value
+
+  - if @site.social_links.present? && @site.social_links.any? { |_k, v| v.present? }
+    tr
+      td.d-mailer-footer__socials-title-wrapper
+        .d-mailer-footer__socials-title.fw-bold
+          = t('.follow_us')
+
+    tr
+      td.d-mailer-footer__socials-table-wrapper
+        = render(Dummy::Mailer::SocialsComponent.new(site: @site))
+  - else
+    tr
+      td.a-mailer-footer__socials-table-wrapper
+
+  - if current_footer_menu?
+    tr
+      td.d-mailer-footer__menu-wrapper
+        = render(Dummy::Mailer::FooterMenuComponent.new(site: @site, menu: @menu))
+
+  tr
+    td.d-mailer-footer__legal-wrapper
+      = @site.copyright_info

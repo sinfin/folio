@@ -2,7 +2,6 @@
 //= require rails-ujs
 //= require popper.min
 //= require folio-bootstrap-5/dist/js/bootstrap.min
-//= require multiselect/js/jquery.multi-select
 //= require js-cookie/src/js.cookie
 //= require jquery.kinetic/index
 //= require clipboard/dist/clipboard
@@ -47,6 +46,7 @@
 //= require folio/click_trigger
 //= require folio/nested_fields_component
 //= require folio/form_to_hash
+//= require folio/tooltip
 
 // must be under folio/input
 //= require daterangepicker.min
@@ -96,7 +96,6 @@
 //= require folio/console/lazy_dom/lazy_dom
 //= require folio/console/merges/form/row/row
 //= require folio/console/merges/index/radios/radios
-//= require folio/console/modules/_multiselect
 //= require folio/console/modules/simple-form-with-atoms
 //= require folio/console/nested_model_controls/nested_model_controls
 //= require folio/console/new_record_modal/new_record_modal

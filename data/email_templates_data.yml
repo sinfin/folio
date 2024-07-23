@@ -15,7 +15,7 @@
 
     <p>někdo si vyžádal odkaz pro změnu Vašeho hesla. Změnu můžete provést pomocí odkazu níže.</p>
 
-    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{USER_CHANGE_PASSWORD_URL}">Změnit heslo</a></p>
+    <p class="redactor-component folio-redactor-button"><a class="btn btn-redactor btn-redactor--fill" href="{USER_CHANGE_PASSWORD_URL}">Změnit heslo</a></p>
 
     <p>Pokud jste si toto nevyžádali, ignorujte tento e-mail. Vaše heslo se nezmění dokud neotevřete výše uvedený odkaz a nevytvoříte si nové heslo.</p>
 
@@ -24,7 +24,7 @@
 
     <p>Someone has requested a link to change your password, and you can do this through the link below.</p>
 
-    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{USER_CHANGE_PASSWORD_URL}">Change my password</a></p>
+    <p class="redactor-component folio-redactor-button"><a class="btn btn-redactor btn-redactor--fill" href="{USER_CHANGE_PASSWORD_URL}">Change my password</a></p>
 
     <p>If you didn't request this, please ignore this email. Your password won't change until you access the link above and create a new one.</p>
   body_text_cs: |
@@ -63,7 +63,7 @@
 
     <p>děkujeme za registraci na webu {SITE_TITLE}. Registraci prosíme dokončete kliknutím na tlačítko:</p>
 
-    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{USER_ACCEPT_INVITATION_URL}">Potvrdit registraci</a></p>
+    <p class="redactor-component folio-redactor-button"><a class="btn btn-redactor btn-redactor--fill" href="{USER_ACCEPT_INVITATION_URL}">Potvrdit registraci</a></p>
 
     <p class="small"><a class="text-muted" href="{USER_ACCEPT_INVITATION_URL}">{USER_ACCEPT_INVITATION_URL}</a></p>
 
@@ -77,7 +77,7 @@
 
     <p>thank you for registering at {SITE_TITLE}. Please complete the registration by clicking the button:</p>
 
-    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{USER_ACCEPT_INVITATION_URL}">Confirm registration</a></p>
+    <p class="redactor-component folio-redactor-button"><a class="btn btn-redactor btn-redactor--fill" href="{USER_ACCEPT_INVITATION_URL}">Confirm registration</a></p>
 
     <p class="small"><a class="text-muted" href="{USER_ACCEPT_INVITATION_URL}">{USER_ACCEPT_INVITATION_URL}</a></p>
 
@@ -127,7 +127,7 @@
 
     <p>Potvďte prosím vaší e-mailovou adresu kliknutím na tlačítko:</p>
 
-    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{USER_CONFIRMATION_URL}">Potvrdit e-mail</a></p>
+    <p class="redactor-component folio-redactor-button"><a class="btn btn-redactor btn-redactor--fill" href="{USER_CONFIRMATION_URL}">Potvrdit e-mail</a></p>
 
     <p class="small"><a class="text-muted" href="{USER_CONFIRMATION_URL}">{USER_CONFIRMATION_URL}</a></p>
 
@@ -141,7 +141,7 @@
 
     <p>kindly confirm your e-mail address by clicking the button bellow:</p>
 
-    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{USER_CONFIRMATION_URL}">Confirm e-mail</a></p>
+    <p class="redactor-component folio-redactor-button"><a class="btn btn-redactor btn-redactor--fill" href="{USER_CONFIRMATION_URL}">Confirm e-mail</a></p>
 
     <p class="small"><a class="text-muted" href="{USER_CONFIRMATION_URL}">{USER_CONFIRMATION_URL}</a></p>
 
@@ -193,7 +193,7 @@
 
     <p>pro dokončení {USER_CONFLICT_PROVIDER} přihlášení klikněte na odkaz níže:</p>
 
-    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{USER_CONFLICT_RESOLVE_URL}">Dokončit přihlášení</a></p>
+    <p class="redactor-component folio-redactor-button"><a class="btn btn-redactor btn-redactor--fill" href="{USER_CONFLICT_RESOLVE_URL}">Dokončit přihlášení</a></p>
 
     <p class="small"><a class="text-muted" href="{USER_CONFLICT_RESOLVE_URL}">{USER_CONFLICT_RESOLVE_URL}</a></p>
 
@@ -203,7 +203,7 @@
 
     <p>to finish signing in via {USER_CONFLICT_PROVIDER} click the link bellow:</p>
 
-    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{USER_CONFLICT_RESOLVE_URL}">Sign in</a></p>
+    <p class="redactor-component folio-redactor-button"><a class="btn btn-redactor btn-redactor--fill" href="{USER_CONFLICT_RESOLVE_URL}">Sign in</a></p>
 
     <p class="small"><a class="text-muted" href="{USER_CONFLICT_RESOLVE_URL}">{USER_CONFLICT_RESOLVE_URL}</a></p>
 
@@ -249,7 +249,7 @@
     <p><strong>URL:</strong><br>{FOLIO_LEAD_URL}</p>
     <p><strong>Odesláno:</strong><br>{FOLIO_LEAD_CREATED_AT}</p>
     <p><strong>Poznámka:</strong><br>{FOLIO_LEAD_NOTE}</p>
-    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{FOLIO_LEAD_CONSOLE_URL}">Zobrazit v administraci</a></p>
+    <p class="redactor-component folio-redactor-button"><a class="btn btn-redactor btn-redactor--fill" href="{FOLIO_LEAD_CONSOLE_URL}">Zobrazit v administraci</a></p>
 
   body_html_en: |
     <p><strong>E-mail:</strong><br>{FOLIO_LEAD_EMAIL}</p>
@@ -257,7 +257,7 @@
     <p><strong>URL:</strong><br>{FOLIO_LEAD_URL}</p>
     <p><strong>Submitted:</strong><br>{FOLIO_LEAD_CREATED_AT}</p>
     <p><strong>Note:</strong><br>{FOLIO_LEAD_NOTE}</p>
-    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{FOLIO_LEAD_CONSOLE_URL}">Show in console</a></p>
+    <p class="redactor-component folio-redactor-button"><a class="btn btn-redactor btn-redactor--fill" href="{FOLIO_LEAD_CONSOLE_URL}">Show in console</a></p>
   body_text_cs: |
     E-mail: {FOLIO_LEAD_EMAIL}
     Telefon: {FOLIO_LEAD_PHONE}

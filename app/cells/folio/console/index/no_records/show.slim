@@ -6,5 +6,16 @@
       .card-body
         h3.card-text.mt-0 = t('.none')
 
-        - unless model[:new_button] == false
-          == cell('folio/console/index/new_button', model)
+        .d-flex.align-items-center.gap-h
+          - unless model[:new_button] == false
+            == cell('folio/console/index/new_button', model)
+
+            - if model[:create_defaults_path]
+              span.f-c-index-no-records__or = t('.or')
+
+          - if model[:create_defaults_path]
+            = simple_form_for "", method: :post, url: model[:create_defaults_path] do |f|
+              == cell('folio/console/ui/button',
+                      type: :submit,
+                      icon: :star,
+                      label: t('.create_defaults'))

@@ -87,7 +87,7 @@ class Dummy::SeedGenerator
           "models" => {
             "application_namespace_path/atom/#{name}" => hash[locale]["activerecord"]["models"]["dummy/atom/#{name}"],
           },
-        }
+        },
       }
     end
 
@@ -108,6 +108,43 @@ class Dummy::SeedGenerator
 
   def search
     scaffold("searches")
+  end
+
+  def install
+    paths = %w[
+      app/overrides/folio_override.rb
+      app/overrides/models/folio/ability_override.rb
+      app/controllers/application_controller.rb
+      app/models/dummy/site.rb
+      app/models/dummy/site.rb
+      app/lib/application_component.rb
+      app/lib/dummy/cache_keys.rb
+      app/lib/dummy/current_methods.rb
+    ].map { |str| Rails.root.join(str) }
+
+    Dir[*paths].each do |path|
+      copy_file(path, @templates_path.join("#{relative_application_path(path).gsub('dummy', 'application_namespace_path')}.tt"))
+    end
+
+    Dir[Folio::Engine.root.join(".editorconfig")].each do |path|
+      copy_file(path, @templates_path.join(relative_path(path)))
+    end
+  end
+
+  def mailer
+    scaffold("mailer")
+
+    Dir[Rails.root.join("app/assets/stylesheets/dummy/mailer/**/*.sass"),
+        Rails.root.join("app/assets/stylesheets/dummy/mailer_extras/**/*.sass"),
+        Rails.root.join("app/assets/stylesheets/dummy/mailer*.sass")].each do |path|
+      target_path = "#{relative_application_path(path).gsub('dummy', 'application_namespace_path')}.tt"
+      copy_file(path, @templates_path.join(target_path))
+    end
+
+    copy_file(Folio::Engine.root.join("app/views/layouts/folio/mailer.html.slim"),
+              @templates_path.join("app/views/layouts/folio/mailer.html.slim.tt"))
+
+    ui_i18n_yamls(Rails.root.join("config/locales/dummy/mailer*.yml"))
   end
 
   def ui_i18n_yamls(path)
@@ -177,7 +214,7 @@ class Dummy::SeedGenerator
     end
 
     def relative_path(path)
-      path.to_s.gsub(/\A#{root}\//, "")
+      path.to_s.gsub(%r{\A#{root}/}, "")
     end
 
     def application_root
@@ -185,7 +222,7 @@ class Dummy::SeedGenerator
     end
 
     def relative_application_path(path)
-      path.to_s.gsub(/\A#{application_root}\//, "")
+      path.to_s.gsub(%r{\A#{application_root}/}, "")
     end
 
     def replace_names(str)
@@ -206,6 +243,7 @@ class Dummy::SeedGenerator
          .gsub("d-atom", "<%= classname_prefix %>-atom")
          .gsub("d-blog", "<%= classname_prefix %>-blog")
          .gsub("d-search", "<%= classname_prefix %>-search")
+         .gsub("d-mailer", "<%= classname_prefix %>-mailer")
          .gsub("d-molecule", "<%= classname_prefix %>-molecule")
          .gsub("d-rich-text", "<%= classname_prefix %>-rich-text")
          .gsub("d-with-icon", "<%= classname_prefix %>-with-icon")
@@ -216,6 +254,7 @@ class Dummy::SeedGenerator
          .gsub("dummy/ui", "<%= application_namespace_path %>/ui")
          .gsub("dummy/blog", "<%= application_namespace_path %>/blog")
          .gsub("dummy/search", "<%= application_namespace_path %>/search")
+         .gsub("dummy/mailer", "<%= application_namespace_path %>/mailer")
          .gsub("dummy/atom", "<%= application_namespace_path %>/atom")
          .gsub("dummy/molecule", "<%= application_namespace_path %>/molecule")
          .gsub("dummy_menu", "<%= application_namespace_path %>_menu")
@@ -238,7 +277,7 @@ class Dummy::SeedGenerator
           Rails.root.join("test/**/dummy/#{key}/**/*.rb"),
           Rails.root.join("test/**/dummy/#{key}_controller_test.rb"),
           Rails.root.join("test/**/dummy/*/#{key}/**/*.rb")].each do |path|
-        target_path = "#{relative_application_path(path).gsub('dummy', "application_namespace_path")}.tt"
+        target_path = "#{relative_application_path(path).gsub('dummy', 'application_namespace_path')}.tt"
         copy_file(path, @templates_path.join(target_path))
       end
     end
@@ -247,15 +286,17 @@ end
 namespace :dummy do
   namespace :seed_generators do
     task all: :environment do
+      Rake::Task["dummy:seed_generators:install"].invoke
       Rake::Task["dummy:seed_generators:assets"].invoke
       Rake::Task["dummy:seed_generators:ui"].invoke
       Rake::Task["dummy:seed_generators:prepared_atom"].invoke
       Rake::Task["dummy:seed_generators:blog"].invoke
       Rake::Task["dummy:seed_generators:search"].invoke
+      Rake::Task["dummy:seed_generators:mailer"].invoke
     end
 
     task assets: :environment do
-      require_relative "../../../../lib/generators/folio/assets/assets_generator"
+      require "generators/folio/assets/assets_generator"
 
       templates_path = Folio::Engine.root.join("lib/generators/folio/assets/templates")
       gen = Dummy::SeedGenerator.new(templates_path:)
@@ -268,7 +309,8 @@ namespace :dummy do
         paths.each do |path|
           Dir[Rails.root.join(path)].each do |glob_path|
             next if File.directory?(glob_path)
-            path = glob_path.to_s.gsub(/\A#{Folio::Engine.root}\/test\/dummy\//, "")
+
+            path = glob_path.to_s.gsub(%r{\A#{Folio::Engine.root}/test/dummy/}, "")
             gen.copy_file(glob_path, templates_path.join("#{path}#{affix}"))
           end
         end
@@ -300,6 +342,7 @@ namespace :dummy do
 
       Dir[Rails.root.join("app/models/dummy/atom/**/*.rb")].each do |atom_path|
         next if atom_path.include?("/blog/")
+
         gen.from_atom_path(atom_path)
       end
 
@@ -314,6 +357,16 @@ namespace :dummy do
     task search: :environment do
       gen = Dummy::SeedGenerator.new(templates_path: Folio::Engine.root.join("lib/generators/folio/search/templates"))
       gen.search
+    end
+
+    task mailer: :environment do
+      gen = Dummy::SeedGenerator.new(templates_path: Folio::Engine.root.join("lib/generators/folio/mailer/templates"))
+      gen.mailer
+    end
+
+    task install: :environment do
+      gen = Dummy::SeedGenerator.new(templates_path: Folio::Engine.root.join("lib/templates"))
+      gen.install
     end
   end
 end

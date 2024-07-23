@@ -1,0 +1,35 @@
+table.d-mailer-header[
+  role="presentation"
+]
+  tr
+    td.d-mailer-header__inner
+      a[
+        href=@site.env_aware_root_url
+        class="d-unlink"
+        class="d-mailer-header__logo-link"
+      ]
+        h1.d-mailer-header__logo
+          .d-mailer-header__logo-img-wrapper[
+            class="light-img-parent"
+          ]
+            img[
+              src=@site.mailer_logo_data[:png_src]
+              class="d-mailer-header__logo-img"
+              alt=@site.title
+              width=@site.mailer_logo_data[:width]
+              height=@site.mailer_logo_data[:height]
+            ]
+
+          // Logo for dark mode
+          // In case of invisible logo, we can add fixed white background for header
+          .d-mailer-header__logo-img-wrapper[
+            class="dark-img-parent"
+            style="display:none;"
+          ]
+            img[
+              src=@site.mailer_logo_data[:light_png_src]
+              class="d-mailer-header__logo-img"
+              alt=@site.title
+              width=@site.mailer_logo_data[:width]
+              height=@site.mailer_logo_data[:height]
+            ]

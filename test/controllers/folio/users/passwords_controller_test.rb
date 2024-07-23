@@ -2,13 +2,7 @@
 
 require "test_helper"
 
-class Folio::Users::PasswordsControllerTest < ActionDispatch::IntegrationTest
-  include Devise::Test::IntegrationHelpers
-
-  def setup
-    create_and_host_site
-  end
-
+class Folio::Users::PasswordsControllerTest < Folio::BaseControllerTest
   test "new" do
     get main_app.new_user_password_path
     assert_response(:ok)

@@ -83,7 +83,7 @@
   --#{$prefix}btn-color: #{$shade-light-contrast}
 
 .btn-secondary
-  --#{$prefix}btn-bg: #{$shade-light-contrast}
+  --#{$prefix}btn-bg: transparent
   --#{$prefix}btn-color: #{$shade-black-contrast}
   --#{$prefix}btn-border-color: #{$shade-black-contrast}
 

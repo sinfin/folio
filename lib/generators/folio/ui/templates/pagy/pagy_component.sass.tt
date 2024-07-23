@@ -4,12 +4,12 @@
     align-items: center
     justify-content: center
     flex-wrap: wrap
-    gap: map-get($spacers, 1)
+    gap: map-get($spacers, a)
 
   &__page-item, &__page-link
     display: block
     font-weight: $font-weight-bold
-    padding: map-get($spacers, 1) px-to-rem(12px)
+    padding: map-get($spacers, a) map-get($spacers, c)
     border-radius: px-to-rem(16px)
 
   &__page-link
@@ -29,7 +29,7 @@
 
   &__page--with-ico > &__page-item,
   &__page--with-ico > &__page-link
-    padding: map-get($spacers, 1)
+    padding: map-get($spacers, a)
 
   &__page--current > &__page-item
     background: $shade-black-contrast
