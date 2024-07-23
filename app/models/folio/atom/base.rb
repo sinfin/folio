@@ -86,7 +86,7 @@ class Folio::Atom::Base < Folio::ApplicationRecord
       position:,
       placement_type:,
       placement_id:,
-      data: data || {},
+      data: data_to_h,
     }.merge(attachments_to_h).merge(associations_to_h)
   end
 
@@ -141,6 +141,35 @@ class Folio::Atom::Base < Folio::ApplicationRecord
     end
 
     { associations: h }
+  end
+
+  def data_to_h
+    if data.present?
+      h = data.dup
+
+      klass::STRUCTURE.each do |key, value|
+        if value == :date || value == :datetime
+          if h[key.to_s].present?
+            date_or_datetime = try(key)
+            if date_or_datetime.present?
+              if value == :datetime
+                date_or_datetime = date_or_datetime.to_datetime
+              elsif value == :date
+                date_or_datetime = date_or_datetime.to_date
+              end
+
+              h[key.to_s] = I18n.l(date_or_datetime, format: :console_short)
+            else
+              h.delete(key.to_s)
+            end
+          end
+        end
+      end
+
+      h
+    else
+      {}
+    end
   end
 
   def valid_for_placement?(placement)

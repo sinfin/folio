@@ -24,20 +24,8 @@ class DateInput extends React.PureComponent {
     if (this.unbindInput) this.unbindInput()
   }
 
-  formatDate (date, delimiter = '-') {
-    const options = { day: "2-digit", month: "2-digit", year: "numeric"}
-    const dateObj = new Date(date)
-
-    return dateObj.toLocaleDateString("cs-CZ", options)
-  }
-
-  onChange = (event) => {
-    let date = event.target.folioInputTempusDominus.viewDate
-
-    date = this.formatDate(date)
-    date = date.split('. ').reverse().join('-')
-
-    this.props.onChange(date)
+  onChange = (e) => {
+    this.props.onChange(e.target.value)
   }
 
   focus () {
@@ -45,12 +33,6 @@ class DateInput extends React.PureComponent {
   }
 
   render () {
-    let defaultValue
-
-    if (this.props.defaultValue && this.props.defaultValue !== '') {
-      defaultValue = this.formatDate(this.props.defaultValue)
-    }
-
     return (
       <div className='d-flex flex-row justify-content-between align-items-center'>
         <Input
@@ -61,7 +43,7 @@ class DateInput extends React.PureComponent {
           placeholder={this.props.placeholder}
           innerRef={this.inputRef}
           invalid={this.props.invalid}
-          defaultValue={defaultValue || ''}
+          defaultValue={this.props.defaultValue}
           data-controller='f-input-date-time'
           data-f-input-date-time-type-value={this.props.type}
         />

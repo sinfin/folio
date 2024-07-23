@@ -75,7 +75,7 @@ export default function AtomInput ({ field, atom, index, onChange, onValueChange
       <DateInput
         name={key}
         defaultValue={defaultValue}
-        onChange={(date) => onValueChange(index, date, key)}
+        onChange={(value) => onValueChange(index, value, key)}
         invalid={Boolean(atom.errors[key])}
         type={type}
       />

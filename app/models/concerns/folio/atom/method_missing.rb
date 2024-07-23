@@ -141,6 +141,8 @@ module Folio::Atom::MethodMissing
           if val.present?
             if is_date && val.is_a?(Date)
               result = val
+            elsif is_datetime && val.is_a?(Time)
+              result = val.to_datetime
             elsif is_datetime && val.is_a?(DateTime)
               result = val
             else
