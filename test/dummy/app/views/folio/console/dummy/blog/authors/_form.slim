@@ -1,0 +1,24 @@
+= form_header f
+
+= tabs %i[content]
+
+.tab-content
+  = tab :content
+    = publishable_inputs(f)
+    .row
+      .col-md-auto
+        = file_picker_for_cover(f)
+      .col-md
+        = f.input :first_name
+        = f.input :last_name
+        = f.input :slug
+        = f.input :perex
+        = f.association :site
+        = f.input :locale
+        = f.input :articles_count
+        = f.input :preview_token
+        = f.input :meta_title
+        = f.input :meta_description
+        = f.input :social_links
+
+= form_footer f

@@ -15,6 +15,11 @@ cs:
         few: Články
         other: Článků
 
+      dummy/blog/author:
+        one: Autor
+        few: Autoři
+        other: Autorů
+
       dummy/blog/topic:
         one: Téma
         few: Témata

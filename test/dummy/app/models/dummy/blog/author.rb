@@ -39,7 +39,7 @@ class Dummy::Blog::Author < ApplicationRecord
                     tsearch: { prefix: true }
                   }
 
-  multisearchable against: [:title],
+  multisearchable against: [:last_name, :first_name],
                   ignoring: :accents
 
   scope :by_locale, -> (locale) { where(locale:) }
@@ -64,6 +64,14 @@ class Dummy::Blog::Author < ApplicationRecord
     h["Folio::FilePlacement::Cover"] = h["Folio::FilePlacement::Cover"].uniq
 
     h
+  end
+
+  def full_name
+    [first_name, last_name].compact.join(" ")
+  end
+
+  def to_label
+    full_name
   end
 end
 

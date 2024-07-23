@@ -6,7 +6,7 @@ class Folio::Console::Dummy::Blog::ArticlesController < Folio::Console::BaseCont
   private
     def article_params
       params.require(:dummy_blog_article)
-            .permit(*(@klass.column_names - ["id"]),
+            .permit(*(@klass.column_names - %w[id site_id]),
                     *atoms_strong_params,
                     *file_placements_strong_params,
                     topic_article_links_attributes: %w[id _destroy position dummy_blog_topic_id])
