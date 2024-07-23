@@ -47,12 +47,14 @@ module Folio::Console::ReactHelper
   def react_images(selected_placements = nil,
                    attachmentable: "page",
                    type: :image_placements,
-                   atom_setting: nil)
+                   atom_setting: nil,
+                   taggable: true)
     react_files("Folio::File::Image",
                 selected_placements,
                 attachmentable:,
                 type:,
-                atom_setting:)
+                atom_setting:,
+                taggable:)
   end
 
   def react_documents(selected_placements = nil,
@@ -123,7 +125,12 @@ module Folio::Console::ReactHelper
                            "data-atoms" => data.to_json)
   end
 
-  def react_files(file_type, selected_placements, attachmentable:, type:, atom_setting: nil)
+  def react_files(file_type,
+                  selected_placements,
+                  attachmentable:,
+                  type:,
+                  atom_setting: nil,
+                  taggable: false)
     if selected_placements.present?
       placements = selected_placements.ordered.map do |fp|
         {
@@ -164,6 +171,7 @@ module Folio::Console::ReactHelper
       "data-placement-type" => type,
       "data-atom-setting" => atom_setting,
       "data-can-destroy-files" => can_now?(:destroy, Folio::File) ? "1" : nil,
+      "data-taggable" => taggable ? "1" : nil,
     )
   end
 

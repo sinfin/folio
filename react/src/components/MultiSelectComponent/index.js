@@ -63,7 +63,7 @@ class MultiSelectComponent extends LazyLoadCheckingComponent {
 
         <h2>{window.Folio.i18n(I18N, `available_${this.props.reactType}`)}</h2>
 
-        <FileFilter fileType={this.props.fileType} filesUrl={this.props.filesUrl} fileTypeIsImage={this.props.fileTypeIsImage} className='f-c-anti-container-fluid f-c-anti-container-fluid--padded' />
+        <FileFilter fileType={this.props.fileType} filesUrl={this.props.filesUrl} fileTypeIsImage={this.props.fileTypeIsImage} taggable={this.props.taggable} className='f-c-anti-container-fluid f-c-anti-container-fluid--padded' />
 
         <UploadTagger fileType={this.props.fileType} nested={this.props.nested} taggable={this.props.taggable} />
 
