@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
-class CreateBlog < ActiveRecord::Migration[6.0]
+class CreateBlog < ActiveRecord::Migration[7.0]
   def change
     create_table :dummy_blog_articles do |t|
       t.string :title
       t.string :slug
       t.text :perex
+
+      t.belongs_to :site
 
       t.string :locale, default: I18n.default_locale
 
@@ -31,6 +33,8 @@ class CreateBlog < ActiveRecord::Migration[6.0]
       t.string :title
       t.string :slug
       t.text :perex
+
+      t.belongs_to :site
 
       t.string :locale, default: I18n.default_locale
 
@@ -63,5 +67,47 @@ class CreateBlog < ActiveRecord::Migration[6.0]
 
       t.timestamps
     end
+
+    create_table :dummy_blog_authors do |t|
+      t.string :first_name
+      t.string :last_name
+      t.string :slug
+      t.text :perex
+
+      t.belongs_to :site
+
+      t.string :locale, default: I18n.default_locale
+
+      t.boolean :published
+      t.boolean :featured
+
+      t.integer :articles_count, default: 0
+
+      t.integer :position
+
+      t.string :preview_token
+
+      t.string :meta_title
+      t.text :meta_description
+
+      t.jsonb :social_links
+
+      t.timestamps
+    end
+
+    add_index :dummy_blog_authors, :slug
+    add_index :dummy_blog_authors, :locale
+    add_index :dummy_blog_authors, :featured
+    add_index :dummy_blog_authors, :published
+    add_index :dummy_blog_authors, :position
+  end
+
+  create_table :dummy_blog_author_article_links do |t|
+    t.belongs_to :dummy_blog_author, index: { name: :dummy_blog_author_article_links_t_id }
+    t.belongs_to :dummy_blog_article, index: { name: :dummy_blog_author_article_links_a_id }
+
+    t.integer :position
+
+    t.timestamps
   end
 end

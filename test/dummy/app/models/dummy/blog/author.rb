@@ -1,28 +1,28 @@
 # frozen_string_literal: true
 
-class Dummy::Blog::Topic < ApplicationRecord
+class Dummy::Blog::Author < ApplicationRecord
   include Folio::BelongsToSiteAndFriendlyId
   include Folio::HasAttachments
   include Folio::Positionable
   include Folio::Publishable::Basic
 
-  has_many :topic_article_links, -> { ordered },
-                                    class_name: "Dummy::Blog::TopicArticleLink",
-                                    inverse_of: :topic,
-                                    foreign_key: :dummy_blog_topic_id,
-                                    dependent: :destroy
+  has_many :author_article_links, -> { ordered },
+                                  class_name: "Dummy::Blog::AuthorArticleLink",
+                                  inverse_of: :author,
+                                  foreign_key: :dummy_blog_author_id,
+                                  dependent: :destroy
 
-  accepts_nested_attributes_for :topic_article_links, allow_destroy: true,
-                                                         reject_if: :all_blank
+  accepts_nested_attributes_for :author_article_links, allow_destroy: true,
+                                                       reject_if: :all_blank
 
-  has_many :articles, through: :topic_article_links,
+  has_many :articles, through: :author_article_links,
                       source: :article
 
   has_many :published_articles, -> { published },
-                                through: :topic_article_links,
+                                through: :author_article_links,
                                 source: :article
 
-  validates :title,
+  validates :last_name,
             presence: true
 
   validates :locale,
@@ -30,8 +30,9 @@ class Dummy::Blog::Topic < ApplicationRecord
 
   pg_search_scope :by_query,
                   against: {
-                    title: "A",
-                    perex: "B"
+                    last_name: "A",
+                    first_name: "B",
+                    perex: "C"
                   },
                   ignoring: :accents,
                   using: {
@@ -68,7 +69,7 @@ end
 
 # == Schema Information
 #
-# Table name: dummy_blog_topics
+# Table name: dummy_blog_authors
 #
 #  id               :bigint(8)        not null, primary key
 #  title            :string
@@ -86,9 +87,9 @@ end
 #
 # Indexes
 #
-#  index_dummy_blog_topics_on_featured   (featured)
-#  index_dummy_blog_topics_on_locale     (locale)
-#  index_dummy_blog_topics_on_position   (position)
-#  index_dummy_blog_topics_on_published  (published)
-#  index_dummy_blog_topics_on_slug       (slug)
+#  index_dummy_blog_authors_on_featured   (featured)
+#  index_dummy_blog_authors_on_locale     (locale)
+#  index_dummy_blog_authors_on_position   (position)
+#  index_dummy_blog_authors_on_published  (published)
+#  index_dummy_blog_authors_on_slug       (slug)
 #

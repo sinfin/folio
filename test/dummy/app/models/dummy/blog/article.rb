@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Dummy::Blog::Article < ApplicationRecord
-  include Folio::FriendlyId
+  include Folio::BelongsToSiteAndFriendlyId
   include Folio::HasAttachments
   include Folio::Publishable::WithDate
   include Folio::HasAtoms::Basic
