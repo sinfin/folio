@@ -73,6 +73,15 @@ class Dummy::Blog::Author < ApplicationRecord
   def to_label
     full_name
   end
+
+  def self.social_link_sites
+    %i[facebook
+       instagram
+       twitter
+       linkedin
+       youtube
+       pinterest]
+  end
 end
 
 # == Schema Information
