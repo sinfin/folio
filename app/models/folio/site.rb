@@ -5,6 +5,7 @@ class Folio::Site < Folio::ApplicationRecord
   include Folio::HasAttachments
   include Folio::HasHeaderMessage
   include Folio::Positionable
+  include Folio::StiPreload
 
   # use specific STI types if site is not a singleton
   validates :type,
@@ -194,6 +195,13 @@ class Folio::Site < Folio::ApplicationRecord
       width: 119,
       height: 60,
     }
+  end
+
+  def self.sti_paths
+    [
+      Folio::Engine.root.join("app/models/folio/site"),
+      Rails.root.join("app/models/**/site"),
+    ]
   end
 
   private

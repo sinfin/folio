@@ -93,7 +93,11 @@ module Folio
 
   # override me at project level
   def self.main_site
-    @main_site ||= Folio::Site.ordered.first
+    if Rails.application.config.eager_load
+      @main_site ||= Folio::Site.ordered.first
+    else
+      Folio::Site.ordered.first
+    end
   end
 
   def self.atoms_previews_stylesheet_path(site:, class_name:)
