@@ -1,31 +1,26 @@
 .d-blog-articles-index
   .container-fluid
-    - if @title.present?
-      h1.d-blog-articles-index__title
-        == cstypo @title
+    - if @title.present? || @perex.present?
+      = render(Dummy::Ui::HeroComponent.new(title: @title,
+                                            perex: @perex))
 
-    - if @perex.present?
-      p.d-blog-articles-index__perex
-        = @perex
+    .mb-4
+      - if @topics.present? && !active_pagy?
+        = render(Dummy::Blog::Topics::ListComponent.new(topics: @topics))
 
-    - else
-      .mb-4
-        - if @topics.present? && !active_pagy?
-          = render(Dummy::Blog::Topics::ListComponent.new(topics: @topics))
+    - if @main_articles.present?
+      = render(Dummy::Blog::Articles::CardsComponent.new(size: :md,
+                                                         hero_size: :lg,
+                                                         container_classes: \
+                                                         "mt-sm-2",
+                                                         column_classes: \
+                                                         "col-12 col-sm-6 col-lg-4",
+                                                         articles: @main_articles))
 
-      - if @main_articles.present?
-        = render(Dummy::Blog::Articles::CardsComponent.new(size: :md,
-                                                           hero_size: :lg,
-                                                           container_classes: \
-                                                           "mt-sm-2",
-                                                           column_classes: \
-                                                           "col-12 col-sm-6 col-lg-4",
-                                                           articles: @main_articles))
+    - if @secondary_articles.present?
+      = render(Dummy::Blog::Articles::CardsComponent.new(size: :md,
+                                                         column_classes: \
+                                                         "col-12 col-sm-6 col-lg-4",
+                                                         articles: @secondary_articles))
 
-      - if @secondary_articles.present?
-        = render(Dummy::Blog::Articles::CardsComponent.new(size: :md,
-                                                           column_classes: \
-                                                           "col-12 col-sm-6 col-lg-4",
-                                                           articles: @secondary_articles))
-
-      = render(Dummy::Ui::PagyComponent.new(pagy: @pagy))
+    = render(Dummy::Ui::PagyComponent.new(pagy: @pagy))

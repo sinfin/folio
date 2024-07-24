@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
 class Dummy::Atom::TitleComponent < ApplicationComponent
-  SMALL_TITLE_MIN_CHAR = 71
-  MEDIUM_TITLE_MIN_CHAR = 26
-
   def initialize(atom:, atom_options: {})
     @atom = atom
     @atom_options = atom_options
@@ -38,14 +35,7 @@ class Dummy::Atom::TitleComponent < ApplicationComponent
 
   def font_size_class_name(base)
     return unless adaptive_font_size?
-
-    if @atom.title.length > SMALL_TITLE_MIN_CHAR
-      "#{base}--font-size-small"
-    elsif @atom.title.length > MEDIUM_TITLE_MIN_CHAR
-      "#{base}--font-size-medium"
-    else
-      "#{base}--font-size-large"
-    end
+    adaptive_font_size_class_name(@atom.title) if @atom.title.present?
   end
 
   def rich_text_chomp_class
