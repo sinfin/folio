@@ -8,7 +8,7 @@ module Folio::HasAtoms
       def atom_settings_from_params(params)
         settings = {}
 
-        if params
+        if params && !try(:atoms_settings_skip_label_and_perex?)
           settings = atom_settings_label_from_params(settings, params)
           settings = atom_settings_perex_from_params(settings, params)
         end

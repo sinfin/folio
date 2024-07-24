@@ -6,6 +6,10 @@ class Dummy::Page::Homepage < Folio::Page
   def self.public_rails_path
     :root_path
   end
+
+  def self.atoms_settings_skip_label_and_perex?
+    true
+  end
 end
 
 # == Schema Information
