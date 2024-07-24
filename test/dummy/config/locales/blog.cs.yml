@@ -12,6 +12,8 @@ cs:
         articles_count: Články
 
     models:
+      dummy/page/blog/articles/index: Stránka / Blog
+
       dummy/blog/article:
         one: Článek
         few: Články
@@ -45,8 +47,8 @@ cs:
   dummy:
     blog:
       articles:
-        index:
-          title: Blog
+        index_component:
+          console_preview: Zde budou vypsány témata a články
 
         show_body_component:
           recommended_articles: Vybrané články

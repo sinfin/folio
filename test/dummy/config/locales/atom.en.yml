@@ -2,28 +2,6 @@
 en:
   activerecord:
     attributes:
-      dummy/atom/image_and_content:
-        image_ratio: Image ratio
-        image_ratio/origin: Original ratio
-        image_ratio/1x1: "1:1"
-        image_ratio/3x2: "3:2"
-        image_ratio/16x9: "16:9"
-        image_ratio/4x3: "4:3"
-        image_ratio/9x16: "9:16"
-        image_ratio/3x4: "3:4"
-        image_ratio/2x3: "2:3"
-        vertically_centered_content: Vertically centered content
-        open_in_new_tab: Open link in new tab
-        image_side: Image side
-        image_side/left: Left
-        image_side/right: Right
-        wrapper: Wrapper
-        wrapper/none: None
-        wrapper/background: Background
-        wrapper/outline: Outline
-        color_mode: Color mode
-        color_mode/light: Light
-        color_mode/dark: Dark
       dummy/atom/cards/person:
         large: Big image
       dummy/atom/divider:
@@ -42,6 +20,28 @@ en:
         size/small: Small
         size/medium: Medium
         size/large: Large
+      dummy/atom/image_and_content:
+        image_ratio: Image ratio
+        image_ratio/origin: Original ratio
+        image_ratio/1x1: '1:1'
+        image_ratio/3x2: '3:2'
+        image_ratio/16x9: '16:9'
+        image_ratio/4x3: '4:3'
+        image_ratio/9x16: '9:16'
+        image_ratio/3x4: '3:4'
+        image_ratio/2x3: '2:3'
+        vertically_centered_content: Vertically centered content
+        open_in_new_tab: Open link in new tab
+        image_side: Image side
+        image_side/left: Left
+        image_side/right: Right
+        wrapper: Wrapper
+        wrapper/none: None
+        wrapper/background: Background
+        wrapper/outline: Outline
+        color_mode: Color mode
+        color_mode/light: Light
+        color_mode/dark: Dark
       dummy/atom/quotation:
         large: Bigger font
       dummy/atom/text:
@@ -73,13 +73,13 @@ en:
         highlight/background: Background
         cover_ratio: Image ratio
         cover_ratio/origin: Original
-        cover_ratio/1x1: "1:1"
-        cover_ratio/3x2: "3:2"
-        cover_ratio/16x9: "16:9"
-        cover_ratio/4x3: "4:3"
-        cover_ratio/2x3: "2:3"
-        cover_ratio/9x16: "9:16"
-        cover_ratio/3x4: "3:4"
+        cover_ratio/1x1: '1:1'
+        cover_ratio/3x2: '3:2'
+        cover_ratio/16x9: '16:9'
+        cover_ratio/4x3: '4:3'
+        cover_ratio/2x3: '2:3'
+        cover_ratio/9x16: '9:16'
+        cover_ratio/3x4: '3:4'
       dummy/atom/text_around_video:
         video_side: Video position
         video_side/left: On the left
@@ -92,13 +92,13 @@ en:
         highlight/background: Background
         cover_ratio: Image ratio
         cover_ratio/origin: Original
-        cover_ratio/1x1: "1:1"
-        cover_ratio/3x2: "3:2"
-        cover_ratio/16x9: "16:9"
-        cover_ratio/4x3: "4:3"
-        cover_ratio/2x3: "2:3"
-        cover_ratio/9x16: "9:16"
-        cover_ratio/3x4: "3:4"
+        cover_ratio/1x1: '1:1'
+        cover_ratio/3x2: '3:2'
+        cover_ratio/16x9: '16:9'
+        cover_ratio/4x3: '4:3'
+        cover_ratio/2x3: '2:3'
+        cover_ratio/9x16: '9:16'
+        cover_ratio/3x4: '3:4'
       dummy/atom/title:
         tag: Tag
         tag/H1: H1
@@ -119,6 +119,7 @@ en:
         theme/light: Light
         theme/dark: Dark
     models:
+      dummy/atom/blog/articles/index: Blog - articles
       dummy/atom/cards/extra_small: Card - extra small
       dummy/atom/cards/full_width: Card - full width
       dummy/atom/cards/image: Card - image

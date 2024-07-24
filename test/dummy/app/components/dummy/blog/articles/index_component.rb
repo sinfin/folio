@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 class Dummy::Blog::Articles::IndexComponent < ApplicationComponent
-  def initialize(articles:, pagy: nil, topics: nil)
+  def initialize(articles:, title: nil, perex: nil, pagy: nil, topics: nil)
     @pagy = pagy
     @topics = topics
+    @title = title
+    @perex = perex
 
     articles_a = articles.to_a
 

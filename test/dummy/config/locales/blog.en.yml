@@ -12,6 +12,8 @@ en:
         articles_count: Articles
 
     models:
+      dummy/page/blog/articles/index: Page / Blog
+
       dummy/blog/article:
         one: Article
         other: Articles
@@ -39,8 +41,8 @@ en:
   dummy:
     blog:
       articles:
-        index:
-          title: Blog
+        index_component:
+          console_preview: Topics and articles will be listed here
 
         show_body_component:
           recommended_articles: Recommended articles

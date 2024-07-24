@@ -17,6 +17,15 @@ namespace :blog do
     end
 
     Folio::Site.find_each do |site|
+      unless Dummy::Page::Blog::Articles::Index.exists?(site:)
+        page = Dummy::Page::Blog::Articles::Index.create!(title: "Blog",
+                                                          site:,
+                                                          published: true,
+                                                          published_at: 1.minute.ago)
+        page.atoms << Dummy::Atom::Blog::Articles::Index.new
+        puts "Seeded Dummy::Page::Blog::Articles::Index for site #{site.slug}"
+      end
+
       Dummy::Blog.available_locales.each do |locale|
         authors_count = Dummy::Blog::Author.where(site:, locale:).count
         topics_count = Dummy::Blog::Author.where(site:, locale:).count

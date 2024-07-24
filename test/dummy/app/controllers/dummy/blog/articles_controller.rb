@@ -2,19 +2,11 @@
 
 class Dummy::Blog::ArticlesController < ApplicationController
   def index
-    folio_run_unless_cached(["blog/articles#index"] + cache_key_base) do
-      articles = Dummy::Blog::Article.published
-                                     .ordered
-                                     .by_locale(I18n.locale)
-                                     .includes(Dummy::Blog.article_includes)
+    folio_run_unless_cached(["blog/articles#index", params[:page], params[:t]] + cache_key_base) do
+      @page = Dummy::Page::Blog::Articles::Index.instance(site: Folio::Current.site, fail_on_missing: true)
+      set_meta_variables(@page)
 
-      @pagy, @articles = pagy(articles, items: Dummy::Blog::ARTICLE_PAGY_ITEMS)
-
-      @topics = Dummy::Blog::Topic.published
-                                  .by_locale(I18n.locale)
-                                  .with_published_articles
-                                  .ordered
-                                  .limit(20)
+      @atom_options = { page: @page }
     end
   end
 
@@ -22,6 +14,7 @@ class Dummy::Blog::ArticlesController < ApplicationController
     folio_run_unless_cached(["blog/articles#show", params[:id]] + cache_key_base) do
       @article = Dummy::Blog::Article.published_or_preview_token(params[Folio::Publishable::PREVIEW_PARAM_NAME])
                                      .by_locale(I18n.locale)
+                                     .by_site(Folio::Current.site)
                                      .friendly.find(params[:id])
 
       set_meta_variables(@article)
@@ -32,6 +25,7 @@ class Dummy::Blog::ArticlesController < ApplicationController
                                      .ordered
                                      .where.not(id: @article.id)
                                      .by_locale(I18n.locale)
+                                     .by_site(Folio::Current.site)
                                      .includes(Dummy::Blog.article_includes)
 
       @articles = pagy(articles, items: 3)

@@ -4,6 +4,7 @@ require "test_helper"
 
 class Dummy::Blog::ArticlesControllerTest < Folio::BaseControllerTest
   test "index" do
+    create_page_singleton(Dummy::Page::Blog::Articles::Index)
     get url_for(Dummy::Blog::Article)
     assert_response :ok
 

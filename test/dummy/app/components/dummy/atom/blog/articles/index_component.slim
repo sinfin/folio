@@ -1,0 +1,6 @@
+.d-atom.d-atom-blog-articles-index
+  = render(Dummy::Blog::Articles::IndexComponent.new(articles: @articles,
+                                                     pagy: @pagy,
+                                                     topics: @topics,
+                                                     title: @page.title,
+                                                     perex: @page.perex))
