@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Dummy::Atom::Blog::Articles::IndexComponent < ApplicationComponent
+  include Dummy::Blog::SetPagyAndArticlesFromScope
   include Pagy::Backend
 
   def initialize(atom:, atom_options: {})
@@ -25,6 +26,6 @@ class Dummy::Atom::Blog::Articles::IndexComponent < ApplicationComponent
                                 .ordered
                                 .limit(20)
 
-    @pagy, @articles = pagy(articles, items: Dummy::Blog::ARTICLE_PAGY_ITEMS)
+    set_pagy_and_articles_from_scope(articles)
   end
 end

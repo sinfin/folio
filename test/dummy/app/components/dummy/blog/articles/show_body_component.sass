@@ -1,4 +1,8 @@
 .d-blog-articles-show-body
+  &__atoms .container-fluid
+    padding-left: 0 !important
+    padding-right: 0 !important
+
   &__row
     display: flex
     gap: 1.5*$grid-gutter-width
@@ -37,22 +41,3 @@
   &__recommended-title
     +font-size-display-xs
     font-weight: $font-weight-bold
-
-  &__perex
-    margin-bottom: 5*$grid-gutter-base
-    padding-bottom: $grid-gutter-width
-    position: relative
-    +font-size-text-xl
-    font-weight: $font-weight-semibold
-    &:after
-      content: ""
-      position: absolute
-      left: 0
-      bottom: 0
-      display: block
-      width: px-to-rem(100px)
-      height: px-to-rem(4px)
-      background-color: $transparent-b300
-
-  &__content
-    +font-size-text-l

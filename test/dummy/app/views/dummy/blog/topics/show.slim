@@ -1,20 +1,16 @@
 = render_folio_cache
+  = render(Dummy::Ui::HeroComponent.new(title: @topic.title,
+                                        perex: @topic.perex,
+                                        breadcrumbs: @breadcrumbs_on_rails,
+                                        show_divider: true,
+                                        href: true))
+
   .container-fluid
-    h1 = cstypo @topic.title
+    - if @articles.present?
+      = render(Dummy::Blog::Articles::CardsComponent.new(size: :md,
+                                                         hero_size: @pagy && @pagy.page > 1 ? nil : :lg,
+                                                         column_classes: "col-12 col-sm-6 col-lg-4",
+                                                         articles: @articles))
 
-    - if @topic.perex.present?
-      .lead.mb-4 == cstypo simple_format @topic.perex
-
-    / TODO: add a custom content as in figma
-    / = render_atoms_in_molecules(@topic.atoms_in_molecules)
-    .mt-4
-      - if @articles.present?
-        = render(Dummy::Blog::Articles::CardsComponent.new( \
-                 size: :md,
-                 hero_size: :lg,
-                 container_classes: "mt-sm-2",
-                 column_classes: "col-12 col-sm-6 col-lg-4",
-                 articles: @articles))
-
-      - if @pagy.present?
-        = render(Dummy::Ui::PagyComponent.new(pagy: @pagy))
+    - if @pagy.present?
+      = render(Dummy::Ui::PagyComponent.new(pagy: @pagy))

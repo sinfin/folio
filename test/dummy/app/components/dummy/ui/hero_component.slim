@@ -26,7 +26,11 @@ div[
       .d-ui-hero__content
         - if @title.present?
           h1.d-ui-hero__title class=adaptive_font_size_class_name(@title)
-            = @title
+            - if @href
+              a.d-unlink href=(@href == true ? request.path : @href)
+                = cstypo @title
+            - else
+              = cstypo @title
 
         - if @perex.present?
           .d-ui-hero__text.fs-text-l

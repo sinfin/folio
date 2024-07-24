@@ -3,7 +3,8 @@
     - if @title.present? || @perex.present?
       = render(Dummy::Ui::HeroComponent.new(title: @title,
                                             perex: @perex,
-                                            show_divider: true))
+                                            show_divider: true,
+                                            href: true))
 
     .mb-4
       - if @topics.present? && !active_pagy?

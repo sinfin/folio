@@ -90,17 +90,21 @@ namespace :blog do
                                                    published: true,
                                                    published_at: 1.day.ago)
 
-            article.atoms.create(type: "Dummy::Atom::Text",
+            article.atoms.create(type: "Dummy::Atom::Perex",
                                  content: "<p>#{Faker::Hipster.paragraph}</p>",
                                  position: 1)
 
+            article.atoms.create(type: "Dummy::Atom::Text",
+                                 content: "<p>#{Faker::Hipster.paragraph}</p>",
+                                 position: 2)
+
             article.atoms.create(type: "Dummy::Atom::Images::Single",
                                  cover: images.sample,
-                                 position: 2)
+                                 position: 3)
 
             article.atoms.create(type: "Dummy::Atom::Text",
                                  content: "<p>#{Faker::Hipster.paragraph}</p>",
-                                 position: 3)
+                                 position: 4)
 
             print "."
           end

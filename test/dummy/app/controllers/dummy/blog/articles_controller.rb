@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-class Dummy::Blog::ArticlesController < ApplicationController
+class Dummy::Blog::ArticlesController < Dummy::Blog::BaseController
   def index
     folio_run_unless_cached(["blog/articles#index", params[:page], params[:t]] + cache_key_base) do
-      @page = Dummy::Page::Blog::Articles::Index.instance(site: Folio::Current.site, fail_on_missing: true)
+      @page = blog_articles_index_page
       set_meta_variables(@page)
 
       @atom_options = { page: @page }
@@ -34,7 +34,6 @@ class Dummy::Blog::ArticlesController < ApplicationController
 
       @articles = pagy(articles, items: 3)
 
-      add_breadcrumb_on_rails @page.title, dummy_blog_articles_path
       add_breadcrumb_on_rails @article.title
     end
   end

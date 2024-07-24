@@ -31,6 +31,7 @@ class Dummy::Ui::HeroComponent < ApplicationComponent
 
   def initialize(title: nil,
                  perex: nil,
+                 href: nil,
                  date: nil,
                  authors: nil,
                  cover: nil,
@@ -44,6 +45,7 @@ class Dummy::Ui::HeroComponent < ApplicationComponent
                  topics: nil)
     @title = title
     @perex = perex
+    @href = href
     @date = date
     @authors = authors
     @cover = cover
