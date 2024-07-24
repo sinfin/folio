@@ -7,6 +7,9 @@ class Dummy::Blog::TopicsController < Dummy::Blog::BaseController
                                  .by_locale(I18n.locale)
                                  .by_site(Folio::Current.site)
                                  .friendly.find(params[:id])
+
+      return if force_correct_path(url_for(@author))
+
       set_meta_variables(@topic)
 
       articles = @topic.published_articles
@@ -16,9 +19,7 @@ class Dummy::Blog::TopicsController < Dummy::Blog::BaseController
 
       set_pagy_and_articles_from_scope(articles)
 
-      force_correct_path(url_for(@topic))
-
-      add_breadcrumb_on_rails @topic.title
+      add_breadcrumb_on_rails @topic.to_label
     end
   end
 end
