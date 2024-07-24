@@ -39,8 +39,8 @@ class Dummy::Ui::HeroComponent < ApplicationComponent
                  theme: ALLOWED_THEMES.first,
                  background_overlay: ALLOWED_OVERLAYS.first,
                  background_color: nil,
-                 show_divider: false)
-
+                 show_divider: false,
+                 breadcrumbs: nil)
     @title = title
     @perex = perex
     @date = date
@@ -49,6 +49,7 @@ class Dummy::Ui::HeroComponent < ApplicationComponent
     @background_cover = background_cover
     @background_color = background_color
     @show_divider = show_divider
+    @breadcrumbs = breadcrumbs
 
     @image_size = set_allowed_option(:image_size, image_size, ALLOWED_IMAGE_SIZES)
     @theme = set_allowed_option(:theme, theme, ALLOWED_THEMES)

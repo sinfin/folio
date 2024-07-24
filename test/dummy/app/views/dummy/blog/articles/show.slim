@@ -1,7 +1,8 @@
 = render_folio_cache
   == cell('folio/publishable_hint', @article)
 
-  = render(Dummy::Blog::Articles::ShowHeaderComponent.new(article: @article))
+  = render(Dummy::Blog::Articles::ShowHeaderComponent.new(article: @article,
+                                                          breadcrumbs: @breadcrumbs_on_rails))
 
   = render(Dummy::Blog::Articles::ShowBodyComponent.new(article: @article,
                                                         articles: @articles))

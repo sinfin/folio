@@ -2,6 +2,10 @@ div[
   class=bem_class_name
   style=atom_styles
 ]
+  - if @breadcrumbs.present?
+    .d-ui-hero__breadcrumbs-wrap
+      = render(Dummy::Ui::BreadcrumbsComponent.new(breadcrumbs: @breadcrumbs))
+
   - if @background_cover.present?
     = dummy_ui_image @background_cover,
                      THUMB_SIZES[:background],

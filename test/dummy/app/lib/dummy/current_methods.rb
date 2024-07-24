@@ -23,6 +23,7 @@ module Dummy::CurrentMethods
 
       Folio::Page.where(type: %w[
         Dummy::Page::Homepage
+        Dummy::Page::Blog::Articles::Index
       ]).each { |p| h[p.type] = p }
 
       h

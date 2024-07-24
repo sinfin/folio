@@ -11,7 +11,11 @@ class Dummy::Blog::ArticlesController < ApplicationController
   end
 
   def show
+    @hide_breadcrumbs = true
+
     folio_run_unless_cached(["blog/articles#show", params[:id]] + cache_key_base) do
+      @page = Dummy::Page::Blog::Articles::Index.instance(site: Folio::Current.site, fail_on_missing: true)
+
       @article = Dummy::Blog::Article.published_or_preview_token(params[Folio::Publishable::PREVIEW_PARAM_NAME])
                                      .by_locale(I18n.locale)
                                      .by_site(Folio::Current.site)
@@ -29,6 +33,9 @@ class Dummy::Blog::ArticlesController < ApplicationController
                                      .includes(Dummy::Blog.article_includes)
 
       @articles = pagy(articles, items: 3)
+
+      add_breadcrumb_on_rails @page.title, dummy_blog_articles_path
+      add_breadcrumb_on_rails @article.title
     end
   end
 end
