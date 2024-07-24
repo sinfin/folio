@@ -1,52 +1,53 @@
 .d-blog-articles-show-header
-  .container-fluid
-    .d-blog-articles-show-header__inner
-      .d-blog-articles-show-header__cover
-        - if @article.cover_placement.present?
-          = dummy_ui_image(@article.cover_placement,
-                          COVER_SIZE,
-                          class_name: \
-                          'd-blog-articles-show-header__cover-img',
-                          border_radius: true)
+  = hero_component
+  / .container-fluid
+  /   .d-blog-articles-show-header__inner
+  /     .d-blog-articles-show-header__cover
+  /       - if @article.cover_placement.present?
+  /         = dummy_ui_image(@article.cover_placement,
+  /                         COVER_SIZE,
+  /                         class_name: \
+  /                         'd-blog-articles-show-header__cover-img',
+  /                         border_radius: true)
 
-          / TODO: Photo author/alt/title
-          - if photo_author.present?
-            .d-blog-articles-show-header__credits
-              .d-blog-articles-show-header__credits-icon
-                = dummy_ui_icon(:info,
-                                height: 16)
+  /         / TODO: Photo author/alt/title
+  /         - if photo_author.present?
+  /           .d-blog-articles-show-header__credits
+  /             .d-blog-articles-show-header__credits-icon
+  /               = dummy_ui_icon(:info,
+  /                               height: 16)
 
-              p.d-blog-articles-show-header__credits-text
-                = cstypo "#{t('.photo_author')}: #{photo_author}"
+  /             p.d-blog-articles-show-header__credits-text
+  /               = cstypo "#{t('.photo_author')}: #{photo_author}"
 
-      h1.d-blog-articles-show-header__title[
-        class=(@article.title.size >= 200 ? \
-              'd-blog-articles-show-header__title--small' \
-              : @article.title.size >= 100 ? \
-              'd-blog-articles-show-header__title--medium' \
-              : nil)
-      ]
-        = cstypo @article.title
+  /     h1.d-blog-articles-show-header__title[
+  /       class=(@article.title.size >= 200 ? \
+  /             'd-blog-articles-show-header__title--small' \
+  /             : @article.title.size >= 100 ? \
+  /             'd-blog-articles-show-header__title--medium' \
+  /             : nil)
+  /     ]
+  /       = cstypo @article.title
 
-      .d-blog-articles-show-header__info
+  /     .d-blog-articles-show-header__info
 
-        -if @article.published_at.present?
-          time.d-blog-articles-show-header__date[
-            datetime=l(@article.published_at, format: :console_html_datetime)
-          ]
-            = l(@article.published_at, format: :console_short_date)
+  /       -if @article.published_at.present?
+  /         time.d-blog-articles-show-header__date[
+  /           datetime=l(@article.published_at, format: :console_html_datetime)
+  /         ]
+  /           = l(@article.published_at, format: :console_short_date)
 
-        //TODO: add real author data
-        .d-blog-articles-show-header__author
-          - if @article.cover_placement.present?
-            .d-blog-articles-show-header__author-cover
-              = dummy_ui_image(@article.cover_placement,
-                              AUTHOR_AVATAR_SIZE,
-                              cover: true,
-                              class_name: \
-                                'd-blog-articles-show-header__author-cover-image',
-                              border_radius: true)
-          = "Name Surname"
+  /       //TODO: add real author data
+  /       .d-blog-articles-show-header__author
+  /         - if @article.cover_placement.present?
+  /           .d-blog-articles-show-header__author-cover
+  /             = dummy_ui_image(@article.cover_placement,
+  /                             AUTHOR_AVATAR_SIZE,
+  /                             cover: true,
+  /                             class_name: \
+  /                               'd-blog-articles-show-header__author-cover-image',
+  /                             border_radius: true)
+  /         = "Name Surname"
 
-      = render(Dummy::Blog::Articles::TopicTagsComponent.new( \
-              article: @article))
+  /     = render(Dummy::Blog::Articles::TopicTagsComponent.new( \
+  /             article: @article))

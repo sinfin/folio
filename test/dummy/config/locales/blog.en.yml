@@ -47,9 +47,6 @@ en:
         show_body_component:
           recommended_articles: Recommended articles
 
-        show_header_component:
-          photo_author: Photo
-
       topics:
         list_component:
           topics: "Topics:"
