@@ -33,4 +33,12 @@
 
   span.d-ui-image__spacer style=spacer_style
 
+  - if credits_to_render
+    .d-ui-image__credits.fs-text-xs
+      .d-ui-image__credits-icon
+        = dummy_ui_icon(:info, height: 16)
+
+      p.d-ui-image__credits-text
+        = cstypo "#{t('.credits')}: #{credits_to_render}"
+
   == @additional_html

@@ -24,7 +24,8 @@ class Dummy::Ui::ImageComponent < ApplicationComponent
                  round: false,
                  border_radius: false,
                  additional_html: nil,
-                 class_name: nil)
+                 class_name: nil,
+                 credits: false)
     @placement = placement
     @size = size
     @lightbox = lightbox
@@ -44,6 +45,7 @@ class Dummy::Ui::ImageComponent < ApplicationComponent
     @border_radius = border_radius
     @lazy = lazy
     @data = set_data(placement)
+    @credits = credits
   end
 
   def set_data(placement)
@@ -276,5 +278,15 @@ class Dummy::Ui::ImageComponent < ApplicationComponent
     end
 
     @sensitive_content = file.try(:sensitive_content?) || false
+  end
+
+  def credits_to_render
+    @credits_to_render ||= if @credits
+      if @credits == true
+        @data[:file].author.presence
+      elsif @data && @data[:file] && @data[:file].author.present?
+        @credits
+      end
+    end
   end
 end

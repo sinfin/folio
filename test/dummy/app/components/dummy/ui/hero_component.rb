@@ -65,6 +65,28 @@ class Dummy::Ui::HeroComponent < ApplicationComponent
     "background-color: #{@background_color};" if @background_color.present?
   end
 
+  def cover_images_data
+    @cover_images_data ||= begin
+      ary = []
+
+      if @cover.present?
+        img_class_name = "d-ui-hero__image"
+
+        if @image_size == "container"
+          img_class_name += " d-ui-hero__image--contained"
+        end
+
+        if mobile_thumb_size.present?
+          ary << [@cover, mobile_thumb_size, "#{img_class_name} d-ui-hero__image--mobile"]
+        end
+
+        ary << [@cover, thumb_size, img_class_name]
+      end
+
+      ary
+    end
+  end
+
   def cover_tag
     @cover_tag ||= begin
       images = []
