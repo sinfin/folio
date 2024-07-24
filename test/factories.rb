@@ -171,6 +171,8 @@ FactoryBot.define do
 
   factory :dummy_menu, class: "Dummy::Menu::Navigation", parent: :folio_menu
 
+  factory :dummy_menu_footer, class: "Dummy::Menu::Footer", parent: :folio_menu
+
   factory :dummy_blog_article, class: "Dummy::Blog::Article" do
     sequence(:title) { |i| "Article title #{i + 1}" }
     perex { "perex" }

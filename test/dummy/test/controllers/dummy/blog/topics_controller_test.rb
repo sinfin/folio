@@ -7,6 +7,13 @@ class Dummy::Blog::TopicsControllerTest < Folio::BaseControllerTest
     topic = create(:dummy_blog_topic)
     get url_for(topic)
     assert_response :ok
+    assert_select(".d-blog-articles-card", 0)
+
+    create(:dummy_blog_article, topics: [topic])
+
+    get url_for(topic)
+    assert_response :ok
+    assert_select(".d-blog-articles-card")
 
     topic.update!(published: false)
 
