@@ -5,9 +5,9 @@ namespace :blog do
     Rake::Task["developer_tools:idp_seed_dummy_images"].invoke
     images = Folio::File::Image.tagged_with("unsplash").to_a
 
-    target_authors_count = 5
-    target_topic_count = 5
-    target_articles_count = 30
+    5
+    5
+    30
 
     if ENV["FORCE"]
       puts "Destroying all blog records as FORCE was passed"
@@ -111,5 +111,3 @@ namespace :blog do
     end
   end
 end
-
-

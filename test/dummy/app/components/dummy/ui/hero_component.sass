@@ -44,13 +44,24 @@
     
   &--show-divider &__content
     border-bottom: 1px solid $transparent-b300
+    margin-bottom: map-get($spacers, f)
+
+    +media-breakpoint-up(lg)
+      margin-bottom: map-get($spacers, g)
+
 
   &__title
-    margin: 0 0 map-get($spacers, c)
+    margin: 0 auto map-get($spacers, c)
+
+    &:last-child
+      margin-bottom: 0
 
   &__text
-    max-width: 800px
     margin: 0 auto
+
+  &__text,
+  &__title
+    max-width: px-to-rem(956px)
 
   &__article-meta
     display: flex

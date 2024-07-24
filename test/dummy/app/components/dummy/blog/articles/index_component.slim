@@ -2,7 +2,8 @@
   .container-fluid
     - if @title.present? || @perex.present?
       = render(Dummy::Ui::HeroComponent.new(title: @title,
-                                            perex: @perex))
+                                            perex: @perex,
+                                            show_divider: true))
 
     .mb-4
       - if @topics.present? && !active_pagy?
