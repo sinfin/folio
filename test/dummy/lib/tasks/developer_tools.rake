@@ -176,68 +176,6 @@ namespace :developer_tools do
     end
   end
 
-  namespace :blog do
-    task idp_seed_dummy_blog: :environment do
-      Rake::Task["developer_tools:idp_seed_dummy_images"].invoke
-      images = Folio::File::Image.tagged_with("unsplash").to_a
-
-      topic_count = 5
-      article_count = 30
-
-      if ENV["FORCE"]
-        puts "Destroying all articles and topics as FORCE was passed"
-        Dummy::Blog::Article.destroy_all
-        Dummy::Blog::Topic.destroy_all
-      end
-
-      Folio::Site.find_each do |site|
-        Dummy::Blog.available_locales.each do |locale|
-          puts "Seeding #{topic_count} dummy blog topics for site #{site.slug} with #{locale} locale."
-
-          topic_count.times do
-            Dummy::Blog::Topic.create!(title: Faker::Hipster.sentence(word_count: rand(1..3)),
-                                       locale:,
-                                       cover: images.sample,
-                                       published: true)
-            print "."
-          end
-
-          puts "\nSeeded #{topic_count} dummy blog topics for site #{site.slug} with #{locale} locale."
-
-          topics = Dummy::Blog::Topic.where(locale:).to_a
-
-          puts "Seeding #{article_count} dummy blog articles for site #{site.slug} with #{locale} locale."
-
-          article_count.times do
-            article = Dummy::Blog::Article.create!(title: Faker::Hipster.sentence(word_count: rand(1..3)),
-                                                   perex: Faker::Hipster.paragraph,
-                                                   locale:,
-                                                   topics: topics.sample(rand(1..3)),
-                                                   cover: images.sample,
-                                                   published: true,
-                                                   published_at: 1.day.ago)
-
-            article.atoms.create(type: "Dummy::Atom::Text",
-                                 content: "<p>#{Faker::Hipster.paragraph}</p>",
-                                 position: 1)
-
-            article.atoms.create(type: "Dummy::Atom::Images::Single",
-                                 cover: images.sample,
-                                 position: 2)
-
-            article.atoms.create(type: "Dummy::Atom::Text",
-                                 content: "<p>#{Faker::Hipster.paragraph}</p>",
-                                 position: 3)
-
-            print "."
-          end
-
-          puts "\nSeeded #{article_count} dummy blog articles for site #{site.slug} with #{locale} locale."
-        end
-      end
-    end
-  end
-
   namespace :atoms do
     desc "Screenshot atoms from atoms_showcase"
     task screenshot: :environment do
