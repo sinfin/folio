@@ -87,10 +87,12 @@ class Dummy::Ui::HeroComponent < ApplicationComponent
                                  class_name: img_class_name)
       end
 
-      class_name = "d-ui-hero__cover-container"
-      class_name = "container-fluid" if @image_size != "full_width"
+      if images.present?
+        class_name = "d-ui-hero__cover-container"
+        class_name = "container-fluid" if @image_size != "full_width"
 
-      content_tag :div, images.join("").html_safe, class: class_name
+        content_tag :div, images.join("").html_safe, class: class_name
+      end
     end
   end
 
