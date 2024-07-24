@@ -28,6 +28,8 @@ class Dummy::Blog::Topic < ApplicationRecord
   validates :locale,
             inclusion: { in: Dummy::Blog.available_locales }
 
+  validate :validate_matching_locales_and_sites
+
   pg_search_scope :by_query,
                   against: {
                     title: "A",
@@ -64,6 +66,17 @@ class Dummy::Blog::Topic < ApplicationRecord
 
     h
   end
+
+  private
+    def validate_matching_locales_and_sites
+      if locale_changed? && articles.where.not(locale:).exists?
+        errors.add(:locale, :articles_have_different_locale)
+      end
+
+      if site_id_changed? && articles.where.not(site_id:).exists?
+        errors.add(:site, :articles_have_different_site)
+      end
+    end
 end
 
 # == Schema Information
