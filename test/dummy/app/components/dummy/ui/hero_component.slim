@@ -32,6 +32,16 @@ div[
             - else
               = cstypo @title
 
+        - if @subtitle.present? || @strong_subtitle.present?
+          .d-ui-hero__subtitles
+            - if @strong_subtitle.present?
+              .d-ui-hero__subtitle.fw-semibold
+                = cstypo @strong_subtitle
+
+            - if @subtitle.present?
+              .d-ui-hero__subtitle
+                = cstypo @subtitle
+
         - if @perex.present?
           .d-ui-hero__text.fs-text-l
             p.mb-0 = cstypo @perex

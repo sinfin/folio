@@ -87,6 +87,8 @@ class CreateBlog < ActiveRecord::Migration[7.0]
 
       t.string :preview_token
 
+      t.string :job
+
       t.string :meta_title
       t.text :meta_description
 
@@ -100,14 +102,14 @@ class CreateBlog < ActiveRecord::Migration[7.0]
     add_index :dummy_blog_authors, :featured
     add_index :dummy_blog_authors, :published
     add_index :dummy_blog_authors, :position
-  end
 
-  create_table :dummy_blog_author_article_links do |t|
-    t.belongs_to :dummy_blog_author, index: { name: :dummy_blog_author_article_links_t_id }
-    t.belongs_to :dummy_blog_article, index: { name: :dummy_blog_author_article_links_a_id }
+    create_table :dummy_blog_author_article_links do |t|
+      t.belongs_to :dummy_blog_author, index: { name: :dummy_blog_author_article_links_t_id }
+      t.belongs_to :dummy_blog_article, index: { name: :dummy_blog_author_article_links_a_id }
 
-    t.integer :position
+      t.integer :position
 
-    t.timestamps
+      t.timestamps
+    end
   end
 end

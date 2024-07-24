@@ -58,7 +58,10 @@ class Dummy::Blog::Author < ApplicationRecord
       ],
     }
 
-    [].uniq.each do |size|
+    [
+      Dummy::Ui::AuthorMedallionComponent::THUMB_SIZE[:s],
+      Dummy::Ui::AuthorMedallionComponent::THUMB_SIZE[:m],
+    ].uniq.each do |size|
       h["Folio::FilePlacement::Cover"] << size
       h["Folio::FilePlacement::Cover"] << size.gsub(/\d+/) { |n| n.to_i * 2 }
     end

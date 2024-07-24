@@ -74,6 +74,23 @@
   &__cover-container
     position: relative
 
+  &__subtitles
+    +font-size-text-m
+    margin: map-get($spacers, b) 0
+    gap: map-get($spacers, b)
+    display: flex
+    align-items: center
+    justify-content: center
+    flex-wrap: wrap
+
+    +media-breakpoint-up(md)
+      +font-size-text-l
+      margin: map-get($spacers, c) 0
+      gap: map-get($spacers, c)
+
+    +media-breakpoint-up(xl)
+      +font-size-text-xl
+
   +media-breakpoint-up(lg)
     &__image--contained
       min-height: 470px

@@ -41,9 +41,10 @@ namespace :blog do
           puts "Need to seed #{needed_topic_count} dummy blog topics for site #{site.slug} with #{locale} locale."
 
           needed_topic_count.times do
-            Dummy::Blog::Topic.create!(title: Faker::Hipster.sentence(word_count: rand(1..3)),
+            Dummy::Blog::Topic.create!(title: Faker::Hipster.sentence(word_count: rand(1..3), random_words_to_add: 0),
                                        locale:,
                                        cover: images.sample,
+                                       perex: Faker::Hipster.paragraph,
                                        published: true,
                                        site:)
             print "."
@@ -63,8 +64,10 @@ namespace :blog do
             Dummy::Blog::Author.create!(first_name: Faker::Name.first_name,
                                         last_name: Faker::Name.last_name,
                                         locale:,
+                                        perex: Faker::Hipster.paragraph,
                                         cover: images.sample,
                                         published: true,
+                                        job: Faker::Hipster.sentence(word_count: rand(1..3), random_words_to_add: 0).delete_suffix("."),
                                         site:)
             print "."
           end
@@ -80,7 +83,7 @@ namespace :blog do
           puts "Need to seed #{needed_articles_count} dummy blog articles for site #{site.slug} with #{locale} locale."
 
           needed_articles_count.times do
-            article = Dummy::Blog::Article.create!(title: Faker::Hipster.sentence(word_count: rand(1..3)),
+            article = Dummy::Blog::Article.create!(title: Faker::Hipster.sentence(word_count: rand(1..3), random_words_to_add: 0),
                                                    perex: Faker::Hipster.paragraph,
                                                    locale:,
                                                    topics: topics.sample(rand(1..3)),

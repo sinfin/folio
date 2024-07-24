@@ -8,6 +8,9 @@ cs:
         author: Autor
         authors: Autoři
 
+      dummy/blog/author:
+        job: Práce
+
       dummy/blog/topic:
         articles_count: Články
 
@@ -52,6 +55,13 @@ cs:
 
         show_body_component:
           recommended_articles: Vybrané články
+
+      authors:
+        show:
+          published_articles_count:
+            one: 1 Článek
+            few: "%{count} Články"
+            other: "%{count} Článků"
 
       topics:
         list_component:

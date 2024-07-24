@@ -36,6 +36,8 @@ class Dummy::Ui::HeroComponent < ApplicationComponent
                  authors: nil,
                  cover: nil,
                  background_cover: nil,
+                 strong_subtitle: nil,
+                 subtitle: nil,
                  image_size: ALLOWED_IMAGE_SIZES.first,
                  theme: ALLOWED_THEMES.first,
                  background_overlay: ALLOWED_OVERLAYS.first,
@@ -54,6 +56,8 @@ class Dummy::Ui::HeroComponent < ApplicationComponent
     @show_divider = show_divider
     @breadcrumbs = breadcrumbs
     @topics = topics
+    @strong_subtitle = strong_subtitle
+    @subtitle = subtitle
 
     @image_size = set_allowed_option(:image_size, image_size, ALLOWED_IMAGE_SIZES)
     @theme = set_allowed_option(:theme, theme, ALLOWED_THEMES)

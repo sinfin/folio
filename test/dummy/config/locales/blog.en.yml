@@ -8,6 +8,9 @@ en:
         author: Author
         authors: Authors
 
+      dummy/blog/author:
+        job: Job
+
       dummy/blog/topic:
         articles_count: Articles
 
@@ -46,6 +49,12 @@ en:
 
         show_body_component:
           recommended_articles: Recommended articles
+
+      authors:
+        show:
+          published_articles_count:
+            one: 1 Article
+            other: "%{count} Articles"
 
       topics:
         list_component:

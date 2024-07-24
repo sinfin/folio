@@ -86,6 +86,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_23_000000) do
     t.integer "articles_count", default: 0
     t.integer "position"
     t.string "preview_token"
+    t.string "job"
     t.string "meta_title"
     t.text "meta_description"
     t.jsonb "social_links"

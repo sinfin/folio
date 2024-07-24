@@ -20,6 +20,9 @@ class Dummy::Blog::AuthorsController < Dummy::Blog::BaseController
       set_pagy_and_articles_from_scope(articles)
 
       add_breadcrumb_on_rails @author.to_label
+
+      published_articles_count = @author.published_articles.count
+      @published_articles_count = t(".published_articles_count", count: published_articles_count)
     end
   end
 end
