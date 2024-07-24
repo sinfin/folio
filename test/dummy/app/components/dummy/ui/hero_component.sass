@@ -91,6 +91,35 @@
     +media-breakpoint-up(xl)
       +font-size-text-xl
 
+  &__links
+    +font-size-text-xs
+    color: $shade-500
+    display: flex
+    align-items: center
+    justify-content: center
+    flex-wrap: wrap
+    gap: map-get($spacers, b) 0
+    margin-top: map-get($spacers, e)
+
+    +media-breakpoint-up(md)
+      +font-size-text-s
+
+  &__links-li
+    &::after
+      content: "|"
+      color: $transparent-b200
+      display: inline-block
+      margin: 0 map-get($spacers, b)
+
+    &:last-child::after
+      display: none
+
+  &__links-a
+    text-decoration: none
+
+    &:hover
+      text-decoration: underline
+
   +media-breakpoint-up(lg)
     &__image--contained
       min-height: 470px

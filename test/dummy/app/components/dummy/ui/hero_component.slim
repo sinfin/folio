@@ -56,6 +56,16 @@ div[
               - @authors.each do |author|
                 = render(Dummy::Ui::AuthorMedallionComponent.new(**author))
 
+        - if @links.present?
+          ul.d-ui-hero__links
+            - @links.each do |link|
+              li.d-ui-hero__links-li
+                a.d-ui-hero__links-a[
+                  href=link[:href]
+                  target="_blank"
+                ]
+                  = link[:label]
+
         - if @topics.present?
           .mt-d
             = render(Dummy::Ui::TopicsComponent.new(topics: @topics,

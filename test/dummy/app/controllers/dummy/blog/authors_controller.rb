@@ -23,6 +23,12 @@ class Dummy::Blog::AuthorsController < Dummy::Blog::BaseController
 
       published_articles_count = @author.published_articles.count
       @published_articles_count = t(".published_articles_count", count: published_articles_count)
+
+      @hero_links = if @author.social_links.present?
+        @author.social_links.map do |key, value|
+          { label: key, href: value }
+        end
+      end
     end
   end
 end

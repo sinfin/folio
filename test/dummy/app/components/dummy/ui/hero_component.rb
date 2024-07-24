@@ -44,7 +44,8 @@ class Dummy::Ui::HeroComponent < ApplicationComponent
                  background_color: nil,
                  show_divider: false,
                  breadcrumbs: nil,
-                 topics: nil)
+                 topics: nil,
+                 links: nil)
     @title = title
     @perex = perex
     @href = href
@@ -55,9 +56,10 @@ class Dummy::Ui::HeroComponent < ApplicationComponent
     @background_color = background_color
     @show_divider = show_divider
     @breadcrumbs = breadcrumbs
-    @topics = topics
     @strong_subtitle = strong_subtitle
     @subtitle = subtitle
+    @topics = topics
+    @links = links
 
     @image_size = set_allowed_option(:image_size, image_size, ALLOWED_IMAGE_SIZES)
     @theme = set_allowed_option(:theme, theme, ALLOWED_THEMES)

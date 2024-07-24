@@ -61,6 +61,10 @@ namespace :blog do
           puts "Need to seed #{needed_authors_count} dummy blog authors for site #{site.slug} with #{locale} locale."
 
           needed_authors_count.times do
+            social_links = Hash[Dummy::Blog::Author.social_link_sites.sample(rand(0..6)).map do |key|
+              [key.to_s, "##{key}"]
+            end]
+
             Dummy::Blog::Author.create!(first_name: Faker::Name.first_name,
                                         last_name: Faker::Name.last_name,
                                         locale:,
@@ -68,6 +72,7 @@ namespace :blog do
                                         cover: images.sample,
                                         published: true,
                                         job: Faker::Hipster.sentence(word_count: rand(1..3), random_words_to_add: 0).delete_suffix("."),
+                                        social_links:,
                                         site:)
             print "."
           end
