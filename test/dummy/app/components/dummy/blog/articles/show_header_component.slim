@@ -9,15 +9,15 @@
                           'd-blog-articles-show-header__cover-img',
                           border_radius: true)
 
-        / TODO: Photo author/alt/title
-        - if @article.cover_placement.placement_title
-          .d-blog-articles-show-header__credits
-            .d-blog-articles-show-header__credits-icon
-              = dummy_ui_icon(:info,
-                              height: 16)
+          / TODO: Photo author/alt/title
+          - if photo_author.present?
+            .d-blog-articles-show-header__credits
+              .d-blog-articles-show-header__credits-icon
+                = dummy_ui_icon(:info,
+                                height: 16)
 
-            p.d-blog-articles-show-header__credits-text
-              =cstypo @article.cover_placement.placement_title
+              p.d-blog-articles-show-header__credits-text
+                = cstypo "#{t('.photo_author')}: #{photo_author}"
 
       h1.d-blog-articles-show-header__title[
         class=(@article.title.size >= 200 ? \

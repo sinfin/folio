@@ -7,4 +7,8 @@ class Dummy::Blog::Articles::ShowHeaderComponent < ApplicationComponent
   def initialize(article:)
     @article = article
   end
+
+  def photo_author
+    @photo_author ||= @article.cover_placement.try(:file).try(:author)
+  end
 end
