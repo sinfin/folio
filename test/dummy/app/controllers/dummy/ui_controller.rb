@@ -23,6 +23,7 @@ class Dummy::UiController < ApplicationController
       slide_lists
       tabs
       share
+      topics
       typo
     ]
   end
@@ -116,6 +117,25 @@ class Dummy::UiController < ApplicationController
       { links: },
       { links:, large: true },
     ]
+  end
+
+  def topics
+    topics = Array.new(16) do |i|
+      label = if [3, 4].include?(i)
+        Faker::Hipster.sentence.delete_suffix(".")
+      else
+        Faker::Hipster.word.capitalize
+      end
+
+      { label:, href: "##{label.parameterize}", active: i == 1 }
+    end
+
+    @topics = {
+      "Default" => { topics: },
+      "Centered" => { topics:, centered: true },
+      "Small" => { topics:, small: true },
+      "Small centered" => { topics:, centered: true, small: true },
+    }
   end
 
   def hero

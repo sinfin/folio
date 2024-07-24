@@ -20,6 +20,7 @@ scope module: :dummy, as: :dummy do
     get :share
     get :slide_lists
     get :tabs
+    get :topics
     get :typo
   end
 end

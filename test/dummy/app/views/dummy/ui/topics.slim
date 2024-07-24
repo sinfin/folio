@@ -1,0 +1,13 @@
+.container-fluid
+  h1
+    a.d-unlink href=dummy_ui_path UI kit
+
+  - %w[light dark].each do |theme|
+    .bg-body.p-f.mt-g.border.rounded data-bs-theme=theme
+      h2.mt-0 Topics - #{theme}
+
+      - @topics.each do |title, hash|
+        h3 = title
+
+        .my-f
+          = render(Dummy::Ui::TopicsComponent.new(**hash))

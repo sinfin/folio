@@ -16,8 +16,8 @@ article.d-blog-articles-card[
         = @article.title
 
     .d-blog-articles-card__details
-      = render(Dummy::Blog::Articles::TopicTagsComponent.new(\
-               article: @article, size: :sm))
+      - if topics.present?
+        = render(Dummy::Ui::TopicsComponent.new(topics:, small: true))
 
       -if @article.published_at.present?
         time.d-blog-articles-card__date[

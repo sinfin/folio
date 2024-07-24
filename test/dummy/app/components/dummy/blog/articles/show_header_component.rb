@@ -9,10 +9,6 @@ class Dummy::Blog::Articles::ShowHeaderComponent < ApplicationComponent
     @breadcrumbs = breadcrumbs
   end
 
-  def photo_author
-    @photo_author ||= @article.cover_placement.try(:file).try(:author)
-  end
-
   def hero_component
     render(Dummy::Ui::HeroComponent.new(title: @article.title,
                                         perex: @article.perex,
@@ -25,6 +21,16 @@ class Dummy::Blog::Articles::ShowHeaderComponent < ApplicationComponent
                                             href: url_for(author),
                                           }
                                         end,
-                                        breadcrumbs: @breadcrumbs))
+                                        breadcrumbs: @breadcrumbs,
+                                        topics:))
+  end
+
+  def topics
+    @article.topics.map do |topic|
+      {
+        href: url_for(topic),
+        label: topic.to_label,
+      }
+    end
   end
 end

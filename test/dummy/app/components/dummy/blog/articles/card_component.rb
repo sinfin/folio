@@ -19,4 +19,13 @@ class Dummy::Blog::Articles::CardComponent < ApplicationComponent
       SMALL_COVER_SIZE
     end
   end
+
+  def topics
+    @topics ||= @article.topics.map do |topic|
+      {
+        href: url_for(topic),
+        label: topic.to_label,
+      }
+    end
+  end
 end

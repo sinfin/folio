@@ -1,0 +1,17 @@
+div class=bem_class_name
+  ul.d-ui-topics__ul
+    - @topics.each do |topic|
+      li.d-ui-topics__li
+        a.d-ui-topics__a[
+          href=topic[:href]
+          class=(topic[:active] ? 'd-ui-topics__a--active' : nil)
+          title=topic[:label]
+        ]
+          span.d-ui-topics__label
+            = topic[:label]
+
+          - if topic[:active] && topic[:close] != false
+            = dummy_ui_icon(:close,
+                            height: 20,
+                            class_name: "d-ui-topics__close")
+

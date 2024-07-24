@@ -41,3 +41,7 @@ div[
             - if @authors.present?
               - @authors.each do |author|
                 = render(Dummy::Ui::AuthorMedallionComponent.new(**author))
+
+        - if @topics.present?
+          = render(Dummy::Ui::TopicsComponent.new(topics: @topics,
+                                                  centered: true))
