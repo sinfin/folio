@@ -5,6 +5,8 @@ cs:
       dummy/blog/article:
         topic: Téma
         topics: Témata
+        author: Autor
+        authors: Autoři
 
       dummy/blog/topic:
         articles_count: Články

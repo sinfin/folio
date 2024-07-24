@@ -86,15 +86,13 @@ Rails.application.routes.draw do
     end
 
     namespace :blog do
-      resources :articles, only: %i[show] do
-        member { get :preview }
-      end
+      resources :articles, only: %i[show]
 
       get "/", to: "articles#index", as: :articles
 
-      resources :topics, only: %i[show] do
-        member { get :preview }
-      end
+      resources :topics, only: %i[show]
+
+      resources :authors, only: %i[show]
     end
   end
 

@@ -5,6 +5,8 @@ en:
       dummy/blog/article:
         topic: Topic
         topics: Topics
+        author: Author
+        authors: Authors
 
       dummy/blog/topic:
         articles_count: Articles

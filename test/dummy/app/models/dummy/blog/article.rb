@@ -16,9 +16,25 @@ class Dummy::Blog::Article < ApplicationRecord
                                                          reject_if: :all_blank
 
   has_many :topics, through: :topic_article_links, source: :topic
+
   has_many :published_topics, -> { published },
                               through: :topic_article_links,
                               source: :topic
+
+  has_many :author_article_links, -> { ordered },
+                                    class_name: "Dummy::Blog::AuthorArticleLink",
+                                    inverse_of: :article,
+                                    foreign_key: :dummy_blog_article_id,
+                                    dependent: :destroy
+
+  accepts_nested_attributes_for :author_article_links, allow_destroy: true,
+                                                       reject_if: :all_blank
+
+  has_many :authors, through: :author_article_links, source: :author
+
+  has_many :published_authors, -> { published },
+                              through: :author_article_links,
+                              source: :author
 
   validates :title,
             :perex,
@@ -58,6 +74,23 @@ class Dummy::Blog::Article < ApplicationRecord
 
     if topic
       by_topic(topic)
+    else
+      none
+    end
+  end
+
+  scope :by_author, -> (author) do
+    ids = Dummy::Blog::AuthorArticleLink.select(:dummy_blog_article_id)
+                                        .where(author:)
+
+    where(id: ids)
+  end
+
+  scope :by_author_slug, -> (slug) do
+    author = Dummy::Blog::Author.find_by(slug:)
+
+    if author
+      by_author(author)
     else
       none
     end

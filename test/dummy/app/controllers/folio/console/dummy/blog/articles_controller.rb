@@ -16,6 +16,11 @@ class Folio::Console::Dummy::Blog::ArticlesController < Folio::Console::BaseCont
       {
         by_locale: Dummy::Blog.available_locales,
         by_published: [true, false],
+        by_author_slug: {
+          klass: "Dummy::Blog::Author",
+          order_scope: :ordered,
+          slug: true,
+        },
         by_topic_slug: {
           klass: "Dummy::Blog::Topic",
           order_scope: :ordered,
