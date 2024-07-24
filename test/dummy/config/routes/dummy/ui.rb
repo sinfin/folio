@@ -3,6 +3,7 @@
 scope module: :dummy, as: :dummy do
   resource :ui, only: %i[show], controller: "ui" do
     get :alerts
+    get :author_medallions
     get :boolean_toggles
     get :breadcrumbs
     get :buttons

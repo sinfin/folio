@@ -1,0 +1,14 @@
+.container-fluid
+  h1
+    a.d-unlink href=dummy_ui_path UI kit
+
+  - %w[light dark].each do |theme|
+    .bg-body.p-f.mt-g.border.rounded data-bs-theme=theme
+      h2.mt-0 Author medallions - #{theme}
+
+      - @author_medallions.each do |title, ary|
+        h3 = title
+
+        .my-f.d-flex.gap-g.flex-wrap
+          - ary.each do |hash|
+              = render(Dummy::Ui::AuthorMedallionComponent.new(**hash))

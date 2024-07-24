@@ -6,6 +6,7 @@ class Dummy::UiController < ApplicationController
   def show
     @actions = %i[
       alerts
+      author_medallions
       boolean_toggles
       breadcrumbs
       buttons
@@ -135,6 +136,17 @@ class Dummy::UiController < ApplicationController
       "Centered" => { topics:, centered: true },
       "Small" => { topics:, small: true },
       "Small centered" => { topics:, centered: true, small: true },
+    }
+  end
+
+  def author_medallions
+    name = Faker::Name.name
+    href = request.path
+    cover = Folio::File::Image.tagged_with("unsplash").first
+
+    @author_medallions = {
+      "Small (default)" => [{ name:, href:, cover: }, { name:, href:, cover: nil },],
+      "Medium" => [{ size: :m, name:, href:, cover: }, { size: :m, name:, href:, cover: nil },],
     }
   end
 
