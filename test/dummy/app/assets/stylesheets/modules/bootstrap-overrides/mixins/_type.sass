@@ -193,5 +193,5 @@
       +media-breakpoint-up($mq)
         @each $name, $sizes in (large: $large, medium: $medium, small: $small)
           @if map-has-key($sizes, $mq)
-            &--font-size-#{$name}
+            &--#{$name}
               font-size: map-get($sizes, $mq)
