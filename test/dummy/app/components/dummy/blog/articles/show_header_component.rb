@@ -18,6 +18,13 @@ class Dummy::Blog::Articles::ShowHeaderComponent < ApplicationComponent
                                         perex: @article.perex,
                                         cover: @article.cover_placement,
                                         date: @article.published_at_with_fallback.to_date,
+                                        authors: @article.authors.includes(cover_placement: :file).map do |author|
+                                          {
+                                            cover: author.cover,
+                                            name: author.full_name,
+                                            href: url_for(author),
+                                          }
+                                        end,
                                         breadcrumbs: @breadcrumbs))
   end
 end

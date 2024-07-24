@@ -20,7 +20,7 @@ div[
         .position-relative
           - cover_images_data.each do |placement, size, class_name|
             = dummy_ui_image(placement, size, class_name:,
-                                              credits: true)
+                                              credits: @image_size != "small")
 
     .container-fluid
       .d-ui-hero__content
@@ -32,12 +32,12 @@ div[
           .d-ui-hero__text.fs-text-l
             p.mb-0 = cstypo @perex
 
-        - if @date.present? || @author.present?
+        - if @date.present? || @authors.present?
           .d-ui-hero__article-meta.fs-text-s
             - if @date.present?
               .d-ui-hero__article-meta-date
                 = l(@date, format: :folio_short)
 
-            - if @author.present?
-              a.d-ui-hero__article-meta-author href="#"
-                = @author
+            - if @authors.present?
+              - @authors.each do |author|
+                = render(Dummy::Ui::AuthorMedallionComponent.new(**author))

@@ -14,6 +14,7 @@ class Dummy::Blog::ArticlesControllerTest < Folio::BaseControllerTest
   end
 
   test "show" do
+    create_page_singleton(Dummy::Page::Blog::Articles::Index)
     article = create(:dummy_blog_article)
     get url_for(article)
     assert_response :ok

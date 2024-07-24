@@ -131,6 +131,14 @@ class Dummy::UiController < ApplicationController
         title: "One and two gallery title",
         perex: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis",
         show_divider: true,
+      },
+      {
+        cover:,
+        title: "One and two gallery title",
+        perex: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis",
+        date: Time.current.to_date,
+        authors: [{ name: "John Doe", href: request.path, cover: }],
+        show_divider: true,
       }, {
         cover:,
         title: "One and two gallery title",
@@ -203,7 +211,9 @@ class Dummy::UiController < ApplicationController
         perex: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis",
         background_overlay: "dark",
         theme: "dark",
-        author: "John Doe",
+        authors: [
+          { name: "John Doe", href: "#", cover: Folio::File::Image.tagged_with("unsplash").first },
+        ],
       }, {
         title: "One and two gallery title",
         perex: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis",

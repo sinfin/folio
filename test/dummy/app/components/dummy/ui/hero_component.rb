@@ -32,7 +32,7 @@ class Dummy::Ui::HeroComponent < ApplicationComponent
   def initialize(title: nil,
                  perex: nil,
                  date: nil,
-                 author: nil,
+                 authors: nil,
                  cover: nil,
                  background_cover: nil,
                  image_size: ALLOWED_IMAGE_SIZES.first,
@@ -44,7 +44,7 @@ class Dummy::Ui::HeroComponent < ApplicationComponent
     @title = title
     @perex = perex
     @date = date
-    @author = author
+    @authors = authors
     @cover = cover
     @background_cover = background_cover
     @background_color = background_color
