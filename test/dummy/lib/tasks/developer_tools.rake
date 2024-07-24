@@ -143,22 +143,24 @@ namespace :developer_tools do
     Folio::Site.find_each do |site|
       puts "Seeding dummy images for site #{site.slug}."
 
-      %w[
-        adrianna-geo-1rBg5YSi00c-unsplash.jpg
-        birmingham-museums-trust-KfRUve5NtO8-unsplash.jpg
-        boston-public-library-_f9cP4_unmg-unsplash.jpg
-        british-library-gUDNK8NqYHk-unsplash.jpg
-        europeana--kUYkiWWM6E-unsplash.jpg
-        europeana-3bg0fd2uIds-unsplash.jpg
-        europeana-4juaKkjUzqQ-unsplash.jpg
-        europeana-6c43FgRt0Dw-unsplash.jpg
-        europeana-H-4WME4eoOo-unsplash.jpg
-        europeana-L9au-ZOs8WU-unsplash.jpg
-        europeana-SMWPYQhVRuY-unsplash.jpg
-        europeana-TjegK_z-0j8-unsplash.jpg
-        europeana-tONMTB7h1TY-unsplash.jpg
-        europeana-uS5LXujNOq4-unsplash.jpg
-      ].each do |file_name|
+      [
+        ['adrianna-geo', '1rBg5YSi00c-unsplash.jpg'],
+        ['birmingham-museums-trust', 'KfRUve5NtO8-unsplash.jpg'],
+        ['boston-public-library', '_f9cP4_unmg-unsplash.jpg'],
+        ['british-library', 'gUDNK8NqYHk-unsplash.jpg'],
+        ['europeana', '-kUYkiWWM6E-unsplash.jpg'],
+        ['europeana', '3bg0fd2uIds-unsplash.jpg'],
+        ['europeana', '4juaKkjUzqQ-unsplash.jpg'],
+        ['europeana', '6c43FgRt0Dw-unsplash.jpg'],
+        ['europeana', 'H-4WME4eoOo-unsplash.jpg'],
+        ['europeana', 'L9au-ZOs8WU-unsplash.jpg'],
+        ['europeana', 'SMWPYQhVRuY-unsplash.jpg'],
+        ['europeana', 'TjegK_z-0j8-unsplash.jpg'],
+        ['europeana', 'tONMTB7h1TY-unsplash.jpg'],
+        ['europeana', 'uS5LXujNOq4-unsplash.jpg'],
+      ].each do |author, file_name_base|
+        file_name = "#{author}-#{file_name_base}"
+
         if Folio::File::Image.tagged_with("unsplash").exists?(site:, file_name: file_name.split(".").map(&:parameterize).join("."))
           print("s")
           next
@@ -168,7 +170,8 @@ namespace :developer_tools do
 
         Folio::File::Image.create!(file_url: src,
                                    tag_list: "unsplash, seed, artwork",
-                                   site:)
+                                   site:,
+                                   author: "unsplash.com/@#{author}")
         print(".")
       end
 
