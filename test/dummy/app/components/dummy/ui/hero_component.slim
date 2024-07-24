@@ -43,5 +43,6 @@ div[
                 = render(Dummy::Ui::AuthorMedallionComponent.new(**author))
 
         - if @topics.present?
-          = render(Dummy::Ui::TopicsComponent.new(topics: @topics,
-                                                  centered: true))
+          .mt-d
+            = render(Dummy::Ui::TopicsComponent.new(topics: @topics,
+                                                    centered: true))

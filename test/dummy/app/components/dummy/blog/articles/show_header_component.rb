@@ -22,6 +22,7 @@ class Dummy::Blog::Articles::ShowHeaderComponent < ApplicationComponent
                                           }
                                         end,
                                         breadcrumbs: @breadcrumbs,
+                                        show_divider: true,
                                         topics:))
   end
 

@@ -11,16 +11,20 @@ article.d-blog-articles-card[
                        border_radius: @size == :sm ? true: false,)
 
   .d-blog-articles-card__content
-    h2.d-blog-articles-card__title
-      a.d-blog-articles-card__link href=url_for(@article)
-        = @article.title
+    .d-blog-articles-card__title-and-perex
+      h2.d-blog-articles-card__title
+        a.d-blog-articles-card__link href=url_for(@article)
+          = cstypo @article.title
+
+      - if @article.perex.present? && @size != :sm
+        p.d-blog-articles-card__perex
+          = cstypo @article.perex
 
     .d-blog-articles-card__details
       - if topics.present?
         = render(Dummy::Ui::TopicsComponent.new(topics:, small: true))
 
-      -if @article.published_at.present?
-        time.d-blog-articles-card__date[
-          datetime=l(@article.published_at, format: :console_html_datetime)
-        ]
-          = l(@article.published_at, format: :console_short_date)
+      time.d-blog-articles-card__date.fs-text-xs[
+        datetime=@article.published_at_with_fallback.iso8601
+      ]
+        = l(@article.published_at_with_fallback.to_date, format: :folio_short)

@@ -49,7 +49,6 @@
     +media-breakpoint-up(lg)
       margin-bottom: map-get($spacers, g)
 
-
   &__title
     margin: 0 auto map-get($spacers, c)
 
@@ -72,19 +71,13 @@
     font-weight: $font-weight-medium
     margin-top: map-get($spacers, d)
 
-  &__article-meta-author
-    text-decoration: none
-    color: $brand-200
-
-    &:hover
-      text-decoration: underline
-
   &__cover-container
     position: relative
 
   +media-breakpoint-up(lg)
     &__image--contained
       min-height: 470px
+
       .d-ui-image__img
         height: 100%
         width: auto

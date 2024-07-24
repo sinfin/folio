@@ -1,4 +1,8 @@
 .d-blog-articles-card
+  --title-and-perex-margin-bottom: #{map-get($spacers, b)}
+  --perex-margin-top: 0px
+  --content-padding: 0px
+
   border-radius: $border-radius
   overflow: hidden
   display: flex
@@ -7,9 +11,11 @@
   justify-content: flex-start
   gap: 2*$grid-gutter-base
   height: auto
+
   &__content
     flex: 1 1 auto
     align-self: center
+    padding: var(--content-padding)
 
   &__top
     position: relative
@@ -24,29 +30,47 @@
   &__title
     +font-size-display-xs
     font-weight: $font-weight-bold
-    margin: 0 0 $grid-gutter-base 0
+    margin: 0
+
+  &__perex
+    margin: 0
+
+  &__title + &__perex
+    margin-top: var(--perex-margin-top)
+
+  &__title-and-perex
+    margin-bottom: var(--title-and-perex-margin-bottom)
+
+  +media-breakpoint-up(lg)
+    &--md &__title
+      +font-size-display-s
 
   &__link
     text-decoration: none
+
     &:hover
       text-decoration: underline
+
     +media-breakpoint-up(sm)
       +line-clamp(6)
+
     +media-breakpoint-up(lg)
       +line-clamp(5)
 
   &__details
     display: flex
     flex-wrap: wrap
-    gap: $grid-gutter-half
+    gap: $grid-gutter-base
     align-items: center
     margin-top: auto
 
   &__date
     color: $shade-400
-    +font-size-text-s
 
   &--md, &--lg
+    --title-and-perex-margin-bottom: #{map-get($spacers, d)}
+    --perex-margin-top: #{map-get($spacers, b)}
+    --content-padding: #{map-get($spacers, f)} #{map-get($spacers, d)}
     flex-direction: column
     align-items: stretch
     border: 1px solid $transparent-b200
@@ -61,24 +85,20 @@
         width: 100%
 
       &__content
-        padding: 2*$grid-gutter-base 2*$grid-gutter-base $grid-gutter-width
         display: flex
         flex-direction: column
         align-self: stretch
-
-      &__title
-        margin-bottom: 2*$grid-gutter-base
-        +media-breakpoint-up(lg)
-          margin-bottom: $grid-gutter-width
 
   &--lg
     background-color: $shade-100
     border: 1px solid $shade-100
 
     +media-breakpoint-up(sm)
+      --content-padding: #{map-get($spacers, g)}
       flex-direction: row
       align-items: stretch
       gap: 0
+
       .d-blog-articles-card
         &__top
           flex: 0 0 calc(50% - #{$grid-gutter-half})
@@ -88,7 +108,6 @@
           padding: 0
 
         &__content
-          padding: $grid-gutter-width
           flex-direction: column
           align-self: center
 
@@ -100,13 +119,15 @@
           +line-clamp(4)
           max-height: 4*$ui-typo-display-line-height*$ui-typo-display-s-font-size
 
+      +media-breakpoint-up(md)
+        --content-padding: #{map-get($spacers, g)}
+
       +media-breakpoint-up(lg)
+        --content-padding: #{map-get($spacers, k)}
+
         .d-blog-articles-card
           &__top
             flex: 0 0 50%
-
-          &__content
-            padding: px-to-rem(64px)
 
           &__title
             +font-size-display-m

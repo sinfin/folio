@@ -4,7 +4,8 @@
     gap: 1.5*$grid-gutter-width
     align-items: flex-start
     flex-direction: column
-    +media-breakpoint-up(lg)
+
+    +media-breakpoint-up(xl)
       flex-direction: row
       align-items: flex-start
       justify-content: space-between
@@ -15,13 +16,8 @@
     text-overflow: ellipsis
 
   &__recommended
-    display: flex
-    gap: $grid-gutter-width
-    flex-direction: column
-    +media-breakpoint-up(lg)
-      flex: 0 0 px-to-rem(360px) + 2 * $grid-gutter-width
-      padding-left: 2*$grid-gutter-width
-      border-left: 1px solid $transparent-b200
+    +media-breakpoint-up(xl)
+      flex: 0 0 360px
 
   &__recommended-articles
     display: flex
@@ -29,15 +25,18 @@
     flex-direction: column
     flex-wrap: nowrap
     align-items: flex-start
+    padding-top: map-get($spacers, d)
+
     +media-breakpoint-up(md)
       flex-direction: row
-    +media-breakpoint-up(lg)
+
+    +media-breakpoint-up(xl)
+      gap: 0
       flex-direction: column
 
   &__recommended-title
     +font-size-display-xs
     font-weight: $font-weight-bold
-    margin: $grid-gutter-half $grid-gutter-base/2
 
   &__perex
     margin-bottom: 5*$grid-gutter-base
