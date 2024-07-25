@@ -173,4 +173,20 @@ module Folio::StimulusHelper
                         action: { mouseenter: "mouseenter", mouseleave: "mouseleave" },
                         inline: true)
   end
+
+  def stimulus_merge(*data_hashes)
+    runner = {}
+
+    data_hashes.each do |data|
+      data.each do |key, value|
+        if runner[key].present?
+          runner[key] += " #{value}"
+        else
+          runner[key] = value
+        end
+      end
+    end
+
+    runner
+  end
 end
