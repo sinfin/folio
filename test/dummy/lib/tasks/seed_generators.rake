@@ -290,7 +290,7 @@ namespace :dummy do
       Rake::Task["dummy:seed_generators:assets"].invoke
       Rake::Task["dummy:seed_generators:ui"].invoke
       Rake::Task["dummy:seed_generators:prepared_atom"].invoke
-      Rake::Task["dummy:seed_generators:blog"].invoke
+      # Rake::Task["dummy:seed_generators:blog"].invoke
       Rake::Task["dummy:seed_generators:search"].invoke
       Rake::Task["dummy:seed_generators:mailer"].invoke
     end
