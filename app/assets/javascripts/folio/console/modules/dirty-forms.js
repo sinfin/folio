@@ -39,6 +39,7 @@ window.FolioConsole.DirtyForms.handle = (form) => {
   window.FolioConsole.DirtyForms.handled = true
 
   document.removeEventListener('change', window.FolioConsole.DirtyForms.onChange)
+  document.removeEventListener('folioConsoleCustomChange', window.FolioConsole.DirtyForms.onChange)
   window.removeEventListener('message', window.FolioConsole.DirtyForms.onMessage, false)
 
   form.classList.add('simple_form--dirty')
@@ -48,6 +49,7 @@ window.FolioConsole.DirtyForms.handle = (form) => {
 window.addEventListener('message', window.FolioConsole.DirtyForms.onMessage, false)
 
 document.addEventListener('change', window.FolioConsole.DirtyForms.onChange)
+document.addEventListener('folioConsoleCustomChange', window.FolioConsole.DirtyForms.onChange)
 
 document.addEventListener('submit', () => {
   window.FolioConsole.DirtyForms.unbind()

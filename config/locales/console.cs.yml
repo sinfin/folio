@@ -222,9 +222,6 @@ cs:
         merge: Sloučení duplikátů
         settings: Nastavení
         site_social_links: Odkazy
-      file:
-        picker:
-          add_file: Přidat soubor
       really_delete: Jste si jist, že chcete smazat "%{title}"?
       remove_confirmation: Odebrat?
       sites:

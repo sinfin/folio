@@ -101,6 +101,7 @@ window.Folio.Stimulus.register('f-c-file-picker', class extends window.Stimulus.
   }
 
   updateAlt (file) {
+    if (!this.hasAltValueTarget) return
     this.altValueTarget.innerHTML = file ? (file.attributes.alt || '') : ''
   }
 

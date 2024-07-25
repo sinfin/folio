@@ -219,9 +219,6 @@ en:
         gallery: Gallery
         settings: Settings
         site_social_links: Links
-      file:
-        picker:
-          add_file: Add file
       really_delete: Are you sure you want to remove "%{title}"?
       remove_confirmation: Remove?
       sites:

@@ -18,12 +18,6 @@ class Folio::Console::File::PickerCell < Folio::ConsoleCell
     model[:hint].presence || t(".hint.#{fp.object.class.reflections["file"].class_name}", default: nil)
   end
 
-  def btn_label
-    if klass.human_type != "image"
-      t(".add_file")
-    end
-  end
-
   def klass
     @klass ||= model[:file_type].constantize
   end
