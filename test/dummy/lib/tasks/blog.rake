@@ -39,7 +39,7 @@ namespace :blog do
           needed_topic_count.times do
             title = nil
 
-            while title.nil? || Dummy::Blog::Topic.where(title: title).exists?
+            while title.nil? || Dummy::Blog::Topic.where(title:).exists?
               title = Faker::Hipster.sentence(word_count: rand(1..3), random_words_to_add: 0)
             end
 
