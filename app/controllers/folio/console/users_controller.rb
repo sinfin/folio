@@ -27,7 +27,7 @@ class Folio::Console::UsersController < Folio::Console::BaseController
     @user.sign_out_everywhere! if @user == current_user
     session[:true_user_id] = current_user.id
     bypass_sign_in @user, scope: :user
-
+    binding.pry
     redirect_to after_impersonate_path,
                 allow_other_host: true,
                 flash: { success: t(".success", label: @user.to_label) }
@@ -146,8 +146,9 @@ class Folio::Console::UsersController < Folio::Console::BaseController
     end
 
     def index_tabs
-      locked_users = Folio::User.where(id: locked_user_ids_subselect)
-      unlocked_users = Folio::User.where.not(id: locked_user_ids_subselect)
+      accesible_users = Folio::User.accessible_by(::Folio::Current.ability)
+      locked_users = accesible_users.where(id: locked_user_ids_subselect)
+      unlocked_users = accesible_users.where.not(id: locked_user_ids_subselect)
 
       [
         {
