@@ -83,3 +83,11 @@ cs:
       default: ''
       separator: "|"
   'true': Ano
+
+  date:
+    formats:
+      folio_short: "%d. %m. %Y"
+
+  time:
+    formats:
+      folio_short: "%d. %m. %Y, %H:%M"

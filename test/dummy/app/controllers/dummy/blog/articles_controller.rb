@@ -1,36 +1,39 @@
 # frozen_string_literal: true
 
-class Dummy::Blog::ArticlesController < ApplicationController
-  before_action { @klass = Dummy::Blog::Article }
-  before_action :find_article, only: [:show, :preview]
-
+class Dummy::Blog::ArticlesController < Dummy::Blog::BaseController
   def index
-    articles = @klass.published
-                     .ordered
-                     .by_locale(I18n.locale)
-                     .includes(:published_topics,
-                               cover_placement: :file)
+    folio_run_unless_cached(["blog/articles#index", params[:page], params[:t]] + cache_key_base) do
+      @page = blog_articles_index_page
+      set_meta_variables(@page)
 
-    @pagy, @articles = pagy(articles, items: 10)
-
-    @topics = Dummy::Blog::Topic.published
-                                .by_locale(I18n.locale)
-                                .with_published_articles
-                                .ordered
-                                .limit(20)
+      @atom_options = { page: @page }
+    end
   end
 
   def show
-    force_correct_path(url_for(@article))
-  end
+    @hide_breadcrumbs = true
 
-  private
-    def find_article
-      @article = @klass.published_or_preview_token(params[Folio::Publishable::PREVIEW_PARAM_NAME])
-                       .by_locale(I18n.locale)
-                       .includes(cover_placement: :file)
-                       .friendly.find(params[:id])
+    folio_run_unless_cached(["blog/articles#show", params[:id]] + cache_key_base) do
+      @article = Dummy::Blog::Article.published_or_preview_token(params[Folio::Publishable::PREVIEW_PARAM_NAME])
+                                     .by_locale(I18n.locale)
+                                     .by_site(Folio::Current.site)
+                                     .friendly.find(params[:id])
 
-      set_meta_variables(@article)
+      unless force_correct_path(url_for(@article))
+        add_breadcrumb_on_rails @article.title
+        set_meta_variables(@article)
+
+        @page = Dummy::Page::Blog::Articles::Index.instance(site: Folio::Current.site, fail_on_missing: true)
+
+        articles = Dummy::Blog::Article.published
+                                       .ordered
+                                       .where.not(id: @article.id)
+                                       .by_locale(I18n.locale)
+                                       .by_site(Folio::Current.site)
+                                       .includes(Dummy::Blog.article_includes)
+
+        @articles = articles.limit(3)
+      end
     end
+  end
 end

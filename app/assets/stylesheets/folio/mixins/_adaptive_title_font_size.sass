@@ -1,8 +1,0 @@
-= adaptive-title-font-size($large, $medium, $small)
-  @each $mq in (xs, sm, md, lg, xl, xxl)
-    @if map-has-key($large, $mq) or map-has-key($medium, $mq) or map-has-key($small, $mq) 
-      +media-breakpoint-up($mq)
-        @each $name, $sizes in (large: $large, medium: $medium, small: $small)
-          @if map-has-key($sizes, $mq)
-            &--font-size-#{$name}
-              font-size: map-get($sizes, $mq)

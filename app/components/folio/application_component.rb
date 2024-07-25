@@ -134,4 +134,16 @@ class Folio::ApplicationComponent < ViewComponent::Base
   def can_now?(action, object = nil)
     controller.can_now?(action, object)
   end
+
+  def adaptive_font_size_class_name(string)
+    return string unless string.is_a?(String)
+
+    if string.length <= 25
+      "fs-adaptive fs-adaptive--large"
+    elsif string.length <= 70
+      "fs-adaptive fs-adaptive--medium"
+    else
+      "fs-adaptive fs-adaptive--small"
+    end
+  end
 end

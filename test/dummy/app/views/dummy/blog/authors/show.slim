@@ -1,0 +1,12 @@
+= render_folio_cache
+  = render(Dummy::Ui::HeroComponent.new(title: @author.to_label,
+                                        perex: @author.perex,
+                                        breadcrumbs: @breadcrumbs_on_rails,
+                                        show_divider: true,
+                                        strong_subtitle: @author.job,
+                                        subtitle: @published_articles_count,
+                                        links: @hero_links,
+                                        href: true))
+
+  = render(Dummy::Blog::Articles::IndexComponent.new(articles_scope: @author.articles,
+                                                     author: @author))

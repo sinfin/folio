@@ -6,7 +6,7 @@ class Folio::Console::Dummy::Blog::ArticlesController < Folio::Console::BaseCont
   private
     def article_params
       params.require(:dummy_blog_article)
-            .permit(*(@klass.column_names - ["id"]),
+            .permit(*(@klass.column_names - %w[id site_id]),
                     *atoms_strong_params,
                     *file_placements_strong_params,
                     topic_article_links_attributes: %w[id _destroy position dummy_blog_topic_id])
@@ -16,6 +16,11 @@ class Folio::Console::Dummy::Blog::ArticlesController < Folio::Console::BaseCont
       {
         by_locale: Dummy::Blog.available_locales,
         by_published: [true, false],
+        by_author_slug: {
+          klass: "Dummy::Blog::Author",
+          order_scope: :ordered,
+          slug: true,
+        },
         by_topic_slug: {
           klass: "Dummy::Blog::Topic",
           order_scope: :ordered,
@@ -25,10 +30,6 @@ class Folio::Console::Dummy::Blog::ArticlesController < Folio::Console::BaseCont
     end
 
     def folio_console_collection_includes
-      [:topics, cover_placement: :file]
-    end
-
-    def folio_console_record_includes
-      []
+      [:authors, :topics, cover_placement: :file]
     end
 end

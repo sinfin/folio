@@ -1,0 +1,13 @@
+.d-blog-articles-cards
+  .row.align-items-stretch.row-gap-d.row-gap-md-f
+    - if @hero_size
+      div class=@hero_classes
+        = render(Dummy::Blog::Articles::CardComponent.new(article: @hero_article,
+                                                          size: @hero_size))
+
+    div class=@container_classes
+      .row.align-items-stretch.row-gap-d.row-gap-md-f
+        - @articles.each do |article|
+          div class=@column_classes
+            = render(Dummy::Blog::Articles::CardComponent.new(article:,
+                                                              size: @size))

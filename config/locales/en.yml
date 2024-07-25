@@ -82,3 +82,11 @@ en:
       separator: "|"
   'true': "Yes"
   confirmation: Are you sure?
+
+  date:
+    formats:
+      folio_short: "%d. %m. %Y"
+
+  time:
+    formats:
+      folio_short: "%d. %m. %Y, %H:%M"

@@ -4,6 +4,8 @@ require "test_helper"
 
 class Dummy::Ui::MenuToolbar::ToolbarComponentTest < Folio::ComponentTest
   def test_render
+    create_site
+
     render_inline(Dummy::Ui::MenuToolbar::ToolbarComponent.new)
 
     assert_selector(".d-ui-menu-toolbar-toolbar")

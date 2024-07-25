@@ -5,12 +5,26 @@ en:
       dummy/blog/article:
         topic: Topic
         topics: Topics
+        author: Author
+        authors: Authors
+
+      dummy/blog/author:
+        job: Job
+
       dummy/blog/topic:
         articles_count: Articles
+
     models:
+      dummy/page/blog/articles/index: Page / Blog
+
       dummy/blog/article:
         one: Article
         other: Articles
+
+      dummy/blog/author:
+        one: Author
+        other: Authors
+
       dummy/blog/topic:
         one: Topic
         other: Topics
@@ -30,9 +44,18 @@ en:
   dummy:
     blog:
       articles:
-        index:
-          title: Blog
+        index_component:
+          console_preview: Topics and articles will be listed here
+
+        show_body_component:
+          recommended_articles: Recommended articles
+
+      authors:
+        show:
+          published_articles_count:
+            one: 1 Article
+            other: "%{count} Articles"
 
       topics:
-        tag_list:
-          topics: "Topics:"
+        filter_list_component:
+          all: All

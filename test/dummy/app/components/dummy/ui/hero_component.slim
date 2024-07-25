@@ -1,7 +1,11 @@
-div [
+div[
   class=bem_class_name
   style=atom_styles
 ]
+  - if @breadcrumbs.present?
+    .d-ui-hero__breadcrumbs-wrap
+      = render(Dummy::Ui::BreadcrumbsComponent.new(breadcrumbs: @breadcrumbs))
+
   - if @background_cover.present?
     = dummy_ui_image @background_cover,
                      THUMB_SIZES[:background],
@@ -9,24 +13,60 @@ div [
                      cover: true
 
   .d-ui-hero__wrap
-    == cover_tag
+    - if cover_images_data.present?
+      .d-ui-hero__cover-container[
+        class=(@image_size == "full_width" ? nil : "container-fluid")
+      ]
+        .position-relative
+          - cover_images_data.each do |placement, size, class_name|
+            = dummy_ui_image(placement, size, class_name:,
+                                              credits: @image_size != "small")
 
     .container-fluid
       .d-ui-hero__content
         - if @title.present?
-          h1.d-ui-hero__title.fs-display-m
-            = @title
+          h1.d-ui-hero__title class=adaptive_font_size_class_name(@title)
+            - if @href
+              a.d-unlink href=(@href == true ? request.path : @href)
+                = cstypo @title
+            - else
+              = cstypo @title
+
+        - if @subtitle.present? || @strong_subtitle.present?
+          .d-ui-hero__subtitles
+            - if @strong_subtitle.present?
+              .d-ui-hero__subtitle.fw-semibold
+                = cstypo @strong_subtitle
+
+            - if @subtitle.present?
+              .d-ui-hero__subtitle
+                = cstypo @subtitle
 
         - if @perex.present?
           .d-ui-hero__text.fs-text-l
             p.mb-0 = cstypo @perex
 
-        - if @date.present? || @author.present?
+        - if @date.present? || @authors.present?
           .d-ui-hero__article-meta.fs-text-s
             - if @date.present?
               .d-ui-hero__article-meta-date
-                = @date.strftime("%d. %m. %y")
+                = l(@date, format: :folio_short)
 
-            - if @author.present?
-              a.d-ui-hero__article-meta-author href="#"
-                = @author
+            - if @authors.present?
+              - @authors.each do |author|
+                = render(Dummy::Ui::AuthorMedallionComponent.new(**author))
+
+        - if @links.present?
+          ul.d-ui-hero__links
+            - @links.each do |link|
+              li.d-ui-hero__links-li
+                a.d-ui-hero__links-a[
+                  href=link[:href]
+                  target="_blank"
+                ]
+                  = link[:label]
+
+        - if @topics.present?
+          .mt-d
+            = render(Dummy::Ui::TopicsComponent.new(topics: @topics,
+                                                    centered: true))

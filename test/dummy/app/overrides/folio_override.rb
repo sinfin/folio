@@ -2,6 +2,10 @@
 
 module Folio
   def self.main_site
-    @main_site ||= Dummy::Site.first
+    if Rails.application.config.eager_load
+      @main_site ||= Dummy::Site.first
+    else
+      Dummy::Site.first
+    end
   end
 end

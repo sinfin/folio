@@ -1,0 +1,50 @@
+= form_header f
+
+= tabs %i[content]
+
+.tab-content
+  = tab :content
+    = publishable_inputs(f)
+    .row
+      .col-md-auto
+        = file_picker_for_cover(f)
+      .col-md
+        .row
+          .col-md-6
+            = f.input :first_name
+          .col-md-6
+            = f.input :last_name
+
+        = f.input :slug
+
+        = f.input :locale, collection: Dummy::Blog.available_locales,
+                           include_blank: false
+
+        = f.input :perex, character_counter: true, autosize: true
+
+        = f.input :job
+
+        = f.input :meta_title
+
+        = f.input :meta_description, character_counter: true,
+                                     autosize: true
+
+        hr.my-5
+
+        .my-3
+          = f.label :social_links
+
+        = f.simple_fields_for :social_links do |g|
+          .row
+            - f.object.class.social_link_sites.each do |key|
+              .col-md-4
+                - value = f.object.social_links.try(:[], key.to_s)
+                - i18n_key = "social_links/#{key}"
+
+                = g.input key,
+                          required: false,
+                          label: f.object.class.human_attribute_name(i18n_key),
+                          input_html: { value: value },
+                          atom_setting: "social_links_#{key}"
+
+= form_footer f

@@ -1,0 +1,11 @@
+a.d-ui-author-medallion[
+  class="d-ui-author-medallion--size-#{@size}"
+  href=@href
+]
+  = dummy_ui_image(@cover,
+                   THUMB_SIZE[@size],
+                   class_name: 'd-ui-author-medallion__cover-wrap',
+                   round: true)
+
+  span.d-ui-author-medallion__name
+    = @name

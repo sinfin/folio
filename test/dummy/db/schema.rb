@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_22_084811) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_23_000000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -46,20 +46,58 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_22_084811) do
     t.string "title"
     t.string "slug"
     t.text "perex"
+    t.bigint "site_id"
     t.string "locale", default: "cs"
     t.string "preview_token"
     t.string "meta_title"
     t.text "meta_description"
     t.boolean "featured"
     t.boolean "published"
-    t.datetime "published_at", precision: nil
+    t.datetime "published_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["featured"], name: "index_dummy_blog_articles_on_featured"
     t.index ["locale"], name: "index_dummy_blog_articles_on_locale"
     t.index ["published"], name: "index_dummy_blog_articles_on_published"
     t.index ["published_at"], name: "index_dummy_blog_articles_on_published_at"
+    t.index ["site_id"], name: "index_dummy_blog_articles_on_site_id"
     t.index ["slug"], name: "index_dummy_blog_articles_on_slug"
+  end
+
+  create_table "dummy_blog_author_article_links", force: :cascade do |t|
+    t.bigint "dummy_blog_author_id"
+    t.bigint "dummy_blog_article_id"
+    t.integer "position"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["dummy_blog_article_id"], name: "dummy_blog_author_article_links_a_id"
+    t.index ["dummy_blog_author_id"], name: "dummy_blog_author_article_links_t_id"
+  end
+
+  create_table "dummy_blog_authors", force: :cascade do |t|
+    t.string "first_name"
+    t.string "last_name"
+    t.string "slug"
+    t.text "perex"
+    t.bigint "site_id"
+    t.string "locale", default: "cs"
+    t.boolean "published"
+    t.boolean "featured"
+    t.integer "articles_count", default: 0
+    t.integer "position"
+    t.string "preview_token"
+    t.string "job"
+    t.string "meta_title"
+    t.text "meta_description"
+    t.jsonb "social_links"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["featured"], name: "index_dummy_blog_authors_on_featured"
+    t.index ["locale"], name: "index_dummy_blog_authors_on_locale"
+    t.index ["position"], name: "index_dummy_blog_authors_on_position"
+    t.index ["published"], name: "index_dummy_blog_authors_on_published"
+    t.index ["site_id"], name: "index_dummy_blog_authors_on_site_id"
+    t.index ["slug"], name: "index_dummy_blog_authors_on_slug"
   end
 
   create_table "dummy_blog_topic_article_links", force: :cascade do |t|
@@ -76,6 +114,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_22_084811) do
     t.string "title"
     t.string "slug"
     t.text "perex"
+    t.bigint "site_id"
     t.string "locale", default: "cs"
     t.boolean "published"
     t.boolean "featured"
@@ -90,6 +129,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_22_084811) do
     t.index ["locale"], name: "index_dummy_blog_topics_on_locale"
     t.index ["position"], name: "index_dummy_blog_topics_on_position"
     t.index ["published"], name: "index_dummy_blog_topics_on_published"
+    t.index ["site_id"], name: "index_dummy_blog_topics_on_site_id"
     t.index ["slug"], name: "index_dummy_blog_topics_on_slug"
   end
 

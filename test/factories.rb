@@ -171,15 +171,26 @@ FactoryBot.define do
 
   factory :dummy_menu, class: "Dummy::Menu::Navigation", parent: :folio_menu
 
+  factory :dummy_menu_footer, class: "Dummy::Menu::Footer", parent: :folio_menu
+
   factory :dummy_blog_article, class: "Dummy::Blog::Article" do
     sequence(:title) { |i| "Article title #{i + 1}" }
     perex { "perex" }
     published { true }
+    site { Folio::Site.first || create(Rails.application.config.folio_site_default_test_factory) }
   end
 
   factory :dummy_blog_topic, class: "Dummy::Blog::Topic" do
     sequence(:title) { |i| "Topic title #{i + 1}" }
     published { true }
+    site { Folio::Site.first || create(Rails.application.config.folio_site_default_test_factory) }
+  end
+
+  factory :dummy_blog_author, class: "Dummy::Blog::Author" do
+    first_name { "Firstname" }
+    sequence(:last_name) { |i| "Lastname #{i + 1}" }
+    published { true }
+    site { Folio::Site.first || create(Rails.application.config.folio_site_default_test_factory) }
   end
 end
 

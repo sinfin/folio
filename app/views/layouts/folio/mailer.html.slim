@@ -13,24 +13,25 @@ html.d-mailer-html[
     meta name="color-scheme" content="light dark" /
     meta name="supported-color-schemes" content="light dark" /
 
-    = stylesheet_link_tag('dummy/mailer', media: 'all')
+    - if !Rails.env.test? || ENV['TEST_WITH_ASSETS'].present?
+      = stylesheet_link_tag('dummy/mailer', media: 'all')
 
-    style[
-      type="text/css"
-      data-premailer="ignore"
-    ]
-      == compiled_asset_contents('dummy/mailer_extras.css')
+      style[
+        type="text/css"
+        data-premailer="ignore"
+      ]
+        == compiled_asset_contents('dummy/mailer_extras.css')
 
-    /[if mso]
-      style type="text/css"
-        | table {border-collapse:collapse;border-spacing:0;border:0;margin:0;}
-        | div, td {padding:0;}
-        | div {margin:0 !important;}
-      noscript
-        xml
-          o:OfficeDocumentSettings
-              o:PixelsPerInch
-                ' 96
+      /[if mso]
+        style type="text/css"
+          | table {border-collapse:collapse;border-spacing:0;border:0;margin:0;}
+          | div, td {padding:0;}
+          | div {margin:0 !important;}
+        noscript
+          xml
+            o:OfficeDocumentSettings
+                o:PixelsPerInch
+                  ' 96
 
   body.d-mailer-body
     = render(Dummy::Mailer::LayoutComponent.new(site:, preview_text: @preview_text))

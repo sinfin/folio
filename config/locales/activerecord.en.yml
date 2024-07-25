@@ -237,12 +237,14 @@ en:
     sensitive_content: Contains sensitive content
     sign_in_count: Sign in count
     slug: Slug
+    social_links: Social links
     social_links/appstore: Appstore
     social_links/facebook: Facebook
     social_links/google_play: Google play
     social_links/instagram: Instagram
     social_links/linkedin: LinkedIn
     social_links/messenger: Messenger
+    social_links/pinterest: Pinterest
     social_links/tiktok: TikTok
     social_links/twitter: Twitter
     social_links/youtube: Youtube

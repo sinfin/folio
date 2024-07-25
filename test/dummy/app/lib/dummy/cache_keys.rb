@@ -4,6 +4,9 @@ module Dummy::CacheKeys
   extend ActiveSupport::Concern
 
   CACHE_KEY_TABLE_NAMES = %w[
+    dummy_blog_articles
+    dummy_blog_authors
+    dummy_blog_topics
     folio_files
     folio_menus
     folio_pages
@@ -63,6 +66,11 @@ module Dummy::CacheKeys
           ],
           set_at: Time.zone.now,
         }
+
+        if defined?(Dummy::Blog::Article)
+          cached_hash[:value] << Dummy::Blog::Article.cache_published_hash
+        end
+
         Rails.cache.write(full_cache_key, cached_hash)
       end
 

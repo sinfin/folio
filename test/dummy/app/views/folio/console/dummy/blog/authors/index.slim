@@ -1,0 +1,28 @@
+= index_header
+
+= catalogue(@authors)
+  ruby:
+    cover
+
+    edit_link :to_label
+
+    attribute(:articles_count) do
+      if record.articles_count && record.articles_count > 0
+        link_to(record.articles_count,
+                url_for([:console, \
+                         Dummy::Blog::Article, \
+                         by_author_slug: record.slug]))
+      else
+        0
+      end
+    end
+
+    locale_flag
+
+    published_toggle
+
+    featured_toggle
+
+    position_controls
+
+    actions :preview, :edit, :destroy

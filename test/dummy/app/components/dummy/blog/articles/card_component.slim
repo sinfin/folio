@@ -1,0 +1,30 @@
+article.d-blog-articles-card[
+  class=(@size ? "d-blog-articles-card--#{@size}" : nil)
+]
+  - if @article.cover_placement.present?
+    a.d-blog-articles-card__top href=url_for(@article)
+      = dummy_ui_image(@article.cover_placement,
+                       cover_size,
+                       class_name: 'd-blog-articles-card__cover',
+                       cover: true,
+                       hover_zoom: true,
+                       border_radius: @size == :sm ? true: false,)
+
+  .d-blog-articles-card__content
+    .d-blog-articles-card__title-and-perex
+      h2.d-blog-articles-card__title
+        a.d-blog-articles-card__link href=url_for(@article)
+          = cstypo @article.title
+
+      - if @article.perex.present? && @size != :sm
+        p.d-blog-articles-card__perex
+          = cstypo @article.perex
+
+    .d-blog-articles-card__details
+      - if topics.present?
+        = render(Dummy::Ui::TopicsComponent.new(topics:, small: true))
+
+      time.d-blog-articles-card__date.fs-text-xs[
+        datetime=@article.published_at_with_fallback.iso8601
+      ]
+        = l(@article.published_at_with_fallback.to_date, format: :folio_short)

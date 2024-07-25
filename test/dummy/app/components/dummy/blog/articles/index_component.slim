@@ -1,0 +1,21 @@
+.d-blog-articles-index
+  .container-fluid
+    - if @title.present? || @perex.present?
+      = render(Dummy::Ui::HeroComponent.new(title: @title,
+                                            perex: @perex,
+                                            show_divider: true,
+                                            href: true))
+
+    - if @topics.present?
+      .mb-4
+        = render(Dummy::Blog::Topics::FilterListComponent.new(topics: @topics,
+                                                              url_base: @url_base))
+
+    - if @articles.present?
+      = render(Dummy::Blog::Articles::CardsComponent.new(size: :md,
+                                                         hero_size: use_hero_size? ? :lg : nil,
+                                                         column_classes: "col-12 col-sm-6 col-lg-4",
+                                                         articles: @articles))
+
+    = render(Dummy::Ui::PagyComponent.new(pagy: @pagy,
+                                          class_name: 'mt-d mt-md-f'))

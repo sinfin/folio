@@ -3,10 +3,19 @@
 = catalogue(@articles)
   ruby:
     cover
+
     edit_link :to_label
+
+    association(:authors, link: [:edit, :console])
+
     association(:topics, link: [:edit, :console])
+
     featured_toggle
+
     published_toggle
+
     date(:published_at)
+
     locale_flag
+
     actions :preview, :edit, :destroy

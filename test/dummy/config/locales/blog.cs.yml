@@ -5,13 +5,28 @@ cs:
       dummy/blog/article:
         topic: Téma
         topics: Témata
+        author: Autor
+        authors: Autoři
+
+      dummy/blog/author:
+        job: Práce
+
       dummy/blog/topic:
         articles_count: Články
+
     models:
+      dummy/page/blog/articles/index: Stránka / Blog
+
       dummy/blog/article:
         one: Článek
         few: Články
         other: Článků
+
+      dummy/blog/author:
+        one: Autor
+        few: Autoři
+        other: Autorů
+
       dummy/blog/topic:
         one: Téma
         few: Témata
@@ -23,6 +38,9 @@ cs:
       dummy/atom/blog/articles/card/small: Článek (karta malá)
 
     errors:
+      messages:
+        articles_have_different_locale: neodpovídá jazykové variantě přiřazených článků.
+        articles_have_different_site: neodpovídá stránkám přiřazených článků.
       models:
         dummy/blog/article:
           attributes:
@@ -32,9 +50,19 @@ cs:
   dummy:
     blog:
       articles:
-        index:
-          title: Blog
+        index_component:
+          console_preview: Zde budou vypsány témata a články
+
+        show_body_component:
+          recommended_articles: Vybrané články
+
+      authors:
+        show:
+          published_articles_count:
+            one: 1 Článek
+            few: "%{count} Články"
+            other: "%{count} Článků"
 
       topics:
-        tag_list:
-          topics: "Témata:"
+        filter_list_component:
+          all: Vše

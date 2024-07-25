@@ -6,6 +6,7 @@ class Dummy::UiController < ApplicationController
   def show
     @actions = %i[
       alerts
+      author_medallions
       boolean_toggles
       breadcrumbs
       buttons
@@ -23,6 +24,7 @@ class Dummy::UiController < ApplicationController
       slide_lists
       tabs
       share
+      topics
       typo
     ]
   end
@@ -118,6 +120,36 @@ class Dummy::UiController < ApplicationController
     ]
   end
 
+  def topics
+    topics = Array.new(16) do |i|
+      label = if [3, 4].include?(i)
+        Faker::Hipster.sentence.delete_suffix(".")
+      else
+        Faker::Hipster.word.capitalize
+      end
+
+      { label:, href: "##{label.parameterize}", active: i == 1 }
+    end
+
+    @topics = {
+      "Default" => { topics: },
+      "Centered" => { topics:, centered: true },
+      "Small" => { topics:, small: true },
+      "Small centered" => { topics:, centered: true, small: true },
+    }
+  end
+
+  def author_medallions
+    name = Faker::Name.name
+    href = request.path
+    cover = Folio::File::Image.tagged_with("unsplash").first
+
+    @author_medallions = {
+      "Small (default)" => [{ name:, href:, cover: }, { name:, href:, cover: nil },],
+      "Medium" => [{ size: :m, name:, href:, cover: }, { size: :m, name:, href:, cover: nil },],
+    }
+  end
+
   def hero
     # TODO: tag images with dark/light theme
     images = Folio::File::Image.tagged_with("unsplash").presence || Folio::File::Image
@@ -130,6 +162,14 @@ class Dummy::UiController < ApplicationController
         cover:,
         title: "One and two gallery title",
         perex: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis",
+        show_divider: true,
+      },
+      {
+        cover:,
+        title: "One and two gallery title",
+        perex: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis",
+        date: Time.current.to_date,
+        authors: [{ name: "John Doe", href: request.path, cover: }],
         show_divider: true,
       }, {
         cover:,
@@ -203,7 +243,9 @@ class Dummy::UiController < ApplicationController
         perex: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis",
         background_overlay: "dark",
         theme: "dark",
-        author: "John Doe",
+        authors: [
+          { name: "John Doe", href: "#", cover: Folio::File::Image.tagged_with("unsplash").first },
+        ],
       }, {
         title: "One and two gallery title",
         perex: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis",

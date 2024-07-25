@@ -1,0 +1,41 @@
+.d-blog-articles-topic-tags
+  display: flex
+  flex-wrap: wrap
+  gap: $grid-gutter-base
+  &__item
+    display: flex
+    padding: 0
+    margin: 0
+    &--primary
+      .d-blog-articles-topic-tags__link
+        border-color: $brand-200
+        background-color: $brand-200
+        color: $shade-light-contrast
+
+  &__link
+    max-width: px-to-rem(200px)
+    border: 1px solid $transparent-b200
+    border-radius: $border-radius-pill
+    justify-content: center
+    align-items: center
+    padding: $grid-gutter-half/2 $grid-gutter-half
+    color: $shade-700
+    +font-size-text-s
+    font-weight: $font-weight-semibold
+    text-decoration: none
+    line-height: 1
+    white-space: nowrap
+    overflow: hidden
+    text-overflow: ellipsis
+    transition: color 0.15s ease, background-color 0.15s ease, border 0.15s ease
+    &:hover
+      border-color: $brand-200
+      color: $brand-200
+      background-color: $shade-light-contrast
+
+  &--sm
+    .d-blog-articles-topic-tags__link
+      max-width: px-to-rem(120px)
+      padding: $grid-gutter-base/2 $grid-gutter-base
+      +font-size-text-xs
+      line-height: 1

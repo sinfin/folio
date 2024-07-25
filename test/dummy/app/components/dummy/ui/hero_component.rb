@@ -31,24 +31,35 @@ class Dummy::Ui::HeroComponent < ApplicationComponent
 
   def initialize(title: nil,
                  perex: nil,
+                 href: nil,
                  date: nil,
-                 author: nil,
+                 authors: nil,
                  cover: nil,
                  background_cover: nil,
+                 strong_subtitle: nil,
+                 subtitle: nil,
                  image_size: ALLOWED_IMAGE_SIZES.first,
                  theme: ALLOWED_THEMES.first,
                  background_overlay: ALLOWED_OVERLAYS.first,
                  background_color: nil,
-                 show_divider: false)
-
+                 show_divider: false,
+                 breadcrumbs: nil,
+                 topics: nil,
+                 links: nil)
     @title = title
     @perex = perex
+    @href = href
     @date = date
-    @author = author
+    @authors = authors
     @cover = cover
     @background_cover = background_cover
     @background_color = background_color
     @show_divider = show_divider
+    @breadcrumbs = breadcrumbs
+    @strong_subtitle = strong_subtitle
+    @subtitle = subtitle
+    @topics = topics
+    @links = links
 
     @image_size = set_allowed_option(:image_size, image_size, ALLOWED_IMAGE_SIZES)
     @theme = set_allowed_option(:theme, theme, ALLOWED_THEMES)
@@ -63,6 +74,28 @@ class Dummy::Ui::HeroComponent < ApplicationComponent
 
   def atom_styles
     "background-color: #{@background_color};" if @background_color.present?
+  end
+
+  def cover_images_data
+    @cover_images_data ||= begin
+      ary = []
+
+      if @cover.present?
+        img_class_name = "d-ui-hero__image"
+
+        if @image_size == "container"
+          img_class_name += " d-ui-hero__image--contained"
+        end
+
+        if mobile_thumb_size.present?
+          ary << [@cover, mobile_thumb_size, "#{img_class_name} d-ui-hero__image--mobile"]
+        end
+
+        ary << [@cover, thumb_size, img_class_name]
+      end
+
+      ary
+    end
   end
 
   def cover_tag
@@ -87,10 +120,12 @@ class Dummy::Ui::HeroComponent < ApplicationComponent
                                  class_name: img_class_name)
       end
 
-      class_name = "d-ui-hero__cover-container"
-      class_name = "container-fluid" if @image_size != "full_width"
+      if images.present?
+        class_name = "d-ui-hero__cover-container"
+        class_name = "container-fluid" if @image_size != "full_width"
 
-      content_tag :div, images.join("").html_safe, class: class_name
+        content_tag :div, images.join("").html_safe, class: class_name
+      end
     end
   end
 

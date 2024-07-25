@@ -1,0 +1,4 @@
+type: Dummy::Page::Blog::Articles::Index
+title: Blog
+atoms:
+  - type: Dummy::Atom::Blog::Articles::Index

@@ -1,11 +1,8 @@
-.container-fluid
-  h1 = cstypo @topic.title
-
-  - if @topic.perex.present?
-    .lead == cstypo simple_format @topic.perex
-
-== cell('dummy/ui/article_card_list', @articles, medium: true)
-
-/ - if @pagy && @pagy.pages > 1
-/   .mt-4
-/     == cell('dummy/ui/pagy', @pagy)
+= render_folio_cache
+  = render(Dummy::Ui::HeroComponent.new(title: @topic.to_label,
+                                        perex: @topic.perex,
+                                        breadcrumbs: @breadcrumbs_on_rails,
+                                        show_divider: true,
+                                        href: true))
+  = render(Dummy::Blog::Articles::IndexComponent.new(topic: @topic,
+                                                     articles_scope: @topic.articles))

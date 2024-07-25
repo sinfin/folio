@@ -2,6 +2,12 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2022-07-24
+### Changed
+- changed `adaptive-title-font-size` to `font-size-adaptive`, added a `fs-adaptive` class name and `adaptive_font_size_class_name` method to `Folio::ApplicationComponent`
+### Removed
+- removed `folio/mixins/_adaptive_title_font_size.sass`
+
 ## 2022-06-28
 ### Removed
 - removed `Rails.application.config.folio_console_ability_lambda`. Use `app/overrides/models/folio/ability_override.rb` in your project instead.
