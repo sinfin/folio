@@ -13,6 +13,8 @@ Folio::Ability.class_eval do
   end
 
   def dummy_blog_rules
+    return unless defined?(Dummy::Blog)
+
     if user.superadmin? || user.has_any_roles?(site:, roles: [:administrator, :manager])
       can :do_anything, Dummy::Blog::Article, { site: }
       can :do_anything, Dummy::Blog::Author, { site: }
