@@ -1,22 +1,47 @@
 # frozen_string_literal: true
 
 class Dummy::Blog::Articles::IndexComponent < ApplicationComponent
-  def initialize(articles:, title: nil, perex: nil, pagy: nil, topics: nil)
-    @pagy = pagy
-    @topics = topics
+  include Dummy::Blog::SetPagyAndArticlesFromScope
+  include Pagy::Backend
+
+  def initialize(articles_scope: nil, title: nil, perex: nil, author: nil)
+    @articles_scope = articles_scope || Dummy::Blog::Article
     @title = title
     @perex = perex
-
-    articles_a = articles.to_a
-
-    if active_pagy?
-      @secondary_articles = articles_a
-    else
-      @main_articles = articles_a
-    end
+    @author = author
+    @url_base = author || Dummy::Blog::Article
   end
 
-  def active_pagy?
-    @active_pagy ||= @pagy && @pagy.page != 1
+  def use_hero_size?
+    return false if @pagy && @pagy.page != 1
+    return false if params[Dummy::Blog::TOPICS_PARAM].present?
+    true
+  end
+
+  def before_render
+    articles = @articles_scope.published
+                              .by_locale(locale)
+                              .by_site(current_site)
+
+    @topics = Dummy::Blog::Topic.published
+                                .by_locale(locale)
+                                .by_site(current_site)
+                                .ordered
+
+    @topics = if @author
+      topic_ids = Dummy::Blog::TopicArticleLink.where(dummy_blog_article_id: articles.select(:id)).select(:dummy_blog_topic_id)
+      @topics.where(id: topic_ids)
+    else
+      @topics.with_published_articles
+    end
+
+    @topics = @topics.ordered
+                     .limit(50)
+
+    articles = articles.public_filter_by_topics(params[Dummy::Blog::TOPICS_PARAM])
+                       .includes(Dummy::Blog.article_includes)
+                       .ordered
+
+    set_pagy_and_articles_from_scope(articles)
   end
 end

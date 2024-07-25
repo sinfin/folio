@@ -21,7 +21,7 @@ class Dummy::Blog::Articles::CardComponent < ApplicationComponent
   end
 
   def topics
-    @topics ||= @article.topics.map do |topic|
+    @topics ||= @article.published_topics.to_a.first(3).map do |topic|
       {
         href: url_for(topic),
         label: topic.to_label,

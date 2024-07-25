@@ -13,6 +13,6 @@ module Dummy::Blog
   end
 
   def self.article_includes
-    [:published_topics, :published_authors, cover_placement: :file]
+    [:published_topics, cover_placement: :file]
   end
 end

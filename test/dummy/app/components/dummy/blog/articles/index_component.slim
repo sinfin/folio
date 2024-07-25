@@ -9,21 +9,12 @@
     - if @topics.present?
       .mb-4
         = render(Dummy::Blog::Topics::FilterListComponent.new(topics: @topics,
-                                                              url_base: Dummy::Blog::Article))
+                                                              url_base: @url_base))
 
-    - if @main_articles.present?
+    - if @articles.present?
       = render(Dummy::Blog::Articles::CardsComponent.new(size: :md,
-                                                         hero_size: :lg,
-                                                         container_classes: \
-                                                         "mt-sm-2",
-                                                         column_classes: \
-                                                         "col-12 col-sm-6 col-lg-4",
-                                                         articles: @main_articles))
-
-    - if @secondary_articles.present?
-      = render(Dummy::Blog::Articles::CardsComponent.new(size: :md,
-                                                         column_classes: \
-                                                         "col-12 col-sm-6 col-lg-4",
-                                                         articles: @secondary_articles))
+                                                         hero_size: use_hero_size? ? :lg : nil,
+                                                         column_classes: "col-12 col-sm-6 col-lg-4",
+                                                         articles: @articles))
 
     = render(Dummy::Ui::PagyComponent.new(pagy: @pagy))

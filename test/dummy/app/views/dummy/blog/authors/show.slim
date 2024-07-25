@@ -8,12 +8,5 @@
                                         links: @hero_links,
                                         href: true))
 
-  .container-fluid
-    - if @articles.present?
-      = render(Dummy::Blog::Articles::CardsComponent.new(size: :md,
-                                                         hero_size: @pagy && @pagy.page > 1 ? nil : :lg,
-                                                         column_classes: "col-12 col-sm-6 col-lg-4",
-                                                         articles: @articles))
-
-    - if @pagy.present?
-      = render(Dummy::Ui::PagyComponent.new(pagy: @pagy))
+  = render(Dummy::Blog::Articles::IndexComponent.new(articles_scope: @author.articles,
+                                                     author: @author))

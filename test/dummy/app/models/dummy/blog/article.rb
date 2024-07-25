@@ -96,6 +96,16 @@ class Dummy::Blog::Article < ApplicationRecord
     end
   end
 
+  scope :public_filter_by_topics, -> (topics_param) do
+    if topics_param.present?
+      topic_ids = Dummy::Blog::Topic.where(slug: topics_param).select(:id)
+      article_ids = Dummy::Blog::TopicArticleLink.where(dummy_blog_topic_id: topic_ids).select(:dummy_blog_article_id)
+      where(id: article_ids)
+    else
+      all
+    end
+  end
+
   def published_at_with_fallback
     published_at || created_at
   end

@@ -7,8 +7,7 @@ class Dummy::Blog::BaseController < ApplicationController
 
   private
     def blog_articles_index_page
-      @blog_articles_index_page ||= Dummy::Page::Blog::Articles::Index.instance(site: Folio::Current.site,
-                                                                                fail_on_missing: true)
+      @blog_articles_index_page ||= current_page_singleton(Dummy::Page::Blog::Articles::Index, fail_on_missing: true)
     end
 
     def add_root_blog_breadcrumb
