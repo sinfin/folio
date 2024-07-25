@@ -1,0 +1,11 @@
+a.<%= classname_prefix %>-ui-author-medallion[
+  class="<%= classname_prefix %>-ui-author-medallion--size-#{@size}"
+  href=@href
+]
+  = <%= application_namespace_path %>_ui_image(@cover,
+                   THUMB_SIZE[@size],
+                   class_name: '<%= classname_prefix %>-ui-author-medallion__cover-wrap',
+                   round: true)
+
+  span.<%= classname_prefix %>-ui-author-medallion__name
+    = @name

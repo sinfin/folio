@@ -33,4 +33,12 @@
 
   span.<%= classname_prefix %>-ui-image__spacer style=spacer_style
 
+  - if credits_to_render
+    .<%= classname_prefix %>-ui-image__credits.fs-text-xs
+      .<%= classname_prefix %>-ui-image__credits-icon
+        = <%= application_namespace_path %>_ui_icon(:info, height: 16)
+
+      p.<%= classname_prefix %>-ui-image__credits-text
+        = cstypo "#{t('.credits')}: #{credits_to_render}"
+
   == @additional_html

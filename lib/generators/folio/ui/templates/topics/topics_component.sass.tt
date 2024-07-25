@@ -1,0 +1,91 @@
+.<%= classname_prefix %>-ui-topics
+  &__ul
+    display: flex
+    flex-wrap: wrap
+    align-items: center
+    gap: $grid-gutter-base
+
+  &--centered &__ul
+    justify-content: center
+
+  &__li
+    display: flex
+    padding: 0
+    margin: 0
+
+    &--toggle
+      display: none
+
+  &__a
+    +font-size-text-xs
+    font-weight: $font-weight-medium
+    border: 1px solid $transparent-b200
+    border-radius: $border-radius-pill
+    justify-content: center
+    align-items: center
+    color: $shade-700
+    text-decoration: none
+    transition: $transition-base
+    max-width: px-to-rem(120px)
+    padding: px-to-rem(5px) map-get($spacers, b)
+    line-height: 1
+    display: flex
+    align-items: center
+    gap: map-get($spacers, a)
+
+    &:hover
+      border-color: $shade-black-contrast
+
+  &__a--active
+    &, &:hover
+      background-color: $shade-black-contrast
+      border-color: $shade-black-contrast
+      color: $shade-light-contrast
+
+  &__label
+    white-space: nowrap
+    overflow: hidden
+    text-overflow: ellipsis
+
+  &__toggle
+    display: flex
+    cursor: pointer
+
+  &__toggle-expand,
+  &__toggle-collapse
+    display: flex
+    align-items: center
+    padding: map-get($spacers, a) map-get($spacers, c)
+    gap: map-get($spacers, b)
+
+  +media-breakpoint-up(lg)
+    &:not(&--small) &__a
+      +font-size-text-s
+      max-width: px-to-rem(200px)
+      padding: px-to-rem(3px) map-get($spacers, c)
+      gap: map-get($spacers, b)
+
+  &--small &__close
+    height: px-to-rem(16px) !important
+
+  +media-breakpoint-down(md)
+    &__close
+      height: px-to-rem(16px) !important
+
+  &__toggle-input:not(:checked) + &__ul &__toggle-expand,,
+  &__toggle-input:checked + &__ul &__toggle-collapse
+    display: none
+
+  +media-breakpoint-down(lg)
+    &--collapsible-mobile &__toggle-input:checked + &__ul &__li--collapsible-mobile
+      display: none
+
+    &--collapsible-mobile &__li--toggle
+      display: block
+
+  +media-breakpoint-up(lg)
+    &--collapsible-desktop &__toggle-input:checked + &__ul &__li--collapsible-desktop
+      display: none
+
+    &--collapsible-desktop &__li--toggle
+      display: block

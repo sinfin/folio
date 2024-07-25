@@ -12,6 +12,9 @@
   p
     color: $shade-700
 
+  &--dark p
+    color: $shade-black-contrast
+
   hr
     margin-top: map-get($spacers, i)
     margin-bottom: map-get($spacers, i)

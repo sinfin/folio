@@ -1,0 +1,13 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= application_namespace %>::Ui::TopicsComponentTest < Folio::ComponentTest
+  def test_render
+    topics = [{ label: "foo", href: "foo" }]
+
+    render_inline(<%= application_namespace %>::Ui::TopicsComponent.new(topics:))
+
+    assert_selector(".<%= classname_prefix %>-ui-topics")
+  end
+end

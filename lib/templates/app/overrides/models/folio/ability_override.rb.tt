@@ -9,5 +9,16 @@ Folio::Ability.class_eval do
   end
 
   def <%= application_namespace_path %>_rules
+    <%= application_namespace_path %>_blog_rules
+  end
+
+  def <%= application_namespace_path %>_blog_rules
+    return unless defined?(<%= application_namespace %>::Blog)
+
+    if user.superadmin? || user.has_any_roles?(site:, roles: [:administrator, :manager])
+      can :do_anything, <%= application_namespace %>::Blog::Article, { site: }
+      can :do_anything, <%= application_namespace %>::Blog::Author, { site: }
+      can :do_anything, <%= application_namespace %>::Blog::Topic, { site: }
+    end
   end
 end

@@ -34,3 +34,8 @@ mini_select_component:
   currency/default/czk: Kč
   currency/default/eur: "€"
   currency/default/usd: "$"
+image_component:
+  credits: Foto
+topics_component:
+  collapse: Sbalit
+  expand: Rozbalit

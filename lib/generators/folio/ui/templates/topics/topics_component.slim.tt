@@ -1,0 +1,41 @@
+div class=bem_class_name
+  - if @collapsible
+    input[
+      hidden=true
+      class="<%= classname_prefix %>-ui-topics__toggle-input"
+      id="<%= classname_prefix %>-ui-topics__toggle-input"
+      type="checkbox"
+      checked=true
+    ]
+
+  ul.<%= classname_prefix %>-ui-topics__ul
+    - @topics.each_with_index do |topic, i|
+      li.<%= classname_prefix %>-ui-topics__li[
+        class=(i + 1 > MAX_ITEMS_UNCOLLAPSED_MOBILE ? '<%= classname_prefix %>-ui-topics__li--collapsible-mobile' : nil)
+        class=(i + 1 > MAX_ITEMS_UNCOLLAPSED_DESKTOP ? '<%= classname_prefix %>-ui-topics__li--collapsible-desktop' : nil)
+      ]
+        a.<%= classname_prefix %>-ui-topics__a[
+          href=topic[:href]
+          class=(topic[:active] ? '<%= classname_prefix %>-ui-topics__a--active' : nil)
+          title=topic[:label]
+        ]
+          span.<%= classname_prefix %>-ui-topics__label
+            = topic[:label]
+
+          - if topic[:active] && topic[:close] != false
+            = <%= application_namespace_path %>_ui_icon(:close,
+                            height: 20,
+                            class_name: "<%= classname_prefix %>-ui-topics__close")
+
+    - if @collapsible
+      li.<%= classname_prefix %>-ui-topics__li.<%= classname_prefix %>-ui-topics__li--toggle
+        label.<%= classname_prefix %>-ui-topics__toggle.fs-text-s.fw-semibold[
+          for="<%= classname_prefix %>-ui-topics__toggle-input"
+        ]
+          span.<%= classname_prefix %>-ui-topics__toggle-expand
+            = t('.expand')
+            = <%= application_namespace_path %>_ui_icon(:chevron_down, height: 20)
+
+          span.<%= classname_prefix %>-ui-topics__toggle-collapse
+            = t('.collapse')
+            = <%= application_namespace_path %>_ui_icon(:chevron_up, height: 20)

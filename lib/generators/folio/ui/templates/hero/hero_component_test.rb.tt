@@ -12,7 +12,6 @@ class <%= application_namespace %>::Ui::HeroComponentTest < Folio::ComponentTest
     render_inline(<%= application_namespace %>::Ui::HeroComponent.new(title: "foo",
                                                perex: "bar",
                                                date: Time.zone.now,
-                                               author: "foo",
                                                cover: create(:folio_cover_placement),
                                                background_cover: create(:folio_cover_placement),
                                                image_size: "container",

@@ -118,6 +118,12 @@ ul
 .fs-text-xs
   +font-size-text-xs
 
+.fs-adaptive
+  $large: (xs: 1.5rem, sm: 2rem, md: 2.5rem, lg: 3rem, xxl: 4rem)
+  $medium: (xs: 1.25rem, sm: 1.5rem, md: 2rem, lg: 2.7rem, xl: 3rem)
+  $small: (xs: 1.25rem, md: 1.5rem, lg: 2.25rem, xl: 2.7rem)
+  +font-size-adaptive($large, $medium, $small)
+
 @for $lines from 1 to 5
   .text-line-clamp-#{$lines}
     +line-clamp($lines)

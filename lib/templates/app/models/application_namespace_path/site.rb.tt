@@ -1,6 +1,13 @@
 # frozen_string_literal: true
 
 class <%= application_namespace %>::Site < Folio::Site
+  def self.console_sidebar_before_menu_links
+    %w[
+      <%= application_namespace %>::Blog::Article
+      <%= application_namespace %>::Blog::Author
+      <%= application_namespace %>::Blog::Topic
+    ]
+  end
 end
 
 # == Schema Information

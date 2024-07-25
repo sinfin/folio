@@ -3,7 +3,7 @@
 ]
   .container-fluid.<%= classname_prefix %>-atom-text__container
     .<%= classname_prefix %>-atom-text__inner
-      .<%= classname_prefix %>-atom-text__content-container
+      .container-fluid.<%= classname_prefix %>-atom-text__content-container
         .<%= classname_prefix %>-rich-text [
           class=rich_text_chomp_class
           class="<%= classname_prefix %>-atom-text__content"
