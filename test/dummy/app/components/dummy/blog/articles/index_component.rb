@@ -4,11 +4,12 @@ class Dummy::Blog::Articles::IndexComponent < ApplicationComponent
   include Dummy::Blog::SetPagyAndArticlesFromScope
   include Pagy::Backend
 
-  def initialize(articles_scope: nil, title: nil, perex: nil, author: nil)
+  def initialize(articles_scope: nil, title: nil, perex: nil, author: nil, topic: nil)
     @articles_scope = articles_scope || Dummy::Blog::Article
     @title = title
     @perex = perex
     @author = author
+    @topic = topic
     @url_base = author || Dummy::Blog::Article
   end
 
@@ -23,20 +24,24 @@ class Dummy::Blog::Articles::IndexComponent < ApplicationComponent
                               .by_locale(locale)
                               .by_site(current_site)
 
-    @topics = Dummy::Blog::Topic.published
-                                .by_locale(locale)
-                                .by_site(current_site)
-                                .ordered
-
-    @topics = if @author
-      topic_ids = Dummy::Blog::TopicArticleLink.where(dummy_blog_article_id: articles.select(:id)).select(:dummy_blog_topic_id)
-      @topics.where(id: topic_ids)
+    @topics = if @topic
+      nil
     else
-      @topics.with_published_articles
-    end
+      scope = Dummy::Blog::Topic.published
+                                  .by_locale(locale)
+                                  .by_site(current_site)
+                                  .ordered
 
-    @topics = @topics.ordered
-                     .limit(50)
+      if @author
+        topic_ids = Dummy::Blog::TopicArticleLink.where(dummy_blog_article_id: articles.select(:id)).select(:dummy_blog_topic_id)
+        scope.where(id: topic_ids)
+      else
+        scope.with_published_articles
+      end
+
+      scope.ordered
+                   .limit(50)
+    end
 
     articles = articles.public_filter_by_topics(params[Dummy::Blog::TOPICS_PARAM])
                        .includes(Dummy::Blog.article_includes)

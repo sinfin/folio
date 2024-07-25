@@ -4,7 +4,8 @@ module Dummy::CurrentMethods
   extend ActiveSupport::Concern
 
   def current_menus
-    @current_menus ||= Folio::Menu.where(type: %w[Dummy::Menu::Header
+    @current_menus ||= Folio::Menu.by_site(current_site)
+                                  .where(type: %w[Dummy::Menu::Header
                                                   Dummy::Menu::Footer])
                                   .to_a
   end
@@ -21,7 +22,7 @@ module Dummy::CurrentMethods
     @current_page_singletons ||= begin
       h = {}
 
-      Folio::Page.where(site: current_site, type: %w[
+      Folio::Page.by_site(current_site).where(type: %w[
         Dummy::Page::Homepage
         Dummy::Page::Blog::Articles::Index
       ]).each { |p| h[p.type] = p }
