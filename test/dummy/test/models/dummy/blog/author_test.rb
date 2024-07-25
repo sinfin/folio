@@ -23,4 +23,17 @@ class Dummy::Blog::AuthorTest < ActiveSupport::TestCase
     assert_not author.valid?
     assert author.errors[:site]
   end
+
+  test "validate_name_uniqueness" do
+    create(:dummy_blog_author, first_name: "John", last_name: "Doe", locale: "cs")
+
+    author = build(:dummy_blog_author, first_name: "John", last_name: "Doe", locale: "cs")
+    assert_not author.valid?
+    assert author.errors[:first_name]
+
+    assert create(:dummy_blog_author, last_name: "Doe", locale: "cs")
+    author = build(:dummy_blog_author, last_name: "Doe", locale: "cs")
+    assert_not author.valid?
+    assert author.errors[:last_name]
+  end
 end

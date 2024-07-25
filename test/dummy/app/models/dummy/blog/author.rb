@@ -29,6 +29,7 @@ class Dummy::Blog::Author < ApplicationRecord
             inclusion: { in: Dummy::Blog.available_locales }
 
   validate :validate_matching_locales_and_sites
+  validate :validate_name_uniqueness
 
   pg_search_scope :by_query,
                   against: {
@@ -97,6 +98,13 @@ class Dummy::Blog::Author < ApplicationRecord
       if site_id_changed? && articles.where.not(site_id:).exists?
         errors.add(:site, :articles_have_different_site)
       end
+    end
+
+    def validate_name_uniqueness
+      return if last_name.blank? || locale.blank? || site.blank?
+      return unless self.class.where.not(id:).exists?(first_name:, last_name:, locale:, site:)
+
+      errors.add(first_name.present? ? :first_name : :last_name, :taken)
     end
 end
 

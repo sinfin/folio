@@ -38,8 +38,10 @@ namespace :blog do
 
           needed_topic_count.times do
             title = nil
+            sanity = 1000
 
-            while title.nil? || Dummy::Blog::Topic.where(title:).exists?
+            while sanity > 0 && (title.nil? || Dummy::Blog::Topic.where(title:, locale:, site:).exists?)
+              sanity -= 1
               title = Faker::Hipster.sentence(word_count: rand(1..3), random_words_to_add: 0)
             end
 
@@ -67,8 +69,17 @@ namespace :blog do
               [key.to_s, "##{key}"]
             end]
 
-            Dummy::Blog::Author.create!(first_name: Faker::Name.first_name,
-                                        last_name: Faker::Name.last_name,
+            first_name = nil
+            last_name = Faker::Name.last_name
+            sanity = 1000
+
+            while sanity > 0 && (first_name.nil? || Dummy::Blog::Author.where(first_name:, last_name:, site:, locale:).exists?)
+              sanity -= 1
+              first_name = Faker::Name.first_name
+            end
+
+            Dummy::Blog::Author.create!(first_name:,
+                                        last_name:,
                                         locale:,
                                         perex: Faker::Hipster.paragraph,
                                         cover: images.sample,
