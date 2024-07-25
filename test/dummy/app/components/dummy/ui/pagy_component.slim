@@ -1,5 +1,5 @@
 - if @pagy && @pagy.try(:pages) && @pagy.pages > 1
-  .d-ui-pagy.fs-display-2xs
+  .d-ui-pagy.fs-display-2xs class=@class_name
     nav.d-ui-pagy__nav role="navigation" aria-label="pager"
       ul.d-ui-pagy__pages
         - if @pagy.prev

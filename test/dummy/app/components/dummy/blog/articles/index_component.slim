@@ -17,4 +17,5 @@
                                                          column_classes: "col-12 col-sm-6 col-lg-4",
                                                          articles: @articles))
 
-    = render(Dummy::Ui::PagyComponent.new(pagy: @pagy))
+    = render(Dummy::Ui::PagyComponent.new(pagy: @pagy,
+                                          class_name: 'mt-d mt-md-f'))

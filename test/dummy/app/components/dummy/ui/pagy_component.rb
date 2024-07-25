@@ -3,8 +3,9 @@
 class Dummy::Ui::PagyComponent < ApplicationComponent
   include Pagy::Frontend
 
-  def initialize(pagy:)
+  def initialize(pagy:, class_name: nil)
     @pagy = pagy
+    @class_name = class_name
   end
 
   def link
