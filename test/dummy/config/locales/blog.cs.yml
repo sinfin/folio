@@ -64,8 +64,5 @@ cs:
             other: "%{count} Článků"
 
       topics:
-        list_component:
-          topics: "Témata:"
-          all: "Vše"
-          collapse: Sbalit
-          expand: Rozbalit
+        filter_list_component:
+          all: Vše

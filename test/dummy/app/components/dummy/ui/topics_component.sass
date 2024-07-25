@@ -13,6 +13,9 @@
     padding: 0
     margin: 0
 
+    &--toggle
+      display: none
+
   &__a
     +font-size-text-xs
     font-weight: $font-weight-medium
@@ -44,6 +47,17 @@
     overflow: hidden
     text-overflow: ellipsis
 
+  &__toggle
+    display: flex
+    cursor: pointer
+
+  &__toggle-expand,
+  &__toggle-collapse
+    display: flex
+    align-items: center
+    padding: map-get($spacers, a) map-get($spacers, c)
+    gap: map-get($spacers, b)
+
   +media-breakpoint-up(lg)
     &:not(&--small) &__a
       +font-size-text-s
@@ -57,3 +71,21 @@
   +media-breakpoint-down(md)
     &__close
       height: px-to-rem(16px) !important
+
+  &__toggle-input:not(:checked) + &__ul &__toggle-expand,,
+  &__toggle-input:checked + &__ul &__toggle-collapse
+    display: none
+
+  +media-breakpoint-down(lg)
+    &--collapsible-mobile &__toggle-input:checked + &__ul &__li--collapsible-mobile
+      display: none
+
+    &--collapsible-mobile &__li--toggle
+      display: block
+
+  +media-breakpoint-up(lg)
+    &--collapsible-desktop &__toggle-input:checked + &__ul &__li--collapsible-desktop
+      display: none
+
+    &--collapsible-desktop &__li--toggle
+      display: block

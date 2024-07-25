@@ -40,3 +40,7 @@ cs:
 
       image_component:
         credits: Foto
+
+      topics_component:
+        collapse: Sbalit
+        expand: Rozbalit

@@ -5,10 +5,6 @@ namespace :blog do
     Rake::Task["developer_tools:idp_seed_dummy_images"].invoke
     images = Folio::File::Image.tagged_with("unsplash").to_a
 
-    5
-    5
-    30
-
     if ENV["FORCE"]
       puts "Destroying all blog records as FORCE was passed"
       Dummy::Blog::Article.destroy_all
@@ -41,7 +37,13 @@ namespace :blog do
           puts "Need to seed #{needed_topic_count} dummy blog topics for site #{site.slug} with #{locale} locale."
 
           needed_topic_count.times do
-            Dummy::Blog::Topic.create!(title: Faker::Hipster.sentence(word_count: rand(1..3), random_words_to_add: 0),
+            title = nil
+
+            while title.nil? || Dummy::Blog::Topic.where(title: title).exists?
+              title = Faker::Hipster.sentence(word_count: rand(1..3), random_words_to_add: 0)
+            end
+
+            Dummy::Blog::Topic.create!(title:,
                                        locale:,
                                        cover: images.sample,
                                        perex: Faker::Hipster.paragraph,

@@ -57,8 +57,5 @@ en:
             other: "%{count} Articles"
 
       topics:
-        list_component:
-          topics: "Topics:"
+        filter_list_component:
           all: All
-          collapse: Collapse
-          expand: Expand

@@ -30,10 +30,6 @@ class Folio::Console::Dummy::Blog::ArticlesController < Folio::Console::BaseCont
     end
 
     def folio_console_collection_includes
-      [:topics, cover_placement: :file]
-    end
-
-    def folio_console_record_includes
-      []
+      [:authors, :topics, cover_placement: :file]
     end
 end

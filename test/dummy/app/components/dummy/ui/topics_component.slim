@@ -1,7 +1,19 @@
 div class=bem_class_name
+  - if @collapsible
+    input[
+      hidden=true
+      class="d-ui-topics__toggle-input"
+      id="d-ui-topics__toggle-input"
+      type="checkbox"
+      checked=true
+    ]
+
   ul.d-ui-topics__ul
-    - @topics.each do |topic|
-      li.d-ui-topics__li
+    - @topics.each_with_index do |topic, i|
+      li.d-ui-topics__li[
+        class=(i + 1 > MAX_ITEMS_UNCOLLAPSED_MOBILE ? 'd-ui-topics__li--collapsible-mobile' : nil)
+        class=(i + 1 > MAX_ITEMS_UNCOLLAPSED_DESKTOP ? 'd-ui-topics__li--collapsible-desktop' : nil)
+      ]
         a.d-ui-topics__a[
           href=topic[:href]
           class=(topic[:active] ? 'd-ui-topics__a--active' : nil)
@@ -14,4 +26,17 @@ div class=bem_class_name
             = dummy_ui_icon(:close,
                             height: 20,
                             class_name: "d-ui-topics__close")
+
+    - if @collapsible
+      li.d-ui-topics__li.d-ui-topics__li--toggle
+        label.d-ui-topics__toggle.fs-text-s.fw-semibold[
+          for="d-ui-topics__toggle-input"
+        ]
+          span.d-ui-topics__toggle-expand
+            = t('.expand')
+            = dummy_ui_icon(:chevron_down, height: 20)
+
+          span.d-ui-topics__toggle-collapse
+            = t('.collapse')
+            = dummy_ui_icon(:chevron_up, height: 20)
 

@@ -15,6 +15,6 @@ class Folio::Console::Dummy::Blog::AuthorsController < Folio::Console::BaseContr
     end
 
     def folio_console_collection_includes
-      []
+      [cover_placement: :file]
     end
 end

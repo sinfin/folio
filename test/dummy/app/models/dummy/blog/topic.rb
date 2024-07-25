@@ -28,6 +28,9 @@ class Dummy::Blog::Topic < ApplicationRecord
   validates :locale,
             inclusion: { in: Dummy::Blog.available_locales }
 
+  validates :title,
+            uniqueness: { scope: %i[site_id locale] }
+
   validate :validate_matching_locales_and_sites
 
   pg_search_scope :by_query,

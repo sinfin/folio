@@ -6,9 +6,10 @@
                                             show_divider: true,
                                             href: true))
 
-    .mb-4
-      - if @topics.present? && !active_pagy?
-        = render(Dummy::Blog::Topics::ListComponent.new(topics: @topics))
+    - if @topics.present?
+      .mb-4
+        = render(Dummy::Blog::Topics::FilterListComponent.new(topics: @topics,
+                                                              url_base: Dummy::Blog::Article))
 
     - if @main_articles.present?
       = render(Dummy::Blog::Articles::CardsComponent.new(size: :md,

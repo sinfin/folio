@@ -40,3 +40,7 @@ en:
 
       image_component:
         credits: Photo
+
+      topics_component:
+        collapse: Collapse
+        expand: Expand

@@ -2,6 +2,7 @@
 
 module Dummy::Blog
   ARTICLE_PAGY_ITEMS = 12
+  TOPICS_PARAM = :t
 
   def self.table_name_prefix
     "dummy_blog_"

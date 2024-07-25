@@ -19,10 +19,6 @@ class Folio::Console::Dummy::Blog::TopicsController < Folio::Console::BaseContro
     end
 
     def folio_console_collection_includes
-      []
-    end
-
-    def folio_console_record_includes
-      []
+      [cover_placement: :file]
     end
 end
