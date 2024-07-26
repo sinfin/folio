@@ -104,6 +104,17 @@ class Dummy::SeedGenerator
 
   def blog
     scaffold("blog")
+
+    paths = %w[
+      app/lib/dummy/blog/set_pagy_and_articles_from_scope.rb
+      app/models/dummy/page/blog/articles/index.rb
+      data/seed/pages/blog/articles/index.yml
+      lib/tasks/blog.rake
+    ].map { |str| Rails.root.join(str) }
+
+    Dir[*paths].each do |path|
+      copy_file(path, @templates_path.join("#{relative_application_path(path).gsub('dummy', 'application_namespace_path')}.tt"))
+    end
   end
 
   def search
@@ -256,6 +267,7 @@ class Dummy::SeedGenerator
          .gsub("dummy/search", "<%= application_namespace_path %>/search")
          .gsub("dummy/mailer", "<%= application_namespace_path %>/mailer")
          .gsub("dummy/atom", "<%= application_namespace_path %>/atom")
+         .gsub("dummy/page", "<%= application_namespace_path %>/page")
          .gsub("dummy/molecule", "<%= application_namespace_path %>/molecule")
          .gsub("dummy_menu", "<%= application_namespace_path %>_menu")
     end

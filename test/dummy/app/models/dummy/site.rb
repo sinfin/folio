@@ -2,11 +2,13 @@
 
 class Dummy::Site < Folio::Site
   def self.console_sidebar_before_menu_links
-    %w[
-      Dummy::Blog::Article
-      Dummy::Blog::Author
-      Dummy::Blog::Topic
-    ]
+    if defined?(Dummy::Blog)
+      %w[
+        Dummy::Blog::Article
+        Dummy::Blog::Author
+        Dummy::Blog::Topic
+      ]
+    end
   end
 end
 
