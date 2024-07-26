@@ -718,6 +718,9 @@ atoms:
     -
     - title: with title
 
+  Dummy::Atom::Blog::Articles:
+    -
+
 values_for_true:
   title: Polaroid cray austin muggle magic humblebrag aesthetic
   content: |

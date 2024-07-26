@@ -177,6 +177,10 @@ class Dummy::SeedGenerator
 
     copy_file(Rails.root.join("data/atoms_showcase.yml"), @templates_path.join("data/atoms_showcase.yml.tt"))
 
+    contents = File.read(@templates_path.join("data/atoms_showcase.yml.tt"))
+    replaced_contents = contents.gsub(/\R\s+<%= application_namespace %>::Atom::Blog::Articles:\R\s+-/, '')
+    File.write(@templates_path.join("data/atoms_showcase.yml.tt"), replaced_contents)
+
     Dir[Rails.root.join("app/views/dummy/atoms/show.slim")].each do |path|
       name = File.basename(path)
       copy_file(path, @templates_path.join("#{name}.tt"))
