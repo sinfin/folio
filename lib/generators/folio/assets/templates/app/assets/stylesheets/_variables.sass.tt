@@ -2,6 +2,7 @@ $enable-negative-margins: true
 $enable-rfs: false
 $enable-validation-icons: false
 $enable-dark-mode: false
+$enable-folio-dark-mode: true
 $color-mode-type: media-query
 
 $grid-gutter-base: px-to-rem(8px)
