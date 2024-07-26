@@ -1,5 +1,8 @@
-== cell('folio/publishable_hint', @article)
+= render_folio_cache
+  == cell('folio/publishable_hint', @article)
 
-== cell('<%= application_namespace_path %>/blog/articles/show_header', @article)
+  = render(<%= application_namespace %>::Blog::Articles::ShowHeaderComponent.new(article: @article,
+                                                          breadcrumbs: @breadcrumbs_on_rails))
 
-= render_atoms_in_molecules(@article.atoms_in_molecules)
+  = render(<%= application_namespace %>::Blog::Articles::ShowBodyComponent.new(article: @article,
+                                                        recommended_articles: @recommended_articles))

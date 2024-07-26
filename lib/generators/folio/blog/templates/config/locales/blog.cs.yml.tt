@@ -5,13 +5,28 @@ cs:
       <%= application_namespace_path %>/blog/article:
         topic: Téma
         topics: Témata
+        author: Autor
+        authors: Autoři
+
+      <%= application_namespace_path %>/blog/author:
+        job: Práce
+
       <%= application_namespace_path %>/blog/topic:
         articles_count: Články
+
     models:
+      <%= application_namespace_path %>/page/blog/articles/index: Stránka / Blog
+
       <%= application_namespace_path %>/blog/article:
         one: Článek
         few: Články
         other: Článků
+
+      <%= application_namespace_path %>/blog/author:
+        one: Autor
+        few: Autoři
+        other: Autorů
+
       <%= application_namespace_path %>/blog/topic:
         one: Téma
         few: Témata
@@ -23,6 +38,9 @@ cs:
       <%= application_namespace_path %>/atom/blog/articles/card/small: Článek (karta malá)
 
     errors:
+      messages:
+        articles_have_different_locale: neodpovídá jazykové variantě přiřazených článků.
+        articles_have_different_site: neodpovídá stránkám přiřazených článků.
       models:
         <%= application_namespace_path %>/blog/article:
           attributes:
@@ -32,9 +50,19 @@ cs:
   <%= application_namespace_path %>:
     blog:
       articles:
-        index:
-          title: Blog
+        index_component:
+          console_preview: Zde budou vypsány témata a články
+
+        show_body_component:
+          recommended_articles: Vybrané články
+
+      authors:
+        show:
+          published_articles_count:
+            one: 1 Článek
+            few: "%{count} Články"
+            other: "%{count} Článků"
 
       topics:
-        tag_list:
-          topics: "Témata:"
+        filter_list_component:
+          all: Vše

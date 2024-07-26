@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class <%= application_namespace %>::Blog::Topic < ApplicationRecord
-  include Folio::FriendlyId
+  include Folio::BelongsToSiteAndFriendlyId
   include Folio::HasAttachments
   include Folio::Positionable
   include Folio::Publishable::Basic
@@ -15,7 +15,9 @@ class <%= application_namespace %>::Blog::Topic < ApplicationRecord
   accepts_nested_attributes_for :topic_article_links, allow_destroy: true,
                                                          reject_if: :all_blank
 
-  has_many :articles, through: :topic_article_links, source: :article
+  has_many :articles, through: :topic_article_links,
+                      source: :article
+
   has_many :published_articles, -> { published },
                                 through: :topic_article_links,
                                 source: :article
@@ -25,6 +27,11 @@ class <%= application_namespace %>::Blog::Topic < ApplicationRecord
 
   validates :locale,
             inclusion: { in: <%= application_namespace %>::Blog.available_locales }
+
+  validates :title,
+            uniqueness: { scope: %i[site_id locale] }
+
+  validate :validate_matching_locales_and_sites
 
   pg_search_scope :by_query,
                   against: {
@@ -62,6 +69,17 @@ class <%= application_namespace %>::Blog::Topic < ApplicationRecord
 
     h
   end
+
+  private
+    def validate_matching_locales_and_sites
+      if locale_changed? && articles.where.not(locale:).exists?
+        errors.add(:locale, :articles_have_different_locale)
+      end
+
+      if site_id_changed? && articles.where.not(site_id:).exists?
+        errors.add(:site, :articles_have_different_site)
+      end
+    end
 end
 
 # == Schema Information

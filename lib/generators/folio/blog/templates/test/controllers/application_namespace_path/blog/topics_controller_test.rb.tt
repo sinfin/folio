@@ -4,9 +4,18 @@ require "test_helper"
 
 class <%= application_namespace %>::Blog::TopicsControllerTest < Folio::BaseControllerTest
   test "show" do
+    create_page_singleton(<%= application_namespace %>::Page::Blog::Articles::Index)
+
     topic = create(:<%= application_namespace_path %>_blog_topic)
     get url_for(topic)
     assert_response :ok
+    assert_select(".<%= classname_prefix %>-blog-articles-card", 0)
+
+    create(:<%= application_namespace_path %>_blog_article, topics: [topic])
+
+    get url_for(topic)
+    assert_response :ok
+    assert_select(".<%= classname_prefix %>-blog-articles-card")
 
     topic.update!(published: false)
 

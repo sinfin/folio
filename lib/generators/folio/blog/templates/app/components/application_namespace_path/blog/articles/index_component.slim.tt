@@ -1,0 +1,21 @@
+.<%= classname_prefix %>-blog-articles-index
+  .container-fluid
+    - if @title.present? || @perex.present?
+      = render(<%= application_namespace %>::Ui::HeroComponent.new(title: @title,
+                                            perex: @perex,
+                                            show_divider: true,
+                                            href: true))
+
+    - if @topics.present?
+      .mb-4
+        = render(<%= application_namespace %>::Blog::Topics::FilterListComponent.new(topics: @topics,
+                                                              url_base: @url_base))
+
+    - if @articles.present?
+      = render(<%= application_namespace %>::Blog::Articles::CardsComponent.new(size: :md,
+                                                         hero_size: use_hero_size? ? :lg : nil,
+                                                         column_classes: "col-12 col-sm-6 col-lg-4",
+                                                         articles: @articles))
+
+    = render(<%= application_namespace %>::Ui::PagyComponent.new(pagy: @pagy,
+                                          class_name: 'mt-d mt-md-f'))

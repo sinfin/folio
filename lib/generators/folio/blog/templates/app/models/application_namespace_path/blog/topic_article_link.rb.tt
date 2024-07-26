@@ -15,7 +15,7 @@ class <%= application_namespace %>::Blog::TopicArticleLink < ApplicationRecord
   validates :<%= application_namespace_path %>_blog_topic_id,
             uniqueness: { scope: :<%= application_namespace_path %>_blog_article_id }
 
-  validate :validate_matching_locales
+  validate :validate_matching_locales_and_sites
 
   def positionable_last_record
     if article
@@ -24,9 +24,15 @@ class <%= application_namespace %>::Blog::TopicArticleLink < ApplicationRecord
   end
 
   private
-    def validate_matching_locales
-      if article && topic && article.locale != topic.locale
-        errors.add(:base, :invalid_locales)
+    def validate_matching_locales_and_sites
+      if article && topic
+        if article.locale != topic.locale
+          errors.add(:base, :invalid_locales)
+        end
+
+        if article.site_id && topic.site_id && article.site_id != topic.site_id
+          errors.add(:topic, :not_from_same_site)
+        end
       end
     end
 end

@@ -1,0 +1,18 @@
+.<%= classname_prefix %>-blog-articles-show-body
+  .container-fluid
+    .<%= classname_prefix %>-blog-articles-show-body__row
+      main.<%= classname_prefix %>-blog-articles-show-body__main
+        .<%= classname_prefix %>-atoms.<%= classname_prefix %>-atoms--narrow
+          = render_atoms_in_molecules(@article.atoms_in_molecules)
+
+      aside.<%= classname_prefix %>-blog-articles-show-body__recommended
+        - if @recommended_articles.present?
+          h2.<%= classname_prefix %>-blog-articles-show-body__recommended-title.mt-0.mb-b
+            = t('.recommended_articles')
+
+          .<%= classname_prefix %>-blog-articles-show-body__recommended-articles
+            = render(<%= application_namespace %>::Blog::Articles::CardsComponent.new(size: :sm,
+                                                               hero_size: :md,
+                                                               container_classes: "col-12 col-sm-6 col-lg-12 sm-mt-1",
+                                                               hero_classes: "col-12 col-sm-6 col-lg-12",
+                                                               articles: @recommended_articles))

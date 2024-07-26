@@ -1,0 +1,21 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= application_namespace %>::Blog::Articles::IndexComponentTest < Folio::ComponentTest
+  def test_render
+    create_and_host_site
+
+    render_inline(<%= application_namespace %>::Blog::Articles::IndexComponent.new)
+
+    assert_selector(".<%= classname_prefix %>-blog-articles-index")
+    assert_no_selector(".<%= classname_prefix %>-blog-articles-card")
+
+    create_list(:<%= application_namespace_path %>_blog_article, 1)
+
+    render_inline(<%= application_namespace %>::Blog::Articles::IndexComponent.new)
+
+    assert_selector(".<%= classname_prefix %>-blog-articles-index")
+    assert_selector(".<%= classname_prefix %>-blog-articles-card")
+  end
+end

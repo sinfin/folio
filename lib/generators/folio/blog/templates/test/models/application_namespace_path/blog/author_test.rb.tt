@@ -1,0 +1,39 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= application_namespace %>::Blog::AuthorTest < ActiveSupport::TestCase
+  test "cannot change locale with offending articles" do
+    author = create(:<%= application_namespace_path %>_blog_author, locale: "cs")
+    create(:<%= application_namespace_path %>_blog_article, locale: "cs", authors: [author])
+
+    author.locale = "en"
+    assert_not author.valid?
+    assert author.errors[:locale]
+  end
+
+  test "cannot change site with offending articles" do
+    site = create_and_host_site
+    site_2 = create_site(force: true)
+
+    author = create(:<%= application_namespace_path %>_blog_author, site:)
+    create(:<%= application_namespace_path %>_blog_article, authors: [author], site:)
+
+    author.site = site_2
+    assert_not author.valid?
+    assert author.errors[:site]
+  end
+
+  test "validate_name_uniqueness" do
+    create(:<%= application_namespace_path %>_blog_author, first_name: "John", last_name: "Doe", locale: "cs")
+
+    author = build(:<%= application_namespace_path %>_blog_author, first_name: "John", last_name: "Doe", locale: "cs")
+    assert_not author.valid?
+    assert author.errors[:first_name]
+
+    assert create(:<%= application_namespace_path %>_blog_author, last_name: "Doe", locale: "cs")
+    author = build(:<%= application_namespace_path %>_blog_author, last_name: "Doe", locale: "cs")
+    assert_not author.valid?
+    assert author.errors[:last_name]
+  end
+end

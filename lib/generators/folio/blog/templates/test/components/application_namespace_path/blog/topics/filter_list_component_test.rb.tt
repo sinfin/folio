@@ -1,0 +1,13 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= application_namespace %>::Blog::Topics::FilterListComponentTest < Folio::ComponentTest
+  def test_render
+    topics = create_list(:<%= application_namespace_path %>_blog_topic, 1)
+
+    render_inline(<%= application_namespace %>::Blog::Topics::FilterListComponent.new(topics:, url_base: <%= application_namespace %>::Blog::Article))
+
+    assert_selector(".<%= classname_prefix %>-blog-topics-filter-list")
+  end
+end

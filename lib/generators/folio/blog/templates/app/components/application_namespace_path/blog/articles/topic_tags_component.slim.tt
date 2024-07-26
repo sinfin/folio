@@ -1,0 +1,10 @@
+ul.<%= classname_prefix %>-blog-articles-topic-tags[
+  class=(@size? "<%= classname_prefix %>-blog-articles-topic-tags--#{@size}" : nil)
+]
+  / TODO: add topic primary or not data
+  - @topics.each do |topic|
+    li.<%= classname_prefix %>-blog-articles-topic-tags__item[
+      class=([true, false].sample ? '<%= classname_prefix %>-blog-articles-topic-tags__item--primary' : nil)
+    ]
+      a.<%= classname_prefix %>-blog-articles-topic-tags__link href=url_for(topic)
+        = topic.title

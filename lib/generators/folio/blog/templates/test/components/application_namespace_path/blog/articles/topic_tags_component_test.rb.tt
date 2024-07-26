@@ -1,0 +1,26 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= application_namespace %>::Blog::Articles::TopicTagsComponentTest < Folio::ComponentTest
+  def test_render
+    create_and_host_site
+
+    article = create(:<%= application_namespace_path %>_blog_article)
+
+    render_inline(<%= application_namespace %>::Blog::Articles::TopicTagsComponent.new(article:))
+
+    assert_no_selector(".<%= classname_prefix %>-blog-articles-topic-tags")
+  end
+
+  def test_render_with_topics
+    create_and_host_site
+
+    article = create(:<%= application_namespace_path %>_blog_article)
+    article.topics << create(:<%= application_namespace_path %>_blog_topic)
+
+    render_inline(<%= application_namespace %>::Blog::Articles::TopicTagsComponent.new(article:))
+
+    assert_selector(".<%= classname_prefix %>-blog-articles-topic-tags")
+  end
+end

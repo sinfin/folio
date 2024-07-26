@@ -1,0 +1,3 @@
+.<%= classname_prefix %>-blog-topics-filter-list
+  = render(<%= application_namespace %>::Ui::TopicsComponent.new(topics: ui_topics,
+                                          collapsible: true))

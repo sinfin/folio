@@ -1,0 +1,12 @@
+# frozen_string_literal: true
+
+class <%= application_namespace %>::Atom::Blog::Articles::IndexComponent < ApplicationComponent
+  def initialize(atom:, atom_options: {})
+    @atom = atom
+    @atom_options = atom_options
+  end
+
+  def before_render
+    @page = @atom_options[:page] || current_page_singleton(<%= application_namespace %>::Page::Blog::Articles::Index, fail_on_missing: true)
+  end
+end

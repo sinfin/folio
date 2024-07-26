@@ -6,7 +6,7 @@ class Folio::Console::<%= application_namespace %>::Blog::TopicsController < Fol
   private
     def topic_params
       params.require(:<%= application_namespace_path %>_blog_topic)
-            .permit(*(@klass.column_names - ["id"]),
+            .permit(*(@klass.column_names - %w[id site_id]),
                     *file_placements_strong_params)
     end
 
@@ -19,10 +19,6 @@ class Folio::Console::<%= application_namespace %>::Blog::TopicsController < Fol
     end
 
     def folio_console_collection_includes
-      []
-    end
-
-    def folio_console_record_includes
-      []
+      [cover_placement: :file]
     end
 end

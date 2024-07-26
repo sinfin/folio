@@ -4,6 +4,7 @@ require "test_helper"
 
 class <%= application_namespace %>::Blog::ArticlesControllerTest < Folio::BaseControllerTest
   test "index" do
+    create_page_singleton(<%= application_namespace %>::Page::Blog::Articles::Index)
     get url_for(<%= application_namespace %>::Blog::Article)
     assert_response :ok
 
@@ -13,6 +14,7 @@ class <%= application_namespace %>::Blog::ArticlesControllerTest < Folio::BaseCo
   end
 
   test "show" do
+    create_page_singleton(<%= application_namespace %>::Page::Blog::Articles::Index)
     article = create(:<%= application_namespace_path %>_blog_article)
     get url_for(article)
     assert_response :ok

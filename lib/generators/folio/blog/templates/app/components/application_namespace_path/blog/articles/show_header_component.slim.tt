@@ -1,0 +1,2 @@
+.<%= classname_prefix %>-blog-articles-show-header
+  = hero_component

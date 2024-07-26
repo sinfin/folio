@@ -1,0 +1,27 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= application_namespace %>::Blog::AuthorsControllerTest < Folio::BaseControllerTest
+  test "show" do
+    create_page_singleton(<%= application_namespace %>::Page::Blog::Articles::Index)
+
+    author = create(:<%= application_namespace_path %>_blog_author)
+    get url_for(author)
+    assert_response :ok
+    assert_select(".<%= classname_prefix %>-blog-articles-card", 0)
+
+    create(:<%= application_namespace_path %>_blog_article, authors: [author])
+
+    get url_for(author)
+    assert_response :ok
+    assert_select(".<%= classname_prefix %>-blog-articles-card")
+
+    author.update!(published: false)
+
+    assert_raises(ActiveRecord::RecordNotFound) { get url_for(author) }
+
+    get url_for([author, Folio::Publishable::PREVIEW_PARAM_NAME => author.preview_token])
+    assert_response(:ok)
+  end
+end

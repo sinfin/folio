@@ -1,0 +1,15 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= application_namespace %>::Blog::Articles::CardsComponentTest < Folio::ComponentTest
+  def test_render
+    create_and_host_site
+
+    articles = create_list(:<%= application_namespace_path %>_blog_article, 1)
+
+    render_inline(<%= application_namespace %>::Blog::Articles::CardsComponent.new(articles:))
+
+    assert_selector(".<%= classname_prefix %>-blog-articles-cards")
+  end
+end

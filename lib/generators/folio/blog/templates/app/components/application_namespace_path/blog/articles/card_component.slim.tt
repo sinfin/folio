@@ -1,0 +1,30 @@
+article.<%= classname_prefix %>-blog-articles-card[
+  class=(@size ? "<%= classname_prefix %>-blog-articles-card--#{@size}" : nil)
+]
+  - if @article.cover_placement.present?
+    a.<%= classname_prefix %>-blog-articles-card__top href=url_for(@article)
+      = <%= application_namespace_path %>_ui_image(@article.cover_placement,
+                       cover_size,
+                       class_name: '<%= classname_prefix %>-blog-articles-card__cover',
+                       cover: true,
+                       hover_zoom: true,
+                       border_radius: @size == :sm ? true: false,)
+
+  .<%= classname_prefix %>-blog-articles-card__content
+    .<%= classname_prefix %>-blog-articles-card__title-and-perex
+      h2.<%= classname_prefix %>-blog-articles-card__title
+        a.<%= classname_prefix %>-blog-articles-card__link href=url_for(@article)
+          = cstypo @article.title
+
+      - if @article.perex.present? && @size != :sm
+        p.<%= classname_prefix %>-blog-articles-card__perex
+          = cstypo @article.perex
+
+    .<%= classname_prefix %>-blog-articles-card__details
+      - if topics.present?
+        = render(<%= application_namespace %>::Ui::TopicsComponent.new(topics:, small: true))
+
+      time.<%= classname_prefix %>-blog-articles-card__date.fs-text-xs[
+        datetime=@article.published_at_with_fallback.iso8601
+      ]
+        = l(@article.published_at_with_fallback.to_date, format: :folio_short)

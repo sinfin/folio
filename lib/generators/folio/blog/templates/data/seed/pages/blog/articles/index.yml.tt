@@ -1,0 +1,4 @@
+type: <%= application_namespace %>::Page::Blog::Articles::Index
+title: Blog
+atoms:
+  - type: <%= application_namespace %>::Atom::Blog::Articles::Index

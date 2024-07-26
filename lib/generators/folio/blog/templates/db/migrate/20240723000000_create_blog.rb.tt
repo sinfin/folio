@@ -1,0 +1,115 @@
+# frozen_string_literal: true
+
+class CreateBlog < ActiveRecord::Migration[7.0]
+  def change
+    create_table :<%= application_namespace_path %>_blog_articles do |t|
+      t.string :title
+      t.string :slug
+      t.text :perex
+
+      t.belongs_to :site
+
+      t.string :locale, default: I18n.default_locale
+
+      t.string :preview_token
+
+      t.string :meta_title
+      t.text :meta_description
+
+      t.boolean :featured
+      t.boolean :published
+      t.datetime :published_at
+
+      t.timestamps
+    end
+
+    add_index :<%= application_namespace_path %>_blog_articles, :slug
+    add_index :<%= application_namespace_path %>_blog_articles, :locale
+    add_index :<%= application_namespace_path %>_blog_articles, :featured
+    add_index :<%= application_namespace_path %>_blog_articles, :published
+    add_index :<%= application_namespace_path %>_blog_articles, :published_at
+
+    create_table :<%= application_namespace_path %>_blog_topics do |t|
+      t.string :title
+      t.string :slug
+      t.text :perex
+
+      t.belongs_to :site
+
+      t.string :locale, default: I18n.default_locale
+
+      t.boolean :published
+      t.boolean :featured
+
+      t.integer :articles_count, default: 0
+
+      t.integer :position
+
+      t.string :preview_token
+
+      t.string :meta_title
+      t.text :meta_description
+
+      t.timestamps
+    end
+
+    add_index :<%= application_namespace_path %>_blog_topics, :slug
+    add_index :<%= application_namespace_path %>_blog_topics, :locale
+    add_index :<%= application_namespace_path %>_blog_topics, :featured
+    add_index :<%= application_namespace_path %>_blog_topics, :published
+    add_index :<%= application_namespace_path %>_blog_topics, :position
+
+    create_table :<%= application_namespace_path %>_blog_topic_article_links do |t|
+      t.belongs_to :<%= application_namespace_path %>_blog_topic, index: { name: :<%= application_namespace_path %>_blog_topic_article_links_t_id }
+      t.belongs_to :<%= application_namespace_path %>_blog_article, index: { name: :<%= application_namespace_path %>_blog_topic_article_links_a_id }
+
+      t.integer :position
+
+      t.timestamps
+    end
+
+    create_table :<%= application_namespace_path %>_blog_authors do |t|
+      t.string :first_name
+      t.string :last_name
+      t.string :slug
+      t.text :perex
+
+      t.belongs_to :site
+
+      t.string :locale, default: I18n.default_locale
+
+      t.boolean :published
+      t.boolean :featured
+
+      t.integer :articles_count, default: 0
+
+      t.integer :position
+
+      t.string :preview_token
+
+      t.string :job
+
+      t.string :meta_title
+      t.text :meta_description
+
+      t.jsonb :social_links
+
+      t.timestamps
+    end
+
+    add_index :<%= application_namespace_path %>_blog_authors, :slug
+    add_index :<%= application_namespace_path %>_blog_authors, :locale
+    add_index :<%= application_namespace_path %>_blog_authors, :featured
+    add_index :<%= application_namespace_path %>_blog_authors, :published
+    add_index :<%= application_namespace_path %>_blog_authors, :position
+
+    create_table :<%= application_namespace_path %>_blog_author_article_links do |t|
+      t.belongs_to :<%= application_namespace_path %>_blog_author, index: { name: :<%= application_namespace_path %>_blog_author_article_links_t_id }
+      t.belongs_to :<%= application_namespace_path %>_blog_article, index: { name: :<%= application_namespace_path %>_blog_author_article_links_a_id }
+
+      t.integer :position
+
+      t.timestamps
+    end
+  end
+end

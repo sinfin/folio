@@ -1,0 +1,26 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= application_namespace %>::Blog::Articles::ShowHeaderComponentTest < Folio::ComponentTest
+  def test_render
+    create_and_host_site
+
+    article = create(:<%= application_namespace_path %>_blog_article)
+
+    render_inline(<%= application_namespace %>::Blog::Articles::ShowHeaderComponent.new(article:))
+
+    assert_selector(".<%= classname_prefix %>-blog-articles-show-header")
+  end
+
+  def test_render_with_topics
+    create_and_host_site
+
+    article = create(:<%= application_namespace_path %>_blog_article)
+    article.topics << create(:<%= application_namespace_path %>_blog_topic)
+
+    render_inline(<%= application_namespace %>::Blog::Articles::ShowHeaderComponent.new(article:))
+
+    assert_selector(".<%= classname_prefix %>-blog-articles-show-header")
+  end
+end

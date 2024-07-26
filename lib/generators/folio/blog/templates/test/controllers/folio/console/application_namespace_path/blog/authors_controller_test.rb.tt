@@ -1,0 +1,64 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class Folio::Console::<%= application_namespace %>::Blog::AuthorsControllerTest < Folio::Console::BaseControllerTest
+  test "index" do
+    get url_for([:console, <%= application_namespace %>::Blog::Author])
+
+    assert_response :success
+
+    create(:<%= application_namespace_path %>_blog_author)
+
+    get url_for([:console, <%= application_namespace %>::Blog::Author])
+
+    assert_response :success
+  end
+
+  test "new" do
+    get url_for([:console, <%= application_namespace %>::Blog::Author, action: :new])
+
+    assert_response :success
+  end
+
+  test "edit" do
+    model = create(:<%= application_namespace_path %>_blog_author)
+
+    get url_for([:edit, :console, model])
+
+    assert_response :success
+  end
+
+  test "create" do
+    params = build(:<%= application_namespace_path %>_blog_author).serializable_hash
+
+    assert_difference("<%= application_namespace %>::Blog::Author.count", 1) do
+      post url_for([:console, <%= application_namespace %>::Blog::Author]), params: {
+        <%= application_namespace_path %>_blog_author: params,
+      }
+    end
+  end
+
+  test "update" do
+    model = create(:<%= application_namespace_path %>_blog_author)
+    assert_not_equal("Title", model.last_name)
+
+    put url_for([:console, model]), params: {
+      <%= application_namespace_path %>_blog_author: {
+        last_name: "Title",
+      },
+    }
+
+    assert_redirected_to url_for([:edit, :console, model])
+    assert_equal("Title", model.reload.last_name)
+  end
+
+  test "destroy" do
+    model = create(:<%= application_namespace_path %>_blog_author)
+
+    delete url_for([:console, model])
+
+    assert_redirected_to url_for([:console, <%= application_namespace %>::Blog::Author])
+    assert_not(<%= application_namespace %>::Blog::Author.exists?(id: model.id))
+  end
+end
