@@ -14,9 +14,9 @@ class Dummy::Ui::HeroComponentTest < Folio::ComponentTest
                                                date: Time.zone.now,
                                                cover: create(:folio_cover_placement),
                                                background_cover: create(:folio_cover_placement),
-                                               image_size: "container",
-                                               theme: "light",
-                                               background_overlay: "light",
+                                               image_size: :container,
+                                               theme: :light,
+                                               background_overlay: :light,
                                                background_color: "#000",
                                                show_divider: true))
 

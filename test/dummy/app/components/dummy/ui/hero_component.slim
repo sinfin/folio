@@ -15,12 +15,14 @@ div[
   .d-ui-hero__wrap
     - if cover_images_data.present?
       .d-ui-hero__cover-container[
-        class=(@image_size == "full_width" ? nil : "container-fluid")
+        class=(@image_size == :full_width ? nil : "container-fluid")
       ]
         .position-relative
           - cover_images_data.each do |placement, size, class_name|
-            = dummy_ui_image(placement, size, class_name:,
-                                              credits: @image_size != "small")
+            = dummy_ui_image(placement,
+                             size,
+                             class_name:,
+                             credits: @image_size != :small && @image_size != :author)
 
     .container-fluid
       .d-ui-hero__content

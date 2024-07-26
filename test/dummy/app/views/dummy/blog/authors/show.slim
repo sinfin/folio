@@ -1,6 +1,8 @@
 = render_folio_cache
   = render(Dummy::Ui::HeroComponent.new(title: @author.to_label,
                                         perex: @author.perex,
+                                        cover: @author.cover,
+                                        image_size: :author,
                                         breadcrumbs: @breadcrumbs_on_rails,
                                         show_divider: true,
                                         strong_subtitle: @author.job,
