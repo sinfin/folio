@@ -3,9 +3,9 @@
 class <%= application_namespace %>::Ui::HeroComponent < ApplicationComponent
   include Folio::Molecule::CoverPlacements
 
-  ALLOWED_IMAGE_SIZES = %w[container full_width small medium large extra_large]
-  ALLOWED_THEMES = %w[light dark]
-  ALLOWED_OVERLAYS = [nil, "light", "dark"]
+  ALLOWED_IMAGE_SIZES = %i[container full_width small medium large extra_large author]
+  ALLOWED_THEMES = %i[light dark]
+  ALLOWED_OVERLAYS = [nil, :light, :dark]
 
   THUMB_SIZES = {
     background: "2560x1440#",
@@ -15,6 +15,7 @@ class <%= application_namespace %>::Ui::HeroComponent < ApplicationComponent
     large: "700x300#",
     medium: "400x200#",
     small: "100x100#",
+    author: "372x200#n",
   }
 
   MOBILE_THUMB_SIZES = {
@@ -65,11 +66,11 @@ class <%= application_namespace %>::Ui::HeroComponent < ApplicationComponent
     @theme = set_allowed_option(:theme, theme, ALLOWED_THEMES)
     @background_overlay = set_allowed_option(:background_overlay, background_overlay, ALLOWED_OVERLAYS)
 
-    @top_spacing = %w[full_width container].exclude?(@image_size)
-    @theme_light = true if @theme == "light"
-    @theme_dark = true if @theme == "dark"
-    @background_color_light = true if @background_color == "light"
-    @background_color_dark = true if @background_color == "dark"
+    @top_spacing = %i[full_width container].exclude?(@image_size)
+    @theme_light = true if @theme == :light
+    @theme_dark = true if @theme == :dark
+    @background_color_light = true if @background_color == :light
+    @background_color_dark = true if @background_color == :dark
   end
 
   def atom_styles
@@ -83,8 +84,10 @@ class <%= application_namespace %>::Ui::HeroComponent < ApplicationComponent
       if @cover.present?
         img_class_name = "<%= classname_prefix %>-ui-hero__image"
 
-        if @image_size == "container"
+        if @image_size == :container
           img_class_name += " <%= classname_prefix %>-ui-hero__image--contained"
+        elsif @image_size == :author
+          img_class_name += " <%= classname_prefix %>-ui-hero__image--author"
         end
 
         if mobile_thumb_size.present?
@@ -105,7 +108,7 @@ class <%= application_namespace %>::Ui::HeroComponent < ApplicationComponent
       if @cover.present?
         img_class_name = "<%= classname_prefix %>-ui-hero__image"
 
-        if @image_size == "container"
+        if @image_size == :container
           img_class_name += " <%= classname_prefix %>-ui-hero__image--contained"
         end
 
@@ -122,7 +125,7 @@ class <%= application_namespace %>::Ui::HeroComponent < ApplicationComponent
 
       if images.present?
         class_name = "<%= classname_prefix %>-ui-hero__cover-container"
-        class_name = "container-fluid" if @image_size != "full_width"
+        class_name = "container-fluid" if @image_size != :full_width
 
         content_tag :div, images.join("").html_safe, class: class_name
       end
@@ -130,11 +133,11 @@ class <%= application_namespace %>::Ui::HeroComponent < ApplicationComponent
   end
 
   def thumb_size
-    @thumb_size ||= THUMB_SIZES[@image_size.to_sym]
+    @thumb_size ||= THUMB_SIZES[@image_size]
   end
 
   def mobile_thumb_size
-    @mobile_thumb_size ||= MOBILE_THUMB_SIZES[@image_size.to_sym]
+    @mobile_thumb_size ||= MOBILE_THUMB_SIZES[@image_size]
   end
 
   def set_allowed_option(key, value, allowed)
