@@ -6,14 +6,13 @@
           = render_atoms_in_molecules(@article.atoms_in_molecules)
 
       aside.d-blog-articles-show-body__recommended
-        h2.d-blog-articles-show-body__recommended-title.mt-0.mb-b
-          = t('.recommended_articles')
+        - if @recommended_articles.present?
+          h2.d-blog-articles-show-body__recommended-title.mt-0.mb-b
+            = t('.recommended_articles')
 
-        .d-blog-articles-show-body__recommended-articles
-          - if @recommended_articles.present?
-            = render(Dummy::Blog::Articles::CardsComponent.new( \
-                     size: :sm,
-                     hero_size: :md,
-                     container_classes: "col-12 col-sm-6 col-lg-12 sm-mt-1",
-                     hero_classes: "col-12 col-sm-6 col-lg-12",
-                     articles: @recommended_articles))
+          .d-blog-articles-show-body__recommended-articles
+            = render(Dummy::Blog::Articles::CardsComponent.new(size: :sm,
+                                                               hero_size: :md,
+                                                               container_classes: "col-12 col-sm-6 col-lg-12 sm-mt-1",
+                                                               hero_classes: "col-12 col-sm-6 col-lg-12",
+                                                               articles: @recommended_articles))

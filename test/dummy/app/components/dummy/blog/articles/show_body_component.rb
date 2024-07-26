@@ -3,13 +3,8 @@
 class Dummy::Blog::Articles::ShowBodyComponent < ApplicationComponent
   include Folio::AtomsHelper
 
-  def initialize(article:, articles:)
+  def initialize(article:, recommended_articles: nil)
     @article = article
-
-    articles_a = articles.to_a
-
-    # TODO: select correct recommended articles
-    articles_a.shift
-    @recommended_articles = articles_a.shift
+    @recommended_articles = recommended_articles
   end
 end
