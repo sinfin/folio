@@ -10,14 +10,6 @@ class Dummy::Blog::TopicsController < Dummy::Blog::BaseController
 
       unless force_correct_path(url_for(@topic))
         set_meta_variables(@topic)
-
-        articles = @topic.published_articles
-                         .by_site(Folio::Current.site)
-                         .ordered
-                         .includes(Dummy::Blog.article_includes)
-
-        set_pagy_and_articles_from_scope(articles)
-
         add_breadcrumb_on_rails @topic.to_label
       end
     end

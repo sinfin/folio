@@ -106,7 +106,6 @@ class Dummy::SeedGenerator
     scaffold("blog")
 
     paths = %w[
-      app/lib/dummy/blog/set_pagy_and_articles_from_scope.rb
       app/models/dummy/page/blog/articles/index.rb
       data/seed/pages/blog/articles/index.yml
       lib/tasks/blog.rake
@@ -270,6 +269,8 @@ class Dummy::SeedGenerator
          .gsub("dummy/page", "<%= application_namespace_path %>/page")
          .gsub("dummy/molecule", "<%= application_namespace_path %>/molecule")
          .gsub("dummy_menu", "<%= application_namespace_path %>_menu")
+         .gsub("idp_seed_<%= application_namespace_path %>_blog", "idp_seed_dummy_blog")
+         .gsub("idp_seed_<%= application_namespace_path %>_images", "idp_seed_dummy_images")
     end
 
     def scaffold(key)

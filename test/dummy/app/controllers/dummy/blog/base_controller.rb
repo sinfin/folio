@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Dummy::Blog::BaseController < ApplicationController
-  include Dummy::Blog::SetPagyAndArticlesFromScope
-
   before_action :add_root_blog_breadcrumb
 
   private
