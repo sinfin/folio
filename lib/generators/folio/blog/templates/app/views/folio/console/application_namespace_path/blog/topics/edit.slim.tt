@@ -1,3 +1,3 @@
-= simple_form_for([:console, @topic], \
-                  url: main_app.url_for([:console, @topic])) do |f|
+= simple_form_for([:console, @topic],
+                  url: through_aware_console_url_for(@topic)) do |f|
   = render 'form', f: f
