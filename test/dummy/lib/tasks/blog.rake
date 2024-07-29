@@ -10,6 +10,11 @@ namespace :blog do
       Dummy::Blog::Article.destroy_all
       Dummy::Blog::Author.destroy_all
       Dummy::Blog::Topic.destroy_all
+
+      Dummy::Page::Blog::Articles::Index.find_each do |page|
+        page.force_destroy = true
+        page.destroy!
+      end
     end
 
     Folio::Site.find_each do |site|
@@ -18,7 +23,15 @@ namespace :blog do
                                                           site:,
                                                           published: true,
                                                           published_at: 1.minute.ago)
-        page.atoms << Dummy::Atom::Blog::Articles::Index.new
+
+        locales = ::Rails.application.config.folio_using_traco ? site.locales : [nil]
+
+        locales.each do |locale|
+          Dummy::Atom::Blog::Articles::Index.create!(placement: page,
+                                                       locale:,
+                                                       position: 1)
+        end
+
         puts "Seeded Dummy::Page::Blog::Articles::Index for site #{site.slug}"
       end
 
@@ -57,7 +70,7 @@ namespace :blog do
           puts "\nSeeded #{needed_topic_count} dummy blog topics for site #{site.slug} with #{locale} locale."
         end
 
-        topics = Dummy::Blog::Topic.where(locale:).to_a
+        topics = Dummy::Blog::Topic.by_site(site).where(locale:).to_a
 
         if needed_authors_count == 0
           puts "Not seeding dummy blog authors for site #{site.slug} with #{locale} locale as there are #{authors_count} already."
@@ -93,7 +106,7 @@ namespace :blog do
           puts "\nSeeded #{needed_authors_count} dummy blog authors for site #{site.slug} with #{locale} locale."
         end
 
-        authors = Dummy::Blog::Author.where(locale:).to_a
+        authors = Dummy::Blog::Author.by_site(site).where(locale:).to_a
 
         if needed_articles_count == 0
           puts "Not seeding dummy blog articles for site #{site.slug} with #{locale} locale as there are #{articles_count} already."

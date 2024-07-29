@@ -10,6 +10,10 @@ class <%= application_namespace %>::Atom::Blog::Articles::Index < Folio::Atom::B
   VALID_PLACEMENT_TYPES = %w[
     <%= application_namespace %>::Page::Blog::Articles::Index
   ]
+
+  def self.console_insert_row
+    3
+  end
 end
 
 # == Schema Information
