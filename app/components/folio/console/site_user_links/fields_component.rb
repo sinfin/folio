@@ -8,14 +8,13 @@ class Folio::Console::SiteUserLinks::FieldsComponent < Folio::Console::Applicati
 
   def allowed_sites_links
     Folio::Site.order(domain: :asc).filter_map do |site|
-      next unless current_user.can_now?(:update_site_links, Folio::User, site:)
-
-      link = @user.site_user_links.joins(:site).detect { |l| l.site == site }
-
+      link = @user.user_link_for(site:)
       if link.blank?
         roles = (site == current_site && @user.new_record?) ? [] : nil
         link = @user.site_user_links.build(site:, roles:)
       end
+
+      next unless current_user.can_now?(:update, link)
 
       link
     end

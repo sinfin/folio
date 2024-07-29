@@ -6,21 +6,22 @@ class Folio::AbilityTest < ActiveSupport::TestCase
   attr_reader :ability, :site1, :site2, :tested_site
 
   MAXIMUM_ACTIONS = { general: [:access_console],
-                      superadmins: [:manage],
-                      administrators: [:manage],
-                      managers: [:manage],
-                      users: [:manage, :impersonate, :stop_impersonating],
-                      images: [:manage],
-                      videos: [:manage],
-                      audios: [:manage],
-                      documents: [:manage],
-                      # blog_articles: [:manage],
-                      # blog_topics: [:manage],
-                      pages: [:manage],
-                      menus: [:manage],
-                      leads: [:manage],
-                      newsletter_subscriptions: [:manage],
-                      email_templates: [:manage],
+                      superadmins: [:crud],
+                      administrators: [:crud],
+                      managers: [:crud],
+                      users: [:crud, :impersonate, :stop_impersonating],
+                      images: [:crud],
+                      videos: [:crud],
+                      audios: [:crud],
+                      documents: [:crud],
+                      # blog_articles: [:crud],
+                      # blog_topics: [:crud],
+                      pages: [:crud],
+                      menus: [:crud],
+                      leads: [:crud],
+                      newsletter_subscriptions: [:crud],
+                      email_templates: [:crud],
+                      site_user_links: [:crud],
                       sites: [:read, :modify] }.freeze # C+U are done by rails console (?)
 
   def setup
@@ -49,7 +50,7 @@ class Folio::AbilityTest < ActiveSupport::TestCase
     user = create_user(roles: { site1 => [:administrator] })
     @tested_site = site1
     allowed_actions = MAXIMUM_ACTIONS.merge({ superadmins: [:new],
-                                              users: [:manage, :stop_impersonating],
+                                              users: [:crud, :stop_impersonating],
                                               sites: [:read, :modify] })
 
     check_abilities(user, allowed_actions)
@@ -68,7 +69,7 @@ class Folio::AbilityTest < ActiveSupport::TestCase
     @tested_site = site1
     allowed_actions = MAXIMUM_ACTIONS.merge({ superadmins: [:new],
                                               administrators: [:new],
-                                              users: [:manage, :stop_impersonating],
+                                              users: [:crud, :stop_impersonating],
                                               sites: [:read, :modify] })
 
     check_abilities(user, allowed_actions)
@@ -155,6 +156,8 @@ class Folio::AbilityTest < ActiveSupport::TestCase
         create(:folio_newsletter_subscription, site: tested_site)
       when :email_templates
         create(:folio_email_template, site: tested_site)
+      when :site_user_links
+        create(:folio_site_user_link, site: tested_site)
       when :sites
         tested_site
       else
@@ -179,7 +182,7 @@ class Folio::AbilityTest < ActiveSupport::TestCase
       expanded_actions = actions.blank? ? [] : actions.dup
       expanded_actions += [:show, :edit, :update] if expanded_actions.delete(:modify)
       expanded_actions += [:index, :show] if expanded_actions.delete(:read)
-      expanded_actions += [:index, :show, :new, :create, :edit, :update, :destroy] if expanded_actions.delete(:manage)
+      expanded_actions += [:index, :show, :new, :create, :edit, :update, :destroy] if expanded_actions.delete(:crud)
 
       expanded_actions.uniq.sort
     end
