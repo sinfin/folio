@@ -41,6 +41,10 @@ class Folio::ConsoleCell < Folio::ApplicationCell
       args[:locale] = I18n.locale
     end
 
+    if current_site.locale.present? && current_site.locales.present? && current_site.locales.exclude?(args[:locale].to_s)
+      args[:locale] = current_site.locale
+    end
+
     begin
       url_for([record, args])
     rescue NoMethodError

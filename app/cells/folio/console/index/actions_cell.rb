@@ -45,9 +45,7 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
         icon: :open_in_new,
         skip_can_now: true,
         target: "_blank",
-        url: -> (record) do
-          preview_url_for(record)
-        end
+        url: -> (record) { preview_url_for(record) }
       },
       arrange: {
         name: :arrange,
