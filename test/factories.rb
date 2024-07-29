@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+def get_existing_site_or_create_from_factory
+  Folio::Current.site || Folio::Site.last || create(Rails.application.config.folio_site_default_test_factory)
+end
+
 FactoryBot.define do
   factory :folio_site, class: "Folio::Site" do
     title { "Folio" }
@@ -29,7 +33,7 @@ FactoryBot.define do
     end
     published { true }
     published_at { 1.day.ago }
-    site { Folio::Site.first || create(Rails.application.config.folio_site_default_test_factory) }
+    site { get_existing_site_or_create_from_factory }
 
     trait :unpublished do
       published { false }
@@ -56,7 +60,7 @@ FactoryBot.define do
 
   factory :folio_file_image, class: "Folio::File::Image" do
     file { Folio::Engine.root.join("test/fixtures/folio/test.gif") }
-    site { Folio::Site.first || create(Rails.application.config.folio_site_default_test_factory) }
+    site { get_existing_site_or_create_from_factory }
 
     trait :black do
       file { Folio::Engine.root.join("test/fixtures/folio/test-black.gif") }
@@ -65,17 +69,17 @@ FactoryBot.define do
 
   factory :folio_file_document, class: "Folio::File::Document" do
     file { Folio::Engine.root.join("test/fixtures/folio/empty.pdf") }
-    site { Folio::Site.first || create(Rails.application.config.folio_site_default_test_factory) }
+    site { get_existing_site_or_create_from_factory }
   end
 
   factory :folio_file_audio, class: "Folio::File::Audio" do
     file { Folio::Engine.root.join("test/fixtures/folio/blank.mp3") }
-    site { Folio::Site.first || create(Rails.application.config.folio_site_default_test_factory) }
+    site { get_existing_site_or_create_from_factory }
   end
 
   factory :folio_file_video, class: "Folio::File::Video" do
     file { Folio::Engine.root.join("test/fixtures/folio/blank.mp4") }
-    site { Folio::Site.first || create(Rails.application.config.folio_site_default_test_factory) }
+    site { get_existing_site_or_create_from_factory }
   end
 
   factory :folio_private_attachment, class: "Folio::PrivateAttachment" do
@@ -86,13 +90,13 @@ FactoryBot.define do
     email { "folio@folio.folio" }
     phone { "+420 123456789" }
     note { "Officiis perferendis commodi." }
-    site { Folio::Site.first || create(Rails.application.config.folio_site_default_test_factory) }
+    site { get_existing_site_or_create_from_factory }
   end
 
   factory :folio_menu, class: "Folio::Menu" do
     locale { :cs }
     sequence(:title) { |i| "Menu #{i}" }
-    site { Folio::Site.first || create(Rails.application.config.folio_site_default_test_factory) }
+    site { get_existing_site_or_create_from_factory }
   end
 
   factory :folio_menu_page, class: "Folio::Menu::Page", parent: :folio_menu
@@ -127,7 +131,7 @@ FactoryBot.define do
     body_text_en { "body_text_en" }
     optional_keywords { [] }
     required_keywords { [] }
-    site { Folio::Site.first || create(Rails.application.config.folio_site_default_test_factory) }
+    site { get_existing_site_or_create_from_factory }
   end
 
   factory :folio_user, class: "Folio::User" do
@@ -146,14 +150,14 @@ FactoryBot.define do
   end
 
   factory :folio_site_user_link, class: "Folio::SiteUserLink" do
-    site { Folio::Site.first || create(Rails.application.config.folio_site_default_test_factory) }
+    site { get_existing_site_or_create_from_factory }
     user { create(:folio_user) }
     roles { [] }
   end
 
   factory :folio_newsletter_subscription, class: "Folio::NewsletterSubscription" do
     sequence(:email) { |i| "email-#{i}@email.email" }
-    site { Folio::Site.first || create(Rails.application.config.folio_site_default_test_factory) }
+    site { get_existing_site_or_create_from_factory }
   end
 
   factory :folio_console_note, class: "Folio::ConsoleNote" do
@@ -177,20 +181,20 @@ FactoryBot.define do
     sequence(:title) { |i| "Article title #{i + 1}" }
     perex { "perex" }
     published { true }
-    site { Folio::Site.first || create(Rails.application.config.folio_site_default_test_factory) }
+    site { get_existing_site_or_create_from_factory }
   end
 
   factory :dummy_blog_topic, class: "Dummy::Blog::Topic" do
     sequence(:title) { |i| "Topic title #{i + 1}" }
     published { true }
-    site { Folio::Site.first || create(Rails.application.config.folio_site_default_test_factory) }
+    site { get_existing_site_or_create_from_factory }
   end
 
   factory :dummy_blog_author, class: "Dummy::Blog::Author" do
     first_name { "Firstname" }
     sequence(:last_name) { |i| "Lastname #{i + 1}" }
     published { true }
-    site { Folio::Site.first || create(Rails.application.config.folio_site_default_test_factory) }
+    site { get_existing_site_or_create_from_factory }
   end
 end
 
@@ -204,7 +208,7 @@ if Rails.application.config.folio_site_default_test_factory
       folio_page
     ].each do |key|
       factory key do
-        after(:build) { |model| model.site ||= Folio.main_site || create(Rails.application.config.folio_site_default_test_factory) }
+        after(:build) { |model| model.site ||= get_existing_site_or_create_from_factory }
       end
     end
   end
