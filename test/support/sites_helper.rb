@@ -9,6 +9,8 @@ module SitesHelper
     def create_and_host_site(key: nil, attributes: {}, force: false)
       site = create_site(key:, attributes:, force:)
       host_site(site)
+      Folio::Current.site = site
+
       site
     end
 

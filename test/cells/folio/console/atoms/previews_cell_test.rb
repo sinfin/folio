@@ -4,6 +4,8 @@ require "test_helper"
 
 class Folio::Console::Atoms::PreviewsCellTest < Folio::Console::CellTest
   test "show" do
+    create_and_host_site
+
     html = cell("folio/console/atoms/previews", nil, klass: Folio::Page).(:show)
     assert_not html.has_css?(".f-c-atoms-previews")
 

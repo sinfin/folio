@@ -13,13 +13,13 @@ module Folio::HasCurrentSite
                            ::Rails.application.config.folio_site_cache_current_site &&
                            respond_to?(:cache_key_base)
         Rails.cache.fetch(["current_site", request.host] + cache_key_base) do
-          Folio.current_site(request:, controller: self)
+          Folio::Current.site
         end
       else
-        Folio.current_site(request:, controller: self)
+        Folio::Current.site
       end
     else
-      Folio.current_site(request:, controller: self)
+      Folio::Current.site
     end
   end
 
