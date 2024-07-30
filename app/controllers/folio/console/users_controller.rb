@@ -146,6 +146,10 @@ class Folio::Console::UsersController < Folio::Console::BaseController
     end
 
     def index_tabs
+      user_locking_tabs
+    end
+
+    def user_locking_tabs
       accesible_users = Folio::User.accessible_by(::Folio::Current.ability)
       locked_users = accesible_users.where(id: locked_user_ids_subselect)
       unlocked_users = accesible_users.where.not(id: locked_user_ids_subselect)
@@ -153,17 +157,25 @@ class Folio::Console::UsersController < Folio::Console::BaseController
       [
         {
           label: t(".index_tabs/unlocked"),
-          force_href: url_for([:console, @klass]),
+          force_href: url_for([:console, @klass, by_locked: "false"]),
           count: unlocked_users.count || 0,
-          active: params[:by_locked] != "true",
+          active: active_tab == :unlocked,
         },
         {
           label: t(".index_tabs/locked"),
           force_href: url_for([:console, @klass, by_locked: "true"]),
           count: locked_users.count || 0,
-          active: params[:by_locked] == "true",
+          active: active_tab == :locked,
         }
       ]
+    end
+
+    def active_tab
+      if params.key?(:by_locked)
+        params[:by_locked] == "true" ? :locked : :unlocked
+      else
+        :unlocked
+      end
     end
 
     def locked_user_ids_subselect

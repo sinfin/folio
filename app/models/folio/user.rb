@@ -108,7 +108,7 @@ class Folio::User < Folio::ApplicationRecord
     when true, "true"
       locked_for(Folio::Current.site)
     when false, "false"
-      where(featured: nil)
+      unlocked_for(Folio::Current.site)
     else
       all
     end
