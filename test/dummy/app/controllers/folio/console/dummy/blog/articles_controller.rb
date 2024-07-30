@@ -9,6 +9,7 @@ class Folio::Console::Dummy::Blog::ArticlesController < Folio::Console::BaseCont
             .permit(*(@klass.column_names - %w[id site_id]),
                     *atoms_strong_params,
                     *file_placements_strong_params,
+                    author_article_links_attributes: %w[id _destroy position dummy_blog_author_id],
                     topic_article_links_attributes: %w[id _destroy position dummy_blog_topic_id])
     end
 
