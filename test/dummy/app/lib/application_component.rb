@@ -16,7 +16,11 @@ class ApplicationComponent < Folio::ApplicationComponent
   end
 
   def current_page_singleton(klass, fail_on_missing: false)
-    controller.try(:current_page_singleton, klass, fail_on_missing:)
+    if controller.respond_to?(:current_page_singleton)
+      controller.current_page_singleton(klass, fail_on_missing:)
+    else
+      klass.instance(fail_on_missing:, site: current_site)
+    end
   end
 
   if ::Rails.env.test?
