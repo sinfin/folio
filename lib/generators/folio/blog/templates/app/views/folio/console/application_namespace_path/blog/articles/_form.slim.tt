@@ -1,5 +1,8 @@
 = form_header f
 
+/ required for atom select filtering by site to work
+= f.input :site_id, as: :hidden, atom_setting: :site_id
+
 = tabs [:content]
 
 .tab-content
@@ -20,10 +23,10 @@
                            include_blank: false,
                            atom_setting: :locale
 
+        = react_ordered_multiselect(f, :authors, atom_setting: :authors)
+
         = react_ordered_multiselect(f, :topics, atom_setting: :topics)
 
         = f.input :meta_title, character_counter: true
         = f.input :meta_description, autosize: true,
                                      character_counter: true
-
-= form_footer f
