@@ -12,7 +12,7 @@ module Folio::PerSiteSingleton
         scope = self
       end
 
-      scope.find_by_site_id(site.id).presence || (fail_on_missing ? fail_on_missing_instance : nil)
+      scope.find_by_site_id(site&.id).presence || (fail_on_missing ? fail_on_missing_instance : nil)
     end
   end
 

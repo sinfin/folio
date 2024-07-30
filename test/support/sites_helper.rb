@@ -3,7 +3,7 @@
 module SitesHelper
   private
     def get_any_site
-      ::Folio::Site.first || create_site
+      get_current_or_existing_site_or_create_from_factory
     end
 
     def create_and_host_site(key: nil, attributes: {}, force: false)
