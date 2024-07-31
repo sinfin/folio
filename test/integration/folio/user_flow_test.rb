@@ -96,4 +96,44 @@ class Folio::UserFlowTest < Folio::CapybaraTest
     assert site_link.present?
     assert_equal [], site_link.roles
   end
+
+  test "sign in on non-master site (using crossdomain_handler)" do
+    main_site = create(:folio_site, type: "Folio::Site", domain: "main.localhost")
+    target_site = create(:folio_site, type: "Folio::Site", domain: "target.localhost")
+    host_site(target_site)
+    assert_not_equal Folio.main_site, target_site
+
+    email = "folio@folio.com"
+    password = "Complex@Password.123"
+    user = create(:folio_user, email:, password:)
+    assert user.site_user_links.blank?
+
+    Rails.application.config.stub(:folio_crossdomain_devise, true) do
+      Folio.stub(:site_for_crossdomain_devise, main_site) do
+        visit main_app.new_user_session_url(only_path: false, host: target_site.domain)
+
+        # result :redirect_to_master_sessions_new with params {"crossdomain"=>"s_8zz13Bazka7Y2E62Yh",
+        #  "resource_name"=>"user",
+        #  "site"=>"folio-c63edece-85d2-4dc3-91f5-8dfa330efee2",
+        #  "test_crossdomain"=>"true"}
+        #  assert_redirected_to main_app.new_user_session_url(only_path: false, host: main_site.domain)
+
+        assert_equal "http://#{main_site.domain}", current_host
+
+        within ".d-layout-main" do
+          assert page.has_css?("h1", text: "Přihlášení")
+
+          fill_in "E-mail", with: email
+          fill_in "Heslo", with: password
+          click_on "Přihlásit se"
+        end
+
+        assert page.has_css?(".d-ui-alert__content", text: "Přihlášení proběhlo úspěšně.")
+        assert_equal "http://#{target_site.domain}", current_host
+
+        assert user.user_link_for(site: main_site).blank?
+        assert user.user_link_for(site: target_site).present?
+      end
+    end
+  end
 end

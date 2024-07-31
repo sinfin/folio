@@ -45,6 +45,8 @@ module Folio::Users::DeviseControllerBase
 
   def sign_in(resource_or_scope, *args)
     super
+
+    set_resource(resource_or_scope, args&.first) if resource.nil?
     acquire_orphan_records!
     create_site_user_link
   end
@@ -76,8 +78,15 @@ module Folio::Users::DeviseControllerBase
     end
 
     def create_site_user_link
-      if resource && resource.respond_to?(:site_user_links)
+      if resource&.respond_to?(:site_user_links)
         resource.create_site_links_for([current_site])
       end
+    end
+
+    def set_resource(resource_or_scope, resource_passed = nil)
+      if resource_passed.blank?
+        resource_passed = resource_or_scope unless resource_or_scope.is_a?(Symbol)
+      end
+      instance_variable_set(:"@#{resource_name}", resource_passed)
     end
 end
