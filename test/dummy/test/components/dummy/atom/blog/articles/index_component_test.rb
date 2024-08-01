@@ -4,6 +4,7 @@ require "test_helper"
 
 class Dummy::Atom::Blog::Articles::IndexComponentTest < Folio::ComponentTest
   def test_render
+    create_and_host_site
     placement = create_page_singleton(Dummy::Page::Blog::Articles::Index)
     atom = create_atom(Dummy::Atom::Blog::Articles::Index, placement:)
 
