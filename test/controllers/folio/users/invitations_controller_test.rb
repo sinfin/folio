@@ -9,39 +9,41 @@ class Folio::Users::InvitationsControllerTest < ActionDispatch::IntegrationTest
     skip unless Rails.application.config.folio_users_publicly_invitable
 
     create_and_host_site
+    Rails.application.config.stub(:folio_crossdomain_devise, false) do
+      get main_app.new_user_invitation_path
+      assert_response(:ok)
 
-    get main_app.new_user_invitation_path
-    assert_response(:ok)
-
-    sign_in create(:folio_user)
-    get main_app.new_user_invitation_path
-    assert_response(302)
+      sign_in create(:folio_user)
+      get main_app.new_user_invitation_path
+      assert_response(302)
+    end
   end
 
   test "create" do
     skip unless Rails.application.config.folio_users_publicly_invitable
 
     create_and_host_site
-
-    assert_difference("Folio::User.count", 1) do
-      post main_app.user_invitation_path, params: {
-        user: {
-          email: "email@email.email"
+    Rails.application.config.stub(:folio_crossdomain_devise, false) do
+      assert_difference("Folio::User.count", 1) do
+        post main_app.user_invitation_path, params: {
+          user: {
+            email: "email@email.email"
+          }
         }
-      }
-    end
+      end
 
-    sign_in create(:folio_user)
+      sign_in create(:folio_user)
 
-    assert_difference("Folio::User.count", 0) do
-      post main_app.user_invitation_path, params: {
-        user: {
-          email: "another-email@email.email"
+      assert_difference("Folio::User.count", 0) do
+        post main_app.user_invitation_path, params: {
+          user: {
+            email: "another-email@email.email"
+          }
         }
-      }
-    end
+      end
 
-    assert_response(302)
+      assert_response(302)
+    end
   end
 
   test "edit" do
