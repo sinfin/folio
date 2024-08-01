@@ -198,6 +198,7 @@ en:
 
   attributes:
     aasm_state: State
+    address_secondary: Secondary address
     article: Article
     audio_cover_placement: Audio
     button_label: Button label
@@ -232,12 +233,12 @@ en:
     published: Published
     published_at: Published at
     published_dates: Date
+    secondary_address: Secondary address
     secondary_button_label: Secondary button label
     secondary_button_url: Secondary button URL
     sensitive_content: Contains sensitive content
     sign_in_count: Sign in count
     slug: Slug
-    social_links: Social links
     social_links/appstore: Appstore
     social_links/facebook: Facebook
     social_links/google_play: Google play
@@ -248,6 +249,7 @@ en:
     social_links/tiktok: TikTok
     social_links/twitter: Twitter
     social_links/youtube: Youtube
+    social_links: Social links
     state: State
     subtitle: Subtitle
     tag_list: Keywords

@@ -27,6 +27,7 @@ class Folio::Console::SitesController < Folio::Console::BaseController
         google_analytics_tracking_code_v4
         facebook_pixel_code
         phone
+        phone_secondary
         email
         email_from
         system_email
@@ -36,6 +37,7 @@ class Folio::Console::SitesController < Folio::Console::BaseController
         header_message_published_until
         header_message
         address
+        address_secondary
         copyright_info_source
       ]
 

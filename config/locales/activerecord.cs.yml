@@ -272,6 +272,7 @@ cs:
 
   attributes:
     aasm_state: Stav
+    address_secondary: Druhá adresa
     article: Článek
     audio_cover_placement: Audio stopa
     button_label: Text tlačítka
@@ -308,7 +309,7 @@ cs:
     password_confirmation: Heslo (kontrola)
     perex: Perex
     phone: Telefon
-    phone_secondary: Druhé telefonní číslo
+    phone_secondary: Telefon (doplňkový)
     position: Pořadí
     primary_address: Adresa - hlavní
     private_attachments: Soubory
@@ -323,7 +324,6 @@ cs:
     sensitive_content: Obsahuje citlivý obsah
     sign_in_count: Počet přihlášení
     slug: Varianta názvu pro odkazy
-    social_links: Odkazy
     social_links/appstore: Appstore
     social_links/facebook: Facebook
     social_links/google_play: Google play
@@ -334,6 +334,7 @@ cs:
     social_links/tiktok: TikTok
     social_links/twitter: Twitter
     social_links/youtube: Youtube
+    social_links: Odkazy
     state: Stav
     subtitle: Podtitulek
     tag_list: Klíčová slova

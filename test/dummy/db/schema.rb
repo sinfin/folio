@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_23_000000) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_01_093103) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -455,6 +455,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_23_000000) do
     t.integer "position"
     t.string "copyright_info_source"
     t.jsonb "available_user_roles", default: ["administrator", "manager"]
+    t.string "phone_secondary"
+    t.text "address_secondary"
     t.index ["domain"], name: "index_folio_sites_on_domain"
     t.index ["position"], name: "index_folio_sites_on_position"
     t.index ["slug"], name: "index_folio_sites_on_slug"

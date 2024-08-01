@@ -1,6 +1,18 @@
 = f.input :email
-= f.input :phone
-= f.input :address, as: :text, autosize: true
+
+.row
+  .col-sm-6
+    = f.input :phone
+
+  .col-sm-6
+    = f.input :phone_secondary
+
+.row
+  .col-sm-6
+    = f.input :address, as: :text, autosize: true
+
+  .col-sm-6
+    = f.input :address_secondary, as: :text, autosize: true
 
 = f.input :email_from
 = f.input :system_email

@@ -248,6 +248,8 @@ end
 #  position                          :integer
 #  copyright_info_source             :string
 #  available_user_roles              :jsonb
+#  phone_secondary                   :string
+#  address_secondary                 :text
 #
 # Indexes
 #
