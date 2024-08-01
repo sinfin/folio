@@ -7,6 +7,8 @@ window.Folio.Stimulus.register('f-scroll-link', class extends window.Stimulus.Co
     const target = document.querySelector(this.selectorValue)
     if (!target) return
 
-    target.scrollIntoView({ behavior: 'smooth' })
+    const block = target.clientHeight < window.innerHeight ? 'center' : 'start'
+
+    target.scrollIntoView({ behavior: 'smooth', block })
   }
 })
