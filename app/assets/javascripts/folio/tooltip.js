@@ -22,7 +22,8 @@ window.Folio.Stimulus.register('f-tooltip', class extends window.Stimulus.Contro
     trigger: { type: String, default: 'hover' },
     open: { type: Boolean, default: false },
     static: { type: Boolean, default: false },
-    variant: { type: String, default: 'default' }
+    variant: { type: String, default: 'default' },
+    tooltipClassName: { type: String, default: '' }
   }
 
   disconnect () {
@@ -85,6 +86,10 @@ window.Folio.Stimulus.register('f-tooltip', class extends window.Stimulus.Contro
     this.tooltipElement = document.importNode(window.Folio.Tooltip.TEMPLATE.content.children[0], true)
     this.tooltipElement.querySelector('.tooltip-inner').innerHTML = this.titleValue
     this.tooltipElement.classList.add(`tooltip--${this.variantValue}`)
+
+    if (this.tooltipClassNameValue) {
+      this.tooltipClassNameValue.split(' ').forEach((className) => { this.tooltipElement.classList.add(className) })
+    }
     if (this.staticValue) this.tooltipElement.classList.add('tooltip--static')
 
     document.body.appendChild(this.tooltipElement)
