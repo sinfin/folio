@@ -69,7 +69,7 @@
             = country_code_input(g, disabled: options[:disabled])
 
           div class=column_size_class_name(6)
-            = model.input :phone,
+            = g.input :phone,
                       as: :phone,
                       default_country_code: data_country_code(:primary_address),
                       disabled: options[:disabled],
