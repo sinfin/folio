@@ -24,8 +24,12 @@ window.Folio.Input.CollectionRemoteSelect.bind = (input, { includeBlank, url }) 
         }
 
         $('.f-c-js-atoms-placement-setting').each((i, el) => {
-          const $el = $(el)
-          data[`by_atom_setting_${$el.data('atom-setting')}`] = $el.val()
+          if (el.type === 'checkbox' || el.type === 'radio') {
+            data[`by_atom_setting_${el.dataset.atomSetting}`] = el.checked
+          } else {
+            const $el = $(el)
+            data[`by_atom_setting_${$el.data('atom-setting')}`] = $el.val()
+          }
         })
 
         return data
@@ -62,9 +66,9 @@ window.Folio.Input.CollectionRemoteSelect.bind = (input, { includeBlank, url }) 
            </div>
            <div>${data.text}</div>
          </div>`
-      );
-    
-      return $result;
+      )
+
+      return $result
     }
   }).on('change.select2', (e) => {
     e.target.dispatchEvent(new window.CustomEvent('folio_select2_change', { bubbles: true }))
