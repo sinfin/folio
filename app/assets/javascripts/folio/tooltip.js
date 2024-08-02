@@ -20,7 +20,9 @@ window.Folio.Stimulus.register('f-tooltip', class extends window.Stimulus.Contro
     title: String,
     placement: { type: String, default: 'auto' },
     trigger: { type: String, default: 'hover' },
-    open: { type: Boolean, default: false }
+    open: { type: Boolean, default: false },
+    static: { type: Boolean, default: false },
+    variant: { type: String, default: 'default' }
   }
 
   disconnect () {
@@ -46,6 +48,8 @@ window.Folio.Stimulus.register('f-tooltip', class extends window.Stimulus.Contro
   }
 
   removeTooltipElement () {
+    this.clearClickCallback()
+
     if (this.cleanup) {
       this.cleanup()
       delete this.cleanup
@@ -67,10 +71,34 @@ window.Folio.Stimulus.register('f-tooltip', class extends window.Stimulus.Contro
     this.removeTooltipElement()
   }
 
+  clearClickCallback () {
+    if (this.clickCallback) {
+      if (this.tooltipElement) {
+        this.tooltipElement.removeEventListener('click', this.clickCallback)
+      }
+
+      delete this.clickCallback
+    }
+  }
+
   createTooltipElement () {
     this.tooltipElement = document.importNode(window.Folio.Tooltip.TEMPLATE.content.children[0], true)
     this.tooltipElement.querySelector('.tooltip-inner').innerHTML = this.titleValue
+    this.tooltipElement.classList.add(`tooltip--${this.variantValue}`)
+    if (this.staticValue) this.tooltipElement.classList.add('tooltip--static')
+
     document.body.appendChild(this.tooltipElement)
+
+    this.clearClickCallback()
+
+    if (this.staticValue) {
+      this.clickCallback = (e) => {
+        e.preventDefault()
+        this.dispatch('tooltipClick', { detail: { close: () => { this.openValue = false } } })
+      }
+
+      this.tooltipElement.addEventListener('click', this.clickCallback)
+    }
 
     this.cleanup = window.FloatingUIDOM.autoUpdate(
       this.element,
