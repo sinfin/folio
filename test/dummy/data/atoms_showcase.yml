@@ -718,7 +718,7 @@ atoms:
     -
     - title: with title
 
-  Dummy::Atom::Blog::Articles:
+  Dummy::Atom::Blog::Articles::Index:
     -
 
 values_for_true:
