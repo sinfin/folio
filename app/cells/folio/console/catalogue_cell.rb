@@ -248,9 +248,20 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
     end
   end
 
-  def cover(options = {})
+  def cover(file: nil, href: false, lightbox: true)
     attribute(:cover) do
-      cell("folio/console/index/images", record, options.merge(cover: true))
+      href = case href
+      when :edit
+        through_aware_console_url_for(record, action: :edit)
+      when :show
+        through_aware_console_url_for(record)
+      else
+        href
+      end
+
+      render_view_component(Folio::Console::Catalogue::CoverComponent.new(file: file || record.cover,
+                                                                          href:,
+                                                                          lightbox: href ? false : lightbox))
     end
   end
 
