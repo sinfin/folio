@@ -58,10 +58,6 @@ class Folio::Lead < Folio::ApplicationRecord
     %i[id email phone note created_at name url aasm_state]
   end
 
-  def self.clears_page_cache_on_save?
-    false
-  end
-
   def self.console_sidebar_count
     by_state("submitted").count
   end

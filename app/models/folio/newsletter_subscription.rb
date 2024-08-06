@@ -73,10 +73,6 @@ class Folio::NewsletterSubscription < Folio::ApplicationRecord
     Folio::Site.all
   end
 
-  def self.clears_page_cache_on_save?
-    false
-  end
-
   private
     def update_mailchimp_subscription(email_for_subscription)
       return unless Rails.application.config.folio_newsletter_subscription_service == :mailchimp
