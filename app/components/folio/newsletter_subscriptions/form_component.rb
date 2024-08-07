@@ -7,7 +7,7 @@ class Folio::NewsletterSubscriptions::FormComponent < Folio::ApplicationComponen
   bem_class_name :persisted, :invalid
 
   def initialize(newsletter_subscription: nil, view_options: {})
-    @newsletter_subscription = newsletter_subscription || Folio::NewsletterSubscription.new(email: "@")
+    @newsletter_subscription = newsletter_subscription || Folio::NewsletterSubscription.new
     @view_options = view_options
     @persisted = @newsletter_subscription.persisted?
     @invalid = @newsletter_subscription.errors.present?
@@ -36,10 +36,16 @@ class Folio::NewsletterSubscriptions::FormComponent < Folio::ApplicationComponen
     t(".message")
   end
 
+  def placeholder
+    return @view_options[:placeholder] unless @view_options[:placeholder].nil?
+    t(".placeholder")
+  end
+
   def input(f)
     f.input :email,
             as: :email,
             label: false,
+            placeholder:,
             input_html: { class: "f-newsletter-subscriptions-form__input", id: nil },
             wrapper_html: { class: "f-newsletter-subscriptions-form__group" }
   end
