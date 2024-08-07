@@ -251,12 +251,12 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
   def cover(file: nil, href: false, lightbox: true)
     attribute(:cover) do
       href = case href
-      when :edit
-        through_aware_console_url_for(record, action: :edit)
-      when :show
-        through_aware_console_url_for(record)
-      else
-        href
+             when :edit
+               through_aware_console_url_for(record, action: :edit)
+             when :show
+               through_aware_console_url_for(record)
+             else
+               href
       end
 
       render_view_component(Folio::Console::Catalogue::CoverComponent.new(file: file || record.cover,
