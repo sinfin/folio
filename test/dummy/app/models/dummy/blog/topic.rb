@@ -22,13 +22,11 @@ class Dummy::Blog::Topic < ApplicationRecord
                                 through: :topic_article_links,
                                 source: :article
 
-  validates :title,
-            presence: true
-
   validates :locale,
             inclusion: { in: Dummy::Blog.available_locales }
 
   validates :title,
+            presence: true,
             uniqueness: { scope: %i[site_id locale] }
 
   validate :validate_matching_locales_and_sites
