@@ -4,8 +4,9 @@ class Folio::Console::Ui::AjaxInputComponent < Folio::Console::ApplicationCompon
   def initialize(name:,
                  url:,
                  value:,
+                 formatted_value: nil,
                  label: nil,
-                 type: :string,
+                 collection: nil,
                  width: nil,
                  cleave: false,
                  method: "PATCH",
@@ -20,8 +21,8 @@ class Folio::Console::Ui::AjaxInputComponent < Folio::Console::ApplicationCompon
                  rows: nil)
     @name = name
     @url = url
-    @type = type
     @value = value
+    @formatted_value = formatted_value || value
     @width = width
     @label = label
     @cleave = cleave
@@ -35,6 +36,7 @@ class Folio::Console::Ui::AjaxInputComponent < Folio::Console::ApplicationCompon
     @textarea = textarea
     @disabled = disabled
     @rows = rows
+    @collection = collection
   end
 
   def data
@@ -65,22 +67,28 @@ class Folio::Console::Ui::AjaxInputComponent < Folio::Console::ApplicationCompon
     h = {
       class: "form-control f-c-ui-ajax-input__input",
       name: @name,
-      value: formatted_value,
-      placeholder: @placeholder,
       disabled: !!@disabled,
       data: input_data,
-      tag: :input
     }
 
-    if @textarea
-      h[:tag] = :textarea
-      h[:rows] = @rows
-      h[:class] += " f-c-ui-ajax-input__input--textarea"
-      h[:data]["controller"] = "f-input-autosize"
+    if @collection
+      h[:tag] = :select
+      h[:class] = "form-select f-c-ui-ajax-input__input f-c-ui-ajax-input__input--select"
     else
-      h[:type] = "text"
-      h[:min] = @min
-      h[:step] = @step
+      h[:tag] = :input
+      h[:value] = formatted_value
+      h[:placeholder] = @placeholder
+
+      if @textarea
+        h[:tag] = :textarea
+        h[:rows] = @rows
+        h[:class] += " f-c-ui-ajax-input__input--textarea"
+        h[:data]["controller"] = "f-input-autosize"
+      else
+        h[:type] = "text"
+        h[:min] = @min
+        h[:step] = @step
+      end
     end
 
     h

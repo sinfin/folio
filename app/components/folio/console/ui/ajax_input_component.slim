@@ -10,7 +10,21 @@
 
   .f-c-ui-ajax-input__inner
     *input_tag
-      - if @textarea
+      - if @collection
+        - if @placeholder && !@disabled
+          option value=""
+            = @placeholder
+
+        - if @disabled && @value
+          option value=@value selected=true
+            = @formatted_value || @value
+        - else
+          - @collection.each do |label, value|
+            - value ||= label
+            option value=value selected=(value == @value)
+              = label
+
+      - elsif @textarea
         = @value
 
     .f-c-ui-ajax-input__right
