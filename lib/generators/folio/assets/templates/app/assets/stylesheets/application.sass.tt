@@ -35,7 +35,7 @@ body
   display: flex
   flex-direction: column
 
-.d-layout-main
+.<%= classname_prefix %>-layout-main
   position: relative
   z-index: 2
   flex: 1 0 auto

@@ -255,6 +255,7 @@ class Dummy::SeedGenerator
          .gsub("d-atoms", "<%= classname_prefix %>-atoms")
          .gsub("d-unlink", "<%= classname_prefix %>-unlink")
          .gsub("d-atom", "<%= classname_prefix %>-atom")
+         .gsub(".d-layout", ".<%= classname_prefix %>-layout")
          .gsub("d-blog", "<%= classname_prefix %>-blog")
          .gsub("d-search", "<%= classname_prefix %>-search")
          .gsub("d-mailer", "<%= classname_prefix %>-mailer")
