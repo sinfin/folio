@@ -24,6 +24,11 @@ class <%= application_namespace %>::Ui::MenuComponent < ApplicationComponent
       tag[:target] = menu_item.open_in_new ? "_blank" : nil
     end
 
+    if menu_item.style == "cookie_consent"
+      tag[:data] ||= {}
+      tag[:data] = stimulus_merge(tag[:data], stimulus_cookie_consent_link)
+    end
+
     tag
   end
 

@@ -45,6 +45,7 @@ cs:
         style/blue: Modrá
         style/yellow: Žlutá
         style/gray: Šedá
+        style/cookie_consent: Nastavení cookies
       folio/menu_item:
         open_in_new: V novém okně?
         target: Odkaz

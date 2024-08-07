@@ -40,6 +40,7 @@ en:
         style/blue: Blue
         style/yellow: Yellow
         style/gray: Gray
+        style/cookie_consent: Nastavení cookies
       folio/menu_item:
         open_in_new: Open in new tab?
         target: Link

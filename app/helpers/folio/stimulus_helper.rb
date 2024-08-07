@@ -189,4 +189,10 @@ module Folio::StimulusHelper
 
     runner
   end
+
+  def stimulus_cookie_consent_link
+    stimulus_controller("f-cookie-consent-link",
+                        action: { click: "click" },
+                        inline: true)
+  end
 end
