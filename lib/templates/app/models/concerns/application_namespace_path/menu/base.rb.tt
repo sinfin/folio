@@ -7,6 +7,10 @@ module <%= application_namespace %>::Menu::Base
     def rails_paths
       <%= application_namespace %>.rails_paths
     end
+
+    def styles
+      %w[cookie_consent]
+    end
   end
 
   def available_targets

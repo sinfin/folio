@@ -7,6 +7,10 @@ module Dummy::Menu::Base
     def rails_paths
       Dummy.rails_paths
     end
+
+    def styles
+      %w[cookie_consent]
+    end
   end
 
   def available_targets
