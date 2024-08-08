@@ -12,6 +12,7 @@ class Folio::UserTest < ActiveSupport::TestCase
       user = Folio::User.invite!(email: "email-#{i}@email.email",
                                  first_name: "John",
                                  last_name: "Doe",
+                                 auth_site_id: subscribable_sites.first.id,
                                  subscribed_to_newsletter:) do |u|
         u.skip_invitation = true
       end

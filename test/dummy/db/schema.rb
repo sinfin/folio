@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_01_093103) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_08_152708) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -514,6 +514,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_01_093103) do
     t.string "bank_account_number"
     t.string "company_name"
     t.string "time_zone", default: "Prague"
+    t.bigint "auth_site_id", default: 1, null: false
+    t.index ["auth_site_id"], name: "index_folio_users_on_auth_site_id"
     t.index ["confirmation_token"], name: "index_folio_users_on_confirmation_token", unique: true
     t.index ["crossdomain_devise_token"], name: "index_folio_users_on_crossdomain_devise_token"
     t.index ["email"], name: "index_folio_users_on_email"
@@ -580,4 +582,5 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_01_093103) do
   add_foreign_key "folio_files", "folio_sites", column: "site_id"
   add_foreign_key "folio_site_user_links", "folio_sites", column: "site_id"
   add_foreign_key "folio_site_user_links", "folio_users", column: "user_id"
+  add_foreign_key "folio_users", "folio_sites", column: "auth_site_id"
 end

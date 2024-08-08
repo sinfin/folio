@@ -14,7 +14,9 @@ module Folio::SetCurrentRequestDetails
 
         # warden takes params from request, so we need to set source_site_id here,
         # before searching for current user
-        request.params["user"]["source_site_id"] = site.id.to_s if request.params["user"].present?
+        if request.params["user"].present? && request.params["user"]["auth_site_id"].blank?
+          request.params["user"]["auth_site_id"] = site.id.to_s
+        end
         user = current_user
 
         Folio::Current.setup!(request:, site:, user:, session:)

@@ -183,6 +183,7 @@ class Folio::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksContr
     def create_user_params
       params.require(:user)
             .permit(:email,
+                    :auth_site_id,
                     *Folio::User.controller_strong_params_for_create)
     end
 

@@ -27,6 +27,11 @@ class Folio::Site < Folio::ApplicationRecord
                           foreign_key: :source_site_id,
                           inverse_of: :source_site,
                           dependent: :nullify
+  has_many :auth_users, class_name: "Folio::User",
+                        foreign_key: :auth_site_id,
+                        inverse_of: :auth_site,
+                        dependent: :destroy
+
   has_many :site_user_links, class_name: "Folio::SiteUserLink",
                              foreign_key: :site_id,
                              inverse_of: :site,

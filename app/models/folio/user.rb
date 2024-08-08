@@ -16,6 +16,8 @@ class Folio::User < Folio::ApplicationRecord
 
   belongs_to :source_site, class_name: "Folio::Site",
                            required: false
+  belongs_to :auth_site, class_name: "Folio::Site",
+                         required: true
 
   selected_device_modules = %i[
     database_authenticatable
@@ -65,7 +67,7 @@ class Folio::User < Folio::ApplicationRecord
   validate :validate_one_of_names
 
   validates :email,
-            uniqueness: { scope: :source_site, case_sensitive: false },
+            uniqueness: { scope: :auth_site, case_sensitive: false },
             format: { with: Folio::EMAIL_REGEXP }
 
   validates :phone,
@@ -326,8 +328,8 @@ class Folio::User < Folio::ApplicationRecord
     # Override of Devise method to scope authentication by zone.
     def self.find_for_authentication(warden_params)
       email = warden_params[:email]
-      site = ::Folio::Site.find(warden_params[:source_site_id])
-      site.source_users.find_by(email:)
+      site = ::Folio.site_for_crossdomain_devise || ::Folio::Site.find(warden_params[:auth_site_id])
+      site.auth_users.find_by(email:)
     end
 
     def validate_names?
@@ -432,9 +434,11 @@ end
 #  bank_account_number       :string
 #  company_name              :string
 #  time_zone                 :string           default("Prague")
+#  auth_site_id              :bigint(8)        default(1), not null
 #
 # Indexes
 #
+#  index_folio_users_on_auth_site_id                       (auth_site_id)
 #  index_folio_users_on_confirmation_token                 (confirmation_token) UNIQUE
 #  index_folio_users_on_crossdomain_devise_token           (crossdomain_devise_token)
 #  index_folio_users_on_email                              (email)
@@ -445,4 +449,8 @@ end
 #  index_folio_users_on_reset_password_token               (reset_password_token) UNIQUE
 #  index_folio_users_on_secondary_address_id               (secondary_address_id)
 #  index_folio_users_on_source_site_id                     (source_site_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (auth_site_id => folio_sites.id)
 #

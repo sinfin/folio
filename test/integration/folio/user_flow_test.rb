@@ -105,7 +105,7 @@ class Folio::UserFlowTest < Folio::CapybaraTest
 
     email = "folio@folio.com"
     password = "Complex@Password.123"
-    user = create(:folio_user, email:, password:)
+    user = create(:folio_user, email:, password:, auth_site_id: main_site.id)
     assert user.site_user_links.blank?
 
     Rails.application.config.stub(:folio_crossdomain_devise, true) do

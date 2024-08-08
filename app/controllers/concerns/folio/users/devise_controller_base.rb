@@ -5,7 +5,7 @@ module Folio::Users::DeviseControllerBase
   include Folio::Devise::CrossdomainController
 
   included do
-    before_action :add_source_site_id_to_params
+    before_action :add_auth_site_id_to_params
   end
 
   def after_sign_in_path_for(_resource)
@@ -61,8 +61,10 @@ module Folio::Users::DeviseControllerBase
   end
 
   private
-    def add_source_site_id_to_params
-      request.params["user"]["source_site_id"] = current_site.id.to_s if request.params["user"]
+    def add_auth_site_id_to_params
+      if request.params["user"]
+        request.params["user"]["auth_site_id"] = (::Folio.site_for_crossdomain_devise || current_site).id.to_s
+      end
     end
 
     def safe_set_up_current_from_request
