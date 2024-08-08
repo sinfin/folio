@@ -25,6 +25,10 @@ class Folio::Console::Index::NewButtonCell < Folio::ConsoleCell
 
       h
     elsif new_dropdown_links.present?
+      if new_dropdown_links.size == 1
+        h[:href] = new_dropdown_links.first[:url]
+      end
+
       h
     else
       url = model[:url] || (model[:new_path_name] ? send(model[:new_path_name]) : default_url)
