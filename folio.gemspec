@@ -38,6 +38,7 @@ Gem::Specification.new do |s|
   s.add_dependency "devise-i18n"
   s.add_dependency "devise"
   # s.add_dependency "discard"
+  s.add_dependency "dotenv", "~> 2"
   s.add_dependency "dotenv-rails"
   # s.add_dependency "dragonfly_libvips" # we have our version in Gemfile
   # s.add_dependency "dragonfly-s3_data_store" # we have our version in Gemfile
@@ -72,8 +73,8 @@ Gem::Specification.new do |s|
   s.add_dependency "sass-rails"
   s.add_dependency "show_for"
   s.add_dependency "httpparty"
-  s.add_dependency "sidekiq-cron", "~> 1.10.1"
-  s.add_dependency "sidekiq", "~> 6.5"
+  s.add_dependency "sidekiq-cron"
+  s.add_dependency "sidekiq"
 
   s.add_dependency "simple_form"
   s.add_dependency "sitemap_generator"
