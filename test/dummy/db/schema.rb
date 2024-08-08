@@ -72,6 +72,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_01_093103) do
     t.datetime "updated_at", null: false
     t.index ["dummy_blog_article_id"], name: "dummy_blog_author_article_links_a_id"
     t.index ["dummy_blog_author_id"], name: "dummy_blog_author_article_links_t_id"
+    t.index ["position"], name: "index_dummy_blog_author_article_links_on_position"
   end
 
   create_table "dummy_blog_authors", force: :cascade do |t|
@@ -108,6 +109,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_01_093103) do
     t.datetime "updated_at", null: false
     t.index ["dummy_blog_article_id"], name: "dummy_blog_topic_article_links_a_id"
     t.index ["dummy_blog_topic_id"], name: "dummy_blog_topic_article_links_t_id"
+    t.index ["position"], name: "index_dummy_blog_topic_article_links_on_position"
   end
 
   create_table "dummy_blog_topics", force: :cascade do |t|

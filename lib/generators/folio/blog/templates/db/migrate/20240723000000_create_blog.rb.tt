@@ -68,6 +68,8 @@ class CreateBlog < ActiveRecord::Migration[7.0]
       t.timestamps
     end
 
+    add_index :<%= application_namespace_path %>_blog_topic_article_links, :position
+
     create_table :<%= application_namespace_path %>_blog_authors do |t|
       t.string :first_name
       t.string :last_name
@@ -111,5 +113,7 @@ class CreateBlog < ActiveRecord::Migration[7.0]
 
       t.timestamps
     end
+
+    add_index :<%= application_namespace_path %>_blog_author_article_links, :position
   end
 end
