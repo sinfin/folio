@@ -4,6 +4,10 @@ module Folio::Users::DeviseControllerBase
   extend ActiveSupport::Concern
   include Folio::Devise::CrossdomainController
 
+  included do
+    before_action :add_source_site_id_to_params
+  end
+
   def after_sign_in_path_for(_resource)
     stored_location_for(:user) ||
     main_app.send(Rails.application.config.folio_users_after_sign_in_path)
@@ -57,6 +61,10 @@ module Folio::Users::DeviseControllerBase
   end
 
   private
+    def add_source_site_id_to_params
+      request.params["user"]["source_site_id"] = current_site.id.to_s if request.params["user"]
+    end
+
     def safe_set_up_current_from_request
       if respond_to?(:set_up_current_from_request, true)
         set_up_current_from_request

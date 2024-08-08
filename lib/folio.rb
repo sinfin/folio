@@ -55,7 +55,7 @@ module Folio
     en_US: "US"
   }
 
-  EMAIL_REGEXP = Devise.email_regexp
+  EMAIL_REGEXP = URI::MailTo::EMAIL_REGEXP # Devise.email_regexp
   OG_IMAGE_DIMENSIONS = "1200x630#"
 
   # respect app/assets/javascripts/folio/message_bus.js
