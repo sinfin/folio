@@ -48,7 +48,7 @@ class Folio::Users::InvitationsControllerTest < ActionDispatch::IntegrationTest
 
   test "edit" do
     create_and_host_site
-    user = Folio::User.invite!(email: "email@email.email", source_site_id: @site.id)
+    user = Folio::User.invite!(email: "email@email.email", auth_site_id: @site.id)
     get main_app.accept_user_invitation_path(invitation_token: user.raw_invitation_token)
     assert_response(:ok)
   end
@@ -59,7 +59,7 @@ class Folio::Users::InvitationsControllerTest < ActionDispatch::IntegrationTest
     user = Folio::User.invite!(email: "email@email.email",
                                first_name: "a",
                                last_name: "b",
-                               source_site_id: @site.id)
+                               auth_site_id: @site.id)
     assert_not user.invitation_accepted?
 
     put main_app.user_invitation_path, params: {

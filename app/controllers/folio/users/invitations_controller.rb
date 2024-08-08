@@ -6,6 +6,20 @@ class Folio::Users::InvitationsController < Devise::InvitationsController
   prepend_before_action :require_no_authentication, only: %i[create new]
   before_action :disallow_public_invitations_if_needed, only: %i[create new]
 
+
+  def new
+    if Rails.application.config.folio_crossdomain_devise && current_site != ::Folio.site_for_crossdomain_devise
+      session[Folio::Devise::CrossdomainHandler::SESSION_KEY] ||= {}
+      session[Folio::Devise::CrossdomainHandler::SESSION_KEY][:target_site_slug] = current_site.slug
+
+      redirect_to new_user_invitation_url(only_path: false,
+                                          host: ::Folio.site_for_crossdomain_devise.env_aware_domain),
+                  allow_other_host: true
+    else
+      super
+    end
+  end
+
   def show
     if session[:folio_user_invited_email]
       @email = session[:folio_user_invited_email]
