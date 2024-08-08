@@ -5,7 +5,7 @@ module Folio::HasSanitizedFields
 
   class_methods do
     def has_sanitized_fields(*fields)
-      before_save :sanitize_fields
+      before_validation :sanitize_fields
 
       define_singleton_method :fields_to_sanitize do
         fields

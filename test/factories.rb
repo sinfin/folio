@@ -143,6 +143,7 @@ FactoryBot.define do
     phone { "+420604123123" }
     superadmin { false }
     association(:primary_address, factory: :folio_address_primary)
+    source_site { get_current_or_existing_site_or_create_from_factory }
 
     trait :superadmin do
       superadmin { true }

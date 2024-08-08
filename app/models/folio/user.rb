@@ -65,8 +65,8 @@ class Folio::User < Folio::ApplicationRecord
   validate :validate_one_of_names
 
   validates :email,
-            format: { with: Folio::EMAIL_REGEXP },
-            if: :email?
+            uniqueness: { scope: :source_site, case_sensitive: false },
+            format: { with: Folio::EMAIL_REGEXP }
 
   validates :phone,
             phone: true,
@@ -323,6 +323,13 @@ class Folio::User < Folio::ApplicationRecord
   end
 
   private
+    # Override of Devise method to scope authentication by zone.
+    def self.find_for_authentication(warden_params)
+      email = warden_params[:email]
+      site = ::Folio::Site.find(warden_params[:source_site_id])
+      site.source_users.find_by(email:)
+    end
+
     def validate_names?
       invitation_accepted_at?
     end
