@@ -58,6 +58,7 @@ en:
         message: Signed up!
         submit: Sign up
         label: Your e-mail
+        placeholder: Your email
     photoswipe:
       error: <div class="pswp__error-msg"><a href="%url%" target="_blank">Obrázek</a> se nepodařilo načíst.</div>
     site:
