@@ -36,7 +36,7 @@ gem "omniauth-rails_csrf_protection"
 gem "omniauth"
 
 group :development do
-  gem "puma"
+  gem "puma", "< 6"
   gem "i18n-tasks"
 end
 
