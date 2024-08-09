@@ -329,7 +329,13 @@ class Folio::User < Folio::ApplicationRecord
     def self.find_for_authentication(warden_params)
       email = warden_params[:email]
       site = ::Folio.site_for_crossdomain_devise || ::Folio::Site.find(warden_params[:auth_site_id])
-      site.auth_users.find_by(email:)
+
+      user = site.auth_users.find_by(email:)
+      if user.nil? && Folio.main_site.present? && site != Folio.main_site
+        # user = Folio::User.superadmins.find_by(email:)
+        user = Folio.main_site.auth_users.superadmins.find_by(email:)
+      end
+      user
     end
 
     def validate_names?
