@@ -30,7 +30,7 @@ class Folio::UserFlowTest < Folio::CapybaraTest
     assert_equal [], site_link.roles
 
     # clicks the e-mail with the accept link
-    user = Folio::User.invite!(email: "test@test.test")
+    user = Folio::User.invite!(email: "test@test.test", auth_site_id: @site.id)
     visit main_app.accept_user_invitation_url(invitation_token: user.raw_invitation_token)
 
     page.find('.f-devise--invitations-edit input[name="user[password]"]').set "Complex@Password.123"
@@ -76,8 +76,9 @@ class Folio::UserFlowTest < Folio::CapybaraTest
     # assert_redirected_to main_app.users_auth_new_user_path
     # follow_redirect! # asking user to create an account, serving data from Facebook
     page.has_css?("h1", text: "Dokončení registrace")
-    within(".f-devise-resource-form .user_email") do
-      page.has_css?("label", text: "E-mail (slouží pro přihlášení) ")
+
+    within(".f-devise-resource-form .f-devise-email-input") do
+      page.has_css?("label", text: "E-mail ")
       assert_equal OMNIAUTH_AUTHENTICATION_DEFAULT_TEST_EMAIL, find_field("user[email]").value
     end
 
