@@ -82,7 +82,10 @@ module Folio
     Folio.main_site
   end
 
-  # set to force authentication via a site
+  def self.enabled_site_for_crossdomain_devise
+    Rails.application.config.folio_crossdomain_devise ? site_for_crossdomain_devise : nil
+  end
+
   def self.site_for_crossdomain_devise
     nil
   end
