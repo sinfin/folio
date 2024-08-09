@@ -28,6 +28,26 @@ class Folio::Devise::SessionsControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "create (sign_in) without crossdomain superadmin have one account on main site for all sites" do
+    site1 = create(:folio_site, domain: "site1.localhost", type: "Folio::Site")
+    site2 = create(:folio_site, domain: "site2.localhost", type: "Folio::Site")
+    main_site = create(:folio_site, domain: "main.localhost", type: "Folio::Site")
+    email = "superadmin@kocourek.cz"
+    user_site1 = user_site2 = nil
+
+    _superadmin = create(:folio_user, email:, password: "password1", superadmin: true, auth_site: main_site)
+
+    Rails.application.config.stub(:folio_crossdomain_devise, false) do
+      Folio.stub(:main_site, main_site) do
+        # let try to sign in to sites
+        assert can_sign_in_at_site?(main_site, email:, password: "password1")
+        assert can_sign_in_at_site?(site1, email:, password: "password1")
+        assert can_sign_in_at_site?(site2, email:, password: "password1")
+      end
+    end
+  end
+
+
   test "create (sign_in) with crossdomain => one user" do
     site1 = create(:folio_site, domain: "site1.localhost", type: "Folio::Site")
     site2 = create(:folio_site, domain: "site2.localhost", type: "Folio::Site")
