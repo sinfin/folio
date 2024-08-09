@@ -1,0 +1,18 @@
+.d-ui-cards
+  --d-ui-cards-gap: #{map-get($spacers, d)}
+
+  container-type: inline-size
+  margin: var(--d-ui-cards-gap) 0
+
+  .container-fluid &__container
+    padding-left: 0
+    padding-right: 0
+
+  &__flex
+    display: flex
+    align-items: stretch
+    flex-wrap: wrap
+    gap: var(--d-ui-cards-gap)
+
+  +media-breakpoint-up(md)
+    --d-ui-cards-gap: #{map-get($spacers, f)}

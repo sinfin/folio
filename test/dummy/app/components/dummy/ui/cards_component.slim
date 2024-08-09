@@ -1,0 +1,6 @@
+.d-ui-cards
+  .d-ui-cards__container.container-fluid
+    .d-ui-cards__flex
+      - @cards.each do |card|
+        = render(Dummy::Ui::CardComponent.new(**card.without(:content)))
+          == card[:content]

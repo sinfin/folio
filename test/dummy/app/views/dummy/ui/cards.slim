@@ -1,0 +1,11 @@
+.container-fluid
+  h1
+    a.d-unlink href=dummy_ui_path UI kit
+
+  = dummy_ui_tabs(tabs: @tabs)
+
+  - %w[light dark].each do |theme|
+    .bg-body.p-f.mt-g.border.rounded data-bs-theme=theme
+      h2.mt-0 Cards - #{theme}
+
+      = render(Dummy::Ui::CardsComponent.new(cards: @cards))
