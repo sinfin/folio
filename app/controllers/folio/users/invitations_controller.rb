@@ -8,12 +8,12 @@ class Folio::Users::InvitationsController < Devise::InvitationsController
 
 
   def new
-    if Rails.application.config.folio_crossdomain_devise && current_site != ::Folio.site_for_crossdomain_devise
+    if Rails.application.config.folio_crossdomain_devise && current_site != ::Folio.enabled_site_for_crossdomain_devise
       session[Folio::Devise::CrossdomainHandler::SESSION_KEY] ||= {}
       session[Folio::Devise::CrossdomainHandler::SESSION_KEY][:target_site_slug] = current_site.slug
 
       redirect_to new_user_invitation_url(only_path: false,
-                                          host: ::Folio.site_for_crossdomain_devise.env_aware_domain),
+                                          host: ::Folio.enabled_site_for_crossdomain_devise.env_aware_domain),
                   allow_other_host: true
     else
       super
@@ -147,7 +147,7 @@ class Folio::Users::InvitationsController < Devise::InvitationsController
 
       if resource.nil? && current_user
         set_flash_message(:alert, "already_authenticated", scope: "devise.failure")
-        redirect_to after_sign_in_path_for(resource)
+        redirect_to after_sign_in_path_for(current_user)
       end
     end
 end

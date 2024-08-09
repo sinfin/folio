@@ -8,7 +8,7 @@ class Folio::Console::Layout::HeaderCell < Folio::ConsoleCell
       if try(:current_user)
         opts = {
           only_path: false,
-          host: Folio.site_for_crossdomain_devise.try(:env_aware_domain)
+          host: Folio.enabled_site_for_crossdomain_devise.try(:env_aware_domain)
         }.compact
 
         router = controller

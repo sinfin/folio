@@ -33,8 +33,6 @@ class Folio::Devise::SessionsControllerTest < ActionDispatch::IntegrationTest
     site2 = create(:folio_site, domain: "site2.localhost", type: "Folio::Site")
     main_site = create(:folio_site, domain: "main.localhost", type: "Folio::Site")
     email = "superadmin@kocourek.cz"
-    user_site1 = user_site2 = nil
-
     _superadmin = create(:folio_user, email:, password: "password1", superadmin: true, auth_site: main_site)
 
     Rails.application.config.stub(:folio_crossdomain_devise, false) do

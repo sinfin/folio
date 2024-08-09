@@ -82,10 +82,10 @@ class Folio::DeviseMailer < Devise::Mailer
         method.to_s.gsub(/\A([a-z]+)_/, "\\1_#{scoped}_")
       end
 
-      if Rails.application.config.folio_crossdomain_devise && Folio.site_for_crossdomain_devise
+      if Folio.enabled_site_for_crossdomain_devise
         extra = {
           only_path: false,
-          host: Folio.site_for_crossdomain_devise.env_aware_domain,
+          host: Folio.enabled_site_for_crossdomain_devise.env_aware_domain,
           protocol: (Rails.env.development? && !ENV["FORCE_SSL"]) ? "http" : "https"
         }
 

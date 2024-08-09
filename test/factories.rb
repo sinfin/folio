@@ -1,7 +1,12 @@
 # frozen_string_literal: true
 
 def get_current_or_existing_site_or_create_from_factory
-  Folio::Current.site&.reload || Folio::Site.last || create(Rails.application.config.folio_site_default_test_factory)
+  site = begin
+    Folio::Current.site&.reload
+  rescue ActiveRecord::RecordNotFound
+    nil
+  end
+  site || Folio::Site.last || create(Rails.application.config.folio_site_default_test_factory)
 end
 
 FactoryBot.define do

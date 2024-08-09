@@ -22,7 +22,8 @@ class Folio::Users::SessionsControllerTest < Folio::BaseControllerTest
 
   test "create" do
     post main_app.user_session_path, params: { user: @params }
-    assert_redirected_to main_app.send(Rails.application.config.folio_users_after_sign_in_path)
+
+    assert_redirected_to controller.after_sign_in_path_for(@user)
   end
 
   test "ajax create" do
