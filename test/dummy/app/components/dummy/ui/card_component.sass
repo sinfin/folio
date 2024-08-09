@@ -22,7 +22,7 @@
   --d-ui-card-description-gap: #{map-get($spacers, b)}
   --d-ui-card-flex-direction: column
   --d-ui-card-flex: 0 0 370px
-  --d-ui-card-image-wrap-border-radius: 0
+  --d-ui-card-image-wrap-border-radius: #{map-get($spacers, b)}
   --d-ui-card-image-wrap-padding: 0
   --d-ui-card-image-wrap-width: 100%
   --d-ui-card-title-font-size: #{$ui-typo-display-xs-font-size}
@@ -62,7 +62,9 @@
     z-index: 3
 
   &__image-inner-wrap
+    border-radius: var(--d-ui-card-image-wrap-border-radius)
     position: relative
+    overflow: hidden
 
   &--image-padding-false
     --d-ui-card-image-wrap-border-radius: var(--d-ui-card-border-radius) var(--d-ui-card-border-radius) 0 0
@@ -135,23 +137,38 @@
     z-index: 5
 
   &--image-padding-true
-    --d-ui-card-image-wrap-padding: var(--d-ui-card-content-box-padding)
+    --d-ui-card-image-wrap-padding: var(--d-ui-card-content-box-padding) var(--d-ui-card-content-box-padding) 0 var(--d-ui-card-content-box-padding)
 
   &--orientation-horizontal
     +d-ui-card-horizontal
       --d-ui-card-flex: 0 0 100%
       --d-ui-card-flex-direction: row
-      --d-ui-card-image-wrap-width: 240px
+      --d-ui-card-image-wrap-width: 200px
       --d-ui-card-content-box-flex-shrink: 1
 
+      &.d-ui-card--image-padding-true
+        padding-left: var(--d-ui-card-content-box-padding)
+
       &.d-ui-card--image-padding-false
+        --d-ui-card-image-wrap-width: 240px
         --d-ui-card-image-wrap-border-radius: var(--d-ui-card-border-radius) 0 0 var(--d-ui-card-border-radius)
+
+      &.d-ui-card--image-padding-true .d-ui-card__image-wrap
+        padding-left: 0
+        padding-right: 0
+        padding-bottom: var(--d-ui-card-content-box-padding)
 
       .d-ui-card__image-wrap
         align-self: stretch
 
   &--size-s
     --d-ui-card-title-line-clamp: 2
+
+  &--size-m
+    @container (min-width: #{breakpoint-min(md, $grid-breakpoints)})
+      --d-ui-card-title-font-size: #{$ui-typo-display-s-font-size}
+      --d-ui-card-title-letter-spacing: #{$ui-typo-display-s-letter-spacing}
+      --d-ui-card-title-line-height: #{$ui-typo-display-s-line-height}
 
   &--size-l
     --d-ui-card-title-font-size: #{$ui-typo-display-s-font-size}

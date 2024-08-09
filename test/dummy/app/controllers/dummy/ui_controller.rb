@@ -330,7 +330,7 @@ class Dummy::UiController < ApplicationController
       end
 
       orientations.each do |orientation|
-        image_paddings = size == :l ? [nil] : [true, false]
+        image_paddings = (!image || size == :l) ? [nil] : [true, false]
 
         image_paddings.each do |image_padding|
           label = "Card #{orientation} #{size.to_s.upcase}"
