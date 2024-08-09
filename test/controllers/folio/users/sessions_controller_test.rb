@@ -32,7 +32,7 @@ class Folio::Users::SessionsControllerTest < Folio::BaseControllerTest
 
   test "create pending invitation" do
     skip unless Rails.application.config.folio_users_publicly_invitable
-    user = Folio::User.invite!(email: "invite@email.email")
+    user = Folio::User.invite!(email: "invite@email.email", auth_site_id: ::Folio::Current.site.id)
     old_timestamp = user.invitation_created_at
     post main_app.user_session_path, params: { user: { email: "invite@email.email" } }
     assert_redirected_to user_invitation_path
@@ -41,7 +41,7 @@ class Folio::Users::SessionsControllerTest < Folio::BaseControllerTest
 
   test "ajax create pending invitation" do
     skip unless Rails.application.config.folio_users_publicly_invitable
-    user = Folio::User.invite!(email: "invite@email.email")
+    user = Folio::User.invite!(email: "invite@email.email", auth_site_id: ::Folio::Current.site.id)
     old_timestamp = user.invitation_created_at
     post main_app.user_session_path(format: :json), params: { user: { email: "invite@email.email" } }
     assert_response(:ok)
