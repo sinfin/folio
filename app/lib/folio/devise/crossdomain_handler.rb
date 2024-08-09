@@ -37,7 +37,7 @@ class Folio::Devise::CrossdomainHandler
     @controller_name = controller_name
     @action_name = action_name
     @params = params || {}
-    @master_site = master_site || Folio.site_for_crossdomain_devise
+    @master_site = master_site || Folio.enabled_site_for_crossdomain_devise
     @resource_class = resource_class || Folio::User
     @resource_name = resource_name || :user
     @devise_controller = devise_controller

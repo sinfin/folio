@@ -9,7 +9,6 @@ module SitesHelper
     def create_and_host_site(key: nil, attributes: {}, force: false)
       site = create_site(key:, attributes:, force:)
       host_site(site)
-      Folio::Current.site = site
 
       site
     end
@@ -28,6 +27,7 @@ module SitesHelper
     def host_site(site)
       Rails.application.routes.default_url_options[:host] = site.domain
       Rails.application.routes.default_url_options[:only_path] = false
+      Folio::Current.site = site
 
       if self.respond_to?(:host!)
         host!(site.domain)
