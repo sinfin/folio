@@ -1,0 +1,311 @@
+.d-ui-card
+  $d-ui-card-horizontal-breakpoint-from: breakpoint-min(sm, $grid-breakpoints)
+  $d-ui-card-horizontal-breakpoint-to: breakpoint-max(sm, $grid-breakpoints)
+
+  = d-ui-card-horizontal
+    @container (min-width: #{$d-ui-card-horizontal-breakpoint-from})
+      @content
+
+  = d-ui-card-forced-vertical
+    @container (max-width: #{$d-ui-card-horizontal-breakpoint-to})
+      @content
+
+  --d-ui-card-background-color: #{$shade-100}
+  --d-ui-card-border-radius: #{map-get($spacers, c)}
+  --d-ui-card-border: 1px solid #{$transparent-b200}
+  --d-ui-card-content-box-flex-shrink: 0
+  --d-ui-card-content-box-gap: #{map-get($spacers, d)}
+  --d-ui-card-content-box-padding: #{map-get($spacers, g)}
+  --d-ui-card-content-font-size: #{$ui-typo-text-s-font-size}
+  --d-ui-card-content-line-clamp: 5
+  --d-ui-card-content-line-height: #{$ui-typo-text-s-line-height}
+  --d-ui-card-description-gap: #{map-get($spacers, b)}
+  --d-ui-card-flex-direction: column
+  --d-ui-card-flex: 0 0 370px
+  --d-ui-card-image-inner-wrap-min-height: auto
+  --d-ui-card-image-inner-wrap-height: 200px
+  --d-ui-card-image-wrap-border-radius: #{map-get($spacers, b)}
+  --d-ui-card-image-wrap-padding: 0
+  --d-ui-card-image-wrap-width: 100%
+  --d-ui-card-title-font-size: #{$ui-typo-display-xs-font-size}
+  --d-ui-card-title-letter-spacing: #{$ui-typo-display-xs-letter-spacing}
+  --d-ui-card-title-line-clamp: 5
+  --d-ui-card-title-line-height: #{$ui-typo-display-xs-line-height}
+
+  background: var(--d-ui-card-background-color)
+  border-radius: var(--d-ui-card-border-radius)
+  display: flex
+  flex-direction: var(--d-ui-card-flex-direction)
+  flex: var(--d-ui-card-flex)
+  position: relative
+  max-width: 100%
+  min-width: px-to-rem(320px) - $grid-gutter-width
+
+  &::after
+    content: ''
+    position: absolute
+    inset: 0
+    z-index: 2
+    pointer-events: none
+    border-radius: var(--d-ui-card-border-radius)
+    border: var(--d-ui-card-border)
+
+  &--border-false
+    --d-ui-card-border: 0
+
+  &--box-false
+    --d-ui-card-background-color: transparent
+    --d-ui-card-border: 0
+
+  &--transparent-true
+    --d-ui-card-background-color: transparent
+
+  &__image-wrap
+    border-radius: var(--d-ui-card-image-wrap-border-radius)
+    flex: 0 0 auto
+    overflow: hidden
+    padding: var(--d-ui-card-image-wrap-padding)
+    position: relative
+    width: var(--d-ui-card-image-wrap-width)
+    z-index: 3
+    align-self: stretch
+    display: flex
+    flex-direction: column
+    align-items: stretch
+    justify-content: stretch
+
+  &__image-inner-wrap
+    border-radius: var(--d-ui-card-image-wrap-border-radius)
+    position: relative
+    overflow: hidden
+    flex: 1 0 auto
+    height: var(--d-ui-card-image-inner-wrap-height)
+    min-height: var(--d-ui-card-image-inner-wrap-min-height)
+
+  &--image-padding-false
+    --d-ui-card-image-wrap-border-radius: var(--d-ui-card-border-radius) var(--d-ui-card-border-radius) 0 0
+
+  &__title
+    font-size: var(--d-ui-card-title-font-size)
+    font-weight: $font-weight-bold
+    letter-spacing: var(--d-ui-card-title-letter-spacing)
+    line-height: var(--d-ui-card-title-line-height)
+    margin: 0
+
+  &__title,
+  &__subtitle
+    -webkit-box-orient: vertical
+    -webkit-line-clamp: var(--d-ui-card-title-line-clamp)
+    display: -webkit-box
+    overflow: hidden
+    text-overflow: ellipsis
+
+  &__title-a
+    &, &:hover, &:focus
+      color: inherit
+      text-decoration: none
+
+  &__title-a,
+  &__button
+    &::after
+      border-radius: var(--d-ui-card-border-radius)
+      content: ''
+      display: block
+      inset: 0
+      position: absolute
+      z-index: 4
+
+  &__button-wrap
+    display: flex
+    flex-wrap: wrap
+    align-items: center
+    gap: map-get($spacers, c)
+
+  &__link
+    +font-size-text-xs
+    font-weight: $font-weight-semibold
+    color: $shade-600
+    text-decoration: none
+    z-index: 5
+    position: relative
+
+    &:hover
+      text-decoration: underline
+
+  &__content
+    font-size: var(--d-ui-card-content-font-size)
+    line-height: var(--d-ui-card-content-line-height)
+    -webkit-box-orient: vertical
+    -webkit-line-clamp: var(--d-ui-card-content-line-clamp)
+    display: -webkit-box
+    overflow: hidden
+    text-overflow: ellipsis
+
+  &__description
+    align-items: stretch
+    display: flex
+    flex-direction: column
+    flex: 0 0 auto
+    gap: var(--d-ui-card-description-gap)
+
+  &__content-box
+    align-items: stretch
+    display: flex
+    flex-direction: column
+    flex: 1 var(--d-ui-card-content-box-flex-shrink) auto
+    gap: var(--d-ui-card-content-box-gap)
+    padding: var(--d-ui-card-content-box-padding)
+
+  &__image--auto:not(:last-child)
+    +d-ui-card-forced-vertical
+      display: none !important
+
+  &__image--forced-vertical
+    +d-ui-card-horizontal
+      display: none !important
+
+  &__topics-and-date a,
+  &__content a
+    position: relative
+    z-index: 5
+
+  &__subtitle
+    +font-size-text-xs
+    font-weight: $font-weight-medium
+
+  &__topics-and-date
+    +font-size-text-xs
+    color: $shade-400
+    display: flex
+    align-items: center
+    gap: map-get($spacers, b)
+
+  &__topics
+    flex: 0 1 auto
+
+  &__date
+    white-space: nowrap
+    flex: 0 0 auto
+
+  &--image-padding-true
+    --d-ui-card-image-wrap-padding: var(--d-ui-card-content-box-padding) var(--d-ui-card-content-box-padding) 0 var(--d-ui-card-content-box-padding)
+
+  &--size-s
+    --d-ui-card-title-line-clamp: 2
+
+    @container (min-width: #{breakpoint-min(lg, $grid-breakpoints)})
+      &.d-ui-card--size-s
+        --d-ui-card-image-inner-wrap-height: 240px
+
+        &.d-ui-card--image-padding-true
+          --d-ui-card-image-inner-wrap-height: 208px
+
+  &--size-m
+    --d-ui-card-flex: 0 0 100%
+
+    @container (min-width: #{breakpoint-min(md, $grid-breakpoints)})
+      --d-ui-card-image-inner-wrap-height: 270px
+      --d-ui-card-title-font-size: #{$ui-typo-display-s-font-size}
+      --d-ui-card-title-letter-spacing: #{$ui-typo-display-s-letter-spacing}
+      --d-ui-card-title-line-height: #{$ui-typo-display-s-line-height}
+
+      &.d-ui-card--image-padding-true
+        --d-ui-card-image-inner-wrap-height: 238px
+
+  &--size-l
+    --d-ui-card-title-font-size: #{$ui-typo-display-s-font-size}
+    --d-ui-card-title-letter-spacing: #{$ui-typo-display-s-letter-spacing}
+    --d-ui-card-title-line-height: #{$ui-typo-display-s-line-height}
+
+    @container (min-width: #{breakpoint-min(lg, $grid-breakpoints)})
+      --d-ui-card-content-box-gap: #{map-get($spacers, f)}
+      --d-ui-card-content-box-padding: #{map-get($spacers, k)}
+      --d-ui-card-content-font-size: #{$ui-typo-text-l-font-size}
+      --d-ui-card-content-line-height: #{$ui-typo-text-l-line-height}
+      --d-ui-card-title-font-size: #{$ui-typo-display-m-font-size}
+      --d-ui-card-title-letter-spacing: #{$ui-typo-display-m-letter-spacing}
+      --d-ui-card-title-line-height: #{$ui-typo-display-m-line-height}
+
+  &--orientation-horizontal
+    --d-ui-card-content-box-flex-shrink: 1
+
+    +d-ui-card-horizontal
+      --d-ui-card-flex: 0 0 100%
+      --d-ui-card-flex-direction: row
+      --d-ui-card-image-wrap-width: 200px
+      --d-ui-card-image-inner-wrap-height: 100%
+
+      &.d-ui-card--image-padding-true
+        --d-ui-card-image-inner-wrap-height: 200px
+        padding-left: var(--d-ui-card-content-box-padding)
+
+      &.d-ui-card--image-padding-false
+        --d-ui-card-image-inner-wrap-min-height: 264px
+        --d-ui-card-image-wrap-border-radius: var(--d-ui-card-border-radius) 0 0 var(--d-ui-card-border-radius)
+        --d-ui-card-image-wrap-width: 240px
+
+        @container (min-width: #{breakpoint-min(lg, $grid-breakpoints)})
+          &.d-ui-card--size-l
+            --d-ui-card-image-inner-wrap-min-height: 380px
+            --d-ui-card-image-wrap-width: 400px
+
+      &.d-ui-card--image-padding-true .d-ui-card__image-wrap
+        padding-left: 0
+        padding-right: 0
+        padding-bottom: var(--d-ui-card-content-box-padding)
+
+      .d-ui-card__image-wrap
+        align-self: stretch
+
+  @container (min-width: #{breakpoint-min(md, $grid-breakpoints)})
+    &--orientation-vertical
+      &.d-ui-card--size-s,
+      &.d-ui-card--size-m
+        --d-ui-card-flex: 0 0 calc(50% - 0.5 * var(--d-ui-cards-gap))
+
+  @container (min-width: #{breakpoint-min(lg, $grid-breakpoints)})
+    &--orientation-vertical
+      &.d-ui-card--size-s
+        --d-ui-card-flex: 0 0 calc(33.3333% - var(--d-ui-cards-gap))
+
+  @container (min-width: #{breakpoint-min(xl, $grid-breakpoints)})
+    &--orientation-vertical
+      --d-ui-card-flex: 0 0 calc(50% - 0.5 * var(--d-ui-cards-gap))
+
+      &.d-ui-card--size-m
+        --d-ui-card-flex: 0 0 calc(33.3333% - var(--d-ui-cards-gap))
+
+    &--orientation-horizontal
+      --d-ui-card-flex: 0 0 calc(50% - 0.5 * var(--d-ui-cards-gap))
+
+      &.d-ui-card--size-l
+        --d-ui-card-flex: 0 0 100%
+
+  +media-breakpoint-down(xs)
+    --d-ui-card-flex: 0 0 100%
+
+  // size-xs is very specific, keep at the botom so that it overrides the default horizontal/image padding styles
+  &--size-xs.d-ui-card--orientation-horizontal
+    --d-ui-card-image-wrap-border-radius: #{map-get($spacers, a)}
+    --d-ui-card-flex: 0 0 100%
+    --d-ui-card-flex-direction: row
+    --d-ui-card-content-box-padding: #{map-get($spacers, d)}
+    --d-ui-card-image-wrap-padding: var(--d-ui-card-content-box-padding) 0 var(--d-ui-card-content-box-padding) var(--d-ui-card-content-box-padding)
+
+    .d-ui-card__image-wrap
+      width: 80px
+      min-height: 80px
+      box-sizing: content-box
+
+    .d-ui-card__image-inner-wrap
+      height: 80px
+      min-height: 80px
+      width: 80px
+      flex: 0 0 80px
+
+    &.d-ui-card--box-false
+      --d-ui-card-content-box-padding: 0
+      gap: map-get($spacers, d)
+
+    @container (min-width: #{breakpoint-min(md, $grid-breakpoints)})
+      --d-ui-card-flex: 0 0 calc(50% - 0.5 * var(--d-ui-cards-gap))

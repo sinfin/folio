@@ -1,11 +1,8 @@
 .d-blog-articles-show-body
   &__row
-    display: flex
-    gap: 1.5*$grid-gutter-width
-    align-items: flex-start
-    flex-direction: column
-
     +media-breakpoint-up(xl)
+      display: flex
+      gap: map-get($spacers, j)
       flex-direction: row
       align-items: flex-start
       justify-content: space-between
@@ -16,21 +13,6 @@
   &__recommended
     +media-breakpoint-up(xl)
       flex: 0 0 360px
-
-  &__recommended-articles
-    display: flex
-    gap: $grid-gutter-width
-    flex-direction: column
-    flex-wrap: nowrap
-    align-items: flex-start
-    padding-top: map-get($spacers, d)
-
-    +media-breakpoint-up(md)
-      flex-direction: row
-
-    +media-breakpoint-up(xl)
-      gap: 0
-      flex-direction: column
 
   &__recommended-title
     +font-size-display-xs

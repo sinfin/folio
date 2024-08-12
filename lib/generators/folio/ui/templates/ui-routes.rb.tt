@@ -7,6 +7,7 @@ scope module: :<%= application_namespace_path %>, as: :<%= application_namespace
     get :boolean_toggles
     get :breadcrumbs
     get :buttons
+    get :cards
     get :chips
     get :clipboard
     get :documents

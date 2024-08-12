@@ -10,6 +10,7 @@ class Dummy::UiController < ApplicationController
       boolean_toggles
       breadcrumbs
       buttons
+      cards
       documents
       chips
       clipboard
@@ -93,7 +94,7 @@ class Dummy::UiController < ApplicationController
   end
 
   def images
-    @image = (Folio::File::Image.tagged_with("unsplash").presence || Folio::File::Image).first
+    @image = (Folio::File::Image.by_site(current_site).tagged_with("unsplash").presence || Folio::File::Image).first
 
     @variants = [
       { size: "100x100#" },
@@ -142,7 +143,7 @@ class Dummy::UiController < ApplicationController
   def author_medallions
     name = Faker::Name.name
     href = request.path
-    cover = Folio::File::Image.tagged_with("unsplash").first
+    cover = Folio::File::Image.by_site(current_site).tagged_with("unsplash").first
 
     @author_medallions = {
       "Small (default)" => [{ name:, href:, cover: }, { name:, href:, cover: nil },],
@@ -152,7 +153,7 @@ class Dummy::UiController < ApplicationController
 
   def hero
     # TODO: tag images with dark/light theme
-    images = Folio::File::Image.tagged_with("unsplash").presence || Folio::File::Image
+    images = Folio::File::Image.by_site(current_site).tagged_with("unsplash").presence || Folio::File::Image
 
     cover = images.first
     background_cover = images.second
@@ -249,7 +250,7 @@ class Dummy::UiController < ApplicationController
         background_overlay: :dark,
         theme: :dark,
         authors: [
-          { name: "John Doe", href: "#", cover: Folio::File::Image.tagged_with("unsplash").first },
+          { name: "John Doe", href: "#", cover: Folio::File::Image.by_site(current_site).tagged_with("unsplash").first },
         ],
       }, {
         title: "One and two gallery title",
@@ -286,6 +287,105 @@ class Dummy::UiController < ApplicationController
   def documents
     @document_placements = Folio::File::Document.last(5).map do |doc|
       Folio::FilePlacement::Document.new(file: doc)
+    end
+  end
+
+  def cards
+    folio_image = Folio::File::Image.by_site(current_site).tagged_with("unsplash").first
+    href = request.fullpath
+
+    @cards = []
+
+    short_text_content = @lorem_ipsum[0..45]
+    text_content = @lorem_ipsum[0..255]
+    html_content = "<p>#{text_content.gsub("consectetur adipisicing", "<a href=\"#{href}\">consectetur adipisicing</a>")}</p>"
+    topics_ary = [
+      { href:, label: "Topic one" },
+      { href:, label: "Topic two" }
+    ]
+
+    @sizes = %i[l m s xs]
+
+    size = if params[:size].present? && params[:size].to_sym.in?(@sizes)
+      params[:size].to_sym
+    else
+      @sizes.first
+    end
+
+    @tabs = []
+
+    @tabs = @sizes.map do |size_sym|
+      {
+        href: cards_dummy_ui_path(size: size_sym == :l ? nil : size_sym, border: params[:border], transparent: params[:transparent]),
+        label: "Size - #{size_sym.to_s.upcase}",
+        active: size_sym == size,
+      }
+    end
+
+    boxes = size == :xs ? [true, false] : [nil]
+
+    boxes.each do |box|
+      [folio_image, nil].each do |image|
+        orientations = if size == :l
+          %i[horizontal]
+        elsif size.in?(%i[xs s])
+          %i[vertical]
+        else
+          %i[vertical horizontal]
+        end
+
+        orientations.each do |orientation|
+          subtitles = size == :xs ? ["Subtitle", nil] : [nil]
+
+          subtitles.each do |subtitle|
+            image_paddings = (!image || size == :l) ? [nil] : [true, false]
+
+            image_paddings.each do |image_padding|
+              label = "Card #{orientation} #{size.to_s.upcase}"
+              label += " padded" if image_padding
+
+              [label, nil].each do |title|
+                [html_content, nil].each do |html|
+                  [text_content, short_text_content, nil].each do |text|
+                    [Time.current.to_date, nil].each do |date|
+                      button_labels = size.in?(%i[l s]) ? ["Button label", nil] : [nil]
+
+                      button_labels.each do |button_label|
+                        topics_variants = size.in?(%i[xs m l]) ? [topics_ary, nil] : [nil]
+
+                        topics_variants.each do |topics|
+                          links_variants = size.in?(%i[s l]) ? [[{}], nil] : [nil]
+
+                          links_variants.each do |links|
+                            @cards << {
+                              size:,
+                              image:,
+                              image_padding:,
+                              title:,
+                              subtitle:,
+                              html:,
+                              text:,
+                              button_label:,
+                              href:,
+                              orientation:,
+                              box:,
+                              topics:,
+                              links:,
+                              transparent: params[:transparent] == "1",
+                              border: params[:border] == "1",
+                              date:,
+                            }
+                          end
+                        end
+                      end
+                    end
+                  end
+                end
+              end
+            end
+          end
+        end
+      end
     end
   end
 

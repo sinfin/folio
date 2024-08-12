@@ -58,12 +58,19 @@
     padding: map-get($spacers, a) map-get($spacers, c)
     gap: map-get($spacers, b)
 
+  = bigger-style
+    +font-size-text-s
+    max-width: px-to-rem(200px)
+    padding: px-to-rem(3px) map-get($spacers, c)
+    gap: map-get($spacers, b)
+
   +media-breakpoint-up(lg)
-    &:not(&--small) &__a
-      +font-size-text-s
-      max-width: px-to-rem(200px)
-      padding: px-to-rem(3px) map-get($spacers, c)
-      gap: map-get($spacers, b)
+    &:not(&--small):not(&--container-query) &__a
+      +bigger-style
+
+  &--container-query:not(&--small) &__a
+    @container (min-width: #{breakpoint-min(sm, $grid-breakpoints)})
+      +bigger-style
 
   &--small &__close
     height: px-to-rem(16px) !important

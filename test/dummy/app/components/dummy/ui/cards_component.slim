@@ -1,0 +1,5 @@
+.d-ui-cards class=@class_name
+  .d-ui-cards__container.container-fluid
+    .d-ui-cards__flex
+      - @cards.each do |card|
+        = render(Dummy::Ui::CardComponent.new(**card))

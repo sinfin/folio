@@ -7,12 +7,9 @@
 
       aside.<%= classname_prefix %>-blog-articles-show-body__recommended
         - if @recommended_articles.present?
-          h2.<%= classname_prefix %>-blog-articles-show-body__recommended-title.mt-0.mb-b
+          h2.m-0.fs-display-xs.fw-bold
             = t('.recommended_articles')
 
           .<%= classname_prefix %>-blog-articles-show-body__recommended-articles
-            = render(<%= application_namespace %>::Blog::Articles::CardsComponent.new(size: :sm,
-                                                               hero_size: :md,
-                                                               container_classes: "col-12 col-sm-6 col-lg-12 sm-mt-1",
-                                                               hero_classes: "col-12 col-sm-6 col-lg-12",
+            = render(<%= application_namespace %>::Blog::Articles::CardsComponent.new(size: :xs,
                                                                articles: @recommended_articles))

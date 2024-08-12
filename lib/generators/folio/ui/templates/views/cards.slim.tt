@@ -1,0 +1,28 @@
+.container-fluid
+  h1
+    a.<%= classname_prefix %>-unlink href=<%= application_namespace_path %>_ui_path UI kit
+
+  form.d-flex.gap-e.my-e[
+    action=request.path
+    onchange="this.submit()"
+    method="get"
+  ]
+    input type="hidden" name="size" value=params[:size]
+
+    = render(<%= application_namespace %>::Ui::BooleanToggleComponent.new(attribute: :transparent,
+                                                   checked: params[:transparent] == "1",
+                                                   value: "1",
+                                                   label: "Transparent"))
+
+    = render(<%= application_namespace %>::Ui::BooleanToggleComponent.new(attribute: :border,
+                                                   checked: params[:border] == "1",
+                                                   value: "1",
+                                                   label: "Border"))
+
+  = <%= application_namespace_path %>_ui_tabs(tabs: @tabs)
+
+  - %w[light dark].each do |theme|
+    .bg-body.p-f.mt-g.border.rounded data-bs-theme=theme
+      h2.mt-0 Cards - #{theme}
+
+      = render(<%= application_namespace %>::Ui::CardsComponent.new(cards: @cards))

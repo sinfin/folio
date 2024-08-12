@@ -12,9 +12,8 @@
                                                               url_base: @url_base))
 
     - if @articles.present?
-      = render(Dummy::Blog::Articles::CardsComponent.new(size: :md,
-                                                         hero_size: use_hero_size? ? :lg : nil,
-                                                         column_classes: "col-12 col-sm-6 col-lg-4",
+      = render(Dummy::Blog::Articles::CardsComponent.new(size: :m,
+                                                         size_of_first:,
                                                          articles: @articles))
 
     = render(Dummy::Ui::PagyComponent.new(pagy: @pagy,

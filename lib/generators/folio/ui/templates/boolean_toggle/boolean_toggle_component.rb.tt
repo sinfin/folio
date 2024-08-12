@@ -13,6 +13,7 @@ class <%= application_namespace %>::Ui::BooleanToggleComponent < Folio::Console:
                  as: nil,
                  confirm: false,
                  class_name: nil,
+                 value: nil,
                  small_label: false)
     @record = record
     @attribute = attribute
@@ -25,6 +26,7 @@ class <%= application_namespace %>::Ui::BooleanToggleComponent < Folio::Console:
     @class_name = class_name
     @small_label = small_label
     @checked = checked
+    @value = value
   end
 
   def checked

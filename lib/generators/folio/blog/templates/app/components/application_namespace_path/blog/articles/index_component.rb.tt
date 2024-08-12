@@ -12,10 +12,10 @@ class <%= application_namespace %>::Blog::Articles::IndexComponent < Application
     @url_base = author || <%= application_namespace %>::Blog::Article
   end
 
-  def use_hero_size?
-    return false if @pagy && @pagy.page != 1
-    return false if params[<%= application_namespace %>::Blog::TOPICS_PARAM].present?
-    true
+  def size_of_first
+    return nil if @pagy && @pagy.page != 1
+    return nil if params[<%= application_namespace %>::Blog::TOPICS_PARAM].present?
+    :l
   end
 
   def before_render

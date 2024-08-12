@@ -1,0 +1,311 @@
+.<%= classname_prefix %>-ui-card
+  $<%= classname_prefix %>-ui-card-horizontal-breakpoint-from: breakpoint-min(sm, $grid-breakpoints)
+  $<%= classname_prefix %>-ui-card-horizontal-breakpoint-to: breakpoint-max(sm, $grid-breakpoints)
+
+  = <%= classname_prefix %>-ui-card-horizontal
+    @container (min-width: #{$<%= classname_prefix %>-ui-card-horizontal-breakpoint-from})
+      @content
+
+  = <%= classname_prefix %>-ui-card-forced-vertical
+    @container (max-width: #{$<%= classname_prefix %>-ui-card-horizontal-breakpoint-to})
+      @content
+
+  --<%= classname_prefix %>-ui-card-background-color: #{$shade-100}
+  --<%= classname_prefix %>-ui-card-border-radius: #{map-get($spacers, c)}
+  --<%= classname_prefix %>-ui-card-border: 1px solid #{$transparent-b200}
+  --<%= classname_prefix %>-ui-card-content-box-flex-shrink: 0
+  --<%= classname_prefix %>-ui-card-content-box-gap: #{map-get($spacers, d)}
+  --<%= classname_prefix %>-ui-card-content-box-padding: #{map-get($spacers, g)}
+  --<%= classname_prefix %>-ui-card-content-font-size: #{$ui-typo-text-s-font-size}
+  --<%= classname_prefix %>-ui-card-content-line-clamp: 5
+  --<%= classname_prefix %>-ui-card-content-line-height: #{$ui-typo-text-s-line-height}
+  --<%= classname_prefix %>-ui-card-description-gap: #{map-get($spacers, b)}
+  --<%= classname_prefix %>-ui-card-flex-direction: column
+  --<%= classname_prefix %>-ui-card-flex: 0 0 370px
+  --<%= classname_prefix %>-ui-card-image-inner-wrap-min-height: auto
+  --<%= classname_prefix %>-ui-card-image-inner-wrap-height: 200px
+  --<%= classname_prefix %>-ui-card-image-wrap-border-radius: #{map-get($spacers, b)}
+  --<%= classname_prefix %>-ui-card-image-wrap-padding: 0
+  --<%= classname_prefix %>-ui-card-image-wrap-width: 100%
+  --<%= classname_prefix %>-ui-card-title-font-size: #{$ui-typo-display-xs-font-size}
+  --<%= classname_prefix %>-ui-card-title-letter-spacing: #{$ui-typo-display-xs-letter-spacing}
+  --<%= classname_prefix %>-ui-card-title-line-clamp: 5
+  --<%= classname_prefix %>-ui-card-title-line-height: #{$ui-typo-display-xs-line-height}
+
+  background: var(--<%= classname_prefix %>-ui-card-background-color)
+  border-radius: var(--<%= classname_prefix %>-ui-card-border-radius)
+  display: flex
+  flex-direction: var(--<%= classname_prefix %>-ui-card-flex-direction)
+  flex: var(--<%= classname_prefix %>-ui-card-flex)
+  position: relative
+  max-width: 100%
+  min-width: px-to-rem(320px) - $grid-gutter-width
+
+  &::after
+    content: ''
+    position: absolute
+    inset: 0
+    z-index: 2
+    pointer-events: none
+    border-radius: var(--<%= classname_prefix %>-ui-card-border-radius)
+    border: var(--<%= classname_prefix %>-ui-card-border)
+
+  &--border-false
+    --<%= classname_prefix %>-ui-card-border: 0
+
+  &--box-false
+    --<%= classname_prefix %>-ui-card-background-color: transparent
+    --<%= classname_prefix %>-ui-card-border: 0
+
+  &--transparent-true
+    --<%= classname_prefix %>-ui-card-background-color: transparent
+
+  &__image-wrap
+    border-radius: var(--<%= classname_prefix %>-ui-card-image-wrap-border-radius)
+    flex: 0 0 auto
+    overflow: hidden
+    padding: var(--<%= classname_prefix %>-ui-card-image-wrap-padding)
+    position: relative
+    width: var(--<%= classname_prefix %>-ui-card-image-wrap-width)
+    z-index: 3
+    align-self: stretch
+    display: flex
+    flex-direction: column
+    align-items: stretch
+    justify-content: stretch
+
+  &__image-inner-wrap
+    border-radius: var(--<%= classname_prefix %>-ui-card-image-wrap-border-radius)
+    position: relative
+    overflow: hidden
+    flex: 1 0 auto
+    height: var(--<%= classname_prefix %>-ui-card-image-inner-wrap-height)
+    min-height: var(--<%= classname_prefix %>-ui-card-image-inner-wrap-min-height)
+
+  &--image-padding-false
+    --<%= classname_prefix %>-ui-card-image-wrap-border-radius: var(--<%= classname_prefix %>-ui-card-border-radius) var(--<%= classname_prefix %>-ui-card-border-radius) 0 0
+
+  &__title
+    font-size: var(--<%= classname_prefix %>-ui-card-title-font-size)
+    font-weight: $font-weight-bold
+    letter-spacing: var(--<%= classname_prefix %>-ui-card-title-letter-spacing)
+    line-height: var(--<%= classname_prefix %>-ui-card-title-line-height)
+    margin: 0
+
+  &__title,
+  &__subtitle
+    -webkit-box-orient: vertical
+    -webkit-line-clamp: var(--<%= classname_prefix %>-ui-card-title-line-clamp)
+    display: -webkit-box
+    overflow: hidden
+    text-overflow: ellipsis
+
+  &__title-a
+    &, &:hover, &:focus
+      color: inherit
+      text-decoration: none
+
+  &__title-a,
+  &__button
+    &::after
+      border-radius: var(--<%= classname_prefix %>-ui-card-border-radius)
+      content: ''
+      display: block
+      inset: 0
+      position: absolute
+      z-index: 4
+
+  &__button-wrap
+    display: flex
+    flex-wrap: wrap
+    align-items: center
+    gap: map-get($spacers, c)
+
+  &__link
+    +font-size-text-xs
+    font-weight: $font-weight-semibold
+    color: $shade-600
+    text-decoration: none
+    z-index: 5
+    position: relative
+
+    &:hover
+      text-decoration: underline
+
+  &__content
+    font-size: var(--<%= classname_prefix %>-ui-card-content-font-size)
+    line-height: var(--<%= classname_prefix %>-ui-card-content-line-height)
+    -webkit-box-orient: vertical
+    -webkit-line-clamp: var(--<%= classname_prefix %>-ui-card-content-line-clamp)
+    display: -webkit-box
+    overflow: hidden
+    text-overflow: ellipsis
+
+  &__description
+    align-items: stretch
+    display: flex
+    flex-direction: column
+    flex: 0 0 auto
+    gap: var(--<%= classname_prefix %>-ui-card-description-gap)
+
+  &__content-box
+    align-items: stretch
+    display: flex
+    flex-direction: column
+    flex: 1 var(--<%= classname_prefix %>-ui-card-content-box-flex-shrink) auto
+    gap: var(--<%= classname_prefix %>-ui-card-content-box-gap)
+    padding: var(--<%= classname_prefix %>-ui-card-content-box-padding)
+
+  &__image--auto:not(:last-child)
+    +<%= classname_prefix %>-ui-card-forced-vertical
+      display: none !important
+
+  &__image--forced-vertical
+    +<%= classname_prefix %>-ui-card-horizontal
+      display: none !important
+
+  &__topics-and-date a,
+  &__content a
+    position: relative
+    z-index: 5
+
+  &__subtitle
+    +font-size-text-xs
+    font-weight: $font-weight-medium
+
+  &__topics-and-date
+    +font-size-text-xs
+    color: $shade-400
+    display: flex
+    align-items: center
+    gap: map-get($spacers, b)
+
+  &__topics
+    flex: 0 1 auto
+
+  &__date
+    white-space: nowrap
+    flex: 0 0 auto
+
+  &--image-padding-true
+    --<%= classname_prefix %>-ui-card-image-wrap-padding: var(--<%= classname_prefix %>-ui-card-content-box-padding) var(--<%= classname_prefix %>-ui-card-content-box-padding) 0 var(--<%= classname_prefix %>-ui-card-content-box-padding)
+
+  &--size-s
+    --<%= classname_prefix %>-ui-card-title-line-clamp: 2
+
+    @container (min-width: #{breakpoint-min(lg, $grid-breakpoints)})
+      &.<%= classname_prefix %>-ui-card--size-s
+        --<%= classname_prefix %>-ui-card-image-inner-wrap-height: 240px
+
+        &.<%= classname_prefix %>-ui-card--image-padding-true
+          --<%= classname_prefix %>-ui-card-image-inner-wrap-height: 208px
+
+  &--size-m
+    --<%= classname_prefix %>-ui-card-flex: 0 0 100%
+
+    @container (min-width: #{breakpoint-min(md, $grid-breakpoints)})
+      --<%= classname_prefix %>-ui-card-image-inner-wrap-height: 270px
+      --<%= classname_prefix %>-ui-card-title-font-size: #{$ui-typo-display-s-font-size}
+      --<%= classname_prefix %>-ui-card-title-letter-spacing: #{$ui-typo-display-s-letter-spacing}
+      --<%= classname_prefix %>-ui-card-title-line-height: #{$ui-typo-display-s-line-height}
+
+      &.<%= classname_prefix %>-ui-card--image-padding-true
+        --<%= classname_prefix %>-ui-card-image-inner-wrap-height: 238px
+
+  &--size-l
+    --<%= classname_prefix %>-ui-card-title-font-size: #{$ui-typo-display-s-font-size}
+    --<%= classname_prefix %>-ui-card-title-letter-spacing: #{$ui-typo-display-s-letter-spacing}
+    --<%= classname_prefix %>-ui-card-title-line-height: #{$ui-typo-display-s-line-height}
+
+    @container (min-width: #{breakpoint-min(lg, $grid-breakpoints)})
+      --<%= classname_prefix %>-ui-card-content-box-gap: #{map-get($spacers, f)}
+      --<%= classname_prefix %>-ui-card-content-box-padding: #{map-get($spacers, k)}
+      --<%= classname_prefix %>-ui-card-content-font-size: #{$ui-typo-text-l-font-size}
+      --<%= classname_prefix %>-ui-card-content-line-height: #{$ui-typo-text-l-line-height}
+      --<%= classname_prefix %>-ui-card-title-font-size: #{$ui-typo-display-m-font-size}
+      --<%= classname_prefix %>-ui-card-title-letter-spacing: #{$ui-typo-display-m-letter-spacing}
+      --<%= classname_prefix %>-ui-card-title-line-height: #{$ui-typo-display-m-line-height}
+
+  &--orientation-horizontal
+    --<%= classname_prefix %>-ui-card-content-box-flex-shrink: 1
+
+    +<%= classname_prefix %>-ui-card-horizontal
+      --<%= classname_prefix %>-ui-card-flex: 0 0 100%
+      --<%= classname_prefix %>-ui-card-flex-direction: row
+      --<%= classname_prefix %>-ui-card-image-wrap-width: 200px
+      --<%= classname_prefix %>-ui-card-image-inner-wrap-height: 100%
+
+      &.<%= classname_prefix %>-ui-card--image-padding-true
+        --<%= classname_prefix %>-ui-card-image-inner-wrap-height: 200px
+        padding-left: var(--<%= classname_prefix %>-ui-card-content-box-padding)
+
+      &.<%= classname_prefix %>-ui-card--image-padding-false
+        --<%= classname_prefix %>-ui-card-image-inner-wrap-min-height: 264px
+        --<%= classname_prefix %>-ui-card-image-wrap-border-radius: var(--<%= classname_prefix %>-ui-card-border-radius) 0 0 var(--<%= classname_prefix %>-ui-card-border-radius)
+        --<%= classname_prefix %>-ui-card-image-wrap-width: 240px
+
+        @container (min-width: #{breakpoint-min(lg, $grid-breakpoints)})
+          &.<%= classname_prefix %>-ui-card--size-l
+            --<%= classname_prefix %>-ui-card-image-inner-wrap-min-height: 380px
+            --<%= classname_prefix %>-ui-card-image-wrap-width: 400px
+
+      &.<%= classname_prefix %>-ui-card--image-padding-true .<%= classname_prefix %>-ui-card__image-wrap
+        padding-left: 0
+        padding-right: 0
+        padding-bottom: var(--<%= classname_prefix %>-ui-card-content-box-padding)
+
+      .<%= classname_prefix %>-ui-card__image-wrap
+        align-self: stretch
+
+  @container (min-width: #{breakpoint-min(md, $grid-breakpoints)})
+    &--orientation-vertical
+      &.<%= classname_prefix %>-ui-card--size-s,
+      &.<%= classname_prefix %>-ui-card--size-m
+        --<%= classname_prefix %>-ui-card-flex: 0 0 calc(50% - 0.5 * var(--<%= classname_prefix %>-ui-cards-gap))
+
+  @container (min-width: #{breakpoint-min(lg, $grid-breakpoints)})
+    &--orientation-vertical
+      &.<%= classname_prefix %>-ui-card--size-s
+        --<%= classname_prefix %>-ui-card-flex: 0 0 calc(33.3333% - var(--<%= classname_prefix %>-ui-cards-gap))
+
+  @container (min-width: #{breakpoint-min(xl, $grid-breakpoints)})
+    &--orientation-vertical
+      --<%= classname_prefix %>-ui-card-flex: 0 0 calc(50% - 0.5 * var(--<%= classname_prefix %>-ui-cards-gap))
+
+      &.<%= classname_prefix %>-ui-card--size-m
+        --<%= classname_prefix %>-ui-card-flex: 0 0 calc(33.3333% - var(--<%= classname_prefix %>-ui-cards-gap))
+
+    &--orientation-horizontal
+      --<%= classname_prefix %>-ui-card-flex: 0 0 calc(50% - 0.5 * var(--<%= classname_prefix %>-ui-cards-gap))
+
+      &.<%= classname_prefix %>-ui-card--size-l
+        --<%= classname_prefix %>-ui-card-flex: 0 0 100%
+
+  +media-breakpoint-down(xs)
+    --<%= classname_prefix %>-ui-card-flex: 0 0 100%
+
+  // size-xs is very specific, keep at the botom so that it overrides the default horizontal/image padding styles
+  &--size-xs.<%= classname_prefix %>-ui-card--orientation-horizontal
+    --<%= classname_prefix %>-ui-card-image-wrap-border-radius: #{map-get($spacers, a)}
+    --<%= classname_prefix %>-ui-card-flex: 0 0 100%
+    --<%= classname_prefix %>-ui-card-flex-direction: row
+    --<%= classname_prefix %>-ui-card-content-box-padding: #{map-get($spacers, d)}
+    --<%= classname_prefix %>-ui-card-image-wrap-padding: var(--<%= classname_prefix %>-ui-card-content-box-padding) 0 var(--<%= classname_prefix %>-ui-card-content-box-padding) var(--<%= classname_prefix %>-ui-card-content-box-padding)
+
+    .<%= classname_prefix %>-ui-card__image-wrap
+      width: 80px
+      min-height: 80px
+      box-sizing: content-box
+
+    .<%= classname_prefix %>-ui-card__image-inner-wrap
+      height: 80px
+      min-height: 80px
+      width: 80px
+      flex: 0 0 80px
+
+    &.<%= classname_prefix %>-ui-card--box-false
+      --<%= classname_prefix %>-ui-card-content-box-padding: 0
+      gap: map-get($spacers, d)
+
+    @container (min-width: #{breakpoint-min(md, $grid-breakpoints)})
+      --<%= classname_prefix %>-ui-card-flex: 0 0 calc(50% - 0.5 * var(--<%= classname_prefix %>-ui-cards-gap))

@@ -32,7 +32,7 @@ class Dummy::Blog::ArticlesController < Dummy::Blog::BaseController
                                        .by_site(Folio::Current.site)
                                        .includes(Dummy::Blog.article_includes)
 
-        @recommended_articles = articles.limit(3)
+        @recommended_articles = articles.limit(2)
       end
     end
   end

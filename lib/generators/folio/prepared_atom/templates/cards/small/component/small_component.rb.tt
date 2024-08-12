@@ -3,14 +3,23 @@
 class <%= application_namespace %>::Molecule::Cards::SmallComponent < ApplicationComponent
   include Folio::Molecule::CoverPlacements
 
-  THUMB_SIZE = "424x240#"
-
   def initialize(atoms:, atom_options: {})
     @atoms = atoms
     @atom_options = atom_options
   end
 
-  def image_class_name
-    "<%= classname_prefix %>-molecule-cards-small__card-image"
+  def cards
+    @atoms.map do |atom|
+      {
+        title: atom.title,
+        html: atom.content,
+        button_label: atom.button_label,
+        href: atom.button_url,
+        links: (atom.link_label.present? && atom.link_url.present?) ? [{ label: atom.link_label, href: atom.link_url }] : nil,
+        image: molecule_cover_placement(atom),
+        size: :s,
+        border: false,
+      }
+    end
   end
 end

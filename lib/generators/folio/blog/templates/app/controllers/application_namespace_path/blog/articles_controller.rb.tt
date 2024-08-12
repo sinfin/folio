@@ -32,7 +32,7 @@ class <%= application_namespace %>::Blog::ArticlesController < <%= application_n
                                        .by_site(Folio::Current.site)
                                        .includes(<%= application_namespace %>::Blog.article_includes)
 
-        @recommended_articles = articles.limit(3)
+        @recommended_articles = articles.limit(2)
       end
     end
   end

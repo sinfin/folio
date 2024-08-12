@@ -1,25 +1,22 @@
 # frozen_string_literal: true
 
 class <%= application_namespace %>::Blog::Articles::CardsComponent < ApplicationComponent
-  def initialize(articles:,
-                 size: :md,
-                 hero_size: nil,
-                 column_classes: "col-12",
-                 container_classes: "col-12",
-                 hero_classes: "col-12")
+  def initialize(articles:, size: :m, size_of_first: nil)
+    @articles = articles
     @size = size
-    @hero_size = hero_size
-    @column_classes = column_classes
-    @container_classes = container_classes
-    @hero_classes = hero_classes
+    @size_of_first = size_of_first
+  end
 
-    articles_a = articles.to_a
+  def ui_cards_component
+    <%= application_namespace %>::Ui::CardsComponent.new(class_name: "<%= classname_prefix %>-blog-articles-cards",
+                                  cards:)
+  end
 
-    if @hero_size
-      @hero_article = articles_a.shift
-      @articles = articles_a
-    else
-      @articles = articles_a
+  def cards
+    @articles.each_with_index.map do |article, index|
+      <%= application_namespace %>::Blog::Articles::CardComponent.ui_card_component_hash_from_article(article:,
+                                                                               size: (index.zero? && @size_of_first) ? @size_of_first : @size,
+                                                                               controller:)
     end
   end
 end
