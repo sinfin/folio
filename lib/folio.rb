@@ -71,14 +71,10 @@ module Folio
   def self.current_site(request: nil, controller: nil)
     return Folio.main_site if request.nil?
 
-    Folio::Site.find_by(domain: normalize_request_host(request.host)) || Folio.main_site
-  end
-
-  def self.normalize_request_host(host)
     if Rails.env.development?
-      host.to_s.downcase.gsub("dev-", "").gsub(/\Adev\./, "www.")
+      Folio::Site.friendly.find(request.host.delete_suffix(".localhost")) || raise(Folio::Singleton::MissingError)
     else
-      host.to_s.downcase
+      Folio::Site.find_by(domain: request.host.to_s.downcase) || Folio.main_site
     end
   end
 
