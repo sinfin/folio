@@ -268,12 +268,18 @@
       &.<%= classname_prefix %>-ui-card--size-s
         --<%= classname_prefix %>-ui-card-flex: 0 0 calc(33.3333% - var(--<%= classname_prefix %>-ui-cards-gap))
 
+        .e-ui-cards[data-card-count="2"] &
+          --e-ui-card-flex: 0 0 calc(50% - 0.5 * var(--e-ui-cards-gap))
+
   @container (min-width: #{breakpoint-min(xl, $grid-breakpoints)})
     &--orientation-vertical
       --<%= classname_prefix %>-ui-card-flex: 0 0 calc(50% - 0.5 * var(--<%= classname_prefix %>-ui-cards-gap))
 
       &.<%= classname_prefix %>-ui-card--size-m
         --<%= classname_prefix %>-ui-card-flex: 0 0 calc(33.3333% - var(--<%= classname_prefix %>-ui-cards-gap))
+
+        .e-ui-cards[data-card-count="2"] &
+          --e-ui-card-flex: 0 0 calc(50% - 0.5 * var(--e-ui-cards-gap))
 
     &--orientation-horizontal
       --<%= classname_prefix %>-ui-card-flex: 0 0 calc(50% - 0.5 * var(--<%= classname_prefix %>-ui-cards-gap))

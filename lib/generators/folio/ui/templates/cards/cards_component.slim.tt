@@ -1,4 +1,4 @@
-.<%= classname_prefix %>-ui-cards class=@class_name
+.<%= classname_prefix %>-ui-cards class=@class_name data-card-count=@cards.size
   .<%= classname_prefix %>-ui-cards__container.container-fluid
     .<%= classname_prefix %>-ui-cards__flex
       - @cards.each do |card|
