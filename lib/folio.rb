@@ -74,7 +74,7 @@ module Folio
     if Rails.env.development?
       Folio::Site.friendly.find(request.host.delete_suffix(".localhost")) || raise(Folio::Singleton::MissingError)
     else
-      Folio::Site.find_by(domain: request.host.to_s.downcase) || Folio.main_site
+      Folio::Site.find_by(domain: request.host) || Folio.main_site
     end
   end
 
