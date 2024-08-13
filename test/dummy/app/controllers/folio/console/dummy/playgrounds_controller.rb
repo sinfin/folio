@@ -61,7 +61,7 @@ class Folio::Console::Dummy::PlaygroundsController < Folio::Console::BaseControl
 
   def update_attributes
     @page = Dummy::Page::WithFolioAttributes.last
-    @page.update!(params.require(:page).permit(*attributes_strong_params))
+    @page.update!(params.require(:page).permit(*folio_attributes_strong_params))
     redirect_to main_app.attributes_console_dummy_playground_path
   end
 

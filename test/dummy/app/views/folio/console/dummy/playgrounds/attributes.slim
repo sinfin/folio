@@ -1,7 +1,9 @@
 h1 Attributes
 
 = simple_form_for @page, url: main_app.update_attributes_console_dummy_playground_path do |f|
-  p hello
+  = folio_attributes_fields(f,
+                            Dummy::AttributeType::Page,
+                            character_counter: 160)
 
   == cell('folio/console/ui/button',
           type: :submit,

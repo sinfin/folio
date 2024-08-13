@@ -261,6 +261,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
         {
           folio_attributes_attributes: %i[id
                                           value
+                                          folio_attribute_type_id
                                           _destroy] + I18n.available_locales.map do |locale|
                                             "value_#{locale}".to_sym
                                           end

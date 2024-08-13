@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-class Dummy::AttributeType::PageAttributeType < Folio::AttributeType
-  include Folio::HasConsoleNotes
+class Dummy::AttributeType::Page < Folio::AttributeType
 end
 
 # == Schema Information

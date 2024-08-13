@@ -3,7 +3,8 @@
 class Folio::Attribute < Folio::ApplicationRecord
   belongs_to :folio_attribute_type, class_name: "Folio::AttributeType",
                                     inverse_of: :folio_attributes,
-                                    counter_cache: true
+                                    counter_cache: :folio_attributes_count,
+                                    foreign_key: :folio_attribute_type_id
 
   belongs_to :placement, polymorphic: true
 

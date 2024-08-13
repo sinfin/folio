@@ -2,12 +2,18 @@
 
 class Folio::AttributeType < Folio::ApplicationRecord
   extend Folio::InheritenceBaseNaming
-  include Folio::StiPreload
   include Folio::BelongsToSite
   include Folio::Positionable
 
+  DATA_TYPES = %w[
+    string
+    integer
+    float
+  ]
+
   has_many :folio_attributes, class_name: "Folio::Attribute",
-                              dependent: :destroy
+                              dependent: :destroy,
+                              foreign_key: :folio_attribute_type_id
 
   validates :title,
             presence: true,
@@ -19,21 +25,18 @@ class Folio::AttributeType < Folio::ApplicationRecord
   validates :data_type,
             inclusion: { in: DATA_TYPES }
 
-  def self.sti_paths
-    [
-      Folio::Engine.root.join("app/models/folio/folio_attribute_types"),
-      Rails.root.join("app/models/**/folio_attribute_types"),
-    ]
-  end
-
-  DATA_TYPES = %w[
-    text
-    integer
-    float
-  ]
-
   def data_type_with_default
     data_type || DATA_TYPES.first
+  end
+
+  def self.human_data_types_name(data_type)
+    human_attribute_name("data_types/#{data_type}")
+  end
+
+  def self.data_types_for_select(selectable_data_types = nil)
+    DATA_TYPES.map do |data_type|
+      [human_attribute_name("data_type/#{data_type}"), data_type]
+    end
   end
 end
 

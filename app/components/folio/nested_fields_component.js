@@ -12,7 +12,7 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
 
   add () {
     this.fieldsWrapTarget.insertAdjacentHTML("beforeend", this.htmlFromTemplate())
-    this.dispatch('add')
+    this.dispatch('add', { detail: { field: this.fieldsTargets[this.fieldsTargets.length - 1] } })
   }
 
   htmlFromTemplate () {

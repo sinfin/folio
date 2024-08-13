@@ -72,7 +72,6 @@
 //= require folio/console/ui/notification_modal_component
 //= require folio/console/ui/tabs_component
 
-//= require folio/console/form_modal_component
 //= require folio/console/addresses/fields/fields
 //= require folio/console/atoms/layout_switch/layout_switch
 //= require folio/console/atoms/locale_switch/locale_switch
@@ -86,7 +85,9 @@
 //= require folio/console/file/preview_reloader/preview_reloader
 //= require folio/console/file/processing_notifier/processing_notifier
 //= require folio/console/flash/flash
+//= require folio/console/folio_attributes_fields_component
 //= require folio/console/form/errors/errors
+//= require folio/console/form_modal_component
 //= require folio/console/index/filters/filters
 //= require folio/console/index/images/images
 //= require folio/console/index/position_buttons/position_buttons
