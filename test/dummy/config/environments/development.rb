@@ -52,7 +52,10 @@ Rails.application.configure do
     Rack::MiniProfiler.config.skip_paths << "/rails/mailers/dummy/developer_mailer/debug"
   end
 
-  config.action_mailer.default_url_options = { host: "localhost", port: ENV["PORT"].presence || 3000, protocol: "http" }
+  config.action_mailer.default_url_options = { host: "localhost",
+                                               port: ENV["PORT"].presence || 3000,
+                                               protocol: "http",
+                                               locale: :cs }
 
   if ENV["DEV_QUEUE_ADAPTER"].present?
     config.active_job.queue_adapter = ENV["DEV_QUEUE_ADAPTER"]

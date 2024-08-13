@@ -17,7 +17,7 @@ class Folio::DeviseMailer < Devise::Mailer
   end
 
   def reset_password_instructions(record, token, opts = {})
-    @site = Folio.site_instance_for_mailers
+    @site = record.auth_site
     opts = { site: @site }.merge(opts)
 
     @data ||= {}
@@ -30,7 +30,7 @@ class Folio::DeviseMailer < Devise::Mailer
   end
 
   def invitation_instructions(record, token, opts = {})
-    @site = (record.site_user_links.order(id: :asc).last&.site || Folio.main_site)
+    @site = (record.site_user_links.order(id: :asc).last&.site || record.auth_site)
     opts = { site: @site }.merge(opts)
 
 
@@ -44,7 +44,7 @@ class Folio::DeviseMailer < Devise::Mailer
 
   def confirmation_instructions(record, token, opts = {})
     @token = token
-    @site = (record.site_user_links.order(id: :asc).last&.site || Folio.main_site)
+    @site = (record.site_user_links.order(id: :asc).last&.site || record.auth_site)
     opts = { site: @site }.merge(opts)
 
     @data ||= {}
@@ -82,18 +82,19 @@ class Folio::DeviseMailer < Devise::Mailer
         method.to_s.gsub(/\A([a-z]+)_/, "\\1_#{scoped}_")
       end
 
-      if Folio.enabled_site_for_crossdomain_devise
-        extra = {
-          only_path: false,
-          host: Folio.enabled_site_for_crossdomain_devise.env_aware_domain,
-          protocol: (Rails.env.development? && !ENV["FORCE_SSL"]) ? "http" : "https"
-        }
+      extra = {
+        only_path: false,
+        protocol: (Rails.env.development? && !ENV["FORCE_SSL"]) ? "http" : "https"
+      }
 
-        if args.present?
-          args[0].merge!(extra)
-        else
-          args = [extra]
-        end
+      if Folio.enabled_site_for_crossdomain_devise
+        extra[:host] = Folio.enabled_site_for_crossdomain_devise.env_aware_domain
+      end
+
+      if args.present?
+        args[0].merge!(extra)
+      else
+        args = [extra]
       end
 
       main_app.send(method_name, *args)
