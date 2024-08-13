@@ -41,6 +41,12 @@ module Folio::Positionable
     end
 
     def positionable_last_record
-      self.class.ordered.last
+      scope = self.class.ordered
+
+      if self.class.try(:has_belongs_to_site?) && try(:site)
+        scope = scope.by_site(site)
+      end
+
+      scope.last
     end
 end
