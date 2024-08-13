@@ -27,7 +27,7 @@ div class=bem_class_name data=data
                 class: "f-c-folio-attributes-fields__value-inputs-by-type", \
                 data: { data_type: }, \
               }
-                - if data_type == "integer" || data_type == "float"
+                - if data_type == "integer"
                   = g.input :value,
                             numeral: true,
                             label: false,

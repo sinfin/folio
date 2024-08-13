@@ -8,7 +8,6 @@ class Folio::AttributeType < Folio::ApplicationRecord
   DATA_TYPES = %w[
     string
     integer
-    float
   ]
 
   has_many :folio_attributes, class_name: "Folio::Attribute",

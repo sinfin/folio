@@ -11,8 +11,12 @@ class Folio::Console::FolioAttributesFieldsComponent < Folio::Console::Applicati
     @character_counter = character_counter
   end
 
+  def attribute_types
+    @attribute_types ||= @klass.ordered.to_a
+  end
+
   def collection
-    @collection ||= @klass.ordered.map do |attribute_type|
+    @collection ||= attribute_types.map do |attribute_type|
       [
         attribute_type.to_label,
         attribute_type.id,
@@ -29,6 +33,7 @@ class Folio::Console::FolioAttributesFieldsComponent < Folio::Console::Applicati
   end
 
   def data_type_disabled?(g, data_type)
-    data_type != (g.object.folio_attribute_type.try(:data_type) || Folio::AttributeType::DATA_TYPES.first)
+    type = g.object.folio_attribute_type || attribute_types.first
+    data_type != type.data_type_with_default
   end
 end

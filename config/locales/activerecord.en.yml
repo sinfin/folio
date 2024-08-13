@@ -6,7 +6,6 @@ en:
         data_type: Type
         data_type/string: Text
         data_type/integer: Number
-        data_type/float: Decimal number
       folio/site_user_link:
         roles: Role
         roles/administrator: Administrator

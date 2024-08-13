@@ -6,7 +6,6 @@ cs:
         data_type: Typ
         data_type/string: Text
         data_type/integer: Číslo
-        data_type/float: Desetinné číslo
       folio/site_user_link:
         roles: Uživatelská role
         roles/administrator: Administrátor

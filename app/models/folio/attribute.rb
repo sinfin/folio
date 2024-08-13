@@ -13,6 +13,10 @@ class Folio::Attribute < Folio::ApplicationRecord
 
   scope :ordered, -> { joins(:folio_attribute_type).order("#{Folio::AttributeType.table_name}.position ASC") }
 
+  if Rails.application.config.folio_using_traco
+    translates :value
+  end
+
   def to_label
     value
   end
