@@ -33,14 +33,15 @@ destroy_all Dummy::Blog::Article
 destroy_all Dummy::Blog::Topic
 
 puts "Creating Folio::Site"
-Dummy::Site.create!(title: "Sinfin.digital",
-                    domain: "sinfin.localhost",
+Dummy::Site.create!(title: "Dummy",
+                    domain: "dummy.localhost",
+                    slug: "dummy",
                     locale: "cs",
                     locales: ["cs", "en", "de"],
-                    email: "info@sinfin.cz",
+                    email: "info@dummy.cz",
                     phone: "+420 123 456 789",
                     address: "Ulice 100, 14000 Praha 4",
-                    copyright_info_source: "© Sinfin.digital {YEAR}",
+                    copyright_info_source: "© Dummy {YEAR}",
                     available_user_roles: %w[administrator manager],
                     social_links: {
                       facebook: "https://www.facebook.com/",

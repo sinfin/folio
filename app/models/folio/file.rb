@@ -2,7 +2,6 @@
 
 class Folio::File < Folio::ApplicationRecord
   include Folio::DragonflyFormatValidation
-  include Folio::Filterable
   include Folio::HasHashId
   include Folio::SanitizeFilename
   include Folio::Taggable

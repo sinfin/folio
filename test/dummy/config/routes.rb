@@ -1,6 +1,19 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  if Rails.env.development?
+    get "/(*path)", constraints: { host: "localhost" },
+                    to: redirect { |params, request|
+                      base = "#{request.protocol}://dummy.localhost:#{request.port}"
+
+                      if params[:path]
+                        "#{base}/#{params[:path]}"
+                      else
+                        base
+                      end
+                    }
+  end
+
   root to: "dummy/home#index"
 
   mount Folio::Engine => "/"

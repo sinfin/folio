@@ -2,7 +2,6 @@
 
 class Folio::User < Folio::ApplicationRecord
   include Folio::Devise::DeliverLater
-  include Folio::Filterable
   include Folio::HasAddresses
   include Folio::HasNewsletterSubscriptions
   include Folio::HasSiteRoles
