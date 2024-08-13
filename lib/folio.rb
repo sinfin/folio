@@ -55,7 +55,7 @@ module Folio
     en_US: "US"
   }
 
-  EMAIL_REGEXP = Devise.email_regexp
+  EMAIL_REGEXP = URI::MailTo::EMAIL_REGEXP # Devise.email_regexp
   OG_IMAGE_DIMENSIONS = "1200x630#"
 
   # respect app/assets/javascripts/folio/message_bus.js
@@ -82,7 +82,10 @@ module Folio
     Folio.main_site
   end
 
-  # set to force authentication via a site
+  def self.enabled_site_for_crossdomain_devise
+    Rails.application.config.folio_crossdomain_devise ? site_for_crossdomain_devise : nil
+  end
+
   def self.site_for_crossdomain_devise
     nil
   end

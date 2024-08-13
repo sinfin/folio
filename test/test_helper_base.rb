@@ -112,7 +112,7 @@ class Folio::BaseControllerTest < ActionDispatch::IntegrationTest
 
   def setup
     super
-    @site = create_site() if @site.nil?
+    @site = create_site() if @site&.reload.nil?
     host_site(@site)
 
     @superadmin = create(:folio_user, :superadmin)

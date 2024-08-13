@@ -10,7 +10,7 @@ class Folio::SharedFilesTest < Folio::Console::BaseControllerTest
     @main_site = create_site(attributes: { domain: "sinfin.localhost" })
     @site_lvh = create_site(attributes: { domain: "lvh.me", locale: "en" }, force: true)
     Folio.instance_variable_set(:@main_site, nil) # to clear the cached version from other tests
-    @superadmin = create(:folio_user, :superadmin)
+    @superadmin = create(:folio_user, :superadmin, auth_site: main_site)
 
     @lvh_image = create(:folio_file_image, site: site_lvh)
     @shared_image = create(:folio_file_image, :black, site: main_site)
