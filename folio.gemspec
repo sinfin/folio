@@ -65,7 +65,7 @@ Gem::Specification.new do |s|
   s.add_dependency "phonelib"
   s.add_dependency "premailer-rails"
   s.add_dependency "rails-i18n", "~> 7"
-  s.add_dependency "rails", "~> 7"
+  s.add_dependency "rails", "~> 7.1.0"  # unless act-as-taggable-on is updated to 10.1, we must stay below 7.2
   s.add_dependency "recaptcha", "4.13.1"
   s.add_dependency "responders"
   s.add_dependency "rubyzip"
