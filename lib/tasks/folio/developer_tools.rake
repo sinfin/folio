@@ -28,5 +28,15 @@ namespace :folio do
         end
       end
     end
+
+    desc "clone users to separate site-link-binded records when switching from crossdomain to user-per-site"
+    task idp_clone_users_to_sites: :environment do
+      Folio::User.find_in_batches do |users|
+        users.each do |user|
+          puts("Copying user #{user.id}")
+          user.make_clones_to_all_linked_sites!
+        end
+      end
+    end
   end
 end
