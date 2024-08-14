@@ -74,8 +74,9 @@ window.Folio.Stimulus.register('f-c-form-modal', class extends window.Stimulus.C
           this.keepLoadingClass = true
           if (typeof json.data.redirected === 'string') {
             window.location.href = json.data.redirected
+          } else {
+            window.location.reload()
           }
-          window.location.reload()
         } else {
           throw new Error('Invalid response - JSON missing data/success or data/state_html')
         }
