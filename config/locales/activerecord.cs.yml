@@ -2,6 +2,10 @@
 cs:
   activerecord:
     attributes:
+      folio/attribute_type:
+        data_type: Typ
+        data_type/string: Text
+        data_type/integer: Číslo
       folio/site_user_link:
         roles: Uživatelská role
         roles/administrator: Administrátor
@@ -263,6 +267,14 @@ cs:
         few: Uživatelé pro daný web
         one: Uživatel pro daný web
         other: Uživatelů pro daný web
+      folio/attribute:
+        few: Atributy
+        one: Atribut
+        other: Atributů
+      folio/attribute_type:
+        few: Atributy
+        one: Atribut
+        other: Atributů
 
     state_machines:
       folio/lead:

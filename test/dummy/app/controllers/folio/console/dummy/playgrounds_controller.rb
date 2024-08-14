@@ -6,6 +6,7 @@ class Folio::Console::Dummy::PlaygroundsController < Folio::Console::BaseControl
   def show
     @actions = %w[
       api
+      attributes
       console_notes
       input_phone
       modals
@@ -44,6 +45,10 @@ class Folio::Console::Dummy::PlaygroundsController < Folio::Console::BaseControl
     end
   end
 
+  def attributes
+    @page = Dummy::Page::WithFolioAttributes.last || Dummy::Page::WithFolioAttributes.create!(site: current_site, title: "Page with console notes")
+  end
+
   def console_notes
     @page = Dummy::Page::WithConsoleNotes.last || Dummy::Page::WithConsoleNotes.create!(site: current_site, title: "Page with console notes")
   end
@@ -52,6 +57,12 @@ class Folio::Console::Dummy::PlaygroundsController < Folio::Console::BaseControl
     @page = Dummy::Page::WithConsoleNotes.last
     @page.update!(params.require(:page).permit(*console_notes_strong_params))
     redirect_to main_app.console_notes_console_dummy_playground_path
+  end
+
+  def update_attributes
+    @page = Dummy::Page::WithFolioAttributes.last
+    @page.update!(params.require(:page).permit(*folio_attributes_strong_params))
+    redirect_to main_app.attributes_console_dummy_playground_path
   end
 
   def private_attachments

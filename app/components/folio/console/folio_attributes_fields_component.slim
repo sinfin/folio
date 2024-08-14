@@ -1,0 +1,46 @@
+div class=bem_class_name data=data
+  h2.mt-0 = @klass.model_name.human(count: 2)
+
+  = folio_nested_fields(@f, :folio_attributes, add:) do |g|
+    .f-c-folio-attributes-fields__attribute.mb-g[
+      data=stimulus_target("attribute")
+    ]
+      .row
+        .col-md-4
+          = g.association :folio_attribute_type,
+                          collection:,
+                          include_blank: false,
+                          label: false,
+                          wrapper_html: { class: 'm-0' },
+                          input_html: { \
+                            class: "f-c-folio-attributes-fields__type-select", \
+                            data: stimulus_action(change: "onTypeChange"), \
+                          }
+
+        .col-md-8
+          .f-c-folio-attributes-fields__value-inputs
+            - Folio::AttributeType::DATA_TYPES.each do |data_type|
+              - disabled = data_type_disabled?(g, data_type)
+
+              *{ \
+                tag: disabled ? :template : :div, \
+                class: "f-c-folio-attributes-fields__value-inputs-by-type", \
+                data: { data_type: }, \
+              }
+                - if data_type == "integer"
+                  - if ::Rails.application.config.folio_using_traco
+                    - current_site.locales.each_with_index do |locale, i|
+                      - if i.zero?
+                        = integer_input(g, key: "value_#{locale}")
+                      - else
+                        = hidden_integer_input(g, key: "value_#{locale}")
+                  - else
+                    = integer_input(g)
+
+                - else
+                  = translated_inputs g,
+                                      :value,
+                                      label: false,
+                                      wrapper_html: { class: 'm-0' },
+                                      character_counter: @character_counter,
+                                      input_html: { class: "f-c-folio-attributes-fields__value-input" }

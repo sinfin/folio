@@ -8,6 +8,7 @@ class Folio::TracoGenerator < Rails::Generators::Base
       "config/initializers/folio_using_traco.rb",
       "db/migrate/20190207101928_add_page_translations.rb",
       "db/migrate/20200310101928_add_content_template_translations.rb",
+      "db/migrate/20240813042944_add_folio_attributes_translations.rb",
     ].each { |f| template "#{f}.erb", f }
   end
 end

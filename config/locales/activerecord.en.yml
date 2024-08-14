@@ -2,6 +2,10 @@
 en:
   activerecord:
     attributes:
+      folio/attribute_type:
+        data_type: Type
+        data_type/string: Text
+        data_type/integer: Number
       folio/site_user_link:
         roles: Role
         roles/administrator: Administrator
@@ -190,6 +194,13 @@ en:
       folio/site_user_link:
         one: User for site
         other: Users for site
+      folio/attribute:
+        few: Attribute
+        other: Attributes
+      folio/attribute_type:
+        few: Attribute
+        other: Attributes
+
     state_machines:
       folio/lead:
         state:

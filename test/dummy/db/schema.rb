@@ -167,6 +167,32 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_08_152708) do
     t.index ["placement_type", "placement_id"], name: "index_folio_atoms_on_placement_type_and_placement_id"
   end
 
+  create_table "folio_attribute_types", force: :cascade do |t|
+    t.bigint "site_id"
+    t.string "title"
+    t.string "type"
+    t.integer "position"
+    t.string "data_type", default: "string"
+    t.integer "folio_attributes_count"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["folio_attributes_count"], name: "index_folio_attribute_types_on_folio_attributes_count"
+    t.index ["position"], name: "index_folio_attribute_types_on_position"
+    t.index ["site_id"], name: "index_folio_attribute_types_on_site_id"
+    t.index ["type"], name: "index_folio_attribute_types_on_type"
+  end
+
+  create_table "folio_attributes", force: :cascade do |t|
+    t.bigint "folio_attribute_type_id"
+    t.string "placement_type"
+    t.bigint "placement_id"
+    t.string "value"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["folio_attribute_type_id"], name: "index_folio_attributes_on_folio_attribute_type_id"
+    t.index ["placement_type", "placement_id"], name: "index_folio_attributes_on_placement"
+  end
+
   create_table "folio_console_notes", force: :cascade do |t|
     t.text "content"
     t.string "target_type"

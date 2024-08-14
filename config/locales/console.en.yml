@@ -337,6 +337,9 @@ en:
         fields_component:
           title: Roles
 
+      folio_attributes_fields_component:
+        add: Add attribute
+
   date:
     formats:
       console_short: "%d. %m. %Y"

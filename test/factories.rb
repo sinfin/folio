@@ -202,6 +202,12 @@ FactoryBot.define do
     published { true }
     site { get_current_or_existing_site_or_create_from_factory }
   end
+
+  factory :dummy_folio_attribute_type, class: "Dummy::AttributeType::Page" do
+    sequence(:title) { |i| "Title #{i + 1}" }
+    data_type { "string" }
+    site { get_current_or_existing_site_or_create_from_factory }
+  end
 end
 
 if Rails.application.config.folio_site_default_test_factory

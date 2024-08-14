@@ -6,4 +6,8 @@ module Folio::FormsHelper
       block.call(c.g)
     end
   end
+
+  def folio_attributes_fields(f, klass, character_counter: nil)
+    render(Folio::Console::FolioAttributesFieldsComponent.new(f:, klass:, character_counter:))
+  end
 end

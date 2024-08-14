@@ -37,6 +37,12 @@ Folio::Engine.routes.draw do
         get :input_date_time
       end
 
+      resources :attribute_types, except: %i[show] do
+        collection do
+          post :set_positions
+        end
+      end
+
       resources :pages, except: %i[show] do
         collection do
           post :set_positions
