@@ -72,7 +72,11 @@ window.Folio.Stimulus.register('f-c-form-modal', class extends window.Stimulus.C
           window.Folio.Api.flashMessageFromMeta(json)
         } else if (json && json.data && json.data.redirected) {
           this.keepLoadingClass = true
-          window.location.reload()
+          if (typeof json.data.redirected === 'string') {
+            window.location.href = json.data.redirected
+          } else {
+            window.location.reload()
+          }
         } else {
           throw new Error('Invalid response - JSON missing data/success or data/state_html')
         }

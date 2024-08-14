@@ -81,7 +81,24 @@ function responseToJson (response) {
 
 function responseToHtml (response) {
   if (response.status === 204) return Promise.resolve('')
-  if (response.redirected) return Promise.resolve('{ "data": { "redirected": true }}')
+
+  if (response.redirected) {
+    if (response.url) {
+      const urlObj = new URL(response.url)
+      const queryParams = urlObj.searchParams
+      const anchor = queryParams.get("_anchor")
+
+      if (anchor) {
+        queryParams.delete("_anchor")
+        urlObj.search = queryParams.toString()
+        return Promise.resolve(`{ "data": { "redirected": "${urlObj}#${anchor}" }}`)
+      }
+
+      return Promise.resolve(`{ "data": { "redirected": "${response.url}" }}`)
+    }
+    
+    return Promise.resolve('{ "data": { "redirected": true }}')
+  }
   return response.text()
 }
 
