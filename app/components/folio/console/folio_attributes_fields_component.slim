@@ -28,12 +28,15 @@ div class=bem_class_name data=data
                 data: { data_type: }, \
               }
                 - if data_type == "integer"
-                  = g.input :value,
-                            numeral: true,
-                            label: false,
-                            wrapper_html: { class: 'm-0' },
-                            as: :numeric,
-                            input_html: { class: "f-c-folio-attributes-fields__value-input" }
+                  - if ::Rails.application.config.folio_using_traco
+                    - current_site.locales.each_with_index do |locale, i|
+                      - if i.zero?
+                        = integer_input(g, key: "value_#{locale}")
+                      - else
+                        = hidden_integer_input(g, key: "value_#{locale}")
+                  - else
+                    = integer_input(g)
+
                 - else
                   = translated_inputs g,
                                       :value,

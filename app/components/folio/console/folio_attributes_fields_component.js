@@ -76,4 +76,15 @@ window.Folio.Stimulus.register('f-c-folio-attributes-fields', class extends wind
   convertTo (node, targetTag) {
     node.outerHTML = node.outerHTML.replace(/^<(div|template)/, `<${targetTag}`).replace(/(div|template>)$/, `${targetTag}>`)
   }
+
+  onIntegerInputChange (e) {
+    const input = e.target
+    const value = input.folioInputNumeralCleave ? input.folioInputNumeralCleave.getRawValue() : input.value
+    const wrap = input.closest('.f-c-folio-attributes-fields__value-inputs-by-type')
+    const hiddenInputs = wrap.querySelectorAll('.f-c-folio-attributes-fields__value-hidden-input')
+
+    for (const hiddenInput of hiddenInputs) {
+      hiddenInput.value = value
+    }
+  }
 })

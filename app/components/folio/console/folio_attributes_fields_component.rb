@@ -36,4 +36,17 @@ class Folio::Console::FolioAttributesFieldsComponent < Folio::Console::Applicati
     type = g.object.folio_attribute_type || attribute_types.first
     data_type != type.data_type_with_default
   end
+
+  def integer_input(g, key: :value)
+    g.input key,
+            numeral: true,
+            label: false,
+            wrapper_html: { class: "m-0" },
+            as: :numeric,
+            input_html: { class: "f-c-folio-attributes-fields__value-input", data: stimulus_action("onIntegerInputChange") }
+  end
+
+  def hidden_integer_input(g, key: :value)
+    g.hidden_field key, class: "f-c-folio-attributes-fields__value-hidden-input"
+  end
 end
