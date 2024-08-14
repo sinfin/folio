@@ -148,8 +148,8 @@ window.Folio.Api.apiGet = (url, body = null, signal) => {
   return window.Folio.Api.api('GET', url, body, signal)
 }
 
-window.Folio.Api.apiDelete = (url) => {
-  return window.Folio.Api.api('DELETE', url, null)
+window.Folio.Api.apiDelete = (url, body = null, signal) => {
+  return window.Folio.Api.api('DELETE', url, body, signal)
 }
 
 window.Folio.Api.htmlApi = (method, url, body, signal) => {
