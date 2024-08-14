@@ -1,9 +1,16 @@
 .f-nested-fields
   &__fields
     position: relative
+    padding-right: 2 * $grid-gutter-width
 
   &__destroy
     position: absolute
-    top: $grid-gutter-half
+    top: 0
     right: $grid-gutter-half
     cursor: pointer
+    color: $danger
+    display: flex
+    align-items: center
+    justify-content: flex-end
+    width: $input-height
+    height: $input-height

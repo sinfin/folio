@@ -13,7 +13,9 @@
             data=stimulus_action(click: 'onDestroyClick')
           ]
             - if @destroy == true
-              = folio_icon(:close, class: "f-nested-fields__destroy-ico")
+              = folio_icon(:close,
+                           height: 16,
+                           class: "f-nested-fields__destroy-ico")
             - else
               == @destroy
 
@@ -46,7 +48,9 @@
                 data=stimulus_action(click: 'onDestroyClick')
               ]
                 - if @destroy == true
-                  = folio_icon(:close, class: "f-nested-fields__destroy-ico")
+                  = folio_icon(:close,
+                               height: 16,
+                               class: "f-nested-fields__destroy-ico")
                 - else
                   == @destroy
 

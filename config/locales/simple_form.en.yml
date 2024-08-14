@@ -29,6 +29,8 @@ en:
         tag_list: 'e.g.: services, offer'
         title: 'e.g.: Our team'
         q: Search...
+      attribute_type:
+        title: 'e.g.: Weight'
     required:
       mark: "*"
       text: required

@@ -1,0 +1,11 @@
+# frozen_string_literal: true
+
+class AddFolioAttributesTranslations < ActiveRecord::Migration[5.2]
+  def change
+    rename_column :folio_attributes, :value, :value_<%= I18n.default_locale %>
+
+    <%- (I18n.available_locales - [I18n.default_locale]).each do |locale| -%>
+    add_column :folio_attributes, :value_<%= locale %>, :string
+    <%- end -%>
+  end
+end

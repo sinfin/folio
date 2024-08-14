@@ -1,0 +1,13 @@
+= form_header f
+
+= tabs %i[content]
+
+.tab-content
+  = tab :content
+    = f.input :title
+    = f.hidden_field :type
+
+    = f.input :data_type, collection: f.object.class.data_types_for_select,
+                          include_blank: false
+
+= form_footer f

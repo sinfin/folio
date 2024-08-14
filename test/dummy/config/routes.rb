@@ -40,6 +40,7 @@ Rails.application.routes.draw do
         resource :playground, only: %i[show] do
           get :api
           get :console_notes
+          get :attributes
           get :input_phone
           get :modals
           get :multiselect
@@ -48,6 +49,7 @@ Rails.application.routes.draw do
           get :private_attachments
           get :report
 
+          patch :update_attributes
           patch :update_console_notes
           patch :update_private_attachments
         end

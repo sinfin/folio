@@ -6,7 +6,8 @@
     = f.input "#{key}_#{translations.first}", *args
   - else
     .f-c-translated-inputs
-      = f.label key
+      - if model[:args].blank? || model[:args][0].blank? || model[:args][0][:label] != false
+        = f.label key
 
       .row.f-c-translated-inputs__row class=compact_row_class
         - translations.each do |locale|
