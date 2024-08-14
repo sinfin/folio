@@ -38,6 +38,8 @@ cs:
         tag_list: 'Např.: služby, nabídka'
         title: 'Např.: Nabídka našich služeb'
         q: Hledat...
+      attribute_type:
+        title: 'Např.: Hmotnost'
     required:
       mark: "*"
       text: povinný údaj
