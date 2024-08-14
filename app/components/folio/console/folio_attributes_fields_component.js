@@ -1,55 +1,22 @@
 window.Folio.Stimulus.register('f-c-folio-attributes-fields', class extends window.Stimulus.Controller {
   static targets = ['attribute']
 
-  reorderAttributes = Folio.debounce((callback) => {
-    // reorder attribute targets by data position in DOM
-    const attributesParent = this.element.querySelector('.f-nested-fields__fields-wrap')
-
-    let didSort = false
-
-    const sorted = this.attributeTargets.sort((a, b) => {
-      const ao = this.getSelectedOption(a.querySelector('.f-c-folio-attributes-fields__type-select'))
-      const bo = this.getSelectedOption(b.querySelector('.f-c-folio-attributes-fields__type-select'))
-
-      const aa = parseInt(ao.dataset.position)
-      const bb = parseInt(bo.dataset.position)
-
-      if (aa > bb) {
-        didSort = true
-      }
-
-      return aa - bb
-    })
-
-    if (didSort) {
-      sorted.forEach((attributeTarget) => {
-        const attributeWrap = attributeTarget.closest('.f-nested-fields__fields')
-        attributesParent.appendChild(attributeWrap)
-      })
-    }
-
-    if (callback) callback()
-  })
-
   attributeTargetConnected (attributeTarget) {
     const select = attributeTarget.querySelector('.f-c-folio-attributes-fields__type-select')
     this.onTypeChange(select)
   }
 
   onNestedFieldsAdd (e) {
-    this.reorderAttributes(() => {
-      if (e && e.detail && e.detail.field) {
-        window.setTimeout(() => {
-          e.detail.field.querySelector('.f-c-folio-attributes-fields__type-select').focus()
-        }, 0)
-      }
-    })
+    if (e && e.detail && e.detail.field) {
+      window.setTimeout(() => {
+        e.detail.field.querySelector('.f-c-folio-attributes-fields__type-select').focus()
+      }, 0)
+    }
   }
 
   onTypeChange (e) {
     if (!e || !e.target) return
     this.handleSelectChange(e.target)
-    this.reorderAttributes()
   }
 
   getSelectedOption (select) {
