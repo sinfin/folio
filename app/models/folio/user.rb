@@ -330,6 +330,11 @@ class Folio::User < Folio::ApplicationRecord
       return
     end
 
+    if site_user_links.size == 1 # no need to do clones
+      self.update!(auth_site_id: site_user_links.first.site_id)
+      return
+    end
+
     site_user_links.each do |site_link|
       next if site_link.site_id == self.auth_site_id
       next if self.class.unscoped.where(auth_site_id: site_link.site_id, email:).exists?

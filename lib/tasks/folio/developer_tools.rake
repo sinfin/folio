@@ -29,12 +29,14 @@ namespace :folio do
       end
     end
 
-    desc "clone users to separate site-link-binded records when switching from crossdomain to user-per-site"
-    task idp_clone_users_to_sites: :environment do
-      Folio::User.find_in_batches do |users|
-        users.each do |user|
-          puts("Copying user #{user.id}")
+    desc "split users to separate site-link-binded records when switching from crossdomain to user-per-site"
+    task idp_split_users_to_sites: :environment do
+      batches = Folio::User.pluck(:id).to_a.in_groups_of(1000)
+      batches.each do |batch|
+        Folio::User.find(batch).each do |user|
+          puts("Spliting user #{user.id}")
           user.make_clones_to_all_linked_sites!
+          # user.destroy if !user.superadmin? && user.auth_site_id == Folio.main_site.id
         end
       end
     end
