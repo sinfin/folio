@@ -11,6 +11,10 @@ class Folio::Console::FolioAttributesFieldsComponent < Folio::Console::Applicati
     @character_counter = character_counter
   end
 
+  def render?
+    collection.present?
+  end
+
   def attribute_types
     @attribute_types ||= @klass.ordered.to_a
   end
