@@ -49,4 +49,11 @@ class Folio::Console::FolioAttributesFieldsComponent < Folio::Console::Applicati
   def hidden_integer_input(g, key: :value)
     g.hidden_field key, class: "f-c-folio-attributes-fields__value-hidden-input"
   end
+
+  def add
+    cell("folio/console/ui/button",
+         label: t(".add"),
+         variant: "success-none",
+         icon: :plus)
+  end
 end

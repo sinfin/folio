@@ -340,6 +340,9 @@ cs:
         fields_component:
           title: Role
 
+      folio_attributes_fields_component:
+        add: Přidat atribut
+
   date:
     formats:
       console_short: "%d. %m. %Y"
