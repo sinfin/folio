@@ -7,7 +7,7 @@ class Folio::Console::Users::InviteAndCopyCell < Folio::ConsoleCell
       only_path: false,
     }
 
-    if ::Rails.application.config.folio_crossdomain_devise && Folio.enabled_site_for_crossdomain_devise
+    if Folio.enabled_site_for_crossdomain_devise
       args[:host] = Folio.enabled_site_for_crossdomain_devise.env_aware_domain
     end
 
