@@ -62,21 +62,32 @@ class Folio::Console::BaseController < Folio::ApplicationController
 
     respond_to :json, only: %i[update]
 
-    # keep this above load_and_authorize_resource
-    if klass.try(:has_belongs_to_site?)
-      before_action :load_belongs_to_site_resource
-    end
-
     if through
       through_as = through.demodulize.underscore
+      through_klass = through.constantize
 
-      load_and_authorize_resource(through_as, class: through)
+      if through_klass.try(:has_belongs_to_site?)
+        before_action :load_belongs_to_site_through_resource
+        load_and_authorize_resource(through_as, class: through)
+      else
+        load_and_authorize_resource(through_as, class: through)
+      end
+
+      # keep this above load_and_authorize_resource
+      if klass.try(:has_belongs_to_site?)
+        before_action :load_belongs_to_site_resource
+      end
 
       load_and_authorize_resource(as, class: class_name,
                                       except:,
                                       parent: (false if as.present?),
                                       through: through_as)
     else
+      # keep this above load_and_authorize_resource
+      if klass.try(:has_belongs_to_site?)
+        before_action :load_belongs_to_site_resource
+      end
+
       load_and_authorize_resource(as, class: class_name,
                                       except:,
                                       parent: (false if as.present?))
@@ -474,6 +485,23 @@ class Folio::Console::BaseController < Folio::ApplicationController
         instance_variable_set(name, @klass.by_site(allowed_record_sites).friendly.find(params[:id]))
       else
         instance_variable_set(name, @klass.by_site(allowed_record_sites).find(params[:id]))
+      end
+    end
+
+    def load_belongs_to_site_through_resource
+      through_record_name = folio_console_controller_for_through.constantize.model_name.element
+      param = params["#{through_record_name}_id".to_sym]
+
+      return unless param.present?
+
+      name = "@#{through_record_name}"
+
+      through_klass = folio_console_controller_for_through.constantize
+
+      if through_klass.respond_to?(:friendly)
+        instance_variable_set(name, through_klass.by_site(allowed_record_sites).friendly.find(param))
+      else
+        instance_variable_set(name, through_klass.by_site(allowed_record_sites).find(param))
       end
     end
 
