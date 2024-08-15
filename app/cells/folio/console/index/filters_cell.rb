@@ -186,12 +186,12 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
 
     if controller.params[key].present?
       klass = data[:klass].constantize
+      klass = klass.by_site(current_site) if klass.try(:has_belongs_to_site?) && current_site.present?
 
       if data[:id_method] && klass.column_names.include?(data[:id_method].to_s)
         record = klass.find_by(data[:id_method] => controller.params[key])
         collection << [record.to_console_label, record.send(data[:id_method]), selected: true] if record
       elsif data[:slug]
-        klass = klass.by_site(current_site) if klass.try(:has_belongs_to_site?) && current_site.present?
         record = klass.find_by_slug(controller.params[key])
         collection << [record.to_console_label, record.slug, selected: true] if record
       else
