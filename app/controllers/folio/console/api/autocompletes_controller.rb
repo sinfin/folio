@@ -150,6 +150,10 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
         scope = scope.unscope(:order).send(p_order)
       end
 
+      if klass.respond_to?(:folio_console_select2_includes)
+        scope = scope.includes(*klass.folio_console_select2_includes)
+      end
+
       pagination, records = pagy(scope, items: 25)
 
       render_select2_options(records,
