@@ -186,6 +186,7 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
 
     if controller.params[key].present?
       klass = data[:klass].constantize
+      klass = klass.by_site(current_site) if klass.try(:has_belongs_to_site?) && current_site.present?
 
       if data[:id_method] && klass.column_names.include?(data[:id_method].to_s)
         record = klass.find_by(data[:id_method] => controller.params[key])
