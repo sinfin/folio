@@ -1,6 +1,6 @@
-= index_header types: Folio::AttributeType.descendants
+= index_header types: current_site.attribute_types_classes
 
-= catalogue(@attribute_types)
+= catalogue(@attribute_types, types: current_site.attribute_types_classes)
   ruby:
     edit_link :to_label
 

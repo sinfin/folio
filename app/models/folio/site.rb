@@ -202,6 +202,10 @@ class Folio::Site < Folio::ApplicationRecord
     }
   end
 
+  def attribute_types_classes
+    Folio::AttributeType.descendants
+  end
+
   def self.sti_paths
     [
       Folio::Engine.root.join("app/models/folio/site"),
