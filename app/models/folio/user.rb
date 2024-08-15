@@ -381,6 +381,15 @@ class Folio::User < Folio::ApplicationRecord
       user
     end
 
+    # used by Devise to lookup for user when reseting pasword etc.
+    def self.find_or_initialize_with_errors(required_attributes, attributes, error = :invalid)
+      if required_attributes == [:email]
+        required_attributes << :auth_site_id
+      end
+
+      super(required_attributes, attributes, error)
+    end
+
     def validate_names?
       invitation_accepted_at?
     end
