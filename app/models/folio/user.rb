@@ -24,7 +24,6 @@ class Folio::User < Folio::ApplicationRecord
     recoverable
     rememberable
     trackable
-    validatable
     invitable
   ]
 
@@ -68,11 +67,19 @@ class Folio::User < Folio::ApplicationRecord
 
   validates :email,
             uniqueness: { scope: :auth_site, case_sensitive: false },
+            presence: true,
             format: { with: Folio::EMAIL_REGEXP }
+
+  validates_presence_of     :password, if: :password_required?
+  validates_confirmation_of :password, if: :password_required?
+  validates_length_of       :password, within: Devise.password_length, allow_blank: true
 
   validates :phone,
             phone: true,
             if: :validate_phone?
+
+
+
 
   after_invitation_accepted :create_newsletter_subscriptions
 

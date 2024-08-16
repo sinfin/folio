@@ -122,4 +122,21 @@ class Folio::UserTest < ActiveSupport::TestCase
     assert Folio::User.by_email_query("@bar").exists?(id: user.id)
     assert_not Folio::User.by_email_query("xaxa").exists?(id: user.id)
   end
+
+  test " unless crossdomian enabled, You can create users with same email on different sites" do
+    site1 = create(:folio_site, type: "Folio::Site")
+    site2 = create(:folio_site, type: "Folio::Site")
+    email = "some@email.com"
+
+    Rails.application.config.stub(:folio_crossdomain_devise, false) do
+      user1 = build(:folio_user, email:, auth_site: site1)
+      assert user1.save
+      user2 = build(:folio_user, email:, auth_site: site2)
+      assert user2.save
+
+      user1b = build(:folio_user, email:, auth_site: site1)
+      assert_not user1b.save
+      assert user1b.errors[:email].present?
+    end
+  end
 end
