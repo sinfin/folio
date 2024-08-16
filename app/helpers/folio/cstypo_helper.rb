@@ -13,4 +13,8 @@ module Folio::CstypoHelper
       string
     end
   end
+
+  def replace_newlines_with_br(input)
+    cstypo(input).gsub(/(\r\n|\n)/, "<br>").html_safe
+  end
 end
