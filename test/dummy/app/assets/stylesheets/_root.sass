@@ -106,12 +106,14 @@
 [data-bs-theme="light"]
   +light-mode
 
-$enable-folio-dark-mode: false !default
+$enable-folio-dark-mode: true !default
+$enable-folio-dark-mode-based-on-prefers-color-scheme: true !default
 
 @if $enable-folio-dark-mode
   [data-bs-theme="dark"]
     +dark-mode
 
+@if $enable-folio-dark-mode-based-on-prefers-color-scheme
   @media (prefers-color-scheme: dark)
     #{":root"}
       +dark-mode
