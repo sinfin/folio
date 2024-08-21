@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::RobotsController < ActionController::Base
+class Folio::RobotsController < Folio::ApplicationController
   include Folio::HasCurrentSite
 
   def index
