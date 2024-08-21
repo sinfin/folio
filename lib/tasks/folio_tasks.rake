@@ -5,6 +5,7 @@ namespace :folio do
     if Rails.env.development?
       if user = Folio::User.find_by(email: "test@test.test")
         user.update!(confirmed_at: Time.current) unless user.confirmed_at?
+        user.update!(superadmin: true) unless user.superadmin?
 
         puts "Account test@test.test already exists."
       else
@@ -13,7 +14,8 @@ namespace :folio do
                             superadmin: true,
                             first_name: "Test",
                             last_name: "Dummy",
-                            confirmed_at: Time.current)
+                            confirmed_at: Time.current,
+                            auth_site: Folio.main_site)
 
         puts "Created test@test.test account."
       end
