@@ -78,9 +78,6 @@ class Folio::User < Folio::ApplicationRecord
             phone: true,
             if: :validate_phone?
 
-
-
-
   after_invitation_accepted :create_newsletter_subscriptions
 
   before_update :update_has_generated_password
@@ -406,7 +403,8 @@ class Folio::User < Folio::ApplicationRecord
     end
 
     def validate_phone?
-      Rails.application.config.folio_users_require_phone
+      return true if Rails.application.config.folio_users_require_phone
+      phone.present?
     end
 
     def validate_one_of_names
