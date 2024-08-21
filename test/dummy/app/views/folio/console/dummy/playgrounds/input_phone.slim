@@ -5,6 +5,8 @@ h1 Input - phone
     code
       = params.permit(:phone).to_h.to_json
 
+  = f.input :country_code
+
   = f.input :phone, as: :phone, input_html: { value: params[:phone].presence }
 
   == cell('folio/console/ui/button',
