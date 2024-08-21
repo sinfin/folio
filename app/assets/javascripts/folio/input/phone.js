@@ -59,8 +59,10 @@ window.Folio.Input.Phone.onFormChange = (e) => {
   const form = e.currentTarget
 
   for (const input of form.querySelectorAll('.iti__tel-input')) {
-    if (input.folioInputPhoneIntlTelInput) {
-      input.folioInputPhoneIntlTelInput.setCountry(countryCode)
+    if (!input.value && input.folioInputPhoneIntlTelInput) {
+      try {
+        input.folioInputPhoneIntlTelInput.setCountry(countryCode)
+      } catch {}
     }
   }
 }
