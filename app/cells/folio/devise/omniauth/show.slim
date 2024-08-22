@@ -6,7 +6,7 @@
     p.f-devise-omniauth__p.f-devise-omniauth__p--title = t(".#{model}")
 
   .f-devise-omniauth__buttons
-    - ::Rails.application.config.folio_users_omniauth_providers.each do |key|
+    - omniauth_providers_with_keys_present.each do |key|
       button.f-devise-omniauth__button[
         class=omniauth_button_class_name
         type="button"
