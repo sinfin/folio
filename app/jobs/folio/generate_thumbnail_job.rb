@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::GenerateThumbnailJob < Folio::ApplicationJob
-  queue_as :default
+  queue_as :slow
 
   discard_on(ActiveJob::DeserializationError) do |job, e|
     Raven.capture_exception(e) if defined?(Raven)
