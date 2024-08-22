@@ -22,8 +22,7 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
     new_thumb = make_thumb(image, size, quality, x:, y:)
 
     # need to reload here because of parallel jobs
-    image.with_lock do
-      image.reload
+    image.reload.with_lock do
       thumbnail_sizes = image.thumbnail_sizes || {}
       image.update!(thumbnail_sizes: thumbnail_sizes.merge(size => new_thumb))
     end
