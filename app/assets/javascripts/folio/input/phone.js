@@ -20,7 +20,7 @@ window.Folio.Input.Phone.onAddressCountryCodeChange = (wrap, countryCode) => {
   }
 }
 
-window.Folio.Input.Phone.onChangeForInput = (input) => {
+window.Folio.Input.Phone.addDialCodeIfNeeded = (input) => {
   const dialCode = `+${input.folioInputPhoneIntlTelInput.s.dialCode}`
 
   let value = input.value.replace(/ /g, '')
@@ -33,7 +33,7 @@ window.Folio.Input.Phone.onChangeForInput = (input) => {
 }
 
 window.Folio.Input.Phone.onChange = (e) => {
-  window.Folio.Input.Phone.onChangeForInput(e.target)
+  window.Folio.Input.Phone.addDialCodeIfNeeded(e.target)
 }
 
 window.Folio.Input.Phone.copyBootstrapValidationClassNames = (input) => {
@@ -97,6 +97,7 @@ window.Folio.Input.Phone.innerBind = (input, options = {}) => {
   }
 
   input.folioInputPhoneIntlTelInput = window.intlTelInput(input, fullOpts)
+  window.Folio.Input.Phone.addDialCodeIfNeeded(input)
 
   const form = input.closest('form')
 
