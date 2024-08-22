@@ -118,6 +118,10 @@ class Folio::Site < Folio::ApplicationRecord
     layout_assets_path
   end
 
+  def layout_favicon_path
+    "/"
+  end
+
   def i18n_key_base
     @i18n_key_base ||= self.class.to_s.deconstantize.underscore
   end
