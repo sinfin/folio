@@ -94,6 +94,7 @@ class Folio::User < Folio::ApplicationRecord
     s_site = ::Folio.enabled_site_for_crossdomain_devise || site
     where(auth_site: s_site)
   end
+  scope :by_auth_site, -> (site) { where(auth_site: site) }
 
   scope :by_address_identification_number_query, -> (q) {
     subselect = Folio::Address::Base.where("identification_number LIKE ?", "%#{q}%").select(:id)
@@ -185,6 +186,10 @@ class Folio::User < Folio::ApplicationRecord
     else
       to_label
     end
+  end
+
+  def auth_site_title
+    auth_site&.title
   end
 
   def <=>(other)

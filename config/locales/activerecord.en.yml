@@ -100,6 +100,8 @@ en:
         keyword/USER_EMAIL: User e-mail
       folio/user:
         address_identification_number: Indentification number
+        auth_site: Auth site
+        auth_site_title: Auth site
         bank_account_number: Bank account number
         born_at: Birth date
         confirmed_at: Confirmed at

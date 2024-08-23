@@ -106,7 +106,7 @@ class Folio::Console::UsersController < Folio::Console::BaseController
           as: :text,
           autocomplete_attribute: :email,
         },
-      }.merge(role_filters)
+      }.merge(role_filters).merge(auth_site_filters)
     end
 
     def index_filters
@@ -123,6 +123,13 @@ class Folio::Console::UsersController < Folio::Console::BaseController
       roles.unshift(["Superadmin", "superadmin"]) if can_now?(:manage, :all)
 
       roles.size > 1 ? { by_role: roles } : {}
+    end
+
+    def auth_site_filters
+      return {} unless current_user.superadmin?
+
+      sites_for_select = Folio::Site.pluck(:title, :id)
+      sites_for_select.size > 1 ? { by_auth_site: sites_for_select } : {}
     end
 
     def folio_console_collection_includes
