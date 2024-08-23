@@ -12,6 +12,14 @@ module Folio::MailerBase
     @site ||= Folio.site_instance_for_mailers
   end
 
+  def default_url_options
+    {
+      only_path: false,
+      host: site.env_aware_domain,
+      locale: ::Rails.application.config.folio_console_add_locale_to_preview_links ? (site.locale || I18n.locale) : nil
+    }.compact
+  end
+
   def system_email
     if site.system_email.present?
       site.system_email_array
