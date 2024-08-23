@@ -26,9 +26,11 @@ module Folio::DeeplForTraco
           candidate_methods = send(friendly_id_config.base).reject { |c| c == :slug }
 
           I18n.with_locale(l) do
-            candidates = FriendlyId::Candidates.new(self, candidate_methods)
-            slug = slug_generator.generate(candidates) || resolve_friendly_id_conflict(candidates)
-            send "#{friendly_id_config.slug_column}=", slug
+            if send(friendly_id_config.slug_column).blank?
+              candidates = FriendlyId::Candidates.new(self, candidate_methods)
+              slug = slug_generator.generate(candidates) || resolve_friendly_id_conflict(candidates)
+              send "#{friendly_id_config.slug_column}=", slug
+            end
           end
         end
       end
