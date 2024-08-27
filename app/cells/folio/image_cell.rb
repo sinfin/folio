@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Folio::ImageCell < Folio::ApplicationCell
-  # this cell is obsolete - generate a ui image component and use one per-project
-
   include Folio::CellLightbox
 
   class_name "f-image", :centered,
@@ -189,18 +187,16 @@ class Folio::ImageCell < Folio::ApplicationCell
   def spacer_style
     s = ""
 
-    if spacer_background_option_with_default
-      if spacer_background_option_with_default.is_a?(String)
-        s += "background-color: #{spacer_background_option_with_default};"
-      elsif spacer_background_option_with_default == false
-        s += "background-color: transparent;"
-      elsif spacer_background_option_with_default == true
-        img = model
-        img = model.file if model.is_a?(Folio::FilePlacement::Base)
+    if spacer_background_option_with_default.is_a?(String)
+      s += "background-color: #{spacer_background_option_with_default};"
+    elsif spacer_background_option_with_default == false
+      s += "background-color: transparent;"
+    elsif spacer_background_option_with_default == true
+      img = model
+      img = model.file if model.is_a?(Folio::FilePlacement::Base)
 
-        if img && img.try(:additional_data)
-          s += "background-color: #{img.additional_data['dominant_color']};"
-        end
+      if img && img.try(:additional_data)
+        s += "background-color: #{img.additional_data['dominant_color']};"
       end
     end
 
