@@ -40,6 +40,10 @@ class Folio::Current < ActiveSupport::CurrentAttributes
     @site_is_master = master_site.id == site.try(:id)
   end
 
+  def auth_site
+    @auth_site ||= Folio.enabled_site_for_crossdomain_devise || site
+  end
+
   if Rails.env.test?
     alias :original_reset :reset
 
