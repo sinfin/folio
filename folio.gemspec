@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
 
   s.add_dependency "aasm"
+  s.add_dependency "activemodel", "~> 7.1.0" # freeze ActiveModel from updating to 7.2 https://github.com/rails/rails/issues/52607#issuecomment-2303015514
   s.add_dependency "acts-as-taggable-on"
   s.add_dependency "after_commit_everywhere"
   s.add_dependency "ancestry"

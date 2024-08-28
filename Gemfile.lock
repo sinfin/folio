@@ -20,6 +20,7 @@ PATH
   specs:
     folio (5.0.0)
       aasm
+      activemodel (~> 7.1.0)
       acts-as-taggable-on
       after_commit_everywhere
       ancestry
