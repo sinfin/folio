@@ -92,7 +92,7 @@ module Folio::ApiControllerBase
         {
           id: model.send(id_method),
           text: model.send(label_method),
-          label: model.send(label_method),
+          label: model.respond_to?(:ancestry) && model.ancestry ? "- #{model.send(label_method)}" : model.send(label_method),
           value: model.send(id_method)
         }
       end

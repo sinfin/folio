@@ -190,7 +190,7 @@ module Folio::Console::ReactHelper
 
       {
         id: record.id,
-        label: through_record.to_console_label,
+        label: through_record.respond_to?(:ancestry) && through_record.ancestry ? "- #{through_record.to_console_label}" : through_record.to_console_label,
         value: through_record.id,
         _destroy: false,
       }
