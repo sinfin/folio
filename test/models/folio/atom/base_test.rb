@@ -3,6 +3,13 @@
 require "test_helper"
 
 class Folio::Atom::BaseTest < ActiveSupport::TestCase
+  class SpecificSite < Folio::Site
+  end
+
+  class SpecificSiteAtom < Folio::Atom::Base
+    VALID_SITE_TYPES = [SpecificSite.name]
+  end
+
   class PageReferenceAtom < Folio::Atom::Base
     ASSOCIATIONS = {
       page: %i[Folio::Page]
@@ -40,6 +47,21 @@ class Folio::Atom::BaseTest < ActiveSupport::TestCase
     special_atom_page.save
 
     atom = PlacementTestAtom.new(placement: special_atom_page)
+    assert atom.valid?
+  end
+
+  test "valid placement site types" do
+    site = create_site
+    placement = create(:folio_page, site:)
+
+    atom = SpecificSiteAtom.new(placement:)
+    assert_not atom.valid?
+    assert atom.errors[:placement]
+
+    specific_site = create(:folio_site, type: SpecificSite.name)
+    placement = create(:folio_page, site: specific_site)
+
+    atom = SpecificSiteAtom.new(placement:)
     assert atom.valid?
   end
 end

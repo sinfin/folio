@@ -2,6 +2,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2022-08-29
+### Added
+- added `VALID_SITE_TYPES` to atoms allowing to filter by `current_site` class
+
 ## 2022-07-24
 ### Changed
 - changed `adaptive-title-font-size` to `font-size-adaptive`, added a `fs-adaptive` class name and `adaptive_font_size_class_name` method to `Folio::ApplicationComponent`

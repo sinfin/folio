@@ -28,6 +28,8 @@ class Folio::Atom::Base < Folio::ApplicationRecord
 
   VALID_PLACEMENT_TYPES = nil
 
+  VALID_SITE_TYPES = nil
+
   MOLECULE = false
 
   FORM_LAYOUT = {
@@ -198,6 +200,16 @@ class Folio::Atom::Base < Folio::ApplicationRecord
     true
   end
 
+  def self.valid_for_site_class?(site_klass)
+    if self::VALID_SITE_TYPES.present?
+      if self::VALID_SITE_TYPES.none? { |type| site_klass <= type.constantize }
+        return false
+      end
+    end
+
+    true
+  end
+
   def self.scoped_model_resource(resource)
     resource.all
   end
@@ -297,6 +309,12 @@ class Folio::Atom::Base < Folio::ApplicationRecord
     def validate_placement
       unless valid_for_placement?(placement)
         errors.add(:placement, :invalid)
+      end
+
+      if self.class::VALID_SITE_TYPES.present? && placement.present? && placement.class.try(:has_belongs_to_site?)
+        if placement.site && !self.class.valid_for_site_class?(placement.site.class)
+          errors.add(:placement, :invalid)
+        end
       end
     end
 end
