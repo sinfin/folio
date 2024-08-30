@@ -96,13 +96,15 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
     end
   end
 
-  def association(name, separator: ", ", small: false, link: false)
+  def association(name, separator: ", ", small: false, link: false, minimal: false)
     assoc = record.send(name)
 
     handle_record = Proc.new do |record, link|
       label = record.to_label
 
-      if link
+      if minimal
+        content_tag(:span, label, class: "f-c-catalogue__cell-value-minimal", title: label)
+      elsif link
         link_to(label, url_for([*link, record]))
       else
         label
@@ -112,7 +114,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
     if assoc.is_a?(Enumerable)
       val = assoc.map do |record|
         handle_record.call(record, link)
-      end.join(separator)
+      end.join(minimal ? " " : separator)
     elsif assoc.respond_to?(:to_label)
       val = handle_record.call(assoc, link)
     else
