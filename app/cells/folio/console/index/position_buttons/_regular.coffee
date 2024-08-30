@@ -22,7 +22,7 @@ switchRows = (tr) ->
     else
       tr.btn.insertAfter tr.target
 
-  tr.btn.closest('.f-c-catalogue__table').trigger('folioConsoleUpdatedRowsOrder')
+  tr.btn.closest('.f-c-catalogue__table')[0].dispatchEvent(new window.CustomEvent('folioConsoleUpdatedRowsOrder', { bubbles: true }))
 
 getTr = ($btn) ->
   $btnTr = $btn.closest('.f-c-catalogue__row')
@@ -68,9 +68,9 @@ post = (tr, url) ->
   ajax
     .done (res) ->
       switchRows(tr)
-      tr.btn.trigger('folioConsolePersistedRowsOrder', response: res)
+      tr.btn[0].dispatchEvent(new window.CustomEvent('folioConsolePersistedRowsOrder', { bubbles: true, detail: { response: res }}))
     .fail (jxHr) ->
-      tr.btn.trigger('folioConsoleFailedToPersistRowsOrder', response: jxHr.responseJSON)
+      tr.btn[0].dispatchEvent(new window.CustomEvent('folioConsoleFailedToPersistRowsOrder', { bubbles: true, detail: { response: jxHr.responseJSON }}))
     .always ->
       tr.btn.removeClass('folio-console-loading')
       tr.target.removeClass('folio-console-loading')

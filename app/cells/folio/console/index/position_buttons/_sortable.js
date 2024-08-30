@@ -8,25 +8,25 @@ window.FolioConsole.Index.PositionButtons.Sortable = window.FolioConsole.Index.P
 
 window.FolioConsole.Index.PositionButtons.Sortable.makeSortableUpdate = ($sortable) => {
   return () => {
-    $sortable.trigger('folioConsoleUpdatedRowsOrder')
+    $sortable[0].dispatchEvent(new window.CustomEvent('folioConsoleUpdatedRowsOrder', { bubbles: true }))
 
-    let positions = []
+    const positions = []
     const $positions = $sortable.find('.f-c-index-position-buttons')
 
     $positions.addClass('folio-console-loading')
     $positions.each((i, el) => { positions.push(parseInt($(el).find('.f-c-index-position-buttons__input').val())) })
 
     if ($sortable.find('.f-c-index-position-buttons--descending').length) {
-      positions.sort(function(a, b) {
+      positions.sort(function (a, b) {
         return b - a
       })
     } else {
-      positions.sort(function(a, b) {
+      positions.sort(function (a, b) {
         return a - b
       })
     }
 
-    let data = {}
+    const data = {}
 
     $positions.each((i, el) => {
       const position = positions[i]
@@ -52,19 +52,15 @@ window.FolioConsole.Index.PositionButtons.Sortable.makeSortableUpdate = ($sortab
     return ajax.fail(() => {
       return $positions.removeClass('folio-console-loading').addClass('f-c-index-position-buttons--failed')
     }).fail((jxHr) => {
-      return $positions.trigger('folioConsoleFailedToPersistRowsOrder', {
-        response: jxHr.responseJSON
-      })
+      return $positions[0].dispatchEvent(new window.CustomEvent('folioConsoleFailedToPersistRowsOrder', { bubbles: true, detail: { response: jxHr.responseJSON } }))
     }).done((res) => {
       $positions.removeClass('folio-console-loading')
-      return $positions.trigger('folioConsolePersistedRowsOrder', {
-        response: res
-      })
+      return $positions[0].dispatchEvent(new window.CustomEvent('folioConsolePersistedRowsOrder', { bubbles: true, detail: { response: res } }))
     })
   }
 }
 
-window.FolioConsole.Index.PositionButtons.Sortable.bind = function() {
+window.FolioConsole.Index.PositionButtons.Sortable.bind = function () {
   const $sortable = $('.f-c-catalogue__table')
 
   if ($sortable.closest('.f-c-catalogue--ancestry').length) return
@@ -76,7 +72,7 @@ window.FolioConsole.Index.PositionButtons.Sortable.bind = function() {
     items: '.f-c-catalogue__row:not(:first-child)',
     placeholder: 'f-c-catalogue__sortable-placeholder',
     update: window.FolioConsole.Index.PositionButtons.Sortable.makeSortableUpdate($sortable),
-    start: function(e, ui) {
+    start: function (e, ui) {
       const $another = $sortable.find('.f-c-catalogue__row:not(.ui-sortable-helper)')
       const $cells = $another.find('.f-c-catalogue__cell')
 
@@ -92,10 +88,10 @@ window.FolioConsole.Index.PositionButtons.Sortable.bind = function() {
   return $sortable
 }
 
-window.FolioConsole.Index.PositionButtons.Sortable.unbind = function() {
+window.FolioConsole.Index.PositionButtons.Sortable.unbind = function () {
   const $sortable = $('.f-c-catalogue__table')
-  if ($sortable.length && $sortable.sortable("instance")) {
-    $sortable.sortable("destroy")
+  if ($sortable.length && $sortable.sortable('instance')) {
+    $sortable.sortable('destroy')
   }
 }
 
