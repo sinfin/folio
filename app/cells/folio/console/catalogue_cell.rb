@@ -259,7 +259,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
                href
       end
 
-      render_view_component(Folio::Console::Catalogue::CoverComponent.new(file: file || record.cover,
+      render_view_component(Folio::Console::Catalogue::CoverComponent.new(file: file || record.cover_placement.try(:file),
                                                                           href:,
                                                                           lightbox: href ? false : lightbox))
     end
