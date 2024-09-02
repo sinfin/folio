@@ -39,7 +39,7 @@ module Folio::PagesControllerBase
         @page = pages_scope.published_or_preview_token(params[Folio::Publishable::PREVIEW_PARAM_NAME])
                            .friendly.find(params[:id])
 
-        add_breadcrumb @page.title, url_for(@page)
+        add_breadcrumb @page.title, url_for([@page, only_path: false])
       end
 
       unless @page.class.public?
