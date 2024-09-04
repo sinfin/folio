@@ -120,8 +120,6 @@ window.Folio.Stimulus.register('f-c-ui-notification-modal', class extends window
           label: typeof data.confirm === "string" ? data.confirm : window.Folio.i18n(window.FolioConsole.Ui.NotificationModal.i18n, 'confirm'),
           data: { action: 'f-c-ui-notification-modal#confirm' }
         })
-
-        this.closeOnSubmit = data.closeOnSubmit
       }
 
       footer.innerHTML = ''
