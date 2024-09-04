@@ -6,10 +6,12 @@ window.FolioConsole.Ui.NotificationModal.i18n = {
   cs: {
     close: 'Zavřít upozornění',
     submit: 'Uložit změny',
+    confirm: 'Pokračovat'
   },
   en: {
     close: 'Close notification',
     submit: 'Save changes',
+    confirm: 'Confirm'
   }
 }
 
@@ -59,6 +61,11 @@ window.Folio.Stimulus.register('f-c-ui-notification-modal', class extends window
     }
   }
 
+  confirm (e) {
+    this.dispatch('confirm')
+    window.Folio.Modal.close(this.element)
+  }
+
   open ({ data, trigger, onCancel }) {
     const html = this.originalInnerHTML
 
@@ -105,6 +112,16 @@ window.Folio.Stimulus.register('f-c-ui-notification-modal', class extends window
         if (data.closeOnSubmit) {
           this.closeOnSubmit = data.closeOnSubmit
         }
+      }
+
+      if (data.confirm) {
+        buttonsData.push({
+          variant: 'primary',
+          label: typeof data.confirm === "string" ? data.confirm : window.Folio.i18n(window.FolioConsole.Ui.NotificationModal.i18n, 'confirm'),
+          data: { action: 'f-c-ui-notification-modal#confirm' }
+        })
+
+        this.closeOnSubmit = data.closeOnSubmit
       }
 
       footer.innerHTML = ''
