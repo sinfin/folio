@@ -31,6 +31,8 @@
 
         = f.input :born_at
 
+        = f.input :time_zone, as: :select, collection: ActiveSupport::TimeZone.all.map { |tz| [tz.name, tz.name] }
+
       .col-xxl-4
         = f.input :admin_note,
                   autosize: true,

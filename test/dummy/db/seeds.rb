@@ -59,7 +59,9 @@ Folio::User.create!(first_name: "Test",
                     email: "test@test.test",
                     password: "test@test.test",
                     confirmed_at: Time.current,
-                    superadmin: true)
+                    superadmin: true,
+                    auth_site_id: Folio::Site.first.id
+                   )
 puts "Created Folio::User test@test.test (superadmin)"
 
 puts "Creating Dummy::Menu::Nestable"

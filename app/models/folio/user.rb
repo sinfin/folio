@@ -64,6 +64,7 @@ class Folio::User < Folio::ApplicationRecord
                                   dependent: :nullify
 
   validate :validate_one_of_names
+  validates :time_zone, inclusion: { in: ActiveSupport::TimeZone.all.map(&:name) }
 
   validates :email,
             uniqueness: { scope: :auth_site, case_sensitive: false },
