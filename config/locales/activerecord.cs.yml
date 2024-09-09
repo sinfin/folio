@@ -126,6 +126,7 @@ cs:
         full_name: Jméno
         nickname: Přezdívka
         subscribed_to_newsletter: Přihlášení do newsletteru
+        time_zone: Časové pásmo
         locked: :activerecord.attributes.folio/site_user_link.locked
         locked/true: :activerecord.attributes.folio/site_user_link.locked/true
         locked/false: :activerecord.attributes.folio/site_user_link.locked/false

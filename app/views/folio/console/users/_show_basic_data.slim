@@ -2,6 +2,7 @@
   = show_for @user do |s|
     = s.attribute :email
       == mail_to(s.object.email, s.object.email)
+    = s.attribute :time_zone
 
     - if ::Rails.application.config.folio_users_use_phone
       = s.attribute :phone
