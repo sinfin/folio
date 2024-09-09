@@ -53,7 +53,9 @@ module Dummy::CacheKeys
 
   def cache_key_base
     @cache_key_base ||= begin
-      full_cache_key = "#{CACHE_KEY_BASE_KEY}_#{request.host}"
+      user_state = try(:user_signed_in?) ? "logged_in" : "logged_out"
+      full_cache_key = "#{CACHE_KEY_BASE_KEY}_#{user_state}_#{I18n.locale}_#{request.host}"
+
       cached_hash = Rails.cache.read(full_cache_key)
 
       if !cached_hash || !cached_hash[:set_at] || cached_hash[:set_at] < CACHE_KEY_BASE_TIMER.ago
