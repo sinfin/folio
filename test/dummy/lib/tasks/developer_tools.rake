@@ -113,7 +113,7 @@ namespace :developer_tools do
           klass.find_each { |o| o.try(:force_destroy=, true); o.destroy! }
 
           menu = klass.create!(title: data["title"],
-                               locale: "en",
+                               locale: Folio.main_site.locale,
                                site: Folio.main_site)
 
           if data["links"].present?
