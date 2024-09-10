@@ -53,7 +53,12 @@ module Dummy::CacheKeys
 
   def cache_key_base
     @cache_key_base ||= begin
-      user_state = try(:user_signed_in?) ? "logged_in" : "logged_out"
+      user_state = if Rails.env.test?
+        "test"
+      else
+        try(:user_signed_in?) ? "logged_in" : "logged_out"
+      end
+
       full_cache_key = "#{CACHE_KEY_BASE_KEY}_#{user_state}_#{I18n.locale}_#{request.host}"
 
       cached_hash = Rails.cache.read(full_cache_key)
