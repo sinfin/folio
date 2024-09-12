@@ -32,6 +32,7 @@ PATH
       dotenv-rails
       dragonfly-s3_data_store
       dropzonejs-rails
+      emailbutler
       fast_jsonapi
       friendly_id
       gibbon
@@ -275,6 +276,13 @@ GEM
       fog-aws
     dropzonejs-rails (0.8.5)
       rails (> 3.1)
+    dry-container (0.11.0)
+      concurrent-ruby (~> 1.0)
+    emailbutler (0.8.3)
+      dry-container (~> 0.11.0)
+      pagy (> 4.0)
+      rails (> 6.0.0)
+      sassc-rails
     erubi (1.12.0)
     et-orbi (1.2.7)
       tzinfo

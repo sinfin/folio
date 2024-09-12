@@ -4,6 +4,7 @@ class Folio::ApplicationMailer < ActionMailer::Base
   include Folio::Engine.routes.url_helpers
   include Folio::MailerBase
   include Folio::MailerEmailTemplates
+  include Emailbutler::Mailers::Helpers
 
   helper Folio::PriceHelper
 

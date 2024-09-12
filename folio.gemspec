@@ -42,6 +42,7 @@ Gem::Specification.new do |s|
   s.add_dependency "dragonfly-s3_data_store"
   # s.add_dependency "dragonfly"
   s.add_dependency "dropzonejs-rails"
+  s.add_dependency "emailbutler"
   s.add_dependency "fast_jsonapi"
   s.add_dependency "friendly_id"
   s.add_dependency "gibbon" # for mailchimp requests
@@ -87,6 +88,7 @@ Gem::Specification.new do |s|
   s.add_dependency "redis"
   s.add_dependency "terser"
   s.add_dependency "view_component"
+
 
   s.add_development_dependency "better_errors"
   s.add_development_dependency "binding_of_caller" # used by BetterErrors
