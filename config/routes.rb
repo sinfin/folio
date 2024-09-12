@@ -233,4 +233,8 @@ Folio::Engine.routes.draw do
   authenticate :account, lambda { |account| account.can_manage_sidekiq? } do
     mount Sidekiq::Web => "/sidekiq"
   end
+
+  if Emailbutler.configuration.providers.any?
+    post "/emailbutler/webhooks/:provider", to: "emailbutler/webhooks#create"
+  end
 end

@@ -37,6 +37,7 @@ require "traco"
 require "aws-sdk-s3"
 require "message_bus"
 require "terser"
+require "emailbutler"
 
 require "dragonfly"
 require "dragonfly/s3_data_store"
