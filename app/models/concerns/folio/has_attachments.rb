@@ -117,6 +117,10 @@ module Folio::HasAttachments
 
       private :update_cover_placement
     end
+
+    def og_image_with_fallback
+      og_image.presence || cover
+    end
   end
 
   private
