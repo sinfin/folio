@@ -71,6 +71,7 @@ window.Folio.Input.CollectionRemoteSelect.bind = (input, { includeBlank, url }) 
       return $result
     }
   }).on('change.select2', (e) => {
+    e.target.dispatchEvent(new window.Event('folioCustomChange', { bubbles: true }))
     e.target.dispatchEvent(new window.CustomEvent('folio_select2_change', { bubbles: true }))
   })
 }
