@@ -105,6 +105,9 @@ crop:
 delete:
   width: 24
   height: 24
+dots_horizontal:
+  width: 16
+  height: 16
 dots_vertical:
   width: 24
   height: 24
