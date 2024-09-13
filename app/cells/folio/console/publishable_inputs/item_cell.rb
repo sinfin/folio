@@ -37,7 +37,7 @@ class Folio::Console::PublishableInputs::ItemCell < Folio::ConsoleCell
     b[:placeholder] = placeholder
 
     if checkbox
-      b["data-action"] = "f-c-publishable-inputs-item#onCheckboxChange"
+      b["data-action"] = "change->f-c-publishable-inputs-item#onCheckboxChange folioCustomChange->f-c-publishable-inputs-item#onCheckboxChange"
     end
 
     b
