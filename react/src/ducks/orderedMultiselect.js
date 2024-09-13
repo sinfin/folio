@@ -37,7 +37,7 @@ export const orderedMultiselectSelector = (state) => state.orderedMultiselect
 function * triggerAtomSettingUpdate (action) {
   const orderedMultiselect = yield select(orderedMultiselectSelector)
   if (orderedMultiselect.atomSetting) {
-    const $wrap = window.jQuery('.folio-react-wrap--ordered-multiselect')
+    const $wrap = window.jQuery('.folio-react-wrap--ordered-multiselect').eq(0)
     $wrap.find('.f-c-js-atoms-placement-setting').trigger('folioCustomChange')
     const form = $wrap.closest('.f-c-simple-form-with-atoms__form, .f-c-dirty-simple-form')[0]
     if (form) form.dispatchEvent(new window.Event('change', { bubbles: true }))
