@@ -5,6 +5,7 @@ class Folio::DeviseMailer < Devise::Mailer
   include DeviseInvitable::Controllers::Helpers
   include Folio::MailerBase
   include Folio::MailerEmailTemplates
+  include Emailbutler::Mailers::Helpers
 
   layout "folio/mailer"
 

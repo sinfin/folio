@@ -235,6 +235,6 @@ Folio::Engine.routes.draw do
   end
 
   if Emailbutler.configuration.providers.any?
-    post "/emailbutler/webhooks/:provider", to: "emailbutler/webhooks#create"
+    post "/emailbutler/webhooks/:provider", to: "/emailbutler/webhooks#create"
   end
 end
