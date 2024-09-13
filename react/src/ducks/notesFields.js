@@ -140,11 +140,9 @@ function * triggerDirtyFormOrSubmit (action) {
       window.FolioConsole.Flash.alert(e.message)
     }
   } else {
-    const $wrap = window.jQuery('.folio-react-wrap--notes-fields')
+    const $wrap = window.jQuery('.folio-react-wrap--notes-fields').eq(0)
     $wrap.trigger('folioCustomChange')
-
-    const form = $wrap.closest('.f-c-simple-form-with-atoms__form, .f-c-dirty-simple-form')[0]
-    if (form) form.dispatchEvent(new window.Event('change', { bubbles: true }))
+    if ($wrap[0]) $wrap[0].dispatchEvent(new window.Event('change', { bubbles: true }))
 
     yield $wrap
   }
