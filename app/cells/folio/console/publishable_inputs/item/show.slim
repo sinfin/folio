@@ -2,6 +2,7 @@ div class=class_name data=data
   .f-c-publishable-inputs-item__inner
     = f.input field,
               hint: false,
+              as: :boolean,
               input_html: input_html('checkbox', checkbox: true),
               wrapper_html: { class: 'f-c-publishable-inputs-item__group' },
               atom_setting: model[:atom_setting] == false ? nil : field
