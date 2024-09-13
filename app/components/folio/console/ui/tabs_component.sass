@@ -14,6 +14,13 @@
     margin: -5px 0
     padding: 3px 6px
 
+    &::after
+      content: attr(data-count)
+      display: inline
+
+    &[data-count="0"]
+      display: none
+
     @each $name, $color in $f-c-state-colors
       &--#{$name}
         background: $color

@@ -22,7 +22,7 @@ class Folio::Console::PublishableInputsCell < Folio::ConsoleCell
   end
 
   def fields
-    @fields ||= begin
+    @fields ||= options[:fields] || begin
       ary = %i[published featured]
 
       ary += options[:additional_fields] if options[:additional_fields]

@@ -6,15 +6,18 @@
       class="f-c-anti-container-fluid--padded"
     ]
       - @tabs.each do |tab|
-        li.f-c-ui-tabs__nav-item class="nav-item"
+        li.f-c-ui-tabs__nav-item[
+          class="nav-item"
+          data-key=tab[:key]
+        ]
           *link_tag(tab)
             = tab[:label]
 
             - if tab[:count]
               span.f-c-ui-tabs__count[
                 class=count_class_name(tab[:color])
+                data-count=tab[:count]
               ]
-                = tab[:count]
 
   - if content?
     .tab-content
