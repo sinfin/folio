@@ -8,6 +8,7 @@ module Folio::Publishable
 
     included do
       before_validation :generate_preview_token
+      before_validation :set_published_date_automatically_if_needed
 
       scope :published, -> { folio_published }
 
@@ -39,6 +40,14 @@ module Folio::Publishable
       def use_preview_tokens?
         true
       end
+
+      def require_published_date_for_publishing?
+        false
+      end
+
+      def set_published_date_automatically?
+        require_published_date_for_publishing?
+      end
     end
 
     def published?
@@ -58,6 +67,9 @@ module Folio::Publishable
         return if preview_token.present?
         self.preview_token = SecureRandom.urlsafe_base64(8)
                                          .gsub(/-|_/, ("a".."z").to_a[rand(26)])
+      end
+
+      def set_published_date_automatically_if_needed
       end
   end
 
@@ -85,23 +97,37 @@ module Folio::Publishable
 
     included do
       scope :folio_published, -> {
-        where("#{table_name}.published = ? AND "\
-              "(#{table_name}.published_at IS NULL OR #{table_name}.published_at <= ?)",
-              true,
-              Time.zone.now)
+        if require_published_date_for_publishing?
+          where("#{table_name}.published = ? AND "\
+                "(#{table_name}.published_at IS NOT NULL) AND (#{table_name}.published_at <= ?)",
+                true,
+                Time.current)
+        else
+          where("#{table_name}.published = ? AND "\
+                "(#{table_name}.published_at IS NULL OR #{table_name}.published_at <= ?)",
+                true,
+                Time.current)
+        end
       }
 
       scope :folio_unpublished, -> {
-        where("(#{table_name}.published != ? OR #{table_name}.published IS NULL) OR "\
-              "(#{table_name}.published_at IS NOT NULL AND #{table_name}.published_at > ?)",
-              true,
-              Time.zone.now)
+        if require_published_date_for_publishing?
+          where("(#{table_name}.published != ? OR #{table_name}.published IS NULL) OR "\
+                "(#{table_name}.published_at IS NULL OR #{table_name}.published_at > ?)",
+                true,
+                Time.current)
+        else
+          where("(#{table_name}.published != ? OR #{table_name}.published IS NULL) OR "\
+                "(#{table_name}.published_at IS NOT NULL AND #{table_name}.published_at > ?)",
+                true,
+                Time.current)
+        end
       }
     end
 
     class_methods do
       def cache_published_hash
-        now = Time.zone.now
+        now = Time.current
         sql = sanitize_sql(["SELECT md5(
                               array_to_string(
                                 array(
@@ -123,14 +149,26 @@ module Folio::Publishable
     def folio_published?
       if published.present?
         if published_at.present?
-          published_at <= Time.zone.now
+          published_at <= Time.current
         else
-          true
+          if self.class.require_published_date_for_publishing?
+            false
+          else
+            true
+          end
         end
       else
         false
       end
     end
+
+    private
+      def set_published_date_automatically_if_needed
+        return unless self.class.set_published_date_automatically?
+        return if published != true
+        return if published_at.present?
+        self.published_at = Time.current
+      end
   end
 
   module Within
@@ -139,27 +177,45 @@ module Folio::Publishable
 
     included do
       scope :folio_published, -> {
-        where("#{table_name}.published = ? AND "\
-              "(#{table_name}.published_from IS NULL OR #{table_name}.published_from <= ?) AND "\
-              "(#{table_name}.published_until IS NULL OR #{table_name}.published_until >= ?)",
-              true,
-              Time.zone.now,
-              Time.zone.now)
+        if require_published_date_for_publishing?
+          where("#{table_name}.published = ? AND "\
+                "(#{table_name}.published_from IS NOT NULL) AND (#{table_name}.published_from <= ?) AND "\
+                "(#{table_name}.published_until IS NULL OR #{table_name}.published_until >= ?)",
+                true,
+                Time.current,
+                Time.current)
+        else
+          where("#{table_name}.published = ? AND "\
+                "(#{table_name}.published_from IS NULL OR #{table_name}.published_from <= ?) AND "\
+                "(#{table_name}.published_until IS NULL OR #{table_name}.published_until >= ?)",
+                true,
+                Time.current,
+                Time.current)
+        end
       }
 
       scope :folio_unpublished, -> {
-        where("(#{table_name}.published != ? OR #{table_name}.published IS NULL) OR "\
-              "(#{table_name}.published_from IS NOT NULL AND #{table_name}.published_from >= ?) OR "\
-              "(#{table_name}.published_until IS NOT NULL AND #{table_name}.published_until <= ?)",
-              true,
-              Time.zone.now,
-              Time.zone.now)
+        if require_published_date_for_publishing?
+          where("(#{table_name}.published != ? OR #{table_name}.published IS NULL) OR "\
+                "(#{table_name}.published_from IS NULL OR #{table_name}.published_from >= ?) OR "\
+                "(#{table_name}.published_until IS NOT NULL AND #{table_name}.published_until <= ?)",
+                true,
+                Time.current,
+                Time.current)
+        else
+          where("(#{table_name}.published != ? OR #{table_name}.published IS NULL) OR "\
+                "(#{table_name}.published_from IS NOT NULL AND #{table_name}.published_from >= ?) OR "\
+                "(#{table_name}.published_until IS NOT NULL AND #{table_name}.published_until <= ?)",
+                true,
+                Time.current,
+                Time.current)
+        end
       }
     end
 
     class_methods do
       def cache_published_hash
-        now = Time.zone.now
+        now = Time.current
         sql = sanitize_sql(["SELECT md5(
                               array_to_string(
                                 array(
@@ -184,11 +240,15 @@ module Folio::Publishable
 
     def folio_published?
       if published.present?
-        if published_from.present? && published_from >= Time.zone.now
+        if self.class.require_published_date_for_publishing? && published_from.blank?
           return false
         end
 
-        if published_until.present? && published_until <= Time.zone.now
+        if published_from.present? && published_from >= Time.current
+          return false
+        end
+
+        if published_until.present? && published_until <= Time.current
           return false
         end
 
@@ -197,5 +257,13 @@ module Folio::Publishable
         false
       end
     end
+
+    private
+      def set_published_date_automatically_if_needed
+        return unless self.class.set_published_date_automatically?
+        return if published != true
+        return if published_from.present?
+        self.published_from = Time.current
+      end
   end
 end
