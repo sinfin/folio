@@ -12,7 +12,7 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
     if options[:query_url].is_a?(String)
       options[:query_url]
     elsif options[:query_url].is_a?(Symbol)
-      controller.send(options[:query_url])
+      send(options[:query_url])
     elsif options[:folio_console_merge]
       through_aware_console_url_for(model, action: :merge)
     else
@@ -56,7 +56,7 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
     end
 
     if options[:query_url]
-      controller.send(options[:query_url], h)
+      send(options[:query_url], h)
     elsif options[:folio_console_merge]
       through_aware_console_url_for(model, action: :merge, hash: h)
     else

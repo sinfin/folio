@@ -11,4 +11,11 @@ Emailbutler::Message.class_eval do
                   using: {
                     tsearch: { prefix: true }
                   }
+
+  def self.model_name
+    @_model_name ||= super.tap do |name|
+      name.param_key = "email_message"
+      name.route_key = "email_messages"
+    end
+  end
 end
