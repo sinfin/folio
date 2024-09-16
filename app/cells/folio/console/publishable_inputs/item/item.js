@@ -3,7 +3,7 @@ window.Folio.Stimulus.register('f-c-publishable-inputs-item', class extends wind
     if (e.currentTarget.checked) {
       this.element.classList.add('f-c-publishable-inputs-item--active')
 
-      const input = this.element.querySelector(window.Folio.Input.DateTime.SELECTOR)
+      const input = this.element.querySelector('.f-input--date-time')
 
       if (input && !input.value && input.folioInputTempusDominus) {
         const oneMinuteAgo = new Date() - 60 * 1000
