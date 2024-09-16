@@ -85,6 +85,7 @@ Folio::Engine.routes.draw do
       end
 
       resources :email_templates, only: %i[index edit update]
+      resources :email_messages, only: %i[index]
       resource :search, only: %i[show]
       resource :site, only: %i[edit update] do
         post :clear_cache
@@ -236,5 +237,8 @@ Folio::Engine.routes.draw do
 
   if Emailbutler.configuration.providers.any?
     post "/emailbutler/webhooks/:provider", to: "/emailbutler/webhooks#create"
+
+    get "/emailbutler/ui", to: "/emailbutler/ui#index"
+
   end
 end

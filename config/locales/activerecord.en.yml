@@ -91,6 +91,15 @@ en:
       folio/user:
         address_identification_number: Indentification number
         confirmed_at: Confirmed at
+      emailbutler/message:
+        subject: Subject
+        send_to: Recipient
+        timestamp: Last status change
+        status/created: Created
+        status/rejected: Rejected
+        status/processed: Processed
+        status/failed: Failed
+        status/delivered: Delivered
     errors:
       messages:
         indestructible: The record cannot be removed.
@@ -170,6 +179,9 @@ en:
       folio/console_note:
         one: Note (internal)
         other: Notes (internal)
+      emailbutler/message:
+        one: Sent mail
+        other: Sent emails
     state_machines:
       folio/lead:
         state:

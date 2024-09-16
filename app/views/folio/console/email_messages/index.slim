@@ -1,0 +1,22 @@
+= index_header query_url: :console_email_messages_url
+
+= catalogue(@email_messages)
+  ruby:
+    attribute(:send_to) do
+      record.send_to.join(", ")
+    end
+
+    attribute(:subject)
+
+    attribute(:status) do
+      Emailbutler::Message.human_attribute_name("status/#{record.status}")
+    end
+
+    attribute(:timestamp, compact: true) do
+      if record.timestamp
+        l(record.timestamp, format: :short)
+      end
+    end
+
+    # actions(show: controller.console_email_message_url(record))
+

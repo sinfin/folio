@@ -121,6 +121,15 @@ cs:
         state: Stát
         vat_identification_number: DIČ
         zip: PSČ
+      emailbutler/message:
+        subject: Předmět
+        send_to: Příjemce
+        timestamp: Poslední změna stavu
+        status/created: Vytvořeno
+        status/rejected: Zamítnuto
+        status/processed: Zpracováno
+        status/failed: Chyba
+        status/delivered: Doručeno
 
     errors:
       messages:
@@ -247,6 +256,10 @@ cs:
         few: Poznámky (interní údaj)
         one: Poznámka (interní údaj)
         other: Poznámek (interní údaj)
+      emailbutler/message:
+        few: Odeslané e-maily
+        one: Odeslaný e-mail
+        other: Odeslaných e-mailů
     state_machines:
       folio/lead:
         state:

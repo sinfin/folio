@@ -200,6 +200,10 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
                 (link_for_class.call(Folio::Lead) if show_leads?),
                 (link_for_class.call(Folio::NewsletterSubscription) if show_newsletter_subscriptions?),
                 link_for_class.call(Folio::EmailTemplate),
+                {
+                    klass: "Emailbutler::Message",
+                    path: controller.console_email_messages_url(only_path: false, host: site.env_aware_domain),
+                },
                 *site_links[:console_sidebar_before_site_links],
                 controller.can?(:manage, site) ? (
                   {
@@ -230,6 +234,10 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
           links: [
             "Folio::Account",
             "Folio::EmailTemplate",
+            {
+              klass: "Emailbutler::Message",
+              path: :console_email_messages_url,
+            },
             {
               klass: "Folio::Site",
               icon: :cog,

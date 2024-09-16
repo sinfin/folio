@@ -161,6 +161,15 @@ FactoryBot.define do
     country_code { "cc" }
   end
 
+  factory :emailbutler_message, class: "Emailbutler::Message" do
+    subject { "subject" }
+    status { "delivered" }
+    timestamp { Time.current }
+    send_to { "test@test.com" }
+    mailer { "Folio::TestMailer" }
+    action { "test_email" }
+  end
+
   factory :dummy_menu, class: "Dummy::Menu::Navigation", parent: :folio_menu
 
   factory :dummy_blog_article, class: "Dummy::Blog::Article" do
@@ -184,6 +193,7 @@ unless Rails.application.config.folio_site_is_a_singleton
         folio_menu
         folio_newsletter_subscription
         folio_page
+        emailbutler_message
       ].each do |key|
         factory key do
           after(:build) { |model| model.site ||= Folio::Site.first || create(Rails.application.config.folio_site_default_test_factory) }
