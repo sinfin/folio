@@ -319,8 +319,8 @@ cs:
     meta_description: Alternativní popis (SEO - Meta Description)
     meta_title: Alternativní titulek (SEO - Meta Title)
     name: Jméno
-    og_image: OG obrázek
-    og_image_placement: OG obrázek
+    og_image: Obrázek pro sociální sítě
+    og_image_placement: Obrázek pro sociální sítě
     password: Heslo
     password_confirmation: Heslo (kontrola)
     perex: Perex
