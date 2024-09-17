@@ -46,9 +46,9 @@ class Folio::SiteUserLink < Folio::ApplicationRecord
   end
 
   def roles=(values)
-    if Folio::Current.user.present?
+    if Folio::Current.user.present? && !@disabled_roles_ability_check
       values.to_a.each do |role|
-        unless Folio::Current.user.allowed_to_manage_role?(role, self.site)
+        unless Folio::Current.user.can_manage_role?(role, self.site)
           raise "Current user #{Folio::Current.user.email} cannot set_#{role}!"
         end
       end
@@ -61,11 +61,15 @@ class Folio::SiteUserLink < Folio::ApplicationRecord
   def normalize_site_roles
     return if roles == []
 
+    @disabled_roles_ability_check = true # we check the roles on assigning them
+
     self.roles = if self.roles.blank?
       []
     else
       site.available_user_roles_ary.select { |role_to_check| roles.include?(role_to_check.to_s) }
     end
+
+    @disabled_roles_ability_check = false
   end
 
   def to_s

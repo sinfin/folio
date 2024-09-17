@@ -30,7 +30,7 @@ module Folio::HasSiteRoles
       roles = roles & selectable_roles if selectable_roles.present?
 
       roles.filter_map do |role|
-        next if Folio::Current.user.present? && !Folio::Current.user.allowed_to_manage_role?(role, site)
+        next if Folio::Current.user.present? && !Folio::Current.user.can_manage_role?(role, site)
         [human_role_name(role), role]
       end
     end
@@ -40,7 +40,7 @@ module Folio::HasSiteRoles
     end
   end
 
-  def allowed_to_manage_role?(role, site)
+  def can_manage_role?(role, site)
     can_now?("set_#{role}".to_sym, site)
   end
 

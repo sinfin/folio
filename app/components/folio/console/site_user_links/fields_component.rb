@@ -22,7 +22,7 @@ class Folio::Console::SiteUserLinks::FieldsComponent < Folio::Console::Applicati
 
   def roles_for(site_link)
     @user.class.roles_for_select(site: site_link.site).select do |role_title, role|
-      current_user.can_now?("set_#{role}".to_sym, Folio::User, site: site_link.site)
+      current_user.can_manage_role?(role, site_link.site)
     end
   end
 
