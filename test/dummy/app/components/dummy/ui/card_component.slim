@@ -16,54 +16,54 @@
                            cover: true)
 
   - if render_content_box?
-  .d-ui-card__content-box
-    - if render_description?
-      .d-ui-card__description
-        - if @title.present? || @subtitle.present?
-          .d-ui-card__headline
-            - if @title.present?
-              *{ tag: @title_tag, class: "d-ui-card__title" }
-                - if @href.present? && !render_button_or_links?
-                  a.d-ui-card__title-a href=@href
+    .d-ui-card__content-box
+      - if render_description?
+        .d-ui-card__description
+          - if @title.present? || @subtitle.present?
+            .d-ui-card__headline
+              - if @title.present?
+                *{ tag: @title_tag, class: "d-ui-card__title" }
+                  - if @href.present? && !render_button_or_links?
+                    a.d-ui-card__title-a href=@href
+                      = cstypo @title
+                  - else
                     = cstypo @title
-                - else
-                  = cstypo @title
 
-            - if @subtitle.present?
-              .d-ui-card__subtitle
-                = cstypo @subtitle
+              - if @subtitle.present?
+                .d-ui-card__subtitle
+                  = cstypo @subtitle
 
-        - if render_content?
-          .d-ui-card__content.d-rich-text.d-rich-text--chomp
-            - if @html.present?
-              == cstypo @html
+          - if render_content?
+            .d-ui-card__content.d-rich-text.d-rich-text--chomp
+              - if @html.present?
+                == cstypo @html
 
-            - if @text.present?
-              == cstypo simple_format(@text)
+              - if @text.present?
+                == cstypo simple_format(@text)
 
-    - if render_topics_or_date?
-      .d-ui-card__topics-and-date
-        - if @topics.present?
-          .d-ui-card__topics
-            = render(Dummy::Ui::TopicsComponent.new(topics: @topics,
-                                                    container_query: true,
-                                                    small: @size == :xs))
+      - if render_topics_or_date?
+        .d-ui-card__topics-and-date
+          - if @topics.present?
+            .d-ui-card__topics
+              = render(Dummy::Ui::TopicsComponent.new(topics: @topics,
+                                                      container_query: true,
+                                                      small: @size == :xs))
 
-        - if @date.present?
-          time.d-ui-card__date[
-            datetime=@date.iso8601
-          ]
-            = l(@date, format: :folio_short)
+          - if @date.present?
+            time.d-ui-card__date[
+              datetime=@date.iso8601
+            ]
+              = l(@date, format: :folio_short)
 
-    - if render_button_or_links?
-      .d-ui-card__button-wrap
-        - if @button_label.present? && @button_variant.present?
-          = dummy_ui_button(label: @button_label,
-                            variant: @button_variant,
-                            href: @href,
-                            class_name: "d-ui-card__button")
+      - if render_button_or_links?
+        .d-ui-card__button-wrap
+          - if @button_label.present? && @button_variant.present?
+            = dummy_ui_button(label: @button_label,
+                              variant: @button_variant,
+                              href: @href,
+                              class_name: "d-ui-card__button")
 
-        - if @links.present?
-          - @links.each do |link_hash|
-            a.d-ui-card__link href=link_hash[:href]
-              = link_hash[:label]
+          - if @links.present?
+            - @links.each do |link_hash|
+              a.d-ui-card__link href=link_hash[:href]
+                = link_hash[:label]

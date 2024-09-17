@@ -16,54 +16,54 @@
                            cover: true)
 
   - if render_content_box?
-  .<%= classname_prefix %>-ui-card__content-box
-    - if render_description?
-      .<%= classname_prefix %>-ui-card__description
-        - if @title.present? || @subtitle.present?
-          .<%= classname_prefix %>-ui-card__headline
-            - if @title.present?
-              *{ tag: @title_tag, class: "<%= classname_prefix %>-ui-card__title" }
-                - if @href.present? && !render_button_or_links?
-                  a.<%= classname_prefix %>-ui-card__title-a href=@href
+    .<%= classname_prefix %>-ui-card__content-box
+      - if render_description?
+        .<%= classname_prefix %>-ui-card__description
+          - if @title.present? || @subtitle.present?
+            .<%= classname_prefix %>-ui-card__headline
+              - if @title.present?
+                *{ tag: @title_tag, class: "<%= classname_prefix %>-ui-card__title" }
+                  - if @href.present? && !render_button_or_links?
+                    a.<%= classname_prefix %>-ui-card__title-a href=@href
+                      = cstypo @title
+                  - else
                     = cstypo @title
-                - else
-                  = cstypo @title
 
-            - if @subtitle.present?
-              .<%= classname_prefix %>-ui-card__subtitle
-                = cstypo @subtitle
+              - if @subtitle.present?
+                .<%= classname_prefix %>-ui-card__subtitle
+                  = cstypo @subtitle
 
-        - if render_content?
-          .<%= classname_prefix %>-ui-card__content.<%= classname_prefix %>-rich-text.<%= classname_prefix %>-rich-text--chomp
-            - if @html.present?
-              == cstypo @html
+          - if render_content?
+            .<%= classname_prefix %>-ui-card__content.<%= classname_prefix %>-rich-text.<%= classname_prefix %>-rich-text--chomp
+              - if @html.present?
+                == cstypo @html
 
-            - if @text.present?
-              == cstypo simple_format(@text)
+              - if @text.present?
+                == cstypo simple_format(@text)
 
-    - if render_topics_or_date?
-      .<%= classname_prefix %>-ui-card__topics-and-date
-        - if @topics.present?
-          .<%= classname_prefix %>-ui-card__topics
-            = render(<%= application_namespace %>::Ui::TopicsComponent.new(topics: @topics,
-                                                    container_query: true,
-                                                    small: @size == :xs))
+      - if render_topics_or_date?
+        .<%= classname_prefix %>-ui-card__topics-and-date
+          - if @topics.present?
+            .<%= classname_prefix %>-ui-card__topics
+              = render(<%= application_namespace %>::Ui::TopicsComponent.new(topics: @topics,
+                                                      container_query: true,
+                                                      small: @size == :xs))
 
-        - if @date.present?
-          time.<%= classname_prefix %>-ui-card__date[
-            datetime=@date.iso8601
-          ]
-            = l(@date, format: :folio_short)
+          - if @date.present?
+            time.<%= classname_prefix %>-ui-card__date[
+              datetime=@date.iso8601
+            ]
+              = l(@date, format: :folio_short)
 
-    - if render_button_or_links?
-      .<%= classname_prefix %>-ui-card__button-wrap
-        - if @button_label.present? && @button_variant.present?
-          = <%= application_namespace_path %>_ui_button(label: @button_label,
-                            variant: @button_variant,
-                            href: @href,
-                            class_name: "<%= classname_prefix %>-ui-card__button")
+      - if render_button_or_links?
+        .<%= classname_prefix %>-ui-card__button-wrap
+          - if @button_label.present? && @button_variant.present?
+            = <%= application_namespace_path %>_ui_button(label: @button_label,
+                              variant: @button_variant,
+                              href: @href,
+                              class_name: "<%= classname_prefix %>-ui-card__button")
 
-        - if @links.present?
-          - @links.each do |link_hash|
-            a.<%= classname_prefix %>-ui-card__link href=link_hash[:href]
-              = link_hash[:label]
+          - if @links.present?
+            - @links.each do |link_hash|
+              a.<%= classname_prefix %>-ui-card__link href=link_hash[:href]
+                = link_hash[:label]
