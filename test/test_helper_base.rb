@@ -44,6 +44,14 @@ class ActiveSupport::TestCase
     super
     Folio::Current.original_reset
   end
+
+  def reset_folio_current(site_user_link)
+    ::Folio::Current.original_reset
+    ::Folio::Current.site = site_user_link.site
+    ::Folio::Current.user = site_user_link.user
+
+    ::Folio::Current.reset_ability!
+  end
 end
 
 class Cell::TestCase # do not inherit from ActiveSupport::TestCase

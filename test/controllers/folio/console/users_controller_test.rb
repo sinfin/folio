@@ -103,8 +103,10 @@ class Folio::Console::UsersControllerTest < Folio::Console::BaseControllerTest
     site_admin.save!
 
     user_author = create(:folio_user, first_name: "Author",  email: "author@#{site.domain}")
-    user_author.set_roles_for(site:, roles: [:author])
-    user_author.save!
+    superadmin.stub(:can_now?, true) do # hack around ability to :set_author
+      user_author.set_roles_for(site:, roles: [:author])
+      user_author.save!
+    end
 
     user = create(:folio_user, first_name: "User",  email: "user@#{site.domain}")
     user.set_roles_for(site:, roles: [])

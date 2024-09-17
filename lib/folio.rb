@@ -72,7 +72,12 @@ module Folio
     return Folio.main_site if request.nil?
 
     if Rails.env.development?
-      Folio::Site.friendly.find(request.host.delete_suffix(".localhost")) || raise(Folio::Singleton::MissingError)
+      slug = request.host.delete_suffix(".localhost")
+      begin
+        Folio::Site.friendly.find(slug)
+      rescue ActiveRecord::RecordNotFound
+        raise "Could not find site with '#{slug}' slug. Available are #{Folio::Site.pluck(:slug)}"
+      end
     else
       Folio::Site.find_by(domain: request.host) || Folio.main_site
     end

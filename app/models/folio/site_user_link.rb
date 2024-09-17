@@ -45,6 +45,18 @@ class Folio::SiteUserLink < Folio::ApplicationRecord
     end
   end
 
+  def roles=(values)
+    if Folio::Current.user.present?
+      values.to_a.each do |role|
+        unless Folio::Current.user.allowed_to_manage_role?(role, self.site)
+          raise "Current user #{Folio::Current.user.email} cannot set_#{role}!"
+        end
+      end
+    end
+
+    super(values)
+  end
+
   # keep defined order and allow only known roles
   def normalize_site_roles
     return if roles == []

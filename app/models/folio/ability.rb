@@ -40,6 +40,10 @@ class Folio::Ability
 
       can :do_anything, Folio::PrivateAttachment
       can :do_anything, Folio::ConsoleNote
+
+      can :set_administrator, Folio::Site
+      can :set_manager, Folio::Site
+
       return
     end
 
@@ -47,19 +51,23 @@ class Folio::Ability
       console_common_admin_rules
 
       if user.has_role?(site:, role: :administrator)
-        can :do_anything, Folio::User, site_user_links: { site: }
-        can :read_administrators, Folio::User
+        can :do_anything, Folio::User, { site_user_links: { site: }, superadmin: false }
+        can :read_administrators, Folio::Site
+        can :set_administrator, Folio::Site
+        can :set_manager, Folio::Site
+
       elsif user.has_role?(site:, role: :manager)
 
         # next do not work, because in the end it tries to do `[x,y,z].include?([x,y]) => false`
         # non_admin_roles = site.available_user_roles_ary - ["administrator"]
         # can :do_anything, Folio::User, site_user_links: { site: , roles: non_admin_roles } do |user|
 
-        can :do_anything, Folio::User, Folio::User.without_site_roles(site:, roles: [:administrator]) do |user|
+        can :do_anything, Folio::User, Folio::User.where(superadmin: false).without_site_roles(site:, roles: [:administrator]) do |user|
           !user.has_role?(site:, role: :administrator) && !user.superadmin?
         end
-        cannot :set_administrator, Folio::User
+        can :set_manager, Folio::Site
       end
+
       cannot :impersonate, Folio::User # `can :do_anything` enabled it, so we must deny it here
       cannot :set_superadmin, Folio::User
     end

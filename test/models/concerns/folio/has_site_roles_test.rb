@@ -86,6 +86,51 @@ class Folio::HasSiteRolesTest < ActiveSupport::TestCase
     assert_equal [["Manažer", "manager"]],
                 Folio::User.roles_for_select(site:,
                                              selectable_roles: ["manager", "spy"])
+
+    admin_link = create(:folio_site_user_link, roles: [:administrator], site:)
+    reset_folio_current(admin_link)
+
+    assert_equal [["Administrátor", "administrator"], ["Manažer", "manager"]],
+                 Folio::User.roles_for_select(site:)
+
+    manager_link = create(:folio_site_user_link, roles: [:manager], site:)
+    reset_folio_current(manager_link)
+
+    assert_equal [["Manažer", "manager"]], Folio::User.roles_for_select(site:)
+  end
+
+  test " allows assign only roles that can be managed by current user" do
+    assert_equal %w[administrator manager], site.available_user_roles
+    user_link = create(:folio_site_user_link, roles: [], site:)
+
+    # no Folio::Current.user => no restrictions
+    assert user_link.roles = [:administrator, :manager]
+    assert user_link.save
+
+    assert_equal %w[administrator manager], user_link.reload.roles
+
+
+    # admin can assign any role
+    admin_link = create(:folio_site_user_link, roles: [:administrator], site:)
+    reset_folio_current(admin_link)
+
+    assert user_link.roles = [:administrator, :manager]
+    assert user_link.save
+
+    assert_equal %w[administrator manager], user_link.reload.roles
+
+    # manager can assign only manager role
+    manager_link = create(:folio_site_user_link, roles: [:manager], site:)
+    reset_folio_current(manager_link)
+
+    excp = assert_raises(RuntimeError) do
+      assert user_link.roles = [:administrator, :manager]
+    end
+    assert_equal "Current user #{manager_link.user.email} cannot set_administrator!", excp.message
+
+    assert user_link.roles = [:manager]
+    assert user_link.save
+    assert_equal ["manager"], user_link.reload.roles
   end
 
   test "creating user with roles" do
