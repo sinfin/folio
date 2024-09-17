@@ -32,6 +32,8 @@
         = f.input :born_at
 
         = f.input :time_zone, as: :select, collection: ActiveSupport::TimeZone.all.map { |tz| [tz.name, tz.name] }
+        - if can_now?(:change_auth_site, f.object)
+          = f.input :auth_site_id, as: :select, collection: Folio::Site.all.map { |site| [site.domain, site.id] }
 
       .col-xxl-4
         = f.input :admin_note,

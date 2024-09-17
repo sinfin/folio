@@ -70,6 +70,7 @@ class Folio::Ability
 
       cannot :impersonate, Folio::User # `can :do_anything` enabled it, so we must deny it here
       cannot :set_superadmin, Folio::User
+      cannot :change_auth_site, Folio::User
     end
   end
   alias_method :folio_console_rules, :folio_rules

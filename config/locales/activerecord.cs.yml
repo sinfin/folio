@@ -116,6 +116,7 @@ cs:
         authentications: Propojení
         auth_site: Autorizační stránka
         auth_site_title: Autorizační stránka
+        auth_site_id: Autorizační stránka
         bank_account_number: Číslo bankovního účtu
         born_at: Datum narození
         confirmed_at: Potvrzen
