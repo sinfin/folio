@@ -52,7 +52,7 @@ class <%= application_namespace %>::AtomsController < ApplicationController
         if klass.valid_for_site_class?(current_site.class)
           { klass:, label: klass.model_name.human }
         end
-      end.sort_by { |h| h[:label] }
+      end.sort_by { |h| ActiveSupport::Inflector.transliterate(h[:label]) }
     end
   end
 
