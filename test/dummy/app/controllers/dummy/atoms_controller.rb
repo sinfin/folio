@@ -11,7 +11,10 @@ class Dummy::AtomsController < ApplicationController
     if params[:atom]
       @atom_klass = params[:atom].safe_constantize
 
-      if @atom_klass && @atom_klass < Folio::Atom::Base && atom_data = @root_data["atoms"][@atom_klass.to_s]
+      if @atom_klass &&
+         @atom_klass < Folio::Atom::Base &&
+         (atom_data = @root_data["atoms"][@atom_klass.to_s]) &&
+         @atom_klass.valid_for_site_class?(current_site.class)
         atom_data_src = atom_data
 
         if params[:screenshot]
@@ -43,9 +46,12 @@ class Dummy::AtomsController < ApplicationController
         nil
       end
     else
-      @atom_classes_data = @root_data["atoms"].keys.map do |class_name|
+      @atom_classes_data = @root_data["atoms"].keys.filter_map do |class_name|
         klass = class_name.constantize
-        { klass:, label: klass.model_name.human }
+
+        if klass.valid_for_site_class?(current_site.class)
+          { klass:, label: klass.model_name.human }
+        end
       end.sort_by { |h| h[:label] }
     end
   end
