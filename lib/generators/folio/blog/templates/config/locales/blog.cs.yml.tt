@@ -32,7 +32,7 @@ cs:
         few: Témata
         other: Témat
 
-      <%= application_namespace_path %>/atom/listing/blog/articles/index: "Výpis: blog - články"
+      <%= application_namespace_path %>/atom/listings/blog/articles/index: "Výpis: blog - články"
 
     errors:
       messages:

@@ -1,4 +1,4 @@
 type: Dummy::Page::Blog::Articles::Index
 title: Blog
 atoms:
-  - type: Dummy::Atom::Listing::Blog::Articles::Index
+  - type: Dummy::Atom::Listings::Blog::Articles::Index

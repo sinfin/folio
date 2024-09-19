@@ -27,7 +27,7 @@ namespace :blog do
         locales = ::Rails.application.config.folio_using_traco ? site.locales : [nil]
 
         locales.each do |locale|
-          Dummy::Atom::Listing::Blog::Articles::Index.create!(placement: page,
+          Dummy::Atom::Listings::Blog::Articles::Index.create!(placement: page,
                                                        locale:,
                                                        position: 1)
         end
@@ -124,11 +124,11 @@ namespace :blog do
                                                    published: true,
                                                    published_at: 1.day.ago)
 
-            article.atoms.create(type: "Dummy::Atom::Content::LeadParagraph",
+            article.atoms.create(type: "Dummy::Atom::Contents::LeadParagraph",
                                  content: "<p>#{Faker::Hipster.paragraph}</p>",
                                  position: 1)
 
-            article.atoms.create(type: "Dummy::Atom::Content::Text",
+            article.atoms.create(type: "Dummy::Atom::Contents::Text",
                                  content: "<p>#{Faker::Hipster.paragraph}</p>",
                                  position: 2)
 
@@ -136,7 +136,7 @@ namespace :blog do
                                  cover: images.sample,
                                  position: 3)
 
-            article.atoms.create(type: "Dummy::Atom::Content::Text",
+            article.atoms.create(type: "Dummy::Atom::Contents::Text",
                                  content: "<p>#{Faker::Hipster.paragraph}</p>",
                                  position: 4)
 

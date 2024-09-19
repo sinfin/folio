@@ -32,7 +32,7 @@ cs:
         few: Témata
         other: Témat
 
-      dummy/atom/listing/blog/articles/index: "Výpis: blog - články"
+      dummy/atom/listings/blog/articles/index: "Výpis: blog - články"
 
     errors:
       messages:

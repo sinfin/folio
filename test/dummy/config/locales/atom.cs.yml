@@ -5,7 +5,7 @@ cs:
       dummy/atom/cards/person:
         large: Velký obrázek
         job: Pozice
-      dummy/atom/content/divider:
+      dummy/atom/contents/divider:
         variant: Varianta
         variant/default: Výchozí
         variant/thin: Tenká linka
@@ -16,12 +16,12 @@ cs:
         margin/medium: Střední (Výchozí)
         margin/large: Velká
         margin/extra-large: Extra velká
-      dummy/atom/content/documents:
+      dummy/atom/contents/documents:
         size: Velikost
         size/small: Malá
         size/medium: Střední
         size/large: Velká
-      dummy/atom/content/image_and_text:
+      dummy/atom/contents/image_and_text:
         image_ratio: Poměr stran obrázku
         image_ratio/origin: Originální poměr
         image_ratio/1x1: '1:1'
@@ -43,9 +43,9 @@ cs:
         color_mode: Barevný režim
         color_mode/light: Světlý
         color_mode/dark: Tmavý
-      dummy/atom/content/quotation:
+      dummy/atom/contents/quotation:
         large: Velké písmo
-      dummy/atom/content/text:
+      dummy/atom/contents/text:
         highlight: Zvýraznění
         highlight/nil: Žádné
         highlight/background: Pozadí
@@ -62,7 +62,7 @@ cs:
         outline/red: Červené
         outline/green: Zelené
         outline/orange: Oranžové
-      dummy/atom/content/text_wrapping_image:
+      dummy/atom/contents/text_wrapping_image:
         image_side: Pozice obrázku
         image_side/left: Nalevo
         image_side/right: Napravo
@@ -81,7 +81,7 @@ cs:
         cover_ratio/2x3: '2:3'
         cover_ratio/9x16: '9:16'
         cover_ratio/3x4: '3:4'
-      dummy/atom/content/title:
+      dummy/atom/contents/title:
         tag: Tag
         tag/H1: H1
         tag/H2: H2
@@ -101,7 +101,7 @@ cs:
         theme/light: Světlé
         theme/dark: Tmavé
     models:
-      dummy/atom/listing/blog/articles/index: "Výpis: blog - články"
+      dummy/atom/listings/blog/articles/index: "Výpis: blog - články"
       dummy/atom/cards/extra_small: "Karta: extra malá"
       dummy/atom/cards/full_width: "Karta: na celou šířku"
       dummy/atom/cards/image: "Karta: obrázek"
@@ -111,16 +111,16 @@ cs:
       dummy/atom/cards/padded_image: "Karta: obrázek s odsazením"
       dummy/atom/cards/person: "Karta: osoba"
       dummy/atom/cards/small: "Karta: malá"
-      dummy/atom/content/divider: "Obsah: Oddělovač"
-      dummy/atom/content/documents: "Obsah: Dokumenty"
-      dummy/atom/content/image_and_text: "Obsah: Obrázek a obsah"
-      dummy/atom/content/lead_paragraph: "Obsah: Úvodní odstavec"
-      dummy/atom/content/quotation: "Obsah: Citace"
-      dummy/atom/content/text: "Obsah: Text"
-      dummy/atom/content/text_wrapping_image: "Obsah: Text obtékající obrázek"
-      dummy/atom/content/title: "Obsah: Nadpis"
-      dummy/atom/embed/html: "Embed: HTML"
-      dummy/atom/form/leads/form: "Formulář: kontakt"
+      dummy/atom/contents/divider: "Obsah: Oddělovač"
+      dummy/atom/contents/documents: "Obsah: Dokumenty"
+      dummy/atom/contents/image_and_text: "Obsah: Obrázek a obsah"
+      dummy/atom/contents/lead_paragraph: "Obsah: Úvodní odstavec"
+      dummy/atom/contents/quotation: "Obsah: Citace"
+      dummy/atom/contents/text: "Obsah: Text"
+      dummy/atom/contents/text_wrapping_image: "Obsah: Text obtékající obrázek"
+      dummy/atom/contents/title: "Obsah: Nadpis"
+      dummy/atom/embeds/html: "Embed: HTML"
+      dummy/atom/forms/leads/form: "Formulář: kontakt"
       dummy/atom/images/gallery: Obrázky - galerie
       dummy/atom/images/grid_gallery: Obrázky - galerie v mřížce
       dummy/atom/images/masonry_gallery: Obrázek - galerie masonry

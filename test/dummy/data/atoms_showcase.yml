@@ -1,5 +1,5 @@
 atoms:
-  Dummy::Atom::Content::Text:
+  Dummy::Atom::Contents::Text:
     - content: |
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, <a href="#congue">congue a suscipit quis</a>, ultrices non diam. Aenean bibendum sollicitudin tortor quis hendrerit. Donec vel porttitor ipsum, a laoreet nulla. Mauris orci tortor, imperdiet et purus sed, bibendum porta lectus. <strong>Proin et dui at augue condimentum</strong> ultrices imperdiet malesuada arcu. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</p>
         <h2>Lorem ipsum dolor</h2>
@@ -58,7 +58,7 @@ atoms:
       outline: gray
       theme: dark
 
-  Dummy::Atom::Content::Title:
+  Dummy::Atom::Contents::Title:
     - tag: H1
       title: H1 Goth squid xoxo sustainable fashion axe
     - tag: H2
@@ -89,11 +89,11 @@ atoms:
       title: Adaptive Polaroid cray austin muggle magic humblebrag aesthetic Adaptive Polaroid cray austin muggle magic austin
       font_size: adaptive
 
-  Dummy::Atom::Content::LeadParagraph:
+  Dummy::Atom::Contents::LeadParagraph:
     - content: true
     - content: <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
 
-  Dummy::Atom::Content::Quotation:
+  Dummy::Atom::Contents::Quotation:
     - content: true
       title: Title
       subtitle: Subtitle
@@ -115,7 +115,7 @@ atoms:
 
     - content: true
 
-  Dummy::Atom::Content::Documents:
+  Dummy::Atom::Contents::Documents:
     - documents: true
       size: small
     - documents: true
@@ -123,7 +123,7 @@ atoms:
     - documents: true
       size: large
 
-  Dummy::Atom::Content::ImageAndText:
+  Dummy::Atom::Contents::ImageAndText:
     - title: Headline dolor amet consectetur
       subtitle: Subtitle
       content: <p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis</p>
@@ -186,7 +186,7 @@ atoms:
     - content: <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis</p>
       cover: true
 
-  Dummy::Atom::Content::TextWrappingImage:
+  Dummy::Atom::Contents::TextWrappingImage:
     - content: |
         <h2>Lorem ipsum dolor</h2>
         <p> Modernism, the idealistic search for truth, gave way in the latter half of the 20th century to a realization of its unattainability. Theodor W. Adorno said in 1970, "It is now taken for granted that nothing which concerns art can be taken for granted any more: neither art itself, nor art in relationship to the whole, nor even the right of art to exist." Relativism was accepted as an unavoidable truth, which led to the period of contemporary art and postmodern criticism, where cultures of the world and of history are seen as changing forms, which can be appreciated  </p>
@@ -633,7 +633,7 @@ atoms:
       cover: true
       _count: 3
 
-  Dummy::Atom::Content::Divider:
+  Dummy::Atom::Contents::Divider:
     - variant: default
     - variant: thin
     - variant: thick
@@ -647,15 +647,15 @@ atoms:
     - variant: default
       margin: extra-large
 
-  Dummy::Atom::Embed::Html:
+  Dummy::Atom::Embeds::Html:
     - embed_code: <iframe width="560" height="315" src="https://www.youtube.com/embed/8DPcXHMGMBc?si=zAACDW5cS002TE3c" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
     - embed_code: <iframe style="border-radius:12px" src="https://open.spotify.com/embed/episode/5qMXTXTJ5YKnoBWWcndNcH?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
 
-  Dummy::Atom::Form::Leads::Form:
+  Dummy::Atom::Forms::Leads::Form:
     -
     - title: with title
 
-  Dummy::Atom::Listing::Blog::Articles::Index:
+  Dummy::Atom::Listings::Blog::Articles::Index:
     -
 
 values_for_true:

@@ -9,7 +9,7 @@ class Folio::Console::AtomsControllerTest < Folio::Console::BaseControllerTest
   end
 
   test "preview" do
-    post preview_console_atoms_path, params: JSON.parse('{"atoms_attributes":[{"id":1,"type":"Dummy::Atom::Content::Text","position":1,"placement_type":"Folio::Page","placement_id":1,"data":null,"content":"lorem ipsum"},{"id":2,"type":"Dummy::Atom::Content::Text","position":2,"placement_type":"Folio::Page","placement_id":1,"data":null,"content":"lorem ipsum"},{"id":3,"type":"Dummy::Atom::Content::Text","position":3,"placement_type":"Folio::Page","placement_id":1,"data":null,"_destroy":true,"content":"lorem ipsum"}]}').merge(class_name: "Folio::Page")
+    post preview_console_atoms_path, params: JSON.parse('{"atoms_attributes":[{"id":1,"type":"Dummy::Atom::Contents::Text","position":1,"placement_type":"Folio::Page","placement_id":1,"data":null,"content":"lorem ipsum"},{"id":2,"type":"Dummy::Atom::Contents::Text","position":2,"placement_type":"Folio::Page","placement_id":1,"data":null,"content":"lorem ipsum"},{"id":3,"type":"Dummy::Atom::Contents::Text","position":3,"placement_type":"Folio::Page","placement_id":1,"data":null,"_destroy":true,"content":"lorem ipsum"}]}').merge(class_name: "Folio::Page")
     assert_response(:ok)
   end
 
@@ -17,7 +17,7 @@ class Folio::Console::AtomsControllerTest < Folio::Console::BaseControllerTest
     post validate_console_atoms_path, params: {
       atoms: [
         {
-          type: "Dummy::Atom::Content::Text",
+          type: "Dummy::Atom::Contents::Text",
           placement_type: "Folio::Page",
           placement_id: create(:folio_page).id,
         }

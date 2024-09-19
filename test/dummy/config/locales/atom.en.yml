@@ -4,7 +4,7 @@ en:
     attributes:
       dummy/atom/cards/person:
         large: Big image
-      dummy/atom/content/divider:
+      dummy/atom/contents/divider:
         variant: Variant
         variant/default: Default
         variant/thin: Thin line
@@ -15,12 +15,12 @@ en:
         margin/medium: Medium (Default)
         margin/large: Large
         margin/extra-large: Extra Large
-      dummy/atom/content/documents:
+      dummy/atom/contents/documents:
         size: Size
         size/small: Small
         size/medium: Medium
         size/large: Large
-      dummy/atom/content/image_and_text:
+      dummy/atom/contents/image_and_text:
         image_ratio: Image ratio
         image_ratio/origin: Original ratio
         image_ratio/1x1: '1:1'
@@ -42,9 +42,9 @@ en:
         color_mode: Color mode
         color_mode/light: Light
         color_mode/dark: Dark
-      dummy/atom/content/quotation:
+      dummy/atom/contents/quotation:
         large: Bigger font
-      dummy/atom/content/text:
+      dummy/atom/contents/text:
         highlight: Highlight
         highlight/nil: None
         highlight/background: Background
@@ -61,7 +61,7 @@ en:
         outline/red: Red
         outline/green: Green
         outline/orange: Orange
-      dummy/atom/content/text_wrapping_image:
+      dummy/atom/contents/text_wrapping_image:
         image_side: Image position
         image_side/left: On the left
         image_side/right: On the right
@@ -80,7 +80,7 @@ en:
         cover_ratio/2x3: '2:3'
         cover_ratio/9x16: '9:16'
         cover_ratio/3x4: '3:4'
-      dummy/atom/content/title:
+      dummy/atom/contents/title:
         tag: Tag
         tag/H1: H1
         tag/H2: H2
@@ -100,7 +100,7 @@ en:
         theme/light: Light
         theme/dark: Dark
     models:
-      dummy/atom/listing/blog/articles/index: "Listing: blog - articles"
+      dummy/atom/listings/blog/articles/index: "Listing: blog - articles"
       dummy/atom/cards/extra_small: "Card: extra small"
       dummy/atom/cards/full_width: "Card: full width"
       dummy/atom/cards/image: "Card: image"
@@ -110,16 +110,16 @@ en:
       dummy/atom/cards/padded_image: "Card: image with padding"
       dummy/atom/cards/person: "Card: person"
       dummy/atom/cards/small: "Card: small"
-      dummy/atom/content/divider: "Content: Divider"
-      dummy/atom/content/documents: "Content: Documents"
-      dummy/atom/content/image_and_text: "Content: Image & text"
-      dummy/atom/content/lead_paragraph: "Content: Lead paragraph"
-      dummy/atom/content/quotation: "Content: Quotation"
-      dummy/atom/content/text: "Content: Text"
-      dummy/atom/content/text_wrapping_image: "Content: Text around image"
-      dummy/atom/content/title: "Content: Title"
-      dummy/atom/embed/html: "Embed: HTML"
-      dummy/atom/form/leads/form: "Form: contact"
+      dummy/atom/contents/divider: "Content: Divider"
+      dummy/atom/contents/documents: "Content: Documents"
+      dummy/atom/contents/image_and_text: "Content: Image & text"
+      dummy/atom/contents/lead_paragraph: "Content: Lead paragraph"
+      dummy/atom/contents/quotation: "Content: Quotation"
+      dummy/atom/contents/text: "Content: Text"
+      dummy/atom/contents/text_wrapping_image: "Content: Text around image"
+      dummy/atom/contents/title: "Content: Title"
+      dummy/atom/embeds/html: "Embed: HTML"
+      dummy/atom/forms/leads/form: "Form: contact"
       dummy/atom/images/gallery: Images - gallery
       dummy/atom/images/grid_gallery: Images - gallery (grid)
       dummy/atom/images/masonry_gallery: Images - gallery (masonry)
