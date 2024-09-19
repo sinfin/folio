@@ -334,12 +334,15 @@ class Folio::Console::BaseController < Folio::ApplicationController
         records.each { |rec| csv << rec.csv_attributes(self) }
       end
 
+      bom = "\uFEFF"
+      data = bom + data
+
       name ||= klass.model_name.human(count: 2)
 
       filename = "#{name}-#{Date.today}.csv".split(".")
                                             .map(&:parameterize)
                                             .join(".")
-      send_data data, filename:
+      send_data data, filename:, type: "text/csv; charset=utf-8"
     end
 
     def index_tabs; end
