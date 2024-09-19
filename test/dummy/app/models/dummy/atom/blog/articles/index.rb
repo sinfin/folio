@@ -10,10 +10,6 @@ class Dummy::Atom::Blog::Articles::Index < Folio::Atom::Base
   VALID_PLACEMENT_TYPES = %w[
     Dummy::Page::Blog::Articles::Index
   ]
-
-  def self.console_insert_row
-    3
-  end
 end
 
 # == Schema Information

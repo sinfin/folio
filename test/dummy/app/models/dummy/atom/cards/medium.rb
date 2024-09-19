@@ -17,6 +17,10 @@ class Dummy::Atom::Cards::Medium < Folio::Atom::Base
 
   validates :content,
             presence: true
+
+  def self.console_insert_row
+    2
+  end
 end
 
 # == Schema Information

@@ -11,6 +11,10 @@ class Dummy::Atom::Content::LeadParagraph < Folio::Atom::Base
 
   validates :content,
             presence: true
+
+  def self.console_insert_row
+    1
+  end
 end
 
 # == Schema Information

@@ -16,6 +16,10 @@ class Dummy::Atom::Cards::Logo < Folio::Atom::Base
 
   validates :cover_placement,
             presence: true
+
+  def self.console_insert_row
+    2
+  end
 end
 
 # == Schema Information

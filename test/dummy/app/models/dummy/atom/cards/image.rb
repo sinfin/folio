@@ -19,6 +19,10 @@ class Dummy::Atom::Cards::Image < Folio::Atom::Base
             :cover_placement,
             :url,
             presence: true
+
+  def self.console_insert_row
+    2
+  end
 end
 
 # == Schema Information

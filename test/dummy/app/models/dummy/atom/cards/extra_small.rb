@@ -18,6 +18,10 @@ class Dummy::Atom::Cards::ExtraSmall < Folio::Atom::Base
   validates :url,
             :title,
             presence: true
+
+  def self.console_insert_row
+    2
+  end
 end
 
 # == Schema Information

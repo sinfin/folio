@@ -45,6 +45,10 @@ class Dummy::Atom::Content::ImageAndText < Folio::Atom::Base
     { image_ratio: "1x1" }
   end
 
+  def self.console_insert_row
+    1
+  end
+
   private
     def validate_one_of_contents
       if title.blank? && content.blank? && button_label.blank?

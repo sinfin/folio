@@ -243,7 +243,7 @@ class Folio::Atom::Base < Folio::ApplicationRecord
   end
 
   def self.console_insert_row
-    1
+    10
   end
 
   def self.contentable?

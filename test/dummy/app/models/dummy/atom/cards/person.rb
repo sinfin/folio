@@ -25,6 +25,10 @@ class Dummy::Atom::Cards::Person < Folio::Atom::Base
   validates :link_url,
             presence: true,
             if: -> { link_label.present? }
+
+  def self.console_insert_row
+    2
+  end
 end
 
 # == Schema Information

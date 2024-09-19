@@ -28,6 +28,10 @@ class Dummy::Atom::Cards::Large < Folio::Atom::Base
 
   validate :validate_one_of_contents
 
+  def self.console_insert_row
+    2
+  end
+
   private
     def validate_one_of_contents
       if title.blank? && content.blank?

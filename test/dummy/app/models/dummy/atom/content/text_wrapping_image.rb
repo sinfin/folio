@@ -47,6 +47,10 @@ class Dummy::Atom::Content::TextWrappingImage < Folio::Atom::Base
       cover_ratio: "origin",
     }
   end
+
+  def self.console_insert_row
+    1
+  end
 end
 
 # == Schema Information
