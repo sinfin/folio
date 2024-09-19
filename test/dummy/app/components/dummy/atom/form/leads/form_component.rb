@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Dummy::Atom::Leads::FormComponent < ApplicationComponent
+class Dummy::Atom::Form::Leads::FormComponent < ApplicationComponent
   def initialize(atom:, atom_options: {})
     @atom = atom
     @atom_options = atom_options

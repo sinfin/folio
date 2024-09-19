@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Dummy::Atom::Leads::Form < Folio::Atom::Base
+class Dummy::Atom::Form::Leads::Form < Folio::Atom::Base
   ATTACHMENTS = %i[]
 
   STRUCTURE = {
@@ -8,6 +8,10 @@ class Dummy::Atom::Leads::Form < Folio::Atom::Base
   }
 
   ASSOCIATIONS = {}
+
+  def self.console_insert_row
+    CONSOLE_INSERT_ROWS[:forms]
+  end
 end
 
 # == Schema Information

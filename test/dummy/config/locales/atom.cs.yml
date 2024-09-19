@@ -120,9 +120,9 @@ cs:
       dummy/atom/content/text_wrapping_image: "Obsah: Text obtékající obrázek"
       dummy/atom/content/title: "Obsah: Nadpis"
       dummy/atom/embed/html: "Embed: HTML"
+      dummy/atom/form/leads/form: "Formulář: kontakt"
       dummy/atom/images/gallery: Obrázky - galerie
       dummy/atom/images/grid_gallery: Obrázky - galerie v mřížce
       dummy/atom/images/masonry_gallery: Obrázek - galerie masonry
       dummy/atom/images/one_and_two: Obrázky - 1 & 2
       dummy/atom/images/single: Obrázek
-      dummy/atom/leads/form: Kontaktní formulář
