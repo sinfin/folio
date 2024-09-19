@@ -29,7 +29,7 @@ en:
         one: Topic
         other: Topics
 
-      <%= application_namespace_path %>/atom/blog/articles/index: Blog - articles
+      <%= application_namespace_path %>/atom/listing/blog/articles/index: "Listing: blog - articles"
 
     errors:
       models:

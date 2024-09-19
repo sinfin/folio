@@ -101,7 +101,7 @@ cs:
         theme/light: Světlé
         theme/dark: Tmavé
     models:
-      dummy/atom/blog/articles/index: Blog - články
+      dummy/atom/listing/blog/articles/index: "Výpis: blog - články"
       dummy/atom/cards/extra_small: "Karta: extra malá"
       dummy/atom/cards/full_width: "Karta: na celou šířku"
       dummy/atom/cards/image: "Karta: obrázek"

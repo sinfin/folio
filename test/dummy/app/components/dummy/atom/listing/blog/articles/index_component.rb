@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Dummy::Atom::Blog::Articles::IndexComponent < ApplicationComponent
+class Dummy::Atom::Listing::Blog::Articles::IndexComponent < ApplicationComponent
   def initialize(atom:, atom_options: {})
     @atom = atom
     @atom_options = atom_options

@@ -655,7 +655,7 @@ atoms:
     -
     - title: with title
 
-  Dummy::Atom::Blog::Articles::Index:
+  Dummy::Atom::Listing::Blog::Articles::Index:
     -
 
 values_for_true:

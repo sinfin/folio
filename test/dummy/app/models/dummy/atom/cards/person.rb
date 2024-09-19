@@ -27,7 +27,7 @@ class Dummy::Atom::Cards::Person < Folio::Atom::Base
             if: -> { link_label.present? }
 
   def self.console_insert_row
-    2
+    CONSOLE_INSERT_ROWS[:cards]
   end
 end
 

@@ -40,6 +40,16 @@ class Folio::Atom::Base < Folio::ApplicationRecord
     ]
   }
 
+  CONSOLE_INSERT_ROWS = {
+    contents: 1,
+    cards: 2,
+    images: 3,
+    forms: 4,
+    embeds: 5,
+    listings: 6,
+    default: 10,
+  }
+
   self.table_name = "folio_atoms"
 
   audited associated_with: :placement,
@@ -243,7 +253,7 @@ class Folio::Atom::Base < Folio::ApplicationRecord
   end
 
   def self.console_insert_row
-    10
+    CONSOLE_INSERT_ROWS[:default]
   end
 
   def self.contentable?

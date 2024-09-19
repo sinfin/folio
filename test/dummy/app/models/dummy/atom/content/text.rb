@@ -42,7 +42,7 @@ class Dummy::Atom::Content::Text < Folio::Atom::Base
   end
 
   def self.console_insert_row
-    1
+    CONSOLE_INSERT_ROWS[:contents]
   end
 end
 

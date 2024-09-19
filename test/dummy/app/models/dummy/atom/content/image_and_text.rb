@@ -46,7 +46,7 @@ class Dummy::Atom::Content::ImageAndText < Folio::Atom::Base
   end
 
   def self.console_insert_row
-    1
+    CONSOLE_INSERT_ROWS[:contents]
   end
 
   private

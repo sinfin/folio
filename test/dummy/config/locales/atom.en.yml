@@ -100,7 +100,7 @@ en:
         theme/light: Light
         theme/dark: Dark
     models:
-      dummy/atom/blog/articles/index: Blog - articles
+      dummy/atom/listing/blog/articles/index: "Listing: blog - articles"
       dummy/atom/cards/extra_small: "Card: extra small"
       dummy/atom/cards/full_width: "Card: full width"
       dummy/atom/cards/image: "Card: image"

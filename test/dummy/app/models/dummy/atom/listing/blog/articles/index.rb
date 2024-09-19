@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Dummy::Atom::Blog::Articles::Index < Folio::Atom::Base
+class Dummy::Atom::Listing::Blog::Articles::Index < Folio::Atom::Base
   ATTACHMENTS = %i[]
 
   STRUCTURE = {}
@@ -10,6 +10,10 @@ class Dummy::Atom::Blog::Articles::Index < Folio::Atom::Base
   VALID_PLACEMENT_TYPES = %w[
     Dummy::Page::Blog::Articles::Index
   ]
+
+  def self.console_insert_row
+    CONSOLE_INSERT_ROWS[:listings]
+  end
 end
 
 # == Schema Information

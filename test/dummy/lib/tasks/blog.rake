@@ -27,7 +27,7 @@ namespace :blog do
         locales = ::Rails.application.config.folio_using_traco ? site.locales : [nil]
 
         locales.each do |locale|
-          Dummy::Atom::Blog::Articles::Index.create!(placement: page,
+          Dummy::Atom::Listing::Blog::Articles::Index.create!(placement: page,
                                                        locale:,
                                                        position: 1)
         end

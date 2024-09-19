@@ -29,7 +29,7 @@ class Dummy::Atom::Cards::Large < Folio::Atom::Base
   validate :validate_one_of_contents
 
   def self.console_insert_row
-    2
+    CONSOLE_INSERT_ROWS[:cards]
   end
 
   private

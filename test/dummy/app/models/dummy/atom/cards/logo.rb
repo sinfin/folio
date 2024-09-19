@@ -18,7 +18,7 @@ class Dummy::Atom::Cards::Logo < Folio::Atom::Base
             presence: true
 
   def self.console_insert_row
-    2
+    CONSOLE_INSERT_ROWS[:cards]
   end
 end
 
