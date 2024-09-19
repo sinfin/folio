@@ -1,3 +1,0 @@
-.<%= classname_prefix %>-atom.<%= classname_prefix %>-atom-document.my-atom
-  .container-fluid
-    = render(ui_documents_component)

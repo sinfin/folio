@@ -1,3 +1,0 @@
-.<%= classname_prefix %>-atom.<%= classname_prefix %>-atom-embed.my-atom
-  .container-fluid
-    == @atom.embed_code
