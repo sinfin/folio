@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Dummy::Atom::EmbedComponent < ApplicationComponent
+class Dummy::Atom::Embed::HtmlComponent < ApplicationComponent
   def initialize(atom:, atom_options: {})
     @atom = atom
     @atom_options = atom_options

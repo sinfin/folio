@@ -118,7 +118,7 @@ en:
       dummy/atom/content/text: "Content: Text"
       dummy/atom/content/text_wrapping_image: "Content: Text around image"
       dummy/atom/content/title: "Content: Title"
-      dummy/atom/embed: Embed
+      dummy/atom/embed/html: "Embed: HTML"
       dummy/atom/images/gallery: Images - gallery
       dummy/atom/images/grid_gallery: Images - gallery (grid)
       dummy/atom/images/masonry_gallery: Images - gallery (masonry)

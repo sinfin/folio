@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Dummy::Atom::Embed < Folio::Atom::Base
+class Dummy::Atom::Embed::Html < Folio::Atom::Base
   ATTACHMENTS = %i[]
 
   STRUCTURE = {
@@ -11,6 +11,10 @@ class Dummy::Atom::Embed < Folio::Atom::Base
 
   validates :embed_code,
             presence: true
+
+  def self.console_insert_row
+    CONSOLE_INSERT_ROWS[:embeds]
+  end
 end
 
 # == Schema Information

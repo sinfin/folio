@@ -119,7 +119,7 @@ cs:
       dummy/atom/content/text: "Obsah: Text"
       dummy/atom/content/text_wrapping_image: "Obsah: Text obtékající obrázek"
       dummy/atom/content/title: "Obsah: Nadpis"
-      dummy/atom/embed: Embed
+      dummy/atom/embed/html: "Embed: HTML"
       dummy/atom/images/gallery: Obrázky - galerie
       dummy/atom/images/grid_gallery: Obrázky - galerie v mřížce
       dummy/atom/images/masonry_gallery: Obrázek - galerie masonry
