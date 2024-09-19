@@ -15,7 +15,7 @@ class Dummy::Atom::Images::Single < Folio::Atom::Base
             presence: true
 
   def self.console_insert_row
-    CONSOLE_INSERT_ROWS[:images]
+    CONSOLE_INSERT_ROWS[:primary]
   end
 end
 

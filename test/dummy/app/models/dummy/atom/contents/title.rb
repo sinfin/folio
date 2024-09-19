@@ -56,7 +56,7 @@ class Dummy::Atom::Contents::Title < Folio::Atom::Base
   end
 
   def self.console_insert_row
-    CONSOLE_INSERT_ROWS[:contents]
+    CONSOLE_INSERT_ROWS[:primary]
   end
 end
 

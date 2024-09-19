@@ -41,12 +41,13 @@ class Folio::Atom::Base < Folio::ApplicationRecord
   }
 
   CONSOLE_INSERT_ROWS = {
-    contents: 1,
-    cards: 2,
-    images: 3,
-    forms: 4,
-    embeds: 5,
-    listings: 6,
+    primary: 1,
+    contents: 2,
+    cards: 3,
+    images: 4,
+    forms: 5,
+    embeds: 6,
+    listings: 7,
     default: 10,
   }
 
