@@ -344,7 +344,7 @@ atoms:
       cover: true
       _count: 3
 
-  Dummy::Atom::Images::Single:
+  Dummy::Atom::Images::SingleImage:
     - cover: true
       title: One and two gallery title
       subtitle: Subtitle

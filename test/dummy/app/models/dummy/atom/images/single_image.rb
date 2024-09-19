@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Dummy::Atom::Images::Single < Folio::Atom::Base
+class Dummy::Atom::Images::SingleImage < Folio::Atom::Base
   ATTACHMENTS = %i[cover]
 
   STRUCTURE = {

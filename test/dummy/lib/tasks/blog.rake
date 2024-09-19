@@ -132,7 +132,7 @@ namespace :blog do
                                  content: "<p>#{Faker::Hipster.paragraph}</p>",
                                  position: 2)
 
-            article.atoms.create(type: "Dummy::Atom::Images::Single",
+            article.atoms.create(type: "Dummy::Atom::Images::SingleImage",
                                  cover: images.sample,
                                  position: 3)
 
