@@ -4,7 +4,7 @@ en:
     attributes:
       dummy/atom/cards/person:
         large: Big image
-      dummy/atom/divider:
+      dummy/atom/content/divider:
         variant: Variant
         variant/default: Default
         variant/thin: Thin line
@@ -15,12 +15,12 @@ en:
         margin/medium: Medium (Default)
         margin/large: Large
         margin/extra-large: Extra Large
-      dummy/atom/documents:
+      dummy/atom/content/documents:
         size: Size
         size/small: Small
         size/medium: Medium
         size/large: Large
-      dummy/atom/image_and_content:
+      dummy/atom/content/image_and_text:
         image_ratio: Image ratio
         image_ratio/origin: Original ratio
         image_ratio/1x1: '1:1'
@@ -42,9 +42,9 @@ en:
         color_mode: Color mode
         color_mode/light: Light
         color_mode/dark: Dark
-      dummy/atom/quotation:
+      dummy/atom/content/quotation:
         large: Bigger font
-      dummy/atom/text:
+      dummy/atom/content/text:
         highlight: Highlight
         highlight/nil: None
         highlight/background: Background
@@ -61,7 +61,7 @@ en:
         outline/red: Red
         outline/green: Green
         outline/orange: Orange
-      dummy/atom/text_around_image:
+      dummy/atom/content/text_wrapping_image:
         image_side: Image position
         image_side/left: On the left
         image_side/right: On the right
@@ -80,26 +80,7 @@ en:
         cover_ratio/2x3: '2:3'
         cover_ratio/9x16: '9:16'
         cover_ratio/3x4: '3:4'
-      dummy/atom/text_around_video:
-        video_side: Video position
-        video_side/left: On the left
-        video_side/right: On the right
-        theme: Theme
-        theme/light: Light
-        theme/dark: Dark
-        highlight: Highlight
-        highlight/nil: None
-        highlight/background: Background
-        cover_ratio: Image ratio
-        cover_ratio/origin: Original
-        cover_ratio/1x1: '1:1'
-        cover_ratio/3x2: '3:2'
-        cover_ratio/16x9: '16:9'
-        cover_ratio/4x3: '4:3'
-        cover_ratio/2x3: '2:3'
-        cover_ratio/9x16: '9:16'
-        cover_ratio/3x4: '3:4'
-      dummy/atom/title:
+      dummy/atom/content/title:
         tag: Tag
         tag/H1: H1
         tag/H2: H2
@@ -129,19 +110,18 @@ en:
       dummy/atom/cards/padded_image: Card - image with padding
       dummy/atom/cards/person: Card - person
       dummy/atom/cards/small: Card - small
-      dummy/atom/divider: Divider
-      dummy/atom/documents: Documents
+      dummy/atom/content/divider: "Content: Divider"
+      dummy/atom/content/documents: "Content: Documents"
       dummy/atom/embed: Embed
-      dummy/atom/image_and_content: Image & content
+      dummy/atom/content/image_and_text: "Content: Image & text"
       dummy/atom/images/gallery: Images - gallery
       dummy/atom/images/grid_gallery: Images - gallery (grid)
       dummy/atom/images/masonry_gallery: Images - gallery (masonry)
       dummy/atom/images/one_and_two: Images - 1 & 2
       dummy/atom/images/single: Image
       dummy/atom/leads/form: Contact form
-      dummy/atom/perex: Perex
-      dummy/atom/quotation: Quotation
-      dummy/atom/text: Text
-      dummy/atom/text_around_image: Text around image
-      dummy/atom/text_around_video: Text around video
-      dummy/atom/title: Title
+      dummy/atom/content/quotation: "Content: Quotation"
+      dummy/atom/content/text: "Content: Text"
+      dummy/atom/content/text_wrapping_image: "Content: Text around image"
+      dummy/atom/content/title: "Content: Title"
+      dummy/atom/content/lead_paragraph: "Content: Lead paragraph"

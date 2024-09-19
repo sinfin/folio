@@ -124,7 +124,7 @@ namespace :blog do
                                                    published: true,
                                                    published_at: 1.day.ago)
 
-            article.atoms.create(type: "<%= application_namespace %>::Atom::Perex",
+            article.atoms.create(type: "<%= application_namespace %>::Atom::Content::LeadParagraph",
                                  content: "<p>#{Faker::Hipster.paragraph}</p>",
                                  position: 1)
 
