@@ -120,8 +120,8 @@ en:
       dummy/atom/contents/title: "Content: Title"
       dummy/atom/embeds/html: "Embed: HTML"
       dummy/atom/forms/leads/form: "Form: contact"
-      dummy/atom/images/gallery: Images - gallery
-      dummy/atom/images/grid_gallery: Images - gallery (grid)
-      dummy/atom/images/masonry_gallery: Images - gallery (masonry)
-      dummy/atom/images/one_and_two: Images - 1 & 2
-      dummy/atom/images/single: Image
+      dummy/atom/images/gallery: "Images: gallery"
+      dummy/atom/images/grid_gallery: "Images: gallery (grid)"
+      dummy/atom/images/masonry_gallery: "Images: gallery (masonry)"
+      dummy/atom/images/one_and_two: "Images: 1 & 2"
+      dummy/atom/images/single: "Images: single"

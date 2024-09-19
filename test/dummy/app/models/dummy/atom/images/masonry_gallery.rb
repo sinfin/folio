@@ -12,6 +12,10 @@ class Dummy::Atom::Images::MasonryGallery < Folio::Atom::Base
 
   validates :image_placements,
             presence: true
+
+  def self.console_insert_row
+    CONSOLE_INSERT_ROWS[:images]
+  end
 end
 
 # == Schema Information

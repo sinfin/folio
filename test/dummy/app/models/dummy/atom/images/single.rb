@@ -13,6 +13,10 @@ class Dummy::Atom::Images::Single < Folio::Atom::Base
 
   validates :cover_placement,
             presence: true
+
+  def self.console_insert_row
+    CONSOLE_INSERT_ROWS[:images]
+  end
 end
 
 # == Schema Information

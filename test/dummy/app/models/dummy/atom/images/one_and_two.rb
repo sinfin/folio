@@ -12,6 +12,10 @@ class Dummy::Atom::Images::OneAndTwo < Folio::Atom::Base
 
   validate :validate_image_placements_size
 
+  def self.console_insert_row
+    CONSOLE_INSERT_ROWS[:images]
+  end
+
   private
     def validate_image_placements_size
       if image_placements.size != 3
