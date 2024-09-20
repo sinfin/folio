@@ -12,10 +12,7 @@
       Emailbutler::Message.human_attribute_name("status/#{record.status}")
     end
 
-    attribute(:timestamp, compact: true) do
-      if record.timestamp
-        l(record.timestamp, format: :short)
-      end
-    end
+    date(:timestamp)
+    date(:created_at)
 
     # actions(show: controller.console_email_message_url(record))

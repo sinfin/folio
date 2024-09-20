@@ -122,9 +122,11 @@ cs:
         vat_identification_number: DIČ
         zip: PSČ
       emailbutler/message:
+        created_at: Vytvořeno
         subject: Předmět
         send_to: Příjemce
         timestamp: Poslední změna stavu
+        status: Stav
         status/created: Vytvořeno
         status/rejected: Zamítnuto
         status/processed: Zpracováno
