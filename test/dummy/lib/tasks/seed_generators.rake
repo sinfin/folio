@@ -43,7 +43,7 @@ class Dummy::SeedGenerator
 
     test_path = Rails.root.join("test/components/dummy/ui/#{name}_component_test.rb")
     if File.exist?(test_path)
-      copy_file(test_path, template_component_dir.join("#{name}_component_test.rb.tt"))
+      copy_file(test_path, template_component_dir.join("#{name.split("/").last}_component_test.rb.tt"))
     else
       puts "M #{relative_path(test_path)}"
     end

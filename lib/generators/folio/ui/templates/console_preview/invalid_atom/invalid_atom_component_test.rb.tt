@@ -1,0 +1,13 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= application_namespace %>::Ui::ConsolePreview::Invali<%= classname_prefix %>AtomComponentTest < Folio::ComponentTest
+  def test_render
+    atom = create_atom(<%= application_namespace %>::Atom::Contents::Text, :content)
+
+    render_inline(<%= application_namespace %>::Ui::ConsolePreview::Invali<%= classname_prefix %>AtomComponent.new(atom:))
+
+    assert_selector(".<%= classname_prefix %>-ui-console-preview-invali<%= classname_prefix %>-atom")
+  end
+end
