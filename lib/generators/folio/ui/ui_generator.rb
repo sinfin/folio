@@ -16,7 +16,7 @@ class Folio::UiGenerator < Rails::Generators::NamedBase
       name.starts_with?(".") || name == "views" || name == "input"
     end
 
-    %w[input menu_toolbar].each do |key|
+    %w[console_preview input menu_toolbar].each do |key|
       allowed_keys += Dir.entries(Folio::Engine.root.join("lib/generators/folio/ui/templates/#{key}")).filter_map do |name|
         unless name.starts_with?(".")
           "#{key}/#{name}"
