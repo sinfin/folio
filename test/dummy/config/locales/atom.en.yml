@@ -100,28 +100,28 @@ en:
         theme/light: Light
         theme/dark: Dark
     models:
-      dummy/atom/listings/blog/articles/index: "Listing: Blog - articles"
-      dummy/atom/cards/extra_small: "Card: Extra small"
-      dummy/atom/cards/full_width: "Card: Full width"
-      dummy/atom/cards/image: "Card: Image"
-      dummy/atom/cards/large: "Card: Large"
-      dummy/atom/cards/logo: "Card: Logo"
-      dummy/atom/cards/medium: "Card: Medium"
-      dummy/atom/cards/padded_image: "Card: Image with padding"
-      dummy/atom/cards/person: "Card: Person"
-      dummy/atom/cards/small: "Card: Small"
-      dummy/atom/contents/divider: "Content: Divider"
-      dummy/atom/contents/documents: "Content: Documents"
-      dummy/atom/contents/image_and_text: "Content: Image & text"
-      dummy/atom/contents/lead_paragraph: "Content: Lead paragraph"
-      dummy/atom/contents/quotation: "Content: Quotation"
-      dummy/atom/contents/text: "Content: Text"
-      dummy/atom/contents/text_wrapping_image: "Content: Text around image"
-      dummy/atom/contents/title: "Content: Title"
-      dummy/atom/embeds/html: "Embed: HTML"
-      dummy/atom/forms/leads/form: "Form: Contact"
-      dummy/atom/images/gallery: "Images: Gallery"
-      dummy/atom/images/grid_gallery: "Images: Gallery (grid)"
-      dummy/atom/images/masonry_gallery: "Images: Gallery (masonry)"
-      dummy/atom/images/one_and_two: "Images: 1 & 2"
-      dummy/atom/images/single_image: "Images: Single image"
+      dummy/atom/cards/extra_small: 'Card: Extra small'
+      dummy/atom/cards/full_width: 'Card: Full width'
+      dummy/atom/cards/image: 'Card: Image'
+      dummy/atom/cards/large: 'Card: Large'
+      dummy/atom/cards/logo: 'Card: Logo'
+      dummy/atom/cards/medium: 'Card: Medium'
+      dummy/atom/cards/padded_image: 'Card: Image with padding'
+      dummy/atom/cards/person: 'Card: Person'
+      dummy/atom/cards/small: 'Card: Small'
+      dummy/atom/contents/divider: 'Content: Divider'
+      dummy/atom/contents/documents: 'Content: Documents'
+      dummy/atom/contents/image_and_text: 'Content: Image & text'
+      dummy/atom/contents/lead_paragraph: 'Content: Lead paragraph'
+      dummy/atom/contents/quotation: 'Content: Quotation'
+      dummy/atom/contents/text: 'Content: Text'
+      dummy/atom/contents/text_wrapping_image: 'Content: Text around image'
+      dummy/atom/contents/title: 'Content: Title'
+      dummy/atom/embeds/html: 'Embed: HTML'
+      dummy/atom/forms/leads/form: 'Form: Contact'
+      dummy/atom/images/gallery: 'Images: Gallery'
+      dummy/atom/images/grid_gallery: 'Images: Gallery (grid)'
+      dummy/atom/images/masonry_gallery: 'Images: Gallery (masonry)'
+      dummy/atom/images/one_and_two: 'Images: 1 & 2'
+      dummy/atom/images/single_image: 'Images: Single image'
+      dummy/atom/listings/blog/articles/index: 'Listing: Blog - articles'

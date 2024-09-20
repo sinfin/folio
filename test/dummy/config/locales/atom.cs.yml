@@ -101,28 +101,28 @@ cs:
         theme/light: Světlé
         theme/dark: Tmavé
     models:
-      dummy/atom/listings/blog/articles/index: "Výpis: Blog - články"
-      dummy/atom/cards/extra_small: "Karta: Extra malá"
-      dummy/atom/cards/full_width: "Karta: Na celou šířku"
-      dummy/atom/cards/image: "Karta: Obrázek"
-      dummy/atom/cards/large: "Karta: Velká"
-      dummy/atom/cards/logo: "Karta: Logo"
-      dummy/atom/cards/medium: "Karta: Střední"
-      dummy/atom/cards/padded_image: "Karta: Obrázek s odsazením"
-      dummy/atom/cards/person: "Karta: Osoba"
-      dummy/atom/cards/small: "Karta: Malá"
-      dummy/atom/contents/divider: "Obsah: Oddělovač"
-      dummy/atom/contents/documents: "Obsah: Dokumenty"
-      dummy/atom/contents/image_and_text: "Obsah: Obrázek a obsah"
-      dummy/atom/contents/lead_paragraph: "Obsah: Úvodní odstavec"
-      dummy/atom/contents/quotation: "Obsah: Citace"
-      dummy/atom/contents/text: "Obsah: Text"
-      dummy/atom/contents/text_wrapping_image: "Obsah: Text obtékající obrázek"
-      dummy/atom/contents/title: "Obsah: Nadpis"
-      dummy/atom/embeds/html: "Embed: HTML"
-      dummy/atom/forms/leads/form: "Formulář: Kontakt"
-      dummy/atom/images/gallery: "Obrázky: Galerie"
-      dummy/atom/images/grid_gallery: "Obrázky: Galerie v mřížce"
-      dummy/atom/images/masonry_gallery: "Obrázky: Galerie masonry"
-      dummy/atom/images/one_and_two: "Obrázky: 1 & 2"
-      dummy/atom/images/single_image: "Obrázky: Samostatný obrázek"
+      dummy/atom/cards/extra_small: 'Karta: Extra malá'
+      dummy/atom/cards/full_width: 'Karta: Na celou šířku'
+      dummy/atom/cards/image: 'Karta: Obrázek'
+      dummy/atom/cards/large: 'Karta: Velká'
+      dummy/atom/cards/logo: 'Karta: Logo'
+      dummy/atom/cards/medium: 'Karta: Střední'
+      dummy/atom/cards/padded_image: 'Karta: Obrázek s odsazením'
+      dummy/atom/cards/person: 'Karta: Osoba'
+      dummy/atom/cards/small: 'Karta: Malá'
+      dummy/atom/contents/divider: 'Obsah: Oddělovač'
+      dummy/atom/contents/documents: 'Obsah: Dokumenty'
+      dummy/atom/contents/image_and_text: 'Obsah: Obrázek a obsah'
+      dummy/atom/contents/lead_paragraph: 'Obsah: Úvodní odstavec'
+      dummy/atom/contents/quotation: 'Obsah: Citace'
+      dummy/atom/contents/text: 'Obsah: Text'
+      dummy/atom/contents/text_wrapping_image: 'Obsah: Text obtékající obrázek'
+      dummy/atom/contents/title: 'Obsah: Nadpis'
+      dummy/atom/embeds/html: 'Embed: HTML'
+      dummy/atom/forms/leads/form: 'Formulář: Kontakt'
+      dummy/atom/images/gallery: 'Obrázky: Galerie'
+      dummy/atom/images/grid_gallery: 'Obrázky: Galerie v mřížce'
+      dummy/atom/images/masonry_gallery: 'Obrázky: Galerie masonry'
+      dummy/atom/images/one_and_two: 'Obrázky: 1 & 2'
+      dummy/atom/images/single_image: 'Obrázky: Samostatný obrázek'
+      dummy/atom/listings/blog/articles/index: 'Výpis: Blog - články'
