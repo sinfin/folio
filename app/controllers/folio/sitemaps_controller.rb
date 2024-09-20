@@ -2,6 +2,7 @@
 
 class Folio::SitemapsController < ActionController::Base
   include Folio::HasCurrentSite
+  include Folio::SetCurrentRequestDetails
 
   def show
     filename = File.basename(request.path)
