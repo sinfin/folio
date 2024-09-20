@@ -27,7 +27,7 @@ namespace :blog do
         locales = ::Rails.application.config.folio_using_traco ? site.locales : [nil]
 
         locales.each do |locale|
-          <%= application_namespace %>::Atom::Blog::Articles::Index.create!(placement: page,
+          <%= application_namespace %>::Atom::Listings::Blog::Articles::Index.create!(placement: page,
                                                        locale:,
                                                        position: 1)
         end
@@ -128,7 +128,7 @@ namespace :blog do
                                  content: "<p>#{Faker::Hipster.paragraph}</p>",
                                  position: 1)
 
-            article.atoms.create(type: "<%= application_namespace %>::Atom::Text",
+            article.atoms.create(type: "<%= application_namespace %>::Atom::Contents::Text",
                                  content: "<p>#{Faker::Hipster.paragraph}</p>",
                                  position: 2)
 
@@ -136,7 +136,7 @@ namespace :blog do
                                  cover: images.sample,
                                  position: 3)
 
-            article.atoms.create(type: "<%= application_namespace %>::Atom::Text",
+            article.atoms.create(type: "<%= application_namespace %>::Atom::Contents::Text",
                                  content: "<p>#{Faker::Hipster.paragraph}</p>",
                                  position: 4)
 

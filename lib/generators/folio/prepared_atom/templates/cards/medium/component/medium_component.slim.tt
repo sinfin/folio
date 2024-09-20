@@ -1,0 +1,2 @@
+.<%= classname_prefix %>-molecule.<%= classname_prefix %>-molecule-cards-medium
+  = render(<%= application_namespace %>::Ui::CardsComponent.new(cards:))

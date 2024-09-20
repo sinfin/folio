@@ -1,0 +1,49 @@
+---
+cs:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/contents/title:
+        tag: Tag
+        tag/H1: H1
+        tag/H2: H2
+        tag/H3: H3
+        tag/H4: H4
+        tag/H5: H5
+        font_size: Velikost písma
+        font_size/fixed: Pevná
+        font_size/adaptive: Adaptivní
+        alignment: Zarovnání
+        alignment/left: Vlevo
+        alignment/center: Na střed
+        highlight: Zvýraznění
+        highlight/nil: Žádné
+        highlight/background: Pozadí
+        theme: Barvy
+        theme/light: Světlé
+        theme/dark: Tmavé
+    models:
+      application_namespace_path/atom/contents/title: 'Obsah: Nadpis'
+en:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/contents/title:
+        tag: Tag
+        tag/H1: H1
+        tag/H2: H2
+        tag/H3: H3
+        tag/H4: H4
+        tag/H5: H5
+        font_size: Font size
+        font_size/fixed: Fixed
+        font_size/adaptive: Adaptive
+        alignment: Alignment
+        alignment/left: Left
+        alignment/center: Center
+        highlight: Highlight
+        highlight/nil: None
+        highlight/background: Background
+        theme: Theme
+        theme/light: Light
+        theme/dark: Dark
+    models:
+      application_namespace_path/atom/contents/title: 'Content: Title'

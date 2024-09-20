@@ -1,0 +1,22 @@
+.<%= classname_prefix %>-atom.<%= classname_prefix %>-atom-images-single-image.my-f data=stimulus_lightbox
+  .container-fluid
+    = <%= application_namespace_path %>_ui_image(atom_cover_placement,
+                     THUMB_SIZE,
+                     lightbox: true,
+                     hover_zoom: true,
+                     border_radius: true,
+                     title: @atom.title,
+                     class_name: "<%= classname_prefix %>-atom-images-single-image__image")
+
+    - if @atom.title.present?
+      .<%= classname_prefix %>-atom-images-single-image__caption.fs-text-s
+        span.<%= classname_prefix %>-atom-images-single-image__title.fw-bold
+          = cstypo @atom.title
+
+        - if @atom.subtitle.present?
+          span.<%= classname_prefix %>-atom-images-single-image__subtitle
+            = cstypo @atom.subtitle
+
+    - if @atom.content.present?
+      .<%= classname_prefix %>-atom-images-single-image__content.fs-text-xs.<%= classname_prefix %>-rich-text
+        == cstypo @atom.content

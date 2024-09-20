@@ -1,0 +1,13 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= application_namespace %>::Atom::Contents::DividerComponentTest < Folio::ComponentTest
+  def test_render
+    atom = create_atom(<%= application_namespace %>::Atom::Contents::Divider)
+
+    render_inline(<%= application_namespace %>::Atom::Contents::DividerComponent.new(atom:))
+
+    assert_selector(".<%= classname_prefix %>-atom-contents-divider")
+  end
+end

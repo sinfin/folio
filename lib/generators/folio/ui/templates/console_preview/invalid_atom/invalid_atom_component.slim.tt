@@ -1,0 +1,13 @@
+.<%= classname_prefix %>-ui-console-preview-invali<%= classname_prefix %>-atom.bg-danger.p-f.text-center.my-atom-lg
+  = <%= application_namespace_path %>_ui_icon(:alert_triangle, height: 40, class_name: "text-white")
+
+  h3.text-center.text-white.my-3
+    = @atom.class.model_name.human
+
+  .text-center.text-white.font-family-headings
+    - if @message
+      = @message
+    - elsif I18n.locale == :cs
+      ' Špatně nastavený atom. Veřejně nebude zobrazen.
+    - else
+      ' Invalid atom. Will not be show publicly.

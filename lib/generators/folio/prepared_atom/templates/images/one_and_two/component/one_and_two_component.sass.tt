@@ -1,0 +1,72 @@
+.<%= classname_prefix %>-atom-images-one-and-two
+  &__item
+    position: relative
+
+  &__caption
+    margin-top: $grid-gutter-width
+
+  &__title:not(:last-child)
+    display: inline-block
+    margin-right: $grid-gutter-half
+
+  &__subtitle
+    color: $shade-400
+
+  +media-breakpoint-down(sm)
+    &__wrap
+      display: flex
+      flex-wrap: wrap
+      gap: 2 * $grid-gutter-base
+
+    &__caption
+      margin-top: 2 * $grid-gutter-base
+
+    &__item
+      &::after
+        content: ''
+        display: block
+        padding-top: 100%
+
+    &__item--1
+      flex: 1 0 100%
+
+      &::after
+        padding-top: 60%
+
+    &__item--2
+      flex: 0 0 calc(50% - #{$grid-gutter-base})
+
+    &__item--3
+      flex: 0 0 calc(50% - #{$grid-gutter-base})
+
+  +media-breakpoint-up(sm)
+    --<%= classname_prefix %>-atom-images-one-and-two-secondary-height: #{(350px - 24) / 2}
+
+    &__wrap
+      position: relative
+      height: calc(2 * var(--<%= classname_prefix %>-atom-images-one-and-two-secondary-height) + #{$grid-gutter-width})
+      padding-right: 250px + rem-to-px($grid-gutter-width)
+
+    &__item--1
+      height: 100%
+      width: 100%
+
+    &__item--2
+      width: 250px
+      position: absolute
+      top: 0
+      right: 0
+      height: var(--<%= classname_prefix %>-atom-images-one-and-two-secondary-height)
+
+    &__item--3
+      width: 250px
+      position: absolute
+      right: 0
+      top: calc(var(--<%= classname_prefix %>-atom-images-one-and-two-secondary-height) + #{$grid-gutter-width})
+      height: var(--<%= classname_prefix %>-atom-images-one-and-two-secondary-height)
+
+  +media-breakpoint-up(md)
+    --<%= classname_prefix %>-atom-images-one-and-two-secondary-height: #{(530px - 24) / 2}
+
+  +media-breakpoint-up(xl)
+    --<%= classname_prefix %>-atom-images-one-and-two-secondary-height: #{(650px - 24) / 2}

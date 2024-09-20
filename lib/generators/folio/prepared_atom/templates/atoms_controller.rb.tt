@@ -46,13 +46,22 @@ class <%= application_namespace %>::AtomsController < ApplicationController
         nil
       end
     else
-      @atom_classes_data = @root_data["atoms"].keys.filter_map do |class_name|
+      hash = {}
+
+      @root_data["atoms"].keys.each do |class_name|
         klass = class_name.constantize
 
         if klass.valid_for_site_class?(current_site.class)
-          { klass:, label: klass.model_name.human }
+          hash[klass.console_insert_row] ||= []
+          hash[klass.console_insert_row] << { klass:, label: klass.model_name.human }
         end
-      end.sort_by { |h| ActiveSupport::Inflector.transliterate(h[:label]) }
+      end
+
+      @atom_classes_data = []
+
+      hash.to_a.sort_by(&:first).each do |_console_insert_row, array|
+        @atom_classes_data += array.sort_by { |h| ActiveSupport::Inflector.transliterate(h[:label]) }
+      end
     end
   end
 

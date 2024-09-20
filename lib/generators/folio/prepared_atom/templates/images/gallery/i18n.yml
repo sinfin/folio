@@ -1,0 +1,13 @@
+---
+cs:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/images/gallery:
+    models:
+      application_namespace_path/atom/images/gallery: 'Obrázky: Galerie'
+en:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/images/gallery:
+    models:
+      application_namespace_path/atom/images/gallery: 'Images: Gallery'

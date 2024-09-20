@@ -1,0 +1,42 @@
+.<%= classname_prefix %>-atom.my-atom[
+  class=bem_class_name
+  data=data
+]
+  .container-fluid[
+    class=(@wrapper ? "container-fluid--with-narrow" : nil)
+  ]
+    .<%= classname_prefix %>-atom-contents-image-and-text__inner[
+      class="<%= classname_prefix %>-ui-image-hover-zoom-wrap"
+    ]
+      .<%= classname_prefix %>-atom-contents-image-and-text__row[
+        class=(@wrapper ? inner_narrow_container_class : nil)
+      ]
+        .<%= classname_prefix %>-atom-contents-image-and-text__image-wrap
+          = <%= application_namespace_path %>_ui_image(atom_cover_placement,
+                           @thumb_size,
+                           class_name: "<%= classname_prefix %>-atom-contents-image-and-text__image",
+                           lightbox: true,
+                           hover_zoom: @atom.url.present?)
+
+        .<%= classname_prefix %>-atom-contents-image-and-text__contents
+          - if @atom.subtitle.present?
+            .<%= classname_prefix %>-atom-contents-image-and-text__subtitle.fs-text-l
+              = @atom.subtitle
+
+          - if @atom.title.present?
+            h2.<%= classname_prefix %>-atom-contents-image-and-text__title.fs-display-s
+              = @atom.title
+
+          - if @atom.content.present?
+            .<%= classname_prefix %>-atom-contents-image-and-text__text[
+              class="<%= classname_prefix %>-rich-text"
+            ]
+              == cstypo @atom.content
+
+          - if @atom.url.present?
+            a.<%= classname_prefix %>-atom-contents-image-and-text__btn[
+              class="btn btn-secondary btn-sm"
+              target=(@atom.open_in_new_tab ? "_blank" : nil)
+              href=@atom.url
+            ]
+              = @atom.button_label

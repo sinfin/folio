@@ -1,0 +1,11 @@
+.<%= classname_prefix %>-atom[
+  class=atom_class_name
+]
+  .container-fluid.<%= classname_prefix %>-atom-contents-text__container
+    .<%= classname_prefix %>-atom-contents-text__inner
+      .container-fluid.<%= classname_prefix %>-atom-contents-text__content-container
+        .<%= classname_prefix %>-rich-text [
+          class=rich_text_chomp_class
+          class="<%= classname_prefix %>-atom-contents-text__content"
+        ]
+          == cstypo @atom.content

@@ -1,0 +1,15 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= application_namespace %>::Atom::Images::OneAndTwoComponentTest < Folio::ComponentTest
+  def test_render
+    images = create_list(:folio_file_image, 3)
+
+    atom = create_atom(<%= application_namespace %>::Atom::Images::OneAndTwo, images:)
+
+    render_inline(<%= application_namespace %>::Atom::Images::OneAndTwoComponent.new(atom:))
+
+    assert_selector(".<%= classname_prefix %>-atom-images-one-and-two")
+  end
+end

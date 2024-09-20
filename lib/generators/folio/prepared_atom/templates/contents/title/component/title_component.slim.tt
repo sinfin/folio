@@ -1,0 +1,9 @@
+.<%= classname_prefix %>-atom[
+  class=atom_class_name
+]
+  .container-fluid.<%= classname_prefix %>-atom-contents-title__container
+    .<%= classname_prefix %>-atom-contents-title__inner
+      .<%= classname_prefix %>-atom-contents-title__content-container
+        .<%= classname_prefix %>-rich-text class=rich_text_chomp_class
+          *title_tag
+            = cstypo @atom.title

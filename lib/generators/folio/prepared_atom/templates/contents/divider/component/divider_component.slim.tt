@@ -1,0 +1,6 @@
+.<%= classname_prefix %>-atom.<%= classname_prefix %>-atom-contents-divider.my-atom-lg[
+  class=variant_class_name
+  class=margin_class_name
+]
+  .container-fluid
+    hr.<%= classname_prefix %>-atom-contents-divider__hr

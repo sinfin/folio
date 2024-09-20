@@ -1,4 +1,4 @@
-.<%= classname_prefix %>-ui-documents [
+.<%= classname_prefix %>-ui-documents[
   class=size_class
 ]
   - if @title.present?

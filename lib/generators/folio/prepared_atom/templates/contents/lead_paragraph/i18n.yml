@@ -1,0 +1,13 @@
+---
+cs:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/contents/lead_paragraph:
+    models:
+      application_namespace_path/atom/contents/lead_paragraph: 'Obsah: Úvodní odstavec'
+en:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/contents/lead_paragraph:
+    models:
+      application_namespace_path/atom/contents/lead_paragraph: 'Content: Lead paragraph'

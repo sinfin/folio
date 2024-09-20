@@ -1,0 +1,97 @@
+.<%= classname_prefix %>-atom-contents-image-and-text
+  --<%= classname_prefix %>-atom-contents-image-and-text-row-gap: #{map-get($spacers, f) + map-get($spacers, f)}
+
+  &[data-bs-theme="dark"]
+    background: transparent
+
+  &__inner
+    position: relative
+
+  &--background &__inner
+    background-color: $shade-100
+    padding: map-get($spacers, d) 0
+
+  &__row
+    flex-wrap: wrap
+    gap: map-get($spacers, f) var(--<%= classname_prefix %>-atom-contents-image-and-text-row-gap)
+
+  &__image-wrap
+    overflow: hidden
+    display: flex
+    align-items: center
+
+  &__image
+    border-radius: $border-radius
+    width: 100%
+
+  &__contents
+    display: flex
+    flex-direction: column
+    align-items: flex-start
+    padding-top: map-get($spacers, e)
+
+  &--vertically-centered-content &__contents
+    align-self: center
+
+  &__title
+    margin: 0 0 map-get($spacers, b) 0
+
+  &__subtitle
+    font-weight: $font-weight-semibold
+    margin-bottom: map-get($spacers, b)
+
+  &__text
+    margin-bottom: map-get($spacers, d)
+    position: relative
+    z-index: 11
+
+    p:last-child
+      margin-bottom: 0
+
+  &__btn
+    margin: map-get($spacers, a) 0
+
+    &::before
+      content: ''
+      display: block
+      position: absolute
+      inset: 0
+      z-index: 10
+
+  +media-breakpoint-up(sm)
+    &__row
+      display: flex
+
+    &__image-wrap,
+    &__contents
+      flex: 0 0 calc(50% - var(--<%= classname_prefix %>-atom-contents-image-and-text-row-gap) / 2)
+      width: calc(50% - var(--<%= classname_prefix %>-atom-contents-image-and-text-row-gap) / 2)
+
+    &__contents
+      padding: map-get($spacers, f) 0
+
+    &--image-right &__row
+      flex-direction: row-reverse
+
+    &--background &__inner
+      border-radius: $border-radius
+      padding: map-get($spacers, g) 0
+
+  +media-breakpoint-up(xl)
+    --<%= classname_prefix %>-atom-contents-image-and-text-row-gap: #{map-get($spacers, f) + map-get($spacers, g)}
+
+    &__contents
+      padding: map-get($spacers, j) 0 map-get($spacers, f)
+
+    &--centered-content &__contents
+      padding-top: map-get($spacers, f)
+
+    &--background &__inner
+      padding: map-get($spacers, l) 0
+
+    &__title
+      +font-size-display-m
+
+  +media-breakpoint-up(xxl)
+    &:not(&--background) &__title
+      +font-size-display-l

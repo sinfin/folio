@@ -1,0 +1,13 @@
+---
+cs:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/images/grid_gallery:
+    models:
+      application_namespace_path/atom/images/grid_gallery: 'Obrázky: Galerie v mřížce'
+en:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/images/grid_gallery:
+    models:
+      application_namespace_path/atom/images/grid_gallery: 'Images: Gallery (grid)'

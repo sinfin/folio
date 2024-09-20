@@ -1,0 +1,21 @@
+---
+cs:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/contents/documents:
+        size: Velikost
+        size/small: Malá
+        size/medium: Střední
+        size/large: Velká
+    models:
+      application_namespace_path/atom/contents/documents: 'Obsah: Dokumenty'
+en:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/contents/documents:
+        size: Size
+        size/small: Small
+        size/medium: Medium
+        size/large: Large
+    models:
+      application_namespace_path/atom/contents/documents: 'Content: Documents'
