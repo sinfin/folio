@@ -9,6 +9,14 @@ def get_current_or_existing_site_or_create_from_factory
   site || Folio::Site.last || create(Rails.application.config.folio_site_default_test_factory)
 end
 
+
+def safely_set_roles_for(user, roles, site)
+  # to avoid check, if current user can actually assing such roles
+  Folio::Current.stub(:user, nil) do
+    user.set_roles_for(site:, roles:)
+  end
+end
+
 FactoryBot.define do
   factory :folio_site, class: "Folio::Site" do
     title { "Folio" }
@@ -158,7 +166,15 @@ FactoryBot.define do
   factory :folio_site_user_link, class: "Folio::SiteUserLink" do
     site { get_current_or_existing_site_or_create_from_factory }
     user { create(:folio_user) }
-    roles { [] }
+    transient do
+      roles { [] }
+    end
+
+    after(:build) do |site_user_link, evaluator|
+      Folio::Current.stub(:user, nil) do
+        site_user_link.roles = evaluator.roles
+      end
+    end
   end
 
   factory :folio_newsletter_subscription, class: "Folio::NewsletterSubscription" do
