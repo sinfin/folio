@@ -46,8 +46,8 @@ module Folio::Featurable
               "(#{table_name}.featured_from IS NULL OR #{table_name}.featured_from <= ?) AND "\
               "(#{table_name}.featured_until IS NULL OR #{table_name}.featured_until >= ?)",
               true,
-              Time.zone.now,
-              Time.zone.now)
+              Time.current,
+              Time.current)
       }
 
       folio_by_scopes_for :featured
@@ -55,11 +55,11 @@ module Folio::Featurable
 
     def featured?
       if featured.present?
-        if featured_from.present? && featured_from >= Time.zone.now
+        if featured_from.present? && featured_from >= Time.current
           return false
         end
 
-        if featured_until.present? && featured_until <= Time.zone.now
+        if featured_until.present? && featured_until <= Time.current
           return false
         end
 

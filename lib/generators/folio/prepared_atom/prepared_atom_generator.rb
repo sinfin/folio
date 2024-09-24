@@ -17,7 +17,7 @@ class Folio::PreparedAtomGenerator < Rails::Generators::NamedBase
     prefix = Folio::Engine.root.join("lib/generators/folio/prepared_atom/templates/").to_s
 
     Dir.glob(Folio::Engine.root.join("lib/generators/folio/prepared_atom/templates/**/component")).each do |component_directory_path|
-      allowed_keys << component_directory_path.delete_prefix(prefix).delete_suffix('/component')
+      allowed_keys << component_directory_path.delete_prefix(prefix).delete_suffix("/component")
     end
 
     if name == "all"

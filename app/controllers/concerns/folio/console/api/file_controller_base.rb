@@ -82,7 +82,7 @@ module Folio::Console::Api::FileControllerBase
 
     zip_data = File.read(tmp_zip_file.path)
     send_data(zip_data, type: "application/zip",
-                        filename: "#{@klass.model_name.human(count: 2)}-#{Time.zone.now.to_i}.zip")
+                        filename: "#{@klass.model_name.human(count: 2)}-#{Time.current.to_i}.zip")
   end
 
   private

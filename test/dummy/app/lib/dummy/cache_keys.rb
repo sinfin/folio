@@ -71,7 +71,7 @@ module Dummy::CacheKeys
             cache_key_counts,
             request.host,
           ],
-          set_at: Time.zone.now,
+          set_at: Time.current,
         }
 
         if defined?(Dummy::Blog::Article)

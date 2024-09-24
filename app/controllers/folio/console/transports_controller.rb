@@ -10,7 +10,7 @@ class Folio::Console::TransportsController < Folio::Console::BaseController
   def download
     @yaml = Folio::Transportable::Exporter.new(@record).to_yaml
 
-    now = Time.zone.now.strftime("%Y-%m-%d-%H-%M-%S")
+    now = Time.current.strftime("%Y-%m-%d-%H-%M-%S")
     filename = "transport-#{@klass.model_name.param_key}-#{@record.to_param}-#{now}.yml"
     send_data @yaml, type: "text/vnd.yaml", disposition: "attachment; filename=#{filename}"
   end

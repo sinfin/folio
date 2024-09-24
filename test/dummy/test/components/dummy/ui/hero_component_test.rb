@@ -11,7 +11,7 @@ class Dummy::Ui::HeroComponentTest < Folio::ComponentTest
     # All parameters
     render_inline(Dummy::Ui::HeroComponent.new(title: "foo",
                                                perex: "bar",
-                                               date: Time.zone.now,
+                                               date: Time.current,
                                                cover: create(:folio_cover_placement),
                                                background_cover: create(:folio_cover_placement),
                                                image_size: :container,

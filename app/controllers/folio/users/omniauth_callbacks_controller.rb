@@ -164,7 +164,7 @@ class Folio::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksContr
           end
 
           session[:pending_folio_authentication] = {
-            timestamp: Time.zone.now,
+            timestamp: Time.current,
             id: auth.id,
             conflict: !!existing_user,
           }
