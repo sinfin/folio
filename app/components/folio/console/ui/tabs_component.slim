@@ -8,6 +8,7 @@
       - @tabs.each do |tab|
         li.f-c-ui-tabs__nav-item[
           class="nav-item"
+          hidden=tab[:hidden]
           data-key=tab[:key]
         ]
           *link_tag(tab)
