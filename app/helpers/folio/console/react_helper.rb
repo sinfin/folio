@@ -1,19 +1,21 @@
 # frozen_string_literal: true
 
 module Folio::Console::ReactHelper
-  def file_picker(f:, placement_key:, file_type:, hint: nil)
+  def file_picker(f:, placement_key:, file_type:, hint: nil, darker: false)
     raw cell("folio/console/file/picker",
              f:,
              placement_key:,
              file_type:,
-             hint:)
+             hint:,
+             darker:)
   end
 
-  def file_picker_for_cover(f, hint: nil)
+  def file_picker_for_cover(f, hint: nil, darker: false)
     file_picker(f:,
                 placement_key: :cover_placement,
                 file_type: "Folio::File::Image",
-                hint:)
+                hint:,
+                darker:)
   end
 
   def file_picker_for_og_image(f, hint: nil)
