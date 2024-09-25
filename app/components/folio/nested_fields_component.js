@@ -35,10 +35,16 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
 
     window.Folio.Confirm.confirm(() => {
       const fields = e.target.closest('.f-nested-fields__fields')
-      const idInput = fields.querySelector("input[name*='[id]']")
+
+      // this is needed in case a file/picker is inside the fields
+      const idInputs = fields.querySelectorAll("input[name*='[id]']")
+      const idInput = idInputs[idInputs.length - 1]
 
       if (idInput && idInput.value) {
-        const destroyInput = fields.querySelector("input[name*='[_destroy]']")
+        // this is needed in case a file/picker is inside the fields
+        const destroyInputs = fields.querySelectorAll("input[name*='[_destroy]']")
+        const destroyInput = destroyInputs[destroyInputs.length - 1]
+
         destroyInput.value = "1"
         fields.hidden = true
       } else {
