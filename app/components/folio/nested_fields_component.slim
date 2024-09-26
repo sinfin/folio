@@ -2,22 +2,45 @@
   .f-nested-fields__fields-wrap data=stimulus_target('fieldsWrap')
     = @f.simple_fields_for @key do |ff|
       .f-nested-fields__fields data=stimulus_target('fields')
-        - @g = ff
+        ruby:
+          @g = ff
+          supports_position = @position && @g.object.respond_to?(:position)
+
         == content
-        = @g.hidden_field :id
 
-        - if @destroy
-          = @g.hidden_field :_destroy
+        = @g.hidden_field :id, class: "f-nested-fields__id-input"
 
-          .f-nested-fields__destroy[
-            data=stimulus_action(click: 'onDestroyClick')
-          ]
-            - if @destroy == true
-              = folio_icon(:close,
-                           height: 16,
-                           class: "f-nested-fields__destroy-ico")
-            - else
-              == @destroy
+        - if @destroy || supports_position
+          .f-nested-fields__controls
+            - if @destroy
+              = @g.hidden_field :_destroy, class: "f-nested-fields__destroy-input"
+
+              .f-nested-fields__control.f-nested-fields__control--destroy[
+                data=stimulus_action(click: 'onDestroyClick')
+              ]
+                - if @destroy == true
+                  = folio_icon(:close,
+                               height: 24,
+                               class: "f-nested-fields__destroy-ico")
+                - else
+                  == @destroy
+
+            - if supports_position
+              = @g.hidden_field :position, class: "f-nested-fields__position-input"
+
+              .f-nested-fields__control[
+                data=stimulus_action(click: 'onPositionUpClick')
+              ]
+                = folio_icon(:arrow_up,
+                             height: 24,
+                             class: "f-nested-fields__position-ico")
+
+              .f-nested-fields__control[
+                data=stimulus_action(click: 'onPositionDownClick')
+              ]
+                = folio_icon(:arrow_down,
+                             height: 24,
+                             class: "f-nested-fields__position-ico")
 
         - remove_instance_variable(:@__vc_content)
 
@@ -40,18 +63,42 @@
           = @f.simple_fields_for @key,
                                  new_object,
                                  child_index: "f-nested-fields-template-#{@key}" do |ff|
-            - @g = ff
+            ruby:
+              @g = ff
+              supports_position = @position && @g.object.respond_to?(:position)
+
             == content
 
-            - if @destroy
-              .f-nested-fields__destroy[
-                data=stimulus_action(click: 'onDestroyClick')
-              ]
-                - if @destroy == true
-                  = folio_icon(:close,
-                               height: 16,
-                               class: "f-nested-fields__destroy-ico")
-                - else
-                  == @destroy
+            - if @destroy || supports_position
+              .f-nested-fields__controls
+                - if @destroy
+                  = @g.hidden_field :_destroy, class: "f-nested-fields__destroy-input"
+
+                  .f-nested-fields__control.f-nested-fields__control--destroy[
+                    data=stimulus_action(click: 'onDestroyClick')
+                  ]
+                    - if @destroy == true
+                      = folio_icon(:close,
+                                   height: 24,
+                                   class: "f-nested-fields__destroy-ico")
+                    - else
+                      == @destroy
+
+                - if supports_position
+                  = @g.hidden_field :position, class: "f-nested-fields__position-input"
+
+                  .f-nested-fields__control[
+                    data=stimulus_action(click: 'onPositionUpClick')
+                  ]
+                    = folio_icon(:arrow_up,
+                                 height: 24,
+                                 class: "f-nested-fields__position-ico")
+
+                  .f-nested-fields__control[
+                    data=stimulus_action(click: 'onPositionDownClick')
+                  ]
+                    = folio_icon(:arrow_down,
+                                 height: 24,
+                                 class: "f-nested-fields__position-ico")
 
             - remove_instance_variable(:@__vc_content)

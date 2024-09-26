@@ -3,14 +3,24 @@
     position: relative
     padding-right: 2 * $grid-gutter-width
 
-  &__destroy
+  &__controls
     position: absolute
     top: 0
-    right: $grid-gutter-half
+    right: 0
+
+  &__control
+    flex: 0 0 auto
     cursor: pointer
-    color: $danger
     display: flex
     align-items: center
-    justify-content: flex-end
-    width: $input-height
+    justify-content: center
+    width: 2 * $grid-gutter-width
     height: $input-height
+
+  &__control--destroy
+    color: $danger
+
+  &__position
+    position: absolute
+    right: 0
+    top: $input-height
