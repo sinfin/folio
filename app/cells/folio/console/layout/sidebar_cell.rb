@@ -37,6 +37,8 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
         path = controller.url_for([:edit, :console, homepage_instance])
         link(t(".homepage"), path)
       end
+    elsif link_source == :hr
+      return :hr
     elsif link_source.is_a?(Hash) && (link_source[:klass] || link_source[:label]) && (link_source[:path] || link_source[:url_name])
       if link_source[:klass]
         return unless can_now?(:index, link_source[:klass].constantize)
@@ -243,29 +245,51 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
 
     def build_site_links_collapsible_block(site)
       I18n.with_locale(site.console_locale) do
-        links = ::Rails.application.config.folio_shared_files_between_sites ? [] : file_links(site)
-        links << link_for_site_class(site, Folio::ContentTemplate) if ::Rails.application.config.folio_content_templates_editable
-
         site_links = site_specific_links(site)
 
-        links += site_links[:console_sidebar_prepended_links]
-        links << link_for_site_class(site, Folio::Page)
-        links << homepage_for_site(site)
-        links += site_links[:console_sidebar_before_menu_links]
-        links << link_for_site_class(site, Folio::Menu)
-        links << link_for_site_class(site, Folio::Lead) if show_leads?
-        links << link_for_site_class(site, Folio::NewsletterSubscription) if show_newsletter_subscriptions?
-        links << link_for_site_class(site, Folio::EmailTemplate)
-        links += site_links[:console_sidebar_before_site_links]
-        if can_now?(:update, site)
-          links << {
-                      klass: "Folio::Site",
-                      icon: :cog,
-                      path: controller.folio.edit_console_site_url(only_path: false, host: site.env_aware_domain),
-                      label: t(".settings"),
-                    }
+        if site_links[:console_sidebar_custom_links].present?
+          links = site_links[:console_sidebar_custom_links]
+          links << :hr
+          if can_now?(:update, site)
+            links << {
+                        klass: "Folio::Site",
+                        icon: :cog,
+                        path: controller.folio.edit_console_site_url(only_path: false, host: site.env_aware_domain),
+                        label: t(".settings"),
+                      }
+          end
+        else
+          links = [link_for_site_class(site, Folio::Lead)] if show_leads?
+          links << :hr
+
+          links += site_links[:console_sidebar_prepended_links]
+          links << :hr
+
+          links << link_for_site_class(site, Folio::Page)
+          links += site_links[:console_sidebar_before_menu_links]
+          links << homepage_for_site(site)
+          links << :hr
+
+          links += ::Rails.application.config.folio_shared_files_between_sites ? [] : file_links(site)
+          links << :hr
+
+          links << link_for_site_class(site, Folio::Menu)
+          links << link_for_site_class(site, Folio::NewsletterSubscription) if show_newsletter_subscriptions?
+          links << link_for_site_class(site, Folio::EmailTemplate)
+          links << link_for_site_class(site, Folio::ContentTemplate) if ::Rails.application.config.folio_content_templates_editable
+          links += site_links[:console_sidebar_before_site_links]
+          links << :hr
+
+          if can_now?(:update, site)
+            links << {
+                        klass: "Folio::Site",
+                        icon: :cog,
+                        path: controller.folio.edit_console_site_url(only_path: false, host: site.env_aware_domain),
+                        label: t(".settings"),
+                      }
+          end
+          links << link_for_site_class(site, Folio::User) if show_users? && !current_user.superadmin?
         end
-        links << link_for_site_class(site, Folio::User) if show_users? && !current_user.superadmin?
 
         {
           locale: site.console_locale,
@@ -282,6 +306,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
         console_sidebar_prepended_links: [],
         console_sidebar_before_menu_links: [],
         console_sidebar_before_site_links: [],
+        console_sidebar_custom_links: [],
       }
 
       I18n.with_locale(site.console_locale) do
@@ -289,7 +314,11 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
           next if (group_links_defs = site.class.try(links_group_key)).blank?
 
           group_links_defs.each do |link_or_hash|
-            site_links[links_group_key] << link_from_definitions(site, link_or_hash)
+            if link_or_hash == "hr"
+              site_links[links_group_key] << :hr
+            else
+              site_links[links_group_key] << link_from_definitions(site, link_or_hash)
+            end
           end
         end
       end
