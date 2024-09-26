@@ -32,6 +32,19 @@ div class=wrap_class
               fill="currentColor"
             ]
 
+      .f-newsletter-subscriptions-form__turnstile
+        div[
+          class="cf-turnstile"
+          data-sitekey=ENV['CLOUDFLARE_TURNSTILE_SITE_KEY']
+          data-callback="javascriptCallback"
+          appearance="interaction-only"
+        ]
+
+      - if errors = f.object.errors[:base].presence
+        .mb-1
+          - errors.each do |error|
+            small.text-danger = error
+
     span.folio-loader.f-newsletter-subscriptions-form__loader
 
   - if submitted

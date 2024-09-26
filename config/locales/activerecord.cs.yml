@@ -142,6 +142,7 @@ cs:
           attributes:
             email:
               invalid: není platná
+          turnstile_verification_failed: Prosím potvrďte, že nejste robot.
         folio/user:
           attributes:
             phone:

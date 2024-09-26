@@ -25,7 +25,7 @@ exclude:
   - app/views/folio/console/partials/_translations.slim
   - app/views/folio/console/users/_form.slim
   - app/views/layouts/folio/_analytics.slim
-  - app/views/layouts/folio/_cookieconsent.slim
+  - app/views/layouts/folio/_cloudflare_turnstile.slim
   - app/views/layouts/folio/console/_head.slim
   - app/views/layouts/folio/console/application.slim
   - app/views/layouts/folio/mailer.html.slim

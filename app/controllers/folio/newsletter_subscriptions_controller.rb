@@ -10,7 +10,11 @@ class Folio::NewsletterSubscriptionsController < Folio::ApplicationController
       @newsletter_subscription.site = current_site
     end
 
-    @newsletter_subscription.save
+    if validate_turnstile(params["cf-turnstile-response"])
+      @newsletter_subscription.save
+    else
+      @newsletter_subscription.errors.add(:base, :turnstile_verification_failed)
+    end
 
     render html: cell("folio/newsletter_subscriptions/form", @newsletter_subscription, cell_options_params)
   end
@@ -32,5 +36,17 @@ class Folio::NewsletterSubscriptionsController < Folio::ApplicationController
       else
         {}
       end
+    end
+
+    def validate_turnstile(response)
+      return true if Rails.env.test?
+      return false unless response
+
+      secret = ENV["CLOUDFLARE_TURNSTILE_SECRET_KEY"]
+      uri = URI.parse("https://challenges.cloudflare.com/turnstile/v0/siteverify")
+      response = Net::HTTP.post_form(uri, secret:, response:)
+
+      result = JSON.parse(response.body)
+      result["success"]
     end
 end
