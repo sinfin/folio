@@ -3,7 +3,15 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
     key: String
   }
 
-  static targets = ['template', 'fieldsWrap', 'fields']
+  static targets = ['template', 'fieldsWrap', 'destroyedWrap', 'fields']
+
+  connect () {
+    this.fieldsTargets.forEach((fieldsTarget) => {
+      if (fieldsTarget.hidden) {
+        this.destroyedWrapTarget.appendChild(fieldsTarget)
+      }
+    })
+  }
 
   onAddClick (e) {
     e.preventDefault()
@@ -42,6 +50,7 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
 
         destroyInput.value = "1"
         fields.hidden = true
+        this.destroyedWrapTarget.appendChild(fields)
       } else {
         fields.remove()
       }

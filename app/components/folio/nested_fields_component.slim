@@ -1,11 +1,19 @@
 .f-nested-fields data=data
+  .f-nested-fields__destroyed-wrap[
+    data=stimulus_target('destroyedWrap')
+    hidden=true
+  ]
+
   .f-nested-fields__fields-wrap data=stimulus_target('fieldsWrap')
     = @f.simple_fields_for @key do |ff|
-      .f-nested-fields__fields data=stimulus_target('fields')
-        ruby:
-          @g = ff
-          supports_position = @position && @g.object.respond_to?(:position)
+      ruby:
+        @g = ff
+        supports_position = @position && @g.object.respond_to?(:position)
 
+      .f-nested-fields__fields[
+        data=stimulus_target('fields')
+        hidden=@g.object.marked_for_destruction?
+      ]
         == content
 
         = @g.hidden_field :id, class: "f-nested-fields__id-input"
@@ -13,7 +21,7 @@
         - if @destroy || supports_position
           .f-nested-fields__controls
             - if @destroy
-              = @g.hidden_field :_destroy, class: "f-nested-fields__destroy-input"
+              = @g.hidden_field :_destroy, class: "f-nested-fields__destroy-input", value: @g.object.marked_for_destruction? ? "1" : nil
 
               .f-nested-fields__control.f-nested-fields__control--destroy[
                 data=stimulus_action(click: 'onDestroyClick')
