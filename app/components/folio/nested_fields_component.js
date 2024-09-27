@@ -1,9 +1,12 @@
+//= require folio/remote_scripts
+
 window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.Controller {
   static values = {
-    key: String
+    key: String,
+    sortableBound: Boolean
   }
 
-  static targets = ['template', 'fieldsWrap', 'destroyedWrap', 'fields']
+  static targets = ['template', 'fieldsWrap', 'destroyedWrap', 'fields', 'sortableHandle']
 
   connect () {
     this.fieldsTargets.forEach((fieldsTarget) => {
@@ -13,13 +16,27 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
     })
   }
 
+  disconnect () {
+    if (this.debouncedSortableInit) {
+      delete this.debouncedSortableInit
+    }
+
+    if (this.sortableBound) {
+      if (window.sortable) {
+        window.sortable(this.fieldsWrapTarget, 'destroy')
+      }
+
+      this.sortableBound = false
+    }
+  }
+
   onAddClick (e) {
     e.preventDefault()
     this.add()
   }
 
   add () {
-    this.fieldsWrapTarget.insertAdjacentHTML("beforeend", this.htmlFromTemplate())
+    this.fieldsWrapTarget.insertAdjacentHTML('beforeend', this.htmlFromTemplate())
     this.dispatch('add', { detail: { field: this.fieldsTargets[this.fieldsTargets.length - 1] } })
   }
 
@@ -48,7 +65,7 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
       if (idInput && idInput.value) {
         const destroyInput = fields.querySelector('.f-nested-fields__destroy-input')
 
-        destroyInput.value = "1"
+        destroyInput.value = '1'
         fields.hidden = true
         this.destroyedWrapTarget.appendChild(fields)
       } else {
@@ -83,6 +100,7 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
 
   redoPositions () {
     let position = 0
+    let triggeredChange = false
 
     this.fieldsTargets.forEach((fields) => {
       if (!fields.hidden) {
@@ -90,9 +108,49 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
 
         if (input) {
           position += 1
-          input.value = position
+
+          if (input.value !== String(position)) {
+            input.value = position
+
+            if (!triggeredChange) {
+              input.dispatchEvent(new Event('change', { bubbles: true }))
+              triggeredChange = true
+            }
+          }
         }
       }
     })
+  }
+
+  sortableHandleTargetConnected (element) {
+    if (!this.debouncedSortableInit) this.debouncedSortableInit = Folio.debounce(this.initSortable)
+    this.debouncedSortableInit()
+  }
+
+  sortableHandleTargetDisconnected (element) {
+    if (!this.debouncedSortableInit) this.debouncedSortableInit = Folio.debounce(this.initSortable)
+    this.debouncedSortableInit()
+  }
+
+  initSortable () {
+    window.Folio.RemoteScripts.run('html5sortable', () => {
+      if (this.sortableBound) {
+        window.sortable(this.fieldsWrapTarget)
+      } else {
+        window.sortable(this.fieldsWrapTarget, {
+          items: '.f-nested-fields__fields',
+          handle: '.f-nested-fields__control--sortable-handle',
+          placeholder: '<div class="f-nested-fields__sortable-placeholder"><div class="f-nested-fields__sortable-placeholder-inner"></div></div>'
+        })
+
+        this.sortableBound = true
+      }
+    }, () => {
+      this.element.classList.add('f-nested-fields--sortable-broken')
+    })
+  }
+
+  onSortUpdate (e) {
+    this.redoPositions()
   }
 })

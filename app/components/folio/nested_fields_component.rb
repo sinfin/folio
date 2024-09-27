@@ -15,6 +15,7 @@ class Folio::NestedFieldsComponent < Folio::ApplicationComponent
     stimulus_controller("f-nested-fields",
                         values: {
                           key: @key,
+                          sortableBound: false,
                         })
   end
 

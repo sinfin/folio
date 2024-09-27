@@ -16,6 +16,9 @@ window.Folio.RemoteScripts.Data = {
   'intl-tel-input': {
     urls: ['https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/23.5.0/js/intlTelInput.min.js'],
     cssUrls: ['https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/23.5.0/css/intlTelInput.css']
+  },
+  'html5sortable': {
+    urls: ['https://cdnjs.cloudflare.com/ajax/libs/html5sortable/0.14.0/html5sortable.min.js']
   }
 }
 

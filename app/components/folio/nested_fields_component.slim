@@ -4,7 +4,9 @@
     hidden=true
   ]
 
-  .f-nested-fields__fields-wrap data=stimulus_target('fieldsWrap')
+  .f-nested-fields__fields-wrap[
+    data=stimulus_data(target: 'fieldsWrap', action: { sortupdate: 'onSortUpdate' })
+  ]
     = @f.simple_fields_for @key do |ff|
       ruby:
         @g = ff
@@ -39,16 +41,17 @@
               .f-nested-fields__control[
                 data=stimulus_action(click: 'onPositionUpClick')
               ]
-                = folio_icon(:arrow_up,
-                             height: 24,
-                             class: "f-nested-fields__position-ico")
+                = folio_icon(:arrow_up, height: 24)
+
+              .f-nested-fields__control.f-nested-fields__control--sortable-handle[
+                data=stimulus_target("sortableHandle")
+              ]
+                = folio_icon(:drag, height: 24)
 
               .f-nested-fields__control[
                 data=stimulus_action(click: 'onPositionDownClick')
               ]
-                = folio_icon(:arrow_down,
-                             height: 24,
-                             class: "f-nested-fields__position-ico")
+                = folio_icon(:arrow_down, height: 24)
 
         - remove_instance_variable(:@__vc_content)
 
@@ -98,15 +101,16 @@
                   .f-nested-fields__control[
                     data=stimulus_action(click: 'onPositionUpClick')
                   ]
-                    = folio_icon(:arrow_up,
-                                 height: 24,
-                                 class: "f-nested-fields__position-ico")
+                    = folio_icon(:arrow_up, height: 24)
+
+                  .f-nested-fields__control.f-nested-fields__control--sortable-handle[
+                    data=stimulus_target("sortableHandle")
+                  ]
+                    = folio_icon(:drag, height: 24)
 
                   .f-nested-fields__control[
                     data=stimulus_action(click: 'onPositionDownClick')
                   ]
-                    = folio_icon(:arrow_down,
-                                 height: 24,
-                                 class: "f-nested-fields__position-ico")
+                    = folio_icon(:arrow_down, height: 24)
 
             - remove_instance_variable(:@__vc_content)

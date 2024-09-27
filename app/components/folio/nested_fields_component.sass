@@ -1,7 +1,26 @@
+$transparent-b300: rgba(0, 0, 0, 0.15) !default
+
+#{":root"}
+  --f-nested-fields-placeholder-background: #{$transparent-b300}
+  --f-nested-fields-gap: #{$grid-gutter-width}
+
 .f-nested-fields
-  &__fields
+  display: flex
+  flex-direction: column
+  gap: var(--f-nested-fields-gap)
+  align-items: stretch
+
+  &__fields-wrap
+    display: flex
+    flex-direction: column
+    align-items: stretch
+    gap: var(--f-nested-fields-gap)
+
+  &__fields,
+  &__sortable-placeholder
     position: relative
-    padding-right: 2 * $grid-gutter-width
+    padding-right: calc(2 * var(--f-nested-fields-gap))
+    flex: 0 0 auto
 
   &__controls
     position: absolute
@@ -14,7 +33,7 @@
     display: flex
     align-items: center
     justify-content: center
-    width: 2 * $grid-gutter-width
+    width: calc(2 * var(--f-nested-fields-gap))
     height: $input-height
 
   &__control--destroy
@@ -24,3 +43,11 @@
     position: absolute
     right: 0
     top: $input-height
+
+  &--sortable-broken &__control--sortable-handle
+    display: none
+
+  &__sortable-placeholder-inner
+    background: $transparent-b300
+    height: calc(4 * var(--f-nested-fields-gap))
+    border-radius: $border-radius
