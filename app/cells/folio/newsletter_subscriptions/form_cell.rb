@@ -4,7 +4,8 @@ class Folio::NewsletterSubscriptions::FormCell < Folio::ApplicationCell
   include SimpleForm::ActionViewExtensions::FormHelper
 
   def newsletter_subscription
-    @newsletter_subscription ||= model || Folio::NewsletterSubscription.new(email: "@")
+    @newsletter_subscription ||= model || Folio::NewsletterSubscription.new(email: "@",
+                                                                            tags: options[:tags])
   end
 
   def form(&block)

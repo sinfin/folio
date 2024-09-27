@@ -3,6 +3,7 @@
 = catalogue(@newsletter_subscriptions)
   ruby:
     email(:email, sanitize: true)
+    attribute(:tags) { record.tags.join(", ") }
     boolean(:active)
     date(:created_at)
     actions :destroy

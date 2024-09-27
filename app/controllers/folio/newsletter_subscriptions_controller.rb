@@ -2,9 +2,7 @@
 
 class Folio::NewsletterSubscriptionsController < Folio::ApplicationController
   def create
-    attrs = newsletter_subscription_params
-
-    @newsletter_subscription = Folio::NewsletterSubscription.new(attrs)
+    @newsletter_subscription = Folio::NewsletterSubscription.new(newsletter_subscription_params)
 
     if !Rails.application.config.folio_site_is_a_singleton
       @newsletter_subscription.site = current_site
@@ -21,7 +19,8 @@ class Folio::NewsletterSubscriptionsController < Folio::ApplicationController
 
   private
     def newsletter_subscription_params
-      params.require(:newsletter_subscription).permit(:email)
+      params.require(:newsletter_subscription).permit(:email,
+                                                      tags: [])
     end
 
     def cell_options_params
@@ -40,7 +39,8 @@ class Folio::NewsletterSubscriptionsController < Folio::ApplicationController
 
     def validate_turnstile(response)
       return true if Rails.env.test?
-      return false unless response
+      return true if ENV["CLOUDFLARE_TURNSTILE_SITE_KEY"].nil?
+      return false if response.blank?
 
       secret = ENV["CLOUDFLARE_TURNSTILE_SECRET_KEY"]
       uri = URI.parse("https://challenges.cloudflare.com/turnstile/v0/siteverify")

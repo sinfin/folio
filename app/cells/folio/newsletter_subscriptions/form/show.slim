@@ -8,6 +8,9 @@ div class=wrap_class
           value=ERB::Util.html_escape(options[opt])
         ]
 
+    - if f.object.tags.present?
+      = f.hidden_field :tags, multiple: true
+
     - if options[:input_label]
       .form-group.m-0
         label = options[:input_label]
@@ -32,13 +35,14 @@ div class=wrap_class
               fill="currentColor"
             ]
 
-      .f-newsletter-subscriptions-form__turnstile
-        div[
-          class="cf-turnstile"
-          data-sitekey=ENV['CLOUDFLARE_TURNSTILE_SITE_KEY']
-          data-callback="javascriptCallback"
-          appearance="interaction-only"
-        ]
+      - if ENV['CLOUDFLARE_TURNSTILE_SITE_KEY'].present?
+        .f-newsletter-subscriptions-form__turnstile
+          div[
+            class="cf-turnstile"
+            data-sitekey=ENV['CLOUDFLARE_TURNSTILE_SITE_KEY']
+            data-callback="javascriptCallback"
+            appearance="interaction-only"
+          ]
 
       - if errors = f.object.errors[:base].presence
         .mb-1

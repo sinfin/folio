@@ -13,7 +13,7 @@ class Folio::NewsletterSubscription < Folio::ApplicationRecord
             format: { with: Folio::EMAIL_REGEXP }
 
   validates :email,
-            uniqueness: { scope: :site_id }
+            uniqueness: { scope: [:site_id, :tags] }
 
   validate :validate_belongs_to_subscribable_site
 
