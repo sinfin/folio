@@ -18,6 +18,7 @@ window.Folio.Stimulus.register('f-c-file-picker-thumb', class extends window.Sti
     const file = JSON.parse(this.element.dataset.file)
     const fileAttributes = file.attributes
 
+    this.element.innerHTML = ""
     this.setDominantColor(fileAttributes)
     this.addPicture(fileAttributes)
     this.addChangeOverlay(fileAttributes)

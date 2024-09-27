@@ -20,6 +20,7 @@ window.Folio.Stimulus.register('f-c-file-picker-document', class extends window.
     const file = JSON.parse(this.element.dataset.file)
     const fileAttributes = file.attributes
 
+    this.element.innerHTML = ""
     this.addDocument(fileAttributes)
   }
 
