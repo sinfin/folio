@@ -16,6 +16,7 @@ class Folio::NewsletterSubscription < Folio::ApplicationRecord
             uniqueness: { scope: [:site_id, :tags] }
 
   validate :validate_belongs_to_subscribable_site
+  validate :validate_tags
 
   default_scope { order(id: :desc) }
 
@@ -73,6 +74,10 @@ class Folio::NewsletterSubscription < Folio::ApplicationRecord
     Folio::Site.all
   end
 
+  def self.allowed_tags
+    []
+  end
+
   def self.clears_page_cache_on_save?
     false
   end
@@ -92,6 +97,14 @@ class Folio::NewsletterSubscription < Folio::ApplicationRecord
       return if Rails.application.config.folio_site_is_a_singleton
 
       errors.add(:site, :invalid) unless site.in?(self.class.subscribable_sites)
+    end
+
+    def validate_tags
+      return if tags.blank?
+
+      tags.each do |tag|
+        errors.add(:tags, :inclusion, value: tag) unless tag.in?(self.class.allowed_tags)
+      end
     end
 end
 
