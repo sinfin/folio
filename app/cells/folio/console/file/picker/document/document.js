@@ -20,7 +20,7 @@ window.Folio.Stimulus.register('f-c-file-picker-document', class extends window.
     const file = JSON.parse(this.element.dataset.file)
     const fileAttributes = file.attributes
 
-    this.element.innerHTML = ""
+    this.element.innerHTML = ''
     this.addDocument(fileAttributes)
   }
 
@@ -29,26 +29,26 @@ window.Folio.Stimulus.register('f-c-file-picker-document', class extends window.
     div.className = 'f-c-file-picker-document__document'
 
     const ext = document.createElement('div')
-    ext.className = "f-c-file-picker-document__ext"
-    ext.innerText = fileAttributes.extension || "?"
+    ext.className = 'f-c-file-picker-document__ext'
+    ext.innerText = fileAttributes.extension || '?'
     div.appendChild(ext)
 
     const name = document.createElement('div')
-    name.className = "f-c-file-picker-document__name"
-    name.innerText = fileAttributes.file_name || "Unknown file name"
+    name.className = 'f-c-file-picker-document__name'
+    name.innerText = fileAttributes.file_name || 'Unknown file name'
     div.appendChild(name)
 
     const size = document.createElement('div')
-    size.className = "f-c-file-picker-document__size"
-    size.innerText = fileAttributes.file_size ? window.Folio.numberToHumanSize(fileAttributes.file_size) : "Unknown file size"
+    size.className = 'f-c-file-picker-document__size'
+    size.innerText = fileAttributes.file_size ? window.Folio.numberToHumanSize(fileAttributes.file_size) : 'Unknown file size'
     div.appendChild(size)
 
     const btns = document.createElement('div')
-    btns.className = "f-c-file-picker-document__btns"
+    btns.className = 'f-c-file-picker-document__btns'
     window.FolioConsole.File.Picker.addControlsForStimulusController({
       element: this.element,
       parent: btns,
-      className: 'f-c-file-picker-document',
+      className: 'f-c-file-picker-document'
     })
     div.appendChild(btns)
 
