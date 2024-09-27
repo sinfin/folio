@@ -16,29 +16,6 @@ en:
     price:
       default_currency: 'CZK'
       free: "Free"
-    errors:
-      show:
-        back_to_home: back to the homepage
-        error_400:
-          text_line_1: Bad Request.
-          text_line_2: Request cannot be fulfilled due to bad syntax.
-          title: '400'
-        error_403:
-          text_line_1: Access Denied
-          text_line_2: We're sorry, but you don't have permission to access this page. If you think this is a mistake, please contact the website administrator.
-          title: '403'
-        error_404:
-          text_line_1: The page you are looking for does not exist.
-          text_line_2: You entered a wrong URL or the page was moved.
-          title: '404'
-        error_422:
-          text_line_1: Change not allowed.
-          text_line_2: Might be you're trying to do something that you can't.
-          title: '422'
-        error_500:
-          text_line_1: We're sorry, but something's broken down.
-          text_line_2: Try the homepage or return later.
-          title: '500'
     lead_form:
       email: E-mail
       failure: Failed to send the message. Please try again later.

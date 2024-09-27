@@ -1,0 +1,21 @@
+---
+cs:
+  folio:
+    errors:
+      show:
+        back_to_home: zpět na homepage
+        error_400/text_line_1: Chybný požadavek
+        error_400/text_line_2: Špatně formulovaný požadavek. Ověřte parametry v adrese.
+        error_400/title: '400'
+        error_403/text_line_1: Přístup odepřen
+        error_403/text_line_2: Omlouváme se, ale nemáte oprávnění k přístupu na tuto stránku. Pokud si myslíte, že jde o chybu, kontaktujte prosím správce webu.
+        error_403/title: '403'
+        error_404/text_line_1: Stránka, kterou hledáte, neexistuje.
+        error_404/text_line_2: Buďto máte špatný odkaz, nebo byla přesunuta.
+        error_404/title: '404'
+        error_422/text_line_1: Změna nebyla povolena.
+        error_422/text_line_2: Možná chcete udělat něco, co nemáte dovoleno.
+        error_422/title: '422'
+        error_500/text_line_1: Omlouváme se, ale něco se rozbilo.
+        error_500/text_line_2: Zkuste přejít na homepage, nebo se vraťte později.
+        error_500/title: '500'

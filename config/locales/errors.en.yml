@@ -1,0 +1,21 @@
+---
+en:
+  folio:
+    errors:
+      show:
+        back_to_home: back to the homepage
+        error_400/text_line_1: Bad Request.
+        error_400/text_line_2: Request cannot be fulfilled due to bad syntax.
+        error_400/title: '400'
+        error_403/text_line_1: Access Denied
+        error_403/text_line_2: We're sorry, but you don't have permission to access this page. If you think this is a mistake, please contact the website administrator.
+        error_403/title: '403'
+        error_404/text_line_1: The page you are looking for does not exist.
+        error_404/text_line_2: You entered a wrong URL or the page was moved.
+        error_404/title: '404'
+        error_422/text_line_1: Change not allowed.
+        error_422/text_line_2: Might be you're trying to do something that you can't.
+        error_422/title: '422'
+        error_500/text_line_1: We're sorry, but something's broken down.
+        error_500/text_line_2: Try the homepage or return later.
+        error_500/title: '500'
