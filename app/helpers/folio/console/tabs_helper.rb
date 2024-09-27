@@ -14,12 +14,24 @@ module Folio::Console::TabsHelper
           { key: }
         end
 
-        @folio_active_tab ||= key
+        unless hash[:hidden]
+          @folio_active_tab ||= key
+        end
 
         {
           label: t("folio.console.tabs.#{hash[:key]}", default: @klass.try(:human_attribute_name, hash[:key]) || hash[:key]),
-          active: @folio_active_tab == hash[:key],
+          active: !hash[:hidden] && @folio_active_tab == hash[:key],
         }.merge(hash)
+      end
+
+      if ary.none? { |hash| hash[:active] }
+        ary.each do |hash|
+          unless hash[:hidden]
+            hash[:active] = true
+            @folio_active_tab = hash[:key]
+            break
+          end
+        end
       end
 
       render(Folio::Console::Ui::TabsComponent.new(tabs: ary, remember: "console"))

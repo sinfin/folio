@@ -12,7 +12,11 @@ window.Folio.Stimulus.register('f-c-ui-tabs', class extends window.Stimulus.Cont
       if (href) {
         this.linkTargets.forEach((link) => {
           if (link.dataset.href.replace('/edit', '') === href) {
-            link.click()
+            const li = link.closest('.f-c-ui-tabs__nav-item')
+
+            if (!li.hidden) {
+              link.click()
+            }
           }
         })
       }
