@@ -94,7 +94,7 @@ window.Folio.Stimulus.register('f-c-file-picker', class extends window.Stimulus.
 
   onUpdated (e) {
     if (e.detail.file) {
-      this.contentTarget.innerHTML = ""
+      this.contentTarget.innerHTML = ''
       this.createFile(e.detail.file)
       this.updateAlt(e.detail.file)
     }

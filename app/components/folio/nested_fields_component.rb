@@ -3,17 +3,19 @@
 class Folio::NestedFieldsComponent < Folio::ApplicationComponent
   attr_reader :g
 
-  def initialize(f:, key:, add: true, destroy: true)
+  def initialize(f:, key:, add: true, destroy: true, position: true)
     @f = f
     @key = key
     @add = add
     @destroy = destroy
+    @position = position
   end
 
   def data
     stimulus_controller("f-nested-fields",
                         values: {
                           key: @key,
+                          sortableBound: false,
                         })
   end
 

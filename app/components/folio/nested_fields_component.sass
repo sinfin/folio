@@ -1,16 +1,56 @@
-.f-nested-fields
-  &__fields
-    position: relative
-    padding-right: 2 * $grid-gutter-width
+$transparent-b300: rgba(0, 0, 0, 0.15) !default
 
-  &__destroy
+#{":root"}
+  --f-nested-fields-placeholder-background: #{$transparent-b300}
+  --f-nested-fields-gap: #{$grid-gutter-width}
+
+.f-nested-fields
+  display: flex
+  flex-direction: column
+  gap: var(--f-nested-fields-gap)
+  align-items: stretch
+
+  &__fields-wrap
+    display: flex
+    flex-direction: column
+    align-items: stretch
+    gap: var(--f-nested-fields-gap)
+
+    &:empty
+      display: none
+
+  &__fields,
+  &__sortable-placeholder
+    position: relative
+    padding-right: calc(2 * var(--f-nested-fields-gap))
+    flex: 0 0 auto
+
+  &__controls
     position: absolute
     top: 0
-    right: $grid-gutter-half
+    right: 0
+
+  &__control
+    flex: 0 0 auto
     cursor: pointer
-    color: $danger
     display: flex
     align-items: center
-    justify-content: flex-end
-    width: $input-height
+    justify-content: center
+    width: calc(2 * var(--f-nested-fields-gap))
     height: $input-height
+
+  &__control--destroy
+    color: $danger
+
+  &__position
+    position: absolute
+    right: 0
+    top: $input-height
+
+  &--sortable-broken &__control--sortable-handle
+    display: none
+
+  &__sortable-placeholder-inner
+    background: $transparent-b300
+    height: calc(4 * var(--f-nested-fields-gap))
+    border-radius: $border-radius
