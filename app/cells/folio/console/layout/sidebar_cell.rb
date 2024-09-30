@@ -19,10 +19,17 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
     link_groups.filter_map do |group|
       I18n.with_locale(group[:locale] || I18n.locale) do
         if group[:links].present?
-          links = group[:links].filter_map { |l| link_from(l) }
+          subgroups = group[:links].slice_before(:hr).to_a
+          processed_subgroups = subgroups.filter_map do |subgroup|
+            links = subgroup.filter_map { |l| l == :hr ? nil : link_from(l) }
 
-          if links.present?
-            group.merge(links:)
+            if links.present?
+              links
+            end
+          end
+
+          if processed_subgroups.present?
+            group.merge(links: processed_subgroups)
           end
         end
       end
@@ -37,8 +44,6 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
         path = controller.url_for([:edit, :console, homepage_instance])
         link(t(".homepage"), path)
       end
-    elsif link_source == :hr
-      return :hr
     elsif link_source.is_a?(Hash) && (link_source[:klass] || link_source[:label]) && (link_source[:path] || link_source[:url_name])
       if link_source[:klass]
         return unless can_now?(:index, link_source[:klass].constantize)
