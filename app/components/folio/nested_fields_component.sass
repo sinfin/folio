@@ -16,6 +16,9 @@ $transparent-b300: rgba(0, 0, 0, 0.15) !default
     align-items: stretch
     gap: var(--f-nested-fields-gap)
 
+    &:empty
+      display: none
+
   &__fields,
   &__sortable-placeholder
     position: relative
