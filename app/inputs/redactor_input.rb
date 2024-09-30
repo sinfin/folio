@@ -2,12 +2,7 @@
 
 class RedactorInput < SimpleForm::Inputs::TextInput
   def input(wrapper_options = nil)
-    input_html_options[:class] ||= []
-    input_html_options[:class] << " f-input--redactor"
-
-    if options[:redactor]
-      input_html_options[:class] << " f-input--redactor-#{options[:redactor]}"
-    end
+    register_stimulus("f-input-redactor", wrapper: true)
 
     if options[:folio_label]
       input_html_options[:class] << "f-c-js-atoms-placement-label"

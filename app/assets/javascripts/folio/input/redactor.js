@@ -1,11 +1,7 @@
-//= require folio/input/_framework
-
 window.Folio = window.Folio || {}
 window.Folio.Input = window.Folio.Input || {}
 
 window.Folio.Input.Redactor = {}
-
-window.Folio.Input.Redactor.SELECTOR = '.f-input--redactor'
 
 window.Folio.Input.Redactor.intlTelInputOptions = {
   separateDialCode: true,
@@ -45,4 +41,14 @@ window.Folio.Input.Redactor.unbind = (input) => {
   window.folioConsoleDestroyRedactor(input)
 }
 
-window.Folio.Input.framework(window.Folio.Input.Redactor)
+window.Folio.Stimulus.register('f-input-redactor', class extends window.Stimulus.Controller {
+  static targets = ['input']
+
+  connect () {
+    window.Folio.Input.Redactor.bind(this.inputTarget)
+  }
+
+  disconnect () {
+    window.Folio.Input.Redactor.unbind(this.inputTarget)
+  }
+})
