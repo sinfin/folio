@@ -12,7 +12,6 @@ class Folio::PriceCell < Folio::ApplicationCell
       kwargs = {
         unit: options[:currency] || t(".default_currency"),
         precision: options[:precision] || 0,
-        delimiter: " ",
       }
 
       kwargs[:format] = options[:format] if options[:format]
