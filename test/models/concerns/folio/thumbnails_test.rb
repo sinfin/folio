@@ -8,12 +8,12 @@ class Folio::ThumbnailsTest < ActiveSupport::TestCase
   THUMB_SIZE = "111x111#"
 
   test "should not generate duplicate jobs" do
-    image = create(:folio_file_image)
+    image = create(:folio_file_image, additional_data: { "generate_thumbnails_in_test" => true })
 
     assert_nil image.thumbnail_sizes[THUMB_SIZE]
     assert_enqueued_jobs 0, only: Folio::GenerateThumbnailJob
 
-    image.thumb(THUMB_SIZE, override_test_behaviour: true)
+    image.thumb(THUMB_SIZE)
 
     assert_enqueued_jobs 1, only: Folio::GenerateThumbnailJob
     started_generating_at = image.thumbnail_sizes[THUMB_SIZE][:started_generating_at]
@@ -23,7 +23,7 @@ class Folio::ThumbnailsTest < ActiveSupport::TestCase
       assert image.thumbnail_sizes[THUMB_SIZE][key]
     end
 
-    image.thumb(THUMB_SIZE, override_test_behaviour: true)
+    image.thumb(THUMB_SIZE)
     assert_enqueued_jobs 1, only: Folio::GenerateThumbnailJob
     %i[url width height quality].each do |key|
       assert image.thumbnail_sizes[THUMB_SIZE][key]
@@ -38,11 +38,11 @@ class Folio::ThumbnailsTest < ActiveSupport::TestCase
   end
 
   test "works for animated gif" do
-    image = create(:folio_file_image, file: Folio::Engine.root.join("test/fixtures/folio/animated.gif"))
+    image = create(:folio_file_image, file: Folio::Engine.root.join("test/fixtures/folio/animated.gif"), additional_data: { "generate_thumbnails_in_test" => true, "animated" => true })
     assert image
 
     perform_enqueued_jobs do
-      assert image.thumb(THUMB_SIZE, override_test_behaviour: true)
+      assert image.thumb(THUMB_SIZE)
     end
 
     assert image.reload.thumbnail_sizes[THUMB_SIZE][:uid].ends_with?(".gif")
