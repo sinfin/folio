@@ -1,7 +1,7 @@
 window.Folio = window.Folio || {}
 
 window.Folio.removeParamsFromUrl = (urlString, paramNames) => {
-  const url = new URL(urlString)
+  const url = urlString.indexOf('/') === 0 ? (new URL(urlString, window.location.origin)) : (new URL(urlString))
 
   if (!url.search) return urlString
 
