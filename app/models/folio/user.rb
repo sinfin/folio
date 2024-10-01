@@ -351,33 +351,36 @@ class Folio::User < Folio::ApplicationRecord
 
     site_user_links.each do |site_link|
       next if site_link.site_id == self.auth_site_id
-      next if self.class.unscoped.where(auth_site_id: site_link.site_id, email:).exists?
-
       # superadmins have only one account on main site
       next if superadmin? && site_link.site_id != Folio.main_site.id
 
-      # create without callbacks
-      result = self.class.unscoped.insert self.attributes
-                                              .except("skip_password_validation", "id")
-                                              .merge({ "created_at" => Time.current,
-                                                       "updated_at" => Time.current,
-                                                       "reset_password_token" => nil,
-                                                       "invitation_token" => nil,
-                                                       "auth_site_id" => site_link.site_id })
-      if result.rows.first.nil?
-        Rails.logger.error("result is nil for link #{site_link.to_json} +  user #{self.attributes.slice("id", "email", "superadmin")}")
-        next
-      end
-      new_user = self.class.unscoped.find(result.rows.first.first)
-      new_user.primary_address = self.primary_address&.dup
-      new_user.secondary_address = self.secondary_address&.dup
+      new_user = self.class.unscoped.where(auth_site_id: site_link.site_id, email:)
 
-      yield(new_user) if block_given?
+      if new_user.blank?
+        # create without callbacks
+        result = self.class.unscoped.insert self.attributes
+                                                .except("skip_password_validation", "id")
+                                                .merge({ "created_at" => Time.current,
+                                                        "updated_at" => Time.current,
+                                                        "reset_password_token" => nil,
+                                                        "invitation_token" => nil,
+                                                        "auth_site_id" => site_link.site_id })
+        if result.rows.first.nil?
+          Rails.logger.error("result is nil for link #{site_link.to_json} +  user #{self.attributes.slice("id", "email", "superadmin")}")
+          next
+        end
+        new_user = self.class.unscoped.find(result.rows.first.first)
+        new_user.primary_address = self.primary_address&.dup
+        new_user.secondary_address = self.secondary_address&.dup
+      end
 
       # NOT COPYING: authentications, console_notes
       new_user.save!
-
       site_link.update!(user: new_user)
+
+      yield(new_user) if block_given?
+
+      new_user.save!
     end
   end
 
