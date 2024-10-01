@@ -5,7 +5,7 @@ module Folio::PregenerateThumbnails
   extend ActiveSupport::Concern
 
   included do
-    after_save :pregenerate_thumbnails
+    after_save_commit :pregenerate_thumbnails
   end
 
   def check_pregenerated_thumbnails
