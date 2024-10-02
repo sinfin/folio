@@ -10,7 +10,8 @@ window.Folio.Stimulus.register('f-lightbox', class extends window.Stimulus.Contr
     if (e.currentTarget.dataset.fLightboxIndex) {
       this.startPhotoSwipe(parseInt(e.currentTarget.dataset.fLightboxIndex))
     } else {
-      this.startPhotoSwipe(this.itemTargets.indexOf(e.currentTarget))
+      const index = this.itemTargets.indexOf(e.currentTarget)
+      this.startPhotoSwipe(index === -1 ? 0 : index)
     }
   }
 
