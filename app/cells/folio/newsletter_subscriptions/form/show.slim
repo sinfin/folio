@@ -37,12 +37,6 @@ div class=wrap_class
 
       - if ENV['CLOUDFLARE_TURNSTILE_SITE_KEY'].present?
         .f-newsletter-subscriptions-form__turnstile
-          div[
-            class="cf-turnstile"
-            data-sitekey=ENV['CLOUDFLARE_TURNSTILE_SITE_KEY']
-            data-callback="javascriptCallback"
-            appearance="interaction-only"
-          ]
 
       - if errors = f.object.errors[:base].presence
         .mb-1

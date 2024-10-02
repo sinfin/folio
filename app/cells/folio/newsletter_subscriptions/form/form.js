@@ -1,3 +1,15 @@
+/* global turnstile */
+
+const renderTurnstile = () => {
+  if (!window.turnstileSiteKey) return
+  if (typeof turnstile === 'undefined') return
+
+  turnstile.render('.f-newsletter-subscriptions-form__turnstile', {
+    sitekey: window.turnstileSiteKey,
+    appearance: 'interaction-only'
+  })
+}
+
 $(document).on('submit', '.f-newsletter-subscriptions-form__form', function (e) {
   e.preventDefault()
 
@@ -14,6 +26,8 @@ $(document).on('submit', '.f-newsletter-subscriptions-form__form', function (e) 
 
     $response.trigger('folio:submitted')
 
+    renderTurnstile()
+
     if ($response.find('.f-newsletter-subscriptions-form__message').length) {
       $response.trigger('folio:success')
     } else {
@@ -21,3 +35,11 @@ $(document).on('submit', '.f-newsletter-subscriptions-form__form', function (e) 
     }
   })
 })
+
+window.onloadTurnstileCallback = () => {
+  renderTurnstile()
+
+  $(document).on('turbolinks:load', () => {
+    renderTurnstile()
+  })
+}
