@@ -346,42 +346,46 @@ class Folio::User < Folio::ApplicationRecord
 
     if site_user_links.size == 1 # no need to do clones
       self.update!(auth_site_id: site_user_links.first.site_id)
-      return
-    end
-
-    site_user_links.each do |site_link|
-      next if site_link.site_id == self.auth_site_id
-      # superadmins have only one account on main site
-      next if superadmin? && site_link.site_id != Folio.main_site.id
-
-      new_user = self.class.unscoped.where(auth_site_id: site_link.site_id, email:)
-
-      if new_user.blank?
-        # create without callbacks
-        result = self.class.unscoped.insert self.attributes
-                                                .except("skip_password_validation", "id")
-                                                .merge({ "created_at" => Time.current,
-                                                        "updated_at" => Time.current,
-                                                        "reset_password_token" => nil,
-                                                        "invitation_token" => nil,
-                                                        "auth_site_id" => site_link.site_id })
-        if result.rows.first.nil?
-          Rails.logger.error("result is nil for link #{site_link.to_json} +  user #{self.attributes.slice("id", "email", "superadmin")}")
-          next
-        end
-        new_user = self.class.unscoped.find(result.rows.first.first)
-        new_user.primary_address = self.primary_address&.dup
-        new_user.secondary_address = self.secondary_address&.dup
+    else
+      site_user_links.each do |site_link|
+        make_clone_for_site_link(site_link)
       end
-
-      # NOT COPYING: authentications, console_notes
-      new_user.save!
-      site_link.update!(user: new_user)
-
-      yield(new_user) if block_given?
-
-      new_user.save!
     end
+  end
+
+  def make_clone_for_site_link(site_link)
+    return self if site_link.site_id == self.auth_site_id
+    # superadmins have only one account on main site
+    return nil if superadmin? && site_link.site_id != Folio.main_site.id
+
+    new_user = self.class.unscoped.where(auth_site_id: site_link.site_id, email:)
+
+    if new_user.blank?
+      # create without callbacks
+      result = self.class.unscoped.insert self.attributes
+                                              .except("skip_password_validation", "id")
+                                              .merge({ "created_at" => Time.current,
+                                                      "updated_at" => Time.current,
+                                                      "reset_password_token" => nil,
+                                                      "invitation_token" => nil,
+                                                      "auth_site_id" => site_link.site_id })
+      if result.rows.first.nil?
+        Rails.logger.error("result is nil for link #{site_link.to_json} +  user #{self.attributes.slice("id", "email", "superadmin")}")
+        return nil
+      end
+      new_user = self.class.unscoped.find(result.rows.first.first)
+      new_user.primary_address = self.primary_address&.dup
+      new_user.secondary_address = self.secondary_address&.dup
+    end
+
+    # NOT COPYING: authentications, console_notes
+    new_user.save!
+    site_link.update!(user: new_user)
+
+    yield(new_user) if block_given?
+
+    new_user.save!
+    new_user
   end
 
   private

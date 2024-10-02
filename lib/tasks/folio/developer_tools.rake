@@ -40,5 +40,29 @@ namespace :folio do
         end
       end
     end
+
+    desc "Try to fix users to be valid (phone, email, etc.)"
+    task idp_fix_users_to_be_valid: :environment do
+      puts("Fixing users to be valid. Latest ID: #{Folio::User.maximum(:id)}")
+      Folio::User.find_each do |user|
+        msg = "Fixing user #{user.id} #{user.to_label}"
+        puts(msg)
+        Rails.logger.error(msg)
+        next if user.valid?
+
+        if user.errors[:phone]
+          user.phone = user.phone.to_s.delete("-").delete(" ").strip
+          user.phone = "+420#{user.phone}" if user.phone.size == 9
+        end
+
+        if user.valid?
+          user.save!
+        else
+          msg = "Failed to fix user #{user.id} #{user.to_label} #{user.errors.full_messages.join(", ")}"
+          Raven.capture_message(msg) if defined?(Raven)
+          Rails.logger.error(msg)
+        end
+      end
+    end
   end
 end
