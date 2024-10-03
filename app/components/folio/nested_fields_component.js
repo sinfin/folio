@@ -14,6 +14,8 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
         this.destroyedWrapTarget.appendChild(fieldsTarget)
       }
     })
+
+    this.redoPositions()
   }
 
   disconnect () {
