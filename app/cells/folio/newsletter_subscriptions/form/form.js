@@ -4,9 +4,11 @@ const renderTurnstile = () => {
   if (!window.turnstileSiteKey) return
   if (typeof turnstile === 'undefined') return
 
-  turnstile.render('.f-newsletter-subscriptions-form__turnstile', {
-    sitekey: window.turnstileSiteKey,
-    appearance: 'interaction-only'
+  $('.f-newsletter-subscriptions-form__turnstile').each((i, el) => {
+    turnstile.render(el, {
+      sitekey: window.turnstileSiteKey,
+      appearance: 'interaction-only'
+    })
   })
 }
 
