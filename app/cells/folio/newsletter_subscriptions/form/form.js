@@ -12,6 +12,12 @@ const renderTurnstile = () => {
   })
 }
 
+const removeTurnstile = () => {
+  if (typeof turnstile === 'undefined') return
+
+  turnstile.remove()
+}
+
 $(document).on('submit', '.f-newsletter-subscriptions-form__form', function (e) {
   e.preventDefault()
 
@@ -43,5 +49,9 @@ window.onloadTurnstileCallback = () => {
 
   $(document).on('turbolinks:load', () => {
     renderTurnstile()
+  })
+
+  $(document).on('turbolinks:before-render', () => {
+    removeTurnstile()
   })
 }
