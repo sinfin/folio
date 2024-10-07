@@ -49,15 +49,6 @@ module Folio::SetStructuredData
     end
   end
 
-  def add_website_structured_data
-    @structured_data_website = {
-      "@type" => "WebSite",
-      "url" => current_site.env_aware_root_url,
-      "name" => current_site.title,
-      "publisher" => publisher_data
-    }
-  end
-
   private
     def structured_data
       data = [
@@ -65,7 +56,14 @@ module Folio::SetStructuredData
         @structured_data_breadcrumbs,
       ].compact
 
-      data << @structured_data_website if @structured_data_article.nil?
+      if @structured_data_article.nil?
+        data << {
+          "@type" => "WebSite",
+          "url" => current_site.env_aware_root_url,
+          "name" => current_site.title,
+          "publisher" => publisher_data
+        }
+      end
 
       return if data.blank?
 
