@@ -16,6 +16,8 @@ html[
       = preload_link_tag '/fonts/SpaceGrotesk-Bold.woff2'
 
   body
+    = render partial: 'layouts/folio/body'
+
     = render(Folio::Users::ImpersonatingBarComponent.new)
 
     = render(Dummy::Ui::HeaderComponent.new)
