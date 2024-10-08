@@ -7,6 +7,14 @@ module Folio::Console::TabsHelper
         @folio_active_tab = params[:tab].try(:to_sym)
       end
 
+      if @folio_active_tab.nil? && respond_to?(:controller)
+        cookies = controller.send(:cookies)
+
+        if cookies && cookies["f-c-ui-tabs__selected-tab"].present?
+          @folio_active_tab = cookies["f-c-ui-tabs__selected-tab"].try(:to_sym).presence
+        end
+      end
+
       ary = keys.map do |key|
         hash = if key.is_a?(Hash)
           key
@@ -34,7 +42,7 @@ module Folio::Console::TabsHelper
         end
       end
 
-      render(Folio::Console::Ui::TabsComponent.new(tabs: ary, remember: "console"))
+      render(Folio::Console::Ui::TabsComponent.new(tabs: ary))
     end
   end
 

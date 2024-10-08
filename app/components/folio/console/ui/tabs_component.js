@@ -1,31 +1,15 @@
 window.Folio.Stimulus.register('f-c-ui-tabs', class extends window.Stimulus.Controller {
-  static targets = ['link']
+  static targets = ['hiddenInput']
 
-  static values = {
-    remember: { type: String, default: '' }
-  }
+  onBeforeUnload () {
+    const activeLink = this.element.querySelector('.f-c-ui-tabs__nav-link.active')
 
-  connect () {
-    if (this.rememberValue) {
-      const href = window.localStorage.getItem(`f-c-ui-tabs-open-tab-${this.rememberValue}`)
+    if (activeLink) {
+      const inFifteenSeconds = new Date(new Date().getTime() + 16 * 1000)
 
-      if (href) {
-        this.linkTargets.forEach((link) => {
-          if (link.dataset.href.replace('/edit', '') === href) {
-            const li = link.closest('.f-c-ui-tabs__nav-item')
-
-            if (!li.hidden) {
-              link.click()
-            }
-          }
-        })
-      }
-    }
-  }
-
-  onLinkClick (e) {
-    if (this.rememberValue) {
-      window.localStorage.setItem(`f-c-ui-tabs-open-tab-${this.rememberValue}`, e.currentTarget.dataset.href.replace('/edit', ''))
+      window.Cookies.set('f-c-ui-tabs__selected-tab',
+                         activeLink.dataset.key,
+                         { expires: inFifteenSeconds, path: '' })
     }
   }
 })

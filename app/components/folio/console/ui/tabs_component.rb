@@ -3,9 +3,8 @@
 class Folio::Console::Ui::TabsComponent < Folio::Console::ApplicationComponent
   ID_PREFIX = "tab-"
 
-  def initialize(tabs:, remember: nil)
+  def initialize(tabs:)
     @tabs = tabs
-    @remember = remember
   end
 
   def count_class_name(color = nil)
@@ -27,8 +26,8 @@ class Folio::Console::Ui::TabsComponent < Folio::Console::ApplicationComponent
   def link_tag(tab)
     tag = { class: "nav-link f-c-ui-tabs__nav-link #{text_color_class_name(tab)}", role: "tab" }
 
-    tag[:data] = stimulus_data(target: "link",
-                               action: "onLinkClick")
+    tag[:data] ||= {}
+    tag[:data][:key] = tab[:key]
 
     if tab[:href]
       tag[:tag] = :a
@@ -64,8 +63,8 @@ class Folio::Console::Ui::TabsComponent < Folio::Console::ApplicationComponent
 
   def data
     stimulus_controller("f-c-ui-tabs",
-                        values: {
-                          remember: @remember || "",
+                        action: {
+                          "beforeunload@window" => "onBeforeUnload",
                         })
   end
 end
