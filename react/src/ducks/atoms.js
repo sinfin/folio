@@ -281,6 +281,8 @@ function * updateAtomPreviews (action) {
     window.postMessage({ type: 'setFormAsDirty' }, window.origin)
   }
 
+  window.dispatchEvent(new CustomEvent('updateAtomPreviews', { detail: { serializedAtoms } }))
+
   if (serializedAtoms.loading) {
     yield delay(100)
     yield put(refreshAtomPreviews())
