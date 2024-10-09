@@ -1,6 +1,9 @@
 div class=bem_class_name data=data
   h2.mt-0 = @klass.model_name.human(count: 2)
 
+  - if @hint
+    p.text-muted = @hint
+
   = folio_nested_fields(@f, :folio_attributes, add:) do |g|
     .f-c-folio-attributes-fields__attribute.mb-g[
       data=stimulus_target("attribute")

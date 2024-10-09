@@ -5,10 +5,11 @@ class Folio::Console::FolioAttributesFieldsComponent < Folio::Console::Applicati
 
   bem_class_name :character_counter
 
-  def initialize(f:, klass:, character_counter: nil)
+  def initialize(f:, klass:, character_counter: nil, hint: nil)
     @f = f
     @klass = klass
     @character_counter = character_counter
+    @hint = hint
   end
 
   def render?
