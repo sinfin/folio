@@ -13,7 +13,7 @@ FOLIO_REDACTOR_I18N =
 
 ADVANCED_OPTIONS =
   plugins: ['video', 'table', 'button', 'character_counter', 'definedlinks', 'linksrel']
-  toolbarFixed: true
+  toolbarFixed: false
   lang: document.documentElement.lang
   formatting: ['p', 'h2', 'h3', 'h4']
   linkNewTab: true
@@ -23,7 +23,7 @@ ADVANCED_OPTIONS =
 OPTIONS =
   plugins: ['table', 'button', 'character_counter', 'definedlinks', 'linksrel']
   buttonsHide: ['file', 'image']
-  toolbarFixed: true
+  toolbarFixed: false
   definedlinks: '/console/api/links.json'
   lang: document.documentElement.lang
   formatting: ['p', 'h2', 'h3', 'h4']
@@ -50,7 +50,7 @@ OPTIONS =
 EMAIL_OPTIONS =
   plugins: ['button', 'character_counter']
   buttonsHide: ['file', 'image', 'format', 'deleted', 'lists']
-  toolbarFixed: true
+  toolbarFixed: false
   lang: document.documentElement.lang
   formatting: []
   callbacks:
@@ -60,7 +60,7 @@ PEREX_OPTIONS =
   plugins: ['character_counter', 'definedlinks', 'linksrel']
   buttonsHide: ['file', 'image', 'html', 'format', 'bold', 'italic', 'deleted', 'lists']
   breakline: true
-  toolbarFixed: true
+  toolbarFixed: false
   lang: document.documentElement.lang
   linkNewTab: true
   callbacks:
