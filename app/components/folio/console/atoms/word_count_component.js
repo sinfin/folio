@@ -3,6 +3,7 @@ window.Folio.Stimulus.register('f-c-atoms-word-count', class extends window.Stim
 
   static values = {
     locale: String,
+    visible: Boolean,
   }
 
   connect () {
@@ -48,5 +49,11 @@ window.Folio.Stimulus.register('f-c-atoms-word-count', class extends window.Stim
 
     this.wordsCountTarget.innerText = wordsCount
     this.charactersCountTarget.innerText = charactersCount
+  }
+
+  onAtomsLocaleSwitch (e) {
+    if (e && e.detail && e.detail.locale) {
+      this.visibleValue = this.localeValue === e.detail.locale
+    }
   }
 })

@@ -62,8 +62,10 @@
                         t('.editor'),
                         icon: :view_dashboard_variant_outline)
 
-                - keys.each do |key|
-                  = render(Folio::Console::Atoms::WordCountComponent.new(locale: key))
+                - if index.zero?
+                  - keys.each_with_index do |key, i|
+                    = render(Folio::Console::Atoms::WordCountComponent.new(locale: key,
+                                                                           visible: i.zero?))
 
               iframe[
                 class="f-c-simple-form-with-atoms__iframe"
