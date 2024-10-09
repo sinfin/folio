@@ -41,6 +41,6 @@ module Folio::SetMetaVariables
       @public_page_description = ActionView::Base.full_sanitizer.sanitize(@public_page_description, tags: [])
     end
 
-    @structured_data_record = instance
+    @record_for_meta_variables = instance
   end
 end
