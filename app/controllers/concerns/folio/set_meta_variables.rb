@@ -40,5 +40,7 @@ module Folio::SetMetaVariables
     if @public_page_description.present?
       @public_page_description = ActionView::Base.full_sanitizer.sanitize(@public_page_description, tags: [])
     end
+
+    @record_for_meta_variables = instance
   end
 end
