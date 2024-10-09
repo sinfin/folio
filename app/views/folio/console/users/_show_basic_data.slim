@@ -13,7 +13,10 @@
     = s.attribute :last_name
     = s.attribute :degree_post
     = s.attribute :company_name
-    = s.attribute :nickname
+
+    - if Rails.application.config.folio_users_include_nickname
+      = s.attribute :nickname
+
     = s.attribute :sign_in_count
     = s.attribute :last_sign_in_at
     = s.attribute :created_at
@@ -22,7 +25,8 @@
       = s.attribute :confirmed_at
 
     = s.attribute :bank_account_number
-    = s.attribute :born_at
+    = s.attribute :born_at do
+      = l(s.object.born_at, format: "%d. %B %Y") if s.object.born_at.present?
 
     = s.attribute :authentications
       == cell('folio/console/authentications/list', s.object)
