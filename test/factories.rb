@@ -12,8 +12,12 @@ end
 
 def safely_set_roles_for(user, roles, site)
   # to avoid check, if current user can actually assing such roles
-  Folio::Current.stub(:user, nil) do
-    user.set_roles_for(site:, roles:)
+  if Folio::Current.respond_to?(:stub)
+    Folio::Current.stub(:user, nil) do
+      user.set_roles_for(site:, roles:)
+    end
+  else # usage of factories outside TEST env
+    Folio::Current.user = nil
   end
 end
 
@@ -171,8 +175,12 @@ FactoryBot.define do
     end
 
     after(:build) do |site_user_link, evaluator|
-      Folio::Current.stub(:user, nil) do
-        site_user_link.roles = evaluator.roles
+      if Folio::Current.respond_to?(:stub)
+        Folio::Current.stub(:user, nil) do
+          site_user_link.roles = evaluator.roles
+        end
+      else
+        Folio::Current.user = nil
       end
     end
   end
