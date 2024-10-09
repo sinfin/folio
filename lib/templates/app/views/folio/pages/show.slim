@@ -1,4 +1,5 @@
 == cell('folio/publishable_hint', @ancestry_any_unpublished || @page)
 
-.container
-  h1 = @page.title
+- cache @cache_key
+  .container
+    h1 = @page.title
