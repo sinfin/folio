@@ -42,6 +42,9 @@ cs:
             error/still_locked: Uživatele se nepodařilo odblokovat.
             error/still_unlocked: Uživatele se nepodařilo zablokovat.
       atoms:
+        word_count_component:
+          words: Slova
+          characters: Znaky
         form_header:
           settings: Nastavení
         settings_header:

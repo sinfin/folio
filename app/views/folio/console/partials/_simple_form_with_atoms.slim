@@ -62,6 +62,9 @@
                         t('.editor'),
                         icon: :view_dashboard_variant_outline)
 
+                - keys.each do |key|
+                  = render(Folio::Console::Atoms::WordCountComponent.new(locale: key))
+
               iframe[
                 class="f-c-simple-form-with-atoms__iframe"
                 src=console_atoms_path(keys: keys, \
