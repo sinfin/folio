@@ -16,7 +16,8 @@ html[
       = preload_link_tag '/fonts/SpaceGrotesk-Bold.woff2'
 
   body
-    = render partial: 'layouts/folio/body'
+    = render(Folio::StructuredData::BodyComponent.new(record: @structured_data_record,
+                                                      breadcrumbs: @breadcrumbs_on_rails))
 
     = render(Folio::Users::ImpersonatingBarComponent.new)
 

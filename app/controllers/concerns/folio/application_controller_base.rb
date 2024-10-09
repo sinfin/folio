@@ -5,7 +5,6 @@ module Folio::ApplicationControllerBase
   include Folio::HasCurrentSite
   include Folio::SetCurrentRequestDetails
   include Folio::SetMetaVariables
-  include Folio::SetStructuredData
   include Folio::Devise::CrossdomainController
   include Folio::RenderComponentJson
 

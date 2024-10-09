@@ -14,8 +14,6 @@ html[
       = preload_link_tag '/fonts/SpaceGrotesk-Bold.woff2'
 
   body
-    = render partial: 'layouts/folio/body'
-
     .<%= project_classnames_prefix %>-layout-main
       = yield
 
