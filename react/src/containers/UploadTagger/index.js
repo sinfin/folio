@@ -14,7 +14,7 @@ import TagsInput from 'components/TagsInput'
 import FolioConsoleUiButtons from 'components/FolioConsoleUiButtons'
 import FolioConsoleUiButton from 'components/FolioConsoleUiButton'
 
-import { AUTHOR_AUTOCOMPLETE_URL } from 'constants/urls'
+import { fileFieldAutocompleteUrl } from 'constants/urls'
 
 import Wrap from './styled/Wrap'
 
@@ -66,8 +66,8 @@ class UploadTagger extends React.PureComponent {
               value={this.state.author}
               name='author'
               onChange={this.onInputChange}
-              placeholder={window.FolioConsole.translations.fileAuthor}
-              url={AUTHOR_AUTOCOMPLETE_URL}
+              placeholder={window.FolioConsole.translations["file/author"]}
+              url={fileFieldAutocompleteUrl("author")}
               autoFocus
             />
           </FormGroup>

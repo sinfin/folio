@@ -20,14 +20,19 @@ en:
       folio/content_template:
         content: Content
       folio/file:
-        mime_type: File type
-        preview_duration: How many seconds are free?
-        default_gravity: Default crop
+        author: Author
+        attribution_copyright: Copyright
+        attribution_source: Source
+        attribution_source_url: Source URL
+        attribution_licence: Licence
         default_gravity/center: Center
         default_gravity/east: East
         default_gravity/north: North
         default_gravity/south: South
         default_gravity/west: West
+        default_gravity: Default crop
+        mime_type: File type
+        preview_duration: How many seconds are free?
       folio/file/image:
         file_placements: Placements
         thumbnail_sizes: Generated versions

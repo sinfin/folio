@@ -14,7 +14,7 @@ import FolioConsoleUiButtons from 'components/FolioConsoleUiButtons'
 import FolioConsoleUiButton from 'components/FolioConsoleUiButton'
 import FolioUiIcon from 'components/FolioUiIcon'
 
-import { AUTHOR_AUTOCOMPLETE_URL } from 'constants/urls'
+import { fileFieldAutocompleteUrl } from 'constants/urls'
 
 import MainImage from './styled/MainImage'
 import MainImageOuter from './styled/MainImageOuter'
@@ -118,19 +118,24 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
 
             {(isAudio || isVideo) && <div className='form-group'><FolioPlayer file={file} /></div>}
 
-            <FormGroup>
-              <Label className='form-label'>{window.FolioConsole.translations.fileAuthor}</Label>
-              {readOnly ? (
-                formState.author ? <p className='m-0'>{formState.author}</p> : <p className='m-0 text-muted'>{window.FolioConsole.translations.blank}</p>
-              ) : (
-                <AutocompleteInput
-                  value={formState.author || ''}
-                  onChange={(e) => onValueChange('author', e.currentTarget.value)}
-                  name='author'
-                  url={AUTHOR_AUTOCOMPLETE_URL}
-                />
-              )}
-            </FormGroup>
+            {
+              ["author", "attribution_source", "attribution_source_url", "attribution_copyright", "attribution_licence"].map((field) => (
+                <FormGroup key={field}>
+                  <Label className='form-label'>{window.FolioConsole.translations[`file/${field}`]}</Label>
+
+                  {readOnly ? (
+                    formState[field] ? <p className='m-0'>{formState[field]}</p> : <p className='m-0 text-muted'>{window.FolioConsole.translations.blank}</p>
+                  ) : (
+                    <AutocompleteInput
+                      value={formState[field] || ''}
+                      onChange={(e) => onValueChange(field, e.currentTarget.value)}
+                      name={field}
+                      url={fileFieldAutocompleteUrl(field)}
+                    />
+                  )}
+                </FormGroup>
+              ))
+            }
 
             <FormGroup>
               <Label className='form-label'>{window.FolioConsole.translations.fileDescription}</Label>

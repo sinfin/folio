@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_13_042943) do
+ActiveRecord::Schema[7.1].define(version: 2024_10_10_104826) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -72,6 +72,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_13_042943) do
     t.datetime "updated_at", null: false
     t.index ["dummy_blog_article_id"], name: "dummy_blog_author_article_links_a_id"
     t.index ["dummy_blog_author_id"], name: "dummy_blog_author_article_links_t_id"
+    t.index ["position"], name: "index_dummy_blog_author_article_links_on_position"
   end
 
   create_table "dummy_blog_authors", force: :cascade do |t|
@@ -108,6 +109,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_13_042943) do
     t.datetime "updated_at", null: false
     t.index ["dummy_blog_article_id"], name: "dummy_blog_topic_article_links_a_id"
     t.index ["dummy_blog_topic_id"], name: "dummy_blog_topic_article_links_t_id"
+    t.index ["position"], name: "index_dummy_blog_topic_article_links_on_position"
   end
 
   create_table "dummy_blog_topics", force: :cascade do |t|
@@ -285,6 +287,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_13_042943) do
     t.integer "preview_track_duration_in_seconds"
     t.string "alt"
     t.bigint "site_id", null: false
+    t.string "attribution_source"
+    t.string "attribution_source_url"
+    t.string "attribution_copyright"
+    t.string "attribution_licence"
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((author)::text, ''::text)))", name: "index_folio_files_on_by_author", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name)::text, ''::text)))", name: "index_folio_files_on_by_file_name", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text)))", name: "index_folio_files_on_by_file_name_for_search", using: :gin

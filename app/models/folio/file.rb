@@ -280,6 +280,10 @@ end
 #  preview_track_duration_in_seconds :integer
 #  alt                               :string
 #  site_id                           :bigint(8)        not null
+#  attribution_source                :string
+#  attribution_source_url            :string
+#  attribution_copyright             :string
+#  attribution_licence               :string
 #
 # Indexes
 #

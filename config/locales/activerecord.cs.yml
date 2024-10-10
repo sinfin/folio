@@ -25,14 +25,18 @@ cs:
         content: Obsah
       folio/file:
         author: Autor
-        preview_duration: Kolik vteřin je zdarma?
-        default_gravity: Výchozí ořez
+        attribution_copyright: Copyright
+        attribution_source: Zdroj
+        attribution_source_url: Zdroj URL
+        attribution_licence: Licence
         default_gravity/center: Uprostřed
         default_gravity/east: Vpravo
         default_gravity/north: Nahoře
         default_gravity/south: Dole
         default_gravity/west: Vlevo
+        default_gravity: Výchozí ořez
         description: Popis
+        preview_duration: Kolik vteřin je zdarma?
       folio/file/image:
         file_placements: Použití
         thumbnail_sizes: Vygenerované verze

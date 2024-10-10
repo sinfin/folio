@@ -31,6 +31,10 @@ class FileModal extends Component {
     if (props.fileModal.file) {
       this.state = {
         author: props.fileModal.file.attributes.author,
+        attribution_source: props.fileModal.file.attributes.attribution_source,
+        attribution_source_url: props.fileModal.file.attributes.attribution_source_url,
+        attribution_copyright: props.fileModal.file.attributes.attribution_copyright,
+        attribution_licence: props.fileModal.file.attributes.attribution_licence,
         default_gravity: props.fileModal.file.attributes.default_gravity,
         alt: props.fileModal.file.attributes.alt,
         description: props.fileModal.file.attributes.description,
@@ -41,6 +45,10 @@ class FileModal extends Component {
     } else {
       this.state = {
         author: null,
+        attribution_source: null,
+        attribution_source_url: null,
+        attribution_copyright: null,
+        attribution_licence: null,
         default_gravity: '',
         alt: null,
         description: null,
@@ -65,6 +73,10 @@ class FileModal extends Component {
         this.setState({
           ...this.state,
           author: this.props.fileModal.file.attributes.author,
+          attribution_source: this.props.fileModal.file.attributes.attribution_source,
+          attribution_source_url: this.props.fileModal.file.attributes.attribution_source_url,
+          attribution_copyright: this.props.fileModal.file.attributes.attribution_copyright,
+          attribution_licence: this.props.fileModal.file.attributes.attribution_licence,
           alt: this.props.fileModal.file.attributes.alt,
           default_gravity: this.props.fileModal.file.attributes.default_gravity,
           description: this.props.fileModal.file.attributes.description,

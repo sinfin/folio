@@ -6,7 +6,11 @@ class Folio::FileSerializer
   attributes :file_name,
              :file_width,
              :file_height,
-             :author
+             :author,
+             :attribution_source,
+             :attribution_source_url,
+             :attribution_copyright,
+             :attribution_licence
 
   attribute :human_type do |object|
     object.class.human_type
