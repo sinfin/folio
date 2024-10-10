@@ -16,6 +16,9 @@ html[
       = preload_link_tag '/fonts/SpaceGrotesk-Bold.woff2'
 
   body
+    = render(Folio::StructuredData::BodyComponent.new(record: @record_for_meta_variables,
+                                                      breadcrumbs: @breadcrumbs_on_rails))
+
     = render(Folio::Users::ImpersonatingBarComponent.new)
 
     = render(Dummy::Ui::HeaderComponent.new)
