@@ -210,6 +210,10 @@ class Folio::Site < Folio::ApplicationRecord
     Folio::AttributeType.descendants
   end
 
+  def structured_data_config
+    {}
+  end
+
   def self.sti_paths
     [
       Folio::Engine.root.join("app/models/folio/site"),

@@ -6,29 +6,23 @@ class Folio::StructuredData::BodyComponent < Folio::ApplicationComponent
     @breadcrumbs = breadcrumbs
   end
 
+  def render?
+    structured_data.present?
+  end
+
   def structured_data
     return @structured_data if @structured_data.present?
+
     data = []
 
-    data << main_structured_data if @record.present?
+    data << structured_data_hash_for_record if @record.present?
     data << breadcrumbs_structured_data if @breadcrumbs.any?
 
     return if data.blank?
 
     @structured_data = {
-    "@context" => "https://schema.org",
-    "@graph" => data
-  }
-  end
-
-  def main_structured_data
-    return set_structured_data_for_article(@record) if article_record?
-
-    {
-      "@type" => "WebSite",
-      "url" => current_site.env_aware_root_url,
-      "name" => current_site.title,
-      "publisher" => publisher_data
+      "@context" => "https://schema.org",
+      "@graph" => data
     }
   end
 
@@ -38,17 +32,23 @@ class Folio::StructuredData::BodyComponent < Folio::ApplicationComponent
       "itemListElement" => []
     }
 
-    add_homepage_structured_data_breadcrumb(breadcrumbs_data)
+    add_site_structured_data_breadcrumb(breadcrumbs_data)
+
     @breadcrumbs.each do |breadcrumb|
-      add_structured_data_breadcrumb(breadcrumbs_data, breadcrumb.name, breadcrumb.path) unless breadcrumb.path.nil? ||
-      breadcrumb.options.delete(:exclude_from_structured_data)
+      next if breadcrumb.path.nil? || breadcrumb.options.delete(:exclude_from_structured_data)
+
+      add_structured_data_breadcrumb(breadcrumbs_data,
+                                     breadcrumb.name,
+                                     breadcrumb.path)
     end
 
     breadcrumbs_data
   end
 
-  def add_homepage_structured_data_breadcrumb(data)
-    add_structured_data_breadcrumb(data, current_site.title, current_site.env_aware_root_url)
+  def add_site_structured_data_breadcrumb(data)
+    add_structured_data_breadcrumb(data,
+                                   current_site.title,
+                                   current_site.env_aware_root_url)
   end
 
   def add_structured_data_breadcrumb(data, name, url)
@@ -65,12 +65,14 @@ class Folio::StructuredData::BodyComponent < Folio::ApplicationComponent
       "@type" => "Organization",
       "name" => current_site.title
     }
-    if current_site.ui_config[:schema_icon_path].present?
+
+    if current_site.structured_data_config.present? && current_site.structured_data_config[:icon_url].present?
       data["logo"] = {
         "@type" => "ImageObject",
-        "url" => "#{current_site.env_aware_root_url.chomp('/')}#{current_site.ui_config[:schema_icon_path]}"
-    }
+        "url" => current_site.structured_data_config[:icon_url]
+      }
     end
+
     data
   end
 
@@ -78,9 +80,20 @@ class Folio::StructuredData::BodyComponent < Folio::ApplicationComponent
     @record.respond_to?(:perex) && @record.type.present? && @record.type.match?(/::Article(\z|::)/)
   end
 
-  def set_structured_data_for_article(article)
-    if article.published_authors.present?
-      author_for_hash = article.published_authors.first
+  def structured_data_hash_for_record
+    return structured_data_hash_for_article if article_record?
+
+    {
+      "@type" => "WebSite",
+      "url" => current_site.env_aware_root_url,
+      "name" => current_site.title,
+      "publisher" => publisher_data
+    }
+  end
+
+  def structured_data_hash_for_article
+    if @record.published_authors.present?
+      author_for_hash = @record.published_authors.first
       author_hash = {
         "@type" => "Person",
         "name" => author_for_hash.full_name,
@@ -94,14 +107,14 @@ class Folio::StructuredData::BodyComponent < Folio::ApplicationComponent
       "@type" => "Article",
       "mainEntityOfPage" => {
         "@type" => "WebPage",
-        "@id" => url_for([article, only_path: false]),
+        "@id" => url_for([@record, only_path: false]),
       },
-      "headline" => article.title,
-      "description" => article.perex,
-      "image" => article.cover.present? ? [article.cover.thumb(Folio::OG_IMAGE_DIMENSIONS).url] : nil,
-      "datePublished" => article.published_at_with_fallback.iso8601,
-      "dateModified" => article.revised_at.present? ? article.revised_at.iso8601 : nil,
-      "keywords" => article.published_tags.present? ? article.published_tags.map(&:title) : nil,
+      "headline" => @record.title,
+      "description" => @record.perex,
+      "image" => @record.cover.present? ? [@record.cover.thumb(Folio::OG_IMAGE_DIMENSIONS).url] : nil,
+      "datePublished" => @record.published_at_with_fallback.iso8601,
+      "dateModified" => @record.revised_at.present? ? @record.revised_at.iso8601 : nil,
+      "keywords" => @record.published_tags.present? ? @record.published_tags.map(&:title) : nil,
       "author" => author_hash,
       "publisher" => publisher_data
     }.compact
