@@ -80,7 +80,16 @@ class Folio::Site < Folio::ApplicationRecord
   end
 
   def env_aware_root_url
-    "http://#{env_aware_domain}/"
+    scheme = if Folio::Current.url.present?
+      uri = URI.parse(Folio::Current.url)
+      uri.scheme
+    elsif (Rails.env.test? || Rails.env.development?) && ENV["FORCE_SSL"] != "1"
+      "http"
+    else
+      "https"
+    end
+
+    "#{scheme}://#{env_aware_domain}/"
   end
 
   def env_aware_domain
