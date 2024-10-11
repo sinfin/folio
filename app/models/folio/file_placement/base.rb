@@ -11,6 +11,8 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
   validates :type,
             presence: true
 
+  validate :validate_file_attribution_and_texts_if_needed
+
   after_save :run_after_save_job!
   after_touch :run_after_save_job!
   after_create :run_file_after_save_job!
@@ -62,6 +64,29 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
       file_before_destroy.run_after_save_job if file_before_destroy
     end
   end
+
+  private
+    def validate_file_attribution_and_texts_if_needed
+      return if file.blank?
+
+      if Rails.application.config.folio_files_require_attribution
+        if file.author.blank? && file.attribution_source.blank? && file.attribution_source_url.blank?
+          errors.add(:file, :missing_file_attribution)
+        end
+      end
+
+      if Rails.application.config.folio_files_require_alt
+        if file.class.human_type == "image" && file.alt.blank?
+          errors.add(:file, :missing_file_alt)
+        end
+      end
+
+      if Rails.application.config.folio_files_require_description
+        if file.description.blank?
+          errors.add(:file, :missing_file_description)
+        end
+      end
+    end
 end
 
 # == Schema Information

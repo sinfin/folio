@@ -128,4 +128,34 @@ class Folio::FileTest < ActiveSupport::TestCase
 
     assert_equal "test", f_file.description
   end
+
+  test "validate_attribution_and_texts_if_needed" do
+    file = create(:folio_file_image)
+    assert file.update(alt: "foo")
+    assert file.update(alt: nil)
+
+    Rails.application.config.stub(:folio_files_require_alt, true) do
+      assert file.update!(alt: "foo")
+      assert_not file.update(alt: nil)
+      assert_equal "Alt je povinná položka", file.errors.full_messages.join(". ")
+    end
+
+    assert file.update(description: "foo")
+    assert file.update(description: nil)
+
+    Rails.application.config.stub(:folio_files_require_description, true) do
+      assert file.update!(description: "foo")
+      assert_not file.update(description: nil)
+      assert_equal "Popis je povinná položka", file.errors.full_messages.join(". ")
+    end
+
+    assert file.update(author: "foo", attribution_source: nil, attribution_source_url: nil)
+    assert file.update(author: nil)
+
+    Rails.application.config.stub(:folio_files_require_attribution, true) do
+      assert file.update!(author: "foo")
+      assert_not file.update(author: nil)
+      assert_equal "Autor nebo zdroj je povinný", file.errors.full_messages.join(". ")
+    end
+  end
 end

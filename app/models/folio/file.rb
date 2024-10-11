@@ -36,6 +36,8 @@ class Folio::File < Folio::ApplicationRecord
             inclusion: { in: DEFAULT_GRAVITIES },
             allow_nil: true
 
+  validate :validate_attribution_and_texts_if_needed
+
   # Scopes
   scope :ordered, -> { order(created_at: :desc) }
   scope :by_placement, -> (placement_title) { order(created_at: :desc) }
@@ -246,6 +248,28 @@ class Folio::File < Folio::ApplicationRecord
     def set_video_file_dimensions
       if %w[video].include?(self.class.human_type)
         self.file_width, self.file_height = Folio::File::GetVideoDimensionsJob.perform_now(file.path, self.class.human_type)
+      end
+    end
+
+    def validate_attribution_and_texts_if_needed
+      if Rails.application.config.folio_files_require_attribution
+        if author_changed? || attribution_source_changed? || attribution_source_url_changed?
+          if author.blank? && attribution_source.blank? && attribution_source_url.blank?
+            errors.add(:author, :missing_file_attribution)
+          end
+        end
+      end
+
+      if Rails.application.config.folio_files_require_alt
+        if self.class.human_type == "image" && alt_changed? && alt.blank?
+          errors.add(:alt, :blank)
+        end
+      end
+
+      if Rails.application.config.folio_files_require_description
+        if description_changed? && description.blank?
+          errors.add(:description, :blank)
+        end
       end
     end
 end
