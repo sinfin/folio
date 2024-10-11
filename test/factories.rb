@@ -75,7 +75,14 @@ FactoryBot.define do
     association :placement, factory: :folio_page
   end
 
-  factory :folio_file_image, class: "Folio::File::Image" do
+  factory :folio_file, class: "Folio::File" do
+    alt { "alt" }
+    author { "author" }
+    attribution_source { "attribution_source" }
+    description { "description" }
+  end
+
+  factory :folio_file_image, parent: :folio_file, class: "Folio::File::Image" do
     file { Folio::Engine.root.join("test/fixtures/folio/test.gif") }
     site { get_current_or_existing_site_or_create_from_factory }
 
@@ -84,17 +91,17 @@ FactoryBot.define do
     end
   end
 
-  factory :folio_file_document, class: "Folio::File::Document" do
+  factory :folio_file_document, parent: :folio_file, class: "Folio::File::Document" do
     file { Folio::Engine.root.join("test/fixtures/folio/empty.pdf") }
     site { get_current_or_existing_site_or_create_from_factory }
   end
 
-  factory :folio_file_audio, class: "Folio::File::Audio" do
+  factory :folio_file_audio, parent: :folio_file, class: "Folio::File::Audio" do
     file { Folio::Engine.root.join("test/fixtures/folio/blank.mp3") }
     site { get_current_or_existing_site_or_create_from_factory }
   end
 
-  factory :folio_file_video, class: "Folio::File::Video" do
+  factory :folio_file_video, parent: :folio_file, class: "Folio::File::Video" do
     file { Folio::Engine.root.join("test/fixtures/folio/blank.mp4") }
     site { get_current_or_existing_site_or_create_from_factory }
   end
