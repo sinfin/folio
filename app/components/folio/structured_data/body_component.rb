@@ -77,7 +77,7 @@ class Folio::StructuredData::BodyComponent < Folio::ApplicationComponent
   end
 
   def article_record?
-    @record.respond_to?(:perex) && @record.type.present? && @record.type.match?(/::Article(\z|::)/)
+    @record.respond_to?(:perex) && @record.class.to_s.match?(/::Article(\z|::)/)
   end
 
   def structured_data_hash_for_record
@@ -113,8 +113,8 @@ class Folio::StructuredData::BodyComponent < Folio::ApplicationComponent
       "description" => @record.perex,
       "image" => @record.cover.present? ? [@record.cover.thumb(Folio::OG_IMAGE_DIMENSIONS).url] : nil,
       "datePublished" => @record.published_at_with_fallback.iso8601,
-      "dateModified" => @record.revised_at.present? ? @record.revised_at.iso8601 : nil,
-      "keywords" => @record.published_tags.present? ? @record.published_tags.map(&:title) : nil,
+      "dateModified" => @record.try(:revised_at).present? ? @record.revised_at.iso8601 : nil,
+      "keywords" => @record.try(:published_tags).present? ? @record.published_tags.map(&:title) : nil,
       "author" => author_hash,
       "publisher" => publisher_data
     }.compact
