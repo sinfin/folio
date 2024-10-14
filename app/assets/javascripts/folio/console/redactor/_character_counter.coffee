@@ -29,13 +29,11 @@
       characters = 0
       $editor = @editor.getElement()
       html = $editor.html()
-      html = @_clean(html)
 
-      if html != ''
-        characters = html.length
+      result = window.Folio.wordCount({ text: html })
 
       data =
-        characters: characters
+        characters: result.characters
 
       # callback
       @app.broadcast 'character_counter', data
@@ -43,9 +41,10 @@
       # statusbar
 
       if @app.opts.characterCounterMax
-        text = "#{data.characters} / #{@app.opts.characterCounterMax} #{window.Folio.i18n(i18n, 'shortForCharacter')}"
+        formattedMax = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0, useGrouping: true }).format(@app.opts.characterCounterMax).replace(/,/g, ' ')
+        text = "#{result.formattedCharacters} / #{formattedMax} #{window.Folio.i18n(i18n, 'shortForCharacter')}"
       else
-        text = "#{data.characters} #{window.Folio.i18n(i18n, 'shortForCharacter')}"
+        text = "#{result.formattedCharacters} #{window.Folio.i18n(i18n, 'shortForCharacter')}"
 
       @statusbar.add 'chars', text
 

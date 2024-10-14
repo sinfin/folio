@@ -15,13 +15,13 @@ window.Folio.Stimulus.register('f-c-atoms-word-count', class extends window.Stim
   }
 
   updateCounts () {
-    let wordsCount = 0
-    let charactersCount = 0
+    let text = ""
 
     const hash = window.Folio.formToHash(this.element.closest('form'))
     const attributesKey = this.localeValue ? `${this.localeValue}_atoms_attributes` : 'atoms_attributes'
 
     const key = Object.keys(hash).find((key) => hash[key][attributesKey])
+    const countableFieldTypes = ['string', 'text', 'richtext']
 
     if (key) {
       const subHash = hash[key][attributesKey]
@@ -32,28 +32,19 @@ window.Folio.Stimulus.register('f-c-atoms-word-count', class extends window.Stim
         const structure = this.structures[atomHash.type].structure
 
         Object.keys(structure).forEach((structureKey) => {
-          if (atomHash[structureKey]) {
-            let text
-
-            if (structure[structureKey].type === "richtext") {
-              text = atomHash[structureKey].replace(/<[^>]*>?/gm, ' ')
-            } else if (structure[structureKey].type === "text" || structure[structureKey].type === "string") {
-              text = atomHash[structureKey]
-            }
-
-            if (text) {
-              text = text.trim().replace(/\s+/g, ' ')
-
-              charactersCount += text.length
-              wordsCount += text.split(/\s+/).length
+          if (countableFieldTypes.indexOf(structure[structureKey].type) !== -1) {
+            if (atomHash[structureKey]) {
+              text += atomHash[structureKey]
             }
           }
         })
       })
     }
 
-    this.wordsCountTarget.innerText = wordsCount
-    this.charactersCountTarget.innerText = charactersCount
+    const result = window.Folio.wordCount({ text })
+
+    this.wordsCountTarget.innerText = result.formattedWords
+    this.charactersCountTarget.innerText = result.formattedCharacters
   }
 
   onAtomsLocaleSwitch (e) {

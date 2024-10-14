@@ -32,6 +32,7 @@
 //= require folio/message_bus
 //= require folio/modal
 //= require folio/remote_scripts
+//= require folio/word_count
 
 //= require folio/lazyload
 //= require folio/lightbox

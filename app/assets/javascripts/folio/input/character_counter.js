@@ -1,4 +1,5 @@
 //= require folio/i18n
+//= require folio/word_count
 
 window.Folio = window.Folio || {}
 window.Folio.Input = window.Folio.Input || {}
@@ -21,14 +22,17 @@ window.Folio.Stimulus.register('f-input-character-counter', class extends window
 
   connect () {
     this.addElementToFormGroup()
+    this.boundOnInput = this.onInput.bind(this)
   }
 
   disconnect () {
     this.removeElementFromFormGroup()
+    delete this.boundOnInput
   }
 
   onInput (e) {
-    const length = this.element.value.length
+    console.log(window.Folio.wordCount(this.element.value))
+    const length = window.Folio.wordCount(this.element.value).characters
     const formGroup = this.element.closest('.form-group')
     const wrap = formGroup.querySelector('.f-input-character-counter-wrap')
     const current = wrap.querySelector('.f-input-character-counter-wrap__current')
@@ -64,7 +68,7 @@ window.Folio.Stimulus.register('f-input-character-counter', class extends window
     wrap.style.position = 'absolute'
     wrap.style.right = 0
 
-    const currentLength = this.element.value.length
+    const currentLength = window.Folio.wordCount(this.element.value).characters
 
     const current = document.createElement('span')
     current.classList.add('f-input-character-counter-wrap__current')
@@ -94,6 +98,10 @@ window.Folio.Stimulus.register('f-input-character-counter', class extends window
 
   removeElementFromFormGroup () {
     const formGroup = this.element.closest('.form-group')
+
+    const input = formGroup.querySelector('input, textarea')
+    unbindChangeEventListener(input)
+
     const wrap = formGroup.querySelector('.f-input-character-counter-wrap')
 
     if (!wrap) return
@@ -103,7 +111,13 @@ window.Folio.Stimulus.register('f-input-character-counter', class extends window
 
   bindChangeEventListener (input) {
     if (input) {
-      input.addEventListener('change', this.onInput.bind(this))
+      input.addEventListener('change', this.boundOnInput)
+    }
+  }
+
+  unbindChangeEventListener (input) {
+    if (this.boundOnInput && input) {
+      input.removeEventListener('change', this.boundOnInput)
     }
   }
 })
