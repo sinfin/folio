@@ -20,6 +20,10 @@ class Folio::Attribute < Folio::ApplicationRecord
   def to_label
     value
   end
+
+  def value_type
+    folio_attribute_type.data_type
+  end
 end
 
 # == Schema Information

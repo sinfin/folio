@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+# Use when model need some adhoc attributes, and You do not want them as columns in DB
+# This adds folio_attributes association to model
+# Then You have to add records to folio_attribute_types table (templates/types of attributes)
+# And finally use such types to set actual values for instances of models
 module Folio::HasFolioAttributes
   extend ActiveSupport::Concern
 
