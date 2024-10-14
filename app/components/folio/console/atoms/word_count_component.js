@@ -1,5 +1,5 @@
 window.Folio.Stimulus.register('f-c-atoms-word-count', class extends window.Stimulus.Controller {
-  static targets = ['wordsCount', 'charactersCount']
+  static targets = ['wordsCount', 'charactersCount', 'charactersWithSpacesCount']
 
   static values = {
     locale: String,
@@ -43,8 +43,9 @@ window.Folio.Stimulus.register('f-c-atoms-word-count', class extends window.Stim
 
     const result = window.Folio.wordCount({ text })
 
-    this.wordsCountTarget.innerText = result.formattedWords
-    this.charactersCountTarget.innerText = result.formattedCharacters
+    this.wordsCountTargets.forEach((target) => { target.innerText = result.formattedWords })
+    this.charactersCountTargets.forEach((target) => { target.innerText = result.formattedCharacters })
+    this.charactersWithSpacesCountTargets.forEach((target) => { target.innerText = result.formattedCharactersWithSpaces })
   }
 
   onAtomsLocaleSwitch (e) {

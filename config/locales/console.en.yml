@@ -45,6 +45,8 @@ en:
         word_count_component:
           words: Words
           characters: Characters
+          charactersWithoutSpaces: Characters (without spaces)
+          charactersWithSpaces: Characters (with spaces)
         form_header:
           settings: Settings
         settings_header:

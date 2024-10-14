@@ -45,6 +45,8 @@ cs:
         word_count_component:
           words: Slova
           characters: Znaky
+          charactersWithoutSpaces: Znaky (bez mezer)
+          charactersWithSpaces: Znaky (s mezerami)
         form_header:
           settings: Nastavení
         settings_header:

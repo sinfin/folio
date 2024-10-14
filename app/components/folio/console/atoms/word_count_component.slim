@@ -1,14 +1,38 @@
 .f-c-atoms-word-count data=data
-  .f-c-atoms-word-count__item
-    span.f-c-atoms-word-count__item-label<>
-      = "#{t('.words')}:"
+  .f-c-atoms-word-count__flex.small
+    .f-c-atoms-word-count__item
+      span.f-c-atoms-word-count__item-label<>
+        = "#{t('.words')}:"
 
-    span.f-c-atoms-word-count__item-value data=stimulus_target("wordsCount")
-      ' &hellip;
+      span.f-c-atoms-word-count__item-value data=stimulus_target("wordsCount")
+        ' &hellip;
 
-  .f-c-atoms-word-count__item
-    span.f-c-atoms-word-count__item-label<>
-      = "#{t('.characters')}:"
+    .f-c-atoms-word-count__item
+      span.f-c-atoms-word-count__item-label<>
+        = "#{t('.characters')}:"
 
-    span.f-c-atoms-word-count__item-value data=stimulus_target("charactersCount")
-      ' &hellip;
+      span.f-c-atoms-word-count__item-value data=stimulus_target("charactersCount")
+        ' &hellip;
+
+  .f-c-atoms-word-count__tooltip
+    .f-c-atoms-word-count__tooltip-inner
+      .f-c-atoms-word-count__item
+        span.f-c-atoms-word-count__item-label<>
+          = "#{t('.words')}:"
+
+        span.f-c-atoms-word-count__item-value data=stimulus_target("wordsCount")
+          ' &hellip;
+
+      .f-c-atoms-word-count__item
+        span.f-c-atoms-word-count__item-label<>
+          = "#{t('.charactersWithoutSpaces')}:"
+
+        span.f-c-atoms-word-count__item-value data=stimulus_target("charactersCount")
+          ' &hellip;
+
+      .f-c-atoms-word-count__item
+        span.f-c-atoms-word-count__item-label<>
+          = "#{t('.charactersWithSpaces')}:"
+
+        span.f-c-atoms-word-count__item-value data=stimulus_target("charactersWithSpacesCount")
+          ' &hellip;
