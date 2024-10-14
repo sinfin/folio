@@ -39,6 +39,7 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
 
   add () {
     this.fieldsWrapTarget.insertAdjacentHTML('beforeend', this.htmlFromTemplate())
+    this.redoPositions()
     this.dispatch('add', { detail: { field: this.fieldsTargets[this.fieldsTargets.length - 1] } })
   }
 
@@ -74,6 +75,7 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
         fields.remove()
       }
 
+      this.redoPositions()
       this.dispatch('destroyed')
     }, 'remove')
   }
