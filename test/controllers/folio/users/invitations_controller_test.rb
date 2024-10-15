@@ -67,7 +67,9 @@ class Folio::Users::InvitationsControllerTest < ActionDispatch::IntegrationTest
         invitation_token: user.raw_invitation_token,
         password: "New@Password.123",
         password_confirmation: "New@Password.123",
-        primary_address_attributes: build(:folio_address_primary).attributes
+        primary_address_attributes: build(:folio_address_primary).attributes,
+        born_at: 20.years.ago,
+        phone: "+420604123456"
       }
     }
 
