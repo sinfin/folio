@@ -82,12 +82,15 @@ module Folio::Console::FormsHelper
       expanded_class = nil
     end
 
+    disabled_atoms_class = opts[:disable_atoms] ? "f-c-simple-form-with-atoms--disable-atoms" : nil
+
     opts[:html] ||= {}
     opts[:html][:class] ||= ""
     opts[:html][:class] = ["f-c-simple-form-with-atoms",
                            opts[:html][:class],
                            layout_class,
-                           expanded_class].compact.join(" ")
+                           expanded_class,
+                           disabled_atoms_class].compact.join(" ")
 
     form_footer_options = opts.delete(:form_footer_options) || {}
 

@@ -202,6 +202,16 @@
     margin-right: 0 !important
     width: 100%
 
+  &--disable-atoms
+    background: $light-gray
+
+  &--disable-atoms &__form
+    max-height: none !important
+
+  &--disable-atoms &__form-toggle,
+  &--disable-atoms &__atoms
+    display: none !important
+
   +media-breakpoint-down(sm)
     &__overlay-inner
       min-width: 320px
