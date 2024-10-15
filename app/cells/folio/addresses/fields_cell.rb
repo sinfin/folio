@@ -21,15 +21,16 @@ class Folio::Addresses::FieldsCell < Folio::ApplicationCell
     { tag: options[:title_tag] || "h2", class: "mt-0" }
   end
 
-  def required?(key, attributes)
+  def address_attributes_required?(key, attributes)
     return true if model.object.send("should_validate_#{key}?")
     all_blank = attributes.all? { |attr, val| attr == "type" || val.blank? }
     !all_blank
   end
 
-  def required_phone?(g)
-    g.object.class.validators_on(:phone).any? do |validator|
-      validator.kind_of?(ActiveRecord::Validations::PresenceValidator)
+  def attribute_required?(key)
+    model.object.class.validators_on(key.to_sym).any? do |validator|
+      validator.kind_of?(ActiveRecord::Validations::PresenceValidator) &&
+        (validator.options[:if].nil? || model.object.send(validator.options[:if]))
     end
   end
 
