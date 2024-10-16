@@ -17,7 +17,7 @@ module Folio::CraMediaCloud::FileProcessing
   end
 
   def remote_manifest_dash_url
-    remote_manifest_url_base + remote_services_data["manifest_hls_path"]
+    remote_manifest_url_base + remote_services_data["manifest_dash_path"]
   end
 
   def remote_cover_url
