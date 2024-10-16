@@ -100,7 +100,7 @@ window.Folio.Stimulus.register('f-input-character-counter', class extends window
     const formGroup = this.element.closest('.form-group')
 
     const input = formGroup.querySelector('input, textarea')
-    unbindChangeEventListener(input)
+    this.unbindChangeEventListener(input)
 
     const wrap = formGroup.querySelector('.f-input-character-counter-wrap')
 

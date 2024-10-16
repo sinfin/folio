@@ -29,15 +29,17 @@ window.Folio.Stimulus.register('f-c-atoms-word-count', class extends window.Stim
       this.structures = this.structures || JSON.parse(document.querySelector('.f-c-atoms').dataset.atoms).structures
 
       Object.values(subHash).forEach((atomHash) => {
-        const structure = this.structures[atomHash.type].structure
+        if (atomHash.type) {
+          const structure = this.structures[atomHash.type].structure
 
-        Object.keys(structure).forEach((structureKey) => {
-          if (countableFieldTypes.indexOf(structure[structureKey].type) !== -1) {
-            if (atomHash[structureKey]) {
-              text += atomHash[structureKey]
+          Object.keys(structure).forEach((structureKey) => {
+            if (countableFieldTypes.indexOf(structure[structureKey].type) !== -1) {
+              if (atomHash[structureKey]) {
+                text += atomHash[structureKey]
+              }
             }
-          }
-        })
+          })
+        }
       })
     }
 
