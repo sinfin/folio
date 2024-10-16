@@ -17,22 +17,23 @@
                       disabled: options[:disabled],
                       input_html: { id: nil }
 
-  .row
-    - if show_born_at_fields?
-      div class=column_size_class_name(6)
-        = model.input :born_at,
-                      required: attribute_required?(:born_at),
-                      disabled: options[:disabled],
-                      input_html: { id: nil }
+  - if show_born_at_fields? || options[:phone] != false
+    .row
+      - if show_born_at_fields?
+        div class=column_size_class_name(6)
+          = model.input :born_at,
+                        required: attribute_required?(:born_at),
+                        disabled: options[:disabled],
+                        input_html: { id: nil }
 
-    - if options[:phone] != false
-      div class=column_size_class_name(6)
-        = model.input :phone,
-                      as: :phone,
-                      default_country_code: data_country_code(:primary_address),
-                      disabled: options[:disabled],
-                      required: options[:phone_required] || attribute_required?(:phone),
-                      input_html: { id: nil }
+      - if model.object.respond_to?(:phone) && options[:phone] != false
+        div class=column_size_class_name(6)
+          = model.input :phone,
+                        as: :phone,
+                        default_country_code: data_country_code(:primary_address),
+                        disabled: options[:disabled],
+                        required: options[:phone_required] || attribute_required?(:phone),
+                        input_html: { id: nil }
 
   - if show_primary_address_fields?
     .f-addresses-fields__fields-wrap[
