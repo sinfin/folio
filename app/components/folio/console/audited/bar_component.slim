@@ -1,0 +1,15 @@
+.f-c-audited-bar
+  .container-fluid
+    .f-c-audited-bar__flex
+      .f-c-audited-bar__label
+        strong<> = t('.version')
+        = l(@audited_revision.audit.created_at, format: :short)
+
+      = restore_link
+
+      == cell('folio/console/ui/with_icon',
+              t('.show_current'),
+              href: show_url,
+              right_icon: :close,
+              icon_options: { height: 16 },
+              class: "f-c-audited-bar__current-link small")

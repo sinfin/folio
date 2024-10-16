@@ -40,6 +40,10 @@ class Folio::Console::Ui::ButtonCell < Folio::ConsoleCell
       h[:class] += " #{model[:class]}"
     end
 
+    if model[:class_name]
+      h[:class] += " #{model[:class_name]}"
+    end
+
     if model[:size]
       h[:class] += " btn-#{model[:size]}"
     end

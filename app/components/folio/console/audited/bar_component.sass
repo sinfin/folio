@@ -1,0 +1,34 @@
+.f-c-audited-bar
+  background: $yellow
+  padding: px-to-rem(7px) 0
+
+  &__flex
+    display: flex
+    align-items: center
+    gap: $grid-gutter-width / 2
+    flex-wrap: wrap
+
+  + .f-c-layout-main-container,
+  + form
+    cursor: not-allowed
+
+    > div
+      pointer-events: none
+      user-select: none
+
+    .f-c-form-footer
+      display: none
+
+  &__current-link
+    margin-left: auto
+    color: $gray-medium-dark
+
+  +media-breakpoint-down(sm)
+    padding: $grid-gutter-width / 2 0
+
+    &__flex
+      flex-direction: column
+      gap: $grid-gutter-width / 4
+
+    &__current-link
+      margin-left: 0
