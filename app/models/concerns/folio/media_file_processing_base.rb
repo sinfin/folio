@@ -11,6 +11,8 @@ module Folio::MediaFileProcessingBase
     preview_media_processing
     preview_media_processed]
 
+  # TODO: split to submodules with & without preview
+
   included do
     after_commit :update_preview_media_length, on: :update
   end
