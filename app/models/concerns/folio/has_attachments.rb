@@ -47,6 +47,10 @@ module Folio::HasAttachments
   end
 
   class_methods do
+    def has_folio_attachments?
+      true
+    end
+
     def has_many_placements(targets, placement:, placements_key: nil)
       placements_key ||= "#{targets.to_s.singularize}_placements".to_sym
 
@@ -121,6 +125,42 @@ module Folio::HasAttachments
 
       private :update_cover_placement
     end
+
+    def folio_attachment_keys
+      h = { has_one: [], has_many: [] }
+
+      reflect_on_all_associations.each do |reflection|
+        if reflection.options && reflection.options[:class_name]
+          klass = reflection.options[:class_name].safe_constantize
+
+          if klass && klass <= Folio::FilePlacement::Base
+            if reflection.is_a?(ActiveRecord::Reflection::HasManyReflection)
+              h[:has_many] << reflection.name
+            else
+              h[:has_one] << reflection.name
+            end
+          end
+        end
+      end
+
+      h
+    end
+  end
+
+  def any_folio_attachment_changed?
+    noticed_change = false
+
+    self.class.folio_attachment_keys.each do |type, keys|
+      if type == :has_one
+        noticed_change = keys.any? { |key| send(key).present? && send(key).changed? }
+      else
+        noticed_change = keys.any? { |key| send(key).present? && send(key).any?(&:changed?) }
+      end
+
+      break if noticed_change
+    end
+
+    noticed_change
   end
 
   def og_image_with_fallback

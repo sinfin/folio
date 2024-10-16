@@ -18,10 +18,21 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
   after_create :run_file_after_save_job!
   after_destroy :run_file_after_save_job!
 
+  audited if: :placement_has_audited_file_placements?
+  self.audit_associated_with = :placement
+
   attr_accessor :dont_run_after_save_jobs
 
   def to_label
     title.presence || file.try(:file_name) || "error: empty file"
+  end
+
+  def audit_comment
+    reflection = self.class.reflect_on_association(:placement)
+
+    if reflection && reflection.options
+      reflection.options[:inverse_of].to_s
+    end
   end
 
   def self.folio_file_placement(class_name, name = nil)
@@ -65,6 +76,11 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
     end
   end
 
+  # audited fix
+  def self.default_ignored_attributes
+    super - [inheritance_column]
+  end
+
   private
     def validate_file_attribution_and_texts_if_needed
       return if file.blank?
@@ -86,6 +102,10 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
           errors.add(:file, :missing_file_description)
         end
       end
+    end
+
+    def placement_has_audited_file_placements?
+      placement.class.try(:has_audited_file_placements?)
     end
 end
 

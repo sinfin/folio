@@ -13,7 +13,7 @@ class Folio::AuditedTest < ActiveSupport::TestCase
     revision.reconstruct_atoms.reject { |a| a.marked_for_destruction? }
   end
 
-  test "audited model & atoms" do
+  test "audited model and atoms" do
     Audited.stub(:auditing_enabled, true) do
       site = get_any_site
       # version 1
@@ -74,6 +74,45 @@ class Folio::AuditedTest < ActiveSupport::TestCase
       assert_equal "v3", @page.title
       assert_equal "atom 1 v3", @page.atoms.first.content
       assert_equal "atom 2 v3", @page.atoms.second.content
+    end
+  end
+
+  test "audited model and file placements" do
+    Audited.stub(:auditing_enabled, true) do
+      site = get_any_site
+
+      file_id_1 = create(:folio_file_image).id
+      file_id_2 = create(:folio_file_image).id
+
+      @page = AuditedPage.create(title: "v1", site:, cover_placement_attributes: { file_id: file_id_1 })
+      assert_equal file_id_1, @page.cover_placement.file_id
+
+      @page.update!(title: "v2")
+      assert_equal file_id_1, @page.cover_placement.file_id
+
+      @page.update!(title: "v3", cover_placement_attributes: { file_id: file_id_2 })
+      assert_equal file_id_2, @page.cover_placement.file_id
+
+      assert_equal 3, @page.revisions.size
+
+      # revision version 1
+      revision = @page.revisions.first
+      revision.reconstruct_file_placements
+
+      assert_equal "v1", revision.title
+      assert_equal file_id_1, revision.cover_placement.file_id
+
+      revision = @page.revisions.second
+      revision.reconstruct_file_placements
+
+      assert_equal "v2", revision.title
+      assert_equal file_id_1, revision.cover_placement.file_id
+
+      revision = @page.revisions.third
+      revision.reconstruct_file_placements
+
+      assert_equal "v3", revision.title
+      assert_equal file_id_2, revision.cover_placement.file_id
     end
   end
 end
