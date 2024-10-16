@@ -116,6 +116,20 @@ en:
         locked: :activerecord.attributes.folio/site_user_link.locked
         locked/true: :activerecord.attributes.folio/site_user_link.locked/true
         locked/false: :activerecord.attributes.folio/site_user_link.locked/false
+      folio/address/base:
+        address_line_1: Street
+        address_line_2: Number
+        city: City
+        company_name: Company name
+        country_code: Country
+        email: Email
+        identification_number: Identification number
+        name: Name
+        phone: Phone
+        state: State
+        vat_identification_number: VAT number
+        zip: ZIP
+
     errors:
       messages:
         indestructible: The record cannot be removed.
@@ -195,6 +209,10 @@ en:
       tag:
         one: Tag
         other: Tags
+      folio/address/base:
+        few: Addresses
+        one: Address
+        other: Addresses
       folio/console_note:
         one: Note (internal)
         other: Notes (internal)
