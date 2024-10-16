@@ -53,6 +53,7 @@ Gem::Specification.new do |s|
   s.add_dependency "message_bus"
   s.add_dependency "multi_exiftool"
   s.add_dependency "mux_ruby", "~> 3.9.0"
+  s.add_dependency "net-sftp"
   s.add_dependency "nokogiri"
   s.add_dependency "omniauth-facebook"
   s.add_dependency "omniauth-google-oauth2"
@@ -75,7 +76,6 @@ Gem::Specification.new do |s|
   s.add_dependency "httpparty"
   s.add_dependency "sidekiq-cron", "~> 1.10.1"
   s.add_dependency "sidekiq", "~> 6.5"
-
   s.add_dependency "simple_form"
   s.add_dependency "sitemap_generator"
   # s.add_dependency "cells-slim", "~> 0.1.1" # need to be in Gemfile
