@@ -126,10 +126,65 @@ module Folio::HasAttachments
     def run_pregenerate_thumbnails_check_job?
       false
     end
+
+    def folio_attachment_keys
+      h = { has_one: [], has_many: [] }
+
+      reflect_on_all_associations.each do |reflection|
+        if reflection.options && reflection.options[:class_name]
+          next if reflection.name == :file_placements
+          klass = reflection.options[:class_name].safe_constantize
+
+          if klass && klass <= Folio::FilePlacement::Base
+            if reflection.is_a?(ActiveRecord::Reflection::HasManyReflection)
+              h[:has_many] << reflection.name
+            else
+              h[:has_one] << reflection.name
+            end
+          end
+        end
+      end
+
+      h
+    end
   end
 
   def og_image_with_fallback
     og_image.presence || cover
+  end
+
+  def folio_attachments_to_audited_hash(only: nil)
+    keys = self.class.folio_attachment_keys
+    keys[:has_one] = keys[:has_one] & only if only.present?
+    keys[:has_many] = keys[:has_many] & only if only.present?
+
+    h = {}
+
+    keys[:has_one].each do |key|
+      next if only.present? && only.exclude?(key)
+      placement = send(key)
+      next if placement.blank?
+      next if placement.marked_for_destruction?
+
+      ah = placement.to_audited_hash
+      h[key.to_s] = ah if ah["key"]
+    end
+
+    keys[:has_many].each do |key|
+      next if only.present? && only.exclude?(key)
+      placements = send(key)
+      next if placements.blank?
+
+      ary = placements.filter_map do |placement|
+        next if placement.marked_for_destruction?
+        ah = placement.to_audited_hash
+        ah if ah["key"]
+      end
+
+      h[key.to_s] = ary if ary.present?
+    end
+
+    h
   end
 
   private

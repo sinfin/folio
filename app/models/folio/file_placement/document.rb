@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::FilePlacement::Document < Folio::FilePlacement::Base
-  folio_document_placement
+  folio_document_placement :documents_placement
 end
 
 # == Schema Information

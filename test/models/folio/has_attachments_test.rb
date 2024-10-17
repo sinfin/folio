@@ -63,4 +63,58 @@ class Folio::HasAttachmentsTest < ActiveSupport::TestCase
 
     assert_equal original_placements[1].file_id, page.cover.id
   end
+
+  test "folio_attachments_to_audited_hash" do
+    page = create(:folio_page)
+    image = create(:folio_file_image)
+
+    assert_equal({}, page.folio_attachments_to_audited_hash)
+
+    page.update!(cover: image)
+    page.reload
+
+    assert_equal({
+      "cover_placement" => {
+        "id" => page.cover_placement.id,
+        "file_id" => image.id,
+        "type" => "Folio::FilePlacement::Cover",
+        "key" => "cover_placement",
+      }
+    }, page.folio_attachments_to_audited_hash)
+
+    page.images << image
+    page.reload
+
+    assert_equal({
+      "cover_placement" => {
+        "id" => page.cover_placement.id,
+        "file_id" => image.id,
+        "type" => "Folio::FilePlacement::Cover",
+        "key" => "cover_placement",
+      },
+      "image_placements" => [{
+        "id" => page.image_placements.last.id,
+        "file_id" => image.id,
+        "type" => "Folio::FilePlacement::Image",
+        "key" => "image_placements",
+      }]
+    }, page.folio_attachments_to_audited_hash)
+
+    page.update!(cover_placement_attributes: { id: page.cover_placement.id, _destroy: "1" })
+
+    assert_equal({
+      "image_placements" => [{
+        "id" => page.image_placements.last.id,
+        "file_id" => image.id,
+        "type" => "Folio::FilePlacement::Image",
+        "key" => "image_placements",
+      }]
+    }, page.folio_attachments_to_audited_hash)
+
+    page.update!(image_placements_attributes: {
+      page.image_placements.last.id => { id: page.image_placements.last.id, _destroy: "1" }
+    })
+
+    assert_equal({}, page.folio_attachments_to_audited_hash)
+  end
 end

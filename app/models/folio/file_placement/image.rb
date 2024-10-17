@@ -3,7 +3,7 @@
 class Folio::FilePlacement::Image < Folio::FilePlacement::Base
   include Folio::Sitemap::FilePlacement::Image
 
-  folio_image_placement
+  folio_image_placement :image_placements
 end
 
 # == Schema Information
