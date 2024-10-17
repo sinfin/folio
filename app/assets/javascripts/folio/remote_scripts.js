@@ -17,7 +17,7 @@ window.Folio.RemoteScripts.Data = {
     urls: ['https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/23.5.0/js/intlTelInput.min.js'],
     cssUrls: ['https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/23.5.0/css/intlTelInput.css']
   },
-  'html5sortable': {
+  html5sortable: {
     urls: ['https://cdnjs.cloudflare.com/ajax/libs/html5sortable/0.14.0/html5sortable.min.js']
   }
 }
@@ -98,12 +98,13 @@ window.Folio.RemoteScripts.run = (script, successCallback, errorCallback) => {
   if (typeof script === 'string') {
     key = script
   } else if (typeof script === 'object') {
-    if (script.key && (script.urls || script.url)) {
+    if (script.key && (script.urls || script.url || script.cssUrls)) {
       key = script.key
 
       if (!window.Folio.RemoteScripts.Data[key]) {
         window.Folio.RemoteScripts.Data[key] = {
-          urls: script.urls || [script.url]
+          urls: script.urls || (script.url ? [script.url] : []),
+          cssUrls: script.cssUrls || []
         }
       }
     }
