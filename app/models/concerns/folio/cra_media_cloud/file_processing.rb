@@ -13,19 +13,27 @@ module Folio::CraMediaCloud::FileProcessing
   end
 
   def remote_manifest_hls_url
-    remote_manifest_url_base + remote_services_data["manifest_hls_path"]
+    if remote_services_data["manifest_hls_path"]
+      remote_manifest_url_base + remote_services_data["manifest_hls_path"]
+    end
   end
 
   def remote_manifest_dash_url
-    remote_manifest_url_base + remote_services_data["manifest_dash_path"]
+    if remote_services_data["manifest_dash_path"]
+      remote_manifest_url_base + remote_services_data["manifest_dash_path"]
+    end
   end
 
   def remote_cover_url
-    remote_content_url_base + remote_services_data["cover_path"]
+    if remote_services_data["cover_path"]
+      remote_content_url_base + remote_services_data["cover_path"]
+    end
   end
 
   def remote_thumbnails_url
-    remote_content_url_base + remote_services_data["thumbnails_path"]
+    if remote_services_data["thumbnails_path"]
+      remote_content_url_base + remote_services_data["thumbnails_path"]
+    end
   end
 
   def remote_id
