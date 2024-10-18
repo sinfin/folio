@@ -16,7 +16,7 @@ class Folio::Api::S3Controller < Folio::Api::BaseController
     }
   end
 
-  # somewhere between, JS on FE directly loads file to S3 and returns it's s3_path
+  # somewhere between, JS on FE directly loads file as temporary to S3 and returns it's s3_path
 
   def after # load back file from S3 and process it
     handle_after(Folio::S3::CreateFileJob)

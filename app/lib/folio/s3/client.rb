@@ -31,7 +31,7 @@ module Folio::S3::Client
   end
 
   def test_aware_presign_url(s3_path)
-    if Rails.env.test?
+    if use_local_file_system?
       "https://dummy-s3-bucket.com/#{s3_path}"
     else
       s3_presigner.presigned_url(:put_object, bucket: s3_bucket, key: s3_path)
@@ -39,7 +39,7 @@ module Folio::S3::Client
   end
 
   def test_aware_download_from_s3(s3_path, local_path)
-    if Rails.env.test?
+    if use_local_file_system?
       test_path = "#{TEST_PATH}/#{s3_path}"
       FileUtils.mkdir_p(File.dirname(test_path))
       FileUtils.cp(test_path, local_path)
@@ -52,7 +52,7 @@ module Folio::S3::Client
   end
 
   def test_aware_s3_exists?(s3_path)
-    if Rails.env.test?
+    if use_local_file_system?
       File.exist?("#{TEST_PATH}/#{s3_path}")
     else
       begin
@@ -69,7 +69,7 @@ module Folio::S3::Client
 
   def test_aware_s3_delete(s3_path)
     if test_aware_s3_exists?(s3_path)
-      if Rails.env.test?
+      if use_local_file_system?
         FileUtils.rm("#{TEST_PATH}/#{s3_path}")
       else
         s3_client.delete_object(
@@ -79,4 +79,9 @@ module Folio::S3::Client
       end
     end
   end
+
+  private
+    def use_local_file_system?
+      @use_local_file_system ||= Dragonfly.app.datastore.is_a?(Dragonfly::FileDataStore)
+    end
 end

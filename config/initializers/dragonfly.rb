@@ -115,11 +115,12 @@ Dragonfly.app.configure do
 
   url_format "/media/:job/:sha/:name"
 
-  if Rails.env.test?
+  if Rails.env.test? && ENV["USE_S3_STORAGE_FOR_TESTS"].to_i == 0
     datastore :file,
               root_path: Rails.root.join("public/system/dragonfly/#{Rails.env}/files"),
               server_root: Rails.root.join("public")
-  elsif Rails.env.development? && !File.exist?(Rails.root.join(".env"))
+
+  elsif (Rails.env.test? || Rails.env.development?) && !File.exist?(Rails.root.join(".env"))
     puts "\nMissing .env file, not setting up dragonfly correctly.\n\n"
   else
     datastore :s3,
