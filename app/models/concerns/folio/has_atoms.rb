@@ -60,9 +60,16 @@ module Folio::HasAtoms
       end
     end
 
+    def atoms_to_audited_hash
+      all_atoms_in_array.filter_map do |atom|
+        next if atom.marked_for_destruction?
+        atom.to_audited_hash
+      end
+    end
+
     private
       def should_reject_atom_attributes?(atom_attributes)
-        return true if atom_attributes["type"].blank?
+        return true if atom_attributes["type"].blank? && atom_attributes["id"].blank?
         return false if self.class.atom_class_names_whitelist.blank?
 
         self.class.atom_class_names_whitelist.exclude?(atom_attributes["type"])

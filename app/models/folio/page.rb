@@ -38,7 +38,7 @@ class Folio::Page < Folio::ApplicationRecord
     translated = %i[
       title perex slug meta_title meta_description
     ]
-    other = %i[published published_at featured]
+    other = %i[published published_at featured folio_audited_atoms_data folio_audited_file_placements_data]
 
     if Rails.application.config.folio_using_traco
       translated = translated.map do |key|
@@ -49,7 +49,6 @@ class Folio::Page < Folio::ApplicationRecord
     end
 
     audited only: translated + other, console: true, console_view_name: :edit
-    has_audited_atoms
   end
 
   if Rails.application.config.folio_using_traco

@@ -59,6 +59,8 @@ class Folio::Atom::BaseTest < ActiveSupport::TestCase
     assert atom.errors[:placement]
 
     specific_site = create(:folio_site, type: SpecificSite.name)
+    specific_site = specific_site.becomes!(SpecificSite)
+    specific_site.save!
     placement = create(:folio_page, site: specific_site)
 
     atom = SpecificSiteAtom.new(placement:)

@@ -5,11 +5,13 @@ module Folio::Audited
 
   included do
     attr_accessor :audit
+
+    before_validation :store_folio_audited_data
   end
 
-  module ClassMethods
+  class_methods do
     def audited(opts = {})
-      super(opts)
+      super(opts[:on].present? ? opts : opts.merge(on: %i[create update destroy]))
 
       define_singleton_method(:audited_console_enabled?) do
         !!opts[:console]
@@ -41,62 +43,64 @@ module Folio::Audited
         end
       end
     end
+  end
 
-    def has_audited_atoms?
-      false
+  def reconstruct_atoms
+    data = folio_audited_atoms_data
+
+    existing_atoms_ary = all_atoms_in_array
+
+    if data.blank?
+      existing_atoms_ary.each(&:mark_for_destruction)
+      return existing_atoms_ary
     end
 
-    def has_audited_atoms
-      has_associated_audits
-      define_singleton_method(:has_audited_atoms?) { true }
+    new_atoms_ary = []
+    handled_ids = []
 
-      define_method(:write_audit) do |attrs|
-        super(attrs)
-        @audit_written = true
+    data.each do |atom_data|
+      atom = atom_data["id"] && existing_atoms_ary.find { |a| a.id.to_s == atom_data["id"] }
+      atom ||= Folio::Atom::Base.new
+
+      handled_ids << atom.id if atom.id
+
+      new_atoms_ary << atom.from_audited_data(atom_data)
+    end
+
+    existing_atoms_ary.each do |atom|
+      if handled_ids.exclude?(atom.id)
+        atom.mark_for_destruction
+        new_atoms_ary << atom
+      end
+    end
+
+    new_atoms_ary.sort do |a, b|
+      if a.marked_for_destruction? && !b.marked_for_destruction?
+        1
+      elsif !a.marked_for_destruction? && b.marked_for_destruction?
+        -1
+      else
+        a.position.to_i <=> b.position.to_i
+      end
+    end.each_with_index.map do |atom, index|
+      atom.position = index + 1
+
+      if atom.new_record?
+        association(:atoms).add_to_target(atom, skip_callbacks: true)
       end
 
-      # save audit if only atoms has changes
-      before_update do
-        if !@audit_written && atoms.any? { |a| a.changed? }
-          write_audit(action: "update",
-                      audited_changes: {},
-                      comment: audit_comment)
-        end
-      end
-
-      define_method(:reconstruct_atoms) do
-        self.atoms = atoms.map do |a|
-          atom_audit = a.audits.reorder(placement_version: :desc, version: :desc)
-                               .where("placement_version <= ?", audit_version)
-                               .first
-
-          if atom_audit.nil?
-            atom = a
-            atom.mark_for_destruction
-            atom
-          else
-            atom_audit.revision
-          end
-        end
-
-        # add destroyed atoms
-        revived = []
-        Audited::Audit.where(associated: self, auditable_type: "Folio::Atom::Base")
-                      .where.not(auditable_id: atoms.ids)
-                      .reorder(placement_version: :desc, version: :desc)
-                      .where("placement_version <= ?", audit_version)
-                      .each do |a|
-          if revived.exclude?(a.auditable_id)
-            association(:atoms).add_to_target(a.revision, skip_callbacks: true) if a.action != "destroy"
-            revived << a.auditable_id
-          end
-        end
-
-        # fixes atoms order
-        define_singleton_method(:atoms) { super().sort_by(&:position) }
-
-        self.atoms
-      end
+      atom
     end
   end
+
+  private
+    def store_folio_audited_data
+      if respond_to?(:folio_audited_atoms_data) && respond_to?(:atoms_to_audited_hash)
+        self.folio_audited_atoms_data = atoms_to_audited_hash
+      end
+
+      if respond_to?(:folio_audited_file_placements_data) && respond_to?(:folio_attachments_to_audited_hash)
+        self.folio_audited_file_placements_data = folio_attachments_to_audited_hash
+      end
+    end
 end
