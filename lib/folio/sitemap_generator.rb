@@ -43,9 +43,15 @@ end
 
 unless Rails.application.config.folio_site_is_a_singleton
   # override urls in sitemap index file because of the way SitemapController is set up
-  SitemapGenerator::SitemapLocation.class_eval do
-    def path_in_public
-      ("sitemaps/" + filename).to_s
+  SitemapGenerator::Builder::SitemapIndexUrl.class_eval do
+    alias_method :original_initialize, :initialize
+    def initialize(path, options = {})
+      if path.is_a?(SitemapGenerator::Builder::SitemapFile)
+        options = SitemapGenerator::Utilities.reverse_merge(options, host: path.location.host, lastmod: Time.current)
+        path = ("sitemaps/" + path.location.filename).to_s
+      end
+
+      super(path, options)
     end
   end
 end
