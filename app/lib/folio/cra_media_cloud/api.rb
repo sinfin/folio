@@ -3,7 +3,7 @@
 module Folio
   module CraMediaCloud
     class Api
-      BASE_URL = Rails.env.production? ? "http://iwm.ha.origin.cdn.cra.cz:8080" : "http://localhost:8080"
+      BASE_URL = Rails.env.development? ? "http://localhost:8080" : "http://iwm.ha.origin.cdn.cra.cz:8080"
 
       def initialize
         fail "CraMediaCloud::Api: Missing credentials" unless ENV["CRA_MEDIA_CLOUD_API_USERNAME"] && ENV["CRA_MEDIA_CLOUD_API_PASSWORD"]
