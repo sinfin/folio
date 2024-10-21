@@ -100,14 +100,14 @@ module Folio::Audited
 
     keys[:has_one].each do |key|
       if placement = send(key)
-        hash["#{key}_attributes"] = placement.to_audited_hash(key:).merge("_destroy" => "1")
+        hash["#{key}_attributes"] = placement.to_audited_hash.merge("_destroy" => "1")
       end
     end
 
     keys[:has_many].each do |key|
       send(key).each do |placement|
         hash["#{key}_attributes"] ||= []
-        hash["#{key}_attributes"] << placement.to_audited_hash(key:).merge("_destroy" => "1")
+        hash["#{key}_attributes"] << placement.to_audited_hash.merge("_destroy" => "1")
       end
     end
 
@@ -131,7 +131,7 @@ module Folio::Audited
           end
         else
           next if hash["#{key}_attributes"].blank? && value_or_array["_destroy"] == "1"
-          hash["#{key}_attributes"] = (hash["#{key}_attributes"] || {}).merge(value_or_array)
+          hash["#{key}_attributes"] = (hash["#{key}_attributes"] || {}).merge(value_or_array.without("id"))
           hash["#{key}_attributes"].delete("_destroy")
         end
       end

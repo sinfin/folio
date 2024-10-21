@@ -142,6 +142,18 @@ class Folio::AuditedTest < ActiveSupport::TestCase
       assert_equal "v3", revision.title
       assert_nil file_placements_hash["cover_placement_attributes"]
       assert_nil file_placements_hash["image_placements_attributes"]
+
+      revision = @page.audits.second.revision
+      revision.reconstruct_file_placements
+      revision.save!
+
+      @page.reload
+
+      assert_equal "v2", @page.title
+
+      assert_equal image_2.id, @page.cover_placement.file_id
+      assert_equal 1, @page.image_placements.size
+      assert_equal image_1.id, @page.image_placements.first.file_id
     end
   end
 end
