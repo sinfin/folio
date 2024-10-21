@@ -33,7 +33,6 @@ class Folio::DeviseMailer < Devise::Mailer
     @site = (record.site_user_links.order(id: :asc).last&.site || record.auth_site)
     opts = { site: @site }.merge(opts)
 
-
     @data ||= {}
     @data[:USER_ACCEPT_INVITATION_URL] = scoped_url_method(record,
                                                            :accept_invitation_url,
@@ -84,7 +83,8 @@ class Folio::DeviseMailer < Devise::Mailer
 
       extra = {
         only_path: false,
-        protocol: (Rails.env.development? && !ENV["FORCE_SSL"]) ? "http" : "https"
+        protocol: (Rails.env.development? && !ENV["FORCE_SSL"]) ? "http" : "https",
+        locale: record.preferred_locale.presence || I18n.default_locale.to_s
       }
 
       if Folio.enabled_site_for_crossdomain_devise
