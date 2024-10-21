@@ -74,16 +74,12 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
   end
 
   def to_audited_hash
-    h = {
+    {
       "id" => id,
       "file_id" => file_id,
       "position" => position || 1,
       "type" => type,
     }
-
-    h["_destroy"] = "1" if marked_for_destruction?
-
-    h
   end
 
   private

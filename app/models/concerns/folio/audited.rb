@@ -116,21 +116,18 @@ module Folio::Audited
         next if value_or_array.blank?
 
         if value_or_array.is_a?(Array)
-          if value_or_array.present?
-            value_or_array.each do |value|
-              if hash["#{key}_attributes"].present? && value["id"].present? && ref = hash["#{key}_attributes"].find { |h| h["id"] == value["id"] }
-                ref = ref.merge(value)
-                ref.delete("_destroy")
-              else
-                if value["_destroy"] != "1"
-                  hash["#{key}_attributes"] ||= []
-                  hash["#{key}_attributes"] << value
-                end
+          value_or_array.each do |value|
+            if hash["#{key}_attributes"].present? && value["id"].present? && ref = hash["#{key}_attributes"].find { |h| h["id"] == value["id"] }
+              ref = ref.merge(value)
+              ref.delete("_destroy")
+            else
+              if value["_destroy"] != "1"
+                hash["#{key}_attributes"] ||= []
+                hash["#{key}_attributes"] << value
               end
             end
           end
         else
-          next if hash["#{key}_attributes"].blank? && value_or_array["_destroy"] == "1"
           hash["#{key}_attributes"] = (hash["#{key}_attributes"] || {}).merge(value_or_array.without("id"))
           hash["#{key}_attributes"].delete("_destroy")
         end
