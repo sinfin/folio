@@ -24,7 +24,7 @@ class Folio::Api::S3ControllerTest < Folio::BaseControllerTest
         assert_response 422
       end
 
-      test_path = "#{Folio::S3::Client::TEST_PATH}/test-#{klass.model_name.singular}.gif"
+      test_path = "#{Folio::S3::Client::LOCAL_TEST_PATH}/test-#{klass.model_name.singular}.gif"
       FileUtils.mkdir_p(File.dirname(test_path))
       FileUtils.cp(Folio::Engine.root.join("test/fixtures/folio/test.gif"), test_path)
 
@@ -45,7 +45,7 @@ class Folio::Api::S3ControllerTest < Folio::BaseControllerTest
         assert_response 422
       end
 
-      test_path = "#{Folio::S3::Client::TEST_PATH}/test-#{klass.model_name.singular}-#{file.id}.gif"
+      test_path = "#{Folio::S3::Client::LOCAL_TEST_PATH}/test-#{klass.model_name.singular}-#{file.id}.gif"
       FileUtils.mkdir_p(File.dirname(test_path))
       FileUtils.cp(Folio::Engine.root.join("test/fixtures/folio/test.gif"), test_path)
 
@@ -67,7 +67,7 @@ class Folio::Api::S3ControllerTest < Folio::BaseControllerTest
       post before_folio_api_s3_path, params: { file_name: "Intricate fílě name.jpg" }
       assert_response :unauthorized
 
-      test_path = "#{Folio::S3::Client::TEST_PATH}/test-#{klass.model_name.singular}.gif"
+      test_path = "#{Folio::S3::Client::LOCAL_TEST_PATH}/test-#{klass.model_name.singular}.gif"
       FileUtils.mkdir_p(File.dirname(test_path))
       FileUtils.cp(Folio::Engine.root.join("test/fixtures/folio/test.gif"), test_path)
 

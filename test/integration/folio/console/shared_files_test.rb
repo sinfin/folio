@@ -84,7 +84,7 @@ class Folio::SharedFilesTest < Folio::Console::BaseControllerTest
       # klasses Folio::File::Document, Folio::File::Image, Folio::PrivateAttachment
       klass = Folio::File::Image
       s3_name = "#{SecureRandom.hex}_test-#{klass.model_name.singular}.gif" # to avoid cross deletions in parallel tests
-      test_path = "#{Folio::S3::Client::TEST_PATH}/#{s3_name}"
+      test_path = "#{Folio::S3::Client::LOCAL_TEST_PATH}/#{s3_name}"
       FileUtils.mkdir_p(File.dirname(test_path))
       FileUtils.cp(Folio::Engine.root.join("test/fixtures/folio/test.gif"), test_path)
 
@@ -160,7 +160,7 @@ class Folio::SharedFilesTest < Folio::Console::BaseControllerTest
       # klasses Folio::File::Document, Folio::File::Image, Folio::PrivateAttachment
       klass = Folio::File::Image
       s3_name = "#{SecureRandom.hex}_test-#{klass.model_name.singular}.gif" # to avoid cross deletions in parallel tests
-      test_path = "#{Folio::S3::Client::TEST_PATH}/#{s3_name}"
+      test_path = "#{Folio::S3::Client::LOCAL_TEST_PATH}/#{s3_name}"
       FileUtils.mkdir_p(File.dirname(test_path))
       FileUtils.cp(Folio::Engine.root.join("test/fixtures/folio/test.gif"), test_path)
 
