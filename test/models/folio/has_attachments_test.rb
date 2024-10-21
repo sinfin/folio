@@ -70,7 +70,7 @@ class Folio::HasAttachmentsTest < ActiveSupport::TestCase
 
     assert_equal({}, page.folio_attachments_to_audited_hash)
 
-    page.update!(cover: image)
+    page.update!(cover_placement_attributes: { file_id: image.id })
     page.reload
 
     assert_equal({
@@ -79,7 +79,6 @@ class Folio::HasAttachmentsTest < ActiveSupport::TestCase
         "file_id" => image.id,
         "position" => 1,
         "type" => "Folio::FilePlacement::Cover",
-        "key" => "cover_placement",
       }
     }, page.folio_attachments_to_audited_hash)
 
@@ -92,14 +91,12 @@ class Folio::HasAttachmentsTest < ActiveSupport::TestCase
         "file_id" => image.id,
         "position" => 1,
         "type" => "Folio::FilePlacement::Cover",
-        "key" => "cover_placement",
       },
       "image_placements" => [{
         "id" => page.image_placements.last.id,
         "file_id" => image.id,
         "position" => 1,
         "type" => "Folio::FilePlacement::Image",
-        "key" => "image_placements",
       }]
     }, page.folio_attachments_to_audited_hash)
 
@@ -113,7 +110,6 @@ class Folio::HasAttachmentsTest < ActiveSupport::TestCase
         "file_id" => image.id,
         "position" => 1,
         "type" => "Folio::FilePlacement::Image",
-        "key" => "image_placements",
       }]
     }, page.folio_attachments_to_audited_hash)
 

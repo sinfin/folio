@@ -170,7 +170,7 @@ module Folio::HasAttachments
       next if placement.blank?
 
       ah = placement.to_audited_hash
-      h[key.to_s] = ah if ah["key"]
+      h[key.to_s] = ah if ah.present?
     end
 
     keys[:has_many].each do |key|
@@ -179,8 +179,7 @@ module Folio::HasAttachments
       next if placements.blank?
 
       ary = placements.filter_map do |placement|
-        ah = placement.to_audited_hash
-        ah if ah["key"]
+        placement.to_audited_hash.presence
       end
 
       h[key.to_s] = ary if ary.present?
