@@ -93,6 +93,75 @@ module Folio::Audited
     end
   end
 
+  def get_file_placements_attributes_for_reconstruction
+    hash = {}
+
+    keys = self.class.folio_attachment_keys
+
+    keys[:has_one].each do |key|
+      if placement = send(key)
+        hash["#{key}_attributes"] = placement.to_audited_hash(key:).merge("_destroy" => "1")
+      end
+    end
+
+    keys[:has_many].each do |key|
+      send(key).each do |placement|
+        hash["#{key}_attributes"] ||= []
+        hash["#{key}_attributes"] << placement.to_audited_hash(key:).merge("_destroy" => "1")
+      end
+    end
+
+    if folio_audited_file_placements_data.present?
+      folio_audited_file_placements_data.each do |key, value_or_array|
+        next if value_or_array.blank?
+
+        if value_or_array.is_a?(Array)
+          if value_or_array.present?
+            value_or_array.each do |value|
+              if hash["#{key}_attributes"].present? && value["id"].present? && ref = hash["#{key}_attributes"].find { |h| h["id"] == value["id"] }
+                ref = ref.merge(value)
+                ref.delete("_destroy")
+              else
+                if value["_destroy"] != "1"
+                  hash["#{key}_attributes"] ||= []
+                  hash["#{key}_attributes"] << value
+                end
+              end
+            end
+          end
+        else
+          next if hash["#{key}_attributes"].blank? && value_or_array["_destroy"] == "1"
+          hash["#{key}_attributes"] = (hash["#{key}_attributes"] || {}).merge(value_or_array)
+          hash["#{key}_attributes"].delete("_destroy")
+        end
+      end
+    end
+
+    hash.each do |key, value_or_array|
+      if value_or_array.is_a?(Array)
+        position = 0
+
+        value_or_array.sort_by { |h| h["position"].to_i }.each do |value|
+          if value["_destroy"] == "1"
+            value.delete("position")
+          else
+            value["position"] = (position += 1)
+          end
+        end
+      else
+        if value_or_array["_destroy"] != "1"
+          value_or_array["position"] = 1
+        end
+      end
+    end
+
+    hash
+  end
+
+  def reconstruct_file_placements
+    assign_attributes(get_file_placements_attributes_for_reconstruction)
+  end
+
   private
     def store_folio_audited_data
       if respond_to?(:folio_audited_atoms_data) && respond_to?(:atoms_to_audited_hash)
