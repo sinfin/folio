@@ -168,6 +168,7 @@ module Folio::HasAttachments
       next if only.present? && only.exclude?(key)
       placement = send(key)
       next if placement.blank?
+      next if placement.marked_for_destruction?
 
       ah = placement.to_audited_hash
       h[key.to_s] = ah if ah.present?
@@ -179,6 +180,7 @@ module Folio::HasAttachments
       next if placements.blank?
 
       ary = placements.filter_map do |placement|
+        next if placement.marked_for_destruction?
         placement.to_audited_hash.presence
       end
 
