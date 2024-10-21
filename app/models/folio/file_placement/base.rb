@@ -77,12 +77,17 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
     key ||= audited_hash_key_fallback
     key = key.to_s if key
 
-    {
+    h = {
       "id" => id,
       "file_id" => file_id,
+      "position" => position || 1,
       "type" => type,
       "key" => key,
     }
+
+    h["_destroy"] = "1" if marked_for_destruction?
+
+    h
   end
 
   private

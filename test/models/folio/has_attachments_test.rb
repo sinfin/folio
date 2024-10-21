@@ -77,6 +77,7 @@ class Folio::HasAttachmentsTest < ActiveSupport::TestCase
       "cover_placement" => {
         "id" => page.cover_placement.id,
         "file_id" => image.id,
+        "position" => 1,
         "type" => "Folio::FilePlacement::Cover",
         "key" => "cover_placement",
       }
@@ -89,12 +90,14 @@ class Folio::HasAttachmentsTest < ActiveSupport::TestCase
       "cover_placement" => {
         "id" => page.cover_placement.id,
         "file_id" => image.id,
+        "position" => 1,
         "type" => "Folio::FilePlacement::Cover",
         "key" => "cover_placement",
       },
       "image_placements" => [{
         "id" => page.image_placements.last.id,
         "file_id" => image.id,
+        "position" => 1,
         "type" => "Folio::FilePlacement::Image",
         "key" => "image_placements",
       }]
@@ -102,10 +105,13 @@ class Folio::HasAttachmentsTest < ActiveSupport::TestCase
 
     page.update!(cover_placement_attributes: { id: page.cover_placement.id, _destroy: "1" })
 
+    page.reload
+
     assert_equal({
       "image_placements" => [{
         "id" => page.image_placements.last.id,
         "file_id" => image.id,
+        "position" => 1,
         "type" => "Folio::FilePlacement::Image",
         "key" => "image_placements",
       }]
