@@ -21,6 +21,7 @@ class Folio::DeviseMailer < Devise::Mailer
     opts = { site: @site }.merge(opts)
 
     @data ||= {}
+    @data[:LOCALE] = record.preferred_locale
     @data[:USER_CHANGE_PASSWORD_URL] = scoped_url_method(record,
                                                          :edit_password_url,
                                                          reset_password_token: token,
@@ -34,10 +35,12 @@ class Folio::DeviseMailer < Devise::Mailer
     opts = { site: @site }.merge(opts)
 
     @data ||= {}
+    @data[:LOCALE] = record.preferred_locale
     @data[:USER_ACCEPT_INVITATION_URL] = scoped_url_method(record,
                                                            :accept_invitation_url,
                                                            invitation_token: token,
                                                            host: @site.env_aware_domain)
+
     super(record, token, opts)
   end
 
@@ -47,6 +50,7 @@ class Folio::DeviseMailer < Devise::Mailer
     opts = { site: @site }.merge(opts)
 
     @data ||= {}
+    @data[:LOCALE] = record.preferred_locale
     @data[:USER_CONFIRMATION_URL] = scoped_url_method(record,
                                                       :confirmation_url,
                                                       confirmation_token: @token,
@@ -62,6 +66,7 @@ class Folio::DeviseMailer < Devise::Mailer
     initialize_from_record(@record)
 
     template_data = {
+      LOCALE: @record.preferred_locale,
       USER_CONFLICT_PROVIDER: authentication.human_provider,
       USER_CONFLICT_RESOLVE_URL: main_app.users_auth_resolve_conflict_url(conflict_token: authentication.conflict_token)
     }
