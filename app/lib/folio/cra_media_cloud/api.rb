@@ -3,11 +3,11 @@
 module Folio
   module CraMediaCloud
     class Api
-      BASE_URL = Rails.env.development? ? "http://localhost:8080" : "http://iwm.ha.origin.cdn.cra.cz:8080"
-
       def initialize
+        fail "CraMediaCloud::Api: Missing base url" unless ENV["CRA_MEDIA_CLOUD_API_BASE_URL"]
         fail "CraMediaCloud::Api: Missing credentials" unless ENV["CRA_MEDIA_CLOUD_API_USERNAME"] && ENV["CRA_MEDIA_CLOUD_API_PASSWORD"]
 
+        @base_url = ENV["CRA_MEDIA_CLOUD_API_BASE_URL"]
         @username = ENV["CRA_MEDIA_CLOUD_API_USERNAME"]
         @password = ENV["CRA_MEDIA_CLOUD_API_PASSWORD"]
       end
@@ -28,7 +28,7 @@ module Folio
         def request(method, key, params = {})
           params.transform_keys! { |key| key.to_s.camelize(:lower) }
 
-          uri = URI.parse([BASE_URL, "manage", @username, key].join("/"))
+          uri = URI.parse([@base_url, "manage", @username, key].join("/"))
           uri.query = URI.encode_www_form(params) if params.present?
 
           request = case method
