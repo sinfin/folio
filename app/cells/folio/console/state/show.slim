@@ -5,7 +5,7 @@ div class=class_name data=data
     .dropdown
       button.f-c-state__state.dropdown-toggle data-bs-toggle="dropdown"
         = state_square(state)
-        = options[:state_label] || model.aasm.human_state
+        = options[:state_label] || model.try(:custom_aasm_human_state) || model.aasm.human_state
 
       .dropdown-menu
         - if options[:remote] == false
@@ -32,4 +32,4 @@ div class=class_name data=data
   - else
     .f-c-state__state
       = state_square(state)
-      = options[:state_label] || model.aasm.human_state
+      = options[:state_label] || model.try(:custom_aasm_human_state) || model.aasm.human_state
