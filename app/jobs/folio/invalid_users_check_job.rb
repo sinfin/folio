@@ -8,7 +8,8 @@ class Folio::InvalidUsersCheckJob < Folio::ApplicationJob
 
   def perform
     errors = []
-    Folio::User.find_each do |user|
+
+    Folio::User.includes(:auth_site, :authentications, site_user_links: :site).find_each(batch_size: 500) do |user|
       next if user.valid?
 
       invalid_fields = user.errors.messages.map do |field, messages|
