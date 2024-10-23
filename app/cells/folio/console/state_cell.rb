@@ -66,7 +66,7 @@ class Folio::Console::StateCell < Folio::ConsoleCell
   end
 
   def active?
-    options[:active] != false
+    options[:active] != false && model.persisted?
   end
 
   def confirm(event)
