@@ -185,13 +185,13 @@ class Folio::Atom::Base < Folio::ApplicationRecord
 
   def to_audited_hash
     {
-      id:,
-      type:,
-      position:,
-      locale:,
-      data: data_to_h,
-      attachments: folio_attachments_to_audited_hash(only: klass::ATTACHMENTS),
-      associations: associations_to_h,
+      "id" => id,
+      "type" => type,
+      "position" => position,
+      "locale" => locale,
+      "data" => data_to_h.deep_stringify_keys,
+      "attachments" => folio_attachments_to_audited_hash(only: klass::ATTACHMENTS),
+      "associations" => associations_to_h.deep_stringify_keys,
     }
   end
 

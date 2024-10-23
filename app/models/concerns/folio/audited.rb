@@ -45,74 +45,90 @@ module Folio::Audited
     end
   end
 
-  def reconstruct_atoms
-    data = folio_audited_atoms_data
+  def get_atoms_attributes_for_reconstruction
+    hash = {}
+    atoms_array = []
 
-    existing_atoms_ary = all_atoms_in_array
-
-    if data.blank?
-      existing_atoms_ary.each(&:mark_for_destruction)
-      return existing_atoms_ary
-    end
-
-    new_atoms_ary = []
-    handled_ids = []
-
-    data.each do |atom_data|
-      atom = atom_data["id"] && existing_atoms_ary.find { |a| a.id.to_s == atom_data["id"] }
-      atom ||= Folio::Atom::Base.new
-
-      handled_ids << atom.id if atom.id
-
-      new_atoms_ary << atom.from_audited_data(atom_data)
-    end
-
-    existing_atoms_ary.each do |atom|
-      if handled_ids.exclude?(atom.id)
-        atom.mark_for_destruction
-        new_atoms_ary << atom
+    self.class.atom_keys.each do |key|
+      hash["#{key}_attributes"] = send(key).map do |atom|
+        atoms_array << atom
+        h = atom.to_audited_hash
+        h["_destroy"] = "1"
+        h
       end
     end
 
-    new_atoms_ary.sort do |a, b|
-      if a.marked_for_destruction? && !b.marked_for_destruction?
-        1
-      elsif !a.marked_for_destruction? && b.marked_for_destruction?
-        -1
-      else
-        a.position.to_i <=> b.position.to_i
-      end
-    end.each_with_index.map do |atom, index|
-      atom.position = index + 1
+    if try(:folio_audited_atoms_data).present?
+      folio_audited_atoms_data.each do |key, values|
+        next if values.blank?
 
-      if atom.new_record?
-        association(:atoms).add_to_target(atom, skip_callbacks: true)
+        values.each do |value|
+          if hash["#{key}_attributes"].present? && value["id"].present? && ref = hash["#{key}_attributes"].find { |h| h["id"] == value["id"] }
+            ref = ref.merge(value)
+            ref.delete("_destroy")
+          else
+            hash["#{key}_attributes"] ||= []
+            hash["#{key}_attributes"] << value.without("id")
+          end
+        end
       end
-
-      atom
     end
+
+    hash.each do |key, values|
+      position = 0
+
+      values.sort_by { |h| h["position"].to_i }.each do |value|
+        if value["_destroy"] == "1"
+          value.delete("position")
+          value.delete("associations")
+          value.delete("attachments")
+        else
+          value["position"] = (position += 1)
+
+          attachments = value.delete("attachments")
+
+          if attachments.present?
+            atom = value["id"] ? (atoms_array.find { |atom| atom.id == value["id"] }) : nil
+            value.merge!(get_file_placements_attributes_for_reconstruction(record: atom, data: attachments))
+          end
+
+          # TODO
+          _associations = value.delete("associations")
+        end
+      end
+    end
+
+    hash
   end
 
-  def get_file_placements_attributes_for_reconstruction
+  def reconstruct_atoms
+    assign_attributes(get_atoms_attributes_for_reconstruction)
+  end
+
+  def get_file_placements_attributes_for_reconstruction(record:, data: nil)
     hash = {}
 
-    keys = self.class.folio_attachment_keys
+    if record
+      keys = record.class.folio_attachment_keys
 
-    keys[:has_one].each do |key|
-      if placement = send(key)
-        hash["#{key}_attributes"] = placement.to_audited_hash.merge("_destroy" => "1")
+      keys[:has_one].each do |key|
+        if placement = record.send(key)
+          hash["#{key}_attributes"] = placement.to_audited_hash.merge("_destroy" => "1")
+        end
+      end
+
+      keys[:has_many].each do |key|
+        record.send(key).each do |placement|
+          hash["#{key}_attributes"] ||= []
+          hash["#{key}_attributes"] << placement.to_audited_hash.merge("_destroy" => "1")
+        end
       end
     end
 
-    keys[:has_many].each do |key|
-      send(key).each do |placement|
-        hash["#{key}_attributes"] ||= []
-        hash["#{key}_attributes"] << placement.to_audited_hash.merge("_destroy" => "1")
-      end
-    end
+    data ||= record.try(:folio_audited_file_placements_data)
 
-    if folio_audited_file_placements_data.present?
-      folio_audited_file_placements_data.each do |key, value_or_array|
+    if data.present?
+      data.each do |key, value_or_array|
         next if value_or_array.blank?
 
         if value_or_array.is_a?(Array)
@@ -121,10 +137,8 @@ module Folio::Audited
               ref = ref.merge(value)
               ref.delete("_destroy")
             else
-              if value["_destroy"] != "1"
-                hash["#{key}_attributes"] ||= []
-                hash["#{key}_attributes"] << value
-              end
+              hash["#{key}_attributes"] ||= []
+              hash["#{key}_attributes"] << value.without("id")
             end
           end
         else
@@ -156,7 +170,7 @@ module Folio::Audited
   end
 
   def reconstruct_file_placements
-    assign_attributes(get_file_placements_attributes_for_reconstruction)
+    assign_attributes(get_file_placements_attributes_for_reconstruction(record: self))
   end
 
   private
