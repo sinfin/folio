@@ -28,6 +28,7 @@ class Folio::Console::Api::AasmController < Folio::Console::Api::BaseController
               small: params[:cell_options][:small].presence,
               active: params[:cell_options][:active].presence,
               remote: params[:cell_options][:remote].presence,
+              button: params[:cell_options][:button].presence,
             }
           else
             opts = {}

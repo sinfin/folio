@@ -83,6 +83,7 @@ class Folio::Console::StateCell < Folio::ConsoleCell
                                                    active: options[:active],
                                                    remote: options[:remote],
                                                    small: options[:small],
+                                                   button: options[:button],
                                                  })
   end
 
@@ -117,5 +118,10 @@ class Folio::Console::StateCell < Folio::ConsoleCell
       "email-subject" => model.try(:aasm_email_default_subject, event) || model.class.try(:aasm_email_default_subject, event),
       "email-text" => model.try(:aasm_email_default_text, event) || model.class.try(:aasm_email_default_text, event),
     }.compact.merge(stimulus_action(click: "onTriggerClick"))
+  end
+
+  def button_class_names
+    return if options[:button].blank?
+    "btn btn-tertiary text-dark-gray"
   end
 end

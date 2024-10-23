@@ -10,11 +10,13 @@
       opacity: 0.5
 
   &__state
-    +unbutton
-    display: flex
-    align-items: center
     white-space: nowrap
-    gap: $grid-gutter-base
+
+    &:not(.btn)
+      +unbutton
+      display: flex
+      align-items: center
+      gap: $grid-gutter-base
 
     &.dropdown-item
       padding: $dropdown-item-padding-y $dropdown-item-padding-x
