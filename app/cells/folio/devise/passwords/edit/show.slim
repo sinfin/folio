@@ -4,6 +4,10 @@
 
     = f.hidden_field :reset_password_token
 
+    - if displayable_errors(f.object).any?
+      .f-devise__errors
+        = displayable_errors(f.object).join("\n")
+
     .f-devise__narrow
       == password_input(f, :password, autocomplete: 'new-password')
       == password_input(f, :password_confirmation, autocomplete: 'new-password')
