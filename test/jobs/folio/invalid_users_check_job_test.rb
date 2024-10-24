@@ -20,8 +20,10 @@ class Folio::InvalidUsersCheckJobTest < ActiveJob::TestCase
       Folio::InvalidUsersCheckJob.perform_now
     end
 
-    assert ex.message.include?("[##{u_invalid_mail.id}] email: není platná hodnota"), ex.message
-    assert ex.message.include?("[##{u_invalid_names.id}] first_name: je povinná položka; last_name: je povinná položka"), ex.message
-    assert_not ex.message.include?("[##{u_valid.id}]"), ex.message
+    message = ex.message
+
+    assert message.include?("[##{u_invalid_mail.id}] email: není platná hodnota"), message
+    assert message.include?("[##{u_invalid_names.id}] first_name: je povinná položka; last_name: je povinná položka"), message
+    assert_not message.include?("[##{u_valid.id}]"), message
   end
 end
