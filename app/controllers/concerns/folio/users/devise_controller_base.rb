@@ -53,6 +53,11 @@ module Folio::Users::DeviseControllerBase
     set_resource(resource_or_scope, args&.first) if resource.nil?
     acquire_orphan_records!
     create_site_user_link
+    after_sign_in
+  end
+
+  def after_sign_in
+    # eg: in case of invalid resource set store_location_for() to resource edit
   end
 
   def email_belongs_to_invited_pending_user?(email)
