@@ -11,7 +11,7 @@ class Folio::GenericDropzoneSerializer
              :type
 
   attribute :source_url do |object|
-    object.file.remote_url
+    Folio::S3.cdn_url_rewrite(object.file.remote_url)
   end
 
   attribute :url do |object|

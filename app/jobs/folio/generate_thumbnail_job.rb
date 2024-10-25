@@ -166,7 +166,7 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
       base = {
         uid:,
         signature: thumbnail.signature,
-        url: Dragonfly.app.datastore.url_for(uid),
+        url: Folio::S3.url_rewrite(Dragonfly.app.datastore.url_for(uid)),
         width: thumbnail.width,
         height: thumbnail.height,
         quality:,
@@ -191,7 +191,7 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
 
         base.merge(
           webp_uid:,
-          webp_url: Dragonfly.app.datastore.url_for(webp_uid),
+          webp_url: Folio::S3.url_rewrite(Dragonfly.app.datastore.url_for(webp_uid)),
           webp_signature: webp.signature,
         )
       else

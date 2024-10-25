@@ -51,6 +51,6 @@ class Folio::Console::PrivateAttachments::SingleDropzoneCell < Folio::ConsoleCel
   end
 
   def href
-    attachment.file.remote_url(expires: 1.hour.from_now)
+    Folio::S3.url_rewrite(attachment.file.remote_url(expires: 1.hour.from_now))
   end
 end
