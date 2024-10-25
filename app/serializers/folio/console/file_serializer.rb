@@ -119,4 +119,8 @@ class Folio::Console::FileSerializer
   attribute :preview_duration do |object|
     object.try(:preview_duration)
   end
+
+  attribute :additional_html_api_url do |object|
+    Rails.application.config.folio_console_files_additional_html_api_url_lambda.call(object)
+  end
 end

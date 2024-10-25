@@ -16,6 +16,8 @@ import FolioUiIcon from 'components/FolioUiIcon'
 
 import { fileFieldAutocompleteUrl } from 'constants/urls'
 
+import AdditionalHtmlFromApi from './AdditionalHtmlFromApi'
+
 import MainImage from './styled/MainImage'
 import MainImageOuter from './styled/MainImageOuter'
 import MainImageInner from './styled/MainImageInner'
@@ -55,21 +57,31 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
       </div>
 
       <div className='modal-body'>
-        <div className={isImage ? 'row' : undefined}>
-          {isImage && (
-            <div className='col-lg-7 mb-3'>
-              <MainImageOuter>
-                <div style={{ paddingTop: `${100 * file.attributes.file_height / file.attributes.file_width}%` }} />
+        <div className={(isImage || isVideo) ? 'row' : undefined}>
+          {(isImage || isVideo) && (
+            <div className='col-lg-6 mb-3'>
+              {isImage ? (
+                <div>
+                  <MainImageOuter>
+                    <div style={{ paddingTop: `${100 * file.attributes.file_height / file.attributes.file_width}%` }} />
 
-                <MainImageInner>
-                  <MainImage src={file.attributes.source_url} />
-                </MainImageInner>
-              </MainImageOuter>
+                    <MainImageInner>
+                      <MainImage src={file.attributes.source_url} />
+                    </MainImageInner>
+                  </MainImageOuter>
 
-              <div className='mt-2 small'>{file.attributes.file_width}×{file.attributes.file_height} px</div>
+                  <div className='mt-2 small'>{file.attributes.file_width}×{file.attributes.file_height} px</div>
+                </div>
+              ) : (
+                <div>
+                  <div className='form-group'><FolioPlayer file={file} /></div>
+
+                  <AdditionalHtmlFromApi apiUrl={file.attributes.additional_html_api_url} />
+                </div>
+              )}
             </div>
           )}
-          <div className={isImage ? 'col-lg-5 mb-3' : undefined}>
+          <div className={(isImage || isVideo) ? 'col-lg-6 mb-3' : undefined}>
             <FolioConsoleUiButtons className='mb-3'>
               <FolioConsoleUiButton
                 href={file.attributes.source_url}
@@ -116,10 +128,10 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
               </div>
             </div>
 
-            {(isAudio || isVideo) && <div className='form-group'><FolioPlayer file={file} /></div>}
+            {isAudio && <div className='form-group'><FolioPlayer file={file} /></div>}
 
             {
-              ["author", "attribution_source", "attribution_source_url", "attribution_copyright", "attribution_licence"].map((field) => (
+              ['author', 'attribution_source', 'attribution_source_url', 'attribution_copyright', 'attribution_licence'].map((field) => (
                 <FormGroup key={field}>
                   <Label className='form-label'>{window.FolioConsole.translations[`file/${field}`]}</Label>
 

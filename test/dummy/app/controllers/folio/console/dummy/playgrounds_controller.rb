@@ -85,6 +85,10 @@ class Folio::Console::Dummy::PlaygroundsController < Folio::Console::BaseControl
     true
   end
 
+  def additional_html_for_video_files_modal
+    render json: { data: "<p>This is additional html for video files modal</p>" }
+  end
+
   private
     def add_playground_breadcrumb
       add_breadcrumb("Playground", main_app.console_dummy_playground_path)
