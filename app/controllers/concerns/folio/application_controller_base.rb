@@ -76,15 +76,15 @@ module Folio::ApplicationControllerBase
       main_app.page_path(path: page.ancestry_url)
     end
 
-    def force_correct_path(correct_path_or_url, ignore_get_params: true)
+    def force_correct_path(correct_path_or_url, ignore_get_params: true, status: :moved_permanently)
       # If an old id or a numeric id was used to find the record, then
       # the request path will not match the post_path, and we should do
       # a 301 redirect that uses the current friendly id.
       if ignore_get_params && request.path != correct_path_or_url && request.url.split("?")[0] != correct_path_or_url.split("?")[0]
-        redirect_to(correct_path_or_url, status: :moved_permanently)
+        redirect_to(correct_path_or_url, status:, allow_other_host: true)
         true
       elsif !ignore_get_params && request.fullpath != correct_path_or_url && request.url != correct_path_or_url
-        redirect_to(correct_path_or_url, status: :moved_permanently)
+        redirect_to(correct_path_or_url, status:, allow_other_host: true)
         true
       else
         false
