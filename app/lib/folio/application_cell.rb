@@ -67,7 +67,7 @@ class Folio::ApplicationCell < Cell::ViewModel
   end
 
   # same as in Folio::ApplicationControllerBase but using "options hacks"
-  def can_now?(action, object = nil)
+  def can_now?(action, object = nil, site: nil)
     object ||= current_site
     (current_user || Folio::User.new).can_now_by_ability?(current_ability, action, object)
   end
