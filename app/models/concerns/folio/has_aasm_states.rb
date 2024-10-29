@@ -19,6 +19,14 @@ module Folio::HasAasmStates
     def permitted_event_names(*args) # some quards may need parameter
       aasm.events({ permitted: true }, *args).map(&:name)
     end
+
+    def allowed_events_for(user, *args)
+      return [] unless user
+
+      aasm.events({ permitted: true }, *args).select do |event|
+        !event.options[:private] && user.can_now?(event.name.to_sym, self)
+      end
+    end
   end
 
   private

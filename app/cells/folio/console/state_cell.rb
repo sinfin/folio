@@ -42,9 +42,8 @@ class Folio::Console::StateCell < Folio::ConsoleCell
     end
   end
 
-  def events
-    @events ||= model.aasm.events(permitted: true)
-                          .reject { |e| e.options[:private] }
+  def events(*args)
+    @events ||= model.allowed_events_for(Folio::Current.user, *args)
   end
 
   def form(&block)
