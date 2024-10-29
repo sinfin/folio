@@ -9,7 +9,7 @@ div[
     playsinline=true
   ]
     source[
-      src=@video.file.remote_url
+      src=Folio::S3.cdn_url_rewrite(@video.file.remote_url)
       type=@video.file_mime_type
     ]
 

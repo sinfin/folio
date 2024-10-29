@@ -61,7 +61,7 @@ class Folio::JwPlayer::Api
       upload_data = {}
       case Dragonfly.app.datastore
       when Dragonfly::S3DataStore
-        upload_data = { download_url: media_file.file.remote_url(expires: 1.hour.from_now),
+        upload_data = { download_url: Folio::S3.url_rewrite(media_file.file.remote_url(expires: 1.hour.from_now)),
                         method: "fetch" }
       when Dragonfly::FileDataStore
         fail

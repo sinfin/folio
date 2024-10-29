@@ -10,6 +10,6 @@ class Folio::Console::PrivateAttachmentSerializer
              :title
 
   attribute :expiring_url do |object|
-    object.file.remote_url(expires: 1.hour.from_now)
+    Folio::S3.url_rewrite(object.file.remote_url(expires: 1.hour.from_now))
   end
 end
