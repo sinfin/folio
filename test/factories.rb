@@ -168,9 +168,26 @@ FactoryBot.define do
     superadmin { false }
     association(:primary_address, factory: :folio_address_primary)
     auth_site { get_current_or_existing_site_or_create_from_factory }
+    preferred_locale { "cs" }
 
     trait :superadmin do
       superadmin { true }
+    end
+  end
+
+  factory :folio_omniauth_authentication, class: "Folio::Omniauth::Authentication" do
+    provider { "facebook" }
+    sequence(:email) { |i| "email-#{i}@example.com" }
+    nickname { "nickname" }
+    access_token { "access_token" }
+    raw_info { { some: "info" }.to_json }
+
+    association :user, factory: :folio_user
+    conflict_user_id { nil }
+    conflict_token { "conflict_token" }
+
+    trait :with_untrusted_email do
+      email { "user@privaterelay.appleid.com" }
     end
   end
 

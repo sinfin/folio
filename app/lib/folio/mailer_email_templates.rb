@@ -49,7 +49,6 @@ module Folio::MailerEmailTemplates
       @data[:SITE_TITLE] = site.title
       @data[:DOMAIN] = site.env_aware_domain
       @data[:USER_EMAIL] = record.email
-      @data[:LOCALE] = record.preferred_locale
 
       @data = @data.stringify_keys
 
