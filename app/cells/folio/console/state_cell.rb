@@ -10,7 +10,7 @@ class Folio::Console::StateCell < Folio::ConsoleCell
   end
 
   def state
-    @state ||= model.aasm.state_object_for_name(model.aasm_state.to_sym)
+    @state ||= model.current_state_aasm_object
   end
 
   def state_square_tag(s, color)

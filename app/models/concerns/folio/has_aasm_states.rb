@@ -27,6 +27,14 @@ module Folio::HasAasmStates
         !event.options[:private] && user.can_now?(event.name.to_sym, self)
       end
     end
+
+    def current_state_aasm_object
+      state_aasm_object_for(aasm_state.to_sym)
+    end
+
+    def state_aasm_object_for(state_name)
+      aasm.state_object_for_name(state_name.to_sym)
+    end
   end
 
   private
