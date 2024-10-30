@@ -163,7 +163,11 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
   end
 
   def featured_toggle(opts = {})
-    toggle(:featured, opts)
+    if rendering_header? || can_now?(:feature, record)
+      toggle(:featured, opts)
+    else
+      boolean(:featured)
+    end
   end
 
   def published_toggle(opts = {})
@@ -271,7 +275,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
     bool = if block_given?
       yield(record)
     else
-      record.send(name)
+      record.send(name) || false
     end
 
     attribute(name, I18n.t("folio.console.boolean.#{bool}"))

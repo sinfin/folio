@@ -514,7 +514,7 @@ end
 #  bank_account_number       :string
 #  company_name              :string
 #  time_zone                 :string           default("Prague")
-#  auth_site_id              :bigint(8)        default(3), not null
+#  auth_site_id              :bigint(8)        not null
 #
 # Indexes
 #
