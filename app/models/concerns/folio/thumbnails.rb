@@ -36,6 +36,29 @@ module Folio::Thumbnails
     before_destroy :delete_thumbnails
   end
 
+  def thumbs_hash_with_rewritten_urls(hash)
+    url = hash[:url]
+    webp_url = hash[:webp_url]
+
+    if hash[:private]
+      url = Folio::S3.url_rewrite(Dragonfly.app.datastore.url_for(hash[:uid], expires: 1.hour.from_now))
+
+      if hash[:webp_url]
+        webp_url = Folio::S3.url_rewrite(Dragonfly.app.datastore.url_for(hash[:webp_uid], expires: 1.hour.from_now))
+      end
+    else
+      if url
+        url = Folio::S3.cdn_url_rewrite(url)
+      end
+
+      if webp_url
+        webp_url = Folio::S3.cdn_url_rewrite(webp_url)
+      end
+    end
+
+    hash.merge(url:, webp_url:)
+  end
+
   # Use w_x_h = 400x250# or similar
   #
   def thumb(w_x_h, quality: 82, immediate: false, force: false, x: nil, y: nil)
@@ -46,28 +69,19 @@ module Folio::Thumbnails
     end
 
     if !force && thumbnail_sizes[w_x_h] && thumbnail_sizes[w_x_h][:uid]
-      hash = thumbnail_sizes[w_x_h]
-
-      if hash[:private]
-        hash[:url] = Dragonfly.app.datastore.url_for(hash[:uid], expires: 1.hour.from_now)
-
-        if hash[:webp_url]
-          hash[:webp_url] = Dragonfly.app.datastore.url_for(hash[:webp_uid], expires: 1.hour.from_now)
-        end
-      end
-
-      OpenStruct.new(hash)
+      OpenStruct.new(thumbs_hash_with_rewritten_urls(thumbnail_sizes[w_x_h]))
     else
       if svg?
         # private svgs won't work, but that should rarely be the case
-        url = file.remote_url
+        url = Folio::S3.cdn_url_rewrite(file.remote_url)
         width, height = get_svg_dimensions(w_x_h)
       else
         width, height = w_x_h.split("x").map(&:to_i)
 
         if immediate || self.class.immediate_thumbnails
           image = Folio::GenerateThumbnailJob.perform_now(self, w_x_h, quality, force:, x:, y:)
-          return OpenStruct.new(image.thumbnail_sizes[w_x_h])
+
+          return OpenStruct.new(thumbs_hash_with_rewritten_urls(image.thumbnail_sizes[w_x_h]))
         else
           if thumbnail_sizes[w_x_h] && thumbnail_sizes[w_x_h][:started_generating_at] && thumbnail_sizes[w_x_h][:started_generating_at] > 5.minutes.ago
             return OpenStruct.new(thumbnail_sizes[w_x_h])
@@ -77,7 +91,7 @@ module Folio::Thumbnails
             response = self.reload.with_lock do
               if !force && thumbnail_sizes[w_x_h] && thumbnail_sizes[w_x_h][:uid]
                 # already added via a parallel process
-                OpenStruct.new(thumbnail_sizes[w_x_h])
+                OpenStruct.new(thumbs_hash_with_rewritten_urls(thumbnail_sizes[w_x_h]))
               else
                 update(thumbnail_sizes: thumbnail_sizes.merge(w_x_h => {
                   uid: nil,

@@ -5,7 +5,7 @@ class Folio::DownloadsController < ActionController::Base
   before_action :find_file
 
   def show
-    redirect_to @file.file.remote_url, allow_other_host: true
+    redirect_to Folio::S3.cdn_url_rewrite(@file.file.remote_url), allow_other_host: true
   end
 
   private

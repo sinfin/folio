@@ -8,9 +8,7 @@ class Folio::Console::Api::AasmController < Folio::Console::Api::BaseController
       if record.valid?
         event_name = params.require(:aasm_event).to_sym
 
-        event = record.aasm
-                      .events(possible: true)
-                      .find { |e| e.name == event_name }
+        event = record.allowed_events_for(Folio::Current.user).find { |e| e.name == event_name }
 
         if event && !event.options[:private]
           record = handle_record_before_event(record)
@@ -28,6 +26,7 @@ class Folio::Console::Api::AasmController < Folio::Console::Api::BaseController
               small: params[:cell_options][:small].presence,
               active: params[:cell_options][:active].presence,
               remote: params[:cell_options][:remote].presence,
+              button: params[:cell_options][:button].presence,
             }
           else
             opts = {}

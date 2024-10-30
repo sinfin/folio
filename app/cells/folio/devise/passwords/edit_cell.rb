@@ -10,4 +10,13 @@ class Folio::Devise::Passwords::EditCell < Folio::Devise::ApplicationCell
 
     simple_form_for(resource, opts, &block)
   end
+
+  def displayable_errors(obj)
+    display_errors_for = %i[reset_password_token]
+    obj.errors.messages.filter_map do |field, messages|
+      next if display_errors_for.exclude?(field)
+
+      "#{field}: #{messages.join(", ")}"
+    end
+  end
 end

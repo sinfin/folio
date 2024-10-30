@@ -25,51 +25,28 @@ class Folio::Users::SessionsController < Devise::SessionsController
   end
 
   def create
-    if Rails.application.config.folio_users_publicly_invitable &&
-       params[:user] &&
-       params[:user][:email].present? &&
-       email_belongs_to_invited_pending_user?(params[:user][:email])
-      controller = self.class.to_s.gsub("Sessions", "Invitations").constantize.new
-      controller.request = request
-      controller.response = response
-      render plain: controller.process("create")
+    if invited_user?
+      render plain: invitation_controller.process("create")
     else
       respond_to do |format|
         format.html do
-          warden_exception_or_user = catch :warden do
-            self.resource = warden.authenticate!(auth_options)
-          end
+          exception_message = try_to_authenticate_resource
 
           if resource
             set_flash_message!(:notice, :signed_in)
-
             sign_in(resource_name, resource)
 
             yield resource if block_given?
             respond_with resource, location: after_sign_in_path_for(resource)
           else
-            message = get_failure_flash_message(warden_exception_or_user)
             session[:user_email] = params[:user][:email]
-            redirect_to main_app.new_user_session_path, flash: { alert: message }
+            redirect_to main_app.new_user_session_path, flash: { alert: exception_message }
           end
         end
 
         format.json do
-          if request.referrer
-            if params[:modal_non_get_request].blank?
-              store_location_for(:user, request.referrer)
-            elsif path = Rails.application.config.folio_users_non_get_referrer_rewrite_proc.call(request.referrer)
-              store_location_for(:user, path)
-            else
-              store_location_for(:user, main_app.send(Rails.application.config.folio_users_after_sign_in_path))
-            end
-          else
-            store_location_for(:user, main_app.send(Rails.application.config.folio_users_after_sign_in_path))
-          end
-
-          warden_exception_or_user = catch :warden do
-            self.resource = warden.authenticate(auth_options)
-          end
+          store_sign_in_location
+          exception_message = try_to_authenticate_resource
 
           if resource
             sign_in(resource_name, resource)
@@ -78,11 +55,9 @@ class Folio::Users::SessionsController < Devise::SessionsController
             set_flash_message!(:notice, :signed_in)
             render json: { data: { url: after_sign_in_path_for(resource) } }, status: 200
           else
-            message = get_failure_flash_message(warden_exception_or_user)
-
-            errors = [{ status: 401, title: "Unauthorized", detail: message }]
+            errors = [{ status: 401, title: "Unauthorized", detail: exception_message }]
             cell_flash = ActionDispatch::Flash::FlashHash.new
-            cell_flash[:alert] = message
+            cell_flash[:alert] = exception_message
 
             html = cell("folio/devise/sessions/new",
                         resource: resource || Folio::User.new(email: params[:user][:email]),
@@ -133,6 +108,43 @@ class Folio::Users::SessionsController < Devise::SessionsController
       else
         super
       end
+    end
+  end
+
+  def invited_user?
+    Rails.application.config.folio_users_publicly_invitable &&
+    params[:user] &&
+    params[:user][:email].present? &&
+    email_belongs_to_invited_pending_user?(params[:user][:email])
+  end
+
+  def invitation_controller
+    controller = self.class.to_s.gsub("Sessions", "Invitations").constantize.new
+    controller.request = request
+    controller.response = response
+    controller
+  end
+
+  def try_to_authenticate_resource
+    warden_exception_or_user = catch :warden do
+      self.resource = warden.authenticate!(auth_options)
+    end
+    return nil if resource
+
+    get_failure_flash_message(warden_exception_or_user)
+  end
+
+  def store_sign_in_location
+    if request.referrer
+      if params[:modal_non_get_request].blank?
+        store_location_for(:user, request.referrer)
+      elsif path = Rails.application.config.folio_users_non_get_referrer_rewrite_proc.call(request.referrer)
+        store_location_for(:user, path)
+      else
+        store_location_for(:user, main_app.send(Rails.application.config.folio_users_after_sign_in_path))
+      end
+    else
+      store_location_for(:user, main_app.send(Rails.application.config.folio_users_after_sign_in_path))
     end
   end
 end

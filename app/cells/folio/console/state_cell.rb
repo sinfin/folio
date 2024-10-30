@@ -10,7 +10,7 @@ class Folio::Console::StateCell < Folio::ConsoleCell
   end
 
   def state
-    @state ||= model.aasm.state_object_for_name(model.aasm_state.to_sym)
+    @state ||= model.current_state_aasm_object
   end
 
   def state_square_tag(s, color)
@@ -42,9 +42,8 @@ class Folio::Console::StateCell < Folio::ConsoleCell
     end
   end
 
-  def events
-    @events ||= model.aasm.events(permitted: true)
-                          .reject { |e| e.options[:private] }
+  def events(*args)
+    @events ||= model.allowed_events_for(Folio::Current.user, *args)
   end
 
   def form(&block)
@@ -66,7 +65,7 @@ class Folio::Console::StateCell < Folio::ConsoleCell
   end
 
   def active?
-    options[:active] != false
+    options[:active] != false && model.persisted?
   end
 
   def confirm(event)
@@ -83,6 +82,7 @@ class Folio::Console::StateCell < Folio::ConsoleCell
                                                    active: options[:active],
                                                    remote: options[:remote],
                                                    small: options[:small],
+                                                   button: options[:button],
                                                  })
   end
 
@@ -117,5 +117,10 @@ class Folio::Console::StateCell < Folio::ConsoleCell
       "email-subject" => model.try(:aasm_email_default_subject, event) || model.class.try(:aasm_email_default_subject, event),
       "email-text" => model.try(:aasm_email_default_text, event) || model.class.try(:aasm_email_default_text, event),
     }.compact.merge(stimulus_action(click: "onTriggerClick"))
+  end
+
+  def button_class_names
+    return if options[:button].blank?
+    "btn btn-tertiary text-dark-gray"
   end
 end

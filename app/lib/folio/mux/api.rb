@@ -112,7 +112,7 @@ class Folio::Mux::Api
     def media_file_content_url
       case Dragonfly.app.datastore
       when Dragonfly::S3DataStore
-        media_file.file.remote_url(expires: 1.hour.from_now)
+        Folio::S3.url_rewrite(media_file.file.remote_url(expires: 1.hour.from_now))
       when Dragonfly::FileDataStore
         fail
         # response = post(url, params)

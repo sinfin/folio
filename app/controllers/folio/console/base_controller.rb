@@ -215,6 +215,8 @@ class Folio::Console::BaseController < Folio::ApplicationController
       (additional_file_placements_strong_params_keys + %i[
         og_image_placement_attributes
         cover_placement_attributes
+        audio_cover_placement_attributes
+        video_cover_placement_attributes
         background_cover_placement_attributes
         document_placement_attributes
         document_placements_attributes

@@ -51,6 +51,7 @@ class Folio::Ability
       console_common_admin_rules
 
       if user.has_role?(site:, role: :administrator)
+        # TODO: should it be `can :do_anything, Folio::User, { auth_site: site, superadmin: false }`?`
         can :do_anything, Folio::User, { site_user_links: { site: }, superadmin: false }
         can :read_administrators, Folio::Site
         can :set_administrator, Folio::Site

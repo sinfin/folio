@@ -40,9 +40,9 @@ class Folio::Console::FileSerializer
 
   attribute :source_url do |object|
     if object.try(:private?)
-      object.file.remote_url(expires: 1.hour.from_now)
+      Folio::S3.url_rewrite(object.file.remote_url(expires: 1.hour.from_now))
     else
-      object.file.remote_url
+      Folio::S3.cdn_url_rewrite(object.file.remote_url)
     end
   end
 
@@ -118,5 +118,9 @@ class Folio::Console::FileSerializer
 
   attribute :preview_duration do |object|
     object.try(:preview_duration)
+  end
+
+  attribute :additional_html_api_url do |object|
+    Rails.application.config.folio_console_files_additional_html_api_url_lambda.call(object)
   end
 end

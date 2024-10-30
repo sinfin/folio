@@ -9,6 +9,6 @@ class Folio::DownloadsControllerTest < ActionDispatch::IntegrationTest
     create_and_host_site
     doc = create(:folio_file_document)
     get download_path(doc, doc.file_name, locale: :cs)
-    assert_redirected_to doc.file.remote_url
+    assert_redirected_to Folio::S3.cdn_url_rewrite(doc.file.remote_url)
   end
 end

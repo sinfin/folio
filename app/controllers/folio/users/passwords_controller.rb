@@ -20,6 +20,15 @@ class Folio::Users::PasswordsController < Devise::PasswordsController
     end
   end
 
+  def update
+    super do |user|
+      if user.errors.any? && !user.errors.attribute_names.any? { |an| an.to_s.include?("password") }
+        user.save(validation: false) # so password is changed even for invalid user
+        user.errors.clear
+      end
+    end
+  end
+
   private
     def sign_out_before_entering
       sign_out(current_user) if current_user

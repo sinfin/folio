@@ -66,8 +66,8 @@ class UploadTagger extends React.PureComponent {
               value={this.state.author}
               name='author'
               onChange={this.onInputChange}
-              placeholder={window.FolioConsole.translations["file/author"]}
-              url={fileFieldAutocompleteUrl("author")}
+              placeholder={window.FolioConsole.translations['file/author']}
+              url={fileFieldAutocompleteUrl('author')}
               autoFocus
             />
           </FormGroup>

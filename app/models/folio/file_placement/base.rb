@@ -70,20 +70,26 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
       return if file.blank?
 
       if Rails.application.config.folio_files_require_attribution
-        if file.author.blank? && file.attribution_source.blank? && file.attribution_source_url.blank?
-          errors.add(:file, :missing_file_attribution)
+        if placement.class.try(:ignore_folio_files_require_attribution) != true
+          if file.author.blank? && file.attribution_source.blank? && file.attribution_source_url.blank?
+            errors.add(:file, :missing_file_attribution)
+          end
         end
       end
 
       if Rails.application.config.folio_files_require_alt
-        if file.class.human_type == "image" && file.alt.blank?
-          errors.add(:file, :missing_file_alt)
+        if placement.class.try(:ignore_folio_files_require_alt) != true
+          if file.class.human_type == "image" && file.alt.blank?
+            errors.add(:file, :missing_file_alt)
+          end
         end
       end
 
       if Rails.application.config.folio_files_require_description
-        if file.description.blank?
-          errors.add(:file, :missing_file_description)
+        if placement.class.try(:ignore_folio_files_require_description) != true
+          if file.description.blank?
+            errors.add(:file, :missing_file_description)
+          end
         end
       end
     end

@@ -11,6 +11,24 @@ class Folio::Console::PublishableInputs::ItemCell < Folio::ConsoleCell
     model[:field]
   end
 
+  def read_only?
+    if @read_only.nil?
+      input_to_event = {
+        published: :publish,
+        featured: :feature
+      }
+
+      @read_only = if Folio::Current.user.blank?
+        false
+      elsif !input_to_event.key?(field.to_sym)
+        false
+      else
+        !can_now?(input_to_event[field.to_sym], f.object, site: Folio::Current.site)
+      end
+    end
+    @read_only
+  end
+
   def date_at?
     return @date_at unless @date_at.nil?
     @date_at = f.object.respond_to?("#{field}_at")

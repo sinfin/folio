@@ -88,7 +88,7 @@ class Folio::Transportable::Exporter
       {
         file: {
           id: fp.file_id,
-          file_url: fp.file.file.remote_url,
+          file_url: Folio::S3.url_rewrite(fp.file.file.remote_url),
           type: fp.file.type,
           file_uid: fp.file.file_uid,
           author: fp.file.author,

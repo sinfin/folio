@@ -27,7 +27,7 @@
           height="auto"
           controls=true
         ]
-          source src=f.object.file.remote_url type="video/mp4"
+          source src=Folio::S3.url_rewrite(f.object.file.remote_url) type="video/mp4"
 
   - else
     .f-c-file-table-wrap
