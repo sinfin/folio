@@ -201,6 +201,7 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
                   <React.Fragment>
                     <TagsInput
                       value={formState.tags}
+                      dataTestId='file-tags'
                       onTagsChange={onTagsChange}
                       submit={saveModal}
                       noAutofocus
