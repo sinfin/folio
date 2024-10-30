@@ -10,19 +10,19 @@
       == cell('folio/devise/omniauth', 'sessions')
 
     .f-devise__narrow
-      == email_input(f, autofocus: true)
+      == email_input(f, autofocus: true, test_id: 'sign-in-form-email-input')
 
-      == password_input(f, :password, autocomplete: 'current-password')
+      == password_input(f, :password, autocomplete: 'current-password', test_id: 'sign-in-form-password-input')
 
     .f-devise__errors
 
-    = submit_button(f, t('.sign_in'))
+    = submit_button(f, t('.sign_in'), test_id: 'sign-in-form-submit-button')
 
     - unless omniauth_above?
       == cell('folio/devise/omniauth', 'sessions')
 
     .f-devise__under-submit-links
-      = forgotten_password_link
+      = forgotten_password_link(test_id: 'sign-in-form-forgotten-password-link')
 
     - if model[:modal_non_get_request]
       input name="modal_non_get_request" value="1" type="hidden"
@@ -31,4 +31,4 @@
 
   - if ::Rails.application.config.folio_users_publicly_invitable
     .f-devise__bottom-action-wrap
-      == invite_button
+      == invite_button(test_id: 'sign-in-form-invite-button')

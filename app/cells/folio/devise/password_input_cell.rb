@@ -11,6 +11,7 @@ class Folio::Devise::PasswordInputCell < Folio::Devise::ApplicationCell
                   class: "f-devise-password-input__input",
                   id: input_id,
                   value: options[:keep_password] ? model.object.send(options[:field]) : nil,
+                  data: { test_id: options[:test_id].presence }
                 }
   end
 

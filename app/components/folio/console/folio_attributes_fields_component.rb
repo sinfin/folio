@@ -61,6 +61,7 @@ class Folio::Console::FolioAttributesFieldsComponent < Folio::Console::Applicati
     cell("folio/console/ui/button",
          label: t(".add"),
          variant: "success-none",
-         icon: :plus)
+         icon: :plus,
+         data: { test_id: "add-attribute-button" })
   end
 end
