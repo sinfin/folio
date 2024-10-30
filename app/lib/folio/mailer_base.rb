@@ -47,4 +47,11 @@ module Folio::MailerBase
       yield locale
     end
   end
+
+  def with_site_locale(site, locale: nil)
+    locale ||= site.locale
+    I18n.with_locale(locale) do
+      yield locale
+    end
+  end
 end
