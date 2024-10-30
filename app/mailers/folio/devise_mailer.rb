@@ -20,7 +20,7 @@ class Folio::DeviseMailer < Devise::Mailer
     @site = record.auth_site
     opts = { site: @site }.merge(opts)
 
-    with_locale(record, opts) do |locale|
+    with_user_locale(record, locale: opts[:locale]) do |locale|
       @data ||= {}
       @data[:LOCALE] = locale
       @data[:USER_CHANGE_PASSWORD_URL] = scoped_url_method(record,
@@ -37,7 +37,7 @@ class Folio::DeviseMailer < Devise::Mailer
     @site = (record.site_user_links.order(id: :asc).last&.site || record.auth_site)
     opts = { site: @site }.merge(opts)
 
-    with_locale(record, opts) do |locale|
+    with_user_locale(record, locale: opts[:locale]) do |locale|
       @data ||= {}
       @data[:LOCALE] = locale
       @data[:USER_ACCEPT_INVITATION_URL] = scoped_url_method(record,
@@ -55,7 +55,7 @@ class Folio::DeviseMailer < Devise::Mailer
     @site = (record.site_user_links.order(id: :asc).last&.site || record.auth_site)
     opts = { site: @site }.merge(opts)
 
-    with_locale(record, opts) do |locale|
+    with_user_locale(record, locale: opts[:locale]) do |locale|
       @data ||= {}
       @data[:LOCALE] = locale
       @data[:USER_CONFIRMATION_URL] = scoped_url_method(record,
@@ -74,7 +74,7 @@ class Folio::DeviseMailer < Devise::Mailer
 
     initialize_from_record(@record)
 
-    with_locale(@record, opts) do |locale|
+    with_user_locale(@record, locale: opts[:locale]) do |locale|
       template_data = {
         LOCALE: locale,
         USER_CONFLICT_PROVIDER: authentication.human_provider,
@@ -88,13 +88,6 @@ class Folio::DeviseMailer < Devise::Mailer
   end
 
   private
-    def with_locale(record, opts)
-      locale = opts[:locale] || record.preferred_locale || record.auth_site.locale
-      I18n.with_locale(locale) do
-        yield locale
-      end
-    end
-
     def scoped_url_method(record, method, *args)
       scoped = "user"
 
