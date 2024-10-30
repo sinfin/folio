@@ -174,6 +174,12 @@ module Folio::StimulusHelper
                         inline: true)
   end
 
+  def stimulus_turbolinks_form
+    stimulus_controller("f-turbolinks-form",
+                        action: { submit: "onSubmit" },
+                        inline: true)
+  end
+
   def stimulus_merge(*data_hashes)
     runner = {}
 
