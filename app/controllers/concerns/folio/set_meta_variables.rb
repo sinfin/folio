@@ -10,6 +10,8 @@ module Folio::SetMetaVariables
       description: :perex,
       meta_title: :meta_title,
       meta_description: :meta_description,
+      meta_keywords_array: :meta_keywords_array,
+      canonical_url: :canonical_url,
     }.merge(mappings)
 
     if ::Rails.application.config.folio_use_og_image
@@ -39,6 +41,14 @@ module Folio::SetMetaVariables
 
     if @public_page_description.present?
       @public_page_description = ActionView::Base.full_sanitizer.sanitize(@public_page_description, tags: [])
+    end
+
+    @public_page_canonical_url = instance.try(m[:canonical_url]).presence
+
+    ary = instance.try(m[:meta_keywords_array])
+
+    if ary.present? && ary.is_a?(Array)
+      @public_page_keywords_array = ary
     end
 
     @record_for_meta_variables = instance

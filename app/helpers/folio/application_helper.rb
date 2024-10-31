@@ -41,6 +41,10 @@ module Folio::ApplicationHelper
     current_site.description
   end
 
+  def public_page_keywords_array
+    @public_page_keywords_array.presence
+  end
+
   def can_now?(action, object = nil)
     controller.can_now?(action, object)
   end

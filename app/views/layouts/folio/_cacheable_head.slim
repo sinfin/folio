@@ -9,6 +9,9 @@ title = public_page_title
 - if public_page_canonical_url.present?
   link rel="canonical" href=public_page_canonical_url
 
+- if public_page_keywords_array.is_a?(Array) && public_page_keywords_array.present?
+  meta name="keywords" content=public_page_keywords_array.join(', ')
+
 meta property="og:title" content=og_title
 
 - current_site.layout_twitter_meta.each do |name, content|
