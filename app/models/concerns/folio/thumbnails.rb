@@ -95,7 +95,7 @@ module Folio::Thumbnails
                 # already added via a parallel process
                 OpenStruct.new(thumbs_hash_with_rewritten_urls(thumbnail_sizes[w_x_h]))
               else
-                update(thumbnail_sizes: thumbnail_sizes.merge(w_x_h => {
+                update(thumbnail_sizes: (thumbnail_sizes || {}).merge(w_x_h => {
                   uid: nil,
                   signature: nil,
                   x: nil,
