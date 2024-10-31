@@ -37,8 +37,7 @@ class Folio::Devise::ApplicationCell < Folio::ApplicationCell
     link_to(t("folio.devise.invite_button"),
             controller.new_invitation_path(resource_name),
             class: "f-devise-modal-aware-link #{invite_button_class_name}",
-            data: (options[:modal] ? stimulus_action("inviteClick") : nil),
-            data: { test_id: test_id.presence })
+            data: (options[:modal] ? stimulus_action("inviteClick").merge(test_id: test_id.presence) : { test_id: test_id.presence }))
   end
 
   def submit_button(f, label, test_id: nil)
