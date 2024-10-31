@@ -37,6 +37,8 @@ module Folio::Thumbnails
   end
 
   def thumbs_hash_with_rewritten_urls(hash)
+    return hash if hash.blank?
+
     url = hash[:url]
     webp_url = hash[:webp_url]
 
@@ -68,7 +70,7 @@ module Folio::Thumbnails
       return thumb_in_test_env(w_x_h, quality:)
     end
 
-    if !force && thumbnail_sizes[w_x_h] && thumbnail_sizes[w_x_h][:uid]
+    if !force && thumbnail_sizes && thumbnail_sizes[w_x_h] && thumbnail_sizes[w_x_h][:uid]
       OpenStruct.new(thumbs_hash_with_rewritten_urls(thumbnail_sizes[w_x_h]))
     else
       if svg?
@@ -83,13 +85,13 @@ module Folio::Thumbnails
 
           return OpenStruct.new(thumbs_hash_with_rewritten_urls(image.thumbnail_sizes[w_x_h]))
         else
-          if thumbnail_sizes[w_x_h] && thumbnail_sizes[w_x_h][:started_generating_at] && thumbnail_sizes[w_x_h][:started_generating_at] > 5.minutes.ago
+          if thumbnail_sizes && thumbnail_sizes[w_x_h] && thumbnail_sizes[w_x_h][:started_generating_at] && thumbnail_sizes[w_x_h][:started_generating_at] > 5.minutes.ago
             return OpenStruct.new(thumbnail_sizes[w_x_h])
           else
             url = temporary_url(w_x_h)
 
             response = self.reload.with_lock do
-              if !force && thumbnail_sizes[w_x_h] && thumbnail_sizes[w_x_h][:uid]
+              if !force && thumbnail_sizes && thumbnail_sizes[w_x_h] && thumbnail_sizes[w_x_h][:uid]
                 # already added via a parallel process
                 OpenStruct.new(thumbs_hash_with_rewritten_urls(thumbnail_sizes[w_x_h]))
               else
@@ -202,7 +204,7 @@ module Folio::Thumbnails
     largest_key = nil; largest_value = 0
 
     keys.each do |key|
-      if thumbnail_sizes[key] && thumbnail_sizes[key][:height] > largest_value
+      if thumbnail_sizes && thumbnail_sizes[key] && thumbnail_sizes[key][:height] > largest_value
         largest_key = key
         largest_value = thumbnail_sizes[key][:height]
       end
@@ -217,6 +219,7 @@ module Folio::Thumbnails
   end
 
   def recreate_all_thumbnails!
+    return unless thumbnail_sizes
     thumbnail_sizes.each do |size, data|
       thumb(size, quality: data[:quality],
                   force: true,
