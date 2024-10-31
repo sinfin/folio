@@ -38,6 +38,7 @@ class TagsInput extends React.Component {
         defaultOptions
         async='/console/api/tags'
         isMulti
+        dataTestId={this.props.dataTestId}
       />
     )
   }

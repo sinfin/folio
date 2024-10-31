@@ -17,10 +17,11 @@ class Folio::Devise::ApplicationCell < Folio::ApplicationCell
     model[:resource_name]
   end
 
-  def forgotten_password_link
+  def forgotten_password_link(test_id: nil)
     link_to(t("folio.devise.forgotten_password_link"),
             controller.new_password_path(resource_name),
-            class: "f-devise__under-submit-link")
+            class: "f-devise__under-submit-link",
+            data: { test_id: test_id.presence })
   end
 
   def sign_in_link
@@ -32,16 +33,19 @@ class Folio::Devise::ApplicationCell < Folio::ApplicationCell
     "btn btn-secondary"
   end
 
-  def invite_button
+  def invite_button(test_id: nil)
     link_to(t("folio.devise.invite_button"),
             controller.new_invitation_path(resource_name),
             class: "f-devise-modal-aware-link #{invite_button_class_name}",
-            data: (options[:modal] ? stimulus_action("inviteClick") : nil))
+            data: (options[:modal] ? stimulus_action("inviteClick").merge(test_id: test_id.presence) : { test_id: test_id.presence }))
   end
 
-  def submit_button(f, label)
+  def submit_button(f, label, test_id: nil)
     content_tag(:div, class: "f-devise__submit-wrap") do
-      f.button :submit, label, class: "f-devise__submit-btn #{submit_button_class_names}"
+      f.button :submit,
+                label,
+                class: "f-devise__submit-btn #{submit_button_class_names}",
+                data: { test_id: test_id.presence }
     end
   end
 
@@ -50,7 +54,7 @@ class Folio::Devise::ApplicationCell < Folio::ApplicationCell
   end
 
   def email_input(f, opts = {})
-    cell("folio/devise/email_input", f)
+    cell("folio/devise/email_input", f, opts)
   end
 
   def phone_input(f, opts = {})

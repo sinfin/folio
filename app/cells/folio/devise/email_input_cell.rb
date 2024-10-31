@@ -11,6 +11,7 @@ class Folio::Devise::EmailInputCell < Folio::Devise::ApplicationCell
                   autofocus: options[:autofocus].nil? ? true : options[:autofocus],
                   autocomplete: "email",
                   value: model.object.email.presence,
+                  data: { test_id: options[:test_id].presence },
                   id: input_id, # need ID for generating "<label for",
                   # but there can be more same inputs on page
                   # so we need to generate unique ID

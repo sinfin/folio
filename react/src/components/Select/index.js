@@ -1,7 +1,7 @@
 import React from 'react'
 import { debounce } from 'lodash'
 
-import ReactSelect from 'react-select'
+import ReactSelect, { components } from 'react-select'
 import CreatableSelect from 'react-select/creatable'
 import AsyncSelect from 'react-select/async'
 import AsyncCreatableSelect from 'react-select/async-creatable'
@@ -14,6 +14,11 @@ import formatOption from './formatOption'
 import formatOptions from './formatOptions'
 import formatCreateLabel from './formatCreateLabel'
 import makeNoOptionsMessage from './makeNoOptionsMessage'
+
+const Input = (props) => {
+  const { dataTestId } = props.selectProps
+  return <components.Input {...props} data-test-id={dataTestId} />
+}
 
 class Select extends React.Component {
   state = { key: 0 }
@@ -72,7 +77,7 @@ class Select extends React.Component {
   }
 
   render () {
-    const { isClearable, createable, value, options, rawOptions, onChange, innerRef, selectize, async, asyncData, addAtomSettings, defaultOptions, placeholder, ...rest } = this.props
+    const { isClearable, createable, value, options, rawOptions, onChange, innerRef, selectize, async, asyncData, addAtomSettings, defaultOptions, placeholder, dataTestId, ...rest } = this.props
     let SelectComponent = CreatableSelect
     let loadOptions, loadOptionsRaw
 
@@ -179,6 +184,8 @@ class Select extends React.Component {
         placeholder={placeholder || window.FolioConsole.translations.selectPlaceholder}
         loadingMessage={() => window.FolioConsole.translations.loading}
         isValidNewOption={this.isValidNewOption}
+        components={{ Input }}
+        dataTestId={dataTestId}
         {...rest}
       />
     )
