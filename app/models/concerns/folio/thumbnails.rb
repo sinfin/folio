@@ -173,15 +173,15 @@ module Folio::Thumbnails
   end
 
   def jpg?
-    file_mime_type.ends_with?("jpeg")
+    file_mime_type.present? && file_mime_type.ends_with?("jpeg")
   end
 
   def svg?
-    file_mime_type.include?("svg")
+    file_mime_type.present? && file_mime_type.include?("svg")
   end
 
   def gif?
-    file_mime_type.include?("gif")
+    file_mime_type.present? && file_mime_type.include?("gif")
   end
 
   def animated_gif?
