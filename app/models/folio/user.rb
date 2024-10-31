@@ -83,6 +83,8 @@ class Folio::User < Folio::ApplicationRecord
 
   before_update :update_has_generated_password
 
+  before_create :set_preferred_locale
+
   pg_search_scope :by_query,
                   against: [:email, :last_name, :first_name, :company_name, :nickname],
                   ignoring: :accents,
@@ -459,6 +461,10 @@ class Folio::User < Folio::ApplicationRecord
         self.has_generated_password = false
       end
     end
+
+    def set_preferred_locale
+      self.preferred_locale = I18n.locale.to_s if preferred_locale.blank?
+    end
 end
 
 # == Schema Information
@@ -515,6 +521,7 @@ end
 #  company_name              :string
 #  time_zone                 :string           default("Prague")
 #  auth_site_id              :bigint(8)        not null
+#  preferred_locale          :string
 #
 # Indexes
 #

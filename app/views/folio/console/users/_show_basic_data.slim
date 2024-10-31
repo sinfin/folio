@@ -34,5 +34,8 @@
     = s.attribute :subscribed_to_newsletter
       = render(Folio::Console::Ui::BooleanToggleComponent.new(record: s.object,
                                                               attribute: :subscribed_to_newsletter))
+
+    = s.attribute :preferred_locale
+
     - if current_user.superadmin?
       = s.attribute :auth_site_title

@@ -11,9 +11,9 @@
         - if ::Rails.application.config.folio_users_use_phone
           .row
             .col-md-6
-              = f.input :phone
+              = f.input :phone, as: :phone
             .col-md-6
-              = f.input :phone_secondary
+              = f.input :phone_secondary, as: :phone
 
         .row
           .col-md-2
@@ -31,7 +31,16 @@
 
         = f.input :born_at
 
-        = f.input :time_zone, as: :select, collection: ActiveSupport::TimeZone.all.map { |tz| [tz.name, tz.name] }
+        .row
+          .col-md-6
+            = f.input :time_zone, as: :select,
+                                  collection: ActiveSupport::TimeZone.all.map { |tz| [tz.name, tz.name] }
+
+          .col-md-6
+            = f.input :preferred_locale, as: :select,
+                                         collection: I18n.available_locales,
+                                         include_blank: false
+
         - if can_now?(:change_auth_site, f.object)
           = f.input :auth_site_id, as: :select,
                                    collection: Folio::Site.all.map { |site| [site.domain, site.id] },

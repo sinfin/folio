@@ -40,4 +40,18 @@ module Folio::MailerBase
       File.read(File.join(Rails.application.assets_manifest.directory, manifest_file))
     end
   end
+
+  def with_user_locale(user, locale: nil)
+    locale ||= user.preferred_locale || user.auth_site.try(:locale) || I18n.locale
+    I18n.with_locale(locale) do
+      yield locale
+    end
+  end
+
+  def with_site_locale(site, locale: nil)
+    locale ||= site.try(:locale) || I18n.locale
+    I18n.with_locale(locale) do
+      yield locale
+    end
+  end
 end

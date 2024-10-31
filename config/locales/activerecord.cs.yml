@@ -135,6 +135,7 @@ cs:
         locked: :activerecord.attributes.folio/site_user_link.locked
         locked/true: :activerecord.attributes.folio/site_user_link.locked/true
         locked/false: :activerecord.attributes.folio/site_user_link.locked/false
+        preferred_locale: Preferovaný jazyk
       folio/address/base:
         address_line_1: Ulice
         address_line_2: Číslo
