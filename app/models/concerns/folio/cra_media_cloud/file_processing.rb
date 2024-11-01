@@ -4,6 +4,10 @@ module Folio::CraMediaCloud::FileProcessing
   extend ActiveSupport::Concern
   include Folio::MediaFileProcessingBase
 
+  def encoder_profile_group
+    nil # use encoder's default
+  end
+
   def remote_content_url_base
     "https://#{ENV.fetch("CRA_MEDIA_CLOUD_CDN_CONTENT_URL")}.ssl.cdn.cra.cz"
   end
