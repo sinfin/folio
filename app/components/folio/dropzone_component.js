@@ -10,8 +10,8 @@ window.Folio.Stimulus.register('f-dropzone', class extends window.Stimulus.Contr
     indexUrl: { type: String, default: '' },
     maxFileSize: { type: Number, default: 0 },
     persistedFileCount: Number,
-    pendingFileCount: { type: Number, defualt: 0 },
-    attachToDocument: { type: Boolean, defualt: true }
+    pendingFileCount: { type: Number, default: 0 },
+    attachToDocument: { type: Boolean, default: true }
   }
 
   static targets = ['trigger', 'previews', 'previewTemplate']
