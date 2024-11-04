@@ -9,11 +9,11 @@ module Folio::CraMediaCloud::FileProcessing
   end
 
   def remote_content_url_base
-    "https://#{ENV.fetch("CRA_MEDIA_CLOUD_CDN_CONTENT_URL")}.ssl.cdn.cra.cz"
+    ENV.fetch("CRA_MEDIA_CLOUD_CDN_CONTENT_URL")
   end
 
   def remote_manifest_url_base
-    "https://#{ENV.fetch("CRA_MEDIA_CLOUD_CDN_MANIFEST_URL")}.ssl.cdn.cra.cz"
+    ENV.fetch("CRA_MEDIA_CLOUD_CDN_MANIFEST_URL")
   end
 
   def remote_manifest_hls_url
