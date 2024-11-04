@@ -9,6 +9,7 @@ class Folio::DropzoneComponent < Folio::ApplicationComponent
                  destroy_url: nil,
                  prompt: nil,
                  hint: nil)
+                 attach_to_document: true)
     @records = records
     @file_type = file_type
     @file_human_type = file_human_type
@@ -17,6 +18,7 @@ class Folio::DropzoneComponent < Folio::ApplicationComponent
     @hint = hint
     @destroy_url = destroy_url
     @index_url = index_url
+    @attach_to_document = attach_to_document
   end
 
   def dict
@@ -57,6 +59,7 @@ class Folio::DropzoneComponent < Folio::ApplicationComponent
                           index_url: @index_url,
                           persisted_file_count:,
                           pending_file_count: 0,
+                          attach_to_document: @attach_to_document,
                         })
   end
 

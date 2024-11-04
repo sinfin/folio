@@ -11,6 +11,7 @@ window.Folio.Stimulus.register('f-dropzone', class extends window.Stimulus.Contr
     maxFileSize: { type: Number, default: 0 },
     persistedFileCount: Number,
     pendingFileCount: { type: Number, defualt: 0 }
+    attachToDocument: { type: Boolean, defualt: true }
   }
 
   static targets = ['trigger', 'previews', 'previewTemplate']
@@ -21,7 +22,7 @@ window.Folio.Stimulus.register('f-dropzone', class extends window.Stimulus.Contr
     this.element.classList.add('dropzone')
 
     this.dropzone = window.Folio.S3Upload.createDropzone({
-      element: document.body,
+      element: this.attachToDocumentValue ? document.body : this.element,
       fileType: this.fileTypeValue,
       fileHumanType: this.fileHumanTypeValue,
       dontRemoveFileOnSuccess: true,
