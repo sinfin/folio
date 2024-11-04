@@ -8,7 +8,7 @@ class Folio::DropzoneComponent < Folio::ApplicationComponent
                  index_url: nil,
                  destroy_url: nil,
                  prompt: nil,
-                 hint: nil)
+                 hint: nil,
                  attach_to_document: true)
     @records = records
     @file_type = file_type
