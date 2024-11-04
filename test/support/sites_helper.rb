@@ -25,12 +25,12 @@ module SitesHelper
     end
 
     def host_site(site)
-      Rails.application.routes.default_url_options[:host] = site.domain
+      Rails.application.routes.default_url_options[:host] = site.env_aware_domain
       Rails.application.routes.default_url_options[:only_path] = false
       Folio::Current.site = site
 
       if self.respond_to?(:host!)
-        host!(site.domain)
+        host!(site.env_aware_domain)
       end
       Folio.instance_variable_set(:@main_site, nil) # to clear the cached version from other tests
       @site = site
