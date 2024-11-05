@@ -8,6 +8,11 @@ module Folio::CraMediaCloud::FileProcessing
     nil # use encoder's default
   end
 
+  def remote_content_mp4_url_for(profile)
+    path = remote_services_data.dig("content_mp4_paths", profile.to_s)
+    remote_content_url_base + path if path
+  end
+
   def remote_content_url_base
     ENV.fetch("CRA_MEDIA_CLOUD_CDN_CONTENT_URL")
   end
