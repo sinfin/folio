@@ -171,10 +171,10 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
   end
 
   def published_toggle(opts = {})
-    if !rendering_header? && controller.cannot?(:publish, record)
-      boolean(:published)
-    else
+    if rendering_header? || can_now?(:publish, record)
       toggle(:published, opts)
+    else
+      boolean(:published)
     end
   end
 
