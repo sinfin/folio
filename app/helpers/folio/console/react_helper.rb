@@ -1,49 +1,55 @@
 # frozen_string_literal: true
 
 module Folio::Console::ReactHelper
-  def file_picker(f:, placement_key:, file_type:, hint: nil, darker: false)
+  def file_picker(f:, placement_key:, file_type:, hint: nil, darker: false, required: false)
     raw cell("folio/console/file/picker",
              f:,
              placement_key:,
              file_type:,
              hint:,
-             darker:)
+             darker:,
+             required:)
   end
 
-  def file_picker_for_cover(f, hint: nil, darker: false)
+  def file_picker_for_cover(f, hint: nil, darker: false, required: false)
     file_picker(f:,
                 placement_key: :cover_placement,
                 file_type: "Folio::File::Image",
                 hint:,
-                darker:)
+                darker:,
+                required:)
   end
 
-  def file_picker_for_og_image(f, hint: nil)
+  def file_picker_for_og_image(f, hint: nil, required: false)
     file_picker(f:,
                 placement_key: :og_image_placement,
                 file_type: "Folio::File::Image",
-                hint:)
+                hint:,
+                required:)
   end
 
-  def file_picker_for_document(f, hint: nil)
+  def file_picker_for_document(f, hint: nil, required: false)
     file_picker(f:,
                 placement_key: :document_placement,
                 file_type: "Folio::File::Document",
-                hint:)
+                hint:,
+                required:)
   end
 
-  def file_picker_for_audio_cover(f, hint: nil)
+  def file_picker_for_audio_cover(f, hint: nil, required: false)
     file_picker(f:,
                 placement_key: :audio_cover_placement,
                 file_type: "Folio::File::Audio",
-                hint:)
+                hint:,
+                required:)
   end
 
-  def file_picker_for_video_cover(f, hint: nil)
+  def file_picker_for_video_cover(f, hint: nil, required: false)
     file_picker(f:,
                 placement_key: :video_cover_placement,
                 file_type: "Folio::File::Video",
-                hint:)
+                hint:,
+                required:)
   end
 
   def react_images(selected_placements = nil,
