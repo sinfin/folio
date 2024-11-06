@@ -3,7 +3,7 @@
 class Folio::Console::Api::FilePlacementsController < Folio::Console::Api::BaseController
   def index
     file = Folio::File.find(params[:file_id])
-    authorize!(:read, file)
+    authorize!(:show, file)
 
     pagination, records = pagy(file.file_placements, items: 20)
 
