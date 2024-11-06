@@ -304,6 +304,7 @@ en:
       missing_file_alt: is missing alt
       missing_file_description: is missing description
       invalid_file_placement: does not meet the requirements
+      not_uniqueness_through_classes: must be unique through the included records (%{classes})
 
     attributes:
       verified_captcha:
