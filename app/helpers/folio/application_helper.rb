@@ -30,6 +30,11 @@ module Folio::ApplicationHelper
   end
 
   def public_page_canonical_url
+    @public_page_canonical_url ||= if try(:request) && request.url
+      request.url.split("?").first
+    end
+
+
     @public_page_canonical_url.presence
   end
 
