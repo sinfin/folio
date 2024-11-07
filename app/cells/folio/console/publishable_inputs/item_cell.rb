@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::Console::PublishableInputs::ItemCell < Folio::ConsoleCell
-  class_name "f-c-publishable-inputs-item", :date?, :active?
+  class_name "f-c-publishable-inputs-item", :date?, :active?, :date_restricted?
 
   def f
     model[:f]
@@ -44,7 +44,19 @@ class Folio::Console::PublishableInputs::ItemCell < Folio::ConsoleCell
   end
 
   def active?
-    !!f.object.send(field)
+    !date_restricted? && !!f.object.send(field)
+  end
+
+  def date_restricted?
+    return unless field == :published
+
+    now = Time.zone.now
+
+    if date_at?
+      now < f.object.send(:"#{field}_at")
+    elsif date_between?
+      now < f.object.send(:"#{field}_from") || now > f.object.send(:"#{field}_until")
+    end
   end
 
   def input_html(class_name_element = nil, placeholder: nil, checkbox: false)
