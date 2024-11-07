@@ -50,12 +50,13 @@ class Folio::Console::PublishableInputs::ItemCell < Folio::ConsoleCell
   def date_restricted?
     return unless field == :published
 
+    record = f.object
     now = Time.zone.now
 
-    if date_at?
-      now < f.object.send(:"#{field}_at")
-    elsif date_between?
-      now < f.object.send(:"#{field}_from") || now > f.object.send(:"#{field}_until")
+    if date_at? && record.published_at.present?
+      now < record.published_at
+    elsif date_between? && record.published_from.present? && record.published_until.present?
+      now < record.published_from || now > record.published_until
     end
   end
 
