@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { FormGroup } from 'reactstrap'
+import { FormGroup, Input } from 'reactstrap'
 import TextareaAutosize from 'react-autosize-textarea'
 
 import {
@@ -21,7 +21,8 @@ import Wrap from './styled/Wrap'
 const DEFAULT_STATE = {
   tags: [],
   author: null,
-  description: null
+  description: null,
+  alt: null
 }
 
 class UploadTagger extends React.PureComponent {
@@ -56,6 +57,8 @@ class UploadTagger extends React.PureComponent {
 
   render () {
     if (!this.props.uploads.showTagger) return null
+
+    const isImage = this.props.fileType === 'Folio::File::Image'
 
     return (
       <Wrap className='my-g p-g'>
@@ -96,6 +99,20 @@ class UploadTagger extends React.PureComponent {
             async
           />
         </FormGroup>
+
+        {
+          isImage && (
+            <FormGroup>
+              <Input
+                name='alt'
+                value={this.state.alt || ''}
+                onChange={this.onInputChange}
+                className='form-control'
+                placeholder={window.FolioConsole.translations.fileAlt}
+              />
+            </FormGroup>
+          )
+        }
 
         <FolioConsoleUiButtons>
           <FolioConsoleUiButton
