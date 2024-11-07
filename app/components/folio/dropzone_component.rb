@@ -11,7 +11,7 @@ class Folio::DropzoneComponent < Folio::ApplicationComponent
                  hint: nil,
                  attach_to_document: true,
                  application_namespace: nil,
-                 icon: nil)
+                 trigger_icon: nil)
     @records = records
     @file_type = file_type
     @file_human_type = file_human_type
@@ -22,7 +22,7 @@ class Folio::DropzoneComponent < Folio::ApplicationComponent
     @index_url = index_url
     @attach_to_document = attach_to_document
     @application_namespace = application_namespace
-    @icon = icon
+    @trigger_icon = trigger_icon
   end
 
   def application_namespace
@@ -80,7 +80,7 @@ class Folio::DropzoneComponent < Folio::ApplicationComponent
                        variant: :secondary,
                        class_name: "f-dropzone__trigger",
                        data: stimulus_target("trigger"),
-                       icon: @icon.present? ? @icon : nil))
+                       icon: @trigger_icon.present? ? @trigger_icon : nil))
     else
       content_tag(:span,
                   @prompt.presence || t(".dictDefaultMessage"),
