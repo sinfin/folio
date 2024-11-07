@@ -90,7 +90,8 @@ export const defaultUploadsKeyState = {
   uploadAttributes: {
     tags: [defaultTag],
     author: null,
-    description: null
+    description: null,
+    alt: null
   },
   uploadedIds: [],
   dropzoneFiles: {},
