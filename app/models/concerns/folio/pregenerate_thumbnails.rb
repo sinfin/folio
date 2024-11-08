@@ -20,21 +20,16 @@ module Folio::PregenerateThumbnails
     return h unless try(:placement)
 
     versions = placement.class.try(:pregenerated_thumbnails)
-    return h if versions.blank?
+
+    collection = [Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE]
 
     if versions.is_a?(Hash)
       if versions[self.class.to_s].present?
-        collection = versions[self.class.to_s].uniq
-      else
-        collection = []
+        collection += versions[self.class.to_s].uniq
       end
     elsif versions.is_a?(Array)
-      collection = versions.uniq
-    else
-      collection = []
+      collection += versions.uniq
     end
-
-    collection << Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE
 
     collection.each do |version|
       h[:versions] << version
@@ -76,43 +71,42 @@ module Folio::PregenerateThumbnails
     h
   end
 
-  private
-    def pregenerate_thumbnails
-      return unless file.respond_to?(:thumb)
-      return if Rails.env.test? && !file.try(:additional_data).try(:[], "generate_thumbnails_in_test")
+  def pregenerate_thumbnails
+    return unless file.respond_to?(:thumb)
+    return if Rails.env.test? && !file.try(:additional_data).try(:[], "generate_thumbnails_in_test")
 
-      # admin thumbnail
-      file.thumb(Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE)
+    # admin thumbnail
+    file.thumb(Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE)
 
-      if is_a?(Folio::FilePlacement::OgImage)
-        file.thumb(Folio::OG_IMAGE_DIMENSIONS)
-      end
+    if is_a?(Folio::FilePlacement::OgImage)
+      file.thumb(Folio::OG_IMAGE_DIMENSIONS)
+    end
 
-      # public page thumbnails
-      return unless respond_to?(:placement)
-      versions = placement.class.try(:pregenerated_thumbnails)
-      return if versions.blank?
+    # public page thumbnails
+    return unless respond_to?(:placement)
+    versions = placement.class.try(:pregenerated_thumbnails)
+    return if versions.blank?
 
-      if versions.is_a?(Hash)
-        if versions[self.class.to_s].present?
-          collection = versions[self.class.to_s].uniq
-        else
-          collection = nil
-        end
-      elsif versions.is_a?(Array)
-        collection = versions.uniq
+    if versions.is_a?(Hash)
+      if versions[self.class.to_s].present?
+        collection = versions[self.class.to_s].uniq
       else
         collection = nil
       end
+    elsif versions.is_a?(Array)
+      collection = versions.uniq
+    else
+      collection = nil
+    end
 
-      if collection.present?
-        collection.each do |version, quality|
-          if quality.present?
-            file.thumb(version, quality:)
-          else
-            file.thumb(version)
-          end
+    if collection.present?
+      collection.each do |version, quality|
+        if quality.present?
+          file.thumb(version, quality:)
+        else
+          file.thumb(version)
         end
       end
     end
+  end
 end
