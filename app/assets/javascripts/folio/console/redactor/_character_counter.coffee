@@ -33,7 +33,7 @@
       result = window.Folio.wordCount({ text: html })
 
       data =
-        characters: result.characters
+        characters: result.charactersWithSpaces
 
       # callback
       @app.broadcast 'character_counter', data
