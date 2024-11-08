@@ -35,7 +35,7 @@ SimpleForm.setup do |config|
       tooltip_title = required.gsub(/<abbr title="([^"]+)">\*<\/abbr>/, '\1')
 
       if tooltip_title.present?
-        "#{label} <abbr class=\"form-label__required\" data-controller=\"f-tooltip\" data-f-tooltip-placement-value=\"auto\"  data-f-tooltip-trigger-value=\"hover\" data-f-tooltip-title-value=\"#{tooltip_title}\" data-action=\"mouseenter->f-tooltip#mouseenter mouseleave->f-tooltip#mouseleave\">*</abbr>"
+        "#{label} <abbr class=\"form-label__required\" data-controller=\"f-tooltip\" data-f-tooltip-placement-value=\"auto\" data-f-tooltip-trigger-value=\"hover\" data-f-tooltip-title-value=\"#{tooltip_title}\" data-action=\"mouseenter->f-tooltip#mouseenter mouseleave->f-tooltip#mouseleave\">*</abbr>"
       else
         "#{label} <span class=\"form-label__required\">#{required}</span>"
       end
