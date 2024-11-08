@@ -175,7 +175,7 @@ module Folio::Console::ReactHelper
     )
   end
 
-  def react_ordered_multiselect(f, relation_name, atom_setting: nil, scope: nil, order_scope: :ordered, sortable: true)
+  def react_ordered_multiselect(f, relation_name, atom_setting: nil, scope: nil, order_scope: :ordered, sortable: true, required: nil)
     class_name = "folio-react-wrap folio-react-wrap--ordered-multiselect"
 
     unless sortable
@@ -216,7 +216,7 @@ module Folio::Console::ReactHelper
                                  only_path: true])
 
     content_tag(:div, class: "form-group") do
-      concat(f.label relation_name)
+      concat(f.label relation_name, required:)
       concat(
         content_tag(:div, content_tag(:span, nil, class: "folio-loader"),
           "class" => class_name,
