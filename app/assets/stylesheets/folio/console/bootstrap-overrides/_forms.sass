@@ -52,3 +52,15 @@ legend
 .invalid-feedback + .form-text,
 .form-text + .form-text
   margin-top: $form-text-margin-top / 2
+
+.form-label__required
+  color: $danger
+  text-decoration: none
+
+.required--published .form-label__required
+  &:empty
+    &::before
+      content: "︎⦁"
+      display: inline-block
+      font-weight: $font-weight-bold
+      color: $orange

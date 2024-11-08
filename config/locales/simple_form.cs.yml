@@ -42,5 +42,6 @@ cs:
         title: 'Např.: Hmotnost'
     required:
       mark: "*"
-      text: povinný údaj
+      text: povinné pro uložení
+      text/published: povinné pro publikování
     'yes': Ano

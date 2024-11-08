@@ -1,0 +1,5 @@
+h1 Required inputs
+
+= simple_form_for "", method: :get, url: request.path do |f|
+  = f.input :required, required: true
+  = f.input :required_for_publishing, required: :published
