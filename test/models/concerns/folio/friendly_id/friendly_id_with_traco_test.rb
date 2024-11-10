@@ -2,34 +2,38 @@
 
 require "test_helper"
 
-class Folio::FriendlyIdTest < ActiveSupport::TestCase
-  class TestPage < Folio::Page
+class Folio::FriendlyIdWithTracoTest < ActiveSupport::TestCase
+  # Rails.application.config.folio_using_traco = true
+  class TestPage < Dummy::Blog::LocalizedPage
+    translates :slug, :title
     def self.slug_additional_classes
       [Folio::Site]
     end
   end
 
-  class TestPage2 < Folio::Page
+  class TestPage2 < Dummy::Blog::LocalizedPage
+    translates :slug, :title
     def self.slug_additional_classes
       []
     end
   end
 
-  class TestArticle < Dummy::Blog::Article
+  class TestArticle < Dummy::Blog::LocalizedArticle
+    translates :slug, :title
     def self.slug_additional_classes
-      [Folio::Page, Dummy::Blog::Article]
+      [Dummy::Blog::LocalizedPage]
     end
   end
 
   test "should generate next slug if slug already exists" do
     site = get_any_site
     site.update!(slug: "test-site")
-
     page1 = TestPage.create(title: "Test Title", site:)
     page2 = TestPage2.create(title: "Test Site", site:)
 
-    article1 = TestArticle.create(title: "Test Title", site:, perex: "Test Perex")
-    article2 = TestArticle.create(title: "Test Title", site:, perex: "Test Perex")
+    article1 = TestArticle.create(title: "Test Title", site:)
+    I18n.locale = :en
+    article2 = TestArticle.create(title: "Test Title", site:)
 
     assert_not_nil page1.slug
     assert_not_nil page2.slug
@@ -44,7 +48,7 @@ class Folio::FriendlyIdTest < ActiveSupport::TestCase
   test "should generate already existing slug" do
     site = get_any_site
     site.update!(slug: "test-site")
-    article = TestArticle.create(title: "Test Site", site:, perex: "Test Perex")
+    article = TestArticle.create(title: "Test Site", site:)
     page = TestPage2.create(title: "Test Site", site:)
 
     assert_not_nil page.slug
