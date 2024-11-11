@@ -9,6 +9,7 @@ class Folio::PregenerateThumbnails::CheckJob < Folio::ApplicationJob
   def perform(attachmentable)
     if attachmentable && attachmentable.respond_to?(:file_placements)
       attachmentable.file_placements.find_each do |file_placement|
+        file_placement.dont_run_after_save_jobs = true
         file_placement.try(:pregenerate_thumbnails)
       end
     end

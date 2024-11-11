@@ -93,6 +93,8 @@ class Folio::File < Folio::ApplicationRecord
   after_commit :process!, if: :attached_file_changed?
   after_destroy :destroy_attached_file
 
+  attr_accessor :dont_run_after_save_jobs
+
   aasm do
     state :unprocessed, initial: true, color: :yellow
     state :processing, color: :orange
@@ -161,6 +163,7 @@ class Folio::File < Folio::ApplicationRecord
   end
 
   def run_after_save_job
+    return if dont_run_after_save_jobs
     # updating placements
     return if ENV["SKIP_FOLIO_FILE_AFTER_SAVE_JOB"]
     return if Rails.env.test? && !Rails.application.config.try(:folio_testing_after_save_job)
