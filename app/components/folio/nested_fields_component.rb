@@ -23,6 +23,7 @@ class Folio::NestedFieldsComponent < Folio::ApplicationComponent
     @class_name = class_name
     @application_namespace = application_namespace
     @add_icon = add_icon
+    @add_label = add_label
     @destroy_icon = destroy_icon
     @destroy_icon_height = destroy_icon_height
     @destroy_label = destroy_label
