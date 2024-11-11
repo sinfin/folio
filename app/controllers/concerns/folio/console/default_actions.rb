@@ -36,6 +36,9 @@ module Folio::Console::DefaultActions
     end
   end
 
+  def show
+  end
+
   def edit
     folio_console_record.valid? if params[:prevalidate]
   end

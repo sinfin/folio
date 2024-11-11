@@ -128,18 +128,21 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
     attribute(:type) { record.class.model_name.human }
   end
 
-  def edit_link(attr = nil, sanitize: false, &block)
+  def show_or_edit_link(attr = nil, sanitize: false, &block)
     if can_now?(:edit, record)
-      resource_link(through_aware_console_url_for(record, action: :edit), attr, sanitize:, &block)
+      true_edit_link(attr, sanitize:, &block)
     else
-      attribute(attr) do
-        if block_given?
-          yield(record)
-        else
-          record.send(attr)
-        end
-      end
+      show_link(attr, sanitize:, &block)
     end
+  end
+
+  def true_edit_link(attr = nil, sanitize: false, &block)
+    resource_link(through_aware_console_url_for(record, action: :edit), attr, sanitize:, &block)
+  end
+
+  # capturing legacy usage
+  def edit_link(attr = nil, sanitize: false, &block)
+    show_or_edit_link(attr, sanitize:, &block)
   end
 
   def show_link(attr = nil, sanitize: false, &block)

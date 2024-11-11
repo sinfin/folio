@@ -2,7 +2,7 @@
 
 class Folio::Console::Index::NewButtonCell < Folio::ConsoleCell
   def show
-    render if button_model.present?
+    render if can_now?(:new, model[:klass]) && button_model.present?
   end
 
   def button_model

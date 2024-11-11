@@ -31,14 +31,14 @@ div class=class_name
                 icon: :open_in_new,
                 label: t('folio.console.actions.preview'))
 
-      - if options[:edit] != false && edit_url
+      - if options[:edit] != false && edit_url && can_now?(:edit, model)
         == cell('folio/console/ui/button',
                 href: edit_url,
                 variant: :secondary,
                 icon: :edit,
                 label: t('folio.console.actions.edit'))
 
-      - if destroy_url
+      - if destroy_url && can_now?(:destroy, model)
         == cell('folio/console/ui/button',
                 href: destroy_url,
                 variant: :danger,
