@@ -41,9 +41,12 @@ class Folio::NestedFieldsComponent < Folio::ApplicationComponent
     @f.object.class.reflect_on_association(@key).klass.new
   end
 
+  def application_namespace
+    @application_namespace.presence || Rails.application.class.name.deconstantize
+  end
+
   def add_button
     label = @add_label || t(".add")
-    application_namespace = @application_namespace.presence || Rails.application.class.name.deconstantize
     klass = "#{application_namespace}::Ui::ButtonComponent".safe_constantize
 
     if klass
@@ -57,6 +60,20 @@ class Folio::NestedFieldsComponent < Folio::ApplicationComponent
                   label,
                   class: "btn btn-success f-nested-fields__add-button",
                   type: "button")
+    end
+  end
+
+  def destroy_icon
+    klass = "#{application_namespace}::Ui::IconComponent".safe_constantize
+
+    if klass
+      render(klass.new(name: @destroy_icon,
+                       height: @destroy_icon_height,
+                       class_name: "f-nested-fields__destroy-ico"))
+    else
+      folio_icon(@destroy_icon,
+                 height: @destroy_icon_height,
+                 class: "f-nested-fields__destroy-ico")
     end
   end
 end
