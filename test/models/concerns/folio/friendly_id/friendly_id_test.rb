@@ -51,4 +51,12 @@ class Folio::FriendlyIdTest < ActiveSupport::TestCase
     assert_match(/[0-9a-z-]+/, page.slug)
     assert_equal article.slug, page.slug
   end
+
+  test "respect slug from input" do
+    site = get_any_site
+    article = TestArticle.create(title: "Test Site", site:, perex: "Test Perex", slug: "test-slug")
+
+    assert_equal "test-slug", article.slug
+    assert article.update(slug: "test-slug")
+  end
 end
