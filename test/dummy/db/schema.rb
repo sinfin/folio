@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_10_10_104826) do
+ActiveRecord::Schema[7.1].define(version: 2024_11_09_152500) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -72,6 +72,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_10_104826) do
     t.datetime "updated_at", null: false
     t.index ["dummy_blog_article_id"], name: "dummy_blog_author_article_links_a_id"
     t.index ["dummy_blog_author_id"], name: "dummy_blog_author_article_links_t_id"
+    t.index ["position"], name: "index_dummy_blog_author_article_links_on_position"
   end
 
   create_table "dummy_blog_authors", force: :cascade do |t|
@@ -100,6 +101,32 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_10_104826) do
     t.index ["slug"], name: "index_dummy_blog_authors_on_slug"
   end
 
+  create_table "dummy_blog_localized_articles", force: :cascade do |t|
+    t.string "title"
+    t.string "title_cs"
+    t.string "title_en"
+    t.string "slug"
+    t.string "slug_cs"
+    t.string "slug_en"
+    t.string "locale"
+    t.integer "site_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "dummy_blog_localized_pages", force: :cascade do |t|
+    t.string "title"
+    t.string "title_cs"
+    t.string "title_en"
+    t.string "slug"
+    t.string "slug_cs"
+    t.string "slug_en"
+    t.string "locale"
+    t.integer "site_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "dummy_blog_topic_article_links", force: :cascade do |t|
     t.bigint "dummy_blog_topic_id"
     t.bigint "dummy_blog_article_id"
@@ -108,6 +135,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_10_104826) do
     t.datetime "updated_at", null: false
     t.index ["dummy_blog_article_id"], name: "dummy_blog_topic_article_links_a_id"
     t.index ["dummy_blog_topic_id"], name: "dummy_blog_topic_article_links_t_id"
+    t.index ["position"], name: "index_dummy_blog_topic_article_links_on_position"
   end
 
   create_table "dummy_blog_topics", force: :cascade do |t|
