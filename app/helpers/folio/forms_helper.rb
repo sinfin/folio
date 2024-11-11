@@ -1,8 +1,31 @@
 # frozen_string_literal: true
 
 module Folio::FormsHelper
-  def folio_nested_fields(f, key, add: true, destroy: true, position: true, &block)
-    render(Folio::NestedFieldsComponent.new(f:, key:, add:, destroy:, position:)) do |c|
+  def folio_nested_fields(f,
+                          key,
+                          add: true,
+                          destroy: true,
+                          position: true,
+                          class_name: nil,
+                          application_namespace: nil,
+                          add_icon: nil,
+                          add_label: nil,
+                          destroy_icon: :close,
+                          destroy_icon_height: 24,
+                          destroy_label: nil,
+                          &block)
+    render(Folio::NestedFieldsComponent.new(f:,
+                                            key:,
+                                            add:,
+                                            destroy:,
+                                            position:,
+                                            class_name:,
+                                            application_namespace:,
+                                            add_icon:,
+                                            add_label:,
+                                            destroy_icon:,
+                                            destroy_icon_height:,
+                                            destroy_label:)) do |c|
       block.call(c.g)
     end
   end
