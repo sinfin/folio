@@ -129,7 +129,17 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
   end
 
   def edit_link(attr = nil, sanitize: false, &block)
-    resource_link(through_aware_console_url_for(record, action: :edit), attr, sanitize:, &block)
+    if can_now?(:edit, record)
+      resource_link(through_aware_console_url_for(record, action: :edit), attr, sanitize:, &block)
+    else
+      attribute(attr) do
+        if block_given?
+          yield(record)
+        else
+          record.send(attr)
+        end
+      end
+    end
   end
 
   def show_link(attr = nil, sanitize: false, &block)
@@ -247,6 +257,8 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
   end
 
   def position_controls(opts = {})
+    return unless can_now?(:update, record)
+
     attribute(:position, class_name: "position-buttons") do
       cell("folio/console/index/position_buttons",
            record,
@@ -302,12 +314,15 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
   def transportable_dropdown
     return unless ::Rails.application.config.folio_show_transportable_frontend
     return unless record.try(:transportable?)
+    return unless can_now?(:update, record)
+    # allows tom create record() from YAML dump
     attribute(:transportable_dropdown, compact: true, skip_desktop_header: true) do
       cell("folio/console/transportable/dropdown", record)
     end
   end
 
   def console_notes
+    # TODO: restrict - only for can_now?(:update, record)
     attribute(:console_notes, compact: true, skip_desktop_header: true) do
       cell("folio/console/console_notes/catalogue_tooltip", record)
     end

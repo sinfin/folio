@@ -4,7 +4,7 @@ module Folio::Console::DefaultActions
   extend ActiveSupport::Concern
 
   def index
-    records = folio_console_records.accessible_by(current_ability, self.class.cancancan_accessible_by_action)
+    records = folio_console_records
 
     unless @sorted_by_param
       if records.respond_to?(:ordered)
