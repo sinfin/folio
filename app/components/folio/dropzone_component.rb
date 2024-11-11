@@ -8,7 +8,10 @@ class Folio::DropzoneComponent < Folio::ApplicationComponent
                  index_url: nil,
                  destroy_url: nil,
                  prompt: nil,
-                 hint: nil)
+                 hint: nil,
+                 attach_to_document: true,
+                 application_namespace: nil,
+                 trigger_icon: nil)
     @records = records
     @file_type = file_type
     @file_human_type = file_human_type
@@ -17,6 +20,13 @@ class Folio::DropzoneComponent < Folio::ApplicationComponent
     @hint = hint
     @destroy_url = destroy_url
     @index_url = index_url
+    @attach_to_document = attach_to_document
+    @application_namespace = application_namespace
+    @trigger_icon = trigger_icon
+  end
+
+  def application_namespace
+    @application_namespace.presence || Rails.application.class.name.deconstantize
   end
 
   def dict
@@ -57,18 +67,20 @@ class Folio::DropzoneComponent < Folio::ApplicationComponent
                           index_url: @index_url,
                           persisted_file_count:,
                           pending_file_count: 0,
+                          attach_to_document: @attach_to_document,
                         })
   end
 
   def trigger_button
-    klass = "#{Rails.application.class.name.deconstantize}::Ui::ButtonComponent".safe_constantize
+    klass = "#{application_namespace}::Ui::ButtonComponent".safe_constantize
 
     if klass
       render(klass.new(tag: :span,
                        label: @prompt.presence || t(".dictDefaultMessage"),
                        variant: :secondary,
                        class_name: "f-dropzone__trigger",
-                       data: stimulus_target("trigger")))
+                       data: stimulus_target("trigger"),
+                       icon: @trigger_icon.present? ? @trigger_icon : nil))
     else
       content_tag(:span,
                   @prompt.presence || t(".dictDefaultMessage"),

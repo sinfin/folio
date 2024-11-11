@@ -10,7 +10,8 @@ window.Folio.Stimulus.register('f-dropzone', class extends window.Stimulus.Contr
     indexUrl: { type: String, default: '' },
     maxFileSize: { type: Number, default: 0 },
     persistedFileCount: Number,
-    pendingFileCount: { type: Number, defualt: 0 }
+    pendingFileCount: { type: Number, default: 0 },
+    attachToDocument: { type: Boolean, default: true }
   }
 
   static targets = ['trigger', 'previews', 'previewTemplate']
@@ -21,7 +22,7 @@ window.Folio.Stimulus.register('f-dropzone', class extends window.Stimulus.Contr
     this.element.classList.add('dropzone')
 
     this.dropzone = window.Folio.S3Upload.createDropzone({
-      element: document.body,
+      element: this.attachToDocumentValue ? document.body : this.element,
       fileType: this.fileTypeValue,
       fileHumanType: this.fileHumanTypeValue,
       dontRemoveFileOnSuccess: true,
@@ -74,24 +75,24 @@ window.Folio.Stimulus.register('f-dropzone', class extends window.Stimulus.Contr
   }
 
   onCountChange () {
-    let persistedCount = 0
-    let pendingCount = 0
+    let persistedFiles = []
+    let pendingFiles = []
 
     if (this.dropzone && this.dropzone.files) {
       this.dropzone.files.forEach((file) => {
         if (file.id) {
-          persistedCount += 1
+          persistedFiles.push(file)
         } else {
-          pendingCount += 1
+          pendingFiles.push(file)
         }
       })
     }
 
-    this.persistedFileCountValue = persistedCount
-    this.pendingFileCountValue = pendingCount
+    this.persistedFileCountValue = persistedFiles.length
+    this.pendingFileCountValue = pendingFiles.length
 
-    this.dispatch('persistedFileCountChange', { detail: { count: persistedCount } })
-    this.dispatch('pendingFileCountChange', { detail: { count: pendingCount } })
+    this.dispatch('persistedFileCountChange', { detail: { files: persistedFiles, count: persistedFiles.length } })
+    this.dispatch('pendingFileCountChange', { detail: { files: pendingFiles, count: pendingFiles.length } })
   }
 
   addSerializedRecord (record) {

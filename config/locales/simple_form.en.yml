@@ -33,5 +33,6 @@ en:
         title: 'e.g.: Weight'
     required:
       mark: "*"
-      text: required
+      text: required to save
+      text/published: required to publish
     'yes': 'Yes'

@@ -115,7 +115,7 @@ class NotesFields extends React.Component {
             {notesFields.form ? (
               <Form content={notesFields.form.content} save={this.saveForm} close={this.closeForm} />
             ) : (
-              <button type='button' className='f-c-r-notes-fields-app__button f-c-r-notes-fields-app__button--add' onClick={this.initNewNote}>
+              <button type='button' className='f-c-r-notes-fields-app__button f-c-r-notes-fields-app__button--add' onClick={this.initNewNote} data-test-id='add-note-button'>
                 <FolioUiIcon name='plus' />
                 {window.Folio.i18n(I18N, 'notesFieldsAdd')}
               </button>

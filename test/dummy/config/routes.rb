@@ -48,6 +48,7 @@ Rails.application.routes.draw do
           get :players
           get :private_attachments
           get :report
+          get :required_inputs
           get :additional_html_for_video_files_modal
 
           patch :update_attributes

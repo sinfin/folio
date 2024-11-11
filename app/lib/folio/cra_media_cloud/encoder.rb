@@ -5,14 +5,14 @@ require "net/sftp"
 module Folio
   module CraMediaCloud
     class Encoder
-      SFTP_HOST = "ingest.origin.cdn.cra.cz"
+      DEFAULT_PROFILE_GROUP = "VoD"
 
-      def upload_file(file, priority: "regular")
+      def upload_file(file, priority: "regular", profile_group: nil)
         s3_object = download_s3_object(file)
 
         ref_id = [file.id, Time.current.to_i].join("-")
         md5 = s3_object.headers["Etag"].delete_prefix('"').delete_suffix('"')
-        xml_manifest = build_ingest_manifest(file, md5:, ref_id:)
+        xml_manifest = build_ingest_manifest(file, md5:, ref_id:, profile_group:)
 
         folder_path = "/ingest/#{priority}"
         file_path = "#{folder_path}/#{file.file_name}"
@@ -45,7 +45,7 @@ module Folio
           s3_datastore.storage.get_object(ENV["S3_BUCKET_NAME"], s3_object_key)
         end
 
-        def build_ingest_manifest(file, md5:, ref_id:)
+        def build_ingest_manifest(file, md5:, ref_id:, profile_group:)
           xml = Builder::XmlMarkup.new; nil
           xml.instruct!(:xml, version: "1.0", encoding: "utf-8")
 
@@ -56,7 +56,7 @@ module Folio
                       md5:) do
               xml.audioTrack(language: "cze", channels: "auto")
             end
-            xml.profileGroup("VoD")
+            xml.profileGroup(profile_group || DEFAULT_PROFILE_GROUP)
             xml.refId(ref_id)
           end
 
@@ -64,9 +64,9 @@ module Folio
         end
 
         def sftp_client(&block)
-          Net::SFTP.start(SFTP_HOST,
-                          ENV["CRA_MEDIA_CLOUD_SFTP_USERNAME"],
-                          password: ENV["CRA_MEDIA_CLOUD_SFTP_PASSWORD"],
+          Net::SFTP.start(ENV.fetch("CRA_MEDIA_CLOUD_SFTP_HOST"),
+                          ENV.fetch("CRA_MEDIA_CLOUD_SFTP_USERNAME"),
+                          password: ENV.fetch("CRA_MEDIA_CLOUD_SFTP_PASSWORD"),
                           number_of_password_prompts: 0, &block)
         end
     end

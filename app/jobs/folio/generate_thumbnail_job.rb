@@ -24,6 +24,7 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
     # need to reload here because of parallel jobs
     image.reload.with_lock do
       thumbnail_sizes = image.thumbnail_sizes || {}
+      image.dont_run_after_save_jobs = true
       image.update!(thumbnail_sizes: thumbnail_sizes.merge(size => new_thumb))
     end
 
@@ -47,6 +48,8 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
 
   private
     def make_thumb(image, raw_size, quality, x: nil, y: nil)
+      gravity = nil
+
       if raw_size.ends_with?("#")
         gravity = case image.try(:default_gravity)
                   when "east"
@@ -173,6 +176,7 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
         x:,
         y:,
         private: is_private,
+        gravity:,
       }
 
       if make_webp

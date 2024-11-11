@@ -96,6 +96,7 @@ class FileFilter extends Component {
               <FormGroup className='mb-0 mb-xl-0 form-group--react-select'>
                 <TagsInput
                   value={filters.tags}
+                  dataTestId='file-filter-tags'
                   onTagsChange={this.onTagsChange}
                   noAutofocus
                   notCreatable

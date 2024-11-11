@@ -30,7 +30,19 @@ SimpleForm.setup do |config|
   config.boolean_label_class = "form-check-label"
 
   # How the label text should be generated altogether with the required text.
-  config.label_text = lambda { |label, required, explicit_label| "#{label} #{required}" }
+  config.label_text = lambda do |label, required, explicit_label|
+    if required.present?
+      tooltip_title = required.gsub(/<abbr title="([^"]+)">\*<\/abbr>/, '\1')
+
+      if tooltip_title.present?
+        "#{label} <abbr class=\"form-label__required\" data-controller=\"f-tooltip\" data-f-tooltip-placement-value=\"auto\" data-f-tooltip-trigger-value=\"hover\" data-f-tooltip-title-value=\"#{tooltip_title}\" data-action=\"mouseenter->f-tooltip#mouseenter mouseleave->f-tooltip#mouseleave\">*</abbr>"
+      else
+        "#{label} <span class=\"form-label__required\">#{required}</span>"
+      end
+    else
+      "<span class=\"form-label__tooltip\">#{label}</span>"
+    end
+  end
 
   # Define the way to render check boxes / radio buttons with labels.
   config.boolean_style = :inline

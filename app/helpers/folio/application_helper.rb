@@ -30,6 +30,11 @@ module Folio::ApplicationHelper
   end
 
   def public_page_canonical_url
+    @public_page_canonical_url ||= if try(:request) && request.url
+      request.url.split("?").first
+    end
+
+
     @public_page_canonical_url.presence
   end
 
@@ -39,6 +44,10 @@ module Folio::ApplicationHelper
 
   def public_page_site_description
     current_site.description
+  end
+
+  def public_page_keywords_array
+    @public_page_keywords_array.presence
   end
 
   def can_now?(action, object = nil)

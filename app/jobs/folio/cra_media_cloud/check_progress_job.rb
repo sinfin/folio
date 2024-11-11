@@ -50,10 +50,13 @@ class Folio::CraMediaCloud::CheckProgressJob < Folio::ApplicationJob
     end
 
     def process_output_hash(process_output_hash)
+      content_mp4_paths = {}
       manifest_hls, manifest_dash = nil, nil
 
       process_output_hash.each do |output_file|
         case output_file["type"]
+        when "MP4"
+          content_mp4_paths[output_file["profiles"].first] = output_file["path"]
         when "HLS"
           manifest_hls = select_output_file(manifest_hls, output_file)
         when "DASH"
@@ -64,8 +67,9 @@ class Folio::CraMediaCloud::CheckProgressJob < Folio::ApplicationJob
       end
 
       media_file.remote_services_data.merge!(
+        "content_mp4_paths" => content_mp4_paths,
         "manifest_hls_path" => manifest_hls["path"],
-        "manifest_dash_path" => manifest_dash["path"]
+        "manifest_dash_path" => manifest_dash["path"],
       )
     end
 

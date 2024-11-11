@@ -30,6 +30,6 @@ module Folio::OpenGraphHelper
   end
 
   def og_url
-    request.original_url.gsub("http://", "https://")
+    request.url.gsub("http://", "https://")
   end
 end

@@ -8,129 +8,139 @@ class Folio::HasSiteRolesTest < ActiveSupport::TestCase
   def setup
     super
 
-    I18n.locale = :cs
-
-    @site = create(Rails.application.config.folio_site_default_test_factory, available_user_roles: ["administrator", "manager"])
-    @user = create(:folio_user) # includes Folio::HasSiteRoles
+    I18n.with_locale(:cs) do
+      @site = create(Rails.application.config.folio_site_default_test_factory, available_user_roles: ["administrator", "manager"])
+      @user = create(:folio_user) # includes Folio::HasSiteRoles
+    end
   end
 
   test "differentiate roles against different sites" do
-    site2 = build(Rails.application.config.folio_site_default_test_factory, available_user_roles: ["administrator", "manager"])
-    def site2.validate_singularity
-    end # hack to allow 2 sites after Folio::Site class initialization
-    site2.save!
+    I18n.with_locale(:cs) do
+      site2 = build(Rails.application.config.folio_site_default_test_factory, available_user_roles: ["administrator", "manager"])
+      def site2.validate_singularity
+      end # hack to allow 2 sites after Folio::Site class initialization
+      site2.save!
 
-    assert_equal [], user.roles_for(site:)
-    assert_equal [], user.roles_for(site: site2)
+      assert_equal [], user.roles_for(site:)
+      assert_equal [], user.roles_for(site: site2)
 
-    user.set_roles_for(site:, roles: ["administrator"])
-    user.set_roles_for(site: site2, roles: ["manager", "administrator"])
+      user.set_roles_for(site:, roles: ["administrator"])
+      user.set_roles_for(site: site2, roles: ["manager", "administrator"])
 
-    assert_equal ["administrator"], user.roles_for(site:)
-    assert_equal ["administrator", "manager"], user.roles_for(site: site2) # sorted roles!
+      assert_equal ["administrator"], user.roles_for(site:)
+      assert_equal ["administrator", "manager"], user.roles_for(site: site2) # sorted roles!
 
-    assert user.has_role?(site:, role: :administrator)
-    assert_not user.has_role?(site:, role: :manager)
-    assert user.has_role?(site: site2, role: :administrator)
-    assert user.has_role?(site: site2, role: :manager)
+      assert user.has_role?(site:, role: :administrator)
+      assert_not user.has_role?(site:, role: :manager)
+      assert user.has_role?(site: site2, role: :administrator)
+      assert user.has_role?(site: site2, role: :manager)
+    end
   end
 
   test "validates roles againts site.availables_roles" do
-    assert_equal ["administrator", "manager"], site.available_user_roles
+    I18n.with_locale(:cs) do
+      assert_equal ["administrator", "manager"], site.available_user_roles
 
-    user.set_roles_for(site:, roles: ["administrator", "manager"])
+      user.set_roles_for(site:, roles: ["administrator", "manager"])
 
-    assert user.valid?
-    assert user.has_role?(site:, role: :administrator)
-    assert user.has_role?(site:, role: :manager)
+      assert user.valid?
+      assert user.has_role?(site:, role: :administrator)
+      assert user.has_role?(site:, role: :manager)
 
-    user.set_roles_for(site:, roles: ["administrator"])
+      user.set_roles_for(site:, roles: ["administrator"])
 
-    assert user.valid?
-    assert user.has_role?(site:, role: :administrator)
-    assert_not user.has_role?(site:, role: :manager)
+      assert user.valid?
+      assert user.has_role?(site:, role: :administrator)
+      assert_not user.has_role?(site:, role: :manager)
 
-    user.set_roles_for(site:, roles: [])
+      user.set_roles_for(site:, roles: [])
 
-    assert user.valid?
-    assert_not user.has_role?(site:, role: :administrator)
-    assert_not user.has_role?(site:, role: :manager)
+      assert user.valid?
+      assert_not user.has_role?(site:, role: :administrator)
+      assert_not user.has_role?(site:, role: :manager)
 
-    user.set_roles_for(site:, roles: ["spy", "manager"])
+      user.set_roles_for(site:, roles: ["spy", "manager"])
 
-    assert_not user.valid?
-    assert_includes user.errors[:site_roles], "Role [\"spy\"] nejsou všechny dostupné pro web '#{site.domain}'."
+      assert_not user.valid?
+      assert_includes user.errors[:site_roles], "Role [\"spy\"] nejsou všechny dostupné pro web '#{site.domain}'."
+    end
   end
 
   test "can use agregate checks" do
-    user.set_roles_for(site:, roles: ["administrator", "manager"])
+    I18n.with_locale(:cs) do
+      user.set_roles_for(site:, roles: ["administrator", "manager"])
 
-    assert user.has_any_roles?(site:, roles: ["administrator", "superman"])
-    assert_not user.has_any_roles?(site:, roles: ["superman"])
+      assert user.has_any_roles?(site:, roles: ["administrator", "superman"])
+      assert_not user.has_any_roles?(site:, roles: ["superman"])
 
-    assert user.has_all_roles?(site:, roles: ["administrator", "manager"])
-    assert_not user.has_all_roles?(site:, roles: ["administrator", "superman"])
+      assert user.has_all_roles?(site:, roles: ["administrator", "manager"])
+      assert_not user.has_all_roles?(site:, roles: ["administrator", "superman"])
 
-    assert_equal ["Administrátor", "Manažer"], user.human_role_names(site:)
+      assert_equal ["Administrátor", "Manažer"], user.human_role_names(site:)
+    end
   end
 
   test ".roles_for_select" do
-    expected_roles = [
-      ["Administrátor", "administrator"],
-      ["Manažer", "manager"],
-    ]
-    assert_equal expected_roles, Folio::User.roles_for_select(site:)
-    assert_equal expected_roles, Folio::User.roles_for_select(site:, selectable_roles: nil)
-    assert_equal expected_roles, Folio::User.roles_for_select(site:, selectable_roles: [])
+    I18n.with_locale(:cs) do
+      expected_roles = [
+        ["Administrátor", "administrator"],
+        ["Manažer", "manager"],
+      ]
+      assert_equal expected_roles, Folio::User.roles_for_select(site:)
+      assert_equal expected_roles, Folio::User.roles_for_select(site:, selectable_roles: nil)
+      assert_equal expected_roles, Folio::User.roles_for_select(site:, selectable_roles: [])
 
-    assert_equal [["Manažer", "manager"]],
-                Folio::User.roles_for_select(site:,
-                                             selectable_roles: ["manager", "spy"])
+      assert_equal [["Manažer", "manager"]],
+                  Folio::User.roles_for_select(site:,
+                                              selectable_roles: ["manager", "spy"])
 
-    admin_link = create(:folio_site_user_link, roles: [:administrator], site:)
-    reset_folio_current(admin_link)
+      admin_link = create(:folio_site_user_link, roles: [:administrator], site:)
+      reset_folio_current(admin_link)
 
-    assert_equal [["Administrátor", "administrator"], ["Manažer", "manager"]],
-                 Folio::User.roles_for_select(site:)
+      assert_equal [["Administrátor", "administrator"], ["Manažer", "manager"]],
+                  Folio::User.roles_for_select(site:)
 
-    manager_link = create(:folio_site_user_link, roles: [:manager], site:)
-    reset_folio_current(manager_link)
+      manager_link = create(:folio_site_user_link, roles: [:manager], site:)
+      reset_folio_current(manager_link)
 
-    assert_equal [["Manažer", "manager"]], Folio::User.roles_for_select(site:)
+      assert_equal [["Manažer", "manager"]], Folio::User.roles_for_select(site:)
+    end
   end
 
-  test " allows assign only roles that can be managed by current user" do
-    assert_equal %w[administrator manager], site.available_user_roles
-    user_link = create(:folio_site_user_link, roles: [], site:)
+  test "allows assign only roles that can be managed by current user" do
+    I18n.with_locale(:cs) do
+      assert_equal %w[administrator manager], site.available_user_roles
+      user_link = create(:folio_site_user_link, roles: [], site:)
 
-    # no Folio::Current.user => no restrictions
-    assert user_link.roles = [:administrator, :manager]
-    assert user_link.save
-
-    assert_equal %w[administrator manager], user_link.reload.roles
-
-
-    # admin can assign any role
-    admin_link = create(:folio_site_user_link, roles: [:administrator], site:)
-    reset_folio_current(admin_link)
-
-    assert user_link.roles = [:administrator, :manager]
-    assert user_link.save
-
-    assert_equal %w[administrator manager], user_link.reload.roles
-
-    # manager can assign only manager role
-    manager_link = create(:folio_site_user_link, roles: [:manager], site:)
-    reset_folio_current(manager_link)
-
-    excp = assert_raises(RuntimeError) do
+      # no Folio::Current.user => no restrictions
       assert user_link.roles = [:administrator, :manager]
-    end
-    assert_equal "Current user #{manager_link.user.email} cannot set_administrator!", excp.message
+      assert user_link.save
 
-    assert user_link.roles = [:manager]
-    assert user_link.save
-    assert_equal ["manager"], user_link.reload.roles
+      assert_equal %w[administrator manager], user_link.reload.roles
+
+
+      # admin can assign any role
+      admin_link = create(:folio_site_user_link, roles: [:administrator], site:)
+      reset_folio_current(admin_link)
+
+      assert user_link.roles = [:administrator, :manager]
+      assert user_link.save
+
+      assert_equal %w[administrator manager], user_link.reload.roles
+
+      # manager can assign only manager role
+      manager_link = create(:folio_site_user_link, roles: [:manager], site:)
+      reset_folio_current(manager_link)
+
+      excp = assert_raises(RuntimeError) do
+        assert user_link.roles = [:administrator, :manager]
+      end
+      assert_equal "Current user #{manager_link.user.email} cannot set_administrator!", excp.message
+
+      assert user_link.roles = [:manager]
+      assert user_link.save
+      assert_equal ["manager"], user_link.reload.roles
+    end
   end
 
   test "creating user with roles" do

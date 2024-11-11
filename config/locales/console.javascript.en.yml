@@ -28,6 +28,7 @@ en:
         fileTableHeaderTags: Keywords
         fileTableHeaderType: Type
         fileTitleHint: File title as displayed on the web (fallback to file name).
+        fileAlt: Alt
         indestructibleFile: Files has active placements and therefore cannot be destroyed.
         indestructibleFiles: Some of the selected files have active placements and therefore cannot be destroyed.
         link: Link

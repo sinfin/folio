@@ -7,6 +7,11 @@ h3 No label
 = render(Folio::Console::Ui::BooleanToggleComponent.new(record: Folio::Page.last,
                                                         attribute: :published))
 
+h3 No label with data test id attribute
+= render(Folio::Console::Ui::BooleanToggleComponent.new(record: Folio::Page.last,
+                                                        attribute: :published,
+                                                        test_id: "boolean-toggle"))
+
 h3 Label
 
 = render(Folio::Console::Ui::BooleanToggleComponent.new(record: Folio::Page.last,

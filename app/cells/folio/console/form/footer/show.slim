@@ -8,7 +8,8 @@
               variant: :gray,
               label: t('folio.console.actions.back'),
               hide_label_on_mobile: true,
-              icon: :arrow_u_left_top)
+              icon: :arrow_u_left_top,
+              data: { test_id: "back-button" })
 
     - if preview_path
       == cell('folio/console/ui/button',
@@ -18,7 +19,8 @@
               label: t('folio.console.actions.preview'),
               hide_label_on_mobile: true,
               icon: :open_in_new,
-              target: "_blank")
+              target: "_blank",
+              data: { test_id: "preview-button" })
 
     = options[:pre_submit_content]
 
@@ -28,7 +30,8 @@
               class: 'f-c-form-footer__btn f-c-form-footer__btn--submit',
               variant: :primary,
               label: submit_label,
-              icon: :check)
+              icon: :check,
+              data: { test_id: "submit-button" })
 
     == cell('folio/console/ui/warning_ribbon',
             t('.dirty_forms'),

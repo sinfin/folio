@@ -31,8 +31,7 @@ window.Folio.Stimulus.register('f-input-character-counter', class extends window
   }
 
   onInput (e) {
-    console.log(window.Folio.wordCount(this.element.value))
-    const length = window.Folio.wordCount(this.element.value).characters
+    const length = window.Folio.wordCount({ text: this.element.value }).charactersWithSpaces
     const formGroup = this.element.closest('.form-group')
     const wrap = formGroup.querySelector('.f-input-character-counter-wrap')
     const current = wrap.querySelector('.f-input-character-counter-wrap__current')
@@ -68,7 +67,7 @@ window.Folio.Stimulus.register('f-input-character-counter', class extends window
     wrap.style.position = 'absolute'
     wrap.style.right = 0
 
-    const currentLength = window.Folio.wordCount(this.element.value).characters
+    const currentLength = window.Folio.wordCount({ text: this.element.value }).charactersWithSpaces
 
     const current = document.createElement('span')
     current.classList.add('f-input-character-counter-wrap__current')

@@ -1,49 +1,55 @@
 # frozen_string_literal: true
 
 module Folio::Console::ReactHelper
-  def file_picker(f:, placement_key:, file_type:, hint: nil, darker: false)
+  def file_picker(f:, placement_key:, file_type:, hint: nil, darker: false, required: nil)
     raw cell("folio/console/file/picker",
              f:,
              placement_key:,
              file_type:,
              hint:,
-             darker:)
+             darker:,
+             required:)
   end
 
-  def file_picker_for_cover(f, hint: nil, darker: false)
+  def file_picker_for_cover(f, hint: nil, darker: false, required: nil)
     file_picker(f:,
                 placement_key: :cover_placement,
                 file_type: "Folio::File::Image",
                 hint:,
-                darker:)
+                darker:,
+                required:)
   end
 
-  def file_picker_for_og_image(f, hint: nil)
+  def file_picker_for_og_image(f, hint: nil, required: nil)
     file_picker(f:,
                 placement_key: :og_image_placement,
                 file_type: "Folio::File::Image",
-                hint:)
+                hint:,
+                required:)
   end
 
-  def file_picker_for_document(f, hint: nil)
+  def file_picker_for_document(f, hint: nil, required: nil)
     file_picker(f:,
                 placement_key: :document_placement,
                 file_type: "Folio::File::Document",
-                hint:)
+                hint:,
+                required:)
   end
 
-  def file_picker_for_audio_cover(f, hint: nil)
+  def file_picker_for_audio_cover(f, hint: nil, required: nil)
     file_picker(f:,
                 placement_key: :audio_cover_placement,
                 file_type: "Folio::File::Audio",
-                hint:)
+                hint:,
+                required:)
   end
 
-  def file_picker_for_video_cover(f, hint: nil)
+  def file_picker_for_video_cover(f, hint: nil, required: nil)
     file_picker(f:,
                 placement_key: :video_cover_placement,
                 file_type: "Folio::File::Video",
-                hint:)
+                hint:,
+                required:)
   end
 
   def react_images(selected_placements = nil,
@@ -169,7 +175,7 @@ module Folio::Console::ReactHelper
     )
   end
 
-  def react_ordered_multiselect(f, relation_name, atom_setting: nil, scope: nil, order_scope: :ordered, sortable: true)
+  def react_ordered_multiselect(f, relation_name, atom_setting: nil, scope: nil, order_scope: :ordered, sortable: true, required: nil)
     class_name = "folio-react-wrap folio-react-wrap--ordered-multiselect"
 
     unless sortable
@@ -210,7 +216,7 @@ module Folio::Console::ReactHelper
                                  only_path: true])
 
     content_tag(:div, class: "form-group") do
-      concat(f.label relation_name)
+      concat(f.label relation_name, required:)
       concat(
         content_tag(:div, content_tag(:span, nil, class: "folio-loader"),
           "class" => class_name,

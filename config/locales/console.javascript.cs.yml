@@ -28,6 +28,7 @@ cs:
         fileTableHeaderTags: Klíčová slova
         fileTableHeaderType: Typ
         fileTitleHint: Název zobrazovaný na webu (v případě nevyplnění se zobrazí název souboru).
+        fileAlt: Alt
         indestructibleFile: Soubor má aktivní použití. Použité soubory nelze mazat.
         indestructibleFiles: Některé z vybraných souborů jsou použité. Použité soubory nelze mazat.
         link: Odkaz

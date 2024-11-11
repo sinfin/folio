@@ -16,8 +16,10 @@ class Folio::InvalidUsersCheckJobTest < ActiveJob::TestCase
     assert_not u_invalid_mail.reload.valid?
     assert_not u_invalid_names.reload.valid?
 
-    ex = assert_raises Folio::InvalidUsersCheckJob::InvalidUsersError do
-      Folio::InvalidUsersCheckJob.perform_now
+    ex = I18n.with_locale(:cs) do
+      assert_raises Folio::InvalidUsersCheckJob::InvalidUsersError do
+        Folio::InvalidUsersCheckJob.perform_now
+      end
     end
 
     message = ex.message

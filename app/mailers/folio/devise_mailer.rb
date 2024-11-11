@@ -20,26 +20,34 @@ class Folio::DeviseMailer < Devise::Mailer
     @site = record.auth_site
     opts = { site: @site }.merge(opts)
 
-    @data ||= {}
-    @data[:USER_CHANGE_PASSWORD_URL] = scoped_url_method(record,
-                                                         :edit_password_url,
-                                                         reset_password_token: token,
-                                                         host: @site.env_aware_domain)
+    with_user_locale(record, locale: opts[:locale]) do |locale|
+      @data ||= {}
+      @data[:LOCALE] = locale
+      @data[:USER_CHANGE_PASSWORD_URL] = scoped_url_method(record,
+                                                           :edit_password_url,
+                                                           reset_password_token: token,
+                                                           host: @site.env_aware_domain,
+                                                           locale:)
 
-    super(record, token, opts)
+      super(record, token, opts)
+    end
   end
 
   def invitation_instructions(record, token, opts = {})
     @site = (record.site_user_links.order(id: :asc).last&.site || record.auth_site)
     opts = { site: @site }.merge(opts)
 
+    with_user_locale(record, locale: opts[:locale]) do |locale|
+      @data ||= {}
+      @data[:LOCALE] = locale
+      @data[:USER_ACCEPT_INVITATION_URL] = scoped_url_method(record,
+                                                             :accept_invitation_url,
+                                                             invitation_token: token,
+                                                             host: @site.env_aware_domain,
+                                                             locale:)
 
-    @data ||= {}
-    @data[:USER_ACCEPT_INVITATION_URL] = scoped_url_method(record,
-                                                           :accept_invitation_url,
-                                                           invitation_token: token,
-                                                           host: @site.env_aware_domain)
-    super(record, token, opts)
+      super(record, token, opts)
+    end
   end
 
   def confirmation_instructions(record, token, opts = {})
@@ -47,13 +55,17 @@ class Folio::DeviseMailer < Devise::Mailer
     @site = (record.site_user_links.order(id: :asc).last&.site || record.auth_site)
     opts = { site: @site }.merge(opts)
 
-    @data ||= {}
-    @data[:USER_CONFIRMATION_URL] = scoped_url_method(record,
-                                                      :confirmation_url,
-                                                      confirmation_token: @token,
-                                                      host: @site.env_aware_domain)
+    with_user_locale(record, locale: opts[:locale]) do |locale|
+      @data ||= {}
+      @data[:LOCALE] = locale
+      @data[:USER_CONFIRMATION_URL] = scoped_url_method(record,
+                                                        :confirmation_url,
+                                                        confirmation_token: @token,
+                                                        host: @site.env_aware_domain,
+                                                        locale:)
 
-    super(record, token, opts)
+      super(record, token, opts)
+    end
   end
 
   def omniauth_conflict(authentication, opts = {})
@@ -62,14 +74,17 @@ class Folio::DeviseMailer < Devise::Mailer
 
     initialize_from_record(@record)
 
-    template_data = {
-      USER_CONFLICT_PROVIDER: authentication.human_provider,
-      USER_CONFLICT_RESOLVE_URL: main_app.users_auth_resolve_conflict_url(conflict_token: authentication.conflict_token)
-    }
+    with_user_locale(@record, locale: opts[:locale]) do |locale|
+      template_data = {
+        LOCALE: locale,
+        USER_CONFLICT_PROVIDER: authentication.human_provider,
+        USER_CONFLICT_RESOLVE_URL: main_app.users_auth_resolve_conflict_url(conflict_token: authentication.conflict_token)
+      }
 
-    email_template_mail template_data,
-                        headers_for(:omniauth_conflict, opts).merge(subject: t("devise.mailer.omniauth_conflict.subject"),
-                                                                    mailer: "Devise::Mailer")
+      email_template_mail template_data,
+                          headers_for(:omniauth_conflict, opts).merge(subject: t("devise.mailer.omniauth_conflict.subject"),
+                                                                      mailer: "Devise::Mailer")
+    end
   end
 
   private
@@ -84,7 +99,7 @@ class Folio::DeviseMailer < Devise::Mailer
 
       extra = {
         only_path: false,
-        protocol: (Rails.env.development? && !ENV["FORCE_SSL"]) ? "http" : "https"
+        protocol: (Rails.env.development? && !ENV["FORCE_SSL"]) ? "http" : "https",
       }
 
       if Folio.enabled_site_for_crossdomain_devise

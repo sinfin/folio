@@ -3,7 +3,7 @@
     margin: map-get($spacers, e) 0
 
   &--highlight-background &__inner
-    padding: map-get($spacers, d) 0
+    padding: map-get($spacers, d) map-get($spacers, d)
 
   &--highlight-background.d-atom-contents-title--theme-light &__inner
     background: $transparent-b100
@@ -19,7 +19,6 @@
     text-align: center
 
   &__content-container
-    padding: 0 map-get($spacers, f)
     margin: 0 auto
 
   +media-breakpoint-up(md)
@@ -30,7 +29,7 @@
       margin: map-get($spacers, g) 0
 
     &--highlight-background &__inner
-      padding: map-get($spacers, g) 0
+      padding: map-get($spacers, g) map-get($spacers, f)
       border-radius: $border-radius
 
   +media-breakpoint-up(xl)
@@ -38,7 +37,7 @@
       max-width: 920px
 
     &--highlight-background &__inner
-      padding: map-get($spacers, l) 0
+      padding: map-get($spacers, l) map-get($spacers, f)
 
   +media-breakpoint-down(md)
     &__container

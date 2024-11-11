@@ -10,7 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_11_09_152500) do
+
+ActiveRecord::Schema[7.1].define(version: 2024_10_21_105052) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -571,6 +572,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_09_152500) do
     t.string "company_name"
     t.string "time_zone", default: "Prague"
     t.bigint "auth_site_id", null: false
+    t.string "preferred_locale"
     t.index ["auth_site_id"], name: "index_folio_users_on_auth_site_id"
     t.index ["confirmation_token"], name: "index_folio_users_on_confirmation_token", unique: true
     t.index ["crossdomain_devise_token"], name: "index_folio_users_on_crossdomain_devise_token"

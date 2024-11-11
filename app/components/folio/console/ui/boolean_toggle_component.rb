@@ -16,7 +16,8 @@ class Folio::Console::Ui::BooleanToggleComponent < Folio::Console::ApplicationCo
                  checked: false,
                  class_name: nil,
                  static: false,
-                 small_label: false)
+                 small_label: false,
+                 test_id: nil)
     @record = record
     @attribute = attribute
     @disabled = disabled
@@ -31,6 +32,7 @@ class Folio::Console::Ui::BooleanToggleComponent < Folio::Console::ApplicationCo
     @small_label = small_label
     @static = static || @f.present?
     @checked = checked || attribute_checked?
+    @test_id = test_id
   end
 
   def attribute_checked?
@@ -70,7 +72,7 @@ class Folio::Console::Ui::BooleanToggleComponent < Folio::Console::ApplicationCo
       url: url_with_default,
       confirmation:,
       static: @static
-    }, classes: %w[loading])
+    }, classes: %w[loading]).merge(test_id: @test_id.presence)
   end
 
   def url_with_default

@@ -14,6 +14,7 @@ module Folio::HasAttachments
              through: :file_placements
 
     after_save :run_file_placements_after_save!
+    after_save_commit :run_pregenerate_thumbnails_check_job_if_needed
 
     has_many_placements(:images,
                         placements_key: :image_placements,
@@ -121,6 +122,10 @@ module Folio::HasAttachments
 
       private :update_cover_placement
     end
+
+    def run_pregenerate_thumbnails_check_job?
+      false
+    end
   end
 
   def og_image_with_fallback
@@ -131,5 +136,10 @@ module Folio::HasAttachments
     def run_file_placements_after_save!
       return if dont_run_file_placements_after_save
       file_placements.find_each(&:run_after_save_job!)
+    end
+
+    def run_pregenerate_thumbnails_check_job_if_needed
+      return unless self.class.run_pregenerate_thumbnails_check_job?
+      Folio::PregenerateThumbnails::CheckJob.perform_later(self)
     end
 end
