@@ -6,8 +6,7 @@ module Folio::FriendlyId::UniqueSlugForMultipleClasses
   included do
     before_validation :set_unique_slug
 
-    validate :validate_slug_through_classes,
-             if: :slug_changed?
+    validate :validate_slug_through_classes
   end
 
   class_methods do
@@ -32,7 +31,9 @@ module Folio::FriendlyId::UniqueSlugForMultipleClasses
         slugs_scope = slugs_scope.where(scope: "#{self.class::FRIENDLY_ID_SCOPE}:#{send(self.class::FRIENDLY_ID_SCOPE)}")
       end
 
-      slugs_scope.where(sluggable_type: self.class.slug_classes.map(&:to_s), slug:).exists?
+      slugs_scope.where(sluggable_type: self.class.slug_classes.map(&:to_s), slug:)
+                 .where.not(sluggable: self)
+                 .exists?
     end
 
     def validate_slug_through_classes
