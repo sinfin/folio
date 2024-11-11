@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class <%= application_namespace %>::Page::<%= class_name %> < Folio::Page
-  include Folio::Singleton
+  include Folio::PerSiteSingleton
 end
 
 # == Schema Information
