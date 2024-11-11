@@ -4,24 +4,22 @@ require "test_helper"
 
 class Folio::UserTest < ActiveSupport::TestCase
   test "newsletter subscriptions / single site" do
-    2.times { create_site(force: true) }
-    subscribable_sites = Folio::NewsletterSubscription.subscribable_sites # Folio::Site.all by default
-    assert_equal 2, subscribable_sites.count
+    site_1 = create_site(force: true)
+    site_2 = create_site(force: true) # should have no subscriptions
 
     [true, false].each_with_index do |subscribed_to_newsletter, i|
       user = Folio::User.invite!(email: "email-#{i}@email.email",
                                  first_name: "John",
                                  last_name: "Doe",
-                                 auth_site_id: subscribable_sites.first.id,
+                                 auth_site_id: site_1.id,
                                  subscribed_to_newsletter:) do |u|
         u.skip_invitation = true
       end
       assert_empty user.newsletter_subscriptions.reload
 
-      assert_difference("Folio::NewsletterSubscription.count",
-                         subscribable_sites.size) do
+      assert_difference("Folio::NewsletterSubscription.count", 1) do
         assert_difference("Folio::NewsletterSubscription.active.count",
-                          subscribed_to_newsletter ? subscribable_sites.size : 0) do
+                          subscribed_to_newsletter ? 1 : 0) do
           user.accept_invitation!
         end
       end
@@ -29,15 +27,16 @@ class Folio::UserTest < ActiveSupport::TestCase
       assert_equal subscribed_to_newsletter, user.newsletter_subscriptions.active.present?
 
       if subscribed_to_newsletter
-        subscribable_sites.each do |site|
-          assert_equal 1, Folio::NewsletterSubscription.by_site(site).active.count
-        end
+        assert_equal 1, Folio::NewsletterSubscription.by_site(site_1).active.count
       else
-        assert_equal 0, Folio::NewsletterSubscription.active.count
+        assert_equal 0, Folio::NewsletterSubscription.by_site(site_1).active.count
       end
 
+      # User is subscribed only to his auth_site
+      assert_equal 0, Folio::NewsletterSubscription.by_site(site_2).count
+
       user.destroy!
-      assert_equal 0, Folio::NewsletterSubscription.count
+      assert_equal 0, Folio::NewsletterSubscription.by_site(site_1).count
     end
   end
 
