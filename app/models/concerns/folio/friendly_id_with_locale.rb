@@ -6,6 +6,7 @@ module Folio::FriendlyIdWithLocale
   included do
     const_set(:FRIENDLY_ID_SCOPE, :locale)
     include Folio::FriendlyId
+    include Folio::FriendlyId::UniqueSlugForMultipleClasses
 
     private
       def should_generate_new_friendly_id?

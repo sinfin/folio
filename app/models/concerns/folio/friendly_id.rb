@@ -5,6 +5,7 @@ module Folio::FriendlyId
 
   included do
     include Folio::FriendlyId::History
+    include Folio::FriendlyId::UniqueSlugForMultipleClasses
 
     if defined?(self::FRIENDLY_ID_SCOPE)
       friendly_id :slug_candidates, use: %i[slugged history scoped], scope: self::FRIENDLY_ID_SCOPE

@@ -375,6 +375,7 @@ cs:
       missing_file_alt: nemá vyplněný alt
       missing_file_description: nemá vyplněný popisek
       invalid_file_placement: nesplňuje požadavky
+      not_uniqueness_through_classes: musí být jedinečná napříč zahrnutými záznamy (%{classes})
 
     attributes:
       verified_captcha:
