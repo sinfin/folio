@@ -1,4 +1,4 @@
-.f-nested-fields data=data
+.f-nested-fields data=data class=@class_name
   .f-nested-fields__destroyed-wrap[
     data=stimulus_target('destroyedWrap')
     hidden=true
@@ -29,9 +29,13 @@
                 data=stimulus_action(click: 'onDestroyClick')
               ]
                 - if @destroy == true
-                  = folio_icon(:close,
-                               height: 24,
+                  = folio_icon(@destroy_icon,
+                               height: @destroy_icon_height,
                                class: "f-nested-fields__destroy-ico")
+
+                  - if destroy_label
+                    .f-nested-fields__destroy-label
+                      = destroy_label
                 - else
                   == @destroy
 
@@ -58,8 +62,7 @@
   - if @add
     .f-nested-fields__add data=stimulus_action(click: 'onAddClick')
       - if @add == true
-        button.btn.btn-success type="button"
-          = t('.add')
+        = add_button
       - else
         == @add
 
@@ -89,9 +92,13 @@
                     data=stimulus_action(click: 'onDestroyClick')
                   ]
                     - if @destroy == true
-                      = folio_icon(:close,
-                                   height: 24,
+                      = folio_icon(@destroy_icon,
+                                   height: @destroy_icon_height,
                                    class: "f-nested-fields__destroy-ico")
+
+                      - if destroy_label
+                        .f-nested-fields__destroy-label
+                          = destroy_label
                     - else
                       == @destroy
 
