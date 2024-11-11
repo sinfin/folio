@@ -29,9 +29,7 @@
                 data=stimulus_action(click: 'onDestroyClick')
               ]
                 - if @destroy == true
-                  = folio_icon(@destroy_icon,
-                               height: @destroy_icon_height,
-                               class: "f-nested-fields__destroy-ico")
+                  = destroy_icon
 
                   - if @destroy_label.present?
                     .f-nested-fields__destroy-label
@@ -92,9 +90,7 @@
                     data=stimulus_action(click: 'onDestroyClick')
                   ]
                     - if @destroy == true
-                      = folio_icon(@destroy_icon,
-                                   height: @destroy_icon_height,
-                                   class: "f-nested-fields__destroy-ico")
+                      = destroy_icon
 
                       - if @destroy_label.present?
                         .f-nested-fields__destroy-label
