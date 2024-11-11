@@ -33,9 +33,9 @@
                                height: @destroy_icon_height,
                                class: "f-nested-fields__destroy-ico")
 
-                  - if destroy_label
+                  - if @destroy_label
                     .f-nested-fields__destroy-label
-                      = destroy_label
+                      = @destroy_label
                 - else
                   == @destroy
 
@@ -96,9 +96,9 @@
                                    height: @destroy_icon_height,
                                    class: "f-nested-fields__destroy-ico")
 
-                      - if destroy_label
+                      - if @destroy_label
                         .f-nested-fields__destroy-label
-                          = destroy_label
+                          = @destroy_label
                     - else
                       == @destroy
 
