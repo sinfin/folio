@@ -13,6 +13,9 @@
   position: relative
   z-index: 101 // above redactor toolbar
 
+  .form-group-invalid &
+    border-color: var(--#{$prefix}form-invalid-border-color)
+
 .f-c-r-ordered-multiselect-app
   &__item
     display: flex

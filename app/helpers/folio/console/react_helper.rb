@@ -223,7 +223,7 @@ module Folio::Console::ReactHelper
                                  order_scope:,
                                  only_path: true])
 
-    content_tag(:div, class: "form-group") do
+    content_tag(:div, class: f.object.errors[relation_name].present? ? "form-group form-group-invalid" : "form-group") do
       concat(f.label relation_name, required:)
       concat(
         content_tag(:div, content_tag(:span, nil, class: "folio-loader"),
@@ -237,6 +237,7 @@ module Folio::Console::ReactHelper
           "data-atom-setting" => atom_setting,
         )
       )
+      concat(f.full_error relation_name, class: "invalid-feedback d-block")
     end
   end
 
