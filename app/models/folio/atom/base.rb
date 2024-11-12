@@ -244,6 +244,10 @@ class Folio::Atom::Base < Folio::ApplicationRecord
     false
   end
 
+  def self.disabled?
+    false
+  end
+
   def self.attachment_placements
     self::ATTACHMENTS.map do |key|
       self.reflections[key.to_s].options[:through]
