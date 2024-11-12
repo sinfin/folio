@@ -177,6 +177,73 @@ module Folio
       end
     end
 
+    def atoms_deprecations
+      atom_data_path_base = "data/atoms_showcase.yml"
+      atom_data_path = Rails.root.join(atom_data_path_base)
+      return ["Missing #{atom_data_path_base}"] unless File.exist?(atom_data_path)
+
+      deprecations = []
+
+      begin
+        atom_showcases = YAML.load_file(atom_data_path)
+        known_parent_classes = ["Folio::Atom::Base"] # grandpa
+        weird_klasses = []
+
+        Dir[Rails.root.join("app/models/*/atom/**/*.rb")].each do |atom_file_path|
+          contents = File.read(atom_file_path)
+          atom_name = self.is_direct_child_of(known_parent_classes, contents)
+          if atom_name
+            known_parent_classes << atom_name
+            deprecations << "Missing atoms_showcase.yml data for atom - #{atom_name}" unless defined_in_showcases?(atom_name, atom_showcases, contents)
+          else
+            weird_klasses << atom_file_path
+          end
+        end
+
+        # recheck weird_klasses
+        parent_added = true
+        while parent_added
+          parent_added = false
+          remove_from_weid_klasses = []
+
+          weird_klasses.each do |atom_file_path|
+            contents = File.read(atom_file_path)
+            atom_name = self.is_direct_child_of(known_parent_classes, contents)
+            known_parent_classes << atom_name
+            deprecations << "Missing atoms_showcase.yml data for atom - #{atom_name}" unless defined_in_showcases?(atom_name, atom_showcases, contents)
+            parent_added = true
+            remove_from_weid_klasses << atom_file_path
+          end
+
+          weird_klasses -= remove_from_weid_klasses
+        end
+
+        weird_klasses.each do |atom_file_path|
+          deprecations << "Invalid atom model code - #{atom_file_path}"
+        end
+
+      rescue StandardError => e
+        deprecations << "Failed reading atoms_showcase - #{e}"
+      end
+
+      deprecations
+    end
+
+    def is_direct_child_of(known_parent_classes, file_content)
+      known_parent_classes.each do |pklass|
+        matches = file_content.match(/class (?<atom_name>[\w:]+) < #{pklass}/)
+        return matches[:atom_name] if matches
+      end
+
+      nil
+    end
+
+    def defined_in_showcases?(atom_name, atom_showcases, file_content)
+      return true if atom_showcases["atoms"][atom_name].present?
+
+      file_content.include?("self.molecule_secondary") || file_content.include?("self.molecule_singleton")
+    end
+
     begin
       initializer :deprecations_and_important_messages do |app|
         deprecations = []
@@ -205,33 +272,7 @@ module Folio
         end
 
         unless Rails.env.production?
-          atom_data_path_base = "data/atoms_showcase.yml"
-          atom_data_path = Rails.root.join(atom_data_path_base)
-
-          if File.exist?(atom_data_path)
-            begin
-              atom_data = YAML.load_file(atom_data_path)
-
-              Dir[Rails.root.join("app/models/*/atom/**/*.rb")].each do |atom_file_path|
-                contents = File.read(atom_file_path)
-                matches = contents.match(/class (?<atom_name>[\w:]+) < Folio::Atom::Base/)
-
-                if matches && matches[:atom_name]
-                  if atom_data["atoms"][matches[:atom_name]].blank?
-                    if contents.exclude?("self.molecule_secondary") && contents.exclude?("self.molecule_singleton")
-                      deprecations << "Missing atoms_showcase.yml data for atom - #{matches[:atom_name]}"
-                    end
-                  end
-                else
-                  deprecations << "Invalid atom model code - #{atom_file_path}"
-                end
-              end
-            rescue StandardError => e
-              deprecations << "Failed reading atoms_showcase - #{e}"
-            end
-          else
-            deprecations << "Missing #{atom_data_path_base}"
-          end
+          deprecations += self.atoms_deprecations
         end
 
         if deprecations.present?

@@ -462,11 +462,8 @@ class Folio::Console::BaseController < Folio::ApplicationController
 
     def filter_records_by_belongs_to_site
       if folio_console_records
-        records = folio_console_records.accessible_by(current_ability,
-                                                      self.class.cancancan_accessible_by_action)
-
         instance_variable_set(folio_console_record_variable_name(plural: true),
-                              records.by_site(allowed_record_sites))
+                              folio_console_records.by_site(allowed_record_sites))
       elsif record = folio_console_record
         if record.persisted? && !allowed_record_sites.map(&:id).include?(record.site.id)
           raise ActiveRecord::RecordNotFound
@@ -553,10 +550,6 @@ class Folio::Console::BaseController < Folio::ApplicationController
 
     def set_show_current_user_console_path_bar
       @show_current_user_console_path_bar = %w[edit update].include?(action_name)
-    end
-
-    def self.cancancan_accessible_by_action
-      :update
     end
 
     def member_action?

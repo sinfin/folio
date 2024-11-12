@@ -18,12 +18,12 @@ class Folio::Console::PublishableInputs::ItemCell < Folio::ConsoleCell
         featured: :feature
       }
 
+      ability_action = input_to_event[field.to_sym] || field.to_sym
+
       @read_only = if Folio::Current.user.blank?
         false
-      elsif !input_to_event.key?(field.to_sym)
-        false
       else
-        !can_now?(input_to_event[field.to_sym], f.object, site: Folio::Current.site)
+        !can_now?(ability_action, f.object, site: Folio::Current.site)
       end
     end
     @read_only
