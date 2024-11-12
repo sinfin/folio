@@ -193,15 +193,23 @@ module Folio::Console::ReactHelper
     through_klass = reflection.class_name.constantize
 
     param_base = "#{f.object_name}[#{through}_attributes]"
-    items = f.object.send(through).map do |record|
-      through_record = through_klass.find(record.send(reflection.foreign_key))
 
-      {
-        id: record.id,
-        label: through_record.to_console_label,
-        value: through_record.id,
-        _destroy: false,
-      }
+    items = []
+    removed_ids = []
+
+    f.object.send(through).each do |record|
+      if record.marked_for_destruction?
+        removed_ids << record.id if record.id
+      else
+        through_record = through_klass.find(record.send(reflection.foreign_key))
+
+        items << {
+          id: record.id,
+          label: through_record.to_console_label,
+          value: through_record.id,
+          _destroy: record.marked_for_destruction?,
+        }
+      end
     end
 
     url = Folio::Engine.routes
@@ -222,6 +230,7 @@ module Folio::Console::ReactHelper
           "class" => class_name,
           "data-param-base" => param_base,
           "data-foreign-key" => reflection.foreign_key,
+          "data-removed-ids" => removed_ids.to_json,
           "data-items" => items.to_json,
           "data-url" => url,
           "data-sortable" => sortable ? "1" : "0",

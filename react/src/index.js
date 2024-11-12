@@ -72,6 +72,7 @@ window.FolioConsole.React.init = (domRoot) => {
   } else if (domRoot.classList.contains('folio-react-wrap--ordered-multiselect')) {
     store.dispatch(setOrderedMultiselectData({
       items: JSON.parse(domRoot.dataset.items),
+      removedIds: JSON.parse(domRoot.dataset.removedIds),
       paramBase: domRoot.dataset.paramBase,
       foreignKey: domRoot.dataset.foreignKey,
       url: domRoot.dataset.url,
