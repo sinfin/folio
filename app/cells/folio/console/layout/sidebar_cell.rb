@@ -18,14 +18,30 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
   def filtered_link_groups_with_links
     link_groups.filter_map do |group|
       I18n.with_locale(group[:locale] || I18n.locale) do
-        if group[:links].present?
-          links = group[:links].filter_map { |l| link_from(l) }
+        next unless group[:links].present?
 
-          if links.present?
-            group.merge(links:)
-          end
-        end
+        links = process_links(group[:links])
+        group.merge(links:) if links.present?
       end
+    end
+  end
+
+  def process_links(links)
+    links.filter_map do |item|
+      case item
+      when Array
+        item.filter_map { |sub_item| process_link_item(sub_item) }
+      else
+        [link_from(item)]
+      end
+    end
+  end
+
+  def process_link_item(item)
+    if item.is_a?(Array)
+      item.filter_map { |l| link_from(l) }
+    else
+      link_from(item)
     end
   end
 
@@ -192,7 +208,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
   end
 
   def homepage_for_site(site)
-    instance = "#{site.class.name.deconstantize}::Page::Homepage".safe_constantize.try(:instance, fail_on_missing: false, site: current_site)
+    instance = "#{site.class.name.split("::").first}::Page::Homepage".safe_constantize.try(:instance, fail_on_missing: false, site: current_site)
 
     if instance && controller.can_now?(:index, Folio::Page)
       {
@@ -243,20 +259,28 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
 
     def build_site_links_collapsible_block(site)
       I18n.with_locale(site.console_locale) do
-        links = ::Rails.application.config.folio_shared_files_between_sites ? [] : file_links(site)
+        links = ::Rails.application.config.folio_shared_files_between_sites ? [] : [file_links(site)]
         links << link_for_site_class(site, Folio::ContentTemplate) if ::Rails.application.config.folio_content_templates_editable
 
         site_links = site_specific_links(site)
 
-        links += site_links[:console_sidebar_prepended_links]
-        links << link_for_site_class(site, Folio::Page)
-        links << homepage_for_site(site)
-        links += site_links[:console_sidebar_before_menu_links]
-        links << link_for_site_class(site, Folio::Menu)
-        links << link_for_site_class(site, Folio::Lead) if show_leads?
-        links << link_for_site_class(site, Folio::NewsletterSubscription) if show_newsletter_subscriptions?
-        links << link_for_site_class(site, Folio::EmailTemplate)
-        links += site_links[:console_sidebar_before_site_links]
+        links << site_links[:console_sidebar_prepended_links]
+
+        page_group = []
+        page_group << link_for_site_class(site, Folio::Page)
+        page_group << homepage_for_site(site)
+        links << page_group.compact
+
+        links << site_links[:console_sidebar_before_menu_links]
+
+        menu_group = []
+        menu_group << link_for_site_class(site, Folio::Menu)
+        menu_group << link_for_site_class(site, Folio::Lead) if show_leads?
+        menu_group << link_for_site_class(site, Folio::NewsletterSubscription) if show_newsletter_subscriptions?
+        menu_group << link_for_site_class(site, Folio::EmailTemplate)
+        links << menu_group.compact
+
+        links += [site_links[:console_sidebar_before_site_links]]
         if can_now?(:update, site)
           links << {
                       klass: "Folio::Site",
@@ -302,6 +326,10 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
         if !link_or_hash[:required_ability] || can_now?(link_or_hash[:required_ability], link_or_hash[:klass].constantize, site:)
           link_or_hash[:host] = site.env_aware_domain if link_or_hash[:url_name]
           link_or_hash
+        end
+      elsif link_or_hash.is_a?(Array)
+        link_or_hash.filter_map do |link|
+          link_for_site_class(site, link.constantize)
         end
       else
         link_for_site_class(site, link_or_hash.constantize)
