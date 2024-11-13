@@ -13,9 +13,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
 
       scope = klass.accessible_by(Folio::Current.ability)
 
-      if !current_user.superadmin?
-        scope = scope.by_site(current_site) if scope.respond_to?(:by_site)
-      end
+      scope = scope.by_site(current_site) if scope.respond_to?(:by_site)
       scope = apply_param_scope(scope)
 
       params.each do |key, val|
