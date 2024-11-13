@@ -13,7 +13,9 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
 
       scope = klass.accessible_by(Folio::Current.ability)
 
-      scope = scope.by_site(current_site) if scope.respond_to?(:by_site)
+      if !klass.try(:console_api_autocomplete_dont_filter_by_site)
+        scope = scope.by_site(current_site) if scope.respond_to?(:by_site)
+      end
       scope = apply_param_scope(scope)
 
       params.each do |key, val|
