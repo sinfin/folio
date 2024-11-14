@@ -15,8 +15,6 @@ class Folio::NewsletterSubscription < Folio::ApplicationRecord
   validates :email,
             uniqueness: { scope: :site_id }
 
-  validate :validate_belongs_to_subscribable_site
-
   default_scope { order(id: :desc) }
 
   scope :active, -> { where(active: true) }
@@ -69,10 +67,6 @@ class Folio::NewsletterSubscription < Folio::ApplicationRecord
     end
   end
 
-  def self.subscribable_sites
-    Folio::Site.all
-  end
-
   private
     def update_mailchimp_subscription(email_for_subscription)
       return unless Rails.application.config.folio_newsletter_subscription_service == :mailchimp
@@ -82,10 +76,6 @@ class Folio::NewsletterSubscription < Folio::ApplicationRecord
       if Folio::Site.count == 1
         Folio::Mailchimp::CreateOrUpdateSubscriptionJob.perform_later(email_for_subscription)
       end
-    end
-
-    def validate_belongs_to_subscribable_site
-      errors.add(:site, :invalid) unless site.in?(self.class.subscribable_sites)
     end
 end
 
