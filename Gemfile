@@ -42,3 +42,6 @@ group :development, :test do
   gem "faker"
   gem "pry-byebug"
 end
+
+gem 'httparty'
+gem 'mini_racer'
