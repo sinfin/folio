@@ -1,0 +1,9 @@
+- if Folio::Security.captcha_provider == :turnstile
+  script [
+    src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onloadTurnstileCallback"
+    async=true
+    defer=true
+  ]
+
+  javascript:
+    window.turnstileSiteKey = "#{Folio::Security.cloudflare_turnstile_site_key}"
