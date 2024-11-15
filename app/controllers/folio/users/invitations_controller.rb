@@ -3,9 +3,11 @@
 class Folio::Users::InvitationsController < Devise::InvitationsController
   include Folio::Users::DeviseControllerBase
 
+  prepend_before_action :validate_turnstile, only: [:create], if: -> {
+    Folio::Security.captcha_provider == :turnstile
+  }
   prepend_before_action :require_no_authentication, only: %i[create new]
   before_action :disallow_public_invitations_if_needed, only: %i[create new]
-
 
   def new
     if Rails.application.config.folio_crossdomain_devise && current_site != ::Folio.enabled_site_for_crossdomain_devise
@@ -148,6 +150,28 @@ class Folio::Users::InvitationsController < Devise::InvitationsController
       if resource.nil? && current_user
         set_flash_message(:alert, "already_authenticated", scope: "devise.failure")
         redirect_to after_sign_in_path_for(current_user)
+      end
+    end
+
+    def validate_turnstile
+      token = params["cf-turnstile-response"]
+      if token.blank?
+        respond_to do |format|
+          format.html { redirect_to new_user_invitation_path, alert: "Ov\u011B\u0159en\u00ED captcha selhalo" }
+          format.json { render json: { error: "Ov\u011B\u0159en\u00ED captcha selhalo" }, status: :unprocessable_entity }
+        end
+        return
+      end
+
+      uri = URI.parse("https://challenges.cloudflare.com/turnstile/v0/siteverify")
+      response = Net::HTTP.post_form(uri, secret: Folio::Security.cloudflare_turnstile_secret_key, response: token)
+      result = JSON.parse(response.body)
+
+      unless result["success"]
+        respond_to do |format|
+          format.html { redirect_to new_user_invitation_path, alert: "Ov\u011B\u0159en\u00ED captcha selhalo" }
+          format.json { render json: { error: "Ov\u011B\u0159en\u00ED captcha selhalo" }, status: :unprocessable_entity }
+        end
       end
     end
 end

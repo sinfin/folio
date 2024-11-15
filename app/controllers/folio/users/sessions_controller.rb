@@ -5,10 +5,8 @@ class Folio::Users::SessionsController < Devise::SessionsController
 
   protect_from_forgery prepend: true
 
-  before_action :validate_turnstile, only: [:create], if: -> { 
-    Rails.logger.debug "[TURNSTILE DEBUG] Checking if turnstile is enabled"
-    Rails.logger.debug "[TURNSTILE DEBUG] Captcha provider: #{Folio::Security.captcha_provider}"
-    Folio::Security.captcha_provider == :turnstile 
+  before_action :validate_turnstile, only: [:create], if: -> {
+    Folio::Security.captcha_provider == :turnstile
   }
 
   def destroy
@@ -155,43 +153,25 @@ class Folio::Users::SessionsController < Devise::SessionsController
   end
 
   private
-
-  def validate_turnstile
-    Rails.logger.debug "[TURNSTILE DEBUG] Starting validation"
-    Rails.logger.debug "[TURNSTILE DEBUG] Params: #{params.inspect}"
-    
-    token = params['cf-turnstile-response']
-    Rails.logger.debug "[TURNSTILE DEBUG] Token: #{token.present? ? 'present' : 'missing'}"
-    
-    if token.blank?
-      Rails.logger.debug "[TURNSTILE DEBUG] Token is blank, returning error"
-      respond_to do |format|
-        format.html { redirect_to new_user_session_path, alert: 'Ověření captcha selhalo' }
-        format.json { render json: { error: 'Ověření captcha selhalo' }, status: :unprocessable_entity }
+    def validate_turnstile
+      token = params["cf-turnstile-response"]
+      if token.blank?
+        respond_to do |format|
+          format.html { redirect_to new_user_session_path, alert: "Ov\u011B\u0159en\u00ED captcha selhalo" }
+          format.json { render json: { error: "Ov\u011B\u0159en\u00ED captcha selhalo" }, status: :unprocessable_entity }
+        end
+        return
       end
-      return
-    end
 
-    Rails.logger.debug "[TURNSTILE DEBUG] Making request to Cloudflare"
-    response = HTTParty.post('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
-      body: {
-        secret: Folio::Security.cloudflare_turnstile_secret_key,
-        response: token
-      }
-    })
-    
-    Rails.logger.debug "[TURNSTILE DEBUG] Cloudflare response: #{response.inspect}"
-    Rails.logger.debug "[TURNSTILE DEBUG] Response success: #{response.success?}"
-    Rails.logger.debug "[TURNSTILE DEBUG] Parsed response: #{response.parsed_response}"
+      uri = URI.parse("https://challenges.cloudflare.com/turnstile/v0/siteverify")
+      response = Net::HTTP.post_form(uri, secret: Folio::Security.cloudflare_turnstile_secret_key, response: token)
+      result = JSON.parse(response.body)
 
-    unless response.success? && response.parsed_response['success']
-      Rails.logger.debug "[TURNSTILE DEBUG] Validation failed"
-      respond_to do |format|
-        format.html { redirect_to new_user_session_path, alert: 'Ověření captcha selhalo' }
-        format.json { render json: { error: 'Ověření captcha selhalo' }, status: :unprocessable_entity }
+      unless result["success"]
+        respond_to do |format|
+          format.html { redirect_to new_user_session_path, alert: "Ov\u011B\u0159en\u00ED captcha selhalo" }
+          format.json { render json: { error: "Ov\u011B\u0159en\u00ED captcha selhalo" }, status: :unprocessable_entity }
+        end
       end
     end
-    
-    Rails.logger.debug "[TURNSTILE DEBUG] Validation completed successfully"
-  end
 end

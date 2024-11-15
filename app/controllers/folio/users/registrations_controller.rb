@@ -1,11 +1,6 @@
 # frozen_string_literal: true
 
 class Folio::Users::RegistrationsController < Devise::RegistrationsController
-  prepend_before_action :validate_turnstile, only: [:create], if: -> { 
-    Rails.logger.debug "[TURNSTILE DEBUG] Checking if turnstile is enabled"
-    Rails.logger.debug "[TURNSTILE DEBUG] Captcha provider: #{Folio::Security.captcha_provider}"
-    Folio::Security.captcha_provider == :turnstile 
-  }
   prepend_before_action :authenticate_scope!, only: [:edit_password, :update_password]
 
   include Folio::Users::DeviseControllerBase
@@ -150,44 +145,5 @@ class Folio::Users::RegistrationsController < Devise::RegistrationsController
 
     def additional_user_params
       %i[first_name last_name nickname phone]
-    end
-
-    def validate_turnstile
-      Rails.logger.debug "[TURNSTILE DEBUG] Starting validation"
-      Rails.logger.debug "[TURNSTILE DEBUG] Params: #{params.inspect}"
-      
-      token = params['cf-turnstile-response']
-      Rails.logger.debug "[TURNSTILE DEBUG] Token: #{token.present? ? 'present' : 'missing'}"
-      
-      if token.blank?
-        Rails.logger.debug "[TURNSTILE DEBUG] Token is blank, returning error"
-        respond_to do |format|
-          format.html { redirect_to new_user_registration_path, alert: 'Ověření captcha selhalo' }
-          format.json { render json: { error: 'Ověření captcha selhalo' }, status: :unprocessable_entity }
-        end
-        return
-      end
-
-      Rails.logger.debug "[TURNSTILE DEBUG] Making request to Cloudflare"
-      response = HTTParty.post('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
-        body: {
-          secret: Folio::Security.cloudflare_turnstile_secret_key,
-          response: token
-        }
-      })
-      
-      Rails.logger.debug "[TURNSTILE DEBUG] Cloudflare response: #{response.inspect}"
-      Rails.logger.debug "[TURNSTILE DEBUG] Response success: #{response.success?}"
-      Rails.logger.debug "[TURNSTILE DEBUG] Parsed response: #{response.parsed_response}"
-
-      unless response.success? && response.parsed_response['success']
-        Rails.logger.debug "[TURNSTILE DEBUG] Validation failed"
-        respond_to do |format|
-          format.html { redirect_to new_user_registration_path, alert: 'Ověření captcha selhalo' }
-          format.json { render json: { error: 'Ověření captcha selhalo' }, status: :unprocessable_entity }
-        end
-      end
-      
-      Rails.logger.debug "[TURNSTILE DEBUG] Validation completed successfully"
     end
 end
