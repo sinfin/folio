@@ -265,23 +265,31 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
 
         site_links = site_specific_links(site)
 
-        links << site_links[:console_sidebar_prepended_links]
+        if site_links[:console_sidebar_prepended_links].present?
+          links << site_links[:console_sidebar_prepended_links]
+        end
 
         page_group = []
         page_group << link_for_site_class(site, Folio::Page)
         page_group << homepage_for_site(site)
         links << page_group.compact
 
-        links << site_links[:console_sidebar_before_menu_links]
+        if site_links[:console_sidebar_before_menu_links].present?
+          links << site_links[:console_sidebar_before_menu_links]
+        end
 
         menu_group = []
         menu_group << link_for_site_class(site, Folio::Menu)
         menu_group << link_for_site_class(site, Folio::Lead) if show_leads?
         menu_group << link_for_site_class(site, Folio::NewsletterSubscription) if show_newsletter_subscriptions?
         menu_group << link_for_site_class(site, Folio::EmailTemplate)
+
         links << menu_group.compact
 
-        links += [site_links[:console_sidebar_before_site_links]]
+        if site_links[:console_sidebar_before_site_links].present?
+          links += [site_links[:console_sidebar_before_site_links]]
+        end
+
         if can_now?(:update, site)
           links << {
                       klass: "Folio::Site",
