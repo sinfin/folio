@@ -5,7 +5,7 @@ module Folio::HasTurnstileValidation
 
   included do
     before_action :validate_turnstile, only: [:create], if: -> {
-      Folio::Security.captcha_provider == :turnstile
+      Folio::Security.captcha_provider == :turnstile && !Rails.env.test?
     }
   end
 
