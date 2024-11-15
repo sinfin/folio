@@ -2,12 +2,9 @@
 
 class Folio::Users::SessionsController < Devise::SessionsController
   include Folio::Users::DeviseControllerBase
+  include Folio::HasTurnstileValidation
 
   protect_from_forgery prepend: true
-
-  before_action :validate_turnstile, only: [:create], if: -> {
-    Folio::Security.captcha_provider == :turnstile
-  }
 
   def destroy
     if current_user
@@ -152,26 +149,7 @@ class Folio::Users::SessionsController < Devise::SessionsController
     end
   end
 
-  private
-    def validate_turnstile
-      token = params["cf-turnstile-response"]
-      if token.blank?
-        respond_to do |format|
-          format.html { redirect_to new_user_session_path, alert: "Ov\u011B\u0159en\u00ED captcha selhalo" }
-          format.json { render json: { error: "Ov\u011B\u0159en\u00ED captcha selhalo" }, status: :unprocessable_entity }
-        end
-        return
-      end
-
-      uri = URI.parse("https://challenges.cloudflare.com/turnstile/v0/siteverify")
-      response = Net::HTTP.post_form(uri, secret: Folio::Security.cloudflare_turnstile_secret_key, response: token)
-      result = JSON.parse(response.body)
-
-      unless result["success"]
-        respond_to do |format|
-          format.html { redirect_to new_user_session_path, alert: "Ov\u011B\u0159en\u00ED captcha selhalo" }
-          format.json { render json: { error: "Ov\u011B\u0159en\u00ED captcha selhalo" }, status: :unprocessable_entity }
-        end
-      end
-    end
+  def turnstile_failure_redirect_path
+    new_user_session_path
+  end
 end

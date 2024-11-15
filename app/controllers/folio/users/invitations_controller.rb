@@ -2,10 +2,8 @@
 
 class Folio::Users::InvitationsController < Devise::InvitationsController
   include Folio::Users::DeviseControllerBase
+  include Folio::HasTurnstileValidation
 
-  prepend_before_action :validate_turnstile, only: [:create], if: -> {
-    Folio::Security.captcha_provider == :turnstile
-  }
   prepend_before_action :require_no_authentication, only: %i[create new]
   before_action :disallow_public_invitations_if_needed, only: %i[create new]
 
@@ -153,25 +151,7 @@ class Folio::Users::InvitationsController < Devise::InvitationsController
       end
     end
 
-    def validate_turnstile
-      token = params["cf-turnstile-response"]
-      if token.blank?
-        respond_to do |format|
-          format.html { redirect_to new_user_invitation_path, alert: "Ov\u011B\u0159en\u00ED captcha selhalo" }
-          format.json { render json: { error: "Ov\u011B\u0159en\u00ED captcha selhalo" }, status: :unprocessable_entity }
-        end
-        return
-      end
-
-      uri = URI.parse("https://challenges.cloudflare.com/turnstile/v0/siteverify")
-      response = Net::HTTP.post_form(uri, secret: Folio::Security.cloudflare_turnstile_secret_key, response: token)
-      result = JSON.parse(response.body)
-
-      unless result["success"]
-        respond_to do |format|
-          format.html { redirect_to new_user_invitation_path, alert: "Ov\u011B\u0159en\u00ED captcha selhalo" }
-          format.json { render json: { error: "Ov\u011B\u0159en\u00ED captcha selhalo" }, status: :unprocessable_entity }
-        end
-      end
+    def turnstile_failure_redirect_path
+      new_user_invitation_path
     end
 end
