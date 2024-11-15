@@ -53,14 +53,8 @@ module Folio::FriendlyId::SlugValidation::MultipleClasses
       friendly_id_slug = slug_validation_friendly_id_slug_from_given_classes_for(slug)
       return unless friendly_id_slug && friendly_id_slug.sluggable
 
-      sorted_names = self.class.slug_validation_classes
-                               .map { |klass| klass.model_name.human }
-                               .sort_by { |s| I18n.transliterate(s) }
-                               .join(", ")
-
       errors.add(:slug,
                  :slug_not_unique_across_classes,
-                 classes: sorted_names,
                  sluggable_name: friendly_id_slug.sluggable.to_label,
                  sluggable_type: friendly_id_slug.sluggable.class.model_name.human)
     end
