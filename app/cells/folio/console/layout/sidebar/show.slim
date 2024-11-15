@@ -21,15 +21,16 @@ aside#f-c-layout-sidebar.f-c-layout-sidebar data-controller="f-c-layout-sidebar"
 
             ul.f-c-layout-sidebar__ul
               - group[:links].each do |link_group|
-                .f-c-layout-sidebar__subgroup
-                  - link_group.each do |link|
-                    - if link.is_a?(Array)
-                      .f-c-layout-sidebar__subgroup
-                        - link.each do |l|
-                          li.f-c-layout-sidebar__li
-                            == l
-                    - else
-                      li.f-c-layout-sidebar__li
-                        == link
+                li.f-c-layout-sidebar__subgroup
+                  ul
+                    - link_group.each do |link|
+                      - if link.is_a?(Array)
+                        ul.f-c-layout-sidebar__subgroup
+                          - link.each do |l|
+                            li.f-c-layout-sidebar__li
+                              == l
+                      - else
+                        li.f-c-layout-sidebar__li
+                          == link
 
     = render(:_appended)
