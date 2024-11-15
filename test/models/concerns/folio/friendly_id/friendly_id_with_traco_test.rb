@@ -6,21 +6,21 @@ class Folio::FriendlyIdWithTracoTest < ActiveSupport::TestCase
   # Rails.application.config.folio_using_traco = true
   class TestPage < Dummy::Blog::LocalizedPage
     translates :slug, :title
-    def self.slug_additional_classes
+    def self.slug_validation_additional_classes
       [Folio::Site]
     end
   end
 
   class TestPage2 < Dummy::Blog::LocalizedPage
     translates :slug, :title
-    def self.slug_additional_classes
+    def self.slug_validation_additional_classes
       []
     end
   end
 
   class TestArticle < Dummy::Blog::LocalizedArticle
     translates :slug, :title
-    def self.slug_additional_classes
+    def self.slug_validation_additional_classes
       [Dummy::Blog::LocalizedPage]
     end
   end

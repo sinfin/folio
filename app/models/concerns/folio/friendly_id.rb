@@ -5,7 +5,7 @@ module Folio::FriendlyId
 
   included do
     include Folio::FriendlyId::History
-    include Folio::FriendlyId::UniqueSlugForMultipleClasses
+    include Folio::FriendlyId::SlugValidation::MultipleClasses
 
     if defined?(self::FRIENDLY_ID_SCOPE)
       friendly_id :slug_candidates, use: %i[slugged history scoped], scope: self::FRIENDLY_ID_SCOPE
@@ -13,7 +13,9 @@ module Folio::FriendlyId
       validates :slug,
                 presence: true,
                 uniqueness: { scope: self::FRIENDLY_ID_SCOPE },
-                format: { with: /[0-9a-z-]+/ }
+                format: { with: /[0-9a-z-]+/ },
+                if: -> { errors[:slug].blank? }
+
     else
       friendly_id :slug_candidates, use: %i[slugged history]
 
