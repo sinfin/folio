@@ -21,7 +21,7 @@ class Folio::SessionAttachmentsController < Folio::ApplicationController
 
     attachment.destroy!
 
-    head 200
+    render json: { status: 200 }
   end
 
   def index
