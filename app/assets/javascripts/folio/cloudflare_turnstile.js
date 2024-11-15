@@ -1,3 +1,5 @@
+// Global Cloudflare Turnstile
+
 const renderTurnstile = () => {
   if (!window.turnstileSiteKey || typeof turnstile === 'undefined') return
 

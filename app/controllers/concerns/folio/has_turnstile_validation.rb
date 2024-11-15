@@ -31,8 +31,11 @@ module Folio::HasTurnstileValidation
       redirect_path = defined?(turnstile_failure_redirect_path) ? turnstile_failure_redirect_path : root_path
 
       respond_to do |format|
-        format.html { redirect_to redirect_path, alert: "Ov\u011B\u0159en\u00ED captcha selhalo" }
-        format.json { render json: { error: "Ov\u011B\u0159en\u00ED captcha selhalo" }, status: :unprocessable_entity }
+        format.html {
+          set_flash_message(:alert, :turnstile_failure, scope: "folio.devise")
+          redirect_to redirect_path
+        }
+        format.json { render json: { error: t("folio.devise.turnstile_failure") }, status: :unprocessable_entity }
       end
     end
 end
