@@ -45,7 +45,8 @@ class Folio::NewsletterSubscriptions::FormComponent < Folio::ApplicationComponen
                        variant: :primary,
                        type: :submit,
                        class_name: "f-newsletter-subscriptions-form__btn",
-                       right_icon: @view_options[:submit_icon].present? ? @view_options[:submit_icon] : nil))
+                       right_icon: @view_options[:submit_icon].present? ? @view_options[:submit_icon] : nil,
+                       icon_height: @view_options[:submit_icon_height].presence || 24))
     else
       content_tag(:button,
                   submit_text,
