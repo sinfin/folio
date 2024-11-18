@@ -116,6 +116,7 @@ class Folio::Devise::SessionsControllerTest < ActionDispatch::IntegrationTest
         assert uri.query.include?("crossdomain=")
 
         follow_redirect!
+
         assert_response :success
 
         post user_invitation_url(only_path: false,

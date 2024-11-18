@@ -2,33 +2,49 @@
 
 class Folio::Current < ActiveSupport::CurrentAttributes
   attribute :user,
-            :site,
+            :site_record,
+            :master_site_record,
             :request_id,
             :user_agent,
             :ip_address,
             :url,
             :session,
-            :ability,
-            :master_site
+            :ability
 
   def to_h
     attributes
   end
 
-  def setup!(request:, site:, user: nil, session: nil)
-    setup_folio_data(request:, site:, user:, session:)
+  def setup!(request:, user: nil, session: nil)
+    setup_folio_data(request:, user:, session:)
   end
 
-  def setup_folio_data(request:, site:, user:, session:)
+  def setup_folio_data(request:, user:, session:)
     self.request_id = request.uuid
     self.user_agent = request.user_agent
     self.ip_address = request.remote_ip
     self.url = request.url
-    self.site = site
     self.user = user
     self.ability = Folio::Ability.new(user, site)
     self.session = session
-    self.master_site = Folio.main_site
+    self.site_record = nil
+    self.master_site_record = nil
+  end
+
+  def site
+    self.site_record ||= Folio.current_site
+  end
+
+  def site=(record)
+    self.site_record = record
+  end
+
+  def master_site
+    self.master_site_record ||= Folio.main_site
+  end
+
+  def master_site=(record)
+    self.master_site_record = record
   end
 
   def reset_ability!

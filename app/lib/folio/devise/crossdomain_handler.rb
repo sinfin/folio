@@ -77,7 +77,7 @@ class Folio::Devise::CrossdomainHandler
 
   private
     def supports_crossdomain_devise?
-      !!master_site
+      Rails.application.config.folio_crossdomain_devise && !!master_site
     end
 
     def handle_on_master_site!
