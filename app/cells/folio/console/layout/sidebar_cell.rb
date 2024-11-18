@@ -30,7 +30,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
     links.filter_map do |item|
       case item
       when Array
-        item.filter_map { |sub_item| process_link_item(sub_item) }
+        item.compact.filter_map { |sub_item| process_link_item(sub_item) }
       else
         [link_from(item)]
       end
@@ -266,7 +266,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
         site_links = site_specific_links(site)
 
         if site_links[:console_sidebar_prepended_links].present?
-          links << site_links[:console_sidebar_prepended_links]
+          links << site_links[:console_sidebar_prepended_links].compact
         end
 
         page_group = []
@@ -275,7 +275,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
         links << page_group.compact
 
         if site_links[:console_sidebar_before_menu_links].present?
-          links << site_links[:console_sidebar_before_menu_links]
+          links << site_links[:console_sidebar_before_menu_links].compact
         end
 
         menu_group = []
@@ -287,7 +287,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
         links << menu_group.compact
 
         if site_links[:console_sidebar_before_site_links].present?
-          links += [site_links[:console_sidebar_before_site_links]]
+          links << site_links[:console_sidebar_before_site_links].compact
         end
 
         if can_now?(:update, site)
