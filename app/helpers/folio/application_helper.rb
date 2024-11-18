@@ -39,7 +39,7 @@ module Folio::ApplicationHelper
   end
 
   def public_page_site_title
-    current_site.title
+    @public_page_site_title || current_site.title
   end
 
   def public_page_site_description
