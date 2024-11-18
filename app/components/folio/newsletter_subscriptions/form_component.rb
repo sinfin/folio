@@ -43,6 +43,7 @@ class Folio::NewsletterSubscriptions::FormComponent < Folio::ApplicationComponen
       render(klass.new(tag: :button,
                        label: submit_text,
                        variant: :primary,
+                       type: :submit,
                        class_name: "f-newsletter-subscriptions-form__btn",
                        right_icon: @view_options[:submit_icon].present? ? @view_options[:submit_icon] : nil))
     else
