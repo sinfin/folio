@@ -259,9 +259,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
 
     def build_site_links_collapsible_block(site)
       I18n.with_locale(site.console_locale) do
-        links = ::Rails.application.config.folio_shared_files_between_sites ? [] : [file_links(site)]
-
-        links << link_for_site_class(site, Folio::ContentTemplate) if ::Rails.application.config.folio_content_templates_editable
+        links = (show_users? && !current_user.superadmin?) ? [link_for_site_class(site, Folio::User)] : []
 
         site_links = site_specific_links(site)
 
@@ -290,6 +288,10 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
           links << site_links[:console_sidebar_before_site_links].compact
         end
 
+        links << file_links(site) unless ::Rails.application.config.folio_shared_files_between_sites
+
+        links << link_for_site_class(site, Folio::ContentTemplate) if ::Rails.application.config.folio_content_templates_editable
+
         if can_now?(:update, site)
           links << {
                       klass: "Folio::Site",
@@ -298,7 +300,6 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
                       label: t(".settings"),
                     }
         end
-        links << link_for_site_class(site, Folio::User) if show_users? && !current_user.superadmin?
 
         {
           locale: site.console_locale,
