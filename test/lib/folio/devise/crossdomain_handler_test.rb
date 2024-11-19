@@ -6,7 +6,7 @@ class Folio::Devise::CrossdomainHandlerTest < ActiveSupport::TestCase
   def setup
     super
 
-    create(:dummy_site) # as it it Folio.main_site
+    create(:dummy_site) # as it it Folio::Current.main_site
   end
 
   test "always noop with nil master_site" do

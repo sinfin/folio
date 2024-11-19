@@ -94,7 +94,7 @@ class Folio::User < Folio::ApplicationRecord
   scope :superadmins, -> { where(superadmin: true) }
   scope :by_role, -> (role) { role == "superadmin" ? superadmins : where(id: Folio::SiteUserLink.by_roles([role]).select(:user_id)) }
   scope :by_site, -> (site) do
-    s_site = ::Folio.enabled_site_for_crossdomain_devise || site
+    s_site = ::Folio::Current.enabled_site_for_crossdomain_devise || site
     where(auth_site: s_site)
   end
   scope :by_auth_site, -> (site) { where(auth_site: site) }
@@ -394,7 +394,7 @@ class Folio::User < Folio::ApplicationRecord
     # Override of Devise method to scope authentication by zone.
     def self.find_for_authentication(warden_params)
       email = warden_params[:email]
-      site = ::Folio.enabled_site_for_crossdomain_devise || ::Folio::Site.find(warden_params[:auth_site_id])
+      site = ::Folio::Current.enabled_site_for_crossdomain_devise || ::Folio::Site.find(warden_params[:auth_site_id])
 
       user = site.auth_users.find_by(email:)
       if user.nil? && Folio::Current.main_site.present? && site != Folio::Current.main_site

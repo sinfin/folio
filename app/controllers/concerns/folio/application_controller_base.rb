@@ -2,11 +2,12 @@
 
 module Folio::ApplicationControllerBase
   extend ActiveSupport::Concern
+
+  include Folio::Devise::CrossdomainController
   include Folio::HasCurrentSite
+  include Folio::RenderComponentJson
   include Folio::SetCurrentRequestDetails
   include Folio::SetMetaVariables
-  include Folio::Devise::CrossdomainController
-  include Folio::RenderComponentJson
 
   included do
     include Pagy::Backend

@@ -2,10 +2,10 @@
 
 namespace :folio do
   namespace :developer_tools do
-    desc "Fill up Folio.main_site to records, where site is missing (and is required)"
+    desc "Fill up Folio::Current.main_site to records, where site is missing (and is required)"
     task idp_fill_up_site_to_folio_records: :environment do
       site = begin
-        ::Folio.main_site
+        ::Folio::Current.main_site
       rescue Folio::Singleton::MissingError
         nil
       end
@@ -36,7 +36,7 @@ namespace :folio do
         Folio::User.find(batch).each do |user|
           puts("Spliting user #{user.id}")
           user.make_clones_to_all_linked_sites!
-          # user.destroy if !user.superadmin? && user.auth_site_id == Folio.main_site.id
+          # user.destroy if !user.superadmin? && user.auth_site_id == Folio::Current.main_site.id
         end
       end
     end

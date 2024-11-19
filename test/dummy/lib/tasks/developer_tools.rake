@@ -64,7 +64,7 @@ namespace :developer_tools do
             record = Folio::Page.create!(title: attrs["title"],
                                          perex: attrs["perex"],
                                          published: true,
-                                         site: Folio.main_site,
+                                         site: Folio::Current.main_site,
                                          published_at: 1.minute.ago)
 
             if attrs["atoms"].present?
@@ -113,8 +113,8 @@ namespace :developer_tools do
           klass.find_each { |o| o.try(:force_destroy=, true); o.destroy! }
 
           menu = klass.create!(title: data["title"],
-                               locale: Folio.main_site.locale,
-                               site: Folio.main_site)
+                               locale: Folio::Current.main_site.locale,
+                               site: Folio::Current.main_site)
 
           if data["links"].present?
             count = 0

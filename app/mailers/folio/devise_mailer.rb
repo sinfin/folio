@@ -102,8 +102,8 @@ class Folio::DeviseMailer < Devise::Mailer
         protocol: (Rails.env.development? && !ENV["FORCE_SSL"]) ? "http" : "https",
       }
 
-      if Folio.enabled_site_for_crossdomain_devise
-        extra[:host] = Folio.enabled_site_for_crossdomain_devise.env_aware_domain
+      if Folio::Current.enabled_site_for_crossdomain_devise
+        extra[:host] = Folio::Current.enabled_site_for_crossdomain_devise.env_aware_domain
       end
 
       if args.present?

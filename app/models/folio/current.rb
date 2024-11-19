@@ -3,7 +3,9 @@
 class Folio::Current < ActiveSupport::CurrentAttributes
   attribute :user,
             :site_record,
-            :master_site_record,
+            :main_site_record,
+            :site_for_crossdomain_devise_record,
+            :site_for_mailers_record,
             :host,
             :request_id,
             :user_agent,
@@ -32,23 +34,25 @@ class Folio::Current < ActiveSupport::CurrentAttributes
   end
 
   def site
-    self.site_record ||= Folio.current_site(host:)
-  end
+    self.site_record ||= if host.nil?
+      main_site
+    else
+      if Rails.env.development?
+        slug = host.delete_suffix(".localhost")
 
-  def site=(record)
-    self.site_record = record
+        begin
+          Folio::Site.friendly.find(slug)
+        rescue ActiveRecord::RecordNotFound
+          raise "Could not find site with '#{slug}' slug. Available are #{Folio::Site.pluck(:slug)}"
+        end
+      else
+        Folio::Site.find_by(domain: host) || main_site
+      end
+    end
   end
 
   def main_site
-    master_site
-  end
-
-  def master_site
-    self.master_site_record ||= Folio.main_site
-  end
-
-  def master_site=(record)
-    self.master_site_record = record
+    self.main_site_record ||= Folio::Site.ordered.first
   end
 
   def reset_ability!
@@ -56,12 +60,34 @@ class Folio::Current < ActiveSupport::CurrentAttributes
   end
 
   def site_is_master?
-    return @site_is_master unless @site_is_master.nil?
-    @site_is_master = master_site.id == site.try(:id)
+    main_site.id == site.id
+  end
+
+  def site_for_mailers
+    site_for_mailers_record || main_site
+  end
+
+  def enabled_site_for_crossdomain_devise
+    Rails.application.config.folio_crossdomain_devise ? site_for_crossdomain_devise : nil
+  end
+
+  def site_for_crossdomain_devise
+    site_for_crossdomain_devise_record || main_site
   end
 
   def auth_site
-    @auth_site ||= Folio.enabled_site_for_crossdomain_devise || site
+    @auth_site ||= Folio::Current.enabled_site_for_crossdomain_devise || site
+  end
+
+  %i[
+    site
+    main_site
+    site_for_crossdomain_devise
+    site_for_mailers
+  ].each do |key|
+    define_method "#{key}=" do |record|
+      instance_variable_set("@#{key}_record", record)
+    end
   end
 
   if Rails.env.test?
