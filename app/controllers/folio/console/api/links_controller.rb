@@ -34,6 +34,8 @@ class Folio::Console::Api::LinksController < Folio::Console::Api::BaseController
         next unless matcher.include?(qq)
       end
 
+      next unless main_app.respond_to?(path)
+
       links << {
         label:,
         url: main_app.public_send(path),
