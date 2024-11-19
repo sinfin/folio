@@ -41,7 +41,7 @@ class Folio::Console::SitesController < Folio::Console::BaseController
         copyright_info_source
       ]
 
-      ary << :domain if @site != Folio.main_site
+      ary << :domain if @site != Folio::Current.main_site
 
       params.require(:site)
             .permit(*ary,

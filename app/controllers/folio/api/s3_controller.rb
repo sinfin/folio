@@ -23,7 +23,7 @@ class Folio::Api::S3Controller < Folio::Api::BaseController
   end
 
   def site_for_new_files
-    Rails.application.config.folio_shared_files_between_sites ? Folio.main_site : current_site
+    Rails.application.config.folio_shared_files_between_sites ? Folio::Current.main_site : current_site
   end
 
   private

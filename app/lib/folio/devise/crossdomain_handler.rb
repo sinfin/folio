@@ -97,7 +97,7 @@ class Folio::Devise::CrossdomainHandler
 
           clear_session!
 
-          target_site = Folio::Site.find_by_slug(target_site_slug) || Folio.main_site
+          target_site = Folio::Site.find_by_slug(target_site_slug) || Folio::Current.main_site
 
           Result.new(action: :sign_in_on_target_site,
                      resource_name:,

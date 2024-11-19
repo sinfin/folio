@@ -43,7 +43,7 @@ class Folio::Console::UsersController < Folio::Console::BaseController
   def new
     @user.creating_in_console = 1
     @user.time_zone = Time.zone.name
-    @user.auth_site = Folio.main_site
+    @user.auth_site = Folio::Current.main_site
   end
 
   def create

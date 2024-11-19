@@ -308,11 +308,11 @@ class Folio::User < Folio::ApplicationRecord
   end
 
   def can_manage_sidekiq?
-    can_now?(:manage, :sidekiq, site: Folio.main_site)
+    can_now?(:manage, :sidekiq, site: Folio::Current.main_site)
   end
 
   def can_now?(action, subject = nil, site: nil)
-    site ||= (subject&.try(:site) || ::Folio.main_site)
+    site ||= (subject&.try(:site) || ::Folio::Current.main_site)
     subject = site if subject.blank?
     ability = ::Folio::Current.ability || Folio::Ability.new(self, site)
     can_now_by_ability?(ability, action, subject)
@@ -358,7 +358,7 @@ class Folio::User < Folio::ApplicationRecord
   def make_clone_for_site_link(site_link)
     return self if site_link.site_id == self.auth_site_id
     # superadmins have only one account on main site
-    return nil if superadmin? && site_link.site_id != Folio.main_site.id
+    return nil if superadmin? && site_link.site_id != Folio::Current.main_site.id
 
     new_user = self.class.unscoped.where(auth_site_id: site_link.site_id, email:)
 
@@ -397,9 +397,9 @@ class Folio::User < Folio::ApplicationRecord
       site = ::Folio.enabled_site_for_crossdomain_devise || ::Folio::Site.find(warden_params[:auth_site_id])
 
       user = site.auth_users.find_by(email:)
-      if user.nil? && Folio.main_site.present? && site != Folio.main_site
+      if user.nil? && Folio::Current.main_site.present? && site != Folio::Current.main_site
         # user = Folio::User.superadmins.find_by(email:)
-        user = Folio.main_site.auth_users.superadmins.find_by(email:)
+        user = Folio::Current.main_site.auth_users.superadmins.find_by(email:)
       end
       user
     end

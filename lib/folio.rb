@@ -68,18 +68,20 @@ module Folio
   end
 
   # overide if needed
-  def self.current_site(request: nil, controller: nil)
-    return Folio.main_site if request.nil?
+  def self.current_site(request: nil, host: nil, controller: nil)
+    return Folio.main_site if request.nil? && host.nil?
+
+    domain = host || request.host
 
     if Rails.env.development?
-      slug = request.host.delete_suffix(".localhost")
+      slug = domain.delete_suffix(".localhost")
       begin
         Folio::Site.friendly.find(slug)
       rescue ActiveRecord::RecordNotFound
         raise "Could not find site with '#{slug}' slug. Available are #{Folio::Site.pluck(:slug)}"
       end
     else
-      Folio::Site.find_by(domain: request.host) || Folio.main_site
+      Folio::Site.find_by(domain:) || Folio.main_site
     end
   end
 

@@ -4,6 +4,7 @@ class Folio::Current < ActiveSupport::CurrentAttributes
   attribute :user,
             :site_record,
             :master_site_record,
+            :host,
             :request_id,
             :user_agent,
             :ip_address,
@@ -20,6 +21,7 @@ class Folio::Current < ActiveSupport::CurrentAttributes
   end
 
   def setup_folio_data(request:, user:, session:)
+    self.host = request.host
     self.request_id = request.uuid
     self.user_agent = request.user_agent
     self.ip_address = request.remote_ip
@@ -27,16 +29,18 @@ class Folio::Current < ActiveSupport::CurrentAttributes
     self.user = user
     self.ability = Folio::Ability.new(user, site)
     self.session = session
-    self.site_record = nil
-    self.master_site_record = nil
   end
 
   def site
-    self.site_record ||= Folio.current_site
+    self.site_record ||= Folio.current_site(host:)
   end
 
   def site=(record)
     self.site_record = record
+  end
+
+  def main_site
+    master_site
   end
 
   def master_site

@@ -83,7 +83,7 @@ class Folio::Ability
     can [:new], Folio::User # new user do not belong to site yet
 
     can :do_anything, Folio::SiteUserLink, { site: }
-    can :do_anything, Folio::File, { site: Rails.application.config.folio_shared_files_between_sites ? [Folio.main_site, site] : site }
+    can :do_anything, Folio::File, { site: Rails.application.config.folio_shared_files_between_sites ? [Folio::Current.main_site, site] : site }
     can :do_anything, Folio::Page, { site: }
     can :do_anything, Folio::Menu, { site: }
     can :do_anything, Folio::Lead, { site: }
