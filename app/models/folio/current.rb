@@ -33,8 +33,8 @@ class Folio::Current < ActiveSupport::CurrentAttributes
     self.session = session
   end
 
-  def site
-    self.site_record ||= if host.nil?
+  def self.site(host: nil)
+    if host.nil?
       main_site
     else
       if Rails.env.development?
@@ -51,8 +51,16 @@ class Folio::Current < ActiveSupport::CurrentAttributes
     end
   end
 
+  def site
+    self.site_record ||= self.class.site(host:)
+  end
+
+  def self.main_site
+    Folio::Site.ordered.first
+  end
+
   def main_site
-    self.main_site_record ||= Folio::Site.ordered.first
+    self.main_site_record ||= self.class.main_site
   end
 
   def reset_ability!
@@ -73,10 +81,6 @@ class Folio::Current < ActiveSupport::CurrentAttributes
 
   def site_for_crossdomain_devise
     site_for_crossdomain_devise_record || main_site
-  end
-
-  def auth_site
-    @auth_site ||= Folio::Current.enabled_site_for_crossdomain_devise || site
   end
 
   %i[
