@@ -89,6 +89,7 @@ class OrderedMultiselectApp extends React.Component {
           key={without}
           defaultOptions
           addAtomSettings
+          menuPlacement={orderedMultiselect.menuPlacement}
           selectize
         />
 
