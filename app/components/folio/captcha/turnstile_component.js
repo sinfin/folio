@@ -39,22 +39,22 @@ window.Folio.Stimulus.register('f-captcha-turnstile', class extends window.Stimu
     const turnstileContainer = document.querySelector(".cf-turnstile")
 
     if (turnstileContainer && !turnstileContainer.innerHTML) {
-      // Control the height of the iframe wrapper because even when the iframe is hidden,
-      // the wrapper takes up unnecessary space
-      const updateIframeWraperHeight = (height) => {
+      // Control the visibility of the iframe wrapper because even when the iframe is hidden,
+      // the wrapper takes up unnecessary space and causes layout shifts
+      const updateIframeWraperVisibility = (display) => {
         const iframeWrapper = document.querySelector(".cf-turnstile > div")
         if (iframeWrapper) {
-          iframeWrapper.style.height = height
+          iframeWrapper.style.display = display
         }
       }
 
       turnstile.render('.cf-turnstile', {
         sitekey: this.siteKeyValue,
         appearance: 'interaction-only',
-        'before-interactive-callback': () => { updateIframeWraperHeight("auto") },
+        'before-interactive-callback': () => { updateIframeWraperVisibility("block") },
       })
 
-      updateIframeWraperHeight("0")
+      updateIframeWraperVisibility("none")
     }
   }
 

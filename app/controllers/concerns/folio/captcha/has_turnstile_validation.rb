@@ -16,8 +16,7 @@ module Folio::Captcha::HasTurnstileValidation
       token = params["cf-turnstile-response"]
 
       if token.blank?
-        respond_with_turnstile_failure
-        return
+        respond_with_turnstile_failure and return
       end
 
       uri = URI.parse(CLOUDFLARE_CHALLENGE_URL)
@@ -25,7 +24,7 @@ module Folio::Captcha::HasTurnstileValidation
       result = JSON.parse(response.body)
 
       unless result["success"]
-        respond_with_turnstile_failure
+        respond_with_turnstile_failure and return
       end
     end
 
