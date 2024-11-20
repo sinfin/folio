@@ -20,8 +20,17 @@ aside#f-c-layout-sidebar.f-c-layout-sidebar data-controller="f-c-layout-sidebar"
                 = group[:title]
 
             ul.f-c-layout-sidebar__ul
-              - group[:links].each do |link|
-                li.f-c-layout-sidebar__li
-                  == link
+              - group[:links].each do |link_group|
+                li.f-c-layout-sidebar__subgroup
+                  ul
+                    - link_group.each do |link|
+                      - if link.is_a?(Array)
+                        ul.f-c-layout-sidebar__subgroup
+                          - link.each do |l|
+                            li.f-c-layout-sidebar__li
+                              == l
+                      - else
+                        li.f-c-layout-sidebar__li
+                          == link
 
     = render(:_appended)

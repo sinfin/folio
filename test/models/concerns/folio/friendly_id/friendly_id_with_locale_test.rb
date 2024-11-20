@@ -6,7 +6,7 @@ class Folio::FriendlyIdWithLocaleTest < ActiveSupport::TestCase
   class TestPage < Dummy::Blog::LocalizedPage
     include Folio::FriendlyIdWithLocale
     translates :slug
-    def self.slug_additional_classes
+    def self.slug_validation_additional_classes
       [Folio::Site]
     end
   end
@@ -14,7 +14,7 @@ class Folio::FriendlyIdWithLocaleTest < ActiveSupport::TestCase
   class TestPage2 < Dummy::Blog::LocalizedPage
     include Folio::FriendlyIdWithLocale
     translates :slug
-    def self.slug_additional_classes
+    def self.slug_validation_additional_classes
       []
     end
   end
@@ -22,7 +22,7 @@ class Folio::FriendlyIdWithLocaleTest < ActiveSupport::TestCase
   class TestArticle < Dummy::Blog::LocalizedArticle
     include Folio::FriendlyIdWithLocale
     translates :slug
-    def self.slug_additional_classes
+    def self.slug_validation_additional_classes
       [Dummy::Blog::LocalizedPage]
     end
   end

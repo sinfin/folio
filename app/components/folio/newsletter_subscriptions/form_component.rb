@@ -27,8 +27,32 @@ class Folio::NewsletterSubscriptions::FormComponent < Folio::ApplicationComponen
   end
 
   def submit_text
+    return nil if @view_options[:submit_text] == false
     return @view_options[:submit_text] unless @view_options[:submit_text].nil?
     t(".submit")
+  end
+
+  def application_namespace
+    @view_options[:application_namespace].presence || Rails.application.class.name.deconstantize
+  end
+
+  def submit_button
+    klass = "#{application_namespace}::Ui::ButtonComponent".safe_constantize
+
+    if klass
+      render(klass.new(tag: :button,
+                       label: submit_text,
+                       variant: :primary,
+                       type: :submit,
+                       class_name: "f-newsletter-subscriptions-form__btn",
+                       right_icon: @view_options[:submit_icon].present? ? @view_options[:submit_icon] : nil,
+                       icon_height: @view_options[:submit_icon_height].presence || 24))
+    else
+      content_tag(:button,
+                  submit_text,
+                  class: "btn btn-primary f-newsletter-subscriptions-form__btn",
+                  type: "submit")
+    end
   end
 
   def message

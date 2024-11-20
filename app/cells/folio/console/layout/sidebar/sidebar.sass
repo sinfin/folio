@@ -47,14 +47,20 @@
   &__group--collapsed &__part-title::after
     transform: translate(0, -50%) rotate(180deg)
 
-  &__ul
+  &__subgroup
+    border-bottom: 1px solid rgba($gray, 0.4227)
+
+  &__subgroup:last-child
+    border-bottom: none
+
+  &__subgroup
     margin: 0
     padding: $grid-gutter-width / 4 0
 
   &__li
     list-style: none
 
-  &__part-title + &__ul
+  &__part-title + &__ul &__subgroup:first-child
     padding-top: 0
 
   &__ul + &__ul

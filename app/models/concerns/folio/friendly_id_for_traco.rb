@@ -5,7 +5,7 @@ module Folio::FriendlyIdForTraco
 
   included do
     include Folio::FriendlyId::History
-    include Folio::FriendlyId::UniqueSlugForMultipleClasses
+    include Folio::FriendlyId::SlugValidation::MultipleClasses
 
     if defined?(self::FRIENDLY_ID_SCOPE)
       friendly_id :slug_candidates, use: %i[slugged history simple_i18n scoped], scope: self::FRIENDLY_ID_SCOPE
@@ -14,7 +14,8 @@ module Folio::FriendlyIdForTraco
         validates "slug_#{locale}".to_sym,
                   presence: true,
                   uniqueness: { scope: self::FRIENDLY_ID_SCOPE },
-                  format: { with: /[a-z][0-9a-z-]+/ }
+                  format: { with: /[a-z][0-9a-z-]+/ },
+                  if: -> { errors["slug_#{locale}".to_sym].blank? }
       end
     else
       friendly_id :slug_candidates, use: %i[slugged history simple_i18n]
@@ -23,7 +24,8 @@ module Folio::FriendlyIdForTraco
         validates "slug_#{locale}".to_sym,
                   presence: true,
                   uniqueness: true,
-                  format: { with: /[a-z][0-9a-z-]+/ }
+                  format: { with: /[a-z][0-9a-z-]+/ },
+                  if: -> { errors["slug_#{locale}".to_sym].blank? }
       end
     end
 

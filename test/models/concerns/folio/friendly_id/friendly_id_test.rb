@@ -4,19 +4,19 @@ require "test_helper"
 
 class Folio::FriendlyIdTest < ActiveSupport::TestCase
   class TestPage < Folio::Page
-    def self.slug_additional_classes
+    def self.slug_validation_additional_classes
       [Folio::Site]
     end
   end
 
   class TestPage2 < Folio::Page
-    def self.slug_additional_classes
+    def self.slug_validation_additional_classes
       []
     end
   end
 
   class TestArticle < Dummy::Blog::Article
-    def self.slug_additional_classes
+    def self.slug_validation_additional_classes
       [Folio::Page, Dummy::Blog::Article]
     end
   end

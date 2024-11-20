@@ -67,6 +67,10 @@ class Folio::NewsletterSubscription < Folio::ApplicationRecord
     end
   end
 
+  def to_label
+    email
+  end
+
   private
     def update_mailchimp_subscription(email_for_subscription)
       return unless Rails.application.config.folio_newsletter_subscription_service == :mailchimp
