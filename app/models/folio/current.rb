@@ -14,6 +14,13 @@ class Folio::Current < ActiveSupport::CurrentAttributes
             :session,
             :ability
 
+  SITE_KEYS = %i[
+    site
+    main_site
+    site_for_crossdomain_devise
+    site_for_mailers
+  ]
+
   def to_h
     attributes
   end
@@ -31,9 +38,27 @@ class Folio::Current < ActiveSupport::CurrentAttributes
     self.user = user
     self.ability = Folio::Ability.new(user, site)
     self.session = session
+
+    unless self.class.site_matches_host?(site:, host:)
+      SITE_KEYS.each do |key|
+        send("#{key}_record=", nil)
+      end
+    end
   end
 
-  def self.site(host: nil)
+  def self.site_matches_host?(site:, host:)
+    return false if host.nil?
+    return false if site.nil?
+
+    if Rails.env.development?
+      slug = host.delete_suffix(".localhost")
+      site.slug == slug
+    else
+      site.domain == host
+    end
+  end
+
+  def self.get_site(host: nil)
     if host.nil?
       main_site
     else
@@ -52,15 +77,15 @@ class Folio::Current < ActiveSupport::CurrentAttributes
   end
 
   def site
-    self.site_record ||= self.class.site(host:)
+    self.site_record ||= self.class.get_site(host:)
   end
 
-  def self.main_site
-    Folio::Site.ordered.first
+  def self.get_main_site
+    Folio::Site.order(id: :asc).first
   end
 
   def main_site
-    self.main_site_record ||= self.class.main_site
+    self.main_site_record ||= self.class.get_main_site
   end
 
   def reset_ability!
@@ -72,7 +97,7 @@ class Folio::Current < ActiveSupport::CurrentAttributes
   end
 
   def site_for_mailers
-    site_for_mailers_record || main_site
+    self.site_for_mailers_record ||= main_site
   end
 
   def enabled_site_for_crossdomain_devise
@@ -80,15 +105,10 @@ class Folio::Current < ActiveSupport::CurrentAttributes
   end
 
   def site_for_crossdomain_devise
-    site_for_crossdomain_devise_record || main_site
+    self.site_for_crossdomain_devise_record ||= main_site
   end
 
-  %i[
-    site
-    main_site
-    site_for_crossdomain_devise
-    site_for_mailers
-  ].each do |key|
+  SITE_KEYS.each do |key|
     define_method "#{key}=" do |record|
       instance_variable_set("@#{key}_record", record)
     end
