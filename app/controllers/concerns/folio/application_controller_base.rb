@@ -21,7 +21,7 @@ module Folio::ApplicationControllerBase
 
     before_action :add_root_breadcrumb
 
-    around_action :set_time_zone, if: :current_user
+    around_action :set_time_zone, if: -> { Folio::Current.user }
 
     add_flash_types :success, :warning, :info
 
@@ -52,14 +52,14 @@ module Folio::ApplicationControllerBase
 
   def can_now?(action, object = nil)
     object ||= Folio::Current.site
-    (current_user || Folio::User.new).can_now_by_ability?(::Folio::Current.ability, action, object)
+    (Folio::Current.user || Folio::User.new).can_now_by_ability?(::Folio::Current.ability, action, object)
   end
 
   def true_user
     if session[:true_user_id].present?
       Folio::User.find_by(id: session[:true_user_id])
     else
-      current_user
+      Folio::Current.user
     end
   end
 
@@ -108,7 +108,7 @@ module Folio::ApplicationControllerBase
       end
 
       catch(:warden) do
-        if user_id = try(:current_user).try(:id)
+        if user_id = Folio::Current.user.try(:id)
           cookies.signed[:u_for_log] = user_id unless cookies.signed[:u_for_log] == user_id
         else
           cookies.signed[:u_for_log] = nil if cookies.signed[:u_for_log]
@@ -129,7 +129,7 @@ module Folio::ApplicationControllerBase
     end
 
     def set_time_zone(&block)
-      Time.use_zone(current_user.time_zone, &block)
+      Time.use_zone(Folio::Current.user.time_zone, &block)
     end
 
     def add_root_breadcrumb

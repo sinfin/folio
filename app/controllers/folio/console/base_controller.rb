@@ -544,7 +544,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
       return if request.path.start_with?("/console/api")
       return if request.path.start_with?("/console/atoms")
 
-      current_user.update_console_url!(request.url)
+      Folio::Current.user.update_console_url!(request.url)
     end
 
     def set_show_current_user_console_url_bar

@@ -278,7 +278,7 @@ module Folio::Console::ReactHelper
       hash = {
         "class" => class_name,
         "data-notes" => data.to_json,
-        "data-account-id" => current_user.id,
+        "data-account-id" => Folio::Current.user.id,
         "data-param-base" => param_base,
         "data-label" => Folio::ConsoleNote.model_name.human(count: 2),
       }

@@ -71,7 +71,7 @@ class Dummy::AtomsController < ApplicationController
 
       authenticate_user!
 
-      return if current_user.can_now?(:display_ui)
+      return if Folio::Current.user.can_now?(:display_ui)
 
       redirect_to root_path
     end

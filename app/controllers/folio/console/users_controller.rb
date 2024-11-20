@@ -24,8 +24,8 @@ class Folio::Console::UsersController < Folio::Console::BaseController
   def impersonate
     authorize! :impersonate, @user
 
-    @user.sign_out_everywhere! if @user == current_user
-    session[:true_user_id] = current_user.id
+    @user.sign_out_everywhere! if @user == Folio::Current.user
+    session[:true_user_id] = Folio::Current.user.id
     bypass_sign_in @user, scope: :user
 
     redirect_to after_impersonate_path,
@@ -34,7 +34,7 @@ class Folio::Console::UsersController < Folio::Console::BaseController
   end
 
   def stop_impersonating
-    user = current_user
+    user = Folio::Current.user
     bypass_sign_in true_user, scope: :user
     session[:true_user_id] = nil
     redirect_to url_for([:console, user])
@@ -52,7 +52,7 @@ class Folio::Console::UsersController < Folio::Console::BaseController
     @user = @klass.new(create_params)
 
     if @user.valid?
-      @user = @klass.invite!(create_params, current_user)
+      @user = @klass.invite!(create_params, Folio::Current.user)
     end
 
     respond_with @user, location: respond_with_location
@@ -128,7 +128,7 @@ class Folio::Console::UsersController < Folio::Console::BaseController
     end
 
     def auth_site_filters
-      return {} unless current_user.superadmin?
+      return {} unless Folio::Current.user.superadmin?
 
       sites_for_select = Folio::Site.pluck(:title, :id)
       sites_for_select.size > 1 ? { by_auth_site: sites_for_select } : {}

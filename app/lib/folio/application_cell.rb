@@ -69,11 +69,7 @@ class Folio::ApplicationCell < Cell::ViewModel
   # same as in Folio::ApplicationControllerBase but using "options hacks"
   def can_now?(action, object = nil, site: nil)
     object ||= Folio::Current.site
-    (current_user || Folio::User.new).can_now_by_ability?(current_ability, action, object)
-  end
-
-  def current_user
-    get_from_options_or_current_or_controller(:current_user)
+    (Folio::Current.user || Folio::User.new).can_now_by_ability?(current_ability, action, object)
   end
 
   def current_ability
@@ -103,6 +99,14 @@ class Folio::ApplicationCell < Cell::ViewModel
       view.render(component)
     else
       fail "Missing both context[:view] and context[:controller] - cannot render_view_component"
+    end
+  end
+
+  def current_user_with_test_fallback
+    if ::Rails.env.test? && options[:current_user]
+      options[:current_user]
+    else
+      Folio::Current.user
     end
   end
 end

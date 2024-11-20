@@ -145,7 +145,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
 
   def main_class_names
     shared_links = []
-    sites = (Folio::Current.site == Folio::Current.main_site || current_user.superadmin?) ? Folio::Site.ordered : [Folio::Current.site]
+    sites = (Folio::Current.site == Folio::Current.main_site || Folio::Current.user.superadmin?) ? Folio::Site.ordered : [Folio::Current.site]
     if ::Rails.application.config.folio_shared_files_between_sites
       shared_links = [{
         locale: Folio::Current.main_site.console_locale,
@@ -165,7 +165,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
 
   def secondary_class_names
     links = []
-    links << link_for_site_class(Folio::Current.main_site, Folio::User) if show_users? && current_user.superadmin?
+    links << link_for_site_class(Folio::Current.main_site, Folio::User) if show_users? && Folio::Current.user.superadmin?
 
     [
       {
@@ -298,7 +298,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
                       label: t(".settings"),
                     }
         end
-        links << link_for_site_class(site, Folio::User) if show_users? && !current_user.superadmin?
+        links << link_for_site_class(site, Folio::User) if show_users? && !Folio::Current.user.superadmin?
 
         {
           locale: site.console_locale,
@@ -355,11 +355,11 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
     end
 
     def can_now?(action, object, site: nil)
-      (current_user || Folio::User.new).can_now_by_ability?(site_ability(site || Folio::Current.site), action, object)
+      (Folio::Current.user || Folio::User.new).can_now_by_ability?(site_ability(site || Folio::Current.site), action, object)
     end
 
     def site_ability(site)
       @site_abilities ||= {}
-      @site_abilities[site] ||= Folio::Ability.new(current_user, site)
+      @site_abilities[site] ||= Folio::Ability.new(Folio::Current.user, site)
     end
 end

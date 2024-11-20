@@ -14,8 +14,6 @@ class ApplicationCell < Folio::ApplicationCell
   else
     %i[
       cache_key_base
-      current_user
-      user_signed_in?
       current_header_menu
       current_footer_menu
     ].each do |name|

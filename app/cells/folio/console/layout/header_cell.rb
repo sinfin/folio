@@ -5,7 +5,7 @@ class Folio::Console::Layout::HeaderCell < Folio::ConsoleCell
     if options[:log_out_path]
       controller.send(options[:log_out_path])
     else
-      if try(:current_user)
+      if current_user_with_test_fallback
         opts = {
           only_path: false,
           host: Folio::Current.enabled_site_for_crossdomain_devise.try(:env_aware_domain)

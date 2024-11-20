@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 - removed `Folio.site_for_mailers` - use `Folio::Current.site_for_mailers`
 - removed `Folio.enabled_site_for_crossdomain_devise` - use `Folio::Current.enabled_site_for_crossdomain_devise`
 - removed `Folio.site_for_crossdomain_devise` - use `Folio::Current.site_for_crossdomain_devise`
+- removed `current_user` usage - use `Folio::Current.user` everywhere!
 
 ## 2024-08-29
 ### Added

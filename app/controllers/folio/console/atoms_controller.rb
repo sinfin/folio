@@ -44,7 +44,7 @@ class Folio::Console::AtomsController < Folio::Console::BaseController
       hash = if @klass.method(:atom_settings_from_params).arity == 1
         @klass.atom_settings_from_params(params[:settings])
       else
-        @klass.atom_settings_from_params(params[:settings], { request:, current_user: try(:current_user), current_site: Folio::Current.site })
+        @klass.atom_settings_from_params(params[:settings], { request:, current_user: Folio::Current.user, current_site: Folio::Current.site })
       end
 
       hash.each do |locale, data|

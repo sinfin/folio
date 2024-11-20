@@ -98,17 +98,10 @@ class Folio::ApplicationComponent < ViewComponent::Base
   end
 
   def current_user_with_test_fallback
-    if Rails.env.test?
-      if @current_user_for_test
-        @current_user_for_test
-      else
-        begin
-          current_user
-        rescue StandardError
-        end
-      end
+    if Rails.env.test? && @current_user_for_test
+      @current_user_for_test
     else
-      current_user
+      Folio::Current.user
     end
   end
 

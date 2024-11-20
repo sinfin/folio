@@ -6,9 +6,9 @@ class Folio::Users::SessionsController < Devise::SessionsController
   protect_from_forgery prepend: true
 
   def destroy
-    if current_user
+    if Folio::Current.user
       if Rails.application.config.folio_crossdomain_devise || Rails.application.config.folio_users_sign_out_everywhere
-        current_user.sign_out_everywhere!
+        Folio::Current.user.sign_out_everywhere!
       end
     end
 
@@ -102,9 +102,9 @@ class Folio::Users::SessionsController < Devise::SessionsController
     result = handle_crossdomain_devise
 
     if result && result.action == :noop
-      if current_user && !request.format.json?
+      if Folio::Current.user && !request.format.json?
         set_flash_message!(:notice, :signed_in)
-        redirect_to after_sign_in_path_for(current_user)
+        redirect_to after_sign_in_path_for(Folio::Current.user)
       else
         super
       end
