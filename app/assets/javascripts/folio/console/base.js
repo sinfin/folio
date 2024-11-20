@@ -80,7 +80,7 @@
 //= require folio/console/catalogue/catalogue
 //= require folio/console/clipboard_copy/clipboard_copy
 //= require folio/console/console_notes/catalogue_tooltip/catalogue_tooltip
-//= require folio/console/current_users/console_path_bar/console_path_bar
+//= require folio/console/current_users/console_url_bar/console_url_bar
 //= require folio/console/file/picker/document/document
 //= require folio/console/file/picker/picker
 //= require folio/console/file/picker/thumb/thumb

@@ -14,8 +14,8 @@ class Folio::Console::BaseController < Folio::ApplicationController
 
   before_action :add_root_breadcrumb
 
-  before_action :update_current_user_console_path
-  before_action :set_show_current_user_console_path_bar
+  before_action :update_current_user_console_url
+  before_action :set_show_current_user_console_url_bar
 
   before_action do
     if (params[:rmp] && can_now?(:display_miniprofiler)) || ENV["FORCE_MINI_PROFILER"]
@@ -540,16 +540,16 @@ class Folio::Console::BaseController < Folio::ApplicationController
       instance_variable_set(name, filtered)
     end
 
-    def update_current_user_console_path
+    def update_current_user_console_url
       return unless can_now?(:access_console)
       return if request.path.start_with?("/console/api")
       return if request.path.start_with?("/console/atoms")
 
-      current_user.update_console_path!(request.path)
+      current_user.update_console_url!(request.url)
     end
 
-    def set_show_current_user_console_path_bar
-      @show_current_user_console_path_bar = %w[edit update].include?(action_name)
+    def set_show_current_user_console_url_bar
+      @show_current_user_console_url_bar = %w[edit update].include?(action_name)
     end
 
     def member_action?

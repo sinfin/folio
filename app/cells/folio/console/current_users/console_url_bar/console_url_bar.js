@@ -1,5 +1,5 @@
 $(() => {
-  const $bar = $('.f-c-current-users-console-path-bar')
+  const $bar = $('.f-c-current-users-console-url-bar')
   if ($bar.length !== 1) return
 
   const url = $bar.data('url')
@@ -8,7 +8,7 @@ $(() => {
     $.ajax({
       url,
       method: "POST",
-      data: { path: window.location.pathname }
+      data: { url: window.location.href.split('?')[0] }
     })
   }, 10000)
 })
