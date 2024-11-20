@@ -37,7 +37,7 @@ class Folio::Devise::SessionsControllerTest < ActionDispatch::IntegrationTest
     _superadmin = create(:folio_user, email:, password: "password1", superadmin: true, auth_site: main_site)
 
     Rails.application.config.stub(:folio_crossdomain_devise, false) do
-      Folio.stub(:main_site, main_site) do
+      Folio::Current.stub(:main_site, main_site) do
         # let try to sign in to sites
         assert can_sign_in_at_site?(main_site, email:, password: "password1")
         assert can_sign_in_at_site?(site1, email:, password: "password1")
@@ -45,7 +45,6 @@ class Folio::Devise::SessionsControllerTest < ActionDispatch::IntegrationTest
       end
     end
   end
-
 
   test "create (sign_in) with crossdomain => one user" do
     site1 = create(:folio_site, domain: "site1.localhost", type: "Folio::Site")
@@ -55,24 +54,23 @@ class Folio::Devise::SessionsControllerTest < ActionDispatch::IntegrationTest
     user_site1 = user_site2 = nil
 
     Rails.application.config.stub(:folio_crossdomain_devise, true) do
-      ::Folio::Current.stub(:site_for_crossdomain_devise, xdomain_site) do
-        # assert_difference("::Folio::User.count", 1) do
+      ::Folio::Current.stub(:enabled_site_for_crossdomain_devise, xdomain_site) do
         user_site1 = register_user_through_xdomain_site(site1, email:, first_name: "Site1", last_name: "User", password: "password1")
         user_site2 = register_user_through_xdomain_site(site2, email:, first_name: "Site2", last_name: "User", password: "password2")
-        # end
 
         assert_equal user_site1, user_site2
-        assert_equal ::Folio::Current.site_for_crossdomain_devise, user_site1.auth_site
+        assert_equal ::Folio::Current.enabled_site_for_crossdomain_devise, user_site1.auth_site
+        assert_equal ::Folio::Current.enabled_site_for_crossdomain_devise, user_site2.auth_site
 
         # let try to sign in to sites ("password2" is invalid)
         assert can_sign_in_at_site?(site1, email:, password: "password1")
         assert_not can_sign_in_at_site?(site1, email:, password: "password2")
+
         assert can_sign_in_at_site?(site2, email:, password: "password1")
         assert_not can_sign_in_at_site?(site2, email:, password: "password2")
       end
     end
   end
-
 
   private
     def register_user_at_site(site, email:, first_name:, last_name:, password:)
@@ -105,7 +103,7 @@ class Folio::Devise::SessionsControllerTest < ActionDispatch::IntegrationTest
     def register_user_through_xdomain_site(auth_site, email:, first_name:, last_name:, password:)
       host_site auth_site
 
-      xdomain_site = ::Folio::Current.site_for_crossdomain_devise
+      xdomain_site = ::Folio::Current.enabled_site_for_crossdomain_devise
       user_site = ::Folio::User.where(auth_site: xdomain_site, email:).first
 
       Rails.application.config.stub(:folio_users_publicly_invitable, true) do

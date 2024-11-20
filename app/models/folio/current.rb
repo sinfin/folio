@@ -39,10 +39,12 @@ class Folio::Current < ActiveSupport::CurrentAttributes
     self.ability = Folio::Ability.new(user, site)
     self.session = session
 
-    unless self.class.site_matches_host?(site:, host:)
-      SITE_KEYS.each do |key|
-        send("#{key}_record=", nil)
-      end
+    nillify_site_records unless self.class.site_matches_host?(site:, host:)
+  end
+
+  def nillify_site_records
+    SITE_KEYS.each do |key|
+      send("#{key}_record=", nil)
     end
   end
 
