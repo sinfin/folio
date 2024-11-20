@@ -2,7 +2,7 @@
 
 class Folio::Users::InvitationsController < Devise::InvitationsController
   include Folio::Users::DeviseControllerBase
-  include Folio::HasTurnstileValidation
+  include Folio::Captcha::HasTurnstileValidation
 
   prepend_before_action :require_no_authentication, only: %i[create new]
   before_action :disallow_public_invitations_if_needed, only: %i[create new]

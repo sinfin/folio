@@ -2,7 +2,7 @@
 
 class Folio::Users::SessionsController < Devise::SessionsController
   include Folio::Users::DeviseControllerBase
-  include Folio::HasTurnstileValidation
+  include Folio::Captcha::HasTurnstileValidation
 
   protect_from_forgery prepend: true
 

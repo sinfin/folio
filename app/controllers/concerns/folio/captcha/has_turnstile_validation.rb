@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
-module Folio::HasTurnstileValidation
+module Folio::Captcha::HasTurnstileValidation
   extend ActiveSupport::Concern
+
+  CLOUDFLARE_CHALLENGE_URL = "https://challenges.cloudflare.com/turnstile/v0/siteverify"
 
   included do
     before_action :validate_turnstile, only: [:create], if: -> {
-      Folio::Security.captcha_provider == :turnstile && !Rails.env.test?
+      ENV["CLOUDFLARE_TURNSTILE_SITE_KEY"] && !Rails.env.test?
     }
   end
 
@@ -18,8 +20,8 @@ module Folio::HasTurnstileValidation
         return
       end
 
-      uri = URI.parse("https://challenges.cloudflare.com/turnstile/v0/siteverify")
-      response = Net::HTTP.post_form(uri, secret: Folio::Security.cloudflare_turnstile_secret_key, response: token)
+      uri = URI.parse(CLOUDFLARE_CHALLENGE_URL)
+      response = Net::HTTP.post_form(uri, secret: ENV["CLOUDFLARE_TURNSTILE_SECRET_KEY"], response: token)
       result = JSON.parse(response.body)
 
       unless result["success"]
@@ -27,13 +29,15 @@ module Folio::HasTurnstileValidation
       end
     end
 
-    def respond_with_turnstile_failure
-      redirect_path = defined?(turnstile_failure_redirect_path) ? turnstile_failure_redirect_path : root_path
+    def turnstile_failure_redirect_path
+      root_path
+    end
 
+    def respond_with_turnstile_failure
       respond_to do |format|
         format.html {
           set_flash_message(:alert, :turnstile_failure, scope: "folio.devise")
-          redirect_to redirect_path
+          redirect_to turnstile_failure_redirect_path
         }
         format.json { render json: { error: t("folio.devise.turnstile_failure") }, status: :unprocessable_entity }
       end
