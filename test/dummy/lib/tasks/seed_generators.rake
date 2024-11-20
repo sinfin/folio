@@ -122,7 +122,6 @@ class Dummy::SeedGenerator
 
   def install
     paths = %w[
-      app/overrides/folio_override.rb
       app/overrides/models/folio/ability_override.rb
       app/controllers/application_controller.rb
       app/models/dummy/site.rb

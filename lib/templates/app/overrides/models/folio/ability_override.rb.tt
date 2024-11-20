@@ -10,6 +10,7 @@ Folio::Ability.class_eval do
 
   def <%= application_namespace_path %>_rules
     <%= application_namespace_path %>_blog_rules
+    <%= application_namespace_path %>_test_rules if Rails.env.test?
   end
 
   def <%= application_namespace_path %>_blog_rules
@@ -19,6 +20,14 @@ Folio::Ability.class_eval do
       can :do_anything, <%= application_namespace %>::Blog::Article, { site: }
       can :do_anything, <%= application_namespace %>::Blog::Author, { site: }
       can :do_anything, <%= application_namespace %>::Blog::Topic, { site: }
+    end
+  end
+
+  def <%= application_namespace_path %>_test_rules
+    # for ability scopes testing
+    if user.has_any_roles?(site:, roles: [:manager])
+      cannot :read, Folio::Lead, { site:, email: "manager_cant@see.me" }
+      cannot :update, Folio::Lead, { site:, email: "manager_can_read_but_not_update@see.me" }
     end
   end
 end
