@@ -39,17 +39,28 @@ window.Folio.Stimulus.register('f-captcha-turnstile', class extends window.Stimu
     const turnstileContainer = document.querySelector(".cf-turnstile")
 
     if (turnstileContainer && !turnstileContainer.innerHTML) {
+      // Control the height of the iframe wrapper because even when the iframe is hidden,
+      // the wrapper takes up unnecessary space
+      const updateIframeWraperHeight = (height) => {
+        const iframeWrapper = document.querySelector(".cf-turnstile > div")
+        if (iframeWrapper) {
+          iframeWrapper.style.height = height
+        }
+      }
+
       turnstile.render('.cf-turnstile', {
         sitekey: this.siteKeyValue,
-        appearance: 'interaction-only'
+        appearance: 'interaction-only',
+        'before-interactive-callback': () => { updateIframeWraperHeight("auto") },
       })
+
+      updateIframeWraperHeight("0")
     }
   }
 
   removeTurnstile() {
-    if (typeof turnstile === 'undefined') return
-    const turnstileContainer = document.querySelector(".cf-turnstile")
-    if (!turnstileContainer.innerHTML) return
+    if (typeof turnstile === 'undefined'
+        || !document.querySelector(".cf-turnstile").innerHTML) return
 
     turnstile.remove()
   }
