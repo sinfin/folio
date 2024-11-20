@@ -178,7 +178,8 @@ module Folio::Console::ReactHelper
                                 scope: nil,
                                 order_scope: :ordered,
                                 sortable: true,
-                                required: nil)
+                                required: nil,
+                                menu_placement: :bottom)
     class_name = "folio-react-wrap folio-react-wrap--ordered-multiselect"
 
     unless sortable
@@ -238,6 +239,7 @@ module Folio::Console::ReactHelper
                          "data-items" => items.to_json,
                          "data-url" => url,
                          "data-sortable" => sortable ? "1" : "0",
+                         "data-menu-placement" => menu_placement,
                          "data-atom-setting" => atom_setting))
       concat(f.full_error(relation_name, class: "invalid-feedback d-block"))
     end
