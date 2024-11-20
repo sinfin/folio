@@ -132,19 +132,17 @@ module Folio::Console::ReactHelper
   end
 
   def react_files(file_type, selected_placements, attachmentable:, type:, atom_setting: nil)
-    if selected_placements.present?
-      placements = selected_placements.ordered.map do |fp|
+    placements = if selected_placements.present?
+      selected_placements.ordered.map do |fp|
         {
           id: fp.id,
           file_id: fp.file.id,
           alt: fp.alt,
           title: fp.title,
           file: Folio::Console::FileSerializer.new(fp.file)
-                                              .serializable_hash[:data]
+                                              .serializable_hash[:data],
         }
       end.to_json
-    else
-      placements = nil
     end
 
     class_name = "folio-react-wrap"
@@ -162,20 +160,25 @@ module Folio::Console::ReactHelper
     end
 
     content_tag(:div, nil,
-      "class" => class_name,
-      "data-original-placements" => placements,
-      "data-file-type" => file_type,
-      "data-files-url" => url,
-      "data-react-type" => klass.human_type,
-      "data-mode" => "multi-select",
-      "data-attachmentable" => attachmentable,
-      "data-placement-type" => type,
-      "data-atom-setting" => atom_setting,
-      "data-can-destroy-files" => can_now?(:destroy, Folio::File) ? "1" : nil,
-    )
+                "class" => class_name,
+                "data-original-placements" => placements,
+                "data-file-type" => file_type,
+                "data-files-url" => url,
+                "data-react-type" => klass.human_type,
+                "data-mode" => "multi-select",
+                "data-attachmentable" => attachmentable,
+                "data-placement-type" => type,
+                "data-atom-setting" => atom_setting,
+                "data-can-destroy-files" => can_now?(:destroy, Folio::File) ? "1" : nil)
   end
 
-  def react_ordered_multiselect(f, relation_name, atom_setting: nil, scope: nil, order_scope: :ordered, sortable: true, required: nil)
+  def react_ordered_multiselect(f,
+                                relation_name,
+                                atom_setting: nil,
+                                scope: nil,
+                                order_scope: :ordered,
+                                sortable: true,
+                                required: nil)
     class_name = "folio-react-wrap folio-react-wrap--ordered-multiselect"
 
     unless sortable
@@ -187,7 +190,7 @@ module Folio::Console::ReactHelper
     through = reflection.options[:through]
 
     if through.nil?
-      fail StandardError, "Only supported for :through relations"
+      raise StandardError, "Only supported for :through relations"
     end
 
     through_klass = reflection.class_name.constantize
@@ -223,21 +226,20 @@ module Folio::Console::ReactHelper
                                  order_scope:,
                                  only_path: true])
 
-    content_tag(:div, class: f.object.errors[relation_name].present? ? "form-group form-group-invalid" : "form-group") do
-      concat(f.label relation_name, required:)
-      concat(
-        content_tag(:div, content_tag(:span, nil, class: "folio-loader"),
-          "class" => class_name,
-          "data-param-base" => param_base,
-          "data-foreign-key" => reflection.foreign_key,
-          "data-removed-ids" => removed_ids.to_json,
-          "data-items" => items.to_json,
-          "data-url" => url,
-          "data-sortable" => sortable ? "1" : "0",
-          "data-atom-setting" => atom_setting,
-        )
-      )
-      concat(f.full_error relation_name, class: "invalid-feedback d-block")
+    form_group_class_name = f.object.errors[relation_name].present? ? "form-group form-group-invalid" : "form-group"
+
+    content_tag(:div, class: form_group_class_name) do
+      concat(f.label(relation_name, required:))
+      concat(content_tag(:div, content_tag(:span, nil, class: "folio-loader"),
+                         "class" => class_name,
+                         "data-param-base" => param_base,
+                         "data-foreign-key" => reflection.foreign_key,
+                         "data-removed-ids" => removed_ids.to_json,
+                         "data-items" => items.to_json,
+                         "data-url" => url,
+                         "data-sortable" => sortable ? "1" : "0",
+                         "data-atom-setting" => atom_setting))
+      concat(f.full_error(relation_name, class: "invalid-feedback d-block"))
     end
   end
 
@@ -254,16 +256,16 @@ module Folio::Console::ReactHelper
   end
 
   def react_atom_setting_id(f)
-    if f.object.id.present?
-      content_tag(:div,
-                  "",
-                  hidden: true,
-                  class: "f-c-js-atoms-placement-setting",
-                  data: {
-                    "atom-setting" => "placement",
-                    "atom-setting-value-json" => { id: f.object.id, class_name: f.object.class.to_s }.to_json,
-                  })
-    end
+    return unless f.object.id.present?
+
+    content_tag(:div,
+                "",
+                hidden: true,
+                class: "f-c-js-atoms-placement-setting",
+                data: {
+                  "atom-setting" => "placement",
+                  "atom-setting-value-json" => { id: f.object.id, class_name: f.object.class.to_s }.to_json,
+                })
   end
 
   private
@@ -271,7 +273,9 @@ module Folio::Console::ReactHelper
       class_name = "folio-react-wrap folio-react-wrap--notes-fields"
 
       target_with_fallback = target || f.object
-      data = target_with_fallback.console_notes.map { |note| Folio::Console::ConsoleNoteSerializer.new(note).serializable_hash[:data] }
+      data = target_with_fallback.console_notes.map do |note|
+        Folio::Console::ConsoleNoteSerializer.new(note).serializable_hash[:data]
+      end
 
       param_base = "#{target_with_fallback.class.base_class.model_name.param_key}[console_notes_attributes]"
 
