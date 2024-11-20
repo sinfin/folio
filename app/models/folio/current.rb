@@ -110,7 +110,7 @@ class Folio::Current < ActiveSupport::CurrentAttributes
 
   SITE_KEYS.each do |key|
     define_method "#{key}=" do |record|
-      instance_variable_set("@#{key}_record", record)
+      send("#{key}_record=", record)
     end
   end
 

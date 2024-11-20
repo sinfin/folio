@@ -23,6 +23,7 @@ class Folio::Devise::SessionsControllerTest < ActionDispatch::IntegrationTest
       # let try to sign in to sites
       assert can_sign_in_at_site?(site1, email:, password: "password1")
       assert_not can_sign_in_at_site?(site1, email:, password: "password2")
+
       assert_not can_sign_in_at_site?(site2, email:, password: "password1")
       assert can_sign_in_at_site?(site2, email:, password: "password2")
     end
@@ -97,6 +98,7 @@ class Folio::Devise::SessionsControllerTest < ActionDispatch::IntegrationTest
 
         assert user_site.reload.invitation_accepted?
       end
+
       user_site
     end
 
