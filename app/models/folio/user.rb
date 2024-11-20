@@ -104,8 +104,8 @@ class Folio::User < Folio::ApplicationRecord
     where(primary_address_id: subselect).or(where(secondary_address_id: subselect))
   }
 
-  scope :currently_editing_path, -> (path) do
-    where(console_path: path).where("console_path_updated_at > ?", 5.minutes.ago)
+  scope :currently_editing_url, -> (url) do
+    where(console_url: url).where("console_url_updated_at > ?", 5.minutes.ago)
   end
 
   scope :locked_for, -> (site) {
@@ -302,9 +302,9 @@ class Folio::User < Folio::ApplicationRecord
     end
   end
 
-  def update_console_path!(console_path)
-    update_columns(console_path:,
-                   console_path_updated_at: Time.current)
+  def update_console_url!(console_url)
+    update_columns(console_url:,
+                   console_url_updated_at: Time.current)
   end
 
   def can_manage_sidekiq?
@@ -511,8 +511,8 @@ end
 #  sign_out_salt_part        :string
 #  source_site_id            :bigint(8)
 #  superadmin                :boolean          default(FALSE), not null
-#  console_path              :string
-#  console_path_updated_at   :datetime
+#  console_url               :string
+#  console_url_updated_at    :datetime
 #  degree_pre                :string(32)
 #  degree_post               :string(32)
 #  phone_secondary           :string
@@ -520,7 +520,7 @@ end
 #  bank_account_number       :string
 #  company_name              :string
 #  time_zone                 :string           default("Prague")
-#  auth_site_id              :bigint(8)        not null
+#  auth_site_id              :bigint(8)        default(3), not null
 #  preferred_locale          :string
 #
 # Indexes

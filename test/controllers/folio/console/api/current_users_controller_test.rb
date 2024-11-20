@@ -5,16 +5,16 @@ require "test_helper"
 class Folio::Console::Api::CurrentUsersControllerTest < Folio::Console::BaseControllerTest
   include Folio::Engine.routes.url_helpers
 
-  test "console_path_ping" do
-    assert_nil superadmin.console_path
-    assert_nil superadmin.console_path_updated_at
+  test "console_url_ping" do
+    assert_nil superadmin.console_url
+    assert_nil superadmin.console_url_updated_at
 
-    post console_path_ping_console_api_current_user_path, params: { path: "foo" }
+    post console_url_ping_console_api_current_user_url, params: { url: "foo" }
     assert_response(:ok)
 
     superadmin.reload
 
-    assert_equal "foo", superadmin.console_path
-    assert superadmin.console_path_updated_at
+    assert_equal "foo", superadmin.console_url
+    assert superadmin.console_url_updated_at
   end
 end

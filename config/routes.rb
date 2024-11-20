@@ -127,7 +127,7 @@ Folio::Engine.routes.draw do
         end
 
         resource :current_user, only: [] do
-          post :console_path_ping
+          post :console_url_ping
         end
 
         resources :console_notes, only: [] do
