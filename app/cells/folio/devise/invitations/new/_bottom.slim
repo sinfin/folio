@@ -1,2 +1,1 @@
-- if Folio::Security.captcha_provider == :turnstile
-  .cf-turnstile
+= render_view_component(Folio::Captcha::TurnstileComponent.new)

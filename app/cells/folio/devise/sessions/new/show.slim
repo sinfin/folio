@@ -14,8 +14,7 @@
 
       == password_input(f, :password, autocomplete: 'current-password', test_id: 'sign-in-form-password-input')
 
-    - if Folio::Security.captcha_provider == :turnstile
-      .cf-turnstile
+    = render_view_component(Folio::Captcha::TurnstileComponent.new)
 
     .f-devise__errors
 
