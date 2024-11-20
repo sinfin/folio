@@ -1,0 +1,5 @@
+en:
+  folio:
+    captcha:
+      turnstile:
+        failure: Captcha verification failed. Please try again.

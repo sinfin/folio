@@ -23,7 +23,6 @@ en:
       invite_button: Create new account
       sign_in_link: Have an account?
       sign_in_link_inner: Sign in
-      turnstile_failure: Captcha verification failed. Please try again.
 
       resource_form:
         email_label: E-mail (used for signing in)
