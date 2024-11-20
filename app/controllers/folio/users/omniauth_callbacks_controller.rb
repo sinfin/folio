@@ -50,7 +50,7 @@ class Folio::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksContr
       if @user.save
         session.delete(:pending_folio_authentication)
 
-        @user.create_site_links_for([current_site, source_site])
+        @user.create_site_links_for([Folio::Current.site, source_site])
 
         sign_in(resource_name, @user)
         set_flash_message!(:notice, :signed_in) if is_flashing_format?

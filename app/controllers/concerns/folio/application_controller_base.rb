@@ -4,7 +4,6 @@ module Folio::ApplicationControllerBase
   extend ActiveSupport::Concern
 
   include Folio::Devise::CrossdomainController
-  include Folio::HasCurrentSite
   include Folio::RenderComponentJson
   include Folio::SetCurrentRequestDetails
   include Folio::SetMetaVariables
@@ -24,18 +23,16 @@ module Folio::ApplicationControllerBase
 
     around_action :set_time_zone, if: :current_user
 
-    helper_method :current_site
-
     add_flash_types :success, :warning, :info
 
     rescue_from CanCan::AccessDenied, with: :handle_can_can_access_denied
   end
 
   def set_i18n_locale
-    if params[:locale] && current_site.locales.include?(params[:locale])
+    if params[:locale] && Folio::Current.site.locales.include?(params[:locale])
       I18n.locale = params[:locale]
     else
-      I18n.locale = current_site.locale
+      I18n.locale = Folio::Current.site.locale
     end
   end
 
@@ -54,7 +51,7 @@ module Folio::ApplicationControllerBase
   end
 
   def can_now?(action, object = nil)
-    object ||= current_site
+    object ||= Folio::Current.site
     (current_user || Folio::User.new).can_now_by_ability?(::Folio::Current.ability, action, object)
   end
 
@@ -120,7 +117,7 @@ module Folio::ApplicationControllerBase
     end
 
     def current_site_based_layout
-      current_site ? current_site.layout_name : "folio/application"
+      Folio::Current.site ? Folio::Current.site.layout_name : "folio/application"
     end
 
     def authenticate_inviter!

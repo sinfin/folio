@@ -10,7 +10,7 @@ class Folio::Console::SiteUserLinks::FieldsComponent < Folio::Console::Applicati
     Folio::Site.order(domain: :asc).filter_map do |site|
       link = @user.user_link_for(site:)
       if link.blank?
-        roles = (site == current_site && @user.new_record?) ? [] : nil
+        roles = (site == Folio::Current.site && @user.new_record?) ? [] : nil
         link = @user.site_user_links.build(site:, roles:)
       end
 

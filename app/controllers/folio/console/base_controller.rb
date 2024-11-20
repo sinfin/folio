@@ -5,7 +5,6 @@ require "csv"
 class Folio::Console::BaseController < Folio::ApplicationController
   include Folio::Console::DefaultActions
   include Folio::Console::Includes
-  include Folio::HasCurrentSite
   include Folio::ErrorsControllerBase
   include Pagy::Backend
 
@@ -159,10 +158,10 @@ class Folio::Console::BaseController < Folio::ApplicationController
   helper_method :through_aware_console_url_for
 
   def set_i18n_locale
-    I18n.locale = if params[:locale] && current_site.locales.include?(params[:locale])
+    I18n.locale = if params[:locale] && Folio::Current.site.locales.include?(params[:locale])
       params[:locale]
     else
-      current_site.console_locale
+      Folio::Current.site.console_locale
     end
   end
 
@@ -247,7 +246,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
               :_destroy,
               *file_placements_strong_params] + Folio::Atom.strong_params
 
-      [{ atoms_attributes: base }] + current_site.locales.map do |locale|
+      [{ atoms_attributes: base }] + Folio::Current.site.locales.map do |locale|
         {
           "#{locale}_atoms_attributes": base,
         }
@@ -410,7 +409,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
       if params[:action].to_sym == :stop_impersonating
         authorize!(:stop_impersonating, Folio::User)
       else
-        authorize!(:access_console, current_site)
+        authorize!(:access_console, Folio::Current.site)
       end
     end
 
@@ -472,7 +471,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
     end
 
     def allowed_record_sites
-      [current_site]
+      [Folio::Current.site]
     end
 
     def load_belongs_to_site_resource

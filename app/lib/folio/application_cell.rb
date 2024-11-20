@@ -68,12 +68,8 @@ class Folio::ApplicationCell < Cell::ViewModel
 
   # same as in Folio::ApplicationControllerBase but using "options hacks"
   def can_now?(action, object = nil, site: nil)
-    object ||= current_site
+    object ||= Folio::Current.site
     (current_user || Folio::User.new).can_now_by_ability?(current_ability, action, object)
-  end
-
-  def current_site
-    get_from_options_or_current_or_controller(:current_site)
   end
 
   def current_user

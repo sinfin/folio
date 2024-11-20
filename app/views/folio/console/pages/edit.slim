@@ -1,5 +1,5 @@
 ruby:
-  locale = (current_site.locales.size > 1 || Rails.application.config.folio_console_add_locale_to_preview_links) ? I18n.locale : nil
+  locale = (Folio::Current.site.locales.size > 1 || Rails.application.config.folio_console_add_locale_to_preview_links) ? I18n.locale : nil
 
   if @page.class.public_rails_path
     preview_path = main_app.send(@page.class.public_rails_path,

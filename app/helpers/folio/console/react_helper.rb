@@ -121,7 +121,7 @@ module Folio::Console::ReactHelper
       atoms:,
       destroyedIds: destroyed_ids,
       namespace:,
-      structures: Folio::Atom.structures_for(klass: f.object.class, site: current_site),
+      structures: Folio::Atom.structures_for(klass: f.object.class, site: Folio::Current.site),
       placementType: f.object.class.to_s,
       className: f.object.class.to_s,
     }

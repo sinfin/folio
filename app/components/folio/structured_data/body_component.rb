@@ -47,8 +47,8 @@ class Folio::StructuredData::BodyComponent < Folio::ApplicationComponent
 
   def add_site_structured_data_breadcrumb(data)
     add_structured_data_breadcrumb(data,
-                                   current_site.title,
-                                   current_site.env_aware_root_url)
+                                   Folio::Current.site.title,
+                                   Folio::Current.site.env_aware_root_url)
   end
 
   def add_structured_data_breadcrumb(data, name, url)
@@ -63,13 +63,13 @@ class Folio::StructuredData::BodyComponent < Folio::ApplicationComponent
   def publisher_data
     data = {
       "@type" => "Organization",
-      "name" => current_site.title
+      "name" => Folio::Current.site.title
     }
 
-    if current_site.structured_data_config.present? && current_site.structured_data_config[:icon_url].present?
+    if Folio::Current.site.structured_data_config.present? && Folio::Current.site.structured_data_config[:icon_url].present?
       data["logo"] = {
         "@type" => "ImageObject",
-        "url" => current_site.structured_data_config[:icon_url]
+        "url" => Folio::Current.site.structured_data_config[:icon_url]
       }
     end
 
@@ -85,8 +85,8 @@ class Folio::StructuredData::BodyComponent < Folio::ApplicationComponent
 
     {
       "@type" => "WebSite",
-      "url" => current_site.env_aware_root_url,
-      "name" => current_site.title,
+      "url" => Folio::Current.site.env_aware_root_url,
+      "name" => Folio::Current.site.title,
       "publisher" => publisher_data
     }
   end

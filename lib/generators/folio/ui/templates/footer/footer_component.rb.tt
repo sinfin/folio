@@ -6,9 +6,9 @@ class <%= application_namespace %>::Ui::FooterComponent < ApplicationComponent
   end
 
   def social_links
-    if current_site.social_links.present?
+    if Folio::Current.site.social_links.present?
       allowed = %w[instagram linkedin twitter tiktok youtube facebook]
-      current_site.social_links.slice(*allowed).select { |key, val| val.present? }
+      Folio::Current.site.social_links.slice(*allowed).select { |key, val| val.present? }
     end
   end
 
@@ -16,8 +16,8 @@ class <%= application_namespace %>::Ui::FooterComponent < ApplicationComponent
     h = {}
 
     %i[address phone email].each do |key|
-      if current_site.send(key).present?
-        h[key] = current_site.send(key)
+      if Folio::Current.site.send(key).present?
+        h[key] = Folio::Current.site.send(key)
       end
     end
 

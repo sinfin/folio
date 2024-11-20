@@ -17,7 +17,7 @@ module Folio::Devise::CrossdomainController
       @devise_crossdomain_handler = Folio::Devise::CrossdomainHandler.new(request:,
                                                                           session:,
                                                                           params:,
-                                                                          current_site:,
+                                                                          current_site: Folio::Current.site,
                                                                           current_resource: current_user,
                                                                           controller_name:,
                                                                           resource_name: safe_resource_name,
@@ -61,8 +61,8 @@ module Folio::Devise::CrossdomainController
     def authenticate_user!(*args)
       if Rails.application.config.folio_crossdomain_devise &&
          current_user.nil? &&
-         current_site.present? &&
-         current_site != Folio::Current.enabled_site_for_crossdomain_devise
+         Folio::Current.site.present? &&
+         Folio::Current.site != Folio::Current.enabled_site_for_crossdomain_devise
         handle_crossdomain_devise
 
         result = @devise_crossdomain_handler.authenticate_user_on_slave_site!

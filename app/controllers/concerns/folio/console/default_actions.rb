@@ -51,7 +51,7 @@ module Folio::Console::DefaultActions
 
   def new
     if @klass.try(:has_belongs_to_site?)
-      folio_console_record.site = current_site
+      folio_console_record.site = Folio::Current.site
     end
   end
 
@@ -247,7 +247,7 @@ module Folio::Console::DefaultActions
 
     def folio_console_params_with_site
       if @klass.try(:add_site_to_console_params?)
-        folio_console_params.merge(site: current_site)
+        folio_console_params.merge(site: Folio::Current.site)
       else
         folio_console_params
       end

@@ -116,11 +116,11 @@ class Folio::Console::UsersController < Folio::Console::BaseController
     end
 
     def role_filters
-      allowed_roles = current_site.available_user_roles_ary.select do |role|
+      allowed_roles = Folio::Current.site.available_user_roles_ary.select do |role|
         can_now?("read_#{role}s", nil)
       end
 
-      roles = @klass.roles_for_select(site: current_site,
+      roles = @klass.roles_for_select(site: Folio::Current.site,
                                       selectable_roles: allowed_roles)
       roles.unshift(["Superadmin", "superadmin"]) if can_now?(:manage, :all)
 

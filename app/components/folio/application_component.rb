@@ -75,10 +75,6 @@ class Folio::ApplicationComponent < ViewComponent::Base
     end
   end
 
-  def current_site
-    controller.current_site
-  end
-
   def atom_cover_placement(atom = nil)
     atom ||= @atom
 

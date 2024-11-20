@@ -143,7 +143,7 @@ class Folio::CookieConsentCell < Folio::ApplicationCell
 
     klass = "#{::Rails.application.class.name.deconstantize}::Page::Cookies".safe_constantize
 
-    if klass && instance = klass.instance(fail_on_missing: false, site: try(:current_site))
+    if klass && instance = klass.instance(fail_on_missing: false, site: Folio::Current.site)
       return url_for(instance)
     end
 

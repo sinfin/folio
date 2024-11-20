@@ -39,11 +39,11 @@ module Folio::ApplicationHelper
   end
 
   def public_page_site_title
-    @public_page_site_title || current_site.title
+    @public_page_site_title || Folio::Current.site.title
   end
 
   def public_page_site_description
-    current_site.description
+    Folio::Current.site.description
   end
 
   def public_page_keywords_array

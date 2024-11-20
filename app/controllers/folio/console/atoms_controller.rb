@@ -13,7 +13,7 @@ class Folio::Console::AtomsController < Folio::Console::BaseController
   def preview
     @atoms = {}
 
-    (current_site.locales + [nil]).each do |locale|
+    (Folio::Current.site.locales + [nil]).each do |locale|
       key = locale ? "#{locale}_atoms_attributes" : "atoms_attributes"
       atoms = atom_params[key]
       next if atoms.nil?
@@ -44,7 +44,7 @@ class Folio::Console::AtomsController < Folio::Console::BaseController
       hash = if @klass.method(:atom_settings_from_params).arity == 1
         @klass.atom_settings_from_params(params[:settings])
       else
-        @klass.atom_settings_from_params(params[:settings], { request:, current_user: try(:current_user), current_site: })
+        @klass.atom_settings_from_params(params[:settings], { request:, current_user: try(:current_user), current_site: Folio::Current.site })
       end
 
       hash.each do |locale, data|
@@ -95,7 +95,7 @@ class Folio::Console::AtomsController < Folio::Console::BaseController
   end
 
   def default_url_options
-    if current_site.locales.size > 1
+    if Folio::Current.site.locales.size > 1
       { locale: I18n.locale }
     else
       {}
@@ -120,7 +120,7 @@ class Folio::Console::AtomsController < Folio::Console::BaseController
     end
 
     def set_layout_stylesheet_path
-      @layout_stylesheet_path = Folio.atoms_previews_stylesheet_path(site: current_site,
+      @layout_stylesheet_path = Folio.atoms_previews_stylesheet_path(site: Folio::Current.site,
                                                                      class_name: params[:class_name])
     end
 end

@@ -68,7 +68,7 @@ module Folio::Users::DeviseControllerBase
   private
     def add_auth_site_id_to_params
       if request.params["user"]
-        request.params["user"]["auth_site_id"] = (::Folio::Current.enabled_site_for_crossdomain_devise || current_site).id.to_s
+        request.params["user"]["auth_site_id"] = (::Folio::Current.enabled_site_for_crossdomain_devise || Folio::Current.site).id.to_s
       end
     end
 
@@ -94,7 +94,7 @@ module Folio::Users::DeviseControllerBase
 
     def create_site_user_link
       if resource&.respond_to?(:site_user_links)
-        resource.create_site_links_for([current_site])
+        resource.create_site_links_for([Folio::Current.site])
       end
     end
 

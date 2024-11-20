@@ -37,7 +37,7 @@ class Folio::Console::Atoms::PreviewsCell < Folio::ConsoleCell
   end
 
   def sorted_types
-    ary = Folio::Atom.klasses_for(klass: options[:klass], site: current_site)
+    ary = Folio::Atom.klasses_for(klass: options[:klass], site: Folio::Current.site)
                      .reject { |klass| klass.molecule_secondary }
 
     ary = ary.sort_by { |klass| I18n.transliterate(klass.model_name.human) }
@@ -62,7 +62,7 @@ class Folio::Console::Atoms::PreviewsCell < Folio::ConsoleCell
   end
 
   def default_locale
-    options[:default_locale].try(:to_sym) || current_site.locale || ::Rails.application.config.folio_console_locale
+    options[:default_locale].try(:to_sym) || Folio::Current.site.locale || ::Rails.application.config.folio_console_locale
   end
 
   def atom_additional_options

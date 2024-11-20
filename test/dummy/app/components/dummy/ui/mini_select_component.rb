@@ -14,7 +14,7 @@ class Dummy::Ui::MiniSelectComponent < ApplicationComponent
   def options
     if @options.nil?
       @options = if @type == :language
-        current_site.locales.map do |locale|
+        Folio::Current.site.locales.map do |locale|
           label = t(".language/#{@verbose ? "verbose" : "default"}/#{locale}")
           { href: controller.main_app.root_path(locale:), label:, selected: locale == I18n.locale.to_s }
         end
