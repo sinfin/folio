@@ -1,12 +1,17 @@
+$d-molecule-cards-image-background-gradient: linear-gradient(180deg, rgba(0, 0, 0, 0.00) 0%, rgba(0, 0, 0, 0.40) 100%) !default
+$d-molecule-cards-padded-image-gap: map-get($spacers, f) !default
+$d-molecule-cards-padded-image-mobile-gap: map-get($spacers, d) !default
+
 .d-molecule-cards-image
-  &__grid
-    display: grid
-    grid-template-columns: repeat(3, 1fr)
+  &__flex
+    display: flex
+    flex-wrap: wrap
     border-radius: $border-radius
     overflow: hidden
 
-  &__cell
-    display: flex
+  &--padded &__flex
+    gap: $d-molecule-cards-padded-image-gap
+    border-radius: 0
 
   &__card
     position: relative
@@ -15,12 +20,16 @@
     display: flex
 
   &__image-wrap
+    border-radius: 0
     overflow: hidden
     position: absolute
     inset: 0
     width: 100%
     height: 100%
     z-index: 1
+
+  &--padded &__image-wrap
+    border-radius: $border-radius
 
   &__image
     &::before
@@ -29,7 +38,7 @@
       position: absolute
       inset: 0
       z-index: 5
-      background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 30%, rgba(0, 0, 0, 0.5) 100%)
+      background: $d-molecule-cards-image-background-gradient
 
   &__content
     min-height: 100%
@@ -42,7 +51,7 @@
 
   &__content-wrap
     padding: px-to-rem(20px)
-    color: $cloud-100
+    color: $primary-white
 
   &__link
     text-decoration: none
@@ -55,38 +64,46 @@
       z-index: 10
 
   &__description
-    margin-top: $grid-gutter-base/2
-    color: $cloud-400
+    margin-top: map-get($spacers, a)
+    color: $cloud-100
     position: relative
     z-index: 11
 
-  &--padded &__grid
-    gap: $grid-gutter-width
-    border-radius: 0
-
-  &--padded &__image-wrap
-    border-radius: $border-radius
-
   +media-breakpoint-up(lg)
     &__cell
-      &:last-child:nth-child(3n+1)
-        grid-column: span 3
+      flex: 1 0 33.3333%
 
-      &:last-child:nth-child(3n+2)
-        grid-column: span 2
+      &:nth-last-child(2):nth-child(3n),
+      &:last-child:nth-child(3n+1)
+        flex: 0 0 50%
+
+      &:last-child:nth-child(3n+2):not(:nth-child(2))
+        flex: 0 0 66.6667%
+
+    &--padded &__cell
+      flex: 1 0 calc(33.3333% - ((#{$d-molecule-cards-padded-image-gap} * 2) / 3))
+
+      &:nth-last-child(2):nth-child(3n),
+      &:last-child:nth-child(3n+1)
+        flex: 1 0 calc(50% - (#{$d-molecule-cards-padded-image-gap} / 2))
+
+      &:nth-last-child(2):nth-child(3n+1):not(:first-child)
+        flex: 0 0 calc(33.3333% - (#{$d-molecule-cards-padded-image-gap} / 2))
+
+      &:last-child:nth-child(3n+2):not(:nth-child(2))
+        flex: 0 0 calc(66.6667% - (#{$d-molecule-cards-padded-image-gap} / 2))
 
   +media-breakpoint-down(lg)
-    &__grid
-      grid-template-columns: repeat(2, 1fr)
+    &__cell
+      flex: 1 0 50%
 
-    +media-breakpoint-up(sm)
-      &__cell
-        &:last-child:nth-child(odd)
-          grid-column: span 2
+    &--padded &__cell
+      flex: 1 0 calc(50% - #{$d-molecule-cards-padded-image-gap} / 2)
 
   +media-breakpoint-down(sm)
-    &__grid
-      grid-template-columns: repeat(1, 1fr)
+    &--padded &__flex
+      gap: $d-molecule-cards-padded-image-mobile-gap
 
-    &--padded &__grid
-      gap: map-get($spacers, d)
+    &__cell,
+    &--padded &__cell
+      flex: 0 0 100%
