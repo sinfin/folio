@@ -77,7 +77,7 @@ class Select extends React.Component {
   }
 
   render () {
-    const { isClearable, createable, value, options, rawOptions, onChange, innerRef, selectize, async, asyncData, addAtomSettings, defaultOptions, placeholder, dataTestId, ...rest } = this.props
+    const { isClearable, createable, value, options, rawOptions, onChange, innerRef, selectize, async, asyncData, addAtomSettings, defaultOptions, placeholder, dataTestId, menuPlacement, ...rest } = this.props
     let SelectComponent = CreatableSelect
     let loadOptions, loadOptionsRaw
 
@@ -186,6 +186,7 @@ class Select extends React.Component {
         isValidNewOption={this.isValidNewOption}
         components={{ Input }}
         dataTestId={dataTestId}
+        menuPlacement={menuPlacement}
         {...rest}
       />
     )
