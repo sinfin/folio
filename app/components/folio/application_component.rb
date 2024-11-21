@@ -107,14 +107,10 @@ class Folio::ApplicationComponent < ViewComponent::Base
 
   def true_user_with_test_fallback
     if Rails.env.test?
-      if @true_user_for_test
-        @true_user_for_test
-      else
-        begin
+      @true_user_for_test || begin
           controller.try(:true_user)
         rescue StandardError
         end
-      end
     else
       controller.try(:true_user)
     end
