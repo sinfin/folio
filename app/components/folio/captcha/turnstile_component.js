@@ -13,23 +13,18 @@ window.Folio.Stimulus.register('f-captcha-turnstile', class extends window.Stimu
   }
 
   disconnect() {
-    document.removeEventListener("turbolinks:load", this.renderTurnstile.bind(this))
-    document.removeEventListener("turbolinks:before-render", this.removeTurnstile.bind(this))
+    this.removeTurnstile()
   }
 
   loadTurnstileScript() {
-    const script = document.createElement("script")
-    Object.assign(script, {
-      id: "cloudflare-turnstile-script",
-      src: "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit",
-      async: true,
-      defer: true,
+    window.Folio.RemoteScripts.run({
+      key: "turnstile",
+      urls: ["https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"]
+    }, () => {
+      this.renderTurnstile()
+    }, () => {
+      console.error("Failed to load Cloudflare Turnstile script")
     })
-
-    document.head.appendChild(script)
-
-    script.onload = () => { this.renderTurnstile() }
-    script.onerror = () => { console.error("Failed to load Cloudflare Turnstile script") }
   }
 
   renderTurnstile() {

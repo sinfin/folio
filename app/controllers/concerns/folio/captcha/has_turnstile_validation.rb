@@ -35,8 +35,7 @@ module Folio::Captcha::HasTurnstileValidation
     def respond_with_turnstile_failure
       respond_to do |format|
         format.html {
-          set_flash_message(:alert, :failure, scope: "folio.captcha.turnstile")
-          redirect_to turnstile_failure_redirect_path
+          redirect_to turnstile_failure_redirect_path, flash: { alert: t("folio.captcha.turnstile.failure") }
         }
         format.json { render json: { error: t("folio.captcha.turnstile.failure") }, status: :unprocessable_entity }
       end
