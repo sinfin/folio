@@ -70,4 +70,8 @@ module Folio
   def self.atoms_previews_stylesheet_path(site:, class_name:)
     site.layout_assets_stylesheets_path
   end
+
+  def self.expires_in
+    1.hour
+  end
 end

@@ -70,7 +70,7 @@ class Folio::Current < ActiveSupport::CurrentAttributes
   def self.cache_aware_get_site(host: nil)
     if !skip_caching && cache_key_base
       # cache_key_base should contain request.host
-      Rails.cache.fetch(["Folio::Current.cache_aware_get_site"] + cache_key_base, expires_in: 1.hour) do
+      Rails.cache.fetch(["Folio::Current.cache_aware_get_site"] + cache_key_base, expires_in: Folio.expires_in) do
         get_site(host:)
       end
     else
@@ -102,7 +102,7 @@ class Folio::Current < ActiveSupport::CurrentAttributes
 
   def self.cache_aware_get_main_site
     if !skip_caching && cache_key_base
-      Rails.cache.fetch(["Folio::Current.cache_aware_get_main_site"] + cache_key_base, expires_in: 1.hour) do
+      Rails.cache.fetch(["Folio::Current.cache_aware_get_main_site"] + cache_key_base, expires_in: Folio.expires_in) do
         get_main_site
       end
     else
