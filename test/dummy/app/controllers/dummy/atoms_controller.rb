@@ -14,7 +14,7 @@ class Dummy::AtomsController < ApplicationController
       if @atom_klass &&
          @atom_klass < Folio::Atom::Base &&
          (atom_data = @root_data["atoms"][@atom_klass.to_s]) &&
-         @atom_klass.valid_for_site_class?(current_site.class)
+         @atom_klass.valid_for_site_class?(Folio::Current.site.class)
         atom_data_src = atom_data
 
         if params[:screenshot]
@@ -51,7 +51,7 @@ class Dummy::AtomsController < ApplicationController
       @root_data["atoms"].keys.each do |class_name|
         klass = class_name.constantize
 
-        if klass.valid_for_site_class?(current_site.class)
+        if klass.valid_for_site_class?(Folio::Current.site.class)
           hash[klass.console_insert_row] ||= []
           hash[klass.console_insert_row] << { klass:, label: klass.model_name.human }
         end
@@ -71,7 +71,7 @@ class Dummy::AtomsController < ApplicationController
 
       authenticate_user!
 
-      return if current_user.can_now?(:display_ui)
+      return if Folio::Current.user.can_now?(:display_ui)
 
       redirect_to root_path
     end

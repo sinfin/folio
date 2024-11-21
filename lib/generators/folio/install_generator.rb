@@ -93,7 +93,6 @@ module Folio
           "app/models/application_namespace_path/page/homepage.rb",
           "app/models/application_record.rb",
           "app/models/concerns/application_namespace_path/menu/base.rb",
-          "app/overrides/folio_override.rb",
           "app/overrides/models/folio/ability_override.rb",
           "app/overrides/controllers/folio/console/api/links_controller_override.rb",
           "app/views/application_namespace_path/home/index.slim",

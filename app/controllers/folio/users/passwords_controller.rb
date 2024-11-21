@@ -31,6 +31,6 @@ class Folio::Users::PasswordsController < Devise::PasswordsController
 
   private
     def sign_out_before_entering
-      sign_out(current_user) if current_user
+      sign_out(Folio::Current.user) if Folio::Current.user
     end
 end

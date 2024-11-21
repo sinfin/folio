@@ -14,7 +14,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
       scope = klass.accessible_by(Folio::Current.ability)
 
       if !klass.try(:console_api_autocomplete_dont_filter_by_site)
-        scope = scope.by_site(current_site) if scope.respond_to?(:by_site)
+        scope = scope.by_site(Folio::Current.site) if scope.respond_to?(:by_site)
       end
       scope = apply_param_scope(scope)
 
@@ -56,7 +56,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
       scope = klass.unscope(:order).where.not(field => nil)
       scope = scope.accessible_by(Folio::Current.ability)
 
-      scope = scope.by_site(current_site) if scope.respond_to?(:by_site)
+      scope = scope.by_site(Folio::Current.site) if scope.respond_to?(:by_site)
       scope = apply_param_scope(scope)
 
       if p_without.present?
@@ -107,7 +107,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
     if klass && klass < ActiveRecord::Base && klass.respond_to?(:by_query)
       scope = klass.accessible_by(Folio::Current.ability)
 
-      scope = scope.by_site(current_site) if scope.respond_to?(:by_site)
+      scope = scope.by_site(Folio::Current.site) if scope.respond_to?(:by_site)
       scope = apply_param_scope(scope)
 
       if p_without.present?
@@ -137,7 +137,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
     if klass && klass < ActiveRecord::Base && klass.respond_to?(:by_query)
       scope = klass.accessible_by(Folio::Current.ability)
 
-      scope = scope.by_site(current_site) if scope.respond_to?(:by_site)
+      scope = scope.by_site(Folio::Current.site) if scope.respond_to?(:by_site)
       scope = apply_param_scope(scope)
 
       if p_without.present?
@@ -183,7 +183,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
         if klass && klass < ActiveRecord::Base
           scope = klass.accessible_by(Folio::Current.ability)
 
-          scope = scope.by_site(current_site) if scope.respond_to?(:by_site)
+          scope = scope.by_site(Folio::Current.site) if scope.respond_to?(:by_site)
           scope = apply_param_scope(scope)
 
           if p_without.present?

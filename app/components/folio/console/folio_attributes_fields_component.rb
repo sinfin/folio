@@ -17,7 +17,7 @@ class Folio::Console::FolioAttributesFieldsComponent < Folio::Console::Applicati
   end
 
   def attribute_types
-    @attribute_types ||= @klass.by_site(current_site)
+    @attribute_types ||= @klass.by_site(Folio::Current.site)
                                .ordered
                                .to_a
   end

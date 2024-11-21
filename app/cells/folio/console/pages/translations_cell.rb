@@ -12,7 +12,7 @@ class Folio::Console::Pages::TranslationsCell < Folio::ConsoleCell
   end
 
   def locales
-    current_site.locales
+    Folio::Current.site.locales
   end
 
   def ul_class

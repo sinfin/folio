@@ -41,7 +41,7 @@ class Folio::Console::SitesController < Folio::Console::BaseController
         copyright_info_source
       ]
 
-      ary << :domain if @site != Folio.main_site
+      ary << :domain if @site != Folio::Current.main_site
 
       params.require(:site)
             .permit(*ary,
@@ -51,7 +51,7 @@ class Folio::Console::SitesController < Folio::Console::BaseController
     end
 
     def find_site
-      @site = current_site
+      @site = Folio::Current.site
     end
 
     def add_site_breadcrumb

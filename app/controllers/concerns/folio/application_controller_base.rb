@@ -2,11 +2,11 @@
 
 module Folio::ApplicationControllerBase
   extend ActiveSupport::Concern
-  include Folio::HasCurrentSite
-  include Folio::SetCurrentRequestDetails
-  include Folio::SetMetaVariables
+
   include Folio::Devise::CrossdomainController
   include Folio::RenderComponentJson
+  include Folio::SetCurrentRequestDetails
+  include Folio::SetMetaVariables
 
   included do
     include Pagy::Backend
@@ -21,9 +21,7 @@ module Folio::ApplicationControllerBase
 
     before_action :add_root_breadcrumb
 
-    around_action :set_time_zone, if: :current_user
-
-    helper_method :current_site
+    around_action :set_time_zone, if: -> { Folio::Current.user }
 
     add_flash_types :success, :warning, :info
 
@@ -31,10 +29,10 @@ module Folio::ApplicationControllerBase
   end
 
   def set_i18n_locale
-    if params[:locale] && current_site.locales.include?(params[:locale])
+    if params[:locale] && Folio::Current.site.locales.include?(params[:locale])
       I18n.locale = params[:locale]
     else
-      I18n.locale = current_site.locale
+      I18n.locale = Folio::Current.site.locale
     end
   end
 
@@ -53,15 +51,15 @@ module Folio::ApplicationControllerBase
   end
 
   def can_now?(action, object = nil)
-    object ||= current_site
-    (current_user || Folio::User.new).can_now_by_ability?(::Folio::Current.ability, action, object)
+    object ||= Folio::Current.site
+    (Folio::Current.user || Folio::User.new).can_now_by_ability?(::Folio::Current.ability, action, object)
   end
 
   def true_user
     if session[:true_user_id].present?
       Folio::User.find_by(id: session[:true_user_id])
     else
-      current_user
+      Folio::Current.user
     end
   end
 
@@ -110,7 +108,7 @@ module Folio::ApplicationControllerBase
       end
 
       catch(:warden) do
-        if user_id = try(:current_user).try(:id)
+        if user_id = Folio::Current.user.try(:id)
           cookies.signed[:u_for_log] = user_id unless cookies.signed[:u_for_log] == user_id
         else
           cookies.signed[:u_for_log] = nil if cookies.signed[:u_for_log]
@@ -119,7 +117,7 @@ module Folio::ApplicationControllerBase
     end
 
     def current_site_based_layout
-      current_site ? current_site.layout_name : "folio/application"
+      Folio::Current.site ? Folio::Current.site.layout_name : "folio/application"
     end
 
     def authenticate_inviter!
@@ -131,7 +129,7 @@ module Folio::ApplicationControllerBase
     end
 
     def set_time_zone(&block)
-      Time.use_zone(current_user.time_zone, &block)
+      Time.use_zone(Folio::Current.user.time_zone, &block)
     end
 
     def add_root_breadcrumb

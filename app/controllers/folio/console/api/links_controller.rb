@@ -6,7 +6,7 @@ class Folio::Console::Api::LinksController < Folio::Console::Api::BaseController
 
     page_links.merge(additional_links).each do |klass, url_proc|
       scope = klass
-      scope = scope.by_site(current_site) if klass.try(:has_belongs_to_site?)
+      scope = scope.by_site(Folio::Current.site) if klass.try(:has_belongs_to_site?)
 
       if params[:q].present? && scope.respond_to?(:by_query)
         scope = scope.by_query(params[:q])

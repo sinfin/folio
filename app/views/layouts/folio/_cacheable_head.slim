@@ -14,7 +14,7 @@ title = public_page_title
 
 meta property="og:title" content=og_title
 
-- current_site.layout_twitter_meta.each do |name, content|
+- Folio::Current.site.layout_twitter_meta.each do |name, content|
   meta name=name content=content
 
 meta name="twitter:title" content=og_title

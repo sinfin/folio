@@ -104,10 +104,10 @@ class Folio::Console::Api::AutocompletesControllerTest < Folio::Console::BaseCon
     same_part = "emailme"
     superadmin = create(:folio_user, superadmin: true, email: "#{same_part}@supedamin.com", first_name: "Superadmin")
     administrator = create(:folio_user, email: "#{same_part}@administrator.com", first_name: "Administrator")
-    administrator.set_roles_for(site: Folio.main_site, roles: ["administrator"])
+    administrator.set_roles_for(site: Folio::Current.main_site, roles: ["administrator"])
     administrator.save!
     manager = create(:folio_user, email: "#{same_part}@manager.com", first_name: "Manager")
-    manager.set_roles_for(site: Folio.main_site, roles: ["manager"])
+    manager.set_roles_for(site: Folio::Current.main_site, roles: ["manager"])
     manager.save!
 
     sign_in superadmin

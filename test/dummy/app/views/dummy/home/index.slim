@@ -6,12 +6,12 @@
 
     - if user_signed_in?
       .mt-5
-        = show_for current_user do |s|
+        = show_for Folio::Current.user do |s|
           = s.attribute(:email)
           = s.attribute(:nickname)
           = s.attribute(:authentications)
             == cell('folio/devise/omniauth/authentications/list',
-                    current_user)
+                    Folio::Current.user)
 
         - if can_now?(:access_console)
           .mt-4.row

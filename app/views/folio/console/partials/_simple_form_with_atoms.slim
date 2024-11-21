@@ -34,7 +34,7 @@
         .f-c-simple-form-with-atoms__previews
           ruby:
             keys = if f.object.class.try(:atom_locales)
-              filtered = f.object.class.atom_locales & current_site.locales_as_sym
+              filtered = f.object.class.atom_locales & Folio::Current.site.locales_as_sym
 
               if filtered.present?
                 filtered

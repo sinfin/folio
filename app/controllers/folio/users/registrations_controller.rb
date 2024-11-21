@@ -98,7 +98,7 @@ class Folio::Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def update_password
-    user = current_user
+    user = Folio::Current.user
 
     if user.has_generated_password?
       update_password_params = params.require(:user)

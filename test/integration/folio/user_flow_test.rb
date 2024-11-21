@@ -102,7 +102,7 @@ class Folio::UserFlowTest < Folio::CapybaraTest
     main_site = create(:folio_site, type: "Folio::Site", domain: "main.localhost")
     target_site = create(:folio_site, type: "Folio::Site", domain: "target.localhost")
     host_site(target_site)
-    assert_not_equal Folio.main_site, target_site
+    assert_not_equal Folio::Current.main_site, target_site
 
     email = "folio@folio.com"
     password = "Complex@Password.123"
@@ -110,7 +110,7 @@ class Folio::UserFlowTest < Folio::CapybaraTest
     assert user.site_user_links.blank?
 
     Rails.application.config.stub(:folio_crossdomain_devise, true) do
-      Folio.stub(:site_for_crossdomain_devise, main_site) do
+      Folio::Current.stub(:site_for_crossdomain_devise, main_site) do
         visit main_app.new_user_session_url(only_path: false, host: target_site.domain)
 
         # result :redirect_to_master_sessions_new with params {"crossdomain"=>"s_8zz13Bazka7Y2E62Yh",

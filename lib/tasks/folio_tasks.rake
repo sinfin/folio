@@ -15,7 +15,7 @@ namespace :folio do
                             first_name: "Test",
                             last_name: "Dummy",
                             confirmed_at: Time.current,
-                            auth_site: Folio.main_site)
+                            auth_site: Folio::Current.main_site)
 
         puts "Created test@test.test account."
       end

@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class Folio::SharedFilesTest < Folio::Console::BaseControllerTest
+class Folio::Console::SharedFilesTest < Folio::Console::BaseControllerTest
   attr_reader :main_site, :site_lvh, :lvh_image, :shared_image
 
   def setup
@@ -152,7 +152,7 @@ class Folio::SharedFilesTest < Folio::Console::BaseControllerTest
     end
   end
 
-  test "`config.folio_shared_files_between_sites` is false: files are stored under current_site" do
+  test "`config.folio_shared_files_between_sites` is false: files are stored under Folio::Current.site" do
     host_site(site_lvh)
     sign_in superadmin
 

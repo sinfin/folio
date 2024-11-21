@@ -21,7 +21,7 @@
   - else
       = f.hidden_field :type, value: types.first.second
 
-  - locales = current_site.locales.map(&:presence).compact
+  - locales = Folio::Current.site.locales.map(&:presence).compact
   - if locales.size > 1
     = f.input :locale, collection: locales,
                        include_blank: false
@@ -39,7 +39,7 @@
     data-menupaths=@serialized_menu_paths
     data-menuitems=@serialized_menu_items
     data-menudepth=@menu.class.max_nesting_depth
-    data-menustyles=@menu.class.styles_for_react_select(site: current_site, locale: I18n.locale)
+    data-menustyles=@menu.class.styles_for_react_select(site: Folio::Current.site, locale: I18n.locale)
   ]
 
 = form_footer f

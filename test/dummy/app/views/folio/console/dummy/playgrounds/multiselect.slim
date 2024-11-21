@@ -1,6 +1,6 @@
 h1 Multiselect
 
-= simple_form_for(current_site, url: "#") do |f|
+= simple_form_for(Folio::Current.site, url: "#") do |f|
   = f.association :pages,
-                  collection: current_site.pages,
-                  selected: current_site.pages.first(2).pluck(:id)
+                  collection: Folio::Current.site.pages,
+                  selected: Folio::Current.site.pages.first(2).pluck(:id)

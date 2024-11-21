@@ -105,13 +105,13 @@ class Folio::Console::UiController < Folio::Console::BaseController
     @button_model_for_form_modals = [
       {
         variant: :info,
-        label: "current_user edit",
-        form_modal: url_for([:edit, :console, current_user]),
+        label: "Folio::Current.user edit",
+        form_modal: url_for([:edit, :console, Folio::Current.user]),
       },
       {
         variant: :info,
-        label: "current_user edit custom title",
-        form_modal: url_for([:edit, :console, current_user]),
+        label: "Folio::Current.user edit custom title",
+        form_modal: url_for([:edit, :console, Folio::Current.user]),
         form_modal_title: "custom title",
       },
     ]
@@ -145,7 +145,7 @@ class Folio::Console::UiController < Folio::Console::BaseController
 
   private
     def only_allow_superadmins
-      if current_user.superadmin?
+      if Folio::Current.user.superadmin?
         add_breadcrumb "UI", console_ui_path
 
         if action_name != "show"

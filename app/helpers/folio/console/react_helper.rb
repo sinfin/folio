@@ -121,7 +121,7 @@ module Folio::Console::ReactHelper
       atoms:,
       destroyedIds: destroyed_ids,
       namespace:,
-      structures: Folio::Atom.structures_for(klass: f.object.class, site: current_site),
+      structures: Folio::Atom.structures_for(klass: f.object.class, site: Folio::Current.site),
       placementType: f.object.class.to_s,
       className: f.object.class.to_s,
     }
@@ -282,7 +282,7 @@ module Folio::Console::ReactHelper
       hash = {
         "class" => class_name,
         "data-notes" => data.to_json,
-        "data-account-id" => current_user.id,
+        "data-account-id" => Folio::Current.user.id,
         "data-param-base" => param_base,
         "data-label" => Folio::ConsoleNote.model_name.human(count: 2),
       }

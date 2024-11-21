@@ -22,7 +22,7 @@ class Folio::UiCell < Folio::ApplicationCell
     @sites.map do |site|
       {
         href: sites_tabs_href(site),
-        active: site == current_site,
+        active: site == Folio::Current.site,
         label: site.to_label
       }
     end

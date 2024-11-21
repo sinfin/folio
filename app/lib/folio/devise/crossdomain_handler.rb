@@ -37,7 +37,7 @@ class Folio::Devise::CrossdomainHandler
     @controller_name = controller_name
     @action_name = action_name
     @params = params || {}
-    @master_site = master_site || Folio.enabled_site_for_crossdomain_devise
+    @master_site = master_site || Folio::Current.enabled_site_for_crossdomain_devise
     @resource_class = resource_class || Folio::User
     @resource_name = resource_name || :user
     @devise_controller = devise_controller
@@ -77,7 +77,7 @@ class Folio::Devise::CrossdomainHandler
 
   private
     def supports_crossdomain_devise?
-      !!master_site
+      Rails.application.config.folio_crossdomain_devise && !!master_site
     end
 
     def handle_on_master_site!
@@ -97,7 +97,7 @@ class Folio::Devise::CrossdomainHandler
 
           clear_session!
 
-          target_site = Folio::Site.find_by_slug(target_site_slug) || Folio.main_site
+          target_site = Folio::Site.find_by_slug(target_site_slug) || Folio::Current.main_site
 
           Result.new(action: :sign_in_on_target_site,
                      resource_name:,

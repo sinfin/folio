@@ -9,7 +9,7 @@ module Folio::MailerBase
   end
 
   def site
-    @site ||= Folio.site_instance_for_mailers
+    @site ||= Folio::Current.site_for_mailers
   end
 
   def default_url_options

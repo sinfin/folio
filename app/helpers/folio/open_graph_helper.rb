@@ -3,7 +3,7 @@
 module Folio::OpenGraphHelper
   def og_image
     return @og_image if @og_image.present?
-    path = defined?(og_image_fallback) ? og_image_fallback : current_site.og_image_with_fallback
+    path = defined?(og_image_fallback) ? og_image_fallback : Folio::Current.site.og_image_with_fallback
     image_url(path, host: request.base_url)
   rescue Sprockets::Rails::Helper::AssetNotFound
     nil
@@ -26,7 +26,7 @@ module Folio::OpenGraphHelper
   end
 
   def og_site_name
-    current_site.domain
+    Folio::Current.site.domain
   end
 
   def og_url

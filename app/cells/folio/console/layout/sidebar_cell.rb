@@ -145,14 +145,14 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
 
   def main_class_names
     shared_links = []
-    sites = (current_site == Folio.main_site || current_user.superadmin?) ? Folio::Site.ordered : [current_site]
+    sites = (Folio::Current.site == Folio::Current.main_site || Folio::Current.user.superadmin?) ? Folio::Site.ordered : [Folio::Current.site]
     if ::Rails.application.config.folio_shared_files_between_sites
       shared_links = [{
-        locale: Folio.main_site.console_locale,
+        locale: Folio::Current.main_site.console_locale,
         title: nil,
         collapsed: nil,
         expanded: nil,
-        links: [file_links(Folio.main_site).compact]
+        links: [file_links(Folio::Current.main_site).compact]
       }]
       sites = Folio::Site.ordered
     end
@@ -165,7 +165,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
 
   def secondary_class_names
     links = []
-    links << link_for_site_class(Folio.main_site, Folio::User) if show_users? && current_user.superadmin?
+    links << link_for_site_class(Folio::Current.main_site, Folio::User) if show_users? && Folio::Current.user.superadmin?
 
     [
       {
@@ -204,11 +204,11 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
   end
 
   def homepage_instance
-    @homepage_instance ||= "#{::Rails.application.class.name.deconstantize}::Page::Homepage".safe_constantize.try(:instance, fail_on_missing: false, site: current_site)
+    @homepage_instance ||= "#{::Rails.application.class.name.deconstantize}::Page::Homepage".safe_constantize.try(:instance, fail_on_missing: false, site: Folio::Current.site)
   end
 
   def homepage_for_site(site)
-    instance = "#{site.class.name.split("::").first}::Page::Homepage".safe_constantize.try(:instance, fail_on_missing: false, site: current_site)
+    instance = "#{site.class.name.split("::").first}::Page::Homepage".safe_constantize.try(:instance, fail_on_missing: false, site: Folio::Current.site)
 
     if instance && controller.can_now?(:index, Folio::Page)
       {
@@ -240,7 +240,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
   end
 
   def show_search?
-    can_now?(:multisearch_console, current_site)
+    can_now?(:multisearch_console, Folio::Current.site)
   end
 
   private
@@ -298,13 +298,13 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
                       label: t(".settings"),
                     }
         end
-        links << link_for_site_class(site, Folio::User) if show_users? && !current_user.superadmin?
+        links << link_for_site_class(site, Folio::User) if show_users? && !Folio::Current.user.superadmin?
 
         {
           locale: site.console_locale,
           title: site.pretty_domain,
-          collapsed: current_site != site,
-          expanded: current_site == site,
+          collapsed: Folio::Current.site != site,
+          expanded: Folio::Current.site == site,
           links: links.compact
         }
       end
@@ -354,12 +354,12 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
       }
     end
 
-    def can_now?(action, object, site: current_site)
-      (current_user || Folio::User.new).can_now_by_ability?(site_ability(site), action, object)
+    def can_now?(action, object, site: nil)
+      (Folio::Current.user || Folio::User.new).can_now_by_ability?(site_ability(site || Folio::Current.site), action, object)
     end
 
     def site_ability(site)
       @site_abilities ||= {}
-      @site_abilities[site] ||= Folio::Ability.new(current_user, site)
+      @site_abilities[site] ||= Folio::Ability.new(Folio::Current.user, site)
     end
 end

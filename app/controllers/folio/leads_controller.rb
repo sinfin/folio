@@ -7,7 +7,7 @@ class Folio::LeadsController < Folio::ApplicationController
     lead = Folio::Lead.new(lead_params.merge(url: request.referrer))
 
     @lead = check_recaptcha_if_needed(lead)
-    @lead.site = current_site
+    @lead.site = Folio::Current.site
 
     success = @lead.save
 

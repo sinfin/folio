@@ -1,8 +1,8 @@
 - if Rails.env.production? || ENV["FORCE_ENABLE_ANALYTICS"].present?
-  - if current_site.google_analytics_tracking_code_v4.present?
+  - if Folio::Current.site.google_analytics_tracking_code_v4.present?
     script[
       async=true
-      src="https://www.googletagmanager.com/gtag/js?id=#{current_site.google_analytics_tracking_code_v4}"
+      src="https://www.googletagmanager.com/gtag/js?id=#{Folio::Current.site.google_analytics_tracking_code_v4}"
       type="text/javascript"
     ]
 
@@ -11,9 +11,9 @@
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
 
-      gtag('config', '#{current_site.google_analytics_tracking_code_v4}');
+      gtag('config', '#{Folio::Current.site.google_analytics_tracking_code_v4}');
 
-  - elsif current_site.google_analytics_tracking_code.present?
+  - elsif Folio::Current.site.google_analytics_tracking_code.present?
     script[
       type=Folio::CookieConsentCell::DISABLED_SCRIPT_TYPE
       data-cookiecategory=Folio::CookieConsentCell::ANALYTICS_CATEGORY
@@ -29,11 +29,11 @@
         ga('require', 'displayfeatures');
         ga('require', 'linkid', 'linkid.js');
 
-        ga('create', '#{current_site.google_analytics_tracking_code}', 'auto');
+        ga('create', '#{Folio::Current.site.google_analytics_tracking_code}', 'auto');
 
         ga('send', 'pageview');
 
-  - if current_site.facebook_pixel_code.present?
+  - if Folio::Current.site.facebook_pixel_code.present?
     script[
       type=Folio::CookieConsentCell::DISABLED_SCRIPT_TYPE
       data-cookiecategory=Folio::CookieConsentCell::ANALYTICS_CATEGORY
@@ -46,5 +46,5 @@
         t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
         document,'script','//connect.facebook.net/en_US/fbevents.js');
         // Insert Your Facebook Pixel ID below.
-        fbq('init', '#{current_site.facebook_pixel_code}');
+        fbq('init', '#{Folio::Current.site.facebook_pixel_code}');
         fbq('track', 'PageView');

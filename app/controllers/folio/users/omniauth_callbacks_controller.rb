@@ -50,7 +50,7 @@ class Folio::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksContr
       if @user.save
         session.delete(:pending_folio_authentication)
 
-        @user.create_site_links_for([current_site, source_site])
+        @user.create_site_links_for([Folio::Current.site, source_site])
 
         sign_in(resource_name, @user)
         set_flash_message!(:notice, :signed_in) if is_flashing_format?
@@ -121,10 +121,10 @@ class Folio::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksContr
 
         if auth.user.nil?
           # it's a new Authentication
-          auth.user = current_user
+          auth.user = Folio::Current.user
           auth.save!
 
-          if current_user.reload.authentications.where(provider: auth.provider).size == 1
+          if Folio::Current.user.reload.authentications.where(provider: auth.provider).size == 1
             msg = t("folio.users.omniauth_callbacks.added_provider",
                     provider: auth.human_provider)
             redirect_to target_url, flash: { success: msg }

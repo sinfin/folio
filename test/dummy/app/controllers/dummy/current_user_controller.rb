@@ -2,11 +2,11 @@
 
 class Dummy::CurrentUserController < ApplicationController
   def settings
-    @user = current_user
+    @user = Folio::Current.user
   end
 
   def update_settings
-    current_user.update(user_params)
+    Folio::Current.user.update(user_params)
   end
 
   private

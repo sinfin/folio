@@ -32,7 +32,7 @@ div class=bem_class_name data=data
               }
                 - if data_type == "integer"
                   - if ::Rails.application.config.folio_using_traco
-                    - current_site.locales.each_with_index do |locale, i|
+                    - Folio::Current.site.locales.each_with_index do |locale, i|
                       - if i.zero?
                         = integer_input(g, key: "value_#{locale}")
                       - else
