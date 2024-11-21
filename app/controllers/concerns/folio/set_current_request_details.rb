@@ -16,7 +16,10 @@ module Folio::SetCurrentRequestDetails
           request.params["user"]["auth_site_id"] = Folio::Current.site.id.to_s
         end
 
-        Folio::Current.setup!(request:, user: current_user, session:)
+        Folio::Current.setup!(request:,
+                              user: current_user,
+                              session:,
+                              cache_key_base: Rails.application.config.action_controller.perform_caching ? try(:cache_key_base) : nil)
       end
     end
 end

@@ -12,7 +12,9 @@ class Folio::Current < ActiveSupport::CurrentAttributes
             :ip_address,
             :url,
             :session,
-            :ability
+            :ability,
+            :cache_key_base,
+            :skip_caching
 
   SITE_KEYS = %i[
     site
@@ -25,24 +27,29 @@ class Folio::Current < ActiveSupport::CurrentAttributes
     attributes
   end
 
-  def setup!(request:, user: nil, session: nil)
-    setup_folio_data(request:, user:, session:)
+  def setup!(request:, user: nil, session: nil, cache_key_base: nil)
+    setup_folio_data(request:, user:, session:, cache_key_base:)
   end
 
-  def setup_folio_data(request:, user:, session:)
+  def setup_folio_data(request:, user:, session:, cache_key_base:)
     self.host = request.host
     self.request_id = request.uuid
     self.user_agent = request.user_agent
     self.ip_address = request.remote_ip
     self.url = request.url
     self.user = user
-    self.ability = Folio::Ability.new(user, site)
     self.session = session
 
+    self.cache_key_base = cache_key_base
+
+    # keep the code that uses site under cache_key_base
     nillify_site_records unless self.class.site_matches_host?(site:, host:)
+    self.ability = Folio::Ability.new(user, site)
   end
 
   def nillify_site_records
+    self.skip_caching = true
+
     SITE_KEYS.each do |key|
       send("#{key}_record=", nil)
     end
@@ -60,9 +67,20 @@ class Folio::Current < ActiveSupport::CurrentAttributes
     end
   end
 
+  def self.cache_aware_get_site(host: nil)
+    if !skip_caching && cache_key_base
+      # cache_key_base should contain request.host
+      Rails.cache.fetch(["Folio::Current.cache_aware_get_site"] + cache_key_base, expires_in: 1.hour) do
+        get_site(host:)
+      end
+    else
+      get_site(host:)
+    end
+  end
+
   def self.get_site(host: nil)
     if host.nil?
-      main_site
+      Folio::Current.main_site
     else
       if Rails.env.development?
         slug = host.delete_suffix(".localhost")
@@ -79,7 +97,17 @@ class Folio::Current < ActiveSupport::CurrentAttributes
   end
 
   def site
-    self.site_record ||= self.class.get_site(host:)
+    self.site_record ||= self.class.cache_aware_get_site(host:)
+  end
+
+  def self.cache_aware_get_main_site
+    if !skip_caching && cache_key_base
+      Rails.cache.fetch(["Folio::Current.cache_aware_get_main_site"] + cache_key_base, expires_in: 1.hour) do
+        get_main_site
+      end
+    else
+      get_main_site
+    end
   end
 
   def self.get_main_site
@@ -87,7 +115,7 @@ class Folio::Current < ActiveSupport::CurrentAttributes
   end
 
   def main_site
-    self.main_site_record ||= self.class.get_main_site
+    self.main_site_record ||= self.class.cache_aware_get_main_site
   end
 
   def reset_ability!

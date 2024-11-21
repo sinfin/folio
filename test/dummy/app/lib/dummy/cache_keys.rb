@@ -7,11 +7,14 @@ module Dummy::CacheKeys
     dummy_blog_articles
     dummy_blog_authors
     dummy_blog_topics
+
     folio_files
     folio_menus
     folio_pages
     folio_private_attachments
     folio_sites
+
+    friendly_id_slugs
   ]
 
   CACHE_KEY_TABLE_NAMES_SQL_IN = CACHE_KEY_TABLE_NAMES.map { |tn| "'#{tn}'" }.join(",")
