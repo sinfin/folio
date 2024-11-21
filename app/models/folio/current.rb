@@ -73,7 +73,7 @@ class Folio::Current < ActiveSupport::CurrentAttributes
           raise "Could not find site with '#{slug}' slug. Available are #{Folio::Site.pluck(:slug)}"
         end
       else
-        Folio::Site.find_by(domain: host) || main_site
+        Folio::Site.find_by(domain: host) || Folio::Current.main_site
       end
     end
   end
