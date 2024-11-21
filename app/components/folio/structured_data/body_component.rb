@@ -20,7 +20,7 @@ class Folio::StructuredData::BodyComponent < Folio::ApplicationComponent
 
     return if data.blank?
 
-    @cache_key = if Folio::Current.cache_key_base
+    @cache_key = if @record && Folio::Current.cache_key_base
       ["folio/structured_data/body_component", @record.class.table_name, @record.id, @record.updated_at] + Folio::Current.cache_key_base
     end
 
