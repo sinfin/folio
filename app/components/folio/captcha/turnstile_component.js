@@ -1,16 +1,8 @@
 window.Folio.Stimulus.register('f-captcha-turnstile', class extends window.Stimulus.Controller {
   static values = { siteKey: String }
-  static targets = ["turnstileContainer"]
 
   connect() {
-    if (!document.querySelector("#cloudflare-turnstile-script")) {
-      this.loadTurnstileScript()
-    } else {
-      this.renderTurnstile()
-    }
-
-    document.addEventListener("turbolinks:load", this.renderTurnstile.bind(this))
-    document.addEventListener("turbolinks:before-render", this.removeTurnstile.bind(this))
+    this.loadTurnstileScript()
   }
 
   disconnect() {
@@ -31,7 +23,7 @@ window.Folio.Stimulus.register('f-captcha-turnstile', class extends window.Stimu
   renderTurnstile() {
     if (!this.siteKeyValue || typeof turnstile === 'undefined') return
 
-    const turnstileContainer = this.turnstileContainerTarget
+    const turnstileContainer = this.element
 
     if (turnstileContainer && !turnstileContainer.innerHTML) {
       // Control the visibility of the iframe wrapper because even when the iframe is hidden,
@@ -54,7 +46,7 @@ window.Folio.Stimulus.register('f-captcha-turnstile', class extends window.Stimu
   }
 
   removeTurnstile() {
-    if (typeof turnstile === 'undefined' || !this.turnstileContainerTarget.innerHTML) return
+    if (typeof turnstile === 'undefined' || !this.element.innerHTML) return
 
     turnstile.remove()
   }
