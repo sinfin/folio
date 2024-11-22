@@ -65,7 +65,7 @@ class Folio::ApplicationComponent < ViewComponent::Base
     if menu_item.url.present?
       menu_item.url
     elsif menu_item.eager_load_aware_target.present?
-      url_for(menu_item.eager_load_aware_target)
+      url_for([menu_item.eager_load_aware_target, locale: I18n.locale])
     elsif menu_item.rails_path.present?
       begin
         controller.send(menu_item.rails_path)
