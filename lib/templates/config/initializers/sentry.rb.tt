@@ -1,0 +1,9 @@
+# frozen_string_literal: true
+
+if ENV["SENTRY_DSN"].present? && (Rails.env.production? || Rails.env.staging?)
+  Sentry.init do |config|
+    config.dsn = ENV["SENTRY_DSN"]
+    config.breadcrumbs_logger = [:active_support_logger, :http_logger]
+    config.enable_tracing = true
+  end
+end

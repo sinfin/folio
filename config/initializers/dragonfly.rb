@@ -45,6 +45,7 @@ Dragonfly.app.configure do
     if shell("which", "jpgicc").blank?
       msg = "Missing jpgicc binary. Profiles not normalized."
       Raven.capture_message msg if defined?(Raven)
+      Sentry.capture_message msg if defined?(Sentry)
       logger.error msg if defined?(logger)
       content
     else
@@ -64,6 +65,7 @@ Dragonfly.app.configure do
     if shell("which", "jpegtran").blank?
       msg = "Missing jpegtran binary. Thumbnail not optimized."
       Raven.capture_message msg if defined?(Raven)
+      Sentry.capture_message msg if defined?(Sentry)
       logger.error msg if defined?(logger)
       content
     else
@@ -97,6 +99,7 @@ Dragonfly.app.configure do
     if shell("which", "exiftool").blank?
       msg = "Missing ExifTool binary. Metadata not processed."
       Raven.capture_message msg if defined?(Raven)
+      Sentry.capture_message msg if defined?(Sentry)
       logger.error msg if defined?(logger)
       # content
       {}

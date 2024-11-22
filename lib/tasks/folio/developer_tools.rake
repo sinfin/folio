@@ -60,6 +60,7 @@ namespace :folio do
         else
           msg = "Failed to fix user #{user.id} #{user.to_label} #{user.errors.full_messages.join(", ")}"
           Raven.capture_message(msg) if defined?(Raven)
+          Sentry.capture_message(msg) if defined?(Sentry)
           Rails.logger.error(msg)
         end
       end

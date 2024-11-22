@@ -5,6 +5,7 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
 
   discard_on(ActiveJob::DeserializationError) do |job, e|
     Raven.capture_exception(e) if defined?(Raven)
+    Sentry.capture_exception(e) if defined?(Sentry)
   end
 
   def perform(image, size, quality, x: nil, y: nil, force: false)
