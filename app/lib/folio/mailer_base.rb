@@ -16,7 +16,8 @@ module Folio::MailerBase
     {
       only_path: false,
       host: site.env_aware_domain,
-      locale: ::Rails.application.config.folio_console_add_locale_to_preview_links ? (site.locale || I18n.locale) : nil
+      locale: ::Rails.application.config.folio_console_add_locale_to_preview_links ? (site.locale || I18n.locale) : nil,
+      protocol: (Rails.env.development? && !ENV["FORCE_SSL"]) ? "http" : "https"
     }.compact
   end
 
