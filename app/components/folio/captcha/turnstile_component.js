@@ -28,6 +28,7 @@ window.Folio.Stimulus.register('f-captcha-turnstile', class extends window.Stimu
     if (turnstileContainer && !turnstileContainer.innerHTML) {
       turnstile.render(turnstileContainer, {
         sitekey: this.siteKeyValue,
+        language: document.documentElement.lang,
         appearance: 'interaction-only',
         'before-interactive-callback': () => { turnstileContainer.style.display = "block" },
       })
