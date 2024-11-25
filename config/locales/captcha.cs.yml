@@ -1,0 +1,5 @@
+cs:
+  folio:
+    captcha:
+      turnstile:
+        failure: Ověření captcha se nezdařilo. Prosíme zkuste to znovu.
