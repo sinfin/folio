@@ -26,22 +26,15 @@ window.Folio.Stimulus.register('f-captcha-turnstile', class extends window.Stimu
     const turnstileContainer = this.element
 
     if (turnstileContainer && !turnstileContainer.innerHTML) {
-      // Control the visibility of the iframe wrapper because even when the iframe is hidden,
-      // the wrapper takes up unnecessary space and causes layout shifts
-      const updateIframeWraperVisibility = (display) => {
-        const iframeWrapper = turnstileContainer.querySelector(":scope > div")
-        if (iframeWrapper) {
-          iframeWrapper.style.display = display
-        }
-      }
-
       turnstile.render(turnstileContainer, {
         sitekey: this.siteKeyValue,
         appearance: 'interaction-only',
-        'before-interactive-callback': () => { updateIframeWraperVisibility("block") },
+        'before-interactive-callback': () => { turnstileContainer.style.display = "block" },
       })
 
-      updateIframeWraperVisibility("none")
+      // Control the visibility of the turnstileContainer because even when the iframe is hidden,
+      // it's wrapper takes up unnecessary space and causes layout shifts
+      turnstileContainer.style.display = "none"
     }
   }
 
