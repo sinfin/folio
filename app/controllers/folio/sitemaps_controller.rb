@@ -15,6 +15,6 @@ class Folio::SitemapsController < ActionController::Base
 
   private
     def s3_sitemap_url(filename)
-      "https://#{ENV["S3_BUCKET_NAME"]}.s3.amazonaws.com/sitemaps/#{Folio::Current.site.domain}/#{filename}"
+      "https://s3.#{ENV["S3_REGION"]}.amazonaws.com/#{ENV["S3_BUCKET_NAME"]}/sitemaps/#{Folio::Current.site.domain}/#{filename}"
     end
 end
