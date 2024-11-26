@@ -130,6 +130,11 @@ en:
         state: State
         vat_identification_number: VAT number
         zip: ZIP
+      folio/url_redirect:
+        url_from: Redirect from
+        url_to: Redirect to
+        status_code: Status code
+        include_query: Include query string
 
     errors:
       messages:
@@ -156,6 +161,14 @@ en:
           attributes:
             roles:
               not_available_for_site: "Roles %{roles} are not completelly available for site '%{site}'."
+        folio/url_redirect:
+          attributes:
+            url_from:
+              same_as_another_url_to: cannot be the same as "%{attribute_name}" of another %{model_name}
+
+            url_to:
+              same_as_url_from: cannot be the same as "%{attribute_name}"
+              same_as_another_url_from: cannot be the same as "%{attribute_name}" of another %{model_name}
 
     models:
       folio/atom:
@@ -211,7 +224,6 @@ en:
         one: Tag
         other: Tags
       folio/address/base:
-        few: Addresses
         one: Address
         other: Addresses
       folio/console_note:
@@ -221,11 +233,14 @@ en:
         one: User for site
         other: Users for site
       folio/attribute:
-        few: Attribute
+        one: Attribute
         other: Attributes
       folio/attribute_type:
-        few: Attribute
+        one: Attribute
         other: Attributes
+      folio/url_redirect:
+        one: Redirect
+        other: Redirects
 
     state_machines:
       folio/lead:

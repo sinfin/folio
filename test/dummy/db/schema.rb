@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_11_20_054115) do
+ActiveRecord::Schema[7.1].define(version: 2024_11_26_064229) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -420,6 +420,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_20_054115) do
     t.bigint "site_id"
     t.text "atoms_data_for_search"
     t.string "preview_token"
+    t.jsonb "folio_audited_atoms_data"
+    t.jsonb "folio_audited_file_placements_data"
     t.index "(((setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((title)::text, ''::text))), 'A'::\"char\") || setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE(perex, ''::text))), 'B'::\"char\")) || setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE(atoms_data_for_search, ''::text))), 'C'::\"char\")))", name: "index_folio_pages_on_by_query", using: :gin
     t.index ["ancestry"], name: "index_folio_pages_on_ancestry"
     t.index ["locale"], name: "index_folio_pages_on_locale"
@@ -521,6 +523,19 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_20_054115) do
     t.index ["type"], name: "index_folio_sites_on_type"
   end
 
+  create_table "folio_url_redirects", force: :cascade do |t|
+    t.string "title"
+    t.string "url_from"
+    t.string "url_to"
+    t.integer "status_code", default: 301
+    t.boolean "published", default: true
+    t.boolean "include_query", default: false
+    t.bigint "site_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["site_id"], name: "index_folio_url_redirects_on_site_id"
+  end
+
   create_table "folio_users", force: :cascade do |t|
     t.string "email"
     t.string "encrypted_password", default: "", null: false
@@ -570,7 +585,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_20_054115) do
     t.string "bank_account_number"
     t.string "company_name"
     t.string "time_zone", default: "Prague"
-    t.bigint "auth_site_id", null: false
+    t.bigint "auth_site_id", default: 3, null: false
     t.string "preferred_locale"
     t.index ["auth_site_id"], name: "index_folio_users_on_auth_site_id"
     t.index ["confirmation_token"], name: "index_folio_users_on_confirmation_token", unique: true

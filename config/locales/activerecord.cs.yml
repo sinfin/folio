@@ -150,6 +150,12 @@ cs:
         vat_identification_number: DIČ
         zip: PSČ
 
+      folio/url_redirect:
+        url_from: Přesměrovat z
+        url_to: Přesměrovat na
+        status_code: Kód odpovědi
+        include_query: Zahodit query parametry
+
     errors:
       messages:
         indestructible: Záznam není možné odstranit.
@@ -183,6 +189,16 @@ cs:
           attributes:
             roles:
               not_available_for_site: "Role %{roles} nejsou všechny dostupné pro web '%{site}'."
+
+        folio/url_redirect:
+          attributes:
+            url_from:
+              same_as_another_url_to: nemůže být stejná jako "%{attribute_name}" jiného %{model_name}
+
+            url_to:
+              same_as_url_from: nemůže být stejná jako "%{attribute_name}"
+              same_as_another_url_from: nemůže být stejná jako "%{attribute_name}" jiného %{model_name}
+
     models:
       folio/atom:
         few: Kapitoly
@@ -284,6 +300,10 @@ cs:
         few: Atributy
         one: Atribut
         other: Atributů
+      folio/url_redirect:
+        few: Přesměrování
+        one: Přesměrování
+        other: Přesměrování
 
     state_machines:
       folio/lead:

@@ -227,6 +227,13 @@ FactoryBot.define do
     country_code { "cc" }
   end
 
+  factory :folio_url_redirect, class: "Folio::UrlRedirect" do
+    sequence(:url_from) { |i| "https://url.from/#{i}" }
+    sequence(:url_to) { |i| "https://url.to/#{i}" }
+    status_code { 301 }
+    site { get_current_or_existing_site_or_create_from_factory }
+  end
+
   factory :dummy_menu, class: "Dummy::Menu::Navigation", parent: :folio_menu
 
   factory :dummy_menu_footer, class: "Dummy::Menu::Footer", parent: :folio_menu
