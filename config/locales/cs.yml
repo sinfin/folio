@@ -54,6 +54,10 @@ cs:
       accept: Ano
       cancel: Ne
     confirmation: Určitě?
+    console:
+      pages:
+        clone:
+          cloned_title: "%{original_title} - duplikát %{date}"
 
   head:
     description: ''
@@ -69,3 +73,11 @@ cs:
   time:
     formats:
       folio_short: "%d. %m. %Y, %H:%M"
+
+  cloning:
+    start: "Začátek klonování %{model} #%{id}"
+    deep_dup_finished: "Deep dup dokončen"
+    references_copied: "Reference zkopirovány: %{references}"
+    associations_duplicated: "Asociace duplikovány: %{associations}"
+    finished: "Klonování dokončeno"
+    error: "Chyba při klonování: %{message}"

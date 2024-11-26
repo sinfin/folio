@@ -35,6 +35,11 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
         icon: :edit_box,
         url: -> (record) { through_aware_console_url_for(record, action: :edit, safe: true) },
       },
+      clone: {
+        name: :clone,
+        icon: :square_outline,
+        url: -> (record) { through_aware_console_url_for(record, action: :clone, safe: true) },
+      },
       show: {
         name: :show,
         icon: :eye,

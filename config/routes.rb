@@ -54,6 +54,7 @@ Folio::Engine.routes.draw do
             get :revision, path: "revision/:version"
             post :restore, path: "restore/:version"
           end
+          get :clone
         end
       end
 
