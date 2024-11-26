@@ -55,7 +55,6 @@ cs:
       cancel: Ne
     confirmation: Určitě?
     console:
-      pages:
         clone:
           cloned_title: "%{original_title} - duplikát %{date}"
 
