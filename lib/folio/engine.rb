@@ -179,6 +179,13 @@ module Folio
       end
     end
 
+    initializer :add_url_redirects_middleware do |app|
+      if Rails.application.config.folio_url_redirects_enabled
+        require "rack/folio/url_redirects_middleware"
+        app.config.middleware.use(Rack::Folio::UrlRedirectsMiddleware)
+      end
+    end
+
     def atoms_deprecations
       atom_data_path_base = "data/atoms_showcase.yml"
       atom_data_path = Rails.root.join(atom_data_path_base)

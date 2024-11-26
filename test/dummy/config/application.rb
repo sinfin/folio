@@ -20,6 +20,8 @@ module Dummy
     config.folio_newsletter_subscriptions = true
     config.folio_site_default_test_factory = :dummy_site
 
+    config.folio_url_redirects_enabled = Rails.env.development? && ENV["ENABLE_FOLIO_URL_REDIRECTS"].present?
+
     I18n.available_locales = [:cs, :en]
     I18n.default_locale = :cs
 

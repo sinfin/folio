@@ -15,6 +15,9 @@ class Folio::UrlRedirect < Folio::ApplicationRecord
     307 => "Temporary Redirect",
   }
 
+  CACHE_KEY = "folio_url_redirects"
+  CACHE_KEY_EXPIRES_IN = 1.day
+
   validates :url_from,
             :url_to,
             presence: true,
@@ -39,8 +42,78 @@ class Folio::UrlRedirect < Folio::ApplicationRecord
 
   validate :validate_url_loop
 
+  after_commit :refresh_url_redirects_cache
+
+  def to_redirect_hash
+    { url_to:, include_query:, status_code: }
+  end
+
   def self.use_preview_tokens?
     false
+  end
+
+  def self.redirect_hash
+    if Rails.application.config.folio_url_redirects_enabled
+      hash = {}
+
+      if Rails.application.config.folio_url_redirects_per_site
+        self.published.includes(:site).each do |url_redirect|
+          hash[url_redirect.site.env_aware_domain] ||= {}
+          hash[url_redirect.site.env_aware_domain][url_redirect.url_from] = url_redirect.to_redirect_hash
+        end
+
+        hash.presence
+      else
+        hash["*"] ||= {}
+
+        self.published.includes(:site).each do |url_redirect|
+          hash["*"][url_redirect.url_from] ||= {}
+          hash["*"][url_redirect.url_from] = url_redirect.to_redirect_hash
+        end
+
+        hash if hash["*"].present?
+      end
+    else
+      {}
+    end
+  end
+
+  def self.cache_aware_redirect_hash
+    if Rails.application.config.action_controller.perform_caching
+      Rails.cache.fetch(CACHE_KEY, expires_in: CACHE_KEY_EXPIRES_IN) do
+        redirect_hash
+      end
+    else
+      redirect_hash
+    end
+  end
+
+  def self.handle_env(env)
+    if Rails.application.config.folio_url_redirects_enabled
+      hash = cache_aware_redirect_hash
+
+      if hash.present?
+        value = if Rails.application.config.folio_url_redirects_per_site
+          hash[env["HTTP_HOST"]]
+        else
+          hash["*"]
+        end
+
+        if value.present?
+          request = Rack::Request.new(env)
+
+          target = value[request.url]
+
+          if target.nil?
+            target = value[request.fullpath]
+          end
+
+          if target
+            [target[:status_code], { "Location" => target[:url_to] }, []]
+          end
+        end
+      end
+    end
   end
 
   private
@@ -71,6 +144,11 @@ class Folio::UrlRedirect < Folio::ApplicationRecord
                    attribute_name: self.class.human_attribute_name(:url_to),
                    model_name: self.class.model_name.human.downcase)
       end
+    end
+
+    def refresh_url_redirects_cache
+      Rails.cache.delete(CACHE_KEY)
+      self.class.cache_aware_redirect_hash
     end
 end
 
