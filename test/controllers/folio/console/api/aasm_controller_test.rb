@@ -39,5 +39,19 @@ class Folio::Console::Api::AasmControllerTest < Folio::Console::BaseControllerTe
       aasm_event: "to_handled",
     }
     assert_response(422)
+
+    lead.errors.add(:base, "Error message")
+    post event_console_api_aasm_path, params: {
+      klass: "Folio::Lead",
+      id: lead.id,
+      aasm_event: "to_handled"
+    }
+
+    assert_response 422
+    json = JSON.parse(response.body)
+    assert_equal 422, json["errors"].first["status"]
+    assert_equal "Error message", json["errors"].first["detail"]
+    assert json["errors"].first["title"].present?
+    assert_equal 1, json["errors"].length
   end
 end
