@@ -18,9 +18,9 @@ class Folio::Console::PagesController < Folio::Console::BaseController
   def clone
     page = Folio::Page.find(params[:id])
     @page = page.create_clone
-    @page.title = t('.cloned_title', 
+    @page.title = t("folio.console.clone.cloned_title",
                     original_title: page.title,
-                    date: Date.today.strftime('%d. %m. %Y'))
+                    date: Date.today.strftime("%d. %m. %Y"))
     render :new
   end
 

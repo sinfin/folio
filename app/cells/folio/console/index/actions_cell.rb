@@ -37,7 +37,7 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
       },
       clone: {
         name: :clone,
-        icon: :square_outline,
+        icon: :plus_circle_multiple_outline,
         url: -> (record) { through_aware_console_url_for(record, action: :clone, safe: true) },
       },
       show: {
