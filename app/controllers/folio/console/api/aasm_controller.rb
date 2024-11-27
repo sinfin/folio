@@ -34,15 +34,14 @@ class Folio::Console::Api::AasmController < Folio::Console::Api::BaseController
 
           if record.errors.any?
             return render json: {
-                    data: cell("folio/console/state", record, opts).show,
-                    meta: {
-                      flash: {
-                        alert: t(".invalid_record_detail") +
-                        "<br>" +
-                        record.errors.full_messages.join("<br>")
+                      errors: record.errors.full_messages.map { |message|
+                        {
+                          status: 422,
+                          title: t(".invalid_record_title"),
+                          detail: message
+                        }
                       }
-                    }
-                  }, status: :unprocessable_entity
+                    }, status: 422
           end
 
           render json: {

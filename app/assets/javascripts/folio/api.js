@@ -59,6 +59,7 @@ const makeCheckResponse = (asHtml) => (response) => {
         return Promise.resolve(json)
       }
 
+      window.FolioConsole.Flash.flashMessageFromApiErrors(json)
       const err = jsonError(json)
 
       if (err) {
@@ -96,7 +97,7 @@ function responseToHtml (response) {
 
       return Promise.resolve(`{ "data": { "redirected": "${response.url}" }}`)
     }
-    
+
     return Promise.resolve('{ "data": { "redirected": true }}')
   }
   return response.text()
