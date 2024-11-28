@@ -20,8 +20,6 @@ class Folio::UrlRedirectTest < ActiveSupport::TestCase
 
     %w[
       /foo
-      http://foo
-      https://foo
     ].each do |url_from|
       fur.url_from = url_from
       assert fur.valid?, "url_from - #{url_from}"

@@ -21,7 +21,7 @@ class Folio::UrlRedirect < Folio::ApplicationRecord
   validates :url_from,
             :url_to,
             presence: true,
-            format: { with: /\A(\/|https?:\/\/).+/ }
+            format: { with: /\A\/.+/ }
 
   validates :url_to,
             :url_from,
