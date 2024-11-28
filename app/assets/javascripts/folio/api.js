@@ -33,10 +33,10 @@ const jsonError = (json) => {
 
     json.errors.forEach((err) => {
       if (err.title && err.title.indexOf('::') === -1) {
-        parts.push(err.title)
+        parts.push(err.title + ": ")
       }
 
-      parts.push(err.detail)
+      parts.push(err.detail + "<br>")
     })
 
     return parts.join(' ')
@@ -59,7 +59,6 @@ const makeCheckResponse = (asHtml) => (response) => {
         return Promise.resolve(json)
       }
 
-      window.FolioConsole.Flash.flashMessageFromApiErrors(json)
       const err = jsonError(json)
 
       if (err) {
