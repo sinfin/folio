@@ -30,6 +30,8 @@ class Folio::Page < Folio::ApplicationRecord
   include Folio::Taggable
   include Folio::Transportable::Model
   include PgSearch::Model
+  include Folio::Console::Clonable
+
 
   if Rails.application.config.folio_pages_audited
     include Folio::Audited
@@ -63,6 +65,9 @@ class Folio::Page < Folio::ApplicationRecord
     validates :title,
               presence: true
   end
+
+  references_original :cover
+  duplicates_with_relations :atoms
 
   # Scopes
   scope :ordered,  -> { order(position: :asc, created_at: :asc) }
