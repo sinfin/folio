@@ -1,0 +1,26 @@
+.f-c-url-redirects-fields
+  = publishable_inputs(@f)
+
+  = @f.input :title
+
+  = @f.input :status_code, collection: status_code_collection,
+                           include_blank: false
+
+  .f-c-url-redirects-fields__row
+    .f-c-url-redirects-fields__url
+      = @f.input :url_from
+
+    .f-c-url-redirects-fields__checkbox
+      = @f.input :match_query
+
+  .f-c-url-redirects-fields__row
+    .f-c-url-redirects-fields__arrow
+      = folio_icon(:subdirectory_arrow_right, height: 36)
+
+    .f-c-url-redirects-fields__url
+      = @f.input :url_to
+
+    .f-c-url-redirects-fields__checkbox
+      = @f.input :pass_query
+
+  .f-c-url-redirects-fields__demo

@@ -228,6 +228,7 @@ FactoryBot.define do
   end
 
   factory :folio_url_redirect, class: "Folio::UrlRedirect" do
+    sequence(:title) { |i| "title #{i}" }
     sequence(:url_from) { |i| "/from-#{i}" }
     sequence(:url_to) { |i| "/to-#{i}" }
     status_code { 301 }

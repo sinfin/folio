@@ -136,6 +136,7 @@ en:
         status_code: Status code
         match_query: Include query string
         pass_query: Pass on query string
+        published: Enabled
 
     errors:
       messages:

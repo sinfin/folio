@@ -26,6 +26,10 @@ class Folio::UrlRedirect < Folio::ApplicationRecord
             presence: true,
             format: { with: /\A\// }
 
+  validates :title,
+            presence: true,
+            uniqueness: { scope: :site_id }
+
   validates :url_to,
             presence: true,
             format: { with: /\A(\/|https?:\/\/)/ }

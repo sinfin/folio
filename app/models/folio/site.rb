@@ -17,6 +17,7 @@ class Folio::Site < Folio::ApplicationRecord
     [:menus, "Folio::Menu"],
     [:newsletter_subscriptions, "Folio::NewsletterSubscription"],
     [:pages, "Folio::Page"],
+    [:url_redirects, "Folio::UrlRedirect"],
   ].each do |key, class_name|
     has_many key, class_name:,
                   foreign_key: :site_id,

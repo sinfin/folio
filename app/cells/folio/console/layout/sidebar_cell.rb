@@ -290,14 +290,25 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
           links << site_links[:console_sidebar_before_site_links].compact
         end
 
-        if can_now?(:update, site)
-          links << {
-                      klass: "Folio::Site",
-                      icon: :cog,
-                      path: controller.folio.edit_console_site_url(only_path: false, host: site.env_aware_domain),
-                      label: t(".settings"),
-                    }
+        site_group = []
+
+        if ::Rails.application.config.folio_url_redirects_enabled
+          site_group << link_for_site_class(site, Folio::UrlRedirect)
         end
+
+        if can_now?(:update, site)
+          site_group << {
+            klass: "Folio::Site",
+            icon: :cog,
+            path: controller.folio.edit_console_site_url(only_path: false, host: site.env_aware_domain),
+            label: t(".settings"),
+          }
+        end
+
+        if site_group.present?
+          links << site_group
+        end
+
         links << link_for_site_class(site, Folio::User) if show_users? && !Folio::Current.user.superadmin?
 
         {

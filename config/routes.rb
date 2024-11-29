@@ -43,6 +43,8 @@ Folio::Engine.routes.draw do
         end
       end
 
+      resources :url_redirects, except: %i[show]
+
       resources :pages, except: %i[show] do
         collection do
           post :set_positions

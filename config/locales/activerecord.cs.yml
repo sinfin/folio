@@ -156,6 +156,7 @@ cs:
         status_code: Kód odpovědi
         match_query: Zahrnout query parametry
         pass_query: Předat query parametry
+        published: Zapnuto
 
     errors:
       messages:

@@ -1,0 +1,9 @@
+= form_header f
+
+= tabs %i[content]
+
+.tab-content
+  = tab :content
+    = render(Folio::Console::UrlRedirects::FieldsComponent.new(f:))
+
+= form_footer f
