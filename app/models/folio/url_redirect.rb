@@ -20,8 +20,15 @@ class Folio::UrlRedirect < Folio::ApplicationRecord
 
   validates :url_from,
             :url_to,
+            presence: true
+
+  validates :url_from,
             presence: true,
-            format: { with: /\A\/.+/ }
+            format: { with: /\A\// }
+
+  validates :url_to,
+            presence: true,
+            format: { with: /\A(\/|https?:\/\/)/ }
 
   validates :url_to,
             :url_from,
@@ -33,7 +40,8 @@ class Folio::UrlRedirect < Folio::ApplicationRecord
             uniqueness: true,
             if: -> { !Rails.application.config.folio_url_redirects_per_site }
 
-  validates :include_query,
+  validates :match_query,
+            :pass_query,
             inclusion: { in: [true, false] }
 
   validates :status_code,
@@ -45,7 +53,7 @@ class Folio::UrlRedirect < Folio::ApplicationRecord
   after_commit :refresh_url_redirects_cache
 
   def to_redirect_hash
-    { url_to:, include_query:, status_code: }
+    { url_to:, match_query:, pass_query:, status_code: }
   end
 
   def self.use_preview_tokens?
@@ -94,22 +102,42 @@ class Folio::UrlRedirect < Folio::ApplicationRecord
 
       if hash.present?
         value = if Rails.application.config.folio_url_redirects_per_site
-          hash[env["HTTP_HOST"]]
+          env_host = env["HTTP_HOST"] || env["SERVER_NAME"]
+          hash[env_host]
         else
           hash["*"]
         end
 
         if value.present?
-          request = Rack::Request.new(env)
+          env_path = env["PATH_INFO"]
+          env_query = env["QUERY_STRING"]
 
-          target = value[request.url]
+          target = nil
 
-          if target.nil?
-            target = value[request.fullpath]
+          if env_query.blank?
+            target = value[env_path]
+          else
+            env_path_with_query = env_query.present? ? "#{env_path}?#{env_query}" : env_path
+
+            target = value[env_path_with_query]
+
+            if target.nil?
+              target = value[env_path]
+
+              if target && target[:match_query]
+                target = nil
+              end
+            end
           end
 
           if target
-            [target[:status_code], { "Location" => target[:url_to] }, []]
+            url = if env_query.present? && target[:pass_query]
+              "#{target[:url_to]}#{target[:url_to].include?("?") ? "&" : "?"}#{env_query}"
+            else
+              target[:url_to]
+            end
+
+            [target[:status_code], { "Location" => url }, []]
           end
         end
       end
@@ -156,16 +184,17 @@ end
 #
 # Table name: folio_url_redirects
 #
-#  id            :bigint(8)        not null, primary key
-#  title         :string
-#  url_from      :string
-#  url_to        :string
-#  status_code   :integer          default(301)
-#  published     :boolean          default(TRUE)
-#  include_query :boolean          default(FALSE)
-#  site_id       :bigint(8)
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
+#  id          :bigint(8)        not null, primary key
+#  title       :string
+#  url_from    :string
+#  url_to      :string
+#  status_code :integer          default(301)
+#  published   :boolean          default(TRUE)
+#  match_query :boolean          default(FALSE)
+#  pass_query  :boolean          default(TRUE)
+#  site_id     :bigint(8)
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
 #
 # Indexes
 #

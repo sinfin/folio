@@ -529,7 +529,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_26_064229) do
     t.string "url_to"
     t.integer "status_code", default: 301
     t.boolean "published", default: true
-    t.boolean "include_query", default: false
+    t.boolean "match_query", default: false
+    t.boolean "pass_query", default: true
     t.bigint "site_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

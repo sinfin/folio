@@ -85,28 +85,28 @@ class Folio::UrlRedirectTest < ActiveSupport::TestCase
                  url_to: "/aa",
                  site: site_1,
                  status_code: 301,
-                 include_query: true)
+                 match_query: true)
 
       b = create(:folio_url_redirect,
                  url_from: "/b",
                  url_to: "/bb",
                  site: site_2,
                  status_code: 301,
-                 include_query: true)
+                 match_query: true)
 
       c = create(:folio_url_redirect,
                  url_from: "/c",
                  url_to: "/cc",
                  site: site_2,
                  status_code: 301,
-                 include_query: true)
+                 match_query: true)
 
       Rails.application.config.stub(:folio_url_redirects_per_site, false) do
         assert_equal({
           "*" => {
-            "/a" => { url_to: "/aa", status_code: 301, include_query: true },
-            "/b" => { url_to: "/bb", status_code: 301, include_query: true },
-            "/c" => { url_to: "/cc", status_code: 301, include_query: true },
+            "/a" => { url_to: "/aa", status_code: 301, match_query: true, pass_query: true },
+            "/b" => { url_to: "/bb", status_code: 301, match_query: true, pass_query: true },
+            "/c" => { url_to: "/cc", status_code: 301, match_query: true, pass_query: true },
           }
         }, Folio::UrlRedirect.redirect_hash)
       end
@@ -114,11 +114,11 @@ class Folio::UrlRedirectTest < ActiveSupport::TestCase
       Rails.application.config.stub(:folio_url_redirects_per_site, true) do
         assert_equal({
           "1.localhost" => {
-            "/a" => { url_to: "/aa", status_code: 301, include_query: true },
+            "/a" => { url_to: "/aa", status_code: 301, match_query: true, pass_query: true },
           },
           "2.localhost" => {
-            "/b" => { url_to: "/bb", status_code: 301, include_query: true },
-            "/c" => { url_to: "/cc", status_code: 301, include_query: true },
+            "/b" => { url_to: "/bb", status_code: 301, match_query: true, pass_query: true },
+            "/c" => { url_to: "/cc", status_code: 301, match_query: true, pass_query: true },
           }
         }, Folio::UrlRedirect.redirect_hash)
       end
@@ -128,8 +128,8 @@ class Folio::UrlRedirectTest < ActiveSupport::TestCase
       Rails.application.config.stub(:folio_url_redirects_per_site, false) do
         assert_equal({
           "*" => {
-            "/a" => { url_to: "/aa", status_code: 301, include_query: true },
-            "/b" => { url_to: "/bb", status_code: 301, include_query: true },
+            "/a" => { url_to: "/aa", status_code: 301, match_query: true, pass_query: true },
+            "/b" => { url_to: "/bb", status_code: 301, match_query: true, pass_query: true },
           }
         }, Folio::UrlRedirect.redirect_hash)
       end
@@ -137,10 +137,10 @@ class Folio::UrlRedirectTest < ActiveSupport::TestCase
       Rails.application.config.stub(:folio_url_redirects_per_site, true) do
         assert_equal({
           "1.localhost" => {
-            "/a" => { url_to: "/aa", status_code: 301, include_query: true },
+            "/a" => { url_to: "/aa", status_code: 301, match_query: true, pass_query: true },
           },
           "2.localhost" => {
-            "/b" => { url_to: "/bb", status_code: 301, include_query: true },
+            "/b" => { url_to: "/bb", status_code: 301, match_query: true, pass_query: true },
           }
         }, Folio::UrlRedirect.redirect_hash)
       end
@@ -159,46 +159,53 @@ class Folio::UrlRedirectTest < ActiveSupport::TestCase
     end
   end
 
-  # test "handle_env" do
-  #   site_1 = create_site(force: true, attributes: { domain: "1.localhost" })
-  #   site_2 = create_site(force: true, attributes: { domain: "2.localhost" })
+  test "handle_env" do
+    site_1 = create_site(force: true, attributes: { domain: "1.localhost" })
+    site_2 = create_site(force: true, attributes: { domain: "2.localhost" })
 
-  #   create(:folio_url_redirect,
-  #              url_from: "/a",
-  #              url_to: "/aa",
-  #              site: site_1,
-  #              status_code: 301,
-  #              include_query: true)
+    create(:folio_url_redirect,
+           url_from: "/a",
+           url_to: "/aa",
+           site: site_1,
+           status_code: 301,
+           match_query: true)
 
-  #   create(:folio_url_redirect,
-  #              url_from: "http://2.localhost/b",
-  #              url_to: "http://2.localhost/bb",
-  #              site: site_2,
-  #              status_code: 301,
-  #              include_query: true)
+    create(:folio_url_redirect,
+           url_from: "/b?must=have",
+           url_to: "/bb",
+           site: site_2,
+           status_code: 301,
+           match_query: true,
+           pass_query: false)
 
-  #   create(:folio_url_redirect,
-  #              url_from: "http://2.localhost/c",
-  #              url_to: "http://2.localhost/cc",
-  #              site: site_2,
-  #              status_code: 301,
-  #              include_query: false)
+    create(:folio_url_redirect,
+           url_from: "/c",
+           url_to: "http://other-domain.com/cc",
+           site: site_2,
+           status_code: 301,
+           match_query: false)
 
-  #   Rails.application.config.stub(:folio_url_redirects_enabled, true) do
-  #     Rails.application.config.stub(:folio_url_redirects_per_site, false) do
-  #       {
-  #         "http://1.localhost/a?foo=bar" => nil,
-  #         "http://1.localhost/a" => "http://1.localhost/aa",
-  #       }.each do |from, to|
-  #         result = Folio::UrlRedirect.handle_env(Rack::MockRequest.env_for(from))
+    Rails.application.config.stub(:folio_url_redirects_enabled, true) do
+      Rails.application.config.stub(:folio_url_redirects_per_site, false) do
+        {
+          "http://1.localhost/a?foo=bar" => nil,
+          "http://1.localhost/a" => "/aa",
+          "http://1.localhost/b" => nil,
+          "http://1.localhost/b?must=have" => "/bb",
+          "http://1.localhost/b?must=have&nope=nope" => nil,
+          "http://2.localhost/c" => "http://other-domain.com/cc",
+          "http://2.localhost/c?foo=bar" => "http://other-domain.com/cc?foo=bar",
+          "http://2.localhost/c?foo=bar&baz=1" => "http://other-domain.com/cc?foo=bar&baz=1",
+        }.each do |from, to|
+          result = Folio::UrlRedirect.handle_env(Rack::MockRequest.env_for(from))
 
-  #         if to.nil?
-  #           assert_nil result, "#{from} -> nil"
-  #         else
-  #           assert_equal [301, { "Location" => to }, []], result, "#{from} -> #{to}"
-  #         end
-  #       end
-  #     end
-  #   end
-  # end
+          if to.nil?
+            assert_nil result, "#{from} -> nil"
+          else
+            assert_equal [301, { "Location" => to }, []], result, "#{from} -> #{to}"
+          end
+        end
+      end
+    end
+  end
 end

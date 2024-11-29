@@ -11,7 +11,8 @@ class CreateFolioUrlRedirects < ActiveRecord::Migration[7.1]
       t.integer :status_code, default: 301
 
       t.boolean :published, default: true
-      t.boolean :include_query, default: false
+      t.boolean :match_query, default: false
+      t.boolean :pass_query, default: true
 
       t.belongs_to :site
 
