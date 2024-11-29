@@ -29,17 +29,13 @@ const jsonError = (json) => {
   if (json.error) {
     return json.error
   } else if (json.errors) {
-    const parts = []
-
-    json.errors.forEach((err) => {
+    return json.errors.map((err) => {
       if (err.title && err.title.indexOf('::') === -1) {
-        parts.push(err.title)
+        return `${err.title}: ${err.detail}`
       }
 
-      parts.push(err.detail)
-    })
-
-    return parts.join(' ')
+      return err.detail
+    }).join('<br>')
   }
 
   return null
@@ -96,7 +92,7 @@ function responseToHtml (response) {
 
       return Promise.resolve(`{ "data": { "redirected": "${response.url}" }}`)
     }
-    
+
     return Promise.resolve('{ "data": { "redirected": true }}')
   }
   return response.text()

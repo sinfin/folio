@@ -32,6 +32,18 @@ class Folio::Console::Api::AasmController < Folio::Console::Api::BaseController
             opts = {}
           end
 
+          if record.errors.any?
+            return render json: {
+                      errors: record.errors.full_messages.map { |message|
+                        {
+                          status: 422,
+                          title: t(".invalid_record_title"),
+                          detail: message
+                        }
+                      }
+                    }, status: 422
+          end
+
           render json: {
             data: cell("folio/console/state", record, opts).show,
             meta: {

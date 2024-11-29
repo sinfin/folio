@@ -39,5 +39,25 @@ class Folio::Console::Api::AasmControllerTest < Folio::Console::BaseControllerTe
       aasm_event: "to_handled",
     }
     assert_response(422)
+
+    lead.define_singleton_method(:skip_note_validation?) do
+      aasm_state == "submitted"
+    end
+
+    lead.note = nil
+    lead.save!
+
+    post event_console_api_aasm_path, params: {
+      klass: "Folio::Lead",
+      id: lead.id,
+      aasm_event: "to_handled"
+    }
+
+    assert_response 422
+    json = JSON.parse(response.body)
+    assert_equal 422, json["errors"].first["status"]
+    assert_equal "Záznam nelze uložit. Před změnou stavu jej opravte.", json["errors"].first["detail"]
+    assert json["errors"].first["title"].present?
+    assert_equal 1, json["errors"].length
   end
 end

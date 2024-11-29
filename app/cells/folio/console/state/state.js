@@ -26,7 +26,8 @@ window.Folio.Stimulus.register('f-c-state', class extends window.Stimulus.Contro
       if (res && res.data) {
         this.element.outerHTML = res.data
       }
-    }).catch(() => {
+    }).catch((error) => {
+      window.FolioConsole.Flash.alert(error.message)
       this.element.classList.remove('f-c-state--loading')
     })
   }
