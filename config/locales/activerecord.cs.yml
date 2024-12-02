@@ -196,6 +196,8 @@ cs:
           attributes:
             url_from:
               same_as_another_url_to: nemůže být stejná jako "%{attribute_name}" jiného %{model_name}
+              must_be_relative: musí být relativní URL (začínat lomítkem)
+              cannot_start_with_console: nesmí mířit do administrace (tedy začínat /console)
 
             url_to:
               same_as_url_from: nemůže být stejná jako "%{attribute_name}"

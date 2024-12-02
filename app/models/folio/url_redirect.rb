@@ -22,10 +22,6 @@ class Folio::UrlRedirect < Folio::ApplicationRecord
             :url_to,
             presence: true
 
-  validates :url_from,
-            presence: true,
-            format: { with: /\A\// }
-
   validates :title,
             presence: true,
             uniqueness: { scope: :site_id }
@@ -34,13 +30,11 @@ class Folio::UrlRedirect < Folio::ApplicationRecord
             presence: true,
             format: { with: /\A(\/|https?:\/\/)/ }
 
-  validates :url_to,
-            :url_from,
+  validates :url_from,
             uniqueness: { scope: :site_id },
             if: -> { Rails.application.config.folio_url_redirects_per_site }
 
-  validates :url_to,
-            :url_from,
+  validates :url_from,
             uniqueness: true,
             if: -> { !Rails.application.config.folio_url_redirects_per_site }
 
@@ -52,6 +46,7 @@ class Folio::UrlRedirect < Folio::ApplicationRecord
             inclusion: { in: STATUS_CODES.keys },
             presence: true
 
+  validate :validate_url_from_format
   validate :validate_url_loop
 
   after_commit :refresh_url_redirects_cache
@@ -186,6 +181,18 @@ class Folio::UrlRedirect < Folio::ApplicationRecord
                    :same_as_another_url_to,
                    attribute_name: self.class.human_attribute_name(:url_to),
                    model_name: self.class.model_name.human.downcase)
+      end
+    end
+
+    def validate_url_from_format
+      return if url_from.blank?
+
+      if url_from.start_with?("/")
+        if url_from.start_with?("/console")
+          errors.add(:url_from, :cannot_start_with_console)
+        end
+      else
+        errors.add(:url_from, :must_be_relative)
       end
     end
 

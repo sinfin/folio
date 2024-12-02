@@ -167,6 +167,8 @@ en:
           attributes:
             url_from:
               same_as_another_url_to: cannot be the same as "%{attribute_name}" of another %{model_name}
+              must_be_relative: must be a relative URL (start with a slash)
+              cannot_start_with_console: cannot start with "/console"
 
             url_to:
               same_as_url_from: cannot be the same as "%{attribute_name}"

@@ -15,7 +15,18 @@ class Folio::UrlRedirectTest < ActiveSupport::TestCase
 
       assert_not fur.valid?, "url_from - #{url_from}"
       assert_equal :url_from, fur.errors.first.attribute
-      assert_equal :invalid, fur.errors.first.type
+      assert_equal :must_be_relative, fur.errors.first.type
+    end
+
+    %w[
+      /console
+      /console/pages
+    ].each do |url_from|
+      fur.url_from = url_from
+
+      assert_not fur.valid?, "url_from - #{url_from}"
+      assert_equal :url_from, fur.errors.first.attribute
+      assert_equal :cannot_start_with_console, fur.errors.first.type
     end
 
     %w[
@@ -55,7 +66,7 @@ class Folio::UrlRedirectTest < ActiveSupport::TestCase
         fur.site = site_1
         assert_not fur.valid?
 
-        assert_equal "Redirect to has already been taken. Redirect from has already been taken",
+        assert_equal "Redirect from has already been taken",
                      fur.errors.full_messages.join(". ")
       end
 
@@ -63,13 +74,13 @@ class Folio::UrlRedirectTest < ActiveSupport::TestCase
         fur.site = site_1
         assert_not fur.valid?
 
-        assert_equal "Redirect to has already been taken. Redirect from has already been taken",
+        assert_equal "Redirect from has already been taken",
                      fur.errors.full_messages.join(". ")
 
         fur.site = site_2
         assert_not fur.valid?
 
-        assert_equal "Redirect to has already been taken. Redirect from has already been taken",
+        assert_equal "Redirect from has already been taken",
                      fur.errors.full_messages.join(". ")
       end
     end
