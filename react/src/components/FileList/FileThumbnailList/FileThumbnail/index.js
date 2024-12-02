@@ -32,7 +32,7 @@ const FileThumbnail = ({ file, fileType, onClick, openFileModalOnClick, selectin
             className='f-c-file-list__picture'
             imageClassName='f-c-file-list__img'
             alt={file.attributes.file_name}
-            lazyload={{ height: 150, once: true, overflow: true }}
+            loading='lazy'
           />
         )}
       </div>
