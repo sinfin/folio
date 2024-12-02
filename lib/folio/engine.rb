@@ -174,14 +174,14 @@ module Folio
 
     initializer :add_folio_maintenance_middleware do |app|
       if ENV["FOLIO_MAINTENANCE"]
-        require "rack/folio/maintenance_middleware"
+        require Folio::Engine.root.join("app/lib/rack/folio/maintenance_middleware")
         app.config.middleware.use(Rack::Folio::MaintenanceMiddleware)
       end
     end
 
     initializer :add_url_redirects_middleware do |app|
       if Rails.application.config.folio_url_redirects_enabled
-        require "rack/folio/url_redirects_middleware"
+        require Folio::Engine.root.join("app/lib/rack/folio/url_redirects_middleware")
         app.config.middleware.use(Rack::Folio::UrlRedirectsMiddleware)
       end
     end
