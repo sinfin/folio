@@ -109,6 +109,7 @@
 //= require folio/console/single_file_select/single_file_select
 //= require folio/console/site_user_links/fields_component
 //= require folio/console/state/state
+//= require folio/console/url_redirects/fields_component
 //= require folio/console/users/invite_and_copy/invite_and_copy
 
 //= require folio/console/main_app

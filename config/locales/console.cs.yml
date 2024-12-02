@@ -349,6 +349,10 @@ cs:
       folio_attributes_fields_component:
         add: Přidat atribut
 
+      url_redirects:
+        fields_component:
+          placeholder/title: Např. přesměrování starého článku
+
   date:
     formats:
       console_short: "%d. %m. %Y"

@@ -56,6 +56,17 @@ class Folio::UrlRedirect < Folio::ApplicationRecord
 
   after_commit :refresh_url_redirects_cache
 
+  pg_search_scope :by_query,
+                  against: {
+                    title: "A",
+                    url_from: "B",
+                    url_to: "B"
+                  },
+                  ignoring: :accents,
+                  using: {
+                    tsearch: { prefix: true }
+                  }
+
   def to_redirect_hash
     { url_to:, match_query:, pass_query:, status_code: }
   end

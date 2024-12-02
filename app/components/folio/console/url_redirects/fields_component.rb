@@ -12,4 +12,8 @@ class Folio::Console::UrlRedirects::FieldsComponent < Folio::Console::Applicatio
       ["#{k} - #{v}", k]
     end
   end
+
+  def data
+    stimulus_controller("f-c-url-redirects-fields")
+  end
 end

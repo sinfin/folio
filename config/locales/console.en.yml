@@ -346,6 +346,10 @@ en:
       folio_attributes_fields_component:
         add: Add attribute
 
+      url_redirects:
+        fields_component:
+          placeholder/title: i.e. redirecting an old article
+
   date:
     formats:
       console_short: "%d. %m. %Y"

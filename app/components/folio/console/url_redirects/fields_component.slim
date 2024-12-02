@@ -1,14 +1,15 @@
-.f-c-url-redirects-fields
+.f-c-url-redirects-fields data=data
   = publishable_inputs(@f)
 
-  = @f.input :title
+  = @f.input :title, placeholder: t('.placeholder/title')
 
   = @f.input :status_code, collection: status_code_collection,
                            include_blank: false
 
   .f-c-url-redirects-fields__row
     .f-c-url-redirects-fields__url
-      = @f.input :url_from
+      = @f.input :url_from,
+                 input_html: { data: stimulus_action(blur: :inputBlurred) }
 
     .f-c-url-redirects-fields__checkbox
       = @f.input :match_query

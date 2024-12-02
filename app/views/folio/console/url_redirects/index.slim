@@ -3,4 +3,17 @@
 = catalogue(@url_redirects)
   ruby:
     edit_link :to_label
+
+    attribute(:url, small: true) do
+      [
+        record.url_from,
+        cell('folio/console/ui/with_icon',
+             record.url_to,
+             icon: :subdirectory_arrow_right,
+             icon_options: { height: 14 })
+      ].join("<br>")
+    end
+
+    published_toggle
+
     actions

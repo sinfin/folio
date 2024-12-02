@@ -34,7 +34,7 @@ class Folio::Console::UrlRedirectsControllerTest < Folio::Console::BaseControlle
 
     assert_difference("Folio::UrlRedirect.count", 1) do
       post url_for([:console, Folio::UrlRedirect]), params: {
-        folio_url_redirect: params,
+        url_redirect: params,
       }
     end
   end
@@ -44,7 +44,7 @@ class Folio::Console::UrlRedirectsControllerTest < Folio::Console::BaseControlle
     assert_not_equal("Title", model.title)
 
     put url_for([:console, model]), params: {
-      folio_url_redirect: {
+      url_redirect: {
         title: "Title",
       },
     }
