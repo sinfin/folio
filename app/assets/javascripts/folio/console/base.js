@@ -52,7 +52,6 @@
 // must be under folio/input
 //= require daterangepicker.min
 
-//= require folio/console/_bootstrap-tabs-lazyload
 //= require folio/console/_cocoon-set-position
 //= require folio/console/_data-auto-submit
 //= require folio/console/_data-change-value
