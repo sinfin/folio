@@ -28,10 +28,11 @@ export function RawPicture ({ src, webpSrc, className, imageClassName, alt, imag
   }
 }
 
-export default function Picture ({ file, className, alt, imageStyle, imageClassName }) {
+export default function Picture ({ file, className, alt, imageStyle, imageClassName, lazyload }) {
   const rawPicture = RawPicture({
     src: file.attributes.thumb || file.attributes.dataThumbnail,
     webpSrc: file.attributes.webp_thumb,
+    loading: 'lazy',
     alt,
     className,
     imageClassName,
