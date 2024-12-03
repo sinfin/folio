@@ -68,7 +68,7 @@ const FileTableRow = ({
               <Picture
                 file={file}
                 imageClassName='f-c-file-table__img'
-                loading='lazy'
+                lazyload
               />
             )}
           </div>

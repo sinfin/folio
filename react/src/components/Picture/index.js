@@ -1,6 +1,6 @@
 import React from 'react'
 
-export function RawPicture ({ src, webpSrc, className, imageClassName, alt, imageStyle }) {
+export function RawPicture ({ src, webpSrc, className, imageClassName, alt, imageStyle, loading }) {
   if (webpSrc) {
     return (
       <picture className={className}>
@@ -13,6 +13,7 @@ export function RawPicture ({ src, webpSrc, className, imageClassName, alt, imag
           className={imageClassName}
           alt={alt || ''}
           style={imageStyle}
+          loading={loading}
         />
       </picture>
     )
@@ -23,6 +24,7 @@ export function RawPicture ({ src, webpSrc, className, imageClassName, alt, imag
         className={imageClassName}
         alt={alt || ''}
         style={imageStyle}
+        loading={loading}
       />
     )
   }
@@ -32,7 +34,7 @@ export default function Picture ({ file, className, alt, imageStyle, imageClassN
   const rawPicture = RawPicture({
     src: file.attributes.thumb || file.attributes.dataThumbnail,
     webpSrc: file.attributes.webp_thumb,
-    loading: 'lazy',
+    loading: lazyload ? 'lazy' : 'eager',
     alt,
     className,
     imageClassName,
