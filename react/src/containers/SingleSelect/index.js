@@ -11,14 +11,13 @@ import {
 import { displayAsThumbsSelector } from 'ducks/display'
 import { openFileModal } from 'ducks/fileModal'
 
-import LazyLoadCheckingComponent from 'utils/LazyLoadCheckingComponent'
 import FileFilter from 'containers/FileFilter'
 import Uploader from 'containers/Uploader'
 import UploadTagger from 'containers/UploadTagger'
 import Loader from 'components/Loader'
 import FileList from 'components/FileList'
 
-class SingleSelect extends LazyLoadCheckingComponent {
+class SingleSelect extends React.Component {
   selectFile = (file) => {
     if (this.props.selectFile) {
       this.props.selectFile(this.props.fileType, file)

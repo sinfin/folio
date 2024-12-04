@@ -1,7 +1,5 @@
 import React from 'react'
 
-import LazyLoadCheckingComponent from 'utils/LazyLoadCheckingComponent'
-
 import FileFilter from 'containers/FileFilter'
 import Uploader from 'containers/Uploader'
 import UploadTagger from 'containers/UploadTagger'
@@ -32,7 +30,7 @@ const I18N = {
   }
 }
 
-class MultiSelectComponent extends LazyLoadCheckingComponent {
+class MultiSelectComponent extends React.Component {
   componentDidMount () {
     if (this.props.shouldLoadFiles &&
         !this.props.filesStatus.loaded &&

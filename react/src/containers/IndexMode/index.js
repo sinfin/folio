@@ -12,8 +12,6 @@ import {
 import { displayAsThumbsSelector } from 'ducks/display'
 import { openFileModal } from 'ducks/fileModal'
 
-import LazyLoadCheckingComponent from 'utils/LazyLoadCheckingComponent'
-
 import FileFilter from 'containers/FileFilter'
 import Uploader from 'containers/Uploader'
 import UploadTagger from 'containers/UploadTagger'
@@ -22,7 +20,7 @@ import FileMassActions from 'containers/FileMassActions'
 import FileList from 'components/FileList'
 import Loader from 'components/Loader'
 
-class IndexMode extends LazyLoadCheckingComponent {
+class IndexMode extends React.Component {
   openFileModal = (file) => {
     this.props.dispatch(openFileModal(this.props.fileType, this.props.filesUrl, file))
   }
