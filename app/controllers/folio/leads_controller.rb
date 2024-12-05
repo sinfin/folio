@@ -2,6 +2,7 @@
 
 class Folio::LeadsController < Folio::ApplicationController
   include Folio::RenderComponentJson
+  include Folio::Captcha::HasTurnstileValidation
 
   def create
     lead = Folio::Lead.new(lead_params.merge(url: request.referrer))

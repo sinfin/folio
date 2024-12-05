@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Folio::Api::NewsletterSubscriptionsController < Folio::Api::BaseController
+  include Folio::Captcha::HasTurnstileValidation
+
   def create
     newsletter_subscription = Folio::NewsletterSubscription.new(newsletter_subscription_params.merge(site: current_site))
     newsletter_subscription.save
