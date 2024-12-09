@@ -15,15 +15,15 @@ module Folio::Console::Clonable
       true
     end
 
-    def ignored_associations
+    def clonable_ignored_associations
       []
     end
 
-    def referenced_associations
+    def clonable_referenced_associations
       []
     end
 
-    def reset_attributes
+    def clonable_reset_attributes
       []
     end
 

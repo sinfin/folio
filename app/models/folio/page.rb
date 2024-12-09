@@ -66,12 +66,16 @@ class Folio::Page < Folio::ApplicationRecord
               presence: true
   end
 
-  def self.referenced_associations
+  def self.clonable_referenced_associations
     [:cover]
   end
 
-  def self.ignored_associations
+  def self.clonable_ignored_associations
     [:files, :slugs, :file_placements, :pg_search_document, :site]
+  end
+
+  def self.clonable_reset_attributes
+    [:published, :published_at]
   end
 
   # Scopes
