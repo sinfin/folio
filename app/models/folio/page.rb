@@ -66,8 +66,13 @@ class Folio::Page < Folio::ApplicationRecord
               presence: true
   end
 
-  references_original :cover
-  duplicates_with_relations :atoms
+  def self.referenced_associations
+    [:cover]
+  end
+
+  def self.ignored_associations
+    [:files, :slugs, :file_placements, :pg_search_document, :site]
+  end
 
   # Scopes
   scope :ordered,  -> { order(position: :asc, created_at: :asc) }

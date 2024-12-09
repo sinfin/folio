@@ -52,7 +52,7 @@ class Folio::Console::PagesControllerTest < Folio::Console::BaseControllerTest
 
   test "clone" do
     page = create(:folio_page)
-    get url_for([:clone, :console, page])
+    get url_for([:duplicate, :console, page])
     assert_response :success
   end
 end

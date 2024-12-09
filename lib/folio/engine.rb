@@ -37,6 +37,7 @@ module Folio
     config.folio_console_default_routes_contstraints = {}
     config.folio_console_add_locale_to_preview_links = false
     config.folio_console_files_additional_html_api_url_lambda = -> (file) { nil }
+    config.folio_console_clonable_enabled = false
 
     config.folio_newsletter_subscription_service = :mailchimp
     config.folio_server_names = []

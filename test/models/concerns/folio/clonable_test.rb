@@ -21,7 +21,7 @@ class Folio::ClonableTest < ActiveSupport::TestCase
     page.cover = image
 
     original_attributes = page.attributes
-    clone = page.create_clone
+    clone = Folio::Clonable::Cloner.new(page).create_clone
 
     clone.title = "clone"
     assert clone.valid?

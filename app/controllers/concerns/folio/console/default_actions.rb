@@ -43,6 +43,14 @@ module Folio::Console::DefaultActions
     folio_console_record.valid? if params[:prevalidate]
   end
 
+  def duplicate
+    cloned_record = Folio::Clonable::Cloner.new(folio_console_record).create_clone
+    cloned_record.after_clone
+
+    instance_variable_set(folio_console_record_variable_name, cloned_record)
+    render :new
+  end
+
   def merge
     @folio_console_merge = @klass
     index

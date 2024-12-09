@@ -15,15 +15,6 @@ class Folio::Console::PagesController < Folio::Console::BaseController
     end
   end
 
-  def clone
-    page = Folio::Page.find(params[:id])
-    @page = page.create_clone
-    @page.title = t("folio.console.clone.cloned_title",
-                    original_title: page.title,
-                    date: Date.today.strftime("%d. %m. %Y"))
-    render :new
-  end
-
   private
     def index_filters
       {

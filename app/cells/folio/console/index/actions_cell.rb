@@ -35,10 +35,10 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
         icon: :edit_box,
         url: -> (record) { through_aware_console_url_for(record, action: :edit, safe: true) },
       },
-      clone: {
+      duplicate: {
         name: :clone,
         icon: :plus_circle_multiple_outline,
-        url: -> (record) { through_aware_console_url_for(record, action: :clone, safe: true) },
+        url: -> (record) { through_aware_console_url_for(record, action: :duplicate, safe: true) },
       },
       show: {
         name: :show,
@@ -63,7 +63,6 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
   def actions
     acts = []
     with_default = (options[:actions].presence || %i[edit destroy])
-
     with_default.each do |sym_or_hash|
       if sym_or_hash.is_a?(Symbol)
         next if sym_or_hash == :destroy && model.class.try(:indestructible?)
