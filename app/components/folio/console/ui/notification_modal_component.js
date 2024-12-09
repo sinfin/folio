@@ -62,7 +62,7 @@ window.Folio.Stimulus.register('f-c-ui-notification-modal', class extends window
   }
 
   confirm (e) {
-    this.dispatch('confirm')
+    this.dispatch('confirm', { detail: { trigger: this.trigger } })
     window.Folio.Modal.close(this.element)
   }
 
