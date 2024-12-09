@@ -26,69 +26,69 @@ class Folio::Clonable::Cloner
     raise
   end
 
-  def clone_nested_records_recursively(original)
-    duplicated = []
-    cloned = original.deep_dup
-    copy_references(original, cloned)
-    original.class.reflect_on_all_associations.each do |association|
-      next if @record.class.clonable_ignored_associations.include?(association.name)
-      next if @record.class.clonable_referenced_associations.include?(association.name)
-      if original.public_send(association.name).present?
-        duplicated << association.name
-        if association.macro == :has_many
-          associated_record = original.public_send(association.name).map { |a| clone_nested_records_recursively(a).first }
-        else
-          associated_record = @record.class.clonable_referenced_associations.include?(association.name) ? original.public_send(association.name) : original.public_send(association.name).deep_dup
+  private
+    def clone_nested_records_recursively(original)
+      duplicated = []
+      cloned = original.deep_dup
+      copy_references(original, cloned)
+      original.class.reflect_on_all_associations.each do |association|
+        next if @record.class.clonable_ignored_associations.include?(association.name)
+        next if @record.class.clonable_referenced_associations.include?(association.name)
+        if original.public_send(association.name).present?
+          duplicated << association.name
+          if association.macro == :has_many
+            associated_record = original.public_send(association.name).map { |a| clone_nested_records_recursively(a).first }
+          else
+            associated_record = @record.class.clonable_referenced_associations.include?(association.name) ? original.public_send(association.name) : original.public_send(association.name).deep_dup
+          end
+          cloned.public_send("#{association.name}=", associated_record)
         end
-        cloned.public_send("#{association.name}=", associated_record)
+      end
+      [cloned, duplicated]
+    end
+
+    def validate_associations!(associations)
+      associations.each do |assoc|
+          unless @record.class.reflect_on_association(assoc)
+            raise ArgumentError, I18n.t("activerecord.errors.clonable.association_not_found",
+                                      association: assoc,
+                                      model: @record.class.name)
+          end
+        end
+    end
+
+    def validate_attributes!(attributes)
+      attributes.each do |attr|
+        unless @record.class.column_names.include?(attr.to_s)
+          raise ArgumentError, I18n.t("activerecord.errors.clonable.attribute_not_found",
+                                    attribute: attr,
+                                    model: self.name)
+        end
       end
     end
-    [cloned, duplicated]
-  end
 
-    private
-      def validate_associations!(associations)
-        associations.each do |assoc|
-            unless @record.class.reflect_on_association(assoc)
-              raise ArgumentError, I18n.t("activerecord.errors.clonable.association_not_found",
-                                        association: assoc,
-                                        model: @record.class.name)
-            end
-          end
+    def reset_clone_attributes(clone)
+      @record.class.clonable_reset_attributes.each do |attr|
+        clone[attr] = nil if clone.has_attribute?(attr)
       end
+    end
 
-      def validate_attributes!(attributes)
-        attributes.each do |attr|
-          unless @record.class.column_names.include?(attr.to_s)
-            raise ArgumentError, I18n.t("activerecord.errors.clonable.attribute_not_found",
-                                      attribute: attr,
-                                      model: self.name)
-          end
+    def copy_references(original, cloned)
+      return unless @record.class.clonable_referenced_associations.present?
+      @record.class.clonable_referenced_associations.each do |assoc|
+        next unless original.class.reflect_on_association(assoc)
+        cloned.public_send("#{assoc}=", original.public_send(assoc))
+      end
+    end
+
+
+    def log(message, level = :info)
+      if Rails.env.development? && Rails.logger
+        Rails.logger.tagged("CLONING") do
+          Rails.logger.public_send(level, message)
         end
+      else
+        puts "[CLONING] #{message}"
       end
-
-      def reset_clone_attributes(clone)
-        @record.class.clonable_reset_attributes.each do |attr|
-          clone[attr] = nil if clone.has_attribute?(attr)
-        end
-      end
-
-      def copy_references(original, cloned)
-        return unless @record.class.clonable_referenced_associations.present?
-        @record.class.clonable_referenced_associations.each do |assoc|
-          next unless original.class.reflect_on_association(assoc)
-          cloned.public_send("#{assoc}=", original.public_send(assoc))
-        end
-      end
-
-
-      def log(message, level = :info)
-        if Rails.env.development? && Rails.logger
-          Rails.logger.tagged("CLONING") do
-            Rails.logger.public_send(level, message)
-          end
-        else
-          puts "[CLONING] #{message}"
-        end
-      end
+    end
 end
