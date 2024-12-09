@@ -9,6 +9,7 @@ en:
         cancel: Cancel
         confirm: Confirm
         continue: Continue
+        clone: Clone
         close: Close
         destroy: Destroy
         discard: Archive
