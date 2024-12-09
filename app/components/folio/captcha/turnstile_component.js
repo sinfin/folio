@@ -1,5 +1,8 @@
 window.Folio.Stimulus.register('f-captcha-turnstile', class extends window.Stimulus.Controller {
-  static values = { siteKey: String }
+  static values = {
+    siteKey: String,
+    appearance: String,
+  }
 
   connect() {
     this.loadTurnstileScript()
@@ -29,13 +32,15 @@ window.Folio.Stimulus.register('f-captcha-turnstile', class extends window.Stimu
       turnstile.render(turnstileContainer, {
         sitekey: this.siteKeyValue,
         language: document.documentElement.lang,
-        appearance: 'interaction-only',
+        appearance: this.appearanceValue,
         'before-interactive-callback': () => { turnstileContainer.style.display = "block" },
       })
 
       // Control the visibility of the turnstileContainer because even when the iframe is hidden,
       // it's wrapper takes up unnecessary space and causes layout shifts
-      turnstileContainer.style.display = "none"
+      if (this.appearanceValue === "interaction-only") {
+        turnstileContainer.style.display = "none"
+      }
     }
   }
 
