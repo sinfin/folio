@@ -8,8 +8,12 @@ div class=wrap_class
           value=ERB::Util.html_escape(options[opt])
         ]
 
-    - if f.object.tags.present?
-      = f.hidden_field :tags, multiple: true
+    - if tags.present?
+      .n-atom-newsletter-subscriptions-form__tags
+        = f.input :tags, collection: tags, as: :check_boxes,
+                                           legend_tag: false,
+                                           value_method: :first,
+                                           label_method: :last
 
     - if options[:input_label]
       .form-group.m-0

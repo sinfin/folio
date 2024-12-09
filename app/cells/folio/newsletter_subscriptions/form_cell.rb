@@ -5,7 +5,7 @@ class Folio::NewsletterSubscriptions::FormCell < Folio::ApplicationCell
 
   def newsletter_subscription
     @newsletter_subscription ||= model || Folio::NewsletterSubscription.new(email: "@",
-                                                                            tags: options[:tags])
+                                                                            tags: default_tags)
   end
 
   def form(&block)
@@ -44,6 +44,14 @@ class Folio::NewsletterSubscriptions::FormCell < Folio::ApplicationCell
 
   def remember_option_keys
     [:placeholder, :submit_text, :message, :button_class, :input_label]
+  end
+
+  def tags
+    options[:tags]
+  end
+
+  def default_tags
+    tags.map(&:first).first(1) if tags.present?
   end
 
   def input(f)
