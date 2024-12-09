@@ -44,4 +44,8 @@ class Folio::LeadsController < Folio::ApplicationController
 
       lead
     end
+
+    def turnstile_failure_redirect_path
+      request.referer
+    end
 end

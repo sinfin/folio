@@ -29,7 +29,7 @@ module Folio::Captcha::HasTurnstileValidation
     end
 
     def turnstile_failure_redirect_path
-      root_path
+      "/"
     end
 
     def respond_with_turnstile_failure
