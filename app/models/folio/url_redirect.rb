@@ -5,13 +5,9 @@ class Folio::UrlRedirect < Folio::ApplicationRecord
   include Folio::Publishable::Basic
 
   STATUS_CODES = {
-    300 => "Multiple Choices",
     301 => "Moved Permanently",
     302 => "Found",
     303 => "See Other",
-    304 => "Not Modified",
-    305 => "Use Proxy",
-    306 => "Switch Proxy",
     307 => "Temporary Redirect",
   }
 
