@@ -24,25 +24,10 @@
     .f-c-url-redirects-fields__checkbox
       = @f.input :pass_query
 
-  .f-c-url-redirects-fields__demo
-    h2 = t('.demo')
+  h2 = t('.demo_title')
 
-    .f-c-url-redirects-fields__demo-loader data=stimulus_target("demoLoader")
-      span.folio-loader
+  .f-c-url-redirects-fields__demo-loader-wrap
+    span.folio-loader
 
-    .f-c-url-redirects-fields__demo-unpublished[
-      data=stimulus_target("demoUnpublished")
-      hidden=true
-    ]
-      = t('.unpublished')
-
-    .f-c-url-redirects-fields__demo-invalid[
-      data=stimulus_target("demoInvalid")
-      hidden=true
-    ]
-      = t('.invalid')
-
-    .f-c-url-redirects-fields__demo-cases[
-      data=stimulus_target("demoCases")
-      hidden=true
-    ]
+  .f-c-url-redirects-fields__demo-wrap
+    = render(Folio::Console::UrlRedirects::Fields::DemoComponent.new(url_redirect: @f.object))

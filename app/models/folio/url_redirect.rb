@@ -104,6 +104,47 @@ class Folio::UrlRedirect < Folio::ApplicationRecord
     end
   end
 
+  def self.get_status_code_and_url(env_path:, env_query:, value:)
+    target = nil
+
+    if env_query.blank?
+      target = value[env_path]
+    else
+      env_path_with_query = env_query.present? ? "#{env_path}?#{env_query}" : env_path
+
+      target = value[env_path_with_query]
+
+      if target.nil?
+        target = value[env_path]
+
+        if target && target[:match_query]
+          target = nil
+        end
+      end
+    end
+
+    if target
+      url = if env_query.present? && target[:pass_query]
+        url_to_uri = URI.parse(target[:url_to])
+
+        url_to_uri_query_h = Rack::Utils.parse_query(url_to_uri.query)
+        env_query_h = Rack::Utils.parse_query(env_query)
+
+        final_query_h = env_query_h.merge(url_to_uri_query_h)
+
+        if final_query_h.present?
+          "#{target[:url_to].split("?", 2)[0]}?#{final_query_h.to_query}"
+        else
+          target[:url_to]
+        end
+      else
+        target[:url_to]
+      end
+
+      [target[:status_code], url]
+    end
+  end
+
   def self.handle_env(env)
     if Rails.application.config.folio_url_redirects_enabled
       hash = cache_aware_redirect_hash
@@ -117,52 +158,18 @@ class Folio::UrlRedirect < Folio::ApplicationRecord
         end
 
         if value.present?
-          env_path = env["PATH_INFO"]
-          env_query = env["QUERY_STRING"]
+          status_code, url = get_status_code_and_url(env_path: env["PATH_INFO"],
+                                                     env_query: env["QUERY_STRING"],
+                                                     value:)
 
-          target = nil
-
-          if env_query.blank?
-            target = value[env_path]
-          else
-            env_path_with_query = env_query.present? ? "#{env_path}?#{env_query}" : env_path
-
-            target = value[env_path_with_query]
-
-            if target.nil?
-              target = value[env_path]
-
-              if target && target[:match_query]
-                target = nil
-              end
-            end
-          end
-
-          if target
-            url = if env_query.present? && target[:pass_query]
-              url_to_uri = URI.parse(target[:url_to])
-
-              url_to_uri_query_h = Rack::Utils.parse_query(url_to_uri.query)
-              env_query_h = Rack::Utils.parse_query(env_query)
-
-              final_query_h = env_query_h.merge(url_to_uri_query_h)
-
-              if final_query_h.present?
-                "#{target[:url_to].split("?", 2)[0]}?#{final_query_h.to_query}"
-              else
-                target[:url_to]
-              end
-            else
-              target[:url_to]
-            end
-
+          if status_code && url
             # store _turbolinks_location so that Turbolinks change URL
             # see https://github.com/turbolinks/turbolinks-rails/blob/4fffc808b437936808f0888a87b1a1ae1bbcb1cd/lib/turbolinks/redirection.rb#L43
             if env["rack.session"]
               env["rack.session"][:_turbolinks_location] = url
             end
 
-            [target[:status_code], { "Location" => url }, []]
+            [status_code, { "Location" => url }, []]
           end
         end
       end

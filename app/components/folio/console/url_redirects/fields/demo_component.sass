@@ -1,0 +1,23 @@
+.f-c-url-redirects-fields-demo
+  &__case
+    display: flex
+    flex-wrap: wrap
+    align-items: center
+    gap: $grid-gutter-half map-get($spacers, 2)
+
+  &__case-from
+    flex: 0 0 100%
+
+  &__case-arrow-wrap
+    flex: 0 0 auto
+    position: relative
+    top: -3px
+
+  &__case-to
+    flex: 1 1 auto
+
+  &__case-to-icon
+    color: $success
+
+  &__case--to-blank &__case-to-icon
+    color: $danger

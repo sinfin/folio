@@ -1,0 +1,37 @@
+.f-c-url-redirects-fields-demo
+  - if @url_redirect.valid?
+    - if @url_redirect.published?
+      - urls.each do |from, to, status_code|
+        .f-c-url-redirects-fields-demo__case[
+          class="f-c-url-redirects-fields-demo__case--to-#{to ? "present" : "blank"}"
+          class="border-top pt-3 mt-3"
+        ]
+          a.f-c-url-redirects-fields-demo__case-from[
+            href=from
+            target="_blank"
+          ]
+            = from
+
+          .f-c-url-redirects-fields-demo__case-arrow-wrap
+            = folio_icon(:subdirectory_arrow_right)
+
+          .f-c-url-redirects-fields-demo__case-to-icon
+            = folio_icon(to ? :check : :close)
+
+          - if to
+            .f-c-url-redirects-fields-demo__case-to
+              a<>[
+                href=to
+                target="_blank"
+              ]
+                = to
+
+              ' (#{status_code})
+
+    - else
+      p = t('.unpublished')
+  - else
+    p = t('.invalid')
+
+    - @url_redirect.errors.each do |error|
+      p.small.mb-2.text-danger = error.full_message

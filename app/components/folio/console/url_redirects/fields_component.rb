@@ -15,6 +15,10 @@ class Folio::Console::UrlRedirects::FieldsComponent < Folio::Console::Applicatio
 
   def data
     stimulus_controller("f-c-url-redirects-fields",
-                        action: { change: "inputChanged" })
+                        action: { change: "inputChanged" },
+                        values: {
+                          demo_loading: false,
+                          demo_api_url: "/TODO"
+                        })
   end
 end
