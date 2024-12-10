@@ -61,7 +61,7 @@ window.Folio.Stimulus.register('f-c-url-redirects-fields', class extends window.
 
     try {
       formUrlFrom = new URL(`${origin}${data.url_from}`)
-      formUrlTo = new URL(data.url_to)
+      formUrlTo = new URL(data.url_to.indexOf("/") === 0 ? `${origin}${data.url_to}` : data.url_to)
     } catch {
       return false
     }
