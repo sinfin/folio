@@ -23,15 +23,17 @@ class Folio::UrlRedirect < Folio::ApplicationRecord
             uniqueness: { scope: :site_id }
 
   validates :url_to,
-            presence: true,
+            allow_nil: true,
             format: { with: /\A(\/|https?:\/\/)/ }
 
   validates :url_from,
             uniqueness: { scope: :site_id },
+            allow_nil: true,
             if: -> { Rails.application.config.folio_url_redirects_per_site }
 
   validates :url_from,
             uniqueness: true,
+            allow_nil: true,
             if: -> { !Rails.application.config.folio_url_redirects_per_site }
 
   validates :match_query,
