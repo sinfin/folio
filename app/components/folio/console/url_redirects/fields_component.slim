@@ -14,7 +14,7 @@
     .f-c-url-redirects-fields__checkbox
       = @f.input :match_query
 
-  .f-c-url-redirects-fields__row
+  .f-c-url-redirects-fields__row.f-c-url-redirects-fields__row--to
     .f-c-url-redirects-fields__arrow
       = folio_icon(:subdirectory_arrow_right, height: 36)
 
@@ -25,3 +25,24 @@
       = @f.input :pass_query
 
   .f-c-url-redirects-fields__demo
+    h2 = t('.demo')
+
+    .f-c-url-redirects-fields__demo-loader data=stimulus_target("demoLoader")
+      span.folio-loader
+
+    .f-c-url-redirects-fields__demo-unpublished[
+      data=stimulus_target("demoUnpublished")
+      hidden=true
+    ]
+      = t('.unpublished')
+
+    .f-c-url-redirects-fields__demo-invalid[
+      data=stimulus_target("demoInvalid")
+      hidden=true
+    ]
+      = t('.invalid')
+
+    .f-c-url-redirects-fields__demo-cases[
+      data=stimulus_target("demoCases")
+      hidden=true
+    ]

@@ -154,8 +154,8 @@ cs:
         url_from: Přesměrovat z
         url_to: Přesměrovat na
         status_code: Kód odpovědi
-        match_query: Zahrnout query parametry
-        pass_query: Předat query parametry
+        match_query: Parametry musí přesně odpovídat
+        pass_query: Všechny parametry budou předány
         published: Zapnuto
 
     errors:

@@ -134,8 +134,8 @@ en:
         url_from: Redirect from
         url_to: Redirect to
         status_code: Status code
-        match_query: Include query string
-        pass_query: Pass on query string
+        match_query: Parameters must match
+        pass_query: Parameters will be passed on
         published: Enabled
 
     errors:

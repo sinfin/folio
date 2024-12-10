@@ -1,4 +1,31 @@
 .f-c-url-redirects-fields
+  &__demo-loader
+    position: relative
+    height: 60px
+
+  &__demo-case
+    display: flex
+    flex-wrap: wrap
+    align-items: center
+    gap: $grid-gutter-half map-get($spacers, 2)
+
+  &__demo-case-from
+    flex: 0 0 100%
+
+  &__demo-case-arrow-wrap
+    flex: 0 0 auto
+    position: relative
+    top: -3px
+
+  &__demo-case-to
+    flex: 1 1 auto
+
+  &__demo-case-to-icon
+    color: $success
+
+  &__demo-case--to-blank &__demo-case-to-icon
+    color: $danger
+
   +media-breakpoint-up(md)
     &__row
       display: flex
@@ -6,13 +33,13 @@
 
     &__arrow
       flex: 0 0 auto
-      padding-top: $grid-gutter-half
+      padding-top: $grid-gutter-half + px-to-rem(7px)
 
     &__url
       flex: 1 1 auto
 
     &__checkbox
-      flex: 0 0 200px
+      flex: 0 0 250px
       padding-top: 25px
       box-sizing: content-box
       height: $input-height
@@ -22,3 +49,14 @@
       .form-group,
       .form-check
         margin: 0
+
+  +media-breakpoint-down(md)
+    &__row--to
+      position: relative
+      padding-left: px-to-rem(36px) + $grid-gutter-half
+      min-height: 36px + 19px
+
+    &__arrow
+      position: absolute
+      top: 19px
+      left: 0

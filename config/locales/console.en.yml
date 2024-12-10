@@ -349,6 +349,9 @@ en:
       url_redirects:
         fields_component:
           placeholder/title: i.e. redirecting an old article
+          unpublished: Redirect is disabled.
+          invalid: Redirect is missing required fields.
+          demo: Overview
 
   date:
     formats:

@@ -352,6 +352,9 @@ cs:
       url_redirects:
         fields_component:
           placeholder/title: Např. přesměrování starého článku
+          unpublished: Přesměrování je vypnuté.
+          invalid: Přesměrování nemá vyplněné všechny povinné údaje.
+          demo: Přehled pro kontrolu
 
   date:
     formats:
