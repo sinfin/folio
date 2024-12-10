@@ -145,6 +145,12 @@ class Folio::UrlRedirect < Folio::ApplicationRecord
               target[:url_to]
             end
 
+            # store _turbolinks_location so that Turbolinks change URL
+            # see https://github.com/turbolinks/turbolinks-rails/blob/4fffc808b437936808f0888a87b1a1ae1bbcb1cd/lib/turbolinks/redirection.rb#L43
+            if env["rack.session"]
+              env["rack.session"][:_turbolinks_location] = url
+            end
+
             [target[:status_code], { "Location" => url }, []]
           end
         end
