@@ -33,7 +33,7 @@ window.Folio.Stimulus.register('f-c-url-redirects-fields', class extends window.
     this.demoLoaderTarget.hidden = true
 
     if (data.published === '0') {
-      this.demoUnpublishedTarget.hidden = true
+      this.demoUnpublishedTarget.hidden = false
       this.demoInvalidTarget.hidden = true
       this.demoCasesTarget.hidden = true
     } else if (!data.url_from || !data.url_to || (data.url_from === data.url_to)) {
