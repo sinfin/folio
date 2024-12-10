@@ -140,7 +140,18 @@ class Folio::UrlRedirect < Folio::ApplicationRecord
 
           if target
             url = if env_query.present? && target[:pass_query]
-              "#{target[:url_to]}#{target[:url_to].include?("?") ? "&" : "?"}#{env_query}"
+              url_to_uri = URI.parse(target[:url_to])
+
+              url_to_uri_query_h = Rack::Utils.parse_query(url_to_uri.query)
+              env_query_h = Rack::Utils.parse_query(env_query)
+
+              final_query_h = env_query_h.merge(url_to_uri_query_h)
+
+              if final_query_h.present?
+                "#{target[:url_to].split("?", 2)[0]}?#{final_query_h.to_query}"
+              else
+                target[:url_to]
+              end
             else
               target[:url_to]
             end

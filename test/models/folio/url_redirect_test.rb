@@ -196,6 +196,14 @@ class Folio::UrlRedirectTest < ActiveSupport::TestCase
            status_code: 301,
            match_query: false)
 
+    create(:folio_url_redirect,
+           url_from: "/d?foo=bar",
+           url_to: "http://other-domain.com/dd?foo=foo",
+           site: site_2,
+           status_code: 301,
+           match_query: true,
+           pass_query: true)
+
     Rails.application.config.stub(:folio_url_redirects_enabled, true) do
       Rails.application.config.stub(:folio_url_redirects_per_site, false) do
         {
@@ -206,7 +214,10 @@ class Folio::UrlRedirectTest < ActiveSupport::TestCase
           "http://1.localhost/b?must=have&nope=nope" => nil,
           "http://2.localhost/c" => "http://other-domain.com/cc",
           "http://2.localhost/c?foo=bar" => "http://other-domain.com/cc?foo=bar",
-          "http://2.localhost/c?foo=bar&baz=1" => "http://other-domain.com/cc?foo=bar&baz=1",
+          "http://2.localhost/c?foo=bar&baz=1" => "http://other-domain.com/cc?baz=1&foo=bar",
+          "http://2.localhost/d" => nil,
+          "http://2.localhost/d?foo=bar" => "http://other-domain.com/dd?foo=foo",
+          "http://2.localhost/d?foo=bar&baz=1" => nil,
         }.each do |from, to|
           result = Folio::UrlRedirect.handle_env(Rack::MockRequest.env_for(from))
 
