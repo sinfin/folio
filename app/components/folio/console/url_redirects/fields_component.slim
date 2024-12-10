@@ -29,5 +29,5 @@
   .f-c-url-redirects-fields__demo-loader-wrap
     span.folio-loader
 
-  .f-c-url-redirects-fields__demo-wrap
+  .f-c-url-redirects-fields__demo-wrap data=stimulus_target("demoWrap")
     = render(Folio::Console::UrlRedirects::Fields::DemoComponent.new(url_redirect: @f.object))

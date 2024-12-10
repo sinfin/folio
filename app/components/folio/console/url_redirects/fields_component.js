@@ -1,5 +1,5 @@
 window.Folio.Stimulus.register('f-c-url-redirects-fields', class extends window.Stimulus.Controller {
-  static targets = ['demo', 'demoCases', 'demoUnpublished', 'demoInvalid', 'demoLoader']
+  static targets = ['demoWrap']
 
   static values = {
     demoLoading: Boolean,
@@ -30,6 +30,15 @@ window.Folio.Stimulus.register('f-c-url-redirects-fields', class extends window.
 
   updateDemo () {
     this.demoLoadingValue = true
-    console.log('updateDemo!')
+
+    const data = window.Folio.formToHash(this.element.closest('form'))
+
+    window.Folio.Api.apiPost(this.demoApiUrlValue, data).then((res) => {
+      this.demoWrapTarget.innerHTML = res.data
+      this.demoLoadingValue = false
+    }).catch((error) => {
+      alert(error)
+      this.demoLoadingValue = false
+    })
   }
 })

@@ -36,11 +36,15 @@ class Folio::Console::UrlRedirects::Fields::DemoComponent < Folio::Console::Appl
       uri = url_from_as_uri.dup
       uri.query = query_h.present? ? query_h.to_query : nil
 
-      status_code, url = Folio::UrlRedirect.get_status_code_and_url(env_path: uri.path,
-                                                                    env_query: uri.query,
-                                                                    value:)
+      status_code, target_url = Folio::UrlRedirect.get_status_code_and_url(env_path: uri.path,
+                                                                           env_query: uri.query,
+                                                                           value:)
 
-      [uri.to_s, url, status_code]
+      if target_url.present? && target_url.start_with?("/")
+        target_url = "#{Folio::Current.site.env_aware_root_url}#{target_url[1..]}"
+      end
+
+      [uri.to_s, target_url, status_code]
     end
     # rescue StandardError
     #   []

@@ -18,7 +18,7 @@ class Folio::Console::UrlRedirects::FieldsComponent < Folio::Console::Applicatio
                         action: { change: "inputChanged" },
                         values: {
                           demo_loading: false,
-                          demo_api_url: "/TODO"
+                          demo_api_url: controller.folio.demo_console_api_url_redirects_path(id: @f.object.id),
                         })
   end
 end

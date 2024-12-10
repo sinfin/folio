@@ -142,6 +142,12 @@ Folio::Engine.routes.draw do
           end
         end
 
+        resources :url_redirects, only: [] do
+          collection do
+            post :demo
+          end
+        end
+
         namespace :file do
           Rails.application.config.folio_file_types_for_routes.each do |type|
             klass = type.constantize
