@@ -112,12 +112,20 @@ class Folio::UrlRedirectTest < ActiveSupport::TestCase
                  status_code: 301,
                  match_query: true)
 
+      d = create(:folio_url_redirect,
+                 url_from: "/d?foo=bar",
+                 url_to: "/dd",
+                 site: site_2,
+                 status_code: 301,
+                 match_query: true)
+
       Rails.application.config.stub(:folio_url_redirects_per_site, false) do
         assert_equal({
           "*" => {
-            "/a" => { url_to: "/aa", status_code: 301, match_query: true, pass_query: true },
-            "/b" => { url_to: "/bb", status_code: 301, match_query: true, pass_query: true },
-            "/c" => { url_to: "/cc", status_code: 301, match_query: true, pass_query: true },
+            "/a" => [{ url_to: "/aa", status_code: 301, match_query: true, pass_query: true, query_array: [] }],
+            "/b" => [{ url_to: "/bb", status_code: 301, match_query: true, pass_query: true, query_array: [] }],
+            "/c" => [{ url_to: "/cc", status_code: 301, match_query: true, pass_query: true, query_array: [] }],
+            "/d" => [{ url_to: "/dd", status_code: 301, match_query: true, pass_query: true, query_array: ["foo=bar"] }],
           }
         }, Folio::UrlRedirect.redirect_hash)
       end
@@ -125,11 +133,12 @@ class Folio::UrlRedirectTest < ActiveSupport::TestCase
       Rails.application.config.stub(:folio_url_redirects_per_site, true) do
         assert_equal({
           "1.localhost" => {
-            "/a" => { url_to: "/aa", status_code: 301, match_query: true, pass_query: true },
+            "/a" => [{ url_to: "/aa", status_code: 301, match_query: true, pass_query: true, query_array: [] }],
           },
           "2.localhost" => {
-            "/b" => { url_to: "/bb", status_code: 301, match_query: true, pass_query: true },
-            "/c" => { url_to: "/cc", status_code: 301, match_query: true, pass_query: true },
+            "/b" => [{ url_to: "/bb", status_code: 301, match_query: true, pass_query: true, query_array: [] }],
+            "/c" => [{ url_to: "/cc", status_code: 301, match_query: true, pass_query: true, query_array: [] }],
+            "/d" => [{ url_to: "/dd", status_code: 301, match_query: true, pass_query: true, query_array: ["foo=bar"] }],
           }
         }, Folio::UrlRedirect.redirect_hash)
       end
@@ -139,8 +148,9 @@ class Folio::UrlRedirectTest < ActiveSupport::TestCase
       Rails.application.config.stub(:folio_url_redirects_per_site, false) do
         assert_equal({
           "*" => {
-            "/a" => { url_to: "/aa", status_code: 301, match_query: true, pass_query: true },
-            "/b" => { url_to: "/bb", status_code: 301, match_query: true, pass_query: true },
+            "/a" => [{ url_to: "/aa", status_code: 301, match_query: true, pass_query: true, query_array: [] }],
+            "/b" => [{ url_to: "/bb", status_code: 301, match_query: true, pass_query: true, query_array: [] }],
+            "/d" => [{ url_to: "/dd", status_code: 301, match_query: true, pass_query: true, query_array: ["foo=bar"] }],
           }
         }, Folio::UrlRedirect.redirect_hash)
       end
@@ -148,17 +158,18 @@ class Folio::UrlRedirectTest < ActiveSupport::TestCase
       Rails.application.config.stub(:folio_url_redirects_per_site, true) do
         assert_equal({
           "1.localhost" => {
-            "/a" => { url_to: "/aa", status_code: 301, match_query: true, pass_query: true },
+            "/a" => [{ url_to: "/aa", status_code: 301, match_query: true, pass_query: true, query_array: [] }],
           },
           "2.localhost" => {
-            "/b" => { url_to: "/bb", status_code: 301, match_query: true, pass_query: true },
+            "/b" => [{ url_to: "/bb", status_code: 301, match_query: true, pass_query: true, query_array: [] }],
+            "/d" => [{ url_to: "/dd", status_code: 301, match_query: true, pass_query: true, query_array: ["foo=bar"] }],
           }
         }, Folio::UrlRedirect.redirect_hash)
       end
 
       a.update!(published: false)
       b.update!(published: false)
-
+      d.update!(published: false)
 
       Rails.application.config.stub(:folio_url_redirects_per_site, false) do
         assert_nil Folio::UrlRedirect.redirect_hash
@@ -204,6 +215,14 @@ class Folio::UrlRedirectTest < ActiveSupport::TestCase
            match_query: true,
            pass_query: true)
 
+    create(:folio_url_redirect,
+           url_from: "/e?foo=bar",
+           url_to: "http://other-domain.com/ee?foo=foo",
+           site: site_2,
+           status_code: 301,
+           match_query: false,
+           pass_query: true)
+
     Rails.application.config.stub(:folio_url_redirects_enabled, true) do
       Rails.application.config.stub(:folio_url_redirects_per_site, false) do
         {
@@ -218,6 +237,9 @@ class Folio::UrlRedirectTest < ActiveSupport::TestCase
           "http://2.localhost/d" => nil,
           "http://2.localhost/d?foo=bar" => "http://other-domain.com/dd?foo=foo",
           "http://2.localhost/d?foo=bar&baz=1" => nil,
+          "http://2.localhost/e" => nil,
+          "http://2.localhost/e?foo=bar" => "http://other-domain.com/ee?foo=foo",
+          "http://2.localhost/e?foo=bar&baz=1" => "http://other-domain.com/ee?baz=1&foo=foo",
         }.each do |from, to|
           result = Folio::UrlRedirect.handle_env(Rack::MockRequest.env_for(from))
 
@@ -226,6 +248,72 @@ class Folio::UrlRedirectTest < ActiveSupport::TestCase
           else
             assert_equal [301, { "Location" => to }, []], result, "#{from} -> #{to}"
           end
+        end
+      end
+    end
+  end
+
+  test "handle_env - pick the most relevant target" do
+    site = get_any_site
+
+    create(:folio_url_redirect,
+           url_from: "/from?a=a",
+           url_to: "/a",
+           status_code: 301,
+           match_query: false,
+           pass_query: false)
+
+    create(:folio_url_redirect,
+           url_from: "/from?a=a&b=b&c=c",
+           url_to: "/c",
+           status_code: 301,
+           match_query: false,
+           pass_query: false)
+
+    create(:folio_url_redirect,
+           url_from: "/from?a=a&b=b&c=c&d=d",
+           url_to: "/d",
+           status_code: 301,
+           match_query: false,
+           pass_query: false)
+
+    create(:folio_url_redirect,
+           url_from: "/from?a=a&b=b",
+           url_to: "/b",
+           status_code: 301,
+           match_query: false,
+           pass_query: false)
+
+    Rails.application.config.stub(:folio_url_redirects_enabled, true) do
+      Rails.application.config.stub(:folio_url_redirects_per_site, false) do
+        {
+          "/from?a=a" => "/a",
+          "/from?a=a&b=b" => "/b",
+          "/from?b=b&a=a" => "/b",
+          "/from?a=a&b=b&c=c" => "/c",
+          "/from?a=a&c=c&b=b" => "/c",
+          "/from?b=b&a=a&c=c" => "/c",
+          "/from?b=b&c=c&a=a" => "/c",
+          "/from?c=c&a=a&b=b" => "/c",
+          "/from?c=c&b=b&a=a" => "/c",
+          "/from?a=a&b=b&c=c&d=d" => "/d",
+          "/from?a=a&b=b&d=d&c=c" => "/d",
+          "/from?a=a&d=d&b=b&c=c" => "/d",
+          "/from?d=d&a=a&b=b&c=c" => "/d",
+          "/from?d=d&b=b&a=a&c=c" => "/d",
+          "/from?d=d&b=b&c=c&a=a" => "/d",
+          "/from?b=b&d=d&a=a&c=c" => "/d",
+          "/from?b=b&c=c&d=d&a=a" => "/d",
+          "/from?b=b&c=c&a=a&d=d" => "/d",
+          "/from?c=c&a=a&b=b&d=d" => "/d",
+          "/from?c=c&b=b&a=a&d=d" => "/d",
+          "/from?c=c&b=b&d=d&a=a" => "/d",
+          "/from?c=c&d=d&a=a&b=b" => "/d",
+          "/from?c=c&d=d&b=b&a=a" => "/d",
+          "/from?c=c&a=a&d=d&b=b" => "/d",
+        }.each do |from, to|
+          result = Folio::UrlRedirect.handle_env(Rack::MockRequest.env_for("#{site.env_aware_root_url}#{from[1..]}"))
+          assert_equal [301, { "Location" => to }, []], result, "#{from} -> #{to}"
         end
       end
     end

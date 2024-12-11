@@ -8,7 +8,7 @@ class Folio::Console::UrlRedirects::Fields::DemoComponent < Folio::Console::Appl
   def urls
     return [] if @url_redirect.url_from.blank?
 
-    value = { @url_redirect.url_from => @url_redirect.to_redirect_hash }
+    value = { @url_redirect.url_from.split("?").first => [@url_redirect.to_redirect_hash] }
 
     random_query_h = { "a#{SecureRandom.hex(4)}" => "a#{SecureRandom.hex(4)}" }
 
@@ -46,7 +46,5 @@ class Folio::Console::UrlRedirects::Fields::DemoComponent < Folio::Console::Appl
 
       [uri.to_s, target_url, status_code]
     end
-    # rescue StandardError
-    #   []
   end
 end

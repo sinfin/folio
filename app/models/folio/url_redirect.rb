@@ -11,7 +11,7 @@ class Folio::UrlRedirect < Folio::ApplicationRecord
     307 => "Temporary Redirect",
   }
 
-  CACHE_KEY = "folio_url_redirects"
+  CACHE_KEY_BASE = "folio_url_redirects"
   CACHE_KEY_EXPIRES_IN = 1.day
 
   validates :url_from,
@@ -61,7 +61,18 @@ class Folio::UrlRedirect < Folio::ApplicationRecord
                   }
 
   def to_redirect_hash
-    { url_to:, match_query:, pass_query:, status_code: }
+    query_array = if url_from.present? && url_from.include?("?")
+      uri = URI.parse(url_from)
+      if uri.query.present?
+        Rack::Utils.parse_query(uri.query).map { |k, v| "#{k}=#{v}" }
+      else
+        []
+      end
+    else
+      []
+    end
+
+    { url_to:, match_query:, pass_query:, status_code:, query_array: }
   end
 
   def self.use_preview_tokens?
@@ -73,18 +84,26 @@ class Folio::UrlRedirect < Folio::ApplicationRecord
       hash = {}
 
       if Rails.application.config.folio_url_redirects_per_site
-        self.published.includes(:site).each do |url_redirect|
-          hash[url_redirect.site.env_aware_domain] ||= {}
-          hash[url_redirect.site.env_aware_domain][url_redirect.url_from] = url_redirect.to_redirect_hash
+        self.published.includes(:site).order(id: :asc).each do |url_redirect|
+          if url_redirect.url_from
+            url_from_without_query = url_redirect.url_from.split("?", 2)[0]
+
+            hash[url_redirect.site.env_aware_domain] ||= {}
+            hash[url_redirect.site.env_aware_domain][url_from_without_query] ||= []
+            hash[url_redirect.site.env_aware_domain][url_from_without_query] << url_redirect.to_redirect_hash
+          end
         end
 
         hash.presence
       else
         hash["*"] ||= {}
 
-        self.published.includes(:site).each do |url_redirect|
-          hash["*"][url_redirect.url_from] ||= {}
-          hash["*"][url_redirect.url_from] = url_redirect.to_redirect_hash
+        self.published.includes(:site).order(id: :asc).each do |url_redirect|
+          url_from_without_query = url_redirect.url_from.split("?", 2)[0]
+
+          hash["*"] ||= {}
+          hash["*"][url_from_without_query] ||= []
+          hash["*"][url_from_without_query] << url_redirect.to_redirect_hash
         end
 
         hash if hash["*"].present?
@@ -94,9 +113,13 @@ class Folio::UrlRedirect < Folio::ApplicationRecord
     end
   end
 
+  def self.hash_cache_key
+    [CACHE_KEY_BASE, ENV["CURRENT_RELEASE_COMMIT_HASH"]].join("-")
+  end
+
   def self.cache_aware_redirect_hash
     if Rails.application.config.action_controller.perform_caching
-      Rails.cache.fetch(CACHE_KEY, expires_in: CACHE_KEY_EXPIRES_IN) do
+      Rails.cache.fetch(hash_cache_key, expires_in: CACHE_KEY_EXPIRES_IN) do
         redirect_hash
       end
     else
@@ -105,23 +128,33 @@ class Folio::UrlRedirect < Folio::ApplicationRecord
   end
 
   def self.get_status_code_and_url(env_path:, env_query:, value:)
-    target = nil
+    targets_ary = value[env_path]
 
-    if env_query.blank?
-      target = value[env_path]
+    return if targets_ary.blank?
+
+    query_array = if env_query.present?
+      Rack::Utils.parse_query(env_query).map { |k, v| "#{k}=#{v}" }
     else
-      env_path_with_query = env_query.present? ? "#{env_path}?#{env_query}" : env_path
+      []
+    end
 
-      target = value[env_path_with_query]
-
-      if target.nil?
-        target = value[env_path]
-
-        if target && target[:match_query]
-          target = nil
+    valid_targets = targets_ary.select do |target|
+      if target[:match_query]
+        if query_array.size > target[:query_array].size
+          (query_array - target[:query_array]).empty?
+        else
+          (target[:query_array] - query_array).empty?
+        end
+      else
+        if target[:query_array].present?
+          (target[:query_array] - query_array).empty?
+        else
+          true
         end
       end
     end
+
+    target = valid_targets.sort_by { |t| t[:query_array].size }.last
 
     if target
       url = if env_query.present? && target[:pass_query]
@@ -219,7 +252,7 @@ class Folio::UrlRedirect < Folio::ApplicationRecord
     end
 
     def refresh_url_redirects_cache
-      Rails.cache.delete(CACHE_KEY)
+      Rails.cache.delete(self.class.hash_cache_key)
       self.class.cache_aware_redirect_hash
     end
 end
