@@ -1,0 +1,12 @@
+.f-c-atoms-previews-broken-preview.my-atom
+  .container-fluid
+    .f-c-atoms-previews-broken-preview__box
+      p.mb-a
+        = t('.title')
+
+        - if model[:atom]
+          '  (#{model[:atom].class.model_name.human})
+
+      p.mb-a.mt-c.pt-c.border-top: strong = model[:error].class
+
+      = model[:error].message
