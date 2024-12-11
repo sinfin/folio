@@ -2,6 +2,12 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [6.0.1] - 2024-12-11
+
+### Changed
+
+- changed react lazyloading from `react-lazyload` to native `loading="lazy"`
+
 ## 2024-11-20
 ### Removed
 - removed `current_site` helpers - use `Folio::Current.site` everywhere!
