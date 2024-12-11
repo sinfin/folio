@@ -1,5 +1,4 @@
 import React from 'react'
-import { forceCheck } from 'react-lazyload'
 
 import Pagination from 'components/Pagination'
 
@@ -7,8 +6,6 @@ import FileTableList from './FileTableList'
 import FileThumbnailList from './FileThumbnailList'
 
 const FileList = (props) => {
-  setTimeout(forceCheck, 0)
-
   const pagination = (
     <Pagination
       pagination={props.pagination}

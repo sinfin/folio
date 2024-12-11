@@ -68,7 +68,7 @@ const FileTableRow = ({
               <Picture
                 file={file}
                 imageClassName='f-c-file-table__img'
-                lazyload={{ height: 50, once: true, overflow: true }}
+                lazyload
               />
             )}
           </div>
