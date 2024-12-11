@@ -56,3 +56,5 @@
     = translated_inputs f, :meta_title, character_counter: true
     = translated_inputs f, :meta_description, autosize: true,
                                               character_counter: true
+
+    = render partial: 'form_bottom', locals: { f: }
