@@ -156,6 +156,9 @@ en:
           attributes:
             roles:
               not_available_for_site: "Roles %{roles} are not completelly available for site '%{site}'."
+      clonable:
+        association_not_found: "Association '%{association}' does not exist for %{model}"
+        attribute_not_found: "Attribute '%{attribute}' does not exist for %{model}"
 
     models:
       folio/atom:

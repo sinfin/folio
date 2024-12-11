@@ -30,6 +30,8 @@ class Folio::Page < Folio::ApplicationRecord
   include Folio::Taggable
   include Folio::Transportable::Model
   include PgSearch::Model
+  include Folio::Console::Clonable
+
 
   if Rails.application.config.folio_pages_audited
     include Folio::Audited
@@ -62,6 +64,18 @@ class Folio::Page < Folio::ApplicationRecord
 
     validates :title,
               presence: true
+  end
+
+  def self.clonable_referenced_associations
+    [:cover]
+  end
+
+  def self.clonable_ignored_associations
+    [:files, :slugs, :file_placements, :pg_search_document, :site]
+  end
+
+  def self.clonable_reset_attributes
+    [:published, :published_at]
   end
 
   # Scopes
