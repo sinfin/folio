@@ -42,3 +42,6 @@ html[
     = yield :modals
     == cell('folio/devise/modal')
     == cell('folio/devise/omniauth/forms')
+
+    = render(Folio::Atoms::FlashTriggerForBrokenComponent.new(record: @record_for_meta_variables,
+                                                              broken_atoms_data: controller.instance_variable_get(:@folio_broken_atoms_data)))
