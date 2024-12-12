@@ -1,0 +1,7 @@
+---
+cs:
+  folio:
+    atoms:
+      flash_trigger_for_broken_component:
+        title: Chyba při zobrazení kapitol!
+        subtitle: "Následující kapitoly nejsou zobrazeny:"

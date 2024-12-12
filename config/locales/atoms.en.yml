@@ -1,0 +1,7 @@
+---
+en:
+  folio:
+    atoms:
+      flash_trigger_for_broken_component:
+        title: Error displaying chapters!
+        subtitle: "The following chapters are not displayed:"
