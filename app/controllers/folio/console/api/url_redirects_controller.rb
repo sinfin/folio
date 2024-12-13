@@ -8,7 +8,7 @@ class Folio::Console::Api::UrlRedirectsController < Folio::Console::Api::BaseCon
       Folio::UrlRedirect.by_site(Folio::Current.site).find_by_id(params[:id])
     end
 
-    url_redirect ||= Folio::UrlRedirect.new
+    url_redirect ||= Folio::UrlRedirect.new(site: Folio::Current.site)
     url_redirect.assign_attributes(url_redirect_params)
 
     render_component_json(Folio::Console::UrlRedirects::Fields::DemoComponent.new(url_redirect:))

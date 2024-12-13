@@ -33,5 +33,6 @@
   - else
     p = t('.invalid')
 
-    - @url_redirect.errors.each do |error|
-      p.small.mb-2.text-danger = error.full_message
+    - if @url_redirect.url_from.present? && @url_redirect.url_to.present?
+      - @url_redirect.errors.each do |error|
+        p.small.mb-2.text-danger = error.full_message
