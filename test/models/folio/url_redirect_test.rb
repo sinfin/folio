@@ -37,6 +37,26 @@ class Folio::UrlRedirectTest < ActiveSupport::TestCase
     end
   end
 
+  test "validate url_from vs url_to" do
+    site = get_any_site
+
+    fur = build(:folio_url_redirect, url_from: "/a", url_to: "/b", site:)
+
+    assert fur.valid?
+
+    fur.url_to = "/a"
+
+    assert_not fur.valid?
+    assert_equal :url_to, fur.errors.first.attribute
+    assert_equal :same_as_url_from, fur.errors.first.type
+
+    fur.url_to = "#{site.env_aware_root_url}a"
+
+    assert_not fur.valid?
+    assert_equal :url_to, fur.errors.first.attribute
+    assert_equal :same_as_url_from, fur.errors.first.type
+  end
+
   test "validate url across records" do
     I18n.with_locale(:en) do
       site = get_any_site

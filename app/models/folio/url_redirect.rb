@@ -215,14 +215,18 @@ class Folio::UrlRedirect < Folio::ApplicationRecord
       return if url_to.blank?
       return if site_id.blank?
 
-      if url_from == url_to
-        errors.add(:url_to, :same_as_url_from, attribute_name: self.class.human_attribute_name(:url_from))
+      if url_from == url_to || "#{site.env_aware_root_url}#{url_from[1..]}" == url_to
+        errors.add(:url_to,
+                   :same_as_url_from,
+                   attribute_name: self.class.human_attribute_name(:url_from))
       end
 
       base_scope = self.class
       base_scope = base_scope.by_site(site) if Rails.application.config.folio_url_redirects_per_site
 
-      record = base_scope.where(url_to: url_from).or(base_scope.where(url_from: url_to)).first
+      record = base_scope.where(url_to: url_from)
+                         .or(base_scope.where(url_from: url_to))
+                         .first
 
       return if record.nil?
 
