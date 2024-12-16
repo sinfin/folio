@@ -55,7 +55,7 @@ en:
         previews:
           add_atom: Insert chapter
           broken_preview:
-            title: Broken chapter
+            title: Broken content block
       back: Zpět
       base:
         atoms:

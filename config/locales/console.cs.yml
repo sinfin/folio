@@ -55,7 +55,7 @@ cs:
         previews:
           add_atom: Vložit kapitolu
           broken_preview:
-            title: Rozbitá kapitola
+            title: Chybný obsahový blok
       back: Zpět
       base:
         atoms:
