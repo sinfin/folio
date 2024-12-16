@@ -44,3 +44,8 @@ cs:
       topics_component:
         collapse: Sbalit
         expand: Rozbalit
+
+      record_bar_component:
+        edit: Upravit
+        record: stránku
+        broken_atom: Stránka obsahuje chybný blok

@@ -1,0 +1,18 @@
+.d-ui-record-bar
+  position: fixed
+  z-index: 1000
+  left: 50%
+  transform: translate(-50%, 0)
+  bottom: map-get($spacers, g)
+  background: $transparent-b800
+  padding: $d-ui-buttons-gap
+  border-radius: 4px
+  display: flex
+  align-items: center
+  gap: $grid-gutter-half
+  flex-wrap: wrap
+  justify-content: center
+
+  &__record-label
+    +media-breakpoint-down(sm)
+      display: none

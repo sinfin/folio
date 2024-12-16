@@ -1,15 +1,17 @@
 # frozen_string_literal: true
 
 module Folio::AtomsHelper
+  BROKEN_DATA_KEY = :@folio_broken_atoms_data
+
   def atoms_rescue_lambda
     @atoms_rescue_lambda ||= lambda do |error, atom|
       if controller_instance = try(:controller)
-        folio_broken_atoms_data = controller_instance.instance_variable_get(:@folio_broken_atoms_data)
+        folio_broken_atoms_data = controller_instance.instance_variable_get(BROKEN_DATA_KEY)
         folio_broken_atoms_data ||= []
 
         folio_broken_atoms_data << { atom:, error: }
 
-        controller_instance.instance_variable_set(:@folio_broken_atoms_data, folio_broken_atoms_data)
+        controller_instance.instance_variable_set(BROKEN_DATA_KEY, folio_broken_atoms_data)
       end
 
       Sentry.capture_exception(e) if defined?(Sentry)
