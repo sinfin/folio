@@ -2,6 +2,16 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [6.0.2] - 2024-12-16
+
+### Added
+
+- added `RecordBar` component to ui, hook onto atom errors
+
+### Fixed
+
+- fixed simple form with atoms submission when atom form is open
+
 ## [6.0.1] - 2024-12-11
 
 ### Changed
