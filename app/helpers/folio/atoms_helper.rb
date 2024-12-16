@@ -4,12 +4,12 @@ module Folio::AtomsHelper
   BROKEN_DATA_KEY = :@folio_broken_atoms_data
 
   def atoms_rescue_lambda
-    @atoms_rescue_lambda ||= lambda do |error, atom|
+    @atoms_rescue_lambda ||= lambda do |e, atom|
       if controller_instance = try(:controller)
         folio_broken_atoms_data = controller_instance.instance_variable_get(BROKEN_DATA_KEY)
         folio_broken_atoms_data ||= []
 
-        folio_broken_atoms_data << { atom:, error: }
+        folio_broken_atoms_data << { atom:, error: e }
 
         controller_instance.instance_variable_set(BROKEN_DATA_KEY, folio_broken_atoms_data)
       end
