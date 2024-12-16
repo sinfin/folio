@@ -43,6 +43,33 @@ class Atoms extends React.PureComponent {
     $(window).on('message', this.receiveMessage)
   }
 
+  onSimpleFormWithAtomsSubmit = (e) => {
+    if (this.props.atoms.form.rootKey) {
+      e.preventDefault()
+      e.stopPropagation()
+      this.props.dispatch(validateAndSubmitGlobalForm())
+    } else {
+      window.FolioConsole.DirtyForms.unbind()
+      e.target.classList.add('f-c-simple-form-with-atoms--submitting')
+    }
+  }
+
+  componentDidMount () {
+    const form = document.querySelector('.f-c-simple-form-with-atoms')
+
+    if (form) {
+      form.addEventListener('submit', this.onSimpleFormWithAtomsSubmit)
+    }
+  }
+
+  componentWillUnmount () {
+    const form = document.querySelector('.f-c-simple-form-with-atoms')
+
+    if (form) {
+      form.removeEventListener('submit', this.onSimpleFormWithAtomsSubmit)
+    }
+  }
+
   receiveMessage = (jqueryEvent) => {
     const { data, origin } = jqueryEvent.originalEvent
     if (origin === window.origin) {
@@ -176,7 +203,6 @@ class Atoms extends React.PureComponent {
             addAtom={(type) => this.props.dispatch(addAtomToForm(type))}
             moveFormAtom={(from, to) => this.props.dispatch(moveFormAtom(from, to))}
             removeFormAtom={(index) => this.props.dispatch(removeFormAtom(index))}
-            validateAndSubmitGlobalForm={() => this.props.dispatch(validateAndSubmitGlobalForm())}
             openFileModal={(fileType, filesUrl, file) => this.props.dispatch(openFileModal(fileType, filesUrl, file))}
             splitFormAtom={(field, parts) => this.props.dispatch(splitFormAtom(field, parts))}
           />

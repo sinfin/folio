@@ -360,10 +360,12 @@ function * validateAndSaveFormAtomSaga () {
 function * validateAndSubmitGlobalFormPerform (action) {
   yield validateAndSaveFormAtomPerform()
   const form = yield select(atomsFormSelector)
-  if (form.rootKey) {
-    window.jQuery('.f-c-form-footer__btn--submit').prop('disabled', false)
-  } else {
-    window.jQuery('.f-c-simple-form-with-atoms').submit()
+
+  const submitBtn = document.querySelector('.f-c-form-footer__btn--submit')
+  submitBtn.disabled = false
+
+  if (!form.rootKey) {
+    submitBtn.click()
   }
 }
 
