@@ -1,0 +1,16 @@
+.f-c-atoms-previews-error data=data
+  .f-c-atoms-previews-error__inner
+    = folio_icon(:close,
+                 height: 96,
+                 class: "f-c-atoms-previews-error__icon")
+
+    .f-c-atoms-previews-error__title.lead.fw-bold
+      = t('.title')
+
+    .f-c-atoms-previews-error__timer.fw-bold
+      .f-c-atoms-previews-error__timer-number data=stimulus_target("timer")
+        ' 5
+
+      .f-c-atoms-previews-error__timer-loader.folio-loader
+
+    .f-c-atoms-previews-error__error.small data=stimulus_target("error")
