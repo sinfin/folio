@@ -3,6 +3,8 @@
 class Folio::Users::SessionsController < Devise::SessionsController
   include Folio::Users::DeviseControllerBase
 
+  after_action :after_sign_in, only: :create
+
   protect_from_forgery prepend: true
 
   def destroy
@@ -83,29 +85,6 @@ class Folio::Users::SessionsController < Devise::SessionsController
     end
   end
 
-  def get_failure_flash_message(warden_exception_or_user)
-    if warden_exception_or_user.is_a?(Hash)
-      if warden_exception_or_user[:message].nil?
-        I18n.t("folio.devise.sessions.create.invalid")
-      elsif warden_exception_or_user[:message] == :unconfirmed
-        unconfirmed_flash_message
-      else
-        I18n.t("devise.failure.#{warden_exception_or_user[:message]}", default: unconfirmed_flash_message)
-      end
-    else
-      I18n.t("devise.failure.invalid", authentication_keys: resource_class.authentication_keys.join(", "))
-    end
-  end
-
-  def unconfirmed_flash_message
-    link = ActionController::Base.helpers.link_to(I18n.t("folio.devise.confirmations.new.header"),
-                                                  main_app.new_user_confirmation_path(email: params[:user] && params[:user][:email]))
-
-    msg = I18n.t("devise.failure.unconfirmed")
-
-    "#{msg} #{link}"
-  end
-
   def require_no_authentication
     result = handle_crossdomain_devise
 
@@ -118,4 +97,32 @@ class Folio::Users::SessionsController < Devise::SessionsController
       end
     end
   end
+
+  private
+    def get_failure_flash_message(warden_exception_or_user)
+      if warden_exception_or_user.is_a?(Hash)
+        if warden_exception_or_user[:message].nil?
+          I18n.t("folio.devise.sessions.create.invalid")
+        elsif warden_exception_or_user[:message] == :unconfirmed
+          unconfirmed_flash_message
+        else
+          I18n.t("devise.failure.#{warden_exception_or_user[:message]}", default: unconfirmed_flash_message)
+        end
+      else
+        I18n.t("devise.failure.invalid", authentication_keys: resource_class.authentication_keys.join(", "))
+      end
+    end
+
+    def unconfirmed_flash_message
+      link = ActionController::Base.helpers.link_to(I18n.t("folio.devise.confirmations.new.header"),
+                                                    main_app.new_user_confirmation_path(email: params[:user] && params[:user][:email]))
+
+      msg = I18n.t("devise.failure.unconfirmed")
+
+      "#{msg} #{link}"
+    end
+
+    def after_sign_in
+      # override in main app
+    end
 end

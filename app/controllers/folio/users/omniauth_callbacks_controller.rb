@@ -136,6 +136,8 @@ class Folio::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksContr
 
           set_flash_message!(:success, :signed_in)
           redirect_to after_sign_in_path_for(resource)
+
+          after_sign_in
         else
           email = auth.email
 
@@ -178,5 +180,9 @@ class Folio::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksContr
       params.require(:user)
             .permit(:email,
                     *Folio::User.controller_strong_params_for_create)
+    end
+
+    def after_sign_in
+      # override in main app
     end
 end
