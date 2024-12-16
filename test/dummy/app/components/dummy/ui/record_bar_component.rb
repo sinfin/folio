@@ -15,7 +15,7 @@ class Dummy::Ui::RecordBarComponent < ApplicationComponent
   def buttons
     ary = [{
       href: console_edit_href,
-      label: "#{t(".edit")} <span class=\"d-ui-record-bar__record-label\">#{t(".record")}</span>".html_safe,
+      label: "<span class=\"d-sm-none\">#{t(".edit_mobile")}</span><span class=\"d-none d-sm-inline\">#{t(".edit_desktop")}</span>".html_safe,
       size: :sm,
       icon: :edit,
       variant: :tertiary,
@@ -28,7 +28,7 @@ class Dummy::Ui::RecordBarComponent < ApplicationComponent
         href: console_edit_href,
         size: :sm,
         icon: :alert_triangle,
-        label: t(".broken_atom"),
+        label: "<span class=\"d-sm-none\">#{t(".broken_atom_mobile")}</span><span class=\"d-none d-sm-inline\">#{t(".broken_atom_desktop")}</span>".html_safe,
         variant: :danger,
         target: "_blank",
         data: { turbolinks: "false" }
