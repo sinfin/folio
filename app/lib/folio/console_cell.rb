@@ -46,7 +46,7 @@ class Folio::ConsoleCell < Folio::ApplicationCell
     end
 
     begin
-      url_for([record, args])
+      I18n.with_locale(args[:locale] || I18n.locale) { url_for([record, args]) }
     rescue NoMethodError
       nil
     end
