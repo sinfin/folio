@@ -4,6 +4,8 @@ class Folio::Mailchimp::CreateOrUpdateSubscriptionJob < ApplicationJob
   queue_as :default
 
   def perform(email)
+    return unless mailchimp_api.ready_to_use?
+
     subscription = Folio::NewsletterSubscription.find_by_email(email)
 
     if subscription && subscription.active?
