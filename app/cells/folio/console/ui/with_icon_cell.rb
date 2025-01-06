@@ -9,6 +9,7 @@ class Folio::Console::Ui::WithIconCell < Folio::ConsoleCell
     h[:class] = "#{class_name} #{options[:class]}"
     h[:tag] ||= :span
     h[:data] = options[:data]
+    h[:title] = options[:title]
 
     if options[:block]
       h[:class] += " d-flex"

@@ -1,2 +1,5 @@
 .f-c-index-actions
-  == actions.join(" ")
+  == render_actions(@actions).join(" ")
+
+  - if @dropdown_links.present?
+    = render_view_component(Folio::Console::Ui::DropdownComponent.new(links: @dropdown_links))

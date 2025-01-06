@@ -1,6 +1,43 @@
 # frozen_string_literal: true
 
 class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
+  def show
+    @actions = actions_ary
+
+    collapsed_ary = @actions.filter_map do |action|
+      action if action[:collapsed]
+    end
+
+    if collapsed_ary.size > 1
+      @actions.reject! { |action| action[:collapsed] }
+
+      @dropdown_links = collapsed_ary.map do |action|
+        href = if action[:url] && !action[:disabled]
+          action[:url].is_a?(Proc) ? action[:url].call(model) : action[:url]
+        end
+
+        title = t("folio.console.actions.#{action[:name]}")
+        icon_options = { class: "text-#{action[:variant] || "reset"}" }
+        data = action[:data] || {}
+        data[:method] = action[:method] if action[:method]
+
+        if action[:confirm]
+          if action[:confirm].is_a?(String)
+            data[:confirm] = action[:confirm]
+          else
+            data[:confirm] = t("folio.console.confirmation")
+          end
+        else
+          data[:confirm] = nil
+        end
+
+        action.merge(title:, href:, label: title, icon_options:, data:)
+      end
+    end
+
+    render
+  end
+
   def safe_url_for(opts)
     controller.url_for(opts)
   rescue StandardError
@@ -14,6 +51,7 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
         variant: :danger,
         method: :delete,
         confirm: true,
+        collapsed: true,
         url: -> (record) { through_aware_console_url_for(record, safe: true) },
       },
       discard: {
@@ -38,6 +76,7 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
       new_clone: {
         name: :new_clone,
         icon: :plus_circle_multiple_outline,
+        collapsed: true,
         url: -> (record) { through_aware_console_url_for(record, action: :new_clone, safe: true) },
       },
       show: {
@@ -60,9 +99,11 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
     }
   end
 
-  def actions
+  def actions_ary
     acts = []
+
     with_default = (options[:actions].presence || %i[edit destroy])
+
     with_default.each do |sym_or_hash|
       if sym_or_hash.is_a?(Symbol)
         next if sym_or_hash == :destroy && model.class.try(:indestructible?)
@@ -88,6 +129,10 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
       end
     end
 
+    acts
+  end
+
+  def render_actions(acts)
     acts.filter_map do |action|
       data = action[:data] || {}
 

@@ -24,6 +24,7 @@ class Folio::Page < Folio::ApplicationRecord
   end
 
   extend Folio::InheritenceBaseNaming
+  include Folio::Console::Clonable
   include Folio::HasAttachments
   include Folio::Publishable::WithDate
   include Folio::Sitemap::Base
