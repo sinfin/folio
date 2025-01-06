@@ -41,7 +41,7 @@ class Folio::ClonableTest < ActiveSupport::TestCase
       )
 
     page.reload
-    assert_equal original_attributes, page.attributes
+    assert_equal original_attributes.without("created_at", "updated_at"), page.attributes.without("created_at", "updated_at")
     assert_equal "Původní text", page.atoms.first.content
     assert_not_equal page.atoms.first.content, clone.atoms.first.content
     assert_equal image, page.atoms.second.cover

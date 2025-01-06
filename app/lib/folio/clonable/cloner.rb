@@ -17,7 +17,7 @@ class Folio::Clonable::Cloner
     log(I18n.t("cloning.finished"))
 
     if clone.respond_to?(:title=)
-      clone.title = @record.class.generate_cloned_title(@record.title)
+      clone.title = generate_cloned_title(@record.title)
     end
     clone
   rescue => e
@@ -83,12 +83,16 @@ class Folio::Clonable::Cloner
 
 
     def log(message, level = :info)
-      if Rails.env.development? && Rails.logger
+      if Rails.env.development? && ENV["FOLIO_CLONABLE_LOG"] && Rails.logger
         Rails.logger.tagged("CLONING") do
           Rails.logger.public_send(level, message)
         end
-      else
-        puts "[CLONING] #{message}"
       end
+    end
+
+    def generate_cloned_title(original_title)
+      I18n.t("folio.console.clone.cloned_title",
+             original_title:,
+             date: Date.today.strftime("%d. %m. %Y"))
     end
 end
