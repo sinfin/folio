@@ -10,7 +10,7 @@ class Folio::Console::React::ModalComponent < Folio::Console::ApplicationCompone
   end
 
   def render?
-    %w[new edit create update].include?(controller.action_name) || controller.try(:force_use_react_modals?)
+    %w[new edit create update duplicate].include?(controller.action_name) || controller.try(:force_use_react_modals?)
   end
 
   def title
