@@ -43,7 +43,7 @@ module Folio::Console::DefaultActions
     folio_console_record.valid? if params[:prevalidate]
   end
 
-  def duplicate
+  def new_clone
     cloned_record = Folio::Clonable::Cloner.new(folio_console_record).create_clone
     cloned_record.after_clone
 

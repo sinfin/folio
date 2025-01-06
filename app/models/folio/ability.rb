@@ -11,7 +11,7 @@ class Folio::Ability
     @site = site
 
     alias_action :manage, to: :do_anything
-    alias_action :index, :show, :new, :create, :edit, :update, :destroy, :set_positions, :create_defaults, to: :crud
+    alias_action :index, :show, :new, :create, :edit, :update, :destroy, :set_positions, :create_defaults, :new_clone, to: :crud
 
     ability_rules
   end
@@ -72,7 +72,7 @@ class Folio::Ability
       cannot :impersonate, Folio::User # `can :do_anything` enabled it, so we must deny it here
       cannot :set_superadmin, Folio::User
       cannot :change_auth_site, Folio::User
-      cannot :duplicate, :all unless Rails.application.config.folio_console_clonable_enabled
+      cannot :new_clone, :all unless Rails.application.config.folio_console_clonable_enabled
     end
   end
   alias_method :folio_console_rules, :folio_rules
