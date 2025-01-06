@@ -2,6 +2,12 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [6.0.2] - 2025-01-06
+
+### Added
+
+- added `Folio::Console::Clonable` concern together with `Folio::Clonable::Cloner` to allow cloning of records
+
 ## [6.0.1] - 2024-12-11
 
 ### Changed
