@@ -24,6 +24,7 @@ class Folio::Page < Folio::ApplicationRecord
   end
 
   extend Folio::InheritenceBaseNaming
+  include Folio::Console::Clonable
   include Folio::HasAttachments
   include Folio::Publishable::WithDate
   include Folio::Sitemap::Base
@@ -62,6 +63,18 @@ class Folio::Page < Folio::ApplicationRecord
 
     validates :title,
               presence: true
+  end
+
+  def self.clonable_referenced_associations
+    [:cover]
+  end
+
+  def self.clonable_ignored_associations
+    [:files, :slugs, :file_placements, :pg_search_document, :site]
+  end
+
+  def self.clonable_reset_attributes
+    [:published, :published_at]
   end
 
   # Scopes

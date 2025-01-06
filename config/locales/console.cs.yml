@@ -7,12 +7,13 @@ cs:
         arrange: Upravit strukturu
         back: Zpět
         cancel: Zrušit
+        close: Zavřít
         confirm: Potvrdit
         continue: Pokračovat
-        close: Zavřít
         destroy: Smazat
         discard: Archivovat
         edit: Upravit
+        new_clone: Duplikovat
         preview: Náhled
         save: Uložit
         show: Zobrazit

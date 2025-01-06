@@ -26,7 +26,7 @@
                                       Folio::Publishable::PREVIEW_PARAM_NAME => record.preview_token)
       end
 
-      actions({ preview: }, :edit, :destroy)
+      actions({ preview: }, :edit, :destroy, :new_clone)
     elsif record.is_a?(Folio::Page) && record.class.try(:public_rails_path)
       actions({ preview: controller.main_app.send(record.class.public_rails_path, locale: locale) },
               :edit,

@@ -49,4 +49,10 @@ class Folio::Console::PagesControllerTest < Folio::Console::BaseControllerTest
 
     assert_redirected_to url_for([:edit, :console, page])
   end
+
+  test "new_clone" do
+    page = create(:folio_page)
+    get url_for([:new_clone, :console, page])
+    assert_response :success
+  end
 end

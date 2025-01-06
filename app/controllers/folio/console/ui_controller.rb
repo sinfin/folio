@@ -10,6 +10,7 @@ class Folio::Console::UiController < Folio::Console::BaseController
       badges
       boolean_toggles
       buttons
+      dropdowns
       modals
       tabs
       warning_ribbons
@@ -141,6 +142,14 @@ class Folio::Console::UiController < Folio::Console::BaseController
   end
 
   def input_date_time
+  end
+
+  def dropdowns
+    @links = [
+      { label: "First", href: dropdowns_console_ui_path, icon: :plus_circle_multiple_outline },
+      { label: "Second", href: dropdowns_console_ui_path, icon: :alert },
+      { label: "Third", href: dropdowns_console_ui_path, icon: :archive, icon_options: { class: "text-danger" } },
+    ]
   end
 
   private
