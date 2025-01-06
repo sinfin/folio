@@ -27,6 +27,10 @@ module Folio::Singleton
     def singleton?
       true
     end
+
+    def is_clonable?
+      false
+    end
   end
 
   private
