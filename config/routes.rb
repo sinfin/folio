@@ -30,6 +30,7 @@ Folio::Engine.routes.draw do
         get :badges
         get :boolean_toggles
         get :buttons
+        get :dropdowns
         get :modals
         get :tabs
         get :warning_ribbons

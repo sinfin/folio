@@ -30,8 +30,6 @@ class Folio::Page < Folio::ApplicationRecord
   include Folio::Taggable
   include Folio::Transportable::Model
   include PgSearch::Model
-  include Folio::Console::Clonable
-
 
   if Rails.application.config.folio_pages_audited
     include Folio::Audited

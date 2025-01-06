@@ -7,13 +7,13 @@ en:
         arrange: Arrange
         back: Back
         cancel: Cancel
+        close: Close
         confirm: Confirm
         continue: Continue
-        clone: Clone
-        close: Close
         destroy: Destroy
         discard: Archive
         edit: Edit
+        new_clone: Clone
         preview: Preview
         save: Save
         show: Show

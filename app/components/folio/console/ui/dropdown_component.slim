@@ -1,0 +1,27 @@
+.f-c-ui-dropdown.dropdown
+  .f-c-ui-dropdown__trigger[
+    class="dropdown-toggle"
+    class=(content? ? "f-c-ui-dropdown__trigger--with-content" : "f-c-ui-dropdown__trigger--without-content")
+    aria-expanded="false"
+    aria-haspopup="true"
+    data-bs-toggle="dropdown"
+  ]
+    - if content?
+      span.f-c-ui-dropdown__content
+        = content
+    - else
+      span.f-c-ui-dropdown__dots
+        = folio_icon(:dots_vertical)
+
+  .f-c-ui-dropdown__menu[
+    class="dropdown-menu"
+    class=(@menu_align == :right ? "dropdown-menu-right" : nil)
+  ]
+    - @links.each do |link|
+      == cell('folio/console/ui/with_icon',
+              link[:label],
+              href: link[:href],
+              class: 'dropdown-item',
+              icon: link[:icon],
+              icon_options: link[:icon_options],
+              block: true)

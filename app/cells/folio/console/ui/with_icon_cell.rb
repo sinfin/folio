@@ -10,6 +10,10 @@ class Folio::Console::Ui::WithIconCell < Folio::ConsoleCell
     h[:tag] ||= :span
     h[:data] = options[:data]
 
+    if options[:block]
+      h[:class] += " d-flex"
+    end
+
     if options[:href]
       h[:tag] = :a
       h[:target] = options[:target]
