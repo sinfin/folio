@@ -3,6 +3,7 @@
 class Folio::Clonable::Cloner
   def initialize(record)
     @record = record
+    fail "Not a clonable record" unless @record.class.is_clonable?
     validate_associations!(@record.class.clonable_ignored_associations)
     validate_associations!(@record.class.clonable_referenced_associations)
     validate_attributes!(@record.class.clonable_reset_attributes)
@@ -10,18 +11,18 @@ class Folio::Clonable::Cloner
 
   def create_clone
     log("CLONING", :info)
-    log(I18n.t("cloning.start", model: self.class.name, id: @record.id))
+    log(I18n.t("clonable.cloner.start", model: self.class.name, id: @record.id))
     clone, duplicated = clone_nested_records_recursively(@record)
-    log(I18n.t("cloning.associations_duplicated", associations: duplicated))
+    log(I18n.t("clonable.cloner.associations_duplicated", associations: duplicated))
     reset_clone_attributes(clone)
-    log(I18n.t("cloning.finished"))
+    log(I18n.t("clonable.cloner.finished"))
 
     if clone.respond_to?(:title=)
       clone.title = generate_cloned_title(@record.title)
     end
     clone
   rescue => e
-    log(I18n.t("cloning.error", message: e.message), :error)
+    log(I18n.t("clonable.cloner.error", message: e.message), :error)
     log(e.backtrace.first(5).join("\n"), :error)
     raise
   end

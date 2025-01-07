@@ -1,0 +1,11 @@
+---
+cs:
+  folio:
+    clonable:
+      cloner:
+        start: "Začátek klonování %{model} #%{id}"
+        associations_duplicated: "Asociace duplikovány: %{associations}"
+        finished: "Klonování dokončeno"
+        error: "Chyba při klonování: %{message}"
+      new_clone:
+        redirect_flash: "Duplikování není povoleno"

@@ -44,11 +44,16 @@ module Folio::Console::DefaultActions
   end
 
   def new_clone
-    cloned_record = Folio::Clonable::Cloner.new(folio_console_record).create_clone
-    cloned_record.after_clone
+    if folio_console_record.class.try(:is_clonable?)
+      cloned_record = Folio::Clonable::Cloner.new(folio_console_record).create_clone
+      cloned_record.after_clone
 
-    instance_variable_set(folio_console_record_variable_name, cloned_record)
-    render :new
+      instance_variable_set(folio_console_record_variable_name, cloned_record)
+      render :new
+    else
+      redirect_to url_for([:console, @klass]),
+                  flash: { error: I18n.t("folio.clonable.new_clone.redirect_flash") }
+    end
   end
 
   def merge

@@ -72,11 +72,3 @@ en:
   time:
     formats:
       folio_short: "%d. %m. %Y, %H:%M"
-
-  cloning:
-    start: "Started cloning %{model} #%{id}"
-    deep_dup_finished: "Deep dup finished"
-    references_copied: "References copied: %{references}"
-    associations_duplicated: "Associations duplicated: %{associations}"
-    finished: "Cloning finished"
-    error: "Cloning error: %{message}"
