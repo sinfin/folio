@@ -3,8 +3,10 @@ window.Folio.Stimulus.register('f-c-links-control-bar', class extends window.Sti
     href: String,
   }
 
+  static outlets = ["f-c-links-modal"]
+
   onAddClick (e) {
     e.preventDefault()
-    console.log('onAddClick')
+    this.fCLinksModalOutlet.openWithData({ href: "/foo" })
   }
 })

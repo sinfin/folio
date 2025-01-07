@@ -354,6 +354,17 @@ cs:
         control_bar_component:
           add_link: Vybrat odkaz
 
+        modal_component:
+          title: :folio.console.links.control_bar_component.add_link
+          label/target: Otevírat v novém okně
+          label/rel: Atribut rel (volitelně)
+          label/label: Text odkazu
+          hint/rel: "Např: noopener, noreferrer, nofollow"
+          cancel: Zrušit
+          submit: Potvrdit
+          select: Vybrat
+          custom_url: Vlastní URL
+
   date:
     formats:
       console_short: "%d. %m. %Y"

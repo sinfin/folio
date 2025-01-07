@@ -351,6 +351,16 @@ en:
         control_bar_component:
           add_link: Add link
 
+        modal_component:
+          label/target: Open in new window
+          label/rel: Rel attribute (optional)
+          label/label: Link text
+          hint/rel: "E.g. noopener, noreferrer, nofollow"
+          cancel: Cancel
+          submit: Confirm
+          select: Select
+          custom_url: Custom URL
+
   date:
     formats:
       console_short: "%d. %m. %Y"

@@ -31,6 +31,7 @@ class Folio::Console::Links::ControlBarComponent < Folio::Console::ApplicationCo
     stimulus_controller("f-c-links-control-bar",
                         values: {
                           href: @url_json[:href],
-                        })
+                        },
+                        outlets: %w[f-c-links-modal])
   end
 end

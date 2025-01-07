@@ -3,9 +3,43 @@ h1 Folio Console UI
 h2 Input URL
 
 = simple_form_for "", method: :get, url: request.path do |f|
+  h3 Blank
+
   = f.input :link, as: :url
 
   = f.input :link_json, as: :url_json
+
+  ruby:
+    data = {
+      href: "/foo",
+      target: "_blank",
+      rel: "noopener noreferrer",
+      label: "Foo",
+      record_type: "Folio::Page",
+      record_id: Folio::Page.first.id,
+    }
+
+  hr.my-5
+
+  h3 With data - href
+
+  pre
+    code
+      = data[:href]
+
+  = f.input :link_with_data, as: :url, input_html: { value: data[:href] }
+
+  hr.my-5
+
+  h3 With data - JSON
+
+  pre
+    code
+      = JSON.pretty_generate(data)
+
+  = f.input :link_json_with_data, as: :url_json, input_html: { value: data.to_json }
+
+  hr.my-5
 
   == cell('folio/console/ui/button',
           type: :submit,
