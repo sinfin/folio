@@ -12,7 +12,7 @@ module Folio::Console::Clonable
 
   class_methods do
     def is_clonable?
-      true
+      Rails.application.config.folio_console_clonable_enabled
     end
 
     def clonable_ignored_associations
