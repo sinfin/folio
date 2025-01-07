@@ -1,0 +1,16 @@
+.f-c-links-control-bar data=data
+  .f-c-links-control-bar__bar[
+    data=stimulus_target("bar")
+    hidden=@url_json[:href].blank?
+  ]
+    ' bar
+
+  .f-c-links-control-bar__button-wrap[
+    data=stimulus_target("buttonWrap")
+    hidden=@url_json[:href].present?
+  ]
+    == cell('folio/console/ui/button',
+            variant: :success,
+            label: t('.add_link'),
+            icon: :link,
+            data: stimulus_action(click: "onAddClick"))

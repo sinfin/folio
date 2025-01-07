@@ -347,6 +347,10 @@ en:
       folio_attributes_fields_component:
         add: Add attribute
 
+      links:
+        control_bar_component:
+          add_link: Add link
+
   date:
     formats:
       console_short: "%d. %m. %Y"

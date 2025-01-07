@@ -18,6 +18,7 @@ SimpleForm::Inputs::Base.class_eval do
       h[:class] ||= []
       h[:class] << "f-input-form-group" if h[:class].exclude?("f-input-form-group")
       h[:class] << "f-input-form-group--#{name.to_s.delete_prefix("f-input-form-group-")}"
+      h[:class] << name.to_s
 
       input_html_options["data-#{name}-target"] = "input"
     else
@@ -77,5 +78,27 @@ SimpleForm::Inputs::Base.class_eval do
     else
       template.label_tag(nil, custom_text, label_options)
     end
+  end
+
+  def register_url_input(json: true, wrapper_options: nil)
+    register_stimulus("f-c-input-form-group-url",
+                      values: { loaded: false, json: },
+                      wrapper: true)
+
+    if json
+      options[:value] ||= (object.try(attribute_name) || {}).to_json
+    end
+
+    options[:custom_html] = <<~HTML.html_safe
+      <div class="f-c-input-form-group-url__inner">
+        <div class="f-c-input-form-group-url__loader-wrap">
+          <div class="folio-loader folio-loader--small f-c-input-form-group-url__loader"></div>
+        </div>
+        <div class="f-c-input-form-group-url__control-bar-wrap"></div>
+      </div>
+    HTML
+
+    merged_input_options = merge_wrapper_options(input_html_options, wrapper_options)
+    @builder.text_field(attribute_name, merged_input_options)
   end
 end

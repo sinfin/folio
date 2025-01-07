@@ -350,6 +350,10 @@ cs:
       folio_attributes_fields_component:
         add: Přidat atribut
 
+      links:
+        control_bar_component:
+          add_link: Vybrat odkaz
+
   date:
     formats:
       console_short: "%d. %m. %Y"

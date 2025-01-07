@@ -5,7 +5,7 @@ require "test_helper"
 class Folio::Console::Api::LinksControllerTest < Folio::Console::BaseControllerTest
   include Folio::Engine.routes.url_helpers
 
-  test "index" do
+  test "show" do
     I18n.with_locale(:cs) do
       get console_api_links_path
       assert_equal([], response.parsed_body["data"])
@@ -45,5 +45,37 @@ class Folio::Console::Api::LinksControllerTest < Folio::Console::BaseControllerT
                     { "label" => "Stránka - Foo", "url" => "/foo", "title" => "Foo" }],
                    response.parsed_body["data"])
     end
+  end
+
+  test "control_bar - href" do
+    get control_bar_console_api_links_path(format: :json), params: {
+      href: ""
+    }
+
+    assert_response :ok
+    assert response.parsed_body["data"].include?("f-c-links-control-bar")
+
+    get control_bar_console_api_links_path(format: :json), params: {
+      href: "/foo"
+    }
+
+    assert_response :ok
+    assert response.parsed_body["data"].include?("f-c-links-control-bar")
+  end
+
+  test "control_bar - url_json" do
+    get control_bar_console_api_links_path(format: :json), params: {
+      url_json: "{}",
+    }
+
+    assert_response :ok
+    assert response.parsed_body["data"].include?("f-c-links-control-bar")
+
+    get control_bar_console_api_links_path(format: :json), params: {
+      url_json: { href: "/foo" }.to_json,
+    }
+
+    assert_response :ok
+    assert response.parsed_body["data"].include?("f-c-links-control-bar")
   end
 end

@@ -1,0 +1,13 @@
+h1 Folio Console UI
+
+h2 Input URL
+
+= simple_form_for "", method: :get, url: request.path do |f|
+  = f.input :link, as: :url
+
+  = f.input :link_json, as: :url_json
+
+  == cell('folio/console/ui/button',
+          type: :submit,
+          variant: :primary,
+          label: t("folio.console.actions.submit"))

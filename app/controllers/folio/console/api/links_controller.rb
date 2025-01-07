@@ -1,7 +1,17 @@
 # frozen_string_literal: true
 
 class Folio::Console::Api::LinksController < Folio::Console::Api::BaseController
-  def index
+  def control_bar
+    url_json = params[:url_json]
+
+    href = if url_json.blank?
+      params[:href]
+    end
+
+    render_component_json(Folio::Console::Links::ControlBarComponent.new(url_json:, href:))
+  end
+
+  def show
     links = []
 
     page_links.merge(additional_links).each do |klass, url_proc|
