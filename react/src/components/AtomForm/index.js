@@ -67,7 +67,6 @@ class AtomForm extends React.PureComponent {
   }
 
   componentDidMount () {
-    window.jQuery('.f-c-simple-form-with-atoms').on('submit', this.handleGlobalFormSubmission)
     window.jQuery(document).on('keydown.fcAtomForm', this.onKeydown)
 
     if (this.autofocusRef.current) {
@@ -76,14 +75,7 @@ class AtomForm extends React.PureComponent {
   }
 
   componentWillUnmount () {
-    window.jQuery('.f-c-simple-form-with-atoms').off('submit', this.handleGlobalFormSubmission)
     window.jQuery(document).off('keydown.fcAtomForm', this.onKeydown)
-  }
-
-  handleGlobalFormSubmission = (e) => {
-    e.preventDefault()
-    e.stopPropagation()
-    this.props.validateAndSubmitGlobalForm()
   }
 
   saveFormAtoms = () => {

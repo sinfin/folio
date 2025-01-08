@@ -110,14 +110,10 @@ showInsertHint = (e) ->
   $(this)
     .closest('.f-c-atoms-previews__insert')
     .addClass('f-c-atoms-previews__insert--active')
-    .closest('.f-c-atoms-previews__locale')
-    .addClass('f-c-atoms-previews__locale--active-insert')
 
 hideInsert = ($insert) ->
   $insert
     .removeClass('f-c-atoms-previews__insert--active')
-    .closest('.f-c-atoms-previews__locale')
-    .removeClass('f-c-atoms-previews__locale--active-insert')
 
 handleInsertClick = (e) ->
   e.preventDefault()
@@ -287,9 +283,11 @@ updatePerex = (locale, value) ->
 $(document)
   .on 'click', '.f-c-atoms-previews__button--arrow', handleArrowClick
   .on 'click', '.f-c-atoms-previews__button--edit', handleEditClick
+  .on 'click', '.f-c-atoms-previews-broken-preview__button--edit', handleEditClick
   .on 'click', '.f-c-atoms-previews__button--settings', handleEditClick
   .on 'click', '.f-c-atoms-previews__controls-overlay', handleOverlayClick
   .on 'click', '.f-c-atoms-previews__button--remove', handleRemoveClick
+  .on 'click', '.f-c-atoms-previews-broken-preview__button--destroy', handleRemoveClick
   .on 'click', '.f-c-atoms-previews__insert-a', handleInsertClick
   .on 'click', '.f-c-atoms-previews__insert-splittable-join-trigger', handleSplitableJoinTriggerClick
   .on 'click', '.f-c-atoms-previews__insert-hint', showInsertHint

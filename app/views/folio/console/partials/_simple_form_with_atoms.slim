@@ -75,6 +75,12 @@
               ]
               span.folio-loader.f-c-simple-form-with-atoms__preview-loader
 
+          .f-c-simple-form-with-atoms__preview-error-wrap hidden=true
+            .f-c-simple-form-with-atoms__preview-error
+
+            template.f-c-simple-form-with-atoms__preview-error-template
+              = render(Folio::Console::Atoms::Previews::ErrorComponent.new)
+
         .f-c-simple-form-with-atoms__overlay-dismiss
 
         .f-c-simple-form-with-atoms__overlay

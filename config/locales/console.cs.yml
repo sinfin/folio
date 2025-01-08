@@ -55,6 +55,11 @@ cs:
           title: Nastavení
         previews:
           add_atom: Vložit kapitolu
+          broken_preview:
+            title: Chybný obsahový blok
+          error_component:
+            title: Při načítání náhledu došlo k chybě. Náhled bude automaticky obnoven.
+
       back: Zpět
       base:
         atoms:

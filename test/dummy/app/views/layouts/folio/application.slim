@@ -42,3 +42,5 @@ html[
     = yield :modals
     == cell('folio/devise/modal')
     == cell('folio/devise/omniauth/forms')
+
+    = render(Dummy::Ui::RecordBarComponent.new(record: @record_for_meta_variables))
