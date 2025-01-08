@@ -1,0 +1,34 @@
+.f-c-atoms-previews-error
+  position: absolute
+  inset: 0
+  background: $body-bg
+  z-index: 2
+  display: flex
+  flex-direction: column
+
+  &__inner
+    flex: 1 0 auto
+    max-height: 50vh
+    display: flex
+    align-items: center
+    justify-content: center
+    flex-direction: column
+    padding: $grid-gutter-width
+    gap: $grid-gutter-half
+
+  &__error,
+  &__icon
+    color: $danger
+
+  &__timer
+    font-size: 48px
+    position: relative
+
+  &__timer-loader
+    display: none
+
+  &[data-f-c-atoms-previews-error-timer-value="0"] &__timer-loader
+    display: block
+
+  &[data-f-c-atoms-previews-error-timer-value="0"] &__timer-number
+    visibility: hidden

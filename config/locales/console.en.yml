@@ -55,6 +55,10 @@ en:
           title: Settings
         previews:
           add_atom: Insert chapter
+          broken_preview:
+            title: Broken content block
+          error_component:
+            title: Error loading preview. Preview will be automatically reloaded.
       back: Zpět
       base:
         atoms:

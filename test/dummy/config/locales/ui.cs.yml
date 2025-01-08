@@ -44,3 +44,9 @@ cs:
       topics_component:
         collapse: Sbalit
         expand: Rozbalit
+
+      record_bar_component:
+        edit_desktop: Upravit stránku
+        edit_mobile: Upravit
+        broken_atom_desktop: Stránka obsahuje chybný blok
+        broken_atom_mobile: Chybný blok

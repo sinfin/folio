@@ -80,23 +80,59 @@ class Folio::Console::Atoms::PreviewsCell < Folio::ConsoleCell
   def render_molecule(atoms)
     atom_class = atoms.first.class
 
+    rescue_lambda = lambda do |error|
+      cell("folio/console/atoms/previews/broken_preview",
+           error:,
+           molecule_component_class: atom_class.molecule_component_class,
+           molecule_cell_name: atom_class.molecule_cell_name,
+           atoms:,
+           atom_options: atom_additional_options).show
+    rescue StandardError => nested_error
+      cell("folio/console/atoms/previews/broken_preview", error: nested_error).show
+    end
+
     if atom_class.molecule_component_class
-      capture { render_view_component(atom_class.molecule_component_class.new(atoms:, atom_options: atom_additional_options)) }
+      capture do
+        render_view_component(atom_class.molecule_component_class.new(atoms:, atom_options: atom_additional_options),
+                              rescue_lambda:)
+      end
     else
-      cell(atom_class.molecule_cell_name,
-           atoms,
-           atom_additional_options)
+      begin
+        cell(atom_class.molecule_cell_name,
+             atoms,
+             atom_additional_options).show
+      rescue StandardError => error
+        rescue_lambda.call(error)
+      end
     end
   end
 
   def render_atom(atom)
     atom_class = atom.class
 
+    rescue_lambda = lambda do |error|
+      cell("folio/console/atoms/previews/broken_preview",
+           error:,
+           component_class: atom_class.component_class,
+           cell_name: atom_class.cell_name,
+           atom:,
+           atom_options: atom_additional_options).show
+    rescue StandardError => other_error
+      cell("folio/console/atoms/previews/broken_preview", error: other_error).show
+    end
+
     if atom_class.component_class
-      capture { render_view_component(atom_class.component_class.new(atom:, atom_options: atom_additional_options)) }
+      capture do
+        render_view_component(atom_class.component_class.new(atom:, atom_options: atom_additional_options),
+                              rescue_lambda:)
+      end
     else
-      opts = (atom.cell_options.presence || {}).merge(atom_additional_options)
-      cell(atom_class.cell_name, atom, opts)
+      begin
+        opts = (atom.cell_options.presence || {}).merge(atom_additional_options)
+        cell(atom_class.cell_name, atom, opts).show
+      rescue StandardError => error
+        rescue_lambda.call(error)
+      end
     end
   end
 end

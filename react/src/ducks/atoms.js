@@ -37,6 +37,8 @@ const ATOM_FORM_PLACEMENTS_CHANGE = 'atoms/ATOM_FORM_PLACEMENTS_CHANGE'
 const REFRESH_ATOM_PREVIEWS = 'atoms/REFRESH_ATOM_PREVIEWS'
 const SPLIT_FORM_ATOM = 'atoms/SPLIT_FORM_ATOM'
 const MERGE_SPLITTABLE_ATOMS = 'atoms/MERGE_SPLITTABLE_ATOMS'
+const ATOM_PREVIEWS_ERROR = 'atoms/ATOM_PREVIEWS_ERROR'
+const CLEAR_ATOM_PREVIEWS_ERROR = 'atoms/CLEAR_ATOM_PREVIEWS_ERROR'
 
 // Actions
 
@@ -150,6 +152,14 @@ export function refreshAtomPreviews () {
 
 export function mergeSplittableAtoms (rootKey, indices, field) {
   return { type: MERGE_SPLITTABLE_ATOMS, rootKey, indices, field }
+}
+
+export function atomPreviewsError (error) {
+  return { type: ATOM_PREVIEWS_ERROR, error }
+}
+
+export function clearAtomPreviewsError () {
+  return { type: CLEAR_ATOM_PREVIEWS_ERROR }
 }
 
 // Selectors
@@ -287,24 +297,32 @@ function * updateAtomPreviews (action) {
     yield delay(100)
     yield put(refreshAtomPreviews())
   } else {
-    const html = yield (call(apiHtmlPost, '/console/atoms/preview', serializedAtoms))
-    $iframes.each((_i, iframe) => {
-      const callback = () => {
-        if (!iframe.contentWindow.jQuery) { return setTimeout(callback, 100) }
-        iframe.contentWindow.postMessage({ type: 'willReplaceHtml' }, window.origin)
-        const $iframe = $(iframe)
-        const visibleLocale = $iframe.closest('.f-c-simple-form-with-atoms__preview').find('.f-c-atoms-locale-switch__button--active').data('locale')
-        const $body = iframe.contentWindow.jQuery(iframe.contentDocument.body)
-        $body.html(html)
-        $body.find('.f-c-atoms-previews__locale').each((_i, el) => {
-          const $el = iframe.contentWindow.jQuery(el)
-          $el.prop('hidden', visibleLocale ? ($el.data('locale') && $el.data('locale') !== visibleLocale) : false)
-        })
-        iframe.contentWindow.postMessage({ type: 'replacedHtml' }, window.origin)
-        $(iframe).parent().removeClass('f-c-simple-form-with-atoms__preview--initializing f-c-simple-form-with-atoms__preview--loading')
-      }
-      callback()
-    })
+    try {
+      const html = yield (call(apiHtmlPost, '/console/atoms/preview', serializedAtoms))
+
+      $iframes.each((_i, iframe) => {
+        const callback = () => {
+          if (!iframe.contentWindow.jQuery) { return setTimeout(callback, 100) }
+          iframe.contentWindow.postMessage({ type: 'willReplaceHtml' }, window.origin)
+          const $iframe = $(iframe)
+          const visibleLocale = $iframe.closest('.f-c-simple-form-with-atoms__preview').find('.f-c-atoms-locale-switch__button--active').data('locale')
+          const $body = iframe.contentWindow.jQuery(iframe.contentDocument.body)
+          $body.html(html)
+          $body.find('.f-c-atoms-previews__locale').each((_i, el) => {
+            const $el = iframe.contentWindow.jQuery(el)
+            $el.prop('hidden', visibleLocale ? ($el.data('locale') && $el.data('locale') !== visibleLocale) : false)
+          })
+          iframe.contentWindow.postMessage({ type: 'replacedHtml' }, window.origin)
+          $(iframe).parent().removeClass('f-c-simple-form-with-atoms__preview--initializing f-c-simple-form-with-atoms__preview--loading')
+        }
+
+        callback()
+      })
+
+      yield put(clearAtomPreviewsError())
+    } catch (e) {
+      yield put(atomPreviewsError(e))
+    }
   }
 }
 
@@ -329,6 +347,32 @@ function * showAtomsFormSaga () {
   yield [
     takeEvery(NEW_ATOMS, showAtomsForm),
     takeEvery(EDIT_ATOMS, showAtomsForm)
+  ]
+}
+
+function * atomPreviewsErrorHandler (action) {
+  const outerErrorWrap = document.querySelector('.f-c-simple-form-with-atoms__preview-error-wrap')
+  const errorWrap = outerErrorWrap.querySelector('.f-c-simple-form-with-atoms__preview-error')
+
+  if (action.error) {
+    const template = document.querySelector('.f-c-simple-form-with-atoms__preview-error-template')
+
+    errorWrap.innerHTML = template.innerHTML
+    errorWrap.querySelector('.f-c-atoms-previews-error').dataset.fCAtomsPreviewsErrorErrorValue = String(action.error)
+
+    outerErrorWrap.hidden = false
+  } else {
+    errorWrap.innerHTML = ''
+    outerErrorWrap.hidden = true
+  }
+
+  yield true
+}
+
+function * atomPreviewsErrorHandlerSaga () {
+  yield [
+    takeEvery(CLEAR_ATOM_PREVIEWS_ERROR, atomPreviewsErrorHandler),
+    takeEvery(ATOM_PREVIEWS_ERROR, atomPreviewsErrorHandler)
   ]
 }
 
@@ -360,10 +404,12 @@ function * validateAndSaveFormAtomSaga () {
 function * validateAndSubmitGlobalFormPerform (action) {
   yield validateAndSaveFormAtomPerform()
   const form = yield select(atomsFormSelector)
-  if (form.rootKey) {
-    window.jQuery('.f-c-form-footer__btn--submit').prop('disabled', false)
-  } else {
-    window.jQuery('.f-c-simple-form-with-atoms').submit()
+
+  const submitBtn = document.querySelector('.f-c-form-footer__btn--submit')
+  submitBtn.disabled = false
+
+  if (!form.rootKey) {
+    submitBtn.click()
   }
 }
 
@@ -376,7 +422,8 @@ export const atomsSagas = [
   showAtomsFormSaga,
   hideAtomsFormSaga,
   validateAndSaveFormAtomSaga,
-  validateAndSubmitGlobalFormSaga
+  validateAndSubmitGlobalFormSaga,
+  atomPreviewsErrorHandlerSaga
 ]
 
 // State
@@ -396,6 +443,7 @@ export const initialState = {
   structures: {},
   placementType: null,
   className: null,
+  previewsError: null,
   form: {
     rootKey: null,
     indices: null,
@@ -1008,6 +1056,20 @@ function atomsReducer (state = initialState, action) {
           ...state.atoms,
           [action.rootKey]: atoms
         }
+      }
+    }
+
+    case ATOM_PREVIEWS_ERROR: {
+      return {
+        ...state,
+        previewsError: action.error
+      }
+    }
+
+    case CLEAR_ATOM_PREVIEWS_ERROR: {
+      return {
+        ...state,
+        previewsError: null
       }
     }
 

@@ -2,9 +2,17 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [6.0.2] - 2025-01-06
+## [6.0.3] - 2025-01-08
 
 ### Added
+
+- added `RecordBar` component to ui, hook onto atom errors
+
+### Fixed
+
+- fixed simple form with atoms submission when atom form is open
+
+## [6.0.2] - 2025-01-06
 
 - added `Folio::Console::Clonable` concern together with `Folio::Clonable::Cloner` to allow cloning of records
 
