@@ -62,6 +62,12 @@ window.Folio.Stimulus.register('f-c-links-modal', class extends window.Stimulus.
   }
 
   submit (e) {
-    console.log(e.detail.data)
+    if (this.triggerController) {
+      this.triggerController.save(e.detail.data)
+      this.triggerController = null
+    }
+
+    window.Folio.Modal.close(this.element)
+    this.formWrapTarget.innerHTML = ""
   }
 })

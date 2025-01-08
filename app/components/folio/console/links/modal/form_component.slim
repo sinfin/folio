@@ -6,6 +6,12 @@
     = f.hidden_field :href, value: @url_json[:href] || "",
                             data: stimulus_target("hrefInput")
 
+    = f.hidden_field :record_id, value: @url_json[:record_id] || "",
+                                 data: stimulus_target("recordIdInput")
+
+    = f.hidden_field :record_type, value: @url_json[:record_type] || "",
+                                   data: stimulus_target("recordTypeInput")
+
     = f.input :label, label: t('.label/label'),
                       required: false,
                       input_html: { id: false, value: @url_json[:label] || "" }

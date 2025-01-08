@@ -83,6 +83,16 @@ window.Folio.Stimulus.register('f-c-input-form-group-url', class extends window.
     this.fCLinksModalOutlet.openWithData({ data, triggerController: this })
   }
 
+  save (data) {
+    if (this.jsonValue) {
+      this.inputTarget.value = JSON.stringify(data)
+    } else {
+      this.inputTarget.value = data.href
+    }
+
+    this.loadedValue = false
+  }
+
   remove () {
     console.log('remove!')
   }
