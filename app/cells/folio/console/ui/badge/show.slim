@@ -1,6 +1,7 @@
 .f-c-ui-badge[
   class="badge"
   class="bg-#{variant}"
+  class=(variant == "white" ? "text-reset" : nil)
   class="f-c-ui-badge--#{variant}"
 ]
   - if options[:icon]

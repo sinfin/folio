@@ -2,7 +2,13 @@
 
 class Folio::Console::Api::LinksController < Folio::Console::Api::BaseController
   def control_bar
-    url_json = params[:url_json]
+    url_json = if params[:url_json].present?
+      begin
+        JSON.parse(params[:url_json])
+      rescue StandardError
+        {}
+      end
+    end
 
     href = if url_json.blank?
       params[:href]

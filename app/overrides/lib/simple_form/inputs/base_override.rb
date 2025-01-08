@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 SimpleForm::Inputs::Base.class_eval do
-  def register_stimulus(name, values: {}, wrapper: false)
+  def register_stimulus(name, values: {}, outlets: [], action: nil, wrapper: false)
     h = if wrapper
       options[:wrapper_html] ||= {}
     else
@@ -28,6 +28,32 @@ SimpleForm::Inputs::Base.class_eval do
 
     values.each do |key, value|
       h["data-#{name}-#{key.to_s.tr('_', '-')}-value"] = value
+    end
+
+    if action
+      if action.is_a?(String)
+        if action.include?("#")
+          h["data-action"] = action
+        else
+          h["data-action"] = "#{name}##{action}"
+        end
+      else
+        action.each do |trigger, action_s|
+          str = "#{trigger}->#{name}##{action_s}"
+
+          if h["data-action"]
+            h["data-action"] += " #{str}"
+          else
+            h["data-action"] = str
+          end
+        end
+      end
+    end
+
+    if outlets.present?
+      outlets.each do |class_name_same_as_controller_name|
+        h["data-#{name}-#{class_name_same_as_controller_name}-outlet"] = ".#{class_name_same_as_controller_name}"
+      end
     end
   end
 
@@ -83,6 +109,11 @@ SimpleForm::Inputs::Base.class_eval do
   def register_url_input(json: true, wrapper_options: nil)
     register_stimulus("f-c-input-form-group-url",
                       values: { loaded: false, json: },
+                      outlets: %w[f-c-links-modal],
+                      action: {
+                        "f-c-input-form-group-url/edit" => "edit",
+                        "f-c-input-form-group-url/remove" => "remove",
+                      },
                       wrapper: true)
 
     if json

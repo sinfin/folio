@@ -17,10 +17,9 @@ class Folio::Console::Links::ControlBarComponent < Folio::Console::ApplicationCo
       @url_json = { href: }
     else
       @url_json = {}
-      parsed = JSON.parse(url_json)
 
       %i[href label target rel record_type record_id].each do |key|
-        if val = parsed[key.to_s]
+        if val = url_json[key.to_s]
           @url_json[key] = val
         end
       end
@@ -31,7 +30,6 @@ class Folio::Console::Links::ControlBarComponent < Folio::Console::ApplicationCo
     stimulus_controller("f-c-links-control-bar",
                         values: {
                           href: @url_json[:href],
-                        },
-                        outlets: %w[f-c-links-modal])
+                        })
   end
 end

@@ -1,0 +1,43 @@
+.f-c-links-value data=data
+  - if @record
+    .f-c-links-value__badges
+      - if @record_site_title
+        == cell('folio/console/ui/badge',
+                @record_site_title.truncate(10),
+                variant: 'white')
+
+      == cell('folio/console/ui/badge',
+              @record.class.model_name.human,
+              variant: 'white')
+
+  a.f-c-links-value__a[
+    href=@url_json[:href]
+    target="_blank"
+    title=(@url_json[:label].presence || @url_json[:href])
+  ]
+    = @url_json[:label].presence || @url_json[:href]
+
+  - if @record && @record.try(:published_at).present?
+    time.f-c-links-value__published-at.small.text-gray-medium-dark[
+      datetime=@record.published_at.iso8601
+    ]
+      = l(@record.published_at, format: :short)
+
+  .f-c-links-value__actions
+    button[
+      type="button"
+      class="f-c-links-value__action"
+      class="f-c-links-value__action--edit"
+      data=stimulus_action(click: "onEditClick")
+      title=t('folio.console.actions.edit')
+    ]
+      = folio_icon(:edit_box)
+
+    button[
+      type="button"
+      class="f-c-links-value__action"
+      class="f-c-links-value__action--close"
+      data=stimulus_action(click: "onRemoveClick")
+      title=t('folio.console.actions.destroy')
+    ]
+      = folio_icon(:close)

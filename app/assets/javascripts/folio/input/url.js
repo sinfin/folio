@@ -6,6 +6,8 @@ window.Folio.Stimulus.register('f-c-input-form-group-url', class extends window.
 
   static targets = ['input']
 
+  static outlets = ["f-c-links-modal"]
+
   disconnect () {
     if (this.abortController) {
       this.abortController.abort()
@@ -63,5 +65,13 @@ window.Folio.Stimulus.register('f-c-input-form-group-url', class extends window.
 
   handleControlBarData (data) {
     this.element.querySelector('.f-c-input-form-group-url__control-bar-wrap').innerHTML = data
+  }
+
+  edit () {
+    console.log('edit!')
+  }
+
+  remove () {
+    console.log('remove!')
   }
 })

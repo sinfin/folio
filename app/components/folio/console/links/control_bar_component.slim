@@ -3,7 +3,8 @@
     data=stimulus_target("bar")
     hidden=@url_json[:href].blank?
   ]
-    ' bar
+    - if @url_json.present?
+      = render(Folio::Console::Links::ValueComponent.new(url_json: @url_json))
 
   .f-c-links-control-bar__button-wrap[
     data=stimulus_target("buttonWrap")
