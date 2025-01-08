@@ -78,4 +78,20 @@ class Folio::Console::Api::LinksControllerTest < Folio::Console::BaseControllerT
     assert_response :ok
     assert response.parsed_body["data"].include?("f-c-links-control-bar")
   end
+
+  test "modal_form" do
+    get modal_form_console_api_links_path(format: :json), params: {
+      url_json: "{}",
+    }
+
+    assert_response :ok
+    assert response.parsed_body["data"].include?("f-c-links-modal-form")
+
+    get modal_form_console_api_links_path(format: :json), params: {
+      url_json: { href: "/foo" }.to_json,
+    }
+
+    assert_response :ok
+    assert response.parsed_body["data"].include?("f-c-links-modal-form")
+  end
 end

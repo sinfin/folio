@@ -1,12 +1,12 @@
 window.Folio.Stimulus.register('f-c-input-form-group-url', class extends window.Stimulus.Controller {
   static values = {
     loaded: Boolean,
-    json: Boolean,
+    json: Boolean
   }
 
   static targets = ['input']
 
-  static outlets = ["f-c-links-modal"]
+  static outlets = ['f-c-links-modal']
 
   disconnect () {
     if (this.abortController) {
@@ -38,9 +38,9 @@ window.Folio.Stimulus.register('f-c-input-form-group-url', class extends window.
     const data = {}
 
     if (this.jsonValue) {
-      data.url_json = this.inputTarget.value || "{}"
+      data.url_json = this.inputTarget.value || '{}'
     } else {
-      data.href = this.inputTarget.value || ""
+      data.href = this.inputTarget.value || ''
     }
 
     const url = window.Folio.addParamsToUrl(baseUrl, data)
@@ -68,7 +68,19 @@ window.Folio.Stimulus.register('f-c-input-form-group-url', class extends window.
   }
 
   edit () {
-    console.log('edit!')
+    const value = this.inputTarget.value
+    let data = {}
+
+    if (this.jsonValue) {
+      try {
+        data = JSON.parse(value)
+      } catch (_e) {
+      }
+    } else {
+      data.href = value
+    }
+
+    this.fCLinksModalOutlet.openWithData({ data, triggerController: this })
   }
 
   remove () {

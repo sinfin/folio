@@ -352,14 +352,18 @@ en:
           add_link: Add link
 
         modal_component:
-          label/target: Open in new window
-          label/rel: Rel attribute (optional)
-          label/label: Link text
-          hint/rel: "E.g. noopener, noreferrer, nofollow"
-          cancel: Cancel
-          submit: Confirm
-          select: Select
-          custom_url: Custom URL
+          title: :folio.console.links.control_bar_component.add_link
+
+        modal:
+          form_component:
+            label/target: Open in new window
+            label/rel: Rel attribute (optional)
+            label/label: Link text
+            hint/rel: "E.g. noopener, noreferrer, nofollow"
+            cancel: Cancel
+            submit: Confirm
+            select: Select
+            custom_url: Custom URL
 
   date:
     formats:

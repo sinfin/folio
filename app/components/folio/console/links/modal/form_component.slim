@@ -1,0 +1,24 @@
+.f-c-links-modal-form data=data
+  = simple_form_for "",
+                    url: "#",
+                    method: :get,
+                    data: stimulus_action(submit: "onSubmit") do |f|
+    = f.hidden_field :href, value: @url_json[:href] || "",
+                            data: stimulus_target("hrefInput")
+
+    = f.input :label, label: t('.label/label'),
+                      required: false,
+                      input_html: { id: false, value: @url_json[:label] || "" }
+
+    / TODO autocomplete: %w[noopener nofollow noreferrer]
+    = f.input :rel, hint: t(".hint/rel"),
+                    required: false,
+                    label: t('.label/rel'),
+                    input_html: { id: false, value: @url_json[:rel] || "" }
+
+    = f.input :target, collection: [[t('.label/target'), "_blank"]],
+                       as: :check_boxes,
+                       legend_tag: false,
+                       checked: @url_json[:target]
+
+    == cell('folio/console/ui/buttons', buttons_model)

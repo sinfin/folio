@@ -7,21 +7,14 @@ class Folio::Console::Links::ModalComponent < Folio::Console::ApplicationCompone
   end
 
   def data
-    stimulus_controller(CLASS_NAME)
-  end
-
-  def buttons_model
-    [
-      {
-        variant: :gray,
-        label: t(".cancel"),
-        data: stimulus_action("onCancelClick")
-      },
-      {
-        variant: :primary,
-        type: :submit,
-        label: t(".submit"),
-      },
-    ]
+    stimulus_controller(CLASS_NAME,
+                        values: {
+                          loading: true,
+                          api_url: controller.modal_form_console_api_links_path,
+                        },
+                        action: {
+                          "f-c-links-modal-form:close" => "close",
+                          "f-c-links-modal-form:submit" => "submit",
+                        })
   end
 end

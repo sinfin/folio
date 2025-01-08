@@ -1,6 +1,18 @@
 # frozen_string_literal: true
 
 class Folio::Console::Api::LinksController < Folio::Console::Api::BaseController
+  def modal_form
+    url_json_s = params.require(:url_json)
+
+    url_json = begin
+      JSON.parse(url_json_s)
+    rescue StandardError
+      {}
+    end.symbolize_keys
+
+    render_component_json(Folio::Console::Links::Modal::FormComponent.new(url_json:))
+  end
+
   def control_bar
     url_json = if params[:url_json].present?
       begin

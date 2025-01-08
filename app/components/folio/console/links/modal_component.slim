@@ -2,23 +2,6 @@
                                                 class_name: CLASS_NAME,
                                                 size: :lg,
                                                 data:))
-  .f-c-links-modal__inner
-    = simple_form_for "",
-                      url: "#",
-                      method: :get,
-                      data: stimulus_action(submit: "onSubmit") do |f|
-      = f.input :label, label: t('.label/label'),
-                        required: false
+  .f-c-links-modal__form-wrap data=stimulus_target("formWrap")
 
-      / TODO autocomplete: %w[noopener nofollow noreferrer]
-      = f.input :rel, hint: t(".hint/rel"),
-                      required: false,
-                      label: t('.label/rel')
-
-      = f.input :target, collection: [[t('.label/target'), "_blank"]],
-                         as: :check_boxes,
-                         legend_tag: false
-
-      == cell('folio/console/ui/buttons', buttons_model)
-
-    / span.folio-loader.f-c-links-modal__loader
+  span.folio-loader.folio-loader--transparent.f-c-links-modal__loader

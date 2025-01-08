@@ -124,6 +124,7 @@ Folio::Engine.routes.draw do
 
         resource :links, only: %i[show] do
           get :control_bar
+          get :modal_form
         end
 
         resources :site_user_links, only: %i[] do
