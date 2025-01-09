@@ -2,6 +2,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+- changed clonable config for model Page
+
 ## [6.0.3] - 2025-01-08
 
 ### Added
