@@ -66,11 +66,11 @@ class Folio::Page < Folio::ApplicationRecord
   end
 
   def self.clonable_referenced_associations
-    [:cover]
+    [:cover, :documents]
   end
 
   def self.clonable_ignored_associations
-    [:files, :slugs, :file_placements, :pg_search_document, :site]
+    [:files, :slugs, :file_placements, :pg_search_document, :site, :document_placements]
   end
 
   def self.clonable_reset_attributes
