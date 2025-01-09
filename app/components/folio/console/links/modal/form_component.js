@@ -4,6 +4,11 @@ window.Folio.Stimulus.register('f-c-links-modal-form', class extends window.Stim
   onSubmit (e) {
     e.preventDefault()
     const data = window.Folio.formToHash(e.target)
+
+    if (typeof data.target === 'object') {
+      data.target = data.target[0]
+    }
+
     this.dispatch('submit', { detail: { data } })
   }
 

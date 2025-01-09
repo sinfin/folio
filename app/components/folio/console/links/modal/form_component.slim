@@ -1,4 +1,6 @@
 .f-c-links-modal-form data=data
+  = render(Folio::Console::Links::Modal::UrlPickerComponent.new(url_json: @url_json))
+
   = simple_form_for "",
                     url: "#",
                     method: :get,

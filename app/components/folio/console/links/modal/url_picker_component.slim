@@ -1,0 +1,10 @@
+.f-c-links-modal-url-picker
+  = render(Folio::Console::Ui::TabsComponent.new(tabs:)) do |c|
+    = c.tab_pane(tabs[0])
+      - if @url_json[:href]
+        = render(Folio::Console::Links::ValueComponent.new(url_json: @url_json,
+                                                           record: @record,
+                                                           verbose: false))
+
+    = c.tab_pane(tabs[1])
+      ' custom

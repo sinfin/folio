@@ -368,6 +368,10 @@ cs:
             select: Vybrat
             custom_url: Vlastní URL
 
+          url_picker_component:
+            tab/pick: Vybrat
+            tab/custom_url: Vlastní URL
+
   date:
     formats:
       console_short: "%d. %m. %Y"

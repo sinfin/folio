@@ -27,10 +27,11 @@
   overflow-y: scroll
 
 .f-c-anti-container-fluid
-  margin-left: - $grid-gutter-width
-  margin-right: - $grid-gutter-width
+  .container-fluid &
+    margin-left: - $grid-gutter-width
+    margin-right: - $grid-gutter-width
 
-  &--padded
+  .container-fluid &--padded
     padding-left: $grid-gutter-width
     padding-right: $grid-gutter-width
 
@@ -75,10 +76,11 @@
     padding: $grid-gutter-width / 2
 
   .f-c-anti-container-fluid
-    margin-left: - $grid-gutter-width / 2
-    margin-right: - $grid-gutter-width / 2
+    .container-fluid &
+      margin-left: - $grid-gutter-width / 2
+      margin-right: - $grid-gutter-width / 2
 
-    &--padded
+    .container-fluid &--padded
       padding-left: $grid-gutter-width / 2
       padding-right: $grid-gutter-width / 2
 

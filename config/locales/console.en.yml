@@ -365,6 +365,10 @@ en:
             select: Select
             custom_url: Custom URL
 
+          url_picker_component:
+            tab/pick: Pick
+            tab/custom_url: Custom URL
+
   date:
     formats:
       console_short: "%d. %m. %Y"

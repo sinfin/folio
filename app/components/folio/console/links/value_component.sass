@@ -1,8 +1,19 @@
 .f-c-links-value
-  display: flex
-  align-items: center
-  gap: $grid-gutter-width
+  container-type: inline-size
   padding: $grid-gutter-base / 2 0
+
+  &__flex, &__left, &__right
+    display: flex
+    align-items: center
+    gap: $grid-gutter-width / 2
+
+  &__left
+    flex: 0 1 auto
+    min-width: 0
+
+  &__right
+    gap: $grid-gutter-width
+    flex: 1 0 auto
 
   &__badges
     display: flex
@@ -26,6 +37,15 @@
     display: flex
     align-items: center
 
+  &__main
+    flex: 0 1 auto
+    min-width: 0
+
+  &__main-top
+    display: flex
+    align-items: center
+    gap: $grid-gutter-base / 2
+
   &__action
     +unbutton
     display: flex
@@ -43,3 +63,11 @@
 
       &, &:hover
         color: $danger
+
+  @container (max-width: #{map-get($grid-breakpoints, sm)})
+    &__flex
+      flex-wrap: wrap
+      row-gap: $grid-gutter-width / 2
+
+    &__left
+      padding-right: $grid-gutter-base

@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 class Folio::Console::Links::ValueComponent < Folio::Console::ApplicationComponent
-  def initialize(url_json:)
+  def initialize(url_json:, record: nil, verbose: true)
     @url_json = url_json
+    @record = record
+    @verbose = verbose
   end
 
   def render?
@@ -10,7 +12,7 @@ class Folio::Console::Links::ValueComponent < Folio::Console::ApplicationCompone
   end
 
   def before_render
-    if @url_json[:record_id].present? && @url_json[:record_type].present?
+    if @record.nil? && @url_json[:record_id].present? && @url_json[:record_type].present?
       klass = @url_json[:record_type].safe_constantize
 
       if klass < ActiveRecord::Base
@@ -18,13 +20,13 @@ class Folio::Console::Links::ValueComponent < Folio::Console::ApplicationCompone
 
         if can_now?(:read, record)
           @record = record
-
-          @record_site_title = if @record.class.try(:has_belongs_to_site?)
-            if @record.site && @record.site.title.present?
-              @record.site.title
-            end
-          end
         end
+      end
+    end
+
+    @record_site_title = if @record.class.try(:has_belongs_to_site?)
+      if @record.site && @record.site.title.present?
+        @record.site.title
       end
     end
   end

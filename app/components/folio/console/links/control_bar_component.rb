@@ -1,15 +1,6 @@
 # frozen_string_literal: true
 
 class Folio::Console::Links::ControlBarComponent < Folio::Console::ApplicationComponent
-  URL_JSON_STRUCTURE = {
-    href: { type: :string, presence: true },
-    label: { type: :string, presence: false },
-    target: { type: :string, presence: false },
-    rel: { type: :string, presence: false },
-    record_type: { type: :string, presence: false },
-    record_id: { type: :number, presence: false },
-  }
-
   def initialize(url_json: {}, href: nil)
     @url_json = url_json
 
