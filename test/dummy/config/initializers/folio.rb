@@ -11,3 +11,6 @@ Rails.application.config.folio_console_files_additional_html_api_url_lambda = ->
     "/console/dummy/playground/additional_html_for_video_files_modal"
   end
 end
+
+# mapping should be as { Klass => Proc.new { |instance| main_app.klass_path(instance) } }
+Rails.application.config.folio_console_links_mapping = {}

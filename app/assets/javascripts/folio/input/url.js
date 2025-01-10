@@ -87,13 +87,15 @@ window.Folio.Stimulus.register('f-c-input-form-group-url', class extends window.
     if (this.jsonValue) {
       this.inputTarget.value = JSON.stringify(data)
     } else {
-      this.inputTarget.value = data.href
+      this.inputTarget.value = data.href || ""
     }
 
     this.loadedValue = false
+
+    this.inputTarget.dispatchEvent(new window.Event('change', { bubbles: true }))
   }
 
   remove () {
-    console.log('remove!')
+    this.save({})
   }
 })

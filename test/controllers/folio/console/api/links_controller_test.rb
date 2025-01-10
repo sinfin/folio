@@ -94,4 +94,20 @@ class Folio::Console::Api::LinksControllerTest < Folio::Console::BaseControllerT
     assert_response :ok
     assert response.parsed_body["data"].include?("f-c-links-modal-form")
   end
+
+  test "value" do
+    get value_console_api_links_path(format: :json), params: {
+      url_json: "{}",
+    }
+
+    assert_response :ok
+    assert_not response.parsed_body["data"].include?("f-c-links-value")
+
+    get value_console_api_links_path(format: :json), params: {
+      url_json: { href: "/foo" }.to_json,
+    }
+
+    assert_response :ok
+    assert response.parsed_body["data"].include?("f-c-links-value")
+  end
 end

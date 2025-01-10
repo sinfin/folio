@@ -1,10 +1,19 @@
-.f-c-links-modal-url-picker
+.f-c-links-modal-url-picker data=data
   = render(Folio::Console::Ui::TabsComponent.new(tabs:)) do |c|
     = c.tab_pane(tabs[0])
-      - if @url_json[:href]
-        = render(Folio::Console::Links::ValueComponent.new(url_json: @url_json,
-                                                           record: @record,
-                                                           verbose: false))
+      .f-c-links-modal-url-picker__value-wrap data=stimulus_target("valueWrap")
+        - if @present
+          = render(Folio::Console::Links::ValueComponent.new(url_json: @url_json,
+                                                             record: @record,
+                                                             verbose: false))
+
+      .f-c-links-modal-url-picker__list-wrap
+        = render(Folio::Console::Links::Modal::ListComponent.new)
 
     = c.tab_pane(tabs[1])
-      ' custom
+      input.form-control[
+        value=@url_json[:href]
+        data=stimulus_data(target: "input", action: "input")
+      ]
+
+  span.folio-loader.f-c-links-modal-url-picker__loader

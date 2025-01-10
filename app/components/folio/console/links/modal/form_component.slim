@@ -16,7 +16,7 @@
 
     = f.input :label, label: t('.label/label'),
                       required: false,
-                      input_html: { id: false, value: @url_json[:label] || "" }
+                      input_html: { id: false, value: @url_json[:label] || "", data: stimulus_target("labelInput") }
 
     / TODO autocomplete: %w[noopener nofollow noreferrer]
     = f.input :rel, hint: t(".hint/rel"),

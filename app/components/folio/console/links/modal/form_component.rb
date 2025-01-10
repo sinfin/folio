@@ -6,7 +6,8 @@ class Folio::Console::Links::Modal::FormComponent < Folio::Console::ApplicationC
   end
 
   def data
-    stimulus_controller("f-c-links-modal-form")
+    stimulus_controller("f-c-links-modal-form",
+                        action: { "f-c-links-modal-url-picker:changed" => "changedInUrlPicker" })
   end
 
   def buttons_model

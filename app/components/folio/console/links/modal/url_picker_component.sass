@@ -2,6 +2,12 @@
   background: $medium-gray
   padding: px-to-rem(20px)
   margin-bottom: $f-c-form-group-spacer
+  position: relative
 
   .nav-tabs
     border-color: $gray
+
+  &[data-f-c-links-modal-url-picker-loading-value="false"] &__loader,
+  &[data-f-c-links-modal-url-picker-present-value="false"] &__value-wrap,
+  &[data-f-c-links-modal-url-picker-present-value="true"] &__list-wrap
+    display: none

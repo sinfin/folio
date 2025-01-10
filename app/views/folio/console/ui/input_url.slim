@@ -3,11 +3,19 @@ h1 Folio Console UI
 h2 Input URL
 
 = simple_form_for "", method: :get, url: request.path do |f|
-  h3 Blank
+  h3 Blank - href
 
-  = f.input :link, as: :url
+  .f-c-uidemo-wrap
+    pre: code.f-c-uidemo-code
 
-  = f.input :link_json, as: :url_json
+    = f.input :link, as: :url
+
+  h3 Blank - JSON
+
+  .f-c-uidemo-wrap
+    pre: code.f-c-uidemo-code
+
+    = f.input :link_json, as: :url_json
 
   ruby:
     data = {
@@ -23,21 +31,18 @@ h2 Input URL
 
   h3 With data - href
 
-  pre
-    code
-      = data[:href]
-
-  = f.input :link_with_data, as: :url, input_html: { value: data[:href] }
+  .f-c-uidemo-wrap
+    pre: code.f-c-uidemo-code = data[:href]
+    = f.input :link_with_data, as: :url, input_html: { value: data[:href] }
 
   hr.my-5
 
   h3 With data - JSON
 
-  pre
-    code
-      = JSON.pretty_generate(data)
+  .f-c-uidemo-wrap
+    pre: code.f-c-uidemo-code = JSON.pretty_generate(data)
 
-  = f.input :link_json_with_data, as: :url_json, input_html: { value: data.to_json }
+    = f.input :link_json_with_data, as: :url_json, input_html: { value: data.to_json }
 
   hr.my-5
 
@@ -45,3 +50,11 @@ h2 Input URL
           type: :submit,
           variant: :primary,
           label: t("folio.console.actions.submit"))
+
+javascript:
+  for (const wrap of document.querySelectorAll('.f-c-uidemo-wrap')) {
+    const input = wrap.querySelector('.form-control')
+    input.addEventListener('change', (e) => {
+      wrap.querySelector('.f-c-uidemo-code').innerHTML = input.value || ""
+    })
+  }

@@ -3,6 +3,7 @@
 class Folio::Console::Links::Modal::UrlPickerComponent < Folio::Console::ApplicationComponent
   def initialize(url_json:)
     @url_json = url_json
+    @present = @url_json[:href]
   end
 
   def before_render
@@ -28,5 +29,19 @@ class Folio::Console::Links::Modal::UrlPickerComponent < Folio::Console::Applica
         { label: t(".tab/custom_url"), key: :custom_url, active: !first_active }
       ]
     end
+  end
+
+  def data
+    stimulus_controller("f-c-links-modal-url-picker",
+                        action: {
+                          "f-c-links-modal-list:selectedRecord" => "selectedRecord",
+                          "f-c-input-form-group-url/edit" => "edit",
+                          "f-c-input-form-group-url/remove" => "remove",
+                        },
+                        values: {
+                          loading: false,
+                          present: @present,
+                          api_url: controller.value_console_api_links_path,
+                        })
   end
 end

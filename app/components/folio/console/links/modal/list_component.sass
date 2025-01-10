@@ -1,0 +1,37 @@
+.f-c-links-modal-list
+  background: $white
+  padding: $grid-gutter-width / 2 $grid-gutter-width
+  height: 308px
+  max-height: 50vh
+  overflow-y: auto
+
+  &__records-li
+    display: flex
+    align-items: center
+    gap: $grid-gutter-base / 2 $grid-gutter-width / 2
+    flex-wrap: wrap
+    transition: $transition-base
+    cursor: pointer
+    background: transparent
+
+    &:hover
+      background: $light-gray
+
+    & + &
+      margin-top: $grid-gutter-width / 4
+
+  &__records-cover-wrap
+    flex: 0 0 64px
+
+  &__records-cover-wrap,
+  &__records-cover
+    width: 64px
+    height: 48px
+
+  &__records-title
+    flex: 0 1 auto
+    padding: $grid-gutter-base 0
+
+  &__records-metadata
+    flex: 0 0 auto
+    padding: $grid-gutter-base 0

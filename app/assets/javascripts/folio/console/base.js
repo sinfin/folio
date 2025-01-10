@@ -98,6 +98,8 @@
 //= require folio/console/lazy_dom/lazy_dom
 //= require folio/console/links/control_bar_component
 //= require folio/console/links/modal/form_component
+//= require folio/console/links/modal/list_component
+//= require folio/console/links/modal/url_picker_component
 //= require folio/console/links/modal_component
 //= require folio/console/links/value_component
 //= require folio/console/merges/form/row/row

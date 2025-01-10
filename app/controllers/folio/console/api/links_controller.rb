@@ -29,6 +29,18 @@ class Folio::Console::Api::LinksController < Folio::Console::Api::BaseController
     render_component_json(Folio::Console::Links::ControlBarComponent.new(url_json:, href:))
   end
 
+  def value
+    url_json_s = params.require(:url_json)
+
+    url_json = begin
+      JSON.parse(url_json_s)
+    rescue StandardError
+      {}
+    end.symbolize_keys
+
+    render_component_json(Folio::Console::Links::ValueComponent.new(url_json:, verbose: false))
+  end
+
   def show
     links = []
 
