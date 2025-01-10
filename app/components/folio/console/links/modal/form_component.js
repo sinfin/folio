@@ -17,11 +17,6 @@ window.Folio.Stimulus.register('f-c-links-modal-form', class extends window.Stim
     this.dispatch('submit', { detail: { data } })
   }
 
-  onCancelClick (e) {
-    e.preventDefault()
-    this.dispatch('cancel')
-  }
-
   changedInUrlPicker (e) {
     if (e.detail.urlJson) {
       this.hrefInputTarget.value = e.detail.urlJson.href

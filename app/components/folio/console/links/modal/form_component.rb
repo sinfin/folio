@@ -15,7 +15,7 @@ class Folio::Console::Links::Modal::FormComponent < Folio::Console::ApplicationC
       {
         variant: :gray,
         label: t(".cancel"),
-        data: stimulus_action("onCancelClick")
+        data: stimulus_modal_close,
       },
       {
         variant: :primary,
