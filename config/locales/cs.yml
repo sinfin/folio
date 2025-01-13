@@ -56,7 +56,7 @@ cs:
     confirmation: Určitě?
     console:
         clone:
-          cloned_title: "%{original_title} - duplikát %{date}"
+          cloned_title: "%{original_title} – duplikát %{date}"
 
   head:
     description: ''

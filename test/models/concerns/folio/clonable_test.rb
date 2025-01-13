@@ -20,6 +20,12 @@ class Folio::ClonableTest < ActiveSupport::TestCase
                 cover: image)
     page.cover = image
 
+    document = create(:folio_file_document)
+    create_atom(Dummy::Atom::Contents::Documents,
+    placement: page,
+    documents: [document],
+    size: "medium")
+
     original_attributes = page.attributes
     clone = Folio::Clonable::Cloner.new(page).create_clone
 
@@ -31,8 +37,10 @@ class Folio::ClonableTest < ActiveSupport::TestCase
     assert_not_equal page.cover_placement, clone.cover_placement
 
     clone.atoms.first.update!(content: "Změněný text")
-    clone.atoms.last.update!(title: "Změněný titulek", description: "Změněný popis", url: "https://example2.com")
+    clone.atoms.second.update!(title: "Změněný titulek", description: "Změněný popis", url: "https://example2.com")
 
+    assert_equal page.atoms.last.documents.first, clone.atoms.last.documents.first
+    assert_not_equal page.atoms.last.document_placements, clone.atoms.last.document_placements
     clone.update!(
         title: "Nový titulek",
         perex: "Nový perex",
