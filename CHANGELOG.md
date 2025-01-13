@@ -3,7 +3,12 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
-- changed clonable config for model Page
+
+## [6.0.4] - 2025-01-13
+
+### Fixed
+
+- fixed clonable config for model Page
 
 ## [6.0.3] - 2025-01-08
 
