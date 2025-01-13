@@ -21,6 +21,34 @@
                           custom_html: folio_icon(:magnify),
                           input_html: { class: "f-c-links-modal-url-picker__list-filter-input f-c-links-modal-url-picker__list-filter-input--q" })
 
+              div[
+                class="f-c-links-modal-url-picker__list-filter"
+                class="f-c-links-modal-url-picker__list-filter--site_id"
+              ]
+                = f.input(:site_id,
+                          label: false,
+                          collection: Folio::Site.accessible_by(Folio::Current.ability).ordered,
+                          include_blank: t('.placeholder/site_id'))
+
+              div[
+                class="f-c-links-modal-url-picker__list-filter"
+                class="f-c-links-modal-url-picker__list-filter--class_name"
+              ]
+                = f.input(:class_name,
+                          label: false,
+                          collection: class_names_collection,
+                          include_blank: t('.placeholder/class_name'))
+
+              div[
+                class="f-c-links-modal-url-picker__list-filter"
+                class="f-c-links-modal-url-picker__list-filter--published_within"
+              ]
+                = f.input(:published_within,
+                          label: false,
+                          placeholder: t(".placeholder/published_within"),
+                          input_html: { class: "f-c-links-modal-url-picker__list-filter-input--published_within" },
+                          as: :date_range)
+
             == cell('folio/console/ui/button', cancel_button_model)
 
         .f-c-links-modal-url-picker__list-inner

@@ -8,30 +8,61 @@ class Folio::Console::Links::Modal::ListComponent < Folio::Console::ApplicationC
   end
 
   def records_data
-    @records_data ||= page_links.merge(additional_links).filter_map do |klass, url_proc|
+    @records_data ||= page_links.merge(additional_links).filter_map do |class_name, url_proc|
       next if Folio::Current.site.blank?
 
-      scope = klass
-      scope = scope.by_site(Folio::Current.site) if scope.respond_to?(:by_site)
-      scope = scope.accessible_by(Folio::Current.ability)
-
-      if @filtering && scope.respond_to?(:by_query) && params[:q].present?
-        scope = scope.by_query(params[:q])
-      elsif scope.respond_to?(:ordered)
-        scope = scope.ordered
-      else
-        scope = scope.order(id: :desc)
+      class_from_params = if params[:class_name].present?
+        runner = params[:class_name].safe_constantize
+        runner if runner < ActiveRecord::Base
       end
 
-      pagy_ref, records = pagy(scope, items: 5)
+      klass = class_name.safe_constantize
+      items = class_from_params ? 25 : 5
 
-      if records.present?
-        {
-          klass:,
-          url_proc:,
-          records:,
-          pagy: pagy_ref,
-        }
+      if klass && klass < ActiveRecord::Base
+        if class_from_params
+          next unless klass <= class_from_params
+        end
+
+        scope = klass
+        scope = scope.by_site(Folio::Current.site) if scope.respond_to?(:by_site)
+        scope = scope.accessible_by(Folio::Current.ability)
+
+        if @filtering && params[:published_within].present?
+          from, to = params[:published_within].split(/ ?- ?/)
+
+          next unless scope.column_names.include?("published_at")
+
+          if from.present?
+            from_date_time = DateTime.parse(from)
+            scope = scope.where("published_at >= ?", from_date_time)
+          end
+
+          if to.present?
+            to = "#{to} 23:59" if to.exclude?(":")
+            to_date_time = DateTime.parse(to)
+            scope = scope.where("published_at <= ?", to_date_time)
+          end
+        end
+
+        if @filtering && scope.respond_to?(:by_query) && params[:q].present?
+          scope = scope.by_query(params[:q])
+        elsif scope.respond_to?(:ordered)
+          scope = scope.ordered
+        else
+          scope = scope.order(id: :desc)
+        end
+
+        pagy_ref, records = pagy(scope, items:)
+
+        if records.present?
+          {
+            klass:,
+            url_proc:,
+            records:,
+            pagy: pagy_ref,
+          }
+        end
       end
     end
   end
@@ -39,11 +70,11 @@ class Folio::Console::Links::Modal::ListComponent < Folio::Console::ApplicationC
   def page_links
     if Rails.application.config.folio_pages_ancestry
       {
-        Folio::Page => Proc.new { |page| controller.main_app.page_path(page.to_preview_param) }
+        "Folio::Page" => Proc.new { |controller, instance| controller.main_app.page_path(instance.to_preview_param) }
       }
     else
       {
-        Folio::Page => Proc.new { |page| controller.main_app.url_for(page) }
+        "Folio::Page" => Proc.new { |controller, instance| controller.main_app.url_for(instance) }
       }
     end
   end
@@ -65,7 +96,7 @@ class Folio::Console::Links::Modal::ListComponent < Folio::Console::ApplicationC
       url_json: {
         record_id: record.id,
         record_type: record.class.base_class.name,
-        href: data[:url_proc].call(record),
+        href: data[:url_proc].call(controller, record),
         label: record.to_label,
       }.to_json
     )

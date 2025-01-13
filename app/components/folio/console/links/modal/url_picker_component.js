@@ -86,13 +86,14 @@ window.Folio.Stimulus.register('f-c-links-modal-url-picker', class extends windo
   }
 
   loadList () {
-    const data = window.Folio.formToHash(this.formTarget)
+    const rawData = window.Folio.formToHash(this.formTarget)
+    const data = {}
     let filtering = false
 
-    for (const key in data) {
-      if (data[key]) {
+    for (const key in rawData) {
+      if (rawData[key]) {
         filtering = true
-        break
+        data[key] = rawData[key]
       }
     }
 

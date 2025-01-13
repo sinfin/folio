@@ -20,6 +20,7 @@
   &__list-filter
     position: relative
     flex: 0 1 auto
+    max-width: 115px
 
     .form-group
       margin-bottom: 0
@@ -39,8 +40,14 @@
   &__list-filter--q
     max-width: 195px
 
+  &__list-filter--published_within
+    max-width: 160px
+
   &__list-filter-input--q
     padding-right: $input-height
+
+  &__list-filter-input--published_within
+    min-width: 160px
 
   &__list-filters-form
     display: flex

@@ -80,6 +80,7 @@ module Folio
     }
 
     config.folio_console_links_mapping = {}
+    config.folio_console_links_additional_filters = {}
 
     config.folio_content_templates_editable = false
 

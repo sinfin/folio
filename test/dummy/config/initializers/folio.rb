@@ -12,5 +12,6 @@ Rails.application.config.folio_console_files_additional_html_api_url_lambda = ->
   end
 end
 
-# mapping should be as { Klass => Proc.new { |instance| main_app.klass_path(instance) } }
-Rails.application.config.folio_console_links_mapping = {}
+Rails.application.config.folio_console_links_mapping = {
+  "Dummy::Blog::Article" => Proc.new { |controller, instance| controller.main_app.url_for(instance) }
+}

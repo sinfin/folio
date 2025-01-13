@@ -72,4 +72,14 @@ class Folio::Console::Links::Modal::UrlPickerComponent < Folio::Console::Applica
 
     simple_form_for("", opts, &block)
   end
+
+  def class_names_collection
+    (%w[Folio::Page] + Rails.application.config.folio_console_links_mapping.keys).uniq.filter_map do |class_name|
+      klass = class_name.safe_constantize
+
+      if klass && klass < ActiveRecord::Base && can_now?(:read, klass)
+        [klass.model_name.human, klass.to_s]
+      end
+    end
+  end
 end
