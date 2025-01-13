@@ -1,31 +1,34 @@
 .f-c-links-modal-list data=data
-  - records_data.each do |data|
-    .f-c-links-modal-list__klass
-      .f-c-links-modal-list__klass-title[
-        class="small border-bottom text-uppercase pb-2 mb-4"
-      ]
-        = "#{data[:klass].model_name.human(count: 2)} (#{data[:pagy].count})"
+  - if records_data.present?
+    - records_data.each do |data|
+      .f-c-links-modal-list__klass
+        .f-c-links-modal-list__klass-title[
+          class="small border-bottom text-uppercase pb-2 mb-4"
+        ]
+          = "#{data[:klass].model_name.human(count: 2)} (#{data[:pagy].count})"
 
-      ul.f-c-links-modal-list__records-ul
-        - data[:records].each do |record|
-          li.f-c-links-modal-list__records-li[
-            data=record_to_data(data:, record:)
-          ]
-            - if record.respond_to?(:cover_placement)
-              .f-c-links-modal-list__records-cover-wrap
-                == cell("folio/image",
-                        record.cover_placement,
-                        size: Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE,
-                        contain: true,
-                        class: "f-c-links-modal-list__records-cover")
+        ul.f-c-links-modal-list__records-ul
+          - data[:records].each do |record|
+            li.f-c-links-modal-list__records-li[
+              data=record_to_data(data:, record:)
+            ]
+              - if record.respond_to?(:cover_placement)
+                .f-c-links-modal-list__records-cover-wrap
+                  == cell("folio/image",
+                          record.cover_placement,
+                          size: Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE,
+                          contain: true,
+                          class: "f-c-links-modal-list__records-cover")
 
-            .f-c-links-modal-list__records-title.text-blue.fw-bold
-              = record.to_label
+              .f-c-links-modal-list__records-title.text-blue.fw-bold
+                = record.to_label
 
-            - if record.respond_to?(:console_link_metadata)
-              - record.console_link_metadata.each do |value|
+              - if record.respond_to?(:console_link_metadata)
+                - record.console_link_metadata.each do |value|
+                  .f-c-links-modal-list__records-metadata.font-size-sm.text-muted
+                    = value
+              - elsif record.try(:published_at).present?
                 .f-c-links-modal-list__records-metadata.font-size-sm.text-muted
-                  = value
-            - elsif record.try(:published_at).present?
-              .f-c-links-modal-list__records-metadata.font-size-sm.text-muted
-                = l(record.published_at, format: :short)
+                  = l(record.published_at, format: :short)
+  - else
+    .f-c-links-modal-list__blank.text-muted.small = t('.no_records')

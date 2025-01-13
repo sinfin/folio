@@ -3,7 +3,7 @@
 class Folio::Console::Links::Modal::UrlPickerComponent < Folio::Console::ApplicationComponent
   def initialize(url_json:)
     @url_json = url_json
-    @present = @url_json[:href]
+    @value_present = @url_json[:href].present?
   end
 
   def before_render
@@ -39,9 +39,37 @@ class Folio::Console::Links::Modal::UrlPickerComponent < Folio::Console::Applica
                           "f-c-input-form-group-url/remove" => "remove",
                         },
                         values: {
-                          loading: false,
-                          present: @present,
-                          api_url: controller.value_console_api_links_path,
+                          value_loading: false,
+                          list_loading: false,
+                          value_present: @value_present,
+                          api_value_url: controller.value_console_api_links_path,
+                          api_list_url: controller.list_console_api_links_path,
+                          filtering: false,
                         })
+  end
+
+  def cancel_button_model
+    {
+      data: stimulus_data(action: { click: "cancelFilters" }, target: "cancelButton"),
+      variant: :danger,
+      icon: :close,
+      class: "f-c-links-modal-url-picker__list-filters-cancel-button"
+    }
+  end
+
+  def filter_form(&block)
+    opts = {
+      url: "#filter",
+      method: :get,
+      html: {
+        class: "f-c-links-modal-url-picker__list-filters-form",
+        data: stimulus_data(action: {
+          change: "onFormChange",
+          submit: "onFormSubmit"
+        }, target: "form"),
+      },
+    }
+
+    simple_form_for("", opts, &block)
   end
 end

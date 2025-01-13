@@ -110,4 +110,20 @@ class Folio::Console::Api::LinksControllerTest < Folio::Console::BaseControllerT
     assert_response :ok
     assert response.parsed_body["data"].include?("f-c-links-value")
   end
+
+  test "list" do
+    create(:folio_page, title: "foobarbaz")
+
+    get list_console_api_links_path(format: :json), params: {}
+
+    assert_response :ok
+    assert response.parsed_body["data"].include?("f-c-links-modal-list")
+    assert response.parsed_body["data"].include?("foobarbaz")
+
+    get list_console_api_links_path(format: :json), params: { q: "abc" }
+
+    assert_response :ok
+    assert response.parsed_body["data"].include?("f-c-links-modal-list")
+    assert_not response.parsed_body["data"].include?("foobarbaz")
+  end
 end

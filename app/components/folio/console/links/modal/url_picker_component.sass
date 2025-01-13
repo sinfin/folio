@@ -6,8 +6,54 @@
 
   .nav-tabs
     border-color: $gray
+    margin-bottom: 2 * $grid-gutter-base
 
-  &[data-f-c-links-modal-url-picker-loading-value="false"] &__loader,
-  &[data-f-c-links-modal-url-picker-present-value="false"] &__value-wrap,
-  &[data-f-c-links-modal-url-picker-present-value="true"] &__list-wrap
+  &[data-f-c-links-modal-url-picker-value-loading-value="false"] &__value-loader,
+  &[data-f-c-links-modal-url-picker-value-present-value="false"] &__value-wrap,
+  &[data-f-c-links-modal-url-picker-value-present-value="true"] &__list-wrap,
+  &[data-f-c-links-modal-url-picker-list-loading-value="false"] &__list-loader
     display: none
+
+  &[data-f-c-links-modal-url-picker-filtering-value="false"] &__list-filters-cancel-button
+    visibility: hidden
+
+  &__list-filter
+    position: relative
+    flex: 0 1 auto
+
+    .form-group
+      margin-bottom: 0
+
+    .form-group__custom-html
+      position: absolute
+      top: 0
+      right: 0
+      width: $input-height
+      height: $input-height
+      display: flex
+      align-items: center
+      justify-content: center
+      pointer-events: none
+      z-index: 2
+
+  &__list-filter--q
+    max-width: 195px
+
+  &__list-filter-input--q
+    padding-right: $input-height
+
+  &__list-filters-form
+    display: flex
+    align-items: flex-start
+    gap: $grid-gutter-base
+    margin-bottom: 2 * $grid-gutter-base
+
+  &__list-filters-flex
+    display: flex
+    align-items: flex-start
+    gap: $grid-gutter-base
+    flex-wrap: wrap
+    flex: 1 1 auto
+
+  &__list-inner
+    position: relative

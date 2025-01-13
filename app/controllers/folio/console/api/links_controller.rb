@@ -41,6 +41,10 @@ class Folio::Console::Api::LinksController < Folio::Console::Api::BaseController
     render_component_json(Folio::Console::Links::ValueComponent.new(url_json:, verbose: false))
   end
 
+  def list
+    render_component_json(Folio::Console::Links::Modal::ListComponent.new(filtering: true))
+  end
+
   def show
     links = []
 

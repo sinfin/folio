@@ -3,6 +3,10 @@
 class Folio::Console::Links::Modal::ListComponent < Folio::Console::ApplicationComponent
   include Pagy::Backend
 
+  def initialize(filtering: false)
+    @filtering = filtering
+  end
+
   def records_data
     @records_data ||= page_links.merge(additional_links).filter_map do |klass, url_proc|
       next if Folio::Current.site.blank?
@@ -11,7 +15,7 @@ class Folio::Console::Links::Modal::ListComponent < Folio::Console::ApplicationC
       scope = scope.by_site(Folio::Current.site) if scope.respond_to?(:by_site)
       scope = scope.accessible_by(Folio::Current.ability)
 
-      if scope.respond_to?(:by_query) && params[:q].present?
+      if @filtering && scope.respond_to?(:by_query) && params[:q].present?
         scope = scope.by_query(params[:q])
       elsif scope.respond_to?(:ordered)
         scope = scope.ordered

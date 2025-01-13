@@ -368,6 +368,10 @@ en:
           url_picker_component:
             tab/pick: Pick
             tab/custom_url: Custom URL
+            placeholder/q: Search ...
+
+          list_component:
+            no_records: No records found.
 
   date:
     formats:

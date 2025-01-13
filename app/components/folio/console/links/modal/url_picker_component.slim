@@ -2,13 +2,34 @@
   = render(Folio::Console::Ui::TabsComponent.new(tabs:)) do |c|
     = c.tab_pane(tabs[0])
       .f-c-links-modal-url-picker__value-wrap data=stimulus_target("valueWrap")
-        - if @present
+        - if @value_present
           = render(Folio::Console::Links::ValueComponent.new(url_json: @url_json,
                                                              record: @record,
                                                              verbose: false))
 
       .f-c-links-modal-url-picker__list-wrap
-        = render(Folio::Console::Links::Modal::ListComponent.new)
+        .f-c-links-modal-url-picker__list-filters
+          = filter_form do |f|
+            .f-c-links-modal-url-picker__list-filters-flex
+              div[
+                class="f-c-links-modal-url-picker__list-filter"
+                class="f-c-links-modal-url-picker__list-filter--q"
+              ]
+                = f.input(:q,
+                          label: false,
+                          placeholder: t(".placeholder/q"),
+                          custom_html: folio_icon(:magnify),
+                          input_html: { class: "f-c-links-modal-url-picker__list-filter-input f-c-links-modal-url-picker__list-filter-input--q" })
+
+            == cell('folio/console/ui/button', cancel_button_model)
+
+        .f-c-links-modal-url-picker__list-inner
+          .f-c-links-modal-url-picker__list-content[
+            data=stimulus_target("listContent")
+          ]
+            = render(Folio::Console::Links::Modal::ListComponent.new)
+
+          span.folio-loader.f-c-links-modal-url-picker__list-loader
 
     = c.tab_pane(tabs[1])
       input.form-control[
@@ -16,4 +37,4 @@
         data=stimulus_data(target: "input", action: "input")
       ]
 
-  span.folio-loader.f-c-links-modal-url-picker__loader
+  span.folio-loader.f-c-links-modal-url-picker__value-loader

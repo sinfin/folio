@@ -371,6 +371,10 @@ cs:
           url_picker_component:
             tab/pick: Vybrat
             tab/custom_url: Vlastní URL
+            placeholder/q: Hledat ...
+
+          list_component:
+            no_records: Nebyly nalezeny žádné záznamy.
 
   date:
     formats:
