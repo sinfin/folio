@@ -72,8 +72,10 @@ window.Folio.Stimulus.register('f-c-links-modal-url-picker', class extends windo
     this.dispatch('changed', { detail: { urlJson: { href: '', label: '' } } })
   }
 
-  input (e) {
-    this.dispatch('changed', { detail: { urlJson: { href: e.target.value } } })
+  onInputChange (e) {
+    const urlJson = { href: e.target.value }
+    this.loadValue(urlJson)
+    this.dispatch('changed', { detail: { urlJson } })
   }
 
   onFormChange (e) {

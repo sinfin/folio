@@ -1,68 +1,69 @@
 .f-c-links-modal-url-picker data=data
   = render(Folio::Console::Ui::TabsComponent.new(tabs:)) do |c|
     = c.tab_pane(tabs[0])
-      .f-c-links-modal-url-picker__value-wrap data=stimulus_target("valueWrap")
-        - if @value_present
-          = render(Folio::Console::Links::ValueComponent.new(url_json: @url_json,
-                                                             record: @record,
-                                                             verbose: false))
+      .f-c-links-modal-url-picker__value-outer-wrap
+        .f-c-links-modal-url-picker__value-wrap data=stimulus_target("valueWrap")
+          - if @value_present
+            = render(Folio::Console::Links::ValueComponent.new(url_json: @url_json,
+                                                               record: @record,
+                                                               verbose: false))
 
-      .f-c-links-modal-url-picker__list-wrap
-        .f-c-links-modal-url-picker__list-filters
-          = filter_form do |f|
-            .f-c-links-modal-url-picker__list-filters-flex
-              div[
-                class="f-c-links-modal-url-picker__list-filter"
-                class="f-c-links-modal-url-picker__list-filter--q"
-              ]
-                = f.input(:q,
-                          label: false,
-                          placeholder: t(".placeholder/q"),
-                          custom_html: folio_icon(:magnify),
-                          input_html: { class: "f-c-links-modal-url-picker__list-filter-input f-c-links-modal-url-picker__list-filter-input--q" })
+        .f-c-links-modal-url-picker__list-wrap
+          .f-c-links-modal-url-picker__list-filters
+            = filter_form do |f|
+              .f-c-links-modal-url-picker__list-filters-flex
+                div[
+                  class="f-c-links-modal-url-picker__list-filter"
+                  class="f-c-links-modal-url-picker__list-filter--q"
+                ]
+                  = f.input(:q,
+                            label: false,
+                            placeholder: t(".placeholder/q"),
+                            custom_html: folio_icon(:magnify),
+                            input_html: { class: "f-c-links-modal-url-picker__list-filter-input f-c-links-modal-url-picker__list-filter-input--q" })
 
-              div[
-                class="f-c-links-modal-url-picker__list-filter"
-                class="f-c-links-modal-url-picker__list-filter--site_id"
-              ]
-                = f.input(:site_id,
-                          label: false,
-                          collection: Folio::Site.accessible_by(Folio::Current.ability).ordered,
-                          include_blank: t('.placeholder/site_id'))
+                div[
+                  class="f-c-links-modal-url-picker__list-filter"
+                  class="f-c-links-modal-url-picker__list-filter--site_id"
+                ]
+                  = f.input(:site_id,
+                            label: false,
+                            collection: Folio::Site.accessible_by(Folio::Current.ability).ordered,
+                            include_blank: t('.placeholder/site_id'))
 
-              div[
-                class="f-c-links-modal-url-picker__list-filter"
-                class="f-c-links-modal-url-picker__list-filter--class_name"
-              ]
-                = f.input(:class_name,
-                          label: false,
-                          collection: class_names_collection,
-                          include_blank: t('.placeholder/class_name'))
+                div[
+                  class="f-c-links-modal-url-picker__list-filter"
+                  class="f-c-links-modal-url-picker__list-filter--class_name"
+                ]
+                  = f.input(:class_name,
+                            label: false,
+                            collection: class_names_collection,
+                            include_blank: t('.placeholder/class_name'))
 
-              div[
-                class="f-c-links-modal-url-picker__list-filter"
-                class="f-c-links-modal-url-picker__list-filter--published_within"
-              ]
-                = f.input(:published_within,
-                          label: false,
-                          placeholder: t(".placeholder/published_within"),
-                          input_html: { class: "f-c-links-modal-url-picker__list-filter-input--published_within" },
-                          as: :date_range)
+                div[
+                  class="f-c-links-modal-url-picker__list-filter"
+                  class="f-c-links-modal-url-picker__list-filter--published_within"
+                ]
+                  = f.input(:published_within,
+                            label: false,
+                            placeholder: t(".placeholder/published_within"),
+                            input_html: { class: "f-c-links-modal-url-picker__list-filter-input--published_within" },
+                            as: :date_range)
 
-            == cell('folio/console/ui/button', cancel_button_model)
+              == cell('folio/console/ui/button', cancel_button_model)
 
-        .f-c-links-modal-url-picker__list-inner
-          .f-c-links-modal-url-picker__list-content[
-            data=stimulus_target("listContent")
-          ]
-            = render(Folio::Console::Links::Modal::ListComponent.new)
+          .f-c-links-modal-url-picker__list-inner
+            .f-c-links-modal-url-picker__list-content[
+              data=stimulus_target("listContent")
+            ]
+              = render(Folio::Console::Links::Modal::ListComponent.new)
 
-          span.folio-loader.f-c-links-modal-url-picker__list-loader
+            span.folio-loader.f-c-links-modal-url-picker__list-loader
+
+        span.folio-loader.f-c-links-modal-url-picker__value-loader
 
     = c.tab_pane(tabs[1])
       input.form-control[
         value=@url_json[:href]
-        data=stimulus_data(target: "input", action: "input")
+        data=stimulus_data(target: "input", action: { change: "onInputChange" })
       ]
-
-  span.folio-loader.f-c-links-modal-url-picker__value-loader

@@ -12,6 +12,9 @@ window.Folio.Stimulus.register('f-c-links-modal-form', class extends window.Stim
     if (data.record_id) {
       const idAsNumber = parseInt(data.record_id)
       if (idAsNumber) data.record_id = idAsNumber
+    } else {
+      delete data.record_id
+      delete data.record_type
     }
 
     this.dispatch('submit', { detail: { data } })
