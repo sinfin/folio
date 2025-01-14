@@ -1,3 +1,49 @@
+// respect changes in app/overrides/lib/simple_form/inputs/base_override.rb
+
+window.Folio = window.Folio || {}
+window.Folio.Input = window.Folio.Input || {}
+window.Folio.Input.Url = window.Folio.Input.Url || {}
+
+window.Folio.Input.Url.disposeFormGroup = (formGroup) => {
+  const input = formGroup.querySelector('.form-control')
+
+  formGroup.removeAttribute('data-controller')
+
+  input.removeAttribute('data-f-c-input-form-group-url-target')
+
+  const customHtml = formGroup.querySelector('.form-group__custom-html')
+  if (customHtml) customHtml.remove()
+
+  formGroup.removeAttribute('data-f-c-input-form-group-url-loaded-value')
+  formGroup.removeAttribute('data-f-c-input-form-group-url-json-value')
+  formGroup.removeAttribute('data-action')
+
+  formGroup.classList.remove('f-c-input-form-group-url')
+}
+
+window.Folio.Input.Url.initFormGroup = (formGroup, opts = {}) => {
+  const input = formGroup.querySelector('.form-control')
+
+  input.setAttribute('data-f-c-input-form-group-url-target', 'input')
+
+  formGroup.classList.add('f-c-input-form-group-url')
+  formGroup.setAttribute('data-f-c-input-form-group-url-loaded-value', 'false')
+  formGroup.setAttribute('data-f-c-input-form-group-url-json-value', opts.json ? 'true' : 'false')
+  formGroup.setAttribute('data-action', 'f-c-input-form-group-url:edit->f-c-input-form-group-url#edit f-c-input-form-group-url:remove->f-c-input-form-group-url#remove')
+
+  formGroup.insertAdjacentHTML('beforeend', `
+    <div class="form-group__custom-html">
+      <div class="f-c-input-form-group-url__inner">
+        <div class="f-c-input-form-group-url__loader-wrap">
+          <div class="folio-loader folio-loader--small f-c-input-form-group-url__loader"></div>
+        </div>
+        <div class="f-c-input-form-group-url__control-bar-wrap"></div>
+    </div>
+  `)
+
+  formGroup.dataset.controller = 'f-c-input-form-group-url'
+}
+
 window.Folio.Stimulus.register('f-c-input-form-group-url', class extends window.Stimulus.Controller {
   static values = {
     loaded: Boolean,
@@ -87,7 +133,7 @@ window.Folio.Stimulus.register('f-c-input-form-group-url', class extends window.
     if (this.jsonValue) {
       this.inputTarget.value = JSON.stringify(data)
     } else {
-      this.inputTarget.value = data.href || ""
+      this.inputTarget.value = data.href || ''
     }
 
     this.loadedValue = false

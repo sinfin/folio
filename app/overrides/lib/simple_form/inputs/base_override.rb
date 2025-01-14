@@ -106,6 +106,7 @@ SimpleForm::Inputs::Base.class_eval do
     end
   end
 
+  # respect changes in app/assets/javascripts/folio/input/url.js
   def register_url_input(json: true, wrapper_options: nil)
     register_stimulus("f-c-input-form-group-url",
                       values: { loaded: false, json: },

@@ -34,7 +34,6 @@ class UrlInput extends React.PureComponent {
         onChange={this.props.onChange}
         onKeyPress={this.props.onKeyPress}
         invalid={this.props.invalid}
-        data-controller='f-c-input-url'
         innerRef={this.inputRef}
       />
     )
