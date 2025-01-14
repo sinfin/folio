@@ -69,21 +69,21 @@ window.Folio.Stimulus.register('f-c-input-form-group-url', class extends window.
 
   edit () {
     const value = this.inputTarget.value
-    let data = {}
+    let urlJson = {}
 
     if (this.jsonValue) {
       try {
-        data = JSON.parse(value)
+        urlJson = JSON.parse(value)
       } catch (_e) {
       }
     } else {
-      data.href = value
+      urlJson.href = value
     }
 
-    this.fCLinksModalOutlet.openWithData({ data, triggerController: this })
+    document.querySelector('.f-c-links-modal').dispatchEvent(new window.CustomEvent('f-c-links-modal:open', { detail: { urlJson, trigger: this } }))
   }
 
-  save (data) {
+  saveUrlJson (data) {
     if (this.jsonValue) {
       this.inputTarget.value = JSON.stringify(data)
     } else {
@@ -96,6 +96,6 @@ window.Folio.Stimulus.register('f-c-input-form-group-url', class extends window.
   }
 
   remove () {
-    this.save({})
+    this.saveUrlJson({})
   }
 })

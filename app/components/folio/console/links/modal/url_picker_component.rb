@@ -35,8 +35,8 @@ class Folio::Console::Links::Modal::UrlPickerComponent < Folio::Console::Applica
     stimulus_controller("f-c-links-modal-url-picker",
                         action: {
                           "f-c-links-modal-list:selectedRecord" => "selectedRecord",
-                          "f-c-input-form-group-url/edit" => "edit",
-                          "f-c-input-form-group-url/remove" => "remove",
+                          "f-c-input-form-group-url:edit" => "edit",
+                          "f-c-input-form-group-url:remove" => "remove",
                         },
                         values: {
                           value_loading: false,

@@ -109,10 +109,9 @@ SimpleForm::Inputs::Base.class_eval do
   def register_url_input(json: true, wrapper_options: nil)
     register_stimulus("f-c-input-form-group-url",
                       values: { loaded: false, json: },
-                      outlets: %w[f-c-links-modal],
                       action: {
-                        "f-c-input-form-group-url/edit" => "edit",
-                        "f-c-input-form-group-url/remove" => "remove",
+                        "f-c-input-form-group-url:edit" => "edit",
+                        "f-c-input-form-group-url:remove" => "remove",
                       },
                       wrapper: true)
 

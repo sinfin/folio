@@ -7,7 +7,7 @@ window.Folio.Stimulus.register('f-c-links-modal', class extends window.Stimulus.
   static targets = ['formWrap']
 
   disconnect () {
-    this.triggerController = null
+    this.trigger = null
 
     if (this.loadTimeout) {
       window.clearTimeout(this.loadTimeout)
@@ -20,17 +20,17 @@ window.Folio.Stimulus.register('f-c-links-modal', class extends window.Stimulus.
     }
   }
 
-  openWithData ({ data, triggerController }) {
-    this.triggerController = triggerController
+  openWithUrlJson ({ urlJson, trigger }) {
+    this.trigger = trigger
 
-    this.loadForm(data)
+    this.loadForm(urlJson)
 
     window.Folio.Modal.open(this.element)
   }
 
-  loadForm (data) {
+  loadForm (urlJson) {
     this.loadingValue = true
-    this.formWrapTarget.innerHTML = ""
+    this.formWrapTarget.innerHTML = ''
 
     if (this.abortController) {
       this.abortController.abort()
@@ -38,7 +38,7 @@ window.Folio.Stimulus.register('f-c-links-modal', class extends window.Stimulus.
 
     this.abortController = new AbortController()
 
-    const url = window.Folio.addParamsToUrl(this.apiUrlValue, { url_json: JSON.stringify(data) })
+    const url = window.Folio.addParamsToUrl(this.apiUrlValue, { url_json: JSON.stringify(urlJson) })
 
     window.Folio.Api.apiGet(url, null, this.abortController.signal).then((res) => {
       if (res.data) {
@@ -49,7 +49,7 @@ window.Folio.Stimulus.register('f-c-links-modal', class extends window.Stimulus.
       }
     }).catch((e) => {
       this.loadTimeout = window.setTimeout(() => {
-        this.loadForm(data)
+        this.loadForm(urlJson)
       }, 1000)
     }).finally(() => {
       delete this.abortController
@@ -58,16 +58,22 @@ window.Folio.Stimulus.register('f-c-links-modal', class extends window.Stimulus.
 
   cancel () {
     window.Folio.Modal.close(this.element)
-    this.formWrapTarget.innerHTML = ""
+    this.formWrapTarget.innerHTML = ''
   }
 
   submit (e) {
-    if (this.triggerController) {
-      this.triggerController.save(e.detail.data)
-      this.triggerController = null
+    if (this.trigger) {
+      this.trigger.saveUrlJson(e.detail.data)
+      this.trigger = null
     }
 
     window.Folio.Modal.close(this.element)
-    this.formWrapTarget.innerHTML = ""
+    this.formWrapTarget.innerHTML = ''
+  }
+
+  onOpen (e) {
+    if (e.detail && e.detail.urlJson) {
+      this.openWithUrlJson({ urlJson: e.detail.urlJson, trigger: e.detail.trigger })
+    }
   }
 })

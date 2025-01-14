@@ -46,6 +46,14 @@ h2 Input URL
 
   hr.my-5
 
+  h3 Richtext uses links as well
+
+  = f.input :richtext,
+            as: :redactor,
+            input_html: { value: '<p>Hello with <a href="/foo">a link</a>!</p>' }
+
+  hr.my-5
+
   == cell('folio/console/ui/button',
           type: :submit,
           variant: :primary,
