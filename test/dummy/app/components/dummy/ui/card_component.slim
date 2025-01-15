@@ -73,5 +73,10 @@
 
           - if @links.present?
             - @links.each do |link_hash|
-              a.d-ui-card__link href=link_hash[:href]
-                = link_hash[:label]
+              - if link_hash[:href].present?
+                a.d-ui-card__link[
+                  href=link_hash[:href]
+                  rel=link_hash[:rel]
+                  target=link_hash[:target]
+                ]
+                  = link_hash[:label]
