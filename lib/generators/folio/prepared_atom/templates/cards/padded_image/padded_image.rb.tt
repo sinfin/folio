@@ -6,7 +6,7 @@ class <%= application_namespace %>::Atom::Cards::PaddedImage < Folio::Atom::Base
   STRUCTURE = {
     title: :string,
     description: :text,
-    url: :url,
+    url_json: :url_json,
   }
 
   ASSOCIATIONS = {}
@@ -17,7 +17,7 @@ class <%= application_namespace %>::Atom::Cards::PaddedImage < Folio::Atom::Base
 
   validates :title,
             :cover_placement,
-            :url,
+            :url_json,
             presence: true
 
   def self.console_insert_row
