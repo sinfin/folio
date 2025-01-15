@@ -130,12 +130,16 @@ window.Folio.Stimulus.register('f-c-input-form-group-url', class extends window.
   }
 
   saveUrlJson (data) {
+    let value
+
     if (this.jsonValue) {
-      this.inputTarget.value = JSON.stringify(data)
+      value = JSON.stringify(data)
     } else {
-      this.inputTarget.value = data.href || ''
+      value = data.href || ''
     }
 
+    this.inputTarget.dataset.value = value
+    this.inputTarget.value = value
     this.loadedValue = false
 
     this.inputTarget.dispatchEvent(new window.Event('change', { bubbles: true }))

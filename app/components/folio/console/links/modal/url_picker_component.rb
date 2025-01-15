@@ -3,7 +3,6 @@
 class Folio::Console::Links::Modal::UrlPickerComponent < Folio::Console::ApplicationComponent
   def initialize(url_json:)
     @url_json = url_json
-    @value_present = @url_json[:href].present?
   end
 
   def before_render
@@ -41,10 +40,11 @@ class Folio::Console::Links::Modal::UrlPickerComponent < Folio::Console::Applica
                         values: {
                           value_loading: false,
                           list_loading: false,
-                          value_present: @value_present,
+                          value_present: !!@record,
                           api_value_url: controller.value_console_api_links_path,
                           api_list_url: controller.list_console_api_links_path,
                           filtering: false,
+                          autofocus_input: tabs[1][:active],
                         })
   end
 

@@ -4,11 +4,21 @@ window.Folio.Stimulus.register('f-c-links-modal-url-picker', class extends windo
     listLoading: Boolean,
     valuePresent: Boolean,
     filtering: Boolean,
+    autofocusInput: Boolean,
     apiValueUrl: String,
     apiListUrl: String
   }
 
   static targets = ['valueWrap', 'input', 'cancelButton', 'form', 'listContent']
+
+  connect () {
+    if (this.autofocusInputValue) {
+      this.inputTarget.focus()
+
+      const length = this.inputTarget.value.length
+      this.inputTarget.setSelectionRange(length, length)
+    }
+  }
 
   disconnect () {
     if (this.listLoadTimeout) {
@@ -72,9 +82,15 @@ window.Folio.Stimulus.register('f-c-links-modal-url-picker', class extends windo
     this.dispatch('changed', { detail: { urlJson: { href: '', label: '' } } })
   }
 
+  removeValue () {
+    this.valuePresentValue = false
+    this.valueWrapTarget.innerHTML = ''
+  }
+
   onInputChange (e) {
+    this.removeValue()
+
     const urlJson = { href: e.target.value }
-    this.loadValue(urlJson)
     this.dispatch('changed', { detail: { urlJson } })
   }
 

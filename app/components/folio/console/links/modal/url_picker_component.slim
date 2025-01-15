@@ -3,7 +3,7 @@
     = c.tab_pane(tabs[0])
       .f-c-links-modal-url-picker__value-outer-wrap
         .f-c-links-modal-url-picker__value-wrap data=stimulus_target("valueWrap")
-          - if @value_present
+          - if @record
             = render(Folio::Console::Links::ValueComponent.new(url_json: @url_json,
                                                                record: @record,
                                                                verbose: false))
