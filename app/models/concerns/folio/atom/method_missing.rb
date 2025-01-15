@@ -134,11 +134,20 @@ module Folio::Atom::MethodMissing
             if value.is_a?(String)
               value
             else
-              value.transform_values(&:presence).compact.to_json
+              if value[:href].present?
+                value.transform_values(&:presence).compact.to_json
+              else
+                nil
+              end
             end
           else
             nil
           end
+        end
+
+        # nillify blanks
+        if value.blank? && !value.nil? && value != false
+          value = nil
         end
 
         self.data[name_without_operator.to_s] = value

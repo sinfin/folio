@@ -96,4 +96,11 @@ class Folio::Atom::BaseTest < ActiveSupport::TestCase
     assert_equal(atom.url_json[:rel], "noreferrer")
     assert_equal(atom.url_json[:target], "_blank")
   end
+
+  test "blank url and url_json" do
+    atom = create_atom(UrlJsonAtom, url: "", url_json: { href: "", rel: "noreferrer", target: "_blank" })
+
+    assert_nil(atom.url)
+    assert_nil(atom.url_json)
+  end
 end
