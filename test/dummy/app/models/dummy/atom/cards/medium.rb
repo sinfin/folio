@@ -6,7 +6,7 @@ class Dummy::Atom::Cards::Medium < Folio::Atom::Base
   STRUCTURE = {
     title: :string,
     content: :richtext,
-    url: :url,
+    url_json: :url_json,
   }
 
   ASSOCIATIONS = {}

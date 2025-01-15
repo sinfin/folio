@@ -16,7 +16,7 @@ class Folio::ClonableTest < ActiveSupport::TestCase
                 placement: page,
                 title: "Původní titulek",
                 description: "Původní popis",
-                url: "https://example.com",
+                url_json: { href: "https://example.com" },
                 cover: image)
     page.cover = image
 
@@ -31,7 +31,7 @@ class Folio::ClonableTest < ActiveSupport::TestCase
     assert_not_equal page.cover_placement, clone.cover_placement
 
     clone.atoms.first.update!(content: "Změněný text")
-    clone.atoms.last.update!(title: "Změněný titulek", description: "Změněný popis", url: "https://example2.com")
+    clone.atoms.last.update!(title: "Změněný titulek", description: "Změněný popis", url_json: { href: "https://example2.com" })
 
     clone.update!(
         title: "Nový titulek",

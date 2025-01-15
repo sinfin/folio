@@ -6,10 +6,8 @@ class Dummy::Atom::Cards::FullWidth < Folio::Atom::Base
   STRUCTURE = {
     title: :string,
     content: :richtext,
-    button_label: :string,
-    button_url: :url,
-    secondary_button_label: :string,
-    secondary_button_url: :url,
+    button_url_json: :url_json,
+    secondary_button_url_json: :url_json,
   }
 
   ASSOCIATIONS = {}

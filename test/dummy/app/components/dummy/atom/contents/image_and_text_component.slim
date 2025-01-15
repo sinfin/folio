@@ -16,7 +16,7 @@
                            @thumb_size,
                            class_name: "d-atom-contents-image-and-text__image",
                            lightbox: true,
-                           hover_zoom: @atom.url.present?)
+                           hover_zoom: @with_link)
 
         .d-atom-contents-image-and-text__contents
           - if @atom.subtitle.present?
@@ -33,10 +33,11 @@
             ]
               == cstypo @atom.content
 
-          - if @atom.url.present?
+          - if @with_link
             a.d-atom-contents-image-and-text__btn[
               class="btn btn-secondary btn-sm"
-              target=(@atom.open_in_new_tab ? "_blank" : nil)
-              href=@atom.url
+              href=@atom.url_json[:href]
+              target=@atom.url_json[:target]
+              rel=@atom.url_json[:rel]
             ]
               = @atom.button_label

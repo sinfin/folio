@@ -28,9 +28,12 @@
                   .fs-text-s.d-rich-text.d-rich-text--chomp
                     == cstypo atom.content
 
-              - if atom.link_url.present?
+              - if atom.link_url_json && atom.link_url_json[:href].present?
                 a.d-molecule-cards-person__card-link[
                   class="fs-text-xs mt-3"
-                  href=atom.link_url
+                  href=atom.link_url_json[:href]
+                  rel=atom.link_url_json[:rel]
+                  target=atom.link_url_json[:target]
+                  title=atom.link_url_json[:label]
                 ]
                   = atom.link_label

@@ -4,7 +4,7 @@ require "test_helper"
 
 class Dummy::Molecule::Cards::ImageComponentTest < Folio::ComponentTest
   def test_render
-    atoms = [create_atom(Dummy::Atom::Cards::Image, :title, :url, :cover)]
+    atoms = [create_atom(Dummy::Atom::Cards::Image, :title, :cover, url_json: { href: "/foo" })]
 
     render_inline(Dummy::Molecule::Cards::ImageComponent.new(atoms:))
 

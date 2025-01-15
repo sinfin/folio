@@ -24,7 +24,12 @@
               - if @title.present?
                 *{ tag: @title_tag, class: "d-ui-card__title" }
                   - if @href.present? && !render_button_or_links?
-                    a.d-ui-card__title-a href=@href
+                    a.d-ui-card__title-a[
+                      href=@href
+                      target=@target
+                      rel=@rel
+                      title=@link_title
+                    ]
                       = cstypo @title
                   - else
                     = cstypo @title
@@ -61,6 +66,9 @@
             = dummy_ui_button(label: @button_label,
                               variant: @button_variant,
                               href: @href,
+                              target: @target,
+                              rel: @rel,
+                              title: @link_title,
                               class_name: "d-ui-card__button")
 
           - if @links.present?
