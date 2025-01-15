@@ -64,4 +64,36 @@ class Folio::Atom::BaseTest < ActiveSupport::TestCase
     atom = SpecificSiteAtom.new(placement:)
     assert atom.valid?
   end
+
+  class DeprecatedAtom < Folio::Atom::Base
+    STRUCTURE = {
+      title: :string,
+      legacy_title: :deprecated,
+    }
+  end
+
+  test "deprecated data" do
+    atom = create_atom(DeprecatedAtom, title: "title", legacy_title: "legacy_title")
+
+    assert_equal(atom.title, "title")
+    assert_equal(atom.legacy_title, "legacy_title")
+  end
+
+  class UrlJsonAtom < Folio::Atom::Base
+    STRUCTURE = {
+      url: :url,
+      url_json: :url_json,
+    }
+  end
+
+  test "url and url_json" do
+    atom = create_atom(UrlJsonAtom, url: "/foo", url_json: { href: "/foo", rel: "noreferrer", target: "_blank" })
+
+    assert_equal(atom.url, "/foo")
+
+    assert(atom.url_json)
+    assert_equal(atom.url_json[:href], "/foo")
+    assert_equal(atom.url_json[:rel], "noreferrer")
+    assert_equal(atom.url_json[:target], "_blank")
+  end
 end

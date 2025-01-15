@@ -17,7 +17,7 @@ class Field extends React.PureComponent {
     const type = this.props.atom.record.meta.structure[this.props.field].type
 
     if (type === 'url' || type === 'url_json') {
-      window.Folio.Input.Url.initFormGroup(this.formGroupRef.current)
+      window.Folio.Input.Url.initFormGroup(this.formGroupRef.current, { json: type === 'url_json' })
     }
   }
 
@@ -40,6 +40,7 @@ class Field extends React.PureComponent {
       <div
         className={`form-group ${formGroupClassName(field, atom.errors, meta.structure)} ${isCheck ? 'form-check' : ''}`}
         ref={this.formGroupRef}
+        hidden={meta.structure[field].type === 'deprecated'}
       >
         <Label
           className='form-label'

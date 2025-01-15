@@ -11,7 +11,7 @@ class UrlInput extends React.PureComponent {
     if (!this.inputRef.current) return
 
     this.boundHandleChange = (e) => {
-      this.props.onChange(e)
+      this.props.onValueChange(e.target.dataset.value)
     }
 
     this.inputRef.current.addEventListener('change', this.boundHandleChange)

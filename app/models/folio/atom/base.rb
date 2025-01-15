@@ -18,6 +18,8 @@ class Folio::Atom::Base < Folio::ApplicationRecord
     color
     boolean
     url
+    url_json
+    deprecated
   ]
 
   ATTACHMENTS = []
