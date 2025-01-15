@@ -108,12 +108,15 @@ module Folio::Atom::MethodMissing
       is_date = klass::STRUCTURE[name_without_operator] == :date
       is_datetime = klass::STRUCTURE[name_without_operator] == :datetime
       is_url_json = klass::STRUCTURE[name_without_operator] == :url_json
+      is_deprecated = klass::STRUCTURE[name_without_operator] == :deprecated
 
       if method_name.to_s.include?("=")
         self.data ||= {}
         value = argument
 
-        if is_bool
+        if is_deprecated
+          value = nil
+        elsif is_bool
           if value == "false" || value == "0"
             value = false
           else

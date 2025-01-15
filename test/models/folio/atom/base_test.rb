@@ -76,7 +76,17 @@ class Folio::Atom::BaseTest < ActiveSupport::TestCase
     atom = create_atom(DeprecatedAtom, title: "title", legacy_title: "legacy_title")
 
     assert_equal(atom.title, "title")
+    assert_nil(atom.legacy_title)
+
+    atom.update_column(:data, atom.data.merge("legacy_title" => "legacy_title"))
+
+    assert_equal(atom.title, "title")
     assert_equal(atom.legacy_title, "legacy_title")
+
+    atom.update!(title: "title 2", legacy_title: "legacy_title 2")
+
+    assert_equal(atom.title, "title 2")
+    assert_nil(atom.legacy_title)
   end
 
   class UrlJsonAtom < Folio::Atom::Base
