@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Folio::Console::Links::Modal::UrlPickerComponent < Folio::Console::ApplicationComponent
+  include Folio::Console::Cell::IndexFilters
+
   def initialize(url_json:)
     @url_json = url_json
   end
@@ -65,6 +67,7 @@ class Folio::Console::Links::Modal::UrlPickerComponent < Folio::Console::Applica
         class: "f-c-links-modal-url-picker__list-filters-form",
         data: stimulus_data(action: {
           change: "onFormChange",
+          folio_select2_change: "onFormChange",
           submit: "onFormSubmit"
         }, target: "form"),
       },
@@ -81,5 +84,23 @@ class Folio::Console::Links::Modal::UrlPickerComponent < Folio::Console::Applica
         [klass.model_name.human, klass.to_s]
       end
     end
+  end
+
+  def additional_filters_hash
+    Rails.application.config.folio_console_links_additional_filters
+  end
+
+  def additional_select(f, key, data)
+    url = controller.folio.select2_console_api_autocomplete_path(klass: data[:klass],
+                                                                 scope: data[:scope],
+                                                                 order_scope: data[:order_scope],
+                                                                 slug: data[:slug],
+                                                                 label_method: data[:label_method])
+
+    select2_select(f, key, data, url:)
+  end
+
+  def label_for_key(key)
+    t(".placeholder/#{key}")
   end
 end

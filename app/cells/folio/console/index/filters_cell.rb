@@ -181,38 +181,6 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
                  input_group_append: controller.params[key].present? ? input_group_append : nil
   end
 
-  def select2_select(f, key, data, url:)
-    collection = []
-
-    if controller.params[key].present?
-      klass = data[:klass].constantize
-      klass = klass.by_site(Folio::Current.site) if klass.try(:has_belongs_to_site?) && Folio::Current.site.present?
-
-      if data[:id_method] && klass.column_names.include?(data[:id_method].to_s)
-        record = klass.find_by(data[:id_method] => controller.params[key])
-        collection << [record.to_console_label, record.send(data[:id_method]), selected: true] if record
-      elsif data[:slug]
-        record = klass.find_by_slug(controller.params[key])
-        collection << [record.to_console_label, record.slug, selected: true] if record
-      else
-        record = klass.find_by_id(controller.params[key])
-        collection << [record.to_console_label, record.id, selected: true] if record
-      end
-    end
-
-    f.input key, collection:,
-                 force_collection: true,
-                 label: false,
-                 remote: url,
-                 include_blank: "#{label_for_key(key)}...",
-                 input_html: {
-                   class: "f-c-index-filters__select2-input",
-                 },
-                 wrapper_html: { class: "f-c-index-filters__select2-wrap input-group--#{controller.params[key].present? ? "filled" : "empty"}" },
-                 wrapper: :input_group,
-                 input_group_append: controller.params[key].present? ? input_group_append : nil
-  end
-
   def collection_input(f, key)
     f.input key, collection: collection(key),
                  include_blank: blank_label(key),

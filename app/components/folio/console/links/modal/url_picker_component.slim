@@ -40,6 +40,14 @@
                             collection: class_names_collection,
                             include_blank: t('.placeholder/class_name'))
 
+                - additional_filters_hash.each do |key, data|
+                  div[
+                    class="f-c-links-modal-url-picker__list-filter"
+                    class="f-c-links-modal-url-picker__list-filter--additional"
+                    class="f-c-links-modal-url-picker__list-filter--#{key}"
+                  ]
+                    = additional_select(f, key, data)
+
                 div[
                   class="f-c-links-modal-url-picker__list-filter"
                   class="f-c-links-modal-url-picker__list-filter--published_within"

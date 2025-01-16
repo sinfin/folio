@@ -20,15 +20,16 @@
                           contain: true,
                           class: "f-c-links-modal-list__records-cover")
 
-              .f-c-links-modal-list__records-title.text-blue.fw-bold
-                = record.to_label
+              .f-c-links-modal-list__records-content
+                .f-c-links-modal-list__records-title.text-blue.fw-bold
+                  = record.to_label
 
-              - if record.respond_to?(:console_link_metadata)
-                - record.console_link_metadata.each do |value|
+                - if record.respond_to?(:console_link_metadata)
+                  - record.console_link_metadata.each do |value|
+                    .f-c-links-modal-list__records-metadata.font-size-sm.text-muted
+                      = value
+                - elsif record.try(:published_at).present?
                   .f-c-links-modal-list__records-metadata.font-size-sm.text-muted
-                    = value
-              - elsif record.try(:published_at).present?
-                .f-c-links-modal-list__records-metadata.font-size-sm.text-muted
-                  = l(record.published_at, format: :short)
+                    = l(record.published_at, format: :short)
   - else
     .f-c-links-modal-list__blank.text-muted.small = t('.no_records')

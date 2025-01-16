@@ -3,71 +3,103 @@
 class Folio::Console::Links::Modal::ListComponent < Folio::Console::ApplicationComponent
   include Pagy::Backend
 
+  PAGY_ITEMS_MULTI = 5
+  PAGY_ITEMS_SINGLE = 25
+
   def initialize(filtering: false)
     @filtering = filtering
   end
 
   def records_data
-    @records_data ||= all_links.filter_map do |class_name, url_proc|
-      next if Folio::Current.site.blank?
+    @records_data ||= begin
+      ary = all_links.filter_map do |class_name, url_proc|
+        next if Folio::Current.site.blank?
 
-      class_from_params = if params[:class_name].present?
-        runner = params[:class_name].safe_constantize
-        runner if runner < ActiveRecord::Base
-      end
-
-      klass = class_name.safe_constantize
-      items = class_from_params ? 25 : 5
-
-      if klass && klass < ActiveRecord::Base
-        if class_from_params
-          next unless klass <= class_from_params
+        class_from_params = if params[:class_name].present?
+          runner = params[:class_name].safe_constantize
+          runner if runner < ActiveRecord::Base
         end
 
-        scope = klass
-        scope = scope.by_site(Folio::Current.site) if scope.respond_to?(:by_site)
-        scope = scope.accessible_by(Folio::Current.ability)
+        klass = class_name.safe_constantize
+        items = class_from_params ? PAGY_ITEMS_SINGLE : PAGY_ITEMS_MULTI
 
-        if klass.try(:has_folio_attachments?)
-          scope = scope.includes(cover_placement: :file)
-        end
-
-        if @filtering && params[:published_within].present?
-          from, to = params[:published_within].split(/ ?- ?/)
-
-          next unless scope.column_names.include?("published_at")
-
-          if from.present?
-            from_date_time = DateTime.parse(from)
-            scope = scope.where("published_at >= ?", from_date_time)
+        if klass && klass < ActiveRecord::Base
+          if class_from_params
+            next unless klass <= class_from_params
           end
 
-          if to.present?
-            to = "#{to} 23:59" if to.exclude?(":")
-            to_date_time = DateTime.parse(to)
-            scope = scope.where("published_at <= ?", to_date_time)
+          scope = klass
+          scope = scope.by_site(Folio::Current.site) if scope.respond_to?(:by_site)
+          scope = scope.accessible_by(Folio::Current.ability)
+
+          if klass.try(:has_folio_attachments?)
+            scope = scope.includes(cover_placement: :file)
+          end
+
+          if @filtering
+            if params[:published_within].present?
+              from, to = params[:published_within].split(/ ?- ?/)
+
+              next unless scope.column_names.include?("published_at")
+
+              if from.present?
+                from_date_time = DateTime.parse(from)
+                scope = scope.where("published_at >= ?", from_date_time)
+              end
+
+              if to.present?
+                to = "#{to} 23:59" if to.exclude?(":")
+                to_date_time = DateTime.parse(to)
+                scope = scope.where("published_at <= ?", to_date_time)
+              end
+            end
+
+            understands_all_filters = true
+
+            Rails.application.config.folio_console_links_additional_filters.each do |key, data|
+              value = params[key].presence
+
+              if value.present?
+                if understands_all_filters && scope.respond_to?(key)
+                  scope = scope.public_send(key, value)
+                else
+                  understands_all_filters = false
+                end
+              end
+            end
+
+            next unless understands_all_filters
+          end
+
+          if @filtering && scope.respond_to?(:by_query) && params[:q].present?
+            scope = scope.by_query(params[:q])
+          elsif scope.respond_to?(:ordered)
+            scope = scope.ordered
+          else
+            scope = scope.order(id: :desc)
+          end
+
+          pagy_ref, records = pagy(scope, items:)
+
+          if records.present?
+            {
+              klass:,
+              url_proc:,
+              records:,
+              pagy: pagy_ref,
+              scope:,
+            }
           end
         end
-
-        if @filtering && scope.respond_to?(:by_query) && params[:q].present?
-          scope = scope.by_query(params[:q])
-        elsif scope.respond_to?(:ordered)
-          scope = scope.ordered
-        else
-          scope = scope.order(id: :desc)
-        end
-
-        pagy_ref, records = pagy(scope, items:)
-
-        if records.present?
-          {
-            klass:,
-            url_proc:,
-            records:,
-            pagy: pagy_ref,
-          }
-        end
       end
+
+      if ary.size == 1 && ary[0][:pagy].items === PAGY_ITEMS_MULTI
+        pagy_ref, records = pagy(ary[0][:scope], items: PAGY_ITEMS_SINGLE)
+        ary[0][:pagy] = pagy_ref
+        ary[0][:records] = records
+      end
+
+      ary
     end
   end
 
@@ -85,10 +117,6 @@ class Folio::Console::Links::Modal::ListComponent < Folio::Console::ApplicationC
 
   def additional_links
     @additional_links ||= Rails.application.config.folio_console_links_mapping
-  end
-
-  def rails_paths
-    @rails_paths ||= Rails.application.class.module_parent.try(:rails_paths)
   end
 
   def data
