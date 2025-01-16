@@ -18,6 +18,10 @@ window.Folio.Stimulus.register('f-c-links-modal-url-picker', class extends windo
       const length = this.inputTarget.value.length
       this.inputTarget.setSelectionRange(length, length)
     }
+
+    this.onQueryInput = Folio.debounce(() => {
+      this.loadList()
+    })
   }
 
   disconnect () {
@@ -40,6 +44,8 @@ window.Folio.Stimulus.register('f-c-links-modal-url-picker', class extends windo
       this.valueAbortController.abort()
       delete this.valueAbortController
     }
+
+    delete this.onQueryInput
   }
 
   selectedRecord (e) {
@@ -105,6 +111,12 @@ window.Folio.Stimulus.register('f-c-links-modal-url-picker', class extends windo
 
   loadList () {
     const rawData = window.Folio.formToHash(this.formTarget)
+
+    const json = JSON.stringify(rawData)
+    if (json === this.lastLoadListJson) return
+
+    this.lastLoadListJson = json
+
     const data = {}
     let filtering = false
 

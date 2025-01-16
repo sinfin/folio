@@ -20,7 +20,7 @@
                             label: false,
                             placeholder: t(".placeholder/q"),
                             custom_html: folio_icon(:magnify),
-                            input_html: { class: "f-c-links-modal-url-picker__list-filter-input f-c-links-modal-url-picker__list-filter-input--q" })
+                            input_html: { class: "f-c-links-modal-url-picker__list-filter-input f-c-links-modal-url-picker__list-filter-input--q", data: stimulus_action(input: "onQueryInput") })
 
                 div[
                   class="f-c-links-modal-url-picker__list-filter"
