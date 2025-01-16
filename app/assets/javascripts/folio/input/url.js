@@ -81,7 +81,7 @@ window.Folio.Stimulus.register('f-c-input-form-group-url', class extends window.
     }
 
     const baseUrl = '/console/api/links/control_bar'
-    const data = {}
+    const data = { json: this.jsonValue }
 
     if (this.jsonValue) {
       data.url_json = this.inputTarget.value || '{}'
@@ -113,7 +113,7 @@ window.Folio.Stimulus.register('f-c-input-form-group-url', class extends window.
     this.element.querySelector('.f-c-input-form-group-url__control-bar-wrap').innerHTML = data
   }
 
-  edit () {
+  edit (e) {
     const value = this.inputTarget.value
     let urlJson = {}
 
@@ -126,7 +126,9 @@ window.Folio.Stimulus.register('f-c-input-form-group-url', class extends window.
       urlJson.href = value
     }
 
-    document.querySelector('.f-c-links-modal').dispatchEvent(new window.CustomEvent('f-c-links-modal:open', { detail: { urlJson, trigger: this } }))
+    const json = e.detail.json !== false
+
+    document.querySelector('.f-c-links-modal').dispatchEvent(new window.CustomEvent('f-c-links-modal:open', { detail: { urlJson, json, trigger: this } }))
   }
 
   saveUrlJson (data) {

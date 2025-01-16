@@ -1,5 +1,6 @@
 window.Folio.Stimulus.register('f-c-links-modal', class extends window.Stimulus.Controller {
   static values = {
+    json: Boolean,
     loading: Boolean,
     apiUrl: String
   }
@@ -20,8 +21,9 @@ window.Folio.Stimulus.register('f-c-links-modal', class extends window.Stimulus.
     }
   }
 
-  openWithUrlJson ({ urlJson, trigger }) {
+  openWithUrlJson ({ urlJson, trigger, json }) {
     this.trigger = trigger
+    this.jsonValue = json !== false
 
     this.loadForm(urlJson)
 
@@ -38,7 +40,7 @@ window.Folio.Stimulus.register('f-c-links-modal', class extends window.Stimulus.
 
     this.abortController = new AbortController()
 
-    const url = window.Folio.addParamsToUrl(this.apiUrlValue, { url_json: JSON.stringify(urlJson) })
+    const url = window.Folio.addParamsToUrl(this.apiUrlValue, { url_json: JSON.stringify(urlJson), json: this.jsonValue })
 
     window.Folio.Api.apiGet(url, null, this.abortController.signal).then((res) => {
       if (res.data) {
@@ -73,7 +75,7 @@ window.Folio.Stimulus.register('f-c-links-modal', class extends window.Stimulus.
 
   onOpen (e) {
     if (e.detail && e.detail.urlJson) {
-      this.openWithUrlJson({ urlJson: e.detail.urlJson, trigger: e.detail.trigger })
+      this.openWithUrlJson({ urlJson: e.detail.urlJson, trigger: e.detail.trigger, json: e.detail.json })
     }
   }
 })

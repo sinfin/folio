@@ -1,6 +1,10 @@
 window.Folio.Stimulus.register('f-c-links-modal-form', class extends window.Stimulus.Controller {
   static targets = ['hrefInput', 'recordIdInput', 'recordTypeInput', 'labelInput']
 
+  static values = {
+    json: Boolean
+  }
+
   onSubmit (e) {
     e.preventDefault()
     const data = window.Folio.formToHash(e.target)
@@ -24,16 +28,18 @@ window.Folio.Stimulus.register('f-c-links-modal-form', class extends window.Stim
     if (e.detail.urlJson) {
       this.hrefInputTarget.value = e.detail.urlJson.href
 
-      if (typeof e.detail.urlJson.label !== 'undefined') {
-        this.labelInputTarget.value = e.detail.urlJson.label
-      }
+      if (this.jsonValue) {
+        if (typeof e.detail.urlJson.label !== 'undefined') {
+          this.labelInputTarget.value = e.detail.urlJson.label
+        }
 
-      if (e.detail.urlJson.record_id && e.detail.urlJson.record_type) {
-        this.recordIdInputTarget.value = e.detail.urlJson.record_id
-        this.recordTypeInputTarget.value = e.detail.urlJson.record_type
-      } else {
-        this.recordIdInputTarget.value = ''
-        this.recordTypeInputTarget.value = ''
+        if (e.detail.urlJson.record_id && e.detail.urlJson.record_type) {
+          this.recordIdInputTarget.value = e.detail.urlJson.record_id
+          this.recordTypeInputTarget.value = e.detail.urlJson.record_type
+        } else {
+          this.recordIdInputTarget.value = ''
+          this.recordTypeInputTarget.value = ''
+        }
       }
     }
   }

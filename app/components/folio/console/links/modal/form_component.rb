@@ -3,13 +3,15 @@
 class Folio::Console::Links::Modal::FormComponent < Folio::Console::ApplicationComponent
   VALID_REL_VALUES = %w[alternate author bookmark external help license next nofollow noopener noreferrer prev search tag]
 
-  def initialize(url_json:)
+  def initialize(url_json:, json: true)
     @url_json = url_json
+    @json = json
   end
 
   def data
     stimulus_controller("f-c-links-modal-form",
-                        action: { "f-c-links-modal-url-picker:changed" => "changedInUrlPicker" })
+                        action: { "f-c-links-modal-url-picker:changed" => "changedInUrlPicker" },
+                        values: { json: @json })
   end
 
   def buttons_model

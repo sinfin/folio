@@ -10,7 +10,9 @@ class Folio::Console::Api::LinksController < Folio::Console::Api::BaseController
       {}
     end.symbolize_keys
 
-    render_component_json(Folio::Console::Links::Modal::FormComponent.new(url_json:))
+    json = params[:json] != false && params[:json] != "false"
+
+    render_component_json(Folio::Console::Links::Modal::FormComponent.new(url_json:, json:))
   end
 
   def control_bar
@@ -26,7 +28,9 @@ class Folio::Console::Api::LinksController < Folio::Console::Api::BaseController
       params[:href]
     end
 
-    render_component_json(Folio::Console::Links::ControlBarComponent.new(url_json:, href:))
+    json = params[:json] != false && params[:json] != "false"
+
+    render_component_json(Folio::Console::Links::ControlBarComponent.new(url_json:, href:, json:))
   end
 
   def value
@@ -38,7 +42,9 @@ class Folio::Console::Api::LinksController < Folio::Console::Api::BaseController
       {}
     end.symbolize_keys
 
-    render_component_json(Folio::Console::Links::ValueComponent.new(url_json:, verbose: false))
+    json = params[:json] != false && params[:json] != "false"
+
+    render_component_json(Folio::Console::Links::ValueComponent.new(url_json:, verbose: false, json:))
   end
 
   def list

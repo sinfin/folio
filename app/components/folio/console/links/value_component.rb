@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 class Folio::Console::Links::ValueComponent < Folio::Console::ApplicationComponent
-  def initialize(url_json:, record: nil, verbose: true)
+  def initialize(url_json:, record: nil, verbose: true, json: true)
     @url_json = url_json
     @record = record
     @verbose = verbose
+    @json = json
   end
 
   def render?
@@ -32,6 +33,7 @@ class Folio::Console::Links::ValueComponent < Folio::Console::ApplicationCompone
   end
 
   def data
-    stimulus_controller("f-c-links-value")
+    stimulus_controller("f-c-links-value",
+                        values: { json: @json })
   end
 end

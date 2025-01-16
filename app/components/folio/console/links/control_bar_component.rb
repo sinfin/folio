@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 class Folio::Console::Links::ControlBarComponent < Folio::Console::ApplicationComponent
-  def initialize(url_json: {}, href: nil)
+  def initialize(url_json: {}, href: nil, json: true)
     @url_json = url_json
+
+    @json = json
 
     if @url_json.blank?
       @url_json = { href: }
@@ -21,6 +23,7 @@ class Folio::Console::Links::ControlBarComponent < Folio::Console::ApplicationCo
     stimulus_controller("f-c-links-control-bar",
                         values: {
                           href: @url_json[:href],
+                          json: @json,
                         })
   end
 end

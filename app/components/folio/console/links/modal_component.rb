@@ -10,6 +10,7 @@ class Folio::Console::Links::ModalComponent < Folio::Console::ApplicationCompone
     stimulus_controller(CLASS_NAME,
                         values: {
                           loading: true,
+                          json: true,
                           api_url: controller.modal_form_console_api_links_path,
                         },
                         action: {
