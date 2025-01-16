@@ -123,7 +123,7 @@ Folio::Engine.routes.draw do
       namespace :api do
         resources :private_attachments, only: %i[create destroy]
 
-        resource :links, only: %i[show] do
+        resource :links, only: [] do
           get :control_bar
           get :modal_form
           get :value
