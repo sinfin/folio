@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Folio::Console::Links::Modal::FormComponent < Folio::Console::ApplicationComponent
+  VALID_REL_VALUES = %w[alternate author bookmark external help license next nofollow noopener noreferrer prev search tag]
+
   def initialize(url_json:)
     @url_json = url_json
   end

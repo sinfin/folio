@@ -18,10 +18,12 @@
                       required: false,
                       input_html: { id: false, value: @url_json[:label] || "", data: stimulus_target("labelInput") }
 
-    / TODO autocomplete: %w[noopener nofollow noreferrer]
     = f.input :rel, hint: t(".hint/rel"),
                     required: false,
                     label: t('.label/rel'),
+                    as: :tags,
+                    collection: VALID_REL_VALUES,
+                    delimiter: " ",
                     input_html: { id: false, value: @url_json[:rel] || "" }
 
     = f.input :target, collection: [[t('.label/target'), "_blank"]],

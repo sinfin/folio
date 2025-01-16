@@ -1,0 +1,14 @@
+h1 Folio Console UI
+
+h2 Input Tags
+
+= simple_form_for "", method: :get, url: request.path do |f|
+  h3 Demo for URL input modal
+
+  .f-c-uidemo-wrap
+    pre: code.f-c-uidemo-code
+
+    = f.input :tags,
+              as: :tags,
+              collection: Folio::Console::Links::Modal::FormComponent::VALID_REL_VALUES,
+              delimiter: " "

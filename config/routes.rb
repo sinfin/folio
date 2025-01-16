@@ -37,6 +37,7 @@ Folio::Engine.routes.draw do
 
         get :input_date_time
         get :input_url
+        get :input_tags
       end
 
       resources :attribute_types, except: %i[show] do

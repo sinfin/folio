@@ -9,15 +9,29 @@ window.Folio.Input.Tags = {}
 window.Folio.Input.Tags.optionMapper = (str) => ({ value: str, text: str })
 
 window.Folio.Input.Tags.bind = (input, opts) => {
-  window.jQuery(input).selectize({
-    delimiter: ', ',
+  const config = {
+    delimiter: opts.delimiter || ', ',
     persist: false,
     create: window.Folio.Input.Tags.optionMapper,
     plugins: ['remove_button'],
     maxOptions: 50000,
-    dropdownParent: 'body',
     preload: 'focus',
-    load: (q, callback) => {
+    render: {
+      option_create: (data, escape) => (`
+        <div class="create option">
+          ${window.FolioConsole.translations.add}
+          <strong>${escape(data.input)}</strong>&hellip;
+        </div>
+      `)
+    }
+  }
+
+  if (!input.closest(".modal-body")) {
+    config.dropdownParent = "body"
+  }
+
+  if (opts.url) {
+    config.load = (q, callback) => {
       const url = window.Folio.addParamsToUrl(opts.url, { q, context: opts.tagsContext })
 
       window.Folio.Api.apiGet(url)
@@ -27,16 +41,13 @@ window.Folio.Input.Tags.bind = (input, opts) => {
         .catch((e) => {
           callback()
         })
-    },
-    render: {
-      option_create: (data, escape) => (`
-        <div class="create option">
-          ${window.FolioConsole.translations.add}
-          <strong>${escape(data.input)}</strong>&hellip;
-        </div>
-      `)
     }
-  })
+  } else {
+    const array = JSON.parse(opts.collectionJson)
+    config.options = array.map(window.Folio.Input.Tags.optionMapper)
+  }
+
+  window.jQuery(input).selectize(config)
 }
 
 window.Folio.Input.Tags.unbind = (input) => {
@@ -49,7 +60,9 @@ window.Folio.Input.Tags.unbind = (input) => {
 window.Folio.Stimulus.register('f-input-tags', class extends window.Stimulus.Controller {
   static values = {
     tagsContext: { type: String, default: 'tags' },
-    url: String
+    url: String,
+    collectionJson: String,
+    delimiter: String,
   }
 
   connect () {
@@ -58,7 +71,9 @@ window.Folio.Stimulus.register('f-input-tags', class extends window.Stimulus.Con
     if (this.initializing) {
       window.Folio.Input.Tags.bind(this.element, {
         url: this.urlValue,
-        tagsContext: this.tagsContextValue
+        tagsContext: this.tagsContextValue,
+        collectionJson: this.collectionJsonValue,
+        delimiter: this.delimiterValue,
       })
     }
   }
