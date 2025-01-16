@@ -8,7 +8,7 @@ class Folio::Console::Links::Modal::ListComponent < Folio::Console::ApplicationC
   end
 
   def records_data
-    @records_data ||= page_links.merge(additional_links).filter_map do |class_name, url_proc|
+    @records_data ||= all_links.filter_map do |class_name, url_proc|
       next if Folio::Current.site.blank?
 
       class_from_params = if params[:class_name].present?
@@ -27,6 +27,10 @@ class Folio::Console::Links::Modal::ListComponent < Folio::Console::ApplicationC
         scope = klass
         scope = scope.by_site(Folio::Current.site) if scope.respond_to?(:by_site)
         scope = scope.accessible_by(Folio::Current.ability)
+
+        if klass.try(:has_folio_attachments?)
+          scope = scope.includes(cover_placement: :file)
+        end
 
         if @filtering && params[:published_within].present?
           from, to = params[:published_within].split(/ ?- ?/)
@@ -89,6 +93,14 @@ class Folio::Console::Links::Modal::ListComponent < Folio::Console::ApplicationC
 
   def data
     stimulus_controller("f-c-links-modal-list")
+  end
+
+  def all_links
+    if additional_links["Folio::Page"]
+      additional_links
+    else
+      additional_links.merge(page_links)
+    end
   end
 
   def record_to_data(data:, record:)

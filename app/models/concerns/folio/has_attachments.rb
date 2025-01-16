@@ -48,6 +48,10 @@ module Folio::HasAttachments
   end
 
   class_methods do
+    def has_folio_attachments?
+      true
+    end
+
     def has_many_placements(targets, placement:, placements_key: nil)
       placements_key ||= "#{targets.to_s.singularize}_placements".to_sym
 
