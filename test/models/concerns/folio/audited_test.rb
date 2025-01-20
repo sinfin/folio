@@ -73,8 +73,6 @@ class Folio::AuditedTest < ActiveSupport::TestCase
       assert_nil atoms_hash.third["_destroy"]
       assert_equal "atom 1 v1", atoms_hash.third["data"]["content"]
 
-      puts "ayooo"
-
       # revision version 2
       revision = @page.revisions.second
       atoms_hash = revision.get_atoms_attributes_for_reconstruction["atoms_attributes"]

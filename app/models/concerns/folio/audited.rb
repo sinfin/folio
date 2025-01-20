@@ -64,8 +64,7 @@ module Folio::Audited
 
         values.each do |value|
           if hash["#{key}_attributes"].present? && value["id"].present? && ref = hash["#{key}_attributes"].find { |h| h["id"] == value["id"] }
-            ref = ref.merge(value)
-            ref.delete("_destroy")
+            ref.merge!(value).delete("_destroy")
           else
             hash["#{key}_attributes"] ||= []
             hash["#{key}_attributes"] << value.without("id")
@@ -134,8 +133,7 @@ module Folio::Audited
         if value_or_array.is_a?(Array)
           value_or_array.each do |value|
             if hash["#{key}_attributes"].present? && value["id"].present? && ref = hash["#{key}_attributes"].find { |h| h["id"] == value["id"] }
-              ref = ref.merge(value)
-              ref.delete("_destroy")
+              ref.merge!(value).delete("_destroy")
             else
               hash["#{key}_attributes"] ||= []
               hash["#{key}_attributes"] << value.without("id")
