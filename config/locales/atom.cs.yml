@@ -5,4 +5,4 @@ cs:
       audited:
         invalid_component:
           title: Kapitolu se nepodařilo obnovit
-          subtitle: Změnilo se nastavení kapitoly, nebo bylo odstraněny odkazované záznamy.
+          subtitle: Změnilo se její nastavení, nebo byly odstraněny odkazované záznamy.

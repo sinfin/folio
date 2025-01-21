@@ -23,13 +23,14 @@
           = model[:error_text]
 
       .f-c-atoms-previews-broken-preview__buttons
-        button.btn[
-          type="button"
-          class="f-c-atoms-previews-broken-preview__button"
-          class="f-c-atoms-previews-broken-preview__button--edit"
-        ]
-          = folio_icon(:edit)
-          = t('folio.console.actions.edit')
+        - if model[:edit] != false
+          button.btn[
+            type="button"
+            class="f-c-atoms-previews-broken-preview__button"
+            class="f-c-atoms-previews-broken-preview__button--edit"
+          ]
+            = folio_icon(:edit)
+            = t('folio.console.actions.edit')
 
         button.btn[
           type="button"

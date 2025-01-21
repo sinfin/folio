@@ -263,6 +263,10 @@ class Folio::Atom::Base < Folio::ApplicationRecord
   def self.console_icon
   end
 
+  def self.editable_in_console?
+    true
+  end
+
   def self.console_insert_row
     CONSOLE_INSERT_ROWS[:default]
   end

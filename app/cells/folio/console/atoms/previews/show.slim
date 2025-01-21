@@ -34,6 +34,7 @@ div class=class_name data-klass=options[:klass]
               data-root-key=(locale ? "#{locale}_atoms" : 'atoms')
               data-indices=indices
               data-contentable=atoms.first.class.contentable?.to_s
+              data-editable=atoms.first.class.editable_in_console?.to_s
               data-atom-klass=atoms.first.class.to_s
             ]
               .f-c-atoms-previews__preview-inner
@@ -52,6 +53,7 @@ div class=class_name data-klass=options[:klass]
                 data-root-key=(locale ? "#{locale}_atoms" : 'atoms')
                 data-indices=[index]
                 data-contentable=atom.class.contentable?.to_s
+                data-editable=atom.class.editable_in_console?.to_s
                 data-atom-klass=atom.class.to_s
                 data-atom-splittable=atom.class.splittable_by_attribute
                 class=splittable_class_name(atoms, atom, atom_index)

@@ -13,6 +13,10 @@ class Folio::Atom::Audited::Invalid < Folio::Atom::Base
   validates :atom_validation_errors,
             :atom_audited_hash_json,
             presence: true
+
+  def self.editable_in_console?
+    false
+  end
 end
 
 # == Schema Information
