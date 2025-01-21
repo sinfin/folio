@@ -7,7 +7,7 @@ class Dummy::Mailer::SocialsComponent < Dummy::Mailer::BaseComponent
 
   def social_links
     if @site.social_links.present?
-      allowed = %w[instagram linkedin twitter tiktok youtube facebook]
+      allowed = %w[instagram linkedin twitter tiktok youtube facebook linktree]
       @site.social_links.slice(*allowed).select { |key, val| val.present? }
     end
   end
