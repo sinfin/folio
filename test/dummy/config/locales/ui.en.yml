@@ -9,11 +9,18 @@ en:
         newsletter: Newsletter signup
         contact: Contact
         follow_us: Follow us
+        facebook: Facebook
+        linktree: Linktree
+        instagram: Instagram
+        linkedin: LinkedIn
+        tiktok: TikTok
+        twitter: x.com
+        youtube: Youtube
       share:
         title: 'Share:'
         facebook: Share on Facebook
         messenger: Share on Messenger
-        twitter: Share on Twitter
+        twitter: Share on X
         email: Share via e-mail
         clipboard: Copy link
       menu_toolbar:
