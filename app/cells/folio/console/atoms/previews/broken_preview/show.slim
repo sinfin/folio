@@ -4,14 +4,23 @@
       = folio_icon(:alert)
 
       .fs-text-l.fw-bold
-        = t('.title')
+        = model[:title] || t('.title')
+
+      - if model[:subtitle]
+        .fs-text-l
+          = model[:subtitle]
 
       - if model[:atom]
         .fs-text-l
           = model[:atom].class.model_name.human
 
-      .small
-        = "#{model[:error].class}: #{model[:error].message}"
+      - if model[:error]
+        .small
+          = "#{model[:error].class}: #{model[:error].message}"
+
+      - if model[:error_text].present?
+        .small
+          = model[:error_text]
 
       .f-c-atoms-previews-broken-preview__buttons
         button.btn[

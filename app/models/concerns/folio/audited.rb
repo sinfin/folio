@@ -76,11 +76,9 @@ module Folio::Audited
     hash.each do |key, values|
       position = 0
 
-      values.sort_by { |h| h["position"].to_i }.each do |value|
+      hash[key] = values.sort_by { |h| h["position"].to_i }.map do |value|
         if value["_destroy"] == "1"
-          value.delete("position")
-          value.delete("associations")
-          value.delete("attachments")
+          value.without("position", "associations", "attachments")
         else
           value["position"] = (position += 1)
 
@@ -90,7 +88,29 @@ module Folio::Audited
             atom = value["id"] ? (atoms_array.find { |atom| atom.id == value["id"] }) : nil
             value.merge!(get_file_placements_attributes_for_reconstruction(record: atom, data: attachments))
           end
+
+          associations = {}
+
+          if value["associations"].present?
+            value["associations"].each do |association_key, association_hash|
+              if association_hash && association_hash["id"].present? && association_hash["type"].present?
+                record_klass = association_hash["type"].safe_constantize
+
+                if record_klass && record_klass < ActiveRecord::Base
+                  record = record_klass.find_by(id: association_hash["id"])
+
+                  if record
+                    associations[association_key] = association_hash
+                  end
+                end
+              end
+            end
+          end
+
+          value["associations"] = associations
         end
+
+        value.without("attachments")
       end
     end
 
@@ -99,6 +119,23 @@ module Folio::Audited
 
   def reconstruct_atoms
     assign_attributes(get_atoms_attributes_for_reconstruction)
+
+    self.class.atom_keys.each do |key|
+      send(key).each do |atom|
+        next if atom.valid?
+        ah = atom.to_audited_hash
+        error_messages = atom.errors.full_messages
+
+        atom.mark_for_destruction
+
+        replacement = send(key).build(atom_validation_errors: error_messages.join(". ") + ".",
+                                      atom_audited_hash_json: ah.to_json,
+                                      position: atom.position,
+                                      type: "Folio::Atom::Audited::Invalid")
+
+        replacement.becomes!(Folio::Atom::Audited::Invalid)
+      end
+    end
   end
 
   def get_file_placements_attributes_for_reconstruction(record:, data: nil)

@@ -189,4 +189,49 @@ class Folio::AuditedTest < ActiveSupport::TestCase
       assert_equal image_1.id, @page.image_placements.first.file_id
     end
   end
+
+  test "missing atom association record" do
+    Audited.stub(:auditing_enabled, true) do
+      site = get_any_site
+
+      page_one = create(:folio_page, site:, title: "page one")
+      page_two = create(:folio_page, site:, title: "page two")
+
+      @page = AuditedPage.create(title: "v1",
+                                 site:,
+                                 atoms_attributes: { 0 => {
+                                   type: "Folio::AuditedTest::PageReferenceAtom",
+                                   position: 1,
+                                   content: "atom 1 v1",
+                                   page: page_one
+                                 } })
+
+      assert_equal 1, @page.atoms.count
+      assert_equal 1, @page.revisions.size
+      assert_equal page_one.id, @page.atoms.first.page.id
+
+      @page.update!(title: "v2",
+                    atoms_attributes: { 0 => {
+                      id: @page.atoms.first.id,
+                      content: "atom 1 v2",
+                      page: page_two
+                    } })
+
+      assert_equal 1, @page.atoms.count
+      assert_equal 2, @page.revisions.size
+      assert_equal page_two.id, @page.atoms.first.page.id
+
+      page_one.destroy!
+
+      revision = @page.audits.first.revision
+      revision.reconstruct_atoms
+      revision.save!
+
+      @page.reload
+
+      assert_equal "v1", @page.title
+      assert_equal 1, @page.atoms.count
+      assert_equal "Folio::Atom::Audited::Invalid", @page.atoms.first.type
+    end
+  end
 end
