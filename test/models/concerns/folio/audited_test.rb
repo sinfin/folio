@@ -91,8 +91,9 @@ class Folio::AuditedTest < ActiveSupport::TestCase
       atoms_hash = revision.get_atoms_attributes_for_reconstruction["atoms_attributes"]
 
       assert_equal "v4", revision.title
-      assert_equal 1, atoms_hash.size
-      assert_equal 2, @page.atoms_hash.count
+      assert_equal 2, atoms_hash.size
+      assert_nil(atoms_hash.find { |a| a["data"]["content"] == "atom 1 v3" }["_destroy"])
+      assert_equal("1", atoms_hash.find { |a| a["data"]["content"] == "atom 3 v5" }["_destroy"])
 
       revision = @page.audits.third.revision
       revision.reconstruct_atoms
