@@ -27,10 +27,11 @@ footer.d-ui-footer
             - social_links.each do |key, link|
               a.d-ui-footer__social-link[
                 href=link
-                title=key
+                title=t(".#{key}")
                 class="d-ui-footer__social-link--#{key}"
               ]
                 = dummy_ui_icon(key.to_sym,
+                                height: 32,
                                 class_name: 'd-ui-footer__social-ico')
 
     .d-ui-footer__row
