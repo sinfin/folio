@@ -90,9 +90,6 @@ module Folio::Audited
             atom = value["id"] ? (atoms_array.find { |atom| atom.id == value["id"] }) : nil
             value.merge!(get_file_placements_attributes_for_reconstruction(record: atom, data: attachments))
           end
-
-          # TODO
-          _associations = value.delete("associations")
         end
       end
     end

@@ -189,9 +189,9 @@ class Folio::Atom::Base < Folio::ApplicationRecord
       "type" => type,
       "position" => position,
       "locale" => locale,
-      "data" => data_to_h.deep_stringify_keys,
+      "data" => data,
       "attachments" => folio_attachments_to_audited_hash(only: klass::ATTACHMENTS),
-      "associations" => associations_to_h.deep_stringify_keys,
+      "associations" => associations,
     }
   end
 

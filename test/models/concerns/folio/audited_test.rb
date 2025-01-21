@@ -8,13 +8,29 @@ class Folio::AuditedTest < ActiveSupport::TestCase
     audited
   end
 
+  class PageReferenceAtom < Folio::Atom::Base
+    STRUCTURE = {
+      content: :string,
+    }
+
+    ASSOCIATIONS = {
+      page: %i[Folio::Page]
+    }
+
+    validates :page, :content,
+              presence: true
+  end
+
   test "audited model & atoms" do
+    site = get_any_site
+    page_one = create(:folio_page, site:)
+    page_two = create(:folio_page, site:)
+
     Audited.stub(:auditing_enabled, true) do
-      site = get_any_site
       # version 1
       @page = AuditedPage.create(title: "v1",
                                  site:,
-                                 atoms_attributes: { 0 => { type: "Dummy::Atom::Contents::Text", position: 1, content: "atom 1 v1" } })
+                                 atoms_attributes: { 0 => { type: "Folio::AuditedTest::PageReferenceAtom", position: 1, content: "atom 1 v1", page: page_one } })
 
       assert_equal 1, @page.atoms.count
       assert_equal 1, @page.revisions.size
@@ -31,7 +47,7 @@ class Folio::AuditedTest < ActiveSupport::TestCase
       # version 3
       @page.update!(title: "v3",
                     atoms_attributes: {
-                      @page.atoms.first.id => { id: @page.atoms.first.id, content: "atom 1 v3" },
+                      @page.atoms.first.id => { id: @page.atoms.first.id, content: "atom 1 v3", page: page_two },
                       @page.atoms.second.id => { id: @page.atoms.second.id, content: "atom 2 v3" },
                     })
 
@@ -72,6 +88,7 @@ class Folio::AuditedTest < ActiveSupport::TestCase
       assert_nil atoms_hash.third["id"]
       assert_nil atoms_hash.third["_destroy"]
       assert_equal "atom 1 v1", atoms_hash.third["data"]["content"]
+      assert_equal page_one.id, atoms_hash.third["associations"]["page"]["id"]
 
       # revision version 2
       revision = @page.revisions.second
