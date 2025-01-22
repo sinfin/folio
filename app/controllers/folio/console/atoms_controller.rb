@@ -18,7 +18,8 @@ class Folio::Console::AtomsController < Folio::Console::BaseController
       atoms = atom_params[key]
       next if atoms.nil?
       @atoms[locale] = []
-      atoms.each_with_index do |attrs, i|
+
+      atoms.sort_by { |h| h["position"] || 0 }.each_with_index do |attrs, i|
         next if attrs["destroyed"]
         next if attrs["_destroy"]
         props = attrs.to_h
