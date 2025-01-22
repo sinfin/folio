@@ -349,12 +349,13 @@ cs:
     social_links/appstore: Appstore
     social_links/facebook: Facebook
     social_links/google_play: Google play
+    social_links/linktree: Linktree
     social_links/instagram: Instagram
     social_links/linkedin: LinkedIn
     social_links/messenger: Messenger
     social_links/pinterest: Pinterest
     social_links/tiktok: TikTok
-    social_links/twitter: Twitter
+    social_links/twitter: X
     social_links/youtube: Youtube
     social_links: Odkazy
     state: Stav
