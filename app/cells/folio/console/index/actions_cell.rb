@@ -179,7 +179,11 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
         url = action[:url].is_a?(Proc) ? action[:url].call(model) : action[:url]
         link_to(ico, url, opts)
       else
-        content_tag(:span, ico, opts)
+        if action[:tooltip].present?
+          content_tag(:span, content_tag(:span, ico, opts), { data: stimulus_tooltip(action[:tooltip]) })
+        else
+          content_tag(:span, ico, opts)
+        end
       end
     end
   end
