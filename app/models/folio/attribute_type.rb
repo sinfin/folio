@@ -26,8 +26,8 @@ class Folio::AttributeType < Folio::ApplicationRecord
     validate :validate_title_for_site_locales
   else
     validates :title,
-            presence: true,
-            uniqueness: { scope: %i[type site_id] }
+              presence: true,
+              uniqueness: { scope: %i[type site_id] }
   end
 
   def data_type_with_default
