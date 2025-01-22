@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- tooltip for disabled action
+
 ## [6.0.4] - 2025-01-13
 
 ### Fixed
