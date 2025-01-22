@@ -284,4 +284,37 @@ class Folio::AuditedTest < ActiveSupport::TestCase
       assert_equal "Folio::Atom::Audited::Invalid", @page.atoms.first.type
     end
   end
+
+  test "atoms while skipping a step" do
+    Audited.stub(:auditing_enabled, true) do
+      site = get_any_site
+
+      @page = AuditedPage.create(title: "v1",
+                                 site:)
+
+      @page.update!(title: "v2",
+                    atoms_attributes: {
+                      0 => {
+                        type: "Dummy::Atom::Contents::Text",
+                        position: 1,
+                        content: "atom 1 v1"
+                      }
+                    })
+
+      @page.update!(title: "v3")
+
+      assert_equal 3, @page.revisions.size
+
+      @page.audits.first
+
+      v1_revision = @page.audits.first.revision
+      v1_revision.reconstruct_atoms
+      v1_revision.save!
+
+      @page.reload
+
+      assert_equal "v1", @page.title
+      assert_equal 0, @page.atoms.count
+    end
+  end
 end
