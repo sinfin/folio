@@ -145,7 +145,7 @@ module Folio::Console::DefaultActions
 
   def revision
     instance_variable_set(folio_console_record_variable_name, @audited_revision)
-    render @klass.audited_console_view_name
+    render :edit
   end
 
   def restore

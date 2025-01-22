@@ -2,12 +2,12 @@
 
 class Folio::Console::Layout::AuditedDropdownCell < Folio::ConsoleCell
   def show
-    render if model.present? && model.size > 1
+    render if model.present? && model.size > 1 && options[:record].present?
   end
 
   def item_class_name(version, i)
-    if options[:audited_revision]
-      active = version.audit.id == options[:audited_revision].audit.id
+    if options[:audited_audit]
+      active = version.id == options[:audited_audit].id
     else
       active = i == 0
     end
@@ -21,13 +21,9 @@ class Folio::Console::Layout::AuditedDropdownCell < Folio::ConsoleCell
 
   def version_url(version, i)
     if i == 0
-      if version.class.audited_console_view_name == :show
-        url_for([:console, version])
-      else
-        url_for([version.class.audited_console_view_name, :console, version])
-      end
+      url_for([:edit, :console, options[:record]])
     else
-      url_for([:revision, :console, version, version: version.audit_version])
+      url_for([:revision, :console, options[:record], version: version.version])
     end
   end
 end

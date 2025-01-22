@@ -190,7 +190,7 @@ class Folio::Atom::Base < Folio::ApplicationRecord
       "position" => position,
       "locale" => locale,
       "data" => data,
-      "attachments" => folio_attachments_to_audited_hash(only: klass::ATTACHMENTS),
+      "attachments" => folio_attachments_to_audited_hash,
       "associations" => associations,
     }
   end
