@@ -6,6 +6,12 @@ class Folio::AuditedTest < ActiveSupport::TestCase
   class AuditedPage < Folio::Page
     include Folio::Audited
     audited
+
+    validates :cover_placement,
+              presence: true,
+              if: :should_validate_cover_placement_in_test
+
+    attr_accessor :should_validate_cover_placement_in_test
   end
 
   class PageReferenceAtom < Folio::Atom::Base
@@ -231,6 +237,50 @@ class Folio::AuditedTest < ActiveSupport::TestCase
 
       assert_equal "v1", @page.title
       assert_equal 1, @page.atoms.count
+      assert_equal "Folio::Atom::Audited::Invalid", @page.atoms.first.type
+    end
+  end
+
+  test "missing attachment record" do
+    Audited.stub(:auditing_enabled, true) do
+      site = get_any_site
+
+      image_1 = create(:folio_file_image)
+      image_2 = create(:folio_file_image)
+
+      @page = AuditedPage.new(title: "v1",
+                              site:,
+                              should_validate_cover_placement_in_test: true)
+
+      assert_not @page.valid?
+
+      @page.update!(cover_placement_attributes: { file_id: image_1.id },
+                    atoms_attributes: {
+                      1 => { type: "Dummy::Atom::Images::SingleImage", position: 1, cover_placement_attributes: { file_id: image_1.id } }
+                    })
+
+      assert_equal image_1.id, @page.cover.id
+      assert_equal image_1.id, @page.atoms.first.cover.id
+
+      @page.update!(title: "v2",
+                    cover_placement_attributes: { id: @page.cover_placement.id, file_id: image_2.id },
+                    atoms_attributes: { 1 => { id: @page.atoms.first.id, _destroy: true } })
+
+      @page.reload
+      assert_equal image_2.id, @page.cover.id
+      assert_equal 0, @page.atoms.count
+
+      image_1.destroy!
+
+      revision = @page.audits.first.revision
+      revision.reconstruct_atoms
+      revision.save!
+
+      @page.reload
+
+      # keeps the image_2 cover as image_1 is deleted
+      assert_equal "v1", @page.title
+      assert_equal image_2.id, @page.cover.id
       assert_equal "Folio::Atom::Audited::Invalid", @page.atoms.first.type
     end
   end
