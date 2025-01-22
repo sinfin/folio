@@ -48,7 +48,7 @@ class Folio::Page < Folio::ApplicationRecord
       end.flatten
     end
 
-    audited only: translated + other, console: true, console_view_name: :edit
+    audited only: translated + other, console: true
   end
 
   if Rails.application.config.folio_using_traco

@@ -12,7 +12,7 @@ module Folio::Audited
       super(opts[:on].present? ? opts : opts.merge(on: %i[create update destroy]))
 
       define_singleton_method(:audited_console_enabled?) do
-        !!opts[:console]
+        opts[:console] != false
       end
 
       define_singleton_method(:audited_console_restorable?) do
