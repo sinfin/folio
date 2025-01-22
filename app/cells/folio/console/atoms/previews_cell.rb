@@ -91,6 +91,11 @@ class Folio::Console::Atoms::PreviewsCell < Folio::ConsoleCell
       cell("folio/console/atoms/previews/broken_preview", error: nested_error).show
     end
 
+    if atom = atoms.find { |a| !a.valid? }
+      error = ActiveRecord::RecordInvalid.new(atom)
+      return rescue_lambda.call(error)
+    end
+
     if atom_class.molecule_component_class
       capture do
         render_view_component(atom_class.molecule_component_class.new(atoms:, atom_options: atom_additional_options),
@@ -119,6 +124,11 @@ class Folio::Console::Atoms::PreviewsCell < Folio::ConsoleCell
            atom_options: atom_additional_options).show
     rescue StandardError => other_error
       cell("folio/console/atoms/previews/broken_preview", error: other_error).show
+    end
+
+    unless atom.valid?
+      error = ActiveRecord::RecordInvalid.new(atom)
+      return rescue_lambda.call(error)
     end
 
     if atom_class.component_class

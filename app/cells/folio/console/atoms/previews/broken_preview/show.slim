@@ -14,6 +14,10 @@
         .fs-text-l
           = model[:atom].class.model_name.human
 
+      - if model[:atoms].present?
+        .fs-text-l
+          = model[:atoms].first.class.model_name.human
+
       - if model[:error]
         .small
           = "#{model[:error].class}: #{model[:error].message}"
