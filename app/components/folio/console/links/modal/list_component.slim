@@ -24,12 +24,25 @@
                 .f-c-links-modal-list__records-title.text-blue.fw-bold
                   = record.to_label
 
+                a.f-c-links-modal-list__records-link[
+                  href=data[:url_proc].call(controller, record)
+                  target="_blank"
+                  data=stimulus_action(click: "onRecordLinkClick")
+                ]
+                  = folio_icon(:open_in_new)
+
                 - if record.respond_to?(:console_link_metadata)
                   - record.console_link_metadata.each do |value|
                     .f-c-links-modal-list__records-metadata.font-size-sm.text-muted
                       = value
-                - elsif record.try(:published_at).present?
+
+                - if record.try(:published_at).present?
                   .f-c-links-modal-list__records-metadata.font-size-sm.text-muted
                     = l(record.published_at, format: :short)
+
+                - if record.try(:published?) == false
+                  .f-c-links-modal-list__records-metadata.font-size-sm.text-muted
+                    = t('.unpublished')
+
   - else
     .f-c-links-modal-list__blank.text-muted.small = t('.no_records')

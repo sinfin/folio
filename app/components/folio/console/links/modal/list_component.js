@@ -3,4 +3,8 @@ window.Folio.Stimulus.register('f-c-links-modal-list', class extends window.Stim
     e.preventDefault()
     this.dispatch("selectedRecord", { detail: { urlJson: JSON.parse(e.currentTarget.dataset.urlJson) } })
   }
+
+  onRecordLinkClick (e) {
+    e.stopPropagation()
+  }
 })

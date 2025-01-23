@@ -357,7 +357,7 @@ cs:
 
       links:
         control_bar_component:
-          add_link: Vybrat odkaz
+          add_link: Vložit odkaz
 
         modal_component:
           title: :folio.console.links.control_bar_component.add_link
@@ -383,6 +383,7 @@ cs:
 
           list_component:
             no_records: Nebyly nalezeny žádné záznamy.
+            unpublished: nezveřejněno
 
   date:
     formats:

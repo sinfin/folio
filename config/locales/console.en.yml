@@ -379,6 +379,7 @@ en:
 
           list_component:
             no_records: No records found.
+            unpublished: unpublished
 
   date:
     formats:
