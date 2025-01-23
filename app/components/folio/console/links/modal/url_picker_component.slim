@@ -73,5 +73,6 @@
     = c.tab_pane(tabs[1])
       input.form-control[
         value=@url_json[:href]
+        placeholder="https://example.com"
         data=stimulus_data(target: "input", action: { change: "onInputChange" })
       ]

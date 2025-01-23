@@ -38,14 +38,15 @@
           = l(@record.published_at, format: :short)
 
       .f-c-links-value__actions
-        button[
-          type="button"
-          class="f-c-links-value__action"
-          class="f-c-links-value__action--edit"
-          data=stimulus_action(click: "onEditClick")
-          title=t('folio.console.actions.edit')
-        ]
-          = folio_icon(:edit_box)
+        - if @verbose
+          button[
+            type="button"
+            class="f-c-links-value__action"
+            class="f-c-links-value__action--edit"
+            data=stimulus_action(click: "onEditClick")
+            title=t('folio.console.actions.edit')
+          ]
+            = folio_icon(:edit_box)
 
         button[
           type="button"

@@ -12,7 +12,7 @@ class Folio::Console::Api::LinksController < Folio::Console::Api::BaseController
 
     json = params[:json] != false && params[:json] != "false"
 
-    render_component_json(Folio::Console::Links::Modal::FormComponent.new(url_json:, json:))
+    render_component_json(Folio::Console::Links::Modal::FormComponent.new(url_json:, json:, preferred_label: params[:preferred_label].presence))
   end
 
   def control_bar

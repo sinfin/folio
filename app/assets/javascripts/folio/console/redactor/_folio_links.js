@@ -52,7 +52,7 @@ window.Redactor.modules.link.prototype.open = function () {
 
   const urlJson = {}
 
-  if (this.$link.nodes && this.$link.nodes[0] && this.$link.nodes[0].getAttribute('href')) {
+  if (this.$link.nodes && this.$link.nodes[0]) {
     urlJson.href = this.$link.nodes[0].getAttribute('href')
     urlJson.label = this.$link.nodes[0].innerText
 
@@ -67,7 +67,9 @@ window.Redactor.modules.link.prototype.open = function () {
 
   const detail = {
     urlJson,
-    trigger: this
+    trigger: this,
+    json: true,
+    preferredLabel: urlJson.label,
   }
 
   document.querySelector('.f-c-links-modal').dispatchEvent(new window.CustomEvent('f-c-links-modal:open', { detail }))

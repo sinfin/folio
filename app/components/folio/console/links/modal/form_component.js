@@ -2,7 +2,8 @@ window.Folio.Stimulus.register('f-c-links-modal-form', class extends window.Stim
   static targets = ['hrefInput', 'recordIdInput', 'recordTypeInput', 'labelInput']
 
   static values = {
-    json: Boolean
+    json: Boolean,
+    preferredLabel: String,
   }
 
   onSubmit (e) {
@@ -29,7 +30,7 @@ window.Folio.Stimulus.register('f-c-links-modal-form', class extends window.Stim
       this.hrefInputTarget.value = e.detail.urlJson.href
 
       if (this.jsonValue) {
-        if (typeof e.detail.urlJson.label !== 'undefined') {
+        if (!this.preferredLabelValue && typeof e.detail.urlJson.label !== 'undefined') {
           this.labelInputTarget.value = e.detail.urlJson.label
         }
 
