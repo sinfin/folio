@@ -2,6 +2,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2025-01-22
+### Added
+- added support for multi-locale `title` attributes in `Folio::AttributeType`
+
 ## 2022-08-29
 ### Added
 - added `VALID_SITE_TYPES` to atoms allowing to filter by `current_site` class
