@@ -15,3 +15,11 @@ end
 Rails.application.config.folio_console_links_mapping = {
   "Dummy::Blog::Article" => Proc.new { |controller, instance| controller.main_app.url_for(instance) }
 }
+
+Rails.application.config.folio_console_links_additional_filters = {
+  by_topic_slug: {
+    klass: "Dummy::Blog::Topic",
+    order_scope: :ordered,
+    slug: true,
+  },
+}

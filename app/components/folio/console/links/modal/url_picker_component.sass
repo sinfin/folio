@@ -54,6 +54,7 @@
   &__list-filter--additional
     max-width: 115px
     min-width: 115px
+    flex-wrap: nowrap
 
   &__list-filter-input--q
     padding-right: $input-height
@@ -76,3 +77,13 @@
 
   &__list-inner
     position: relative
+
+  &__list-filter-inner
+    flex: 1 1 auto
+    min-width: 50px
+
+  &__list-filter-append
+    flex: 0 0 auto
+
+  &__list-filter:not(&__list-filter--active) &__list-filter-append
+    display: none

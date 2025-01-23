@@ -41,12 +41,19 @@
                             include_blank: t('.placeholder/class_name'))
 
                 - additional_filters_hash.each do |key, data|
-                  div[
+                  .input-group[
                     class="f-c-links-modal-url-picker__list-filter"
                     class="f-c-links-modal-url-picker__list-filter--additional"
                     class="f-c-links-modal-url-picker__list-filter--#{key}"
                   ]
-                    = additional_select(f, key, data)
+                    .f-c-links-modal-url-picker__list-filter-inner
+                      = additional_select(f, key, data)
+
+                    .input-group-append.f-c-links-modal-url-picker__list-filter-append
+                      == cell("folio/console/ui/button",
+                              variant: :medium_dark,
+                              data: stimulus_action(click: "resetAdditionalFilter"),
+                              icon: :close)
 
                 div[
                   class="f-c-links-modal-url-picker__list-filter"

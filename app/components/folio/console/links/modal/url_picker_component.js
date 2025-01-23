@@ -101,12 +101,12 @@ window.Folio.Stimulus.register('f-c-links-modal-url-picker', class extends windo
   }
 
   onFormChange (e) {
-    this.loadList()
+    this.markSelectsAndLoadList()
   }
 
   onFormSubmit (e) {
     e.preventDefault()
-    this.loadList()
+    this.markSelectsAndLoadList()
   }
 
   loadList () {
@@ -153,6 +153,27 @@ window.Folio.Stimulus.register('f-c-links-modal-url-picker', class extends windo
 
   cancelFilters () {
     this.formTarget.reset()
+
+    for (const input of this.formTarget.querySelectorAll('.f-input--collection-remote-select')) {
+      window.Folio.Input.CollectionRemoteSelect.clearValue(input)
+    }
+
+    this.markSelectsAndLoadList()
+  }
+
+  markSelectsAndLoadList () {
+    for (const input of this.formTarget.querySelectorAll('.f-input--collection-remote-select')) {
+      const wrap = input.closest('.f-c-links-modal-url-picker__list-filter')
+      wrap.classList.toggle('f-c-links-modal-url-picker__list-filter--active', !!input.value)
+    }
+
     this.loadList()
+  }
+
+  resetAdditionalFilter (e) {
+    e.preventDefault()
+    const input = e.target.closest('.f-c-links-modal-url-picker__list-filter').querySelector('.f-input--collection-remote-select')
+
+    window.Folio.Input.CollectionRemoteSelect.clearValue(input)
   }
 })

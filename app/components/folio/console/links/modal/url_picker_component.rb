@@ -101,6 +101,6 @@ class Folio::Console::Links::Modal::UrlPickerComponent < Folio::Console::Applica
   end
 
   def label_for_key(key)
-    t(".placeholder/#{key}")
+    t(".placeholder/#{key}", default: key.to_s)
   end
 end
