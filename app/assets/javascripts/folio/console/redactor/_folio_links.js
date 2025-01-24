@@ -23,10 +23,11 @@ window.Redactor.modules.link.prototype._setLinkData = function (nodes, data, typ
     const linkData = {}
 
     if (data.text && isTextChanged) linkData.text = data.text
-    if (data.url) linkData.url = data.url
-    if (data.rel) linkData.rel = data.rel
     if (data.title !== undefined) linkData.title = data.title
-    if (data.target !== undefined) linkData.target = data.target
+
+    linkData.url = data.url
+    linkData.rel = data.rel || false
+    linkData.target = data.target || false
 
     $link.setData(linkData)
 
