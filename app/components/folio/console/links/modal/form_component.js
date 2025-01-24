@@ -10,6 +10,12 @@ window.Folio.Stimulus.register('f-c-links-modal-form', class extends window.Stim
     e.preventDefault()
     const data = window.Folio.formToHash(e.target)
 
+    if (!data.href || !data.href.trim()) {
+      this.element.querySelector('.f-c-ui-tabs__nav-link[data-bs-target="#tab-custom_url"]').click()
+      this.element.querySelector(".f-c-links-modal-url-picker__href-input").focus()
+      return
+    }
+
     if (typeof data.target === 'object') {
       data.target = data.target[0]
     }
