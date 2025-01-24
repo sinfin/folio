@@ -14,7 +14,7 @@ class Folio::Console::Links::Modal::UrlPickerComponent < Folio::Console::Applica
       if klass < ActiveRecord::Base
         record = klass.find_by(id: @url_json[:record_id])
 
-        if can_now?(:read, record)
+        if can_now?(:show, record)
           @record = record
         end
       end
@@ -80,7 +80,7 @@ class Folio::Console::Links::Modal::UrlPickerComponent < Folio::Console::Applica
     (%w[Folio::Page] + Rails.application.config.folio_console_links_mapping.keys).uniq.filter_map do |class_name|
       klass = class_name.safe_constantize
 
-      if klass && klass < ActiveRecord::Base && can_now?(:read, klass)
+      if klass && klass < ActiveRecord::Base && can_now?(:show, klass)
         [klass.model_name.human, klass.to_s]
       end
     end

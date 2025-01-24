@@ -19,7 +19,7 @@ class Folio::Console::Links::ValueComponent < Folio::Console::ApplicationCompone
       if klass < ActiveRecord::Base
         record = klass.find_by(id: @url_json[:record_id])
 
-        if can_now?(:read, record)
+        if can_now?(:show, record)
           @record = record
         end
       end
