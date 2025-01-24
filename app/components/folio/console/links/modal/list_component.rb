@@ -71,8 +71,10 @@ class Folio::Console::Links::Modal::ListComponent < Folio::Console::ApplicationC
             next unless understands_all_filters
           end
 
-          if @filtering && scope.respond_to?(:by_query) && params[:q].present?
-            scope = scope.by_query(params[:q])
+          if @filtering && scope.respond_to?(:by_label_query) && params[:q].present?
+            scope = scope.by_label_query(params[:q])
+          elsif @filtering && scope.respond_to?(:by_label_query) && params[:q].present?
+            scope = scope.by_label_query(params[:q])
           elsif scope.respond_to?(:ordered)
             scope = scope.ordered
           else
