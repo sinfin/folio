@@ -357,6 +357,11 @@ class Folio::Console::BaseController < Folio::ApplicationController
       @audited_audit = folio_console_record.audits.find_by_version!(params[:version])
 
       @audited_revision = @audited_audit.revision
+
+      if @audited_revision.try(:type)
+        @audited_revision = @audited_revision.becomes(@audited_revision.type.constantize)
+      end
+
       @audited_revision.reconstruct_folio_data
     end
 

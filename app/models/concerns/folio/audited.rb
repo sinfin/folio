@@ -22,6 +22,11 @@ module Folio::Audited
       define_singleton_method(:audited_console_restorable?) do
         opts[:restore] == false ? false : true
       end
+
+      # override audited - don't ignore inheritance_column
+      define_singleton_method(:default_ignored_attributes) do
+        [primary_key] | Audited.ignored_attributes
+      end
     end
   end
 
