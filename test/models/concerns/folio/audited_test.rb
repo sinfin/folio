@@ -130,7 +130,9 @@ class Folio::AuditedTest < ActiveSupport::TestCase
 
       assert_equal "v3", @page.title
       assert_equal "atom 1 v3", @page.atoms.first.content
+      assert_equal 0, @page.atoms.first.position
       assert_equal "atom 2 v3", @page.atoms.second.content
+      assert_equal 1, @page.atoms.second.position
     end
   end
 
