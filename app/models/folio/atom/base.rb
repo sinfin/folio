@@ -183,18 +183,6 @@ class Folio::Atom::Base < Folio::ApplicationRecord
     end
   end
 
-  def to_audited_hash
-    {
-      "id" => id,
-      "type" => type,
-      "position" => position,
-      "locale" => locale,
-      "data" => data,
-      "attachments" => folio_attachments_to_audited_hash,
-      "associations" => associations,
-    }
-  end
-
   def valid_for_placement?(placement)
     if placement.class.atom_class_names_whitelist.present?
       if placement.class.atom_class_names_whitelist.exclude?(type)

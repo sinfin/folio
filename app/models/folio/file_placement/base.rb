@@ -73,15 +73,6 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
     end
   end
 
-  def to_audited_hash
-    {
-      "id" => id,
-      "file_id" => file_id,
-      "position" => position || 1,
-      "type" => type,
-    }
-  end
-
   private
     def validate_file_attribution_and_texts_if_needed
       return if file.blank?

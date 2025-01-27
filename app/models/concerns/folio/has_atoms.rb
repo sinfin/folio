@@ -64,19 +64,6 @@ module Folio::HasAtoms
       end
     end
 
-    def atoms_to_audited_hash
-      hash = {}
-
-      self.class.atom_keys.each do |atom_key|
-        hash[atom_key.to_s] = send(atom_key).filter_map do |atom|
-          next if atom.marked_for_destruction?
-          atom.to_audited_hash
-        end
-      end
-
-      hash
-    end
-
     def all_atoms_in_array
       array = []
 

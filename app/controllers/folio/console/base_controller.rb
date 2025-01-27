@@ -357,7 +357,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
       @audited_audit = folio_console_record.audits.find_by_version!(params[:version])
 
       @audited_revision = @audited_audit.revision
-      @audited_revision.try(:reconstruct_atoms)
+      @audited_revision.reconstruct_folio_data
     end
 
     def add_through_breadcrumbs

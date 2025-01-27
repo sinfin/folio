@@ -420,8 +420,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_20_054115) do
     t.bigint "site_id"
     t.text "atoms_data_for_search"
     t.string "preview_token"
-    t.jsonb "folio_audited_atoms_data"
-    t.jsonb "folio_audited_file_placements_data"
+    t.jsonb "folio_audited_data"
     t.index "(((setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((title)::text, ''::text))), 'A'::\"char\") || setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE(perex, ''::text))), 'B'::\"char\")) || setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE(atoms_data_for_search, ''::text))), 'C'::\"char\")))", name: "index_folio_pages_on_by_query", using: :gin
     t.index ["ancestry"], name: "index_folio_pages_on_ancestry"
     t.index ["locale"], name: "index_folio_pages_on_locale"

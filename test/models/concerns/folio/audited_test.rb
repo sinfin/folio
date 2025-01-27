@@ -81,7 +81,8 @@ class Folio::AuditedTest < ActiveSupport::TestCase
 
       # revision version 1
       revision = @page.revisions.first
-      atoms_hash = revision.get_atoms_attributes_for_reconstruction["atoms_attributes"]
+      auditor = Folio::Audited::Auditor.new(revision)
+      atoms_hash = auditor.send(:get_atoms_attributes_for_reconstruction, revision)["atoms_attributes"]
 
       assert_equal "v1", revision.title
 
@@ -98,7 +99,8 @@ class Folio::AuditedTest < ActiveSupport::TestCase
 
       # revision version 2
       revision = @page.revisions.second
-      atoms_hash = revision.get_atoms_attributes_for_reconstruction["atoms_attributes"]
+      auditor = Folio::Audited::Auditor.new(revision)
+      atoms_hash = auditor.send(:get_atoms_attributes_for_reconstruction, revision)["atoms_attributes"]
 
       assert_equal "v2", revision.title
 
@@ -111,7 +113,8 @@ class Folio::AuditedTest < ActiveSupport::TestCase
 
       # revision version 4
       revision = @page.revisions.fourth
-      atoms_hash = revision.get_atoms_attributes_for_reconstruction["atoms_attributes"]
+      auditor = Folio::Audited::Auditor.new(revision)
+      atoms_hash = auditor.send(:get_atoms_attributes_for_reconstruction, revision)["atoms_attributes"]
 
       assert_equal "v4", revision.title
       assert_equal 2, atoms_hash.size
@@ -119,7 +122,8 @@ class Folio::AuditedTest < ActiveSupport::TestCase
       assert_equal("1", atoms_hash.find { |a| a["data"]["content"] == "atom 3 v5" }["_destroy"])
 
       revision = @page.audits.third.revision
-      revision.reconstruct_atoms
+      Folio::Audited::Auditor.new(revision)
+      revision.reconstruct_folio_data
       revision.save!
 
       @page.reload
@@ -159,7 +163,10 @@ class Folio::AuditedTest < ActiveSupport::TestCase
 
       # revision version 1
       revision = @page.revisions.first
-      file_placements_hash = revision.get_file_placements_attributes_for_reconstruction(record: revision)
+      auditor = Folio::Audited::Auditor.new(revision)
+      file_placements_hash = auditor.send(:get_file_placements_attributes_for_reconstruction,
+                                          record: revision,
+                                          data: revision.folio_audited_data["file_placements"])
 
       assert_equal "v1", revision.title
       assert_equal image_1.id, file_placements_hash["cover_placement_attributes"]["file_id"]
@@ -167,7 +174,10 @@ class Folio::AuditedTest < ActiveSupport::TestCase
 
       # revision version 2
       revision = @page.revisions.second
-      file_placements_hash = revision.get_file_placements_attributes_for_reconstruction(record: revision)
+      auditor = Folio::Audited::Auditor.new(revision)
+      file_placements_hash = auditor.send(:get_file_placements_attributes_for_reconstruction,
+                                          record: revision,
+                                          data: revision.folio_audited_data["file_placements"])
 
       assert_equal "v2", revision.title
       assert_equal image_2.id, file_placements_hash["cover_placement_attributes"]["file_id"]
@@ -176,14 +186,18 @@ class Folio::AuditedTest < ActiveSupport::TestCase
 
       # revision version 3
       revision = @page.revisions.third
-      file_placements_hash = revision.get_file_placements_attributes_for_reconstruction(record: revision)
+      auditor = Folio::Audited::Auditor.new(revision)
+      file_placements_hash = auditor.send(:get_file_placements_attributes_for_reconstruction,
+                                          record: revision,
+                                          data: revision.folio_audited_data["file_placements"])
 
       assert_equal "v3", revision.title
       assert_nil file_placements_hash["cover_placement_attributes"]
       assert_nil file_placements_hash["image_placements_attributes"]
 
       revision = @page.audits.second.revision
-      revision.reconstruct_file_placements
+      Folio::Audited::Auditor.new(revision)
+      revision.reconstruct_folio_data
       revision.save!
 
       @page.reload
@@ -230,7 +244,7 @@ class Folio::AuditedTest < ActiveSupport::TestCase
       page_one.destroy!
 
       revision = @page.audits.first.revision
-      revision.reconstruct_atoms
+      revision.reconstruct_folio_data
       revision.save!
 
       @page.reload
@@ -273,7 +287,7 @@ class Folio::AuditedTest < ActiveSupport::TestCase
       image_1.destroy!
 
       revision = @page.audits.first.revision
-      revision.reconstruct_atoms
+      revision.reconstruct_folio_data
       revision.save!
 
       @page.reload
@@ -308,7 +322,7 @@ class Folio::AuditedTest < ActiveSupport::TestCase
       @page.audits.first
 
       v1_revision = @page.audits.first.revision
-      v1_revision.reconstruct_atoms
+      v1_revision.reconstruct_folio_data
       v1_revision.save!
 
       @page.reload

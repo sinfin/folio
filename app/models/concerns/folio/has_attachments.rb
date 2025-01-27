@@ -157,39 +157,6 @@ module Folio::HasAttachments
     og_image.presence || cover
   end
 
-  def folio_attachments_to_audited_hash(only: nil)
-    keys = self.class.folio_attachment_keys
-    keys[:has_one] = keys[:has_one] & only if only.present?
-    keys[:has_many] = keys[:has_many] & only if only.present?
-
-    h = {}
-
-    keys[:has_one].each do |key|
-      next if only.present? && only.exclude?(key)
-      placement = send(key)
-      next if placement.blank?
-      next if placement.marked_for_destruction?
-
-      ah = placement.to_audited_hash
-      h[key.to_s] = ah if ah.present?
-    end
-
-    keys[:has_many].each do |key|
-      next if only.present? && only.exclude?(key)
-      placements = send(key)
-      next if placements.blank?
-
-      ary = placements.filter_map do |placement|
-        next if placement.marked_for_destruction?
-        placement.to_audited_hash.presence
-      end
-
-      h[key.to_s] = ary if ary.present?
-    end
-
-    h
-  end
-
   private
     def run_file_placements_after_save!
       return if dont_run_file_placements_after_save

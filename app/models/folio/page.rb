@@ -38,7 +38,7 @@ class Folio::Page < Folio::ApplicationRecord
     translated = %i[
       title perex slug meta_title meta_description
     ]
-    other = %i[published published_at featured folio_audited_atoms_data folio_audited_file_placements_data]
+    other = %i[type published published_at featured folio_audited_data]
 
     if Rails.application.config.folio_using_traco
       translated = translated.map do |key|
@@ -186,27 +186,26 @@ end
 #
 # Table name: folio_pages
 #
-#  id                                 :bigint(8)        not null, primary key
-#  title                              :string
-#  slug                               :string
-#  perex                              :text
-#  meta_title                         :string(512)
-#  meta_description                   :text
-#  ancestry                           :string
-#  type                               :string
-#  position                           :integer
-#  published                          :boolean
-#  published_at                       :datetime
-#  original_id                        :integer
-#  locale                             :string(6)
-#  created_at                         :datetime         not null
-#  updated_at                         :datetime         not null
-#  ancestry_slug                      :string
-#  site_id                            :bigint(8)
-#  atoms_data_for_search              :text
-#  preview_token                      :string
-#  folio_audited_atoms_data           :jsonb
-#  folio_audited_file_placements_data :jsonb
+#  id                    :bigint(8)        not null, primary key
+#  title                 :string
+#  slug                  :string
+#  perex                 :text
+#  meta_title            :string(512)
+#  meta_description      :text
+#  ancestry              :string
+#  type                  :string
+#  position              :integer
+#  published             :boolean
+#  published_at          :datetime
+#  original_id           :integer
+#  locale                :string(6)
+#  created_at            :datetime         not null
+#  updated_at            :datetime         not null
+#  ancestry_slug         :string
+#  site_id               :bigint(8)
+#  atoms_data_for_search :text
+#  preview_token         :string
+#  folio_audited_data    :jsonb
 #
 # Indexes
 #
