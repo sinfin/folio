@@ -91,7 +91,7 @@ class Folio::Console::Atoms::PreviewsCell < Folio::ConsoleCell
       cell("folio/console/atoms/previews/broken_preview", error: nested_error).show
     end
 
-    if atom = atoms.find { |a| !a.valid? }
+    if atom = atoms.find { |a| a.errors.present? }
       error = ActiveRecord::RecordInvalid.new(atom)
       return rescue_lambda.call(error)
     end
@@ -126,7 +126,7 @@ class Folio::Console::Atoms::PreviewsCell < Folio::ConsoleCell
       cell("folio/console/atoms/previews/broken_preview", error: other_error).show
     end
 
-    unless atom.valid?
+    if atom.errors.present?
       error = ActiveRecord::RecordInvalid.new(atom)
       return rescue_lambda.call(error)
     end

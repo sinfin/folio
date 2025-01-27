@@ -19,16 +19,23 @@ class Folio::Console::AtomsController < Folio::Console::BaseController
       next if atoms.nil?
       @atoms[locale] = []
 
+      position = 0
+
       atoms.sort_by { |h| h["position"] || 0 }.each_with_index do |attrs, i|
         next if attrs["destroyed"]
         next if attrs["_destroy"]
         props = attrs.to_h
                      .without("id", "placement_id")
                      .merge(placement: attrs[:placement_type].constantize.new,
-                            position: i + 1)
+                            position: position += 1)
 
-        @atoms[locale] << attrs["type"].constantize
-                                       .new(props)
+        atom = attrs["type"].constantize
+                            .new(props)
+
+        # check if atom is valid here, will check atom.errors in the previews cell
+        atom.valid?
+
+        @atoms[locale] << atom
       end
     end
 
