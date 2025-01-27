@@ -331,4 +331,31 @@ class Folio::AuditedTest < ActiveSupport::TestCase
       assert_equal 0, @page.atoms.count
     end
   end
+
+  test "saving with atoms doesn't create unnecessary revisions" do
+    Audited.stub(:auditing_enabled, true) do
+      site = get_any_site
+
+      @page = AuditedPage.create(title: "v1",
+                                 site:,
+                                 atoms_attributes: {
+                                  0 => {
+                                    type: "Dummy::Atom::Contents::Text",
+                                    position: 1,
+                                    content: "atom 1 v1"
+                                  }
+                                })
+
+      assert_equal 1, @page.revisions.count
+
+      assert_difference -> { @page.revisions.count }, 1 do
+        # sets the atom id
+        @page.update!(atoms_attributes: { 0 => { id: @page.atoms.first.id, content: "atom 1 v1" } })
+      end
+
+      assert_difference -> { @page.revisions.count }, 0 do
+        @page.update!(atoms_attributes: { 0 => { id: @page.atoms.first.id, content: "atom 1 v1" } })
+      end
+    end
+  end
 end
