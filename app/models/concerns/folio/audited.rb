@@ -30,12 +30,8 @@ module Folio::Audited
     end
   end
 
-  def reconstruct_folio_data
+  def reconstruct_folio_audited_data
     Folio::Audited::Auditor.new(self).reconstruct
-  end
-
-  def reconstruct_file_placements
-    assign_attributes(get_file_placements_attributes_for_reconstruction(record: self))
   end
 
   private

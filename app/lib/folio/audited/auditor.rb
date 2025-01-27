@@ -12,8 +12,8 @@ class Folio::Audited::Auditor
 
     if @record.class.folio_audited_data_additional_keys.present?
       @record.class.folio_audited_data_additional_keys.each do |key|
-        if self.folio_audited_data[key.to_s]
-          self.folio_audited_data[key.to_s] = if respond_to?("reconstruct_#{key}")
+        if @record.folio_audited_data[key.to_s]
+          @record.folio_audited_data[key.to_s] = if respond_to?("reconstruct_#{key}")
             send("reconstruct_#{key}")
           else
             # TODO do this in a generic manner
@@ -22,12 +22,12 @@ class Folio::Audited::Auditor
       end
     end
 
-    after_reconstruct_folio_data(@record)
+    after_reconstruct_folio_audited_data(@record)
 
     @record
   end
 
-  def after_reconstruct_folio_data(record)
+  def after_reconstruct_folio_audited_data(record)
     # to be overriden
   end
 

@@ -122,8 +122,7 @@ class Folio::AuditedTest < ActiveSupport::TestCase
       assert_equal("1", atoms_hash.find { |a| a["data"]["content"] == "atom 3 v5" }["_destroy"])
 
       revision = @page.audits.third.revision
-      Folio::Audited::Auditor.new(revision)
-      revision.reconstruct_folio_data
+      revision.reconstruct_folio_audited_data
       revision.save!
 
       @page.reload
@@ -196,8 +195,7 @@ class Folio::AuditedTest < ActiveSupport::TestCase
       assert_nil file_placements_hash["image_placements_attributes"]
 
       revision = @page.audits.second.revision
-      Folio::Audited::Auditor.new(revision)
-      revision.reconstruct_folio_data
+      revision.reconstruct_folio_audited_data
       revision.save!
 
       @page.reload
@@ -244,7 +242,7 @@ class Folio::AuditedTest < ActiveSupport::TestCase
       page_one.destroy!
 
       revision = @page.audits.first.revision
-      revision.reconstruct_folio_data
+      revision.reconstruct_folio_audited_data
       revision.save!
 
       @page.reload
@@ -287,7 +285,7 @@ class Folio::AuditedTest < ActiveSupport::TestCase
       image_1.destroy!
 
       revision = @page.audits.first.revision
-      revision.reconstruct_folio_data
+      revision.reconstruct_folio_audited_data
       revision.save!
 
       @page.reload
@@ -322,7 +320,7 @@ class Folio::AuditedTest < ActiveSupport::TestCase
       @page.audits.first
 
       v1_revision = @page.audits.first.revision
-      v1_revision.reconstruct_folio_data
+      v1_revision.reconstruct_folio_audited_data
       v1_revision.save!
 
       @page.reload

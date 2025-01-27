@@ -362,7 +362,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
         @audited_revision = @audited_revision.becomes(@audited_revision.type.constantize)
       end
 
-      @audited_revision.reconstruct_folio_data
+      @audited_revision.reconstruct_folio_audited_data
     end
 
     def add_through_breadcrumbs
