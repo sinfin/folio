@@ -169,7 +169,7 @@ class Folio::Audited::Auditor
 
       h.each do |key, value_or_array|
         if value_or_array.is_a?(Array)
-          position = -1
+          position = 0
 
           value_or_array.sort_by { |hh| hh["position"].to_i }.each do |value|
             if value["_destroy"] == "1"
@@ -222,7 +222,7 @@ class Folio::Audited::Auditor
       end
 
       h.each do |key, values|
-        position = -1
+        position = 0
 
         h[key] = values.sort_by { |h| h["position"].to_i }.map do |value|
           if value["_destroy"] == "1"
