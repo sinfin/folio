@@ -9,7 +9,7 @@ module Folio::Audited
 
   class_methods do
     def audited(opts = {})
-      super(opts[:on].present? ? opts : opts.merge(on: %i[create update destroy]))
+      super(opts[:on].present? ? opts.without(:relations) : opts.without(:relations).merge(on: %i[create update destroy]))
 
       define_singleton_method(:folio_audited_data_additional_keys) do
         opts[:relations]

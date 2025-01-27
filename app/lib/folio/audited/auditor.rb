@@ -47,7 +47,9 @@ class Folio::Audited::Auditor
         h[key.to_s] = if @record.respond_to?("#{key}_to_audited_hash")
           @record.send("#{key}_to_audited_hash")
         else
-          @record.send(key).map(&:to_audited_hash)
+          @record.send(key).map do |related_record|
+            related_record_to_audited_hash(related_record)
+          end
         end
       end
     end
@@ -82,6 +84,22 @@ class Folio::Audited::Auditor
         end
 
         h[key.to_s] = ary if ary.present?
+      end
+
+      h
+    end
+
+    def related_record_to_audited_hash(related_record)
+      without = %w[created_at updated_at]
+
+      related_record.class.column_names.each do |column_name|
+        without << column_name if column_name.ends_with?("_id")
+      end
+
+      h = related_record.attributes.without(*without)
+
+      if related_record.class.try(:has_folio_attachments?)
+        h["_file_placements"] = file_placements_to_audited_hash(related_record)
       end
 
       h
