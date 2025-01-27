@@ -8,11 +8,21 @@
     gap: $grid-gutter-width / 2
     flex-wrap: wrap
 
-  + .f-c-layout-main-container,
-  + form
+  + .f-c-layout-main-container
     cursor: not-allowed
 
-    > div
+    .simple_form
+      pointer-events: none
+      user-select: none
+
+    .f-c-form-footer
+      display: none
+
+  + .f-c-simple-form-with-atoms
+    cursor: not-allowed
+
+    .f-c-simple-form-with-atoms__form,
+    .f-c-simple-form-with-atoms__form-toggle
       pointer-events: none
       user-select: none
 

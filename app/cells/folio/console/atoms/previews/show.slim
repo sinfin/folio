@@ -16,7 +16,9 @@ div class=class_name data-klass=options[:klass]
             - settings.each do |key, value|
               .f-c-atoms-previews__setting data-setting-key=key
                 == value
-                = label_perex_controls
+
+                - unless options[:non_interactive]
+                  = label_perex_controls
 
         - index = 0
         - insert_after_str = nil

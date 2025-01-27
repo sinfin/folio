@@ -287,6 +287,10 @@ function * updateAtomPreviews (action) {
     ...settingsToHash()
   }
 
+  if ($('.f-c-simple-form-with-atoms--audited-audit').length) {
+    serializedAtoms['audited_audit_active'] = '1'
+  }
+
   if (action.type !== SET_ATOMS_DATA && action.type !== REFRESH_ATOM_PREVIEWS) {
     window.postMessage({ type: 'setFormAsDirty' }, window.origin)
   }

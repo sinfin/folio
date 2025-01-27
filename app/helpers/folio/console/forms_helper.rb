@@ -83,6 +83,7 @@ module Folio::Console::FormsHelper
     end
 
     disabled_atoms_class = opts[:disable_atoms] ? "f-c-simple-form-with-atoms--disable-atoms" : nil
+    audited_class = @audited_audit ? "f-c-simple-form-with-atoms--audited-audit" : nil
 
     opts[:html] ||= {}
     opts[:html][:class] ||= ""
@@ -90,7 +91,8 @@ module Folio::Console::FormsHelper
                            opts[:html][:class],
                            layout_class,
                            expanded_class,
-                           disabled_atoms_class].compact.join(" ")
+                           disabled_atoms_class,
+                           audited_class].compact.join(" ")
 
     form_footer_options = opts.delete(:form_footer_options) || {}
 
@@ -101,6 +103,7 @@ module Folio::Console::FormsHelper
              layout_code:,
              form_footer_options:,
              expandable:,
+             audited_audit_active: @audited_audit.present?,
            },
            &block
   end

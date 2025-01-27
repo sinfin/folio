@@ -60,6 +60,8 @@ class Folio::Console::AtomsController < Folio::Console::BaseController
       @settings = {}
     end
 
+    @non_interactive ||= params[:audited_audit_active] == "1"
+
     render :preview, layout: false
   end
 
