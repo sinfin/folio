@@ -85,18 +85,13 @@ class Folio::AuditedTest < ActiveSupport::TestCase
       auditor = Folio::Audited::Auditor.new(record: revision)
       atoms_hash = auditor.send(:get_atoms_attributes_for_reconstruction, record: revision, audit:)["atoms_attributes"]
 
-      assert_equal "v1", revision.title
-
       assert_equal current_page_atom_1.id, atoms_hash.first["id"]
-      assert_equal "1", atoms_hash.first["_destroy"]
+      assert_equal "atom 1 v1", atoms_hash.first["data"]["content"]
+      assert_equal page_one.id, atoms_hash.first["associations"]["page"]["id"]
+      assert_nil atoms_hash.first["_destroy"]
 
       assert_equal current_page_atom_2.id, atoms_hash.second["id"]
       assert_equal "1", atoms_hash.second["_destroy"]
-
-      assert_nil atoms_hash.third["id"]
-      assert_nil atoms_hash.third["_destroy"]
-      assert_equal "atom 1 v1", atoms_hash.third["data"]["content"]
-      assert_equal page_one.id, atoms_hash.third["associations"]["page"]["id"]
 
       # revision version 2
       audit = @page.audits.second

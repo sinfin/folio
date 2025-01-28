@@ -87,10 +87,11 @@ class Folio::Audited::AuditorTest < ActionDispatch::IntegrationTest
       assert_equal ["file_placements"],
                    Folio::Audited::Auditor.new(record: page).get_folio_audited_changed_relations
 
-      puts "first save!"
       page.save!
       assert_equal [],
                    Folio::Audited::Auditor.new(record: page).get_folio_audited_changed_relations
+
+      assert page.audits.last.folio_data["file_placements"]["cover_placement"]["id"]
 
       page.reload.assign_attributes(atoms_attributes: { 0 => { type: "Dummy::Atom::Contents::Text", position: 1, content: "atom 1" } })
       assert_equal ["atoms"],
@@ -99,6 +100,7 @@ class Folio::Audited::AuditorTest < ActionDispatch::IntegrationTest
       page.save!
       assert_equal [],
                    Folio::Audited::Auditor.new(record: page).get_folio_audited_changed_relations
+      assert page.audits.last.folio_data["atoms"]["atoms"][0]["id"]
 
       page.reload.assign_attributes(atoms_attributes: { 0 => { id: page.atoms.first.id, _destroy: "1" } },
                                     cover_placement_attributes: { id: page.cover_placement.id, _destroy: "1" })
@@ -108,6 +110,8 @@ class Folio::Audited::AuditorTest < ActionDispatch::IntegrationTest
       page.save!
       assert_equal [],
                    Folio::Audited::Auditor.new(record: page.reload).get_folio_audited_changed_relations
+      assert_equal [], page.audits.last.folio_data["atoms"]["atoms"]
+      assert_equal({}, page.audits.last.folio_data["file_placements"])
     end
   end
 end

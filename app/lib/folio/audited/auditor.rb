@@ -100,6 +100,46 @@ class Folio::Audited::Auditor
     ary
   end
 
+  def fill_ids_to_folio_data(folio_data:)
+    changed = false
+    runner = folio_data.deep_dup
+
+    get_folio_audited_data.each do |root_key, root_value|
+      next if runner[root_key].blank?
+
+      if %w[atoms file_placements].include?(root_key)
+        # root_value is a folio-specific Hash
+        root_value.each do |subroot_key, value_or_array|
+          next if runner[root_key][subroot_key].blank?
+
+          if value_or_array.is_a?(Array)
+            next unless runner[root_key][subroot_key].is_a?(Array)
+            value_or_array.each_with_index do |value, index|
+              next if runner[root_key][subroot_key][index].blank?
+              next if value["id"] == runner[root_key][subroot_key][index]["id"]
+              next if value.without("id") != runner[root_key][subroot_key][index].without("id")
+              runner[root_key][subroot_key][index] = value
+              changed = true
+            end
+          else
+            next unless runner[root_key][subroot_key].is_a?(Hash)
+            next if runner[root_key][subroot_key].blank?
+            next if value_or_array["id"] == runner[root_key][subroot_key]["id"]
+            next if value_or_array.without("id") != runner[root_key][subroot_key].without("id")
+            runner[root_key][subroot_key] = value_or_array
+            changed = true
+          end
+        end
+      else
+        # root_value is an array of related records
+        root_value.each_with_index do |value, index|
+        end
+      end
+    end
+
+    { changed:, folio_data: runner }
+  end
+
   private
     def file_placements_to_audited_hash(record)
       return unless record.class.try(:has_folio_attachments?)
