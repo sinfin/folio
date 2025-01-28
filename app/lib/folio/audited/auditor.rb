@@ -16,8 +16,8 @@ class Folio::Audited::Auditor
 
     if @record.class.folio_audited_data_additional_keys.present?
       @record.class.folio_audited_data_additional_keys.each do |key|
-        if @record.folio_audited_data[key.to_s]
-          @record.folio_audited_data[key.to_s] = if respond_to?("reconstruct_#{key}")
+        if @audit.folio_data[key.to_s]
+          @audit.folio_data[key.to_s] = if respond_to?("reconstruct_#{key}")
             send("reconstruct_#{key}", @audit)
           else
             # TODO do this in a generic manner
@@ -109,23 +109,26 @@ class Folio::Audited::Auditor
 
       if %w[atoms file_placements].include?(root_key)
         # root_value is a folio-specific Hash
+        # such as { "atoms" => { "cs_atoms" => [] } }
+        # or { "file_placements" => { "cover_placement" => { "id" => 1, "file_id" => 1 } } }
         root_value.each do |subroot_key, value_or_array|
           next if runner[root_key][subroot_key].blank?
 
           if value_or_array.is_a?(Array)
             next unless runner[root_key][subroot_key].is_a?(Array)
+
             value_or_array.each_with_index do |value, index|
               next if runner[root_key][subroot_key][index].blank?
-              next if value["id"] == runner[root_key][subroot_key][index]["id"]
-              next if value.without("id") != runner[root_key][subroot_key][index].without("id")
+              next unless folio_data_hashes_equal_apart_from_ids(one: value, two: runner[root_key][subroot_key][index])
+
               runner[root_key][subroot_key][index] = value
               changed = true
             end
           else
             next unless runner[root_key][subroot_key].is_a?(Hash)
             next if runner[root_key][subroot_key].blank?
-            next if value_or_array["id"] == runner[root_key][subroot_key]["id"]
-            next if value_or_array.without("id") != runner[root_key][subroot_key].without("id")
+            next unless folio_data_hashes_equal_apart_from_ids(one: value_or_array, two: runner[root_key][subroot_key])
+
             runner[root_key][subroot_key] = value_or_array
             changed = true
           end
@@ -133,6 +136,11 @@ class Folio::Audited::Auditor
       else
         # root_value is an array of related records
         root_value.each_with_index do |value, index|
+          next if runner[root_key][index].blank?
+          next unless folio_data_hashes_equal_apart_from_ids(one: value, two: runner[root_key][index])
+
+          runner[root_key][index] = value
+          changed = true
         end
       end
     end
@@ -141,7 +149,7 @@ class Folio::Audited::Auditor
   end
 
   private
-    def file_placements_to_audited_hash(record)
+    def file_placements_to_audited_hash(record:)
       return unless record.class.try(:has_folio_attachments?)
 
       h = {}
@@ -182,7 +190,7 @@ class Folio::Audited::Auditor
       h = related_record.attributes.without(*without)
 
       if related_record.class.try(:has_folio_attachments?)
-        h["_file_placements"] = file_placements_to_audited_hash(related_record)
+        h["_file_placements"] = file_placements_to_audited_hash(record: related_record)
       end
 
       h
@@ -196,7 +204,7 @@ class Folio::Audited::Auditor
         "locale" => atom.locale,
         "data" => atom.data,
         "associations" => atom.associations,
-        "_file_placements" => file_placements_to_audited_hash(atom),
+        "_file_placements" => file_placements_to_audited_hash(record: atom),
       }
     end
 
@@ -225,7 +233,7 @@ class Folio::Audited::Auditor
     end
 
     def get_folio_audited_data_file_placements
-      file_placements_to_audited_hash(@record)
+      file_placements_to_audited_hash(record: @record)
     end
 
     def get_file_placements_attributes_for_reconstruction(record:, data: nil)
@@ -396,5 +404,27 @@ class Folio::Audited::Auditor
                                                                 data: audit.folio_data["file_placements"])
 
       record.assign_attributes(attrs)
+    end
+
+    def strip_ids_from_folio_data_hash(folio_data_hash)
+      runner = folio_data_hash.without("id")
+
+      if runner["_file_placements"].present?
+        runner["_file_placements"].each do |key, value|
+          runner["_file_placements"][key] = if value.is_a?(Array)
+            value.map do |h|
+              h.without("id")
+            end
+          else
+            value.without("id")
+          end
+        end
+      end
+
+      runner
+    end
+
+    def folio_data_hashes_equal_apart_from_ids(one:, two:)
+      strip_ids_from_folio_data_hash(one.deep_dup) == strip_ids_from_folio_data_hash(two.deep_dup)
     end
 end

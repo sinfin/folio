@@ -359,4 +359,42 @@ class Folio::AuditedTest < ActiveSupport::TestCase
       end
     end
   end
+
+  test "sets atom cover_placement id" do
+    Audited.stub(:auditing_enabled, true) do
+      site = get_any_site
+      image_one = create(:folio_file_image, site:)
+      image_two = create(:folio_file_image, site:)
+
+      page = AuditedPage.create!(title: "v1",
+                                 site:,
+                                 atoms_attributes: { 0 => { type: "Dummy::Atom::Images::SingleImage", position: 1, cover_placement_attributes: { file_id: image_one.id } } })
+
+      first_atom_id = page.atoms.first.id
+
+      audit = page.audits.last
+
+      assert_equal first_atom_id, audit.folio_data["atoms"]["atoms"][0]["id"]
+      assert_equal page.atoms.first.cover_placement.id, audit.folio_data["atoms"]["atoms"][0]["_file_placements"]["cover_placement"]["id"]
+      assert_equal image_one.id, audit.folio_data["atoms"]["atoms"][0]["_file_placements"]["cover_placement"]["file_id"]
+
+      page.update!(atoms_attributes: { 0 => { id: first_atom_id, cover_placement_attributes: { file_id: image_two.id } } })
+
+      audit = page.audits.last
+
+      assert_equal first_atom_id, audit.folio_data["atoms"]["atoms"][0]["id"]
+      assert_equal page.atoms.first.cover_placement.id, audit.folio_data["atoms"]["atoms"][0]["_file_placements"]["cover_placement"]["id"]
+      assert_equal image_two.id, audit.folio_data["atoms"]["atoms"][0]["_file_placements"]["cover_placement"]["file_id"]
+
+      audit = page.audits.first
+      revision = audit.revision
+      revision.reconstruct_folio_audited_data(audit:)
+      revision.save!
+
+      page.reload
+
+      assert_equal first_atom_id, page.atoms.first.id
+      assert_equal image_one.id, page.atoms.first.cover_placement.file_id
+    end
+  end
 end
