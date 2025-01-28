@@ -1,20 +1,24 @@
 # frozen_string_literal: true
 
 class Folio::Audited::Auditor
-  def initialize(record:)
+  def initialize(record:, audit: nil)
     @record = record
     fail "Not an audited record" unless @record.class.respond_to?(:folio_audited_data_additional_keys)
+
+    @audit = audit
   end
 
   def reconstruct
-    reconstruct_atoms(@record)
-    reconstruct_file_placements(@record)
+    fail "Need a Folio::Audited::Audit to reconstruct" unless @audit.is_a?(Folio::Audited::Audit)
+
+    reconstruct_atoms(record: @record, audit: @audit)
+    reconstruct_file_placements(record: @record, audit: @audit)
 
     if @record.class.folio_audited_data_additional_keys.present?
       @record.class.folio_audited_data_additional_keys.each do |key|
         if @record.folio_audited_data[key.to_s]
           @record.folio_audited_data[key.to_s] = if respond_to?("reconstruct_#{key}")
-            send("reconstruct_#{key}")
+            send("reconstruct_#{key}", @audit)
           else
             # TODO do this in a generic manner
           end
@@ -22,12 +26,12 @@ class Folio::Audited::Auditor
       end
     end
 
-    after_reconstruct_folio_audited_data(@record)
+    after_reconstruct_folio_audited_data(record: @record, audit: @record)
 
     @record
   end
 
-  def after_reconstruct_folio_audited_data(record)
+  def after_reconstruct_folio_audited_data(record:, audit:)
     # to be overriden
   end
 
@@ -245,7 +249,7 @@ class Folio::Audited::Auditor
       h
     end
 
-    def get_atoms_attributes_for_reconstruction(record)
+    def get_atoms_attributes_for_reconstruction(record:, audit:)
       h = {}
       atoms_array = []
 
@@ -262,8 +266,8 @@ class Folio::Audited::Auditor
         end
       end
 
-      if record.try(:folio_audited_data).present? && record.folio_audited_data["atoms"].present?
-        record.folio_audited_data["atoms"].each do |key, values|
+      if audit.folio_data && audit.folio_data["atoms"].present?
+        audit.folio_data["atoms"].each do |key, values|
           next if values.blank?
 
           values.each do |value|
@@ -323,8 +327,8 @@ class Folio::Audited::Auditor
       h
     end
 
-    def reconstruct_atoms(record)
-      record.assign_attributes(get_atoms_attributes_for_reconstruction(record))
+    def reconstruct_atoms(record:, audit:)
+      record.assign_attributes(get_atoms_attributes_for_reconstruction(record:, audit:))
 
       record.class.atom_keys.each do |key|
         record.send(key).each do |atom|
@@ -345,11 +349,11 @@ class Folio::Audited::Auditor
       end
     end
 
-    def reconstruct_file_placements(record)
-      return unless record.try(:folio_audited_data).present? && record.folio_audited_data["file_placements"].present?
+    def reconstruct_file_placements(record:, audit:)
+      return unless audit.folio_data && audit.folio_data["file_placements"].present?
 
       attrs = get_file_placements_attributes_for_reconstruction(record:,
-                                                                data: record.folio_audited_data["file_placements"])
+                                                                data: audit.folio_data["file_placements"])
 
       record.assign_attributes(attrs)
     end

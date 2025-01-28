@@ -4,7 +4,7 @@ module Folio::Audited
   extend ActiveSupport::Concern
 
   included do
-    before_validation :store_folio_audited_data
+    before_validation :set_folio_audited_changed_relations
 
     attribute :folio_audited_changed_relations, :jsonb, default: []
   end
@@ -32,12 +32,13 @@ module Folio::Audited
     end
   end
 
-  def reconstruct_folio_audited_data
-    Folio::Audited::Auditor.new(record: self).reconstruct
+  def reconstruct_folio_audited_data(audit:)
+    Folio::Audited::Auditor.new(record: self, audit:).reconstruct
   end
 
   private
-    def store_folio_audited_data
-      self.folio_audited_changed_relations = Folio::Audited::Auditor.new(record: self).get_folio_audited_changed_relations
+    def set_folio_audited_changed_relations
+      auditor = Folio::Audited::Auditor.new(record: self)
+      self.folio_audited_changed_relations = auditor.get_folio_audited_changed_relations
     end
 end
