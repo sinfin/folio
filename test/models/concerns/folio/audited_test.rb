@@ -16,7 +16,12 @@ class Folio::AuditedTest < ActiveSupport::TestCase
 
   class AuditedPageTwo < Folio::Page
     include Folio::Audited
+
     audited
+
+    def should_audit_changes?
+      title != "no audit"
+    end
   end
 
   class PageReferenceAtom < Folio::Atom::Base
@@ -429,6 +434,23 @@ class Folio::AuditedTest < ActiveSupport::TestCase
       page = Folio::Page.find(page.id)
       assert_equal "Folio::AuditedTest::AuditedPage", page.type
       assert_equal "Folio::AuditedTest::AuditedPage", page.class.name
+    end
+  end
+
+  test "conditional auditing" do
+    Audited.stub(:auditing_enabled, true) do
+      site = get_any_site
+
+      page = AuditedPageTwo.new(title: "no audit", site:)
+
+      assert_difference -> { page.audits.count }, 0 do
+        page.save!
+        page.update!(perex: "v2")
+      end
+
+      assert_difference -> { page.audits.count }, 1 do
+        page.update!(perex: "v3", title: "do audit please")
+      end
     end
   end
 end

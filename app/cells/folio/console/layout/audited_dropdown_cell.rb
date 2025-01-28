@@ -2,7 +2,7 @@
 
 class Folio::Console::Layout::AuditedDropdownCell < Folio::ConsoleCell
   def show
-    render if model.present? && model.size > 1 && options[:record].present?
+    render if model.present? && model.size > 1 && options[:record].present? && options[:record].should_audit_changes?
   end
 
   def item_class_name(version, i)

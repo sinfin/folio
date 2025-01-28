@@ -11,7 +11,12 @@ module Folio::Audited
 
   class_methods do
     def audited(opts = {})
-      super(opts[:on].present? ? opts.without(:relations) : opts.without(:relations).merge(on: %i[create update destroy]))
+      opts_with_folio_defaults = opts.without(:relations)
+
+      opts_with_folio_defaults[:on] ||= %i[create update destroy]
+      opts_with_folio_defaults[:if] ||= :should_audit_changes?
+
+      super(opts_with_folio_defaults)
 
       define_singleton_method(:folio_audited_data_additional_keys) do
         opts[:relations]
@@ -19,6 +24,10 @@ module Folio::Audited
 
       define_singleton_method(:audited_console_enabled?) do
         opts[:console] != false
+      end
+
+      define_method(:should_audit_changes?) do
+        true
       end
 
       define_singleton_method(:audited_console_restorable?) do

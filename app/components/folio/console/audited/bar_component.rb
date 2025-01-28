@@ -7,7 +7,7 @@ class Folio::Console::Audited::BarComponent < Folio::Console::ApplicationCompone
   end
 
   def render?
-    @audit.present? && @record.present?
+    @audit.present? && @record.present? && @record.should_audit_changes?
   end
 
   def restore_link
