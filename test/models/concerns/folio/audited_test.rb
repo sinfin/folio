@@ -14,6 +14,11 @@ class Folio::AuditedTest < ActiveSupport::TestCase
     attr_accessor :should_validate_cover_placement_in_test
   end
 
+  class AuditedPageTwo < Folio::Page
+    include Folio::Audited
+    audited
+  end
+
   class PageReferenceAtom < Folio::Atom::Base
     STRUCTURE = {
       content: :string,
@@ -395,6 +400,35 @@ class Folio::AuditedTest < ActiveSupport::TestCase
 
       assert_equal first_atom_id, page.atoms.first.id
       assert_equal image_one.id, page.atoms.first.cover_placement.file_id
+    end
+  end
+
+  test "handles type" do
+    Audited.stub(:auditing_enabled, true) do
+      site = get_any_site
+
+      page = AuditedPage.create!(title: "v1", site:)
+      first_audit = page.audits.last
+
+      assert_equal "Folio::AuditedTest::AuditedPage", first_audit.audited_changes["type"]
+
+      page = page.becomes!(AuditedPageTwo)
+      page.save!
+      audit = page.audits.last
+
+      page = Folio::Page.find(page.id)
+
+      assert_equal "Folio::AuditedTest::AuditedPageTwo", page.type
+      assert_equal "Folio::AuditedTest::AuditedPageTwo", page.class.name
+      assert_equal ["Folio::AuditedTest::AuditedPage", "Folio::AuditedTest::AuditedPageTwo"], audit.audited_changes["type"]
+
+      revision = first_audit.revision
+      revision.reconstruct_folio_audited_data(audit: first_audit)
+      revision.save!
+
+      page = Folio::Page.find(page.id)
+      assert_equal "Folio::AuditedTest::AuditedPage", page.type
+      assert_equal "Folio::AuditedTest::AuditedPage", page.class.name
     end
   end
 end
