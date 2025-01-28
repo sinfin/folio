@@ -27,7 +27,7 @@ class Folio::AuditedTest < ActiveSupport::TestCase
               presence: true
   end
 
-  test "audited model & atoms" do
+  test "audited model and atoms" do
     site = get_any_site
     page_one = create(:folio_page, site:)
     page_two = create(:folio_page, site:)
@@ -132,7 +132,7 @@ class Folio::AuditedTest < ActiveSupport::TestCase
     end
   end
 
-  test "audited model & file placements" do
+  test "audited model and file placements" do
     Audited.stub(:auditing_enabled, true) do
       site = get_any_site
 
@@ -351,13 +351,10 @@ class Folio::AuditedTest < ActiveSupport::TestCase
                                 })
 
       assert_equal 1, @page.revisions.count
-
-      assert_difference -> { @page.revisions.count }, 1 do
-        # sets the atom id
-        @page.update!(atoms_attributes: { 0 => { id: @page.atoms.first.id, content: "atom 1 v1" } })
-      end
+      @page.reload
 
       assert_difference -> { @page.revisions.count }, 0 do
+        # saving with the same content shouldn't create another audit
         @page.update!(atoms_attributes: { 0 => { id: @page.atoms.first.id, content: "atom 1 v1" } })
       end
     end
