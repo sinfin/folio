@@ -5,6 +5,8 @@ module Folio::Audited
 
   included do
     before_validation :store_folio_audited_data
+
+    attribute :folio_audited_changed_relations, :jsonb, default: []
   end
 
   class_methods do
@@ -31,13 +33,11 @@ module Folio::Audited
   end
 
   def reconstruct_folio_audited_data
-    Folio::Audited::Auditor.new(self).reconstruct
+    Folio::Audited::Auditor.new(record: self).reconstruct
   end
 
   private
     def store_folio_audited_data
-      if respond_to?(:folio_audited_data)
-        self.folio_audited_data = Folio::Audited::Auditor.new(self).get_folio_audited_data
-      end
+      self.folio_audited_changed_relations = Folio::Audited::Auditor.new(record: self).get_folio_audited_changed_relations
     end
 end

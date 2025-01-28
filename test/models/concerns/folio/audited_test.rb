@@ -81,7 +81,7 @@ class Folio::AuditedTest < ActiveSupport::TestCase
 
       # revision version 1
       revision = @page.revisions.first
-      auditor = Folio::Audited::Auditor.new(revision)
+      auditor = Folio::Audited::Auditor.new(record: revision)
       atoms_hash = auditor.send(:get_atoms_attributes_for_reconstruction, revision)["atoms_attributes"]
 
       assert_equal "v1", revision.title
@@ -99,7 +99,7 @@ class Folio::AuditedTest < ActiveSupport::TestCase
 
       # revision version 2
       revision = @page.revisions.second
-      auditor = Folio::Audited::Auditor.new(revision)
+      auditor = Folio::Audited::Auditor.new(record: revision)
       atoms_hash = auditor.send(:get_atoms_attributes_for_reconstruction, revision)["atoms_attributes"]
 
       assert_equal "v2", revision.title
@@ -113,7 +113,7 @@ class Folio::AuditedTest < ActiveSupport::TestCase
 
       # revision version 4
       revision = @page.revisions.fourth
-      auditor = Folio::Audited::Auditor.new(revision)
+      auditor = Folio::Audited::Auditor.new(record: revision)
       atoms_hash = auditor.send(:get_atoms_attributes_for_reconstruction, revision)["atoms_attributes"]
 
       assert_equal "v4", revision.title
@@ -162,7 +162,7 @@ class Folio::AuditedTest < ActiveSupport::TestCase
 
       # revision version 1
       revision = @page.revisions.first
-      auditor = Folio::Audited::Auditor.new(revision)
+      auditor = Folio::Audited::Auditor.new(record: revision)
       file_placements_hash = auditor.send(:get_file_placements_attributes_for_reconstruction,
                                           record: revision,
                                           data: revision.folio_audited_data["file_placements"])
@@ -173,7 +173,7 @@ class Folio::AuditedTest < ActiveSupport::TestCase
 
       # revision version 2
       revision = @page.revisions.second
-      auditor = Folio::Audited::Auditor.new(revision)
+      auditor = Folio::Audited::Auditor.new(record: revision)
       file_placements_hash = auditor.send(:get_file_placements_attributes_for_reconstruction,
                                           record: revision,
                                           data: revision.folio_audited_data["file_placements"])
@@ -185,7 +185,7 @@ class Folio::AuditedTest < ActiveSupport::TestCase
 
       # revision version 3
       revision = @page.revisions.third
-      auditor = Folio::Audited::Auditor.new(revision)
+      auditor = Folio::Audited::Auditor.new(record: revision)
       file_placements_hash = auditor.send(:get_file_placements_attributes_for_reconstruction,
                                           record: revision,
                                           data: revision.folio_audited_data["file_placements"])
