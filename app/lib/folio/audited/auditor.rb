@@ -20,7 +20,7 @@ class Folio::Audited::Auditor
           @audit.folio_data[key.to_s] = if respond_to?("reconstruct_#{key}")
             send("reconstruct_#{key}", @audit)
           else
-            # TODO do this in a generic manner
+            reconstruct_related_records(key: key.to_s, record: @record, audit: @audit)
           end
         end
       end
@@ -375,6 +375,57 @@ class Folio::Audited::Auditor
       h
     end
 
+    def get_related_records_attributes_for_reconstruction(key:, record:, audit:)
+      records_ary = []
+      nested_attributes = []
+
+      record.send(key).each do |related_record|
+        records_ary << related_record
+
+        ah = related_record_to_audited_hash(related_record)
+        ah["_destroy"] = "1"
+
+        nested_attributes << ah
+      end
+
+      if audit.folio_data && audit.folio_data[key].present?
+        audit.folio_data[key].each do |value|
+          if value["id"].present? && ref = nested_attributes.find { |h| h["id"] == value["id"] }
+            ref.merge!(value).delete("_destroy")
+          else
+            nested_attributes << value.without("id")
+          end
+        end
+      end
+
+      handle_position = nested_attributes.any? { |h| h["position"].present? }
+      position = 0
+
+      if handle_position
+        nested_attributes.sort_by! { |h| h["position"].to_i }
+      end
+
+      nested_attributes.map! do |value|
+        if value["_destroy"] == "1"
+          value.without("position", "associations", "_file_placements")
+        else
+          value["position"] = (position += 1) if handle_position
+
+          file_placements_data = value.delete("_file_placements")
+
+          if file_placements_data.present?
+            related_record = value["id"] ? (records_ary.find { |related_record| related_record.id == value["id"] }) : nil
+            value.merge!(get_file_placements_attributes_for_reconstruction(record: related_record,
+                                                                           data: file_placements_data))
+          end
+        end
+
+        value.without("_file_placements")
+      end
+
+      { "#{key}_attributes" => nested_attributes }
+    end
+
     def reconstruct_atoms(record:, audit:)
       record.assign_attributes(get_atoms_attributes_for_reconstruction(record:, audit:))
 
@@ -404,6 +455,10 @@ class Folio::Audited::Auditor
                                                                 data: audit.folio_data["file_placements"])
 
       record.assign_attributes(attrs)
+    end
+
+    def reconstruct_related_records(key:, record:, audit:)
+      record.assign_attributes(get_related_records_attributes_for_reconstruction(key:, record:, audit:))
     end
 
     def strip_ids_from_folio_data_hash(folio_data_hash)
