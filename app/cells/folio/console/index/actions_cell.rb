@@ -175,7 +175,7 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
 
       ico = folio_icon(action[:icon], height: action[:icon_height])
 
-      if action[:url] && !action[:disabled]
+      inner_content = if action[:url] && !action[:disabled]
         url = action[:url].is_a?(Proc) ? action[:url].call(model) : action[:url]
         link_to(ico, url, opts)
       else
@@ -184,6 +184,12 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
         else
           content_tag(:span, ico, opts)
         end
+      end
+
+      if action[:tooltip].present?
+        content_tag(:span, inner_content, { data: stimulus_tooltip(action[:tooltip]) })
+      else
+        inner_content
       end
     end
   end
