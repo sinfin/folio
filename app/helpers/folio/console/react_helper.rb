@@ -96,6 +96,8 @@ module Folio::Console::ReactHelper
             atoms[key] << atom.to_h
           end
         end
+
+        atoms[key].sort_by! { |a| a[:position] || 0 }
       end
     else
       atoms = { atoms: [] }
@@ -108,6 +110,8 @@ module Folio::Console::ReactHelper
           atoms[:atoms] << atom.to_h
         end
       end
+
+      atoms[:atoms].sort_by! { |a| a[:position] || 0 }
     end
 
     if f.lookup_model_names.size == 1
