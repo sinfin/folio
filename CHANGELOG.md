@@ -2,6 +2,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2025-01-29
+### Changed
+- changed `Folio::ContentTemplate` to be scoped per-site and allowed site admins to manage them
+
 ## 2025-01-22
 ### Added
 - added support for multi-locale `title` attributes in `Folio::AttributeType`
