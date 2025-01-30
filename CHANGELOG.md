@@ -8,6 +8,10 @@ All notable changes to this project will be documented in this file.
 
 - tooltip for disabled action
 
+### Changed
+
+- only pass preview token if unpublished in console index actions
+
 ## [6.0.4] - 2025-01-13
 
 ### Fixed

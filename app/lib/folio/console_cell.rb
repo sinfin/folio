@@ -32,7 +32,7 @@ class Folio::ConsoleCell < Folio::ApplicationCell
     args = {}
 
     if record.respond_to?(:published?) && token = record.try(:preview_token)
-      args[Folio::Publishable::PREVIEW_PARAM_NAME] = token
+      args[Folio::Publishable::PREVIEW_PARAM_NAME] = token unless record.published?
     end
 
     if record.respond_to?(:locale)
