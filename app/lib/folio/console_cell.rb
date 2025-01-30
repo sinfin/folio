@@ -41,7 +41,7 @@ class Folio::ConsoleCell < Folio::ApplicationCell
       args[:locale] = I18n.locale
     end
 
-    if Folio::Current.site.locale.present? && Folio::Current.site.locales.present? && Folio::Current.site.locales.exclude?(args[:locale].to_s)
+    if args[:locale] && Folio::Current.site.locale.present? && Folio::Current.site.locales.present? && Folio::Current.site.locales.exclude?(args[:locale].to_s)
       args[:locale] = Folio::Current.site.locale
     end
 
