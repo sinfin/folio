@@ -1,0 +1,144 @@
+h1 Folio Console UI
+
+h2 Input rich text
+
+h3 Blank
+
+= simple_form_for "", method: :get, url: request.path do |f|
+  = f.input :default, as: :redactor
+
+h3 With content
+
+= simple_form_for "", method: :get, url: request.path do |f|
+  = f.input :default, as: :redactor, input_html: { value: '<p>Lorem ipsum <strong>dolor sit amet</strong>, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>' }
+
+h2 HTML Auto Format
+
+table.table.table-bordered[
+  class="f-c-ui-input-rich-text-string-auto-format-demo"
+]
+  thead
+    tr
+      th From
+      th Expect
+      th Result
+  tbody
+    tr
+      td Lorem ipsum... dolor sit amet
+      td Lorem ipsum… dolor sit amet
+      td
+    tr
+      td Lorem ipsum -> dolor sit amet
+      td Lorem ipsum → dolor sit amet
+      td
+    tr
+      td Lorem ipsum <- dolor sit amet
+      td Lorem ipsum ← dolor sit amet
+      td
+    tr
+      td Lorem ipsum <= dolor sit amet
+      td Lorem ipsum ≤ dolor sit amet
+      td
+    tr
+      td Lorem ipsum >= dolor sit amet
+      td Lorem ipsum ≥ dolor sit amet
+      td
+    tr
+      td Lorem ipsum != dolor sit amet
+      td Lorem ipsum ≠ dolor sit amet
+      td
+    tr
+      td Lorem ipsum 1/2 dolor sit amet
+      td Lorem ipsum ½ dolor sit amet
+      td
+    tr
+      td Lorem ipsum 1/4 dolor sit amet
+      td Lorem ipsum ¼ dolor sit amet
+      td
+    tr
+      td Lorem ipsum 3/4 dolor sit amet
+      td Lorem ipsum ¾ dolor sit amet
+      td
+    tr
+      td Lorem ipsum ^o dolor sit amet
+      td Lorem ipsum ° dolor sit amet
+      td
+    tr
+      td Lorem ipsum (c) dolor sit amet
+      td Lorem ipsum © dolor sit amet
+      td
+    tr
+      td Lorem ipsum (r) dolor sit amet
+      td Lorem ipsum ® dolor sit amet
+      td
+    tr
+      td Lorem ipsum (tm) dolor sit amet
+      td Lorem ipsum ™ dolor sit amet
+      td
+    tr
+      td Lorem - ipsum dolor sit amet
+      td Lorem – ipsum dolor sit amet
+      td
+    tr
+      td Lorem "ipsum" dolor sit amet
+      td Lorem „ipsum“ dolor sit amet
+      td
+    tr
+      td Lorem 'ipsum' dolor sit amet
+      td Lorem ‚ipsum‘ dolor sit amet
+      td
+    tr
+      td Lorem "ipsum “dolor ”sit
+      td Lorem „ipsum „dolor „sit
+      td
+    tr
+      td Lorem ipsum" dolor“ sit”
+      td Lorem ipsum“ dolor“ sit“
+      td
+    tr
+      td Lorem 'ipsum `dolor sit
+      td Lorem ‚ipsum ‚dolor sit
+      td
+    tr
+      td Lorem ipsum' dolor` sit
+      td Lorem ipsum‘ dolor‘ sit
+      td
+    tr
+      td Lorem ipsum" dolor“ sit”
+      td Lorem ipsum“ dolor“ sit“
+      td
+    tr
+      td Lorem ipsum... dolor sit amet Lorem ipsum -> dolor sit amet Lorem ipsum <- dolor sit amet Lorem ipsum <= dolor sit amet Lorem ipsum >= dolor sit amet Lorem ipsum != dolor sit amet Lorem ipsum 1/2 dolor sit amet Lorem ipsum 1/4 dolor sit amet Lorem ipsum 3/4 dolor sit amet Lorem ipsum ^o dolor sit amet Lorem ipsum (c) dolor sit amet Lorem ipsum (r) dolor sit amet Lorem ipsum (tm) dolor sit amet Lorem - ipsum dolor sit amet Lorem "ipsum" dolor sit amet Lorem 'ipsum' dolor sit amet Lorem "ipsum “dolor ”sit Lorem ipsum" dolor“ sit” Lorem 'ipsum `dolor sit Lorem ipsum' dolor` sit Lorem ipsum" dolor“ sit”
+      td Lorem ipsum… dolor sit amet Lorem ipsum → dolor sit amet Lorem ipsum ← dolor sit amet Lorem ipsum ≤ dolor sit amet Lorem ipsum ≥ dolor sit amet Lorem ipsum ≠ dolor sit amet Lorem ipsum ½ dolor sit amet Lorem ipsum ¼ dolor sit amet Lorem ipsum ¾ dolor sit amet Lorem ipsum ° dolor sit amet Lorem ipsum © dolor sit amet Lorem ipsum ® dolor sit amet Lorem ipsum ™ dolor sit amet Lorem – ipsum dolor sit amet Lorem „ipsum“ dolor sit amet Lorem ‚ipsum‘ dolor sit amet Lorem „ipsum „dolor „sit Lorem ipsum“ dolor“ sit“ Lorem ‚ipsum ‚dolor sit Lorem ipsum‘ dolor‘ sit Lorem ipsum“ dolor“ sit“
+      td
+
+javascript:
+  document.addEventListener('DOMContentLoaded', function() {
+    const table = document.querySelector('.f-c-ui-input-rich-text-string-auto-format-demo')
+
+    for (const row of table.querySelectorAll('tbody tr')) {
+      const tds = row.querySelectorAll('td');
+
+      tds[2].innerHTML = window.Folio.HtmlAutoFormat.replace({ html: tds[0].textContent })
+
+      if (tds[1].textContent === tds[2].textContent) {
+        tds[2].classList.add('text-success')
+      } else {
+        tds[2].classList.add('text-danger')
+
+        const one = tds[1].textContent.split(' ')
+        const two = tds[2].textContent.split(' ')
+
+        for (let i = 0; i < one.length; i++) {
+          if (one[i] !== two[i]) {
+            // rest of array
+            const restOfOne = one.slice(i).join(' ')
+            const restOfTwo = two.slice(i).join(' ')
+
+            tds[2].innerHTML += `<p class="mt-3 text-reset"><strong>expected:</strong><br>${restOfOne}</p><p class="text-reset mt-3"><strong>got:</strong><br>${restOfTwo}</p>`
+            break
+          }
+        }
+      }
+    }
+  });

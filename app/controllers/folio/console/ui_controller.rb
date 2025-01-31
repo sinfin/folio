@@ -18,6 +18,7 @@ class Folio::Console::UiController < Folio::Console::BaseController
 
     @inputs = %i[
       date_time
+      rich_text
     ].sort
   end
 

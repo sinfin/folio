@@ -35,6 +35,7 @@ Folio::Engine.routes.draw do
         get :tabs
         get :warning_ribbons
 
+        get :input_rich_text
         get :input_date_time
       end
 
