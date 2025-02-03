@@ -341,11 +341,9 @@ class Folio::Audited::Auditor
 
             file_placements_data = value.delete("_file_placements")
 
-            if file_placements_data.present?
-              atom = value["id"] ? (atoms_array.find { |atom| atom.id == value["id"] }) : nil
-              value.merge!(get_file_placements_attributes_for_reconstruction(record: atom,
-                                                                             data: file_placements_data))
-            end
+            atom = value["id"] ? (atoms_array.find { |atom| atom.id == value["id"] }) : nil
+            value.merge!(get_file_placements_attributes_for_reconstruction(record: atom,
+                                                                           data: file_placements_data))
 
             associations = {}
 
@@ -413,11 +411,9 @@ class Folio::Audited::Auditor
 
           file_placements_data = value.delete("_file_placements")
 
-          if file_placements_data.present?
-            related_record = value["id"] ? (records_ary.find { |related_record| related_record.id == value["id"] }) : nil
-            value.merge!(get_file_placements_attributes_for_reconstruction(record: related_record,
-                                                                           data: file_placements_data))
-          end
+          related_record = value["id"] ? (records_ary.find { |related_record| related_record.id == value["id"] }) : nil
+          value.merge!(get_file_placements_attributes_for_reconstruction(record: related_record,
+                                                                         data: file_placements_data))
         end
 
         value.without("_file_placements")
@@ -449,8 +445,6 @@ class Folio::Audited::Auditor
     end
 
     def reconstruct_file_placements(record:, audit:)
-      return unless audit.folio_data && audit.folio_data["file_placements"].present?
-
       attrs = get_file_placements_attributes_for_reconstruction(record:,
                                                                 data: audit.folio_data["file_placements"])
 

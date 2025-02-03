@@ -453,4 +453,36 @@ class Folio::AuditedTest < ActiveSupport::TestCase
       end
     end
   end
+
+  test "reconstruct deletes unwanted attachments" do
+    Audited.stub(:auditing_enabled, true) do
+      site = get_any_site
+
+      image_1 = create(:folio_file_image)
+
+      @page = AuditedPage.create(title: "v1",
+                                 site:,
+                                 atoms_attributes: { 0 => { type: "Dummy::Atom::Cards::Small", position: 1, title: "foo"  } })
+
+      @page.update!(title: "v2",
+                    cover_placement_attributes: { file_id: image_1.id },
+                    atoms_attributes: { 0 => { id: @page.atoms.first.id, cover_placement_attributes: { file_id: image_1.id } } })
+
+      assert_equal 2, @page.revisions.count
+
+      assert_equal image_1.id, @page.cover_placement.file_id
+      assert_equal image_1.id, @page.atoms.first.cover_placement.file_id
+
+      first_audit = @page.audits.first
+      revision = first_audit.revision
+      revision.reconstruct_folio_audited_data(audit: first_audit)
+      revision.save!
+
+      @page.reload
+
+      assert_equal "v1", @page.title
+      assert_nil @page.cover_placement
+      assert_nil @page.atoms.reload.first.cover_placement
+    end
+  end
 end
