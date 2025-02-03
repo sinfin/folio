@@ -12,17 +12,23 @@ class Folio::Console::FilePlacementSerializer
       placement = placement.placement
     end
 
+    options = if site = placement&.site
+      { host: site.env_aware_domain, only_path: false }
+    else
+      { only_path: true }
+    end
+
     begin
-      Folio::Engine.app.url_helpers.url_for([:edit, :console, placement, only_path: true])
+      Folio::Engine.app.url_helpers.url_for([:edit, :console, placement, options])
     rescue StandardError
       begin
-        Folio::Engine.app.url_helpers.url_for([:console, placement, only_path: true])
+        Folio::Engine.app.url_helpers.url_for([:console, placement, options])
       rescue StandardError
         begin
-          Rails.application.routes.url_helpers.url_for([:edit, :console, placement, only_path: true])
+          Rails.application.routes.url_helpers.url_for([:edit, :console, placement, options])
         rescue StandardError
           begin
-            Rails.application.routes.url_helpers.url_for([:console, placement, only_path: true])
+            Rails.application.routes.url_helpers.url_for([:console, placement, options])
           rescue StandardError
             nil
           end
