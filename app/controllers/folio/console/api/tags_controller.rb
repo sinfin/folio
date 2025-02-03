@@ -9,7 +9,7 @@ class Folio::Console::Api::TagsController < Folio::Console::Api::BaseController
                                  .where(taggings: { context:, tenant: Folio::Current.site.id })
 
     if q.present?
-      scope = scope.by_query(q)
+      scope = scope.by_label_query(q)
     end
 
     scope = scope.unscope(:order).most_used(7)

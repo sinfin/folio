@@ -351,6 +351,36 @@ en:
       folio_attributes_fields_component:
         add: Add attribute
 
+      links:
+        control_bar_component:
+          add_link: Add link
+
+        modal_component:
+          title: :folio.console.links.control_bar_component.add_link
+
+        modal:
+          form_component:
+            label/target: Open in new window
+            label/rel: Rel attribute (optional)
+            label/label: Link text
+            hint/rel: "E.g. noopener, noreferrer, nofollow"
+            cancel: Cancel
+            submit: Confirm
+            select: Select
+            custom_url: Custom URL
+
+          url_picker_component:
+            tab/pick: Pick
+            tab/custom_url: Custom URL
+            placeholder/q: Search ...
+            placeholder/site_id: Web ...
+            placeholder/class_name: Type ...
+            placeholder/published_within: Datum zveřejnění ...
+
+          list_component:
+            no_records: No records found.
+            unpublished: unpublished
+
   date:
     formats:
       console_short: "%d. %m. %Y"

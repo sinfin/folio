@@ -13,14 +13,29 @@ class Dummy::Molecule::Cards::FullWidthComponent < ApplicationComponent
   def buttons_ary(atom)
     ary = []
 
-    if atom.button_label.present? && atom.button_url.present?
-      ary << { href: atom.button_url, label: atom.button_label }
+    if atom.button_url_json.present?
+      if atom.button_url_json[:label].present? && atom.button_url_json[:href].present?
+        ary << {
+          href: atom.button_url_json[:href],
+          label: atom.button_url_json[:label],
+          title: atom.button_url_json[:label],
+          rel: atom.button_url_json[:rel],
+          target: atom.button_url_json[:target],
+        }
+      end
     end
 
-    if atom.secondary_button_label.present? && atom.secondary_button_url.present?
-      ary << { href: atom.secondary_button_url,
-               label: atom.secondary_button_label,
-               variant: :secondary }
+    if atom.button_url_json.present?
+      if atom.button_url_json[:label].present? && atom.button_url_json[:href].present?
+        ary << {
+          href: atom.button_url_json[:href],
+          label: atom.button_url_json[:label],
+          title: atom.button_url_json[:label],
+          rel: atom.button_url_json[:rel],
+          target: atom.button_url_json[:target],
+          variant: :secondary
+        }
+      end
     end
 
     ary

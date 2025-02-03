@@ -120,7 +120,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
   end
 
   def filter_params
-    params.permit(:by_query, *index_filters_keys)
+    params.permit(:by_label_query, *index_filters_keys)
   end
 
   def safe_url_for(opts)

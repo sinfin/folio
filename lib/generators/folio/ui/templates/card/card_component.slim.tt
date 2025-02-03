@@ -24,7 +24,12 @@
               - if @title.present?
                 *{ tag: @title_tag, class: "<%= classname_prefix %>-ui-card__title" }
                   - if @href.present? && !render_button_or_links?
-                    a.<%= classname_prefix %>-ui-card__title-a href=@href
+                    a.<%= classname_prefix %>-ui-card__title-a[
+                      href=@href
+                      target=@target
+                      rel=@rel
+                      title=@link_title
+                    ]
                       = cstypo @title
                   - else
                     = cstypo @title
@@ -61,9 +66,17 @@
             = <%= application_namespace_path %>_ui_button(label: @button_label,
                               variant: @button_variant,
                               href: @href,
+                              target: @target,
+                              rel: @rel,
+                              title: @link_title,
                               class_name: "<%= classname_prefix %>-ui-card__button")
 
           - if @links.present?
             - @links.each do |link_hash|
-              a.<%= classname_prefix %>-ui-card__link href=link_hash[:href]
-                = link_hash[:label]
+              - if link_hash[:href].present?
+                a.<%= classname_prefix %>-ui-card__link[
+                  href=link_hash[:href]
+                  rel=link_hash[:rel]
+                  target=link_hash[:target]
+                ]
+                  = link_hash[:label]

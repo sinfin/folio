@@ -1,0 +1,7 @@
+= render(Folio::Console::Ui::ModalComponent.new(title: t('.title'),
+                                                class_name: CLASS_NAME,
+                                                size: :custom,
+                                                data:))
+  .f-c-links-modal__form-wrap data=stimulus_target("formWrap")
+
+  span.folio-loader.folio-loader--transparent.f-c-links-modal__loader
