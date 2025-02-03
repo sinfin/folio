@@ -175,7 +175,7 @@ class Folio::AuditedTest < ActiveSupport::TestCase
       auditor = Folio::Audited::Auditor.new(record: revision, audit:)
       file_placements_hash = auditor.send(:get_file_placements_attributes_for_reconstruction,
                                           record: revision,
-                                          data: audit.folio_data["file_placements"])
+                                          data: audit.folio_data && audit.folio_data["file_placements"])
 
       assert_equal "v1", revision.title
       assert_equal image_1.id, file_placements_hash["cover_placement_attributes"]["file_id"]
@@ -187,7 +187,7 @@ class Folio::AuditedTest < ActiveSupport::TestCase
       auditor = Folio::Audited::Auditor.new(record: revision, audit:)
       file_placements_hash = auditor.send(:get_file_placements_attributes_for_reconstruction,
                                           record: revision,
-                                          data: audit.folio_data["file_placements"])
+                                          data: audit.folio_data && audit.folio_data["file_placements"])
 
       assert_equal "v2", revision.title
       assert_equal image_2.id, file_placements_hash["cover_placement_attributes"]["file_id"]
@@ -200,7 +200,7 @@ class Folio::AuditedTest < ActiveSupport::TestCase
       auditor = Folio::Audited::Auditor.new(record: revision, audit:)
       file_placements_hash = auditor.send(:get_file_placements_attributes_for_reconstruction,
                                           record: revision,
-                                          data: audit.folio_data["file_placements"])
+                                          data: audit.folio_data && audit.folio_data["file_placements"])
 
       assert_equal "v3", revision.title
       assert_nil file_placements_hash["cover_placement_attributes"]

@@ -16,7 +16,7 @@ class Folio::Audited::Auditor
 
     if @record.class.folio_audited_data_additional_keys.present?
       @record.class.folio_audited_data_additional_keys.each do |key|
-        if @audit.folio_data[key.to_s]
+        if @audit.folio_data && @audit.folio_data[key.to_s]
           @audit.folio_data[key.to_s] = if respond_to?("reconstruct_#{key}")
             send("reconstruct_#{key}", @audit)
           else
@@ -446,7 +446,7 @@ class Folio::Audited::Auditor
 
     def reconstruct_file_placements(record:, audit:)
       attrs = get_file_placements_attributes_for_reconstruction(record:,
-                                                                data: audit.folio_data["file_placements"])
+                                                                data: audit.folio_data && audit.folio_data["file_placements"])
 
       record.assign_attributes(attrs)
     end
