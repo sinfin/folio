@@ -17,8 +17,10 @@ class Dummy::Ui::ButtonComponent < ApplicationComponent
                  type: :button,
                  disabled: false,
                  onclick: nil,
-                 target: nil,
-                 href: nil)
+                 href: nil,
+                 rel: nil,
+                 title: nil,
+                 target: nil)
     @variant = variant
     @size = size
     @icon_height = icon_height
@@ -34,6 +36,8 @@ class Dummy::Ui::ButtonComponent < ApplicationComponent
     @type = type
     @href = href
     @target = target
+    @rel = rel
+    @title = title
     @onclick = onclick
     @right_icon = right_icon
   end
@@ -48,7 +52,9 @@ class Dummy::Ui::ButtonComponent < ApplicationComponent
     if @href
       h[:tag] = :a
       h[:href] = @href
-      h[:target] = @target
+      h[:target] = @target if @target
+      h[:rel] = @rel if @rel
+      h[:title] = @title if @title
     else
       h[:type] = @type
     end

@@ -39,3 +39,8 @@ image_component:
 topics_component:
   collapse: Collapse
   expand: Expand
+record_bar_component:
+  edit_desktop: Edit page
+  edit_mobile: Edit
+  broken_atom_desktop: Page contains a broken block
+  broken_atom_mobile: Broken block

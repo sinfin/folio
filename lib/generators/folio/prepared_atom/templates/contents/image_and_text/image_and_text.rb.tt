@@ -21,8 +21,7 @@ class <%= application_namespace %>::Atom::Contents::ImageAndText < Folio::Atom::
     image_ratio: ALLOWED_THUMB_SIZES.keys,
     vertically_centered_content: :boolean,
     button_label: :string,
-    url: :url,
-    open_in_new_tab: :boolean,
+    url_json: :url_json,
     image_side: %w[left right],
     wrapper: %w[none background outline],
     color_mode: %w[light dark],
@@ -53,8 +52,8 @@ class <%= application_namespace %>::Atom::Contents::ImageAndText < Folio::Atom::
     def validate_one_of_contents
       if title.blank? && content.blank? && button_label.blank?
         errors.add(:content, :blank)
-      elsif button_label.present? && url.blank?
-        errors.add(:url, :blank)
+      elsif button_label.present? && url_json.blank?
+        errors.add(:url_json, :blank)
       end
     end
 

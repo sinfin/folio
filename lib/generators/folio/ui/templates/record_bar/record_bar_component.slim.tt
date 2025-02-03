@@ -1,0 +1,4 @@
+.<%= classname_prefix %>-ui-record-bar
+  .<%= classname_prefix %>-ui-record-bar__inner
+    = render(<%= application_namespace %>::Ui::ButtonsComponent.new(buttons:,
+                                             class_name: "justify-content-center"))
