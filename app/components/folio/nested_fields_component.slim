@@ -7,7 +7,7 @@
   .f-nested-fields__fields-wrap[
     data=stimulus_data(target: 'fieldsWrap', action: { sortupdate: 'onSortUpdate' })
   ]
-    = @f.simple_fields_for @key do |ff|
+    = @f.simple_fields_for @key, @collection do |ff|
       ruby:
         @g = ff
         supports_position = @position && @g.object.respond_to?(:position)
