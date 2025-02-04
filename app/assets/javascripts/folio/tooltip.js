@@ -15,6 +15,28 @@ if (!window.Folio.Tooltip.TEMPLATE) {
   window.Folio.Tooltip.TEMPLATE.innerHTML = window.Folio.Tooltip.TEMPLATE_HTML
 }
 
+window.Folio.Tooltip.addToElement = ({ element, title, placement }) => {
+  if (!element || !title) return
+
+  element.dataset.fTooltipTitleValue = title
+
+  if (placement) {
+    element.dataset.fTooltipPlacementValue = placement
+  }
+
+  if (element.dataset.controller) {
+    element.dataset.controller += " f-tooltip"
+  } else {
+    element.dataset.controller = "f-tooltip"
+  }
+
+  if (element.dataset.action) {
+    element.dataset.action += ' mouseenter->f-tooltip#mouseenter mouseleave->f-tooltip#mouseleave'
+  } else {
+    element.dataset.action = 'mouseenter->f-tooltip#mouseenter mouseleave->f-tooltip#mouseleave'
+  }
+}
+
 window.Folio.Stimulus.register('f-tooltip', class extends window.Stimulus.Controller {
   static values = {
     title: String,

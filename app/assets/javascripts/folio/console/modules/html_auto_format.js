@@ -4,6 +4,15 @@ window.FolioConsole.HtmlAutoFormat.enabled = true
 
 window.FolioConsole.HtmlAutoFormat.CLASS_NAME = 'f-c-html-auto-format'
 
+window.FolioConsole.HtmlAutoFormat.I18N = {
+  cs: {
+    tooltip: "Automaticky nahrazeno za \"%{from}\". <br> Kliknutím zrušíte."
+  },
+  en: {
+    tooltip: "Automatically replaced from \"%{from}\". <br> Click to cancel."
+  }
+}
+
 window.FolioConsole.HtmlAutoFormat.MAPPINGS = {
   commons: [
     { from: '...', to: '…' },
@@ -62,9 +71,9 @@ window.FolioConsole.HtmlAutoFormat.wrapInSpan = ({ string, from, cancelAfter, no
   }
 
   if (notify) {
-    window.FolioConsole.HtmlAutoFormat.span.dataset.fCHtmlAutoFormatNotifyValue = Date.now()
+    window.FolioConsole.HtmlAutoFormat.span.dataset.fCHtmlAutoFormatInteractiveValue = Date.now()
   } else {
-    delete window.FolioConsole.HtmlAutoFormat.span.dataset.fCHtmlAutoFormatNotifyValue
+    delete window.FolioConsole.HtmlAutoFormat.span.dataset.fCHtmlAutoFormatInteractiveValue
   }
 
   window.FolioConsole.HtmlAutoFormat.span.dataset.fCHtmlAutoFormatFromValue = from
@@ -194,14 +203,19 @@ window.Folio.Stimulus.register('f-c-html-auto-format', class extends window.Stim
 
   connect () {
     this.element.dataset.action = 'click->f-c-html-auto-format#cancel'
+
+    if (!this.cancelledValue && this.fromValue) {
+      const title = window.Folio.i18n(window.FolioConsole.HtmlAutoFormat.I18N, 'tooltip').replace('%{from}', this.fromValue)
+      window.Folio.Tooltip.addToElement({ element: this.element, placement: 'top', title })
+    }
   }
 
   notifyValueChanged () {
     if (this.notifyValue && this.notifyValue > 0) {
       if ((Date.now() - this.notifyValue) < 1000) {
-        this.element.classList.add('f-c-html-auto-format--notify')
+        this.element.classList.add('f-c-html-auto-format--hint')
       } else {
-        this.element.classList.remove('f-c-html-auto-format--notify')
+        this.element.classList.remove('f-c-html-auto-format--hint')
       }
     }
   }
