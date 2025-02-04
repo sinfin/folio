@@ -1,5 +1,6 @@
 window.Folio = window.Folio || {}
 window.Folio.HtmlAutoFormat = window.Folio.HtmlAutoFormat || {}
+window.Folio.HtmlAutoFormat.enabled = true
 
 window.Folio.HtmlAutoFormat.CLASS_NAME = 'f-c-html-auto-format'
 
@@ -7,9 +8,13 @@ window.Folio.HtmlAutoFormat.MAPPINGS = {
   commons: [
     { from: '...', to: '…' },
     { from: '->', to: '→' },
+    { from: '-&gt;', to: '→' },
     { from: '<-', to: '←' },
+    { from: '&lt;-', to: '←' },
     { from: '<=', to: '≤' },
+    { from: '&lt;=', to: '≤' },
     { from: '>=', to: '≥' },
+    { from: '&gt;=', to: '≥' },
     { from: '!=', to: '≠' },
     { from: '1/2', to: '½' },
     { from: '1/4', to: '¼' },
@@ -28,6 +33,17 @@ window.Folio.HtmlAutoFormat.MAPPINGS = {
     { from: /(?<g1s>['`])(?<g2c>\w)/, transform: { g1s: '‚' }, cancelAfter: "'" },
     { from: /(?<g1c>\w)(?<g2s>['`])/, transform: { g2s: '‘' }, cancelAfter: "'" }
   ]
+}
+
+window.Folio.HtmlAutoFormat.redactorBlurCallback = ({ redactor }) => {
+  if (!window.Folio.HtmlAutoFormat.enabled) return
+
+  const html = redactor.source.getCode()
+  const replaced = window.Folio.HtmlAutoFormat.replace({ html })
+
+  if (replaced !== html) {
+    redactor.source.setCode(replaced)
+  }
 }
 
 window.Folio.HtmlAutoFormat.sanity = 0
@@ -163,6 +179,14 @@ window.Folio.HtmlAutoFormat.replace = (opts) => {
 
 window.Folio.Stimulus.register('f-c-html-auto-format', class extends window.Stimulus.Controller {
   static values = {
-    cancelAfter: { type: String, default: '' }
+    cancelAfter: { type: String, default: '' },
+    cancelled: { type: Boolean, default: false },
+    notify: { type: Boolean, default: false },
+  }
+
+  connect () {
+    if (this.notifyValue) {
+      console.log('connected', this.element)
+    }
   }
 })

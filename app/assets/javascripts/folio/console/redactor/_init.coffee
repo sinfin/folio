@@ -1,6 +1,11 @@
 #= require folio/i18n
 
-changedCallback = ->
+blurCallback = ->
+  if window.Folio and window.Folio.HtmlAutoFormat and window.Folio.HtmlAutoFormat.redactorBlurCallback
+    window.Folio.HtmlAutoFormat.redactorBlurCallback
+      redactor: this
+
+changedCallback = (html) ->
   @rootElement.dispatchEvent(new window.Event('change', bubbles: true))
 
 FOLIO_REDACTOR_I18N =
@@ -19,6 +24,7 @@ ADVANCED_OPTIONS =
   linkNewTab: true
   callbacks:
     changed: changedCallback
+    blur: blurCallback
 
 OPTIONS =
   plugins: ['table', 'button', 'character_counter', 'definedlinks', 'linksrel']
@@ -46,6 +52,7 @@ OPTIONS =
   linkNewTab: true
   callbacks:
     changed: changedCallback
+    blur: blurCallback
 
 EMAIL_OPTIONS =
   plugins: ['button', 'character_counter']
@@ -55,6 +62,7 @@ EMAIL_OPTIONS =
   formatting: []
   callbacks:
     changed: changedCallback
+    blur: blurCallback
 
 PEREX_OPTIONS =
   plugins: ['character_counter', 'definedlinks', 'linksrel']
@@ -65,6 +73,7 @@ PEREX_OPTIONS =
   linkNewTab: true
   callbacks:
     changed: changedCallback
+    blur: blurCallback
 
 window.folioConsoleInitRedactor = (node, options = {}, additional = {}) ->
   return if node.classList.contains('redactor-source')
