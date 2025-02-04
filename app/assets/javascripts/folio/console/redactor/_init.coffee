@@ -1,8 +1,8 @@
 #= require folio/i18n
 
 blurCallback = ->
-  if window.Folio and window.Folio.HtmlAutoFormat and window.Folio.HtmlAutoFormat.redactorBlurCallback
-    window.Folio.HtmlAutoFormat.redactorBlurCallback
+  if window.FolioConsole and window.FolioConsole.HtmlAutoFormat and window.FolioConsole.HtmlAutoFormat.redactorBlurCallback
+    window.FolioConsole.HtmlAutoFormat.redactorBlurCallback
       redactor: this
 
 changedCallback = (html) ->

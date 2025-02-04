@@ -119,7 +119,7 @@ javascript:
     for (const row of table.querySelectorAll('tbody tr')) {
       const tds = row.querySelectorAll('td');
 
-      tds[2].innerHTML = window.Folio.HtmlAutoFormat.replace({ html: tds[0].textContent })
+      tds[2].innerHTML = window.FolioConsole.HtmlAutoFormat.replace({ html: tds[0].textContent })
 
       if (tds[1].textContent === tds[2].textContent) {
         tds[2].classList.add('text-success')
