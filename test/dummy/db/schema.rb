@@ -244,7 +244,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_29_103749) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.string "title"
-    t.bigint "site_id", null: false
+    t.bigint "site_id"
     t.index ["position"], name: "index_folio_content_templates_on_position"
     t.index ["site_id"], name: "index_folio_content_templates_on_site_id"
     t.index ["type"], name: "index_folio_content_templates_on_type"

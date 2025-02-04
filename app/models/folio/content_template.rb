@@ -70,7 +70,7 @@ end
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  title      :string
-#  site_id    :bigint(8)        not null
+#  site_id    :bigint(8)
 #
 # Indexes
 #
