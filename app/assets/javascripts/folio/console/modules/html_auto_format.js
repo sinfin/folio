@@ -39,7 +39,7 @@ window.Folio.HtmlAutoFormat.redactorBlurCallback = ({ redactor }) => {
   if (!window.Folio.HtmlAutoFormat.enabled) return
 
   const html = redactor.source.getCode()
-  const replaced = window.Folio.HtmlAutoFormat.replace({ html })
+  const replaced = window.Folio.HtmlAutoFormat.replace({ html, notify: true })
 
   if (replaced !== html) {
     redactor.source.setCode(replaced)
@@ -48,7 +48,7 @@ window.Folio.HtmlAutoFormat.redactorBlurCallback = ({ redactor }) => {
 
 window.Folio.HtmlAutoFormat.sanity = 0
 
-window.Folio.HtmlAutoFormat.wrapInSpan = ({ string, cancelAfter }) => {
+window.Folio.HtmlAutoFormat.wrapInSpan = ({ string, cancelAfter, notify }) => {
   if (!window.Folio.HtmlAutoFormat.span) {
     window.Folio.HtmlAutoFormat.span = document.createElement('span')
     window.Folio.HtmlAutoFormat.span.className = window.Folio.HtmlAutoFormat.CLASS_NAME
@@ -61,19 +61,25 @@ window.Folio.HtmlAutoFormat.wrapInSpan = ({ string, cancelAfter }) => {
     delete window.Folio.HtmlAutoFormat.span.dataset.fCHtmlAutoFormatCancelAfterValue
   }
 
+  if (notify) {
+    window.Folio.HtmlAutoFormat.span.dataset.fCHtmlAutoFormatNotifyValue = Date.now()
+  } else {
+    delete window.Folio.HtmlAutoFormat.span.dataset.fCHtmlAutoFormatNotifyValue
+  }
+
   window.Folio.HtmlAutoFormat.span.innerHTML = string
 
   return window.Folio.HtmlAutoFormat.span.outerHTML
 }
 
-window.Folio.HtmlAutoFormat.useMapping = ({ mapping, textNode }) => {
+window.Folio.HtmlAutoFormat.useMapping = ({ mapping, textNode, notify }) => {
   let replacedSomething = false
   let html = ''
 
   if (mapping.to) {
     html = textNode.nodeValue.replace(mapping.from, (match, offset, string) => {
       replacedSomething = true
-      return window.Folio.HtmlAutoFormat.wrapInSpan({ string: match.replace(mapping.from, mapping.to), cancelAfter: mapping.cancelAfter })
+      return window.Folio.HtmlAutoFormat.wrapInSpan({ string: match.replace(mapping.from, mapping.to), cancelAfter: mapping.cancelAfter, notify })
     })
   } else {
     const match = mapping.from.exec(textNode.nodeValue)
@@ -91,7 +97,7 @@ window.Folio.HtmlAutoFormat.useMapping = ({ mapping, textNode }) => {
         const string = match.groups[groupKey]
 
         if (mapping.transform[groupKey]) {
-          html += window.Folio.HtmlAutoFormat.wrapInSpan({ string: mapping.transform[groupKey], cancelAfter: mapping.cancelAfter })
+          html += window.Folio.HtmlAutoFormat.wrapInSpan({ string: mapping.transform[groupKey], cancelAfter: mapping.cancelAfter, notify })
         } else {
           html += string
         }
@@ -110,13 +116,13 @@ window.Folio.HtmlAutoFormat.useMapping = ({ mapping, textNode }) => {
   return false
 }
 
-window.Folio.HtmlAutoFormat.replaceInNode = ({ locale, node }) => {
+window.Folio.HtmlAutoFormat.replaceInNode = ({ locale, node, notify }) => {
   let replaced = false
 
   window.Folio.HtmlAutoFormat.MAPPINGS.commons.forEach((mapping) => {
     if (replaced) return
 
-    if (window.Folio.HtmlAutoFormat.useMapping({ mapping, textNode: node })) {
+    if (window.Folio.HtmlAutoFormat.useMapping({ mapping, textNode: node, notify })) {
       replaced = true
     }
   })
@@ -127,7 +133,7 @@ window.Folio.HtmlAutoFormat.replaceInNode = ({ locale, node }) => {
     window.Folio.HtmlAutoFormat.MAPPINGS[locale].forEach((mapping) => {
       if (replaced) return
 
-      if (window.Folio.HtmlAutoFormat.useMapping({ mapping, textNode: node })) {
+      if (window.Folio.HtmlAutoFormat.useMapping({ mapping, textNode: node, notify })) {
         replaced = true
       }
     })
@@ -136,7 +142,7 @@ window.Folio.HtmlAutoFormat.replaceInNode = ({ locale, node }) => {
   return replaced
 }
 
-window.Folio.HtmlAutoFormat.loopNode = ({ node, locale }) => {
+window.Folio.HtmlAutoFormat.loopNode = ({ node, locale, notify }) => {
   window.Folio.HtmlAutoFormat.sanity -= 1
   if (window.Folio.HtmlAutoFormat.sanity < 0) return
 
@@ -147,7 +153,7 @@ window.Folio.HtmlAutoFormat.loopNode = ({ node, locale }) => {
       let shouldReloop = false
 
       for (const child of node.childNodes) {
-        if (window.Folio.HtmlAutoFormat.loopNode({ node: child, locale })) {
+        if (window.Folio.HtmlAutoFormat.loopNode({ node: child, locale, notify })) {
           // if replacement is performed, reloop!
           shouldReloop = true
           break
@@ -155,13 +161,13 @@ window.Folio.HtmlAutoFormat.loopNode = ({ node, locale }) => {
       }
 
       if (shouldReloop) {
-        return window.Folio.HtmlAutoFormat.loopNode({ node, locale })
+        return window.Folio.HtmlAutoFormat.loopNode({ node, locale, notify })
       }
     }
 
     return false
   } else {
-    return window.Folio.HtmlAutoFormat.replaceInNode({ node, locale })
+    return window.Folio.HtmlAutoFormat.replaceInNode({ node, locale, notify })
   }
 }
 
@@ -172,7 +178,7 @@ window.Folio.HtmlAutoFormat.replace = (opts) => {
   div.innerHTML = opts.html
 
   window.Folio.HtmlAutoFormat.sanity = 100000
-  window.Folio.HtmlAutoFormat.loopNode({ node: div, locale })
+  window.Folio.HtmlAutoFormat.loopNode({ node: div, locale, notify: opts.notify })
 
   return div.innerHTML
 }
@@ -181,12 +187,16 @@ window.Folio.Stimulus.register('f-c-html-auto-format', class extends window.Stim
   static values = {
     cancelAfter: { type: String, default: '' },
     cancelled: { type: Boolean, default: false },
-    notify: { type: Boolean, default: false },
+    notify: { type: Number, default: 0 },
   }
 
-  connect () {
-    if (this.notifyValue) {
-      console.log('connected', this.element)
+  notifyValueChanged () {
+    if (this.notifyValue && this.notifyValue > 0) {
+      if ((Date.now() - this.notifyValue) < 1000) {
+        this.element.classList.add('f-c-html-auto-format--notify')
+      } else {
+        this.element.classList.remove('f-c-html-auto-format--notify')
+      }
     }
   }
 })
