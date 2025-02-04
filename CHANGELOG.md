@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ## 2025-01-29
 ### Changed
 - changed `Folio::ContentTemplate` to be scoped per-site and allowed site admins to manage them
+- added `folio:content_templates:idp_migrate_to_per_site` rake task to migrate existing content templates to per-site
 
 ## 2025-01-22
 ### Added
