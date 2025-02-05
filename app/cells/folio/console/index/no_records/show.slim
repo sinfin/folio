@@ -1,5 +1,5 @@
 .f-c-index-no-records
-  - if filtered? || controller.params[:by_label_query].present?
+  - if filtered? || controller.params[:by_query].present?
     p: strong = t('.filtered')
   - else
     .card.card--medium-gray

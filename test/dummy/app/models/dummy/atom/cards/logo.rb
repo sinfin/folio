@@ -5,7 +5,7 @@ class Dummy::Atom::Cards::Logo < Folio::Atom::Base
 
   STRUCTURE = {
     title: :string,
-    url_json: :url_json,
+    url: :url,
   }
 
   ASSOCIATIONS = {}

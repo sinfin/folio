@@ -10,22 +10,14 @@ class Dummy::Molecule::Cards::ExtraSmallComponent < ApplicationComponent
 
   def cards
     @atoms.map do |atom|
-      h = {
+      {
         title: atom.title,
         subtitle: atom.subtitle,
+        href: atom.url,
         image: molecule_cover_placement(atom),
         size: :xs,
         border: false,
       }
-
-      if atom.url_json.present?
-        h[:href] = atom.url_json[:href]
-        h[:target] = atom.url_json[:target]
-        h[:rel] = atom.url_json[:rel]
-        h[:link_title] = atom.url_json[:label]
-      end
-
-      h
     end
   end
 end

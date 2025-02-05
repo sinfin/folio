@@ -3,25 +3,6 @@
 module Folio::ToLabel
   extend ActiveSupport::Concern
 
-  included do
-    pg_search_scope :by_title_query,
-                    against: %i[title],
-                    ignoring: :accents,
-                    using: {
-                      tsearch: { prefix: true }
-                    }
-
-    scope :by_label_query, -> (query) do
-      if column_names.include?("title")
-        by_title_query(query)
-      elsif respond_to?(:by_query)
-        by_query(query)
-      else
-        none
-      end
-    end
-  end
-
   def to_label
     try(:title).presence ||
     try(:name).presence ||

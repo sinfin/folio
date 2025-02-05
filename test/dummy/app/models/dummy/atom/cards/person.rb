@@ -7,7 +7,8 @@ class Dummy::Atom::Cards::Person < Folio::Atom::Base
     name: :string,
     job: :string,
     content: :richtext,
-    link_url_json: :url_json,
+    link_label: :string,
+    link_url: :url,
     large: :boolean,
   }
 
@@ -20,6 +21,10 @@ class Dummy::Atom::Cards::Person < Folio::Atom::Base
   validates :name,
             :job,
             presence: true
+
+  validates :link_url,
+            presence: true,
+            if: -> { link_label.present? }
 
   def self.console_insert_row
     CONSOLE_INSERT_ROWS[:cards]

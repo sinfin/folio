@@ -302,7 +302,6 @@ cs:
     audio_cover_placement: Audio stopa
     button_label: Text tlačítka
     button_url: Odkaz tlačítka
-    button_url_json: Tlačítko
     console_notes: Poznámky (interní údaj)
     content: Obsah
     count: Počet
@@ -324,7 +323,6 @@ cs:
     last_sign_in_at: Poslední přihlášení
     link_label: Text odkazu
     link_url: URL odkazu
-    link_url_json: Odkaz
     locale: Jazyková verze
     locked: Uzamčen
     meta_description: Alternativní popis (SEO - Meta Description)
@@ -348,7 +346,6 @@ cs:
     secondary_address: Adresa - doplňková
     secondary_button_label: Text druhého tlačítka
     secondary_button_url: Odkaz druhého tlačítka
-    secondary_button_url_json: Druhé tlačítko
     sensitive_content: Obsahuje citlivý obsah
     sign_in_count: Počet přihlášení
     slug: Varianta názvu pro odkazy
@@ -369,7 +366,6 @@ cs:
     title: Název
     to_label: Název
     url: URL
-    url_json: URL
     use_secondary_address: Použít doplňkovou adresu
     video_cover_placement: Video stopa
 

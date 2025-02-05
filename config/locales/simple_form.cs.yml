@@ -30,7 +30,6 @@ cs:
     placeholders:
       defaults:
         by_query: Hledat...
-        by_label_query: Hledat...
         content: Textový obsah s možností formátování
         meta_description: Alternativní popis obsahu stránky doporučujeme napsat tak, aby se vše podstatné vešlo do 250 znaků textu.
         meta_title: 'Např.: Nabídka specializovaných služeb'

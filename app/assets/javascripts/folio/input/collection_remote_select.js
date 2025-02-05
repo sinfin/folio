@@ -3,15 +3,6 @@ window.Folio.Input = window.Folio.Input || {}
 
 window.Folio.Input.CollectionRemoteSelect = {}
 
-window.Folio.Input.CollectionRemoteSelect.setValue = (input, value) => {
-  const $input = $(input)
-  $input.val(value).trigger('change')
-}
-
-window.Folio.Input.CollectionRemoteSelect.clearValue = (input) => {
-  window.Folio.Input.CollectionRemoteSelect.setValue(input, null)
-}
-
 window.Folio.Input.CollectionRemoteSelect.bind = (input, { includeBlank, url }) => {
   const $input = $(input)
 

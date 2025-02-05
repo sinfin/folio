@@ -43,9 +43,6 @@ class Dummy::Ui::CardComponent < ApplicationComponent
                  button_label: nil,
                  button_variant: nil,
                  href: nil,
-                 target: nil,
-                 rel: nil,
-                 link_title: nil,
                  links: nil,
                  topics: nil,
                  tag: :div,
@@ -77,9 +74,6 @@ class Dummy::Ui::CardComponent < ApplicationComponent
     @button_variant = button_variant || default_button_variant
     @links = size.in?(%i[s l]) ? links : nil
     @href = href
-    @link_title = link_title
-    @target = target
-    @rel = rel
     @topics = size.in?(%i[xs m l]) ? topics : nil
     @box = size == :xs ? box : true
     @tag = tag

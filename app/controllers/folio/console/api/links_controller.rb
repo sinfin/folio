@@ -1,53 +1,82 @@
 # frozen_string_literal: true
 
 class Folio::Console::Api::LinksController < Folio::Console::Api::BaseController
-  def modal_form
-    url_json_s = params.require(:url_json)
+  def index
+    links = []
 
-    url_json = begin
-      JSON.parse(url_json_s)
-    rescue StandardError
-      {}
-    end.symbolize_keys
+    page_links.merge(additional_links).each do |klass, url_proc|
+      scope = klass
+      scope = scope.by_site(Folio::Current.site) if klass.try(:has_belongs_to_site?)
 
-    json = params[:json] != false && params[:json] != "false"
+      if params[:q].present? && scope.respond_to?(:by_query)
+        scope = scope.by_query(params[:q])
+      end
 
-    render_component_json(Folio::Console::Links::Modal::FormComponent.new(url_json:, json:, preferred_label: params[:preferred_label].presence))
-  end
-
-  def control_bar
-    url_json = if params[:url_json].present?
-      begin
-        JSON.parse(params[:url_json])
-      rescue StandardError
-        {}
+      scope.limit(10).each do |item|
+        next if item.class.try(:public?) == false
+        links << {
+          label: record_label(item),
+          url: url_proc.call(item),
+          title: item.try(:to_label)
+        }
       end
     end
 
-    href = if url_json.blank?
-      params[:href]
+    if params[:q].present?
+      qq = I18n.transliterate(params[:q]).downcase
+    else
+      qq = nil
     end
 
-    json = params[:json] != false && params[:json] != "false"
+    rails_paths.each do |path, label|
+      if qq.present?
+        matcher = I18n.transliterate(label).downcase
+        next unless matcher.include?(qq)
+      end
 
-    render_component_json(Folio::Console::Links::ControlBarComponent.new(url_json:, href:, json:))
+      next unless main_app.respond_to?(path)
+
+      links << {
+        label:,
+        url: main_app.public_send(path),
+        title: label,
+      }
+    end
+
+    sorted_links = links.sort_by { |link| I18n.transliterate(link[:label]) }
+
+    render_json(sorted_links)
   end
 
-  def value
-    url_json_s = params.require(:url_json)
+  private
+    def page_links
+      if Rails.application.config.folio_pages_ancestry
+        {
+          Folio::Page => Proc.new { |page| main_app.page_path(page.to_preview_param) }
+        }
+      else
+        {
+          Folio::Page => Proc.new { |page| main_app.url_for(page) }
+        }
+      end
+    end
 
-    url_json = begin
-      JSON.parse(url_json_s)
-    rescue StandardError
+    def additional_links
+      # {
+      #   Klass => Proc.new { |instance| main_app.klass_path(instance) },
+      # }
       {}
-    end.symbolize_keys
+    end
 
-    json = params[:json] != false && params[:json] != "false"
+    def rails_paths
+      # {
+      #   :path_symbol => "label",
+      # }
+      {}
+    end
 
-    render_component_json(Folio::Console::Links::ValueComponent.new(url_json:, verbose: false, json:))
-  end
-
-  def list
-    render_component_json(Folio::Console::Links::Modal::ListComponent.new(filtering: true))
-  end
+    def record_label(record)
+      label = record.try(:to_console_label) || record.try(:to_label)
+      "#{record.class.model_name.human} - #{label}"
+    end
 end

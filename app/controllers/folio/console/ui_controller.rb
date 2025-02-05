@@ -18,7 +18,6 @@ class Folio::Console::UiController < Folio::Console::BaseController
 
     @inputs = %i[
       date_time
-      url
     ].sort
   end
 
@@ -143,9 +142,6 @@ class Folio::Console::UiController < Folio::Console::BaseController
   end
 
   def input_date_time
-  end
-
-  def input_url
   end
 
   def dropdowns

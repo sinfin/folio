@@ -11,15 +11,3 @@ Rails.application.config.folio_console_files_additional_html_api_url_lambda = ->
     "/console/dummy/playground/additional_html_for_video_files_modal"
   end
 end
-
-Rails.application.config.folio_console_links_mapping = {
-  "Dummy::Blog::Article" => Proc.new { |controller, instance| controller.main_app.url_for(instance) }
-}
-
-Rails.application.config.folio_console_links_additional_filters = {
-  by_topic_slug: {
-    klass: "Dummy::Blog::Topic",
-    order_scope: :ordered,
-    slug: true,
-  },
-}

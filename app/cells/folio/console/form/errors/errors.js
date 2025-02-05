@@ -64,7 +64,11 @@ window.Folio.Stimulus.register('f-c-form-errors', class extends window.Stimulus.
 
     btn.formGroup.scrollIntoView({ behavior: 'smooth', block: 'center' })
 
-    window.FolioConsole.DangerBoxShadowBlink.blinkFormGroup(btn.formGroup)
+    if (btn.formGroup.dataset.controller) {
+      btn.formGroup.dataset.controller += ' f-c-danger-box-shadow-blink'
+    } else {
+      btn.formGroup.dataset.controller = 'f-c-danger-box-shadow-blink'
+    }
 
     const input = btn.formGroup.querySelector('.form-control')
     if (input) input.focus()

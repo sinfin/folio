@@ -10,23 +10,16 @@ class Dummy::Molecule::Cards::LargeComponent < ApplicationComponent
 
   def cards
     @atoms.map do |atom|
-      h = {
+      {
         title: atom.title,
         html: atom.content,
-        links: atom.link_url_json ? [atom.link_url_json] : nil,
+        button_label: atom.button_label,
+        href: atom.button_url,
+        links: (atom.link_label.present? && atom.link_url.present?) ? [{ label: atom.link_label, href: atom.link_url }] : nil,
         image: molecule_cover_placement(atom),
         size: :l,
         border: false,
       }
-
-      if atom.button_url_json
-        h[:button_label] = atom.button_url_json[:label]
-        h[:rel] = atom.button_url_json[:rel]
-        h[:target] = atom.button_url_json[:target]
-        h[:href] = atom.button_url_json[:href]
-      end
-
-      h
     end
   end
 end

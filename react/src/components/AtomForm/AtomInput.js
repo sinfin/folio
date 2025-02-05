@@ -25,9 +25,6 @@ function inputProps (type, defaultValue) {
     case 'color':
       return { type: 'color' }
 
-    case 'deprecated':
-      return { type: 'hidden' }
-
     default:
       return { type: 'text' }
   }
@@ -60,7 +57,7 @@ export default function AtomInput ({ field, atom, index, onChange, onValueChange
     )
   }
 
-  if (type === 'url' || type === 'url_json') {
+  if (type === 'url') {
     return (
       <UrlInput
         name={key}

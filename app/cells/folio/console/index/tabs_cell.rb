@@ -11,7 +11,7 @@ class Folio::Console::Index::TabsCell < Folio::ConsoleCell
     query = {}
 
     if options[:index_filters_keys]
-      (%i[by_label_query] + options[:index_filters_keys]).each do |key|
+      (%i[by_query] + options[:index_filters_keys]).each do |key|
         next if options[:params][key].blank?
         query[key] = options[:params][key]
       end

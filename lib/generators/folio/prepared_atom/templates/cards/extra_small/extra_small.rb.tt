@@ -6,7 +6,7 @@ class <%= application_namespace %>::Atom::Cards::ExtraSmall < Folio::Atom::Base
   STRUCTURE = {
     title: :string,
     subtitle: :string,
-    url_json: :url_json,
+    url: :url
   }
 
   ASSOCIATIONS = {}
@@ -15,7 +15,7 @@ class <%= application_namespace %>::Atom::Cards::ExtraSmall < Folio::Atom::Base
 
   MOLECULE = true
 
-  validates :url_json,
+  validates :url,
             :title,
             presence: true
 

@@ -43,5 +43,5 @@
               icon: :close,
               class: "text-danger f-c-index-filters__cancel")
 
-    = f.input :by_label_query, as: :hidden,
-                               input_html: { value: controller.params[:by_label_query] }
+    = f.input :by_query, as: :hidden,
+                         input_html: { value: controller.params[:by_query] }

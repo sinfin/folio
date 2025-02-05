@@ -15,19 +15,9 @@
 
             .<%= classname_prefix %>-molecule-cards-image__content
               .<%= classname_prefix %>-molecule-cards-image__content-wrap
-                - if atom.url_json.present? && atom.url_json[:href]
-                  a.<%= classname_prefix %>-molecule-cards-image__link[
-                    href=atom.url_json[:href]
-                    title=atom.url_json[:title]
-                    rel=atom.url_json[:rel]
-                    target=atom.url_json[:target]
-                  ]
-                    .<%= classname_prefix %>-molecule-cards-image__title.fs-display-xs
-                      = atom.title
-                - else
-                  .<%= classname_prefix %>-molecule-cards-image__link
-                    .<%= classname_prefix %>-molecule-cards-image__title.fs-display-xs
-                      = atom.title
+                a.<%= classname_prefix %>-molecule-cards-image__link href=atom.url
+                  .<%= classname_prefix %>-molecule-cards-image__title.fs-display-xs
+                    = atom.title
 
                 - if atom.description.present?
                   .<%= classname_prefix %>-molecule-cards-image__description.fs-text-xs

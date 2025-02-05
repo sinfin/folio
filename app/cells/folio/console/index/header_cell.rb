@@ -71,7 +71,7 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
     if options[:csv] == true
       h = {
         format: :csv,
-        by_label_query: controller.params[:by_label_query],
+        by_query: controller.params[:by_query],
       }
 
       index_filters_hash.keys.each do |key|
@@ -95,15 +95,15 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
     model.try(:transportable?)
   end
 
-  def by_label_query_input(f)
-    f.input(:by_label_query,
+  def by_query_input(f)
+    f.input(:by_query,
             label: false,
             wrapper: false,
             autocomplete: query_autocomplete,
             input_html: {
-              value: params[:by_label_query],
+              value: params[:by_query],
               id: nil,
-              placeholder: options[:by_label_query_placeholder],
+              placeholder: options[:by_query_placeholder],
               autocomplete: query_autocomplete ? nil : "off",
             })
   end
@@ -114,7 +114,7 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
                   type: :submit,
                   icon: :magnify)
 
-    if controller.params[:by_label_query].present?
+    if controller.params[:by_query].present?
       [
         cell("folio/console/ui/button",
              variant: :icon,

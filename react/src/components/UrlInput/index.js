@@ -11,7 +11,7 @@ class UrlInput extends React.PureComponent {
     if (!this.inputRef.current) return
 
     this.boundHandleChange = (e) => {
-      this.props.onValueChange(e.target.dataset.value)
+      this.props.onChange(e)
     }
 
     this.inputRef.current.addEventListener('change', this.boundHandleChange)
@@ -34,6 +34,7 @@ class UrlInput extends React.PureComponent {
         onChange={this.props.onChange}
         onKeyPress={this.props.onKeyPress}
         invalid={this.props.invalid}
+        data-controller='f-c-input-url'
         innerRef={this.inputRef}
       />
     )

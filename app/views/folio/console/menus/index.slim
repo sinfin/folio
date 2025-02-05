@@ -1,7 +1,7 @@
 ruby:
   types = @klass.creatable_types if @klass.creatable_types.size > 1
 
-= index_header by_label_query: false,
+= index_header by_query: false,
                types: types,
                new_button: @klass.creatable_types.present?
 

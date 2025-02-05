@@ -7,33 +7,17 @@ class TagsInput < SimpleForm::Inputs::StringInput
 
     register_atom_settings
 
-    if options[:collection]
-      ary = options[:collection]
+    values = options.slice(:tags_context, :url)
+    values[:url] ||= Folio::Engine.routes
+                                         .url_helpers
+                                         .console_api_tags_path(context: values[:tags_context])
 
-      if input_html_options[:value].present?
-        split = input_html_options[:value].split(options[:delimiter] || ", ")
-        split.each do |tag|
-          ary << tag unless ary.include?(tag)
-        end
-      end
+    register_stimulus("f-input-tags", values:)
 
-      register_stimulus("f-input-tags", values: {
-        collection_json: ary.to_json,
-        delimiter: options[:delimiter],
-      }.compact)
-    else
-      values = options.slice(:tags_context, :url, :delimiter)
-      values[:url] ||= Folio::Engine.routes
-                                    .url_helpers
-                                    .console_api_tags_path(context: values[:tags_context])
+    value = object.send(attribute_name)
 
-      register_stimulus("f-input-tags", values:)
-
-      value = object.send(attribute_name)
-
-      if value.is_a?(Array)
-        input_html_options[:value] = value.join(", ")
-      end
+    if value.is_a?(Array)
+      input_html_options[:value] = value.join(", ")
     end
 
     merged_input_options = merge_wrapper_options(input_html_options, wrapper_options)

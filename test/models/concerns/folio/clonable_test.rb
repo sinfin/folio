@@ -7,8 +7,8 @@ class Folio::ClonableTest < ActiveSupport::TestCase
     page = create(:folio_page)
 
     create_atom(Dummy::Atom::Contents::Text,
-                placement: page,
-                content: "Původní text")
+            placement: page,
+            content: "Původní text")
 
     image = create(:folio_file_image)
 
@@ -16,15 +16,15 @@ class Folio::ClonableTest < ActiveSupport::TestCase
                 placement: page,
                 title: "Původní titulek",
                 description: "Původní popis",
-                url_json: { href: "https://example.com" },
+                url: "https://example.com",
                 cover: image)
     page.cover = image
 
     document = create(:folio_file_document)
     create_atom(Dummy::Atom::Contents::Documents,
-                placement: page,
-                documents: [document],
-                size: "medium")
+    placement: page,
+    documents: [document],
+    size: "medium")
 
     original_attributes = page.attributes
     clone = Folio::Clonable::Cloner.new(page).create_clone
@@ -37,15 +37,16 @@ class Folio::ClonableTest < ActiveSupport::TestCase
     assert_not_equal page.cover_placement, clone.cover_placement
 
     clone.atoms.first.update!(content: "Změněný text")
-    clone.atoms.second.update!(title: "Změněný titulek", description: "Změněný popis", url_json: { href: "https://example2.com" })
+    clone.atoms.second.update!(title: "Změněný titulek", description: "Změněný popis", url: "https://example2.com")
 
     assert_equal page.atoms.last.documents.first, clone.atoms.last.documents.first
     assert_not_equal page.atoms.last.document_placements, clone.atoms.last.document_placements
-
-    clone.update!(title: "Nový titulek",
-                  perex: "Nový perex",
-                  published_at: Time.current,
-                  published: true)
+    clone.update!(
+        title: "Nový titulek",
+        perex: "Nový perex",
+        published_at: Time.current,
+        published: true,
+      )
 
     page.reload
     assert_equal original_attributes.without("created_at", "updated_at"), page.attributes.without("created_at", "updated_at")

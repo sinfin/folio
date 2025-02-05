@@ -13,7 +13,6 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - only pass preview token if unpublished in console index actions
-- the way we work with links - added a modal for `as: :url` inputs, added `as: :url_json` and switched some atoms to it
 
 ## [6.0.4] - 2025-01-13
 

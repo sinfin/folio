@@ -6,8 +6,10 @@ class Dummy::Atom::Cards::Large < Folio::Atom::Base
   STRUCTURE = {
     title: :string,
     content: :richtext,
-    button_url_json: :url_json,
-    link_url_json: :url_json,
+    button_label: :string,
+    button_url: :url,
+    link_label: :string,
+    link_url: :url,
   }
 
   ASSOCIATIONS = {}
@@ -15,6 +17,14 @@ class Dummy::Atom::Cards::Large < Folio::Atom::Base
   MOLECULE = true
 
   FORM_LAYOUT = :aside_attachments
+
+  validates :button_url,
+            presence: true,
+            if: -> { button_label.present? }
+
+  validates :link_url,
+            presence: true,
+            if: -> { link_label.present? }
 
   validate :validate_one_of_contents
 

@@ -1,9 +1,6 @@
 .select2-container--default
   outline: 0
 
-  .select2-dropdown
-    min-width: 200px
-
   .select2-selection
     background-color: $form-select-bg
     background-image: escape-svg($form-select-indicator)
@@ -63,7 +60,7 @@
 
   .select2-results__option-inner-wrap
     display: flex
-
+    
     align-items: center
     gap: 10px
 
@@ -85,9 +82,7 @@
     min-width: 0
     margin-bottom: 0
 
-.select2-container--open,
-.selectize-dropdown,
-.selectize-dropdown.form-control
+.select2-container--open
   z-index: $zindex-modal + 1
 
 .f-c-select2-larger

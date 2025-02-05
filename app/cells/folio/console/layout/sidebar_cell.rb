@@ -245,7 +245,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
 
   private
     def site_main_links(site)
-      return nil unless can_now?(:show, site)
+      return nil unless can_now?(:read, site)
 
       build_site_links_collapsible_block(site)
     end

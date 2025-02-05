@@ -8,7 +8,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
 
     if klass &&
        klass < ActiveRecord::Base &&
-       klass.respond_to?(:by_label_query) &&
+       klass.respond_to?(:by_query) &&
        klass.new.respond_to?(:to_autocomplete_label)
 
       scope = klass.accessible_by(Folio::Current.ability)
@@ -28,7 +28,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
         end
       end
 
-      scope = scope.by_label_query(q) if q.present?
+      scope = scope.by_query(q) if q.present?
 
       if p_order.present? && scope.respond_to?(p_order)
         scope = scope.unscope(:order).send(p_order)
@@ -104,7 +104,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
     p_order = params[:order_scope]
     p_without = params[:without]
 
-    if klass && klass < ActiveRecord::Base && klass.respond_to?(:by_label_query)
+    if klass && klass < ActiveRecord::Base && klass.respond_to?(:by_query)
       scope = klass.accessible_by(Folio::Current.ability)
 
       scope = scope.by_site(Folio::Current.site) if scope.respond_to?(:by_site)
@@ -116,7 +116,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
 
       scope = filter_by_atom_setting_params(scope)
 
-      scope = scope.by_label_query(q) if q.present?
+      scope = scope.by_query(q) if q.present?
 
       if p_order.present? && scope.respond_to?(p_order)
         scope = scope.unscope(:order).send(p_order)
@@ -134,7 +134,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
     p_order = params[:order_scope]
     p_without = params[:without]
 
-    if klass && klass < ActiveRecord::Base && klass.respond_to?(:by_label_query)
+    if klass && klass < ActiveRecord::Base && klass.respond_to?(:by_query)
       scope = klass.accessible_by(Folio::Current.ability)
 
       scope = scope.by_site(Folio::Current.site) if scope.respond_to?(:by_site)
@@ -146,7 +146,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
 
       scope = filter_by_atom_setting_params(scope)
 
-      scope = scope.by_label_query(q) if q.present?
+      scope = scope.by_query(q) if q.present?
 
       if p_order.present? && scope.respond_to?(p_order)
         scope = scope.unscope(:order).send(p_order)
@@ -191,7 +191,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
           end
 
           if q.present?
-            scope = scope.by_label_query(q)
+            scope = scope.by_query(q)
           else
             scope = scope.all
           end
