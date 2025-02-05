@@ -25,8 +25,15 @@ namespace :folio do
           end
         end
 
-        Rails.logger.info "Content templates have been successfully duplicated for each site."
+        Rails.logger.info "Content templates have been successfully duplicated for each site. Run `rake folio:content_templates:remove_siteless` to remove the siteless content templates."
       end
+    end
+
+    desc "Remove siteless content templates"
+    task remove_siteless: :environment do
+      Folio::ContentTemplate.where(site_id: nil).destroy_all
+
+      Rails.logger.info "Siteless content templates have been removed."
     end
   end
 end
