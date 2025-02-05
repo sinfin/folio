@@ -89,7 +89,10 @@ window.folioConsoleInitRedactor = (node, options = {}, additional = {}) ->
 
   window.folioConsoleRedactorOptionsOverride ||= {}
 
-  $R(node, $.extend({}, opts, additional, window.folioConsoleRedactorOptionsOverride))
+  callbacksHash =
+    callbacks: $.extend({}, opts.callbacks or {}, additional.callbacks or {}, window.folioConsoleRedactorOptionsOverride.callbacks or {})
+
+  $R(node, $.extend({}, opts, additional, window.folioConsoleRedactorOptionsOverride, callbacksHash))
 
 window.folioConsoleDestroyRedactor = (node) ->
   $R(node, 'destroy')
