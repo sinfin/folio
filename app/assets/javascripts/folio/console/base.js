@@ -91,6 +91,7 @@
 //= require folio/console/folio_attributes_fields_component
 //= require folio/console/form/errors/errors
 //= require folio/console/form_modal_component
+//= require folio/console/html_auto_format/toggle_component
 //= require folio/console/index/filters/filters
 //= require folio/console/index/images/images
 //= require folio/console/index/position_buttons/position_buttons

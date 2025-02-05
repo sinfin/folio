@@ -2,6 +2,9 @@ h1 Folio Console UI
 
 h2 Input rich text
 
+.my-4
+  = render(Folio::Console::HtmlAutoFormat::ToggleComponent.new)
+
 h3 Blank
 
 = simple_form_for "", method: :get, url: request.path do |f|
@@ -113,11 +116,11 @@ table.table.table-bordered[
       td
 
 javascript:
-  window.FolioConsole = window.FolioConsole || {}
-  window.FolioConsole.HtmlAutoFormat = window.FolioConsole.HtmlAutoFormat || {}
-  window.FolioConsole.HtmlAutoFormat.enabled = true
-
   document.addEventListener('DOMContentLoaded', function() {
+    const wasEnabled = window.FolioConsole.HtmlAutoFormat.enabled
+
+    window.FolioConsole.HtmlAutoFormat.enabled = true
+
     const table = document.querySelector('.f-c-ui-input-rich-text-string-auto-format-demo')
 
     for (const row of table.querySelectorAll('tbody tr')) {
@@ -145,4 +148,6 @@ javascript:
         }
       }
     }
+
+    window.FolioConsole.HtmlAutoFormat.enabled = wasEnabled
   });

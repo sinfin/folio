@@ -38,3 +38,5 @@
             class: "f-c-form-footer__ribbon")
 
     = options[:post_submit_content]
+
+    = render_view_component(Folio::Console::HtmlAutoFormat::ToggleComponent.new)

@@ -132,6 +132,7 @@ Folio::Engine.routes.draw do
 
         resource :current_user, only: [] do
           post :console_url_ping
+          post :update_console_preferences
         end
 
         resources :console_notes, only: [] do
