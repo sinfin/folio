@@ -15,6 +15,32 @@ if (!window.Folio.Tooltip.TEMPLATE) {
   window.Folio.Tooltip.TEMPLATE.innerHTML = window.Folio.Tooltip.TEMPLATE_HTML
 }
 
+window.Folio.Tooltip.removeFromElement = ({ element }) => {
+  if (!element) return
+  if (!element.dataset.controller) return
+  if (!element.dataset.controller.indexOf('f-tooltip') === -1) return
+
+  if (element.dataset.controller === 'f-tooltip') {
+    delete element.dataset.controller
+  } else {
+    element.dataset.controller = element.dataset.controller.replace(/ *f-tooltip */, '')
+  }
+
+  if (element.dataset.action) {
+    if (element.dataset.action == 'mouseenter->f-tooltip#mouseenter mouseleave->f-tooltip#mouseleave') {
+      delete element.dataset.action
+    } else {
+      element.dataset.action = element.dataset.action.replace(/ *mouseenter->f-tooltip#mouseenter mouseleave->f-tooltip#mouseleave */, '')
+    }
+  }
+
+  Object.keys(element.dataset).forEach((key) => {
+    if (key.indexOf('fTooltip') === 0) {
+      delete element.dataset[key]
+    }
+  })
+}
+
 window.Folio.Tooltip.addToElement = ({ element, title, placement }) => {
   if (!element || !title) return
 
