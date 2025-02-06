@@ -126,7 +126,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
       end
     end
 
-    if active && path == url_for([:console, Folio::Page]) && homepage_instance
+    if active && path.end_with?(url_for([:console, Folio::Page])) && homepage_instance
       url = url_for([:edit, :console, homepage_instance])
       if (request.path == url) || (request.url == url)
         active = false
