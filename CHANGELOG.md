@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [6.1.0] - 2025-02-07
+
 ### Changed
 
 - automatically sort nested collection by position if possible in in `Folio::NestedFieldsComponent`
