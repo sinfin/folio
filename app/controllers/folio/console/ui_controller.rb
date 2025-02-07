@@ -13,6 +13,7 @@ class Folio::Console::UiController < Folio::Console::BaseController
       dropdowns
       modals
       tabs
+      tooltips
       warning_ribbons
     ].sort
 

@@ -5,10 +5,10 @@ window.FolioConsole.HtmlAutoFormat.CLASS_NAME = 'f-c-html-auto-format'
 
 window.FolioConsole.HtmlAutoFormat.I18N = {
   cs: {
-    tooltip: "Automaticky nahrazeno %{before} <br> Kliknutím zrušíte"
+    tooltip: "Automaticky nahrazeno%{before} <br> Kliknutím zrušíte"
   },
   en: {
-    tooltip: "Automatically replaced %{before} <br> Click to cancel"
+    tooltip: "Automatically replaced%{before} <br> Click to cancel"
   }
 }
 
@@ -209,6 +209,7 @@ window.FolioConsole.HtmlAutoFormat.replace = (opts) => {
 window.FolioConsole.HtmlAutoFormat.onClick = (element) => {
   if (!element) return
   if (element.classList.contains('f-c-html-auto-format--reverted')) return
+  window.FolioConsole.HtmlAutoFormat.removeTooltip(element)
 
   const redactorGroup = element.closest('[data-controller="f-input-redactor"]')
   const revertTo = window.FolioConsole.HtmlAutoFormat.UNDO_MAPPINGS[element.innerText]
@@ -233,13 +234,27 @@ window.FolioConsole.HtmlAutoFormat.onClick = (element) => {
 window.FolioConsole.HtmlAutoFormat.onMouseenter = (element) => {
   if (!element) return
   if (element.classList.contains('f-c-html-auto-format--reverted')) return
-  console.log('show tooltip for element', element)
+
+  let title = window.Folio.i18n(window.FolioConsole.HtmlAutoFormat.I18N, "tooltip")
+  let replacement = window.FolioConsole.HtmlAutoFormat.UNDO_MAPPINGS[element.innerText] || ""
+
+  if (replacement) {
+    replacement = `: ${replacement}`
+  }
+
+  title = title.replace('%{before}', replacement)
+
+  window.Folio.Tooltip.createTooltip({ element, title })
 }
 
 window.FolioConsole.HtmlAutoFormat.onMouseleave = (element) => {
+  window.FolioConsole.HtmlAutoFormat.removeTooltip(element)
+}
+
+window.FolioConsole.HtmlAutoFormat.removeTooltip = (element) => {
   if (!element) return
   if (element.classList.contains('f-c-html-auto-format--reverted')) return
-  console.log('hide tooltip for element', element)
+  window.Folio.Tooltip.removeTooltip({ element })
 }
 
 window.Folio.Stimulus.register('f-c-html-auto-format', class extends window.Stimulus.Controller {
@@ -262,6 +277,8 @@ window.Folio.Stimulus.register('f-c-html-auto-format', class extends window.Stim
   }
 
   disconnect () {
+    window.FolioConsole.HtmlAutoFormat.removeTooltip(this.element)
+
     if (this.timeout) {
       window.clearTimeout(this.timeout)
       delete this.timeout
