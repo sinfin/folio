@@ -9,6 +9,16 @@ All notable changes to this project will be documented in this file.
 - automatically sort nested collection by position if possible in in `Folio::NestedFieldsComponent`
 - audited now uses a `Folio::Audited::Audit` with a custom `folio_data` jsonb column used to store data about atoms, attachments and other relations
 
+## [6.0.5] - 2025-02-03
+
+### Added
+
+- tooltip for disabled action
+
+### Changed
+
+- only pass preview token if unpublished in console index actions
+
 ## [6.0.4] - 2025-01-13
 
 ### Fixed
