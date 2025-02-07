@@ -80,7 +80,7 @@ module Folio::Console::ReactHelper
              max_nesting_depth:)
   end
 
-  def console_form_atoms(f)
+  def console_form_atoms(f, audited_audit_active: false)
     if f.object.class.respond_to?(:atom_locales)
       atoms = {}
       destroyed_ids = {}
@@ -96,6 +96,8 @@ module Folio::Console::ReactHelper
             atoms[key] << atom.to_h
           end
         end
+
+        atoms[key].sort_by! { |a| a[:position] || 0 }
       end
     else
       atoms = { atoms: [] }
@@ -108,6 +110,8 @@ module Folio::Console::ReactHelper
           atoms[:atoms] << atom.to_h
         end
       end
+
+      atoms[:atoms].sort_by! { |a| a[:position] || 0 }
     end
 
     if f.lookup_model_names.size == 1
@@ -124,6 +128,7 @@ module Folio::Console::ReactHelper
       structures: Folio::Atom.structures_for(klass: f.object.class, site: Folio::Current.site),
       placementType: f.object.class.to_s,
       className: f.object.class.to_s,
+      auditedAuditActive: audited_audit_active,
     }
 
     content_tag(:div, nil, "class" => "f-c-atoms folio-react-wrap",

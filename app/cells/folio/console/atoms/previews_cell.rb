@@ -38,7 +38,7 @@ class Folio::Console::Atoms::PreviewsCell < Folio::ConsoleCell
 
   def sorted_types
     ary = Folio::Atom.klasses_for(klass: options[:klass], site: Folio::Current.site)
-                     .reject { |klass| klass.molecule_secondary }
+                     .reject { |klass| klass.molecule_secondary || !klass.editable_in_console? }
 
     ary = ary.sort_by { |klass| I18n.transliterate(klass.model_name.human) }
 
@@ -91,6 +91,11 @@ class Folio::Console::Atoms::PreviewsCell < Folio::ConsoleCell
       cell("folio/console/atoms/previews/broken_preview", error: nested_error).show
     end
 
+    if atom = atoms.find { |a| a.errors.present? }
+      error = ActiveRecord::RecordInvalid.new(atom)
+      return rescue_lambda.call(error)
+    end
+
     if atom_class.molecule_component_class
       capture do
         render_view_component(atom_class.molecule_component_class.new(atoms:, atom_options: atom_additional_options),
@@ -119,6 +124,11 @@ class Folio::Console::Atoms::PreviewsCell < Folio::ConsoleCell
            atom_options: atom_additional_options).show
     rescue StandardError => other_error
       cell("folio/console/atoms/previews/broken_preview", error: other_error).show
+    end
+
+    if atom.errors.present?
+      error = ActiveRecord::RecordInvalid.new(atom)
+      return rescue_lambda.call(error)
     end
 
     if atom_class.component_class

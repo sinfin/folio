@@ -65,6 +65,14 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
     end
   end
 
+  def audited_hash_key_fallback
+    reflection = self.class.reflect_on_association(:placement)
+
+    if reflection && reflection.options
+      reflection.options[:inverse_of]
+    end
+  end
+
   private
     def validate_file_attribution_and_texts_if_needed
       return if file.blank?

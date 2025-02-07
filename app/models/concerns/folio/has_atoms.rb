@@ -5,6 +5,10 @@ module Folio::HasAtoms
     extend ActiveSupport::Concern
 
     class_methods do
+      def atom_keys
+        %i[atoms]
+      end
+
       def atom_settings_from_params(params)
         settings = {}
 
@@ -60,9 +64,19 @@ module Folio::HasAtoms
       end
     end
 
+    def all_atoms_in_array
+      array = []
+
+      self.class.atom_keys.each do |atom_key|
+        array += send(atom_key).to_a
+      end
+
+      array
+    end
+
     private
       def should_reject_atom_attributes?(atom_attributes)
-        return true if atom_attributes["type"].blank?
+        return true if atom_attributes["type"].blank? && atom_attributes["id"].blank?
         return false if self.class.atom_class_names_whitelist.blank?
 
         self.class.atom_class_names_whitelist.exclude?(atom_attributes["type"])
@@ -98,10 +112,6 @@ module Folio::HasAtoms
     def atom_image_placements
       Folio::Atom.atom_image_placements(atoms)
     end
-
-    def all_atoms_in_array
-      atoms.to_a
-    end
   end
 
   module Localized
@@ -130,16 +140,12 @@ module Folio::HasAtoms
           [I18n.default_locale]
         end
       end
-    end
 
-    def all_atoms_in_array
-      all = []
-
-      self.class.atom_locales.each do |locale|
-        all += atoms(locale).to_a
+      def atom_keys
+        atom_locales.map do |locale|
+          "#{locale}_atoms".to_sym
+        end
       end
-
-      all
     end
 
     def atoms(locale = I18n.locale)

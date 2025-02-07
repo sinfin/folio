@@ -39,6 +39,8 @@
 
   &--non-interactive
     padding: $grid-gutter-width / 2
+    pointer-events: none
+    user-select: none
 
   &__preview
     position: relative
@@ -134,6 +136,9 @@
       color: $white
       background: $danger
       border-color: $danger
+
+    .f-c-atoms-previews__preview[data-editable="false"] &:not(&--remove)
+      display: none
 
   &__controls-overlay
     position: absolute

@@ -22,9 +22,11 @@ class Folio::ClonableTest < ActiveSupport::TestCase
 
     document = create(:folio_file_document)
     create_atom(Dummy::Atom::Contents::Documents,
-    placement: page,
-    documents: [document],
-    size: "medium")
+                placement: page,
+                documents: [document],
+                size: "medium")
+
+    page.reload
 
     original_attributes = page.attributes
     clone = Folio::Clonable::Cloner.new(page).create_clone
@@ -32,7 +34,7 @@ class Folio::ClonableTest < ActiveSupport::TestCase
     clone.title = "clone"
     assert clone.valid?
 
-    assert_not_equal page.atoms, clone.atoms
+    assert_not_equal page.atoms.to_a, clone.atoms.to_a
     assert_equal page.cover, clone.cover
     assert_not_equal page.cover_placement, clone.cover_placement
 

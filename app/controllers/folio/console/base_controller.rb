@@ -93,7 +93,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
     end
 
     if klass.try(:audited_console_enabled?)
-      before_action :load_revisions, only: [klass.audited_console_view_name, :revision]
+      before_action :load_revisions, only: [:edit, :revision]
       before_action :find_revision, only: %i[revision restore]
     end
 
@@ -350,17 +350,19 @@ class Folio::Console::BaseController < Folio::ApplicationController
     def load_revisions
       return unless folio_console_record && folio_console_record.respond_to?(:revisions)
 
-      @audited_revisions = folio_console_record.revisions.reverse
+      @audited_audits = folio_console_record.audits.reverse
     end
 
     def find_revision
-      audit = folio_console_record.audits.find_by_version!(params[:version])
-      @audited_revision = audit.revision
-      @audited_revision.audit = audit
+      @audited_audit = folio_console_record.audits.find_by_version!(params[:version])
 
-      return unless @audited_revision.class.try(:has_audited_atoms?)
+      @audited_revision = @audited_audit.revision
 
-      @audited_revision.reconstruct_atoms
+      if @audited_revision.try(:type)
+        @audited_revision = @audited_revision.becomes(@audited_revision.type.constantize)
+      end
+
+      @audited_revision.reconstruct_folio_audited_data(audit: @audited_audit)
     end
 
     def add_through_breadcrumbs

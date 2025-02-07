@@ -53,15 +53,13 @@ class Folio::Atom::Base < Folio::ApplicationRecord
 
   self.table_name = "folio_atoms"
 
-  audited associated_with: :placement,
-          if: :placement_has_audited_atoms?
-
   after_initialize :validate_structure
 
   belongs_to :placement,
              polymorphic: true,
              touch: true,
              required: true
+
   scope :by_type, -> (type) { where(type: type.to_s) }
 
   validates :type, presence: true
@@ -253,6 +251,10 @@ class Folio::Atom::Base < Folio::ApplicationRecord
   def self.console_icon
   end
 
+  def self.editable_in_console?
+    true
+  end
+
   def self.console_insert_row
     CONSOLE_INSERT_ROWS[:default]
   end
@@ -274,11 +276,6 @@ class Folio::Atom::Base < Folio::ApplicationRecord
     ]
   end
 
-  # audited fix
-  def self.default_ignored_attributes
-    super - [inheritance_column]
-  end
-
   def self.default_atom_values
     # { STRUCTURE_KEY => value }
     # i.e. { content: "<p>hello</p>" }
@@ -289,6 +286,20 @@ class Folio::Atom::Base < Folio::ApplicationRecord
     data.try(:values).try(:join, "\n").presence
   end
 
+  def from_audited_data(audited_data)
+    klass = audited_data["type"].safe_constantize
+
+    if klass && klass < Folio::Atom::Base
+      becomes!(klass)
+      self.data = audited_data["data"]
+      self.position = audited_data["position"]
+      self.locale = audited_data["locale"]
+      # TODO associations and attachments
+    end
+
+    self
+  end
+
   private
     def klass
       # as type can be changed
@@ -297,11 +308,7 @@ class Folio::Atom::Base < Folio::ApplicationRecord
 
     def positionable_last_record
       if placement.present?
-        if placement.new_record?
-          placement.atoms.last
-        else
-          placement.reload.atoms.last
-        end
+        placement.atoms.last
       end
     end
 
@@ -311,10 +318,6 @@ class Folio::Atom::Base < Folio::ApplicationRecord
         next if KNOWN_STRUCTURE_TYPES.include?(value)
         fail ArgumentError, "Unknown field type: #{value}"
       end
-    end
-
-    def placement_has_audited_atoms?
-      placement.class.try(:has_audited_atoms?)
     end
 
     def validate_placement

@@ -5,6 +5,7 @@ class Folio::NestedFieldsComponent < Folio::ApplicationComponent
 
   def initialize(f:,
                  key:,
+                 collection: nil,
                  add: true,
                  destroy: true,
                  position: true,
@@ -17,6 +18,13 @@ class Folio::NestedFieldsComponent < Folio::ApplicationComponent
                  destroy_label: nil)
     @f = f
     @key = key
+    @collection = collection || @f.object.send(@key).sort do |a, b|
+      if a.respond_to?(:position) && b.respond_to?(:position)
+        a.position <=> b.position
+      else
+        0
+      end
+    end
     @add = add
     @destroy = destroy
     @position = position

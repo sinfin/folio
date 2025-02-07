@@ -19,7 +19,7 @@ class Folio::MergerTest < ActiveSupport::TestCase
     duplicate_atom = create_atom(Dummy::Atom::Contents::Text, :content, placement: duplicate)
     duplicate_cover = create(:folio_cover_placement, placement: duplicate)
 
-    merger = Folio::Page::Merger.new(original, duplicate)
+    merger = Folio::Page::Merger.new(original.reload, duplicate.reload)
 
     reference = create_atom(ReferenceAtom, page: duplicate)
     assert_equal(duplicate.id, reference.page.id)
