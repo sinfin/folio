@@ -63,6 +63,12 @@ window.Folio.Tooltip.addToElement = ({ element, title, placement }) => {
   }
 }
 
+window.Folio.Tooltip.showForElement = ({ element, title, placement }) => {
+}
+
+window.Folio.Tooltip.hideForElement = ({ element }) => {
+}
+
 window.Folio.Stimulus.register('f-tooltip', class extends window.Stimulus.Controller {
   static values = {
     title: String,

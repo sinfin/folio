@@ -5,10 +5,10 @@ window.FolioConsole.HtmlAutoFormat.CLASS_NAME = 'f-c-html-auto-format'
 
 window.FolioConsole.HtmlAutoFormat.I18N = {
   cs: {
-    tooltip: "Automaticky nahrazeno: %{before} <br> Kliknutím zrušíte"
+    tooltip: "Automaticky nahrazeno %{before} <br> Kliknutím zrušíte"
   },
   en: {
-    tooltip: "Automatically replaced: %{before} <br> Click to cancel"
+    tooltip: "Automatically replaced %{before} <br> Click to cancel"
   }
 }
 
@@ -43,6 +43,23 @@ window.FolioConsole.HtmlAutoFormat.MAPPINGS = {
   ]
 }
 
+window.FolioConsole.HtmlAutoFormat.UNDO_MAPPINGS = {
+  '„': '"',
+  '“': '"',
+  '„': '"',
+  '“': '"',
+  '‚': "'",
+  '‘': "'",
+  '‚': "'",
+  '‘': "'",
+}
+
+window.FolioConsole.HtmlAutoFormat.MAPPINGS.commons.map((mapping) => {
+  if (mapping.to) {
+    window.FolioConsole.HtmlAutoFormat.UNDO_MAPPINGS[mapping.to] = mapping.from
+  }
+})
+
 window.FolioConsole.HtmlAutoFormat.redactorBlurCallback = ({ redactor }) => {
   if (!window.FolioConsole.HtmlAutoFormat.enabled) return
 
@@ -56,26 +73,19 @@ window.FolioConsole.HtmlAutoFormat.redactorBlurCallback = ({ redactor }) => {
 
 window.FolioConsole.HtmlAutoFormat.sanity = 0
 
-window.FolioConsole.HtmlAutoFormat.wrapInSpan = ({ string, before, cancelAfter, notify }) => {
+window.FolioConsole.HtmlAutoFormat.wrapInSpan = ({ string, notify }) => {
   if (!window.FolioConsole.HtmlAutoFormat.span) {
     window.FolioConsole.HtmlAutoFormat.span = document.createElement('span')
     window.FolioConsole.HtmlAutoFormat.span.className = window.FolioConsole.HtmlAutoFormat.CLASS_NAME
     window.FolioConsole.HtmlAutoFormat.span.dataset.controller = window.FolioConsole.HtmlAutoFormat.CLASS_NAME
   }
 
-  if (cancelAfter) {
-    window.FolioConsole.HtmlAutoFormat.span.dataset.fCHtmlAutoFormatCancelAfterValue = cancelAfter
+  if (notify && window.FolioConsole.HtmlAutoFormat.UNDO_MAPPINGS[string]) {
+    window.FolioConsole.HtmlAutoFormat.span.classList.add('f-c-html-auto-format--notify')
   } else {
-    delete window.FolioConsole.HtmlAutoFormat.span.dataset.fCHtmlAutoFormatCancelAfterValue
+    window.FolioConsole.HtmlAutoFormat.span.classList.remove('f-c-html-auto-format--notify')
   }
 
-  if (notify) {
-    window.FolioConsole.HtmlAutoFormat.span.dataset.fCHtmlAutoFormatNotifyValue = Date.now()
-  } else {
-    delete window.FolioConsole.HtmlAutoFormat.span.dataset.fCHtmlAutoFormatNotifyValue
-  }
-
-  window.FolioConsole.HtmlAutoFormat.span.dataset.fCHtmlAutoFormatBeforeValue = before
   window.FolioConsole.HtmlAutoFormat.span.innerHTML = string
 
   return window.FolioConsole.HtmlAutoFormat.span.outerHTML
@@ -88,7 +98,7 @@ window.FolioConsole.HtmlAutoFormat.useMapping = ({ mapping, textNode, notify }) 
   if (mapping.to) {
     html = textNode.nodeValue.replace(mapping.from, (match, offset, string) => {
       replacedSomething = true
-      return window.FolioConsole.HtmlAutoFormat.wrapInSpan({ string: match.replace(mapping.from, mapping.to), before: match, cancelAfter: mapping.cancelAfter, notify })
+      return window.FolioConsole.HtmlAutoFormat.wrapInSpan({ string: match.replace(mapping.from, mapping.to), notify })
     })
   } else {
     const match = mapping.from.exec(textNode.nodeValue)
@@ -106,7 +116,7 @@ window.FolioConsole.HtmlAutoFormat.useMapping = ({ mapping, textNode, notify }) 
         const string = match.groups[groupKey]
 
         if (mapping.transform[groupKey]) {
-          html += window.FolioConsole.HtmlAutoFormat.wrapInSpan({ string: mapping.transform[groupKey], before: string, cancelAfter: mapping.cancelAfter, notify })
+          html += window.FolioConsole.HtmlAutoFormat.wrapInSpan({ string: mapping.transform[groupKey], notify })
         } else {
           html += string
         }
@@ -196,58 +206,74 @@ window.FolioConsole.HtmlAutoFormat.replace = (opts) => {
   return div.innerHTML
 }
 
+window.FolioConsole.HtmlAutoFormat.onClick = (element) => {
+  if (!element) return
+  if (element.classList.contains('f-c-html-auto-format--reverted')) return
+
+  const redactorGroup = element.closest('[data-controller="f-input-redactor"]')
+  const revertTo = window.FolioConsole.HtmlAutoFormat.UNDO_MAPPINGS[element.innerText]
+
+  if (revertTo) {
+    element.innerHTML = revertTo
+    element.classList.add('f-c-html-auto-format--reverted')
+    delete element.dataset.controller
+  } else {
+    element.remove()
+  }
+
+  if (redactorGroup) {
+    const input = redactorGroup.querySelector('[data-f-input-redactor-target="input"]')
+
+    if (input) {
+      window.Folio.Input.Redactor.updateByCurrentHtml(input)
+    }
+  }
+}
+
+window.FolioConsole.HtmlAutoFormat.onMouseenter = (element) => {
+  if (!element) return
+  if (element.classList.contains('f-c-html-auto-format--reverted')) return
+  console.log('show tooltip for element', element)
+}
+
+window.FolioConsole.HtmlAutoFormat.onMouseleave = (element) => {
+  if (!element) return
+  if (element.classList.contains('f-c-html-auto-format--reverted')) return
+  console.log('hide tooltip for element', element)
+}
+
 window.Folio.Stimulus.register('f-c-html-auto-format', class extends window.Stimulus.Controller {
-  static values = {
-    cancelAfter: { type: String, default: '' },
-    before: { type: String, default: '' },
-    cancelled: { type: Boolean, default: false },
-    notify: { type: Number, default: 0 },
-  }
-
   connect () {
-    this.element.dataset.action = 'click->f-c-html-auto-format#cancel'
-
-    if (!this.cancelledValue && this.beforeValue) {
-      const title = window.Folio.i18n(window.FolioConsole.HtmlAutoFormat.I18N, 'tooltip').replace('%{before}', this.beforeValue)
-      window.Folio.Tooltip.addToElement({ element: this.element, placement: 'top', title })
-    }
-  }
-
-  notifyValueChanged () {
-    if (this.notifyValue && this.notifyValue > 0) {
-      if ((Date.now() - this.notifyValue) < 1000) {
-        this.element.classList.add('f-c-html-auto-format--notify')
-      } else {
+    if (this.element.classList.contains('f-c-html-auto-format--notify')) {
+      this.timeout = window.setTimeout(() => {
         this.element.classList.remove('f-c-html-auto-format--notify')
-      }
+      }, 1000)
     }
+
+    // do it this way so that we don't clutter the HTML in rich text with stimulus data attributes
+    this.onClick = (e) => { window.FolioConsole.HtmlAutoFormat.onClick(this.element) }
+    this.element.addEventListener('click', this.onClick)
+
+    this.onMouseenter = (e) => { window.FolioConsole.HtmlAutoFormat.onMouseenter(this.element) }
+    this.element.addEventListener('mouseenter', this.onMouseenter)
+
+    this.onMouseleave = (e) => { window.FolioConsole.HtmlAutoFormat.onMouseleave(this.element) }
+    this.element.addEventListener('mouseleave', this.onMouseleave)
   }
 
-  cancel (e) {
-    e.preventDefault()
-    e.stopPropagation()
-
-    if (this.cancelledValue) return
-
-    const redactorGroup = this.element.closest('[data-controller="f-input-redactor"]')
-
-    if (this.beforeValue) {
-      this.element.innerHTML = this.beforeValue
-
-      this.cancelledValue = true
-      delete this.element.dataset.fCHtmlAutoFormatBeforeValue
-      delete this.element.dataset.action
-      window.Folio.Tooltip.removeFromElement({ element: this.element })
-    } else {
-      this.element.remove()
+  disconnect () {
+    if (this.timeout) {
+      window.clearTimeout(this.timeout)
+      delete this.timeout
     }
 
-    if (redactorGroup) {
-      const input = redactorGroup.querySelector('[data-f-input-redactor-target="input"]')
+    this.element.removeEventListener('click', this.onClick)
+    delete this.onClick
 
-      if (input) {
-        window.Folio.Input.Redactor.updateByCurrentHtml(input)
-      }
-    }
+    this.element.removeEventListener('mouseenter', this.onMouseenter)
+    delete this.onMouseenter
+
+    this.element.removeEventListener('mouseleave', this.onMouseleave)
+    delete this.onMouseleave
   }
 })

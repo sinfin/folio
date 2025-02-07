@@ -23,10 +23,10 @@
     border-radius: $border-radius
     transition: $transition-base
 
-  &[data-f-c-html-auto-format-before-value]:not([data-f-c-html-auto-format-cancelled-value="true"])::before
+  &:not(&--reverted)::before
     display: block
 
-  &:not([data-f-c-html-auto-format-cancelled-value="true"]):hover::before
+  &:hover::before
     background-color: rgba(0, 0, 0, 0.08)
 
   &::after
@@ -40,8 +40,6 @@
     background-color: rgba(76, 132, 253, 0.5)
     opacity: 0
 
-  &[data-f-c-html-auto-format-before-value]::after
-    display: block
-
   &--notify::after
+    display: block
     animation: fCHtmlAutoFormatNotify .75s 1 ease-in-out
