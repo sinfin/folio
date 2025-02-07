@@ -36,7 +36,7 @@ module Folio::Audited
 
       # override audited - don't ignore inheritance_column
       define_singleton_method(:default_ignored_attributes) do
-        [primary_key, :atoms_data_for_search] | Audited.ignored_attributes
+        [primary_key, :atoms_data_for_search, :aasm_state_log] | Audited.ignored_attributes
       end
     end
   end
