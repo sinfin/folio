@@ -15,6 +15,7 @@ window.FolioConsole.HtmlAutoFormat.I18N = {
 window.FolioConsole.HtmlAutoFormat.MAPPINGS = {
   commons: [
     { from: '...', to: '…' },
+    { from: "''", to: '"' },
     { from: '->', to: '→' },
     { from: '-&gt;', to: '→' },
     { from: '<-', to: '←' },
