@@ -11,7 +11,7 @@
         class=item_class_name(version, i)
       ]
         .f-c-layout-audited-dropdown__label
-          = l(version.created_at, format: :short)
+          = l(version.created_at, format: :console_short_with_seconds)
           - if i == 0
             '  #{t('.current')}
 
