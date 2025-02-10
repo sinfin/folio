@@ -5,6 +5,10 @@ module Folio::AtomsHelper
 
   def atoms_rescue_lambda
     @atoms_rescue_lambda ||= lambda do |e, atom|
+      if Rails.env.development? && ENV["FOLIO_DEBUG_ATOMS"]
+        raise e
+      end
+
       if controller_instance = try(:controller)
         folio_broken_atoms_data = controller_instance.instance_variable_get(BROKEN_DATA_KEY)
         folio_broken_atoms_data ||= []
