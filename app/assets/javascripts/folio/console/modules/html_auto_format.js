@@ -77,6 +77,7 @@ window.FolioConsole.HtmlAutoFormat.sanity = 0
 window.FolioConsole.HtmlAutoFormat.wrapInSpan = ({ string, notify }) => {
   if (!window.FolioConsole.HtmlAutoFormat.span) {
     window.FolioConsole.HtmlAutoFormat.span = document.createElement('span')
+    window.FolioConsole.HtmlAutoFormat.span.setAttribute('contenteditable', 'false')
     window.FolioConsole.HtmlAutoFormat.span.className = window.FolioConsole.HtmlAutoFormat.CLASS_NAME
     window.FolioConsole.HtmlAutoFormat.span.dataset.controller = window.FolioConsole.HtmlAutoFormat.CLASS_NAME
   }
