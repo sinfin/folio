@@ -34,6 +34,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_05_075820) do
     t.string "request_uuid"
     t.datetime "created_at", precision: nil
     t.integer "placement_version"
+    t.jsonb "folio_data"
     t.index ["associated_type", "associated_id"], name: "associated_index"
     t.index ["auditable_type", "auditable_id", "version"], name: "auditable_index"
     t.index ["created_at"], name: "index_audits_on_created_at"

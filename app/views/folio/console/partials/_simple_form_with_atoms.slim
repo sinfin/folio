@@ -71,7 +71,8 @@
                 class="f-c-simple-form-with-atoms__iframe"
                 src=console_atoms_path(keys: keys, \
                                        default_locale: key, \
-                                       class_name: f.object.class.to_s)
+                                       class_name: f.object.class.to_s, \
+                                       audited_audit_active: audited_audit_active ? "1" : nil)
               ]
               span.folio-loader.f-c-simple-form-with-atoms__preview-loader
 
@@ -84,7 +85,7 @@
         .f-c-simple-form-with-atoms__overlay-dismiss
 
         .f-c-simple-form-with-atoms__overlay
-          = console_form_atoms(f)
+          = console_form_atoms(f, audited_audit_active:)
 
     = form_footer(f, form_footer_options)
 

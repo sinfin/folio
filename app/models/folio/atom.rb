@@ -94,6 +94,7 @@ module Folio::Atom
         attachments:,
         hint: I18n.t("simple_form.hints.#{klass.name.underscore}.base", default: nil).try(:html_safe),
         structure:,
+        editable: klass.editable_in_console?,
         form_layout: klass::FORM_LAYOUT,
         title: klass.model_name.human,
         molecule: klass.molecule_component_class || klass.molecule_cell_name,
