@@ -238,7 +238,9 @@ cs:
             info: Symbol {0} bude po odeslání nahrazen textem článku.
       users:
         send_reset_password_email:
-          success: Instrukce pro reset hesla odeslány e-mailem
+          success:
+            reset_password: Instrukce pro reset hesla odeslány e-mailem.
+            invite_again: Uživatel nepotvrdil pozvánku, byla mu odeslána pozvánka nová, původní tím přestavá platit.
         impersonate:
           success: Přihlášen jako uživatel "%{label}"
         header_actions:

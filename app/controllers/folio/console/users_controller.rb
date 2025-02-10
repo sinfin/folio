@@ -8,9 +8,16 @@ class Folio::Console::UsersController < Folio::Console::BaseController
   before_action :skip_email_reconfirmation, only: [:update]
 
   def send_reset_password_email
-    @user.send_reset_password_instructions
+    if Rails.application.config.folio_users_publicly_invitable && !@user.accepted_or_not_invited?
+      @user.invite!(current_account)
+      message = t(".success.invite_again")
+    else
+      @user.send_reset_password_instructions
+      message = t(".success.reset_password")
+    end
+
     redirect_back fallback_location: url_for([:console, @user]),
-                  flash: { success: t(".success") }
+                  flash: { success: message }
   end
 
   def impersonate
