@@ -1,16 +1,6 @@
 .f-c-html-auto-format-toggle data=data
-  label[
-    class="f-c-html-auto-format-toggle__label"
-  ]
-    input[
-      class="form-check-input"
-      class="f-c-html-auto-format-toggle__input"
-      type="checkbox"
-      data=stimulus_data(action: "onInput", target: "input")
-    ]
-
-    span[
-      class="f-c-html-auto-format-toggle__label-inner"
-      data=stimulus_tooltip(t('.tooltip'))
-    ]
-      = t('.label')
+  = render(Folio::Console::Ui::BooleanToggleComponent.new(record: nil,
+                                                          static: true,
+                                                          attribute: nil,
+                                                          checked: enabled,
+                                                          small_label: t('.label')))

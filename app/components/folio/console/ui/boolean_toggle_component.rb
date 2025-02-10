@@ -40,7 +40,11 @@ class Folio::Console::Ui::BooleanToggleComponent < Folio::Console::ApplicationCo
   end
 
   def name
-    "#{as}[#{@attribute}]"
+    if @static && !@attribute
+      nil
+    else
+      "#{as}[#{@attribute}]"
+    end
   end
 
   def as
