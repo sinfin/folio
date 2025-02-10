@@ -1,4 +1,4 @@
-@keyframes heartBeat
+@keyframes fCFormFooterHeartBeat
   0%
     transform: scale(1)
   14%
@@ -43,23 +43,49 @@
   .f-c-layout-html.slideout-open &
     display: none
 
-  & &__ribbon
-    display: none
-
   &__container
     display: flex
     flex-wrap: wrap
     gap: $f-c-ui-buttons-gap
 
-  &--dirty &__btn--submit,
-  .simple_form--dirty &__btn--submit
-    animation: heartBeat 1.5s 1 linear
+  &__status
+    flex: 0 0 auto
     position: relative
-    z-index: 2
 
-  &--dirty &__ribbon,
-  .simple_form--dirty &__ribbon
+  &__status-saved,
+  &__status-saving,
+  &__status-unsaved
+    visibility: hidden
+
+  &__status-saved,
+  &__status-saving
+    position: absolute
+    top: 0
+    bottom: 0
+    left: 0
     display: flex
+    align-items: center
+    justify-content: center
+    width: 16px
+
+  &[data-f-c-form-footer-status-value="saved"] &__status-saved,
+  &[data-f-c-form-footer-status-value="saving"] &__status-saving,
+  &[data-f-c-form-footer-status-value="unsaved"] &__status-unsaved
+    visibility: visible
+
+  &[data-f-c-form-footer-status-value="unsaved"] &__btn--submit
+    animation: fCFormFooterHeartBeat 1.5s 1 linear
+
+  &__left,
+  &__right
+    display: flex
+    align-items: center
+    gap: 0.5 * $grid-gutter-base 2 * $grid-gutter-base
+    flex: 0 0 auto
+
+  &__right
+    margin-left: auto
+    flex: 0 1 auto
 
   +mq-desktop-menu
     padding-top: 2 * $grid-gutter-width / 3

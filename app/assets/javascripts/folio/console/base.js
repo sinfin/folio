@@ -90,6 +90,7 @@
 //= require folio/console/flash/flash
 //= require folio/console/folio_attributes_fields_component
 //= require folio/console/form/errors/errors
+//= require folio/console/form/footer_component
 //= require folio/console/form_modal_component
 //= require folio/console/html_auto_format/toggle_component
 //= require folio/console/index/filters/filters

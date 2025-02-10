@@ -333,6 +333,10 @@ en:
           placeholders:
             subject: E-mail subject
             text: E-mail content
+      form:
+        footer_component:
+          saved: Uloženo
+          unsaved_changes: Unsaved changes
 
       react:
         modal_component:

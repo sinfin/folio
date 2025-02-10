@@ -107,4 +107,9 @@ module Folio::Console::FormsHelper
            },
            &block
   end
+
+  def form_footer(f, opts = {})
+    render(Folio::Console::Form::FooterComponent.new(f:,
+                                                     preview_path: opts[:preview_path]))
+  end
 end

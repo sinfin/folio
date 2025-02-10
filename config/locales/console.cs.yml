@@ -337,6 +337,10 @@ cs:
           placeholders:
             subject: Předmět e-mailu
             text: Obsah e-mailu
+      form:
+        footer_component:
+          saved: Uloženo
+          unsaved_changes: Neuložené změny
 
       react:
         modal_component:
