@@ -60,7 +60,6 @@
 //= require folio/console/modules/event_names
 //= require folio/console/modules/danger-box-shadow-blink
 //= require folio/console/modules/popover
-//= require folio/console/modules/dirty-forms
 //= require folio/console/modules/with_aside
 //= require folio/console/modules/input/url
 //= require folio/console/modules/html_auto_format

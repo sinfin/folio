@@ -21,6 +21,12 @@ class Folio::Console::Form::FooterComponent < Folio::Console::ApplicationCompone
     stimulus_controller("f-c-form-footer",
                         values: {
                           status: "saved",
+                        },
+                        action: {
+                          "message@window" => "onWindowMessage",
+                          "change@document" => "onDocumentChange",
+                          "folioConsoleCustomChange@document" => "onDocumentChange",
+                          "submit@document" => "onDocumentSubmit"
                         })
   end
 
