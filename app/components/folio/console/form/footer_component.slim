@@ -2,16 +2,6 @@
 
 .f-c-form-footer data=data
   .container-fluid.f-c-form-footer__container
-    / - if back_path_with_default
-    /   == cell('folio/console/ui/button',
-    /           href: back_path_with_default,
-    /           class: 'f-c-form-footer__btn',
-    /           variant: :gray,
-    /           label: t('folio.console.actions.back'),
-    /           hide_label_on_mobile: true,
-    /           icon: :arrow_u_left_top,
-    /           data: { test_id: "back-button" })
-
     .f-c-form-footer__left
       - if @f
         == cell('folio/console/ui/button',
@@ -38,6 +28,15 @@
                     icon_options: { height: 16 })
 
     .f-c-form-footer__right
+      - if @f && @f.object
+        = render(Folio::Console::Autosave::ToggleComponent.new(record: @f.object))
+
+        = render(Folio::Console::Audited::DropdownComponent.new(audits: controller.instance_variable_get(:@audited_audits),
+                                                                audit: controller.instance_variable_get(:@audited_audit),
+                                                                record: @f.object))
+
+      = render(Folio::Console::HtmlAutoFormat::ToggleComponent.new)
+
       - if preview_path_with_default
         == cell('folio/console/ui/button',
                 href: preview_path_with_default,
@@ -48,5 +47,3 @@
                 icon: :open_in_new,
                 target: "_blank",
                 data: { test_id: "preview-button" })
-
-      = render(Folio::Console::HtmlAutoFormat::ToggleComponent.new)

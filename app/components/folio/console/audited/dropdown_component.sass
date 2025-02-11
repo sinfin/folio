@@ -1,13 +1,15 @@
-.f-c-layout-audited-dropdown
-  margin-left: auto
-  align-self: center
+.f-c-audited-dropdown
+  display: flex
+  align-items: center
+  gap: 2 * $grid-gutter-base
 
   &__toggle
+    cursor: pointer
     display: flex
     align-items: center
-    padding: 0 $grid-gutter-half
-    line-height: 35px
-    cursor: pointer
+
+    &::after
+      display: none
 
   &__menu
     max-height: 400px

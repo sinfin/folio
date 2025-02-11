@@ -31,6 +31,7 @@ class Folio::Page < Folio::ApplicationRecord
   include Folio::Taggable
   include Folio::Transportable::Model
   include PgSearch::Model
+  include Folio::Autosave::Model
 
   if Rails.application.config.folio_pages_audited
     include Folio::Audited
@@ -161,6 +162,10 @@ class Folio::Page < Folio::ApplicationRecord
     else
       true
     end
+  end
+
+  def folio_autosave_enabled?
+    Rails.application.config.folio_pages_autosave
   end
 
   private

@@ -286,10 +286,11 @@ cs:
           version: "Verze:"
           restore: Obnovit tuto verzi
           show_current: Zobrazit současnou verzi
-      layout:
-        audited_dropdown:
+        dropdown_component:
           toggle: Historie verzí
           current: (současná verze)
+          back: Zpět
+      layout:
         sidebar:
           homepage: Úvodní stránka
           audio: Audiobanka
@@ -363,6 +364,10 @@ cs:
         toggle_component:
           label: Automatické náhrady
           tooltip: Spojovníky –, "rovné" uvozovky „oblými“ , tři tečky za trojtečku … atd.
+
+      autosave:
+        toggle_component:
+          label: Automatické ukládání
 
   date:
     formats:

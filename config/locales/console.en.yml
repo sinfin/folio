@@ -282,10 +282,11 @@ en:
           version: "Version:"
           restore: Restore this version
           show_current: Show current version
-      layout:
-        audited_dropdown:
+        dropdown_component:
           toggle: Version history
           current: (current version)
+          back: Back
+      layout:
         sidebar:
           homepage: Homepage
           audio: Audios
@@ -359,6 +360,10 @@ en:
         toggle_component:
           label: Automatic replacements
           tooltip: Hyphens –, three dots … etc.
+
+      autosave:
+        toggle_component:
+          label: Automatic save
 
   date:
     formats:

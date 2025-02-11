@@ -1,0 +1,32 @@
+.f-c-audited-dropdown.small.text-muted
+  == cell('folio/console/ui/with_icon',
+          t('.back'),
+          title: t('.back'),
+          href: version_url(@audits[1], 1),
+          icon: :arrow_u_left_top,
+          icon_options: { height: 16 },
+          class: "f-c-audited-dropdown__back small text-reset")
+
+  .f-c-audited-dropdown__dropdown.dropdown
+    .f-c-audited-dropdown__toggle.dropdown-toggle[
+      data-bs-toggle="dropdown"
+    ]
+      == cell('folio/console/ui/with_icon',
+              t('.toggle'),
+              hover: :underline,
+              icon: :history,
+              icon_options: { height: 16 })
+
+    .dropdown-menu.dropdown-menu-right.f-c-audited-dropdown__menu.py-0
+      - @audits.each_with_index do |version, i|
+        a.dropdown-item.f-c-audited-dropdown__item.py-2[
+          href=version_url(version, i)
+          class=item_class_name(version, i)
+        ]
+          .f-c-audited-dropdown__label
+            = l(version.created_at, format: :console_short_with_seconds)
+            - if i == 0
+              '  #{t('.current')}
+
+          .small
+            = version.user.try(:to_label)

@@ -36,11 +36,6 @@
                              class: "f-c-layout-header__breadcrumb-delimiter",
                              height: 16)
 
-      == cell('folio/console/layout/audited_dropdown',
-              model[:audited_audits],
-              audited_audit: model[:audited_audit],
-              record: model[:record])
-
       == cell('folio/console/ui/with_icon',
               t('.sign_out', user: current_user_with_test_fallback.email),
               href: log_out_path,
