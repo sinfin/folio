@@ -6,29 +6,13 @@ class Folio::Console::Autosave::ToggleComponent < Folio::Console::ApplicationCom
   end
 
   def render?
-    @record.respond_to?(:folio_autosave_enabled?) && @record.folio_autosave_enabled?
+    @record.present? && @record.respond_to?(:folio_autosave_enabled?) && @record.folio_autosave_enabled?
   end
 
-  def data
-    stimulus_controller("f-c-autosave-toggle",
-                        values: {
-                          api_url: controller.update_console_preferences_console_api_current_user_path,
-                          enabled:,
-                        },
-                        action: {
-                          "f-c-ui-boolean-toggle:input" => "booleanToggleInput",
-                        })
-  end
-
-  def enabled
-    return @enabled unless @enabled.nil?
-
-    @enabled = if Folio::Current.user && Folio::Current.user.console_preferences.present?
-      Folio::Current.user.console_preferences["autosave"]
-    end
-
-    @enabled = true if @enabled.nil?
-
-    @enabled
+  def preference_toggle_component
+    Folio::Console::CurrentUsers::PreferenceToggleComponent.new(key: "autosave",
+                                                                javascript_key: "Autosave",
+                                                                label: t(".label"),
+                                                                class_name: "f-c-autosave-toggle")
   end
 end
