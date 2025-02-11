@@ -1,6 +1,7 @@
 window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.Controller {
   static values = {
     status: String,
+    collapsed: Boolean,
   }
 
   disconnect () {
@@ -54,5 +55,10 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
     if (form === targetForm) {
       this.statusValue = 'saving'
     }
+  }
+
+  toggleCollapsed (e) {
+    e.preventDefault()
+    this.collapsedValue = !this.collapsedValue
   }
 })

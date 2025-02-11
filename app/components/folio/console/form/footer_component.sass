@@ -102,6 +102,62 @@
     align-items: center
     gap: $f-c-ui-with-icon-gap
 
+  &__collapsible-backdrop
+    position: absolute
+    top: -100vh
+    left: -100vw
+    width: 200vw
+    height: 200vh
+    z-index: 2
+    display: none
+
+  @media screen and (min-width: 1180px)
+    &__btn--collapsible
+      display: none
+
+    &__collapsible
+      order: 1
+
+    &__collapsible-content
+      display: flex
+      align-items: center
+      gap: 2 * $grid-gutter-base
+
+    &__btn--preview
+      order: 2
+
+  @media screen and (max-width: 1179px)
+    &__right .f-c-ui-button__label
+      display: none
+
+    &__right .f-c-ui-button__icon
+      margin: $f-c-ui-button-no-label-icon-margin
+
+    &__collapsible
+      position: relative
+
+    &__collapsible-content
+      --f-c-audited-dropdown-align-items: stretch
+      --f-c-audited-dropdown-flex-direction: column
+      position: absolute
+      z-index: 3
+      bottom: 100%
+      right: 0
+      margin-bottom: $grid-gutter-base
+      box-shadow: $f-c-box-shadow-overlay
+      background: $dropdown-bg
+      display: none
+      flex-direction: column
+      align-items: stretch
+      padding: $dropdown-item-padding-y $dropdown-item-padding-x
+      gap: $dropdown-item-padding-y
+
+    &[data-f-c-form-footer-collapsed-value="false"] &__collapsible-content
+      display: flex
+
+    &[data-f-c-form-footer-collapsed-value="false"] &__collapsible-backdrop
+      display: block
+
   +mq-desktop-menu
     left: 220px
 

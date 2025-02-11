@@ -67,4 +67,8 @@ window.Folio.Stimulus.register('f-c-ui-boolean-toggle', class extends window.Sti
       input.checked = !input.checked
     })
   }
+
+  stopPropagation (e) {
+    e.stopPropagation()
+  }
 })

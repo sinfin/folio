@@ -32,6 +32,7 @@ class Folio::Console::Form::FooterComponent < Folio::Console::ApplicationCompone
     stimulus_controller("f-c-form-footer",
                         values: {
                           status: "saved",
+                          collapsed: true,
                         },
                         action: {
                           "message@window" => "onWindowMessage",

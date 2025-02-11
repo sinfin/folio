@@ -33,29 +33,38 @@
                       icon_options: { height: 16 })
 
       .f-c-form-footer__right
-        - if @record
-          = render(Folio::Console::Autosave::ToggleComponent.new(record: @record))
-
-          = render(Folio::Console::Audited::DropdownComponent.new(audits: controller.instance_variable_get(:@audited_audits),
-                                                                  audit: @audit,
-                                                                  record: @record))
-
-        = render(Folio::Console::HtmlAutoFormat::ToggleComponent.new)
-
-        - if @share_url.present?
-          .f-c-form-footer__share.small.text-muted
-            == cell('folio/console/clipboard_copy',
-                    @share_url,
-                    icon: :link,
-                    label: t('.share'))
-
         - if preview_path_with_default
           == cell('folio/console/ui/button',
                   href: preview_path_with_default,
-                  class: 'f-c-form-footer__btn',
+                  class: 'f-c-form-footer__btn f-c-form-footer__btn--preview',
                   variant: :gray,
                   label: t('folio.console.actions.preview'),
-                  hide_label_on_mobile: true,
                   icon: :open_in_new,
                   target: "_blank",
                   data: { test_id: "preview-button" })
+
+        .f-c-form-footer__collapsible
+          .f-c-form-footer__collapsible-backdrop data=stimulus_action(click: "toggleCollapsed")
+          .f-c-form-footer__collapsible-content
+
+            - if @record
+              = render(Folio::Console::Autosave::ToggleComponent.new(record: @record))
+
+              = render(Folio::Console::Audited::DropdownComponent.new(audits: controller.instance_variable_get(:@audited_audits),
+                                                                      audit: @audit,
+                                                                      record: @record))
+
+            = render(Folio::Console::HtmlAutoFormat::ToggleComponent.new)
+
+            - if @share_url.present?
+              .f-c-form-footer__share.small.text-muted
+                == cell('folio/console/clipboard_copy',
+                        @share_url,
+                        icon: :link,
+                        label: t('.share'))
+
+          == cell('folio/console/ui/button',
+                  class: 'f-c-form-footer__btn f-c-form-footer__btn--collapsible',
+                  variant: :gray,
+                  icon: :dots_vertical,
+                  data: stimulus_action(click: "toggleCollapsed").merge(test_id: "dropdown-button"))

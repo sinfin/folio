@@ -1,7 +1,12 @@
+#{":root"}
+  --f-c-audited-dropdown-flex-direction: row
+  --f-c-audited-dropdown-align-items: center
+
 .f-c-audited-dropdown
   display: flex
-  align-items: center
+  align-items: var(--f-c-audited-dropdown-align-items)
   gap: 2 * $grid-gutter-base
+  flex-direction: var(--f-c-audited-dropdown-flex-direction)
 
   &__toggle
     cursor: pointer
