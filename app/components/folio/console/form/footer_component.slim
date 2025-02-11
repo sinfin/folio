@@ -1,49 +1,54 @@
-.f-c-form-footer-spacer
+.f-c-form-footer-spacer class=(@audit ? "f-c-form-footer-spacer--with-audit" : nil)
 
-.f-c-form-footer data=data
-  .container-fluid.f-c-form-footer__container
-    .f-c-form-footer__left
-      - if @f
-        == cell('folio/console/ui/button',
-                type: :submit,
-                class: 'f-c-form-footer__btn f-c-form-footer__btn--submit',
-                variant: :primary,
-                label: t("folio.console.actions.submit"),
-                icon: :check,
-                data: { test_id: "submit-button" })
+.f-c-form-footer data=data class=(@audit ? "f-c-form-footer--with-audit" : nil)
+  - if @audit && @record
+    = render(Folio::Console::Audited::BarComponent.new(audit: @audit,
+                                                       record: @record))
 
-        .f-c-form-footer__status
-          .f-c-form-footer__status-saved.text-success[
-            data=saved_at_tooltip
-          ]
-            = folio_icon(:content_save, height: 16)
+  .f-c-form-footer__inner
+    .container-fluid.f-c-form-footer__container
+      .f-c-form-footer__left
+        - if @f
+          == cell('folio/console/ui/button',
+                  type: :submit,
+                  class: 'f-c-form-footer__btn f-c-form-footer__btn--submit',
+                  variant: :primary,
+                  label: t("folio.console.actions.submit"),
+                  icon: :check,
+                  data: { test_id: "submit-button" })
 
-          .f-c-form-footer__status-saving
-            span.folio-loader.folio-loader--tiny
+          .f-c-form-footer__status
+            .f-c-form-footer__status-saved.text-success[
+              data=saved_at_tooltip
+            ]
+              = folio_icon(:content_save, height: 16)
 
-          .f-c-form-footer__status-unsaved.small.text-danger
-            == cell('folio/console/ui/with_icon',
-                    t('.unsaved_changes'),
-                    icon: :alert,
-                    icon_options: { height: 16 })
+            .f-c-form-footer__status-saving
+              span.folio-loader.folio-loader--tiny
 
-    .f-c-form-footer__right
-      - if @f && @f.object
-        = render(Folio::Console::Autosave::ToggleComponent.new(record: @f.object))
+            .f-c-form-footer__status-unsaved.small.text-danger
+              == cell('folio/console/ui/with_icon',
+                      t('.unsaved_changes'),
+                      icon: :alert,
+                      icon_options: { height: 16 })
 
-        = render(Folio::Console::Audited::DropdownComponent.new(audits: controller.instance_variable_get(:@audited_audits),
-                                                                audit: controller.instance_variable_get(:@audited_audit),
-                                                                record: @f.object))
+      .f-c-form-footer__right
+        - if @record
+          = render(Folio::Console::Autosave::ToggleComponent.new(record: @record))
 
-      = render(Folio::Console::HtmlAutoFormat::ToggleComponent.new)
+          = render(Folio::Console::Audited::DropdownComponent.new(audits: controller.instance_variable_get(:@audited_audits),
+                                                                  audit: @audit,
+                                                                  record: @record))
 
-      - if preview_path_with_default
-        == cell('folio/console/ui/button',
-                href: preview_path_with_default,
-                class: 'f-c-form-footer__btn',
-                variant: :gray,
-                label: t('folio.console.actions.preview'),
-                hide_label_on_mobile: true,
-                icon: :open_in_new,
-                target: "_blank",
-                data: { test_id: "preview-button" })
+        = render(Folio::Console::HtmlAutoFormat::ToggleComponent.new)
+
+        - if preview_path_with_default
+          == cell('folio/console/ui/button',
+                  href: preview_path_with_default,
+                  class: 'f-c-form-footer__btn',
+                  variant: :gray,
+                  label: t('folio.console.actions.preview'),
+                  hide_label_on_mobile: true,
+                  icon: :open_in_new,
+                  target: "_blank",
+                  data: { test_id: "preview-button" })

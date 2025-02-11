@@ -3,17 +3,23 @@
 class Folio::Console::Form::FooterComponent < Folio::Console::ApplicationComponent
   def initialize(f: nil, preview_path: nil)
     @f = f
+    @record = @f ? @f.object : nil
     @preview_path = preview_path
+  end
+
+  def before_render
+    if @record
+      @audit = controller.instance_variable_get(:@audited_audit)
+    end
   end
 
   def preview_path_with_default
     return if @preview_path == false
     return @preview_path if @preview_path
 
-    return unless @f
-    return unless @f.object.persisted?
+    return unless @record.persisted?
 
-    preview_url_for(@f.object)
+    preview_url_for(@record)
   rescue NoMethodError
   end
 
@@ -31,8 +37,8 @@ class Folio::Console::Form::FooterComponent < Folio::Console::ApplicationCompone
   end
 
   def saved_at_tooltip
-    if @f.object.created_at
-      title = "#{t(".saved")} #{l(@f.object.created_at, format: :console_short_with_seconds)}"
+    if @record && @record.created_at
+      title = "#{t(".saved")} #{l(@record.created_at, format: :console_short_with_seconds)}"
       stimulus_tooltip(title, placement: :right)
     end
   end

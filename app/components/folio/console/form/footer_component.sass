@@ -14,28 +14,38 @@
 .f-c-form-footer
   min-height: 60px
 
+  &--with-audit
+    min-height: 60px + 50
+
   +mq-desktop-menu
     min-height: 68px
 
+    &--with-audit
+      min-height: 68px + 50
+
 .f-c-form-footer
-  padding-top: $grid-gutter-width / 2
-  padding-bottom: $grid-gutter-width / 2
-  background: $white
   position: fixed
   left: 0
   right: 0
   bottom: 0
   z-index: 999
-  box-shadow: $f-c-box-shadow-card
+
+  &__inner
+    padding-top: $grid-gutter-width / 2
+    padding-bottom: $grid-gutter-width / 2
+    background: $white
+    box-shadow: $f-c-box-shadow-card
 
   .modal &
     position: relative
     inset: 0 !important
-    box-shadow: none
-    padding: 0 !important
     margin-top: $grid-gutter-width
     min-height: 0 !important
     z-index: 1
+
+    &__inner
+      box-shadow: none
+      padding: 0 !important
 
     &__container
       padding: 0 !important
@@ -88,9 +98,11 @@
     flex: 0 1 auto
 
   +mq-desktop-menu
-    padding-top: 2 * $grid-gutter-width / 3
-    padding-bottom: 2 * $grid-gutter-width / 3
     left: 220px
+
+    &__inner
+      padding-top: 2 * $grid-gutter-width / 3
+      padding-bottom: 2 * $grid-gutter-width / 3
 
     &,
     .f-c-simple-form-with-atoms &

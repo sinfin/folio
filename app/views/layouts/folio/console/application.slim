@@ -18,9 +18,6 @@ html.f-c-layout-html.f-html--show-sensitive-content lang=I18n.locale
       - unless @hide_flash_messages
         == cell('folio/console/flash', flash)
 
-      = render(Folio::Console::Audited::BarComponent.new(audit: @audited_audit,
-                                                         record: controller.send(:folio_console_record)))
-
       - if content_for?(:under_flash)
         = yield(:under_flash)
 
