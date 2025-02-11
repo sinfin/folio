@@ -15,3 +15,7 @@ span.f-c-clipboard-copy data-clipboard-text=model class=options[:class_name]
       = folio_icon(:check,
                    height: 16,
                    class: "f-c-clipboard-copy__done")
+
+    - if options[:label]
+      span.f-c-clipboard-copy__label
+        = options[:label]

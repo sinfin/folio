@@ -42,6 +42,13 @@
 
         = render(Folio::Console::HtmlAutoFormat::ToggleComponent.new)
 
+        - if @share_url.present?
+          .f-c-form-footer__share.small.text-muted
+            == cell('folio/console/clipboard_copy',
+                    @share_url,
+                    icon: :link,
+                    label: t('.share'))
+
         - if preview_path_with_default
           == cell('folio/console/ui/button',
                   href: preview_path_with_default,

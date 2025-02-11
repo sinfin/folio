@@ -10,6 +10,11 @@ class Folio::Console::Form::FooterComponent < Folio::Console::ApplicationCompone
   def before_render
     if @record
       @audit = controller.instance_variable_get(:@audited_audit)
+
+      @share_url = controller.through_aware_console_url_for(@record,
+                                                            action: :edit,
+                                                            hash: { only_path: false },
+                                                            safe: true)
     end
   end
 

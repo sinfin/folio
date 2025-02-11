@@ -342,6 +342,7 @@ cs:
         footer_component:
           saved: Uloženo
           unsaved_changes: Neuložené změny
+          share: Sdílet
 
       react:
         modal_component:

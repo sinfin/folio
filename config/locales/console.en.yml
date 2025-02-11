@@ -336,8 +336,9 @@ en:
             text: E-mail content
       form:
         footer_component:
-          saved: Uloženo
+          saved: Saved
           unsaved_changes: Unsaved changes
+          share: Share
 
       react:
         modal_component:
