@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - autosave to console - add `Folio::Autosave::Model` to your model
+- `text_or_edit_link` in `Folio::Console::CatalogueCell` returns text or link according to ability
 
 ## [6.1.0] - 2025-02-07
 
