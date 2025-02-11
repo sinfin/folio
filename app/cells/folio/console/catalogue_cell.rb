@@ -136,6 +136,14 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
     end
   end
 
+  def text_or_edit_link(attr = nil, sanitize: false, &block)
+    if can_now?(:edit, record)
+      true_edit_link(attr, sanitize:, &block)
+    else
+      attribute(attr, spacey: true)
+    end
+  end
+
   def true_edit_link(attr = nil, sanitize: false, &block)
     resource_link(through_aware_console_url_for(record, action: :edit), attr, sanitize:, &block)
   end

@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- `text_or_edit_link` in `Folio::Console::CatalogueCell` returns text or link according to ability
+
 ## [6.1.0] - 2025-02-07
 
 ### Changed
