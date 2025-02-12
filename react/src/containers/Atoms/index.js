@@ -48,8 +48,6 @@ class Atoms extends React.PureComponent {
       e.preventDefault()
       e.stopPropagation()
       this.props.dispatch(validateAndSubmitGlobalForm())
-    } else {
-      e.target.classList.add('f-c-simple-form-with-atoms--submitting')
     }
   }
 

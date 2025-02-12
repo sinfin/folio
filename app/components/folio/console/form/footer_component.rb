@@ -35,11 +35,17 @@ class Folio::Console::Form::FooterComponent < Folio::Console::ApplicationCompone
                           status: "saved",
                           collapsed: true,
                           settings: false,
+                          autosave_enabled: (@record && @record.try(:folio_autosave_enabled?)) || false,
+                          autosave_timer: -1,
                         },
                         action: {
                           "message@window" => "onWindowMessage",
                           "change@document" => "onDocumentChange",
+                          "focusin@document" => "onDocumentFocusin",
+                          "focusout@document" => "onDocumentFocusout",
                           "folioConsoleCustomChange@document" => "onDocumentChange",
+                          "atomsFormHidden@document" => "onDocumentAtomsFormHidden",
+                          "atomsFormShown@document" => "onDocumentAtomsFormShown",
                           "submit@document" => "onDocumentSubmit"
                         })
   end

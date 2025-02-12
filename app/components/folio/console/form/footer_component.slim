@@ -18,10 +18,11 @@
                   data: { test_id: "submit-button" })
 
           .f-c-form-footer__status
-            .f-c-form-footer__status-saved.text-success[
-              data=saved_at_tooltip
-            ]
-              = folio_icon(:content_save, height: 16)
+            - if @record && @record.persisted?
+              .f-c-form-footer__status-saved.text-success[
+                data=saved_at_tooltip
+              ]
+                = folio_icon(:content_save, height: 16)
 
             .f-c-form-footer__status-saving
               span.folio-loader.folio-loader--tiny

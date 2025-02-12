@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- autosave to console - add `Folio::Autosave::Model` to your model
+
 ## [6.1.0] - 2025-02-07
 
 ### Changed
