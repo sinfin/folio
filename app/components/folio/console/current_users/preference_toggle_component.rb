@@ -24,7 +24,7 @@ class Folio::Console::CurrentUsers::PreferenceToggleComponent < Folio::Console::
     stimulus_controller("f-c-current-users-preference-toggle",
                         values: {
                           api_url: controller.update_console_preferences_console_api_current_user_path,
-                          enabled:,
+                          enabled: enabled ? 1 : 0,
                           key: @key,
                           javascript_key: @javascript_key,
                         },
