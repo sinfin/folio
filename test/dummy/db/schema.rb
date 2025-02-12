@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_11_20_054115) do
+ActiveRecord::Schema[7.1].define(version: 2025_01_29_103749) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -244,7 +244,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_20_054115) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.string "title"
+    t.bigint "site_id"
     t.index ["position"], name: "index_folio_content_templates_on_position"
+    t.index ["site_id"], name: "index_folio_content_templates_on_site_id"
     t.index ["type"], name: "index_folio_content_templates_on_type"
   end
 
@@ -636,6 +638,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_20_054115) do
   end
 
   add_foreign_key "folio_console_notes", "folio_sites", column: "site_id"
+  add_foreign_key "folio_content_templates", "folio_sites", column: "site_id"
   add_foreign_key "folio_files", "folio_sites", column: "site_id"
   add_foreign_key "folio_site_user_links", "folio_sites", column: "site_id"
   add_foreign_key "folio_site_user_links", "folio_users", column: "user_id"

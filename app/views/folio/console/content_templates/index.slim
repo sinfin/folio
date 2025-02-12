@@ -9,5 +9,5 @@
     end
 
     attribute(:title) { record.model_name.human(count: 2) }
-    attribute(:count) { record.count }
+    attribute(:count) { record.by_site(current_site).count }
     actions(edit: edit_url)

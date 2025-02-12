@@ -10,7 +10,8 @@ class Folio::Console::ContentTemplatesController < Folio::Console::BaseControlle
   end
 
   def edit
-    @content_templates = @klass.ordered
+    @content_templates = @klass.by_site(current_site)
+                               .ordered
   end
 
   def update
@@ -22,14 +23,14 @@ class Folio::Console::ContentTemplatesController < Folio::Console::BaseControlle
 
         if destroy == "1"
           if id
-            @klass.find(id).destroy!
+            @klass.by_site(current_site).find(id).destroy!
           end
         else
           if id
-            ct = @klass.find(id)
+            ct = @klass.by_site(current_site).find(id)
             ct.update!(dup)
           else
-            @klass.create!(dup)
+            @klass.create!(dup.merge(site: current_site))
           end
         end
       end
