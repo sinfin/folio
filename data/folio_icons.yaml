@@ -306,6 +306,9 @@ th-list:
 tune_vertical_variant:
   width: 24
   height: 24
+upload:
+  width: 24
+  height: 24
 user:
   width: 24
   height: 24

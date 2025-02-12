@@ -2,6 +2,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2025-02-12
+### Added
+- added `upload` icon
+
 ## 2025-01-29
 ### Changed
 - changed `Folio::ContentTemplate` to be scoped per-site and allowed site admins to manage them
