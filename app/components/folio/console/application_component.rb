@@ -20,6 +20,8 @@ class Folio::Console::ApplicationComponent < Folio::ApplicationComponent
       args[:locale] = Folio::Current.site.locale
     end
 
+    args[:only_path] = false if args[:only_path].nil?
+
     begin
       url_for([record, args])
     rescue NoMethodError

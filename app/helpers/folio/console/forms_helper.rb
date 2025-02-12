@@ -109,7 +109,18 @@ module Folio::Console::FormsHelper
   end
 
   def form_footer(f, opts = {})
+    if f && f.object && f.object.persisted? && f.object.class.try(:use_preview_tokens?)
+      share_preview = true
+
+      content_for(:modals) do
+        render(Folio::Console::SharePreviewModalComponent.new(record: f.object))
+      end
+    else
+      share_preview = false
+    end
+
     render(Folio::Console::Form::FooterComponent.new(f:,
-                                                     preview_path: opts[:preview_path]))
+                                                     preview_path: opts[:preview_path],
+                                                     share_preview:))
   end
 end

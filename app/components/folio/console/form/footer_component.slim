@@ -70,12 +70,13 @@
               .f-c-form-footer__settings-content
                 = render(Folio::Console::HtmlAutoFormat::ToggleComponent.new)
 
-            - if @share_url.present?
-              .f-c-form-footer__share.small.text-muted
-                == cell('folio/console/clipboard_copy',
-                        @share_url,
+            - if @share_preview
+              .f-c-form-footer__share.small.text-muted data=stimulus_modal_toggle(Folio::Console::SharePreviewModalComponent::CLASS_NAME)
+                == cell('folio/console/ui/with_icon',
+                        t('.share'),
+                        hover: :underline,
                         icon: :link,
-                        label: t('.share'))
+                        icon_options: { height: 16 })
 
           == cell('folio/console/ui/button',
                   class: 'f-c-form-footer__btn f-c-form-footer__btn--collapsible',

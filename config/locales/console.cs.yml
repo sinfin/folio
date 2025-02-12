@@ -345,6 +345,10 @@ cs:
           share: Sdílet
           settings: Nastavení
 
+      share_preview_modal_component:
+        title: Sdílet náhled
+        text: Sdílet můžete unikátní URL adresu, která zobrazí nepublikovaný záznam. U náhledů se nepočítá čtenost a obecně nesleduje návštěvnost.
+
       react:
         modal_component:
           title: Zvolte soubor

@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 class Folio::Console::Form::FooterComponent < Folio::Console::ApplicationComponent
-  def initialize(f: nil, preview_path: nil)
+  def initialize(f: nil, preview_path: nil, share_preview: false)
     @f = f
     @record = @f ? @f.object : nil
     @preview_path = preview_path
+    @share_preview = share_preview
   end
 
   def before_render
