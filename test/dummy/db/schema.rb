@@ -245,7 +245,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_05_075820) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.string "title"
+    t.bigint "site_id"
     t.index ["position"], name: "index_folio_content_templates_on_position"
+    t.index ["site_id"], name: "index_folio_content_templates_on_site_id"
     t.index ["type"], name: "index_folio_content_templates_on_type"
   end
 
@@ -638,6 +640,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_05_075820) do
   end
 
   add_foreign_key "folio_console_notes", "folio_sites", column: "site_id"
+  add_foreign_key "folio_content_templates", "folio_sites", column: "site_id"
   add_foreign_key "folio_files", "folio_sites", column: "site_id"
   add_foreign_key "folio_site_user_links", "folio_sites", column: "site_id"
   add_foreign_key "folio_site_user_links", "folio_users", column: "user_id"

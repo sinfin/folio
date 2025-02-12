@@ -25,7 +25,9 @@ SimpleForm::Inputs::TextInput.class_eval do
       end
 
       register_stimulus("f-input-content-templates",
-                        values: { edit_url:, title: ct_klass.model_name.human(count: 2), templates: ct_klass.to_data_attribute })
+                        values: { edit_url:,
+                                  title: ct_klass.model_name.human(count: 2),
+                                  templates: ct_klass.by_site(Folio::Current.site).to_data_attribute })
     end
 
     merged_input_options = merge_wrapper_options(input_html_options, wrapper_options)

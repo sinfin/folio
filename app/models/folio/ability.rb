@@ -91,6 +91,7 @@ class Folio::Ability
     can :do_anything, Folio::NewsletterSubscription, { site: }
     can :do_anything, Folio::EmailTemplate, { site: }
     can :do_anything, Folio::AttributeType, { site: }
+    can :do_anything, Folio::ContentTemplate, { site: }
     # can :do_anything, Folio::ConsoleNote, target: { site: } cannot be used, because it is polymorphic
 
     can [:read, :update], Folio::Site, { id: site.id }
