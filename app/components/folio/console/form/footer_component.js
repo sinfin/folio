@@ -2,6 +2,7 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
   static values = {
     status: String,
     collapsed: Boolean,
+    settings: Boolean,
   }
 
   disconnect () {
@@ -55,6 +56,11 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
     if (form === targetForm) {
       this.statusValue = 'saving'
     }
+  }
+
+  toggleSettings (e) {
+    e.preventDefault()
+    this.settingsValue = !this.settingsValue
   }
 
   toggleCollapsed (e) {

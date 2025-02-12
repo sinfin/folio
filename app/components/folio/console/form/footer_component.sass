@@ -102,7 +102,8 @@
     align-items: center
     gap: $f-c-ui-with-icon-gap
 
-  &__collapsible-backdrop
+  &__collapsible-backdrop,
+  &__settings-backdrop
     position: absolute
     top: -100vh
     left: -100vw
@@ -110,6 +111,30 @@
     height: 200vh
     z-index: 2
     display: none
+
+  &__settings
+    position: relative
+
+  &__settings-toggle
+    cursor: pointer
+    display: flex
+    align-items: center
+    align-self: stretch
+
+  &__settings-content
+    position: absolute
+    z-index: 3
+    bottom: 100%
+    right: 0
+    margin-bottom: $grid-gutter-base
+    box-shadow: $f-c-box-shadow-overlay
+    background: $dropdown-bg
+    display: none
+    padding: 2 * $grid-gutter-base $dropdown-item-padding-x
+
+  &[data-f-c-form-footer-settings-value="true"] &__settings-content,
+  &[data-f-c-form-footer-settings-value="true"] &__settings-backdrop
+    display: block
 
   @media screen and (min-width: 1180px)
     &__btn--collapsible
@@ -149,8 +174,8 @@
       display: none
       flex-direction: column
       align-items: stretch
-      padding: $dropdown-item-padding-y $dropdown-item-padding-x
-      gap: $dropdown-item-padding-y
+      padding: 2 * $grid-gutter-base $dropdown-item-padding-x
+      gap: 2 * $grid-gutter-base
 
     &[data-f-c-form-footer-collapsed-value="false"] &__collapsible-content
       display: flex

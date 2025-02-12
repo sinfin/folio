@@ -343,6 +343,7 @@ cs:
           saved: Uloženo
           unsaved_changes: Neuložené změny
           share: Sdílet
+          settings: Nastavení
 
       react:
         modal_component:

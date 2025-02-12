@@ -46,7 +46,6 @@
         .f-c-form-footer__collapsible
           .f-c-form-footer__collapsible-backdrop data=stimulus_action(click: "toggleCollapsed")
           .f-c-form-footer__collapsible-content
-
             - if @record
               = render(Folio::Console::Autosave::ToggleComponent.new(record: @record))
 
@@ -54,7 +53,22 @@
                                                                       audit: @audit,
                                                                       record: @record))
 
-            = render(Folio::Console::HtmlAutoFormat::ToggleComponent.new)
+            .f-c-form-footer__settings
+              .f-c-form-footer__settings-toggle.small.text-muted[
+                data=stimulus_action(click: "toggleSettings")
+              ]
+                == cell('folio/console/ui/with_icon',
+                        t('.settings'),
+                        hover: :underline,
+                        icon: :cog,
+                        icon_options: { height: 16 })
+
+              .f-c-form-footer__settings-backdrop[
+                data=stimulus_action(click: "toggleSettings")
+              ]
+
+              .f-c-form-footer__settings-content
+                = render(Folio::Console::HtmlAutoFormat::ToggleComponent.new)
 
             - if @share_url.present?
               .f-c-form-footer__share.small.text-muted

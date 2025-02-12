@@ -339,6 +339,7 @@ en:
           saved: Saved
           unsaved_changes: Unsaved changes
           share: Share
+          settings: Settings
 
       react:
         modal_component:

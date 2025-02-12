@@ -33,6 +33,7 @@ class Folio::Console::Form::FooterComponent < Folio::Console::ApplicationCompone
                         values: {
                           status: "saved",
                           collapsed: true,
+                          settings: false,
                         },
                         action: {
                           "message@window" => "onWindowMessage",
