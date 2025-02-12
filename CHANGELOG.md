@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 - added `folio:content_templates:idp_migrate_to_per_site` rake task to migrate existing content templates to per-site
 - added `folio:content_templates:remove_siteless` rake task to remove siteless content templates
+- added `upload` icon
 
 ## [6.2.5] - 2025-03-26
 
