@@ -34,7 +34,7 @@ class Folio::Console::Api::AasmController < Folio::Console::Api::BaseController
 
           render json: {
             data: cell("folio/console/state", record, opts).show,
-            meta: {
+            meta: params[:reload_form] ? nil : {
               flash: {
                 success: I18n.t("flash.actions.event.notice", resource_name: record.model_name.human)
               }

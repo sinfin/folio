@@ -44,6 +44,7 @@ class Folio::Console::Form::FooterComponent < Folio::Console::ApplicationCompone
                           "focusin@document" => "onDocumentFocusin",
                           "focusout@document" => "onDocumentFocusout",
                           "folioConsoleCustomChange@document" => "onDocumentChange",
+                          "fCPageReload" => "reloadPageWhenPossible",
                           "atomsFormHidden@document" => "onDocumentAtomsFormHidden",
                           "atomsFormShown@document" => "onDocumentAtomsFormShown",
                           "submit@document" => "onDocumentSubmit"

@@ -148,4 +148,21 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
       }, 1000)
     }
   }
+
+  reloadPage () {
+    this.statusValue = 'saving'
+    window.location.reload()
+  }
+
+  reloadPageWhenPossible () {
+    if (this.statusValue === 'saved') {
+      this.reloadPage()
+    } else if (this.statusValue === 'unsaved') {
+      if (this.autosaveEnabledValue && window.FolioConsole.Autosave.enabled) {
+        this.queueAutosaveIfPossible()
+      } else {
+        this.element.closest('form').requestSubmit()
+      }
+    }
+  }
 })
