@@ -8,6 +8,10 @@ All notable changes to this project will be documented in this file.
 
 - `text_or_edit_link` in `Folio::Console::CatalogueCell` returns text or link according to ability
 
+### Changed
+
+- updated legacy audited usage on User, SiteUserLink and Address
+
 ## [6.1.0] - 2025-02-07
 
 ### Changed
