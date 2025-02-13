@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::User < Folio::ApplicationRecord
+  include Folio::Audited
   include Folio::Devise::DeliverLater
   include Folio::HasAddresses
   include Folio::HasNewsletterSubscriptions
@@ -158,8 +159,9 @@ class Folio::User < Folio::ApplicationRecord
     end
   }
 
-  audited only: %i[email unconfirmed_email first_name last_name company_name nickname phone subscribed_to_newsletter superadmin bank_account_number]
-  has_associated_audits
+  audited only: %i[email unconfirmed_email first_name last_name company_name nickname phone subscribed_to_newsletter superadmin bank_account_number],
+          relations: %i[site_user_links],
+          console: false
 
   def full_name
     if first_name.present? || last_name.present?

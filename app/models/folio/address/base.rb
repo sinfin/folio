@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::Address::Base < Folio::ApplicationRecord
+  include Folio::Audited
   include Folio::StiPreload
 
   self.table_name = "folio_addresses"
