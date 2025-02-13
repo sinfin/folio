@@ -85,6 +85,14 @@ class Folio::Audited::Auditor
       @record.class.folio_audited_data_additional_keys.each do |key|
         collection_or_record = @record.send(key)
 
+        # TODO: rm the bellow block after fixin g
+        if @record.persisted? && key == :site_user_links
+          # collection_or_record.first.changed? is false even though the roles changed!
+          puts collection_or_record.first
+          binding.pry
+        end
+        # TODO: rm the above block after fixing
+
         if collection_or_record.is_a?(ActiveRecord::Relation)
           if collection_or_record.any? { |r| r.changed? || r.marked_for_destruction? }
             ary << key.to_s
