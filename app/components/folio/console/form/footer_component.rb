@@ -53,7 +53,7 @@ class Folio::Console::Form::FooterComponent < Folio::Console::ApplicationCompone
 
   def saved_at_tooltip
     if @record && @record.created_at
-      title = "#{t(".saved")} #{l(@record.created_at, format: :console_short_with_seconds)}"
+      title = "#{t(".saved")} #{l(@record.updated_at, format: :console_short_with_seconds)}"
       stimulus_tooltip(title, placement: :right)
     end
   end
