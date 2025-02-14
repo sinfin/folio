@@ -69,6 +69,13 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
     if (!this.isFromProperForm(e)) return
 
     this.statusValue = 'unsaved'
+
+    if (e.detail && e.detail.redactor) return
+
+    if (this.shouldAbortBasedOnTarget(document.activeElement)) {
+      return
+    }
+
     this.queueAutosaveIfPossible()
   }
 
@@ -101,13 +108,23 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
     }
   }
 
+  shouldAbortBasedOnTarget (target) {
+    const tagName = target.tagName
+
+    if (tagName === 'INPUT') return true
+    if (tagName === 'TEXTAREA') return true
+    if (tagName === 'SELECT') return true
+
+    if (target.classList.contains('redactor-in')) return true
+
+    return false
+  }
+
   onDocumentFocusin (e) {
     if (!this.autosaveEnabledValue || !window.FolioConsole.Autosave.enabled) return
     if (!this.isFromProperForm(e)) return
 
-    const tagName = e.target.tagName
-
-    if (tagName === 'INPUT' || tagName === 'TEXTAREA' || tagName === 'SELECT') {
+    if (this.shouldAbortBasedOnTarget(e.target)) {
       this.abortAutosave()
     }
   }

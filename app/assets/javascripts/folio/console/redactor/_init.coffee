@@ -1,12 +1,18 @@
 #= require folio/i18n
 
-blurCallback = ->
+blurCallback = (e) ->
   if window.FolioConsole and window.FolioConsole.HtmlAutoFormat and window.FolioConsole.HtmlAutoFormat.redactorBlurCallback
     window.FolioConsole.HtmlAutoFormat.redactorBlurCallback
       redactor: this
 
+  e.target.dispatchEvent(new CustomEvent('focusout', { bubbles: true, detail: { redactor: true } }))
+
+
+focusCallback = (e) ->
+  e.target.dispatchEvent(new CustomEvent('focusin', { bubbles: true, detail: { redactor: true } }))
+
 changedCallback = (html) ->
-  @rootElement.dispatchEvent(new window.Event('change', bubbles: true))
+  @rootElement.dispatchEvent(new CustomEvent('change', { bubbles: true, detail: { redactor: true } }))
 
 FOLIO_REDACTOR_I18N =
   cs:
@@ -24,6 +30,7 @@ ADVANCED_OPTIONS =
   linkNewTab: true
   callbacks:
     changed: changedCallback
+    focus: focusCallback
     blur: blurCallback
 
 OPTIONS =
@@ -52,6 +59,7 @@ OPTIONS =
   linkNewTab: true
   callbacks:
     changed: changedCallback
+    focus: focusCallback
     blur: blurCallback
 
 EMAIL_OPTIONS =
@@ -62,6 +70,7 @@ EMAIL_OPTIONS =
   formatting: []
   callbacks:
     changed: changedCallback
+    focus: focusCallback
     blur: blurCallback
 
 PEREX_OPTIONS =
@@ -73,6 +82,7 @@ PEREX_OPTIONS =
   linkNewTab: true
   callbacks:
     changed: changedCallback
+    focus: focusCallback
     blur: blurCallback
 
 window.folioConsoleInitRedactor = (node, options = {}, additional = {}) ->
