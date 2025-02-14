@@ -236,4 +236,9 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
       }
     }
   }
+
+  onDocumentBsTabShown () {
+    if (this.statusValue !== 'unsaved') return
+    this.queueAutosaveIfPossible()
+  }
 })

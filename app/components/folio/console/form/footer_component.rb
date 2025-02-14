@@ -47,6 +47,7 @@ class Folio::Console::Form::FooterComponent < Folio::Console::ApplicationCompone
                           "fCPageReload" => "reloadPageWhenPossible",
                           "atomsFormHidden@document" => "onDocumentAtomsFormHidden",
                           "atomsFormShown@document" => "onDocumentAtomsFormShown",
+                          "shown.bs.tab@document" => "onDocumentBsTabShown",
                           "submit@document" => "onDocumentSubmit",
                           "f-c-form-footer:resumeAutosave" => "onResumeAutosave",
                           "f-c-form-footer:pauseAutosave" => "onPauseAutosave",
