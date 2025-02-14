@@ -11,7 +11,7 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
     autosaveTimer: { type: Number, default: -1 },
   }
 
-  static targets = ["autosaveInput"]
+  static targets = ["autosaveInput", "submitButtonIndicator"]
 
   disconnect () {
     this.unbindUnload()
@@ -48,7 +48,7 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
 
   queueAutosaveIfPossible () {
     if (this.autosaveEnabledValue && window.FolioConsole.Autosave.enabled) {
-      this.autosaveTimerValue = window.FolioConsole.Autosave.TIMER_SECONDS
+      this.autosaveTimerValue = 10 * window.FolioConsole.Autosave.TIMER_SECONDS
     }
   }
 
@@ -164,12 +164,25 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
 
     if (from === to) return
 
+    if (to === -1) {
+      this.submitButtonIndicatorTarget.style.transform = "scaleX(0)"
+      return
+    }
+
+    // shift by one so that the transition ends at the same time as the submit
+    const remaining = 10 * window.FolioConsole.Autosave.TIMER_SECONDS - (to - 1)
+    // handle the shift - don't overflow 1
+    const width = Math.min(1, remaining / (10 * window.FolioConsole.Autosave.TIMER_SECONDS) * 1)
+    const scale = Math.round(100 * width) / 100
+
+    this.submitButtonIndicatorTarget.style.transform = `scaleX(${scale})`
+
     if (to === 0) {
       this.element.closest('form').requestSubmit()
     } else if (to > 0) {
       this.autosaveTimeout = window.setTimeout(() => {
         this.autosaveTimerValue = to - 1
-      }, 1000)
+      }, 100)
     }
   }
 

@@ -81,30 +81,16 @@
   &__btn--submit
     position: relative
 
-    &::before
-      position: absolute
-      top: -1 * $input-border-width
-      left: -1 * $input-border-width
-      bottom: -1 * $input-border-width
-      background: rgba(255, 255, 255, 0.4)
-      width: 0
-      z-index: 0
-      content: ''
-      display: block
-      transition: width 1s linear
-
-  &[data-f-c-form-footer-autosave-timer-value="-1"] &__btn--submit::before
-    transition: width $f-c-transition-duration linear
-
-  &[data-f-c-form-footer-autosave-timer-value="3"] &__btn--submit::before
-    width: calc(33.33% + #{2 * $input-border-width})
-
-  &[data-f-c-form-footer-autosave-timer-value="2"] &__btn--submit::before
-    width: calc(66.66% + #{2 * $input-border-width})
-
-  &[data-f-c-form-footer-autosave-timer-value="1"] &__btn--submit::before,
-  &[data-f-c-form-footer-autosave-timer-value="0"] &__btn--submit::before
-    width: calc(100% + #{2 * $input-border-width})
+  &__submit-btn-indicator
+    position: absolute
+    inset: -1 * $input-border-width
+    background: rgba(255, 255, 255, 0.4)
+    transform: scaleX(0)
+    transform-origin: top left
+    z-index: 0
+    display: block
+    transition: transform 0.1s linear
+    will-change: transform
 
   &[data-f-c-form-footer-status-value="saved"] &__status-saved,
   &[data-f-c-form-footer-status-value="saving"] &__status-saving,
