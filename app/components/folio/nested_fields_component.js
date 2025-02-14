@@ -51,6 +51,7 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
     this.fieldsWrapTarget.insertAdjacentHTML('beforeend', this.htmlFromTemplate())
     this.redoPositions()
     this.dispatch('add', { detail: { field: this.fieldsTargets[this.fieldsTargets.length - 1] } })
+    window.FolioConsole.Autosave.abort()
     this.element.dispatchEvent(new CustomEvent('f-nested-fields:add', { bubbles: true }))
   }
 
@@ -158,8 +159,8 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
           placeholder: '<div class="f-nested-fields__sortable-placeholder"><div class="f-nested-fields__sortable-placeholder-inner"></div></div>'
         })
 
-        this.onSortStart = (e) => { this.element.dispatchEvent(new CustomEvent('sortstart', { bubbles: true })) }
-        this.onSortStop = (e) => { this.element.dispatchEvent(new CustomEvent('sortstop', { bubbles: true })) }
+        this.onSortStart = (e) => { window.FolioConsole.Autosave.pause() }
+        this.onSortStop = (e) => { window.FolioConsole.Autosave.resume() }
 
         this.fieldsWrapTarget.addEventListener('sortstart', this.onSortStart)
         this.fieldsWrapTarget.addEventListener('sortstop', this.onSortStop)

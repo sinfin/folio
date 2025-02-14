@@ -2,6 +2,18 @@ window.FolioConsole = window.FolioConsole || {}
 window.FolioConsole.Autosave = window.FolioConsole.Autosave || {}
 window.FolioConsole.Autosave.TIMER_SECONDS = 3
 
+window.FolioConsole.Autosave.resume = () => {
+  const footer = document.querySelector('.f-c-form-footer')
+  if (!footer) return
+  footer.dispatchEvent(new CustomEvent('f-c-form-footer:resumeAutosave', { bubbles: true }))
+}
+
+window.FolioConsole.Autosave.pause = () => {
+  const footer = document.querySelector('.f-c-form-footer')
+  if (!footer) return
+  footer.dispatchEvent(new CustomEvent('f-c-form-footer:pauseAutosave', { bubbles: true }))
+}
+
 window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.Controller {
   static values = {
     status: String,
@@ -79,19 +91,19 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
     this.queueAutosaveIfPossible()
   }
 
-  resumeAutosaveIfNeeded () {
+  resumeAutosave () {
     if (this.statusValue !== 'unsaved') return
     this.queueAutosaveIfPossible()
 }
 
   onDocumentFocusout (e) {
     if (!this.autosaveEnabledValue || !window.FolioConsole.Autosave.enabled) return
-    this.resumeAutosaveIfNeeded()
+    this.resumeAutosave()
   }
 
   onDocumentAtomsFormHidden (e) {
     if (!this.autosaveEnabledValue || !window.FolioConsole.Autosave.enabled) return
-    this.resumeAutosaveIfNeeded()
+    this.resumeAutosave()
   }
 
   onDocumentAtomsFormShown (e) {
@@ -103,7 +115,7 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
     }
   }
 
-  abortAutosave () {
+  pauseAutosave () {
     this.clearAutosaveTimeout()
 
     if (this.autosaveTimerValue !== -1) {
@@ -128,7 +140,7 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
     if (!this.isFromProperForm(e)) return
 
     if (this.shouldAbortBasedOnTarget(e.target)) {
-      this.abortAutosave()
+      this.pauseAutosave()
     }
   }
 
@@ -201,26 +213,5 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
         this.element.closest('form').requestSubmit()
       }
     }
-  }
-
-  onNestedFieldsAdd (e) {
-    if (!this.autosaveEnabledValue || !window.FolioConsole.Autosave.enabled) return
-    if (!this.isFromProperForm(e)) return
-
-    this.abortAutosave()
-  }
-
-  onDocumentSortstart (e) {
-    if (!this.autosaveEnabledValue || !window.FolioConsole.Autosave.enabled) return
-    if (!this.isFromProperForm(e)) return
-
-    this.abortAutosave()
-  }
-
-  onDocumentSortstop (e) {
-    if (!this.autosaveEnabledValue || !window.FolioConsole.Autosave.enabled) return
-    if (!this.isFromProperForm(e)) return
-
-    this.resumeAutosaveIfNeeded()
   }
 })
