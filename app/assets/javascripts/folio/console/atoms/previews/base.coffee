@@ -114,9 +114,19 @@ showInsertHint = (e) ->
     .closest('.f-c-atoms-previews__insert')
     .addClass('f-c-atoms-previews__insert--active')
 
+  data =
+    type: "atomsInsertShown"
+
+  window.top.postMessage(data, window.origin)
+
 hideInsert = ($insert) ->
   $insert
     .removeClass('f-c-atoms-previews__insert--active')
+
+  data =
+    type: "atomsInsertHidden"
+
+  window.top.postMessage(data, window.origin)
 
 handleInsertClick = (e) ->
   e.preventDefault()

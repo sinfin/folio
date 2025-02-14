@@ -74,9 +74,19 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
   onWindowMessage (e) {
     if (document.querySelector('.f-c-simple-form-with-atoms--editing-atom')) return
 
-    if (e.origin === window.origin && e.data.type === 'setFormAsDirty') {
-      this.statusValue = 'unsaved'
-      this.queueAutosaveIfPossible()
+    if (e.origin === window.origin) {
+      switch (e.data.type) {
+        case 'setFormAsDirty':
+          this.statusValue = 'unsaved'
+          this.queueAutosaveIfPossible()
+          break
+        case 'atomsInsertShown':
+          this.pauseAutosave()
+          break
+        case 'atomsInsertHidden':
+          this.resumeAutosave()
+          break
+      }
     }
   }
 
