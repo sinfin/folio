@@ -2,6 +2,14 @@ window.FolioConsole = window.FolioConsole || {}
 window.FolioConsole.Autosave = window.FolioConsole.Autosave || {}
 window.FolioConsole.Autosave.TIMER_SECONDS = 3
 
+window.FolioConsole.Autosave.enabledChangeCallback = () => {
+  if (window.FolioConsole.Autosave.enabled) {
+    window.FolioConsole.Autosave.resume()
+  } else {
+    window.FolioConsole.Autosave.pause()
+  }
+}
+
 window.FolioConsole.Autosave.resume = () => {
   const footer = document.querySelector('.f-c-form-footer')
   if (!footer) return
@@ -203,6 +211,7 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
 
     if (!this.autosaveEnabledValue || !window.FolioConsole.Autosave.enabled) {
       this.autosaveTimerValue = -1
+      this.submitButtonIndicatorTarget.style.transform = 'scaleX(0)'
       return
     }
 

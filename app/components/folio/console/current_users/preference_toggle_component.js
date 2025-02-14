@@ -19,6 +19,10 @@ window.Folio.Stimulus.register('f-c-current-users-preference-toggle', class exte
 
     if (previousValue === -1) return
 
+    if (window.FolioConsole[this.javascriptKeyValue].enabledChangeCallback) {
+      window.FolioConsole[this.javascriptKeyValue].enabledChangeCallback()
+    }
+
     const data = {}
     data[this.keyValue] = this.enabledValue === 1
 
