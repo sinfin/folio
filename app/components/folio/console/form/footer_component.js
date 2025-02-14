@@ -20,14 +20,15 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
     collapsed: Boolean,
     settings: Boolean,
     autosaveEnabled: Boolean,
-    autosaveTimer: { type: Number, default: -1 },
+    autosaveTimer: { type: Number, default: -1 }
   }
 
-  static targets = ["autosaveInput", "submitButtonIndicator"]
+  static targets = ['autosaveInput', 'submitButtonIndicator']
 
   disconnect () {
     this.unbindUnload()
     this.clearAutosaveTimeout()
+    delete this.lastTargetCache
   }
 
   bindUnload () {
@@ -49,7 +50,7 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
 
   statusValueChanged () {
     this.element.closest('form').classList.toggle('f-c-form-footer-form-saving',
-                                                  this.statusValue === 'saving')
+      this.statusValue === 'saving')
 
     if (this.statusValue === 'unsaved') {
       this.bindUnload()
@@ -58,7 +59,12 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
     }
   }
 
-  queueAutosaveIfPossible () {
+  queueAutosaveIfPossible (target) {
+    if (!this.autosaveEnabledValue || !window.FolioConsole.Autosave.enabled) return
+    if (target && this.lastTargetCache && target === this.lastTargetCache && this.autosaveTimerValue > 0) return
+
+    this.lastTargetCache = target
+
     if (this.autosaveEnabledValue && window.FolioConsole.Autosave.enabled) {
       this.autosaveTimerValue = 10 * window.FolioConsole.Autosave.TIMER_SECONDS
     }
@@ -84,26 +90,30 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
 
     if (e.detail && e.detail.redactor) return
 
-    if (this.shouldAbortBasedOnTarget(document.activeElement)) {
+    if (this.shouldAbortBasedOnElement({ element: document.activeElement, target: e.target })) {
       return
     }
 
-    this.queueAutosaveIfPossible()
+    this.queueAutosaveIfPossible(e.target)
   }
 
-  resumeAutosave () {
+  resumeAutosave (element) {
     if (this.statusValue !== 'unsaved') return
-    this.queueAutosaveIfPossible()
-}
+    this.queueAutosaveIfPossible(element)
+  }
+
+  onResumeAutosave () {
+    this.resumeAutosave()
+  }
 
   onDocumentFocusout (e) {
     if (!this.autosaveEnabledValue || !window.FolioConsole.Autosave.enabled) return
-    this.resumeAutosave()
+    this.resumeAutosave(e.target)
   }
 
   onDocumentAtomsFormHidden (e) {
     if (!this.autosaveEnabledValue || !window.FolioConsole.Autosave.enabled) return
-    this.resumeAutosave()
+    this.resumeAutosave(e.target)
   }
 
   onDocumentAtomsFormShown (e) {
@@ -123,14 +133,23 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
     }
   }
 
-  shouldAbortBasedOnTarget (target) {
-    const tagName = target.tagName
+  onPauseAutosave () {
+    this.pauseAutosave()
+  }
 
-    if (tagName === 'INPUT') return true
+  shouldAbortBasedOnElement ({ element, target }) {
+    const tagName = element.tagName
+
+    if (tagName === 'INPUT') {
+      if (target && element.type === 'radio' && target === element) return false
+      if (target && element.type === 'checkbox' && target === element) return false
+      return true
+    }
+
     if (tagName === 'TEXTAREA') return true
-    if (tagName === 'SELECT') return true
+    if (tagName === 'SELECT' && element !== target) return true
 
-    if (target.classList.contains('redactor-in')) return true
+    if (element.classList.contains('redactor-in')) return true
 
     return false
   }
@@ -139,7 +158,7 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
     if (!this.autosaveEnabledValue || !window.FolioConsole.Autosave.enabled) return
     if (!this.isFromProperForm(e)) return
 
-    if (this.shouldAbortBasedOnTarget(e.target)) {
+    if (this.shouldAbortBasedOnElement({ element: e.target })) {
       this.pauseAutosave()
     }
   }
@@ -177,7 +196,7 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
     if (from === to) return
 
     if (to === -1) {
-      this.submitButtonIndicatorTarget.style.transform = "scaleX(0)"
+      this.submitButtonIndicatorTarget.style.transform = 'scaleX(0)'
       return
     }
 

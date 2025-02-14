@@ -48,8 +48,8 @@ class Folio::Console::Form::FooterComponent < Folio::Console::ApplicationCompone
                           "atomsFormHidden@document" => "onDocumentAtomsFormHidden",
                           "atomsFormShown@document" => "onDocumentAtomsFormShown",
                           "submit@document" => "onDocumentSubmit",
-                          "f-c-form-footer:resumeAutosave" => "resumeAutosave",
-                          "f-c-form-footer:pauseAutosave" => "pauseAutosave",
+                          "f-c-form-footer:resumeAutosave" => "onResumeAutosave",
+                          "f-c-form-footer:pauseAutosave" => "onPauseAutosave",
                         })
   end
 
