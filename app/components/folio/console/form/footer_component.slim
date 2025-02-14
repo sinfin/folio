@@ -87,3 +87,55 @@
                   variant: :gray,
                   icon: :dots_vertical,
                   data: (stimulus_action_unless_audit(click: "toggleCollapsed") || {}).merge(test_id: "dropdown-button"))
+
+javascript:
+  if (window.sessionStorage.getItem('fCAutosaveUiState')) {
+    window.FolioConsole = window.FolioConsole || {}
+    window.FolioConsole.Autosave = window.FolioConsole.Autosave || {}
+
+    window.FolioConsole.Autosave.restoreUiState = ({ clear }) => {
+      const string = window.sessionStorage.getItem('fCAutosaveUiState')
+      if (!string) return
+
+      if (clear) window.sessionStorage.removeItem('fCAutosaveUiState')
+
+      const data = JSON.parse(string)
+      console.log(clear, data)
+
+      if (!data || !data.now || data.now + 10000 < Date.now()) {
+        return
+      }
+
+      const flash = document.querySelector('.f-c-flash-wrap')
+      const flashOffset = flash ? flash.offsetHeight : 0
+
+      if (data.atomsFormExpanded) {
+        const atomsForm = document.querySelector('.f-c-simple-form-with-atoms')
+        if (atomsForm) atomsForm.classList.add('f-c-simple-form-with-atoms--expanded-form')
+      }
+
+      if (data.form) {
+        const atomsForm = document.querySelector('.f-c-simple-form-with-atoms__form-scroll')
+        if (atomsForm) atomsForm.scrollTop = data.form
+      }
+
+      const atomsPreviews = document.querySelector('.f-c-simple-form-with-atoms__iframe')
+      if (atomsPreviews) {
+        if (data.previewsHeight) {
+          atomsPreviews.style.minHeight = `${data.previewsHeight}px`
+        }
+
+        if (data.previewsScroll) {
+          atomsPreviews.contentWindow.scrollTo(0, data.previews)
+        }
+      }
+
+      window.scrollTo({ top: data.window + flashOffset, behavior: 'instant' })
+    }
+
+    window.FolioConsole.Autosave.restoreUiState({ clear: false })
+
+    document.addEventListener("readystatechange", (event) => {
+      window.FolioConsole.Autosave.restoreUiState({ clear: true })
+    }, { once: true })
+  }

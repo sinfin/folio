@@ -231,6 +231,7 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
     this.submitButtonIndicatorTarget.style.transform = `scaleX(${scale})`
 
     if (to === 0) {
+      this.storeUiState()
       this.element.closest('form').requestSubmit()
     } else if (to > 0) {
       this.autosaveTimeout = window.setTimeout(() => {
@@ -259,5 +260,28 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
   onDocumentBsTabShown () {
     if (this.statusValue !== 'unsaved') return
     this.queueAutosaveIfPossible()
+  }
+
+  storeUiState () {
+    const atomsForm = document.querySelector('.f-c-simple-form-with-atoms__form-scroll')
+    const atomsPreviews = document.querySelector('.f-c-simple-form-with-atoms__iframe')
+    const flash = document.querySelector('.f-c-flash-wrap')
+    const flashOffset = flash ? flash.offsetHeight : 0
+
+    const data = {
+      window: window.scrollY - flashOffset,
+      now: Date.now()
+    }
+
+    if (atomsForm) data.form = atomsForm.scrollTop
+
+    if (atomsPreviews) {
+      data.previewsHeight = atomsPreviews.clientHeight
+      data.previewsScroll = atomsPreviews.contentWindow.scrollY
+    }
+
+    if (document.querySelector('.f-c-simple-form-with-atoms--expanded-form')) data.atomsFormExpanded = true
+
+    window.sessionStorage.setItem('fCAutosaveUiState', JSON.stringify(data))
   }
 })
