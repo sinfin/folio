@@ -28,6 +28,16 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
         window.sortable(this.fieldsWrapTarget, 'destroy')
       }
 
+      if (this.onSortStart) {
+        this.fieldsWrapTarget.removeEventListener('sortstart', this.onSortStart)
+        delete this.onSortStart
+      }
+
+      if (this.onSortStop) {
+        this.fieldsWrapTarget.removeEventListener('sortstop', this.onSortStop)
+        delete this.onSortStop
+      }
+
       this.sortableBound = false
     }
   }
@@ -147,6 +157,12 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
           handle: '.f-nested-fields__control--sortable-handle',
           placeholder: '<div class="f-nested-fields__sortable-placeholder"><div class="f-nested-fields__sortable-placeholder-inner"></div></div>'
         })
+
+        this.onSortStart = (e) => { this.element.dispatchEvent(new CustomEvent('sortstart', { bubbles: true })) }
+        this.onSortStop = (e) => { this.element.dispatchEvent(new CustomEvent('sortstop', { bubbles: true })) }
+
+        this.fieldsWrapTarget.addEventListener('sortstart', this.onSortStart)
+        this.fieldsWrapTarget.addEventListener('sortstop', this.onSortStop)
 
         this.sortableBound = true
       }

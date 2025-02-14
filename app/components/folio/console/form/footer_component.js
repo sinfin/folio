@@ -79,16 +79,19 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
     this.queueAutosaveIfPossible()
   }
 
-  onDocumentFocusout (e) {
-    if (!this.autosaveEnabledValue || !window.FolioConsole.Autosave.enabled) return
+  resumeAutosaveIfNeeded () {
     if (this.statusValue !== 'unsaved') return
     this.queueAutosaveIfPossible()
+}
+
+  onDocumentFocusout (e) {
+    if (!this.autosaveEnabledValue || !window.FolioConsole.Autosave.enabled) return
+    this.resumeAutosaveIfNeeded()
   }
 
   onDocumentAtomsFormHidden (e) {
     if (!this.autosaveEnabledValue || !window.FolioConsole.Autosave.enabled) return
-    if (this.statusValue !== 'unsaved') return
-    this.queueAutosaveIfPossible()
+    this.resumeAutosaveIfNeeded()
   }
 
   onDocumentAtomsFormShown (e) {
@@ -192,5 +195,19 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
     if (!this.isFromProperForm(e)) return
 
     this.abortAutosave()
+  }
+
+  onDocumentSortstart (e) {
+    if (!this.autosaveEnabledValue || !window.FolioConsole.Autosave.enabled) return
+    if (!this.isFromProperForm(e)) return
+
+    this.abortAutosave()
+  }
+
+  onDocumentSortstop (e) {
+    if (!this.autosaveEnabledValue || !window.FolioConsole.Autosave.enabled) return
+    if (!this.isFromProperForm(e)) return
+
+    this.resumeAutosaveIfNeeded()
   }
 })

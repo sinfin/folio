@@ -48,6 +48,8 @@ class Folio::Console::Form::FooterComponent < Folio::Console::ApplicationCompone
                           "atomsFormHidden@document" => "onDocumentAtomsFormHidden",
                           "atomsFormShown@document" => "onDocumentAtomsFormShown",
                           "submit@document" => "onDocumentSubmit",
+                          "sortstart@document" => "onDocumentSortstart",
+                          "sortstop@document" => "onDocumentSortstop",
                           "f-nested-fields:add@document" => "onNestedFieldsAdd"
                         })
   end
