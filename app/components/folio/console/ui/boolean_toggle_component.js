@@ -30,6 +30,7 @@ window.Folio.Stimulus.register('f-c-ui-boolean-toggle', class extends window.Sti
 
   onInputInner (input) {
     this.dispatch('input', { detail: { checked: input.checked } })
+    input.dispatchEvent(new CustomEvent('folioConsoleCustomChange', { bubbles: true }))
 
     if (this.staticValue) return
     if (this.element.classList.contains(this.loadingClass)) return
