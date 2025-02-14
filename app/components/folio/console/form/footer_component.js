@@ -62,6 +62,7 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
   queueAutosaveIfPossible (target) {
     if (!this.autosaveEnabledValue || !window.FolioConsole.Autosave.enabled) return
     if (target && this.lastTargetCache && target === this.lastTargetCache && this.autosaveTimerValue > 0) return
+    if (document.querySelector('.f-c-simple-form-with-atoms--editing-atom')) return
 
     this.lastTargetCache = target
 
@@ -71,6 +72,8 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
   }
 
   onWindowMessage (e) {
+    if (document.querySelector('.f-c-simple-form-with-atoms--editing-atom')) return
+
     if (e.origin === window.origin && e.data.type === 'setFormAsDirty') {
       this.statusValue = 'unsaved'
       this.queueAutosaveIfPossible()
