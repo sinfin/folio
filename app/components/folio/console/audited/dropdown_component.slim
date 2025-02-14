@@ -1,11 +1,12 @@
 .f-c-audited-dropdown.small.text-muted
-  == cell('folio/console/ui/with_icon',
-          t('.back'),
-          title: t('.back'),
-          href: version_url(@audits[1], 1),
-          icon: :arrow_u_left_top,
-          icon_options: { height: 16 },
-          class: "f-c-audited-dropdown__back small text-reset")
+  - unless @audit
+    == cell('folio/console/ui/with_icon',
+            t('.back'),
+            title: t('.back'),
+            href: version_url(@audits[1], 1),
+            icon: :arrow_u_left_top,
+            icon_options: { height: 16 },
+            class: "f-c-audited-dropdown__back small text-reset")
 
   .f-c-audited-dropdown__dropdown.dropdown
     .f-c-audited-dropdown__toggle.dropdown-toggle[

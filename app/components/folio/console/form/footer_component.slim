@@ -7,32 +7,33 @@
 
   .f-c-form-footer__inner
     .container-fluid.f-c-form-footer__container
-      .f-c-form-footer__left
-        - if @f
-          == cell('folio/console/ui/button',
-                  type: :submit,
-                  class: 'f-c-form-footer__btn f-c-form-footer__btn--submit',
-                  variant: :primary,
-                  label: t("folio.console.actions.submit"),
-                  icon: :check,
-                  data: { test_id: "submit-button" },
-                  html_left: content_tag(:span, nil, class: "f-c-form-footer__submit-btn-indicator", data: stimulus_target('submitButtonIndicator')))
+      - unless @audit
+        .f-c-form-footer__left
+          - if @f
+            == cell('folio/console/ui/button',
+                    type: :submit,
+                    class: 'f-c-form-footer__btn f-c-form-footer__btn--submit',
+                    variant: :primary,
+                    label: t("folio.console.actions.submit"),
+                    icon: :check,
+                    data: { test_id: "submit-button" },
+                    html_left: content_tag(:span, nil, class: "f-c-form-footer__submit-btn-indicator", data: stimulus_target('submitButtonIndicator')))
 
-          .f-c-form-footer__status
-            - if @record && @record.persisted?
-              .f-c-form-footer__status-saved.text-success[
-                data=saved_at_tooltip
-              ]
-                = folio_icon(:content_save, height: 16)
+            .f-c-form-footer__status
+              - if @record && @record.persisted?
+                .f-c-form-footer__status-saved.text-success[
+                  data=saved_at_tooltip
+                ]
+                  = folio_icon(:content_save, height: 16)
 
-            .f-c-form-footer__status-saving
-              span.folio-loader.folio-loader--tiny
+              .f-c-form-footer__status-saving
+                span.folio-loader.folio-loader--tiny
 
-            .f-c-form-footer__status-unsaved.small.text-danger
-              == cell('folio/console/ui/with_icon',
-                      t('.unsaved_changes'),
-                      icon: :alert,
-                      icon_options: { height: 16 })
+              .f-c-form-footer__status-unsaved.small.text-danger
+                == cell('folio/console/ui/with_icon',
+                        t('.unsaved_changes'),
+                        icon: :alert,
+                        icon_options: { height: 16 })
 
       .f-c-form-footer__right
         - if preview_path_with_default
@@ -49,7 +50,8 @@
           .f-c-form-footer__collapsible-backdrop data=stimulus_action(click: "toggleCollapsed")
           .f-c-form-footer__collapsible-content
             - if @record
-              = render(Folio::Console::Autosave::ToggleComponent.new(record: @record))
+              - unless @audit
+                = render(Folio::Console::Autosave::ToggleComponent.new(record: @record))
 
               = render(Folio::Console::Audited::DropdownComponent.new(audits: controller.instance_variable_get(:@audited_audits),
                                                                       audit: @audit,
