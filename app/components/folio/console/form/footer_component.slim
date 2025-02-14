@@ -1,6 +1,6 @@
 .f-c-form-footer-spacer class=(@audit ? "f-c-form-footer-spacer--with-audit" : nil)
 
-.f-c-form-footer data=data class=(@audit ? "f-c-form-footer--with-audit" : nil)
+.f-c-form-footer data=(@audit ? nil : data) class=(@audit ? "f-c-form-footer--with-audit" : nil)
   - if @audit && @record
     = render(Folio::Console::Audited::BarComponent.new(audit: @audit,
                                                        record: @record))
@@ -47,7 +47,7 @@
                   data: { test_id: "preview-button" })
 
         .f-c-form-footer__collapsible
-          .f-c-form-footer__collapsible-backdrop data=stimulus_action(click: "toggleCollapsed")
+          .f-c-form-footer__collapsible-backdrop data=stimulus_action_unless_audit(click: "toggleCollapsed")
           .f-c-form-footer__collapsible-content
             - if @record
               - unless @audit
@@ -59,7 +59,7 @@
 
             .f-c-form-footer__settings
               .f-c-form-footer__settings-toggle.small.text-muted[
-                data=stimulus_action(click: "toggleSettings")
+                data=stimulus_action_unless_audit(click: "toggleSettings")
               ]
                 == cell('folio/console/ui/with_icon',
                         t('.settings'),
@@ -68,7 +68,7 @@
                         icon_options: { height: 16 })
 
               .f-c-form-footer__settings-backdrop[
-                data=stimulus_action(click: "toggleSettings")
+                data=stimulus_action_unless_audit(click: "toggleSettings")
               ]
 
               .f-c-form-footer__settings-content
@@ -86,4 +86,4 @@
                   class: 'f-c-form-footer__btn f-c-form-footer__btn--collapsible',
                   variant: :gray,
                   icon: :dots_vertical,
-                  data: stimulus_action(click: "toggleCollapsed").merge(test_id: "dropdown-button"))
+                  data: (stimulus_action_unless_audit(click: "toggleCollapsed") || {}).merge(test_id: "dropdown-button"))

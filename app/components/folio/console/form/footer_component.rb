@@ -60,4 +60,9 @@ class Folio::Console::Form::FooterComponent < Folio::Console::ApplicationCompone
       stimulus_tooltip(title, placement: :right)
     end
   end
+
+  def stimulus_action_unless_audit(hash)
+    return nil if @audit
+    stimulus_action(hash)
+  end
 end
