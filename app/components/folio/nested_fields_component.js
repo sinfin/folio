@@ -41,6 +41,7 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
     this.fieldsWrapTarget.insertAdjacentHTML('beforeend', this.htmlFromTemplate())
     this.redoPositions()
     this.dispatch('add', { detail: { field: this.fieldsTargets[this.fieldsTargets.length - 1] } })
+    this.element.dispatchEvent(new CustomEvent('f-nested-fields:add', { bubbles: true }))
   }
 
   htmlFromTemplate () {

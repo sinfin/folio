@@ -93,6 +93,14 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
     }
   }
 
+  abortAutosave () {
+    this.clearAutosaveTimeout()
+
+    if (this.autosaveTimerValue !== -1) {
+      this.autosaveTimerValue = -1
+    }
+  }
+
   onDocumentFocusin (e) {
     if (!this.autosaveEnabledValue || !window.FolioConsole.Autosave.enabled) return
     if (!this.isFromProperForm(e)) return
@@ -100,11 +108,7 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
     const tagName = e.target.tagName
 
     if (tagName === 'INPUT' || tagName === 'TEXTAREA' || tagName === 'SELECT') {
-      this.clearAutosaveTimeout()
-
-      if (this.autosaveTimerValue !== -1) {
-        this.autosaveTimerValue = -1
-      }
+      this.abortAutosave()
     }
   }
 
@@ -164,5 +168,12 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
         this.element.closest('form').requestSubmit()
       }
     }
+  }
+
+  onNestedFieldsAdd (e) {
+    if (!this.autosaveEnabledValue || !window.FolioConsole.Autosave.enabled) return
+    if (!this.isFromProperForm(e)) return
+
+    this.abortAutosave()
   }
 })

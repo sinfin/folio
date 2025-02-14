@@ -47,7 +47,8 @@ class Folio::Console::Form::FooterComponent < Folio::Console::ApplicationCompone
                           "fCPageReload" => "reloadPageWhenPossible",
                           "atomsFormHidden@document" => "onDocumentAtomsFormHidden",
                           "atomsFormShown@document" => "onDocumentAtomsFormShown",
-                          "submit@document" => "onDocumentSubmit"
+                          "submit@document" => "onDocumentSubmit",
+                          "f-nested-fields:add@document" => "onNestedFieldsAdd"
                         })
   end
 
