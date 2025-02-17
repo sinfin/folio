@@ -192,6 +192,7 @@ end
 #  body_html_cs      :text
 #  body_text_cs      :text
 #  site_id           :bigint(8)
+#  active            :boolean          default(TRUE)
 #
 # Indexes
 #

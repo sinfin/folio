@@ -154,4 +154,30 @@ class Folio::DeviseMailerTest < ActionMailer::TestCase
     assert mail.text_part.decoded.include?("to finish signing in via")
     assert mail.html_part.decoded.include?("to finish signing in via")
   end
+
+  test "inactive email template does not send email" do
+    Folio::EmailTemplate.where(mailer: "Devise::Mailer", site: @site).update_all(active: false)
+
+    mail = Folio::DeviseMailer.reset_password_instructions(@superadmin, "TOKEN")
+    mail.deliver
+
+    assert_emails 0
+
+    mail = Folio::DeviseMailer.invitation_instructions(@superadmin, "TOKEN")
+    mail.deliver
+
+    assert_emails 0
+
+    mail = Folio::DeviseMailer.confirmation_instructions(@superadmin, "TOKEN")
+    mail.deliver
+
+    assert_emails 0
+
+    authentication = create(:folio_omniauth_authentication,
+                            user: @superadmin, conflict_user_id: @superadmin.id)
+    mail = Folio::DeviseMailer.omniauth_conflict(authentication)
+    mail.deliver
+
+    assert_emails 0
+  end
 end

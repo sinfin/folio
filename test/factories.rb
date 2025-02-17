@@ -156,6 +156,7 @@ FactoryBot.define do
     optional_keywords { [] }
     required_keywords { [] }
     site { get_current_or_existing_site_or_create_from_factory }
+    active { true }
   end
 
   factory :folio_user, class: "Folio::User" do
