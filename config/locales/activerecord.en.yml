@@ -240,6 +240,9 @@ en:
   attributes:
     aasm_state: State
     address_secondary: Secondary address
+    atoms: Chapters
+    cs_atoms: Chapters (CZ)
+    en_atoms: Chapters (EN)
     article: Article
     audio_cover_placement: Audio
     button_label: Button label

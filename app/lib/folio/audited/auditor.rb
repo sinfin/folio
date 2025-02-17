@@ -75,9 +75,18 @@ class Folio::Audited::Auditor
     if @record.class.try(:has_folio_attachments?)
       keys = @record.class.folio_attachment_keys
 
-      if keys[:has_one].any? { |key| fp = @record.send(key); fp && (fp.changed? || fp.marked_for_destruction?) } ||
-         keys[:has_many].any? { |key| @record.send(key).any? { |fp| fp.changed? || fp.marked_for_destruction? } }
-        ary << "file_placements"
+      keys[:has_one].each do |key|
+        fp = @record.send(key)
+
+        if fp && (fp.changed? || fp.marked_for_destruction?)
+          ary << key.to_s
+        end
+      end
+
+      keys[:has_many].each do |key|
+        if @record.send(key).any? { |fp| fp.changed? || fp.marked_for_destruction? }
+          ary << key.to_s
+        end
       end
     end
 

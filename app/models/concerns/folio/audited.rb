@@ -26,6 +26,10 @@ module Folio::Audited
         opts[:console] != false
       end
 
+      define_singleton_method(:audited_columns) do
+        column_names - non_audited_columns + %w[folio_audited_changed_relations]
+      end
+
       define_method(:should_audit_changes?) do
         true
       end
