@@ -18,16 +18,27 @@
 
   &__menu
     max-height: 400px
+    width: 320px
+    max-width: 100vw
     overflow-y: auto
 
   &__item
+    font-weight: $font-weight-normal
+    color: #495057
+    white-space: normal
+
     &--link
       border-top: 1px solid $border-color
 
     &--active
       &, &:hover, &:focus
-        background: rgba(230, 244, 250, 0.6)
-        color: $dark
+        background: #E6F4FA
+
+  &__small
+    color: #212529
+
+    &--changes
+      color: #6F7172
 
   &__item--active &__label
     font-weight: $font-weight-bold

@@ -19,9 +19,9 @@ class Folio::Console::Audited::DropdownComponent < Folio::Console::ApplicationCo
     end
 
     if active
-      "f-c-layout-audited-dropdown__item--active"
+      "f-c-audited-dropdown__item--active"
     else
-      "f-c-layout-audited-dropdown__item--link"
+      "f-c-audited-dropdown__item--link"
     end
   end
 
@@ -31,5 +31,31 @@ class Folio::Console::Audited::DropdownComponent < Folio::Console::ApplicationCo
     else
       url_for([:revision, :console, @record, version: version.version])
     end
+  end
+
+  def pretty_print_changes(audited_changes)
+    ary = []
+
+    if audited_changes["aasm_state"]
+      ary << "#{@record.class.human_attribute_name(:aasm_state)}: #{audited_changes["aasm_state"][0]} > #{audited_changes["aasm_state"][1]}"
+    end
+
+    second_line = []
+
+    if audited_changes["folio_audited_changed_relations"].present?
+      second_line += audited_changes["folio_audited_changed_relations"][1].map do |key|
+        @record.class.human_attribute_name(key)
+      end
+    end
+
+    second_line += audited_changes.without("aasm_state", "folio_audited_changed_relations").map do |key, value|
+      @record.class.human_attribute_name(key)
+    end
+
+    if second_line.present?
+      ary << second_line.join(", ")
+    end
+
+    ary.join("<br>").html_safe
   end
 end

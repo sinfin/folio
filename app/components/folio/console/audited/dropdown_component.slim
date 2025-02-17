@@ -20,7 +20,7 @@
 
     .dropdown-menu.dropdown-menu-right.f-c-audited-dropdown__menu.py-0
       - @audits.each_with_index do |version, i|
-        a.dropdown-item.f-c-audited-dropdown__item.py-2[
+        a.dropdown-item.f-c-audited-dropdown__item[
           href=version_url(version, i)
           class=item_class_name(version, i)
         ]
@@ -29,5 +29,8 @@
             - if i == 0
               '  #{t('.current')}
 
-          .small
+          .f-c-audited-dropdown__small.small.mt-1
             = version.user.try(:to_label)
+
+          .f-c-audited-dropdown__small.f-c-audited-dropdown__small--changes.small.mt-1
+            = pretty_print_changes(version.audited_changes)
