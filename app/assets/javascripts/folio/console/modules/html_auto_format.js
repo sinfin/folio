@@ -5,10 +5,12 @@ window.FolioConsole.HtmlAutoFormat.CLASS_NAME = 'f-c-html-auto-format'
 
 window.FolioConsole.HtmlAutoFormat.I18N = {
   cs: {
-    tooltip: "Automaticky nahrazeno%{before} <br> Kliknutím zrušíte"
+    undo: 'Automaticky nahrazeno%{before} <br> Kliknutím zrušíte',
+    redo: 'Opět nahradit%{before}'
   },
   en: {
-    tooltip: "Automatically replaced%{before} <br> Click to cancel"
+    undo: 'Automatically replaced%{before} <br> Click to cancel',
+    redo: 'Redo replacement%{before}'
   }
 }
 
@@ -52,10 +54,10 @@ window.FolioConsole.HtmlAutoFormat.UNDO_MAPPINGS = {
   '‚': "'",
   '‘': "'",
   '‚': "'",
-  '‘': "'",
+  '‘': "'"
 }
 
-window.FolioConsole.HtmlAutoFormat.MAPPINGS.commons.map((mapping) => {
+window.FolioConsole.HtmlAutoFormat.MAPPINGS.commons.forEach((mapping) => {
   if (mapping.to) {
     window.FolioConsole.HtmlAutoFormat.UNDO_MAPPINGS[mapping.to] = mapping.from
   }
@@ -210,35 +212,47 @@ window.FolioConsole.HtmlAutoFormat.replace = (opts) => {
 
 window.FolioConsole.HtmlAutoFormat.onClick = (element) => {
   if (!element) return
-  if (element.classList.contains('f-c-html-auto-format--reverted')) return
+  const reverted = element.classList.contains('f-c-html-auto-format--reverted')
+
   window.FolioConsole.HtmlAutoFormat.removeTooltip(element)
-
   const redactorGroup = element.closest('[data-controller="f-input-redactor"]')
-  const revertTo = window.FolioConsole.HtmlAutoFormat.UNDO_MAPPINGS[element.innerText]
+  const redactorInput = redactorGroup ? redactorGroup.querySelector('[data-f-input-redactor-target="input"]') : null
 
-  if (revertTo) {
-    element.innerHTML = revertTo
-    element.classList.add('f-c-html-auto-format--reverted')
-    delete element.dataset.controller
-  } else {
+  if (reverted) {
+    const parent = element.parentElement
+
+    element.insertAdjacentHTML('beforebegin', element.innerText)
     element.remove()
+
+    if (redactorInput) {
+      window.Folio.Input.Redactor.updateByCurrentHtml(redactorInput)
+      const redactor = window.$R(redactorInput)
+      window.FolioConsole.HtmlAutoFormat.redactorBlurCallback({ redactor })
+    } else if (!parent.closest('.redactor-box')) {
+      parent.innerHTML = window.FolioConsole.HtmlAutoFormat.replace({ html: parent.innerHTML })
+    }
+  } else {
+    const revertTo = window.FolioConsole.HtmlAutoFormat.UNDO_MAPPINGS[element.innerText]
+
+    if (revertTo) {
+      element.innerHTML = revertTo
+      element.classList.add('f-c-html-auto-format--reverted')
+    } else {
+      element.remove()
+    }
   }
 
-  if (redactorGroup) {
-    const input = redactorGroup.querySelector('[data-f-input-redactor-target="input"]')
-
-    if (input) {
-      window.Folio.Input.Redactor.updateByCurrentHtml(input)
-    }
+  if (redactorInput) {
+    window.Folio.Input.Redactor.updateByCurrentHtml(redactorInput)
   }
 }
 
 window.FolioConsole.HtmlAutoFormat.onMouseenter = (element) => {
   if (!element) return
-  if (element.classList.contains('f-c-html-auto-format--reverted')) return
+  const reverted = element.classList.contains('f-c-html-auto-format--reverted')
 
-  let title = window.Folio.i18n(window.FolioConsole.HtmlAutoFormat.I18N, "tooltip")
-  let replacement = window.FolioConsole.HtmlAutoFormat.UNDO_MAPPINGS[element.innerText] || ""
+  let title = window.Folio.i18n(window.FolioConsole.HtmlAutoFormat.I18N, reverted ? 'redo' : 'undo')
+  let replacement = window.FolioConsole.HtmlAutoFormat.UNDO_MAPPINGS[element.innerText] || ''
 
   if (replacement) {
     replacement = `: ${replacement}`
@@ -255,7 +269,6 @@ window.FolioConsole.HtmlAutoFormat.onMouseleave = (element) => {
 
 window.FolioConsole.HtmlAutoFormat.removeTooltip = (element) => {
   if (!element) return
-  if (element.classList.contains('f-c-html-auto-format--reverted')) return
   window.Folio.Tooltip.removeTooltip({ element })
 }
 
