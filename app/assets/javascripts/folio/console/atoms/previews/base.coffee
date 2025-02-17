@@ -269,11 +269,24 @@ handleNewHtml = ->
   bindSortables()
   lazyloadAll()
   sendResizeMessage()
+  restoreScrollTop()
   $(document).trigger('folioConsoleReplacedHtml')
 
 handleWillReplaceHtml = ->
+  storeScrollTop()
   unbindSortables()
   $(document).trigger('folioConsoleWillReplaceHtml')
+
+previousScrollTop = 0
+dontStoreScrollTop = false
+
+storeScrollTop = ->
+  return if dontStoreScrollTop
+  previousScrollTop = window.scrollY
+
+restoreScrollTop = ->
+  dontStoreScrollTop = false
+  window.scrollTo({ top: previousScrollTop || 0, behavior: 'instant' })
 
 updateLabel = (locale, value) ->
   if locale
@@ -312,6 +325,23 @@ $(document)
 
 $(window).on 'resize orientationchange', sendResizeMessage
 
+setScrollTopCallbacks = (top) ->
+  previousScrollTop = top
+  dontStoreScrollTop = true
+
+  callback = ->
+    window.scrollTo
+      top: top
+      behavior: 'instant'
+
+  callback()
+
+  document.addEventListener "DOMContentLoaded", callback, { once: true }
+
+  document.addEventListener "readystatechange", callback, { once: true }
+
+  window.addEventListener "load", callback, { once: true }
+
 receiveMessage = (e) ->
   return if e.origin isnt window.origin
   switch e.data.type
@@ -321,6 +351,7 @@ receiveMessage = (e) ->
     when 'setMediaQuery' then setMediaQuery(e.data.width)
     when 'updateLabel' then updateLabel(e.data.locale, e.data.value)
     when 'updatePerex' then updatePerex(e.data.locale, e.data.value)
+    when 'setScrollTopCallbacks' then setScrollTopCallbacks(e.data.top)
 
 window.addEventListener('message', receiveMessage, false)
 

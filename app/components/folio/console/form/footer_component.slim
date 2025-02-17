@@ -93,6 +93,22 @@ javascript:
     window.FolioConsole = window.FolioConsole || {}
     window.FolioConsole.Autosave = window.FolioConsole.Autosave || {}
 
+    window.FolioConsole.Autosave.bindLoad = (w, callback) => {
+      callback()
+
+      w.document.addEventListener("DOMContentLoaded", (event) => {
+        callback()
+      }, { once: true })
+
+      w.document.addEventListener("readystatechange", (event) => {
+        callback()
+      }, { once: true })
+
+      w.addEventListener("load", (event) => {
+        callback()
+      }, { once: true })
+    }
+
     window.FolioConsole.Autosave.restoreUiState = ({ clear }) => {
       const string = window.sessionStorage.getItem('fCAutosaveUiState')
       if (!string) return
@@ -100,7 +116,6 @@ javascript:
       if (clear) window.sessionStorage.removeItem('fCAutosaveUiState')
 
       const data = JSON.parse(string)
-      console.log(clear, data)
 
       if (!data || !data.now || data.now + 10000 < Date.now()) {
         return
@@ -120,22 +135,26 @@ javascript:
       }
 
       const atomsPreviews = document.querySelector('.f-c-simple-form-with-atoms__iframe')
+
       if (atomsPreviews) {
         if (data.previewsHeight) {
           atomsPreviews.style.minHeight = `${data.previewsHeight}px`
         }
 
         if (data.previewsScroll) {
-          atomsPreviews.contentWindow.scrollTo(0, data.previews)
+          const msg = {
+            type: 'setScrollTopCallbacks',
+            top: data.previewsScroll
+          }
+
+          atomsPreviews.contentWindow.postMessage(msg, window.origin)
         }
       }
 
       window.scrollTo({ top: data.window + flashOffset, behavior: 'instant' })
     }
 
-    window.FolioConsole.Autosave.restoreUiState({ clear: false })
-
-    document.addEventListener("readystatechange", (event) => {
-      window.FolioConsole.Autosave.restoreUiState({ clear: true })
-    }, { once: true })
+    window.FolioConsole.Autosave.bindLoad(window, () => {
+      window.FolioConsole.Autosave.restoreUiState({ clear: false })
+    })
   }

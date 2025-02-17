@@ -33,6 +33,10 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
 
   static targets = ['autosaveInput', 'submitButtonIndicator']
 
+  connect () {
+    this.restoreUiState()
+  }
+
   disconnect () {
     this.unbindUnload()
     this.clearAutosaveTimeout()
@@ -186,6 +190,7 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
 
   onDocumentSubmit (e) {
     if (!this.isFromProperForm(e)) return
+    this.storeUiState()
     this.statusValue = 'saving'
   }
 
@@ -231,7 +236,6 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
     this.submitButtonIndicatorTarget.style.transform = `scaleX(${scale})`
 
     if (to === 0) {
-      this.storeUiState()
       this.element.closest('form').requestSubmit()
     } else if (to > 0) {
       this.autosaveTimeout = window.setTimeout(() => {
@@ -283,5 +287,10 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
     if (document.querySelector('.f-c-simple-form-with-atoms--expanded-form')) data.atomsFormExpanded = true
 
     window.sessionStorage.setItem('fCAutosaveUiState', JSON.stringify(data))
+  }
+
+  restoreUiState () {
+    if (!window.FolioConsole.Autosave.restoreUiState) return
+    window.FolioConsole.Autosave.restoreUiState({ clear: true })
   }
 })
