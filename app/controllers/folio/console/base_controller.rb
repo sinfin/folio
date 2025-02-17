@@ -350,11 +350,30 @@ class Folio::Console::BaseController < Folio::ApplicationController
     def load_revisions
       return unless folio_console_record && folio_console_record.respond_to?(:revisions)
 
-      @audited_audits = folio_console_record.audits.reverse
+      scope = folio_console_record.audits.unscope(:order).order(version: :desc)
+
+      if Rails.application.config.folio_console_audited_revisions_limit
+        scope = scope.limit(Rails.application.config.folio_console_audited_revisions_limit + 1)
+      end
+
+      @audited_audits = scope
     end
 
     def find_revision
-      @audited_audit = folio_console_record.audits.find_by_version!(params[:version])
+      scope = if Rails.application.config.folio_console_audited_revisions_limit
+        max_version = folio_console_record.audits.maximum(:version)
+
+        if max_version
+          min_version = max_version - Rails.application.config.folio_console_audited_revisions_limit
+          folio_console_record.audits.where(version: min_version..)
+        else
+          folio_console_record.audits
+        end
+      else
+        folio_console_record.audits
+      end
+
+      @audited_audit = scope.find_by_version!(params[:version])
 
       @audited_revision = @audited_audit.revision
 
