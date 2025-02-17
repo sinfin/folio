@@ -350,7 +350,10 @@ class Folio::Console::BaseController < Folio::ApplicationController
     def load_revisions
       return unless folio_console_record && folio_console_record.respond_to?(:revisions)
 
-      scope = folio_console_record.audits.unscope(:order).order(version: :desc)
+      scope = folio_console_record.audits
+                                  .includes(:user)
+                                  .unscope(:order)
+                                  .order(version: :desc)
 
       if Rails.application.config.folio_console_audited_revisions_limit
         scope = scope.limit(Rails.application.config.folio_console_audited_revisions_limit + 1)
