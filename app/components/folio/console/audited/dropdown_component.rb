@@ -33,7 +33,10 @@ class Folio::Console::Audited::DropdownComponent < Folio::Console::ApplicationCo
     end
   end
 
-  def pretty_print_changes(audited_changes)
+  def pretty_print_changes(version)
+    return t(".created") if version.action == "create"
+
+    audited_changes = version.audited_changes
     ary = []
 
     if audited_changes["aasm_state"]
@@ -43,8 +46,14 @@ class Folio::Console::Audited::DropdownComponent < Folio::Console::ApplicationCo
     second_line = []
 
     if audited_changes["folio_audited_changed_relations"].present?
-      second_line += audited_changes["folio_audited_changed_relations"][1].map do |key|
-        @record.class.human_attribute_name(key)
+      first = audited_changes["folio_audited_changed_relations"][1]
+
+      if first.is_a?(String)
+        second_line << @record.class.human_attribute_name(first)
+      elsif first.is_a?(Array)
+        second_line += first.map do |key|
+          @record.class.human_attribute_name(key)
+        end
       end
     end
 

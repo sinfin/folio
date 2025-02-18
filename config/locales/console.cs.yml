@@ -290,6 +290,7 @@ cs:
           toggle: Historie verzí
           current: (současná verze)
           back: Zpět
+          created: Vytvořeno
       layout:
         sidebar:
           homepage: Úvodní stránka

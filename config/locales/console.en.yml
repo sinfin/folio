@@ -286,6 +286,7 @@ en:
           toggle: Version history
           current: (current version)
           back: Back
+          created: Created
       layout:
         sidebar:
           homepage: Homepage
