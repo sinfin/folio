@@ -225,9 +225,14 @@ window.FolioConsole.HtmlAutoFormat.onClick = (element) => {
     element.remove()
 
     if (redactorInput) {
+      const wasEnabled = window.FolioConsole.HtmlAutoFormat.enabled
+      window.FolioConsole.HtmlAutoFormat.enabled = true
+
       window.Folio.Input.Redactor.updateByCurrentHtml(redactorInput)
       const redactor = window.$R(redactorInput)
       window.FolioConsole.HtmlAutoFormat.redactorBlurCallback({ redactor })
+
+      window.FolioConsole.HtmlAutoFormat.enabled = wasEnabled
     } else if (!parent.closest('.redactor-box')) {
       parent.innerHTML = window.FolioConsole.HtmlAutoFormat.replace({ html: parent.innerHTML })
     }
