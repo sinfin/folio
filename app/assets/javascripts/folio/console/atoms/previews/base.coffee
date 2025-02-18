@@ -62,9 +62,9 @@ handleEditClick = (e) ->
   closeMobileControls($this)
   $wrap = $this.closest('.f-c-atoms-previews__preview')
 
-  return unless $wrap.data('editable')
-
   if $wrap.length
+    return unless $wrap.data('editable')
+
     data =
       rootKey: $wrap.data('root-key')
       indices: $wrap.data('indices')
