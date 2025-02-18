@@ -524,6 +524,7 @@ end
 #  time_zone                 :string           default("Prague")
 #  auth_site_id              :bigint(8)        not null
 #  preferred_locale          :string
+#  console_preferences       :jsonb
 #
 # Indexes
 #
