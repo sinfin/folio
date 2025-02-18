@@ -31,11 +31,17 @@ SimpleForm::Inputs::Base.class_eval do
   end
 
   def register_atom_settings
-    if options[:folio_label]
-      input_html_classes << "f-c-js-atoms-placement-label"
-    elsif options[:folio_perex]
-      input_html_classes << "f-c-js-atoms-placement-perex"
-    elsif options[:atom_setting]
+    if options[:folio_label] || options[:atom_setting] == :title
+      input_html_options[:class] ||= []
+      input_html_options[:class] << "f-c-js-atoms-placement-label"
+    end
+
+    if options[:folio_perex] || options[:atom_setting] == :perex
+      input_html_options[:class] ||= []
+      input_html_options[:class] << "f-c-js-atoms-placement-perex"
+    end
+
+    if options[:atom_setting]
       input_html_options[:class] ||= []
       input_html_options[:class] << "f-c-js-atoms-placement-setting"
       input_html_options["data-atom-setting"] = options[:atom_setting]
