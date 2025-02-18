@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- update ruby to 3.4.2
+- update rails to 8.0.1
+- use custom `cells-slim` to update `slim` to 5.2.1
+
 ## [6.1.2] - 2025-02-18
 
 ### Added

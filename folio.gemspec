@@ -19,7 +19,6 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
 
   s.add_dependency "aasm"
-  s.add_dependency "activemodel", "~> 7.1.0" # freeze ActiveModel from updating to 7.2 https://github.com/rails/rails/issues/52607#issuecomment-2303015514
   s.add_dependency "acts-as-taggable-on"
   s.add_dependency "after_commit_everywhere"
   s.add_dependency "ancestry"
@@ -66,8 +65,8 @@ Gem::Specification.new do |s|
   s.add_dependency "pg"
   s.add_dependency "phonelib"
   s.add_dependency "premailer-rails"
-  s.add_dependency "rails-i18n", "~> 7"
-  s.add_dependency "rails", "~> 7.1"
+  s.add_dependency "rails-i18n", "~> 8.0"
+  s.add_dependency "rails", "~> 8.0"
   s.add_dependency "recaptcha", "4.13.1"
   s.add_dependency "responders"
   s.add_dependency "rubyzip"
@@ -105,6 +104,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rubocop-performance"
   s.add_development_dependency "rubocop-rails"
   s.add_development_dependency "rubocop-rake"
+  s.add_development_dependency "rubocop-rails_config"
   s.add_development_dependency "rubocop"
   s.add_development_dependency "vcr"
   s.add_development_dependency "webmock"

@@ -1,11 +1,11 @@
-# copied from https://github.com/toshimaru/rubocop-rails_config/blob/main/config/rails.yml
-# and removed broken rubocop-md
+# copied from https://github.com/rails/rails/blob/main/.rubocop.yml
 
 require:
   - rubocop-minitest
   - rubocop-packaging
   - rubocop-performance
   - rubocop-rails
+  - rubocop-md
 
 AllCops:
   # RuboCop has a bunch of cops enabled by default. This setting tells RuboCop
@@ -16,10 +16,12 @@ AllCops:
     - '**/tmp/**/*'
     - '**/templates/**/*'
     - '**/vendor/**/*'
-    - 'actionpack/lib/action_dispatch/journey/parser.rb'
     - 'actionmailbox/test/dummy/**/*'
     - 'activestorage/test/dummy/**/*'
     - 'actiontext/test/dummy/**/*'
+    - 'tools/rail_inspector/test/fixtures/*'
+    - guides/source/debugging_rails_applications.md
+    - guides/source/active_support_instrumentation.md
     - '**/node_modules/**/*'
     - '**/CHANGELOG.md'
     - '**/2_*_release_notes.md'
@@ -27,9 +29,7 @@ AllCops:
     - '**/4_*_release_notes.md'
     - '**/5_*_release_notes.md'
     - '**/6_*_release_notes.md'
-    # Additional exclude files by rubocop-rails_config
-    - 'bin/**/*'
-    - 'db/schema.rb'
+
 
 Performance:
   Exclude:
@@ -55,10 +55,6 @@ Rails/IndexWith:
 Style/AndOr:
   Enabled: true
 
-# Align `when` with `case`.
-Layout/CaseIndentation:
-  Enabled: true
-
 Layout/ClosingHeredocIndentation:
   Enabled: true
 
@@ -67,6 +63,9 @@ Layout/ClosingParenthesisIndentation:
 
 # Align comments with method definitions.
 Layout/CommentIndentation:
+  Enabled: true
+
+Layout/DefEndAlignment:
   Enabled: true
 
 Layout/ElseAlignment:
@@ -107,6 +106,7 @@ Layout/EmptyLinesAroundModuleBody:
 # Use Ruby >= 1.9 syntax for hashes. Prefer { a: :b } over { :a => :b }.
 Style/HashSyntax:
   Enabled: true
+  EnforcedShorthandSyntax: either
 
 # Method definitions after `private` or `protected` isolated calls need one
 # extra level of indentation.
@@ -217,11 +217,19 @@ Layout/TrailingWhitespace:
 Style/RedundantPercentQ:
   Enabled: true
 
+Lint/NestedMethodDefinition:
+  Enabled: true
+
 Lint/AmbiguousOperator:
   Enabled: true
 
 Lint/AmbiguousRegexpLiteral:
   Enabled: true
+
+Lint/Debugger:
+  Enabled: true
+  DebuggerRequires:
+    - debug
 
 Lint/DuplicateRequire:
   Enabled: true
@@ -238,11 +246,26 @@ Lint/ErbNewArguments:
 Lint/EnsureReturn:
   Enabled: true
 
+Lint/MissingCopEnableDirective:
+  Enabled: true
+
 # Use my_method(my_arg) not my_method( my_arg ) or my_method my_arg.
 Lint/RequireParentheses:
   Enabled: true
 
+Lint/RedundantCopDisableDirective:
+  Enabled: true
+
+Lint/RedundantCopEnableDirective:
+  Enabled: true
+
+Lint/RedundantRequireStatement:
+  Enabled: true
+
 Lint/RedundantStringCoercion:
+  Enabled: true
+
+Lint/RedundantSafeNavigation:
   Enabled: true
 
 Lint/UriEscapeUnescape:
@@ -252,6 +275,14 @@ Lint/UselessAssignment:
   Enabled: true
 
 Lint/DeprecatedClassMethods:
+  Enabled: true
+
+Lint/InterpolationCheck:
+  Enabled: true
+  Exclude:
+    - '**/test/**/*'
+
+Lint/SafeNavigationChain:
   Enabled: true
 
 Style/EvalWithLocation:
@@ -293,6 +324,18 @@ Style/TrivialAccessors:
 Style/RedundantCondition:
   Enabled: true
 
+Style/RedundantDoubleSplatHashBraces:
+  Enabled: true
+
+Style/OpenStructUse:
+  Enabled: true
+
+Style/ArrayIntersect:
+  Enabled: true
+
+Style/KeywordArgumentsMerging:
+  Enabled: true
+
 Performance/BindCall:
   Enabled: true
 
@@ -323,16 +366,10 @@ Performance/ReverseEach:
 Performance/StringReplacement:
   Enabled: true
 
-Performance/UnfreezeString:
-  Enabled: true
-
 Performance/DeletePrefix:
   Enabled: true
 
 Performance/DeleteSuffix:
-  Enabled: true
-
-Performance/OpenStruct:
   Enabled: true
 
 Performance/InefficientHashSearch:
@@ -347,10 +384,19 @@ Performance/RedundantStringChars:
 Performance/StringInclude:
   Enabled: true
 
+Minitest/AssertPredicate:
+  Enabled: true
+
 Minitest/AssertRaisesWithRegexpArgument:
   Enabled: true
 
 Minitest/AssertWithExpectedArgument:
+  Enabled: true
+
+Minitest/LiteralAsActualArgument:
+  Enabled: true
+
+Minitest/NonExecutableTestMethod:
   Enabled: true
 
 Minitest/SkipEnsure:
@@ -358,3 +404,9 @@ Minitest/SkipEnsure:
 
 Minitest/UnreachableAssertion:
   Enabled: true
+
+# Markdown:
+#   # Whether to run RuboCop against non-valid snippets
+#   WarnInvalid: true
+#   # Whether to lint codeblocks without code attributes
+#   Autodetect: false
