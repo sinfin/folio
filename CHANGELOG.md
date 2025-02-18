@@ -1,8 +1,9 @@
-
 # Change Log
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+
+## [6.1.1] - 2025-02-18
 
 ### Added
 
