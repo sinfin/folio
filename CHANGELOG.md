@@ -2,6 +2,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2025-02-17
+### Added
+- added `active` column to `Folio::EmailTemplate` and possibility to disable specific email templates
+
 ## 2025-02-12
 ### Added
 - added `upload` icon
