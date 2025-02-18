@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_02_05_075820) do
+ActiveRecord::Schema[7.1].define(version: 2025_02_17_134355) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -267,6 +267,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_05_075820) do
     t.text "body_html_cs"
     t.text "body_text_cs"
     t.bigint "site_id"
+    t.boolean "active", default: true
     t.index ["site_id"], name: "index_folio_email_templates_on_site_id"
     t.index ["slug"], name: "index_folio_email_templates_on_slug"
   end

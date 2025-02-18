@@ -44,4 +44,15 @@ class Folio::LeadMailerTest < ActionMailer::TestCase
     assert mail.text_part.decoded.include?("Phone")
     assert mail.html_part.decoded.include?("Phone")
   end
+
+  test "inactive email template does not send email" do
+    Folio::EmailTemplate.where(mailer: "Folio::LeadMailer", site: @site).update_all(active: false)
+
+    lead = create(:folio_lead, note: "Foo Bar")
+
+    mail = Folio::LeadMailer.notification_email(lead)
+    mail.deliver
+
+    assert_emails 0
+  end
 end
