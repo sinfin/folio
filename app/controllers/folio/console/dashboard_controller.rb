@@ -2,7 +2,7 @@
 
 class Folio::Console::DashboardController < Folio::Console::BaseController
   def index
-    if path = current_site.console_dashboard_redirect_path_name
+    if path = Folio::Current.site.console_dashboard_redirect_path_name
       if respond_to?(path)
         redirect_to send(path)
       elsif main_app.respond_to?(path)

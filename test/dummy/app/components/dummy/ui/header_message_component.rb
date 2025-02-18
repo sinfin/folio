@@ -2,14 +2,14 @@
 
 class Dummy::Ui::HeaderMessageComponent < ApplicationComponent
   def message
-    @message ||= if current_site.header_message_published?
+    @message ||= if Folio::Current.site.header_message_published?
       if controller.send(:cookies)[:hiddenHeaderMessage] != cookie
-        current_site.header_message.presence
+        Folio::Current.site.header_message.presence
       end
     end
   end
 
   def cookie
-    @cookie ||= Base64.urlsafe_encode64(current_site.header_message)
+    @cookie ||= Base64.urlsafe_encode64(Folio::Current.site.header_message)
   end
 end

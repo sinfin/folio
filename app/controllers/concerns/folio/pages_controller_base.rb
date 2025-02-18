@@ -72,7 +72,7 @@ module Folio::PagesControllerBase
     end
 
     def pages_scope
-      base = Folio::Page.by_site(current_site)
+      base = Folio::Page.by_site(Folio::Current.site)
 
       base = base.roots if Rails.application.config.folio_pages_ancestry
       filter_pages_by_locale(base)

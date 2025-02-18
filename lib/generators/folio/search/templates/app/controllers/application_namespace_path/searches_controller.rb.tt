@@ -55,7 +55,7 @@ class <%= application_namespace %>::SearchesController < ApplicationController
         scope = meta[:klass].published
 
         if scope.respond_to?(:by_site)
-          scope = scope.by_site(current_site)
+          scope = scope.by_site(Folio::Current.site)
         end
 
         scope = scope.includes(*meta[:includes]) if meta[:includes].present?

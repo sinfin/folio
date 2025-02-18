@@ -3,6 +3,7 @@
 class <%= application_namespace %>::Ui::ButtonComponent < ApplicationComponent
   def initialize(variant: "primary",
                  size: nil,
+                 icon_height: nil,
                  confirm: false,
                  class_name: nil,
                  label: nil,
@@ -19,6 +20,7 @@ class <%= application_namespace %>::Ui::ButtonComponent < ApplicationComponent
                  href: nil)
     @variant = variant
     @size = size
+    @icon_height = icon_height
     @confirm = confirm
     @class_name = class_name
     @label = label
@@ -87,6 +89,8 @@ class <%= application_namespace %>::Ui::ButtonComponent < ApplicationComponent
   end
 
   def icon_height
+    return @icon_height if @icon_height
+
     case @size
     when :sm
       15

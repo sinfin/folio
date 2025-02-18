@@ -49,4 +49,20 @@ class Folio::Console::PagesControllerTest < Folio::Console::BaseControllerTest
 
     assert_redirected_to url_for([:edit, :console, page])
   end
+
+  test "new_clone when enabled" do
+    Rails.application.config.stub(:folio_console_clonable_enabled, true) do
+      page = create(:folio_page)
+      get url_for([:new_clone, :console, page])
+      assert_response :success
+    end
+  end
+
+  test "new_clone when disabled" do
+    Rails.application.config.stub(:folio_console_clonable_enabled, false) do
+      page = create(:folio_page)
+      get url_for([:new_clone, :console, page])
+      assert_redirected_to url_for([:console, page.class])
+    end
+  end
 end

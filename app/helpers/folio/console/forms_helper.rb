@@ -71,18 +71,19 @@ module Folio::Console::FormsHelper
                   "horizontal"
     layout_class = "f-c-simple-form-with-atoms--layout-#{layout_code}"
 
+    disabled_atoms_class = opts[:disable_atoms] ? "f-c-simple-form-with-atoms--disable-atoms" : nil
+    audited_class = @audited_audit ? "f-c-simple-form-with-atoms--audited-audit" : nil
+
     expandable = true
 
     if model.class.try(:console_atoms_expandable) == false
       expanded_class = "f-c-simple-form-with-atoms--expanded-form f-c-simple-form-with-atoms--non-expandable"
       expandable = false
-    elsif model.class.try(:console_atoms_expanded_settings)
+    elsif model.class.try(:console_atoms_expanded_settings) || audited_class
       expanded_class = "f-c-simple-form-with-atoms--expanded-form"
     else
       expanded_class = nil
     end
-
-    disabled_atoms_class = opts[:disable_atoms] ? "f-c-simple-form-with-atoms--disable-atoms" : nil
 
     opts[:html] ||= {}
     opts[:html][:class] ||= ""
@@ -90,7 +91,8 @@ module Folio::Console::FormsHelper
                            opts[:html][:class],
                            layout_class,
                            expanded_class,
-                           disabled_atoms_class].compact.join(" ")
+                           disabled_atoms_class,
+                           audited_class].compact.join(" ")
 
     form_footer_options = opts.delete(:form_footer_options) || {}
 
@@ -101,6 +103,7 @@ module Folio::Console::FormsHelper
              layout_code:,
              form_footer_options:,
              expandable:,
+             audited_audit_active: @audited_audit.present?,
            },
            &block
   end

@@ -17,7 +17,7 @@ class Folio::Users::PasswordsControllerTest < Folio::BaseControllerTest
     main_site = create(:folio_site, type: "Folio::Site", domain: "main.localhost")
 
     Rails.application.config.stub(:folio_crossdomain_devise, true) do
-      Folio.stub(:site_for_crossdomain_devise, main_site) do
+      Folio::Current.stub(:site_for_crossdomain_devise, main_site) do
         get main_app.new_user_password_url(only_path: false, host: @site.domain)
 
         assert_redirected_to main_app.new_user_session_url(only_path: false, host: main_site.domain)

@@ -52,6 +52,10 @@ en:
       content: This image contains sensitive content. To see it, verify your age. Are you over 18?
       accept: Yes
       cancel: No
+    console:
+      pages:
+        clone:
+          cloned_title: "%{original_title} - copy %{date}"
 
   head:
     description: ''

@@ -1,17 +1,49 @@
 # frozen_string_literal: true
 
 module Folio::AtomsHelper
+  BROKEN_DATA_KEY = :@folio_broken_atoms_data
+
+  def atoms_rescue_lambda
+    @atoms_rescue_lambda ||= lambda do |e, atom|
+      if Rails.env.development? && ENV["FOLIO_DEBUG_ATOMS"]
+        raise e
+      end
+
+      if controller_instance = try(:controller)
+        folio_broken_atoms_data = controller_instance.instance_variable_get(BROKEN_DATA_KEY)
+        folio_broken_atoms_data ||= []
+
+        folio_broken_atoms_data << { atom:, error: e }
+
+        controller_instance.instance_variable_set(BROKEN_DATA_KEY, folio_broken_atoms_data)
+      end
+
+      Sentry.capture_exception(e) if defined?(Sentry)
+    end
+  end
+
   def render_atom(atom, atom_options: {})
     if atom.class.component_class
       if self.is_a?(Folio::ApplicationCell)
-        capture { render_view_component(atom.class.component_class.new(atom:, atom_options:)) }
+        capture do
+          render_view_component(atom.class.component_class.new(atom:, atom_options:),
+                                rescue_lambda: lambda { |e| atoms_rescue_lambda.call(e, atom) })
+        end
       else
-        capture { render(atom.class.component_class.new(atom:, atom_options:)) }
+        capture do
+          render(atom.class.component_class.new(atom:, atom_options:))
+        rescue StandardError => e
+          atoms_rescue_lambda.call(e, atom)
+        end
       end
     elsif atom.class.cell_name
-      cell(atom.class.cell_name,
-           atom,
-           atom.cell_options.present? ? atom.cell_options.merge(atom_options) : atom_options)
+      begin
+        cell(atom.class.cell_name,
+             atom,
+             atom.cell_options.present? ? atom.cell_options.merge(atom_options) : atom_options).show
+      rescue StandardError => e
+        atoms_rescue_lambda.call(e, atom)
+      end
     else
       render "folio/atoms/#{atom.partial_name}", data: atom
     end
@@ -20,19 +52,34 @@ module Folio::AtomsHelper
   def render_molecule(molecule, atoms, atom_options: {})
     if atoms.present?
       if molecule.is_a?(String)
-        cell(molecule,
-             atoms,
-             atom_options)
+        begin
+          cell(molecule,
+               atoms,
+               atom_options).show
+        rescue StandardError => e
+          atoms_rescue_lambda.call(e, atoms.first)
+        end
       elsif molecule < ViewComponent::Base
         if self.is_a?(Folio::ApplicationCell)
-          capture { render_view_component(molecule.new(atoms:, atom_options:)) }
+          capture do
+            render_view_component(molecule.new(atoms:, atom_options:),
+                                  rescue_lambda: lambda { |e| atoms_rescue_lambda.call(e, atoms.first) })
+          end
         else
-          capture { render(molecule.new(atoms:, atom_options:)) }
+          capture do
+            render(molecule.new(atoms:, atom_options:))
+          rescue StandardError => e
+            atoms_rescue_lambda.call(e, atoms)
+          end
         end
       else
-        cell(molecule.cell_name,
-             atoms,
-             molecule.cell_options.present? ? molecule.cell_options.merge(atom_options) : atom_options)
+        begin
+          cell(molecule.cell_name,
+               atoms,
+               molecule.cell_options.present? ? molecule.cell_options.merge(atom_options) : atom_options).show
+        rescue StandardError => e
+          atoms_rescue_lambda.call(e, atoms)
+        end
       end
     end
   end

@@ -17,6 +17,6 @@ class Folio::Console::Api::BaseController < Folio::Console::BaseController
     end
 
     def api_authorize_user!
-      fail CanCan::AccessDenied unless can_now?(:access_console, current_site)
+      fail CanCan::AccessDenied unless can_now?(:access_console, Folio::Current.site)
     end
 end

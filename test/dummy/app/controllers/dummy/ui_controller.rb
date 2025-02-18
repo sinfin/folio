@@ -94,7 +94,7 @@ class Dummy::UiController < ApplicationController
   end
 
   def images
-    @image = (Folio::File::Image.by_site(current_site).tagged_with("unsplash").presence || Folio::File::Image).first
+    @image = (Folio::File::Image.by_site(Folio::Current.site).tagged_with("unsplash").presence || Folio::File::Image).first
 
     @variants = [
       { size: "100x100#" },
@@ -143,7 +143,7 @@ class Dummy::UiController < ApplicationController
   def author_medallions
     name = Faker::Name.name
     href = request.path
-    cover = Folio::File::Image.by_site(current_site).tagged_with("unsplash").first
+    cover = Folio::File::Image.by_site(Folio::Current.site).tagged_with("unsplash").first
 
     @author_medallions = {
       "Small (default)" => [{ name:, href:, cover: }, { name:, href:, cover: nil },],
@@ -153,7 +153,7 @@ class Dummy::UiController < ApplicationController
 
   def hero
     # TODO: tag images with dark/light theme
-    images = Folio::File::Image.by_site(current_site).tagged_with("unsplash").presence || Folio::File::Image
+    images = Folio::File::Image.by_site(Folio::Current.site).tagged_with("unsplash").presence || Folio::File::Image
 
     cover = images.first
     background_cover = images.second
@@ -250,7 +250,7 @@ class Dummy::UiController < ApplicationController
         background_overlay: :dark,
         theme: :dark,
         authors: [
-          { name: "John Doe", href: "#", cover: Folio::File::Image.by_site(current_site).tagged_with("unsplash").first },
+          { name: "John Doe", href: "#", cover: Folio::File::Image.by_site(Folio::Current.site).tagged_with("unsplash").first },
         ],
       }, {
         title: "One and two gallery title",
@@ -291,7 +291,7 @@ class Dummy::UiController < ApplicationController
   end
 
   def cards
-    folio_image = Folio::File::Image.by_site(current_site).tagged_with("unsplash").first
+    folio_image = Folio::File::Image.by_site(Folio::Current.site).tagged_with("unsplash").first
     href = request.fullpath
 
     @cards = []

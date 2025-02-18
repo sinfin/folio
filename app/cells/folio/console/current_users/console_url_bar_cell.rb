@@ -8,7 +8,7 @@ class Folio::Console::CurrentUsers::ConsoleUrlBarCell < Folio::ConsoleCell
   def other_user_at_url
     return false unless can_now?(:access_console)
     return @other_user_at_url unless @other_user_at_url.nil?
-    @other_user_at_url = Folio::User.currently_editing_url(request.url).where.not(id: current_user.id).first || false
+    @other_user_at_url = Folio::User.currently_editing_url(request.url).where.not(id: Folio::Current.user.id).first || false
   end
 
   def hidden?

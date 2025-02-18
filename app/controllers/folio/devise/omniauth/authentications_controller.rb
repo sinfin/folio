@@ -8,9 +8,9 @@ class Folio::Devise::Omniauth::AuthenticationsController < Folio::ApplicationCon
   def destroy
     provider = params.require(:provider)
 
-    current_user.authentications
-                .where(provider:)
-                .destroy_all
+    Folio::Current.user.authentications
+                       .where(provider:)
+                       .destroy_all
 
     msg = t(".success",
             provider: Folio::Omniauth::Authentication.human_provider(provider))
@@ -20,6 +20,6 @@ class Folio::Devise::Omniauth::AuthenticationsController < Folio::ApplicationCon
   end
 
   def fallback_location
-    signed_in_root_path(current_user)
+    signed_in_root_path(Folio::Current.user)
   end
 end

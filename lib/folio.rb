@@ -67,40 +67,11 @@ module Folio
     "folio_"
   end
 
-  # overide if needed
-  def self.current_site(request: nil, controller: nil)
-    return Folio.main_site if request.nil?
-
-    if Rails.env.development?
-      slug = request.host.delete_suffix(".localhost")
-      begin
-        Folio::Site.friendly.find(slug)
-      rescue ActiveRecord::RecordNotFound
-        raise "Could not find site with '#{slug}' slug. Available are #{Folio::Site.pluck(:slug)}"
-      end
-    else
-      Folio::Site.find_by(domain: request.host) || Folio.main_site
-    end
-  end
-
-  def self.site_instance_for_mailers
-    Folio.main_site
-  end
-
-  def self.enabled_site_for_crossdomain_devise
-    Rails.application.config.folio_crossdomain_devise ? site_for_crossdomain_devise : nil
-  end
-
-  def self.site_for_crossdomain_devise
-    nil
-  end
-
-  # override me at project level
-  def self.main_site
-    Folio::Site.ordered.first
-  end
-
   def self.atoms_previews_stylesheet_path(site:, class_name:)
     site.layout_assets_stylesheets_path
+  end
+
+  def self.expires_in
+    1.hour
   end
 end

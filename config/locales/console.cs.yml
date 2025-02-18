@@ -7,12 +7,13 @@ cs:
         arrange: Upravit strukturu
         back: Zpět
         cancel: Zrušit
+        close: Zavřít
         confirm: Potvrdit
         continue: Pokračovat
-        close: Zavřít
         destroy: Smazat
         discard: Archivovat
         edit: Upravit
+        new_clone: Duplikovat
         preview: Náhled
         save: Uložit
         show: Zobrazit
@@ -54,6 +55,11 @@ cs:
           title: Nastavení
         previews:
           add_atom: Vložit kapitolu
+          broken_preview:
+            title: Chybný obsahový blok
+          error_component:
+            title: Při načítání náhledu došlo k chybě. Náhled bude automaticky obnoven.
+
       back: Zpět
       base:
         atoms:

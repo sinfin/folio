@@ -1,22 +1,85 @@
-
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## 2025-01-22
+## [Unreleased]
+
 ### Added
 - added support for multi-locale `title` attributes in `Folio::AttributeType`
 
-## 2022-08-29
-### Added
-- added `VALID_SITE_TYPES` to atoms allowing to filter by `current_site` class
+## [6.1.1] - 2025-02-18
 
-## 2022-07-24
+### Added
+
+- `text_or_edit_link` in `Folio::Console::CatalogueCell` returns text or link according to ability
+
+### Changed
+
+- updated legacy audited usage on User, SiteUserLink and Address
+
+## [6.1.0] - 2025-02-07
+
+### Changed
+
+- automatically sort nested collection by position if possible in in `Folio::NestedFieldsComponent`
+- audited now uses a `Folio::Audited::Audit` with a custom `folio_data` jsonb column used to store data about atoms, attachments and other relations
+
+## [6.0.5] - 2025-02-03
+
+### Added
+
+- tooltip for disabled action
+
+### Changed
+
+- only pass preview token if unpublished in console index actions
+
+## [6.0.4] - 2025-01-13
+
+### Fixed
+
+- fixed clonable config for model Page
+
+## [6.0.3] - 2025-01-08
+
+### Added
+
+- added `RecordBar` component to ui, hook onto atom errors
+
+### Fixed
+
+- fixed simple form with atoms submission when atom form is open
+
+## [6.0.2] - 2025-01-06
+
+- added `Folio::Console::Clonable` concern together with `Folio::Clonable::Cloner` to allow cloning of records
+
+## [6.0.1] - 2024-12-11
+
+### Changed
+
+- changed react lazyloading from `react-lazyload` to native `loading="lazy"`
+
+## 2024-11-20
+### Removed
+- removed `current_site` helpers - use `Folio::Current.site` everywhere!
+- removed `Folio.current_site` - use `Folio::Current.site`
+- removed `Folio.main_site` - use `Folio::Current.main_site`
+- removed `Folio.site_for_mailers` - use `Folio::Current.site_for_mailers`
+- removed `Folio.enabled_site_for_crossdomain_devise` - use `Folio::Current.enabled_site_for_crossdomain_devise`
+- removed `Folio.site_for_crossdomain_devise` - use `Folio::Current.site_for_crossdomain_devise`
+- removed `current_user` usage - use `Folio::Current.user` everywhere!
+
+## 2024-08-29
+### Added
+- added `VALID_SITE_TYPES` to atoms allowing to filter by `Folio::Current.site` class
+
+## 2024-07-24
 ### Changed
 - changed `adaptive-title-font-size` to `font-size-adaptive`, added a `fs-adaptive` class name and `adaptive_font_size_class_name` method to `Folio::ApplicationComponent`
 ### Removed
 - removed `folio/mixins/_adaptive_title_font_size.sass`
 
-## 2022-06-28
+## 2024-06-28
 ### Removed
 - removed `Rails.application.config.folio_console_ability_lambda`. Use `app/overrides/models/folio/ability_override.rb` in your project instead.
 - removed obsolete `Rails.application.config.folio_site_validate_belongs_to_namespace`
@@ -178,7 +241,7 @@ folio/_message-bus       -> folio/message_bus
 
 ## 2022-11-28
 ### Added
-- added `Folio::PerSiteSingleton` and update console to use the locale of `current_site`
+- added `Folio::PerSiteSingleton` and update console to use the locale of `Folio::Current.site`
 
 ## 2022-11-14
 ### Changed
@@ -190,7 +253,7 @@ folio/_message-bus       -> folio/message_bus
 
 ## 2022-09-23
 ### Changed
-- refactored console site form - added tab configuration to `current_site.console_form_tabs` for easier extending in `main_app`
+- refactored console site form - added tab configuration to `Folio::Current.site.console_form_tabs` for easier extending in `main_app`
 
 ## 2022-07-19
 ### Changed

@@ -183,6 +183,9 @@ cs:
           attributes:
             roles:
               not_available_for_site: "Role %{roles} nejsou všechny dostupné pro web '%{site}'."
+      clonable:
+        association_not_found: "Asociace '%{association}' neexistuje pro %{model}"
+        attribute_not_found: "Atribut '%{attribute}' neexistuje pro %{model}"  
     models:
       folio/atom:
         few: Kapitoly

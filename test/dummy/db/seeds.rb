@@ -65,7 +65,7 @@ Folio::User.create!(first_name: "Test",
 puts "Created Folio::User test@test.test (superadmin)"
 
 puts "Creating Dummy::Menu::Nestable"
-menu = Dummy::Menu::Nestable.create!(locale: :cs, title: "Nestable", site: ::Folio.main_site)
+menu = Dummy::Menu::Nestable.create!(locale: :cs, title: "Nestable", site: ::Folio::Current.main_site)
 
 root = Folio::MenuItem.create!(menu:,
                                title: "Reference",
@@ -91,7 +91,7 @@ Folio::MenuItem.create!(menu:,
 puts "Created Dummy::Menu::Nestable"
 
 puts "Creating Dummy::Menu::Stylable"
-menu = Dummy::Menu::Stylable.create!(locale: :cs, title: "Stylable", site: ::Folio.main_site)
+menu = Dummy::Menu::Stylable.create!(locale: :cs, title: "Stylable", site: ::Folio::Current.main_site)
 
 Folio::MenuItem.create!(menu:,
                         title: "Reference",
@@ -111,7 +111,7 @@ Folio::MenuItem.create!(menu:,
 puts "Created Dummy::Menu::Stylable"
 
 puts "Creating Dummy::Menu::Header"
-menu = Dummy::Menu::Header.create!(locale: :cs, title: "Header", site: ::Folio.main_site)
+menu = Dummy::Menu::Header.create!(locale: :cs, title: "Header", site: ::Folio::Current.main_site)
 
 position = 0
 
@@ -178,7 +178,7 @@ puts "Created Dummy::Menu::Header"
 
 puts "Creating Dummy::Menu::Footer"
 
-menu = Dummy::Menu::Footer.create!(locale: :cs, title: "Footer", site: ::Folio.main_site)
+menu = Dummy::Menu::Footer.create!(locale: :cs, title: "Footer", site: ::Folio::Current.main_site)
 
 3.times do |i|
   Folio::MenuItem.create!(menu:,

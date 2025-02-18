@@ -17,6 +17,7 @@ class Dummy::Ui::ButtonComponent < ApplicationComponent
                  type: :button,
                  disabled: false,
                  onclick: nil,
+                 target: nil,
                  href: nil)
     @variant = variant
     @size = size
@@ -32,6 +33,7 @@ class Dummy::Ui::ButtonComponent < ApplicationComponent
     @disabled = disabled
     @type = type
     @href = href
+    @target = target
     @onclick = onclick
     @right_icon = right_icon
   end
@@ -46,6 +48,7 @@ class Dummy::Ui::ButtonComponent < ApplicationComponent
     if @href
       h[:tag] = :a
       h[:href] = @href
+      h[:target] = @target
     else
       h[:type] = @type
     end

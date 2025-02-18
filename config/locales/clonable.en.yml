@@ -1,0 +1,11 @@
+---
+en:
+  folio:
+    clonable:
+      cloner:
+        start: "Started cloning %{model} #%{id}"
+        associations_duplicated: "Associations duplicated: %{associations}"
+        finished: "Cloning finished"
+        error: "Cloning error: %{message}"
+      new_clone:
+        redirect_flash: "Cloning is not allowed"

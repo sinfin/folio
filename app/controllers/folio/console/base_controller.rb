@@ -5,7 +5,6 @@ require "csv"
 class Folio::Console::BaseController < Folio::ApplicationController
   include Folio::Console::DefaultActions
   include Folio::Console::Includes
-  include Folio::HasCurrentSite
   include Folio::ErrorsControllerBase
   include Pagy::Backend
 
@@ -94,7 +93,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
     end
 
     if klass.try(:audited_console_enabled?)
-      before_action :load_revisions, only: [klass.audited_console_view_name, :revision]
+      before_action :load_revisions, only: [:edit, :revision]
       before_action :find_revision, only: %i[revision restore]
     end
 
@@ -159,10 +158,10 @@ class Folio::Console::BaseController < Folio::ApplicationController
   helper_method :through_aware_console_url_for
 
   def set_i18n_locale
-    I18n.locale = if params[:locale] && current_site.locales.include?(params[:locale])
+    I18n.locale = if params[:locale] && Folio::Current.site.locales.include?(params[:locale])
       params[:locale]
     else
-      current_site.console_locale
+      Folio::Current.site.console_locale
     end
   end
 
@@ -247,7 +246,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
               :_destroy,
               *file_placements_strong_params] + Folio::Atom.strong_params
 
-      [{ atoms_attributes: base }] + current_site.locales.map do |locale|
+      [{ atoms_attributes: base }] + Folio::Current.site.locales.map do |locale|
         {
           "#{locale}_atoms_attributes": base,
         }
@@ -351,17 +350,19 @@ class Folio::Console::BaseController < Folio::ApplicationController
     def load_revisions
       return unless folio_console_record && folio_console_record.respond_to?(:revisions)
 
-      @audited_revisions = folio_console_record.revisions.reverse
+      @audited_audits = folio_console_record.audits.reverse
     end
 
     def find_revision
-      audit = folio_console_record.audits.find_by_version!(params[:version])
-      @audited_revision = audit.revision
-      @audited_revision.audit = audit
+      @audited_audit = folio_console_record.audits.find_by_version!(params[:version])
 
-      return unless @audited_revision.class.try(:has_audited_atoms?)
+      @audited_revision = @audited_audit.revision
 
-      @audited_revision.reconstruct_atoms
+      if @audited_revision.try(:type)
+        @audited_revision = @audited_revision.becomes(@audited_revision.type.constantize)
+      end
+
+      @audited_revision.reconstruct_folio_audited_data(audit: @audited_audit)
     end
 
     def add_through_breadcrumbs
@@ -410,7 +411,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
       if params[:action].to_sym == :stop_impersonating
         authorize!(:stop_impersonating, Folio::User)
       else
-        authorize!(:access_console, current_site)
+        authorize!(:access_console, Folio::Current.site)
       end
     end
 
@@ -472,7 +473,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
     end
 
     def allowed_record_sites
-      [current_site]
+      [Folio::Current.site]
     end
 
     def load_belongs_to_site_resource
@@ -545,7 +546,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
       return if request.path.start_with?("/console/api")
       return if request.path.start_with?("/console/atoms")
 
-      current_user.update_console_url!(request.url)
+      Folio::Current.user.update_console_url!(request.url)
     end
 
     def set_show_current_user_console_url_bar

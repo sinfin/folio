@@ -15,7 +15,7 @@ class Folio::LeadMailerTest < ActionMailer::TestCase
     lead = create(:folio_lead, note: "Foo Bar")
 
     mail = Folio::LeadMailer.notification_email(lead)
-    assert_equal [Folio.site_instance_for_mailers.email], mail.to
+    assert_equal [Folio::Current.site_for_mailers.email], mail.to
     assert_match "Foo Bar", mail.body.encoded
 
     mail.deliver
@@ -25,14 +25,15 @@ class Folio::LeadMailerTest < ActionMailer::TestCase
 
     assert mail.text_part.decoded.include?("Telefon")
     assert mail.html_part.decoded.include?("Telefon")
+  end
 
-    ActionMailer::Base.deliveries.clear
-
-    # ---
-    # English locale
+  test "notification_email - english" do
     @site.update!(locale: :en)
+
+    lead = create(:folio_lead, note: "Foo Bar")
+
     mail = Folio::LeadMailer.notification_email(lead)
-    assert_equal [Folio.site_instance_for_mailers.email], mail.to
+    assert_equal [Folio::Current.site_for_mailers.email], mail.to
     assert_match "Foo Bar", mail.body.encoded
 
     mail.deliver

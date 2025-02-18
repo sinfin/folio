@@ -69,7 +69,7 @@
                   = status_icon(site_link.roles.present? && site_link.roles.include?(role_key))
                   = role_label
 
-          - if site_link.persisted? || site_link.site == Folio.main_site
+          - if site_link.persisted? || site_link.site == Folio::Current.main_site
             .f-c-site-user-links-fields__link-toggle-wrap
               - if site_link.persisted?
                 = render(Folio::Console::Ui::BooleanToggleComponent.new(record: site_link,

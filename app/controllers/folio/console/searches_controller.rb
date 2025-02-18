@@ -4,7 +4,7 @@ class Folio::Console::SearchesController < Folio::Console::BaseController
   add_breadcrumb I18n.t("folio.console.breadcrumbs.searches"), :console_search_path
 
   def show
-    authorize! :multisearch_console, current_site
+    authorize! :multisearch_console, Folio::Current.site
 
     @query = ActionController::Base.helpers.sanitize(params[:q].to_s)
 

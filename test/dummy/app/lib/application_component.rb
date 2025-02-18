@@ -5,8 +5,6 @@ class ApplicationComponent < Folio::ApplicationComponent
 
   %i[
     cache_key_base
-    current_user
-    user_signed_in?
     current_header_menu
     current_footer_menu
   ].each do |name|
@@ -19,7 +17,7 @@ class ApplicationComponent < Folio::ApplicationComponent
     if controller.respond_to?(:current_page_singleton)
       controller.current_page_singleton(klass, fail_on_missing:)
     else
-      klass.instance(fail_on_missing:, site: current_site)
+      klass.instance(fail_on_missing:, site: Folio::Current.site)
     end
   end
 

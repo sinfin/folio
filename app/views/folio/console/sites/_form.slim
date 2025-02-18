@@ -6,10 +6,10 @@ ruby:
 
 = form_header f, right: cache_clear_button
 
-= tabs current_site.console_form_tabs
+= tabs Folio::Current.site.console_form_tabs
 
 .tab-content
-  - current_site.console_form_tabs.each do |tab_key|
+  - Folio::Current.site.console_form_tabs.each do |tab_key|
     = tab tab_key
       = render partial: "folio/console/sites/form_tabs/#{tab_key}",
                locals: { f: f }

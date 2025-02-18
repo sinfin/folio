@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { forceCheck } from 'react-lazyload'
 import { uniqueId } from 'lodash'
 
 import { getFiles, messageBusFileUpdated, makeFilesLoadedSelector } from 'ducks/files'
@@ -21,7 +20,6 @@ class FilesApp extends Component {
       this.loadFiles(this.props.app.fileType, this.props.app.filesUrl)
     }
     this.listenOnMessageBus()
-    window.addEventListener('checkLazyload', forceCheck)
   }
 
   loadFiles = (fileType, filesUrl) => {

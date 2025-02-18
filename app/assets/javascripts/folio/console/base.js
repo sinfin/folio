@@ -52,7 +52,6 @@
 // must be under folio/input
 //= require daterangepicker.min
 
-//= require folio/console/_bootstrap-tabs-lazyload
 //= require folio/console/_cocoon-set-position
 //= require folio/console/_data-auto-submit
 //= require folio/console/_data-change-value
@@ -76,6 +75,7 @@
 //= require folio/console/addresses/fields/fields
 //= require folio/console/atoms/layout_switch/layout_switch
 //= require folio/console/atoms/locale_switch/locale_switch
+//= require folio/console/atoms/previews/error_component
 //= require folio/console/atoms/word_count_component
 //= require folio/console/catalogue/catalogue
 //= require folio/console/clipboard_copy/clipboard_copy

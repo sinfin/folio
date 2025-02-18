@@ -3,7 +3,7 @@
 class Folio::Console::Atoms::LocaleSwitchCell < Folio::ConsoleCell
   def locales
     if model.class.try(:atom_locales)
-      filtered = model.class.atom_locales & current_site.locales_as_sym
+      filtered = model.class.atom_locales & Folio::Current.site.locales_as_sym
 
       if filtered.present?
         filtered

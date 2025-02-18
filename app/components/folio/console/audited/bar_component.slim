@@ -3,7 +3,7 @@
     .f-c-audited-bar__flex
       .f-c-audited-bar__label
         strong<> = t('.version')
-        = l(@audited_revision.audit.created_at, format: :short)
+        = l(@audit.created_at, format: :short)
 
       = restore_link
 

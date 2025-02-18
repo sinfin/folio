@@ -43,6 +43,19 @@ module Folio::Console::DefaultActions
     folio_console_record.valid? if params[:prevalidate]
   end
 
+  def new_clone
+    if folio_console_record.class.try(:is_clonable?)
+      cloned_record = Folio::Clonable::Cloner.new(folio_console_record).create_clone
+      cloned_record.after_clone
+
+      instance_variable_set(folio_console_record_variable_name, cloned_record)
+      render :new
+    else
+      redirect_to url_for([:console, @klass]),
+                  flash: { error: I18n.t("folio.clonable.new_clone.redirect_flash") }
+    end
+  end
+
   def merge
     @folio_console_merge = @klass
     index
@@ -51,7 +64,7 @@ module Folio::Console::DefaultActions
 
   def new
     if @klass.try(:has_belongs_to_site?)
-      folio_console_record.site = current_site
+      folio_console_record.site = Folio::Current.site
     end
   end
 
@@ -132,7 +145,7 @@ module Folio::Console::DefaultActions
 
   def revision
     instance_variable_set(folio_console_record_variable_name, @audited_revision)
-    render @klass.audited_console_view_name
+    render :edit
   end
 
   def restore
@@ -247,7 +260,7 @@ module Folio::Console::DefaultActions
 
     def folio_console_params_with_site
       if @klass.try(:add_site_to_console_params?)
-        folio_console_params.merge(site: current_site)
+        folio_console_params.merge(site: Folio::Current.site)
       else
         folio_console_params
       end

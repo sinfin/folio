@@ -28,11 +28,11 @@ table
       = I18n.l(time_after_dst.in_time_zone("Prague"))
   tr
     td
-      = "User explicit: #{current_user.time_zone}"
+      = "User explicit: #{Folio::Current.user.time_zone}"
     td
-      = I18n.l(time_before_dst.in_time_zone(current_user.time_zone))
+      = I18n.l(time_before_dst.in_time_zone(Folio::Current.user.time_zone))
     td
-      = I18n.l(time_after_dst.in_time_zone(current_user.time_zone))
+      = I18n.l(time_after_dst.in_time_zone(Folio::Current.user.time_zone))
   tr
     td
       = "Application config: #{Rails.configuration.time_zone}"

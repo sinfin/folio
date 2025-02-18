@@ -54,6 +54,8 @@ class Folio::Site < Folio::ApplicationRecord
 
   validate :system_emails_should_be_valid
 
+  after_commit :nillify_folio_current_site_records
+
   def self.additional_params
     []
   end
@@ -241,6 +243,10 @@ class Folio::Site < Folio::ApplicationRecord
           end
         end
       end
+    end
+
+    def nillify_folio_current_site_records
+      Folio::Current.nillify_site_records
     end
 end
 

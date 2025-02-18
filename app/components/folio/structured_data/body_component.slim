@@ -1,2 +1,3 @@
-script type="application/ld+json"
-  = structured_data.to_json.html_safe
+- cache_if @cache_key, @cache_key, expires_in: Folio.expires_in
+  script type="application/ld+json"
+    = structured_data.to_json.html_safe

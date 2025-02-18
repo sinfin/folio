@@ -1,0 +1,25 @@
+.f-c-ui-dropdown.dropdown
+  .f-c-ui-dropdown__trigger[
+    class="dropdown-toggle"
+    class=(content? ? "f-c-ui-dropdown__trigger--with-content" : "f-c-ui-dropdown__trigger--without-content")
+    aria-expanded="false"
+    aria-haspopup="true"
+    data-bs-toggle="dropdown"
+  ]
+    - if content?
+      span.f-c-ui-dropdown__content
+        = content
+    - else
+      span.f-c-ui-dropdown__dots
+        = folio_icon(:dots_vertical)
+
+  .f-c-ui-dropdown__menu[
+    class="dropdown-menu"
+    class=(@menu_align == :right ? "dropdown-menu-right" : nil)
+  ]
+    - @links.each do |link|
+      - if link[:tooltip].present?
+        span data=stimulus_tooltip(link[:tooltip])
+          == cell_content_for_link(link)
+      - else
+        == cell_content_for_link(link)

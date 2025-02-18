@@ -48,6 +48,10 @@ module Folio::HasAttachments
   end
 
   class_methods do
+    def has_folio_attachments?
+      true
+    end
+
     def has_many_placements(targets, placement:, placements_key: nil)
       placements_key ||= "#{targets.to_s.singularize}_placements".to_sym
 
@@ -125,6 +129,27 @@ module Folio::HasAttachments
 
     def run_pregenerate_thumbnails_check_job?
       false
+    end
+
+    def folio_attachment_keys
+      h = { has_one: [], has_many: [] }
+
+      reflect_on_all_associations.each do |reflection|
+        if reflection.options && reflection.options[:class_name]
+          next if reflection.name == :file_placements
+          klass = reflection.options[:class_name].safe_constantize
+
+          if klass && klass <= Folio::FilePlacement::Base
+            if reflection.is_a?(ActiveRecord::Reflection::HasManyReflection)
+              h[:has_many] << reflection.name
+            else
+              h[:has_one] << reflection.name
+            end
+          end
+        end
+      end
+
+      h
     end
   end
 

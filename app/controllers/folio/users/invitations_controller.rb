@@ -8,12 +8,12 @@ class Folio::Users::InvitationsController < Devise::InvitationsController
   before_action :disallow_public_invitations_if_needed, only: %i[create new]
 
   def new
-    if Rails.application.config.folio_crossdomain_devise && current_site != ::Folio.enabled_site_for_crossdomain_devise
+    if Rails.application.config.folio_crossdomain_devise && Folio::Current.site != ::Folio::Current.enabled_site_for_crossdomain_devise
       session[Folio::Devise::CrossdomainHandler::SESSION_KEY] ||= {}
-      session[Folio::Devise::CrossdomainHandler::SESSION_KEY][:target_site_slug] = current_site.slug
+      session[Folio::Devise::CrossdomainHandler::SESSION_KEY][:target_site_slug] = Folio::Current.site.slug
 
       redirect_to new_user_invitation_url(only_path: false,
-                                          host: ::Folio.enabled_site_for_crossdomain_devise.env_aware_domain),
+                                          host: ::Folio::Current.enabled_site_for_crossdomain_devise.env_aware_domain),
                   allow_other_host: true
     else
       super
@@ -34,7 +34,7 @@ class Folio::Users::InvitationsController < Devise::InvitationsController
 
     if source_site_for_user.present? && resource_invited
       resource.update_column(:source_site_id, source_site_for_user.id)
-      resource.create_site_links_for([current_site, source_site_for_user])
+      resource.create_site_links_for([Folio::Current.site, source_site_for_user])
     end
 
 
@@ -137,7 +137,7 @@ class Folio::Users::InvitationsController < Devise::InvitationsController
         return Folio::Site.find(site_slug)
       end
 
-      current_site
+      Folio::Current.site
     end
 
     def require_no_authentication
@@ -145,9 +145,9 @@ class Folio::Users::InvitationsController < Devise::InvitationsController
 
       super
 
-      if resource.nil? && current_user
+      if resource.nil? && Folio::Current.user
         set_flash_message(:alert, "already_authenticated", scope: "devise.failure")
-        redirect_to after_sign_in_path_for(current_user)
+        redirect_to after_sign_in_path_for(Folio::Current.user)
       end
     end
 

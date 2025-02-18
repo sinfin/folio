@@ -3,6 +3,7 @@
 module Folio::FormsHelper
   def folio_nested_fields(f,
                           key,
+                          collection: nil,
                           add: true,
                           destroy: true,
                           position: true,
@@ -16,6 +17,7 @@ module Folio::FormsHelper
                           &block)
     render(Folio::NestedFieldsComponent.new(f:,
                                             key:,
+                                            collection:,
                                             add:,
                                             destroy:,
                                             position:,

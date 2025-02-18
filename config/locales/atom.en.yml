@@ -1,0 +1,8 @@
+---
+en:
+  folio:
+    atom:
+      audited:
+        invalid_component:
+          title: Could not restore the atom
+          subtitle: The settings of the atom have changed or the referenced records have been removed.

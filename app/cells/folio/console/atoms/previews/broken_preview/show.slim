@@ -1,0 +1,45 @@
+.f-c-atoms-previews-broken-preview.my-atom
+  .container-fluid
+    .f-c-atoms-previews-broken-preview__box
+      = folio_icon(:alert)
+
+      .fs-text-l.fw-bold
+        = model[:title] || t('.title')
+
+      - if model[:subtitle]
+        .fs-text-l
+          = model[:subtitle]
+
+      - if model[:atom]
+        .fs-text-l
+          = model[:atom].class.model_name.human
+
+      - if model[:atoms].present?
+        .fs-text-l
+          = model[:atoms].first.class.model_name.human
+
+      - if model[:error]
+        .small
+          = "#{model[:error].class}: #{model[:error].message}"
+
+      - if model[:error_text].present?
+        .small
+          = model[:error_text]
+
+      .f-c-atoms-previews-broken-preview__buttons
+        - if model[:edit] != false
+          button.btn[
+            type="button"
+            class="f-c-atoms-previews-broken-preview__button"
+            class="f-c-atoms-previews-broken-preview__button--edit"
+          ]
+            = folio_icon(:edit)
+            = t('folio.console.actions.edit')
+
+        button.btn[
+          type="button"
+          class="f-c-atoms-previews-broken-preview__button"
+          class="f-c-atoms-previews-broken-preview__button--destroy"
+        ]
+          = folio_icon(:delete)
+          = t('folio.console.actions.destroy')

@@ -75,10 +75,6 @@ class Folio::ApplicationComponent < ViewComponent::Base
     end
   end
 
-  def current_site
-    controller.current_site
-  end
-
   def atom_cover_placement(atom = nil)
     atom ||= @atom
 
@@ -102,30 +98,19 @@ class Folio::ApplicationComponent < ViewComponent::Base
   end
 
   def current_user_with_test_fallback
-    if Rails.env.test?
-      if @current_user_for_test
-        @current_user_for_test
-      else
-        begin
-          current_user
-        rescue StandardError
-        end
-      end
+    if Rails.env.test? && @current_user_for_test
+      @current_user_for_test
     else
-      current_user
+      Folio::Current.user
     end
   end
 
   def true_user_with_test_fallback
     if Rails.env.test?
-      if @true_user_for_test
-        @true_user_for_test
-      else
-        begin
+      @true_user_for_test || begin
           controller.try(:true_user)
         rescue StandardError
         end
-      end
     else
       controller.try(:true_user)
     end

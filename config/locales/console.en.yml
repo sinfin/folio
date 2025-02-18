@@ -7,12 +7,13 @@ en:
         arrange: Arrange
         back: Back
         cancel: Cancel
+        close: Close
         confirm: Confirm
         continue: Continue
-        close: Close
         destroy: Destroy
         discard: Archive
         edit: Edit
+        new_clone: Clone
         preview: Preview
         save: Save
         show: Show
@@ -54,6 +55,10 @@ en:
           title: Settings
         previews:
           add_atom: Insert chapter
+          broken_preview:
+            title: Broken content block
+          error_component:
+            title: Error loading preview. Preview will be automatically reloaded.
       back: Zpět
       base:
         atoms:

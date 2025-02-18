@@ -54,6 +54,9 @@ cs:
       accept: Ano
       cancel: Ne
     confirmation: Určitě?
+    console:
+        clone:
+          cloned_title: "%{original_title} – duplikát %{date}"
 
   head:
     description: ''

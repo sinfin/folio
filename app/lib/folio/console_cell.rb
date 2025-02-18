@@ -32,7 +32,7 @@ class Folio::ConsoleCell < Folio::ApplicationCell
     args = {}
 
     if record.respond_to?(:published?) && token = record.try(:preview_token)
-      args[Folio::Publishable::PREVIEW_PARAM_NAME] = token
+      args[Folio::Publishable::PREVIEW_PARAM_NAME] = token unless record.published?
     end
 
     if record.respond_to?(:locale)
@@ -41,8 +41,8 @@ class Folio::ConsoleCell < Folio::ApplicationCell
       args[:locale] = I18n.locale
     end
 
-    if current_site.locale.present? && current_site.locales.present? && current_site.locales.exclude?(args[:locale].to_s)
-      args[:locale] = current_site.locale
+    if args[:locale] && Folio::Current.site.locale.present? && Folio::Current.site.locales.present? && Folio::Current.site.locales.exclude?(args[:locale].to_s)
+      args[:locale] = Folio::Current.site.locale
     end
 
     begin

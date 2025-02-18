@@ -14,7 +14,7 @@ class Folio::Console::Api::PrivateAttachmentsControllerTest < Folio::Console::Ba
   end
 
   test "create" do
-    attachmentable = PageWithAttachments.create!(title: "PageWithAttachments", site: Folio.main_site)
+    attachmentable = PageWithAttachments.create!(title: "PageWithAttachments", site: Folio::Current.main_site)
     user = Folio::User.superadmins.last
 
     sign_out user
@@ -50,7 +50,7 @@ class Folio::Console::Api::PrivateAttachmentsControllerTest < Folio::Console::Ba
   end
 
   test "destroy" do
-    attachmentable = PageWithAttachments.create!(title: "PageWithAttachments", site: Folio.main_site)
+    attachmentable = PageWithAttachments.create!(title: "PageWithAttachments", site: Folio::Current.main_site)
     private_attachment = Folio::PrivateAttachment.create!(
       attachmentable:,
       file: Folio::Engine.root.join("test/fixtures/folio/test.gif")

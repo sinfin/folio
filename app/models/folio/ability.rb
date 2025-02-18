@@ -11,7 +11,7 @@ class Folio::Ability
     @site = site
 
     alias_action :manage, to: :do_anything
-    alias_action :index, :show, :new, :create, :edit, :update, :destroy, :set_positions, :create_defaults, to: :crud
+    alias_action :index, :show, :new, :create, :edit, :update, :destroy, :set_positions, :create_defaults, :new_clone, to: :crud
 
     ability_rules
   end
@@ -72,6 +72,7 @@ class Folio::Ability
       cannot :impersonate, Folio::User # `can :do_anything` enabled it, so we must deny it here
       cannot :set_superadmin, Folio::User
       cannot :change_auth_site, Folio::User
+      cannot :new_clone, :all unless Rails.application.config.folio_console_clonable_enabled
     end
   end
   alias_method :folio_console_rules, :folio_rules
@@ -83,7 +84,7 @@ class Folio::Ability
     can [:new], Folio::User # new user do not belong to site yet
 
     can :do_anything, Folio::SiteUserLink, { site: }
-    can :do_anything, Folio::File, { site: Rails.application.config.folio_shared_files_between_sites ? [Folio.main_site, site] : site }
+    can :do_anything, Folio::File, { site: Rails.application.config.folio_shared_files_between_sites ? [Folio::Current.main_site, site] : site }
     can :do_anything, Folio::Page, { site: }
     can :do_anything, Folio::Menu, { site: }
     can :do_anything, Folio::Lead, { site: }
