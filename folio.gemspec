@@ -77,9 +77,9 @@ Gem::Specification.new do |s|
   s.add_dependency "sidekiq", "~> 6.5"
   s.add_dependency "simple_form"
   s.add_dependency "sitemap_generator"
-  # s.add_dependency "cells-slim", "~> 0.1.1" # need to be in Gemfile
-  # s.add_dependency "cells-rails", "~> 0.1.5" # need to be in Gemfile
-  s.add_dependency "slim-rails" # need to be in Gemfile
+  s.add_dependency "cells-slim"
+  s.add_dependency "cells-rails"
+  s.add_dependency "slim-rails"
   s.add_dependency "slim"
   s.add_dependency "traco"
   s.add_dependency "turbolinks"
