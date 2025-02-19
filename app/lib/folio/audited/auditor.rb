@@ -66,7 +66,7 @@ class Folio::Audited::Auditor
 
     if @record.class.respond_to?(:atom_keys)
       @record.class.atom_keys.each do |atom_key|
-        if @record.send(atom_key).any? { |atom| atom.changed? || atom.marked_for_destruction? }
+        if @record.send(atom_key).any? { |atom| atom.nillify_blanks; atom.changed? || atom.marked_for_destruction? }
           ary << "atoms"
         end
       end
@@ -77,6 +77,7 @@ class Folio::Audited::Auditor
 
       keys[:has_one].each do |key|
         fp = @record.send(key)
+        fp.nillify_blanks if fp
 
         if fp && (fp.changed? || fp.marked_for_destruction?)
           ary << key.to_s
@@ -84,7 +85,7 @@ class Folio::Audited::Auditor
       end
 
       keys[:has_many].each do |key|
-        if @record.send(key).any? { |fp| fp.changed? || fp.marked_for_destruction? }
+        if @record.send(key).any? { |fp| fp.nillify_blanks; fp.changed? || fp.marked_for_destruction? }
           ary << key.to_s
         end
       end
@@ -94,13 +95,17 @@ class Folio::Audited::Auditor
       @record.class.folio_audited_data_additional_keys.each do |key|
         collection_or_record = @record.send(key)
 
-        if collection_or_record.is_a?(ActiveRecord::Relation)
-          if collection_or_record.any? { |r| r.changed? || r.marked_for_destruction? }
-            ary << key.to_s
-          end
-        else
-          if collection_or_record.changed? || collection_or_record.marked_for_destruction?
-            ary << key.to_s
+        if collection_or_record.present?
+          if collection_or_record.is_a?(ActiveRecord::Relation)
+            if collection_or_record.any? { |r| r.try(:nillify_blanks); r.changed? || r.marked_for_destruction? }
+              ary << key.to_s
+            end
+          else
+            collection_or_record.try(:nillify_blanks)
+
+            if collection_or_record.changed? || collection_or_record.marked_for_destruction?
+              ary << key.to_s
+            end
           end
         end
       end

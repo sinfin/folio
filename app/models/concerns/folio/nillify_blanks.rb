@@ -13,13 +13,12 @@ module Folio::NillifyBlanks
     end
   end
 
-  private
-    def nillify_blanks
-      attributes.each do |column, value|
-        next if self.class.non_nillifiable_fields.include?(column)
-        if value.blank? && !value.nil? && value != false
-          self[column] = nil
-        end
+  def nillify_blanks
+    attributes.each do |column, value|
+      next if self.class.non_nillifiable_fields.include?(column)
+      if value.blank? && !value.nil? && value != false
+        self[column] = nil
       end
     end
+  end
 end
