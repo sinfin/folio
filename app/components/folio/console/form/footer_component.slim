@@ -103,10 +103,6 @@ javascript:
       w.document.addEventListener("readystatechange", (event) => {
         callback()
       }, { once: true })
-
-      w.addEventListener("load", (event) => {
-        callback()
-      }, { once: true })
     }
 
     window.FolioConsole.Autosave.restoreUiState = ({ clear }) => {

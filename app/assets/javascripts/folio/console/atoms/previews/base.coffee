@@ -265,11 +265,11 @@ unbindSortables = ->
   $('.f-c-atoms-previews__locale.ui-sortable').each ->
     $(this).sortable('destroy')
 
-handleNewHtml = ->
+handleNewHtml = (opts) ->
   bindSortables()
   lazyloadAll()
   sendResizeMessage()
-  restoreScrollTop()
+  restoreScrollTop() unless opts and opts.scroll is false
   $(document).trigger('folioConsoleReplacedHtml')
 
 handleWillReplaceHtml = ->
@@ -279,12 +279,20 @@ handleWillReplaceHtml = ->
 
 previousScrollTop = 0
 dontStoreScrollTop = false
+scrollTopCallbacksRun = true
+windowLoaded = false
 
 storeScrollTop = ->
-  return if dontStoreScrollTop
-  previousScrollTop = window.scrollY
+  return unless scrollTopCallbacksRun
+
+  if dontStoreScrollTop
+    dontStoreScrollTop = false
+  else
+    previousScrollTop = window.scrollY
 
 restoreScrollTop = ->
+  return unless scrollTopCallbacksRun
+
   dontStoreScrollTop = false
   window.scrollTo({ top: previousScrollTop || 0, behavior: 'instant' })
 
@@ -328,19 +336,22 @@ $(window).on 'resize orientationchange', sendResizeMessage
 setScrollTopCallbacks = (top) ->
   previousScrollTop = top
   dontStoreScrollTop = true
+  scrollTopCallbacksRun = false
 
   callback = ->
     window.scrollTo
       top: top
       behavior: 'instant'
 
-  callback()
+  loadCallback = ->
+    callback()
+    scrollTopCallbacksRun = true
 
-  document.addEventListener "DOMContentLoaded", callback, { once: true }
-
-  document.addEventListener "readystatechange", callback, { once: true }
-
-  window.addEventListener "load", callback, { once: true }
+  if windowLoaded
+    loadCallback()
+  else
+    callback()
+    document.addEventListener "readystatechange", loadCallback, { once: true }
 
 receiveMessage = (e) ->
   return if e.origin isnt window.origin
@@ -357,6 +368,8 @@ window.addEventListener('message', receiveMessage, false)
 
 $ ->
   setMediaQuery()
-  handleNewHtml()
+  handleNewHtml({ scroll: false })
   sendMediaQueryRequest()
-  $(window).one 'load', -> sendResizeMessage()
+  $(window).one 'load', ->
+    windowLoaded = true
+    sendResizeMessage()
