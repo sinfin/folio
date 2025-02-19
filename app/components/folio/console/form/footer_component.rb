@@ -36,6 +36,7 @@ class Folio::Console::Form::FooterComponent < Folio::Console::ApplicationCompone
                           collapsed: true,
                           settings: false,
                           autosave_enabled: (@record && @record.try(:folio_autosave_enabled?)) || false,
+                          autosave_paused: false,
                           autosave_timer: -1,
                         },
                         action: {
@@ -52,6 +53,8 @@ class Folio::Console::Form::FooterComponent < Folio::Console::ApplicationCompone
                           "submit@document" => "onDocumentSubmit",
                           "f-nested-fields:add@document" => "onNestedFieldsAdd",
                           "f-nested-fields:destroyed@document" => "onNestedFieldsDestroyed",
+                          "f-input-collection-remote-select:open@document" => "onSelect2Open",
+                          "f-input-collection-remote-select:close@document" => "onSelect2Close",
                           "f-c-form-footer:resumeAutosave" => "onResumeAutosave",
                           "f-c-form-footer:pauseAutosave" => "onPauseAutosave",
                         })

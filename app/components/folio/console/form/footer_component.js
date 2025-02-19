@@ -28,6 +28,7 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
     collapsed: Boolean,
     settings: Boolean,
     autosaveEnabled: Boolean,
+    autosavePaused: { type: Boolean, default: false },
     autosaveTimer: { type: Number, default: -1 }
   }
 
@@ -73,8 +74,8 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
 
   queueAutosaveIfPossible (target) {
     if (!this.autosaveEnabledValue || !window.FolioConsole.Autosave.enabled) return
-    if (target && this.lastTargetCache && target === this.lastTargetCache && this.autosaveTimerValue > 0) return
-    if (document.querySelector('.f-c-simple-form-with-atoms--editing-atom')) return
+    if (this.autosavePausedValue) return
+    if (target && this.lastTargetCache && target === this.lastTargetCache && this.autosaveTimerValue > 0 && target.type !== 'checkbox') return
 
     this.lastTargetCache = target
 
@@ -303,19 +304,29 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
     window.FolioConsole.Autosave.restoreUiState({ clear: true })
   }
 
-  restartAutosave () {
-    if (this.autosaveTimerValue && this.autosaveTimerValue > 0) {
-      this.autosaveTimerValue = 10 * window.FolioConsole.Autosave.TIMER_SECONDS
-    } else {
-      this.queueAutosaveIfPossible()
-    }
-  }
-
   onNestedFieldsAdd () {
     this.pauseAutosave()
   }
 
   onNestedFieldsDestroyed () {
-    this.restartAutosave()
+    this.queueAutosaveIfPossible()
+  }
+
+  autosavePausedValueChanged (to, from) {
+    if (to === from) return
+
+    if (this.autosavePausedValue) {
+      this.pauseAutosave()
+    } else {
+      this.resumeAutosave()
+    }
+  }
+
+  onSelect2Open () {
+    this.autosavePausedValue = true
+  }
+
+  onSelect2Close () {
+    this.autosavePausedValue = false
   }
 })
