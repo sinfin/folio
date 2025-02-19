@@ -51,7 +51,6 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
     this.fieldsWrapTarget.insertAdjacentHTML('beforeend', this.htmlFromTemplate())
     this.redoPositions()
     this.dispatch('add', { detail: { field: this.fieldsTargets[this.fieldsTargets.length - 1] } })
-    window.FolioConsole.Autosave.pause()
     this.element.dispatchEvent(new CustomEvent('f-nested-fields:add', { bubbles: true }))
   }
 
@@ -89,6 +88,7 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
 
       this.redoPositions()
       this.dispatch('destroyed')
+      this.element.dispatchEvent(new CustomEvent('f-nested-fields:destroyed', { bubbles: true }))
     }, 'remove')
   }
 

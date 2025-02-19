@@ -302,4 +302,20 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
     if (!window.FolioConsole.Autosave.restoreUiState) return
     window.FolioConsole.Autosave.restoreUiState({ clear: true })
   }
+
+  restartAutosave () {
+    if (this.autosaveTimerValue && this.autosaveTimerValue > 0) {
+      this.autosaveTimerValue = 10 * window.FolioConsole.Autosave.TIMER_SECONDS
+    } else {
+      this.queueAutosaveIfPossible()
+    }
+  }
+
+  onNestedFieldsAdd () {
+    this.pauseAutosave()
+  }
+
+  onNestedFieldsDestroyed () {
+    this.restartAutosave()
+  }
 })

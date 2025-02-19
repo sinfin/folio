@@ -50,6 +50,8 @@ class Folio::Console::Form::FooterComponent < Folio::Console::ApplicationCompone
                           "atomsFormShown@document" => "onDocumentAtomsFormShown",
                           "shown.bs.tab@document" => "onDocumentBsTabShown",
                           "submit@document" => "onDocumentSubmit",
+                          "f-nested-fields:add@document" => "onNestedFieldsAdd",
+                          "f-nested-fields:destroyed@document" => "onNestedFieldsDestroyed",
                           "f-c-form-footer:resumeAutosave" => "onResumeAutosave",
                           "f-c-form-footer:pauseAutosave" => "onPauseAutosave",
                         })
