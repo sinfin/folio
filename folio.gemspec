@@ -29,7 +29,6 @@ Gem::Specification.new do |s|
   s.add_dependency "breadcrumbs_on_rails"
   s.add_dependency "cancancan"
   s.add_dependency "cocoon"
-  s.add_dependency "coffee-rails", "~> 5.0"
   s.add_dependency "countries"
   s.add_dependency "country_select"
   s.add_dependency "deepl-rb"
