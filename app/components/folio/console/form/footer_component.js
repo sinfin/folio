@@ -108,6 +108,15 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
     return form === targetForm
   }
 
+  onDocumentInput (e) {
+    if (!this.isFromProperForm(e)) return
+
+    if (e && e.target && e.target.tagName === 'SELECT') {
+      this.pauseAutosave()
+      this.resumeAutosave()
+    }
+  }
+
   onDocumentChange (e) {
     if (!this.isFromProperForm(e)) return
 

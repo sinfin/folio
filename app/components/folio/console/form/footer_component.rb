@@ -41,6 +41,7 @@ class Folio::Console::Form::FooterComponent < Folio::Console::ApplicationCompone
                         action: {
                           "message@window" => "onWindowMessage",
                           "change@document" => "onDocumentChange",
+                          "input@document" => "onDocumentInput",
                           "focusin@document" => "onDocumentFocusin",
                           "focusout@document" => "onDocumentFocusout",
                           "folioConsoleCustomChange@document" => "onDocumentChange",
