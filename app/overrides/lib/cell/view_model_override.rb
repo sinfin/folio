@@ -3,7 +3,7 @@
 # bring back rails methods removed in 0.1.1
 
 Cell::ViewModel.class_eval do
-  def with_output_buffer(block_buffer=Cell::ViewModel::OutputBuffer.new)
+  def with_output_buffer(block_buffer = Cell::ViewModel::OutputBuffer.new)
     @output_buffer, old_buffer = block_buffer, @output_buffer
     yield
     @output_buffer = old_buffer
