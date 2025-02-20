@@ -11,7 +11,7 @@ window.Folio.formToHash = (form) => {
       hash[key] = value
     } else {
       const cleanParts = parts.map((part) => part.replace(']', ''))
-      const isArray = cleanParts[cleanParts.length - 1] === ""
+      const isArray = cleanParts[cleanParts.length - 1] === ''
 
       if (isArray) cleanParts.pop()
 
@@ -24,7 +24,7 @@ window.Folio.formToHash = (form) => {
           if (isArray) {
             if (!runner[cleanParts[i]]) runner[cleanParts[i]] = []
 
-            if (value !== "") {
+            if (value !== '') {
               runner[cleanParts[i]].push(value)
             }
           } else {

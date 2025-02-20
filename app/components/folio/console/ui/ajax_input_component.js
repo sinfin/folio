@@ -28,7 +28,7 @@ window.Folio.Stimulus.register('f-c-ui-ajax-input', class extends window.Stimulu
   }
 
   onKeyUp (e) {
-    if (e.code === 'Enter' && this.inputTarget.tagName !== "TEXTAREA") return this.save()
+    if (e.code === 'Enter' && this.inputTarget.tagName !== 'TEXTAREA') return this.save()
 
     if (this.element.classList.contains('f-c-ui-ajax-input--loading')) {
       e.preventDefault()

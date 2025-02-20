@@ -82,10 +82,10 @@ function responseToHtml (response) {
     if (response.url) {
       const urlObj = new URL(response.url)
       const queryParams = urlObj.searchParams
-      const anchor = queryParams.get("_anchor")
+      const anchor = queryParams.get('_anchor')
 
       if (anchor) {
-        queryParams.delete("_anchor")
+        queryParams.delete('_anchor')
         urlObj.search = queryParams.toString()
         return Promise.resolve(`{ "data": { "redirected": "${urlObj}#${anchor}" }}`)
       }

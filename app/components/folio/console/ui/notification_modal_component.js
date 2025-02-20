@@ -97,7 +97,7 @@ window.Folio.Stimulus.register('f-c-ui-notification-modal', class extends window
       if (data.cancel) {
         buttonsData.push({
           variant: 'tertiary',
-          label: typeof data.cancel === "string" ? data.cancel : window.Folio.i18n(window.FolioConsole.Ui.NotificationModal.i18n, 'close'),
+          label: typeof data.cancel === 'string' ? data.cancel : window.Folio.i18n(window.FolioConsole.Ui.NotificationModal.i18n, 'close'),
           data: { controller: 'f-modal-close', action: 'f-modal-close#click' }
         })
       }
@@ -105,7 +105,7 @@ window.Folio.Stimulus.register('f-c-ui-notification-modal', class extends window
       if (data.submit) {
         buttonsData.push({
           variant: 'primary',
-          label: typeof data.submit === "string" ? data.submit : window.Folio.i18n(window.FolioConsole.Ui.NotificationModal.i18n, 'submit'),
+          label: typeof data.submit === 'string' ? data.submit : window.Folio.i18n(window.FolioConsole.Ui.NotificationModal.i18n, 'submit'),
           data: { action: 'f-c-ui-notification-modal#submit' }
         })
 
@@ -117,7 +117,7 @@ window.Folio.Stimulus.register('f-c-ui-notification-modal', class extends window
       if (data.confirm) {
         buttonsData.push({
           variant: 'primary',
-          label: typeof data.confirm === "string" ? data.confirm : window.Folio.i18n(window.FolioConsole.Ui.NotificationModal.i18n, 'confirm'),
+          label: typeof data.confirm === 'string' ? data.confirm : window.Folio.i18n(window.FolioConsole.Ui.NotificationModal.i18n, 'confirm'),
           data: { action: 'f-c-ui-notification-modal#confirm' }
         })
       }

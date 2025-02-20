@@ -1,13 +1,13 @@
-$(() => {
-  const $bar = $('.f-c-current-users-console-url-bar')
+window.jQuery(() => {
+  const $bar = window.jQuery('.f-c-current-users-console-url-bar')
   if ($bar.length !== 1) return
 
   const url = $bar.data('url')
 
   window.setInterval(() => {
-    $.ajax({
+    window.jQuery.ajax({
       url,
-      method: "POST",
+      method: 'POST',
       data: { url: window.location.href.split('?')[0] }
     })
   }, 10000)

@@ -64,14 +64,14 @@ window.Folio.Input.DateRange.OPTIONS = {
 }
 
 window.Folio.Input.DateRange.bindDatepicker = (el, opts) => {
-  const $element = $(el)
+  const $element = window.jQuery(el)
 
   el.insertAdjacentElement('afterend',
     window.Folio.Ui.Icon.create('calendar_range', { class: 'f-input-date-range-icon' }))
 
   $element.daterangepicker({
     ...window.Folio.Input.DateRange.OPTIONS,
-    ...Folio.i18n(window.Folio.Input.DateRange.i18n, 'config'),
+    ...window.Folio.i18n(window.Folio.Input.DateRange.i18n, 'config'),
     ...opts
   })
 
@@ -91,7 +91,7 @@ window.Folio.Input.DateRange.unbindDatepicker = (el) => {
     icon.parentNode.removeChild(icon)
   }
 
-  const picker = $(el).data('daterangepicker')
+  const picker = window.jQuery(el).data('daterangepicker')
   picker.remove()
 }
 

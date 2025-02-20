@@ -8,8 +8,8 @@ window.Folio.Stimulus.register('f-c-ui-tabs', class extends window.Stimulus.Cont
       const inFifteenSeconds = new Date(new Date().getTime() + 16 * 1000)
 
       window.Cookies.set('f-c-ui-tabs__selected-tab',
-                         activeLink.dataset.key,
-                         { expires: inFifteenSeconds, path: '' })
+        activeLink.dataset.key,
+        { expires: inFifteenSeconds, path: '' })
     }
   }
 })

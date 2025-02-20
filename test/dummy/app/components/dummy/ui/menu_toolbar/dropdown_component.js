@@ -2,7 +2,7 @@ window.Folio.Stimulus.register('d-ui-menu-toolbar-dropdown', class extends windo
   static values = {
     open: { type: Boolean, default: false },
     width: Number,
-    dropdownTrigger: String,
+    dropdownTrigger: String
   }
 
   disconnect () {
@@ -11,7 +11,7 @@ window.Folio.Stimulus.register('d-ui-menu-toolbar-dropdown', class extends windo
 
   onAnyClick (e) {
     const $dropdownTrigger = document.querySelector(`.${this.dropdownTriggerValue}`)
-    
+
     if (!this.element.contains(e.target) && !$dropdownTrigger.contains(e.target)) {
       this.close()
     }
@@ -34,7 +34,7 @@ window.Folio.Stimulus.register('d-ui-menu-toolbar-dropdown', class extends windo
   triggerClicked () {
     if (this.openValue) {
       this.close()
-    }else{
+    } else {
       this.open()
     }
   }
@@ -42,16 +42,16 @@ window.Folio.Stimulus.register('d-ui-menu-toolbar-dropdown', class extends windo
   open () {
     this.setPosition()
     this.openValue = true
-    this.element.classList.add("d-ui-menu-toolbar-dropdown--open")
+    this.element.classList.add('d-ui-menu-toolbar-dropdown--open')
     this.bindOutsideClick()
-    this.dispatch("opened")
+    this.dispatch('opened')
   }
 
   close () {
     this.unbindOutsideClick()
     this.openValue = false
-    this.element.classList.remove("d-ui-menu-toolbar-dropdown--open")
-    this.dispatch("closed", { detail: { targetTrigger: this.dropdownTriggerValue}})
+    this.element.classList.remove('d-ui-menu-toolbar-dropdown--open')
+    this.dispatch('closed', { detail: { targetTrigger: this.dropdownTriggerValue } })
   }
 
   closeOtherDropdowns (e) {
@@ -67,14 +67,14 @@ window.Folio.Stimulus.register('d-ui-menu-toolbar-dropdown', class extends windo
     // get center position of dropdown trigger
     const dropdownTriggerLeft = $dropdownTrigger.offsetLeft
     const dropdownTriggerWidth = $dropdownTrigger.offsetWidth
-    const center = dropdownTriggerLeft + dropdownTriggerWidth/2
-    
+    const center = dropdownTriggerLeft + dropdownTriggerWidth / 2
+
     // set left position of dropdown
-    const dropdownLeft = center - this.widthValue/2
+    const dropdownLeft = center - this.widthValue / 2
     this.element.style.left = `${dropdownLeft}px`
   }
 
   titleClick () {
-    this.element.classList.toggle("d-ui-menu-toolbar-dropdown--expanded")
+    this.element.classList.toggle('d-ui-menu-toolbar-dropdown--expanded')
   }
 })

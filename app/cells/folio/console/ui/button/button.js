@@ -20,7 +20,7 @@ window.FolioConsole.Ui.Button.create = (model) => {
   }
 
   if (model.icon) {
-    element.appendChild(window.Folio.Ui.Icon.create(model.icon, { class: "f-c-ui-button__icon" }))
+    element.appendChild(window.Folio.Ui.Icon.create(model.icon, { class: 'f-c-ui-button__icon' }))
   }
 
   if (model.data) {
@@ -37,7 +37,7 @@ window.FolioConsole.Ui.Button.create = (model) => {
   }
 
   if (model.rightIcon) {
-    element.appendChild(window.Folio.Ui.Icon.create(model.rightIcon, { class: "f-c-ui-button__right-icon" }))
+    element.appendChild(window.Folio.Ui.Icon.create(model.rightIcon, { class: 'f-c-ui-button__right-icon' }))
   }
 
   return element

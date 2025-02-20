@@ -97,32 +97,32 @@ window.Redactor.modules.link.prototype._setLinkData = function (nodes, data, typ
 }
 
 const LINK_REL_OPTIONS = [
-  "alternate",
-  "author",
-  "bookmark",
-  "canonical",
-  "dns-prefetch",
-  "external",
-  "help",
-  "icon",
-  "license",
-  "manifest",
-  "me",
-  "modulepreload",
-  "next",
-  "nofollow",
-  "noopener",
-  "noreferrer",
-  "opener",
-  "pingback",
-  "preconnect",
-  "prefetch",
-  "preload",
-  "prerender",
-  "prev",
-  "search",
-  "stylesheet",
-  "tag",
+  'alternate',
+  'author',
+  'bookmark',
+  'canonical',
+  'dns-prefetch',
+  'external',
+  'help',
+  'icon',
+  'license',
+  'manifest',
+  'me',
+  'modulepreload',
+  'next',
+  'nofollow',
+  'noopener',
+  'noreferrer',
+  'opener',
+  'pingback',
+  'preconnect',
+  'prefetch',
+  'preload',
+  'prerender',
+  'prev',
+  'search',
+  'stylesheet',
+  'tag'
 ]
 
 window.Redactor.add('plugin', 'linksrel', {
@@ -153,5 +153,5 @@ window.Redactor.add('plugin', 'linksrel', {
         }
       }
     }
-  },
+  }
 })

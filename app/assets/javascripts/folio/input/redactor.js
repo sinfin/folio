@@ -27,7 +27,7 @@ window.Folio.Input.Redactor.bind = (input) => {
           value: input.source.getCode()
         }
 
-        $('.f-c-simple-form-with-atoms__iframe, .f-c-merges-form-row__atoms-iframe').each((i, el) => {
+        window.jQuery('.f-c-simple-form-with-atoms__iframe, .f-c-merges-form-row__atoms-iframe').each((i, el) => {
           el.contentWindow.postMessage(data, window.origin)
         })
       }

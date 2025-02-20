@@ -14,11 +14,11 @@ window.FolioConsole.File.Picker.Thumb.create = (serializedFile) => {
 }
 
 window.Folio.Stimulus.register('f-c-file-picker-thumb', class extends window.Stimulus.Controller {
-  connect() {
+  connect () {
     const file = JSON.parse(this.element.dataset.file)
     const fileAttributes = file.attributes
 
-    this.element.innerHTML = ""
+    this.element.innerHTML = ''
     this.setDominantColor(fileAttributes)
     this.addPicture(fileAttributes)
     this.addChangeOverlay(fileAttributes)
@@ -30,13 +30,13 @@ window.Folio.Stimulus.register('f-c-file-picker-thumb', class extends window.Sti
     })
   }
 
-  setDominantColor(fileAttributes) {
+  setDominantColor (fileAttributes) {
     if (fileAttributes.dominant_color) {
       this.element.style.backgroundColor = fileAttributes.dominant_color
     }
   }
 
-  addPicture(fileAttributes) {
+  addPicture (fileAttributes) {
     const picture = document.createElement('picture')
     picture.className = 'f-c-file-picker-thumb__picture'
 
@@ -56,7 +56,7 @@ window.Folio.Stimulus.register('f-c-file-picker-thumb', class extends window.Sti
     this.element.appendChild(picture)
   }
 
-  addChangeOverlay() {
+  addChangeOverlay () {
     const overlay = document.createElement('div')
     overlay.className = 'f-c-file-picker-thumb__action'
     overlay.dataset.action = 'click->f-c-file-picker#onBtnClick'

@@ -1,5 +1,5 @@
 window.Folio.Stimulus.register('f-c-site-user-links-fields', class extends window.Stimulus.Controller {
-  static targets = ["link"]
+  static targets = ['link']
 
   onAnyChange () {
     this.toggleDisabledOnCheckboxes()

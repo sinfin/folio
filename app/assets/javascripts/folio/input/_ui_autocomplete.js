@@ -1,13 +1,13 @@
-$.widget('ui.autocomplete', $.ui.autocomplete, {
+window.jQuery.widget('ui.autocomplete', window.jQuery.ui.autocomplete, {
   _renderMenu: function ($ul, items) {
     $ul.attr('class', 'dropdown-menu ui-menu f-c-autocomplete-input-menu')
-    return $.each(items, (index, item) => {
+    return window.jQuery.each(items, (index, item) => {
       if (index >= 9) return
       return this._renderItemData($ul, item)
     })
   },
   _renderItem: function ($ul, item) {
-    return $(`<li class="ui-menu-item" title="${item.label}">
+    return window.jQuery(`<li class="ui-menu-item" title="${item.label}">
       <span class="dropdown-item ui-menu-item-wrapper f-c-autocomplete-input-menu__item">${item.label}</span>
     </li>`).appendTo($ul)
   },

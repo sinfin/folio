@@ -114,6 +114,6 @@
 //= require folio/console/main_app
 
 // So that we can use frontend turbolinks-bound scripts
-$(document).on('ready', function () {
-  $(document).trigger('turbolinks:load')
+window.jQuery(document).on('ready', function () {
+  window.jQuery(document).trigger('turbolinks:load')
 })

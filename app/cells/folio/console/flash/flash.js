@@ -3,7 +3,6 @@ window.FolioConsole.Flash = {}
 
 window.FolioConsole.Flash.flash = (data) => {
   const contents = document.querySelectorAll('.f-c-ui-alert__content')
-  let targetContent
 
   for (const content of contents) {
     if (content.dataset.content === data.content) {
@@ -54,7 +53,7 @@ window.FolioConsole.Flash.loader = (content, data = {}) => {
 }
 
 window.FolioConsole.Flash.clearFlashes = () => {
-  $('.f-c-flash-wrap').html('')
+  window.jQuery('.f-c-flash-wrap').html('')
 }
 
 window.FolioConsole.Flash.flashMessageFromMeta = (response) => {

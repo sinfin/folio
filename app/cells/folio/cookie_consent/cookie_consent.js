@@ -81,7 +81,7 @@ if (window.Folio.CookieConsent.configuration) {
   window.Folio.Stimulus.register('f-cookie-consent-link', class extends window.Stimulus.Controller {
     connect () {
       if (!this.element.dataset.action) {
-        this.element.dataset.action = "f-cookie-consent-link#click"
+        this.element.dataset.action = 'f-cookie-consent-link#click'
       }
     }
 

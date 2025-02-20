@@ -9,12 +9,12 @@ window.Folio.Input.RemoteAutocomplete = {}
 window.Folio.Input.RemoteAutocomplete.SELECTOR = '.f-input--remote-autocomplete'
 
 window.Folio.Input.RemoteAutocomplete.bind = (input) => {
-  const $input = $(input)
+  const $input = window.jQuery(input)
 
   $input.autocomplete({
     minLength: 0,
     source: (request, response) => (
-      $.ajax({
+      window.jQuery.ajax({
         url: $input.data('remote-autocomplete'),
         dataType: 'json',
         data: { q: request.term },
@@ -35,7 +35,7 @@ window.Folio.Input.RemoteAutocomplete.bind = (input) => {
 }
 
 window.Folio.Input.RemoteAutocomplete.unbind = (input) => {
-  const $input = $(input)
+  const $input = window.jQuery(input)
 
   $input
     .off('focus.folioInput')

@@ -9,12 +9,12 @@ window.Folio.Input.Autocomplete = {}
 window.Folio.Input.Autocomplete.SELECTOR = '.f-input--autocomplete'
 
 window.Folio.Input.Autocomplete.bind = (input) => {
-  const $input = $(input)
+  const $input = window.jQuery(input)
   $input.autocomplete({ source: $input.data('autocomplete') })
 }
 
 window.Folio.Input.Autocomplete.unbind = (input) => {
-  $(input).autocomplete('destroy')
+  window.jQuery(input).autocomplete('destroy')
 }
 
 window.Folio.Input.framework(window.Folio.Input.Autocomplete)

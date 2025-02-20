@@ -127,12 +127,12 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
   }
 
   sortableHandleTargetConnected (element) {
-    if (!this.debouncedSortableInit) this.debouncedSortableInit = Folio.debounce(this.initSortable)
+    if (!this.debouncedSortableInit) this.debouncedSortableInit = window.Folio.debounce(this.initSortable)
     this.debouncedSortableInit()
   }
 
   sortableHandleTargetDisconnected (element) {
-    if (!this.debouncedSortableInit) this.debouncedSortableInit = Folio.debounce(this.initSortable)
+    if (!this.debouncedSortableInit) this.debouncedSortableInit = window.Folio.debounce(this.initSortable)
     this.debouncedSortableInit()
   }
 

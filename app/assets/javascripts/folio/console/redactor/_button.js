@@ -40,8 +40,8 @@
           const node = $modal.app.selection.getCurrent()
           let ref
 
-          if (node != null ? ((ref = node.classList) != null ? ref.contains('folio-redactor-button') : undefined) : undefined) {
-            const $a = $(node).find('a')
+          if (node !== null ? ((ref = node.classList) !== null ? ref.contains('folio-redactor-button') : undefined) : undefined) {
+            const $a = window.jQuery(node).find('a')
 
             $form.getField('fill').nodes[0].checked = !$a.hasClass('btn-redactor--outline')
             $form.getField('link').val($a.attr('href'))

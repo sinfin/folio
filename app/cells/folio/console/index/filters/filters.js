@@ -19,7 +19,7 @@ window.FolioConsole.Index.Filters.bindAutocompletes = ($input, className) => {
       }, 0)
     },
     source: function (request, response) {
-      return $.ajax({
+      return window.jQuery.ajax({
         url: $input.data('url'),
         dataType: 'json',
         data: {
@@ -57,7 +57,7 @@ window.FolioConsole.Index.Filters.cleanSubmit = ($form) => {
   const data = params.toString()
 
   if (data !== '') {
-    const joiner = url.indexOf("?") === -1 ? "?" : "&"
+    const joiner = url.indexOf('?') === -1 ? '?' : '&'
     url = `${url}${joiner}${data}`
   }
 
@@ -65,32 +65,32 @@ window.FolioConsole.Index.Filters.cleanSubmit = ($form) => {
 }
 
 window.FolioConsole.Index.Filters.bind = () => {
-  $('.f-c-index-filters__autocomplete-input').each((i, el) => {
-    window.FolioConsole.Index.Filters.bindAutocompletes($(el), 'f-c-index-filters__autocomplete-input')
+  window.jQuery('.f-c-index-filters__autocomplete-input').each((i, el) => {
+    window.FolioConsole.Index.Filters.bindAutocompletes(window.jQuery(el), 'f-c-index-filters__autocomplete-input')
   })
 
-  $('.f-c-index-filters__toggle').on('click', (e) => {
+  window.jQuery('.f-c-index-filters__toggle').on('click', (e) => {
     e.preventDefault()
-    $(e.currentTarget)
+    window.jQuery(e.currentTarget)
       .closest('.f-c-index-filters')
       .toggleClass('f-c-index-filters--expanded')
   })
 
-  $('.f-c-index-filters__reset-input').on('click', (e) => {
+  window.jQuery('.f-c-index-filters__reset-input').on('click', (e) => {
     e.preventDefault()
-    const $button = $(e.currentTarget)
+    const $button = window.jQuery(e.currentTarget)
     $button.closest('.input-group').find('.form-control').val('')
     $button.closest('form').submit()
   })
 
-  $('.f-c-index-filters').on('submit', (e) => {
+  window.jQuery('.f-c-index-filters').on('submit', (e) => {
     e.preventDefault()
-    window.FolioConsole.Index.Filters.cleanSubmit($(e.currentTarget))
+    window.FolioConsole.Index.Filters.cleanSubmit(window.jQuery(e.currentTarget))
   })
 
-  $('.f-c-index-filters__text-autocomplete-input').each((i, el) => {
-    window.FolioConsole.Index.Filters.bindAutocompletes($(el), 'f-c-index-filters__text-autocomplete-input')
+  window.jQuery('.f-c-index-filters__text-autocomplete-input').each((i, el) => {
+    window.FolioConsole.Index.Filters.bindAutocompletes(window.jQuery(el), 'f-c-index-filters__text-autocomplete-input')
   })
 }
 
-$(window.FolioConsole.Index.Filters.bind)
+window.jQuery(window.FolioConsole.Index.Filters.bind)
