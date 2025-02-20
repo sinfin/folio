@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [6.1.3] - 2025-02-20
+
+### Changed
+- preview token is passed for published index actions to see "Mobilní náhled" button
+
 ## [6.1.2] - 2025-02-18
 
 ### Added

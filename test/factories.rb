@@ -9,7 +9,6 @@ def get_current_or_existing_site_or_create_from_factory
   site || Folio::Site.last || create(Rails.application.config.folio_site_default_test_factory)
 end
 
-
 def safely_set_roles_for(user, roles, site)
   # to avoid check, if current user can actually assing such roles
   if Folio::Current.respond_to?(:stub)

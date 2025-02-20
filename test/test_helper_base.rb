@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative "support/env_mock_helper"
+
 require "rails/test_help"
 require "capybara/rails"
 require "capybara/minitest"
@@ -7,11 +9,9 @@ require "factory_bot"
 require "vcr"
 require "webmock/minitest"
 
-
 require Folio::Engine.root.join("test/support/omniauth_helper")
 require Folio::Engine.root.join("test/support/action_mailer_test_helper")
 require Folio::Engine.root.join("test/support/capybara_helper")
-
 
 Rails.application.config.active_job.queue_adapter = :test
 
@@ -101,6 +101,7 @@ class ActionDispatch::IntegrationTest
     Folio::Current.user = nil
     get destroy_user_session_path
   end
+
   require Folio::Engine.root.join("test/support/create_page_singleton_helper")
 end
 
@@ -141,7 +142,6 @@ end
 
 class Folio::Console::BaseControllerTest < Folio::BaseControllerTest
 end
-
 
 class Folio::ComponentTest < ViewComponent::TestCase
   require Folio::Engine.root.join("test/support/create_atom_helper")
