@@ -267,10 +267,6 @@ module Folio
         rescue ActiveRecord::NoDatabaseError, ActiveRecord::ConnectionNotEstablished, ActiveRecord::StatementInvalid
         end
 
-        if %w[js coffee].any? { |ext| File.exist?(Rails.root.join("app/cells/folio/console/atoms/previews/main_app.#{ext}")) }
-          deprecations << "The main_app js/coffee file has moved from app/cells/folio/console/atoms/previews to app/assets/javascripts/folio/console/atoms/previews"
-        end
-
         unless Rails.env.production?
           deprecations += self.atoms_deprecations
         end
