@@ -76,6 +76,12 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
     if (!this.autosaveEnabledValue || !window.FolioConsole.Autosave.enabled) return
     if (this.autosavePausedValue) return
     if (target && this.lastTargetCache && target === this.lastTargetCache && this.autosaveTimerValue > 0 && target.type !== 'checkbox') return
+    if (document.activeElement) {
+      if (document.activeElement.tagName === 'TEXTAREA') return
+      if (document.activeElement.tagName === 'INPUT') {
+        if (document.activeElement.type !== 'radio' && document.activeElement.type !== 'checkbox') return
+      }
+    }
 
     this.lastTargetCache = target
 
