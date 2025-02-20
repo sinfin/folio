@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [6.1.3] - 2025-02-20
+
+### Fixed
+- fixed initial project configuration when project is freshly cloned and set up
+
 ## [6.1.2] - 2025-02-18
 
 ### Added
