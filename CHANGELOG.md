@@ -8,6 +8,10 @@ All notable changes to this project will be documented in this file.
 ### Added
 - added support for multi-locale `title` attributes in `Folio::AttributeType`
 
+### Changed
+- reverted order of loading email templates in `folio:email_templates:idp_seed` task.
+  First App, then Folio. This allows overrinding Folio templates in app.
+
 ## [6.1.1] - 2025-02-18
 
 ### Added
