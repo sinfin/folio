@@ -11,7 +11,7 @@
         - if ::Rails.application.config.folio_users_use_phone
           .row
             .col-md-6
-              = f.input :phone, as: :phone
+              = f.input :phone, as: :phone, required: f.object.validate_phone?
             .col-md-6
               = f.input :phone_secondary, as: :phone
 
@@ -29,7 +29,7 @@
 
         = f.input :bank_account_number
 
-        = f.input :born_at
+        = f.input :born_at, required: f.object.born_at_required?
 
         .row
           .col-md-6
