@@ -3,9 +3,12 @@
 class Folio::Users::InvitationsController < Devise::InvitationsController
   include Folio::Users::DeviseControllerBase
   include Folio::Captcha::HasTurnstileValidation
+  include Folio::Captcha::HasRecaptchaValidation
 
   prepend_before_action :require_no_authentication, only: %i[create new]
   before_action :disallow_public_invitations_if_needed, only: %i[create new]
+
+  before_action :validate_recaptcha, only: :create
 
   def new
     if Rails.application.config.folio_crossdomain_devise && current_site != ::Folio.enabled_site_for_crossdomain_devise
@@ -36,7 +39,6 @@ class Folio::Users::InvitationsController < Devise::InvitationsController
       resource.update_column(:source_site_id, source_site_for_user.id)
       resource.create_site_links_for([current_site, source_site_for_user])
     end
-
 
     respond_to do |format|
       # need to override devise invitable here with devise default
@@ -152,6 +154,10 @@ class Folio::Users::InvitationsController < Devise::InvitationsController
     end
 
     def turnstile_failure_redirect_path
+      new_user_invitation_path
+    end
+
+    def recaptcha_failure_redirect_path
       new_user_invitation_path
     end
 end
