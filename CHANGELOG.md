@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- added href to confirm button in `Folio::Console::Ui::NotificationModalComponent`
+
 ## [6.1.3] - 2025-02-20
 
 ### Fixed
