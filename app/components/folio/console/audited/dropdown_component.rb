@@ -8,21 +8,27 @@ class Folio::Console::Audited::DropdownComponent < Folio::Console::ApplicationCo
   end
 
   def render?
-    @audits.present? && @audits.size > 1 && @record && @record.should_audit_changes?
+    @audits.present? && @record && @record.should_audit_changes?
   end
 
-  def item_class_name(version, i)
-    if @audit
-      active = @audit.present? && version.id == @audit.id
+  def dropdown_item_tag(version, i)
+    tag = { tag: :div, class: "dropdown-item f-c-audited-dropdown__item" }
+
+    active = if @audit
+      @audit.present? && version.id == @audit.id
     else
-      active = i == 0
+      i == 0
     end
 
     if active
-      "f-c-audited-dropdown__item--active"
+      tag[:class] += " f-c-audited-dropdown__item--active"
     else
-      "f-c-audited-dropdown__item--link"
+      tag[:class] += " f-c-audited-dropdown__item--link"
+      tag[:tag] = :a
+      tag[:href] = version_url(version, i)
     end
+
+    tag
   end
 
   def version_url(version, i)

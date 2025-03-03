@@ -3,10 +3,10 @@
     == cell('folio/console/ui/with_icon',
             t('.back'),
             title: t('.back'),
-            href: version_url(@audits[1], 1),
+            href: @audits[1] ? version_url(@audits[1], 1) : nil,
             icon: :arrow_u_left_top,
             icon_options: { height: 16 },
-            class: "f-c-audited-dropdown__back small text-reset")
+            class: "f-c-audited-dropdown__back #{@audits[1] ? "f-c-audited-dropdown__back--enabled" : "f-c-audited-dropdown__back--disabled"} small text-reset")
 
   .f-c-audited-dropdown__dropdown.dropdown
     .f-c-audited-dropdown__toggle.dropdown-toggle[
@@ -20,10 +20,7 @@
 
     .dropdown-menu.dropdown-menu-right.f-c-audited-dropdown__menu.py-0
       - @audits.each_with_index do |version, i|
-        a.dropdown-item.f-c-audited-dropdown__item[
-          href=version_url(version, i)
-          class=item_class_name(version, i)
-        ]
+        *dropdown_item_tag(version, i)
           .f-c-audited-dropdown__label
             = l(version.created_at, format: :console_short_with_seconds)
             - if i == 0

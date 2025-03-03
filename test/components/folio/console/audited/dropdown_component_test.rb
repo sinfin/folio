@@ -14,6 +14,7 @@ class Folio::Console::Audited::DropdownComponentTest < Folio::Console::Component
         Audited.stub(:auditing_enabled, true) do
           site = get_any_site
           page = AuditedPage.create!(title: "v1", site:)
+          page.audits.destroy_all
 
           render_inline(Folio::Console::Audited::DropdownComponent.new(record: page,
                                                                        audits: page.audits))
