@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- added divider to `Folio::Console::DropdownCell` with optional title
+
 ## [6.1.3] - 2025-02-20
 
 ### Fixed
