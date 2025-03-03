@@ -122,7 +122,7 @@ window.Folio.Stimulus.register('f-c-ui-notification-modal', class extends window
         })
       }
 
-      if (data.confirm_with_link) {
+      if (data.confirm_with_link && data.confirm_with_link.href) {
         const label = data.confirm_with_link.label
         const href = data.confirm_with_link.href
         buttonsData.push({
