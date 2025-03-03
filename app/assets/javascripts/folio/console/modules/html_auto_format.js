@@ -49,12 +49,9 @@ window.FolioConsole.HtmlAutoFormat.MAPPINGS = {
 window.FolioConsole.HtmlAutoFormat.UNDO_MAPPINGS = {
   '„': '"',
   '“': '"',
-  '„': '"',
-  '“': '"',
   '‚': "'",
   '‘': "'",
-  '‚': "'",
-  '‘': "'"
+  '–': '-'
 }
 
 window.FolioConsole.HtmlAutoFormat.MAPPINGS.commons.forEach((mapping) => {
