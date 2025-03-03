@@ -34,7 +34,7 @@ module Folio::Audited
         true
       end
 
-      define_singleton_method(:audited_console_restorable?) do
+      define_method(:audited_console_restorable?) do
         opts[:restore] == false ? false : true
       end
 
