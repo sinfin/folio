@@ -3,16 +3,30 @@ window.Folio.Stimulus.register('f-c-links-modal-form', class extends window.Stim
 
   static values = {
     json: Boolean,
-    preferredLabel: String,
+    preferredLabel: String
   }
 
   onSubmit (e) {
     e.preventDefault()
     const data = window.Folio.formToHash(e.target)
 
-    if (!data.href || !data.href.trim()) {
+    let validHref = false
+
+    if (data.href) {
+      const trimmed = data.href.trim()
+
+      if (data.href !== trimmed) {
+        data.href = trimmed
+      }
+
+      // data.href must be a valid absolute/relative/anchor url
+      const regex = /^(https?:\/\/\w+|\/|#\w+)/
+      validHref = regex.test(data.href)
+    }
+
+    if (!validHref) {
       this.element.querySelector('.f-c-ui-tabs__nav-link[data-bs-target="#tab-custom_url"]').click()
-      const input = this.element.querySelector(".f-c-links-modal-url-picker__href-input")
+      const input = this.element.querySelector('.f-c-links-modal-url-picker__href-input')
       window.FolioConsole.DangerBoxShadowBlink.blinkFormGroup(input.closest('.form-group'))
       input.focus()
       return
