@@ -55,3 +55,16 @@ SimpleForm.setup do |config|
     b.use :custom_html, wrap_with: { tag: "div", class: "form-group__custom-html" }
   end
 end
+
+ActiveSupport.on_load(:action_view) do
+  def simple_form_for(record, options = {}, &block)
+    if options[:readonly] || @audited_audit
+      options[:html] ||= {}
+      options[:html][:class] ||= ""
+      options[:html][:class] += " simple_form--readonly"
+      options[:url] = "#readonly"
+    end
+
+    super(record, options, &block)
+  end
+end
