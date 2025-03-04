@@ -1,7 +1,7 @@
 window.Folio.Stimulus.register('f-c-form-errors', class extends window.Stimulus.Controller {
     static targets = ['button']
 
-    connect() {
+    connect () {
         const form = this.element.closest('form')
         if (!form) return
 
@@ -15,8 +15,6 @@ window.Folio.Stimulus.register('f-c-form-errors', class extends window.Stimulus.
 
             let key = input.getAttribute('name')
             if (!key) continue
-            key = key.replace(/_id\]/, ']')
-            console.log(key)
 
             key = key.match(/\[(.+)\]$/)
             if (!key) continue
@@ -38,17 +36,17 @@ window.Folio.Stimulus.register('f-c-form-errors', class extends window.Stimulus.
         }
     }
 
-    disconnect() {
+    disconnect () {
         this.buttonTargets.forEach((buttonTarget) => {
             delete buttonTarget.formGroup
         })
     }
 
-    onButtonClick(e) {
+    onButtonClick (e) {
         e.preventDefault()
 
         const btn = e.currentTarget
-        console.log(btn.formGroup)
+
         if (!btn.formGroup) return
 
         const tab = btn.formGroup.closest('.tab-pane')
@@ -62,13 +60,14 @@ window.Folio.Stimulus.register('f-c-form-errors', class extends window.Stimulus.
             }
         }
 
-        btn.formGroup.scrollIntoView({behavior: 'smooth', block: 'center'})
+        btn.formGroup.scrollIntoView({ behavior: 'smooth', block: 'center' })
 
         if (btn.formGroup.dataset.controller) {
             btn.formGroup.dataset.controller += ' f-c-danger-box-shadow-blink'
         } else {
             btn.formGroup.dataset.controller = 'f-c-danger-box-shadow-blink'
         }
+
         const input = btn.formGroup.querySelector('.form-control')
         if (input) input.focus()
     }
