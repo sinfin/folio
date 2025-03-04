@@ -2,7 +2,8 @@
 
 //= link_tree ../images
 
-//= link application.js
+//= link_tree ../../javascript
+
 //= link application.css
 
 //= link dummy/mailer.css

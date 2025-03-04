@@ -152,7 +152,7 @@ module Folio
       app.config.assets.paths << self.root.join("app/cells")
       app.config.assets.paths << self.root.join("app/components")
       app.config.assets.paths << self.root.join("node_modules")
-      app.config.assets.paths << self.root.join("vendor/assets/javascripts")
+      app.config.assets.paths << self.root.join("vendor/javascript")
       app.config.assets.paths << self.root.join("vendor/assets/bower_components")
       app.config.assets.precompile += %w[
         folio/console/base.css
@@ -175,6 +175,11 @@ module Folio
         require "rack/folio/maintenance_middleware"
         app.config.middleware.use(Rack::Folio::MaintenanceMiddleware)
       end
+    end
+
+    initializer "folio.importmap", before: "importmap" do |app|
+      app.config.importmap.paths << ::Folio::Engine.root.join("config/importmap.rb")
+      app.config.importmap.cache_sweepers << ::Folio::Engine.root.join("app/assets/javascript")
     end
 
     def atoms_deprecations

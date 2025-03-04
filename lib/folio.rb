@@ -42,6 +42,7 @@ require "premailer/rails"
 require "cells-rails"
 require "cells-slim"
 require "view_component"
+require "importmap-rails"
 
 require "dragonfly"
 require "dragonfly/s3_data_store"

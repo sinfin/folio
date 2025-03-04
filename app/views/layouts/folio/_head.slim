@@ -42,7 +42,12 @@ meta name="turbolinks-cache-control" content=turbolinks_cache_control
       == cell('folio/cookie_consent', request.hostname)
 
   - unless skip_javascript
-    = javascript_include_tag javascript, 'data-turbolinks-track' => 'reload', \
-                                         defer: true
+    script[
+      async=true
+      src="https://ga.jspm.io/npm:es-module-shims@1.8.2/dist/es-module-shims.js"
+      data-turbolinks-track="reload"
+    ]
+
+    = javascript_importmap_tags
 
     == render partial: 'layouts/folio/recaptcha'
