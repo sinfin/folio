@@ -75,6 +75,7 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
   queueAutosaveIfPossible (target) {
     if (!this.autosaveEnabledValue || !window.FolioConsole.Autosave.enabled) return
     if (this.autosavePausedValue) return
+    if (this.atomsFormOpen()) return
     if (target && this.lastTargetCache && target === this.lastTargetCache && this.autosaveTimerValue > 0 && target.type !== 'checkbox') return
     if (document.activeElement) {
       if (document.activeElement.tagName === 'TEXTAREA') return
@@ -90,8 +91,12 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
     }
   }
 
+  atomsFormOpen () {
+    return !!document.querySelector('.f-c-simple-form-with-atoms--editing-atom')
+  }
+
   onWindowMessage (e) {
-    if (document.querySelector('.f-c-simple-form-with-atoms--editing-atom')) return
+    if (this.atomsFormOpen()) return
 
     if (e.origin === window.origin) {
       switch (e.data.type) {

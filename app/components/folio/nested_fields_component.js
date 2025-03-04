@@ -159,11 +159,13 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
           placeholder: '<div class="f-nested-fields__sortable-placeholder"><div class="f-nested-fields__sortable-placeholder-inner"></div></div>'
         })
 
-        this.onSortStart = (e) => { window.FolioConsole.Autosave.pause() }
-        this.onSortStop = (e) => { window.FolioConsole.Autosave.resume() }
+        if (window.FolioConsole && window.FolioConsole.Autosave) {
+          this.onSortStart = (e) => { window.FolioConsole.Autosave.pause() }
+          this.onSortStop = (e) => { window.FolioConsole.Autosave.resume() }
 
-        this.fieldsWrapTarget.addEventListener('sortstart', this.onSortStart)
-        this.fieldsWrapTarget.addEventListener('sortstop', this.onSortStop)
+          this.fieldsWrapTarget.addEventListener('sortstart', this.onSortStart)
+          this.fieldsWrapTarget.addEventListener('sortstop', this.onSortStop)
+        }
 
         this.sortableBound = true
       }
