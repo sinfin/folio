@@ -23,7 +23,7 @@ module MethodInvokingMatchersHelper
       end
     end
 
-    def expect_no_method_called_on(obj, method, &block)
-      obj.stub(method, ->(*_args) { raise "Unexpected call of :#{method} on #{obj.class.name}#{obj.to_json}" }, &block)
+    def expect_no_method_called_on(object:, method:, &block)
+      object.stub(method, ->(*_args) { raise "Unexpected call of :#{method} on #{object.class.name}#{object.to_json}" }, &block)
     end
 end
