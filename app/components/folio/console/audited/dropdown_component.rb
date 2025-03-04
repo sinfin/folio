@@ -39,14 +39,27 @@ class Folio::Console::Audited::DropdownComponent < Folio::Console::ApplicationCo
     end
   end
 
+  def pretty_print_state(state)
+    state_instance = @record.aasm.states.find { |s| s.name.to_s == state.to_s }
+
+    if state_instance
+      state_instance.human_name
+    else
+      state.to_s
+    end
+  end
+
   def pretty_print_changes(version)
     return t(".created") if version.action == "create"
 
     audited_changes = version.audited_changes
     ary = []
 
-    if audited_changes["aasm_state"]
-      ary << "#{@record.class.human_attribute_name(:aasm_state)}: #{audited_changes["aasm_state"][0]} > #{audited_changes["aasm_state"][1]}"
+    if audited_changes["aasm_state"] && audited_changes["aasm_state"].size > 1
+      from = audited_changes["aasm_state"][0]
+      to = audited_changes["aasm_state"][1]
+
+      ary << "#{@record.class.human_attribute_name(:aasm_state)}: #{pretty_print_state(from)} > #{pretty_print_state(to)}"
     end
 
     second_line = []
