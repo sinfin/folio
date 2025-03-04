@@ -3,12 +3,15 @@
 class Folio::Console::Form::FooterComponent < Folio::Console::ApplicationComponent
   def initialize(f: nil, preview_path: nil, share_preview: false)
     @f = f
-    @record = @f ? @f.object : nil
     @preview_path = preview_path
     @share_preview = share_preview
   end
 
   def before_render
+    # use audited_record as the revision might have changed audited_console_restorable? (i.e. swap published boolean)
+    @record = controller.instance_variable_get(:@audited_record) || (@f ? @f.object : nil)
+    @record ||= @f ? @f.object : nil
+
     if @record
       @audit = controller.instance_variable_get(:@audited_audit)
 

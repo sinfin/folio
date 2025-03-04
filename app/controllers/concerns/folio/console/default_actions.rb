@@ -144,6 +144,7 @@ module Folio::Console::DefaultActions
   end
 
   def revision
+    @audited_record = folio_console_record
     instance_variable_set(folio_console_record_variable_name, @audited_revision)
     render :edit
   end
