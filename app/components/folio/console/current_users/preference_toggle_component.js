@@ -32,4 +32,8 @@ window.Folio.Stimulus.register('f-c-current-users-preference-toggle', class exte
   booleanToggleInput (e) {
     this.enabledValue = e.detail.checked ? 1 : 0
   }
+
+  stopPropagation (e) {
+    e.stopPropagation()
+  }
 })

@@ -30,6 +30,9 @@ class Folio::Console::CurrentUsers::PreferenceToggleComponent < Folio::Console::
                         },
                         action: {
                           "f-c-ui-boolean-toggle:input" => "booleanToggleInput",
+                          "change" => "stopPropagation",
+                          "input" => "stopPropagation",
+                          "folioConsoleCustomChange" => "stopPropagation",
                         })
   end
 end
