@@ -211,6 +211,12 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
 
   onDocumentSubmit (e) {
     if (!this.isFromProperForm(e)) return
+
+    if (this.statusValue === 'saving') {
+      e.preventDefault()
+      return
+    }
+
     this.storeUiState()
     this.statusValue = 'saving'
   }
