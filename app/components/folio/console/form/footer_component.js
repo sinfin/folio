@@ -32,7 +32,7 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
     autosaveTimer: { type: Number, default: -1 }
   }
 
-  static targets = ['autosaveInput', 'submitButtonIndicator']
+  static targets = ['autosaveInput', 'submitButton', 'submitButtonIndicator']
 
   connect () {
     this.restoreUiState()
@@ -62,8 +62,13 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
   }
 
   statusValueChanged () {
-    this.element.closest('form').classList.toggle('f-c-form-footer-form-saving',
-      this.statusValue === 'saving')
+    const saving = this.statusValue === 'saving'
+
+    this.element.closest('form').classList.toggle('f-c-form-footer-form-saving', saving)
+
+    if (this.hasSubmitButtonTarget) {
+      this.submitButtonTarget.disabled = saving
+    }
 
     if (this.statusValue === 'unsaved') {
       this.bindUnload()
@@ -263,7 +268,7 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
     this.submitButtonIndicatorTarget.style.transform = `scaleX(${scale})`
 
     if (to === 0) {
-      this.element.closest('form').requestSubmit()
+      if (this.statusValue !== 'saving') this.element.closest('form').requestSubmit()
     } else if (to > 0) {
       this.autosaveTimeout = window.setTimeout(() => {
         this.autosaveTimerValue = to - 1
@@ -283,7 +288,7 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
       if (this.autosaveEnabledValue && window.FolioConsole.Autosave.enabled) {
         this.queueAutosaveIfPossible()
       } else {
-        this.element.closest('form').requestSubmit()
+        if (this.statusValue !== 'saving') this.element.closest('form').requestSubmit()
       }
     }
   }
