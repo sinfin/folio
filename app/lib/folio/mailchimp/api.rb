@@ -11,6 +11,10 @@ class Folio::Mailchimp::Api
     @list_id = ENV.fetch("MAILCHIMP_LIST_ID")
   end
 
+  def ready_to_use?
+    api_key.gsub("todo-api-key", "").present?
+  end
+
   def request
     Gibbon::Request.new(api_key:)
   end

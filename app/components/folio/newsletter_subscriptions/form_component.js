@@ -28,6 +28,9 @@ window.Folio.Stimulus.register('f-newsletter-subscriptions-form', class extends 
       }
     }).catch((err) => {
       console.error(err)
+      if (err.message) {
+        this.element.dispatchEvent(new window.CustomEvent('folio:newsletterSubscriptionFailure', { bubbles: true, detail: err.message }))
+      }
       this.element.classList.remove(this.submittingClass)
     })
   }

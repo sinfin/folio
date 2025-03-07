@@ -37,7 +37,9 @@ module Folio::HasNewsletterSubscriptions
         did_create = ns.save
 
         unless did_create
-          Raven.capture_message("NewsletterSubscription for #{self.class.model_name.human} ##{id} - email \"#{subscription_email}\"; site \"#{auth_site.env_aware_domain}\" - failed to create.") if defined?(Raven)
+          message = "NewsletterSubscription for #{self.class.model_name.human} ##{id} - email \"#{subscription_email}\"; site \"#{auth_site.env_aware_domain}\" - failed to create."
+          Raven.capture_message(message) if defined?(Raven)
+          Sentry.capture_message(message) if defined?(Sentry)
         end
       end
 
@@ -65,7 +67,9 @@ module Folio::HasNewsletterSubscriptions
                              active: should_subscribe_to_newsletter?)
 
       unless did_update
-        Raven.capture_message("NewsletterSubscription for #{self.class.model_name.human} ##{id} - email \"#{subscription_email}\"; site \"#{auth_site.env_aware_domain}\" - failed to update.") if defined?(Raven)
+        message = "NewsletterSubscription for #{self.class.model_name.human} ##{id} - email \"#{subscription_email}\"; site \"#{auth_site.env_aware_domain}\" - failed to update."
+        Raven.capture_message(message) if defined?(Raven)
+        Sentry.capture_message(message) if defined?(Sentry)
       end
     end
 

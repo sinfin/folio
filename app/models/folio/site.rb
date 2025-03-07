@@ -68,6 +68,7 @@ class Folio::Site < Folio::ApplicationRecord
        twitter
        linkedin
        youtube
+       linktree
        appstore
        google_play
        messenger]

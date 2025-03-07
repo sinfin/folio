@@ -12,7 +12,8 @@
     color: $shade-400
 
   &__image
-    margin-bottom: var(--d-atom-images-masonry-gallery-spacer)
+    padding-bottom: var(--d-atom-images-masonry-gallery-spacer)
+    break-inside: avoid
 
   &__wrap
     column-count: 2
@@ -29,6 +30,3 @@
 
   +media-breakpoint-down(sm)
     --d-atom-images-masonry-gallery-spacer: #{2 * $grid-gutter-base}
-
-
-

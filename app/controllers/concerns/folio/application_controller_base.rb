@@ -142,6 +142,7 @@ module Folio::ApplicationControllerBase
       end
 
       Raven.capture_exception(e) if defined?(Raven)
+      Sentry.capture_exception(e) if defined?(Sentry)
 
       if request.path.starts_with?("/console") && !can_now?(:access_console)
         redirect_to "/403"

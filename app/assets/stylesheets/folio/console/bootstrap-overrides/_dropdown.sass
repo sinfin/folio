@@ -3,3 +3,18 @@
 
 .dropdown-item
   font-weight: $font-weight-bold
+
+.dropdown-divider
+  display: flex
+  align-items: center
+  gap: $grid-gutter-width / 4
+  pointer-events: none
+
+  &__title
+    font-weight: $font-weight-light
+    font-size: $font-size-sm
+    color: $dropdown-link-color
+
+  &__line
+    flex-grow: 1
+    border-top: 1px solid $dropdown-divider-color

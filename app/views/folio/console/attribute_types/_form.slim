@@ -4,7 +4,7 @@
 
 .tab-content
   = tab :content
-    = f.input :title
+    == translated_inputs f, :title
     = f.hidden_field :type
 
     = f.input :data_type, collection: f.object.class.data_types_for_select,

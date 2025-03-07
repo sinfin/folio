@@ -2,6 +2,7 @@
 
 class Folio::Users::SessionsController < Devise::SessionsController
   include Folio::Users::DeviseControllerBase
+  include Folio::Captcha::HasTurnstileValidation
 
   protect_from_forgery prepend: true
 
@@ -16,6 +17,9 @@ class Folio::Users::SessionsController < Devise::SessionsController
   end
 
   def new
+    # Superadmin is signed in even if the Turnstile validation fails (order of before_actions)
+    sign_out(:user) if current_user
+
     self.resource = resource_class.new(sign_in_params)
     self.resource.email = session[:user_email] if session[:user_email].present?
     clean_up_passwords(resource)
@@ -146,5 +150,9 @@ class Folio::Users::SessionsController < Devise::SessionsController
     else
       store_location_for(:user, main_app.send(Rails.application.config.folio_users_after_sign_in_path))
     end
+  end
+
+  def turnstile_failure_redirect_path
+    new_user_session_path
   end
 end

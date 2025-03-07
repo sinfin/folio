@@ -24,7 +24,7 @@ window.Folio.Stimulus.register('f-leads-form', class extends window.Stimulus.Con
         throw new Error('No data')
       }
     }).catch((err) => {
-      window.alert(this.failureMessageValue)
+      window.alert(err.message || this.failureMessageValue)
       this.loadingValue = false
     })
   }

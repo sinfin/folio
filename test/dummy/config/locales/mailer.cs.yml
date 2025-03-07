@@ -6,6 +6,15 @@ cs:
         contact: Kontakt
         follow_us: Sledujte nás
 
+      socials_component:
+        facebook: Facebook
+        linktree: Linktree
+        instagram: Instagram
+        linkedin: LinkedIn
+        tiktok: TikTok
+        twitter: x.com
+        youtube: Youtube
+
       order_summary_component:
         total_price: Celková cena (vč. provize)
 

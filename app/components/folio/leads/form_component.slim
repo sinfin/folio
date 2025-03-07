@@ -19,6 +19,7 @@
     = f.input :note, input_html: { id: nil }, required: note_required?
 
     = render(Folio::RecaptchaFieldComponent.new(f:))
+    = render(Folio::Captcha::TurnstileComponent.new)
 
     button.btn.btn-primary.f-leads-form__submit[
       type="submit"

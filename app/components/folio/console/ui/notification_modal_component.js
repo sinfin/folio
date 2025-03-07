@@ -62,7 +62,7 @@ window.Folio.Stimulus.register('f-c-ui-notification-modal', class extends window
   }
 
   confirm (e) {
-    this.dispatch('confirm')
+    this.dispatch('confirm', { detail: { trigger: this.trigger } })
     window.Folio.Modal.close(this.element)
   }
 
@@ -118,6 +118,17 @@ window.Folio.Stimulus.register('f-c-ui-notification-modal', class extends window
         buttonsData.push({
           variant: 'primary',
           label: typeof data.confirm === "string" ? data.confirm : window.Folio.i18n(window.FolioConsole.Ui.NotificationModal.i18n, 'confirm'),
+          data: { action: 'f-c-ui-notification-modal#confirm' }
+        })
+      }
+
+      if (data.confirm_with_link && data.confirm_with_link.href) {
+        const label = data.confirm_with_link.label
+        const href = data.confirm_with_link.href
+        buttonsData.push({
+          variant: 'primary',
+          href: href,
+          label: typeof label === "string" ? label : window.Folio.i18n(window.FolioConsole.Ui.NotificationModal.i18n, 'confirm'),
           data: { action: 'f-c-ui-notification-modal#confirm' }
         })
       }

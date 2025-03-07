@@ -69,7 +69,7 @@ window.FolioConsole.Flash.flashMessageFromMeta = (response) => {
 
 window.FolioConsole.Flash.flashMessageFromApiErrors = (response) => {
   if (typeof response === 'object' && response.errors) {
-    const flash = response.errors.map((obj) => `${obj.title} ${obj.detail}`)
+    const flash = response.errors.map((obj) => `${obj.title} - ${obj.detail}`)
     window.FolioConsole.Flash.alert(flash)
   }
 }

@@ -2,6 +2,7 @@
 
 class Folio::LeadsController < Folio::ApplicationController
   include Folio::RenderComponentJson
+  include Folio::Captcha::HasTurnstileValidation
 
   def create
     lead = Folio::Lead.new(lead_params.merge(url: request.referrer))
@@ -42,5 +43,9 @@ class Folio::LeadsController < Folio::ApplicationController
       end
 
       lead
+    end
+
+    def turnstile_failure_redirect_path
+      request.referer
     end
 end
