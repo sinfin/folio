@@ -15,6 +15,172 @@ if (!window.Folio.Tooltip.TEMPLATE) {
   window.Folio.Tooltip.TEMPLATE.innerHTML = window.Folio.Tooltip.TEMPLATE_HTML
 }
 
+window.Folio.Tooltip.removeStimulusFromElement = ({ element }) => {
+  if (!element) return
+  if (!element.dataset.controller) return
+  if (!element.dataset.controller.indexOf('f-tooltip') === -1) return
+
+  if (element.dataset.controller === 'f-tooltip') {
+    delete element.dataset.controller
+  } else {
+    element.dataset.controller = element.dataset.controller.replace(/ *f-tooltip */, '')
+  }
+
+  if (element.dataset.action) {
+    if (element.dataset.action == 'mouseenter->f-tooltip#mouseenter mouseleave->f-tooltip#mouseleave') {
+      delete element.dataset.action
+    } else {
+      element.dataset.action = element.dataset.action.replace(/ *mouseenter->f-tooltip#mouseenter mouseleave->f-tooltip#mouseleave */, '')
+    }
+  }
+
+  Object.keys(element.dataset).forEach((key) => {
+    if (key.indexOf('fTooltip') === 0) {
+      delete element.dataset[key]
+    }
+  })
+}
+
+window.Folio.Tooltip.initStimulusForElement = ({ element, title, placement }) => {
+  if (!element || !title) return
+
+  element.dataset.fTooltipTitleValue = title
+
+  if (placement) {
+    element.dataset.fTooltipPlacementValue = placement
+  }
+
+  if (element.dataset.controller) {
+    element.dataset.controller += " f-tooltip"
+  } else {
+    element.dataset.controller = "f-tooltip"
+  }
+
+  if (element.dataset.action) {
+    element.dataset.action += ' mouseenter->f-tooltip#mouseenter mouseleave->f-tooltip#mouseleave'
+  } else {
+    element.dataset.action = 'mouseenter->f-tooltip#mouseenter mouseleave->f-tooltip#mouseleave'
+  }
+}
+
+window.Folio.Tooltip.createTooltip = ({ element, title, placement, variant, tooltipClassName, staticTooltip, clickCallback }) => {
+  const data = { element }
+
+  data.tooltipElement = document.importNode(window.Folio.Tooltip.TEMPLATE.content.children[0], true)
+  data.tooltipElement.querySelector('.tooltip-inner').innerHTML = title
+  data.tooltipElement.classList.add(`tooltip--${variant}`)
+
+  if (tooltipClassName) {
+    tooltipClassName.split(' ').forEach((className) => { data.tooltipElement.classList.add(className) })
+  }
+
+  if (staticTooltip) {
+    data.tooltipElement.classList.add('tooltip--static')
+  }
+
+  document.body.appendChild(data.tooltipElement)
+
+  if (clickCallback) {
+    data.clickCallback = clickCallback
+    data.tooltipElement.addEventListener('click', data.clickCallback)
+  }
+
+  data.cleanup = window.FloatingUIDOM.autoUpdate(
+    data.element,
+    data.tooltipElement,
+    () => {
+      const options = {
+        middleware: [
+          window.FloatingUIDOM.offset({ mainAxis: 8 }),
+          window.FloatingUIDOM.arrow({ element: data.tooltipElement.querySelector('.tooltip-arrow') })
+        ]
+      }
+
+      if (placement === 'auto') {
+        options.middleware.push(window.FloatingUIDOM.autoPlacement())
+      } else {
+        options.placement = placement
+      }
+
+      window.FloatingUIDOM.computePosition(element, data.tooltipElement, options).then(({
+        x,
+        y,
+        middlewareData,
+        placement
+      }) => {
+        Object.assign(data.tooltipElement.style, {
+          left: `${x}px`,
+          top: `${y}px`
+        })
+
+        data.tooltipElement.setAttribute('data-popper-placement', placement)
+
+        if (middlewareData.arrow) {
+          let left, top
+
+          if (typeof middlewareData.arrow.x === 'number') {
+            left = `${middlewareData.arrow.x}px`
+          } else {
+            left = ''
+          }
+
+          if (typeof middlewareData.arrow.y === 'number') {
+            top = `${middlewareData.arrow.y}px`
+          } else {
+            top = ''
+          }
+
+          switch (placement) {
+            case 'top':
+              top = ''
+              break
+            case 'right':
+              left = ''
+              break
+            case 'bottom':
+              top = ''
+              break
+            case 'left':
+              left = ''
+              break
+          }
+
+          Object.assign(data.tooltipElement.querySelector('.tooltip-arrow').style, {
+            left,
+            top
+          })
+        }
+      })
+    }
+  )
+
+  element.folioTooltipData = data
+
+  return element
+}
+
+window.Folio.Tooltip.removeTooltip = ({ element }) => {
+  if (!element.folioTooltipData) return
+
+  if (element.folioTooltipData.clickCallback) {
+    element.folioTooltipData.tooltipElement.removeEventListener('click', element.folioTooltipData.clickCallback)
+  }
+
+  if (element.folioTooltipData.cleanup) {
+    element.folioTooltipData.cleanup()
+    delete element.folioTooltipData.cleanup
+  }
+
+  if (element.folioTooltipData.tooltipElement) {
+    element.folioTooltipData.tooltipElement.remove()
+    delete element.folioTooltipData.tooltipElement
+  }
+
+  delete element.folioTooltipData
+
+  return element
+}
+
 window.Folio.Stimulus.register('f-tooltip', class extends window.Stimulus.Controller {
   static values = {
     title: String,
@@ -49,129 +215,24 @@ window.Folio.Stimulus.register('f-tooltip', class extends window.Stimulus.Contro
   }
 
   removeTooltipElement () {
-    this.clearClickCallback()
-
-    if (this.cleanup) {
-      this.cleanup()
-      delete this.cleanup
-    }
-
-    if (this.tooltipElement) {
-      this.tooltipElement.remove()
-      delete this.tooltipElement
-    }
+    window.Folio.Tooltip.removeTooltip({ element: this.element })
   }
 
   showTooltip () {
-    if (!this.tooltipElement) {
-      this.createTooltipElement()
-    }
+    window.Folio.Tooltip.createTooltip({
+      element: this.element,
+      title: this.titleValue,
+      placement: this.placementValue,
+      variant: this.variantValue,
+      tooltipClassName: this.tooltipClassNameValue,
+      staticTooltip: this.staticValue,
+      clickCallback: this.staticValue ? () => {
+        this.dispatch('tooltipClick', { detail: { close: () => { this.openValue = false } } })
+      } : null,
+    })
   }
 
   hideTooltip () {
     this.removeTooltipElement()
-  }
-
-  clearClickCallback () {
-    if (this.clickCallback) {
-      if (this.tooltipElement) {
-        this.tooltipElement.removeEventListener('click', this.clickCallback)
-      }
-
-      delete this.clickCallback
-    }
-  }
-
-  createTooltipElement () {
-    this.tooltipElement = document.importNode(window.Folio.Tooltip.TEMPLATE.content.children[0], true)
-    this.tooltipElement.querySelector('.tooltip-inner').innerHTML = this.titleValue
-    this.tooltipElement.classList.add(`tooltip--${this.variantValue}`)
-
-    if (this.tooltipClassNameValue) {
-      this.tooltipClassNameValue.split(' ').forEach((className) => { this.tooltipElement.classList.add(className) })
-    }
-    if (this.staticValue) this.tooltipElement.classList.add('tooltip--static')
-
-    document.body.appendChild(this.tooltipElement)
-
-    this.clearClickCallback()
-
-    if (this.staticValue) {
-      this.clickCallback = (e) => {
-        e.preventDefault()
-        this.dispatch('tooltipClick', { detail: { close: () => { this.openValue = false } } })
-      }
-
-      this.tooltipElement.addEventListener('click', this.clickCallback)
-    }
-
-    this.cleanup = window.FloatingUIDOM.autoUpdate(
-      this.element,
-      this.tooltipElement,
-      () => {
-        const options = {
-          middleware: [
-            window.FloatingUIDOM.offset({ mainAxis: 8 }),
-            window.FloatingUIDOM.arrow({ element: this.tooltipElement.querySelector('.tooltip-arrow') })
-          ]
-        }
-
-        if (this.placementValue === 'auto') {
-          options.middleware.push(window.FloatingUIDOM.autoPlacement())
-        } else {
-          options.placement = this.placementValue
-        }
-
-        window.FloatingUIDOM.computePosition(this.element, this.tooltipElement, options).then(({
-          x,
-          y,
-          middlewareData,
-          placement
-        }) => {
-          Object.assign(this.tooltipElement.style, {
-            left: `${x}px`,
-            top: `${y}px`
-          })
-
-          this.tooltipElement.setAttribute('data-popper-placement', placement)
-
-          if (middlewareData.arrow) {
-            let left, top
-
-            if (typeof middlewareData.arrow.x === 'number') {
-              left = `${middlewareData.arrow.x}px`
-            } else {
-              left = ''
-            }
-
-            if (typeof middlewareData.arrow.y === 'number') {
-              top = `${middlewareData.arrow.y}px`
-            } else {
-              top = ''
-            }
-
-            switch (placement) {
-              case 'top':
-                top = ''
-                break
-              case 'right':
-                left = ''
-                break
-              case 'bottom':
-                top = ''
-                break
-              case 'left':
-                left = ''
-                break
-            }
-
-            Object.assign(this.tooltipElement.querySelector('.tooltip-arrow').style, {
-              left,
-              top
-            })
-          }
-        })
-      }
-    )
   }
 })

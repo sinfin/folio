@@ -114,9 +114,19 @@ showInsertHint = (e) ->
     .closest('.f-c-atoms-previews__insert')
     .addClass('f-c-atoms-previews__insert--active')
 
+  data =
+    type: "atomsInsertShown"
+
+  window.top.postMessage(data, window.origin)
+
 hideInsert = ($insert) ->
   $insert
     .removeClass('f-c-atoms-previews__insert--active')
+
+  data =
+    type: "atomsInsertHidden"
+
+  window.top.postMessage(data, window.origin)
 
 handleInsertClick = (e) ->
   e.preventDefault()
@@ -255,15 +265,36 @@ unbindSortables = ->
   $('.f-c-atoms-previews__locale.ui-sortable').each ->
     $(this).sortable('destroy')
 
-handleNewHtml = ->
+handleNewHtml = (opts) ->
   bindSortables()
   lazyloadAll()
   sendResizeMessage()
+  restoreScrollTop() unless opts and opts.scroll is false
   $(document).trigger('folioConsoleReplacedHtml')
 
 handleWillReplaceHtml = ->
+  storeScrollTop()
   unbindSortables()
   $(document).trigger('folioConsoleWillReplaceHtml')
+
+previousScrollTop = 0
+dontStoreScrollTop = false
+scrollTopCallbacksRun = true
+windowLoaded = false
+
+storeScrollTop = ->
+  return unless scrollTopCallbacksRun
+
+  if dontStoreScrollTop
+    dontStoreScrollTop = false
+  else
+    previousScrollTop = window.scrollY
+
+restoreScrollTop = ->
+  return unless scrollTopCallbacksRun
+
+  dontStoreScrollTop = false
+  window.scrollTo({ top: previousScrollTop || 0, behavior: 'instant' })
 
 updateLabel = (locale, value) ->
   if locale
@@ -302,6 +333,26 @@ $(document)
 
 $(window).on 'resize orientationchange', sendResizeMessage
 
+setScrollTopCallbacks = (top) ->
+  previousScrollTop = top
+  dontStoreScrollTop = true
+  scrollTopCallbacksRun = false
+
+  callback = ->
+    window.scrollTo
+      top: top
+      behavior: 'instant'
+
+  loadCallback = ->
+    callback()
+    scrollTopCallbacksRun = true
+
+  if windowLoaded
+    loadCallback()
+  else
+    callback()
+    document.addEventListener "readystatechange", loadCallback, { once: true }
+
 receiveMessage = (e) ->
   return if e.origin isnt window.origin
   switch e.data.type
@@ -311,11 +362,14 @@ receiveMessage = (e) ->
     when 'setMediaQuery' then setMediaQuery(e.data.width)
     when 'updateLabel' then updateLabel(e.data.locale, e.data.value)
     when 'updatePerex' then updatePerex(e.data.locale, e.data.value)
+    when 'setScrollTopCallbacks' then setScrollTopCallbacks(e.data.top)
 
 window.addEventListener('message', receiveMessage, false)
 
 $ ->
   setMediaQuery()
-  handleNewHtml()
+  handleNewHtml({ scroll: false })
   sendMediaQueryRequest()
-  $(window).one 'load', -> sendResizeMessage()
+  $(window).one 'load', ->
+    windowLoaded = true
+    sendResizeMessage()

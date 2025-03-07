@@ -40,7 +40,11 @@ class Folio::Console::Ui::BooleanToggleComponent < Folio::Console::ApplicationCo
   end
 
   def name
-    "#{as}[#{@attribute}]"
+    if @static && !@attribute
+      nil
+    else
+      "#{as}[#{@attribute}]"
+    end
   end
 
   def as
@@ -72,7 +76,7 @@ class Folio::Console::Ui::BooleanToggleComponent < Folio::Console::ApplicationCo
       url: url_with_default,
       confirmation:,
       static: @static
-    }, classes: %w[loading]).merge(test_id: @test_id.presence)
+    }, classes: %w[loading], action: @static ? { change: "stopPropagation" } : nil).merge(test_id: @test_id.presence)
   end
 
   def url_with_default

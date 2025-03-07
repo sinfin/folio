@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
+- autosave to console - add `Folio::Autosave::Model` to your model
+- autoformat for rich text inputs
+- `console_preferences` jsonb column to `Folio::User` to store autosave/autoformat preferences
 - added divider to `Folio::Console::DropdownCell` with optional title
 - added href to confirm button in `Folio::Console::Ui::NotificationModalComponent`
 
@@ -24,17 +27,14 @@ All notable changes to this project will be documented in this file.
 ## [6.1.1] - 2025-02-18
 
 ### Added
-
 - `text_or_edit_link` in `Folio::Console::CatalogueCell` returns text or link according to ability
 
 ### Changed
-
 - updated legacy audited usage on User, SiteUserLink and Address
 
 ## [6.1.0] - 2025-02-07
 
 ### Changed
-
 - automatically sort nested collection by position if possible in in `Folio::NestedFieldsComponent`
 - audited now uses a `Folio::Audited::Audit` with a custom `folio_data` jsonb column used to store data about atoms, attachments and other relations
 
