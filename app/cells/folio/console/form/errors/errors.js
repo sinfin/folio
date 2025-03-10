@@ -1,7 +1,7 @@
 window.Folio.Stimulus.register('f-c-form-errors', class extends window.Stimulus.Controller {
   static targets = ['button']
 
-  connect() {
+  connect () {
     const form = this.element.closest('form')
     if (!form) return
 
@@ -36,13 +36,13 @@ window.Folio.Stimulus.register('f-c-form-errors', class extends window.Stimulus.
     }
   }
 
-  disconnect() {
+  disconnect () {
     this.buttonTargets.forEach((buttonTarget) => {
       delete buttonTarget.formGroup
     })
   }
 
-  onButtonClick(e) {
+  onButtonClick (e) {
     e.preventDefault()
 
     const btn = e.currentTarget
@@ -60,7 +60,7 @@ window.Folio.Stimulus.register('f-c-form-errors', class extends window.Stimulus.
       }
     }
 
-    btn.formGroup.scrollIntoView({behavior: 'smooth', block: 'center'})
+    btn.formGroup.scrollIntoView({ behavior: 'smooth', block: 'center' })
 
     if (btn.formGroup.dataset.controller) {
       btn.formGroup.dataset.controller += ' f-c-danger-box-shadow-blink'
