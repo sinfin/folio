@@ -3,12 +3,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [6.2.0] - 2025-03-10
+
 ### Added
 - autosave to console - add `Folio::Autosave::Model` to your model
 - autoformat for rich text inputs
 - `console_preferences` jsonb column to `Folio::User` to store autosave/autoformat preferences
-- added divider to `Folio::Console::DropdownCell` with optional title
-- added href to confirm button in `Folio::Console::Ui::NotificationModalComponent`
+- divider to `Folio::Console::DropdownCell` with optional title
+- href to confirm button in `Folio::Console::Ui::NotificationModalComponent`
 
 ## [6.1.3] - 2025-02-20
 
