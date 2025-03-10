@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [6.2.1] - 2025-03-10
+
 ### Changed
 - moved `Folio::Audited` concern module to `Folio::Audited::Model`
 
