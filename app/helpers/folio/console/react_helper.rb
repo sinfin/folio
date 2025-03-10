@@ -132,8 +132,8 @@ module Folio::Console::ReactHelper
     }
 
     content_tag(:div, nil, "class" => "f-c-atoms folio-react-wrap",
-                           "data-mode" => "atoms",
-                           "data-atoms" => data.to_json)
+                "data-mode" => "atoms",
+                "data-atoms" => data.to_json)
   end
 
   def react_files(file_type, selected_placements, attachmentable:, type:, atom_setting: nil)
@@ -188,7 +188,7 @@ module Folio::Console::ReactHelper
     class_name = "folio-react-wrap folio-react-wrap--ordered-multiselect"
 
     unless sortable
-      class_name = "#{class_name} folio-react-wrap--ordered-multiselect-not-sortable"
+      class_name += " folio-react-wrap--ordered-multiselect-not-sortable"
     end
 
     klass = f.object.class
@@ -200,7 +200,6 @@ module Folio::Console::ReactHelper
     end
 
     through_klass = reflection.class_name.constantize
-
     param_base = "#{f.object_name}[#{through}_attributes]"
 
     items = []
@@ -211,7 +210,6 @@ module Folio::Console::ReactHelper
         removed_ids << record.id if record.id
       else
         through_record = through_klass.find(record.send(reflection.foreign_key))
-
         items << {
           id: record.id,
           label: through_record.to_console_label,
@@ -221,31 +219,44 @@ module Folio::Console::ReactHelper
       end
     end
 
-    url = Folio::Engine.routes
-                       .url_helpers
-                       .url_for([:selectize,
-                                 :console,
-                                 :api,
-                                 :autocomplete,
-                                 klass: through_klass.to_s,
-                                 scope:,
-                                 order_scope:,
-                                 only_path: true])
+    url = Folio::Engine.routes.url_helpers.url_for([
+                                                     :selectize,
+                                                     :console,
+                                                     :api,
+                                                     :autocomplete,
+                                                     {
+                                                       klass: through_klass.to_s,
+                                                       scope: scope,
+                                                       order_scope: order_scope,
+                                                       only_path: true
+                                                     }
+                                                   ])
 
-    form_group_class_name = f.object.errors[relation_name].present? ? "form-group form-group-invalid" : "form-group"
+    form_group_class_name = if f.object.errors[relation_name].present?
+      "form-group form-group-invalid"
+    else
+      "form-group"
+    end
 
     content_tag(:div, class: form_group_class_name) do
-      concat(f.label(relation_name, required:))
-      concat(content_tag(:div, content_tag(:span, nil, class: "folio-loader"),
-                         "class" => class_name,
-                         "data-param-base" => param_base,
-                         "data-foreign-key" => reflection.foreign_key,
-                         "data-removed-ids" => removed_ids.to_json,
-                         "data-items" => items.to_json,
-                         "data-url" => url,
-                         "data-sortable" => sortable ? "1" : "0",
-                         "data-menu-placement" => menu_placement,
-                         "data-atom-setting" => atom_setting))
+      concat(f.label(relation_name, required: required))
+      concat(
+        content_tag(
+          :div,
+          content_tag(:span, nil, class: "folio-loader"),
+          "class" => "#{class_name} form-control",
+          "data-name" => "#{f.object_name}[#{relation_name}]",
+          "data-param-base" => param_base,
+          "data-foreign-key" => reflection.foreign_key,
+          "data-removed-ids" => removed_ids.to_json,
+          "data-items" => items.to_json,
+          "data-url" => url,
+          "data-sortable" => sortable ? "1" : "0",
+          "data-menu-placement" => menu_placement,
+          "data-atom-setting" => atom_setting
+        )
+      )
+
       concat(f.full_error(relation_name, class: "invalid-feedback d-block"))
     end
   end

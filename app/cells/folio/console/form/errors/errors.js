@@ -11,10 +11,9 @@ window.Folio.Stimulus.register('f-c-form-errors', class extends window.Stimulus.
 
     for (const formGroup of formGroups) {
       const input = formGroup.querySelector('.form-control')
-
       if (!input) continue
 
-      let key = input.name
+      let key = input.name || input.getAttribute('data-name') // input.getAttribute("data-name") is for react_ordered_multiselect
       if (!key) continue
 
       key = key.match(/\[(.+)\]$/)
@@ -24,7 +23,6 @@ window.Folio.Stimulus.register('f-c-form-errors', class extends window.Stimulus.
       if (!key) continue
 
       key = key.replace('_attributes', '').replace(/\]\[\d*\]\[/, '.')
-
       let found = false
 
       this.buttonTargets.forEach((buttonTarget) => {
