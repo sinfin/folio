@@ -2,14 +2,14 @@ label data=data class=@class_name class=bem_class_name
   - if @f
     = @f.check_box @attribute,
                    class: "f-c-ui-boolean-toggle__input",
-                   data: stimulus_action('onInput'),
+                   data: stimulus_action(input: 'onInput'),
                    disabled: @disabled
   - else
     input.f-c-ui-boolean-toggle__input[
       type="checkbox"
       checked=@checked
       name=name
-      data=stimulus_action('onInput')
+      data=stimulus_action(input: 'onInput')
       disabled=@disabled
     ]
 

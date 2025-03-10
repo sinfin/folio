@@ -1,6 +1,20 @@
 legend
   float: none
 
+.f-c-layout-body--with-audit
+  .f-c-layout-main-container,
+  .f-c-simple-form-with-atoms
+    cursor: not-allowed
+
+  .simple_form,
+  .f-c-simple-form-with-atoms__form,
+  .f-c-simple-form-with-atoms__form-toggle
+    pointer-events: none
+    user-select: none
+
+  .f-c-ui-tabs__nav-item
+    pointer-events: all
+
 .form-group
   margin-bottom: $f-c-form-group-spacer
 

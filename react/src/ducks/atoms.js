@@ -345,7 +345,9 @@ function * updateAtomPreviewsSaga () {
 }
 
 function * showAtomsForm (action) {
-  yield window.jQuery('.f-c-simple-form-with-atoms').addClass('f-c-simple-form-with-atoms--editing-atom')
+  const form = document.querySelector('.f-c-simple-form-with-atoms')
+  form.classList.add('f-c-simple-form-with-atoms--editing-atom')
+  yield form.dispatchEvent(new CustomEvent('atomsFormShown', { bubbles: true }))
 }
 
 function * showAtomsFormSaga () {
@@ -382,7 +384,9 @@ function * atomPreviewsErrorHandlerSaga () {
 }
 
 function * hideAtomsForm (action) {
-  yield window.jQuery('.f-c-simple-form-with-atoms').removeClass('f-c-simple-form-with-atoms--editing-atom')
+  const form = document.querySelector('.f-c-simple-form-with-atoms')
+  form.classList.remove('f-c-simple-form-with-atoms--editing-atom')
+  yield form.dispatchEvent(new CustomEvent('atomsFormHidden', { bubbles: true }))
 }
 
 function * hideAtomsFormSaga () {
@@ -414,7 +418,7 @@ function * validateAndSubmitGlobalFormPerform (action) {
   submitBtn.disabled = false
 
   if (!form.rootKey) {
-    submitBtn.click()
+    submitBtn.closest('form').requestSubmit()
   }
 }
 

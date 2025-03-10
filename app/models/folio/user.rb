@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::User < Folio::ApplicationRecord
-  include Folio::Audited
+  include Folio::Audited::Model
   include Folio::Devise::DeliverLater
   include Folio::HasAddresses
   include Folio::HasNewsletterSubscriptions

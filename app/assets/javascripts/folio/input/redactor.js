@@ -41,6 +41,11 @@ window.Folio.Input.Redactor.unbind = (input) => {
   window.folioConsoleDestroyRedactor(input)
 }
 
+window.Folio.Input.Redactor.updateByCurrentHtml = (input) => {
+  const R = $R(input)
+  R.broadcast('hardsync')
+}
+
 window.Folio.Stimulus.register('f-input-redactor', class extends window.Stimulus.Controller {
   static targets = ['input']
 

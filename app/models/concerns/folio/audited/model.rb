@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Folio::Audited
+module Folio::Audited::Model
   extend ActiveSupport::Concern
 
   included do
@@ -26,11 +26,15 @@ module Folio::Audited
         opts[:console] != false
       end
 
+      define_singleton_method(:audited_columns) do
+        column_names - non_audited_columns + %w[folio_audited_changed_relations]
+      end
+
       define_method(:should_audit_changes?) do
         true
       end
 
-      define_singleton_method(:audited_console_restorable?) do
+      define_method(:audited_console_restorable?) do
         opts[:restore] == false ? false : true
       end
 

@@ -3,8 +3,14 @@
 
   .dropdown-menu class=('dropdown-menu-right' if menu_align == :right)
     - links.each do |link|
-      == cell('folio/console/ui/with_icon',
-              link[:title],
-              href: link[:url],
-              class: 'dropdown-item',
-              icon: link[:icon])
+      - if link[:divider]
+        .dropdown-item.dropdown-divider
+          - if link[:title]
+            span.dropdown-divider__title = link[:title]
+          .dropdown-divider__line
+      - else
+        == cell('folio/console/ui/with_icon',
+                link[:title],
+                href: link[:url],
+                class: 'dropdown-item',
+                icon: link[:icon])

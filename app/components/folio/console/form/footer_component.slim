@@ -1,0 +1,156 @@
+.f-c-form-footer-spacer class=(@audit ? "f-c-form-footer-spacer--with-audit" : nil)
+
+.f-c-form-footer data=(@audit ? nil : data) class=(@audit ? "f-c-form-footer--with-audit" : nil)
+  - if @audit && @record
+    = render(Folio::Console::Audited::BarComponent.new(audit: @audit,
+                                                       record: @record))
+
+  .f-c-form-footer__inner
+    .container-fluid.f-c-form-footer__container
+      - unless @audit
+        .f-c-form-footer__left
+          - if @f
+            == cell('folio/console/ui/button',
+                    type: :submit,
+                    class: 'f-c-form-footer__btn f-c-form-footer__btn--submit',
+                    variant: :primary,
+                    label: t("folio.console.actions.submit"),
+                    icon: :check,
+                    data: stimulus_target('submitButton').merge(test_id: "submit-button"),
+                    html_left: content_tag(:span, nil, class: "f-c-form-footer__submit-btn-indicator", data: stimulus_target('submitButtonIndicator')))
+
+            .f-c-form-footer__status
+              - if @record && @record.persisted?
+                .f-c-form-footer__status-saved.text-success[
+                  data=saved_at_tooltip
+                ]
+                  = folio_icon(:content_save, height: 16)
+
+              .f-c-form-footer__status-saving
+                span.folio-loader.folio-loader--tiny
+
+              .f-c-form-footer__status-unsaved.small.text-danger
+                == cell('folio/console/ui/with_icon',
+                        t('.unsaved_changes'),
+                        icon: :alert,
+                        icon_options: { height: 16 })
+
+      .f-c-form-footer__right
+        - if preview_path_with_default
+          == cell('folio/console/ui/button',
+                  href: preview_path_with_default,
+                  class: 'f-c-form-footer__btn f-c-form-footer__btn--preview',
+                  variant: :gray,
+                  label: t('folio.console.actions.preview'),
+                  icon: :open_in_new,
+                  target: "_blank",
+                  data: { test_id: "preview-button" })
+
+        .f-c-form-footer__collapsible
+          .f-c-form-footer__collapsible-backdrop data=stimulus_action_unless_audit(click: "toggleCollapsed")
+          .f-c-form-footer__collapsible-content
+            - if @record
+              - unless @audit
+                = render(Folio::Console::Autosave::ToggleComponent.new(record: @record))
+
+              = render(Folio::Console::Audited::DropdownComponent.new(audits: controller.instance_variable_get(:@audited_audits),
+                                                                      audit: @audit,
+                                                                      record: @record))
+
+            .f-c-form-footer__settings
+              .f-c-form-footer__settings-toggle.small.text-muted[
+                data=stimulus_action_unless_audit(click: "toggleSettings")
+              ]
+                == cell('folio/console/ui/with_icon',
+                        t('.settings'),
+                        hover: :underline,
+                        icon: :cog,
+                        icon_options: { height: 16 })
+
+              .f-c-form-footer__settings-backdrop[
+                data=stimulus_action_unless_audit(click: "toggleSettings")
+              ]
+
+              .f-c-form-footer__settings-content
+                = render(Folio::Console::HtmlAutoFormat::ToggleComponent.new)
+
+            - if @share_preview
+              .f-c-form-footer__share.small.text-muted data=stimulus_modal_toggle(Folio::Console::SharePreviewModalComponent::CLASS_NAME)
+                == cell('folio/console/ui/with_icon',
+                        t('.share'),
+                        hover: :underline,
+                        icon: :link,
+                        icon_options: { height: 16 })
+
+          == cell('folio/console/ui/button',
+                  class: 'f-c-form-footer__btn f-c-form-footer__btn--collapsible',
+                  variant: :gray,
+                  icon: :dots_vertical,
+                  data: (stimulus_action_unless_audit(click: "toggleCollapsed") || {}).merge(test_id: "dropdown-button"))
+
+javascript:
+  if (window.sessionStorage.getItem('fCAutosaveUiState')) {
+    window.FolioConsole = window.FolioConsole || {}
+    window.FolioConsole.Autosave = window.FolioConsole.Autosave || {}
+
+    window.FolioConsole.Autosave.bindLoad = (w, callback) => {
+      callback()
+
+      w.document.addEventListener("DOMContentLoaded", (event) => {
+        callback()
+      }, { once: true })
+
+      w.document.addEventListener("readystatechange", (event) => {
+        callback()
+      }, { once: true })
+    }
+
+    window.FolioConsole.Autosave.restoreUiState = ({ clear }) => {
+      const string = window.sessionStorage.getItem('fCAutosaveUiState')
+      if (!string) return
+
+      if (clear) window.sessionStorage.removeItem('fCAutosaveUiState')
+
+      const data = JSON.parse(string)
+
+      if (!data || !data.now || data.now + 10000 < Date.now()) {
+        return
+      }
+
+      const flash = document.querySelector('.f-c-flash-wrap')
+      const flashOffset = flash ? flash.offsetHeight : 0
+
+      if (data.atomsFormExpanded) {
+        const atomsForm = document.querySelector('.f-c-simple-form-with-atoms')
+        if (atomsForm) atomsForm.classList.add('f-c-simple-form-with-atoms--expanded-form')
+      }
+
+      if (data.form) {
+        const atomsForm = document.querySelector('.f-c-simple-form-with-atoms__form-scroll')
+        if (atomsForm) atomsForm.scrollTop = data.form
+      }
+
+      const atomsPreviews = document.querySelector('.f-c-simple-form-with-atoms__iframe')
+
+      if (atomsPreviews) {
+        if (data.previewsHeight) {
+          atomsPreviews.style.minHeight = `${data.previewsHeight}px`
+        }
+
+        if (data.previewsScroll) {
+          const msg = {
+            type: 'setScrollTopCallbacks',
+            top: data.previewsScroll
+          }
+
+          atomsPreviews.contentWindow.postMessage(msg, window.origin)
+        }
+      }
+
+      window.scrollTo({ top: data.window + flashOffset, behavior: 'instant' })
+    }
+
+    window.FolioConsole.Autosave.bindLoad(window, () => {
+      window.FolioConsole.Autosave.restoreUiState({ clear: false })
+    })
+  }

@@ -299,6 +299,9 @@ cs:
     aasm_state: Stav
     address_secondary: Druhá adresa
     article: Článek
+    atoms: Kapitoly
+    cs_atoms: Kapitoly (CZ)
+    en_atoms: Kapitoly (EN)
     audio_cover_placement: Audio stopa
     button_label: Text tlačítka
     button_url: Odkaz tlačítka
