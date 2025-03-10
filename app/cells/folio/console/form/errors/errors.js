@@ -13,7 +13,7 @@ window.Folio.Stimulus.register('f-c-form-errors', class extends window.Stimulus.
       const input = formGroup.querySelector('.form-control')
       if (!input) continue
 
-      let key = input.getAttribute('name')
+      let key = input.name || input.getAttribute('data-name') // input.getAttribute("data-name") is for react_ordered_multiselect
       if (!key) continue
 
       key = key.match(/\[(.+)\]$/)

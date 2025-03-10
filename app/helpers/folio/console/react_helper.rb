@@ -245,7 +245,7 @@ module Folio::Console::ReactHelper
           :div,
           content_tag(:span, nil, class: "folio-loader"),
           "class" => "#{class_name} form-control",
-          "name" => "#{f.object_name}[#{relation_name}]",
+          "data-name" => "#{f.object_name}[#{relation_name}]",
           "data-param-base" => param_base,
           "data-foreign-key" => reflection.foreign_key,
           "data-removed-ids" => removed_ids.to_json,
