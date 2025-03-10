@@ -4,7 +4,7 @@ require "test_helper"
 
 class Folio::Audited::AuditorTest < ActionDispatch::IntegrationTest
   class AuditedPage < Folio::Page
-    include Folio::Audited
+    include Folio::Audited::Model
     audited
   end
 

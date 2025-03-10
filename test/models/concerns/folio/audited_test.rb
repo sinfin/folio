@@ -4,7 +4,7 @@ require "test_helper"
 
 class Folio::AuditedTest < ActiveSupport::TestCase
   class AuditedPage < Folio::Page
-    include Folio::Audited
+    include Folio::Audited::Model
     audited
 
     validates :cover_placement,
@@ -15,7 +15,7 @@ class Folio::AuditedTest < ActiveSupport::TestCase
   end
 
   class AuditedPageTwo < Folio::Page
-    include Folio::Audited
+    include Folio::Audited::Model
 
     audited
 
