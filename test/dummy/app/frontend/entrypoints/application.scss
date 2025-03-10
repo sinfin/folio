@@ -1,0 +1,58 @@
+@use '@folio-stylesheets/utilities' as *;
+
+@use '../stylesheets/custom_bootstrap';
+@use '../stylesheets/fonts';
+
+@use '../modules/turbolinks';
+@use '../modules/bootstrap-overrides/**/*';
+@use '../modules/atoms';
+@use '../modules/rich-text';
+@use '../modules/with-icon';
+
+// @use 'folio/cookie_consent/cookie_consent';
+// @use 'folio/devise';
+// @use 'folio/loader';
+// @use 'folio/lazyload';
+// @use 'folio/lightbox';
+// @use 'folio/togglable_fields_component';
+// @use 'folio/dropzone_component';
+// @use 'folio/image/image';
+// @use 'folio/input/phone';
+// @use 'folio/leads/form_component';
+// @use 'folio/newsletter_subscriptions/form_component';
+// @use 'folio/publishable_hint/publishable_hint';
+// @use 'folio/ui/ui';
+// @use 'folio/nested_fields_component';
+
+@use '@app-components/dummy/**/*';
+
+html {
+  height: 100%;
+  min-width: 320px;
+  overflow-y: scroll;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.d-layout-main {
+  position: relative;
+  z-index: 2;
+  flex: 1 0 auto;
+}
+
+.f-devise {
+  @extend .container-fluid;
+}
+
+// @import '../../cells/folio/**/*';
+// @import '../../cells/dummy/**/*';
+// @import '../../components/dummy/**/*';
+
+// @media print {
+//   @import 'print';
+// }

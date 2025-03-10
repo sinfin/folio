@@ -1,0 +1,7 @@
+{
+  "success": false,
+  "errors": "x Build failed in 6ms\nerror during build:\nCould not resolve entry module \"index.html\".\n    at getRollupError (file:///home/petr/work/folio/node_modules/rollup/dist/es/shared/parseAst.js:397:41)\n    at error (file:///home/petr/work/folio/node_modules/rollup/dist/es/shared/parseAst.js:393:42)\n    at ModuleLoader.loadEntryModule (file:///home/petr/work/folio/node_modules/rollup/dist/es/shared/node-entry.js:21188:20)\n    at async Promise.all (index 0)\n",
+  "timestamp": "2025-03-10 10:29:21",
+  "vite_ruby": "3.9.1",
+  "digest": "62db8ea27b441fb20c42ecf9e24630d285dd07a3"
+}

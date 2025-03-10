@@ -1,0 +1,57 @@
+@use './variables' as *;
+
+@use "folio-bootstrap-5/scss/mixins/banner" as *;
+
+// Configuration
+@use "folio-bootstrap-5/scss/functions" as *;
+
+@use "folio/bootstrap-5-mixin-fixes" as *;
+
+@use "folio-bootstrap-5/scss/variables" as *;
+@use "folio-bootstrap-5/scss/maps" as *;
+@use "folio-bootstrap-5/scss/mixins" as *;
+@use "folio-bootstrap-5/scss/utilities" as *;
+
+// Layout & components
+@use "folio-bootstrap-5/scss/root" as *;
+@use "folio-bootstrap-5/scss/reboot" as *;
+// @use "folio-bootstrap-5/scss/type";
+// @use "folio-bootstrap-5/scss/images";
+@use "folio-bootstrap-5/scss/containers" as *;
+@use "folio-bootstrap-5/scss/grid" as *;
+@use "folio-bootstrap-5/scss/tables" as *;
+@use "folio-bootstrap-5/scss/forms" as *;
+// @use "folio-bootstrap-5/scss/buttons";
+// @use "folio-bootstrap-5/scss/transitions";
+// @use "folio-bootstrap-5/scss/dropdown";
+// @use "folio-bootstrap-5/scss/button-group";
+// @use "folio-bootstrap-5/scss/nav";
+// @use "folio-bootstrap-5/scss/navbar";
+// @use "folio-bootstrap-5/scss/card";
+// @use "folio-bootstrap-5/scss/accordion";
+// @use "folio-bootstrap-5/scss/breadcrumb";
+// @use "folio-bootstrap-5/scss/pagination";
+// @use "folio-bootstrap-5/scss/badge";
+// @use "folio-bootstrap-5/scss/alert";
+// @use "folio-bootstrap-5/scss/progress";
+// @use "folio-bootstrap-5/scss/list-group";
+// @use "folio-bootstrap-5/scss/close";
+// @use "folio-bootstrap-5/scss/toasts";
+@use "folio-bootstrap-5/scss/modal" as *;
+@use "folio-bootstrap-5/scss/tooltip" as *;
+// @use "folio-bootstrap-5/scss/popover";
+// @use "folio-bootstrap-5/scss/carousel";
+// @use "folio-bootstrap-5/scss/spinners";
+// @use "folio-bootstrap-5/scss/offcanvas";
+// @use "folio-bootstrap-5/scss/placeholders";
+
+@use './root' as *;
+
+// Helpers
+@use "folio-bootstrap-5/scss/helpers" as *;
+
+// Utilities
+@use "folio-bootstrap-5/scss/utilities/api" as *;
+// scss-docs-end import-stack
+
+@include bsBanner("");

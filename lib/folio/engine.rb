@@ -148,20 +148,6 @@ module Folio
       }
     }
 
-    initializer :append_folio_assets_paths do |app|
-      app.config.assets.paths << self.root.join("app/cells")
-      app.config.assets.paths << self.root.join("app/components")
-      app.config.assets.paths << self.root.join("node_modules")
-      app.config.assets.paths << self.root.join("vendor/assets/javascripts")
-      app.config.assets.paths << self.root.join("vendor/assets/bower_components")
-      app.config.assets.precompile += %w[
-        folio/console/base.css
-        folio/console/base.js
-        folio/console/react/main.js
-        folio/console/react/main.css
-      ]
-    end
-
     initializer :append_migrations do |app|
       unless app.root.to_s.include?(root.to_s + "/")
         config.paths["db/migrate"].expanded.each do |expanded_path|

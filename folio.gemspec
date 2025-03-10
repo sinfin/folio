@@ -69,7 +69,6 @@ Gem::Specification.new do |s|
   s.add_dependency "recaptcha", "4.13.1"
   s.add_dependency "responders"
   s.add_dependency "rubyzip"
-  s.add_dependency "sass-rails"
   s.add_dependency "show_for"
   s.add_dependency "httpparty"
   s.add_dependency "sidekiq-cron", "~> 1.10.1"
@@ -87,6 +86,7 @@ Gem::Specification.new do |s|
   s.add_dependency "redis"
   s.add_dependency "terser"
   s.add_dependency "view_component"
+  s.add_dependency "vite_rails"
 
   s.add_development_dependency "better_errors"
   s.add_development_dependency "binding_of_caller" # used by BetterErrors

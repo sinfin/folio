@@ -5,7 +5,7 @@ module Folio::OpenGraphHelper
     return @og_image if @og_image.present?
     path = defined?(og_image_fallback) ? og_image_fallback : Folio::Current.site.og_image_with_fallback
     image_url(path, host: request.base_url)
-  rescue Sprockets::Rails::Helper::AssetNotFound
+  rescue StandardError
     nil
   end
 
