@@ -138,17 +138,17 @@ module Folio::Console::ReactHelper
 
   def react_files(file_type, selected_placements, attachmentable:, type:, atom_setting: nil)
     placements = if selected_placements.present?
-                   selected_placements.ordered.map do |fp|
-                     {
-                       id: fp.id,
-                       file_id: fp.file.id,
-                       alt: fp.alt,
-                       title: fp.title,
-                       file: Folio::Console::FileSerializer.new(fp.file)
-                                                           .serializable_hash[:data],
-                     }
-                   end.to_json
-                 end
+      selected_placements.ordered.map do |fp|
+        {
+          id: fp.id,
+          file_id: fp.file.id,
+          alt: fp.alt,
+          title: fp.title,
+          file: Folio::Console::FileSerializer.new(fp.file)
+                                              .serializable_hash[:data],
+        }
+      end.to_json
+    end
 
     class_name = "folio-react-wrap"
 
@@ -233,10 +233,10 @@ module Folio::Console::ReactHelper
                                                    ])
 
     form_group_class_name = if f.object.errors[relation_name].present?
-                              "form-group form-group-invalid"
-                            else
-                              "form-group"
-                            end
+      "form-group form-group-invalid"
+    else
+      "form-group"
+    end
 
     content_tag(:div, class: form_group_class_name) do
       concat(f.label(relation_name, required: required))
@@ -287,35 +287,34 @@ module Folio::Console::ReactHelper
   end
 
   private
+    def react_notes_common(f: nil, target: nil)
+      class_name = "folio-react-wrap folio-react-wrap--notes-fields"
 
-  def react_notes_common(f: nil, target: nil)
-    class_name = "folio-react-wrap folio-react-wrap--notes-fields"
+      target_with_fallback = target || f.object
+      data = target_with_fallback.console_notes.map do |note|
+        Folio::Console::ConsoleNoteSerializer.new(note).serializable_hash[:data]
+      end
 
-    target_with_fallback = target || f.object
-    data = target_with_fallback.console_notes.map do |note|
-      Folio::Console::ConsoleNoteSerializer.new(note).serializable_hash[:data]
+      param_base = "#{target_with_fallback.class.base_class.model_name.param_key}[console_notes_attributes]"
+
+      hash = {
+        "class" => class_name,
+        "data-notes" => data.to_json,
+        "data-account-id" => Folio::Current.user.id,
+        "data-param-base" => param_base,
+        "data-label" => Folio::ConsoleNote.model_name.human(count: 2),
+      }
+
+      if target
+        hash["data-target-type"] = target.class.base_class.to_s
+        hash["data-target-id"] = target.id
+        hash["data-url"] = url_for([:react_update_target, :console, :api, Folio::ConsoleNote])
+        hash["data-class-name-parent"] = REACT_NOTE_PARENT_CLASS_NAME
+        hash["data-class-name-tooltip-parent"] = REACT_NOTE_TOOLTIP_PARENT_CLASS_NAME
+      elsif f
+        hash["data-errors-html"] = f.error(:console_notes).to_s.presence
+      end
+
+      content_tag(:div, content_tag(:span, nil, class: "folio-loader"), hash)
     end
-
-    param_base = "#{target_with_fallback.class.base_class.model_name.param_key}[console_notes_attributes]"
-
-    hash = {
-      "class" => class_name,
-      "data-notes" => data.to_json,
-      "data-account-id" => Folio::Current.user.id,
-      "data-param-base" => param_base,
-      "data-label" => Folio::ConsoleNote.model_name.human(count: 2),
-    }
-
-    if target
-      hash["data-target-type"] = target.class.base_class.to_s
-      hash["data-target-id"] = target.id
-      hash["data-url"] = url_for([:react_update_target, :console, :api, Folio::ConsoleNote])
-      hash["data-class-name-parent"] = REACT_NOTE_PARENT_CLASS_NAME
-      hash["data-class-name-tooltip-parent"] = REACT_NOTE_TOOLTIP_PARENT_CLASS_NAME
-    elsif f
-      hash["data-errors-html"] = f.error(:console_notes).to_s.presence
-    end
-
-    content_tag(:div, content_tag(:span, nil, class: "folio-loader"), hash)
-  end
 end
