@@ -1,0 +1,6 @@
+.f-c-current-users-preference-toggle data=data class=@class_name
+  = render(Folio::Console::Ui::BooleanToggleComponent.new(record: nil,
+                                                          static: true,
+                                                          attribute: nil,
+                                                          checked: enabled,
+                                                          small_label: @label))

@@ -3,6 +3,15 @@
 require "test_helper"
 
 class Folio::Console::PagesControllerTest < Folio::Console::BaseControllerTest
+  class AuditedPage < Folio::Page
+    include Folio::Audited
+    audited
+
+    def audited_console_restorable?
+      title != "non-restorable"
+    end
+  end
+
   test "index" do
     get url_for([:console, Folio::Page])
     assert_response :success
@@ -42,12 +51,22 @@ class Folio::Console::PagesControllerTest < Folio::Console::BaseControllerTest
     assert_response :success
   end
 
-  test "revive" do
+  test "restore" do
     page = Audited.stub(:auditing_enabled, true) {  create(:folio_page) }
 
     post url_for([:restore, :console, page, version: 1])
 
     assert_redirected_to url_for([:edit, :console, page])
+  end
+
+  test "restore when not allowed" do
+    page = Audited.stub(:auditing_enabled, true) do
+      page = AuditedPage.create!(title: "non-restorable", site: get_any_site)
+
+      assert_raises(ActionController::BadRequest) do
+        post url_for([:restore, :console, page, version: 1])
+      end
+    end
   end
 
   test "new_clone when enabled" do

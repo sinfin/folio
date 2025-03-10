@@ -80,13 +80,17 @@ window.Folio.Input.CollectionRemoteSelect.bind = (input, { includeBlank, url }) 
       return $result
     }
   }).on('change.select2', (e) => {
-    e.target.dispatchEvent(new window.Event('folioCustomChange', { bubbles: true }))
+    e.target.dispatchEvent(new window.CustomEvent('folioCustomChange', { bubbles: true }))
     e.target.dispatchEvent(new window.CustomEvent('folio_select2_change', { bubbles: true }))
+  }).on('select2:open', (e) => {
+    e.target.dispatchEvent(new window.CustomEvent('f-input-collection-remote-select:open', { bubbles: true }))
+  }).on('select2:close', (e) => {
+    e.target.dispatchEvent(new window.CustomEvent('f-input-collection-remote-select:close', { bubbles: true }))
   })
 }
 
 window.Folio.Input.CollectionRemoteSelect.unbind = (input) => {
-  $(input).select2('destroy').off('change.select2')
+  $(input).select2('destroy').off('change.select2').off('select2:open').off('select2:close')
 }
 
 window.Folio.Stimulus.register('f-input-collection-remote-select', class extends window.Stimulus.Controller {

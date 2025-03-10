@@ -13,12 +13,14 @@ class Folio::Console::UiController < Folio::Console::BaseController
       dropdowns
       modals
       tabs
+      tooltips
       warning_ribbons
     ].sort
 
     @inputs = %i[
       date_time
       url
+      rich_text
     ].sort
   end
 

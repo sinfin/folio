@@ -1,0 +1,48 @@
+#{":root"}
+  --f-c-audited-dropdown-flex-direction: row
+  --f-c-audited-dropdown-align-items: center
+
+.f-c-audited-dropdown
+  display: flex
+  align-items: var(--f-c-audited-dropdown-align-items)
+  gap: 2 * $grid-gutter-base
+  flex-direction: var(--f-c-audited-dropdown-flex-direction)
+
+  &__toggle
+    cursor: pointer
+    display: flex
+    align-items: center
+
+    &::after
+      display: none
+
+  &__menu
+    max-height: 400px
+    width: 320px
+    max-width: 100vw
+    overflow-y: auto
+
+  &__item
+    font-weight: $font-weight-normal
+    color: #495057
+    white-space: normal
+
+    &--link
+      border-top: 1px solid $border-color
+
+    &--active
+      &, &:hover, &:focus
+        background: #E6F4FA
+
+  &__small
+    color: #212529
+
+    &--changes
+      color: #6F7172
+
+  &__item--active &__label
+    font-weight: $font-weight-bold
+
+  &__back--disabled
+    cursor: not-allowed
+    opacity: $btn-disabled-opacity

@@ -5,15 +5,6 @@ module Folio::Mux::FileProcessing
   include Folio::MediaFileProcessingBase
 
   included do
-    missing_envs = ENV.fetch("MUX_API_KEY").to_s.gsub("find-me-in-vault", "").blank?
-    missing_envs ||= ENV.fetch("MUX_API_SECRET").to_s.gsub("find-me-in-vault", "").blank?
-    missing_envs ||= ENV.fetch("MUX_SIGNING_KEY").to_s.gsub("find-me-in-vault", "").blank?
-    missing_envs ||= ENV.fetch("MUX_SIGNING_PRIVATE_KEY").to_s.gsub("find-me-in-vault", "").blank?
-
-    if missing_envs
-      raise 'requires filled ENVs :"MUX_API_KEY", "MUX_API_SECRET", "MUX_SIGNING_KEY", "MUX_SIGNING_PRIVATE_KEY"'
-    end
-
     require "jwt"
   end
 

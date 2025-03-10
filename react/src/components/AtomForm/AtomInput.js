@@ -91,7 +91,7 @@ export default function AtomInput ({ field, atom, index, onChange, onValueChange
         {...inputProps(type, atom.record.data[key])}
         name={key}
         defaultValue={defaultValue}
-        onChange={(e) => onChange(e, index, key)}
+        onInput={(e) => { console.log('onChange', e); onChange(e, index, key) }}
         onKeyPress={preventEnterSubmit}
         invalid={Boolean(atom.errors[key])}
       >

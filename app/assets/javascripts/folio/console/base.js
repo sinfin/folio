@@ -59,9 +59,9 @@
 //= require folio/console/modules/event_names
 //= require folio/console/modules/danger-box-shadow-blink
 //= require folio/console/modules/popover
-//= require folio/console/modules/dirty-forms
 //= require folio/console/modules/with_aside
 //= require folio/console/modules/input/url
+//= require folio/console/modules/html_auto_format
 
 //= require folio/console/ui/ajax_input_component
 //= require folio/console/ui/alert/alert
@@ -80,6 +80,7 @@
 //= require folio/console/clipboard_copy/clipboard_copy
 //= require folio/console/console_notes/catalogue_tooltip/catalogue_tooltip
 //= require folio/console/current_users/console_url_bar/console_url_bar
+//= require folio/console/current_users/preference_toggle_component
 //= require folio/console/file/picker/document/document
 //= require folio/console/file/picker/picker
 //= require folio/console/file/picker/thumb/thumb
@@ -88,6 +89,7 @@
 //= require folio/console/flash/flash
 //= require folio/console/folio_attributes_fields_component
 //= require folio/console/form/errors/errors
+//= require folio/console/form/footer_component
 //= require folio/console/form_modal_component
 //= require folio/console/index/filters/filters
 //= require folio/console/index/images/images

@@ -3,25 +3,40 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [6.2.0] - 2025-03-10
+
+### Added
+- autosave to console - add `Folio::Autosave::Model` to your model
+- autoformat for rich text inputs
+- `console_preferences` jsonb column to `Folio::User` to store autosave/autoformat preferences
+- divider to `Folio::Console::DropdownCell` with optional title
+- href to confirm button in `Folio::Console::Ui::NotificationModalComponent`
+
+## [6.1.3] - 2025-02-20
+
+### Fixed
+- fixed initial project configuration when project is freshly cloned and set up
+
 ## [6.1.2] - 2025-02-18
 
 ### Added
 - added support for multi-locale `title` attributes in `Folio::AttributeType`
 
+### Changed
+- reverted order of loading email templates in `folio:email_templates:idp_seed` task.
+  First App, then Folio. This allows overrinding Folio templates in app.
+
 ## [6.1.1] - 2025-02-18
 
 ### Added
-
 - `text_or_edit_link` in `Folio::Console::CatalogueCell` returns text or link according to ability
 
 ### Changed
-
 - updated legacy audited usage on User, SiteUserLink and Address
 
 ## [6.1.0] - 2025-02-07
 
 ### Changed
-
 - automatically sort nested collection by position if possible in in `Folio::NestedFieldsComponent`
 - audited now uses a `Folio::Audited::Audit` with a custom `folio_data` jsonb column used to store data about atoms, attachments and other relations
 
