@@ -3,19 +3,19 @@
   "version": "0.0.0",
   "standard": {
     "ignore": [
-      "/app/assets/javascripts/folio/console/_cocoon-set-position.js",
-      "/app/assets/javascripts/folio/console/_data-auto-submit.js",
-      "/app/assets/javascripts/folio/console/_data-change-value.js",
-      "/app/assets/javascripts/folio/console/_data-cocoon-single-nested.js",
-      "/app/assets/javascripts/folio/console/_data-destroy-association.js",
-      "/app/assets/javascripts/folio/console/atoms/previews/base.js",
-      "/app/assets/javascripts/folio/console/modules/simple-form-with-atoms.js",
-      "/app/assets/javascripts/folio/console/react.js",
-      "/app/assets/javascripts/folio/console/redactor/_character_counter.js",
-      "/app/assets/javascripts/folio/console/redactor/_definedlinks.js",
-      "/app/assets/javascripts/folio/console/redactor/_init.js",
-      "/app/assets/javascripts/folio/cstypo.js",
-      "/app/assets/javascripts/folio/lazyload.js",
+      "/app/frontend/javascripts/folio/console/_cocoon-set-position.js",
+      "/app/frontend/javascripts/folio/console/_data-auto-submit.js",
+      "/app/frontend/javascripts/folio/console/_data-change-value.js",
+      "/app/frontend/javascripts/folio/console/_data-cocoon-single-nested.js",
+      "/app/frontend/javascripts/folio/console/_data-destroy-association.js",
+      "/app/frontend/javascripts/folio/console/atoms/previews/base.js",
+      "/app/frontend/javascripts/folio/console/modules/simple-form-with-atoms.js",
+      "/app/frontend/javascripts/folio/console/react.js",
+      "/app/frontend/javascripts/folio/console/redactor/_character_counter.js",
+      "/app/frontend/javascripts/folio/console/redactor/_definedlinks.js",
+      "/app/frontend/javascripts/folio/console/redactor/_init.js",
+      "/app/frontend/javascripts/folio/cstypo.js",
+      "/app/frontend/javascripts/folio/lazyload.js",
       "/app/cells/folio/console/aasm/email_modal/email_modal.js",
       "/app/cells/folio/console/atoms/layout_switch/layout_switch.js",
       "/app/cells/folio/console/atoms/locale_switch/locale_switch.js",
@@ -36,11 +36,11 @@
       "/node_modules",
       "/react",
       "/vendor",
-      "app/assets/javascripts/folio/input/phone.js"
+      "app/frontend/javascripts/folio/input/phone.js"
     ]
   },
   "dependencies": {
-    "folio-bootstrap-5": "npm:bootstrap@^5.2.3"
+    "folio-bootstrap-5": "npm:bootstrap@^5.3.3"
   },
   "devDependencies": {
     "sass-embedded": "^1.85.1",

@@ -1,3 +1,5 @@
+@use "sass:math"
+
 .f-c-file-placement
   display: flex
   align-items: center
@@ -5,7 +7,7 @@
   transition: background .2s ease-in-out
 
   & + &
-    margin-top: $grid-gutter-width / 2
+    margin-top: math.div($grid-gutter-width, 2)
 
   .f-c-nested-model-controls
     margin-left: auto
@@ -141,7 +143,7 @@ body > .f-c-file-placement
 
     .f-c-file-placement__inputs
       order: 4
-      margin-top: $grid-gutter-half / 2
+      margin-top: math.div($grid-gutter-half, 2)
       display: block
       padding-right: $grid-gutter-half
 

@@ -1,3 +1,5 @@
+@use "sass:math"
+
 .f-c-form-header
   margin: 0 0 2 * $spacer
 
@@ -8,7 +10,7 @@
     display: flex
     align-items: center
     flex-wrap: wrap
-    gap: $grid-gutter-width / 2
+    gap: math.div($grid-gutter-width, 2)
 
   &__inner
     display: flex
@@ -20,4 +22,4 @@
     padding-left: $grid-gutter-width
 
   &__h2
-    margin: $spacer / 2 0 0
+    margin: math.div($spacer, 2) 0 0

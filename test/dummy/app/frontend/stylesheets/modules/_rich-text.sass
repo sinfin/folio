@@ -1,3 +1,5 @@
+@use "sass:math"
+
 .d-rich-text
   video
     width: 100%
@@ -22,7 +24,7 @@
   &.small,
   &--compact
     p, figure, ul, ol
-      margin: 0 0 $spacer / 2
+      margin: 0 0 math.div($spacer, 2)
 
     hr
       margin: map-get($spacers, f) 0 map-get($spacers, f)

@@ -4,8 +4,8 @@ import sassGlobImports from 'vite-plugin-sass-glob-import'
 
 export default defineConfig({
   plugins: [
-    sassGlobImports(),
     ViteRails(),
+    sassGlobImports(),
   ],
   resolve: {
     alias: {
@@ -14,7 +14,9 @@ export default defineConfig({
       "@folio-images": process.env.FOLIO_IMAGES_PATH,
       "@folio-stylesheets": process.env.FOLIO_STYLESHEETS_PATH,
       "@folio-javascripts": process.env.FOLIO_JAVASCRIPTS_PATH,
+      "@folio-cells": process.env.FOLIO_CELLS_PATH,
       "@folio-components": process.env.FOLIO_COMPONENTS_PATH,
+      "@folio-vendor": process.env.FOLIO_VENDOR_PATH,
     },
   },
   server: {
@@ -25,7 +27,9 @@ export default defineConfig({
         process.env.FOLIO_IMAGES_PATH,
         process.env.FOLIO_STYLESHEETS_PATH,
         process.env.FOLIO_JAVASCRIPTS_PATH,
+        process.env.FOLIO_CELLS_PATH,
         process.env.FOLIO_COMPONENTS_PATH,
+        process.env.FOLIO_VENDOR_PATH,
       ],
     },
   },
@@ -33,6 +37,8 @@ export default defineConfig({
     preprocessorOptions: {
       scss: {
         api: 'modern',
+        quietDeps: true,
+        silenceDeprecations: ["import", "global-builtin", "mixed-decls"]
       },
     },
   },

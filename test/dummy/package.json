@@ -1,6 +1,9 @@
 {
   "name": "dummy",
   "private": true,
+  "dependencies": {
+    "folio-bootstrap-5": "npm:bootstrap@^5.3.3"
+  },
   "devDependencies": {
     "sass-embedded": "^1.85.1",
     "svg-sprite": "^1.5.0",

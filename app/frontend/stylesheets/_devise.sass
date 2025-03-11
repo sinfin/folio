@@ -1,3 +1,5 @@
+@use "sass:math"
+
 $folio-devise-danger-color: $danger !default
 $folio-devise-narrow-max-width: 307px !default
 $folio-devise-modal-max-width: 640px !default
@@ -36,10 +38,10 @@ $folio-devise-modal-registrations-max-width: $folio-devise-modal-max-width !defa
   &__row
     display: flex
     flex-wrap: wrap
-    margin: 0 (( - $grid-gutter-width / 2))
+    margin: 0 (( - math.div($grid-gutter-width, 2)))
 
   &__col
-    padding: 0 $grid-gutter-width / 2
+    padding: 0 math.div($grid-gutter-width, 2)
     flex: 1 1 auto
 
   &__danger
@@ -52,5 +54,15 @@ $folio-devise-modal-registrations-max-width: $folio-devise-modal-max-width !defa
     &:empty
       display: none
 
-@import '../../../cells/folio/addresses/**/*'
-@import '../../../cells/folio/devise/**/*'
+@import "../../cells/folio/addresses/fields/fields"
+
+@import "../../cells/folio/devise/email_input/email_input"
+@import "../../cells/folio/devise/invitations/show/show"
+@import "../../cells/folio/devise/omniauth/icon/icon"
+@import "../../cells/folio/devise/flash/flash"
+@import "../../cells/folio/devise/modal/modal"
+@import "../../cells/folio/devise/omniauth/omniauth"
+@import "../../cells/folio/devise/invitations/edit/edit"
+@import "../../cells/folio/devise/omniauth/authentications/list/list"
+@import "../../cells/folio/devise/password_input/password_input"
+

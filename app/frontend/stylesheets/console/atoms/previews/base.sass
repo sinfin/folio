@@ -1,3 +1,5 @@
+@use "sass:math"
+
 // see app/cells/folio/console/atoms/previews/previews.sass
 // code is here as it would get included by
 // @import '../../../../cells/folio/console/**/*'
@@ -38,7 +40,7 @@
     padding: calc(#{$grid-gutter-width + px-to-rem(10px)} + #{$input-btn-focus-width}) $grid-gutter-width (( px-to-rem(105px) + $grid-gutter-width ))
 
   &--non-interactive
-    padding: $grid-gutter-width / 2
+    padding: math.div($grid-gutter-width, 2)
     pointer-events: none
     user-select: none
 
@@ -241,7 +243,7 @@
 
   &__insert-ul
     background: $secondary
-    padding: $grid-gutter-width / 2 0
+    padding: math.div($grid-gutter-width, 2) 0
     margin: 0
     display: flex
     flex-wrap: wrap
@@ -251,7 +253,7 @@
 
   &__insert-li
     flex: 0 0 100%
-    padding: 0 $grid-gutter-width / 2
+    padding: 0 math.div($grid-gutter-width, 2)
     display: flex
     flex-direction: column
 

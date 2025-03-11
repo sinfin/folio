@@ -1,3 +1,5 @@
+@use "sass:math"
+
 .f-c-pagination
   margin: $grid-gutter-width 0
   color: $gray-medium-dark
@@ -48,7 +50,7 @@
     text-align: center
 
   &__page--page a
-    padding: 0 $spacer / 2
+    padding: 0 math.div($spacer, 2)
 
   &__page--current:before,
   &__page--current + &__page--page:before

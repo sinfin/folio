@@ -1,3 +1,5 @@
+@use "sass:math"
+
 .f-c-layout-html
   height: 100%
   min-height: 100%
@@ -72,15 +74,15 @@
 
 +mq-mobile-menu
   .f-c-layout-main-container
-    padding: $grid-gutter-width / 2
+    padding: math.div($grid-gutter-width, 2)
 
   .f-c-anti-container-fluid
-    margin-left: - $grid-gutter-width / 2
-    margin-right: - $grid-gutter-width / 2
+    margin-left: - math.div($grid-gutter-width, 2)
+    margin-right: - math.div($grid-gutter-width, 2)
 
     &--padded
-      padding-left: $grid-gutter-width / 2
-      padding-right: $grid-gutter-width / 2
+      padding-left: math.div($grid-gutter-width, 2)
+      padding-right: math.div($grid-gutter-width, 2)
 
   .f-c-layout-sidebar
     display: none

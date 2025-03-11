@@ -1,3 +1,5 @@
+@use "sass:math"
+
 .modal-title
   font-family: $headings-font-family
   font-size: $ui-typo-display-s-font-size
@@ -18,10 +20,10 @@
 
 .modal-body
   .modal-header + &
-    padding-top: $modal-inner-padding / 2
+    padding-top: math.div($modal-inner-padding, 2)
 
   &:not(:last-child)
-    padding-bottom: $modal-inner-padding / 2
+    padding-bottom: math.div($modal-inner-padding, 2)
 
   &:first-child
     padding-right: $modal-inner-padding + px-to-rem(24px) + $grid-gutter-half

@@ -1,13 +1,15 @@
+@use "sass:math"
+
 .f-c-file-list
   display: flex
   flex-wrap: wrap
-  margin: - $grid-gutter-half / 2
+  margin: - math.div($grid-gutter-half, 2)
 
   &__file,
   &__dropzone-trigger
     flex: 0 0 150px
     width: 150px
-    margin: $grid-gutter-half / 2
+    margin: math.div($grid-gutter-half, 2)
     position: relative
 
   &__file-checkbox

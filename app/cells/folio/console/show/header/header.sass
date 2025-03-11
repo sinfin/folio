@@ -1,3 +1,5 @@
+@use "sass:math"
+
 .f-c-show-header
   margin: 0 0 $headings-margin-bottom
 
@@ -18,7 +20,7 @@
     margin: 0
 
   &__h2
-    margin: $spacer / 2 0 0
+    margin: math.div($spacer, 2) 0 0
 
   &__right
     margin-left: auto
@@ -37,7 +39,7 @@
 
     &__titles
       flex: 0 0 100%
-      margin-bottom: $spacer / 2
+      margin-bottom: math.div($spacer, 2)
 
     &__right
       flex-wrap: wrap

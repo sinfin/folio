@@ -1,3 +1,5 @@
+@use "sass:math"
+
 .f-c-index-filters
   background: $light-gray
   margin-top: $grid-gutter-width
@@ -87,7 +89,7 @@
       cursor: pointer
 
   &__wrap
-    padding: $grid-gutter-width / 2 0
+    padding: math.div($grid-gutter-width, 2) 0
 
   .form-group,
   .input-group
@@ -130,11 +132,11 @@
       width: 100% !important
 
       & + &
-        margin-top: $grid-gutter-half / 2
+        margin-top: math.div($grid-gutter-half, 2)
 
     &__cancel-wrap,
     &__toggle-wrap
-      margin-top: $grid-gutter-half / 2
+      margin-top: math.div($grid-gutter-half, 2)
 
     &__cancel-wrap
       flex: 0 0 100%

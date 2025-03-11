@@ -1,3 +1,5 @@
+@use "sass:math"
+
 .f-c-console-notes-catalogue-tooltip
   &__note
     display: flex
@@ -10,7 +12,7 @@
       background: $gray-100
 
   &__note-input
-    margin-right: $spacer / 2
+    margin-right: math.div($spacer, 2)
 
   &__tooltip-inner
     position: relative

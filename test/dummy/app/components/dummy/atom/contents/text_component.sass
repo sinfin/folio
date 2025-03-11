@@ -27,7 +27,7 @@ $outline_colors: (gray: $transparent-b300, blue: $status-neutral, red: $status-e
     padding: map-get($spacers, g)
 
   @each $name, $value in $outline_colors
-    &--outline-#{$name} &__content
+    &--outline-#{"" + $name} &__content
       border-color: #{$value}
 
   &--theme-dark.d-atom-contents-text--outline-gray &__content

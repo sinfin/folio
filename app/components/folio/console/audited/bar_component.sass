@@ -1,3 +1,5 @@
+@use "sass:math"
+
 .f-c-audited-bar
   background: $yellow
   padding: px-to-rem(7px) 0
@@ -5,7 +7,7 @@
   &__flex
     display: flex
     align-items: center
-    gap: $grid-gutter-width / 2
+    gap: math.div($grid-gutter-width, 2)
     flex-wrap: wrap
 
   + .f-c-layout-main-container
@@ -40,7 +42,7 @@
     color: $gray-medium-dark
 
   +media-breakpoint-down(sm)
-    padding: $grid-gutter-width / 2 0
+    padding: math.div($grid-gutter-width, 2) 0
 
     &__flex
       flex-direction: column

@@ -1,3 +1,5 @@
+@use "sass:math"
+
 $gray-medium-dark: #6F7172 !default
 
 .form-group.date_range
@@ -9,7 +11,7 @@ $gray-medium-dark: #6F7172 !default
 .f-input-date-range-icon
   position: absolute
   margin-top: px-to-rem(-12px)
-  top: calc(#{$input-height / 2})
+  top: calc(#{math.div($input-height, 2)})
   right: px-to-rem(6px)
   z-index: 6
   pointer-events: none

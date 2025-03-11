@@ -1,3 +1,5 @@
+@use "sass:math"
+
 .f-c-layout-sidebar
   background: $dark-gray
   color: $gray
@@ -70,7 +72,7 @@
     display: flex
     align-items: center
     gap: $f-c-ui-with-icon-gap
-    padding: 9px $grid-gutter-width / 2 8px
+    padding: 9px math.div($grid-gutter-width, 2) 8px
 
     &, &:hover, &:focus
       color: $gray

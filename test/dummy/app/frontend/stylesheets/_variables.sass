@@ -1,3 +1,5 @@
+@use "sass:math"
+
 $enable-negative-margins: true
 $enable-rfs: false
 $enable-validation-icons: false
@@ -8,13 +10,13 @@ $color-mode-type: media-query
 
 $grid-gutter-base: px-to-rem(8px)
 $grid-gutter-width: 3 * $grid-gutter-base
-$grid-gutter-half: $grid-gutter-width / 2
+$grid-gutter-half: math.div($grid-gutter-width, 2)
 
 $spacer: $grid-gutter-half
 
-$spacers: ( 0: 0, 1: $grid-gutter-base / 2, 2: $grid-gutter-base, 3: $grid-gutter-half, 4: $grid-gutter-width, 5: 2 * $grid-gutter-width, a: $grid-gutter-base/2, b: $grid-gutter-base, c: $grid-gutter-base*1.5, d: $grid-gutter-base*2, e: $grid-gutter-base*2.5, f: $grid-gutter-base*3, g: $grid-gutter-base*4, h: $grid-gutter-base*5, i: $grid-gutter-base*6, j: $grid-gutter-base*7, k: $grid-gutter-base*8, l: $grid-gutter-base*10 )
+$spacers: ( 0: 0, 1: math.div($grid-gutter-base, 2), 2: $grid-gutter-base, 3: $grid-gutter-half, 4: $grid-gutter-width, 5: 2 * $grid-gutter-width, a: math.div($grid-gutter-base, 2), b: $grid-gutter-base, c: $grid-gutter-base*1.5, d: $grid-gutter-base*2, e: $grid-gutter-base*2.5, f: $grid-gutter-base*3, g: $grid-gutter-base*4, h: $grid-gutter-base*5, i: $grid-gutter-base*6, j: $grid-gutter-base*7, k: $grid-gutter-base*8, l: $grid-gutter-base*10 )
 
-@use './variables-colors'
+@import './variables-colors'
 
 $white: $primary-white
 $black: #000000
@@ -135,7 +137,7 @@ $btn-link-focus-shadow-rgb: none
 
 $headings-font-family: "Space Grotesk", $font-family-sans-serif
 $headings-font-weight: $font-weight-bold
-$headings-margin-top: $spacer / 2
+$headings-margin-top: math.div($spacer, 2)
 $headings-margin-bottom: $spacer
 $headings-margin-top-s: $headings-margin-top
 $headings-margin-bottom-s: $headings-margin-bottom
@@ -239,7 +241,7 @@ $btn-border-radius-lg: px-to-rem(32px)
 $btn-border-radius-sm: px-to-rem(24px)
 $btn-min-size: px-to-rem(40px)
 $btn-font-size: px-to-rem(14px)
-$btn-line-height: 21 / 14
+$btn-line-height: math.div(21, 14)
 $btn-font-weight: $font-weight-semibold
 $btn-text-transform-uppercase: true
 $btn-padding-x: px-to-rem(16px)
@@ -248,13 +250,13 @@ $btn-transition: $transition-base
 
 $btn-min-size-sm: px-to-rem(34px)
 $btn-font-size-sm: px-to-rem(12px)
-$btn-line-height-sm: 18 / 12
+$btn-line-height-sm: math.div(18, 12)
 $btn-padding-x-sm: $btn-padding-x
 $btn-padding-y-sm: px-to-rem(6px)
 
 $btn-min-size-lg: px-to-rem(48px)
 $btn-font-size-lg: px-to-rem(16px)
-$btn-line-height-lg: 24 / 16
+$btn-line-height-lg: math.div(24, 16)
 $btn-border-radius-lg: px-to-rem(32px)
 $btn-padding-x-lg: px-to-rem(14px)
 $btn-padding-y-lg: px-to-rem(10px)

@@ -1,8 +1,10 @@
+@use "sass:math"
+
 $enable-negative-margins: true
 
 $grid-gutter-base: px-to-rem(8px)
 $grid-gutter-width: 3 * $grid-gutter-base
-$grid-gutter-half: $grid-gutter-width / 2
+$grid-gutter-half: math.div($grid-gutter-width, 2)
 
 $white: #FFFFFF
 $black: #000000
@@ -54,7 +56,7 @@ $blue-background: #E4F0FC
 $f-c-transition-duration: .15s
 $f-c-transition-base: all $f-c-transition-duration ease-in-out
 
-$f-c-form-group-spacer: 2 * $grid-gutter-width / 3
+$f-c-form-group-spacer: 2 * math.div($grid-gutter-width, 3)
 $form-group-spacer: $f-c-form-group-spacer
 
 $f-c-box-shadow-card: 0px 1px 3px rgba(0, 0, 0, 0.15), 2px 2px 15px 2px rgba(0, 0, 0, 0.15)
@@ -69,8 +71,8 @@ $f-c-btn-hover-opacity: 0.7
 $f-c-state-colors-default: $gray
 $f-c-state-colors: ( red: $red, green: $green, yellow: $yellow, dark: $dark-gray, secondary: $secondary, purple: $violet, orange: $orange, blue: $blue )
 
-$f-c-ui-with-icon-gap: $grid-gutter-width / 6
-$f-c-ui-buttons-gap: $grid-gutter-width / 3
+$f-c-ui-with-icon-gap: math.div($grid-gutter-width, 6)
+$f-c-ui-buttons-gap: math.div($grid-gutter-width, 3)
 
 $font-size-base: to-rem(14)
 $font-size-sm: to-rem(12)
@@ -142,7 +144,7 @@ $dropdown-padding-x: 0
 $dropdown-padding-y: 0.5rem
 $dropdown-item-padding-y: 2 / 3 * 1rem
 $dropdown-item-padding-x: 1rem
-$dropdown-box-shadow:               $box-shadow !default;
+$dropdown-box-shadow: $box-shadow !default
 
 $tooltip-max-width: px-to-rem(320px) - $grid-gutter-width
 
@@ -161,9 +163,9 @@ $modal-content-box-shadow-sm-up: $f-c-box-shadow-overlay
 $modal-md: 640px
 $modal-inner-padding: $grid-gutter-width
 $modal-inner-padding-mobile: $grid-gutter-half
-$modal-header-padding-y: 2 * $grid-gutter-width / 3
+$modal-header-padding-y: 2 * math.div($grid-gutter-width, 3)
 
-$form-text-margin-top: $grid-gutter-width / 4
+$form-text-margin-top: math.div($grid-gutter-width, 4)
 $form-text-font-size: $font-size-sm
 
 $nav-link-color: inherit
@@ -176,8 +178,8 @@ $nav-tabs-margin-bottom: $grid-gutter-width
 $badge-font-size: $font-size-base
 $badge-font-weight: $font-weight-normal
 $badge-color: $white
-$badge-padding-y: $grid-gutter-width / 6
-$badge-padding-x: $grid-gutter-width / 2
+$badge-padding-y: math.div($grid-gutter-width, 6)
+$badge-padding-x: math.div($grid-gutter-width, 2)
 $badge-border-radius: $border-radius
 
 $popover-font-size: $font-size-base
@@ -185,7 +187,7 @@ $popover-bg: $white
 $popover-max-width: px-to-rem(225px)
 $popover-border-width: 0
 $popover-border-radius: $border-radius
-$popover-inner-border-radius:       subtract($popover-border-radius, $popover-border-width) !default;
+$popover-inner-border-radius: subtract($popover-border-radius, $popover-border-width) !default
 $popover-box-shadow: $f-c-box-shadow-overlay
 
 $f-togglable-fields-input-top: 3px

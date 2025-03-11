@@ -1,3 +1,5 @@
+@use "sass:math"
+
 .f-c-ui-boolean-toggle
   position: relative
   transition: $transition-base
@@ -21,7 +23,7 @@
       content: ''
       display: block
       position: absolute
-      top: calc(50% - #{px-to-rem(8px / 2)})
+      top: calc(50% - #{px-to-rem(math.div(8px, 2))})
       left: 0
       height: px-to-rem(8px)
       width: px-to-rem(24px)
@@ -32,7 +34,7 @@
       content: ''
       display: block
       position: absolute
-      top: calc(50% - #{px-to-rem(16px / 2)})
+      top: calc(50% - #{px-to-rem(math.div(16px, 2))})
       left: 0
       width: px-to-rem(16px)
       height: px-to-rem(16px)

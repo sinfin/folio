@@ -1,3 +1,5 @@
+@use "sass:math"
+
 .d-atom-images-one-and-two
   &__item
     position: relative
@@ -40,7 +42,7 @@
       flex: 0 0 calc(50% - #{$grid-gutter-base})
 
   +media-breakpoint-up(sm)
-    --d-atom-images-one-and-two-secondary-height: #{(350px - 24) / 2}
+    --d-atom-images-one-and-two-secondary-height: #{math.div(350px - 24, 2)}
 
     &__wrap
       position: relative
@@ -66,7 +68,7 @@
       height: var(--d-atom-images-one-and-two-secondary-height)
 
   +media-breakpoint-up(md)
-    --d-atom-images-one-and-two-secondary-height: #{(530px - 24) / 2}
+    --d-atom-images-one-and-two-secondary-height: #{math.div(530px - 24, 2)}
 
   +media-breakpoint-up(xl)
-    --d-atom-images-one-and-two-secondary-height: #{(650px - 24) / 2}
+    --d-atom-images-one-and-two-secondary-height: #{math.div(650px - 24, 2)}

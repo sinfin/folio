@@ -1,3 +1,5 @@
+@use "sass:math"
+
 @keyframes heartBeat
   0%
     transform: scale(1)
@@ -18,8 +20,8 @@
     min-height: 68px
 
 .f-c-form-footer
-  padding-top: $grid-gutter-width / 2
-  padding-bottom: $grid-gutter-width / 2
+  padding-top: math.div($grid-gutter-width, 2)
+  padding-bottom: math.div($grid-gutter-width, 2)
   background: $white
   position: fixed
   left: 0

@@ -1,3 +1,5 @@
+@use "sass:math"
+
 .d-atom-contents-text-wrapping-image
   &--highlight-background
     margin: map-get($spacers, e) 0
@@ -23,7 +25,7 @@
       +clearfix
 
     &__image-wrap
-      width: percentage(368/760)
+      width: percentage(math.div(368, 760))
       max-width: 368px
       margin: map-get($spacers, f)
       margin-top: .3rem

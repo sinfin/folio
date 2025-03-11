@@ -1,3 +1,5 @@
+@use "sass:math"
+
 .d-blog-articles-topic-tags
   display: flex
   flex-wrap: wrap
@@ -18,7 +20,7 @@
     border-radius: $border-radius-pill
     justify-content: center
     align-items: center
-    padding: $grid-gutter-half/2 $grid-gutter-half
+    padding: math.div($grid-gutter-half, 2) $grid-gutter-half
     color: $shade-700
     +font-size-text-s
     font-weight: $font-weight-semibold
@@ -36,6 +38,6 @@
   &--sm
     .d-blog-articles-topic-tags__link
       max-width: px-to-rem(120px)
-      padding: $grid-gutter-base/2 $grid-gutter-base
+      padding: math.div($grid-gutter-base, 2) $grid-gutter-base
       +font-size-text-xs
       line-height: 1

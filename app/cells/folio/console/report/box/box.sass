@@ -1,3 +1,5 @@
+@use "sass:math"
+
 .f-c-report-box
   width: 360px
   max-width: 100%
@@ -12,7 +14,7 @@
     margin: 0
 
   &__stats
-    margin-top: $grid-gutter-width / 2
+    margin-top: math.div($grid-gutter-width, 2)
 
     &:first-child
       margin-top: 0

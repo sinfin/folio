@@ -1,13 +1,15 @@
+@use "sass:math"
+
 .f-c-publishable-inputs-item
   display: flex
   align-items: center
   gap: $grid-gutter-width / 3
 
   &__inner
-    padding: 0 (( $grid-gutter-width / 2 )) 0 calc(#{3 * $grid-gutter-width / 4} + #{$form-check-input-width})
+    padding: 0 (( math.div($grid-gutter-width, 2) )) 0 calc(#{3 * $grid-gutter-width / 4} + #{$form-check-input-width})
     display: flex
     flex-wrap: wrap
-    gap: 0 $grid-gutter-width / 2
+    gap: 0 math.div($grid-gutter-width, 2)
     align-items: center
     position: relative
     background: $medium-gray
@@ -29,7 +31,7 @@
     margin: 0
     position: absolute
     top: 50%
-    left: $grid-gutter-width / 2
+    left: math.div($grid-gutter-width, 2)
     transform: translate(0, -50%)
 
   &--active &__inner

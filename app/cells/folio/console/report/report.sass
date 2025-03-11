@@ -1,3 +1,5 @@
+@use "sass:math"
+
 .f-c-report
   .text-success
     color: #00B594 !important
@@ -8,7 +10,7 @@
   &__form
     display: flex
     flex-wrap: wrap
-    gap: $grid-gutter-width / 2
+    gap: math.div($grid-gutter-width, 2)
 
   &__h1
     margin: 0
@@ -62,13 +64,13 @@
 
     &--title
       margin-top: 5 * $grid-gutter-width / 4
-      margin-bottom: $grid-gutter-width / 2
+      margin-bottom: math.div($grid-gutter-width, 2)
 
     &--title + &--text
-      margin-top: $grid-gutter-width / 2
+      margin-top: math.div($grid-gutter-width, 2)
 
     &--title + &--text_stats,
-      margin-top: $grid-gutter-width / 2
+      margin-top: math.div($grid-gutter-width, 2)
 
     &--text + &--text_stats
-      margin-top: - $grid-gutter-width / 2
+      margin-top: - math.div($grid-gutter-width, 2)

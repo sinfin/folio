@@ -1,3 +1,5 @@
+@use "sass:math"
+
 $f-c-layout-header-color: $gray-medium-dark !default
 $f-c-layout-header-bg: $light-gray !default
 
@@ -24,7 +26,7 @@ $f-c-layout-header-bg: $light-gray !default
     display: flex
     align-items: stretch
     min-height: 36px
-    gap: $grid-gutter-width / 2
+    gap: math.div($grid-gutter-width, 2)
 
   &__sign-out-link
     display: flex

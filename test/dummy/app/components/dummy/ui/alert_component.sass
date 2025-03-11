@@ -1,3 +1,5 @@
+@use "sass:math"
+
 .d-ui-alert
   +font-size-sm
   font-weight: $font-weight-medium
@@ -53,7 +55,7 @@
     display: flex
     align-items: center
     justify-content: center
-    gap: $grid-gutter-width / 2
+    gap: math.div($grid-gutter-width, 2)
     min-height: 48px
 
     .container-fluid &.container-fluid

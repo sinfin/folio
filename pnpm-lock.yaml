@@ -9,7 +9,7 @@ importers:
   .:
     dependencies:
       folio-bootstrap-5:
-        specifier: npm:bootstrap@^5.2.3
+        specifier: npm:bootstrap@^5.3.3
         version: bootstrap@5.3.3(@popperjs/core@2.11.8)
     devDependencies:
       sass-embedded:

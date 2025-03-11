@@ -1,3 +1,5 @@
+@use "sass:math"
+
 legend
   float: none
 
@@ -51,7 +53,7 @@ legend
 
 .invalid-feedback + .form-text,
 .form-text + .form-text
-  margin-top: $form-text-margin-top / 2
+  margin-top: math.div($form-text-margin-top, 2)
 
 .form-label__required
   color: $danger

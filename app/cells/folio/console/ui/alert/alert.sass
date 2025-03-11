@@ -1,3 +1,5 @@
+@use "sass:math"
+
 .f-c-ui-alert
   color: $white
   background: $blue
@@ -25,8 +27,8 @@
 
   &__content
     flex: 1 1 auto
-    padding-top: $grid-gutter-width / 2
-    padding-bottom: $grid-gutter-width / 2
+    padding-top: math.div($grid-gutter-width, 2)
+    padding-bottom: math.div($grid-gutter-width, 2)
 
   &__icon
     flex: 0 0 auto
@@ -45,7 +47,7 @@
     display: flex
     align-items: center
     justify-content: center
-    gap: $grid-gutter-width / 2
+    gap: math.div($grid-gutter-width, 2)
     min-height: 48px
 
   &__loader-wrap

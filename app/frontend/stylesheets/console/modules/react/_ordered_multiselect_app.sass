@@ -1,3 +1,5 @@
+@use "sass:math"
+
 .folio-react-wrap--ordered-multiselect
   +font-size($input-font-size)
   +border-radius($input-border-radius, 0)
@@ -20,10 +22,10 @@
   &__item
     display: flex
     align-items: center
-    padding-left: $spacer / 2
+    padding-left: math.div($spacer, 2)
 
   &__item-destroy
-    margin-left: $spacer / 2
+    margin-left: math.div($spacer, 2)
     cursor: pointer
 
   .react-select__control
