@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 ViteRuby.env["APP_COMPONENTS_PATH"] = File.expand_path("../app/components", __dir__)
+ViteRuby.env["APP_VENDOR_PATH"] = File.expand_path("../vendor/assets", __dir__)
 
 folio_spec = Gem.loaded_specs["folio"]
 

@@ -10,6 +10,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@app-components": process.env.APP_COMPONENTS_PATH,
+      "@app-vendor": process.env.APP_VENDOR_PATH,
       "@folio-root": process.env.FOLIO_ROOT_PATH,
       "@folio-images": process.env.FOLIO_IMAGES_PATH,
       "@folio-stylesheets": process.env.FOLIO_STYLESHEETS_PATH,
@@ -23,6 +24,7 @@ export default defineConfig({
     fs: {
       allow: [
         process.env.APP_COMPONENTS_PATH,
+        process.env.APP_VENDOR_PATH,
         process.env.FOLIO_ROOT_PATH,
         process.env.FOLIO_IMAGES_PATH,
         process.env.FOLIO_STYLESHEETS_PATH,

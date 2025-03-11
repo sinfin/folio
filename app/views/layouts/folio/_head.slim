@@ -29,8 +29,6 @@ meta name="turbolinks-cache-control" content=turbolinks_cache_control
 - if !Rails.env.test? || ENV['TEST_WITH_ASSETS'].present?
   = vite_client_tag
 
-  = action_cable_meta_tag
-
   = vite_stylesheet_tag "#{stylesheet}.scss"
 
   == render partial: 'layouts/folio/analytics'
