@@ -1,4 +1,4 @@
-- stylesheet ||= 'folio_console'
+- stylesheet ||= 'folio-console'
 
 meta charset="utf-8"
 meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"
@@ -19,7 +19,7 @@ meta[
   = vite_stylesheet_tag "#{stylesheet}.scss", media: 'all'
 
   - unless ENV['REACT_DEV']
-    link rel="stylesheet" href=asset_path("folio_console_react/react.css") media="all"
+    link rel="stylesheet" href=asset_path("folio-console-react/react.css") media="all"
 
 = csrf_meta_tags
 

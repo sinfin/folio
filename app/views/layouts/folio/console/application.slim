@@ -50,7 +50,7 @@ html.f-c-layout-html.f-html--show-sensitive-content lang=I18n.locale
     = render 'folio/console/partials/application_above_javascripts'
 
     - if !Rails.env.test? || ENV['TEST_WITH_ASSETS'].present?
-      / = javascript_include_tag 'folio/console/base'
+      = vite_javascript_tag 'folio-console'
 
       - if ENV['REACT_DEV']
         = javascript_include_tag 'http://localhost:3001/static/js/bundle.js'
@@ -61,7 +61,7 @@ html.f-c-layout-html.f-html--show-sensitive-content lang=I18n.locale
         script[
           async=true
           defer=true
-          src=asset_path("folio_console_react/react.js")
+          src=asset_path("folio-console-react/react.js")
         ]
 
       = yield :javascripts

@@ -1,32 +1,31 @@
-//= require jquery
-//= require rails-ujs
-//= require popper.min
-//= require folio-bootstrap-5/dist/js/bootstrap.min
-//= require js-cookie/src/js.cookie
-//= require jquery.kinetic/index
-//= require clipboard/dist/clipboard
-//= require strftime
-//= require moment/moment
-//= require moment/locale/cs
+import jQuery from 'jquery'
+window.jQuery = window.$ = jQuery
 
-//= require jquery-ui/jquery-ui
-//= require selectize
-//= require select2/dist/js/select2.full
-//= require select2/dist/js/i18n/cs
-
+import '@folio-vendor/javascripts/popper.min'
+import 'folio-bootstrap-5/dist/js/bootstrap.min'
+import '@folio-vendor/bower_components/js-cookie/src/js.cookie'
+import "@folio-vendor/bower_components/jquery.kinetic/index"
+import "@folio-vendor/bower_components/clipboard/dist/clipboard"
+import "@folio-vendor/javascripts/strftime"
+import "@folio-vendor/bower_components/moment/moment"
+import "@folio-vendor/bower_components/moment/locale/cs"
+import "@folio-vendor/bower_components/jquery-ui/jquery-ui"
+import "@folio-vendor/javascripts/selectize"
+import "@folio-vendor/bower_components/select2/dist/js/select2.full"
+import "@folio-vendor/bower_components/select2/dist/js/i18n/cs"
 //= require cocoon
-//= require redactor
 
-//= require ./redactor/_cs
-//= require ./redactor/_button
-//= require ./redactor/_character_counter
-//= require ./redactor/_table
-//= require ./redactor/_video
-//= require ./redactor/_definedlinks
-//= require ./redactor/_linksrel
-//= require ./redactor/_init
+import "@app-vendor/redactor/redactor"
+import "./redactor/_cs"
+import "./redactor/_button"
+import "./redactor/_character_counter"
+import "./redactor/_table"
+import "./redactor/_video"
+import "./redactor/_definedlinks"
+import "./redactor/_linksrel"
+import "./redactor/_init"
 
-//= require folio/stimulus
+import "@folio-javascripts/stimulus"
 //= require folio/api
 //= require folio/s3_upload
 //= require folio/message_bus

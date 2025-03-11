@@ -12,5 +12,5 @@ guard :slimlint do
 end
 
 guard :standard_js, all_on_start: true do
-  watch(/^(app|test\/dummy\/app)\/.+(\.js)$/)
+  watch(/^(app|test\/dummy\/app)\/frontend\/.+(\.js)$/)
 end

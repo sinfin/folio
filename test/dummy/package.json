@@ -2,6 +2,7 @@
   "name": "dummy",
   "private": true,
   "dependencies": {
+    "@hotwired/stimulus": "^3.2.2",
     "folio-bootstrap-5": "npm:bootstrap@^5.3.3"
   },
   "devDependencies": {
