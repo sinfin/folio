@@ -3,7 +3,7 @@
     window.Dummy = window.Dummy || {};
     window.Dummy.Ui = window.Dummy.Ui || {};
     window.Dummy.Ui.Icon = window.Dummy.Ui.Icon || {};
-    window.Dummy.Ui.Icon.svgSpritePath = "#{image_path('ui_icons_sprite.svg')}";
+    window.Dummy.Ui.Icon.svgSpritePath = "#{vite_asset_path('images/ui_icons_sprite.svg')}";
     window.Dummy.Ui.Icon.defaultSizes = #{ICONS.to_json.html_safe};
 
 - else

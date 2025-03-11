@@ -24,7 +24,7 @@ SimpleForm::Inputs::DateTimeInput.class_eval do
       type:,
       min: options[:min] ? I18n.l(options[:min].to_datetime, format: :console_short) : nil,
       max: options[:max] ? I18n.l(options[:max].to_datetime, format: :console_short) : nil,
-      sprite_url: ActionController::Base.helpers.image_path("folio/input/date_time/svg-sprite.svg"),
+      sprite_url: ActionController::Base.helpers.image_path("images/folio/input/date_time/svg-sprite.svg"),
     }.compact)
 
     merged_input_options = merge_wrapper_options(input_html_options, wrapper_options)

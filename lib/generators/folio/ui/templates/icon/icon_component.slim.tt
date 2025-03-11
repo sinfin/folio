@@ -3,7 +3,7 @@
     window.<%= application_namespace %> = window.<%= application_namespace %> || {};
     window.<%= application_namespace %>.Ui = window.<%= application_namespace %>.Ui || {};
     window.<%= application_namespace %>.Ui.Icon = window.<%= application_namespace %>.Ui.Icon || {};
-    window.<%= application_namespace %>.Ui.Icon.svgSpritePath = "#{image_path('ui_icons_sprite.svg')}";
+    window.<%= application_namespace %>.Ui.Icon.svgSpritePath = "#{vite_asset_path('images/ui_icons_sprite.svg')}";
     window.<%= application_namespace %>.Ui.Icon.defaultSizes = #{ICONS.to_json.html_safe};
 
 - else
@@ -14,4 +14,4 @@
     data=@data
     title=@title
   ]
-    use xlink:href="#{image_path('ui_icons_sprite.svg')}##{@name}"
+    use xlink:href="#{vite_asset_path('image/ui_icons_sprite.svg')}##{@name}"

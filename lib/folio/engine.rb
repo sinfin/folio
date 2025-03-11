@@ -148,6 +148,10 @@ module Folio
       }
     }
 
+    initializer :append_folio_assets_paths do |app|
+      app.config.assets.paths << self.root.join("app/assets")
+    end
+
     initializer :append_migrations do |app|
       unless app.root.to_s.include?(root.to_s + "/")
         config.paths["db/migrate"].expanded.each do |expanded_path|
