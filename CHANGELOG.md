@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+- added default `folio_pages_autosave` config
+
 ## [6.2.1] - 2025-03-10
 
 ### Changed
