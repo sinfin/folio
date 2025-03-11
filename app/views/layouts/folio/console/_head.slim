@@ -18,8 +18,8 @@ meta[
 
   = vite_stylesheet_tag "#{stylesheet}.scss", media: 'all'
 
-/   - unless ENV['REACT_DEV']
-/     = stylesheet_link_tag 'folio/console/react', media: 'all'
+  - unless ENV['REACT_DEV']
+    link rel="stylesheet" href=asset_path("folio_console_react/react.css") media="all"
 
 = csrf_meta_tags
 

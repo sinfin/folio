@@ -7,7 +7,7 @@ rootDir="$( dirname "$0" )/../.."
 (
   cd "$rootDir/react" || exit
 
-  js=../app/assets/javascripts/folio/console/react.js
+  js=../app/assets/folio_console_react/react.js
   touch $js
   echo '// folioSkipUglifier' > $js
 
@@ -18,7 +18,7 @@ rootDir="$( dirname "$0" )/../.."
 
   sed -i '/\/\/# sourceMappingURL/d' $js
 
-  css=../app/assets/javascripts/folio/console/react.css
+  css=../app/assets/folio_console_react/react.css
   touch $css
   echo '' > $css
 
