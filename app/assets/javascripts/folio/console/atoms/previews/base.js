@@ -3,7 +3,6 @@
 //= require justified-layout
 //= require folio/atoms
 //= require folio/message_bus
-//= require folio/lazyload
 //= require folio/debounce
 //= require folio/lightbox
 //= require folio/stimulus
@@ -17,14 +16,7 @@
 // code is here as it would get included by a wildcard import
 
 (function () {
-  let bindSortables, closeMobileControls, handleArrowClick, handleEditClick, handleInsertClick, handleMobileclick, handleNewHtml, handleOverlayClick, handleRemoveClick, handleSplitableJoinTriggerClick, handleWillReplaceHtml, hideInsert, lazyloadAll, receiveMessage, selectLocale, sendMediaQueryRequest, sendResizeMessage, setMediaQuery, showInsertHint, unbindSortables, updateLabel, updatePerex
-
-  lazyloadAll = function () {
-    return window.folioLazyloadInstances.forEach(function (instance) {
-      instance.update()
-      return instance.loadAll()
-    })
-  }
+  let bindSortables, closeMobileControls, handleArrowClick, handleEditClick, handleInsertClick, handleMobileclick, handleNewHtml, handleOverlayClick, handleRemoveClick, handleSplitableJoinTriggerClick, handleWillReplaceHtml, hideInsert, receiveMessage, selectLocale, sendMediaQueryRequest, sendResizeMessage, setMediaQuery, showInsertHint, unbindSortables, updateLabel, updatePerex
 
   selectLocale = function (locale) {
     return window.jQuery('.f-c-atoms-previews__locale').each(function () {
@@ -294,7 +286,6 @@
 
   handleNewHtml = function () {
     bindSortables()
-    lazyloadAll()
     sendResizeMessage()
     return window.jQuery(document).trigger('folioConsoleReplacedHtml')
   }

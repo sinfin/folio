@@ -12,7 +12,6 @@
 //= require folio/devise
 //= require folio/i18n
 //= require folio/form_to_hash
-//= require folio/lazyload
 //= require folio/lightbox
 //= require folio/modal
 //= require folio/nested_fields_component

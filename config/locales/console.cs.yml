@@ -271,8 +271,6 @@ cs:
         add_image: Přidat obrázek
         add_video: Přidat video
         remove_video: Odebrat video
-      lazy_dom:
-        error: 'Nepodařilo se načíst data:'
       publishable_inputs:
         item:
           from: od (nepovinné)

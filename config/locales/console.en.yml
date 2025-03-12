@@ -267,8 +267,6 @@ en:
         add_image: Add image
         add_video: Add video
         remove_video: Remove video
-      lazy_dom:
-        error: 'Failed to load data:'
       publishable_inputs:
         item:
           from: from (optional)

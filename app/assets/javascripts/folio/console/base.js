@@ -34,7 +34,6 @@
 //= require folio/remote_scripts
 //= require folio/word_count
 
-//= require folio/lazyload
 //= require folio/lightbox
 //= require folio/confirm
 //= require folio/debounce
@@ -96,7 +95,6 @@
 //= require folio/console/layout/sidebar/search/search
 //= require folio/console/layout/sidebar/sidebar
 //= require folio/console/layout/sidebar/title/title
-//= require folio/console/lazy_dom/lazy_dom
 //= require folio/console/merges/form/row/row
 //= require folio/console/merges/index/radios/radios
 //= require folio/console/modules/simple-form-with-atoms
