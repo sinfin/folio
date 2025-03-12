@@ -20,6 +20,7 @@
 //= require folio/recaptcha_field_component
 //= require folio/dropzone_component
 //= require folio/tooltip
+//= require folio/uppy_component
 
 //= require folio/image/image
 

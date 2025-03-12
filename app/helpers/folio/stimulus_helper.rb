@@ -16,7 +16,7 @@ module Folio::StimulusHelper
 
     values.each do |key, value|
       value = value.to_s if value.is_a?(TrueClass) || value.is_a?(FalseClass)
-      h["#{controller}-#{key}-value"] = value
+      h["#{controller}-#{key.to_s.dasherize}-value"] = value
     end
 
     h.merge(stimulus_data(controller:, action:, outlets:, classes:, params:))

@@ -2,24 +2,6 @@
   "name": "folio",
   "version": "0.0.0",
   "standard": {
-    "globals": [
-      "$",
-      "jQuery",
-      "Turbolinks",
-      "PhotoSwipe",
-      "PhotoSwipeUI_Default",
-      "Image",
-      "Event",
-      "Folio"
-    ]
-  },
-  "dependencies": {
-    "folio-bootstrap-5": "npm:bootstrap@^5.2.3"
-  },
-  "devDependencies": {
-    "standard": "^17.1.2"
-  },
-  "standard": {
     "ignore": [
       "/app/assets/javascripts/folio/console/_cocoon-set-position.js",
       "/app/assets/javascripts/folio/console/_data-auto-submit.js",
@@ -54,5 +36,11 @@
       "/vendor",
       "app/assets/javascripts/folio/input/phone.js"
     ]
+  },
+  "dependencies": {
+    "folio-bootstrap-5": "npm:bootstrap@^5.2.3"
+  },
+  "devDependencies": {
+    "standard": "^17.1.2"
   }
 }

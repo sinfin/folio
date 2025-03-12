@@ -15,7 +15,11 @@ class Folio::Console::Dummy::PlaygroundsController < Folio::Console::BaseControl
       players
       private_attachments
       report
+      uppy
     ]
+  end
+
+  def uppy
   end
 
   def players

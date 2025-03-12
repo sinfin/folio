@@ -47,6 +47,7 @@
 //= require folio/nested_fields_component
 //= require folio/form_to_hash
 //= require folio/tooltip
+//= require folio/uppy_component
 
 // must be under folio/input
 //= require daterangepicker.min
