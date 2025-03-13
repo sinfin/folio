@@ -1,7 +1,13 @@
 .f-file-list-file data=data
   .f-file-list-file__image-wrap data=stimulus_target("imageWrap")
-    - if @file.present?
-      = @file.id
+    - if @file.present? && @file.respond_to?(:base_thumb)
+      img.f-file-list-file__image[
+        src=@file.base_thumb.url
+        loading="lazy"
+        alt=@file.file_name
+        width=@file.base_thumb.width
+        height=@file.base_thumb.height
+      ]
 
   - if @template
-    span.folio-loader.f-file-list-file__loader data=stimulus_target("loader")
+    span.folio-loader.folio-loader--small.f-file-list-file__loader data=stimulus_target("loader")

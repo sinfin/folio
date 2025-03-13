@@ -1,11 +1,13 @@
 .f-file-list
+  --f-file-list-item-width: #{19 * $grid-gutter-base}
+
   &__flex
     display: flex
-    gap: $grid-gutter-width
+    gap: $grid-gutter-base
     flex-wrap: wrap
 
   &__flex-item
     flex: 0 0 auto
-    width: 168px
+    width: var(--f-file-list-item-width)
     aspect-ratio: 1
     position: relative

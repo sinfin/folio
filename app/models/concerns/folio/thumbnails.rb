@@ -132,6 +132,10 @@ module Folio::Thumbnails
     end
   end
 
+  def base_thumb(immediate: false, force: false)
+    admin_thumb(immediate:, force:)
+  end
+
   def admin_thumb(immediate: false, force: false)
     thumb(Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE,
           immediate:,
