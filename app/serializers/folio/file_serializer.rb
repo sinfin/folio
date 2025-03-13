@@ -6,6 +6,7 @@ class Folio::FileSerializer
   attributes :file_name,
              :file_width,
              :file_height,
+             :file_mime_type,
              :author,
              :attribution_source,
              :attribution_source_url,
