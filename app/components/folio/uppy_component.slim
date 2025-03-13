@@ -1,2 +1,5 @@
 .f-uppy data=data
-  span.folio-loader.f-uppy__loader
+  .f-uppy__trigger data=stimulus_target("trigger")
+    = folio_icon(:plus_circle, class: "f-uppy__trigger-icon")
+
+  span.f-uppy__loader.folio-loader.folio-loader--transparent

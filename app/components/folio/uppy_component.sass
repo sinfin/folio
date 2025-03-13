@@ -1,3 +1,21 @@
 .f-uppy
-  min-height: 400px
   position: relative
+  min-height: 168px
+
+  &--inline
+    min-height: 400px
+
+  &__trigger
+    width: 168px
+    height: 168px
+    background: lightgray
+    cursor: pointer
+    display: flex
+    align-items: center
+    justify-content: center
+
+    &:not(:last-child) .f-uppy__trigger-icon
+      visibility: hidden
+
+  &--inline &__trigger
+    display: none

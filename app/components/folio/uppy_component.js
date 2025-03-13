@@ -2,10 +2,19 @@
 
 window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controller {
   static values = {
-    fileType: String
+    fileType: String,
+    inline: Boolean
   }
 
+  static targets = ['trigger']
+
   connect () {
+    window.folioUppyCounter = (window.folioUppyCounter || 0) + 1
+    this.folioUppyCounter = window.folioUppyCounter
+
+    this.element.classList.add(`f-uppy--${window.folioUppyCounter}`)
+    this.triggerTarget.classList.add(`f-uppy__trigger--${window.folioUppyCounter}`)
+
     window.Folio.RemoteScripts.run({
       key: 'uppy-js',
       urls: ['https://unpkg.com/uppy@4.13.3/dist/uppy.min.js'],
@@ -26,15 +35,21 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
   init () {
     if (this.uppy) return
 
-    this.element.innerHTML = ''
-
     this.uppy = new window.Uppy.Uppy()
 
-    this.uppy.use(window.Uppy.Dashboard, {
-      target: this.element,
-      inline: true,
+    const opts = {
+      inline: this.inlineValue,
       locale: document.documentElement.lang === 'cs' ? window.Uppy.locales.cs_CZ : null
-    })
+    }
+
+    if (this.inlineValue) {
+      opts.target = this.element
+    } else {
+      opts.target = document.body
+      opts.trigger = `.f-uppy__trigger--${this.folioUppyCounter}`
+    }
+
+    this.uppy.use(window.Uppy.Dashboard, opts)
 
     this.uppy.use(window.Uppy.DropTarget, {
       target: document.body
@@ -58,13 +73,23 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
     this.uppy.on('complete', (result) => {
       this.uppyComplete(result)
     })
+
+    if (!this.inlineValue) {
+      this.uppy.on('files-added', (_files) => {
+        this.uppy.getPlugin('Dashboard').openModal()
+      })
+    }
+
+    this.element.querySelector('.f-uppy__loader').remove()
   }
 
-  uppyComplete (result) {
-    console.log('uppyComplete', result)
+  uppyComplete (_result) {
+    if (!this.inlineValue) {
+      this.uppy.getPlugin('Dashboard').closeModal()
+    }
   }
 
-  uppyUploadSuccess (_file, result) {
+  uppyUploadSuccess (file, result) {
     const data = {
       s3_path: new URL(result.uploadURL).pathname.replace(/^\//, ''),
       type: this.fileTypeValue
@@ -76,10 +101,10 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
 
       window.setTimeout(() => {
         if (!this.uppy) return
-        this.uppyUploadSuccess(_file, result)
+        this.uppyUploadSuccess(file, result)
       }, result.timeoutRunner)
     }).then((response) => {
-      this.dispatch('upload-success', { detail: data })
+      this.dispatch('upload-success', { detail: { file, result, data } })
     })
   }
 

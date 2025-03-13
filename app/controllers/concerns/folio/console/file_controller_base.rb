@@ -3,10 +3,6 @@
 module Folio::Console::FileControllerBase
   extend ActiveSupport::Concern
 
-  def index
-    render index_view_name
-  end
-
   def show
     @file_for_modal = Folio::Console::FileSerializer.new(folio_console_record)
                                                     .serializable_hash[:data]

@@ -48,6 +48,8 @@
 //= require folio/form_to_hash
 //= require folio/tooltip
 //= require folio/uppy_component
+//= require folio/file_list_component
+//= require folio/file_list/file_component
 
 // must be under folio/input
 //= require daterangepicker.min

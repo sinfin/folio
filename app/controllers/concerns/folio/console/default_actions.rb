@@ -17,22 +17,22 @@ module Folio::Console::DefaultActions
     if self.folio_console_controller_for_handle_csv
       respond_with(records) do |format|
         format.html do
-          pagy, records = pagy(records)
-          instance_variable_set("@pagy", pagy)
+          pagy_data, records = pagy(records)
+          instance_variable_set("@pagy", pagy_data)
           instance_variable_set(folio_console_record_variable_name(plural: true),
                                 records)
-          render :index
+          render index_view_name
         end
         format.csv do
           render_csv(records)
         end
       end
     else
-      pagy, records = pagy(records)
-      instance_variable_set("@pagy", pagy)
+      pagy_data, records = pagy(records)
+      instance_variable_set("@pagy", pagy_data)
       instance_variable_set(folio_console_record_variable_name(plural: true),
                             records)
-      render :index
+      render index_view_name
     end
   end
 
@@ -315,5 +315,9 @@ module Folio::Console::DefaultActions
       else
         render json: {}, status: 200
       end
+    end
+
+    def index_view_name
+      :index
     end
 end

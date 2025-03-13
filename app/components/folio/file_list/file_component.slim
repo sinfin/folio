@@ -1,0 +1,7 @@
+.f-file-list-file data=data
+  .f-file-list-file__image-wrap data=stimulus_target("imageWrap")
+    - if @file.present?
+      = @file.id
+
+  - if @template
+    span.folio-loader.f-file-list-file__loader data=stimulus_target("loader")
