@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Folio::Audited
+module Folio::Audited::Model
   extend ActiveSupport::Concern
 
   included do

@@ -19,6 +19,7 @@ module Folio
     config.folio_public_page_title_reversed = false
     config.folio_using_traco = false
     config.folio_pages_audited = false
+    config.folio_pages_autosave = false
     config.folio_pages_ancestry = false
     config.folio_pages_perex_richtext = false
     config.folio_pages_locales = false

@@ -4,7 +4,7 @@ require "test_helper"
 
 class Folio::Console::PagesControllerTest < Folio::Console::BaseControllerTest
   class AuditedPage < Folio::Page
-    include Folio::Audited
+    include Folio::Audited::Model
     audited
 
     def audited_console_restorable?

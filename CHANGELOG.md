@@ -3,6 +3,24 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+- set default timeouts for Devise actions and display such information in corresponding emails.
+   ```
+   config.reset_password_within = 6.hours # see as Folio::User.reset_password_within
+   config.invite_for = 30.days
+   config.confirm_within = 7.days
+   ```
+
+## [6.2.2] - 2025-03-11
+
+### Fixed
+- added default `folio_pages_autosave` config
+
+## [6.2.1] - 2025-03-10
+
+### Changed
+- moved `Folio::Audited` concern module to `Folio::Audited::Model`
+
 ## [6.2.0] - 2025-03-10
 
 ### Added

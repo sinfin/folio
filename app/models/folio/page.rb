@@ -34,7 +34,7 @@ class Folio::Page < Folio::ApplicationRecord
   include Folio::Autosave::Model
 
   if Rails.application.config.folio_pages_audited
-    include Folio::Audited
+    include Folio::Audited::Model
 
     translated = %i[
       title perex slug meta_title meta_description

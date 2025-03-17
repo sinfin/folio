@@ -4,7 +4,7 @@ require "test_helper"
 
 class Folio::Console::Audited::DropdownComponentTest < Folio::Console::ComponentTest
   class AuditedPage < Folio::Page
-    include Folio::Audited
+    include Folio::Audited::Model
     audited
   end
 
