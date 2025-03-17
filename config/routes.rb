@@ -38,6 +38,8 @@ Folio::Engine.routes.draw do
 
         get :input_rich_text
         get :input_date_time
+        get :input_url
+        get :input_tags
       end
 
       resources :attribute_types, except: %i[show] do
@@ -123,7 +125,12 @@ Folio::Engine.routes.draw do
       namespace :api do
         resources :private_attachments, only: %i[create destroy]
 
-        resources :links, only: %i[index]
+        resource :links, only: [] do
+          get :control_bar
+          get :modal_form
+          get :value
+          get :list
+        end
 
         resources :site_user_links, only: %i[] do
           member do

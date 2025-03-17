@@ -23,7 +23,7 @@ FOLIO_REDACTOR_I18N =
     small: "Small"
 
 ADVANCED_OPTIONS =
-  plugins: ['video', 'table', 'button', 'character_counter', 'definedlinks', 'linksrel']
+  plugins: ['video', 'table', 'button', 'character_counter']
   toolbarFixed: false
   lang: document.documentElement.lang
   formatting: ['p', 'h2', 'h3', 'h4']
@@ -34,10 +34,9 @@ ADVANCED_OPTIONS =
     blur: blurCallback
 
 OPTIONS =
-  plugins: ['table', 'button', 'character_counter', 'definedlinks', 'linksrel']
+  plugins: ['table', 'button', 'character_counter']
   buttonsHide: ['file', 'image']
   toolbarFixed: false
-  definedlinks: '/console/api/links.json'
   lang: document.documentElement.lang
   formatting: ['p', 'h2', 'h3', 'h4']
   formattingAdd:
@@ -74,7 +73,7 @@ EMAIL_OPTIONS =
     blur: blurCallback
 
 PEREX_OPTIONS =
-  plugins: ['character_counter', 'definedlinks', 'linksrel']
+  plugins: ['character_counter']
   buttonsHide: ['file', 'image', 'html', 'format', 'bold', 'italic', 'deleted', 'lists']
   breakline: true
   toolbarFixed: false

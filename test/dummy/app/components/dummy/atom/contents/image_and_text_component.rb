@@ -7,7 +7,7 @@ class Dummy::Atom::Contents::ImageAndTextComponent < ApplicationComponent
     @atom = atom
     @atom_options = atom_options
     @image_right = @atom.image_side == "right"
-    @with_link = @atom.url.present?
+    @with_link = @atom.url_json.present? && @atom.url_json[:href].present?
     @thumb_size = @atom.thumb_size_with_fallback
     @wrapper = @atom.wrapper.present? && @atom.wrapper != "none"
     @background = @atom.wrapper == "background"
@@ -16,7 +16,7 @@ class Dummy::Atom::Contents::ImageAndTextComponent < ApplicationComponent
   end
 
   def data
-    hash = @atom.url.blank? ? stimulus_lightbox : {}
+    hash = @with_link ? {} : stimulus_lightbox
 
     if @dark_mode
       hash[:bs_theme] = "dark"

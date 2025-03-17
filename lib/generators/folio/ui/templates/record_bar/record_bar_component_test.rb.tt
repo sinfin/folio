@@ -1,0 +1,28 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= application_namespace %>::Ui::RecordBarComponentTest < Folio::ComponentTest
+  def test_render
+    site = get_any_site
+    user = create(:folio_user, :superadmin)
+    record = create(:folio_page)
+
+    Folio::Current.ability = Folio::Ability.new(user, site)
+
+    render_inline(<%= application_namespace %>::Ui::RecordBarComponent.new(record:))
+    assert_selector(".<%= classname_prefix %>-ui-record-bar")
+  end
+
+  def test_render_no_record
+    render_inline(<%= application_namespace %>::Ui::RecordBarComponent.new(record: nil))
+    assert_no_selector(".<%= classname_prefix %>-ui-record-bar")
+  end
+
+  def test_render_no_user
+    record = create(:folio_page)
+
+    render_inline(<%= application_namespace %>::Ui::RecordBarComponent.new(record:))
+    assert_no_selector(".<%= classname_prefix %>-ui-record-bar")
+  end
+end

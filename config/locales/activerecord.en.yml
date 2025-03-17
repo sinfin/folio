@@ -247,6 +247,7 @@ en:
     audio_cover_placement: Audio
     button_label: Button label
     button_url: Button URL
+    button_url_json: Button
     console_notes: Notes (internal)
     content: Content
     count: Count
@@ -262,6 +263,7 @@ en:
     last_sign_in_at: Last sign in
     link_label: Link label
     link_url: Link URL
+    link_url_json: Link
     locale: Locale
     locked: Locked
     meta_description: SEO - Meta Description
@@ -280,6 +282,7 @@ en:
     secondary_address: Secondary address
     secondary_button_label: Secondary button label
     secondary_button_url: Secondary button URL
+    secondary_button_url_json: Secondary button
     sensitive_content: Contains sensitive content
     sign_in_count: Sign in count
     slug: Slug
@@ -301,6 +304,7 @@ en:
     title: Title
     to_label: Title
     url: URL
+    url_json: URL
     video_cover_placement: Video
 
   errors:

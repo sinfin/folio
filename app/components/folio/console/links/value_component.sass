@@ -1,0 +1,73 @@
+.f-c-links-value
+  container-type: inline-size
+  padding: $grid-gutter-base / 2 0
+
+  &__flex, &__left, &__right
+    display: flex
+    align-items: center
+    gap: $grid-gutter-width / 2
+
+  &__left
+    flex: 0 1 auto
+    min-width: 0
+
+  &__right
+    gap: $grid-gutter-width
+    flex: 1 0 auto
+
+  &__badges
+    display: flex
+    align-items: center
+    gap: $grid-gutter-base / 2
+
+  &__a
+    flex: 0 1 auto
+    white-space: nowrap
+    overflow: hidden
+    text-overflow: ellipsis
+
+  &__published-at
+    flex: 0 0 auto
+
+  &__actions
+    flex: 0 0 auto
+    margin-top: - $grid-gutter-base
+    margin-bottom: - $grid-gutter-base
+    margin-left: auto
+    display: flex
+    align-items: center
+
+  &__main
+    flex: 0 1 auto
+    min-width: 0
+
+  &__main-top
+    display: flex
+    align-items: center
+    gap: $grid-gutter-base / 2
+
+  &__action
+    +unbutton
+    display: flex
+    align-items: center
+    justify-content: center
+    width: 36px
+    height: 44px
+    transition: $transition-base
+
+    &:hover
+      opacity: $f-c-btn-hover-opacity
+
+    &--close
+      padding-right: $grid-gutter-base / 2
+
+      &, &:hover
+        color: $danger
+
+  @container (max-width: #{map-get($grid-breakpoints, sm)})
+    &__flex
+      flex-wrap: wrap
+      row-gap: $grid-gutter-width / 2
+
+    &__left
+      padding-right: $grid-gutter-base

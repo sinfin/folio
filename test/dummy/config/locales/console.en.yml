@@ -1,0 +1,8 @@
+---
+en:
+  folio:
+    console:
+      links:
+        modal:
+          url_picker_component:
+            placeholder/by_topic_slug: Topic

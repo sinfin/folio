@@ -99,8 +99,8 @@ class Folio::Page < Folio::ApplicationRecord
 
   before_save :set_atoms_data_for_search
 
-  def self.traco_aware_against(multisearch: false)
-    if multisearch
+  def self.traco_aware_against(multisearch: false, only_title: false)
+    if multisearch || only_title
       if Rails.application.config.folio_using_traco
         I18n.available_locales.map { |locale| "title_#{locale}".to_sym }
       else
@@ -132,6 +132,13 @@ class Folio::Page < Folio::ApplicationRecord
 
   pg_search_scope :by_query,
                   against: self.traco_aware_against,
+                  ignoring: :accents,
+                  using: {
+                    tsearch: { prefix: true }
+                  }
+
+  pg_search_scope :by_label_query,
+                  against: self.traco_aware_against(only_title: true),
                   ignoring: :accents,
                   using: {
                     tsearch: { prefix: true }

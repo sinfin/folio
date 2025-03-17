@@ -8,12 +8,12 @@
         ]
           .d-molecule-cards-person__card[
             class=(atom.large ? "d-molecule-cards-person__card--large" : nil)
-            class=(atom.link_url.present? ? "d-ui-image-hover-zoom-wrap" : nil)
+            class=(atom.link_url_json.present? ? "d-ui-image-hover-zoom-wrap" : nil)
           ]
             = dummy_ui_image(molecule_cover_placement(atom),
                              image_thumb_size(atom),
                              class_name: 'd-molecule-cards-person__card-image',
-                             lightbox: atom.link_url.blank?,
+                             lightbox: atom.link_url_json.blank?,
                              hover_zoom: true)
 
             .d-molecule-cards-person__card-body
@@ -28,9 +28,12 @@
                   .fs-text-s.d-rich-text.d-rich-text--chomp
                     == cstypo atom.content
 
-              - if atom.link_url.present?
+              - if atom.link_url_json && atom.link_url_json[:href].present?
                 a.d-molecule-cards-person__card-link[
                   class="fs-text-xs mt-3"
-                  href=atom.link_url
+                  href=atom.link_url_json[:href]
+                  rel=atom.link_url_json[:rel]
+                  target=atom.link_url_json[:target]
+                  title=atom.link_url_json[:label]
                 ]
                   = atom.link_label

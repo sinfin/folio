@@ -107,12 +107,16 @@ module Folio::Atom::MethodMissing
       is_bool = klass::STRUCTURE[name_without_operator] == :boolean
       is_date = klass::STRUCTURE[name_without_operator] == :date
       is_datetime = klass::STRUCTURE[name_without_operator] == :datetime
+      is_url_json = klass::STRUCTURE[name_without_operator] == :url_json
+      is_deprecated = klass::STRUCTURE[name_without_operator] == :deprecated
 
       if method_name.to_s.include?("=")
         self.data ||= {}
         value = argument
 
-        if is_bool
+        if is_deprecated
+          value = nil
+        elsif is_bool
           if value == "false" || value == "0"
             value = false
           else
@@ -128,6 +132,25 @@ module Folio::Atom::MethodMissing
           if value && is_date
             value = value.to_date
           end
+        elsif is_url_json
+          value = if value.present?
+            if value.is_a?(String)
+              value
+            else
+              if value[:href].present?
+                value.transform_values(&:presence).compact.to_json
+              else
+                nil
+              end
+            end
+          else
+            nil
+          end
+        end
+
+        # nillify blanks
+        if value.blank? && !value.nil? && value != false
+          value = nil
         end
 
         self.data[name_without_operator.to_s] = value
@@ -154,6 +177,13 @@ module Folio::Atom::MethodMissing
             end
           else
             result = val
+          end
+        elsif is_url_json
+          if val.present?
+            begin
+              result = JSON.parse(val).symbolize_keys.transform_values(&:presence).compact
+            rescue StandardError
+            end
           end
         else
           result = val
