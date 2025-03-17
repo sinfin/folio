@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+- include `id` and `slug` (when possible) in `by_label_query`
+
 ## [6.2.3] - 2025-03-17
 
 ### Changed

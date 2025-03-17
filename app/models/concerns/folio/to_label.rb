@@ -4,8 +4,15 @@ module Folio::ToLabel
   extend ActiveSupport::Concern
 
   included do
-    pg_search_scope :by_title_query,
-                    against: %i[title],
+    pg_search_scope :by_title_and_id_query,
+                    against: %i[id title],
+                    ignoring: :accents,
+                    using: {
+                      tsearch: { prefix: true }
+                    }
+
+    pg_search_scope :by_title_id_and_slug_query,
+                    against: %i[id title slug],
                     ignoring: :accents,
                     using: {
                       tsearch: { prefix: true }
@@ -13,7 +20,11 @@ module Folio::ToLabel
 
     scope :by_label_query, -> (query) do
       if column_names.include?("title")
-        by_title_query(query)
+        if column_names.include?("slug")
+          by_title_id_and_slug_query(query)
+        else
+          by_title_and_id_query(query)
+        end
       elsif respond_to?(:by_query)
         by_query(query)
       else
