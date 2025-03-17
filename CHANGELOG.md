@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [6.2.3] - 2025-03-17
+
 ### Changed
 - set default timeouts for Devise actions and display such information in corresponding emails.
    ```
