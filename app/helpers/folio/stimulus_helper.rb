@@ -74,8 +74,8 @@ module Folio::StimulusHelper
     h
   end
 
-  def stimulus_action(action)
-    stimulus_data(action:)
+  def stimulus_action(action, params = nil)
+    stimulus_data(action:, params:)
   end
 
   def stimulus_target(target)

@@ -3,12 +3,16 @@
 class Folio::FileListComponent < Folio::ApplicationComponent
   def initialize(file_klass:,
                  files: nil,
-                 files_pagy: nil,
-                 upload: true)
+                 upload: true,
+                 editable: true,
+                 destroyable: false,
+                 primary_action: nil)
     @file_klass = file_klass
     @files = files
-    @files_pagy = files_pagy
     @upload = upload
+    @editable = editable
+    @destroyable = destroyable
+    @primary_action = primary_action
   end
 
   def data
@@ -19,5 +23,18 @@ class Folio::FileListComponent < Folio::ApplicationComponent
                         action: {
                           "f-uppy:upload-success": "uppyUploadSuccess",
                         })
+  end
+
+  def file_args(file: nil, template: false)
+    @file_args ||= {
+      file: nil,
+      template: false,
+      file_klass: @file_klass,
+      editable: @editable,
+      destroyable: @destroyable,
+      primary_action: @primary_action,
+    }
+
+    @file_args.merge(file:, template:)
   end
 end

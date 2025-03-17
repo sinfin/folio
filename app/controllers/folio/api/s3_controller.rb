@@ -29,7 +29,20 @@ class Folio::Api::S3Controller < Folio::Api::BaseController
 
     if file_klass && allowed_klass?(file_klass)
       @file = file_klass.accessible_by(Folio::Current.ability).find(params.require(:file_id))
-      render_component_json(Folio::FileList::FileComponent.new(file: @file))
+
+      props = { file: @file }
+
+      %i[
+        editable
+        destroyable
+        primary_action
+      ].each do |param|
+        if params[param]
+          props[param] = params[param]
+        end
+      end
+
+      render_component_json(Folio::FileList::FileComponent.new(**props))
     else
       render json: {}, status: 404
     end

@@ -15,3 +15,24 @@
         span.folio-loader.folio-loader--tiny.folio-loader--transparent
 
       .f-file-list-file__loader-label = t('.processing')
+  - else
+    - if destroy_url
+      button[
+        class="f-file-list-file__control"
+        class="f-file-list-file__control--destroy"
+        type="button"
+        data=stimulus_action("destroy", { url: destroy_url })
+      ]
+        = folio_icon(:delete, height: 12)
+
+    - if @editable
+      button[
+        class="f-file-list-file__control"
+        class="f-file-list-file__control--edit"
+        type="button"
+        data=stimulus_action("edit")
+      ]
+        = folio_icon(:edit, height: 12)
+
+    - if @primary_action == :edit
+      .f-file-list-file__primary-overlay data=stimulus_action(click: "edit")

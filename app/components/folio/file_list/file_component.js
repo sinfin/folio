@@ -1,10 +1,13 @@
+//= require folio/confirm
+
 window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus.Controller {
   static targets = ['imageWrap', 'loader']
 
   static values = {
     templateData: { type: String, default: '' },
     s3Path: { type: String, default: '' },
-    fileType: String
+    fileType: String,
+    templateUrl: { type: String, default: '' }
   }
 
   connect () {
@@ -50,15 +53,20 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
       type: this.fileTypeValue
     }
 
-    window.Folio.Api.apiPost('/folio/api/s3/after', data).catch(() => {
-      this.timeoutRunner = this.timeoutRunner || 500
-      this.timeoutRunner += 500
+    window.Folio.Api.apiPost('/folio/api/s3/after', data).catch((error) => {
+      this.catchCounter = this.catchCounter || 0
+      this.catchCounter += 1
+
+      if (this.catchCounter > 10) {
+        this.removeParentOrElement()
+        window.alert(`Failed to process file: ${error.message}`)
+      }
 
       if (this.timeout) window.clearTimeout(this.timeout)
 
       this.timeout = window.setTimeout(() => {
         this.pingApi()
-      }, this.timeoutRunner)
+      }, this.catchCounter * 500)
     })
   }
 
@@ -76,19 +84,24 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
   }
 
   messageBusSuccess (data) {
-    const url = new URL('/folio/api/s3/file_list_file', window.location.origin)
-    url.searchParams.set('file_type', data.file_type)
+    if (!this.templateUrlValue) return
+
+    const url = new URL(this.templateUrlValue, window.location.origin)
     url.searchParams.set('file_id', data.file_id)
 
-    window.Folio.Api.apiGet(url.toString()).catch(() => {
-      this.timeoutRunner = this.timeoutRunner || 500
-      this.timeoutRunner += 500
+    window.Folio.Api.apiGet(url.toString()).catch((error) => {
+      this.catchCounter = this.catchCounter || 0
+      this.catchCounter += 1
 
+      if (this.catchCounter > 10) throw error
       if (this.timeout) window.clearTimeout(this.timeout)
 
       this.timeout = window.setTimeout(() => {
         this.messageBusSuccess(data)
-      }, this.timeoutRunner)
+      }, this.catchCounter * 500)
+    }).catch((error) => {
+      this.removeParentOrElement()
+      window.alert(`Failed to process file: ${error.message}`)
     }).then((response) => {
       this.element.outerHTML = response.data
     })
@@ -96,6 +109,35 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
 
   messageBusFailure (data) {
     console.log('failure', data)
+  }
+
+  edit () {
+    console.log('modal control click')
+  }
+
+  removeParentOrElement () {
+    const parent = this.element.closest('.f-file-list__flex-item')
+
+    if (parent) {
+      parent.remove()
+    } else {
+      this.element.remove()
+    }
+  }
+
+  destroy (e) {
+    if (!e || !e.params || !e.params.url) return
+
+    window.Folio.Confirm.confirm(() => {
+      this.element.classList.add('f-file-list-file--destroying')
+
+      window.Folio.Api.apiDelete(e.params.url).then(() => {
+        this.removeParentOrElement()
+      }).catch((error) => {
+        this.element.classList.remove('f-file-list-file--destroying')
+        window.alert(`Failed to delete file: ${error.message}`)
+      })
+    }, 'delete')
   }
 })
 

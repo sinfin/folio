@@ -6,7 +6,7 @@
     - if @files.present?
       - @files.each do |file|
         .f-file-list__flex-item
-          = render(Folio::FileList::FileComponent.new(file:))
+          = render(Folio::FileList::FileComponent.new(**file_args(file:)))
 
   template.f-file-list__file-template data=stimulus_target("fileTemplate")
-    = render(Folio::FileList::FileComponent.new(file: nil, template: true))
+    = render(Folio::FileList::FileComponent.new(**file_args(template: true)))

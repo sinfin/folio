@@ -1,6 +1,7 @@
 .f-file-list-file
   &__image-wrap
     position: absolute
+    z-index: 1
     inset: 0
     display: flex
     align-items: center
@@ -15,6 +16,7 @@
     flex: 0 1 auto
 
   &__loader
+    z-index: 4
     position: absolute
     inset: 0
     display: flex
@@ -29,3 +31,45 @@
     width: 3 * $grid-gutter-base
     height: 3 * $grid-gutter-base
     position: relative
+
+  &__control
+    position: absolute
+    z-index: 3
+    width: 3 * $grid-gutter-base
+    height: 3 * $grid-gutter-base
+    background-color: #000000
+    color: #ffffff
+    border: 0
+    appearance: none
+    padding: 0
+    display: flex
+    align-items: center
+    justify-content: center
+    cursor: pointer
+    transition: $transition-base
+    opacity: 0
+
+    &--edit
+      bottom: 0
+      right: 0
+
+    &--destroy
+      background-color: $danger
+      top: 0
+      right: 0
+
+  &:hover &__control
+    opacity: 1
+
+  &:hover &__control:hover
+    opacity: 0.75
+
+  &__primary-overlay
+    position: absolute
+    z-index: 2
+    inset: 0
+    cursor: pointer
+
+  &--destroying
+    pointer-events: none
+    opacity: 0.5

@@ -1,7 +1,10 @@
 = index_header react_new: true
 
 = render(Folio::FileListComponent.new(file_klass: @klass,
-                                      files: controller.instance_variable_get(controller.send(:folio_console_record_variable_name, plural: true))))
+                                      files: controller.instance_variable_get(controller.send(:folio_console_record_variable_name, plural: true)),
+                                      editable: true,
+                                      destroyable: true,
+                                      primary_action: :edit))
 
 / .folio-react-wrap[
 /   data-file-type=@klass.to_s
