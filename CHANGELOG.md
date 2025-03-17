@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
    config.invite_for = 30.days
    config.confirm_within = 7.days
    ```
+- the way we work with links - added a modal for `as: :url` inputs, added `as: :url_json` and switched some atoms to it
 
 ## [6.2.2] - 2025-03-11
 
@@ -67,7 +68,6 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - only pass preview token if unpublished in console index actions
-- the way we work with links - added a modal for `as: :url` inputs, added `as: :url_json` and switched some atoms to it
 
 ## [6.0.4] - 2025-01-13
 
