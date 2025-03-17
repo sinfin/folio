@@ -76,7 +76,7 @@ module Folio
     config.folio_direct_s3_upload_allow_for_users = false
     config.folio_direct_s3_upload_allow_public = false
     config.folio_direct_s3_upload_attributes_for_job_proc = -> (controller) {
-      { site_id: controller.site_for_new_files.id }
+      { site_id: controller.send(:site_for_new_files).id }
     }
 
     config.folio_content_templates_editable = false

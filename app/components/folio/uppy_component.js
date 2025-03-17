@@ -90,22 +90,7 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
   }
 
   uppyUploadSuccess (file, result) {
-    const data = {
-      s3_path: new URL(result.uploadURL).pathname.replace(/^\//, ''),
-      type: this.fileTypeValue
-    }
-
-    window.Folio.Api.apiPost('/folio/api/s3/after', data).catch(() => {
-      result.timeoutRunner = result.timeoutRunner || 500
-      result.timeoutRunner += 500
-
-      window.setTimeout(() => {
-        if (!this.uppy) return
-        this.uppyUploadSuccess(file, result)
-      }, result.timeoutRunner)
-    }).then((response) => {
-      this.dispatch('upload-success', { detail: { file, result, data } })
-    })
+    this.dispatch('upload-success', { detail: { file, result } })
   }
 
   addCsLocale () {

@@ -37,7 +37,7 @@ class Folio::S3::BaseJob < Folio::ApplicationJob
     end
 
     def broadcast_success(s3_path:, file:, file_type:)
-      broadcast({ s3_path:, type: "success", file: file ? serialized_file(file)[:data] : nil, file_type: })
+      broadcast({ s3_path:, type: "success", file_id: file.id, file_type: })
     end
 
     def broadcast_error(s3_path:, file: nil, error: nil, file_type:)
@@ -49,14 +49,14 @@ class Folio::S3::BaseJob < Folio::ApplicationJob
         errors = nil
       end
 
-      broadcast({ s3_path:, type: "failure", errors:, file_type: })
+      broadcast({ s3_path:, type: "failure", errors:, file_id: file.id, file_type: })
     end
 
-    def broadcast_replace_success(file:, file_type:)
-      broadcast({ type: "replace-success", file: serialized_file(file)[:data], file_type: })
+    def broadcast_replace_success(s3_path:, file:, file_type:)
+      broadcast({ type: "replace-success", file_id: file.id, file_type: })
     end
 
-    def broadcast_replace_error(file:, error: nil, file_type:)
+    def broadcast_replace_error(s3_path:, file:, error: nil, file_type:)
       if error
         errors = [error.message]
       elsif file && file.errors
@@ -65,7 +65,7 @@ class Folio::S3::BaseJob < Folio::ApplicationJob
         errors = nil
       end
 
-      broadcast({ type: "replace-failure", file: file ? serialized_file(file)[:data] : nil, errors:, file_type: })
+      broadcast({ type: "replace-failure", file_id: file.id, errors:, file_type: })
     end
 
     def broadcast(hash)

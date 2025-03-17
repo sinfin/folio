@@ -6,10 +6,14 @@ window.Folio.Stimulus.register('f-file-list', class extends window.Stimulus.Cont
   static targets = ['fileTemplate', 'uppy']
 
   uppyUploadSuccess (event) {
-    const { file, result, data } = event.detail
+    const { file, result } = event.detail
 
     const fileElement = this.fileTemplateTarget.content.children[0].cloneNode(true)
-    fileElement.dataset.fFileListFileTemplateDataValue = JSON.stringify({ file, result, data })
+    fileElement.dataset.fFileListFileTemplateDataValue = JSON.stringify({
+      preview: file.preview
+    })
+    fileElement.dataset.fFileListFileS3PathValue = new URL(result.uploadURL).pathname.replace(/^\//, '')
+    fileElement.dataset.fFileListFileFileTypeValue = this.fileTypeValue
 
     const flexItem = document.createElement('div')
     flexItem.classList.add('f-file-list__flex-item')

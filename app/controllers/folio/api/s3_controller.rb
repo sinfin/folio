@@ -22,8 +22,17 @@ class Folio::Api::S3Controller < Folio::Api::BaseController
     handle_after(Folio::S3::CreateFileJob)
   end
 
-  def site_for_new_files
-    Rails.application.config.folio_shared_files_between_sites ? Folio::Current.main_site : Folio::Current.site
+  # Folio::FileList::FileComponent created from a template waits for a message from the S3 job. Once it gets it, it will ping this endpoint to get the render component with the file
+  def file_list_file
+    file_type = params.require(:file_type)
+    file_klass = file_type.safe_constantize
+
+    if file_klass && allowed_klass?(file_klass)
+      @file = file_klass.accessible_by(Folio::Current.ability).find(params.require(:file_id))
+      render_component_json(Folio::FileList::FileComponent.new(file: @file))
+    else
+      render json: {}, status: 404
+    end
   end
 
   private
@@ -71,5 +80,9 @@ class Folio::Api::S3Controller < Folio::Api::BaseController
       else
         render json: {}, status: 422
       end
+    end
+
+    def site_for_new_files
+      Rails.application.config.folio_shared_files_between_sites ? Folio::Current.main_site : Folio::Current.site
     end
 end

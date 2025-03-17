@@ -12,13 +12,13 @@ class Folio::S3::CreateFileJob < Folio::S3::BaseJob
 
       if @file.save
         if replacing_file
-          broadcast_replace_success(file: @file.reload, file_type: klass.to_s)
+          broadcast_replace_success(file: @file, s3_path:, file_type: klass.to_s)
         else
-          broadcast_success(file: @file.reload, s3_path:, file_type: klass.to_s)
+          broadcast_success(file: @file, s3_path:, file_type: klass.to_s)
         end
       else
         if replacing_file
-          broadcast_replace_error(file: @file, file_type: klass.to_s)
+          broadcast_replace_error(file: @file, s3_path:, file_type: klass.to_s)
         else
           broadcast_error(file: @file, s3_path:, file_type: klass.to_s)
         end

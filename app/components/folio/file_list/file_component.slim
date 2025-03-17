@@ -1,5 +1,5 @@
 .f-file-list-file data=data
-  .f-file-list-file__image-wrap data=stimulus_target("imageWrap")
+  .f-file-list-file__image-wrap data=stimulus_target("imageWrap") style=image_wrap_style
     - if @file.present? && @file.respond_to?(:base_thumb)
       img.f-file-list-file__image[
         src=@file.base_thumb.url
@@ -10,4 +10,8 @@
       ]
 
   - if @template
-    span.folio-loader.folio-loader--small.f-file-list-file__loader data=stimulus_target("loader")
+    .f-file-list-file__loader data=stimulus_target("loader")
+      .f-file-list-file__loader-wrap
+        span.folio-loader.folio-loader--tiny.folio-loader--transparent
+
+      .f-file-list-file__loader-label = t('.processing')
