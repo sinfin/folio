@@ -232,12 +232,19 @@ class Folio::File < Folio::ApplicationRecord
     end
   end
 
+  def indestructible_reason
+    return nil if file_placements_size == 0
+    return nil if file_placements_size.nil?
+    I18n.t("folio.file.cannot_destroy_file_with_placements")
+  end
+
   private
     def set_file_name_for_search
       self.file_name_for_search = self.class.sanitize_filename_for_search(file_name)
     end
 
     def check_usage_before_destroy
+      throw(:abort) if indestructible_reason.present?
       throw(:abort) if file_placements.exists?
     end
 

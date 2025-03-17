@@ -64,6 +64,11 @@
   &:hover &__control:hover
     opacity: 0.75
 
+  &:hover &__control--disabled,
+  &:hover &__control--disabled:hover
+    opacity: 0.5
+    cursor: not-allowed
+
   &__primary-overlay
     position: absolute
     z-index: 2

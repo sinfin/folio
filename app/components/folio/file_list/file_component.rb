@@ -50,4 +50,14 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
                                                       destroyable: @destroyable,
                                                       primary_action: @primary_action)
   end
+
+  def indestructible_reason
+    return @indestructible_reason unless @indestructible_reason.nil?
+
+    @indestructible_reason = if @file.present? && @file.try(:indestructible_reason).present?
+      @file.indestructible_reason
+    else
+      false
+    end
+  end
 end

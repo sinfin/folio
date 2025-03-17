@@ -20,8 +20,9 @@
       button[
         class="f-file-list-file__control"
         class="f-file-list-file__control--destroy"
+        class=(indestructible_reason ? "f-file-list-file__control--disabled" : nil)
         type="button"
-        data=stimulus_action("destroy", { url: destroy_url })
+        data=(indestructible_reason ? stimulus_tooltip(indestructible_reason) : stimulus_action("destroy", { url: destroy_url }))
       ]
         = folio_icon(:delete, height: 12)
 
