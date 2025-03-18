@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - include `id` and `slug` (when possible) in `by_label_query`
+- option to hide "subscribe to newsleter" input in  resource form
+- pass `:placeholder` to email input
 
 ## [6.2.3] - 2025-03-17
 
