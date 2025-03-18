@@ -33,6 +33,8 @@ class Folio::AssetsGenerator < Rails::Generators::Base
   FILES = %w[
     app/cells/folio/.keep
     app/cells/folio/console/.keep
+    app/components/folio/.keep
+    app/components/folio/console/.keep
     data/icons.yaml
     data/icons/*.svg
     public/*
@@ -43,6 +45,8 @@ class Folio::AssetsGenerator < Rails::Generators::Base
     app/cells/application_namespace_path/.keep
     app/cells/folio/.keep
     app/cells/folio/console/.keep
+    app/components/folio/.keep
+    app/components/folio/console/.keep
     app/components/application_namespace_path/.keep
   ]
 
@@ -72,6 +76,7 @@ class Folio::AssetsGenerator < Rails::Generators::Base
     FILES.each do |key|
       Dir["#{base}#{key}"].each do |full_path|
         next if File.directory?(full_path)
+
         path = full_path.to_s.gsub(base, "")
         copy_file path, path
       end
@@ -95,7 +100,7 @@ class Folio::AssetsGenerator < Rails::Generators::Base
         file,
       ].each do |path|
         if File.exist?(path)
-          ::File.chmod(0775, path)
+          ::File.chmod(0o775, path)
         end
       end
     end
