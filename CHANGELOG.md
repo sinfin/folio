@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- `:scope_name` option to `folio_console_links_mapping` config
+
 ### Changed
 - include `id` and `slug` (when possible) in `by_label_query`
 - option to hide "subscribe to newsleter" input in  resource form

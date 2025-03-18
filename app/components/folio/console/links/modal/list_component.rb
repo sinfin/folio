@@ -18,9 +18,11 @@ class Folio::Console::Links::Modal::ListComponent < Folio::Console::ApplicationC
         if url_proc_or_hash.is_a?(Hash)
           url_proc = url_proc_or_hash[:url_proc]
           includes = url_proc_or_hash[:includes]
+          scope_name = url_proc_or_hash[:scope_name]
         else
           url_proc = url_proc_or_hash
           includes = nil
+          scope_name = nil
         end
 
         class_from_params = if params[:class_name].present?
@@ -37,6 +39,10 @@ class Folio::Console::Links::Modal::ListComponent < Folio::Console::ApplicationC
           end
 
           scope = klass
+
+          if scope_name.present?
+            scope = scope.send(scope_name)
+          end
 
           scope = scope.includes(includes) if includes
 
