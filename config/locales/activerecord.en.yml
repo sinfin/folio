@@ -31,7 +31,8 @@ en:
         default_gravity/south: South
         default_gravity/west: West
         default_gravity: Default crop
-        mime_type: File type
+        file_mime_type: File type
+        file_size: File size
         preview_duration: How many seconds are free?
       folio/file/image:
         file_placements: Placements

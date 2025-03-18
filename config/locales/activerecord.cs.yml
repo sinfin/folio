@@ -36,6 +36,8 @@ cs:
         default_gravity/west: Vlevo
         default_gravity: Výchozí ořez
         description: Popis
+        file_mime_type: Typ souboru
+        file_size: Velikost souboru
         preview_duration: Kolik vteřin je zdarma?
       folio/file/image:
         file_placements: Použití
@@ -185,7 +187,7 @@ cs:
               not_available_for_site: "Role %{roles} nejsou všechny dostupné pro web '%{site}'."
       clonable:
         association_not_found: "Asociace '%{association}' neexistuje pro %{model}"
-        attribute_not_found: "Atribut '%{attribute}' neexistuje pro %{model}"  
+        attribute_not_found: "Atribut '%{attribute}' neexistuje pro %{model}"
     models:
       folio/atom:
         few: Kapitoly

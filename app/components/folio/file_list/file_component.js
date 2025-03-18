@@ -111,8 +111,9 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
     console.log('failure', data)
   }
 
-  edit () {
-    console.log('modal control click')
+  edit (e) {
+    if (!e || !e.params || !e.params.url) return
+    window.location.href = e.params.url
   }
 
   removeParentOrElement () {

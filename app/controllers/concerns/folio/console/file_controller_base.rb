@@ -3,6 +3,10 @@
 module Folio::Console::FileControllerBase
   extend ActiveSupport::Concern
 
+  def edit
+    render "folio/console/file/edit"
+  end
+
   def show
     @file_for_modal = Folio::Console::FileSerializer.new(folio_console_record)
                                                     .serializable_hash[:data]
@@ -26,6 +30,11 @@ module Folio::Console::FileControllerBase
       end
 
       p
+    end
+
+    # manually set method overriding default_actions
+    def folio_console_params
+      file_params
     end
 
     def folio_console_record_includes

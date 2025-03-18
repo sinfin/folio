@@ -32,6 +32,16 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
     "background-color: #{@file.additional_data["dominant_color"]}"
   end
 
+  def edit_url
+    return @edit_url unless @edit_url.nil?
+
+    @edit_url = if @file.present? && @file_klass <= Folio::File
+      controller.folio.url_for([:edit, :console, @file])
+    else
+      false
+    end
+  end
+
   def destroy_url
     return @destroy_url unless @destroy_url.nil?
 

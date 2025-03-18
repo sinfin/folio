@@ -31,9 +31,9 @@
         class="f-file-list-file__control"
         class="f-file-list-file__control--edit"
         type="button"
-        data=stimulus_action("edit")
+        data=stimulus_action("edit", { url: edit_url })
       ]
         = folio_icon(:edit, height: 12)
 
     - if @primary_action == :edit
-      .f-file-list-file__primary-overlay data=stimulus_action(click: "edit")
+      .f-file-list-file__primary-overlay data=stimulus_action({ click: "edit" }, { url: edit_url })
