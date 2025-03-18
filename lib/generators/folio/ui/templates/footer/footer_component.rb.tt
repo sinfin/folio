@@ -7,7 +7,7 @@ class <%= application_namespace %>::Ui::FooterComponent < ApplicationComponent
 
   def social_links
     if Folio::Current.site.social_links.present?
-      allowed = %w[instagram linkedin twitter tiktok youtube facebook]
+      allowed = %w[instagram linkedin twitter tiktok youtube facebook linktree]
       Folio::Current.site.social_links.slice(*allowed).select { |key, val| val.present? }
     end
   end

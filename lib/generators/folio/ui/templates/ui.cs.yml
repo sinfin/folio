@@ -6,11 +6,18 @@ footer_component:
   newsletter: Přihlášení k newsletteru
   contact: Kontakt
   follow_us: Sledujte nás
+  facebook: Facebook
+  linktree: Linktree
+  instagram: Instagram
+  linkedin: LinkedIn
+  tiktok: TikTok
+  twitter: x.com
+  youtube: Youtube
 share_component:
   title: 'Sdílejte:'
   facebook: Sdílejte na Facebooku
   messenger: Sdílejte na Messengeru
-  twitter: Sdílejte na Twitteru
+  twitter: Sdílejte na X
   email: Sdílejte mailem
   clipboard: Kopírovat odkaz
 menu_toolbar:
