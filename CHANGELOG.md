@@ -11,6 +11,9 @@ All notable changes to this project will be documented in this file.
 - option to hide "subscribe to newsleter" input in  resource form
 - pass `:placeholder` to email input
 
+### Fixed
+- built react version to include "folio links" changes
+
 ## [6.2.3] - 2025-03-17
 
 ### Changed
