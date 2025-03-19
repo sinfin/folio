@@ -81,6 +81,7 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
     if (!this.autosaveEnabledValue || !window.FolioConsole.Autosave.enabled) return
     if (this.autosavePausedValue) return
     if (this.atomsFormOpen()) return
+    if (this.anyModalOpen()) return
     if (target && this.lastTargetCache && target === this.lastTargetCache && this.autosaveTimerValue > 0 && target.type !== 'checkbox') return
     if (document.activeElement) {
       if (document.activeElement.tagName === 'TEXTAREA') return
@@ -100,8 +101,13 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
     return !!document.querySelector('.f-c-simple-form-with-atoms--editing-atom')
   }
 
+  anyModalOpen () {
+    return !!document.querySelector('.f-c-ui-modal.show')
+  }
+
   onWindowMessage (e) {
     if (this.atomsFormOpen()) return
+    if (this.anyModalOpen()) return
 
     if (e.origin === window.origin) {
       switch (e.data.type) {
@@ -331,6 +337,14 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
   }
 
   onNestedFieldsDestroyed () {
+    this.queueAutosaveIfPossible()
+  }
+
+  onModalOpened () {
+    this.pauseAutosave()
+  }
+
+  onModalClosed () {
     this.queueAutosaveIfPossible()
   }
 

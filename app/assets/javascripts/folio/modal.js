@@ -73,6 +73,7 @@ window.Folio.Stimulus.register('f-modal', class extends window.Stimulus.Controll
       }
 
       this.dispatch('opened')
+      this.element.dispatchEvent(new window.CustomEvent('f-modal:opened', { bubbles: true }))
     } else {
       this.unbindOutsideClick()
 
@@ -85,6 +86,7 @@ window.Folio.Stimulus.register('f-modal', class extends window.Stimulus.Controll
       this.removeBackdrops()
 
       this.dispatch('closed')
+      this.element.dispatchEvent(new window.CustomEvent('f-modal:closed', { bubbles: true }))
     }
   }
 })
