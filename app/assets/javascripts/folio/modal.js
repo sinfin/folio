@@ -55,7 +55,9 @@ window.Folio.Stimulus.register('f-modal', class extends window.Stimulus.Controll
     }
   }
 
-  openValueChanged (value) {
+  openValueChanged (value, from) {
+    if (!value && !from) return
+
     if (value) {
       this.bindOutsideClick()
 
