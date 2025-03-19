@@ -3,7 +3,8 @@ window.Folio.Stimulus.register('f-c-links-modal-form', class extends window.Stim
 
   static values = {
     json: Boolean,
-    preferredLabel: String
+    preferredLabel: String,
+    absoluteUrls: { type: Boolean, default: false },
   }
 
   onSubmit (e) {
@@ -20,7 +21,7 @@ window.Folio.Stimulus.register('f-c-links-modal-form', class extends window.Stim
       }
 
       // data.href must be a valid absolute/relative/anchor url
-      const regex = /^(https?:\/\/\w+|\/|#\w+)/
+      const regex = this.absoluteUrlsValue ? /^https?:\/\/\w+/ : /^(https?:\/\/\w+|\/|#\w+)/
       validHref = regex.test(data.href)
     }
 

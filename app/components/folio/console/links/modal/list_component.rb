@@ -6,8 +6,9 @@ class Folio::Console::Links::Modal::ListComponent < Folio::Console::ApplicationC
   PAGY_ITEMS_MULTI = 5
   PAGY_ITEMS_SINGLE = 25
 
-  def initialize(filtering: false)
+  def initialize(filtering: false, absolute_urls: false)
     @filtering = filtering
+    @absolute_urls = absolute_urls
   end
 
   def records_data
@@ -196,11 +197,13 @@ class Folio::Console::Links::Modal::ListComponent < Folio::Console::ApplicationC
   end
 
   def add_other_domain_if_needed(href:, record:)
-    if href.start_with?("/") &&
-       record.class.try(:has_belongs_to_site?) &&
-       record.site_id != Folio::Current.site.id
-      if site = sites_hash[record.site_id]
-        return site.env_aware_root_url + href[1..]
+    if href.start_with?("/")
+      if record.class.try(:has_belongs_to_site?) && record.site_id != Folio::Current.site.id
+        if site = sites_hash[record.site_id]
+          return site.env_aware_root_url + href[1..]
+        end
+      elsif @absolute_urls
+        return Folio::Current.site.env_aware_root_url + href[1..]
       end
     end
 

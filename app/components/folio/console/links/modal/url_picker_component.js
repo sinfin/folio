@@ -6,7 +6,8 @@ window.Folio.Stimulus.register('f-c-links-modal-url-picker', class extends windo
     filtering: Boolean,
     autofocusInput: Boolean,
     apiValueUrl: String,
-    apiListUrl: String
+    apiListUrl: String,
+    absoluteUrls: { type: Boolean, default: false }
   }
 
   static targets = ['valueWrap', 'input', 'cancelButton', 'form', 'listContent']
@@ -130,7 +131,10 @@ window.Folio.Stimulus.register('f-c-links-modal-url-picker', class extends windo
 
     this.lastLoadListJson = json
 
-    const data = {}
+    const data = {
+      absolute_urls: this.absoluteUrlsValue
+    }
+
     let filtering = false
 
     for (const key in rawData) {

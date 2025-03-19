@@ -21,6 +21,14 @@ h2 Input URL
 
     = f.input :link_json, as: :url_json
 
+  h3 Blank - JSON - absolute URLs
+
+  .f-c-uidemo-wrap
+    pre.f-c-uidemo-pre hidden=true
+      code.f-c-uidemo-code
+
+    = f.input :link_json, as: :url_json, absolute_urls: true
+
   ruby:
     data = {
       href: "/foo",

@@ -3,7 +3,7 @@
 SimpleForm::Inputs::StringInput.class_eval do
   def input(wrapper_options = nil)
     if input_type == :url
-      register_url_input(json: false, wrapper_options:)
+      register_url_input(json: false, wrapper_options:, options:)
     else
       if string? || input_type == :email
         if options[:autocomplete]

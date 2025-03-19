@@ -71,7 +71,7 @@
             .f-c-links-modal-url-picker__list-content[
               data=stimulus_target("listContent")
             ]
-              = render(Folio::Console::Links::Modal::ListComponent.new)
+              = render(Folio::Console::Links::Modal::ListComponent.new(absolute_urls: @absolute_urls))
 
             span.folio-loader.f-c-links-modal-url-picker__list-loader
 

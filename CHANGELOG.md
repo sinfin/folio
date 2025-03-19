@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- `:absolute_urls` option to URL inputs
+
 ## [6.2.4] - 2025-03-18
 
 ### Added

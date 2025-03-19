@@ -4,6 +4,7 @@ window.Folio.Stimulus.register('f-c-links-modal', class extends window.Stimulus.
     loading: Boolean,
     apiUrl: String,
     preferredLabel: String,
+    absoluteUrls: { type: Boolean, default: false },
   }
 
   static targets = ['formWrap']
@@ -22,10 +23,11 @@ window.Folio.Stimulus.register('f-c-links-modal', class extends window.Stimulus.
     }
   }
 
-  openWithUrlJson ({ urlJson, trigger, json, preferredLabel }) {
+  openWithUrlJson ({ urlJson, trigger, json, absoluteUrls, preferredLabel }) {
     this.trigger = trigger
     this.preferredLabelValue = preferredLabel
     this.jsonValue = json !== false
+    this.absoluteUrlsValue = absoluteUrls === true
 
     this.loadForm(urlJson)
 
@@ -45,6 +47,7 @@ window.Folio.Stimulus.register('f-c-links-modal', class extends window.Stimulus.
     const url = window.Folio.addParamsToUrl(this.apiUrlValue, {
       url_json: JSON.stringify(urlJson),
       json: this.jsonValue,
+      absolute_urls: this.absoluteUrlsValue,
       preferred_label: this.preferredLabelValue,
     })
 
@@ -84,6 +87,7 @@ window.Folio.Stimulus.register('f-c-links-modal', class extends window.Stimulus.
       this.openWithUrlJson({
         urlJson: e.detail.urlJson,
         trigger: e.detail.trigger,
+        absoluteUrls: e.detail.absoluteUrls,
         json: e.detail.json,
         preferredLabel: e.detail.preferredLabel,
       })

@@ -11,8 +11,12 @@ class Folio::Console::Api::LinksController < Folio::Console::Api::BaseController
     end.symbolize_keys
 
     json = params[:json] != false && params[:json] != "false"
+    absolute_urls = params[:absolute_urls] == true || params[:absolute_urls] == "true"
 
-    render_component_json(Folio::Console::Links::Modal::FormComponent.new(url_json:, json:, preferred_label: params[:preferred_label].presence))
+    render_component_json(Folio::Console::Links::Modal::FormComponent.new(url_json:,
+                                                                          json:,
+                                                                          absolute_urls:,
+                                                                          preferred_label: params[:preferred_label].presence))
   end
 
   def control_bar
@@ -29,8 +33,12 @@ class Folio::Console::Api::LinksController < Folio::Console::Api::BaseController
     end
 
     json = params[:json] != false && params[:json] != "false"
+    absolute_urls = params[:absolute_urls] == true || params[:absolute_urls] == "true"
 
-    render_component_json(Folio::Console::Links::ControlBarComponent.new(url_json:, href:, json:))
+    render_component_json(Folio::Console::Links::ControlBarComponent.new(url_json:,
+                                                                         href:,
+                                                                         json:,
+                                                                         absolute_urls:))
   end
 
   def value
@@ -44,10 +52,15 @@ class Folio::Console::Api::LinksController < Folio::Console::Api::BaseController
 
     json = params[:json] != false && params[:json] != "false"
 
-    render_component_json(Folio::Console::Links::ValueComponent.new(url_json:, verbose: false, json:))
+    render_component_json(Folio::Console::Links::ValueComponent.new(url_json:,
+                                                                    verbose: false,
+                                                                    json:))
   end
 
   def list
-    render_component_json(Folio::Console::Links::Modal::ListComponent.new(filtering: true))
+    absolute_urls = params[:absolute_urls] == true || params[:absolute_urls] == "true"
+
+    render_component_json(Folio::Console::Links::Modal::ListComponent.new(filtering: true,
+                                                                          absolute_urls:))
   end
 end

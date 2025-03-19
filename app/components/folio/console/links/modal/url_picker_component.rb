@@ -3,8 +3,9 @@
 class Folio::Console::Links::Modal::UrlPickerComponent < Folio::Console::ApplicationComponent
   include Folio::Console::Cell::IndexFilters
 
-  def initialize(url_json:)
+  def initialize(url_json:, absolute_urls: false)
     @url_json = url_json
+    @absolute_urls = absolute_urls
   end
 
   def before_render
@@ -47,6 +48,7 @@ class Folio::Console::Links::Modal::UrlPickerComponent < Folio::Console::Applica
                           api_list_url: controller.list_console_api_links_path,
                           filtering: false,
                           autofocus_input: tabs[1][:active],
+                          absolute_urls: @absolute_urls,
                         })
   end
 

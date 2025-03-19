@@ -113,9 +113,13 @@ SimpleForm::Inputs::Base.class_eval do
   end
 
   # respect changes in app/assets/javascripts/folio/input/url.js
-  def register_url_input(json: true, wrapper_options: nil)
+  def register_url_input(json: true, wrapper_options: nil, options: nil)
     register_stimulus("f-c-input-form-group-url",
-                      values: { loaded: false, json: },
+                      values: {
+                        loaded: false,
+                        json:,
+                        absolute_urls: (options && options[:absolute_urls]) || false,
+                      },
                       action: {
                         "f-c-input-form-group-url:edit" => "edit",
                         "f-c-input-form-group-url:remove" => "remove",
