@@ -3,16 +3,8 @@
 module Folio::Console::FileControllerBase
   extend ActiveSupport::Concern
 
-  def edit
-    render "folio/console/file/edit"
-  end
-
-  def show
-    @file_for_modal = Folio::Console::FileSerializer.new(folio_console_record)
-                                                    .serializable_hash[:data]
-                                                    .to_json
-
-    render index_view_name
+  included do
+    before_action :set_file_for_show_modal, only: %i[index]
   end
 
   private
@@ -43,5 +35,14 @@ module Folio::Console::FileControllerBase
 
     def index_view_name
       "folio/console/file/index"
+    end
+
+    def set_file_for_show_modal
+      file_id = params[:file_id]
+      return if file_id.blank?
+
+      @folio_file_for_show_modal = @klass.by_site(Folio::Current.site)
+                                         .accessible_by(Folio::Current.ability)
+                                         .find(file_id)
     end
 end

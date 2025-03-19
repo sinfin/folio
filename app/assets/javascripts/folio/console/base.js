@@ -88,10 +88,11 @@
 //= require folio/console/file/picker/thumb/thumb
 //= require folio/console/file/preview_reloader/preview_reloader
 //= require folio/console/file/processing_notifier/processing_notifier
+//= require folio/console/files/show_modal_component
 //= require folio/console/flash/flash
 //= require folio/console/folio_attributes_fields_component
-//= require folio/console/form/errors/errors
 //= require folio/console/form_modal_component
+//= require folio/console/form/errors/errors
 //= require folio/console/index/filters/filters
 //= require folio/console/index/images/images
 //= require folio/console/index/position_buttons/position_buttons
@@ -103,8 +104,8 @@
 //= require folio/console/modules/simple-form-with-atoms
 //= require folio/console/nested_model_controls/nested_model_controls
 //= require folio/console/new_record_modal/new_record_modal
-//= require folio/console/private_attachments/single_dropzone/single_dropzone
 //= require folio/console/private_attachments_fields_component
+//= require folio/console/private_attachments/single_dropzone/single_dropzone
 //= require folio/console/publishable_inputs/item/item
 //= require folio/console/report/report
 //= require folio/console/single_file_select/single_file_select

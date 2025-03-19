@@ -21,6 +21,13 @@ module Folio::Console::Api::FileControllerBase
     render json:
   end
 
+  def show
+    fail CanCan::AccessDenied unless can_now?(:show, folio_console_record)
+
+    render_component_json(Folio::Console::Files::ShowComponent.new(file: folio_console_record),
+                          meta: { title: folio_console_record.to_label })
+  end
+
   def update
     if folio_console_record.update(file_params)
       meta = {

@@ -1,8 +1,8 @@
-.f-files-fields
+.f-c-files-fields
   = helpers.form_header @f
 
   .row
-    = render(Folio::Files::Fields::PreviewComponent.new(f: @f))
+    = render(Folio::Console::Files::Fields::PreviewComponent.new(f: @f))
 
     .col-lg
       .mb-3 ID: #{@f.object.id}

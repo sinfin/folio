@@ -21,6 +21,7 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
                           file_type: @file_klass.to_s,
                           primary_action: @primary_action,
                           template_url:,
+                          file_id: @file ? @file.id : ""
                         })
   end
 
@@ -32,11 +33,11 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
     "background-color: #{@file.additional_data["dominant_color"]}"
   end
 
-  def edit_url
-    return @edit_url unless @edit_url.nil?
+  def modal_api_url
+    return @modal_api_url unless @modal_api_url.nil?
 
-    @edit_url = if @file.present? && @file_klass <= Folio::File
-      controller.folio.url_for([:edit, :console, @file])
+    @modal_api_url = if @file.present? && @file_klass <= Folio::File
+      controller.folio.url_for([:console, :api, @file])
     else
       false
     end

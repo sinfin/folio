@@ -13,7 +13,7 @@ window.Folio.Modal.close = (modal) => {
 
 window.Folio.Stimulus.register('f-modal', class extends window.Stimulus.Controller {
   static values = {
-    open: Boolean
+    open: { type: Boolean, default: false }
   }
 
   disconnect () {

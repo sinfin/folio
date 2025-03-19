@@ -68,5 +68,12 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
       get url_for([:mass_download, :console, :api, klass, ids:])
       assert_response(:ok)
     end
+
+    test "#{klass} - show" do
+      file = create(klass.model_name.singular)
+      get url_for([:console, :api, file, format: :json])
+      assert_response(:ok)
+      assert_match("f-c-files-show", response.parsed_body["data"])
+    end
   end
 end

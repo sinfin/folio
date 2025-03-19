@@ -42,6 +42,7 @@ html.f-c-layout-html.f-html--show-sensitive-content lang=I18n.locale
     / == cell('folio/console/aasm/email_modal')
     = render(Folio::Console::Ui::NotificationModalComponent.new)
     = render(Folio::Console::FormModalComponent.new)
+    = render(Folio::Console::Files::ShowModalComponent.new(file: @folio_file_for_show_modal))
     = render 'folio/console/partials/modals'
     = render 'folio/console/partials/react_modals'
 

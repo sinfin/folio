@@ -4,6 +4,7 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
   static targets = ['imageWrap', 'loader']
 
   static values = {
+    fileId: { type: String, default: '' },
     templateData: { type: String, default: '' },
     s3Path: { type: String, default: '' },
     fileType: String,
@@ -113,7 +114,12 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
 
   edit (e) {
     if (!e || !e.params || !e.params.url) return
-    window.location.href = e.params.url
+    if (!this.fileIdValue) return
+
+    const modal = document.querySelector('.f-c-files-show-modal')
+    if (!modal) return
+
+    modal.dispatchEvent(new CustomEvent('f-c-files-show-modal/show-file', { detail: { fileId: Number(this.fileIdValue), url: e.params.url } }))
   }
 
   removeParentOrElement () {

@@ -4,9 +4,12 @@ module Folio::RenderComponentJson
   extend ActiveSupport::Concern
 
   private
-    def render_component_json(component, pagy: nil, flash: nil, collection_attribute: nil, status: 200)
-      meta = {}
-
+    def render_component_json(component,
+                              pagy: nil,
+                              flash: nil,
+                              collection_attribute: nil,
+                              meta: {},
+                              status: 200)
       if pagy
         meta[:pagy] = meta_from_pagy(pagy)
       end

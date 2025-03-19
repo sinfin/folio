@@ -13,11 +13,5 @@ class Folio::Console::FileControllerBaseTest < Folio::Console::BaseControllerTes
       get url_for([:console, klass])
       assert_response :success
     end
-
-    test "#{klass} - show" do
-      file = create(klass.model_name.singular)
-      get url_for([:console, file])
-      assert_response :success
-    end
   end
 end

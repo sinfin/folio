@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::Files::Fields::PreviewComponent < ApplicationComponent
+class Folio::Console::Files::Fields::PreviewComponent < ApplicationComponent
   def initialize(f:)
     @f = f
     @human_type = f.object.class.human_type

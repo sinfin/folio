@@ -1,0 +1,11 @@
+= render(Folio::Console::Ui::ModalComponent.new(title: @file ? @file.to_label : "{title}",
+                                                class_name: CLASS_NAME,
+                                                size: :lg,
+                                                data:,
+                                                open: @file.present?)) do |c|
+  .f-c-files-show-modal__outer
+    .f-c-files-show-modal__inner data=stimulus_target("inner")
+      - if @file.present?
+        = render(Folio::Console::Files::ShowComponent.new(file: @file))
+
+    span.folio-loader.folio-loader--transparent.f-c-files-show-modal__loader

@@ -72,7 +72,7 @@ Folio::Engine.routes.draw do
 
       namespace :file do
         Rails.application.config.folio_file_types_for_routes.each do |type|
-          resources type.constantize.model_name.element.pluralize.to_sym, only: %i[index show edit update]
+          resources type.constantize.model_name.element.pluralize.to_sym, only: %i[index update]
         end
       end
 
@@ -148,7 +148,7 @@ Folio::Engine.routes.draw do
             klass = type.constantize
             key = type.constantize.model_name.element.pluralize.to_sym
 
-            resources key, only: %i[index update destroy] do
+            resources key, only: %i[index show update destroy] do
               collection do
                 post :tag
                 delete :mass_destroy

@@ -1,0 +1,13 @@
+.f-c-files-show-modal
+  &__outer
+    min-height: 400px
+
+  &[data-f-c-files-show-modal-loading-value="true"]
+    .f-c-ui-modal__title,
+      visibility: hidden
+
+    .f-c-files-show-modal__inner
+      display: none
+
+  &[data-f-c-files-show-modal-loading-value="false"] &__loader
+    display: none
