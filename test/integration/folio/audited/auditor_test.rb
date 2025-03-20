@@ -4,7 +4,7 @@ require "test_helper"
 
 class Folio::Audited::AuditorTest < ActionDispatch::IntegrationTest
   class AuditedPage < Folio::Page
-    include Folio::Audited
+    include Folio::Audited::Model
     audited
   end
 
@@ -84,7 +84,7 @@ class Folio::Audited::AuditorTest < ActionDispatch::IntegrationTest
                    Folio::Audited::Auditor.new(record: page).get_folio_audited_changed_relations
 
       page.reload.assign_attributes(cover_placement_attributes: { file_id: image.id })
-      assert_equal ["file_placements"],
+      assert_equal ["cover_placement"],
                    Folio::Audited::Auditor.new(record: page).get_folio_audited_changed_relations
 
       page.save!
@@ -104,7 +104,7 @@ class Folio::Audited::AuditorTest < ActionDispatch::IntegrationTest
 
       page.reload.assign_attributes(atoms_attributes: { 0 => { id: page.atoms.first.id, _destroy: "1" } },
                                     cover_placement_attributes: { id: page.cover_placement.id, _destroy: "1" })
-      assert_equal ["atoms", "file_placements"],
+      assert_equal ["atoms", "cover_placement"],
                    Folio::Audited::Auditor.new(record: page).get_folio_audited_changed_relations
 
       page.save!

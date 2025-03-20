@@ -1,0 +1,10 @@
+= render(Folio::Console::Ui::ModalComponent.new(title: t('.title'),
+                                                class_name: CLASS_NAME_BASE,
+                                                size: :md)) do |c|
+  p.text-muted = t('.text')
+
+  - if @preview_url
+    = render(Folio::Console::Ui::InputClipboardCopyComponent.new(string: @preview_url))
+
+  - else
+    p Failed to get a preview URL

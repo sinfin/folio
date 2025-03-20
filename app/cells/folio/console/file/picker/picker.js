@@ -140,6 +140,9 @@ window.Folio.Stimulus.register('f-c-file-picker', class extends window.Stimulus.
 
   onBtnClick (e) {
     e.preventDefault()
+
+    window.FolioConsole.Autosave.pause()
+
     e.currentTarget.dispatchEvent(new window.CustomEvent(`folioConsoleModalSingleSelect/${this.fileTypeValue}/showModal`, { bubbles: true }))
   }
 
@@ -149,6 +152,8 @@ window.Folio.Stimulus.register('f-c-file-picker', class extends window.Stimulus.
   }
 
   openModal ({ trigger, file, autoFocusField }) {
+    window.FolioConsole.Autosave.pause()
+
     const eventName = `folioConsoleModalSingleSelect/${this.fileTypeValue}/showFileModal`
     trigger.dispatchEvent(new window.CustomEvent(eventName, { bubbles: true, detail: { file, autoFocusField } }))
   }
@@ -164,6 +169,8 @@ window.Folio.Stimulus.register('f-c-file-picker', class extends window.Stimulus.
   }
 
   onAltClick (e) {
+    window.FolioConsole.Autosave.pause()
+
     this.openModal({ trigger: e.currentTarget, file: JSON.parse(this.element.querySelector('.f-c-file-picker-thumb').dataset.file), autoFocusField: 'alt' })
   }
 })

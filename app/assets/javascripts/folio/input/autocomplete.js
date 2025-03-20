@@ -10,6 +10,11 @@ window.Folio.Input.Autocomplete.SELECTOR = '.f-input--autocomplete'
 
 window.Folio.Input.Autocomplete.bind = (input) => {
   const $input = window.jQuery(input)
+
+  $input.on('change', () => {
+    $input[0].dispatchEvent(new CustomEvent('folioConsoleCustomChange', { bubbles: true }))
+  })
+
   $input.autocomplete({ source: $input.data('autocomplete') })
 }
 

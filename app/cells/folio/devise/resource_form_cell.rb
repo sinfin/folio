@@ -19,7 +19,11 @@ class Folio::Devise::ResourceFormCell < Folio::Devise::ApplicationCell
   end
 
   def show_subscribed_to_newsletter?(f)
-    true
+    if model.key?(:show_subscribed_to_newsletter)
+      model[:show_subscribed_to_newsletter]
+    else
+      true
+    end
   end
 
   def show_address?(f)

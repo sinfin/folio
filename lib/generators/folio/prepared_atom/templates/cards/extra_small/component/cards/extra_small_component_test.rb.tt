@@ -4,7 +4,7 @@ require "test_helper"
 
 class <%= application_namespace %>::Molecule::Cards::ExtraSmallComponentTest < Folio::ComponentTest
   def test_render
-    atoms = [create_atom(<%= application_namespace %>::Atom::Cards::ExtraSmall, :url, :title)]
+    atoms = [create_atom(<%= application_namespace %>::Atom::Cards::ExtraSmall, :title, url_json: { href: "/" })]
 
     render_inline(<%= application_namespace %>::Molecule::Cards::ExtraSmallComponent.new(atoms:))
 

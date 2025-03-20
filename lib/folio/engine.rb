@@ -19,6 +19,7 @@ module Folio
     config.folio_public_page_title_reversed = false
     config.folio_using_traco = false
     config.folio_pages_audited = false
+    config.folio_pages_autosave = false
     config.folio_pages_ancestry = false
     config.folio_pages_perex_richtext = false
     config.folio_pages_locales = false
@@ -38,6 +39,7 @@ module Folio
     config.folio_console_add_locale_to_preview_links = false
     config.folio_console_files_additional_html_api_url_lambda = -> (file) { nil }
     config.folio_console_clonable_enabled = true
+    config.folio_console_audited_revisions_limit = 50
 
     config.folio_newsletter_subscription_service = :mailchimp
     config.folio_server_names = []
@@ -78,6 +80,9 @@ module Folio
     config.folio_direct_s3_upload_attributes_for_job_proc = -> (controller) {
       { site_id: controller.site_for_new_files.id }
     }
+
+    config.folio_console_links_mapping = {}
+    config.folio_console_links_additional_filters = {}
 
     config.folio_content_templates_editable = false
 

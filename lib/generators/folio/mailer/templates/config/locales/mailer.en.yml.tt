@@ -6,6 +6,15 @@ en:
         contact: Contact
         follow_us: Follow us
 
+      socials_component:
+        facebook: Facebook
+        linktree: Linktree
+        instagram: Instagram
+        linkedin: LinkedIn
+        tiktok: TikTok
+        twitter: x.com
+        youtube: Youtube
+
       order_summary_component:
         total_price: Total price (including commission)
 

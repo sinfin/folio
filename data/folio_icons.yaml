@@ -96,6 +96,9 @@ cog:
 content_copy:
   width: 24
   height: 24
+content_save:
+  width: 24
+  height: 24
 credit_card_scan_outline:
   width: 24
   height: 24
@@ -169,6 +172,9 @@ gift:
   width: 24
   height: 24
 globe:
+  width: 24
+  height: 24
+history:
   width: 24
   height: 24
 home:

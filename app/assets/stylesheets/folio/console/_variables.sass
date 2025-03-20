@@ -71,6 +71,8 @@ $f-c-state-colors: ( red: $red, green: $green, yellow: $yellow, dark: $dark-gray
 
 $f-c-ui-with-icon-gap: $grid-gutter-width / 6
 $f-c-ui-buttons-gap: $grid-gutter-width / 3
+$f-c-ui-buttons-gap: $grid-gutter-width / 3
+$f-c-ui-button-no-label-icon-margin: 0 (( - 1 * px-to-rem(11px - 5) ))
 
 $font-size-base: to-rem(14)
 $font-size-sm: to-rem(12)
@@ -143,6 +145,7 @@ $dropdown-padding-y: 0.5rem
 $dropdown-item-padding-y: 2 / 3 * 1rem
 $dropdown-item-padding-x: 1rem
 $dropdown-box-shadow:               $box-shadow !default;
+$dropdown-divider-color: $gray-medium-dark
 
 $tooltip-max-width: px-to-rem(320px) - $grid-gutter-width
 
@@ -172,13 +175,18 @@ $nav-link-padding-y: .4rem
 
 $nav-tabs-link-active-border-color: transparent transparent $blue
 $nav-tabs-margin-bottom: $grid-gutter-width
+$nav-tabs-link-active-bg: transparent
 
-$badge-font-size: $font-size-base
 $badge-font-weight: $font-weight-normal
 $badge-color: $white
+$badge-font-size: $font-size-base
 $badge-padding-y: $grid-gutter-width / 6
 $badge-padding-x: $grid-gutter-width / 2
 $badge-border-radius: $border-radius
+
+$badge-font-size-sm: $font-size-sm
+$badge-padding-y-sm: $grid-gutter-width / 8
+$badge-padding-x-sm: $grid-gutter-base
 
 $popover-font-size: $font-size-base
 $popover-bg: $white

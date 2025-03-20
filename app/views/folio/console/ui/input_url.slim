@@ -1,0 +1,83 @@
+h1 Folio Console UI
+
+h2 Input URL
+
+= simple_form_for "", method: :get, url: request.path do |f|
+  h3 Blank - href
+
+  p For easier migrating of legacy projects. Use JSON for new projects as it holds information about selected record and supports target and rel attributes.
+
+  .f-c-uidemo-wrap
+    pre.f-c-uidemo-pre hidden=true
+      code.f-c-uidemo-code
+
+    = f.input :link, as: :url
+
+  h3 Blank - JSON
+
+  .f-c-uidemo-wrap
+    pre.f-c-uidemo-pre hidden=true
+      code.f-c-uidemo-code
+
+    = f.input :link_json, as: :url_json
+
+  h3 Blank - JSON - absolute URLs
+
+  .f-c-uidemo-wrap
+    pre.f-c-uidemo-pre hidden=true
+      code.f-c-uidemo-code
+
+    = f.input :link_json, as: :url_json, absolute_urls: true
+
+  ruby:
+    data = {
+      href: "/foo",
+      target: "_blank",
+      rel: "noopener noreferrer",
+      label: "Foo",
+      record_type: "Folio::Page",
+      record_id: Folio::Page.first.id,
+    }
+
+  hr.my-5
+
+  h3 With data - href
+
+  p For easier migrating of legacy projects. Use JSON for new projects as it holds information about selected record and supports target and rel attributes.
+
+  .f-c-uidemo-wrap
+    pre.f-c-uidemo-pre: code.f-c-uidemo-code = data[:href]
+    = f.input :link_with_data, as: :url, input_html: { value: data[:href] }
+
+  hr.my-5
+
+  h3 With data - JSON
+
+  .f-c-uidemo-wrap
+    pre.f-c-uidemo-pre: code.f-c-uidemo-code = JSON.pretty_generate(data)
+
+    = f.input :link_json_with_data, as: :url_json, input_html: { value: data.to_json }
+
+  hr.my-5
+
+  h3 Richtext uses links as well
+
+  = f.input :richtext,
+            as: :redactor,
+            input_html: { value: '<p>Hello with <a href="/foo">a link</a>!</p>' }
+
+  hr.my-5
+
+  == cell('folio/console/ui/button',
+          type: :submit,
+          variant: :primary,
+          label: t("folio.console.actions.submit"))
+
+javascript:
+  for (const wrap of document.querySelectorAll('.f-c-uidemo-wrap')) {
+    const input = wrap.querySelector('.form-control')
+    input.addEventListener('change', (e) => {
+      wrap.querySelector('.f-c-uidemo-pre').hidden = !input.value
+      wrap.querySelector('.f-c-uidemo-code').innerHTML = input.value || ""
+    })
+  }
