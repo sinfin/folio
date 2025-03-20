@@ -6,10 +6,8 @@ class Dummy::Atom::Cards::Small < Folio::Atom::Base
   STRUCTURE = {
     title: :string,
     content: :richtext,
-    button_label: :string,
-    button_url: :url,
-    link_label: :string,
-    link_url: :url,
+    button_url_json: :url_json,
+    link_url_json: :url_json,
   }
 
   ASSOCIATIONS = {}

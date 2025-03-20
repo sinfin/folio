@@ -21,6 +21,7 @@ en:
     placeholders:
       defaults:
         by_query: Search...
+        by_label_query: Search...
         content: Formatted rich text
         meta_description: Recommended size is under 250 characters.
         meta_title: 'e.g.: Our team'

@@ -5,14 +5,6 @@ module Folio::JwPlayer::FileProcessing
   include Folio::MediaFileProcessingBase
 
   included do
-    missing_envs ||= ENV.fetch("JWPLAYER_API_KEY").to_s.gsub("find-me-in-vault", "").blank?
-    missing_envs ||= ENV.fetch("JWPLAYER_API_V1_SECRET").to_s.gsub("find-me-in-vault", "").blank?
-    missing_envs ||= ENV.fetch("JWPLAYER_API_V2_SECRET").to_s.gsub("find-me-in-vault", "").blank?
-
-    if missing_envs
-      raise 'requires filled ENV["JWPLAYER_API_KEY"], ENV["JWPLAYER_API_V1_SECRET"] and ENV["JWPLAYER_API_V2_SECRET"]'
-    end
-
     require "jwt"
   end
 

@@ -31,9 +31,10 @@ class Folio::Page < Folio::ApplicationRecord
   include Folio::Taggable
   include Folio::Transportable::Model
   include PgSearch::Model
+  include Folio::Autosave::Model
 
   if Rails.application.config.folio_pages_audited
-    include Folio::Audited
+    include Folio::Audited::Model
 
     translated = %i[
       title perex slug meta_title meta_description
@@ -98,8 +99,8 @@ class Folio::Page < Folio::ApplicationRecord
 
   before_save :set_atoms_data_for_search
 
-  def self.traco_aware_against(multisearch: false)
-    if multisearch
+  def self.traco_aware_against(multisearch: false, only_title: false)
+    if multisearch || only_title
       if Rails.application.config.folio_using_traco
         I18n.available_locales.map { |locale| "title_#{locale}".to_sym }
       else
@@ -136,6 +137,13 @@ class Folio::Page < Folio::ApplicationRecord
                     tsearch: { prefix: true }
                   }
 
+  pg_search_scope :by_label_query,
+                  against: self.traco_aware_against(only_title: true),
+                  ignoring: :accents,
+                  using: {
+                    tsearch: { prefix: true }
+                  }
+
   def to_label
     title
   end
@@ -161,6 +169,10 @@ class Folio::Page < Folio::ApplicationRecord
     else
       true
     end
+  end
+
+  def folio_autosave_enabled?
+    Rails.application.config.folio_pages_autosave
   end
 
   private

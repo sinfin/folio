@@ -1,82 +1,66 @@
 # frozen_string_literal: true
 
 class Folio::Console::Api::LinksController < Folio::Console::Api::BaseController
-  def index
-    links = []
+  def modal_form
+    url_json_s = params.require(:url_json)
 
-    page_links.merge(additional_links).each do |klass, url_proc|
-      scope = klass
-      scope = scope.by_site(Folio::Current.site) if klass.try(:has_belongs_to_site?)
+    url_json = begin
+      JSON.parse(url_json_s)
+    rescue StandardError
+      {}
+    end.symbolize_keys
 
-      if params[:q].present? && scope.respond_to?(:by_query)
-        scope = scope.by_query(params[:q])
-      end
+    json = params[:json] != false && params[:json] != "false"
+    absolute_urls = params[:absolute_urls] == true || params[:absolute_urls] == "true"
 
-      scope.limit(10).each do |item|
-        next if item.class.try(:public?) == false
-        links << {
-          label: record_label(item),
-          url: url_proc.call(item),
-          title: item.try(:to_label)
-        }
-      end
-    end
-
-    if params[:q].present?
-      qq = I18n.transliterate(params[:q]).downcase
-    else
-      qq = nil
-    end
-
-    rails_paths.each do |path, label|
-      if qq.present?
-        matcher = I18n.transliterate(label).downcase
-        next unless matcher.include?(qq)
-      end
-
-      next unless main_app.respond_to?(path)
-
-      links << {
-        label:,
-        url: main_app.public_send(path),
-        title: label,
-      }
-    end
-
-    sorted_links = links.sort_by { |link| I18n.transliterate(link[:label]) }
-
-    render_json(sorted_links)
+    render_component_json(Folio::Console::Links::Modal::FormComponent.new(url_json:,
+                                                                          json:,
+                                                                          absolute_urls:,
+                                                                          preferred_label: params[:preferred_label].presence))
   end
 
-  private
-    def page_links
-      if Rails.application.config.folio_pages_ancestry
-        {
-          Folio::Page => Proc.new { |page| main_app.page_path(page.to_preview_param) }
-        }
-      else
-        {
-          Folio::Page => Proc.new { |page| main_app.url_for(page) }
-        }
+  def control_bar
+    url_json = if params[:url_json].present?
+      begin
+        JSON.parse(params[:url_json])
+      rescue StandardError
+        {}
       end
     end
 
-    def additional_links
-      # {
-      #   Klass => Proc.new { |instance| main_app.klass_path(instance) },
-      # }
-      {}
+    href = if url_json.blank?
+      params[:href]
     end
 
-    def rails_paths
-      # {
-      #   :path_symbol => "label",
-      # }
-      {}
-    end
+    json = params[:json] != false && params[:json] != "false"
+    absolute_urls = params[:absolute_urls] == true || params[:absolute_urls] == "true"
 
-    def record_label(record)
-      label = record.try(:to_console_label) || record.try(:to_label)
-      "#{record.class.model_name.human} - #{label}"
-    end
+    render_component_json(Folio::Console::Links::ControlBarComponent.new(url_json:,
+                                                                         href:,
+                                                                         json:,
+                                                                         absolute_urls:))
+  end
+
+  def value
+    url_json_s = params.require(:url_json)
+
+    url_json = begin
+      JSON.parse(url_json_s)
+    rescue StandardError
+      {}
+    end.symbolize_keys
+
+    json = params[:json] != false && params[:json] != "false"
+
+    render_component_json(Folio::Console::Links::ValueComponent.new(url_json:,
+                                                                    verbose: false,
+                                                                    json:))
+  end
+
+  def list
+    absolute_urls = params[:absolute_urls] == true || params[:absolute_urls] == "true"
+
+    render_component_json(Folio::Console::Links::Modal::ListComponent.new(filtering: true,
+                                                                          absolute_urls:))
+  end
 end

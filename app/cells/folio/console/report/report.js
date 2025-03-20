@@ -70,13 +70,17 @@ window.Folio.Stimulus.register('f-c-report', class extends window.Stimulus.Contr
       const newGroupByInput = index.querySelector('.f-c-report__header-group-by-input')
       if (oldGroupByValue !== newGroupByInput.value || (oldGroupByParam && oldGroupByParam !== newGroupByInput.value)) {
         const groupByWrap = newGroupByInput.closest('.f-c-report__header-group-by-wrap')
-        if (groupByWrap) groupByWrap.dataset.controller = 'f-c-danger-box-shadow-blink'
+        if (groupByWrap) {
+          window.FolioConsole.DangerBoxShadowBlink.blinkFormGroup(groupByWrap)
+        }
       }
 
       const newDateInput = index.querySelector('.f-c-report__header-date-input')
       if (oldDateValue !== newDateInput.value || (oldDateParam && oldDateParam !== newDateInput.value)) {
         const dateWrap = newDateInput.closest('.f-c-report__header-date-wrap')
-        if (dateWrap) dateWrap.dataset.controller = 'f-c-danger-box-shadow-blink'
+        if (dateWrap) {
+          window.FolioConsole.DangerBoxShadowBlink.blinkFormGroup(dateWrap)
+        }
       }
     } else {
       this.handleLoadError(new Error(window.Folio.i18n(window.FolioConsole.Report.i18n, 'loadFailure')))

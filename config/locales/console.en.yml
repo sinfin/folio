@@ -157,10 +157,10 @@ en:
         cannot_merge_into_itself: Duplicate cannot be the target
         form:
           title: Merge
-          original: 'Target:'
-          duplicate: 'Duplicate:'
+          original: "Target:"
+          duplicate: "Duplicate:"
           submit: Merge
-          invalid: 'To merge records, the target needs to be valid. Fix the following errors and  refresh this page:'
+          invalid: "To merge records, the target needs to be valid. Fix the following errors and  refresh this page:"
           reload: Reload
           association:
             empty: none
@@ -175,8 +175,8 @@ en:
             duplicate: Duplicate
           footer:
             new_merge: Continue
-            original: 'Target:'
-            duplicate: 'Duplicate:'
+            original: "Target:"
+            duplicate: "Duplicate:"
       nested_model_controls:
         destroy: Remove
       noTags: No tags
@@ -277,13 +277,15 @@ en:
         invalid: Some of the records are invalid. It's required to fix these first in order to change structure. Invalid records are marked red.
       audited:
         bar_component:
-          version: 'Version:'
+          version: "Version:"
           restore: Restore this version
           show_current: Show current version
-      layout:
-        audited_dropdown:
+        dropdown_component:
           toggle: Version history
           current: (current version)
+          back: Back
+          created: Created
+      layout:
         sidebar:
           homepage: Homepage
           audio: Audios
@@ -299,7 +301,7 @@ en:
         in:
           title: Create new from YAML
           title_with_class: Replace from YAML - %{class_label}
-          alert: 'Warning: Replacing from YAML is an irreversible action and the original content will be lost.'
+          alert: "Warning: Replacing from YAML is an irreversible action and the original content will be lost."
         transport:
           success: Record was successfully replaced
           failure: Failed to replace the record
@@ -331,6 +333,12 @@ en:
           placeholders:
             subject: E-mail subject
             text: E-mail content
+      form:
+        footer_component:
+          saved: Saved
+          unsaved_changes: Unsaved changes
+          share: Share
+          settings: Settings
 
       react:
         modal_component:
@@ -349,16 +357,56 @@ en:
       folio_attributes_fields_component:
         add: Add attribute
 
+      links:
+        control_bar_component:
+          add_link: Add link
+
+        modal_component:
+          title: :folio.console.links.control_bar_component.add_link
+
+        modal:
+          form_component:
+            label/target: Open in new window
+            label/rel: Rel attribute (optional)
+            label/label: Link text
+            hint/rel: "E.g. noopener, noreferrer, nofollow"
+            cancel: Cancel
+            submit: Confirm
+            select: Select
+            custom_url: Custom URL
+
+          url_picker_component:
+            tab/pick: Pick
+            tab/custom_url: Custom URL
+            placeholder/q: Search ...
+            placeholder/site_id: Web ...
+            placeholder/class_name: Type ...
+            placeholder/published_within: Datum zveřejnění ...
+
+          list_component:
+            no_records: No records found.
+            unpublished: unpublished
+
+      html_auto_format:
+        toggle_component:
+          label: Automatic replacements
+          tooltip: Hyphens –, three dots … etc.
+
+      autosave:
+        toggle_component:
+          label: Automatic save
+
   date:
     formats:
       console_short: "%d. %m. %Y"
-      console_group_by_day: '%a %-d. %B. %Y'
-      console_short_date: '%d. %m. %Y'
+      console_group_by_day: "%a %-d. %B. %Y"
+      console_short_date: "%d. %m. %Y"
 
   time:
     formats:
       console_short: "%d. %m. %Y, %H:%M"
-      console_group_by_day: '%a %-d. %B. %Y'
-      console_short_date: '%d. %m. %Y'
-      console_short_time: '%H:%M'
+      console_short_with_seconds: "%d. %m. %Y, %H:%M:%S"
+      console_group_by_day: "%a %-d. %B. %Y"
+      console_short_date: "%d. %m. %Y"
+      console_short_time: "%H:%M"
       console_html_datetime: "%Y-%m-%dT%H:%M:%S%z"

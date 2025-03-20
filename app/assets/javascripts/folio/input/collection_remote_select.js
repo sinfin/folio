@@ -3,6 +3,15 @@ window.Folio.Input = window.Folio.Input || {}
 
 window.Folio.Input.CollectionRemoteSelect = {}
 
+window.Folio.Input.CollectionRemoteSelect.setValue = (input, value) => {
+  const $input = window.jQuery(input)
+  $input.val(value).trigger('change')
+}
+
+window.Folio.Input.CollectionRemoteSelect.clearValue = (input) => {
+  window.Folio.Input.CollectionRemoteSelect.setValue(input, null)
+}
+
 window.Folio.Input.CollectionRemoteSelect.bind = (input, { includeBlank, url }) => {
   const $input = window.jQuery(input)
 
@@ -71,13 +80,17 @@ window.Folio.Input.CollectionRemoteSelect.bind = (input, { includeBlank, url }) 
       return $result
     }
   }).on('change.select2', (e) => {
-    e.target.dispatchEvent(new window.Event('folioCustomChange', { bubbles: true }))
+    e.target.dispatchEvent(new window.CustomEvent('folioCustomChange', { bubbles: true }))
     e.target.dispatchEvent(new window.CustomEvent('folio_select2_change', { bubbles: true }))
+  }).on('select2:open', (e) => {
+    e.target.dispatchEvent(new window.CustomEvent('f-input-collection-remote-select:open', { bubbles: true }))
+  }).on('select2:close', (e) => {
+    e.target.dispatchEvent(new window.CustomEvent('f-input-collection-remote-select:close', { bubbles: true }))
   })
 }
 
 window.Folio.Input.CollectionRemoteSelect.unbind = (input) => {
-  window.jQuery(input).select2('destroy').off('change.select2')
+  window.jQuery(input).select2('destroy').off('change.select2').off('select2:open').off('select2:close')
 }
 
 window.Folio.Stimulus.register('f-input-collection-remote-select', class extends window.Stimulus.Controller {

@@ -25,6 +25,9 @@ function inputProps (type, defaultValue) {
     case 'color':
       return { type: 'color' }
 
+    case 'deprecated':
+      return { type: 'hidden' }
+
     default:
       return { type: 'text' }
   }
@@ -57,7 +60,7 @@ export default function AtomInput ({ field, atom, index, onChange, onValueChange
     )
   }
 
-  if (type === 'url') {
+  if (type === 'url' || type === 'url_json') {
     return (
       <UrlInput
         name={key}
@@ -88,7 +91,7 @@ export default function AtomInput ({ field, atom, index, onChange, onValueChange
         {...inputProps(type, atom.record.data[key])}
         name={key}
         defaultValue={defaultValue}
-        onChange={(e) => onChange(e, index, key)}
+        onInput={(e) => { console.log('onChange', e); onChange(e, index, key) }}
         onKeyPress={preventEnterSubmit}
         invalid={Boolean(atom.errors[key])}
       >

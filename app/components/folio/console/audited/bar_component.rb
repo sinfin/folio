@@ -11,7 +11,7 @@ class Folio::Console::Audited::BarComponent < Folio::Console::ApplicationCompone
   end
 
   def restore_link
-    return unless @record.class.audited_console_restorable?
+    return unless @record.audited_console_restorable?
 
     href = url_for([:restore, :console, @record, version: @audit.version])
 

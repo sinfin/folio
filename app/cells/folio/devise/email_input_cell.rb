@@ -7,6 +7,7 @@ class Folio::Devise::EmailInputCell < Folio::Devise::ApplicationCell
                 label: false,
                 required: true,
                 disabled: options[:disabled],
+                placeholder: options[:placeholder],
                 input_html: {
                   autofocus: options[:autofocus].nil? ? true : options[:autofocus],
                   autocomplete: "email",
@@ -15,7 +16,7 @@ class Folio::Devise::EmailInputCell < Folio::Devise::ApplicationCell
                   id: input_id, # need ID for generating "<label for",
                   # but there can be more same inputs on page
                   # so we need to generate unique ID
-                }
+                }.merge(options[:input_html] || {})
   end
 
   def input_id

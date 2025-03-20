@@ -27,10 +27,11 @@ footer.<%= classname_prefix %>-ui-footer
             - social_links.each do |key, link|
               a.<%= classname_prefix %>-ui-footer__social-link[
                 href=link
-                title=key
+                title=t(".#{key}")
                 class="<%= classname_prefix %>-ui-footer__social-link--#{key}"
               ]
                 = <%= application_namespace_path %>_ui_icon(key.to_sym,
+                                height: 32,
                                 class_name: '<%= classname_prefix %>-ui-footer__social-ico')
 
     .<%= classname_prefix %>-ui-footer__row

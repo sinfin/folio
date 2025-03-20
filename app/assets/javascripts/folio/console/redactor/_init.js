@@ -4,68 +4,97 @@
 // once you update it, remove it from package.json standard js ignored files
 
 (function () {
-  let ADVANCED_OPTIONS, EMAIL_OPTIONS, FOLIO_REDACTOR_I18N, OPTIONS, PEREX_OPTIONS, changedCallback
+  var ADVANCED_OPTIONS, EMAIL_OPTIONS, FOLIO_REDACTOR_I18N, OPTIONS, PEREX_OPTIONS, blurCallback, changedCallback, focusCallback;
 
-  changedCallback = function () {
-    return this.rootElement.dispatchEvent(new window.Event('change', {
-      bubbles: true
-    }))
-  }
+  blurCallback = function(e) {
+    if (window.FolioConsole && window.FolioConsole.HtmlAutoFormat && window.FolioConsole.HtmlAutoFormat.redactorBlurCallback) {
+      window.FolioConsole.HtmlAutoFormat.redactorBlurCallback({
+        redactor: this
+      });
+    }
+    return e.target.dispatchEvent(new CustomEvent('focusout', {
+      bubbles: true,
+      detail: {
+        redactor: true
+      }
+    }));
+  };
+
+  focusCallback = function(e) {
+    return e.target.dispatchEvent(new CustomEvent('focusin', {
+      bubbles: true,
+      detail: {
+        redactor: true
+      }
+    }));
+  };
+
+  changedCallback = function(html) {
+    return this.rootElement.dispatchEvent(new CustomEvent('change', {
+      bubbles: true,
+      detail: {
+        redactor: true
+      }
+    }));
+  };
 
   FOLIO_REDACTOR_I18N = {
     cs: {
-      large: 'Velký',
-      small: 'Malý'
+      large: "Velký",
+      small: "Malý"
     },
     en: {
-      large: 'Large',
-      small: 'Small'
+      large: "Large",
+      small: "Small"
     }
-  }
+  };
 
   ADVANCED_OPTIONS = {
-    plugins: ['video', 'table', 'button', 'character_counter', 'definedlinks', 'linksrel'],
+    plugins: ['video', 'table', 'button', 'character_counter'],
     toolbarFixed: false,
     lang: document.documentElement.lang,
     formatting: ['p', 'h2', 'h3', 'h4'],
     linkNewTab: true,
     callbacks: {
-      changed: changedCallback
+      changed: changedCallback,
+      focus: focusCallback,
+      blur: blurCallback
     }
-  }
+  };
 
   OPTIONS = {
-    plugins: ['table', 'button', 'character_counter', 'definedlinks', 'linksrel'],
+    plugins: ['table', 'button', 'character_counter'],
     buttonsHide: ['file', 'image'],
     toolbarFixed: false,
-    definedlinks: '/console/api/links.json',
     lang: document.documentElement.lang,
     formatting: ['p', 'h2', 'h3', 'h4'],
     formattingAdd: {
-      'large-p': {
-        title: window.Folio.i18n(FOLIO_REDACTOR_I18N, 'large'),
+      "large-p": {
+        title: window.Folio.i18n(FOLIO_REDACTOR_I18N, "large"),
         api: 'module.block.format',
         args: {
-          tag: 'p',
-          class: 'font-size-lg',
-          type: 'toggle'
+          'tag': 'p',
+          'class': 'font-size-lg',
+          'type': 'toggle'
         }
       },
-      'small-p': {
-        title: window.Folio.i18n(FOLIO_REDACTOR_I18N, 'small'),
+      "small-p": {
+        title: window.Folio.i18n(FOLIO_REDACTOR_I18N, "small"),
         api: 'module.block.format',
         args: {
-          tag: 'p',
-          class: 'font-size-sm',
-          type: 'toggle'
+          'tag': 'p',
+          'class': 'font-size-sm',
+          'type': 'toggle'
         }
       }
     },
     linkNewTab: true,
     callbacks: {
-      changed: changedCallback
+      changed: changedCallback,
+      focus: focusCallback,
+      blur: blurCallback
     }
-  }
+  };
 
   EMAIL_OPTIONS = {
     plugins: ['button', 'character_counter'],
@@ -74,63 +103,70 @@
     lang: document.documentElement.lang,
     formatting: [],
     callbacks: {
-      changed: changedCallback
+      changed: changedCallback,
+      focus: focusCallback,
+      blur: blurCallback
     }
-  }
+  };
 
   PEREX_OPTIONS = {
-    plugins: ['character_counter', 'definedlinks', 'linksrel'],
+    plugins: ['character_counter'],
     buttonsHide: ['file', 'image', 'html', 'format', 'bold', 'italic', 'deleted', 'lists'],
     breakline: true,
     toolbarFixed: false,
     lang: document.documentElement.lang,
     linkNewTab: true,
     callbacks: {
-      changed: changedCallback
+      changed: changedCallback,
+      focus: focusCallback,
+      blur: blurCallback
     }
-  }
+  };
 
-  window.folioConsoleInitRedactor = function (node, options = {}, additional = {}) {
-    let opts
+  window.folioConsoleInitRedactor = function(node, options = {}, additional = {}) {
+    var callbacksHash, opts;
     if (node.classList.contains('redactor-source')) {
-      return
+      return;
     }
     if (options.advanced) {
-      opts = ADVANCED_OPTIONS
+      opts = ADVANCED_OPTIONS;
     } else if (options.email) {
-      opts = EMAIL_OPTIONS
+      opts = EMAIL_OPTIONS;
     } else if (options.perex) {
-      opts = PEREX_OPTIONS
+      opts = PEREX_OPTIONS;
     } else {
-      opts = OPTIONS
+      opts = OPTIONS;
     }
-    window.folioConsoleRedactorOptionsOverride || (window.folioConsoleRedactorOptionsOverride = {})
-    return $R(node, $.extend({}, opts, additional, window.folioConsoleRedactorOptionsOverride))
-  }
+    window.folioConsoleRedactorOptionsOverride || (window.folioConsoleRedactorOptionsOverride = {});
+    callbacksHash = {
+      callbacks: $.extend({}, opts.callbacks || {}, additional.callbacks || {}, window.folioConsoleRedactorOptionsOverride.callbacks || {})
+    };
+    return $R(node, $.extend({}, opts, additional, window.folioConsoleRedactorOptionsOverride, callbacksHash));
+  };
 
-  window.folioConsoleDestroyRedactor = function (node) {
-    return $R(node, 'destroy')
-  }
+  window.folioConsoleDestroyRedactor = function(node) {
+    return $R(node, 'destroy');
+  };
 
-  window.folioConsoleRedactorSetContent = function (node, content) {
-    let R
-    R = $R(node)
-    return R.source.setCode(content)
-  }
+  window.folioConsoleRedactorSetContent = function(node, content) {
+    var R;
+    R = $R(node);
+    return R.source.setCode(content);
+  };
 
-  window.folioConsoleRedactorGetContent = function (node) {
-    let R
-    R = $R(node)
-    return R.source.getCode()
-  }
+  window.folioConsoleRedactorGetContent = function(node) {
+    var R;
+    R = $R(node);
+    return R.source.getCode();
+  };
 
-  window.folioConsoleRedactorHardsyncAll = function () {
-    return window.jQuery('.redactor-source').each(function () {
-      let R
-      R = $R(this)
-      return R.broadcast('hardsync')
-    })
-  }
+  window.folioConsoleRedactorHardsyncAll = function() {
+    return $('.redactor-source').each(function() {
+      var R;
+      R = $R(this);
+      return R.broadcast('hardsync');
+    });
+  };
 
-  window.jQuery(document).on('submit', 'form', window.folioConsoleRedactorHardsyncAll)
+  $(document).on('submit', 'form', window.folioConsoleRedactorHardsyncAll);
 })()

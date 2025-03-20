@@ -9,6 +9,7 @@ import FolioConsoleUiButton from 'components/FolioConsoleUiButton'
 import FolioUiIcon from 'components/FolioUiIcon'
 
 import splitAtomValueToParts from './utils/splitAtomValueToParts'
+import stopPropagation from 'utils/stopPropagation'
 
 import Associations from './Associations'
 import Fields from './Fields'
@@ -32,6 +33,7 @@ class AtomForm extends React.PureComponent {
 
   constructor (props) {
     super(props)
+    this.wrapRef = React.createRef()
     this.autofocusRef = React.createRef()
   }
 
@@ -69,12 +71,26 @@ class AtomForm extends React.PureComponent {
   componentDidMount () {
     window.jQuery(document).on('keydown.fcAtomForm', this.onKeydown)
 
+    if (this.wrapRef.current) {
+      this.wrapRef.current.addEventListener('focusin', stopPropagation)
+      this.wrapRef.current.addEventListener('focusout', stopPropagation)
+      this.wrapRef.current.addEventListener('change', stopPropagation)
+      this.wrapRef.current.addEventListener('folioConsoleCustomChange', stopPropagation)
+    }
+
     if (this.autofocusRef.current) {
       setTimeout(() => { this.autofocusRef.current.focus() }, 0)
     }
   }
 
   componentWillUnmount () {
+    if (this.wrapRef.current) {
+      this.wrapRef.current.removeEventListener('focusin', stopPropagation)
+      this.wrapRef.current.removeEventListener('focusout', stopPropagation)
+      this.wrapRef.current.removeEventListener('change', stopPropagation)
+      this.wrapRef.current.removeEventListener('folioConsoleCustomChange', stopPropagation)
+    }
+
     window.jQuery(document).off('keydown.fcAtomForm', this.onKeydown)
   }
 
@@ -188,7 +204,7 @@ class AtomForm extends React.PureComponent {
     }
 
     return (
-      <AtomFormWrap>
+      <AtomFormWrap innerRef={this.wrapRef}>
         <div className='f-c-r-atoms-settings-header'>
           <div className='f-c-r-atoms-settings-header__title'>
             {molecule ? null : (

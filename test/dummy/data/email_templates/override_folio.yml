@@ -1,0 +1,74 @@
+- mailer: Devise::Mailer
+  action: confirmation_instructions
+  optional_keywords:
+    - USER_EMAIL
+    - ROOT_URL
+    - DOMAIN
+    - SITE_TITLE
+    - VALID_UNTIL_TIME
+  required_keywords:
+    - USER_CONFIRMATION_URL
+  title_cs: Uživatelské účty - potvrzení - DUMMY
+  title_en: Users - confirmation - DUMMY
+  subject_cs: Potvrzení e-mailové adresy - DUMMY
+  subject_en: Account e-mail confirmation - DUMMY
+  body_html_cs: |
+    <p>Dobrý den,</p>
+
+    <p>Potvďte prosím vaší e-mailovou adresu kliknutím na tlačítko:</p>
+
+    <p class="redactor-component folio-redactor-button"><a class="btn btn-redactor btn-redactor--fill" href="{USER_CONFIRMATION_URL}">Potvrdit e-mail</a></p>
+
+    <p class="small"><a class="text-muted" href="{USER_CONFIRMATION_URL}">{USER_CONFIRMATION_URL}</a></p>
+
+    <p>Odkaz je platný jen do: {VALID_UNTIL_TIME}</p>
+
+    <p>Pokud jste si toto nevyžádali, ignorujte tento e-mail.</p>
+
+    <p>S přátelským pozdravem - DUMMY</p>
+
+    <p>{SITE_TITLE}</p>
+  body_html_en: |
+    <p>Hello,</p>
+
+    <p>kindly confirm your e-mail address by clicking the button bellow:</p>
+
+    <p class="redactor-component folio-redactor-button"><a class="btn btn-redactor btn-redactor--fill" href="{USER_CONFIRMATION_URL}">Confirm e-mail</a></p>
+
+    <p class="small"><a class="text-muted" href="{USER_CONFIRMATION_URL}">{USER_CONFIRMATION_URL}</a></p>
+
+    <p>The link is valid until: {VALID_UNTIL_TIME}</p>
+
+    <p>If you did not request this, please ignore this email.</p>
+
+    <p>With kind regards from DUMMY,</p>
+
+    <p>{SITE_TITLE}</p>
+  body_text_cs: |
+    Dobrý den,
+
+    Potvďte prosím vaší e-mailovou adresu kliknutím na odkaz:
+
+    {USER_CONFIRMATION_URL}
+
+    Odkaz je platný jen do: {VALID_UNTIL_TIME}
+
+    Pokud jste si toto nevyžádali, ignorujte tento e-mail.
+
+    S přátelským pozdravem - DUMMY
+
+    {SITE_TITLE}
+  body_text_en: |
+    Hello,
+
+    kindly confirm your e-mail address by clicking the link bellow:
+
+    {USER_CONFIRMATION_URL}
+
+    The link is valid until: {VALID_UNTIL_TIME}
+
+    If you did not request this, please ignore this email.
+
+    With kind regards from DUMMY,
+
+    {SITE_TITLE}

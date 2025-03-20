@@ -4,6 +4,7 @@
     - USER_EMAIL
     - ROOT_URL
     - DOMAIN
+    - VALID_UNTIL_TIME
   required_keywords:
     - USER_CHANGE_PASSWORD_URL
   title_cs: Uživatelské účty - obnova hesla
@@ -17,6 +18,8 @@
 
     <p class="redactor-component folio-redactor-button"><a class="btn btn-redactor btn-redactor--fill" href="{USER_CHANGE_PASSWORD_URL}">Změnit heslo</a></p>
 
+    <p>Odkaz je platný do: {VALID_UNTIL_TIME}</p>
+
     <p>Pokud jste si toto nevyžádali, ignorujte tento e-mail. Vaše heslo se nezmění dokud neotevřete výše uvedený odkaz a nevytvoříte si nové heslo.</p>
 
   body_html_en: |
@@ -26,6 +29,8 @@
 
     <p class="redactor-component folio-redactor-button"><a class="btn btn-redactor btn-redactor--fill" href="{USER_CHANGE_PASSWORD_URL}">Change my password</a></p>
 
+    <p>The link is valid until {VALID_UNTIL_TIME}.</p>
+
     <p>If you didn't request this, please ignore this email. Your password won't change until you access the link above and create a new one.</p>
   body_text_cs: |
     Dobrý den,
@@ -33,6 +38,8 @@
     někdo si vyžádal odkaz pro změnu Vašeho hesla. Změnu můžete provést pomocí odkazu níže.
 
     {USER_CHANGE_PASSWORD_URL}
+
+    Odkaz je platný do: {VALID_UNTIL_TIME}
 
     Pokud jste si toto nevyžádali, ignorujte tento e-mail. Vaše heslo se nezmění dokud neotevřete výše uvedený odkaz a nevytvoříte si nové heslo.
 
@@ -43,6 +50,8 @@
 
     {USER_CHANGE_PASSWORD_URL}
 
+    The link is valid until {VALID_UNTIL_TIME}.
+
     If you didn't request this, please ignore this email. Your password won't change until you access the link above and create a new one.
 
 - mailer: Devise::Mailer
@@ -52,6 +61,7 @@
     - ROOT_URL
     - DOMAIN
     - SITE_TITLE
+    - VALID_UNTIL_TIME
   required_keywords:
     - USER_ACCEPT_INVITATION_URL
   title_cs: Uživatelské účty - registrace
@@ -67,6 +77,8 @@
 
     <p class="small"><a class="text-muted" href="{USER_ACCEPT_INVITATION_URL}">{USER_ACCEPT_INVITATION_URL}</a></p>
 
+    <p>Odkaz je platný do: {VALID_UNTIL_TIME}</p>
+
     <p>Pokud jste si toto nevyžádali, ignorujte tento e-mail.</p>
 
     <p>S přátelským pozdravem</p>
@@ -81,6 +93,8 @@
 
     <p class="small"><a class="text-muted" href="{USER_ACCEPT_INVITATION_URL}">{USER_ACCEPT_INVITATION_URL}</a></p>
 
+    <p>The link is valid until {VALID_UNTIL_TIME}</p>
+
     <p>If you did not request this, please ignore this email.</p>
 
     <p>With kind regards,</p>
@@ -93,6 +107,8 @@
 
     {USER_ACCEPT_INVITATION_URL}
 
+    Odkaz je platný do: {VALID_UNTIL_TIME}
+
     Pokud jste si toto nevyžádali, ignorujte tento e-mail.
 
     S přátelským pozdravem
@@ -103,6 +119,8 @@
     thank you for registering at {SITE_TITLE}. Please complete the registration by clicking the link:
 
     {USER_ACCEPT_INVITATION_URL}
+
+    The link is valid until {VALID_UNTIL_TIME}.
 
     If you did not request this, please ignore this email.
 
@@ -116,6 +134,7 @@
     - ROOT_URL
     - DOMAIN
     - SITE_TITLE
+    - VALID_UNTIL_TIME
   required_keywords:
     - USER_CONFIRMATION_URL
   title_cs: Uživatelské účty - potvrzení
@@ -131,6 +150,8 @@
 
     <p class="small"><a class="text-muted" href="{USER_CONFIRMATION_URL}">{USER_CONFIRMATION_URL}</a></p>
 
+    <p>Odkaz je platný do: {VALID_UNTIL_TIME}</p>
+
     <p>Pokud jste si toto nevyžádali, ignorujte tento e-mail.</p>
 
     <p>S přátelským pozdravem</p>
@@ -145,6 +166,8 @@
 
     <p class="small"><a class="text-muted" href="{USER_CONFIRMATION_URL}">{USER_CONFIRMATION_URL}</a></p>
 
+    <p>The link is valid until {VALID_UNTIL_TIME}.</p>
+
     <p>If you did not request this, please ignore this email.</p>
 
     <p>With kind regards,</p>
@@ -157,6 +180,8 @@
 
     {USER_CONFIRMATION_URL}
 
+    Odkaz je platný do: {VALID_UNTIL_TIME}
+
     Pokud jste si toto nevyžádali, ignorujte tento e-mail.
 
     S přátelským pozdravem
@@ -168,6 +193,8 @@
     kindly confirm your e-mail address by clicking the link bellow:
 
     {USER_CONFIRMATION_URL}
+
+    The link is valid until {VALID_UNTIL_TIME}.
 
     If you did not request this, please ignore this email.
 

@@ -21,9 +21,6 @@ en:
           none: There are no records yet.
 
       form:
-        footer:
-          dirty_forms: Unsaved changes
-
         errors:
           fix: Fix
 

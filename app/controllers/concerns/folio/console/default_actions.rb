@@ -144,11 +144,14 @@ module Folio::Console::DefaultActions
   end
 
   def revision
+    @audited_record = folio_console_record
     instance_variable_set(folio_console_record_variable_name, @audited_revision)
     render :edit
   end
 
   def restore
+    fail ActionController::BadRequest.new("Audited record is not restorable") unless folio_console_record.audited_console_restorable?
+
     @audited_revision.save!
 
     redirect_to url_for([:edit, :console, @audited_revision]),

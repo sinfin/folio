@@ -14,9 +14,13 @@ class Dummy::Molecule::Cards::LogoComponent < ApplicationComponent
     base_class = "d-molecule-cards-logo__card"
     tag = { tag: :div, class: base_class }
 
-    if atom.url.present?
+    if atom.url_json.present? && atom.url_json[:href].present?
       tag[:class] += " #{base_class}--link"
-      tag.merge(tag: :a, href: atom.url)
+      tag.merge(tag: :a,
+                href: atom.url_json[:href],
+                rel: atom.url_json[:rel],
+                target: atom.url_json[:target],
+                title: atom.url_json[:label])
     else
       tag
     end

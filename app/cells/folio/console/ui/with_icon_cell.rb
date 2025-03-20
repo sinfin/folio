@@ -11,6 +11,10 @@ class Folio::Console::Ui::WithIconCell < Folio::ConsoleCell
     h[:data] = options[:data]
     h[:title] = options[:title]
 
+    if options[:hover] == :underline
+      h[:class] += " f-c-ui-with-icon--hover-underline"
+    end
+
     if options[:block]
       h[:class] += " d-flex"
     end

@@ -78,6 +78,7 @@ class Folio::Console::StateCell < Folio::ConsoleCell
     controller.folio.event_console_api_aasm_path(klass:,
                                                  id: model.id,
                                                  aasm_event: event.name,
+                                                 reload_form: options[:reload_form] == true,
                                                  cell_options: {
                                                    active: options[:active],
                                                    remote: options[:remote],
@@ -97,7 +98,10 @@ class Folio::Console::StateCell < Folio::ConsoleCell
   end
 
   def data
-    stimulus_controller("f-c-state")
+    stimulus_controller("f-c-state",
+                        values: {
+                          reload_form: options[:reload_form] == true,
+                        })
   end
 
   def data_for_event(event)
