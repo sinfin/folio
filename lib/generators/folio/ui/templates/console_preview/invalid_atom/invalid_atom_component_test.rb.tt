@@ -8,6 +8,6 @@ class <%= application_namespace %>::Ui::ConsolePreview::InvalidAtomComponentTest
 
     render_inline(<%= application_namespace %>::Ui::ConsolePreview::InvalidAtomComponent.new(atom:))
 
-    assert_selector(".<%= classname_prefix %>-ui-console-preview-invali<%= classname_prefix %>-atom")
+    assert_selector(".<%= classname_prefix %>-ui-console-preview-invalid-atom")
   end
 end

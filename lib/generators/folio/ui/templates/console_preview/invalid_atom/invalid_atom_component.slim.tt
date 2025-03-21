@@ -1,4 +1,4 @@
-.<%= classname_prefix %>-ui-console-preview-invali<%= classname_prefix %>-atom.bg-danger.p-f.text-center.my-atom-lg
+.<%= classname_prefix %>-ui-console-preview-invalid-atom.bg-danger.p-f.text-center.my-atom-lg
   = <%= application_namespace_path %>_ui_icon(:alert_triangle, height: 40, class_name: "text-white")
 
   h3.text-center.text-white.my-3
