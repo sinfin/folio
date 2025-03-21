@@ -44,7 +44,7 @@ window.Folio.Stimulus.register('f-c-files-show-modal', class extends window.Stim
         this.element.querySelector('.f-c-ui-modal__title').textContent = ''
       }
 
-      this.innerTarget.innerHTML = response.data.content
+      this.innerTarget.innerHTML = response.data
       this.loadingValue = false
     }).catch((error) => {
       window.FolioConsole.Flash.alert('Failed to load file ' + error.message)

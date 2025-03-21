@@ -1,2 +1,21 @@
 .f-c-files-show
-  h2 = @file.id
+  .f-c-files-show__row.row
+    .col-lg-6.f-c-files-show__preview-col
+      = render(Folio::Console::Files::Show::PreviewComponent.new(file: @file))
+
+    .col-lg
+      / FIXME $text-muted color not working
+      .f-c-files-show__meta.small.text-muted
+        .f-c-files-show__meta-item
+          ' #{t(".id")}: #{@file.id}
+
+        - if @file.file_mime_type.present?
+          .f-c-files-show__meta-item
+            = @file.file_mime_type
+
+        - if @file.created_at.present?
+          .f-c-files-show__meta-item
+            ' #{t(".created_at")}: #{l(@file.created_at.to_date, format: :console_short)}
+
+        .f-c-files-show__meta-item.ms-auto
+          == cell("folio/console/state", @file, active: false)

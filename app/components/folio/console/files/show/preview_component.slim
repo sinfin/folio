@@ -1,0 +1,21 @@
+.f-c-files-show-preview
+  - if @human_type == "image"
+    figure.f-c-files-show-preview__figure.mb-0
+      a.f-c-files-show-preview__image-wrap[
+        href=@file.file.remote_url
+        target="_blank"
+      ]
+        img.f-c-files-show-preview__image[
+          src=@file.file.remote_url
+          alt=""
+          width=@file.file_width
+          height=@file.file_height
+          loading="lazy"
+        ]
+
+      - if @file.file_width && @file.file_height
+        figcaption.mt-2.small
+          = @file.file_width
+          | ×
+          = @file.file_height
+          | px
