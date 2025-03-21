@@ -90,7 +90,7 @@ function orderedMultiselectReducer (state = initialState, action) {
       return {
         ...state,
         items: [
-          ...state.items,
+          ...state.items.filter((stateItem) => stateItem.value !== action.item.id),
           {
             id: null,
             label: action.item.label,
