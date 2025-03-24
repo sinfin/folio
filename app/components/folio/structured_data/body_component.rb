@@ -114,7 +114,7 @@ class Folio::StructuredData::BodyComponent < Folio::ApplicationComponent
     cover = @record.try(:cache_aware_cover) || @record.cover
 
     {
-      "@type" => "Article",
+      "@type" => @record.try(:structured_data_type) || "Article",
       "mainEntityOfPage" => {
         "@type" => "WebPage",
         "@id" => url_for([@record, only_path: false]),
@@ -133,5 +133,10 @@ class Folio::StructuredData::BodyComponent < Folio::ApplicationComponent
   private
     def record_cover_thumb_size
       @record.try(:structured_data_cover_thumb_size) || Folio::OG_IMAGE_DIMENSIONS
+    end
+
+    def record_cover_thumb
+      cover = @record.try(:cache_aware_cover) || @record.cover
+      cover.present? ? cover.thumb(record_cover_thumb_size) : nil
     end
 end
