@@ -6,3 +6,6 @@ cs:
         show_component:
           created_at: Nahráno
           id: ID
+          download: Stáhnout originál
+          replace: Nahradit
+          destroy: Smazat

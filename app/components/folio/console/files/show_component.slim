@@ -1,11 +1,22 @@
-.f-c-files-show
+.f-c-files-show data=data
   .f-c-files-show__row.row
     .col-lg-6.f-c-files-show__preview-col
       = render(Folio::Console::Files::Show::PreviewComponent.new(file: @file))
 
     .col-lg
-      / FIXME $text-muted color not working
-      .f-c-files-show__meta.small.text-muted
+      .f-c-files-show__buttons.mb-h
+        == cell("folio/console/ui/button", download_button_model)
+
+        / TODO: add replace button
+
+        - if can_now?(:destroy, @file)
+          - if @file.indestructible_reason
+            .f-c-files-show__button-tooltip data=stimulus_tooltip(@file.indestructible_reason)
+              == cell("folio/console/ui/button", destroy_button_model)
+          - else
+            == cell("folio/console/ui/button", destroy_button_model)
+
+      .f-c-files-show__meta.small.text-muted.mb-h
         .f-c-files-show__meta-item
           ' #{t(".id")}: #{@file.id}
 
@@ -19,3 +30,5 @@
 
         .f-c-files-show__meta-item.ms-auto
           == cell("folio/console/state", @file, active: false)
+
+  span.folio-loader.folio-loader--outset-8.f-c-files-show__loader

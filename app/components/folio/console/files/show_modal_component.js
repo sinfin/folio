@@ -1,6 +1,6 @@
 window.Folio.Stimulus.register('f-c-files-show-modal', class extends window.Stimulus.Controller {
   static values = {
-    fileId: { type: String, default: '' },
+    id: { type: String, default: '' },
     loading: { type: Boolean, default: true }
   }
 
@@ -10,7 +10,7 @@ window.Folio.Stimulus.register('f-c-files-show-modal', class extends window.Stim
     this.abortLoad()
   }
 
-  fileIdValueChanged (to, from) {
+  idValueChanged (to, from) {
     if (to === from) return
 
     if (to) {
@@ -28,11 +28,11 @@ window.Folio.Stimulus.register('f-c-files-show-modal', class extends window.Stim
   }
 
   showFile (e) {
-    if (!e.detail.fileId) return
+    if (!e.detail.id) return
     if (!e.detail.url) return
 
     this.loadingValue = true
-    this.fileIdValue = e.detail.fileId
+    this.idValue = e.detail.id
 
     this.abortLoad()
     this.abortController = new AbortController()
@@ -48,8 +48,13 @@ window.Folio.Stimulus.register('f-c-files-show-modal', class extends window.Stim
       this.loadingValue = false
     }).catch((error) => {
       window.FolioConsole.Flash.alert('Failed to load file ' + error.message)
-      this.fileIdValue = ''
+      this.idValue = ''
       this.loadingValue = false
     })
+  }
+
+  onFileDeleted (e) {
+    this.idValue = ''
+    this.loadingValue = false
   }
 })

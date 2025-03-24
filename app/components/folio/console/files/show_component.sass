@@ -1,4 +1,6 @@
 .f-c-files-show
+  position: relative
+
   &__row
     row-gap: $grid-gutter-width
 
@@ -12,3 +14,12 @@
     flex-wrap: wrap
     gap: $grid-gutter-base $grid-gutter-width
     padding: $grid-gutter-base
+
+  &__buttons
+    align-items: center
+    display: flex
+    flex-wrap: wrap
+    gap: $f-c-ui-buttons-gap
+
+  &[data-f-c-files-show-loading-value="false"] &__loader
+    display: none

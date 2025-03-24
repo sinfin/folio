@@ -6,3 +6,6 @@ en:
         show_component:
           created_at: Uploaded
           id: ID
+          download: Download original
+          replace: Replace
+          destroy: Delete

@@ -4,7 +4,7 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
   static targets = ['imageWrap', 'loader']
 
   static values = {
-    fileId: { type: String, default: '' },
+    id: { type: String, default: '' },
     templateData: { type: String, default: '' },
     s3Path: { type: String, default: '' },
     fileType: String,
@@ -114,12 +114,17 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
 
   edit (e) {
     if (!e || !e.params || !e.params.url) return
-    if (!this.fileIdValue) return
+    if (!this.idValue) return
 
     const modal = document.querySelector('.f-c-files-show-modal')
     if (!modal) return
 
-    modal.dispatchEvent(new CustomEvent('f-c-files-show-modal/show-file', { detail: { fileId: Number(this.fileIdValue), url: e.params.url } }))
+    modal.dispatchEvent(new CustomEvent('f-c-files-show-modal/show-file', {
+      detail: {
+        id: Number(this.idValue),
+        url: e.params.url
+      }
+    }))
   }
 
   removeParentOrElement () {
@@ -145,6 +150,11 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
         window.alert(`Failed to delete file: ${error.message}`)
       })
     }, 'delete')
+  }
+
+  filesShowDeleted (e) {
+    if (!e.detail || e.detail.id !== this.idValue) return
+    this.removeParentOrElement()
   }
 })
 

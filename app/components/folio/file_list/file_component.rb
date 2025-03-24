@@ -21,8 +21,11 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
                           file_type: @file_klass.to_s,
                           primary_action: @primary_action,
                           template_url:,
-                          file_id: @file ? @file.id : ""
-                        })
+                          id: @file ? @file.id : ""
+                        },
+                        action: @editable ? {
+                          "f-c-files-show/deleted@document": "filesShowDeleted"
+                        } : nil)
   end
 
   def image_wrap_style

@@ -10,11 +10,12 @@ class Folio::Console::Files::ShowModalComponent < ApplicationComponent
   def data
     stimulus_controller("f-c-files-show-modal",
                         values: {
-                          file_id: @file.try(:id),
+                          id: @file.try(:id),
                           loading: @file.blank?,
                         },
                         action: {
-                          "f-c-files-show-modal/show-file": "showFile"
+                          "f-c-files-show-modal/show-file" => "showFile",
+                          "f-c-files-show:deleted" => "onFileDeleted",
                         })
   end
 end
