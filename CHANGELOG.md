@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 - `:absolute_urls` option to URL inputs
 - `f-c-r-ordered-multiselect-app:add-entry` event listener to react ordered multi select
+- `Rails.application.config.folio_dragonfly_cwebp_quality` to set webp conversion quality, change default to 90
 
 ## [6.2.4] - 2025-03-18
 

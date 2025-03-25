@@ -16,6 +16,7 @@ module Folio
     config.folio_crossdomain_devise = false
     config.folio_shared_files_between_sites = true
     config.folio_dragonfly_keep_png = true
+    config.folio_dragonfly_cwebp_quality = 90
     config.folio_public_page_title_reversed = false
     config.folio_using_traco = false
     config.folio_pages_audited = false
