@@ -3,11 +3,11 @@
     min-height: 400px
 
   &[data-f-c-files-show-modal-loading-value="true"]
-    .f-c-ui-modal__title,
-      visibility: hidden
+    --#{$prefix}modal-header-border-color: transparent
 
+    .f-c-ui-modal__title,
     .f-c-files-show-modal__inner
-      display: none
+      visibility: hidden
 
   &[data-f-c-files-show-modal-loading-value="false"] &__loader
     display: none

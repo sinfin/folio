@@ -8,7 +8,11 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
     templateData: { type: String, default: '' },
     s3Path: { type: String, default: '' },
     fileType: String,
-    templateUrl: { type: String, default: '' }
+    templateUrl: { type: String, default: '' },
+    editable: { type: Boolean, default: false },
+    destroyable: { type: Boolean, default: false },
+    selectable: { type: Boolean, default: false },
+    primaryAction: { type: String, default: '' }
   }
 
   connect () {
@@ -18,7 +22,10 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
 
     if (this.s3PathValue && this.fileTypeValue) {
       this.pingApi()
-      this.boundMessageBusCallback = this.messageBusCallback.bind(this)
+      this.boundMessageBusCallback = this.messageBusCallbackForCreate.bind(this)
+      this.element.addEventListener('f-file-list-file/message', this.boundMessageBusCallback)
+    } else if (this.editableValue) {
+      this.boundMessageBusCallback = this.messageBusCallbackForEdit.bind(this)
       this.element.addEventListener('f-file-list-file/message', this.boundMessageBusCallback)
     }
   }
@@ -71,9 +78,10 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
     })
   }
 
-  messageBusCallback (event) {
+  messageBusCallbackForCreate (event) {
     const message = event.detail.message
     if (message.type !== 'Folio::S3::CreateFileJob') return
+
     switch (message.data.type) {
       case 'success':
         this.messageBusSuccess(message.data)
@@ -84,13 +92,30 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
     }
   }
 
-  messageBusSuccess (data) {
-    if (!this.templateUrlValue) return
+  messageBusCallbackForEdit (event) {
+    console.log('messageBusCallbackForEdit', event.detail.message)
+    const message = event.detail.message
+    if (message.type !== 'Folio::S3::CreateFileJob') return
 
-    const url = new URL(this.templateUrlValue, window.location.origin)
-    url.searchParams.set('file_id', data.file_id)
+    switch (message.data.type) {
+      case 'replace-success':
+        this.messageBusReplaceSuccess(message.data)
+        break
+    }
+  }
+
+  reload ({ handleErrors = true }) {
+    const url = new URL('/folio/api/s3/file_list_file', window.location.origin)
+    url.searchParams.set('file_id', this.idValue)
+    url.searchParams.set('file_type', this.fileTypeValue)
+    url.searchParams.set('primary_action', this.primaryActionValue)
+    url.searchParams.set('selectable', this.selectableValue)
+    url.searchParams.set('editable', this.editableValue)
+    url.searchParams.set('destroyable', this.destroyableValue)
 
     window.Folio.Api.apiGet(url.toString()).catch((error) => {
+      if (!handleErrors) return
+
       this.catchCounter = this.catchCounter || 0
       this.catchCounter += 1
 
@@ -98,14 +123,25 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
       if (this.timeout) window.clearTimeout(this.timeout)
 
       this.timeout = window.setTimeout(() => {
-        this.messageBusSuccess(data)
+        this.reload({ handleErrors })
       }, this.catchCounter * 500)
     }).catch((error) => {
+      if (!handleErrors) return
+
       this.removeParentOrElement()
       window.alert(`Failed to process file: ${error.message}`)
     }).then((response) => {
       this.element.outerHTML = response.data
     })
+  }
+
+  messageBusReplaceSuccess (_data) {
+    this.reload({ handleErrors: false })
+  }
+
+  messageBusSuccess (data) {
+    this.idValue = data.file_id
+    this.reload({ handleErrors: true })
   }
 
   messageBusFailure (data) {
@@ -171,7 +207,7 @@ if (window.Folio && window.Folio.MessageBus && window.Folio.MessageBus.callbacks
     if (!message) return
     if (message.type !== 'Folio::S3::CreateFileJob') return
 
-    const selector = `.f-file-list-file[data-f-file-list-file-s3-path-value="${message.data.s3_path}"]`
+    const selector = `.f-file-list-file[data-f-file-list-file-s3-path-value="${message.data.s3_path}"], .f-file-list-file[data-f-file-list-file-id-value="${message.data.file_id}"]`
     const files = document.querySelectorAll(selector)
 
     for (const file of files) {

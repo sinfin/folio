@@ -10,6 +10,12 @@ class Folio::Console::Files::ShowComponent < Folio::Console::ApplicationComponen
                         values: {
                           loading: false,
                           id: @file.id,
+                          file_type: @file.class.to_s,
+                          show_url: controller.folio.url_for([:console, :api, @file])
+                        },
+                        action: {
+                          "f-uppy:upload-success": "uppyUploadSuccess",
+                          "f-c-files-show/message": "messageBusCallback"
                         })
   end
 
@@ -43,5 +49,13 @@ class Folio::Console::Files::ShowComponent < Folio::Console::ApplicationComponen
     end
 
     h
+  end
+
+  def replace_button_model
+    {
+      label: t(".replace"),
+      icon: :swap_horizontal,
+      variant: :warning,
+    }
   end
 end

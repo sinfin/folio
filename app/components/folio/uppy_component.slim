@@ -1,6 +1,12 @@
-.f-uppy data=data
+.f-uppy data=data class=(content? ? "f-uppy--custom-trigger" : nil)
   = render(Folio::FileList::LoaderComponent.new(data: stimulus_target("loader"),
                                                 light: false))
 
-  - unless @inline
-    = render(Folio::FileList::TriggerComponent.new(data: stimulus_target("trigger")))
+  - if content?
+    .f-uppy__trigger data=stimulus_target("trigger")
+      = content
+  - else
+    - unless @inline
+      .f-uppy__trigger data=stimulus_target("trigger")
+        = render(Folio::FileList::TriggerComponent.new)
+

@@ -4,5 +4,17 @@
   position: relative
   min-height: $f-file-list-file-item-size
 
+  &--custom-trigger
+    min-height: 0
+
   &--inline
     min-height: 400px
+
+.uppy-Dashboard--modal
+  $zindex-modal: 1055 !default
+
+  .uppy-Dashboard-overlay
+    z-index: $zindex-modal + 1 !important
+
+  .uppy-Dashboard-inner
+    z-index: $zindex-modal + 2 !important

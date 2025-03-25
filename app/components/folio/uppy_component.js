@@ -3,7 +3,9 @@
 window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controller {
   static values = {
     fileType: String,
-    inline: Boolean
+    inline: Boolean,
+    maxNumberOfFiles: Number,
+    existingId: String
   }
 
   static targets = ['trigger', 'loader']
@@ -35,31 +37,40 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
   init () {
     if (this.uppy) return
 
-    this.uppy = new window.Uppy.Uppy()
+    const opts = {}
 
-    const opts = {
+    if (this.maxNumberOfFilesValue) {
+      opts.restrictions = {
+        maxNumberOfFiles: this.maxNumberOfFilesValue
+      }
+    }
+
+    this.uppy = new window.Uppy.Uppy(opts)
+
+    const dashboardOpts = {
       inline: this.inlineValue,
       locale: document.documentElement.lang === 'cs' ? window.Uppy.locales.cs_CZ : null
     }
 
     if (this.inlineValue) {
-      opts.target = this.element
+      dashboardOpts.target = this.element
     } else {
-      opts.target = document.body
-      opts.trigger = `.f-uppy__trigger--${this.folioUppyCounter}`
+      dashboardOpts.target = document.body
+      dashboardOpts.trigger = `.f-uppy__trigger--${this.folioUppyCounter}`
     }
 
-    this.uppy.use(window.Uppy.Dashboard, opts)
+    this.uppy.use(window.Uppy.Dashboard, dashboardOpts)
 
     this.uppy.use(window.Uppy.DropTarget, {
       target: document.body
     })
 
-    const fileType = this.fileTypeValue
+    const args = { type: this.fileTypeValue }
+    if (this.existingIdValue) args.existing_id = this.existingIdValue
 
     this.uppy.use(window.Uppy.AwsS3, {
       getUploadParameters (file) {
-        return window.Folio.Api.apiPost('/folio/api/s3/before', { file_name: file.name, type: fileType }).then((response) => {
+        return window.Folio.Api.apiPost('/folio/api/s3/before', { ...args, file_name: file.name }).then((response) => {
           return {
             method: 'PUT',
             url: response.s3_url

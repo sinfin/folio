@@ -22,8 +22,11 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
                         values: {
                           file_type: @file_klass.to_s,
                           primary_action: @primary_action,
-                          template_url:,
-                          id: @file ? @file.id : ""
+                          id: @file ? @file.id : "",
+                          primary_action: @primary_action,
+                          selectable: @selectable,
+                          editable: @editable,
+                          destroyable: @destroyable
                         },
                         action: @editable ? {
                           "f-c-files-show/deleted@document": "filesShowDeleted"
