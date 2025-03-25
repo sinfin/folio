@@ -53,6 +53,7 @@ window.Folio.Stimulus.register('f-c-links-modal-url-picker', class extends windo
     this.inputTarget.value = e.detail.urlJson.href
     this.loadValue(e.detail.urlJson)
     this.dispatch('changed', { detail: { urlJson: e.detail.urlJson } })
+    this.element.dispatchEvent(new CustomEvent('f-c-links-modal-url-picker:selected', { bubbles: true, detail: { urlJson: e.detail.urlJson } }))
   }
 
   loadValue (urlJson) {

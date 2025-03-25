@@ -26,7 +26,7 @@ function SerializedRemovedItem ({ id, index, paramBase }) {
 }
 
 function Serialized ({ orderedMultiselect }) {
-  const { paramBase, foreignKey, items, removedIds, sortable } = orderedMultiselect
+  const { paramBase, foreignKey, items, removedItems, sortable } = orderedMultiselect
 
   let i = -1
   const index = () => { i++; return i }
@@ -44,10 +44,10 @@ function Serialized ({ orderedMultiselect }) {
         />
       ))}
 
-      {removedIds.map((id) => (
+      {removedItems.map((item) => (
         <SerializedRemovedItem
-          id={id}
-          key={id}
+          key={item.uniqueId}
+          id={item.id}
           index={index()}
           paramBase={paramBase}
         />

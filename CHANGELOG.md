@@ -3,10 +3,20 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- `:absolute_urls` option to URL inputs
+- `f-c-r-ordered-multiselect-app:add-entry` event listener to react ordered multi select
+- `Rails.application.config.folio_dragonfly_cwebp_quality` to set webp conversion quality, change default to 90
+
 ### Changed
 
 - update ruby to 3.4.2
 - update rails to 8.0.1
+
+## [6.2.4] - 2025-03-18
+
+### Added
+- `:scope_name` option to `folio_console_links_mapping` config
 
 ## [6.1.2] - 2025-02-18
 

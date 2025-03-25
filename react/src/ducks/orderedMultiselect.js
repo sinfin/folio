@@ -57,7 +57,7 @@ export const orderedMultiselectSagas = [
 
 const initialState = {
   items: [],
-  removedIds: [],
+  removedItems: [],
   paramBase: null,
   foreignKey: null,
   url: null,
@@ -86,27 +86,44 @@ function orderedMultiselectReducer (state = initialState, action) {
         items: action.items
       }
 
-    case ADD_ITEM:
-      return {
-        ...state,
-        items: [
-          ...state.items,
-          {
-            id: null,
-            label: action.item.label,
-            value: action.item.id,
-            uniqueId: uniqueId()
-          }
-        ]
+    case ADD_ITEM: {
+      const existingItem = state.items.find((item) => item.value === action.item.id)
+      if (existingItem) return state
+
+      const removedItem = state.removedItems.find((item) => item.value === action.item.id)
+      let removedItems = state.removedItems
+
+      if (removedItem) {
+        removedItems = removedItems.filter((item) => item.value !== action.item.id)
       }
 
-    case REMOVE_ITEM: {
-      const removedIds = [...state.removedIds]
-      if (action.item.id) removedIds.push(action.item.id)
+      const item = removedItem || {
+        id: null,
+        label: action.item.label,
+        value: action.item.id,
+        uniqueId: uniqueId()
+      }
 
       return {
         ...state,
-        removedIds,
+        removedItems,
+        items: [
+          ...state.items.filter((stateItem) => stateItem.value !== action.item.id),
+          item
+        ]
+      }
+    }
+
+    case REMOVE_ITEM: {
+      const removedItems = [...state.removedItems]
+
+      if (action.item.id) {
+        removedItems.push(action.item)
+      }
+
+      return {
+        ...state,
+        removedItems,
         items: state.items.filter((stateItem) => stateItem.uniqueId !== action.item.uniqueId)
       }
     }

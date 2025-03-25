@@ -254,7 +254,9 @@ export const serializedFormAtomsSelector = (state) => (
 // Sagas
 function * updateAtomPreviews (action) {
   const atomsState = yield select(atomsSelector)
+
   if (atomsState.form && atomsState.form.dirty) return
+  if (action.type === REFRESH_ATOM_PREVIEWS && atomsState.form && atomsState.form.rootKey) return
 
   yield put(closeFormAtom())
   const $ = window.jQuery
