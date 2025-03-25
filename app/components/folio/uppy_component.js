@@ -28,8 +28,8 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
   disconnect () {
     if (!this.uppy) return
 
-    this.uppy.close()
-    this.uppy = null
+    this.uppy.destroy()
+    delete this.uppy
   }
 
   init () {
