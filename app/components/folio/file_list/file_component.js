@@ -114,7 +114,7 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
     if (window.FolioConsole && window.FolioConsole.Flash && window.FolioConsole.Flash.alert) {
       window.FolioConsole.Flash.alert(msg)
     } else {
-      alert(msg)
+      window.alert(msg)
     }
 
     this.removeParentOrElement()
