@@ -55,9 +55,11 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
       target: document.body
     })
 
+    const fileType = this.fileTypeValue
+
     this.uppy.use(window.Uppy.AwsS3, {
       getUploadParameters (file) {
-        return window.Folio.Api.apiPost('/folio/api/s3/before', { file_name: file.name }).then((response) => {
+        return window.Folio.Api.apiPost('/folio/api/s3/before', { file_name: file.name, type: fileType }).then((response) => {
           return {
             method: 'PUT',
             url: response.s3_url
