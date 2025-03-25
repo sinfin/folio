@@ -87,6 +87,9 @@ function orderedMultiselectReducer (state = initialState, action) {
       }
 
     case ADD_ITEM: {
+      const existingItem = state.items.find((item) => item.value === action.item.id)
+      if (existingItem) return state
+
       const removedItem = state.removedItems.find((item) => item.value === action.item.id)
       let removedItems = state.removedItems
 
