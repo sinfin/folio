@@ -37,6 +37,10 @@
     - if @primary_action == :edit
       .f-file-list-file__primary-overlay data=stimulus_action({ click: "edit" }, { url: modal_api_url })
 
+    - if unmet_requirements.present?
+      .f-file-list-file__warning data=stimulus_tooltip(unmet_requirements_html, variant: :popover)
+        = folio_icon(:alert)
+
     - if @selectable
       - if @file.try(:file_list_count).is_a?(Numeric) && @file.file_list_count > 0
         .f-file-list-file__count-wrap

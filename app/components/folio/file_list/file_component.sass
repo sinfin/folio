@@ -1,8 +1,9 @@
 .f-file-list-file
+  $accent-orange: #FF9A52 !default
   $border-radius: 4px !default
-  $overlays-black-100: rgba(0, 0, 0, 0.08) !default
   $f-file-list-file-item-size: 168px !default
   $gray-600: #3B4548 !default
+  $overlays-black-100: rgba(0, 0, 0, 0.08) !default
 
   background-color: $overlays-black-100
   border-radius: $border-radius
@@ -114,3 +115,14 @@
 
   &__source-wrap
     bottom: 9px
+
+  &__warning
+    bottom: 0
+    cursor: help
+    height: 24px + 2 * 8px
+    left: 0
+    padding: 8px
+    position: absolute
+    width: 24px + 2 * 8px
+    z-index: 3
+    color: $accent-orange

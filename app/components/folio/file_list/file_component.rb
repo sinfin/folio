@@ -78,4 +78,37 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
       false
     end
   end
+
+  def unmet_requirements
+    return unless @file
+    return if @unmet_requirements == false
+
+    ary = []
+
+    if Rails.application.config.folio_files_require_attribution
+      if author.blank? && attribution_source.blank? && attribution_source_url.blank?
+        ary << I18n.t("errors.messages.missing_file_attribution").capitalize
+      end
+    end
+
+    if Rails.application.config.folio_files_require_alt
+      if alt.blank?
+        ary << I18n.t("errors.messages.missing_file_alt").capitalize
+      end
+    end
+
+    if Rails.application.config.folio_files_require_description
+      if description.blank?
+        ary << I18n.t("errors.messages.missing_file_description").capitalize
+      end
+    end
+
+    @unmet_requirements = ary.presence || false
+  end
+
+  def unmet_requirements_html
+    unmet_requirements.map do |str|
+      content_tag(:p, str, class: "mb-0 text-danger")
+    end.join(" ")
+  end
 end
