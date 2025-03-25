@@ -28,7 +28,7 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
                         } : nil)
   end
 
-  def image_wrap_style
+  def image_wrap_bg_style
     return if @file.blank?
     return if @file.additional_data.blank?
     return if @file.additional_data["dominant_color"].blank?
@@ -49,8 +49,9 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
   def destroy_url
     return @destroy_url unless @destroy_url.nil?
 
-    @destroy_url = if @file.present? && @destroyable && @file_klass <= Folio::File
-      controller.folio.url_for([:console, :api, @file])
+    @destroy_url = if @file.present? && @destroyable && !(@file_klass <= Folio::File)
+      # TODO handle private/session attachments
+      false
     else
       false
     end

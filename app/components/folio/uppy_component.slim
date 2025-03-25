@@ -1,5 +1,6 @@
 .f-uppy data=data
-  .f-uppy__trigger data=stimulus_target("trigger")
-    = folio_icon(:plus_circle, class: "f-uppy__trigger-icon")
+  = render(Folio::FileList::LoaderComponent.new(data: stimulus_target("loader"),
+                                                light: false))
 
-  span.f-uppy__loader.folio-loader.folio-loader--transparent
+  - unless @inline
+    = render(Folio::FileList::TriggerComponent.new(data: stimulus_target("trigger")))

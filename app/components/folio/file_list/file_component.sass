@@ -1,12 +1,27 @@
 .f-file-list-file
+  $border-radius: 4px !default
+  $overlays-black-100: rgba(0, 0, 0, 0.08) !default
+  $f-file-list-file-item-size: 168px !default
+
+  background-color: $overlays-black-100
+  border-radius: $border-radius
+  overflow: hidden
+  position: relative
+
   &__image-wrap
-    position: absolute
     z-index: 1
-    inset: 0
+    position: relative
+    aspect-ratio: 1 / 1
     display: flex
     align-items: center
     justify-content: center
-    background-color: lightgray
+
+  &__image-wrap-bg
+    position: absolute
+    inset: 0
+    z-index: 1
+    background: $overlays-black-100
+    opacity: 0.75
 
   &__image
     max-width: 100%
@@ -14,23 +29,8 @@
     width: auto
     height: auto
     flex: 0 1 auto
-
-  &__loader
-    z-index: 4
-    position: absolute
-    inset: 0
-    display: flex
-    align-items: center
-    justify-content: center
-    flex-direction: column
-    gap: $grid-gutter-base
-    padding: 2 * $grid-gutter-base
-    background-color: rgba(255, 255, 255, 0.9)
-
-  &__loader-wrap
-    width: 3 * $grid-gutter-base
-    height: 3 * $grid-gutter-base
     position: relative
+    z-index: 2
 
   &__control
     position: absolute

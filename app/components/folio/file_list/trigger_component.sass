@@ -1,0 +1,29 @@
+.f-file-list-trigger
+  $border-radius: 4px !default
+  $f-file-list-file-item-size: 168px !default
+  $overlays-black-100: rgba(0, 0, 0, 0.08) !default
+  $input-height: 36px !default
+
+  width: $f-file-list-file-item-size
+  height: $f-file-list-file-item-size
+  background: $overlays-black-100
+  cursor: pointer
+  display: flex
+  align-items: center
+  justify-content: center
+  border-radius: $border-radius
+
+  &__btn
+    padding: 0
+    width: $input-height
+    height: $input-height
+    position: static
+
+    &::after
+      content: ''
+      position: absolute
+      inset: 0
+      display: block
+
+  .f-file-list-loader + & &__btn
+    visibility: hidden

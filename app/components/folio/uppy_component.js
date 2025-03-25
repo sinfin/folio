@@ -6,7 +6,7 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
     inline: Boolean
   }
 
-  static targets = ['trigger']
+  static targets = ['trigger', 'loader']
 
   connect () {
     window.folioUppyCounter = (window.folioUppyCounter || 0) + 1
@@ -82,7 +82,7 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
       })
     }
 
-    this.element.querySelector('.f-uppy__loader').remove()
+    this.loaderTarget.remove()
   }
 
   uppyComplete (_result) {

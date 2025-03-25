@@ -10,7 +10,7 @@ class Folio::FileList::FileComponentTest < Folio::ComponentTest
 
     assert_selector(".f-file-list-file")
     assert_selector(".f-file-list-file__image-wrap")
-    assert_no_selector(".f-file-list-file__loader")
+    assert_no_selector(".f-file-list-loader")
   end
 
   def test_template
@@ -18,6 +18,6 @@ class Folio::FileList::FileComponentTest < Folio::ComponentTest
 
     assert_selector(".f-file-list-file")
     assert_selector(".f-file-list-file__image-wrap")
-    assert_selector(".f-file-list-file__loader")
+    assert_selector(".f-file-list-loader")
   end
 end
