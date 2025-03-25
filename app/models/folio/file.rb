@@ -238,6 +238,25 @@ class Folio::File < Folio::ApplicationRecord
     I18n.t("folio.file.cannot_destroy_file_with_placements")
   end
 
+  def file_list_count
+    file_placements_size
+  end
+
+  def file_list_source
+    if attribution_source.present?
+      attribution_source
+    elsif attribution_source_url.present?
+      begin
+        uri = URI.parse(attribution_source_url.gsub("www.", ""))
+
+        if uri.host.present?
+          uri.host.split(".", 2)[0]
+        end
+      rescue StandardError
+      end
+    end
+  end
+
   private
     def set_file_name_for_search
       self.file_name_for_search = self.class.sanitize_filename_for_search(file_name)

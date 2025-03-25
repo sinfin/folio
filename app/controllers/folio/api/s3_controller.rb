@@ -35,6 +35,7 @@ class Folio::Api::S3Controller < Folio::Api::BaseController
       %i[
         editable
         destroyable
+        selectable
         primary_action
       ].each do |param|
         if params[param]

@@ -6,12 +6,14 @@ class Folio::FileListComponent < Folio::ApplicationComponent
                  upload: true,
                  editable: true,
                  destroyable: false,
+                 selectable: false,
                  primary_action: nil)
     @file_klass = file_klass
     @files = files
     @upload = upload
     @editable = editable
     @destroyable = destroyable
+    @selectable = selectable
     @primary_action = primary_action
   end
 
@@ -32,6 +34,7 @@ class Folio::FileListComponent < Folio::ApplicationComponent
       file_klass: @file_klass,
       editable: @editable,
       destroyable: @destroyable,
+      selectable: @selectable,
       primary_action: @primary_action,
     }
 

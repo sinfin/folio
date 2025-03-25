@@ -6,12 +6,14 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
                  template: false,
                  editable: true,
                  destroyable: false,
+                 selectable: false,
                  primary_action: nil)
     @file = file
     @file_klass = file_klass || file.class
     @template = template
     @editable = editable
     @destroyable = destroyable
+    @selectable = selectable
     @primary_action = primary_action
   end
 
@@ -63,6 +65,7 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
     controller.folio.file_list_file_folio_api_s3_path(file_type: @file_klass.to_s,
                                                       editable: @editable,
                                                       destroyable: @destroyable,
+                                                      selectable: @selectable,
                                                       primary_action: @primary_action)
   end
 

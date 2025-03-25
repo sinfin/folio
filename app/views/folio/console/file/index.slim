@@ -3,7 +3,7 @@
 = render(Folio::FileListComponent.new(file_klass: @klass,
                                       files: controller.instance_variable_get(controller.send(:folio_console_record_variable_name, plural: true)),
                                       editable: true,
-                                      destroyable: true,
+                                      selectable: true,
                                       primary_action: :edit))
 
 / .folio-react-wrap[

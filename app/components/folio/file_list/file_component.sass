@@ -2,6 +2,7 @@
   $border-radius: 4px !default
   $overlays-black-100: rgba(0, 0, 0, 0.08) !default
   $f-file-list-file-item-size: 168px !default
+  $gray-600: #3B4548 !default
 
   background-color: $overlays-black-100
   border-radius: $border-radius
@@ -78,3 +79,38 @@
   &--destroying
     pointer-events: none
     opacity: 0.5
+
+  &__count,
+  &__source
+    align-items: center
+    background: $gray-600
+    border-radius: 12px
+    color: #ffffff
+    display: inline-block
+    font-size: 12px
+    justify-content: center
+    line-height: 24px
+    max-width: 100%
+    min-width: 24px
+    overflow: hidden
+    padding: 0 8px
+    pointer-events: none
+    text-align: center
+    text-overflow: ellipsis
+    white-space: nowrap
+
+  &__count-wrap,
+  &__source-wrap
+    position: absolute
+    z-index: 1
+    left: 0
+    right: 0
+    text-align: center
+    padding: 0 10px
+    height: 24px
+
+  &__count-wrap
+    top: 6px
+
+  &__source-wrap
+    bottom: 9px
