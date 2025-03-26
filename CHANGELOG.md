@@ -8,6 +8,13 @@ All notable changes to this project will be documented in this file.
 - `f-c-r-ordered-multiselect-app:add-entry` event listener to react ordered multi select
 - `Rails.application.config.folio_dragonfly_cwebp_quality` to set webp conversion quality, change default to 90
 
+### Changed
+- only broadcast `file_update` message bus message to users currently in console
+- pass `message_bus_client_id` during s3 upload and use it to target message bus messages
+
+### Removed
+- presigned URLs from serializers
+
 ## [6.2.4] - 2025-03-18
 
 ### Added
