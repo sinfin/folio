@@ -31,23 +31,21 @@ class Folio::Console::FileSerializer
   end
 
   attribute :thumb do |object|
-    object.thumb(ADMIN_THUMBNAIL_SIZE).url if object.class.human_type == "image"
+    object.thumb(ADMIN_THUMBNAIL_SIZE).url if object.class.human_type == "image" && !object.try(:private?)
   end
 
   attribute :webp_thumb do |object|
-    object.thumb(ADMIN_THUMBNAIL_SIZE).webp_url if object.class.human_type == "image"
+    object.thumb(ADMIN_THUMBNAIL_SIZE).webp_url if object.class.human_type == "image" && !object.try(:private?)
   end
 
   attribute :source_url do |object|
-    if object.try(:private?)
-      Folio::S3.url_rewrite(object.file.remote_url(expires: 1.hour.from_now))
-    else
+    unless object.try(:private?)
       Folio::S3.cdn_url_rewrite(object.file.remote_url)
     end
   end
 
   attribute :url do |object|
-    object.file.url if object.class.human_type == "image"
+    object.file.url if object.class.human_type == "image" && !object.try(:private?)
   end
 
   attribute :dominant_color do |object|
