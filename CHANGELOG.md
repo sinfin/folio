@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [6.2.5] - 2025-03-26
+
 ### Added
 - `:absolute_urls` option to URL inputs
 - `f-c-r-ordered-multiselect-app:add-entry` event listener to react ordered multi select
