@@ -20,7 +20,12 @@ window.Folio.S3Upload.newUpload = ({ file }) => {
 }
 
 window.Folio.S3Upload.finishedUpload = ({ type, existingId, s3Path }) => {
-  return window.Folio.Api.apiPost('/folio/api/s3/after', { s3_path: s3Path, type, existing_id: existingId })
+  return window.Folio.Api.apiPost('/folio/api/s3/after', {
+    s3_path: s3Path,
+    type,
+    existing_id: existingId,
+    message_bus_client_id: window.MessageBus.clientId
+  })
 }
 
 window.Folio.S3Upload.previousDropzoneId = 0

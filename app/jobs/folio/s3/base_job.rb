@@ -9,9 +9,11 @@ class Folio::S3::BaseJob < Folio::ApplicationJob
     sidekiq_options retry: false
   end
 
-  def perform(s3_path:, type:, existing_id: nil, web_session_id: nil, user_id: nil, attributes: {})
+  def perform(s3_path:, type:, message_bus_client_id: nil, existing_id: nil, web_session_id: nil, user_id: nil, attributes: {})
     return unless s3_path
     return unless type
+
+    @message_bus_client_id = message_bus_client_id
 
     if !self.class.multipart? && !test_aware_s3_exists?(s3_path)
       # probably handled it already in another job
@@ -69,10 +71,13 @@ class Folio::S3::BaseJob < Folio::ApplicationJob
     end
 
     def broadcast(hash)
+      return unless @message_bus_client_id
+
       MessageBus.publish Folio::MESSAGE_BUS_CHANNEL,
                          {
                            type: "Folio::S3::CreateFileJob",
                            data: hash,
-                         }.to_json
+                         }.to_json,
+                         client_ids: [@message_bus_client_id]
     end
 end
