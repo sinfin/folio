@@ -58,11 +58,13 @@ class Folio::Api::S3Controller < Folio::Api::BaseController
     def handle_after(job_klass)
       @s3_path = params.require(:s3_path)
       type = params.require(:type)
+      message_bus_client_id = params.require(:message_bus_client_id)
       file_klass = type.safe_constantize
 
       if file_klass && allowed_klass?(file_klass) && test_aware_s3_exists?(@s3_path)
         job_klass.perform_later(s3_path: @s3_path,
                                 type:,
+                                message_bus_client_id:,
                                 existing_id: params[:existing_id].try(:to_i),
                                 web_session_id: session.id.public_id,
                                 user_id: try(:current_user).try(:id),
