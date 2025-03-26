@@ -17,9 +17,7 @@ class Folio::FileSerializer
   end
 
   attribute :source_url do |object|
-    if object.try(:private?)
-      Folio::S3.url_rewrite(object.file.remote_url(expires: 1.hour.from_now))
-    else
+    unless object.try(:private?)
       Folio::S3.cdn_url_rewrite(object.file.remote_url)
     end
   end
