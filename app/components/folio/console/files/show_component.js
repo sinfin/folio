@@ -51,7 +51,8 @@ window.Folio.Stimulus.register('f-c-files-show', class extends window.Stimulus.C
     this.replacingFileData = {
       s3_path: new URL(event.detail.result.uploadURL).pathname.replace(/^\//, ''),
       type: this.fileTypeValue,
-      existing_id: this.idValue
+      existing_id: this.idValue,
+      message_bus_client_id: window.MessageBus.clientId
     }
 
     this.pingS3After()

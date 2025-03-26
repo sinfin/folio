@@ -58,7 +58,8 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
 
     const data = {
       s3_path: this.s3PathValue,
-      type: this.fileTypeValue
+      type: this.fileTypeValue,
+      message_bus_client_id: window.MessageBus.clientId
     }
 
     window.Folio.Api.apiPost('/folio/api/s3/after', data).catch((error) => {
