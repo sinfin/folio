@@ -100,7 +100,6 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
   }
 
   messageBusCallbackForEdit (event) {
-    console.log('messageBusCallbackForEdit', event.detail.message)
     const message = event.detail.message
     if (message.type !== 'Folio::S3::CreateFileJob') return
 

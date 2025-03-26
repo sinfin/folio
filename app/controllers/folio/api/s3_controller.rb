@@ -36,11 +36,14 @@ class Folio::Api::S3Controller < Folio::Api::BaseController
         editable
         destroyable
         selectable
-        primary_action
       ].each do |param|
         if params[param]
           props[param] = params[param]
         end
+      end
+
+      if params[:primary_action].is_a?(String)
+        props[:primary_action] = params[:primary_action].to_sym
       end
 
       render_component_json(Folio::FileList::FileComponent.new(**props))

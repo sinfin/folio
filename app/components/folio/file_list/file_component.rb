@@ -21,7 +21,6 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
     stimulus_controller("f-file-list-file",
                         values: {
                           file_type: @file_klass.to_s,
-                          primary_action: @primary_action,
                           id: @file ? @file.id : "",
                           primary_action: @primary_action,
                           selectable: @selectable,
