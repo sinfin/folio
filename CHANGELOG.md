@@ -2,6 +2,14 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2025-03-26
+### Changed
+- only broadcast `file_update` message bus message to users currently in console
+- pass `message_bus_client_id` during s3 upload and use it to target message bus messages
+
+### Deleted
+- presigned URLs from serializers
+
 ## 2025-03-03
 ### Added
 - added divider to `Folio::Console::DropdownCell` with optional title
