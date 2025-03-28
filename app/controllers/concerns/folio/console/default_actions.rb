@@ -316,7 +316,16 @@ module Folio::Console::DefaultActions
           }
         }, status: 200
       else
-        render json: {}, status: 200
+        data = {}
+
+        folio_console_params.keys.each do |key|
+          change = folio_console_record.saved_changes[key]
+          if change && change[1]
+            data[key] = change[1]
+          end
+        end
+
+        render json: { data: }, status: 200
       end
     end
 

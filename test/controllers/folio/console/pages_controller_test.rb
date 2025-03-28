@@ -28,6 +28,27 @@ class Folio::Console::PagesControllerTest < Folio::Console::BaseControllerTest
     assert_response :success
   end
 
+  test "update" do
+    page = create(:folio_page)
+    assert_not_equal "foo", page.title
+
+    patch url_for([:console, page]), params: { page: { title: "foo" } }
+    assert_response :redirect
+
+    assert_equal "foo", page.reload.title
+  end
+
+  test "update json" do
+    page = create(:folio_page)
+    assert_not_equal "foo", page.title
+
+    patch url_for([:console, page, format: :json]), params: { page: { title: "foo" } }
+    assert_response :success
+
+    assert_equal "foo", page.reload.title
+    assert_equal "foo", response.parsed_body["data"]["title"]
+  end
+
   test "failed edit" do
     folio_page = create(:folio_page)
 
