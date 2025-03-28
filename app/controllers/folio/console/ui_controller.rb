@@ -39,12 +39,14 @@ class Folio::Console::UiController < Folio::Console::BaseController
       raise ActionController::BadRequest.new("Invalid name #{name}")
     end
 
+    name = name.to_sym
+
     value = params.require(:value)
 
     @page = Folio::Page.last
     @page.update!(name => value)
 
-    render json: { data: { value: } }
+    render json: { data: { name => value } }
   end
 
   def tabs

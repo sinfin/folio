@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 - update ruby to 3.4.2
 - update rails to 8.0.1
 - default console `update` for `format: :json` now returns a JSON with changes instead of an empty hash
+- `Folio::Console::Ui::AjaxInputComponent` now expects API to return `{ name => new_value }` instead of `{ value: new_value }`
 
 ## [6.2.5] - 2025-03-26
 

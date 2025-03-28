@@ -71,19 +71,21 @@ window.Folio.Stimulus.register('f-c-ui-ajax-input', class extends window.Stimulu
 
     const apiFn = this.methodValue === 'POST' ? window.Folio.Api.apiPost : window.Folio.Api.apiPatch
 
+    const name = this.inputTarget.name
+
     const data = {
-      name: this.inputTarget.name,
+      name,
       value: this.cleave ? this.cleave.getRawValue() : this.inputTarget.value
     }
 
     apiFn(this.urlValue, data).then((res) => {
       if (this.cleave) {
-        this.cleave.setRawValue(res.data.value)
+        this.cleave.setRawValue(res.data[name])
       } else {
-        this.inputTarget.value = res.data.value
+        this.inputTarget.value = res.data[name]
       }
 
-      this.originalValueValue = res.data.value
+      this.originalValueValue = res.data[name]
       this.inputTarget.blur()
       this.element.classList.add('f-c-ui-ajax-input--success')
       setTimeout(() => {
