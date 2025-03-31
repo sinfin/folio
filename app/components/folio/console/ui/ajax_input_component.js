@@ -1,4 +1,5 @@
 //= require cleave.js/dist/cleave
+//= require folio/form_to_hash
 
 window.Folio.Stimulus.register('f-c-ui-ajax-input', class extends window.Stimulus.Controller {
   static targets = ['input', 'tooltip']
@@ -43,6 +44,7 @@ window.Folio.Stimulus.register('f-c-ui-ajax-input', class extends window.Stimulu
     if (value !== this.originalValueValue) {
       return this.element.classList.add('f-c-ui-ajax-input--dirty')
     } else {
+      this.dispatch('blur', { detail: { dirty: false } })
       return this.element.classList.remove('f-c-ui-ajax-input--dirty')
     }
   }
@@ -60,6 +62,12 @@ window.Folio.Stimulus.register('f-c-ui-ajax-input', class extends window.Stimulu
     this.element.classList.remove('f-c-ui-ajax-input--dirty')
     this.element.classList.remove('f-c-ui-ajax-input--success')
     this.element.classList.remove('f-c-ui-ajax-input--failure')
+
+    this.dispatch('blur', { detail: { dirty: false } })
+  }
+
+  onBlur () {
+    this.dispatch('blur', { detail: { dirty: this.element.classList.contains('f-c-ui-ajax-input--dirty') } })
   }
 
   save (e) {
@@ -73,20 +81,24 @@ window.Folio.Stimulus.register('f-c-ui-ajax-input', class extends window.Stimulu
 
     const name = this.inputTarget.name
 
-    const data = {
-      name,
-      value: this.cleave ? this.cleave.getRawValue() : this.inputTarget.value
-    }
+    const rawData = {}
+    rawData[name] = this.cleave ? this.cleave.getRawValue() : this.inputTarget.value
+
+    const data = window.Folio.formToHash(rawData)
 
     apiFn(this.urlValue, data).then((res) => {
+      const key = name.replace(/^.+\[(.+)\]$/, '$1')
+
       if (this.cleave) {
-        this.cleave.setRawValue(res.data[name])
+        this.cleave.setRawValue(res.data[key])
       } else {
-        this.inputTarget.value = res.data[name]
+        this.inputTarget.value = res.data[key]
       }
 
-      this.originalValueValue = res.data[name]
+      this.originalValueValue = res.data[key]
       this.inputTarget.blur()
+      this.dispatch('success', { detail: { value: res.data[key] } })
+
       this.element.classList.add('f-c-ui-ajax-input--success')
       setTimeout(() => {
         if (this && this.element) {

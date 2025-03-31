@@ -11,6 +11,7 @@ class Folio::Console::UiController < Folio::Console::BaseController
       boolean_toggles
       buttons
       dropdowns
+      in_place_inputs
       modals
       tabs
       tooltips
@@ -22,6 +23,10 @@ class Folio::Console::UiController < Folio::Console::BaseController
       url
       rich_text
     ].sort
+  end
+
+  def in_place_inputs
+    @page = Folio::Page.last
   end
 
   def ajax_inputs

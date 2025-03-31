@@ -1,11 +1,12 @@
 //= require jquery
 //= require jquery-ui/jquery-ui
 //= require justified-layout
+//= require folio/stimulus
+
 //= require folio/atoms
 //= require folio/message_bus
 //= require folio/debounce
 //= require folio/lightbox
-//= require folio/stimulus
 //= require folio/console/atoms/previews/main_app
 //= require folio/console/file/preview_reloader/preview_reloader
 

@@ -49,7 +49,7 @@ class Folio::Console::Ui::AjaxInputComponent < Folio::Console::ApplicationCompon
   end
 
   def input_data
-    stimulus_data(action: { keyup: :onKeyUp, change: :onKeyUp },
+    stimulus_data(action: { keyup: :onKeyUp, change: :onKeyUp, blur: :onBlur },
                   target: "input")
   end
 

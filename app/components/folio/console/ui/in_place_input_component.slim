@@ -1,0 +1,19 @@
+.f-c-ui-in-place-input data=data
+  .f-c-ui-in-place-input__content-wrap
+    .f-c-ui-in-place-input__content-flex data=stimulus_action(click: "toggle")
+      span[
+        class="flex-grow-0 flex-shrink-1"
+        data=stimulus_target("content")
+      ]
+        = @value
+
+      = folio_icon(:edit,
+                   height: 12,
+                   class: "flex-grow-0 flex-shrink-0")
+
+  .f-c-ui-in-place-input__input-wrap
+    = render(Folio::Console::Ui::AjaxInputComponent.new(name: "#{@record.model_name.param_key}[#{@name}]",
+                                                        url:,
+                                                        value: @value,
+                                                        cleave: @cleave,
+                                                        textarea: @textarea))

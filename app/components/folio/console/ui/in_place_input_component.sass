@@ -1,0 +1,29 @@
+.f-c-ui-in-place-input
+  &[data-f-c-ui-in-place-input-editing-value="true"] &__content-wrap,
+  &[data-f-c-ui-in-place-input-editing-value="false"] &__input-wrap
+    display: none
+
+  &__content-wrap
+    display: flex
+    align-items: center
+    gap: px-to-rem(4px)
+
+  &__content-flex
+    display: inline-flex
+    align-items: center
+    max-width: 100%
+    position: relative
+    transition: $transition-base
+    gap: px-to-rem(4px)
+    border-radius: $border-radius
+    cursor: pointer
+
+    &:hover
+      background: $gray-200
+      box-shadow: 0 0 0 4px $gray-200
+
+  &__toggle-ico
+    flex: 0 0 auto
+
+  &__toggle:hover &__toggle-ico
+    color: $blue

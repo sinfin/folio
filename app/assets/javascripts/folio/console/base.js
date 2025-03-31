@@ -70,6 +70,7 @@
 //= require folio/console/ui/boolean_toggle_component
 //= require folio/console/ui/button/button
 //= require folio/console/ui/buttons/buttons
+//= require folio/console/ui/in_place_input_component
 //= require folio/console/ui/notification_modal_component
 //= require folio/console/ui/tabs_component
 

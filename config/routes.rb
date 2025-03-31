@@ -31,6 +31,7 @@ Folio::Engine.routes.draw do
         get :boolean_toggles
         get :buttons
         get :dropdowns
+        get :in_place_inputs
         get :modals
         get :tabs
         get :tooltips
