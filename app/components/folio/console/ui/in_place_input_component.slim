@@ -1,19 +1,22 @@
 .f-c-ui-in-place-input data=data
-  .f-c-ui-in-place-input__content-wrap
+  .f-c-ui-in-place-input__content-wrap data=stimulus_target("contentWrap")
     .f-c-ui-in-place-input__content-flex data=stimulus_action(click: "toggle")
-      span[
+      span.f-c-ui-in-place-input__content[
         class="flex-grow-0 flex-shrink-1"
         data=stimulus_target("content")
       ]
         = @value
 
+      span.f-c-ui-in-place-input__content-blank.text-muted
+        = t('.blank')
+
       = folio_icon(:edit,
                    height: 12,
-                   class: "flex-grow-0 flex-shrink-0")
+                   class: "flex-grow-0 flex-shrink-0 f-c-ui-in-place-input__toggle-ico")
 
-  .f-c-ui-in-place-input__input-wrap
-    = render(Folio::Console::Ui::AjaxInputComponent.new(name: "#{@record.model_name.param_key}[#{@name}]",
+  .f-c-ui-in-place-input__input-wrap data=stimulus_target("inputWrap")
+    = render(Folio::Console::Ui::AjaxInputComponent.new(name:,
                                                         url:,
                                                         value: @value,
                                                         cleave: @cleave,
-                                                        textarea: @textarea))
+                                                        textarea: @textareas))

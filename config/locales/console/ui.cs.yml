@@ -1,0 +1,7 @@
+---
+cs:
+  folio:
+    console:
+      ui:
+        in_place_input_component:
+          blank: Nevyplněno

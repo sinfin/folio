@@ -11,10 +11,15 @@ module Folio::Console::FileControllerBase
     def file_params
       p = params.require(:file)
                 .permit(:tag_list,
-                        :type,
-                        :file,
                         :author,
+                        :attribution_source,
+                        :attribution_source_url,
+                        :attribution_copyright,
+                        :attribution_licence,
                         :description,
+                        :sensitive_content,
+                        :default_gravity,
+                        :alt,
                         tags: [])
 
       if p[:tags].present? && p[:tag_list].blank?

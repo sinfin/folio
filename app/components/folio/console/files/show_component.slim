@@ -35,4 +35,15 @@
         .f-c-files-show__meta-item.ms-auto
           == cell("folio/console/state", @file, active: false)
 
+      .f-c-files-show__table
+        - table_row_keys.each do |key|
+          .f-c-files-show__tr
+            .f-c-files-show__th
+              = @file.class.human_attribute_name(key)
+
+            .f-c-files-show__td
+              = render(Folio::Console::Ui::InPlaceInputComponent.new(attribute: key,
+                                                                     record: @file,
+                                                                     as: :file))
+
   span.folio-loader.folio-loader--outset-8.f-c-files-show__loader

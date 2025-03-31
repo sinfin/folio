@@ -58,4 +58,15 @@ class Folio::Console::Files::ShowComponent < Folio::Console::ApplicationComponen
       variant: :warning,
     }
   end
+
+  def table_row_keys
+    %i[
+      author
+      attribution_source
+      attribution_source_url
+      attribution_copyright
+      attribution_licence
+      alt
+    ]
+  end
 end

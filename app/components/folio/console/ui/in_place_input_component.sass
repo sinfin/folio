@@ -7,20 +7,45 @@
     display: flex
     align-items: center
     gap: px-to-rem(4px)
+    min-height: $input-height
 
   &__content-flex
     display: inline-flex
     align-items: center
     max-width: 100%
     position: relative
-    transition: $transition-base
     gap: px-to-rem(4px)
-    border-radius: $border-radius
     cursor: pointer
 
-    &:hover
+    &::after
       background: $gray-200
-      box-shadow: 0 0 0 4px $gray-200
+      border-radius: $border-radius
+      content: ''
+      display: block
+      inset: px-to-rem(-4px) px-to-rem(-8px)
+      opacity: 0
+      pointer-events: none
+      position: absolute
+      transition: $transition-base
+      z-index: 1
+
+    &:hover::after
+      opacity: 1
+
+  &__content:not(:empty) + &__content-blank
+    display: none
+
+  &__content,
+  &__content-blank,
+  &__toggle-ico
+    position: relative
+    z-index: 2
+
+  &__content
+    overflow-wrap: break-word
+
+    &:empty
+      display: none
 
   &__toggle-ico
     flex: 0 0 auto

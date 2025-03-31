@@ -44,7 +44,6 @@ window.Folio.Stimulus.register('f-c-ui-ajax-input', class extends window.Stimulu
     if (value !== this.originalValueValue) {
       return this.element.classList.add('f-c-ui-ajax-input--dirty')
     } else {
-      this.dispatch('blur', { detail: { dirty: false } })
       return this.element.classList.remove('f-c-ui-ajax-input--dirty')
     }
   }

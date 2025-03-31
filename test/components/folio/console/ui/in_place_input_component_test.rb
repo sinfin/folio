@@ -6,10 +6,10 @@ class Folio::Console::Ui::InPlaceInputComponentTest < Folio::Console::ComponentT
   def test_render
     with_controller_class(Folio::Console::PagesController) do
       with_request_url "/console/pages" do
-        name = :meta_title
+        attribute = :meta_title
         record = create(:folio_page)
 
-        render_inline(Folio::Console::Ui::InPlaceInputComponent.new(name:, record:))
+        render_inline(Folio::Console::Ui::InPlaceInputComponent.new(attribute:, record:))
 
         assert_selector(".f-c-ui-in-place-input")
       end
