@@ -18,7 +18,8 @@ class Folio::Console::Ui::AjaxInputComponent < Folio::Console::ApplicationCompon
                  small_affix: nil,
                  textarea: false,
                  disabled: false,
-                 rows: nil)
+                 rows: nil,
+                 autocomplete: nil)
     @name = name
     @url = url
     @value = value
@@ -37,6 +38,7 @@ class Folio::Console::Ui::AjaxInputComponent < Folio::Console::ApplicationCompon
     @disabled = disabled
     @rows = rows
     @collection = collection
+    @autocomplete = autocomplete
   end
 
   def data
@@ -49,8 +51,26 @@ class Folio::Console::Ui::AjaxInputComponent < Folio::Console::ApplicationCompon
   end
 
   def input_data
-    stimulus_data(action: { keyup: :onKeyUp, change: :onKeyUp, blur: :onBlur },
-                  target: "input")
+    h = stimulus_data(action: { keyup: :onKeyUp, change: :onKeyUp, blur: :onBlur },
+                      target: "input")
+
+    if @autocomplete
+      values = if @autocomplete.is_a?(Array)
+        { collection: @autocomplete }
+      elsif @autocomplete.is_a?(String)
+        { url: @autocomplete }
+      end
+
+      if values
+        autocomplete_h = stimulus_controller("f-input-autocomplete",
+                                             inline: true,
+                                             values:)
+
+        return stimulus_merge(h, autocomplete_h)
+      end
+    end
+
+    h
   end
 
   def formatted_value

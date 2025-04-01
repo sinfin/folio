@@ -29,7 +29,13 @@ window.Folio.Stimulus.register('f-c-ui-ajax-input', class extends window.Stimulu
   }
 
   onKeyUp (e) {
-    if (e.code === 'Enter' && this.inputTarget.tagName !== 'TEXTAREA') return this.save()
+    if (e.code === 'Enter' && this.inputTarget.tagName !== 'TEXTAREA') {
+      if (this.inputTarget.getAttribute('data-f-input-autocomplete-has-active-dropdown-value') === 'true') {
+        return
+      }
+
+      return this.save()
+    }
 
     if (this.element.classList.contains('f-c-ui-ajax-input--loading')) {
       e.preventDefault()
@@ -87,16 +93,17 @@ window.Folio.Stimulus.register('f-c-ui-ajax-input', class extends window.Stimulu
 
     apiFn(this.urlValue, data).then((res) => {
       const key = name.replace(/^.+\[(.+)\]$/, '$1')
+      const newValue = res.data[key] || ''
 
       if (this.cleave) {
-        this.cleave.setRawValue(res.data[key])
+        this.cleave.setRawValue(newValue)
       } else {
-        this.inputTarget.value = res.data[key]
+        this.inputTarget.value = newValue
       }
 
-      this.originalValueValue = res.data[key]
+      this.originalValueValue = newValue
       this.inputTarget.blur()
-      this.dispatch('success', { detail: { value: res.data[key] } })
+      this.dispatch('success', { detail: { value: newValue } })
 
       this.element.classList.add('f-c-ui-ajax-input--success')
       setTimeout(() => {

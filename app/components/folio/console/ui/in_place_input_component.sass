@@ -37,7 +37,8 @@
 
   &__content,
   &__content-blank,
-  &__toggle-ico
+  &__toggle-ico,
+  &__success-ico
     position: relative
     z-index: 2
 
@@ -47,8 +48,13 @@
     &:empty
       display: none
 
-  &__toggle-ico
+  &__toggle-ico,
+  &__success-ico
     flex: 0 0 auto
 
-  &__toggle:hover &__toggle-ico
-    color: $blue
+  &__success-ico
+    color: $success
+
+  &:not(&--success) &__success-ico,
+  &--success &__toggle-ico
+    display: none

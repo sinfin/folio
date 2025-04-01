@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 
 class Folio::Console::Ui::InPlaceInputComponent < Folio::Console::ApplicationComponent
-  def initialize(attribute:, record:, as: nil, cleave: false)
+  def initialize(attribute:, record:, as: nil, cleave: false, autocomplete: nil)
     @attribute = attribute
     @record = record
     @value = record.send(attribute)
     @cleave = cleave
     @textarea = !cleave && @record.class.columns_hash[attribute.to_s].type == :text
     @as = as
+    @autocomplete = autocomplete
   end
 
   def url
@@ -22,6 +23,7 @@ class Folio::Console::Ui::InPlaceInputComponent < Folio::Console::ApplicationCom
                         },
                         values: {
                           editing: false,
+                          has_autocomplete: !!@autocomplete,
                         })
   end
 

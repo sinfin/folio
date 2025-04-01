@@ -28,6 +28,14 @@ class Folio::Console::UiController < Folio::Console::BaseController
 
   def in_place_inputs
     @page = Folio::Page.last
+
+    @autocomplete_url = folio.url_for([:field,
+                                       :console,
+                                       :api,
+                                       :autocomplete,
+                                       klass: @page.class.to_s,
+                                       field: :title,
+                                       only_path: true])
   end
 
   def ajax_inputs

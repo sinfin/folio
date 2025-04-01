@@ -10,6 +10,10 @@
       span.f-c-ui-in-place-input__content-blank.text-muted
         = t('.blank')
 
+      = folio_icon(:check,
+                   height: 12,
+                   class: "flex-grow-0 flex-shrink-0 f-c-ui-in-place-input__success-ico")
+
       = folio_icon(:edit,
                    height: 12,
                    class: "flex-grow-0 flex-shrink-0 f-c-ui-in-place-input__toggle-ico")
@@ -19,4 +23,5 @@
                                                         url:,
                                                         value: @value,
                                                         cleave: @cleave,
-                                                        textarea: @textareas))
+                                                        textarea: @textareas,
+                                                        autocomplete: @autocomplete))

@@ -17,3 +17,13 @@ h3 Textarea
 
 = render(Folio::Console::Ui::InPlaceInputComponent.new(attribute: :meta_description,
                                                        record: @page))
+
+h3 Autocomplete
+
+p Page titles: #{Folio::Page.by_site(Folio::Current.site).pluck(:title).join(", ")}
+
+- @page.title = ""
+
+= render(Folio::Console::Ui::InPlaceInputComponent.new(attribute: :title,
+                                                       autocomplete: @autocomplete_url,
+                                                       record: @page))

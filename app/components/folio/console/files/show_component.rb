@@ -69,4 +69,14 @@ class Folio::Console::Files::ShowComponent < Folio::Console::ApplicationComponen
       alt
     ]
   end
+
+  def autocomplete_for(key)
+    controller.folio.url_for([:field,
+                              :console,
+                              :api,
+                              :autocomplete,
+                              klass: @file.class.to_s,
+                              field: key,
+                              only_path: true])
+  end
 end

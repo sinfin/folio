@@ -65,8 +65,6 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
 
       scope = filter_by_atom_setting_params(scope)
 
-      scope = scope.by_query(q) if q.present?
-
       if q.present?
         if scope.respond_to?("by_#{field}")
           scope = scope.send("by_#{field}", q)

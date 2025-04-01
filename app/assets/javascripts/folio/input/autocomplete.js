@@ -26,8 +26,7 @@ window.Folio.Stimulus.register('f-input-autocomplete', class extends window.Stim
   static values = {
     url: { type: String, default: '' },
     collection: { type: String, default: '' },
-    dropdownHover: { type: Boolean, default: false },
-    inputFocused: { type: Boolean, default: false }
+    hasActiveDropdown: { type: Boolean, default: false }
   }
 
   connect () {
@@ -46,31 +45,23 @@ window.Folio.Stimulus.register('f-input-autocomplete', class extends window.Stim
     this.boundOnInput = this.onInput.bind(this)
     this.element.addEventListener('input', this.boundOnInput)
 
-    this.boundOnKeydown = this.onKeydown.bind(this)
-    this.element.addEventListener('keydown', this.boundOnKeydown)
+    this.boundOnKeyup = this.onKeyup.bind(this)
+    this.element.addEventListener('keyup', this.boundOnKeyup)
 
     this.boundOnFocus = this.onFocus.bind(this)
     this.element.addEventListener('focus', this.boundOnFocus)
-
-    this.boundOnBlur = this.onBlur.bind(this)
-    this.element.addEventListener('blur', this.boundOnBlur)
-
-    this.boundDocumentClick = this.onDocumentClick.bind(this)
-    document.addEventListener('click', this.boundDocumentClick)
   }
 
   disconnect () {
     this.abort()
 
-    delete this.lastApiResults
+    if (this.lastApiResults) delete this.lastApiResults
+    if (this.debouncedApiLoad) delete this.debouncedApiLoad
+    if (this.parsedItems) delete this.parsedItems
 
-    if (this.parsedItems) {
-      delete this.parsedItems
-    }
-
-    if (this.boundOnKeydown) {
-      this.element.removeEventListener('keydown', this.boundOnKeydown)
-      delete this.boundOnKeydown
+    if (this.boundOnKeyup) {
+      this.element.removeEventListener('keyup', this.boundOnKeyup)
+      delete this.boundOnKeyup
     }
 
     if (this.boundOnInput) {
@@ -78,26 +69,16 @@ window.Folio.Stimulus.register('f-input-autocomplete', class extends window.Stim
       delete this.boundOnInput
     }
 
-    if (this.boundOnBlur) {
-      this.element.removeEventListener('blur', this.boundOnBlur)
-      delete this.boundOnBlur
-    }
-
     if (this.boundOnFocus) {
       this.element.removeEventListener('focus', this.boundOnFocus)
       delete this.boundOnFocus
     }
 
-    if (this.boundDocumentClick) {
-      document.removeEventListener('click', this.boundDocumentClick)
-      delete this.boundDocumentClick
-    }
-
     this.removeDropdown()
   }
 
-  onKeydown (e) {
-    if (!this.autocompleteDropdown) return
+  onKeyup (e) {
+    if (!this.hasActiveDropdownValue) return
 
     switch (e.code) {
       case 'ArrowDown':
@@ -133,7 +114,7 @@ window.Folio.Stimulus.register('f-input-autocomplete', class extends window.Stim
   }
 
   handleAutocompleteActive (action) {
-    if (!this.autocompleteDropdown) return
+    if (!this.hasActiveDropdownValue) return
 
     const menu = this.autocompleteDropdown.querySelector('.f-input-autocomplete-dropdown__menu')
     const active = menu.querySelector('.active')
@@ -170,18 +151,13 @@ window.Folio.Stimulus.register('f-input-autocomplete', class extends window.Stim
     this.loadOrSetItems(this.element.value)
   }
 
-  onBlur (_e) {
-    this.inputFocusedValue = false
-  }
-
   onFocus (_e) {
-    this.inputFocusedValue = true
     this.loadOrSetItems(this.element.value)
   }
 
   abort () {
     if (this.abortController) {
-      this.abortController.abort()
+      this.abortController.abort('abort')
       delete this.abortController
     }
   }
@@ -205,20 +181,28 @@ window.Folio.Stimulus.register('f-input-autocomplete', class extends window.Stim
         return this.setAutocompleteItems(this.lastApiResults[value])
       }
 
-      this.abort()
-      this.abortController = new AbortController()
+      if (!this.debouncedApiLoad) {
+        this.debouncedApiLoad = window.Folio.debounce(this.apiLoad.bind(this))
+      }
 
-      const url = value ? window.Folio.addParamsToUrl(this.urlValue, { q: value }) : this.urlValue
-
-      window.Folio.Api.apiGet(url, null, this.abortController.signal).then((res) => {
-        if (res && res.data) {
-          this.lastApiResults = { [value]: res.data }
-          this.setAutocompleteItems(res.data)
-        } else {
-          this.removeDropdown()
-        }
-      }).catch(() => { this.removeDropdown() })
+      this.debouncedApiLoad(value)
     }
+  }
+
+  apiLoad (value) {
+    this.abort()
+    this.abortController = new AbortController()
+
+    const url = value ? window.Folio.addParamsToUrl(this.urlValue, { q: value }) : this.urlValue
+
+    window.Folio.Api.apiGet(url, null, this.abortController.signal).then((res) => {
+      if (res && res.data) {
+        this.lastApiResults = { [value]: res.data }
+        this.setAutocompleteItems(res.data)
+      } else {
+        this.removeDropdown()
+      }
+    }).catch(() => { this.removeDropdown() })
   }
 
   onDocumentClick (e) {
@@ -226,118 +210,101 @@ window.Folio.Stimulus.register('f-input-autocomplete', class extends window.Stim
 
     if (validTarget && validTarget.closest('.f-input-autocomplete-dropdown') === this.autocompleteDropdown) {
       this.setValue(e.target.innerText)
-    } else if (e.target !== this.element && this.autocompleteDropdown) {
-      this.removeDropdown()
+    } else if (this.hasActiveDropdownValue) {
+      if (e.target !== this.element) {
+        const closest = e.target.closest('.f-c-ui-in-place-input')
+
+        if (!closest || closest !== this.element.closest('.f-c-ui-in-place-input')) {
+          this.removeDropdown()
+        }
+      }
     }
   }
 
-  onDropdownMouseenter () {
-    this.dropdownHoverValue = true
-  }
-
-  onDropdownMouseleave () {
-    this.dropdownHoverValue = false
-  }
-
   addDropdown (html) {
-    this.autocompleteDropdown = document.importNode(window.Folio.Input.Autocomplete.TEMPLATE.content.children[0], true)
-    this.autocompleteDropdown.querySelector('.f-input-autocomplete-dropdown__menu').innerHTML = html
-    this.autocompleteDropdown.style.width = `${this.element.offsetWidth}px`
+    if (!this.hasActiveDropdownValue) {
+      this.autocompleteDropdown = document.importNode(window.Folio.Input.Autocomplete.TEMPLATE.content.children[0], true)
+      this.autocompleteDropdown.style.width = `${this.element.offsetWidth}px`
 
-    document.body.appendChild(this.autocompleteDropdown)
+      document.body.appendChild(this.autocompleteDropdown)
 
-    this.boundDropdownMouseenter = this.onDropdownMouseenter.bind(this)
-    this.autocompleteDropdown.addEventListener('mouseenter', this.boundDropdownMouseenter)
+      this.floatingUiCleanup = window.FloatingUIDOM.autoUpdate(
+        this.element,
+        this.autocompleteDropdown,
+        () => {
+          const options = {
+            middleware: [
+              window.FloatingUIDOM.offset({ mainAxis: 8 })
+            ],
+            placement: 'bottom'
+          }
 
-    this.boundDropdownMouseleave = this.onDropdownMouseleave.bind(this)
-    this.autocompleteDropdown.addEventListener('mouseleave', this.boundDropdownMouseleave)
+          window.FloatingUIDOM.computePosition(this.element, this.autocompleteDropdown, options).then(({
+            x,
+            y,
+            middlewareData,
+            placement
+          }) => {
+            Object.assign(this.autocompleteDropdown.style, {
+              left: `${x}px`,
+              top: `${y}px`,
+              width: `${this.element.offsetWidth}px`
+            })
 
-    this.floatingUiCleanup = window.FloatingUIDOM.autoUpdate(
-      this.element,
-      this.autocompleteDropdown,
-      () => {
-        const options = {
-          middleware: [
-            window.FloatingUIDOM.offset({ mainAxis: 8 })
-          ],
-          placement: 'bottom'
-        }
-
-        window.FloatingUIDOM.computePosition(this.element, this.autocompleteDropdown, options).then(({
-          x,
-          y,
-          middlewareData,
-          placement
-        }) => {
-          Object.assign(this.autocompleteDropdown.style, {
-            left: `${x}px`,
-            top: `${y}px`,
-            width: `${this.element.offsetWidth}px`
+            this.autocompleteDropdown.setAttribute('data-popper-placement', 'bottom')
+            this.autocompleteDropdown.classList.add('d-block')
           })
+        }
+      )
 
-          this.autocompleteDropdown.setAttribute('data-popper-placement', 'bottom')
-          this.autocompleteDropdown.classList.add('d-block')
-        })
-      }
-    )
-  }
+      this.boundDocumentClick = this.onDocumentClick.bind(this)
+      document.addEventListener('click', this.boundDocumentClick)
 
-  removeDropdownUnlessActive () {
-    if (this.inputFocusedValue || this.dropdownHoverValue) return
-    if (!this.autocompleteDropdown) return
-    this.removeDropdown()
+      this.hasActiveDropdownValue = true
+    }
+
+    this.autocompleteDropdown.querySelector('.f-input-autocomplete-dropdown__menu').innerHTML = html
   }
 
   removeDropdown () {
-    this.dropdownHoverValue = false
-
     if (this.floatingUiCleanup) {
       this.floatingUiCleanup()
       delete this.floatingUiCleanup
     }
 
+    if (this.boundDocumentClick) {
+      document.removeEventListener('click', this.boundDocumentClick)
+      delete this.boundDocumentClick
+    }
+
     if (this.autocompleteDropdown) {
-      if (this.boundDropdownMouseenter) {
-        this.autocompleteDropdown.removeEventListener('mouseenter', this.boundDropdownMouseenter)
-        delete this.boundDropdownMouseenter
-      }
-
-      if (this.boundDropdownMouseleave) {
-        this.autocompleteDropdown.removeEventListener('mouseleave', this.boundDropdownMouseleave)
-        delete this.boundDropdownMouseleave
-      }
-
       this.autocompleteDropdown.remove()
       delete this.autocompleteDropdown
+    }
+
+    if (this.hasActiveDropdownValue) {
+      this.hasActiveDropdownValue = false
     }
   }
 
   setAutocompleteItems (items) {
-    this.removeDropdown()
-
     if (items.length) {
       let html = ''
 
       items.forEach((item, index) => {
         if (index > 9) return
-        html += `<li><span class="dropdown-item cursor-pointer d-block${index === 0 ? ' active' : ''}">${item}</span></li>`
+        html += `<li><span class="dropdown-item ${index === 0 ? ' active' : ''}" style="cursor: pointer; overflow-wrap: break-word; white-space: normal;">${item}</span></li>`
       })
 
       this.addDropdown(html)
+    } else {
+      this.removeDropdown()
     }
   }
 
-  dropdownHoverValueChanged (to, from) {
-    if (typeof from === 'undefined') return
-    if (to) return
-    if (to === from) return
-    this.removeDropdownUnlessActive()
-  }
-
-  inputFocusedValueChanged (to, from) {
-    if (typeof from === 'undefined') return
-    if (to) return
-    if (to === from) return
-    this.removeDropdownUnlessActive()
+  hasActiveDropdownValueChanged (to, from) {
+    if (to && typeof from !== 'undefined' && to !== from) {
+      this.element.dispatchEvent(new Event('f-input-autocomplete:active-dropdown-changed', { bubbles: true, detail: { hasActiveDropdown: to } }))
+    }
   }
 })
