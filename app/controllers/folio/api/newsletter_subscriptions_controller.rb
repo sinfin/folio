@@ -24,10 +24,7 @@ class Folio::Api::NewsletterSubscriptionsController < Folio::Api::BaseController
                             :message,
                             :button_class,
                             :label,
-                            :input_label,
-                            :application_namespace,
-                            :submit_icon,
-                            :submit_icon_height)
+                            :input_label)
       else
         {}
       end
