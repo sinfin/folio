@@ -80,6 +80,6 @@ class Folio::NewsletterSubscriptions::FormComponent < Folio::ApplicationComponen
   end
 
   def remember_option_keys
-    [:placeholder, :submit_text, :message, :button_class, :input_label]
+    [:placeholder, :submit_text, :message, :button_class, :input_label, :application_namespace]
   end
 end
