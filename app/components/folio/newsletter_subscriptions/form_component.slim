@@ -1,7 +1,7 @@
 div class=bem_class_name data=data
   = form do |f|
     - remember_option_keys.each do |opt|
-      - if @view_options[opt]
+      - if @view_options[opt] != nil
         input[
           type="hidden"
           name="view_options[#{opt}]"
