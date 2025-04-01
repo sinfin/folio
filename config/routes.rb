@@ -37,10 +37,11 @@ Folio::Engine.routes.draw do
         get :tooltips
         get :warning_ribbons
 
-        get :input_rich_text
+        get :input_autocomplete
         get :input_date_time
-        get :input_url
+        get :input_rich_text
         get :input_tags
+        get :input_url
       end
 
       resources :attribute_types, except: %i[show] do

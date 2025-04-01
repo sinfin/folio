@@ -19,6 +19,7 @@ class Folio::Console::UiController < Folio::Console::BaseController
     ].sort
 
     @inputs = %i[
+      autocomplete
       date_time
       url
       rich_text
@@ -155,6 +156,11 @@ class Folio::Console::UiController < Folio::Console::BaseController
   end
 
   def input_url
+  end
+
+  def input_autocomplete
+    @page = Folio::Page.last
+    @autocomplete_collection = %w[dog cat mouse rat horse cow pig sheep goat chicken duck turkey]
   end
 
   def dropdowns
