@@ -2,14 +2,15 @@
 
 require "test_helper"
 
-class Folio::Users::SessionsControllerTest < Folio::BaseControllerTest
+class Folio::Users::SessionsControllerTest < ActionDispatch::IntegrationTest
+  TEST_PASSWORD = "Complex@Password.123"
+
   def setup
-    super
-    sign_out
+    @site = create_and_host_site
 
     @params = {
       email: "email@email.email",
-      password: "Complex@Password.123",
+      password: TEST_PASSWORD,
     }
 
     @user = create(:folio_user, @params)
@@ -48,6 +49,58 @@ class Folio::Users::SessionsControllerTest < Folio::BaseControllerTest
     assert_response(:ok)
     assert_equal user_invitation_path, response.parsed_body["data"]["url"]
     assert_not_equal old_timestamp, user.reload.invitation_created_at
+  end
+
+  test "create with crossdomain always signs in superadmins" do
+    main_site = @site
+
+    superadmin = @user
+    superadmin.update!(superadmin: true, auth_site: main_site)
+
+    Rails.application.config.stub(:folio_crossdomain_devise, true) do
+      Folio::Current.stub(:site_for_crossdomain_devise, main_site) do
+        other_site = create_site(force: true)
+
+        assert_difference("superadmin.reload.sign_in_count", 1) do
+          host_site main_site
+          post main_app.user_session_path, params: { user: @params }
+          assert_response(:redirect)
+        end
+
+        sign_out superadmin
+
+        assert_difference("superadmin.reload.sign_in_count", 1) do
+          host_site other_site
+          post main_app.user_session_path, params: { user: @params }
+          assert_response(:redirect)
+        end
+      end
+    end
+  end
+
+  test "create without crossdomain always signs in superadmins" do
+    main_site = @site
+
+    superadmin = @user
+    superadmin.update!(superadmin: true, auth_site: main_site)
+
+    Rails.application.config.stub(:folio_crossdomain_devise, false) do
+      other_site = create_site(force: true)
+
+      assert_difference("superadmin.reload.sign_in_count", 1) do
+        host_site main_site
+        post main_app.user_session_path, params: { user: @params }
+        assert_response(:redirect)
+      end
+
+      sign_out superadmin
+
+      assert_difference("superadmin.reload.sign_in_count", 1) do
+        host_site other_site
+        post main_app.user_session_path, params: { user: @params }
+        assert_response(:redirect)
+      end
+    end
   end
 
   test "destroy" do
