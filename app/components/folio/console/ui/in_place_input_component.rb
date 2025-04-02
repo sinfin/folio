@@ -19,6 +19,7 @@ class Folio::Console::Ui::InPlaceInputComponent < Folio::Console::ApplicationCom
     stimulus_controller("f-c-ui-in-place-input",
                         action: {
                           "f-c-ui-ajax-input:success" => "onSuccess",
+                          "f-c-ui-ajax-input:cancel" => "onCancel",
                           "f-c-ui-ajax-input:blur" => "onBlur",
                         },
                         values: {

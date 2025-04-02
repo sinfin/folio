@@ -19,6 +19,7 @@ class Folio::Console::Ui::AjaxInputComponent < Folio::Console::ApplicationCompon
                  textarea: false,
                  disabled: false,
                  rows: nil,
+                 force_cancel: false,
                  autocomplete: nil)
     @name = name
     @url = url
@@ -39,6 +40,7 @@ class Folio::Console::Ui::AjaxInputComponent < Folio::Console::ApplicationCompon
     @rows = rows
     @collection = collection
     @autocomplete = autocomplete
+    @force_cancel = force_cancel
   end
 
   def data

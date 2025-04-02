@@ -6,6 +6,10 @@ window.Folio.Stimulus.register('f-c-ui-in-place-input', class extends window.Sti
     hasAutocomplete: Boolean
   }
 
+  onCancel (e) {
+    this.editingValue = false
+  }
+
   onBlur (e) {
     if (e.detail && !e.detail.dirty) {
       if (this.hasAutocompleteValue) {

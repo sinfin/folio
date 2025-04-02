@@ -50,6 +50,9 @@ window.Folio.Stimulus.register('f-input-autocomplete', class extends window.Stim
 
     this.boundOnFocus = this.onFocus.bind(this)
     this.element.addEventListener('focus', this.boundOnFocus)
+
+    this.boundOnCancel = () => { this.removeDropdown() }
+    this.element.addEventListener('f-c-ui-ajax-input:cancel', this.boundOnCancel)
   }
 
   disconnect () {
@@ -72,6 +75,11 @@ window.Folio.Stimulus.register('f-input-autocomplete', class extends window.Stim
     if (this.boundOnFocus) {
       this.element.removeEventListener('focus', this.boundOnFocus)
       delete this.boundOnFocus
+    }
+
+    if (this.boundOnCancel) {
+      this.element.removeEventListener('f-c-ui-ajax-input:cancel', this.boundOnCancel)
+      delete this.boundOnCancel
     }
 
     this.removeDropdown()

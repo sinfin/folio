@@ -69,6 +69,7 @@ window.Folio.Stimulus.register('f-c-ui-ajax-input', class extends window.Stimulu
     this.element.classList.remove('f-c-ui-ajax-input--failure')
 
     this.dispatch('blur', { detail: { dirty: false } })
+    this.inputTarget.dispatchEvent(new CustomEvent('f-c-ui-ajax-input:cancel', { bubbles: true }))
   }
 
   onBlur () {
