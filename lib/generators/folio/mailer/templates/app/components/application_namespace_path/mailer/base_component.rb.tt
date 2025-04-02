@@ -20,7 +20,7 @@ class <%= application_namespace %>::Mailer::BaseComponent < ApplicationComponent
   def menu_url_for(menu_item)
     string = super
 
-    if string.try(:start_with?, "/")
+    if string && string.try(:start_with?, "/")
       "#{@site.env_aware_root_url}#{string[1..]}"
     else
       string
