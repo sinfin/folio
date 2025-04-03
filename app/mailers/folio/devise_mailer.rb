@@ -13,6 +13,9 @@ class Folio::DeviseMailer < Devise::Mailer
 
   def devise_mail(record, action, opts = {}, &block)
     full_opts = devise_opts_from_template(opts, action, record)
+
+    return if full_opts.nil?
+
     super(record, action, full_opts, &block)
   end
 

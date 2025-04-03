@@ -31,6 +31,7 @@ module Folio::HasAddresses
     def unset_unwanted_secondary_address
       if use_secondary_address == false && secondary_address.present?
         secondary_address.mark_for_destruction
+        self.secondary_address = nil
       end
     end
 

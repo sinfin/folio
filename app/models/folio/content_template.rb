@@ -16,6 +16,7 @@ class Folio::ContentTemplate < Folio::ApplicationRecord
   include Folio::Positionable
   include Folio::ContentTemplateFormMock
   include Folio::StiPreload
+  include Folio::BelongsToSite
 
   self.table_name = "folio_content_templates"
 
@@ -69,9 +70,15 @@ end
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  title      :string
+#  site_id    :bigint(8)
 #
 # Indexes
 #
 #  index_folio_content_templates_on_position  (position)
+#  index_folio_content_templates_on_site_id   (site_id)
 #  index_folio_content_templates_on_type      (type)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (site_id => folio_sites.id)
 #

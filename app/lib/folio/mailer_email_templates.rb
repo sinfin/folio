@@ -23,6 +23,8 @@ module Folio::MailerEmailTemplates
     @site = opts.delete(:site)
     @email_template = email_template_for!(mailer: opts.delete(:mailer))
 
+    return nil unless @email_template.active?
+
     @data[:ROOT_URL] = site.env_aware_root_url
     @data[:SITE_TITLE] = site.title
     @data[:DOMAIN] = site.env_aware_domain
@@ -41,19 +43,20 @@ module Folio::MailerEmailTemplates
     opts = source_opts.dup
     @email_template = email_template_for(action, mailer: "Devise::Mailer")
 
-    if @email_template.present?
-      @data ||= {}
-      @data[:ROOT_URL] = site.env_aware_root_url
-      @data[:SITE_TITLE] = site.title
-      @data[:DOMAIN] = site.env_aware_domain
-      @data[:USER_EMAIL] = record.email
+    return opts if @email_template.nil?
+    return nil unless @email_template.active?
 
-      opts[:subject] = @email_template.render_subject(@data, locale: @data[:LOCALE])
-      opts[:bcc] = email_template_bcc_string(opts[:bcc])
-      opts[:from] ||= site.email_from.presence || site.email
-      opts[:template_path] = "folio/email_templates"
-      opts[:template_name] = "mail"
-    end
+    @data ||= {}
+    @data[:ROOT_URL] = site.env_aware_root_url
+    @data[:SITE_TITLE] = site.title
+    @data[:DOMAIN] = site.env_aware_domain
+    @data[:USER_EMAIL] = record.email
+
+    opts[:subject] = @email_template.render_subject(@data, locale: @data[:LOCALE])
+    opts[:bcc] = email_template_bcc_string(opts[:bcc])
+    opts[:from] ||= site.email_from.presence || site.email
+    opts[:template_path] = "folio/email_templates"
+    opts[:template_name] = "mail"
 
     opts
   end
