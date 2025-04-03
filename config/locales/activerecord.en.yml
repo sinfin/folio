@@ -285,7 +285,7 @@ en:
     secondary_button_label: Secondary button label
     secondary_button_url: Secondary button URL
     secondary_button_url_json: Secondary button
-    sensitive_content: Contains sensitive content
+    sensitive_content: Sensitive content
     sign_in_count: Sign in count
     slug: Slug
     social_links/appstore: Appstore

@@ -20,6 +20,14 @@
           - else
             == cell("folio/console/ui/button", destroy_button_model)
 
+        - if @file.class.human_type == "image"
+          .ms-auto
+            = render(Folio::Console::Ui::BooleanToggleComponent.new(record: @file,
+                                                                    attribute: :sensitive_content,
+                                                                    as: :file,
+                                                                    label: true,
+                                                                    flash: false))
+
       .f-c-files-show__meta.small.text-muted.mb-h
         .f-c-files-show__meta-item
           ' #{t(".id")}: #{@file.id}

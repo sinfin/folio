@@ -9,6 +9,7 @@
     display: flex
     gap: px-to-rem(6px)
     align-items: center
+    transition: $transition-base
 
   &__label-visual
     position: relative
@@ -61,6 +62,9 @@
     position: absolute
     top: 0
     left: 0
+
+  &__input:not(:checked) ~ &__label
+    color: $gray-500
 
   &__input:checked ~ &__label &__label-visual
     &::after

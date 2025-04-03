@@ -355,7 +355,7 @@ cs:
     secondary_button_label: Text druhého tlačítka
     secondary_button_url: Odkaz druhého tlačítka
     secondary_button_url_json: Druhé tlačítko
-    sensitive_content: Obsahuje citlivý obsah
+    sensitive_content: Citlivý obsah
     sign_in_count: Počet přihlášení
     slug: Varianta názvu pro odkazy
     social_links/appstore: Appstore

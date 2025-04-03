@@ -19,10 +19,10 @@ window.FolioConsole.Flash.flash = (data) => {
     flash: true
   })
 
-  const modal = document.querySelector('.ReactModal--FileModal')
+  const modalBody = document.querySelector('.f-c-ui-modal.show .f-c-ui-modal__body')
 
-  if (modal) {
-    modal.querySelector('.modal-content').insertBefore(alert, modal.querySelector('.modal-body'))
+  if (modalBody) {
+    modalBody.insertAdjacentElement('beforebegin', alert)
   } else {
     document.querySelector('.f-c-flash-wrap').appendChild(alert)
   }

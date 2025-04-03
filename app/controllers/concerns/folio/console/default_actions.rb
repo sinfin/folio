@@ -309,7 +309,7 @@ module Folio::Console::DefaultActions
             console_ui_boolean_toggle_data: folio_console_record.try(:console_ui_boolean_toggle_data),
             f_c_catalogue_published_dates: cell("folio/console/catalogue/published_dates", folio_console_record).show,
           },
-          meta: {
+          meta: params[:_flash] == false ? {} : {
             flash: {
               success: t("flash.actions.update.success", resource_name: @klass.model_name.human)
             },
