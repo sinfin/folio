@@ -55,14 +55,14 @@ class Folio::Users::SessionsControllerTest < ActionDispatch::IntegrationTest
     site_a = @site
 
     superadmin = @user
-    superadmin.update!(superadmin: true, auth_site: main_site)
+    superadmin.update!(superadmin: true, auth_site: site_a)
 
     Rails.application.config.stub(:folio_crossdomain_devise, true) do
-      Folio::Current.stub(:site_for_crossdomain_devise, main_site) do
+      Folio::Current.stub(:site_for_crossdomain_devise, site_a) do
         other_site = create_site(force: true)
 
         assert_difference("superadmin.reload.sign_in_count", 1) do
-          host_site main_site
+          host_site site_a
           post main_app.user_session_path, params: { user: @params }
           assert_response(:redirect)
         end
@@ -87,7 +87,7 @@ class Folio::Users::SessionsControllerTest < ActionDispatch::IntegrationTest
         sign_out superadmin
 
         assert_no_difference("superadmin.reload.sign_in_count",  "should not sign in when auth_site isn't site_for_crossdomain_devise") do
-          host_site main_site
+          host_site site_a
           post main_app.user_session_path, params: { user: @params }
           assert_response(:redirect)
         end
@@ -96,16 +96,16 @@ class Folio::Users::SessionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "without crossdomain, superadmin auth_site can be any site" do
-    main_site = @site
+    site_a = @site
 
     superadmin = @user
-    superadmin.update!(superadmin: true, auth_site: main_site)
+    superadmin.update!(superadmin: true, auth_site: site_a)
 
     Rails.application.config.stub(:folio_crossdomain_devise, false) do
       other_site = create_site(force: true)
 
       assert_difference("superadmin.reload.sign_in_count", 1) do
-        host_site main_site
+        host_site site_a
         post main_app.user_session_path, params: { user: @params }
         assert_response(:redirect)
       end
@@ -130,7 +130,7 @@ class Folio::Users::SessionsControllerTest < ActionDispatch::IntegrationTest
       sign_out superadmin
 
       assert_difference("superadmin.reload.sign_in_count", 1, "should sign in even when auth_site isn't site_for_crossdomain_devise") do
-        host_site main_site
+        host_site site_a
         post main_app.user_session_path, params: { user: @params }
         assert_response(:redirect)
       end
