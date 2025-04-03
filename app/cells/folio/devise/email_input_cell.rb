@@ -9,7 +9,7 @@ class Folio::Devise::EmailInputCell < Folio::Devise::ApplicationCell
                 disabled: options[:disabled],
                 placeholder: options[:placeholder],
                 input_html: {
-                  autofocus: options[:autofocus].nil? ? true : options[:autofocus],
+                  autofocus: options[:autofocus].nil? || options[:autofocus],
                   autocomplete: "email",
                   value: model.object.email.presence,
                   data: { test_id: options[:test_id].presence },
