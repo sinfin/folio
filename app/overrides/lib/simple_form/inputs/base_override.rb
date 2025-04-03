@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 SimpleForm::Inputs::Base.class_eval do
-  def register_stimulus(name, values: {}, wrapper: false)
+  def register_stimulus(name, values: {}, outlets: [], action: nil, wrapper: false)
     h = if wrapper
       options[:wrapper_html] ||= {}
     else
@@ -18,6 +18,7 @@ SimpleForm::Inputs::Base.class_eval do
       h[:class] ||= []
       h[:class] << "f-input-form-group" if h[:class].exclude?("f-input-form-group")
       h[:class] << "f-input-form-group--#{name.to_s.delete_prefix("f-input-form-group-")}"
+      h[:class] << name.to_s
 
       input_html_options["data-#{name}-target"] = "input"
     else
@@ -27,6 +28,32 @@ SimpleForm::Inputs::Base.class_eval do
 
     values.each do |key, value|
       h["data-#{name}-#{key.to_s.tr('_', '-')}-value"] = value
+    end
+
+    if action
+      if action.is_a?(String)
+        if action.include?("#")
+          h["data-action"] = action
+        else
+          h["data-action"] = "#{name}##{action}"
+        end
+      else
+        action.each do |trigger, action_s|
+          str = "#{trigger}->#{name}##{action_s}"
+
+          if h["data-action"]
+            h["data-action"] += " #{str}"
+          else
+            h["data-action"] = str
+          end
+        end
+      end
+    end
+
+    if outlets.present?
+      outlets.each do |class_name_same_as_controller_name|
+        h["data-#{name}-#{class_name_same_as_controller_name}-outlet"] = ".#{class_name_same_as_controller_name}"
+      end
     end
   end
 
@@ -83,5 +110,36 @@ SimpleForm::Inputs::Base.class_eval do
     else
       template.label_tag(nil, custom_text, label_options)
     end
+  end
+
+  # respect changes in app/assets/javascripts/folio/input/url.js
+  def register_url_input(json: true, wrapper_options: nil, options: nil)
+    register_stimulus("f-c-input-form-group-url",
+                      values: {
+                        loaded: false,
+                        json:,
+                        absolute_urls: (options && options[:absolute_urls]) || false,
+                      },
+                      action: {
+                        "f-c-input-form-group-url:edit" => "edit",
+                        "f-c-input-form-group-url:remove" => "remove",
+                      },
+                      wrapper: true)
+
+    if json
+      options[:value] ||= (object.try(attribute_name) || {}).to_json
+    end
+
+    options[:custom_html] = <<~HTML.html_safe
+      <div class="f-c-input-form-group-url__inner">
+        <div class="f-c-input-form-group-url__loader-wrap">
+          <div class="folio-loader folio-loader--small f-c-input-form-group-url__loader"></div>
+        </div>
+        <div class="f-c-input-form-group-url__control-bar-wrap"></div>
+      </div>
+    HTML
+
+    merged_input_options = merge_wrapper_options(input_html_options, wrapper_options)
+    @builder.text_field(attribute_name, merged_input_options)
   end
 end

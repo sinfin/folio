@@ -58,6 +58,8 @@ class Folio::Console::Form::FooterComponent < Folio::Console::ApplicationCompone
                           "f-nested-fields:destroyed@document" => "onNestedFieldsDestroyed",
                           "f-input-collection-remote-select:open@document" => "onSelect2Open",
                           "f-input-collection-remote-select:close@document" => "onSelect2Close",
+                          "f-modal:opened@document" => "onModalOpened",
+                          "f-modal:closed@document" => "onModalClosed",
                           "f-c-form-footer:resumeAutosave" => "onResumeAutosave",
                           "f-c-form-footer:pauseAutosave" => "onPauseAutosave",
                         })

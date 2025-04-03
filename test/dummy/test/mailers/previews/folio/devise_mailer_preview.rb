@@ -11,6 +11,11 @@ class Folio::DeviseMailerPreview < ActionMailer::Preview
                                                 "INVITATION_TOKEN")
   end
 
+  def confirmation_instructions
+    Folio::DeviseMailer.confirmation_instructions(Folio::User.last,
+                                                 "CONFIRMATION_TOKEN")
+  end
+
   def omniauth_conflict
     auth = Folio::Omniauth::Authentication.where.not(conflict_user_id: nil, conflict_token: nil).first
 

@@ -16,6 +16,8 @@ module Folio::DragonflyFormatValidation
           mime_types << "application/msword"
         elsif f == "docx"
           mime_types << "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        elsif f == "xlsx"
+          mime_types << "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         elsif f.include?("/")
           mime_types << f
         else

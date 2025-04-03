@@ -17,6 +17,24 @@ import Item from './Item'
 import Serialized from './Serialized'
 
 class OrderedMultiselectApp extends React.Component {
+  constructor (props) {
+    super(props)
+    this.wrapRef = React.createRef()
+  }
+
+  componentDidMount () {
+    this.wrapRef.current.addEventListener('f-c-r-ordered-multiselect-app:add-entry', this.onAddEntryEvent)
+  }
+
+  componentWillUnmount () {
+    this.wrapRef.current.removeEventListener('f-c-r-ordered-multiselect-app:add-entry', this.onAddEntryEvent)
+  }
+
+  onAddEntryEvent = (e) => {
+    if (!e || !e.detail || !e.detail.entry) return
+    this.onSelect(e.detail.entry)
+  }
+
   onSelect = (item) => {
     document.querySelector('.f-c-r-ordered-multiselect-app').dispatchEvent(new window.Event('change', { bubbles: true }))
     this.props.dispatch(addItem(item))
@@ -50,6 +68,7 @@ class OrderedMultiselectApp extends React.Component {
     return (
       <div
         className={`f-c-r-ordered-multiselect-app`}
+        ref={this.wrapRef}
         data-atom-setting-value={this.settingValue()}
       >
         {orderedMultiselect.atomSetting ? (

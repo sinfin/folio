@@ -22,8 +22,7 @@
 //= require ./redactor/_character_counter
 //= require ./redactor/_table
 //= require ./redactor/_video
-//= require ./redactor/_definedlinks
-//= require ./redactor/_linksrel
+//= require ./redactor/_folio_links
 //= require ./redactor/_init
 
 //= require folio/stimulus
@@ -99,6 +98,12 @@
 //= require folio/console/layout/sidebar/sidebar
 //= require folio/console/layout/sidebar/title/title
 //= require folio/console/lazy_dom/lazy_dom
+//= require folio/console/links/control_bar_component
+//= require folio/console/links/modal/form_component
+//= require folio/console/links/modal/list_component
+//= require folio/console/links/modal/url_picker_component
+//= require folio/console/links/modal_component
+//= require folio/console/links/value_component
 //= require folio/console/merges/form/row/row
 //= require folio/console/merges/index/radios/radios
 //= require folio/console/modules/simple-form-with-atoms

@@ -1,0 +1,58 @@
+.f-c-links-value data=data
+  .f-c-links-value__flex
+    .f-c-links-value__left
+      - if @record
+        .f-c-links-value__badges
+          - if @record_site_title
+            == cell('folio/console/ui/badge',
+                    @record_site_title.truncate(10),
+                    variant: 'white',
+                    size: 'sm')
+
+          == cell('folio/console/ui/badge',
+                  @record.class.model_name.human,
+                  variant: 'white',
+                  size: 'sm')
+
+      .f-c-links-value__main
+        .f-c-links-value__main-top
+          a.f-c-links-value__a[
+            href=@url_json[:href]
+            target="_blank"
+            title=(@url_json[:label].presence || @url_json[:href])
+          ]
+            = @url_json[:label].presence || @url_json[:href]
+
+          - if @verbose && @url_json[:target] == "_blank"
+            = folio_icon(:open_in_new, height: 16, class: "text-muted")
+
+        - if @verbose && @url_json[:rel].present?
+          .f-c-links-value__main-rel.text-muted.small
+            = @url_json[:rel]
+
+    .f-c-links-value__right
+      - if @record && @record.try(:published_at).present?
+        time.f-c-links-value__published-at.small.text-gray-medium-dark[
+          datetime=@record.published_at.iso8601
+        ]
+          = l(@record.published_at, format: :short)
+
+      .f-c-links-value__actions
+        - if @verbose
+          button[
+            type="button"
+            class="f-c-links-value__action"
+            class="f-c-links-value__action--edit"
+            data=stimulus_action(click: "onEditClick")
+            title=t('folio.console.actions.edit')
+          ]
+            = folio_icon(:edit_box)
+
+        button[
+          type="button"
+          class="f-c-links-value__action"
+          class="f-c-links-value__action--close"
+          data=stimulus_action(click: "onRemoveClick")
+          title=t('folio.console.actions.destroy')
+        ]
+          = folio_icon(:close)

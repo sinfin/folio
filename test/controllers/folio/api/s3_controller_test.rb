@@ -20,7 +20,7 @@ class Folio::Api::S3ControllerTest < Folio::BaseControllerTest
 
       # nonexisting file
       assert_enqueued_jobs(0) do
-        post after_folio_api_s3_path, params: { s3_path: "foo", type: klass.to_s, existing_id: nil }
+        post after_folio_api_s3_path, params: { s3_path: "foo", type: klass.to_s, existing_id: nil, message_bus_client_id: "foo" }
         assert_response 422
       end
 
@@ -31,7 +31,7 @@ class Folio::Api::S3ControllerTest < Folio::BaseControllerTest
       # file exists
       assert_difference("#{klass}.count", 1) do
         perform_enqueued_jobs do
-          post after_folio_api_s3_path, params: { s3_path: "test-#{klass.model_name.singular}.gif", type: klass.to_s, existing_id: nil }
+          post after_folio_api_s3_path, params: { s3_path: "test-#{klass.model_name.singular}.gif", type: klass.to_s, existing_id: nil, message_bus_client_id: "foo" }
           assert_response(:ok)
         end
       end
@@ -41,7 +41,7 @@ class Folio::Api::S3ControllerTest < Folio::BaseControllerTest
       file = create(klass.model_name.singular, file_name: "foo.gif")
 
       assert_enqueued_jobs(0) do
-        post after_folio_api_s3_path, params: { s3_path: "foo", type: klass.to_s, existing_id: file.id }
+        post after_folio_api_s3_path, params: { s3_path: "foo", type: klass.to_s, existing_id: file.id, message_bus_client_id: "foo" }
         assert_response 422
       end
 
@@ -53,7 +53,7 @@ class Folio::Api::S3ControllerTest < Folio::BaseControllerTest
 
       assert_difference("#{klass}.count", 0) do
         perform_enqueued_jobs do
-          post after_folio_api_s3_path, params: { s3_path: "test-#{klass.model_name.singular}-#{file.id}.gif", type: klass.to_s, existing_id: file.id }
+          post after_folio_api_s3_path, params: { s3_path: "test-#{klass.model_name.singular}-#{file.id}.gif", type: klass.to_s, existing_id: file.id, message_bus_client_id: "foo" }
           assert_response(:ok)
         end
       end
@@ -73,7 +73,7 @@ class Folio::Api::S3ControllerTest < Folio::BaseControllerTest
 
       assert_difference("#{klass}.count", 0) do
         perform_enqueued_jobs do
-          post after_folio_api_s3_path, params: { s3_path: "test-#{klass.model_name.singular}.gif", type: klass.to_s, existing_id: nil }
+          post after_folio_api_s3_path, params: { s3_path: "test-#{klass.model_name.singular}.gif", type: klass.to_s, existing_id: nil, message_bus_client_id: "foo" }
           assert_response :unauthorized
         end
       end

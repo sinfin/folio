@@ -13,6 +13,9 @@ class Folio::DeviseMailer < Devise::Mailer
 
   def devise_mail(record, action, opts = {}, &block)
     full_opts = devise_opts_from_template(opts, action, record)
+
+    return if full_opts.nil?
+
     super(record, action, full_opts, &block)
   end
 
@@ -23,6 +26,7 @@ class Folio::DeviseMailer < Devise::Mailer
     with_user_locale(record, locale: opts[:locale]) do |locale|
       @data ||= {}
       @data[:LOCALE] = locale
+      @data[:VALID_UNTIL_TIME] = valid_until_translated(record.class.reset_password_within)
       @data[:USER_CHANGE_PASSWORD_URL] = scoped_url_method(record,
                                                            :edit_password_url,
                                                            reset_password_token: token,
@@ -40,6 +44,7 @@ class Folio::DeviseMailer < Devise::Mailer
     with_user_locale(record, locale: opts[:locale]) do |locale|
       @data ||= {}
       @data[:LOCALE] = locale
+      @data[:VALID_UNTIL_TIME] = valid_until_translated(record.class.invite_for)
       @data[:USER_ACCEPT_INVITATION_URL] = scoped_url_method(record,
                                                              :accept_invitation_url,
                                                              invitation_token: token,
@@ -58,12 +63,12 @@ class Folio::DeviseMailer < Devise::Mailer
     with_user_locale(record, locale: opts[:locale]) do |locale|
       @data ||= {}
       @data[:LOCALE] = locale
+      @data[:VALID_UNTIL_TIME] = valid_until_translated(record.class.confirm_within)
       @data[:USER_CONFIRMATION_URL] = scoped_url_method(record,
                                                         :confirmation_url,
                                                         confirmation_token: @token,
                                                         host: @site.env_aware_domain,
                                                         locale:)
-
       super(record, token, opts)
     end
   end
@@ -115,5 +120,13 @@ class Folio::DeviseMailer < Devise::Mailer
       main_app.send(method_name, *args)
     rescue StandardError
       send(method_name, *args)
+    end
+
+    def valid_until_translated(duration)
+      if duration.to_i == 0
+        t("devise.mailer.valid_until.unlimited")
+      else
+        l(duration.from_now, format: :long)
+      end
     end
 end

@@ -6,6 +6,61 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - `react_ordered_multiselect` can now show button to fix required field
 
+## [6.3.0] - 2025-04-03
+
+### Changed
+- changed `Folio::ContentTemplate` to be scoped per-site and allowed site admins to manage them
+
+### Added
+- added `folio:content_templates:idp_migrate_to_per_site` rake task to migrate existing content templates to per-site
+- added `folio:content_templates:remove_siteless` rake task to remove siteless content templates
+- added `upload` icon
+- added `active` column to `Folio::EmailTemplate` and possibility to disable specific email templates
+- added `Folio::Captcha::HasRecaptchaValidation` concern, used it in `Folio::Users::InvitationsController`
+
+## [6.2.5] - 2025-03-26
+
+### Added
+- `:absolute_urls` option to URL inputs
+- `f-c-r-ordered-multiselect-app:add-entry` event listener to react ordered multi select
+- `Rails.application.config.folio_dragonfly_cwebp_quality` to set webp conversion quality, change default to 90
+
+### Changed
+- only broadcast `file_update` message bus message to users currently in console
+- pass `message_bus_client_id` during s3 upload and use it to target message bus messages
+
+### Removed
+- presigned URLs from serializers
+
+## [6.2.4] - 2025-03-18
+
+### Added
+- `:scope_name` option to `folio_console_links_mapping` config
+
+### Changed
+- include `id` and `slug` (when possible) in `by_label_query`
+- option to hide "subscribe to newsleter" input in  resource form
+- pass `:placeholder` to email input
+
+### Fixed
+- built react version to include "folio links" changes
+
+## [6.2.3] - 2025-03-17
+
+### Changed
+- set default timeouts for Devise actions and display such information in corresponding emails.
+   ```
+   config.reset_password_within = 6.hours # see as Folio::User.reset_password_within
+   config.invite_for = 30.days
+   config.confirm_within = 7.days
+   ```
+- the way we work with links - added a modal for `as: :url` inputs, added `as: :url_json` and switched some atoms to it
+
+## [6.2.2] - 2025-03-11
+
+### Fixed
+- added default `folio_pages_autosave` config
+
 ## [6.2.1] - 2025-03-10
 
 ### Changed

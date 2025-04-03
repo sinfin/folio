@@ -90,7 +90,7 @@ class Folio::Console::SharedFilesTest < Folio::Console::BaseControllerTest
 
       assert_difference("#{klass}.count", 1) do
         perform_enqueued_jobs do
-          post after_folio_api_s3_path, params: { s3_path: s3_name, type: klass.to_s, existing_id: nil }
+          post after_folio_api_s3_path, params: { s3_path: s3_name, type: klass.to_s, existing_id: nil, message_bus_client_id: "foo" }
           assert_response(:ok)
         end
       end
@@ -166,7 +166,7 @@ class Folio::Console::SharedFilesTest < Folio::Console::BaseControllerTest
 
       assert_difference("#{klass}.count", 1) do
         perform_enqueued_jobs do
-          post after_folio_api_s3_path, params: { s3_path: s3_name, type: klass.to_s, existing_id: nil }
+          post after_folio_api_s3_path, params: { s3_path: s3_name, type: klass.to_s, existing_id: nil, message_bus_client_id: "foo" }
           assert_response(:ok)
         end
       end

@@ -180,6 +180,9 @@ link_2:
 linkedin:
   width: 32
   height: 33
+linktree:
+  width: 24
+  height: 24
 list:
   width: 24
   height: 24
@@ -303,6 +306,9 @@ tag:
 thumbs_up:
   width: 24
   height: 24
+tiktok:
+  width: 24
+  height: 24
 timer:
   width: 24
   height: 24
@@ -316,8 +322,8 @@ tv:
   width: 24
   height: 24
 twitter:
-  width: 32
-  height: 33
+  width: 24
+  height: 24
 upload:
   width: 24
   height: 24

@@ -78,6 +78,7 @@ en:
         roles/manager: Manager
         roles/user: User
       folio/email_template:
+        active: Active
         missing_keyword: does not contain the {%{keyword}} keyword
         subject: Subject
         body_html: Message in HTML
@@ -247,6 +248,7 @@ en:
     audio_cover_placement: Audio
     button_label: Button label
     button_url: Button URL
+    button_url_json: Button
     console_notes: Notes (internal)
     content: Content
     count: Count
@@ -262,6 +264,7 @@ en:
     last_sign_in_at: Last sign in
     link_label: Link label
     link_url: Link URL
+    link_url_json: Link
     locale: Locale
     locked: Locked
     meta_description: SEO - Meta Description
@@ -280,6 +283,7 @@ en:
     secondary_address: Secondary address
     secondary_button_label: Secondary button label
     secondary_button_url: Secondary button URL
+    secondary_button_url_json: Secondary button
     sensitive_content: Contains sensitive content
     sign_in_count: Sign in count
     slug: Slug
@@ -301,6 +305,7 @@ en:
     title: Title
     to_label: Title
     url: URL
+    url_json: URL
     video_cover_placement: Video
 
   errors:
@@ -319,7 +324,7 @@ en:
         invalid: Please verify you're not a robot 🤖
       type:
         already_exists_for_site: "Only one record of '%{class}' for each site is allowed."
-        already_exists_with_locale: "Only one record of '%{class}' with 'locale = \"%{rec_locale}\"' is allowed."
+        already_exists_with_locale: 'Only one record of ''%{class}'' with ''locale = "%{rec_locale}"'' is allowed.'
         already_exists: "Only one record of '%{class}' is allowed."
       author:
         missing_file_attribution: or source is required

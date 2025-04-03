@@ -13,6 +13,9 @@ table.d-mailer-footer-menu[
               <tr>
 
             - @menu.menu_items.includes(:page).each do |menu_item|
+              - href = menu_url_for(menu_item)
+              - next if href.blank?
+
               /[if mso]
                 <td style="padding:0 12px 0 0;" align="left" valign="top">
 
@@ -20,7 +23,7 @@ table.d-mailer-footer-menu[
                 / href placeholder is for development purpose
                 / will be replaced by href=menu_url_for(menu_item)
                 a.d-mailer-footer-menu__menu-link[
-                  href=menu_url_for(menu_item)
+                  href=href
                 ]
                   = menu_item.to_label
 

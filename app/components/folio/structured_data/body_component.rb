@@ -114,14 +114,14 @@ class Folio::StructuredData::BodyComponent < Folio::ApplicationComponent
     cover = @record.try(:cache_aware_cover) || @record.cover
 
     {
-      "@type" => "Article",
+      "@type" => @record.try(:structured_data_type) || "Article",
       "mainEntityOfPage" => {
         "@type" => "WebPage",
         "@id" => url_for([@record, only_path: false]),
       },
       "headline" => @record.title,
       "description" => @record.perex,
-      "image" => cover.present? ? [cover.thumb(Folio::OG_IMAGE_DIMENSIONS).url] : nil,
+      "image" => cover.present? ? [cover.thumb(record_cover_thumb_size).url] : nil,
       "datePublished" => @record.published_at_with_fallback.iso8601,
       "dateModified" => @record.try(:revised_at).present? ? @record.revised_at.iso8601 : nil,
       "keywords" => tags_ary.present? ? tags_ary.map(&:title) : nil,
@@ -129,4 +129,14 @@ class Folio::StructuredData::BodyComponent < Folio::ApplicationComponent
       "publisher" => publisher_data
     }.compact
   end
+
+  private
+    def record_cover_thumb_size
+      @record.try(:structured_data_cover_thumb_size) || Folio::OG_IMAGE_DIMENSIONS
+    end
+
+    def record_cover_thumb
+      cover = @record.try(:cache_aware_cover) || @record.cover
+      cover.present? ? cover.thumb(record_cover_thumb_size) : nil
+    end
 end
