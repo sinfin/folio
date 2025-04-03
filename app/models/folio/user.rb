@@ -407,10 +407,19 @@ class Folio::User < Folio::ApplicationRecord
       site = ::Folio::Current.enabled_site_for_crossdomain_devise || ::Folio::Site.find(warden_params[:auth_site_id])
 
       user = site.auth_users.find_by(email:)
-      if user.nil? && Folio::Current.main_site.present? && site != Folio::Current.main_site
-        # user = Folio::User.superadmins.find_by(email:)
-        user = Folio::Current.main_site.auth_users.superadmins.find_by(email:)
+
+      if user.nil?
+        if Rails.application.config.folio_crossdomain_devise
+          crossdomain_site = Folio::Current.enabled_site_for_crossdomain_devise
+
+          if crossdomain_site.present? && site != crossdomain_site
+            user = crossdomain_site.auth_users.superadmins.find_by(email:)
+          end
+        else
+          user = Folio::User.superadmins.find_by(email:)
+        end
       end
+
       user
     end
 

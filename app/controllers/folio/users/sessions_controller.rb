@@ -133,6 +133,7 @@ class Folio::Users::SessionsController < Devise::SessionsController
     warden_exception_or_user = catch :warden do
       self.resource = warden.authenticate!(auth_options)
     end
+
     return nil if resource
 
     get_failure_flash_message(warden_exception_or_user)
