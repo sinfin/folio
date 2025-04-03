@@ -402,10 +402,10 @@ class Folio::User < Folio::ApplicationRecord
 
       if user.nil?
         if Rails.application.config.folio_crossdomain_devise
-          cd_site = Folio::Current.site_for_crossdomain_devise_record
+          crossdomain_site = Folio::Current.enabled_site_for_crossdomain_devise
 
-          if cd_site.present? && site != cd_site
-            user = cd_site.auth_users.superadmins.find_by(email:)
+          if crossdomain_site.present? && site != crossdomain_site
+            user = crossdomain_site.auth_users.superadmins.find_by(email:)
           end
         else
           user = Folio::User.superadmins.find_by(email:)
