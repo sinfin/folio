@@ -49,6 +49,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
     klass = params.require(:klass).safe_constantize
     field = params.require(:field)
     q = params[:q]
+    q = q.downcase.parameterize if q.present?
     p_order = params[:order_scope]
     p_without = params[:without]
 
@@ -88,6 +89,10 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
              .limit(10)
              .count("id")
              .keys
+      end
+
+      if q.present?
+        ary.select! { |item| item.downcase.parameterize.include?(q) }
       end
 
       render json: { data: ary }
