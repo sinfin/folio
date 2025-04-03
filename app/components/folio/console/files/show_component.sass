@@ -4,9 +4,6 @@
   &__row
     row-gap: $grid-gutter-width
 
-  &__preview-col
-    max-width: calc(500px + var(--bs-gutter-x))
-
   &__meta
     align-items: flex-start
     background: $gray-100
@@ -15,11 +12,15 @@
     gap: $grid-gutter-base $grid-gutter-width
     padding: $grid-gutter-base
 
+  &__buttons-outer,
   &__buttons
     align-items: center
     display: flex
     flex-wrap: wrap
     gap: $f-c-ui-buttons-gap
+
+  &__buttons-outer
+    gap: map-get($spacers, 3) map-get($spacers, 5)
 
   &[data-f-c-files-show-loading-value="false"] &__loader
     display: none
@@ -55,6 +56,10 @@
     &__th
       padding-right: $grid-gutter-width
       width: 120px
+
+  +media-breakpoint-up(lg)
+    &__preview-col
+      max-width: calc(500px + var(--bs-gutter-x))
 
   +media-breakpoint-down(sm)
     &__th
