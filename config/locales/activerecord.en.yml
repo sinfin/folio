@@ -79,6 +79,7 @@ en:
         roles/manager: Manager
         roles/user: User
       folio/email_template:
+        active: Active
         missing_keyword: does not contain the {%{keyword}} keyword
         subject: Subject
         body_html: Message in HTML
@@ -324,7 +325,7 @@ en:
         invalid: Please verify you're not a robot 🤖
       type:
         already_exists_for_site: "Only one record of '%{class}' for each site is allowed."
-        already_exists_with_locale: "Only one record of '%{class}' with 'locale = \"%{rec_locale}\"' is allowed."
+        already_exists_with_locale: 'Only one record of ''%{class}'' with ''locale = "%{rec_locale}"'' is allowed.'
         already_exists: "Only one record of '%{class}' is allowed."
       author:
         missing_file_attribution: or source is required

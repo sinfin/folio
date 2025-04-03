@@ -4,6 +4,15 @@ class Folio::NewsletterSubscriptions::FormComponent < Folio::ApplicationComponen
   include SimpleForm::ActionViewExtensions::FormHelper
   include ActionView::Helpers::FormOptionsHelper
 
+  REMEMBER_OPTION_KEYS = %i[application_namespace
+                            placeholder
+                            submit_text
+                            submit_icon
+                            submit_icon_height
+                            message
+                            button_class
+                            input_label]
+
   bem_class_name :persisted, :invalid
 
   def initialize(newsletter_subscription: nil, view_options: {})
@@ -19,7 +28,7 @@ class Folio::NewsletterSubscriptions::FormComponent < Folio::ApplicationComponen
       html: {
         class: "f-newsletter-subscriptions-form__form",
         id: nil,
-        data: stimulus_action("onSubmit")
+        data: stimulus_action("onSubmit"),
       },
     }
 
@@ -27,8 +36,9 @@ class Folio::NewsletterSubscriptions::FormComponent < Folio::ApplicationComponen
   end
 
   def submit_text
-    return nil if @view_options[:submit_text] == false
+    return nil if [false, "false"].include?(@view_options[:submit_text])
     return @view_options[:submit_text] unless @view_options[:submit_text].nil?
+
     t(".submit")
   end
 
@@ -45,7 +55,7 @@ class Folio::NewsletterSubscriptions::FormComponent < Folio::ApplicationComponen
                        variant: :primary,
                        type: :submit,
                        class_name: "f-newsletter-subscriptions-form__btn",
-                       right_icon: @view_options[:submit_icon].present? ? @view_options[:submit_icon] : nil,
+                       right_icon: @view_options[:submit_icon]&.to_sym.presence,
                        icon_height: @view_options[:submit_icon_height].presence || 24))
     else
       content_tag(:button,
@@ -57,11 +67,13 @@ class Folio::NewsletterSubscriptions::FormComponent < Folio::ApplicationComponen
 
   def message
     return @view_options[:message] unless @view_options[:message].nil?
+
     t(".message")
   end
 
   def placeholder
     return @view_options[:placeholder] unless @view_options[:placeholder].nil?
+
     t(".placeholder")
   end
 
@@ -80,6 +92,6 @@ class Folio::NewsletterSubscriptions::FormComponent < Folio::ApplicationComponen
   end
 
   def remember_option_keys
-    [:placeholder, :submit_text, :message, :button_class, :input_label]
+    REMEMBER_OPTION_KEYS
   end
 end

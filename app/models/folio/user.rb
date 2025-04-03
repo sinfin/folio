@@ -80,6 +80,10 @@ class Folio::User < Folio::ApplicationRecord
             phone: true,
             if: :validate_phone?
 
+  validates :born_at,
+            presence: true,
+            if: :born_at_required?
+
   after_invitation_accepted :create_newsletter_subscriptions
 
   before_update :update_has_generated_password
@@ -390,6 +394,10 @@ class Folio::User < Folio::ApplicationRecord
 
     new_user.save!
     new_user
+  end
+
+  def born_at_required?
+    false
   end
 
   private

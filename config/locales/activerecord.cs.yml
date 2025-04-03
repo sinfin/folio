@@ -90,6 +90,7 @@ cs:
         roles/user: Uživatel
 
       folio/email_template:
+        active: Aktivní
         missing_keyword: neobsahuje povinné klíčové slovo {%{keyword}}
         subject: Předmět
         body_html: Obsah zprávy v HTML

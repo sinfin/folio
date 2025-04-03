@@ -16,15 +16,11 @@ class Folio::Api::NewsletterSubscriptionsController < Folio::Api::BaseController
     end
 
     def view_options_params
+      view_option_keys = Folio::NewsletterSubscriptions::FormComponent::REMEMBER_OPTION_KEYS
       view_options = params[:view_options]
 
       if view_options
-        view_options.permit(:placeholder,
-                            :submit_text,
-                            :message,
-                            :button_class,
-                            :label,
-                            :input_label)
+        view_options.permit(*view_option_keys)
       else
         {}
       end

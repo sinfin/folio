@@ -59,7 +59,7 @@ class Folio::Lead < Folio::ApplicationRecord
   end
 
   def self.console_sidebar_count
-    by_state("submitted").count
+    by_site(Folio::Current.site).by_state("submitted").count
   end
 
   def csv_attributes(controller = nil)
