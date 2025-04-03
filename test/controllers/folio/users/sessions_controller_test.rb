@@ -74,6 +74,23 @@ class Folio::Users::SessionsControllerTest < ActionDispatch::IntegrationTest
           post main_app.user_session_path, params: { user: @params }
           assert_response(:redirect)
         end
+
+        sign_out superadmin
+        superadmin.update!(auth_site: other_site)
+
+        assert_difference("superadmin.reload.sign_in_count", 0, "cannot sign in when auth_site isn't site_for_crossdomain_devise") do
+          host_site other_site
+          post main_app.user_session_path, params: { user: @params }
+          assert_response(:redirect)
+        end
+
+        sign_out superadmin
+
+        assert_difference("superadmin.reload.sign_in_count", 0, "cannot sign in when auth_site isn't site_for_crossdomain_devise") do
+          host_site main_site
+          post main_app.user_session_path, params: { user: @params }
+          assert_response(:redirect)
+        end
       end
     end
   end
@@ -97,6 +114,23 @@ class Folio::Users::SessionsControllerTest < ActionDispatch::IntegrationTest
 
       assert_difference("superadmin.reload.sign_in_count", 1) do
         host_site other_site
+        post main_app.user_session_path, params: { user: @params }
+        assert_response(:redirect)
+      end
+
+      sign_out superadmin
+      superadmin.update!(auth_site: other_site)
+
+      assert_difference("superadmin.reload.sign_in_count", 1, "can sign in even when auth_site isn't site_for_crossdomain_devise") do
+        host_site other_site
+        post main_app.user_session_path, params: { user: @params }
+        assert_response(:redirect)
+      end
+
+      sign_out superadmin
+
+      assert_difference("superadmin.reload.sign_in_count", 1, "can sign in even when auth_site isn't site_for_crossdomain_devise") do
+        host_site main_site
         post main_app.user_session_path, params: { user: @params }
         assert_response(:redirect)
       end
