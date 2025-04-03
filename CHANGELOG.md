@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [6.3.0] - 2025-04-03
+
 ### Changed
 - changed `Folio::ContentTemplate` to be scoped per-site and allowed site admins to manage them
 
