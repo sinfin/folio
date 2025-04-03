@@ -12,7 +12,7 @@ class Folio::Console::Ui::DropdownComponent < Folio::Console::ApplicationCompone
          href: link[:href],
          class: "dropdown-item #{"f-c-index-actions__link--disabled" if link[:disabled]}",
          icon: link[:icon],
-         icon_options: link[:icon_options],
+         icon_options: { height: 18 }.merge(link[:icon_options] || {}),
          block: true,
          data: link[:data],
          title: link[:title])
