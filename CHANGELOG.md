@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+- `react_ordered_multiselect` can now show button to fix required field
+
 ## [6.3.0] - 2025-04-03
 
 ### Changed
