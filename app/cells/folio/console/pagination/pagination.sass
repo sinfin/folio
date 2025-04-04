@@ -64,6 +64,24 @@
     width: 24px
     text-align: center
 
+  +media-breakpoint-up(md)
+    &--with-middle
+      align-items: center
+
+    &--with-middle &__info,
+    &--with-middle &__nav
+      margin: 0
+      flex: 0 0 calc((100% - #{2 * $grid-gutter-width}) * 2 / 5)
+
+    &--with-middle &__nav
+      justify-content: flex-end
+
+    &--with-middle &__middle
+      flex: 0 0 calc((100% - #{2 * $grid-gutter-width}) * 1 / 5)
+      display: flex
+      align-items: center
+      justify-content: center
+
   +media-breakpoint-down(sm)
     &__nav
       justify-content: center

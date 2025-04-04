@@ -132,4 +132,14 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
       !hash.is_a?(Hash) || (hash.try(:[], :as) != :hidden)
     end
   end
+
+  def pagy_options
+    if options[:pagy_options]
+      options[:pagy_options]
+    elsif options[:inside_pagination]
+      { inside: options[:inside_pagination] }
+    else
+      {}
+    end
+  end
 end

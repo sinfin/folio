@@ -24,6 +24,7 @@ class Folio::FileListComponent < Folio::ApplicationComponent
                         },
                         action: {
                           "f-uppy:upload-success": "uppyUploadSuccess",
+                          "f-c-files-display-toggle:table-view-change": "tableViewChange"
                         })
   end
 
@@ -39,5 +40,17 @@ class Folio::FileListComponent < Folio::ApplicationComponent
     }
 
     @file_args.merge(file:, template:)
+  end
+
+  def view_class_names
+    if @file_klass.try(:human_type) == "image"
+      if Folio::Current.user && Folio::Current.user.console_preferences.present? && Folio::Current.user.console_preferences["images_table_view"]
+        "f-file-list--view-changeable f-file-list--view-table"
+      else
+        "f-file-list--view-changeable f-file-list--view-grid"
+      end
+    else
+      "f-file-list--view-table"
+    end
   end
 end

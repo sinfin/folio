@@ -89,6 +89,7 @@
 //= require folio/console/file/picker/thumb/thumb
 //= require folio/console/file/preview_reloader/preview_reloader
 //= require folio/console/file/processing_notifier/processing_notifier
+//= require folio/console/files/display_toggle_component
 //= require folio/console/files/show_component
 //= require folio/console/files/show_modal_component
 //= require folio/console/flash/flash

@@ -21,4 +21,13 @@ window.Folio.Stimulus.register('f-file-list', class extends window.Stimulus.Cont
 
     this.uppyTarget.insertAdjacentElement('afterend', flexItem)
   }
+
+  tableViewChange (e) {
+    if (!this.element.classList.contains('f-file-list--view-changeable')) return
+
+    const asTable = !!e.detail.images_table_view
+
+    this.element.classList.toggle('f-file-list--view-grid', !asTable)
+    this.element.classList.toggle('f-file-list--view-table', asTable)
+  }
 })

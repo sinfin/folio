@@ -1,9 +1,15 @@
-.f-c-pagination.small
+.f-c-pagination.small[
+  class=(options[:middle_component] ? "f-c-pagination--with-middle" : nil)
+]
   .f-c-pagination__info
     == pagy_info(model)
 
     - if options[:inside]
       == options[:inside]
+
+  - if options[:middle_component]
+    .f-c-pagination__middle
+      = render_view_component(options[:middle_component])
 
   - if model.pages > 1
     .f-c-pagination__nav

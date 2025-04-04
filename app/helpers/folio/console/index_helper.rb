@@ -3,6 +3,7 @@
 module Folio::Console::IndexHelper
   def index_header(opts = {})
     opts[:pagy] ||= @pagy
+    opts[:pagy_options] ||= @pagy_options
     opts[:tabs] ||= index_tabs
     opts[:folio_console_merge] ||= @folio_console_merge
     opts[:csv] = controller.try(:folio_console_controller_for_handle_csv) if opts[:csv].nil?

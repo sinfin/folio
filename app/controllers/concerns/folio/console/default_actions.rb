@@ -17,7 +17,7 @@ module Folio::Console::DefaultActions
     if self.folio_console_controller_for_handle_csv
       respond_with(records) do |format|
         format.html do
-          pagy_data, records = pagy(records)
+          pagy_data, records = pagy(records, items: index_pagy_items_per_page)
           instance_variable_set("@pagy", pagy_data)
           instance_variable_set(folio_console_record_variable_name(plural: true),
                                 records)
@@ -28,7 +28,7 @@ module Folio::Console::DefaultActions
         end
       end
     else
-      pagy_data, records = pagy(records)
+      pagy_data, records = pagy(records, items: index_pagy_items_per_page)
       instance_variable_set("@pagy", pagy_data)
       instance_variable_set(folio_console_record_variable_name(plural: true),
                             records)
@@ -331,5 +331,9 @@ module Folio::Console::DefaultActions
 
     def index_view_name
       :index
+    end
+
+    def index_pagy_items_per_page
+      Pagy::DEFAULT[:items]
     end
 end

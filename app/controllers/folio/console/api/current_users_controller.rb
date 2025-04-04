@@ -7,8 +7,11 @@ class Folio::Console::Api::CurrentUsersController < Folio::Console::Api::BaseCon
   end
 
   def update_console_preferences
-    console_preferences_params = params.permit(:autosave, :html_auto_format).to_h
-    console_preferences = (Folio::Current.user.console_preferences || {}).merge(console_preferences_params)
+    console_preferences_params = params.permit(:autosave,
+                                               :html_auto_format,
+                                               :images_table_view)
+
+    console_preferences = (Folio::Current.user.console_preferences || {}).merge(console_preferences_params.to_h)
 
     console_preferences.each do |key, value|
       if value == "true"

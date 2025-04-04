@@ -5,6 +5,7 @@ module Folio::Console::FileControllerBase
 
   included do
     before_action :set_file_for_show_modal, only: %i[index]
+    before_action :set_pagy_options, only: %i[index]
   end
 
   private
@@ -49,5 +50,15 @@ module Folio::Console::FileControllerBase
       @folio_file_for_show_modal = @klass.by_site(Folio::Current.site)
                                          .accessible_by(Folio::Current.ability)
                                          .find(file_id)
+    end
+
+    def set_pagy_options
+      if @klass.human_type == "image"
+        @pagy_options = { middle_component: Folio::Console::Files::DisplayToggleComponent.new }
+      end
+    end
+
+    def index_pagy_items_per_page
+      64
     end
 end
