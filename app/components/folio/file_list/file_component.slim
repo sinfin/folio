@@ -42,6 +42,15 @@
         = folio_icon(:alert)
 
     - if @selectable
+      .f-file-list-file__info
+        - if @file.file_name.present?
+          .f-file-list-file__info-file-name
+            = @file.file_name
+
+        - file_information_rows.each do |row|
+          .f-file-list-file__info-item
+            = row
+
       - if @file.try(:file_list_count).is_a?(Numeric) && @file.file_list_count > 0
         .f-file-list-file__count-wrap
           span.f-file-list-file__count

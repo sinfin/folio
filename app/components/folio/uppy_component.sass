@@ -4,10 +4,15 @@
   position: relative
   min-height: $f-file-list-file-item-size
 
-  &--custom-trigger
+  .f-file-list--view-table &
+    min-height: 75px
+
+  &--custom-trigger,
+  .f-file-list--view-table &--custom-trigger
     min-height: 0
 
-  &--inline
+  &--inline,
+  .f-file-list--view-table &--inline
     min-height: 400px
 
 .uppy-Dashboard--modal

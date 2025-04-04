@@ -113,4 +113,29 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
       content_tag(:p, str, class: "mb-0 text-danger")
     end.join(" ")
   end
+
+  def file_information_rows
+    return [] if @file.blank?
+
+    ary = []
+
+    if description = @file.try(:description).presence
+      ary << description
+    end
+
+    %i[
+      alt
+      author
+    ].each do |key|
+      if value = @file.try(key).presence
+        ary << "#{@file_klass.human_attribute_name(key)}: #{value}"
+      end
+    end
+
+    if value = @file.try(:file_list_source).presence
+      ary << "#{@file_klass.human_attribute_name(:attribution_source)}: #{value}"
+    end
+
+    ary
+  end
 end
