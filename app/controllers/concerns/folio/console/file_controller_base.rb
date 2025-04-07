@@ -6,6 +6,7 @@ module Folio::Console::FileControllerBase
   included do
     before_action :set_file_for_show_modal, only: %i[index]
     before_action :set_pagy_options, only: %i[index]
+    after_action :message_bus_broadcast_update, only: %i[update]
   end
 
   private
@@ -60,5 +61,22 @@ module Folio::Console::FileControllerBase
 
     def index_pagy_items_per_page
       64
+    end
+
+    def message_bus_broadcast_update
+      return if folio_console_record.saved_changes.blank?
+
+      user_ids = Folio::User.where.not(console_url: nil)
+                            .where(console_url_updated_at: 1.hour.ago..)
+                            .pluck(:id)
+
+      return if user_ids.blank?
+
+      MessageBus.publish Folio::MESSAGE_BUS_CHANNEL,
+                         {
+                           type: "Folio::Console::FileControllerBase/file_updated",
+                           data: { id: folio_console_record.id },
+                         }.to_json,
+                         user_ids:
     end
 end

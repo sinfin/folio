@@ -24,8 +24,8 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
       this.pingApi()
       this.boundMessageBusCallback = this.messageBusCallbackForCreate.bind(this)
       this.element.addEventListener('f-file-list-file/message', this.boundMessageBusCallback)
-    } else if (this.editableValue) {
-      this.boundMessageBusCallback = this.messageBusCallbackForEdit.bind(this)
+    } else {
+      this.boundMessageBusCallback = this.messageBusCallbackGeneric.bind(this)
       this.element.addEventListener('f-file-list-file/message', this.boundMessageBusCallback)
     }
   }
@@ -99,14 +99,11 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
     }
   }
 
-  messageBusCallbackForEdit (event) {
+  messageBusCallbackGeneric (event) {
     const message = event.detail.message
-    if (message.type !== 'Folio::S3::CreateFileJob') return
 
-    switch (message.data.type) {
-      case 'replace-success':
-        this.messageBusReplaceSuccess(message.data)
-        break
+    if (message.type === 'Folio::Console::FileControllerBase/file_updated' || (message.type === 'Folio::S3::CreateFileJob' && message.data.type === 'replace-success')) {
+      this.reload({ handleErrors: false })
     }
   }
 
@@ -139,10 +136,6 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
     }).then((response) => {
       this.element.outerHTML = response.data
     })
-  }
-
-  messageBusReplaceSuccess (_data) {
-    this.reload({ handleErrors: false })
   }
 
   messageBusSuccess (data) {
@@ -211,9 +204,16 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
 if (window.Folio && window.Folio.MessageBus && window.Folio.MessageBus.callbacks) {
   window.Folio.MessageBus.callbacks['f-file-list-file'] = (message) => {
     if (!message) return
-    if (message.type !== 'Folio::S3::CreateFileJob') return
+    let selector
 
-    const selector = `.f-file-list-file[data-f-file-list-file-s3-path-value="${message.data.s3_path}"], .f-file-list-file[data-f-file-list-file-id-value="${message.data.file_id}"]`
+    if (message.type === 'Folio::Console::FileControllerBase/file_updated') {
+      selector = `.f-file-list-file[data-f-file-list-file-id-value="${message.data.id}"]`
+    } else if (message.type === 'Folio::S3::CreateFileJob') {
+      selector = `.f-file-list-file[data-f-file-list-file-s3-path-value="${message.data.s3_path}"], .f-file-list-file[data-f-file-list-file-id-value="${message.data.file_id}"]`
+    }
+
+    if (!selector) return
+
     const files = document.querySelectorAll(selector)
 
     for (const file of files) {
