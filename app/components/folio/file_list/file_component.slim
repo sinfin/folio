@@ -50,6 +50,12 @@
 
       div[
         class="f-file-list-file__part"
+        class="f-file-list-file__part--mobile-divider"
+        class="f-file-list-file__part--mobile-divider-one"
+      ]
+
+      div[
+        class="f-file-list-file__part"
         class="f-file-list-file__part--count"
       ]
         - if @file.try(:file_list_count).is_a?(Numeric) && @file.file_list_count > 0
@@ -83,9 +89,12 @@
         div[
           class="f-file-list-file__part"
           class="f-file-list-file__part--tags"
+          class="small text-muted"
         ]
           - if @file.tags.present?
-            = @file.tags.join(", ")
+            .f-file-list-file__tags
+              - @file.tags.each do |file_tag|
+                  span.f-file-list-file__tag = file_tag
 
       - if @file.try(:file_list_source).present?
         div[
@@ -94,6 +103,12 @@
         ]
           span.f-file-list-file__source
             = @file.file_list_source
+
+    div[
+      class="f-file-list-file__part"
+      class="f-file-list-file__part--mobile-divider"
+      class="f-file-list-file__part--mobile-divider-two"
+    ]
 
     div[
       class="f-file-list-file__part"
