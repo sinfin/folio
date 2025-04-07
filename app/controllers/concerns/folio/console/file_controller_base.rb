@@ -36,7 +36,7 @@ module Folio::Console::FileControllerBase
     end
 
     def folio_console_record_includes
-      [:file_placements]
+      [:tags]
     end
 
     def index_view_name

@@ -1,7 +1,7 @@
 //= require folio/confirm
 
 window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus.Controller {
-  static targets = ['imageWrap', 'loader']
+  static targets = ['imagePart', 'loader']
 
   static values = {
     id: { type: String, default: '' },
@@ -48,7 +48,7 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
       const img = document.createElement('img')
       img.classList.add('f-file-list-file__image')
       img.src = data.preview
-      this.imageWrapTarget.appendChild(img)
+      this.imagePartTarget.appendChild(img)
     }
   }
 

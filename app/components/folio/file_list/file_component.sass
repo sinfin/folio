@@ -1,14 +1,26 @@
 .f-file-list-file
+  $accent-blue: #4C84FD !default
   $accent-orange: #FF9A52 !default
   $border-radius: 4px !default
   $f-file-list-file-item-size: 168px !default
+  $gray-100: #f5f5f5 !default
+  $gray-200: #E8E8E8 !default
   $gray-600: #3B4548 !default
   $overlays-black-100: rgba(0, 0, 0, 0.08) !default
 
-  background-color: $overlays-black-100
-  border-radius: $border-radius
   overflow: hidden
   position: relative
+
+  &--destroying
+    pointer-events: none
+    opacity: 0.5
+
+  &__part
+    position: relative
+    display: none
+
+  &__part--image
+    display: block
 
   &__image-wrap
     z-index: 1
@@ -18,7 +30,7 @@
     align-items: center
     justify-content: center
 
-  &__image-wrap-bg
+  &__image-bg
     position: absolute
     inset: 0
     z-index: 1
@@ -33,56 +45,11 @@
     flex: 0 1 auto
     position: relative
     z-index: 2
-
-  &__control
-    position: absolute
-    z-index: 3
-    width: 3 * $grid-gutter-base
-    height: 3 * $grid-gutter-base
-    background-color: #000000
-    color: #ffffff
-    border: 0
-    appearance: none
-    padding: 0
-    display: flex
-    align-items: center
-    justify-content: center
     cursor: pointer
-    transition: $transition-base
-    opacity: 0
-
-    &--edit
-      bottom: 0
-      right: 0
-
-    &--destroy
-      background-color: $danger
-      top: 0
-      right: 0
-
-  &:hover &__control
-    opacity: 1
-
-  &:hover &__control:hover
-    opacity: 0.75
-
-  &:hover &__control--disabled,
-  &:hover &__control--disabled:hover
-    opacity: 0.5
-    cursor: not-allowed
-
-  &__primary-overlay
-    position: absolute
-    z-index: 2
-    inset: 0
-    cursor: pointer
-
-  &--destroying
-    pointer-events: none
-    opacity: 0.5
 
   &__count,
-  &__source
+  &__source,
+  &__extension
     align-items: center
     background: $gray-600
     border-radius: 12px
@@ -100,45 +67,157 @@
     text-overflow: ellipsis
     white-space: nowrap
 
-  &__count-wrap,
-  &__source-wrap
-    position: absolute
-    z-index: 1
-    left: 0
-    right: 0
-    text-align: center
-    padding: 0 10px
-    height: 24px
+  &__extension
+    background: $gray-200
+    color: $gray-600
 
-  &__count-wrap
-    top: 6px
+  &__info-file-name--interactive
+    color: $accent-blue
+    cursor: pointer
 
-  &__source-wrap
-    bottom: 9px
+    &:hover
+      text-decoration: underline
 
-  &__warning
-    bottom: 0
-    cursor: help
-    height: 24px + 2 * 8px
-    left: 0
-    padding: 8px
-    position: absolute
-    width: 24px + 2 * 8px
-    z-index: 3
+  &__part--warning
     color: $accent-orange
+    cursor: help
 
-  &__info
-    display: none
+  &__control
+    color: #000000
+    border: 0
+    background: transparent
+    appearance: none
+    padding: 0
+    display: flex
+    align-items: center
+    justify-content: center
+    cursor: pointer
+
+  .f-file-list--view-grid &
+    background-color: $overlays-black-100
+    border-radius: $border-radius
+
+    &__part:empty
+      display: none
+
+    &__part--controls
+      position: absolute
+      inset: 0
+      z-index: 3
+      display: block
+
+    &__control
+      width: 3 * $grid-gutter-base
+      height: 3 * $grid-gutter-base
+      background-color: rgba(255, 255, 255, 0.3)
+      opacity: 0
+      position: absolute
+      z-index: 3
+
+      &--download
+        display: none
+
+      &--primary
+        inset: 0
+        width: auto
+        height: auto
+        background: none
+
+      &--edit
+        bottom: 0
+        right: 0
+
+      &--destroy
+        top: 0
+        right: 0
+        display: none
+
+    &:hover .f-file-list-file__control
+      opacity: 1
+
+    &:hover .f-file-list-file__control:hover
+      opacity: 0.75
+
+    &:hover .f-file-list-file__control--disabled,
+    &:hover .f-file-list-file__control--disabled:hover
+      opacity: 0.5
+      cursor: not-allowed
+
+    &__part--count,
+    &__part--source
+      position: absolute
+      z-index: 1
+      left: 0
+      right: 0
+      text-align: center
+      padding: 0 10px
+      height: 24px
+      display: block
+
+    &__part--count
+      top: 6px
+
+    &__part--source
+      bottom: 9px
+
+    &__part--warning
+      bottom: 0
+      height: 24px + 2 * 8px
+      left: 0
+      padding: 8px
+      position: absolute
+      width: 24px + 2 * 8px
+      z-index: 3
+      display: block
 
   .f-file-list--view-table &
     background: transparent
     border-radius: 0
+    display: flex
+    align-items: center
+    gap: px-to-rem(8px)
 
-    &__primary-overlay
-      display: none
+  .f-file-list--view-table &
+    @container (min-width: 600px)
+      display: table-row
 
-    &__image-wrap
-      width: 50px
+      &:hover
+        background: $gray-100
 
-    &__info
-      display: block
+      &__part
+        width: auto
+        vertical-align: middle
+        padding: px-to-rem(8px) px-to-rem(8px) px-to-rem(8px) 0
+        border-bottom: 1px solid $border-color
+
+      &__part--image,
+      &__part--extension,
+      &__part--info,
+      &__part--count,
+      &__part--warning,
+      &__part--size,
+      &__part--tags,
+      &__part--controls
+        display: table-cell
+
+      &__part--image
+        width: 50px
+        min-width: 50px
+
+      &__part--info
+        width: 90%
+
+      &__part--extension
+        width: 0
+        white-space: nowrap
+
+      &__controls
+        display: flex
+        align-items: center
+
+      &__control
+        width: 36px
+        height: 36px
+
+      &__control--primary
+        display: none

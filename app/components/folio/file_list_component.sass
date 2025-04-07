@@ -1,4 +1,6 @@
 .f-file-list
+  container-type: inline-size
+
   &__flex
     display: flex
     gap: $grid-gutter-base
@@ -12,6 +14,7 @@
 
   &--view-table &__flex
     display: block
+    border-top: 1px solid $border-color
 
   &--view-table &__flex-item
     width: 100%
@@ -19,3 +22,14 @@
 
     &--uppy
       display: none
+
+  @container (min-width: 600px)
+    &--view-table &__flex
+      display: table
+      width: 100%
+
+    &--view-table &__flex-item
+      display: table-row-group
+
+      &--uppy
+        display: none

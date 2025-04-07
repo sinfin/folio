@@ -32,7 +32,7 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
                         } : nil)
   end
 
-  def image_wrap_bg_style
+  def image_bg_style
     return if @file.blank?
     return if @file.additional_data.blank?
     return if @file.additional_data["dominant_color"].blank?
@@ -53,9 +53,13 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
   def destroy_url
     return @destroy_url unless @destroy_url.nil?
 
-    @destroy_url = if @file.present? && @destroyable && !(@file_klass <= Folio::File)
-      # TODO handle private/session attachments
-      false
+    @destroy_url = if @file.present? && @destroyable
+      if @file_klass <= Folio::File
+        url_for([:console, :api, @file])
+      else
+        # TODO handle private/session attachments
+        false
+      end
     else
       false
     end
@@ -137,5 +141,17 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
     end
 
     ary
+  end
+
+  def primary_action_data
+    @primary_action_data ||= stimulus_action({ click: "edit" }, { url: modal_api_url })
+  end
+
+  def download_href
+    if @file.try(:private?)
+      Folio::S3.url_rewrite(@file.file.remote_url(expires: 1.hour.from_now))
+    else
+      Folio::S3.cdn_url_rewrite(@file.file.remote_url)
+    end
   end
 end
