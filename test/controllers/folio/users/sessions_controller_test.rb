@@ -59,7 +59,12 @@ class Folio::Users::SessionsControllerTest < ActionDispatch::IntegrationTest
 
     Rails.application.config.stub(:folio_crossdomain_devise, true) do
       Folio::Current.stub(:site_for_crossdomain_devise, site_a) do
-        other_site = create_site(force: true)
+        begin
+          other_site = create_site(key: try(:other_site_key), force: true)
+        rescue ActiveRecord::RecordInvalid => e
+          puts "Cannot create other_site! Try setting other_site_key in Folio::Users::SessionsControllerTest.class_eval to handle singletons in folio_site_default_test_factory."
+          raise e
+        end
 
         assert_difference("superadmin.reload.sign_in_count", 1) do
           host_site site_a
@@ -102,7 +107,12 @@ class Folio::Users::SessionsControllerTest < ActionDispatch::IntegrationTest
     superadmin.update!(superadmin: true, auth_site: site_a)
 
     Rails.application.config.stub(:folio_crossdomain_devise, false) do
-      other_site = create_site(force: true)
+      begin
+        other_site = create_site(key: try(:other_site_key), force: true)
+      rescue ActiveRecord::RecordInvalid => e
+        puts "Cannot create other_site! Try setting other_site_key in Folio::Users::SessionsControllerTest.class_eval to handle singletons in folio_site_default_test_factory."
+        raise e
+      end
 
       assert_difference("superadmin.reload.sign_in_count", 1) do
         host_site site_a
