@@ -92,6 +92,7 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
   def unmet_requirements
     return unless @file
     return if @thead
+    return if @template
     return if @unmet_requirements == false
 
     ary = []
@@ -157,6 +158,20 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
       Folio::S3.url_rewrite(@file.file.remote_url(expires: 1.hour.from_now))
     else
       Folio::S3.cdn_url_rewrite(@file.file.remote_url)
+    end
+  end
+
+  FILE_ICON_KEYS = {
+    "audio" => :microphone,
+    "default" => :file_document,
+    "video" => :video,
+  }
+
+  def file_icon_key
+    if human_type = @file_klass.try(:human_type)
+      FILE_ICON_KEYS[human_type] || FILE_ICON_KEYS["default"]
+    else
+      FILE_ICON_KEYS["default"]
     end
   end
 end

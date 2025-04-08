@@ -3,7 +3,12 @@ window.Folio.Stimulus.register('f-file-list', class extends window.Stimulus.Cont
     fileType: String
   }
 
-  static targets = ['fileTemplate', 'uppy']
+  static targets = ['fileTemplate', 'uppy', 'blank', 'thead', 'flexItem']
+
+  connect () {
+    // don't handle flexItem targets 64 times on load
+    window.setTimeout(() => { this.handleFlexItemTargets = true }, 0)
+  }
 
   uppyUploadSuccess (event) {
     const { file, result } = event.detail
@@ -14,12 +19,14 @@ window.Folio.Stimulus.register('f-file-list', class extends window.Stimulus.Cont
     })
     fileElement.dataset.fFileListFileS3PathValue = new URL(result.uploadURL).pathname.replace(/^\//, '')
     fileElement.dataset.fFileListFileFileTypeValue = this.fileTypeValue
+    fileElement.querySelector('.f-file-list-file__info-file-name').innerText = file.name
 
     const flexItem = document.createElement('div')
     flexItem.classList.add('f-file-list__flex-item')
+    flexItem.dataset.fFileListTarget = 'flexItem'
     flexItem.appendChild(fileElement)
 
-    this.uppyTarget.insertAdjacentElement('afterend', flexItem)
+    this.theadTarget.insertAdjacentElement('afterend', flexItem)
   }
 
   tableViewChange (e) {
@@ -29,5 +36,18 @@ window.Folio.Stimulus.register('f-file-list', class extends window.Stimulus.Cont
 
     this.element.classList.toggle('f-file-list--view-grid', !asTable)
     this.element.classList.toggle('f-file-list--view-table', asTable)
+  }
+
+  toggleBlankTarget () {
+    if (!this.handleFlexItemTargets) return
+    this.blankTarget.hidden = this.flexItemTargets.length > 0
+  }
+
+  flexItemTargetConnected () {
+    this.toggleBlankTarget()
+  }
+
+  flexItemTargetDisconnected () {
+    this.toggleBlankTarget()
   }
 })

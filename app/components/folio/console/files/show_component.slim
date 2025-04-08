@@ -1,7 +1,8 @@
 .f-c-files-show data=data
   .f-c-files-show__row.row
-    .col-lg-6.f-c-files-show__preview-col
-      = render(Folio::Console::Files::Show::PreviewComponent.new(file: @file))
+    - if @file.class.human_type != "document"
+      .col-lg-6.f-c-files-show__preview-col
+        = render(Folio::Console::Files::Show::PreviewComponent.new(file: @file))
 
     .col-lg
       .f-c-files-show__buttons-outer.mb-h

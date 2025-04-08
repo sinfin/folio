@@ -20,9 +20,7 @@ class Folio::Console::Index::NewButtonCell < Folio::ConsoleCell
 
       h
     elsif model[:file_list_uppy]
-      h["data-controller"] = "f-click-trigger"
-      h["data-f-click-trigger-target-value"] = ".f-file-list-trigger"
-
+      h[:data] = stimulus_click_trigger(".f-file-list-trigger")
       h
     elsif new_dropdown_links.present?
       if new_dropdown_links.size == 1

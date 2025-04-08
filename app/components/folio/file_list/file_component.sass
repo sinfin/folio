@@ -208,8 +208,11 @@
       cursor: not-allowed
 
     &__part--image
-      width: 50px
-      min-width: 50px
+      width: 50px + 8px
+      min-width: 50px + 8px
+
+    &__part--controls
+      min-width: 80px
 
     &__controls
       display: flex
@@ -254,9 +257,6 @@
 
       &__part--warning-blank
         display: none
-
-      &__part--image
-        width: 50px
 
       &__part--extension
         margin-right: px-to-rem(16px)

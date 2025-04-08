@@ -137,6 +137,12 @@ module Folio::StimulusHelper
                         inline: true)
   end
 
+  def stimulus_click_trigger(target)
+    stimulus_controller("f-click-trigger",
+                        values: { target: },
+                        inline: true)
+  end
+
   def stimulus_merge_data(*hashes)
     result = {}
     keys = %w[controller action]

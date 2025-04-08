@@ -1,16 +1,20 @@
 .f-file-list class=view_class_names data=data
+  .f-file-list__blank data=stimulus_target("blank") hidden=@files.present?
+    = blank_message
+
   .f-file-list__flex
     .f-file-list__flex-item.f-file-list__flex-item--uppy data=stimulus_target("uppy")
       = render(Folio::UppyComponent.new(file_type: @file_klass.to_s))
 
-    .f-file-list__flex-item.f-file-list__flex-item--thead
+    .f-file-list__flex-item.f-file-list__flex-item--thead data=stimulus_target("thead")
       = render(Folio::FileList::FileComponent.new(**file_args(thead: true,
-                                                              file: @file_klass.new)))
+                                                              file: new_file)))
 
     - if @files.present?
       - @files.each do |file|
-        .f-file-list__flex-item
+        .f-file-list__flex-item data=stimulus_target("flexItem")
           = render(Folio::FileList::FileComponent.new(**file_args(file:)))
 
   template.f-file-list__file-template data=stimulus_target("fileTemplate")
-    = render(Folio::FileList::FileComponent.new(**file_args(template: true)))
+    = render(Folio::FileList::FileComponent.new(**file_args(template: true,
+                                                            file: new_file)))

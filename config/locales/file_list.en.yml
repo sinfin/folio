@@ -1,6 +1,10 @@
 ---
 en:
   folio:
+    file_list_component:
+      blank: No files have been uploaded yet. Drag and drop or %{blank_prompt} the first one.
+      blank_prompt: pick
+
     file_list:
       file_component:
         thead/info: Information

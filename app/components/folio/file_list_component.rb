@@ -54,4 +54,16 @@ class Folio::FileListComponent < Folio::ApplicationComponent
       "f-file-list--view-table"
     end
   end
+
+  def blank_message
+    blank_prompt = content_tag(:span,
+                               t(".blank_prompt"),
+                               data: stimulus_click_trigger(".f-file-list-trigger"),
+                               class: "f-file-list__blank-trigger")
+    t(".blank", blank_prompt:).html_safe
+  end
+
+  def new_file
+    @new_file ||= @file_klass.new
+  end
 end

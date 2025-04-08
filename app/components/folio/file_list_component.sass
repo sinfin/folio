@@ -1,4 +1,5 @@
 .f-file-list
+  $accent-blue: #4C84FD !default
   container-type: inline-size
 
   &__flex
@@ -24,6 +25,13 @@
 
     &--uppy
       display: none
+
+  &__blank-trigger
+    color: $accent-blue
+    cursor: pointer
+
+    &:hover
+      text-decoration: underline
 
   @container (max-width: 599px)
     &--view-table &__flex
