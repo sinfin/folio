@@ -109,6 +109,7 @@ class Folio::Users::SessionsController < Devise::SessionsController
       if Folio::Current.user && !request.format.json?
         set_flash_message!(:notice, :signed_in)
         redirect_to after_sign_in_path_for(Folio::Current.user)
+        after_sign_in
       else
         super
       end
