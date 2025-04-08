@@ -15,7 +15,8 @@ class Folio::Console::PublishableInputs::ItemCell < Folio::ConsoleCell
     if @read_only.nil?
       input_to_event = {
         published: :publish,
-        featured: :feature
+        featured: :feature,
+        header_message_published: :publish_header_message,
       }
 
       ability_action = input_to_event[field.to_sym] || field.to_sym

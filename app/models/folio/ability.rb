@@ -94,7 +94,7 @@ class Folio::Ability
     can :do_anything, Folio::ContentTemplate, { site: }
     # can :do_anything, Folio::ConsoleNote, target: { site: } cannot be used, because it is polymorphic
 
-    can [:read, :update], Folio::Site, { id: site.id }
+    can %i[read update publish_header_message], Folio::Site, { id: site.id }
     can :read_managers, Folio::User
   end
 end
