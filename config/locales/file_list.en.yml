@@ -1,0 +1,9 @@
+---
+en:
+  folio:
+    file_list:
+      file_component:
+        thead/info: Information
+        thead/count: Usage
+        thead/size: Size
+        thead/tags: Keywords

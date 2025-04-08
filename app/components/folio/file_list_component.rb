@@ -28,10 +28,11 @@ class Folio::FileListComponent < Folio::ApplicationComponent
                         })
   end
 
-  def file_args(file: nil, template: false)
+  def file_args(file: nil, template: false, thead: false)
     @file_args ||= {
       file: nil,
       template: false,
+      thead: false,
       file_klass: @file_klass,
       editable: @editable,
       destroyable: @destroyable,
@@ -39,7 +40,7 @@ class Folio::FileListComponent < Folio::ApplicationComponent
       primary_action: @primary_action,
     }
 
-    @file_args.merge(file:, template:)
+    @file_args.merge(file:, template:, thead:)
   end
 
   def view_class_names

@@ -1,21 +1,22 @@
-.f-file-list-file data=data
+div data=data class=bem_class_name
   div[
     class="f-file-list-file__part"
     class="f-file-list-file__part--image"
     data=stimulus_target("imageWrap")
   ]
-    .f-file-list-file__image-wrap
-      - if @file.present? && @file.respond_to?(:base_thumb)
-        .f-file-list-file__image-bg style=image_bg_style
+    - unless @thead
+      .f-file-list-file__image-wrap
+        - if @file.present? && @file.respond_to?(:base_thumb)
+          .f-file-list-file__image-bg style=image_bg_style
 
-        img.f-file-list-file__image[
-          src=@file.base_thumb.url
-          loading="lazy"
-          alt=@file.file_name
-          width=@file.base_thumb.width
-          height=@file.base_thumb.height
-          data=(@primary_action == :edit ? primary_action_data : nil)
-        ]
+          img.f-file-list-file__image[
+            src=@file.base_thumb.url
+            loading="lazy"
+            alt=@file.file_name
+            width=@file.base_thumb.width
+            height=@file.base_thumb.height
+            data=(@primary_action == :edit ? primary_action_data : nil)
+          ]
 
   - if @template
     = render(Folio::FileList::LoaderComponent.new(data: stimulus_target("loader")))
@@ -26,27 +27,32 @@
         class="f-file-list-file__part"
         class="f-file-list-file__part--extension"
       ]
-        .f-file-list-file__extension
-          = @file.try(:file_extension).try(:upcase)
+        - unless @thead
+          .f-file-list-file__extension
+            = @file.try(:file_extension).try(:upcase)
 
     - if @selectable
       div[
         class="f-file-list-file__part"
         class="f-file-list-file__part--info"
       ]
-        - if @file.file_name.present?
-          - if @primary_action == :edit
-            .f-file-list-file__info-file-name.f-file-list-file__info-file-name--interactive[
-              data=primary_action_data
-            ]
-              = @file.file_name
-          - else
-            .f-file-list-file__info-file-name
-              = @file.file_name
+        - if @thead
+          .f-file-list-file__thead-label-wrap.small.text-muted
+            span.f-file-list-file__thead-label = t('.thead/info')
+        - else
+          - if @file.file_name.present?
+            - if @primary_action == :edit
+              .f-file-list-file__info-file-name.f-file-list-file__info-file-name--interactive[
+                data=primary_action_data
+              ]
+                = @file.file_name
+            - else
+              .f-file-list-file__info-file-name
+                = @file.file_name
 
-        - file_information_rows.each do |row|
-          .f-file-list-file__info-item.small.text-muted
-            = row
+          - file_information_rows.each do |row|
+            .f-file-list-file__info-item.small.text-muted
+              = row
 
       div[
         class="f-file-list-file__part"
@@ -58,7 +64,10 @@
         class="f-file-list-file__part"
         class="f-file-list-file__part--count"
       ]
-        - if @file.try(:file_list_count).is_a?(Numeric) && @file.file_list_count > 0
+        - if @thead
+          .f-file-list-file__thead-label-wrap.small.text-muted
+            span.f-file-list-file__thead-label = t('.thead/count')
+        - elsif @file.try(:file_list_count).is_a?(Numeric) && @file.file_list_count > 0
           span.f-file-list-file__count
             = @file.file_list_count
 
@@ -76,13 +85,16 @@
           class="f-file-list-file__part--warning-blank"
         ]
 
-      - if @file.try(:file_size)
+      - if @thead || @file.try(:file_size)
         div[
           class="f-file-list-file__part"
           class="f-file-list-file__part--size"
           class="small text-muted text-nowrap text-end"
         ]
-          - if @file.file_size.present?
+          - if @thead
+            .f-file-list-file__thead-label-wrap.small.text-muted
+              span.f-file-list-file__thead-label = t('.thead/size')
+          - elsif @file.file_size.present?
             = helpers.number_to_human_size(@file.file_size, precision: 0)
 
       - if @file.respond_to?(:tags)
@@ -91,12 +103,15 @@
           class="f-file-list-file__part--tags"
           class="small text-muted"
         ]
-          - if @file.tags.present?
+          - if @thead
+            .f-file-list-file__thead-label-wrap.small.text-muted
+              span.f-file-list-file__thead-label = t('.thead/tags')
+          - elsif @file.tags.present?
             .f-file-list-file__tags
               - @file.tags.each do |file_tag|
                   span.f-file-list-file__tag = file_tag
 
-      - if @file.try(:file_list_source).present?
+      - if !@thead && @file.try(:file_list_source).present?
         div[
           class="f-file-list-file__part"
           class="f-file-list-file__part--source"
@@ -115,37 +130,38 @@
       class="f-file-list-file__part--controls"
     ]
       .f-file-list-file__controls
-        - if @primary_action == :edit
-          div[
-            class="f-file-list-file__control"
-            class="f-file-list-file__control--primary"
-            data=primary_action_data
-          ]
+        - unless @thead
+          - if @primary_action == :edit
+            div[
+              class="f-file-list-file__control"
+              class="f-file-list-file__control--primary"
+              data=primary_action_data
+            ]
 
-        a[
-          class="f-file-list-file__control"
-          class="f-file-list-file__control--download"
-          href=download_href
-          target="_blank"
-        ]
-          = folio_icon(:download)
-
-        - if @editable
-          button[
+          a[
             class="f-file-list-file__control"
-            class="f-file-list-file__control--edit"
-            type="button"
-            data=stimulus_action("edit", { url: modal_api_url })
+            class="f-file-list-file__control--download"
+            href=download_href
+            target="_blank"
           ]
-            = folio_icon(:edit_box)
+            = folio_icon(:download)
 
-        - if destroy_url
-          button[
-            class="f-file-list-file__control"
-            class="f-file-list-file__control--destroy"
-            class="text-danger"
-            class=(indestructible_reason ? "f-file-list-file__control--disabled" : nil)
-            type="button"
-            data=(indestructible_reason ? stimulus_tooltip(indestructible_reason) : stimulus_action("destroy", { url: destroy_url }))
-          ]
-            = folio_icon(:delete)
+          - if @editable
+            button[
+              class="f-file-list-file__control"
+              class="f-file-list-file__control--edit"
+              type="button"
+              data=stimulus_action("edit", { url: modal_api_url })
+            ]
+              = folio_icon(:edit_box)
+
+          - if destroy_url
+            button[
+              class="f-file-list-file__control"
+              class="f-file-list-file__control--destroy"
+              class="text-danger"
+              class=(indestructible_reason ? "f-file-list-file__control--disabled" : nil)
+              type="button"
+              data=(indestructible_reason ? stimulus_tooltip(indestructible_reason) : stimulus_action("destroy", { url: destroy_url }))
+            ]
+              = folio_icon(:delete)

@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
 class Folio::FileList::FileComponent < Folio::ApplicationComponent
+  bem_class_name :thead
+
   def initialize(file:,
                  file_klass: nil,
                  template: false,
+                 thead: false,
                  editable: true,
                  destroyable: false,
                  selectable: false,
@@ -11,6 +14,7 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
     @file = file
     @file_klass = file_klass || file.class
     @template = template
+    @thead = thead
     @editable = editable
     @destroyable = destroyable
     @selectable = selectable
@@ -87,6 +91,7 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
 
   def unmet_requirements
     return unless @file
+    return if @thead
     return if @unmet_requirements == false
 
     ary = []

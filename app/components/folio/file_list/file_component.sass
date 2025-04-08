@@ -54,7 +54,7 @@
     background: $gray-600
     border-radius: 12px
     color: #ffffff
-    display: inline-block
+    display: inline-flex
     font-size: 12px
     justify-content: center
     line-height: 24px
@@ -185,6 +185,17 @@
     text-overflow: ellipsis
     display: inline-block
 
+  &__thead-label-wrap
+    text-transform: uppercase
+    position: relative
+    min-height: 16px
+
+  &__part--tags &__thead-label
+    white-space: nowrap
+    position: absolute
+    top: 0
+    left: 0
+
   .f-file-list--view-table &
     background: transparent
     border-radius: 0
@@ -211,11 +222,6 @@
 
     &__control--primary
       display: none
-
-    &__count,
-    &__source,
-    &__extension
-      display: block
 
     @container (max-width: 599px)
       border-bottom: 1px solid #000000
@@ -272,7 +278,7 @@
     @container (min-width: 600px)
       display: table-row
 
-      &:hover
+      &:not(&--thead):hover
         background: $gray-100
 
       &__part
@@ -286,6 +292,9 @@
       &__part--tags,
       &__part--controls
         padding-left: 2 * px-to-rem(8px)
+
+      &__part--count
+        text-align: center
 
       &__part--image,
       &__part--extension,
@@ -303,3 +312,6 @@
       &__part--extension
         width: 0
         white-space: nowrap
+
+      &--thead &__part
+        padding-top: 0

@@ -1,0 +1,9 @@
+---
+cs:
+  folio:
+    file_list:
+      file_component:
+        thead/info: Informace
+        thead/count: Použití
+        thead/size: Velikost
+        thead/tags: Klíčová slova
