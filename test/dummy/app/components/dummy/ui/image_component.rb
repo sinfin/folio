@@ -38,7 +38,7 @@ class Dummy::Ui::ImageComponent < ApplicationComponent
     @force_width = force_width
     @force_aspect_ratio = force_aspect_ratio
     @style = style
-    @spacer_background = spacer_background || ::Rails.application.config.folio_image_spacer_background_fallback
+    @spacer_background = spacer_background
     @additional_html = additional_html
     @class_name = class_name
     @round = round
@@ -170,17 +170,15 @@ class Dummy::Ui::ImageComponent < ApplicationComponent
   def spacer_style
     s = ""
 
-    if @spacer_background
-      if @spacer_background.is_a?(String)
-        s += "background-color: #{@spacer_background};"
-      elsif @spacer_background == false
-        s += "background-color: transparent;"
-      elsif @spacer_background == true
-        img = @data && @data[:file]
+    if @spacer_background.is_a?(String)
+      s += "background-color: #{@spacer_background};"
+    elsif @spacer_background == false
+      s += "background-color: transparent;"
+    elsif @spacer_background == true
+      img = @data && @data[:file]
 
-        if img && img.try(:additional_data)
-          s += "background-color: #{img.additional_data['dominant_color']};"
-        end
+      if img && img.try(:additional_data)
+        s += "background-color: #{img.additional_data['dominant_color']};"
       end
     end
 
