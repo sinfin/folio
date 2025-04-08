@@ -3,6 +3,8 @@
 module Folio::Console::FileControllerBase
   extend ActiveSupport::Concern
 
+  PAGY_ITEMS = 64
+
   included do
     before_action :set_file_for_show_modal, only: %i[index]
     before_action :set_pagy_options, only: %i[index]
@@ -54,13 +56,19 @@ module Folio::Console::FileControllerBase
     end
 
     def set_pagy_options
+      @pagy_options = {
+        reload_url: url_for([:pagination, :console, :api, @klass, page: params[:page]])
+      }
+
       if @klass.human_type == "image"
-        @pagy_options = { middle_component: Folio::Console::Files::DisplayToggleComponent.new }
+        @pagy_options = {
+          middle_component: Folio::Console::Files::DisplayToggleComponent.new,
+        }
       end
     end
 
     def index_pagy_items_per_page
-      64
+      PAGY_ITEMS
     end
 
     def message_bus_broadcast_update

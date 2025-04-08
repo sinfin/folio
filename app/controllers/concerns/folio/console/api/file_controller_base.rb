@@ -95,6 +95,23 @@ module Folio::Console::Api::FileControllerBase
                         filename: "#{@klass.model_name.human(count: 2)}-#{Time.current.to_i}.zip")
   end
 
+  def pagination
+    @pagy, _records = pagy(folio_console_records, items: Folio::Console::FileControllerBase::PAGY_ITEMS)
+
+    @pagy_options = {
+      reload_url: url_for([:pagination, :console, :api, @klass, page: params[:page]])
+    }
+
+    if @klass.human_type == "image"
+      @pagy_options = {
+        middle_component: Folio::Console::Files::DisplayToggleComponent.new,
+      }
+    end
+
+    render_component_json(Folio::Console::Ui::PagyComponent.new(pagy: @pagy,
+                                                                options: @pagy_options))
+  end
+
   private
     def folio_console_collection_includes
       [:tags, :file_placements]

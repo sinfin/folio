@@ -154,7 +154,12 @@ Folio::Engine.routes.draw do
             post :react_update_target
           end
         end
+      end
 
+      resource :merge, only: [:new, :create],
+                       path: "merge/:klass/:original_id/:duplicate_id"
+
+      namespace :api, constraints: -> (req) { req.format == :json } do
         namespace :file do
           Rails.application.config.folio_file_types_for_routes.each do |type|
             klass = type.constantize
@@ -165,7 +170,9 @@ Folio::Engine.routes.draw do
                 post :tag
                 delete :mass_destroy
                 get :mass_download
+                get :pagination
               end
+
               member do
                 if klass.human_type == "image"
                   post :update_file_thumbnail
@@ -176,9 +183,6 @@ Folio::Engine.routes.draw do
           end
         end
       end
-
-      resource :merge, only: [:new, :create],
-                       path: "merge/:klass/:original_id/:duplicate_id"
     end
 
     # these are outside of constraint by design

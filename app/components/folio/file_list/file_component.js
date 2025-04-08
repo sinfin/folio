@@ -109,7 +109,7 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
     }
   }
 
-  reload ({ handleErrors = true }) {
+  reload ({ handleErrors = true, updatePagy = false }) {
     const url = new URL('/folio/api/s3/file_list_file', window.location.origin)
     url.searchParams.set('file_id', this.idValue)
     url.searchParams.set('file_type', this.fileTypeValue)
@@ -128,7 +128,7 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
       if (this.timeout) window.clearTimeout(this.timeout)
 
       this.timeout = window.setTimeout(() => {
-        this.reload({ handleErrors })
+        this.reload({ handleErrors, updatePagy })
       }, this.catchCounter * 500)
     }).catch((error) => {
       if (!handleErrors) return
@@ -137,12 +137,16 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
       window.alert(`Failed to process file: ${error.message}`)
     }).then((response) => {
       this.element.outerHTML = response.data
+
+      if (updatePagy && window.FolioConsole && window.FolioConsole.Ui && window.FolioConsole.Ui.Pagy) {
+        window.FolioConsole.Ui.Pagy.reload()
+      }
     })
   }
 
   messageBusSuccess (data) {
     this.idValue = data.file_id
-    this.reload({ handleErrors: true })
+    this.reload({ handleErrors: true, updatePagy: true })
   }
 
   messageBusFailure (data) {

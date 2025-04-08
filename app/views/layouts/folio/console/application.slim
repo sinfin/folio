@@ -32,7 +32,8 @@ html.f-c-layout-html.f-html--show-sensitive-content lang=I18n.locale
       - else
         .f-c-layout-main-container.container-fluid
           = yield
-          == cell('folio/console/pagination', @pagy, @pagy_options || {})
+          = render(Folio::Console::Ui::PagyComponent.new(pagy: @pagy,
+                                                         options: @pagy_options))
 
     = yield :modals
 

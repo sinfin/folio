@@ -38,16 +38,20 @@ window.Folio.Stimulus.register('f-file-list', class extends window.Stimulus.Cont
     this.element.classList.toggle('f-file-list--view-table', asTable)
   }
 
-  toggleBlankTarget () {
+  handleCountChange ({ updatePagy }) {
     if (!this.handleFlexItemTargets) return
     this.blankTarget.hidden = this.flexItemTargets.length > 0
+
+    if (updatePagy && window.FolioConsole && window.FolioConsole.Ui && window.FolioConsole.Ui.Pagy) {
+      window.FolioConsole.Ui.Pagy.reload()
+    }
   }
 
   flexItemTargetConnected () {
-    this.toggleBlankTarget()
+    this.handleCountChange({ updatePagy: false })
   }
 
   flexItemTargetDisconnected () {
-    this.toggleBlankTarget()
+    this.handleCountChange({ updatePagy: true })
   }
 })

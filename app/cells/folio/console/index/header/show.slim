@@ -60,4 +60,5 @@ div class=class_name
           cancel_url: options[:filters_cancel_url])
 
 - if options[:pagy]
-  == cell('folio/console/pagination', options[:pagy], pagy_options)
+  = render_view_component(Folio::Console::Ui::PagyComponent.new(pagy: options[:pagy],
+                                                                options: pagy_options || {}))

@@ -47,7 +47,7 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
   def modal_api_url
     return @modal_api_url unless @modal_api_url.nil?
 
-    @modal_api_url = if @file.present? && @file_klass <= Folio::File
+    @modal_api_url = if !@template && !@thead && @file.present? && @file_klass <= Folio::File
       controller.folio.url_for([:console, :api, @file])
     else
       false
