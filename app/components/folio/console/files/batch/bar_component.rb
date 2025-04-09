@@ -10,6 +10,7 @@ class Folio::Console::Files::Batch::BarComponent < Folio::Console::ApplicationCo
                         values: {
                           base_api_url: url_for([:console, :api, @file_klass]),
                           loading: false,
+                          file_ids_json: file_ids.to_json,
                         },
                         action: {
                           "f-c-files-batch-bar/action" => "batchActionFromFile"
@@ -24,37 +25,39 @@ class Folio::Console::Files::Batch::BarComponent < Folio::Console::ApplicationCo
     @files_ary ||= file_ids.present? ? @file_klass.where(id: file_ids).to_a : []
   end
 
-  def can_batch_delete
-    return @can_batch_delete unless @can_batch_delete.nil?
-    @can_batch_delete = can? :destroy, @file_klass
-  end
-
-  def buttons_model
+  def buttons_data
     return [] if files_ary.blank?
 
     ary = []
 
     if files_ary.all? { |file| can_now?(:destroy, file) }
-      ary << {
-        variant: :danger,
-        icon: :delete,
-        label: t(".delete"),
-        confirm: true,
-      }
+      indestructible_file = files_ary.find { |file| file.indestructible_reason }
+
+      base = { variant: :danger, icon: :delete, label: t(".delete") }
+
+      if indestructible_file.present?
+        base[:disabled] = true
+        ary << [stimulus_tooltip(indestructible_file.indestructible_reason), base]
+      else
+        base[:data] = stimulus_action("delete")
+        ary << [nil, base]
+      end
     end
 
-    ary << {
+    ary << [nil, {
       variant: :medium_dark,
       icon: :download,
       label: t(".download"),
-    }
+      data: stimulus_action("download")
+    }]
 
     if files_ary.all? { |file| can_now?(:update, file) }
-      ary << {
+      ary << [nil, {
         variant: :medium_dark,
         icon: :menu,
         label: t(".settings"),
-      }
+        data: stimulus_action("settings")
+      }]
     end
 
     ary

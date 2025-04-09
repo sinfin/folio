@@ -9,5 +9,6 @@
 
       = folio_icon(:content_copy, class: 'f-c-files-batch-bar__icon')
 
-    - buttons_model.each do |button_model|
-      == cell("folio/console/ui/button", button_model)
+    - buttons_data.each do |button_wrap_data, button_model|
+      .f-c-files-batch-bar__button-wrap data=button_wrap_data
+        == cell("folio/console/ui/button", button_model)

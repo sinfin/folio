@@ -68,14 +68,6 @@ module Folio::Console::Api::FileControllerBase
     render_records(files, Folio::Console::FileSerializer)
   end
 
-  def mass_destroy
-    ids = params.require(:ids).split(",")
-    @klass.where(id: ids).each(&:destroy!)
-    render json: { data: { message: t(".success") }, status: 200 }
-  rescue StandardError => e
-    render json: { error: t(".failure", msg: e.message), status: 400 }
-  end
-
   def mass_download
     ids = params.require(:ids).split(",")
     files = @klass.where(id: ids)
@@ -134,6 +126,42 @@ module Folio::Console::Api::FileControllerBase
     session[BATCH_SESSION_KEY][@klass.to_s]["file_ids"] = (session[BATCH_SESSION_KEY][@klass.to_s]["file_ids"] || []) - file_ids
 
     render_component_json(Folio::Console::Files::Batch::BarComponent.new(file_klass: @klass))
+  end
+
+  def batch_delete
+    session_file_ids = session.dig(BATCH_SESSION_KEY, @klass.to_s, "file_ids") || []
+    param_file_ids = params.require(:file_ids)
+
+    if param_file_ids.is_a?(Array)
+      param_file_ids.map!(&:to_i)
+    else
+      raise ActionController::BadRequest.new("Invalid file IDs")
+    end
+
+    safe_file_ids = param_file_ids & session_file_ids
+
+    if safe_file_ids.size != param_file_ids.size
+      raise ActionController::BadRequest.new("Invalid file IDs")
+    end
+
+    files = @klass.where(id: safe_file_ids).to_a
+
+    if indestructible_file = files.find { |file| file.indestructible_reason }
+      raise ActionController::BadRequest.new(indestructible_file.indestructible_reason)
+    end
+
+    if forbidden_file = files.find { |file| !can_now?(:destroy, file) }
+      raise ActionController::BadRequest.new("Invalid file IDs - you are not allowed to destroy file #{forbidden_file.id}")
+    end
+
+    @klass.transaction do
+      files.each { |file| file.destroy! }
+    end
+
+    session[BATCH_SESSION_KEY][@klass.to_s]["file_ids"] = []
+
+    render_component_json(Folio::Console::Files::Batch::BarComponent.new(file_klass: @klass),
+      flash: { success: t("folio.console.api.file_controller_base.batch_delete_success") })
   end
 
   private

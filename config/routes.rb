@@ -168,12 +168,12 @@ Folio::Engine.routes.draw do
             resources key, only: %i[index show update destroy] do
               collection do
                 post :tag
-                delete :mass_destroy
-                get :mass_download
                 get :pagination
 
                 post :add_to_batch
                 post :remove_from_batch
+
+                delete :batch_delete
               end
 
               member do

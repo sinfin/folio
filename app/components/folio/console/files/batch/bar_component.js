@@ -1,7 +1,10 @@
+//= require folio/confirm
+
 window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimulus.Controller {
   static values = {
     baseApiUrl: String,
-    loading: Boolean
+    loading: Boolean,
+    fileIdsJson: String
   }
 
   disconnect () {
@@ -13,6 +16,24 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
 
     this.abortController.abort()
     delete this.abortController
+  }
+
+  settings () {
+    console.log('settings')
+  }
+
+  download () {
+    console.log('download')
+  }
+
+  delete () {
+    window.Folio.Confirm.confirm(() => {
+      this.ajax({
+        url: `${this.baseApiUrlValue}/batch_delete`,
+        data: { file_ids: JSON.parse(this.fileIdsJsonValue) },
+        apiMethod: 'apiDelete'
+      })
+    }, 'delete')
   }
 
   batchActionFromFile (e) {
@@ -66,10 +87,14 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
 
     if (!url || !data) return
 
+    this.ajax({ url, data })
+  }
+
+  ajax ({ url, data, apiMethod = 'apiPost' }) {
     this.loadingValue = true
     this.abortController = new AbortController()
 
-    window.Folio.Api.apiPost(url, data, this.abortController.signal).then((res) => {
+    window.Folio.Api[apiMethod](url, data, this.abortController.signal).then((res) => {
       if (res && res.data) {
         this.element.outerHTML = res.data
         this.loadingValue = false

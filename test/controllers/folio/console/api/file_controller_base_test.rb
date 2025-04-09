@@ -54,21 +54,6 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
       assert_equal(["a", "b"], files.second.reload.tag_list.sort)
     end
 
-    test "#{klass} - mass_destroy" do
-      files = create_list(klass.model_name.singular, 3)
-      assert_equal(3, klass.count)
-      ids = files.first(2).map(&:id).join(",")
-      delete url_for([:mass_destroy, :console, :api, klass, ids:, format: :json])
-      assert_equal(1, klass.count)
-    end
-
-    test "#{klass} - mass_download" do
-      files = create_list(klass.model_name.singular, 2)
-      ids = files.map(&:id).join(",")
-      get url_for([:mass_download, :console, :api, klass, ids:, format: :json])
-      assert_response(:ok)
-    end
-
     test "#{klass} - show" do
       file = create(klass.model_name.singular)
       get url_for([:console, :api, file, format: :json])
@@ -101,6 +86,44 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
         file_ids: [file.id]
       }
       assert_response(:ok)
+
+      parsed_component = Nokogiri::HTML(response.parsed_body["data"])
+      assert parsed_component.css(".f-c-files-batch-bar")
+      assert_equal("0", parsed_component.css(".f-c-files-batch-bar__count").first.text.strip)
+    end
+
+    test "#{klass} - batch_delete" do
+      files = create_list(klass.model_name.singular, 3)
+      file_ids = files.map(&:id)
+      assert_equal 3, klass.where(id: file_ids).count
+
+      delete url_for([:batch_delete, :console, :api, klass, format: :json]), params: { file_ids: }
+
+      assert_response(:bad_request)
+      assert_equal 3, klass.where(id: file_ids).count, "Don't delete file_ids that were not added to batch"
+
+      post url_for([:add_to_batch, :console, :api, klass, format: :json]), params: { file_ids: }
+      assert_response(:ok)
+
+      parsed_component = Nokogiri::HTML(response.parsed_body["data"])
+      assert parsed_component.css(".f-c-files-batch-bar")
+      assert_equal("3", parsed_component.css(".f-c-files-batch-bar__count").first.text.strip)
+
+      # make file indestructible
+      files.first.update_column(:file_placements_size, 1)
+
+      delete url_for([:batch_delete, :console, :api, klass, format: :json]), params: { file_ids: }
+
+      assert_response(:bad_request)
+      assert_equal 3, klass.where(id: file_ids).count, "Don't delete file_ids when some of them are indestructible"
+
+      # make file destructible
+      files.first.update_column(:file_placements_size, 0)
+
+      delete url_for([:batch_delete, :console, :api, klass, format: :json]), params: { file_ids: }
+
+      assert_response(:ok)
+      assert_equal 0, klass.where(id: file_ids).count, "Delete file_ids that were added to batch"
 
       parsed_component = Nokogiri::HTML(response.parsed_body["data"])
       assert parsed_component.css(".f-c-files-batch-bar")
