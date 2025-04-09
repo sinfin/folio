@@ -9,3 +9,9 @@ cs:
           download: Stáhnout originál
           replace: Nahradit
           destroy: Smazat
+
+        batch:
+          bar_component:
+            delete: Smazat
+            download: Stáhnout
+            settings: Hromadné nastavení

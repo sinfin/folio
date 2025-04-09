@@ -1,0 +1,13 @@
+.f-c-files-batch-bar[
+  data=data
+  hidden=files_ary.blank?
+]
+  .f-c-files-batch-bar__flex
+    .f-c-files-batch-bar__count-and-ico
+      .f-c-files-batch-bar__count.h3.m-0
+        = files_ary.size
+
+      = folio_icon(:content_copy, class: 'f-c-files-batch-bar__icon')
+
+    - buttons_model.each do |button_model|
+      == cell("folio/console/ui/button", button_model)

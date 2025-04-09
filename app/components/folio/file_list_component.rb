@@ -7,6 +7,7 @@ class Folio::FileListComponent < Folio::ApplicationComponent
                  editable: true,
                  destroyable: false,
                  selectable: false,
+                 batch_actions: false,
                  primary_action: nil)
     @file_klass = file_klass
     @files = files
@@ -14,6 +15,7 @@ class Folio::FileListComponent < Folio::ApplicationComponent
     @editable = editable
     @destroyable = destroyable
     @selectable = selectable
+    @batch_actions = batch_actions
     @primary_action = primary_action
   end
 
@@ -24,7 +26,7 @@ class Folio::FileListComponent < Folio::ApplicationComponent
                         },
                         action: {
                           "f-uppy:upload-success": "uppyUploadSuccess",
-                          "f-c-files-display-toggle:table-view-change": "tableViewChange"
+                          "f-c-files-display-toggle:table-view-change": "tableViewChange",
                         })
   end
 
@@ -37,6 +39,7 @@ class Folio::FileListComponent < Folio::ApplicationComponent
       editable: @editable,
       destroyable: @destroyable,
       selectable: @selectable,
+      batch_actions: @batch_actions,
       primary_action: @primary_action,
     }
 

@@ -112,6 +112,30 @@ module Folio::Console::Api::FileControllerBase
                                                                 options: @pagy_options))
   end
 
+  BATCH_SESSION_KEY = "folio_files_console_batch"
+
+  def add_to_batch
+    file_ids = folio_console_records.where(id: params.require(:file_ids)).pluck(:id)
+
+    session[BATCH_SESSION_KEY] ||= {}
+    session[BATCH_SESSION_KEY][@klass.to_s] ||= {}
+    session[BATCH_SESSION_KEY][@klass.to_s]["file_ids"] ||= []
+    session[BATCH_SESSION_KEY][@klass.to_s]["file_ids"] += file_ids
+    session[BATCH_SESSION_KEY][@klass.to_s]["file_ids"].uniq!
+
+    render_component_json(Folio::Console::Files::Batch::BarComponent.new(file_klass: @klass))
+  end
+
+  def remove_from_batch
+    file_ids = folio_console_records.where(id: params.require(:file_ids)).pluck(:id)
+
+    session[BATCH_SESSION_KEY] ||= {}
+    session[BATCH_SESSION_KEY][@klass.to_s] ||= {}
+    session[BATCH_SESSION_KEY][@klass.to_s]["file_ids"] = (session[BATCH_SESSION_KEY][@klass.to_s]["file_ids"] || []) - file_ids
+
+    render_component_json(Folio::Console::Files::Batch::BarComponent.new(file_klass: @klass))
+  end
+
   private
     def folio_console_collection_includes
       [:tags, :file_placements]

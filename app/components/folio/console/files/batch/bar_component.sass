@@ -1,0 +1,26 @@
+.f-c-files-batch-bar
+  margin: 0 0 $grid-gutter-width
+
+  &__flex
+    background: $gray-200
+    padding: px-to-rem(8px) px-to-rem(22px)
+    display: flex
+    align-items: center
+    flex-wrap: wrap
+    gap: px-to-rem(8px)
+
+  &__count-and-ico
+    align-items: center
+    color: $black
+    display: flex
+    gap: px-to-rem(8px)
+    margin-right: px-to-rem(4px)
+    min-height: $input-height
+    position: relative
+    transition: $transition-base
+
+  &[data-f-c-files-batch-bar-count-value="0"]
+    display: none
+
+  &[data-f-c-files-batch-bar-loading-value="true"] &__count-and-ico
+    opacity: 0.25

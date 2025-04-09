@@ -1,4 +1,18 @@
 div data=data class=bem_class_name
+  - if @batch_actions
+    div[
+      class="f-file-list-file__part"
+      class="f-file-list-file__part--batch-actions"
+    ]
+      - unless @template
+        input[
+          type="checkbox"
+          class="f-file-list-file__checkbox"
+          checked=selected_for_batch_actions?
+          value=(@thead ? "all" : @file.id)
+          data=stimulus_data(target: "checkbox", action: { input: @thead ? "onGlobalBatchActionCheckboxInput" : "onBatchActionCheckboxInput" })
+        ]
+
   div[
     class="f-file-list-file__part"
     class="f-file-list-file__part--image"
@@ -24,103 +38,101 @@ div data=data class=bem_class_name
           - else
             = folio_icon(file_icon_key, height: 40)
 
-  - if @selectable
-    div[
-      class="f-file-list-file__part"
-      class="f-file-list-file__part--extension"
-    ]
-      - if !@thead && !@template
-        .f-file-list-file__extension
-          = @file.try(:file_extension).try(:upcase)
+  div[
+    class="f-file-list-file__part"
+    class="f-file-list-file__part--extension"
+  ]
+    - if !@thead && !@template
+      .f-file-list-file__extension
+        = @file.try(:file_extension).try(:upcase)
 
-  - if @selectable
-    div[
-      class="f-file-list-file__part"
-      class="f-file-list-file__part--info"
-    ]
-      - if @thead
-        .f-file-list-file__thead-label-wrap.small.text-muted
-          span.f-file-list-file__thead-label = t('.thead/info')
-      - else
-        - if @primary_action == :edit
-          .f-file-list-file__info-file-name.f-file-list-file__info-file-name--interactive[
-            data=primary_action_data
-          ]
-            = @file.file_name
-        - else
-          .f-file-list-file__info-file-name
-            = @file.file_name
-
-        - if !@template
-          - file_information_rows.each do |row|
-            .f-file-list-file__info-item.small.text-muted
-              = row
-
-    div[
-      class="f-file-list-file__part"
-      class="f-file-list-file__part--mobile-divider"
-      class="f-file-list-file__part--mobile-divider-one"
-      hidden=@template
-    ]
-
-    div[
-      class="f-file-list-file__part"
-      class="f-file-list-file__part--count"
-    ]
-      - if @thead
-        .f-file-list-file__thead-label-wrap.small.text-muted
-          span.f-file-list-file__thead-label = t('.thead/count')
-      - elsif !@template && @file.try(:file_list_count).is_a?(Numeric) && @file.file_list_count > 0
-        span.f-file-list-file__count
-          = @file.file_list_count
-
-    - if unmet_requirements.present?
-      div[
-        class="f-file-list-file__part"
-        class="f-file-list-file__part--warning"
-        data=stimulus_tooltip(unmet_requirements_html, variant: :popover)
-      ]
-        = folio_icon(:alert)
+  div[
+    class="f-file-list-file__part"
+    class="f-file-list-file__part--info"
+  ]
+    - if @thead
+      .f-file-list-file__thead-label-wrap.small.text-muted
+        span.f-file-list-file__thead-label = t('.thead/info')
     - else
-      div[
-        class="f-file-list-file__part"
-        class="f-file-list-file__part--warning"
-        class="f-file-list-file__part--warning-blank"
-      ]
+      - if @primary_action == :edit
+        .f-file-list-file__info-file-name.f-file-list-file__info-file-name--interactive[
+          data=primary_action_data
+        ]
+          = @file.file_name
+      - else
+        .f-file-list-file__info-file-name
+          = @file.file_name
 
-    - if @thead || @template || @file.try(:file_size)
-      div[
-        class="f-file-list-file__part"
-        class="f-file-list-file__part--size"
-        class="small text-muted text-nowrap text-end"
-      ]
-        - if @thead
-          .f-file-list-file__thead-label-wrap.small.text-muted
-            span.f-file-list-file__thead-label = t('.thead/size')
-        - elsif !@template && @file.file_size.present?
-          = helpers.number_to_human_size(@file.file_size, precision: 0)
+      - if !@template
+        - file_information_rows.each do |row|
+          .f-file-list-file__info-item.small.text-muted
+            = row
 
-    - if @file.respond_to?(:tags)
-      div[
-        class="f-file-list-file__part"
-        class="f-file-list-file__part--tags"
-        class="small text-muted"
-      ]
-        - if @thead
-          .f-file-list-file__thead-label-wrap.small.text-muted
-            span.f-file-list-file__thead-label = t('.thead/tags')
-        - elsif @file.tags.present?
-          .f-file-list-file__tags
-            - @file.tags.each do |file_tag|
-                span.f-file-list-file__tag = file_tag
+  div[
+    class="f-file-list-file__part"
+    class="f-file-list-file__part--mobile-divider"
+    class="f-file-list-file__part--mobile-divider-one"
+    hidden=@template
+  ]
 
-    - if !@thead && !@template && @file.try(:file_list_source).present?
-      div[
-        class="f-file-list-file__part"
-        class="f-file-list-file__part--source"
-      ]
-        span.f-file-list-file__source
-          = @file.file_list_source
+  div[
+    class="f-file-list-file__part"
+    class="f-file-list-file__part--count"
+  ]
+    - if @thead
+      .f-file-list-file__thead-label-wrap.small.text-muted
+        span.f-file-list-file__thead-label = t('.thead/count')
+    - elsif !@template && @file.try(:file_list_count).is_a?(Numeric) && @file.file_list_count > 0
+      span.f-file-list-file__count
+        = @file.file_list_count
+
+  - if unmet_requirements.present?
+    div[
+      class="f-file-list-file__part"
+      class="f-file-list-file__part--warning"
+      data=stimulus_tooltip(unmet_requirements_html, variant: :popover)
+    ]
+      = folio_icon(:alert)
+  - else
+    div[
+      class="f-file-list-file__part"
+      class="f-file-list-file__part--warning"
+      class="f-file-list-file__part--warning-blank"
+    ]
+
+  - if @thead || @template || @file.try(:file_size)
+    div[
+      class="f-file-list-file__part"
+      class="f-file-list-file__part--size"
+      class="small text-muted text-nowrap text-end"
+    ]
+      - if @thead
+        .f-file-list-file__thead-label-wrap.small.text-muted
+          span.f-file-list-file__thead-label = t('.thead/size')
+      - elsif !@template && @file.file_size.present?
+        = helpers.number_to_human_size(@file.file_size, precision: 0)
+
+  - if @file.respond_to?(:tags)
+    div[
+      class="f-file-list-file__part"
+      class="f-file-list-file__part--tags"
+      class="small text-muted"
+    ]
+      - if @thead
+        .f-file-list-file__thead-label-wrap.small.text-muted
+          span.f-file-list-file__thead-label = t('.thead/tags')
+      - elsif @file.tags.present?
+        .f-file-list-file__tags
+          - @file.tags.each do |file_tag|
+              span.f-file-list-file__tag = file_tag
+
+  - if !@thead && !@template && @file.try(:file_list_source).present?
+    div[
+      class="f-file-list-file__part"
+      class="f-file-list-file__part--source"
+    ]
+      span.f-file-list-file__source
+        = @file.file_list_source
 
   div[
     class="f-file-list-file__part"

@@ -36,6 +36,7 @@ class Folio::Api::S3Controller < Folio::Api::BaseController
         editable
         destroyable
         selectable
+        batch_actions
       ].each do |param|
         if params[param]
           props[param] = params[param]

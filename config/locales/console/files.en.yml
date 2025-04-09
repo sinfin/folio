@@ -9,3 +9,9 @@ en:
           download: Download original
           replace: Replace
           destroy: Delete
+
+        batch:
+          bar_component:
+            delete: Delete
+            download: Download
+            settings: Batch Settings

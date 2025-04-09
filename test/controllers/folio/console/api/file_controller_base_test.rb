@@ -83,5 +83,28 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
       assert_response(:ok)
       assert_match("f-c-ui-pagy", response.parsed_body["data"])
     end
+
+    test "#{klass} - add_to_batch, remove_from_batch" do
+      # cannot test session[*] sadly
+      file = create(klass.model_name.singular)
+
+      post url_for([:add_to_batch, :console, :api, klass, format: :json]), params: {
+        file_ids: [file.id]
+      }
+      assert_response(:ok)
+
+      parsed_component = Nokogiri::HTML(response.parsed_body["data"])
+      assert parsed_component.css(".f-c-files-batch-bar")
+      assert_equal("1", parsed_component.css(".f-c-files-batch-bar__count").first.text.strip)
+
+      post url_for([:remove_from_batch, :console, :api, klass, format: :json]), params: {
+        file_ids: [file.id]
+      }
+      assert_response(:ok)
+
+      parsed_component = Nokogiri::HTML(response.parsed_body["data"])
+      assert parsed_component.css(".f-c-files-batch-bar")
+      assert_equal("0", parsed_component.css(".f-c-files-batch-bar__count").first.text.strip)
+    end
   end
 end

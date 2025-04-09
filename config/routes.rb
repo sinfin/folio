@@ -171,6 +171,9 @@ Folio::Engine.routes.draw do
                 delete :mass_destroy
                 get :mass_download
                 get :pagination
+
+                post :add_to_batch
+                post :remove_from_batch
               end
 
               member do

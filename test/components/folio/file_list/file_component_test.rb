@@ -14,7 +14,7 @@ class Folio::FileList::FileComponentTest < Folio::ComponentTest
   end
 
   def test_template
-    render_inline(Folio::FileList::FileComponent.new(file: nil, template: true))
+    render_inline(Folio::FileList::FileComponent.new(file: Folio::File::Image.new, template: true))
 
     assert_selector(".f-file-list-file")
     assert_selector(".f-file-list-file__image-wrap")
