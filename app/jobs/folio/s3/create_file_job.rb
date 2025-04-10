@@ -25,14 +25,14 @@ class Folio::S3::CreateFileJob < Folio::S3::BaseJob
       end
     end
   ensure
-    test_aware_s3_delete(s3_path)
+    test_aware_s3_delete(s3_path:)
   end
 
   private
     def downloaded_file(s3_path, tmpdir)
       tmp_file_path = "#{tmpdir}/#{s3_path.split("/").pop}"
 
-      test_aware_download_from_s3(s3_path, tmp_file_path)
+      test_aware_download_from_s3(s3_path:, local_path: tmp_file_path)
 
       tmp_file_path = ensure_proper_file_extension_for_mime_type(tmp_file_path)
 

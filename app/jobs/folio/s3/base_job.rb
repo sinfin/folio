@@ -15,7 +15,7 @@ class Folio::S3::BaseJob < Folio::ApplicationJob
 
     @message_bus_client_id = message_bus_client_id
 
-    if !self.class.multipart? && !test_aware_s3_exists?(s3_path)
+    if !self.class.multipart? && !test_aware_s3_exists?(s3_path:)
       # probably handled it already in another job
       return
     end
