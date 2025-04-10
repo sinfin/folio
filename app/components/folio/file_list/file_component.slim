@@ -5,13 +5,16 @@ div data=data class=bem_class_name
       class="f-file-list-file__part--batch-actions"
     ]
       - unless @template
-        input[
-          type="checkbox"
-          class="f-file-list-file__checkbox"
-          checked=selected_for_batch_actions?
-          value=(@thead ? "all" : @file.id)
-          data=stimulus_data(target: "checkbox", action: { input: @thead ? "onGlobalBatchActionCheckboxInput" : "onBatchActionCheckboxInput" })
+        label[
+          class="f-file-list-file__checkbox-label"
         ]
+          input[
+            type="checkbox"
+            class="f-file-list-file__checkbox"
+            checked=selected_for_batch_actions?
+            value=(@thead ? "all" : @file.id)
+            data=stimulus_data(target: "checkbox", action: { input: @thead ? "onGlobalBatchActionCheckboxInput" : "onBatchActionCheckboxInput" })
+          ]
 
   div[
     class="f-file-list-file__part"
