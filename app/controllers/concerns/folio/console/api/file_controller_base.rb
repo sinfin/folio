@@ -6,6 +6,14 @@ require "zip"
 module Folio::Console::Api::FileControllerBase
   extend ActiveSupport::Concern
 
+  S3_PATH_DOWNLOAD_BASE = "tmp/folio-files-batch-download"
+
+  included do
+    include Folio::S3::Client
+    before_action :set_safe_file_ids, only: %i[batch_delete batch_download]
+    before_action :delete_s3_download_file, only: %i[add_to_batch remove_from_batch batch_delete]
+  end
+
   def index
     can_cache = (params[:page].nil? || params[:page] == "1") &&
                 filter_params.to_h.all? { |k, v| v.blank? }
@@ -68,25 +76,6 @@ module Folio::Console::Api::FileControllerBase
     render_records(files, Folio::Console::FileSerializer)
   end
 
-  def mass_download
-    ids = params.require(:ids).split(",")
-    files = @klass.where(id: ids)
-
-    tmp_zip_file = Tempfile.new("folio-files")
-
-    Zip::File.open(tmp_zip_file.path, Zip::File::CREATE) do |zip|
-      files.each do |file|
-        # dragonfly ¯\_(ツ)_/¯
-        tmp_file = file.file.file
-        zip.add("#{file.id}-#{file.file_name}", tmp_file)
-      end
-    end
-
-    zip_data = File.read(tmp_zip_file.path)
-    send_data(zip_data, type: "application/zip",
-                        filename: "#{@klass.model_name.human(count: 2)}-#{Time.current.to_i}.zip")
-  end
-
   def pagination
     @pagy, _records = pagy(folio_console_records, items: Folio::Console::FileControllerBase::PAGY_ITEMS)
 
@@ -128,23 +117,35 @@ module Folio::Console::Api::FileControllerBase
     render_component_json(Folio::Console::Files::Batch::BarComponent.new(file_klass: @klass))
   end
 
+  def batch_download
+    files = @klass.where(id: @safe_file_ids).to_a
+
+    tmp_zip_file = Tempfile.new("folio-files")
+    file_name = "#{Folio::Current.site.slug}-#{@klass.human_type.pluralize}.zip"
+    s3_path = "#{S3_PATH_DOWNLOAD_BASE}/#{Time.current.to_i}-#{SecureRandom.hex(8)}/#{file_name}"
+
+    Zip::File.open(tmp_zip_file.path, Zip::File::CREATE) do |zip|
+      files.each do |file|
+        # dragonfly ¯\_(ツ)_/¯
+        tmp_file = file.file.file
+        zip.add("#{file.id}-#{file.file_name}", tmp_file)
+      end
+    end
+
+    test_aware_s3_upload(s3_path:, file: File.open(tmp_zip_file, "rb"), acl: "private")
+    s3_url = test_aware_presign_url(s3_path:)
+
+    session[BATCH_SESSION_KEY][@klass.to_s]["download"] = { "url" => s3_url, "path" => s3_path, "timestamp" => Time.current.to_i }
+    run_delete_s3_job(s3_path:, wait: 15.minutes)
+
+    render_component_json(Folio::Console::Files::Batch::BarComponent.new(file_klass: @klass))
+  ensure
+    tmp_zip_file.close
+    tmp_zip_file.unlink
+  end
+
   def batch_delete
-    session_file_ids = session.dig(BATCH_SESSION_KEY, @klass.to_s, "file_ids") || []
-    param_file_ids = params.require(:file_ids)
-
-    if param_file_ids.is_a?(Array)
-      param_file_ids.map!(&:to_i)
-    else
-      raise ActionController::BadRequest.new("Invalid file IDs")
-    end
-
-    safe_file_ids = param_file_ids & session_file_ids
-
-    if safe_file_ids.size != param_file_ids.size
-      raise ActionController::BadRequest.new("Invalid file IDs")
-    end
-
-    files = @klass.where(id: safe_file_ids).to_a
+    files = @klass.where(id: @safe_file_ids).to_a
 
     if indestructible_file = files.find { |file| file.indestructible_reason }
       raise ActionController::BadRequest.new(indestructible_file.indestructible_reason)
@@ -227,5 +228,43 @@ module Folio::Console::Api::FileControllerBase
       else
         [Folio::Current.site]
       end
+    end
+
+    def set_safe_file_ids
+      session_file_ids = session.dig(BATCH_SESSION_KEY, @klass.to_s, "file_ids") || []
+      param_file_ids = params.require(:file_ids)
+
+      if param_file_ids.is_a?(Array)
+        param_file_ids.map!(&:to_i)
+      else
+        raise ActionController::BadRequest.new("Invalid file IDs")
+      end
+
+      safe_file_ids = param_file_ids & session_file_ids
+
+      if safe_file_ids.size != param_file_ids.size
+        raise ActionController::BadRequest.new("Invalid file IDs")
+      end
+
+      @safe_file_ids = safe_file_ids
+    end
+
+    def delete_s3_download_file
+      download_hash = session.dig(BATCH_SESSION_KEY, @klass.to_s, "download")
+      return unless download_hash.is_a?(Hash)
+
+      if download_hash["path"].is_a?(String)
+        run_delete_s3_job(s3_path: download_hash["path"])
+      end
+
+      session[BATCH_SESSION_KEY][@klass.to_s]["download"] = nil
+    end
+
+    def run_delete_s3_job(s3_path:, wait: nil)
+      return unless s3_path.start_with?(S3_PATH_DOWNLOAD_BASE)
+
+      job = Folio::S3::DeleteJob
+      job = job.set(wait:) if wait
+      job.perform_later(s3_path:)
     end
 end

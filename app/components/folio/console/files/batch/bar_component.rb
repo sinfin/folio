@@ -9,7 +9,7 @@ class Folio::Console::Files::Batch::BarComponent < Folio::Console::ApplicationCo
     stimulus_controller("f-c-files-batch-bar",
                         values: {
                           base_api_url: url_for([:console, :api, @file_klass]),
-                          loading: false,
+                          status: "loaded",
                           file_ids_json: file_ids.to_json,
                         },
                         action: {
@@ -44,12 +44,22 @@ class Folio::Console::Files::Batch::BarComponent < Folio::Console::ApplicationCo
       end
     end
 
-    ary << [nil, {
-      variant: :medium_dark,
-      icon: :download,
-      label: t(".download"),
-      data: stimulus_action("download")
-    }]
+    if s3_url
+      ary << [nil, {
+        variant: :success,
+        icon: :download,
+        label: t(".download"),
+        href: s3_url,
+        target: "_blank",
+      }]
+    else
+      ary << [nil, {
+        variant: :medium_dark,
+        icon: :download,
+        label: t(".download"),
+        data: stimulus_action("download")
+      }]
+    end
 
     if files_ary.all? { |file| can_now?(:update, file) }
       ary << [nil, {
@@ -61,5 +71,18 @@ class Folio::Console::Files::Batch::BarComponent < Folio::Console::ApplicationCo
     end
 
     ary
+  end
+
+  def s3_url
+    return @s3_url unless @s3_url.nil?
+    @s3_url = begin
+      h = session.dig(Folio::Console::Api::FileControllerBase::BATCH_SESSION_KEY, @file_klass.to_s, "download")
+
+      if h && h["url"] && h["timestamp"] && h["timestamp"] >= 15.minutes.ago.to_i
+        h["url"]
+      else
+        false
+      end
+    end
   end
 end

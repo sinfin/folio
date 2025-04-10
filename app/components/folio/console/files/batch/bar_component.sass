@@ -1,13 +1,15 @@
 .f-c-files-batch-bar
   margin: 0 0 $grid-gutter-width
+  position: relative
+  background: $gray-200
 
   &__flex
-    background: $gray-200
     padding: px-to-rem(8px) px-to-rem(22px)
     display: flex
     align-items: center
     flex-wrap: wrap
     gap: px-to-rem(8px)
+    transition: $transition-base
 
   &__count-and-ico
     align-items: center
@@ -19,8 +21,27 @@
     position: relative
     transition: $transition-base
 
+  &__loader
+    transition: $transition-base
+    pointer-events: none
+
+  &__download
+    padding: px-to-rem(8px) px-to-rem(22px) px-to-rem(16px)
+
+  &__download-content
+    min-width: 0
+
+  &__download-link
+    overflow-wrap: break-word
+
   &[data-f-c-files-batch-bar-count-value="0"]
     display: none
 
-  &[data-f-c-files-batch-bar-loading-value="true"] &__count-and-ico
+  &[data-f-c-files-batch-bar-status-value="reloading"] &__count-and-ico
     opacity: 0.25
+
+  &:not([data-f-c-files-batch-bar-status-value="loading"]) &__loader
+    opacity: 0
+
+  &[data-f-c-files-batch-bar-status-value="loading"] &__flex
+    opacity: 0

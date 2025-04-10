@@ -12,3 +12,24 @@
     - buttons_data.each do |button_wrap_data, button_model|
       .f-c-files-batch-bar__button-wrap data=button_wrap_data
         == cell("folio/console/ui/button", button_model)
+
+  - if s3_url
+    .f-c-files-batch-bar__download.d-flex.align-items-center.gap-g
+      .f-c-files-batch-bar__download-content.flex-grow-1.flex-shrink-1
+        p.mb-2 #{t('.download_label')}:
+
+        a.f-c-files-batch-bar__download-link[
+          href=s3_url
+          target="_blank"
+          title=s3_url
+        ]
+          = s3_url
+
+      .f-c-files-batch-bar__download-copy.flex-shrink-0.flex-grow-0
+        == cell('folio/console/clipboard_copy', s3_url, icon_height: 24)
+
+  span.f-c-files-batch-bar__loader[
+    class="folio-loader"
+    class="folio-loader--small"
+    class="folio-loader--transparent"
+  ]

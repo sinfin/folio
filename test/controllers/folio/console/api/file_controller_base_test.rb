@@ -79,7 +79,7 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
       assert_response(:ok)
 
       parsed_component = Nokogiri::HTML(response.parsed_body["data"])
-      assert parsed_component.css(".f-c-files-batch-bar")
+      assert_equal 1, parsed_component.css(".f-c-files-batch-bar").size
       assert_equal("1", parsed_component.css(".f-c-files-batch-bar__count").first.text.strip)
 
       post url_for([:remove_from_batch, :console, :api, klass, format: :json]), params: {
@@ -88,7 +88,7 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
       assert_response(:ok)
 
       parsed_component = Nokogiri::HTML(response.parsed_body["data"])
-      assert parsed_component.css(".f-c-files-batch-bar")
+      assert_equal 1, parsed_component.css(".f-c-files-batch-bar").size
       assert_equal("0", parsed_component.css(".f-c-files-batch-bar__count").first.text.strip)
     end
 
@@ -106,7 +106,7 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
       assert_response(:ok)
 
       parsed_component = Nokogiri::HTML(response.parsed_body["data"])
-      assert parsed_component.css(".f-c-files-batch-bar")
+      assert_equal 1, parsed_component.css(".f-c-files-batch-bar").size
       assert_equal("3", parsed_component.css(".f-c-files-batch-bar__count").first.text.strip)
 
       # make file indestructible
@@ -126,8 +126,37 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
       assert_equal 0, klass.where(id: file_ids).count, "Delete file_ids that were added to batch"
 
       parsed_component = Nokogiri::HTML(response.parsed_body["data"])
-      assert parsed_component.css(".f-c-files-batch-bar")
+      assert_equal 1, parsed_component.css(".f-c-files-batch-bar").size
       assert_equal("0", parsed_component.css(".f-c-files-batch-bar__count").first.text.strip)
+    end
+
+    test "#{klass} - batch_download" do
+      files = create_list(klass.model_name.singular, 3)
+      file_ids = files.map(&:id)
+      assert_equal 3, klass.where(id: file_ids).count
+
+      post url_for([:batch_download, :console, :api, klass, format: :json]), params: { file_ids: }
+
+      assert_response(:bad_request)
+      assert_equal 3, klass.where(id: file_ids).count, "Don't download file_ids that were not added to batch"
+
+      post url_for([:add_to_batch, :console, :api, klass, format: :json]), params: { file_ids: }
+      assert_response(:ok)
+
+      parsed_component = Nokogiri::HTML(response.parsed_body["data"])
+      assert_equal 1, parsed_component.css(".f-c-files-batch-bar").size
+      assert_equal 0, parsed_component.css(".f-c-files-batch-bar__download").size
+      assert_equal("3", parsed_component.css(".f-c-files-batch-bar__count").first.text.strip)
+
+      post url_for([:batch_download, :console, :api, klass, format: :json]), params: { file_ids: }
+
+      assert_response(:ok)
+      assert_equal 3, klass.where(id: file_ids).count, "Delete file_ids that were added to batch"
+
+      parsed_component = Nokogiri::HTML(response.parsed_body["data"])
+      assert_equal 1, parsed_component.css(".f-c-files-batch-bar").size
+      assert_equal 1, parsed_component.css(".f-c-files-batch-bar__download").size
+      assert_equal("3", parsed_component.css(".f-c-files-batch-bar__count").first.text.strip)
     end
   end
 end

@@ -3,7 +3,7 @@
 window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimulus.Controller {
   static values = {
     baseApiUrl: String,
-    loading: Boolean,
+    status: String,
     fileIdsJson: String
   }
 
@@ -23,7 +23,10 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
   }
 
   download () {
-    console.log('download')
+    this.ajax({
+      url: `${this.baseApiUrlValue}/batch_download`,
+      data: { file_ids: JSON.parse(this.fileIdsJsonValue) }
+    })
   }
 
   delete () {
@@ -87,24 +90,24 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
 
     if (!url || !data) return
 
-    this.ajax({ url, data })
+    this.ajax({ url, data, status: 'reloading' })
   }
 
-  ajax ({ url, data, apiMethod = 'apiPost' }) {
-    this.loadingValue = true
+  ajax ({ url, data, apiMethod = 'apiPost', status = 'loading' }) {
+    this.statusValue = status
     this.abortController = new AbortController()
 
     window.Folio.Api[apiMethod](url, data, this.abortController.signal).then((res) => {
       if (res && res.data) {
         this.element.outerHTML = res.data
-        this.loadingValue = false
+        this.statusValue = 'loaded'
       } else {
         throw new Error('Failed to perform batch action')
       }
     }).catch((error) => {
       const message = error.message || 'An error occurred'
       window.FolioConsole.Flash.alert(message)
-      this.loadingValue = false
+      this.statusValue = 'loaded'
     }).finally(() => {
       delete this.abortController
     })
