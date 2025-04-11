@@ -47,6 +47,7 @@ module Folio::HasNewsletterSubscriptions
     end
 
     def update_newsletter_subscriptions
+      return unless saved_changes.key?("email") || saved_changes.key?("invitation_accepted_at")
       return unless newsletter_subscriptions_enabled?
       return unless auth_site.present?
 
