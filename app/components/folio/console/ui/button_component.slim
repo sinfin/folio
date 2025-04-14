@@ -1,0 +1,25 @@
+*tag
+  - if left?
+    = left
+
+  - if @icon
+    = folio_icon(@icon,
+                 height: @icon_height,
+                 class_name: "f-c-ui-button__icon")
+
+  - if @loader
+    span.f-c-ui-button__loader-wrap
+      span.f-c-ui-button__loader[
+        class="folio-loader"
+        class="folio-loader--transparent"
+        class="folio-loader--tiny"
+        class="folio-loader--white"
+      ]
+
+  - if @label
+    span.f-c-ui-button__label = @label
+
+  - if @right_icon
+    = folio_icon(@right_icon,
+                 height: @icon_height,
+                 class_name: "f-c-ui-button__right-icon")

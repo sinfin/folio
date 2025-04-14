@@ -50,10 +50,9 @@
                       = additional_select(f, key, data)
 
                     .input-group-append.f-c-links-modal-url-picker__list-filter-append
-                      == cell("folio/console/ui/button",
-                              variant: :medium_dark,
-                              data: stimulus_action(click: "resetAdditionalFilter"),
-                              icon: :close)
+                      = render(Folio::Console::Ui::ButtonComponent.new(variant: :medium_dark,
+                                                                       data: stimulus_action(click: "resetAdditionalFilter"),
+                                                                       icon: :close))
 
                 div[
                   class="f-c-links-modal-url-picker__list-filter"
@@ -65,7 +64,7 @@
                             input_html: { class: "f-c-links-modal-url-picker__list-filter-input--published_within" },
                             as: :date_range)
 
-              == cell('folio/console/ui/button', cancel_button_model)
+              = render(Folio::Console::Ui::ButtonComponent.new(**cancel_button_model))
 
           .f-c-links-modal-url-picker__list-inner
             .f-c-links-modal-url-picker__list-content[

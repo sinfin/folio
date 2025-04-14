@@ -1,5 +1,5 @@
 .dropdown
-  == cell('folio/console/ui/button', button_model)
+  = render_view_component(Folio::Console::Ui::ButtonComponent.new(**button_model))
 
   .dropdown-menu class=('dropdown-menu-right' if menu_align == :right)
     - links.each do |link|

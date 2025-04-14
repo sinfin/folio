@@ -24,11 +24,10 @@ div class=class_name
     == options[:right]
 
   - if options[:csv]
-    == cell('folio/console/ui/button',
-            variant: :tertiary,
-            href: csv_path,
-            icon: :download,
-            label: options[:csv].try(:[], :label) || "CSV")
+    = render_view_component(Folio::Console::Ui::ButtonComponent.new(variant: :tertiary,
+                                                                    href: csv_path,
+                                                                    icon: :download,
+                                                                    label: options[:csv].try(:[], :label) || "CSV"))
 
   - if options[:new_button] != false
     == cell('folio/console/index/new_button',

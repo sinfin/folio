@@ -88,7 +88,7 @@ class Folio::Console::UiController < Folio::Console::BaseController
       }
     }
 
-    @button_model_for_notifications_form = [
+    @buttons_model_for_notifications_form = [
       {
         variant: :info,
         label: "Modal with submit",
@@ -106,7 +106,7 @@ class Folio::Console::UiController < Folio::Console::BaseController
       }
     ]
 
-    @button_model_for_form_modals = [
+    @buttons_model_for_form_modals = [
       {
         variant: :info,
         label: "Folio::Current.user edit",

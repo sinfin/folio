@@ -109,6 +109,8 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
   end
 
   def query_buttons
+    return [] # TODO: component
+
     submit = cell("folio/console/ui/button",
                   variant: :icon,
                   type: :submit,

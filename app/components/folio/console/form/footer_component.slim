@@ -10,14 +10,16 @@
       - unless @audit
         .f-c-form-footer__left
           - if @f
-            == cell('folio/console/ui/button',
-                    type: :submit,
-                    class: 'f-c-form-footer__btn f-c-form-footer__btn--submit',
-                    variant: :primary,
-                    label: t("folio.console.actions.submit"),
-                    icon: :check,
-                    data: stimulus_target('submitButton').merge(test_id: "submit-button"),
-                    html_left: content_tag(:span, nil, class: "f-c-form-footer__submit-btn-indicator", data: stimulus_target('submitButtonIndicator')))
+            = render(Folio::Console::Ui::ButtonComponent.new(type: :submit,
+                                                             class_name: 'f-c-form-footer__btn f-c-form-footer__btn--submit',
+                                                             variant: :primary,
+                                                             label: t("folio.console.actions.submit"),
+                                                             icon: :check,
+                                                             data: stimulus_target('submitButton').merge(test_id: "submit-button"))) do |c|
+              - c.with_left
+                span.f-c-form-footer__submit-btn-indicator[
+                  data=stimulus_target('submitButtonIndicator')
+                ]
 
             .f-c-form-footer__status
               - if @record && @record.persisted?
@@ -37,14 +39,13 @@
 
       .f-c-form-footer__right
         - if preview_path_with_default
-          == cell('folio/console/ui/button',
-                  href: preview_path_with_default,
-                  class: 'f-c-form-footer__btn f-c-form-footer__btn--preview',
-                  variant: :gray,
-                  label: t('folio.console.actions.preview'),
-                  icon: :open_in_new,
-                  target: "_blank",
-                  data: { test_id: "preview-button" })
+          = render(Folio::Console::Ui::ButtonComponent.new(href: preview_path_with_default,
+                                                           class_name: 'f-c-form-footer__btn f-c-form-footer__btn--preview',
+                                                           variant: :gray,
+                                                           label: t('folio.console.actions.preview'),
+                                                           icon: :open_in_new,
+                                                           target: "_blank",
+                                                           data: { test_id: "preview-button" }))
 
         .f-c-form-footer__collapsible
           .f-c-form-footer__collapsible-backdrop data=stimulus_action_unless_audit(click: "toggleCollapsed")
@@ -82,11 +83,10 @@
                         icon: :link,
                         icon_options: { height: 16 })
 
-          == cell('folio/console/ui/button',
-                  class: 'f-c-form-footer__btn f-c-form-footer__btn--collapsible',
-                  variant: :gray,
-                  icon: :dots_vertical,
-                  data: (stimulus_action_unless_audit(click: "toggleCollapsed") || {}).merge(test_id: "dropdown-button"))
+          = render(Folio::Console::Ui::ButtonComponent.new(class_name: 'f-c-form-footer__btn f-c-form-footer__btn--collapsible',
+                                                           variant: :gray,
+                                                           icon: :dots_vertical,
+                                                           data: (stimulus_action_unless_audit(click: "toggleCollapsed") || {}).merge(test_id: "dropdown-button")))
 
 javascript:
   if (window.sessionStorage.getItem('fCAutosaveUiState')) {

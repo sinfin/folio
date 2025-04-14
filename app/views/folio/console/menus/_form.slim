@@ -1,10 +1,9 @@
 = form_header f
   - if f.object.persisted?
-    == cell('folio/console/ui/button',
-            variant: :success,
-            class: 'f-c-js-menus-form-add',
-            icon: :plus,
-            label: t('folio.console.javascript.addMenuItem'))
+    = render(Folio::Console::Ui::ButtonComponent.new(variant: :success,
+                                                     class_name: 'f-c-js-menus-form-add',
+                                                     icon: :plus,
+                                                     label: t('folio.console.javascript.addMenuItem'))
 
 - if @errors.present?
   = render(Folio::Console::Ui::AlertComponent.new(variant: :danger))

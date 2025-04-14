@@ -25,11 +25,10 @@
                 show_form_controls: true)
 
     .f-c-file-picker__btn-wrap
-      == cell('folio/console/ui/button',
-              class: "f-c-file-picker__btn",
-              variant: :success,
-              icon: :plus,
-              "data-action" => "f-c-file-picker#onBtnClick")
+      = render_view_component(Folio::Console::Ui::ButtonComponent.new(class_name: "f-c-file-picker__btn",
+                                                                      variant: :success,
+                                                                      icon: :plus,
+                                                                      data: { action: "f-c-file-picker#onBtnClick" }))
 
     - if hint = hint_for(fp)
       small.f-c-file-picker__hint.form-text.text-muted

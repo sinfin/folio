@@ -3,18 +3,18 @@ ruby:
     {
       variant: :primary,
       label: "window.Folio.Api.apiGet",
-      class: "f-c-dummy-playgrounds-api-button"
+      class_name: "f-c-dummy-playgrounds-api-button"
     },
     {
       variant: :warning,
       label: "window.Folio.Api.apiGet and abort",
-      class: "f-c-dummy-playgrounds-api-button f-c-dummy-playgrounds-api-button--abort"
+      class_name: "f-c-dummy-playgrounds-api-button f-c-dummy-playgrounds-api-button--abort"
     }
   ]
 
 h1 API
 
-== cell('folio/console/ui/buttons', buttons)
+= render(Folio::Console::Ui::ButtonsComponent.new(buttons:))
 
 pre.rounded.bg-medium-gray.p-5.mt-5
   code.f-c-dummy-playgrounds-api-code

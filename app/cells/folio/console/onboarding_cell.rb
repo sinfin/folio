@@ -44,12 +44,13 @@ class Folio::Console::OnboardingCell < Folio::ConsoleCell
   end
 
   def button(data)
-    cell("folio/console/ui/button",
-         class: "f-c-onboarding__btn",
-         variant: (data[:done] || data[:disabled]) ? :secondary : :success,
-         label: data[:action],
-         disabled: data[:disabled],
-         right_icon: data[:done] ? nil : :arrow_right,
-         href: data[:url])
+    render_view_component(Folio::Console::Ui::ButtonComponent.new(
+      class_name: "f-c-onboarding__btn",
+      variant: (data[:done] || data[:disabled]) ? :secondary : :success,
+      label: data[:action],
+      disabled: data[:disabled],
+      right_icon: data[:done] ? nil : :arrow_right,
+      href: data[:url]
+    ))
   end
 end

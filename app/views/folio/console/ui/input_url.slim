@@ -68,10 +68,9 @@ h2 Input URL
 
   hr.my-5
 
-  == cell('folio/console/ui/button',
-          type: :submit,
-          variant: :primary,
-          label: t("folio.console.actions.submit"))
+  = render(Folio::Console::Ui::ButtonComponent.new(type: :submit,
+                                                   variant: :primary,
+                                                   label: t("folio.console.actions.submit"))
 
 javascript:
   for (const wrap of document.querySelectorAll('.f-c-uidemo-wrap')) {
