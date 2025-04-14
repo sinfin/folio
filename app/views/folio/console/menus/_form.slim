@@ -7,9 +7,11 @@
             label: t('folio.console.javascript.addMenuItem'))
 
 - if @errors.present?
-  == cell('folio/console/ui/alert',
-          @errors.join("<br>"),
-          variant: :danger)
+  = render(Folio::Console::Ui::AlertComponent.new(variant: :danger))
+    - @errors.each_with_index do |error, i|
+      - unless i.zero?
+        br
+      = error
 
 - if f.object.new_record?
   = f.input :title, hint: false

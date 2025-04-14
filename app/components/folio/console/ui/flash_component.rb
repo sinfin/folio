@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::Console::FlashCell < Folio::ConsoleCell
+class Folio::Console::Ui::FlashComponent < Folio::Console::ApplicationComponent
   VARIANTS = {
     alert: :danger,
     error: :danger,
@@ -9,4 +9,8 @@ class Folio::Console::FlashCell < Folio::ConsoleCell
     success: :success,
     loader: :loader,
   }
+
+  def initialize(flash:)
+    @flash = flash
+  end
 end

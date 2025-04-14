@@ -54,13 +54,4 @@ class Folio::Users::ImpersonatingBarComponent < Folio::ApplicationComponent
                                 button:)
     end
   end
-
-  def console_alert(&block)
-    cell("folio/console/ui/alert",
-         capture(&block),
-         icon: :user,
-         variant: :danger,
-         closable: false,
-         class_name: "m-0")
-  end
 end

@@ -1,6 +1,6 @@
 .f-users-impersonating-bar
   - if console?
-    == console_alert
+    = render(Folio::Console::Ui::AlertComponent.new(icon: :user, variant: :danger, closable: false, class_name: "m-0"))
       .d-flex.gap-g.align-items-center
         .flex-grow-1 = label
 

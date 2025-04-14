@@ -5,7 +5,7 @@ html.f-c-layout-html.f-c-layout-html--devise lang=I18n.locale
 
   body.f-c-layout-body.f-c-layout-body--devise
     .f-c-layout-main.f-c-layout-main--devise
-      == cell('folio/console/flash', flash)
+      = render(Folio::Console::Ui::FlashComponent.new(flash:))
 
       .f-c-layout-devise
         .f-c-layout-devise__inner

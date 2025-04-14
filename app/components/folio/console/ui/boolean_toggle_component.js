@@ -63,7 +63,7 @@ window.Folio.Stimulus.register('f-c-ui-boolean-toggle', class extends window.Sti
         }
       }
     }).catch((res) => {
-      window.FolioConsole.Flash.alert(res.message)
+      window.FolioConsole.Ui.Flash.alert(res.message)
 
       this.element.classList.remove(this.loadingClass)
       input.checked = !input.checked

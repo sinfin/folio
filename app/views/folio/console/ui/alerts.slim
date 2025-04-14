@@ -4,7 +4,7 @@ h2 Alerts
 
 h3 Flash
 
-== cell('folio/console/flash', flash)
+= render(Folio::Console::Ui::FlashComponent.new(flash:))
 
 .mt-g
   == cell('folio/console/ui/buttons',
@@ -13,10 +13,8 @@ h3 Flash
 h3 Regular
 
 - %i[info success warning danger loader].each do |variant|
-  == cell('folio/console/ui/alert',
-          "#{variant.capitalize} #{@lorem_ipsum}",
-          variant:)
+  = render(Folio::Console::Ui::AlertComponent.new(variant:))
+    = "#{variant.capitalize} #{@lorem_ipsum}"
 
-  == cell('folio/console/ui/alert',
-          "#{variant.capitalize} #{@lorem_ipsum[0..30]}",
-          variant:)
+  = render(Folio::Console::Ui::AlertComponent.new(variant:))
+    = "#{variant.capitalize} #{@lorem_ipsum[0..30]}"

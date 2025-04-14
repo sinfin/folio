@@ -88,7 +88,7 @@ function * destroyFileThumbnailPerform (action) {
     const url = urlWithAffix(action.filesUrl, `/${action.file.id}/destroy_file_thumbnail`)
     yield call(apiPost, url, { ...action.params, thumb_key: action.thumbKey })
   } catch (e) {
-    window.FolioConsole.Flash.alert(e.message)
+    window.FolioConsole.Ui.Flash.alert(e.message)
     yield put(destroyFileThumbnailFailed(action.fileType, action.filesUrl, action.file, action.thumbKey, action.thumb))
   }
 }
@@ -105,7 +105,7 @@ function * updateFileThumbnailPerform (action) {
     const response = yield call(apiPost, url, { ...action.params, thumb_key: action.thumbKey })
     yield put(updatedFileModalFile(response.data))
   } catch (e) {
-    window.FolioConsole.Flash.alert(e.message)
+    window.FolioConsole.Ui.Flash.alert(e.message)
   }
 }
 
@@ -128,7 +128,7 @@ function * uploadNewFileInsteadPerform (action) {
       existingId: action.file.id
     })
   } catch (e) {
-    window.FolioConsole.Flash.alert(`${e.status}: ${e.statusText}`)
+    window.FolioConsole.Ui.Flash.alert(`${e.status}: ${e.statusText}`)
   }
 }
 
@@ -163,7 +163,7 @@ function * openFileModalPerform (action) {
     const response = yield call(apiGet, url)
     yield put(loadedFileModalPlacements(action.file, response.data, response.meta))
   } catch (e) {
-    window.FolioConsole.Flash.alert(e.message)
+    window.FolioConsole.Ui.Flash.alert(e.message)
   }
 }
 
@@ -179,7 +179,7 @@ function * closeFileModalPerform (action) {
       window.history.replaceState(null, '', indexUrl)
     }
   } catch (e) {
-    window.FolioConsole.Flash.alert(e.message)
+    window.FolioConsole.Ui.Flash.alert(e.message)
   }
 }
 
@@ -193,7 +193,7 @@ function * changeFilePlacementsPagePerform (action) {
     const response = yield call(apiGet, url)
     yield put(loadedFileModalPlacements(action.file, response.data, response.meta))
   } catch (e) {
-    window.FolioConsole.Flash.alert(e.message)
+    window.FolioConsole.Ui.Flash.alert(e.message)
   }
 }
 

@@ -104,7 +104,7 @@ class FileModal extends Component {
             this.props.dispatch(updatedFiles(this.props.fileModal.fileType, [msg.data.file]))
             this.props.dispatch(uploadNewFileInsteadSuccess(msg.data.file))
           } else if (msg.data.type === 'replace-failure') {
-            window.FolioConsole.Flash.alert(msg.data.errors.join('<br>'))
+            window.FolioConsole.Ui.Flash.alert(msg.data.errors.join('<br>'))
             this.props.dispatch(uploadNewFileInsteadFailure(this.props.fileModal.file))
           }
         }

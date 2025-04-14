@@ -1,7 +1,8 @@
 window.FolioConsole = window.FolioConsole || {}
-window.FolioConsole.Flash = {}
+window.FolioConsole.Ui = window.FolioConsole.Ui || {}
+window.FolioConsole.Ui.Flash = {}
 
-window.FolioConsole.Flash.flash = (data) => {
+window.FolioConsole.Ui.Flash.flash = (data) => {
   const contents = document.querySelectorAll('.f-c-ui-alert__content')
 
   for (const content of contents) {
@@ -24,51 +25,51 @@ window.FolioConsole.Flash.flash = (data) => {
   if (modal) {
     modal.querySelector('.modal-content').insertBefore(alert, modal.querySelector('.modal-body'))
   } else {
-    document.querySelector('.f-c-flash-wrap').appendChild(alert)
+    document.querySelector('.f-c-ui-flash').appendChild(alert)
   }
 }
 
-window.FolioConsole.Flash.success = (content, data = {}) => {
-  return window.FolioConsole.Flash.flash({
+window.FolioConsole.Ui.Flash.success = (content, data = {}) => {
+  return window.FolioConsole.Ui.Flash.flash({
     ...data,
     content,
     variant: 'success'
   })
 }
 
-window.FolioConsole.Flash.alert = (content, data = {}) => {
-  return window.FolioConsole.Flash.flash({
+window.FolioConsole.Ui.Flash.alert = (content, data = {}) => {
+  return window.FolioConsole.Ui.Flash.flash({
     ...data,
     content,
     variant: 'danger'
   })
 }
 
-window.FolioConsole.Flash.loader = (content, data = {}) => {
-  return window.FolioConsole.Flash.flash({
+window.FolioConsole.Ui.Flash.loader = (content, data = {}) => {
+  return window.FolioConsole.Ui.Flash.flash({
     ...data,
     content,
     variant: 'loader'
   })
 }
 
-window.FolioConsole.Flash.clearFlashes = () => {
-  window.jQuery('.f-c-flash-wrap').html('')
+window.FolioConsole.Ui.Flash.clearFlashes = () => {
+  window.jQuery('.f-c-ui-flash').html('')
 }
 
-window.FolioConsole.Flash.flashMessageFromMeta = (response) => {
+window.FolioConsole.Ui.Flash.flashMessageFromMeta = (response) => {
   if (typeof response === 'object' && response.meta && response.meta.flash) {
     if (response.meta.flash.success) {
-      window.FolioConsole.Flash.success(response.meta.flash.success)
+      window.FolioConsole.Ui.Flash.success(response.meta.flash.success)
     } else if (response.meta.flash.alert) {
-      window.FolioConsole.Flash.alert(response.meta.flash.alert)
+      window.FolioConsole.Ui.Flash.alert(response.meta.flash.alert)
     }
   }
 }
 
-window.FolioConsole.Flash.flashMessageFromApiErrors = (response) => {
+window.FolioConsole.Ui.Flash.flashMessageFromApiErrors = (response) => {
   if (typeof response === 'object' && response.errors) {
     const flash = response.errors.map((obj) => `${obj.title} - ${obj.detail}`)
-    window.FolioConsole.Flash.alert(flash)
+    window.FolioConsole.Ui.Flash.alert(flash)
   }
 }

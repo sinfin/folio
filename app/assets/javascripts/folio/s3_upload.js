@@ -123,9 +123,9 @@ window.Folio.S3Upload.createDropzone = ({
 
       if (window.FolioConsole && window.FolioConsole.Flash) {
         if (typeof message === 'string') {
-          window.FolioConsole.Flash.alert(message)
+          window.FolioConsole.Ui.Flash.alert(message)
         } else {
-          window.FolioConsole.Flash.flashMessageFromApiErrors(message)
+          window.FolioConsole.Ui.Flash.flashMessageFromApiErrors(message)
         }
       }
 
@@ -240,7 +240,7 @@ window.Folio.S3Upload.createDropzone = ({
       case 'failure': {
         if (msg.data.errors && msg.data.errors.length) {
           if (window.FolioConsole && window.FolioConsole.Flash) {
-            window.FolioConsole.Flash.alert(msg.data.errors.join('<br>'))
+            window.FolioConsole.Ui.Flash.alert(msg.data.errors.join('<br>'))
           } else {
             window.alert(msg.data.errors.join('\n'))
           }
