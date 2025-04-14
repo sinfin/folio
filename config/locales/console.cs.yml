@@ -106,7 +106,7 @@ cs:
           success: Šablony upraveny.
       create: Vytvořit
       current_users:
-        console_url_bar:
+        console_url_bar_component:
           title: Tuto stránku nyní upravuje
           text: Vyčkejte, až dokončí úpravy. Při současné úpravě by mohlo dojít ke ztrátě rozpracovaného obsahu.
       delete: Smazat
