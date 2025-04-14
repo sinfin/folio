@@ -1,0 +1,11 @@
+.f-c-ui-badge[
+  class="badge"
+  class="bg-#{@variant}"
+  class=(@variant == "white" ? "text-reset" : nil)
+  class=(@size ? "f-c-ui-badge--size-#{@size}" : nil)
+  class="f-c-ui-badge--#{@variant}"
+]
+  - if @icon
+    = folio_icon(@icon, height: 16)
+
+  = content
