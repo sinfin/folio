@@ -10,6 +10,14 @@ module Folio::Console::PreviewUrlFor
       else
         record.locale
       end
+    elsif ::Rails.application.config.folio_console_add_locale_to_preview_links
+      if Folio::Current.site.locale.present? &&
+         Folio::Current.site.locales.present? &&
+         Folio::Current.site.locales.exclude?(I18n.locale.to_s)
+        Folio::Current.site.locale
+      else
+        I18n.locale
+      end
     else
       nil
     end
