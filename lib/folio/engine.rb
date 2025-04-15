@@ -41,6 +41,7 @@ module Folio
     config.folio_console_files_additional_html_api_url_lambda = -> (file) { nil }
     config.folio_console_clonable_enabled = true
     config.folio_console_audited_revisions_limit = 50
+    config.folio_console_preview_url_for_procs = nil
 
     config.folio_newsletter_subscription_service = :mailchimp
     config.folio_server_names = []
