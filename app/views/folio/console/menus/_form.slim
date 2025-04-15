@@ -3,7 +3,7 @@
     = render(Folio::Console::Ui::ButtonComponent.new(variant: :success,
                                                      class_name: 'f-c-js-menus-form-add',
                                                      icon: :plus,
-                                                     label: t('folio.console.javascript.addMenuItem'))
+                                                     label: t('folio.console.javascript.addMenuItem')))
 
 - if @errors.present?
   = render(Folio::Console::Ui::AlertComponent.new(variant: :danger))

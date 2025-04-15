@@ -9,7 +9,6 @@
           = render(Folio::Console::Ui::ButtonComponent.new(label: t(".restore"),
                                                            href: restore_url,
                                                            data: { confirm: t("folio.console.confirmation"), method: :post }))
-      = restore_link
 
       == cell('folio/console/ui/with_icon',
               t('.show_current'),

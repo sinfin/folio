@@ -71,7 +71,7 @@ class Folio::Console::Ui::ButtonComponent < Folio::Console::ApplicationComponent
       h[:type] = @type
     end
 
-    h[:class] = "d-ui-button btn btn-#{@variant}"
+    h[:class] = "f-c-ui-button btn btn-#{@variant}"
 
     if @confirm
       h[:data][:confirm] = @confirm == true ? t("folio.confirmation") : @confirm
@@ -86,10 +86,10 @@ class Folio::Console::Ui::ButtonComponent < Folio::Console::ApplicationComponent
     end
 
     if @label.present?
-      h[:class] += " d-ui-button--label"
+      h[:class] += " f-c-ui-button--label"
 
       if @hide_label_on_mobile &&
-        h[:class] += " d-ui-button--hide-label-on-mobile"
+        h[:class] += " f-c-ui-button--hide-label-on-mobile"
       end
     end
 
