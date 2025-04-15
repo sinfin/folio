@@ -32,12 +32,14 @@ module Folio::Console::PreviewUrlFor
     else
       nil
     end
-  rescue NoMethodError
+  rescue NoMethodError => e
+    ::Rails.logger.error("Error in preview_url_for_page: #{e.message} (Record class: #{record.class})")
+    ::Rails.logger.error(e.backtrace.join("\n")) if e.backtrace
     nil
   end
 
   def preview_url_for(record)
-    procs = Rails.application.config.folio_console_preview_url_for_procs
+    procs = ::Rails.application.config.folio_console_preview_url_for_procs
 
     if procs.present?
       target_proc = procs[record.class.to_s] || procs[record.class.base_class.to_s]
@@ -45,7 +47,9 @@ module Folio::Console::PreviewUrlFor
       if target_proc
         begin
           return target_proc.call(record, controller)
-        rescue StandardError
+        rescue StandardError => e
+          ::Rails.logger.error("Error in preview_url_for proc: #{e.message} (Record class: #{record.class})")
+          ::Rails.logger.error(e.backtrace.join("\n")) if e.backtrace
         end
 
         return nil
@@ -76,7 +80,9 @@ module Folio::Console::PreviewUrlFor
 
     begin
       url_for([record, args])
-    rescue NoMethodError
+    rescue NoMethodError => e
+      ::Rails.logger.error("Error in preview_url_for: #{e.message} (Record class: #{record.class})")
+      ::Rails.logger.error(e.backtrace.join("\n")) if e.backtrace
       nil
     end
   end
