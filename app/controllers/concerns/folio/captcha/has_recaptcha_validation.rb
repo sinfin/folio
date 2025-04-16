@@ -23,4 +23,9 @@ module Folio::Captcha::HasRecaptchaValidation
     def recaptcha_failure_redirect_path
       "/"
     end
+
+    # disable default flash error
+    def recaptcha_flash_supported?
+      false
+    end
 end
