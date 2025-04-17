@@ -13,7 +13,7 @@ module Folio::Thumbnails
 
   class_methods do
     def should_serialize_thumbnail_sizes?
-      if defined?(Folio::SessionAttachment::Base) && self <= Folio::SessionAttachment::Base
+      if defined?(Folio::SessionAttachment) && self <= Folio::SessionAttachment
         false
       else
         true
@@ -30,9 +30,12 @@ module Folio::Thumbnails
       serialize :thumbnail_sizes, type: Hash, coder: YAML
     end
 
-    before_validation :reset_thumbnails
+    # TODO: do we need? No, I think
+    # before_validation :reset_thumbnails
 
     after_save :run_set_additional_data_job
+
+    # TODO: not needed, deletion will be done somehow
     before_destroy :delete_thumbnails
   end
 

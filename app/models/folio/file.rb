@@ -1,16 +1,17 @@
 # frozen_string_literal: true
 
 class Folio::File < Folio::ApplicationRecord
-  include Folio::DragonflyFormatValidation
+  # include Folio::DragonflyFormatValidation
   include Folio::HasHashId
   include Folio::SanitizeFilename
   include Folio::Taggable
-  include Folio::Thumbnails
+  # include Folio::Thumbnails
   include Folio::StiPreload
-  include Folio::HasAasmStates
   include Folio::BelongsToSite
+  include Folio::Aws::FileProcessable
 
-  READY_STATE = :ready
+  # self.abstract_class = true
+  # self.table_name = "folio_files"
 
   DEFAULT_GRAVITIES = %w[
     center
@@ -20,17 +21,16 @@ class Folio::File < Folio::ApplicationRecord
     west
   ]
 
-  dragonfly_accessor :file do
-    after_assign :sanitize_filename
-  end
-
   # Relations
   has_many :file_placements, class_name: "Folio::FilePlacement::Base"
+
+  # TODO: this throws error or I don't know how to use it yet. I presume problem is :placement is not defined by
+  #       default in Folio::FilePlacement::Base. Instead it is somehow defined by method. But then it should be done
+  #       same way here.
   has_many :placements, through: :file_placements
 
   # Validations
-  validates :file, :type,
-            presence: true
+  validates :type, presence: true
 
   validates :default_gravity,
             inclusion: { in: DEFAULT_GRAVITIES },
@@ -85,42 +85,29 @@ class Folio::File < Folio::ApplicationRecord
                     tsearch: { prefix: true }
                   }
 
+  # TODO: Bellow both before filters should be implemented in child class. I would expect something like
+  #       `before_action :set_basic_data`
+  #       Which will be empty here and child classes add it's logic by overriding.
+  #       I think this should be in Folio::File::Video and Folio::File::Audio
   before_validation :set_file_track_duration, if: :file_uid_changed?
+  # TODO: I think this should be in Folio::File::Video
   before_validation :set_video_file_dimensions, if: :file_uid_changed?
+
   before_save :set_file_name_for_search, if: :file_name_changed?
   before_destroy :check_usage_before_destroy
-  after_save :run_after_save_job
-  after_commit :process!, if: :attached_file_changed?
+
+  # TODO: this should be done by metadata update. It stores size of file and touch (update_at) all placements
+  # after_save :run_after_save_job
+
+  # TODO: again probably not needed because files are processed by lambda
+  # after_commit :process!, if: :attached_file_changed?
+
+  # TODO: why is this here? It's empty method and no child overrides it? It's in some concerns but the aren't included
+  #       in any child.
   after_destroy :destroy_attached_file
 
+  # TODO: probably remove it's part of `after_save :run_after_save_job`
   attr_accessor :dont_run_after_save_jobs
-
-  aasm do
-    state :unprocessed, initial: true, color: :yellow
-    state :processing, color: :orange
-    state READY_STATE, color: :green
-    state :processing_failed, color: :red
-
-    event :process do
-      transitions from: :unprocessed, to: :processing
-      transitions from: READY_STATE, to: :processing
-      after :process_attached_file
-    end
-
-    event :processing_done do
-      transitions from: :processing, to: READY_STATE
-      transitions from: READY_STATE, to: READY_STATE
-    end
-
-    event :processing_failed do
-      transitions from: :processing, to: :processing_failed
-    end
-
-    event :reprocess do
-      transitions from: READY_STATE, to: :processing
-    end
-  end
-
 
   def title
     file_name
@@ -159,16 +146,16 @@ class Folio::File < Folio::ApplicationRecord
 
   def self.sanitize_filename_for_search(string)
     string.to_s.gsub("-", "{d}")
-               .gsub("_", "{u}")
+          .gsub("_", "{u}")
   end
 
-  def run_after_save_job
-    return if dont_run_after_save_jobs
-    # updating placements
-    return if ENV["SKIP_FOLIO_FILE_AFTER_SAVE_JOB"]
-    return if Rails.env.test? && !Rails.application.config.try(:folio_testing_after_save_job)
-    Folio::Files::AfterSaveJob.perform_later(self)
-  end
+  # def run_after_save_job
+  #   return if dont_run_after_save_jobs
+  #   # updating placements
+  #   return if ENV["SKIP_FOLIO_FILE_AFTER_SAVE_JOB"]
+  #   return if Rails.env.test? && !Rails.application.config.try(:folio_testing_after_save_job)
+  #   Folio::Files::AfterSaveJob.perform_later(self)
+  # end
 
   def process_attached_file
     regenerate_thumbnails if try(:thumbnailable?)
@@ -185,7 +172,13 @@ class Folio::File < Folio::ApplicationRecord
   def regenerate_thumbnails
     try(:admin_thumb, immediate: true)
     if try(:thumbnail_sizes).is_a?(Hash)
-      thumbnail_sizes.keys.each { |t_key| file.thumb(t_key) }
+      # thumbnail_sizes.keys.each { |t_key| file.thumb(t_key) }
+      # TODO: we need to set new version to force lambda to regenerate thumbnail
+      #       path should be like /<base_path>/<original_file_uuid>/<thumbnail_uuid>/<version>
+      #       in this case lambda can automatically remove old file or we can do it by some job worker
+      thumbnail_sizes.keys.each do |key|
+        key[:version] += 1
+      end
     end
   end
 
@@ -220,7 +213,7 @@ class Folio::File < Folio::ApplicationRecord
 
   def screenshot_time_in_ffmpeg_format
     if file_track_duration
-      quarter = file_track_duration / 4  # take screenshot at 1/4 of the video
+      quarter = file_track_duration / 4 # take screenshot at 1/4 of the video
 
       seconds = quarter
       minutes = seconds / 60
@@ -258,6 +251,7 @@ class Folio::File < Folio::ApplicationRecord
   end
 
   private
+
     def set_file_name_for_search
       self.file_name_for_search = self.class.sanitize_filename_for_search(file_name)
     end

@@ -12,7 +12,7 @@ module Folio::ContentTemplateFormMock
 end
 
 class Folio::ContentTemplate < Folio::ApplicationRecord
-  include Folio::InheritenceBaseNaming
+  include Folio::InheritanceBaseNaming
   include Folio::Positionable
   include Folio::ContentTemplateFormMock
   include Folio::StiPreload

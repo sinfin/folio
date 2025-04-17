@@ -73,7 +73,7 @@ module Folio
     config.folio_direct_s3_upload_class_names = %w[
       Folio::File
       Folio::PrivateAttachment
-      Folio::SessionAttachment::Base
+      Folio::SessionAttachment
     ]
 
     config.folio_direct_s3_upload_allow_for_users = false

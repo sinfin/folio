@@ -7,7 +7,7 @@ class Folio::SessionAttachmentTest < ActiveSupport::TestCase
     id = "123"
     image = Folio::Engine.root.join("test/fixtures/folio/test.gif")
 
-    assert_not Folio::SessionAttachment::Base.new(web_session_id: id,
+    assert_not Folio::SessionAttachment.new(web_session_id: id,
                                                   file: image).valid?
 
     assert_not Folio::SessionAttachment::Document.new(web_session_id: id,
@@ -40,15 +40,15 @@ class Folio::SessionAttachmentTest < ActiveSupport::TestCase
     image = Folio::Engine.root.join("test/fixtures/folio/test.gif")
     sa = Dummy::SessionAttachment::Image.create!(file: image,
                                                  web_session_id: id)
-    assert_equal(1, Folio::SessionAttachment::Base.count)
+    assert_equal(1, Folio::SessionAttachment.count)
 
-    assert_difference("Folio::SessionAttachment::Base.count", 0) do
-      Folio::SessionAttachment::Base.clear_unpaired!
+    assert_difference("Folio::SessionAttachment.count", 0) do
+      Folio::SessionAttachment.clear_unpaired!
     end
 
-    assert_difference("Folio::SessionAttachment::Base.count", -1) do
+    assert_difference("Folio::SessionAttachment.count", -1) do
       sa.update_column(:created_at, 3.days.ago)
-      Folio::SessionAttachment::Base.clear_unpaired!
+      Folio::SessionAttachment.clear_unpaired!
     end
   end
 end
