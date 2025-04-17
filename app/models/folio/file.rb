@@ -7,10 +7,8 @@ class Folio::File < Folio::ApplicationRecord
   include Folio::Taggable
   include Folio::Thumbnails
   include Folio::StiPreload
-  include Folio::HasAasmStates
   include Folio::BelongsToSite
-
-  READY_STATE = :ready
+  include Folio::Aws::FileProcessable
 
   DEFAULT_GRAVITIES = %w[
     center
@@ -20,16 +18,20 @@ class Folio::File < Folio::ApplicationRecord
     west
   ]
 
-  dragonfly_accessor :file do
-    after_assign :sanitize_filename
-  end
+  # dragonfly_accessor :file do
+  #   after_assign :sanitize_filename
+  # end
 
   # Relations
   has_many :file_placements, class_name: "Folio::FilePlacement::Base"
+
+  # TODO: this throws error or I don't know how to use it yet. I presume problem is :placement is not defined by
+  #       default in Folio::FilePlacement::Base. Instead it is somehow defined by method. But then it should be done
+  #       same way here.
   has_many :placements, through: :file_placements
 
   # Validations
-  validates :file, :type,
+  validates :type,
             presence: true
 
   validates :default_gravity,
@@ -85,42 +87,29 @@ class Folio::File < Folio::ApplicationRecord
                     tsearch: { prefix: true }
                   }
 
+  # TODO: Bellow both before filters should be implemented in child class. I would expect something like
+  #       `before_action :set_basic_data`
+  #       Which will be empty here and child classes add it's logic by overriding.
+  #       I think this should be in Folio::File::Video and Folio::File::Audio
   before_validation :set_file_track_duration, if: :file_uid_changed?
+  # TODO: I think this should be in Folio::File::Video
   before_validation :set_video_file_dimensions, if: :file_uid_changed?
+
   before_save :set_file_name_for_search, if: :file_name_changed?
   before_destroy :check_usage_before_destroy
-  after_save :run_after_save_job
-  after_commit :process!, if: :attached_file_changed?
+
+  # TODO: this should be done by metadata update. It stores size of file and touch (update_at) all placements
+  # after_save :run_after_save_job
+
+  # TODO: again probably not needed because files are processed by lambda
+  # after_commit :process!, if: :attached_file_changed?
+
+  # TODO: why is this here? It's empty method and no child overrides it? It's in some concerns but the aren't included
+  #       in any child.
   after_destroy :destroy_attached_file
 
+  # TODO: probably remove it's part of `after_save :run_after_save_job`
   attr_accessor :dont_run_after_save_jobs
-
-  aasm do
-    state :unprocessed, initial: true, color: :yellow
-    state :processing, color: :orange
-    state READY_STATE, color: :green
-    state :processing_failed, color: :red
-
-    event :process do
-      transitions from: :unprocessed, to: :processing
-      transitions from: READY_STATE, to: :processing
-      after :process_attached_file
-    end
-
-    event :processing_done do
-      transitions from: :processing, to: READY_STATE
-      transitions from: READY_STATE, to: READY_STATE
-    end
-
-    event :processing_failed do
-      transitions from: :processing, to: :processing_failed
-    end
-
-    event :reprocess do
-      transitions from: READY_STATE, to: :processing
-    end
-  end
-
 
   def title
     file_name
@@ -158,8 +147,7 @@ class Folio::File < Folio::ApplicationRecord
   end
 
   def self.sanitize_filename_for_search(string)
-    string.to_s.gsub("-", "{d}")
-               .gsub("_", "{u}")
+    string.to_s.gsub("-", "{d}").gsub("_", "{u}")
   end
 
   def run_after_save_job
@@ -220,7 +208,7 @@ class Folio::File < Folio::ApplicationRecord
 
   def screenshot_time_in_ffmpeg_format
     if file_track_duration
-      quarter = file_track_duration / 4  # take screenshot at 1/4 of the video
+      quarter = file_track_duration / 4 # take screenshot at 1/4 of the video
 
       seconds = quarter
       minutes = seconds / 60

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::File::Video < Folio::File
-  validate_file_format %w[video/mp4 video/webm]
+  # validate_file_format %w[video/mp4 video/webm]
 
   def thumbnailable?
     true

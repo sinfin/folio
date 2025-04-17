@@ -30,10 +30,6 @@ class Folio::SiteUserLink < Folio::ApplicationRecord
   scope :locked, -> { where(["locked_at < ?", Time.current]) }
   scope :unlocked, -> { where(locked_at: nil) }
 
-  def self.non_nillifiable_fields
-    %w[roles]
-  end
-
   def validate_roles_from_site
     forbidden_roles = (roles.to_a.collect(&:to_s) - site.available_user_roles_ary.to_a)
     if forbidden_roles.present?

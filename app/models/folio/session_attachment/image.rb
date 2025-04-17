@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-class Folio::SessionAttachment::Image < Folio::SessionAttachment::Base
-  include Folio::DragonflyFormatValidation
+class Folio::SessionAttachment::Image < Folio::SessionAttachment
+  # include Folio::DragonflyFormatValidation
   include Folio::Thumbnails
 
-  validate_file_format
+  # validate_file_format
 
   def self.human_type
     "image"

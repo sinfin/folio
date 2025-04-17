@@ -124,7 +124,7 @@ end
 #
 # Table name: folio_addresses
 #
-#  id                        :bigint(8)        not null, primary key
+#  id                        :integer          not null, primary key
 #  name                      :string
 #  company_name              :string
 #  address_line_1            :string

@@ -2,7 +2,7 @@
 
 # https://gist.github.com/sj26/5843855
 
-module Folio::InheritenceBaseNaming
+module Folio::InheritanceBaseNaming
   def model_name
     @_model_name ||= super.tap do |name|
       unless self == base_class

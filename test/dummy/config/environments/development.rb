@@ -85,4 +85,7 @@ Rails.application.configure do
   # routes, locales, etc. This feature depends on the listen gem.
   # config.file_watcher = ActiveSupport::EventedFileUpdateChecker
   config.hosts += [/[^.]+\.dev\.dummy\.cz/, "dev.dummy.cz", "api.dummy.cz", "lvh.me"]
+
+  config.hosts << "dummy.z0ny.net"
+  config.hosts << "dummy.z0ny.net"
 end

@@ -23,7 +23,7 @@ class Folio::Page < Folio::ApplicationRecord
     end
   end
 
-  extend Folio::InheritenceBaseNaming
+  extend Folio::InheritanceBaseNaming
   include Folio::Console::Clonable
   include Folio::HasAttachments
   include Folio::Publishable::WithDate

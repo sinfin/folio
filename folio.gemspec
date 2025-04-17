@@ -25,6 +25,7 @@ Gem::Specification.new do |s|
   s.add_dependency "annotate" # required from task copied from Folio to main_app
   s.add_dependency "audited"
   s.add_dependency "aws-sdk-s3"
+  s.add_dependency "aws-sdk-sqs"
   s.add_dependency "babel-transpiler"
   s.add_dependency "breadcrumbs_on_rails"
   s.add_dependency "cancancan"

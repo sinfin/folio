@@ -6,6 +6,7 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
   static values = {
     id: { type: String, default: '' },
     templateData: { type: String, default: '' },
+    fileUUID: { type: String, default: '' },
     s3Path: { type: String, default: '' },
     fileType: String,
     templateUrl: { type: String, default: '' },
@@ -20,7 +21,7 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
       this.fillTemplate()
     }
 
-    if (this.s3PathValue && this.fileTypeValue) {
+    if ((this.s3PathValue || this.fileUUIDValue) && this.fileTypeValue) {
       this.pingApi()
       this.boundMessageBusCallback = this.messageBusCallbackForCreate.bind(this)
       this.element.addEventListener('f-file-list-file/message', this.boundMessageBusCallback)
@@ -55,10 +56,11 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
   }
 
   pingApi () {
-    if (!this.s3PathValue) return
+    if (!this.s3PathValue && !this.fileUUIDValue) return
     if (!this.fileTypeValue) return
 
     const data = {
+      file_uuid: this.fileUUIDValue,
       s3_path: this.s3PathValue,
       type: this.fileTypeValue,
       message_bus_client_id: window.MessageBus.clientId

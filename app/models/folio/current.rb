@@ -84,6 +84,7 @@ class Folio::Current < ActiveSupport::CurrentAttributes
     else
       if Rails.env.development?
         slug = host.delete_suffix(".localhost")
+        slug = host.delete_suffix(".z0ny.net") if slug == host
 
         begin
           Folio::Site.friendly.find(slug)

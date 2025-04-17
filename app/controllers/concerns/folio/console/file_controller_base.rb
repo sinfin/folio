@@ -87,4 +87,12 @@ module Folio::Console::FileControllerBase
                          }.to_json,
                          user_ids:
     end
+
+    def folio_console_records
+      super.visible
+    end
+
+    def folio_console_records
+      super.visible
+    end
 end

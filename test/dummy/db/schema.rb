@@ -10,13 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_02_17_134355) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_17_154716) do
   # These are extensions that must be enabled in order to support this database
+  enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
-  enable_extension "plpgsql"
   enable_extension "unaccent"
 
   create_folio_unaccent
+  enable_extension "uuid-ossp"
 
   create_table "audits", force: :cascade do |t|
     t.bigint "auditable_id"
@@ -321,15 +322,24 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_17_134355) do
     t.string "attribution_source_url"
     t.string "attribution_copyright"
     t.string "attribution_licence"
+    t.uuid "file_uuid", default: -> { "uuid_generate_v4()" }, null: false
+    t.string "s3_path"
+    t.string "reference_key"
+    t.jsonb "metadata", default: {}, null: false
+    t.jsonb "metadata_rekognition", default: {}, null: false
+    t.bigint "user_id"
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((author)::text, ''::text)))", name: "index_folio_files_on_by_author", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name)::text, ''::text)))", name: "index_folio_files_on_by_file_name", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text)))", name: "index_folio_files_on_by_file_name_for_search", using: :gin
     t.index ["created_at"], name: "index_folio_files_on_created_at"
     t.index ["file_name"], name: "index_folio_files_on_file_name"
+    t.index ["file_uuid"], name: "index_folio_files_on_file_uuid", unique: true
     t.index ["hash_id"], name: "index_folio_files_on_hash_id"
+    t.index ["reference_key"], name: "index_folio_files_on_reference_key", where: "(reference_key IS NOT NULL)"
     t.index ["site_id"], name: "index_folio_files_on_site_id"
     t.index ["type"], name: "index_folio_files_on_type"
     t.index ["updated_at"], name: "index_folio_files_on_updated_at"
+    t.index ["user_id"], name: "index_folio_files_on_user_id"
   end
 
   create_table "folio_leads", force: :cascade do |t|
@@ -454,8 +464,18 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_17_134355) do
     t.datetime "updated_at", precision: nil, null: false
     t.string "hash_id"
     t.string "file_mime_type"
+    t.uuid "file_uuid", default: -> { "uuid_generate_v4()" }, null: false
+    t.string "s3_path"
+    t.string "reference_key"
+    t.jsonb "metadata", default: {}, null: false
+    t.jsonb "metadata_rekognition", default: {}, null: false
+    t.bigint "user_id"
+    t.string "aasm_state", default: "initialized", null: false
     t.index ["attachmentable_type", "attachmentable_id"], name: "index_folio_private_attachments_on_attachmentable"
+    t.index ["file_uuid"], name: "index_folio_private_attachments_on_file_uuid", unique: true
+    t.index ["reference_key"], name: "index_folio_private_attachments_on_reference_key", where: "(reference_key IS NOT NULL)"
     t.index ["type"], name: "index_folio_private_attachments_on_type"
+    t.index ["user_id"], name: "index_folio_private_attachments_on_user_id"
   end
 
   create_table "folio_session_attachments", force: :cascade do |t|
@@ -473,9 +493,19 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_17_134355) do
     t.integer "file_width"
     t.integer "file_height"
     t.json "thumbnail_sizes", default: {}
+    t.uuid "file_uuid", default: -> { "uuid_generate_v4()" }, null: false
+    t.string "s3_path"
+    t.string "reference_key"
+    t.jsonb "metadata", default: {}, null: false
+    t.jsonb "metadata_rekognition", default: {}, null: false
+    t.bigint "user_id"
+    t.string "aasm_state", default: "initialized", null: false
+    t.index ["file_uuid"], name: "index_folio_session_attachments_on_file_uuid", unique: true
     t.index ["hash_id"], name: "index_folio_session_attachments_on_hash_id"
     t.index ["placement_type", "placement_id"], name: "index_folio_session_attachments_on_placement"
+    t.index ["reference_key"], name: "index_folio_session_attachments_on_reference_key", where: "(reference_key IS NOT NULL)"
     t.index ["type"], name: "index_folio_session_attachments_on_type"
+    t.index ["user_id"], name: "index_folio_session_attachments_on_user_id"
     t.index ["web_session_id"], name: "index_folio_session_attachments_on_web_session_id"
   end
 

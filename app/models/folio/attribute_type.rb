@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::AttributeType < Folio::ApplicationRecord
-  extend Folio::InheritenceBaseNaming
+  extend Folio::InheritanceBaseNaming
   include Folio::BelongsToSite
   include Folio::Positionable
 

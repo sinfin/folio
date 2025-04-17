@@ -537,8 +537,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
         instance_variable_set(name, with_include)
       end
 
-      if filter_params.present? &&
-         instance_variable_get(name).respond_to?(:filter_by_params)
+      if filter_params.present? && instance_variable_get(name).respond_to?(:filter_by_params)
         filtered = instance_variable_get(name).filter_by_params(filter_params)
         instance_variable_set(name, filtered)
       end

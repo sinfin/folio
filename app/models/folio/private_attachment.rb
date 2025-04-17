@@ -4,11 +4,13 @@ class Folio::PrivateAttachment < Folio::ApplicationRecord
   include Folio::HasHashId
   include Folio::Positionable
   include Folio::SanitizeFilename
-  extend Folio::InheritenceBaseNaming
+  include Folio::Aws::FileProcessable
+  extend Folio::InheritanceBaseNaming
 
-  dragonfly_accessor :file do
-    after_assign :sanitize_filename
-  end
+  # TODO: replace by AWS logic
+  # dragonfly_accessor :file do
+  #   after_assign :sanitize_filename
+  # end
 
   belongs_to :attachmentable, polymorphic: true,
                               touch: true,

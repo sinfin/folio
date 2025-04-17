@@ -3,102 +3,123 @@
 class Folio::Api::S3Controller < Folio::Api::BaseController
   include Folio::S3::Client
 
-  before_action :authenticate_s3!
-  before_action :get_file_name_and_s3_path, only: %i[before]
+  skip_before_action :verify_authenticity_token, only: [:uploaded, :processed]
 
-  def before # return settings for S3 file upload
-    presigned_url = test_aware_presign_url(@s3_path)
+  before_action :verify_file_class
+  before_action :authenticate_s3!, except: [:uploaded, :processed]
+  # before_action :get_file_name_and_s3_path, only: %i[before]
+
+  # Creates pre-sign URL for uploading file to S3 upload path and create DB record for this file
+  def before
+    file_name = params.require(:file_name).split(".").map(&:parameterize).join(".")
+
+    session[:init] = true unless session.id
+
+    file = file_class.create!(
+      file_name: file_name,
+      reference_key: session.id.public_id,
+      site: site_for_new_files,
+      user: current_user
+    )
+
+    # return settings for S3 file upload
+    presigned_url = test_aware_presign_url(file.full_s3_path, method_name: :put_object)
 
     render json: {
+      file_uuid: file.file_uuid,
       s3_url: presigned_url,
-      file_name: @file_name,
-      s3_path: @s3_path,
+      file_name: file.file_name,
     }
   end
 
   # somewhere between, JS on FE directly loads file as temporary to S3 and returns it's s3_path
 
-  def after # load back file from S3 and process it
-    handle_after(Folio::S3::CreateFileJob)
+  # Called after file is successfully uploaded to S3 upload path.
+  # Just change file state to unprocessed
+  def after
+    file = file_class.find_by!(file_uuid: params.require(:file_uuid))
+
+    # unless file
+    #   head :not_found
+    #   return
+    # end
+
+    file.process_uploaded
+
+    head :ok
   end
 
-  # Folio::FileList::FileComponent created from a template waits for a message from the S3 job. Once it gets it, it will ping this endpoint to get the render component with the file
+  # Called when file is uploaded to S3 but not processed. Difference between uploaded and after is that after is called
+  # by FE and uploaded is called by AWS
+  def uploaded
+    # TODO: add custom authorization by ApiToken
+
+    after
+  end
+
+  # Called when any metadata was updated or created in AWS for requested file. This also means file is ready to use.
+  # Called by lambda from AWS.
+  def processed
+    # TODO: add custom authorization by ApiToken
+
+    file = file_class.find_by!(file_uuid: params.require(:file_uuid))
+
+    # unless file
+    #   head :not_found
+    #   return
+    # end
+
+    file.process_metadata(JSON.parse(request.body.read), params[:fileLastModified])
+
+    head :ok
+  end
+
+  # Folio::FileList::FileComponent created from a template waits for a message from the S3 job. Once it gets it, it will
+  # ping this endpoint to get the render component with the file
   def file_list_file
-    file_type = params.require(:file_type)
-    file_klass = file_type.safe_constantize
+    @file = file_class.accessible_by(Folio::Current.ability).find_by!(file_uuid: params.require(:file_uuid))
 
-    if file_klass && allowed_klass?(file_klass)
-      @file = file_klass.accessible_by(Folio::Current.ability).find(params.require(:file_id))
+    props = { file: @file }
 
-      props = { file: @file }
-
-      %i[
+    %i[
         editable
         destroyable
         selectable
+        batch_actions
       ].each do |param|
-        if params[param]
-          props[param] = params[param]
-        end
+      if params[param]
+        props[param] = params[param]
       end
-
-      if params[:primary_action].is_a?(String)
-        props[:primary_action] = params[:primary_action].to_sym
-      end
-
-      render_component_json(Folio::FileList::FileComponent.new(**props))
-    else
-      render json: {}, status: 404
     end
+
+    if params[:primary_action].is_a?(String)
+      props[:primary_action] = params[:primary_action].to_sym
+    end
+
+    render_component_json(Folio::FileList::FileComponent.new(**props))
   end
 
   private
-    def allowed_klass?(file_klass)
-      Rails.application.config.folio_direct_s3_upload_class_names.any? do |class_name|
-        file_klass <= class_name.constantize
+    def verify_file_class
+      head :not_found unless file_class
+    end
+
+    def file_class
+      return @file_class if defined?(@file_class)
+
+      if params[:file_type]
+        @file_class = Folio::Aws::FileJwt.file_subclass(params[:file_type].tr("-", "/").classify)
+      else
+        @file_class = Folio::Aws::FileJwt.file_subclass(params.require(:type))
       end
     end
 
     def authenticate_s3!
       return if Rails.application.config.folio_direct_s3_upload_allow_public
-      return if can_now?(:create, Folio::File.new(site: Folio::Current.site))
+      return if can_now?(:create, file_class.new(site: Folio::Current.site))
       return if Rails.application.config.folio_direct_s3_upload_allow_for_users && user_signed_in?
       return if Rails.application.config.folio_allow_users_to_console && user_signed_in?
       fail CanCan::AccessDenied
-    end
-
-    def get_file_name_and_s3_path
-      @file_name = params.require(:file_name).split(".").map(&:parameterize).join(".")
-
-      session[:init] = true unless session.id
-
-      @s3_path = [
-        "tmp_folio_file_uploads",
-        "session",
-        session.id.public_id,
-        SecureRandom.urlsafe_base64(16),
-        @file_name,
-      ].join("/")
-    end
-
-    def handle_after(job_klass)
-      @s3_path = params.require(:s3_path)
-      type = params.require(:type)
-      message_bus_client_id = params.require(:message_bus_client_id)
-      file_klass = type.safe_constantize
-
-      if file_klass && allowed_klass?(file_klass) && test_aware_s3_exists?(@s3_path)
-        job_klass.perform_later(s3_path: @s3_path,
-                                type:,
-                                message_bus_client_id:,
-                                existing_id: params[:existing_id].try(:to_i),
-                                web_session_id: session.id.public_id,
-                                user_id: Folio::Current.user.try(:id),
-                                attributes: Rails.application.config.folio_direct_s3_upload_attributes_for_job_proc.call(self))
-        render json: {}
-      else
-        render json: {}, status: 422
-      end
     end
 
     def site_for_new_files

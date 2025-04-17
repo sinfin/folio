@@ -1,25 +1,25 @@
 # frozen_string_literal: true
 
-class Folio::SessionAttachment::Base < Folio::ApplicationRecord
+class Folio::SessionAttachment < Folio::ApplicationRecord
   include Folio::HasHashId
   include Folio::RecursiveSubclasses
   include Folio::SanitizeFilename
   include Folio::StiPreload
+  include Folio::Aws::FileProcessable
 
   STALE_PERIOD = 1.day
 
-  self.table_name = "folio_session_attachments"
-
-  dragonfly_accessor :file do
-    after_assign :sanitize_filename
-
-    storage_options do |attachment|
-      {
-        headers: { "x-amz-acl" => "private" },
-        path: "session_attachments/#{hash_id}/#{sanitize_filename}",
-      }
-    end
-  end
+  # Replace "file" with AWS logic
+  # dragonfly_accessor :file do
+  #   after_assign :sanitize_filename
+  #
+  #   storage_options do |attachment|
+  #     {
+  #       headers: { "x-amz-acl" => "private" },
+  #       path: "session_attachments/#{hash_id}/#{sanitize_filename}",
+  #     }
+  #   end
+  # end
 
   scope :ordered, -> { order(id: :desc) }
   scope :unpaired, -> { where(placement: nil) }
