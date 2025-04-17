@@ -143,14 +143,4 @@ class Folio::Current < ActiveSupport::CurrentAttributes
       send("#{key}_record=", record)
     end
   end
-
-  if Rails.env.test?
-    alias :original_reset :reset
-
-    def reset
-      run_callbacks :reset do
-        # self.attributes = {}
-      end
-    end
-  end
 end

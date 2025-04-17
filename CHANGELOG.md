@@ -11,6 +11,9 @@ All notable changes to this project will be documented in this file.
 - `react_ordered_multiselect` can now show button to fix required field
 - setting of `auth_site_id` caching wrong site in `Folio::Current`
 
+## Removed
+- `Folio::Current` override of `reset`
+
 ## [6.3.0] - 2025-04-03
 
 ### Changed

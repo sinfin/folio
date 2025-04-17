@@ -157,7 +157,7 @@ class Folio::UserFlowTest < Folio::CapybaraTest
 
           assert page.has_css?("h1", text: "Přihlášení")
 
-          Folio::Current.original_reset
+          Folio::Current.reset
 
           within ".d-layout-main" do
             fill_in "E-mail", with: email
@@ -188,7 +188,7 @@ class Folio::UserFlowTest < Folio::CapybaraTest
 
           assert page.has_css?("h1", text: "Přihlášení")
 
-          Folio::Current.original_reset
+          Folio::Current.reset
 
           within ".d-layout-main" do
             fill_in "E-mail", with: email
