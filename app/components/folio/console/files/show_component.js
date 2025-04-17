@@ -48,8 +48,10 @@ window.Folio.Stimulus.register('f-c-files-show', class extends window.Stimulus.C
 
   uppyUploadSuccess (event) {
     this.loadingValue = true
+
     this.replacingFileData = {
       s3_path: new URL(event.detail.result.uploadURL).pathname.replace(/^\//, ''),
+      file_uuid: event.detail.file.fileUUID,
       type: this.fileTypeValue,
       existing_id: this.idValue,
       message_bus_client_id: window.MessageBus.clientId

@@ -4,7 +4,7 @@ require "test_helper"
 
 class Folio::SesionAttachments::DropzoneComponentTest < Folio::ComponentTest
   def test_render
-    klass = Folio::SessionAttachment::Base
+    klass = Folio::SessionAttachment
 
     render_inline(Folio::SesionAttachments::DropzoneComponent.new(klass:))
 

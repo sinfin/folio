@@ -235,6 +235,8 @@ Folio::Engine.routes.draw do
       resource :s3, only: [], controller: "s3" do
         post :before
         post :after
+        post :uploaded
+        post :processed
         get :file_list_file
       end
 

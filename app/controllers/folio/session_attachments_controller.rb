@@ -39,7 +39,7 @@ class Folio::SessionAttachmentsController < Folio::ApplicationController
     def klass
       type = params.require(:type)
 
-      if Folio::SessionAttachment::Base.valid_types.map(&:to_s).include?(type)
+      if Folio::SessionAttachment.valid_types.map(&:to_s).include?(type)
         type.constantize
       else
         raise ActionController::ParameterMissing, :type

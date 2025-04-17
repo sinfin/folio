@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::SessionAttachment::Document < Folio::SessionAttachment::Base
+class Folio::SessionAttachment::Document < Folio::SessionAttachment
 end
 
 # == Schema Information

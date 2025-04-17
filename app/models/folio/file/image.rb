@@ -3,12 +3,12 @@
 class Folio::File::Image < Folio::File
   include Folio::Sitemap::Image
 
-  validate_file_format
-
-  dragonfly_accessor :file do
-    after_assign :sanitize_filename
-    after_assign { |file| file.metadata }
-  end
+  # validate_file_format
+  #
+  # dragonfly_accessor :file do
+  #   after_assign :sanitize_filename
+  #   after_assign { |file| file.metadata }
+  # end
 
   # Get from metadata
   def title

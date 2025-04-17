@@ -47,8 +47,8 @@ end
 #
 # Table name: folio_omniauth_authentications
 #
-#  id               :bigint(8)        not null, primary key
-#  folio_user_id    :bigint(8)
+#  id               :integer          not null, primary key
+#  folio_user_id    :integer
 #  uid              :string
 #  provider         :string
 #  email            :string

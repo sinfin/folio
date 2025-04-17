@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::SessionAttachment::Image < Folio::SessionAttachment::Base
+class Folio::SessionAttachment::Image < Folio::SessionAttachment
   include Folio::DragonflyFormatValidation
   include Folio::Thumbnails
 

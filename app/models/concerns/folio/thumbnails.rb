@@ -13,11 +13,7 @@ module Folio::Thumbnails
 
   class_methods do
     def should_serialize_thumbnail_sizes?
-      if defined?(Folio::SessionAttachment::Base) && self <= Folio::SessionAttachment::Base
-        false
-      else
-        true
-      end
+      !(defined?(Folio::SessionAttachment) && self <= Folio::SessionAttachment)
     end
 
     def immediate_thumbnails
@@ -30,10 +26,14 @@ module Folio::Thumbnails
       serialize :thumbnail_sizes, type: Hash, coder: YAML
     end
 
-    before_validation :reset_thumbnails
+    # TODO: do we need? No, I think
+    # before_validation :reset_thumbnails
 
-    after_save :run_set_additional_data_job
-    before_destroy :delete_thumbnails
+    # TODO: We don't have any job
+    # after_save :run_set_additional_data_job
+
+    # TODO: not needed, deletion will be done in different way
+    # before_destroy :delete_thumbnails
   end
 
   def thumbs_hash_with_rewritten_urls(hash)
@@ -64,6 +64,7 @@ module Folio::Thumbnails
   # Use w_x_h = 400x250# or similar
   #
   def thumb(w_x_h, quality: 82, immediate: false, force: false, x: nil, y: nil)
+    return thumb_in_test_env(w_x_h, quality:) if uploaded?
     fail_for_non_images
 
     if Rails.env.test? && !try(:additional_data).try(:[], "generate_thumbnails_in_test")

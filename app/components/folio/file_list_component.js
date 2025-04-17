@@ -17,6 +17,8 @@ window.Folio.Stimulus.register('f-file-list', class extends window.Stimulus.Cont
     fileElement.dataset.fFileListFileTemplateDataValue = JSON.stringify({
       preview: file.preview
     })
+
+    fileElement.dataset.fFileListFileFileUUIDValue = file.fileUUID
     fileElement.dataset.fFileListFileS3PathValue = new URL(result.uploadURL).pathname.replace(/^\//, '')
     fileElement.dataset.fFileListFileFileTypeValue = this.fileTypeValue
     fileElement.querySelector('.f-file-list-file__info-file-name').innerText = file.name
