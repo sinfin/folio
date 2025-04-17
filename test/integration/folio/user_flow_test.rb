@@ -137,4 +137,66 @@ class Folio::UserFlowTest < Folio::CapybaraTest
       end
     end
   end
+
+  test "sign in on auth_site site works with cached site" do
+    site_a = create_site(force: true)
+    site_b = create_and_host_site(force: true)
+
+    assert_equal 2, Folio::Site.count
+    assert_nil Folio::Current.site_record
+    assert_equal site_a.id, Folio::Current.main_site.id
+
+    password = "Complex@Password.123"
+    regular_user = create(:folio_user, superadmin: false, auth_site: site_b, password:)
+    email = regular_user.email
+
+    Rails.application.config.action_controller.stub(:perform_caching, true) do
+      Rails.application.config.stub(:folio_crossdomain_devise, false) do
+        assert_difference("regular_user.reload.sign_in_count", 1) do
+          visit main_app.new_user_session_url(only_path: false, host: site_b.env_aware_domain)
+
+          assert page.has_css?("h1", text: "Přihlášení")
+
+          Folio::Current.original_reset
+
+          within ".d-layout-main" do
+            fill_in "E-mail", with: email
+            fill_in "Heslo", with: password
+            click_on "Přihlásit se"
+          end
+        end
+      end
+    end
+  end
+
+  test "sign in on non-auth_site site does not work with cached site" do
+    site_a = create_and_host_site(force: true)
+    site_b = create_site(force: true)
+
+    assert_equal 2, Folio::Site.count
+    assert_nil Folio::Current.site_record
+    assert_equal site_a.id, Folio::Current.main_site.id
+
+    password = "Complex@Password.123"
+    regular_user = create(:folio_user, superadmin: false, auth_site: site_b, password:)
+    email = regular_user.email
+
+    Rails.application.config.action_controller.stub(:perform_caching, true) do
+      Rails.application.config.stub(:folio_crossdomain_devise, false) do
+        assert_difference("regular_user.reload.sign_in_count", 0) do
+          visit main_app.new_user_session_url(only_path: false, host: site_a.env_aware_domain)
+
+          assert page.has_css?("h1", text: "Přihlášení")
+
+          Folio::Current.original_reset
+
+          within ".d-layout-main" do
+            fill_in "E-mail", with: email
+            fill_in "Heslo", with: password
+            click_on "Přihlásit se"
+          end
+        end
+      end
+    end
+  end
 end

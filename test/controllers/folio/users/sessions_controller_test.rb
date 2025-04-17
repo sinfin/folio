@@ -147,6 +147,52 @@ class Folio::Users::SessionsControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "without crossdomain, regular user auth_site works" do
+    site_a = @site
+    regular_user = @user
+    regular_user.update!(superadmin: false, auth_site: site_a)
+
+    Rails.application.config.stub(:folio_crossdomain_devise, false) do
+      begin
+        other_site = create_site(key: try(:other_site_key), force: true)
+      rescue ActiveRecord::RecordInvalid => e
+        puts "Cannot create other_site! Try setting other_site_key in Folio::Users::SessionsControllerTest.class_eval to handle singletons in folio_site_default_test_factory."
+        raise e
+      end
+
+      assert_difference("regular_user.reload.sign_in_count", 1) do
+        host_site site_a
+        post main_app.user_session_path, params: { user: @params }
+        assert_response(:redirect)
+      end
+
+      sign_out regular_user
+
+      assert_difference("regular_user.reload.sign_in_count", 0) do
+        host_site other_site
+        post main_app.user_session_path, params: { user: @params }
+        assert_response(:redirect)
+      end
+
+      sign_out regular_user
+      regular_user.update!(auth_site: other_site)
+
+      assert_difference("regular_user.reload.sign_in_count", 0) do
+        host_site site_a
+        post main_app.user_session_path, params: { user: @params }
+        assert_response(:redirect)
+      end
+
+      sign_out regular_user
+
+      assert_difference("regular_user.reload.sign_in_count", 1) do
+        host_site other_site
+        post main_app.user_session_path, params: { user: @params }
+        assert_response(:redirect)
+      end
+    end
+  end
+
   test "destroy" do
     sign_in @user
     get main_app.destroy_user_session_path

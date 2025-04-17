@@ -28,7 +28,9 @@ module SitesHelper
       Rails.application.routes.default_url_options[:host] = site.env_aware_domain
       Rails.application.routes.default_url_options[:only_path] = false
 
-      Folio::Current.site = site
+      unless is_a?(Folio::CapybaraTest)
+        Folio::Current.site = site
+      end
 
       if self.respond_to?(:host!)
         host!(site.env_aware_domain)
