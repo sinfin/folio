@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - `react_ordered_multiselect` can now show button to fix required field
 - setting of `auth_site_id` caching wrong site in `Folio::Current`
+- double rendering (devise and Folio) in `require_no_athentication`, when user is signed in
 
 ## Removed
 - `Folio::Current` override of `reset`
