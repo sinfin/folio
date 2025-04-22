@@ -292,6 +292,8 @@ en:
           homepage: Homepage
           audio: Audios
           video: Videos
+        header_component:
+          sign_out: Sign out %{user}
       private_attachments:
         single_dropzone:
           download: Download

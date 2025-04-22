@@ -296,6 +296,8 @@ cs:
           homepage: Úvodní stránka
           audio: Audiobanka
           video: Videobanka
+        header_component:
+          sign_out: Odhlásit %{user}
       private_attachments:
         single_dropzone:
           download: Stáhnout

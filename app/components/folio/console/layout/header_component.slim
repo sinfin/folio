@@ -6,9 +6,9 @@
 
   .container-fluid
     .f-c-layout-header__inner
-      - if model[:breadcrumbs_on_rails]
+      - if @breadcrumbs_on_rails
         .f-c-layout-header__breadcrumbs
-          - model[:breadcrumbs_on_rails].each_with_index do |breadcrumb, i|
+          - @breadcrumbs_on_rails.each_with_index do |breadcrumb, i|
             .f-c-layout-header__breadcrumb[
               class=breadcrumb_position_class_name(i)
             ]
@@ -31,14 +31,15 @@
                 ]
                   = cstypo breadcrumb.name
 
-              - if model[:breadcrumbs_on_rails].size - 1 > i
+              - if @breadcrumbs_on_rails.size - 1 > i
                 = folio_icon(:chevron_right,
                              class: "f-c-layout-header__breadcrumb-delimiter",
                              height: 16)
 
-      == cell('folio/console/ui/with_icon',
-              t('.sign_out', user: current_user_with_test_fallback.email),
-              href: log_out_path,
-              icon: :logout_variant,
-              icon_options: { height: 14 },
-              class: 'f-c-layout-header__sign-out-link text-reset')
+      - if log_out_path
+        == cell('folio/console/ui/with_icon',
+                t('.sign_out', user: Folio::Current.user.email),
+                href: log_out_path,
+                icon: :logout_variant,
+                icon_options: { height: 14 },
+                class: 'f-c-layout-header__sign-out-link text-reset')
