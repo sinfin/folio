@@ -63,7 +63,8 @@ class Folio::PagesControllerTest < Folio::BaseControllerTest
   test "published does not have a no-cache Cache-Control header" do
     get url_for(@page)
     assert_response(:ok)
-    assert_not_equal "no-store, no-cache, must-revalidate, max-age=0", response.get_header("Cache-Control")
+    assert_equal ActionDispatch::Http::Cache::Response::DEFAULT_CACHE_CONTROL, response.get_header("Cache-Control")
+    assert_not_equal "no-store", response.get_header("Cache-Control")
   end
 
   test "unpublished does have a no-cache Cache-Control header" do
@@ -71,6 +72,7 @@ class Folio::PagesControllerTest < Folio::BaseControllerTest
 
     get url_for([@page, preview: @page.preview_token])
     assert_response(:ok)
-    assert_equal "no-store, no-cache, must-revalidate, max-age=0", response.get_header("Cache-Control")
+    assert_not_equal ActionDispatch::Http::Cache::Response::DEFAULT_CACHE_CONTROL, response.get_header("Cache-Control")
+    assert_equal "no-store", response.get_header("Cache-Control")
   end
 end

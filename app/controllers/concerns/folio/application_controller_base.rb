@@ -154,7 +154,7 @@ module Folio::ApplicationControllerBase
 
     def set_cache_control_headers(record: nil)
       if record && record.respond_to?(:published?) && !record.published?
-        response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+        no_store
       end
     end
 end
