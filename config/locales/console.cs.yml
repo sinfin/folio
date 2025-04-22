@@ -110,6 +110,9 @@ cs:
           title: Tuto stránku nyní upravuje
           text: Vyčkejte, až dokončí úpravy. Při současné úpravě by mohlo dojít ke ztrátě rozpracovaného obsahu.
       delete: Smazat
+      current_users:
+        show:
+          title: Můj profil
       documents:
         edit:
           download: Stáhnout
@@ -297,7 +300,7 @@ cs:
           audio: Audiobanka
           video: Videobanka
         header_component:
-          sign_out: Odhlásit %{user}
+          sign_out: Odhlásit se
       private_attachments:
         single_dropzone:
           download: Stáhnout
