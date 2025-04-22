@@ -53,7 +53,6 @@ class Folio::User < Folio::ApplicationRecord
                              inverse_of: :user,
                              dependent: :destroy
 
-
   has_many :created_console_notes, class_name: "Folio::ConsoleNote",
                                    inverse_of: :created_by,
                                    foreign_key: :created_by_id,

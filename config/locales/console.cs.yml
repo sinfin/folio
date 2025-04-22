@@ -111,8 +111,23 @@ cs:
           text: Vyčkejte, až dokončí úpravy. Při současné úpravě by mohlo dojít ke ztrátě rozpracovaného obsahu.
       delete: Smazat
       current_users:
-        show:
+        show_component:
           title: Můj profil
+          title/sign_in: Přihlašovací jméno
+          title/password: Heslo
+          title/others: Kontaktní a další údaje
+          edit_others: Upravit další údaje
+          edit_password: Změnit heslo
+          unconfirmed_email: Na email %{email} jsme vám odeslali odkaz pro potvrzení změny e‑mailu na %{unconfirmed_email}.
+          label/current_password: Aktuální heslo pro kontrolu
+          label/password: Nové heslo
+          label/password_confirmation: Nové heslo (kontrola)
+        update_password:
+          success: Heslo bylo změněno.
+          failure: Změna hesla se nezdařila.
+        update_email:
+          success: Změna e-mailu zahájena. Potvrďte prosím změnu kliknutím na odkaz, který jsme vám zaslali na váš původní e-mail.
+          failure: Změna e-mailu se nezdařila.
       documents:
         edit:
           download: Stáhnout

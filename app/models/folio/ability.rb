@@ -31,6 +31,9 @@ class Folio::Ability
   def folio_rules
     can [:stop_impersonating], Folio::User # anyone must be able to stop impersonating
 
+    can :update_email, @user
+    can :update_password, @user
+
     if user.superadmin?
       console_common_admin_rules
       can :do_anything, Folio::User

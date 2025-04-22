@@ -110,8 +110,23 @@ en:
           text: Wait for them to finish. If you edit now, you might lose the content you are working on.
       delete: Remove
       current_users:
-        show:
+        show_component:
           title: My profile
+          title/sign_in: Login
+          title/password: Password
+          title/others: Contacts and other information
+          edit_others: Edit other information
+          edit_password: Change password
+          unconfirmed_email: We sent a link to confirm the change of email from %{email} to %{unconfirmed_email} to your email.
+          label/current_password: Current password
+          label/password: New password
+          label/password_confirmation: New password (confirmation)
+        update_password:
+          success: Password changed.
+          failure: Failed to change password.
+        update_email:
+          success: Email change started. Please confirm the change by clicking on the link we sent to your original email.
+          failure: Failed to change email.
       documents:
         edit:
           download: Download
