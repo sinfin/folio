@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- `set_cache_control_headers` to set `Cache-Control` headers for unpublished records
+
 ### Changed
 - console `preview_url_for` - now defined in `Folio::Console::PreviewUrlFor` and expandable via `Rails.application.config.folio_console_preview_url_for_procs`
 - added `:preview` to the console actions default - hide it if URL is not available

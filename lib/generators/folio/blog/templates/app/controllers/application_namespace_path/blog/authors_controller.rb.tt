@@ -11,6 +11,7 @@ class <%= application_namespace %>::Blog::AuthorsController < <%= application_na
       unless force_correct_path(url_for(@author))
         set_meta_variables(@author)
         add_breadcrumb_on_rails @author.to_label
+        set_cache_control_headers(record: @author)
 
         published_articles_count = @author.published_articles.count
         @published_articles_count = t(".published_articles_count", count: published_articles_count)

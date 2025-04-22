@@ -10,6 +10,7 @@ class Dummy::Blog::TopicsController < Dummy::Blog::BaseController
 
       unless force_correct_path(url_for(@topic))
         set_meta_variables(@topic)
+        set_cache_control_headers(record: @topic)
         add_breadcrumb_on_rails @topic.to_label
       end
     end

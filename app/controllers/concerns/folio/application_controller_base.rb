@@ -151,4 +151,10 @@ module Folio::ApplicationControllerBase
         render "folio/errors/show", status: @error_code
       end
     end
+
+    def set_cache_control_headers(record: nil)
+      if record && record.respond_to?(:published?) && !record.published?
+        response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+      end
+    end
 end
