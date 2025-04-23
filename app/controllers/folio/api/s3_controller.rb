@@ -10,6 +10,7 @@ class Folio::Api::S3Controller < Folio::Api::BaseController
     presigned_url = test_aware_presign_url(s3_path: @s3_path)
 
     render json: {
+      jwt: "TODO",
       s3_url: presigned_url,
       file_name: @file_name,
       s3_path: @s3_path,

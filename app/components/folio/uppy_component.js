@@ -72,6 +72,8 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
       getUploadParameters (file) {
         return window.Folio.Api.apiPost('/folio/api/s3/before', { ...args, file_name: file.name }).then((response) => {
           file.name = response.file_name
+          file.s3_path = response.s3_path
+          file.jwt = response.jwt
 
           return {
             method: 'PUT',
