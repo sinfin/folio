@@ -8,9 +8,18 @@ class Folio::Console::AttributeTypesController < Folio::Console::BaseController
   end
 
   private
+    def additional_attribute_type_params
+      # to be overriden in main_app should it be needed
+      []
+    end
+
     def attribute_type_params
       params.require(:attribute_type)
-            .permit(*(@klass.column_names - %w[id site_id]))
+            .permit(*folio_using_traco_aware_param_names(:title),
+                    :type,
+                    :position,
+                    :data_type,
+                    *additional_attribute_type_params)
     end
 
     def index_filters

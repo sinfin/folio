@@ -6,7 +6,15 @@ class Folio::Console::<%= application_namespace %>::Blog::ArticlesController < F
   private
     def article_params
       params.require(:<%= application_namespace_path %>_blog_article)
-            .permit(*(@klass.column_names - %w[id site_id]),
+            .permit(:title,
+                    :slug,
+                    :perex,
+                    :locale,
+                    :meta_title,
+                    :meta_description,
+                    :featured,
+                    :published,
+                    :published_at,
                     *atoms_strong_params,
                     *file_placements_strong_params,
                     author_article_links_attributes: %w[id _destroy position <%= application_namespace_path %>_blog_author_id],
