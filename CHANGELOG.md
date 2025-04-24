@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [6.3.1] - 2025-04-24
+
 ### Added
 - `set_cache_control_headers` to set `Cache-Control` headers for unpublished records
 - console "CurrentUser" controller allowing users to change their e-mail and password
