@@ -3,6 +3,10 @@
 module Folio::ErrorsControllerBase
   extend ActiveSupport::Concern
 
+  included do
+    before_action :set_cache_control_no_store
+  end
+
   def page400
     @error_code = 400
     render_errors_show
@@ -39,5 +43,9 @@ module Folio::ErrorsControllerBase
       else
         render "folio/errors/show", status: @error_code
       end
+    end
+
+    def set_cache_control_no_store
+      no_store
     end
 end

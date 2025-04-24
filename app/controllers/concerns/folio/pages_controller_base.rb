@@ -61,6 +61,7 @@ module Folio::PagesControllerBase
       end
 
       set_meta_variables(@page) if @page
+      set_cache_control_headers(record: @page) if @page
     end
 
     def filter_pages_by_locale(pages)
