@@ -7,6 +7,16 @@ class Folio::File::Video < Folio::File
     additional_data && additional_data["subtitles"]
   end
 
+  def subtitles_cze
+    subtitles["cze"]
+  end
+
+  def subtitles_cze=(value)
+    self.additional_data ||= {}
+    self.additional_data["subtitles"] ||= {}
+    self.additional_data["subtitles"]["cze"] = value
+  end
+
   def thumbnailable?
     true
   end
