@@ -234,6 +234,12 @@ Folio::Engine.routes.draw do
       resource :ares, only: [], controller: "ares" do
         post :subject
       end
+
+      namespace :file do
+        resources :videos, only: [] do
+          member { get :subtitles, path: "subtitles/:lang.vtt" }
+        end
+      end
     end
   end
 

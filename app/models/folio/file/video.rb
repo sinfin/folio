@@ -3,6 +3,10 @@
 class Folio::File::Video < Folio::File
   validate_file_format %w[video/mp4 video/webm]
 
+  def subtitles
+    additional_data && additional_data["subtitles"]
+  end
+
   def thumbnailable?
     true
   end
