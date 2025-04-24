@@ -30,9 +30,6 @@ cs:
           search:
             placeholder: Hledat
 
-        header:
-          sign_out: Odhlásit %{user}
-
       searches:
         results:
           title: Výsledky vyhledávání
