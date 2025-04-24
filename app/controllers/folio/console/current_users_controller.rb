@@ -27,10 +27,14 @@ class Folio::Console::CurrentUsersController < Folio::Console::BaseController
     end
 
     if @user.valid_password?(user_params[:current_password])
-      if @user.update(password: user_params[:password], password_confirmation: user_params[:password_confirmation])
-        bypass_sign_in @user
-        redirect_to folio.console_current_user_path, flash: { notice: t(".success") }
-        return
+      if user_params[:current_password] == user_params[:password]
+        @user.errors.add(:password, :same_as_current_password)
+      else
+        if @user.update(password: user_params[:password], password_confirmation: user_params[:password_confirmation])
+          bypass_sign_in @user
+          redirect_to folio.console_current_user_path, flash: { notice: t(".success") }
+          return
+        end
       end
     end
 
