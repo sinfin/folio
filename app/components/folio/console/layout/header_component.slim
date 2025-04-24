@@ -6,9 +6,9 @@
 
   .container-fluid
     .f-c-layout-header__inner
-      - if model[:breadcrumbs_on_rails]
+      - if @breadcrumbs_on_rails
         .f-c-layout-header__breadcrumbs
-          - model[:breadcrumbs_on_rails].each_with_index do |breadcrumb, i|
+          - @breadcrumbs_on_rails.each_with_index do |breadcrumb, i|
             .f-c-layout-header__breadcrumb[
               class=breadcrumb_position_class_name(i)
             ]
@@ -31,14 +31,21 @@
                 ]
                   = cstypo breadcrumb.name
 
-              - if model[:breadcrumbs_on_rails].size - 1 > i
+              - if @breadcrumbs_on_rails.size - 1 > i
                 = folio_icon(:chevron_right,
                              class: "f-c-layout-header__breadcrumb-delimiter",
                              height: 16)
 
-      == cell('folio/console/ui/with_icon',
-              t('.sign_out', user: current_user_with_test_fallback.email),
-              href: log_out_path,
-              icon: :logout_variant,
-              icon_options: { height: 14 },
-              class: 'f-c-layout-header__sign-out-link text-reset')
+      - if Folio::Current.user
+        a.f-c-layout-header__current-user-link.text-reset[
+          href=controller.folio.console_current_user_path
+        ]
+          = folio_icon(:user_filled, height: 14)
+          = Folio::Current.user.email
+
+      - if log_out_path
+        a.f-c-layout-header__sign-out-link.text-reset[
+          href=log_out_path
+        ]
+          = folio_icon(:logout_variant, height: 14)
+          = t('.sign_out')

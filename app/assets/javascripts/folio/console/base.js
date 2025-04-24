@@ -81,6 +81,7 @@
 //= require folio/console/console_notes/catalogue_tooltip/catalogue_tooltip
 //= require folio/console/current_users/console_url_bar/console_url_bar
 //= require folio/console/current_users/preference_toggle_component
+//= require folio/console/current_users/show_component
 //= require folio/console/file/picker/document/document
 //= require folio/console/file/picker/picker
 //= require folio/console/file/picker/thumb/thumb

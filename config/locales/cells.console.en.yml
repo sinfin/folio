@@ -30,9 +30,6 @@ en:
           search:
             placeholder: Search
 
-        header:
-          sign_out: Sign out %{user}
-
       searches:
         results:
           title: Search results
