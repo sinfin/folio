@@ -138,4 +138,10 @@ class Folio::UserTest < ActiveSupport::TestCase
       assert user1b.errors[:email].present?
     end
   end
+
+  test "devise timeoutable" do
+    user = create(:folio_user, :superadmin)
+    assert_equal false, user.timedout?(Time.current)
+    assert_equal true, user.timedout?(31.minutes.ago)
+  end
 end

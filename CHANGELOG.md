@@ -3,8 +3,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- `timeoutable` to `Folio::User` with a value of 30 minutes
+
 ### Changed
+
 - whitelist strong params instead of blacklisting - use `folio_using_traco_aware_param_names` for traco-translatable columns, use `additional_*_params` (i.e. `additional_user_params ) to add more column names to the whitelist
+- updated `session_store` config with `expire_after` / `secure` / `httponly` / `same_site`
 
 ## [6.3.1] - 2025-04-24
 

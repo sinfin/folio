@@ -26,6 +26,7 @@ class Folio::User < Folio::ApplicationRecord
     rememberable
     trackable
     invitable
+    timeoutable
   ]
 
   if Rails.application.config.folio_users_confirmable
