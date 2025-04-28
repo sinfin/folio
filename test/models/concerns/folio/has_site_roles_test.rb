@@ -146,7 +146,7 @@ class Folio::HasSiteRolesTest < ActiveSupport::TestCase
   test "creating user with roles" do
     params = {
       "email" => "test@test.com",
-      "password" => "test1234",
+      "password" => "Complex.test1234",
       "auth_site_id" => site.id,
       "site_user_links_attributes" => { "0" => { "site_id" => site.id, "roles" => [] } }
     }

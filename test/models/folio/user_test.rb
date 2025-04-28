@@ -138,4 +138,40 @@ class Folio::UserTest < ActiveSupport::TestCase
       assert user1b.errors[:email].present?
     end
   end
+
+  test "devise timeoutable" do
+    user = create(:folio_user, :superadmin)
+    assert_equal false, user.timedout?(Time.current)
+    assert_equal true, user.timedout?(31.minutes.ago)
+  end
+
+  test "validates password complexity" do
+    user = build(:folio_user, password: "weak")
+    assert_not user.valid?
+    assert_equal 1, user.errors.size
+    assert_equal :password, user.errors.first.attribute
+    assert_equal :too_short, user.errors.first.type
+
+    user.password = "weakpassword"
+    assert_not user.valid?
+    assert_equal 3, user.errors.size
+    assert_equal %i[password password password],
+                 user.errors.map(&:attribute)
+    assert_equal %i[missing_uppercase missing_digit missing_special].sort,
+                 user.errors.map(&:type).sort
+
+    user.password = "weak password"
+    assert_not user.valid?
+    assert_equal 3, user.errors.size
+    assert_equal %i[password password password],
+                 user.errors.map(&:attribute)
+    assert_equal %i[missing_uppercase missing_digit missing_special].sort,
+                 user.errors.map(&:type).sort
+
+    user.password = "a very long full lowercase password is fine if over forty eight characters long"
+    assert user.valid?
+
+    user.password = "Short, but 2 complex!"
+    assert user.valid?
+  end
 end

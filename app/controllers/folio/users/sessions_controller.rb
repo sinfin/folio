@@ -3,6 +3,9 @@
 class Folio::Users::SessionsController < Devise::SessionsController
   include Folio::Users::DeviseControllerBase
   include Folio::Captcha::HasTurnstileValidation
+  include Folio::Captcha::HasRecaptchaValidation
+
+  before_action :validate_recaptcha, only: :create
 
   protect_from_forgery prepend: true
 
@@ -155,6 +158,10 @@ class Folio::Users::SessionsController < Devise::SessionsController
   end
 
   def turnstile_failure_redirect_path
+    new_user_session_path
+  end
+
+  def recaptcha_failure_redirect_path
     new_user_session_path
   end
 end

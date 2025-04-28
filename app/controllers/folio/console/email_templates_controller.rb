@@ -9,15 +9,16 @@ class Folio::Console::EmailTemplatesController < Folio::Console::BaseController
   end
 
   private
-    def email_template_params
-      black_list = %w[id
-                      mailer
-                      action
-                      slug
-                      required_keywords
-                      optional_keywords]
+    def additional_email_template_params
+      # to be overriden in main_app should it be needed
+      []
+    end
 
+    def email_template_params
       params.require(:email_template)
-            .permit(*(Folio::EmailTemplate.column_names - black_list))
+            .permit(*traco_aware_param_names(:subject, :body_html, :body_text),
+                    :title,
+                    :active,
+                    *additional_email_template_params)
     end
 end

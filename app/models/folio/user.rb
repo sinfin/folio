@@ -26,6 +26,8 @@ class Folio::User < Folio::ApplicationRecord
     rememberable
     trackable
     invitable
+    timeoutable
+    lockable
   ]
 
   if Rails.application.config.folio_users_confirmable
@@ -82,6 +84,8 @@ class Folio::User < Folio::ApplicationRecord
   validates :born_at,
             presence: true,
             if: :born_at_required?
+
+  validate :validate_password_complexity
 
   after_invitation_accepted :create_newsletter_subscriptions
 
@@ -483,6 +487,23 @@ class Folio::User < Folio::ApplicationRecord
     def set_preferred_locale
       self.preferred_locale = I18n.locale.to_s if preferred_locale.blank?
     end
+
+    def validate_password_complexity
+      return if password.blank?
+      return unless Devise.password_length.include?(password.length)
+
+      if password.length < 48
+        has_uppercase = password =~ /[A-Z]/
+        has_lowercase = password =~ /[a-z]/
+        has_digit = password =~ /[0-9]/
+        has_special = password =~ /[^a-zA-Z0-9\s]/
+
+        errors.add(:password, :missing_uppercase) unless has_uppercase
+        errors.add(:password, :missing_lowercase) unless has_lowercase
+        errors.add(:password, :missing_digit) unless has_digit
+        errors.add(:password, :missing_special) unless has_special
+      end
+    end
 end
 
 # == Schema Information
@@ -541,6 +562,9 @@ end
 #  auth_site_id              :bigint(8)        not null
 #  preferred_locale          :string
 #  console_preferences       :jsonb
+#  failed_attempts           :integer          default(0), not null
+#  unlock_token              :string
+#  locked_at                 :datetime
 #
 # Indexes
 #

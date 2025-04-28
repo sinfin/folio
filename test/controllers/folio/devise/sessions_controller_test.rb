@@ -13,19 +13,19 @@ class Folio::Devise::SessionsControllerTest < ActionDispatch::IntegrationTest
 
     Rails.application.config.stub(:folio_crossdomain_devise, false) do
       assert_difference("::Folio::User.count", 2) do
-        user_site1 = register_user_at_site(site1, email:, first_name: "Site1", last_name: "User", password: "password1")
-        user_site2 = register_user_at_site(site2, email:, first_name: "Site2", last_name: "User", password: "password2")
+        user_site1 = register_user_at_site(site1, email:, first_name: "Site1", last_name: "User", password: "Strong@password1")
+        user_site2 = register_user_at_site(site2, email:, first_name: "Site2", last_name: "User", password: "Strong@password2")
       end
 
       assert_not_equal user_site1, user_site2
       assert_not_equal user_site1.auth_site, user_site2.auth_site
 
       # let try to sign in to sites
-      assert can_sign_in_at_site?(site1, email:, password: "password1")
-      assert_not can_sign_in_at_site?(site1, email:, password: "password2")
+      assert can_sign_in_at_site?(site1, email:, password: "Strong@password1")
+      assert_not can_sign_in_at_site?(site1, email:, password: "Strong@password2")
 
-      assert_not can_sign_in_at_site?(site2, email:, password: "password1")
-      assert can_sign_in_at_site?(site2, email:, password: "password2")
+      assert_not can_sign_in_at_site?(site2, email:, password: "Strong@password1")
+      assert can_sign_in_at_site?(site2, email:, password: "Strong@password2")
     end
   end
 
@@ -34,14 +34,14 @@ class Folio::Devise::SessionsControllerTest < ActionDispatch::IntegrationTest
     site2 = create(:folio_site, domain: "site2.localhost", type: "Folio::Site")
     main_site = create(:folio_site, domain: "main.localhost", type: "Folio::Site")
     email = "superadmin@kocourek.cz"
-    _superadmin = create(:folio_user, email:, password: "password1", superadmin: true, auth_site: main_site)
+    _superadmin = create(:folio_user, email:, password: "Strong@password1", superadmin: true, auth_site: main_site)
 
     Rails.application.config.stub(:folio_crossdomain_devise, false) do
       Folio::Current.stub(:main_site, main_site) do
         # let try to sign in to sites
-        assert can_sign_in_at_site?(main_site, email:, password: "password1")
-        assert can_sign_in_at_site?(site1, email:, password: "password1")
-        assert can_sign_in_at_site?(site2, email:, password: "password1")
+        assert can_sign_in_at_site?(main_site, email:, password: "Strong@password1")
+        assert can_sign_in_at_site?(site1, email:, password: "Strong@password1")
+        assert can_sign_in_at_site?(site2, email:, password: "Strong@password1")
       end
     end
   end
@@ -55,19 +55,19 @@ class Folio::Devise::SessionsControllerTest < ActionDispatch::IntegrationTest
 
     Rails.application.config.stub(:folio_crossdomain_devise, true) do
       ::Folio::Current.stub(:enabled_site_for_crossdomain_devise, xdomain_site) do
-        user_site1 = register_user_through_xdomain_site(site1, email:, first_name: "Site1", last_name: "User", password: "password1")
-        user_site2 = register_user_through_xdomain_site(site2, email:, first_name: "Site2", last_name: "User", password: "password2")
+        user_site1 = register_user_through_xdomain_site(site1, email:, first_name: "Site1", last_name: "User", password: "Strong@password1")
+        user_site2 = register_user_through_xdomain_site(site2, email:, first_name: "Site2", last_name: "User", password: "Strong@password2")
 
         assert_equal user_site1, user_site2
         assert_equal ::Folio::Current.enabled_site_for_crossdomain_devise, user_site1.auth_site
         assert_equal ::Folio::Current.enabled_site_for_crossdomain_devise, user_site2.auth_site
 
         # let try to sign in to sites ("password2" is invalid)
-        assert can_sign_in_at_site?(site1, email:, password: "password1")
-        assert_not can_sign_in_at_site?(site1, email:, password: "password2")
+        assert can_sign_in_at_site?(site1, email:, password: "Strong@password1")
+        assert_not can_sign_in_at_site?(site1, email:, password: "Strong@password2")
 
-        assert can_sign_in_at_site?(site2, email:, password: "password1")
-        assert_not can_sign_in_at_site?(site2, email:, password: "password2")
+        assert can_sign_in_at_site?(site2, email:, password: "Strong@password1")
+        assert_not can_sign_in_at_site?(site2, email:, password: "Strong@password2")
       end
     end
   end

@@ -186,7 +186,7 @@ cs:
               not_available_for_site: "Role %{roles} nejsou všechny dostupné pro web '%{site}'."
       clonable:
         association_not_found: "Asociace '%{association}' neexistuje pro %{model}"
-        attribute_not_found: "Atribut '%{attribute}' neexistuje pro %{model}"  
+        attribute_not_found: "Atribut '%{attribute}' neexistuje pro %{model}"
     models:
       folio/atom:
         few: Kapitoly
@@ -400,3 +400,7 @@ cs:
         missing_file_attribution: nebo zdroj je povinný
       password:
         same_as_current_password: nesmí být stejné jako aktuální heslo
+        missing_uppercase: musí obsahovat velké písmeno
+        missing_lowercase: musí obsahovat malé písmeno
+        missing_digit: musí obsahovat číslo
+        missing_special: musí obsahovat speciální znak

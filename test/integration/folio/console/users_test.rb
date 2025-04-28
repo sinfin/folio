@@ -9,15 +9,15 @@ class Folio::UsersTest < Folio::Console::BaseControllerTest
     super
     sign_out superadmin
 
-    @auth_allowed_user = create(:folio_user, password: "password")
-    @auth_forbidden_user = create(:folio_user, password: "password")
+    @auth_allowed_user = create(:folio_user, password: "Strong@password.123")
+    @auth_forbidden_user = create(:folio_user, password: "Strong@password.123")
     create(:folio_site_user_link, site: @site, locked_at: Time.current, user: auth_forbidden_user)
  end
 
   test "sign_in dis/allowed" do
     assert_not_equal auth_allowed_user.email, auth_forbidden_user.email
 
-    post user_session_url(params: { user: { email: auth_allowed_user.email, password: "password" } })
+    post user_session_url(params: { user: { email: auth_allowed_user.email, password: "Strong@password.123" } })
 
     assert_redirected_to root_url
     follow_redirect!
@@ -30,7 +30,7 @@ class Folio::UsersTest < Folio::Console::BaseControllerTest
     follow_redirect!
     assert_select ".d-ui-flash", text: "Odhlášení proběhlo úspěšně."
 
-    post user_session_url(params: { user: { email: auth_forbidden_user.email, password: "password" } })
+    post user_session_url(params: { user: { email: auth_forbidden_user.email, password: "Strong@password.123" } })
 
     assert_redirected_to new_user_session_url
     follow_redirect!

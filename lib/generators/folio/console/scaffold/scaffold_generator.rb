@@ -121,11 +121,13 @@ class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
     end
 
     def controller_params_permit
+      excluded_column_names = %w[id site_id created_at updated_at preview_token]
+
       if options[:through]
-        rows = ["*(@klass.column_names - %w[id site_id #{options[:through].demodulize.underscore}_id])"]
-      else
-        rows = ["*(@klass.column_names - %w[id site_id])"]
+        excluded_column_names << "#{options[:through].demodulize.underscore}_id"
       end
+
+      rows = (attributes_names - excluded_column_names).map { |name| ":#{name}" }
 
       if has_attachmentable?
         rows << "*file_placements_strong_params"

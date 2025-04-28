@@ -135,7 +135,7 @@ en:
     errors:
       messages:
         indestructible: The record cannot be removed.
-        file_format: '%{file_mime_type} is invalid. Allowed types: %{types}'
+        file_format: "%{file_mime_type} is invalid. Allowed types: %{types}"
         wrong_namespace: The record type does not match the site type.
         not_from_same_site: is not from the same site
       models:
@@ -330,3 +330,7 @@ en:
         missing_file_attribution: or source is required
       password:
         same_as_current_password: must not be the same as the current password
+        missing_uppercase: must contain a uppercase letter
+        missing_lowercase: must contain a lowercase letter
+        missing_digit: must contain a digit
+        missing_special: must contain a special character

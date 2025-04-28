@@ -173,4 +173,34 @@ class Folio::Console::UsersControllerTest < Folio::Console::BaseControllerTest
     post url_for([:invite_and_copy, :console, model])
     assert_response(:success)
   end
+
+  test "only superadmin can set superadmin boolean" do
+    Folio::SiteUserLink.find_or_create_by!(site:, user: @superadmin, roles: %i[administrator])
+    @superadmin.update!(superadmin: false)
+
+    user = create(:folio_user, first_name: "User",  email: "user@#{site.domain}")
+    Folio::SiteUserLink.find_or_create_by!(site:, user:, roles: %i[administrator])
+
+    sign_in @superadmin
+    patch url_for([:console, user]), params: {
+      user: { superadmin: true }
+    }
+    assert_redirected_to url_for([:edit, :console, user])
+    follow_redirect!
+    assert_response(:ok)
+
+    assert_equal false, user.reload.superadmin?
+
+    @superadmin.update!(superadmin: true)
+
+    sign_in @superadmin
+    patch url_for([:console, user]), params: {
+      user: { superadmin: true }
+    }
+    assert_redirected_to url_for([:edit, :console, user])
+    follow_redirect!
+    assert_response(:ok)
+
+    assert_equal true, user.reload.superadmin?
+  end
 end

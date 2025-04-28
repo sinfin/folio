@@ -6,7 +6,15 @@ class Folio::Console::Dummy::Blog::TopicsController < Folio::Console::BaseContro
   private
     def topic_params
       params.require(:dummy_blog_topic)
-            .permit(*(@klass.column_names - %w[id site_id]),
+            .permit(:title,
+                    :slug,
+                    :perex,
+                    :locale,
+                    :published,
+                    :featured,
+                    :position,
+                    :meta_title,
+                    :meta_description,
                     *file_placements_strong_params)
     end
 
