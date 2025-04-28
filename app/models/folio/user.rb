@@ -27,6 +27,7 @@ class Folio::User < Folio::ApplicationRecord
     trackable
     invitable
     timeoutable
+    lockable
   ]
 
   if Rails.application.config.folio_users_confirmable
@@ -561,6 +562,9 @@ end
 #  auth_site_id              :bigint(8)        not null
 #  preferred_locale          :string
 #  console_preferences       :jsonb
+#  failed_attempts           :integer          default(0), not null
+#  unlock_token              :string
+#  locked_at                 :datetime
 #
 # Indexes
 #

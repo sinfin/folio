@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - `timeoutable` to `Folio::User` with a value of 30 minutes
+- `lockable` to `Folio::User` - lock user for 15 minutes after 5 unsuccessful attempts
 - password complexity validation to `Folio::User` - allow 8-128 characters, must include special/lower/upper/number if shorter than 48 characters
 
 ### Changed
