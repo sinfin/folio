@@ -44,7 +44,7 @@ class Folio::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksContr
       @user = Folio::User.new_from_auth(@auth)
 
       @user.assign_attributes(create_user_params)
-      @user.password = "#{Devise.friendly_token[0, 20]}a6C" # appendix to always fullfill standard requirements
+      @user.password = "#{Devise.friendly_token[0, 20]}$a6C" # appendix to always fullfill standard requirements
       @user.has_generated_password = true
 
       if @user.save
