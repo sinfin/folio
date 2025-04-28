@@ -121,13 +121,13 @@ class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
     end
 
     def controller_params_permit
-      blacklist = %w[id site_id created_at updated_at preview_token]
+      excluded_column_names = %w[id site_id created_at updated_at preview_token]
 
       if options[:through]
-        blacklist << "#{options[:through].demodulize.underscore}_id"
+        excluded_column_names << "#{options[:through].demodulize.underscore}_id"
       end
 
-      rows = (attributes_names - blacklist).map { |name| ":#{name}" }
+      rows = (attributes_names - excluded_column_names).map { |name| ":#{name}" }
 
       if has_attachmentable?
         rows << "*file_placements_strong_params"
