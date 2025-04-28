@@ -10,11 +10,11 @@ class Folio::Users::ComebacksControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to main_app.new_user_session_path
 
-    create(:folio_user, password: "foobarbaz", email: "test@test.test")
+    create(:folio_user, password: "Complex@Password.123", email: "test@test.test")
 
     post main_app.user_session_path, params: {
       'user[email]': "test@test.test",
-      'user[password]': "foobarbaz"
+      'user[password]': "Complex@Password.123"
     }
 
     # Get there after sign in
