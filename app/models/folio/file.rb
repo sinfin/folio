@@ -232,6 +232,10 @@ class Folio::File < Folio::ApplicationRecord
     end
   end
 
+  def file_modal_additional_fields
+    {}
+  end
+
   private
     def set_file_name_for_search
       self.file_name_for_search = self.class.sanitize_filename_for_search(file_name)

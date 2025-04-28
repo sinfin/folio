@@ -113,8 +113,14 @@ module Folio::Console::Api::FileControllerBase
         :alt,
       ]
 
-      if @klass.new.respond_to?("preview_duration=")
+      test_instance = @klass.new
+
+      if test_instance.respond_to?("preview_duration=")
         ary << :preview_duration
+      end
+
+      if test_instance.try(:file_modal_additional_fields).present?
+        ary += test_instance.file_modal_additional_fields.keys
       end
 
       ary << { tags: [] }

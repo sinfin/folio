@@ -29,7 +29,7 @@ class FileModal extends Component {
     super(props)
 
     if (props.fileModal.file) {
-      this.state = {
+      const newState = {
         author: props.fileModal.file.attributes.author,
         attribution_source: props.fileModal.file.attributes.attribution_source,
         attribution_source_url: props.fileModal.file.attributes.attribution_source_url,
@@ -42,6 +42,12 @@ class FileModal extends Component {
         sensitive_content: props.fileModal.file.attributes.sensitive_content,
         tags: props.fileModal.file.attributes.tags
       }
+
+      props.fileModal.file.attributes.file_modal_additional_fields.forEach((field) => {
+        newState[field.name] = field.value
+      })
+
+      this.state = newState
     } else {
       this.state = {
         author: null,
@@ -70,8 +76,7 @@ class FileModal extends Component {
   componentDidUpdate (prevProps) {
     if (this.props.fileModal.file) {
       if (!prevProps.fileModal.file || (prevProps.fileModal.updating && this.props.fileModal.updating === false)) {
-        this.setState({
-          ...this.state,
+        const newState = {
           author: this.props.fileModal.file.attributes.author,
           attribution_source: this.props.fileModal.file.attributes.attribution_source,
           attribution_source_url: this.props.fileModal.file.attributes.attribution_source_url,
@@ -83,6 +88,15 @@ class FileModal extends Component {
           preview_duration: this.props.fileModal.file.attributes.preview_duration,
           sensitive_content: this.props.fileModal.file.attributes.sensitive_content,
           tags: this.props.fileModal.file.attributes.tags
+        }
+
+        this.props.fileModal.file.attributes.file_modal_additional_fields.forEach((field) => {
+          newState[field.name] = field.value
+        })
+
+        this.setState({
+          ...this.state,
+          ...newState,
         })
       }
     }

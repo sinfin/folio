@@ -33,6 +33,8 @@ en:
         default_gravity: Default crop
         mime_type: File type
         preview_duration: How many seconds are free?
+        subtitles_cs: Subtitles (CZ)
+        subtitles_en: Subtitles (EN)
       folio/file/image:
         file_placements: Placements
         thumbnail_sizes: Generated versions

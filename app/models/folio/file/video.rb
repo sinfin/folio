@@ -7,14 +7,20 @@ class Folio::File::Video < Folio::File
     additional_data && additional_data["subtitles"]
   end
 
-  def subtitles_cze
-    subtitles["cze"]
+  def subtitles_cs
+    subtitles["cs"] if subtitles.is_a?(Hash)
   end
 
-  def subtitles_cze=(value)
+  def subtitles_cs=(value)
     self.additional_data ||= {}
     self.additional_data["subtitles"] ||= {}
-    self.additional_data["subtitles"]["cze"] = value
+    self.additional_data["subtitles"]["cs"] = value
+  end
+
+  def file_modal_additional_fields
+    {
+      subtitles_cs: :text,
+    }
   end
 
   def thumbnailable?
