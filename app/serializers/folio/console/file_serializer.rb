@@ -123,13 +123,26 @@ class Folio::Console::FileSerializer
   end
 
   attribute :file_modal_additional_fields do |object|
-    object.file_modal_additional_fields.map do |name, type|
-      {
+    object.file_modal_additional_fields.map do |name, hash|
+      h = {
         name:,
-        type:,
-        label: object.class.human_attribute_name(name),
+        type: hash[:type],
+        label: hash[:label] || object.class.human_attribute_name(name),
         value: object.send(name),
       }
+
+      if hash[:collection]
+        if hash[:include_blank] != false
+          h[:collection] = [["", ""]]
+        else
+          h[:value] ||= hash[:collection][0][1]
+          h[:collection] = []
+        end
+
+        h[:collection] += hash[:collection]
+      end
+
+      h
     end
   end
 end

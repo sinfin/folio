@@ -235,11 +235,28 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
                       async
                     />
                   ) : (
-                    <Input
-                      value={formState[additionalField.name]}
-                      onChange={(e) => onValueChange(additionalField.name, e.currentTarget.value)}
-                      name={additionalField.name}
-                    />
+                    additionalField.type === 'select' ? (
+                      <Input
+                        value={formState[additionalField.name]}
+                        onChange={(e) => onValueChange(additionalField.name, e.currentTarget.value)}
+                        name={additionalField.name}
+                        type='select'
+                        className='select'
+                      >
+                        {additionalField.collection.map((opt) => (
+                          <option value={opt[1]} key={opt[1] || '_blank'}>
+                            {opt[0]}
+                          </option>
+                        ))}
+                      </Input>
+
+                    ) : (
+                      <Input
+                        value={formState[additionalField.name]}
+                        onChange={(e) => onValueChange(additionalField.name, e.currentTarget.value)}
+                        name={additionalField.name}
+                      />
+                    )
                   )
                 )}
               </FormGroup>

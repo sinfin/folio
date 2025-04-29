@@ -96,7 +96,7 @@ class FileModal extends Component {
 
         this.setState({
           ...this.state,
-          ...newState,
+          ...newState
         })
       }
     }

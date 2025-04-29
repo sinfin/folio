@@ -19,7 +19,9 @@ class Folio::File::Video < Folio::File
 
   def file_modal_additional_fields
     {
-      subtitles_cs: :text,
+      subtitles_cs: {
+        type: :text,
+      }
     }
   end
 
