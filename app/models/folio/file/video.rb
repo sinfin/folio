@@ -7,14 +7,18 @@ class Folio::File::Video < Folio::File
     additional_data && additional_data["subtitles"]
   end
 
+  def set_subtitles(lang, value)
+    self.additional_data ||= {}
+    self.additional_data["subtitles"] ||= {}
+    self.additional_data["subtitles"][lang] = value
+  end
+
   def subtitles_cs
     subtitles["cs"] if subtitles.is_a?(Hash)
   end
 
   def subtitles_cs=(value)
-    self.additional_data ||= {}
-    self.additional_data["subtitles"] ||= {}
-    self.additional_data["subtitles"]["cs"] = value
+    set_subtitles("cs", value)
   end
 
   def file_modal_additional_fields
