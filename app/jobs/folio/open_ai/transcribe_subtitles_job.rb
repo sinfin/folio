@@ -5,8 +5,10 @@ class Folio::OpenAi::TranscribeSubtitlesJob < Folio::ApplicationJob
 
   queue_as :default
 
-  def perform(video_file, lang = "cs")
+  def perform(video_file, lang:)
     raise "only video files can be transcribed" unless video_file.is_a?(Folio::File::Video)
+
+    video_file.dont_run_after_save_jobs = true
 
     # compress audio into a small, speech-optimized .ogg file using the Opus codec
     audio_tempfile = Tempfile.new(["audio", ".ogg"], binmode: true)
@@ -16,8 +18,13 @@ class Folio::OpenAi::TranscribeSubtitlesJob < Folio::ApplicationJob
     subtitles = whisper_api_request(audio_tempfile, lang)
 
     # save subtitles without VTT header for easier editing
-    video_file.set_subtitles(lang, subtitles.delete_prefix("WEBVTT\n\n"))
+    video_file.set_subtitles_text_for(lang, subtitles.delete_prefix("WEBVTT\n\n"))
     video_file.save!
+  rescue => e
+    video_file.set_subtitles_state_for(lang, "failed")
+    video_file.save!
+    Raven.capture_exception(e, extra:) if defined?(Raven)
+    Sentry.capture_exception(e, extra:) if defined?(Sentry)
   ensure
     audio_tempfile.close
     audio_tempfile.unlink
@@ -25,7 +32,7 @@ class Folio::OpenAi::TranscribeSubtitlesJob < Folio::ApplicationJob
 
   private
     def extract_and_compress_audio(video_file_path, audio_file_path)
-      system("ffmpeg -y -i #{video_file_path} -hide_banner -loglevel error -vn -map_metadata -1 -ac 1 -c:a libopus -b:a 12k -application voip #{audio_file_path}")
+      system("ffmpeg -y -i #{video_file_path} -loglevel error -vn -map_metadata -1 -ac 1 -c:a libopus -b:a 12k -application voip #{audio_file_path}")
     end
 
     def whisper_api_request(file, lang)

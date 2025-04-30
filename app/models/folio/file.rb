@@ -104,7 +104,10 @@ class Folio::File < Folio::ApplicationRecord
     event :process do
       transitions from: :unprocessed, to: :processing
       transitions from: READY_STATE, to: :processing
-      after :process_attached_file
+      after do
+        process_attached_file
+        after_process
+      end
     end
 
     event :processing_done do
@@ -176,6 +179,10 @@ class Folio::File < Folio::ApplicationRecord
   end
 
   def destroy_attached_file
+  end
+
+  def after_process
+    # override in main app if needed
   end
 
   def attached_file_changed?

@@ -15,7 +15,7 @@ class Folio::Api::File::VideosController < Folio::Api::BaseController
     end
 
     def vtt_subtitles_for(video, lang)
-      subs = video.subtitles[lang]
+      subs = video.get_subtitles_text_for(lang)
       raise ActiveRecord::RecordNotFound unless subs
       "WEBVTT\n\n" + subs
     end

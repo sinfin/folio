@@ -33,8 +33,8 @@ en:
         default_gravity: Default crop
         mime_type: File type
         preview_duration: How many seconds are free?
-        subtitles_cs: Subtitles (CZ)
-        subtitles_en: Subtitles (EN)
+        subtitles_cs_text: Subtitles (CZ)
+        subtitles_en_text: Subtitles (EN)
       folio/file/image:
         file_placements: Placements
         thumbnail_sizes: Generated versions
@@ -137,7 +137,7 @@ en:
     errors:
       messages:
         indestructible: The record cannot be removed.
-        file_format: '%{file_mime_type} is invalid. Allowed types: %{types}'
+        file_format: "%{file_mime_type} is invalid. Allowed types: %{types}"
         wrong_namespace: The record type does not match the site type.
         not_from_same_site: is not from the same site
       models:

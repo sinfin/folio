@@ -1,32 +1,18 @@
 # frozen_string_literal: true
 
 class Folio::File::Video < Folio::File
+  include Folio::File::Video::HasSubtitles
+
   validate_file_format %w[video/mp4 video/webm]
 
-  def subtitles
-    additional_data && additional_data["subtitles"]
-  end
-
-  def set_subtitles(lang, value)
-    self.additional_data ||= {}
-    self.additional_data["subtitles"] ||= {}
-    self.additional_data["subtitles"][lang] = value
-  end
-
-  def subtitles_cs
-    subtitles["cs"] if subtitles.is_a?(Hash)
-  end
-
-  def subtitles_cs=(value)
-    set_subtitles("cs", value)
-  end
-
   def file_modal_additional_fields
-    {
-      subtitles_cs: {
-        type: :text,
-      }
-    }
+    additional_fields = {}
+
+    self.class.enabled_subtitle_languages.each do |lang|
+      additional_fields[:"subtitles_#{lang}_text"] = { type: :text }
+    end
+
+    additional_fields
   end
 
   def thumbnailable?
