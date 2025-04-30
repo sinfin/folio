@@ -37,6 +37,8 @@ cs:
         default_gravity: Výchozí ořez
         description: Popis
         preview_duration: Kolik vteřin je zdarma?
+        subtitles_cs_text: Titulky (CZ)
+        subtitles_en_text: Titulky (EN)
       folio/file/image:
         file_placements: Použití
         thumbnail_sizes: Vygenerované verze
@@ -186,7 +188,7 @@ cs:
               not_available_for_site: "Role %{roles} nejsou všechny dostupné pro web '%{site}'."
       clonable:
         association_not_found: "Asociace '%{association}' neexistuje pro %{model}"
-        attribute_not_found: "Atribut '%{attribute}' neexistuje pro %{model}"  
+        attribute_not_found: "Atribut '%{attribute}' neexistuje pro %{model}"
     models:
       folio/atom:
         few: Kapitoly
