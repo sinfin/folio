@@ -400,3 +400,5 @@ cs:
         already_exists: "Je povolen jen jeden záznam '%{class}'."
       author:
         missing_file_attribution: nebo zdroj je povinný
+      password:
+        same_as_current_password: nesmí být stejné jako aktuální heslo

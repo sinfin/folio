@@ -318,6 +318,9 @@ upload:
 user:
   width: 24
   height: 24
+user_filled:
+  width: 24
+  height: 24
 video:
   width: 24
   height: 24

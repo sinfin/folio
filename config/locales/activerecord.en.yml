@@ -330,3 +330,5 @@ en:
         already_exists: "Only one record of '%{class}' is allowed."
       author:
         missing_file_attribution: or source is required
+      password:
+        same_as_current_password: must not be the same as the current password

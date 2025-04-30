@@ -9,6 +9,12 @@ All notable changes to this project will be documented in this file.
 - `Folio::OpenAi::TranscribeSubtitlesJob` for automatic subtitles transcription (disabled by default)
 - `file_modal_additional_fields` method to files for custom fields in console file modal
 
+## [6.3.1] - 2025-04-24
+
+### Added
+- `set_cache_control_headers` to set `Cache-Control` headers for unpublished records
+- console "CurrentUser" controller allowing users to change their e-mail and password
+
 ### Changed
 - console `preview_url_for` - now defined in `Folio::Console::PreviewUrlFor` and expandable via `Rails.application.config.folio_console_preview_url_for_procs`
 - added `:preview` to the console actions default - hide it if URL is not available

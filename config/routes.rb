@@ -42,6 +42,11 @@ Folio::Engine.routes.draw do
         get :input_tags
       end
 
+      resource :current_user, only: %i[show] do
+        patch :update_email
+        patch :update_password
+      end
+
       resources :attribute_types, except: %i[show] do
         collection do
           post :set_positions
