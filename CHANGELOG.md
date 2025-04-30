@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- `Folio::File::Video::HasSubtitles` concern to Video files
+- `Rails.application.config.folio_files_video_enabled_subtitle_languages` to set subtitle languages
+- `Folio::OpenAi::TranscribeSubtitlesJob` for automatic subtitles transcription (disabled by default)
+- `file_modal_additional_fields` method to files for custom fields in console file modal
+
 ### Changed
 - console `preview_url_for` - now defined in `Folio::Console::PreviewUrlFor` and expandable via `Rails.application.config.folio_console_preview_url_for_procs`
 - added `:preview` to the console actions default - hide it if URL is not available
