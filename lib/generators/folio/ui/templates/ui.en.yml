@@ -1,5 +1,5 @@
 ---
-disclaimer:
+disclaimer_component:
   text: By submitting you agree to our %{link}.
   link: privacy policy
 footer_component:

@@ -2,7 +2,7 @@
 cs:
   dummy:
     ui:
-      disclaimer:
+      disclaimer_component:
         text: Odesláním souhlasíte se %{link}.
         link: zásadami ochrany osobních údajů
       footer_component:

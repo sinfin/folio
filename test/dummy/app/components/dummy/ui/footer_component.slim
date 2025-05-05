@@ -8,7 +8,7 @@ footer.d-ui-footer
 
             = render(Folio::NewsletterSubscriptions::FormComponent.new)
 
-            == cell('dummy/ui/disclaimer')
+            = render(Dummy::Ui::DisclaimerComponent.new)
 
         - if contact_details.present?
           .d-ui-footer__col
