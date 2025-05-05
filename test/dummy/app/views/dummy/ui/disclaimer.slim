@@ -1,0 +1,14 @@
+.container-fluid
+  h1
+    a.d-unlink href=dummy_ui_path UI kit
+
+  - %w[light dark].each do |theme|
+    .bg-body.p-f.mt-f.border.rounded data-bs-theme=theme
+      h2.mt-0 Disclaimer - #{theme}
+
+      h3 Without link
+      = render(Dummy::Ui::DisclaimerComponent.new)
+
+      h3 With link
+      - if (page = Folio::Page.published.first).present?
+        = render(Dummy::Ui::DisclaimerComponent.new(page:))

@@ -11,6 +11,7 @@ class Dummy::UiController < ApplicationController
       breadcrumbs
       buttons
       cards
+      disclaimer
       documents
       chips
       clipboard

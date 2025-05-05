@@ -10,6 +10,7 @@ scope module: :dummy, as: :dummy do
     get :cards
     get :chips
     get :clipboard
+    get :disclaimer
     get :documents
     get :embed
     get :forms
