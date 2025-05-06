@@ -13,12 +13,17 @@ class Folio::Console::Files::Batch::BarComponent < Folio::Console::ApplicationCo
                           file_ids_json: file_ids.to_json,
                         },
                         action: {
-                          "f-c-files-batch-bar/action" => "batchActionFromFile"
+                          "f-c-files-batch-bar/action" => "batchActionFromFile",
+                          "f-c-files-batch-form:cancel" => "cancelForm"
                         })
   end
 
   def file_ids
     @file_ids ||= session.dig(Folio::Console::Api::FileControllerBase::BATCH_SESSION_KEY, @file_klass.to_s, "file_ids") || []
+  end
+
+  def form_open
+    @form_open ||= session.dig(Folio::Console::Api::FileControllerBase::BATCH_SESSION_KEY, @file_klass.to_s, "form_open") || false
   end
 
   def files_ary

@@ -115,6 +115,22 @@ module Folio::Console::Api::FileControllerBase
     render_component_json(Folio::Console::Files::Batch::BarComponent.new(file_klass: @klass))
   end
 
+  def open_batch_form
+    session[BATCH_SESSION_KEY] ||= {}
+    session[BATCH_SESSION_KEY][@klass.to_s] ||= {}
+    session[BATCH_SESSION_KEY][@klass.to_s]["form_open"] = true
+
+    render_component_json(Folio::Console::Files::Batch::BarComponent.new(file_klass: @klass))
+  end
+
+  def close_batch_form
+    session[BATCH_SESSION_KEY] ||= {}
+    session[BATCH_SESSION_KEY][@klass.to_s] ||= {}
+    session[BATCH_SESSION_KEY][@klass.to_s]["form_open"] = false
+
+    render_component_json(Folio::Console::Files::Batch::BarComponent.new(file_klass: @klass))
+  end
+
   def batch_download
     files = @klass.where(id: @safe_file_ids).to_a
 
@@ -122,6 +138,7 @@ module Folio::Console::Api::FileControllerBase
     file_name = "#{Folio::Current.site.slug}-#{@klass.human_type.pluralize}.zip"
     s3_path = "#{S3_PATH_DOWNLOAD_BASE}/#{Time.current.to_i}-#{SecureRandom.hex(8)}/#{file_name}"
 
+    # TODO: move this to a sidekiq job
     Zip::File.open(tmp_zip_file.path, Zip::File::CREATE) do |zip|
       files.each do |file|
         # dragonfly ¯\_(ツ)_/¯

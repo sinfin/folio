@@ -7,6 +7,8 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
     fileIdsJson: String
   }
 
+  static targets = ['form']
+
   disconnect () {
     this.abortAjax()
   }
@@ -19,7 +21,15 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
   }
 
   settings () {
-    console.log('settings')
+    this.ajax({
+      url: `${this.baseApiUrlValue}/open_batch_form`
+    })
+  }
+
+  cancelForm () {
+    this.ajax({
+      url: `${this.baseApiUrlValue}/close_batch_form`
+    })
   }
 
   download () {
