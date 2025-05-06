@@ -145,4 +145,12 @@ class Folio::Console::FileSerializer
       h
     end
   end
+
+  attribute :imported_from_photo_archive do |object|
+    if Rails.application.config.folio_photo_archive_enabled
+      if object.respond_to?(:imported_from_photo_archive?)
+        object.imported_from_photo_archive?
+      end
+    end
+  end
 end
