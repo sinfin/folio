@@ -34,6 +34,7 @@ en:
         file_mime_type: File type
         file_size: File size
         preview_duration: How many seconds are free?
+        used: Used
       folio/file/image:
         file_placements: Placements
         thumbnail_sizes: Generated versions
