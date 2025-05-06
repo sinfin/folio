@@ -103,9 +103,7 @@ module Folio::Console::Api::FileControllerBase
     }
 
     if @klass.human_type == "image"
-      @pagy_options = {
-        middle_component: Folio::Console::Files::DisplayToggleComponent.new,
-      }
+      @pagy_options[:middle_component] = Folio::Console::Files::DisplayToggleComponent.new
     end
 
     render_component_json(Folio::Console::Ui::PagyComponent.new(pagy: @pagy,
@@ -118,7 +116,10 @@ module Folio::Console::Api::FileControllerBase
     end
 
     def filter_params
-      params.permit(:by_file_name, :by_placement, :by_tags, :by_used)
+      params.permit(:by_file_name,
+                    :by_placement,
+                    :by_tags,
+                    :by_used)
     end
 
     def file_params_whitelist
