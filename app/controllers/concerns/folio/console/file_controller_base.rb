@@ -61,10 +61,10 @@ module Folio::Console::FileControllerBase
       }
 
       if @klass.human_type == "image"
-        @pagy_options = {
-          middle_component: Folio::Console::Files::DisplayToggleComponent.new,
-        }
+        @pagy_options[:middle_component] = Folio::Console::Files::DisplayToggleComponent.new
       end
+
+      @pagy_options
     end
 
     def index_pagy_items_per_page
