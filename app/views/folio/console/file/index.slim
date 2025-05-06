@@ -9,4 +9,5 @@
   data-mode='index'
   data-taggable='1'
   data-can-destroy-files=(can_now?(:destroy, @klass) ? "1" : nil)
+  data-photo-archive-enabled=(Rails.application.config.folio_photo_archive_enabled ? "1" : nil)
 ]

@@ -9,6 +9,7 @@ const SET_READ_ONLY = 'app/SET_READ_ONLY'
 const SET_TAGGABLE = 'app/SET_TAGGABLE'
 const SET_NO_FILE_USAGE = 'app/SET_NO_FILE_USAGE'
 const SET_CAN_DESTROY_FILES = 'app/SET_CAN_DESTROY_FILES'
+const SET_PHOTO_ARCHIVE_ENABLED = 'app/SET_PHOTO_ARCHIVE_ENABLED'
 
 // Actions
 
@@ -44,6 +45,10 @@ export function setCanDestroyFiles (canDestroyFiles) {
   return { type: SET_CAN_DESTROY_FILES, canDestroyFiles }
 }
 
+export function setPhotoArchiveEnabled (photoArchiveEnabled) {
+  return { type: SET_PHOTO_ARCHIVE_ENABLED, photoArchiveEnabled }
+}
+
 export function setNoFileUsage () {
   return { type: SET_NO_FILE_USAGE }
 }
@@ -54,6 +59,7 @@ export const appSelector = (state) => state.app
 export const fileTypeSelector = (state) => state.app.fileType
 export const filesUrlSelector = (state) => state.app.filesUrl
 export const fileUsageSelector = (state) => state.app.fileUsage
+export const photoArchiveEnabledSelector = (state) => state.app.photoArchiveEnabled
 export const indexUrlSelector = (state) => state.app.mode === 'index' ? state.app.indexUrl : null
 
 // State
@@ -66,7 +72,8 @@ const initialState = {
   readOnly: false,
   fileUsage: true,
   canDestroyFiles: true,
-  taggable: false
+  taggable: false,
+  photoArchiveEnabled: false
 }
 
 // Reducer
@@ -119,6 +126,12 @@ function appReducer (state = initialState, action) {
       return {
         ...state,
         canDestroyFiles: !!action.canDestroyFiles
+      }
+
+    case SET_PHOTO_ARCHIVE_ENABLED:
+      return {
+        ...state,
+        photoArchiveEnabled: !!action.photoArchiveEnabled
       }
 
     case SET_NO_FILE_USAGE:
