@@ -10,6 +10,7 @@ class Folio::CraMediaCloud::CreateMediaJob < Folio::ApplicationJob
     fail "only video files are supported" unless media_file.is_a?(Folio::File::Video)
 
     original_remote_id = media_file.remote_id
+    original_remote_reference_id = media_file.remote_reference_id
 
     response = Folio::CraMediaCloud::Encoder.new.upload_file(media_file, profile_group: media_file.try(:encoder_profile_group))
 
@@ -21,7 +22,10 @@ class Folio::CraMediaCloud::CreateMediaJob < Folio::ApplicationJob
     media_file.save!
 
     Folio::CraMediaCloud::CheckProgressJob.set(wait: 1.minute).perform_later(media_file)
-    Folio::CraMediaCloud::DeleteMediaJob.perform_later(original_remote_id) if original_remote_id.present?
+
+    if original_remote_id || original_remote_reference_id
+      Folio::CraMediaCloud::DeleteMediaJob.perform_later(original_remote_id, reference_id: original_remote_reference_id)
+    end
 
     broadcast_file_update(media_file)
   end
