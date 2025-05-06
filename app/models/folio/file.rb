@@ -40,16 +40,20 @@ class Folio::File < Folio::ApplicationRecord
 
   # Scopes
   scope :ordered, -> { order(created_at: :desc) }
+
   scope :by_placement, -> (placement_title) { order(created_at: :desc) }
+
   scope :by_used, -> (used) do
-    if used == "used"
+    case used
+    when true, "true"
       joins(:file_placements)
-    elsif used == "unused"
+    when false, "false"
       left_joins(:file_placements).where(folio_file_placements: { id: nil })
     else
-      all
+      noen
     end
   end
+
   scope :by_tags, -> (tags) do
     if tags.is_a?(String)
       tagged_with(tags.split(","))
@@ -57,7 +61,7 @@ class Folio::File < Folio::ApplicationRecord
       tagged_with(tags)
     end
   end
-  # workaround for filenames with dashes & underscores
+
   scope :by_file_name, -> (query) do
     by_file_name_for_search(sanitize_filename_for_search(query))
   end
@@ -255,6 +259,10 @@ class Folio::File < Folio::ApplicationRecord
       rescue StandardError
       end
     end
+  end
+
+  def to_label
+    file_name.presence || self.class.model_name.human
   end
 
   private

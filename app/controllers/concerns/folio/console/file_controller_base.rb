@@ -87,4 +87,10 @@ module Folio::Console::FileControllerBase
                          }.to_json,
                          user_ids:
     end
+
+    def index_filters
+      {
+        by_used: [true, false],
+      }
+    end
 end

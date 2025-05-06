@@ -39,6 +39,7 @@ cs:
         file_mime_type: Typ souboru
         file_size: Velikost souboru
         preview_duration: Kolik vteřin je zdarma?
+        used: Použitý
       folio/file/image:
         file_placements: Použití
         thumbnail_sizes: Vygenerované verze
