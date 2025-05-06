@@ -9,6 +9,9 @@ All notable changes to this project will be documented in this file.
 - `Folio::OpenAi::TranscribeSubtitlesJob` for automatic subtitles transcription (disabled by default)
 - `file_modal_additional_fields` method to files for custom fields in console file modal
 
+### Changed
+- use `only_path: true` for file sidebar links when `folio_shared_files_between_sites`
+
 ## [6.3.1] - 2025-04-24
 
 ### Added

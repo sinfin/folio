@@ -66,7 +66,7 @@ class Folio::Console::SharedFilesTest < Folio::Console::BaseControllerTest
                         .css("a")
                         .attribute("href")
                         .value
-                        .include?(main_site.domain)
+                        .starts_with?("/")
       end
     end
   end
