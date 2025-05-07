@@ -58,3 +58,7 @@ cs:
         usageUnused: Nepoužité
         usageUsed: Použité
         used: Již použité
+        photoArchivePlaceholder: Fotoarchiv...
+        photoArchiveFromPhotoArchive: Z fotoarchivu
+        photoArchiveNotFromPhotoArchive: Mimo fotoarchiv
+        importedFromPhotoArchive: Importováno z fotoarchivu

@@ -11,7 +11,7 @@ import AncestryApp from 'containers/AncestryApp'
 import MenuFormApp from 'containers/MenuFormApp'
 import OrderedMultiselectApp from 'containers/OrderedMultiselectApp'
 import NotesFieldsApp from 'containers/NotesFieldsApp'
-import { setMode, setFileType, setFilesUrl, setIndexUrl, setReadOnly, setTaggable, setNoFileUsage, setFileReactType, setCanDestroyFiles } from 'ducks/app'
+import { setMode, setFileType, setFilesUrl, setIndexUrl, setReadOnly, setTaggable, setNoFileUsage, setFileReactType, setCanDestroyFiles, setPhotoArchiveEnabled } from 'ducks/app'
 import { setMenusData } from 'ducks/menus'
 import { openFileModal } from 'ducks/fileModal'
 import { setAncestryData } from 'ducks/ancestry'
@@ -142,6 +142,12 @@ window.FolioConsole.React.init = (domRoot) => {
       {
         key: 'canDestroyFiles',
         action: setCanDestroyFiles,
+        asJson: false,
+        fallbackValue: false
+      },
+      {
+        key: 'photoArchiveEnabled',
+        action: setPhotoArchiveEnabled,
         asJson: false,
         fallbackValue: false
       },

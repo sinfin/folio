@@ -94,7 +94,7 @@ module Folio::Console::Api::FileControllerBase
     end
 
     def filter_params
-      params.permit(:by_file_name, :by_placement, :by_tags, :by_used)
+      params.permit(:by_file_name, :by_placement, :by_tags, :by_used, :by_photo_archive)
     end
 
     def file_params_whitelist

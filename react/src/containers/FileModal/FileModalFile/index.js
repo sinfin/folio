@@ -121,6 +121,10 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
 
             <p>ID: {file.attributes.id}</p>
 
+            {file.attributes.imported_from_photo_archive && (
+              <p>{window.FolioConsole.translations.importedFromPhotoArchive}</p>
+            )}
+
             <p className='mb-1'>{window.FolioConsole.translations.state}:</p>
 
             <div className='f-c-state mb-3'>
