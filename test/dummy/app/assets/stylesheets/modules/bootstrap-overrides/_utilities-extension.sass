@@ -1,0 +1,4 @@
+// Extending Bootstrap $utility variable with custom colors
+$color-values-with-custom: map-merge(map-get(map-get($utilities, "color"), "values"), $custom-utilities-text-colors)
+$color-utility-with-custom: map-merge(map-get($utilities, "color"), (values: $color-values-with-custom))
+$utilities: map-merge($utilities, ("color": $color-utility-with-custom))
