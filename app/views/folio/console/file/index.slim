@@ -4,8 +4,10 @@
                                       files: controller.instance_variable_get(controller.send(:folio_console_record_variable_name, plural: true)),
                                       editable: true,
                                       destroyable: true,
+                                      uploadable: true,
                                       batch_actions: true,
-                                      primary_action: :edit))
+                                      primary_action: :edit,
+                                      reload_pagy: true))
 
 / .folio-react-wrap[
 /   data-file-type=@klass.to_s

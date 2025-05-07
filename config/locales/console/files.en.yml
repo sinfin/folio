@@ -19,3 +19,4 @@ en:
 
           form_component:
             title: Batch settings of files
+            selected_files: Selected files

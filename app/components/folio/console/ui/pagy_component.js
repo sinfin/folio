@@ -14,12 +14,19 @@ window.Folio.Stimulus.register('f-c-ui-pagy', class extends window.Stimulus.Cont
   }
 
   reload () {
+    if (this.reloading) return false
+
+    this.reloading = true
+
     window.Folio.Api.apiGet(this.reloadUrlValue).then((res) => {
       if (res && res.data) {
+        if (!this.element.parentNode) return
+
         this.element.outerHTML = res.data
       }
     }).catch((e) => {
       console.error('Error reloading pagy:', e)
+      this.reloading = false
     })
   }
 })

@@ -37,3 +37,17 @@
 
 
     == cell('folio/console/ui/buttons', form_buttons_model)
+
+    - if @files.present?
+      p.mt-g = t('.selected_files')
+
+      .border-top
+        = render(Folio::FileListComponent.new(file_klass: @file_klass,
+                                              files: @files,
+                                              editable: true,
+                                              destroyable: true,
+                                              batch_actions: false,
+                                              removable_from_batch: true,
+                                              allow_thumbnail_view: false,
+                                              thead: false,
+                                              primary_action: :edit))

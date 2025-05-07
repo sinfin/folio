@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 class Folio::Console::Files::Batch::FormComponent < Folio::Console::ApplicationComponent
-  def initialize(file_klass:)
+  def initialize(file_klass:, files: [])
     @file_klass = file_klass
+    @files = files
   end
 
   def data

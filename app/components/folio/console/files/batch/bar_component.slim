@@ -4,7 +4,8 @@
 ]
   - if form_open
     .f-c-files-batch-bar__form-wrap
-      = render(Folio::Console::Files::Batch::FormComponent.new(file_klass: @file_klass))
+      = render(Folio::Console::Files::Batch::FormComponent.new(file_klass: @file_klass,
+                                                               files: files_ary))
   - else
     .f-c-files-batch-bar__flex
       .f-c-files-batch-bar__count-and-ico

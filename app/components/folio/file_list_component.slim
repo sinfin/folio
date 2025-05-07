@@ -6,12 +6,14 @@
     = blank_message
 
   .f-file-list__flex
-    .f-file-list__flex-item.f-file-list__flex-item--uppy data=stimulus_target("uppy")
-      = render(Folio::UppyComponent.new(file_type: @file_klass.to_s))
+    - if @uploadable
+      .f-file-list__flex-item.f-file-list__flex-item--uppy data=stimulus_target("uppy")
+        = render(Folio::UppyComponent.new(file_type: @file_klass.to_s))
 
     .f-file-list__flex-item.f-file-list__flex-item--thead data=stimulus_target("thead")
-      = render(Folio::FileList::FileComponent.new(**file_args(thead: true,
-                                                              file: new_file)))
+      - if @thead
+        = render(Folio::FileList::FileComponent.new(**file_args(thead: true,
+                                                                file: new_file)))
 
     - if @files.present?
       - @files.each do |file|

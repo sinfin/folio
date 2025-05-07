@@ -19,3 +19,4 @@ cs:
 
           form_component:
             title: Hromadné nastavení souborů
+            selected_files: Vybrané soubory

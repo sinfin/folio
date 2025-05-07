@@ -1,6 +1,7 @@
 window.Folio.Stimulus.register('f-file-list', class extends window.Stimulus.Controller {
   static values = {
-    fileType: String
+    fileType: String,
+    reloadPagy: { type: Boolean, default: false }
   }
 
   static targets = ['fileTemplate', 'uppy', 'blank', 'thead', 'flexItem']
@@ -44,7 +45,7 @@ window.Folio.Stimulus.register('f-file-list', class extends window.Stimulus.Cont
     if (!this.handleFlexItemTargets) return
     this.blankTarget.hidden = this.flexItemTargets.length > 0
 
-    if (updatePagy && window.FolioConsole && window.FolioConsole.Ui && window.FolioConsole.Ui.Pagy) {
+    if (updatePagy && this.reloadPagyValue && window.FolioConsole && window.FolioConsole.Ui && window.FolioConsole.Ui.Pagy) {
       window.FolioConsole.Ui.Pagy.reload()
     }
   }

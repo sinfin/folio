@@ -100,10 +100,23 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
 
     if (!url || !data) return
 
-    this.ajax({ url, data, status: 'reloading' })
+    const callback = () => {
+      const message = { type: 'Folio::Console::Files::Batch::BarComponent/batch_updated' }
+
+      data.file_ids.forEach((fileId) => {
+        const selector = `.f-file-list-file[data-f-file-list-file-id-value="${fileId}"]`
+        const files = document.querySelectorAll(selector)
+
+        for (const file of files) {
+          file.dispatchEvent(new CustomEvent('f-file-list-file/message', { detail: { message } }))
+        }
+      })
+    }
+
+    this.ajax({ url, data, status: 'reloading', callback })
   }
 
-  ajax ({ url, data, apiMethod = 'apiPost', status = 'loading' }) {
+  ajax ({ url, data, callback, apiMethod = 'apiPost', status = 'loading' }) {
     this.statusValue = status
     this.abortController = new AbortController()
 
@@ -111,6 +124,8 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
       if (res && res.data) {
         this.element.outerHTML = res.data
         this.statusValue = 'loaded'
+
+        if (callback) callback()
       } else {
         throw new Error('Failed to perform batch action')
       }
