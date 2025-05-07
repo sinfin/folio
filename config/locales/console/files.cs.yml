@@ -16,3 +16,6 @@ cs:
             download: Stáhnout
             settings: Hromadné nastavení
             download_label: Soubory připraveny ke stažení
+
+          form_component:
+            title: Hromadné nastavení souborů

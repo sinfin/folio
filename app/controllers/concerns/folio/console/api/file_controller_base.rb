@@ -10,7 +10,7 @@ module Folio::Console::Api::FileControllerBase
 
   included do
     include Folio::S3::Client
-    before_action :set_safe_file_ids, only: %i[batch_delete batch_download]
+    before_action :set_safe_file_ids, only: %i[batch_delete batch_download batch_update]
     before_action :delete_s3_download_file, only: %i[add_to_batch remove_from_batch batch_delete]
   end
 
@@ -178,6 +178,33 @@ module Folio::Console::Api::FileControllerBase
 
     render_component_json(Folio::Console::Files::Batch::BarComponent.new(file_klass: @klass),
       flash: { success: t("folio.console.api.file_controller_base.batch_delete_success") })
+  end
+
+  def batch_update
+    files = @klass.where(id: @safe_file_ids)
+
+    if forbidden_file = files.find { |file| !can_now?(:update, file) }
+      raise ActionController::BadRequest.new("Invalid file IDs - you are not allowed to update file #{forbidden_file.id}")
+    end
+
+    update_params = params.require(:file_attributes)
+                          .permit(:author,
+                                  :attribution_source,
+                                  :attribution_source_url,
+                                  :attribution_copyright,
+                                  :attribution_licence,
+                                  :alt,
+                                  :tag_list,
+                                  :description)
+
+    @klass.transaction do
+      files.each { |file| file.update!(update_params) }
+    end
+
+    session[BATCH_SESSION_KEY][@klass.to_s]["form_open"] = false
+
+    render_component_json(Folio::Console::Files::Batch::BarComponent.new(file_klass: @klass),
+      flash: { success: t("folio.console.api.file_controller_base.batch_update_success") })
   end
 
   private

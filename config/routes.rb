@@ -177,6 +177,7 @@ Folio::Engine.routes.draw do
                 post :close_batch_form
 
                 post :batch_download
+                patch :batch_update
                 delete :batch_delete
               end
 

@@ -1,4 +1,39 @@
-.f-c-files-batch-form data=data
-  = folio_console_ui_button(icon: :close,
-                            data: stimulus_action(click: "cancel"),
-                            variant: :icon)
+.f-c-files-batch-form.p-g data=data
+  .d-flex.align-items-center.gap-g.mb-h
+    .h3.m-0.flex-shrink-1.flex-grow-1
+      = t('.title')
+
+    = folio_console_ui_button(icon: :close,
+                              data: stimulus_action(click: "cancel"),
+                              variant: :icon)
+
+  = form do |f|
+    .row
+      .col-sm-6.col-lg-3
+        = f.input :author
+
+      .col-sm-6.col-lg-3
+        = f.input :attribution_source
+
+      .col-sm-6.col-lg-3
+        = f.input :attribution_source_url, as: :string
+
+      .col-sm-6.col-lg-3
+        = f.input :attribution_copyright
+
+    .row
+      .col-sm-6.col-lg-4
+        = f.input :attribution_licence
+
+      .col-sm-6.col-lg-4
+        = f.input :alt, hint: false
+
+      .col-sm-6.col-lg-4
+        = f.input :tag_list, hint: false
+
+    .row
+      .col-12
+        = f.input :description, autosize: true
+
+
+    == cell('folio/console/ui/buttons', form_buttons_model)

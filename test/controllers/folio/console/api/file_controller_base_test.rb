@@ -158,5 +158,37 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
       assert_equal 1, parsed_component.css(".f-c-files-batch-bar__download").size
       assert_equal("3", parsed_component.css(".f-c-files-batch-bar__count").first.text.strip)
     end
+
+    test "#{klass} - batch_update" do
+      files = create_list(klass.model_name.singular, 3)
+      file_ids = files.map(&:id)
+      assert_equal 3, klass.where(id: file_ids).count
+
+      post url_for([:add_to_batch, :console, :api, klass, format: :json]), params: { file_ids: }
+      assert_response(:ok)
+
+      parsed_component = Nokogiri::HTML(response.parsed_body["data"])
+      assert_equal 1, parsed_component.css(".f-c-files-batch-bar").size
+      assert_equal 0, parsed_component.css(".f-c-files-batch-bar__form-wrap").size
+
+      post url_for([:open_batch_form, :console, :api, klass, format: :json])
+      assert_response(:ok)
+
+      assert_not_equal "foo", files.first.reload.author
+
+      parsed_component = Nokogiri::HTML(response.parsed_body["data"])
+      assert_equal 1, parsed_component.css(".f-c-files-batch-bar").size
+      assert_equal 1, parsed_component.css(".f-c-files-batch-bar__form-wrap").size
+
+      patch url_for([:batch_update, :console, :api, klass, format: :json]), params: {
+        file_ids:,
+        file_attributes: {
+          author: "foo",
+        }
+      }
+      assert_response(:ok)
+
+      assert_equal "foo", files.first.reload.author
+    end
   end
 end
