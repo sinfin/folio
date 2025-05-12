@@ -43,6 +43,14 @@ window.FolioConsole.Flash.success = (content, data = {}) => {
   })
 }
 
+window.FolioConsole.Flash.info = (content, data = {}) => {
+  return window.FolioConsole.Flash.flash({
+    ...data,
+    content,
+    variant: 'info'
+  })
+}
+
 window.FolioConsole.Flash.alert = (content, data = {}) => {
   return window.FolioConsole.Flash.flash({
     ...data,
