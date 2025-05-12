@@ -124,6 +124,13 @@ module Folio::StimulusHelper
                         inline: true)
   end
 
+  def stimulus_modal
+    stimulus_controller("f-modal",
+                        action: {
+                          "f-modal-toggle:toggle" => "onToggleClick",
+                        })
+  end
+
   def stimulus_modal_toggle(target, dialog: nil)
     stimulus_controller("f-modal-toggle",
                         values: { target:, dialog: },
@@ -131,8 +138,9 @@ module Folio::StimulusHelper
                         inline: true)
   end
 
-  def stimulus_modal_close
+  def stimulus_modal_close(target = "")
     stimulus_controller("f-modal-close",
+                        values: { target: },
                         action: { click: "click" },
                         inline: true)
   end
