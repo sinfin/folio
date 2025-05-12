@@ -25,7 +25,13 @@ window.FolioConsole.Flash.flash = (data) => {
   if (modal) {
     modal.querySelector('.modal-content').insertBefore(alert, modal.querySelector('.modal-body'))
   } else {
-    document.querySelector('.f-c-flash-wrap').appendChild(alert)
+    const flashWrap = document.querySelector('.f-c-flash-wrap')
+
+    if (flashWrap) {
+      flashWrap.appendChild(alert)
+    } else {
+      console.log(alert)
+    }
   }
 }
 
@@ -71,5 +77,14 @@ window.FolioConsole.Flash.flashMessageFromApiErrors = (response) => {
   if (typeof response === 'object' && response.errors) {
     const flash = response.errors.map((obj) => `${obj.title} - ${obj.detail}`)
     window.FolioConsole.Flash.alert(flash)
+  }
+}
+
+if (window.Folio && window.Folio.MessageBus && window.Folio.MessageBus.callbacks) {
+  window.Folio.MessageBus.callbacks['FolioConsole.Ui.Flash'] = (message) => {
+    if (!message || message.type !== "FolioConsole.Ui.Flash") return
+    if (message.data && message.data.content) {
+      window.FolioConsole.Flash.flash(message.data)
+    }
   }
 }
