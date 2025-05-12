@@ -70,7 +70,7 @@ class Folio::Console::Ui::ButtonCell < Folio::ConsoleCell
                                                               action: {
                                                                 "f-c-ui-notification-modal-trigger" => "onClick"
                                                               },
-                                                              value: {
+                                                              values: {
                                                                 data: model[:notification_modal].to_json
                                                               }))
     end
