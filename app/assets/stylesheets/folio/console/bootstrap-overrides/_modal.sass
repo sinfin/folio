@@ -16,8 +16,25 @@
   &:not(:last-child)
     padding-bottom: $modal-header-padding-y
 
-.modal-dialog.modal-react
+.modal-dialog.modal-react,
+.modal-dialog.modal-fullheight
   max-width: 1172px
+
+.modal-dialog.modal-fullheight
+  height: calc(100% - 2 * var(--#{$prefix}modal-margin))
+  display: flex
+  flex-direction: column
+
+  .modal-content
+    display: flex
+    flex-direction: column
+    flex: 1 0 auto
+
+  .modal-header
+    flex: 0 0 auto
+
+  .modal-body
+    flex: 1 0 auto
 
 .modal-footer
   border-top: 0

@@ -156,7 +156,7 @@ cs:
     errors:
       messages:
         indestructible: Záznam není možné odstranit.
-        file_format: '%{file_mime_type} není povolen. Povolené typy: %{types}'
+        file_format: "%{file_mime_type} není povolen. Povolené typy: %{types}"
         wrong_namespace: Typ záznamu neodpovídá typu webové stránky.
         not_from_same_site: není ze stejné stránky
       models:
@@ -390,6 +390,7 @@ cs:
       missing_file_description: nemá vyplněný popisek
       invalid_file_placement: nesplňuje požadavky
       slug_not_unique_across_classes: je již použita u záznamu "%{sluggable_name}" (%{sluggable_type})
+      invalid_subtitle_block: má nevalidní text na řádku %{line}
 
     attributes:
       verified_captcha:

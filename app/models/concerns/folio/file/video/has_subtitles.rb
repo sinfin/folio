@@ -26,6 +26,8 @@ module Folio::File::Video::HasSubtitles
         super(value)
       end
     end
+
+    validate :validate_subtitles_format
   end
 
   def set_subtitles_state_for(lang, state)
@@ -67,4 +69,51 @@ module Folio::File::Video::HasSubtitles
     # enable in main app
     # Folio::OpenAi::TranscribeSubtitlesJob
   end
+
+  private
+    def validate_subtitles_format
+      self.class.enabled_subtitle_languages.each do |lang|
+        validate_subtitles_format_for(lang)
+      end
+    end
+
+    def validate_subtitles_format_for(lang)
+      attribute_name = "subtitles_#{lang}_text"
+      value = get_subtitles_text_for(lang)
+
+      return if value.blank?
+
+      errors.add(attribute_name, :invalid) unless value.is_a?(String)
+
+      lines = value.strip.lines
+      last_line_was_timecode = false
+
+      lines.each_with_index do |line, index|
+        stripped = line.strip
+
+        if stripped.empty? || stripped.start_with?("NOTE")
+          # empty line or note/comment
+          last_line_was_timecode = false
+          next
+        end
+
+        if /^\d+$/.match?(stripped)
+          # sequence number (optional)
+          last_line_was_timecode = false
+          next
+        end
+
+        if /\A\d{2}:\d{2}:\d{2}\.\d{3}\s-->\s\d{2}:\d{2}:\d{2}\.\d{3}/.match?(stripped)
+          # timecode line
+          last_line_was_timecode = true
+          next
+        end
+
+        # text line — must follow a timecode line
+        unless last_line_was_timecode
+          errors.add(attribute_name, :invalid_subtitle_block, line: index + 1)
+          return
+        end
+      end
+    end
 end
