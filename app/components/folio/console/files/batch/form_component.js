@@ -9,4 +9,8 @@ window.Folio.Stimulus.register('f-c-files-batch-form', class extends window.Stim
   cancel () {
     this.dispatch('cancel')
   }
+
+  fileReloaded () {
+    this.dispatch('reload')
+  }
 })

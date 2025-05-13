@@ -113,6 +113,10 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
   }
 
   reload ({ handleErrors = true, updatePagy = false }) {
+    if (this.element.closest('.f-c-files-batch-form')) {
+      return this.dispatch('reloadForm')
+    }
+
     const url = new URL('/folio/api/s3/file_list_file', window.location.origin)
     url.searchParams.set('file_id', this.idValue)
     url.searchParams.set('file_type', this.fileTypeValue)

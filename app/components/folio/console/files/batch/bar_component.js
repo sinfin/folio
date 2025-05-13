@@ -20,7 +20,7 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
     delete this.abortController
   }
 
-  settings () {
+  openForm () {
     this.ajax({
       url: `${this.baseApiUrlValue}/open_batch_form`
     })
@@ -40,6 +40,10 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
       apiMethod: 'apiPatch',
       data: { ...data, file_ids: JSON.parse(this.fileIdsJsonValue) }
     })
+  }
+
+  reloadForm () {
+    this.openForm()
   }
 
   download () {
