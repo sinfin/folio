@@ -12,6 +12,10 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - use `only_path: true` for file sidebar links when `folio_shared_files_between_sites`
 - allow hiding settings and 'share preview' in  `form_footer`
+- fix hiding settings in `form_footer`
+- add support for custom submit label in `form_footer` 
+- fix merges form using `form_footer` component instead of outdated cell
+
 
 ## [6.3.1] - 2025-04-24
 
