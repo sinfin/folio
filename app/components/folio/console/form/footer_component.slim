@@ -45,19 +45,18 @@
                   icon: :open_in_new,
                   target: "_blank",
                   data: { test_id: "preview-button" })
+        - if @show_settings
+          .f-c-form-footer__collapsible
+            .f-c-form-footer__collapsible-backdrop data=stimulus_action_unless_audit(click: "toggleCollapsed")
+            .f-c-form-footer__collapsible-content
+              - if @record
+                - unless @audit
+                  = render(Folio::Console::Autosave::ToggleComponent.new(record: @record))
 
-        .f-c-form-footer__collapsible
-          .f-c-form-footer__collapsible-backdrop data=stimulus_action_unless_audit(click: "toggleCollapsed")
-          .f-c-form-footer__collapsible-content
-            - if @record
-              - unless @audit
-                = render(Folio::Console::Autosave::ToggleComponent.new(record: @record))
+                = render(Folio::Console::Audited::DropdownComponent.new(audits: controller.instance_variable_get(:@audited_audits),
+                                                                        audit: @audit,
+                                                                        record: @record))
 
-              = render(Folio::Console::Audited::DropdownComponent.new(audits: controller.instance_variable_get(:@audited_audits),
-                                                                      audit: @audit,
-                                                                      record: @record))
-
-            - if @show_settings
               .f-c-form-footer__settings
                 .f-c-form-footer__settings-toggle.small.text-muted[
                   data=stimulus_action_unless_audit(click: "toggleSettings")
@@ -75,19 +74,19 @@
                 .f-c-form-footer__settings-content
                   = render(Folio::Console::HtmlAutoFormat::ToggleComponent.new)
 
-            - if @share_preview
-              .f-c-form-footer__share.small.text-muted data=stimulus_modal_toggle(Folio::Console::SharePreviewModalComponent::CLASS_NAME)
-                == cell('folio/console/ui/with_icon',
-                        t('.share'),
-                        hover: :underline,
-                        icon: :link,
-                        icon_options: { height: 16 })
+              - if @share_preview
+                .f-c-form-footer__share.small.text-muted data=stimulus_modal_toggle(Folio::Console::SharePreviewModalComponent::CLASS_NAME)
+                  == cell('folio/console/ui/with_icon',
+                          t('.share'),
+                          hover: :underline,
+                          icon: :link,
+                          icon_options: { height: 16 })
 
-          == cell('folio/console/ui/button',
-                  class: 'f-c-form-footer__btn f-c-form-footer__btn--collapsible',
-                  variant: :gray,
-                  icon: :dots_vertical,
-                  data: (stimulus_action_unless_audit(click: "toggleCollapsed") || {}).merge(test_id: "dropdown-button"))
+            == cell('folio/console/ui/button',
+                    class: 'f-c-form-footer__btn f-c-form-footer__btn--collapsible',
+                    variant: :gray,
+                    icon: :dots_vertical,
+                    data: (stimulus_action_unless_audit(click: "toggleCollapsed") || {}).merge(test_id: "dropdown-button"))
 
 javascript:
   if (window.sessionStorage.getItem('fCAutosaveUiState')) {
