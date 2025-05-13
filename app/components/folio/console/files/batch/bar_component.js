@@ -69,20 +69,24 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
     const { action, id } = e.detail
 
     let url = this.baseApiUrlValue
+    let messageAction
     const data = {}
 
     switch (action) {
       case 'add':
         url = `${url}/add_to_batch`
         data.file_ids = [id]
+        messageAction = 'add'
         break
       case 'remove':
         url = `${url}/remove_from_batch`
         data.file_ids = [id]
+        messageAction = 'remove'
         break
       case 'add-all':
         url = `${url}/add_to_batch`
         data.file_ids = []
+        messageAction = 'add'
 
         for (const checkbox of document.querySelectorAll('.f-file-list-file__checkbox')) {
           if (checkbox.value && checkbox.value !== 'all') {
@@ -98,6 +102,7 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
       case 'remove-all':
         url = `${url}/remove_from_batch`
         data.file_ids = []
+        messageAction = 'remove'
 
         for (const checkbox of document.querySelectorAll('.f-file-list-file__checkbox:checked')) {
           if (checkbox.value && checkbox.value !== 'all') {
@@ -115,7 +120,10 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
     if (!url || !data) return
 
     const callback = () => {
-      const message = { type: 'Folio::Console::Files::Batch::BarComponent/batch_updated' }
+      const message = {
+        type: 'Folio::Console::Files::Batch::BarComponent/batch_updated',
+        data: { action: messageAction }
+      }
 
       data.file_ids.forEach((fileId) => {
         const selector = `.f-file-list-file[data-f-file-list-file-id-value="${fileId}"]`

@@ -30,10 +30,11 @@ class Folio::Console::Files::Batch::FormComponent < Folio::Console::ApplicationC
   def input(f, attribute, opts = {})
     opts ||= {}
     opts[:hint] = false
+    opts[:autocomplete] = true
 
     opts[:wrapper_html] = { class: "f-c-files-batch-form__form-group" }
 
-    values = @files.map { |file| file.public_send(attribute).presence }.uniq.compact
+    values = @files.map { |file| file.public_send(attribute).presence }.uniq
 
     if values.present?
       if values.size == 1

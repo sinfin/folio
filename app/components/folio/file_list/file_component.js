@@ -107,7 +107,11 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
   messageBusCallbackGeneric (event) {
     const message = event.detail.message
 
-    if (message.type === 'Folio::Console::Files::Batch::BarComponent/batch_updated' || message.type === 'Folio::Console::FileControllerBase/file_updated' || (message.type === 'Folio::S3::CreateFileJob' && message.data.type === 'replace-success')) {
+    if (message.type === 'Folio::Console::Files::Batch::BarComponent/batch_updated') {
+      if (this.hasCheckboxTarget) {
+        this.checkboxTarget.checked = message.data.action === 'add'
+      }
+    } else if (message.type === 'Folio::Console::FileControllerBase/file_updated' || (message.type === 'Folio::S3::CreateFileJob' && message.data.type === 'replace-success')) {
       this.reload({ handleErrors: false })
     }
   }
