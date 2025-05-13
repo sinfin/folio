@@ -14,6 +14,7 @@ class Folio::Console::Files::Batch::BarComponent < Folio::Console::ApplicationCo
                         },
                         action: {
                           "f-c-files-batch-bar/action" => "batchActionFromFile",
+                          "f-c-files-batch-form:submit" => "submitForm",
                           "f-c-files-batch-form:cancel" => "cancelForm"
                         })
   end

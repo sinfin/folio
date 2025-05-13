@@ -1,2 +1,10 @@
 .f-c-files-batch-form
   background: $gray-100
+
+  &__form-group--has-values
+    &, .form-text
+      color: $danger
+
+    .form-control::placeholder
+      color: $danger
+      opacity: 1

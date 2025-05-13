@@ -160,7 +160,7 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
     end
 
     test "#{klass} - batch_update" do
-      files = create_list(klass.model_name.singular, 3)
+      files = create_list(klass.model_name.singular, 3, attribution_licence: "bar")
       file_ids = files.map(&:id)
       assert_equal 3, klass.where(id: file_ids).count
 
@@ -184,11 +184,13 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
         file_ids:,
         file_attributes: {
           author: "foo",
+          attribution_licence: "",
         }
       }
       assert_response(:ok)
 
       assert_equal "foo", files.first.reload.author
+      assert_equal "bar", files.first.reload.attribution_licence, "Don't update attribution_licence when blank"
     end
   end
 end

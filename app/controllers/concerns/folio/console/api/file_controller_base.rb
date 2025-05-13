@@ -196,6 +196,8 @@ module Folio::Console::Api::FileControllerBase
                                   :alt,
                                   :tag_list,
                                   :description)
+                          .to_h
+                          .select { |_, value| value.present? }
 
     @klass.transaction do
       files.each { |file| file.update!(update_params) }

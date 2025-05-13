@@ -32,6 +32,16 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
     })
   }
 
+  submitForm (e) {
+    const { data } = e.detail
+
+    this.ajax({
+      url: `${this.baseApiUrlValue}/batch_update`,
+      apiMethod: 'apiPatch',
+      data: { ...data, file_ids: JSON.parse(this.fileIdsJsonValue) }
+    })
+  }
+
   download () {
     this.ajax({
       url: `${this.baseApiUrlValue}/batch_download`,
