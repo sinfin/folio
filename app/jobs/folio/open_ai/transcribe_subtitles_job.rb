@@ -8,26 +8,27 @@ class Folio::OpenAi::TranscribeSubtitlesJob < Folio::ApplicationJob
   def perform(video_file, lang:)
     raise "only video files can be transcribed" unless video_file.is_a?(Folio::File::Video)
 
-    video_file.dont_run_after_save_jobs = true
+    begin
+      # compress audio into a small, speech-optimized .ogg file using the Opus codec
+      audio_tempfile = Tempfile.new(["audio", ".ogg"], binmode: true)
+      extract_and_compress_audio(video_file.file.remote_url, audio_tempfile.path)
 
-    # compress audio into a small, speech-optimized .ogg file using the Opus codec
-    audio_tempfile = Tempfile.new(["audio", ".ogg"], binmode: true)
-    extract_and_compress_audio(video_file.file.remote_url, audio_tempfile.path)
+      # transcribe audio using OpenAI Whisper API
+      subtitles = whisper_api_request(audio_tempfile, lang)
 
-    # transcribe audio using OpenAI Whisper API
-    subtitles = whisper_api_request(audio_tempfile, lang)
+      # save subtitles without VTT header for easier editing
+      video_file.set_subtitles_text_for(lang, subtitles.delete_prefix("WEBVTT\n\n"))
+      save_subtitles!(video_file)
+    rescue => e
+      video_file.set_subtitles_state_for(lang, "failed")
+      save_subtitles!(video_file)
 
-    # save subtitles without VTT header for easier editing
-    video_file.set_subtitles_text_for(lang, subtitles.delete_prefix("WEBVTT\n\n"))
-    video_file.save!
-  rescue => e
-    video_file.set_subtitles_state_for(lang, "failed")
-    video_file.save!
-    Raven.capture_exception(e, extra:) if defined?(Raven)
-    Sentry.capture_exception(e, extra:) if defined?(Sentry)
-  ensure
-    audio_tempfile.close
-    audio_tempfile.unlink
+      Raven.capture_exception(e) if defined?(Raven)
+      Sentry.capture_exception(e) if defined?(Sentry)
+    ensure
+      audio_tempfile.close
+      audio_tempfile.unlink
+    end
   end
 
   private
@@ -49,7 +50,7 @@ class Folio::OpenAi::TranscribeSubtitlesJob < Folio::ApplicationJob
         ["file", file],
         ["model", "whisper-1"],
         ["response_format", "vtt"],
-        ["language", lang]
+        ["language", lang.to_s]
       ]
       request.set_form form_data, "multipart/form-data"
 
@@ -60,5 +61,10 @@ class Folio::OpenAi::TranscribeSubtitlesJob < Folio::ApplicationJob
       end
 
       response.body
+    end
+
+    def save_subtitles!(video_file)
+      video_file.update_columns(additional_data: video_file.additional_data,
+                                updated_at: Time.current)
     end
 end
