@@ -159,4 +159,11 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
       delete this.abortController
     })
   }
+
+  cancel () {
+    this.ajax({
+      url: `${this.baseApiUrlValue}/remove_from_batch`,
+      data: { file_ids: JSON.parse(this.fileIdsJsonValue) }
+    })
+  }
 })
