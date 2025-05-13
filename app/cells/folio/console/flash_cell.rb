@@ -9,4 +9,14 @@ class Folio::Console::FlashCell < Folio::ConsoleCell
     success: :success,
     loader: :loader,
   }
+
+  def flashes
+    if model.present?
+      # filter out devise timedout
+      # https://github.com/heartcombo/devise/issues/1777
+      model.filter { |key, _value| key != "timedout" }
+    else
+      []
+    end
+  end
 end
