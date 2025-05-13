@@ -109,7 +109,9 @@ module Folio::Console::FormsHelper
   end
 
   def form_footer(f, opts = {})
-    if f && f.object && f.object.persisted? && f.object.class.try(:use_preview_tokens?)
+    if opts.key?(:share_preview)
+      share_preview = opts[:share_preview]
+    elsif f && f.object && f.object.persisted? && f.object.class.try(:use_preview_tokens?)
       share_preview = true
 
       content_for(:modals) do
