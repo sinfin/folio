@@ -57,22 +57,23 @@
                                                                       audit: @audit,
                                                                       record: @record))
 
-            .f-c-form-footer__settings
-              .f-c-form-footer__settings-toggle.small.text-muted[
-                data=stimulus_action_unless_audit(click: "toggleSettings")
-              ]
-                == cell('folio/console/ui/with_icon',
-                        t('.settings'),
-                        hover: :underline,
-                        icon: :cog,
-                        icon_options: { height: 16 })
+            - if @show_settings
+              .f-c-form-footer__settings
+                .f-c-form-footer__settings-toggle.small.text-muted[
+                  data=stimulus_action_unless_audit(click: "toggleSettings")
+                ]
+                  == cell('folio/console/ui/with_icon',
+                          t('.settings'),
+                          hover: :underline,
+                          icon: :cog,
+                          icon_options: { height: 16 })
 
-              .f-c-form-footer__settings-backdrop[
-                data=stimulus_action_unless_audit(click: "toggleSettings")
-              ]
+                .f-c-form-footer__settings-backdrop[
+                  data=stimulus_action_unless_audit(click: "toggleSettings")
+                ]
 
-              .f-c-form-footer__settings-content
-                = render(Folio::Console::HtmlAutoFormat::ToggleComponent.new)
+                .f-c-form-footer__settings-content
+                  = render(Folio::Console::HtmlAutoFormat::ToggleComponent.new)
 
             - if @share_preview
               .f-c-form-footer__share.small.text-muted data=stimulus_modal_toggle(Folio::Console::SharePreviewModalComponent::CLASS_NAME)

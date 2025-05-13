@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - use `only_path: true` for file sidebar links when `folio_shared_files_between_sites`
+- allow hiding settings and 'share preview' in  `form_footer`
 
 ## [6.3.1] - 2025-04-24
 
