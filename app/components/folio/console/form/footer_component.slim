@@ -14,7 +14,7 @@
                     type: :submit,
                     class: 'f-c-form-footer__btn f-c-form-footer__btn--submit',
                     variant: :primary,
-                    label: t("folio.console.actions.submit"),
+                    label: @submit_label || t("folio.console.actions.submit"),
                     icon: :check,
                     data: stimulus_target('submitButton').merge(test_id: "submit-button"),
                     html_left: content_tag(:span, nil, class: "f-c-form-footer__submit-btn-indicator", data: stimulus_target('submitButtonIndicator')))
