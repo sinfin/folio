@@ -119,8 +119,11 @@ module Folio::Console::FormsHelper
       share_preview = false
     end
 
+    show_settings = opts[:show_settings].nil? || opts[:show_settings]
+
     render(Folio::Console::Form::FooterComponent.new(f:,
                                                      preview_path: opts[:preview_path],
-                                                     share_preview:))
+                                                     share_preview:,
+                                                     show_settings:))
   end
 end
