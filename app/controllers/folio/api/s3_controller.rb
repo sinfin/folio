@@ -7,7 +7,7 @@ class Folio::Api::S3Controller < Folio::Api::BaseController
   before_action :get_file_name_and_s3_path, only: %i[before]
 
   def before # return settings for S3 file upload
-    presigned_url = test_aware_presign_url(s3_path: @s3_path)
+    presigned_url = test_aware_presign_url(s3_path: @s3_path, method_name: :put_object)
 
     render json: {
       jwt: "TODO",
