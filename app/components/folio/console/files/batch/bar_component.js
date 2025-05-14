@@ -4,18 +4,10 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
   static values = {
     baseApiUrl: String,
     status: String,
-    fileIdsJson: String,
-    retryDownload: Boolean
+    fileIdsJson: String
   }
 
   static targets = ['form']
-
-  connect () {
-    if (this.retryDownloadValue) {
-      this.retryDownloadValue = false
-      this.download()
-    }
-  }
 
   disconnect () {
     this.abortAjax()
@@ -37,6 +29,12 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
   cancelForm () {
     this.ajax({
       url: `${this.baseApiUrlValue}/close_batch_form`
+    })
+  }
+
+  cancelDownload () {
+    this.ajax({
+      url: `${this.baseApiUrlValue}/cancel_batch_download`
     })
   }
 

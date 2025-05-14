@@ -25,20 +25,38 @@
     transition: $transition-base
     pointer-events: none
 
+  &__download-outer-wrap
+    padding: px-to-rem(16px) px-to-rem(22px)
+
+  &__download-wrap
+    padding: px-to-rem(16px) px-to-rem(22px)
+    display: flex
+    align-items: center
+    gap: $grid-gutter-width
+    min-width: 0
+    background: $gray-100
+
   &__download
-    padding: px-to-rem(8px) px-to-rem(22px) px-to-rem(16px)
+    display: flex
+    align-items: center
+    gap: $grid-gutter-width
+    flex: 1 1 auto
+    min-width: 0
 
   &__download-content
     min-width: 0
+
+  &__download-controls
+    flex: 0 0 auto
 
   &__download-link
     overflow-wrap: break-word
 
   &__download-pending
-    padding: px-to-rem(22px)
     display: flex
     align-items: center
     gap: $grid-gutter-width / 2
+    flex: 1 1 auto
 
   &__download-pending-loader-wrap
     width: 22px

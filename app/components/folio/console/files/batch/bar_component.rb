@@ -11,7 +11,6 @@ class Folio::Console::Files::Batch::BarComponent < Folio::Console::ApplicationCo
                           base_api_url: url_for([:console, :api, @file_klass]),
                           status: "loaded",
                           file_ids_json: file_ids.to_json,
-                          retry_download:,
                         },
                         action: {
                           "f-c-files-batch-bar/action" => "batchActionFromFile",
@@ -59,7 +58,7 @@ class Folio::Console::Files::Batch::BarComponent < Folio::Console::ApplicationCo
           variant: :success,
           icon: :download,
           label: t(".download"),
-          href: s3_hash,
+          href: s3_hash["url"],
           target: "_blank",
         }]
       else
@@ -98,18 +97,10 @@ class Folio::Console::Files::Batch::BarComponent < Folio::Console::ApplicationCo
       h = session.dig(Folio::Console::Api::FileControllerBase::BATCH_SESSION_KEY, @file_klass.to_s, "download")
 
       if h && h["timestamp"] && h["timestamp"] >= Folio::File::BatchDownloadJob::S3_FILE_LIFESPAN.ago.to_i
-        h.symbolize_keys
+        h
       else
         false
       end
-    end
-  end
-
-  def retry_download
-    if s3_hash && s3_hash["timestamp"] && s3_hash["timestamp"] >= 3.minutes.ago.to_i
-      true
-    else
-      false
     end
   end
 end

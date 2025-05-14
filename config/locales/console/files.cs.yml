@@ -17,6 +17,8 @@ cs:
             settings: Hromadné nastavení
             download_label: Soubory připraveny ke stažení
             download_pending: Probíhá příprava souborů ke stažení
+            cancel_download: Zrušit stahování
+            cancel: Zavřít hromadné akce
 
           form_component:
             title: Hromadné nastavení souborů
