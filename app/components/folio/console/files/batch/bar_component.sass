@@ -34,6 +34,17 @@
   &__download-link
     overflow-wrap: break-word
 
+  &__download-pending
+    padding: px-to-rem(22px)
+    display: flex
+    align-items: center
+    gap: $grid-gutter-width / 2
+
+  &__download-pending-loader-wrap
+    width: 22px
+    height: 22px
+    position: relative
+
   &[data-f-c-files-batch-bar-count-value="0"]
     display: none
 

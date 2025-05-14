@@ -4,10 +4,18 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
   static values = {
     baseApiUrl: String,
     status: String,
-    fileIdsJson: String
+    fileIdsJson: String,
+    retryDownload: Boolean
   }
 
   static targets = ['form']
+
+  connect () {
+    if (this.retryDownloadValue) {
+      this.retryDownloadValue = false
+      this.download()
+    }
+  }
 
   disconnect () {
     this.abortAjax()
@@ -166,4 +174,26 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
       data: { file_ids: JSON.parse(this.fileIdsJsonValue) }
     })
   }
+
+  onMessage (e) {
+    if (!e.detail || !e.detail.message) return
+
+    const { message } = e.detail
+
+    if (message.type === 'Folio::File::BatchDownloadJob/ready') {
+      this.ajax({
+        url: `${this.baseApiUrlValue}/batch_download_ready`,
+        data: { file_ids: JSON.parse(this.fileIdsJsonValue), url: message.data.url }
+      })
+    }
+  }
 })
+
+window.Folio.MessageBus.callbacks['f-c-files-batch-bar'] = (message) => {
+  if (!message) return
+  if (message.type !== 'Folio::File::BatchDownloadJob/ready') return
+
+  for (const bar of document.querySelectorAll('.f-c-files-batch-bar')) {
+    bar.dispatchEvent(new CustomEvent('f-c-files-batch-bar:message', { detail: { message } }))
+  }
+}

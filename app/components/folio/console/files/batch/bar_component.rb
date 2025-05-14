@@ -11,9 +11,11 @@ class Folio::Console::Files::Batch::BarComponent < Folio::Console::ApplicationCo
                           base_api_url: url_for([:console, :api, @file_klass]),
                           status: "loaded",
                           file_ids_json: file_ids.to_json,
+                          retry_download:,
                         },
                         action: {
                           "f-c-files-batch-bar/action" => "batchActionFromFile",
+                          "f-c-files-batch-bar:message" => "onMessage",
                           "f-c-files-batch-form:submit" => "submitForm",
                           "f-c-files-batch-form:cancel" => "cancelForm",
                           "f-file-list-file:reloadForm" => "reloadForm",
@@ -51,14 +53,23 @@ class Folio::Console::Files::Batch::BarComponent < Folio::Console::ApplicationCo
       end
     end
 
-    if s3_url
-      ary << [nil, {
-        variant: :success,
-        icon: :download,
-        label: t(".download"),
-        href: s3_url,
-        target: "_blank",
-      }]
+    if s3_hash
+      if s3_hash["url"]
+        ary << [nil, {
+          variant: :success,
+          icon: :download,
+          label: t(".download"),
+          href: s3_hash,
+          target: "_blank",
+        }]
+      else
+        ary << [nil, {
+          variant: :medium_dark,
+          icon: :download,
+          label: t(".download"),
+          disabled: true,
+        }]
+      end
     else
       ary << [nil, {
         variant: :medium_dark,
@@ -80,16 +91,25 @@ class Folio::Console::Files::Batch::BarComponent < Folio::Console::ApplicationCo
     ary
   end
 
-  def s3_url
-    return @s3_url unless @s3_url.nil?
-    @s3_url = begin
+  def s3_hash
+    return @s3_hash unless @s3_hash.nil?
+
+    @s3_hash = begin
       h = session.dig(Folio::Console::Api::FileControllerBase::BATCH_SESSION_KEY, @file_klass.to_s, "download")
 
-      if h && h["url"] && h["timestamp"] && h["timestamp"] >= 15.minutes.ago.to_i
-        h["url"]
+      if h && h["timestamp"] && h["timestamp"] >= Folio::File::BatchDownloadJob::S3_FILE_LIFESPAN.ago.to_i
+        h.symbolize_keys
       else
         false
       end
+    end
+  end
+
+  def retry_download
+    if s3_hash && s3_hash["timestamp"] && s3_hash["timestamp"] >= 3.minutes.ago.to_i
+      true
+    else
+      false
     end
   end
 end

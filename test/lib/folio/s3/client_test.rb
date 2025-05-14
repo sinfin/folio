@@ -49,7 +49,7 @@ class Folio::S3::ClientTest < ActiveSupport::TestCase
   end
 
   test "test_aware_s3_delete" do
-    s3_path = "test_path/empty.pdf"
+    s3_path = "test_aware_s3_delete-#{Time.current.to_i}.pdf"
     file_path = Folio::Engine.root.join("test", "fixtures", "folio", "empty.pdf")
     FileUtils.cp(file_path, "/tmp/folio_tmp_user_photo_uploads/#{s3_path}")
     @instance.test_aware_s3_delete(s3_path:)

@@ -16,6 +16,7 @@ en:
             download: Download
             settings: Batch Settings
             download_label: Files ready to download
+            download_pending: Preparing files for download
 
           form_component:
             title: Batch settings of files

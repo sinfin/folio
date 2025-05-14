@@ -10,7 +10,7 @@ module Folio::Console::Api::FileControllerBase
 
   included do
     include Folio::S3::Client
-    before_action :set_safe_file_ids, only: %i[batch_delete batch_download batch_update]
+    before_action :set_safe_file_ids, only: %i[batch_delete batch_download batch_update batch_download_ready]
     before_action :delete_s3_download_file, only: %i[add_to_batch remove_from_batch batch_delete]
   end
 
@@ -131,32 +131,33 @@ module Folio::Console::Api::FileControllerBase
     render_component_json(Folio::Console::Files::Batch::BarComponent.new(file_klass: @klass))
   end
 
-  def batch_download
-    files = @klass.where(id: @safe_file_ids).to_a
+  def batch_download_ready
+    download_hash = session.dig(BATCH_SESSION_KEY, @klass.to_s, "download")
 
-    tmp_zip_file = Tempfile.new("folio-files")
+    if download_hash && download_hash["pending"] && download_hash["timestamp"] && params[:url]
+      session[BATCH_SESSION_KEY][@klass.to_s]["download"] = { "url" => params[:url], "timestamp" => download_hash["timestamp"] }
+    end
+
+    render_component_json(Folio::Console::Files::Batch::BarComponent.new(file_klass: @klass))
+  end
+
+  def batch_download
+    if @safe_file_ids.blank?
+      raise ActionController::BadRequest.new("Invalid file IDs - no files selected")
+    end
+
     file_name = "#{Folio::Current.site.slug}-#{@klass.human_type.pluralize}.zip"
     s3_path = "#{S3_PATH_DOWNLOAD_BASE}/#{Time.current.to_i}-#{SecureRandom.hex(8)}/#{file_name}"
 
-    # TODO: move this to a sidekiq job
-    Zip::File.open(tmp_zip_file.path, Zip::File::CREATE) do |zip|
-      files.each do |file|
-        # dragonfly ¯\_(ツ)_/¯
-        tmp_file = file.file.file
-        zip.add("#{file.id}-#{file.file_name}", tmp_file)
-      end
-    end
+    Folio::File::BatchDownloadJob.perform_later(s3_path:,
+                                                file_ids: @safe_file_ids,
+                                                file_class_name: @klass.to_s,
+                                                user_id: Folio::Current.user.id,
+                                                site_id: Folio::Current.site.id)
 
-    test_aware_s3_upload(s3_path:, file: File.open(tmp_zip_file, "rb"), acl: "private")
-    s3_url = test_aware_presign_url(s3_path:)
-
-    session[BATCH_SESSION_KEY][@klass.to_s]["download"] = { "url" => s3_url, "path" => s3_path, "timestamp" => Time.current.to_i }
-    run_delete_s3_job(s3_path:, wait: 15.minutes)
+    session[BATCH_SESSION_KEY][@klass.to_s]["download"] = { "pending" => true, "timestamp" => Time.current.to_i }
 
     render_component_json(Folio::Console::Files::Batch::BarComponent.new(file_klass: @klass))
-  ensure
-    tmp_zip_file.close
-    tmp_zip_file.unlink
   end
 
   def batch_delete
