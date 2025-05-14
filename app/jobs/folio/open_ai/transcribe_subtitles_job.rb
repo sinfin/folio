@@ -66,5 +66,6 @@ class Folio::OpenAi::TranscribeSubtitlesJob < Folio::ApplicationJob
     def save_subtitles!(video_file)
       video_file.update_columns(additional_data: video_file.additional_data,
                                 updated_at: Time.current)
+      broadcast_file_update(video_file)
     end
 end
