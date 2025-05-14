@@ -9,3 +9,17 @@ en:
           download: Download original
           replace: Replace
           destroy: Delete
+
+        batch:
+          bar_component:
+            delete: Delete
+            download: Download
+            settings: Batch Settings
+            download_label: Files ready to download
+            download_pending: Preparing files for download
+
+          form_component:
+            title: Batch settings of files
+            selected_files: Selected files
+            has_values_placeholder: Multiple values
+            has_values_hint: Multiple values set. Change the field to update all, or leave it to keep them.

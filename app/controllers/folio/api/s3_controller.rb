@@ -7,7 +7,7 @@ class Folio::Api::S3Controller < Folio::Api::BaseController
   before_action :get_file_name_and_s3_path, only: %i[before]
 
   def before # return settings for S3 file upload
-    presigned_url = test_aware_presign_url(@s3_path)
+    presigned_url = test_aware_presign_url(s3_path: @s3_path)
 
     render json: {
       jwt: "TODO",
@@ -37,6 +37,7 @@ class Folio::Api::S3Controller < Folio::Api::BaseController
         editable
         destroyable
         selectable
+        batch_actions
       ].each do |param|
         if params[param]
           props[param] = params[param]
@@ -88,7 +89,7 @@ class Folio::Api::S3Controller < Folio::Api::BaseController
       message_bus_client_id = params.require(:message_bus_client_id)
       file_klass = type.safe_constantize
 
-      if file_klass && allowed_klass?(file_klass) && test_aware_s3_exists?(@s3_path)
+      if file_klass && allowed_klass?(file_klass) && test_aware_s3_exists?(s3_path: @s3_path)
         job_klass.perform_later(s3_path: @s3_path,
                                 type:,
                                 message_bus_client_id:,

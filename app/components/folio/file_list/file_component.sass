@@ -207,6 +207,18 @@
       opacity: 0.5
       cursor: not-allowed
 
+    &__checkbox-label
+      margin-right: px-to-rem(-8px)
+      padding: px-to-rem(8px)
+      cursor: pointer
+      min-height: 50px
+      display: flex
+      align-items: center
+      justify-content: center
+
+    &__part--checkbox
+      min-width: 16px + 8px
+
     &__part--image
       width: 50px + 8px
       min-width: 50px + 8px
@@ -237,6 +249,7 @@
       &__part
         flex: 0 0 auto
 
+      &__part--batch-actions,
       &__part--image,
       &__part--extension,
       &__part--info,
@@ -297,6 +310,7 @@
       &__part--count
         text-align: center
 
+      &__part--batch-actions,
       &__part--image,
       &__part--extension,
       &__part--info,

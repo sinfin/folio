@@ -23,7 +23,7 @@ module Folio::S3::Client
     @s3_bucket ||= ENV.fetch("S3_BUCKET_NAME")
   end
 
-  def s3_ls(prefix, max_keys: 1000)
+  def s3_ls(prefix:, max_keys: 1000)
     s3_client.list_objects(
       bucket: s3_bucket,
       prefix:,
@@ -31,7 +31,7 @@ module Folio::S3::Client
     )
   end
 
-  def test_aware_presign_url(s3_path)
+  def test_aware_presign_url(s3_path:)
     if use_local_file_system?
       "https://dummy-s3-bucket.com/#{s3_path}"
     else
@@ -39,7 +39,7 @@ module Folio::S3::Client
     end
   end
 
-  def test_aware_download_from_s3(s3_path, local_path)
+  def test_aware_download_from_s3(s3_path:, local_path:)
     if use_local_file_system?
       FileUtils.mkdir_p(File.dirname(test_aware_s3_path(s3_path)))
       FileUtils.cp(test_aware_s3_path(s3_path), local_path)
@@ -51,7 +51,7 @@ module Folio::S3::Client
     end
   end
 
-  def test_aware_s3_exists?(s3_path)
+  def test_aware_s3_exists?(s3_path:)
     if use_local_file_system?
       File.exist?(test_aware_s3_path(s3_path))
     else
@@ -67,8 +67,8 @@ module Folio::S3::Client
     end
   end
 
-  def test_aware_s3_delete(s3_path)
-    if test_aware_s3_exists?(s3_path)
+  def test_aware_s3_delete(s3_path:)
+    if test_aware_s3_exists?(s3_path:)
       if use_local_file_system?
         FileUtils.rm(test_aware_s3_path(s3_path))
       else
@@ -77,6 +77,20 @@ module Folio::S3::Client
           key: test_aware_s3_path(s3_path)
         )
       end
+    end
+  end
+
+  def test_aware_s3_upload(s3_path:, file:, acl: "private")
+    if use_local_file_system?
+      FileUtils.mkdir_p(File.dirname(test_aware_s3_path(s3_path)))
+      FileUtils.cp(file.path, test_aware_s3_path(s3_path))
+    else
+      s3_client.put_object(
+        bucket: s3_bucket,
+        key: test_aware_s3_path(s3_path),
+        body: file,
+        acl:,
+      )
     end
   end
 

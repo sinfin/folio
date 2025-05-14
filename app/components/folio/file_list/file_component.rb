@@ -10,14 +10,17 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
                  editable: true,
                  destroyable: false,
                  selectable: false,
+                 batch_actions: false,
                  primary_action: nil)
     @file = file
+    throw ArgumentError, "File is nil" if @file.nil?
     @file_klass = file_klass || file.class
     @template = template
     @thead = thead
     @editable = editable
     @destroyable = destroyable
     @selectable = selectable
+    @batch_actions = batch_actions
     @primary_action = primary_action
   end
 
@@ -29,7 +32,8 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
                           primary_action: @primary_action,
                           selectable: @selectable,
                           editable: @editable,
-                          destroyable: @destroyable
+                          destroyable: @destroyable,
+                          batch_actions: @batch_actions,
                         },
                         action: @editable ? {
                           "f-c-files-show/deleted@document": "filesShowDeleted"
@@ -173,5 +177,14 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
     else
       FILE_ICON_KEYS["default"]
     end
+  end
+
+  def selected_for_batch_actions?
+    return false if @file.try(:id).blank?
+
+    file_ids = controller.session.dig(Folio::Console::Api::FileControllerBase::BATCH_SESSION_KEY, @file_klass.to_s, "file_ids")
+    return false if file_ids.blank?
+
+    file_ids.include?(@file.id)
   end
 end

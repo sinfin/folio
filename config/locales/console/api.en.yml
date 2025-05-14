@@ -1,0 +1,8 @@
+---
+en:
+  folio:
+    console:
+      api:
+        file_controller_base:
+          batch_delete_success: Files have been deleted.
+          batch_update_success: Files have been updated.

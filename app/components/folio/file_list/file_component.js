@@ -1,7 +1,7 @@
 //= require folio/confirm
 
 window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus.Controller {
-  static targets = ['imagePart', 'loader']
+  static targets = ['imagePart', 'loader', 'checkbox']
 
   static values = {
     id: { type: String, default: '' },
@@ -13,6 +13,7 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
     editable: { type: Boolean, default: false },
     destroyable: { type: Boolean, default: false },
     selectable: { type: Boolean, default: false },
+    batchActions: { type: Boolean, default: false },
     primaryAction: { type: String, default: '' }
   }
 
@@ -106,17 +107,26 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
   messageBusCallbackGeneric (event) {
     const message = event.detail.message
 
-    if (message.type === 'Folio::Console::FileControllerBase/file_updated' || (message.type === 'Folio::S3::CreateFileJob' && message.data.type === 'replace-success')) {
+    if (message.type === 'Folio::Console::Files::Batch::BarComponent/batch_updated') {
+      if (this.hasCheckboxTarget) {
+        this.checkboxTarget.checked = message.data.action === 'add'
+      }
+    } else if (message.type === 'Folio::Console::FileControllerBase/file_updated' || (message.type === 'Folio::S3::CreateFileJob' && message.data.type === 'replace-success')) {
       this.reload({ handleErrors: false })
     }
   }
 
   reload ({ handleErrors = true, updatePagy = false }) {
+    if (this.element.closest('.f-c-files-batch-form')) {
+      return this.dispatch('reloadForm')
+    }
+
     const url = new URL('/folio/api/s3/file_list_file', window.location.origin)
     url.searchParams.set('file_id', this.idValue)
     url.searchParams.set('file_type', this.fileTypeValue)
     url.searchParams.set('primary_action', this.primaryActionValue)
     url.searchParams.set('selectable', this.selectableValue)
+    url.searchParams.set('batch_actions', this.batchActionsValue)
     url.searchParams.set('editable', this.editableValue)
     url.searchParams.set('destroyable', this.destroyableValue)
 
@@ -206,6 +216,24 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
   filesShowDeleted (e) {
     if (!e.detail || e.detail.id !== this.idValue) return
     this.removeParentOrElement()
+  }
+
+  onGlobalBatchActionCheckboxInput (e) {
+    const batchBar = document.querySelector('.f-c-files-batch-bar')
+    if (!batchBar) return
+    const action = e.target.checked ? 'add-all' : 'remove-all'
+    batchBar.dispatchEvent(new CustomEvent('f-c-files-batch-bar/action', { detail: { action } }))
+  }
+
+  onBatchActionCheckboxInput (e) {
+    if (!this.idValue) return
+
+    const batchBar = document.querySelector('.f-c-files-batch-bar')
+    if (!batchBar) return
+
+    const action = e.target.checked ? 'add' : 'remove'
+
+    batchBar.dispatchEvent(new CustomEvent('f-c-files-batch-bar/action', { detail: { action, id: this.idValue } }))
   }
 })
 

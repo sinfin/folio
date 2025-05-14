@@ -3,28 +3,39 @@
 class Folio::FileListComponent < Folio::ApplicationComponent
   def initialize(file_klass:,
                  files: nil,
-                 upload: true,
+                 uploadable: false,
                  editable: true,
                  destroyable: false,
                  selectable: false,
-                 primary_action: nil)
+                 removable_from_batch: nil,
+                 batch_actions: false,
+                 primary_action: nil,
+                 allow_thumbnail_view: true,
+                 thead: true,
+                 reload_pagy: false)
     @file_klass = file_klass
     @files = files
-    @upload = upload
+    @uploadable = uploadable
     @editable = editable
     @destroyable = destroyable
+    @removable_from_batch = removable_from_batch.nil? ? batch_actions : removable_from_batch
     @selectable = selectable
+    @batch_actions = batch_actions
     @primary_action = primary_action
+    @allow_thumbnail_view = allow_thumbnail_view
+    @thead = thead
+    @reload_pagy = reload_pagy
   end
 
   def data
     stimulus_controller("f-file-list",
                         values: {
                           file_type: @file_klass.to_s,
+                          reload_pagy: @reload_pagy,
                         },
                         action: {
                           "f-uppy:upload-success": "uppyUploadSuccess",
-                          "f-c-files-display-toggle:table-view-change": "tableViewChange"
+                          "f-c-files-display-toggle:table-view-change": "tableViewChange",
                         })
   end
 
@@ -37,6 +48,7 @@ class Folio::FileListComponent < Folio::ApplicationComponent
       editable: @editable,
       destroyable: @destroyable,
       selectable: @selectable,
+      batch_actions: @batch_actions || @removable_from_batch,
       primary_action: @primary_action,
     }
 
@@ -44,7 +56,7 @@ class Folio::FileListComponent < Folio::ApplicationComponent
   end
 
   def view_class_names
-    if @file_klass.try(:human_type) == "image"
+    if @allow_thumbnail_view && @file_klass.try(:human_type) == "image"
       if Folio::Current.user && Folio::Current.user.console_preferences.present? && Folio::Current.user.console_preferences["images_table_view"]
         "f-file-list--view-changeable f-file-list--view-table"
       else

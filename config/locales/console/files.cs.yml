@@ -9,3 +9,17 @@ cs:
           download: Stáhnout originál
           replace: Nahradit
           destroy: Smazat
+
+        batch:
+          bar_component:
+            delete: Smazat
+            download: Stáhnout
+            settings: Hromadné nastavení
+            download_label: Soubory připraveny ke stažení
+            download_pending: Probíhá příprava souborů ke stažení
+
+          form_component:
+            title: Hromadné nastavení souborů
+            selected_files: Vybrané soubory
+            has_values_placeholder: Různé hodnoty
+            has_values_hint: Různé hodnoty. Při změně se aktualizují všechny. Pro zachování hodnot ponechte prázdné.

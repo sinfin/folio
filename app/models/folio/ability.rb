@@ -83,16 +83,16 @@ class Folio::Ability
     can :display_ui, site
     can [:new], Folio::User # new user do not belong to site yet
 
-    can :do_anything, Folio::SiteUserLink, { site: }
-    can :do_anything, Folio::File, { site: Rails.application.config.folio_shared_files_between_sites ? [Folio::Current.main_site, site] : site }
-    can :do_anything, Folio::Page, { site: }
-    can :do_anything, Folio::Menu, { site: }
-    can :do_anything, Folio::Lead, { site: }
-    can :do_anything, Folio::NewsletterSubscription, { site: }
-    can :do_anything, Folio::EmailTemplate, { site: }
-    can :do_anything, Folio::AttributeType, { site: }
-    can :do_anything, Folio::ContentTemplate, { site: }
-    # can :do_anything, Folio::ConsoleNote, target: { site: } cannot be used, because it is polymorphic
+    can :do_anything, Folio::SiteUserLink, { site_id: site.id }
+    can :do_anything, Folio::File, { site_id: Rails.application.config.folio_shared_files_between_sites ? [Folio::Current.main_site.id, site.id] : site.id }
+    can :do_anything, Folio::Page, { site_id: site.id }
+    can :do_anything, Folio::Menu, { site_id: site.id }
+    can :do_anything, Folio::Lead, { site_id: site.id }
+    can :do_anything, Folio::NewsletterSubscription, { site_id: site.id }
+    can :do_anything, Folio::EmailTemplate, { site_id: site.id }
+    can :do_anything, Folio::AttributeType, { site_id: site.id }
+    can :do_anything, Folio::ContentTemplate, { site_id: site.id }
+    # can :do_anything, Folio::ConsoleNote, target: { site_id: site.id } cannot be used, because it is polymorphic
 
     can [:read, :update], Folio::Site, { id: site.id }
     can :read_managers, Folio::User
