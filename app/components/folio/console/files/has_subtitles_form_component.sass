@@ -1,0 +1,28 @@
+.f-c-files-has-subtitles-form
+  margin: var(--#{$prefix}modal-padding) calc(-1 * var(--#{$prefix}modal-padding)) calc(-1 * var(--#{$prefix}modal-padding))
+  padding: var(--#{$prefix}modal-padding)
+  border-top: var(--#{$prefix}modal-header-border-width) solid var(--#{$prefix}modal-header-border-color)
+  position: relative
+
+  &__header
+    display: flex
+    align-items: center
+    gap: $grid-gutter-width / 2
+
+  &__title
+    flex: 1 1 auto
+    min-width: 0
+
+  &__status
+    display: flex
+    align-items: center
+    gap: 1ch
+    margin-left: auto
+
+  &__status-loader-wrap
+    width: 16px
+    height: 16px
+    position: relative
+
+  &__form
+    margin-top: $grid-gutter-width / 2

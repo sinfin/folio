@@ -418,6 +418,15 @@ en:
         toggle_component:
           label: Automatic save
 
+      files:
+        has_subtitles_form_component:
+          title: Subtitles
+          subtitles_ready: Subtitles are ready.
+          subtitles_processing: Subtitles are being generated.
+          subtitles_failed: Failed to generate subtitles. You can enter them manually.
+          retranscribe_subtitles: Retranscribe subtitles
+          submit: Save subtitles
+
   date:
     formats:
       console_short: "%d. %m. %Y"

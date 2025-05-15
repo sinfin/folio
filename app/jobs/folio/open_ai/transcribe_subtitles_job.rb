@@ -67,5 +67,17 @@ class Folio::OpenAi::TranscribeSubtitlesJob < Folio::ApplicationJob
       video_file.update_columns(additional_data: video_file.additional_data,
                                 updated_at: Time.current)
       broadcast_file_update(video_file)
+      broadcast_subtitles_update(video_file)
+    end
+
+    def broadcast_subtitles_update(video_file)
+      return if message_bus_user_ids.blank?
+
+      MessageBus.publish Folio::MESSAGE_BUS_CHANNEL,
+                         {
+                           type: "Folio::OpenAi::TranscribeSubtitlesJob/updated",
+                           data: { id: video_file.id },
+                         }.to_json,
+                         user_ids: message_bus_user_ids
     end
 end

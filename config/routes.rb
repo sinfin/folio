@@ -180,6 +180,12 @@ Folio::Engine.routes.draw do
                   post :update_file_thumbnail
                   post :destroy_file_thumbnail
                 end
+
+                if klass.human_type == "video"
+                  get :subtitles_html
+                  post :retranscribe_subtitles
+                  patch :update_subtitles
+                end
               end
             end
           end

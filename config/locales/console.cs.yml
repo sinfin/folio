@@ -426,6 +426,15 @@ cs:
         toggle_component:
           label: Automatické ukládání
 
+      files:
+        has_subtitles_form_component:
+          title: Titulky
+          subtitles_ready: Titulky připraveny
+          subtitles_processing: Probíhá generování titulků
+          subtitles_failed: Chyba generování titulků. Titulky lze zadat ručně.
+          retranscribe_subtitles: Vygenerovat znovu
+          submit: Uložit titulky
+
   date:
     formats:
       console_short: "%d. %m. %Y"

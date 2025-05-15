@@ -122,6 +122,14 @@ class Folio::Console::FileSerializer
     Rails.application.config.folio_console_files_additional_html_api_url_lambda.call(object)
   end
 
+  attribute :bottom_html_api_url do |object|
+    if object.is_a?(Folio::File::Video) && object.class.try(:subtitles_enabled?)
+      Folio::Engine.routes
+                   .url_helpers
+                   .subtitles_html_console_api_file_video_path(object)
+    end
+  end
+
   attribute :file_modal_additional_fields do |object|
     object.file_modal_additional_fields.map do |name, hash|
       h = {

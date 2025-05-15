@@ -7,6 +7,15 @@ module Folio::File::Video::HasSubtitles
     def enabled_subtitle_languages
       Rails.application.config.folio_files_video_enabled_subtitle_languages
     end
+
+    def transcribe_subtitles_job_class
+      # enable in main app
+      # Folio::OpenAi::TranscribeSubtitlesJob
+    end
+
+    def subtitles_enabled?
+      transcribe_subtitles_job_class.present?
+    end
   end
 
   included do
@@ -52,7 +61,7 @@ module Folio::File::Video::HasSubtitles
   end
 
   def transcribe_subtitles!
-    return unless transcribe_subtitles_job_class.present?
+    return unless self.class.transcribe_subtitles_job_class.present?
 
     self.class.enabled_subtitle_languages.each do |lang|
       send("subtitles_#{lang}=", { "state" => "processing" })
@@ -61,13 +70,8 @@ module Folio::File::Video::HasSubtitles
                    updated_at: current_time_from_proper_timezone)
 
     self.class.enabled_subtitle_languages.each do |lang|
-      transcribe_subtitles_job_class.perform_later(self, lang: lang)
+      self.class.transcribe_subtitles_job_class.perform_later(self, lang: lang)
     end
-  end
-
-  def transcribe_subtitles_job_class
-    # enable in main app
-    # Folio::OpenAi::TranscribeSubtitlesJob
   end
 
   private
