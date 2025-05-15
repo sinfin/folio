@@ -10,7 +10,7 @@ GIT
 PATH
   remote: .
   specs:
-    folio (6.3.2)
+    folio (6.4.0)
       aasm
       activemodel (~> 7.1.0)
       acts-as-taggable-on

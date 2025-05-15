@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [6.4.0] - 2025-05-15
+
 ### Added
 
 - `timeoutable` to `Folio::User` ; session will expire after 30 minutes of inactivity
@@ -12,7 +14,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
-- whitelist strong params instead of blacklisting - use `folio_using_traco_aware_param_names` for traco-translatable columns, use `additional_*_params` (i.e. `additional_user_params ) to add more column names to the whitelist
+- whitelist strong params instead of blacklisting - use `folio_using_traco_aware_param_names` for traco-translatable columns, use `additional_*_params` (i.e. `additional_user_params` ) to add more column names to the whitelist
 - updated `session_store` config with `expire_after` / `secure` / `httponly` / `same_site`
 - use Devise `paranoid` to avoid enumeration
 
