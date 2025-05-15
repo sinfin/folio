@@ -1,7 +1,6 @@
 .f-c-flash-wrap
-  - if model.present?
-    - model.each do |msg_type, message|
-      == cell('folio/console/ui/alert',
-              message,
-              variant: VARIANTS[msg_type.to_sym],
-              flash: true)
+  - flashes.each do |msg_type, message|
+    == cell('folio/console/ui/alert',
+            message,
+            variant: VARIANTS[msg_type.to_sym],
+            flash: true)

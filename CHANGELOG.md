@@ -3,6 +3,19 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- `timeoutable` to `Folio::User` ; session will expire after 30 minutes of inactivity
+- `lockable` to `Folio::User` - lock user for 15 minutes after 5 unsuccessful attempts
+- password complexity validation to `Folio::User` - allow 8-128 characters, must include special/lower/upper/number if shorter than 48 characters
+- recaptcha to users/session/new
+
+### Changed
+
+- whitelist strong params instead of blacklisting - use `folio_using_traco_aware_param_names` for traco-translatable columns, use `additional_*_params` (i.e. `additional_user_params ) to add more column names to the whitelist
+- updated `session_store` config with `expire_after` / `secure` / `httponly` / `same_site`
+- use Devise `paranoid` to avoid enumeration
+
 ## [6.3.2] - 2025-05-15
 
 ### Added

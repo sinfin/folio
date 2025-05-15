@@ -12,7 +12,13 @@ class Dummy::Ui::FlashComponent < ApplicationComponent
   }
 
   def initialize(flash:)
-    @flash = flash
+    @flash = if flash.present?
+      # filter out devise timedout
+      # https://github.com/heartcombo/devise/issues/1777
+      flash.filter { |key, _value| key != "timedout" }
+    else
+      []
+    end
   end
 
   def variant(type)

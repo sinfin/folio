@@ -198,4 +198,39 @@ class Folio::Users::SessionsControllerTest < ActionDispatch::IntegrationTest
     get main_app.destroy_user_session_path
     assert_redirected_to main_app.send(Rails.application.config.folio_users_after_sign_out_path)
   end
+
+  test "lockable" do
+    user = create(:folio_user)
+    assert_equal 0, user.failed_attempts
+    assert_nil user.unlock_token
+    assert_nil user.locked_at
+
+    4.times do |i|
+      post main_app.user_session_path, params: { user: { email: user.email, password: "foo" } }
+      assert_redirected_to main_app.user_session_path
+
+      user.reload
+
+      assert_equal i + 1, user.failed_attempts
+      assert_nil user.locked_at
+      assert_not user.access_locked?
+      assert user.active_for_authentication?
+    end
+
+    post main_app.user_session_path, params: { user: { email: user.email, password: "foo" } }
+    assert_redirected_to main_app.user_session_path
+
+    user.reload
+
+    assert_equal 5, user.failed_attempts
+    assert user.locked_at
+    assert user.access_locked?
+    assert_not user.active_for_authentication?
+
+    travel_to 1.hour.from_now do
+      assert user.locked_at
+      assert_not user.access_locked?
+      assert user.active_for_authentication?
+    end
+  end
 end

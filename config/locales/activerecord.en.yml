@@ -333,3 +333,7 @@ en:
         missing_file_attribution: or source is required
       password:
         same_as_current_password: must not be the same as the current password
+        missing_uppercase: must contain a uppercase letter
+        missing_lowercase: must contain a lowercase letter
+        missing_digit: must contain a digit
+        missing_special: must contain a special character
