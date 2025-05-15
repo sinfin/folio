@@ -81,7 +81,13 @@ Folio::Engine.routes.draw do
 
       namespace :file do
         Rails.application.config.folio_file_types_for_routes.each do |type|
-          resources type.constantize.model_name.element.pluralize.to_sym, only: %i[index show]
+          resources type.constantize.model_name.element.pluralize.to_sym, only: %i[index show] do
+            member do
+              if type == "Folio::File::Video"
+                post :retranscribe_subtitles
+              end
+            end
+          end
         end
       end
 
@@ -238,6 +244,12 @@ Folio::Engine.routes.draw do
 
       resource :ares, only: [], controller: "ares" do
         post :subject
+      end
+
+      namespace :file do
+        resources :videos, only: [] do
+          member { get :subtitles, path: "subtitles/:lang.vtt" }
+        end
       end
     end
   end

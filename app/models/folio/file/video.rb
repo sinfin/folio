@@ -1,7 +1,19 @@
 # frozen_string_literal: true
 
 class Folio::File::Video < Folio::File
+  include Folio::File::Video::HasSubtitles
+
   validate_file_format %w[video/mp4 video/webm]
+
+  def file_modal_additional_fields
+    additional_fields = {}
+
+    self.class.enabled_subtitle_languages.each do |lang|
+      additional_fields[:"subtitles_#{lang}_text"] = { type: :text }
+    end
+
+    additional_fields
+  end
 
   def thumbnailable?
     true

@@ -33,6 +33,8 @@ en:
         default_gravity: Default crop
         mime_type: File type
         preview_duration: How many seconds are free?
+        subtitles_cs_text: Subtitles (CZ)
+        subtitles_en_text: Subtitles (EN)
       folio/file/image:
         file_placements: Placements
         thumbnail_sizes: Generated versions
@@ -318,6 +320,7 @@ en:
       missing_file_description: is missing description
       invalid_file_placement: does not meet the requirements
       slug_not_unique_across_classes: is already used by the record "%{sluggable_name}" (%{sluggable_type})
+      invalid_subtitle_block: has invalid subtitle block near line %{line}
 
     attributes:
       verified_captcha:

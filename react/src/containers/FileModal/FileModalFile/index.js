@@ -46,6 +46,8 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
     }
   }
 
+  const additionalFields = file.attributes.file_modal_additional_fields
+
   return (
     <div className='modal-content'>
       <div className='modal-header'>
@@ -214,6 +216,51 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
                 )}
               </div>
             )}
+
+            {additionalFields.map((additionalField) => (
+              <FormGroup key={additionalField.name}>
+                <Label className='form-label'>{additionalField.label}</Label>
+                {readOnly ? (
+                  <p className='m-0'>{formState[additionalField.name]}</p>
+                ) : (
+                  additionalField.type === 'text' ? (
+                    <TextareaAutosize
+                      name={additionalField.name}
+                      value={formState[additionalField.name]}
+                      onChange={(e) => onValueChange(additionalField.name, e.currentTarget.value)}
+                      type='text'
+                      className='form-control'
+                      rows={3}
+                      maxRows={10}
+                      async
+                    />
+                  ) : (
+                    additionalField.type === 'select' ? (
+                      <Input
+                        value={formState[additionalField.name]}
+                        onChange={(e) => onValueChange(additionalField.name, e.currentTarget.value)}
+                        name={additionalField.name}
+                        type='select'
+                        className='select'
+                      >
+                        {additionalField.collection.map((opt) => (
+                          <option value={opt[1]} key={opt[1] || '_blank'}>
+                            {opt[0]}
+                          </option>
+                        ))}
+                      </Input>
+
+                    ) : (
+                      <Input
+                        value={formState[additionalField.name]}
+                        onChange={(e) => onValueChange(additionalField.name, e.currentTarget.value)}
+                        name={additionalField.name}
+                      />
+                    )
+                  )
+                )}
+              </FormGroup>
+            ))}
 
             {
               isImage && (

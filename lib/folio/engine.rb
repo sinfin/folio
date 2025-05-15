@@ -120,6 +120,7 @@ module Folio
     config.folio_files_require_attribution = false
     config.folio_files_require_alt = false
     config.folio_files_require_description = false
+    config.folio_files_video_enabled_subtitle_languages = %w[cs]
 
     config.folio_component_generator_parent_component_class_name_proc = -> (class_name) do
       if class_name.starts_with?("Folio::Console::")

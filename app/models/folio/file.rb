@@ -104,7 +104,10 @@ class Folio::File < Folio::ApplicationRecord
     event :process do
       transitions from: :unprocessed, to: :processing
       transitions from: READY_STATE, to: :processing
-      after :process_attached_file
+      after do
+        process_attached_file
+        after_process
+      end
     end
 
     event :processing_done do
@@ -178,6 +181,10 @@ class Folio::File < Folio::ApplicationRecord
   def destroy_attached_file
   end
 
+  def after_process
+    # override in main app if needed
+  end
+
   def attached_file_changed?
     (saved_changes[:file_uid] || changes[:file_uid]).present?
   end
@@ -230,6 +237,10 @@ class Folio::File < Folio::ApplicationRecord
 
       "#{hours.to_s.rjust(2, '0')}:#{minutes.to_s.rjust(2, '0')}:#{seconds.to_s.rjust(2, '0')}.00"
     end
+  end
+
+  def file_modal_additional_fields
+    {}
   end
 
   private

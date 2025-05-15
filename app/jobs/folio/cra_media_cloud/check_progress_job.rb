@@ -30,7 +30,7 @@ class Folio::CraMediaCloud::CheckProgressJob < Folio::ApplicationJob
       if media_file.remote_id.present?
         api.get_job(media_file.remote_id)
       elsif media_file.remote_reference_id.present?
-        api.get_jobs(ref_id: media_file.remote_reference_id).first
+        api.get_jobs(ref_id: media_file.remote_reference_id).last
       else
         raise "Missing remote_key and remote_reference_id"
       end
@@ -91,6 +91,6 @@ class Folio::CraMediaCloud::CheckProgressJob < Folio::ApplicationJob
     end
 
     def api
-      Folio::CraMediaCloud::Api.new
+      @api ||= Folio::CraMediaCloud::Api.new
     end
 end

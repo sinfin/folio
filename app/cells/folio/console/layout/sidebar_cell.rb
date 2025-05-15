@@ -146,6 +146,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
   def main_class_names
     shared_links = []
     sites = (Folio::Current.site == Folio::Current.main_site || Folio::Current.user.superadmin?) ? Folio::Site.ordered : [Folio::Current.site]
+
     if ::Rails.application.config.folio_shared_files_between_sites
       shared_links = [{
         locale: Folio::Current.main_site.console_locale,
@@ -156,7 +157,6 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
       }]
       sites = Folio::Site.ordered
     end
-
 
     sites_links = sites.filter_map { |site| site_main_links(site) }
 
@@ -251,10 +251,14 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
     end
 
     def file_links(site)
-      [ link_for_site_class(site, Folio::File::Image),
-        link_for_site_class(site, Folio::File::Video),
-        link_for_site_class(site, Folio::File::Audio),
-        link_for_site_class(site, Folio::File::Document)]
+      only_path = ::Rails.application.config.folio_shared_files_between_sites
+
+      [
+        link_for_site_class(site, Folio::File::Image, only_path:),
+        link_for_site_class(site, Folio::File::Video, only_path:),
+        link_for_site_class(site, Folio::File::Audio, only_path:),
+        link_for_site_class(site, Folio::File::Document, only_path:)
+      ]
     end
 
     def build_site_links_collapsible_block(site)
@@ -345,13 +349,22 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
       end
     end
 
-    def link_for_site_class(site, klass, params: {}, label: nil)
+    def link_for_site_class(site, klass, params: {}, label: nil, only_path: false)
       return nil unless can_now?(:index, klass, site:)
-      {
-        klass: klass.to_s,
-        label:,
-        path: url_for([:console, klass, only_path: false, host: site.env_aware_domain, params:])
-      }
+
+      if only_path
+        {
+          klass: klass.to_s,
+          label:,
+          path: url_for([:console, klass, only_path: true, params:])
+        }
+      else
+        {
+          klass: klass.to_s,
+          label:,
+          path: url_for([:console, klass, only_path: false, host: site.env_aware_domain, params:])
+        }
+      end
     end
 
     def can_now?(action, object, site: nil)

@@ -16,6 +16,18 @@ All notable changes to this project will be documented in this file.
 - updated `session_store` config with `expire_after` / `secure` / `httponly` / `same_site`
 - use Devise `paranoid` to avoid enumeration
 
+## [6.3.2] - 2025-05-15
+
+### Added
+- `Folio::File::Video::HasSubtitles` concern to Video files
+- `Rails.application.config.folio_files_video_enabled_subtitle_languages` to set subtitle languages
+- `Folio::OpenAi::TranscribeSubtitlesJob` for automatic subtitles transcription (disabled by default)
+- `file_modal_additional_fields` method to files for custom fields in console file modal
+
+### Changed
+- use `only_path: true` for file sidebar links when `folio_shared_files_between_sites`
+- allow hiding settings and 'share preview' in  `form_footer`
+
 ## [6.3.1] - 2025-04-24
 
 ### Added
