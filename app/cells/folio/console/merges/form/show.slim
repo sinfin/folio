@@ -19,7 +19,11 @@
                                                    row: row, \
                                                    f: f)
 
-                                                   = form_footer f
+      = render_view_component(Folio::Console::Form::FooterComponent.new(f:,
+                                                                        preview_path: false,
+                                                                        share_preview: false,
+                                                                        show_settings: false,
+                                                                        submit_label: t('.submit')))
 
   - else
     .f-c-merges-form__invalid.mt-3
