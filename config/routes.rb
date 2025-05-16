@@ -177,7 +177,8 @@ Folio::Engine.routes.draw do
                 post :close_batch_form
 
                 post :batch_download
-                post :batch_download_ready
+                post :batch_download_success
+                post :batch_download_failure
                 post :cancel_batch_download
 
                 patch :batch_update

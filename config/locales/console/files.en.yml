@@ -19,6 +19,7 @@ en:
             download_pending: Preparing files for download
             cancel_download: Cancel download
             cancel: Close batch actions
+            download_failure: Failed to prepare files for download
 
           form_component:
             title: Batch settings of files

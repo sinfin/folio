@@ -19,6 +19,7 @@ cs:
             download_pending: Probíhá příprava souborů ke stažení
             cancel_download: Zrušit stahování
             cancel: Zavřít hromadné akce
+            download_failure: Nepodařilo se přípravit soubory ke stažení
 
           form_component:
             title: Hromadné nastavení souborů

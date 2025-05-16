@@ -52,13 +52,13 @@ class Folio::Console::Files::Batch::BarComponent < Folio::Console::ApplicationCo
       end
     end
 
-    if s3_hash
-      if s3_hash["url"]
+    if download_hash
+      if download_hash["url"]
         ary << [nil, {
           variant: :success,
           icon: :download,
           label: t(".download"),
-          href: s3_hash["url"],
+          href: download_hash["url"],
           target: "_blank",
         }]
       else
@@ -90,10 +90,10 @@ class Folio::Console::Files::Batch::BarComponent < Folio::Console::ApplicationCo
     ary
   end
 
-  def s3_hash
-    return @s3_hash unless @s3_hash.nil?
+  def download_hash
+    return @download_hash unless @download_hash.nil?
 
-    @s3_hash = begin
+    @download_hash = begin
       h = session.dig(Folio::Console::Api::FileControllerBase::BATCH_SESSION_KEY, @file_klass.to_s, "download")
 
       if h && h["timestamp"] && h["timestamp"] >= Folio::File::BatchDownloadJob::S3_FILE_LIFESPAN.ago.to_i

@@ -24,33 +24,41 @@
                                 title: t('.cancel'),
                                 class_name: "ms-auto me-nh")
 
-    - if s3_hash
+    - if download_hash
       .f-c-files-batch-bar__download-outer-wrap
         .f-c-files-batch-bar__download-wrap
-          - if s3_hash["url"]
+          - if download_hash["failure_message"]
             .f-c-files-batch-bar__download
-              .f-c-files-batch-bar__download-content.flex-grow-1.flex-shrink-1
-                p.mb-2 #{t('.download_label')}:
+              .f-c-files-batch-bar__download-failure
+                p.text-danger = t('.download_failure')
 
-                - if s3_hash["url"]
-                  a.f-c-files-batch-bar__download-link[
-                    href=s3_hash["url"]
-                    target="_blank"
-                    title=s3_hash["url"]
-                  ]
-                    = s3_hash["url"]
+                p.m-0.small = download_hash["failure_message"]
 
           - else
-            .f-c-files-batch-bar__download-pending
-              .f-c-files-batch-bar__download-pending-loader-wrap
-                span.folio-loader.folio-loader--small.folio-loader--transparent
+            - if download_hash["url"]
+              .f-c-files-batch-bar__download
+                .f-c-files-batch-bar__download-content.flex-grow-1.flex-shrink-1
+                  p.mb-2 #{t('.download_label')}:
 
-              span = t('.download_pending')
+                  - if download_hash["url"]
+                    a.f-c-files-batch-bar__download-link[
+                      href=download_hash["url"]
+                      target="_blank"
+                      title=download_hash["url"]
+                    ]
+                      = download_hash["url"]
+
+            - else
+              .f-c-files-batch-bar__download-pending
+                .f-c-files-batch-bar__download-pending-loader-wrap
+                  span.folio-loader.folio-loader--small.folio-loader--transparent
+
+                span = t('.download_pending')
 
           .f-c-files-batch-bar__download-controls.me-nh
-            - if s3_hash["url"]
+            - if download_hash["url"]
               .mb-2.text-center
-                == cell('folio/console/clipboard_copy', s3_hash["url"], icon_height: 24)
+                == cell('folio/console/clipboard_copy', download_hash["url"], icon_height: 24)
 
             = folio_console_ui_button(icon: :close,
                                       data: stimulus_action(click: "cancelDownload"),

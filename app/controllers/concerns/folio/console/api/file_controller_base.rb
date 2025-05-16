@@ -10,7 +10,7 @@ module Folio::Console::Api::FileControllerBase
 
   included do
     include Folio::S3::Client
-    before_action :set_safe_file_ids, only: %i[batch_delete batch_download batch_update batch_download_ready]
+    before_action :set_safe_file_ids, only: %i[batch_delete batch_download batch_update batch_download_success]
     before_action :delete_s3_download_file, only: %i[add_to_batch remove_from_batch batch_delete cancel_batch_download]
   end
 
@@ -131,11 +131,21 @@ module Folio::Console::Api::FileControllerBase
     render_batch_bar_component
   end
 
-  def batch_download_ready
+  def batch_download_success
     download_hash = session.dig(BATCH_SESSION_KEY, @klass.to_s, "download")
 
     if download_hash && download_hash["pending"] && download_hash["timestamp"] && params[:url]
       session[BATCH_SESSION_KEY][@klass.to_s]["download"] = { "url" => params[:url], "timestamp" => download_hash["timestamp"] }
+    end
+
+    render_batch_bar_component
+  end
+
+  def batch_download_failure
+    download_hash = session.dig(BATCH_SESSION_KEY, @klass.to_s, "download")
+
+    if download_hash && download_hash["pending"] && download_hash["timestamp"] && params[:message]
+      session[BATCH_SESSION_KEY][@klass.to_s]["download"] = { "failure_message" => params[:message], "timestamp" => download_hash["timestamp"] }
     end
 
     render_batch_bar_component

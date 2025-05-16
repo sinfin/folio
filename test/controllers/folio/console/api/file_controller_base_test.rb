@@ -130,7 +130,7 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
       assert_equal("0", parsed_component.css(".f-c-files-batch-bar__count").first.text.strip)
     end
 
-    test "#{klass} - batch_download, batch_download_ready, cancel_batch_download" do
+    test "#{klass} - batch_download, batch_download_success, batch_download_failure, cancel_batch_download" do
       files = create_list(klass.model_name.singular, 3)
       file_ids = files.map(&:id)
       assert_equal 3, klass.where(id: file_ids).count
@@ -157,7 +157,16 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
       assert_equal 1, parsed_component.css(".f-c-files-batch-bar__download-pending").size
       assert_equal("3", parsed_component.css(".f-c-files-batch-bar__count").first.text.strip)
 
-      post url_for([:batch_download_ready, :console, :api, klass, format: :json]), params: { file_ids:, url: "/foo" }
+      post url_for([:batch_download_success, :console, :api, klass, format: :json]), params: { file_ids:, url: "/foo" }
+      assert_response(:ok)
+
+      parsed_component = Nokogiri::HTML(response.parsed_body["data"])
+      assert_equal 1, parsed_component.css(".f-c-files-batch-bar").size
+      assert_equal 1, parsed_component.css(".f-c-files-batch-bar__download").size
+      assert_equal 0, parsed_component.css(".f-c-files-batch-bar__download-pending").size
+      assert_equal("3", parsed_component.css(".f-c-files-batch-bar__count").first.text.strip)
+
+      post url_for([:batch_download_failure, :console, :api, klass, format: :json]), params: { file_ids:, message: "foo!" }
       assert_response(:ok)
 
       parsed_component = Nokogiri::HTML(response.parsed_body["data"])

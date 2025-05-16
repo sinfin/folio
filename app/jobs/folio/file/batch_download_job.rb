@@ -42,8 +42,15 @@ class Folio::File::BatchDownloadJob < Folio::ApplicationJob
 
     MessageBus.publish Folio::MESSAGE_BUS_CHANNEL,
                        {
-                         type: "Folio::File::BatchDownloadJob/ready",
+                         type: "Folio::File::BatchDownloadJob/success",
                          data: { url: },
+                       }.to_json,
+                       user_ids: [user.id]
+  rescue StandardError => e
+    MessageBus.publish Folio::MESSAGE_BUS_CHANNEL,
+                       {
+                         type: "Folio::File::BatchDownloadJob/failure",
+                         data: { message: "#{e.message[0..96]}..." },
                        }.to_json,
                        user_ids: [user.id]
   end
