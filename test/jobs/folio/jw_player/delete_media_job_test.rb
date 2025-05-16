@@ -21,6 +21,7 @@ class Folio::JwPlayer::DeleteMediaJobTest < ActiveJob::TestCase
       return_value: api_mock) do
       Folio::JwPlayer::DeleteMediaJob.perform_now(remote_key)
     end
-    api_mock.verify
+
+    assert api_mock.verify
   end
 end
