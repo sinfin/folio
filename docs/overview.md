@@ -20,6 +20,10 @@ Welcome to the documentation for the **Folio Rails Engine**. This project provid
 - [Troubleshooting](troubleshooting.md) — Common issues and solutions
 - [Upgrade & Migration](upgrade.md) — Upgrading projects, migration guides
 - [Extending & Customization](extending.md) — Generators, overrides, custom code
+- [Concerns](concerns.md) — Reusable model and controller modules
+- [Jobs](jobs.md) — Background processing overview
+- [Seeding](seeding.md) — Demo data & tasks
+- [Sitemaps](sitemap.md) — XML sitemap generation
 - [FAQ](faq.md) — Frequently asked questions
 
 ---
@@ -63,19 +67,6 @@ Welcome to the documentation for the **Folio Rails Engine**. This project provid
 - Using generators, writing custom extensions, and overriding engine behavior.
 
 **FAQ:**
-- Short answers to common questions and practical tips.
-
----
-
-## Navigation
-
-- [Next: Architecture →](architecture.md)
-- [Components](components.md) | [Atoms](atoms.md) | [Admin Console](admin.md) | [Files & Media](files.md)
-
----
-
-*For more information, see the individual chapters linked above. This documentation will be updated as new content is reviewed and migrated from legacy sources.*
-
 ## Key Features at a Glance
 
 - **Modular CMS Engine** – Pages composed of reusable CMS blocks (Atoms)
@@ -124,8 +115,10 @@ app/
   controllers/folio/     # Public & admin controllers
   overrides/             # Safe place for engine overrides
   cells/                 # Legacy Trailblazer Cells (deprecated)
-lib/generators/folio/    # Rich set of generators
+  lib/generators/folio/    # Rich set of generators
 ```
+
+Trailblazer Cells will be removed in favour of ViewComponents in the next major release.
 
 See individual chapters for deeper dives into components, atoms, files, etc.
 
@@ -145,9 +138,18 @@ Ensure these binaries are present on CI / production servers.
 
 ## Conventions & Roadmap
 
-- New UI code should use **ViewComponent**; **Trailblazer Cells** remain for legacy only.
+- New UI code should use **ViewComponent**. Support for **Trailblazer Cells** is deprecated and will be removed in the next major release.
 - Follow **BEM** for SASS class names.
 - Place project-specific patches in `app/overrides/` to stay upgrade-safe.
 - Prefer generators over hand-written boilerplate.
 
 --- 
+
+## Navigation
+
+- [Next: Architecture →](architecture.md)
+- [Components](components.md) | [Atoms](atoms.md) | [Admin Console](admin.md) | [Files & Media](files.md) | [Concerns](concerns.md) | [Jobs](jobs.md) | [Sitemaps](sitemap.md)
+
+---
+
+*For more information, see the individual chapters linked above. This documentation will be updated as new content is reviewed and migrated from legacy sources.*

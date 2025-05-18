@@ -71,7 +71,7 @@ classDiagram
 
 - [← Back to Overview](overview.md)
 - [Next: Components →](components.md)
-- [Atoms](atoms.md) | [Admin Console](admin.md) | [Files & Media](files.md)
+- [Atoms](atoms.md) | [Admin Console](admin.md) | [Files & Media](files.md) | [Concerns](concerns.md) | [Jobs](jobs.md)
 
 ---
 

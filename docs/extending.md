@@ -90,8 +90,7 @@ Folio ships with several helper tasks located in `lib/tasks/`:
 
 | Task | Purpose |
 |------|---------|
-| `rake folio:file:metadata` | Extract missing EXIF/IPTC metadata for existing images |
-| `rake folio:file:fill_missing_metadata` | Same as above, but for all file types |
+| `rake folio:file:fill_missing_metadata` | Extract missing EXIF/IPTC metadata for all files |
 | `rake folio:session_attachments:clear_unpaired` | Remove unused temporary attachments |
 | `rake folio:developer_tools:idp_fill_up_site_to_folio_records` | Back-fill `site_id` on legacy records |
 | `rake folio:developer_tools:idp_split_users_to_sites` | Split users to individual sites after cross-domain auth removal |
