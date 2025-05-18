@@ -89,7 +89,7 @@ Once installed, metadata of every new image is stored in `Folio::File::Image.fil
 
 For existing uploads run:
 ```bash
-rake folio:file:metadata
+rake folio:file:fill_missing_metadata
 ```
 You can inspect a single image in the console:
 ```ruby

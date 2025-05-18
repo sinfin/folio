@@ -8,6 +8,8 @@ This chapter describes the component-based architecture of the Folio Rails Engin
 
 Folio uses a modern, modular approach to UI development based on [ViewComponent](https://viewcomponent.org/). Components are organized for clarity, reusability, and maintainability, following BEM naming conventions and leveraging Stimulus for JavaScript behavior. React components can also be integrated for advanced interactivity.
 
+Legacy Trailblazer Cells are still bundled for backwards compatibility but are scheduled for removal in the next major release.
+
 ---
 
 ## Creating Components (Recommended: Generator)
@@ -92,19 +94,7 @@ classDiagram
     UiComponent <|-- NestedFieldsComponent
 ```
 
-*Note: This is a simplified example. Actual component hierarchy may vary.*
 
----
-
-## Navigation
-
-- [← Back to Overview](overview.md)
-- [← Back to Architecture](architecture.md)
-- [Next: Atoms →](atoms.md)
-- [Admin Console](admin.md) | [Files & Media](files.md)
-- [Extending & Customization](extending.md)
-
----
 
 ## Advanced Component Topics
 
@@ -137,6 +127,8 @@ Projects that need React UI pieces should:
 See the old wiki page *Working-with-react-in-folio* for a complete webpack example.
 
 ---
+
+*Note: This is a simplified example. Actual component hierarchy may vary.*
 
 ## Navigation
 
