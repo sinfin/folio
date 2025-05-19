@@ -15,20 +15,20 @@ Folio integrates tightly with **Action Mailer**. The engine ships with several p
 > **Best Practice:** Use the Folio mailer generator to scaffold a new mailer together with its views and tests.
 
 ```sh
-rails generate folio:mailer Newsletter
+rails generate mailer MyApplication::Newsletter
 ```
 
 This command will create, for example:
 
 ```
-app/mailers/folio/newsletter_mailer.rb
-app/views/folio/newsletter_mailer/
+app/mailers/my_application/newsletter_mailer.rb
+app/views/my_application/newsletter_mailer/
   newsletter.html.slim
   newsletter.text.erb
-config/locales/folio/newsletter_mailer.en.yml
+config/locales/my_application/newsletter_mailer.en.yml
 ```
 
-The generator also prepares test stubs under `test/mailers/` and `test/mailers/previews/`.
+The generator also prepares test and preview under `test/mailers/` and `test/mailers/previews/`.
 
 For advanced options, see the [Extending & Customization](extending.md) chapter.
 
@@ -48,26 +48,32 @@ The core engine includes:
 
 ## Email Templates
 
-Reusable email templates live under `app/views/folio/email_templates/` and are rendered via the `Folio::EmailTemplate` model. They can be edited in the admin console (see *Admin → Email templates*). Each template has both HTML Slim (`mail.html.slim`) and plain-text ERB (`mail.text.erb`) parts.
+Email templates can be defined by `Folio::EmailTemplate` records. They can be edited in the admin console (see *Admin → Email templates*). Each template has both HTML (`body_html`) and plain-text (`body_text`) parts.
 
-When you need a new template type, create a record in the console or via seed data and reference it from your mailer:
+When you need a new template type, define it in `data/email_templates_data.yml` and run `rake folio:email_templates:seed_all`.
 
 ```ruby
-template = Folio::EmailTemplate.find_by!(key: :newsletter)
-mail to: user.email, subject: template.subject do |format|
-  format.html { render inline: template.html_body }
-  format.text { render inline: template.text_body }
-end
+template_data = {
+  LOCALE: locale,
+  FOLIO_LEAD_ID: lead.id,
+  FOLIO_LEAD_EMAIL: lead.email,
+  FOLIO_LEAD_PHONE: lead.phone,
+  FOLIO_LEAD_NOTE: lead.note,
+  FOLIO_LEAD_CREATED_AT: lead.created_at ? l(lead.created_at, format: :short) : "",
+  FOLIO_LEAD_NAME: lead.name,
+  FOLIO_LEAD_URL: lead.url,
+  FOLIO_LEAD_CONSOLE_URL: url_for([:console, lead, host: site.env_aware_domain, locale: ]),
+}
+opts = { reply_to: lead.email, site: }
+
+email_template_mail(template_data, opts)
 ```
 
 ---
 
 ## Best Practices
 
-- Prefer the generator to create new mailers and keep a consistent structure.
-- Store repeated layouts/content in `email_templates` rather than hard-coding.
 - Keep plain-text versions up to date for better deliverability.
-- Localise subjects and static strings through I18n YAML files.
 
 ---
 

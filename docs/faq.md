@@ -14,12 +14,9 @@ This creates the model, component, tests, and i18n entries. Edit the generated f
 ---
 
 ### 2. A newly scaffolded resource is missing from the admin sidebar. What now?
-Add its console controller class to the initializer:
-```ruby
-config.folio_console_sidebar_link_class_names ||= []
-config.folio_console_sidebar_link_class_names << "Folio::Console::ArticlesController"
-```
-Restart the server.
+
+- add class to one of `console_sidebar_prepended_links`, `console_sidebar_before_menu_links`, `console_sidebar_before_site_links` in your `Folio::Site` subclass
+- add class to `config/initializers/folio.rb` – option `config.folio_console_sidebar_link_class_names`
 
 ---
 
@@ -29,20 +26,16 @@ Set `config.folio_console_locale` in `config/initializers/folio.rb` (default `:c
 ---
 
 ### 4. How do I share Devise sessions across sub-domains?
-Enable cross-domain Devise cookies:
+Enable Folio cross-domain functionality:
 ```ruby
 config.folio_crossdomain_devise = true
 ```
-Make sure Rails' session cookie domain is set appropriately.
 
 ---
 
 ### 5. Can I upload directly to Amazon S3?
-Yes. Enable direct uploads:
-```ruby
-config.folio_direct_s3_upload_allow_public = true # or allow for users
-```
-See `config.folio_direct_s3_upload_*` options in `lib/folio/engine.rb` for more control.
+
+Yes. Folio components only use direct S3 uploads.
 
 ---
 
@@ -51,17 +44,7 @@ Inherit from the provided base classes (`Folio::CapybaraTest`, `Folio::BaseContr
 
 ---
 
-### 7. How do I add translation (Traco) to an existing model?
-Run the Traco generator:
-```sh
-rails generate folio:traco title description
-rails db:migrate
-```
-Add `traco :title, :description` to the model.
-
----
-
-### 8. Can I disable OpenGraph fallback images?
+### 7. Can I disable OpenGraph fallback images?
 Yes:
 ```ruby
 config.folio_use_og_image = false
@@ -69,17 +52,17 @@ config.folio_use_og_image = false
 
 ---
 
-### 9. How do I send emails via a different provider?
+### 8. How do I send emails via a different provider?
 Set delivery method in `config/environments/production.rb`, and configure credentials as usual. Folio mailers inherit from `Folio::ApplicationMailer`, so any ActionMailer setting applies.
 
 ---
 
-### 10. Is Trailblazer Cell support still maintained?
+### 9. Is Trailblazer Cell support still maintained?
 Legacy Cells are supported but new development should use ViewComponent. Use the `folio:component` generator instead of `folio:cell`.
 
 ---
 
-### 11. How do I customise user permissions?
+### 10. How do I customise user permissions?
 Override `Folio::Ability` in `app/overrides/` and add rules using CanCan syntax. See the Abilities section in Admin chapter.
 
 ---

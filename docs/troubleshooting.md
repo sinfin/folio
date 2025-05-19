@@ -50,9 +50,9 @@ Folio expects your application namespace module to be loaded so `self.table_name
 
 ## Debugging Console Sidebar Links
 
-If newly scaffolded resources do not appear in the admin sidebar, check:
-- `config/initializers/folio.rb` – option `config.folio_console_sidebar_link_class_names` should include your model's console controller class.
-- The generated controller inherits from `Folio::Console::BaseController` and the policy permits `index`.
+If newly scaffolded resources do not appear in the admin sidebar:
+- add class to one of `console_sidebar_prepended_links`, `console_sidebar_before_menu_links`, `console_sidebar_before_site_links` in your `Folio::Site` subclass
+- add class to `config/initializers/folio.rb` – option `config.folio_console_sidebar_link_class_names`
 
 ---
 
@@ -62,7 +62,7 @@ Use the provided test base classes—each resets `Folio::Current` and sets up a 
 ```
 Folio::Current::MissingSite: No current site is set
 ```
-Fix by inheriting from `Folio::ComponentTest`, `Folio::BaseControllerTest`, etc.
+Fix by inheriting from `Folio::ComponentTest`, `Folio::BaseControllerTest`, etc., or by seeding it with `create_and_host_site` or `get_any_site`.
 
 ---
 

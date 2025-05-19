@@ -61,68 +61,20 @@ After changing configuration, restart your Rails server.
 
 ## SEO Helpers
 
-### Canonical URL
-Use the helper in your public controller:
-```ruby
-set_meta_tags canonical: canonical_url(@page)
-```
-`canonical_url` is provided by Folio and respects the current locale and site domain.
-
-### Meta-variables in Controllers
-Expose dynamic placeholders for email templates or OpenGraph meta:
-```ruby
-class ArticlesController < ApplicationController
-  meta_variables :article_title, :author_name
-end
-```
-These can be referenced in views via `meta_variable(:article_title)`.
-
----
-
 ## Cookie Consent Banner
 Enable and configure the built-in cookie-consent component:
 ```ruby
 config.folio_cookie_consent_configuration = {
-  message: "We use cookies…",
-  accept_text: "OK",
-  policy_path: "/privacy"
+  enabled: true,
+  cookies: {
+    necessary: [
+      ...
+    ]
+    ...
+  }
 }
 ```
 It will automatically render at the bottom of every public page.
-
----
-
-## Cross-domain Devise Sessions
-Set both the Folio flag and Rails session domain:
-```ruby
-# config/initializers/folio.rb
-config.folio_crossdomain_devise = true
-
-# config/initializers/session_store.rb
-Rails.application.config.session_store :cookie_store, key: "_myapp_session", domain: ".example.com"
-```
-
----
-
-## Traco Localisation Example
-```sh
-rails generate folio:traco title description
-rails db:migrate
-```
-Model:
-```ruby
-class Article < ApplicationRecord
-  traco :title, :description
-end
-```
-YAML:
-```yml
-en:
-  activerecord:
-    attributes:
-      article:
-        title: "Title"
-```
 
 ---
 

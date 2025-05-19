@@ -23,13 +23,11 @@ This chapter explains the concept of Atoms in the Folio Rails Engine—referred 
 
 Folio core ships with the **base Atom model only**; concrete CMS block types are generated per project using the generator shown below. Typical projects tend to include blocks such as:
 
-- **TextAtom** — Rich text content (`content` field)
-- **ImageAtom** — Image with optional caption or link (`file`, `caption`, `link_url` fields)
-- **VideoAtom** — Embedded video (`url`, `caption` fields)
-- **QuoteAtom** — Highlighted quote (`quote`, `author` fields)
-- **GalleryAtom** — Image gallery (`files`, `caption` fields)
+- **Text** — Rich text content (`content` field)
+- **Image** — Image with optional caption or link (`file`, `caption`, `link_url` fields)
+- **Gallery** — Image gallery (`files`, `caption` fields)
 
-The exact list depends on which generators have been run in your codebase. Check your `app/models/folio/atom/` directory for the blocks currently available in your project.
+The exact list depends on which generators have been run in your codebase. Check your `app/models/application_namespace/atom/` directory for the blocks currently available in your project.
 
 ---
 
@@ -44,24 +42,11 @@ rails generate folio:atom MyCustomAtom
 ```
 
 This command will:
-- Create a new Atom class in `app/models/folio/atom/my_custom_atom.rb`
-- Generate a corresponding ViewComponent in `app/components/folio/atom/my_custom_atom_component.rb`
-- Add Slim, SASS, and JS files as needed
-- Register the new block type for use in the admin console
+- Create a new Atom class in `app/models/application_namespace/atom/my_custom_atom.rb`
+- Generate a corresponding ViewComponent in `app/components/application_namespace/atom/my_custom_atom_component.rb`
+- Add Slim and test files as needed
 
 For more details and advanced options, see the [Extending & Customization](extending.md) chapter.
-
----
-
-## Advanced: Manual Customization
-
-Manual creation or editing of CMS block files is only recommended for advanced use cases. If you need to customize generated files, follow these principles:
-- Keep block types focused and single-purpose
-- Use BEM and SASS for styling block components
-- Document the purpose and usage of each block type
-- Use strong parameter validation for block fields
-- Leverage ViewComponent for custom rendering and logic
-- Maintain backward compatibility for existing content
 
 ---
 
@@ -70,7 +55,6 @@ Manual creation or editing of CMS block files is only recommended for advanced u
 ```mermaid
 classDiagram
     Page "1" o-- "*" Atom : has many
-    Atom "*" o-- "1" AtomType : type
     Atom "*" o-- "*" File : attachments
 ```
 

@@ -10,31 +10,6 @@ Folio provides a robust system for managing files and media assets, including im
 
 ---
 
-## File Placements and Custom File Types (Recommended: Generator)
-
-> **Best Practice:** Use Folio generators to create custom file placements or file types. This ensures all necessary models, associations, and configuration are set up correctly.
-
-To generate a custom file placement, run:
-
-```sh
-rails generate folio:file_placement MyCustomPlacement
-```
-
-To generate a custom file type, run:
-
-```sh
-rails generate folio:file MyCustomFile
-```
-
-These commands will:
-- Create the necessary models and associations
-- Set up admin console integration for file management
-- Register the new file type or placement for use in your project
-
-For more details and advanced options, see the [Extending & Customization](extending.md) chapter.
-
----
-
 ## Overview of File Placements, Metadata, and Media Types
 
 - **File Placements:**
@@ -45,13 +20,12 @@ For more details and advanced options, see the [Extending & Customization](exten
   - Metadata can be used for display, filtering, or processing
 - **Media Types:**
   - Images, videos, audio, documents, and other file types are supported
-  - Custom file types can be defined using generators
+  - Custom file types can be added
 
 ---
 
 ## Best Practices for Extending File Handling
 
-- Use generators for all new file types and placements
 - Keep file associations clear and well-documented
 - Leverage metadata for advanced features (e.g., responsive images, previews)
 - Use the admin console for file management whenever possible
@@ -60,24 +34,25 @@ For more details and advanced options, see the [Extending & Customization](exten
 
 ## Advanced: Manual Customization
 
-Manual editing of file or placement models is only recommended for advanced use cases. If you need to customize generated files, follow best practices for associations, validations, and documentation.
+Manual editing of file or placement models is only recommended for advanced use cases.
 
 ### Form Helpers for File Placements
 
 **Single placement**
 ```slim
 = simple_form_for @page do |f|
-  = f.association :hero_image_placement, as: :file_placement, file_type: "Folio::File::Image"
+  = file_picker_for_cover(f)
 ```
 **Multiple placement**
 ```slim
-= f.association :gallery_placements, as: :file_placements, file_type: "Folio::File::Image"
+= simple_form_for @page do |f|
+  = react_images f.object.image_placements,
+                 attachmentable: 'folio_page',
+                 type: :image_placements
 ```
 
 ### Audio / Video Media
 - Supported subtitle languages configured via `config.folio_files_video_enabled_subtitle_languages` (default `[%w[cs]]`).
-- Videos are transcoded via Active Storage variants; ensure **ffmpeg** is installed for tests.
-- Use the `Folio::VideoPreviewComponent` to render a poster + controls.
 
 ### Image Metadata Extraction
 Folio can automatically extract full **EXIF & IPTC** metadata from uploaded images when **exiftool** is available on the server.
@@ -86,15 +61,6 @@ Folio can automatically extract full **EXIF & IPTC** metadata from uploaded imag
 • Install on Ubuntu: `sudo apt install exiftool`
 
 Once installed, metadata of every new image is stored in `Folio::File::Image.file_metadata`.
-
-For existing uploads run:
-```bash
-rake folio:file:fill_missing_metadata
-```
-You can inspect a single image in the console:
-```ruby
-Dragonfly.app.fetch(Folio::File::Image.last.file_uid).metadata
-``` 
 
 ---
 

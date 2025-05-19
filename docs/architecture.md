@@ -26,11 +26,9 @@ classDiagram
     Page "1" o-- "*" Atom : has many
     Page "1" o-- "*" FilePlacement : has many
     FilePlacement "*" o-- "1" File : belongs to
-    Atom "*" o-- "1" AtomType : type
     User <|-- SiteUserLink
     Page o-- Menu : navigation
     File <|-- MediaFile
-    Page <|-- ContentTemplate
     User <|-- NewsletterSubscription
 ```
 
@@ -42,9 +40,7 @@ classDiagram
 - `User` — User account
 - `Menu` — Navigation structure
 - `FilePlacement` — Placement of a file on a page
-- `AtomType` — Type of atom (text, image, etc.)
 - `NewsletterSubscription` — Newsletter signup
-- `ContentTemplate` — Page content template
 - `SiteUserLink` — User-to-site relationship
 
 ---

@@ -14,7 +14,6 @@ Folio uses the default **Minitest** framework that ships with Rails, extended wi
 | `capybara-minitest` | Integrates Capybara with Minitest assertions |
 | `factory_bot` | Factories for test data |
 | `vcr` + `webmock` | Record and stub external HTTP requests |
-| `view_component-test` | Test helpers for ViewComponent |
 
 You can find the core setup in `test/test_helper_base.rb`.
 
@@ -28,9 +27,11 @@ The engine defines several base classes that you can inherit from:
 |-------|----------|----------|
 | `ActiveSupport::TestCase` | Minitest unit test | Model/unit tests (includes FactoryBot) |
 | `Cell::TestCase` |  | Tests for legacy Trailblazer Cells |
-| `ActionDispatch::IntegrationTest` | Rails integration | Controller & request tests (Devise helpers included) |
+| `ActionDispatch::IntegrationTest` | | Controller & request tests (Devise helpers included) |
 | `Folio::CapybaraTest` | IntegrationTest | Full-stack browser tests with Capybara |
 | `Folio::ComponentTest` | `ViewComponent::TestCase` | Tests for ViewComponents |
+| `Folio::BaseControllerTest` | `ActionDispatch::IntegrationTest` | Adds site and user handling |
+| `Folio::Console::BaseControllerTest` | `Folio::BaseControllerTest` | Creates and signs in a superadmin user |
 
 Each base class automatically:
 - Resets `Folio::Current` context (site/user)
@@ -41,11 +42,13 @@ Each base class automatically:
 
 ## Factories
 
-Factories live in `test/factories.rb` and are loaded via FactoryBot. When you generate new models with Folio generators, remember to add corresponding factories.
+Factories live in `test/factories.rb` and are loaded via FactoryBot. When you generate new models, remember to add corresponding factories.
 
 ```ruby
-# Example factory
-after(:build) { |file| file.file.attach(io: File.open('test/fixtures/files/sample.jpg'), filename: 'sample.jpg') }
+factory :my_application_list, class: "MyApplication::List" do
+  title { "hello" }
+  published { true }
+end
 ```
 
 ---
@@ -54,8 +57,6 @@ after(:build) { |file| file.file.attach(io: File.open('test/fixtures/files/sampl
 
 ```sh
 rails test           # run all tests
-rails test test/models # run model tests only
-rails test:system    # run Capybara system tests (if any)
 ```
 
 Parallel testing is enabled by default (`parallelize` in `test_helper_base.rb`).

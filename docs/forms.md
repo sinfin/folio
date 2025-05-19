@@ -17,8 +17,6 @@ The engine includes the following input classes (see `app/inputs/`):
 | Input class | Purpose |
 |-------------|---------|
 | `RedactorInput` | Rich-text editor using Redactor |
-| `AdvancedRedactorInput` | Rich-text editor with extended toolbar |
-| `EmailRedactorInput` | Redactor configured for email templates |
 | `TagsInput` | Tag selector with autocomplete |
 | `UrlJsonInput` | Array of links stored as JSON |
 | `DateRangeInput` | Two-field date range picker |
@@ -39,7 +37,7 @@ Folio does **not** currently provide a generator for new inputs. To add a custom
 
 1. Create a new class in `app/inputs/`, inheriting from `SimpleForm::Inputs::Base` or another existing input.
 2. Implement the `input` method and any helpers.
-3. Add related JavaScript or CSS if needed.
+3. Add related JavaScript or CSS if needed - utilize `register_stimulus` for JS behavior.
 4. Document usage in your project.
 
 You can copy one of the built-in inputs as a starting point.

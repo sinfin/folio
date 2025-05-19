@@ -57,54 +57,19 @@ Manual editing of admin console files is only recommended for advanced use cases
 
 ## Advanced Console Features
 
-### Catalogue Actions & Sorting
-The scaffold generator includes **catalogue (index) actions** and default sorting. Extend them by editing:
-```ruby
-# app/controllers/folio/console/articles_controller.rb
-catalogue_action :publish, unless: :published? do |item|
-  item.update!(published: true)
-end
-
-sortable_by :created_at, :title
-```
-Add buttons in the index ViewComponent (`*_row_component.rb`).
-
 ### CSV Export
-Enable CSV export in any console controller:
-```ruby
-include Folio::Console::CsvExport
-self.csv_export_columns = %w[id title created_at]
-```
-Users will see a **Download CSV** button.
-
-### New-Record Modal
-To create records in a modal instead of a full form:
-1. In the controller: `use_new_record_modal!`
-2. Ensure the `new` action responds to Turbo/JS.
-
-### Autocomplete Fields
-Use `Folio::ConsoleAutocompleteFieldComponent` for quick look-ups:
-```slim
-= render Folio::ConsoleAutocompleteFieldComponent.new(url: console_search_articles_path, placeholder: "Search…")
-```
-The URL should return JSON with `{ id, label }` keys.
+Enable CSV export in any console controller by adding a `collection_csv` route and a `csv_attributes` method on your model.
 
 ### Nested Resources
 Generate nested resources under a parent:
 ```sh
-rails generate folio:console:scaffold Comment --parent Article
+rails generate folio:console:scaffold Comment --through Article
 ```
 This adds routes `/console/articles/:article_id/comments` and breadcrumbs.
 
 ### Multi-site Administration (Details)
 - Each user can belong to multiple sites via `Folio::SiteUserLink`.
-- `Folio::Current.site` is set from the sub-domain or admin dropdown.
-- To seed an extra site:
-  ```ruby
-  site = Folio::Site.create!(title: "US", locale: :en, domain: "example.com")
-  user.site_user_links.create!(site: site)
-  ```
-- Use `Rails.application.routes.default_url_options[:host]` to generate links per site.
+- `Folio::Current.site` is set based on the domain
 
 ### Abilities & Authorization
 Folio uses `Folio::Ability` (CanCanCan-style) to define user permissions.
