@@ -38,7 +38,7 @@
 //= require folio/debounce
 //= require folio/throttle
 //= require folio/input
-//= require folio/player/player
+//= require folio/player_component
 //= require folio/image/image
 //= require folio/chart/chart
 //= require folio/ui/icon/icon
