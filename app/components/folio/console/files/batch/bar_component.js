@@ -75,26 +75,26 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
     const { action, id } = e.detail
 
     let url = this.baseApiUrlValue
-    let messageAction
+    let checkboxAction
     const data = {}
 
     switch (action) {
       case 'add':
         url = `${url}/add_to_batch`
         data.file_ids = [id]
-        messageAction = 'add'
+        checkboxAction = 'add'
         break
       case 'remove':
         url = `${url}/remove_from_batch`
         data.file_ids = [id]
-        messageAction = 'remove'
+        checkboxAction = 'remove'
         break
       case 'add-all':
         url = `${url}/add_to_batch`
         data.file_ids = []
-        messageAction = 'add'
+        checkboxAction = 'add'
 
-        for (const checkbox of document.querySelectorAll('.f-file-list-file__checkbox')) {
+        for (const checkbox of document.querySelectorAll('.f-file-list-file-batch-checkbox__input')) {
           if (checkbox.value && checkbox.value !== 'all') {
             const numericId = parseInt(checkbox.value)
             if (numericId) {
@@ -108,9 +108,9 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
       case 'remove-all':
         url = `${url}/remove_from_batch`
         data.file_ids = []
-        messageAction = 'remove'
+        checkboxAction = 'remove'
 
-        for (const checkbox of document.querySelectorAll('.f-file-list-file__checkbox:checked')) {
+        for (const checkbox of document.querySelectorAll('.f-file-list-file-batch-checkbox__input:checked')) {
           if (checkbox.value && checkbox.value !== 'all') {
             const numericId = parseInt(checkbox.value)
             if (numericId) {
@@ -126,19 +126,7 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
     if (!url || !data) return
 
     const callback = () => {
-      const message = {
-        type: 'Folio::Console::Files::Batch::BarComponent/batch_updated',
-        data: { action: messageAction }
-      }
-
-      data.file_ids.forEach((fileId) => {
-        const selector = `.f-file-list-file[data-f-file-list-file-id-value="${fileId}"]`
-        const files = document.querySelectorAll(selector)
-
-        for (const file of files) {
-          file.dispatchEvent(new CustomEvent('f-file-list-file/message', { detail: { message } }))
-        }
-      })
+      this.dispatchCheckboxEvents(data.file_ids, checkboxAction)
     }
 
     this.ajax({ url, data, status: 'reloading', callback })
@@ -167,9 +155,13 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
   }
 
   cancel () {
+    const fileIds = JSON.parse(this.fileIdsJsonValue)
+
+    this.dispatchCheckboxEvents(fileIds, 'remove')
+
     this.ajax({
       url: `${this.baseApiUrlValue}/remove_from_batch`,
-      data: { file_ids: JSON.parse(this.fileIdsJsonValue) }
+      data: { file_ids: fileIds }
     })
   }
 
@@ -189,6 +181,17 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
         data: { file_ids: JSON.parse(this.fileIdsJsonValue), message: message.data.message }
       })
     }
+  }
+
+  dispatchCheckboxEvents (fileIds, checkboxAction) {
+    fileIds.forEach((fileId) => {
+      const selector = `.f-file-list-file-batch-checkbox__input[value="${fileId}"]`
+      const checkboxes = document.querySelectorAll(selector)
+
+      for (const checkbox of checkboxes) {
+        checkbox.dispatchEvent(new CustomEvent('f-c-files-batch-bar:batchUpdated', { detail: { action: checkboxAction } }))
+      }
+    })
   }
 })
 

@@ -96,7 +96,7 @@
     justify-content: center
     cursor: pointer
 
-  .f-file-list--view-grid &
+  .f-file-list--view-grid > .f-file-list__flex &
     background-color: $overlays-black-100
     border-radius: $border-radius
 
@@ -107,6 +107,13 @@
       position: absolute
       inset: 0
       z-index: 3
+      display: block
+
+    &__part--batch-actions
+      position: absolute
+      top: 0
+      left: 0
+      z-index: 4
       display: block
 
     &__control
@@ -173,6 +180,12 @@
       z-index: 3
       display: block
 
+  .f-file-list--view-grid .f-c-files-batch-bar[hidden] ~ .f-file-list__flex .f-file-list-file &__part--batch-actions
+    opacity: 0
+
+  .f-file-list--view-grid .f-c-files-batch-bar[hidden] ~ .f-file-list__flex .f-file-list-file:hover &__part--batch-actions
+    opacity: 1
+
   &__tags
     display: flex
     flex-wrap: wrap
@@ -196,7 +209,7 @@
     top: 0
     left: 0
 
-  .f-file-list--view-table &
+  .f-file-list--view-table > .f-file-list__flex &
     background: transparent
     border-radius: 0
     display: flex
@@ -206,15 +219,6 @@
     .f-file-list-file__control--disabled
       opacity: 0.5
       cursor: not-allowed
-
-    &__checkbox-label
-      margin-right: px-to-rem(-8px)
-      padding: px-to-rem(8px)
-      cursor: pointer
-      min-height: 50px
-      display: flex
-      align-items: center
-      justify-content: center
 
     &__part--checkbox
       min-width: 16px + 8px

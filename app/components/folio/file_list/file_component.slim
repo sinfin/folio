@@ -5,16 +5,9 @@ div data=data class=bem_class_name
       class="f-file-list-file__part--batch-actions"
     ]
       - unless @template
-        label[
-          class="f-file-list-file__checkbox-label"
-        ]
-          input[
-            type="checkbox"
-            class="f-file-list-file__checkbox"
-            checked=selected_for_batch_actions?
-            value=(@thead ? "all" : @file.id)
-            data=stimulus_data(target: "checkbox", action: { input: @thead ? "onGlobalBatchActionCheckboxInput" : "onBatchActionCheckboxInput" })
-          ]
+        = render(Folio::FileList::File::BatchCheckboxComponent.new(file: @file,
+                                                                   file_klass: @file_klass,
+                                                                   thead: @thead))
 
   div[
     class="f-file-list-file__part"

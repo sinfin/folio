@@ -49,6 +49,7 @@
 //= require folio/uppy_component
 //= require folio/file_list_component
 //= require folio/file_list/file_component
+//= require folio/file_list/file/batch_checkbox_component
 
 // must be under folio/input
 //= require daterangepicker.min

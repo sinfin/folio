@@ -178,13 +178,4 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
       FILE_ICON_KEYS["default"]
     end
   end
-
-  def selected_for_batch_actions?
-    return false if @file.try(:id).blank?
-
-    file_ids = controller.session.dig(Folio::Console::Api::FileControllerBase::BATCH_SESSION_KEY, @file_klass.to_s, "file_ids")
-    return false if file_ids.blank?
-
-    file_ids.include?(@file.id)
-  end
 end

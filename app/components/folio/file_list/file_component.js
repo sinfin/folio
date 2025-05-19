@@ -107,11 +107,7 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
   messageBusCallbackGeneric (event) {
     const message = event.detail.message
 
-    if (message.type === 'Folio::Console::Files::Batch::BarComponent/batch_updated') {
-      if (this.hasCheckboxTarget) {
-        this.checkboxTarget.checked = message.data.action === 'add'
-      }
-    } else if (message.type === 'Folio::Console::FileControllerBase/file_updated' || (message.type === 'Folio::S3::CreateFileJob' && message.data.type === 'replace-success')) {
+    if (message.type === 'Folio::Console::FileControllerBase/file_updated' || (message.type === 'Folio::S3::CreateFileJob' && message.data.type === 'replace-success')) {
       this.reload({ handleErrors: false })
     }
   }
@@ -216,24 +212,6 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
   filesShowDeleted (e) {
     if (!e.detail || e.detail.id !== this.idValue) return
     this.removeParentOrElement()
-  }
-
-  onGlobalBatchActionCheckboxInput (e) {
-    const batchBar = document.querySelector('.f-c-files-batch-bar')
-    if (!batchBar) return
-    const action = e.target.checked ? 'add-all' : 'remove-all'
-    batchBar.dispatchEvent(new CustomEvent('f-c-files-batch-bar/action', { detail: { action } }))
-  }
-
-  onBatchActionCheckboxInput (e) {
-    if (!this.idValue) return
-
-    const batchBar = document.querySelector('.f-c-files-batch-bar')
-    if (!batchBar) return
-
-    const action = e.target.checked ? 'add' : 'remove'
-
-    batchBar.dispatchEvent(new CustomEvent('f-c-files-batch-bar/action', { detail: { action, id: this.idValue } }))
   }
 })
 
