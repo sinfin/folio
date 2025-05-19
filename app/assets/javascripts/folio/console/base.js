@@ -86,14 +86,14 @@
 //= require folio/console/console_notes/catalogue_tooltip/catalogue_tooltip
 //= require folio/console/current_users/console_url_bar/console_url_bar
 //= require folio/console/current_users/preference_toggle_component
-//= require folio/console/file/picker/document/document
-//= require folio/console/file/picker/picker
-//= require folio/console/file/picker/thumb/thumb
 //= require folio/console/file/preview_reloader/preview_reloader
 //= require folio/console/file/processing_notifier/processing_notifier
 //= require folio/console/files/batch/bar_component
 //= require folio/console/files/batch/form_component
 //= require folio/console/files/display_toggle_component
+//= require folio/console/files/picker/document_component
+//= require folio/console/files/picker/image_component
+//= require folio/console/files/picker_component
 //= require folio/console/files/show_component
 //= require folio/console/files/show_modal_component
 //= require folio/console/flash/flash

@@ -3,7 +3,7 @@ h1 Players
 h2 Audio
 
 - if Folio::File::Audio.last
-  == cell('folio/player', Folio::File::Audio.last)
+  = render(Folio::PlayerComponent.new(file: Folio::File::Audio.last))
 - else
   p.text-danger Upload an audio file first!
 
@@ -23,7 +23,7 @@ h2 Audio form present
 h2 Video
 
 - if Folio::File::Video.last
-  == cell('folio/player', Folio::File::Video.last)
+  = render(Folio::PlayerComponent.new(file: Folio::File::Video.last))
 - else
   p.text-danger Upload a video file first!
 

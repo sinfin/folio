@@ -1,10 +1,10 @@
 //= require folio/capitalize
 
 window.FolioConsole = window.FolioConsole || {}
-window.FolioConsole.File = window.FolioConsole.File || {}
-window.FolioConsole.File.Picker = window.FolioConsole.File.Picker || {}
+window.FolioConsole.Files = window.FolioConsole.Files || {}
+window.FolioConsole.Files.Picker = window.FolioConsole.Files.Picker || {}
 
-window.FolioConsole.File.Picker.addControlsForStimulusController = (opts) => {
+window.FolioConsole.Files.Picker.addControlsForStimulusController = (opts) => {
   ['modal', 'destroy'].forEach((key) => {
     const button = document.createElement('button')
 
@@ -16,13 +16,13 @@ window.FolioConsole.File.Picker.addControlsForStimulusController = (opts) => {
     const icon = window.Folio.Ui.Icon.create(key === 'modal' ? 'edit_box' : 'close')
     button.appendChild(icon)
 
-    button.dataset.action = `f-c-file-picker#onFormControl${window.Folio.capitalize(key)}Click`
+    button.dataset.action = `f-c-files-picker#onFormControl${window.Folio.capitalize(key)}Click`
 
     opts.parent.appendChild(button)
   })
 }
 
-window.Folio.Stimulus.register('f-c-file-picker', class extends window.Stimulus.Controller {
+window.Folio.Stimulus.register('f-c-files-picker', class extends window.Stimulus.Controller {
   static targets = ['idInput', 'content', 'fileIdInput', 'destroyInput', 'altValue']
 
   static values = {
@@ -116,7 +116,7 @@ window.Folio.Stimulus.register('f-c-file-picker', class extends window.Stimulus.
         this.createPlayer(serializedFile)
         break
       case 'image':
-        this.createThumbnail(serializedFile)
+        this.createImage(serializedFile)
         break
       case 'document':
         this.createDocument(serializedFile)
@@ -126,12 +126,12 @@ window.Folio.Stimulus.register('f-c-file-picker', class extends window.Stimulus.
     }
   }
 
-  createThumbnail (serializedFile) {
-    this.contentTarget.appendChild(window.FolioConsole.File.Picker.Thumb.create(serializedFile))
+  createImage (serializedFile) {
+    this.contentTarget.appendChild(window.FolioConsole.Files.Picker.Image.create(serializedFile))
   }
 
   createDocument (serializedFile) {
-    this.contentTarget.appendChild(window.FolioConsole.File.Picker.Document.create(serializedFile))
+    this.contentTarget.appendChild(window.FolioConsole.Files.Picker.Document.create(serializedFile))
   }
 
   createPlayer (serializedFile) {
@@ -171,6 +171,6 @@ window.Folio.Stimulus.register('f-c-file-picker', class extends window.Stimulus.
   onAltClick (e) {
     window.FolioConsole.Autosave.pause()
 
-    this.openModal({ trigger: e.currentTarget, file: JSON.parse(this.element.querySelector('.f-c-file-picker-thumb').dataset.file), autoFocusField: 'alt' })
+    this.openModal({ trigger: e.currentTarget, file: JSON.parse(this.element.querySelector('.f-c-files-picker-thumb').dataset.file), autoFocusField: 'alt' })
   }
 })

@@ -1,0 +1,47 @@
+.f-c-files-picker[
+  data=data
+  class="form-group"
+  class="f-c-files-picker--as-#{@file_klass.human_type}"
+  class=(@darker ? "f-c-files-picker--darker" : nil)
+  class="f-c-js-atoms-placement-setting"
+]
+  = @f.label @placement_key, required: @required
+
+  = @f.simple_fields_for @placement_key, build: true do |fp|
+    = fp.hidden_field :id, data: stimulus_target("idInput")
+
+    = fp.hidden_field :_destroy,
+                      value: fp.object.marked_for_destruction? ? "1" : "0",
+                      disabled: !fp.object.marked_for_destruction?,
+                      data: stimulus_target("destroyInput")
+
+    = fp.hidden_field :file_id,
+                      data: stimulus_target("fileIdInput")
+
+    .f-c-files-picker__content data=stimulus_target("content")
+      - if file_placement && file_placement.file && !file_placement.marked_for_destruction?
+        = render(content_component)
+
+    .f-c-files-picker__btn-wrap
+      = folio_console_ui_button(class: "f-c-files-picker__btn",
+                                variant: :success,
+                                icon: :plus,
+                                data: stimulus_action(click: 'onBtnClick'))
+
+    - if hint = hint_for(fp)
+      small.f-c-files-picker__hint.form-text.text-muted
+        = hint
+
+    - if @file_klass.human_type == "image"
+      small.f-c-files-picker__alt.form-text.text-muted
+        span.f-c-files-picker__alt-label<>
+          ' alt:
+
+        span.f-c-files-picker__alt-value<> data=stimulus_target("altValue")
+          - if file_placement && file_placement.file && !file_placement.marked_for_destruction?
+            = file_placement.file.alt
+
+        = folio_icon(:edit,
+                     height: 12,
+                     class: 'f-c-files-picker__alt-ico',
+                     data: { action: "click->f-c-files-picker#onAltClick" })
