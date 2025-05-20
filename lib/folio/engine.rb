@@ -114,7 +114,7 @@ module Folio
 
     config.folio_users_non_get_referrer_rewrite_proc = -> (referrer) { }
 
-    config.folio_console_react_modal_types = config.folio_file_types_for_routes
+    config.folio_console_files_index_modal_types = config.folio_file_types_for_routes
 
     config.folio_files_require_attribution = false
     config.folio_files_require_alt = false

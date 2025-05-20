@@ -30,12 +30,12 @@ class Folio::Console::SharedFilesTest < Folio::Console::BaseControllerTest
 
         assert_response :success, response.body
 
-        assert file_data_in_json(response.body, shared_image).present?,
+        assert file_in_response_html(shared_image).present?,
                 "Data #{shared_image.file_name} not found in response for `#{site.domain}`"
         if site == main_site
-          assert_nil file_data_in_json(response.body, lvh_image), response.body
+          assert_nil file_in_response_html(lvh_image), response.body
         else
-          assert file_data_in_json(response.body, lvh_image).present?,
+          assert file_in_response_html(lvh_image).present?,
                   "Data #{lvh_image.file_name} not found in response for `#{site.domain}`"
         end
       end
@@ -115,12 +115,12 @@ class Folio::Console::SharedFilesTest < Folio::Console::BaseControllerTest
         assert_response :success, response.body
 
         if site == main_site
-          assert file_data_in_json(response.body, shared_image).present?,
+          assert file_in_response_html(shared_image).present?,
                "Data #{shared_image.file_name} not found in response for `#{site.domain}`"
-          assert_nil file_data_in_json(response.body, lvh_image), response.body
+          assert_nil file_in_response_html(lvh_image), response.body
         else
-          assert_nil file_data_in_json(response.body, shared_image), response.body
-          assert file_data_in_json(response.body, lvh_image).present?,
+          assert_nil file_in_response_html(shared_image), response.body
+          assert file_in_response_html(lvh_image).present?,
                  "Data #{lvh_image.file_name} not found in response for `#{site.domain}`"
         end
       end
@@ -179,8 +179,8 @@ class Folio::Console::SharedFilesTest < Folio::Console::BaseControllerTest
   end
 
   private
-    def file_data_in_json(json_body, file)
-      json_data = JSON.parse(response.body)["data"]
-      json_data.detect { |f_data| f_data["attributes"]["file_name"] == file.file_name }
+    def file_in_response_html(file)
+      html = response.parsed_body["data"]
+      html.match("data-f-file-list-file-id-value=\"#{file.id}\"")
     end
 end

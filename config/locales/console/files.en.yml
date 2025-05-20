@@ -10,6 +10,11 @@ en:
           replace: Replace
           destroy: Delete
 
+        picker_component:
+          add_file: Add file
+          hint/Folio::File::Audio: "Supported formats: MP3, AAC do 1000 MB"
+          hint/Folio::File::Video: "Supported formats: MP4, WebM do 1000 MB"
+
         batch:
           bar_component:
             delete: Delete
@@ -26,3 +31,10 @@ en:
             selected_files: Selected files
             has_values_placeholder: Multiple values
             has_values_hint: Multiple values set. Change the field to update all, or leave it to keep them.
+
+        index:
+          modal_component:
+            title: Pick a file
+            title/image: Pick an image
+            title/video: Pick a video
+            title/audio: Pick an audio

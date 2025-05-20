@@ -29,7 +29,7 @@ class Folio::Console::Files::PickerComponent < Folio::Console::ApplicationCompon
   end
 
   def hint_for(fp)
-    @hint.presence || t(".hint.#{fp.object.class.reflections["file"].class_name}", default: nil)
+    @hint.presence || t(".hint/#{fp.object.class.reflections["file"].class_name}", default: nil)
   end
 
   def content_component

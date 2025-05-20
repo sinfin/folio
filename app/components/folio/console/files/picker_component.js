@@ -146,7 +146,13 @@ window.Folio.Stimulus.register('f-c-files-picker', class extends window.Stimulus
 
     window.FolioConsole.Autosave.pause()
 
-    e.currentTarget.dispatchEvent(new window.CustomEvent(`folioConsoleModalSingleSelect/${this.fileTypeValue}/showModal`, { bubbles: true }))
+    const modal = document.querySelector(`.f-c-files-index-modal[data-f-c-files-index-modal-file-type-value="${this.fileTypeValue}"]`)
+
+    if (modal) {
+      modal.dispatchEvent(new window.CustomEvent('f-c-files-picker:open', { detail: { picker: this.element } }))
+    } else {
+      throw new Error(`Missing modal for file type ${this.fileTypeValue}`)
+    }
   }
 
   onFormControlModalClick (e) {

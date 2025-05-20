@@ -2,7 +2,6 @@
 
 class Folio::Console::ContentTemplatesController < Folio::Console::BaseController
   folio_console_controller_for "Folio::ContentTemplate", except: %w[index edit update]
-  before_action { @no_react_modals = true }
   before_action :set_klass, only: %i[edit update]
 
   def index

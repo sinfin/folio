@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 - default console `update` for `format: :json` now returns a JSON with changes instead of an empty hash
 - `Folio::Console::Ui::AjaxInputComponent` now expects API to return `{ name => new_value }` instead of `{ value: new_value }`
 - redid input autocomplete without jQuery UI
+- changed `folio_console_react_modal_types` config to `folio_console_files_index_modal_types`
 
 ## [6.3.0] - 2025-04-03
 

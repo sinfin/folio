@@ -332,13 +332,6 @@ en:
           share: Share
           settings: Settings
 
-      react:
-        modal_component:
-          title: Pick a file
-          title/image: Pick an image
-          title/video: Pick a video
-          title/audio: Pick an audio
-
       with_aside:
         hide: Hide
 

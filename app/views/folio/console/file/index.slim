@@ -1,21 +1,2 @@
-= index_header file_list_uppy: true
-
-= render(Folio::FileListComponent.new(file_klass: @klass,
-                                      files: controller.instance_variable_get(controller.send(:folio_console_record_variable_name, plural: true)),
-                                      editable: true,
-                                      destroyable: true,
-                                      uploadable: true,
-                                      batch_actions: true,
-                                      primary_action: :edit,
-                                      reload_pagy: true))
-
-/ .folio-react-wrap[
-/   data-file-type=@klass.to_s
-/   data-index-url=url_for([:console, @klass])
-/   data-files-url=url_for([:console, :api, @klass])
-/   data-react-type=@klass.human_type
-/   data-file-for-modal=@file_for_modal
-/   data-mode='index'
-/   data-taggable='1'
-/   data-can-destroy-files=(can_now?(:destroy, @klass) ? "1" : nil)
-/ ]
+= render(Folio::Console::Files::IndexComponent.new(file_klass: @klass,
+                                                   files: controller.instance_variable_get(controller.send(:folio_console_record_variable_name, plural: true))))

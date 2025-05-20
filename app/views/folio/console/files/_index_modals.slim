@@ -1,0 +1,2 @@
+- Rails.application.config.folio_console_files_index_modal_types.each do |file_type|
+  = render(Folio::Console::Files::Index::ModalComponent.new(file_type:))

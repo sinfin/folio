@@ -340,13 +340,6 @@ cs:
         title: Sdílet náhled
         text: Sdílet můžete unikátní URL adresu, která zobrazí nepublikovaný záznam. U náhledů se nepočítá čtenost a obecně nesleduje návštěvnost.
 
-      react:
-        modal_component:
-          title: Zvolte soubor
-          title/image: Zvolte obrázek
-          title/video: Zvolte video
-          title/audio: Zvolte audio
-
       with_aside:
         hide: Skrýt
 

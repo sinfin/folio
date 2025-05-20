@@ -11,6 +11,12 @@ module Folio::Console::FileControllerBase
     after_action :message_bus_broadcast_update, only: %i[update]
   end
 
+  def self.index_filters
+    {
+      by_used: [true, false],
+    }
+  end
+
   private
     def file_params
       p = params.require(:file)
@@ -89,8 +95,6 @@ module Folio::Console::FileControllerBase
     end
 
     def index_filters
-      {
-        by_used: [true, false],
-      }
+      Folio::Console::FileControllerBase.index_filters
     end
 end

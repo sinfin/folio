@@ -15,18 +15,14 @@ module Folio::Console::Api::FileControllerBase
   end
 
   def index
-    can_cache = (params[:page].nil? || params[:page] == "1") &&
-                filter_params.to_h.all? { |k, v| v.blank? }
+    fail CanCan::AccessDenied unless can_now?(:show, @klass)
 
-    if can_cache
-      json = Rails.cache.fetch(index_cache_key, expires_in: 1.day) do
-        index_json
-      end
-    else
-      json = index_json
-    end
+    @pagy, @files = pagy(folio_console_records.ordered, items: Folio::Console::FileControllerBase::PAGY_ITEMS)
+    set_pagy_options
 
-    render json:
+    render_component_json(Folio::Console::Files::IndexComponent.new(file_klass: @klass,
+                                                                    files: @files,
+                                                                    modal: true))
   end
 
   def show
@@ -79,13 +75,7 @@ module Folio::Console::Api::FileControllerBase
   def pagination
     @pagy, _records = pagy(folio_console_records, items: Folio::Console::FileControllerBase::PAGY_ITEMS)
 
-    @pagy_options = {
-      reload_url: url_for([:pagination, :console, :api, @klass, page: params[:page]])
-    }
-
-    if @klass.human_type == "image"
-      @pagy_options[:middle_component] = Folio::Console::Files::DisplayToggleComponent.new
-    end
+    set_pagy_options
 
     render_component_json(Folio::Console::Ui::PagyComponent.new(pagy: @pagy,
                                                                 options: @pagy_options))
@@ -332,5 +322,19 @@ module Folio::Console::Api::FileControllerBase
 
     def render_batch_bar_component
       render_component_json(Folio::Console::Files::Batch::BarComponent.new(file_klass: @klass))
+    end
+
+    def index_filters
+      Folio::Console::FileControllerBase.index_filters
+    end
+
+    def set_pagy_options
+      @pagy_options = {
+        reload_url: url_for([:pagination, :console, :api, @klass, page: params[:page]])
+      }
+
+      if @klass.human_type == "image"
+        @pagy_options[:middle_component] = Folio::Console::Files::DisplayToggleComponent.new
+      end
     end
 end

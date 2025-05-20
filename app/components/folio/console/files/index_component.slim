@@ -1,0 +1,11 @@
+.f-c-files-index
+  = helpers.index_header file_list_uppy: true, klass: @file_klass
+
+  = render(Folio::FileListComponent.new(file_klass: @file_klass,
+                                        files: @files,
+                                        editable: true,
+                                        destroyable: true,
+                                        uploadable: true,
+                                        batch_actions: true,
+                                        primary_action: :edit,
+                                        reload_pagy: true))
