@@ -47,6 +47,9 @@ window.Folio.Stimulus.register('f-c-files-picker', class extends window.Stimulus
   disconnect () {
     this.element.removeEventListener(this.selectedEventName(), this.boundOnSelected)
     delete this.boundOnSelected
+
+    this.element.removeEventListener(window.FolioConsole.Events.FOLIO_CONSOLE_FILE_UPDATED, this.boundOnUpdated)
+    delete this.boundOnUpdated
   }
 
   selectedEventName () {

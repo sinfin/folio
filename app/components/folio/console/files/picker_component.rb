@@ -10,11 +10,17 @@ class Folio::Console::Files::PickerComponent < Folio::Console::ApplicationCompon
     @required = required
   end
 
+  def before_render
+    if @f.object.send(@placement_key).blank?
+      @f.object.send("build_#{@placement_key}")
+    end
+  end
+
   def data
     stimulus_controller("f-c-files-picker",
                         values: {
                           file_type: @file_klass.to_s,
-                          has_file: (file_placement && file_placement.file && !file_placement.marked_for_destruction?) ? "true" : "false",
+                          has_file: (file_placement && file_placement.file && !file_placement.marked_for_destruction?) ? true : false,
                         })
   end
 
