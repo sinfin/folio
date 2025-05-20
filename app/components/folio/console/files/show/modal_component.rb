@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::Console::Files::ShowModalComponent < ApplicationComponent
+class Folio::Console::Files::Show::ModalComponent < ApplicationComponent
   CLASS_NAME = "f-c-files-show-modal"
 
   def initialize(file: nil)

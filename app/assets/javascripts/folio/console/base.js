@@ -95,7 +95,7 @@
 //= require folio/console/files/picker/image_component
 //= require folio/console/files/picker_component
 //= require folio/console/files/show_component
-//= require folio/console/files/show_modal_component
+//= require folio/console/files/show/modal_component
 //= require folio/console/flash/flash
 //= require folio/console/folio_attributes_fields_component
 //= require folio/console/form/errors/errors

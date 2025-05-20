@@ -2,13 +2,13 @@
 
 require "test_helper"
 
-class Folio::Console::Files::ShowModalComponentTest < Folio::ComponentTest
+class Folio::Console::Files::Show::ModalComponentTest < Folio::ComponentTest
   def test_render_with_file
     with_controller_class(Folio::Console::File::ImagesController) do
       with_request_url "/console/file/images" do
         file = create(:folio_file_image)
 
-        render_inline(Folio::Console::Files::ShowModalComponent.new(file: file))
+        render_inline(Folio::Console::Files::Show::ModalComponent.new(file: file))
 
         assert_selector(".f-c-files-show-modal")
       end
@@ -18,7 +18,7 @@ class Folio::Console::Files::ShowModalComponentTest < Folio::ComponentTest
   def test_render_without_file
     with_controller_class(Folio::Console::File::ImagesController) do
       with_request_url "/console/file/images" do
-        render_inline(Folio::Console::Files::ShowModalComponent.new)
+        render_inline(Folio::Console::Files::Show::ModalComponent.new)
 
         assert_selector(".f-c-files-show-modal")
       end
