@@ -95,12 +95,12 @@ class Folio::StructuredData::BodyComponent < Folio::ApplicationComponent
     }
   end
 
-  def structured_data_hash_for_article_author_from(name:, url:)
+  def structured_data_hash_for_article_author_from(name: nil, url: nil)
     {
       "@type" => "Person",
       "name" => name,
       "url" => url,
-    }
+    }.compact
   end
 
   def structured_data_hash_for_article_author
