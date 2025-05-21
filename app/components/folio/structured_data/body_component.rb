@@ -95,20 +95,28 @@ class Folio::StructuredData::BodyComponent < Folio::ApplicationComponent
     }
   end
 
-  def structured_data_hash_for_article
+  def structured_data_hash_for_article_author_from(name:, url:)
+    {
+      "@type" => "Person",
+      "name" => name,
+      "url" => url,
+    }
+  end
+
+  def structured_data_hash_for_article_author
     authors_ary = @record.try(:cache_aware_published_authors) || @record.published_authors
 
     if authors_ary.present?
       author_for_hash = authors_ary.first
-      author_hash = {
-        "@type" => "Person",
-        "name" => author_for_hash.full_name,
-        "url" => url_for([author_for_hash, only_path: false])
-      }
-    else
-      author_hash = nil
-    end
+      structured_data_hash_for_article_author_from(name: author_for_hash.full_name,
+                                                   url: url_for([author_for_hash, only_path: false]))
 
+    else
+      nil
+    end
+  end
+
+  def structured_data_hash_for_article
     tags_ary = @record.try(:cache_aware_published_tags) || @record.try(:published_tags)
 
     cover = @record.try(:cache_aware_cover) || @record.cover
@@ -125,7 +133,7 @@ class Folio::StructuredData::BodyComponent < Folio::ApplicationComponent
       "datePublished" => @record.published_at_with_fallback.iso8601,
       "dateModified" => @record.try(:revised_at).present? ? @record.revised_at.iso8601 : nil,
       "keywords" => tags_ary.present? ? tags_ary.map(&:title) : nil,
-      "author" => author_hash,
+      "author" => structured_data_hash_for_article_author,
       "publisher" => publisher_data
     }.compact
   end
