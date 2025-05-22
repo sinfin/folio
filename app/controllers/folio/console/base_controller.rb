@@ -468,7 +468,11 @@ class Folio::Console::BaseController < Folio::ApplicationController
       return url if valid_routes_parent
 
       begin
-        through_aware_console_url_for(record, action: :edit)
+        if include_through_record
+          through_aware_console_url_for(record, action: :edit)
+        else
+          url_for([:console, record, action: :edit])
+        end
       rescue NoMethodError, ActionController::RoutingError
         nil
       end
