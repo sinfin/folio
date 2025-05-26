@@ -61,6 +61,30 @@ class Folio::MenuItemTest < ActiveSupport::TestCase
     assert_not build(:folio_menu_item, menu:, target: page, style: "red").valid?
     assert_not build(:folio_menu_item, menu:, target: page, style: "foo").valid?
   end
+
+  test "validate_url" do
+    menu_item = build(:folio_menu_item, target: create(:folio_page))
+    assert menu_item.valid?
+
+    {
+      "/foo" => true,
+      "/" => true,
+      "./" => true,
+      "../" => true,
+      "http://example.com" => true,
+      "javascript:alert('foo');" => false,
+      "foo" => false,
+    }.each do |url, valid|
+      menu_item.url = url
+
+      if valid
+        assert menu_item.valid?, "Expected URL '#{url}' to be valid"
+      else
+        assert_not menu_item.valid?, "Expected URL '#{url}' to be invalid"
+        assert menu_item.errors[:url].present?, "Expected URL '#{url}' to have errors"
+      end
+    end
+  end
 end
 
 # == Schema Information
