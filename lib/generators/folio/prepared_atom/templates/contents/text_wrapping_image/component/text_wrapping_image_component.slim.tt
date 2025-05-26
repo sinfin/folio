@@ -16,4 +16,4 @@
                 class='<%= classname_prefix %>-rich-text fs-text-l'
                 class='<%= classname_prefix %>-rich-text--chomp'
               ]
-                = cstypo @atom.content
+                == cstypo @atom.content

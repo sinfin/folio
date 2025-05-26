@@ -7,6 +7,10 @@ All notable changes to this project will be documented in this file.
 
 - `bottom_html_api_url` to files, used for new `HasSubtitlesFormComponent`
 
+### Changed
+
+- `cstypo` to use U+00A0 instead of nbsp entity, allowing us to remove `html_safe`
+
 ## [6.4.0] - 2025-05-15
 
 ### Added
