@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - `cstypo` to use U+00A0 instead of nbsp entity, allowing us to remove `html_safe`
+- overriden `friendly_id` to use persisted values so that we don't form invalid URLs in console forms
 
 ## [6.4.0] - 2025-05-15
 
