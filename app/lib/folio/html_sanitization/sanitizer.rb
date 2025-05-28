@@ -33,7 +33,7 @@ module Folio
         def sanitize_attribute(attribute:)
           value = @record.send(attribute)
           return if value.blank?
-          return unless value.is_a?(String)
+          return if !value.is_a?(String) && !value.is_a?(Hash)
 
           attribute_config = attributes_config[attribute] || DEFAULT_ATTRIBUTE_CONFIG
 
@@ -53,22 +53,53 @@ module Folio
           end
         end
 
-        def sanitize_attribute_as_richtext(attribute:, value:)
-          sanitized_value = ActionController::Base.helpers.sanitize(value)
+        def handle_hash_or_string_attribute(attribute:, value:, sanitize_method:, logger_info:)
+          changed = false
+          sanitized_value = nil
 
-          if value != sanitized_value
+          if value.is_a?(Hash)
+            recursively_sanitize_hash_proc = -> (hash) do
+              hash.transform_values do |hash_value|
+                result = if hash_value.is_a?(String)
+                  send(sanitize_method, value: hash_value)
+                elsif hash_value.is_a?(Hash)
+                  recursively_sanitize_hash_proc.call(hash_value)
+                else
+                  hash_value
+                end
+
+                changed ||= result != hash_value
+
+                result
+              end
+            end
+
+            sanitized_value = recursively_sanitize_hash_proc.call(value)
+          else
+            sanitized_value = send(sanitize_method, value:)
+            changed = sanitized_value != value
+          end
+
+          if changed
             @record.send("#{attribute}=", sanitized_value)
-            log(attribute:, message: "Sanitized as richtext from #{value.inspect} to #{sanitized_value.inspect}")
+            log(attribute:, message: "Sanitized as #{logger_info} from #{value.inspect} to #{sanitized_value.inspect}")
           end
         end
 
-        def sanitize_attribute_as_string(attribute:, value:)
-          sanitized_value = Loofah.fragment(value).text(encode_special_chars: false)
+        def sanitize_value_as_richtext(value:)
+          ActionController::Base.helpers.sanitize(value)
+        end
 
-          if value != sanitized_value
-            @record.send("#{attribute}=", sanitized_value)
-            log(attribute:, message: "Sanitized as string from #{value.inspect} to #{sanitized_value.inspect}")
-          end
+        def sanitize_attribute_as_richtext(attribute:, value:)
+          handle_hash_or_string_attribute(attribute:, value:, sanitize_method: :sanitize_value_as_richtext, logger_info: :richtext)
+        end
+
+        def sanitize_value_as_string(value:)
+          Loofah.fragment(value).text(encode_special_chars: false)
+        end
+
+        def sanitize_attribute_as_string(attribute:, value:)
+          handle_hash_or_string_attribute(attribute:, value:, sanitize_method: :sanitize_value_as_string, logger_info: :string)
         end
 
         def sanitize_attribute_via_proc(attribute:, value:, proc:)
