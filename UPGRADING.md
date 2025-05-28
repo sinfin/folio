@@ -3,7 +3,7 @@
 ## 6.4.0 to Unreleased - HTML sanitization
 
 - Replace `include Folio::HasSanitizedFields` with `include Folio::HtmlSanitization::Model` on your `ApplicationRecord`.
-- Sanitizer **santizes all strings/texts and JSON containing strings/texts by default**.
+- Sanitizer **sanitizes all strings/texts and JSON containing strings/texts by default**.
   - Go through all of your models and pick the attributes that may contain HTML. Should such a model exist, define a `folio_html_sanitization_config` method (overriding the concern default) with the following syntax
   ```rb
   def folio_html_sanitization_config

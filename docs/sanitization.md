@@ -31,10 +31,11 @@ HTML sanitization ensures that all strings, texts, and JSON containing strings o
 3. **Supported Attribute Values**:
    - `:unsafe_html`: Ignore the attribute and do not sanitize it.
    - `:richtext`: Keep safe HTML tags and attributes using `Rails::HTML5::SafeListSanitizer`.
+   - `:string` (default): Sanitize the attribute as plain text, stripping all HTML tags.
    - proc: Pass a proc (i.e. `-> (value) { custom_sanitization_handler(value) }`) to handle custom sanitization logic.
 
 4. **Default Behavior**:
-   Attributes not defined in the `:attributes` hash are stripped of all HTML using `Loofah`.
+   Attributes not defined in the `:attributes` hash are sanitized as plain text (equivalent to `:string`) and stripped of all HTML using `Loofah`.
 
 5. **Disabling Sanitization**:
    You can disable sanitization for a specific model by setting `{ enabled: false }` in the configuration.
