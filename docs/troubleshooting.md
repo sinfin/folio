@@ -11,7 +11,7 @@ This chapter collects common issues encountered when working with the Folio Rail
 SassC::SyntaxError: Error: File to import not found or unreadable: redactor.
 ```
 
-**Cause**  
+**Cause**
 Folio depends on licensed **Redactor 3** assets. The installer expects them under `vendor/assets/redactor/`.
 
 **Solution**
@@ -25,10 +25,10 @@ Folio depends on licensed **Redactor 3** assets. The installer expects them unde
 
 ## Engine Namespace Not Loaded in Development
 
-**Symptom**  
+**Symptom**
 Generated table names are missing the expected prefix and you see model-not-found errors.
 
-**Cause**  
+**Cause**
 Folio expects your application namespace module to be loaded so `self.table_name_prefix` is applied. The install generator adds `<app_namespace>.rb` in `app/models/` and an initializer to require it. If this initializer is missing, Rails autoloader may skip the namespace file on boot.
 
 **Solution**
@@ -66,10 +66,35 @@ Fix by inheriting from `Folio::ComponentTest`, `Folio::BaseControllerTest`, etc.
 
 ---
 
+## HTML Sanitization Issues
+
+### Symptom: HTML Content is Being Stripped
+
+If your HTML content is being stripped, it is likely caused by the default sanitization behavior. By default, attributes not explicitly defined in the `:attributes` hash of the `folio_html_sanitization_config` method are sanitized using `Loofah`, which removes all HTML tags.
+
+### Solution: Disable Sanitization for a Specific Model
+
+To disable sanitization for a specific model, override the `folio_html_sanitization_config` method in the model and set `{ enabled: false }` in the configuration. For example:
+
+```ruby
+def folio_html_sanitization_config
+  { enabled: false }
+end
+```
+
+This will bypass all sanitization for the model.
+
+### Solution: Allow Specific Attributes to Contain HTML
+
+You can allow specific HTML tags and attributes by using the `:richtext` configuration. This uses `Rails::HTML5::SafeListSanitizer`, which keeps safe HTML tags and attributes.
+
+- Use `:unsafe_html` to completely disable sanitization for a specific attribute.
+- For more granular control, define a custom proc to handle sanitization logic for specific attributes.
+
 ## Need More Help?
 
-1. Re-run the relevant Folio generator to compare with generated code.  
-2. Enable debug logging: `rails s -e development` and set `config.log_level = :debug` in `config/environments/development.rb`.  
+1. Re-run the relevant Folio generator to compare with generated code.
+2. Enable debug logging: `rails s -e development` and set `config.log_level = :debug` in `config/environments/development.rb`.
 3. Search existing GitHub issues: <https://github.com/sinfin/folio/issues>.
 
 ---
@@ -82,4 +107,4 @@ Fix by inheriting from `Folio::ComponentTest`, `Folio::BaseControllerTest`, etc.
 
 ---
 
-*This list will grow as more issues are collected from real-world projects.* 
+*This list will grow as more issues are collected from real-world projects.*
