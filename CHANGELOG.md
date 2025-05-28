@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [Unreleased - HTML sanitization]
+
+### Added
+
+- HTML sanitization of all string/json values using `Folio::HtmlSanitization::Model` concern included on `ApplicationRecord`
+
 ## [Unreleased]
 
 ### Added
