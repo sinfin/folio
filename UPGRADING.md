@@ -16,7 +16,7 @@
       },
     }
   end
-  ````
+  ```
   - The following values are supported:
     - `:unsafe_html` - ignore the attribute, don't sanitize at all
     - `:richtext` - keep safe HTML tags and attributes via `Rails::HTML5::SafeListSanitizer`
