@@ -21,8 +21,6 @@ module Folio
       end
 
       test "sanitizes input" do
-        unsafe_input = "<p>fixed&nbsp;space script-<script>alert('xss')</script> absolute-a-<a href=\"https://www.google.com/\">a</a> relative-a-<a href=\"/foo\">a</a> hash-a-<a href=\"#foo\">a</a> xss-a-<a href=\"javascript:alert('xss')\">a</a> img-<img onerror=\"alert('xss')\"> input-<input onfocus=\"alert('xss')\"> bar & baz lt< gt></p>"
-
         file = FileWithSanitizationConfig.new(author: unsafe_input,
                                               alt: unsafe_input,
                                               description: unsafe_input,
@@ -48,10 +46,7 @@ module Folio
         # trigger sanitization in before_validation
         file.valid?
 
-        utf_nbsp = " "
-        safe_string = "fixed#{utf_nbsp}space script-alert('xss') absolute-a-a relative-a-a hash-a-a xss-a-a img- input- bar & baz lt< gt>"
-
-        assert_equal(safe_string,
+        assert_equal(input_sanitized_as_string,
                      file.author,
                      "author: :string - HTML tags should be removed, but symbols such as & < > should be preserved")
 
@@ -63,7 +58,7 @@ module Folio
                      file.description,
                      "description: :unsafe_html - no sanitization should be applied")
 
-        assert_equal("<p>fixed#{utf_nbsp}space script-alert('xss') absolute-a-<a href=\"https://www.google.com/\">a</a> relative-a-<a href=\"/foo\">a</a> hash-a-<a href=\"#foo\">a</a> xss-a-<a>a</a> img-<img> input- bar &amp; baz lt&lt; gt&gt;</p>",
+        assert_equal(input_sanitized_as_richtext,
                      file.attribution_source,
                      "attribution_source: :richtext - HTML should be whitelisted, symbols such as & < > should be preserved, but converted to HTML entities")
 
@@ -71,7 +66,7 @@ module Folio
                      file.file_width,
                      "integer field should not be handled")
 
-        assert_equal({ "foo" => "bar & baz", "html" => safe_string, "nested" => { "html" => safe_string } },
+        assert_equal({ "foo" => "bar & baz", "html" => input_sanitized_as_string, "nested" => { "html" => input_sanitized_as_string } },
                      file.additional_data,
                      "additional_data - for each value in JSON, HTML tags should be removed, but symbols such as & < > should be preserved")
 
@@ -83,6 +78,31 @@ module Folio
                      file.file_metadata,
                      "file_metadata - no sanitization should be applied as the value is safe already")
       end
+
+      test "sanitizes atom input" do
+        atom = create_atom(Dummy::Atom::Contents::Text, content: unsafe_input)
+        assert_equal input_sanitized_as_richtext, atom.content
+
+        atom = create_atom(Dummy::Atom::Contents::Title, title: unsafe_input)
+        assert_equal input_sanitized_as_string, atom.title
+      end
+
+      private
+        def unsafe_input
+          "<p>fixed&nbsp;space script-<script>alert('xss')</script> absolute-a-<a href=\"https://www.google.com/\">a</a> relative-a-<a href=\"/foo\">a</a> hash-a-<a href=\"#foo\">a</a> xss-a-<a href=\"javascript:alert('xss')\">a</a> img-<img onerror=\"alert('xss')\"> input-<input onfocus=\"alert('xss')\"> bar & baz lt< gt></p>"
+        end
+
+        def utf_nbsp
+          " "
+        end
+
+        def input_sanitized_as_string
+          "fixed#{utf_nbsp}space script-alert('xss') absolute-a-a relative-a-a hash-a-a xss-a-a img- input- bar & baz lt< gt>"
+        end
+
+        def input_sanitized_as_richtext
+          "<p>fixed#{utf_nbsp}space script-alert('xss') absolute-a-<a href=\"https://www.google.com/\">a</a> relative-a-<a href=\"/foo\">a</a> hash-a-<a href=\"#foo\">a</a> xss-a-<a>a</a> img-<img> input- bar &amp; baz lt&lt; gt&gt;</p>"
+        end
     end
   end
 end

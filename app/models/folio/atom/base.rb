@@ -302,6 +302,23 @@ class Folio::Atom::Base < Folio::ApplicationRecord
     self
   end
 
+  def folio_html_sanitization_config
+    attributes_config = {}
+
+    klass::STRUCTURE.each do |attribute, type|
+      if type == :code
+        attributes_config[attribute.to_sym] = :unsafe_html
+      elsif type == :richtext
+        attributes_config[attribute.to_sym] = :richtext
+      end
+    end
+
+    {
+      enabled: true,
+      attributes: attributes_config,
+    }
+  end
+
   private
     def klass
       # as type can be changed
