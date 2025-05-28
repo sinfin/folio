@@ -102,7 +102,7 @@ You can allow specific HTML tags and attributes by using the `:richtext` configu
 ## Navigation
 
 - [← Back to Overview](overview.md)
-- [← Back to Testing](testing.md)
+- [← Back to HTML Sanitization](sanitization.md)
 - [Next: Upgrade & Migration →](upgrade.md)
 
 ---

@@ -62,3 +62,12 @@ end
 ```
 
 By following these steps, you can ensure that your application handles HTML content securely and consistently.
+
+---
+
+## Navigation
+
+- [← Back to Overview](overview.md)
+- [Next: Troubleshooting →](troubleshooting.md)
+
+---

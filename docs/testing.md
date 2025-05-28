@@ -76,8 +76,8 @@ Parallel testing is enabled by default (`parallelize` in `test_helper_base.rb`).
 
 - [← Back to Overview](overview.md)
 - [← Back to Configuration](configuration.md)
-- [Next: Troubleshooting →](troubleshooting.md)
+- [Next: HTML Sanitization →](sanitization.md)
 
 ---
 
-*This testing overview will be updated as the documentation evolves.* 
+*This testing overview will be updated as the documentation evolves.*
