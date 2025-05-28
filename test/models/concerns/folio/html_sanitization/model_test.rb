@@ -87,6 +87,19 @@ module Folio
         assert_equal input_sanitized_as_string, atom.title
       end
 
+      test "sanitizes tags" do
+        taggable = create(:folio_file_image)
+        taggable.tag_list.add("tag1<script>alert('xss')</script>")
+        taggable.save!
+
+        assert_equal "tag1alert('xss')", taggable.reload.tag_list.to_s, "#{taggable.class} should have the tag_list sanitized"
+
+        taggable.tag_list.add("tag2")
+        taggable.save!
+
+        assert_equal "tag1alert('xss'), tag2", taggable.reload.tag_list.to_s, "#{taggable.class} should have the tag_list sanitized"
+      end
+
       private
         def unsafe_input
           "<p>fixed&nbsp;space script-<script>alert('xss')</script> absolute-a-<a href=\"https://www.google.com/\">a</a> relative-a-<a href=\"/foo\">a</a> hash-a-<a href=\"#foo\">a</a> xss-a-<a href=\"javascript:alert('xss')\">a</a> img-<img onerror=\"alert('xss')\"> input-<input onfocus=\"alert('xss')\"> bar & baz lt< gt></p>"
