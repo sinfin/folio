@@ -32,6 +32,7 @@ module Folio
 
         def sanitize_attribute(attribute:)
           value = @record.send(attribute)
+          return if value.blank?
           return unless value.is_a?(String)
 
           attribute_config = attributes_config[attribute] || DEFAULT_ATTRIBUTE_CONFIG
@@ -62,7 +63,7 @@ module Folio
         end
 
         def sanitize_attribute_as_string(attribute:, value:)
-          sanitized_value = ActionView::Base.full_sanitizer.sanitize(value)
+          sanitized_value = Loofah.fragment(value).text(encode_special_chars: false)
 
           if value != sanitized_value
             @record.send("#{attribute}=", sanitized_value)

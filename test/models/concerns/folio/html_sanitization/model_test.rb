@@ -20,7 +20,7 @@ module Folio
       end
 
       test "sanitizes input" do
-        unsafe_input = "<p>script-<script>alert('xss')</script> absolute-a-<a href=\"https://www.google.com/\">a</a> relative-a-<a href=\"/foo\">a</a> hash-a-<a href=\"#foo\">a</a> xss-a-<a href=\"javascript:alert('xss')\">a</a> img-<img onerror=\"alert('xss')\"> input-<input onfocus=\"alert('xss')\"> baz</p>"
+        unsafe_input = "<p>fixed&nbsp;space script-<script>alert('xss')</script> absolute-a-<a href=\"https://www.google.com/\">a</a> relative-a-<a href=\"/foo\">a</a> hash-a-<a href=\"#foo\">a</a> xss-a-<a href=\"javascript:alert('xss')\">a</a> img-<img onerror=\"alert('xss')\"> input-<input onfocus=\"alert('xss')\"> bar & baz lt< gt></p>"
 
         page = PageWithSanitizationConfig.new(title: unsafe_input,
                                               meta_title: unsafe_input,
@@ -29,10 +29,12 @@ module Folio
                                               site: get_any_site)
         assert page.valid?
 
-        assert_equal("script- absolute-a-a relative-a-a hash-a-a xss-a-a img- input- baz", page.title)
-        assert_equal("<P>SCRIPT-<SCRIPT>ALERT('XSS')</SCRIPT> ABSOLUTE-A-<A HREF=\"HTTPS://WWW.GOOGLE.COM/\">A</A> RELATIVE-A-<A HREF=\"/FOO\">A</A> HASH-A-<A HREF=\"#FOO\">A</A> XSS-A-<A HREF=\"JAVASCRIPT:ALERT('XSS')\">A</A> IMG-<IMG ONERROR=\"ALERT('XSS')\"> INPUT-<INPUT ONFOCUS=\"ALERT('XSS')\"> BAZ</P>", page.meta_title)
+        utf_nbsp = " "
+
+        assert_equal("fixed#{utf_nbsp}space script-alert('xss') absolute-a-a relative-a-a hash-a-a xss-a-a img- input- bar & baz lt< gt>", page.title)
+        assert_equal("<P>FIXED&NBSP;SPACE SCRIPT-<SCRIPT>ALERT('XSS')</SCRIPT> ABSOLUTE-A-<A HREF=\"HTTPS://WWW.GOOGLE.COM/\">A</A> RELATIVE-A-<A HREF=\"/FOO\">A</A> HASH-A-<A HREF=\"#FOO\">A</A> XSS-A-<A HREF=\"JAVASCRIPT:ALERT('XSS')\">A</A> IMG-<IMG ONERROR=\"ALERT('XSS')\"> INPUT-<INPUT ONFOCUS=\"ALERT('XSS')\"> BAR & BAZ LT< GT></P>", page.meta_title)
         assert_equal(unsafe_input, page.meta_description)
-        assert_equal("<p>script-alert('xss') absolute-a-<a href=\"https://www.google.com/\">a</a> relative-a-<a href=\"/foo\">a</a> hash-a-<a href=\"#foo\">a</a> xss-a-<a>a</a> img-<img> input- baz</p>", page.perex)
+        assert_equal("<p>fixed#{utf_nbsp}space script-alert('xss') absolute-a-<a href=\"https://www.google.com/\">a</a> relative-a-<a href=\"/foo\">a</a> hash-a-<a href=\"#foo\">a</a> xss-a-<a>a</a> img-<img> input- bar &amp; baz lt&lt; gt&gt;</p>", page.perex)
       end
     end
   end
