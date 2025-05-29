@@ -3,8 +3,6 @@
 class Folio::NewsletterSubscription < Folio::ApplicationRecord
   include Folio::BelongsToSite
 
-  has_sanitized_fields :email
-
   belongs_to :subscribable, polymorphic: true,
                             optional: true,
                             inverse_of: :newsletter_subscriptions
