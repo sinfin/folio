@@ -226,6 +226,15 @@ class Folio::Site < Folio::ApplicationRecord
     {}
   end
 
+  def folio_html_sanitization_config
+    {
+      enabled: true,
+      attributes: {
+        header_message: :rich_text,
+      }
+    }
+  end
+
   def self.sti_paths
     [
       Folio::Engine.root.join("app/models/folio/site"),
