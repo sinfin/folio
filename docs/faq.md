@@ -69,7 +69,7 @@ Override `Folio::Ability` in `app/overrides/` and add rules using CanCan syntax.
 
 ### 11. Why is my HTML being stripped?
 
-If your HTML content is being stripped, it is likely caused by the default sanitization behavior. By default, attributes not explicitly defined in the `:attributes` hash of the `folio_html_sanitization_config` method are sanitized using `Loofah`, which removes all HTML tags. To preserve specific HTML content, ensure that the attribute is included in the `:attributes` hash with the appropriate sanitization configuration, such as `:richtext` or a custom proc.
+If your HTML content is being stripped, it is likely caused by the default sanitization behavior. By default, attributes not explicitly defined in the `:attributes` hash of the `folio_html_sanitization_config` method are sanitized using `Loofah`, which removes all HTML tags. To preserve specific HTML content, ensure that the attribute is included in the `:attributes` hash with the appropriate sanitization configuration, such as `:rich_text` or a custom proc.
 
 #### 11a. How do I disable sanitization for a specific model?
 
@@ -85,7 +85,7 @@ This will bypass all sanitization for the model.
 
 #### 11b. Can I allow only some attributes to contain HTML?
 
-Yes, you can allow specific HTML tags and attributes by using the `:richtext` configuration. This uses `Rails::HTML5::SafeListSanitizer`, which keeps safe HTML tags and attributes.
+Yes, you can allow specific HTML tags and attributes by using the `:rich_text` configuration. This uses `Rails::HTML5::SafeListSanitizer`, which keeps safe HTML tags and attributes.
 
 You can use `:unsafe_html` to completely disable sanitization for a specific attribute.
 

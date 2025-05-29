@@ -309,7 +309,7 @@ class Folio::Atom::Base < Folio::ApplicationRecord
       if type == :code
         attributes_config[attribute.to_sym] = :unsafe_html
       elsif type == :richtext
-        attributes_config[attribute.to_sym] = :richtext
+        attributes_config[attribute.to_sym] = :rich_text
       end
     end
 

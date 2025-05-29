@@ -43,8 +43,8 @@ module Folio
             case attribute_config
             when :unsafe_html
               # No sanitization for unsafe_html
-            when :richtext
-              sanitize_attribute_as_richtext(attribute:, value:)
+            when :rich_text
+              sanitize_attribute_as_rich_text(attribute:, value:)
             when :string
               sanitize_attribute_as_string(attribute:, value:)
             else
@@ -86,12 +86,12 @@ module Folio
           end
         end
 
-        def sanitize_value_as_richtext(value:)
+        def sanitize_value_as_rich_text(value:)
           ActionController::Base.helpers.sanitize(value)
         end
 
-        def sanitize_attribute_as_richtext(attribute:, value:)
-          handle_hash_or_string_attribute(attribute:, value:, sanitize_method: :sanitize_value_as_richtext, logger_info: :richtext)
+        def sanitize_attribute_as_rich_text(attribute:, value:)
+          handle_hash_or_string_attribute(attribute:, value:, sanitize_method: :sanitize_value_as_rich_text, logger_info: :rich_text)
         end
 
         def sanitize_value_as_string(value:)

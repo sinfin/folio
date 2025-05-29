@@ -13,7 +13,7 @@ module Folio
               author: :string,
               description: :unsafe_html,
               alt: -> (value) { value.upcase },
-              attribution_source: :richtext,
+              attribution_source: :rich_text,
               remote_services_data: :unsafe_html,
             }
           }
@@ -58,9 +58,9 @@ module Folio
                      file.description,
                      "description: :unsafe_html - no sanitization should be applied")
 
-        assert_equal(input_sanitized_as_richtext,
+        assert_equal(input_sanitized_as_rich_text,
                      file.attribution_source,
-                     "attribution_source: :richtext - HTML should be whitelisted, symbols such as & < > should be preserved, but converted to HTML entities")
+                     "attribution_source: :rich_text - HTML should be whitelisted, symbols such as & < > should be preserved, but converted to HTML entities")
 
         assert_equal(123,
                      file.file_width,
@@ -81,7 +81,7 @@ module Folio
 
       test "sanitizes atom input" do
         atom = create_atom(Dummy::Atom::Contents::Text, content: unsafe_input)
-        assert_equal input_sanitized_as_richtext, atom.content
+        assert_equal input_sanitized_as_rich_text, atom.content
 
         atom = create_atom(Dummy::Atom::Contents::Title, title: unsafe_input)
         assert_equal input_sanitized_as_string, atom.title
@@ -113,7 +113,7 @@ module Folio
           "fixed#{utf_nbsp}space script-alert('xss') absolute-a-a relative-a-a hash-a-a xss-a-a img- input- bar & baz lt< gt>"
         end
 
-        def input_sanitized_as_richtext
+        def input_sanitized_as_rich_text
           "<p>fixed#{utf_nbsp}space script-alert('xss') absolute-a-<a href=\"https://www.google.com/\">a</a> relative-a-<a href=\"/foo\">a</a> hash-a-<a href=\"#foo\">a</a> xss-a-<a>a</a> img-<img> input- bar &amp; baz lt&lt; gt&gt;</p>"
         end
     end

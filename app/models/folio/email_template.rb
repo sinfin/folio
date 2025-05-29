@@ -131,7 +131,7 @@ class Folio::EmailTemplate < Folio::ApplicationRecord
 
     attribute_names.each do |attribute_name|
       if attribute_name.starts_with?("body_html")
-        attributes_config[attribute_name.to_sym] = :richtext
+        attributes_config[attribute_name.to_sym] = :rich_text
       end
     end
 

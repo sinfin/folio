@@ -21,7 +21,7 @@ HTML sanitization ensures that all strings, texts, and JSON containing strings o
        enabled: true,
        attributes: {
          attribute_1: :unsafe_html,
-         attribute_2: :richtext,
+         attribute_2: :rich_text,
          attribute_3: -> (value) { custom_sanitization_handler(value) },
        },
      }
@@ -30,7 +30,7 @@ HTML sanitization ensures that all strings, texts, and JSON containing strings o
 
 3. **Supported Attribute Values**:
    - `:unsafe_html`: Ignore the attribute and do not sanitize it.
-   - `:richtext`: Keep safe HTML tags and attributes using `Rails::HTML5::SafeListSanitizer`.
+   - `:rich_text`: Keep safe HTML tags and attributes using `Rails::HTML5::SafeListSanitizer`.
    - `:string` (default): Sanitize the attribute as plain text, stripping all HTML tags.
    - proc: Pass a proc (i.e. `-> (value) { custom_sanitization_handler(value) }`) to handle custom sanitization logic.
 
@@ -50,7 +50,7 @@ def folio_html_sanitization_config
 
   attribute_names.each do |attribute_name|
     if attribute_name.starts_with?("body_html")
-      attributes_config[attribute_name.to_sym] = :richtext
+      attributes_config[attribute_name.to_sym] = :rich_text
     end
   end
 

@@ -86,7 +86,7 @@ This will bypass all sanitization for the model.
 
 ### Solution: Allow Specific Attributes to Contain HTML
 
-You can allow specific HTML tags and attributes by using the `:richtext` configuration. This uses `Rails::HTML5::SafeListSanitizer`, which keeps safe HTML tags and attributes.
+You can allow specific HTML tags and attributes by using the `:rich_text` configuration. This uses `Rails::HTML5::SafeListSanitizer`, which keeps safe HTML tags and attributes.
 
 - Use `:unsafe_html` to completely disable sanitization for a specific attribute.
 - For more granular control, define a custom proc to handle sanitization logic for specific attributes.
