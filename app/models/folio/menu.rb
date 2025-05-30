@@ -97,6 +97,10 @@ class Folio::Menu < Folio::ApplicationRecord
     end
   end
 
+  def self.console_icon
+    "fa-bars"
+  end
+
   private
     def set_default_title
       self.title ||= self.class.model_name.human

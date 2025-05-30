@@ -82,6 +82,10 @@ class Folio::NewsletterSubscription < Folio::ApplicationRecord
     false
   end
 
+  def self.console_icon
+    "fa-newspaper"
+  end
+
   private
     def update_mailchimp_subscription(email_for_subscription = nil)
       return unless Rails.application.config.folio_newsletter_subscription_service == :mailchimp

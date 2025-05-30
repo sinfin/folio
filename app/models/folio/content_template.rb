@@ -56,6 +56,10 @@ class Folio::ContentTemplate < Folio::ApplicationRecord
       Rails.root.join("app/models/**/content_template"),
     ]
   end
+
+  def self.console_icon
+    "fa-file-alt"
+  end
 end
 
 # == Schema Information

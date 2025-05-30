@@ -229,6 +229,10 @@ class Folio::User < Folio::ApplicationRecord
   def acquire_orphan_records!(old_session_id:)
   end
 
+  def self.console_icon
+    "fa-users"
+  end
+
   private
     def validate_first_name_and_last_name?
       invitation_accepted_at?

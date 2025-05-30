@@ -4,6 +4,10 @@ class Folio::Document < Folio::File
   def thumbnailable?
     file_mime_type_image? || file_mime_type == "application/pdf"
   end
+
+  def self.console_icon
+    "fa-file"
+  end
 end
 
 # == Schema Information

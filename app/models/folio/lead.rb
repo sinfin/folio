@@ -85,6 +85,10 @@ class Folio::Lead < Folio::ApplicationRecord
     true
   end
 
+  def self.console_icon
+    "fa-envelope"
+  end
+
   private
     def skip_note_validation?
       false

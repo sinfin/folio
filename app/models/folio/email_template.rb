@@ -133,6 +133,10 @@ class Folio::EmailTemplate < Folio::ApplicationRecord
     locales.sort
   end
 
+  def self.console_icon
+    "fa-envelope"
+  end
+
   private
     def validate_subjects
       self.class.column_names.each do |column_name|

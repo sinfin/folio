@@ -113,6 +113,10 @@ class Folio::Account < Folio::ApplicationRecord
     update_columns(console_path:,
                    console_path_updated_at: Time.current)
   end
+
+  def self.console_icon
+    "fa-user"
+  end
 end
 
 # == Schema Information

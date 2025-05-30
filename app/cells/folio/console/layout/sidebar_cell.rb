@@ -35,8 +35,14 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
     if link_source == :homepage
       if homepage_instance
         path = controller.url_for([:edit, :console, homepage_instance])
-        link(t(".homepage"), path)
+        link(nil, path) do
+          concat(content_tag(:i, "", class: "fa fa-home f-c-layout-sidebar__icon"))
+          concat(content_tag(:span, t(".homepage"), class: "f-c-layout-sidebar__span"))
+        end
       end
+    elsif link_source.is_a?(Hash) && link_source[:type] == :separator
+      # Return a special hash that template can detect
+      { separator_html: content_tag(:div, "", class: "f-c-layout-sidebar__separator") }
     elsif link_source.is_a?(Hash) && (link_source[:klass] || link_source[:label]) && link_source[:path]
       if link_source[:klass]
         return if controller.cannot?(:index, link_source[:klass].constantize)
@@ -88,7 +94,24 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
 
       label = label_from(klass)
       path = controller.url_for([:console, klass])
-      link(label, path)
+      
+      # Try to get icon from model's console_icon method
+      icon = if klass.respond_to?(:console_icon)
+        icon_value = klass.console_icon
+        if icon_value
+          # FontAwesome format is "fa fa-icon-name"
+          "fa #{icon_value}"
+        end
+      end
+
+      if icon
+        link(nil, path) do
+          concat(content_tag(:i, "", class: "#{icon} f-c-layout-sidebar__icon"))
+          concat(content_tag(:span, label, class: "f-c-layout-sidebar__span"))
+        end
+      else
+        link(label, path)
+      end
     end
   end
 
@@ -123,31 +146,40 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
     if ::Rails.application.config.folio_site_is_a_singleton
       [{
         links: [
-          "Folio::Page",
+          console_model_link_with_icon("Folio::Page"),
           :homepage,
-          "Folio::Menu",
-          "Folio::Image",
-          "Folio::Document",
-          "Folio::ContentTemplate",
+          { type: :separator },
+          console_model_link_with_icon("Folio::Menu"),
+          { type: :separator },
+          console_model_link_with_icon("Folio::Image"),
+          console_model_link_with_icon("Folio::Document"),
+          console_model_link_with_icon("Folio::ContentTemplate"),
         ]
       }]
     else
       [
         {
           links: [
-            "Folio::Image",
-            "Folio::Document",
-            "Folio::ContentTemplate",
+            console_model_link_with_icon("Folio::Image"),
+            console_model_link_with_icon("Folio::Document"),
+            console_model_link_with_icon("Folio::ContentTemplate"),
           ]
         }
       ] + Folio::Site.ordered.filter_map do |site|
         if controller.can?(:read, site)
           I18n.with_locale(site.locale) do
             link_for_class = -> (klass) do
+              icon = begin
+                klass.respond_to?(:console_icon) ? "fa #{klass.console_icon}" : nil
+              rescue NameError
+                nil
+              end
+
               {
                 klass: klass.to_s,
-                path: url_for([:console, klass, only_path: false, host: site.env_aware_domain])
-              }
+                path: url_for([:console, klass, only_path: false, host: site.env_aware_domain]),
+                icon: icon
+              }.compact
             end
 
             site_links = {
@@ -164,7 +196,37 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
                 values.each do |link_or_hash|
                   if link_or_hash.is_a?(Hash)
                     if !link_or_hash[:required_ability] || controller.can?(link_or_hash[:required_ability], link_or_hash[:klass].constantize)
-                      site_links[key] << link_or_hash
+                      # Convert path symbol to full URL with domain for multisite
+                      converted_hash = link_or_hash.dup
+                      if converted_hash[:path].is_a?(Symbol)
+                        begin
+                          # Get the path from the helper
+                          path = controller.send(converted_hash[:path])
+                          # Convert to full URL with domain using same scheme as current request
+                          if path.start_with?('/')
+                            scheme = controller.request.ssl? ? 'https' : 'http'
+                            converted_hash[:path] = "#{scheme}://#{site.env_aware_domain}#{path}"
+                          elsif !path.start_with?('http')
+                            scheme = controller.request.ssl? ? 'https' : 'http'
+                            converted_hash[:path] = "#{scheme}://#{site.env_aware_domain}/#{path}"
+                          end
+                        rescue NoMethodError
+                          begin
+                            # Try with main_app
+                            path = controller.main_app.send(converted_hash[:path])
+                            if path.start_with?('/')
+                              scheme = controller.request.ssl? ? 'https' : 'http'
+                              converted_hash[:path] = "#{scheme}://#{site.env_aware_domain}#{path}"
+                            elsif !path.start_with?('http')
+                              scheme = controller.request.ssl? ? 'https' : 'http'
+                              converted_hash[:path] = "#{scheme}://#{site.env_aware_domain}/#{path}"
+                            end
+                          rescue NoMethodError
+                            # Keep original if helpers not found
+                          end
+                        end
+                      end
+                      site_links[key] << converted_hash
                     end
                   else
                     site_links[key] << link_for_class.call(link_or_hash.constantize)
@@ -182,10 +244,13 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
                 link_for_class.call(Folio::Page),
                 homepage_for_site(site)
               ].compact + site_links[:console_sidebar_before_menu_links].compact + [
+                { type: :separator },
                 link_for_class.call(Folio::Menu),
+                { type: :separator },
                 link_for_class.call(Folio::Lead),
                 link_for_class.call(Folio::NewsletterSubscription),
                 link_for_class.call(Folio::EmailTemplate),
+                { type: :separator },
                 controller.can?(:manage, site) ? (
                   {
                     klass: "Folio::Site",
@@ -205,17 +270,19 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
   def secondary_class_names
     if ::Rails.application.config.folio_site_is_a_singleton
       [
-        show_users? ? { links: %w[Folio::User] } : nil,
-        {
-          links: %w[
-            Folio::Lead
-            Folio::NewsletterSubscription
-          ],
-        },
+        show_users? ? { links: [console_model_link_with_icon("Folio::User")] } : nil,
+        { type: :separator },
         {
           links: [
-            "Folio::Account",
-            "Folio::EmailTemplate",
+            console_model_link_with_icon("Folio::Lead"),
+            console_model_link_with_icon("Folio::NewsletterSubscription"),
+          ],
+        },
+        { type: :separator },
+        {
+          links: [
+            console_model_link_with_icon("Folio::Account"),
+            console_model_link_with_icon("Folio::EmailTemplate"),
             {
               klass: "Folio::Site",
               icon: "fa fa-cogs",
@@ -229,8 +296,8 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
       [
         {
           links: [
-            ::Rails.application.config.folio_users ? "Folio::User" : nil,
-            "Folio::Account",
+            ::Rails.application.config.folio_users ? console_model_link_with_icon("Folio::User") : nil,
+            console_model_link_with_icon("Folio::Account"),
           ].compact
         }
       ]
@@ -277,6 +344,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
       {
         label: t(".homepage"),
         path: controller.url_for([:edit, :console, instance, only_path: false, host: site.env_aware_domain]),
+        icon: "fa fa-home",
       }
     end
   end
@@ -292,5 +360,31 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
     ary << "f-c-layout-sidebar__group--expanded" if group[:expanded]
 
     ary
+  end
+
+  private
+
+  def console_model_link_with_icon(klass_name, site: nil)
+    icon = begin
+      klass = klass_name.constantize
+      if klass.respond_to?(:console_icon)
+        icon_value = klass.console_icon
+        # FontAwesome format is "fa fa-icon-name"
+        "fa #{icon_value}" if icon_value
+      end
+    rescue NameError
+      nil
+    end
+
+    url_options = [:console, klass_name.constantize]
+    if site
+      url_options << { only_path: false, host: site.env_aware_domain }
+    end
+
+    {
+      klass: klass_name,
+      path: controller.url_for(url_options),
+      icon: icon
+    }.compact
   end
 end

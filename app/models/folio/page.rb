@@ -150,6 +150,10 @@ class Folio::Page < Folio::ApplicationRecord
     end
   end
 
+  def self.console_icon
+    "fa-file-alt"
+  end
+
   private
     def set_atoms_data_for_search
       self.atoms_data_for_search = all_atoms_in_array.filter_map { |a| a.data_for_search }.join(" ").presence

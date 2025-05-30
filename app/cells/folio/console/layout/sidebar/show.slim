@@ -19,7 +19,10 @@ aside#f-c-layout-sidebar.f-c-layout-sidebar
 
             ul.f-c-layout-sidebar__ul
               - group[:links].each do |link|
-                li.f-c-layout-sidebar__li
-                  == link
+                - if link.is_a?(Hash) && link[:separator_html]
+                  == link[:separator_html]
+                - else
+                  li.f-c-layout-sidebar__li
+                    == link
 
     = render(:_appended)

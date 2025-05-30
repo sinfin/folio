@@ -37,6 +37,10 @@ class Folio::Image < Folio::File
     "image"
   end
 
+  def self.console_icon
+    "fa-image"
+  end
+
   private
     def metadata_compose(tags)
       string_arr = tags.filter_map { |tag| file_metadata.try("[]", tag) }.uniq
