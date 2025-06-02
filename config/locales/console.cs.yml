@@ -105,12 +105,11 @@ cs:
         update:
           success: Šablony upraveny.
       create: Vytvořit
+      delete: Smazat
       current_users:
         console_url_bar:
           title: Tuto stránku nyní upravuje
           text: Vyčkejte, až dokončí úpravy. Při současné úpravě by mohlo dojít ke ztrátě rozpracovaného obsahu.
-      delete: Smazat
-      current_users:
         show_component:
           title: Můj profil
           title/sign_in: Přihlašovací jméno
