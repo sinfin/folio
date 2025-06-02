@@ -268,6 +268,15 @@ en:
           show_current: Show current version
         sidebar:
           homepage: Homepage
+          help: Help
+      help_documents:
+        index:
+          title: "Help Documentation"
+          no_documents: "No help documents available. Please create doc/help/index.yml file to configure help documents."
+        show:
+          back_to_list: "Back to list"
+          last_updated: "Last updated:"
+          not_found: "Help document not found."
       private_attachments:
         single_dropzone:
           download: Download

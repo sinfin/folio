@@ -275,6 +275,15 @@ cs:
           show_current: Zobrazit současnou verzi
         sidebar:
           homepage: Úvodní stránka
+          help: Nápověda
+      help_documents:
+        index:
+          title: "Nápověda"
+          no_documents: "Nejsou k dispozici žádné dokumenty nápovědy. Pro konfiguraci nápovědy vytvořte soubor doc/help/index.yml."
+        show:
+          back_to_list: "Zpět na seznam"
+          last_updated: "Poslední aktualizace:"
+          not_found: "Dokument nápovědy nebyl nalezen."
       private_attachments:
         single_dropzone:
           download: Stáhnout
@@ -315,7 +324,7 @@ cs:
           undiscard: Obnovit
       aasm:
         email_modal:
-          title: Opravdu si přejete změnit stav na „{STATE_NAME}“?
+          title: Opravdu si přejete změnit stav na "{STATE_NAME}"?
           send_email_label: Odeslat e-mail na {EMAIL}
           placeholders:
             subject: Předmět e-mailu

@@ -76,6 +76,8 @@ Folio::Engine.routes.draw do
       end
     end
 
+    resources :help_documents, only: %i[index show]
+
     resource :transport, only: [] do
       get :out, path: "out/:class_name/:id"
       get :download, path: "download/:class_name/:id"

@@ -1,0 +1,59 @@
+.folio-console-help-documents-show
+  .container-fluid
+    .folio-console-actions-wrap
+      = link_to console_help_documents_path, class: "btn btn-sm btn-secondary" do
+        i.fa.fa-arrow-left
+        = " "
+        = t(".back_to_list")
+      
+      h1.h3.d-inline-block.ml-3 = @help_document.title
+
+    .row
+      .col-lg-9
+        .card
+          .card-body
+            - if @help_document.description.present?
+              .lead = @help_document.description
+              hr
+            
+            .folio-console-help-content data-has-mermaid="true"
+              = raw(Folio::ApplicationController.helpers.markdown_to_html(@help_document.content))
+            
+          .card-footer.small.text-muted
+            i.fa.fa-clock-o
+            = " "
+            = t(".last_updated")
+            = " "
+            = l(@help_document.updated_at, format: :long)
+
+= javascript_include_tag "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js", defer: true
+
+javascript:
+  document.addEventListener('DOMContentLoaded', function() {
+    if (typeof mermaid !== 'undefined') {
+      mermaid.initialize({ 
+        startOnLoad: true,
+        theme: 'default',
+        themeVariables: {
+          primaryColor: '#f8f9fa',
+          primaryTextColor: '#212529',
+          primaryBorderColor: '#dee2e6',
+          lineColor: '#868e96',
+          secondaryColor: '#e9ecef',
+          tertiaryColor: '#fff'
+        }
+      });
+      
+      // Find all mermaid code blocks and convert them
+      document.querySelectorAll('.folio-console-help-content pre code.language-mermaid').forEach(function(el) {
+        const graphDefinition = el.textContent;
+        const pre = el.parentElement;
+        const div = document.createElement('div');
+        div.className = 'mermaid';
+        div.textContent = graphDefinition;
+        pre.parentNode.replaceChild(div, pre);
+      });
+      
+      mermaid.init();
+    }
+  }); 
