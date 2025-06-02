@@ -15,7 +15,7 @@ class Folio::Console::Api::File::VideosController < Folio::Console::Api::BaseCon
   end
 
   def update_subtitles
-    @video.update(params.require(:file).permit(:subtitles_cs_text))
+    @video.update(params.require(:file).permit(:subtitles_cs_enabled, :subtitles_cs_text))
     render_component_json(Folio::Console::Files::HasSubtitlesFormComponent.new(file: @video))
   end
 end
