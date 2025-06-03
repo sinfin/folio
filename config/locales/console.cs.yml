@@ -21,14 +21,15 @@ cs:
         undiscard: Odarchivovat
       alt_prompt: Alternativní popisek obrázku
       api:
-        documents:
-          mass_destroy:
-            success: Dokumenty smazány
-            failure: Dokumenty se nepodařilo smazat - %{msg}
-        images:
-          mass_destroy:
-            success: Obrázky smazány
-            failure: Obrázky se nepodařilo smazat - %{msg}
+        file:
+          documents:
+            mass_destroy:
+              success: Dokumenty smazány
+              failure: Dokumenty se nepodařilo smazat - %{msg}
+          images:
+            mass_destroy:
+              success: Obrázky smazány
+              failure: Obrázky se nepodařilo smazat - %{msg}
         aasm:
           failure_title: Neúspěch
           failure_detail: Nepodařilo se změnit stav záznamu.
