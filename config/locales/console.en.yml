@@ -21,14 +21,15 @@ en:
         undiscard: Unarchive
       alt_prompt: Alternative image caption
       api:
-        documents:
-          mass_destroy:
-            success: Documents destroyed
-            failure: Failed to destroy documents - %{msg}
-        images:
-          mass_destroy:
-            success: Images destroyed
-            failure: Failed to destroy images - %{msg}
+        file:
+          documents:
+            mass_destroy:
+              success: Documents destroyed
+              failure: Failed to destroy documents - %{msg}
+          images:
+            mass_destroy:
+              success: Images destroyed
+              failure: Failed to destroy images - %{msg}
         aasm:
           failure_title: Failure
           failure_detail: Failed to change the state.
