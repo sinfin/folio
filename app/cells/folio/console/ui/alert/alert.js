@@ -90,18 +90,19 @@ window.Folio.Stimulus.register('f-c-ui-alert', class extends window.Stimulus.Con
   }
 
   disconnect() {
-    if (this.autohideTimeout) {
-      clearTimeout(this.autohideTimeout)
-    }
+    this.clearAutohideTimeout()
   }
 
   close (e) {
     e.preventDefault()
-    
+    this.clearAutohideTimeout()
+    this.element.parentNode.removeChild(this.element)
+  }
+
+  clearAutohideTimeout() {
     if (this.autohideTimeout) {
       clearTimeout(this.autohideTimeout)
+      this.autohideTimeout = null
     }
-    
-    this.element.parentNode.removeChild(this.element)
   }
 })
