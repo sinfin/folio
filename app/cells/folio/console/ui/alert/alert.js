@@ -78,8 +78,30 @@ window.FolioConsole.Ui.Alert.create = (data) => {
 }
 
 window.Folio.Stimulus.register('f-c-ui-alert', class extends window.Stimulus.Controller {
+  static values = { autohide: Boolean }
+
+  connect() {
+    if (this.autohideValue) {
+      this.autohideTimeout = setTimeout(() => {
+        const closeBtn = this.element.querySelector('.f-c-ui-alert__close')
+        if (closeBtn) closeBtn.click()
+      }, 5000)
+    }
+  }
+
+  disconnect() {
+    if (this.autohideTimeout) {
+      clearTimeout(this.autohideTimeout)
+    }
+  }
+
   close (e) {
     e.preventDefault()
+    
+    if (this.autohideTimeout) {
+      clearTimeout(this.autohideTimeout)
+    }
+    
     this.element.parentNode.removeChild(this.element)
   }
 })
