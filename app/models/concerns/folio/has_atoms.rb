@@ -26,7 +26,7 @@ module Folio::HasAtoms
             settings[locale] ||= []
             settings[locale] << {
               cell_name: "folio/console/atoms/previews/label",
-              model: label,
+              model: ActionView::Base.full_sanitizer.sanitize(label),
               key: :label,
             }
           end
@@ -41,7 +41,7 @@ module Folio::HasAtoms
             settings[locale] ||= []
             settings[locale] << {
               cell_name: "folio/console/atoms/previews/perex",
-              model: perex,
+              model: ActionView::Base.full_sanitizer.sanitize(perex),
               key: :perex,
             }
           end

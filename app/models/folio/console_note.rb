@@ -4,8 +4,6 @@ class Folio::ConsoleNote < Folio::ApplicationRecord
   include Folio::Positionable
   include Folio::BelongsToSite
 
-  has_sanitized_fields :content
-
   belongs_to :target, polymorphic: true
 
   belongs_to :created_by, class_name: "Folio::User",
