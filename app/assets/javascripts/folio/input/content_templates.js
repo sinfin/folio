@@ -67,8 +67,22 @@ window.Folio.Stimulus.register('f-input-content-templates-menu', class extends w
 
     inputs.forEach((input, i) => {
       if (values[i]) {
-        input.value = values[i]
-        input.dispatchEvent(new window.Event('change', { bubbles: true }))
+        if (input.classList.contains('redactor-source')) {
+          try {
+            const R = $R(input)
+            if (R && R.source) {
+              R.source.setCode(values[i])
+            }
+          } catch (error) {
+            console.warn('Failed to set redactor content:', error)
+
+            input.value = values[i]
+            input.dispatchEvent(new window.Event('change', { bubbles: true }))
+          }
+        } else {
+          input.value = values[i]
+          input.dispatchEvent(new window.Event('change', { bubbles: true }))
+        }
       }
     })
   }
