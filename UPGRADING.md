@@ -1,6 +1,6 @@
 # Upgrading
 
-## 6.4.0 to Unreleased - HTML sanitization
+## 6.4.1 to 6.5.0
 
 - Replace `include Folio::HasSanitizedFields` with `include Folio::HtmlSanitization::Model` on your `ApplicationRecord`.
 - Sanitizer **sanitizes all strings/texts and JSON containing strings/texts by default**.
