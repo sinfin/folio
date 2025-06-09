@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [6.4.1] - 2025-06-09
+
 ### Added
 
 - `bottom_html_api_url` to files, used for new `HasSubtitlesFormComponent`
