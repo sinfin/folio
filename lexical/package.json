@@ -1,0 +1,25 @@
+{
+  "name": "lexical",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^6.3.5"
+  },
+  "dependencies": {
+    "@lexical/dragon": "^0.32.1",
+    "@lexical/history": "^0.32.1",
+    "@lexical/html": "^0.32.1",
+    "@lexical/link": "^0.32.1",
+    "@lexical/list": "^0.32.1",
+    "@lexical/rich-text": "^0.32.1",
+    "@lexical/selection": "^0.32.1",
+    "@lexical/utils": "^0.32.1",
+    "lexical": "^0.32.1"
+  }
+}
