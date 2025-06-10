@@ -12,6 +12,7 @@
     "vite": "^6.3.5"
   },
   "dependencies": {
+    "@hotwired/stimulus": "^3.2.2",
     "@lexical/dragon": "^0.32.1",
     "@lexical/history": "^0.32.1",
     "@lexical/html": "^0.32.1",
