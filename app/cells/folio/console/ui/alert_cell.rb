@@ -19,4 +19,10 @@ class Folio::Console::Ui::AlertCell < Folio::ConsoleCell
       :information_outline
     end
   end
+
+  def data
+    stimulus_controller("f-c-ui-alert", values: {
+      autohide: options[:autohide] ? "true" : nil
+    }.compact)
+  end
 end

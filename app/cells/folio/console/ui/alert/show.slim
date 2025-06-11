@@ -3,8 +3,7 @@ div[
   class="f-c-ui-alert--#{variant}"
   class=options[:class_name]
   role="alert"
-  data-controller="f-c-ui-alert"
-  data-f-c-ui-alert-autohide-value=(options[:autohide] ? "true" : nil)
+  data=data
 ]
   .f-c-ui-alert__container.container-fluid
     - if variant == :loader
