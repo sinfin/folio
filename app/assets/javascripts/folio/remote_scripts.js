@@ -19,6 +19,9 @@ window.Folio.RemoteScripts.Data = {
   },
   html5sortable: {
     urls: ['https://cdnjs.cloudflare.com/ajax/libs/html5sortable/0.14.0/html5sortable.min.js']
+  },
+  'folio-tiptap': {
+    meta: 'folio-tiptap-urls',
   }
 }
 
@@ -54,11 +57,27 @@ window.Folio.RemoteScripts.onError = (key, url) => {
 
 window.Folio.RemoteScripts.load = (key) => {
   const data = window.Folio.RemoteScripts.Data[key]
+
   if (data.loaded) {
     return window.Folio.RemoteScripts.runSuccessCallbacks(key)
   }
 
   data.loading = true
+
+  if (data.meta) {
+    const meta = document.querySelector(`meta[name="${data.meta}"]`)
+
+    if (meta && meta.content) {
+      const metaData = JSON.parse(meta.content)
+      if (metaData.cssUrls) {
+        data.cssUrls = metaData.cssUrls
+      }
+
+      if (metaData.urls) {
+        data.urls = metaData.urls
+      }
+    }
+  }
 
   data.stylesheets = (data.cssUrls || []).map((url) => {
     const link = document.createElement('link')

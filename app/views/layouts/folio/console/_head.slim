@@ -26,3 +26,5 @@ meta[
 - if !Rails.env.test? || ENV['TEST_WITH_ASSETS'].present?
   = preload_link_tag font_path('Roboto-Regular.woff2')
   = preload_link_tag font_path('Roboto-Bold.woff2')
+
+  meta name="folio-tiptap-urls" content=Folio::Tiptap.remote_script_urls(context: self).to_json

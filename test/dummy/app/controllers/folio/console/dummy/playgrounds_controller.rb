@@ -15,6 +15,7 @@ class Folio::Console::Dummy::PlaygroundsController < Folio::Console::BaseControl
       players
       private_attachments
       report
+      tiptap
     ]
   end
 

@@ -162,6 +162,7 @@ module Folio
       app.config.assets.paths << self.root.join("node_modules")
       app.config.assets.paths << self.root.join("vendor/assets/javascripts")
       app.config.assets.paths << self.root.join("vendor/assets/bower_components")
+      app.config.assets.paths << self.root.join("tiptap/dist/assets")
       app.config.assets.precompile += %w[
         folio/console/base.css
         folio/console/base.js

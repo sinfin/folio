@@ -46,3 +46,5 @@ meta name="turbolinks-cache-control" content=turbolinks_cache_control
                                          defer: true
 
     == render partial: 'layouts/folio/recaptcha'
+
+  meta name="folio-tiptap-urls" content=Folio::Tiptap.remote_script_urls(context: self).to_json

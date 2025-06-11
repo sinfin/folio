@@ -11,4 +11,5 @@
 //= require folio/input/redactor
 //= require folio/input/remote_autocomplete
 //= require folio/input/tags
+//= require folio/input/tiptap
 //= require folio/input/url
