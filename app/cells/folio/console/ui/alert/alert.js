@@ -58,12 +58,7 @@ window.FolioConsole.Ui.Alert.create = (data) => {
   alert.dataset.controller = 'f-c-ui-alert'
 
   if (data.autohide !== false) {
-    const autohideDelay = typeof data.autohide === 'number' ? data.autohide : 5000
-
-    setTimeout(() => {
-      const close = alert.querySelector('.f-c-ui-alert__close')
-      if (close) close.click()
-    }, autohideDelay)
+    alert.dataset.fCUiAlertAutohideValue = 'true'
   }
 
   if (data.data) {
