@@ -1,10 +1,13 @@
-import { useState } from 'react'
-import { SimpleEditor } from '@/components/tiptap-templates/simple/simple-editor'
+import { SimpleEditor } from "@/components/tiptap-templates/simple/simple-editor";
 
-import './App.css'
+import "./App.css";
 
-function App() {
-  return <SimpleEditor />
+interface AppProps {
+  onUpdate?: (content: { editor: { getJSON: () => Record<string, unknown> } }) => void;
 }
 
-export default App
+function App({ onUpdate }: AppProps) {
+  return <SimpleEditor onUpdate={onUpdate} />;
+}
+
+export default App;

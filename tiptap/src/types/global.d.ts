@@ -50,6 +50,15 @@ declare module "react" {
 declare global {
   interface Window {
     __DEV__?: boolean;
+    Folio: {
+      Tiptap: {
+        init: (props: {
+          node: HTMLElement;
+          onUpdate?: (content: { editor: { getJSON: () => Record<string, unknown> } }) => void;
+        }) => ReturnType<typeof import("react-dom/client").createRoot>;
+        destroy: (root: ReturnType<typeof import("react-dom/client").createRoot>) => void;
+      };
+    };
   }
   
   // Promise support for older environments
