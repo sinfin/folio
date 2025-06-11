@@ -197,6 +197,11 @@ export function SimpleEditor() {
   const toolbarRef = React.useRef<HTMLDivElement>(null)
 
   const editor = useEditor({
+    // triggered on every change
+    onUpdate: ({ editor }) => {
+      const json = editor.getJSON()
+      console.log("editor changed", json)
+    },
     immediatelyRender: false,
     editorProps: {
       attributes: {
