@@ -1,0 +1,104 @@
+.folio-tiptap-block-dialog-popover {
+  min-width: 400px;
+  max-width: 500px;
+  padding: 0;
+}
+
+.folio-tiptap-block-dialog-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.folio-tiptap-block-dialog-header {
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid var(--tiptap-border-color, #e2e8f0);
+}
+
+.folio-tiptap-block-dialog-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--tiptap-text-color, #1e293b);
+  line-height: 1.4;
+}
+
+.folio-tiptap-block-dialog-body {
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.folio-tiptap-block-dialog-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.folio-tiptap-block-dialog-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--tiptap-text-color, #374151);
+  line-height: 1.4;
+}
+
+.folio-tiptap-block-dialog-textarea {
+  resize: vertical;
+  min-height: 80px;
+  font-family: inherit;
+}
+
+.folio-tiptap-block-dialog-footer {
+  padding: 12px 20px 16px;
+  border-top: 1px solid var(--tiptap-border-color, #e2e8f0);
+}
+
+.folio-tiptap-block-dialog-footer .tiptap-button-group {
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.folio-tiptap-block-dialog-footer .tiptap-button-group button {
+  min-width: auto;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.folio-tiptap-block-dialog-footer .tiptap-button-group button[data-style="primary"] {
+  background-color: var(--tiptap-primary-color, #3b82f6);
+  color: white;
+  border-color: var(--tiptap-primary-color, #3b82f6);
+}
+
+.folio-tiptap-block-dialog-footer .tiptap-button-group button[data-style="primary"]:hover:not(:disabled) {
+  background-color: var(--tiptap-primary-hover-color, #2563eb);
+  border-color: var(--tiptap-primary-hover-color, #2563eb);
+}
+
+.folio-tiptap-block-dialog-footer .tiptap-button-group button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.folio-tiptap-block-dialog-footer .tiptap-button-group button .tiptap-button-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 6px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 500px) {
+  .folio-tiptap-block-dialog-popover {
+    min-width: 320px;
+    max-width: 90vw;
+  }
+  
+  .folio-tiptap-block-dialog-header,
+  .folio-tiptap-block-dialog-body,
+  .folio-tiptap-block-dialog-footer {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
