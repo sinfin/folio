@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 - fix hiding settings in `form_footer`
 - add support for custom submit label in `form_footer` 
 - fix merges form using `form_footer` component instead of outdated cell
+- add support for auto-hiding server-rendered flash messages
 
 ## [6.5.0] - 2025-06-09
 
