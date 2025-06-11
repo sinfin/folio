@@ -175,6 +175,19 @@ class Folio::Page < Folio::ApplicationRecord
     Rails.application.config.folio_pages_autosave
   end
 
+  def folio_html_sanitization_config
+    if Rails.application.config.folio_pages_perex_richtext
+      {
+        enabled: true,
+        attributes: {
+          perex: :rich_text,
+        }
+      }
+    else
+      super
+    end
+  end
+
   private
     def set_atoms_data_for_search
       self.atoms_data_for_search = all_atoms_in_array.filter_map { |a| a.data_for_search }.join(" ").presence

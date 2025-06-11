@@ -17,6 +17,7 @@ Welcome to the documentation for the **Folio Rails Engine**. This project provid
 - [Emails & Templates](emails.md) — Email templates, newsletters
 - [Configuration](configuration.md) — Engine setup, options, localization
 - [Testing](testing.md) — Testing strategies, helpers, best practices
+- [HTML Sanitization](sanitization.md) — Guidelines for implementing HTML sanitization
 - [Troubleshooting](troubleshooting.md) — Common issues and solutions
 - [Upgrade & Migration](upgrade.md) — Upgrading projects, migration guides
 - [Extending & Customization](extending.md) — Generators, overrides, custom code
@@ -143,12 +144,12 @@ Ensure these binaries are present on CI / production servers.
 - Place project-specific patches in `app/overrides/` to stay upgrade-safe.
 - Prefer generators over hand-written boilerplate.
 
---- 
+---
 
 ## Navigation
 
 - [Next: Architecture →](architecture.md)
-- [Components](components.md) | [Atoms](atoms.md) | [Admin Console](admin.md) | [Files & Media](files.md) | [Concerns](concerns.md) | [Jobs](jobs.md) | [Sitemaps](sitemap.md)
+- [Components](components.md) | [Atoms](atoms.md) | [Admin Console](admin.md) | [Files & Media](files.md) | [HTML Sanitization](sanitization.md) | [Concerns](concerns.md) | [Jobs](jobs.md) | [Sitemaps](sitemap.md)
 
 ---
 

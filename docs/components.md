@@ -82,10 +82,16 @@ Manual creation or editing of component files is only recommended for advanced u
 
 ```mermaid
 classDiagram
-    Folio::ApplicationComponent <|-- ApplicationComponent
-    Folio::ApplicationComponent <|-- Folio::Console::ApplicationComponent
-    ApplicationComponent <|-- MyProject::ComponentNamespace::ComponentNameComponent
-    Folio::Console::ApplicationComponent <|-- Folio::Console::MyProject::ComponentNamespace::ComponentNameComponent
+    class FolioApplicationComponent["Folio::ApplicationComponent"]
+    class ApplicationComponent
+    class FolioConsoleApplicationComponent["Folio::Console::ApplicationComponent"]
+    class MyProjectComponent["MyProject::ComponentNamespace::ComponentNameComponent"]
+    class FolioConsoleMyProjectComponent["Folio::Console::MyProject::ComponentNamespace::ComponentNameComponent"]
+
+    FolioApplicationComponent <|-- ApplicationComponent
+    FolioApplicationComponent <|-- FolioConsoleApplicationComponent
+    ApplicationComponent <|-- MyProjectComponent
+    FolioConsoleApplicationComponent <|-- FolioConsoleMyProjectComponent
 ```
 
 ## Advanced Component Topics

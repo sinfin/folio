@@ -2,6 +2,17 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+- fix hiding settings in `form_footer`
+- add support for custom submit label in `form_footer` 
+- fix merges form using `form_footer` component instead of outdated cell
+
+## [6.5.0] - 2025-06-09
+
+### Added
+
+- HTML sanitization of all string/json values using `Folio::HtmlSanitization::Model` concern included on `ApplicationRecord`
+
+## [6.4.1] - 2025-06-09
 
 ### Added
 
