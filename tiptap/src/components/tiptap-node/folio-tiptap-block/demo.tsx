@@ -1,7 +1,7 @@
 import * as React from "react"
 import { EditorContent, useEditor } from "@tiptap/react"
 import { StarterKit } from "@tiptap/starter-kit"
-import { FolioTiptapBlockExtension } from "./folio-tiptap-block-extension"
+import { FolioTiptapBlock as FolioTiptapBlockExtension } from "./folio-tiptap-block-extension"
 import { FolioTiptapBlockButton } from "@/components/tiptap-ui/folio-tiptap-block-button"
 import { Button } from "@/components/tiptap-ui-primitive/button"
 import { Toolbar, ToolbarGroup } from "@/components/tiptap-ui-primitive/toolbar"
@@ -25,10 +25,10 @@ export const FolioTiptapBlockDemo: React.FC = () => {
       StarterKit,
       FolioTiptapBlockExtension.configure({
         apiUrl: '/api/folio-blocks',
-        onError: (error) => {
+        onError: (error: Error) => {
           console.error('Folio block error:', error)
         },
-        onSuccess: (html) => {
+        onSuccess: (html: string) => {
           console.log('Folio block loaded successfully:', html.slice(0, 100) + '...')
         },
       }),

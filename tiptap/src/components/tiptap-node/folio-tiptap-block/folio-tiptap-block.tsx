@@ -209,7 +209,6 @@ const FolioTiptapBlockContent: React.FC<{
       <Button
         onClick={onEdit}
         data-style="ghost"
-        size="sm"
         className="folio-tiptap-block-edit-btn"
         title="Edit block"
       >
@@ -272,7 +271,7 @@ export const FolioTiptapBlock: React.FC<NodeViewProps> = (props) => {
   const hasConfiguration = attributes.title || attributes.blockType
   const { loading, error, htmlContent, reload } = useApiContent(
     attributes, 
-    hasConfiguration
+    !!hasConfiguration
   )
 
   const handleSave = (newAttributes: FolioTiptapBlockAttributes) => {
