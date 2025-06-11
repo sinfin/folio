@@ -353,6 +353,12 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
         </div>
       </div>
 
+      {file.attributes.bottom_html_api_url ? (
+        <div className="modal-body">
+          <AdditionalHtmlFromApi apiUrl={file.attributes.bottom_html_api_url} />
+        </div>
+      ) : null}
+
       {(fileModal.updating || fileModal.uploadingNew) && <span className='folio-loader' />}
     </div>
   )

@@ -48,7 +48,9 @@ class Folio::Console::UsersController < Folio::Console::BaseController
 
   def create
     create_params = user_params.merge(skip_password_validation: 1,
-                                      creating_in_console: 1)
+                                      creating_in_console: 1,
+                                      auth_site: Folio::Current.site)
+
     @user = @klass.new(create_params)
 
     if @user.valid?
@@ -72,19 +74,34 @@ class Folio::Console::UsersController < Folio::Console::BaseController
       Rails.application.config.folio_users_after_impersonate_path_proc.call(self, @user)
     end
 
+    def additional_user_params
+      # to be overriden in main_app should it be needed
+      []
+    end
+
     def user_params
       params.require(:user)
-            .permit(*(@klass.column_names - user_params_blacklist),
+            .permit(:email,
+                    :first_name,
+                    :last_name,
+                    :admin_note,
                     :locked,
+                    :nickname,
+                    :subscribed_to_newsletter,
+                    :phone,
+                    :degree_pre,
+                    :degree_post,
+                    :phone_secondary,
+                    :born_at,
+                    :bank_account_number,
+                    :company_name,
+                    :time_zone,
+                    :preferred_locale,
                     *site_user_links_params,
                     *addresses_strong_params,
                     *file_placements_strong_params,
                     *private_attachments_strong_params,
                     *additional_user_params)
-    end
-
-    def user_params_blacklist
-      ["id"]
     end
 
     def default_index_filters
@@ -143,11 +160,15 @@ class Folio::Console::UsersController < Folio::Console::BaseController
     end
 
     def site_user_links_params
-      [ site_user_links_attributes: [:site_id, :locked, roles: []] ]
-    end
+      ary = if @user && can_now?(:set_superadmin, @user)
+        [:superadmin]
+      else
+        []
+      end
 
-    def additional_user_params
-      []
+      ary << { site_user_links_attributes: [:site_id, :locked, roles: []] }
+
+      ary
     end
 
     def skip_email_reconfirmation

@@ -2,6 +2,42 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+- fix hiding settings in `form_footer`
+- add support for custom submit label in `form_footer` 
+- fix merges form using `form_footer` component instead of outdated cell
+
+## [6.5.0] - 2025-06-09
+
+### Added
+
+- HTML sanitization of all string/json values using `Folio::HtmlSanitization::Model` concern included on `ApplicationRecord`
+
+## [6.4.1] - 2025-06-09
+
+### Added
+
+- `bottom_html_api_url` to files, used for new `HasSubtitlesFormComponent`
+
+### Changed
+
+- `cstypo` to use U+00A0 instead of nbsp entity, allowing us to remove `html_safe`
+
+## [6.4.0] - 2025-05-15
+
+### Added
+
+- `timeoutable` to `Folio::User` ; session will expire after 30 minutes of inactivity
+- `lockable` to `Folio::User` - lock user for 15 minutes after 5 unsuccessful attempts
+- password complexity validation to `Folio::User` - allow 8-128 characters, must include special/lower/upper/number if shorter than 48 characters
+- recaptcha to users/session/new
+
+### Changed
+
+- whitelist strong params instead of blacklisting - use `folio_using_traco_aware_param_names` for traco-translatable columns, use `additional_*_params` (i.e. `additional_user_params` ) to add more column names to the whitelist
+- updated `session_store` config with `expire_after` / `secure` / `httponly` / `same_site`
+- use Devise `paranoid` to avoid enumeration
+
+## [6.3.2] - 2025-05-15
 
 ### Added
 - `Folio::File::Video::HasSubtitles` concern to Video files
@@ -14,6 +50,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - use `only_path: true` for file sidebar links when `folio_shared_files_between_sites`
+- allow hiding settings and 'share preview' in  `form_footer`
 
 ## [6.3.1] - 2025-04-24
 

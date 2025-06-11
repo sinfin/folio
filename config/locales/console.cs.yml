@@ -21,14 +21,15 @@ cs:
         undiscard: Odarchivovat
       alt_prompt: Alternativní popisek obrázku
       api:
-        documents:
-          mass_destroy:
-            success: Dokumenty smazány
-            failure: Dokumenty se nepodařilo smazat - %{msg}
-        images:
-          mass_destroy:
-            success: Obrázky smazány
-            failure: Obrázky se nepodařilo smazat - %{msg}
+        file:
+          documents:
+            mass_destroy:
+              success: Dokumenty smazány
+              failure: Dokumenty se nepodařilo smazat - %{msg}
+          images:
+            mass_destroy:
+              success: Obrázky smazány
+              failure: Obrázky se nepodařilo smazat - %{msg}
         aasm:
           failure_title: Neúspěch
           failure_detail: Nepodařilo se změnit stav záznamu.
@@ -105,12 +106,11 @@ cs:
         update:
           success: Šablony upraveny.
       create: Vytvořit
+      delete: Smazat
       current_users:
         console_url_bar:
           title: Tuto stránku nyní upravuje
           text: Vyčkejte, až dokončí úpravy. Při současné úpravě by mohlo dojít ke ztrátě rozpracovaného obsahu.
-      delete: Smazat
-      current_users:
         show_component:
           title: Můj profil
           title/sign_in: Přihlašovací jméno
@@ -425,6 +425,15 @@ cs:
       autosave:
         toggle_component:
           label: Automatické ukládání
+
+      files:
+        has_subtitles_form_component:
+          title: Titulky
+          subtitles_ready: Titulky připraveny
+          subtitles_processing: Probíhá generování titulků
+          subtitles_failed: Chyba generování titulků. Titulky lze zadat ručně.
+          retranscribe_subtitles: Vygenerovat znovu
+          submit: Uložit titulky
 
   date:
     formats:

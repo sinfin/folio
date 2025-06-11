@@ -403,3 +403,7 @@ cs:
         missing_file_attribution: nebo zdroj je povinný
       password:
         same_as_current_password: nesmí být stejné jako aktuální heslo
+        missing_uppercase: musí obsahovat velké písmeno
+        missing_lowercase: musí obsahovat malé písmeno
+        missing_digit: musí obsahovat číslo
+        missing_special: musí obsahovat speciální znak

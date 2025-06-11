@@ -11,7 +11,7 @@ class Folio::File::Video::HasSubtitlesTest < ActiveSupport::TestCase
   end
 
   class TranscribeSubtitlesFile < Folio::File::Video
-    def transcribe_subtitles_job_class
+    def self.transcribe_subtitles_job_class
       Folio::OpenAi::TranscribeSubtitlesJob
     end
   end

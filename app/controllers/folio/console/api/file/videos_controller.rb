@@ -4,4 +4,18 @@ class Folio::Console::Api::File::VideosController < Folio::Console::Api::BaseCon
   include Folio::Console::Api::FileControllerBase
 
   folio_console_controller_for "Folio::File::Video"
+
+  def subtitles_html
+    render_component_json(Folio::Console::Files::HasSubtitlesFormComponent.new(file: @video))
+  end
+
+  def retranscribe_subtitles
+    @video.transcribe_subtitles!
+    render_component_json(Folio::Console::Files::HasSubtitlesFormComponent.new(file: @video))
+  end
+
+  def update_subtitles
+    @video.update(params.require(:file).permit(:subtitles_cs_text))
+    render_component_json(Folio::Console::Files::HasSubtitlesFormComponent.new(file: @video))
+  end
 end
