@@ -21,6 +21,7 @@ class Folio::Console::UiController < Folio::Console::BaseController
       date_time
       url
       rich_text
+      tiptap
     ].sort
   end
 

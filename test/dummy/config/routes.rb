@@ -51,9 +51,6 @@ Rails.application.routes.draw do
           get :required_inputs
           get :additional_html_for_video_files_modal
 
-          get :tiptap
-          post :tiptap
-
           patch :update_attributes
           patch :update_console_notes
           patch :update_private_attachments

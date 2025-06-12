@@ -40,6 +40,7 @@ Folio::Engine.routes.draw do
         get :input_date_time
         get :input_url
         get :input_tags
+        get :input_tiptap
       end
 
       resource :current_user, only: %i[show] do
