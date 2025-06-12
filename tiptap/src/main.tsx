@@ -5,14 +5,13 @@ import "./styles/_variables.scss";
 import "./styles/_keyframe-animations.scss";
 import App from "./App.tsx";
 
+import demoContent from "@/components/tiptap-templates/simple/data/content.json";
+
 // Initialize the Folio namespace if it doesn't exist
 window.Folio = window.Folio || {};
 window.Folio.Tiptap = window.Folio.Tiptap || {};
 
-window.Folio.Tiptap.init = (props: {
-  node: HTMLElement;
-  onUpdate?: (content: { editor: { getJSON: () => Record<string, unknown> } }) => void;
-}) => {
+window.Folio.Tiptap.init = (props) => {
   if (!props.node) {
     throw new Error('Node is required');
   }
@@ -20,7 +19,7 @@ window.Folio.Tiptap.init = (props: {
   const root = createRoot(props.node);
   root.render(
     <StrictMode>
-      <App onUpdate={props.onUpdate} />
+      <App onUpdate={props.onUpdate} defaultContent={props.content} />
     </StrictMode>,
   );
 
@@ -39,6 +38,7 @@ if (process.env.NODE_ENV !== "production") {
   if (rootElement) {
     window.Folio.Tiptap.init({
       node: rootElement,
+      content: demoContent,
       onUpdate: ({ editor }: { editor: { getJSON: () => Record<string, unknown> } }) => {
         const json = editor.getJSON();
         if (typeof json !== 'object' || json === null) {

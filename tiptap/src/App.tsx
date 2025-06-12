@@ -4,10 +4,11 @@ import "./App.css";
 
 interface AppProps {
   onUpdate?: (content: { editor: { getJSON: () => Record<string, unknown> } }) => void;
+  defaultContent?: any;
 }
 
-function App({ onUpdate }: AppProps) {
-  return <SimpleEditor onUpdate={onUpdate} />;
+function App({ onUpdate, defaultContent }: AppProps) {
+  return <SimpleEditor onUpdate={onUpdate} defaultContent={defaultContent} />;
 }
 
 export default App;

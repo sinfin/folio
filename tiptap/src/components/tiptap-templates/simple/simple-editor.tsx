@@ -76,8 +76,6 @@ import { handleImageUpload, MAX_FILE_SIZE } from "@/lib/tiptap-utils";
 // --- Styles ---
 import "@/components/tiptap-templates/simple/simple-editor.scss";
 
-import content from "@/components/tiptap-templates/simple/data/content.json";
-
 // --- 3rd party extensions ---
 import GlobalDragHandle from "tiptap-extension-global-drag-handle";
 import AutoJoiner from "tiptap-extension-auto-joiner";
@@ -190,8 +188,10 @@ const MobileToolbarContent = ({
 
 export function SimpleEditor({
   onUpdate,
+  defaultContent,
 }: {
   onUpdate?: (content: { editor: { getJSON: () => Record<string, unknown> } }) => void;
+  defaultContent?: any;
 }) {
   const isMobile = useMobile();
   const windowSize = useWindowSize();
@@ -203,6 +203,7 @@ export function SimpleEditor({
   const editor = useEditor({
     // triggered on every change
     onUpdate,
+    content: defaultContent,
     immediatelyRender: false,
     editorProps: {
       attributes: {
@@ -252,7 +253,6 @@ export function SimpleEditor({
         elementsToJoin: ["bulletList", "orderedList"], // default
       }),
     ],
-    content: content,
   });
 
   const bodyRect = useCursorVisibility({

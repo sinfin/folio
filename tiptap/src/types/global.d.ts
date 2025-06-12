@@ -55,6 +55,7 @@ declare global {
         init: (props: {
           node: HTMLElement;
           onUpdate?: (content: { editor: { getJSON: () => Record<string, unknown> } }) => void;
+          content?: any;
         }) => ReturnType<typeof import("react-dom/client").createRoot>;
         destroy: (root: ReturnType<typeof import("react-dom/client").createRoot>) => void;
       };

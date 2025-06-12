@@ -26,7 +26,21 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     this.boundOnUpdate = this.onUpdate.bind(this)
 
     window.Folio.RemoteScripts.run('folio-tiptap', () => {
-      this.reactRoot = window.Folio.Tiptap.init({ node: this.reactRootTarget, onUpdate: this.boundOnUpdate })
+      let content = null
+
+      if (this.inputTarget.value) {
+        try {
+          content = JSON.parse(this.inputTarget.value)
+        } catch (e) {
+          console.error('Failed to parse input value as JSON:', e)
+        }
+      }
+
+      this.reactRoot = window.Folio.Tiptap.init({
+        node: this.reactRootTarget,
+        onUpdate: this.boundOnUpdate,
+        content,
+      })
     }, () => {
       console.error('Failed to load folio-tiptap!')
     })
