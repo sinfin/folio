@@ -231,10 +231,7 @@ Folio::Engine.routes.draw do
 
   resource :tiptap, path: "folio-tiptap", controller: :tiptap, only: [] do
     get :block_editor
-    post :block_editor
-
     get :rich_text_editor
-    post :rich_text_editor
   end
 
   resource :csrf, only: %i[show], controller: :csrf

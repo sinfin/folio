@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::Tiptap::EditorComponent < ApplicationComponent
-  def initialize(type:, tiptap_content: nil)
-    @tiptap_content = tiptap_content.is_a?(Hash) ? tiptap_content.to_json : ""
+  def initialize(type:)
     @type = case type
             when :block, :rich_text
               type
@@ -13,9 +12,9 @@ class Folio::Tiptap::EditorComponent < ApplicationComponent
 
   def data
     stimulus_controller("f-tiptap-editor",
-                        values: {
-                          type: @type,
-                          tiptap_content: @tiptap_content,
+                        values: { type: @type },
+                        action: {
+                          "message@window" => "onWindowMessage"
                         })
   end
 end

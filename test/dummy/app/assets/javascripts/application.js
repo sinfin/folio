@@ -24,8 +24,6 @@
 
 //= require folio/image/image
 
-//= require folio/tiptap/editor_component
-
 //= require dummy/searches/show_component
 //= require dummy/ui/alert_component
 //= require dummy/ui/boolean_toggle_component
