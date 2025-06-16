@@ -229,7 +229,7 @@ Folio::Engine.routes.draw do
     end
   end
 
-  resource :tiptap, controller: :tiptap, only: [] do
+  resource :tiptap, path: "folio-tiptap", controller: :tiptap, only: [] do
     get :block_editor
     post :block_editor
 
