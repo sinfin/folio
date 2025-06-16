@@ -32,4 +32,8 @@ class Folio::Console::React::ModalComponent < Folio::Console::ApplicationCompone
       "mode" => "modal-single-select",
     }
   end
+
+  def additional_right_content
+    # to be overriden in main_app
+  end
 end

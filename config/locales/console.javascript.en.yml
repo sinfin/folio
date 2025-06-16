@@ -58,3 +58,7 @@ en:
         usageUnused: Unused
         usageUsed: Used
         used: Used already
+        photoArchivePlaceholder: Photo archive...
+        photoArchiveFromPhotoArchive: From photo archive
+        photoArchiveNotFromPhotoArchive: Not from photo archive
+        importedFromPhotoArchive: Imported from photo archive

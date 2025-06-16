@@ -7,6 +7,9 @@ All notable changes to this project will be documented in this file.
 
 - support for custom submit label in `form_footer`
 - support for auto-hiding server-rendered flash messages
+- `Rails.application.config.folio_photo_archive_enabled` to enable photo archive feature
+- added photo archive filtering for image files
+- added information display in file modal for photos imported from photo archive
 
 ### Fixed
 
