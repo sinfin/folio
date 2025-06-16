@@ -1,10 +1,9 @@
-//= require folio/stimulus
-
 window.Folio.Stimulus.register('f-tiptap-editor', class extends window.Stimulus.Controller {
-  static targets = ['reactRoot']
+  static targets = ['reactRoot', 'loader']
 
   static values = {
     type: String,
+    tiptapContent: String,
   }
 
   connect () {
@@ -14,14 +13,18 @@ window.Folio.Stimulus.register('f-tiptap-editor', class extends window.Stimulus.
       this.element.insertAdjacentHTML('beforeend', '<div class="f-tiptap-editor__react-root" data-f-tiptap-editor-target="reactRoot"></div>')
     }
 
+    this.boundOnCreate = this.onCreate.bind(this)
     this.boundOnUpdate = this.onUpdate.bind(this)
+
+    document.documentElement.classList.add('f-tiptap-editor-html')
+    document.body.classList.add('f-tiptap-editor-body')
 
     window.Folio.RemoteScripts.run('folio-tiptap', () => {
       let content = null
 
-      if (this.inputTarget.value) {
+      if (this.tiptapContentValue) {
         try {
-          content = JSON.parse(this.inputTarget.value)
+          content = JSON.parse(this.tiptapContentValue)
         } catch (e) {
           console.error('Failed to parse input value as JSON:', e)
         }
@@ -29,6 +32,7 @@ window.Folio.Stimulus.register('f-tiptap-editor', class extends window.Stimulus.
 
       this.reactRoot = window.Folio.Tiptap.init({
         node: this.reactRootTarget,
+        onCreate: this.boundOnCreate,
         onUpdate: this.boundOnUpdate,
         content,
       })
@@ -48,8 +52,20 @@ window.Folio.Stimulus.register('f-tiptap-editor', class extends window.Stimulus.
     }
   }
 
+  onCreate () {
+    window.top.postMessage({
+      type: 'f-tiptap-editor:created',
+      height: this.element.clientHeight,
+    }, window.origin)
+
+    this.loaderTarget.remove()
+  }
+
   onUpdate ({ editor }) {
-    console.log('Tiptap editor updated:', editor.getJSON())
-    // this.inputTarget.value = JSON.stringify(editor.getJSON())
+    window.top.postMessage({
+      type: 'f-tiptap-editor:updated',
+      content: editor.getJSON(),
+      height: this.element.clientHeight,
+    }, window.origin)
   }
 })

@@ -19,7 +19,7 @@ window.Folio.Tiptap.init = (props) => {
   const root = createRoot(props.node);
   root.render(
     <StrictMode>
-      <App onUpdate={props.onUpdate} defaultContent={props.content} />
+      <App onCreate={props.onCreate} onUpdate={props.onUpdate} defaultContent={props.content} />
     </StrictMode>,
   );
 
@@ -39,12 +39,19 @@ if (process.env.NODE_ENV !== "production") {
     window.Folio.Tiptap.init({
       node: rootElement,
       content: demoContent,
+      onCreate: ({ editor }: { editor: { getJSON: () => Record<string, unknown> } }) => {
+        const json = editor.getJSON();
+        if (typeof json !== 'object' || json === null) {
+          throw new Error('getJSON must return a hash');
+        }
+        console.log('onCreate', json);
+      },
       onUpdate: ({ editor }: { editor: { getJSON: () => Record<string, unknown> } }) => {
         const json = editor.getJSON();
         if (typeof json !== 'object' || json === null) {
           throw new Error('getJSON must return a hash');
         }
-        console.log(json);
+        console.log('onUpdate', json);
       }
     });
   }

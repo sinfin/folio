@@ -187,9 +187,11 @@ const MobileToolbarContent = ({
 );
 
 export function SimpleEditor({
+  onCreate,
   onUpdate,
   defaultContent,
 }: {
+  onCreate?: (content: { editor: { getJSON: () => Record<string, unknown> } }) => void;
   onUpdate?: (content: { editor: { getJSON: () => Record<string, unknown> } }) => void;
   defaultContent?: any;
 }) {
@@ -203,6 +205,7 @@ export function SimpleEditor({
   const editor = useEditor({
     // triggered on every change
     onUpdate,
+    onCreate,
     content: defaultContent,
     immediatelyRender: false,
     editorProps: {

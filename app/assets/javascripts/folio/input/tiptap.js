@@ -22,6 +22,23 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     }
   }
 
-  // disconnect () {
-  // }
+  disconnect () {
+  }
+
+  onWindowMessage (e) {
+    if (!e.data) return
+    if (e.data.type.indexOf('f-tiptap-editor:') !== 0) return
+
+    this.setHeight(e.data.height)
+
+    if (e.data.type === 'f-tiptap-editor:updated') {
+      this.setHeight(e.data.height)
+      this.inputTarget.value = JSON.stringify(e.data.content)
+    }
+  }
+
+  setHeight (height) {
+    if (typeof height !== 'number') return
+    this.iframeTarget.style.minHeight = `${height}px`
+  }
 })

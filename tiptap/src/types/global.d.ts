@@ -54,6 +54,7 @@ declare global {
       Tiptap: {
         init: (props: {
           node: HTMLElement;
+          onCreate?: (content: { editor: { getJSON: () => Record<string, unknown> } }) => void;
           onUpdate?: (content: { editor: { getJSON: () => Record<string, unknown> } }) => void;
           content?: any;
         }) => ReturnType<typeof import("react-dom/client").createRoot>;
