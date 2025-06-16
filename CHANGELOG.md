@@ -2,10 +2,17 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
-- fix hiding settings in `form_footer`
-- add support for custom submit label in `form_footer` 
+
+### Added
+
+- support for custom submit label in `form_footer`
+- support for auto-hiding server-rendered flash messages
+
+### Fixed
+
+- hiding settings in `form_footer`
 - fix merges form using `form_footer` component instead of outdated cell
-- add support for auto-hiding server-rendered flash messages
+- handle `HtmlAutoFormat` with `Folio::HtmlSanitization` - add missing attributes on redactor init when only the `f-c-html-auto-format` class remained
 
 ## [6.5.0] - 2025-06-09
 

@@ -25,7 +25,7 @@ module Folio::File::Video::HasSubtitles
     store_accessor :additional_data, :subtitles
     store :subtitles, accessors: self.enabled_subtitle_languages, prefix: :subtitles
     enabled_subtitle_languages.each do |lang|
-      store :"subtitles_#{lang}", accessors: %w[state text], prefix: :"subtitles_#{lang}"
+      store :"subtitles_#{lang}", accessors: %w[enabled state text], prefix: :"subtitles_#{lang}"
     end
 
     # if subtitle text is set, always set the state to ready
@@ -33,6 +33,16 @@ module Folio::File::Video::HasSubtitles
       define_method :"subtitles_#{lang}_text=" do |value|
         send("subtitles_#{lang}_state=", "ready")
         super(value)
+      end
+
+      define_method :"subtitles_#{lang}_enabled?" do |value|
+        send("subtitles_#{lang}_enabled")
+      end
+
+      after_initialize do
+        if send("subtitles_#{lang}_enabled").nil?
+          send("subtitles_#{lang}_enabled=", true)
+        end
       end
     end
 
