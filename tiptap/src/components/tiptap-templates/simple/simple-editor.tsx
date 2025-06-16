@@ -268,36 +268,38 @@ export function SimpleEditor({
 
   return (
     <EditorContext.Provider value={{ editor }}>
-      <Toolbar
-        ref={toolbarRef}
-        style={
-          isMobile
-            ? {
-                bottom: `calc(100% - ${windowSize.height - bodyRect.y}px)`,
-              }
-            : {}
-        }
-      >
-        {mobileView === "main" ? (
-          <MainToolbarContent
-            onHighlighterClick={() => setMobileView("highlighter")}
-            onLinkClick={() => setMobileView("link")}
-            isMobile={isMobile}
-          />
-        ) : (
-          <MobileToolbarContent
-            type={mobileView === "highlighter" ? "highlighter" : "link"}
-            onBack={() => setMobileView("main")}
-          />
-        )}
-      </Toolbar>
+      <div className="f-tiptap f-tiptap-editor">
+        <Toolbar
+          ref={toolbarRef}
+          style={
+            isMobile
+              ? {
+                  bottom: `calc(100% - ${windowSize.height - bodyRect.y}px)`,
+                }
+              : {}
+          }
+        >
+          {mobileView === "main" ? (
+            <MainToolbarContent
+              onHighlighterClick={() => setMobileView("highlighter")}
+              onLinkClick={() => setMobileView("link")}
+              isMobile={isMobile}
+            />
+          ) : (
+            <MobileToolbarContent
+              type={mobileView === "highlighter" ? "highlighter" : "link"}
+              onBack={() => setMobileView("main")}
+            />
+          )}
+        </Toolbar>
 
-      <div className="content-wrapper">
-        <EditorContent
-          editor={editor}
-          role="presentation"
-          className="simple-editor-content"
-        />
+        <div className="simple-editor__content-wrapper">
+          <EditorContent
+            editor={editor}
+            role="presentation"
+            className="simple-editor__content"
+          />
+        </div>
       </div>
     </EditorContext.Provider>
   );
