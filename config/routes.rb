@@ -229,6 +229,14 @@ Folio::Engine.routes.draw do
     end
   end
 
+  resource :tiptap, controller: :tiptap, only: [] do
+    get :block_editor
+    post :block_editor
+
+    get :rich_text_editor
+    post :rich_text_editor
+  end
+
   resource :csrf, only: %i[show], controller: :csrf
 
   if ::Rails.application.config.folio_leads_from_component_class_name
