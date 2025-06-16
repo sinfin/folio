@@ -10,33 +10,34 @@
     opacity: 0
 
 .f-c-html-auto-format
-  display: inline-block
-  position: relative
+  &[data-controller="f-c-html-auto-format"][contenteditable="false"]
+    display: inline-block
+    position: relative
 
-  &::before
-    content: ""
-    position: absolute
-    inset: -4px
-    z-index: 2
-    cursor: pointer
-    border-radius: $border-radius
-    transition: $transition-base
-    display: block
+    &::before
+      content: ""
+      position: absolute
+      inset: -4px
+      z-index: 2
+      cursor: pointer
+      border-radius: $border-radius
+      transition: $transition-base
+      display: block
 
-  &:hover::before
-    background-color: rgba(0, 0, 0, 0.08)
+    &:hover::before
+      background-color: rgba(0, 0, 0, 0.08)
 
-  &::after
-    content: ""
-    display: none
-    pointer-events: none
-    z-index: 0
-    position: absolute
-    inset: 0
-    border-radius: $border-radius
-    background-color: rgba(76, 132, 253, 0.5)
-    opacity: 0
+    &::after
+      content: ""
+      display: none
+      pointer-events: none
+      z-index: 0
+      position: absolute
+      inset: 0
+      border-radius: $border-radius
+      background-color: rgba(76, 132, 253, 0.5)
+      opacity: 0
 
-  &--notify::after
+  &[data-controller="f-c-html-auto-format"][contenteditable="false"].f-c-html-auto-format--notify::after
     display: block
     animation: fCHtmlAutoFormatNotify .75s 1 ease-in-out
