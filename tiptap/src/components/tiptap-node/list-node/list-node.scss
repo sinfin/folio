@@ -23,9 +23,9 @@
   // Common list styles
   ol,
   ul {
-    margin-top: 1.5em;
-    margin-bottom: 1.5em;
-    padding-left: 1.5em;
+    margin-top: var(--f-tiptap--tt-default-content-spacer);
+    margin-bottom: var(--f-tiptap--tt-default-content-spacer);
+    padding-left: var(--f-tiptap--tt-default-content-spacer);
 
     &:first-child {
       margin-top: 0;
@@ -43,8 +43,20 @@
   }
 
   li {
-    p {
+    list-style-type: inherit;
+    margin-top: var(--f-tiptap--tt-list-item-spacer);
+    margin-bottom: var(--f-tiptap--tt-list-item-spacer);
+
+    &:first-child {
       margin-top: 0;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    p {
+      margin: 0;
     }
   }
 

@@ -30,11 +30,16 @@
   caret-color: var(--tt-cursor-color);
 
   // Paragraph spacing
-  p:not(:first-child) {
-    font-size: 1rem;
-    line-height: 1.6;
-    font-weight: normal;
-    margin-top: 20px;
+  p {
+    margin: var(--f-tiptap--tt-default-content-spacer) 0;
+  }
+
+  p:first-child {
+    margin-top: 0;
+  }
+
+  p:last-child {
+    margin-bottom: 0;
   }
 
   // Selection styles
@@ -134,7 +139,7 @@
     padding-left: 1em;
     padding-top: 0.375em;
     padding-bottom: 0.375em;
-    margin: 1.5rem 0;
+    margin: var(--f-tiptap--tt-default-content-spacer) 0;
 
     p {
       margin-top: 0;
@@ -207,34 +212,36 @@
     position: relative;
     color: inherit;
     font-style: inherit;
+    margin: var(--f-tiptap--tt-default-content-spacer) 0;
+    font-weight: var(--f-tiptap--tt-default-headings-font-weight);
 
     &:first-child {
       margin-top: 0;
     }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
 
   h1 {
-    font-size: 1.5em;
-    font-weight: 700;
-    margin-top: 3em;
+    font-size: var(--f-tiptap--tt-h1-font-size);
+    margin: var(--f-tiptap--tt-h1-margin);
   }
 
   h2 {
-    font-size: 1.25em;
-    font-weight: 700;
-    margin-top: 2.5em;
+    font-size: var(--f-tiptap--tt-h2-font-size);
+    margin: var(--f-tiptap--tt-h2-margin);
   }
 
   h3 {
-    font-size: 1.125em;
-    font-weight: 600;
-    margin-top: 2em;
+    font-size: var(--f-tiptap--tt-h3-font-size);
+    margin: var(--f-tiptap--tt-h3-margin);
   }
 
   h4 {
-    font-size: 1em;
-    font-weight: 600;
-    margin-top: 2em;
+    font-size: var(--f-tiptap--tt-h4-font-size);
+    margin: var(--f-tiptap--tt-h4-margin);
   }
 }
 
@@ -243,8 +250,7 @@
      ===================== */
 .tiptap.ProseMirror {
   hr {
-    margin-top: 3em;
-    margin-bottom: 3em;
+    margin: var(--f-tiptap--tt-hr-margin) 0;
     border: none;
     height: 1px;
     background-color: var(--separator-color);

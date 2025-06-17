@@ -5,6 +5,25 @@
   --f-tiptap-editor--border-radius: 4px;
   --f-tiptap-editor-content-wrap--padding: 1rem 2rem;
   --f-tiptap-editor-content-wrap--padding-mobile: 1rem;
+
+  --f-tiptap--tt-default-content-spacer: 1.5rem;
+  --f-tiptap--tt-default-headings-font-weight: bold;
+
+  --f-tiptap--tt-list-item-spacer: 0.5rem;
+
+  --f-tiptap--tt-h1-margin: 3rem 0 var(--f-tiptap--tt-default-content-spacer);
+  --f-tiptap--tt-h1-font-size: 2.5rem;
+
+  --f-tiptap--tt-h2-margin: 2.5rem 0 var(--f-tiptap--tt-default-content-spacer);
+  --f-tiptap--tt-h2-font-size: 2rem;
+
+  --f-tiptap--tt-h3-margin: 2rem 0 var(--f-tiptap--tt-default-content-spacer);
+  --f-tiptap--tt-h3-font-size: 1.5rem;
+
+  --f-tiptap--tt-h4-margin: var(--f-tiptap--tt-h3-margin);
+  --f-tiptap--tt-h4-font-size: 1.25rem;
+
+  --f-tiptap--tt-hr-margin: 3rem;
 }
 
 html,
