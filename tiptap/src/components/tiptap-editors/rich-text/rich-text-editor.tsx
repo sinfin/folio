@@ -255,11 +255,11 @@ export function RichTextEditor({
           )}
         </Toolbar>
 
-        <div className="simple-editor__content-wrapper">
+        <div className="f-tiptap-editors-rich-text-editor__content-wrap">
           <EditorContent
             editor={editor}
             role="presentation"
-            className="simple-editor__content"
+            className="f-tiptap-editors-rich-text-editor__content f-tiptap-styles"
           />
         </div>
       </div>

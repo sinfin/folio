@@ -1,0 +1,20 @@
+.f-tiptap-styles {
+  --f-tiptap--default-spacer: 1rem;
+  --f-tiptap--hr-margin: 2rem 0;
+  --f-tiptap--img-max-width: 100%;
+
+  img {
+    max-width: var(--f-tiptap--img-max-width);
+  }
+
+  p,
+  figure,
+  ul,
+  ol {
+    margin: 0 0 var(--f-tiptap--default-spacer);
+  }
+
+  hr {
+    margin: var(--f-tiptap--hr-margin);
+  }
+}

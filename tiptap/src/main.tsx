@@ -77,11 +77,15 @@ window.addEventListener("message", (e) => {
 
   if (e.data.type === "f-input-tiptap:start") {
     if (!window.Folio.Tiptap.root) {
-      const node = document.querySelector(".f-tiptap-iframe-content")
+      const node = document.querySelector(".f-tiptap-iframe-content") as HTMLElement
+
+      if (!node) {
+        throw new Error("Node not found for Tiptap editor");
+      }
 
       window.Folio.Tiptap.init({
-        node: node,
-        type: node.dataset.tiptapType || "rich-text",
+        node,
+        type: node.dataset.tiptapType === "block" ? "block" : "rich-text",
         content: e.data.content,
       });
     }
@@ -95,7 +99,7 @@ if (process.env.NODE_ENV !== "production" && window.top === window) {
   if (rootElement) {
     window.Folio.Tiptap.init({
       node: rootElement,
-      type: rootElement.dataset.tiptapType || "rich-text",
+      type: (rootElement as HTMLElement).dataset.tiptapType === "block" ? "block" : "rich-text",
       content: demoContent,
       onCreate: ({ editor }: { editor: TiptapEditor }) => {
         const json = editor.getJSON();
