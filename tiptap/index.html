@@ -7,6 +7,19 @@
   </head>
   <body>
     <div id="folio-tiptap-dev-root"></div>
+
+    <script type="text/javascript">
+      if (window.location.search.indexOf("folio-iframe=rich_text") !== -1) {
+        const node = document.getElementById("folio-tiptap-dev-root")
+        node.removeAttribute("id")
+        node.className = "f-tiptap-iframe-content f-tiptap-iframe-content--rich-text"
+      } else if (window.location.search.indexOf("folio-iframe=block") !== -1) {
+        const node = document.getElementById("folio-tiptap-dev-root")
+        node.removeAttribute("id")
+        node.className = "f-tiptap-iframe-content f-tiptap-iframe-content--block"
+      }
+    </script>
+
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

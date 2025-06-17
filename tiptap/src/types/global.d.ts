@@ -17,23 +17,23 @@ declare module "*.css" {
 
 declare module "tiptap-extension-global-drag-handle" {
   import { Extension } from "@tiptap/core";
-  
+
   interface GlobalDragHandleOptions {
     dragHandleWidth?: number;
     scrollTreshold?: number;
   }
-  
+
   const GlobalDragHandle: Extension<GlobalDragHandleOptions>;
   export default GlobalDragHandle;
 }
 
 declare module "tiptap-extension-auto-joiner" {
   import { Extension } from "@tiptap/core";
-  
+
   interface AutoJoinerOptions {
     elementsToJoin?: string[];
   }
-  
+
   const AutoJoiner: Extension<AutoJoinerOptions>;
   export default AutoJoiner;
 }
@@ -48,24 +48,37 @@ declare module "react" {
 
 // Global interface augmentations
 declare global {
+  interface TiptapEditor {
+    getJSON: () => Record<string, unknown>;
+  }
+
   interface Window {
     __DEV__?: boolean;
+    top: Window;
     Folio: {
       Tiptap: {
+        root: HTMLElement | null;
         init: (props: {
           node: HTMLElement;
-          onCreate?: (content: { editor: { getJSON: () => Record<string, unknown> } }) => void;
-          onUpdate?: (content: { editor: { getJSON: () => Record<string, unknown> } }) => void;
+          onCreate?: (content: { editor: TiptapEditor }) => void;
+          onUpdate?: (content: { editor: TiptapEditor }) => void;
           content?: any;
         }) => ReturnType<typeof import("react-dom/client").createRoot>;
-        destroy: (root: ReturnType<typeof import("react-dom/client").createRoot>) => void;
+        destroy: (
+          root: ReturnType<typeof import("react-dom/client").createRoot>,
+        ) => void;
       };
     };
   }
-  
+
   // Promise support for older environments
   interface PromiseConstructor {
-    new <T>(executor: (resolve: (value?: T | PromiseLike<T>) => void, reject: (reason?: any) => void) => void): Promise<T>;
+    new <T>(
+      executor: (
+        resolve: (value?: T | PromiseLike<T>) => void,
+        reject: (reason?: any) => void,
+      ) => void,
+    ): Promise<T>;
   }
 }
 

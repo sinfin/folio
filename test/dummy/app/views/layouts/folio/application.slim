@@ -15,7 +15,7 @@ html[
       = preload_link_tag '/fonts/Figtree-Bold.woff2'
       = preload_link_tag '/fonts/SpaceGrotesk-Bold.woff2'
 
-  body class=(@folio_tiptap ? "f-tiptap-body" : nil)
+  body
     - if @folio_tiptap
       = yield
     - else

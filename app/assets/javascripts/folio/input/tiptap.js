@@ -3,22 +3,27 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
 
   static values = {
     loading: { type: Boolean, default: true },
+    origin: String,
+  }
+
+  connect () {
+    this.sendStartMessage()
   }
 
   onWindowMessage (e) {
-    if (e.origin !== window.origin) return
+    if (this.originValue !== "*" && e.origin !== window.origin) return
     if (e.source !== this.iframeTarget.contentWindow) return
     if (!e.data) return
-    if (e.data.type.indexOf('f-tiptap-editor:') !== 0) return
+    if (e.data.type.indexOf('f-tiptap:') !== 0) return
 
-    if (e.data.type === 'f-tiptap-editor:connected') {
+    if (e.data.type === 'f-tiptap:javascript-evaluated') {
       this.sendStartMessage()
     } else {
       this.setHeight(e.data.height)
 
-      if (e.data.type === 'f-tiptap-editor:created') {
+      if (e.data.type === 'f-tiptap:created') {
         this.loadingValue = false
-      } else if (e.data.type === 'f-tiptap-editor:updated') {
+      } else if (e.data.type === 'f-tiptap:updated') {
         this.setHeight(e.data.height)
         this.inputTarget.value = JSON.stringify(e.data.content)
       }
@@ -41,14 +46,9 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
       }
     }
 
-    console.log('sendStartMessage', {
-      type: 'f-input-tiptap:start',
-      content,
-    })
-
     this.iframeTarget.contentWindow.postMessage({
       type: 'f-input-tiptap:start',
       content,
-    }, window.origin)
+    }, this.originValue || window.origin)
   }
 })

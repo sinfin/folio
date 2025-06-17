@@ -4,17 +4,23 @@ class TiptapInput < SimpleForm::Inputs::StringInput
   def input(wrapper_options = nil)
     register_stimulus("f-input-tiptap",
                       wrapper: true,
-                      values: { loaded: false },
+                      values: { loaded: false, origin: ENV["FOLIO_TIPTAP_DEV"] ? "*" : "" },
                       action: { "message@window" => "onWindowMessage" })
 
     input_html_options[:hidden] = true
 
     merged_input_options = merge_wrapper_options(input_html_options, wrapper_options)
 
+    src = if ENV["FOLIO_TIPTAP_DEV"]
+      "http://localhost:5173/?folio-iframe=#{options[:block] ? "block" : "rich_text"}"
+    else
+      "/folio-tiptap/#{options[:block] ? "block" : "rich_text"}_editor"
+    end
+
     options[:custom_html] = <<~HTML.html_safe
       <div class="f-input-tiptap__inner">
         <span class="f-input-tiptap__loader folio-loader" data-f-input-tiptap-target="loader"></span>
-        <iframe class="f-input-tiptap__iframe" data-f-input-tiptap-target="iframe" src="/folio-tiptap/#{options[:block] ? "block" : "rich_text"}_editor"></iframe>
+        <iframe class="f-input-tiptap__iframe" data-f-input-tiptap-target="iframe" src="#{src}"></iframe>
       </div>
     HTML
 
