@@ -230,8 +230,8 @@ Folio::Engine.routes.draw do
   end
 
   resource :tiptap, path: "folio-tiptap", controller: :tiptap, only: [] do
-    get :block_editor
-    get :rich_text_editor
+    get :block_editor, path: "block-editor"
+    get :rich_text_editor, path: "rich-text-editor"
   end
 
   resource :csrf, only: %i[show], controller: :csrf

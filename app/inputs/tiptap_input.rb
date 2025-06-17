@@ -12,9 +12,9 @@ class TiptapInput < SimpleForm::Inputs::StringInput
     merged_input_options = merge_wrapper_options(input_html_options, wrapper_options)
 
     src = if ENV["FOLIO_TIPTAP_DEV"]
-      "http://localhost:5173/?folio-iframe=#{options[:block] ? "block" : "rich_text"}"
+      "http://localhost:5173/?folio-iframe=#{options[:block] ? "block" : "rich-text"}"
     else
-      "/folio-tiptap/#{options[:block] ? "block" : "rich_text"}_editor"
+      "/folio-tiptap/#{options[:block] ? "block" : "rich-text"}-editor"
     end
 
     options[:custom_html] = <<~HTML.html_safe

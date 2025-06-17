@@ -60,6 +60,7 @@ declare global {
         root: HTMLElement | null;
         init: (props: {
           node: HTMLElement;
+          type: "rich-text" | "block";
           onCreate?: (content: { editor: TiptapEditor }) => void;
           onUpdate?: (content: { editor: TiptapEditor }) => void;
           content?: any;
