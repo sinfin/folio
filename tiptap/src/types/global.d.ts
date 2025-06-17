@@ -48,6 +48,12 @@ declare module "react" {
 
 // Global interface augmentations
 declare global {
+  interface FolioTiptapEditor {
+    onCreate?: (content: { editor: TiptapEditor }) => void;
+    onUpdate?: (content: { editor: TiptapEditor }) => void;
+    defaultContent?: any;
+  }
+
   interface TiptapEditor {
     getJSON: () => Record<string, unknown>;
     view: {

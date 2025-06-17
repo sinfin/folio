@@ -3,6 +3,9 @@ import { EditorContent, EditorContext, useEditor } from "@tiptap/react";
 
 // --- Tiptap Core Extensions ---
 import { StarterKit } from "@tiptap/starter-kit";
+import { Image } from "@tiptap/extension-image";
+import { TaskItem } from "@tiptap/extension-task-item";
+import { TaskList } from "@tiptap/extension-task-list";
 import { TextAlign } from "@tiptap/extension-text-align";
 import { Typography } from "@tiptap/extension-typography";
 import { Highlight } from "@tiptap/extension-highlight";
@@ -25,12 +28,18 @@ import {
 } from "@/components/tiptap-ui-primitive/toolbar";
 
 // --- Tiptap Node ---
+import { ImageUploadNode } from "@/components/tiptap-node/image-upload-node/image-upload-node-extension";
+import { FolioTiptapBlockExtension } from "@/components/tiptap-node/folio-tiptap-block";
 import "@/components/tiptap-node/code-block-node/code-block-node.scss";
 import "@/components/tiptap-node/list-node/list-node.scss";
+import "@/components/tiptap-node/image-node/image-node.scss";
 import "@/components/tiptap-node/paragraph-node/paragraph-node.scss";
+import "@/components/tiptap-node/folio-tiptap-block/folio-tiptap-block.scss";
 
 // --- Tiptap UI ---
 import { HeadingDropdownMenu } from "@/components/tiptap-ui/heading-dropdown-menu";
+import { ImageUploadButton } from "@/components/tiptap-ui/image-upload-button";
+import { FolioTiptapBlockButton } from "@/components/tiptap-ui/folio-tiptap-block-button";
 import { ListDropdownMenu } from "@/components/tiptap-ui/list-dropdown-menu";
 import { BlockQuoteButton } from "@/components/tiptap-ui/blockquote-button";
 import { CodeBlockButton } from "@/components/tiptap-ui/code-block-button";
@@ -58,6 +67,9 @@ import { useMobile } from "@/hooks/use-mobile";
 import { useWindowSize } from "@/hooks/use-window-size";
 import { useCursorVisibility } from "@/hooks/use-cursor-visibility";
 
+// --- Lib ---
+import { handleImageUpload, MAX_FILE_SIZE } from "@/lib/tiptap-utils";
+
 // --- 3rd party extensions ---
 import GlobalDragHandle from "tiptap-extension-global-drag-handle";
 import AutoJoiner from "tiptap-extension-auto-joiner";
@@ -84,7 +96,7 @@ const MainToolbarContent = ({
 
       <ToolbarGroup>
         <HeadingDropdownMenu levels={[1, 2, 3, 4]} />
-        <ListDropdownMenu types={["bulletList", "orderedList"]} />
+        <ListDropdownMenu types={["bulletList", "orderedList", "taskList"]} />
         <BlockQuoteButton />
         <CodeBlockButton />
       </ToolbarGroup>
@@ -119,6 +131,13 @@ const MainToolbarContent = ({
         <TextAlignButton align="center" />
         <TextAlignButton align="right" />
         <TextAlignButton align="justify" />
+      </ToolbarGroup>
+
+      <ToolbarSeparator />
+
+      <ToolbarGroup>
+        <ImageUploadButton text="Add" />
+        <FolioTiptapBlockButton />
       </ToolbarGroup>
 
       <Spacer />
@@ -157,7 +176,7 @@ const MobileToolbarContent = ({
   </>
 );
 
-export function RichTextEditor({
+export function BlockEditor({
   onCreate,
   onUpdate,
   defaultContent,
@@ -187,14 +206,29 @@ export function RichTextEditor({
       StarterKit,
       TextAlign.configure({ types: ["heading", "paragraph"] }),
       Underline,
+      TaskList,
+      TaskItem.configure({ nested: true }),
       Highlight.configure({ multicolor: true }),
+      Image,
       Typography,
       Superscript,
       Subscript,
 
       Selection,
+      ImageUploadNode.configure({
+        accept: "image/*",
+        maxSize: MAX_FILE_SIZE,
+        limit: 3,
+        upload: handleImageUpload,
+        onError: (error) => console.error("Upload failed:", error),
+      }),
       TrailingNode,
       Link.configure({ openOnClick: false }),
+      FolioTiptapBlockExtension.configure({
+        apiUrl: "/api/folio-blocks",
+        onError: (error) => console.error("Folio block error:", error),
+        onSuccess: (html) => console.log("Folio block loaded:", html),
+      }),
       GlobalDragHandle.configure({
         dragHandleWidth: 20, // default
 
@@ -223,7 +257,7 @@ export function RichTextEditor({
 
   return (
     <EditorContext.Provider value={{ editor }}>
-      <div className="f-tiptap-editor f-tiptap-editor--rich-text">
+      <div className="f-tiptap-editor f-tiptap-editor--block">
         <Toolbar
           ref={toolbarRef}
           style={

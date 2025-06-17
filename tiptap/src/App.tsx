@@ -1,3 +1,4 @@
+import { BlockEditor } from "@/components/tiptap-editors/block/block-editor";
 import { RichTextEditor } from "@/components/tiptap-editors/rich-text/rich-text-editor";
 
 import "./App.css";
@@ -20,8 +21,13 @@ function App({ onCreate, onUpdate, defaultContent, type }: AppProps) {
         />
       );
     case "block":
-      throw new Error(`To be implemented: ${type}`);
-      break;
+      return (
+        <BlockEditor
+          onCreate={onCreate}
+          onUpdate={onUpdate}
+          defaultContent={defaultContent}
+        />
+      );
     default:
       throw new Error(`Unknown editor type: ${type}`);
       break;

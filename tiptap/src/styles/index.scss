@@ -29,13 +29,20 @@ body,
 .f-tiptap-editor {
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--f-tiptap-editor--border-color);
-  border-radius: var(--f-tiptap-editor--border-radius);
-  transition: var(--f-tiptap-editor--transition);
-  max-height: calc(100vh - 2px);
 
-  &--focused {
-    border-color: var(--f-tiptap-editor--border-color--focused);
+  &--rich-text {
+    border: 1px solid var(--f-tiptap-editor--border-color);
+    border-radius: var(--f-tiptap-editor--border-radius);
+    transition: var(--f-tiptap-editor--transition);
+    max-height: calc(100vh - 2px);
+
+    &.f-tiptap-editor--focused {
+      border-color: var(--f-tiptap-editor--border-color--focused);
+    }
+  }
+
+  &--block {
+    height: 100%;
   }
 }
 

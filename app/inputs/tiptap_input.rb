@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class TiptapInput < SimpleForm::Inputs::StringInput
-  def input(wrapper_options = nil)
+  def input(wrapper_options = {})
     tiptap_type = options[:block] ? "block" : "rich-text"
 
     register_stimulus("f-input-tiptap",
