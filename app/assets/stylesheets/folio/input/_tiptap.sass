@@ -1,24 +1,22 @@
 .f-input-tiptap
-  $input-border-width: 1px !default
-  $input-border-color: #cccccc !default
+  // $input-border-width: 1px !default
+  // $input-border-color: #cccccc !default
 
   &__inner
-    min-height: 150px
     position: relative
 
   &__iframe
     border: 0
-    min-height: 150px
+    min-height: 191px
     width: 100%
 
-  &__loader
+  // &__loader
+  //   border: $input-border-width solid $input-border-color
+  //   border-radius: $input-border-radius
+  //   inset: $input-border-width
+
+  &[data-f-input-tiptap-loaded-value="true"] &__loader
     display: none
-    border: $input-border-width solid $input-border-color
-    border-radius: $input-border-radius
-    inset: $input-border-width
 
-  &[data-f-input-tiptap-loading-value="true"] &__loader
-    display: block
-
-  &[data-f-input-tiptap-loading-value="true"] &__iframe
+  &[data-f-input-tiptap-loaded-value="false"] &__iframe
     visibility: hidden

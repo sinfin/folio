@@ -2,7 +2,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
   static targets = ['input', 'iframe', 'loader']
 
   static values = {
-    loading: { type: Boolean, default: true },
+    loaded: { type: Boolean, default: false },
     origin: String,
   }
 
@@ -22,7 +22,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
       this.setHeight(e.data.height)
 
       if (e.data.type === 'f-tiptap:created') {
-        this.loadingValue = false
+        this.loadedValue = true
       } else if (e.data.type === 'f-tiptap:updated') {
         this.setHeight(e.data.height)
         this.inputTarget.value = JSON.stringify(e.data.content)
