@@ -1,8 +1,8 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import "./index.css";
 import "./styles/_variables.scss";
 import "./styles/_keyframe-animations.scss";
+import "./styles/index.scss";
 import App from "./App.tsx";
 
 import demoContent from "@/components/tiptap-templates/simple/data/content.json";
@@ -21,11 +21,15 @@ window.Folio.Tiptap.init = (props) => {
     throw new Error("Node is required");
   }
 
+  const height = (editor: TiptapEditor) => {
+    return editor.view!.dom!.closest('.f-tiptap-editor')!.clientHeight
+  };
+
   const onCreate = ({ editor }: { editor: TiptapEditor }) => {
     window.top!.postMessage(
       {
         type: "f-tiptap:created",
-        height: props.node.clientHeight,
+        height: height(editor),
       },
       "*",
     );
@@ -40,7 +44,7 @@ window.Folio.Tiptap.init = (props) => {
       {
         type: "f-tiptap:updated",
         content: editor.getJSON(),
-        height: props.node.clientHeight,
+        height: height(editor),
       },
       "*",
     );
@@ -77,10 +81,19 @@ window.addEventListener("message", (e) => {
 
   if (e.data.type === "f-input-tiptap:start") {
     if (!window.Folio.Tiptap.root) {
-      const node = document.querySelector(".f-tiptap-iframe-content") as HTMLElement
+      const node = document.querySelector(
+        ".f-tiptap-iframe-content",
+      ) as HTMLElement;
 
       if (!node) {
         throw new Error("Node not found for Tiptap editor");
+      }
+
+      if (e.data.stylesheetPath) {
+        const link = document.createElement("link");
+        link.rel = "stylesheet";
+        link.href = e.data.stylesheetPath;
+        document.head.insertBefore(link, document.head.firstChild);
       }
 
       window.Folio.Tiptap.init({
@@ -99,7 +112,10 @@ if (process.env.NODE_ENV !== "production" && window.top === window) {
   if (rootElement) {
     window.Folio.Tiptap.init({
       node: rootElement,
-      type: (rootElement as HTMLElement).dataset.tiptapType === "block" ? "block" : "rich-text",
+      type:
+        (rootElement as HTMLElement).dataset.tiptapType === "block"
+          ? "block"
+          : "rich-text",
       content: demoContent,
       onCreate: ({ editor }: { editor: TiptapEditor }) => {
         const json = editor.getJSON();
@@ -119,7 +135,4 @@ if (process.env.NODE_ENV !== "production" && window.top === window) {
   }
 }
 
-window.top!.postMessage(
-  { type: "f-tiptap:javascript-evaluated" },
-  "*",
-);
+window.top!.postMessage({ type: "f-tiptap:javascript-evaluated" }, "*");

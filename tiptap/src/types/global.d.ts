@@ -50,6 +50,9 @@ declare module "react" {
 declare global {
   interface TiptapEditor {
     getJSON: () => Record<string, unknown>;
+    view: {
+      dom: HTMLElement;
+    };
   }
 
   interface Window {

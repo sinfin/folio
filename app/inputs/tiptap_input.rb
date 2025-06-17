@@ -2,9 +2,15 @@
 
 class TiptapInput < SimpleForm::Inputs::StringInput
   def input(wrapper_options = nil)
+    tiptap_type = options[:block] ? "block" : "rich-text"
+
     register_stimulus("f-input-tiptap",
                       wrapper: true,
-                      values: { loaded: false, origin: ENV["FOLIO_TIPTAP_DEV"] ? "*" : "" },
+                      values: {
+                        loaded: false,
+                        origin: ENV["FOLIO_TIPTAP_DEV"] ? "*" : "",
+                        type: tiptap_type,
+                      },
                       action: { "message@window" => "onWindowMessage" })
 
     input_html_options[:hidden] = true
@@ -12,9 +18,15 @@ class TiptapInput < SimpleForm::Inputs::StringInput
     merged_input_options = merge_wrapper_options(input_html_options, wrapper_options)
 
     src = if ENV["FOLIO_TIPTAP_DEV"]
-      "http://localhost:5173/?folio-iframe=#{options[:block] ? "block" : "rich-text"}"
+      stylesheet_url = if ENV["FOLIO_TIPTAP_DEV"]
+        site = Folio::Current.site
+        path = site.layout_assets_stylesheets_path
+        "#{site.env_aware_root_url}#{@builder.template.stylesheet_path(path)}"
+      end
+
+      "http://localhost:5173/?folio-iframe=#{tiptap_type}&folio-iframe-stylesheet-url=#{stylesheet_url}"
     else
-      "/folio-tiptap/#{options[:block] ? "block" : "rich-text"}-editor"
+      "/folio-tiptap/#{tiptap_type}-editor"
     end
 
     options[:custom_html] = <<~HTML.html_safe

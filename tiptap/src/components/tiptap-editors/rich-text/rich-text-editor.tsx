@@ -87,7 +87,7 @@ const MainToolbarContent = ({
 
       <ToolbarGroup>
         <HeadingDropdownMenu levels={[1, 2, 3, 4]} />
-        <ListDropdownMenu types={["bulletList", "orderedList", "taskList"]} />
+        <ListDropdownMenu types={["bulletList", "orderedList"]} />
         <BlockQuoteButton />
         <CodeBlockButton />
       </ToolbarGroup>
@@ -160,13 +160,23 @@ const MobileToolbarContent = ({
   </>
 );
 
+const onFocus = ({ editor }: { editor: TiptapEditor }) => {
+  const parent = editor.view.dom.closest(".f-tiptap-editor");
+  parent?.classList.add("f-tiptap-editor--focused");
+};
+
+const onBlur = ({ editor }: { editor: TiptapEditor }) => {
+  const parent = editor.view.dom.closest(".f-tiptap-editor");
+  parent?.classList.remove("f-tiptap-editor--focused");
+};
+
 export function RichTextEditor({
   onCreate,
   onUpdate,
   defaultContent,
 }: {
-  onCreate?: (content: { editor: { getJSON: () => Record<string, unknown> } }) => void;
-  onUpdate?: (content: { editor: { getJSON: () => Record<string, unknown> } }) => void;
+  onCreate?: (content: { editor: TiptapEditor }) => void;
+  onUpdate?: (content: { editor: TiptapEditor }) => void;
   defaultContent?: any;
 }) {
   const isMobile = useMobile();
@@ -180,6 +190,8 @@ export function RichTextEditor({
     // triggered on every change
     onUpdate,
     onCreate,
+    onFocus,
+    onBlur,
     content: defaultContent,
     immediatelyRender: false,
     editorProps: {
@@ -230,7 +242,7 @@ export function RichTextEditor({
 
   return (
     <EditorContext.Provider value={{ editor }}>
-      <div className="f-tiptap f-tiptap-editor">
+      <div className="f-tiptap-editor f-tiptap-editor--rich-text">
         <Toolbar
           ref={toolbarRef}
           style={
@@ -255,11 +267,11 @@ export function RichTextEditor({
           )}
         </Toolbar>
 
-        <div className="f-tiptap-editors-rich-text-editor__content-wrap">
+        <div className="f-tiptap-editor__content-wrap">
           <EditorContent
             editor={editor}
             role="presentation"
-            className="f-tiptap-editors-rich-text-editor__content f-tiptap-styles"
+            className="f-tiptap-editor__content f-tiptap-styles"
           />
         </div>
       </div>

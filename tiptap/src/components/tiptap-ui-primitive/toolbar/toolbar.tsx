@@ -276,7 +276,7 @@ export const Toolbar = React.forwardRef<HTMLDivElement, ToolbarProps>(
         role="toolbar"
         aria-label="toolbar"
         data-variant={variant}
-        className={`tiptap-toolbar ${className || ""}`}
+        className={`f-tiptap-editor-toolbar ${className || ""}`}
         {...props}
       >
         {children}
@@ -298,7 +298,7 @@ export const ToolbarGroup = React.forwardRef<HTMLDivElement, BaseProps>(
       <div
         ref={mergeRefs([groupRef, ref])}
         role="group"
-        className={`tiptap-toolbar-group ${className || ""}`}
+        className={`f-tiptap-editor-toolbar__group ${className || ""}`}
         {...props}
       >
         {children}

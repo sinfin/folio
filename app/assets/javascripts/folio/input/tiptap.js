@@ -4,6 +4,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
   static values = {
     loaded: { type: Boolean, default: false },
     origin: String,
+    type: String,
   }
 
   connect () {
@@ -32,7 +33,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
 
   setHeight (height) {
     if (typeof height !== 'number') return
-    this.iframeTarget.style.minHeight = `${height}px`
+    this.iframeTarget.style.height = `${height + 50}px`
   }
 
   sendStartMessage () {
@@ -46,9 +47,19 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
       }
     }
 
-    this.iframeTarget.contentWindow.postMessage({
+    const data = {
       type: 'f-input-tiptap:start',
       content,
-    }, this.originValue || window.origin)
+    }
+
+    if (this.originValue === "*") {
+      const link = document.querySelector('link[rel="stylesheet"][href*="/assets/application."]')
+
+      if (link && link.href) {
+        data.stylesheetPath = link.href
+      }
+    }
+
+    this.iframeTarget.contentWindow.postMessage(data, this.originValue || window.origin)
   }
 })

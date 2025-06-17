@@ -17,4 +17,14 @@
   hr {
     margin: var(--f-tiptap--hr-margin);
   }
+
+  .tiptap.ProseMirror {
+    > :first-child {
+      margin-top: 0;
+    }
+
+    > :last-child {
+      margin-bottom: 0;
+    }
+  }
 }

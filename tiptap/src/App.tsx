@@ -3,8 +3,8 @@ import { RichTextEditor } from "@/components/tiptap-editors/rich-text/rich-text-
 import "./App.css";
 
 interface AppProps {
-  onUpdate?: (content: { editor: { getJSON: () => Record<string, unknown> } }) => void;
-  onCreate?: (content: { editor: { getJSON: () => Record<string, unknown> } }) => void;
+  onUpdate?: (content: { editor: TiptapEditor }) => void;
+  onCreate?: (content: { editor: TiptapEditor }) => void;
   defaultContent?: any;
   type?: "rich-text" | "block";
 }
@@ -12,11 +12,13 @@ interface AppProps {
 function App({ onCreate, onUpdate, defaultContent, type }: AppProps) {
   switch (type) {
     case "rich-text":
-      return <RichTextEditor
-        onCreate={onCreate}
-        onUpdate={onUpdate}
-        defaultContent={defaultContent}
-      />
+      return (
+        <RichTextEditor
+          onCreate={onCreate}
+          onUpdate={onUpdate}
+          defaultContent={defaultContent}
+        />
+      );
     case "block":
       throw new Error(`To be implemented: ${type}`);
       break;

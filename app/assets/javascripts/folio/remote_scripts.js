@@ -19,9 +19,6 @@ window.Folio.RemoteScripts.Data = {
   },
   html5sortable: {
     urls: ['https://cdnjs.cloudflare.com/ajax/libs/html5sortable/0.14.0/html5sortable.min.js']
-  },
-  'folio-tiptap': {
-    meta: 'folio-tiptap-urls',
   }
 }
 

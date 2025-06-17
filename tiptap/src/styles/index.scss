@@ -1,9 +1,60 @@
+:root {
+  --f-tiptap-editor--transition: box-shadow 0.15s ease-in-out;
+  --f-tiptap-editor--border-color: #c9cbcc;
+  --f-tiptap-editor--border-color--focused: #3b4548;
+  --f-tiptap-editor--border-radius: 4px;
+  --f-tiptap-editor-content-wrap--padding: 1rem 2rem;
+  --f-tiptap-editor-content-wrap--padding-mobile: 1rem;
+}
+
 html,
 body {
   overflow: hidden;
+  min-width: 320px;
+  margin: 0;
 }
 
-.f-tiptap .drag-handle {
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+html,
+body,
+#folio-tiptap-dev-root,
+.f-tiptap-iframe-content {
+  height: 100vh;
+}
+
+.f-tiptap-editor {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--f-tiptap-editor--border-color);
+  border-radius: var(--f-tiptap-editor--border-radius);
+  transition: var(--f-tiptap-editor--transition);
+  max-height: calc(100vh - 2px);
+
+  &--focused {
+    border-color: var(--f-tiptap-editor--border-color--focused);
+  }
+}
+
+.f-tiptap-editor-toolbar {
+  flex: 0 0 auto;
+}
+
+.f-tiptap-editor__content-wrap {
+  flex: 0 1 auto;
+  position: relative;
+  overflow: auto;
+  padding: var(--f-tiptap-editor-content-wrap--padding);
+
+  @media screen and (max-width: 400px) {
+    padding: var(--f-tiptap-editor-content-wrap--padding-mobile);
+  }
+}
+
+.f-tiptap-editor .drag-handle {
   position: fixed;
   opacity: 1;
   transition: opacity ease-in 0.2s;
