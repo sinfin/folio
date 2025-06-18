@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [6.5.1] - 2025-06-18
+
 ### Added
 
 - support for custom submit label in `form_footer`
