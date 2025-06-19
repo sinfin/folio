@@ -230,6 +230,7 @@ end
 #  site_id               :bigint(8)
 #  atoms_data_for_search :text
 #  preview_token         :string
+#  tiptap_content        :jsonb
 #
 # Indexes
 #
