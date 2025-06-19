@@ -9,11 +9,11 @@ import { Highlight } from "@tiptap/extension-highlight";
 import { Subscript } from "@tiptap/extension-subscript";
 import { Superscript } from "@tiptap/extension-superscript";
 import { Underline } from "@tiptap/extension-underline";
+import Placeholder from '@tiptap/extension-placeholder'
 
 // --- Custom Extensions ---
 import { Link } from "@/components/tiptap-extension/link-extension";
 import { Selection } from "@/components/tiptap-extension/selection-extension";
-import { TrailingNode } from "@/components/tiptap-extension/trailing-node-extension";
 
 // --- UI Primitives ---
 import { Button } from "@/components/tiptap-ui-primitive/button";
@@ -187,13 +187,16 @@ export function RichTextEditor({
       StarterKit,
       TextAlign.configure({ types: ["heading", "paragraph"] }),
       Underline,
+      Placeholder.configure({
+        // Use a placeholder:
+        placeholder: document.documentElement.lang === "cs" ? 'Stiskněte "/" pro příkazy' : 'Press "/" for commands',
+      }),
       Highlight.configure({ multicolor: true }),
       Typography,
       Superscript,
       Subscript,
 
       Selection,
-      TrailingNode,
       Link.configure({ openOnClick: false }),
       GlobalDragHandle.configure({
         dragHandleWidth: 20, // default

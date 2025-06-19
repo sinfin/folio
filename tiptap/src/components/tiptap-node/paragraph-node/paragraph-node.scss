@@ -383,25 +383,3 @@
     display: inline-block;
   }
 }
-
-/* =====================
-     PLACEHOLDER
-     ===================== */
-.is-empty[data-placeholder]:has(
-    > .ProseMirror-trailingBreak:only-child
-  )::before {
-  content: "Write, type '/' for commands…";
-}
-
-.is-empty[data-placeholder]:has(
-    > .ProseMirror-trailingBreak:only-child
-  ):before {
-  pointer-events: none;
-  height: 0;
-  position: absolute;
-  font-style: italic;
-}
-
-.is-empty[data-placeholder]:has(> .ProseMirror-trailingBreak):before {
-  color: var(--placeholder-color);
-}

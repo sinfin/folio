@@ -12,11 +12,11 @@ import { Highlight } from "@tiptap/extension-highlight";
 import { Subscript } from "@tiptap/extension-subscript";
 import { Superscript } from "@tiptap/extension-superscript";
 import { Underline } from "@tiptap/extension-underline";
+import Placeholder from '@tiptap/extension-placeholder'
 
 // --- Custom Extensions ---
 import { Link } from "@/components/tiptap-extension/link-extension";
 import { Selection } from "@/components/tiptap-extension/selection-extension";
-import { TrailingNode } from "@/components/tiptap-extension/trailing-node-extension";
 
 // --- UI Primitives ---
 import { Button } from "@/components/tiptap-ui-primitive/button";
@@ -206,6 +206,10 @@ export function BlockEditor({
       StarterKit,
       TextAlign.configure({ types: ["heading", "paragraph"] }),
       Underline,
+      Placeholder.configure({
+        // Use a placeholder:
+        placeholder: document.documentElement.lang === "cs" ? 'Stiskněte "/" pro příkazy' : 'Press "/" for commands',
+      }),
       TaskList,
       TaskItem.configure({ nested: true }),
       Highlight.configure({ multicolor: true }),
@@ -222,7 +226,6 @@ export function BlockEditor({
         upload: handleImageUpload,
         onError: (error) => console.error("Upload failed:", error),
       }),
-      TrailingNode,
       Link.configure({ openOnClick: false }),
       FolioTiptapBlockExtension.configure({
         apiUrl: "/api/folio-blocks",
