@@ -1,0 +1,21 @@
+.f-c-tiptap-simple-form-wrap
+  = helpers.simple_form_for(@simple_form_model, @simple_form_options) do |form|
+    .f-c-tiptap-simple-form-wrap__inner
+      .f-c-tiptap-simple-form-wrap__fields
+        - if content?
+          - @f = form
+          = content
+        - else
+          = render 'form', f: form
+
+      .f-c-tiptap-simple-form-wrap__editors-bar
+        .f-c-tiptap-simple-form-wrap__editors-bar-title
+          = t('.editor_title')
+
+      .f-c-tiptap-simple-form-wrap__editors
+        .f-c-tiptap-simple-form-wrap__editors-input-wrap
+          - form.object.class.folio_tiptap_fields.each do |field|
+            = form.input field, as: :tiptap, block: true
+
+    .f-c-tiptap-simple-form-wrap__form-footer
+      = helpers.form_footer form, static: true

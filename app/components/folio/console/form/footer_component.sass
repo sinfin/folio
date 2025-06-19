@@ -32,6 +32,9 @@
   pointer-events: all
   cursor: default
 
+  &--static
+    position: relative
+
   &__inner
     padding-top: $grid-gutter-width / 2
     padding-bottom: $grid-gutter-width / 2
@@ -213,6 +216,10 @@
     &,
     .f-c-simple-form-with-atoms &
       width: calc(100% - 220px)
+
+    &--static
+      left: 0
+      width: auto
 
 .f-c-form-footer-spacer
   .modal &

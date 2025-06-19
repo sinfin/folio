@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
 class Folio::Console::Form::FooterComponent < Folio::Console::ApplicationComponent
-  def initialize(f: nil, preview_path: nil, share_preview: false, show_settings: true)
+  bem_class_name :static
+
+  def initialize(f: nil, preview_path: nil, share_preview: false, show_settings: true, static: false)
     @f = f
     @preview_path = preview_path
     @share_preview = share_preview
     @show_settings = show_settings
+    @static = static
   end
 
   def before_render

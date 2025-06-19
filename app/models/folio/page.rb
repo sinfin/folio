@@ -32,6 +32,7 @@ class Folio::Page < Folio::ApplicationRecord
   include Folio::Transportable::Model
   include PgSearch::Model
   include Folio::Autosave::Model
+  include Folio::Tiptap::Model
 
   if Rails.application.config.folio_pages_audited
     include Folio::Audited::Model

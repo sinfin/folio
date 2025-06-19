@@ -65,6 +65,12 @@ module Folio::Console::FormsHelper
     end
   end
 
+  def simple_form_for_with_block_tiptap(simple_form_model, simple_form_options = {}, &block)
+    content_for(:with_block_tiptap) do
+      render(Folio::Console::Tiptap::SimpleFormWrapComponent.new(simple_form_model:, simple_form_options:), &block)
+    end
+  end
+
   def simple_form_for_with_atoms(model, opts = {}, &block)
     layout_code = model.class.try(:console_atoms_layout_code) ||
                   cookies[:f_c_atoms_layout_switch].presence ||
@@ -125,6 +131,7 @@ module Folio::Console::FormsHelper
 
     render(Folio::Console::Form::FooterComponent.new(f:,
                                                      preview_path: opts[:preview_path],
+                                                     static: opts[:static] || false,
                                                      share_preview:,
                                                      show_settings:))
   end

@@ -1,6 +1,13 @@
-.f-c-form-footer-spacer class=(@audit ? "f-c-form-footer-spacer--with-audit" : nil)
+- unless @static
+  .f-c-form-footer-spacer[
+    class=(@audit ? "f-c-form-footer-spacer--with-audit" : nil)
+  ]
 
-.f-c-form-footer data=(@audit ? nil : data) class=(@audit ? "f-c-form-footer--with-audit" : nil)
+div[
+  data=(@audit ? nil : data)
+  class=bem_class_name
+  class=(@audit ? "f-c-form-footer--with-audit" : nil)
+]
   - if @audit && @record
     = render(Folio::Console::Audited::BarComponent.new(audit: @audit,
                                                        record: @record))

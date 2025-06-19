@@ -1,0 +1,7 @@
+---
+cs:
+  folio:
+    console:
+      tiptap:
+        simple_form_wrap_component:
+          editor_title: Editor
