@@ -1,6 +1,6 @@
 .f-input-tiptap
-  // $input-border-width: 1px !default
-  // $input-border-color: #cccccc !default
+  $input-border-width: 1px !default
+  $input-border-color: #cccccc !default
 
   .form-label
     display: none
@@ -16,20 +16,10 @@
   &[data-f-input-tiptap-type-value="rich-text"] &__iframe
     max-height: 50vh
 
-  &[data-f-input-tiptap-type-value="block"],
-  &[data-f-input-tiptap-type-value="block"] .form-group__custom-html,
-  &[data-f-input-tiptap-type-value="block"] &__inner
-    height: 100%
-    max-height: 100%
-
-  &[data-f-input-tiptap-type-value="block"] &__iframe
-    height: 100% !important
-    max-height: 100%
-
-  // &__loader
-  //   border: $input-border-width solid $input-border-color
-  //   border-radius: $input-border-radius
-  //   inset: $input-border-width
+  &[data-f-input-tiptap-type-value="rich-text"] &__loader
+    border: $input-border-width solid $input-border-color
+    border-radius: $input-border-radius
+    inset: $input-border-width
 
   &[data-f-input-tiptap-loaded-value="true"] &__loader
     display: none

@@ -10,8 +10,11 @@
   display: flex;
   align-items: center;
   gap: 0.25rem;
-  border-top-left-radius: var(--f-tiptap-editor--border-radius);
-  border-top-right-radius: var(--f-tiptap-editor--border-radius);
+
+  .f-tiptap-editor--rich-text & {
+    border-top-left-radius: var(--f-tiptap-editor--border-radius);
+    border-top-right-radius: var(--f-tiptap-editor--border-radius);
+  }
 
   &__group {
     display: flex;
@@ -41,6 +44,10 @@
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     -ms-overflow-style: none;
+
+    .f-tiptap-editor--block & {
+      border-top: 1px solid var(--tt-toolbar-border-color);
+    }
 
     &::-webkit-scrollbar {
       display: none;

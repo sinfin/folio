@@ -66,13 +66,13 @@
     &__inner
       display: grid
       grid-template-columns: 1fr 1fr
-      grid-template-rows: 1fr 1000fr
+      grid-template-rows: auto 1fr
       grid-gap: 0
 
     &__fields
       overflow-y: scroll
       grid-column: 1
-      grid-row: 1 / 3
+      grid-row: span 2 / span 2
       border-right: 1px solid $border-color
 
     &__editors-bar
@@ -80,5 +80,14 @@
       grid-row: 1
 
     &__editors
-      grid-column: 2
-      grid-row: 2
+      grid-column-start: 2
+      grid-row-start: 2
+
+    &__editors-input-wrap
+      &,
+      .f-input-tiptap,
+      .form-group__custom-html,
+      .f-input-tiptap__inner,
+      .f-input-tiptap__iframe
+        height: 100% !important
+        max-height: 100% !important

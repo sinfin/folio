@@ -8,7 +8,26 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
   }
 
   connect () {
+    this.onWindowResize = window.Folio.debounce((e) => {
+      this.setWindowWidth(e)
+      this.sendWindowResizeMessage()
+    })
+
+    this.setWindowWidth()
     this.sendStartMessage()
+  }
+
+  setWindowWidth (e) {
+    this.windowWidth = window.innerWidth
+  }
+
+  sendWindowResizeMessage () {
+    const data = {
+      type: 'f-input-tiptap:window-resize',
+      windowWidth: this.windowWidth,
+    }
+
+    this.iframeTarget.contentWindow.postMessage(data, this.originValue || window.origin)
   }
 
   onWindowMessage (e) {
@@ -50,6 +69,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     const data = {
       type: 'f-input-tiptap:start',
       content,
+      windowWidth: this.windowWidth,
     }
 
     if (this.originValue === "*") {

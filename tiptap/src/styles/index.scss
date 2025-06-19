@@ -60,8 +60,8 @@ body,
     }
   }
 
-  &--block {
-    height: 100%;
+  .f-tiptap-iframe-content--console-aside &--block {
+    height: 100vh;
   }
 }
 

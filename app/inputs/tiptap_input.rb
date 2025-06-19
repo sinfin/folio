@@ -11,7 +11,11 @@ class TiptapInput < SimpleForm::Inputs::StringInput
                         origin: ENV["FOLIO_TIPTAP_DEV"] ? "*" : "",
                         type: tiptap_type,
                       },
-                      action: { "message@window" => "onWindowMessage" })
+                      action: {
+                        "message@window" => "onWindowMessage",
+                        "resize@window" => "onWindowResize",
+                        "orientationchange@window" => "onWindowResize",
+                      })
 
     input_html_options[:hidden] = true
 

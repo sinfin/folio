@@ -96,11 +96,21 @@ window.addEventListener("message", (e) => {
         document.head.insertBefore(link, document.head.firstChild);
       }
 
+      node.classList.toggle('f-tiptap-iframe-content--console-aside', !!e.data.windowWidth && e.data.windowWidth >= 1700);
+
       window.Folio.Tiptap.init({
         node,
         type: node.dataset.tiptapType === "block" ? "block" : "rich-text",
         content: e.data.content,
       });
+    }
+  } else if (e.data.type === "f-input-tiptap:window-resize") {
+    const node = document.querySelector(
+      ".f-tiptap-iframe-content",
+    ) as HTMLElement;
+
+    if (node) {
+      node.classList.toggle('f-tiptap-iframe-content--console-aside', !!e.data.windowWidth && e.data.windowWidth >= 1700);
     }
   }
 });
