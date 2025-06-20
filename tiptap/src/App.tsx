@@ -1,5 +1,4 @@
-import { BlockEditor } from "@/components/tiptap-editors/block/block-editor";
-import { RichTextEditor } from "@/components/tiptap-editors/rich-text/rich-text-editor";
+import { FolioEditor } from "@/components/tiptap-editors/folio/folio-editor";
 
 import "./App.css";
 
@@ -12,20 +11,14 @@ interface AppProps {
 
 function App({ onCreate, onUpdate, defaultContent, type }: AppProps) {
   switch (type) {
+    case "block":
     case "rich-text":
       return (
-        <RichTextEditor
+        <FolioEditor
           onCreate={onCreate}
           onUpdate={onUpdate}
           defaultContent={defaultContent}
-        />
-      );
-    case "block":
-      return (
-        <BlockEditor
-          onCreate={onCreate}
-          onUpdate={onUpdate}
-          defaultContent={defaultContent}
+          editorType={type}
         />
       );
     default:
