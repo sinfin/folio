@@ -17,6 +17,7 @@ import Placeholder from "@tiptap/extension-placeholder";
 // --- Custom Extensions ---
 import { Link } from "@/components/tiptap-extension/link-extension";
 import { Selection } from "@/components/tiptap-extension/selection-extension";
+import { SlashCommands } from "@/components/tiptap-extension/slash-menu-extension";
 
 // --- UI Primitives ---
 import { Button } from "@/components/tiptap-ui-primitive/button";
@@ -244,6 +245,54 @@ export function FolioEditor({
       }),
       AutoJoiner.configure({
         elementsToJoin: ["bulletList", "orderedList"], // default
+      }),
+      SlashCommands.configure({
+        commands: [
+          {
+            title: 'Heading 1',
+            command: ({ editor, range }) => {
+              editor
+                .chain()
+                .focus()
+                .deleteRange(range)
+                .setNode('heading', { level: 1 })
+                .run()
+            },
+          },
+          {
+            title: 'Heading 2',
+            command: ({ editor, range }) => {
+              editor
+                .chain()
+                .focus()
+                .deleteRange(range)
+                .setNode('heading', { level: 2 })
+                .run()
+            },
+          },
+          {
+            title: 'Bold',
+            command: ({ editor, range }) => {
+              editor
+                .chain()
+                .focus()
+                .deleteRange(range)
+                .setMark('bold')
+                .run()
+            },
+          },
+          {
+            title: 'Italic',
+            command: ({ editor, range }) => {
+              editor
+                .chain()
+                .focus()
+                .deleteRange(range)
+                .setMark('italic')
+                .run()
+            },
+          },
+        ]
       }),
     ],
   });
