@@ -18,7 +18,7 @@ function App({ onCreate, onUpdate, defaultContent, type }: AppProps) {
           onCreate={onCreate}
           onUpdate={onUpdate}
           defaultContent={defaultContent}
-          editorType={type}
+          type={type}
         />
       );
     default:

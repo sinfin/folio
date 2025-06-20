@@ -12,7 +12,7 @@ import { Highlight } from "@tiptap/extension-highlight";
 import { Subscript } from "@tiptap/extension-subscript";
 import { Superscript } from "@tiptap/extension-superscript";
 import { Underline } from "@tiptap/extension-underline";
-import Placeholder from '@tiptap/extension-placeholder'
+import Placeholder from "@tiptap/extension-placeholder";
 
 // --- Custom Extensions ---
 import { Link } from "@/components/tiptap-extension/link-extension";
@@ -180,18 +180,17 @@ export function FolioEditor({
   onCreate,
   onUpdate,
   defaultContent,
-  editorType,
-}: FolioTiptapEditor) {
+  type,
+}: FolioEditor) {
   const isMobile = useMobile();
   const windowSize = useWindowSize();
   const [mobileView, setMobileView] = React.useState<
     "main" | "highlighter" | "link"
   >("main");
   const toolbarRef = React.useRef<HTMLDivElement>(null);
-  const blockEditor = editorType === "block";
+  const blockEditor = type === "block";
 
   const editor = useEditor({
-    // triggered on every change
     onUpdate,
     onCreate,
     content: defaultContent,
@@ -210,23 +209,30 @@ export function FolioEditor({
       Underline,
       Placeholder.configure({
         // Use a placeholder:
-        placeholder: document.documentElement.lang === "cs" ? 'Stiskněte "/" pro příkazy' : 'Press "/" for commands',
+        placeholder:
+          document.documentElement.lang === "cs"
+            ? 'Stiskněte "/" pro příkazy'
+            : 'Press "/" for commands',
       }),
-      blockEditor ? TaskList : null,
-      blockEditor ? TaskItem.configure({ nested: true }) : null,
+      ...(blockEditor ? [TaskList] : []),
+      ...(blockEditor ? [TaskItem.configure({ nested: true })] : []),
       Highlight.configure({ multicolor: true }),
-      blockEditor ? Image : null,
+      ...(blockEditor ? [Image] : []),
       Typography,
       Superscript,
       Subscript,
 
       Selection,
       Link.configure({ openOnClick: false }),
-      blockEditor ? FolioTiptapBlockExtension.configure({
-        apiUrl: "/api/folio-blocks",
-        onError: (error) => console.error("Folio block error:", error),
-        onSuccess: (html) => console.log("Folio block loaded:", html),
-      }) : null,
+      ...(blockEditor
+        ? [
+            FolioTiptapBlockExtension.configure({
+              apiUrl: "/api/folio-blocks",
+              onError: (error) => console.error("Folio block error:", error),
+              onSuccess: (html) => console.log("Folio block loaded:", html),
+            }),
+          ]
+        : []),
       GlobalDragHandle.configure({
         dragHandleWidth: 20, // default
 
@@ -255,7 +261,9 @@ export function FolioEditor({
 
   return (
     <EditorContext.Provider value={{ editor }}>
-      <div className={`f-tiptap-editor f-tiptap-editor--${blockEditor ? "block" : "rich-text"}`}>
+      <div
+        className={`f-tiptap-editor f-tiptap-editor--${blockEditor ? "block" : "rich-text"}`}
+      >
         <Toolbar
           ref={toolbarRef}
           style={

@@ -48,10 +48,11 @@ declare module "react" {
 
 // Global interface augmentations
 declare global {
-  interface FolioTiptapEditor {
+  interface FolioEditor {
     onCreate?: (content: { editor: TiptapEditor }) => void;
     onUpdate?: (content: { editor: TiptapEditor }) => void;
     defaultContent?: any;
+    type: "rich-text" | "block";
   }
 
   interface TiptapEditor {
