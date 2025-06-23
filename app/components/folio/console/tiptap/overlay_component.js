@@ -40,7 +40,7 @@ window.Folio.Stimulus.register('f-c-tiptap-overlay', class extends window.Stimul
 
     this.ajax({
       url: this.editUrlValue,
-      data: { tiptap_node_type: "Folio::Tiptap::Node::Card" }
+      data: { tiptap_node_type: "Dummy::Tiptap::Node::Card" }
     })
   }
 

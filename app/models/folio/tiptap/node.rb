@@ -5,7 +5,19 @@ class Folio::Tiptap::Node
   include ActiveModel::Attributes
 
   def self.tiptap_node(hash)
-    attr_accessor(*hash.keys)
+    hash.each do |key, type|
+      if key == :type
+        fail ArgumentError, "Cannot use reserved key `type` in tiptap_node definition"
+      end
+
+      handled_type = case type
+                     when :string, :text, :jsonb
+                     when :rich_text
+                       :text
+      end
+
+      attribute key, type: handled_type
+    end
 
     define_singleton_method :structure do
       hash
@@ -14,8 +26,14 @@ class Folio::Tiptap::Node
 
   def to_tiptap_node_hash
     {
-      yee: "haw",
+      "type" => "folio_node",
+      "version" => version,
+      "attrs" => self.attributes.deep_stringify_keys.merge("type" => self.class.name),
     }
+  end
+
+  def version
+    1
   end
 
   def assign_attributes_from_params(params)
@@ -33,5 +51,9 @@ class Folio::Tiptap::Node
                        .permit(*permitted)
 
     assign_attributes(attributes)
+  end
+
+  def self.view_component_class
+    "#{self}Component".constantize
   end
 end
