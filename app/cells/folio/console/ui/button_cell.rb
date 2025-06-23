@@ -68,7 +68,7 @@ class Folio::Console::Ui::ButtonCell < Folio::ConsoleCell
       h[:data] = stimulus_merge(h[:data], stimulus_controller("f-c-ui-notification-modal-trigger",
                                                               inline: true,
                                                               action: {
-                                                                "f-c-ui-notification-modal-trigger" => "onClick"
+                                                                "click" => "onClick"
                                                               },
                                                               values: {
                                                                 data: model[:notification_modal].to_json
