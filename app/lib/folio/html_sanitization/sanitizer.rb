@@ -87,7 +87,9 @@ module Folio
         end
 
         def sanitize_value_as_rich_text(value:)
-          ActionController::Base.helpers.sanitize(value)
+          default_attributes = Rails::Html::WhiteListSanitizer.allowed_attributes.to_a
+          custom_attributes = default_attributes | ['target', 'rel']
+          ActionController::Base.helpers.sanitize(value, attributes: custom_attributes)
         end
 
         def sanitize_attribute_as_rich_text(attribute:, value:)
