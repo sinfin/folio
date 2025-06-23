@@ -50,7 +50,7 @@ module Folio
                      file.author,
                      "author: :string - HTML tags should be removed, but symbols such as & < > should be preserved")
 
-        assert_equal("<P>FIXED&NBSP;SPACE SCRIPT-<SCRIPT>ALERT('XSS')</SCRIPT> ABSOLUTE-A-<A HREF=\"HTTPS://WWW.GOOGLE.COM/\">A</A> RELATIVE-A-<A HREF=\"/FOO\">A</A> HASH-A-<A HREF=\"#FOO\">A</A> XSS-A-<A HREF=\"JAVASCRIPT:ALERT('XSS')\">A</A> IMG-<IMG ONERROR=\"ALERT('XSS')\"> INPUT-<INPUT ONFOCUS=\"ALERT('XSS')\"> BAR & BAZ LT< GT></P>",
+        assert_equal("<P>FIXED&NBSP;SPACE SCRIPT-<SCRIPT>ALERT('XSS')</SCRIPT> ABSOLUTE-A-<A HREF=\"HTTPS://WWW.GOOGLE.COM/\" TARGET=\"_BLANK\" REL=\"NOOPENER NOREFERRER\">A</A> RELATIVE-A-<A HREF=\"/FOO\" TARGET=\"_SELF\" REL=\"NOFOLLOW\">A</A> HASH-A-<A HREF=\"#FOO\" TARGET=\"_PARENT\" REL=\"BOOKMARK\">A</A> XSS-A-<A HREF=\"JAVASCRIPT:ALERT('XSS')\" TARGET=\"_BLANK\" REL=\"NOOPENER\">A</A> IMG-<IMG ONERROR=\"ALERT('XSS')\"> INPUT-<INPUT ONFOCUS=\"ALERT('XSS')\"> BAR & BAZ LT< GT></P>",
                      file.alt,
                      "alt: proc - proc should be used to transform the value")
 
@@ -102,7 +102,7 @@ module Folio
 
       private
         def unsafe_input
-          "<p>fixed&nbsp;space script-<script>alert('xss')</script> absolute-a-<a href=\"https://www.google.com/\">a</a> relative-a-<a href=\"/foo\">a</a> hash-a-<a href=\"#foo\">a</a> xss-a-<a href=\"javascript:alert('xss')\">a</a> img-<img onerror=\"alert('xss')\"> input-<input onfocus=\"alert('xss')\"> bar & baz lt< gt></p>"
+          "<p>fixed&nbsp;space script-<script>alert('xss')</script> absolute-a-<a href=\"https://www.google.com/\" target=\"_blank\" rel=\"noopener noreferrer\">a</a> relative-a-<a href=\"/foo\" target=\"_self\" rel=\"nofollow\">a</a> hash-a-<a href=\"#foo\" target=\"_parent\" rel=\"bookmark\">a</a> xss-a-<a href=\"javascript:alert('xss')\" target=\"_blank\" rel=\"noopener\">a</a> img-<img onerror=\"alert('xss')\"> input-<input onfocus=\"alert('xss')\"> bar & baz lt< gt></p>"
         end
 
         def utf_nbsp
@@ -114,7 +114,7 @@ module Folio
         end
 
         def input_sanitized_as_rich_text
-          "<p>fixed#{utf_nbsp}space script-alert('xss') absolute-a-<a href=\"https://www.google.com/\">a</a> relative-a-<a href=\"/foo\">a</a> hash-a-<a href=\"#foo\">a</a> xss-a-<a>a</a> img-<img> input- bar &amp; baz lt&lt; gt&gt;</p>"
+          "<p>fixed#{utf_nbsp}space script-alert('xss') absolute-a-<a href=\"https://www.google.com/\" target=\"_blank\" rel=\"noopener noreferrer\">a</a> relative-a-<a href=\"/foo\" target=\"_self\" rel=\"nofollow\">a</a> hash-a-<a href=\"#foo\" target=\"_parent\" rel=\"bookmark\">a</a> xss-a-<a target=\"_blank\" rel=\"noopener\">a</a> img-<img> input- bar &amp; baz lt&lt; gt&gt;</p>"
         end
     end
   end

@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- added `rel` and `target` to allowed rich text attributes
+
 ## [6.5.1] - 2025-06-18
 
 ### Added
