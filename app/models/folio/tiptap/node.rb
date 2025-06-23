@@ -47,7 +47,9 @@ class Folio::Tiptap::Node
     1
   end
 
-  def assign_attributes_from_params(params)
+  def assign_attributes_from_param_attrs(attrs)
+    return if attrs[:data].blank?
+
     permitted = self.class.structure.map do |key, type|
       if type == :url_json
         {
@@ -58,10 +60,7 @@ class Folio::Tiptap::Node
       end
     end
 
-    attrs = params.require(:tiptap_node_attributes)
-                  .permit(*permitted)
-
-    assign_attributes(attrs)
+    assign_attributes(attrs.require(:data).permit(*permitted))
   end
 
   def self.view_component_class

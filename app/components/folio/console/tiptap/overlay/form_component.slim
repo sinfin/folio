@@ -1,6 +1,6 @@
 .f-c-tiptap-overlay-form data=data
   = form do |f|
-    input type="hidden" name="tiptap_node_type" value=@node.class.to_s
+    input type="hidden" name="tiptap_node_attrs[type]" value=@node.class.to_s
 
     header.f-c-tiptap-overlay-form__form-header
       h3.f-c-tiptap-overlay-form__form-title.m-0

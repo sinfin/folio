@@ -23,7 +23,7 @@ class Folio::Console::Tiptap::Overlay::FormComponent < Folio::Console::Applicati
       opts = {
         url: "#form",
         method: :post,
-        as: :tiptap_node_attributes,
+        as: "tiptap_node_attrs[data]",
         html: {
           class: "f-c-tiptap-overlay-form__form",
           data: stimulus_action(submit: "onFormSubmit")

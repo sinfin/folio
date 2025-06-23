@@ -29,17 +29,29 @@ window.Folio.Stimulus.register('f-c-tiptap-overlay', class extends window.Stimul
     if (!e.data) return
 
     if (e.data.type === 'f-tiptap-node-button:click') {
-      this.onBlockInsert(e)
+      this.onNodeButtonClickMessage(e)
+    } else if (e.data.type === "f-tiptap-node:click") {
+      this.onNodeClickMessage(e)
     }
   }
 
-  onBlockInsert (e) {
+  onNodeButtonClickMessage (e) {
     this.iframeWindowReference = e.source
     this.stateValue = "loading"
 
     this.ajax({
       url: this.editUrlValue,
-      data: { tiptap_node_type: "Dummy::Tiptap::Node::Card" }
+      data: { tiptap_node_attrs: { type: "Dummy::Tiptap::Node::Card" } }
+    })
+  }
+
+  onNodeClickMessage (e) {
+    this.iframeWindowReference = e.source
+    this.stateValue = "loading"
+
+    this.ajax({
+      url: this.editUrlValue,
+      data: { tiptap_node_attrs: e.data.attrs }
     })
   }
 

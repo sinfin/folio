@@ -124,3 +124,7 @@ body,
   height: 0;
   pointer-events: none;
 }
+
+.f-tiptap-editor .node-folioTiptapNode {
+  margin: var(--f-tiptap--tt-default-content-spacer) 0;
+}
