@@ -134,7 +134,7 @@ Folio::Engine.routes.draw do
         post :transport, path: "transport(/:class_name/:id)"
       end
 
-      namespace :api do
+      namespace :api, constraints: -> (req) { req.format == :json } do
         resources :private_attachments, only: %i[create destroy]
 
         resource :links, only: [] do
@@ -163,6 +163,11 @@ Folio::Engine.routes.draw do
           collection do
             post :react_update_target
           end
+        end
+
+        resource :tiptap, controller: :tiptap, only: [] do
+          post :edit_node
+          post :save_node
         end
 
         namespace :file do

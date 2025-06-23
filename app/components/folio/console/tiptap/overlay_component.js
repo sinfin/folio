@@ -1,0 +1,78 @@
+window.Folio.Stimulus.register('f-c-tiptap-overlay', class extends window.Stimulus.Controller {
+  static values = {
+    state: String,
+    origin: String,
+    editUrl: String,
+    saveUrl: String,
+  }
+
+  static targets = ["formWrap"]
+
+  disconnect () {
+    delete this.iframeWindowReference
+    this.abortAjax()
+  }
+
+  abortAjax () {
+    if (!this.abortController) return
+
+    this.abortController.abort()
+    delete this.abortController
+  }
+
+  backdropClick () {
+    this.stateValue = 'closed'
+  }
+
+  onWindowMessage (e) {
+    if (this.originValue !== "*" && e.origin !== window.origin) return
+    if (!e.data) return
+    if (e.data.type.indexOf('f-tiptap:') !== 0) return
+
+    if (e.data.type === 'f-tiptap:block:insert') {
+      this.onBlockInsert(e)
+    }
+  }
+
+  onBlockInsert (e) {
+    this.iframeWindowReference = e.source
+    this.stateValue = "loading"
+
+    this.ajax({
+      url: this.editUrlValue,
+      data: { tiptap_node_type: "Folio::Tiptap::Node::Card" }
+    })
+  }
+
+  ajax ({ url, data, apiMethod = 'apiPost' }) {
+    this.abortAjax()
+    this.abortController = new AbortController()
+
+    window.Folio.Api[apiMethod](url, data, this.abortController.signal).then((res) => {
+      if (res) {
+        if (res.meta && res.meta.tiptap_node_valid) {
+          console.log('valid!')
+          return
+        } else if (res.data) {
+          this.formWrapTarget.innerHTML = res.data
+          this.stateValue = "loaded"
+          return
+        }
+      }
+
+      throw new Error('No data returned from API')
+    }).catch((e) => {
+      this.stateValue = "closed"
+      window.alert('Error: ' + e.message)
+    }).finally(() => {
+      delete this.abortController
+    })
+  }
+
+  onFormSubmit (e) {
+    this.ajax({
+      url: this.saveUrlValue,
+      data: e.detail.data,
+    })
+  }
+})

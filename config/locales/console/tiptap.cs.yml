@@ -5,3 +5,7 @@ cs:
       tiptap:
         simple_form_wrap_component:
           editor_title: Editor
+
+        overlay:
+          form_component:
+            submit: Hotovo

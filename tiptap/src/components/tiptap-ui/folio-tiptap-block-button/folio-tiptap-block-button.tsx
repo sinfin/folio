@@ -83,7 +83,6 @@ export const FolioTiptapBlockButton = React.forwardRef<
       text,
       className = "",
       disabled,
-      onClick,
       children,
       ...buttonProps
     },
@@ -102,16 +101,17 @@ export const FolioTiptapBlockButton = React.forwardRef<
         console.log('Editor available:', !!editor)
         console.log('Editor editable:', editor?.isEditable)
         console.log('Disabled:', disabled)
-        
-        onClick?.(e)
 
         if (!e.defaultPrevented && !disabled) {
-          console.log('Attempting to insert FolioTiptapBlock...')
-          const result = handleInsertBlock()
-          console.log('Insert result:', result)
+          window.top!.postMessage(
+            {
+              type: "f-tiptap:block:insert",
+            },
+            "*",
+          );
         }
       },
-      [onClick, disabled, handleInsertBlock]
+      [disabled]
     )
 
     if (!editor || !editor.isEditable) {
