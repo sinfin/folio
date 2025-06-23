@@ -25,6 +25,7 @@ class Folio::Console::SharedFilesTest < Folio::Console::BaseControllerTest
 
         get console_api_file_images_url(host: site.domain,
                                         only_path: false,
+                                        format: :json,
                                         params: { by_file_name: "test" }) # params are here to disable caching
 
         assert_response :success, response.body
@@ -108,6 +109,7 @@ class Folio::Console::SharedFilesTest < Folio::Console::BaseControllerTest
 
         get console_api_file_images_url(host: site.domain,
                                         only_path: false,
+                                        format: :json,
                                         params: { by_file_name: "test" }) # params are here to disable caching
 
         assert_response :success, response.body

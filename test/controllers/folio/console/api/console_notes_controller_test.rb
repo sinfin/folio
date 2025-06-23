@@ -14,7 +14,7 @@ class Folio::Console::Api::ConsoleNotesControllerTest < Folio::Console::BaseCont
 
     note.update_columns(target_id: nil, target_type: nil)
 
-    post url_for([:toggle_closed_at, :console, :api, note]), params: {
+    post url_for([:toggle_closed_at, :console, :api, note, format: :json]), params: {
       closed: true,
     }
 
@@ -30,7 +30,7 @@ class Folio::Console::Api::ConsoleNotesControllerTest < Folio::Console::BaseCont
 
     assert_nil note.closed_at
 
-    post url_for([:toggle_closed_at, :console, :api, note]), params: {
+    post url_for([:toggle_closed_at, :console, :api, note, format: :json]), params: {
       closed: true,
     }
 
@@ -38,7 +38,7 @@ class Folio::Console::Api::ConsoleNotesControllerTest < Folio::Console::BaseCont
     assert response.parsed_body["data"]["catalogue_tooltip"]
     assert note.reload.closed_at
 
-    post url_for([:toggle_closed_at, :console, :api, another_note]), params: {
+    post url_for([:toggle_closed_at, :console, :api, another_note, format: :json]), params: {
       closed: true,
     }
 
@@ -46,7 +46,7 @@ class Folio::Console::Api::ConsoleNotesControllerTest < Folio::Console::BaseCont
     assert response.parsed_body["data"]["catalogue_tooltip"]
     assert another_note.reload.closed_at
 
-    post url_for([:toggle_closed_at, :console, :api, note]), params: {
+    post url_for([:toggle_closed_at, :console, :api, note, format: :json]), params: {
       closed: false,
     }
 
@@ -61,7 +61,7 @@ class Folio::Console::Api::ConsoleNotesControllerTest < Folio::Console::BaseCont
 
     assert_equal(0, page.console_notes.count)
 
-    post react_update_target_console_api_console_notes_path, params: {
+    post react_update_target_console_api_console_notes_path(format: :json), params: {
       target_id: page.id,
       target_type: "::Folio::Console::Api::ConsoleNotesControllerTest::PageWithConsoleNotes",
       console_notes_attributes: {

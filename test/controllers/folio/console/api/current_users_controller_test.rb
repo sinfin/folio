@@ -9,7 +9,7 @@ class Folio::Console::Api::CurrentUsersControllerTest < Folio::Console::BaseCont
     assert_nil superadmin.console_url
     assert_nil superadmin.console_url_updated_at
 
-    post console_url_ping_console_api_current_user_url, params: { url: "foo" }
+    post console_url_ping_console_api_current_user_url(format: :json), params: { url: "foo" }
     assert_response(:ok)
 
     superadmin.reload
