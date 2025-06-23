@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { type Editor } from "@tiptap/react";
+import type { Editor, Content } from "@tiptap/react";
 
 // --- Hooks ---
 import { useTiptapEditor } from "@/hooks/use-tiptap-editor";
@@ -14,12 +14,12 @@ import type { ButtonProps } from "@/components/tiptap-ui-primitive/button";
 import { Button } from "@/components/tiptap-ui-primitive/button";
 
 export interface FolioTiptapNodeButtonProps extends ButtonProps {
-  editor: FolioEditor;
+  editor: Editor | null;
 }
 
 export function insertFolioTiptapNode(
-  editor: FolioEditor,
-  node: any,
+  editor: Editor | null,
+  node: Content,
 ): boolean {
   if (!editor) {
     console.log("No editor available for insertFolioTiptapNode");
@@ -41,71 +41,62 @@ export function insertFolioTiptapNode(
 export const FolioTiptapNodeButton = React.forwardRef<
   HTMLButtonElement,
   FolioTiptapNodeButtonProps
->(
-  (
-    {
-      editor: providedEditor,
-      disabled,
+>(({ editor: providedEditor, disabled }, ref) => {
+  const editor = useTiptapEditor(providedEditor);
+
+  const handleClick = React.useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      if (!e.defaultPrevented && !disabled) {
+        window.top!.postMessage(
+          {
+            type: "f-tiptap-node-button:click",
+          },
+          "*",
+        );
+      }
     },
-    ref,
-  ) => {
-    const editor = useTiptapEditor(providedEditor);
+    [disabled],
+  );
 
-    const handleClick = React.useCallback(
-      (e: React.MouseEvent<HTMLButtonElement>) => {
-        if (!e.defaultPrevented && !disabled) {
-          window.top!.postMessage(
-            {
-              type: "f-tiptap-node-button:click",
-            },
-            "*",
-          );
-        }
-      },
-      [disabled],
-    );
+  React.useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (
+        process.env.NODE_ENV === "production" &&
+        event.origin !== window.origin
+      )
+        return;
+      if (!event.data || event.data.type !== "f-c-tiptap-overlay:saved") return;
 
-    React.useEffect(() => {
-      const handleMessage = (event: MessageEvent) => {
-        if (
-          process.env.NODE_ENV === "production" &&
-          event.origin !== window.origin
-        )
-          return;
-        if (!event.data || event.data.type !== "f-c-tiptap-overlay:saved")
-          return;
+      // Handle window message events here
+      insertFolioTiptapNode(editor, event.data.node);
+    };
 
-        // Handle window message events here
-        insertFolioTiptapNode(editor, event.data.node);
-      };
+    window.addEventListener("message", handleMessage);
 
-      window.addEventListener("message", handleMessage);
+    return () => {
+      window.removeEventListener("message", handleMessage);
+    };
+  }, [editor]);
 
-      return () => {
-        window.removeEventListener("message", handleMessage);
-      };
-    }, [editor]);
+  if (!editor || !editor.isEditable) {
+    return null;
+  }
 
-    if (!editor || !editor.isEditable) {
-      return null;
-    }
-
-    return (
-      <Button
-        ref={ref}
-        type="button"
-        data-style="ghost"
-        role="button"
-        tabIndex={-1}
-        aria-label="Add Folio Tiptap Node"
-        tooltip="Add Folio Tiptap Node"
-        onClick={handleClick}
-      >
-        <BlocksIcon className="tiptap-button-icon" />
-      </Button>
-    );
-  },
-);
+  return (
+    <Button
+      ref={ref}
+      type="button"
+      data-style="ghost"
+      role="button"
+      tabIndex={-1}
+      aria-label="Add Folio Tiptap Node"
+      tooltip="Add Folio Tiptap Node"
+      onClick={handleClick}
+    >
+      <BlocksIcon className="tiptap-button-icon" />
+    </Button>
+  );
+});
 
 FolioTiptapNodeButton.displayName = "FolioTiptapNodeButton";
 

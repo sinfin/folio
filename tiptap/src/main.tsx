@@ -5,8 +5,6 @@ import "./styles/_keyframe-animations.scss";
 import "./styles/index.scss";
 import App from "./App.tsx";
 
-import demoContent from "@/components/tiptap-templates/simple/data/content.json";
-
 // Initialize the Folio namespace if it doesn't exist
 window.Folio = window.Folio || {};
 window.Folio.Tiptap = window.Folio.Tiptap || {};

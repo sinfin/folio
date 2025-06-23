@@ -1,7 +1,7 @@
 // Global type declarations for the TipTap editor
 
 declare module "*.json" {
-  const value: any;
+  const value: unknown;
   export default value;
 }
 
@@ -51,7 +51,7 @@ declare global {
   interface FolioEditor {
     onCreate?: (content: { editor: TiptapEditor }) => void;
     onUpdate?: (content: { editor: TiptapEditor }) => void;
-    defaultContent?: any;
+    defaultContent?: import("@tiptap/react").Content;
     type: "rich-text" | "block";
   }
 
@@ -73,7 +73,7 @@ declare global {
           type: "rich-text" | "block";
           onCreate?: (content: { editor: TiptapEditor }) => void;
           onUpdate?: (content: { editor: TiptapEditor }) => void;
-          content?: any;
+          content?: import("@tiptap/react").Content;
         }) => ReturnType<typeof import("react-dom/client").createRoot>;
         destroy: (
           root: ReturnType<typeof import("react-dom/client").createRoot>,
@@ -87,7 +87,7 @@ declare global {
     new <T>(
       executor: (
         resolve: (value?: T | PromiseLike<T>) => void,
-        reject: (reason?: any) => void,
+        reject: (reason?: unknown) => void,
       ) => void,
     ): Promise<T>;
   }
@@ -96,13 +96,10 @@ declare global {
 // TipTap command type augmentations
 declare module "@tiptap/react" {
   interface Commands<ReturnType> {
-    folioTiptapBlock: {
-      setFolioTiptapBlock: (attributes?: {
-        title?: string;
-        content?: string;
-        blockType?: string;
-        apiUrl?: string;
-      }) => ReturnType;
+    folioTiptapNode: {
+      setFolioTiptapNode: (
+        node?: import("@tiptap/react").Content,
+      ) => ReturnType;
     };
   }
 }

@@ -1,11 +1,12 @@
 import { FolioEditor } from "@/components/tiptap-editors/folio/folio-editor";
+import type { Content } from "@tiptap/react";
 
 import "./App.css";
 
 interface AppProps {
   onUpdate?: (content: { editor: TiptapEditor }) => void;
   onCreate?: (content: { editor: TiptapEditor }) => void;
-  defaultContent?: any;
+  defaultContent?: Content;
   type?: "rich-text" | "block";
 }
 

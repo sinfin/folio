@@ -1,5 +1,10 @@
 import * as React from "react";
-import { EditorContent, EditorContext, useEditor } from "@tiptap/react";
+import {
+  EditorContent,
+  EditorContext,
+  useEditor,
+  type Editor,
+} from "@tiptap/react";
 
 // --- Tiptap Core Extensions ---
 import { StarterKit } from "@tiptap/starter-kit";
@@ -17,7 +22,6 @@ import Placeholder from "@tiptap/extension-placeholder";
 // --- Custom Extensions ---
 import { Link } from "@/components/tiptap-extension/link-extension";
 import { Selection } from "@/components/tiptap-extension/selection-extension";
-import { SlashCommands } from "@/components/tiptap-extension/slash-menu-extension";
 
 // --- UI Primitives ---
 import { Button } from "@/components/tiptap-ui-primitive/button";
@@ -30,7 +34,7 @@ import {
 
 // --- Tiptap Node ---
 import { FolioTiptapNodeExtension } from "@/components/tiptap-node/folio-tiptap-node/folio-tiptap-node-extension";
-import { ImageUploadNode } from "@/components/tiptap-node/image-upload-node/image-upload-node-extension";
+
 import "@/components/tiptap-node/code-block-node/code-block-node.scss";
 import "@/components/tiptap-node/list-node/list-node.scss";
 import "@/components/tiptap-node/image-node/image-node.scss";
@@ -67,9 +71,6 @@ import { useMobile } from "@/hooks/use-mobile";
 import { useWindowSize } from "@/hooks/use-window-size";
 import { useCursorVisibility } from "@/hooks/use-cursor-visibility";
 
-// --- Lib ---
-import { handleImageUpload, MAX_FILE_SIZE } from "@/lib/tiptap-utils";
-
 // --- 3rd party extensions ---
 import GlobalDragHandle from "tiptap-extension-global-drag-handle";
 import AutoJoiner from "tiptap-extension-auto-joiner";
@@ -79,11 +80,13 @@ const MainToolbarContent = ({
   onLinkClick,
   isMobile,
   blockEditor,
+  editor,
 }: {
   onHighlighterClick: () => void;
   onLinkClick: () => void;
   isMobile: boolean;
   blockEditor: boolean;
+  editor: Editor | null;
 }) => {
   return (
     <>
@@ -139,7 +142,7 @@ const MainToolbarContent = ({
 
       <ToolbarGroup>
         <ImageUploadButton text="Add" />
-        {blockEditor ? <FolioTiptapNodeButton /> : null}
+        {blockEditor ? <FolioTiptapNodeButton editor={editor} /> : null}
       </ToolbarGroup>
 
       <Spacer />
@@ -239,54 +242,44 @@ export function FolioEditor({
       AutoJoiner.configure({
         elementsToJoin: ["bulletList", "orderedList"], // default
       }),
-      SlashCommands.configure({
-        commands: [
-          {
-            title: 'Heading 1',
-            command: ({ editor, range }) => {
-              editor
-                .chain()
-                .focus()
-                .deleteRange(range)
-                .setNode('heading', { level: 1 })
-                .run()
-            },
-          },
-          {
-            title: 'Heading 2',
-            command: ({ editor, range }) => {
-              editor
-                .chain()
-                .focus()
-                .deleteRange(range)
-                .setNode('heading', { level: 2 })
-                .run()
-            },
-          },
-          {
-            title: 'Bold',
-            command: ({ editor, range }) => {
-              editor
-                .chain()
-                .focus()
-                .deleteRange(range)
-                .setMark('bold')
-                .run()
-            },
-          },
-          {
-            title: 'Italic',
-            command: ({ editor, range }) => {
-              editor
-                .chain()
-                .focus()
-                .deleteRange(range)
-                .setMark('italic')
-                .run()
-            },
-          },
-        ]
-      }),
+      // SlashCommands.configure({
+      //   commands: [
+      //     {
+      //       title: "Heading 1",
+      //       command: ({ editor, range }) => {
+      //         editor
+      //           .chain()
+      //           .focus()
+      //           .deleteRange(range)
+      //           .setNode("heading", { level: 1 })
+      //           .run();
+      //       },
+      //     },
+      //     {
+      //       title: "Heading 2",
+      //       command: ({ editor, range }) => {
+      //         editor
+      //           .chain()
+      //           .focus()
+      //           .deleteRange(range)
+      //           .setNode("heading", { level: 2 })
+      //           .run();
+      //       },
+      //     },
+      //     {
+      //       title: "Bold",
+      //       command: ({ editor, range }) => {
+      //         editor.chain().focus().deleteRange(range).setMark("bold").run();
+      //       },
+      //     },
+      //     {
+      //       title: "Italic",
+      //       command: ({ editor, range }) => {
+      //         editor.chain().focus().deleteRange(range).setMark("italic").run();
+      //       },
+      //     },
+      //   ],
+      // }),
     ],
   });
 
@@ -322,6 +315,7 @@ export function FolioEditor({
               onLinkClick={() => setMobileView("link")}
               isMobile={isMobile}
               blockEditor={blockEditor}
+              editor={editor}
             />
           ) : (
             <MobileToolbarContent
