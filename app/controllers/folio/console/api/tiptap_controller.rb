@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::Console::Api::TiptapController < Folio::Console::Api::BaseController
-  before_action :initialize_node
+  before_action :initialize_node, only: %i[edit_node save_node]
 
   def edit_node
     render_component_json(Folio::Console::Tiptap::Overlay::FormComponent.new(node: @node))
@@ -16,6 +16,19 @@ class Folio::Console::Api::TiptapController < Folio::Console::Api::BaseControlle
     else
       render_component_json(Folio::Console::Tiptap::Overlay::FormComponent.new(node: @node))
     end
+  end
+
+  def render_nodes
+    @components = []
+    @index = 0
+
+    params.require(:nodes).each do |node_attrs|
+      node = Folio::Tiptap::Node.new_from_attrs(node_attrs[:attrs])
+      component = node.class.view_component_class.new(node:)
+      @components << [node_attrs[:unique_id], component]
+    end
+
+    render layout: false
   end
 
   private

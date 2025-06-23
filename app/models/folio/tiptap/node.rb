@@ -66,4 +66,16 @@ class Folio::Tiptap::Node
   def self.view_component_class
     "#{self}Component".constantize
   end
+
+  def self.new_from_attrs(attrs)
+    klass = attrs.require(:type).safe_constantize
+
+    if klass && klass < Folio::Tiptap::Node
+      node = klass.new
+      node.assign_attributes_from_param_attrs(attrs)
+      node
+    else
+      fail ArgumentError, "Invalid Tiptap node type: #{attrs['type']}"
+    end
+  end
 end

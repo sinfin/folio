@@ -1,0 +1,4 @@
+{ "data": [<%- @components.each do |unique_id, component| -%>
+<%= @index == 0 ? "" : "," %>{ "unique_id": <%= unique_id %>, "html": <%= raw render(component).to_json -%> }
+<%- @index += 1 -%>
+<%- end -%>] }

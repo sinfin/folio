@@ -10,6 +10,7 @@ class TiptapInput < SimpleForm::Inputs::StringInput
                         loaded: false,
                         origin: ENV["FOLIO_TIPTAP_DEV"] ? "*" : "",
                         type: tiptap_type,
+                        render_url: @builder.template.render_nodes_console_api_tiptap_path,
                       },
                       action: {
                         "message@window" => "onWindowMessage",

@@ -168,6 +168,7 @@ Folio::Engine.routes.draw do
         resource :tiptap, controller: :tiptap, only: [] do
           post :edit_node
           post :save_node
+          post :render_nodes
         end
 
         namespace :file do

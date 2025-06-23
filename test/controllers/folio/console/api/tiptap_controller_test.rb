@@ -60,4 +60,26 @@ class Folio::Console::Api::TiptapControllerTest < Folio::Console::BaseController
       },
     } }, hash["data"])
   end
+
+  test "render_nodes" do
+    post render_nodes_console_api_tiptap_path(format: :json), params: {
+      "nodes" => [
+        {
+          "unique_id" => 1,
+          "attrs" => {
+            "version" => 1,
+            "type" => "Dummy::Tiptap::Node::Card",
+            "data" => { "title" => "asf" }
+          }
+        }
+      ]
+    }
+    assert_response :ok
+
+    hash = response.parsed_body
+
+    assert_equal 1, hash["data"].size
+    assert_equal 1, hash["data"]["unique_id"]
+    assert hash["data"]["html"]
+  end
 end
