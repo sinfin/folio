@@ -29,18 +29,17 @@ import {
 } from "@/components/tiptap-ui-primitive/toolbar";
 
 // --- Tiptap Node ---
+import { FolioTiptapNodeExtension } from "@/components/tiptap-node/folio-tiptap-node/folio-tiptap-node-extension";
 import { ImageUploadNode } from "@/components/tiptap-node/image-upload-node/image-upload-node-extension";
-import { FolioTiptapBlockExtension } from "@/components/tiptap-node/folio-tiptap-block";
 import "@/components/tiptap-node/code-block-node/code-block-node.scss";
 import "@/components/tiptap-node/list-node/list-node.scss";
 import "@/components/tiptap-node/image-node/image-node.scss";
 import "@/components/tiptap-node/paragraph-node/paragraph-node.scss";
-import "@/components/tiptap-node/folio-tiptap-block/folio-tiptap-block.scss";
 
 // --- Tiptap UI ---
 import { HeadingDropdownMenu } from "@/components/tiptap-ui/heading-dropdown-menu";
 import { ImageUploadButton } from "@/components/tiptap-ui/image-upload-button";
-import { FolioTiptapBlockButton } from "@/components/tiptap-ui/folio-tiptap-block-button";
+import { FolioTiptapNodeButton } from "@/components/tiptap-ui/folio-tiptap-node-button";
 import { ListDropdownMenu } from "@/components/tiptap-ui/list-dropdown-menu";
 import { BlockQuoteButton } from "@/components/tiptap-ui/blockquote-button";
 import { CodeBlockButton } from "@/components/tiptap-ui/code-block-button";
@@ -79,10 +78,12 @@ const MainToolbarContent = ({
   onHighlighterClick,
   onLinkClick,
   isMobile,
+  blockEditor,
 }: {
   onHighlighterClick: () => void;
   onLinkClick: () => void;
   isMobile: boolean;
+  blockEditor: boolean;
 }) => {
   return (
     <>
@@ -138,7 +139,7 @@ const MainToolbarContent = ({
 
       <ToolbarGroup>
         <ImageUploadButton text="Add" />
-        <FolioTiptapBlockButton />
+        {blockEditor ? <FolioTiptapNodeButton /> : null}
       </ToolbarGroup>
 
       <Spacer />
@@ -225,15 +226,7 @@ export function FolioEditor({
 
       Selection,
       Link.configure({ openOnClick: false }),
-      ...(blockEditor
-        ? [
-            FolioTiptapBlockExtension.configure({
-              apiUrl: "/api/folio-blocks",
-              onError: (error) => console.error("Folio block error:", error),
-              onSuccess: (html) => console.log("Folio block loaded:", html),
-            }),
-          ]
-        : []),
+      ...(blockEditor ? [FolioTiptapNodeExtension] : []),
       GlobalDragHandle.configure({
         dragHandleWidth: 20, // default
 
@@ -328,6 +321,7 @@ export function FolioEditor({
               onHighlighterClick={() => setMobileView("highlighter")}
               onLinkClick={() => setMobileView("link")}
               isMobile={isMobile}
+              blockEditor={blockEditor}
             />
           ) : (
             <MobileToolbarContent

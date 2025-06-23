@@ -27,9 +27,8 @@ window.Folio.Stimulus.register('f-c-tiptap-overlay', class extends window.Stimul
   onWindowMessage (e) {
     if (this.originValue !== "*" && e.origin !== window.origin) return
     if (!e.data) return
-    if (e.data.type.indexOf('f-tiptap:') !== 0) return
 
-    if (e.data.type === 'f-tiptap:block:insert') {
+    if (e.data.type === 'f-tiptap-node-button:click') {
       this.onBlockInsert(e)
     }
   }
@@ -50,8 +49,9 @@ window.Folio.Stimulus.register('f-c-tiptap-overlay', class extends window.Stimul
 
     window.Folio.Api[apiMethod](url, data, this.abortController.signal).then((res) => {
       if (res) {
-        if (res.meta && res.meta.tiptap_node_valid) {
-          console.log('valid!')
+        if (res.meta && res.meta.tiptap_node_valid && res.data.tiptap_node) {
+          this.handleValidNode(res.data.tiptap_node)
+          this.stateValue = "closed"
           return
         } else if (res.data) {
           this.formWrapTarget.innerHTML = res.data
@@ -74,5 +74,16 @@ window.Folio.Stimulus.register('f-c-tiptap-overlay', class extends window.Stimul
       url: this.saveUrlValue,
       data: e.detail.data,
     })
+  }
+
+  handleValidNode (nodeHash) {
+    if (!this.iframeWindowReference) {
+      throw new Error('No iframe window reference found')
+    }
+
+    this.iframeWindowReference.postMessage({
+      type: "f-c-tiptap-overlay:saved",
+      node: nodeHash,
+    }, this.originValue || window.origin)
   }
 })

@@ -25,10 +25,21 @@ class Folio::Tiptap::Node
   end
 
   def to_tiptap_node_hash
+    data = {}
+
+    attributes.each do |key, value|
+      if value.present?
+        data[key.to_s] = value
+      end
+    end
+
     {
-      "type" => "folio_node",
-      "version" => version,
-      "attrs" => self.attributes.deep_stringify_keys.merge("type" => self.class.name),
+      "type" => "folioTiptapNode",
+      "attrs" => {
+        "version" => version,
+        "type" => self.class.name,
+        "data" => data,
+      },
     }
   end
 
@@ -47,10 +58,10 @@ class Folio::Tiptap::Node
       end
     end
 
-    attributes = params.require(:tiptap_node_attributes)
-                       .permit(*permitted)
+    attrs = params.require(:tiptap_node_attributes)
+                  .permit(*permitted)
 
-    assign_attributes(attributes)
+    assign_attributes(attrs)
   end
 
   def self.view_component_class

@@ -18,10 +18,10 @@ class Folio::Tiptap::NodeTest < ActiveSupport::TestCase
                             button_url_json: { href: "foo", label: "bar" })
 
     hash = node.to_tiptap_node_hash
-    assert_equal "folio_node", hash["type"]
-    assert_equal 1, hash["version"]
+    assert_equal "folioTiptapNode", hash["type"]
+    assert_equal 1, hash["attrs"]["version"]
     assert_equal "Folio::Tiptap::NodeTest::Node", hash["attrs"]["type"]
-    assert_equal "foo", hash["attrs"]["title"]
+    assert_equal "foo", hash["attrs"]["data"]["title"]
   end
 end
 
