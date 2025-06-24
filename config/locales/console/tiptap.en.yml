@@ -9,3 +9,6 @@ en:
         overlay:
           form_component:
             submit: Done
+
+        invalid_node_component:
+          title: Invalid content. Will not be show publicly.

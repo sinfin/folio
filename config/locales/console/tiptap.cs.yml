@@ -9,3 +9,6 @@ cs:
         overlay:
           form_component:
             submit: Hotovo
+
+        invalid_node_component:
+          title: Špatně nastavený obsah. Veřejně nebude zobrazen.

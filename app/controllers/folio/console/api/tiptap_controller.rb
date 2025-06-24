@@ -19,13 +19,10 @@ class Folio::Console::Api::TiptapController < Folio::Console::Api::BaseControlle
   end
 
   def render_nodes
-    @components = []
-    @index = 0
+    @nodes_hash = {}
 
     params.require(:nodes).each do |node_attrs|
-      node = Folio::Tiptap::Node.new_from_attrs(node_attrs[:attrs])
-      component = node.class.view_component_class.new(node:)
-      @components << [node_attrs[:unique_id], component]
+      @nodes_hash[node_attrs[:unique_id].to_i] = Folio::Tiptap::Node.new_from_attrs(node_attrs[:attrs])
     end
 
     render layout: false

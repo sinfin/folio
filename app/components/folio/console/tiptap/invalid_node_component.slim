@@ -1,0 +1,24 @@
+.f-c-tiptap-invalid-node
+  svg.f-c-tiptap-invalid-node__icon[
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+  ]
+    path d="M13 14H11V9H13M13 18H11V16H13M1 21H23L12 2L1 21Z" fill="white"
+
+  .f-c-tiptap-invalid-node__title
+    = t('.title')
+
+  .f-c-tiptap-invalid-node__name
+    = @node.class.model_name.human
+
+  .f-c-tiptap-invalid-node__small
+    = @node.class.name
+
+  - if @error
+    .f-c-tiptap-invalid-node__small = @error
+  - else
+    - @node.errors.full_messages.each do |msg|
+      .f-c-tiptap-invalid-node__small = msg
