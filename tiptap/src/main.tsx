@@ -20,7 +20,8 @@ window.Folio.Tiptap.init = (props) => {
   }
 
   const height = (editor: TiptapEditor) => {
-    return editor.view!.dom!.closest('.f-tiptap-editor')!.clientHeight
+    // return editor.view!.dom!.closest('.f-tiptap-editor')!.clientHeight
+    return 1000
   };
 
   const onCreate = ({ editor }: { editor: TiptapEditor }) => {
