@@ -1,0 +1,11 @@
+.tiptap-folio-tiptap-node {
+  &__html {
+    pointer-events: none;
+  }
+
+  &__loader-wrap {
+    position: relative;
+    height: 150px;
+    background: rgba(0, 0, 0, .5);
+  }
+}
