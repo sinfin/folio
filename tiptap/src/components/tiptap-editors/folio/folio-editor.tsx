@@ -42,7 +42,6 @@ import "@/components/tiptap-node/paragraph-node/paragraph-node.scss";
 
 // --- Tiptap UI ---
 import { HeadingDropdownMenu } from "@/components/tiptap-ui/heading-dropdown-menu";
-import { ImageUploadButton } from "@/components/tiptap-ui/image-upload-button";
 import { FolioTiptapNodeButton } from "@/components/tiptap-ui/folio-tiptap-node-button";
 import { ListDropdownMenu } from "@/components/tiptap-ui/list-dropdown-menu";
 import { BlockQuoteButton } from "@/components/tiptap-ui/blockquote-button";
@@ -141,7 +140,6 @@ const MainToolbarContent = ({
       <ToolbarSeparator />
 
       <ToolbarGroup>
-        <ImageUploadButton text="Add" />
         {blockEditor ? <FolioTiptapNodeButton editor={editor} /> : null}
       </ToolbarGroup>
 

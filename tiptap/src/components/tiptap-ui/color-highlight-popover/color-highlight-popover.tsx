@@ -198,8 +198,7 @@ export function ColorHighlightPopover({
 
       const isInCompatibleContext =
         editor.isActive("code") ||
-        editor.isActive("codeBlock") ||
-        editor.isActive("imageUpload")
+        editor.isActive("codeBlock")
 
       if (isInCompatibleContext) {
         isDisabled = true
