@@ -38,13 +38,18 @@ window.Folio.RemoteScripts.onLoaded = (key, url) => {
 
   if (data.loadedCount === data.urls.length) {
     data.loaded = true
-    window.Folio.RemoteScripts.runSuccessCallbacks(key)
+    if (data.error) {
+      window.Folio.RemoteScripts.runErrorCallbacks(key)
+    } else {
+      window.Folio.RemoteScripts.runSuccessCallbacks(key)
+    }
   }
 }
 
 window.Folio.RemoteScripts.onError = (key, url) => {
   const data = window.Folio.RemoteScripts.Data[key]
   data.error = true
+  data.loadedCount = (data.loadedCount || 0) + 1
 
   if (data.loadedCount === data.urls.length) {
     data.loaded = true
@@ -80,7 +85,7 @@ window.Folio.RemoteScripts.load = (key) => {
       window.Folio.RemoteScripts.onLoaded(key, url)
     }
 
-    script.onError = () => {
+    script.onerror = () => {
       window.Folio.RemoteScripts.onError(key, url)
     }
 
