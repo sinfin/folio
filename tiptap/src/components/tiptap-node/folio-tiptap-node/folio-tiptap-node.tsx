@@ -1,21 +1,28 @@
 import * as React from "react";
 import type { NodeViewProps } from "@tiptap/react";
 import { NodeViewWrapper } from "@tiptap/react";
-// import "@/components/tiptap-node/image-upload-node/image-upload-node.scss"
+import { Button } from "@/components/tiptap-ui-primitive/button";
+import { EditIcon } from "@/components/tiptap-icons/edit-icon";
+import { XIcon } from "@/components/tiptap-icons/x-icon";
 
 import "./folio-tiptap-node.scss";
 
 let uniqueIdForNode = 0;
 const getUniqueIdForNode = () => uniqueIdForNode++;
 
-let htmlCache = [];
+interface StoredHtml {
+  html: string;
+  serializedAttrs: string;
+}
 
-const storeHtmlToCache = ({ html, serializedAttrs }) => {
+let htmlCache: StoredHtml[] = [];
+
+const storeHtmlToCache = ({ html, serializedAttrs }: StoredHtml) => {
   htmlCache = [{ html, serializedAttrs }, ...htmlCache.slice(0, 9)];
 };
 
 export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
-  const handleClick = React.useCallback(
+  const handleEditClick = React.useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       if (!e.defaultPrevented) {
         window.top!.postMessage(
@@ -28,6 +35,15 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
       }
     },
     [],
+  );
+
+  const handleRemoveClick = React.useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      if (!e.defaultPrevented) {
+        props.deleteNode();
+      }
+    },
+    [props],
   );
 
   const [uniqueId, setUniqueId] = React.useState<number>(0);
@@ -90,11 +106,7 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
   }, [uniqueId]);
 
   return (
-    <NodeViewWrapper
-      className="tiptap-folio-tiptap-node"
-      tabIndex={0}
-      onClick={handleClick}
-    >
+    <NodeViewWrapper className="tiptap-folio-tiptap-node" tabIndex={0}>
       {htmlFromApi ? (
         <div
           className="tiptap-folio-tiptap-node__html"
@@ -105,6 +117,30 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
           <span className="folio-loader" />
         </div>
       )}
+
+      <div className="tiptap-folio-tiptap-node__hover-controls">
+        <Button
+          type="button"
+          role="button"
+          tabIndex={-1}
+          aria-label="Edit"
+          tooltip="Edit"
+          onClick={handleEditClick}
+        >
+          <EditIcon className="tiptap-button-icon" />
+        </Button>
+
+        <Button
+          type="button"
+          role="button"
+          tabIndex={-1}
+          aria-label="Remove"
+          tooltip="Remove"
+          onClick={handleRemoveClick}
+        >
+          <XIcon className="tiptap-button-icon" />
+        </Button>
+      </div>
     </NodeViewWrapper>
   );
 };

@@ -26,11 +26,8 @@ export function insertFolioTiptapNode(
     return false;
   }
 
-  console.log("insertFolioTiptapNode called with node:", node);
-
   try {
     const result = editor.commands.setFolioTiptapNode(node);
-    console.log("insertFolioTiptapNode result:", result);
     return result;
   } catch (error) {
     console.error("insertFolioTiptapNode error", error);

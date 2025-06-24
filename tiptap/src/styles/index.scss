@@ -3,8 +3,10 @@
   --f-tiptap-editor--border-color: #c9cbcc;
   --f-tiptap-editor--border-color--focused: #3b4548;
   --f-tiptap-editor--border-radius: 4px;
-  --f-tiptap-editor-content-wrap--padding: 1rem 2rem;
-  --f-tiptap-editor-content-wrap--padding-mobile: 1rem;
+  --f-tiptap-editor-content-wrap--padding-x: 3rem;
+  --f-tiptap-editor-content-wrap--padding-y: 1rem;
+  --f-tiptap-editor-content-wrap--padding-x-mobile: 1rem;
+  --f-tiptap-editor-content-wrap--padding-y-mobile: 1rem;
 
   --f-tiptap--tt-default-content-spacer: 1.5rem;
   --f-tiptap--tt-default-headings-font-weight: bold;
@@ -73,10 +75,10 @@ body,
   flex: 0 1 auto;
   position: relative;
   overflow: auto;
-  padding: var(--f-tiptap-editor-content-wrap--padding);
+  padding: var(--f-tiptap-editor-content-wrap--padding-y) var(--f-tiptap-editor-content-wrap--padding-x) ;
 
   @media screen and (max-width: 400px) {
-    padding: var(--f-tiptap-editor-content-wrap--padding-mobile);
+    padding: var(--f-tiptap-editor-content-wrap--padding-y-mobile) var(--f-tiptap-editor-content-wrap--padding-x-mobile);
   }
 }
 
