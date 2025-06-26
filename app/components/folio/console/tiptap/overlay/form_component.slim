@@ -1,0 +1,14 @@
+.f-c-tiptap-overlay-form data=data
+  = form do |f|
+    input type="hidden" name="tiptap_node_attrs[type]" value=@node.class.to_s
+
+    header.f-c-tiptap-overlay-form__form-header
+      h3.f-c-tiptap-overlay-form__form-title.m-0
+        = @node.class.to_s
+
+      .f-c-tiptap-overlay-form__form-buttons
+        == cell('folio/console/ui/buttons', buttons_model)
+
+    .f-c-tiptap-overlay-form__form-body
+      - @node.class.structure.each do |key, type|
+        = render_input(f:, key:, type:)

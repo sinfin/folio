@@ -5,3 +5,10 @@ cs:
       tiptap:
         simple_form_wrap_component:
           editor_title: Editor
+
+        overlay:
+          form_component:
+            submit: Hotovo
+
+        invalid_node_component:
+          title: Špatně nastavený obsah. Veřejně nebude zobrazen.

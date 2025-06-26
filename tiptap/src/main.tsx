@@ -5,8 +5,6 @@ import "./styles/_keyframe-animations.scss";
 import "./styles/index.scss";
 import App from "./App.tsx";
 
-import demoContent from "@/components/tiptap-templates/simple/data/content.json";
-
 // Initialize the Folio namespace if it doesn't exist
 window.Folio = window.Folio || {};
 window.Folio.Tiptap = window.Folio.Tiptap || {};
@@ -62,6 +60,7 @@ window.Folio.Tiptap.init = (props) => {
         onUpdate={onUpdate}
         defaultContent={props.content}
         type={props.type}
+        folioTiptapNodes={props.folioTiptapNodes || []}
       />
     </StrictMode>,
   );
@@ -101,6 +100,7 @@ window.addEventListener("message", (e) => {
       window.Folio.Tiptap.init({
         node,
         type: node.dataset.tiptapType === "block" ? "block" : "rich-text",
+        folioTiptapNodes: e.data.folioTiptapNodes,
         content: e.data.content,
       });
     }
@@ -126,21 +126,21 @@ if (process.env.NODE_ENV !== "production" && window.top === window) {
         (rootElement as HTMLElement).dataset.tiptapType === "block"
           ? "block"
           : "rich-text",
-      content: demoContent,
-      onCreate: ({ editor }: { editor: TiptapEditor }) => {
-        const json = editor.getJSON();
-        if (typeof json !== "object" || json === null) {
-          throw new Error("getJSON must return a hash");
-        }
-        console.log("onCreate", json);
-      },
-      onUpdate: ({ editor }: { editor: TiptapEditor }) => {
-        const json = editor.getJSON();
-        if (typeof json !== "object" || json === null) {
-          throw new Error("getJSON must return a hash");
-        }
-        console.log("onUpdate", json);
-      },
+      // content: demoContent,
+      // onCreate: ({ editor }: { editor: TiptapEditor }) => {
+      //   const json = editor.getJSON();
+      //   if (typeof json !== "object" || json === null) {
+      //     throw new Error("getJSON must return a hash");
+      //   }
+      //   console.log("onCreate", json);
+      // },
+      // onUpdate: ({ editor }: { editor: TiptapEditor }) => {
+      //   const json = editor.getJSON();
+      //   if (typeof json !== "object" || json === null) {
+      //     throw new Error("getJSON must return a hash");
+      //   }
+      //   console.log("onUpdate", json);
+      // },
     });
   }
 }

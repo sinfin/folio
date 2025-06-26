@@ -12,13 +12,13 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
     Folio::File::Audio,
   ].each do |klass|
     test "#{klass} - index" do
-      get url_for([:console, :api, klass])
+      get url_for([:console, :api, klass, format: :json])
       assert_response :success
     end
 
     test "#{klass} - update" do
       file = create(klass.model_name.singular)
-      put url_for([:console, :api, file]), params: {
+      put url_for([:console, :api, file, format: :json]), params: {
         file: {
           attributes: {
             tags: ["foo"],
@@ -34,7 +34,7 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
       file = create(klass.model_name.singular)
       assert klass.exists?(file.id)
 
-      delete url_for([:console, :api, file])
+      delete url_for([:console, :api, file, format: :json])
 
       assert_response(:success)
       assert_not klass.exists?(file.id)
@@ -45,7 +45,7 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
       assert_equal([], files.first.tag_list)
       assert_equal([], files.second.tag_list)
 
-      post url_for([:tag, :console, :api, klass]), params: {
+      post url_for([:tag, :console, :api, klass, format: :json]), params: {
         file_ids: files.pluck(:id),
         tags: ["a", "b"],
       }
@@ -58,14 +58,14 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
       files = create_list(klass.model_name.singular, 3)
       assert_equal(3, klass.count)
       ids = files.first(2).map(&:id).join(",")
-      delete url_for([:mass_destroy, :console, :api, klass, ids:])
+      delete url_for([:mass_destroy, :console, :api, klass, ids:, format: :json])
       assert_equal(1, klass.count)
     end
 
     test "#{klass} - mass_download" do
       files = create_list(klass.model_name.singular, 2)
       ids = files.map(&:id).join(",")
-      get url_for([:mass_download, :console, :api, klass, ids:])
+      get url_for([:mass_download, :console, :api, klass, ids:, format: :json])
       assert_response(:ok)
     end
   end

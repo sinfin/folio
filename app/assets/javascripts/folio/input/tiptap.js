@@ -5,6 +5,8 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     loaded: { type: Boolean, default: false },
     origin: String,
     type: String,
+    renderUrl: String,
+    tiptapNodesJson: String,
   }
 
   connect () {
@@ -34,19 +36,22 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     if (this.originValue !== "*" && e.origin !== window.origin) return
     if (e.source !== this.iframeTarget.contentWindow) return
     if (!e.data) return
-    if (e.data.type.indexOf('f-tiptap:') !== 0) return
 
-    if (e.data.type === 'f-tiptap:javascript-evaluated') {
-      this.sendStartMessage()
-    } else {
-      this.setHeight(e.data.height)
-
-      if (e.data.type === 'f-tiptap:created') {
+    switch (e.data.type) {
+      case 'f-tiptap:created':
+        this.setHeight(e.data.height)
         this.loadedValue = true
-      } else if (e.data.type === 'f-tiptap:updated') {
+        break
+      case 'f-tiptap:updated':
         this.setHeight(e.data.height)
         this.inputTarget.value = JSON.stringify(e.data.content)
-      }
+        break
+      case 'f-tiptap-node:render':
+        this.onRenderNodeMessage(e)
+        break
+      case 'f-tiptap:javascript-evaluated':
+        this.sendStartMessage()
+        break
     }
   }
 
@@ -69,6 +74,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     const data = {
       type: 'f-input-tiptap:start',
       content,
+      folioTiptapNodes: this.tiptapNodesJsonValue ? JSON.parse(this.tiptapNodesJsonValue) : [],
       windowWidth: this.windowWidth,
     }
 
@@ -78,6 +84,51 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
       if (link && link.href) {
         data.stylesheetPath = link.href
       }
+    }
+
+    this.iframeTarget.contentWindow.postMessage(data, this.originValue || window.origin)
+  }
+
+  onRenderNodeMessage (e) {
+    const data = {
+      unique_id: e.data.uniqueId,
+      attrs: e.data.attrs,
+    }
+
+    if (this.renderQueue) {
+      this.renderQueue.push(data)
+      return
+    }
+
+    this.renderQueue = [data]
+
+    window.setTimeout(() => {
+      if (!this.renderQueue) return
+
+      const queue = this.renderQueue
+      delete this.renderQueue
+
+      this.renderNodesApi(queue)
+    }, 50)
+  }
+
+  renderNodesApi (nodes) {
+    window.Folio.Api.apiPost(this.renderUrlValue, { nodes }).then((res) => {
+      if (res && res.data) {
+        this.handleRenderNodesResponse(res.data)
+        return
+      }
+
+      throw new Error('No data returned from API')
+    }).catch((e) => {
+      window.alert('Error: ' + e.message)
+    })
+  }
+
+  handleRenderNodesResponse (nodes) {
+    const data = {
+      type: "f-input-tiptap:render-nodes",
+      nodes,
     }
 
     this.iframeTarget.contentWindow.postMessage(data, this.originValue || window.origin)

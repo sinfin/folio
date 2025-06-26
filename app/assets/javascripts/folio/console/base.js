@@ -69,7 +69,6 @@
 //= require folio/console/ui/button/button
 //= require folio/console/ui/buttons/buttons
 //= require folio/console/ui/notification_modal_component
-//= require folio/console/ui/tabs_component
 
 //= require folio/console/addresses/fields/fields
 //= require folio/console/atoms/layout_switch/layout_switch
@@ -118,6 +117,9 @@
 //= require folio/console/single_file_select/single_file_select
 //= require folio/console/site_user_links/fields_component
 //= require folio/console/state/state
+//= require folio/console/tiptap/overlay/form_component
+//= require folio/console/tiptap/overlay_component
+//= require folio/console/ui/tabs_component
 //= require folio/console/users/invite_and_copy/invite_and_copy
 
 //= require folio/console/main_app
