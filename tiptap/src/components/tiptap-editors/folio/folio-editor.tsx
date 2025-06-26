@@ -80,12 +80,14 @@ const MainToolbarContent = ({
   isMobile,
   blockEditor,
   editor,
+  folioTiptapNodes,
 }: {
   onHighlighterClick: () => void;
   onLinkClick: () => void;
   isMobile: boolean;
   blockEditor: boolean;
   editor: Editor | null;
+  folioTiptapNodes: string[];
 }) => {
   return (
     <>
@@ -140,7 +142,7 @@ const MainToolbarContent = ({
       <ToolbarSeparator />
 
       <ToolbarGroup>
-        {blockEditor ? <FolioTiptapNodeButton editor={editor} /> : null}
+        {blockEditor ? <FolioTiptapNodeButton editor={editor} folioTiptapNodes={folioTiptapNodes} /> : null}
       </ToolbarGroup>
 
       <Spacer />
@@ -184,6 +186,7 @@ export function FolioEditor({
   onUpdate,
   defaultContent,
   type,
+  folioTiptapNodes,
 }: FolioEditor) {
   const isMobile = useMobile();
   const windowSize = useWindowSize();
@@ -314,6 +317,7 @@ export function FolioEditor({
               isMobile={isMobile}
               blockEditor={blockEditor}
               editor={editor}
+              folioTiptapNodes={folioTiptapNodes}
             />
           ) : (
             <MobileToolbarContent

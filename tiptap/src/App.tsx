@@ -8,9 +8,10 @@ interface AppProps {
   onCreate?: (content: { editor: TiptapEditor }) => void;
   defaultContent?: Content;
   type?: "rich-text" | "block";
+  folioTiptapNodes: string[];
 }
 
-function App({ onCreate, onUpdate, defaultContent, type }: AppProps) {
+function App({ onCreate, onUpdate, defaultContent, type, folioTiptapNodes }: AppProps) {
   switch (type) {
     case "block":
     case "rich-text":
@@ -20,6 +21,7 @@ function App({ onCreate, onUpdate, defaultContent, type }: AppProps) {
           onUpdate={onUpdate}
           defaultContent={defaultContent}
           type={type}
+          folioTiptapNodes={folioTiptapNodes}
         />
       );
     default:

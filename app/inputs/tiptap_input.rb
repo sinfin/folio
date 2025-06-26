@@ -11,6 +11,7 @@ class TiptapInput < SimpleForm::Inputs::StringInput
                         origin: ENV["FOLIO_TIPTAP_DEV"] ? "*" : "",
                         type: tiptap_type,
                         render_url: @builder.template.render_nodes_console_api_tiptap_path,
+                        tiptap_nodes_json: (@builder.object.try(:folio_tiptap_nodes) || Folio::Tiptap.default_tiptap_nodes).to_json,
                       },
                       action: {
                         "message@window" => "onWindowMessage",
