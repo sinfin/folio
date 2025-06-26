@@ -46,19 +46,19 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
     [props],
   );
 
-  const [uniqueId, setUniqueId] = React.useState<number>(0);
+  const [uniqueId, setUniqueId] = React.useState<number>(-1);
   const [loaded, setLoaded] = React.useState<boolean>(false);
   const [htmlFromApi, setHtmlFromApi] = React.useState<string>("");
 
   React.useEffect(() => {
-    if (uniqueId === 0) {
+    if (uniqueId === -1) {
       setUniqueId(getUniqueIdForNode());
     }
   }, [uniqueId]);
 
   // Effect to fetch HTML content from API
   React.useEffect(() => {
-    if (!loaded && uniqueId !== 0) {
+    if (!loaded && uniqueId !== -1) {
       const serializedAttrs = JSON.stringify(props.node.attrs);
       // Check if we have cached HTML for these attributes
       const cachedEntry = htmlCache.find(
