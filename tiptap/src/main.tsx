@@ -126,21 +126,20 @@ if (process.env.NODE_ENV !== "production" && window.top === window) {
         (rootElement as HTMLElement).dataset.tiptapType === "block"
           ? "block"
           : "rich-text",
-      // content: demoContent,
-      // onCreate: ({ editor }: { editor: TiptapEditor }) => {
-      //   const json = editor.getJSON();
-      //   if (typeof json !== "object" || json === null) {
-      //     throw new Error("getJSON must return a hash");
-      //   }
-      //   console.log("onCreate", json);
-      // },
-      // onUpdate: ({ editor }: { editor: TiptapEditor }) => {
-      //   const json = editor.getJSON();
-      //   if (typeof json !== "object" || json === null) {
-      //     throw new Error("getJSON must return a hash");
-      //   }
-      //   console.log("onUpdate", json);
-      // },
+      onCreate: ({ editor }: { editor: TiptapEditor }) => {
+        const json = editor.getJSON();
+        if (typeof json !== "object" || json === null) {
+          throw new Error("getJSON must return a hash");
+        }
+        console.log("onCreate", json);
+      },
+      onUpdate: ({ editor }: { editor: TiptapEditor }) => {
+        const json = editor.getJSON();
+        if (typeof json !== "object" || json === null) {
+          throw new Error("getJSON must return a hash");
+        }
+        console.log("onUpdate", json);
+      },
     });
   }
 }
