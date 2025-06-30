@@ -12,38 +12,119 @@ class Folio::Tiptap::Node
         fail ArgumentError, "Cannot use reserved key `type` in tiptap_node definition"
       end
 
-      if type == :url_json
-        attribute key, type: :json
-
-        define_method "#{key}=" do |value|
-          transformed_value = if value.is_a?(String)
-            JSON.parse(value) rescue {}
-          elsif value.is_a?(Hash)
-            value.stringify_keys
-          else
-            fail ArgumentError, "Expected a String or Hash for #{key}, got #{value.class.name}"
-          end
-
-          whitelisted = transformed_value.slice(*ALLOWED_URL_JSON_KEYS).transform_values do |v|
-            v.is_a?(String) ? v.strip.presence : nil
-          end.compact
-
-          super(whitelisted)
+      if type.is_a?(Hash) && type[:class_name]
+        if type[:has_many]
+          tiptap_node_setup_structure_for_has_many(key:, class_name: type[:class_name])
+        else
+          tiptap_node_setup_structure_for_belongs_to(key:, class_name: type[:class_name])
         end
       else
-        handled_type = case type
-                       when :string, :text, :rich_text
-                         :text
-                       else
-                         fail ArgumentError, "Unsupported type #{type} in tiptap_node definition"
+        case type
+        when :url_json
+          tiptap_node_setup_structure_for_url_json(key)
+        when :image,
+             :images,
+             :document,
+             :documents,
+             :audio,
+             :audios,
+             :video,
+             :videos
+          tiptap_node_setup_structure_for_attachment(key)
+        when :string,
+             :text,
+             :rich_text
+          tiptap_node_setup_structure_default(key)
+        else
+          fail ArgumentError, "Unsupported type #{type} in tiptap_node definition"
         end
-
-        attribute key, type: handled_type
       end
     end
 
     define_singleton_method :structure do
       hash
+    end
+  end
+
+  def self.tiptap_node_setup_structure_default(key)
+    attribute key, type: :text
+  end
+
+  def self.tiptap_node_setup_structure_for_url_json(key)
+    attribute key, type: :json
+
+    define_method "#{key}=" do |value|
+      transformed_value = if value.is_a?(String)
+        JSON.parse(value) rescue {}
+      elsif value.is_a?(Hash)
+        value.stringify_keys
+      else
+        fail ArgumentError, "Expected a String or Hash for #{key}, got #{value.class.name}"
+      end
+
+      whitelisted = transformed_value.slice(*ALLOWED_URL_JSON_KEYS).transform_values do |v|
+        v.is_a?(String) ? v.strip.presence : nil
+      end.compact
+
+      super(whitelisted)
+    end
+  end
+
+  def self.tiptap_node_setup_structure_for_attachment(key)
+    is_plural = key.to_s.end_with?("s")
+    singular_key = is_plural ? key.to_s.chomp("s") : key.to_s
+
+    class_name = case singular_key
+                 when "image"
+                   "Folio::File::Image"
+                 when "document"
+                   "Folio::File::Document"
+                 when "audio"
+                   "Folio::File::Audio"
+                 when "video"
+                   "Folio::File::Video"
+                 else
+                   fail ArgumentError, "Unsupported attachment type for key #{key}"
+    end
+
+    if is_plural
+      tiptap_node_setup_structure_for_has_many(key:, class_name:)
+    else
+      tiptap_node_setup_structure_for_belongs_to(key:, class_name:)
+    end
+  end
+
+  def self.tiptap_node_setup_structure_for_belongs_to(key:, class_name:)
+    attribute "#{key}_id", type: :integer
+    klass = class_name.constantize
+
+    define_method(key) do
+      klass.find_by(id: send("#{key}_id"))
+    end
+
+    define_method("#{key}=") do |value|
+      if value.is_a?(klass)
+        send("#{key}_id=", value.id)
+      else
+        fail ArgumentError, "Expected a #{klass.name} for #{key}, got #{value.class.name}"
+      end
+    end
+  end
+
+  def self.tiptap_node_setup_structure_for_has_many(key:, class_name:)
+    attribute "#{key}_ids", type: :integer, array: true, default: []
+    klass = class_name.constantize
+
+    define_method(key) do
+      klass.where(id: send("#{key}_ids")).to_a
+    end
+
+    define_method("#{key}=") do |value|
+      if value.is_a?(Array) && value.all? { |v| v.is_a?(klass) }
+        send("#{key}_ids=", value.map(&:id))
+      else
+        fail ArgumentError, "Expected an Array of #{klass.name} for #{key}, got #{value}"
+      end
     end
   end
 
