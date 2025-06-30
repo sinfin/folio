@@ -1,5 +1,6 @@
 .f-c-tiptap-simple-form-wrap
   --f-c-tiptap-simple-form-wrap-inner-padding: #{$f-c-layout-main-container__padding}
+  --f-c-tiptap-simple-form-wrap-fields-background: #{$light-gray}
 
   position: relative
   z-index: 1
@@ -24,6 +25,10 @@
     padding: var(--f-c-tiptap-simple-form-wrap-inner-padding)
     position: relative
     z-index: 1
+    background: var(--f-c-tiptap-simple-form-wrap-fields-background)
+
+    .nav-tabs .nav-link.active
+      background: var(--f-c-tiptap-simple-form-wrap-fields-background)
 
     .tab-pane > .form-group:last-child
       margin-bottom: 0
