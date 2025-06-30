@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Folio::Tiptap::Node
+  ALLOWED_URL_JSON_KEYS = %w[href label title rel target]
+
   include ActiveModel::Model
   include ActiveModel::Attributes
 
@@ -10,13 +12,34 @@ class Folio::Tiptap::Node
         fail ArgumentError, "Cannot use reserved key `type` in tiptap_node definition"
       end
 
-      handled_type = case type
-                     when :string, :text, :jsonb
-                     when :rich_text
-                       :text
-      end
+      if type == :url_json
+        attribute key, type: :json
 
-      attribute key, type: handled_type
+        define_method "#{key}=" do |value|
+          transformed_value = if value.is_a?(String)
+            JSON.parse(value) rescue {}
+          elsif value.is_a?(Hash)
+            value.stringify_keys
+          else
+            fail ArgumentError, "Expected a String or Hash for #{key}, got #{value.class.name}"
+          end
+
+          whitelisted = transformed_value.slice(*ALLOWED_URL_JSON_KEYS).transform_values do |v|
+            v.is_a?(String) ? v.strip.presence : nil
+          end.compact
+
+          super(whitelisted)
+        end
+      else
+        handled_type = case type
+                       when :string, :text, :rich_text
+                         :text
+                       else
+                         fail ArgumentError, "Unsupported type #{type} in tiptap_node definition"
+        end
+
+        attribute key, type: handled_type
+      end
     end
 
     define_singleton_method :structure do
@@ -50,13 +73,14 @@ class Folio::Tiptap::Node
   def assign_attributes_from_param_attrs(attrs)
     return if attrs[:data].blank?
 
-    permitted = self.class.structure.map do |key, type|
+    permitted = []
+
+    self.class.structure.each do |key, type|
       if type == :url_json
-        {
-          key => %i[href label title rel target],
-        }
+        permitted << key
+        permitted << { key => ALLOWED_URL_JSON_KEYS }
       else
-        key
+        permitted << key
       end
     end
 

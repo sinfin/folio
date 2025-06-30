@@ -14,14 +14,15 @@ class Folio::Tiptap::NodeTest < ActiveSupport::TestCase
 
   test "to_tiptap_node_hash" do
     node = Node.new(title: "foo",
-                            content: "bar",
-                            button_url_json: { href: "foo", label: "bar" })
+                    content: "bar",
+                    button_url_json: { href: "foo", label: "bar" })
 
     hash = node.to_tiptap_node_hash
     assert_equal "folioTiptapNode", hash["type"]
     assert_equal 1, hash["attrs"]["version"]
     assert_equal "Folio::Tiptap::NodeTest::Node", hash["attrs"]["type"]
     assert_equal "foo", hash["attrs"]["data"]["title"]
+    assert_equal "foo", hash["attrs"]["data"]["button_url_json"]["href"]
   end
 end
 
