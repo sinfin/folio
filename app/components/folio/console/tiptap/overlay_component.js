@@ -21,6 +21,10 @@ window.Folio.Stimulus.register('f-c-tiptap-overlay', class extends window.Stimul
   }
 
   backdropClick () {
+    this.close()
+  }
+
+  close () {
     this.stateValue = 'closed'
   }
 

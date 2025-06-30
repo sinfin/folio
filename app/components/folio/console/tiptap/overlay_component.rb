@@ -12,6 +12,7 @@ class Folio::Console::Tiptap::OverlayComponent < Folio::Console::ApplicationComp
                         action: {
                           "message@window" => "onWindowMessage",
                           "f-c-tiptap-overlay-form:submit" => "onFormSubmit",
+                          "f-c-tiptap-overlay-form:close" => "close",
                         })
   end
 end

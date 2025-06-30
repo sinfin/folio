@@ -17,4 +17,8 @@ window.Folio.Stimulus.register('f-c-tiptap-overlay-form', class extends window.S
 
     this.dispatch("submit", { detail: { data } })
   }
+
+  onCancelClick () {
+    this.dispatch("close")
+  }
 })
