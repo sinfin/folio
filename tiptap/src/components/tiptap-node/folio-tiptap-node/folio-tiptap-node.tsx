@@ -110,9 +110,9 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
           event.data.uniqueId === uniqueId
         ) {
           if (event.data.node && event.data.node.attrs) {
+            setHtmlFromApi("");
+            setLoaded(false);
             props.updateAttributes(event.data.node.attrs);
-            setHtmlFromApi("")
-            setLoaded(false)
           }
         }
       };
