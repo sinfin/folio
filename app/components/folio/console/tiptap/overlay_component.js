@@ -10,6 +10,7 @@ window.Folio.Stimulus.register('f-c-tiptap-overlay', class extends window.Stimul
 
   disconnect () {
     delete this.iframeWindowReference
+    delete this.nodeUniqueId
     this.abortAjax()
   }
 
@@ -45,6 +46,7 @@ window.Folio.Stimulus.register('f-c-tiptap-overlay', class extends window.Stimul
 
   onNodeClickMessage (e) {
     this.iframeWindowReference = e.source
+    this.nodeUniqueId = e.data.uniqueId || null
     this.stateValue = "loading"
 
     this.ajax({
@@ -94,6 +96,7 @@ window.Folio.Stimulus.register('f-c-tiptap-overlay', class extends window.Stimul
     this.iframeWindowReference.postMessage({
       type: "f-c-tiptap-overlay:saved",
       node: nodeHash,
+      uniqueId: this.nodeUniqueId,
     }, this.originValue || window.origin)
   }
 })

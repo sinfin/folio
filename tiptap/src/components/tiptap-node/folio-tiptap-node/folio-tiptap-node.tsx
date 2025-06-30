@@ -4,6 +4,7 @@ import { NodeViewWrapper } from "@tiptap/react";
 import { Button } from "@/components/tiptap-ui-primitive/button";
 import { EditIcon } from "@/components/tiptap-icons/edit-icon";
 import { XIcon } from "@/components/tiptap-icons/x-icon";
+import { FolioTiptapNodeExtension } from "./folio-tiptap-node-extension";
 
 import "./folio-tiptap-node.scss";
 
@@ -22,6 +23,10 @@ const storeHtmlToCache = ({ html, serializedAttrs }: StoredHtml) => {
 };
 
 export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
+  const [uniqueId, setUniqueId] = React.useState<number>(-1);
+  const [loaded, setLoaded] = React.useState<boolean>(false);
+  const [htmlFromApi, setHtmlFromApi] = React.useState<string>("");
+
   const handleEditClick = React.useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       if (!e.defaultPrevented) {
@@ -29,12 +34,13 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
           {
             type: "f-tiptap-node:click",
             attrs: props.node.attrs,
+            uniqueId,
           },
           "*",
         );
       }
     },
-    [],
+    [props.node, uniqueId],
   );
 
   const handleRemoveClick = React.useCallback(
@@ -45,10 +51,6 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
     },
     [props],
   );
-
-  const [uniqueId, setUniqueId] = React.useState<number>(-1);
-  const [loaded, setLoaded] = React.useState<boolean>(false);
-  const [htmlFromApi, setHtmlFromApi] = React.useState<string>("");
 
   React.useEffect(() => {
     if (uniqueId === -1) {
@@ -84,26 +86,44 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
 
   // Effect to handle messages from the parent window
   React.useEffect(() => {
-    const handleMessage = (event: MessageEvent) => {
-      if (event.data.type === "f-input-tiptap:render-nodes") {
-        event.data.nodes.forEach((node: any) => {
-          if (node.unique_id === uniqueId) {
-            const serializedAttrs = JSON.stringify(props.node.attrs);
-            storeHtmlToCache({ html: node.html, serializedAttrs });
+    if (!loaded && uniqueId !== -1) {
+      const handleMessage = (event: MessageEvent) => {
+        if (
+          process.env.NODE_ENV === "production" &&
+          event.origin !== window.origin
+        )
+          return;
 
-            setHtmlFromApi(node.html);
-            setLoaded(true);
+        if (event.data.type === "f-input-tiptap:render-nodes") {
+          event.data.nodes.forEach((node: any) => {
+            if (node.unique_id === uniqueId) {
+              const serializedAttrs = JSON.stringify(props.node.attrs);
+              storeHtmlToCache({ html: node.html, serializedAttrs });
+
+              setHtmlFromApi(node.html);
+              setLoaded(true);
+            }
+          });
+        } else if (
+          event.data &&
+          event.data.type === "f-c-tiptap-overlay:saved" &&
+          event.data.uniqueId === uniqueId
+        ) {
+          if (event.data.node && event.data.node.attrs) {
+            props.updateAttributes(event.data.node.attrs);
+            setHtmlFromApi("")
+            setLoaded(false)
           }
-        });
-      }
-    };
+        }
+      };
 
-    window.addEventListener("message", handleMessage);
+      window.addEventListener("message", handleMessage);
 
-    return () => {
-      window.removeEventListener("message", handleMessage);
-    };
-  }, [uniqueId]);
+      return () => {
+        window.removeEventListener("message", handleMessage);
+      };
+    }
+  }, [uniqueId, props]);
 
   return (
     <NodeViewWrapper className="tiptap-folio-tiptap-node" tabIndex={0}>

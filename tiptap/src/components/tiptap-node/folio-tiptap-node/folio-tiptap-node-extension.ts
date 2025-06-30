@@ -48,16 +48,6 @@ export const FolioTiptapNodeExtension = Node.create<FolioTiptapNodeOptions>({
   addNodeView() {
     return ReactNodeViewRenderer(FolioTiptapNode);
   },
-
-  addCommands() {
-    return {
-      setFolioTiptapNode:
-        (node: Content = {}) =>
-        ({ commands }) => {
-          return commands.insertContent(node);
-        },
-    };
-  },
 });
 
 export default FolioTiptapNodeExtension;

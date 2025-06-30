@@ -20,7 +20,7 @@ export interface FolioTiptapNodeButtonProps extends ButtonProps {
 
 export function insertFolioTiptapNode(
   editor: Editor | null,
-  node: Content,
+  node: any,
 ): boolean {
   if (!editor) {
     console.log("No editor available for insertFolioTiptapNode");
@@ -28,7 +28,7 @@ export function insertFolioTiptapNode(
   }
 
   try {
-    const result = editor.commands.setFolioTiptapNode(node);
+    const result = editor.commands.insertContent(node);
     return result;
   } catch (error) {
     console.error("insertFolioTiptapNode error", error);
@@ -44,11 +44,16 @@ export const FolioTiptapNodeButton = React.forwardRef<
 
   const handleClick = React.useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
-      if (!e.defaultPrevented && !disabled && folioTiptapNodes && folioTiptapNodes[0]) {
+      if (
+        !e.defaultPrevented &&
+        !disabled &&
+        folioTiptapNodes &&
+        folioTiptapNodes[0]
+      ) {
         window.top!.postMessage(
           {
             type: "f-tiptap-node-button:click",
-            attrs: { type: folioTiptapNodes[0] }
+            attrs: { type: folioTiptapNodes[0] },
           },
           "*",
         );
@@ -65,6 +70,11 @@ export const FolioTiptapNodeButton = React.forwardRef<
       )
         return;
       if (!event.data || event.data.type !== "f-c-tiptap-overlay:saved") return;
+
+      if (event.data.uniqueId) {
+        // handle these in folio-tiptap-node.tsx
+        return;
+      }
 
       // Handle window message events here
       insertFolioTiptapNode(editor, event.data.node);

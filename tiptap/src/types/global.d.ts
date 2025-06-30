@@ -101,6 +101,7 @@ declare module "@tiptap/react" {
     folioTiptapNode: {
       setFolioTiptapNode: (
         node?: import("@tiptap/react").Content,
+        uniqueId: number | null = null,
       ) => ReturnType;
     };
   }
