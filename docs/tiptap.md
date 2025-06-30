@@ -32,7 +32,7 @@ The aim is to provide a basic rich text editor and an advanced block editor. Sin
 
 We use window messages extensively to communicate between the iframe and the parent window.
 
-- The input stimulus sends a `f-input-tiptap:start` message to the iframe window to try and initialize with JSON data from the hidden input.
+- The input stimulus sends a `f-input-tiptap:start` message to the iframe window to try and initialize with JSON data from the hidden input. Available custom folio tiptap nodes are specified in it as well.
   - If the javascript is initialized, it starts the editor.
   - If it's not, nothing happens.
 - The iframe finishes loading the javascript and sends a `f-tiptap:javascript-evaluated` message to the top window to let the input know that the javascript has been evaluated.

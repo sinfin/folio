@@ -6,6 +6,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     origin: String,
     type: String,
     renderUrl: String,
+    tiptapNodesJson: String,
   }
 
   connect () {
@@ -41,7 +42,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
         this.setHeight(e.data.height)
         this.loadedValue = true
         break
-      case 'f-input-tiptap:updated':
+      case 'f-tiptap:updated':
         this.setHeight(e.data.height)
         this.inputTarget.value = JSON.stringify(e.data.content)
         break
@@ -73,6 +74,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     const data = {
       type: 'f-input-tiptap:start',
       content,
+      folioTiptapNodes: this.tiptapNodesJsonValue ? JSON.parse(this.tiptapNodesJsonValue) : [],
       windowWidth: this.windowWidth,
     }
 

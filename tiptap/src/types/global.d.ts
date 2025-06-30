@@ -53,6 +53,7 @@ declare global {
     onUpdate?: (content: { editor: TiptapEditor }) => void;
     defaultContent?: import("@tiptap/react").Content;
     type: "rich-text" | "block";
+    folioTiptapNodes: string[];
   }
 
   interface TiptapEditor {
@@ -70,6 +71,7 @@ declare global {
         root: HTMLElement | null;
         init: (props: {
           node: HTMLElement;
+          folioTiptapNodes?: string[];
           type: "rich-text" | "block";
           onCreate?: (content: { editor: TiptapEditor }) => void;
           onUpdate?: (content: { editor: TiptapEditor }) => void;

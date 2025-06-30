@@ -8,5 +8,11 @@ module Folio
         cssUrls: [context.asset_path("folio-tiptap.css")],
       }
     end
+
+    def self.default_tiptap_nodes
+      %w[
+        Dummy::Tiptap::Node::Card
+      ]
+    end
   end
 end

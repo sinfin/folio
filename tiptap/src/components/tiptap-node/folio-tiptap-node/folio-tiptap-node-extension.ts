@@ -54,7 +54,6 @@ export const FolioTiptapNodeExtension = Node.create<FolioTiptapNodeOptions>({
       setFolioTiptapNode:
         (node: Content = {}) =>
         ({ commands }) => {
-          console.log("inserting node", node);
           return commands.insertContent(node);
         },
     };

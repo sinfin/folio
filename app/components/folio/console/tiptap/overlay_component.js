@@ -36,13 +36,7 @@ window.Folio.Stimulus.register('f-c-tiptap-overlay', class extends window.Stimul
   }
 
   onNodeButtonClickMessage (e) {
-    this.iframeWindowReference = e.source
-    this.stateValue = "loading"
-
-    this.ajax({
-      url: this.editUrlValue,
-      data: { tiptap_node_attrs: { type: "Dummy::Tiptap::Node::Card" } }
-    })
+    this.onNodeClickMessage(e)
   }
 
   onNodeClickMessage (e) {

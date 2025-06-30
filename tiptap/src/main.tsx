@@ -61,6 +61,7 @@ window.Folio.Tiptap.init = (props) => {
         onUpdate={onUpdate}
         defaultContent={props.content}
         type={props.type}
+        folioTiptapNodes={props.folioTiptapNodes || []}
       />
     </StrictMode>,
   );
@@ -100,6 +101,7 @@ window.addEventListener("message", (e) => {
       window.Folio.Tiptap.init({
         node,
         type: node.dataset.tiptapType === "block" ? "block" : "rich-text",
+        folioTiptapNodes: e.data.folioTiptapNodes,
         content: e.data.content,
       });
     }
