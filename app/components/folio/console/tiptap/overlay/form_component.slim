@@ -10,5 +10,11 @@
         == cell('folio/console/ui/buttons', buttons_model)
 
     .f-c-tiptap-overlay-form__form-body
-      - @node.class.structure.each do |key, type|
-        = render_input(f:, key:, type:)
+      - form_rows.each do |row|
+        .f-c-tiptap-overlay-form__form-row
+          - row[:columns].each do |column|
+            .f-c-tiptap-overlay-form__form-col[
+              class=(column[:bem_modifier] ? "f-c-tiptap-overlay-form__form-col--#{column[:bem_modifier]}" : nil)
+            ]
+              - column[:structure].each do |key, type|
+                = render_input(f:, key:, type:)

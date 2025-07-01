@@ -78,4 +78,28 @@ class Folio::Console::Tiptap::Overlay::FormComponent < Folio::Console::Applicati
         },
       ]
     end
+
+    def form_rows
+      single_attachments = {}
+      rest = {}
+
+      @node.class.structure.each do |key, type|
+        if type.in?([:image, :document, :video, :audio])
+          single_attachments[key] = type
+        else
+          rest[key] = type
+        end
+      end
+
+      if single_attachments.present?
+        [
+          { columns: [
+            { structure: single_attachments, bem_modifier: "single-attachments" },
+            { structure: rest, bem_modifier: "main" },
+          ] }
+        ]
+      else
+        [ { columns: [ { structure: rest } ] } ]
+      end
+    end
 end
