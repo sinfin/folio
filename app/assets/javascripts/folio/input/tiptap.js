@@ -52,7 +52,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
       case 'f-tiptap:javascript-evaluated':
         this.sendStartMessage()
         break
-      case 'f-tiptap-node:any-node-rendered':
+      case 'f-tiptap-editor:resized':
         this.setHeight(e.data.height)
         break
     }

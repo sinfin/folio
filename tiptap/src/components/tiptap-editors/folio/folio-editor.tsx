@@ -142,7 +142,12 @@ const MainToolbarContent = ({
       <ToolbarSeparator />
 
       <ToolbarGroup>
-        {blockEditor ? <FolioTiptapNodeButton editor={editor} folioTiptapNodes={folioTiptapNodes} /> : null}
+        {blockEditor ? (
+          <FolioTiptapNodeButton
+            editor={editor}
+            folioTiptapNodes={folioTiptapNodes}
+          />
+        ) : null}
       </ToolbarGroup>
 
       <Spacer />
@@ -194,6 +199,7 @@ export function FolioEditor({
     "main" | "highlighter" | "link"
   >("main");
   const toolbarRef = React.useRef<HTMLDivElement>(null);
+  const editorRef = React.useRef<HTMLDivElement>(null);
   const blockEditor = type === "block";
 
   const editor = useEditor({
@@ -296,10 +302,35 @@ export function FolioEditor({
     }
   }, [isMobile, mobileView]);
 
+  React.useEffect(() => {
+    if (!editorRef.current) return;
+
+    const editorElement = editorRef.current;
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        window.top!.postMessage(
+          {
+            type: "f-tiptap-editor:resized",
+            height: entry.contentRect.height,
+          },
+          "*",
+        );
+      }
+    });
+
+    resizeObserver.observe(editorElement);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, []);
+
   return (
     <EditorContext.Provider value={{ editor }}>
       <div
-        className={`f-tiptap-editor f-tiptap-editor--${blockEditor ? "block" : "rich-text"}`}
+        ref={editorRef}
+        className={`f-tiptap-editor f-tiptap-editor--${blockEditor ? "" : "rich-text"}`}
       >
         <Toolbar
           ref={toolbarRef}
