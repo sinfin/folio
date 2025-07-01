@@ -24,6 +24,8 @@
 
   - if @file.subtitles_cs_state != "processing"
     = form do |f|
+      = f.input :subtitles_cs_enabled, as: :boolean
+
       = f.input :subtitles_cs_text, as: :text,
                                     input_html: { rows: 20 },
                                     label: false

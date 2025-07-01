@@ -8,7 +8,7 @@ import {
   resetFilters
 } from 'ducks/filters'
 
-import { fileUsageSelector } from 'ducks/app'
+import { fileUsageSelector, photoArchiveEnabledSelector } from 'ducks/app'
 
 import TagsInput from 'components/TagsInput'
 import FolioConsoleUiButton from 'components/FolioConsoleUiButton'
@@ -42,7 +42,7 @@ class FileFilter extends Component {
   }
 
   render () {
-    const { filters, margined, fileUsage, taggable, className } = this.props
+    const { filters, margined, fileUsage, taggable, className, photoArchiveEnabled } = this.props
 
     return (
       <Wrap margined={margined} className={`f-c-r-file-filter-wrap ${className}`}>
@@ -91,8 +91,28 @@ class FileFilter extends Component {
             </div>
           )}
 
+          {photoArchiveEnabled && (
+            <div className='col-12 col-sm-6 col-xl-2'>
+            <FormGroup className='mb-2 mb-xl-0'>
+              <Input
+                type='select'
+                value={filters.photo_archive}
+                onChange={this.onInputChange}
+                placeholder={window.FolioConsole.translations.photoArchiveFilter}
+                name='photo_archive'
+                className='form-control--select select'
+                required
+              >
+                <option value=''>{window.FolioConsole.translations.photoArchivePlaceholder}</option>
+                <option value='from_photo_archive'>{window.FolioConsole.translations.photoArchiveFromPhotoArchive}</option>
+                <option value='not_from_photo_archive'>{window.FolioConsole.translations.photoArchiveNotFromPhotoArchive}</option>
+              </Input>
+            </FormGroup>
+          </div>
+          )}
+
           {taggable && (
-            <div className='col-12 col-sm-6 col-xl-3'>
+            <div className={`col-12 col-sm-6 col-xl-3 ${photoArchiveEnabled ? 'mt-xl-2' : ''}`}>
               <FormGroup className='mb-0 mb-xl-0 form-group--react-select'>
                 <TagsInput
                   value={filters.tags}
@@ -106,7 +126,7 @@ class FileFilter extends Component {
           )}
 
           {filters.active && (
-            <div className='col-12 col-xl-1'>
+            <div className={`col-12 col-xl-1 ${photoArchiveEnabled ? 'mt-sm-2' : ''}`}>
               <FormGroup className='mb-0 mt-2 mt-sm-0 form-group--react-reset ms-auto text-center text-xl-right'>
                 <FolioConsoleUiButton onClick={this.onReset} variant='danger' icon='close' />
               </FormGroup>
@@ -120,7 +140,8 @@ class FileFilter extends Component {
 
 const mapStateToProps = (state, props) => ({
   filters: makeFiltersSelector(props.fileType)(state),
-  fileUsage: fileUsageSelector(state)
+  fileUsage: fileUsageSelector(state),
+  photoArchiveEnabled: photoArchiveEnabledSelector(state) && props.fileType === 'Folio::File::Image'
 })
 
 function mapDispatchToProps (dispatch) {

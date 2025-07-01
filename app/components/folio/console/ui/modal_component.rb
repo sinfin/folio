@@ -20,4 +20,8 @@ class Folio::Console::Ui::ModalComponent < Folio::Console::ApplicationComponent
                type: "button",
                data:)
   end
+
+  def modal_data
+    stimulus_modal
+  end
 end

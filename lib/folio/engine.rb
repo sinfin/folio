@@ -83,6 +83,8 @@ module Folio
       { site_id: controller.site_for_new_files.id }
     }
 
+    config.folio_photo_archive_enabled = false
+
     config.folio_console_links_mapping = {}
     config.folio_console_links_additional_filters = {}
 

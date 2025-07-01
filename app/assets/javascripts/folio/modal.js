@@ -18,6 +18,29 @@ window.Folio.Stimulus.register('f-modal', class extends window.Stimulus.Controll
 
   disconnect () {
     this.unbindOutsideClick()
+    this.removeBackdrop()
+    delete this.toggleElement
+  }
+
+  onToggleClick (e) {
+    if (this.openValue) {
+      this.openValue = false
+      delete this.toggleElement
+    } else {
+      this.openValue = true
+      this.toggleElement = e.detail.toggle
+
+      if (e && e.detail && e.detail.dialog) {
+        const dialogs = this.element.querySelectorAll('.modal-dialog')
+
+        for (const dialog of dialogs) {
+          dialog.classList.remove('modal-dialog--active')
+        }
+
+        const dialog = this.element.querySelector(e.detail.dialog)
+        dialog.classList.add('modal-dialog--active')
+      }
+    }
   }
 
   onAnyClick (e) {
@@ -45,13 +68,16 @@ window.Folio.Stimulus.register('f-modal', class extends window.Stimulus.Controll
     backdrop.className = 'modal-backdrop show'
     backdrop.dataset.controller = 'f-modal-close'
     backdrop.dataset.action = 'click->f-modal-close#click'
+
     document.body.appendChild(backdrop)
+
+    this.backdropElement = backdrop
   }
 
-  removeBackdrops () {
-    const backdrops = document.querySelectorAll('.modal-backdrop')
-    for (const backdrop of backdrops) {
-      backdrop.parentNode.removeChild(backdrop)
+  removeBackdrop () {
+    if (this.backdropElement) {
+      this.backdropElement.remove()
+      delete this.backdropElement
     }
   }
 
@@ -76,6 +102,10 @@ window.Folio.Stimulus.register('f-modal', class extends window.Stimulus.Controll
 
       this.dispatch('opened')
       this.element.dispatchEvent(new window.CustomEvent('f-modal:opened', { bubbles: true }))
+
+      if (this.toggleElement) {
+        this.toggleElement.dispatchEvent(new window.CustomEvent('f-modal-toggle:opened', { bubbles: true }))
+      }
     } else {
       this.unbindOutsideClick()
 
@@ -85,10 +115,14 @@ window.Folio.Stimulus.register('f-modal', class extends window.Stimulus.Controll
       this.element.classList.remove('show')
       this.element.style.display = 'none'
 
-      this.removeBackdrops()
+      this.removeBackdrop()
 
       this.dispatch('closed')
       this.element.dispatchEvent(new window.CustomEvent('f-modal:closed', { bubbles: true }))
+
+      if (this.toggleElement) {
+        this.toggleElement.dispatchEvent(new window.CustomEvent('f-modal-toggle:closed', { bubbles: true }))
+      }
     }
   }
 })
@@ -107,32 +141,32 @@ window.Folio.Stimulus.register('f-modal-toggle', class extends window.Stimulus.C
       throw new Error(`No modal for selector "${this.targetValue}" found.`)
     }
 
-    if (modal.dataset.fModalOpenValue === 'true') {
-      modal.dataset.fModalOpenValue = 'false'
-    } else {
-      modal.dataset.fModalOpenValue = 'true'
-
-      if (this.dialogValue) {
-        const dialogs = modal.querySelectorAll('.modal-dialog')
-
-        for (const dialog of dialogs) {
-          dialog.classList.remove('modal-dialog--active')
-        }
-
-        const dialog = modal.querySelector(this.dialogValue)
-        dialog.classList.add('modal-dialog--active')
-      }
-    }
+    modal.dispatchEvent(new window.CustomEvent('f-modal-toggle:toggle', { bubbles: true, detail: { toggle: this.element, dialog: this.dialogValue } }))
   }
 })
 
 window.Folio.Stimulus.register('f-modal-close', class extends window.Stimulus.Controller {
+  static values = {
+    target: { type: String, default: "" }
+  }
+
   click (e) {
     e.preventDefault()
-    const modals = document.querySelectorAll('[data-f-modal-open-value="true"]')
 
-    for (const modal of modals) {
+    if (this.targetValue) {
+      const modal = document.querySelector(this.targetValue)
+
+      if (!modal) {
+        throw new Error(`No modal for selector "${this.targetValue}" found.`)
+      }
+
       window.Folio.Modal.close(modal)
+    } else {
+      const modals = document.querySelectorAll('[data-f-modal-open-value="true"]')
+
+      for (const modal of modals) {
+        window.Folio.Modal.close(modal)
+      }
     }
   }
 })

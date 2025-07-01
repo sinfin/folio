@@ -124,6 +124,13 @@ module Folio::StimulusHelper
                         inline: true)
   end
 
+  def stimulus_modal
+    stimulus_controller("f-modal",
+                        action: {
+                          "f-modal-toggle:toggle" => "onToggleClick",
+                        })
+  end
+
   def stimulus_modal_toggle(target, dialog: nil)
     stimulus_controller("f-modal-toggle",
                         values: { target:, dialog: },
@@ -131,8 +138,9 @@ module Folio::StimulusHelper
                         inline: true)
   end
 
-  def stimulus_modal_close
+  def stimulus_modal_close(target = "")
     stimulus_controller("f-modal-close",
+                        values: { target: },
                         action: { click: "click" },
                         inline: true)
   end
@@ -168,9 +176,17 @@ module Folio::StimulusHelper
   end
 
   def stimulus_tooltip(title, placement: "auto", trigger: "hover", open: false, static: false, variant: "default", tooltip_class_name: "")
+    action = if static
+      nil
+    elsif trigger == "click"
+      { click: "click" }
+    else
+      { mouseenter: "mouseenter", mouseleave: "mouseleave" }
+    end
+
     stimulus_controller("f-tooltip",
                         values: { title:, placement:, trigger:, open: open || static, static:, variant:, tooltip_class_name: },
-                        action: static ? nil : { mouseenter: "mouseenter", mouseleave: "mouseleave" },
+                        action: action,
                         inline: true)
   end
 

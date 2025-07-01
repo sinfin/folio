@@ -274,6 +274,13 @@ window.FolioConsole.HtmlAutoFormat.removeTooltip = (element) => {
   window.Folio.Tooltip.removeTooltip({ element })
 }
 
+window.FolioConsole.HtmlAutoFormat.addMissingAttributes = (redactorWrap) => {
+  for (const span of redactorWrap.querySelectorAll('.f-c-html-auto-format')) {
+    span.setAttribute('contenteditable', 'false')
+    span.dataset.controller = window.FolioConsole.HtmlAutoFormat.CLASS_NAME
+  }
+}
+
 window.Folio.Stimulus.register('f-c-html-auto-format', class extends window.Stimulus.Controller {
   connect () {
     if (this.element.classList.contains('f-c-html-auto-format--notify')) {

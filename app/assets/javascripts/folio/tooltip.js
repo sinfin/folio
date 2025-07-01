@@ -204,6 +204,10 @@ window.Folio.Stimulus.register('f-tooltip', class extends window.Stimulus.Contro
     this.openValue = true
   }
 
+  click () {
+    this.openValue = !this.openValue
+  }
+
   openValueChanged (to, from) {
     if (from === undefined) return
 

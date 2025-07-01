@@ -3,6 +3,23 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [6.5.1] - 2025-06-18
+
+### Added
+
+- support for custom submit label in `form_footer`
+- support for auto-hiding server-rendered flash messages
+- `Rails.application.config.folio_photo_archive_enabled` to enable photo archive feature
+- added photo archive filtering for image files
+- added information display in file modal for photos imported from photo archive
+
+### Fixed
+
+- hiding settings in `form_footer`
+- fix merges form using `form_footer` component instead of outdated cell
+- handle `HtmlAutoFormat` with `Folio::HtmlSanitization` - add missing attributes on redactor init when only the `f-c-html-auto-format` class remained
+- overriden `friendly_id` to use persisted values so that we don't form invalid URLs in console forms
+
 ## [6.5.0] - 2025-06-09
 
 ### Added

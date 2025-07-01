@@ -103,6 +103,13 @@ window.folioConsoleInitRedactor = (node, options = {}, additional = {}) ->
 
   $R(node, $.extend({}, opts, additional, window.folioConsoleRedactorOptionsOverride, callbacksHash))
 
+  if window.FolioConsole and window.FolioConsole.HtmlAutoFormat and window.FolioConsole.HtmlAutoFormat.addMissingAttributes
+    parent = node.closest('.redactor')
+    if parent
+      box = parent.querySelector('.redactor-in')
+      if box
+        window.FolioConsole.HtmlAutoFormat.addMissingAttributes(box)
+
 window.folioConsoleDestroyRedactor = (node) ->
   $R(node, 'destroy')
 

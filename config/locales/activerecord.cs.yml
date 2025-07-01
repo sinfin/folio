@@ -37,6 +37,7 @@ cs:
         default_gravity: Výchozí ořez
         description: Popis
         preview_duration: Kolik vteřin je zdarma?
+        subtitles_cs_enabled: Zobrazit titulky
         subtitles_cs_text: Titulky (CZ)
         subtitles_en_text: Titulky (EN)
       folio/file/image:
