@@ -7,8 +7,8 @@ class Folio::Tiptap::NodeTest < ActiveSupport::TestCase
     tiptap_node title: :string,
                 content: :text,
                 button_url_json: :url_json,
-                image: :image,
-                documents: :documents,
+                cover: :image,
+                reports: :documents,
                 page: { class_name: "Folio::Page" },
                 related_pages: { class_name: "Folio::Page", has_many: true }
 
@@ -27,16 +27,16 @@ class Folio::Tiptap::NodeTest < ActiveSupport::TestCase
   end
 
   test "attachments" do
-    image = create(:folio_file_image)
-    documents = create_list(:folio_file_document, 2)
+    cover = create(:folio_file_image)
+    reports = create_list(:folio_file_document, 2)
 
-    node = Node.new(title: "foo", image:, documents:)
+    node = Node.new(title: "foo", cover:, reports:)
 
-    assert_equal image, node.image
-    assert_equal image.id, node.image_id
+    assert_equal cover, node.cover
+    assert_equal cover.id, node.cover_id
 
-    assert_equal documents, node.documents
-    assert_equal documents.map(&:id).sort, node.documents_ids.sort
+    assert_equal reports, node.reports
+    assert_equal reports.map(&:id).sort, node.reports_ids.sort
   end
 
   test "relations" do
@@ -53,15 +53,15 @@ class Folio::Tiptap::NodeTest < ActiveSupport::TestCase
   end
 
   test "to_tiptap_node_hash" do
-    image = create(:folio_file_image)
-    documents = create_list(:folio_file_document, 2)
+    cover = create(:folio_file_image)
+    reports = create_list(:folio_file_document, 2)
     page = create(:folio_page)
     related_pages = create_list(:folio_page, 2)
 
     node = Node.new(title: "foo",
                     content: "bar",
-                    image:,
-                    documents:,
+                    cover:,
+                    reports:,
                     page:,
                     related_pages:,
                     button_url_json: { href: "foo", label: "bar" })
@@ -73,8 +73,8 @@ class Folio::Tiptap::NodeTest < ActiveSupport::TestCase
     assert_equal "Folio::Tiptap::NodeTest::Node", hash["attrs"]["type"]
     assert_equal "foo", hash["attrs"]["data"]["title"]
     assert_equal "foo", hash["attrs"]["data"]["button_url_json"]["href"]
-    assert_equal image.id, hash["attrs"]["data"]["image_id"]
-    assert_equal documents.map(&:id).sort, hash["attrs"]["data"]["documents_ids"].sort
+    assert_equal cover.id, hash["attrs"]["data"]["cover_id"]
+    assert_equal reports.map(&:id).sort, hash["attrs"]["data"]["reports_ids"].sort
     assert_equal page.id, hash["attrs"]["data"]["page_id"]
     assert_equal related_pages.map(&:id).sort, hash["attrs"]["data"]["related_pages_ids"].sort
   end

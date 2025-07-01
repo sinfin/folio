@@ -21,7 +21,7 @@ class Folio::Tiptap::Node
       else
         case type
         when :url_json
-          tiptap_node_setup_structure_for_url_json(key)
+          tiptap_node_setup_structure_for_url_json(key:)
         when :image,
              :images,
              :document,
@@ -30,11 +30,11 @@ class Folio::Tiptap::Node
              :audios,
              :video,
              :videos
-          tiptap_node_setup_structure_for_attachment(key)
+          tiptap_node_setup_structure_for_attachment(key:, type:)
         when :string,
              :text,
              :rich_text
-          tiptap_node_setup_structure_default(key)
+          tiptap_node_setup_structure_default(key:)
         else
           fail ArgumentError, "Unsupported type #{type} in tiptap_node definition"
         end
@@ -46,11 +46,11 @@ class Folio::Tiptap::Node
     end
   end
 
-  def self.tiptap_node_setup_structure_default(key)
+  def self.tiptap_node_setup_structure_default(key:)
     attribute key, type: :text
   end
 
-  def self.tiptap_node_setup_structure_for_url_json(key)
+  def self.tiptap_node_setup_structure_for_url_json(key:)
     attribute key, type: :json
 
     define_method "#{key}=" do |value|
@@ -70,11 +70,11 @@ class Folio::Tiptap::Node
     end
   end
 
-  def self.tiptap_node_setup_structure_for_attachment(key)
-    is_plural = key.to_s.end_with?("s")
-    singular_key = is_plural ? key.to_s.chomp("s") : key.to_s
+  def self.tiptap_node_setup_structure_for_attachment(key:, type:)
+    is_plural = type.to_s.end_with?("s")
+    singular_type = is_plural ? type.to_s.chomp("s") : type.to_s
 
-    class_name = case singular_key
+    class_name = case singular_type
                  when "image"
                    "Folio::File::Image"
                  when "document"
@@ -84,7 +84,7 @@ class Folio::Tiptap::Node
                  when "video"
                    "Folio::File::Video"
                  else
-                   fail ArgumentError, "Unsupported attachment type for key #{key}"
+                   fail ArgumentError, "Unsupported attachment type for type #{type}"
     end
 
     if is_plural

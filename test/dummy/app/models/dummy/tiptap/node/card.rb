@@ -3,7 +3,9 @@
 class Dummy::Tiptap::Node::Card < Folio::Tiptap::Node
   tiptap_node title: :string,
               content: :text,
-              button_url_json: :url_json
+              button_url_json: :url_json,
+              cover: :image,
+              documents: :documents
 
   validates :title,
             presence: true
