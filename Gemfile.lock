@@ -204,8 +204,14 @@ GEM
     base64 (0.2.0)
     bcrypt (3.1.20)
     benchmark (0.4.0)
+    better_errors (2.10.1)
+      erubi (>= 1.0.0)
+      rack (>= 0.9.0)
+      rouge (>= 1.0.0)
     bigdecimal (3.1.9)
     bindata (2.5.0)
+    binding_of_caller (1.0.1)
+      debug_inspector (>= 1.2.0)
     breadcrumbs_on_rails (4.1.0)
       railties (>= 5.0)
     builder (3.3.0)
@@ -258,6 +264,7 @@ GEM
       addressable
     csv (3.3.5)
     date (3.4.1)
+    debug_inspector (1.2.0)
     declarative-builder (0.2.0)
       trailblazer-option (~> 0.1.0)
     declarative-option (0.1.0)
@@ -601,6 +608,7 @@ GEM
       actionpack (>= 5.2)
       railties (>= 5.2)
     rexml (3.4.1)
+    rouge (4.5.1)
     rubocop (1.75.1)
       json (~> 2.3)
       language_server-protocol (~> 3.17.0.2)
@@ -753,6 +761,8 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  better_errors
+  binding_of_caller
   capybara
   cells-rails (~> 0.1.5)
   cells-slim (~> 0.0.6)
