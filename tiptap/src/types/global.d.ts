@@ -78,6 +78,7 @@ declare global {
           content?: import("@tiptap/react").Content;
         }) => ReturnType<typeof import("react-dom/client").createRoot>;
         destroy: () => void;
+        getHeight: () => number;
       };
     };
   }

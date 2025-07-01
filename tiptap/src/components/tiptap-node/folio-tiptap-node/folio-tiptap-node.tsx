@@ -22,6 +22,18 @@ const storeHtmlToCache = ({ html, serializedAttrs }: StoredHtml) => {
   htmlCache = [{ html, serializedAttrs }, ...htmlCache.slice(0, 9)];
 };
 
+const sendRenderedMessage = () => {
+  window.setTimeout(() => {
+    window.top!.postMessage(
+      {
+        type: "f-tiptap-node:any-node-rendered",
+        height: window.Folio.Tiptap.getHeight()
+      },
+      "*",
+    );
+  }, 0)
+}
+
 export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
   const [uniqueId, setUniqueId] = React.useState<number>(-1);
   const [loaded, setLoaded] = React.useState<boolean>(false);
@@ -70,6 +82,7 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
       if (cachedEntry) {
         setHtmlFromApi(cachedEntry.html);
         setLoaded(true);
+        sendRenderedMessage();
         return;
       } else {
         window.top!.postMessage(
@@ -102,6 +115,7 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
 
               setHtmlFromApi(node.html);
               setLoaded(true);
+              sendRenderedMessage();
             }
           });
         } else if (

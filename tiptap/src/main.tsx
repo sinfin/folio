@@ -10,6 +10,11 @@ window.Folio = window.Folio || {};
 window.Folio.Tiptap = window.Folio.Tiptap || {};
 window.Folio.Tiptap.root = window.Folio.Tiptap.root || null;
 
+window.Folio.Tiptap.getHeight = () => {
+  const editor = document.querySelector(".f-tiptap-editor")
+  return editor ? editor.clientHeight : 0;
+}
+
 window.Folio.Tiptap.init = (props) => {
   if (window.Folio.Tiptap.root) {
     throw new Error("Tiptap editor is already initialized");
@@ -19,16 +24,11 @@ window.Folio.Tiptap.init = (props) => {
     throw new Error("Node is required");
   }
 
-  const height = () => {
-    const content = document.querySelector(".f-tiptap-editor__content");
-    return content ? content.clientHeight : 0;
-  };
-
   const onCreate = ({ editor }: { editor: TiptapEditor }) => {
     window.top!.postMessage(
       {
         type: "f-tiptap:created",
-        height: height(),
+        height: window.Folio.Tiptap.getHeight(),
       },
       "*",
     );
@@ -43,7 +43,7 @@ window.Folio.Tiptap.init = (props) => {
       {
         type: "f-tiptap:updated",
         content: editor.getJSON(),
-        height: height(),
+        height: window.Folio.Tiptap.getHeight(),
       },
       "*",
     );
