@@ -27,9 +27,7 @@ class Folio::Tiptap::Node
              :document,
              :documents,
              :audio,
-             :audios,
-             :video,
-             :videos
+             :video
           tiptap_node_setup_structure_for_attachment(key:, type:)
         when :string,
              :text,
@@ -90,7 +88,30 @@ class Folio::Tiptap::Node
     if is_plural
       tiptap_node_setup_structure_for_has_many(key:, class_name:)
     else
+      # Placeholder methods for compatibility with existing code in Folio::Console::File::PickerCell.
+      define_method "#{key}_placement" do
+        self.class.folio_attachments_file_placements_class(key:).new(file_id: send("#{key}_id"), file_type: class_name)
+      end
+
+      # def tiptap_node_pseudo_file_placements
+      #   []
+      # end
       tiptap_node_setup_structure_for_belongs_to(key:, class_name:)
+    end
+  end
+
+  def self.folio_attachments_file_placements_class(key:)
+    case key
+    when :image
+      Folio::FilePlacement::Cover
+    when :document
+      Folio::FilePlacement::SingleDocument
+    when :audio
+      Folio::FilePlacement::AudioCover
+    when :video
+      Folio::FilePlacement::VideoCover
+    else
+      fail ArgumentError, "Unsupported attachment key #{key}"
     end
   end
 

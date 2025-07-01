@@ -11,7 +11,7 @@ class Folio::Console::File::PickerCell < Folio::ConsoleCell
   end
 
   def file_placement
-    @file_placement ||= model[:f].object.send(model[:placement_key])
+    @file_placement ||= model[:f].object.try(model[:placement_key])
   end
 
   def hint_for(fp)

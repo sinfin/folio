@@ -13,7 +13,11 @@ class Folio::Console::Tiptap::Overlay::FormComponent < Folio::Console::Applicati
     def render_input(f:, key:, type:)
       case type
       when :string, :text, :url_json
-        send("render_input_#{type}", f: f, key: key)
+        send("render_input_#{type}", f:, key:)
+      when :image, :document, :video, :audio
+        render_file_picker(f:, key:, type:)
+      when :images, :documents
+        render_react_files(f:, key:, type:)
       else
         raise ArgumentError, "Unsupported input type: #{type}"
       end
@@ -49,6 +53,17 @@ class Folio::Console::Tiptap::Overlay::FormComponent < Folio::Console::Applicati
     def render_input_url_json(f:, key:)
       f.input key,
               as: :url_json
+    end
+
+    def render_file_picker(f:, key:, type:)
+      class_name = "Folio::File::#{type.to_s.capitalize}"
+
+      helpers.file_picker(f:,
+                          placement_key: "#{key}_placement",
+                          file_type: Folio::Tiptap::Node.folio_attachments_file_placements_class(key:).to_s,
+    end
+
+    def render_react_files(f:, key:, type:)
     end
 
     def buttons_model
