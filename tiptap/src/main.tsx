@@ -19,8 +19,8 @@ window.Folio.Tiptap.init = (props) => {
     throw new Error("Node is required");
   }
 
-  const height = (editor: TiptapEditor) => {
-    const content = document.querySelector('.f-tiptap-editor__content')
+  const height = () => {
+    const content = document.querySelector(".f-tiptap-editor__content");
     return content ? content.clientHeight : 0;
   };
 
@@ -28,7 +28,7 @@ window.Folio.Tiptap.init = (props) => {
     window.top!.postMessage(
       {
         type: "f-tiptap:created",
-        height: height(editor),
+        height: height(),
       },
       "*",
     );
@@ -43,7 +43,7 @@ window.Folio.Tiptap.init = (props) => {
       {
         type: "f-tiptap:updated",
         content: editor.getJSON(),
-        height: height(editor),
+        height: height(),
       },
       "*",
     );
@@ -66,7 +66,7 @@ window.Folio.Tiptap.init = (props) => {
     </StrictMode>,
   );
 
-  window.Folio.Tiptap.root = root
+  window.Folio.Tiptap.root = root;
 
   return root;
 };
@@ -100,7 +100,10 @@ window.addEventListener("message", (e) => {
         document.head.insertBefore(link, document.head.firstChild);
       }
 
-      node.classList.toggle('f-tiptap-iframe-content--console-aside', !!e.data.windowWidth && e.data.windowWidth >= 1700);
+      node.classList.toggle(
+        "f-tiptap-iframe-content--console-aside",
+        !!e.data.windowWidth && e.data.windowWidth >= 1700,
+      );
 
       window.Folio.Tiptap.init({
         node,
@@ -115,7 +118,10 @@ window.addEventListener("message", (e) => {
     ) as HTMLElement;
 
     if (node) {
-      node.classList.toggle('f-tiptap-iframe-content--console-aside', !!e.data.windowWidth && e.data.windowWidth >= 1700);
+      node.classList.toggle(
+        "f-tiptap-iframe-content--console-aside",
+        !!e.data.windowWidth && e.data.windowWidth >= 1700,
+      );
     }
   }
 });

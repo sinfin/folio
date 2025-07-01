@@ -68,7 +68,7 @@ declare global {
     top: Window;
     Folio: {
       Tiptap: {
-        root: HTMLElement | null;
+        root: ReturnType<typeof import("react-dom/client").createRoot> | null;
         init: (props: {
           node: HTMLElement;
           folioTiptapNodes?: string[];
@@ -77,9 +77,7 @@ declare global {
           onUpdate?: (content: { editor: TiptapEditor }) => void;
           content?: import("@tiptap/react").Content;
         }) => ReturnType<typeof import("react-dom/client").createRoot>;
-        destroy: (
-          root: ReturnType<typeof import("react-dom/client").createRoot>,
-        ) => void;
+        destroy: () => void;
       };
     };
   }
