@@ -17,6 +17,7 @@ class Folio::Console::Links::ModalComponent < Folio::Console::ApplicationCompone
                           "f-c-links-modal-form:close" => "close",
                           "f-c-links-modal-form:submit" => "submit",
                           "f-c-links-modal:open" => "onOpen",
+                          "f-modal:closed" => "onModalClosed",
                         })
   end
 end

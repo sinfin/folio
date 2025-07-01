@@ -1,12 +1,13 @@
 #= require folio/i18n
 
 blurCallback = (e) ->
+  return if @module.link.folioLinkModalOpen
+
   if window.FolioConsole and window.FolioConsole.HtmlAutoFormat and window.FolioConsole.HtmlAutoFormat.redactorBlurCallback
     window.FolioConsole.HtmlAutoFormat.redactorBlurCallback
       redactor: this
 
   e.target.dispatchEvent(new CustomEvent('focusout', { bubbles: true, detail: { redactor: true } }))
-
 
 focusCallback = (e) ->
   e.target.dispatchEvent(new CustomEvent('focusin', { bubbles: true, detail: { redactor: true } }))
