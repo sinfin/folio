@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - added `rel` and `target` to allowed rich text attributes
+- actions `destroy`, `discard` and `undiscard` are now by default collapsed in console index pages
 
 ## [6.5.1] - 2025-06-18
 
