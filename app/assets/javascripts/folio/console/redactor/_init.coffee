@@ -105,7 +105,7 @@ window.folioConsoleInitRedactor = (node, options = {}, additional = {}) ->
   $R(node, $.extend({}, opts, additional, window.folioConsoleRedactorOptionsOverride, callbacksHash))
 
   if window.FolioConsole and window.FolioConsole.HtmlAutoFormat and window.FolioConsole.HtmlAutoFormat.addMissingAttributes
-    parent = node.closest('.redactor')
+    parent = node.closest('.redactor-box')
     if parent
       box = parent.querySelector('.redactor-in')
       if box
