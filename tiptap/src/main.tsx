@@ -20,7 +20,8 @@ window.Folio.Tiptap.init = (props) => {
   }
 
   const height = (editor: TiptapEditor) => {
-    return editor.view!.dom!.closest('.f-tiptap-editor')!.clientHeight
+    const content = document.querySelector('.f-tiptap-editor__content')
+    return content ? content.clientHeight : 0;
   };
 
   const onCreate = ({ editor }: { editor: TiptapEditor }) => {
@@ -65,12 +66,16 @@ window.Folio.Tiptap.init = (props) => {
     </StrictMode>,
   );
 
+  window.Folio.Tiptap.root = root
+
   return root;
 };
 
-window.Folio.Tiptap.destroy = (root: ReturnType<typeof createRoot>) => {
-  if (!root) return;
-  root.unmount();
+window.Folio.Tiptap.destroy = () => {
+  if (!window.Folio.Tiptap.root) return;
+
+  window.Folio.Tiptap.root.unmount();
+  window.Folio.Tiptap.root = null;
 };
 
 window.addEventListener("message", (e) => {
