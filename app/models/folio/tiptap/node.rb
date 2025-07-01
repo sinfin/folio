@@ -69,28 +69,23 @@ class Folio::Tiptap::Node
   end
 
   def self.tiptap_node_setup_structure_for_attachment(key:, type:)
+    class_name = folio_attachments_file_class(type:).to_s
     is_plural = type.to_s.end_with?("s")
-    singular_type = is_plural ? type.to_s.chomp("s") : type.to_s
-
-    class_name = case singular_type
-                 when "image"
-                   "Folio::File::Image"
-                 when "document"
-                   "Folio::File::Document"
-                 when "audio"
-                   "Folio::File::Audio"
-                 when "video"
-                   "Folio::File::Video"
-                 else
-                   fail ArgumentError, "Unsupported attachment type for type #{type}"
-    end
 
     if is_plural
       tiptap_node_setup_structure_for_has_many(key:, class_name:)
     else
       # Placeholder methods for compatibility with existing code in Folio::Console::File::PickerCell.
       define_method "#{key}_placement" do
-        self.class.folio_attachments_file_placements_class(key:).new(file_id: send("#{key}_id"), file_type: class_name)
+        self.class.folio_attachments_file_placements_class(type:).new(file_id: send("#{key}_id"))
+      end
+
+      define_method "#{key}_placement_attributes=" do |attributes|
+        if attributes[:_destroy] == "1"
+          send("#{key}_id=", nil)
+        else
+          send("#{key}_id=", attributes[:file_id].to_i)
+        end
       end
 
       # def tiptap_node_pseudo_file_placements
@@ -100,8 +95,23 @@ class Folio::Tiptap::Node
     end
   end
 
-  def self.folio_attachments_file_placements_class(key:)
-    case key
+  def self.folio_attachments_file_class(type:)
+    case type
+    when :image, :images
+      Folio::File::Image
+    when :document, :documents
+      Folio::File::Document
+    when :audio
+      Folio::File::Audio
+    when :video
+      Folio::File::Video
+    else
+      fail ArgumentError, "Unsupported attachment type #{type}"
+    end
+  end
+
+  def self.folio_attachments_file_placements_class(type:)
+    case type
     when :image
       Folio::FilePlacement::Cover
     when :document
@@ -111,7 +121,7 @@ class Folio::Tiptap::Node
     when :video
       Folio::FilePlacement::VideoCover
     else
-      fail ArgumentError, "Unsupported attachment key #{key}"
+      fail ArgumentError, "Unsupported attachment type #{type}"
     end
   end
 
@@ -178,9 +188,13 @@ class Folio::Tiptap::Node
     permitted = []
 
     self.class.structure.each do |key, type|
-      if type == :url_json
+      case type
+      when :url_json
         permitted << key
         permitted << { key => ALLOWED_URL_JSON_KEYS }
+      when :image, :document, :audio, :video
+        permitted << "#{key}_id"
+        permitted << { "#{key}_placement_attributes" => %i[file_id _destroy] }
       else
         permitted << key
       end

@@ -50,6 +50,7 @@ Rails.application.routes.draw do
           get :report
           get :required_inputs
           get :additional_html_for_video_files_modal
+          get :tiptap_form
 
           patch :update_attributes
           patch :update_console_notes

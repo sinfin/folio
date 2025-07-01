@@ -39,6 +39,20 @@ class Folio::Tiptap::NodeTest < ActiveSupport::TestCase
     assert_equal reports.map(&:id).sort, node.reports_ids.sort
   end
 
+  test "attachments via file_placements" do
+    cover = create(:folio_file_image)
+
+    node = Node.new(title: "foo", cover_placement_attributes: { file_id: cover.id })
+
+    assert_equal cover, node.cover
+    assert_equal cover.id, node.cover_id
+
+    node.assign_attributes(cover_placement_attributes: { _destroy: "1" })
+
+    assert_nil node.cover
+    assert_nil node.cover_id
+  end
+
   test "relations" do
     page = create(:folio_page)
     related_pages = create_list(:folio_page, 2)
