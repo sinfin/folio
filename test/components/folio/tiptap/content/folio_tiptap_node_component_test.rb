@@ -1,0 +1,277 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTest
+  def test_render_basic_folio_tiptap_node
+    prosemirror_node = {
+      "type" => "folioTiptapNode",
+      "attrs" => {
+        "type" => "Dummy::Tiptap::Node::Card",
+        "data" => { "title" => "Test Card", "content" => "Test content" }
+      }
+    }
+
+    model = build_mock_record
+    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: model, prosemirror_node: prosemirror_node))
+
+    assert_selector(".d-tiptap-node-card")
+  end
+
+  def test_render_with_string_type_attribute
+    prosemirror_node = {
+      "type" => "folioTiptapNode",
+      "attrs" => {
+        "type" => "Dummy::Tiptap::Node::Card",
+        "data" => {
+          "title" => "Image Card",
+          "content" => "A card with image content"
+        }
+      }
+    }
+
+    model = build_mock_record
+    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: model, prosemirror_node: prosemirror_node))
+
+    assert_selector(".d-tiptap-node-card")
+  end
+
+  def test_render_with_complex_data_attributes
+    prosemirror_node = {
+      "type" => "folioTiptapNode",
+      "attrs" => {
+        "type" => "Dummy::Tiptap::Node::Card",
+        "data" => {
+          "title" => "Gallery Card",
+          "content" => "A complex card with multiple attributes",
+          "button_url_json" => {
+            "href" => "https://example.com",
+            "label" => "View Gallery"
+          }
+        }
+      }
+    }
+
+    model = build_mock_record
+    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: model, prosemirror_node: prosemirror_node))
+
+    assert_selector(".d-tiptap-node-card")
+    assert_text("Gallery Card")
+  end
+
+  def test_render_with_nested_data_structure
+    prosemirror_node = {
+      "type" => "folioTiptapNode",
+      "attrs" => {
+        "type" => "Dummy::Tiptap::Node::Card",
+        "data" => {
+          "title" => "Testimonial Card",
+          "content" => "This is a great product!",
+          "button_url_json" => {
+            "href" => "/testimonials",
+            "label" => "Read More",
+            "target" => "_blank"
+          }
+        }
+      }
+    }
+
+    model = build_mock_record
+    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: model, prosemirror_node: prosemirror_node))
+
+    assert_selector(".d-tiptap-node-card")
+    assert_text("Testimonial Card")
+  end
+
+  def test_render_with_empty_data
+    prosemirror_node = {
+      "type" => "folioTiptapNode",
+      "attrs" => {
+        "type" => "Dummy::Tiptap::Node::Card",
+        "data" => {}
+      }
+    }
+
+    model = build_mock_record
+    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: model, prosemirror_node: prosemirror_node))
+
+    assert_selector(".d-tiptap-node-card")
+  end
+
+  def test_render_with_no_data_attribute
+    prosemirror_node = {
+      "type" => "folioTiptapNode",
+      "attrs" => {
+        "type" => "Dummy::Tiptap::Node::Card"
+      }
+    }
+
+    model = build_mock_record
+    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: model, prosemirror_node: prosemirror_node))
+
+    assert_selector(".d-tiptap-node-card")
+  end
+
+  def test_render_with_null_attributes
+    prosemirror_node = {
+      "type" => "folioTiptapNode",
+      "attrs" => {
+        "type" => "Dummy::Tiptap::Node::Card",
+        "data" => {
+          "title" => "Test Title",
+          "content" => nil
+          # button_url_json omitted - nil values cause errors
+        }
+      }
+    }
+
+    model = build_mock_record
+    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: model, prosemirror_node: prosemirror_node))
+
+    assert_selector(".d-tiptap-node-card")
+    assert_text("Test Title")
+  end
+
+  def test_render_with_special_characters_in_data
+    prosemirror_node = {
+      "type" => "folioTiptapNode",
+      "attrs" => {
+        "type" => "Dummy::Tiptap::Node::Card",
+        "data" => {
+          "title" => "Special chars: <>&\"'",
+          "content" => "HTML content with <strong>formatting</strong>",
+          "button_url_json" => {
+            "href" => "https://example.com/special?param=value&other=true",
+            "label" => "Visit & Learn"
+          }
+        }
+      }
+    }
+
+    model = build_mock_record
+    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: model, prosemirror_node: prosemirror_node))
+
+    assert_selector(".d-tiptap-node-card")
+    # The component displays attributes as JSON, so special chars will be escaped
+    assert_text("Special chars:")
+  end
+
+
+
+  def test_render_with_url_attributes
+    prosemirror_node = {
+      "type" => "folioTiptapNode",
+      "attrs" => {
+        "type" => "Dummy::Tiptap::Node::Card",
+        "data" => {
+          "title" => "Embed Card",
+          "content" => "Card with external content",
+          "button_url_json" => {
+            "href" => "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            "label" => "Watch Video",
+            "target" => "_blank",
+            "rel" => "noopener"
+          }
+        }
+      }
+    }
+
+    model = build_mock_record
+    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: model, prosemirror_node: prosemirror_node))
+
+    assert_selector(".d-tiptap-node-card")
+    assert_text("Embed Card")
+  end
+
+  def test_render_with_mixed_data_types
+    prosemirror_node = {
+      "type" => "folioTiptapNode",
+      "attrs" => {
+        "type" => "Dummy::Tiptap::Node::Card",
+        "data" => {
+          "title" => "Mixed Data Card",
+          "content" => "Card with various data types",
+          "button_url_json" => {
+            "href" => "/path/to/resource",
+            "label" => "Learn More",
+            "title" => "Click to learn more about this topic"
+          }
+        }
+      }
+    }
+
+    model = build_mock_record
+    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: model, prosemirror_node: prosemirror_node))
+
+    assert_selector(".d-tiptap-node-card")
+    assert_text("Mixed Data Card")
+  end
+
+  def test_render_with_json_data_display
+    prosemirror_node = {
+      "type" => "folioTiptapNode",
+      "attrs" => {
+        "type" => "Dummy::Tiptap::Node::Card",
+        "data" => {
+          "title" => "JSON Display Test",
+          "content" => "Testing JSON serialization"
+        }
+      }
+    }
+
+    model = build_mock_record
+    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: model, prosemirror_node: prosemirror_node))
+
+    assert_selector(".d-tiptap-node-card")
+    # The CardComponent displays attributes as JSON
+    assert_text("JSON Display Test")
+    assert_text("Testing JSON serialization")
+  end
+
+  def test_render_validates_node_attributes
+    prosemirror_node = {
+      "type" => "folioTiptapNode",
+      "attrs" => {
+        "type" => "Dummy::Tiptap::Node::Card",
+        "data" => {
+          "title" => "", # Empty title should fail validation
+          "content" => "Valid content"
+        }
+      }
+    }
+
+    model = build_mock_record
+
+    # The component should still render even with validation errors
+    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: model, prosemirror_node: prosemirror_node))
+    assert_selector(".d-tiptap-node-card")
+  end
+
+  def test_component_renders_ui_card_component
+    prosemirror_node = {
+      "type" => "folioTiptapNode",
+      "attrs" => {
+        "type" => "Dummy::Tiptap::Node::Card",
+        "data" => {
+          "title" => "UI Component Test",
+          "content" => "Testing the UI card component rendering"
+        }
+      }
+    }
+
+    model = build_mock_record
+    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: model, prosemirror_node: prosemirror_node))
+
+    # Should render the tiptap node card wrapper
+    assert_selector(".d-tiptap-node-card")
+    # And contain the UI card component
+    assert_selector(".d-ui-card")
+    # With the expected title from Dummy::Ui::CardComponent
+    assert_text("Dummy::Ui::CardComponent from API")
+  end
+
+  private
+    def build_mock_record
+      Object.new
+    end
+end

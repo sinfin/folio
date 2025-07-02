@@ -12,4 +12,23 @@ module Folio::Tiptap::Model
       %w[tiptap_content]
     end
   end
+
+  included do
+    before_validation :convert_titap_fields_to_hashes
+  end
+
+  def convert_titap_fields_to_hashes
+    self.class.folio_tiptap_fields.each do |field|
+      value = send(field)
+
+      if value.is_a?(String) && value.present?
+        begin
+          parsed_value = JSON.parse(value)
+          send("#{field}=", parsed_value)
+        rescue JSON::ParserError
+          errors.add(field, "is not a valid JSON string")
+        end
+      end
+    end
+  end
 end

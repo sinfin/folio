@@ -20,6 +20,11 @@ class TiptapInput < SimpleForm::Inputs::StringInput
                       })
 
     input_html_options[:hidden] = true
+    input_html_options[:value] = input_html_options[:value] || @builder.object.send(attribute_name) || ""
+
+    if input_html_options[:value].present? && input_html_options[:value].is_a?(Hash)
+      input_html_options[:value] = input_html_options[:value].to_json
+    end
 
     merged_input_options = merge_wrapper_options(input_html_options, wrapper_options)
 

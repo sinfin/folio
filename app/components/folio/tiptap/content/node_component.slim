@@ -1,0 +1,20 @@
+- if @node_definition
+  - if @node_definition["component_name"]
+    = render(@node_definition["component_name"].constantize.new(record: @record,
+                                                                prosemirror_node: @prosemirror_node))
+
+  - elsif @node_definition["tag"]
+    - if @node_definition["self_closing"]
+      = content_tag(resolve_tag_name, nil, resolve_tag_attributes)
+    - elsif @node_definition["tag"].is_a?(Array)
+      = render_nested_tags(@node_definition["tag"])
+    - else
+      = content_tag(resolve_tag_name, resolve_tag_attributes) do
+        - if @prosemirror_node["content"]
+          - @prosemirror_node["content"].each do |child_node|
+            = render(Folio::Tiptap::Content::NodeComponent.new(record: @record,
+                                                               prosemirror_node: child_node))
+
+- else
+  p.f-tiptap-content-node.f-tiptap-content-node--error.text-danger
+    ' TODO missing node_definition
