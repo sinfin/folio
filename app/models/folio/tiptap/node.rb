@@ -73,6 +73,34 @@ class Folio::Tiptap::Node
     is_plural = type.to_s.end_with?("s")
 
     if is_plural
+      # Placeholder methods for compatibility with existing code in react_images/react_documents
+      define_method "#{key.to_s.singularize}_placements" do
+        send("#{key}_ids").map do |file_id|
+          self.class.folio_attachments_file_placements_class(type:).new(file_id:, placement: self)
+        end
+      end
+
+      define_method "#{key.to_s.singularize}_placements_attributes=" do |attributes|
+        ary = []
+
+        if attributes.is_a?(Hash)
+          ary = attributes.values
+        elsif attributes.is_a?(Array)
+          ary = attributes
+        else
+          fail ArgumentError, "Expected attributes to be a Hash or Array, got #{attributes.class.name}"
+        end
+
+        file_ids = []
+        ary.each do |value|
+          if value[:file_id] && value[:_destroy] != "1"
+            file_ids << value[:file_id].to_i
+          end
+        end
+
+        send("#{key}_ids=", file_ids)
+      end
+
       tiptap_node_setup_structure_for_has_many(key:, class_name:)
     else
       # Placeholder methods for compatibility with existing code in Folio::Console::File::PickerCell.
@@ -114,8 +142,12 @@ class Folio::Tiptap::Node
     case type
     when :image
       Folio::FilePlacement::Cover
+    when :images
+      Folio::FilePlacement::Image
     when :document
       Folio::FilePlacement::SingleDocument
+    when :documents
+      Folio::FilePlacement::Document
     when :audio
       Folio::FilePlacement::AudioCover
     when :video
@@ -131,6 +163,23 @@ class Folio::Tiptap::Node
 
     define_method(key) do
       klass.find_by(id: send("#{key}_id"))
+    end
+
+    # always cast ids to integers when setting them
+    define_method("#{key}_id=") do |raw_value|
+      value = if raw_value.present?
+        if raw_value.is_a?(String)
+          raw_value.to_i
+        elsif raw_value.is_a?(Integer)
+          raw_value
+        else
+          fail ArgumentError, "Expected a String or Integer for #{key}_id, got #{raw_value.class.name}"
+        end
+      else
+        nil
+      end
+
+      super(value)
     end
 
     define_method("#{key}=") do |value|
@@ -154,6 +203,31 @@ class Folio::Tiptap::Node
       else
         []
       end
+    end
+
+    # always cast ids to integers when setting them
+    define_method("#{key}_ids=") do |raw_ary|
+      raw_ary ||= []
+
+      unless raw_ary.is_a?(Array)
+        fail ArgumentError, "Expected an Array for #{key}_ids, got #{raw_ary.class.name}"
+      end
+
+      ary = []
+
+      raw_ary.each do |raw_value|
+        if raw_value.present?
+          if raw_value.is_a?(String)
+            ary << raw_value.to_i
+          elsif raw_value.is_a?(Integer)
+            ary << raw_value
+          else
+            fail ArgumentError, "Expected a String or Integer for #{key}_ids, got #{raw_value.class.name}"
+          end
+        end
+      end
+
+      super(ary)
     end
 
     define_method("#{key}=") do |value|
@@ -201,12 +275,24 @@ class Folio::Tiptap::Node
       when :image, :document, :audio, :video
         permitted << "#{key}_id"
         permitted << { "#{key}_placement_attributes" => %i[file_id _destroy] }
+      when :images, :documents
+        permitted << "#{key}_ids"
+        permitted << { "#{key.to_s.singularize}_placements_attributes" => %i[file_id _destroy] }
+      when Hash
+        if type[:class_name]
+          if type[:has_many]
+            permitted << "#{key}_ids"
+          else
+            permitted << "#{key}_id"
+          end
+        end
       else
         permitted << key
       end
     end
 
-    assign_attributes(attrs.require(:data).permit(*permitted))
+    permitted_data = attrs.require(:data).permit(*permitted)
+    assign_attributes(permitted_data)
   end
 
   def self.view_component_class

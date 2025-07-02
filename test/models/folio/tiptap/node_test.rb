@@ -10,6 +10,7 @@ class Folio::Tiptap::NodeTest < ActiveSupport::TestCase
                 cover: :image,
                 reports: :documents,
                 page: { class_name: "Folio::Page" },
+                another_page: { class_name: "Folio::Page" },
                 related_pages: { class_name: "Folio::Page", has_many: true }
 
     validates :title,
@@ -91,6 +92,50 @@ class Folio::Tiptap::NodeTest < ActiveSupport::TestCase
     assert_equal reports.map(&:id).sort, hash["attrs"]["data"]["reports_ids"].sort
     assert_equal page.id, hash["attrs"]["data"]["page_id"]
     assert_equal related_pages.map(&:id).sort, hash["attrs"]["data"]["related_pages_ids"].sort
+  end
+
+  test "assign_attributes_from_param_attrs" do
+    page = create(:folio_page)
+    image = create(:folio_file_image)
+    document = create(:folio_file_document)
+
+    params_hash = {
+      tiptap_node_attrs: {
+        type: "Dummy::Tiptap::Node::Card",
+        data: {
+          cover_placement_attributes: { id: "", file_id: "#{image.id}" },
+          title: "a",
+          content: "",
+          button_url_json: "{}",
+          page_id: "#{page.id}",
+          another_page_id: "",
+          report_placements_attributes: {
+            "1751435538853" => { id: "", file_id: "#{document.id}", position: "0" }
+          }
+        }
+      }
+    }
+
+    params = ActionController::Parameters.new(params_hash)
+
+    node = Node.new
+    node.assign_attributes_from_param_attrs(params[:tiptap_node_attrs])
+
+    assert_equal "a", node.title
+    assert_equal "", node.content
+    assert_equal({}, node.button_url_json)
+
+    assert_equal image, node.cover
+    assert_equal image.id, node.cover_id
+
+    assert_equal [document], node.reports
+    assert_equal [document.id], node.reports_ids
+
+    assert_equal page, node.page
+    assert_equal page.id, node.page_id
+
+    assert_nil node.another_page
+    assert_nil node.another_page_id
   end
 end
 
