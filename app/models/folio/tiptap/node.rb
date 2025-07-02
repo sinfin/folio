@@ -147,7 +147,13 @@ class Folio::Tiptap::Node
     klass = class_name.constantize
 
     define_method(key) do
-      klass.where(id: send("#{key}_ids")).to_a
+      ids = send("#{key}_ids")
+
+      if ids.present?
+        klass.where(id: ids).to_a
+      else
+        []
+      end
     end
 
     define_method("#{key}=") do |value|

@@ -18,6 +18,8 @@ class Folio::Console::Tiptap::Overlay::FormComponent < Folio::Console::Applicati
         render_file_picker(f:, key:, type:)
       when :images, :documents
         render_react_files(f:, key:, type:)
+      when Hash
+        render_relation_select(f:, key:, type:)
       else
         raise ArgumentError, "Unsupported input type: #{type}"
       end
@@ -62,6 +64,44 @@ class Folio::Console::Tiptap::Overlay::FormComponent < Folio::Console::Applicati
     end
 
     def render_react_files(f:, key:, type:)
+    end
+
+    def render_relation_select(f:, key:, type:)
+      class_name = type[:class_name]
+
+      unless class_name && class_name.constantize < ActiveRecord::Base
+        fail ArgumentError, "Missing class_name for relation select"
+      end
+
+      if type[:has_many]
+        render_relation_select_for_has_many(f:, key:, type:, class_name:)
+      else
+        render_relation_select_for_single(f:, key:, type:, class_name:)
+      end
+    end
+
+    def render_relation_select_for_has_many(f:, key:, type:, class_name:)
+      input_name = "#{key}_ids"
+
+      collection = @node.send(key).map do |record|
+        [record.to_console_label, record.id, selected: true]
+      end
+
+      f.input input_name,
+              input_html: { value: collection.map(&:first).join(", ") },
+              hint: "TODO with a better remote multi-select"
+    end
+
+    def render_relation_select_for_single(f:, key:, type:, class_name:)
+      input_name = "#{key}_id"
+      collection = []
+      record = @node.send(key)
+      collection << [record.to_console_label, record.id, selected: true] if record.present?
+
+      f.input input_name,
+              collection:,
+              remote: true,
+              reflection_class_name: class_name
     end
 
     def buttons_model
