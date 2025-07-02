@@ -25,11 +25,15 @@ class Folio::Console::Tiptap::Overlay::FormComponent < Folio::Console::Applicati
       end
     end
 
+    def simple_form_as
+      "tiptap_node_attrs[data]"
+    end
+
     def form(&block)
       opts = {
         url: "#form",
         method: :post,
-        as: "tiptap_node_attrs[data]",
+        as: simple_form_as,
         html: {
           class: "f-c-tiptap-overlay-form__form",
           data: stimulus_action(submit: "onFormSubmit")
@@ -64,6 +68,22 @@ class Folio::Console::Tiptap::Overlay::FormComponent < Folio::Console::Applicati
     end
 
     def render_react_files(f:, key:, type:)
+      if type == :images
+        helper_name = :react_images
+        Folio::FilePlacement::Image
+      elsif type == :documents
+        helper_name = :react_documents
+        Folio::FilePlacement::Document
+      else
+        fail ArgumentError, "Unsupported type for react files: #{type}"
+      end
+
+      selected_placements = @node.send("#{key.to_s.singularize}_placements")
+
+      helpers.send(helper_name,
+                   selected_placements,
+                   attachmentable: simple_form_as,
+                   type: "#{key.to_s.singularize}_placements")
     end
 
     def render_relation_select(f:, key:, type:)
@@ -121,25 +141,34 @@ class Folio::Console::Tiptap::Overlay::FormComponent < Folio::Console::Applicati
 
     def form_rows
       single_attachments = {}
+      multi_attachments = {}
       rest = {}
 
       @node.class.structure.each do |key, type|
         if type.in?([:image, :document, :video, :audio])
           single_attachments[key] = type
+        elsif type.in?([:images, :documents])
+          multi_attachments[key] = type
         else
           rest[key] = type
         end
       end
 
+      rows = []
+
       if single_attachments.present?
-        [
-          { columns: [
-            { structure: single_attachments, bem_modifier: "single-attachments" },
-            { structure: rest, bem_modifier: "main" },
-          ] }
-        ]
+        rows << { columns: [
+          { structure: single_attachments, bem_modifier: "single-attachments" },
+          { structure: rest, bem_modifier: "main" },
+        ] }
       else
-        [ { columns: [ { structure: rest } ] } ]
+        rows << { columns: [ { structure: rest } ] }
       end
+
+      if multi_attachments.present?
+        rows << { columns: [ structure: multi_attachments, bem_modifier: "multi-attachments" ] }
+      end
+
+      rows
     end
 end

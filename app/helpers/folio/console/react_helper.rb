@@ -138,7 +138,13 @@ module Folio::Console::ReactHelper
 
   def react_files(file_type, selected_placements, attachmentable:, type:, atom_setting: nil)
     placements = if selected_placements.present?
-      selected_placements.ordered.map do |fp|
+      ordered = if selected_placements.is_a?(ActiveRecord::Relation)
+        selected_placements.ordered
+      else
+        selected_placements
+      end
+
+      ordered.map do |fp|
         {
           id: fp.id,
           file_id: fp.file.id,

@@ -76,7 +76,7 @@ class Folio::Tiptap::Node
       # Placeholder methods for compatibility with existing code in react_images/react_documents
       define_method "#{key.to_s.singularize}_placements" do
         send("#{key}_ids").map do |file_id|
-          self.class.folio_attachments_file_placements_class(type:).new(file_id:, placement: self)
+          self.class.folio_attachments_file_placements_class(type:).new(file_id:)
         end
       end
 
@@ -105,20 +105,37 @@ class Folio::Tiptap::Node
     else
       # Placeholder methods for compatibility with existing code in Folio::Console::File::PickerCell.
       define_method "#{key}_placement" do
-        self.class.folio_attachments_file_placements_class(type:).new(file_id: send("#{key}_id"))
+        file_id = send("#{key}_id")
+
+        if file_id.present?
+          self.class.folio_attachments_file_placements_class(type:).new(file_id:)
+        end
+      end
+
+      define_method "build_#{key}_placement" do
+        self.class.folio_attachments_file_placements_class(type:).new
       end
 
       define_method "#{key}_placement_attributes=" do |attributes|
         if attributes[:_destroy] == "1"
           send("#{key}_id=", nil)
         else
-          send("#{key}_id=", attributes[:file_id].to_i)
+          id = if attributes[:file_id].present?
+            if attributes[:file_id].is_a?(String)
+              attributes[:file_id].to_i
+            elsif attributes[:file_id].is_a?(Integer)
+              attributes[:file_id]
+            else
+              fail ArgumentError, "Expected a String or Integer for file_id, got #{attributes[:file_id].class.name}"
+            end
+          else
+            nil
+          end
+
+          send("#{key}_id=", id)
         end
       end
 
-      # def tiptap_node_pseudo_file_placements
-      #   []
-      # end
       tiptap_node_setup_structure_for_belongs_to(key:, class_name:)
     end
   end

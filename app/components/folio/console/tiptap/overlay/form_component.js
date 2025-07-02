@@ -9,6 +9,24 @@ window.Folio.Stimulus.register('f-c-tiptap-overlay-form', class extends window.S
         firstInput.focus()
       ]
     }, 200) // wait for css transition
+
+    this.startReactNodes()
+  }
+
+  disconnect () {
+    this.stopReactNodes()
+  }
+
+  startReactNodes () {
+    for (const reactNode of this.element.querySelectorAll('.folio-react-wrap')) {
+      window.FolioConsole.React.init(reactNode)
+    }
+  }
+
+  stopReactNodes () {
+    for (const reactNode of this.element.querySelectorAll('.folio-react-wrap')) {
+      window.FolioConsole.React.destroy(reactNode)
+    }
   }
 
   onFormSubmit (e) {
