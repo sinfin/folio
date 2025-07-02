@@ -11,14 +11,10 @@ class Folio::Tiptap::Content::NodeComponent < ApplicationComponent
   end
 
   private
-    def resolve_tag_name
-      tag = @node_definition["tag"]
-
+    def resolve_tag_name(tag)
       if @node_definition["level_based"] && @prosemirror_node["attrs"] && @prosemirror_node["attrs"]["level"]
         level = @prosemirror_node["attrs"]["level"]
         "h#{level}"
-      elsif tag.is_a?(Array)
-        tag.first
       else
         tag
       end
@@ -45,20 +41,21 @@ class Folio::Tiptap::Content::NodeComponent < ApplicationComponent
       attrs
     end
 
-    def render_nested_tags(tags)
-      tags.reverse.reduce(render_content) do |content, tag|
-        content_tag(tag, content)
+    def render_nested_tags(tags, top: true, &block)
+      if tags.is_a?(String)
+        tags = [tags]
       end
-    end
 
-    def render_content
-      return "" unless @prosemirror_node["content"]
-
-      content = ""
-      @prosemirror_node["content"].each do |child_node|
-        content += render(Folio::Tiptap::Content::NodeComponent.new(record: @record,
-                                                                   prosemirror_node: child_node))
+      if tags.length == 1
+        if top
+          content_tag(resolve_tag_name(tags.first), resolve_tag_attributes, &block)
+        else
+          content_tag(resolve_tag_name(tags.first), &block)
+        end
+      else
+        content_tag(resolve_tag_name(tags.first)) do
+          render_nested_tags(tags[1..-1], top: false, &block)
+        end
       end
-      content.html_safe
     end
 end

@@ -4,12 +4,10 @@
                                                                 prosemirror_node: @prosemirror_node))
 
   - elsif @node_definition["tag"]
-    - if @node_definition["self_closing"]
-      = content_tag(resolve_tag_name, nil, resolve_tag_attributes)
-    - elsif @node_definition["tag"].is_a?(Array)
-      = render_nested_tags(@node_definition["tag"])
-    - else
-      = content_tag(resolve_tag_name, resolve_tag_attributes) do
+    - if @node_definition["self_closing"] && @node_definition["tag"].is_a?(String)
+      = content_tag(resolve_tag_name(@node_definition["tag"]), nil, resolve_tag_attributes)
+    - elsif @node_definition["tag"]
+      = render_nested_tags(@node_definition["tag"]) do
         - if @prosemirror_node["content"]
           - @prosemirror_node["content"].each do |child_node|
             = render(Folio::Tiptap::Content::NodeComponent.new(record: @record,

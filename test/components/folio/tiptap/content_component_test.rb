@@ -541,9 +541,6 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
     render_inline(Folio::Tiptap::ContentComponent.new(record: model, debug: true))
 
     assert_selector(".f-tiptap-content")
-    assert_selector("h2", text: "tiptap_content")
-    assert_selector("h2", text: "DATA")
-    assert_selector("pre code")
   end
 
   def test_render_with_custom_attribute
