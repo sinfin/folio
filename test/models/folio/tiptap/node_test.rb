@@ -37,7 +37,7 @@ class Folio::Tiptap::NodeTest < ActiveSupport::TestCase
     assert_equal cover.id, node.cover_id
 
     assert_equal reports, node.reports
-    assert_equal reports.map(&:id).sort, node.reports_ids.sort
+    assert_equal reports.map(&:id).sort, node.report_ids.sort
   end
 
   test "attachments via file_placements" do
@@ -64,7 +64,7 @@ class Folio::Tiptap::NodeTest < ActiveSupport::TestCase
     assert_equal page.id, node.page_id
 
     assert_equal related_pages, node.related_pages
-    assert_equal related_pages.map(&:id).sort, node.related_pages_ids.sort
+    assert_equal related_pages.map(&:id).sort, node.related_page_ids.sort
   end
 
   test "to_tiptap_node_hash" do
@@ -89,9 +89,9 @@ class Folio::Tiptap::NodeTest < ActiveSupport::TestCase
     assert_equal "foo", hash["attrs"]["data"]["title"]
     assert_equal "foo", hash["attrs"]["data"]["button_url_json"]["href"]
     assert_equal cover.id, hash["attrs"]["data"]["cover_id"]
-    assert_equal reports.map(&:id).sort, hash["attrs"]["data"]["reports_ids"].sort
+    assert_equal reports.map(&:id).sort, hash["attrs"]["data"]["report_ids"].sort
     assert_equal page.id, hash["attrs"]["data"]["page_id"]
-    assert_equal related_pages.map(&:id).sort, hash["attrs"]["data"]["related_pages_ids"].sort
+    assert_equal related_pages.map(&:id).sort, hash["attrs"]["data"]["related_page_ids"].sort
   end
 
   test "assign_attributes_from_param_attrs" do
@@ -129,7 +129,7 @@ class Folio::Tiptap::NodeTest < ActiveSupport::TestCase
     assert_equal image.id, node.cover_id
 
     assert_equal [document], node.reports
-    assert_equal [document.id], node.reports_ids
+    assert_equal [document.id], node.report_ids
 
     assert_equal page, node.page
     assert_equal page.id, node.page_id

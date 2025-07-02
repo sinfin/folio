@@ -75,7 +75,7 @@ class Folio::Tiptap::Node
     if is_plural
       # Placeholder methods for compatibility with existing code in react_images/react_documents
       define_method "#{key.to_s.singularize}_placements" do
-        send("#{key}_ids").map do |file_id|
+        send("#{key.to_s.singularize}_ids").map do |file_id|
           self.class.folio_attachments_file_placements_class(type:).new(file_id:)
         end
       end
@@ -98,7 +98,7 @@ class Folio::Tiptap::Node
           end
         end
 
-        send("#{key}_ids=", file_ids)
+        send("#{key.to_s.singularize}_ids=", file_ids)
       end
 
       tiptap_node_setup_structure_for_has_many(key:, class_name:)
@@ -209,11 +209,11 @@ class Folio::Tiptap::Node
   end
 
   def self.tiptap_node_setup_structure_for_has_many(key:, class_name:)
-    attribute "#{key}_ids", type: :integer, array: true, default: []
+    attribute "#{key.to_s.singularize}_ids", type: :integer, array: true, default: []
     klass = class_name.constantize
 
     define_method(key) do
-      ids = send("#{key}_ids")
+      ids = send("#{key.to_s.singularize}_ids")
 
       if ids.present?
         klass.where(id: ids).to_a
@@ -223,11 +223,11 @@ class Folio::Tiptap::Node
     end
 
     # always cast ids to integers when setting them
-    define_method("#{key}_ids=") do |raw_ary|
+    define_method("#{key.to_s.singularize}_ids=") do |raw_ary|
       raw_ary ||= []
 
       unless raw_ary.is_a?(Array)
-        fail ArgumentError, "Expected an Array for #{key}_ids, got #{raw_ary.class.name}"
+        fail ArgumentError, "Expected an Array for #{key.to_s.singularize}_ids, got #{raw_ary.class.name}"
       end
 
       ary = []
@@ -239,7 +239,7 @@ class Folio::Tiptap::Node
           elsif raw_value.is_a?(Integer)
             ary << raw_value
           else
-            fail ArgumentError, "Expected a String or Integer for #{key}_ids, got #{raw_value.class.name}"
+            fail ArgumentError, "Expected a String or Integer for #{key.to_s.singularize}_ids, got #{raw_value.class.name}"
           end
         end
       end
@@ -249,7 +249,7 @@ class Folio::Tiptap::Node
 
     define_method("#{key}=") do |value|
       if value.is_a?(Array) && value.all? { |v| v.is_a?(klass) }
-        send("#{key}_ids=", value.map(&:id))
+        send("#{key.to_s.singularize}_ids=", value.map(&:id))
       else
         fail ArgumentError, "Expected an Array of #{klass.name} for #{key}, got #{value}"
       end
@@ -293,12 +293,12 @@ class Folio::Tiptap::Node
         permitted << "#{key}_id"
         permitted << { "#{key}_placement_attributes" => %i[file_id _destroy] }
       when :images, :documents
-        permitted << "#{key}_ids"
+        permitted << { "#{key.to_s.singularize}_ids" => [] }
         permitted << { "#{key.to_s.singularize}_placements_attributes" => %i[file_id _destroy] }
       when Hash
         if type[:class_name]
           if type[:has_many]
-            permitted << "#{key}_ids"
+            permitted << { "#{key.to_s.singularize}_ids" => [] }
           else
             permitted << "#{key}_id"
           end
