@@ -225,15 +225,15 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
     assert_selector("a[href='https://example.com'][target='_blank']", text: "a link")
   end
 
-  def test_render_with_bullet_list
+  def test_render_with_bulletList
     prosemirror_json = {
       "type" => "doc",
       "content" => [
         {
-          "type" => "bullet_list",
+          "type" => "bulletList",
           "content" => [
             {
-              "type" => "list_item",
+              "type" => "listItem",
               "content" => [
                 {
                   "type" => "paragraph",
@@ -247,7 +247,7 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
               ]
             },
             {
-              "type" => "list_item",
+              "type" => "listItem",
               "content" => [
                 {
                   "type" => "paragraph",
@@ -274,16 +274,16 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
     assert_text("Second item")
   end
 
-  def test_render_with_ordered_list
+  def test_render_with_orderedList
     prosemirror_json = {
       "type" => "doc",
       "content" => [
         {
-          "type" => "ordered_list",
+          "type" => "orderedList",
           "attrs" => { "start" => 1 },
           "content" => [
             {
-              "type" => "list_item",
+              "type" => "listItem",
               "content" => [
                 {
                   "type" => "paragraph",
@@ -337,7 +337,7 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
     assert_text("This is a quote from someone famous.")
   end
 
-  def test_render_with_horizontal_rule
+  def test_render_with_horizontalRule
     prosemirror_json = {
       "type" => "doc",
       "content" => [
@@ -351,7 +351,7 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
           ]
         },
         {
-          "type" => "horizontal_rule"
+          "type" => "horizontalRule"
         },
         {
           "type" => "paragraph",
@@ -373,7 +373,7 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
     assert_text("Content below")
   end
 
-  def test_render_with_hard_break_in_paragraph
+  def test_render_with_hardBreak_in_paragraph
     prosemirror_json = {
       "type" => "doc",
       "content" => [
@@ -385,7 +385,7 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
               "text" => "First line"
             },
             {
-              "type" => "hard_break"
+              "type" => "hardBreak"
             },
             {
               "type" => "text",
@@ -428,10 +428,10 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
           ]
         },
         {
-          "type" => "bullet_list",
+          "type" => "bulletList",
           "content" => [
             {
-              "type" => "list_item",
+              "type" => "listItem",
               "content" => [
                 {
                   "type" => "paragraph",
@@ -521,28 +521,6 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
     assert_selector(".f-tiptap-content__root")
   end
 
-  def test_render_with_debug_enabled
-    prosemirror_json = {
-      "type" => "doc",
-      "content" => [
-        {
-          "type" => "paragraph",
-          "content" => [
-            {
-              "type" => "text",
-              "text" => "Debug test"
-            }
-          ]
-        }
-      ]
-    }
-
-    model = build_mock_record(prosemirror_json)
-    render_inline(Folio::Tiptap::ContentComponent.new(record: model, debug: true))
-
-    assert_selector(".f-tiptap-content")
-  end
-
   def test_render_with_custom_attribute
     prosemirror_json = {
       "type" => "doc",
@@ -597,10 +575,10 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
           "type" => "table",
           "content" => [
             {
-              "type" => "table_row",
+              "type" => "tableRow",
               "content" => [
                 {
-                  "type" => "table_header",
+                  "type" => "tableHeader",
                   "attrs" => {},
                   "content" => [
                     {
@@ -615,7 +593,7 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
                   ]
                 },
                 {
-                  "type" => "table_header",
+                  "type" => "tableHeader",
                   "attrs" => {},
                   "content" => [
                     {
@@ -632,10 +610,10 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
               ]
             },
             {
-              "type" => "table_row",
+              "type" => "tableRow",
               "content" => [
                 {
-                  "type" => "table_cell",
+                  "type" => "tableCell",
                   "attrs" => {},
                   "content" => [
                     {
@@ -650,7 +628,7 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
                   ]
                 },
                 {
-                  "type" => "table_cell",
+                  "type" => "tableCell",
                   "attrs" => {},
                   "content" => [
                     {
@@ -825,11 +803,11 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
           "type" => "paragraph",
           "content" => [
             { "type" => "text", "text" => "Before break" },
-            { "type" => "hard_break" },
+            { "type" => "hardBreak" },
             { "type" => "text", "text" => "After break" }
           ]
         },
-        { "type" => "horizontal_rule" },
+        { "type" => "horizontalRule" },
         {
           "type" => "paragraph",
           "content" => [

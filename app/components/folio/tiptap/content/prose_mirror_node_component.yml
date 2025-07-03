@@ -10,38 +10,44 @@ nodes:
 
   blockquote:
     tag: blockquote
-  bullet_list:
+  bulletList:
     tag: ul
   # code_block:
   #   tag: [pre, code]
-  hard_break:
+  hardBreak:
     tag: br
     self_closing: true
   heading:
     tag: h1  # Dynamic: h1-h6 based on level attribute
     dynamic: true
     level_based: true
-  horizontal_rule:
+  horizontalRule:
     tag: hr
     self_closing: true
   # image:
   #   tag: img
   #   self_closing: true
   #   has_attrs: true
-  list_item:
+  listItem:
     tag: li
-  ordered_list:
+  orderedList:
     tag: ol
     has_attrs: true
   paragraph:
     tag: p
   table:
     tag: [table, tbody]
-  table_cell:
+  tableCell:
     tag: td
     has_attrs: true
-  table_header:
+  tableHeader:
     tag: th
     has_attrs: true
-  table_row:
+  tableRow:
     tag: tr
+  taskList:
+    tag: ul
+    data_attrs:
+      type: taskList
+  taskItem:
+    component_name: Folio::Tiptap::Content::ProseMirrorNodes::TaskItemNodeComponent

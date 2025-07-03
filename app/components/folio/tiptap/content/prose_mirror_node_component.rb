@@ -26,15 +26,27 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponent < ApplicationComponent
       # Include static attributes from node definition
       if @node_definition["attrs"]
         @node_definition["attrs"].each do |key, value|
-          attrs[key.to_sym] = value
+          attrs[key] = value
         end
       end
 
-      # Include dynamic attributes from prosemirror node
-      if @node_definition["has_attrs"] && @prose_mirror_node["attrs"]
-        @prose_mirror_node["attrs"].each do |key, value|
-          next if key == "level" # Skip level for headings as it's used for tag name
-          attrs[key.to_sym] = value
+      if @node_definition["data_attrs"]
+        @node_definition["data_attrs"].each do |key, value|
+          attrs["data-#{key}"] = value
+        end
+      end
+
+      if @prose_mirror_node["attrs"]
+        if @node_definition["has_attrs"]
+          @prose_mirror_node["attrs"].each do |key, value|
+            next if key == "level" # Skip level for headings as it's used for tag name
+            attrs[key] = value
+          end
+        elsif @node_definition["has_data_attrs"] &&
+          @prose_mirror_node["attrs"].each do |key, value|
+            next if key == "level" # Skip level for headings as it's used for tag name
+            attrs["data-#{key}"] = value
+          end
         end
       end
 
