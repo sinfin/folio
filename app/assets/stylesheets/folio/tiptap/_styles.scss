@@ -1,8 +1,17 @@
 :root {
+  // TODO replace these --tt- defaults
   --tt-gray-light-a-100: rgba(15, 22, 36, 0.05);
   --tt-gray-light-a-200: rgba(37, 39, 45, 0.1);
   --tt-gray-light-a-500: rgba(52, 55, 60, 0.64);
   --tt-gray-light-a-900: rgba(29, 30, 32, 0.98);
+
+  --tt-gray-dark-a-50: rgba(232, 232, 253, 0.05);
+  --tt-gray-dark-a-100: rgba(231, 231, 243, 0.07);
+  --tt-gray-dark-a-200: rgba(238, 238, 246, 0.11);
+  --tt-gray-dark-a-500: rgba(236, 238, 253, 0.5);
+  --tt-gray-dark-a-700: rgba(251, 251, 254, 0.75);
+  --tt-gray-dark-a-800: rgba(253, 253, 253, 0.88);
+  --tt-gray-dark-a-900: rgba(255, 255, 255, 0.96);
 
   --tt-gray-dark-100: rgba(32, 32, 34, 1);
   --tt-gray-dark-200: rgba(45, 45, 47, 1);
@@ -79,6 +88,24 @@
   --f-tiptap__ul-tasklist--border-color-active: var(--tt-gray-light-a-900);
   --f-tiptap__ul-tasklist--check-icon-color: var(--white);
   --f-tiptap__ul-tasklist--text-active: var(--tt-gray-light-a-500);
+
+  --f-tiptap__codeblock--background-color: var(--tt-gray-light-a-50);
+  --f-tiptap__codeblock--border-color: var(--tt-gray-light-a-200);
+  --f-tiptap__codeblock--border-radius: var(--bs-border-radius);
+  --f-tiptap__codeblock--border-width: var(--bs-border-width);
+  --f-tiptap__codeblock--font-size: 1rem;
+  --f-tiptap__codeblock--padding: 1em;
+  --f-tiptap__codeblock--text-color: var(--tt-gray-light-a-800);
+
+  --f-tiptap__code--background-color: var(--tt-gray-light-a-100);
+  --f-tiptap__code--border-color: var(--f-tiptap__codeblock--border-color);
+  --f-tiptap__code--border-radius: var(--f-tiptap__codeblock--border-radius);
+  --f-tiptap__code--border-width: var(--f-tiptap__codeblock--border-width);
+  --f-tiptap__code--font-family: var(--bs-font-monospace);
+  --f-tiptap__code--font-size: 0.875em;
+  --f-tiptap__code--line-height: 1.4;
+  --f-tiptap__code--padding: 0.1em 0.2em;
+  --f-tiptap__code--text-color: var(--bs-code-color);
 }
 
 .f-tiptap-styles--dark {
@@ -90,6 +117,13 @@
   --f-tiptap__ul-tasklist--border-color-active: var(--tt-gray-dark-a-900);
   --f-tiptap__ul-tasklist--check-icon-color: var(--black);
   --f-tiptap__ul-tasklist--text-active: var(--tt-gray-dark-a-500);
+
+  --f-tiptap__code--background-color: var(--tt-gray-dark-a-100);
+  --f-tiptap__code--text-color: var(--tt-gray-dark-a-700);
+  --f-tiptap__code--border-color: var(--tt-gray-dark-a-200);
+  --f-tiptap__codeblock--background-color: var(--tt-gray-dark-a-50);
+  --f-tiptap__codeblock--text-color: var(--tt-gray-dark-a-800);
+  --f-tiptap__codeblock--border-color: var(--tt-gray-dark-a-200);
 }
 
 .f-tiptap-styles {
@@ -99,6 +133,7 @@
   ul,
   ol,
   blockquote,
+  pre,
   .f-tiptap-node {
     margin-top: var(--f-tiptap__node--margin-top);
     margin-bottom: var(--f-tiptap__node--margin-bottom);
@@ -309,6 +344,36 @@
         flex: 1 1 0%;
         min-width: 0;
       }
+    }
+  }
+
+  // Inline code
+  code {
+    background-color: var(--f-tiptap__code--background-color);
+    border-radius: var(--f-tiptap__code--border-radius);
+    border: var(--f-tiptap__code--border-width) solid var(--f-tiptap__code--border-color);
+    color: var(--f-tiptap__code--text-color);
+    font-family: var(--f-tiptap__code--font-family);
+    font-size: var(--f-tiptap__code--font-size);
+    line-height: var(--f-tiptap__code--line-height);
+    padding: var(--f-tiptap__code--padding);
+  }
+
+  // Code blocks
+  pre {
+    background-color: var(--f-tiptap__codeblock--background-color);
+    color: var(--f-tiptap__codeblock--text-color);
+    border: var(--f-tiptap__codeblock--border-width) solid var(--f-tiptap__codeblock--border-color);
+    padding: var(--f-tiptap__codeblock--padding);
+    font-size: var(--f-tiptap__codeblock--font-size);
+    border-radius: var(--f-tiptap__codeblock--border-radius);
+
+    code {
+      background-color: transparent;
+      border: none;
+      border-radius: 0;
+      -webkit-text-fill-color: inherit;
+      color: inherit;
     }
   }
 }

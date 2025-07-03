@@ -35,7 +35,6 @@ import {
 // --- Tiptap Node ---
 import { FolioTiptapNodeExtension } from "@/components/tiptap-node/folio-tiptap-node/folio-tiptap-node-extension";
 
-import "@/components/tiptap-node/code-block-node/code-block-node.scss";
 import "@/components/tiptap-node/image-node/image-node.scss";
 import "@/components/tiptap-node/paragraph-node/paragraph-node.scss";
 

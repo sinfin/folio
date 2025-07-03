@@ -12,8 +12,8 @@ nodes:
     tag: blockquote
   bulletList:
     tag: ul
-  # code_block:
-  #   tag: [pre, code]
+  codeBlock:
+    tag: [pre, code]
   hardBreak:
     tag: br
     self_closing: true
