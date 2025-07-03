@@ -64,7 +64,7 @@ class Folio::Console::Tiptap::Overlay::FormComponent < Folio::Console::Applicati
     def render_file_picker(f:, key:, type:)
       helpers.file_picker(f:,
                           placement_key: "#{key}_placement",
-                          file_type: Folio::Tiptap::Node.folio_attachments_file_class(type:).to_s)
+                          file_type: Folio::Tiptap::NodeBuilder.folio_attachments_file_class(type:).to_s)
     end
 
     def render_react_files(f:, key:, type:)

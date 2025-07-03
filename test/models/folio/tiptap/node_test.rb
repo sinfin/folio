@@ -4,14 +4,16 @@ require "test_helper"
 
 class Folio::Tiptap::NodeTest < ActiveSupport::TestCase
   class Node < Folio::Tiptap::Node
-    tiptap_node title: :string,
-                content: :text,
-                button_url_json: :url_json,
-                cover: :image,
-                reports: :documents,
-                page: { class_name: "Folio::Page" },
-                another_page: { class_name: "Folio::Page" },
-                related_pages: { class_name: "Folio::Page", has_many: true }
+    tiptap_node structure: {
+      title: :string,
+      content: :text,
+      button_url_json: :url_json,
+      cover: :image,
+      reports: :documents,
+      page: { class_name: "Folio::Page" },
+      another_page: { class_name: "Folio::Page" },
+      related_pages: { class_name: "Folio::Page", has_many: true }
+    }
 
     validates :title,
               presence: true

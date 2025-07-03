@@ -4,9 +4,11 @@ require "test_helper"
 
 class Folio::Console::Api::TiptapControllerTest < Folio::Console::BaseControllerTest
   class Node < Folio::Tiptap::Node
-    tiptap_node title: :string,
-                content: :text,
-                button_url_json: :url_json
+    tiptap_node structure: {
+      title: :string,
+      content: :text,
+      button_url_json: :url_json
+    }
 
     validates :title,
               presence: true

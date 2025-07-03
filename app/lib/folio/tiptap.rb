@@ -2,6 +2,8 @@
 
 module Folio
   module Tiptap
+    ALLOWED_URL_JSON_KEYS = %w[href label title rel target]
+
     def self.remote_script_urls(context:)
       {
         urls: [context.asset_path("folio-tiptap.js")],
