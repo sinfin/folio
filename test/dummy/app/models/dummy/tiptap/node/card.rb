@@ -3,7 +3,8 @@
 class Dummy::Tiptap::Node::Card < Folio::Tiptap::Node
   tiptap_node structure: {
     title: :string,
-    content: :text,
+    text: :text,
+    content: :rich_text,
     button_url_json: :url_json,
     cover: :image,
     reports: :documents,

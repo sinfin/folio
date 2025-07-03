@@ -13,7 +13,13 @@ class Folio::Tiptap::Node
 
     attributes.each do |key, value|
       if value.present?
-        data[key.to_s] = value
+        key_definition = self.class.structure[key.to_sym]
+
+        if key_definition && key_definition.in?(%i[rich_text url_json]) && value.is_a?(Hash)
+          data[key.to_s] = value.to_json
+        else
+          data[key.to_s] = value
+        end
       end
     end
 

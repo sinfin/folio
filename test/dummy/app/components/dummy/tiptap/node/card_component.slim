@@ -1,5 +1,32 @@
-.d-tiptap-node-card
-  = render(Dummy::Ui::CardComponent.new(size: :l,
-                                        title: "Dummy::Ui::CardComponent from API",
-                                        image: @node.cover,
-                                        text:))
+.d-tiptap-node-card[
+  class="p-4 rounded bg-shade-200 border"
+]
+  div class="d-flex gap-4 align-items-start"
+    - if @node.cover
+      img[
+        src=@node.cover.admin_thumb.url
+        height="125"
+        loading="lazy"
+        style="flex: 0 0 125px"
+      ]
+
+    div class="d-flex flex-column gap-3 align-items-start flex-grow-1"
+      h2.m-0 Dummy::Ui::CardComponent from API
+
+      - if @node.title
+        h3.m-0 = @node.title
+
+      - if @node.content.present?
+        = render(Folio::Tiptap::ContentComponent.new(record: @node,
+                                                     attribute: :content))
+
+      - if @node.text.present?
+        = simple_format @node.text
+
+      - if @node.button_url_json.present?
+        a.btn.btn-primary href=@node.button_url_json["href"]
+          = @node.button_url_json["label"] || "Button"
+
+  pre.bg-white.mt-4
+    code style="white-space: break-spaces;"
+      = @node.attributes.to_json

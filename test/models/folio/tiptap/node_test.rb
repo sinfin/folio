@@ -6,7 +6,8 @@ class Folio::Tiptap::NodeTest < ActiveSupport::TestCase
   class Node < Folio::Tiptap::Node
     tiptap_node structure: {
       title: :string,
-      content: :text,
+      text: :text,
+      content: :rich_text,
       button_url_json: :url_json,
       cover: :image,
       reports: :documents,
@@ -19,13 +20,19 @@ class Folio::Tiptap::NodeTest < ActiveSupport::TestCase
               presence: true
   end
 
+  RICH_TEXT_HASH = { "type" => "doc", "content" => [{ "type" => "paragraph", "attrs" => { "textAlign" => nil }, "content" => [{ "type" => "text", "text" => "lorem" }] }, { "type" => "paragraph", "attrs" => { "textAlign" => nil }, "content" => [{ "type" => "text", "text" => "ipsum" }] }] }
+
+  URL_JSON_HASH = { href: "foo", label: "bar" }
+
   test "attributes" do
     node = Node.new(title: "foo",
-                    content: "foo bar",
+                    text: "foo bar",
+                    content: RICH_TEXT_HASH.to_json,
                     button_url_json: { href: "https://example.com", label: "Example" })
 
     assert_equal "foo", node.title
-    assert_equal "foo bar", node.content
+    assert_equal "foo bar", node.text
+    assert_equal RICH_TEXT_HASH, node.content
     assert_equal({ "href" => "https://example.com", "label" => "Example" }, node.button_url_json)
   end
 
@@ -76,12 +83,13 @@ class Folio::Tiptap::NodeTest < ActiveSupport::TestCase
     related_pages = create_list(:folio_page, 2)
 
     node = Node.new(title: "foo",
-                    content: "bar",
+                    text: "bar",
+                    content: RICH_TEXT_HASH.to_json,
                     cover:,
                     reports:,
                     page:,
                     related_pages:,
-                    button_url_json: { href: "foo", label: "bar" })
+                    button_url_json: URL_JSON_HASH)
 
     hash = node.to_tiptap_node_hash
 
@@ -89,7 +97,8 @@ class Folio::Tiptap::NodeTest < ActiveSupport::TestCase
     assert_equal 1, hash["attrs"]["version"]
     assert_equal "Folio::Tiptap::NodeTest::Node", hash["attrs"]["type"]
     assert_equal "foo", hash["attrs"]["data"]["title"]
-    assert_equal "foo", hash["attrs"]["data"]["button_url_json"]["href"]
+    assert_equal RICH_TEXT_HASH.to_json, hash["attrs"]["data"]["content"]
+    assert_equal URL_JSON_HASH.to_json, hash["attrs"]["data"]["button_url_json"]
     assert_equal cover.id, hash["attrs"]["data"]["cover_id"]
     assert_equal reports.map(&:id).sort, hash["attrs"]["data"]["report_ids"].sort
     assert_equal page.id, hash["attrs"]["data"]["page_id"]
@@ -107,7 +116,7 @@ class Folio::Tiptap::NodeTest < ActiveSupport::TestCase
         data: {
           cover_placement_attributes: { id: "", file_id: "#{image.id}" },
           title: "a",
-          content: "",
+          text: "",
           button_url_json: "{}",
           page_id: "#{page.id}",
           another_page_id: "",
@@ -124,7 +133,7 @@ class Folio::Tiptap::NodeTest < ActiveSupport::TestCase
     node.assign_attributes_from_param_attrs(params[:tiptap_node_attrs])
 
     assert_equal "a", node.title
-    assert_equal "", node.content
+    assert_equal "", node.text
     assert_equal({}, node.button_url_json)
 
     assert_equal image, node.cover

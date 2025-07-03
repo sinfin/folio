@@ -68,9 +68,10 @@ class Folio::Tiptap::NodeBuilder
                :audio,
                :video
             setup_structure_for_attachment(key:, type:)
+          when :rich_text
+            setup_structure_for_rich_text(key:)
           when :string,
-               :text,
-               :rich_text
+               :text
             setup_structure_default(key:)
           else
             fail ArgumentError, "Unsupported type #{type} in tiptap_node definition"
@@ -87,6 +88,23 @@ class Folio::Tiptap::NodeBuilder
 
     def setup_structure_default(key:)
       @klass.attribute key, type: :text
+    end
+
+    def setup_structure_for_rich_text(key:)
+      @klass.attribute key, type: :json
+      # TODO validate rich_text JSON structure
+
+      @klass.define_method "#{key}=" do |value|
+        transformed_value = if value.is_a?(String)
+          JSON.parse(value) rescue {}
+        elsif value.is_a?(Hash)
+          value.stringify_keys
+        else
+          fail ArgumentError, "Expected a String or Hash for #{key}, got #{value.class.name}"
+        end
+
+        super(transformed_value)
+      end
     end
 
     def setup_structure_for_url_json(key:)

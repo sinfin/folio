@@ -12,7 +12,7 @@ class Folio::Console::Tiptap::Overlay::FormComponent < Folio::Console::Applicati
 
     def render_input(f:, key:, type:)
       case type
-      when :string, :text, :url_json
+      when :string, :text, :url_json, :rich_text
         send("render_input_#{type}", f:, key:)
       when :image, :document, :video, :audio
         render_file_picker(f:, key:, type:)
@@ -59,6 +59,11 @@ class Folio::Console::Tiptap::Overlay::FormComponent < Folio::Console::Applicati
     def render_input_url_json(f:, key:)
       f.input key,
               as: :url_json
+    end
+
+    def render_input_rich_text(f:, key:)
+      f.input key,
+              as: :tiptap
     end
 
     def render_file_picker(f:, key:, type:)

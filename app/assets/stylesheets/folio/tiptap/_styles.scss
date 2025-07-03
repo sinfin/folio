@@ -136,6 +136,10 @@
 .f-tiptap-styles {
   white-space: var(--f-tiptap__root--white-space);
 
+  .container-fluid {
+    padding: 0;
+  }
+
   p,
   ul,
   ol,
