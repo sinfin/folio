@@ -94,43 +94,47 @@
   --f-tiptap__ul-tasklist--border-color: var(--tt-gray-light-a-200);
   --f-tiptap__ul-tasklist--border-color-active: var(--tt-gray-light-a-900);
   --f-tiptap__ul-tasklist--check-icon-color: var(--white);
-  --f-tiptap__ul-tasklist--text-active: var(--tt-gray-light-a-500);
 
   --f-tiptap__codeblock--background-color: var(--tt-gray-light-a-50);
   --f-tiptap__codeblock--border-color: var(--tt-gray-light-a-200);
   --f-tiptap__codeblock--border-radius: var(--bs-border-radius);
   --f-tiptap__codeblock--border-width: var(--bs-border-width);
+  --f-tiptap__codeblock--color: var(--tt-gray-light-a-800);
   --f-tiptap__codeblock--font-size: 1rem;
   --f-tiptap__codeblock--padding: 1em;
-  --f-tiptap__codeblock--text-color: var(--tt-gray-light-a-800);
 
   --f-tiptap__code--background-color: var(--tt-gray-light-a-100);
   --f-tiptap__code--border-color: var(--f-tiptap__codeblock--border-color);
   --f-tiptap__code--border-radius: var(--f-tiptap__codeblock--border-radius);
   --f-tiptap__code--border-width: var(--f-tiptap__codeblock--border-width);
+  --f-tiptap__code--color: var(--bs-code-color);
   --f-tiptap__code--font-family: var(--bs-font-monospace);
   --f-tiptap__code--font-size: 0.875em;
   --f-tiptap__code--line-height: 1.4;
   --f-tiptap__code--padding: 0.1em 0.2em;
-  --f-tiptap__code--text-color: var(--bs-code-color);
+
+  --f-tiptap__a--color: #0a58ca;
+  --f-tiptap__a--color-hover: var(--f-tiptap__a--color);
+  --f-tiptap__a--text-decoration: underline;
+  --f-tiptap__a--text-decoration-hover: none;
 }
 
 .f-tiptap-styles--dark {
   --f-tiptap__blockquote--background: rgba(245, 245, 245, 1);
 
-  --f-tiptap__ul-tasklist--background-color: var(--tt-gray-dark-a-100);
   --f-tiptap__ul-tasklist--background-color-active: var(--tt-gray-dark-a-900);
-  --f-tiptap__ul-tasklist--border-color: var(--tt-gray-dark-a-200);
+  --f-tiptap__ul-tasklist--background-color: var(--tt-gray-dark-a-100);
   --f-tiptap__ul-tasklist--border-color-active: var(--tt-gray-dark-a-900);
+  --f-tiptap__ul-tasklist--border-color: var(--tt-gray-dark-a-200);
   --f-tiptap__ul-tasklist--check-icon-color: var(--black);
-  --f-tiptap__ul-tasklist--text-active: var(--tt-gray-dark-a-500);
 
   --f-tiptap__code--background-color: var(--tt-gray-dark-a-100);
-  --f-tiptap__code--text-color: var(--tt-gray-dark-a-700);
   --f-tiptap__code--border-color: var(--tt-gray-dark-a-200);
+  --f-tiptap__code--color: var(--tt-gray-dark-a-700);
+
   --f-tiptap__codeblock--background-color: var(--tt-gray-dark-a-50);
-  --f-tiptap__codeblock--text-color: var(--tt-gray-dark-a-800);
   --f-tiptap__codeblock--border-color: var(--tt-gray-dark-a-200);
+  --f-tiptap__codeblock--color: var(--tt-gray-dark-a-800);
 }
 
 .f-tiptap-styles {
@@ -155,6 +159,17 @@
 
     &:last-child {
       margin-bottom: 0;
+    }
+  }
+
+  a:not([class]) {
+    color: var(--f-tiptap__a--color);
+    cursor: pointer;
+    text-decoration: var(--f-tiptap__a--text-decoration);
+
+    &:hover {
+      color: var(--f-tiptap__a--color-hover);
+      text-decoration: var(--f-tiptap__a--text-decoration-hover);
     }
   }
 
@@ -368,7 +383,7 @@
     background-color: var(--f-tiptap__code--background-color);
     border-radius: var(--f-tiptap__code--border-radius);
     border: var(--f-tiptap__code--border-width) solid var(--f-tiptap__code--border-color);
-    color: var(--f-tiptap__code--text-color);
+    color: var(--f-tiptap__code--color);
     font-family: var(--f-tiptap__code--font-family);
     font-size: var(--f-tiptap__code--font-size);
     line-height: var(--f-tiptap__code--line-height);
@@ -378,7 +393,7 @@
   // Code blocks
   pre {
     background-color: var(--f-tiptap__codeblock--background-color);
-    color: var(--f-tiptap__codeblock--text-color);
+    color: var(--f-tiptap__codeblock--color);
     border: var(--f-tiptap__codeblock--border-width) solid var(--f-tiptap__codeblock--border-color);
     padding: var(--f-tiptap__codeblock--padding);
     font-size: var(--f-tiptap__codeblock--font-size);
