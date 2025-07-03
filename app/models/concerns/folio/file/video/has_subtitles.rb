@@ -9,8 +9,9 @@ module Folio::File::Video::HasSubtitles
     end
 
     def transcribe_subtitles_job_class
-      # enable in main app
-      # Folio::OpenAi::TranscribeSubtitlesJob
+      # enable in main app, choose one:
+      # Folio::OpenAi::TranscribeSubtitlesJob        # for OpenAI Whisper
+      # Folio::ElevenLabs::TranscribeSubtitlesJob    # for ElevenLabs
     end
 
     def subtitles_enabled?
