@@ -8,6 +8,8 @@ All notable changes to this project will be documented in this file.
 - added `rel` and `target` to allowed rich text attributes
 - actions `destroy`, `discard` and `undiscard` are now by default collapsed in console index pages
 
+- `Folio::ElevenLabs::TranscribeSubtitlesJob` for automatic subtitles transcription using ElevenLabs (disabled by default)
+
 ## [6.5.1] - 2025-06-18
 
 ### Added
@@ -61,7 +63,8 @@ All notable changes to this project will be documented in this file.
 ### Added
 - `Folio::File::Video::HasSubtitles` concern to Video files
 - `Rails.application.config.folio_files_video_enabled_subtitle_languages` to set subtitle languages
-- `Folio::OpenAi::TranscribeSubtitlesJob` for automatic subtitles transcription (disabled by default)
+- `Folio::OpenAi::TranscribeSubtitlesJob` for automatic subtitles transcription using OpenAI Whisper (disabled by default)
+
 - `file_modal_additional_fields` method to files for custom fields in console file modal
 
 ### Changed
