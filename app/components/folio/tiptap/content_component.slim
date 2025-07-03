@@ -3,9 +3,8 @@
     = render(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: @record,
                                                                   prose_mirror_node: tiptap_content))
 
-  - if @debug
-    .container-fluid.my-4
-      h2 tiptap_content
+  .container-fluid.my-4
+    h2 tiptap_content
 
-      pre: code
-        = JSON.pretty_generate(tiptap_content)
+    pre: code
+      = JSON.pretty_generate(tiptap_content)

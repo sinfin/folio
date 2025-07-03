@@ -1,5 +1,4 @@
 .tiptap.ProseMirror {
-  --blockquote-bg-color: var(--tt-gray-light-900);
   --link-text-color: var(--tt-brand-color-500);
   --separator-color: var(--tt-gray-light-a-200);
   --thread-text: var(--tt-gray-light-900);
@@ -25,43 +24,6 @@
      CORE EDITOR STYLES
      ===================== */
 .tiptap.ProseMirror {
-  white-space: pre-wrap;
-  outline: none;
-  caret-color: var(--tt-cursor-color);
-
-  // Paragraph spacing
-  p {
-    margin: var(--f-tiptap--tt-default-content-spacer) 0;
-  }
-
-  p:first-child {
-    margin-top: 0;
-  }
-
-  p:last-child {
-    margin-bottom: 0;
-  }
-
-  // Selection styles
-  &:not(.readonly):not(.ProseMirror-hideselection) {
-    ::selection {
-      background-color: var(--tt-selection-color);
-    }
-
-    .selection::selection {
-      background: transparent;
-    }
-  }
-
-  .selection {
-    display: inline;
-    background-color: var(--tt-selection-color);
-  }
-
-  .ProseMirror-hideselection {
-    caret-color: transparent;
-  }
-
   // Placeholder
   > p.is-editor-empty::before {
     content: attr(data-placeholder);
@@ -113,54 +75,6 @@
 }
 
 /* =====================
-     TEXT DECORATION
-     ===================== */
-.tiptap.ProseMirror {
-  // Text decoration inheritance for spans
-  a span {
-    text-decoration: underline;
-  }
-
-  s span {
-    text-decoration: line-through;
-  }
-
-  u span {
-    text-decoration: underline;
-  }
-}
-
-/* =====================
-     BLOCKQUOTE
-     ===================== */
-.tiptap.ProseMirror {
-  blockquote {
-    position: relative;
-    padding-left: 1em;
-    padding-top: 0.375em;
-    padding-bottom: 0.375em;
-    margin: var(--f-tiptap--tt-default-content-spacer) 0;
-
-    p {
-      margin-top: 0;
-    }
-
-    &::before,
-    &.is-empty::before {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      top: 0;
-      height: 100%;
-      width: 0.25em;
-      background-color: var(--blockquote-bg-color);
-      content: "";
-      border-radius: 0;
-    }
-  }
-}
-
-/* =====================
      COLLABORATION
      ===================== */
 .tiptap.ProseMirror {
@@ -199,50 +113,6 @@
   width: 1.25em;
   height: 1.25em;
   cursor: text;
-}
-
-/* =====================
-     HEADINGS
-     ===================== */
-.tiptap.ProseMirror {
-  h1,
-  h2,
-  h3,
-  h4 {
-    position: relative;
-    color: inherit;
-    font-style: inherit;
-    margin: var(--f-tiptap--tt-default-content-spacer) 0;
-    font-weight: var(--f-tiptap--tt-default-headings-font-weight);
-
-    &:first-child {
-      margin-top: 0;
-    }
-
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
-
-  h1 {
-    font-size: var(--f-tiptap--tt-h1-font-size);
-    margin: var(--f-tiptap--tt-h1-margin);
-  }
-
-  h2 {
-    font-size: var(--f-tiptap--tt-h2-font-size);
-    margin: var(--f-tiptap--tt-h2-margin);
-  }
-
-  h3 {
-    font-size: var(--f-tiptap--tt-h3-font-size);
-    margin: var(--f-tiptap--tt-h3-margin);
-  }
-
-  h4 {
-    font-size: var(--f-tiptap--tt-h4-font-size);
-    margin: var(--f-tiptap--tt-h4-margin);
-  }
 }
 
 /* =====================

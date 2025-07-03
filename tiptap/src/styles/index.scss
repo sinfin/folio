@@ -161,3 +161,28 @@ body,
     line-height: 140%;
   }
 }
+
+.tiptap.ProseMirror {
+  outline: none;
+  caret-color: var(--tt-cursor-color);
+
+  // Selection styles
+  &:not(.readonly):not(.ProseMirror-hideselection) {
+    ::selection {
+      background-color: var(--tt-selection-color);
+    }
+
+    .selection::selection {
+      background: transparent;
+    }
+  }
+
+  .selection {
+    display: inline;
+    background-color: var(--tt-selection-color);
+  }
+
+  .ProseMirror-hideselection {
+    caret-color: transparent;
+  }
+}
