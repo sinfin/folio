@@ -2,7 +2,7 @@ nodes:
   doc:
     tag: div
     attrs:
-      class: "f-tiptap-content__root"
+      class: "f-tiptap-content__root f-tiptap-styles"
   text:
     component_name: Folio::Tiptap::Content::TextComponent
   folioTiptapNode:

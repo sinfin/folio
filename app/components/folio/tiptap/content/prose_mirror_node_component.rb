@@ -1,19 +1,19 @@
 # frozen_string_literal: true
 
-class Folio::Tiptap::Content::NodeComponent < ApplicationComponent
-  NODES = YAML.load_file(File.join(__dir__, "node_component.yml"))["nodes"].freeze
+class Folio::Tiptap::Content::ProseMirrorNodeComponent < ApplicationComponent
+  NODES = YAML.load_file(File.join(__dir__, "prose_mirror_node_component.yml"))["nodes"].freeze
 
-  def initialize(record:, prosemirror_node:)
+  def initialize(record:, prose_mirror_node:)
     @record = record
-    @prosemirror_node = prosemirror_node
+    @prose_mirror_node = prose_mirror_node
 
-    @node_definition = NODES[@prosemirror_node["type"]]
+    @node_definition = NODES[@prose_mirror_node["type"]]
   end
 
   private
     def resolve_tag_name(tag)
-      if @node_definition["level_based"] && @prosemirror_node["attrs"] && @prosemirror_node["attrs"]["level"]
-        level = @prosemirror_node["attrs"]["level"]
+      if @node_definition["level_based"] && @prose_mirror_node["attrs"] && @prose_mirror_node["attrs"]["level"]
+        level = @prose_mirror_node["attrs"]["level"]
         "h#{level}"
       else
         tag
@@ -31,8 +31,8 @@ class Folio::Tiptap::Content::NodeComponent < ApplicationComponent
       end
 
       # Include dynamic attributes from prosemirror node
-      if @node_definition["has_attrs"] && @prosemirror_node["attrs"]
-        @prosemirror_node["attrs"].each do |key, value|
+      if @node_definition["has_attrs"] && @prose_mirror_node["attrs"]
+        @prose_mirror_node["attrs"].each do |key, value|
           next if key == "level" # Skip level for headings as it's used for tag name
           attrs[key.to_sym] = value
         end

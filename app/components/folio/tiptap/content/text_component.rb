@@ -3,17 +3,17 @@
 class Folio::Tiptap::Content::TextComponent < ApplicationComponent
   MARKS = YAML.load_file(File.join(__dir__, "text_component.yml"))["marks"].freeze
 
-  def initialize(record:, prosemirror_node:)
+  def initialize(record:, prose_mirror_node:)
     @record = record
-    @prosemirror_node = prosemirror_node
+    @prose_mirror_node = prose_mirror_node
   end
 
   def text
-    @text ||= @prosemirror_node["text"] || ""
+    @text ||= @prose_mirror_node["text"] || ""
   end
 
   def marks
-    @marks ||= @prosemirror_node["marks"] || []
+    @marks ||= @prose_mirror_node["marks"] || []
   end
 
   def has_marks?

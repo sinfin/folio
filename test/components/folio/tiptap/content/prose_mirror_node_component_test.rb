@@ -2,22 +2,22 @@
 
 require "test_helper"
 
-class Folio::Tiptap::Content::NodeComponentTest < Folio::ComponentTest
+class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTest
   def test_render_simple_text_node
-    prosemirror_node = {
+    prose_mirror_node = {
       "type" => "text",
       "text" => "Hello world"
     }
 
     model = build_mock_record
-    render_inline(Folio::Tiptap::Content::NodeComponent.new(record: model, prosemirror_node: prosemirror_node))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: model, prose_mirror_node: prose_mirror_node))
 
     # Text nodes render the TextComponent directly, which just outputs text
     assert_text("Hello world")
   end
 
   def test_render_paragraph_node
-    prosemirror_node = {
+    prose_mirror_node = {
       "type" => "paragraph",
       "content" => [
         {
@@ -28,14 +28,14 @@ class Folio::Tiptap::Content::NodeComponentTest < Folio::ComponentTest
     }
 
     model = build_mock_record
-    render_inline(Folio::Tiptap::Content::NodeComponent.new(record: model, prosemirror_node: prosemirror_node))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: model, prose_mirror_node: prose_mirror_node))
 
     assert_selector("p")
     assert_text("This is a paragraph")
   end
 
   def test_render_heading_node_level_1
-    prosemirror_node = {
+    prose_mirror_node = {
       "type" => "heading",
       "attrs" => { "level" => 1 },
       "content" => [
@@ -47,14 +47,14 @@ class Folio::Tiptap::Content::NodeComponentTest < Folio::ComponentTest
     }
 
     model = build_mock_record
-    render_inline(Folio::Tiptap::Content::NodeComponent.new(record: model, prosemirror_node: prosemirror_node))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: model, prose_mirror_node: prose_mirror_node))
 
     # Now that we have dynamic heading levels
     assert_selector("h1", text: "Main Heading")
   end
 
   def test_render_heading_node_with_different_level
-    prosemirror_node = {
+    prose_mirror_node = {
       "type" => "heading",
       "attrs" => { "level" => 3 },
       "content" => [
@@ -66,14 +66,14 @@ class Folio::Tiptap::Content::NodeComponentTest < Folio::ComponentTest
     }
 
     model = build_mock_record
-    render_inline(Folio::Tiptap::Content::NodeComponent.new(record: model, prosemirror_node: prosemirror_node))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: model, prose_mirror_node: prose_mirror_node))
 
     # Now that we have dynamic heading levels
     assert_selector("h3", text: "Sub Heading")
   end
 
   def test_render_blockquote_node
-    prosemirror_node = {
+    prose_mirror_node = {
       "type" => "blockquote",
       "content" => [
         {
@@ -89,14 +89,14 @@ class Folio::Tiptap::Content::NodeComponentTest < Folio::ComponentTest
     }
 
     model = build_mock_record
-    render_inline(Folio::Tiptap::Content::NodeComponent.new(record: model, prosemirror_node: prosemirror_node))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: model, prose_mirror_node: prose_mirror_node))
 
     assert_selector("blockquote")
     assert_text("This is a quoted text")
   end
 
   def test_render_bullet_list_node
-    prosemirror_node = {
+    prose_mirror_node = {
       "type" => "bullet_list",
       "content" => [
         {
@@ -131,7 +131,7 @@ class Folio::Tiptap::Content::NodeComponentTest < Folio::ComponentTest
     }
 
     model = build_mock_record
-    render_inline(Folio::Tiptap::Content::NodeComponent.new(record: model, prosemirror_node: prosemirror_node))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: model, prose_mirror_node: prose_mirror_node))
 
     assert_selector("ul")
     assert_selector("li", count: 2)
@@ -140,7 +140,7 @@ class Folio::Tiptap::Content::NodeComponentTest < Folio::ComponentTest
   end
 
   def test_render_ordered_list_node
-    prosemirror_node = {
+    prose_mirror_node = {
       "type" => "ordered_list",
       "attrs" => { "start" => 1 },
       "content" => [
@@ -162,7 +162,7 @@ class Folio::Tiptap::Content::NodeComponentTest < Folio::ComponentTest
     }
 
     model = build_mock_record
-    render_inline(Folio::Tiptap::Content::NodeComponent.new(record: model, prosemirror_node: prosemirror_node))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: model, prose_mirror_node: prose_mirror_node))
 
     assert_selector("ol")
     assert_selector("li")
@@ -170,7 +170,7 @@ class Folio::Tiptap::Content::NodeComponentTest < Folio::ComponentTest
   end
 
   def test_render_doc_node_with_class
-    prosemirror_node = {
+    prose_mirror_node = {
       "type" => "doc",
       "content" => [
         {
@@ -186,14 +186,14 @@ class Folio::Tiptap::Content::NodeComponentTest < Folio::ComponentTest
     }
 
     model = build_mock_record
-    render_inline(Folio::Tiptap::Content::NodeComponent.new(record: model, prosemirror_node: prosemirror_node))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: model, prose_mirror_node: prose_mirror_node))
 
     assert_selector("div.f-tiptap-content__root")
     assert_text("Document content")
   end
 
   def test_render_folio_tiptap_node
-    prosemirror_node = {
+    prose_mirror_node = {
       "type" => "folioTiptapNode",
       "attrs" => {
         "type" => "Dummy::Tiptap::Node::Card",
@@ -202,7 +202,7 @@ class Folio::Tiptap::Content::NodeComponentTest < Folio::ComponentTest
     }
 
     model = build_mock_record
-    render_inline(Folio::Tiptap::Content::NodeComponent.new(record: model, prosemirror_node: prosemirror_node))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: model, prose_mirror_node: prose_mirror_node))
 
     # Should render the FolioTiptapNodeComponent with the card
     assert_selector(".d-tiptap-node-card")
@@ -210,7 +210,7 @@ class Folio::Tiptap::Content::NodeComponentTest < Folio::ComponentTest
   end
 
   def test_render_nested_structure
-    prosemirror_node = {
+    prose_mirror_node = {
       "type" => "bullet_list",
       "content" => [
         {
@@ -231,7 +231,7 @@ class Folio::Tiptap::Content::NodeComponentTest < Folio::ComponentTest
     }
 
     model = build_mock_record
-    render_inline(Folio::Tiptap::Content::NodeComponent.new(record: model, prosemirror_node: prosemirror_node))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: model, prose_mirror_node: prose_mirror_node))
 
     assert_selector("ul")
     assert_selector("li p")
@@ -239,7 +239,7 @@ class Folio::Tiptap::Content::NodeComponentTest < Folio::ComponentTest
   end
 
   def test_render_unsupported_node_type
-    prosemirror_node = {
+    prose_mirror_node = {
       "type" => "unsupported_node",
       "content" => [
         {
@@ -250,16 +250,16 @@ class Folio::Tiptap::Content::NodeComponentTest < Folio::ComponentTest
     }
 
     model = build_mock_record
-    render_inline(Folio::Tiptap::Content::NodeComponent.new(record: model, prosemirror_node: prosemirror_node))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: model, prose_mirror_node: prose_mirror_node))
 
-    assert_selector(".f-tiptap-content-node--error")
+    assert_selector(".f-tiptap-prose-mirror-node--error")
     assert_text("TODO missing node_definition")
   end
 
 
 
   def test_render_list_item_node
-    prosemirror_node = {
+    prose_mirror_node = {
       "type" => "list_item",
       "content" => [
         {
@@ -275,20 +275,20 @@ class Folio::Tiptap::Content::NodeComponentTest < Folio::ComponentTest
     }
 
     model = build_mock_record
-    render_inline(Folio::Tiptap::Content::NodeComponent.new(record: model, prosemirror_node: prosemirror_node))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: model, prose_mirror_node: prose_mirror_node))
 
     assert_selector("li")
     assert_text("List item content")
   end
 
   def test_render_empty_content_array
-    prosemirror_node = {
+    prose_mirror_node = {
       "type" => "paragraph",
       "content" => []
     }
 
     model = build_mock_record
-    render_inline(Folio::Tiptap::Content::NodeComponent.new(record: model, prosemirror_node: prosemirror_node))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: model, prose_mirror_node: prose_mirror_node))
 
     assert_selector("p")
     # Should render empty paragraph
@@ -297,7 +297,7 @@ class Folio::Tiptap::Content::NodeComponentTest < Folio::ComponentTest
 
 
   def test_render_multiple_text_nodes_in_paragraph
-    prosemirror_node = {
+    prose_mirror_node = {
       "type" => "paragraph",
       "content" => [
         {
@@ -312,14 +312,14 @@ class Folio::Tiptap::Content::NodeComponentTest < Folio::ComponentTest
     }
 
     model = build_mock_record
-    render_inline(Folio::Tiptap::Content::NodeComponent.new(record: model, prosemirror_node: prosemirror_node))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: model, prose_mirror_node: prose_mirror_node))
 
     assert_selector("p")
     assert_text("First part second part")
   end
 
   def test_render_complex_structure_with_multiple_levels
-    prosemirror_node = {
+    prose_mirror_node = {
       "type" => "blockquote",
       "content" => [
         {
@@ -339,7 +339,7 @@ class Folio::Tiptap::Content::NodeComponentTest < Folio::ComponentTest
     }
 
     model = build_mock_record
-    render_inline(Folio::Tiptap::Content::NodeComponent.new(record: model, prosemirror_node: prosemirror_node))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: model, prose_mirror_node: prose_mirror_node))
 
     assert_selector("blockquote")
     assert_selector("blockquote p")
@@ -347,7 +347,7 @@ class Folio::Tiptap::Content::NodeComponentTest < Folio::ComponentTest
   end
 
   def test_component_initialization_with_all_parameters
-    prosemirror_node = {
+    prose_mirror_node = {
       "type" => "paragraph",
       "content" => [
         {
@@ -358,9 +358,9 @@ class Folio::Tiptap::Content::NodeComponentTest < Folio::ComponentTest
     }
 
     model = build_mock_record
-    component = Folio::Tiptap::Content::NodeComponent.new(
+    component = Folio::Tiptap::Content::ProseMirrorNodeComponent.new(
       record: model,
-      prosemirror_node: prosemirror_node
+      prose_mirror_node: prose_mirror_node
     )
 
     # Component should initialize without errors

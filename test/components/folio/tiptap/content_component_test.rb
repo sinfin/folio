@@ -585,7 +585,7 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
     model = build_mock_record(prosemirror_json)
     render_inline(Folio::Tiptap::ContentComponent.new(record: model))
 
-    assert_selector(".f-tiptap-content-node--error")
+    assert_selector(".f-tiptap-prose-mirror-node--error")
     assert_text("TODO missing node_definition")
   end
 

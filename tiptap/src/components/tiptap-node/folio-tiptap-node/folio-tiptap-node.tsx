@@ -126,19 +126,19 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
   }, [uniqueId, props]);
 
   return (
-    <NodeViewWrapper className="tiptap-folio-tiptap-node" tabIndex={0}>
+    <NodeViewWrapper className="f-tiptap-node" tabIndex={0}>
       {htmlFromApi ? (
         <div
-          className="tiptap-folio-tiptap-node__html"
+          className="f-tiptap-node__html"
           dangerouslySetInnerHTML={{ __html: htmlFromApi }}
         />
       ) : (
-        <div className="tiptap-folio-tiptap-node__loader-wrap rounded">
+        <div className="f-tiptap-node__loader-wrap rounded">
           <span className="folio-loader" />
         </div>
       )}
 
-      <div className="tiptap-folio-tiptap-node__hover-controls">
+      <div className="f-tiptap-node__hover-controls">
         <Button
           type="button"
           role="button"

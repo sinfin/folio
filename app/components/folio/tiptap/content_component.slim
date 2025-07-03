@@ -1,8 +1,7 @@
 .f-tiptap-content
   .container-fluid
-    .f-tiptap-styles
-      = render(Folio::Tiptap::Content::NodeComponent.new(record: @record,
-                                                         prosemirror_node: tiptap_content))
+    = render(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: @record,
+                                                                  prose_mirror_node: tiptap_content))
 
   - if @debug
     .container-fluid.my-4

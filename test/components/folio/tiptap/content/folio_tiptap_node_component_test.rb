@@ -4,7 +4,7 @@ require "test_helper"
 
 class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTest
   def test_render_basic_folio_tiptap_node
-    prosemirror_node = {
+    prose_mirror_node = {
       "type" => "folioTiptapNode",
       "attrs" => {
         "type" => "Dummy::Tiptap::Node::Card",
@@ -12,14 +12,13 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTes
       }
     }
 
-    model = build_mock_record
-    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: model, prosemirror_node: prosemirror_node))
+    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:))
 
     assert_selector(".d-tiptap-node-card")
   end
 
   def test_render_with_string_type_attribute
-    prosemirror_node = {
+    prose_mirror_node = {
       "type" => "folioTiptapNode",
       "attrs" => {
         "type" => "Dummy::Tiptap::Node::Card",
@@ -30,14 +29,13 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTes
       }
     }
 
-    model = build_mock_record
-    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: model, prosemirror_node: prosemirror_node))
+    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:))
 
     assert_selector(".d-tiptap-node-card")
   end
 
   def test_render_with_complex_data_attributes
-    prosemirror_node = {
+    prose_mirror_node = {
       "type" => "folioTiptapNode",
       "attrs" => {
         "type" => "Dummy::Tiptap::Node::Card",
@@ -52,15 +50,14 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTes
       }
     }
 
-    model = build_mock_record
-    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: model, prosemirror_node: prosemirror_node))
+    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:))
 
     assert_selector(".d-tiptap-node-card")
     assert_text("Gallery Card")
   end
 
   def test_render_with_nested_data_structure
-    prosemirror_node = {
+    prose_mirror_node = {
       "type" => "folioTiptapNode",
       "attrs" => {
         "type" => "Dummy::Tiptap::Node::Card",
@@ -76,15 +73,14 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTes
       }
     }
 
-    model = build_mock_record
-    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: model, prosemirror_node: prosemirror_node))
+    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:))
 
     assert_selector(".d-tiptap-node-card")
     assert_text("Testimonial Card")
   end
 
   def test_render_with_empty_data
-    prosemirror_node = {
+    prose_mirror_node = {
       "type" => "folioTiptapNode",
       "attrs" => {
         "type" => "Dummy::Tiptap::Node::Card",
@@ -92,28 +88,26 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTes
       }
     }
 
-    model = build_mock_record
-    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: model, prosemirror_node: prosemirror_node))
+    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:))
 
     assert_selector(".d-tiptap-node-card")
   end
 
   def test_render_with_no_data_attribute
-    prosemirror_node = {
+    prose_mirror_node = {
       "type" => "folioTiptapNode",
       "attrs" => {
         "type" => "Dummy::Tiptap::Node::Card"
       }
     }
 
-    model = build_mock_record
-    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: model, prosemirror_node: prosemirror_node))
+    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:))
 
     assert_selector(".d-tiptap-node-card")
   end
 
   def test_render_with_null_attributes
-    prosemirror_node = {
+    prose_mirror_node = {
       "type" => "folioTiptapNode",
       "attrs" => {
         "type" => "Dummy::Tiptap::Node::Card",
@@ -125,15 +119,14 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTes
       }
     }
 
-    model = build_mock_record
-    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: model, prosemirror_node: prosemirror_node))
+    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:))
 
     assert_selector(".d-tiptap-node-card")
     assert_text("Test Title")
   end
 
   def test_render_with_special_characters_in_data
-    prosemirror_node = {
+    prose_mirror_node = {
       "type" => "folioTiptapNode",
       "attrs" => {
         "type" => "Dummy::Tiptap::Node::Card",
@@ -148,8 +141,7 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTes
       }
     }
 
-    model = build_mock_record
-    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: model, prosemirror_node: prosemirror_node))
+    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:))
 
     assert_selector(".d-tiptap-node-card")
     # The component displays attributes as JSON, so special chars will be escaped
@@ -159,7 +151,7 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTes
 
 
   def test_render_with_url_attributes
-    prosemirror_node = {
+    prose_mirror_node = {
       "type" => "folioTiptapNode",
       "attrs" => {
         "type" => "Dummy::Tiptap::Node::Card",
@@ -176,15 +168,14 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTes
       }
     }
 
-    model = build_mock_record
-    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: model, prosemirror_node: prosemirror_node))
+    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:))
 
     assert_selector(".d-tiptap-node-card")
     assert_text("Embed Card")
   end
 
   def test_render_with_mixed_data_types
-    prosemirror_node = {
+    prose_mirror_node = {
       "type" => "folioTiptapNode",
       "attrs" => {
         "type" => "Dummy::Tiptap::Node::Card",
@@ -200,15 +191,14 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTes
       }
     }
 
-    model = build_mock_record
-    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: model, prosemirror_node: prosemirror_node))
+    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:))
 
     assert_selector(".d-tiptap-node-card")
     assert_text("Mixed Data Card")
   end
 
   def test_render_with_json_data_display
-    prosemirror_node = {
+    prose_mirror_node = {
       "type" => "folioTiptapNode",
       "attrs" => {
         "type" => "Dummy::Tiptap::Node::Card",
@@ -219,8 +209,7 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTes
       }
     }
 
-    model = build_mock_record
-    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: model, prosemirror_node: prosemirror_node))
+    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:))
 
     assert_selector(".d-tiptap-node-card")
     # The CardComponent displays attributes as JSON
@@ -229,7 +218,7 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTes
   end
 
   def test_render_validates_node_attributes
-    prosemirror_node = {
+    prose_mirror_node = {
       "type" => "folioTiptapNode",
       "attrs" => {
         "type" => "Dummy::Tiptap::Node::Card",
@@ -240,15 +229,14 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTes
       }
     }
 
-    model = build_mock_record
 
     # The component should still render even with validation errors
-    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: model, prosemirror_node: prosemirror_node))
+    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:))
     assert_selector(".d-tiptap-node-card")
   end
 
   def test_component_renders_ui_card_component
-    prosemirror_node = {
+    prose_mirror_node = {
       "type" => "folioTiptapNode",
       "attrs" => {
         "type" => "Dummy::Tiptap::Node::Card",
@@ -259,8 +247,7 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTes
       }
     }
 
-    model = build_mock_record
-    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: model, prosemirror_node: prosemirror_node))
+    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:))
 
     # Should render the tiptap node card wrapper
     assert_selector(".d-tiptap-node-card")
