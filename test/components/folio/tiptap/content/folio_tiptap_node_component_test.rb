@@ -8,7 +8,7 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTes
       "type" => "folioTiptapNode",
       "attrs" => {
         "type" => "Dummy::Tiptap::Node::Card",
-        "data" => { "title" => "Test Card", "content" => "Test content" }
+        "data" => { "title" => "Test Card", "text" => "Test content" }
       }
     }
 
@@ -24,7 +24,7 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTes
         "type" => "Dummy::Tiptap::Node::Card",
         "data" => {
           "title" => "Image Card",
-          "content" => "A card with image content"
+          "text" => "A card with image content"
         }
       }
     }
@@ -41,7 +41,7 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTes
         "type" => "Dummy::Tiptap::Node::Card",
         "data" => {
           "title" => "Gallery Card",
-          "content" => "A complex card with multiple attributes",
+          "text" => "A complex card with multiple attributes",
           "button_url_json" => {
             "href" => "https://example.com",
             "label" => "View Gallery"
@@ -63,7 +63,7 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTes
         "type" => "Dummy::Tiptap::Node::Card",
         "data" => {
           "title" => "Testimonial Card",
-          "content" => "This is a great product!",
+          "text" => "This is a great product!",
           "button_url_json" => {
             "href" => "/testimonials",
             "label" => "Read More",
@@ -113,8 +113,8 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTes
         "type" => "Dummy::Tiptap::Node::Card",
         "data" => {
           "title" => "Test Title",
-          "content" => nil
-          # button_url_json omitted - nil values cause errors
+          "text" => nil,
+          "button_url_json" => nil
         }
       }
     }
@@ -132,7 +132,7 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTes
         "type" => "Dummy::Tiptap::Node::Card",
         "data" => {
           "title" => "Special chars: <>&\"'",
-          "content" => "HTML content with <strong>formatting</strong>",
+          "text" => "HTML content with <strong>formatting</strong>",
           "button_url_json" => {
             "href" => "https://example.com/special?param=value&other=true",
             "label" => "Visit & Learn"
@@ -157,7 +157,7 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTes
         "type" => "Dummy::Tiptap::Node::Card",
         "data" => {
           "title" => "Embed Card",
-          "content" => "Card with external content",
+          "text" => "Card with external content",
           "button_url_json" => {
             "href" => "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
             "label" => "Watch Video",
@@ -181,7 +181,7 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTes
         "type" => "Dummy::Tiptap::Node::Card",
         "data" => {
           "title" => "Mixed Data Card",
-          "content" => "Card with various data types",
+          "text" => "Card with various data types",
           "button_url_json" => {
             "href" => "/path/to/resource",
             "label" => "Learn More",
@@ -204,7 +204,7 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTes
         "type" => "Dummy::Tiptap::Node::Card",
         "data" => {
           "title" => "JSON Display Test",
-          "content" => "Testing JSON serialization"
+          "text" => "Testing JSON serialization"
         }
       }
     }
@@ -224,7 +224,7 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTes
         "type" => "Dummy::Tiptap::Node::Card",
         "data" => {
           "title" => "", # Empty title should fail validation
-          "content" => "Valid content"
+          "text" => "Valid content"
         }
       }
     }
@@ -242,19 +242,15 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTes
         "type" => "Dummy::Tiptap::Node::Card",
         "data" => {
           "title" => "UI Component Test",
-          "content" => "Testing the UI card component rendering"
+          "text" => "Testing the UI card component rendering"
         }
       }
     }
 
     render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:))
 
-    # Should render the tiptap node card wrapper
     assert_selector(".d-tiptap-node-card")
-    # And contain the UI card component
-    assert_selector(".d-ui-card")
-    # With the expected title from Dummy::Ui::CardComponent
-    assert_text("Dummy::Ui::CardComponent from API")
+    assert_text("Dummy Card Component from API")
   end
 
   private

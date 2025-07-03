@@ -95,7 +95,9 @@ class Folio::Tiptap::NodeBuilder
       # TODO validate rich_text JSON structure
 
       @klass.define_method "#{key}=" do |value|
-        transformed_value = if value.is_a?(String)
+        transformed_value = if value.nil?
+          nil
+        elsif value.is_a?(String)
           JSON.parse(value) rescue {}
         elsif value.is_a?(Hash)
           value.stringify_keys
@@ -111,6 +113,10 @@ class Folio::Tiptap::NodeBuilder
       @klass.attribute key, type: :json
 
       @klass.define_method "#{key}=" do |value|
+        if value.nil?
+          return super(nil)
+        end
+
         transformed_value = if value.is_a?(String)
           JSON.parse(value) rescue {}
         elsif value.is_a?(Hash)
@@ -141,6 +147,10 @@ class Folio::Tiptap::NodeBuilder
 
         @klass.define_method "#{key.to_s.singularize}_placements_attributes=" do |attributes|
           ary = []
+
+          if attributes.nil?
+            return send("#{key.to_s.singularize}_ids=", [])
+          end
 
           if attributes.is_a?(Hash)
             ary = attributes.values
@@ -225,7 +235,9 @@ class Folio::Tiptap::NodeBuilder
       end
 
       @klass.define_method("#{key}=") do |value|
-        if value.is_a?(belongs_to_klass)
+        if value.nil?
+          send("#{key}_id=", nil)
+        elsif value.is_a?(belongs_to_klass)
           send("#{key}_id=", value.id)
         else
           fail ArgumentError, "Expected a #{belongs_to_klass.name} for #{key}, got #{value.class.name}"
