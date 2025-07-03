@@ -60,7 +60,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
 
   setHeight (height) {
     if (typeof height !== 'number') return
-    this.iframeTarget.style.height = `${height + 50}px`
+    this.iframeTarget.style.height = `${height + 2}px`
   }
 
   sendStartMessage () {
