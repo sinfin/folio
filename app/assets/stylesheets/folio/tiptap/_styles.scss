@@ -21,15 +21,21 @@
   --white: rgb(255, 255, 255);
   --black: rgb(0, 0, 0);
 
+  --f-tiptap__spacer: 1rem;
+
   --f-tiptap__root--white-space: pre-wrap;
 
-  --f-tiptap__node--margin-top: 1.5rem;
-  --f-tiptap__node--margin-bottom: 1.5rem;
+  --f-tiptap__node--margin-top: var(--f-tiptap__spacer);
+  --f-tiptap__node--margin-bottom: var(--f-tiptap__spacer);
 
   --f-tiptap__blockquote--padding: 0.375em 0 0.375em 1em;
   --f-tiptap__blockquote--background: rgba(34, 35, 37, 1);
 
-  --f-tiptap__headings--margin-top: var(--f-tiptap__node--margin-top);
+  --f-tiptap__hr--margin: 2rem;
+  --f-tiptap__hr--color: var(--bs-border-color);
+  --f-tiptap__hr--height: 1px;
+
+  --f-tiptap__headings--margin-top: 2rem;
   --f-tiptap__h1--margin-top: var(--f-tiptap__headings--margin-top);
   --f-tiptap__h2--margin-top: var(--f-tiptap__headings--margin-top);
   --f-tiptap__h3--margin-top: var(--f-tiptap__headings--margin-top);
@@ -77,10 +83,11 @@
   --f-tiptap__h3--letter-spacing: var(--f-tiptap__headings--letter-spacing);
   --f-tiptap__h4--letter-spacing: var(--f-tiptap__headings--letter-spacing);
 
-  --f-tiptap__ul--padding-left: var(--f-tiptap__node--margin-top);
+  --f-tiptap__ul--padding-left: 1.5em;
 
-  --f-tiptap__li--margin-top: 0.75em;
-  --f-tiptap__li--margin-bottom: 0.75em;
+  --f-tiptap__li--spacer: 0.5rem;
+  --f-tiptap__li--margin-top: var(--f-tiptap__li--spacer);
+  --f-tiptap__li--margin-bottom: var(--f-tiptap__li--spacer);
 
   --f-tiptap__ul-tasklist--background-color: var(--tt-gray-light-a-100);
   --f-tiptap__ul-tasklist--background-color-active: var(--tt-gray-light-a-900);
@@ -223,6 +230,11 @@
   }
 
   li {
+    // reduce spacings inside list
+    --f-tiptap__spacer: var(--f-tiptap__li--spacer);
+    --f-tiptap__node--margin-top: var(--f-tiptap__li--spacer);
+    --f-tiptap__node--margin-bottom: var(--f-tiptap__li--spacer);
+
     list-style-type: inherit;
     margin-top: var(--f-tiptap__li--margin-top);
     margin-bottom: var(--f-tiptap__li--margin-bottom);
@@ -261,7 +273,7 @@
   }
 
   ul[data-type="taskList"] {
-    padding-left: 0.25em;
+    padding-left: 0.1em;
 
     li {
       display: flex;
@@ -375,5 +387,12 @@
       -webkit-text-fill-color: inherit;
       color: inherit;
     }
+  }
+
+  hr {
+    background-color: var(--f-tiptap__hr--color);
+    border: none;
+    height: var(--f-tiptap__hr--height);
+    margin: var(--f-tiptap__hr--margin) 0;
   }
 }

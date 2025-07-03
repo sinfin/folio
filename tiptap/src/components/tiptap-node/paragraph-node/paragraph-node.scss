@@ -116,26 +116,6 @@
 }
 
 /* =====================
-     HORIZONTAL RULE
-     ===================== */
-.tiptap.ProseMirror {
-  hr {
-    margin: var(--f-tiptap--tt-hr-margin) 0;
-    border: none;
-    height: 1px;
-    background-color: var(--separator-color);
-  }
-
-  &.ProseMirror-focused {
-    hr.ProseMirror-selectednode {
-      border-radius: 9999px;
-      outline: 3px solid var(--tt-brand-color-500);
-      outline-offset: 2px;
-    }
-  }
-}
-
-/* =====================
      LINKS
      ===================== */
 .tiptap.ProseMirror {
