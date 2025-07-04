@@ -128,7 +128,7 @@ Folio provides a powerful system for creating custom Tiptap nodes that integrate
 
 ### Node Definition
 
-Custom nodes inherit from `Folio::Tiptap::Node` and use the `tiptap_node` class method to define their structure:
+Custom nodes inherit from `Folio::Tiptap::Node` and use the `tiptap_node` class method to define their structure. The `Folio::Tiptap::Node` is not an active record model and does not have a database table.
 
 ```rb
 class MyApp::CustomNode < Folio::Tiptap::Node
@@ -148,13 +148,13 @@ end
 
 The `Node` models are defined by calling `tiptap_node` method which uses the `Folio::Tiptap::NodeBuilder` and supports various attribute types:
 
-- **`:string`, `:text`**: Basic text attributes
-- **`:rich_text`**: JSON-stored rich text content (nested Tiptap structure)
-- **`:url_json`**: URL with metadata (href, title, target, etc.)
-- **`:image`, `:document`, `:audio`, `:video`**: Single Folio file attachments
-- **`:images`, `:documents`**: Multiple Folio file attachments
-- **`{ class_name: "Model" }`**: belongs_to relationship
-- **`{ class_name: "Model", has_many: true }`**: has_many relationship
+- `:string`, `:text`: Basic text attributes
+- `:rich_text`: JSON-stored rich text content (nested Tiptap structure)
+- `:url_json`: URL with metadata (href, title, target, etc.)
+- `:image`, `:document`, `:audio`, `:video`: Single Folio file attachments
+- `:images`, `:documents`: Multiple Folio file attachments
+- `{ class_name: "Model" }`: belongs_to relationship
+- `{ class_name: "Model", has_many: true }`: has_many relationship
 
 ### File Attachments
 
@@ -192,6 +192,10 @@ node.tags       # => Tag.where(id: [1, 2, 3])
 
 ### Data Conversion
 
+The node system provides bidirectional conversion between Tiptap JSON and Ruby objects.
+
+#### Converting Node to Tiptap Format
+
 The `to_tiptap_node_hash` method converts the node to Tiptap format:
 
 ```rb
@@ -208,6 +212,50 @@ node.to_tiptap_node_hash
 #      }
 #    }
 ```
+
+#### Converting Tiptap Format to Node
+
+The reverse conversion is handled by two key methods:
+
+**`new_from_attrs` (class method)**: Creates a new node instance from Tiptap attributes:
+
+```rb
+# From Tiptap JSON structure
+attrs = {
+  type: "MyApp::CustomNode",
+  data: {
+    title: "My Title",
+    image_id: "123"
+  }
+}
+
+node = Folio::Tiptap::Node.new_from_attrs(attrs)
+```
+
+**`assign_attributes_from_param_attrs` (instance method)**: Assigns attributes from params-style data with proper type casting and validation:
+
+```rb
+# Handles different attribute types appropriately
+node.assign_attributes_from_param_attrs({
+  data: {
+    title: "New Title",
+    image_id: "456",                    # String IDs converted to integers
+    document_ids: ["1", "2", "3"],      # Array of string IDs converted
+    rich_content: '{"type": "doc"}',    # JSON strings parsed
+    url_data: {                         # URL JSON filtered to allowed keys
+      href: "https://example.com",
+      title: "Link Title"
+    }
+  }
+})
+```
+
+The method handles:
+- **Type safety**: Validates the node class exists and inherits from `Folio::Tiptap::Node`
+- **Attribute filtering**: Only permits attributes defined in the node's structure
+- **Type casting**: Converts string IDs to integers, parses JSON strings
+- **File attachments**: Handles placement attributes for file relationships
+- **URL validation**: Filters URL JSON to only allowed keys and/or parses JSON strings
 
 ### View Components
 
@@ -276,6 +324,51 @@ When editing a node:
 
 The `Folio::Console::Api::TiptapController` handles the `render_nodes` action, which creates node instances from the provided attributes and renders them via `Folio::Console::Tiptap::RenderNodesJsonComponent` using their associated view components, returning a JSON with HTML paired by node uniqueId that can be directly inserted into the editor.
 
+## CSS Styling System
+
+Folio Tiptap uses a comprehensive CSS styling system that ensures consistent appearance between the editor and the final rendered content in your application.
+
+### Architecture Overview
+
+The styling system is built around CSS custom properties (variables) and a shared stylesheet that works both in the Tiptap editor iframe and in your main application:
+
+- **`app/assets/stylesheets/folio/tiptap/_styles.scss`**: Contains all Tiptap-specific styles
+- **Shared Usage**: The same styles are used in both the editor iframe and your application's front-end
+- **CSS Variables**: All styling is customizable through CSS custom properties
+
+### How It Works
+
+1. **Editor Iframe**: The Tiptap editor loads your application layout, including the shared stylesheet
+2. **Content Container**: Editor content is wrapped in `.f-tiptap-styles` class
+3. **Application Rendering**: When displaying saved content, wrap it in the same `.f-tiptap-styles` class
+4. **Consistent Styling**: Both contexts use identical CSS, ensuring WYSIWYG accuracy
+
+### CSS Variables for Customization
+
+All styling is controlled through CSS custom properties, making it easy to customize:
+
+### Customization Examples
+
+```scss
+// Example: Corporate theme customization
+:root {
+  // Brand colors
+  --f-tiptap__a--color: #0066cc;
+  --f-tiptap__headings--color: #2c3e50;
+
+  // Typography
+  --f-tiptap__headings--font-family: 'Roboto', sans-serif;
+  --f-tiptap__code--font-family: 'Source Code Pro', monospace;
+
+  // Spacing - more compact
+  --f-tiptap__spacer: 0.75rem;
+  --f-tiptap__headings--margin-top: 1.5rem;
+
+  // Task lists with brand colors
+  --f-tiptap__ul-tasklist--background-color-active: #0066cc;
+  --f-tiptap__ul-tasklist--border-color-active: #0066cc;
+}
+```
 
 ## Development
 
