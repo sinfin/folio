@@ -492,6 +492,79 @@ The rendering system includes several security measures:
 
 The rendered HTML works seamlessly with the CSS styling system, the root node adds the required `f-tiptap-styles` class name, which ensures consistent styling between the editor and the final rendered content.
 
+## Console Block Implementation
+
+Folio provides a specialized console interface for editing models with block-based Tiptap content using `simple_form_for_with_block_tiptap`.
+
+### Block Editor Form Helper
+
+The `simple_form_for_with_block_tiptap` helper creates a split-screen interface optimized for block editing:
+
+```rb
+# In console views (e.g., app/views/folio/console/pages/edit.slim)
+= simple_form_for_with_block_tiptap([:console, @page])
+```
+
+This helper:
+- Creates a form using `Folio::Console::Tiptap::SimpleFormWrapComponent`
+- Automatically renders block editors for designated fields
+- Provides a responsive layout that splits into form fields and editors
+- Integrates with the console layout using `content_for(:with_block_tiptap)`
+
+### Component Structure
+
+```slim
+.f-c-tiptap-simple-form-wrap
+  = simple_form_for(@simple_form_model, @simple_form_options)
+    .f-c-tiptap-simple-form-wrap__inner
+      .f-c-tiptap-simple-form-wrap__fields
+        // Regular form fields rendered here
+        // Uses the "_form" partial unless block is passed
+
+      .f-c-tiptap-simple-form-wrap__editors-bar
+        // Editor section title
+
+      .f-c-tiptap-simple-form-wrap__editors
+        // Automatic rendering of block editors
+        - form.object.class.folio_tiptap_fields.each do |field|
+          = form.input field, as: :tiptap, block: true
+```
+
+### Responsive Behavior
+
+**Desktop (≥1700px):**
+- Two-column grid layout
+- Form fields: scrollable left column
+- Editors: full-height right column
+- Editors bar: sticky at top of right column
+
+**Mobile/Tablet (<1700px):**
+- Single column layout
+- Form fields at top
+- Editors at bottom with sticky bar
+- Vertical scrolling for form fields
+
+### Usage Example
+
+Basic example rendering the `_form` partial:
+
+```slim
+/ edit.slim
+= simple_form_for_with_block_tiptap([:console, @page])
+```
+
+You can add custom form fields by passing a block. That makes the component skip the `_form` partial:
+
+```slim
+/ edit.slim
+= simple_form_for_with_block_tiptap([:console, @page]) do |f|
+  = f.input :title, required: true
+  = f.input :slug
+  = f.input :published_at, as: :datetime_picker
+  = f.input :meta_description, as: :text
+  / Block editors are still automatically added
+```
+
 ## Development
 
 Tiptap development happens in the `tiptap` directory. It's developed as a separate Vite app that is built using `npm run build`. That produces `folio-tiptap.css` and `folio-tiptap.js` in `tiptap/dist/assets` which are in the assets pipeline path.
