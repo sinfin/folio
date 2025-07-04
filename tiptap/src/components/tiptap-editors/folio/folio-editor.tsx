@@ -328,7 +328,7 @@ export function FolioEditor({
     <EditorContext.Provider value={{ editor }}>
       <div
         ref={editorRef}
-        className={`f-tiptap-editor f-tiptap-editor--${blockEditor ? "" : "rich-text"}`}
+        className={`f-tiptap-editor f-tiptap-editor--${blockEditor ? "block" : "rich-text"}`}
       >
         <Toolbar
           ref={toolbarRef}
