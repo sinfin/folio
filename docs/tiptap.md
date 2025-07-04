@@ -370,6 +370,128 @@ All styling is controlled through CSS custom properties, making it easy to custo
 }
 ```
 
+## Server-Side Rendering
+
+Folio provides a comprehensive server-side rendering system for Tiptap content through a set of view components that convert JSON content into HTML.
+
+### Content Component Overview
+
+The rendering system consists of several specialized components:
+
+- **`Folio::Tiptap::ContentComponent`**: Main entry point for rendering Tiptap content
+- **`Folio::Tiptap::Content::ProseMirrorNodeComponent`**: Handles standard ProseMirror nodes (paragraphs, headings, lists, etc.)
+- **`Folio::Tiptap::Content::TextComponent`**: Renders text nodes with formatting marks
+- **`Folio::Tiptap::Content::FolioTiptapNodeComponent`**: Renders custom `folioTiptapNode` instances
+
+### Basic Usage
+
+To render Tiptap content in your views:
+
+```slim
+/ Basic
+= render Folio::Tiptap::ContentComponent.new(record: @post)
+
+/ Custom attribute name
+= render Folio::Tiptap::ContentComponent.new(record: @post, attribute: :custom_content)
+```
+
+### Content Component Structure
+
+The main `ContentComponent` expects:
+- **`record`**: The model instance containing the Tiptap content
+- **`attribute`**: The attribute name (defaults to `:tiptap_content`)
+
+### ProseMirror Node Rendering
+
+The `ProseMirrorNodeComponent` handles standard HTML elements using configuration from `prose_mirror_node_component.yml`:
+
+```yaml
+# Example node configuration
+nodes:
+  paragraph:
+    tag: "p"
+  heading:
+    tag: "h1"
+    level_based: true  # Uses attrs.level for h1, h2, h3, etc.
+  blockquote:
+    tag: "blockquote"
+  hard_break:
+    tag: "br"
+    self_closing: true
+```
+
+**Features:**
+- **Level-based tags**: Headings automatically use correct tag (h1-h6) based on `level` attribute
+- **Attribute mapping**: Supports both direct attributes and data attributes
+- **Nested tag rendering**: Handles complex nested structures
+- **Self-closing tags**: Properly handles elements like `<br>` and `<hr>`
+
+### Text Component with Marks
+
+The `TextComponent` handles text formatting using `text_component.yml` configuration:
+
+```yaml
+# Example marks configuration
+marks:
+  bold:
+    tag: "strong"
+  italic:
+    tag: "em"
+  code:
+    tag: "code"
+  link:
+    tag: "a"
+    has_attrs: true
+    attrs: ["href", "title", "target"]
+```
+
+**Mark Processing:**
+- **Nested marks**: Multiple formatting marks are properly nested
+- **Attribute filtering**: Only allowed attributes are included for security
+- **HTML safety**: All text content is properly escaped
+
+### Custom Node Integration
+
+Custom `folioTiptapNode` instances are rendered through their associated view components:
+
+```ruby
+# The FolioTiptapNodeComponent automatically:
+# 1. Creates a node instance from the JSON attributes
+# 2. Resolves the appropriate view component class
+# 3. Renders the component with the node data
+
+# Example custom node rendering
+class MyApp::CustomNodeComponent < ApplicationComponent
+  def initialize(node:)
+    @node = node
+  end
+end
+```
+
+### Rendering Flow
+
+1. **ContentComponent** receives the record and attribute
+2. **JSON parsing** converts stored JSON to Ruby hash structure
+3. **Node iteration** processes each node in the content array
+4. **Component selection** chooses appropriate component based on node type:
+   - `"text"` → `TextComponent`
+   - `"folioTiptapNode"` → `FolioTiptapNodeComponent`
+   - Other types → `ProseMirrorNodeComponent`
+5. **Recursive rendering** handles nested content structures
+
+### Security Considerations
+
+The rendering system includes several security measures:
+
+- **Attribute filtering**: Only whitelisted attributes are included
+- **HTML escaping**: All text content is properly escaped
+- **Safe HTML generation**: Uses Rails' `content_tag` helpers
+- **Custom node validation**: Node types are validated before instantiation
+
+### Styling Integration
+
+The rendered HTML works seamlessly with the CSS styling system, the root node adds the required `f-tiptap-styles` class name, which ensures consistent styling between the editor and the final rendered content.
+
 ## Development
 
 Tiptap development happens in the `tiptap` directory. It's developed as a separate Vite app that is built using `npm run build`. That produces `folio-tiptap.css` and `folio-tiptap.js` in `tiptap/dist/assets` which are in the assets pipeline path.
