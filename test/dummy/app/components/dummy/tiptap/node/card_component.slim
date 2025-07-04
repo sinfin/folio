@@ -23,6 +23,14 @@
       - if @node.text.present?
         = simple_format @node.text
 
+      - if @node.reports.present?
+        ol.m-0
+          - @node.reports.each_with_index do |report, i|
+            li
+              ' Report file
+              a<> href=report.file.url target="_blank"
+                = report.file_name
+
       - if @node.button_url_json.present?
         a.btn.btn-primary href=@node.button_url_json["href"]
           = @node.button_url_json["label"] || "Button"
