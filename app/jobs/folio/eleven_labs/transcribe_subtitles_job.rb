@@ -17,54 +17,31 @@ class Folio::ElevenLabs::TranscribeSubtitlesJob < Folio::ApplicationJob
       # Validate file size against ElevenLabs limits
       validate_file_size!(video_file)
 
-      # transcribe video directly using ElevenLabs Speech-to-Text API with cloud storage URL
-      response = elevenlabs_speech_to_text_request(video_file.file.remote_url)
-      Rails.logger.info "[TranscribeSubtitlesJob] API transcription completed. Word count: #{response['words']&.count || 0}"
-      
-      subtitles = convert_elevenlabs_response_to_vtt(response)
+      # transcribe video directly using ElevenLabs Speech-to-Text API
+      signed_url = video_file.file.remote_url
+      response = elevenlabs_speech_to_text_request(signed_url)
+      vtt_content = convert_srt_to_vtt(response)
 
-      # save subtitles without VTT header for easier editing
-      video_file.set_subtitles_text_for(lang, subtitles.delete_prefix("WEBVTT\n\n"))
-      save_subtitles!(video_file)
-      
+      # Save the subtitles to the video file
+      video_file.set_subtitles_text_for(lang, vtt_content)
+      video_file.set_subtitles_state_for(lang, "ready")
+
       Rails.logger.info "[TranscribeSubtitlesJob] Transcription completed successfully for video_file ID: #{video_file.id}"
-    rescue => e
-      Rails.logger.error "[TranscribeSubtitlesJob] Error: #{e.class.name}: #{e.message}"
-      
-      video_file.set_subtitles_state_for(lang, "failed")
-      save_subtitles!(video_file)
 
-      Raven.capture_exception(e) if defined?(Raven)
-      Sentry.capture_exception(e) if defined?(Sentry)
+    rescue => e
+      Rails.logger.error "[TranscribeSubtitlesJob] Transcription failed for video_file ID: #{video_file.id}: #{e.message}"
+      video_file.set_subtitles_state_for(lang, "failed")
+      raise e
     end
   end
 
   private
+
     def validate_file_size!(video_file)
       file_size = video_file.file_size
-      
-      if file_size.nil?
-        file_size = get_remote_file_size(video_file.file.remote_url)
-      end
-      
       if file_size && file_size > MAX_FILE_SIZE_BYTES
-        max_size_mb = MAX_FILE_SIZE_BYTES / 1024.0 / 1024.0
-        current_size_mb = file_size / 1024.0 / 1024.0
-        error_msg = "File size (#{current_size_mb.round(2)} MB) exceeds ElevenLabs limit of #{max_size_mb.round(2)} MB"
-        Rails.logger.error "[TranscribeSubtitlesJob] #{error_msg}"
-        raise error_msg
+        raise "File size #{file_size} bytes exceeds ElevenLabs limit of #{MAX_FILE_SIZE_BYTES} bytes"
       end
-    end
-
-    def get_remote_file_size(url)
-      uri = URI(url)
-      Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
-        response = http.head(uri.path)
-        response['content-length']&.to_i
-      end
-    rescue => e
-      Rails.logger.warn "[TranscribeSubtitlesJob] Could not get remote file size: #{e.message}"
-      nil
     end
 
     def elevenlabs_speech_to_text_request(video_url)
@@ -77,19 +54,35 @@ class Folio::ElevenLabs::TranscribeSubtitlesJob < Folio::ApplicationJob
       request = Net::HTTP::Post.new(uri)
       request["xi-api-key"] = ENV.fetch("ELEVENLABS_API_KEY")
 
+      # Build additional_formats JSON for SRT export
+      additional_formats = [
+        {
+          format: "srt",
+          max_characters_per_line: 50,
+          include_speakers: false,
+          include_timestamps: true,
+          segment_on_silence_longer_than_s: 0.8,
+          max_segment_duration_s: 6.0,
+          max_segment_chars: 90
+        }
+      ]
+
+      # Use correct parameter names from official API documentation
       form_data = [
         ["cloud_storage_url", video_url],
         ["model_id", "scribe_v1"],
+        ["diarize", "true"],
         ["timestamps_granularity", "word"],
-        ["tag_audio_events", "true"]
+        ["additional_formats", additional_formats.to_json]
       ]
-      request.set_form form_data, "multipart/form-data"
-
+      
+      request.set_form(form_data, "multipart/form-data")
       response = http.request(request)
 
       unless response.is_a?(Net::HTTPSuccess)
         error_message = begin
-          JSON.parse(response.body).dig("detail", "message") || JSON.parse(response.body)["detail"]
+          error_body = JSON.parse(response.body)
+          error_body.dig("detail", "message") || error_body["detail"] || error_body["error"] || response.body
         rescue
           response.body
         end
@@ -100,51 +93,53 @@ class Folio::ElevenLabs::TranscribeSubtitlesJob < Folio::ApplicationJob
       JSON.parse(response.body)
     end
 
-    def convert_elevenlabs_response_to_vtt(response)
-      unless response["words"]&.any?
-        Rails.logger.warn "[TranscribeSubtitlesJob] No words found in API response"
-        return ""
+    def convert_srt_to_vtt(response)
+      # Get the SRT content from additional_formats in the response
+      srt_content = response.dig("additional_formats", 0, "content")
+      
+      unless srt_content&.strip&.present?
+        Rails.logger.warn "[TranscribeSubtitlesJob] No SRT content found in API response, falling back to word-by-word processing"
+        return convert_words_to_vtt(response["words"])
       end
 
-      vtt_content = "WEBVTT\n\n"
+      # Convert SRT format to VTT format
+      # SRT uses format: "00:00:01,234 --> 00:00:02,567"
+      # VTT uses format: "00:00:01.234 --> 00:00:02.567"
+      vtt_content = srt_content.gsub(/(\d{2}:\d{2}:\d{2}),(\d{3})/) { "#{$1}.#{$2}" }
       
-      response["words"].each do |word|
-        # Skip spacing tokens for cleaner subtitles
-        next if word["type"] == "spacing"
-        
-        start_time = format_vtt_time(word["start"])
-        end_time = format_vtt_time(word["end"])
-        text = word["text"].strip
-        
-        vtt_content += "#{start_time} --> #{end_time}\n#{text}\n\n"
+      # Add VTT header if not present
+      unless vtt_content.start_with?("WEBVTT")
+        vtt_content = "WEBVTT\n\n#{vtt_content}"
       end
 
       vtt_content.strip
     end
 
+    def convert_words_to_vtt(words)
+      return "" unless words&.any?
+
+      vtt_lines = ["WEBVTT", ""]
+      
+      words.each do |word|
+        start_time = format_vtt_time(word["start"])
+        end_time = format_vtt_time(word["end"])
+        text = word["word"]
+        
+        vtt_lines << "#{start_time} --> #{end_time}"
+        vtt_lines << text
+        vtt_lines << ""
+      end
+
+      vtt_lines.join("\n").strip
+    end
+
     def format_vtt_time(seconds)
+      return "00:00:00.000" if seconds.nil?
+      
       hours = (seconds / 3600).to_i
       minutes = ((seconds % 3600) / 60).to_i
-      secs = (seconds % 60)
+      secs = seconds % 60
       
-      format("%02d:%02d:%06.3f", hours, minutes, secs)
-    end
-
-    def save_subtitles!(video_file)
-      video_file.update_columns(additional_data: video_file.additional_data,
-                                updated_at: Time.current)
-      broadcast_file_update(video_file)
-      broadcast_subtitles_update(video_file)
-    end
-
-    def broadcast_subtitles_update(video_file)
-      return if message_bus_user_ids.blank?
-
-      MessageBus.publish Folio::MESSAGE_BUS_CHANNEL,
-                         {
-                           type: "Folio::ElevenLabs::TranscribeSubtitlesJob/updated",
-                           data: { id: video_file.id },
-                         }.to_json,
-                         user_ids: message_bus_user_ids
+      sprintf("%02d:%02d:%06.3f", hours, minutes, secs)
     end
 end 
