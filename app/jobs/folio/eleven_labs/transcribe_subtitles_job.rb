@@ -18,8 +18,8 @@ class Folio::ElevenLabs::TranscribeSubtitlesJob < Folio::ApplicationJob
       validate_file_size!(video_file)
 
       # transcribe video directly using ElevenLabs Speech-to-Text API
-      signed_url = video_file.file.remote_url
-      response = elevenlabs_speech_to_text_request(signed_url)
+      # Retry with fresh signed URL if AWS credentials expire
+      response = elevenlabs_speech_to_text_request_with_retry(video_file)
       vtt_content = convert_srt_to_vtt(response)
 
       # Save the subtitles to the video file
@@ -41,6 +41,24 @@ class Folio::ElevenLabs::TranscribeSubtitlesJob < Folio::ApplicationJob
       file_size = video_file.file_size
       if file_size && file_size > MAX_FILE_SIZE_BYTES
         raise "File size #{file_size} bytes exceeds ElevenLabs limit of #{MAX_FILE_SIZE_BYTES} bytes"
+      end
+    end
+
+    def elevenlabs_speech_to_text_request_with_retry(video_file, max_retries: 3)
+      retries = 0
+      begin
+        # Generate fresh signed URL with reasonable expiration
+        signed_url = video_file.file.remote_url(expires: 1.hour.from_now)
+        elevenlabs_speech_to_text_request(signed_url)
+      rescue => e
+        retries += 1
+        if retries <= max_retries && (e.message.include?("Failed to read file from cloud storage") || e.message.include?("SignatureDoesNotMatch"))
+          Rails.logger.warn "[TranscribeSubtitlesJob] AWS signature/access error (attempt #{retries}/#{max_retries}): #{e.message}. Retrying with fresh signed URL... (Check server time sync if this persists)"
+          sleep(2 ** retries) # Exponential backoff
+          retry
+        else
+          raise e
+        end
       end
     end
 
