@@ -25,12 +25,14 @@ class Folio::ElevenLabs::TranscribeSubtitlesJob < Folio::ApplicationJob
       # Save the subtitles to the video file
       video_file.set_subtitles_text_for(lang, vtt_content)
       video_file.set_subtitles_state_for(lang, "ready")
+      save_subtitles!(video_file)
 
       Rails.logger.info "[TranscribeSubtitlesJob] Transcription completed successfully for video_file ID: #{video_file.id}"
 
     rescue => e
       Rails.logger.error "[TranscribeSubtitlesJob] Transcription failed for video_file ID: #{video_file.id}: #{e.message}"
       video_file.set_subtitles_state_for(lang, "failed")
+      save_subtitles!(video_file)
       raise e
     end
   end
@@ -159,5 +161,23 @@ class Folio::ElevenLabs::TranscribeSubtitlesJob < Folio::ApplicationJob
       secs = seconds % 60
       
       sprintf("%02d:%02d:%06.3f", hours, minutes, secs)
+    end
+
+    def save_subtitles!(video_file)
+      video_file.update_columns(additional_data: video_file.additional_data,
+                                updated_at: Time.current)
+      broadcast_file_update(video_file)
+      broadcast_subtitles_update(video_file)
+    end
+
+    def broadcast_subtitles_update(video_file)
+      return if message_bus_user_ids.blank?
+
+      MessageBus.publish Folio::MESSAGE_BUS_CHANNEL,
+                         {
+                           type: "Folio::ElevenLabs::TranscribeSubtitlesJob/updated",
+                           data: { id: video_file.id },
+                         }.to_json,
+                         user_ids: message_bus_user_ids
     end
 end 
