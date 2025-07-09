@@ -21,7 +21,11 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
         next unless group[:links].present?
 
         links = process_links(group[:links])
-        group.merge(links:) if links.present?
+        if links.present?
+          group.merge(links:)
+        else
+          nil
+        end
       end
     end
   end
@@ -39,13 +43,14 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
 
   def process_link_item(item)
     if item.is_a?(Array)
-      item.filter_map { |l| link_from(l) }
+      item.compact.filter_map { |l| link_from(l) }
     else
       link_from(item)
     end
   end
 
   def link_from(link_source)
+    return nil if link_source.nil?
     return if skip_link_class_names.include?(link_source)
 
     if link_source == :homepage
