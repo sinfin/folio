@@ -53,7 +53,7 @@ class Folio::ElevenLabs::TranscribeSubtitlesJobTest < ActiveJob::TestCase
     end
     job.perform_now
 
-    expected_vtt = "WEBVTT\n\n1\n00:00:00.000 --> 00:00:01.000\nDobrý den,\n\n2\n00:00:01.500 --> 00:00:03.000\njak se máte?"
+    expected_vtt = "00:00:00.000 --> 00:00:01.000\nDobrý den,\n\n00:00:01.500 --> 00:00:03.000\njak se máte?"
     assert_equal expected_vtt, video_file.subtitles_cs_text
     assert_equal "ready", video_file.get_subtitles_state_for("cs")
   end
@@ -80,7 +80,7 @@ class Folio::ElevenLabs::TranscribeSubtitlesJobTest < ActiveJob::TestCase
     end
     job.perform_now
 
-    expected_vtt = "WEBVTT\n\n00:00:00.000 --> 00:00:03.000\nTest"
+    expected_vtt = "00:00:00.000 --> 00:00:03.000\nTest"
     assert_equal expected_vtt, video_file.subtitles_cs_text
     assert_equal "ready", video_file.get_subtitles_state_for("cs")
   end

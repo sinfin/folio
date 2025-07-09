@@ -127,10 +127,12 @@ class Folio::ElevenLabs::TranscribeSubtitlesJob < Folio::ApplicationJob
       # VTT uses format: "00:00:01.234 --> 00:00:02.567"
       vtt_content = srt_content.gsub(/(\d{2}:\d{2}:\d{2}),(\d{3})/) { "#{$1}.#{$2}" }
       
-      # Add VTT header if not present
-      unless vtt_content.start_with?("WEBVTT")
-        vtt_content = "WEBVTT\n\n#{vtt_content}"
-      end
+      # Remove SRT sequence numbers (standalone numbers on their own lines)
+      # Match: line start, one or more digits, line end, followed by newline and timestamp
+      vtt_content = vtt_content.gsub(/^\d+\n(?=\d{2}:\d{2}:\d{2})/, '')
+      
+      # Remove WEBVTT header if present (causes validation errors in some systems)
+      vtt_content = vtt_content.gsub(/^WEBVTT\s*\n+/, '')
 
       vtt_content.strip
     end
@@ -138,7 +140,7 @@ class Folio::ElevenLabs::TranscribeSubtitlesJob < Folio::ApplicationJob
     def convert_words_to_vtt(words)
       return "" unless words&.any?
 
-      vtt_lines = ["WEBVTT", ""]
+      vtt_lines = []
       
       words.each do |word|
         start_time = format_vtt_time(word["start"])
