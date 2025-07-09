@@ -21,4 +21,4 @@ class Folio::OpenAi::TranscribeSubtitlesJobTest < ActiveJob::TestCase
 
     assert_equal video_file.subtitles_cs_text, "00:00:00.000 --> 00:00:03.000\nTest"
   end
-end 
+end

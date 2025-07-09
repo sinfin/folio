@@ -425,6 +425,7 @@ en:
           subtitles_processing: Subtitles are being generated.
           subtitles_failed: Failed to generate subtitles. You can enter them manually.
           retranscribe_subtitles: Retranscribe subtitles
+          force_retranscribe_hint: Click to override current processing
           submit: Save subtitles
 
   date:

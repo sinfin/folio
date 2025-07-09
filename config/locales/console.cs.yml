@@ -433,6 +433,7 @@ cs:
           subtitles_processing: Probíhá generování titulků
           subtitles_failed: Chyba generování titulků. Titulky lze zadat ručně.
           retranscribe_subtitles: Vygenerovat znovu
+          force_retranscribe_hint: Kliknutím přepíšete probíhající proces
           submit: Uložit titulky
 
   date:

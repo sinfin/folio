@@ -10,7 +10,7 @@ class Folio::ElevenLabs::TranscribeSubtitlesJob < Folio::ApplicationJob
 
   def perform(video_file, lang:)
     Rails.logger.info "[TranscribeSubtitlesJob] Starting transcription for video_file ID: #{video_file.id}, language: #{lang}"
-    
+
     raise "only video files can be transcribed" unless video_file.is_a?(Folio::File::Video)
 
     begin
@@ -38,7 +38,6 @@ class Folio::ElevenLabs::TranscribeSubtitlesJob < Folio::ApplicationJob
   end
 
   private
-
     def validate_file_size!(video_file)
       file_size = video_file.file_size
       if file_size && file_size > MAX_FILE_SIZE_BYTES
@@ -56,7 +55,7 @@ class Folio::ElevenLabs::TranscribeSubtitlesJob < Folio::ApplicationJob
         retries += 1
         if retries <= max_retries && (e.message.include?("Failed to read file from cloud storage") || e.message.include?("SignatureDoesNotMatch"))
           Rails.logger.warn "[TranscribeSubtitlesJob] AWS signature/access error (attempt #{retries}/#{max_retries}): #{e.message}. Retrying with fresh signed URL... (Check server time sync if this persists)"
-          sleep(2 ** retries) # Exponential backoff
+          sleep(2**retries) # Exponential backoff
           retry
         else
           raise e
@@ -95,7 +94,7 @@ class Folio::ElevenLabs::TranscribeSubtitlesJob < Folio::ApplicationJob
         ["timestamps_granularity", "word"],
         ["additional_formats", additional_formats.to_json]
       ]
-      
+
       request.set_form(form_data, "multipart/form-data")
       response = http.request(request)
 
@@ -116,7 +115,7 @@ class Folio::ElevenLabs::TranscribeSubtitlesJob < Folio::ApplicationJob
     def convert_srt_to_vtt(response)
       # Get the SRT content from additional_formats in the response
       srt_content = response.dig("additional_formats", 0, "content")
-      
+
       unless srt_content&.strip&.present?
         Rails.logger.warn "[TranscribeSubtitlesJob] No SRT content found in API response, falling back to word-by-word processing"
         return convert_words_to_vtt(response["words"])
@@ -126,13 +125,13 @@ class Folio::ElevenLabs::TranscribeSubtitlesJob < Folio::ApplicationJob
       # SRT uses format: "00:00:01,234 --> 00:00:02,567"
       # VTT uses format: "00:00:01.234 --> 00:00:02.567"
       vtt_content = srt_content.gsub(/(\d{2}:\d{2}:\d{2}),(\d{3})/) { "#{$1}.#{$2}" }
-      
+
       # Remove SRT sequence numbers (standalone numbers on their own lines)
       # Match: line start, one or more digits, line end, followed by newline and timestamp
-      vtt_content = vtt_content.gsub(/^\d+\n(?=\d{2}:\d{2}:\d{2})/, '')
-      
+      vtt_content = vtt_content.gsub(/^\d+\n(?=\d{2}:\d{2}:\d{2})/, "")
+
       # Remove WEBVTT header if present (causes validation errors in some systems)
-      vtt_content = vtt_content.gsub(/^WEBVTT\s*\n+/, '')
+      vtt_content = vtt_content.gsub(/^WEBVTT\s*\n+/, "")
 
       vtt_content.strip
     end
@@ -141,12 +140,12 @@ class Folio::ElevenLabs::TranscribeSubtitlesJob < Folio::ApplicationJob
       return "" unless words&.any?
 
       vtt_lines = []
-      
+
       words.each do |word|
         start_time = format_vtt_time(word["start"])
         end_time = format_vtt_time(word["end"])
         text = word["word"]
-        
+
         vtt_lines << "#{start_time} --> #{end_time}"
         vtt_lines << text
         vtt_lines << ""
@@ -157,11 +156,11 @@ class Folio::ElevenLabs::TranscribeSubtitlesJob < Folio::ApplicationJob
 
     def format_vtt_time(seconds)
       return "00:00:00.000" if seconds.nil?
-      
+
       hours = (seconds / 3600).to_i
       minutes = ((seconds % 3600) / 60).to_i
       secs = seconds % 60
-      
+
       sprintf("%02d:%02d:%06.3f", hours, minutes, secs)
     end
 
@@ -182,4 +181,4 @@ class Folio::ElevenLabs::TranscribeSubtitlesJob < Folio::ApplicationJob
                          }.to_json,
                          user_ids: message_bus_user_ids
     end
-end 
+end

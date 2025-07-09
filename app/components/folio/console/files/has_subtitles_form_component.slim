@@ -15,21 +15,23 @@
         = folio_icon(:alert, height: 16)
         = t(".subtitles_failed")
 
-    - if @file.subtitles_cs_state != "processing"
+    .f-c-files-has-subtitles-form__actions
       = folio_console_ui_button(variant: :warning,
                                 label: t('.retranscribe_subtitles'),
                                 size: :sm,
                                 icon: :reload,
                                 data: stimulus_action("retranscribe"))
 
-  - if @file.subtitles_cs_state != "processing"
-    = form do |f|
-      = f.input :subtitles_cs_enabled, as: :boolean
+      - if @file.subtitles_cs_state == "processing"
+        span.text-muted.small.ms-2 = t(".force_retranscribe_hint")
 
-      = f.input :subtitles_cs_text, as: :text,
-                                    input_html: { rows: 20 },
-                                    label: false
+  = form do |f|
+    = f.input :subtitles_cs_enabled, as: :boolean
 
-      == cell('folio/console/ui/buttons', form_buttons)
+    = f.input :subtitles_cs_text, as: :text,
+                                  input_html: { rows: 20 },
+                                  label: false
+
+    == cell('folio/console/ui/buttons', form_buttons)
 
   span.folio-loader data=stimulus_target("loader") hidden=true

@@ -10,7 +10,7 @@ class Folio::Console::Api::File::VideosController < Folio::Console::Api::BaseCon
   end
 
   def retranscribe_subtitles
-    @video.transcribe_subtitles!
+    @video.transcribe_subtitles!(force: true)
     render_component_json(Folio::Console::Files::HasSubtitlesFormComponent.new(file: @video))
   end
 
