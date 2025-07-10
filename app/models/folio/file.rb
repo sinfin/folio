@@ -227,9 +227,15 @@ class Folio::File < Folio::ApplicationRecord
 
   def screenshot_time_in_ffmpeg_format
     if file_track_duration
-      quarter = file_track_duration / 4  # take screenshot at 1/4 of the video
+      # For videos under 10 seconds: use 1/4 duration (current behavior)
+      # For videos 10+ seconds: use fixed 10 seconds (avoids long FFmpeg seeks)
+      screenshot_time = if file_track_duration < 10
+        file_track_duration / 4.0
+      else
+        10
+      end
 
-      seconds = quarter
+      seconds = screenshot_time.to_i
       minutes = seconds / 60
       seconds -= minutes * 60
       hours = minutes / 60
