@@ -2,7 +2,7 @@
 
 class Folio::Devise::Omniauth::IconCell < Folio::Devise::ApplicationCell
   def provider
-    model.to_sym
+    model&.to_sym
   end
 
   def size_class_name
