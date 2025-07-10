@@ -15,7 +15,7 @@ class Folio::CraMediaCloud::CreateMediaJob < Folio::ApplicationJob
     response = Folio::CraMediaCloud::Encoder.new.upload_file(media_file, profile_group: media_file.try(:encoder_profile_group))
 
     media_file.remote_services_data = {
-      "service" => "cro_media_cloud",
+      "service" => "cra_media_cloud",
       "reference_id" => response[:ref_id],
       "processing_state" => "full_media_processing"
     }

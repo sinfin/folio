@@ -47,7 +47,9 @@ module Folio::File::Video::HasSubtitles
       end
     end
 
-    validate :validate_subtitles_format
+    validate :validate_subtitles_format, unless: :skip_subtitles_validation
+
+    attr_accessor :skip_subtitles_validation
   end
 
   def set_subtitles_state_for(lang, state)
@@ -74,37 +76,13 @@ module Folio::File::Video::HasSubtitles
   def transcribe_subtitles!(force: false)
     return unless self.class.transcribe_subtitles_job_class.present?
 
-    # Track which languages need processing
-    languages_to_process = []
-
     self.class.enabled_subtitle_languages.each do |lang|
-      current_state = get_subtitles_state_for(lang)
-
-      # Skip if already ready and not forced
-      if current_state == "ready" && !force
-        next
-      end
-
-      # Skip if already processing and not forced (avoid duplicate jobs)
-      if current_state == "processing" && !force
-        next
-      end
-
-      # Add to processing list
-      languages_to_process << lang
-
-      # Set to processing state
+      next if send("subtitles_#{lang}_state") == "ready" && force == false
+      
       send("subtitles_#{lang}=", { "state" => "processing" })
-    end
-
-    # Update database if we processed any languages
-    if languages_to_process.any?
-      update_columns(additional_data:, updated_at: Time.current)
-
-      # Enqueue job for each language
-      languages_to_process.each do |lang|
-        self.class.transcribe_subtitles_job_class.perform_later(self, lang:)
-      end
+      update_columns(additional_data:,
+                      updated_at: current_time_from_proper_timezone)
+      self.class.transcribe_subtitles_job_class.perform_later(self, lang: lang)
     end
   end
 
