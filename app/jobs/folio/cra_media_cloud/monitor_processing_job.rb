@@ -41,46 +41,24 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
 
       # Check Sidekiq scheduled jobs
       Sidekiq::ScheduledSet.new.each do |job|
-        if job.klass == "Folio::CraMediaCloud::CheckProgressJob"
-          args = job.args.first
-          if args.is_a?(Hash) && args["_aj_globalid"]
-            # Extract ID from GlobalID
-            global_id = args["_aj_globalid"]
-            if global_id.include?("Folio::File::Video")
-              id = global_id.split("/").last.to_i
-              scheduled_ids << id
-            end
+        args = job.args.first
+        if args.is_a?(Hash) && args["job_class"] == "Folio::CraMediaCloud::CheckProgressJob"
+          global_id = args["arguments"].first["_aj_globalid"]
+          if global_id.include?("Folio::File::Video")
+            id = global_id.split("/").last.to_i
+            scheduled_ids << id
           end
         end
       end
 
       # Check Sidekiq retry set (failed jobs that will retry)
       Sidekiq::RetrySet.new.each do |job|
-        if job.klass == "Folio::CraMediaCloud::CheckProgressJob"
-          args = job.args.first
-          if args.is_a?(Hash) && args["_aj_globalid"]
-            global_id = args["_aj_globalid"]
-            if global_id.include?("Folio::File::Video")
-              id = global_id.split("/").last.to_i
-              scheduled_ids << id
-            end
-          end
-        end
-      end
-
-      # Check Sidekiq working set (currently executing jobs)
-      Sidekiq::Workers.new.each do |process_id, thread_id, work|
-        if work["payload"]["class"] == "ActiveJob::QueueAdapters::SidekiqAdapter::JobWrapper"
-          job_data = work["payload"]["args"].first
-          if job_data.is_a?(Hash) && job_data["job_class"] == "Folio::CraMediaCloud::CheckProgressJob"
-            args = job_data["arguments"].first
-            if args.is_a?(Hash) && args["_aj_globalid"]
-              global_id = args["_aj_globalid"]
-              if global_id.include?("Folio::File::Video")
-                id = global_id.split("/").last.to_i
-                scheduled_ids << id
-              end
-            end
+        args = job.args.first
+        if args.is_a?(Hash) && args["job_class"] == "Folio::CraMediaCloud::CheckProgressJob"
+          global_id = args["arguments"].first["_aj_globalid"]
+          if global_id.include?("Folio::File::Video")
+            id = global_id.split("/").last.to_i
+            scheduled_ids << id
           end
         end
       end
