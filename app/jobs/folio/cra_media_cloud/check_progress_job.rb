@@ -97,7 +97,7 @@ class Folio::CraMediaCloud::CheckProgressJob < Folio::ApplicationJob
     end
 
     def check_again_later
-      Folio::CraMediaCloud::CheckProgressJob.set(wait: 30.seconds).perform_later(media_file)
+      Folio::CraMediaCloud::CheckProgressJob.set(wait: 15.seconds).perform_later(media_file)
     end
 
     def api

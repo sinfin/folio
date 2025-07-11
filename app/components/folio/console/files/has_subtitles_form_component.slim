@@ -8,7 +8,7 @@
         = t(".subtitles_ready")
       - when "processing"
         - if @file.subtitles_cs_processing_started_at
-          = t(".subtitles_processing_started_at", time: @file.subtitles_cs_processing_started_at.strftime("%d.%m.%Y %H:%M:%S"))
+          = t(".subtitles_processing_started_at", time: @file.get_subtitles_cs_processing_started_at.strftime("%d.%m.%Y %H:%M:%S"))
         - else
           = t(".subtitles_processing")
         span.f-c-files-has-subtitles-form__status-loader-wrap

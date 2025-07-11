@@ -431,6 +431,7 @@ cs:
           title: Titulky
           subtitles_ready: Titulky připraveny
           subtitles_processing: Probíhá generování titulků
+          subtitles_processing_started_at: Generování začlo:
           subtitles_failed: Chyba generování titulků. Titulky lze zadat ručně.
           retranscribe_subtitles: Vygenerovat znovu
           submit: Uložit titulky

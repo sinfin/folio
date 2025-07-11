@@ -423,6 +423,7 @@ en:
           title: Subtitles
           subtitles_ready: Subtitles are ready.
           subtitles_processing: Subtitles are being generated.
+          subtitles_processing_started_at: Processing started
           subtitles_failed: Failed to generate subtitles. You can enter them manually.
           retranscribe_subtitles: Retranscribe subtitles
           submit: Save subtitles
