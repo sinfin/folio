@@ -30,10 +30,18 @@ class Folio::ElevenLabs::TranscribeSubtitlesJob < Folio::ApplicationJob
       Rails.logger.info "[TranscribeSubtitlesJob] Transcription completed successfully for video_file ID: #{video_file.id}"
 
     rescue => e
-      Rails.logger.error "[TranscribeSubtitlesJob] Transcription failed for video_file ID: #{video_file.id}: #{e.message}"
-      video_file.set_subtitles_state_for(lang, "failed")
-      save_subtitles!(video_file)
-      raise e
+      if e.message.include?("ElevenLabs API error: 400 / Audio is too short")
+        Rails.logger.warn "[TranscribeSubtitlesJob] No audio detected in video_file ID: #{video_file.id}. Marking subtitles as failed."
+        video_file.set_subtitles_state_for(lang, "failed")
+        video_file.set_subtitles_text_for(lang, "No audio detected in video file.")
+        save_subtitles!(video_file)
+        # Do not re-raise, this is a known, non-retryable case
+      else
+        Rails.logger.error "[TranscribeSubtitlesJob] Transcription failed for video_file ID: #{video_file.id}: #{e.message}"
+        video_file.set_subtitles_state_for(lang, "failed")
+        save_subtitles!(video_file)
+        raise e
+      end
     end
   end
 
@@ -46,34 +54,16 @@ class Folio::ElevenLabs::TranscribeSubtitlesJob < Folio::ApplicationJob
       end
     end
 
-    def elevenlabs_speech_to_text_request_with_retry(video_file, max_retries: 3)
-      retries = 0
-      begin
-        # Generate fresh signed URL with reasonable expiration
-        signed_url = video_file.file.remote_url(expires: 1.hour.from_now)
-        elevenlabs_speech_to_text_request(signed_url)
-      rescue => e
-        retries += 1
-        if retries <= max_retries && (e.message.include?("Failed to read file from cloud storage") || e.message.include?("SignatureDoesNotMatch"))
-          Rails.logger.warn "[TranscribeSubtitlesJob] AWS signature/access error (attempt #{retries}/#{max_retries}): #{e.message}. Retrying with fresh signed URL... (Check server time sync if this persists)"
-          sleep(2 ** retries) # Exponential backoff
-          retry
-        else
-          raise e
-        end
-      end
-    end
-
-    def elevenlabs_speech_to_text_request(video_url)
+    def elevenlabs_speech_to_text_request(video_file)
       uri = URI("https://api.elevenlabs.io/v1/speech-to-text")
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true
       http.read_timeout = 10 * 60  # Increased timeout for cloud processing
       http.open_timeout = 30
-
+      
       request = Net::HTTP::Post.new(uri)
       request["xi-api-key"] = ENV.fetch("ELEVENLABS_API_KEY")
-
+      
       # Build additional_formats JSON for SRT export
       additional_formats = [
         {
@@ -86,10 +76,11 @@ class Folio::ElevenLabs::TranscribeSubtitlesJob < Folio::ApplicationJob
           max_segment_chars: 90
         }
       ]
-
+      
+      signed_url = video_file.file.remote_url(expires: 1.hour.from_now)
       # Use correct parameter names from official API documentation
       form_data = [
-        ["cloud_storage_url", video_url],
+        ["cloud_storage_url", signed_url],
         ["model_id", "scribe_v1"],
         ["diarize", "true"],
         ["timestamps_granularity", "word"],
@@ -118,8 +109,7 @@ class Folio::ElevenLabs::TranscribeSubtitlesJob < Folio::ApplicationJob
       srt_content = response.dig("additional_formats", 0, "content")
       
       unless srt_content&.strip&.present?
-        Rails.logger.warn "[TranscribeSubtitlesJob] No SRT content found in API response, falling back to word-by-word processing"
-        return convert_words_to_vtt(response["words"])
+        raise "[TranscribeSubtitlesJob] No SRT content found in API response"
       end
 
       # Convert SRT format to VTT format
@@ -141,25 +131,6 @@ class Folio::ElevenLabs::TranscribeSubtitlesJob < Folio::ApplicationJob
       vtt_content.strip
     end
 
-    def convert_words_to_vtt(words)
-      return "" unless words&.any?
-
-      vtt_lines = []
-      words.each do |word|
-        start_time = format_vtt_time(word["start"])
-        end_time = format_vtt_time(word["end"])
-        text = word["word"].to_s.strip
-
-        next if text.empty?
-
-        vtt_lines << "#{start_time} --> #{end_time}"
-        vtt_lines << text
-        vtt_lines << "" # cue separator
-      end
-
-      vtt_lines.join("\n").strip
-    end
-
     def format_vtt_time(seconds)
       return "00:00:00.000" if seconds.nil?
       
@@ -172,7 +143,7 @@ class Folio::ElevenLabs::TranscribeSubtitlesJob < Folio::ApplicationJob
 
     def save_subtitles!(video_file)
       video_file.update_columns(additional_data: video_file.additional_data,
-                                updated_at: Time.current)
+                                updated_at: current_time_from_proper_timezone)
       broadcast_file_update(video_file)
       broadcast_subtitles_update(video_file)
     end

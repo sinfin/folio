@@ -7,6 +7,10 @@
       - when "ready"
         = t(".subtitles_ready")
       - when "processing"
+        - if @file.subtitles_cs_processing_started_at
+          = t(".subtitles_processing_started_at", time: @file.subtitles_cs_processing_started_at.strftime("%d.%m.%Y %H:%M:%S"))
+        - else
+          = t(".subtitles_processing")
         span.f-c-files-has-subtitles-form__status-loader-wrap
           span.folio-loader.folio-loader--tiny
 
@@ -15,12 +19,11 @@
         = folio_icon(:alert, height: 16)
         = t(".subtitles_failed")
 
-    - if @file.subtitles_cs_state != "processing"
-      = folio_console_ui_button(variant: :warning,
-                                label: t('.retranscribe_subtitles'),
-                                size: :sm,
-                                icon: :reload,
-                                data: stimulus_action("retranscribe"))
+    = folio_console_ui_button(variant: :warning,
+                              label: t('.retranscribe_subtitles'),
+                              size: :sm,
+                              icon: :reload,
+                              data: stimulus_action("retranscribe"))
 
   - if @file.subtitles_cs_state != "processing"
     = form do |f|

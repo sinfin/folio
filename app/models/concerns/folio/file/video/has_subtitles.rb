@@ -59,6 +59,10 @@ module Folio::File::Video::HasSubtitles
   def set_subtitles_text_for(lang, text)
     send("subtitles_#{lang}_text=", text.to_s)
   end
+  
+  def set_subtitles_processing_started_at_for(lang, time)
+    send("subtitles_#{lang}_processing_started_at=", time)
+  end
 
   def get_subtitles_state_for(lang)
     send("subtitles_#{lang}_state")
@@ -66,6 +70,10 @@ module Folio::File::Video::HasSubtitles
 
   def get_subtitles_text_for(lang)
     send("subtitles_#{lang}_text")
+  end
+
+  def get_subtitles_processing_started_at_for(lang)
+    send("subtitles_#{lang}_processing_started_at")
   end
 
   def after_process
@@ -79,9 +87,8 @@ module Folio::File::Video::HasSubtitles
     self.class.enabled_subtitle_languages.each do |lang|
       next if send("subtitles_#{lang}_state") == "ready" && force == false
       
-      send("subtitles_#{lang}=", { "state" => "processing" })
-      update_columns(additional_data:,
-                      updated_at: current_time_from_proper_timezone)
+      send("subtitles_#{lang}=", { "state" => "processing", "processing_started_at" => current_time_from_proper_timezone })
+      update_columns(updated_at: current_time_from_proper_timezone)
       self.class.transcribe_subtitles_job_class.perform_later(self, lang: lang)
     end
   end
