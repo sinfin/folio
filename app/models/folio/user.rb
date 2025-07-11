@@ -261,19 +261,6 @@ class Folio::User < Folio::ApplicationRecord
   end
 
   def self.controller_strong_params_for_create
-    address_strong_params = %i[
-      id
-      _destroy
-      name
-      company_name
-      address_line_1
-      address_line_2
-      zip
-      city
-      country_code
-      phone
-    ]
-
     [
       :first_name,
       :last_name,
@@ -282,8 +269,8 @@ class Folio::User < Folio::ApplicationRecord
       :phone,
       :subscribed_to_newsletter,
       :use_secondary_address,
-      primary_address_attributes: address_strong_params,
-      secondary_address_attributes: address_strong_params,
+      primary_address_attributes: Folio::Address::Primary.strong_params,
+      secondary_address_attributes: Folio::Address::Secondary.strong_params,
     ] + additional_controller_strong_params_for_create
   end
 
