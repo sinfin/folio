@@ -15,12 +15,16 @@ class Folio::CraMediaCloud::CheckProgressJob < Folio::ApplicationJob
     return check_again_later if response.nil?
 
     update_remote_service_data(response)
+    media_file.skip_subtitles_validation = true
 
     if media_file.full_media_processed?
       media_file.processing_done!
       broadcast_file_update(media_file)
+    elsif media_file.changed?
+      media_file.save!
+      broadcast_file_update(media_file)
+      check_again_later
     else
-      media_file.save! if media_file.changed?
       check_again_later
     end
   end
@@ -38,13 +42,19 @@ class Folio::CraMediaCloud::CheckProgressJob < Folio::ApplicationJob
 
     def update_remote_service_data(response)
       media_file.remote_services_data["remote_id"] ||= response["id"]
-
-      if response["status"] == "DONE"
+      
+      case response["status"]
+      when "DONE"
         process_output_hash(response["output"])
 
         media_file.remote_services_data.merge!(
           "output" => response["output"],
-          "processing_state" => "full_media_processed"
+          "processing_state" => "full_media_processed",
+        )
+      when "PROCESSING"
+        media_file.remote_services_data.merge!(
+          "processing_state" => "full_media_processing",
+          "progress_percentage" => (response["progress"] ? response["progress"] * 100.0 : 0).round(1),
         )
       end
     end

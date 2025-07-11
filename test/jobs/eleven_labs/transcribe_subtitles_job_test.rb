@@ -95,11 +95,9 @@ class Folio::ElevenLabs::TranscribeSubtitlesJobTest < ActiveJob::TestCase
       raise "ElevenLabs API error: 400 / Invalid request"
     end
 
-    exception = assert_raises(RuntimeError) do
+    assert_raises(RuntimeError, "ElevenLabs API error: 400 / Invalid request") do
       job.perform_now
     end
-
-    assert_equal "ElevenLabs API error: 400 / Invalid request", exception.message
 
     assert_equal "failed", video_file.get_subtitles_state_for("cs")
   end
@@ -116,12 +114,10 @@ class Folio::ElevenLabs::TranscribeSubtitlesJobTest < ActiveJob::TestCase
 
     job = Folio::ElevenLabs::TranscribeSubtitlesJob.new(video_file, lang: "cs")
 
-    exception = assert_raises(RuntimeError) do
+    assert_raises(RuntimeError, /File size .* exceeds ElevenLabs limit/) do
       job.perform_now
     end
 
-    assert_match(/File size .* exceeds ElevenLabs limit/, exception.message)
-
     assert_equal "failed", video_file.get_subtitles_state_for("cs")
   end
-end
+end 
