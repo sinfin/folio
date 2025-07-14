@@ -328,6 +328,7 @@ export function DragHandleContent({ editor }: DragHandleContentProps) {
         tabIndex={-1}
         aria-label="Plus"
         onClick={handlePlusClick}
+        className="f-tiptap__drag-handle-button"
       >
         <Plus className="tiptap-button-icon" />
       </Button>
@@ -346,6 +347,7 @@ export function DragHandleContent({ editor }: DragHandleContentProps) {
             tabIndex={-1}
             aria-label="Drag"
             onClick={handleDragClick}
+            className="f-tiptap__drag-handle-button"
           >
             <GripVertical className="tiptap-button-icon" />
           </Button>
@@ -361,6 +363,7 @@ export function DragHandleContent({ editor }: DragHandleContentProps) {
                   role="button"
                   tabIndex={-1}
                   aria-label={translate(TRANSLATIONS, option.type)}
+                  className="f-tiptap__drag-handle-dropdown-button"
                   onClick={(e) => {
                     const rect = (e.target as HTMLElement)
                       .closest(".tiptap-dropdown-menu")!
