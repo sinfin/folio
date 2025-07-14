@@ -18,7 +18,6 @@ import { Highlight } from "@tiptap/extension-highlight";
 // import { Superscript } from "@tiptap/extension-superscript";
 import { Selection } from "@tiptap/extensions";
 import DragHandle from "@tiptap/extension-drag-handle-react";
-import UniqueID from "@tiptap/extension-unique-id";
 
 // --- UI Primitives ---
 import { Button } from "@/components/tiptap-ui-primitive/button";
@@ -194,9 +193,6 @@ export function FolioEditor({
   const [mobileView, setMobileView] = React.useState<
     "main" | "highlighter" | "link"
   >("main");
-  const [selectedNodeId, setSelectedNodeId] = React.useState<string | null>(
-    null,
-  );
   const toolbarRef = React.useRef<HTMLDivElement>(null);
   const editorRef = React.useRef<HTMLDivElement>(null);
   const blockEditor = type === "block";
@@ -217,27 +213,6 @@ export function FolioEditor({
     },
     extensions: [
       StarterKit,
-      UniqueID.configure({
-        types: [
-          "folioTiptapNode",
-          "blockquote",
-          "bulletList",
-          "codeBlock",
-          "hardBreak",
-          "heading",
-          "horizontalRule",
-          "listItem",
-          "orderedList",
-          "paragraph",
-          "table",
-          "tableCell",
-          "tableHeader",
-          "tableRow",
-          "taskList",
-          "taskItem",
-        ],
-        attributeName: "uid",
-      }),
       TextAlign.configure({ types: ["heading", "paragraph"] }),
       // Placeholder.configure({
       //   // Use a placeholder:
@@ -378,16 +353,8 @@ export function FolioEditor({
         </Toolbar>
 
         <div className="f-tiptap-editor__content-wrap">
-          <DragHandle
-            editor={editor}
-            onNodeChange={({ node }) => {
-              setSelectedNodeId(node?.attrs?.uid || null);
-            }}
-          >
-            <DragHandleContent
-              editor={editor}
-              selectedNodeId={selectedNodeId}
-            />
+          <DragHandle editor={editor}>
+            <DragHandleContent editor={editor} />
           </DragHandle>
 
           <EditorContent

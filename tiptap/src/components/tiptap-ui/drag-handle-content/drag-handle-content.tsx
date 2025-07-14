@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, createElement } from "react";
 import {
   GripVertical,
   Plus,
@@ -35,77 +35,43 @@ const handleDragClick = () => {
 
 type MoveDirection = "up" | "down" | "top" | "bottom";
 
+type TargetNodeInfo = {
+  resultElement: Element | null;
+  resultNode: Node;
+  pos: number;
+};
+
 const moveNode = (
   editor: Editor,
   direction: MoveDirection,
-  selectedNodeId: string | null,
+  targetNode: TargetNodeInfo,
 ): boolean => {
   try {
     const { state } = editor;
 
-    if (!selectedNodeId) {
-      console.warn("No node selected for movement");
+    if (!targetNode.resultNode || targetNode.pos === null) {
+      console.error("Invalid target node");
       return false;
     }
 
-    // Find the node and its parent info
-    let foundNode: Node | null = null;
-    let foundNodePos = -1;
-    let parentNode: Node | null = null;
-    let nodeIndex = -1;
-    let nodeDepth = 0;
+    // Find the node's position in the document
+    const resolvedPos = state.doc.resolve(targetNode.pos);
 
-    state.doc.descendants((currentNode, currentPos, parent, index) => {
-      if (currentNode.attrs?.uid === selectedNodeId) {
-        foundNode = currentNode;
-        foundNodePos = currentPos;
-        parentNode = parent;
-        nodeIndex = index;
-        nodeDepth = state.doc.resolve(currentPos).depth;
-        return false; // Stop searching
-      }
-      return true;
-    });
-
-    if (!foundNode || foundNodePos === -1) {
-      console.warn("Cannot move: node not found");
-      return false;
-    }
-
-    // Handle document-level nodes (depth 0)
-    if (nodeDepth === 0) {
-      parentNode = state.doc;
-      // Find the correct index for document-level nodes
-      for (let i = 0; i < state.doc.childCount; i++) {
-        if (state.doc.child(i) === foundNode) {
-          nodeIndex = i;
-          break;
-        }
-      }
-    }
-
-    if (!parentNode) {
-      console.warn("Cannot move: no valid parent found");
-      return false;
-    }
-
-    const parentChildCount = parentNode.childCount;
-
-    if (parentChildCount <= 1) {
-      console.warn("Cannot move: parent has only one child");
-      return false;
-    }
+    // Work only with root nodes directly under the doc node
+    const depth = 1; // Root nodes are at depth 1
+    const parentDepth = 0; // Document is at depth 0
+    const nodeIndex = resolvedPos.index(parentDepth);
+    const parent = resolvedPos.node(parentDepth); // The document node
 
     // Calculate target index
     let targetIndex: number;
-
     switch (direction) {
       case "up":
         if (nodeIndex === 0) return false;
         targetIndex = nodeIndex - 1;
         break;
       case "down":
-        if (nodeIndex >= parentChildCount - 1) return false;
+        if (nodeIndex >= parent.childCount - 1) return false;
         targetIndex = nodeIndex + 1;
         break;
       case "top":
@@ -113,66 +79,58 @@ const moveNode = (
         targetIndex = 0;
         break;
       case "bottom":
-        if (nodeIndex >= parentChildCount - 1) return false;
-        targetIndex = parentChildCount - 1;
+        if (nodeIndex >= parent.childCount - 1) return false;
+        targetIndex = parent.childCount - 1;
         break;
       default:
         return false;
     }
 
-    console.log("Moving node:", {
-      direction,
-      nodeIndex,
-      targetIndex,
-      parentChildCount,
-      nodeDepth,
-    });
-
-    // Execute the move
+    // Execute the move using a simpler approach
     const success = editor
       .chain()
       .focus()
       .command(({ tr }) => {
         try {
-          // Get the current node position in the transaction
-          const currentPos = foundNodePos;
-          if (!foundNode) {
+          // Use the node we already found from findElementNextToCoords
+          const currentNode = targetNode.resultNode;
+          const currentNodePos = targetNode.pos;
+
+          if (!currentNode) {
+            console.error("No node found at position");
             return false;
           }
-          const nodeSize = foundNode.nodeSize;
-          const nodeContent = tr.doc.slice(currentPos, currentPos + nodeSize);
 
-          // Remove the node from current position
-          tr.delete(currentPos, currentPos + nodeSize);
-
-          // Calculate new target position
+          // Calculate target position
           let targetPos: number;
+          const parentStart = resolvedPos.start(0); // Start of document
 
-          if (nodeDepth === 0) {
-            // Document-level node
-            targetPos = 0;
-            const docAfterDelete = tr.doc;
+          // Remove the node from its current position first
+          tr.delete(currentNodePos, currentNodePos + currentNode.nodeSize);
+
+          // Calculate target position in the updated document
+          const updatedDoc = tr.doc;
+          const updatedParent = updatedDoc.resolve(parentStart).node(0);
+
+          if (targetIndex === 0) {
+            targetPos = parentStart;
+          } else {
+            // After removal, use targetIndex directly for both up and down movements
+            let effectiveTargetIndex = targetIndex;
 
             // Calculate position by summing node sizes up to target index
+            targetPos = parentStart;
             for (
               let i = 0;
-              i < targetIndex && i < docAfterDelete.childCount;
+              i < effectiveTargetIndex && i < updatedParent.childCount;
               i++
             ) {
-              targetPos += docAfterDelete.child(i).nodeSize;
+              targetPos += updatedParent.child(i).nodeSize;
             }
-          } else {
-            // Nested node
-            const $parentPos = tr.doc.resolve(
-              state.doc.resolve(foundNodePos).start(nodeDepth - 1),
-            );
-            targetPos =
-              $parentPos.pos +
-              $parentPos.posAtIndex(targetIndex, nodeDepth - 1);
           }
 
-          // Insert the node at the target position
-          tr.insert(targetPos, nodeContent.content);
+          // Insert at target position
+          tr.insert(targetPos, currentNode);
 
           // Set selection to the moved node
           const newNodeStart = targetPos + 1;
@@ -188,32 +146,6 @@ const moveNode = (
       })
       .run();
 
-    // Fallback focus mechanism
-    if (success) {
-      setTimeout(() => {
-        try {
-          // Find the moved node again and focus it
-          let movedNodePos = -1;
-          editor.state.doc.descendants((currentNode, currentPos) => {
-            if (currentNode.attrs?.uid === selectedNodeId) {
-              movedNodePos = currentPos;
-              return false;
-            }
-            return true;
-          });
-
-          if (movedNodePos !== -1) {
-            const startPos = movedNodePos + 1;
-            if (startPos < editor.state.doc.content.size) {
-              editor.chain().focus().setTextSelection(startPos).run();
-            }
-          }
-        } catch (error) {
-          console.warn("Fallback focus failed:", error);
-        }
-      }, 0);
-    }
-
     return success;
   } catch (error) {
     console.error(`Error moving node ${direction}:`, error);
@@ -221,57 +153,30 @@ const moveNode = (
   }
 };
 
-const moveNodeUp = (editor: Editor, selectedNodeId: string | null): boolean =>
-  moveNode(editor, "up", selectedNodeId);
-const moveNodeDown = (editor: Editor, selectedNodeId: string | null): boolean =>
-  moveNode(editor, "down", selectedNodeId);
-const moveNodeToTop = (
-  editor: Editor,
-  selectedNodeId: string | null,
-): boolean => moveNode(editor, "top", selectedNodeId);
+const moveNodeUp = (editor: Editor, targetNode: TargetNodeInfo): boolean =>
+  moveNode(editor, "up", targetNode);
+const moveNodeDown = (editor: Editor, targetNode: TargetNodeInfo): boolean =>
+  moveNode(editor, "down", targetNode);
+const moveNodeToTop = (editor: Editor, targetNode: TargetNodeInfo): boolean =>
+  moveNode(editor, "top", targetNode);
 const moveNodeToBottom = (
   editor: Editor,
-  selectedNodeId: string | null,
-): boolean => moveNode(editor, "bottom", selectedNodeId);
+  targetNode: TargetNodeInfo,
+): boolean => moveNode(editor, "bottom", targetNode);
 
-const removeNode = (editor: Editor, selectedNodeId: string | null): boolean => {
-  const { state } = editor;
+const removeNode = (editor: Editor, targetNode: TargetNodeInfo): boolean => {
+  try {
+    const { state } = editor;
 
-  if (!selectedNodeId) {
-    console.warn("No node selected for movement");
-    return false;
-  }
+    const tr = state.tr;
+    tr.delete(targetNode.pos, targetNode.pos + targetNode.resultNode.nodeSize);
+    editor.view.dispatch(tr);
 
-  // Find the node and its parent info
-  let foundNode: Node | null = null;
-  let foundNodePos = -1;
-  let parentNode: Node | null = null;
-  let nodeIndex = -1;
-  let nodeDepth = 0;
-
-  state.doc.descendants((currentNode, currentPos, parent, index) => {
-    if (currentNode.attrs?.uid === selectedNodeId) {
-      foundNode = currentNode;
-      foundNodePos = currentPos;
-      parentNode = parent;
-      nodeIndex = index;
-      nodeDepth = state.doc.resolve(currentPos).depth;
-      return false; // Stop searching
-    }
     return true;
-  });
-
-  if (!foundNode || foundNodePos === -1) {
-    console.warn("Cannot move: node not found");
+  } catch (error) {
+    console.error("Error removing node:", error);
     return false;
   }
-
-  // Remove the node from the document
-  const tr = state.tr;
-  tr.delete(foundNodePos, foundNodePos + foundNode.nodeSize);
-  editor.view.dispatch(tr);
-
-  return true;
 };
 
 const TRANSLATIONS = {
@@ -319,34 +224,96 @@ const DRAG_HANDLE_DROPDOWN_OPTIONS = [
   },
 ];
 
+export type FindElementNextToCoords = {
+  x: number;
+  y: number;
+  direction?: "left" | "right";
+  editor: Editor;
+};
+
+export function findElementNextToCoords(options: FindElementNextToCoords) {
+  const { x, y, direction, editor } = options;
+  let targetElement: Element | null = null;
+  let targetNode: Node | null = null;
+  let documentPosition: number | null = null;
+  let currentX = x;
+
+  while (targetNode === null && currentX < window.innerWidth && currentX > 0) {
+    const elementsAtPoint = document.elementsFromPoint(currentX, y);
+    const proseMirrorIndex = elementsAtPoint.findIndex((el) =>
+      el.classList.contains("ProseMirror"),
+    );
+    const relevantElements = elementsAtPoint.slice(0, proseMirrorIndex);
+
+    // console.log({ currentX, y, direction, elementsAtPoint });
+
+    if (relevantElements.length > 0) {
+      const currentElement = relevantElements[0];
+      targetElement = currentElement;
+
+      // Find the root node at depth 1 (directly under doc)
+      let blockElement = currentElement;
+      while (blockElement && blockElement.parentElement) {
+        const pos = editor.view.posAtDOM(blockElement, 0);
+        if (pos >= 0) {
+          const resolvedPos = editor.state.doc.resolve(pos);
+          // Only look for root nodes at depth 1
+          if (resolvedPos.depth >= 1) {
+            const rootNode = resolvedPos.node(1);
+            if (rootNode.isBlock && rootNode.type.name !== "doc") {
+              const nodePos = resolvedPos.before(1);
+              documentPosition = nodePos;
+              targetNode = rootNode;
+
+              break;
+            }
+          }
+        }
+        if (targetNode) break;
+        blockElement = blockElement.parentElement;
+      }
+
+      // Fallback to original logic if no block node found
+      if (!targetNode && documentPosition === null) {
+        documentPosition = editor.view.posAtDOM(currentElement, 0);
+        if (documentPosition >= 0) {
+          targetNode = editor.state.doc.nodeAt(documentPosition);
+        }
+      }
+
+      if (targetNode) break;
+    }
+
+    if (direction === "left") {
+      currentX -= 1;
+    } else {
+      currentX += 1;
+    }
+  }
+
+  console.log(
+    `findElementNextToCoords: Found element at (${currentX}, ${y})`,
+    targetElement,
+    targetNode,
+    documentPosition,
+  );
+
+  return {
+    resultElement: targetElement,
+    resultNode: targetNode,
+    pos: documentPosition !== null ? documentPosition : null,
+  };
+}
+
 export interface DragHandleContentProps {
   /**
    * The TipTap editor instance.
    */
   editor: Editor | null;
-  /**
-   * The currently selected node ID from the drag handle extension.
-   */
-  selectedNodeId?: string | null;
 }
 
-export function DragHandleContent({
-  editor,
-  selectedNodeId,
-}: DragHandleContentProps) {
-  const [openedDropdown, setOpenedDropdown] = React.useState<string | null>(
-    null,
-  );
-  const [persistedNodeId, setPersistedNodeId] = React.useState<string | null>(
-    null,
-  );
-
-  // Clear persisted node when dropdown closes
-  React.useEffect(() => {
-    if (openedDropdown === null) {
-      setPersistedNodeId(null);
-    }
-  }, [openedDropdown]);
+export function DragHandleContent({ editor }: DragHandleContentProps) {
+  const [openedDropdown, setOpenedDropdown] = useState<string | null>(null);
 
   if (!editor) {
     return null;
@@ -368,10 +335,6 @@ export function DragHandleContent({
       <DropdownMenu
         open={openedDropdown === "drag"}
         onOpenChange={(open: boolean) => {
-          if (open && selectedNodeId) {
-            // Persist the current node when opening dropdown
-            setPersistedNodeId(selectedNodeId);
-          }
           setOpenedDropdown(open ? "drag" : null);
         }}
       >
@@ -398,18 +361,37 @@ export function DragHandleContent({
                   role="button"
                   tabIndex={-1}
                   aria-label={translate(TRANSLATIONS, option.type)}
-                  onClick={() => {
-                    // Use persisted node ID if available, fallback to current selectedNodeId
-                    const nodeIdToUse = persistedNodeId || selectedNodeId;
-                    if (nodeIdToUse) {
-                      const success = option.command(editor, nodeIdToUse);
+                  onClick={(e) => {
+                    const rect = (e.target as HTMLElement)
+                      .closest(".tiptap-dropdown-menu")!
+                      .getBoundingClientRect();
+
+                    const nodeToUse = findElementNextToCoords({
+                      x: rect.left,
+                      y: rect.top,
+                      direction: "right",
+                      editor,
+                    });
+
+                    if (
+                      nodeToUse &&
+                      nodeToUse.resultNode &&
+                      nodeToUse.pos !== null
+                    ) {
+                      const success = option.command(
+                        editor,
+                        nodeToUse as TargetNodeInfo,
+                      );
+
                       if (success) {
                         setOpenedDropdown(null);
                       }
+                    } else {
+                      setOpenedDropdown(null);
                     }
                   }}
                 >
-                  {React.createElement(option.icon, {
+                  {createElement(option.icon, {
                     className: "tiptap-button-icon",
                   })}
                   {translate(TRANSLATIONS, option.type)}
