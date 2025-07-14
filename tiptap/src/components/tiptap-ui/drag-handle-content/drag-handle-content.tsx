@@ -6,6 +6,7 @@ import {
   MoveDown,
   ArrowUpToLine,
   ArrowDownToLine,
+  X,
 } from "lucide-react";
 import type { Editor } from "@tiptap/react";
 import type { Node } from "@tiptap/pm/model";
@@ -233,30 +234,88 @@ const moveNodeToBottom = (
   selectedNodeId: string | null,
 ): boolean => moveNode(editor, "bottom", selectedNodeId);
 
+const removeNode = (editor: Editor, selectedNodeId: string | null): boolean => {
+  const { state } = editor;
+
+  if (!selectedNodeId) {
+    console.warn("No node selected for movement");
+    return false;
+  }
+
+  // Find the node and its parent info
+  let foundNode: Node | null = null;
+  let foundNodePos = -1;
+  let parentNode: Node | null = null;
+  let nodeIndex = -1;
+  let nodeDepth = 0;
+
+  state.doc.descendants((currentNode, currentPos, parent, index) => {
+    if (currentNode.attrs?.uid === selectedNodeId) {
+      foundNode = currentNode;
+      foundNodePos = currentPos;
+      parentNode = parent;
+      nodeIndex = index;
+      nodeDepth = state.doc.resolve(currentPos).depth;
+      return false; // Stop searching
+    }
+    return true;
+  });
+
+  if (!foundNode || foundNodePos === -1) {
+    console.warn("Cannot move: node not found");
+    return false;
+  }
+
+  // Remove the node from the document
+  const tr = state.tr;
+  tr.delete(foundNodePos, foundNodePos + foundNode.nodeSize);
+  editor.view.dispatch(tr);
+
+  return true;
+};
+
+const TRANSLATIONS = {
+  cs: {
+    moveUp: "Přesunout nahoru",
+    moveDown: "Přesunout dolů",
+    moveToTop: "Nahoru",
+    moveToBottom: "Dolu",
+    removeNode: "Odstranit",
+  },
+  en: {
+    moveUp: "Move up",
+    moveDown: "Move down",
+    moveToTop: "Move to top",
+    moveToBottom: "Move to bottom",
+    removeNode: "Remove",
+  },
+};
+
 const DRAG_HANDLE_DROPDOWN_OPTIONS = [
   {
     type: "moveUp",
     icon: MoveUp,
-    i18n: { cs: { label: "Přesunout nahoru" }, en: { label: "Move up" } },
     command: moveNodeUp,
   },
   {
     type: "moveDown",
     icon: MoveDown,
-    i18n: { cs: { label: "Přesunout dolů" }, en: { label: "Move down" } },
     command: moveNodeDown,
   },
   {
     type: "moveToTop",
     icon: ArrowUpToLine,
-    i18n: { cs: { label: "Nahoru" }, en: { label: "Move to top" } },
     command: moveNodeToTop,
   },
   {
     type: "moveToBottom",
     icon: ArrowDownToLine,
-    i18n: { cs: { label: "Dolu" }, en: { label: "Move to bottom" } },
     command: moveNodeToBottom,
+  },
+  {
+    type: "removeNode",
+    icon: X,
+    command: removeNode,
   },
 ];
 
@@ -338,7 +397,7 @@ export function DragHandleContent({
                   data-style="ghost"
                   role="button"
                   tabIndex={-1}
-                  aria-label={translate(option.i18n, "label")}
+                  aria-label={translate(TRANSLATIONS, option.type)}
                   onClick={() => {
                     // Use persisted node ID if available, fallback to current selectedNodeId
                     const nodeIdToUse = persistedNodeId || selectedNodeId;
@@ -353,7 +412,7 @@ export function DragHandleContent({
                   {React.createElement(option.icon, {
                     className: "tiptap-button-icon",
                   })}
-                  {translate(option.i18n, "label")}
+                  {translate(TRANSLATIONS, option.type)}
                 </Button>
               </DropdownMenuItem>
             ))}
