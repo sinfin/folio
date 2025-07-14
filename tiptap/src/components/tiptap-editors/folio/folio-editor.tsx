@@ -8,16 +8,16 @@ import {
 
 // --- Tiptap Core Extensions ---
 import { StarterKit } from "@tiptap/starter-kit";
-import { Image } from "@tiptap/extension-image";
+// import { Image } from "@tiptap/extension-image";
 import { TaskItem } from "@tiptap/extension-task-item";
 import { TaskList } from "@tiptap/extension-task-list";
 import { TextAlign } from "@tiptap/extension-text-align";
 import { Typography } from "@tiptap/extension-typography";
 import { Highlight } from "@tiptap/extension-highlight";
-import { Subscript } from "@tiptap/extension-subscript";
-import { Superscript } from "@tiptap/extension-superscript";
+// import { Subscript } from "@tiptap/extension-subscript";
+// import { Superscript } from "@tiptap/extension-superscript";
 import { Underline } from "@tiptap/extension-underline";
-import Placeholder from "@tiptap/extension-placeholder";
+// import Placeholder from "@tiptap/extension-placeholder";
 
 // --- Custom Extensions ---
 import { Link } from "@/components/tiptap-extension/link-extension";
@@ -69,8 +69,8 @@ import { useWindowSize } from "@/hooks/use-window-size";
 import { useCursorVisibility } from "@/hooks/use-cursor-visibility";
 
 // --- 3rd party extensions ---
-import GlobalDragHandle from "tiptap-extension-global-drag-handle";
-import AutoJoiner from "tiptap-extension-auto-joiner";
+// import GlobalDragHandle from "tiptap-extension-global-drag-handle";
+// import AutoJoiner from "tiptap-extension-auto-joiner";
 
 const MainToolbarContent = ({
   onHighlighterClick,
@@ -218,36 +218,36 @@ export function FolioEditor({
       StarterKit,
       TextAlign.configure({ types: ["heading", "paragraph"] }),
       Underline,
-      Placeholder.configure({
-        // Use a placeholder:
-        placeholder:
-          document.documentElement.lang === "cs"
-            ? 'Stiskněte "/" pro příkazy'
-            : 'Press "/" for commands',
-      }),
+      // Placeholder.configure({
+      //   // Use a placeholder:
+      //   placeholder:
+      //     document.documentElement.lang === "cs"
+      //       ? 'Stiskněte "/" pro příkazy'
+      //       : 'Press "/" for commands',
+      // }),
       ...(blockEditor ? [TaskList] : []),
       ...(blockEditor ? [TaskItem.configure({ nested: true })] : []),
       Highlight.configure({ multicolor: true }),
-      ...(blockEditor ? [Image] : []),
+      // ...(blockEditor ? [Image] : []),
       Typography,
-      Superscript,
-      Subscript,
+      // Superscript,
+      // Subscript,
 
       Selection,
       Link.configure({ openOnClick: false }),
       ...(blockEditor ? [FolioTiptapNodeExtension] : []),
-      GlobalDragHandle.configure({
-        dragHandleWidth: 20, // default
+      // GlobalDragHandle.configure({
+      //   dragHandleWidth: 20, // default
 
-        // The scrollTreshold specifies how close the user must drag an element to the edge of the lower/upper screen for automatic
-        // scrolling to take place. For example, scrollTreshold = 100 means that scrolling starts automatically when the user drags an
-        // element to a position that is max. 99px away from the edge of the screen
-        // You can set this to 0 to prevent auto scrolling caused by this extension
-        scrollTreshold: 100, // default
-      }),
-      AutoJoiner.configure({
-        elementsToJoin: ["bulletList", "orderedList"], // default
-      }),
+      //   // The scrollTreshold specifies how close the user must drag an element to the edge of the lower/upper screen for automatic
+      //   // scrolling to take place. For example, scrollTreshold = 100 means that scrolling starts automatically when the user drags an
+      //   // element to a position that is max. 99px away from the edge of the screen
+      //   // You can set this to 0 to prevent auto scrolling caused by this extension
+      //   scrollTreshold: 100, // default
+      // }),
+      // AutoJoiner.configure({
+      //   elementsToJoin: ["bulletList", "orderedList"], // default
+      // }),
       // SlashCommands.configure({
       //   commands: [
       //     {
