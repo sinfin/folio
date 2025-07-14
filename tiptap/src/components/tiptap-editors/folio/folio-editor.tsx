@@ -16,12 +16,7 @@ import { Typography } from "@tiptap/extension-typography";
 import { Highlight } from "@tiptap/extension-highlight";
 // import { Subscript } from "@tiptap/extension-subscript";
 // import { Superscript } from "@tiptap/extension-superscript";
-import { Underline } from "@tiptap/extension-underline";
-// import Placeholder from "@tiptap/extension-placeholder";
-
-// --- Custom Extensions ---
-import { Link } from "@/components/tiptap-extension/link-extension";
-import { Selection } from "@/components/tiptap-extension/selection-extension";
+import { Selection, Placeholder } from "@tiptap/extensions";
 
 // --- UI Primitives ---
 import { Button } from "@/components/tiptap-ui-primitive/button";
@@ -217,7 +212,6 @@ export function FolioEditor({
     extensions: [
       StarterKit,
       TextAlign.configure({ types: ["heading", "paragraph"] }),
-      Underline,
       // Placeholder.configure({
       //   // Use a placeholder:
       //   placeholder:
@@ -234,7 +228,6 @@ export function FolioEditor({
       // Subscript,
 
       Selection,
-      Link.configure({ openOnClick: false }),
       ...(blockEditor ? [FolioTiptapNodeExtension] : []),
       // GlobalDragHandle.configure({
       //   dragHandleWidth: 20, // default
