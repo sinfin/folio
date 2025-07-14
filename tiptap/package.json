@@ -16,15 +16,18 @@
   "dependencies": {
     "@floating-ui/dom": "^1.7.2",
     "@floating-ui/react": "^0.27.12",
+    "@tiptap/extension-drag-handle-react": "^3.0.1",
     "@tiptap/extension-highlight": "^3.0.1",
     "@tiptap/extension-task-item": "^3.0.1",
     "@tiptap/extension-task-list": "^3.0.1",
     "@tiptap/extension-text-align": "^3.0.1",
     "@tiptap/extension-typography": "^3.0.1",
+    "@tiptap/extension-unique-id": "^3.0.1",
     "@tiptap/extensions": "^3.0.1",
     "@tiptap/pm": "^3.0.1",
     "@tiptap/react": "^3.0.1",
     "@tiptap/starter-kit": "^3.0.1",
+    "lucide-react": "^0.525.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },

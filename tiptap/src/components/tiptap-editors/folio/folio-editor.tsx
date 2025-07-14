@@ -16,7 +16,9 @@ import { Typography } from "@tiptap/extension-typography";
 import { Highlight } from "@tiptap/extension-highlight";
 // import { Subscript } from "@tiptap/extension-subscript";
 // import { Superscript } from "@tiptap/extension-superscript";
-import { Selection, Placeholder } from "@tiptap/extensions";
+import { Selection } from "@tiptap/extensions";
+import DragHandle from "@tiptap/extension-drag-handle-react";
+import UniqueID from "@tiptap/extension-unique-id";
 
 // --- UI Primitives ---
 import { Button } from "@/components/tiptap-ui-primitive/button";
@@ -52,6 +54,7 @@ import {
 import { MarkButton } from "@/components/tiptap-ui/mark-button";
 import { TextAlignButton } from "@/components/tiptap-ui/text-align-button";
 import { UndoRedoButton } from "@/components/tiptap-ui/undo-redo-button";
+import { DragHandleContent } from "@/components/tiptap-ui/drag-handle-content";
 
 // --- Icons ---
 import { ArrowLeftIcon } from "@/components/tiptap-icons/arrow-left-icon";
@@ -191,6 +194,9 @@ export function FolioEditor({
   const [mobileView, setMobileView] = React.useState<
     "main" | "highlighter" | "link"
   >("main");
+  const [selectedNodeId, setSelectedNodeId] = React.useState<string | null>(
+    null,
+  );
   const toolbarRef = React.useRef<HTMLDivElement>(null);
   const editorRef = React.useRef<HTMLDivElement>(null);
   const blockEditor = type === "block";
@@ -211,6 +217,27 @@ export function FolioEditor({
     },
     extensions: [
       StarterKit,
+      UniqueID.configure({
+        types: [
+          "folioTiptapNode",
+          "blockquote",
+          "bulletList",
+          "codeBlock",
+          "hardBreak",
+          "heading",
+          "horizontalRule",
+          "listItem",
+          "orderedList",
+          "paragraph",
+          "table",
+          "tableCell",
+          "tableHeader",
+          "tableRow",
+          "taskList",
+          "taskItem",
+        ],
+        attributeName: "uid",
+      }),
       TextAlign.configure({ types: ["heading", "paragraph"] }),
       // Placeholder.configure({
       //   // Use a placeholder:
@@ -351,6 +378,18 @@ export function FolioEditor({
         </Toolbar>
 
         <div className="f-tiptap-editor__content-wrap">
+          <DragHandle
+            editor={editor}
+            onNodeChange={({ node }) => {
+              setSelectedNodeId(node?.attrs?.uid || null);
+            }}
+          >
+            <DragHandleContent
+              editor={editor}
+              selectedNodeId={selectedNodeId}
+            />
+          </DragHandle>
+
           <EditorContent
             editor={editor}
             role="presentation"
