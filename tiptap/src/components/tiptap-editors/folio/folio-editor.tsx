@@ -202,7 +202,7 @@ export function FolioEditor({
     onCreate,
     content: defaultContent,
     immediatelyRender: true,
-    shouldRerenderOnTransaction: false,
+    shouldRerenderOnTransaction: true,
     editorProps: {
       attributes: {
         autocomplete: "off",
