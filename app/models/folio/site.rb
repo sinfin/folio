@@ -242,6 +242,15 @@ class Folio::Site < Folio::ApplicationRecord
     ]
   end
 
+  # Subtitle settings
+  def subtitle_languages
+    self[:subtitle_languages].presence || Rails.application.config.folio_files_video_enabled_subtitle_languages
+  end
+
+  def subtitle_auto_generation_enabled?
+    subtitle_auto_generation_enabled
+  end
+
   private
     def system_emails_should_be_valid
       %i[system_email system_email_copy].each do |attr|

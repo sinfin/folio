@@ -24,6 +24,8 @@ import MainImageInner from './styled/MainImageInner'
 import FileEditInput from './styled/FileEditInput'
 
 export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fileModal, onTagsChange, closeFileModal, saveModal, updateThumbnail, destroyThumbnail, readOnly, changeFilePlacementsPage, canDestroyFiles, taggable, autoFocusField }) => {
+  const [activeTab, setActiveTab] = React.useState('details')
+  
   const file = fileModal.file
   const isImage = file.attributes.human_type === 'image'
   const isAudio = file.attributes.human_type === 'audio'
@@ -47,6 +49,9 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
   }
 
   const additionalFields = file.attributes.file_modal_additional_fields
+  
+  // Check if subtitles are available for this video
+  const hasSubtitles = isVideo && file.attributes.bottom_html_api_url
 
   return (
     <div className='modal-content'>
@@ -59,11 +64,28 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
       </div>
 
       <div className='modal-body'>
-        <div className={(isImage || isVideo) ? 'row' : undefined}>
-          {(isImage || isVideo) && (
-            <div className='col-lg-6 mb-3'>
-              {isImage ? (
-                <div>
+        {/* Status Section + ID - Always Visible First */}
+        <div className='d-flex justify-content-between align-items-center mb-3'>
+          <div className='f-c-state'>
+            <div className='f-c-state__state'>
+              <div className={`f-c-state__state-square f-c-state__state-square--color-${file.attributes.aasm_state_color}`} />
+              {file.attributes.aasm_state_human}
+            </div>
+          </div>
+          <div className='text-muted'>
+            <small>ID: {file.attributes.id}</small>
+            {file.attributes.imported_from_photo_archive && (
+              <small className='ms-2'>{window.FolioConsole.translations.importedFromPhotoArchive}</small>
+            )}
+          </div>
+        </div>
+
+        {/* Video/Image Preview Section - Full Width */}
+        {(isImage || isVideo) && (
+          <div className='mb-4'>
+            {isImage ? (
+              <div className='row'>
+                <div className='col-lg-6'>
                   <MainImageOuter>
                     <div style={{ paddingTop: `${100 * file.attributes.file_height / file.attributes.file_width}%` }} />
 
@@ -72,292 +94,314 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
                     </MainImageInner>
                   </MainImageOuter>
 
-                  <div className='mt-2 small'>{file.attributes.file_width}×{file.attributes.file_height} px</div>
+                  <div className='mt-2 small text-center'>{file.attributes.file_width}×{file.attributes.file_height} px</div>
                 </div>
-              ) : (
-                <div>
+              </div>
+            ) : (
+              <div className='row'>
+                <div className='col-lg-6 mb-3'>
                   <div className='form-group'><FolioPlayer file={file} /></div>
-
+                </div>
+                <div className='col-lg-6 mb-3'>
                   <AdditionalHtmlFromApi apiUrl={file.attributes.additional_html_api_url} />
                 </div>
-              )}
-            </div>
-          )}
-          <div className={(isImage || isVideo) ? 'col-lg-6 mb-3' : undefined}>
-            <FolioConsoleUiButtons className='mb-3'>
-              <FolioConsoleUiButton
-                href={file.attributes.source_url}
-                variant='secondary'
-                target='_blank'
-                rel='noopener noreferrer'
-                download={download}
-                icon='download'
-                label={window.FolioConsole.translations.downloadOriginal}
-              />
-
-              {(canDestroyFiles && !readOnly) && (
-                <FolioConsoleUiButton
-                  class='overflow-hidden position-relative'
-                  icon='edit'
-                  variant='warning'
-                  label={window.FolioConsole.translations.replace}
-                >
-                  <FileEditInput type='file' onClick={onEditClick} onChange={(e) => uploadNewFileInstead(e.target.files[0])} />
-                </FolioConsoleUiButton>
-              )}
-
-              {(canDestroyFiles && !readOnly) && (
-                <FolioConsoleUiButton
-                  class={notAllowedCursor}
-                  onClick={onDeleteClick}
-                  disabled={indestructible}
-                  title={indestructible ? window.FolioConsole.translations.indestructibleFile : undefined}
-                  variant='danger'
-                  icon='delete'
-                  label={window.FolioConsole.translations.destroy}
-                />
-              )}
-            </FolioConsoleUiButtons>
-
-            <p>ID: {file.attributes.id}</p>
-
-            {file.attributes.imported_from_photo_archive && (
-              <p>{window.FolioConsole.translations.importedFromPhotoArchive}</p>
-            )}
-
-            <p className='mb-1'>{window.FolioConsole.translations.state}:</p>
-
-            <div className='f-c-state mb-3'>
-              <div className='f-c-state__state'>
-                <div className={`f-c-state__state-square f-c-state__state-square--color-${file.attributes.aasm_state_color}`} />
-                {file.attributes.aasm_state_human}
               </div>
-            </div>
+            )}
+          </div>
+        )}
 
-            {isAudio && <div className='form-group'><FolioPlayer file={file} /></div>}
+        {/* Tab Navigation for Videos with Subtitles */}
+        {hasSubtitles && (
+          <ul className='nav nav-tabs mb-3'>
+            <li className='nav-item'>
+              <button 
+                className={`nav-link ${activeTab === 'details' ? 'active' : ''}`}
+                onClick={() => setActiveTab('details')}
+                type='button'
+              >
+                {window.FolioConsole.translations.details || 'Details'}
+              </button>
+            </li>
+            <li className='nav-item'>
+              <button 
+                className={`nav-link ${activeTab === 'subtitles' ? 'active' : ''}`}
+                onClick={() => setActiveTab('subtitles')}
+                type='button'
+              >
+                {window.FolioConsole.translations.subtitles || 'Subtitles'}
+              </button>
+            </li>
+          </ul>
+        )}
 
-            {
-              ['author', 'attribution_source', 'attribution_source_url', 'attribution_copyright', 'attribution_licence'].map((field) => (
-                <FormGroup key={field}>
-                  <Label className='form-label'>{window.FolioConsole.translations[`file/${field}`]}</Label>
+        {/* Tab Content */}
+        <div className='tab-content'>
+          {/* Details Tab */}
+          <div className={`tab-pane ${(!hasSubtitles || activeTab === 'details') ? 'show active' : ''}`}>
+            <div className='row'>
+              <div className='col-lg-6 mb-3'>
+                <FolioConsoleUiButtons className='mb-3'>
+                  <FolioConsoleUiButton
+                    href={file.attributes.source_url}
+                    variant='secondary'
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    download={download}
+                    icon='download'
+                    label={window.FolioConsole.translations.downloadOriginal}
+                  />
 
-                  {readOnly ? (
-                    formState[field] ? <p className='m-0'>{formState[field]}</p> : <p className='m-0 text-muted'>{window.FolioConsole.translations.blank}</p>
-                  ) : (
-                    <AutocompleteInput
-                      value={formState[field] || ''}
-                      onChange={(e) => onValueChange(field, e.currentTarget.value)}
-                      name={field}
-                      url={fileFieldAutocompleteUrl(field)}
+                  {(canDestroyFiles && !readOnly) && (
+                    <FolioConsoleUiButton
+                      class='overflow-hidden position-relative'
+                      icon='edit'
+                      variant='warning'
+                      label={window.FolioConsole.translations.replace}
+                    >
+                      <FileEditInput type='file' onClick={onEditClick} onChange={(e) => uploadNewFileInstead(e.target.files[0])} />
+                    </FolioConsoleUiButton>
+                  )}
+
+                  {(canDestroyFiles && !readOnly) && (
+                    <FolioConsoleUiButton
+                      className={notAllowedCursor}
+                      onClick={onDeleteClick}
+                      icon='delete'
+                      variant='danger'
+                      label={window.FolioConsole.translations.destroy}
                     />
                   )}
-                </FormGroup>
-              ))
-            }
+                </FolioConsoleUiButtons>
 
-            <FormGroup>
-              <Label className='form-label'>{window.FolioConsole.translations.fileDescription}</Label>
-              {readOnly ? (
-                formState.description ? <p className='m-0'>{formState.description}</p> : <p className='m-0 text-muted'>{window.FolioConsole.translations.blank}</p>
-              ) : (
-                <TextareaAutosize
-                  name='description'
-                  value={formState.description || ''}
-                  onChange={(e) => onValueChange('description', e.currentTarget.value)}
-                  type='text'
-                  className='form-control'
-                  rows={3}
-                  async
-                />
-              )}
-            </FormGroup>
+                {isAudio && <div className='form-group'><FolioPlayer file={file} /></div>}
 
-            {
-              isImage && (
+                {
+                  ['author', 'attribution_source', 'attribution_source_url', 'attribution_copyright', 'attribution_licence'].map((field) => (
+                    <FormGroup key={field}>
+                      <Label className='form-label'>{window.FolioConsole.translations[`file/${field}`]}</Label>
+
+                      {readOnly ? (
+                        formState[field] ? <p className='m-0'>{formState[field]}</p> : <p className='m-0 text-muted'>{window.FolioConsole.translations.blank}</p>
+                      ) : (
+                        <AutocompleteInput
+                          value={formState[field] || ''}
+                          onChange={(e) => onValueChange(field, e.currentTarget.value)}
+                          name={field}
+                          url={fileFieldAutocompleteUrl(field)}
+                        />
+                      )}
+                    </FormGroup>
+                  ))
+                }
+
                 <FormGroup>
-                  <Label className='form-label'>Alt</Label>
+                  <Label className='form-label'>{window.FolioConsole.translations.fileDescription}</Label>
                   {readOnly ? (
-                    formState.alt ? <p className='m-0'>{formState.alt}</p> : <p className='m-0 text-muted'>{window.FolioConsole.translations.blank}</p>
+                    formState.description ? <p className='m-0'>{formState.description}</p> : <p className='m-0 text-muted'>{window.FolioConsole.translations.blank}</p>
                   ) : (
-                    <Input
-                      name='alt'
-                      value={formState.alt || ''}
-                      onChange={(e) => onValueChange('alt', e.currentTarget.value)}
-                      className='form-control'
-                      autoFocus={autoFocusField === 'alt'}
-                    />
-                  )}
-                </FormGroup>
-              )
-            }
-
-            {taggable && (
-              <div className='form-group string optional file_tag_list'>
-                <label className='form-label string optional'>
-                  {window.FolioConsole.translations.tagsLabel}
-                </label>
-
-                {readOnly ? (
-                  formState.tags.length ? (
-                    <PrettyTags tags={formState.tags} />
-                  ) : (
-                    <p className='m-0 text-muted'>{window.FolioConsole.translations.blank}</p>
-                  )
-                ) : (
-                  <React.Fragment>
-                    <TagsInput
-                      value={formState.tags}
-                      dataTestId='file-tags'
-                      onTagsChange={onTagsChange}
-                      submit={saveModal}
-                      noAutofocus
-                    />
-
-                    <small className='form-text'>
-                      {window.FolioConsole.translations.tagsHint}
-                    </small>
-                  </React.Fragment>
-                )}
-              </div>
-            )}
-
-            {additionalFields.map((additionalField) => (
-              <FormGroup key={additionalField.name}>
-                <Label className='form-label'>{additionalField.label}</Label>
-                {readOnly ? (
-                  <p className='m-0'>{formState[additionalField.name]}</p>
-                ) : (
-                  additionalField.type === 'text' ? (
                     <TextareaAutosize
-                      name={additionalField.name}
-                      value={formState[additionalField.name]}
-                      onChange={(e) => onValueChange(additionalField.name, e.currentTarget.value)}
+                      name='description'
+                      value={formState.description || ''}
+                      onChange={(e) => onValueChange('description', e.currentTarget.value)}
                       type='text'
                       className='form-control'
                       rows={3}
-                      maxRows={10}
                       async
                     />
-                  ) : (
-                    additionalField.type === 'select' ? (
-                      <Input
-                        value={formState[additionalField.name]}
-                        onChange={(e) => onValueChange(additionalField.name, e.currentTarget.value)}
-                        name={additionalField.name}
-                        type='select'
-                        className='select'
-                      >
-                        {additionalField.collection.map((opt) => (
-                          <option value={opt[1]} key={opt[1] || '_blank'}>
-                            {opt[0]}
-                          </option>
-                        ))}
-                      </Input>
+                  )}
+                </FormGroup>
 
-                    ) : (
-                      <Input
-                        value={formState[additionalField.name]}
-                        onChange={(e) => onValueChange(additionalField.name, e.currentTarget.value)}
-                        name={additionalField.name}
-                      />
-                    )
+                {
+                  isImage && (
+                    <FormGroup>
+                      <Label className='form-label'>Alt</Label>
+                      {readOnly ? (
+                        formState.alt ? <p className='m-0'>{formState.alt}</p> : <p className='m-0 text-muted'>{window.FolioConsole.translations.blank}</p>
+                      ) : (
+                        <Input
+                          name='alt'
+                          value={formState.alt || ''}
+                          onChange={(e) => onValueChange('alt', e.currentTarget.value)}
+                          className='form-control'
+                          autoFocus={autoFocusField === 'alt'}
+                        />
+                      )}
+                    </FormGroup>
                   )
+                }
+
+                {taggable && (
+                  <div className='form-group string optional file_tag_list'>
+                    <label className='form-label string optional'>
+                      {window.FolioConsole.translations.tagsLabel}
+                    </label>
+
+                    {readOnly ? (
+                      formState.tags.length ? (
+                        <PrettyTags tags={formState.tags} />
+                      ) : (
+                        <p className='m-0 text-muted'>{window.FolioConsole.translations.blank}</p>
+                      )
+                    ) : (
+                      <React.Fragment>
+                        <TagsInput
+                          value={formState.tags}
+                          dataTestId='file-tags'
+                          onTagsChange={onTagsChange}
+                          submit={saveModal}
+                          noAutofocus
+                        />
+
+                        <small className='form-text'>
+                          {window.FolioConsole.translations.tagsHint}
+                        </small>
+                      </React.Fragment>
+                    )}
+                  </div>
                 )}
-              </FormGroup>
-            ))}
 
-            {
-              isImage && (
-                <FormGroup>
-                  <Label className='form-label'>{window.FolioConsole.translations.fileDefaultGravity}</Label>
-                  {readOnly ? (
-                    <p className='m-0'>{formState.default_gravity}</p>
-                  ) : (
-                    <Input
-                      value={formState.default_gravity || file.attributes.default_gravities_for_select[0][1]}
-                      onChange={(e) => onValueChange('default_gravity', e.currentTarget.value)}
-                      name='default_gravity'
-                      type='select'
-                      className='select'
-                    >
-                      {file.attributes.default_gravities_for_select.map((opt) => (
-                        <option value={opt[1]} key={opt[1]}>
-                          {opt[0]}
-                        </option>
-                      ))}
-                    </Input>
-                  )}
-                </FormGroup>
-              )
-            }
+                {additionalFields.map((additionalField) => (
+                  <FormGroup key={additionalField.name}>
+                    <Label className='form-label'>{additionalField.label}</Label>
+                    {readOnly ? (
+                      <p className='m-0'>{formState[additionalField.name]}</p>
+                    ) : (
+                      additionalField.type === 'text' ? (
+                        <TextareaAutosize
+                          name={additionalField.name}
+                          value={formState[additionalField.name]}
+                          onChange={(e) => onValueChange(additionalField.name, e.currentTarget.value)}
+                          type='text'
+                          className='form-control'
+                          rows={3}
+                          maxRows={10}
+                          async
+                        />
+                      ) : (
+                        additionalField.type === 'select' ? (
+                          <Input
+                            value={formState[additionalField.name]}
+                            onChange={(e) => onValueChange(additionalField.name, e.currentTarget.value)}
+                            name={additionalField.name}
+                            type='select'
+                            className='select'
+                          >
+                            {additionalField.collection.map((opt) => (
+                              <option value={opt[1]} key={opt[1] || '_blank'}>
+                                {opt[0]}
+                              </option>
+                            ))}
+                          </Input>
 
-            {
-              typeof file.attributes.preview_duration === 'number' && (
-                <FormGroup>
-                  <Label className='form-label'>{window.FolioConsole.translations.filePreviewDuration}</Label>
-                  {readOnly ? (
-                    <p className='m-0'>{formState.preview_duration}</p>
-                  ) : (
-                    <Input
-                      value={formState.preview_duration || 30}
-                      onChange={(e) => onValueChange('preview_duration', e.currentTarget.value)}
-                      name='preview_duration'
-                      type='number'
-                    />
-                  )}
-                </FormGroup>
-              )
-            }
+                        ) : (
+                          <Input
+                            value={formState[additionalField.name]}
+                            onChange={(e) => onValueChange(additionalField.name, e.currentTarget.value)}
+                            name={additionalField.name}
+                          />
+                        )
+                      )
+                    )}
+                  </FormGroup>
+                ))}
 
-            {readOnly ? (
-              formState.sensitiveContent ? <p>{window.FolioConsole.translations.fileSensitiveContent}</p> : null
-            ) : (
-              <FormGroup>
-                <FormGroup check>
-                  <Label className='form-label' check>
-                    <Input
-                      type='checkbox'
-                      name='sensitive_content'
-                      onChange={(e) => onValueChange('sensitive_content', e.currentTarget.checked)}
-                      checked={formState.sensitive_content}
-                    />
-                    {' '}
-                    {window.FolioConsole.translations.fileSensitiveContent}
-                  </Label>
-                </FormGroup>
-              </FormGroup>
-            )}
+                {
+                  isImage && (
+                    <FormGroup>
+                      <Label className='form-label'>{window.FolioConsole.translations.fileDefaultGravity}</Label>
+                      {readOnly ? (
+                        <p className='m-0'>{formState.default_gravity}</p>
+                      ) : (
+                        <Input
+                          value={formState.default_gravity || file.attributes.default_gravities_for_select[0][1]}
+                          onChange={(e) => onValueChange('default_gravity', e.currentTarget.value)}
+                          name='default_gravity'
+                          type='select'
+                          className='select'
+                        >
+                          {file.attributes.default_gravities_for_select.map((opt) => (
+                            <option value={opt[1]} key={opt[1]}>
+                              {opt[0]}
+                            </option>
+                          ))}
+                        </Input>
+                      )}
+                    </FormGroup>
+                  )
+                }
 
-            {!readOnly && (
-              <button type='button' className='btn btn-primary px-4' onClick={saveModal}>
-                {window.FolioConsole.translations.save}
-              </button>
+                {
+                  typeof file.attributes.preview_duration === 'number' && (
+                    <FormGroup>
+                      <Label className='form-label'>{window.FolioConsole.translations.filePreviewDuration}</Label>
+                      {readOnly ? (
+                        <p className='m-0'>{formState.preview_duration}</p>
+                      ) : (
+                        <Input
+                          value={formState.preview_duration || 30}
+                          onChange={(e) => onValueChange('preview_duration', e.currentTarget.value)}
+                          name='preview_duration'
+                          type='number'
+                        />
+                      )}
+                    </FormGroup>
+                  )
+                }
+
+                {readOnly ? (
+                  formState.sensitiveContent ? <p>{window.FolioConsole.translations.fileSensitiveContent}</p> : null
+                ) : (
+                  <FormGroup>
+                    <FormGroup check>
+                      <Label className='form-label' check>
+                        <Input
+                          type='checkbox'
+                          name='sensitive_content'
+                          onChange={(e) => onValueChange('sensitive_content', e.currentTarget.checked)}
+                          checked={formState.sensitive_content}
+                        />
+                        {' '}
+                        {window.FolioConsole.translations.fileSensitiveContent}
+                      </Label>
+                    </FormGroup>
+                  </FormGroup>
+                )}
+
+                {!readOnly && (
+                  <button type='button' className='btn btn-primary px-4' onClick={saveModal}>
+                    {window.FolioConsole.translations.save}
+                  </button>
+                )}
+              </div>
+              
+              {/* Right Column - Usage */}
+              <div className='col-lg-6 mb-3'>
+                <FileUsage filePlacements={fileModal.filePlacements} changeFilePlacementsPage={changeFilePlacementsPage} />
+              </div>
+            </div>
+
+            {/* Thumbnail Sizes Section - Only for Images */}
+            {isImage && (
+              <div className='row mt-3'>
+                <div className='col-lg-12 mb-3'>
+                  <ThumbnailSizes
+                    file={file}
+                    updateThumbnail={updateThumbnail}
+                    destroyThumbnail={destroyThumbnail}
+                  />
+                </div>
+              </div>
             )}
           </div>
-        </div>
 
-        <div className={isImage ? 'row mt-3' : 'mt-3'}>
-          {isImage && (
-            <div className='col-lg-7 mb-3'>
-              <ThumbnailSizes
-                file={file}
-                updateThumbnail={updateThumbnail}
-                destroyThumbnail={destroyThumbnail}
-              />
+          {/* Subtitles Tab */}
+          {hasSubtitles && (
+            <div className={`tab-pane ${activeTab === 'subtitles' ? 'show active' : ''}`}>
+              <AdditionalHtmlFromApi apiUrl={file.attributes.bottom_html_api_url} />
             </div>
           )}
-
-          <div className={isImage ? 'col-lg-5 mb-3' : undefined}>
-            <FileUsage filePlacements={fileModal.filePlacements} changeFilePlacementsPage={changeFilePlacementsPage} />
-          </div>
         </div>
       </div>
-
-      {file.attributes.bottom_html_api_url ? (
-        <div className="modal-body">
-          <AdditionalHtmlFromApi apiUrl={file.attributes.bottom_html_api_url} />
-        </div>
-      ) : null}
 
       {(fileModal.updating || fileModal.uploadingNew) && <span className='folio-loader' />}
     </div>

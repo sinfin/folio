@@ -185,6 +185,11 @@ Folio::Engine.routes.draw do
                   get :subtitles_html
                   post :retranscribe_subtitles
                   patch :update_subtitles
+                  
+                  # New subtitle-specific routes
+                  post 'subtitles/:language', action: :create_subtitle
+                  patch 'subtitles/:language', action: :update_subtitle
+                  delete 'subtitles/:language', action: :delete_subtitle
                 end
               end
             end

@@ -48,6 +48,7 @@ Gem::Specification.new do |s|
   s.add_dependency "friendly_id"
   s.add_dependency "gibbon" # for mailchimp requests
   s.add_dependency "invisible_captcha"
+  s.add_dependency "iso-639"
   s.add_dependency "jquery-rails"
   s.add_dependency "jwt"
   s.add_dependency "message_bus"
@@ -82,6 +83,7 @@ Gem::Specification.new do |s|
   # s.add_dependency "cells-rails", "~> 0.1.5" # need to be in Gemfile
   s.add_dependency "slim-rails" # need to be in Gemfile
   s.add_dependency "slim"
+  s.add_dependency "sys-filesystem"
   s.add_dependency "traco"
   s.add_dependency "turbolinks"
   s.add_dependency "uglifier"

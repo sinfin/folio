@@ -6,11 +6,20 @@ en:
   dragonfly:
     invalid_format: Invalid format
   'false': "No"
+  activerecord:
+    attributes:
+      folio/site:
+        subtitle_languages: Subtitle Languages
+        subtitle_languages_string: Subtitle Languages
+        subtitle_auto_generation_enabled: Auto-generate Subtitles
   folio:
     nested_fields_component:
       add: Add
 
     root_breadcrumb: Homepage
+    file:
+      subtitle:
+        title: Subtitles
     chart:
       js_load_error: Failed to load javascript needed for charts.
     price:
@@ -56,6 +65,16 @@ en:
       pages:
         clone:
           cloned_title: "%{original_title} - copy %{date}"
+    video_subtitle:
+      status:
+        processing: "Generating subtitles..."
+        ready: "Subtitles ready"
+      language:
+        cs: "Czech"
+        en: "English"
+        de: "German"
+        fr: "French"
+        es: "Spanish"
 
   head:
     description: ''

@@ -74,7 +74,11 @@ class Folio::Console::FileSerializer
   end
 
   attribute :aasm_state_human do |object|
-    object.aasm.human_state
+    if object.processing? && object.remote_services_data.try(:[], "progress_percentage")
+      "#{object.aasm.human_state} (#{object.remote_services_data.try(:[], "progress_percentage")}%)"
+    else
+      object.aasm.human_state
+    end
   end
 
   attribute :aasm_state_color do |object|

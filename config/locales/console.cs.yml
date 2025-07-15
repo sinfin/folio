@@ -261,6 +261,10 @@ cs:
         form_tabs:
           header_message:
             header_message: Text oznámení
+          settings:
+            subtitle_settings: Nastavení titulků
+            subtitle_languages_hint: Zadejte kódy jazyků oddělené čárkami (např. cs, en, de, es)
+            subtitle_auto_generation_enabled_hint: Povolit automatické generování titulků pro nová videa
       users:
         index:
           index_tabs/locked: Zablokovaní
@@ -427,14 +431,40 @@ cs:
           label: Automatické ukládání
 
       files:
-        has_subtitles_form_component:
+
+        subtitles_form_component:
           title: Titulky
-          subtitles_ready: Titulky připraveny
-          subtitles_processing: Probíhá generování titulků
-          subtitles_failed: Chyba generování titulků. Titulky lze zadat ručně.
-          retranscribe_subtitles: Vygenerovat znovu
-          force_retranscribe_hint: Kliknutím přepíšete probíhající proces
-          submit: Uložit titulky
+          regenerate_subtitles: Znovu vygenerovat titulky
+          regenerate_confirm: Opravdu chcete znovu vygenerovat titulky? Tím se přepíše stávající obsah.
+          transcription_in_progress: Automaticky se generují titulky...
+          transcription_failed: Přepis selhal
+          started_time_ago: Začal před %{time}
+          enabled_label: Povolit titulky
+          add_missing_languages: Přidat ruční překlad
+          select_language: Vyberte jazyk...
+          add_language: Přidat jazyk
+          delete_subtitle: Smazat
+          delete_subtitle_confirm: Opravdu chcete smazat tyto titulky?
+
+          text_label: Text titulků
+          text_hint: Zadejte titulky ve formátu VTT
+          validation_errors_title: "Chyby validace:"
+          save: Uložit
+          cancel: Zrušit
+          never_processed: Nikdy nezpracováno
+          status:
+            processing: Zpracovává se
+            ready: Připraveno
+            disabled: Zakázáno
+            empty: Prázdné
+          last_activity:
+            auto_only: "Automaticky vygenerováno před %{time}"
+            auto_with_edits: "Automaticky vygenerováno, upraveno %{edits}krát, naposledy před %{time}"
+            manual_only: "Ručně vytvořeno před %{time}"
+          metadata:
+            transcription_service: "Služba: %{service}"
+            attempts: "%{count} pokusů"
+            validation_errors: "%{count} chyb validace"
 
   date:
     formats:

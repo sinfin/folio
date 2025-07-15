@@ -18,6 +18,8 @@ cs:
         close: Zavřít
         create: Vytvořit
         destroy: Smazat
+        deleteSubtitleConfirm: Opravdu chcete smazat tyto titulky?
+        details: Detaily
         download: Stáhnout
         downloadOriginal: Stáhnout originál
         editOffset: Upravit ořez
@@ -50,6 +52,7 @@ cs:
         split: Rozdělit
         startSplittingAtom: Rozdělit na části
         state: Stav
+        subtitles: Titulky
         thumbnailSizes: Vygenerované verze
         title: Název
         usage: Použití
