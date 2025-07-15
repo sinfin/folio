@@ -179,7 +179,8 @@ export function isColorHighlightButtonDisabled(
 
   const isIncompatibleContext =
     editor.isActive("code") ||
-    editor.isActive("codeBlock")
+    editor.isActive("codeBlock") ||
+    editor.isActive("imageUpload")
 
   return isIncompatibleContext || !canToggleHighlight(editor)
 }

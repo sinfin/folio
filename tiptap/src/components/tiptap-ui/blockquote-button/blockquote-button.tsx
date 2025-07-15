@@ -14,7 +14,7 @@ import { isNodeInSchema } from "@/lib/tiptap-utils"
 import type { ButtonProps } from "@/components/tiptap-ui-primitive/button"
 import { Button } from "@/components/tiptap-ui-primitive/button"
 
-export interface BlockQuoteButtonProps extends Omit<ButtonProps, "type"> {
+export interface BlockquoteButtonProps extends Omit<ButtonProps, "type"> {
   /**
    * The TipTap editor instance.
    */
@@ -126,9 +126,9 @@ export function useBlockquoteState(
   }
 }
 
-export const BlockQuoteButton = React.forwardRef<
+export const BlockquoteButton = React.forwardRef<
   HTMLButtonElement,
-  BlockQuoteButtonProps
+  BlockquoteButtonProps
 >(
   (
     {
@@ -198,6 +198,6 @@ export const BlockQuoteButton = React.forwardRef<
   }
 )
 
-BlockQuoteButton.displayName = "BlockQuoteButton"
+BlockquoteButton.displayName = "BlockquoteButton"
 
-export default BlockQuoteButton
+export default BlockquoteButton
