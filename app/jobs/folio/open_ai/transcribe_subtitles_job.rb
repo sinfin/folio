@@ -5,10 +5,19 @@ class Folio::OpenAi::TranscribeSubtitlesJob < Folio::ApplicationJob
 
   queue_as :default
 
-  def perform(video_file, lang:)
+  def perform(video_file)
     raise "only video files can be transcribed" unless video_file.is_a?(Folio::File::Video)
 
     begin
+      # Mark transcription as started in video metadata
+      mark_transcription_started!(video_file)
+
+      # TODO: Implement proper language detection similar to ElevenLabs job
+      # For now, hardcoding Czech language until we add OpenAI language detection
+      lang = "cs"
+      
+      subtitle = video_file.subtitle_for!(lang)
+      audio_tempfile = nil
       # compress audio into a small, speech-optimized .ogg file using the Opus codec
       audio_tempfile = Tempfile.new(["audio", ".ogg"], binmode: true)
       extract_and_compress_audio(video_file.file.remote_url, audio_tempfile.path)
@@ -17,17 +26,36 @@ class Folio::OpenAi::TranscribeSubtitlesJob < Folio::ApplicationJob
       subtitles = whisper_api_request(audio_tempfile, lang)
 
       # save subtitles without VTT header for easier editing
-      video_file.set_subtitles_text_for(lang, subtitles.delete_prefix("WEBVTT\n\n"))
-      save_subtitles!(video_file)
+      vtt_content = subtitles.delete_prefix("WEBVTT\n\n")
+      subtitle.mark_transcription_ready!(vtt_content)
+
+      if subtitle.enabled?
+        Rails.logger.info "[OpenAi::TranscribeSubtitlesJob] Transcription completed successfully and enabled for video_file ID: #{video_file.id}"
+      else
+        Rails.logger.warn "[OpenAi::TranscribeSubtitlesJob] Transcription completed but subtitles are invalid and kept disabled for video_file ID: #{video_file.id}"
+      end
+      
+      # Mark transcription as completed
+      mark_transcription_completed!(video_file)
+
     rescue => e
-      video_file.set_subtitles_state_for(lang, "failed")
-      save_subtitles!(video_file)
+      # Mark transcription as failed in video metadata
+      mark_transcription_failed!(video_file, e.message)
+      
+      if defined?(subtitle) && subtitle
+        subtitle.mark_transcription_failed!(e.message)
+      end
 
       Raven.capture_exception(e) if defined?(Raven)
       Sentry.capture_exception(e) if defined?(Sentry)
     ensure
-      audio_tempfile.close
-      audio_tempfile.unlink
+      if audio_tempfile
+        audio_tempfile.close
+        audio_tempfile.unlink
+      end
+      
+      broadcast_file_update(video_file)
+      broadcast_subtitles_update(video_file)
     end
   end
 
@@ -79,5 +107,42 @@ class Folio::OpenAi::TranscribeSubtitlesJob < Folio::ApplicationJob
                            data: { id: video_file.id },
                          }.to_json,
                          user_ids: message_bus_user_ids
+    end
+
+    def mark_transcription_started!(video_file)
+      additional_data = video_file.additional_data || {}
+      additional_data['subtitle_transcription'] = {
+        'status' => 'processing',
+        'job_class' => self.class.name,
+        'started_at' => Time.current.iso8601,
+        'job_id' => job_id
+      }
+      video_file.update_column(:additional_data, additional_data)
+      broadcast_file_update(video_file)
+    end
+
+    def mark_transcription_completed!(video_file)
+      additional_data = video_file.additional_data || {}
+      if additional_data['subtitle_transcription']
+        # Remove the transcription status completely after successful completion
+        # The subtitle records themselves will show the current state
+        additional_data.delete('subtitle_transcription')
+        video_file.update_column(:additional_data, additional_data)
+        broadcast_file_update(video_file)
+      end
+    end
+
+    def mark_transcription_failed!(video_file, error_message)
+      additional_data = video_file.additional_data || {}
+      additional_data['subtitle_transcription'] = {
+        'status' => 'failed',
+        'job_class' => self.class.name,
+        'started_at' => additional_data.dig('subtitle_transcription', 'started_at') || Time.current.iso8601,
+        'failed_at' => Time.current.iso8601,
+        'error_message' => error_message,
+        'job_id' => job_id
+      }
+      video_file.update_column(:additional_data, additional_data)
+      broadcast_file_update(video_file)
     end
 end
