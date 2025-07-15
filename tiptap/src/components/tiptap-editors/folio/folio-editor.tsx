@@ -66,6 +66,8 @@ import { useMobile } from "@/hooks/use-mobile";
 import { useWindowSize } from "@/hooks/use-window-size";
 import { useCursorVisibility } from "@/hooks/use-cursor-visibility";
 
+import { CommandsPopup } from "@/components/tiptap-commands/ui/commands-popup"
+
 import translate from "@/lib/i18n";
 
 // --- 3rd party extensions ---
@@ -325,6 +327,8 @@ export function FolioEditor({
           <DragHandle
             editor={editor}
             onNodeChange={({ node, pos }) => {
+              return
+
               if (node) {
                 const handle = document.querySelector(".drag-handle");
 
@@ -355,6 +359,8 @@ export function FolioEditor({
             role="presentation"
             className="f-tiptap-editor__content f-tiptap-styles"
           />
+
+          <CommandsPopup editor={editor} />
         </div>
       </div>
     </EditorContext.Provider>

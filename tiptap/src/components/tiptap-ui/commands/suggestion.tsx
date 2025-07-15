@@ -3,6 +3,7 @@ import { ReactRenderer } from "@tiptap/react";
 import { Editor } from "@tiptap/core";
 
 import { CommandsList } from "./commands-list";
+import { COMMANDS_POPUP_OPEN_EVENT_NAME } from "@/components/tiptap-commands/ui/commands-popup"
 
 interface SuggestionProps {
   editor: Editor;
@@ -62,73 +63,26 @@ export const suggestion = {
 
   allowSpaces: false,
 
+  startOfLine: true,
+
   render: () => {
-    let component: ReactRenderer | null = null;
-
-    function repositionComponent(clientRect: DOMRect) {
-      if (!component || !component.element) {
-        return;
-      }
-
-      const virtualElement = {
-        getBoundingClientRect() {
-          return clientRect;
-        },
-      };
-
-      computePosition(virtualElement, component.element as HTMLElement, {
-        placement: "bottom-start",
-      }).then((pos) => {
-        Object.assign((component!.element as HTMLElement).style, {
-          left: `${pos.x}px`,
-          top: `${pos.y}px`,
-          position: pos.strategy === "fixed" ? "fixed" : "absolute",
-        });
-      });
-    }
-
     return {
       onStart: (props: SuggestionProps) => {
-        component = new ReactRenderer(CommandsList, {
-          props,
-          editor: props.editor,
-        });
+        console.log("suggestion onStart", props);
+        const clientRect = props.clientRect()
 
-        console.log("suggestion onStart", component);
-        document.body.appendChild(component.element);
-        repositionComponent(props.clientRect());
+        props.editor.chain().setMeta("hideDragHandle", true).setMeta("lockDragHandle", true).run()
+        props.editor.chain().focus().deleteRange(props.range).run();
+
+        const ref = document.elementFromPoint(clientRect.x, clientRect.y)
+        const coords = { x: clientRect.x, y: clientRect.y + (clientRect.height < 100 ? clientRect.height : 0)  };
+
+        window.dispatchEvent(new CustomEvent(COMMANDS_POPUP_OPEN_EVENT_NAME, { detail: { coords, ref } }));
       },
 
-      onUpdate(props: SuggestionProps) {
-        console.log("suggestion onUpdate", component);
-        component?.updateProps(props);
-        repositionComponent(props.clientRect());
-      },
-
-      onKeyDown(props: SuggestionProps) {
-        console.log("suggestion onKeyDown", component);
-        if (props.event.key === "Escape") {
-          if (component?.element) {
-            document.body.removeChild(component.element);
-            component.destroy();
-          }
-
-          return true;
-        }
-
-        return (
-          component?.ref as { onKeyDown: (props: SuggestionProps) => boolean }
-        )?.onKeyDown(props);
-      },
-
-      onExit() {
-        console.log("suggestion onExit", component);
-        if (!component) return;
-
-        if (component.element && document.body.contains(component.element)) {
-          document.body.removeChild(component.element);
-        }
-        component.destroy();
+      onExit(props: SuggestionProps) {
+        props.editor.chain().setMeta("hideDragHandle", false).setMeta("lockDragHandle", false).run()
+        console.log("suggestion onExit");
       },
     };
   },

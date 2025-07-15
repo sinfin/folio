@@ -29,6 +29,7 @@ export const CommandsExtension = Extension.create({
     return [
       Suggestion({
         editor: this.editor,
+        foo: "bar",
         ...this.options.suggestion,
       }),
     ];
