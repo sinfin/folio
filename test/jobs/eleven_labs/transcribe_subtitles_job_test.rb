@@ -10,7 +10,7 @@ class Folio::ElevenLabs::TranscribeSubtitlesJobTest < ActiveJob::TestCase
 
     assert_nil video_file.subtitles_cs_text
 
-    job = Folio::ElevenLabs::TranscribeSubtitlesJob.new(video_file, lang: "cs")
+    job = Folio::ElevenLabs::TranscribeSubtitlesJob.new(video_file)
     def job.elevenlabs_speech_to_text_request(_video_url)
       {
         "language_code" => "cs",
@@ -63,7 +63,7 @@ class Folio::ElevenLabs::TranscribeSubtitlesJobTest < ActiveJob::TestCase
     video_file.file = Folio::Engine.root.join("test/fixtures/folio/blank.mp4")
     video_file.save
 
-    job = Folio::ElevenLabs::TranscribeSubtitlesJob.new(video_file, lang: "cs")
+    job = Folio::ElevenLabs::TranscribeSubtitlesJob.new(video_file)
     def job.elevenlabs_speech_to_text_request(_video_url)
       {
         "language_code" => "cs",
@@ -90,16 +90,14 @@ class Folio::ElevenLabs::TranscribeSubtitlesJobTest < ActiveJob::TestCase
     video_file.file = Folio::Engine.root.join("test/fixtures/folio/blank.mp4")
     video_file.save
 
-    job = Folio::ElevenLabs::TranscribeSubtitlesJob.new(video_file, lang: "cs")
+    job = Folio::ElevenLabs::TranscribeSubtitlesJob.new(video_file)
     def job.elevenlabs_speech_to_text_request(_video_url)
       raise "ElevenLabs API error: 400 / Invalid request"
     end
 
-    exception = assert_raises(RuntimeError) do
+    assert_raises(RuntimeError, "ElevenLabs API error: 400 / Invalid request") do
       job.perform_now
     end
-
-    assert_equal "ElevenLabs API error: 400 / Invalid request", exception.message
 
     assert_equal "failed", video_file.get_subtitles_state_for("cs")
   end
@@ -114,14 +112,12 @@ class Folio::ElevenLabs::TranscribeSubtitlesJobTest < ActiveJob::TestCase
       Folio::ElevenLabs::TranscribeSubtitlesJob::MAX_FILE_SIZE_BYTES + 1
     end
 
-    job = Folio::ElevenLabs::TranscribeSubtitlesJob.new(video_file, lang: "cs")
+    job = Folio::ElevenLabs::TranscribeSubtitlesJob.new(video_file)
 
-    exception = assert_raises(RuntimeError) do
+    assert_raises(RuntimeError, /File size .* exceeds ElevenLabs limit/) do
       job.perform_now
     end
 
-    assert_match(/File size .* exceeds ElevenLabs limit/, exception.message)
-
     assert_equal "failed", video_file.get_subtitles_state_for("cs")
   end
-end
+end 

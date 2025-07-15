@@ -10,7 +10,7 @@ class Folio::OpenAi::TranscribeSubtitlesJobTest < ActiveJob::TestCase
 
     assert_nil video_file.subtitles_cs_text
 
-    job = Folio::OpenAi::TranscribeSubtitlesJob.new(video_file, lang: "cs")
+    job = Folio::OpenAi::TranscribeSubtitlesJob.new(video_file)
     def job.extract_and_compress_audio(_video_file_path, _audio_file_path)
       true
     end
@@ -21,4 +21,4 @@ class Folio::OpenAi::TranscribeSubtitlesJobTest < ActiveJob::TestCase
 
     assert_equal video_file.subtitles_cs_text, "00:00:00.000 --> 00:00:03.000\nTest"
   end
-end
+end 
