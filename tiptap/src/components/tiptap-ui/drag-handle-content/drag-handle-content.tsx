@@ -180,9 +180,9 @@ const editFolioTiptapNode = (
   editor: Editor,
   targetNode: TargetNodeInfo,
 ): boolean => {
-  const btn = targetNode.resultElement.querySelector(
+  const btn = targetNode.resultElement?.querySelector(
     ".f-tiptap-node__hover-controls-edit-button",
-  );
+  ) as HTMLButtonElement;
 
   if (btn) {
     btn.click();
@@ -299,35 +299,40 @@ export function findElementNextToCoords(options: FindElementNextToCoords) {
   };
 }
 
-const makeButtonOnClick = (editor, option, setOpenedDropdown) => (e) => {
-  const rect = (e.target as HTMLElement)
-    .closest(".tiptap-dropdown-menu")!
-    .getBoundingClientRect();
+const makeButtonOnClick =
+  (editor: Editor, option: any, setOpenedDropdown: any) => (e: any) => {
+    const rect = (e.target as HTMLElement)
+      .closest(".tiptap-dropdown-menu")!
+      .getBoundingClientRect();
 
-  const nodeToUse = findElementNextToCoords({
-    x: rect.left,
-    y: rect.top,
-    direction: "right",
-    editor,
-  });
+    const nodeToUse = findElementNextToCoords({
+      x: rect.left,
+      y: rect.top,
+      direction: "right",
+      editor,
+    });
 
-  if (nodeToUse && nodeToUse.resultNode && nodeToUse.pos !== null) {
-    const success = option.command(editor, nodeToUse as TargetNodeInfo);
+    if (nodeToUse && nodeToUse.resultNode && nodeToUse.pos !== null) {
+      const success = option.command(editor, nodeToUse as TargetNodeInfo);
 
-    if (success) {
+      if (success) {
+        setOpenedDropdown(null);
+      }
+    } else {
       setOpenedDropdown(null);
     }
-  } else {
-    setOpenedDropdown(null);
-  }
-};
+  };
 
 export interface DragHandleContentProps {
   /**
    * The TipTap editor instance.
    */
   editor: Editor | null;
-  selectedNodeData: string | null;
+  selectedNodeData: {
+    type: string;
+    x: number;
+    y: number;
+  } | null;
 }
 
 export function DragHandleContent({
@@ -341,7 +346,7 @@ export function DragHandleContent({
   }
 
   const wrapRef = React.useRef<HTMLDivElement>(null);
-  const [nodeHeightPx, setNodeHeightPx] = React.useState(null);
+  const [nodeHeightPx, setNodeHeightPx] = React.useState<string | null>(null);
 
   React.useEffect(() => {
     if (!wrapRef || !wrapRef.current || !editor) return;
@@ -388,7 +393,7 @@ export function DragHandleContent({
   return (
     <div
       className="f-tiptap__drag-handle-content"
-      style={{ minHeight: nodeHeightPx }}
+      style={{ minHeight: nodeHeightPx || undefined }}
       ref={wrapRef}
     >
       <Button

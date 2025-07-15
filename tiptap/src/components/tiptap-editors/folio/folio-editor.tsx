@@ -78,8 +78,8 @@ const TRANSLATIONS = {
   },
   en: {
     commandPlaceholder: 'Press "/" for commands',
-  }
-}
+  },
+};
 
 const MainToolbarContent = ({
   onHighlighterClick,
@@ -228,7 +228,7 @@ export function FolioEditor({
       TextAlign.configure({ types: ["heading", "paragraph"] }),
       Placeholder.configure({
         // Use a placeholder:
-        placeholder: translate(TRANSLATIONS, "commandPlaceholder")
+        placeholder: translate(TRANSLATIONS, "commandPlaceholder"),
       }),
       ...(blockEditor ? [TaskList] : []),
       ...(blockEditor ? [TaskItem.configure({ nested: true })] : []),
@@ -282,7 +282,11 @@ export function FolioEditor({
     };
   }, []);
 
-  const [selectedNodeData, setSelectedNodeData] = React.useState(null)
+  const [selectedNodeData, setSelectedNodeData] = React.useState<{
+    type: string;
+    x: number;
+    y: number;
+  } | null>(null);
 
   return (
     <EditorContext.Provider value={{ editor }}>
@@ -322,25 +326,28 @@ export function FolioEditor({
             editor={editor}
             onNodeChange={({ node, pos }) => {
               if (node) {
-                const handle = document.querySelector('.drag-handle')
+                const handle = document.querySelector(".drag-handle");
 
                 if (handle) {
-                  const rect = handle.getBoundingClientRect()
+                  const rect = handle.getBoundingClientRect();
 
                   setSelectedNodeData({
                     type: node.type.name,
                     x: rect.x,
                     y: rect.y,
-                  })
+                  });
 
-                  return
+                  return;
                 }
               }
 
-              setSelectedNodeData(null)
+              setSelectedNodeData(null);
             }}
           >
-            <DragHandleContent editor={editor} selectedNodeData={selectedNodeData} />
+            <DragHandleContent
+              editor={editor}
+              selectedNodeData={selectedNodeData}
+            />
           </DragHandle>
 
           <EditorContent

@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React from "react";
 
 interface CommandItem {
   title: string;
+  command?: (params: any) => void;
   [key: string]: any;
 }
 
@@ -10,16 +11,23 @@ interface CommandsListProps {
   command: (item: CommandItem) => void;
 }
 
-export class CommandsList extends React.Component {
-  constructor() {
-    super();
+interface CommandsListState {
+  selectedIndex: number;
+}
+
+export class CommandsList extends React.Component<
+  CommandsListProps,
+  CommandsListState
+> {
+  constructor(props: CommandsListProps) {
+    super(props);
 
     this.state = {
       selectedIndex: 0,
     };
   }
 
-  onKeyDown({ event }) {
+  onKeyDown({ event }: { event: KeyboardEvent }) {
     if (event.key === "ArrowUp") {
       this.upHandler();
       return true;
@@ -38,23 +46,28 @@ export class CommandsList extends React.Component {
     return false;
   }
 
-  setSelectedIndex (selectedIndex) {
+  setSelectedIndex(selectedIndex: number) {
     this.setState({ selectedIndex });
   }
 
   upHandler() {
-    this.setSelectedIndex((this.state.selectedIndex + this.props.items.length - 1) % this.props.items.length);
+    this.setSelectedIndex(
+      (this.state.selectedIndex + this.props.items.length - 1) %
+        this.props.items.length,
+    );
   }
 
   downHandler() {
-    this.setSelectedIndex((this.state.selectedIndex + 1) % this.props.items.length)
+    this.setSelectedIndex(
+      (this.state.selectedIndex + 1) % this.props.items.length,
+    );
   }
 
   enterHandler() {
     this.selectItem(this.state.selectedIndex);
   }
 
-  selectItem(index) {
+  selectItem(index: number) {
     const item = this.props.items[index];
 
     if (item) {
@@ -62,20 +75,25 @@ export class CommandsList extends React.Component {
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(
+    prevProps: CommandsListProps,
+    _prevState: CommandsListState,
+  ) {
     if (prevProps.items.length !== this.props.items.length) {
       this.setState({ selectedIndex: 0 });
     }
   }
 
-  render () {
+  render() {
     return (
       <div className="dropdown-menu">
         {this.props.items.length > 0 ? (
-          this.props.items.map((item, index) => (
+          this.props.items.map((item: CommandItem, index: number) => (
             <button
               key={index}
-              className={index === this.state.selectedIndex ? "is-selected" : ""}
+              className={
+                index === this.state.selectedIndex ? "is-selected" : ""
+              }
               onClick={() => this.selectItem(index)}
             >
               {item.title}
@@ -87,6 +105,6 @@ export class CommandsList extends React.Component {
       </div>
     );
   }
-};
+}
 
 export default CommandsList;
