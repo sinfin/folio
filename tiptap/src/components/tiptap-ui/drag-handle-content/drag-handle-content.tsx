@@ -233,75 +233,44 @@ export type FindElementNextToCoords = {
 
 export function findElementNextToCoords(options: FindElementNextToCoords) {
   const { x, y, direction, editor } = options;
-  let targetElement: Element | null = null;
-  let targetNode: Node | null = null;
-  let documentPosition: number | null = null;
+  let targetElement: any = null;
+  let targetNode: any = null;
+  let documentPosition: any = null;
   let currentX = x;
 
   while (targetNode === null && currentX < window.innerWidth && currentX > 0) {
     const elementsAtPoint = document.elementsFromPoint(currentX, y);
-    const proseMirrorIndex = elementsAtPoint.findIndex((el) =>
-      el.classList.contains("ProseMirror"),
-    );
+    const proseMirrorIndex = elementsAtPoint.findIndex(el => el.classList.contains('ProseMirror'));
     const relevantElements = elementsAtPoint.slice(0, proseMirrorIndex);
-
-    // console.log({ currentX, y, direction, elementsAtPoint });
 
     if (relevantElements.length > 0) {
       const currentElement = relevantElements[0];
       targetElement = currentElement;
+      documentPosition = editor.view.posAtDOM(currentElement, 0);
 
-      // Find the root node at depth 1 (directly under doc)
-      let blockElement = currentElement;
-      while (blockElement && blockElement.parentElement) {
-        const pos = editor.view.posAtDOM(blockElement, 0);
-        if (pos >= 0) {
-          const resolvedPos = editor.state.doc.resolve(pos);
-          // Only look for root nodes at depth 1
-          if (resolvedPos.depth >= 1) {
-            const rootNode = resolvedPos.node(1);
-            if (rootNode.isBlock && rootNode.type.name !== "doc") {
-              const nodePos = resolvedPos.before(1);
-              documentPosition = nodePos;
-              targetNode = rootNode;
-
-              break;
-            }
-          }
+      if (documentPosition >= 0) {
+        targetNode = editor.state.doc.nodeAt(Math.max(documentPosition - 1, 0));
+        if (targetNode === null || targetNode.isText) {
+          targetNode = editor.state.doc.nodeAt(Math.max(documentPosition - 1, 0));
         }
-        if (targetNode) break;
-        blockElement = blockElement.parentElement;
-      }
-
-      // Fallback to original logic if no block node found
-      if (!targetNode && documentPosition === null) {
-        documentPosition = editor.view.posAtDOM(currentElement, 0);
-        if (documentPosition >= 0) {
-          targetNode = editor.state.doc.nodeAt(documentPosition);
+        if (!targetNode) {
+          targetNode = editor.state.doc.nodeAt(Math.max(documentPosition, 0));
         }
+        break;
       }
-
-      if (targetNode) break;
     }
 
-    if (direction === "left") {
+    if (direction === 'left') {
       currentX -= 1;
     } else {
       currentX += 1;
     }
   }
 
-  console.log(
-    `findElementNextToCoords: Found element at (${currentX}, ${y})`,
-    targetElement,
-    targetNode,
-    documentPosition,
-  );
-
   return {
     resultElement: targetElement,
     resultNode: targetNode,
-    pos: documentPosition !== null ? documentPosition : null,
+    pos: documentPosition !== null ? documentPosition : null
   };
 }
 
