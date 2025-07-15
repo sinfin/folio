@@ -82,6 +82,7 @@ Gem::Specification.new do |s|
   # s.add_dependency "cells-rails", "~> 0.1.5" # need to be in Gemfile
   s.add_dependency "slim-rails" # need to be in Gemfile
   s.add_dependency "slim"
+  s.add_dependency "sys-filesystem"
   s.add_dependency "traco"
   s.add_dependency "turbolinks"
   s.add_dependency "uglifier"
