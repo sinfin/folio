@@ -146,6 +146,7 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
           aria-label="Edit"
           tooltip="Edit"
           onClick={handleEditClick}
+          className="f-tiptap-node__hover-controls-edit-button"
         >
           <EditIcon className="tiptap-button-icon" />
         </Button>
@@ -157,6 +158,7 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
           aria-label="Remove"
           tooltip="Remove"
           onClick={handleRemoveClick}
+          className="f-tiptap-node__hover-controls-remove-button"
         >
           <XIcon className="tiptap-button-icon" />
         </Button>

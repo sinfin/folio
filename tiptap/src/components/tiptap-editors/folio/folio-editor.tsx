@@ -319,6 +319,8 @@ export function FolioEditor({
     };
   }, []);
 
+  const [selectedNodeData, setSelectedNodeData] = React.useState(null)
+
   return (
     <EditorContext.Provider value={{ editor }}>
       <div
@@ -353,8 +355,28 @@ export function FolioEditor({
         </Toolbar>
 
         <div className="f-tiptap-editor__content-wrap">
-          <DragHandle editor={editor}>
-            <DragHandleContent editor={editor} />
+          <DragHandle
+            editor={editor}
+            onNodeChange={({ node, pos }) => {
+              if (node) {
+                const handle = document.querySelector('.drag-handle')
+
+                if (handle) {
+                  const rect = handle.getBoundingClientRect()
+
+                  setSelectedNodeData({
+                    type: node.type.name,
+                    x: rect.x,
+                    y: rect.y,
+                  })
+                  return
+                }
+              }
+
+              setSelectedNodeData(null)
+            }}
+          >
+            <DragHandleContent editor={editor} selectedNodeData={selectedNodeData} />
           </DragHandle>
 
           <EditorContent

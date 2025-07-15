@@ -7,6 +7,7 @@ import {
   ArrowUpToLine,
   ArrowDownToLine,
   X,
+  SquarePen,
 } from "lucide-react";
 import type { Editor } from "@tiptap/react";
 import type { Node } from "@tiptap/pm/model";
@@ -25,13 +26,9 @@ import translate from "@/lib/i18n";
 
 import "./drag-handle-content.scss";
 
-const handlePlusClick = () => {
-  console.log("Plus button clicked");
-};
+const handlePlusClick = () => {};
 
-const handleDragClick = () => {
-  console.log("Drag button clicked");
-};
+const handleDragClick = () => {};
 
 type MoveDirection = "up" | "down" | "top" | "bottom";
 
@@ -179,6 +176,22 @@ const removeNode = (editor: Editor, targetNode: TargetNodeInfo): boolean => {
   }
 };
 
+const editFolioTiptapNode = (
+  editor: Editor,
+  targetNode: TargetNodeInfo,
+): boolean => {
+  const btn = targetNode.resultElement.querySelector(
+    ".f-tiptap-node__hover-controls-edit-button",
+  );
+
+  if (btn) {
+    btn.click();
+    return true;
+  }
+
+  return false;
+};
+
 const TRANSLATIONS = {
   cs: {
     moveUp: "Přesunout nahoru",
@@ -186,6 +199,7 @@ const TRANSLATIONS = {
     moveToTop: "Nahoru",
     moveToBottom: "Dolu",
     removeNode: "Odstranit",
+    editFolioTiptapNode: "Upravit",
   },
   en: {
     moveUp: "Move up",
@@ -193,6 +207,7 @@ const TRANSLATIONS = {
     moveToTop: "Move to top",
     moveToBottom: "Move to bottom",
     removeNode: "Remove",
+    editFolioTiptapNode: "Edit",
   },
 };
 
@@ -224,6 +239,12 @@ const DRAG_HANDLE_DROPDOWN_OPTIONS = [
   },
 ];
 
+const DRAG_HANDLE_FOLIO_TIPTAP_NODE_OPTION = {
+  type: "editFolioTiptapNode",
+  icon: SquarePen,
+  command: editFolioTiptapNode,
+};
+
 export type FindElementNextToCoords = {
   x: number;
   y: number;
@@ -240,7 +261,9 @@ export function findElementNextToCoords(options: FindElementNextToCoords) {
 
   while (targetNode === null && currentX < window.innerWidth && currentX > 0) {
     const elementsAtPoint = document.elementsFromPoint(currentX, y);
-    const proseMirrorIndex = elementsAtPoint.findIndex(el => el.classList.contains('ProseMirror'));
+    const proseMirrorIndex = elementsAtPoint.findIndex((el) =>
+      el.classList.contains("ProseMirror"),
+    );
     const relevantElements = elementsAtPoint.slice(0, proseMirrorIndex);
 
     if (relevantElements.length > 0) {
@@ -251,7 +274,9 @@ export function findElementNextToCoords(options: FindElementNextToCoords) {
       if (documentPosition >= 0) {
         targetNode = editor.state.doc.nodeAt(Math.max(documentPosition - 1, 0));
         if (targetNode === null || targetNode.isText) {
-          targetNode = editor.state.doc.nodeAt(Math.max(documentPosition - 1, 0));
+          targetNode = editor.state.doc.nodeAt(
+            Math.max(documentPosition - 1, 0),
+          );
         }
         if (!targetNode) {
           targetNode = editor.state.doc.nodeAt(Math.max(documentPosition, 0));
@@ -260,7 +285,7 @@ export function findElementNextToCoords(options: FindElementNextToCoords) {
       }
     }
 
-    if (direction === 'left') {
+    if (direction === "left") {
       currentX -= 1;
     } else {
       currentX += 1;
@@ -270,26 +295,102 @@ export function findElementNextToCoords(options: FindElementNextToCoords) {
   return {
     resultElement: targetElement,
     resultNode: targetNode,
-    pos: documentPosition !== null ? documentPosition : null
+    pos: documentPosition !== null ? documentPosition : null,
   };
 }
+
+const makeButtonOnClick = (editor, option, setOpenedDropdown) => (e) => {
+  const rect = (e.target as HTMLElement)
+    .closest(".tiptap-dropdown-menu")!
+    .getBoundingClientRect();
+
+  const nodeToUse = findElementNextToCoords({
+    x: rect.left,
+    y: rect.top,
+    direction: "right",
+    editor,
+  });
+
+  if (nodeToUse && nodeToUse.resultNode && nodeToUse.pos !== null) {
+    const success = option.command(editor, nodeToUse as TargetNodeInfo);
+
+    if (success) {
+      setOpenedDropdown(null);
+    }
+  } else {
+    setOpenedDropdown(null);
+  }
+};
 
 export interface DragHandleContentProps {
   /**
    * The TipTap editor instance.
    */
   editor: Editor | null;
+  selectedNodeData: string | null;
 }
 
-export function DragHandleContent({ editor }: DragHandleContentProps) {
+export function DragHandleContent({
+  editor,
+  selectedNodeData,
+}: DragHandleContentProps) {
   const [openedDropdown, setOpenedDropdown] = useState<string | null>(null);
 
   if (!editor) {
     return null;
   }
 
+  const wrapRef = React.useRef<HTMLDivElement>(null);
+  const [nodeHeightPx, setNodeHeightPx] = React.useState(null);
+
+  React.useEffect(() => {
+    if (!wrapRef || !wrapRef.current || !editor) return;
+    if (!selectedNodeData || !selectedNodeData.y) return;
+
+    // y changed -> other node -> close
+    if (openedDropdown) {
+      setOpenedDropdown(null);
+    }
+
+    const nodeToUse = findElementNextToCoords({
+      x: selectedNodeData.x,
+      y: selectedNodeData.y,
+      direction: "right",
+      editor,
+    });
+
+    if (nodeToUse && nodeToUse.resultElement) {
+      const nodeHeight = nodeToUse.resultElement.getBoundingClientRect().height;
+      return setNodeHeightPx(`${nodeHeight}px`);
+    }
+
+    return setNodeHeightPx(null);
+  }, [
+    selectedNodeData && selectedNodeData.y,
+    setNodeHeightPx,
+    editor,
+    wrapRef && wrapRef.current,
+  ]);
+
+  const dragHandleButtonOptions = [
+    ...(selectedNodeData && selectedNodeData.type === "folioTiptapNode"
+      ? [
+          ...DRAG_HANDLE_DROPDOWN_OPTIONS.slice(
+            0,
+            DRAG_HANDLE_DROPDOWN_OPTIONS.length - 1,
+          ),
+          DRAG_HANDLE_FOLIO_TIPTAP_NODE_OPTION,
+          DRAG_HANDLE_DROPDOWN_OPTIONS[DRAG_HANDLE_DROPDOWN_OPTIONS.length - 1],
+        ]
+      : DRAG_HANDLE_DROPDOWN_OPTIONS),
+  ];
+
   return (
-    <div className="f-tiptap__drag-handle-content">
+    <div
+      className="f-tiptap__drag-handle-content"
+      style={{ minHeight: nodeHeightPx }}
+      ref={wrapRef}
+    >
       <Button
         type="button"
         data-style="ghost"
@@ -324,7 +425,7 @@ export function DragHandleContent({ editor }: DragHandleContentProps) {
 
         <DropdownMenuContent>
           <DropdownMenuGroup>
-            {DRAG_HANDLE_DROPDOWN_OPTIONS.map((option) => (
+            {dragHandleButtonOptions.map((option) => (
               <DropdownMenuItem key={option.type} asChild>
                 <Button
                   type="button"
@@ -333,35 +434,7 @@ export function DragHandleContent({ editor }: DragHandleContentProps) {
                   tabIndex={-1}
                   aria-label={translate(TRANSLATIONS, option.type)}
                   className="f-tiptap__drag-handle-dropdown-button"
-                  onClick={(e) => {
-                    const rect = (e.target as HTMLElement)
-                      .closest(".tiptap-dropdown-menu")!
-                      .getBoundingClientRect();
-
-                    const nodeToUse = findElementNextToCoords({
-                      x: rect.left,
-                      y: rect.top,
-                      direction: "right",
-                      editor,
-                    });
-
-                    if (
-                      nodeToUse &&
-                      nodeToUse.resultNode &&
-                      nodeToUse.pos !== null
-                    ) {
-                      const success = option.command(
-                        editor,
-                        nodeToUse as TargetNodeInfo,
-                      );
-
-                      if (success) {
-                        setOpenedDropdown(null);
-                      }
-                    } else {
-                      setOpenedDropdown(null);
-                    }
-                  }}
+                  onClick={makeButtonOnClick(editor, option, setOpenedDropdown)}
                 >
                   {createElement(option.icon, {
                     className: "tiptap-button-icon",
