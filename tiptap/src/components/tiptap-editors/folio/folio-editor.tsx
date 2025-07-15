@@ -16,7 +16,7 @@ import { Typography } from "@tiptap/extension-typography";
 import { Highlight } from "@tiptap/extension-highlight";
 // import { Subscript } from "@tiptap/extension-subscript";
 // import { Superscript } from "@tiptap/extension-superscript";
-import { Selection } from "@tiptap/extensions";
+import { Selection, Placeholder } from "@tiptap/extensions";
 import DragHandle from "@tiptap/extension-drag-handle-react";
 
 // --- UI Primitives ---
@@ -37,6 +37,7 @@ import "@/components/tiptap-node/paragraph-node/paragraph-node.scss";
 // --- Tiptap UI ---
 import { HeadingDropdownMenu } from "@/components/tiptap-ui/heading-dropdown-menu";
 import { FolioTiptapNodeButton } from "@/components/tiptap-ui/folio-tiptap-node-button";
+import { CommandsExtension, suggestion } from "@/components/tiptap-ui/commands";
 import { ListDropdownMenu } from "@/components/tiptap-ui/list-dropdown-menu";
 import { BlockquoteButton } from "@/components/tiptap-ui/blockquote-button";
 import { CodeBlockButton } from "@/components/tiptap-ui/code-block-button";
@@ -65,9 +66,20 @@ import { useMobile } from "@/hooks/use-mobile";
 import { useWindowSize } from "@/hooks/use-window-size";
 import { useCursorVisibility } from "@/hooks/use-cursor-visibility";
 
+import translate from "@/lib/i18n";
+
 // --- 3rd party extensions ---
 // import GlobalDragHandle from "tiptap-extension-global-drag-handle";
 // import AutoJoiner from "tiptap-extension-auto-joiner";
+
+const TRANSLATIONS = {
+  cs: {
+    commandPlaceholder: 'Stiskněte "/" pro příkazy',
+  },
+  en: {
+    commandPlaceholder: 'Press "/" for commands',
+  }
+}
 
 const MainToolbarContent = ({
   onHighlighterClick,
@@ -202,7 +214,7 @@ export function FolioEditor({
     onCreate,
     content: defaultContent,
     immediatelyRender: true,
-    shouldRerenderOnTransaction: true,
+    shouldRerenderOnTransaction: false,
     editorProps: {
       attributes: {
         autocomplete: "off",
@@ -214,13 +226,10 @@ export function FolioEditor({
     extensions: [
       StarterKit,
       TextAlign.configure({ types: ["heading", "paragraph"] }),
-      // Placeholder.configure({
-      //   // Use a placeholder:
-      //   placeholder:
-      //     document.documentElement.lang === "cs"
-      //       ? 'Stiskněte "/" pro příkazy'
-      //       : 'Press "/" for commands',
-      // }),
+      Placeholder.configure({
+        // Use a placeholder:
+        placeholder: translate(TRANSLATIONS, "commandPlaceholder")
+      }),
       ...(blockEditor ? [TaskList] : []),
       ...(blockEditor ? [TaskItem.configure({ nested: true })] : []),
       Highlight.configure({ multicolor: true }),
@@ -231,56 +240,10 @@ export function FolioEditor({
 
       Selection,
       ...(blockEditor ? [FolioTiptapNodeExtension] : []),
-      // GlobalDragHandle.configure({
-      //   dragHandleWidth: 20, // default
 
-      //   // The scrollTreshold specifies how close the user must drag an element to the edge of the lower/upper screen for automatic
-      //   // scrolling to take place. For example, scrollTreshold = 100 means that scrolling starts automatically when the user drags an
-      //   // element to a position that is max. 99px away from the edge of the screen
-      //   // You can set this to 0 to prevent auto scrolling caused by this extension
-      //   scrollTreshold: 100, // default
-      // }),
-      // AutoJoiner.configure({
-      //   elementsToJoin: ["bulletList", "orderedList"], // default
-      // }),
-      // SlashCommands.configure({
-      //   commands: [
-      //     {
-      //       title: "Heading 1",
-      //       command: ({ editor, range }) => {
-      //         editor
-      //           .chain()
-      //           .focus()
-      //           .deleteRange(range)
-      //           .setNode("heading", { level: 1 })
-      //           .run();
-      //       },
-      //     },
-      //     {
-      //       title: "Heading 2",
-      //       command: ({ editor, range }) => {
-      //         editor
-      //           .chain()
-      //           .focus()
-      //           .deleteRange(range)
-      //           .setNode("heading", { level: 2 })
-      //           .run();
-      //       },
-      //     },
-      //     {
-      //       title: "Bold",
-      //       command: ({ editor, range }) => {
-      //         editor.chain().focus().deleteRange(range).setMark("bold").run();
-      //       },
-      //     },
-      //     {
-      //       title: "Italic",
-      //       command: ({ editor, range }) => {
-      //         editor.chain().focus().deleteRange(range).setMark("italic").run();
-      //       },
-      //     },
-      //   ],
-      // }),
+      CommandsExtension.configure({
+        suggestion,
+      }),
     ],
   });
 
@@ -369,6 +332,7 @@ export function FolioEditor({
                     x: rect.x,
                     y: rect.y,
                   })
+
                   return
                 }
               }
