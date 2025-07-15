@@ -19,8 +19,11 @@ class Folio::CraMediaCloud::CheckProgressJob < Folio::ApplicationJob
     if media_file.full_media_processed?
       media_file.processing_done!
       broadcast_file_update(media_file)
+    elsif media_file.changed?
+      media_file.save!
+      broadcast_file_update(media_file)
+      check_again_later
     else
-      media_file.save! if media_file.changed?
       check_again_later
     end
   end
@@ -32,19 +35,28 @@ class Folio::CraMediaCloud::CheckProgressJob < Folio::ApplicationJob
       elsif media_file.remote_reference_id.present?
         api.get_jobs(ref_id: media_file.remote_reference_id).last
       else
-        raise "Missing remote_key and remote_reference_id"
+        # No remote references exist, create a new upload job
+        Rails.logger.info "[CraMediaCloud::CheckProgressJob] No remote_id or remote_reference_id found for #{media_file.class.name} ID #{media_file.id}. Creating new CreateMediaJob."
+        Folio::CraMediaCloud::CreateMediaJob.perform_later(media_file)
+        return nil  # Return nil to stop processing this check job
       end
     end
 
     def update_remote_service_data(response)
       media_file.remote_services_data["remote_id"] ||= response["id"]
-
-      if response["status"] == "DONE"
+      
+      case response["status"]
+      when "DONE"
         process_output_hash(response["output"])
 
         media_file.remote_services_data.merge!(
           "output" => response["output"],
-          "processing_state" => "full_media_processed"
+          "processing_state" => "full_media_processed",
+        )
+      when "PROCESSING"
+        media_file.remote_services_data.merge!(
+          "processing_state" => "full_media_processing",
+          "progress_percentage" => (response["progress"] ? response["progress"] * 100.0 : 0).round(1),
         )
       end
     end
@@ -87,7 +99,7 @@ class Folio::CraMediaCloud::CheckProgressJob < Folio::ApplicationJob
     end
 
     def check_again_later
-      Folio::CraMediaCloud::CheckProgressJob.set(wait: 30.seconds).perform_later(media_file)
+      Folio::CraMediaCloud::CheckProgressJob.set(wait: 15.seconds).perform_later(media_file)
     end
 
     def api

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require "net/sftp"
+require "tempfile"
+require "sys/filesystem"
 
 module Folio
   module CraMediaCloud
@@ -8,27 +10,65 @@ module Folio
       DEFAULT_PROFILE_GROUP = "VoD"
 
       def upload_file(file, priority: "regular", profile_group: nil)
-        s3_object = download_s3_object(file)
-
         ref_id = [file.id, Time.current.to_i].join("-")
-        md5 = s3_object.headers["Etag"].delete_prefix('"').delete_suffix('"')
+        Rails.logger.info("[CraMediaCloud::Encoder] Starting upload for file ID: #{file.id}, ref_id: #{ref_id}, priority: #{priority}")
+
+        # Get metadata without downloading the file
+        s3_metadata = get_s3_metadata(file)
+        md5 = extract_etag(s3_metadata).delete_prefix('"').delete_suffix('"')
+
         xml_manifest = build_ingest_manifest(file, md5:, ref_id:, profile_group:)
 
         folder_path = "/ingest/#{priority}"
         file_path = "#{folder_path}/#{file.file_name}"
         xml_manifest_path = "#{folder_path}/#{file.file_name.split(".").first}_manifest.xml"
 
-        sftp_client do |sftp|
-          start = Time.current
-          Rails.logger.info("Folio::CraMediaCloud::Encoder: Starting SFTP upload for file ##{file.id}")
+        # Log S3 object key
+        s3_datastore = Dragonfly.app.datastore
+        s3_object_key = [s3_datastore.root_path, file.file_uid].join("/")
+        Rails.logger.info("[CraMediaCloud::Encoder] S3 object key: #{s3_object_key}")
 
-          sftp.upload!(StringIO.new(s3_object.body), file_path)
-          Rails.logger.info("Folio::CraMediaCloud::Encoder: Uploaded file to #{file_path}")
+        # Check available disk space before downloading
+        stat = Sys::Filesystem.stat(Dir.tmpdir)
+        available_bytes = stat.block_size * stat.blocks_available
+        Rails.logger.info("[CraMediaCloud::Encoder] Available disk space in tmp: #{available_bytes} bytes, file size: #{file.file_size} bytes")
+        if available_bytes < file.file_size.to_i * 2 # *2 for safety (download + temp operations)
+          Rails.logger.error("[CraMediaCloud::Encoder] Not enough disk space to download file. Required: #{file.file_size * 2}, Available: #{available_bytes}")
+          raise "Not enough disk space to download file for encoding. Required: #{file.file_size * 2}, Available: #{available_bytes}"
+        end
 
-          sftp.upload!(StringIO.new(xml_manifest), xml_manifest_path)
-          Rails.logger.info("Folio::CraMediaCloud::Encoder: Uploaded XML manifest to #{xml_manifest_path}")
+        # Use temporary file approach for reliability
+        Tempfile.create(['cra_upload', '.tmp']) do |temp_file|
+          begin
+            Rails.logger.info("[CraMediaCloud::Encoder] Downloading from S3 to temp file: #{temp_file.path}")
+            # Download from S3 to temporary file
+            download_s3_to_temp_file(file, temp_file)
+            Rails.logger.info("[CraMediaCloud::Encoder] Download complete: #{temp_file.path}")
 
-          Rails.logger.info("Folio::CraMediaCloud::Encoder: Finished SFTP upload in #{(Time.current - start).round(2)} seconds")
+            # Ensure file is written and verify size
+            temp_file.flush
+            temp_file.close
+            actual_size = ::File.size(temp_file.path)
+            Rails.logger.info("[CraMediaCloud::Encoder] Temp file size: #{actual_size} bytes (expected: #{file.file_size})")
+
+            if actual_size != file.file_size
+              Rails.logger.error("[CraMediaCloud::Encoder] Downloaded file size mismatch: got #{actual_size}, expected #{file.file_size}")
+              raise "Downloaded file size mismatch: got #{actual_size}, expected #{file.file_size}"
+            end
+
+            # Upload temp file to SFTP
+            Rails.logger.info("[CraMediaCloud::Encoder] Uploading file to SFTP: #{file_path}")
+            sftp_client do |sftp|
+              sftp.upload!(temp_file.path, file_path)
+              Rails.logger.info("[CraMediaCloud::Encoder] File uploaded to SFTP: #{file_path}")
+              sftp.upload!(StringIO.new(xml_manifest), xml_manifest_path)
+              Rails.logger.info("[CraMediaCloud::Encoder] Manifest uploaded to SFTP: #{xml_manifest_path}")
+            end
+          rescue => e
+            Rails.logger.error("[CraMediaCloud::Encoder] Error during upload process: #{e.class}: #{e.message}\n#{e.backtrace.join("\n")}")
+            raise
+          end
+          # Temp file is automatically deleted when block exits
         end
 
         {
@@ -39,10 +79,35 @@ module Folio
       end
 
       private
-        def download_s3_object(file)
+
+        def get_s3_metadata(file)
           s3_datastore = Dragonfly.app.datastore
           s3_object_key = [s3_datastore.root_path, file.file_uid].join("/")
-          s3_datastore.storage.get_object(ENV["S3_BUCKET_NAME"], s3_object_key)
+          Rails.logger.info("[CraMediaCloud::Encoder] Fetching S3 metadata for key: #{s3_object_key}")
+          s3_datastore.storage.head_object(ENV["S3_BUCKET_NAME"], s3_object_key)
+        end
+
+        def extract_etag(response)
+          # Handle different response types (AWS SDK, Excon, etc.)
+          if response.respond_to?(:etag)
+            response.etag
+          elsif response.respond_to?(:headers)
+            response.headers['ETag'] || response.headers['etag'] || response.headers['Etag']
+          else
+            raise "Cannot extract ETag from response type: #{response.class}"
+          end
+        end
+
+        def download_s3_to_temp_file(file, temp_file)
+          s3_datastore = Dragonfly.app.datastore
+          s3_object_key = [s3_datastore.root_path, file.file_uid].join("/")
+          
+          # Get the S3 object with body
+          s3_response = s3_datastore.storage.get_object(ENV["S3_BUCKET_NAME"], s3_object_key)
+          
+          # Write the body to temp file
+          temp_file.binmode
+          temp_file.write(s3_response.body)
         end
 
         def build_ingest_manifest(file, md5:, ref_id:, profile_group:)
@@ -52,8 +117,8 @@ module Folio
           xml.vod_encoder_job do
             xml.input(type: "VIDEO",
                       file: file.file_name,
-                      size: file.file_size,
-                      md5:) do
+                      size: file.file_size.to_s,
+                      md5: md5) do
               xml.audioTrack(language: "cze", channels: "auto")
             end
             xml.profileGroup(profile_group || DEFAULT_PROFILE_GROUP)
