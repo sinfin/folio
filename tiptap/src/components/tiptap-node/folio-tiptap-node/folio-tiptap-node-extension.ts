@@ -17,6 +17,10 @@ export const FolioTiptapNodeExtension = Node.create<FolioTiptapNodeOptions>({
 
   atom: true,
 
+  code: true,
+
+  isolating: true,
+
   addAttributes() {
     return {
       version: {
@@ -32,14 +36,20 @@ export const FolioTiptapNodeExtension = Node.create<FolioTiptapNodeOptions>({
   },
 
   parseHTML() {
-    // return [{ tag: 'div[data-type="image-upload"]' }]
-    return [];
+    return [
+      {
+        tag: "div",
+        getAttrs: (node) => {
+          return JSON.parse(node.getAttribute("data-folio-tiptap-node-payload") || "{}");
+        },
+      },
+    ]
   },
 
   renderHTML({ HTMLAttributes }) {
     return [
       "div",
-      mergeAttributes({ "data-type": "folio-tiptap-node" }, HTMLAttributes),
+      mergeAttributes({ "data-folio-tiptap-node-payload": JSON.stringify(HTMLAttributes) }, HTMLAttributes),
     ];
   },
 
