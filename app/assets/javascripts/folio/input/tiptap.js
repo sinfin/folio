@@ -77,6 +77,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     const data = {
       type: 'f-input-tiptap:start',
       content,
+      lang: document.documentElement.lang || 'en',
       folioTiptapNodes: this.tiptapNodesJsonValue ? JSON.parse(this.tiptapNodesJsonValue) : [],
       windowWidth: this.windowWidth,
     }

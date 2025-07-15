@@ -6,10 +6,23 @@ import { EditIcon } from "@/components/tiptap-icons/edit-icon";
 import { XIcon } from "@/components/tiptap-icons/x-icon";
 import { FolioTiptapNodeExtension } from "./folio-tiptap-node-extension";
 
+import translate from "@/lib/i18n";
+
 import "./folio-tiptap-node.scss";
 
 let uniqueIdForNode = 0;
 const getUniqueIdForNode = () => uniqueIdForNode++;
+
+const TRANSLATIONS = {
+  cs: {
+    remove: "Odstranit",
+    edit: "Upravit",
+  },
+  en: {
+    remove: "Remove",
+    edit: "Edit",
+  },
+};
 
 interface StoredHtml {
   html: string;
@@ -143,8 +156,8 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
           type="button"
           role="button"
           tabIndex={-1}
-          aria-label="Edit"
-          tooltip="Edit"
+          aria-label={translate(TRANSLATIONS, "edit")}
+          tooltip={translate(TRANSLATIONS, "edit")}
           onClick={handleEditClick}
           className="f-tiptap-node__hover-controls-edit-button"
         >
@@ -155,8 +168,8 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
           type="button"
           role="button"
           tabIndex={-1}
-          aria-label="Remove"
-          tooltip="Remove"
+          aria-label={translate(TRANSLATIONS, "remove")}
+          tooltip={translate(TRANSLATIONS, "remove")}
           onClick={handleRemoveClick}
           className="f-tiptap-node__hover-controls-remove-button"
         >

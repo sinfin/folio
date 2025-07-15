@@ -94,6 +94,10 @@ window.addEventListener("message", (e) => {
         throw new Error("Node not found for Tiptap editor");
       }
 
+      if (e.data.lang) {
+        document.documentElement.lang = e.data.lang;
+      }
+
       if (e.data.stylesheetPath) {
         const link = document.createElement("link");
         link.rel = "stylesheet";
