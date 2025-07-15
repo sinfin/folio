@@ -6,11 +6,20 @@ cs:
   dragonfly:
     invalid_format: Nepodporovaný formát
   'false': Ne
+  activerecord:
+    attributes:
+      folio/site:
+        subtitle_languages: Jazyky titulků
+        subtitle_languages_string: Jazyky titulků
+        subtitle_auto_generation_enabled: Automatické generování titulků
   folio:
     nested_fields_component:
       add: Přidat
 
     root_breadcrumb: Úvodní stránka
+    file:
+      subtitle:
+        title: Titulky
     chart:
       js_load_error: Nepodařilo se načíst javascript pro tvorbu grafů.
     price:
@@ -57,6 +66,16 @@ cs:
     console:
         clone:
           cloned_title: "%{original_title} – duplikát %{date}"
+    video_subtitle:
+      status:
+        processing: "Generují se titulky..."
+        ready: "Titulky připraveny"
+      language:
+        cs: "Čeština"
+        en: "Angličtina"
+        de: "Němčina"
+        fr: "Francouzština"
+        es: "Španělština"
 
   head:
     description: ''
