@@ -35,9 +35,24 @@ class Folio::CraMediaCloud::CheckProgressJob < Folio::ApplicationJob
       elsif media_file.remote_reference_id.present?
         api.get_jobs(ref_id: media_file.remote_reference_id).last
       else
-        # No remote references exist, create a new upload job
-        Rails.logger.info "[CraMediaCloud::CheckProgressJob] No remote_id or remote_reference_id found for #{media_file.class.name} ID #{media_file.id}. Creating new CreateMediaJob."
-        Folio::CraMediaCloud::CreateMediaJob.perform_later(media_file)
+        # No remote references exist, create a new upload job (with deduplication)
+        if should_create_media_job?
+          Rails.logger.info "[CraMediaCloud::CheckProgressJob] No remote_id or remote_reference_id found for #{media_file.class.name} ID #{media_file.id}. Creating new CreateMediaJob."
+          
+          # Mark that we're creating a job to prevent duplicates
+          media_file.with_lock do
+            media_file.remote_services_data = (media_file.remote_services_data || {}).merge({
+              "service" => "cra_media_cloud",
+              "processing_state" => "creating_media_job",
+              "processing_step_started_at" => Time.current.iso8601
+            })
+            media_file.save!
+          end
+          
+          Folio::CraMediaCloud::CreateMediaJob.perform_later(media_file)
+        else
+          Rails.logger.info "[CraMediaCloud::CheckProgressJob] CreateMediaJob already scheduled or in progress for #{media_file.class.name} ID #{media_file.id}. Skipping."
+        end
         return nil  # Return nil to stop processing this check job
       end
     end
@@ -100,6 +115,57 @@ class Folio::CraMediaCloud::CheckProgressJob < Folio::ApplicationJob
 
     def check_again_later
       Folio::CraMediaCloud::CheckProgressJob.set(wait: 15.seconds).perform_later(media_file)
+    end
+
+    def should_create_media_job?
+      # Check if we already have a CreateMediaJob scheduled for this video
+      return false if create_media_job_scheduled?
+      
+      # Check if the video is already in a state where CreateMediaJob has been triggered
+      processing_state = media_file.remote_services_data&.dig("processing_state")
+      started_at = media_file.remote_services_data&.dig("processing_step_started_at")
+      
+      if processing_state == "creating_media_job"
+        # If it's been more than 5 minutes since we started creating the job, allow retry
+        if started_at && Time.parse(started_at) < 10.minutes.ago
+          Rails.logger.warn "[CraMediaCloud::CheckProgressJob] Video #{media_file.id} has been in creating_media_job state for >5 minutes, allowing retry"
+          return true
+        else
+          return false
+        end
+      end
+      
+      # Check if the video is already in processing state
+      return false if processing_state == "full_media_processing"
+      
+      # Allow retry for failed uploads after some time
+      if processing_state == "upload_failed"
+        if started_at && Time.parse(started_at) < 15.minutes.ago
+          Rails.logger.info "[CraMediaCloud::CheckProgressJob] Video #{media_file.id} upload failed >10 minutes ago, allowing retry"
+          return true
+        else
+          return false
+        end
+      end
+      
+      true
+    rescue => e
+      Rails.logger.error "[CraMediaCloud::CheckProgressJob] Error checking if CreateMediaJob should be created: #{e.message}"
+      false
+    end
+    
+    def create_media_job_scheduled?
+      # Check Sidekiq scheduled jobs
+      Sidekiq::ScheduledSet.new.any? do |job|
+        args = job.args.first
+        if args.is_a?(Hash) && args["job_class"] == "Folio::CraMediaCloud::CreateMediaJob"
+          global_id = args["arguments"].first["_aj_globalid"]
+          global_id.include?("Folio::File::Video") && global_id.split("/").last.to_i == media_file.id
+        end
+      end
+    rescue => e
+      Rails.logger.error "[CraMediaCloud::CheckProgressJob] Error checking scheduled CreateMediaJob: #{e.message}"
+      false
     end
 
     def api

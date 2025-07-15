@@ -119,6 +119,7 @@ class Folio::OpenAi::TranscribeSubtitlesJob < Folio::ApplicationJob
       }
       video_file.update_column(:additional_data, additional_data)
       broadcast_file_update(video_file)
+      broadcast_subtitles_update(video_file)
     end
 
     def mark_transcription_completed!(video_file)
@@ -129,6 +130,7 @@ class Folio::OpenAi::TranscribeSubtitlesJob < Folio::ApplicationJob
         additional_data.delete('subtitle_transcription')
         video_file.update_column(:additional_data, additional_data)
         broadcast_file_update(video_file)
+        broadcast_subtitles_update(video_file)
       end
     end
 
@@ -144,5 +146,6 @@ class Folio::OpenAi::TranscribeSubtitlesJob < Folio::ApplicationJob
       }
       video_file.update_column(:additional_data, additional_data)
       broadcast_file_update(video_file)
+      broadcast_subtitles_update(video_file)
     end
 end

@@ -36,13 +36,13 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
     end
 
     def find_scheduled_video_ids
-      # Get all pending CheckProgressJob instances and extract video IDs
+      # Get all pending CheckProgressJob and CreateMediaJob instances and extract video IDs
       scheduled_ids = []
 
       # Check Sidekiq scheduled jobs
       Sidekiq::ScheduledSet.new.each do |job|
         args = job.args.first
-        if args.is_a?(Hash) && args["job_class"] == "Folio::CraMediaCloud::CheckProgressJob"
+        if args.is_a?(Hash) && (args["job_class"] == "Folio::CraMediaCloud::CheckProgressJob" || args["job_class"] == "Folio::CraMediaCloud::CreateMediaJob")
           global_id = args["arguments"].first["_aj_globalid"]
           if global_id.include?("Folio::File::Video")
             id = global_id.split("/").last.to_i
@@ -54,8 +54,19 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
       # Check Sidekiq retry set (failed jobs that will retry)
       Sidekiq::RetrySet.new.each do |job|
         args = job.args.first
-        if args.is_a?(Hash) && args["job_class"] == "Folio::CraMediaCloud::CheckProgressJob"
+        if args.is_a?(Hash) && (args["job_class"] == "Folio::CraMediaCloud::CheckProgressJob" || args["job_class"] == "Folio::CraMediaCloud::CreateMediaJob")
           global_id = args["arguments"].first["_aj_globalid"]
+          if global_id.include?("Folio::File::Video")
+            id = global_id.split("/").last.to_i
+            scheduled_ids << id
+          end
+        end
+      end
+
+      # Check Sidekiq working set (currently running jobs)
+      Sidekiq::Workers.new.each do |process_id, thread_id, work|
+        if work["payload"]["job_class"] == "Folio::CraMediaCloud::CheckProgressJob" || work["payload"]["job_class"] == "Folio::CraMediaCloud::CreateMediaJob"
+          global_id = work["payload"]["arguments"].first["_aj_globalid"]
           if global_id.include?("Folio::File::Video")
             id = global_id.split("/").last.to_i
             scheduled_ids << id

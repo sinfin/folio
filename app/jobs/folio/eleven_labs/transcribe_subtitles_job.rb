@@ -94,12 +94,35 @@ class Folio::ElevenLabs::TranscribeSubtitlesJob < Folio::ApplicationJob
       # Get site's enabled languages
       enabled_languages = video_file.site.subtitle_languages || []
       
+      # Map ElevenLabs language codes to our standard codes
+      normalized_language = normalize_language_code(detected_language)
+      
       # Check if probability > 50% and language is in enabled languages
-      if language_probability > 0.5 && enabled_languages.include?(detected_language)
-        detected_language
+      if language_probability > 0.5 && enabled_languages.include?(normalized_language)
+        normalized_language
       else
         # Fallback to Czech
         "cs"
+      end
+    end
+
+    def normalize_language_code(elevenlabs_code)
+      # Use ISO-639 gem to normalize language codes
+      # ElevenLabs returns alpha-3 codes, we need alpha-2 codes for our system
+      
+      return elevenlabs_code.to_s.downcase if elevenlabs_code.blank?
+      
+      # Require the gem when needed
+      require 'iso-639' unless defined?(ISO_639)
+      
+      # Find the language by alpha-3 code
+      language = ISO_639.find_by_code(elevenlabs_code.to_s.downcase)
+      
+      if language && language.alpha2.present?
+        language.alpha2
+      else
+        # Fallback to original code if not found
+        elevenlabs_code.to_s.downcase
       end
     end
 
@@ -225,6 +248,7 @@ class Folio::ElevenLabs::TranscribeSubtitlesJob < Folio::ApplicationJob
       }
       video_file.update_column(:additional_data, additional_data)
       broadcast_file_update(video_file)
+      broadcast_subtitles_update(video_file)
     end
 
     def mark_transcription_completed!(video_file)
@@ -235,6 +259,7 @@ class Folio::ElevenLabs::TranscribeSubtitlesJob < Folio::ApplicationJob
         additional_data.delete('subtitle_transcription')
         video_file.update_column(:additional_data, additional_data)
         broadcast_file_update(video_file)
+        broadcast_subtitles_update(video_file)
       end
     end
 
@@ -250,5 +275,6 @@ class Folio::ElevenLabs::TranscribeSubtitlesJob < Folio::ApplicationJob
       }
       video_file.update_column(:additional_data, additional_data)
       broadcast_file_update(video_file)
+      broadcast_subtitles_update(video_file)
     end
 end 
