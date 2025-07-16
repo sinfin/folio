@@ -1,1 +1,3 @@
-{ "data": <%= raw render(@component).to_json %><%= raw @meta %> }
+<% cache_if @cache_key, @cache_key, expires_in: Folio.expires_in do %>
+  { "data": <%= raw render(@component).to_json %><%= raw @meta %> }
+<% end %>
