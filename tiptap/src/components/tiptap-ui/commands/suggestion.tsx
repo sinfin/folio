@@ -159,10 +159,13 @@ export const suggestion = {
       },
 
       onKeyDown(props: SuggestionProps) {
-        console.log("suggestion onKeyDown", component);
         if (props.event.key === "Escape") {
+          if (component?.ref) {
+            component.ref.onEscape();
+          }
+
           if (component?.element) {
-            document.body.removeChild(component.element);
+            component.element.remove();
             component.destroy();
           }
 

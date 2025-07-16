@@ -44,6 +44,13 @@ export class CommandsList extends React.Component<
     };
   }
 
+  onEscape () {
+    this.props.command({ command: ({ editor, range }: { editor: Editor; range: any }) => {
+      // insert space to disable suggestion
+      editor.chain().focus().insertContent(" ").run();
+    } })
+  }
+
   onKeyDown({ event }: { event: KeyboardEvent }) {
     if (event.key === "ArrowUp") {
       this.upHandler();
