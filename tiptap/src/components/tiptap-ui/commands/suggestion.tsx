@@ -4,6 +4,9 @@ import { Editor } from "@tiptap/core";
 
 import { CommandsList } from "./commands-list";
 
+import { headingIcons } from "@/components/tiptap-ui/heading-button/heading-button"
+import { markIcons } from "@/components/tiptap-ui/mark-button/mark-button"
+
 interface SuggestionProps {
   editor: Editor;
   range: any;
@@ -21,6 +24,7 @@ const defaultGroups = [
       {
         title: { cs: "Titulek H2", en: "Heading H2" },
         keymap: "##",
+        icon: headingIcons[2],
         command: ({ editor, range }: { editor: Editor; range: any }) => {
           editor
             .chain()
@@ -33,6 +37,7 @@ const defaultGroups = [
       {
         title: { cs: "Titulek H3", en: "Heading H3" },
         keymap: "###",
+        icon: headingIcons[3],
         command: ({ editor, range }: { editor: Editor; range: any }) => {
           editor
             .chain()
@@ -45,6 +50,7 @@ const defaultGroups = [
       {
         title: { cs: "Titulek H4", en: "Heading H4" },
         keymap: "####",
+        icon: headingIcons[4],
         command: ({ editor, range }: { editor: Editor; range: any }) => {
           editor
             .chain()
@@ -57,6 +63,7 @@ const defaultGroups = [
       {
         title: { cs: "Tučné písmo", en: "Bold" },
         keymap: "C-b",
+        icon: markIcons["bold"],
         command: ({ editor, range }: { editor: Editor; range: any }) => {
           editor.chain().focus().deleteRange(range).setMark("bold").run();
         },
@@ -64,6 +71,7 @@ const defaultGroups = [
       {
         title: { cs: "Kurzíva", en: "Italic" },
         keymap: "C-i",
+        icon: markIcons["italic"],
         command: ({ editor, range }: { editor: Editor; range: any }) => {
           editor.chain().focus().deleteRange(range).setMark("italic").run();
         },

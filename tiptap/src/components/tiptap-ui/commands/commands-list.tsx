@@ -143,7 +143,8 @@ export class CommandsList extends React.Component<
 
                 <ul className="f-tiptap-commands-list__section-ul">
                   {group.items.map((item: CommandItem) => {
-                    index += 1
+                    const ItemIcon = item.icon;
+                    index += 1;
 
                     return (
                       <li className="f-tiptap-commands-list__section-li" key={`${group.title}-${item.title}`}>
@@ -155,6 +156,7 @@ export class CommandsList extends React.Component<
                           onMouseOver={() => this.setSelectedIndex(index)}
                         >
                           <span className="f-tiptap-commands-list__item-inner">
+                            {ItemIcon ? <ItemIcon className="f-tiptap-commands-list__item-icon" /> : null}
                             <span className="f-tiptap-commands-list__item-label">
                               {item.title}
                             </span>

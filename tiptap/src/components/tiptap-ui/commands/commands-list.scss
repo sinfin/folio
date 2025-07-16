@@ -1,5 +1,5 @@
 .f-tiptap-commands-list {
-  --f-tiptap-commands-list__item--height: 48px;
+  --f-tiptap-commands-list__item--min-height: 48px;
   --f-tiptap-commands-list__item--padding: 3px 16px;
 
   background: #ffffff;
@@ -29,7 +29,7 @@
   }
 
   &__section--fallback &__item {
-    --f-tiptap-commands-list__item--height: 36px;
+    --f-tiptap-commands-list__item--min-height: 36px;
     font-size: .85rem;
   }
 
@@ -76,11 +76,16 @@
   &__item-inner {
     align-items: center;
     display: flex;
-    gap: 8px;
-    height: var(--f-tiptap-commands-list__item--height);
+    gap: 12px;
+    min-height: var(--f-tiptap-commands-list__item--min-height);
     padding: var(--f-tiptap-commands-list__item--padding);
     width: 100%;
     box-sizing: border-box;
+  }
+
+  &__item-icon {
+    width: 1rem;
+    height: auto;
   }
 
   &__item-label {
