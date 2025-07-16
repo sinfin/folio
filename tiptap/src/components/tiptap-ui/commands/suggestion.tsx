@@ -16,18 +16,8 @@ interface SuggestionProps {
 
 const defaultItems = [
   {
-    title: "Heading 1",
-    command: ({ editor, range }: { editor: Editor; range: any }) => {
-      editor
-        .chain()
-        .focus()
-        .deleteRange(range)
-        .setNode("heading", { level: 1 })
-        .run();
-    },
-  },
-  {
     title: "Heading 2",
+    keymap: "##",
     command: ({ editor, range }: { editor: Editor; range: any }) => {
       editor
         .chain()
@@ -38,13 +28,39 @@ const defaultItems = [
     },
   },
   {
+    title: "Heading 3",
+    keymap: "###",
+    command: ({ editor, range }: { editor: Editor; range: any }) => {
+      editor
+        .chain()
+        .focus()
+        .deleteRange(range)
+        .setNode("heading", { level: 3 })
+        .run();
+    },
+  },
+  {
+    title: "Heading 4",
+    keymap: "####",
+    command: ({ editor, range }: { editor: Editor; range: any }) => {
+      editor
+        .chain()
+        .focus()
+        .deleteRange(range)
+        .setNode("heading", { level: 4 })
+        .run();
+    },
+  },
+  {
     title: "Bold",
+    keymap: "C-b",
     command: ({ editor, range }: { editor: Editor; range: any }) => {
       editor.chain().focus().deleteRange(range).setMark("bold").run();
     },
   },
   {
     title: "Italic",
+    keymap: "C-i",
     command: ({ editor, range }: { editor: Editor; range: any }) => {
       editor.chain().focus().deleteRange(range).setMark("italic").run();
     },

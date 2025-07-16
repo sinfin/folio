@@ -1,0 +1,99 @@
+.f-tiptap-commands-list {
+  --f-tiptap-commands-list__item--height: 48px;
+  --f-tiptap-commands-list__item--padding: 3px 16px;
+
+  background: #ffffff;
+  border-radius: var(--f-tiptap-editor--border-radius);
+  border: 1px solid var(--f-tiptap-editor--border-color);
+  box-shadow: var(--tt-shadow-elevated-md);
+  color: inherit;
+  overflow: hidden;
+  width: 340px;
+  max-width: 90%;
+  font-size: 1rem;
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.2;
+
+  &__section {
+    max-height: 450px;
+    overflow-y: auto;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    & + & {
+      border-top: 1px solid var(--f-tiptap-editor--border-color);
+    }
+  }
+
+  &__section--fallback &__item {
+    --f-tiptap-commands-list__item--height: 36px;
+    font-size: .85rem;
+  }
+
+  &__section--fallback &__item-label {
+    opacity: 0.6;
+  }
+
+  &__section-li {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  &__item {
+    border: 0;
+    padding: 0;
+    appearance: none;
+    cursor: pointer;
+    background: transparent;
+    display: block;
+    width: 100%;
+    text-align: left;
+    font-size: inherit;
+    line-height: 1;
+    font-family: inherit;
+
+    &, &:hover, &:focus {
+      color: inherit;
+      outline: 0;
+      box-shadow: none;
+    }
+  }
+
+  &__item-inner {
+    align-items: center;
+    display: flex;
+    gap: 8px;
+    height: var(--f-tiptap-commands-list__item--height);
+    padding: var(--f-tiptap-commands-list__item--padding);
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  &__item-label {
+    flex: 1 1 auto;
+  }
+
+  &__item-keymap {
+    opacity: 0.6;
+    flex: 0 0 auto;
+    font-size: .75rem;
+    line-height: 1;
+    min-width: 24px;
+    text-align: right;
+
+    &::after {
+      content: attr(data-keymap);
+      display: inline;
+    }
+  }
+
+  &__item[data-selected="true"] &__item-inner {
+    background: var(--tt-gray-light-a-100);
+  }
+
+  &__item[data-selected="true"] &__item-keymap::after {
+    content: "enter";
+  }
+}

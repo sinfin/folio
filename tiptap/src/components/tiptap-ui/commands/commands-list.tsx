@@ -1,4 +1,16 @@
 import React from "react";
+import translate from "@/lib/i18n";
+
+import "./commands-list.scss"
+
+const TRANSLATIONS = {
+  cs: {
+    defaultAction: 'Napsat /{query} do obsahu',
+  },
+  en: {
+    defaultAction: 'Type /{query} to content',
+  },
+};
 
 interface CommandItem {
   title: string;
@@ -33,7 +45,7 @@ export class CommandsList extends React.Component<
       return true;
     }
 
-    if (event.key === "ArrowDown") {
+    if (event.key === "ArrowDown" || event.key === "Tab") {
       this.downHandler();
       return true;
     }
@@ -86,22 +98,46 @@ export class CommandsList extends React.Component<
 
   render() {
     return (
-      <div className="dropdown-menu">
-        {this.props.items.length > 0 ? (
-          this.props.items.map((item: CommandItem, index: number) => (
-            <button
-              key={index}
-              className={
-                index === this.state.selectedIndex ? "is-selected" : ""
-              }
-              onClick={() => this.selectItem(index)}
-            >
-              {item.title}
-            </button>
-          ))
-        ) : (
-          <div className="item">No result</div>
-        )}
+      <div className="f-tiptap-commands-list">
+        <ul className="f-tiptap-commands-list__section">
+          {this.props.items.length > 0 ? (
+            this.props.items.map((item: CommandItem, index: number) => (
+              <li className="f-tiptap-commands-list__section-li">
+                <button
+                  key={index}
+                  type="button"
+                  className="f-tiptap-commands-list__item f-tiptap-commands-list__item--active"
+                  data-selected={String(index === this.state.selectedIndex)}
+                  onClick={() => this.selectItem(index)}
+                  onMouseOver={() => this.setSelectedIndex(index)}
+                >
+                  <span className="f-tiptap-commands-list__item-inner">
+                    <span className="f-tiptap-commands-list__item-label">
+                      {item.title}
+                    </span>
+                    <span className="f-tiptap-commands-list__item-keymap" data-keymap={item.keymap}>
+                    </span>
+                  </span>
+                </button>
+              </li>
+            ))
+          ) : null}
+        </ul>
+
+        <ul className="f-tiptap-commands-list__section f-tiptap-commands-list__section--fallback">
+          <li className="f-tiptap-commands-list__section-li">
+            <span className="f-tiptap-commands-list__item f-tiptap-commands-list__item--fallback">
+              <span className="f-tiptap-commands-list__item-inner">
+                <span className="f-tiptap-commands-list__item-label">
+                  {translate(TRANSLATIONS, "defaultAction").replace('{query}', this.props.query || "")}
+                </span>
+                <span className="f-tiptap-commands-list__item-keymap">
+                  esc
+                </span>
+              </span>
+            </span>
+          </li>
+        </ul>
       </div>
     );
   }
