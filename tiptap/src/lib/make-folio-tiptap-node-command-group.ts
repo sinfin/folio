@@ -1,29 +1,36 @@
 import { Cuboid } from "lucide-react";
+import { type Range, type Editor } from "@tiptap/core";
 
-export const makeFolioTiptapNodeCommandGroup = (folioTiptapNodes) => {
-  const items = folioTiptapNodes.map((folioTiptapNode) => ({
-    title: folioTiptapNode.title,
-    icon: Cuboid,
-    command: ({ editor, range }: { editor: Editor; range: any }) => {
-      editor.chain().focus().deleteRange(range).run();
+import { type CommandItem } from "@/components/tiptap-ui/commands/commands-list";
 
-      window.top!.postMessage(
-        {
-          type: "f-tiptap-slash-command:selected",
-          attrs: { type: folioTiptapNode.type },
-        },
-        "*",
-      );
-    }
-  }))
+export const makeFolioTiptapNodeCommandGroup = (
+  folioTiptapNodes: FolioTiptapNodeFromInput[],
+) => {
+  const items = folioTiptapNodes.map(
+    (folioTiptapNode: FolioTiptapNodeFromInput): CommandItem => ({
+      title: folioTiptapNode.title,
+      icon: Cuboid,
+      command: ({ editor, range }: { editor: Editor; range: Range }) => {
+        editor.chain().focus().deleteRange(range).run();
+
+        window.top!.postMessage(
+          {
+            type: "f-tiptap-slash-command:selected",
+            attrs: { type: folioTiptapNode.type },
+          },
+          "*",
+        );
+      },
+    }),
+  );
 
   return {
     title: {
       cs: "Bloky",
-      en: "Blocks"
+      en: "Blocks",
     },
     items,
-  }
+  };
 };
 
 export default makeFolioTiptapNodeCommandGroup;

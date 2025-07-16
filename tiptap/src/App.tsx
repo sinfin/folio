@@ -8,10 +8,16 @@ interface AppProps {
   onCreate?: (content: { editor: TiptapEditor }) => void;
   defaultContent?: Content;
   type?: "rich-text" | "block";
-  folioTiptapNodes: string[];
+  folioTiptapNodes: FolioTiptapNodeFromInput[];
 }
 
-function App({ onCreate, onUpdate, defaultContent, type, folioTiptapNodes }: AppProps) {
+function App({
+  onCreate,
+  onUpdate,
+  defaultContent,
+  type,
+  folioTiptapNodes,
+}: AppProps) {
   switch (type) {
     case "block":
     case "rich-text":
@@ -20,13 +26,12 @@ function App({ onCreate, onUpdate, defaultContent, type, folioTiptapNodes }: App
           onCreate={onCreate}
           onUpdate={onUpdate}
           defaultContent={defaultContent}
-          type={type}
+          type={type as "block" | "rich-text"}
           folioTiptapNodes={folioTiptapNodes}
         />
       );
     default:
       throw new Error(`Unknown editor type: ${type}`);
-      break;
   }
 }
 

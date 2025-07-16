@@ -2,45 +2,53 @@ import { computePosition } from "@floating-ui/dom";
 import { ReactRenderer } from "@tiptap/react";
 import { Editor } from "@tiptap/core";
 
-import { CommandsList } from "./commands-list";
+import { CommandsList, CommandItem, CommandGroup } from "./commands-list";
 
-import { headingIcons } from "@/components/tiptap-ui/heading-button/heading-button"
-import { markIcons } from "@/components/tiptap-ui/mark-button/mark-button"
+import { headingIcons } from "@/components/tiptap-ui/heading-button/heading-button";
+import { markIcons } from "@/components/tiptap-ui/mark-button/mark-button";
+
+// Local Range type for compatibility with TipTap commands
+type Range = { from: number; to: number };
 
 interface SuggestionProps {
   editor: Editor;
-  range: any;
+  range: Range;
   clientRect: () => DOMRect;
-  command: (item: any) => void;
-  items: any[];
+  command: (item: CommandItem) => void;
+  items: CommandGroup[];
   query: string;
   event: KeyboardEvent;
 }
 
-export const makeSuggestionItems = (groups) => {
+export const makeSuggestionItems = (groups: CommandGroup[]) => {
   return ({ query }: { editor: Editor; query: string }) => {
     return translateTitles(groups)
-      .map((group) => {
-        const matchingItems = group.items.filter((item) =>
-          item.title.toLowerCase().indexOf(query.toLowerCase()) !== -1,
-        );
+      .map((group: CommandGroup): CommandGroup | null => {
+        const matchingItems = group.items.filter((item: CommandItem) => {
+          const title =
+            typeof item.title === "string"
+              ? item.title
+              : item.title[document.documentElement.lang as "cs" | "en"] ||
+                item.title.en;
+          return title.toLowerCase().indexOf(query.toLowerCase()) !== -1;
+        });
         if (matchingItems.length > 0) {
           return { ...group, items: matchingItems };
         }
         return null;
       })
-      .filter((group) => group !== null);
-  }
-}
+      .filter((group): group is CommandGroup => group !== null);
+  };
+};
 
-export const defaultGroup = {
+export const defaultGroup: CommandGroup = {
   title: { cs: "Text", en: "Text" },
   items: [
     {
       title: { cs: "Titulek H2", en: "Heading H2" },
       keymap: "##",
       icon: headingIcons[2],
-      command: ({ editor, range }: { editor: Editor; range: any }) => {
+      command: ({ editor, range }: { editor: Editor; range: Range }) => {
         editor
           .chain()
           .focus()
@@ -53,7 +61,7 @@ export const defaultGroup = {
       title: { cs: "Titulek H3", en: "Heading H3" },
       keymap: "###",
       icon: headingIcons[3],
-      command: ({ editor, range }: { editor: Editor; range: any }) => {
+      command: ({ editor, range }: { editor: Editor; range: Range }) => {
         editor
           .chain()
           .focus()
@@ -66,7 +74,7 @@ export const defaultGroup = {
       title: { cs: "Titulek H4", en: "Heading H4" },
       keymap: "####",
       icon: headingIcons[4],
-      command: ({ editor, range }: { editor: Editor; range: any }) => {
+      command: ({ editor, range }: { editor: Editor; range: Range }) => {
         editor
           .chain()
           .focus()
@@ -79,7 +87,7 @@ export const defaultGroup = {
       title: { cs: "Tučné písmo", en: "Bold" },
       keymap: "C-b",
       icon: markIcons["bold"],
-      command: ({ editor, range }: { editor: Editor; range: any }) => {
+      command: ({ editor, range }: { editor: Editor; range: Range }) => {
         editor.chain().focus().deleteRange(range).setMark("bold").run();
       },
     },
@@ -87,25 +95,30 @@ export const defaultGroup = {
       title: { cs: "Kurzíva", en: "Italic" },
       keymap: "C-i",
       icon: markIcons["italic"],
-      command: ({ editor, range }: { editor: Editor; range: any }) => {
+      command: ({ editor, range }: { editor: Editor; range: Range }) => {
         editor.chain().focus().deleteRange(range).setMark("italic").run();
       },
     },
   ],
-}
+};
 
-const translateTitles = (groups) => {
-  return groups.map((group) => ({
+const translateTitles = (groups: CommandGroup[]): CommandGroup[] => {
+  const lang = document.documentElement.lang as "cs" | "en";
+  return groups.map((group: CommandGroup) => ({
     ...group,
-    title: group.title[document.documentElement.lang] || group.title.en,
-    items: group.items.map((item) => ({
+    title:
+      typeof group.title === "string"
+        ? group.title
+        : group.title[lang] || group.title.en,
+    items: group.items.map((item: CommandItem) => ({
       ...item,
-      title: typeof item.title === "string"
-        ? item.title
-        : item.title[document.documentElement.lang] || item.title.en,
+      title:
+        typeof item.title === "string"
+          ? item.title
+          : item.title[lang] || item.title.en,
     })),
   }));
-}
+};
 
 export const suggestion = {
   items: makeSuggestionItems([defaultGroup]),
@@ -147,7 +160,7 @@ export const suggestion = {
           .run();
 
         component = new ReactRenderer(CommandsList, {
-          props,
+          props: { ...props, query: props.query },
           editor: props.editor,
         });
 
@@ -163,8 +176,12 @@ export const suggestion = {
 
       onKeyDown(props: SuggestionProps) {
         if (props.event.key === "Escape") {
-          if (component?.ref) {
-            component.ref.onEscape();
+          if (
+            component?.ref &&
+            typeof (component.ref as { onEscape?: () => void }).onEscape ===
+              "function"
+          ) {
+            (component.ref as { onEscape: () => void }).onEscape();
           }
 
           if (component?.element) {

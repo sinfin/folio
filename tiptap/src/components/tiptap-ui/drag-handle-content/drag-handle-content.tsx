@@ -26,7 +26,13 @@ import translate from "@/lib/i18n";
 
 import "./drag-handle-content.scss";
 
-const handlePlusClick = ({ event, editor }: { event: MouseEvent; editor: Editor }) => {
+const handlePlusClick = ({
+  event,
+  editor,
+}: {
+  event: React.MouseEvent;
+  editor: Editor;
+}) => {
   const rect = (event.target as HTMLElement).getBoundingClientRect();
 
   const nodeToUse = findElementNextToCoords({
@@ -36,7 +42,12 @@ const handlePlusClick = ({ event, editor }: { event: MouseEvent; editor: Editor 
     editor,
   });
 
-  const targetPos = nodeToUse.pos + nodeToUse.resultNode.nodeSize
+  if (!nodeToUse || !nodeToUse.resultNode || nodeToUse.pos === null) {
+    console.error("No node found at the clicked position");
+    return;
+  }
+
+  const targetPos = nodeToUse.pos + nodeToUse.resultNode.nodeSize;
 
   editor
     .chain()
@@ -45,8 +56,8 @@ const handlePlusClick = ({ event, editor }: { event: MouseEvent; editor: Editor 
       type: "paragraph",
       content: [{ type: "text", text: "/" }],
     })
-    .run()
-}
+    .run();
+};
 
 const handleDragClick = () => {};
 
@@ -274,9 +285,9 @@ export type FindElementNextToCoords = {
 
 export function findElementNextToCoords(options: FindElementNextToCoords) {
   const { x, y, direction, editor } = options;
-  let targetElement: any = null;
-  let targetNode: any = null;
-  let documentPosition: any = null;
+  let targetElement: Element | null = null;
+  let targetNode: Node | null = null;
+  let documentPosition: number | null = null;
   let currentX = x;
 
   while (targetNode === null && currentX < window.innerWidth && currentX > 0) {
@@ -320,7 +331,12 @@ export function findElementNextToCoords(options: FindElementNextToCoords) {
 }
 
 const makeButtonOnClick =
-  (editor: Editor, option: any, setOpenedDropdown: any) => (e: any) => {
+  (
+    editor: Editor,
+    option: { command: (editor: Editor, nodeInfo: TargetNodeInfo) => boolean },
+    setOpenedDropdown: (value: string | null) => void,
+  ) =>
+  (e: React.MouseEvent) => {
     const rect = (e.target as HTMLElement)
       .closest(".tiptap-dropdown-menu")!
       .getBoundingClientRect();
@@ -422,7 +438,9 @@ export function DragHandleContent({
         role="button"
         tabIndex={-1}
         aria-label="Plus"
-        onClick={(event) => { handlePlusClick({ event, editor }) }}
+        onClick={(event) => {
+          handlePlusClick({ event, editor });
+        }}
         className="f-tiptap__drag-handle-button"
       >
         <Plus className="tiptap-button-icon" />

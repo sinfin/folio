@@ -15,7 +15,7 @@ import { Button } from "@/components/tiptap-ui-primitive/button";
 
 export interface FolioTiptapNodeButtonProps extends ButtonProps {
   editor: Editor | null;
-  folioTiptapNodes: { title: string; type: string }[] | null;
+  folioTiptapNodes: FolioTiptapNodeFromInput[] | null;
 }
 
 export function insertFolioTiptapNode(

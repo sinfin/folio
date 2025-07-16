@@ -14,9 +14,12 @@ export const CommandsExtension = Extension.create({
           props,
         }: {
           editor: Editor;
-          range: any;
+          range: { from: number; to: number };
           props: {
-            command: (params: { editor: Editor; range: any }) => void;
+            command: (params: {
+              editor: Editor;
+              range: { from: number; to: number };
+            }) => void;
           };
         }) => {
           props.command({ editor, range });

@@ -37,7 +37,12 @@ import "@/components/tiptap-node/paragraph-node/paragraph-node.scss";
 // --- Tiptap UI ---
 import { HeadingDropdownMenu } from "@/components/tiptap-ui/heading-dropdown-menu";
 import { FolioTiptapNodeButton } from "@/components/tiptap-ui/folio-tiptap-node-button";
-import { CommandsExtension, suggestion, defaultGroup, makeSuggestionItems } from "@/components/tiptap-ui/commands";
+import {
+  CommandsExtension,
+  suggestion,
+  defaultGroup,
+  makeSuggestionItems,
+} from "@/components/tiptap-ui/commands";
 import { ListDropdownMenu } from "@/components/tiptap-ui/list-dropdown-menu";
 import { BlockquoteButton } from "@/components/tiptap-ui/blockquote-button";
 import { CodeBlockButton } from "@/components/tiptap-ui/code-block-button";
@@ -73,7 +78,7 @@ import makeFolioTiptapNodeCommandGroup from "@/lib/make-folio-tiptap-node-comman
 // import GlobalDragHandle from "tiptap-extension-global-drag-handle";
 // import AutoJoiner from "tiptap-extension-auto-joiner";
 
-import TRANSLATIONS from "./folio-editor-i18n.json"
+import TRANSLATIONS from "./folio-editor-i18n.json";
 
 const MainToolbarContent = ({
   onHighlighterClick,
@@ -88,7 +93,7 @@ const MainToolbarContent = ({
   isMobile: boolean;
   blockEditor: boolean;
   editor: Editor | null;
-  folioTiptapNodes: { title: string; type: string }[] | null;
+  folioTiptapNodes: FolioTiptapNodeFromInput[] | null;
 }) => {
   return (
     <>
@@ -187,13 +192,23 @@ const MobileToolbarContent = ({
   </>
 );
 
+import type { Content } from "@tiptap/react";
+
+interface FolioEditorProps {
+  onCreate?: (content: { editor: Editor }) => void;
+  onUpdate?: (content: { editor: Editor }) => void;
+  defaultContent?: Content;
+  type: "block" | "rich-text";
+  folioTiptapNodes: FolioTiptapNodeFromInput[];
+}
+
 export function FolioEditor({
   onCreate,
   onUpdate,
   defaultContent,
   type,
   folioTiptapNodes,
-}: FolioEditor) {
+}: FolioEditorProps) {
   const isMobile = useMobile();
   const windowSize = useWindowSize();
   const [mobileView, setMobileView] = React.useState<
@@ -224,13 +239,17 @@ export function FolioEditor({
       Placeholder.configure({
         // Use a placeholder:
         placeholder: ({ node }) => {
-          let key = "commandPlaceholder"
+          let key = "commandPlaceholder";
 
-          if (node.type.name === 'heading' && node.attrs.level && [2, 3, 4].indexOf(node.attrs.level !== -1)) {
-            key = `h${node.attrs.level}Placeholder`
+          if (
+            node.type.name === "heading" &&
+            node.attrs.level &&
+            [2, 3, 4].indexOf(node.attrs.level) !== -1
+          ) {
+            key = `h${node.attrs.level}Placeholder`;
           }
 
-          return translate(TRANSLATIONS, key)
+          return translate(TRANSLATIONS, key);
         },
       }),
       ...(blockEditor ? [TaskList] : []),
@@ -245,10 +264,16 @@ export function FolioEditor({
       ...(blockEditor ? [FolioTiptapNodeExtension] : []),
 
       CommandsExtension.configure({
-        suggestion: (blockEditor && folioTiptapNodes) ? {
-          ...suggestion,
-          items: makeSuggestionItems([defaultGroup, makeFolioTiptapNodeCommandGroup(folioTiptapNodes)])
-        } : suggestion,
+        suggestion:
+          blockEditor && folioTiptapNodes
+            ? {
+                ...suggestion,
+                items: makeSuggestionItems([
+                  defaultGroup,
+                  makeFolioTiptapNodeCommandGroup(folioTiptapNodes),
+                ]),
+              }
+            : suggestion,
       }),
     ],
   });
@@ -330,7 +355,7 @@ export function FolioEditor({
         <div className="f-tiptap-editor__content-wrap">
           <DragHandle
             editor={editor}
-            onNodeChange={({ node, pos }) => {
+            onNodeChange={({ node }) => {
               if (node) {
                 const handle = document.querySelector(".drag-handle");
 

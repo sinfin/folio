@@ -48,19 +48,24 @@ declare module "react" {
 
 // Global interface augmentations
 declare global {
-  interface FolioEditor {
-    onCreate?: (content: { editor: TiptapEditor }) => void;
-    onUpdate?: (content: { editor: TiptapEditor }) => void;
-    defaultContent?: import("@tiptap/react").Content;
-    type: "rich-text" | "block";
-    folioTiptapNodes: string[];
-  }
-
   interface TiptapEditor {
     getJSON: () => Record<string, unknown>;
     view: {
       dom: HTMLElement;
     };
+  }
+
+  interface FolioTiptapNodeFromInput {
+    title: string;
+    type: string;
+  }
+
+  interface FolioEditor extends TiptapEditor {
+    onCreate?: (content: { editor: TiptapEditor }) => void;
+    onUpdate?: (content: { editor: TiptapEditor }) => void;
+    defaultContent?: import("@tiptap/react").Content;
+    type: "rich-text" | "block";
+    folioTiptapNodes: FolioTiptapNodeFromInput[];
   }
 
   interface Window {
@@ -71,7 +76,7 @@ declare global {
         root: ReturnType<typeof import("react-dom/client").createRoot> | null;
         init: (props: {
           node: HTMLElement;
-          folioTiptapNodes?: string[];
+          folioTiptapNodes?: FolioTiptapNodeFromInput[];
           type: "rich-text" | "block";
           onCreate?: (content: { editor: TiptapEditor }) => void;
           onUpdate?: (content: { editor: TiptapEditor }) => void;

@@ -1,36 +1,43 @@
 import React from "react";
 import translate from "@/lib/i18n";
 
-import "./commands-list.scss"
+import "./commands-list.scss";
 
 const TRANSLATIONS = {
   cs: {
-    defaultAction: 'Napsat /{query} do obsahu',
-    defaultBlankAction: 'Zavřít nabídku',
+    defaultAction: "Napsat /{query} do obsahu",
+    defaultBlankAction: "Zavřít nabídku",
   },
   en: {
-    defaultAction: 'Type /{query} to content',
-    defaultBlankAction: 'Close menu',
+    defaultAction: "Type /{query} to content",
+    defaultBlankAction: "Close menu",
   },
 };
 
-interface CommandGroup {
-  title: string;
+export interface CommandGroup {
+  title: string | { cs: string; en: string };
   items: CommandItem[];
 }
 
-interface CommandItem {
-  title: string;
-  command?: (params: any) => void;
-  [key: string]: any;
+import type { Editor } from "@tiptap/react";
+
+export interface CommandItem {
+  title: string | { cs: string; en: string };
+  command?: (params: {
+    editor: Editor;
+    range: { from: number; to: number };
+  }) => void;
+  keymap?: string;
+  icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 }
 
-interface CommandsListProps {
-  items: CommandItem[];
+export interface CommandsListProps {
+  items: CommandGroup[];
   command: (item: CommandItem) => void;
+  query: string;
 }
 
-interface CommandsListState {
+export interface CommandsListState {
   selectedIndex: number;
 }
 
@@ -46,16 +53,26 @@ export class CommandsList extends React.Component<
     };
   }
 
-  onEscape () {
-    this.props.command({ command: ({ editor, range }: { editor: Editor; range: any }) => {
-      if (this.props.query) {
-        // insert space to disable suggestion
-        editor.chain().focus().insertContent(" ").run();
-      } else {
-        // remove current paragraph
-        editor.chain().focus().deleteRange(range).run();
-      }
-    } })
+  onEscape() {
+    // Always pass a valid CommandItem with a title
+    this.props.command({
+      title: "",
+      command: ({
+        editor,
+        range,
+      }: {
+        editor: Editor;
+        range: { from: number; to: number };
+      }) => {
+        if (this.props.query) {
+          // insert space to disable suggestion
+          editor.chain().focus().insertContent(" ").run();
+        } else {
+          // remove current paragraph
+          editor.chain().focus().deleteRange(range).run();
+        }
+      },
+    });
   }
 
   onKeyDown({ event }: { event: KeyboardEvent }) {
@@ -85,46 +102,52 @@ export class CommandsList extends React.Component<
     let newIndex = this.state.selectedIndex - 1;
 
     if (newIndex < 0) {
-      let itemsCount = 0
-      this.props.items.forEach((group) => { itemsCount += group.items.length })
+      let itemsCount = 0;
+      this.props.items.forEach((group) => {
+        itemsCount += group.items.length;
+      });
 
       newIndex = itemsCount - 1;
     }
 
-    this.setSelectedIndex(newIndex)
+    this.setSelectedIndex(newIndex);
   }
 
   downHandler() {
-    let itemsCount = 0
-    this.props.items.forEach((group) => { itemsCount += group.items.length })
+    let itemsCount = 0;
+    this.props.items.forEach((group) => {
+      itemsCount += group.items.length;
+    });
 
     let newIndex = this.state.selectedIndex + 1;
 
     if (newIndex >= itemsCount) {
-      newIndex = 0
+      newIndex = 0;
     }
 
-    this.setSelectedIndex(newIndex)
+    this.setSelectedIndex(newIndex);
   }
 
   enterHandler() {
-    let index = -1
-    let targetItem = null
+    let index = -1;
+    let targetItem: CommandItem | null = null;
 
     this.props.items.forEach((group) => {
-      if (targetItem) return
+      if (targetItem) return;
 
       group.items.forEach((item) => {
-        if (targetItem) return
-        index += 1
+        if (targetItem) return;
+        index += 1;
 
         if (index === this.state.selectedIndex) {
           targetItem = item;
         }
-      })
-    })
+      });
+    });
 
-    this.selectItem(targetItem);
+    if (targetItem) {
+      this.selectItem(targetItem);
+    }
   }
 
   selectItem(item: CommandItem) {
@@ -143,7 +166,7 @@ export class CommandsList extends React.Component<
   }
 
   render() {
-    let index = -1
+    let index = -1;
 
     return (
       <div className="f-tiptap-commands-list">
@@ -152,7 +175,11 @@ export class CommandsList extends React.Component<
             {this.props.items.map((group: CommandGroup) => (
               <>
                 <div className="f-tiptap-commands-list__section-heading">
-                  {group.title}
+                  {typeof group.title === "string"
+                    ? group.title
+                    : group.title[
+                        document.documentElement.lang as "cs" | "en"
+                      ] || group.title.en}
                 </div>
 
                 <ul className="f-tiptap-commands-list__section-ul">
@@ -161,25 +188,38 @@ export class CommandsList extends React.Component<
                     index += 1;
 
                     return (
-                      <li className="f-tiptap-commands-list__section-li" key={`${group.title}-${item.title}`}>
+                      <li
+                        className="f-tiptap-commands-list__section-li"
+                        key={`${group.title}-${item.title}`}
+                      >
                         <button
                           type="button"
                           className="f-tiptap-commands-list__item f-tiptap-commands-list__item--active"
-                          data-selected={String(index === this.state.selectedIndex)}
+                          data-selected={String(
+                            index === this.state.selectedIndex,
+                          )}
                           onClick={() => this.selectItem(item)}
                           onMouseOver={() => this.setSelectedIndex(index)}
                         >
                           <span className="f-tiptap-commands-list__item-inner">
-                            {ItemIcon ? <ItemIcon className="f-tiptap-commands-list__item-icon" /> : null}
+                            {ItemIcon ? (
+                              <ItemIcon className="f-tiptap-commands-list__item-icon" />
+                            ) : null}
                             <span className="f-tiptap-commands-list__item-label">
-                              {item.title}
+                              {typeof item.title === "string"
+                                ? item.title
+                                : item.title[
+                                    document.documentElement.lang as "cs" | "en"
+                                  ] || item.title.en}
                             </span>
-                            <span className="f-tiptap-commands-list__item-keymap" data-keymap={item.keymap}>
-                            </span>
+                            <span
+                              className="f-tiptap-commands-list__item-keymap"
+                              data-keymap={item.keymap}
+                            ></span>
                           </span>
                         </button>
                       </li>
-                    )
+                    );
                   })}
                 </ul>
               </>
@@ -193,7 +233,12 @@ export class CommandsList extends React.Component<
               <span className="f-tiptap-commands-list__item f-tiptap-commands-list__item--fallback">
                 <span className="f-tiptap-commands-list__item-inner">
                   <span className="f-tiptap-commands-list__item-label">
-                    {this.props.query ? translate(TRANSLATIONS, "defaultAction").replace('{query}', this.props.query) : translate(TRANSLATIONS, "defaultBlankAction")}
+                    {this.props.query
+                      ? translate(TRANSLATIONS, "defaultAction").replace(
+                          "{query}",
+                          this.props.query,
+                        )
+                      : translate(TRANSLATIONS, "defaultBlankAction")}
                   </span>
                   <span className="f-tiptap-commands-list__item-keymap">
                     esc
