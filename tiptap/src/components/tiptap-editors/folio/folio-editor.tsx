@@ -213,6 +213,7 @@ export function FolioEditor({
     onUpdate,
     onCreate,
     content: defaultContent,
+    autofocus: true,
     immediatelyRender: true,
     shouldRerenderOnTransaction: false,
     editorProps: {

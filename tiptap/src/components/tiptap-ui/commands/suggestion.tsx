@@ -89,6 +89,9 @@ export const suggestion = {
 
     return {
       onStart: (props: SuggestionProps) => {
+        console.log("suggestion onStart", component);
+        props.editor.chain().setMeta("hideDragHandle", true).setMeta("lockDragHandle", true).run()
+
         component = new ReactRenderer(CommandsList, {
           props,
           editor: props.editor,
@@ -121,8 +124,9 @@ export const suggestion = {
         )?.onKeyDown(props);
       },
 
-      onExit() {
+      onExit(props: SuggestionProps) {
         console.log("suggestion onExit", component);
+        props.editor.chain().setMeta("hideDragHandle", false).setMeta("lockDragHandle", false).run()
         if (!component) return;
 
         if (component.element && document.body.contains(component.element)) {
