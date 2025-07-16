@@ -26,7 +26,27 @@ import translate from "@/lib/i18n";
 
 import "./drag-handle-content.scss";
 
-const handlePlusClick = () => {};
+const handlePlusClick = ({ event, editor }: { event: MouseEvent; editor: Editor }) => {
+  const rect = (event.target as HTMLElement).getBoundingClientRect();
+
+  const nodeToUse = findElementNextToCoords({
+    x: rect.left,
+    y: rect.top,
+    direction: "right",
+    editor,
+  });
+
+  const targetPos = nodeToUse.pos + nodeToUse.resultNode.nodeSize
+
+  editor
+    .chain()
+    .focus()
+    .insertContentAt(targetPos - 1, {
+      type: "paragraph",
+      content: [{ type: "text", text: "/" }],
+    })
+    .run()
+}
 
 const handleDragClick = () => {};
 
@@ -402,7 +422,7 @@ export function DragHandleContent({
         role="button"
         tabIndex={-1}
         aria-label="Plus"
-        onClick={handlePlusClick}
+        onClick={(event) => { handlePlusClick({ event, editor }) }}
         className="f-tiptap__drag-handle-button"
       >
         <Plus className="tiptap-button-icon" />

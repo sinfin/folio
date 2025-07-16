@@ -135,7 +135,7 @@ export const suggestion = {
 
     return {
       onStart: (props: SuggestionProps) => {
-        console.log("suggestion onStart", component);
+        // console.log("suggestion onStart", component);
         props.editor
           .chain()
           .setMeta("hideDragHandle", true)
@@ -147,13 +147,12 @@ export const suggestion = {
           editor: props.editor,
         });
 
-        console.log("suggestion onStart", component);
         document.body.appendChild(component.element);
         repositionComponent(props.clientRect());
       },
 
       onUpdate(props: SuggestionProps) {
-        console.log("suggestion onUpdate", component);
+        // console.log("suggestion onUpdate", component);
         component?.updateProps(props);
         repositionComponent(props.clientRect());
       },
@@ -178,7 +177,7 @@ export const suggestion = {
       },
 
       onExit(props: SuggestionProps) {
-        console.log("suggestion onExit", component);
+        // console.log("suggestion onExit", component);
         props.editor
           .chain()
           .setMeta("hideDragHandle", false)
