@@ -6,9 +6,11 @@ import "./commands-list.scss"
 const TRANSLATIONS = {
   cs: {
     defaultAction: 'Napsat /{query} do obsahu',
+    defaultBlankAction: 'Zavřít nabídku',
   },
   en: {
     defaultAction: 'Type /{query} to content',
+    defaultBlankAction: 'Close menu',
   },
 };
 
@@ -46,8 +48,13 @@ export class CommandsList extends React.Component<
 
   onEscape () {
     this.props.command({ command: ({ editor, range }: { editor: Editor; range: any }) => {
-      // insert space to disable suggestion
-      editor.chain().focus().insertContent(" ").run();
+      if (this.props.query) {
+        // insert space to disable suggestion
+        editor.chain().focus().insertContent(" ").run();
+      } else {
+        // remove current paragraph
+        editor.chain().focus().deleteRange(range).run();
+      }
     } })
   }
 
@@ -186,7 +193,7 @@ export class CommandsList extends React.Component<
               <span className="f-tiptap-commands-list__item f-tiptap-commands-list__item--fallback">
                 <span className="f-tiptap-commands-list__item-inner">
                   <span className="f-tiptap-commands-list__item-label">
-                    {translate(TRANSLATIONS, "defaultAction").replace('{query}', this.props.query || "")}
+                    {this.props.query ? translate(TRANSLATIONS, "defaultAction").replace('{query}', this.props.query) : translate(TRANSLATIONS, "defaultBlankAction")}
                   </span>
                   <span className="f-tiptap-commands-list__item-keymap">
                     esc
