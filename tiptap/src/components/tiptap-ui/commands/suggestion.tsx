@@ -14,66 +14,88 @@ interface SuggestionProps {
   event: KeyboardEvent;
 }
 
-const defaultItems = [
+const defaultGroups = [
   {
-    title: "Heading 2",
-    keymap: "##",
-    command: ({ editor, range }: { editor: Editor; range: any }) => {
-      editor
-        .chain()
-        .focus()
-        .deleteRange(range)
-        .setNode("heading", { level: 2 })
-        .run();
-    },
-  },
-  {
-    title: "Heading 3",
-    keymap: "###",
-    command: ({ editor, range }: { editor: Editor; range: any }) => {
-      editor
-        .chain()
-        .focus()
-        .deleteRange(range)
-        .setNode("heading", { level: 3 })
-        .run();
-    },
-  },
-  {
-    title: "Heading 4",
-    keymap: "####",
-    command: ({ editor, range }: { editor: Editor; range: any }) => {
-      editor
-        .chain()
-        .focus()
-        .deleteRange(range)
-        .setNode("heading", { level: 4 })
-        .run();
-    },
-  },
-  {
-    title: "Bold",
-    keymap: "C-b",
-    command: ({ editor, range }: { editor: Editor; range: any }) => {
-      editor.chain().focus().deleteRange(range).setMark("bold").run();
-    },
-  },
-  {
-    title: "Italic",
-    keymap: "C-i",
-    command: ({ editor, range }: { editor: Editor; range: any }) => {
-      editor.chain().focus().deleteRange(range).setMark("italic").run();
-    },
+    title: { cs: "Text", en: "Text" },
+    items: [
+      {
+        title: { cs: "Titulek H2", en: "Heading H2" },
+        keymap: "##",
+        command: ({ editor, range }: { editor: Editor; range: any }) => {
+          editor
+            .chain()
+            .focus()
+            .deleteRange(range)
+            .setNode("heading", { level: 2 })
+            .run();
+        },
+      },
+      {
+        title: { cs: "Titulek H3", en: "Heading H3" },
+        keymap: "###",
+        command: ({ editor, range }: { editor: Editor; range: any }) => {
+          editor
+            .chain()
+            .focus()
+            .deleteRange(range)
+            .setNode("heading", { level: 3 })
+            .run();
+        },
+      },
+      {
+        title: { cs: "Titulek H4", en: "Heading H4" },
+        keymap: "####",
+        command: ({ editor, range }: { editor: Editor; range: any }) => {
+          editor
+            .chain()
+            .focus()
+            .deleteRange(range)
+            .setNode("heading", { level: 4 })
+            .run();
+        },
+      },
+      {
+        title: { cs: "Tučné písmo", en: "Bold" },
+        keymap: "C-b",
+        command: ({ editor, range }: { editor: Editor; range: any }) => {
+          editor.chain().focus().deleteRange(range).setMark("bold").run();
+        },
+      },
+      {
+        title: { cs: "Kurzíva", en: "Italic" },
+        keymap: "C-i",
+        command: ({ editor, range }: { editor: Editor; range: any }) => {
+          editor.chain().focus().deleteRange(range).setMark("italic").run();
+        },
+      },
+    ],
   },
 ];
 
+const translateTitles = (groups) => {
+  return groups.map((group) => ({
+    ...group,
+    title: group.title[document.documentElement.lang] || group.title.en,
+    items: group.items.map((item) => ({
+      ...item,
+      title: item.title[document.documentElement.lang] || item.title.en,
+    })),
+  }));
+}
+
 export const suggestion = {
   items: ({ query }: { editor: Editor; query: string }) => {
-    return defaultItems
-      .filter((item) =>
-        item.title.toLowerCase().startsWith(query.toLowerCase()),
-      )
-      .slice(0, 5);
+    return translateTitles(defaultGroups)
+      .map((group) => {
+        const matchingItems = group.items.filter((item) =>
+          item.title.toLowerCase().indexOf(query.toLowerCase()) !== -1,
+        );
+        if (matchingItems.length > 0) {
+          return { ...group, items: matchingItems };
+        }
+        return null;
+      })
+      .filter((group) => group !== null);
   },
 
   allowSpaces: false,
@@ -106,7 +128,11 @@ export const suggestion = {
     return {
       onStart: (props: SuggestionProps) => {
         console.log("suggestion onStart", component);
-        props.editor.chain().setMeta("hideDragHandle", true).setMeta("lockDragHandle", true).run()
+        props.editor
+          .chain()
+          .setMeta("hideDragHandle", true)
+          .setMeta("lockDragHandle", true)
+          .run();
 
         component = new ReactRenderer(CommandsList, {
           props,
@@ -142,7 +168,11 @@ export const suggestion = {
 
       onExit(props: SuggestionProps) {
         console.log("suggestion onExit", component);
-        props.editor.chain().setMeta("hideDragHandle", false).setMeta("lockDragHandle", false).run()
+        props.editor
+          .chain()
+          .setMeta("hideDragHandle", false)
+          .setMeta("lockDragHandle", false)
+          .run();
         if (!component) return;
 
         if (component.element && document.body.contains(component.element)) {

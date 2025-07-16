@@ -38,6 +38,10 @@
           const node = document.getElementById("folio-tiptap-dev-root");
           node.dataset.tiptapType = "block";
         }
+
+        if (params.get('lang') === "cs") {
+          document.documentElement.lang = "cs"
+        }
       })()
     </script>
 

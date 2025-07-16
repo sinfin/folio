@@ -12,6 +12,11 @@ const TRANSLATIONS = {
   },
 };
 
+interface CommandGroup {
+  title: string;
+  items: CommandItem[];
+}
+
 interface CommandItem {
   title: string;
   command?: (params: any) => void;
@@ -63,25 +68,52 @@ export class CommandsList extends React.Component<
   }
 
   upHandler() {
-    this.setSelectedIndex(
-      (this.state.selectedIndex + this.props.items.length - 1) %
-        this.props.items.length,
-    );
+    let newIndex = this.state.selectedIndex - 1;
+
+    if (newIndex < 0) {
+      let itemsCount = 0
+      this.props.items.forEach((group) => { itemsCount += group.items.length })
+
+      newIndex = itemsCount - 1;
+    }
+
+    this.setSelectedIndex(newIndex)
   }
 
   downHandler() {
-    this.setSelectedIndex(
-      (this.state.selectedIndex + 1) % this.props.items.length,
-    );
+    let itemsCount = 0
+    this.props.items.forEach((group) => { itemsCount += group.items.length })
+
+    let newIndex = this.state.selectedIndex + 1;
+
+    if (newIndex >= itemsCount) {
+      newIndex = 0
+    }
+
+    this.setSelectedIndex(newIndex)
   }
 
   enterHandler() {
-    this.selectItem(this.state.selectedIndex);
+    let index = -1
+    let targetItem = null
+
+    this.props.items.forEach((group) => {
+      if (targetItem) return
+
+      group.items.forEach((item) => {
+        if (targetItem) return
+        index += 1
+
+        if (index === this.state.selectedIndex) {
+          targetItem = item;
+        }
+      })
+    })
+
+    this.selectItem(targetItem);
   }
 
-  selectItem(index: number) {
-    const item = this.props.items[index];
-
+  selectItem(item: CommandItem) {
     if (item) {
       this.props.command(item);
     }
@@ -97,47 +129,64 @@ export class CommandsList extends React.Component<
   }
 
   render() {
+    let index = -1
+
     return (
       <div className="f-tiptap-commands-list">
-        <ul className="f-tiptap-commands-list__section">
-          {this.props.items.length > 0 ? (
-            this.props.items.map((item: CommandItem, index: number) => (
-              <li className="f-tiptap-commands-list__section-li">
-                <button
-                  key={index}
-                  type="button"
-                  className="f-tiptap-commands-list__item f-tiptap-commands-list__item--active"
-                  data-selected={String(index === this.state.selectedIndex)}
-                  onClick={() => this.selectItem(index)}
-                  onMouseOver={() => this.setSelectedIndex(index)}
-                >
-                  <span className="f-tiptap-commands-list__item-inner">
-                    <span className="f-tiptap-commands-list__item-label">
-                      {item.title}
-                    </span>
-                    <span className="f-tiptap-commands-list__item-keymap" data-keymap={item.keymap}>
-                    </span>
-                  </span>
-                </button>
-              </li>
-            ))
-          ) : null}
-        </ul>
+        {this.props.items.length > 0 ? (
+          <div className="f-tiptap-commands-list__section">
+            {this.props.items.map((group: CommandGroup) => (
+              <>
+                <div className="f-tiptap-commands-list__section-heading">
+                  {group.title}
+                </div>
 
-        <ul className="f-tiptap-commands-list__section f-tiptap-commands-list__section--fallback">
-          <li className="f-tiptap-commands-list__section-li">
-            <span className="f-tiptap-commands-list__item f-tiptap-commands-list__item--fallback">
-              <span className="f-tiptap-commands-list__item-inner">
-                <span className="f-tiptap-commands-list__item-label">
-                  {translate(TRANSLATIONS, "defaultAction").replace('{query}', this.props.query || "")}
-                </span>
-                <span className="f-tiptap-commands-list__item-keymap">
-                  esc
+                <ul className="f-tiptap-commands-list__section-ul">
+                  {group.items.map((item: CommandItem) => {
+                    index += 1
+
+                    return (
+                      <li className="f-tiptap-commands-list__section-li" key={`${group.title}-${item.title}`}>
+                        <button
+                          type="button"
+                          className="f-tiptap-commands-list__item f-tiptap-commands-list__item--active"
+                          data-selected={String(index === this.state.selectedIndex)}
+                          onClick={() => this.selectItem(item)}
+                          onMouseOver={() => this.setSelectedIndex(index)}
+                        >
+                          <span className="f-tiptap-commands-list__item-inner">
+                            <span className="f-tiptap-commands-list__item-label">
+                              {item.title}
+                            </span>
+                            <span className="f-tiptap-commands-list__item-keymap" data-keymap={item.keymap}>
+                            </span>
+                          </span>
+                        </button>
+                      </li>
+                    )
+                  })}
+                </ul>
+              </>
+            ))}
+          </div>
+        ) : null}
+
+        <div className="f-tiptap-commands-list__section f-tiptap-commands-list__section--fallback">
+          <ul className="f-tiptap-commands-list__section-ul">
+            <li className="f-tiptap-commands-list__section-li">
+              <span className="f-tiptap-commands-list__item f-tiptap-commands-list__item--fallback">
+                <span className="f-tiptap-commands-list__item-inner">
+                  <span className="f-tiptap-commands-list__item-label">
+                    {translate(TRANSLATIONS, "defaultAction").replace('{query}', this.props.query || "")}
+                  </span>
+                  <span className="f-tiptap-commands-list__item-keymap">
+                    esc
+                  </span>
                 </span>
               </span>
-            </span>
-          </li>
-        </ul>
+            </li>
+          </ul>
+        </div>
       </div>
     );
   }
