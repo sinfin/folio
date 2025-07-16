@@ -51,6 +51,10 @@ body,
   display: flex;
   flex-direction: column;
 
+  &--block {
+    min-height: 500px;
+  }
+
   &--rich-text {
     border: 1px solid var(--f-tiptap-editor--border-color);
     border-radius: var(--f-tiptap-editor--border-radius);
@@ -83,7 +87,10 @@ body,
   }
 }
 
-.f-tiptap-editor p.is-empty::before {
+.f-tiptap-editor p.is-empty::before,
+.f-tiptap-editor h2.is-empty::before,
+.f-tiptap-editor h3.is-empty::before,
+.f-tiptap-editor h4.is-empty::before {
   color: #adb5bd;
   content: attr(data-placeholder);
   float: left;

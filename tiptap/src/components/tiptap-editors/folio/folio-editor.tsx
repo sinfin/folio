@@ -73,14 +73,7 @@ import makeFolioTiptapNodeCommandGroup from "@/lib/make-folio-tiptap-node-comman
 // import GlobalDragHandle from "tiptap-extension-global-drag-handle";
 // import AutoJoiner from "tiptap-extension-auto-joiner";
 
-const TRANSLATIONS = {
-  cs: {
-    commandPlaceholder: 'Stiskněte "/" pro příkazy',
-  },
-  en: {
-    commandPlaceholder: 'Press "/" for commands',
-  },
-};
+import TRANSLATIONS from "./folio-editor-i18n.json"
 
 const MainToolbarContent = ({
   onHighlighterClick,
@@ -230,7 +223,15 @@ export function FolioEditor({
       TextAlign.configure({ types: ["heading", "paragraph"] }),
       Placeholder.configure({
         // Use a placeholder:
-        placeholder: translate(TRANSLATIONS, "commandPlaceholder"),
+        placeholder: ({ node }) => {
+          let key = "commandPlaceholder"
+
+          if (node.type.name === 'heading' && node.attrs.level && [2, 3, 4].indexOf(node.attrs.level !== -1)) {
+            key = `h${node.attrs.level}Placeholder`
+          }
+
+          return translate(TRANSLATIONS, key)
+        },
       }),
       ...(blockEditor ? [TaskList] : []),
       ...(blockEditor ? [TaskItem.configure({ nested: true })] : []),

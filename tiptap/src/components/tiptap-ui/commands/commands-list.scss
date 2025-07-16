@@ -2,6 +2,9 @@
   --f-tiptap-commands-list__item--min-height: 48px;
   --f-tiptap-commands-list__item--padding: 8px 16px;
 
+  --f-tiptap-commands-list__small-font-size: .75rem;
+  --f-tiptap-commands-list__small-opacity: .5;
+
   background: #ffffff;
   border-radius: var(--f-tiptap-editor--border-radius);
   border: 1px solid var(--f-tiptap-editor--border-color);
@@ -30,19 +33,19 @@
 
   &__section--fallback &__item {
     --f-tiptap-commands-list__item--min-height: 36px;
-    font-size: .85rem;
+    font-size: var(--f-tiptap-commands-list__small-font-size);
   }
 
   &__section--fallback &__item-label {
-    opacity: 0.6;
+    opacity: var(--f-tiptap-commands-list__small-opacity);
   }
 
   &__section-heading {
     padding: var(--f-tiptap-commands-list__item--padding);
     padding-top: 12px;
     padding-bottom: 12px;
-    opacity: 0.4;
-    font-size: .75rem;
+    opacity: var(--f-tiptap-commands-list__small-opacity);
+    font-size: var(--f-tiptap-commands-list__small-font-size);
     display: flex;
     align-items: center;
   }
@@ -95,9 +98,9 @@
   }
 
   &__item-keymap {
-    opacity: 0.6;
+    opacity: var(--f-tiptap-commands-list__small-opacity);
     flex: 0 0 auto;
-    font-size: .75rem;
+    font-size: var(--f-tiptap-commands-list__small-font-size);
     line-height: 1;
     min-width: 24px;
     text-align: right;
