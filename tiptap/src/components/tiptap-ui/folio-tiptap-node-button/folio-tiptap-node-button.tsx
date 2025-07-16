@@ -15,7 +15,7 @@ import { Button } from "@/components/tiptap-ui-primitive/button";
 
 export interface FolioTiptapNodeButtonProps extends ButtonProps {
   editor: Editor | null;
-  folioTiptapNodes?: string[];
+  folioTiptapNodes: { title: string; type: string }[] | null;
 }
 
 export function insertFolioTiptapNode(
@@ -53,7 +53,7 @@ export const FolioTiptapNodeButton = React.forwardRef<
         window.top!.postMessage(
           {
             type: "f-tiptap-node-button:click",
-            attrs: { type: folioTiptapNodes[0] },
+            attrs: { type: folioTiptapNodes[0].type },
           },
           "*",
         );

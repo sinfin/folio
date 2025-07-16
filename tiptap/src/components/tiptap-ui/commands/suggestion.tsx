@@ -17,83 +17,9 @@ interface SuggestionProps {
   event: KeyboardEvent;
 }
 
-const defaultGroups = [
-  {
-    title: { cs: "Text", en: "Text" },
-    items: [
-      {
-        title: { cs: "Titulek H2", en: "Heading H2" },
-        keymap: "##",
-        icon: headingIcons[2],
-        command: ({ editor, range }: { editor: Editor; range: any }) => {
-          editor
-            .chain()
-            .focus()
-            .deleteRange(range)
-            .setNode("heading", { level: 2 })
-            .run();
-        },
-      },
-      {
-        title: { cs: "Titulek H3", en: "Heading H3" },
-        keymap: "###",
-        icon: headingIcons[3],
-        command: ({ editor, range }: { editor: Editor; range: any }) => {
-          editor
-            .chain()
-            .focus()
-            .deleteRange(range)
-            .setNode("heading", { level: 3 })
-            .run();
-        },
-      },
-      {
-        title: { cs: "Titulek H4", en: "Heading H4" },
-        keymap: "####",
-        icon: headingIcons[4],
-        command: ({ editor, range }: { editor: Editor; range: any }) => {
-          editor
-            .chain()
-            .focus()
-            .deleteRange(range)
-            .setNode("heading", { level: 4 })
-            .run();
-        },
-      },
-      {
-        title: { cs: "Tučné písmo", en: "Bold" },
-        keymap: "C-b",
-        icon: markIcons["bold"],
-        command: ({ editor, range }: { editor: Editor; range: any }) => {
-          editor.chain().focus().deleteRange(range).setMark("bold").run();
-        },
-      },
-      {
-        title: { cs: "Kurzíva", en: "Italic" },
-        keymap: "C-i",
-        icon: markIcons["italic"],
-        command: ({ editor, range }: { editor: Editor; range: any }) => {
-          editor.chain().focus().deleteRange(range).setMark("italic").run();
-        },
-      },
-    ],
-  },
-];
-
-const translateTitles = (groups) => {
-  return groups.map((group) => ({
-    ...group,
-    title: group.title[document.documentElement.lang] || group.title.en,
-    items: group.items.map((item) => ({
-      ...item,
-      title: item.title[document.documentElement.lang] || item.title.en,
-    })),
-  }));
-}
-
-export const suggestion = {
-  items: ({ query }: { editor: Editor; query: string }) => {
-    return translateTitles(defaultGroups)
+export const makeSuggestionItems = (groups) => {
+  return ({ query }: { editor: Editor; query: string }) => {
+    return translateTitles(groups)
       .map((group) => {
         const matchingItems = group.items.filter((item) =>
           item.title.toLowerCase().indexOf(query.toLowerCase()) !== -1,
@@ -104,7 +30,85 @@ export const suggestion = {
         return null;
       })
       .filter((group) => group !== null);
-  },
+  }
+}
+
+export const defaultGroup = {
+  title: { cs: "Text", en: "Text" },
+  items: [
+    {
+      title: { cs: "Titulek H2", en: "Heading H2" },
+      keymap: "##",
+      icon: headingIcons[2],
+      command: ({ editor, range }: { editor: Editor; range: any }) => {
+        editor
+          .chain()
+          .focus()
+          .deleteRange(range)
+          .setNode("heading", { level: 2 })
+          .run();
+      },
+    },
+    {
+      title: { cs: "Titulek H3", en: "Heading H3" },
+      keymap: "###",
+      icon: headingIcons[3],
+      command: ({ editor, range }: { editor: Editor; range: any }) => {
+        editor
+          .chain()
+          .focus()
+          .deleteRange(range)
+          .setNode("heading", { level: 3 })
+          .run();
+      },
+    },
+    {
+      title: { cs: "Titulek H4", en: "Heading H4" },
+      keymap: "####",
+      icon: headingIcons[4],
+      command: ({ editor, range }: { editor: Editor; range: any }) => {
+        editor
+          .chain()
+          .focus()
+          .deleteRange(range)
+          .setNode("heading", { level: 4 })
+          .run();
+      },
+    },
+    {
+      title: { cs: "Tučné písmo", en: "Bold" },
+      keymap: "C-b",
+      icon: markIcons["bold"],
+      command: ({ editor, range }: { editor: Editor; range: any }) => {
+        editor.chain().focus().deleteRange(range).setMark("bold").run();
+      },
+    },
+    {
+      title: { cs: "Kurzíva", en: "Italic" },
+      keymap: "C-i",
+      icon: markIcons["italic"],
+      command: ({ editor, range }: { editor: Editor; range: any }) => {
+        editor.chain().focus().deleteRange(range).setMark("italic").run();
+      },
+    },
+  ],
+}
+
+const translateTitles = (groups) => {
+  return groups.map((group) => ({
+    ...group,
+    title: group.title[document.documentElement.lang] || group.title.en,
+    items: group.items.map((item) => ({
+      ...item,
+      title: typeof item.title === "string"
+        ? item.title
+        : item.title[document.documentElement.lang] || item.title.en,
+    })),
+  }));
+}
+
+export const suggestion = {
+  items: makeSuggestionItems([defaultGroup]),
 
   allowSpaces: false,
 

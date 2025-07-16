@@ -11,7 +11,7 @@ class TiptapInput < SimpleForm::Inputs::StringInput
                         origin: ENV["FOLIO_TIPTAP_DEV"] ? "*" : "",
                         type: tiptap_type,
                         render_url: @builder.template.render_nodes_console_api_tiptap_path,
-                        tiptap_nodes_json: (@builder.object.try(:folio_tiptap_nodes) || Folio::Tiptap.default_tiptap_nodes).to_json,
+                        tiptap_nodes_json: tiptap_nodes_json(@builder.object.try(:folio_tiptap_nodes) || Folio::Tiptap.default_tiptap_nodes),
                       },
                       action: {
                         "message@window" => "onWindowMessage",
@@ -49,4 +49,14 @@ class TiptapInput < SimpleForm::Inputs::StringInput
 
     @builder.hidden_field(attribute_name, merged_input_options)
   end
+
+  private
+    def tiptap_nodes_json(node_names)
+      node_names.map do |node_name|
+        {
+          title: node_name.constantize.model_name.human,
+          type: node_name,
+        }
+      end.to_json
+    end
 end

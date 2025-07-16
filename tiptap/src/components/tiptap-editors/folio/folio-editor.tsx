@@ -37,7 +37,7 @@ import "@/components/tiptap-node/paragraph-node/paragraph-node.scss";
 // --- Tiptap UI ---
 import { HeadingDropdownMenu } from "@/components/tiptap-ui/heading-dropdown-menu";
 import { FolioTiptapNodeButton } from "@/components/tiptap-ui/folio-tiptap-node-button";
-import { CommandsExtension, suggestion } from "@/components/tiptap-ui/commands";
+import { CommandsExtension, suggestion, defaultGroup, makeSuggestionItems } from "@/components/tiptap-ui/commands";
 import { ListDropdownMenu } from "@/components/tiptap-ui/list-dropdown-menu";
 import { BlockquoteButton } from "@/components/tiptap-ui/blockquote-button";
 import { CodeBlockButton } from "@/components/tiptap-ui/code-block-button";
@@ -67,6 +67,7 @@ import { useWindowSize } from "@/hooks/use-window-size";
 import { useCursorVisibility } from "@/hooks/use-cursor-visibility";
 
 import translate from "@/lib/i18n";
+import makeFolioTiptapNodeCommandGroup from "@/lib/make-folio-tiptap-node-command-group";
 
 // --- 3rd party extensions ---
 // import GlobalDragHandle from "tiptap-extension-global-drag-handle";
@@ -94,7 +95,7 @@ const MainToolbarContent = ({
   isMobile: boolean;
   blockEditor: boolean;
   editor: Editor | null;
-  folioTiptapNodes: string[];
+  folioTiptapNodes: { title: string; type: string }[] | null;
 }) => {
   return (
     <>
@@ -243,7 +244,10 @@ export function FolioEditor({
       ...(blockEditor ? [FolioTiptapNodeExtension] : []),
 
       CommandsExtension.configure({
-        suggestion,
+        suggestion: (blockEditor && folioTiptapNodes) ? {
+          ...suggestion,
+          items: makeSuggestionItems([defaultGroup, makeFolioTiptapNodeCommandGroup(folioTiptapNodes)])
+        } : suggestion,
       }),
     ],
   });

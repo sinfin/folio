@@ -35,9 +35,15 @@ window.Folio.Stimulus.register('f-c-tiptap-overlay', class extends window.Stimul
 
     if (e.data.type === 'f-tiptap-node-button:click') {
       this.onNodeButtonClickMessage(e)
+    } else if (e.data.type === 'f-tiptap-slash-command:selected') {
+      this.onSlashCommandSelectedMessage(e)
     } else if (e.data.type === "f-tiptap-node:click") {
       this.onNodeClickMessage(e)
     }
+  }
+
+  onSlashCommandSelectedMessage (e) {
+    this.onNodeClickMessage(e)
   }
 
   onNodeButtonClickMessage (e) {
