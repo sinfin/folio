@@ -130,7 +130,8 @@ class Folio::OpenAi::TranscribeSubtitlesJob < Folio::ApplicationJob
         # Remove the transcription status completely after successful completion
         # The subtitle records themselves will show the current state
         additional_data.delete("subtitle_transcription")
-              video_file.update_column(:additional_data, additional_data)
+        video_file.update_column(:additional_data, additional_data)
+      end
       broadcast_file_update(video_file)
       broadcast_subtitles_update(video_file)
     end
