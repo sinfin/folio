@@ -352,65 +352,6 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
     assert_selector("p", text: "Test initialization")
   end
 
-  def test_taskList
-    prose_mirror_node = {
-      "type" => "taskList",
-      "content" => [
-        {
-          "type" => "taskItem",
-          "attrs" => {
-            "checked" => true
-          },
-          "content" => [
-            {
-              "type" => "paragraph",
-              "attrs" => {
-                "textAlign" => nil,
-              },
-              "content" => [
-                {
-                  "text" => "Lorem ipsum dolor sit amet",
-                  "type" => "text"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type" => "taskItem",
-          "attrs" => {
-            "checked" => false
-          },
-          "content" => [
-            {
-              "type" => "paragraph",
-              "attrs" => {
-                "textAlign" => nil,
-              },
-              "content" => [
-                {
-                  "text" => "Consectetur adipisicing elit",
-                  "type" => "text"
-                }
-              ]
-            }
-          ]
-        },
-      ]
-    }
-
-    component = Folio::Tiptap::Content::ProseMirrorNodeComponent.new(
-      record: build_mock_record,
-      prose_mirror_node:
-    )
-
-    render_inline(component)
-
-    assert_selector('ul[data-type="taskList"]')
-    assert_selector('li[data-checked="true"]', text: "Lorem ipsum dolor sit amet")
-    assert_selector('li[data-checked="false"]', text: "Consectetur adipisicing elit")
-  end
-
   private
     def build_mock_record
       Object.new

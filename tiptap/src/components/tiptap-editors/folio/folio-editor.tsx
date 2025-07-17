@@ -102,10 +102,7 @@ const MainToolbarContent = ({
       {blockEditor ? (
         <>
         <ToolbarGroup>
-          <FolioTiptapNodeButton
-            editor={editor}
-            folioTiptapNodes={folioTiptapNodes}
-          />
+          <FolioTiptapNodeButton editor={editor} />
         </ToolbarGroup>
 
         <ToolbarSeparator />

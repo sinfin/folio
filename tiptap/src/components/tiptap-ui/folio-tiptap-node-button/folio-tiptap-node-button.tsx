@@ -13,7 +13,6 @@ import { Button } from "@/components/tiptap-ui-primitive/button";
 
 export interface FolioTiptapNodeButtonProps extends ButtonProps {
   editor: Editor | null;
-  folioTiptapNodes: FolioTiptapNodeFromInput[] | null;
 }
 
 export function insertFolioTiptapNode(
@@ -37,12 +36,12 @@ export function insertFolioTiptapNode(
 export const FolioTiptapNodeButton = React.forwardRef<
   HTMLButtonElement,
   FolioTiptapNodeButtonProps
->(({ editor: providedEditor, disabled, folioTiptapNodes }, ref) => {
+>(({ editor: providedEditor, disabled }, ref) => {
   const editor = useTiptapEditor(providedEditor);
 
   const handleClick = React.useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
-      if (!e.defaultPrevented && !disabled && folioTiptapNodes) {
+      if (!e.defaultPrevented && !disabled && editor) {
         const currentPos = editor.state.selection.$from.pos;
 
         editor

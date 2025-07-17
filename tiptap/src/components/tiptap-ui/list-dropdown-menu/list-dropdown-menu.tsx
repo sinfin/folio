@@ -150,7 +150,7 @@ export function useActiveListIcon(
 
 export function ListDropdownMenu({
   editor: providedEditor,
-  types = ["bulletList", "orderedList", "taskList"],
+  types = ["bulletList", "orderedList"],
   hideWhenUnavailable = false,
   onOpenChange,
   ...props

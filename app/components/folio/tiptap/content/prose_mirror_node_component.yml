@@ -45,9 +45,5 @@ nodes:
     has_attrs: true
   tableRow:
     tag: tr
-  taskList:
-    tag: ul
-    data_attrs:
-      type: taskList
   taskItem:
     component_name: Folio::Tiptap::Content::ProseMirrorNodes::TaskItemNodeComponent
