@@ -256,6 +256,71 @@ FactoryBot.define do
     data_type { "string" }
     site { get_current_or_existing_site_or_create_from_factory }
   end
+
+  factory :folio_video_subtitle, class: "Folio::VideoSubtitle" do
+    association :video, factory: :folio_file_video
+    language { "cs" }
+    format { "vtt" }
+    enabled { false }
+    text { "00:00:01.000 --> 00:00:02.000\nSample subtitle text" }
+    metadata { {} }
+
+    trait :enabled do
+      enabled { true }
+    end
+
+    trait :auto_generated do
+      after(:create) do |subtitle|
+        subtitle.update_transcription_metadata(
+          "job_class" => "Folio::ElevenLabs::TranscribeSubtitlesJob",
+          "state" => "ready",
+          "completed_at" => Time.current.iso8601,
+          "attempts" => 1
+        )
+        subtitle.save!
+      end
+    end
+
+    trait :processing do
+      after(:create) do |subtitle|
+        subtitle.update_transcription_metadata(
+          "job_class" => "Folio::ElevenLabs::TranscribeSubtitlesJob",
+          "state" => "processing",
+          "processing_started_at" => Time.current.iso8601,
+          "attempts" => 1
+        )
+        subtitle.save!
+      end
+    end
+
+    trait :failed do
+      after(:create) do |subtitle|
+        subtitle.update_transcription_metadata(
+          "job_class" => "Folio::ElevenLabs::TranscribeSubtitlesJob",
+          "state" => "failed",
+          "completed_at" => Time.current.iso8601,
+          "error_message" => "Transcription failed",
+          "attempts" => 1
+        )
+        subtitle.save!
+      end
+    end
+
+    trait :manual_override do
+      after(:create) do |subtitle|
+        subtitle.update_transcription_metadata(
+          "job_class" => "Folio::ElevenLabs::TranscribeSubtitlesJob",
+          "state" => "manual_override"
+        )
+        subtitle.update_manual_edits_metadata
+        subtitle.save!
+      end
+    end
+
+    trait :invalid_content do
+      text { "Invalid VTT content without proper format" }
+    end
+  end
 end
 
 if Rails.application.config.folio_site_default_test_factory

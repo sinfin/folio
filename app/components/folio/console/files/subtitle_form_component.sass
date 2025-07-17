@@ -1,0 +1,103 @@
+.f-c-files-subtitle-form
+  &.accordion-item
+    margin-bottom: 0.5rem
+    border: 1px solid var(--bs-border-color)
+    border-radius: var(--bs-border-radius)
+    
+  &__header
+    .accordion-button
+      background-color: var(--bs-light)
+      border: none
+      padding: 0.5rem 1.25rem
+      font-weight: 500
+      
+      &:focus
+        box-shadow: none
+        border-color: var(--bs-primary)
+        
+      &:not(.collapsed)
+        background-color: var(--bs-primary-bg-subtle)
+        color: var(--bs-primary-text-emphasis)
+        
+      // Ensure caret icon is visible
+      &::after
+        content: ""
+        width: 1rem
+        height: 1rem
+        margin-left: auto
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23212529'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e")
+        background-repeat: no-repeat
+        background-size: 1rem
+        transition: transform 0.2s ease-in-out
+        
+      &.collapsed::after
+        transform: rotate(-90deg)
+
+  &__language-info
+    flex: 1
+    
+  &__language-title
+    display: flex
+    align-items: center
+    gap: 0.5rem
+    margin-bottom: 0.25rem
+
+  &__body
+    .accordion-body
+      padding: 1.5rem 1.25rem
+      background-color: var(--bs-body-bg)
+      border-top: 1px solid var(--bs-border-color)
+      
+      // Ensure alert borders are visible
+      .alert
+        border: 1px solid transparent
+        border-radius: var(--bs-border-radius)
+        &.alert-danger
+          border-color: var(--bs-danger-border-subtle, #f5c6cb)
+          background-color: var(--bs-danger-bg-subtle, #f8d7da)
+
+  &__content
+    position: relative
+
+  &__loader
+    background-color: rgba(255, 255, 255, 0.8)
+    position: absolute
+    top: 0
+    left: 0
+    right: 0
+    bottom: 0
+    z-index: 10
+    display: flex
+    align-items: center
+    justify-content: center
+
+  &__last-activity
+    margin-bottom: 1rem
+
+  // Badge styling improvements for better visibility
+  .badge
+    font-size: 0.7rem
+    &.badge-success
+      background-color: #28a745
+      color: #ffffff
+      font-weight: 500
+      
+    &.badge-warning
+      background-color: #ffc107
+      color: #212529
+      font-weight: 500
+      
+    &.badge-danger
+      background-color: #dc3545
+      color: #ffffff
+      font-weight: 500
+      
+    &.badge-info
+      background-color: #17a2b8
+      color: #ffffff
+      font-weight: 500
+      
+    &.badge-secondary
+      background-color: #6c757d
+      color: #ffffff
+      font-weight: 500 

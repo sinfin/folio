@@ -18,6 +18,14 @@ en:
         close: Close
         create: Create
         destroy: Destroy
+        deleteSubtitleConfirm: Are you sure you want to delete this subtitle?
+        details: Details
+        errorGeneric: 'Error: %{message}'
+        failedToAddLanguage: Failed to add language
+        failedToDeleteSubtitle: Failed to delete subtitle
+        invalidServerResponse: Invalid server response
+        languageAlreadyAdded: This language has already been added
+        pleaseSelectLanguage: Please select a language
         download: Download
         downloadOriginal: Download original
         editOffset: Crop
@@ -50,6 +58,7 @@ en:
         split: Split
         startSplittingAtom: Split into parts
         state: State
+        subtitles: Subtitles
         thumbnailSizes: Generated thumbnails
         title: Title
         usage: Usage

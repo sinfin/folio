@@ -7,15 +7,16 @@ class Folio::CraMediaCloud::DeleteMediaJob < Folio::ApplicationJob
     if id.present?
       api.delete_job_content(id)
     elsif reference_id.present?
-      # media file processing in progress, check the status
-      response = api.get_jobs(ref_id: reference_id).last
+      # Get all jobs with this reference_id
+      jobs = api.get_jobs(ref_id: reference_id)
 
-      if response.present?
-        # processed, content can be deleted
-        api.delete_job_content(response["id"])
-      else
-        # still not processed, wait
-        Folio::CraMediaCloud::DeleteMediaJob.set(wait: 1.minute).perform_later(id, reference_id:)
+      if jobs.any?
+        # Delete content for all jobs with this reference_id
+        jobs.each do |job|
+          Rails.logger.info "[CraMediaCloud::DeleteMediaJob] Deleting job content for job ID #{job['id']} (ref: #{reference_id})"
+          api.delete_job_content(job["id"])
+        end
+        Rails.logger.info "[CraMediaCloud::DeleteMediaJob] Deleted content for #{jobs.size} job(s) with reference_id #{reference_id}"
       end
     else
       raise "Missing remote_key and remote_reference_id"

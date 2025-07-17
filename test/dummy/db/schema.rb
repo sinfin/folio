@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_04_28_074018) do
+ActiveRecord::Schema[7.1].define(version: 2025_07_16_062032) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -519,9 +519,12 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_28_074018) do
     t.jsonb "available_user_roles", default: ["administrator", "manager"]
     t.string "phone_secondary"
     t.text "address_secondary"
+    t.jsonb "subtitle_languages", default: ["cs"]
+    t.boolean "subtitle_auto_generation_enabled", default: false
     t.index ["domain"], name: "index_folio_sites_on_domain"
     t.index ["position"], name: "index_folio_sites_on_position"
     t.index ["slug"], name: "index_folio_sites_on_slug"
+    t.index ["subtitle_languages"], name: "index_folio_sites_on_subtitle_languages", using: :gin
     t.index ["type"], name: "index_folio_sites_on_type"
   end
 
@@ -593,6 +596,22 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_28_074018) do
     t.index ["source_site_id"], name: "index_folio_users_on_source_site_id"
   end
 
+  create_table "folio_video_subtitles", force: :cascade do |t|
+    t.bigint "video_id", null: false
+    t.string "language", null: false
+    t.string "format", default: "vtt"
+    t.text "text"
+    t.boolean "enabled", default: false
+    t.jsonb "metadata", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["enabled"], name: "index_folio_video_subtitles_on_enabled"
+    t.index ["language"], name: "index_folio_video_subtitles_on_language"
+    t.index ["metadata"], name: "index_folio_video_subtitles_on_metadata", using: :gin
+    t.index ["video_id", "language"], name: "index_folio_video_subtitles_on_video_id_and_language", unique: true
+    t.index ["video_id"], name: "index_folio_video_subtitles_on_video_id"
+  end
+
   create_table "friendly_id_slugs", force: :cascade do |t|
     t.string "slug", null: false
     t.integer "sluggable_id", null: false
@@ -649,4 +668,5 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_28_074018) do
   add_foreign_key "folio_site_user_links", "folio_sites", column: "site_id"
   add_foreign_key "folio_site_user_links", "folio_users", column: "user_id"
   add_foreign_key "folio_users", "folio_sites", column: "auth_site_id"
+  add_foreign_key "folio_video_subtitles", "folio_files", column: "video_id"
 end

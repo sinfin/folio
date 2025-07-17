@@ -7,7 +7,17 @@ class Folio::Console::SitesController < Folio::Console::BaseController
   before_action :add_site_breadcrumb
 
   def update
-    @site.update(site_params)
+    processed_params = site_params
+    # Convert comma-separated string to array
+    if processed_params[:subtitle_languages_string].present?
+      processed_params[:subtitle_languages] = processed_params[:subtitle_languages_string]
+                                                .split(",")
+                                                .map(&:strip)
+                                                .reject(&:blank?)
+      processed_params.delete(:subtitle_languages_string)
+    end
+
+    @site.update(processed_params)
     Folio.instance_variable_set(:@main_site, nil) # to clear the cached version from other tests
     respond_with @site, location: edit_console_site_path
   end
@@ -39,6 +49,7 @@ class Folio::Console::SitesController < Folio::Console::BaseController
         address
         address_secondary
         copyright_info_source
+        subtitle_auto_generation_enabled
       ]
 
       ary << :domain if @site != Folio::Current.main_site
@@ -47,6 +58,7 @@ class Folio::Console::SitesController < Folio::Console::BaseController
             .permit(*ary,
                     *@site.class.additional_params,
                     *file_placements_strong_params,
+                    :subtitle_languages_string,
                     social_links: Folio::Site.social_link_sites)
     end
 

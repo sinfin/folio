@@ -74,7 +74,11 @@ class Folio::Console::FileSerializer
   end
 
   attribute :aasm_state_human do |object|
-    object.aasm.human_state
+    if object.processing? && object.remote_services_data.try(:[], "progress_percentage")
+      "#{object.aasm.human_state} (#{object.remote_services_data.try(:[], "progress_percentage")}%)"
+    else
+      object.aasm.human_state
+    end
   end
 
   attribute :aasm_state_color do |object|
@@ -122,8 +126,8 @@ class Folio::Console::FileSerializer
     Rails.application.config.folio_console_files_additional_html_api_url_lambda.call(object)
   end
 
-  attribute :bottom_html_api_url do |object|
-    if object.is_a?(Folio::File::Video) && object.class.try(:subtitles_enabled?)
+  attribute :subtitles_html_api_url do |object|
+    if object.is_a?(Folio::File::Video) && object.try(:subtitles_enabled?)
       Folio::Engine.routes
                    .url_helpers
                    .subtitles_html_console_api_file_video_path(object)

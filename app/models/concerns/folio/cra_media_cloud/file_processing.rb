@@ -76,4 +76,8 @@ module Folio::CraMediaCloud::FileProcessing
   def processed_by
     "cra_media_cloud"
   end
+
+  def upload_failed?
+    processing_state == "upload_failed"
+  end
 end
