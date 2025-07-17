@@ -1,3 +1,9 @@
+.f-tiptap-commands-list-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+}
+
 .f-tiptap-commands-list {
   --f-tiptap-commands-list__item--min-height: 48px;
   --f-tiptap-commands-list__item--padding: 8px 16px;

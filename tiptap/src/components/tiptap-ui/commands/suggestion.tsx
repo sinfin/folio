@@ -2,7 +2,8 @@ import { computePosition, flip, offset } from "@floating-ui/dom";
 import { ReactRenderer } from "@tiptap/react";
 import { Editor } from "@tiptap/core";
 
-import { CommandsList, CommandItem, CommandGroup } from "./commands-list";
+import { CommandsList, type CommandItem, type CommandGroup } from "./commands-list";
+import { CommandsListBackdrop } from "./commands-list-backdrop";
 
 import { headingIcons } from "@/components/tiptap-ui/heading-button/heading-button";
 import { markIcons } from "@/components/tiptap-ui/mark-button/mark-button";
@@ -127,6 +128,7 @@ export const suggestion = {
 
   render: () => {
     let component: ReactRenderer | null = null;
+    let backdrop: ReactRenderer | null = null
 
     function repositionComponent(clientRect: DOMRect, action: string) {
       if (!component || !component.element) {
@@ -160,7 +162,14 @@ export const suggestion = {
         Object.assign((component!.element as HTMLElement).style, {
           left: `${pos.x}px`,
           top: `${pos.y}px`,
+          zIndex: "11",
           position: pos.strategy === "fixed" ? "fixed" : "absolute",
+        });
+
+        Object.assign((backdrop!.element as HTMLElement).style, {
+          inset: 0,
+          position: pos.strategy === "fixed" ? "fixed" : "absolute",
+          zIndex: "10",
         });
       });
     }
@@ -174,12 +183,18 @@ export const suggestion = {
           .setMeta("lockDragHandle", true)
           .run();
 
+        backdrop = new ReactRenderer(CommandsListBackdrop, {
+          props: { ...props, query: props.query },
+          editor: props.editor,
+        })
+        document.body.appendChild(backdrop.element)
+
         component = new ReactRenderer(CommandsList, {
           props: { ...props, query: props.query },
           editor: props.editor,
         });
-
         document.body.appendChild(component.element);
+
         repositionComponent(props.clientRect(), "start");
       },
 
@@ -199,6 +214,11 @@ export const suggestion = {
             (component.ref as { onEscape: () => void }).onEscape();
           }
 
+          if (backdrop?.element) {
+            backdrop.element.remove();
+            backdrop.destroy();
+          }
+
           if (component?.element) {
             component.element.remove();
             component.destroy();
@@ -213,17 +233,24 @@ export const suggestion = {
       },
 
       onExit(props: SuggestionProps) {
-        // console.log("suggestion onExit", component);
         props.editor
           .chain()
           .setMeta("hideDragHandle", false)
           .setMeta("lockDragHandle", false)
           .run();
-        if (!component) return;
+
+        if (!component) return
+
+        if (backdrop.element && document.body.contains(backdrop.element)) {
+          document.body.removeChild(backdrop.element);
+        }
+
+        backdrop.destroy()
 
         if (component.element && document.body.contains(component.element)) {
           document.body.removeChild(component.element);
         }
+
         component.destroy();
       },
     };
