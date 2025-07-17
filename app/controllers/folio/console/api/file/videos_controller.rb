@@ -80,7 +80,7 @@ class Folio::Console::Api::File::VideosController < Folio::Console::Api::BaseCon
     broadcast_subtitle_update
 
     respond_to do |format|
-      format.json { render_component_json(Folio::Console::Files::SubtitlesFormComponent.new(file: @video)) }
+      format.json { render json: { success: true, message: "Subtitle deleted successfully" } }
     end
   end
 
