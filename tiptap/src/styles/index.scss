@@ -103,6 +103,33 @@ body,
 
 .f-tiptap-editor .node-folioTiptapNode {
   margin: var(--f-tiptap--tt-default-content-spacer) 0;
+  position: relative;
+  z-index: 2;
+
+  &::after,
+  &::before {
+    content: "";
+    position: absolute;
+    inset: -0.5rem;
+    background: var(--tt-selection-color);
+    border-radius: var(--f-tiptap-editor--border-radius);
+    z-index: 3;
+    opacity: 0.5;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  &::before {
+    opacity: 1;
+    z-index: 1;
+  }
+
+  &.ProseMirror-selectednode {
+    &::before,
+    &::after {
+      visibility: visible;
+    }
+  }
 }
 
 .f-c-tiptap-invalid-node {

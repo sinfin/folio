@@ -16,7 +16,7 @@ import { Typography } from "@tiptap/extension-typography";
 import { Highlight } from "@tiptap/extension-highlight";
 // import { Subscript } from "@tiptap/extension-subscript";
 // import { Superscript } from "@tiptap/extension-superscript";
-import { Selection, Placeholder } from "@tiptap/extensions";
+import { Selection, Placeholder, TrailingNode } from "@tiptap/extensions";
 import DragHandle from "@tiptap/extension-drag-handle-react";
 
 // --- UI Primitives ---
@@ -237,6 +237,7 @@ export function FolioEditor({
         alignments: ['left', 'center', 'right'],
         types: ["heading", "paragraph"]
       }),
+      TrailingNode,
       // ...(blockEditor ? [TaskList] : []),
       // ...(blockEditor ? [TaskItem.configure({ nested: true })] : []),
       Highlight.configure({ multicolor: true }),

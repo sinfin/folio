@@ -33,9 +33,7 @@ window.Folio.Stimulus.register('f-c-tiptap-overlay', class extends window.Stimul
     if (this.originValue !== "*" && e.origin !== window.origin) return
     if (!e.data) return
 
-    if (e.data.type === 'f-tiptap-node-button:click') {
-      this.onNodeButtonClickMessage(e)
-    } else if (e.data.type === 'f-tiptap-slash-command:selected') {
+    if (e.data.type === 'f-tiptap-slash-command:selected') {
       this.onSlashCommandSelectedMessage(e)
     } else if (e.data.type === "f-tiptap-node:click") {
       this.onNodeClickMessage(e)
@@ -43,10 +41,6 @@ window.Folio.Stimulus.register('f-c-tiptap-overlay', class extends window.Stimul
   }
 
   onSlashCommandSelectedMessage (e) {
-    this.onNodeClickMessage(e)
-  }
-
-  onNodeButtonClickMessage (e) {
     this.onNodeClickMessage(e)
   }
 
