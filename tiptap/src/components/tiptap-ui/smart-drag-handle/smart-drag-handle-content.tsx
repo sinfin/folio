@@ -24,7 +24,7 @@ import {
 
 import translate from "@/lib/i18n";
 
-import "./drag-handle-content.scss";
+import "./smart-drag-handle-content.scss";
 
 const handlePlusClick = ({
   event,
@@ -359,7 +359,7 @@ const makeButtonOnClick =
     }
   };
 
-export interface DragHandleContentProps {
+export interface SmartDragHandleContentProps {
   /**
    * The TipTap editor instance.
    */
@@ -371,10 +371,10 @@ export interface DragHandleContentProps {
   } | null;
 }
 
-export function DragHandleContent({
+export function SmartDragHandleContent({
   editor,
   selectedNodeData,
-}: DragHandleContentProps) {
+}: SmartDragHandleContentProps) {
   const [openedDropdown, setOpenedDropdown] = useState<string | null>(null);
 
   if (!editor) {
@@ -428,7 +428,7 @@ export function DragHandleContent({
 
   return (
     <div
-      className="f-tiptap__drag-handle-content"
+      className="f-tiptap-smart-drag-handle-content"
       style={{ minHeight: nodeHeightPx || undefined }}
       ref={wrapRef}
     >
@@ -441,7 +441,7 @@ export function DragHandleContent({
         onClick={(event) => {
           handlePlusClick({ event, editor });
         }}
-        className="f-tiptap__drag-handle-button"
+        className="f-tiptap-smart-drag-handle__button"
       >
         <Plus className="tiptap-button-icon" />
       </Button>
@@ -460,7 +460,7 @@ export function DragHandleContent({
             tabIndex={-1}
             aria-label="Drag"
             onClick={handleDragClick}
-            className="f-tiptap__drag-handle-button"
+            className="f-tiptap-smart-drag-handle__button"
           >
             <GripVertical className="tiptap-button-icon" />
           </Button>
@@ -476,7 +476,7 @@ export function DragHandleContent({
                   role="button"
                   tabIndex={-1}
                   aria-label={translate(TRANSLATIONS, option.type)}
-                  className="f-tiptap__drag-handle-dropdown-button"
+                  className="f-tiptap-smart-drag-handle__dropdown-button"
                   onClick={makeButtonOnClick(editor, option, setOpenedDropdown)}
                 >
                   {createElement(option.icon, {

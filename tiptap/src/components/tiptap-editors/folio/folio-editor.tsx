@@ -17,7 +17,6 @@ import { Highlight } from "@tiptap/extension-highlight";
 // import { Subscript } from "@tiptap/extension-subscript";
 // import { Superscript } from "@tiptap/extension-superscript";
 import { Selection, Placeholder, TrailingNode } from "@tiptap/extensions";
-import DragHandle from "@tiptap/extension-drag-handle-react";
 
 // --- UI Primitives ---
 import { Button } from "@/components/tiptap-ui-primitive/button";
@@ -59,12 +58,12 @@ import {
 import { MarkButton } from "@/components/tiptap-ui/mark-button";
 import { TextAlignButton } from "@/components/tiptap-ui/text-align-button";
 import { UndoRedoButton } from "@/components/tiptap-ui/undo-redo-button";
-import { DragHandleContent } from "@/components/tiptap-ui/drag-handle-content";
 
 // --- Icons ---
 import { ArrowLeftIcon } from "@/components/tiptap-icons/arrow-left-icon";
 import { HighlighterIcon } from "@/components/tiptap-icons/highlighter-icon";
 import { LinkIcon } from "@/components/tiptap-icons/link-icon";
+import { SmartDragHandle } from "@/components/tiptap-ui/smart-drag-handle";
 
 // --- Hooks ---
 import { useMobile } from "@/hooks/use-mobile";
@@ -73,10 +72,6 @@ import { useCursorVisibility } from "@/hooks/use-cursor-visibility";
 
 import translate from "@/lib/i18n";
 import makeFolioTiptapNodeCommandGroup from "@/lib/make-folio-tiptap-node-command-group";
-
-// --- 3rd party extensions ---
-// import GlobalDragHandle from "tiptap-extension-global-drag-handle";
-// import AutoJoiner from "tiptap-extension-auto-joiner";
 
 import TRANSLATIONS from "./folio-editor-i18n.json";
 
@@ -329,11 +324,7 @@ export function FolioEditor({
     };
   }, []);
 
-  const [selectedNodeData, setSelectedNodeData] = React.useState<{
-    type: string;
-    x: number;
-    y: number;
-  } | null>(null);
+  // console.log('editor rendered', Number(new Date()))
 
   return (
     <EditorContext.Provider value={{ editor }}>
@@ -370,33 +361,7 @@ export function FolioEditor({
 
         <div className="f-tiptap-editor__content-wrap">
           {blockEditor ? (
-            <DragHandle
-              editor={editor}
-              onNodeChange={({ node }) => {
-                if (node) {
-                  const handle = document.querySelector(".drag-handle");
-
-                  if (handle) {
-                    const rect = handle.getBoundingClientRect();
-
-                    setSelectedNodeData({
-                      type: node.type.name,
-                      x: rect.x,
-                      y: rect.y,
-                    });
-
-                    return;
-                  }
-                }
-
-                setSelectedNodeData(null);
-              }}
-            >
-              <DragHandleContent
-                editor={editor}
-                selectedNodeData={selectedNodeData}
-              />
-            </DragHandle>
+            <SmartDragHandle editor={editor} />
           ) : null}
 
           <EditorContent

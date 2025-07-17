@@ -268,6 +268,8 @@ export const Toolbar = React.forwardRef<HTMLDivElement, ToolbarProps>(
 
     useToolbarKeyboardNav(toolbarRef)
 
+    // console.log('toolbar rendered', Number(new Date()))
+
     if (!isVisible) return null
 
     return (

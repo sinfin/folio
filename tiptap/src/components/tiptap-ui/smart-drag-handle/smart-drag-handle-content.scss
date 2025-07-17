@@ -1,0 +1,16 @@
+.f-tiptap-smart-drag-handle-content {
+  display: flex;
+  gap: 0.125rem;
+  align-items: flex-start;
+  padding-right: 1rem;
+}
+
+.f-tiptap-smart-drag-handle__button,
+.f-tiptap-smart-drag-handle__dropdown-button {
+  cursor: pointer;
+}
+
+.f-tiptap-smart-drag-handle__dropdown-button.tiptap-button {
+  justify-content: flex-start;
+  gap: 0.5rem;
+}
