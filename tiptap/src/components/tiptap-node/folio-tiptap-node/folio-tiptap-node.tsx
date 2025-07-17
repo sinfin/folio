@@ -139,7 +139,7 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
   }, [uniqueId, props]);
 
   return (
-    <NodeViewWrapper className="f-tiptap-node" tabIndex={0} data-drag-handle="">
+    <NodeViewWrapper className="f-tiptap-node" tabIndex={0} data-drag-handle="" onDoubleClick={handleEditClick}>
       {htmlFromApi ? (
         <div
           className="f-tiptap-node__html"
