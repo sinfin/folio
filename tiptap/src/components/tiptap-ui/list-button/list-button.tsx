@@ -9,7 +9,6 @@ import { useTiptapEditor } from "@/hooks/use-tiptap-editor"
 // --- Icons ---
 import { ListIcon } from "@/components/tiptap-icons/list-icon"
 import { ListOrderedIcon } from "@/components/tiptap-icons/list-ordered-icon"
-import { ListTodoIcon } from "@/components/tiptap-icons/list-todo-icon"
 
 // --- Lib ---
 import { isNodeInSchema } from "@/lib/tiptap-utils"
@@ -18,7 +17,7 @@ import { isNodeInSchema } from "@/lib/tiptap-utils"
 import type { ButtonProps } from "@/components/tiptap-ui-primitive/button"
 import { Button } from "@/components/tiptap-ui-primitive/button"
 
-export type ListType = "bulletList" | "orderedList" | "taskList"
+export type ListType = "bulletList" | "orderedList"
 
 export interface ListOption {
   label: string
@@ -57,17 +56,11 @@ export const listOptions: ListOption[] = [
     type: "orderedList",
     icon: ListOrderedIcon,
   },
-  {
-    label: "Task List",
-    type: "taskList",
-    icon: ListTodoIcon,
-  },
 ]
 
 export const listShortcutKeys: Record<ListType, string> = {
   bulletList: "Ctrl-Shift-8",
   orderedList: "Ctrl-Shift-7",
-  taskList: "Ctrl-Shift-9",
 }
 
 export function canToggleList(editor: Editor | null, type: ListType): boolean {
@@ -80,8 +73,6 @@ export function canToggleList(editor: Editor | null, type: ListType): boolean {
       return editor.can().toggleBulletList()
     case "orderedList":
       return editor.can().toggleOrderedList()
-    case "taskList":
-      return editor.can().toggleList("taskList", "taskItem")
     default:
       return false
   }
@@ -95,8 +86,6 @@ export function isListActive(editor: Editor | null, type: ListType): boolean {
       return editor.isActive("bulletList")
     case "orderedList":
       return editor.isActive("orderedList")
-    case "taskList":
-      return editor.isActive("taskList")
     default:
       return false
   }
@@ -111,9 +100,6 @@ export function toggleList(editor: Editor | null, type: ListType): void {
       break
     case "orderedList":
       editor.chain().focus().toggleOrderedList().run()
-      break
-    case "taskList":
-      editor.chain().focus().toggleList("taskList", "taskItem").run()
       break
   }
 }

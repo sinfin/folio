@@ -2,12 +2,10 @@
 
 import * as React from "react";
 import type { Editor, Content } from "@tiptap/react";
+import { Plus } from "lucide-react";
 
 // --- Hooks ---
 import { useTiptapEditor } from "@/hooks/use-tiptap-editor";
-
-// --- Icons ---
-import { BlocksIcon } from "@/components/tiptap-icons/blocks-icon";
 
 // --- UI Primitives ---
 import type { ButtonProps } from "@/components/tiptap-ui-primitive/button";
@@ -44,19 +42,22 @@ export const FolioTiptapNodeButton = React.forwardRef<
 
   const handleClick = React.useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
-      if (
-        !e.defaultPrevented &&
-        !disabled &&
-        folioTiptapNodes &&
-        folioTiptapNodes[0]
-      ) {
-        window.top!.postMessage(
-          {
-            type: "f-tiptap-node-button:click",
-            attrs: { type: folioTiptapNodes[0].type },
-          },
-          "*",
-        );
+      if (!e.defaultPrevented && !disabled && folioTiptapNodes) {
+        const currentPos = editor.state.selection.$from.pos;
+
+        editor
+          .chain()
+          .focus()
+          .insertContentAt(currentPos, {
+            type: "paragraph",
+            content: [
+              {
+                type: "text",
+                text: "/",
+              },
+            ],
+          })
+          .run();
       }
     },
     [disabled],
@@ -102,7 +103,7 @@ export const FolioTiptapNodeButton = React.forwardRef<
       tooltip="Add Folio Tiptap Node"
       onClick={handleClick}
     >
-      <BlocksIcon className="tiptap-button-icon" />
+      <Plus className="tiptap-button-icon" />
     </Button>
   );
 });

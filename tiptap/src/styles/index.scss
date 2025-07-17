@@ -4,6 +4,7 @@
   --f-tiptap-editor--border-color--focused: #3b4548;
   --f-tiptap-editor--border-radius: 4px;
   --f-tiptap-editor-content-wrap--padding-x: 6rem;
+  --f-tiptap-editor-content-wrap--padding-x-rich-text: 1rem;
   --f-tiptap-editor-content-wrap--padding-y: 1rem;
   --f-tiptap-editor-content-wrap--padding-x-mobile: 1rem;
   --f-tiptap-editor-content-wrap--padding-y-mobile: 1rem;
@@ -56,6 +57,8 @@ body,
   }
 
   &--rich-text {
+    --f-tiptap-editor-content-wrap--padding-x: var(--f-tiptap-editor-content-wrap--padding-x-rich-text);
+
     border: 1px solid var(--f-tiptap-editor--border-color);
     border-radius: var(--f-tiptap-editor--border-radius);
     transition: var(--f-tiptap-editor--transition);

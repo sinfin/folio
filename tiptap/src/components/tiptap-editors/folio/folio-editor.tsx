@@ -99,6 +99,19 @@ const MainToolbarContent = ({
     <>
       <Spacer />
 
+      {blockEditor ? (
+        <>
+        <ToolbarGroup>
+          <FolioTiptapNodeButton
+            editor={editor}
+            folioTiptapNodes={folioTiptapNodes}
+          />
+        </ToolbarGroup>
+
+        <ToolbarSeparator />
+        </>
+      ) : null}
+
       <ToolbarGroup>
         <UndoRedoButton action="undo" />
         <UndoRedoButton action="redo" />
@@ -108,7 +121,7 @@ const MainToolbarContent = ({
 
       <ToolbarGroup>
         <HeadingDropdownMenu levels={[1, 2, 3, 4]} />
-        <ListDropdownMenu types={["bulletList", "orderedList", "taskList"]} />
+        <ListDropdownMenu types={["bulletList", "orderedList"]} />
         <BlockquoteButton />
         <CodeBlockButton />
       </ToolbarGroup>
@@ -142,18 +155,6 @@ const MainToolbarContent = ({
         <TextAlignButton align="left" />
         <TextAlignButton align="center" />
         <TextAlignButton align="right" />
-        <TextAlignButton align="justify" />
-      </ToolbarGroup>
-
-      <ToolbarSeparator />
-
-      <ToolbarGroup>
-        {blockEditor ? (
-          <FolioTiptapNodeButton
-            editor={editor}
-            folioTiptapNodes={folioTiptapNodes}
-          />
-        ) : null}
       </ToolbarGroup>
 
       <Spacer />
@@ -222,7 +223,7 @@ export function FolioEditor({
     onUpdate,
     onCreate,
     content: defaultContent,
-    autofocus: true,
+    autofocus: blockEditor,
     immediatelyRender: true,
     shouldRerenderOnTransaction: false,
     editorProps: {
@@ -235,7 +236,24 @@ export function FolioEditor({
     },
     extensions: [
       StarterKit,
-      TextAlign.configure({ types: ["heading", "paragraph"] }),
+      TextAlign.configure({
+        alignments: ['left', 'center', 'right'],
+        types: ["heading", "paragraph"]
+      }),
+      // ...(blockEditor ? [TaskList] : []),
+      // ...(blockEditor ? [TaskItem.configure({ nested: true })] : []),
+      Highlight.configure({ multicolor: true }),
+      // ...(blockEditor ? [Image] : []),
+      Typography,
+      // Superscript,
+      // Subscript,
+
+      Selection,
+
+      ...(blockEditor ? [
+        FolioTiptapNodeExtension,
+      ] : []),
+
       Placeholder.configure({
         // Use a placeholder:
         placeholder: ({ node }) => {
@@ -353,33 +371,35 @@ export function FolioEditor({
         </Toolbar>
 
         <div className="f-tiptap-editor__content-wrap">
-          <DragHandle
-            editor={editor}
-            onNodeChange={({ node }) => {
-              if (node) {
-                const handle = document.querySelector(".drag-handle");
-
-                if (handle) {
-                  const rect = handle.getBoundingClientRect();
-
-                  setSelectedNodeData({
-                    type: node.type.name,
-                    x: rect.x,
-                    y: rect.y,
-                  });
-
-                  return;
-                }
-              }
-
-              setSelectedNodeData(null);
-            }}
-          >
-            <DragHandleContent
+          {blockEditor ? (
+            <DragHandle
               editor={editor}
-              selectedNodeData={selectedNodeData}
-            />
-          </DragHandle>
+              onNodeChange={({ node }) => {
+                if (node) {
+                  const handle = document.querySelector(".drag-handle");
+
+                  if (handle) {
+                    const rect = handle.getBoundingClientRect();
+
+                    setSelectedNodeData({
+                      type: node.type.name,
+                      x: rect.x,
+                      y: rect.y,
+                    });
+
+                    return;
+                  }
+                }
+
+                setSelectedNodeData(null);
+              }}
+            >
+              <DragHandleContent
+                editor={editor}
+                selectedNodeData={selectedNodeData}
+              />
+            </DragHandle>
+          ) : null}
 
           <EditorContent
             editor={editor}
