@@ -1,4 +1,4 @@
-import { computePosition } from "@floating-ui/dom";
+import { computePosition, flip, offset } from "@floating-ui/dom";
 import { ReactRenderer } from "@tiptap/react";
 import { Editor } from "@tiptap/core";
 
@@ -128,7 +128,7 @@ export const suggestion = {
   render: () => {
     let component: ReactRenderer | null = null;
 
-    function repositionComponent(clientRect: DOMRect) {
+    function repositionComponent(clientRect: DOMRect, action: string) {
       if (!component || !component.element) {
         return;
       }
@@ -139,9 +139,24 @@ export const suggestion = {
         },
       };
 
+      let placement: import("@floating-ui/dom").Placement | undefined =
+        "bottom-start";
+
+      if (
+        action === "update" &&
+        component &&
+        component.element &&
+        (component.element as HTMLElement).dataset.placement
+      ) {
+        placement = (component.element as HTMLElement).dataset
+          .placement as import("@floating-ui/dom").Placement;
+      }
+
       computePosition(virtualElement, component.element as HTMLElement, {
-        placement: "bottom-start",
+        placement,
+        middleware: [flip(), offset(12)],
       }).then((pos) => {
+        (component!.element as HTMLElement).dataset.placement = pos.placement;
         Object.assign((component!.element as HTMLElement).style, {
           left: `${pos.x}px`,
           top: `${pos.y}px`,
@@ -165,13 +180,13 @@ export const suggestion = {
         });
 
         document.body.appendChild(component.element);
-        repositionComponent(props.clientRect());
+        repositionComponent(props.clientRect(), "start");
       },
 
       onUpdate(props: SuggestionProps) {
         // console.log("suggestion onUpdate", component);
         component?.updateProps(props);
-        repositionComponent(props.clientRect());
+        repositionComponent(props.clientRect(), "update");
       },
 
       onKeyDown(props: SuggestionProps) {
