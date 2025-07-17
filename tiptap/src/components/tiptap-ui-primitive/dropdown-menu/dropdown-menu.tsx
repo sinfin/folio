@@ -83,7 +83,7 @@ function useDropdownMenu({
 
   const interactions = useInteractions([
     useClick(context, {
-      event: "mousedown",
+      event: "click",
       toggle: true,
       ignoreMouse: false,
     }),
