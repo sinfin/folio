@@ -80,7 +80,7 @@ class Folio::Console::Api::File::VideosController < Folio::Console::Api::BaseCon
     broadcast_subtitle_update
 
     respond_to do |format|
-      format.json { render json: { success: true, message: "Subtitle deleted successfully" } }
+      format.json { render_component_json(Folio::Console::Files::SubtitlesFormComponent.new(file: @video)) }
     end
   end
 
@@ -181,9 +181,15 @@ class Folio::Console::Api::File::VideosController < Folio::Console::Api::BaseCon
         message_bus_user_ids
       end
 
-      nil unless user_ids.any?
+      return unless user_ids.any?
 
-      # The player will reload when the modal is closed or page is refreshed
+      # Send broadcast message for subtitle updates
+      MessageBus.publish Folio::MESSAGE_BUS_CHANNEL,
+                         {
+                           type: "Folio::Console::Api::File::VideosController/subtitle_updated",
+                           data: { id: @video.id },
+                         }.to_json,
+                         user_ids: user_ids
     end
 
     def message_bus_user_ids

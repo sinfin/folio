@@ -36,7 +36,7 @@ class Folio::VideoSubtitle < Folio::ApplicationRecord
 
   def self.default_language
     # Configurable default language for subtitle creation
-    Rails.application.config.folio_files_video_default_subtitle_language || "cs"
+    Rails.application.config.try(:folio_files_video_default_subtitle_language) || "cs"
   end
 
   def display_name
