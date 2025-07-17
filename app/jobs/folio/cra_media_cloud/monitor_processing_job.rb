@@ -256,62 +256,15 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
     end
 
     def find_scheduled_create_media_job_ids
-      # Use Redis-based tracking for better performance
-      get_tracked_job_video_ids("create_media_jobs")
+      extract_video_ids_from_jobs("Folio::CraMediaCloud::CreateMediaJob")
     end
 
     def find_running_create_media_job_ids
-      get_tracked_job_video_ids("running_create_media_jobs")
+      extract_video_ids_from_running_jobs("Folio::CraMediaCloud::CreateMediaJob")
     end
 
     def find_scheduled_check_progress_job_ids
-      get_tracked_job_video_ids("check_progress_jobs")
-    end
-
-    def get_tracked_job_video_ids(key)
-      redis_key = "folio:cra_monitor:#{key}"
-      redis_client = Redis.current
-
-      # Get set members and convert to integers
-      video_ids = redis_client.smembers(redis_key).map(&:to_i)
-
-      # Clean up expired entries (videos that are no longer processing)
-      cleanup_expired_job_tracking(redis_key, video_ids)
-
-      video_ids
-    rescue => e
-      Rails.logger.error("MonitorProcessingJob: Error getting tracked jobs: #{e.message}")
-      # Fallback to less efficient but working method
-      extract_video_ids_from_jobs_fallback(key)
-    end
-
-    def cleanup_expired_job_tracking(redis_key, video_ids)
-      return if video_ids.empty?
-
-      # Remove videos that are no longer in processing state
-      non_processing_ids = Folio::File::Video
-        .where(id: video_ids)
-        .where.not(aasm_state: :processing)
-        .pluck(:id)
-
-      if non_processing_ids.any?
-        Redis.current.srem(redis_key, non_processing_ids)
-      end
-    rescue => e
-      Rails.logger.debug("MonitorProcessingJob: Error cleaning up job tracking: #{e.message}")
-    end
-
-    def extract_video_ids_from_jobs_fallback(key)
-      case key
-      when "create_media_jobs"
-        extract_video_ids_from_jobs("Folio::CraMediaCloud::CreateMediaJob")
-      when "check_progress_jobs"
-        extract_video_ids_from_jobs("Folio::CraMediaCloud::CheckProgressJob")
-      when "running_create_media_jobs"
-        extract_video_ids_from_running_jobs("Folio::CraMediaCloud::CreateMediaJob")
-      else
-        []
-      end
+      extract_video_ids_from_jobs("Folio::CraMediaCloud::CheckProgressJob")
     end
 
     def extract_video_ids_from_jobs(job_class)
@@ -319,16 +272,20 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
 
       # Check Sidekiq scheduled jobs
       Sidekiq::ScheduledSet.new.each do |job|
-        if job_matches_class?(job, job_class)
-          scheduled_ids << extract_video_id_from_job(job)
-        end
+        job_data = job.args.first
+        next unless job_data.is_a?(Hash) && job_data["job_class"] == job_class
+
+        video_id = extract_video_id_from_job_data(job_data)
+        scheduled_ids << video_id if video_id
       end
 
       # Check Sidekiq retry set (failed jobs that will retry)
       Sidekiq::RetrySet.new.each do |job|
-        if job_matches_class?(job, job_class)
-          scheduled_ids << extract_video_id_from_job(job)
-        end
+        job_data = job.args.first
+        next unless job_data.is_a?(Hash) && job_data["job_class"] == job_class
+
+        video_id = extract_video_id_from_job_data(job_data)
+        scheduled_ids << video_id if video_id
       end
 
       # Check Sidekiq working set (currently running jobs)
@@ -363,20 +320,15 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
       []
     end
 
-    def job_matches_class?(job, job_class)
-      args = job.args.first
-      args.is_a?(Hash) && args["job_class"] == job_class
-    end
+    def extract_video_id_from_job_data(job_data)
+      return nil unless job_data["arguments"]&.first&.is_a?(Hash)
 
-    def extract_video_id_from_job(job)
-      args = job.args.first
-      return nil unless args.is_a?(Hash)
-
-      global_id = args["arguments"].first["_aj_globalid"]
-      if global_id.include?("Folio::File::Video")
+      global_id = job_data["arguments"].first["_aj_globalid"]
+      if global_id&.include?("Folio::File::Video")
         global_id.split("/").last.to_i
       end
-    rescue
+    rescue => e
+      Rails.logger.debug("MonitorProcessingJob: Error extracting video ID from job: #{e.message}")
       nil
     end
 
@@ -410,37 +362,19 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
 
       # Calculate appropriate timeout based on file size
       file_size = video.file_size || 0
-      base_timeout = 15.minutes # Base timeout for small files
+      base_timeout = 5.minutes # Base timeout for small files
 
       # Add extra time for large files (1 minute per 100MB)
       size_based_timeout = (file_size / 100.megabytes) * 1.minute
       total_timeout = base_timeout + size_based_timeout
 
-      # Cap the timeout at 2 hours for very large files
-      total_timeout = [total_timeout, 2.hours].min
+      # Cap the timeout at 30 minutes for very large files
+      total_timeout = [total_timeout, 30.minutes].min
 
       elapsed_time = Time.current - upload_started_at
 
       Rails.logger.debug("MonitorProcessingJob: Video ##{video.id} upload timeout check: elapsed #{elapsed_time.round(0)}s, timeout #{total_timeout.round(0)}s")
 
-      # If we have upload progress data, use it to determine if stuck
-      if upload_progress
-        progress_updated_at = upload_progress["updated_at"]
-
-        if progress_updated_at
-          time_since_progress = Time.current - Time.parse(progress_updated_at)
-          progress_timeout = 10.minutes # No progress update for 10 minutes = stuck
-
-          if time_since_progress > progress_timeout
-            Rails.logger.warn("MonitorProcessingJob: Video ##{video.id} no upload progress for #{time_since_progress.round(0)}s, considering stuck")
-            return true
-          end
-
-          # If we have recent progress, not stuck regardless of total time
-          Rails.logger.debug("MonitorProcessingJob: Video ##{video.id} has recent upload progress (#{time_since_progress.round(0)}s ago), not stuck")
-          return false
-        end
-      end
 
       # Fallback to time-based check if no progress data
       if elapsed_time > total_timeout
