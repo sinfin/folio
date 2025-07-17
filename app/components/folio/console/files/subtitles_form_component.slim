@@ -2,7 +2,7 @@
   .f-c-files-subtitles-form__loader.text-center.py-3 data-f-c-files-subtitles-form-target="loader" hidden=true
     .spinner-border role="status"
       span.visually-hidden Loading...
-      
+
   .f-c-files-subtitles-form__header
     h2.h3.m-0.f-c-files-subtitles-form__title = t('.title')
 
@@ -33,7 +33,7 @@
   - if video_transcription_status == 'failed' && video_transcription_error.present?
     .f-c-files-subtitles-form__error.alert.alert-danger.alert-dismissible.fade.show.mb-3
       strong = t('.transcription_failed')
-      | : 
+      | :
       = video_transcription_error
       button.btn-close type="button" data-bs-dismiss="alert" aria-label="Close"
 
@@ -54,8 +54,8 @@
                         } do |f|
         .row
           .col-md-6
-            = f.select :language, 
-                       options_for_select(available_languages_for_addition.map { |lang| [t("folio.locale.languages.#{lang}", default: lang.upcase), lang] }), 
+            = f.select :language,
+                       options_for_select(available_languages_for_addition.map { |lang| [t("folio.locale.languages.#{lang}", default: lang.upcase), lang] }),
                        { prompt: t('.select_language') },
                        { class: "form-select", required: true }
           .col-md-6
@@ -63,5 +63,3 @@
               type="button"
               data-action="click->f-c-files-subtitles-form#addLanguage"
             ) = t('.add_language')
-
- 

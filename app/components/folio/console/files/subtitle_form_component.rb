@@ -6,7 +6,7 @@ class Folio::Console::Files::SubtitleFormComponent < Folio::Console::Application
     @subtitle = subtitle
     @language = language
     @expanded = expanded
-    
+
     # If no subtitle provided but language is, create a new unsaved subtitle
     if @subtitle.nil? && @language.present?
       @subtitle = @file.video_subtitles.build(
@@ -120,6 +120,4 @@ class Folio::Console::Files::SubtitleFormComponent < Folio::Console::Application
   def display_name
     @subtitle.display_name
   end
-
-  private
-end 
+end

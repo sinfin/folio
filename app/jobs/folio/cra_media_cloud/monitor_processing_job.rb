@@ -164,7 +164,7 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
 
       orphaned_videos.each do |video|
         Rails.logger.info("MonitorProcessingJob: Checking orphaned video ##{video.id}")
-        
+
         begin
           # Try to reconcile the video state with remote jobs
           reconcile_video_state(video)
@@ -180,7 +180,7 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
         .where(aasm_state: :processing)
         .where("remote_services_data ->> 'service' = ?", "cra_media_cloud")
         .where(
-          # Videos with reference_id but no remote_id, or videos that have been 
+          # Videos with reference_id but no remote_id, or videos that have been
           # in creating_media_job state for a very long time
           "(remote_services_data ->> 'reference_id' IS NOT NULL AND remote_services_data ->> 'remote_id' IS NULL) OR " \
           "(remote_services_data ->> 'processing_state' = 'creating_media_job' AND " \
@@ -192,7 +192,7 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
     def reconcile_video_state(video)
       rs_data = video.remote_services_data || {}
       reference_id = rs_data["reference_id"]
-      
+
       return unless reference_id
 
       Rails.logger.info("MonitorProcessingJob: Reconciling video ##{video.id} with reference_id: #{reference_id}")
@@ -222,25 +222,21 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
         when "DONE"
           if current_remote_id != latest_job["id"]
             Rails.logger.info("MonitorProcessingJob: Updating video ##{video.id} to point to successful job #{latest_job['id']}")
-            rs_data.merge!({
-              "remote_id" => latest_job["id"],
-              "processing_state" => "full_media_processing" # CheckProgressJob will update to final state
-            })
+            rs_data["remote_id"] = latest_job["id"]
+            rs_data["processing_state"] = "full_media_processing"
             video.update_column(:remote_services_data, rs_data)
-            
+
             # Schedule progress check to update final state
             Folio::CraMediaCloud::CheckProgressJob.perform_later(video)
           end
         when "PROCESSING", "CREATED"
           if current_remote_id != latest_job["id"]
             Rails.logger.info("MonitorProcessingJob: Updating video ##{video.id} to point to processing job #{latest_job['id']}")
-            rs_data.merge!({
-              "remote_id" => latest_job["id"],
-              "processing_state" => "full_media_processing"
-            })
+            rs_data["remote_id"] = latest_job["id"]
+            rs_data["processing_state"] = "full_media_processing"
             video.update_column(:remote_services_data, rs_data)
           end
-          
+
           # Schedule progress check
           Folio::CraMediaCloud::CheckProgressJob.perform_later(video)
         when "FAILED", "ERROR"
@@ -275,13 +271,13 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
     def get_tracked_job_video_ids(key)
       redis_key = "folio:cra_monitor:#{key}"
       redis_client = Redis.current
-      
+
       # Get set members and convert to integers
       video_ids = redis_client.smembers(redis_key).map(&:to_i)
-      
+
       # Clean up expired entries (videos that are no longer processing)
       cleanup_expired_job_tracking(redis_key, video_ids)
-      
+
       video_ids
     rescue => e
       Rails.logger.error("MonitorProcessingJob: Error getting tracked jobs: #{e.message}")
@@ -291,13 +287,13 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
 
     def cleanup_expired_job_tracking(redis_key, video_ids)
       return if video_ids.empty?
-      
+
       # Remove videos that are no longer in processing state
       non_processing_ids = Folio::File::Video
         .where(id: video_ids)
         .where.not(aasm_state: :processing)
         .pluck(:id)
-        
+
       if non_processing_ids.any?
         Redis.current.srem(redis_key, non_processing_ids)
       end
@@ -411,47 +407,47 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
     def upload_is_stuck?(video, upload_started_at)
       rs_data = video.remote_services_data || {}
       upload_progress = rs_data["upload_progress"]
-      
+
       # Calculate appropriate timeout based on file size
       file_size = video.file_size || 0
       base_timeout = 15.minutes # Base timeout for small files
-      
+
       # Add extra time for large files (1 minute per 100MB)
       size_based_timeout = (file_size / 100.megabytes) * 1.minute
       total_timeout = base_timeout + size_based_timeout
-      
+
       # Cap the timeout at 2 hours for very large files
       total_timeout = [total_timeout, 2.hours].min
-      
+
       elapsed_time = Time.current - upload_started_at
-      
+
       Rails.logger.debug("MonitorProcessingJob: Video ##{video.id} upload timeout check: elapsed #{elapsed_time.round(0)}s, timeout #{total_timeout.round(0)}s")
-      
+
       # If we have upload progress data, use it to determine if stuck
       if upload_progress
         progress_updated_at = upload_progress["updated_at"]
-        
+
         if progress_updated_at
           time_since_progress = Time.current - Time.parse(progress_updated_at)
           progress_timeout = 10.minutes # No progress update for 10 minutes = stuck
-          
+
           if time_since_progress > progress_timeout
             Rails.logger.warn("MonitorProcessingJob: Video ##{video.id} no upload progress for #{time_since_progress.round(0)}s, considering stuck")
             return true
           end
-          
+
           # If we have recent progress, not stuck regardless of total time
           Rails.logger.debug("MonitorProcessingJob: Video ##{video.id} has recent upload progress (#{time_since_progress.round(0)}s ago), not stuck")
           return false
         end
       end
-      
+
       # Fallback to time-based check if no progress data
       if elapsed_time > total_timeout
         Rails.logger.warn("MonitorProcessingJob: Video ##{video.id} upload timeout: #{elapsed_time.round(0)}s > #{total_timeout.round(0)}s")
         return true
       end
-      
+
       false
     end
 
@@ -459,16 +455,16 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
       # Use Redis-based locking to prevent multiple instances
       redis_key = "folio:cra_monitor:job_lock"
       redis_client = Redis.current
-      
+
       # Try to acquire lock with 5-minute expiration
       lock_acquired = redis_client.set(redis_key, Process.pid, nx: true, ex: 300)
-      
+
       if lock_acquired
         Rails.logger.debug("MonitorProcessingJob: Lock acquired")
-        return false
+        false
       else
         Rails.logger.info("MonitorProcessingJob: Another instance is already running, skipping")
-        return true
+        true
       end
     rescue => e
       Rails.logger.error("MonitorProcessingJob: Error checking for running instances: #{e.message}")
@@ -485,7 +481,7 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
           return 0
         end
       LUA
-      
+
       Redis.current.eval(script, keys: [redis_key], argv: [Process.pid.to_s])
     rescue => e
       Rails.logger.debug("MonitorProcessingJob: Error releasing lock: #{e.message}")

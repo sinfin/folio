@@ -36,7 +36,7 @@ class Folio::Console::Api::File::VideosController < Folio::Console::Api::BaseCon
     end
 
     subtitle = @video.subtitle_for(language)
-    
+
     if subtitle
       respond_to do |format|
         format.json { render_component_json(Folio::Console::Files::SubtitleFormComponent.new(file: @video, subtitle: subtitle)) }
@@ -112,8 +112,8 @@ class Folio::Console::Api::File::VideosController < Folio::Console::Api::BaseCon
 
       # Use shared validation service for consistent validation handling
       enable_if_valid = subtitle.user_action == :enable
-      validation_passed = Folio::SubtitleValidationService.validate_and_update_metadata(subtitle, enable_if_valid: enable_if_valid)
-      
+      Folio::SubtitleValidationService.validate_and_update_metadata(subtitle, enable_if_valid: enable_if_valid)
+
       # Clear user_action since validation service handled the enabling logic
       subtitle.user_action = nil if subtitle.user_action == :enable
       subtitle.save!(validate: false) # Skip Rails validations since we handled them manually
@@ -152,8 +152,8 @@ class Folio::Console::Api::File::VideosController < Folio::Console::Api::BaseCon
 
       # Use shared validation service for consistent validation handling
       enable_if_valid = subtitle.user_action == :enable
-      validation_passed = Folio::SubtitleValidationService.validate_and_update_metadata(subtitle, enable_if_valid: enable_if_valid)
-      
+      Folio::SubtitleValidationService.validate_and_update_metadata(subtitle, enable_if_valid: enable_if_valid)
+
       # Clear user_action since validation service handled the enabling logic
       subtitle.user_action = nil if subtitle.user_action == :enable
 
@@ -176,12 +176,12 @@ class Folio::Console::Api::File::VideosController < Folio::Console::Api::BaseCon
       # In test environment, always broadcast for testing purposes
       # In production, ensure we have a current user to broadcast to
       user_ids = if Rails.env.test?
-                   [current_user&.id].compact
-                 else
-                   message_bus_user_ids
-                 end
+        [current_user&.id].compact
+      else
+        message_bus_user_ids
+      end
 
-      return unless user_ids.any?
+      nil unless user_ids.any?
 
       # The player will reload when the modal is closed or page is refreshed
     end

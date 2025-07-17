@@ -79,14 +79,14 @@ class Folio::CraMediaCloud::CheckProgressJob < Folio::ApplicationJob
         )
       when "FAILED", "ERROR"
         error_messages = response["messages"]&.select { |msg| msg["type"] == "ERROR" }&.map { |msg| msg["message"] }&.join("; ")
-        
+
         media_file.remote_services_data.merge!(
           "processing_state" => "upload_failed",
           "error_message" => error_messages || "Upload failed",
           "failed_at" => Time.current.iso8601,
           "progress_percentage" => nil
         )
-        
+
         Rails.logger.error "[CraMediaCloud::CheckProgressJob] Video #{media_file.id} failed: #{error_messages}"
       end
     end

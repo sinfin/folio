@@ -32,7 +32,7 @@ module Folio
 
         # Use plain temp file path to avoid Ruby memory buffering
         temp_file_path = ::File.join(Dir.tmpdir, "cra_upload_#{ref_id}_#{Process.pid}_#{Time.current.to_i}.tmp")
-        
+
         begin
           # Download using system tools (no Ruby file handles involved)
           download_to_file_path(file, temp_file_path)
@@ -54,7 +54,7 @@ module Folio
             upload_with_retry(sftp, StringIO.new(xml_manifest), xml_manifest_path)
             Rails.logger.info("[CraMediaCloud::Encoder] Manifest uploaded to SFTP: #{xml_manifest_path}")
           end
-          
+
         rescue => e
           Rails.logger.error("[CraMediaCloud::Encoder] Error during upload process: #{e.class}: #{e.message}")
           raise
@@ -100,28 +100,28 @@ module Folio
           s3_object_key = [s3_datastore.root_path, file.file_uid].join("/")
 
           download_success = false
-          
+
           # Try AWS CLI first (if available)
           if system("which aws > /dev/null 2>&1")
             s3_url = "s3://#{ENV['S3_BUCKET_NAME']}/#{s3_object_key}"
             aws_command = "aws s3 cp #{s3_url} #{file_path} --no-progress"
-            
+
             if system(aws_command)
               download_success = true
             end
           end
-          
+
           # Fallback to curl with S3 presigned URL
           unless download_success
             begin
               s3_client = s3_datastore.storage
               presigned_url = s3_client.presigned_url(
                 :get_object,
-                bucket: ENV['S3_BUCKET_NAME'],
+                bucket: ENV["S3_BUCKET_NAME"],
                 key: s3_object_key,
                 expires_in: 3600
               )
-              
+
               curl_command = [
                 "curl", "-L", "-s", "-S",
                 "-o", file_path,
@@ -129,32 +129,32 @@ module Folio
                 "--connect-timeout", "30",
                 presigned_url
               ]
-              
+
               if system(*curl_command)
                 download_success = true
               end
-              
+
             rescue => e
               Rails.logger.error("[CraMediaCloud::Encoder] Error generating presigned URL: #{e.message}")
             end
           end
-          
+
           # Final fallback to Ruby download
           unless download_success
             Rails.logger.warn("[CraMediaCloud::Encoder] System download failed, using Ruby fallback")
-            
+
             downloaded_bytes = 0
-            
+
             ::File.open(file_path, "wb") do |output_file|
               loop do
                 range_start = downloaded_bytes
                 range_end = [downloaded_bytes + CHUNK_SIZE - 1, file.file_size - 1].min
-                
+
                 break if range_start >= file.file_size
 
                 begin
                   s3_response = s3_datastore.storage.get_object(
-                    ENV["S3_BUCKET_NAME"], 
+                    ENV["S3_BUCKET_NAME"],
                     s3_object_key,
                     range: "bytes=#{range_start}-#{range_end}"
                   )
@@ -162,12 +162,12 @@ module Folio
                   chunk_data = s3_response.body
                   output_file.write(chunk_data)
                   output_file.flush
-                  
+
                   downloaded_bytes += chunk_data.length
 
                   # Clear references
-                  chunk_data = nil
-                  s3_response = nil
+                  nil
+                  nil
 
                 rescue => e
                   Rails.logger.error("[CraMediaCloud::Encoder] Error downloading chunk #{range_start}-#{range_end}: #{e.message}")
@@ -175,14 +175,14 @@ module Folio
                 end
               end
             end
-            
+
             download_success = true
           end
 
           unless download_success
             raise "All download methods failed"
           end
-          
+
           actual_size = ::File.size(file_path)
           if actual_size != file.file_size
             raise "Downloaded size mismatch: got #{actual_size}, expected #{file.file_size}"
@@ -291,38 +291,38 @@ module Folio
 
           begin
             sftp.upload!(source, destination)
-            
+
             # Verify upload for file uploads (not StringIO)
             if expected_size
               begin
                 remote_attrs = sftp.stat!(destination)
                 actual_size = remote_attrs.size
-                
+
                 if actual_size != expected_size
                   Rails.logger.error("[CraMediaCloud::Encoder] Upload size mismatch: expected #{expected_size}, got #{actual_size}")
-                  
+
                   # Clean up the invalid file
                   begin
                     sftp.remove!(destination)
                   rescue => cleanup_error
                     Rails.logger.warn("[CraMediaCloud::Encoder] Could not remove invalid upload: #{cleanup_error.message}")
                   end
-                  
+
                   raise "Upload verification failed: size mismatch (expected #{expected_size}, got #{actual_size})"
                 end
-                
+
                 Rails.logger.info("[CraMediaCloud::Encoder] Upload verified: #{actual_size} bytes")
               rescue Net::SFTP::StatusException => e
                 Rails.logger.error("[CraMediaCloud::Encoder] Could not verify upload: #{e.message}")
                 raise "Upload verification failed: #{e.message}"
               end
             end
-            
+
           rescue => e
             retries += 1
             if retries <= max_retries
               Rails.logger.warn("[CraMediaCloud::Encoder] Upload failed (attempt #{retries}/#{max_retries}): #{e.message}")
-              
+
               # Clean up any partial upload
               if expected_size
                 begin
@@ -331,7 +331,7 @@ module Folio
                   Rails.logger.debug("[CraMediaCloud::Encoder] Could not remove partial upload: #{cleanup_error.message}")
                 end
               end
-              
+
               sleep(SFTP_RETRY_DELAY * retries) # Exponential backoff
               retry
             else

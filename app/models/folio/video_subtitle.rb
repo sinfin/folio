@@ -17,10 +17,10 @@ class Folio::VideoSubtitle < Folio::ApplicationRecord
   scope :for_language, ->(lang) { where(language: lang) }
   scope :auto_generated, -> { where("metadata -> 'transcription' ->> 'job_class' IS NOT NULL") }
   scope :manually_created, -> { where("metadata -> 'transcription' ->> 'job_class' IS NULL") }
-  
+
   # Scope that adds calculated last_activity_at for efficient querying
   scope :with_last_activity, -> {
-    select("#{table_name}.*, 
+    select("#{table_name}.*,
             GREATEST(
               COALESCE((metadata->'transcription'->>'completed_at')::timestamp, updated_at),
               COALESCE((metadata->'manual_edits'->>'last_edited_at')::timestamp, updated_at),

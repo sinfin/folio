@@ -100,7 +100,7 @@ class Folio::CraMediaCloud::CreateMediaJob < Folio::ApplicationJob
 
       if current_remote_id != successful_job_id
         Rails.logger.info "[CraMediaCloud::CreateMediaJob] Updating local state: remote_id #{current_remote_id} -> #{successful_job_id} for video #{media_file.id}"
-        
+
         # Update local state to point to the successful job
         media_file.remote_services_data.merge!({
           "service" => "cra_media_cloud",
@@ -113,9 +113,9 @@ class Folio::CraMediaCloud::CreateMediaJob < Folio::ApplicationJob
 
         # Schedule CheckProgressJob to update final state based on the successful job
         Folio::CraMediaCloud::CheckProgressJob.perform_later(media_file)
-        
+
         broadcast_file_update(media_file)
-        
+
         Rails.logger.info "[CraMediaCloud::CreateMediaJob] Successfully updated local state for video #{media_file.id} to point to successful job #{successful_job_id}"
       else
         Rails.logger.debug "[CraMediaCloud::CreateMediaJob] Local state already points to correct job #{successful_job_id} for video #{media_file.id}"
@@ -136,8 +136,8 @@ class Folio::CraMediaCloud::CreateMediaJob < Folio::ApplicationJob
 
       begin
         Folio::CraMediaCloud::Encoder.new.upload_file(
-          media_file, 
-          profile_group: media_file.try(:encoder_profile_group), 
+          media_file,
+          profile_group: media_file.try(:encoder_profile_group),
           reference_id: reference_id
         )
 

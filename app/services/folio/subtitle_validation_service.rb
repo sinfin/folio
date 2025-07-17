@@ -13,30 +13,30 @@ class Folio::SubtitleValidationService
   def validate_and_update_metadata
     # Set validation flag
     @subtitle.validate_content = true
-    
+
     # Trigger validation
     is_valid = @subtitle.valid?
-    
+
     # Update validation metadata
     if @subtitle.errors.any?
       @subtitle.update_validation_metadata(false, @subtitle.errors.full_messages)
-      
+
       # Prevent enabling if there are validation errors
       if @enable_if_valid
         @subtitle.enabled = false
       end
     else
       @subtitle.update_validation_metadata(true, [])
-      
+
       # Enable if validation passes and requested
       if @enable_if_valid
         @subtitle.enabled = true
       end
     end
-    
+
     # Clear validation flag
     @subtitle.validate_content = false
-    
+
     # Return whether validation passed
     is_valid
   end
@@ -74,4 +74,4 @@ class Folio::SubtitleValidationService
 
     errors
   end
-end 
+end

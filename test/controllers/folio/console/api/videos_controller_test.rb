@@ -50,8 +50,8 @@ class Folio::Console::Api::VideosControllerTest < Folio::Console::BaseController
     Folio::File::Video.stub(:transcribe_subtitles_job_class, Folio::OpenAi::TranscribeSubtitlesJob) do
       # Mock MessageBus to capture published messages
       published_messages = []
-      MessageBus.stub(:publish, ->(channel, message, opts = {}) { 
-        published_messages << { channel: channel, message: message, opts: opts } 
+      MessageBus.stub(:publish, ->(channel, message, opts = {}) {
+        published_messages << { channel: channel, message: message, opts: opts }
       }) do
         post "/console/api/file/videos/#{@video.id}/subtitles/cs", params: {
           subtitle: {
@@ -66,16 +66,14 @@ class Folio::Console::Api::VideosControllerTest < Folio::Console::BaseController
 
       # Check that subtitle update broadcast was sent
       subtitle_update_message = published_messages.find do |msg|
-        begin
-          parsed = JSON.parse(msg[:message])
-          parsed["type"] == "Folio::Console::Api::File::VideosController/subtitle_updated"
-        rescue JSON::ParserError
-          false
-        end
+        parsed = JSON.parse(msg[:message])
+        parsed["type"] == "Folio::Console::Api::File::VideosController/subtitle_updated"
+      rescue JSON::ParserError
+        false
       end
 
       assert_not_nil subtitle_update_message, "Subtitle update broadcast was not sent. Messages: #{published_messages.inspect}"
-      
+
       parsed_message = JSON.parse(subtitle_update_message[:message])
       assert_equal @video.id, parsed_message["data"]["id"]
     end
@@ -103,13 +101,13 @@ class Folio::Console::Api::VideosControllerTest < Folio::Console::BaseController
   end
 
   test "update_subtitle broadcasts subtitle update" do
-    subtitle = @video.video_subtitles.create!(language: "cs", text: "Original text")
+    @video.video_subtitles.create!(language: "cs", text: "Original text")
 
     Folio::File::Video.stub(:transcribe_subtitles_job_class, Folio::OpenAi::TranscribeSubtitlesJob) do
       # Mock MessageBus to capture published messages
       published_messages = []
-      MessageBus.stub(:publish, ->(channel, message, opts = {}) { 
-        published_messages << { channel: channel, message: message, opts: opts } 
+      MessageBus.stub(:publish, ->(channel, message, opts = {}) {
+        published_messages << { channel: channel, message: message, opts: opts }
       }) do
         patch "/console/api/file/videos/#{@video.id}/subtitles/cs", params: {
           subtitle: {
@@ -124,16 +122,14 @@ class Folio::Console::Api::VideosControllerTest < Folio::Console::BaseController
 
       # Check that subtitle update broadcast was sent
       subtitle_update_message = published_messages.find do |msg|
-        begin
-          parsed = JSON.parse(msg[:message])
-          parsed["type"] == "Folio::Console::Api::File::VideosController/subtitle_updated"
-        rescue JSON::ParserError
-          false
-        end
+        parsed = JSON.parse(msg[:message])
+        parsed["type"] == "Folio::Console::Api::File::VideosController/subtitle_updated"
+      rescue JSON::ParserError
+        false
       end
 
       assert_not_nil subtitle_update_message, "Subtitle update broadcast was not sent. Messages: #{published_messages.inspect}"
-      
+
       parsed_message = JSON.parse(subtitle_update_message[:message])
       assert_equal @video.id, parsed_message["data"]["id"]
     end
@@ -160,7 +156,7 @@ class Folio::Console::Api::VideosControllerTest < Folio::Console::BaseController
   end
 
   test "delete_subtitle" do
-    subtitle = @video.video_subtitles.create!(language: "cs", text: "Test subtitle")
+    @video.video_subtitles.create!(language: "cs", text: "Test subtitle")
 
     Folio::File::Video.stub(:transcribe_subtitles_job_class, Folio::OpenAi::TranscribeSubtitlesJob) do
       delete "/console/api/file/videos/#{@video.id}/subtitles/cs", params: { format: :json }
@@ -173,13 +169,13 @@ class Folio::Console::Api::VideosControllerTest < Folio::Console::BaseController
   end
 
   test "delete_subtitle broadcasts subtitle update" do
-    subtitle = @video.video_subtitles.create!(language: "cs", text: "Test subtitle")
+    @video.video_subtitles.create!(language: "cs", text: "Test subtitle")
 
     Folio::File::Video.stub(:transcribe_subtitles_job_class, Folio::OpenAi::TranscribeSubtitlesJob) do
       # Mock MessageBus to capture published messages
       published_messages = []
-      MessageBus.stub(:publish, ->(channel, message, opts = {}) { 
-        published_messages << { channel: channel, message: message, opts: opts } 
+      MessageBus.stub(:publish, ->(channel, message, opts = {}) {
+        published_messages << { channel: channel, message: message, opts: opts }
       }) do
         delete "/console/api/file/videos/#{@video.id}/subtitles/cs", params: { format: :json }
       end
@@ -188,16 +184,14 @@ class Folio::Console::Api::VideosControllerTest < Folio::Console::BaseController
 
       # Check that subtitle update broadcast was sent
       subtitle_update_message = published_messages.find do |msg|
-        begin
-          parsed = JSON.parse(msg[:message])
-          parsed["type"] == "Folio::Console::Api::File::VideosController/subtitle_updated"
-        rescue JSON::ParserError
-          false
-        end
+        parsed = JSON.parse(msg[:message])
+        parsed["type"] == "Folio::Console::Api::File::VideosController/subtitle_updated"
+      rescue JSON::ParserError
+        false
       end
 
       assert_not_nil subtitle_update_message, "Subtitle update broadcast was not sent. Messages: #{published_messages.inspect}"
-      
+
       parsed_message = JSON.parse(subtitle_update_message[:message])
       assert_equal @video.id, parsed_message["data"]["id"]
     end
@@ -235,8 +229,8 @@ class Folio::Console::Api::VideosControllerTest < Folio::Console::BaseController
     Folio::File::Video.stub(:transcribe_subtitles_job_class, Folio::OpenAi::TranscribeSubtitlesJob) do
       # Mock MessageBus to capture published messages
       published_messages = []
-      MessageBus.stub(:publish, ->(channel, message, opts = {}) { 
-        published_messages << { channel: channel, message: message, opts: opts } 
+      MessageBus.stub(:publish, ->(channel, message, opts = {}) {
+        published_messages << { channel: channel, message: message, opts: opts }
       }) do
         patch url_for([:update_subtitles, :console, :api, @video, format: :json]), params: {
           file: {
@@ -250,16 +244,14 @@ class Folio::Console::Api::VideosControllerTest < Folio::Console::BaseController
 
       # Check that subtitle update broadcast was sent
       subtitle_update_message = published_messages.find do |msg|
-        begin
-          parsed = JSON.parse(msg[:message])
-          parsed["type"] == "Folio::Console::Api::File::VideosController/subtitle_updated"
-        rescue JSON::ParserError
-          false
-        end
+        parsed = JSON.parse(msg[:message])
+        parsed["type"] == "Folio::Console::Api::File::VideosController/subtitle_updated"
+      rescue JSON::ParserError
+        false
       end
 
       assert_not_nil subtitle_update_message, "Subtitle update broadcast was not sent. Messages: #{published_messages.inspect}"
-      
+
       parsed_message = JSON.parse(subtitle_update_message[:message])
       assert_equal @video.id, parsed_message["data"]["id"]
     end

@@ -86,8 +86,8 @@ class Folio::ElevenLabs::TranscribeSubtitlesJob < Folio::ApplicationJob
       end
 
       # Re-raise unless it's a known recoverable error
-      should_not_retry = e.message.include?("Audio is too short") || 
-                        e.message.include?('Failed to read file from cloud storage')
+      should_not_retry = e.message.include?("Audio is too short") ||
+                        e.message.include?("Failed to read file from cloud storage")
       raise e unless should_not_retry
     ensure
       broadcast_file_update(video_file)
