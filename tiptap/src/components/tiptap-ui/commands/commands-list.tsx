@@ -160,7 +160,17 @@ export class CommandsList extends React.Component<
     prevProps: CommandsListProps,
     _prevState: CommandsListState,
   ) {
-    if (prevProps.items.length !== this.props.items.length) {
+    let previousItemsCount = 0;
+    prevProps.items.forEach((group) => {
+      previousItemsCount += group.items.length;
+    });
+
+    let itemsCount = 0;
+    this.props.items.forEach((group) => {
+      itemsCount += group.items.length;
+    });
+
+    if (itemsCount !== previousItemsCount) {
       this.setState({ selectedIndex: 0 });
     }
   }
@@ -184,8 +194,10 @@ export class CommandsList extends React.Component<
 
                 <ul className="f-tiptap-commands-list__section-ul">
                   {group.items.map((item: CommandItem) => {
-                    const ItemIcon = item.icon;
                     index += 1;
+
+                    const ItemIcon = item.icon;
+                    const itemIndex = index
 
                     return (
                       <li
@@ -199,7 +211,7 @@ export class CommandsList extends React.Component<
                             index === this.state.selectedIndex,
                           )}
                           onClick={() => this.selectItem(item)}
-                          onMouseOver={() => this.setSelectedIndex(index)}
+                          onMouseOver={() => this.setSelectedIndex(itemIndex)}
                         >
                           <span className="f-tiptap-commands-list__item-inner">
                             {ItemIcon ? (
