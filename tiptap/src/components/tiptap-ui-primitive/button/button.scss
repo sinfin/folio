@@ -17,6 +17,7 @@
   transition-property: background, color, opacity;
   transition-duration: var(--tt-transition-duration-default);
   transition-timing-function: var(--tt-transition-easing-default);
+  cursor: pointer;
 
   // focus-visible
   &:focus-visible {

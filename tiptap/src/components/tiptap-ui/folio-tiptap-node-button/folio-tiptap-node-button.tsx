@@ -42,19 +42,26 @@ export const FolioTiptapNodeButton = React.forwardRef<
   const handleClick = React.useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       if (!e.defaultPrevented && !disabled && editor) {
-        const currentPos = editor.state.selection.$from.pos;
+        let currentPos = editor.state.selection.$from.pos;
+        let currentNode = editor.state.doc.nodeAt(currentPos);
+
+        let targetPos
+
+        if (currentNode) {
+          // If we're inside a node, insert the new one after
+          const $pos = editor.state.doc.resolve(currentPos);
+          targetPos = $pos.start($pos.depth) + currentNode.nodeSize + 1;
+        } else {
+          // if we're outside a node, insert the new one at the current position
+          targetPos = currentPos + 1;
+        }
 
         editor
           .chain()
           .focus()
-          .insertContentAt(currentPos, {
+          .insertContentAt(targetPos - 1, {
             type: "paragraph",
-            content: [
-              {
-                type: "text",
-                text: "/",
-              },
-            ],
+            content: [{ type: "text", text: "/" }],
           })
           .run();
       }
