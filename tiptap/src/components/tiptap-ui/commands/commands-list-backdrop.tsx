@@ -1,4 +1,7 @@
 import React from "react";
+import type { Editor } from "@tiptap/react";
+
+import { type CommandsListProps, type CommandsListState } from "./commands-list";
 
 export class CommandsListBackdrop extends React.Component<
   CommandsListProps,

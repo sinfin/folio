@@ -14,14 +14,12 @@ const TRANSLATIONS = {
   },
 };
 
-export interface CommandGroup {
+export interface UntranslatedCommandGroup {
   title: string | { cs: string; en: string };
-  items: CommandItem[];
+  items: UntranslatedCommandItem[];
 }
 
-import type { Editor } from "@tiptap/react";
-
-export interface CommandItem {
+export interface UntranslatedCommandItem {
   title: string | { cs: string; en: string };
   command?: (params: {
     editor: Editor;
@@ -29,6 +27,17 @@ export interface CommandItem {
   }) => void;
   keymap?: string;
   icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+}
+
+export interface CommandGroup {
+  title: string;
+  items: CommandItem[];
+}
+
+import type { Editor } from "@tiptap/react";
+
+export interface CommandItem extends UntranslatedCommandItem {
+  title: string;
 }
 
 export interface CommandsListProps {
@@ -185,11 +194,7 @@ export class CommandsList extends React.Component<
             {this.props.items.map((group: CommandGroup) => (
               <React.Fragment key={group.title}>
                 <div className="f-tiptap-commands-list__section-heading">
-                  {typeof group.title === "string"
-                    ? group.title
-                    : group.title[
-                        document.documentElement.lang as "cs" | "en"
-                      ] || group.title.en}
+                  {group.title}
                 </div>
 
                 <ul className="f-tiptap-commands-list__section-ul">
@@ -218,11 +223,7 @@ export class CommandsList extends React.Component<
                               <ItemIcon className="f-tiptap-commands-list__item-icon" />
                             ) : null}
                             <span className="f-tiptap-commands-list__item-label">
-                              {typeof item.title === "string"
-                                ? item.title
-                                : item.title[
-                                    document.documentElement.lang as "cs" | "en"
-                                  ] || item.title.en}
+                              {item.title}
                             </span>
                             <span
                               className="f-tiptap-commands-list__item-keymap"

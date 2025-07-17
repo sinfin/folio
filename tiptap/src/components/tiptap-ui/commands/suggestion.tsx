@@ -2,7 +2,13 @@ import { computePosition, flip, offset } from "@floating-ui/dom";
 import { ReactRenderer } from "@tiptap/react";
 import { Editor } from "@tiptap/core";
 
-import { CommandsList, type CommandItem, type CommandGroup } from "./commands-list";
+import {
+  CommandsList,
+  type CommandItem,
+  type CommandGroup,
+  type UntranslatedCommandGroup,
+  type UntranslatedCommandItem
+} from "./commands-list";
 import { CommandsListBackdrop } from "./commands-list-backdrop";
 
 import { headingIcons } from "@/components/tiptap-ui/heading-button/heading-button";
@@ -21,17 +27,12 @@ interface SuggestionProps {
   event: KeyboardEvent;
 }
 
-export const makeSuggestionItems = (groups: CommandGroup[]) => {
+export const makeSuggestionItems = (groups: UntranslatedCommandGroup[]) => {
   return ({ query }: { editor: Editor; query: string }) => {
     return translateTitles(groups)
       .map((group: CommandGroup): CommandGroup | null => {
         const matchingItems = group.items.filter((item: CommandItem) => {
-          const title =
-            typeof item.title === "string"
-              ? item.title
-              : item.title[document.documentElement.lang as "cs" | "en"] ||
-                item.title.en;
-          return title.toLowerCase().indexOf(query.toLowerCase()) !== -1;
+          return item.title.toLowerCase().indexOf(query.toLowerCase()) !== -1;
         });
         if (matchingItems.length > 0) {
           return { ...group, items: matchingItems };
@@ -42,7 +43,7 @@ export const makeSuggestionItems = (groups: CommandGroup[]) => {
   };
 };
 
-export const defaultGroup: CommandGroup = {
+export const defaultGroup: UntranslatedCommandGroup = {
   title: { cs: "Text", en: "Text" },
   items: [
     {
@@ -103,15 +104,15 @@ export const defaultGroup: CommandGroup = {
   ],
 };
 
-const translateTitles = (groups: CommandGroup[]): CommandGroup[] => {
+const translateTitles = (groups: UntranslatedCommandGroup[]): CommandGroup[] => {
   const lang = document.documentElement.lang as "cs" | "en";
-  return groups.map((group: CommandGroup) => ({
+  return groups.map((group: UntranslatedCommandGroup) => ({
     ...group,
     title:
       typeof group.title === "string"
         ? group.title
         : group.title[lang] || group.title.en,
-    items: group.items.map((item: CommandItem) => ({
+    items: group.items.map((item: UntranslatedCommandItem) => ({
       ...item,
       title:
         typeof item.title === "string"
@@ -241,11 +242,13 @@ export const suggestion = {
 
         if (!component) return
 
-        if (backdrop.element && document.body.contains(backdrop.element)) {
-          document.body.removeChild(backdrop.element);
-        }
+        if (backdrop) {
+          if (backdrop.element && document.body.contains(backdrop.element)) {
+            document.body.removeChild(backdrop.element);
+          }
 
-        backdrop.destroy()
+          backdrop.destroy()
+        }
 
         if (component.element && document.body.contains(component.element)) {
           document.body.removeChild(component.element);
