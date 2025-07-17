@@ -173,7 +173,7 @@ export class CommandsList extends React.Component<
         {this.props.items.length > 0 ? (
           <div className="f-tiptap-commands-list__section">
             {this.props.items.map((group: CommandGroup) => (
-              <>
+              <React.Fragment key={group.title}>
                 <div className="f-tiptap-commands-list__section-heading">
                   {typeof group.title === "string"
                     ? group.title
@@ -222,7 +222,7 @@ export class CommandsList extends React.Component<
                     );
                   })}
                 </ul>
-              </>
+              </React.Fragment>
             ))}
           </div>
         ) : null}

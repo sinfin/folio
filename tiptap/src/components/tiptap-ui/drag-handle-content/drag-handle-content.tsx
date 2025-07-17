@@ -225,16 +225,16 @@ const editFolioTiptapNode = (
 
 const TRANSLATIONS = {
   cs: {
-    moveUp: "Přesunout nahoru",
-    moveDown: "Přesunout dolů",
+    moveUp: "Přesunout",
+    moveDown: "Přesunout",
     moveToTop: "Nahoru",
     moveToBottom: "Dolu",
     removeNode: "Odstranit",
     editFolioTiptapNode: "Upravit",
   },
   en: {
-    moveUp: "Move up",
-    moveDown: "Move down",
+    moveUp: "Move",
+    moveDown: "Move",
     moveToTop: "Move to top",
     moveToBottom: "Move to bottom",
     removeNode: "Remove",
