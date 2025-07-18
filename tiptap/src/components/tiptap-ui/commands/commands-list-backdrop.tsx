@@ -1,5 +1,6 @@
 import React from "react";
 import type { Editor } from "@tiptap/react";
+import type { Range } from "@tiptap/core";
 
 import { type CommandsListProps, type CommandsListState } from "./commands-list";
 
@@ -16,7 +17,7 @@ export class CommandsListBackdrop extends React.Component<
         range,
       }: {
         editor: Editor;
-        range: { from: number; to: number };
+        range: Range;
       }) => {
         if (this.props.query) {
           // insert space to disable suggestion

@@ -24,6 +24,7 @@ import {
 
 import translate from "@/lib/i18n";
 
+import { findElementNextToCoords } from "./smart-drag-handle-utils";
 import "./smart-drag-handle-content.scss";
 
 const handlePlusClick = ({
@@ -65,8 +66,8 @@ type MoveDirection = "up" | "down" | "top" | "bottom";
 
 type TargetNodeInfo = {
   resultElement: Element | null;
-  resultNode: Node;
-  pos: number;
+  resultNode: Node | null;
+  pos: number | null;
 };
 
 const moveNode = (
@@ -124,7 +125,7 @@ const moveNode = (
           const currentNode = targetNode.resultNode;
           const currentNodePos = targetNode.pos;
 
-          if (!currentNode) {
+          if (!currentNode || !currentNodePos) {
             console.error("No node found at position");
             return false;
           }
@@ -196,6 +197,11 @@ const removeNode = (editor: Editor, targetNode: TargetNodeInfo): boolean => {
   try {
     const { state } = editor;
 
+    if (!targetNode.resultNode || targetNode.pos === null) {
+      console.error("Invalid target node");
+      return false;
+    }
+
     const tr = state.tr;
     tr.delete(targetNode.pos, targetNode.pos + targetNode.resultNode.nodeSize);
     editor.view.dispatch(tr);
@@ -211,10 +217,15 @@ const editFolioTiptapNode = (
   editor: Editor,
   targetNode: TargetNodeInfo,
 ): boolean => {
+  if (!targetNode.resultNode || targetNode.pos === null) {
+    console.error("Invalid target node");
+    return false;
+  }
+
   if (targetNode.resultElement) {
-    const event = new CustomEvent("f-tiptap-node:edit")
+    const event = new CustomEvent("f-tiptap-node:edit");
     targetNode.resultElement.dispatchEvent(event);
-    return true
+    return true;
   }
 
   return false;
@@ -273,60 +284,6 @@ const DRAG_HANDLE_FOLIO_TIPTAP_NODE_OPTION = {
   command: editFolioTiptapNode,
 };
 
-export type FindElementNextToCoords = {
-  x: number;
-  y: number;
-  direction?: "left" | "right";
-  editor: Editor;
-};
-
-export function findElementNextToCoords(options: FindElementNextToCoords) {
-  const { x, y, direction, editor } = options;
-  let targetElement: Element | null = null;
-  let targetNode: Node | null = null;
-  let documentPosition: number | null = null;
-  let currentX = x;
-
-  while (targetNode === null && currentX < window.innerWidth && currentX > 0) {
-    const elementsAtPoint = document.elementsFromPoint(currentX, y);
-    const proseMirrorIndex = elementsAtPoint.findIndex((el) =>
-      el.classList.contains("ProseMirror"),
-    );
-    const relevantElements = elementsAtPoint.slice(0, proseMirrorIndex);
-
-    if (relevantElements.length > 0) {
-      const currentElement = relevantElements[0];
-      targetElement = currentElement;
-      documentPosition = editor.view.posAtDOM(currentElement, 0);
-
-      if (documentPosition >= 0) {
-        targetNode = editor.state.doc.nodeAt(Math.max(documentPosition - 1, 0));
-        if (targetNode === null || targetNode.isText) {
-          targetNode = editor.state.doc.nodeAt(
-            Math.max(documentPosition - 1, 0),
-          );
-        }
-        if (!targetNode) {
-          targetNode = editor.state.doc.nodeAt(Math.max(documentPosition, 0));
-        }
-        break;
-      }
-    }
-
-    if (direction === "left") {
-      currentX -= 1;
-    } else {
-      currentX += 1;
-    }
-  }
-
-  return {
-    resultElement: targetElement,
-    resultNode: targetNode,
-    pos: documentPosition !== null ? documentPosition : null,
-  };
-}
-
 const makeButtonOnClick =
   (
     editor: Editor,
@@ -334,8 +291,8 @@ const makeButtonOnClick =
     setOpenedDropdown: (value: string | null) => void,
   ) =>
   (e: React.MouseEvent) => {
-    const rect = (e.target as HTMLElement)
-      .closest(".tiptap-dropdown-menu")!
+    const rect = document
+      .querySelector(".f-tiptap-smart-drag-handle__button--drag")!
       .getBoundingClientRect();
 
     const nodeToUse = findElementNextToCoords({
@@ -346,7 +303,7 @@ const makeButtonOnClick =
     });
 
     if (nodeToUse && nodeToUse.resultNode && nodeToUse.pos !== null) {
-      const success = option.command(editor, nodeToUse as TargetNodeInfo);
+      const success = option.command(editor, nodeToUse);
 
       if (success) {
         setOpenedDropdown(null);
@@ -438,7 +395,7 @@ export function SmartDragHandleContent({
         onClick={(event) => {
           handlePlusClick({ event, editor });
         }}
-        className="f-tiptap-smart-drag-handle__button"
+        className="f-tiptap-smart-drag-handle__button f-tiptap-smart-drag-handle__button--plus"
       >
         <Plus className="tiptap-button-icon" />
       </Button>
@@ -457,7 +414,7 @@ export function SmartDragHandleContent({
             tabIndex={-1}
             aria-label="Drag"
             onClick={handleDragClick}
-            className="f-tiptap-smart-drag-handle__button"
+            className="f-tiptap-smart-drag-handle__button f-tiptap-smart-drag-handle__button--drag"
           >
             <GripVertical className="tiptap-button-icon" />
           </Button>

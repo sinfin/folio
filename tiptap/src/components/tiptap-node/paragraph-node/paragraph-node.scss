@@ -19,15 +19,6 @@
      CORE EDITOR STYLES
      ===================== */
 .tiptap.ProseMirror {
-  // Placeholder
-  > p.is-editor-empty::before {
-    content: attr(data-placeholder);
-    pointer-events: none;
-    color: var(--placeholder-color);
-    float: left;
-    height: 0;
-  }
-
   // Resize cursor
   &.resize-cursor {
     cursor: ew-resize;

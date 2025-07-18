@@ -107,7 +107,7 @@ export function addOrDeleteCol({
   return true;
 }
 
-export function gotoCol({ state, dispatch, type }: { state: EditorState, dispatch: any, type: 'before' | 'after' }) {
+export function goToColumn({ state, dispatch, type }: { state: EditorState, dispatch: any, type: 'before' | 'after' }) {
   const maybeColumns = findParentNode((node: Node) => node.type.name === FolioTiptapColumnsNode.name)(state.selection);
   const maybeColumn = findParentNode((node: Node) => node.type.name === FolioTiptapColumnNode.name)(state.selection);
 

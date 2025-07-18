@@ -1,9 +1,7 @@
 import { Node, mergeAttributes } from '@tiptap/core';
 import { TextSelection } from '@tiptap/pm/state';
 
-import { addOrDeleteCol, createColumns, gotoCol } from './utils';
-
-// export const EXTENSION_PRIORITY_HIGHEST = 200;
+import { addOrDeleteCol, createColumns, goToColumn } from './utils';
 
 export * from './folio-tiptap-column-node';
 // export * from './components/ColumnActionButton';
@@ -26,7 +24,7 @@ export const FolioTiptapColumnsNode = Node.create({
   isolating: true,
   allowGapCursor: false,
   content: 'folioTiptapColumn{1,}',
-  // priority: EXTENSION_PRIORITY_HIGHEST,
+  draggable: true,
 
   addOptions() {
     return {
@@ -60,7 +58,7 @@ export const FolioTiptapColumnsNode = Node.create({
   addCommands() {
     return {
       insertColumns:
-        attrs =>
+        (attrs) =>
           ({ tr, dispatch, editor }) => {
             const node = createColumns(editor.schema, (attrs && attrs.count) || 2);
 
@@ -95,14 +93,14 @@ export const FolioTiptapColumnsNode = Node.create({
   addKeyboardShortcuts() {
     return {
       'Tab': () => {
-        return gotoCol({
+        return goToColumn({
           state: this.editor.state,
           dispatch: this.editor.view.dispatch,
           type: 'after',
         });
       },
       'Shift-Tab': () => {
-        return gotoCol({
+        return goToColumn({
           state: this.editor.state,
           dispatch: this.editor.view.dispatch,
           type: 'before',

@@ -1,5 +1,6 @@
 import React from "react";
 import translate from "@/lib/i18n";
+import type { Range } from "@tiptap/core";
 
 import "./commands-list.scss";
 
@@ -23,7 +24,7 @@ export interface UntranslatedCommandItem {
   title: string | { cs: string; en: string };
   command?: (params: {
     editor: Editor;
-    range: { from: number; to: number };
+    range: Range;
   }) => void;
   keymap?: string;
   icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
@@ -71,7 +72,7 @@ export class CommandsList extends React.Component<
         range,
       }: {
         editor: Editor;
-        range: { from: number; to: number };
+        range: Range;
       }) => {
         if (this.props.query) {
           // insert space to disable suggestion

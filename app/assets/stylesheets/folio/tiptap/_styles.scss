@@ -330,6 +330,7 @@ $f-tiptap__columns--min-horizontal-width: 550px !default;
     display: block;
     inset: 0;
     border: var(--f-tiptap__column--border-in-editor-only);
+    border-radius: var(--f-tiptap-editor--border-radius);
   }
 
   @container (min-width: #{$f-tiptap__columns--min-horizontal-width}) {

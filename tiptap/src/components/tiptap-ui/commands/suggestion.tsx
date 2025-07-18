@@ -1,6 +1,9 @@
 import { computePosition, flip, offset } from "@floating-ui/dom";
 import { ReactRenderer } from "@tiptap/react";
 import { Editor } from "@tiptap/core";
+import type { Range } from "@tiptap/core";
+
+import { Pilcrow } from "lucide-react"
 
 import {
   CommandsList,
@@ -14,8 +17,8 @@ import { CommandsListBackdrop } from "./commands-list-backdrop";
 import { headingIcons } from "@/components/tiptap-ui/heading-button/heading-button";
 import { markIcons } from "@/components/tiptap-ui/mark-button/mark-button";
 
-// Local Range type for compatibility with TipTap commands
-type Range = { from: number; to: number };
+import { FolioTiptapColumnsCommandItem } from "@/components/tiptap-extensions/folio-tiptap-columns";
+
 
 interface SuggestionProps {
   editor: Editor;
@@ -43,7 +46,7 @@ export const makeSuggestionItems = (groups: UntranslatedCommandGroup[]) => {
   };
 };
 
-export const defaultGroup: UntranslatedCommandGroup = {
+export const defaultGroupForRichText: UntranslatedCommandGroup = {
   title: { cs: "Text", en: "Text" },
   items: [
     {
@@ -86,6 +89,18 @@ export const defaultGroup: UntranslatedCommandGroup = {
       },
     },
     {
+      title: { cs: "Odstavec", en: "Paragraph" },
+      icon: Pilcrow,
+      command: ({ editor, range }: { editor: Editor; range: Range }) => {
+        editor
+          .chain()
+          .focus()
+          .deleteRange(range)
+          .setNode("paragraph")
+          .run();
+      },
+    },
+    {
       title: { cs: "Tučné písmo", en: "Bold" },
       keymap: "C-b",
       icon: markIcons["bold"],
@@ -103,6 +118,14 @@ export const defaultGroup: UntranslatedCommandGroup = {
     },
   ],
 };
+
+export const defaultGroupForBlock: UntranslatedCommandGroup = {
+  ...defaultGroupForRichText,
+  items: [
+    ...defaultGroupForRichText.items,
+    FolioTiptapColumnsCommandItem,
+  ]
+}
 
 const translateTitles = (groups: UntranslatedCommandGroup[]): CommandGroup[] => {
   const lang = document.documentElement.lang as "cs" | "en";
@@ -123,7 +146,7 @@ const translateTitles = (groups: UntranslatedCommandGroup[]): CommandGroup[] => 
 };
 
 export const suggestion = {
-  items: makeSuggestionItems([defaultGroup]),
+  items: makeSuggestionItems([defaultGroupForRichText]),
 
   allowSpaces: false,
 

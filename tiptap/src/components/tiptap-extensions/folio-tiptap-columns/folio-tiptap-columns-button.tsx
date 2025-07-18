@@ -1,4 +1,5 @@
 import * as React from "react";
+import type { Range } from "@tiptap/core";
 import type { Editor, Content } from "@tiptap/react";
 import { Columns2 } from "lucide-react";
 
@@ -9,6 +10,8 @@ import { useTiptapEditor } from "@/hooks/use-tiptap-editor";
 import type { ButtonProps } from "@/components/tiptap-ui-primitive/button";
 import { Button } from "@/components/tiptap-ui-primitive/button";
 
+import { type UntranslatedCommandItem } from "@/components/tiptap-ui/commands/commands-list";
+
 import translate from "@/lib/i18n";
 
 const TRANSLATIONS = {
@@ -17,6 +20,19 @@ const TRANSLATIONS = {
   },
   en: {
     addColumns: "Add columns",
+  }
+}
+
+export const FolioTiptapColumnsCommandItem: UntranslatedCommandItem = {
+  title: { cs: "Sloupce", en: "Columns" },
+  icon: Columns2,
+  command: ({ editor, range }: { editor: Editor, range: Range }) => {
+    editor
+      .chain()
+      .focus()
+      .deleteRange(range)
+      .insertColumns({ count: 2 })
+      .run();
   },
 }
 
@@ -33,11 +49,7 @@ export const FolioTiptapColumnsButton = React.forwardRef<
   const handleClick = React.useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       if (!e.defaultPrevented && !disabled && editor) {
-        editor
-          .chain()
-          .focus()
-          .insertColumns({ count: 2 })
-          .run();
+        editor.chain().focus().insertColumns({ count: 2 }).run();
       }
     },
     [disabled],
@@ -47,6 +59,8 @@ export const FolioTiptapColumnsButton = React.forwardRef<
     return null;
   }
 
+  const label = translate(TRANSLATIONS, "addColumns");
+
   return (
     <Button
       ref={ref}
@@ -54,8 +68,8 @@ export const FolioTiptapColumnsButton = React.forwardRef<
       data-style="ghost"
       role="button"
       tabIndex={-1}
-      aria-label={translate(TRANSLATIONS, 'addColumns')}
-      tooltip={translate(TRANSLATIONS, 'addColumns')}
+      aria-label={label}
+      tooltip={label}
       onClick={handleClick}
     >
       <Columns2 className="tiptap-button-icon" />

@@ -90,19 +90,28 @@ body,
   }
 }
 
-.f-tiptap-editor p.is-empty::before,
-.f-tiptap-editor h2.is-empty::before,
-.f-tiptap-editor h3.is-empty::before,
-.f-tiptap-editor h4.is-empty::before {
-  color: #adb5bd;
-  content: attr(data-placeholder);
-  float: left;
-  height: 0;
-  pointer-events: none;
+.f-tiptap-editor p.is-empty,
+.f-tiptap-editor h2.is-empty,
+.f-tiptap-editor h3.is-empty,
+.f-tiptap-editor h4.is-empty {
+  position: relative;
+
+  &::before {
+    color: #adb5bd;
+    content: attr(data-placeholder);
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    overflow: hidden;
+    height: 100%;
+  }
 }
 
 .f-tiptap-editor .node-folioTiptapNode {
-  margin: var(--f-tiptap--tt-default-content-spacer) 0;
   position: relative;
   z-index: 2;
 

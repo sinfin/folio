@@ -1,5 +1,6 @@
 import { Extension, Editor } from "@tiptap/core";
 import Suggestion from "@tiptap/suggestion";
+import type { Range } from "@tiptap/core";
 
 export const CommandsExtension = Extension.create({
   name: "commands",
@@ -14,11 +15,11 @@ export const CommandsExtension = Extension.create({
           props,
         }: {
           editor: Editor;
-          range: { from: number; to: number };
+          range: Range;
           props: {
             command: (params: {
               editor: Editor;
-              range: { from: number; to: number };
+              range: Range;
             }) => void;
           };
         }) => {

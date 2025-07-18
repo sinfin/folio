@@ -45,7 +45,8 @@ import { FolioTiptapNodeButton } from "@/components/tiptap-ui/folio-tiptap-node-
 import {
   CommandsExtension,
   suggestion,
-  defaultGroup,
+  defaultGroupForBlock,
+  defaultGroupForRichText,
   makeSuggestionItems,
 } from "@/components/tiptap-ui/commands";
 import { ListDropdownMenu } from "@/components/tiptap-ui/list-dropdown-menu";
@@ -296,7 +297,7 @@ export function FolioEditor({
             ? {
                 ...suggestion,
                 items: makeSuggestionItems([
-                  defaultGroup,
+                  defaultGroupForBlock,
                   makeFolioTiptapNodeCommandGroup(folioTiptapNodes),
                 ]),
               }
