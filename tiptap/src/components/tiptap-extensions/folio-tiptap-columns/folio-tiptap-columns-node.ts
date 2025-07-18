@@ -1,7 +1,7 @@
 import { Node, mergeAttributes } from '@tiptap/core';
 import { TextSelection } from '@tiptap/pm/state';
 
-import { addOrDeleteCol, createColumns, goToColumn } from './utils';
+import { addOrDeleteColumn, createColumns, goToColumn } from './utils';
 
 export * from './folio-tiptap-column-node';
 // export * from './components/ColumnActionButton';
@@ -10,9 +10,9 @@ declare module '@tiptap/core' {
   interface Commands<ReturnType> {
     columns: {
       insertColumns: (attrs?: { count: number }) => ReturnType
-      addColBefore: () => ReturnType
-      addColAfter: () => ReturnType
-      deleteCol: () => ReturnType
+      addColumnBefore: () => ReturnType
+      addColumnAfter: () => ReturnType
+      deleteColumn: () => ReturnType
     }
   }
 }
@@ -72,20 +72,20 @@ export const FolioTiptapColumnsNode = Node.create({
 
             return true;
           },
-      addColBefore:
+      addColumnBefore:
         () =>
           ({ dispatch, state }) => {
-            return addOrDeleteCol({ dispatch, state, type: 'addBefore' });
+            return addOrDeleteColumn({ dispatch, state, type: 'addBefore' });
           },
-      addColAfter:
+      addColumnAfter:
         () =>
           ({ dispatch, state }) => {
-            return addOrDeleteCol({ dispatch, state, type: 'addAfter' });
+            return addOrDeleteColumn({ dispatch, state, type: 'addAfter' });
           },
-      deleteCol:
+      deleteColumn:
         () =>
           ({ dispatch, state }) => {
-            return addOrDeleteCol({ dispatch, state, type: 'delete' });
+            return addOrDeleteColumn({ dispatch, state, type: 'delete' });
           },
     };
   },

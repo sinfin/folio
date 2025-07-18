@@ -43,7 +43,7 @@ export function createColumns(schema: any, colsCount: any, colContent = null) {
   return types.columns.createChecked({ columnCount: colsCount }, cols);
 }
 
-export function addOrDeleteCol({
+export function addOrDeleteColumn({
   state,
   dispatch,
   type,
@@ -68,7 +68,7 @@ export function addOrDeleteCol({
     } else {
       nextIndex = type === 'addBefore' ? colIndex : colIndex + 1;
       colsJSON.content.splice(nextIndex, 0, {
-        type: 'column',
+        type: FolioTiptapColumnNode.name,
         attrs: {
           index: colIndex,
         },

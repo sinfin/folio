@@ -1,0 +1,91 @@
+import React from "react";
+import { BubbleMenu } from "@tiptap/react/menus";
+
+import type { Editor } from "@tiptap/core";
+
+import type { ButtonProps } from "@/components/tiptap-ui-primitive/button";
+import { Button } from "@/components/tiptap-ui-primitive/button";
+
+import { folioTiptapColumnsBubbleMenuSource } from "@/components/tiptap-extensions/folio-tiptap-columns/folio-tiptap-columns-bubble-menu-source";
+
+import "./folio-editor-bubble-menus.scss";
+
+export interface FolioEditorBubbleMenusProps {
+  editor: Editor;
+  blockEditor: boolean;
+}
+
+export interface FolioEditorBubbleMenuSourceItem {
+  command: (params: { editor: Editor }) => void;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  title: string;
+}
+
+export interface FolioEditorBubbleMenuSource {
+  pluginKey: string;
+  shouldShow: (params: {
+    editor: Editor;
+    view: any;
+    state: any;
+    oldState?: any;
+    from: number;
+    to: number;
+  }) => boolean;
+  items: FolioEditorBubbleMenuSourceItem[];
+}
+
+export function FolioEditorBubbleMenu({
+  editor,
+  source,
+}: {
+  editor: Editor;
+  source: FolioEditorBubbleMenuSource;
+}) {
+  return (
+    <BubbleMenu
+      pluginKey={source.pluginKey}
+      shouldShow={source.shouldShow}
+      className="f-tiptap-editor-bubble-menu"
+      data-bubble-menu-type={source.pluginKey}
+    >
+      {source.items.map((item) => {
+        const Icon = item.icon;
+
+        return (
+          <Button
+            key={item.title}
+            type="button"
+            data-style="ghost"
+            role="button"
+            tabIndex={-1}
+            aria-label={item.title}
+            tooltip={item.title}
+            onClick={() => {
+              item.command({ editor });
+            }}
+          >
+            <Icon className="tiptap-button-icon" />
+          </Button>
+        );
+      })}
+    </BubbleMenu>
+  );
+}
+
+export function FolioEditorBubbleMenus({
+  editor,
+  blockEditor,
+}: FolioEditorBubbleMenusProps) {
+  if (!editor) return null;
+
+  return (
+    <>
+      {blockEditor && (
+        <FolioEditorBubbleMenu
+          editor={editor}
+          source={folioTiptapColumnsBubbleMenuSource}
+        />
+      )}
+    </>
+  );
+}

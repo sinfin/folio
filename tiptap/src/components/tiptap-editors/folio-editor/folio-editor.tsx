@@ -81,6 +81,7 @@ import translate from "@/lib/i18n";
 import makeFolioTiptapNodeCommandGroup from "@/lib/make-folio-tiptap-node-command-group";
 
 import TRANSLATIONS from "./folio-editor-i18n.json";
+import { FolioEditorBubbleMenus } from "./folio-editor-bubble-menus";
 
 const MainToolbarContent = ({
   onHighlighterClick,
@@ -386,6 +387,8 @@ export function FolioEditor({
             role="presentation"
             className="f-tiptap-editor__content f-tiptap-styles"
           />
+
+          <FolioEditorBubbleMenus editor={editor} blockEditor={blockEditor} />
         </div>
       </div>
     </EditorContext.Provider>

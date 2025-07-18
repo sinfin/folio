@@ -1,4 +1,4 @@
-import { FolioEditor } from "@/components/tiptap-editors/folio/folio-editor";
+import { FolioEditor } from "@/components/tiptap-editors/folio-editor";
 import type { Content } from "@tiptap/react";
 
 import "./App.css";
