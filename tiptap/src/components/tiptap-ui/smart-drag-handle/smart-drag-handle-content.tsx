@@ -211,13 +211,10 @@ const editFolioTiptapNode = (
   editor: Editor,
   targetNode: TargetNodeInfo,
 ): boolean => {
-  const btn = targetNode.resultElement?.querySelector(
-    ".f-tiptap-node__hover-controls-edit-button",
-  ) as HTMLButtonElement;
-
-  if (btn) {
-    btn.click();
-    return true;
+  if (targetNode.resultElement) {
+    const event = new CustomEvent("f-tiptap-node:edit")
+    targetNode.resultElement.dispatchEvent(event);
+    return true
   }
 
   return false;

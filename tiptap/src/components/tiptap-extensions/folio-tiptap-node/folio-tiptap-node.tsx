@@ -40,6 +40,8 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
   const [loaded, setLoaded] = React.useState<boolean>(false);
   const [htmlFromApi, setHtmlFromApi] = React.useState<string>("");
 
+  const wrapperRef = React.useRef<HTMLDivElement>(null);
+
   const handleEditClick = React.useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       if (!e.defaultPrevented) {
@@ -54,15 +56,6 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
       }
     },
     [props.node, uniqueId],
-  );
-
-  const handleRemoveClick = React.useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
-      if (!e.defaultPrevented) {
-        props.deleteNode();
-      }
-    },
-    [props],
   );
 
   React.useEffect(() => {
@@ -96,6 +89,21 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
       }
     }
   }, [loaded, uniqueId]);
+
+  // Effect to handle edit event
+  React.useEffect(() => {
+    if (wrapperRef && wrapperRef.current) {
+      const wrapper = wrapperRef.current;
+
+      // Add event listener for double-click to edit
+      wrapper.addEventListener("f-tiptap-node:edit", handleEditClick);
+
+      // Cleanup event listener on unmount
+      return () => {
+        wrapper.removeEventListener("f-tiptap-node:edit", handleEditClick);
+      };
+    }
+  }, [wrapperRef, handleEditClick]);
 
   // Effect to handle messages from the parent window
   React.useEffect(() => {
@@ -139,7 +147,7 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
   }, [uniqueId, props]);
 
   return (
-    <NodeViewWrapper className="f-tiptap-node" tabIndex={0} data-drag-handle="" onDoubleClick={handleEditClick}>
+    <NodeViewWrapper className="f-tiptap-node" tabIndex={0} data-drag-handle="" onDoubleClick={handleEditClick} ref={wrapperRef}>
       {htmlFromApi ? (
         <div
           className="f-tiptap-node__html"
@@ -150,32 +158,6 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
           <span className="folio-loader" />
         </div>
       )}
-
-      <div className="f-tiptap-node__hover-controls">
-        <Button
-          type="button"
-          role="button"
-          tabIndex={-1}
-          aria-label={translate(TRANSLATIONS, "edit")}
-          tooltip={translate(TRANSLATIONS, "edit")}
-          onClick={handleEditClick}
-          className="f-tiptap-node__hover-controls-edit-button"
-        >
-          <EditIcon className="tiptap-button-icon" />
-        </Button>
-
-        <Button
-          type="button"
-          role="button"
-          tabIndex={-1}
-          aria-label={translate(TRANSLATIONS, "remove")}
-          tooltip={translate(TRANSLATIONS, "remove")}
-          onClick={handleRemoveClick}
-          className="f-tiptap-node__hover-controls-remove-button"
-        >
-          <XIcon className="tiptap-button-icon" />
-        </Button>
-      </div>
     </NodeViewWrapper>
   );
 };

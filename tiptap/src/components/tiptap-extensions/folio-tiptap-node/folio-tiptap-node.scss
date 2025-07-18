@@ -10,23 +10,4 @@
     height: 150px;
     background: rgba(0, 0, 0, .5);
   }
-
-  &__hover-controls {
-    align-items: flex-start;
-    bottom: 0;
-    display: flex;
-    flex-direction: column;
-    gap: .5rem;
-    position: absolute;
-    right: calc(-1 * var(--f-tiptap-editor-content-wrap--padding-x));
-    top: 0;
-    visibility: hidden;
-    width: var(--f-tiptap-editor-content-wrap--padding-x);
-    padding-left: 1rem;
-  }
-
-  &__hover-controls:hover,
-  &:hover &__hover-controls {
-    visibility: visible;
-  }
 }
