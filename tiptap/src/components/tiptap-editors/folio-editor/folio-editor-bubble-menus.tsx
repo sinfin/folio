@@ -32,6 +32,7 @@ export interface FolioEditorBubbleMenuSource {
     to: number;
   }) => boolean;
   items: FolioEditorBubbleMenuSourceItem[];
+  placement?: "top" | "right" | "bottom" | "left" | "top-start" | "top-end" | "right-start" | "right-end" | "bottom-start" | "bottom-end" | "left-start" | "left-end" | undefined;
 }
 
 export function FolioEditorBubbleMenu({
@@ -41,10 +42,17 @@ export function FolioEditorBubbleMenu({
   editor: Editor;
   source: FolioEditorBubbleMenuSource;
 }) {
+  const floatingUiOptions = {
+    placement: source.placement || "bottom",
+    offset: 12,
+    flip: true,
+  }
+
   return (
     <BubbleMenu
       pluginKey={source.pluginKey}
       shouldShow={source.shouldShow}
+      options={floatingUiOptions}
       className="f-tiptap-editor-bubble-menu"
       data-bubble-menu-type={source.pluginKey}
     >
