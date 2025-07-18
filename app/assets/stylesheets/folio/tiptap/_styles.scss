@@ -1,3 +1,5 @@
+$f-tiptap__columns--min-horizontal-width: 550px !default;
+
 :root {
   // TODO replace these --tt- defaults
   --tt-gray-light-a-100: rgba(15, 22, 36, 0.05);
@@ -130,6 +132,7 @@
 
 .f-tiptap-styles {
   white-space: var(--f-tiptap__root--white-space);
+  container-type: inline-size;
 
   .container-fluid {
     padding: 0;
@@ -309,26 +312,44 @@
   }
 
   .f-tiptap-columns {
-    display: flex;
-    align-items: stretch;
-    gap: var(--f-tiptap__columns--gap);
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--f-tiptap__columns--gap);
   }
 
   .f-tiptap-column {
-    min-width: 0;
-    flex: 1 1 0%;
     box-sizing: border-box;
     position: relative;
+    container-type: inline-size;
+  }
 
-    .f-tiptap-editor & {
-      &::before {
-        content: "";
-        position: absolute;
-        display: block;
-        inset: 0;
-        border: var(--f-tiptap__column--border-in-editor-only);
-      }
+  .f-tiptap-editor & .f-tiptap-column::before {
+    content: "";
+    position: absolute;
+    display: block;
+    inset: 0;
+    border: var(--f-tiptap__column--border-in-editor-only);
+  }
+
+  @container (min-width: #{$f-tiptap__columns--min-horizontal-width}) {
+    .f-tiptap-columns {
+      align-items: stretch;
+      width: 100%;
+      flex-direction: row;
+    }
+
+    .f-tiptap-column {
+      min-width: 0;
+      flex: 1 1 0%;
+    }
+
+    .f-tiptap-editor & .f-tiptap-columns > .f-tiptap-columns:first-child .f-tiptap-column::before {
+      border-top: 0;
+    }
+
+    .f-tiptap-editor & .f-tiptap-columns > .f-tiptap-columns:last-child .f-tiptap-column::before {
+      border-bottom: 0;
     }
   }
 }
