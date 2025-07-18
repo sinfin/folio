@@ -118,9 +118,9 @@ export function gotoCol({ state, dispatch, type }: { state: EditorState, dispatc
     let nextIndex = 0;
 
     if (type === 'before') {
-      nextIndex = (colIndex - 1 + cols.attrs.cols) % cols.attrs.cols;
+      nextIndex = (colIndex - 1 + cols.attrs.count) % cols.attrs.count;
     } else {
-      nextIndex = (colIndex + 1) % cols.attrs.cols;
+      nextIndex = (colIndex + 1) % cols.attrs.count;
     }
 
     let nextSelectPos = maybeColumns.pos;

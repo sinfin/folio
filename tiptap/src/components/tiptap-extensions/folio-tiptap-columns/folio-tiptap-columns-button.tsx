@@ -36,7 +36,7 @@ export const FolioTiptapColumnsButton = React.forwardRef<
         editor
           .chain()
           .focus()
-          .insertColumns({ cols: 2 })
+          .insertColumns({ count: 2 })
           .run();
       }
     },

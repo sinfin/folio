@@ -54,7 +54,7 @@ export const FolioTiptapColumnsNode = Node.create({
   },
 
   renderHTML({ HTMLAttributes }) {
-    return ['div', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes), 0];
+    return ['div', mergeAttributes({ "data-f-tiptap-columns-count": HTMLAttributes.count }, this.options.HTMLAttributes, HTMLAttributes), 0];
   },
 
   addCommands() {
@@ -62,7 +62,7 @@ export const FolioTiptapColumnsNode = Node.create({
       insertColumns:
         attrs =>
           ({ tr, dispatch, editor }) => {
-            const node = createColumns(editor.schema, (attrs && attrs.count) || 3);
+            const node = createColumns(editor.schema, (attrs && attrs.count) || 2);
 
             if (dispatch) {
               const offset = tr.selection.anchor + 1;
@@ -92,25 +92,24 @@ export const FolioTiptapColumnsNode = Node.create({
     };
   },
 
-  // addKeyboardShortcuts() {
-  //   return {
-  //     'Mod-Alt-G': () => this.editor.commands.insertColumns(),
-  //     'Tab': () => {
-  //       return gotoCol({
-  //         state: this.editor.state,
-  //         dispatch: this.editor.view.dispatch,
-  //         type: 'after',
-  //       });
-  //     },
-  //     'Shift-Tab': () => {
-  //       return gotoCol({
-  //         state: this.editor.state,
-  //         dispatch: this.editor.view.dispatch,
-  //         type: 'before',
-  //       });
-  //     },
-  //   };
-  // },
+  addKeyboardShortcuts() {
+    return {
+      'Tab': () => {
+        return gotoCol({
+          state: this.editor.state,
+          dispatch: this.editor.view.dispatch,
+          type: 'after',
+        });
+      },
+      'Shift-Tab': () => {
+        return gotoCol({
+          state: this.editor.state,
+          dispatch: this.editor.view.dispatch,
+          type: 'before',
+        });
+      },
+    };
+  },
 });
 
 export default FolioTiptapColumnsNode;
