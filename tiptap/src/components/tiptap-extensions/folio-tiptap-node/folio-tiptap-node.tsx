@@ -35,6 +35,17 @@ const storeHtmlToCache = ({ html, serializedAttrs }: StoredHtml) => {
   htmlCache = [{ html, serializedAttrs }, ...htmlCache.slice(0, 9)];
 };
 
+const postEditMessage = (attrs: any, uniqueId: number) => {
+  window.top!.postMessage(
+    {
+      type: "f-tiptap-node:click",
+      attrs,
+      uniqueId,
+    },
+    "*",
+  );
+};
+
 export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
   const [uniqueId, setUniqueId] = React.useState<number>(-1);
   const [loaded, setLoaded] = React.useState<boolean>(false);
@@ -45,17 +56,17 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
   const handleEditClick = React.useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       if (!e.defaultPrevented) {
-        window.top!.postMessage(
-          {
-            type: "f-tiptap-node:click",
-            attrs: props.node.attrs,
-            uniqueId,
-          },
-          "*",
-        );
+        postEditMessage(props.node.attrs, uniqueId);
       }
     },
-    [props.node, uniqueId],
+    [props.node.attrs, uniqueId],
+  );
+
+  const handleDomEditEvent = React.useCallback(
+    (e: Event) => {
+      postEditMessage(props.node.attrs, uniqueId);
+    },
+    [props.node.attrs, uniqueId],
   );
 
   React.useEffect(() => {
@@ -96,14 +107,14 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
       const wrapper = wrapperRef.current;
 
       // Add event listener for double-click to edit
-      wrapper.addEventListener("f-tiptap-node:edit", handleEditClick);
+      wrapper.addEventListener("f-tiptap-node:edit", handleDomEditEvent);
 
       // Cleanup event listener on unmount
       return () => {
-        wrapper.removeEventListener("f-tiptap-node:edit", handleEditClick);
+        wrapper.removeEventListener("f-tiptap-node:edit", handleDomEditEvent);
       };
     }
-  }, [wrapperRef, handleEditClick]);
+  }, [wrapperRef, handleDomEditEvent]);
 
   // Effect to handle messages from the parent window
   React.useEffect(() => {
@@ -147,7 +158,13 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
   }, [uniqueId, props]);
 
   return (
-    <NodeViewWrapper className="f-tiptap-node" tabIndex={0} data-drag-handle="" onDoubleClick={handleEditClick} ref={wrapperRef}>
+    <NodeViewWrapper
+      className="f-tiptap-node"
+      tabIndex={0}
+      data-drag-handle=""
+      onDoubleClick={handleEditClick}
+      ref={wrapperRef}
+    >
       {htmlFromApi ? (
         <div
           className="f-tiptap-node__html"
