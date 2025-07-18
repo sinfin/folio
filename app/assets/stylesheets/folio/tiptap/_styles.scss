@@ -89,12 +89,6 @@
   --f-tiptap__li--margin-top: var(--f-tiptap__li--spacer);
   --f-tiptap__li--margin-bottom: var(--f-tiptap__li--spacer);
 
-  --f-tiptap__ul-tasklist--background-color: var(--tt-gray-light-a-100);
-  --f-tiptap__ul-tasklist--background-color-active: var(--tt-gray-light-a-900);
-  --f-tiptap__ul-tasklist--border-color: var(--tt-gray-light-a-200);
-  --f-tiptap__ul-tasklist--border-color-active: var(--tt-gray-light-a-900);
-  --f-tiptap__ul-tasklist--check-icon-color: var(--white);
-
   --f-tiptap__codeblock--background-color: var(--tt-gray-light-a-50);
   --f-tiptap__codeblock--border-color: var(--tt-gray-light-a-200);
   --f-tiptap__codeblock--border-radius: var(--bs-border-radius);
@@ -117,16 +111,13 @@
   --f-tiptap__a--color-hover: var(--f-tiptap__a--color);
   --f-tiptap__a--text-decoration: underline;
   --f-tiptap__a--text-decoration-hover: none;
+
+  --f-tiptap__columns--gap: var(--f-tiptap__spacer);
+  --f-tiptap__column--border-in-editor-only: 1px dashed #ccc;
 }
 
 .f-tiptap-styles--dark {
   --f-tiptap__blockquote--background: rgba(245, 245, 245, 1);
-
-  --f-tiptap__ul-tasklist--background-color-active: var(--tt-gray-dark-a-900);
-  --f-tiptap__ul-tasklist--background-color: var(--tt-gray-dark-a-100);
-  --f-tiptap__ul-tasklist--border-color-active: var(--tt-gray-dark-a-900);
-  --f-tiptap__ul-tasklist--border-color: var(--tt-gray-dark-a-200);
-  --f-tiptap__ul-tasklist--check-icon-color: var(--black);
 
   --f-tiptap__code--background-color: var(--tt-gray-dark-a-100);
   --f-tiptap__code--border-color: var(--tt-gray-dark-a-200);
@@ -149,7 +140,8 @@
   ol,
   blockquote,
   pre,
-  .f-tiptap-node {
+  .f-tiptap-node,
+  .f-tiptap-columns {
     margin-top: var(--f-tiptap__node--margin-top);
     margin-bottom: var(--f-tiptap__node--margin-bottom);
 
@@ -314,5 +306,29 @@
     border: none;
     height: var(--f-tiptap__hr--height);
     margin: var(--f-tiptap__hr--margin) 0;
+  }
+
+  .f-tiptap-columns {
+    display: flex;
+    align-items: stretch;
+    gap: var(--f-tiptap__columns--gap);
+    width: 100%;
+  }
+
+  .f-tiptap-column {
+    min-width: 0;
+    flex: 1 1 0%;
+    box-sizing: border-box;
+    position: relative;
+
+    .f-tiptap-editor & {
+      &::before {
+        content: "";
+        position: absolute;
+        display: block;
+        inset: 0;
+        border: var(--f-tiptap__column--border-in-editor-only);
+      }
+    }
   }
 }

@@ -29,6 +29,12 @@ import {
 
 // --- Tiptap Node ---
 import { FolioTiptapNodeExtension } from "@/components/tiptap-extensions/folio-tiptap-node";
+import {
+  FolioTiptapColumnsButton,
+  FolioTiptapColumnsExtension,
+  FolioTiptapColumnNode,
+  FolioTiptapColumnsNode,
+} from "@/components/tiptap-extensions/folio-tiptap-columns";
 
 import "@/components/tiptap-node/image-node/image-node.scss";
 import "@/components/tiptap-node/paragraph-node/paragraph-node.scss";
@@ -148,6 +154,16 @@ const MainToolbarContent = ({
         <TextAlignButton align="center" />
         <TextAlignButton align="right" />
       </ToolbarGroup>
+
+      {blockEditor ? (
+        <>
+          <ToolbarSeparator />
+
+          <ToolbarGroup>
+            <FolioTiptapColumnsButton editor={editor} />
+          </ToolbarGroup>
+        </>
+      ) : null}
 
       <Spacer />
 
@@ -272,7 +288,7 @@ export function FolioEditor({
       // Subscript,
 
       Selection,
-      ...(blockEditor ? [FolioTiptapNodeExtension] : []),
+      ...(blockEditor ? [FolioTiptapColumnsExtension, FolioTiptapColumnsNode, FolioTiptapColumnNode] : []),
 
       CommandsExtension.configure({
         suggestion:
