@@ -28,7 +28,7 @@ import {
 } from "@/components/tiptap-ui-primitive/toolbar";
 
 // --- Tiptap Node ---
-import { FolioTiptapNodeExtension } from "@/components/tiptap-node/folio-tiptap-node/folio-tiptap-node-extension";
+import { FolioTiptapNodeExtension } from "@/components/tiptap-extensions/folio-tiptap-node";
 
 import "@/components/tiptap-node/image-node/image-node.scss";
 import "@/components/tiptap-node/paragraph-node/paragraph-node.scss";

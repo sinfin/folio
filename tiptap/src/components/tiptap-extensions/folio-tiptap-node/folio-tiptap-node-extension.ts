@@ -1,5 +1,5 @@
 import { mergeAttributes, Node, ReactNodeViewRenderer } from "@tiptap/react";
-import { FolioTiptapNode } from "@/components/tiptap-node/folio-tiptap-node/folio-tiptap-node";
+import { FolioTiptapNode } from "@/components/tiptap-extensions/folio-tiptap-node";
 
 export type FolioTiptapNodeOptions = Record<string, never>;
 
