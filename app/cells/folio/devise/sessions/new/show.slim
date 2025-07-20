@@ -14,7 +14,7 @@
 
       == password_input(f, :password, autocomplete: 'current-password', test_id: 'sign-in-form-password-input')
 
-    = render_view_component(Folio::Captcha::TurnstileComponent.new)
+    = render_view_component(Folio::Captcha::TurnstileComponent.new(submit_button_class_name: 'f-devise__submit-btn'))
 
     .f-devise__errors
 
