@@ -9,10 +9,14 @@ module Folio::IsSiteLockable
   end
 
   def locked?
-    # TODO: because this is called from Warden::Managerbefore Folio::Current is set,
-    # it will always check against the main site
-    # we need somehow prebend Warden
-    locked_for?(Folio::Current.site || Folio::Current.main_site)
+    # This is called from Warden::Manager before Folio::Current is set, it would always check against the main site
+    # -> during auth, use the site from warden params (stored during find_for_authentication)
+    if instance_variable_defined?(:@authentication_site) && @authentication_site.present?
+      locked_for?(@authentication_site)
+    else
+      # for non-auth contexts, fall back to the current site
+      locked_for?(Folio::Current.site || Folio::Current.main_site)
+    end
   end
 
   def locked_for?(site)

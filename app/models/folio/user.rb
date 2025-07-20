@@ -419,6 +419,11 @@ class Folio::User < Folio::ApplicationRecord
         end
       end
 
+      # Store the auth site on the user instance for use in Folio::IsSiteLockable#active_for_authentication?
+      if user
+        user.instance_variable_set(:@authentication_site, site)
+      end
+
       user
     end
 
