@@ -14,12 +14,12 @@ import {
 } from "./commands-list";
 import { CommandsListBackdrop } from "./commands-list-backdrop";
 
-import { headingIcons } from "@/components/tiptap-ui/heading-button/heading-button";
 import { markIcons } from "@/components/tiptap-ui/mark-button/mark-button";
 
 import { FolioTiptapColumnsCommandItem } from "@/components/tiptap-extensions/folio-tiptap-columns";
 
-import { HEADING_TRANSLATIONS } from "@/components/tiptap-ui/heading-button/heading-button";
+import { HEADING_TRANSLATIONS, headingIcons } from "@/components/tiptap-ui/heading-button/heading-button";
+import { LIST_TRANSLATIONS, listIcons } from "@/components/tiptap-ui/list-button/list-button";
 
 
 interface SuggestionProps {
@@ -103,19 +103,17 @@ export const defaultGroupForRichText: UntranslatedCommandGroup = {
       },
     },
     {
-      title: { cs: "Tučné písmo", en: "Bold" },
-      keymap: "C-b",
-      icon: markIcons["bold"],
+      title: { cs: LIST_TRANSLATIONS["cs"]["bulletList"], en: LIST_TRANSLATIONS["en"]["bulletList"] },
+      icon: listIcons["bulletList"],
       command: ({ editor, range }: { editor: Editor; range: Range }) => {
-        editor.chain().focus().deleteRange(range).setMark("bold").run();
+        editor.chain().focus().deleteRange(range).toggleBulletList().run();
       },
     },
     {
-      title: { cs: "Kurzíva", en: "Italic" },
-      keymap: "C-i",
-      icon: markIcons["italic"],
+      title: { cs: LIST_TRANSLATIONS["cs"]["orderedList"], en: LIST_TRANSLATIONS["en"]["orderedList"] },
+      icon: listIcons["orderedList"],
       command: ({ editor, range }: { editor: Editor; range: Range }) => {
-        editor.chain().focus().deleteRange(range).setMark("italic").run();
+        editor.chain().focus().deleteRange(range).toggleOrderedList().run();
       },
     },
   ],

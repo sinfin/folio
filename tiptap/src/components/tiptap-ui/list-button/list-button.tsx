@@ -3,6 +3,8 @@
 import * as React from "react"
 import { isNodeSelection, type Editor } from "@tiptap/react"
 
+import translate from "@/lib/i18n";
+
 // --- Hooks ---
 import { useTiptapEditor } from "@/hooks/use-tiptap-editor"
 
@@ -45,14 +47,30 @@ export interface ListButtonProps extends Omit<ButtonProps, "type"> {
   hideWhenUnavailable?: boolean
 }
 
+export const LIST_TRANSLATIONS = {
+  cs: {
+    bulletList: "Bodový seznam",
+    orderedList: "Číslovaný seznam",
+  },
+  en: {
+    bulletList: "Bullet List",
+    orderedList: "Ordered List",
+  },
+}
+
+export const listIcons = {
+  bulletList: ListIcon,
+  orderedList: ListOrderedIcon,
+}
+
 export const listOptions: ListOption[] = [
   {
-    label: "Bullet List",
+    label: translate(LIST_TRANSLATIONS, "bulletList"),
     type: "bulletList",
     icon: ListIcon,
   },
   {
-    label: "Ordered List",
+    label: translate(LIST_TRANSLATIONS, "orderedList"),
     type: "orderedList",
     icon: ListOrderedIcon,
   },
