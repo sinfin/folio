@@ -3,14 +3,14 @@ import { ReactRenderer } from "@tiptap/react";
 import { Editor } from "@tiptap/core";
 import type { Range } from "@tiptap/core";
 
-import { Pilcrow } from "lucide-react"
+import { Pilcrow } from "lucide-react";
 
 import {
   CommandsList,
   type CommandItem,
   type CommandGroup,
   type UntranslatedCommandGroup,
-  type UntranslatedCommandItem
+  type UntranslatedCommandItem,
 } from "./commands-list";
 import { CommandsListBackdrop } from "./commands-list-backdrop";
 
@@ -18,9 +18,20 @@ import { markIcons } from "@/components/tiptap-ui/mark-button/mark-button";
 
 import { FolioTiptapColumnsCommandItem } from "@/components/tiptap-extensions/folio-tiptap-columns";
 
-import { HEADING_TRANSLATIONS, headingIcons } from "@/components/tiptap-ui/heading-button/heading-button";
-import { LIST_TRANSLATIONS, listIcons } from "@/components/tiptap-ui/list-button/list-button";
+import {
+  HEADING_TRANSLATIONS,
+  headingIcons,
+} from "@/components/tiptap-ui/heading-button/heading-button";
+import {
+  LIST_TRANSLATIONS,
+  listIcons,
+} from "@/components/tiptap-ui/list-button/list-button";
 
+export const normalizeString = (string: string) =>
+  string
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .toLowerCase();
 
 interface SuggestionProps {
   editor: Editor;
@@ -34,10 +45,12 @@ interface SuggestionProps {
 
 export const makeSuggestionItems = (groups: UntranslatedCommandGroup[]) => {
   return ({ query }: { editor: Editor; query: string }) => {
-    return translateTitles(groups)
+    const normalizedQuery = normalizeString(query);
+
+    return translateAndNormalizeTitles(groups)
       .map((group: CommandGroup): CommandGroup | null => {
         const matchingItems = group.items.filter((item: CommandItem) => {
-          return item.title.toLowerCase().indexOf(query.toLowerCase()) !== -1;
+          return item.normalizedTitle.indexOf(normalizedQuery) !== -1;
         });
         if (matchingItems.length > 0) {
           return { ...group, items: matchingItems };
@@ -52,7 +65,10 @@ export const defaultGroupForRichText: UntranslatedCommandGroup = {
   title: { cs: "Text", en: "Text" },
   items: [
     {
-      title: { cs: `${HEADING_TRANSLATIONS["cs"]["heading"]} H2`, en: `${HEADING_TRANSLATIONS["cs"]["heading"]} H2` },
+      title: {
+        cs: `${HEADING_TRANSLATIONS["cs"]["heading"]} H2`,
+        en: `${HEADING_TRANSLATIONS["cs"]["heading"]} H2`,
+      },
       keymap: "##",
       icon: headingIcons[2],
       command: ({ editor, range }: { editor: Editor; range: Range }) => {
@@ -65,7 +81,10 @@ export const defaultGroupForRichText: UntranslatedCommandGroup = {
       },
     },
     {
-      title: { cs: `${HEADING_TRANSLATIONS["cs"]["heading"]} H3`, en: `${HEADING_TRANSLATIONS["cs"]["heading"]} H3` },
+      title: {
+        cs: `${HEADING_TRANSLATIONS["cs"]["heading"]} H3`,
+        en: `${HEADING_TRANSLATIONS["cs"]["heading"]} H3`,
+      },
       keymap: "###",
       icon: headingIcons[3],
       command: ({ editor, range }: { editor: Editor; range: Range }) => {
@@ -78,7 +97,10 @@ export const defaultGroupForRichText: UntranslatedCommandGroup = {
       },
     },
     {
-      title: { cs: `${HEADING_TRANSLATIONS["cs"]["heading"]} H4`, en: `${HEADING_TRANSLATIONS["cs"]["heading"]} H4` },
+      title: {
+        cs: `${HEADING_TRANSLATIONS["cs"]["heading"]} H4`,
+        en: `${HEADING_TRANSLATIONS["cs"]["heading"]} H4`,
+      },
       keymap: "####",
       icon: headingIcons[4],
       command: ({ editor, range }: { editor: Editor; range: Range }) => {
@@ -94,23 +116,24 @@ export const defaultGroupForRichText: UntranslatedCommandGroup = {
       title: { cs: "Odstavec", en: "Paragraph" },
       icon: Pilcrow,
       command: ({ editor, range }: { editor: Editor; range: Range }) => {
-        editor
-          .chain()
-          .focus()
-          .deleteRange(range)
-          .setNode("paragraph")
-          .run();
+        editor.chain().focus().deleteRange(range).setNode("paragraph").run();
       },
     },
     {
-      title: { cs: LIST_TRANSLATIONS["cs"]["bulletList"], en: LIST_TRANSLATIONS["en"]["bulletList"] },
+      title: {
+        cs: LIST_TRANSLATIONS["cs"]["bulletList"],
+        en: LIST_TRANSLATIONS["en"]["bulletList"],
+      },
       icon: listIcons["bulletList"],
       command: ({ editor, range }: { editor: Editor; range: Range }) => {
         editor.chain().focus().deleteRange(range).toggleBulletList().run();
       },
     },
     {
-      title: { cs: LIST_TRANSLATIONS["cs"]["orderedList"], en: LIST_TRANSLATIONS["en"]["orderedList"] },
+      title: {
+        cs: LIST_TRANSLATIONS["cs"]["orderedList"],
+        en: LIST_TRANSLATIONS["en"]["orderedList"],
+      },
       icon: listIcons["orderedList"],
       command: ({ editor, range }: { editor: Editor; range: Range }) => {
         editor.chain().focus().deleteRange(range).toggleOrderedList().run();
@@ -121,28 +144,42 @@ export const defaultGroupForRichText: UntranslatedCommandGroup = {
 
 export const defaultGroupForBlock: UntranslatedCommandGroup = {
   ...defaultGroupForRichText,
-  items: [
-    ...defaultGroupForRichText.items,
-    FolioTiptapColumnsCommandItem,
-  ]
-}
+  items: [...defaultGroupForRichText.items, FolioTiptapColumnsCommandItem],
+};
 
-const translateTitles = (groups: UntranslatedCommandGroup[]): CommandGroup[] => {
+const translateAndNormalizeTitles = (
+  groups: UntranslatedCommandGroup[],
+): CommandGroup[] => {
   const lang = document.documentElement.lang as "cs" | "en";
-  return groups.map((group: UntranslatedCommandGroup) => ({
-    ...group,
-    title:
-      typeof group.title === "string"
-        ? group.title
-        : group.title[lang] || group.title.en,
-    items: group.items.map((item: UntranslatedCommandItem) => ({
-      ...item,
-      title:
-        typeof item.title === "string"
-          ? item.title
-          : item.title[lang] || item.title.en,
-    })),
-  }));
+  return groups.map((group: UntranslatedCommandGroup) => {
+    let groupTitle;
+
+    if (typeof group.title === "string") {
+      groupTitle = group.title;
+    } else {
+      groupTitle = group.title[lang] || group.title.en;
+    }
+
+    return {
+      ...group,
+      title: groupTitle,
+      items: group.items.map((item: UntranslatedCommandItem) => {
+        let itemTitle;
+
+        if (typeof item.title === "string") {
+          itemTitle = item.title;
+        } else {
+          itemTitle = item.title[lang] || item.title.en;
+        }
+
+        return {
+          ...item,
+          title: itemTitle,
+          normalizedTitle: normalizeString(itemTitle),
+        };
+      }),
+    };
+  });
 };
 
 export const suggestion = {
@@ -152,7 +189,7 @@ export const suggestion = {
 
   render: () => {
     let component: ReactRenderer | null = null;
-    let backdrop: ReactRenderer | null = null
+    let backdrop: ReactRenderer | null = null;
 
     function repositionComponent(clientRect: DOMRect, action: string) {
       if (!component || !component.element) {
@@ -210,8 +247,8 @@ export const suggestion = {
         backdrop = new ReactRenderer(CommandsListBackdrop, {
           props: { ...props, query: props.query },
           editor: props.editor,
-        })
-        document.body.appendChild(backdrop.element)
+        });
+        document.body.appendChild(backdrop.element);
 
         component = new ReactRenderer(CommandsList, {
           props: { ...props, query: props.query },
@@ -263,14 +300,14 @@ export const suggestion = {
           .setMeta("lockDragHandle", false)
           .run();
 
-        if (!component) return
+        if (!component) return;
 
         if (backdrop) {
           if (backdrop.element && document.body.contains(backdrop.element)) {
             document.body.removeChild(backdrop.element);
           }
 
-          backdrop.destroy()
+          backdrop.destroy();
         }
 
         if (component.element && document.body.contains(component.element)) {

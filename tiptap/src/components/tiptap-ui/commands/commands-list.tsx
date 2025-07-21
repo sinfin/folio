@@ -39,6 +39,7 @@ import type { Editor } from "@tiptap/react";
 
 export interface CommandItem extends UntranslatedCommandItem {
   title: string;
+  normalizedTitle: string;
 }
 
 export interface CommandsListProps {
@@ -67,6 +68,7 @@ export class CommandsList extends React.Component<
     // Always pass a valid CommandItem with a title
     this.props.command({
       title: "",
+      normalizedTitle: "",
       command: ({
         editor,
         range,

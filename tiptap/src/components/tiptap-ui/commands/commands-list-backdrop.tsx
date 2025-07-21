@@ -12,6 +12,7 @@ export class CommandsListBackdrop extends React.Component<
     // Always pass a valid CommandItem with a title
     this.props.command({
       title: "",
+      normalizedTitle: "",
       command: ({
         editor,
         range,
