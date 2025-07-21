@@ -14,8 +14,6 @@ import { TaskList } from "@tiptap/extension-task-list";
 import { TextAlign } from "@tiptap/extension-text-align";
 import { Typography } from "@tiptap/extension-typography";
 import { Highlight } from "@tiptap/extension-highlight";
-// import { Subscript } from "@tiptap/extension-subscript";
-// import { Superscript } from "@tiptap/extension-superscript";
 import { Selection, Placeholder, TrailingNode } from "@tiptap/extensions";
 
 // --- Tiptap Node ---
@@ -104,8 +102,6 @@ export function FolioEditor({
       Highlight.configure({ multicolor: true }),
       // ...(blockEditor ? [Image] : []),
       Typography,
-      // Superscript,
-      // Subscript,
 
       Selection,
 

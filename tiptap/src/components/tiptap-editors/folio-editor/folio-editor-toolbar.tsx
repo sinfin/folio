@@ -42,8 +42,6 @@ interface FolioEditorToolbarStateMapping {
   strike: FolioEditorToolbarButtonStateMapping;
   code: FolioEditorToolbarButtonStateMapping;
   underline: FolioEditorToolbarButtonStateMapping;
-  superscript: FolioEditorToolbarButtonStateMapping;
-  subscript: FolioEditorToolbarButtonStateMapping;
 }
 
 interface FolioEditorToolbarButtonState {
@@ -59,8 +57,6 @@ interface FolioEditorToolbarState {
   strike: FolioEditorToolbarButtonState;
   code: FolioEditorToolbarButtonState;
   underline: FolioEditorToolbarButtonState;
-  superscript: FolioEditorToolbarButtonState;
-  subscript: FolioEditorToolbarButtonState;
 }
 
 interface FolioEditorToolbarProps {
@@ -100,14 +96,6 @@ const toolbarStateMapping: FolioEditorToolbarStateMapping = {
   underline: {
     enabled: makeMarkEnabled("underline"),
     active: makeMarkActive("underline"),
-  },
-  superscript: {
-    enabled: makeMarkEnabled("superscript"),
-    active: makeMarkActive("superscript"),
-  },
-  subscript: {
-    enabled: makeMarkEnabled("subscript"),
-    active: makeMarkActive("subscript"),
   },
 };
 
@@ -207,11 +195,6 @@ const MainToolbarContent = ({
       </ToolbarGroup>
 
       <ToolbarSeparator />
-
-      <ToolbarGroup>
-        <MarkButton editor={editor} type="superscript" />
-        <MarkButton editor={editor} type="subscript" />
-      </ToolbarGroup>
 
       <ToolbarSeparator />
 
