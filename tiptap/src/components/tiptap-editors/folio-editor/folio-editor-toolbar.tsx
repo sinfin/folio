@@ -208,12 +208,16 @@ const MainToolbarContent = ({
 
       <ToolbarSeparator />
 
-      <ToolbarGroup>
-        <MarkButton editor={editor} type="superscript" />
-        <MarkButton editor={editor} type="subscript" />
-      </ToolbarGroup>
+      {blockEditor && (
+        <>
+          <ToolbarGroup>
+            <MarkButton editor={editor} type="superscript" />
+            <MarkButton editor={editor} type="subscript" />
+          </ToolbarGroup>
 
-      <ToolbarSeparator />
+          <ToolbarSeparator />
+        </>
+      )}
 
       <ToolbarGroup>
         <TextAlignButton align="left" />
