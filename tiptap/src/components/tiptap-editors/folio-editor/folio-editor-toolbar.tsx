@@ -32,6 +32,7 @@ import { FolioTiptapColumnsButton } from "@/components/tiptap-extensions/folio-t
 interface FolioEditorToolbarButtonStateMapping {
   enabled: (params: { editor: Editor }) => boolean;
   active: (params: { editor: Editor }) => boolean;
+  value?: (params: { editor: Editor }) => string | undefined;
 }
 
 interface FolioEditorToolbarStateMapping {
@@ -44,11 +45,13 @@ interface FolioEditorToolbarStateMapping {
   underline: FolioEditorToolbarButtonStateMapping;
   superscript: FolioEditorToolbarButtonStateMapping;
   subscript: FolioEditorToolbarButtonStateMapping;
+  heading: FolioEditorToolbarButtonStateMapping;
 }
 
 interface FolioEditorToolbarButtonState {
   enabled: boolean;
   active: boolean;
+  value?: string;
 }
 
 interface FolioEditorToolbarState {
@@ -61,6 +64,7 @@ interface FolioEditorToolbarState {
   underline: FolioEditorToolbarButtonState;
   superscript: FolioEditorToolbarButtonState;
   subscript: FolioEditorToolbarButtonState;
+  heading: FolioEditorToolbarButtonState;
 }
 
 interface FolioEditorToolbarProps {
@@ -109,6 +113,21 @@ const toolbarStateMapping: FolioEditorToolbarStateMapping = {
     enabled: makeMarkEnabled("subscript"),
     active: makeMarkActive("subscript"),
   },
+  heading: {
+    enabled: ({ editor }) => editor.can().toggleNode("heading", "paragraph"),
+    active: ({ editor }) => editor!.isActive("heading"),
+    value: ({ editor }) => {
+      if (editor!.isActive("heading")) {
+        const attr = editor!.getAttributes("heading");
+
+        if (attr && attr.level) {
+          return `h${attr.level}`
+        }
+      }
+
+      return undefined;
+    },
+  },
 };
 
 const getToolbarState = ({
@@ -128,6 +147,7 @@ const getToolbarState = ({
       state[key] = {
         enabled: toolbarStateMapping[key].enabled({ editor }),
         active: toolbarStateMapping[key].active({ editor }),
+        value: toolbarStateMapping[key].value ? toolbarStateMapping[key].value({ editor }) : undefined,
       };
     });
   } else {
@@ -157,6 +177,8 @@ const MainToolbarContent = ({
       return getToolbarState({ editor });
     },
   });
+
+  console.log(editorState)
 
   return (
     <>
@@ -188,7 +210,13 @@ const MainToolbarContent = ({
       <ToolbarSeparator />
 
       <ToolbarGroup>
-        <HeadingDropdownMenu levels={[1, 2, 3, 4]} />
+        <HeadingDropdownMenu
+          active={editorState["heading"].active}
+          enabled={editorState["heading"].enabled}
+          value={editorState["heading"].value}
+          editor={editor}
+          levels={[1, 2, 3, 4]}
+        />
         <ListDropdownMenu types={["bulletList", "orderedList"]} />
         <BlockquoteButton />
         <CodeBlockButton />

@@ -33,84 +33,68 @@ import {
 export interface HeadingDropdownMenuProps extends Omit<ButtonProps, "type"> {
   editor?: Editor | null
   levels?: Level[]
-  hideWhenUnavailable?: boolean
-  onOpenChange?: (isOpen: boolean) => void
+  value?: string
+  active: boolean
+  enabled: boolean
 }
 
 export function HeadingDropdownMenu({
-  editor: providedEditor,
-  levels = [1, 2, 3, 4, 5, 6],
-  hideWhenUnavailable = false,
-  onOpenChange,
+  editor,
+  levels = [2, 3, 4],
+  value,
+  active,
+  enabled,
   ...props
 }: HeadingDropdownMenuProps) {
-  const [isOpen, setIsOpen] = React.useState(false)
-  const editor = useTiptapEditor(providedEditor)
+  if (!editor) return null
 
-  const headingInSchema = isNodeInSchema("heading", editor)
+  const [isOpen, setIsOpen] = React.useState(false)
 
   const handleOnOpenChange = React.useCallback(
     (open: boolean) => {
       setIsOpen(open)
-      onOpenChange?.(open)
     },
-    [onOpenChange]
+    []
   )
 
   const getActiveIcon = React.useCallback(() => {
-    if (!editor) return <HeadingIcon className="tiptap-button-icon" />
+    let activeLevel: Level | undefined = undefined
 
-    const activeLevel = levels.find((level) =>
-      editor.isActive("heading", { level })
-    ) as Level | undefined
+    if (active) {
+      switch (value) {
+        case "h2":
+          activeLevel = 2
+          break
+        case "h3":
+          activeLevel = 3
+          break
+        case "h4":
+          activeLevel = 4
+          break
+        default:
+          undefined
+      }
+    }
 
     if (!activeLevel) return <HeadingIcon className="tiptap-button-icon" />
 
     const ActiveIcon = headingIcons[activeLevel]
     return <ActiveIcon className="tiptap-button-icon" />
-  }, [editor, levels])
-
-  const canToggleAnyHeading = React.useCallback((): boolean => {
-    if (!editor) return false
-    return levels.some((level) =>
-      editor.can().toggleNode("heading", "paragraph", { level })
-    )
-  }, [editor, levels])
-
-  const isDisabled = !canToggleAnyHeading()
-  const isAnyHeadingActive = editor?.isActive("heading") ?? false
-
-  const show = React.useMemo(() => {
-    if (!headingInSchema || !editor) {
-      return false
-    }
-
-    if (hideWhenUnavailable) {
-      if (isNodeSelection(editor.state.selection) || !canToggleAnyHeading()) {
-        return false
-      }
-    }
-
-    return true
-  }, [headingInSchema, editor, hideWhenUnavailable, canToggleAnyHeading])
-
-  if (!show || !editor || !editor.isEditable) {
-    return null
-  }
+  }, [active, value])
 
   return (
     <DropdownMenu open={isOpen} onOpenChange={handleOnOpenChange}>
       <DropdownMenuTrigger asChild>
         <Button
           type="button"
-          disabled={isDisabled}
+          disabled={!enabled}
           data-style="ghost"
-          data-active-state={isAnyHeadingActive ? "on" : "off"}
-          data-disabled={isDisabled}
+          data-active-state={active ? "on" : "off"}
+          data-disabled={!enabled}
           role="button"
           tabIndex={-1}
           aria-label="Format text as heading"
-          aria-pressed={isAnyHeadingActive}
+          aria-pressed={active}
           tooltip="Heading"
           {...props}
         >
