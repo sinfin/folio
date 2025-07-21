@@ -115,6 +115,18 @@ $f-tiptap__columns--min-horizontal-width: 550px !default;
   --f-tiptap__a--text-decoration: underline;
   --f-tiptap__a--text-decoration-hover: none;
 
+  --f-tiptap__styled-paragraph-small--color: inherit;
+  --f-tiptap__styled-paragraph-small--font-family: inherit;
+  --f-tiptap__styled-paragraph-small--font-size: 0.8rem;
+  --f-tiptap__styled-paragraph-small--font-weight: inherit;
+  --f-tiptap__styled-paragraph-small--line-height: inherit;
+
+  --f-tiptap__styled-paragraph-large--color: inherit;
+  --f-tiptap__styled-paragraph-large--font-family: inherit;
+  --f-tiptap__styled-paragraph-large--font-size: 1.2rem;
+  --f-tiptap__styled-paragraph-large--font-weight: inherit;
+  --f-tiptap__styled-paragraph-large--line-height: inherit;
+
   --f-tiptap__columns--gap: var(--f-tiptap__spacer);
   --f-tiptap__column--border-in-editor-only: 1px dashed #ccc;
 }
@@ -332,6 +344,18 @@ $f-tiptap__columns--min-horizontal-width: 550px !default;
     inset: 0;
     border: var(--f-tiptap__column--border-in-editor-only);
     border-radius: var(--f-tiptap-editor--border-radius);
+  }
+
+  .f-tiptap-styled-paragraph {
+    @each $variant in small, large {
+      &[data-variant="#{$variant}"] {
+        color: var(--f-tiptap__styled-paragraph-#{$variant}--color);
+        font-family: var(--f-tiptap__styled-paragraph-#{$variant}--font-family);
+        font-size: var(--f-tiptap__styled-paragraph-#{$variant}--font-size);
+        font-weight: var(--f-tiptap__styled-paragraph-#{$variant}--font-weight);
+        line-height: var(--f-tiptap__styled-paragraph-#{$variant}--line-height);
+      }
+    }
   }
 
   @container (min-width: #{$f-tiptap__columns--min-horizontal-width}) {

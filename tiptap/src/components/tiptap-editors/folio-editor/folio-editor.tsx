@@ -24,6 +24,11 @@ import {
   FolioTiptapColumnNode,
   FolioTiptapColumnsNode,
 } from "@/components/tiptap-extensions/folio-tiptap-columns";
+import {
+  StyledParagraph,
+  DEFAULT_FOLIO_TIPTAP_STYLED_PARAGRAPH_VARIANTS,
+  makeFolioTiptapStyledParagraphCommands,
+} from "@/components/tiptap-extensions/folio-tiptap-styled-paragraph";
 
 import "@/components/tiptap-node/image-node/image-node.scss";
 import "@/components/tiptap-node/paragraph-node/paragraph-node.scss";
@@ -33,7 +38,6 @@ import {
   CommandsExtension,
   suggestion,
   defaultGroupForBlock,
-  defaultGroupForRichText,
   makeSuggestionItems,
 } from "@/components/tiptap-ui/commands";
 
@@ -43,9 +47,7 @@ import { LinkIcon } from "@/components/tiptap-icons/link-icon";
 import { SmartDragHandle } from "@/components/tiptap-ui/smart-drag-handle";
 
 // --- Hooks ---
-import { useMobile } from "@/hooks/use-mobile";
 import { useWindowSize } from "@/hooks/use-window-size";
-import { useCursorVisibility } from "@/hooks/use-cursor-visibility";
 
 import translate from "@/lib/i18n";
 import makeFolioTiptapNodeCommandGroup from "@/lib/make-folio-tiptap-node-command-group";
@@ -74,6 +76,12 @@ export function FolioEditor({
   const windowSize = useWindowSize();
   const editorRef = React.useRef<HTMLDivElement>(null);
   const blockEditor = type === "block";
+  const styledParagraphVariants =
+    DEFAULT_FOLIO_TIPTAP_STYLED_PARAGRAPH_VARIANTS;
+
+  const styledParagraph = StyledParagraph.configure({
+    variants: styledParagraphVariants,
+  });
 
   const editor = useEditor({
     onUpdate,
@@ -93,19 +101,17 @@ export function FolioEditor({
     extensions: [
       StarterKit,
       TextAlign.configure({
-        alignments: ['left', 'center', 'right'],
-        types: ["heading", "paragraph"]
+        alignments: ["left", "center", "right"],
+        types: ["heading", "paragraph"],
       }),
       TrailingNode,
       Typography,
 
       Selection,
 
-      ...(blockEditor ? [
-        FolioTiptapNodeExtension,
-        Superscript,
-        Subscript,
-      ] : []),
+      ...(blockEditor
+        ? [FolioTiptapNodeExtension, Superscript, Subscript]
+        : []),
 
       Placeholder.configure({
         // Use a placeholder:
@@ -128,15 +134,29 @@ export function FolioEditor({
       Typography,
 
       Selection,
-      ...(blockEditor ? [FolioTiptapColumnsExtension, FolioTiptapColumnsNode, FolioTiptapColumnNode] : []),
-
+      ...(blockEditor
+        ? [
+            FolioTiptapColumnsExtension,
+            FolioTiptapColumnsNode,
+            FolioTiptapColumnNode,
+          ]
+        : []),
+      styledParagraph,
       CommandsExtension.configure({
         suggestion:
           blockEditor && folioTiptapNodes
             ? {
                 ...suggestion,
                 items: makeSuggestionItems([
-                  defaultGroupForBlock,
+                  {
+                    ...defaultGroupForBlock,
+                    items: [
+                      ...defaultGroupForBlock.items,
+                      ...makeFolioTiptapStyledParagraphCommands(
+                        styledParagraphVariants,
+                      ),
+                    ],
+                  },
                   makeFolioTiptapNodeCommandGroup(folioTiptapNodes),
                 ]),
               }
@@ -180,9 +200,7 @@ export function FolioEditor({
         <FolioEditorToolbar editor={editor} blockEditor={blockEditor} />
 
         <div className="f-tiptap-editor__content-wrap">
-          {blockEditor ? (
-            <SmartDragHandle editor={editor} />
-          ) : null}
+          {blockEditor ? <SmartDragHandle editor={editor} /> : null}
 
           <EditorContent
             editor={editor}
