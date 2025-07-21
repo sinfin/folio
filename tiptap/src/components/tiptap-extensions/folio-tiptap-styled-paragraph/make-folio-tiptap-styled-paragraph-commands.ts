@@ -1,4 +1,4 @@
-import { Pilcrow } from "lucide-react";
+import { TypeOutline } from "lucide-react";
 import { type Range, type Editor } from "@tiptap/core";
 
 import { type CommandItem } from "@/components/tiptap-ui/commands/commands-list";
@@ -6,7 +6,7 @@ import { normalizeString } from "@/components/tiptap-ui/commands/suggestion"
 
 import type { FolioTiptapStyledParagraphVariant } from './default-folio-tiptap-styled-paragraph-variants';
 
-export const DEFAULT_FOLIO_TIPTAP_STYLED_PARAGRAPH_ICON = Pilcrow
+export const DEFAULT_FOLIO_TIPTAP_STYLED_PARAGRAPH_ICON = TypeOutline
 
 export const makeFolioTiptapStyledParagraphCommands = (styledParagraphVariants: FolioTiptapStyledParagraphVariant[]) => {
   return styledParagraphVariants.map((variant) => {

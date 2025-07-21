@@ -18,6 +18,11 @@
   transition-duration: var(--tt-transition-duration-default);
   transition-timing-function: var(--tt-transition-easing-default);
 
+  .tiptap-dropdown-menu & {
+    gap: 0.5rem;
+    justify-content: flex-start;
+  }
+
   &:not([disabled]) {
     cursor: pointer;
   }

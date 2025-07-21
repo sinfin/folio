@@ -22,6 +22,9 @@ import { UndoRedoButton } from "@/components/tiptap-ui/undo-redo-button";
 import { HeadingDropdownMenu } from "@/components/tiptap-ui/heading-dropdown-menu";
 import { FolioTiptapColumnsButton } from "@/components/tiptap-extensions/folio-tiptap-columns";
 import { FolioTiptapEraseMarksButton } from "@/components/tiptap-extensions/folio-tiptap-erase-marks/folio-tiptap-erase-marks-button"
+import { FolioEditorToolbarDropdown } from "./folio-editor-toolbar-dropdown"
+
+import { type FolioTiptapStyledParagraphVariant, folioTiptapStyledParagraphToolbarItems } from '@/components/tiptap-extensions/folio-tiptap-styled-paragraph';
 
 interface FolioEditorToolbarButtonStateMapping {
   enabled: (params: { editor: Editor }) => boolean;
@@ -58,6 +61,7 @@ type FolioEditorToolbarState = {
 interface FolioEditorToolbarProps {
   editor: Editor;
   blockEditor: boolean;
+  styledParagraphVariants: FolioTiptapStyledParagraphVariant[];
 }
 
 const makeMarkEnabled =
@@ -125,6 +129,29 @@ const toolbarStateMapping: FolioEditorToolbarStateMapping = {
     },
     active: ({ editor }) => false,
   },
+  textStyles: {
+    enabled: ({ editor }) => editor.can().toggleNode("heading", "paragraph"),
+    active: ({ editor }) => editor!.isActive("heading") || editor!.isActive("styledParagraph"),
+    value: ({ editor }) => {
+      if (editor!.isActive("heading")) {
+        const attr = editor!.getAttributes("heading");
+
+        if (attr && attr.level) {
+          return `heading-${attr.level}`
+        }
+      } else if (editor!.isActive("styledParagraph")) {
+        const attr = editor!.getAttributes("styledParagraph");
+
+        if (attr && attr.variant) {
+          return `styledParagraph-${attr.variant}`;
+        }
+      } else if (editor!.isActive("paragraph")) {
+        return "paragraph"
+      }
+
+      return undefined;
+    },
+  },
   heading: {
     enabled: ({ editor }) => editor.can().toggleNode("heading", "paragraph"),
     active: ({ editor }) => editor!.isActive("heading"),
@@ -190,9 +217,11 @@ const getToolbarState = ({
 const MainToolbarContent = ({
   blockEditor,
   editor,
+  textStylesCommands,
 }: {
   blockEditor: boolean;
   editor: Editor;
+  textStylesCommands: any[],
 }) => {
   const editorState: FolioEditorToolbarState = useEditorState({
     editor,
@@ -238,8 +267,15 @@ const MainToolbarContent = ({
           enabled={editorState["heading"].enabled}
           value={editorState["heading"].value}
           editor={editor}
-          levels={[1, 2, 3, 4]}
+          levels={[2, 3, 4]}
         />
+
+        <FolioEditorToolbarDropdown
+          editorState={editorState["textStyles"]}
+          commands={textStylesCommands}
+          editor={editor}
+        />
+
         <ListDropdownMenu
           types={["bulletList", "orderedList"]}
           active={editorState["list"].active}
@@ -301,12 +337,21 @@ const MainToolbarContent = ({
 export function FolioEditorToolbar({
   editor,
   blockEditor,
+  styledParagraphVariants,
 }: FolioEditorToolbarProps) {
   if (!editor) return null;
 
+  const textStylesCommands = React.useMemo(() => {
+    return folioTiptapStyledParagraphToolbarItems(styledParagraphVariants)
+  }, [styledParagraphVariants]);
+
   return (
     <Toolbar>
-      <MainToolbarContent blockEditor={blockEditor} editor={editor} />
+      <MainToolbarContent
+        blockEditor={blockEditor}
+        editor={editor}
+        textStylesCommands={textStylesCommands}
+      />
     </Toolbar>
   );
 }

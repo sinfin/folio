@@ -197,7 +197,11 @@ export function FolioEditor({
         ref={editorRef}
         className={`f-tiptap-editor f-tiptap-editor--${blockEditor ? "block" : "rich-text"}`}
       >
-        <FolioEditorToolbar editor={editor} blockEditor={blockEditor} />
+        <FolioEditorToolbar
+          editor={editor}
+          blockEditor={blockEditor}
+          styledParagraphVariants={styledParagraphVariants}
+        />
 
         <div className="f-tiptap-editor__content-wrap">
           {blockEditor ? <SmartDragHandle editor={editor} /> : null}
