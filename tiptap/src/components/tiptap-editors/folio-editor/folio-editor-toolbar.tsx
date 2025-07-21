@@ -21,6 +21,7 @@ import { TextAlignButton } from "@/components/tiptap-ui/text-align-button";
 import { UndoRedoButton } from "@/components/tiptap-ui/undo-redo-button";
 import { HeadingDropdownMenu } from "@/components/tiptap-ui/heading-dropdown-menu";
 import { FolioTiptapColumnsButton } from "@/components/tiptap-extensions/folio-tiptap-columns";
+import { FolioTiptapEraseMarksButton } from "@/components/tiptap-extensions/folio-tiptap-erase-marks/folio-tiptap-erase-marks-button"
 
 interface FolioEditorToolbarButtonStateMapping {
   enabled: (params: { editor: Editor }) => boolean;
@@ -39,6 +40,7 @@ interface FolioEditorToolbarStateMapping {
   subscript: FolioEditorToolbarButtonStateMapping;
   heading: FolioEditorToolbarButtonStateMapping;
   list: FolioEditorToolbarButtonStateMapping;
+  erase: FolioEditorToolbarButtonStateMapping;
 }
 
 interface FolioEditorToolbarButtonState {
@@ -47,18 +49,11 @@ interface FolioEditorToolbarButtonState {
   value?: string;
 }
 
-interface FolioEditorToolbarState {
-  undo: FolioEditorToolbarButtonState;
-  redo: FolioEditorToolbarButtonState;
-  bold: FolioEditorToolbarButtonState;
-  italic: FolioEditorToolbarButtonState;
-  strike: FolioEditorToolbarButtonState;
-  underline: FolioEditorToolbarButtonState;
-  superscript: FolioEditorToolbarButtonState;
-  subscript: FolioEditorToolbarButtonState;
-  heading: FolioEditorToolbarButtonState;
-  list: FolioEditorToolbarButtonState;
-}
+type FolioEditorToolbarKey = keyof FolioEditorToolbarStateMapping;
+
+type FolioEditorToolbarState = {
+  [K in FolioEditorToolbarKey]: FolioEditorToolbarButtonState;
+};
 
 interface FolioEditorToolbarProps {
   editor: Editor;
@@ -104,6 +99,31 @@ const toolbarStateMapping: FolioEditorToolbarStateMapping = {
   subscript: {
     enabled: makeMarkEnabled("subscript"),
     active: makeMarkActive("subscript"),
+  },
+  erase: {
+    enabled: ({ editor }) => {
+      let hasAnyMarks = false
+      const selection = editor.view.state.selection
+
+      if (selection.empty) {
+        // If the selection is empty, we check if the current node has any marks
+        const node = editor.view.state.doc.nodeAt(selection.from);
+
+        if (node && node.marks && node.marks.length > 0) {
+          hasAnyMarks = true;
+        }
+      } else {
+        editor.view.state.doc.nodesBetween(selection.from, selection.to, (node) => {
+          if (node.marks && node.marks.length > 0) {
+            hasAnyMarks = true;
+            return false
+          }
+        })
+      }
+
+      return hasAnyMarks
+    },
+    active: ({ editor }) => false,
   },
   heading: {
     enabled: ({ editor }) => editor.can().toggleNode("heading", "paragraph"),
@@ -183,8 +203,6 @@ const MainToolbarContent = ({
     },
   });
 
-  console.log(editorState)
-
   return (
     <>
       <Spacer />
@@ -252,6 +270,12 @@ const MainToolbarContent = ({
           <ToolbarSeparator />
         </>
       )}
+
+      <ToolbarGroup>
+        <FolioTiptapEraseMarksButton editor={editor} enabled={editorState["erase"].enabled} />
+      </ToolbarGroup>
+
+      <ToolbarSeparator />
 
       <ToolbarGroup>
         <TextAlignButton align="left" />
