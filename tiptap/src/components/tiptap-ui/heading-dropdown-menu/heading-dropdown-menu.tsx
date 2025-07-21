@@ -57,30 +57,27 @@ export function HeadingDropdownMenu({
     []
   )
 
-  const getActiveIcon = React.useCallback(() => {
-    let activeLevel: Level | undefined = undefined
-
-    if (active) {
-      switch (value) {
-        case "h2":
-          activeLevel = 2
-          break
-        case "h3":
-          activeLevel = 3
-          break
-        case "h4":
-          activeLevel = 4
-          break
-        default:
-          undefined
-      }
+  const getActiveLevel = React.useCallback(() => {
+    switch (value) {
+      case "h2":
+        return 2
+      case "h3":
+        return 3
+      case "h4":
+        return 4
     }
 
+    return undefined
+  }, [value])
+
+  const activeLevel: Level | undefined = getActiveLevel()
+
+  const getActiveIcon = React.useCallback(() => {
     if (!activeLevel) return <HeadingIcon className="tiptap-button-icon" />
 
     const ActiveIcon = headingIcons[activeLevel]
     return <ActiveIcon className="tiptap-button-icon" />
-  }, [active, value])
+  }, [activeLevel])
 
   return (
     <DropdownMenu open={isOpen} onOpenChange={handleOnOpenChange}>
@@ -111,6 +108,8 @@ export function HeadingDropdownMenu({
                 editor={editor}
                 level={level}
                 text={getFormattedHeadingName(level)}
+                active={level === activeLevel}
+                enabled={enabled}
                 tooltip={""}
               />
             </DropdownMenuItem>

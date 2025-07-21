@@ -7,6 +7,7 @@ import { useTiptapEditor } from "@/hooks/use-tiptap-editor"
 // --- Icons ---
 import { ChevronDownIcon } from "@/components/tiptap-icons/chevron-down-icon"
 import { ListIcon } from "@/components/tiptap-icons/list-icon"
+import { ListOrderedIcon } from "@/components/tiptap-icons/list-ordered-icon"
 
 // --- Lib ---
 import { isNodeInSchema } from "@/lib/tiptap-utils"
@@ -40,12 +41,9 @@ export interface ListDropdownMenuProps extends Omit<ButtonProps, "type"> {
    * The list types to display in the dropdown.
    */
   types?: ListType[]
-  /**
-   * Whether the dropdown should be hidden when no list types are available
-   * @default false
-   */
-  hideWhenUnavailable?: boolean
-  onOpenChange?: (isOpen: boolean) => void
+  active: boolean
+  enabled: boolean
+  value: string | undefined
 }
 
 export function canToggleAnyList(
@@ -75,117 +73,47 @@ export function getFilteredListOptions(
 export function shouldShowListDropdown(params: {
   editor: Editor | null
   listTypes: ListType[]
-  hideWhenUnavailable: boolean
   listInSchema: boolean
   canToggleAny: boolean
 }): boolean {
-  const { editor, hideWhenUnavailable, listInSchema, canToggleAny } = params
+  const { editor, listInSchema, canToggleAny } = params
 
   if (!listInSchema || !editor) {
     return false
   }
 
-  if (hideWhenUnavailable) {
-    if (isNodeSelection(editor.state.selection) || !canToggleAny) {
-      return false
-    }
-  }
-
   return true
-}
-
-export function useListDropdownState(
-  editor: Editor | null,
-  availableTypes: ListType[]
-) {
-  const [isOpen, setIsOpen] = React.useState(false)
-
-  const listInSchema = availableTypes.some((type) =>
-    isNodeInSchema(type, editor)
-  )
-
-  const filteredLists = React.useMemo(
-    () => getFilteredListOptions(availableTypes),
-    [availableTypes]
-  )
-
-  const canToggleAny = canToggleAnyList(editor, availableTypes)
-  const isAnyActive = isAnyListActive(editor, availableTypes)
-
-  const handleOpenChange = React.useCallback(
-    (open: boolean, callback?: (isOpen: boolean) => void) => {
-      setIsOpen(open)
-      callback?.(open)
-    },
-    []
-  )
-
-  return {
-    isOpen,
-    setIsOpen,
-    listInSchema,
-    filteredLists,
-    canToggleAny,
-    isAnyActive,
-    handleOpenChange,
-  }
-}
-
-export function useActiveListIcon(
-  editor: Editor | null,
-  filteredLists: typeof listOptions
-) {
-  return React.useCallback(() => {
-    const activeOption = filteredLists.find((option) =>
-      isListActive(editor, option.type)
-    )
-
-    return activeOption ? (
-      <activeOption.icon className="tiptap-button-icon" />
-    ) : (
-      <ListIcon className="tiptap-button-icon" />
-    )
-  }, [editor, filteredLists])
 }
 
 export function ListDropdownMenu({
   editor: providedEditor,
   types = ["bulletList", "orderedList"],
-  hideWhenUnavailable = false,
-  onOpenChange,
+  active,
+  enabled,
+  value,
   ...props
 }: ListDropdownMenuProps) {
   const editor = useTiptapEditor(providedEditor)
 
-  const {
-    isOpen,
-    listInSchema,
-    filteredLists,
-    canToggleAny,
-    isAnyActive,
-    handleOpenChange,
-  } = useListDropdownState(editor, types)
+  const [isOpen, setIsOpen] = React.useState(false)
 
-  const getActiveIcon = useActiveListIcon(editor, filteredLists)
+  const getActiveIcon = React.useCallback(() => {
+    if (value === "orderedList") {
+      return <ListOrderedIcon className="tiptap-button-icon" />
+    }
 
-  const show = React.useMemo(() => {
-    return shouldShowListDropdown({
-      editor,
-      listTypes: types,
-      hideWhenUnavailable,
-      listInSchema,
-      canToggleAny,
-    })
-  }, [editor, types, hideWhenUnavailable, listInSchema, canToggleAny])
+    return <ListIcon className="tiptap-button-icon" />
+  }, [active, value])
 
   const handleOnOpenChange = React.useCallback(
-    (open: boolean) => handleOpenChange(open, onOpenChange),
-    [handleOpenChange, onOpenChange]
+    (open: boolean) => setIsOpen(open),
+    []
   )
 
-  if (!show || !editor || !editor.isEditable) {
-    return null
-  }
+  const filteredLists = React.useMemo(
+    () => getFilteredListOptions(types),
+    [types]
+  )
 
   return (
     <DropdownMenu open={isOpen} onOpenChange={handleOnOpenChange}>
@@ -193,7 +121,7 @@ export function ListDropdownMenu({
         <Button
           type="button"
           data-style="ghost"
-          data-active-state={isAnyActive ? "on" : "off"}
+          data-active-state={active ? "on" : "off"}
           role="button"
           tabIndex={-1}
           aria-label="List options"
@@ -213,7 +141,6 @@ export function ListDropdownMenu({
                 editor={editor}
                 type={option.type}
                 text={option.label}
-                hideWhenUnavailable={hideWhenUnavailable}
                 tooltip={""}
               />
             </DropdownMenuItem>

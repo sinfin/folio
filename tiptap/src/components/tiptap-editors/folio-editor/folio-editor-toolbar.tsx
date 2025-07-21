@@ -46,6 +46,7 @@ interface FolioEditorToolbarStateMapping {
   superscript: FolioEditorToolbarButtonStateMapping;
   subscript: FolioEditorToolbarButtonStateMapping;
   heading: FolioEditorToolbarButtonStateMapping;
+  list: FolioEditorToolbarButtonStateMapping;
 }
 
 interface FolioEditorToolbarButtonState {
@@ -65,6 +66,7 @@ interface FolioEditorToolbarState {
   superscript: FolioEditorToolbarButtonState;
   subscript: FolioEditorToolbarButtonState;
   heading: FolioEditorToolbarButtonState;
+  list: FolioEditorToolbarButtonState;
 }
 
 interface FolioEditorToolbarProps {
@@ -123,6 +125,19 @@ const toolbarStateMapping: FolioEditorToolbarStateMapping = {
         if (attr && attr.level) {
           return `h${attr.level}`
         }
+      }
+
+      return undefined;
+    },
+  },
+  list: {
+    enabled: ({ editor }) => editor.can().toggleBulletList() || editor.can().toggleOrderedList(),
+    active: ({ editor }) => editor.isActive("bulletList") || editor.isActive("orderedList"),
+    value: ({ editor }) => {
+      if (editor.isActive("bulletList")) {
+        return "bulletList";
+      } else if (editor.isActive("orderedList")) {
+        return "orderedList";
       }
 
       return undefined;
@@ -217,7 +232,12 @@ const MainToolbarContent = ({
           editor={editor}
           levels={[1, 2, 3, 4]}
         />
-        <ListDropdownMenu types={["bulletList", "orderedList"]} />
+        <ListDropdownMenu
+          types={["bulletList", "orderedList"]}
+          active={editorState["list"].active}
+          enabled={editorState["list"].enabled}
+          value={editorState["list"].value}
+        />
         <BlockquoteButton />
         <CodeBlockButton />
       </ToolbarGroup>

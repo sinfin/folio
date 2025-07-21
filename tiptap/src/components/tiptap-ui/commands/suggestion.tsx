@@ -19,6 +19,8 @@ import { markIcons } from "@/components/tiptap-ui/mark-button/mark-button";
 
 import { FolioTiptapColumnsCommandItem } from "@/components/tiptap-extensions/folio-tiptap-columns";
 
+import { HEADING_TRANSLATIONS } from "@/components/tiptap-ui/heading-button/heading-button";
+
 
 interface SuggestionProps {
   editor: Editor;
@@ -50,7 +52,7 @@ export const defaultGroupForRichText: UntranslatedCommandGroup = {
   title: { cs: "Text", en: "Text" },
   items: [
     {
-      title: { cs: "Titulek H2", en: "Heading H2" },
+      title: { cs: `${HEADING_TRANSLATIONS["cs"]["heading"]} H2`, en: `${HEADING_TRANSLATIONS["cs"]["heading"]} H2` },
       keymap: "##",
       icon: headingIcons[2],
       command: ({ editor, range }: { editor: Editor; range: Range }) => {
@@ -63,7 +65,7 @@ export const defaultGroupForRichText: UntranslatedCommandGroup = {
       },
     },
     {
-      title: { cs: "Titulek H3", en: "Heading H3" },
+      title: { cs: `${HEADING_TRANSLATIONS["cs"]["heading"]} H3`, en: `${HEADING_TRANSLATIONS["cs"]["heading"]} H3` },
       keymap: "###",
       icon: headingIcons[3],
       command: ({ editor, range }: { editor: Editor; range: Range }) => {
@@ -76,7 +78,7 @@ export const defaultGroupForRichText: UntranslatedCommandGroup = {
       },
     },
     {
-      title: { cs: "Titulek H4", en: "Heading H4" },
+      title: { cs: `${HEADING_TRANSLATIONS["cs"]["heading"]} H4`, en: `${HEADING_TRANSLATIONS["cs"]["heading"]} H4` },
       keymap: "####",
       icon: headingIcons[4],
       command: ({ editor, range }: { editor: Editor; range: Range }) => {

@@ -1,6 +1,8 @@
 import * as React from "react"
 import { isNodeSelection, type Editor } from "@tiptap/react"
 
+import translate from "@/lib/i18n";
+
 // --- Hooks ---
 import { useTiptapEditor } from "@/hooks/use-tiptap-editor"
 
@@ -34,11 +36,8 @@ export interface HeadingButtonProps extends Omit<ButtonProps, "type"> {
    * Optional text to display alongside the icon.
    */
   text?: string
-  /**
-   * Whether the button should hide when the heading is not available.
-   * @default false
-   */
-  hideWhenUnavailable?: boolean
+  enabled: boolean
+  active: boolean
 }
 
 export const headingIcons = {
@@ -84,63 +83,17 @@ export function toggleHeading(editor: Editor | null, level: Level): void {
   }
 }
 
-export function isHeadingButtonDisabled(
-  editor: Editor | null,
-  level: Level,
-  userDisabled: boolean = false
-): boolean {
-  if (!editor) return true
-  if (userDisabled) return true
-  if (!canToggleHeading(editor, level)) return true
-  return false
-}
-
-export function shouldShowHeadingButton(params: {
-  editor: Editor | null
-  level: Level
-  hideWhenUnavailable: boolean
-  headingInSchema: boolean
-}): boolean {
-  const { editor, hideWhenUnavailable, headingInSchema } = params
-
-  if (!headingInSchema || !editor) {
-    return false
-  }
-
-  if (hideWhenUnavailable) {
-    if (isNodeSelection(editor.state.selection)) {
-      return false
-    }
-  }
-
-  return true
+export const HEADING_TRANSLATIONS = {
+  cs: {
+    heading: "Nadpis",
+  },
+  en: {
+    heading: "Heading",
+  },
 }
 
 export function getFormattedHeadingName(level: Level): string {
-  return `Heading ${level}`
-}
-
-export function useHeadingState(
-  editor: Editor | null,
-  level: Level,
-  disabled: boolean = false
-) {
-  const headingInSchema = isNodeInSchema("heading", editor)
-  const isDisabled = isHeadingButtonDisabled(editor, level, disabled)
-  const isActive = isHeadingActive(editor, level)
-
-  const Icon = headingIcons[level]
-  const shortcutKey = headingShortcutKeys[level]
-  const formattedName = getFormattedHeadingName(level)
-
-  return {
-    headingInSchema,
-    isDisabled,
-    isActive,
-    Icon,
-    shortcutKey,
-    formattedName,
-  }
+  return `${translate(HEADING_TRANSLATIONS, "heading")} ${level}`
 }
 
 export const HeadingButton = React.forwardRef<
@@ -152,9 +105,9 @@ export const HeadingButton = React.forwardRef<
       editor: providedEditor,
       level,
       text,
-      hideWhenUnavailable = false,
       className = "",
-      disabled,
+      enabled,
+      active,
       onClick,
       children,
       ...buttonProps
@@ -163,51 +116,33 @@ export const HeadingButton = React.forwardRef<
   ) => {
     const editor = useTiptapEditor(providedEditor)
 
-    const {
-      headingInSchema,
-      isDisabled,
-      isActive,
-      Icon,
-      shortcutKey,
-      formattedName,
-    } = useHeadingState(editor, level, disabled)
-
     const handleClick = React.useCallback(
       (e: React.MouseEvent<HTMLButtonElement>) => {
         onClick?.(e)
 
-        if (!e.defaultPrevented && !isDisabled && editor) {
+        if (!e.defaultPrevented && enabled && editor) {
           toggleHeading(editor, level)
         }
       },
-      [onClick, isDisabled, editor, level]
+      [onClick, enabled, editor, level]
     )
 
-    const show = React.useMemo(() => {
-      return shouldShowHeadingButton({
-        editor,
-        level,
-        hideWhenUnavailable,
-        headingInSchema,
-      })
-    }, [editor, level, hideWhenUnavailable, headingInSchema])
-
-    if (!show || !editor || !editor.isEditable) {
-      return null
-    }
+    const Icon = headingIcons[level]
+    const shortcutKey = headingShortcutKeys[level]
+    const formattedName = getFormattedHeadingName(level)
 
     return (
       <Button
         type="button"
         className={className.trim()}
-        disabled={isDisabled}
+        disabled={!enabled}
         data-style="ghost"
-        data-active-state={isActive ? "on" : "off"}
-        data-disabled={isDisabled}
+        data-active-state={active ? "on" : "off"}
+        data-disabled={!enabled}
         role="button"
         tabIndex={-1}
         aria-label={formattedName}
-        aria-pressed={isActive}
+        aria-pressed={active}
         tooltip={formattedName}
         shortcutKeys={shortcutKey}
         onClick={handleClick}
