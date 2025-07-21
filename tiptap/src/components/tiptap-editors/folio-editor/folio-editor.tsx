@@ -13,7 +13,6 @@ import { TaskItem } from "@tiptap/extension-task-item";
 import { TaskList } from "@tiptap/extension-task-list";
 import { TextAlign } from "@tiptap/extension-text-align";
 import { Typography } from "@tiptap/extension-typography";
-import { Highlight } from "@tiptap/extension-highlight";
 import { Subscript } from "@tiptap/extension-subscript";
 import { Superscript } from "@tiptap/extension-superscript";
 import { Selection, Placeholder, TrailingNode } from "@tiptap/extensions";
@@ -40,7 +39,6 @@ import {
 
 // --- Icons ---
 import { ArrowLeftIcon } from "@/components/tiptap-icons/arrow-left-icon";
-import { HighlighterIcon } from "@/components/tiptap-icons/highlighter-icon";
 import { LinkIcon } from "@/components/tiptap-icons/link-icon";
 import { SmartDragHandle } from "@/components/tiptap-ui/smart-drag-handle";
 
@@ -99,10 +97,6 @@ export function FolioEditor({
         types: ["heading", "paragraph"]
       }),
       TrailingNode,
-      // ...(blockEditor ? [TaskList] : []),
-      // ...(blockEditor ? [TaskItem.configure({ nested: true })] : []),
-      Highlight.configure({ multicolor: true }),
-      // ...(blockEditor ? [Image] : []),
       Typography,
 
       Selection,
@@ -131,8 +125,6 @@ export function FolioEditor({
       }),
       ...(blockEditor ? [TaskList] : []),
       ...(blockEditor ? [TaskItem.configure({ nested: true })] : []),
-      Highlight.configure({ multicolor: true }),
-      // ...(blockEditor ? [Image] : []),
       Typography,
 
       Selection,

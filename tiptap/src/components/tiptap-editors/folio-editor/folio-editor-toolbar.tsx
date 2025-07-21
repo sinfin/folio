@@ -11,13 +11,7 @@ import {
 } from "@/components/tiptap-ui-primitive/toolbar";
 import { FolioTiptapNodeButton } from "@/components/tiptap-ui/folio-tiptap-node-button";
 import { ListDropdownMenu } from "@/components/tiptap-ui/list-dropdown-menu";
-import { BlockquoteButton } from "@/components/tiptap-ui/blockquote-button";
 import { CodeBlockButton } from "@/components/tiptap-ui/code-block-button";
-import {
-  ColorHighlightPopover,
-  ColorHighlightPopoverContent,
-  ColorHighlightPopoverButton,
-} from "@/components/tiptap-ui/color-highlight-popover";
 import {
   LinkPopover,
   LinkContent,
@@ -238,7 +232,6 @@ const MainToolbarContent = ({
           enabled={editorState["list"].enabled}
           value={editorState["list"].value}
         />
-        <BlockquoteButton />
         <CodeBlockButton />
       </ToolbarGroup>
 
@@ -247,10 +240,9 @@ const MainToolbarContent = ({
       <ToolbarGroup>
         <MarkButton editor={editor} type="bold" />
         <MarkButton editor={editor} type="italic" />
-        <MarkButton editor={editor} type="strike" />
         <MarkButton editor={editor} type="code" />
         <MarkButton editor={editor} type="underline" />
-        <ColorHighlightPopover />
+        <MarkButton editor={editor} type="strike" />
         <LinkPopover />
       </ToolbarGroup>
 
