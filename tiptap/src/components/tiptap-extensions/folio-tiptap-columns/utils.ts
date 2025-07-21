@@ -1,8 +1,8 @@
-import { findParentNode } from '@tiptap/core';
-import { Node } from '@tiptap/pm/model';
-import { type EditorState, TextSelection } from '@tiptap/pm/state';
+import { findParentNode } from "@tiptap/core";
+import { Node } from "@tiptap/pm/model";
+import { type EditorState, TextSelection } from "@tiptap/pm/state";
 
-import { FolioTiptapColumnNode, FolioTiptapColumnsNode } from './index';
+import { FolioTiptapColumnNode, FolioTiptapColumnsNode } from "./index";
 
 export function createColumn(colType: any, index: any, colContent = null) {
   if (colContent) {
@@ -48,12 +48,16 @@ export function addOrDeleteColumn({
   dispatch,
   type,
 }: {
-  state: EditorState
-  dispatch: any
-  type: 'addBefore' | 'addAfter' | 'delete'
+  state: EditorState;
+  dispatch: any;
+  type: "addBefore" | "addAfter" | "delete";
 }) {
-  const maybeColumns = findParentNode((node: Node) => node.type.name === FolioTiptapColumnsNode.name)(state.selection);
-  const maybeColumn = findParentNode((node: Node) => node.type.name === FolioTiptapColumnNode.name)(state.selection);
+  const maybeColumns = findParentNode(
+    (node: Node) => node.type.name === FolioTiptapColumnsNode.name,
+  )(state.selection);
+  const maybeColumn = findParentNode(
+    (node: Node) => node.type.name === FolioTiptapColumnNode.name,
+  )(state.selection);
 
   if (dispatch && maybeColumns && maybeColumn) {
     const cols = maybeColumns.node;
@@ -62,11 +66,64 @@ export function addOrDeleteColumn({
 
     let nextIndex = colIndex;
 
-    if (type === 'delete') {
-      nextIndex = colIndex - 1;
+    if (type === "delete") {
+      // If we have 2 or fewer columns, replace the entire columns node with the combined contents
+      if (colsJSON.content.length <= 2) {
+        // Collect all content from all columns
+        const allContent = [];
+        colsJSON.content.forEach((column: { content: any[]; }) => {
+          if (column.content && column.content.length > 0) {
+            allContent.push(...column.content);
+          }
+        });
+
+        // If no content, add an empty paragraph
+        if (allContent.length === 0) {
+          allContent.push({ type: "paragraph" });
+        }
+
+        const tr = state.tr;
+
+        // Replace the entire columns node with the combined content
+        tr.replaceWith(
+          maybeColumns.pos,
+          maybeColumns.pos + maybeColumns.node.nodeSize,
+          allContent.map((content) => Node.fromJSON(state.schema, content)),
+        );
+
+        // Position cursor at the start of the replaced content
+        tr.setSelection(
+          TextSelection.near(tr.doc.resolve(maybeColumns.pos + 1)),
+        );
+
+        dispatch(tr);
+        return true;
+      }
+
+      // For more than 2 columns, merge with adjacent column
+      // Get the content of the column to be deleted
+      const deletedColumn = colsJSON.content[colIndex];
+      const deletedContent = deletedColumn.content || [];
+
+      // Determine which column to merge with
+      const targetIndex = colIndex > 0 ? colIndex - 1 : colIndex + 1;
+      const targetColumn = colsJSON.content[targetIndex];
+
+      // Merge the content into the target column
+      if (deletedContent.length > 0) {
+        if (!targetColumn.content) {
+          targetColumn.content = [];
+        }
+        targetColumn.content.push(...deletedContent);
+      }
+
+      // Remove the deleted column
       colsJSON.content.splice(colIndex, 1);
+
+      // Set next index for cursor positioning
+      nextIndex = colIndex > 0 ? colIndex - 1 : 0;
     } else {
-      nextIndex = type === 'addBefore' ? colIndex : colIndex + 1;
+      nextIndex = type === "addBefore" ? colIndex : colIndex + 1;
       colsJSON.content.splice(nextIndex, 0, {
         type: FolioTiptapColumnNode.name,
         attrs: {
@@ -74,7 +131,7 @@ export function addOrDeleteColumn({
         },
         content: [
           {
-            type: 'paragraph',
+            type: "paragraph",
           },
         ],
       });
@@ -95,11 +152,13 @@ export function addOrDeleteColumn({
       }
     });
 
-    const tr = state.tr.setTime(Date.now());
+    const tr = state.tr;
 
-    tr.replaceWith(maybeColumns.pos, maybeColumns.pos + maybeColumns.node.nodeSize, nextCols).setSelection(
-      TextSelection.near(tr.doc.resolve(nextSelectPos)),
-    );
+    tr.replaceWith(
+      maybeColumns.pos,
+      maybeColumns.pos + maybeColumns.node.nodeSize,
+      nextCols,
+    ).setSelection(TextSelection.near(tr.doc.resolve(nextSelectPos)));
 
     dispatch(tr);
   }
@@ -107,9 +166,21 @@ export function addOrDeleteColumn({
   return true;
 }
 
-export function goToColumn({ state, dispatch, type }: { state: EditorState, dispatch: any, type: 'before' | 'after' }) {
-  const maybeColumns = findParentNode((node: Node) => node.type.name === FolioTiptapColumnsNode.name)(state.selection);
-  const maybeColumn = findParentNode((node: Node) => node.type.name === FolioTiptapColumnNode.name)(state.selection);
+export function goToColumn({
+  state,
+  dispatch,
+  type,
+}: {
+  state: EditorState;
+  dispatch: any;
+  type: "before" | "after";
+}) {
+  const maybeColumns = findParentNode(
+    (node: Node) => node.type.name === FolioTiptapColumnsNode.name,
+  )(state.selection);
+  const maybeColumn = findParentNode(
+    (node: Node) => node.type.name === FolioTiptapColumnNode.name,
+  )(state.selection);
 
   if (dispatch && maybeColumns && maybeColumn) {
     const cols = maybeColumns.node;
@@ -117,7 +188,7 @@ export function goToColumn({ state, dispatch, type }: { state: EditorState, disp
 
     let nextIndex = 0;
 
-    if (type === 'before') {
+    if (type === "before") {
       nextIndex = (colIndex - 1 + cols.attrs.count) % cols.attrs.count;
     } else {
       nextIndex = (colIndex + 1) % cols.attrs.count;
@@ -130,7 +201,7 @@ export function goToColumn({ state, dispatch, type }: { state: EditorState, disp
       }
     });
 
-    const tr = state.tr.setTime(Date.now());
+    const tr = state.tr;
 
     tr.setSelection(TextSelection.near(tr.doc.resolve(nextSelectPos)));
     dispatch(tr);
