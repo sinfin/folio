@@ -11,7 +11,6 @@ import {
 } from "@/components/tiptap-ui-primitive/toolbar";
 import { FolioTiptapNodeButton } from "@/components/tiptap-ui/folio-tiptap-node-button";
 import { ListDropdownMenu } from "@/components/tiptap-ui/list-dropdown-menu";
-import { CodeBlockButton } from "@/components/tiptap-ui/code-block-button";
 import {
   LinkPopover,
   LinkContent,
@@ -35,7 +34,6 @@ interface FolioEditorToolbarStateMapping {
   bold: FolioEditorToolbarButtonStateMapping;
   italic: FolioEditorToolbarButtonStateMapping;
   strike: FolioEditorToolbarButtonStateMapping;
-  code: FolioEditorToolbarButtonStateMapping;
   underline: FolioEditorToolbarButtonStateMapping;
   superscript: FolioEditorToolbarButtonStateMapping;
   subscript: FolioEditorToolbarButtonStateMapping;
@@ -55,7 +53,6 @@ interface FolioEditorToolbarState {
   bold: FolioEditorToolbarButtonState;
   italic: FolioEditorToolbarButtonState;
   strike: FolioEditorToolbarButtonState;
-  code: FolioEditorToolbarButtonState;
   underline: FolioEditorToolbarButtonState;
   superscript: FolioEditorToolbarButtonState;
   subscript: FolioEditorToolbarButtonState;
@@ -96,7 +93,6 @@ const toolbarStateMapping: FolioEditorToolbarStateMapping = {
     enabled: makeMarkEnabled("strike"),
     active: makeMarkActive("strike"),
   },
-  code: { enabled: makeMarkEnabled("code"), active: makeMarkActive("code") },
   underline: {
     enabled: makeMarkEnabled("underline"),
     active: makeMarkActive("underline"),
@@ -232,7 +228,6 @@ const MainToolbarContent = ({
           enabled={editorState["list"].enabled}
           value={editorState["list"].value}
         />
-        <CodeBlockButton />
       </ToolbarGroup>
 
       <ToolbarSeparator />
@@ -240,7 +235,6 @@ const MainToolbarContent = ({
       <ToolbarGroup>
         <MarkButton editor={editor} type="bold" />
         <MarkButton editor={editor} type="italic" />
-        <MarkButton editor={editor} type="code" />
         <MarkButton editor={editor} type="underline" />
         <MarkButton editor={editor} type="strike" />
         <LinkPopover />
