@@ -18,19 +18,9 @@ import { Highlight } from "@tiptap/extension-highlight";
 // import { Superscript } from "@tiptap/extension-superscript";
 import { Selection, Placeholder, TrailingNode } from "@tiptap/extensions";
 
-// --- UI Primitives ---
-import { Button } from "@/components/tiptap-ui-primitive/button";
-import { Spacer } from "@/components/tiptap-ui-primitive/spacer";
-import {
-  Toolbar,
-  ToolbarGroup,
-  ToolbarSeparator,
-} from "@/components/tiptap-ui-primitive/toolbar";
-
 // --- Tiptap Node ---
 import { FolioTiptapNodeExtension } from "@/components/tiptap-extensions/folio-tiptap-node";
 import {
-  FolioTiptapColumnsButton,
   FolioTiptapColumnsExtension,
   FolioTiptapColumnNode,
   FolioTiptapColumnsNode,
@@ -40,8 +30,6 @@ import "@/components/tiptap-node/image-node/image-node.scss";
 import "@/components/tiptap-node/paragraph-node/paragraph-node.scss";
 
 // --- Tiptap UI ---
-import { HeadingDropdownMenu } from "@/components/tiptap-ui/heading-dropdown-menu";
-import { FolioTiptapNodeButton } from "@/components/tiptap-ui/folio-tiptap-node-button";
 import {
   CommandsExtension,
   suggestion,
@@ -49,22 +37,6 @@ import {
   defaultGroupForRichText,
   makeSuggestionItems,
 } from "@/components/tiptap-ui/commands";
-import { ListDropdownMenu } from "@/components/tiptap-ui/list-dropdown-menu";
-import { BlockquoteButton } from "@/components/tiptap-ui/blockquote-button";
-import { CodeBlockButton } from "@/components/tiptap-ui/code-block-button";
-import {
-  ColorHighlightPopover,
-  ColorHighlightPopoverContent,
-  ColorHighlightPopoverButton,
-} from "@/components/tiptap-ui/color-highlight-popover";
-import {
-  LinkPopover,
-  LinkContent,
-  LinkButton,
-} from "@/components/tiptap-ui/link-popover";
-import { MarkButton } from "@/components/tiptap-ui/mark-button";
-import { TextAlignButton } from "@/components/tiptap-ui/text-align-button";
-import { UndoRedoButton } from "@/components/tiptap-ui/undo-redo-button";
 
 // --- Icons ---
 import { ArrowLeftIcon } from "@/components/tiptap-icons/arrow-left-icon";
@@ -82,126 +54,7 @@ import makeFolioTiptapNodeCommandGroup from "@/lib/make-folio-tiptap-node-comman
 
 import TRANSLATIONS from "./folio-editor-i18n.json";
 import { FolioEditorBubbleMenus } from "./folio-editor-bubble-menus";
-
-const MainToolbarContent = ({
-  onHighlighterClick,
-  onLinkClick,
-  isMobile,
-  blockEditor,
-  editor,
-  folioTiptapNodes,
-}: {
-  onHighlighterClick: () => void;
-  onLinkClick: () => void;
-  isMobile: boolean;
-  blockEditor: boolean;
-  editor: Editor | null;
-  folioTiptapNodes: FolioTiptapNodeFromInput[] | null;
-}) => {
-  return (
-    <>
-      <Spacer />
-
-      {blockEditor ? (
-        <>
-        <ToolbarGroup>
-          <FolioTiptapNodeButton editor={editor} />
-        </ToolbarGroup>
-
-        <ToolbarSeparator />
-        </>
-      ) : null}
-
-      <ToolbarGroup>
-        <UndoRedoButton action="undo" />
-        <UndoRedoButton action="redo" />
-      </ToolbarGroup>
-
-      <ToolbarSeparator />
-
-      <ToolbarGroup>
-        <HeadingDropdownMenu levels={[1, 2, 3, 4]} />
-        <ListDropdownMenu types={["bulletList", "orderedList"]} />
-        <BlockquoteButton />
-        <CodeBlockButton />
-      </ToolbarGroup>
-
-      <ToolbarSeparator />
-
-      <ToolbarGroup>
-        <MarkButton type="bold" />
-        <MarkButton type="italic" />
-        <MarkButton type="strike" />
-        <MarkButton type="code" />
-        <MarkButton type="underline" />
-        {!isMobile ? (
-          <ColorHighlightPopover />
-        ) : (
-          <ColorHighlightPopoverButton onClick={onHighlighterClick} />
-        )}
-        {!isMobile ? <LinkPopover /> : <LinkButton onClick={onLinkClick} />}
-      </ToolbarGroup>
-
-      <ToolbarSeparator />
-
-      <ToolbarGroup>
-        <MarkButton type="superscript" />
-        <MarkButton type="subscript" />
-      </ToolbarGroup>
-
-      <ToolbarSeparator />
-
-      <ToolbarGroup>
-        <TextAlignButton align="left" />
-        <TextAlignButton align="center" />
-        <TextAlignButton align="right" />
-      </ToolbarGroup>
-
-      {blockEditor ? (
-        <>
-          <ToolbarSeparator />
-
-          <ToolbarGroup>
-            <FolioTiptapColumnsButton editor={editor} />
-          </ToolbarGroup>
-        </>
-      ) : null}
-
-      <Spacer />
-
-      {isMobile && <ToolbarSeparator />}
-    </>
-  );
-};
-
-const MobileToolbarContent = ({
-  type,
-  onBack,
-}: {
-  type: "highlighter" | "link";
-  onBack: () => void;
-}) => (
-  <>
-    <ToolbarGroup>
-      <Button data-style="ghost" onClick={onBack}>
-        <ArrowLeftIcon className="tiptap-button-icon" />
-        {type === "highlighter" ? (
-          <HighlighterIcon className="tiptap-button-icon" />
-        ) : (
-          <LinkIcon className="tiptap-button-icon" />
-        )}
-      </Button>
-    </ToolbarGroup>
-
-    <ToolbarSeparator />
-
-    {type === "highlighter" ? (
-      <ColorHighlightPopoverContent />
-    ) : (
-      <LinkContent />
-    )}
-  </>
-);
+import { FolioEditorToolbar } from "./folio-editor-toolbar";
 
 import type { Content } from "@tiptap/react";
 
@@ -220,12 +73,7 @@ export function FolioEditor({
   type,
   folioTiptapNodes,
 }: FolioEditorProps) {
-  const isMobile = useMobile();
   const windowSize = useWindowSize();
-  const [mobileView, setMobileView] = React.useState<
-    "main" | "highlighter" | "link"
-  >("main");
-  const toolbarRef = React.useRef<HTMLDivElement>(null);
   const editorRef = React.useRef<HTMLDivElement>(null);
   const blockEditor = type === "block";
 
@@ -307,17 +155,6 @@ export function FolioEditor({
     ],
   });
 
-  const bodyRect = useCursorVisibility({
-    editor,
-    overlayHeight: toolbarRef.current?.getBoundingClientRect().height ?? 0,
-  });
-
-  React.useEffect(() => {
-    if (!isMobile && mobileView !== "main") {
-      setMobileView("main");
-    }
-  }, [isMobile, mobileView]);
-
   React.useEffect(() => {
     if (!editorRef.current) return;
 
@@ -350,32 +187,7 @@ export function FolioEditor({
         ref={editorRef}
         className={`f-tiptap-editor f-tiptap-editor--${blockEditor ? "block" : "rich-text"}`}
       >
-        <Toolbar
-          ref={toolbarRef}
-          style={
-            isMobile
-              ? {
-                  bottom: `calc(100% - ${windowSize.height - bodyRect.y}px)`,
-                }
-              : {}
-          }
-        >
-          {mobileView === "main" ? (
-            <MainToolbarContent
-              onHighlighterClick={() => setMobileView("highlighter")}
-              onLinkClick={() => setMobileView("link")}
-              isMobile={isMobile}
-              blockEditor={blockEditor}
-              editor={editor}
-              folioTiptapNodes={folioTiptapNodes}
-            />
-          ) : (
-            <MobileToolbarContent
-              type={mobileView === "highlighter" ? "highlighter" : "link"}
-              onBack={() => setMobileView("main")}
-            />
-          )}
-        </Toolbar>
+        <FolioEditorToolbar editor={editor} blockEditor={blockEditor} />
 
         <div className="f-tiptap-editor__content-wrap">
           {blockEditor ? (
