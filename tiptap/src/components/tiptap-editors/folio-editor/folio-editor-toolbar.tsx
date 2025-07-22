@@ -27,6 +27,7 @@ interface FolioEditorToolbarButtonStateMapping {
   enabled: (params: { editor: Editor }) => boolean;
   active: (params: { editor: Editor }) => boolean;
   value?: (params: { editor: Editor }) => string | undefined;
+  onlyInBlockEditor?: true;
 }
 
 interface FolioEditorToolbarStateMapping {
@@ -163,6 +164,7 @@ const toolbarStateMapping: FolioEditorToolbarStateMapping = {
     },
   },
   layouts: {
+    onlyInBlockEditor: true,
     enabled: ({ editor }) => editor.can().insertFolioTiptapColumns() || editor.can().insertTable(),
     active: ({ editor }) => false,
     value: ({ editor }) => {
@@ -179,15 +181,21 @@ const toolbarStateMapping: FolioEditorToolbarStateMapping = {
 
 const getToolbarState = ({
   editor,
+  blockEditor,
 }: {
   editor: Editor;
+  blockEditor: boolean;
 }): FolioEditorToolbarState => {
   const state: Partial<
     Record<keyof FolioEditorToolbarStateMapping, FolioEditorToolbarButtonState>
   > = {};
-  const keys = Object.keys(
+  let keys = Object.keys(
     toolbarStateMapping,
   ) as (keyof FolioEditorToolbarStateMapping)[];
+
+  if (!blockEditor) {
+    keys = keys.filter((key) => !toolbarStateMapping[key].onlyInBlockEditor)
+  }
 
   if (editor && editor.isEditable) {
     keys.forEach((key: keyof FolioEditorToolbarStateMapping) => {
@@ -221,7 +229,7 @@ const MainToolbarContent = ({
 
     // the selector function is used to select the state you want to react to
     selector: ({ editor }) => {
-      return getToolbarState({ editor });
+      return getToolbarState({ editor, blockEditor });
     },
   });
 

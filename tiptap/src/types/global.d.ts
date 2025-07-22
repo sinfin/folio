@@ -67,7 +67,7 @@ declare global {
   interface FolioEditor extends TiptapEditor {
     onCreate?: (content: { editor: TiptapEditor }) => void;
     onUpdate?: (content: { editor: TiptapEditor }) => void;
-    defaultContent?: import("@tiptap/react").Content;
+    defaultContent?: import("@tiptap/react").JSONContent;
     type: "rich-text" | "block";
     folioTiptapNodes: FolioTiptapNodeFromInput[];
   }
@@ -113,7 +113,7 @@ declare global {
           type: "rich-text" | "block";
           onCreate?: (content: { editor: TiptapEditor }) => void;
           onUpdate?: (content: { editor: TiptapEditor }) => void;
-          content?: import("@tiptap/react").Content;
+          content?: import("@tiptap/react").JSONContent;
         }) => ReturnType<typeof import("react-dom/client").createRoot>;
         destroy: () => void;
         getHeight: () => number;
@@ -137,7 +137,7 @@ declare module "@tiptap/react" {
   interface Commands<ReturnType> {
     folioTiptapNode: {
       setFolioTiptapNode: (
-        node?: import("@tiptap/react").Content,
+        node?: import("@tiptap/react").JSONContent,
         uniqueId: number | null = null,
       ) => ReturnType;
     };

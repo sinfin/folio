@@ -57,17 +57,18 @@ import { SmartDragHandle } from "@/components/tiptap-ui/smart-drag-handle";
 import { useWindowSize } from "@/hooks/use-window-size";
 
 import translate from "@/lib/i18n";
+import clearContent from "@/lib/clear-content";
 
 import TRANSLATIONS from "./folio-editor-i18n.json";
 import { FolioEditorBubbleMenus } from "./folio-editor-bubble-menus";
 import { FolioEditorToolbar } from "./folio-editor-toolbar";
 
-import type { Content } from "@tiptap/react";
+import type { JSONContent } from "@tiptap/react";
 
 interface FolioEditorProps {
   onCreate?: (content: { editor: Editor }) => void;
   onUpdate?: (content: { editor: Editor }) => void;
-  defaultContent?: Content;
+  defaultContent?: JSONContent;
   type: "block" | "rich-text";
   folioTiptapNodes: FolioTiptapNodeFromInput[];
 }
@@ -86,7 +87,7 @@ export function FolioEditor({
   const editor = useEditor({
     onUpdate,
     onCreate,
-    content: defaultContent,
+    content: clearContent({ content: defaultContent, blockEditor }),
     autofocus: blockEditor,
     immediatelyRender: true,
     shouldRerenderOnTransaction: false,
