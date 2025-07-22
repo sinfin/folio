@@ -76,12 +76,6 @@ export function FolioEditor({
   const windowSize = useWindowSize();
   const editorRef = React.useRef<HTMLDivElement>(null);
   const blockEditor = type === "block";
-  const styledParagraphVariants =
-    DEFAULT_FOLIO_TIPTAP_STYLED_PARAGRAPH_VARIANTS;
-
-  const styledParagraph = StyledParagraph.configure({
-    variants: styledParagraphVariants,
-  });
 
   const editor = useEditor({
     onUpdate,
@@ -141,7 +135,7 @@ export function FolioEditor({
             FolioTiptapColumnNode,
           ]
         : []),
-      styledParagraph,
+      StyledParagraph,
       CommandsExtension.configure({
         suggestion:
           blockEditor && folioTiptapNodes
@@ -152,9 +146,6 @@ export function FolioEditor({
                     ...defaultGroupForBlock,
                     items: [
                       ...defaultGroupForBlock.items,
-                      ...makeFolioTiptapStyledParagraphCommands(
-                        styledParagraphVariants,
-                      ),
                     ],
                   },
                   makeFolioTiptapNodeCommandGroup(folioTiptapNodes),
@@ -200,7 +191,6 @@ export function FolioEditor({
         <FolioEditorToolbar
           editor={editor}
           blockEditor={blockEditor}
-          styledParagraphVariants={styledParagraphVariants}
         />
 
         <div className="f-tiptap-editor__content-wrap">

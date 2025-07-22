@@ -1,4 +1,5 @@
 import React from "react";
+import type { Editor } from '@tiptap/react';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -10,6 +11,8 @@ import translate from "@/lib/i18n";
 import { ChevronDownIcon } from "@/components/tiptap-icons/chevron-down-icon"
 import { HeadingIcon } from "@/components/tiptap-icons/heading-icon"
 import { Button } from "@/components/tiptap-ui-primitive/button"
+
+import type { FolioEditorToolbarButtonState } from './folio-editor-toolbar';
 
 const TRANSLATIONS = {
   cs: {
@@ -34,6 +37,7 @@ export interface FolioEditorToolbarDropdownButtonProps {
   enabled: boolean;
   active: boolean;
   tooltip?: string;
+  onClick: () => void;
 }
 
 export function FolioEditorToolbarDropdownButton({
@@ -64,14 +68,24 @@ export function FolioEditorToolbarDropdownButton({
 
 export interface FolioEditorToolbarDropdownProps {
   editor: Editor | null;
-  commands: any[];
+  editorState: FolioEditorToolbarButtonState;
+  commandGroup: FolioEditorCommandGroup;
+}
+
+const makeOnClick = ({ command, editor }: { command: FolioEditorCommand; editor: Editor }) => () => {
+  const chain = editor.chain()
+  chain.focus()
+  command.command({ chain })
+  chain.run()
 }
 
 export function FolioEditorToolbarDropdown({
   editorState,
-  commands,
+  commandGroup,
   editor,
 }: FolioEditorToolbarDropdownProps) {
+  if (!editor) return
+
   const [isOpen, setIsOpen] = React.useState(false)
 
   const handleOnOpenChange = React.useCallback(
@@ -83,18 +97,18 @@ export function FolioEditorToolbarDropdown({
 
   const getActiveItem = React.useCallback(() => {
     if (editorState.value) {
-      return commands.find((command) => !command.dontShowAsActiveInCollapsedToolbar && command.key === editorState.value) || null
+      return commandGroup.commands.find((command) => !command.dontShowAsActiveInCollapsedToolbar && command.key === editorState.value) || null
     } else {
       return null
     }
-  }, [editorState.value, commands])
+  }, [editorState.value, commandGroup.commands])
 
   const activeItem = getActiveItem()
   const ActiveIcon = activeItem ? activeItem.icon : HeadingIcon;
   const tooltip = translate(TRANSLATIONS, "tooltip")
 
   return (
-    <DropdownMenu open={isOpen} onOpenChange={handleOnOpenChange} className="f-tiptap-editor-toolbar-dropdown">
+    <DropdownMenu open={isOpen} onOpenChange={handleOnOpenChange}>
       <DropdownMenuTrigger asChild>
         <Button
           type="button"
@@ -115,17 +129,15 @@ export function FolioEditorToolbarDropdown({
 
       <DropdownMenuContent>
         <DropdownMenuGroup>
-          {commands.map((item) => (
-            <DropdownMenuItem key={item.key} asChild>
+          {commandGroup.commands.map((command) => (
+            <DropdownMenuItem key={command.key} asChild>
               <FolioEditorToolbarDropdownButton
-                active={editorState.value ? (item.key === editorState.value) : false}
+                active={editorState.value ? (command.key === editorState.value) : false}
                 enabled={editorState.enabled}
-                onClick={() => {
-                  item.command({ editor, slash: false })
-                }}
+                onClick={makeOnClick({ editor, command })}
               >
-                <item.icon className="tiptap-button-icon" />
-                {item.title}
+                <command.icon className="tiptap-button-icon" />
+                {command.title[document.documentElement.lang as keyof typeof command.title] || command.title.en}
               </FolioEditorToolbarDropdownButton>
             </DropdownMenuItem>
           ))}

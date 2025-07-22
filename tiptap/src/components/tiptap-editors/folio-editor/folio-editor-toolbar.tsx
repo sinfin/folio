@@ -22,8 +22,7 @@ import { UndoRedoButton } from "@/components/tiptap-ui/undo-redo-button";
 import { FolioTiptapColumnsButton } from "@/components/tiptap-extensions/folio-tiptap-columns";
 import { FolioTiptapEraseMarksButton } from "@/components/tiptap-extensions/folio-tiptap-erase-marks/folio-tiptap-erase-marks-button"
 import { FolioEditorToolbarDropdown } from "./folio-editor-toolbar-dropdown"
-
-import { type FolioTiptapStyledParagraphVariant, folioTiptapStyledParagraphToolbarItems } from '@/components/tiptap-extensions/folio-tiptap-styled-paragraph';
+import { TextStylesCommandGroup } from '@/components/tiptap-command-groups/text-styles-command-group';
 
 interface FolioEditorToolbarButtonStateMapping {
   enabled: (params: { editor: Editor }) => boolean;
@@ -43,9 +42,10 @@ interface FolioEditorToolbarStateMapping {
   heading: FolioEditorToolbarButtonStateMapping;
   list: FolioEditorToolbarButtonStateMapping;
   erase: FolioEditorToolbarButtonStateMapping;
+  textStyles: FolioEditorToolbarButtonStateMapping;
 }
 
-interface FolioEditorToolbarButtonState {
+export interface FolioEditorToolbarButtonState {
   enabled: boolean;
   active: boolean;
   value?: string;
@@ -60,7 +60,6 @@ type FolioEditorToolbarState = {
 interface FolioEditorToolbarProps {
   editor: Editor;
   blockEditor: boolean;
-  styledParagraphVariants: FolioTiptapStyledParagraphVariant[];
 }
 
 const makeMarkEnabled =
@@ -216,11 +215,9 @@ const getToolbarState = ({
 const MainToolbarContent = ({
   blockEditor,
   editor,
-  textStylesCommands,
 }: {
   blockEditor: boolean;
   editor: Editor;
-  textStylesCommands: any[],
 }) => {
   const editorState: FolioEditorToolbarState = useEditorState({
     editor,
@@ -263,7 +260,7 @@ const MainToolbarContent = ({
       <ToolbarGroup>
         <FolioEditorToolbarDropdown
           editorState={editorState["textStyles"]}
-          commands={textStylesCommands}
+          commandGroup={TextStylesCommandGroup}
           editor={editor}
         />
 
@@ -328,20 +325,14 @@ const MainToolbarContent = ({
 export function FolioEditorToolbar({
   editor,
   blockEditor,
-  styledParagraphVariants,
 }: FolioEditorToolbarProps) {
   if (!editor) return null;
-
-  const textStylesCommands = React.useMemo(() => {
-    return folioTiptapStyledParagraphToolbarItems(styledParagraphVariants)
-  }, [styledParagraphVariants]);
 
   return (
     <Toolbar>
       <MainToolbarContent
         blockEditor={blockEditor}
         editor={editor}
-        textStylesCommands={textStylesCommands}
       />
     </Toolbar>
   );

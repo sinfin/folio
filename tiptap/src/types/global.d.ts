@@ -68,6 +68,22 @@ declare global {
     folioTiptapNodes: FolioTiptapNodeFromInput[];
   }
 
+  interface FolioEditorCommand {
+    title: { cs: string; en: string };
+    icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+    key: string;
+    dontShowAsActiveInCollapsedToolbar?: boolean;
+    command: (props: {
+      chain: any;
+    }) => void;
+  }
+
+  interface FolioEditorCommandGroup {
+    title: { cs: string; en: string };
+    key: string;
+    commands: FolioEditorCommand[];
+  }
+
   interface Window {
     __DEV__?: boolean;
     top: Window;

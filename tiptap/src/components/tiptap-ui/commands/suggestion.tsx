@@ -19,11 +19,6 @@ import { markIcons } from "@/components/tiptap-ui/mark-button/mark-button";
 import { FolioTiptapColumnsCommandItem } from "@/components/tiptap-extensions/folio-tiptap-columns";
 
 import {
-  HEADING_TRANSLATIONS,
-  HEADING_ICONS,
-} from "@/components/tiptap-extensions/folio-tiptap-styled-paragraph/folio-tiptap-styled-paragraph-toolbar-items";
-
-import {
   LIST_TRANSLATIONS,
   listIcons,
 } from "@/components/tiptap-ui/list-button/list-button";
@@ -65,61 +60,6 @@ export const makeSuggestionItems = (groups: UntranslatedCommandGroup[]) => {
 export const defaultGroupForRichText: UntranslatedCommandGroup = {
   title: { cs: "Text", en: "Text" },
   items: [
-    {
-      title: {
-        cs: `${HEADING_TRANSLATIONS["cs"]["heading"]} H2`,
-        en: `${HEADING_TRANSLATIONS["cs"]["heading"]} H2`,
-      },
-      keymap: "##",
-      icon: HEADING_ICONS[2],
-      command: ({ editor, range }: { editor: Editor; range: Range }) => {
-        editor
-          .chain()
-          .focus()
-          .deleteRange(range)
-          .setNode("heading", { level: 2 })
-          .run();
-      },
-    },
-    {
-      title: {
-        cs: `${HEADING_TRANSLATIONS["cs"]["heading"]} H3`,
-        en: `${HEADING_TRANSLATIONS["cs"]["heading"]} H3`,
-      },
-      keymap: "###",
-      icon: HEADING_ICONS[3],
-      command: ({ editor, range }: { editor: Editor; range: Range }) => {
-        editor
-          .chain()
-          .focus()
-          .deleteRange(range)
-          .setNode("heading", { level: 3 })
-          .run();
-      },
-    },
-    {
-      title: {
-        cs: `${HEADING_TRANSLATIONS["cs"]["heading"]} H4`,
-        en: `${HEADING_TRANSLATIONS["cs"]["heading"]} H4`,
-      },
-      keymap: "####",
-      icon: HEADING_ICONS[4],
-      command: ({ editor, range }: { editor: Editor; range: Range }) => {
-        editor
-          .chain()
-          .focus()
-          .deleteRange(range)
-          .setNode("heading", { level: 4 })
-          .run();
-      },
-    },
-    {
-      title: { cs: "Odstavec", en: "Paragraph" },
-      icon: Pilcrow,
-      command: ({ editor, range }: { editor: Editor; range: Range }) => {
-        editor.chain().focus().deleteRange(range).setNode("paragraph").run();
-      },
-    },
     {
       title: {
         cs: LIST_TRANSLATIONS["cs"]["bulletList"],

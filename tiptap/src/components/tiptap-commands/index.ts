@@ -1,0 +1,6 @@
+export * from "./heading-four-command"
+export * from "./heading-three-command"
+export * from "./heading-two-command"
+export * from "./paragraph-command"
+export * from "./styled-paragraph-large-command"
+export * from "./styled-paragraph-small-command"
