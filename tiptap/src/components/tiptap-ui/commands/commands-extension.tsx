@@ -2,6 +2,14 @@ import { Extension, Editor } from "@tiptap/core";
 import Suggestion from "@tiptap/suggestion";
 import type { Range } from "@tiptap/core";
 
+interface CommandInterface {
+  editor: Editor;
+  range: Range;
+  props: {
+    command: ({ chain }: { chain: FolioEditorCommandChain }) => void;
+  };
+}
+
 export const CommandsExtension = Extension.create({
   name: "commands",
 
@@ -13,17 +21,14 @@ export const CommandsExtension = Extension.create({
           editor,
           range,
           props,
-        }: {
-          editor: Editor;
-          range: Range;
-          props: {
-            command: (params: {
-              editor: Editor;
-              range: Range;
-            }) => void;
-          };
-        }) => {
-          props.command({ editor, range });
+        }: CommandInterface) => {
+          const chain = editor.chain()
+          chain.focus()
+          chain.deleteRange(range)
+
+          props.command({ chain })
+
+          chain.run();
         },
       },
     };

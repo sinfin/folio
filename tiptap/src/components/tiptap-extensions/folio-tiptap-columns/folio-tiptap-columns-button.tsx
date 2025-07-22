@@ -10,8 +10,6 @@ import { useTiptapEditor } from "@/hooks/use-tiptap-editor";
 import type { ButtonProps } from "@/components/tiptap-ui-primitive/button";
 import { Button } from "@/components/tiptap-ui-primitive/button";
 
-import { type UntranslatedCommandItem } from "@/components/tiptap-ui/commands/commands-list";
-
 import translate from "@/lib/i18n";
 
 const TRANSLATIONS = {
@@ -21,19 +19,6 @@ const TRANSLATIONS = {
   en: {
     addColumns: "Add columns",
   }
-}
-
-export const FolioTiptapColumnsCommandItem: UntranslatedCommandItem = {
-  title: { cs: "Sloupce", en: "Columns" },
-  icon: Columns2,
-  command: ({ editor, range }: { editor: Editor, range: Range }) => {
-    editor
-      .chain()
-      .focus()
-      .deleteRange(range)
-      .insertColumns({ count: 2 })
-      .run();
-  },
 }
 
 export interface FolioTiptapColumnsButtonProps extends ButtonProps {

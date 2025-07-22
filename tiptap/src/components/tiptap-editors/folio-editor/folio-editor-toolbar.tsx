@@ -40,7 +40,7 @@ interface FolioEditorToolbarStateMapping {
   superscript: FolioEditorToolbarButtonStateMapping;
   subscript: FolioEditorToolbarButtonStateMapping;
   heading: FolioEditorToolbarButtonStateMapping;
-  list: FolioEditorToolbarButtonStateMapping;
+  lists: FolioEditorToolbarButtonStateMapping;
   erase: FolioEditorToolbarButtonStateMapping;
   textStyles: FolioEditorToolbarButtonStateMapping;
 }
@@ -165,7 +165,7 @@ const toolbarStateMapping: FolioEditorToolbarStateMapping = {
       return undefined;
     },
   },
-  list: {
+  lists: {
     enabled: ({ editor }) => editor.can().toggleBulletList() || editor.can().toggleOrderedList(),
     active: ({ editor }) => editor.isActive("bulletList") || editor.isActive("orderedList"),
     value: ({ editor }) => {
@@ -266,9 +266,9 @@ const MainToolbarContent = ({
 
         <ListDropdownMenu
           types={["bulletList", "orderedList"]}
-          active={editorState["list"].active}
-          enabled={editorState["list"].enabled}
-          value={editorState["list"].value}
+          active={editorState["lists"].active}
+          enabled={editorState["lists"].enabled}
+          value={editorState["lists"].value}
         />
       </ToolbarGroup>
 

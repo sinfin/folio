@@ -27,17 +27,22 @@ import {
 import {
   StyledParagraph,
   DEFAULT_FOLIO_TIPTAP_STYLED_PARAGRAPH_VARIANTS,
-  makeFolioTiptapStyledParagraphCommands,
 } from "@/components/tiptap-extensions/folio-tiptap-styled-paragraph";
 
 import "@/components/tiptap-node/image-node/image-node.scss";
 import "@/components/tiptap-node/paragraph-node/paragraph-node.scss";
 
+import {
+  TextStylesCommandGroup,
+  ListsCommandGroup,
+  LayoutsCommandGroup,
+  makeFolioTiptapNodesCommandGroup
+} from '@/components/tiptap-command-groups';
+
 // --- Tiptap UI ---
 import {
   CommandsExtension,
   suggestion,
-  defaultGroupForBlock,
   makeSuggestionItems,
 } from "@/components/tiptap-ui/commands";
 
@@ -50,7 +55,6 @@ import { SmartDragHandle } from "@/components/tiptap-ui/smart-drag-handle";
 import { useWindowSize } from "@/hooks/use-window-size";
 
 import translate from "@/lib/i18n";
-import makeFolioTiptapNodeCommandGroup from "@/lib/make-folio-tiptap-node-command-group";
 
 import TRANSLATIONS from "./folio-editor-i18n.json";
 import { FolioEditorBubbleMenus } from "./folio-editor-bubble-menus";
@@ -142,16 +146,13 @@ export function FolioEditor({
             ? {
                 ...suggestion,
                 items: makeSuggestionItems([
-                  {
-                    ...defaultGroupForBlock,
-                    items: [
-                      ...defaultGroupForBlock.items,
-                    ],
-                  },
-                  makeFolioTiptapNodeCommandGroup(folioTiptapNodes),
+                  TextStylesCommandGroup,
+                  ListsCommandGroup,
+                  LayoutsCommandGroup,
+                  makeFolioTiptapNodesCommandGroup(folioTiptapNodes),
                 ]),
               }
-            : suggestion,
+            : suggestion
       }),
     ],
   });

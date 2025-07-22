@@ -1,6 +1,7 @@
 import React from "react";
 import translate from "@/lib/i18n";
-import type { Range } from "@tiptap/core";
+import type { Range, Editor } from "@tiptap/core";
+import { X } from 'lucide-react';
 
 import "./commands-list.scss";
 
@@ -15,36 +16,9 @@ const TRANSLATIONS = {
   },
 };
 
-export interface UntranslatedCommandGroup {
-  title: string | { cs: string; en: string };
-  items: UntranslatedCommandItem[];
-}
-
-export interface UntranslatedCommandItem {
-  title: string | { cs: string; en: string };
-  command?: (params: {
-    editor: Editor;
-    range: Range;
-  }) => void;
-  keymap?: string;
-  icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-}
-
-export interface CommandGroup {
-  title: string;
-  items: CommandItem[];
-}
-
-import type { Editor } from "@tiptap/react";
-
-export interface CommandItem extends UntranslatedCommandItem {
-  title: string;
-  normalizedTitle: string;
-}
-
 export interface CommandsListProps {
-  items: CommandGroup[];
-  command: (item: CommandItem) => void;
+  items: FolioEditorCommandGroupForSuggestion[];
+  command: (item: FolioEditorCommandForSuggestion) => void;
   query: string;
 }
 
@@ -65,23 +39,16 @@ export class CommandsList extends React.Component<
   }
 
   onEscape() {
-    // Always pass a valid CommandItem with a title
+    // Always pass a valid FolioEditorCommandForSuggestion with a title
     this.props.command({
       title: "",
       normalizedTitle: "",
-      command: ({
-        editor,
-        range,
-      }: {
-        editor: Editor;
-        range: Range;
-      }) => {
+      icon: X,
+      key: "commandListEscape",
+      command: ({ chain }: { chain: FolioEditorCommandChain }) => {
         if (this.props.query) {
           // insert space to disable suggestion
-          editor.chain().focus().insertContent(" ").run();
-        } else {
-          // remove current paragraph
-          editor.chain().focus().deleteRange(range).run();
+          chain.insertContent(`/${this.props.query} `)
         }
       },
     });
@@ -116,7 +83,7 @@ export class CommandsList extends React.Component<
     if (newIndex < 0) {
       let itemsCount = 0;
       this.props.items.forEach((group) => {
-        itemsCount += group.items.length;
+        itemsCount += group.commandsForSuggestion.length;
       });
 
       newIndex = itemsCount - 1;
@@ -128,7 +95,7 @@ export class CommandsList extends React.Component<
   downHandler() {
     let itemsCount = 0;
     this.props.items.forEach((group) => {
-      itemsCount += group.items.length;
+      itemsCount += group.commandsForSuggestion.length;
     });
 
     let newIndex = this.state.selectedIndex + 1;
@@ -142,12 +109,12 @@ export class CommandsList extends React.Component<
 
   enterHandler() {
     let index = -1;
-    let targetItem: CommandItem | null = null;
+    let targetItem: FolioEditorCommandForSuggestion | null = null;
 
     this.props.items.forEach((group) => {
       if (targetItem) return;
 
-      group.items.forEach((item) => {
+      group.commandsForSuggestion.forEach((item) => {
         if (targetItem) return;
         index += 1;
 
@@ -162,7 +129,7 @@ export class CommandsList extends React.Component<
     }
   }
 
-  selectItem(item: CommandItem) {
+  selectItem(item: FolioEditorCommandForSuggestion) {
     if (item) {
       this.props.command(item);
     }
@@ -174,12 +141,12 @@ export class CommandsList extends React.Component<
   ) {
     let previousItemsCount = 0;
     prevProps.items.forEach((group) => {
-      previousItemsCount += group.items.length;
+      previousItemsCount += group.commandsForSuggestion.length;
     });
 
     let itemsCount = 0;
     this.props.items.forEach((group) => {
-      itemsCount += group.items.length;
+      itemsCount += group.commandsForSuggestion.length;
     });
 
     if (itemsCount !== previousItemsCount) {
@@ -194,23 +161,23 @@ export class CommandsList extends React.Component<
       <div className="f-tiptap-commands-list">
         {this.props.items.length > 0 ? (
           <div className="f-tiptap-commands-list__section">
-            {this.props.items.map((group: CommandGroup) => (
+            {this.props.items.map((group: FolioEditorCommandGroupForSuggestion) => (
               <React.Fragment key={group.title}>
                 <div className="f-tiptap-commands-list__section-heading">
                   {group.title}
                 </div>
 
                 <ul className="f-tiptap-commands-list__section-ul">
-                  {group.items.map((item: CommandItem) => {
+                  {group.commandsForSuggestion.map((commandsForSuggestion: FolioEditorCommandForSuggestion) => {
                     index += 1;
 
-                    const ItemIcon = item.icon;
+                    const ItemIcon = commandsForSuggestion.icon;
                     const itemIndex = index
 
                     return (
                       <li
                         className="f-tiptap-commands-list__section-li"
-                        key={`${group.title}-${item.title}`}
+                        key={`${group.title}-${commandsForSuggestion.title}`}
                       >
                         <button
                           type="button"
@@ -218,7 +185,7 @@ export class CommandsList extends React.Component<
                           data-selected={String(
                             index === this.state.selectedIndex,
                           )}
-                          onClick={() => this.selectItem(item)}
+                          onClick={() => this.selectItem(commandsForSuggestion)}
                           onMouseOver={() => this.setSelectedIndex(itemIndex)}
                         >
                           <span className="f-tiptap-commands-list__item-inner">
@@ -226,11 +193,11 @@ export class CommandsList extends React.Component<
                               <ItemIcon className="f-tiptap-commands-list__item-icon" />
                             ) : null}
                             <span className="f-tiptap-commands-list__item-label">
-                              {item.title}
+                              {commandsForSuggestion.title}
                             </span>
                             <span
                               className="f-tiptap-commands-list__item-keymap"
-                              data-keymap={item.keymap}
+                              data-keymap={commandsForSuggestion.keymap}
                             ></span>
                           </span>
                         </button>

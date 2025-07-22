@@ -54,7 +54,10 @@ class TiptapInput < SimpleForm::Inputs::StringInput
     def tiptap_nodes_json(node_names)
       node_names.map do |node_name|
         {
-          title: node_name.constantize.model_name.human,
+          title: {
+            cs: I18n.with_locale(:cs) { node_name.constantize.model_name.human },
+            en: I18n.with_locale(:en) { node_name.constantize.model_name.human },
+          },
           type: node_name,
         }
       end.to_json

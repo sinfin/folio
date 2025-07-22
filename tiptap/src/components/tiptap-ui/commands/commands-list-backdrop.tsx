@@ -1,6 +1,7 @@
 import React from "react";
 import type { Editor } from "@tiptap/react";
 import type { Range } from "@tiptap/core";
+import { X } from 'lucide-react';
 
 import { type CommandsListProps, type CommandsListState } from "./commands-list";
 
@@ -9,23 +10,19 @@ export class CommandsListBackdrop extends React.Component<
   CommandsListState
 > {
   close () {
-    // Always pass a valid CommandItem with a title
+    console.log('close')
+
     this.props.command({
       title: "",
       normalizedTitle: "",
-      command: ({
-        editor,
-        range,
-      }: {
-        editor: Editor;
-        range: Range;
-      }) => {
+      icon: X,
+      key: "commandListBackdrop",
+      command: ({ chain }: { chain: FolioEditorCommandChain }) => {
+        console.log('commandListBackdrop', this.props.query)
         if (this.props.query) {
           // insert space to disable suggestion
-          editor.chain().focus().insertContent(" ").run();
-        } else {
-          // remove current paragraph
-          editor.chain().focus().deleteRange(range).run();
+          console.log('insertContent')
+          chain.insertContent(` `)
         }
       },
     });

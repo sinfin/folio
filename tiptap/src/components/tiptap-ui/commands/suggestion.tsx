@@ -7,16 +7,12 @@ import { Pilcrow } from "lucide-react";
 
 import {
   CommandsList,
-  type CommandItem,
-  type CommandGroup,
-  type UntranslatedCommandGroup,
-  type UntranslatedCommandItem,
 } from "./commands-list";
 import { CommandsListBackdrop } from "./commands-list-backdrop";
 
 import { markIcons } from "@/components/tiptap-ui/mark-button/mark-button";
 
-import { FolioTiptapColumnsCommandItem } from "@/components/tiptap-extensions/folio-tiptap-columns";
+import { TextStylesCommandGroup, ListsCommandGroup } from '@/components/tiptap-command-groups';
 
 import {
   LIST_TRANSLATIONS,
@@ -33,66 +29,37 @@ interface SuggestionProps {
   editor: Editor;
   range: Range;
   clientRect: () => DOMRect;
-  command: (item: CommandItem) => void;
-  items: CommandGroup[];
+  command: (item: FolioEditorCommandForSuggestion) => void;
+  items: FolioEditorCommandGroupForSuggestion[];
   query: string;
   event: KeyboardEvent;
 }
 
-export const makeSuggestionItems = (groups: UntranslatedCommandGroup[]) => {
+export const makeSuggestionItems = (groups: FolioEditorCommandGroup[]) => {
   return ({ query }: { editor: Editor; query: string }) => {
     const normalizedQuery = normalizeString(query);
 
     return translateAndNormalizeTitles(groups)
-      .map((group: CommandGroup): CommandGroup | null => {
-        const matchingItems = group.items.filter((item: CommandItem) => {
-          return item.normalizedTitle.indexOf(normalizedQuery) !== -1;
+      .map((group: FolioEditorCommandGroupForSuggestion): FolioEditorCommandGroupForSuggestion | null => {
+        const matchingCommands = group.commandsForSuggestion.filter((commandForSuggestion: FolioEditorCommandForSuggestion) => {
+          return commandForSuggestion.normalizedTitle.indexOf(normalizedQuery) !== -1;
         });
-        if (matchingItems.length > 0) {
-          return { ...group, items: matchingItems };
+
+        if (matchingCommands.length > 0) {
+          return { ...group, commandsForSuggestion: matchingCommands };
         }
+
         return null;
       })
-      .filter((group): group is CommandGroup => group !== null);
+      .filter((group): group is FolioEditorCommandGroupForSuggestion => group !== null);
   };
 };
 
-export const defaultGroupForRichText: UntranslatedCommandGroup = {
-  title: { cs: "Text", en: "Text" },
-  items: [
-    {
-      title: {
-        cs: LIST_TRANSLATIONS["cs"]["bulletList"],
-        en: LIST_TRANSLATIONS["en"]["bulletList"],
-      },
-      icon: listIcons["bulletList"],
-      command: ({ editor, range }: { editor: Editor; range: Range }) => {
-        editor.chain().focus().deleteRange(range).toggleBulletList().run();
-      },
-    },
-    {
-      title: {
-        cs: LIST_TRANSLATIONS["cs"]["orderedList"],
-        en: LIST_TRANSLATIONS["en"]["orderedList"],
-      },
-      icon: listIcons["orderedList"],
-      command: ({ editor, range }: { editor: Editor; range: Range }) => {
-        editor.chain().focus().deleteRange(range).toggleOrderedList().run();
-      },
-    },
-  ],
-};
-
-export const defaultGroupForBlock: UntranslatedCommandGroup = {
-  ...defaultGroupForRichText,
-  items: [...defaultGroupForRichText.items, FolioTiptapColumnsCommandItem],
-};
-
 const translateAndNormalizeTitles = (
-  groups: UntranslatedCommandGroup[],
-): CommandGroup[] => {
+  groups: FolioEditorCommandGroup[],
+): FolioEditorCommandGroupForSuggestion[] => {
   const lang = document.documentElement.lang as "cs" | "en";
-  return groups.map((group: UntranslatedCommandGroup) => {
+  return groups.map((group: FolioEditorCommandGroup) => {
     let groupTitle;
 
     if (typeof group.title === "string") {
@@ -102,29 +69,29 @@ const translateAndNormalizeTitles = (
     }
 
     return {
-      ...group,
       title: groupTitle,
-      items: group.items.map((item: UntranslatedCommandItem) => {
+      key: group.key,
+      commandsForSuggestion: group.commands.map((command: FolioEditorCommand) => {
         let itemTitle;
 
-        if (typeof item.title === "string") {
-          itemTitle = item.title;
+        if (typeof command.title === "string") {
+          itemTitle = command.title;
         } else {
-          itemTitle = item.title[lang] || item.title.en;
+          itemTitle = command.title[lang] || command.title.en;
         }
 
         return {
-          ...item,
+          ...command,
           title: itemTitle,
           normalizedTitle: normalizeString(itemTitle),
         };
       }),
-    };
+    } as FolioEditorCommandGroupForSuggestion;
   });
 };
 
 export const suggestion = {
-  items: makeSuggestionItems([defaultGroupForRichText]),
+  items: makeSuggestionItems([ TextStylesCommandGroup, ListsCommandGroup ]),
 
   allowSpaces: false,
 

@@ -56,8 +56,12 @@ declare global {
   }
 
   interface FolioTiptapNodeFromInput {
-    title: string;
+    title: { cs: string, en: string };
     type: string;
+  }
+
+  interface FolioEditorCommandChain extends import("@tiptap/core").CommandChain {
+    insertContent: (content: any) => FolioEditorCommandChain;
   }
 
   interface FolioEditor extends TiptapEditor {
@@ -72,9 +76,10 @@ declare global {
     title: { cs: string; en: string };
     icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
     key: string;
+    keymap?: string;
     dontShowAsActiveInCollapsedToolbar?: boolean;
     command: (props: {
-      chain: any;
+      chain: import("@tiptap/core").CommandChain;
     }) => void;
   }
 
@@ -82,6 +87,17 @@ declare global {
     title: { cs: string; en: string };
     key: string;
     commands: FolioEditorCommand[];
+  }
+
+  interface FolioEditorCommandForSuggestion extends FolioEditorCommand {
+    title: string;
+    normalizedTitle: string;
+  }
+
+  interface FolioEditorCommandGroupForSuggestion extends FolioEditorCommandGroup {
+    title: string;
+    key: string;
+    commandsForSuggestion: FolioEditorCommandForSuggestion[];
   }
 
   interface Window {
