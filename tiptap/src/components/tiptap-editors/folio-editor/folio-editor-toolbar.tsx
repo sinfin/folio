@@ -19,7 +19,6 @@ import {
 import { MarkButton } from "@/components/tiptap-ui/mark-button";
 import { TextAlignButton } from "@/components/tiptap-ui/text-align-button";
 import { UndoRedoButton } from "@/components/tiptap-ui/undo-redo-button";
-import { HeadingDropdownMenu } from "@/components/tiptap-ui/heading-dropdown-menu";
 import { FolioTiptapColumnsButton } from "@/components/tiptap-extensions/folio-tiptap-columns";
 import { FolioTiptapEraseMarksButton } from "@/components/tiptap-extensions/folio-tiptap-erase-marks/folio-tiptap-erase-marks-button"
 import { FolioEditorToolbarDropdown } from "./folio-editor-toolbar-dropdown"
@@ -262,14 +261,6 @@ const MainToolbarContent = ({
       <ToolbarSeparator />
 
       <ToolbarGroup>
-        <HeadingDropdownMenu
-          active={editorState["heading"].active}
-          enabled={editorState["heading"].enabled}
-          value={editorState["heading"].value}
-          editor={editor}
-          levels={[2, 3, 4]}
-        />
-
         <FolioEditorToolbarDropdown
           editorState={editorState["textStyles"]}
           commands={textStylesCommands}

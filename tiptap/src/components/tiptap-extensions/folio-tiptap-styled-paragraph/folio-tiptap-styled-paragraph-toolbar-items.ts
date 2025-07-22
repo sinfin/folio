@@ -1,14 +1,27 @@
 import { DEFAULT_FOLIO_TIPTAP_STYLED_PARAGRAPH_ICON } from "./make-folio-tiptap-styled-paragraph-commands"
 import { Pilcrow } from "lucide-react";
-
-import {
-  HEADING_TRANSLATIONS,
-  headingIcons,
-} from "@/components/tiptap-ui/heading-button/heading-button";
+import { HeadingTwoIcon } from "@/components/tiptap-icons/heading-two-icon"
+import { HeadingThreeIcon } from "@/components/tiptap-icons/heading-three-icon"
+import { HeadingFourIcon } from "@/components/tiptap-icons/heading-four-icon"
 
 import translate from "@/lib/i18n";
 
-const HEADING_LEVELS = [2, 3, 4]
+export const HEADING_LEVELS = [2, 3, 4]
+
+export const HEADING_TRANSLATIONS = {
+  cs: {
+    heading: "Nadpis",
+  },
+  en: {
+    heading: "Heading",
+  },
+}
+
+export const HEADING_ICONS = {
+  2: HeadingTwoIcon,
+  3: HeadingThreeIcon,
+  4: HeadingFourIcon,
+}
 
 export const folioTiptapStyledParagraphToolbarItems = (styledParagraphVariants: FolioTiptapStyledParagraphVariant[]) => {
   const commands = []
@@ -37,7 +50,7 @@ export const folioTiptapStyledParagraphToolbarItems = (styledParagraphVariants: 
 
     commands.push({
       title,
-      icon: headingIcons[level],
+      icon: HEADING_ICONS[level],
       key: `heading-${level}`,
       command: ({ editor, range, slash }: { editor: Editor; range?: Range, slash?: boolean }) => {
         const chain = editor.chain()

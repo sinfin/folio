@@ -20,8 +20,9 @@ import { FolioTiptapColumnsCommandItem } from "@/components/tiptap-extensions/fo
 
 import {
   HEADING_TRANSLATIONS,
-  headingIcons,
-} from "@/components/tiptap-ui/heading-button/heading-button";
+  HEADING_ICONS,
+} from "@/components/tiptap-extensions/folio-tiptap-styled-paragraph/folio-tiptap-styled-paragraph-toolbar-items";
+
 import {
   LIST_TRANSLATIONS,
   listIcons,
@@ -70,7 +71,7 @@ export const defaultGroupForRichText: UntranslatedCommandGroup = {
         en: `${HEADING_TRANSLATIONS["cs"]["heading"]} H2`,
       },
       keymap: "##",
-      icon: headingIcons[2],
+      icon: HEADING_ICONS[2],
       command: ({ editor, range }: { editor: Editor; range: Range }) => {
         editor
           .chain()
@@ -86,7 +87,7 @@ export const defaultGroupForRichText: UntranslatedCommandGroup = {
         en: `${HEADING_TRANSLATIONS["cs"]["heading"]} H3`,
       },
       keymap: "###",
-      icon: headingIcons[3],
+      icon: HEADING_ICONS[3],
       command: ({ editor, range }: { editor: Editor; range: Range }) => {
         editor
           .chain()
@@ -102,7 +103,7 @@ export const defaultGroupForRichText: UntranslatedCommandGroup = {
         en: `${HEADING_TRANSLATIONS["cs"]["heading"]} H4`,
       },
       keymap: "####",
-      icon: headingIcons[4],
+      icon: HEADING_ICONS[4],
       command: ({ editor, range }: { editor: Editor; range: Range }) => {
         editor
           .chain()
