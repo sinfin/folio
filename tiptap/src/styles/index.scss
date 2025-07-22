@@ -90,6 +90,18 @@ body,
   }
 }
 
+// fix bubble menu z-index
+.f-tiptap-editor__content {
+  > .tiptap {
+    position: relative;
+    z-index: 1;
+
+    & ~ div {
+      z-index: 2;
+    }
+  }
+}
+
 .f-tiptap-editor p.is-empty,
 .f-tiptap-editor h2.is-empty,
 .f-tiptap-editor h3.is-empty,

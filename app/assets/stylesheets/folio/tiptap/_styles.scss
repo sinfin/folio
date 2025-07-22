@@ -168,6 +168,7 @@ $f-tiptap__columns--min-horizontal-width: 550px !default;
   pre,
   table,
   // .tableWrapper,
+  .node-folioTiptapNode,
   .f-tiptap-node,
   .f-tiptap-columns {
     margin-top: var(--f-tiptap__node--margin-top);
@@ -382,8 +383,6 @@ $f-tiptap__columns--min-horizontal-width: 550px !default;
   // }
 
   table {
-    --f-tiptap__node--margin-bottom: 0;
-
     width: 100%;
     max-width: 100%;
     border-collapse: collapse;
@@ -394,6 +393,7 @@ $f-tiptap__columns--min-horizontal-width: 550px !default;
 
     td,
     th {
+      --f-tiptap__node--margin-bottom: 0;
       border: var(--f-tiptap__table--border);
       min-width: 1rem;
       padding: var(--f-tiptap__table--cell-padding);

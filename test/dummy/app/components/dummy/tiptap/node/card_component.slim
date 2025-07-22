@@ -18,7 +18,8 @@
 
       - if @node.content.present?
         = render(Folio::Tiptap::ContentComponent.new(record: @node,
-                                                     attribute: :content))
+                                                     attribute: :content,
+                                                     class_name: "w-100"))
 
       - if @node.text.present?
         = simple_format @node.text
