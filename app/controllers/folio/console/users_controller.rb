@@ -57,7 +57,7 @@ class Folio::Console::UsersController < Folio::Console::BaseController
       if @user.devise_modules.include?(:invitable)
         @user = @klass.invite!(create_params, Folio::Current.user)
       else
-        @user.password = Devise.friendly_token[0, 20]
+        @user.password = Devise.friendly_token[0, 20] + "aB1@" # to obey password validation
         @user.password_confirmation = @user.password  # user will need to reset password
         @user.save!
       end
