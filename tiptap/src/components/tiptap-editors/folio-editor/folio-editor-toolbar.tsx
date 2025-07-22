@@ -21,7 +21,7 @@ import { UndoRedoButton } from "@/components/tiptap-ui/undo-redo-button";
 import { FolioTiptapColumnsButton } from "@/components/tiptap-extensions/folio-tiptap-columns";
 import { FolioTiptapEraseMarksButton } from "@/components/tiptap-extensions/folio-tiptap-erase-marks/folio-tiptap-erase-marks-button"
 import { FolioEditorToolbarDropdown } from "./folio-editor-toolbar-dropdown"
-import { TextStylesCommandGroup, ListsCommandGroup } from '@/components/tiptap-command-groups';
+import { TextStylesCommandGroup, ListsCommandGroup, LayoutsCommandGroup } from '@/components/tiptap-command-groups';
 
 interface FolioEditorToolbarButtonStateMapping {
   enabled: (params: { editor: Editor }) => boolean;
@@ -41,6 +41,7 @@ interface FolioEditorToolbarStateMapping {
   lists: FolioEditorToolbarButtonStateMapping;
   erase: FolioEditorToolbarButtonStateMapping;
   textStyles: FolioEditorToolbarButtonStateMapping;
+  layouts: FolioEditorToolbarButtonStateMapping;
 }
 
 export interface FolioEditorToolbarButtonState {
@@ -161,6 +162,19 @@ const toolbarStateMapping: FolioEditorToolbarStateMapping = {
       return undefined;
     },
   },
+  layouts: {
+    enabled: ({ editor }) => editor.can().insertColumns() || editor.can().insertTable(),
+    active: ({ editor }) => false,
+    value: ({ editor }) => {
+      if (editor.isActive("folioTiptapColumns")) {
+        return "folioTiptapColumns";
+      } else if (editor.isActive("table")) {
+        return "table";
+      }
+
+      return undefined;
+    },
+  }
 };
 
 const getToolbarState = ({
@@ -294,7 +308,11 @@ const MainToolbarContent = ({
           <ToolbarSeparator />
 
           <ToolbarGroup>
-            <FolioTiptapColumnsButton editor={editor} />
+            <FolioEditorToolbarDropdown
+              editorState={editorState["layouts"]}
+              commandGroup={LayoutsCommandGroup}
+              editor={editor}
+            />
           </ToolbarGroup>
         </>
       ) : null}

@@ -16,6 +16,8 @@ import { Typography } from "@tiptap/extension-typography";
 import { Subscript } from "@tiptap/extension-subscript";
 import { Superscript } from "@tiptap/extension-superscript";
 import { Selection, Placeholder, TrailingNode } from "@tiptap/extensions";
+import { TableKit } from '@tiptap/extension-table';
+
 
 // --- Tiptap Node ---
 import { FolioTiptapNodeExtension } from "@/components/tiptap-extensions/folio-tiptap-node";
@@ -137,6 +139,9 @@ export function FolioEditor({
             FolioTiptapColumnsExtension,
             FolioTiptapColumnsNode,
             FolioTiptapColumnNode,
+            TableKit.configure({
+              table: { resizable: true },
+            }),
           ]
         : []),
       StyledParagraph,

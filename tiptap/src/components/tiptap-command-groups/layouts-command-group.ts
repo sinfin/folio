@@ -2,6 +2,7 @@ import { Columns2 } from "lucide-react";
 
 import {
   FolioTiptapColumnsCommand,
+  TableCommand,
 } from "@/components/tiptap-commands"
 
 export const LayoutsCommandGroup: FolioEditorCommandGroup = {
@@ -9,6 +10,7 @@ export const LayoutsCommandGroup: FolioEditorCommandGroup = {
   key: "layouts",
   icon: Columns2,
   commands: [
+    TableCommand,
     FolioTiptapColumnsCommand,
   ]
 }
