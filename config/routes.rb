@@ -79,6 +79,8 @@ Folio::Engine.routes.draw do
 
       resources :menus, except: %i[show]
 
+      resources :help_documents, only: %i[index show]
+
       namespace :file do
         Rails.application.config.folio_file_types_for_routes.each do |type|
           resources type.constantize.model_name.element.pluralize.to_sym, only: %i[index show] do

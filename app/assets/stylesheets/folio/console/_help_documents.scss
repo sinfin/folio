@@ -1,0 +1,103 @@
+.folio-console-help-documents-index {
+  .card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    height: 100%;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    .card-title {
+      margin-bottom: 0.5rem;
+      
+      a {
+        color: inherit;
+        
+        &:hover {
+          color: var(--primary);
+        }
+      }
+    }
+  }
+}
+
+.folio-console-help-documents-show {
+  .folio-console-help-content {
+    font-size: 1rem;
+    line-height: 1.6;
+    
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.75rem; }
+    h3 { font-size: 1.5rem; }
+    h4 { font-size: 1.25rem; }
+    
+    p {
+      margin-bottom: 1rem;
+    }
+    
+    code {
+      background-color: #f8f9fa;
+      padding: 0.2em 0.4em;
+      border-radius: 3px;
+      font-size: 0.875em;
+    }
+    
+    pre {
+      background-color: #f8f9fa;
+      padding: 1rem;
+      border-radius: 4px;
+      overflow-x: auto;
+      margin-bottom: 1rem;
+      
+      code {
+        background: none;
+        padding: 0;
+      }
+    }
+    
+    blockquote {
+      border-left: 4px solid #dee2e6;
+      padding-left: 1rem;
+      margin: 1rem 0;
+      color: #6c757d;
+    }
+    
+    table {
+      width: 100%;
+      margin-bottom: 1rem;
+      border-collapse: collapse;
+      
+      th, td {
+        padding: 0.75rem;
+        border: 1px solid #dee2e6;
+      }
+      
+      th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+      }
+    }
+    
+    ul, ol {
+      margin-bottom: 1rem;
+      padding-left: 2rem;
+    }
+    
+    // Mermaid diagram styling
+    .mermaid {
+      text-align: center;
+      margin: 1.5rem 0;
+      
+      svg {
+        max-width: 100%;
+        height: auto;
+      }
+    }
+  }
+} 

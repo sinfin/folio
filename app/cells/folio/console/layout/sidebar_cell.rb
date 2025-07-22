@@ -63,6 +63,10 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
         return unless can_now?(:index, link_source[:klass].constantize)
       end
 
+      if link_source[:required_ability]
+        return unless can_now?(link_source[:required_ability], Folio::Current.site)
+      end
+
       label = if link_source[:label]
         link_source[:label].is_a?(Symbol) ? t(".#{link_source[:label]}") : link_source[:label]
       elsif link_source[:klass]

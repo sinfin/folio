@@ -278,6 +278,15 @@ cs:
         invite_and_copy:
           button: Pozvat znovu a zkopírovat adresu
           failure: Pozvánka se nezdařila. Chyba byla reportována.
+      help_documents:
+        index:
+          title: Nápověda
+          no_documents: Nejsou k dispozici žádné dokumenty nápovědy. Pro konfiguraci nápovědy vytvořte soubor doc/help/index.yml.
+        show:
+          back_to_list: Zpět na seznam
+          last_updated: "Poslední aktualizace:"
+          not_found: Dokument nápovědy nebyl nalezen.
+        access_denied: Nemáte oprávnění k přístupu k dokumentaci nápovědy.
       email_templates:
         form:
           keywords:
@@ -312,6 +321,7 @@ cs:
       layout:
         sidebar:
           homepage: Úvodní stránka
+          help: Nápověda
           audio: Audiobanka
           video: Videobanka
         header_component:

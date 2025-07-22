@@ -39,6 +39,7 @@ Full English documentation lives in the `docs/` folder:
 | Components | [docs/components.md](docs/components.md) |
 | CMS Blocks (Atoms) | [docs/atoms.md](docs/atoms.md) |
 | Admin Console | [docs/admin.md](docs/admin.md) |
+| Help Documents | [docs/help_documents.md](docs/help_documents.md) |
 | Files & Media | [docs/files.md](docs/files.md) |
 | Forms | [docs/forms.md](docs/forms.md) |
 | Emails & Templates | [docs/emails.md](docs/emails.md) |

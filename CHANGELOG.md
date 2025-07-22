@@ -5,9 +5,13 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- **Help Documents**: New feature for displaying Markdown documentation within the console interface
+  - Configurable via `doc/help/index.yml` with support for categories, ordering, and custom paths
+  - Full Markdown support including code highlighting, tables, and Mermaid diagrams
+  - Automatic sidebar integration when configuration is detected
+  - Secure external library loading via `Folio.RemoteScripts` system
 - added `rel` and `target` to allowed rich text attributes
 - actions `destroy`, `discard` and `undiscard` are now by default collapsed in console index pages
-
 - `Folio::ElevenLabs::TranscribeSubtitlesJob` for automatic subtitles transcription using ElevenLabs (disabled by default)
 - default `devise_modules` moved to folio config, so each app can set their own set. Default are `%i[database_authenticatable recoverable rememberable trackable invitable timeoutable lockable]
 
