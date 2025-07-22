@@ -1,3 +1,5 @@
+import { HeadingIcon } from '@/components/tiptap-icons/heading-icon';
+
 import {
   HeadingFourCommand,
   HeadingThreeCommand,
@@ -10,6 +12,7 @@ import {
 export const TextStylesCommandGroup: FolioEditorCommandGroup = {
   title: { cs: "Formát textu", en: "Text format" },
   key: "textStyles",
+  icon: HeadingIcon,
   commands: [
     ParagraphCommand,
     HeadingTwoCommand,

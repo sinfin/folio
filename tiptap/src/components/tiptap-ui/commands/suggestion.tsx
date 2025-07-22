@@ -14,11 +14,6 @@ import { markIcons } from "@/components/tiptap-ui/mark-button/mark-button";
 
 import { TextStylesCommandGroup, ListsCommandGroup } from '@/components/tiptap-command-groups';
 
-import {
-  LIST_TRANSLATIONS,
-  listIcons,
-} from "@/components/tiptap-ui/list-button/list-button";
-
 export const normalizeString = (string: string) =>
   string
     .normalize("NFD")

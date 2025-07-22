@@ -23,6 +23,7 @@ export const makeFolioTiptapNodesCommandGroup = (folioTiptapNodes: FolioTiptapNo
   return {
     title: { cs: "Bloky", en: "Blocks" },
     key: "folioTiptapNodes",
+    icon: Cuboid,
     commands,
   }
 }

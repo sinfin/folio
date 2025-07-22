@@ -10,7 +10,6 @@ import {
   ToolbarSeparator,
 } from "@/components/tiptap-ui-primitive/toolbar";
 import { FolioTiptapNodeButton } from "@/components/tiptap-ui/folio-tiptap-node-button";
-import { ListDropdownMenu } from "@/components/tiptap-ui/list-dropdown-menu";
 import {
   LinkPopover,
   LinkContent,
@@ -22,7 +21,7 @@ import { UndoRedoButton } from "@/components/tiptap-ui/undo-redo-button";
 import { FolioTiptapColumnsButton } from "@/components/tiptap-extensions/folio-tiptap-columns";
 import { FolioTiptapEraseMarksButton } from "@/components/tiptap-extensions/folio-tiptap-erase-marks/folio-tiptap-erase-marks-button"
 import { FolioEditorToolbarDropdown } from "./folio-editor-toolbar-dropdown"
-import { TextStylesCommandGroup } from '@/components/tiptap-command-groups/text-styles-command-group';
+import { TextStylesCommandGroup, ListsCommandGroup } from '@/components/tiptap-command-groups';
 
 interface FolioEditorToolbarButtonStateMapping {
   enabled: (params: { editor: Editor }) => boolean;
@@ -39,7 +38,6 @@ interface FolioEditorToolbarStateMapping {
   underline: FolioEditorToolbarButtonStateMapping;
   superscript: FolioEditorToolbarButtonStateMapping;
   subscript: FolioEditorToolbarButtonStateMapping;
-  heading: FolioEditorToolbarButtonStateMapping;
   lists: FolioEditorToolbarButtonStateMapping;
   erase: FolioEditorToolbarButtonStateMapping;
   textStyles: FolioEditorToolbarButtonStateMapping;
@@ -150,21 +148,6 @@ const toolbarStateMapping: FolioEditorToolbarStateMapping = {
       return undefined;
     },
   },
-  heading: {
-    enabled: ({ editor }) => editor.can().toggleNode("heading", "paragraph"),
-    active: ({ editor }) => editor!.isActive("heading"),
-    value: ({ editor }) => {
-      if (editor!.isActive("heading")) {
-        const attr = editor!.getAttributes("heading");
-
-        if (attr && attr.level) {
-          return `h${attr.level}`
-        }
-      }
-
-      return undefined;
-    },
-  },
   lists: {
     enabled: ({ editor }) => editor.can().toggleBulletList() || editor.can().toggleOrderedList(),
     active: ({ editor }) => editor.isActive("bulletList") || editor.isActive("orderedList"),
@@ -264,11 +247,10 @@ const MainToolbarContent = ({
           editor={editor}
         />
 
-        <ListDropdownMenu
-          types={["bulletList", "orderedList"]}
-          active={editorState["lists"].active}
-          enabled={editorState["lists"].enabled}
-          value={editorState["lists"].value}
+        <FolioEditorToolbarDropdown
+          editorState={editorState["lists"]}
+          commandGroup={ListsCommandGroup}
+          editor={editor}
         />
       </ToolbarGroup>
 

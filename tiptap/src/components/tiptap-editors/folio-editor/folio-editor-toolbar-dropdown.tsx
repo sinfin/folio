@@ -9,7 +9,6 @@ import {
 } from "@/components/tiptap-ui-primitive/dropdown-menu"
 import translate from "@/lib/i18n";
 import { ChevronDownIcon } from "@/components/tiptap-icons/chevron-down-icon"
-import { HeadingIcon } from "@/components/tiptap-icons/heading-icon"
 import { Button } from "@/components/tiptap-ui-primitive/button"
 
 import type { FolioEditorToolbarButtonState } from './folio-editor-toolbar';
@@ -104,7 +103,7 @@ export function FolioEditorToolbarDropdown({
   }, [editorState.value, commandGroup.commands])
 
   const activeItem = getActiveItem()
-  const ActiveIcon = activeItem ? activeItem.icon : HeadingIcon;
+  const ActiveIcon = activeItem ? activeItem.icon : commandGroup.icon;
   const tooltip = translate(TRANSLATIONS, "tooltip")
 
   return (

@@ -85,6 +85,7 @@ declare global {
 
   interface FolioEditorCommandGroup {
     title: { cs: string; en: string };
+    icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
     key: string;
     commands: FolioEditorCommand[];
   }
