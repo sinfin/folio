@@ -21,32 +21,34 @@ const TRANSLATIONS = {
   }
 }
 
-export const folioTiptapColumnsBubbleMenuSource: FolioEditorBubbleMenuSource = {
+export const FOLIO_TIPTAP_COLUMNS_BUBBLE_MENU_SOURCE: FolioEditorBubbleMenuSource = {
   pluginKey: "folioTiptapColumnsBubbleMenu",
   shouldShow: ({ editor, view, state, oldState, from, to }) => {
     return editor.isActive(FolioTiptapColumnsNode.name)
   },
   items: [
-    {
-      title: translate(TRANSLATIONS, "addFolioTiptapColumnBefore"),
-      icon: AddColumnBefore,
-      command: ({ editor }: { editor: Editor }) => {
-        editor.chain().focus().addFolioTiptapColumnBefore().run()
-      }
-    },
-    {
-      title: translate(TRANSLATIONS, "addFolioTiptapColumnAfter"),
-      icon: AddColumnAfter,
-      command: ({ editor }: { editor: Editor }) => {
-        editor.chain().focus().addFolioTiptapColumnAfter().run()
-      }
-    },
-    {
-      title: translate(TRANSLATIONS, "deleteFolioTiptapColumn"),
-      icon: X,
-      command: ({ editor }: { editor: Editor }) => {
-        editor.chain().focus().deleteFolioTiptapColumn().run()
-      }
-    },
+    [
+      {
+        title: translate(TRANSLATIONS, "addFolioTiptapColumnBefore"),
+        icon: AddColumnBefore,
+        command: ({ editor }: { editor: Editor }) => {
+          editor.chain().focus().addFolioTiptapColumnBefore().run()
+        }
+      },
+      {
+        title: translate(TRANSLATIONS, "addFolioTiptapColumnAfter"),
+        icon: AddColumnAfter,
+        command: ({ editor }: { editor: Editor }) => {
+          editor.chain().focus().addFolioTiptapColumnAfter().run()
+        }
+      },
+      {
+        title: translate(TRANSLATIONS, "deleteFolioTiptapColumn"),
+        icon: X,
+        command: ({ editor }: { editor: Editor }) => {
+          editor.chain().focus().deleteFolioTiptapColumn().run()
+        }
+      },
+    ]
   ]
 }

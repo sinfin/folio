@@ -6,7 +6,8 @@ import type { Editor } from "@tiptap/core";
 import type { ButtonProps } from "@/components/tiptap-ui-primitive/button";
 import { Button } from "@/components/tiptap-ui-primitive/button";
 
-import { folioTiptapColumnsBubbleMenuSource } from "@/components/tiptap-extensions/folio-tiptap-columns/folio-tiptap-columns-bubble-menu-source";
+import { FOLIO_TIPTAP_COLUMNS_BUBBLE_MENU_SOURCE } from "@/components/tiptap-extensions/folio-tiptap-columns/folio-tiptap-columns-bubble-menu-source";
+import { TABLE_BUBBLE_MENU_SOURCE } from '@/lib/table-bubble-menu-source';
 
 import "./folio-editor-bubble-menus.scss";
 
@@ -31,7 +32,7 @@ export interface FolioEditorBubbleMenuSource {
     from: number;
     to: number;
   }) => boolean;
-  items: FolioEditorBubbleMenuSourceItem[];
+  items: FolioEditorBubbleMenuSourceItem[][];
   placement?: "top" | "right" | "bottom" | "left" | "top-start" | "top-end" | "right-start" | "right-end" | "bottom-start" | "bottom-end" | "left-start" | "left-end" | undefined;
 }
 
@@ -56,26 +57,30 @@ export function FolioEditorBubbleMenu({
       className="f-tiptap-editor-bubble-menu"
       data-bubble-menu-type={source.pluginKey}
     >
-      {source.items.map((item) => {
-        const Icon = item.icon;
+      {source.items.map((row, rowIndex) => (
+        <div className="f-tiptap-editor-bubble-menu__row" key={rowIndex}>
+          {row.map((item) => {
+            const Icon = item.icon;
 
-        return (
-          <Button
-            key={item.title}
-            type="button"
-            data-style="ghost"
-            role="button"
-            tabIndex={-1}
-            aria-label={item.title}
-            tooltip={item.title}
-            onClick={() => {
-              item.command({ editor });
-            }}
-          >
-            <Icon className="tiptap-button-icon" />
-          </Button>
-        );
-      })}
+            return (
+              <Button
+                key={item.title}
+                type="button"
+                data-style="ghost"
+                role="button"
+                tabIndex={-1}
+                aria-label={item.title}
+                tooltip={item.title}
+                onClick={() => {
+                  item.command({ editor });
+                }}
+              >
+                <Icon className="tiptap-button-icon" />
+              </Button>
+            );
+          })}
+        </div>
+      ))}
     </BubbleMenu>
   );
 }
@@ -91,7 +96,14 @@ export function FolioEditorBubbleMenus({
       {blockEditor && (
         <FolioEditorBubbleMenu
           editor={editor}
-          source={folioTiptapColumnsBubbleMenuSource}
+          source={FOLIO_TIPTAP_COLUMNS_BUBBLE_MENU_SOURCE}
+        />
+      )}
+
+      {blockEditor && (
+        <FolioEditorBubbleMenu
+          editor={editor}
+          source={TABLE_BUBBLE_MENU_SOURCE}
         />
       )}
     </>

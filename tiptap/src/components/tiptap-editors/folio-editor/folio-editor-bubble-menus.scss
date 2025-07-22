@@ -10,4 +10,11 @@
   gap: 4px;
   line-height: 1.2;
   padding: 4px;
+  flex-direction: column;
+
+  &__row {
+    display: flex;
+    gap: 4px;
+    width: 100%;
+  }
 }
