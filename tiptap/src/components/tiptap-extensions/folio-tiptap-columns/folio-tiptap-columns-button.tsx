@@ -34,7 +34,7 @@ export const FolioTiptapColumnsButton = React.forwardRef<
   const handleClick = React.useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       if (!e.defaultPrevented && !disabled && editor) {
-        editor.chain().focus().insertColumns({ count: 2 }).run();
+        editor.chain().focus().insertFolioTiptapColumns({ count: 2 }).run();
       }
     },
     [disabled],

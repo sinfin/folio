@@ -9,7 +9,7 @@ export * from './folio-tiptap-column-node';
 declare module '@tiptap/core' {
   interface Commands<ReturnType> {
     columns: {
-      insertColumns: (attrs?: { count: number }) => ReturnType
+      insertFolioTiptapColumns: (attrs?: { count: number }) => ReturnType
       addFolioTiptapColumnBefore: () => ReturnType
       addFolioTiptapColumnAfter: () => ReturnType
       deleteFolioTiptapColumn: () => ReturnType
@@ -57,7 +57,7 @@ export const FolioTiptapColumnsNode = Node.create({
 
   addCommands() {
     return {
-      insertColumns:
+      insertFolioTiptapColumns:
         (attrs) =>
           ({ tr, dispatch, editor }) => {
             const node = createColumns(editor.schema, (attrs && attrs.count) || 2);

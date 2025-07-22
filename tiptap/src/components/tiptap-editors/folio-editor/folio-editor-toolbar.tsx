@@ -163,7 +163,7 @@ const toolbarStateMapping: FolioEditorToolbarStateMapping = {
     },
   },
   layouts: {
-    enabled: ({ editor }) => editor.can().insertColumns() || editor.can().insertTable(),
+    enabled: ({ editor }) => editor.can().insertFolioTiptapColumns() || editor.can().insertTable(),
     active: ({ editor }) => false,
     value: ({ editor }) => {
       if (editor.isActive("folioTiptapColumns")) {
