@@ -140,7 +140,10 @@ export function FolioEditor({
             FolioTiptapColumnsNode,
             FolioTiptapColumnNode,
             TableKit.configure({
-              table: { resizable: true },
+              table: {
+                allowTableNodeSelection: true,
+                resizable: false,
+              }
             }),
           ]
         : []),

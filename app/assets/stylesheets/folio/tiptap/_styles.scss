@@ -27,6 +27,7 @@ $f-tiptap__columns--min-horizontal-width: 550px !default;
   --f-tiptap__spacer: 1rem;
 
   --f-tiptap__root--white-space: pre-wrap;
+  --f-tiptap__root--word-break: break-word;
 
   --f-tiptap__node--margin-top: var(--f-tiptap__spacer);
   --f-tiptap__node--margin-bottom: var(--f-tiptap__spacer);
@@ -129,6 +130,14 @@ $f-tiptap__columns--min-horizontal-width: 550px !default;
 
   --f-tiptap__columns--gap: var(--f-tiptap__spacer);
   --f-tiptap__column--border-in-editor-only: 1px dashed #ccc;
+
+  --f-tiptap__table--border: 1px solid var(--tt-gray-light-a-200);
+  --f-tiptap__table--background: transparent;
+  --f-tiptap__table--header-background: var(--f-tiptap__table--background);
+  --f-tiptap__table--cell-padding: 1rem;
+  --f-tiptap__table--vertical-align: top;
+  --f-tiptap__table--selected-background: var(--tt-brand-color-50);
+  --f-tiptap__table--selected-border: 1px solid var(--tt-brand-color-100);
 }
 
 .f-tiptap-styles--dark {
@@ -145,6 +154,7 @@ $f-tiptap__columns--min-horizontal-width: 550px !default;
 
 .f-tiptap-styles {
   white-space: var(--f-tiptap__root--white-space);
+  word-break: var(--f-tiptap__root--word-break);
   container-type: inline-size;
 
   .container-fluid {
@@ -156,6 +166,8 @@ $f-tiptap__columns--min-horizontal-width: 550px !default;
   ol,
   blockquote,
   pre,
+  table,
+  // .tableWrapper,
   .f-tiptap-node,
   .f-tiptap-columns {
     margin-top: var(--f-tiptap__node--margin-top);
@@ -291,7 +303,8 @@ $f-tiptap__columns--min-horizontal-width: 550px !default;
   code {
     background-color: var(--f-tiptap__code--background-color);
     border-radius: var(--f-tiptap__code--border-radius);
-    border: var(--f-tiptap__code--border-width) solid var(--f-tiptap__code--border-color);
+    border: var(--f-tiptap__code--border-width) solid
+      var(--f-tiptap__code--border-color);
     color: var(--f-tiptap__code--color);
     font-family: var(--f-tiptap__code--font-family);
     font-size: var(--f-tiptap__code--font-size);
@@ -303,7 +316,8 @@ $f-tiptap__columns--min-horizontal-width: 550px !default;
   pre {
     background-color: var(--f-tiptap__codeblock--background-color);
     color: var(--f-tiptap__codeblock--color);
-    border: var(--f-tiptap__codeblock--border-width) solid var(--f-tiptap__codeblock--border-color);
+    border: var(--f-tiptap__codeblock--border-width) solid
+      var(--f-tiptap__codeblock--border-color);
     padding: var(--f-tiptap__codeblock--padding);
     font-size: var(--f-tiptap__codeblock--font-size);
     border-radius: var(--f-tiptap__codeblock--border-radius);
@@ -358,6 +372,66 @@ $f-tiptap__columns--min-horizontal-width: 550px !default;
     }
   }
 
+  // .tableWrapper {
+  //   max-width: 100%;
+  //   overflow-x: auto;
+
+  //   table {
+  //     margin: 0;
+  //   }
+  // }
+
+  table {
+    --f-tiptap__node--margin-bottom: 0;
+
+    width: 100%;
+    max-width: 100%;
+    border-collapse: collapse;
+    overflow: hidden;
+    border: var(--f-tiptap__table--border);
+    background: var(--f-tiptap__table--background);
+    table-layout: auto;
+
+    td,
+    th {
+      border: var(--f-tiptap__table--border);
+      min-width: 1rem;
+      padding: var(--f-tiptap__table--cell-padding);
+      position: relative;
+      vertical-align: var(--f-tiptap__table--vertical-align);
+    }
+
+    td {
+      background: var(--f-tiptap__table--background);
+    }
+
+    th {
+      background: var(--f-tiptap__table--header-background);
+      font-weight: 700;
+      text-align: left
+    }
+
+    .selectedCell {
+      background: var(--f-tiptap__table--selected-background);
+      border: var(--f-tiptap__table--selected-border);
+    }
+
+    // .column-resize-handle {
+    //   background-color: var(--tt-brand-color-400);
+    //   bottom: -2px;
+    //   pointer-events: none;
+    //   position: absolute;
+    //   right: -2px;
+    //   top: 0;
+    //   width: 4px
+    // }
+  }
+
+  // .tiptap.resize-cursor {
+  //   cursor: ew-resize;
+  //   cursor: col-resize
+  // }
+
   @container (min-width: #{$f-tiptap__columns--min-horizontal-width}) {
     .f-tiptap-columns {
       align-items: stretch;
@@ -370,11 +444,19 @@ $f-tiptap__columns--min-horizontal-width: 550px !default;
       flex: 1 1 0%;
     }
 
-    .f-tiptap-editor & .f-tiptap-columns > .f-tiptap-columns:first-child .f-tiptap-column::before {
+    .f-tiptap-editor
+      &
+      .f-tiptap-columns
+      > .f-tiptap-columns:first-child
+      .f-tiptap-column::before {
       border-top: 0;
     }
 
-    .f-tiptap-editor & .f-tiptap-columns > .f-tiptap-columns:last-child .f-tiptap-column::before {
+    .f-tiptap-editor
+      &
+      .f-tiptap-columns
+      > .f-tiptap-columns:last-child
+      .f-tiptap-column::before {
       border-bottom: 0;
     }
   }
