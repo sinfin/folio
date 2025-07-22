@@ -25,12 +25,35 @@ export const FolioTiptapNodeExtension = Node.create<FolioTiptapNodeOptions>({
     return {
       version: {
         default: 1,
+        parseHTML: (element) => {
+          let version
+
+          try {
+            const raw = element.dataset.folioTiptapNodeVersion || "1"
+            version = parseInt(raw, 10);
+          } catch (error) {
+            console.error("Error parsing folioTiptapNode version:", error);
+            version = 1; // Fallback to default version
+          }
+
+          return version
+        }
       },
       type: {
         default: "",
+        parseHTML: (element) => element.dataset.folioTiptapNodeType || ""
       },
       data: {
         default: {},
+        parseHTML: (element) => {
+          const raw = element.dataset.folioTiptapNodeData || "{}";
+          try {
+            return JSON.parse(raw);
+          } catch (error) {
+            console.error("Error parsing folioTiptapNode data:", error);
+            return {};
+          }
+        }
       },
     };
   },
@@ -38,10 +61,7 @@ export const FolioTiptapNodeExtension = Node.create<FolioTiptapNodeOptions>({
   parseHTML() {
     return [
       {
-        tag: "div",
-        getAttrs: (node) => {
-          return JSON.parse(node.getAttribute("data-folio-tiptap-node-payload") || "{}");
-        },
+        tag: 'div[class="f-tiptap-node"]',
       },
     ]
   },
@@ -49,7 +69,12 @@ export const FolioTiptapNodeExtension = Node.create<FolioTiptapNodeOptions>({
   renderHTML({ HTMLAttributes }) {
     return [
       "div",
-      mergeAttributes({ "data-folio-tiptap-node-payload": JSON.stringify(HTMLAttributes) }, HTMLAttributes),
+      {
+        "class": "f-tiptap-node",
+        "data-folio-tiptap-node-version": HTMLAttributes.version,
+        "data-folio-tiptap-node-type": HTMLAttributes.type,
+        "data-folio-tiptap-node-data": JSON.stringify(HTMLAttributes.data),
+      }
     ];
   },
 
