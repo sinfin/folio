@@ -54,7 +54,13 @@ class Folio::Console::UsersController < Folio::Console::BaseController
     @user = @klass.new(create_params)
 
     if @user.valid?
-      @user = @klass.invite!(create_params, Folio::Current.user)
+      if @user.devise_modules.include?(:invitable)
+        @user = @klass.invite!(create_params, Folio::Current.user)
+      else
+        @user.password = Devise.friendly_token[0, 20]
+        @user.password_confirmation = @user.password  # user will need to reset password
+        @user.save!
+      end
     end
 
     respond_with @user, location: respond_with_location

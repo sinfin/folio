@@ -18,15 +18,7 @@ class Folio::User < Folio::ApplicationRecord
   belongs_to :auth_site, class_name: "Folio::Site",
                          required: true
 
-  selected_device_modules = %i[
-    database_authenticatable
-    recoverable
-    rememberable
-    trackable
-    invitable
-    timeoutable
-    lockable
-  ]
+  selected_device_modules = Rails.application.config.folio_users_device_modules
 
   if Rails.application.config.folio_users_confirmable
     selected_device_modules << :confirmable
@@ -85,7 +77,9 @@ class Folio::User < Folio::ApplicationRecord
 
   validate :validate_password_complexity
 
-  after_invitation_accepted :create_newsletter_subscriptions
+  if selected_device_modules.include?(:invitable)
+    after_invitation_accepted :create_newsletter_subscriptions
+  end
 
   before_update :update_has_generated_password
 

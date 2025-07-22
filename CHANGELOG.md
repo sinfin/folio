@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - actions `destroy`, `discard` and `undiscard` are now by default collapsed in console index pages
 
 - `Folio::ElevenLabs::TranscribeSubtitlesJob` for automatic subtitles transcription using ElevenLabs (disabled by default)
+- default `devise_modules` moved to folio config, so each app can set their own set. Default are `%i[database_authenticatable recoverable rememberable trackable invitable timeoutable lockable]
 
 ## [6.5.1] - 2025-06-18
 
