@@ -211,7 +211,10 @@ export function FolioEditor({
             className="f-tiptap-editor__content f-tiptap-styles"
           />
 
-          <FolioEditorBubbleMenus editor={editor} blockEditor={blockEditor} />
+          <FolioEditorBubbleMenus
+            editor={editor}
+            blockEditor={blockEditor}
+          />
         </div>
       </div>
     </EditorContext.Provider>

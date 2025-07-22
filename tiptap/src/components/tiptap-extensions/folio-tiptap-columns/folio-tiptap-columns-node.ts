@@ -10,9 +10,9 @@ declare module '@tiptap/core' {
   interface Commands<ReturnType> {
     columns: {
       insertColumns: (attrs?: { count: number }) => ReturnType
-      addColumnBefore: () => ReturnType
-      addColumnAfter: () => ReturnType
-      deleteColumn: () => ReturnType
+      addFolioTiptapColumnBefore: () => ReturnType
+      addFolioTiptapColumnAfter: () => ReturnType
+      deleteFolioTiptapColumn: () => ReturnType
     }
   }
 }
@@ -72,17 +72,17 @@ export const FolioTiptapColumnsNode = Node.create({
 
             return true;
           },
-      addColumnBefore:
+      addFolioTiptapColumnBefore:
         () =>
           ({ dispatch, state }) => {
             return addOrDeleteColumn({ dispatch, state, type: 'addBefore' });
           },
-      addColumnAfter:
+      addFolioTiptapColumnAfter:
         () =>
           ({ dispatch, state }) => {
             return addOrDeleteColumn({ dispatch, state, type: 'addAfter' });
           },
-      deleteColumn:
+      deleteFolioTiptapColumn:
         () =>
           ({ dispatch, state }) => {
             return addOrDeleteColumn({ dispatch, state, type: 'delete' });

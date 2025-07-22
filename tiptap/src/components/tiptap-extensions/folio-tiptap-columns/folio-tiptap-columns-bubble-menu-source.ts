@@ -10,14 +10,14 @@ import translate from "@/lib/i18n";
 
 const TRANSLATIONS = {
   cs: {
-    addColumnBefore: "Přidat sloupec před",
-    addColumnAfter: "Přidat sloupec za",
-    removeColumn: "Odstranit sloupec",
+    addFolioTiptapColumnBefore: "Přidat sloupec před",
+    addFolioTiptapColumnAfter: "Přidat sloupec za",
+    deleteFolioTiptapColumn: "Odstranit sloupec",
   },
   en: {
-    addColumnBefore: "Add column before",
-    addColumnAfter: "Add column after",
-    removeColumn: "Remove column",
+    addFolioTiptapColumnBefore: "Add column before",
+    addFolioTiptapColumnAfter: "Add column after",
+    deleteFolioTiptapColumn: "Remove column",
   }
 }
 
@@ -28,24 +28,24 @@ export const folioTiptapColumnsBubbleMenuSource: FolioEditorBubbleMenuSource = {
   },
   items: [
     {
-      title: translate(TRANSLATIONS, "addColumnBefore"),
+      title: translate(TRANSLATIONS, "addFolioTiptapColumnBefore"),
       icon: AddColumnBefore,
       command: ({ editor }: { editor: Editor }) => {
-        editor.chain().focus().addColumnBefore().run()
+        editor.chain().focus().addFolioTiptapColumnBefore().run()
       }
     },
     {
-      title: translate(TRANSLATIONS, "addColumnAfter"),
+      title: translate(TRANSLATIONS, "addFolioTiptapColumnAfter"),
       icon: AddColumnAfter,
       command: ({ editor }: { editor: Editor }) => {
-        editor.chain().focus().addColumnAfter().run()
+        editor.chain().focus().addFolioTiptapColumnAfter().run()
       }
     },
     {
-      title: translate(TRANSLATIONS, "removeColumn"),
+      title: translate(TRANSLATIONS, "deleteFolioTiptapColumn"),
       icon: X,
       command: ({ editor }: { editor: Editor }) => {
-        editor.chain().focus().deleteColumn().run()
+        editor.chain().focus().deleteFolioTiptapColumn().run()
       }
     },
   ]
