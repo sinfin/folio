@@ -1,6 +1,8 @@
 import * as React from "react"
 import { isNodeSelection, type Editor } from "@tiptap/react"
 
+import translate from "@/lib/i18n";
+
 // --- Hooks ---
 import { useTiptapEditor } from "@/hooks/use-tiptap-editor"
 
@@ -27,6 +29,19 @@ import { Separator } from "@/components/tiptap-ui-primitive/separator"
 import "@/components/tiptap-ui/link-popover/link-popover.scss"
 
 import type { FolioEditorToolbarButtonState } from '@/components/tiptap-editors/folio-editor/folio-editor-toolbar';
+
+const TRANSLATIONS = {
+  cs: {
+    apply: "Uložit",
+    openTheLink: "Otevřít odkaz",
+    removeLink: "Odstranit odkaz",
+  },
+  en: {
+    apply: "Apply",
+    openTheLink: "Open the link",
+    removeLink: "Remove link",
+  }
+}
 
 export interface LinkHandlerProps {
   editor: Editor | null
@@ -180,7 +195,7 @@ const LinkMain: React.FC<LinkMainProps> = ({
         <Button
           type="button"
           onClick={setLink}
-          title="Apply link"
+          title={translate(TRANSLATIONS, "apply")}
           disabled={!url && !isActive}
           data-style="ghost"
         >
@@ -194,7 +209,7 @@ const LinkMain: React.FC<LinkMainProps> = ({
         <Button
           type="button"
           onClick={handleOpenLink}
-          title="Open in new window"
+          title={translate(TRANSLATIONS, "openTheLink")}
           disabled={!url && !isActive}
           data-style="ghost"
         >
@@ -204,7 +219,7 @@ const LinkMain: React.FC<LinkMainProps> = ({
         <Button
           type="button"
           onClick={removeLink}
-          title="Remove link"
+          title={translate(TRANSLATIONS, "removeLink")}
           disabled={!url && !isActive}
           data-style="ghost"
         >
