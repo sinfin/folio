@@ -13,15 +13,6 @@ import { Button } from "@/components/tiptap-ui-primitive/button"
 
 import type { FolioEditorToolbarButtonState } from './folio-editor-toolbar';
 
-const TRANSLATIONS = {
-  cs: {
-    tooltip: "Formát textu",
-  },
-  en: {
-    tooltip: "Text format",
-  }
-}
-
 export interface FolioEditorToolbarDropdownItemProps {
   title: string;
   icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
@@ -104,7 +95,7 @@ export function FolioEditorToolbarDropdown({
 
   const activeItem = getActiveItem()
   const ActiveIcon = activeItem ? activeItem.icon : commandGroup.icon;
-  const tooltip = translate(TRANSLATIONS, "tooltip")
+  const tooltip = commandGroup.title[document.documentElement.lang as keyof typeof commandGroup.title] || commandGroup.title.en;
 
   return (
     <DropdownMenu open={isOpen} onOpenChange={handleOnOpenChange}>

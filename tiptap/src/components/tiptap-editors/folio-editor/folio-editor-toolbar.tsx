@@ -16,12 +16,16 @@ import {
   LinkButton,
 } from "@/components/tiptap-ui/link-popover";
 import { MarkButton } from "@/components/tiptap-ui/mark-button";
-import { TextAlignButton } from "@/components/tiptap-ui/text-align-button";
 import { UndoRedoButton } from "@/components/tiptap-ui/undo-redo-button";
 import { FolioTiptapColumnsButton } from "@/components/tiptap-extensions/folio-tiptap-columns";
 import { FolioTiptapEraseMarksButton } from "@/components/tiptap-extensions/folio-tiptap-erase-marks/folio-tiptap-erase-marks-button"
 import { FolioEditorToolbarDropdown } from "./folio-editor-toolbar-dropdown"
-import { TextStylesCommandGroup, ListsCommandGroup, LayoutsCommandGroup } from '@/components/tiptap-command-groups';
+import {
+  TextStylesCommandGroup,
+  ListsCommandGroup,
+  LayoutsCommandGroup,
+  TextAlignCommandGroup
+} from '@/components/tiptap-command-groups';
 
 interface FolioEditorToolbarButtonStateMapping {
   enabled: (params: { editor: Editor }) => boolean;
@@ -42,6 +46,7 @@ interface FolioEditorToolbarStateMapping {
   lists: FolioEditorToolbarButtonStateMapping;
   erase: FolioEditorToolbarButtonStateMapping;
   textStyles: FolioEditorToolbarButtonStateMapping;
+  textAlign: FolioEditorToolbarButtonStateMapping;
   layouts: FolioEditorToolbarButtonStateMapping;
 }
 
@@ -101,6 +106,21 @@ const toolbarStateMapping: FolioEditorToolbarStateMapping = {
   subscript: {
     enabled: makeMarkEnabled("subscript"),
     active: makeMarkActive("subscript"),
+  },
+  textAlign: {
+    enabled: ({ editor }) => editor.can().setTextAlign("left") || editor.can().setTextAlign("center"),
+    active: ({ editor }) => (editor.isActive({ textAlign: 'center' }) || editor.isActive({ textAlign: 'right' })),
+    value: ({ editor }) => {
+      if (editor.isActive({ textAlign: 'left' })) {
+        return 'align-left';
+      } else if (editor.isActive({ textAlign: 'center' })) {
+        return 'align-center';
+      } else if (editor.isActive({ textAlign: 'right' })) {
+        return 'align-right';
+      }
+
+      return undefined;
+    }
   },
   erase: {
     enabled: ({ editor }) => {
@@ -306,9 +326,11 @@ const MainToolbarContent = ({
       <ToolbarSeparator />
 
       <ToolbarGroup>
-        <TextAlignButton align="left" />
-        <TextAlignButton align="center" />
-        <TextAlignButton align="right" />
+        <FolioEditorToolbarDropdown
+          editorState={editorState["textAlign"]}
+          commandGroup={TextAlignCommandGroup}
+          editor={editor}
+        />
       </ToolbarGroup>
 
       {blockEditor ? (
