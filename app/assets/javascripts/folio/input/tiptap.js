@@ -55,6 +55,9 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
       case 'f-tiptap-editor:resized':
         this.setHeight(e.data.height)
         break
+      case 'f-tiptap-editor:open-link-popover':
+        this.openLinkPopover(e.data.urlJson)
+        break
     }
   }
 
@@ -133,6 +136,25 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     const data = {
       type: "f-input-tiptap:render-nodes",
       nodes,
+    }
+
+    this.iframeTarget.contentWindow.postMessage(data, this.originValue || window.origin)
+  }
+
+  openLinkPopover (urlJson) {
+    const detail = {
+      urlJson,
+      trigger: this,
+      json: true,
+    }
+
+    document.querySelector('.f-c-links-modal').dispatchEvent(new window.CustomEvent('f-c-links-modal:open', { detail }))
+  }
+
+  saveUrlJson (urlJson) {
+    const data = {
+      type: 'f-input-tiptap:save-url-json',
+      urlJson,
     }
 
     this.iframeTarget.contentWindow.postMessage(data, this.originValue || window.origin)

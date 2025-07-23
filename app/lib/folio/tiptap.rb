@@ -2,7 +2,7 @@
 
 module Folio
   module Tiptap
-    ALLOWED_URL_JSON_KEYS = %w[href label title rel target]
+    ALLOWED_URL_JSON_KEYS = %w[href label title rel target record_id record_type]
 
     def self.remote_script_urls(context:)
       {

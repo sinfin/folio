@@ -1,126 +1,174 @@
-import * as React from "react"
-import { isNodeSelection, type Editor } from "@tiptap/react"
+import * as React from "react";
+import { isNodeSelection, type Editor } from "@tiptap/react";
+import { Settings } from "lucide-react";
 
 import translate from "@/lib/i18n";
 
 // --- Hooks ---
-import { useTiptapEditor } from "@/hooks/use-tiptap-editor"
+import { useTiptapEditor } from "@/hooks/use-tiptap-editor";
 
 // --- Icons ---
-import { CornerDownLeftIcon } from "@/components/tiptap-icons/corner-down-left-icon"
-import { ExternalLinkIcon } from "@/components/tiptap-icons/external-link-icon"
-import { LinkIcon } from "@/components/tiptap-icons/link-icon"
-import { TrashIcon } from "@/components/tiptap-icons/trash-icon"
+import { CornerDownLeftIcon } from "@/components/tiptap-icons/corner-down-left-icon";
+import { ExternalLinkIcon } from "@/components/tiptap-icons/external-link-icon";
+import { LinkIcon } from "@/components/tiptap-icons/link-icon";
+import { TrashIcon } from "@/components/tiptap-icons/trash-icon";
 
 // --- Lib ---
-import { isMarkInSchema, sanitizeUrl } from "@/lib/tiptap-utils"
+import { isMarkInSchema, sanitizeUrl } from "@/lib/tiptap-utils";
 
 // --- UI Primitives ---
-import type { ButtonProps } from "@/components/tiptap-ui-primitive/button"
-import { Button } from "@/components/tiptap-ui-primitive/button"
+import type { ButtonProps } from "@/components/tiptap-ui-primitive/button";
+import { Button } from "@/components/tiptap-ui-primitive/button";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/tiptap-ui-primitive/popover"
-import { Separator } from "@/components/tiptap-ui-primitive/separator"
+} from "@/components/tiptap-ui-primitive/popover";
+import { Separator } from "@/components/tiptap-ui-primitive/separator";
 
 // --- Styles ---
-import "@/components/tiptap-ui/link-popover/link-popover.scss"
+import "@/components/tiptap-ui/link-popover/link-popover.scss";
 
-import type { FolioEditorToolbarButtonState } from '@/components/tiptap-editors/folio-editor/folio-editor-toolbar';
+import type { FolioEditorToolbarButtonState } from "@/components/tiptap-editors/folio-editor/folio-editor-toolbar";
 
 const TRANSLATIONS = {
   cs: {
     apply: "Uložit",
     openTheLink: "Otevřít odkaz",
+    openSettings: "Upravit odkaz",
     removeLink: "Odstranit odkaz",
   },
   en: {
     apply: "Apply",
     openTheLink: "Open the link",
+    openSettings: "Edit link",
     removeLink: "Remove link",
-  }
-}
+  },
+};
 
 export interface LinkHandlerProps {
-  editor: Editor | null
-  onSetLink?: () => void
-  onLinkActive?: () => void
+  editor: Editor;
+  onSetLink?: () => void;
+  onLinkActive?: () => void;
+  editorState: FolioEditorToolbarButtonState;
+}
+
+export interface LinkData {
+  href: string | null;
+  rel: string | null;
+  target: string | null;
+  // recordId: number | null
+  // recordType: string | null
 }
 
 export interface LinkMainProps {
-  url: string
-  setUrl: React.Dispatch<React.SetStateAction<string | null>>
-  setLink: () => void
-  removeLink: () => void
-  isActive: boolean
+  linkData: LinkData;
+  setLinkData: React.Dispatch<React.SetStateAction<LinkData>>;
+  setLink: () => void;
+  removeLink: () => void;
+  active: boolean;
 }
 
+const DEFAULT_STATE: LinkData = {
+  href: null,
+  rel: null,
+  target: null,
+  // recordId: null,
+  // recordType: null,
+};
+
 export const useLinkHandler = (props: LinkHandlerProps) => {
-  const { editor, onSetLink, onLinkActive } = props
-  const [url, setUrl] = React.useState<string | null>(null)
+  const { editor, onSetLink, onLinkActive, editorState } = props;
+  const [linkData, setLinkData] = React.useState<LinkData>({
+    ...DEFAULT_STATE,
+  });
 
   React.useEffect(() => {
-    if (!editor) return
+    if (!editorState.active) return;
 
     // Get URL immediately on mount
-    const { href } = editor.getAttributes("link")
+    const linkAttributes = editor.getAttributes("link");
 
-    if (editor.isActive("link") && url === null) {
-      setUrl(href || "")
-      onLinkActive?.()
+    if (editor.isActive("link") && linkData.href === null) {
+      setLinkData({
+        href: linkAttributes.href || null,
+        rel: linkAttributes.rel || null,
+        target: linkAttributes.target || null,
+        // recordId: linkAttributes.recordId || null,
+        // recordType: linkAttributes.recordType || null,
+      });
+      onLinkActive?.();
     }
-  }, [editor, onLinkActive, url])
+  }, [editorState.active, onLinkActive, linkData]);
 
   React.useEffect(() => {
-    if (!editor) return
+    if (!editorState.active) return;
 
     const updateLinkState = () => {
-      const { href } = editor.getAttributes("link")
-      setUrl(href || "")
+      const linkAttributes = editor.getAttributes("link");
 
-      if (editor.isActive("link") && url !== null) {
-        onLinkActive?.()
+      setLinkData({
+        href: linkAttributes.href || null,
+        rel: linkAttributes.rel || null,
+        target: linkAttributes.target || null,
+        // recordId: linkAttributes.recordId || null,
+        // recordType: linkAttributes.recordType || null,
+      });
+
+      if (editor.isActive("link") && linkAttributes.href !== null) {
+        onLinkActive?.();
       }
-    }
+    };
 
-    editor.on("selectionUpdate", updateLinkState)
+    editor.on("selectionUpdate", updateLinkState);
     return () => {
-      editor.off("selectionUpdate", updateLinkState)
-    }
-  }, [editor, onLinkActive, url])
+      editor.off("selectionUpdate", updateLinkState);
+    };
+  }, [editorState.active, onLinkActive, linkData]);
 
-  const setLink = React.useCallback(() => {
-    if (!url || !editor) return
+  const setLink = React.useCallback(
+    (optionalNewData: LinkData = DEFAULT_STATE) => {
+      if (!linkData.href && !optionalNewData.href) return;
 
-    editor.chain().focus().extendMarkRange("link").setLink({ href: url }).run()
+      editor
+        .chain()
+        .focus()
+        .extendMarkRange("link")
+        .setLink({
+          href: optionalNewData.href || linkData.href || "",
+          rel: optionalNewData.rel || linkData.rel,
+          target: optionalNewData.target || linkData.target,
+        })
+        .run();
 
-    setUrl(null)
+      setLinkData({ ...DEFAULT_STATE });
 
-    onSetLink?.()
-  }, [editor, onSetLink, url])
+      onSetLink?.();
+    },
+    [editor, onSetLink, linkData.href],
+  );
 
   const removeLink = React.useCallback(() => {
-    if (!editor) return
+    if (!editor) return;
+
     editor
       .chain()
       .focus()
       .extendMarkRange("link")
       .unsetLink()
       .setMeta("preventAutolink", true)
-      .run()
-    setUrl("")
-  }, [editor])
+      .run();
+
+    setLinkData({ ...DEFAULT_STATE });
+  }, [editor]);
 
   return {
-    url: url || "",
-    setUrl,
+    linkData,
+    setLinkData,
     setLink,
     removeLink,
-    isActive: editor?.isActive("link") || false,
-  }
-}
+  };
+};
 
 export const LinkButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, children, ...props }, ref) => {
@@ -138,52 +186,53 @@ export const LinkButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
       >
         {children || <LinkIcon className="tiptap-button-icon" />}
       </Button>
-    )
-  }
-)
-
-export const LinkContent: React.FC<{
-  editor?: Editor | null
-}> = ({ editor: providedEditor }) => {
-  const editor = useTiptapEditor(providedEditor)
-
-  const linkHandler = useLinkHandler({
-    editor: editor,
-  })
-
-  return <LinkMain {...linkHandler} />
-}
+    );
+  },
+);
 
 const LinkMain: React.FC<LinkMainProps> = ({
-  url,
-  setUrl,
+  linkData,
+  setLinkData,
   setLink,
   removeLink,
-  isActive,
+  active,
 }) => {
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === "Enter") {
-      event.preventDefault()
-      setLink()
+      event.preventDefault();
+      setLink();
     }
-  }
+  };
+
+  const handleSettingsLink = () => {
+    window.top!.postMessage(
+      {
+        type: "f-tiptap-editor:open-link-popover",
+        urlJson: linkData,
+      },
+      "*",
+    );
+  };
 
   const handleOpenLink = () => {
-    if (!url) return
+    if (!linkData.href) return;
 
-    const safeUrl = sanitizeUrl(url, window.location.href)
+    const safeUrl = sanitizeUrl(linkData.href, window.location.href);
+
     if (safeUrl !== "#") {
-      window.open(safeUrl, "_blank", "noopener,noreferrer")
+      window.open(safeUrl, "_blank", "noopener,noreferrer");
     }
-  }
+  };
 
   return (
     <>
       <input
         type="url"
         placeholder="Paste a link..."
-        value={url}
-        onChange={(e) => setUrl(e.target.value)}
+        value={linkData.href || ""}
+        onChange={(e) =>
+          setLinkData({ ...linkData, href: e.target.value || null })
+        }
         onKeyDown={handleKeyDown}
         autoComplete="off"
         autoCorrect="off"
@@ -194,12 +243,22 @@ const LinkMain: React.FC<LinkMainProps> = ({
       <div className="tiptap-button-group" data-orientation="horizontal">
         <Button
           type="button"
-          onClick={setLink}
+          onClick={() => setLink()}
           title={translate(TRANSLATIONS, "apply")}
-          disabled={!url && !isActive}
+          disabled={!linkData.href && !active}
           data-style="ghost"
         >
           <CornerDownLeftIcon className="tiptap-button-icon" />
+        </Button>
+
+        <Button
+          type="button"
+          onClick={handleSettingsLink}
+          data-active-state={(linkData.rel || linkData.target) ? "on" : "off"}
+          title={translate(TRANSLATIONS, "openSettings")}
+          data-style="ghost"
+        >
+          <Settings className="tiptap-button-icon" />
         </Button>
       </div>
 
@@ -210,7 +269,7 @@ const LinkMain: React.FC<LinkMainProps> = ({
           type="button"
           onClick={handleOpenLink}
           title={translate(TRANSLATIONS, "openTheLink")}
-          disabled={!url && !isActive}
+          disabled={!linkData.href && !active}
           data-style="ghost"
         >
           <ExternalLinkIcon className="tiptap-button-icon" />
@@ -220,95 +279,88 @@ const LinkMain: React.FC<LinkMainProps> = ({
           type="button"
           onClick={removeLink}
           title={translate(TRANSLATIONS, "removeLink")}
-          disabled={!url && !isActive}
+          disabled={!linkData.href && !active}
           data-style="ghost"
         >
           <TrashIcon className="tiptap-button-icon" />
         </Button>
       </div>
     </>
-  )
-}
+  );
+};
 
 export interface LinkPopoverProps extends Omit<ButtonProps, "type"> {
   editor: Editor;
   editorState: FolioEditorToolbarButtonState;
 }
 
-export function LinkPopover({
-  editor: providedEditor,
-  ...props
-}: LinkPopoverProps) {
-  const editor = useTiptapEditor(providedEditor)
-
-  const linkInSchema = isMarkInSchema("link", editor)
-
-  const [isOpen, setIsOpen] = React.useState(false)
+export function LinkPopover({ editor, editorState }: LinkPopoverProps) {
+  const [isOpen, setIsOpen] = React.useState(false);
 
   const onSetLink = () => {
-    setIsOpen(false)
-  }
+    setIsOpen(false);
+  };
 
-  const onLinkActive = () => setIsOpen(true)
+  const onLinkActive = () => setIsOpen(true);
 
   const linkHandler = useLinkHandler({
-    editor: editor,
+    editor,
     onSetLink,
     onLinkActive,
-  })
+    editorState,
+  });
 
-  const isDisabled = React.useMemo(() => {
-    if (!editor) return true
-    if (editor.isActive("codeBlock")) return true
-    return !editor.can().setLink?.({ href: "" })
-  }, [editor])
+  const handleOnOpenChange = React.useCallback((nextIsOpen: boolean) => {
+    setIsOpen(nextIsOpen);
+  }, []);
 
-  const canSetLink = React.useMemo(() => {
-    if (!editor) return false
-    try {
-      return editor.can().setMark("link")
-    } catch {
-      return false
-    }
-  }, [editor])
+  React.useEffect(() => {
+    if (!isOpen) return;
 
-  const isActive = editor?.isActive("link") ?? false
+    const handleMessage = (event: MessageEvent) => {
+      if (
+        process.env.NODE_ENV === "production" &&
+        event.origin !== window.origin
+      )
+        return;
 
-  const handleOnOpenChange = React.useCallback(
-    (nextIsOpen: boolean) => {
-      setIsOpen(nextIsOpen)
-    },
-    []
-  )
+      if (event.data?.type === "f-input-tiptap:save-url-json") {
+        // Example: update link data with the received urlJson
+        if (event.data.urlJson) {
+          const newData = {
+            href: event.data.urlJson.href || null,
+            rel: event.data.urlJson.rel || null,
+            target: event.data.urlJson.target || null,
+            // recordId: event.data.urlJson.recordId || null,
+            // recordType: event.data.urlJson.recordType || null,
+          };
+          linkHandler.setLinkData(newData);
+          linkHandler.setLink(newData);
+        }
+      }
+    };
 
-  const show = React.useMemo(() => {
-    if (!linkInSchema || !editor) {
-      return false
-    }
-
-    return true
-  }, [linkInSchema, editor, canSetLink])
-
-  if (!show || !editor || !editor.isEditable) {
-    return null
-  }
+    window.addEventListener("message", handleMessage);
+    return () => {
+      window.removeEventListener("message", handleMessage);
+    };
+  }, [isOpen, linkHandler]);
 
   return (
     <Popover open={isOpen} onOpenChange={handleOnOpenChange}>
       <PopoverTrigger asChild>
         <LinkButton
-          disabled={isDisabled}
-          data-active-state={isActive ? "on" : "off"}
-          data-disabled={isDisabled}
-          {...props}
+          disabled={!editorState.enabled}
+          data-active-state={editorState.active ? "on" : "off"}
+          data-disabled={!editorState.enabled}
         />
       </PopoverTrigger>
 
       <PopoverContent>
-        <LinkMain {...linkHandler} />
+        <LinkMain active={editorState.active} {...linkHandler} />
       </PopoverContent>
     </Popover>
-  )
+  );
 }
 
-LinkButton.displayName = "LinkButton"
+LinkButton.displayName = "LinkButton";

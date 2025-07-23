@@ -10,11 +10,7 @@ import {
   ToolbarSeparator,
 } from "@/components/tiptap-ui-primitive/toolbar";
 import { FolioTiptapNodeButton } from "@/components/tiptap-ui/folio-tiptap-node-button";
-import {
-  LinkPopover,
-  LinkContent,
-  LinkButton,
-} from "@/components/tiptap-ui/link-popover";
+import { LinkPopover } from "@/components/tiptap-ui/link-popover";
 import { MarkButton } from "@/components/tiptap-ui/mark-button";
 import { UndoRedoButton } from "@/components/tiptap-ui/undo-redo-button";
 import { FolioTiptapColumnsButton } from "@/components/tiptap-extensions/folio-tiptap-columns";
@@ -109,7 +105,7 @@ const toolbarStateMapping: FolioEditorToolbarStateMapping = {
     active: makeMarkActive("subscript"),
   },
   link: {
-    enabled: makeMarkEnabled("link"),
+    enabled: ({ editor }) => editor.can().setLink?.({ href: "" }),
     active: makeMarkActive("link"),
   },
   textAlign: {
@@ -308,7 +304,11 @@ const MainToolbarContent = ({
         <MarkButton editor={editor} type="italic" />
         <MarkButton editor={editor} type="underline" />
         <MarkButton editor={editor} type="strike" />
-        <LinkPopover editor={editor} editorState={editorState["link"]} />
+
+        <LinkPopover
+          editor={editor}
+          editorState={editorState["link"]}
+        />
       </ToolbarGroup>
 
       <ToolbarSeparator />

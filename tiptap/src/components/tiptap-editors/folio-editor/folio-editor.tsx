@@ -99,6 +99,10 @@ export function FolioEditor({
         link: {
           openOnClick: false,
           enableClickSelection: true,
+          HTMLAttributes: {
+            rel: null,
+            target: null,
+          },
         }
       }),
       TextAlign.configure({
