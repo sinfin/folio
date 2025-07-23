@@ -146,6 +146,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
       urlJson,
       trigger: this,
       json: true,
+      disableLabel: true,
     }
 
     document.querySelector('.f-c-links-modal').dispatchEvent(new window.CustomEvent('f-c-links-modal:open', { detail }))

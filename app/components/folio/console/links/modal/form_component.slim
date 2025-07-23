@@ -17,9 +17,10 @@
       = f.hidden_field :record_type, value: @url_json[:record_type] || "",
                                      data: stimulus_target("recordTypeInput")
 
-      = f.input :label, label: t('.label/label'),
-                        required: false,
-                        input_html: { id: false, value: @url_json[:label] || "", data: stimulus_target("labelInput") }
+      - unless @disable_label
+        = f.input :label, label: t('.label/label'),
+                          required: false,
+                          input_html: { id: false, value: @url_json[:label] || "", data: stimulus_target("labelInput") }
 
       = f.input :rel, hint: t(".hint/rel"),
                       required: false,

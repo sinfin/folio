@@ -16,6 +16,7 @@ class Folio::Console::Api::LinksController < Folio::Console::Api::BaseController
     render_component_json(Folio::Console::Links::Modal::FormComponent.new(url_json:,
                                                                           json:,
                                                                           absolute_urls:,
+                                                                          disable_label: params[:disable_label].to_s == "true",
                                                                           preferred_label: params[:preferred_label].presence))
   end
 

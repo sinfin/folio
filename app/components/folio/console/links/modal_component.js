@@ -4,6 +4,7 @@ window.Folio.Stimulus.register('f-c-links-modal', class extends window.Stimulus.
     loading: Boolean,
     apiUrl: String,
     preferredLabel: String,
+    disableLabel: { type: Boolean, default: false },
     absoluteUrls: { type: Boolean, default: false },
   }
 
@@ -23,9 +24,10 @@ window.Folio.Stimulus.register('f-c-links-modal', class extends window.Stimulus.
     }
   }
 
-  openWithUrlJson ({ urlJson, trigger, json, absoluteUrls, preferredLabel }) {
+  openWithUrlJson ({ urlJson, trigger, json, absoluteUrls, preferredLabel, disableLabel }) {
     this.trigger = trigger
     this.preferredLabelValue = preferredLabel
+    this.disableLabelValue = disableLabel === true
     this.jsonValue = json !== false
     this.absoluteUrlsValue = absoluteUrls === true
 
@@ -49,6 +51,7 @@ window.Folio.Stimulus.register('f-c-links-modal', class extends window.Stimulus.
       json: this.jsonValue,
       absolute_urls: this.absoluteUrlsValue,
       preferred_label: this.preferredLabelValue,
+      disable_label: this.disableLabelValue,
     })
 
     window.Folio.Api.apiGet(url, null, this.abortController.signal).then((res) => {
@@ -89,6 +92,7 @@ window.Folio.Stimulus.register('f-c-links-modal', class extends window.Stimulus.
         trigger: e.detail.trigger,
         absoluteUrls: e.detail.absoluteUrls,
         json: e.detail.json,
+        disableLabel: e.detail.disableLabel,
         preferredLabel: e.detail.preferredLabel,
       })
     }
