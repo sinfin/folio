@@ -26,6 +26,8 @@ import { Separator } from "@/components/tiptap-ui-primitive/separator"
 // --- Styles ---
 import "@/components/tiptap-ui/link-popover/link-popover.scss"
 
+import type { FolioEditorToolbarButtonState } from '@/components/tiptap-editors/folio-editor/folio-editor-toolbar';
+
 export interface LinkHandlerProps {
   editor: Editor | null
   onSetLink?: () => void
@@ -214,31 +216,12 @@ const LinkMain: React.FC<LinkMainProps> = ({
 }
 
 export interface LinkPopoverProps extends Omit<ButtonProps, "type"> {
-  /**
-   * The TipTap editor instance.
-   */
-  editor?: Editor | null
-  /**
-   * Whether to hide the link popover.
-   * @default false
-   */
-  hideWhenUnavailable?: boolean
-  /**
-   * Callback for when the popover opens or closes.
-   */
-  onOpenChange?: (isOpen: boolean) => void
-  /**
-   * Whether to automatically open the popover when a link is active.
-   * @default true
-   */
-  autoOpenOnLinkActive?: boolean
+  editor: Editor;
+  editorState: FolioEditorToolbarButtonState;
 }
 
 export function LinkPopover({
   editor: providedEditor,
-  hideWhenUnavailable = false,
-  onOpenChange,
-  autoOpenOnLinkActive = true,
   ...props
 }: LinkPopoverProps) {
   const editor = useTiptapEditor(providedEditor)
@@ -251,7 +234,7 @@ export function LinkPopover({
     setIsOpen(false)
   }
 
-  const onLinkActive = () => setIsOpen(autoOpenOnLinkActive)
+  const onLinkActive = () => setIsOpen(true)
 
   const linkHandler = useLinkHandler({
     editor: editor,
@@ -279,9 +262,8 @@ export function LinkPopover({
   const handleOnOpenChange = React.useCallback(
     (nextIsOpen: boolean) => {
       setIsOpen(nextIsOpen)
-      onOpenChange?.(nextIsOpen)
     },
-    [onOpenChange]
+    []
   )
 
   const show = React.useMemo(() => {
@@ -289,14 +271,8 @@ export function LinkPopover({
       return false
     }
 
-    if (hideWhenUnavailable) {
-      if (isNodeSelection(editor.state.selection) || !canSetLink) {
-        return false
-      }
-    }
-
     return true
-  }, [linkInSchema, hideWhenUnavailable, editor, canSetLink])
+  }, [linkInSchema, editor, canSetLink])
 
   if (!show || !editor || !editor.isEditable) {
     return null

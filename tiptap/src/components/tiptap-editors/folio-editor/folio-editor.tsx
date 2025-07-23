@@ -9,15 +9,12 @@ import {
 // --- Tiptap Core Extensions ---
 import { StarterKit } from "@tiptap/starter-kit";
 // import { Image } from "@tiptap/extension-image";
-import { TaskItem } from "@tiptap/extension-task-item";
-import { TaskList } from "@tiptap/extension-task-list";
 import { TextAlign } from "@tiptap/extension-text-align";
 import { Typography } from "@tiptap/extension-typography";
 import { Subscript } from "@tiptap/extension-subscript";
 import { Superscript } from "@tiptap/extension-superscript";
-import { Selection, Placeholder, TrailingNode } from "@tiptap/extensions";
+import { Selection, Placeholder } from "@tiptap/extensions";
 import { TableKit } from '@tiptap/extension-table';
-
 
 // --- Tiptap Node ---
 import { FolioTiptapNodeExtension } from "@/components/tiptap-extensions/folio-tiptap-node";
@@ -49,8 +46,6 @@ import {
 } from "@/components/tiptap-ui/commands";
 
 // --- Icons ---
-import { ArrowLeftIcon } from "@/components/tiptap-icons/arrow-left-icon";
-import { LinkIcon } from "@/components/tiptap-icons/link-icon";
 import { SmartDragHandle } from "@/components/tiptap-ui/smart-drag-handle";
 
 // --- Hooks ---
@@ -100,14 +95,17 @@ export function FolioEditor({
       },
     },
     extensions: [
-      StarterKit,
+      StarterKit.configure({
+        link: {
+          openOnClick: false,
+          enableClickSelection: true,
+        }
+      }),
       TextAlign.configure({
         alignments: ["left", "center", "right"],
         types: ["heading", "paragraph"],
       }),
-      TrailingNode,
       Typography,
-
       Selection,
 
       ...(blockEditor
@@ -130,8 +128,6 @@ export function FolioEditor({
           return translate(TRANSLATIONS, key);
         },
       }),
-      ...(blockEditor ? [TaskList] : []),
-      ...(blockEditor ? [TaskItem.configure({ nested: true })] : []),
       Typography,
 
       Selection,

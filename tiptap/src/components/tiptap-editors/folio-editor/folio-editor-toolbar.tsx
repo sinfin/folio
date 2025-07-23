@@ -43,6 +43,7 @@ interface FolioEditorToolbarStateMapping {
   underline: FolioEditorToolbarButtonStateMapping;
   superscript: FolioEditorToolbarButtonStateMapping;
   subscript: FolioEditorToolbarButtonStateMapping;
+  link: FolioEditorToolbarButtonStateMapping;
   lists: FolioEditorToolbarButtonStateMapping;
   erase: FolioEditorToolbarButtonStateMapping;
   textStyles: FolioEditorToolbarButtonStateMapping;
@@ -106,6 +107,10 @@ const toolbarStateMapping: FolioEditorToolbarStateMapping = {
   subscript: {
     enabled: makeMarkEnabled("subscript"),
     active: makeMarkActive("subscript"),
+  },
+  link: {
+    enabled: makeMarkEnabled("link"),
+    active: makeMarkActive("link"),
   },
   textAlign: {
     enabled: ({ editor }) => editor.can().setTextAlign("left") || editor.can().setTextAlign("center"),
@@ -303,7 +308,7 @@ const MainToolbarContent = ({
         <MarkButton editor={editor} type="italic" />
         <MarkButton editor={editor} type="underline" />
         <MarkButton editor={editor} type="strike" />
-        <LinkPopover />
+        <LinkPopover editor={editor} editorState={editorState["link"]} />
       </ToolbarGroup>
 
       <ToolbarSeparator />
