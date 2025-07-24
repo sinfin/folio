@@ -13,7 +13,7 @@ import { TextAlign } from "@tiptap/extension-text-align";
 import { Typography } from "@tiptap/extension-typography";
 import { Subscript } from "@tiptap/extension-subscript";
 import { Superscript } from "@tiptap/extension-superscript";
-import { Selection, Placeholder } from "@tiptap/extensions";
+import { Placeholder } from "@tiptap/extensions";
 import { TableKit } from '@tiptap/extension-table';
 
 // --- Tiptap Node ---
@@ -110,7 +110,6 @@ export function FolioEditor({
         types: ["heading", "paragraph"],
       }),
       Typography,
-      Selection,
 
       ...(blockEditor
         ? [FolioTiptapNodeExtension, Superscript, Subscript]
@@ -132,9 +131,7 @@ export function FolioEditor({
           return translate(TRANSLATIONS, key);
         },
       }),
-      Typography,
 
-      Selection,
       ...(blockEditor
         ? [
             FolioTiptapColumnsExtension,
