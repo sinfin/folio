@@ -83,6 +83,7 @@ body,
   position: relative;
   overflow: auto;
   padding: var(--f-tiptap-editor-content-wrap--padding-y) var(--f-tiptap-editor-content-wrap--padding-x) ;
+  container-type: inline-size;
 
   @media screen and (max-width: 400px) {
     padding: var(--f-tiptap-editor-content-wrap--padding-y-mobile) var(--f-tiptap-editor-content-wrap--padding-x-mobile);

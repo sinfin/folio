@@ -28,6 +28,8 @@ $f-tiptap__columns--min-horizontal-width: 550px !default;
 
   --f-tiptap__root--white-space: pre-wrap;
   --f-tiptap__root--word-break: break-word;
+  --f-tiptap__root--margin-x: auto;
+  --f-tiptap__root--max-width: 750px;
 
   --f-tiptap__node--margin-top: var(--f-tiptap__spacer);
   --f-tiptap__node--margin-bottom: var(--f-tiptap__spacer);
@@ -156,6 +158,11 @@ $f-tiptap__columns--min-horizontal-width: 550px !default;
   white-space: var(--f-tiptap__root--white-space);
   word-break: var(--f-tiptap__root--word-break);
   container-type: inline-size;
+  padding-left: var(--f-tiptap__root--padding-x);
+  padding-right: var(--f-tiptap__root--padding-x);
+  margin-left: var(--f-tiptap__root--margin-x);
+  margin-right: var(--f-tiptap__root--margin-x);
+  max-width: var(--f-tiptap__root--max-width);
 
   .container-fluid {
     padding: 0;
@@ -180,6 +187,22 @@ $f-tiptap__columns--min-horizontal-width: 550px !default;
 
     &:last-child {
       margin-bottom: 0;
+    }
+  }
+
+  .node-folioTiptapNode,
+  .f-tiptap-node,
+  .f-tiptap-columns {
+    margin-left: calc(var(--f-tiptap__root--padding-x) * -1);
+    margin-right: calc(var(--f-tiptap__root--padding-x) * -1);
+  }
+
+  .f-tiptap-columns,
+  .node-folioTiptapNode{
+    .f-tiptap-node,
+    .node-folioTiptapNode,
+    .f-tiptap-columns {
+      --f-tiptap__root--padding-x: 0;
     }
   }
 
@@ -340,7 +363,6 @@ $f-tiptap__columns--min-horizontal-width: 550px !default;
   }
 
   .f-tiptap-columns {
-    width: 100%;
     display: flex;
     flex-direction: column;
     gap: var(--f-tiptap__columns--gap);
@@ -435,7 +457,6 @@ $f-tiptap__columns--min-horizontal-width: 550px !default;
   @container (min-width: #{$f-tiptap__columns--min-horizontal-width}) {
     .f-tiptap-columns {
       align-items: stretch;
-      width: 100%;
       flex-direction: row;
     }
 
