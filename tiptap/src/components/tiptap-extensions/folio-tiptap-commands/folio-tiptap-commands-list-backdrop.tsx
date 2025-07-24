@@ -3,11 +3,11 @@ import type { Editor } from "@tiptap/react";
 import type { Range } from "@tiptap/core";
 import { X } from 'lucide-react';
 
-import { type CommandsListProps, type CommandsListState } from "./commands-list";
+import { type FolioTiptapCommandsListProps, type FolioTiptapCommandsListState } from "./folio-tiptap-commands-list";
 
-export class CommandsListBackdrop extends React.Component<
-  CommandsListProps,
-  CommandsListState
+export class FolioTiptapCommandsListBackdrop extends React.Component<
+  FolioTiptapCommandsListProps,
+  FolioTiptapCommandsListState
 > {
   close () {
     console.log('close')
@@ -35,4 +35,4 @@ export class CommandsListBackdrop extends React.Component<
   }
 }
 
-export default CommandsListBackdrop;
+export default FolioTiptapCommandsListBackdrop;

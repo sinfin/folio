@@ -40,10 +40,10 @@ import {
 
 // --- Tiptap UI ---
 import {
-  CommandsExtension,
-  suggestion,
-  makeSuggestionItems,
-} from "@/components/tiptap-ui/commands";
+  FolioTiptapCommandsExtension,
+  folioTiptapCommandsSuggestion,
+  makeFolioTiptapCommandsSuggestionItems,
+} from "@/components/tiptap-extensions/folio-tiptap-commands";
 
 // --- Icons ---
 import { SmartDragHandle } from "@/components/tiptap-ui/smart-drag-handle";
@@ -146,19 +146,19 @@ export function FolioEditor({
           ]
         : []),
       StyledParagraph,
-      CommandsExtension.configure({
+      FolioTiptapCommandsExtension.configure({
         suggestion:
           blockEditor && folioTiptapNodes
             ? {
-                ...suggestion,
-                items: makeSuggestionItems([
+                ...folioTiptapCommandsSuggestion,
+                items: makeFolioTiptapCommandsSuggestionItems([
                   TextStylesCommandGroup,
                   ListsCommandGroup,
                   LayoutsCommandGroup,
                   makeFolioTiptapNodesCommandGroup(folioTiptapNodes),
                 ]),
               }
-            : suggestion
+            : folioTiptapCommandsSuggestion
       }),
     ],
   });

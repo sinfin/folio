@@ -10,8 +10,8 @@ interface CommandInterface {
   };
 }
 
-export const CommandsExtension = Extension.create({
-  name: "commands",
+export const FolioTiptapCommandsExtension = Extension.create({
+  name: "folioTiptapCommands",
 
   addOptions() {
     return {
@@ -44,4 +44,4 @@ export const CommandsExtension = Extension.create({
   },
 });
 
-export default CommandsExtension;
+export default FolioTiptapCommandsExtension;

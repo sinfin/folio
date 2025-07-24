@@ -3,7 +3,7 @@ import translate from "@/lib/i18n";
 import type { Range, Editor } from "@tiptap/core";
 import { X } from 'lucide-react';
 
-import "./commands-list.scss";
+import "./folio-tiptap-commands-list.scss";
 
 const TRANSLATIONS = {
   cs: {
@@ -16,21 +16,21 @@ const TRANSLATIONS = {
   },
 };
 
-export interface CommandsListProps {
+export interface FolioTiptapCommandsListProps {
   items: FolioEditorCommandGroupForSuggestion[];
   command: (item: FolioEditorCommandForSuggestion) => void;
   query: string;
 }
 
-export interface CommandsListState {
+export interface FolioTiptapCommandsListState {
   selectedIndex: number;
 }
 
-export class CommandsList extends React.Component<
-  CommandsListProps,
-  CommandsListState
+export class FolioTiptapCommandsList extends React.Component<
+  FolioTiptapCommandsListProps,
+  FolioTiptapCommandsListState
 > {
-  constructor(props: CommandsListProps) {
+  constructor(props: FolioTiptapCommandsListProps) {
     super(props);
 
     this.state = {
@@ -136,8 +136,8 @@ export class CommandsList extends React.Component<
   }
 
   componentDidUpdate(
-    prevProps: CommandsListProps,
-    _prevState: CommandsListState,
+    prevProps: FolioTiptapCommandsListProps,
+    _prevState: FolioTiptapCommandsListState,
   ) {
     let previousItemsCount = 0;
     prevProps.items.forEach((group) => {
@@ -236,4 +236,4 @@ export class CommandsList extends React.Component<
   }
 }
 
-export default CommandsList;
+export default FolioTiptapCommandsList;

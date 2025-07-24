@@ -6,9 +6,9 @@ import type { Range } from "@tiptap/core";
 import { Pilcrow } from "lucide-react";
 
 import {
-  CommandsList,
-} from "./commands-list";
-import { CommandsListBackdrop } from "./commands-list-backdrop";
+  FolioTiptapCommandsList,
+} from "./folio-tiptap-commands-list";
+import { FolioTiptapCommandsListBackdrop } from "./folio-tiptap-commands-list-backdrop";
 
 import { markIcons } from "@/components/tiptap-ui/mark-button/mark-button";
 
@@ -30,7 +30,7 @@ interface SuggestionProps {
   event: KeyboardEvent;
 }
 
-export const makeSuggestionItems = (groups: FolioEditorCommandGroup[]) => {
+export const makeFolioTiptapCommandsSuggestionItems = (groups: FolioEditorCommandGroup[]) => {
   return ({ query }: { editor: Editor; query: string }) => {
     const normalizedQuery = normalizeString(query);
 
@@ -85,8 +85,8 @@ const translateAndNormalizeTitles = (
   });
 };
 
-export const suggestion = {
-  items: makeSuggestionItems([ TextStylesCommandGroup, ListsCommandGroup ]),
+export const folioTiptapCommandsSuggestion = {
+  items: makeFolioTiptapCommandsSuggestionItems([ TextStylesCommandGroup, ListsCommandGroup ]),
 
   allowSpaces: false,
 
@@ -147,13 +147,13 @@ export const suggestion = {
           .setMeta("lockDragHandle", true)
           .run();
 
-        backdrop = new ReactRenderer(CommandsListBackdrop, {
+        backdrop = new ReactRenderer(FolioTiptapCommandsListBackdrop, {
           props: { ...props, query: props.query },
           editor: props.editor,
         });
         document.body.appendChild(backdrop.element);
 
-        component = new ReactRenderer(CommandsList, {
+        component = new ReactRenderer(FolioTiptapCommandsList, {
           props: { ...props, query: props.query },
           editor: props.editor,
         });
@@ -223,4 +223,4 @@ export const suggestion = {
   },
 };
 
-export default suggestion;
+export default folioTiptapCommandsSuggestion;
