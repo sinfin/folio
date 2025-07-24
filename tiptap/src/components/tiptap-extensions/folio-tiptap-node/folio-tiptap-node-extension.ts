@@ -1,6 +1,8 @@
 import { mergeAttributes, Node, ReactNodeViewRenderer } from "@tiptap/react";
 import { FolioTiptapNode } from "@/components/tiptap-extensions/folio-tiptap-node";
 
+import { makeUniqueId } from './make-unique-id.tsx';
+
 export type FolioTiptapNodeOptions = Record<string, never>;
 
 /**
@@ -57,7 +59,7 @@ export const FolioTiptapNodeExtension = Node.create<FolioTiptapNodeOptions>({
       },
       uniqueId: {
         default: "",
-        parseHTML: (element) => element.dataset.folioTiptapNodeUniqueId || ""
+        parseHTML: (element) => makeUniqueId()
       },
     };
   },
@@ -78,7 +80,6 @@ export const FolioTiptapNodeExtension = Node.create<FolioTiptapNodeOptions>({
         "data-folio-tiptap-node-version": HTMLAttributes.version,
         "data-folio-tiptap-node-type": HTMLAttributes.type,
         "data-folio-tiptap-node-data": JSON.stringify(HTMLAttributes.data),
-        "data-folio-tiptap-node-unique-id": HTMLAttributes.uniqueId,
       }
     ];
   },
