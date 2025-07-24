@@ -137,6 +137,7 @@ class MyApp::CustomNode < Folio::Tiptap::Node
     description: :text,
     content: :rich_text,
     image: :image,
+    background: ["gray", "blue"],
     documents: :documents,
     category: { class_name: "Category" },
     reports: { class_name: "Report", has_many: true }
@@ -151,6 +152,7 @@ The `Node` models are defined by calling `tiptap_node` method which uses the `Fo
 - `:string`, `:text`: Basic text attributes
 - `:rich_text`: JSON-stored rich text content (nested Tiptap structure)
 - `:url_json`: URL with metadata (href, title, target, etc.)
+- `[]`: Collection to pick from.
 - `:image`, `:document`, `:audio`, `:video`: Single Folio file attachments
 - `:images`, `:documents`: Multiple Folio file attachments
 - `{ class_name: "Model" }`: belongs_to relationship
@@ -264,8 +266,9 @@ Each custom node should have a corresponding view component:
 ```rb
 # For MyApp::CustomNode, create:
 class MyApp::CustomNodeComponent < ViewComponent::Base
-  def initialize(node:)
+  def initialize(node:, editor_preview: false)
     @node = node
+    @editor_preview = editor_preview
   end
 end
 ```
@@ -462,8 +465,9 @@ Custom `folioTiptapNode` instances are rendered through their associated view co
 
 # Example custom node rendering
 class MyApp::CustomNodeComponent < ApplicationComponent
-  def initialize(node:)
+  def initialize(node:, editor_preview: false)
     @node = node
+    @editor_preview = editor_preview
   end
 end
 ```

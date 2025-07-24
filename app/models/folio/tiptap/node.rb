@@ -2,7 +2,9 @@
 
 class Folio::Tiptap::Node
   include ActiveModel::Model
+
   include ActiveModel::Attributes
+  include ActiveModel::Translation
 
   def self.tiptap_node(structure:)
     Folio::Tiptap::NodeBuilder.new(klass: self, structure:).build!

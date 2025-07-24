@@ -57,6 +57,8 @@ class Folio::Tiptap::NodeBuilder
           else
             setup_structure_for_belongs_to(key:, class_name: type[:class_name])
           end
+        elsif type.is_a?(Array)
+          setup_structure_default(key:)
         else
           case type
           when :url_json

@@ -1,5 +1,6 @@
 .d-tiptap-node-card[
-  class="p-4 rounded bg-shade-200 border"
+  class="p-4 rounded border"
+  style="background: #{@node.background === 'blue' ? '#d7e9ff' : '#e8e8e8'};"
 ]
   div class="d-flex gap-4 align-items-start"
     - if @node.cover

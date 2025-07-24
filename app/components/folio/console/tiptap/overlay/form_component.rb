@@ -18,6 +18,8 @@ class Folio::Console::Tiptap::Overlay::FormComponent < Folio::Console::Applicati
         render_file_picker(f:, key:, type:)
       when :images, :documents
         render_react_files(f:, key:, type:)
+      when Array
+        render_collection_select(f:, key:, type:)
       when Hash
         render_relation_select(f:, key:, type:)
       else
@@ -103,6 +105,16 @@ class Folio::Console::Tiptap::Overlay::FormComponent < Folio::Console::Applicati
       else
         render_relation_select_for_single(f:, key:, type:, class_name:)
       end
+    end
+
+    def render_collection_select(f:, key:, type:)
+      collection = type.map do |value|
+        [@node.class.human_attribute_name("#{key}/#{value}"), value]
+      end
+
+      f.input key,
+              collection: collection,
+              include_blank: false
     end
 
     def render_relation_select_for_has_many(f:, key:, type:, class_name:)

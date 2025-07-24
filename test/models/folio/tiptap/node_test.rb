@@ -9,6 +9,7 @@ class Folio::Tiptap::NodeTest < ActiveSupport::TestCase
       text: :text,
       content: :rich_text,
       button_url_json: :url_json,
+      background: %w[gray blue],
       cover: :image,
       reports: :documents,
       page: { class_name: "Folio::Page" },
@@ -84,6 +85,7 @@ class Folio::Tiptap::NodeTest < ActiveSupport::TestCase
 
     node = Node.new(title: "foo",
                     text: "bar",
+                    background: "blue",
                     content: RICH_TEXT_HASH.to_json,
                     cover:,
                     reports:,
@@ -97,6 +99,7 @@ class Folio::Tiptap::NodeTest < ActiveSupport::TestCase
     assert_equal 1, hash["attrs"]["version"]
     assert_equal "Folio::Tiptap::NodeTest::Node", hash["attrs"]["type"]
     assert_equal "foo", hash["attrs"]["data"]["title"]
+    assert_equal "blue", hash["attrs"]["data"]["background"]
     assert_equal RICH_TEXT_HASH.to_json, hash["attrs"]["data"]["content"]
     assert_equal URL_JSON_HASH.to_json, hash["attrs"]["data"]["button_url_json"]
     assert_equal cover.id, hash["attrs"]["data"]["cover_id"]
@@ -114,6 +117,7 @@ class Folio::Tiptap::NodeTest < ActiveSupport::TestCase
       tiptap_node_attrs: {
         type: "Dummy::Tiptap::Node::Card",
         data: {
+          background: "blue",
           cover_placement_attributes: { id: "", file_id: "#{image.id}" },
           title: "a",
           text: "",
@@ -135,6 +139,7 @@ class Folio::Tiptap::NodeTest < ActiveSupport::TestCase
     assert_equal "a", node.title
     assert_equal "", node.text
     assert_equal({}, node.button_url_json)
+    assert_equal("blue", node.background)
 
     assert_equal image, node.cover
     assert_equal image.id, node.cover_id
