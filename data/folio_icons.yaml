@@ -138,6 +138,9 @@ face:
 file_document:
   width: 24
   height: 24
+flag:
+  width: 24
+  height: 24
 format_align_center:
   width: 24
   height: 24

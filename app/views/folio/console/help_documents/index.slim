@@ -1,0 +1,29 @@
+.folio-console-help-documents-index
+  .container-fluid
+    .folio-console-actions-wrap
+      h1 = t(".title")
+
+    - if @help_documents.empty?
+      .alert.alert-info
+        = t(".no_documents")
+    - else
+      .folio-console__cards
+        - @help_documents.group_by(&:category).each do |category, documents|
+          - if category.present?
+            h2.mt-4.mb-3 = category
+
+          .row
+            - documents.each do |document|
+              .col-12.col-sm-6.col-lg-4.mb-4
+                .card
+                  .card-body
+                    h3.card-title
+                      = link_to document.title, console_help_document_path(document.slug), class: "text-decoration-none"
+
+                    - if document.description.present?
+                      p.card-text.small.text-muted = document.description
+
+                    .small.text-muted
+                      i.fa.fa-clock-o
+                      = " "
+                      = l(document.updated_at, format: :short)

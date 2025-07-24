@@ -6,6 +6,8 @@ class Folio::Console::Api::SiteUserLinksController < Folio::Console::Api::BaseCo
   def set_locked
     flash = if @site_user_link.update(locked: params.require(:site_user_link)[:locked])
       if @site_user_link.locked?
+        @site_user_link.user.sign_out_everywhere!
+
         { success: t(".success/locked") }
       else
         { success: t(".success/unlocked") }

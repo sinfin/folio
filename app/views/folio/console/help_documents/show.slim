@@ -1,0 +1,31 @@
+.folio-console-help-documents-show
+  .container-fluid
+    .folio-console-actions-wrap
+      = link_to console_help_documents_path, class: "btn btn-sm btn-secondary" do
+        i.fa.fa-arrow-left
+        = " "
+        = t(".back_to_list")
+
+    .folio-console-actions-wrap
+      h1 = @help_document.title
+
+    .row
+      .col-lg-9
+        .card
+          .card-body
+            - if @help_document.description.present?
+              .lead = @help_document.description
+              hr
+
+            .folio-console-help-content[
+              data-has-mermaid="true"
+              data-controller="f-mermaid"
+            ]
+              = raw(Folio::ApplicationController.helpers.markdown_to_html(@help_document.content))
+
+          .card-footer.small.text-muted
+            i.fa.fa-clock-o
+            = " "
+            = t(".last_updated")
+            = " "
+            = l(@help_document.updated_at, format: :long)

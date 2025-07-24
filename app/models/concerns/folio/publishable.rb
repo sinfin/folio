@@ -61,6 +61,16 @@ module Folio::Publishable
       self.preview_token
     end
 
+    def publish!(**kwargs)
+      publish(**kwargs)
+      save!
+    end
+
+    def unpublish!(**kwargs)
+      unpublish(**kwargs)
+      save!
+    end
+
     private
       def generate_preview_token
         return unless self.class.use_preview_tokens?
@@ -88,6 +98,14 @@ module Folio::Publishable
 
     def folio_published?
       published.present?
+    end
+
+    def publish(**kwargs)
+      self.published = true
+    end
+
+    def unpublish(**kwargs)
+      self.published = false
     end
   end
 
@@ -160,6 +178,16 @@ module Folio::Publishable
       else
         false
       end
+    end
+
+    def publish(published_at: Time.current)
+      self.published = true
+      self.published_at = published_at
+    end
+
+    def unpublish(**kwargs)
+      self.published = false
+      # self.published_at = nil
     end
 
     private
@@ -256,6 +284,18 @@ module Folio::Publishable
       else
         false
       end
+    end
+
+    def publish(published_from: nil, published_until: nil)
+      self.published = true
+      self.published_from = published_from
+      self.published_until = published_until
+    end
+
+    def unpublish(**kwargs)
+      self.published = false
+      # self.published_from = nil
+      # self.published_until = nil
     end
 
     private

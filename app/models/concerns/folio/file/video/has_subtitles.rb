@@ -9,8 +9,9 @@ module Folio::File::Video::HasSubtitles
     end
 
     def transcribe_subtitles_job_class
-      # enable in main app
-      # Folio::OpenAi::TranscribeSubtitlesJob
+      # enable in main app, choose one:
+      # Folio::OpenAi::TranscribeSubtitlesJob        # for OpenAI Whisper
+      # Folio::ElevenLabs::TranscribeSubtitlesJob    # for ElevenLabs
     end
 
     def subtitles_enabled?
@@ -70,17 +71,40 @@ module Folio::File::Video::HasSubtitles
     transcribe_subtitles!
   end
 
-  def transcribe_subtitles!
+  def transcribe_subtitles!(force: false)
     return unless self.class.transcribe_subtitles_job_class.present?
 
-    self.class.enabled_subtitle_languages.each do |lang|
-      send("subtitles_#{lang}=", { "state" => "processing" })
-    end
-    update_columns(additional_data:,
-                   updated_at: current_time_from_proper_timezone)
+    # Track which languages need processing
+    languages_to_process = []
 
     self.class.enabled_subtitle_languages.each do |lang|
-      self.class.transcribe_subtitles_job_class.perform_later(self, lang: lang)
+      current_state = get_subtitles_state_for(lang)
+
+      # Skip if already ready and not forced
+      if current_state == "ready" && !force
+        next
+      end
+
+      # Skip if already processing and not forced (avoid duplicate jobs)
+      if current_state == "processing" && !force
+        next
+      end
+
+      # Add to processing list
+      languages_to_process << lang
+
+      # Set to processing state
+      send("subtitles_#{lang}=", { "state" => "processing" })
+    end
+
+    # Update database if we processed any languages
+    if languages_to_process.any?
+      update_columns(additional_data:, updated_at: Time.current)
+
+      # Enqueue job for each language
+      languages_to_process.each do |lang|
+        self.class.transcribe_subtitles_job_class.perform_later(self, lang:)
+      end
     end
   end
 

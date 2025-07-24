@@ -61,6 +61,7 @@ PATH
       rails (~> 7.1)
       rails-i18n (~> 7)
       recaptcha (= 4.13.1)
+      redcarpet
       redis
       responders
       rubyzip
@@ -600,6 +601,7 @@ GEM
       psych (>= 4.0.0)
     recaptcha (4.13.1)
       json
+    redcarpet (3.6.1)
     redis (4.8.1)
     regexp_parser (2.10.0)
     reline (0.6.0)

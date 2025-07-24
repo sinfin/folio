@@ -510,6 +510,8 @@ class Folio::Console::BaseController < Folio::ApplicationController
       return unless params[:id].present?
 
       name = folio_console_record_variable_name(plural: false)
+      return if instance_variable_get(name).present?
+
       if @klass.respond_to?(:friendly)
         instance_variable_set(name, @klass.by_site(allowed_record_sites).friendly.find(params[:id]))
       else
@@ -524,6 +526,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
       return unless param.present?
 
       name = "@#{through_record_name}"
+      return if instance_variable_get(name).present?
 
       through_klass = folio_console_controller_for_through.constantize
 

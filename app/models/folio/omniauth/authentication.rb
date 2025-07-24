@@ -6,6 +6,11 @@ class Folio::Omniauth::Authentication < Folio::ApplicationRecord
                     optional: true,
                     inverse_of: :authentications
 
+  belongs_to :conflict_user, class_name: "Folio::User",
+                             foreign_key: :conflict_user_id,
+                             optional: true,
+                             inverse_of: :conflicting_authentications
+
   validates :nickname, :access_token,
             presence: true
 

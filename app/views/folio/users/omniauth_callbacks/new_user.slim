@@ -4,4 +4,5 @@
           resource_name:,
           use_password: false,
           lock_email: false,
+          phone: ::Rails.application.config.folio_users_use_phone,
           form_url: main_app.users_auth_create_user_path)

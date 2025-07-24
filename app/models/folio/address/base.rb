@@ -76,6 +76,25 @@ class Folio::Address::Base < Folio::ApplicationRecord
     ]
   end
 
+  def self.strong_params
+    %i[
+      id
+      _destroy
+      name
+      company_name
+      address_line_1
+      address_line_2
+      zip
+      city
+      state
+      country_code
+      phone
+      email
+      vat_identification_number
+      identification_number
+    ]
+  end
+
   def self.countries_whitelist
     # all
     nil

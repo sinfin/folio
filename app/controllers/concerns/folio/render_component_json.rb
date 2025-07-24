@@ -4,7 +4,13 @@ module Folio::RenderComponentJson
   extend ActiveSupport::Concern
 
   private
-    def render_component_json(component, meta: nil, pagy: nil, flash: nil, collection_attribute: nil, status: 200)
+    def render_component_json(component,
+                              meta: nil,
+                              pagy: nil,
+                              flash: nil,
+                              collection_attribute: nil,
+                              status: 200,
+                              cache_key: nil)
       meta_hash = meta || {}
 
       if pagy
@@ -28,6 +34,8 @@ module Folio::RenderComponentJson
         render "folio/component_collection_json", status:, layout: false
       else
         @component = component
+        @cache_key = cache_key
+
         render "folio/component_json", status:, layout: false
       end
     end

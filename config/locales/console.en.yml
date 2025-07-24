@@ -281,6 +281,15 @@ en:
             paragraph: Keywords allow you to insert dynamic elements into an email that need to be generated. To use it, you need to insert the keyword with parentheses anywhere in the text. While sending the e-mail, it will be replaced by the given dynamic element.
             required: Required keywords
             optional: Other keywords
+      help_documents:
+        index:
+          title: Help Documentation
+          no_documents: No help documents available. Please create doc/help/index.yml file to configure help documents.
+        show:
+          back_to_list: Back to list
+          last_updated: "Last updated:"
+          not_found: Help document not found.
+        access_denied: You don't have permission to access help documentation.
       single_file_select:
         add_image: Add image
         add_video: Add video
@@ -308,6 +317,7 @@ en:
       layout:
         sidebar:
           homepage: Homepage
+          help: Help
           audio: Audios
           video: Videos
         header_component:
@@ -425,6 +435,7 @@ en:
           subtitles_processing: Subtitles are being generated.
           subtitles_failed: Failed to generate subtitles. You can enter them manually.
           retranscribe_subtitles: Retranscribe subtitles
+          force_retranscribe_hint: Click to override current processing
           submit: Save subtitles
 
   date:

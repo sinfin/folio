@@ -102,6 +102,15 @@ module Folio
     config.folio_users_include_nickname = true
     config.folio_users_confirmable = false
     config.folio_users_confirm_email_change = true
+    config.folio_users_device_modules = %i[
+      database_authenticatable
+      recoverable
+      rememberable
+      trackable
+      invitable
+      timeoutable
+      lockable
+    ]
     config.folio_users_publicly_invitable = false
     config.folio_users_use_address = true
     config.folio_users_omniauth_providers = %i[facebook google_oauth2 twitter2 apple]
@@ -184,11 +193,34 @@ module Folio
       end
     end
 
+    initializer :append_help_documents_to_sidebar do |app|
+      app.config.after_initialize do
+        if Folio::HelpDocument.config_exists?
+          # Add help documents link to the sidebar
+          app.config.folio_console_sidebar_appended_link_class_names += [
+            {
+              links: [
+                {
+                  label: :help,
+                  path: :console_help_documents_path,
+                  icon: :information_outline,
+                  required_ability: :access_help_documents
+                }
+              ]
+            }
+          ]
+        end
+      end
+    end
+
     initializer :add_folio_maintenance_middleware do |app|
       if ENV["FOLIO_MAINTENANCE"]
         require "rack/folio/maintenance_middleware"
         app.config.middleware.use(Rack::Folio::MaintenanceMiddleware)
       end
+    end
+
+    config.to_prepare do
     end
 
     def atoms_deprecations

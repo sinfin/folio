@@ -73,7 +73,8 @@ window.Folio.Stimulus.register('f-c-files-has-subtitles-form', class extends win
 })
 
 window.Folio.MessageBus.callbacks['f-c-files-has-subtitles-form'] = (data) => {
-  if (!data || data.type !== 'Folio::OpenAi::TranscribeSubtitlesJob/updated') return
+  if (!data || (data.type !== 'Folio::OpenAi::TranscribeSubtitlesJob/updated' && 
+                data.type !== 'Folio::ElevenLabs::TranscribeSubtitlesJob/updated')) return
 
   const wraps = document.querySelectorAll(`.f-c-files-has-subtitles-form[data-f-c-files-has-subtitles-form-file-id-value="${data.data.id}"]`)
 

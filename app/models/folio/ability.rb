@@ -86,6 +86,11 @@ class Folio::Ability
     can :display_ui, site
     can [:new], Folio::User # new user do not belong to site yet
 
+    # Help documents access - excluded for ghost role
+    unless user.roles_for(site: site) == [:ghost]
+      can :access_help_documents, site
+    end
+
     can :do_anything, Folio::SiteUserLink, { site: }
     can :do_anything, Folio::File, { site: Rails.application.config.folio_shared_files_between_sites ? [Folio::Current.main_site, site] : site }
     can :do_anything, Folio::Page, { site: }

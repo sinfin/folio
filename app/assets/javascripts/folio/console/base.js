@@ -70,6 +70,8 @@
 //= require folio/console/ui/buttons/buttons
 //= require folio/console/ui/notification_modal_component
 
+//= require folio/mermaid
+
 //= require folio/console/addresses/fields/fields
 //= require folio/console/atoms/layout_switch/layout_switch
 //= require folio/console/atoms/locale_switch/locale_switch
