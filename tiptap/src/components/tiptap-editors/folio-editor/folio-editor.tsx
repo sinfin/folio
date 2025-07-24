@@ -110,30 +110,28 @@ export function FolioEditor({
         types: ["heading", "paragraph"],
       }),
       Typography,
-
-      ...(blockEditor
-        ? [FolioTiptapNodeExtension, Superscript, Subscript]
-        : []),
-
-      Placeholder.configure({
-        // Use a placeholder:
-        placeholder: ({ node }) => {
-          let key = "commandPlaceholder";
-
-          if (
-            node.type.name === "heading" &&
-            node.attrs.level &&
-            [2, 3, 4].indexOf(node.attrs.level) !== -1
-          ) {
-            key = `h${node.attrs.level}Placeholder`;
-          }
-
-          return translate(TRANSLATIONS, key);
-        },
-      }),
+      Superscript,
+      Subscript,
 
       ...(blockEditor
         ? [
+            FolioTiptapNodeExtension,
+            Placeholder.configure({
+              // Use a placeholder:
+              placeholder: ({ node }) => {
+                let key = "commandPlaceholder";
+
+                if (
+                  node.type.name === "heading" &&
+                  node.attrs.level &&
+                  [2, 3, 4].indexOf(node.attrs.level) !== -1
+                ) {
+                  key = `h${node.attrs.level}Placeholder`;
+                }
+
+                return translate(TRANSLATIONS, key);
+              },
+            }),
             FolioTiptapColumnsExtension,
             FolioTiptapColumnsNode,
             FolioTiptapColumnNode,
@@ -143,23 +141,23 @@ export function FolioEditor({
                 resizable: false,
               }
             }),
+            FolioTiptapCommandsExtension.configure({
+              suggestion:
+                blockEditor && folioTiptapNodes
+                  ? {
+                      ...folioTiptapCommandsSuggestion,
+                      items: makeFolioTiptapCommandsSuggestionItems([
+                        TextStylesCommandGroup,
+                        ListsCommandGroup,
+                        LayoutsCommandGroup,
+                        makeFolioTiptapNodesCommandGroup(folioTiptapNodes),
+                      ]),
+                    }
+                  : folioTiptapCommandsSuggestion
+            }),
           ]
         : []),
       StyledParagraph,
-      FolioTiptapCommandsExtension.configure({
-        suggestion:
-          blockEditor && folioTiptapNodes
-            ? {
-                ...folioTiptapCommandsSuggestion,
-                items: makeFolioTiptapCommandsSuggestionItems([
-                  TextStylesCommandGroup,
-                  ListsCommandGroup,
-                  LayoutsCommandGroup,
-                  makeFolioTiptapNodesCommandGroup(folioTiptapNodes),
-                ]),
-              }
-            : folioTiptapCommandsSuggestion
-      }),
     ],
   });
 

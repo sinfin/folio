@@ -62,7 +62,6 @@ body,
     border: 1px solid var(--f-tiptap-editor--border-color);
     border-radius: var(--f-tiptap-editor--border-radius);
     transition: var(--f-tiptap-editor--transition);
-    max-height: calc(100vh - 2px);
     min-height: 140px + 2px;
 
     &.f-tiptap-editor--focused {
