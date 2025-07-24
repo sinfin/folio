@@ -59,7 +59,7 @@ window.Folio.Tiptap.init = (props) => {
     }
   };
 
-  let contentWithFolioTiptapNodeUniqueIds = {}
+  let contentWithFolioTiptapNodeUniqueIds
 
   if (props.content) {
     contentWithFolioTiptapNodeUniqueIds = addUniqueIdsToFolioTiptapNodes(props.content);
