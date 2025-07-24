@@ -289,7 +289,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       "content" => [
         {
           "type" => "text",
-          "text" => "First part "
+          "text" => "First part"
         },
         {
           "type" => "text",
@@ -301,7 +301,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
     render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
 
     assert_selector("p")
-    assert_text("First part second part")
+    assert_text("First partsecond part")
   end
 
   def test_render_complex_structure_with_multiple_levels
@@ -350,6 +350,38 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
     # Component should initialize without errors
     render_inline(component)
     assert_selector("p", text: "Test initialization")
+  end
+
+  def test_render_folio_tiptap_columns
+    prose_mirror_node = {
+      "type" => "folioTiptapColumns",
+      "content" => [
+        {
+          "type" => "folioTiptapColumn",
+          "content" => [
+            {
+              "type" => "text",
+              "text" => "First part"
+            }
+          ]
+        },
+        {
+          "type" => "folioTiptapColumn",
+          "content" => [
+            {
+              "type" => "text",
+              "text" => "Second part"
+            }
+          ]
+        }
+      ]
+    }
+
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+
+    assert_selector(".f-tiptap-columns")
+    assert_selector(".f-tiptap-columns .f-tiptap-column:first-child", text: "First part")
+    assert_selector(".f-tiptap-columns .f-tiptap-column:last-child", text: "Second part")
   end
 
   private

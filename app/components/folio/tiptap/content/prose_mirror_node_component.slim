@@ -11,8 +11,8 @@
         - if @prose_mirror_node["content"]
           - @prose_mirror_node["content"].each do |child_node|
             = render(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: @record,
-                                                               prose_mirror_node: child_node))
+                                                                          prose_mirror_node: child_node))
 
 - else
   p.f-tiptap-prose-mirror-node.f-tiptap-prose-mirror-node--error.text-danger
-    ' TODO missing node_definition
+    ' TODO missing node_definition for #{@prose_mirror_node["type"]}
