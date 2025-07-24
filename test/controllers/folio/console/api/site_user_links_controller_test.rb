@@ -7,7 +7,7 @@ class Folio::Console::Api::SiteUserLinksControllerTest < Folio::Console::BaseCon
     link = create(:folio_site_user_link, site: @site)
     assert_not link.locked?
 
-    patch url_for([:set_locked, :console, :api, link]), params: {
+    patch url_for([:set_locked, :console, :api, link, format: :json]), params: {
       site_user_link: {
         locked: true,
       }
@@ -32,7 +32,7 @@ class Folio::Console::Api::SiteUserLinksControllerTest < Folio::Console::BaseCon
     assert_equal user, found_user_before
     assert found_user_before.active_for_authentication?
 
-    patch url_for([:set_locked, :console, :api, link]), params: {
+    patch url_for([:set_locked, :console, :api, link, format: :json]), params: {
       site_user_link: {
         locked: true,
       }
