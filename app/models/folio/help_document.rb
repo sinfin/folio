@@ -4,7 +4,7 @@ module Folio
   class HelpDocument
     include ActiveModel::Model
 
-    attr_accessor :slug, :title, :description, :order, :category, :path, :content, :updated_at
+    attr_accessor :slug, :title, :description, :order, :category, :path
 
     class << self
       def all
@@ -12,7 +12,7 @@ module Folio
 
         documents = []
         return [] unless config_data["documents"]
-        
+
         config_data["documents"].each_with_index do |doc_data, index|
           if doc_data["slug"].present?
             documents << new(
@@ -83,31 +83,30 @@ module Folio
     end
 
     private
+      def git_last_modified_date
+        return nil unless git_available? && in_git_repository? && file_tracked_by_git?
 
-    def git_last_modified_date
-      return nil unless git_available? && in_git_repository? && file_tracked_by_git?
-      
-      result = `git log -1 --format="%aI" -- "#{path}" 2>/dev/null`.strip
-      return nil if result.blank?
-      
-      Time.parse(result)
-    rescue StandardError
-      nil
-    end
+        result = `git log -1 --format="%aI" -- "#{path}" 2>/dev/null`.strip
+        return nil if result.blank?
 
-    def git_available?
-      system('which git > /dev/null 2>&1')
-    end
+        Time.parse(result)
+      rescue StandardError
+        nil
+      end
 
-    def in_git_repository?
-      system('git rev-parse --git-dir > /dev/null 2>&1')
-    end
+      def git_available?
+        system("which git > /dev/null 2>&1")
+      end
 
-    def file_tracked_by_git?
-      return false unless ::File.exist?(path)
-      
-      # Check if file is tracked by git
-      system("git ls-files --error-unmatch '#{path}' > /dev/null 2>&1")
-    end
+      def in_git_repository?
+        system("git rev-parse --git-dir > /dev/null 2>&1")
+      end
+
+      def file_tracked_by_git?
+        return false unless ::File.exist?(path)
+
+        # Check if file is tracked by git
+        system("git ls-files --error-unmatch '#{path}' > /dev/null 2>&1")
+      end
   end
-end 
+end

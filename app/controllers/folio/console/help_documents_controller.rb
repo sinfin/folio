@@ -14,15 +14,14 @@ module Folio
         unless @help_document
           flash[:danger] = t(".not_found")
           redirect_to console_help_documents_path
-          return
+          nil
         end
       end
 
       private
-
-      def authorize_help_documents_access!
-        authorize! :access_help_documents, Folio::Current.site
-      end
+        def authorize_help_documents_access!
+          authorize! :access_help_documents, Folio::Current.site
+        end
     end
   end
-end 
+end

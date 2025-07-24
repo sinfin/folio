@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'redcarpet'
+require "redcarpet"
 
 module Folio
   module MarkdownHelper
@@ -29,4 +29,4 @@ module Folio
       markdown.render(text).html_safe
     end
   end
-end 
+end
