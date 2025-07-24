@@ -6,6 +6,11 @@ import "./styles/index.scss";
 import "../../app/assets/stylesheets/folio/tiptap/_styles.scss";
 import App from "./App.tsx";
 
+import {
+  addUniqueIdsToFolioTiptapNodes,
+  removeUniqueIdsFromFolioTiptapNodes
+} from '@/components/tiptap-extensions/folio-tiptap-node';
+
 // Initialize the Folio namespace if it doesn't exist
 window.Folio = window.Folio || {};
 window.Folio.Tiptap = window.Folio.Tiptap || {};
@@ -43,7 +48,7 @@ window.Folio.Tiptap.init = (props) => {
     window.top!.postMessage(
       {
         type: "f-tiptap:updated",
-        content: editor.getJSON(),
+        content: removeUniqueIdsFromFolioTiptapNodes(editor.getJSON()),
         height: window.Folio.Tiptap.getHeight(),
       },
       "*",
@@ -54,13 +59,19 @@ window.Folio.Tiptap.init = (props) => {
     }
   };
 
+  let contentWithFolioTiptapNodeUniqueIds = {}
+
+  if (props.content) {
+    contentWithFolioTiptapNodeUniqueIds = addUniqueIdsToFolioTiptapNodes(props.content);
+  }
+
   const root = createRoot(props.node);
   root.render(
     <StrictMode>
       <App
         onCreate={onCreate}
         onUpdate={onUpdate}
-        defaultContent={props.content}
+        defaultContent={contentWithFolioTiptapNodeUniqueIds}
         type={props.type}
         folioTiptapNodes={props.folioTiptapNodes || []}
       />
@@ -146,14 +157,14 @@ if (process.env.NODE_ENV !== "production" && window.top === window) {
           : "rich-text",
       content: defaultContent,
       onCreate: ({ editor }: { editor: TiptapEditor }) => {
-        const json = editor.getJSON();
+        const json = removeUniqueIdsFromFolioTiptapNodes(editor.getJSON());
         if (typeof json !== "object" || json === null) {
           throw new Error("getJSON must return a hash");
         }
         console.log("onCreate", json);
       },
       onUpdate: ({ editor }: { editor: TiptapEditor }) => {
-        const json = editor.getJSON();
+        const json = removeUniqueIdsFromFolioTiptapNodes(editor.getJSON());
         if (typeof json !== "object" || json === null) {
           throw new Error("getJSON must return a hash");
         }

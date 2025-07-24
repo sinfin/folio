@@ -67,7 +67,7 @@ class Folio::Console::Api::TiptapControllerTest < Folio::Console::BaseController
     post render_nodes_console_api_tiptap_path(format: :json), params: {
       "nodes" => [
         {
-          "unique_id" => 1,
+          "unique_id" => "folioTiptapNode-1",
           "attrs" => {
             "version" => 1,
             "type" => "Dummy::Tiptap::Node::Card",
@@ -81,7 +81,7 @@ class Folio::Console::Api::TiptapControllerTest < Folio::Console::BaseController
     hash = response.parsed_body
 
     assert_equal 1, hash["data"].size
-    assert_equal 1, hash["data"][0]["unique_id"]
+    assert_equal "folioTiptapNode-1", hash["data"][0]["unique_id"]
 
     page = Capybara.string(hash["data"][0]["html"])
     assert page.has_css?(".d-tiptap-node-card")
@@ -89,7 +89,7 @@ class Folio::Console::Api::TiptapControllerTest < Folio::Console::BaseController
     post render_nodes_console_api_tiptap_path(format: :json), params: {
       "nodes" => [
         {
-          "unique_id" => 1,
+          "unique_id" => "folioTiptapNode-1",
           "attrs" => {
             "version" => 1,
             "type" => "Dummy::Tiptap::Node::Card",
@@ -103,7 +103,7 @@ class Folio::Console::Api::TiptapControllerTest < Folio::Console::BaseController
     hash = response.parsed_body
 
     assert_equal 1, hash["data"].size
-    assert_equal 1, hash["data"][0]["unique_id"]
+    assert_equal "folioTiptapNode-1", hash["data"][0]["unique_id"]
 
     page = Capybara.string(hash["data"][0]["html"])
     assert page.has_css?(".f-c-tiptap-invalid-node")

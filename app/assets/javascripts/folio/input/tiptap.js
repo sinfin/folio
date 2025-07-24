@@ -102,7 +102,11 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
       attrs: e.data.attrs,
     }
 
+    if (!data.unique_id) return
+
     if (this.renderQueue) {
+      // remove any existing render request for this unique_id
+      this.renderQueue = this.renderQueue.filter(item => item.unique_id !== data.unique_id)
       this.renderQueue.push(data)
       return
     }

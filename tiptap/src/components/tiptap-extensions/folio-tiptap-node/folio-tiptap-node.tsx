@@ -5,13 +5,11 @@ import { Button } from "@/components/tiptap-ui-primitive/button";
 import { EditIcon } from "@/components/tiptap-icons/edit-icon";
 import { XIcon } from "@/components/tiptap-icons/x-icon";
 import { FolioTiptapNodeExtension } from "./folio-tiptap-node-extension";
+import { makeUniqueId } from './make-unique-id';
 
 import translate from "@/lib/i18n";
 
 import "./folio-tiptap-node.scss";
-
-let uniqueIdForNode = 0;
-const getUniqueIdForNode = () => uniqueIdForNode++;
 
 const TRANSLATIONS = {
   cs: {
@@ -35,7 +33,7 @@ const storeHtmlToCache = ({ html, serializedAttrs }: StoredHtml) => {
   htmlCache = [{ html, serializedAttrs }, ...htmlCache.slice(0, 9)];
 };
 
-const postEditMessage = (attrs: any, uniqueId: number) => {
+const postEditMessage = (attrs: any, uniqueId: string) => {
   window.top!.postMessage(
     {
       type: "f-tiptap-node:click",
@@ -47,8 +45,18 @@ const postEditMessage = (attrs: any, uniqueId: number) => {
 };
 
 export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
-  const [uniqueId, setUniqueId] = React.useState<number>(-1);
-  const [loaded, setLoaded] = React.useState<boolean>(false);
+  const { uniqueId, ...attrsWithoutUniqueId } = props.node.attrs;
+
+  // set uniqueId if one is not present
+  React.useEffect(() => {
+    if (!uniqueId) {
+      props.updateAttributes({ uniqueId: makeUniqueId() });
+    }
+  }, [uniqueId]);
+
+  if (!uniqueId) return
+
+  const [status, setStatus] = React.useState<string>("initial");
   const [htmlFromApi, setHtmlFromApi] = React.useState<string>("");
 
   const wrapperRef = React.useRef<HTMLDivElement>(null);
@@ -56,50 +64,46 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
   const handleEditClick = React.useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       if (!e.defaultPrevented) {
-        postEditMessage(props.node.attrs, uniqueId);
+        postEditMessage(attrsWithoutUniqueId, uniqueId);
       }
     },
-    [props.node.attrs, uniqueId],
+    [attrsWithoutUniqueId, uniqueId],
   );
 
   const handleDomEditEvent = React.useCallback(
     (e: Event) => {
-      postEditMessage(props.node.attrs, uniqueId);
+      postEditMessage(attrsWithoutUniqueId, uniqueId);
     },
-    [props.node.attrs, uniqueId],
+    [attrsWithoutUniqueId, uniqueId],
   );
-
-  React.useEffect(() => {
-    if (uniqueId === -1) {
-      setUniqueId(getUniqueIdForNode());
-    }
-  }, [uniqueId]);
 
   // Effect to fetch HTML content from API
   React.useEffect(() => {
-    if (!loaded && uniqueId !== -1) {
-      const serializedAttrs = JSON.stringify(props.node.attrs);
+    if (status === "initial" && uniqueId) {
+      const serializedAttrs = JSON.stringify(attrsWithoutUniqueId);
       // Check if we have cached HTML for these attributes
       const cachedEntry = htmlCache.find(
         (entry) => entry.serializedAttrs === serializedAttrs,
       );
 
       if (cachedEntry) {
+        setStatus("loaded");
         setHtmlFromApi(cachedEntry.html);
-        setLoaded(true);
         return;
       } else {
+        setStatus("loading");
+
         window.top!.postMessage(
           {
             type: "f-tiptap-node:render",
             uniqueId,
-            attrs: props.node.attrs,
+            attrs: attrsWithoutUniqueId,
           },
           "*",
         );
       }
     }
-  }, [loaded, uniqueId]);
+  }, [status, uniqueId]);
 
   // Effect to handle edit event
   React.useEffect(() => {
@@ -118,44 +122,42 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
 
   // Effect to handle messages from the parent window
   React.useEffect(() => {
-    if (!loaded && uniqueId !== -1) {
-      const handleMessage = (event: MessageEvent) => {
-        if (
-          process.env.NODE_ENV === "production" &&
-          event.origin !== window.origin
-        )
-          return;
+    const handleMessage = (event: MessageEvent) => {
+      if (
+        process.env.NODE_ENV === "production" &&
+        event.origin !== window.origin
+      )
+        return;
 
-        if (event.data.type === "f-input-tiptap:render-nodes") {
-          event.data.nodes.forEach((node: any) => {
-            if (node.unique_id === uniqueId) {
-              const serializedAttrs = JSON.stringify(props.node.attrs);
-              storeHtmlToCache({ html: node.html, serializedAttrs });
+      if (event.data.type === "f-input-tiptap:render-nodes") {
+        event.data.nodes.forEach((node: any) => {
+          if (node.unique_id === uniqueId) {
+            const serializedAttrs = JSON.stringify(attrsWithoutUniqueId);
+            storeHtmlToCache({ html: node.html, serializedAttrs });
 
-              setHtmlFromApi(node.html);
-              setLoaded(true);
-            }
-          });
-        } else if (
-          event.data &&
-          event.data.type === "f-c-tiptap-overlay:saved" &&
-          event.data.uniqueId === uniqueId
-        ) {
-          if (event.data.node && event.data.node.attrs) {
-            setHtmlFromApi("");
-            setLoaded(false);
-            props.updateAttributes(event.data.node.attrs);
+            setHtmlFromApi(node.html);
+            setStatus("loaded");
           }
+        });
+      } else if (
+        event.data &&
+        event.data.type === "f-c-tiptap-overlay:saved" &&
+        event.data.uniqueId === uniqueId
+      ) {
+        if (event.data.node && event.data.node.attrs) {
+          setHtmlFromApi("");
+          setStatus("initial");
+          props.updateAttributes(event.data.node.attrs);
         }
-      };
+      }
+    };
 
-      window.addEventListener("message", handleMessage);
+    window.addEventListener("message", handleMessage);
 
-      return () => {
-        window.removeEventListener("message", handleMessage);
-      };
-    }
-  }, [uniqueId, props]);
+    return () => {
+      window.removeEventListener("message", handleMessage);
+    };
+  }, [uniqueId, props, status]);
 
   return (
     <NodeViewWrapper

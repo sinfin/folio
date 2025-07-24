@@ -55,6 +55,10 @@ export const FolioTiptapNodeExtension = Node.create<FolioTiptapNodeOptions>({
           }
         }
       },
+      uniqueId: {
+        default: "",
+        parseHTML: (element) => element.dataset.folioTiptapNodeUniqueId || ""
+      },
     };
   },
 
@@ -74,6 +78,7 @@ export const FolioTiptapNodeExtension = Node.create<FolioTiptapNodeOptions>({
         "data-folio-tiptap-node-version": HTMLAttributes.version,
         "data-folio-tiptap-node-type": HTMLAttributes.type,
         "data-folio-tiptap-node-data": JSON.stringify(HTMLAttributes.data),
+        "data-folio-tiptap-node-unique-id": HTMLAttributes.uniqueId,
       }
     ];
   },
