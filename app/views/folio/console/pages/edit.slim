@@ -1,1 +1,22 @@
-= simple_form_for_with_block_tiptap([:console, @page])
+- if @page.class.try(:has_folio_tiptap?)
+  = simple_form_for_with_block_tiptap([:console, @page])
+- else
+  ruby:
+    locale = (Folio::Current.site.locales.size > 1 || Rails.application.config.folio_console_add_locale_to_preview_links) ? I18n.locale : nil
+
+    if @page.class.public_rails_path
+      preview_path = main_app.send(@page.class.public_rails_path,
+                                   locale: locale)
+    elsif @page.class.public?
+      preview_path = controller.main_app.page_path(@page.to_preview_param,
+                                                   locale: locale,
+                                                   Folio::Publishable::PREVIEW_PARAM_NAME => @page.preview_token)
+    else
+      preview_path = false
+    end
+
+  = simple_form_for_with_atoms([:console, @page],
+                               form_footer_options: { \
+                                 preview_path: preview_path \
+                               }) do |f|
+    = render 'form', f: f

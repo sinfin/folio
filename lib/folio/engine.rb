@@ -93,6 +93,8 @@ module Folio
     config.folio_leads_from_component_class_name = nil
     config.folio_newsletter_subscriptions = false
 
+    config.folio_tiptap_use_for_pages = false
+
     config.folio_users_use_phone = false
     config.folio_users_require_phone = false
     config.folio_users_sign_out_everywhere = true
