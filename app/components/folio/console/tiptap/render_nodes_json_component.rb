@@ -20,7 +20,7 @@ class Folio::Console::Tiptap::RenderNodesJsonComponent < Folio::Console::Applica
 
   def render_node_component(node)
     if node.valid?
-      component = node.class.view_component_class.new(node:)
+      component = node.class.view_component_class.new(node:, editor_preview: true)
 
       capture { render(component) }
     else

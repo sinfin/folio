@@ -55,11 +55,19 @@ class TiptapInput < SimpleForm::Inputs::StringInput
       node_names.map do |node_name|
         {
           title: {
-            cs: I18n.with_locale(:cs) { node_name.constantize.model_name.human },
-            en: I18n.with_locale(:en) { node_name.constantize.model_name.human },
+            cs: node_name_in_locale(node_name, :cs),
+            en: node_name_in_locale(node_name, :en),
           },
           type: node_name,
         }
       end.to_json
+    end
+
+    def node_name_in_locale(node_name, locale)
+      if I18n.available_locales.include?(locale.to_sym)
+        I18n.with_locale(locale) { node_name.constantize.model_name.human }
+      else
+        I18n.with_locale(I18n.default_locale) { node_name.constantize.model_name.human }
+      end
     end
 end
