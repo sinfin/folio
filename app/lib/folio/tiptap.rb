@@ -12,9 +12,7 @@ module Folio
     end
 
     def self.default_tiptap_nodes
-      %w[
-        Dummy::Tiptap::Node::Card
-      ]
+      Rails.application.config.folio_tiptap_default_nodes
     end
   end
 end
