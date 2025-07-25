@@ -4,6 +4,9 @@ const BLOCK_EDITOR_ONLY_NODE_TYPES = [
   "table",
   "folioTiptapNode",
   "folioTiptapColumns",
+  "folioTiptapColumn",
+  "folioTiptapFloatLayout",
+  "folioTiptapFloat"
 ];
 
 // Type guard to ensure proper typing after filtering

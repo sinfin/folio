@@ -1,5 +1,6 @@
 export * from "./bullet-list-command"
 export * from "./folio-tiptap-columns-command"
+export * from "./folio-tiptap-float-command"
 export * from "./heading-four-command"
 export * from "./heading-three-command"
 export * from "./heading-two-command"
