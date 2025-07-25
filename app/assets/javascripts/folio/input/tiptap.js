@@ -58,6 +58,9 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
       case 'f-tiptap-editor:open-link-popover':
         this.openLinkPopover(e.data.urlJson)
         break
+      case 'f-tiptap-editor:show-html':
+        this.showHtmlInModal(e.data.html)
+        break
     }
   }
 
@@ -163,5 +166,27 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     }
 
     this.iframeTarget.contentWindow.postMessage(data, this.originValue || window.origin)
+  }
+
+  showHtmlInModal (html) {
+    if (!html) return
+
+    const modal = document.querySelector('.f-c-tiptap-html-modal')
+
+    if (modal) {
+      const code = modal.querySelector('.f-c-tiptap-html-modal__code')
+
+      if (code) {
+        code.textContent = html
+        window.Folio.Modal.open(modal)
+        return
+      }
+    }
+
+    console.group('[Folio] [Tiptap] HTML')
+    console.log(html)
+    console.groupEnd()
+
+    window.alert("HTML output logged to console.")
   }
 })
