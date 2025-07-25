@@ -59,4 +59,23 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponent < ApplicationComponent
         end
       end
     end
+
+    def raw_custom_component_render
+      component_klass = @node_definition["component_name"].constantize
+
+      component = component_klass.new(record: @record,
+                                      prose_mirror_node: @prose_mirror_node)
+
+      render(component)
+    end
+
+    def safe_custom_component_render
+      raw_custom_component_render
+    rescue StandardError => e
+      Rails.logger.error("Error rendering ProseMirror node component: #{@node_definition['component_name']}")
+
+      if Rails.env.development? && ENV["FOLIO_DEBUG_TIPTAP_NODES"]
+        raise e
+      end
+    end
 end
