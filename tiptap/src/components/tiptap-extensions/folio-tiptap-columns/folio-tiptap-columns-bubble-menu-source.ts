@@ -23,12 +23,13 @@ const TRANSLATIONS = {
 
 export const FOLIO_TIPTAP_COLUMNS_BUBBLE_MENU_SOURCE: FolioEditorBubbleMenuSource = {
   pluginKey: "folioTiptapColumnsBubbleMenu",
-  shouldShow: ({ editor, view, state, oldState, from, to }) => {
+  shouldShow: ({ editor, state }) => {
     return editor.isActive(FolioTiptapColumnsNode.name)
   },
   items: [
     [
       {
+        key: "addFolioTiptapColumnBefore",
         title: translate(TRANSLATIONS, "addFolioTiptapColumnBefore"),
         icon: AddColumnBefore,
         command: ({ editor }: { editor: Editor }) => {
@@ -36,17 +37,19 @@ export const FOLIO_TIPTAP_COLUMNS_BUBBLE_MENU_SOURCE: FolioEditorBubbleMenuSourc
         }
       },
       {
-        title: translate(TRANSLATIONS, "addFolioTiptapColumnAfter"),
-        icon: AddColumnAfter,
-        command: ({ editor }: { editor: Editor }) => {
-          editor.chain().focus().addFolioTiptapColumnAfter().run()
-        }
-      },
-      {
+        key: "deleteFolioTiptapColumn",
         title: translate(TRANSLATIONS, "deleteFolioTiptapColumn"),
         icon: X,
         command: ({ editor }: { editor: Editor }) => {
           editor.chain().focus().deleteFolioTiptapColumn().run()
+        }
+      },
+      {
+        key: "addFolioTiptapColumnAfter",
+        title: translate(TRANSLATIONS, "addFolioTiptapColumnAfter"),
+        icon: AddColumnAfter,
+        command: ({ editor }: { editor: Editor }) => {
+          editor.chain().focus().addFolioTiptapColumnAfter().run()
         }
       },
     ]

@@ -49,12 +49,13 @@ const TRANSLATIONS = {
 
 export const TABLE_BUBBLE_MENU_SOURCE: FolioEditorBubbleMenuSource = {
   pluginKey: "tableBubbleMenu",
-  shouldShow: ({ editor, view, state, oldState, from, to }) => {
+  shouldShow: ({ editor, state }) => {
     return editor.isActive("table");
   },
   items: [
     [
       {
+        key: "addColumnBefore",
         title: translate(TRANSLATIONS, "addColumnBefore"),
         icon: TableAddColumnBefore,
         command: ({ editor }: { editor: Editor }) => {
@@ -62,6 +63,7 @@ export const TABLE_BUBBLE_MENU_SOURCE: FolioEditorBubbleMenuSource = {
         },
       },
       {
+        key: "addColumnAfter",
         title: translate(TRANSLATIONS, "addColumnAfter"),
         icon: TableAddColumnAfter,
         command: ({ editor }: { editor: Editor }) => {
@@ -69,6 +71,7 @@ export const TABLE_BUBBLE_MENU_SOURCE: FolioEditorBubbleMenuSource = {
         },
       },
       {
+        key: "deleteColumn",
         title: translate(TRANSLATIONS, "deleteColumn"),
         icon: TableDeleteColumn,
         command: ({ editor }: { editor: Editor }) => {
@@ -78,6 +81,7 @@ export const TABLE_BUBBLE_MENU_SOURCE: FolioEditorBubbleMenuSource = {
     ],
     [
       {
+        key: "addRowBefore",
         title: translate(TRANSLATIONS, "addRowBefore"),
         icon: TableAddRowBefore,
         command: ({ editor }: { editor: Editor }) => {
@@ -85,6 +89,7 @@ export const TABLE_BUBBLE_MENU_SOURCE: FolioEditorBubbleMenuSource = {
         },
       },
       {
+        key: "addRowAfter",
         title: translate(TRANSLATIONS, "addRowAfter"),
         icon: TableAddRowAfter,
         command: ({ editor }: { editor: Editor }) => {
@@ -92,6 +97,7 @@ export const TABLE_BUBBLE_MENU_SOURCE: FolioEditorBubbleMenuSource = {
         },
       },
       {
+        key: "deleteRow",
         title: translate(TRANSLATIONS, "deleteRow"),
         icon: TableDeleteRow,
         command: ({ editor }: { editor: Editor }) => {
@@ -101,6 +107,7 @@ export const TABLE_BUBBLE_MENU_SOURCE: FolioEditorBubbleMenuSource = {
     ],
     [
       {
+        key: "toggleHeaderColumn",
         title: translate(TRANSLATIONS, "toggleHeaderColumn"),
         icon: TableToggleHeaderColumn,
         command: ({ editor }: { editor: Editor }) => {
@@ -108,6 +115,7 @@ export const TABLE_BUBBLE_MENU_SOURCE: FolioEditorBubbleMenuSource = {
         },
       },
       {
+        key: "toggleHeaderRow",
         title: translate(TRANSLATIONS, "toggleHeaderRow"),
         icon: TableToggleHeaderRow,
         command: ({ editor }: { editor: Editor }) => {
@@ -115,6 +123,7 @@ export const TABLE_BUBBLE_MENU_SOURCE: FolioEditorBubbleMenuSource = {
         },
       },
       {
+        key: "toggleHeaderCell",
         title: translate(TRANSLATIONS, "toggleHeaderCell"),
         icon: TableToggleHeaderCell,
         command: ({ editor }: { editor: Editor }) => {
@@ -124,6 +133,7 @@ export const TABLE_BUBBLE_MENU_SOURCE: FolioEditorBubbleMenuSource = {
     ],
     [
       {
+        key: "mergeCells",
         title: translate(TRANSLATIONS, "mergeCells"),
         icon: TableMergeCells,
         command: ({ editor }: { editor: Editor }) => {
@@ -131,6 +141,7 @@ export const TABLE_BUBBLE_MENU_SOURCE: FolioEditorBubbleMenuSource = {
         },
       },
       {
+        key: "splitCell",
         title: translate(TRANSLATIONS, "splitCell"),
         icon: TableSplitCell,
         command: ({ editor }: { editor: Editor }) => {
@@ -138,6 +149,7 @@ export const TABLE_BUBBLE_MENU_SOURCE: FolioEditorBubbleMenuSource = {
         },
       },
       {
+        key: "deleteTable",
         title: translate(TRANSLATIONS, "deleteTable"),
         icon: TableDeleteTable,
         command: ({ editor }: { editor: Editor }) => {

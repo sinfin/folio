@@ -1,6 +1,7 @@
 import React from "react";
 import { BubbleMenu } from "@tiptap/react/menus";
 
+import { type EditorState } from "@tiptap/pm/state";
 import type { Editor } from "@tiptap/core";
 
 import type { ButtonProps } from "@/components/tiptap-ui-primitive/button";
@@ -21,19 +22,19 @@ export interface FolioEditorBubbleMenuSourceItem {
   command: (params: { editor: Editor }) => void;
   icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   title: string;
+  key: string;
+}
+
+export interface FolioEditorBubbleMenuSourceShouldShowArgs {
+  editor: Editor;
+  state: EditorState;
 }
 
 export interface FolioEditorBubbleMenuSource {
   pluginKey: string;
-  shouldShow: (params: {
-    editor: Editor;
-    view: any;
-    state: any;
-    oldState?: any;
-    from: number;
-    to: number;
-  }) => boolean;
+  shouldShow: (params: FolioEditorBubbleMenuSourceShouldShowArgs) => boolean;
   items: FolioEditorBubbleMenuSourceItem[][];
+  activeKeys?: (params: FolioEditorBubbleMenuSourceShouldShowArgs) => string[];
   placement?: "top" | "right" | "bottom" | "left" | "top-start" | "top-end" | "right-start" | "right-end" | "bottom-start" | "bottom-end" | "left-start" | "left-end" | undefined;
 }
 
@@ -50,10 +51,24 @@ export function FolioEditorBubbleMenu({
     flip: true,
   }
 
+  const [activeKeys, setActiveKeys] = React.useState<string[]>([])
+
   return (
     <BubbleMenu
       pluginKey={source.pluginKey}
-      shouldShow={source.shouldShow}
+      shouldShow={({ editor, state }: FolioEditorBubbleMenuSourceShouldShowArgs) => {
+        const show = source.shouldShow({ editor, state })
+
+        if (show && source.activeKeys) {
+          const newActiveKeys = source.activeKeys({ editor, state })
+
+          if (JSON.stringify(newActiveKeys) !== JSON.stringify(activeKeys)) {
+            setActiveKeys(newActiveKeys)
+          }
+        }
+
+        return show
+      }}
       options={floatingUiOptions}
       className="f-tiptap-editor-bubble-menu"
       data-bubble-menu-type={source.pluginKey}
@@ -62,6 +77,7 @@ export function FolioEditorBubbleMenu({
         <div className="f-tiptap-editor-bubble-menu__row" key={rowIndex}>
           {row.map((item) => {
             const Icon = item.icon;
+            const active = activeKeys.indexOf(item.key) !== -1;
 
             return (
               <Button
@@ -71,6 +87,8 @@ export function FolioEditorBubbleMenu({
                 role="button"
                 tabIndex={-1}
                 aria-label={item.title}
+                data-active-state={active ? "on" : "off"}
+                aria-pressed={active}
                 tooltip={item.title}
                 onClick={() => {
                   item.command({ editor });
