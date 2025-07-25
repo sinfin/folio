@@ -12,3 +12,6 @@ en:
 
         invalid_node_component:
           title: Invalid content. Will not be show publicly.
+
+        html_modal_component:
+          title: HTML code

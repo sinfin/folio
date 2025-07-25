@@ -12,3 +12,6 @@ cs:
 
         invalid_node_component:
           title: Špatně nastavený obsah. Veřejně nebude zobrazen.
+
+        html_modal_component:
+          title: HTML kód
