@@ -53,5 +53,3 @@ nodes:
     has_attrs: true
   tableRow:
     tag: tr
-  taskItem:
-    component_name: Folio::Tiptap::Content::ProseMirrorNodes::TaskItemNodeComponent
