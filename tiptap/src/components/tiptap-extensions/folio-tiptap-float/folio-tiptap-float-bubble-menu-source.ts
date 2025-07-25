@@ -34,35 +34,35 @@ export const FOLIO_TIPTAP_FLOAT_BUBBLE_MENU_SOURCE: FolioEditorBubbleMenuSource 
         title: translate(TRANSLATIONS, "setFloatSideToLeft"),
         icon: ArrowLeftToLine,
         command: ({ editor }: { editor: Editor }) => {
-          editor.chain().focus().setFloatLayoutAttributes({ side: "left" }).run()
+          editor.chain().focus().setFolioTiptapFloatAttributes({ side: "left" }).run()
         }
       },
       {
         title: translate(TRANSLATIONS, "setFloatSideToRight"),
         icon: ArrowRightToLine,
         command: ({ editor }: { editor: Editor }) => {
-          editor.chain().focus().setFloatLayoutAttributes({ side: "right" }).run()
+          editor.chain().focus().setFolioTiptapFloatAttributes({ side: "right" }).run()
         }
       },
       {
         title: translate(TRANSLATIONS, "setFloatSizeToSmall"),
         icon: ArrowDownWideNarrow,
         command: ({ editor }: { editor: Editor }) => {
-          editor.chain().focus().setFloatLayoutAttributes({ size: "small" }).run()
+          editor.chain().focus().setFolioTiptapFloatAttributes({ size: "small" }).run()
         }
       },
       {
         title: translate(TRANSLATIONS, "setFloatSizeToMedium"),
         icon: AlignJustify,
         command: ({ editor }: { editor: Editor }) => {
-          editor.chain().focus().setFloatLayoutAttributes({ size: "medium" }).run()
+          editor.chain().focus().setFolioTiptapFloatAttributes({ size: "medium" }).run()
         }
       },
       {
         title: translate(TRANSLATIONS, "setFloatSizeToLarge"),
         icon: ArrowUpWideNarrow,
         command: ({ editor }: { editor: Editor }) => {
-          editor.chain().focus().setFloatLayoutAttributes({ size: "large" }).run()
+          editor.chain().focus().setFolioTiptapFloatAttributes({ size: "large" }).run()
         }
       }
     ]

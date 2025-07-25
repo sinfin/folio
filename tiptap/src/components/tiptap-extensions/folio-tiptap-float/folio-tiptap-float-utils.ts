@@ -49,7 +49,7 @@ export interface SetFloatLayoutAttributesArgs
   state: EditorState;
 }
 
-export const setFloatLayoutAttributes = ({
+export const setFolioTiptapFloatAttributes = ({
   attrs,
   tr,
   dispatch,
@@ -96,7 +96,7 @@ export const setFloatLayoutAttributes = ({
   return true;
 };
 
-export function goToFloatOrMain({
+export function goToFolioTiptapFloatAsideOrMain({
   state,
   dispatch,
 }: {

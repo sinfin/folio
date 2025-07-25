@@ -2,8 +2,8 @@ import { Node, mergeAttributes } from "@tiptap/core";
 
 import {
   insertFolioTiptapFloat,
-  setFloatLayoutAttributes,
-  goToFloatOrMain,
+  setFolioTiptapFloatAttributes,
+  goToFolioTiptapFloatAsideOrMain,
   type InsertFolioTiptapFloatArgs,
   type SetFloatLayoutAttributesAttrs,
   type SetFloatLayoutAttributesArgs,
@@ -16,7 +16,7 @@ declare module "@tiptap/core" {
   interface Commands<ReturnType> {
     folioTiptapFloat: {
       insertFolioTiptapFloat: () => ReturnType;
-      setFloatLayoutAttributes: (
+      setFolioTiptapFloatAttributes: (
         attrs: SetFloatLayoutAttributesAttrs,
       ) => ReturnType;
     };
@@ -86,10 +86,10 @@ export const FolioTiptapFloatNode = Node.create({
         ({ tr, dispatch, editor }) => {
           return insertFolioTiptapFloat({ tr, dispatch, editor });
         },
-      setFloatLayoutAttributes:
+      setFolioTiptapFloatAttributes:
         (attrs: SetFloatLayoutAttributesAttrs) =>
         ({ tr, dispatch, state, editor }) => {
-          return setFloatLayoutAttributes({
+          return setFolioTiptapFloatAttributes({
             attrs,
             tr,
             dispatch,
@@ -103,13 +103,13 @@ export const FolioTiptapFloatNode = Node.create({
   addKeyboardShortcuts() {
     return {
       'Tab': () => {
-        return goToFloatOrMain({
+        return goToFolioTiptapFloatAsideOrMain({
           state: this.editor.state,
           dispatch: this.editor.view.dispatch,
         });
       },
       'Shift-Tab': () => {
-        return goToFloatOrMain({
+        return goToFolioTiptapFloatAsideOrMain({
           state: this.editor.state,
           dispatch: this.editor.view.dispatch,
         });
