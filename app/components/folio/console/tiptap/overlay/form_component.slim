@@ -4,7 +4,7 @@
 
     header.f-c-tiptap-overlay-form__form-header
       h3.f-c-tiptap-overlay-form__form-title.m-0
-        = @node.class.to_s
+        = @node.class.model_name.human
 
       .f-c-tiptap-overlay-form__form-buttons
         == cell('folio/console/ui/buttons', buttons_model)
