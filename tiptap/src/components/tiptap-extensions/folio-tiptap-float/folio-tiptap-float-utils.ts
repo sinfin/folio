@@ -84,10 +84,6 @@ export const setFolioTiptapFloatAttributes = ({
   if (!changed) return false;
 
   if (dispatch) {
-    tr.setSelection(
-      TextSelection.near(tr.doc.resolve(floatNode.pos + 1)),
-    );
-
     tr.setNodeMarkup(floatNode.pos, undefined, newAttrs);
 
     dispatch(tr);
