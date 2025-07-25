@@ -12,7 +12,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponent < ApplicationComponent
 
   private
     def resolve_tag_name(tag)
-      if @node_definition["level_based"] && @prose_mirror_node["attrs"] && @prose_mirror_node["attrs"]["level"]
+      if @node_definition["level_based_tag"] && @prose_mirror_node["attrs"] && @prose_mirror_node["attrs"]["level"]
         level = @prose_mirror_node["attrs"]["level"]
         "h#{level}"
       else
@@ -23,29 +23,18 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponent < ApplicationComponent
     def resolve_tag_attributes
       attrs = {}
 
-      # Include static attributes from node definition
-      if @node_definition["attrs"]
-        @node_definition["attrs"].each do |key, value|
+      if @node_definition["static_attrs"]
+        @node_definition["static_attrs"].each do |key, value|
           attrs[key] = value
         end
       end
 
-      if @node_definition["data_attrs"]
-        @node_definition["data_attrs"].each do |key, value|
-          attrs["data-#{key}"] = value
-        end
-      end
+      if @node_definition["attrs"].present?
+        @node_definition["attrs"].each do |attr_name, attr_config|
+          value = (@prose_mirror_node["attrs"].present? ? @prose_mirror_node["attrs"][attr_name] : nil) || attr_config["default_value"]
 
-      if @prose_mirror_node["attrs"]
-        if @node_definition["has_attrs"]
-          @prose_mirror_node["attrs"].each do |key, value|
-            next if key == "level" # Skip level for headings as it's used for tag name
-            attrs[key] = value
-          end
-        elsif @node_definition["has_data_attrs"] &&
-          @prose_mirror_node["attrs"].each do |key, value|
-            next if key == "level" # Skip level for headings as it's used for tag name
-            attrs["data-#{key}"] = value
+          if value.present?
+            attrs[attr_config["data_attribute"]] = value
           end
         end
       end

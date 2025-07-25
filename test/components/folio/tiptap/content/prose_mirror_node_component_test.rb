@@ -384,6 +384,73 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
     assert_selector(".f-tiptap-columns .f-tiptap-column:last-child", text: "Second part")
   end
 
+  def test_render_folio_tiptap_float
+    prose_mirror_node = {
+      "type" => "folioTiptapFloat",
+      "content" => [
+        {
+          "type" => "folioTiptapFloatAside",
+          "content" => [
+            {
+              "type" => "text",
+              "text" => "Aside part"
+            }
+          ]
+        },
+        {
+          "type" => "folioTiptapFloatMain",
+          "content" => [
+            {
+              "type" => "text",
+              "text" => "Main part"
+            }
+          ]
+        }
+      ]
+    }
+
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+
+    assert_selector(".f-tiptap-float")
+    assert_selector(".f-tiptap-float[data-f-tiptap-float-size='medium']")
+    assert_selector(".f-tiptap-float[data-f-tiptap-float-side='left']")
+    assert_selector(".f-tiptap-float .f-tiptap-float__aside", text: "Aside part")
+    assert_selector(".f-tiptap-float .f-tiptap-float__main", text: "Main part")
+
+    prose_mirror_node = {
+      "type" => "folioTiptapFloat",
+      "attrs" => { "size" => "large", "side" => "right" },
+      "content" => [
+        {
+          "type" => "folioTiptapFloatAside",
+          "content" => [
+            {
+              "type" => "text",
+              "text" => "Aside part"
+            }
+          ]
+        },
+        {
+          "type" => "folioTiptapFloatMain",
+          "content" => [
+            {
+              "type" => "text",
+              "text" => "Main part"
+            }
+          ]
+        }
+      ]
+    }
+
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+
+    assert_selector(".f-tiptap-float")
+    assert_selector(".f-tiptap-float[data-f-tiptap-float-size='large']")
+    assert_selector(".f-tiptap-float[data-f-tiptap-float-side='right']")
+    assert_selector(".f-tiptap-float .f-tiptap-float__aside", text: "Aside part")
+    assert_selector(".f-tiptap-float .f-tiptap-float__main", text: "Main part")
+  end
+
   private
     def build_mock_record
       Object.new

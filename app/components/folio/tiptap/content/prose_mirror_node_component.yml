@@ -1,7 +1,7 @@
 nodes:
   doc:
     tag: div
-    attrs:
+    static_attrs:
       class: "f-tiptap-content__root f-tiptap-styles"
   text:
     component_name: Folio::Tiptap::Content::TextComponent
@@ -16,26 +16,40 @@ nodes:
     tag: [pre, code]
   folioTiptapColumn:
     tag: div
-    attrs:
+    static_attrs:
       class: "f-tiptap-column"
   folioTiptapColumns:
     tag: div
-    attrs:
+    static_attrs:
       class: "f-tiptap-columns"
+  folioTiptapFloat:
+    tag: div
+    attrs:
+      side:
+        data_attribute: "data-f-tiptap-float-side"
+        default_value: "left"
+      size:
+        data_attribute: "data-f-tiptap-float-size"
+        default_value: "medium"
+    static_attrs:
+      class: "f-tiptap-float"
+  folioTiptapFloatAside:
+    tag: aside
+    static_attrs:
+      class: "f-tiptap-float__aside"
+  folioTiptapFloatMain:
+    tag: div
+    static_attrs:
+      class: "f-tiptap-float__main"
   hardBreak:
     tag: br
     self_closing: true
   heading:
-    tag: h1  # Dynamic: h1-h6 based on level attribute
-    dynamic: true
-    level_based: true
+    tag: h2
+    level_based_tag: true
   horizontalRule:
     tag: hr
     self_closing: true
-  # image:
-  #   tag: img
-  #   self_closing: true
-  #   has_attrs: true
   listItem:
     tag: li
   orderedList:
