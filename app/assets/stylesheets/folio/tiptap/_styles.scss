@@ -138,6 +138,7 @@ $f-tiptap__columns--min-horizontal-width: 550px !default;
   --f-tiptap__float--aside-width-small: 180px;
   --f-tiptap__float--aside-width-medium: 240px;
   --f-tiptap__float--aside-width-large: 300px;
+  --f-tiptap__float--aside-float: left;
 
   --f-tiptap__table--border: 1px solid var(--tt-gray-light-a-200);
   --f-tiptap__table--background: transparent;
@@ -391,32 +392,33 @@ $f-tiptap__columns--min-horizontal-width: 550px !default;
   }
 
   .f-tiptap-float__aside {
-    float: left;
-    margin-right: var(--f-tiptap__float--aside-margin-x);
     margin-bottom: var(--f-tiptap__float--aside-margin-y);
-    width: var(--f-tiptap__float--aside-width-medium);
-    position: relative;
-    container-type: inline-size;
-    box-sizing: border-box;
-    min-height: 2rem;
+  }
 
-    + * {
-      margin-top: 0;
+  @container (min-width: 500px) {
+    .f-tiptap-float__aside {
+      float: var(--f-tiptap__float--aside-float);
+      margin-right: var(--f-tiptap__float--aside-margin-x);
+      width: var(--f-tiptap__float--aside-width-medium);
+      position: relative;
+      container-type: inline-size;
+      box-sizing: border-box;
+      min-height: 2rem;
     }
-  }
 
-  .f-tiptap-float[data-f-tiptap-float-side="right"] .f-tiptap-float__aside {
-    float: right;
-    margin-right: 0;
-    margin-left: var(--f-tiptap__float--aside-margin-x);
-  }
+    .f-tiptap-float[data-f-tiptap-float-side="right"] .f-tiptap-float__aside {
+      --f-tiptap__float--aside-float: right;
+      margin-right: 0;
+      margin-left: var(--f-tiptap__float--aside-margin-x);
+    }
 
-  .f-tiptap-float[data-f-tiptap-float-size="small"] .f-tiptap-float__aside {
-    width: var(--f-tiptap__float--aside-width-small);
-  }
+    .f-tiptap-float[data-f-tiptap-float-size="small"] .f-tiptap-float__aside {
+      width: var(--f-tiptap__float--aside-width-small);
+    }
 
-  .f-tiptap-float[data-f-tiptap-float-size="large"] .f-tiptap-float__aside {
-    width: var(--f-tiptap__float--aside-width-large);
+    .f-tiptap-float[data-f-tiptap-float-size="large"] .f-tiptap-float__aside {
+      width: var(--f-tiptap__float--aside-width-large);
+    }
   }
 
   .f-tiptap-editor & .f-tiptap-column::before,
