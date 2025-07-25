@@ -2,6 +2,7 @@ import { Node, mergeAttributes } from "@tiptap/core";
 
 import {
   insertFolioTiptapFloat,
+  cancelFolioTiptapFloat,
   setFolioTiptapFloatAttributes,
   goToFolioTiptapFloatAsideOrMain,
   type InsertFolioTiptapFloatArgs,
@@ -16,6 +17,7 @@ declare module "@tiptap/core" {
   interface Commands<ReturnType> {
     folioTiptapFloat: {
       insertFolioTiptapFloat: () => ReturnType;
+      cancelFolioTiptapFloat: () => ReturnType;
       setFolioTiptapFloatAttributes: (
         attrs: SetFloatLayoutAttributesAttrs,
       ) => ReturnType;
@@ -85,6 +87,11 @@ export const FolioTiptapFloatNode = Node.create({
         () =>
         ({ tr, dispatch, editor }) => {
           return insertFolioTiptapFloat({ tr, dispatch, editor });
+        },
+      cancelFolioTiptapFloat:
+        () =>
+        ({ tr, dispatch, state, editor }) => {
+          return cancelFolioTiptapFloat({ tr, dispatch, state, editor });
         },
       setFolioTiptapFloatAttributes:
         (attrs: SetFloatLayoutAttributesAttrs) =>

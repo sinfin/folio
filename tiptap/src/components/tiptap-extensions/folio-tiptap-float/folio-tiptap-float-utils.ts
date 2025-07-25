@@ -1,5 +1,5 @@
 import { type EditorState, TextSelection } from "@tiptap/pm/state";
-import { type Node } from "@tiptap/pm/model";
+import { Node } from "@tiptap/pm/model";
 import { findParentNode, type Editor } from "@tiptap/core";
 import { FolioTiptapFloatNode } from "./folio-tiptap-float-node";
 import { FolioTiptapFloatAsideNode } from "./folio-tiptap-float-aside-node";
@@ -137,3 +137,64 @@ export function goToFolioTiptapFloatAsideOrMain({
 
   return false;
 }
+
+interface CancelFolioTiptapFloatArgs extends InsertFolioTiptapFloatArgs {
+  state: EditorState;
+}
+
+interface NodeJson {
+  type: string;
+  content: NodeJson[];
+}
+
+export function cancelFolioTiptapFloat ({
+  tr,
+  dispatch,
+  state,
+  editor,
+}: CancelFolioTiptapFloatArgs) {
+  const floatNode = findParentNode(
+    (node: Node) => node.type.name === FolioTiptapFloatNode.name,
+  )(state.selection);
+
+  if (!floatNode) return false
+  if (!dispatch) return false
+
+  const allContent = [];
+
+  // loop all child nodes and gather their content
+  floatNode.node.toJSON().content.forEach((childNode: NodeJson) => {
+    if (childNode.content && childNode.content.length > 0) {
+      childNode.content.forEach((contentNode: NodeJson) => {
+        if (contentNode) {
+          if (contentNode.type === "paragraph" && contentNode.content.length === 0) {
+            // skip empty paragraphs
+            return;
+          }
+          allContent.push(contentNode)
+        }
+      })
+    }
+  });
+
+  // If no content, add an empty paragraph
+  if (allContent.length === 0) {
+    allContent.push({ type: "paragraph" });
+  }
+
+  // Replace the entire float node with the combined content
+  tr.replaceWith(
+    floatNode.pos,
+    floatNode.pos + floatNode.node.nodeSize,
+    allContent.map((content) => Node.fromJSON(state.schema, content)),
+  );
+
+  // Position cursor at the start of the replaced content
+  tr.setSelection(
+    TextSelection.near(tr.doc.resolve(floatNode.pos + 1)),
+  );
+
+  dispatch(tr);
+
+  return true
+};
