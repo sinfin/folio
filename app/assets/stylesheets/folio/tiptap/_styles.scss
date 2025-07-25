@@ -376,6 +376,7 @@ $f-tiptap__columns--min-horizontal-width: 550px !default;
 
   .f-tiptap-editor & .f-tiptap-column::before {
     content: "";
+    pointer-events: none;
     position: absolute;
     display: block;
     inset: 0;
