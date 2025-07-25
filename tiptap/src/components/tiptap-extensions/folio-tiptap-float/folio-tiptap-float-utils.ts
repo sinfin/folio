@@ -2,25 +2,25 @@ import { type EditorState, TextSelection } from "@tiptap/pm/state";
 import { type Node } from "@tiptap/pm/model";
 import { findParentNode, type Editor } from "@tiptap/core";
 import { FolioTiptapFloatNode } from "./folio-tiptap-float-node";
-import { FolioTiptapFloatLayoutNode } from "./folio-tiptap-float-layout-node";
+import { FolioTiptapFloatAsideNode } from "./folio-tiptap-float-aside-node";
 
-export interface InsertFolioTiptapFloatLayoutArgs {
+export interface InsertFolioTiptapFloatArgs {
   tr: any; // Transaction type from ProseMirror
   dispatch?: (tr: any) => void; // Dispatch function for the transaction (optional)
   editor: Editor;
 }
 
-export const insertFolioTiptapFloatLayout = ({
+export const insertFolioTiptapFloat = ({
   tr,
   dispatch,
   editor,
-}: InsertFolioTiptapFloatLayoutArgs) => {
+}: InsertFolioTiptapFloatArgs) => {
   const children = [
-    editor.schema.nodes.folioTiptapFloat.createAndFill({}) as Node,
-    editor.schema.nodes.paragraph.createAndFill({}) as Node,
+    editor.schema.nodes.folioTiptapFloatAside.createAndFill({}) as Node,
+    editor.schema.nodes.folioTiptapFloatMain.createAndFill({}) as Node,
   ];
 
-  const node = editor.schema.nodes.folioTiptapFloatLayout.createChecked(
+  const node = editor.schema.nodes.folioTiptapFloat.createChecked(
     {},
     children,
   );
@@ -44,7 +44,7 @@ export interface SetFloatLayoutAttributesAttrs {
 }
 
 export interface SetFloatLayoutAttributesArgs
-  extends InsertFolioTiptapFloatLayoutArgs {
+  extends InsertFolioTiptapFloatArgs {
   attrs: SetFloatLayoutAttributesAttrs;
   state: EditorState;
 }
@@ -56,15 +56,15 @@ export const setFloatLayoutAttributes = ({
   state,
   editor,
 }: SetFloatLayoutAttributesArgs) => {
-  const floatLayoutNode = findParentNode(
-    (node: Node) => node.type.name === FolioTiptapFloatLayoutNode.name,
+  const floatNode = findParentNode(
+    (node: Node) => node.type.name === FolioTiptapFloatNode.name,
   )(state.selection);
-  if (!floatLayoutNode) return false;
+  if (!floatNode) return false;
 
   let changed = false;
   const newAttrs = {
-    side: floatLayoutNode.node.attrs.side || "left",
-    size: floatLayoutNode.node.attrs.size || "medium",
+    side: floatNode.node.attrs.side || "left",
+    size: floatNode.node.attrs.size || "medium",
   };
 
   if (attrs.side && attrs.side !== newAttrs.side) {
@@ -85,10 +85,10 @@ export const setFloatLayoutAttributes = ({
 
   if (dispatch) {
     tr.setSelection(
-      TextSelection.near(tr.doc.resolve(floatLayoutNode.pos + 1)),
+      TextSelection.near(tr.doc.resolve(floatNode.pos + 1)),
     );
 
-    tr.setNodeMarkup(floatLayoutNode.pos, undefined, newAttrs);
+    tr.setNodeMarkup(floatNode.pos, undefined, newAttrs);
 
     dispatch(tr);
   }
@@ -96,18 +96,18 @@ export const setFloatLayoutAttributes = ({
   return true;
 };
 
-export function goToFloatOrBack({
+export function goToFloatOrMain({
   state,
   dispatch,
 }: {
   state: EditorState;
   dispatch: any;
 }) {
-  const floatLayoutNode = findParentNode(
-    (node: Node) => node.type.name === FolioTiptapFloatLayoutNode.name,
+  const floatNode = findParentNode(
+    (node: Node) => node.type.name === FolioTiptapFloatNode.name,
   )(state.selection);
 
-  if (dispatch && floatLayoutNode) {
+  if (dispatch && floatNode) {
     const listNode = findParentNode(
       (node: Node) => node.type.name === "listItem",
     )(state.selection);
@@ -115,19 +115,19 @@ export function goToFloatOrBack({
     // don't override tab inside lists
     if (listNode) return false
 
-    const floatNode = findParentNode(
-      (node: Node) => node.type.name === FolioTiptapFloatNode.name,
+    const asideNode = findParentNode(
+      (node: Node) => node.type.name === FolioTiptapFloatAsideNode.name,
     )(state.selection);
 
     const tr = state.tr;
 
-    if (floatNode) {
+    if (asideNode) {
       // move selection after the node
-      const nextSelectPos = floatNode.pos + floatNode.node.nodeSize;
+      const nextSelectPos = asideNode.pos + asideNode.node.nodeSize;
       tr.setSelection(TextSelection.near(tr.doc.resolve(nextSelectPos)));
     } else {
       // move selection inside the node
-      const nextSelectPos = floatLayoutNode.pos + 1;
+      const nextSelectPos = floatNode.pos + 1;
       tr.setSelection(TextSelection.near(tr.doc.resolve(nextSelectPos)));
     }
 

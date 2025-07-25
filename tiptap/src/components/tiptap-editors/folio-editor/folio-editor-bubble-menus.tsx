@@ -8,7 +8,7 @@ import { Button } from "@/components/tiptap-ui-primitive/button";
 
 import { FOLIO_TIPTAP_COLUMNS_BUBBLE_MENU_SOURCE } from "@/components/tiptap-extensions/folio-tiptap-columns/folio-tiptap-columns-bubble-menu-source";
 import { TABLE_BUBBLE_MENU_SOURCE } from '@/lib/table-bubble-menu-source';
-import { FOLIO_TIPTAP_FLOAT_LAYOUT_BUBBLE_MENU_SOURCE } from '@/components/tiptap-extensions/folio-tiptap-float-layout';
+import { FOLIO_TIPTAP_FLOAT_BUBBLE_MENU_SOURCE } from '@/components/tiptap-extensions/folio-tiptap-float';
 
 import "./folio-editor-bubble-menus.scss";
 
@@ -111,7 +111,7 @@ export function FolioEditorBubbleMenus({
       {blockEditor && (
         <FolioEditorBubbleMenu
           editor={editor}
-          source={FOLIO_TIPTAP_FLOAT_LAYOUT_BUBBLE_MENU_SOURCE}
+          source={FOLIO_TIPTAP_FLOAT_BUBBLE_MENU_SOURCE}
         />
       )}
     </>

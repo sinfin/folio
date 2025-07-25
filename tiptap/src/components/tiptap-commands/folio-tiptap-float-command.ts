@@ -3,9 +3,9 @@ import { FormatImageLeft } from "@/components/tiptap-icons/format-image-left";
 export const FolioTiptapFloatCommand: FolioEditorCommand = {
   title: { cs: "Obtékaný obsah", en: "Float content" },
   icon: FormatImageLeft,
-  key: "folioTiptapFloatLayout",
+  key: "folioTiptapFloat",
   command: ({ chain }) => {
-    chain.insertFolioTiptapFloatLayout()
+    chain.insertFolioTiptapFloat()
   }
 }
 

@@ -18,18 +18,18 @@ const TRANSLATIONS = {
   }
 }
 
-export interface FolioTiptapFloatLayoutButtonProps extends ButtonProps {
+export interface FolioTiptapFloatButtonProps extends ButtonProps {
   editor: Editor;
 }
 
-export const FolioTiptapFloatLayoutButton = React.forwardRef<
+export const FolioTiptapFloatButton = React.forwardRef<
   HTMLButtonElement,
-  FolioTiptapFloatLayoutButtonProps
+  FolioTiptapFloatButtonProps
 >(({ editor, disabled }, ref) => {
   const handleClick = React.useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       if (!e.defaultPrevented && !disabled && editor) {
-        editor.chain().focus().insertFolioTiptapFloatLayout().run();
+        editor.chain().focus().insertFolioTiptapFloat().run();
       }
     },
     [disabled],
@@ -57,6 +57,6 @@ export const FolioTiptapFloatLayoutButton = React.forwardRef<
   );
 });
 
-FolioTiptapFloatLayoutButton.displayName = "FolioTiptapFloatLayoutButton";
+FolioTiptapFloatButton.displayName = "FolioTiptapFloatButton";
 
-export default FolioTiptapFloatLayoutButton;
+export default FolioTiptapFloatButton;

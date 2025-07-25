@@ -28,9 +28,10 @@ import {
   DEFAULT_FOLIO_TIPTAP_STYLED_PARAGRAPH_VARIANTS,
 } from "@/components/tiptap-extensions/folio-tiptap-styled-paragraph";
 import {
-  FolioTiptapFloatLayoutNode,
   FolioTiptapFloatNode,
-} from "@/components/tiptap-extensions/folio-tiptap-float-layout";
+  FolioTiptapFloatAsideNode,
+  FolioTiptapFloatMainNode,
+} from "@/components/tiptap-extensions/folio-tiptap-float";
 
 import "@/components/tiptap-node/image-node/image-node.scss";
 import "@/components/tiptap-node/paragraph-node/paragraph-node.scss";
@@ -139,8 +140,9 @@ export function FolioEditor({
             FolioTiptapColumnsExtension,
             FolioTiptapColumnsNode,
             FolioTiptapColumnNode,
-            FolioTiptapFloatLayoutNode,
             FolioTiptapFloatNode,
+            FolioTiptapFloatAsideNode,
+            FolioTiptapFloatMainNode,
             TableKit.configure({
               table: {
                 allowTableNodeSelection: true,

@@ -133,11 +133,11 @@ $f-tiptap__columns--min-horizontal-width: 550px !default;
   --f-tiptap__columns--gap: var(--f-tiptap__spacer);
   --f-tiptap__column--border-in-editor-only: 1px dashed #ccc;
 
-  --f-tiptap__float--margin-x: var(--f-tiptap__spacer);
-  --f-tiptap__float--margin-y: var(--f-tiptap__spacer);
-  --f-tiptap__float--width-small: 180px;
-  --f-tiptap__float--width-medium: 240px;
-  --f-tiptap__float--width-large: 300px;
+  --f-tiptap__float--aside-margin-x: var(--f-tiptap__spacer);
+  --f-tiptap__float--aside-margin-y: var(--f-tiptap__spacer);
+  --f-tiptap__float--aside-width-small: 180px;
+  --f-tiptap__float--aside-width-medium: 240px;
+  --f-tiptap__float--aside-width-large: 300px;
 
   --f-tiptap__table--border: 1px solid var(--tt-gray-light-a-200);
   --f-tiptap__table--background: transparent;
@@ -380,7 +380,7 @@ $f-tiptap__columns--min-horizontal-width: 550px !default;
     container-type: inline-size;
   }
 
-  .f-tiptap-float-layout {
+  .f-tiptap-float {
     position: relative;
 
     &::after {
@@ -390,11 +390,11 @@ $f-tiptap__columns--min-horizontal-width: 550px !default;
     }
   }
 
-  .f-tiptap-float {
+  .f-tiptap-float__aside {
     float: left;
-    margin-right: var(--f-tiptap__float--margin-x);
-    margin-bottom: var(--f-tiptap__float--margin-y);
-    width: var(--f-tiptap__float--width-medium);
+    margin-right: var(--f-tiptap__float--aside-margin-x);
+    margin-bottom: var(--f-tiptap__float--aside-margin-y);
+    width: var(--f-tiptap__float--aside-width-medium);
     position: relative;
     container-type: inline-size;
     box-sizing: border-box;
@@ -405,23 +405,23 @@ $f-tiptap__columns--min-horizontal-width: 550px !default;
     }
   }
 
-  .f-tiptap-float-layout[data-f-tiptap-float-layout-side="right"] .f-tiptap-float {
+  .f-tiptap-float[data-f-tiptap-float-side="right"] .f-tiptap-float__aside {
     float: right;
     margin-right: 0;
-    margin-left: var(--f-tiptap__float--margin-x);
+    margin-left: var(--f-tiptap__float--aside-margin-x);
   }
 
-  .f-tiptap-float-layout[data-f-tiptap-float-layout-size="small"] .f-tiptap-float {
-    width: var(--f-tiptap__float--width-small);
+  .f-tiptap-float[data-f-tiptap-float-size="small"] .f-tiptap-float__aside {
+    width: var(--f-tiptap__float--aside-width-small);
   }
 
-  .f-tiptap-float-layout[data-f-tiptap-float-layout-size="large"] .f-tiptap-float {
-    width: var(--f-tiptap__float--width-large);
+  .f-tiptap-float[data-f-tiptap-float-size="large"] .f-tiptap-float__aside {
+    width: var(--f-tiptap__float--aside-width-large);
   }
 
   .f-tiptap-editor & .f-tiptap-column::before,
-  .f-tiptap-editor & .f-tiptap-float-layout::before,
-  .f-tiptap-editor & .f-tiptap-float::before {
+  .f-tiptap-editor & .f-tiptap-float::before,
+  .f-tiptap-editor & .f-tiptap-float__aside::before {
     content: "";
     pointer-events: none;
     position: absolute;

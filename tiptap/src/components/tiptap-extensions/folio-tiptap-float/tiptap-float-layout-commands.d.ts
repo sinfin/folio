@@ -3,12 +3,12 @@ import '@tiptap/core';
 declare module '@tiptap/core' {
   interface Commands<ReturnType> {
     /**
-     * Inserts a FolioTiptapFloatLayout node.
+     * Inserts a FolioTiptapFloat node.
      */
-    insertFolioTiptapFloatLayout: (attrs?: Record<string, any>) => ReturnType;
+    insertFolioTiptapFloat: (attrs?: Record<string, any>) => ReturnType;
 
     /**
-     * Sets attributes for the FolioTiptapFloatLayout node.
+     * Sets attributes for the FolioTiptapFloat node.
      */
     setFloatLayoutAttributes: (attrs: Record<string, any>) => ReturnType;
   }

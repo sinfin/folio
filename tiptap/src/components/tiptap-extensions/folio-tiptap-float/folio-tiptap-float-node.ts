@@ -1,21 +1,21 @@
 import { Node, mergeAttributes } from "@tiptap/core";
 
 import {
-  insertFolioTiptapFloatLayout,
+  insertFolioTiptapFloat,
   setFloatLayoutAttributes,
-  goToFloatOrBack,
-  type InsertFolioTiptapFloatLayoutArgs,
+  goToFloatOrMain,
+  type InsertFolioTiptapFloatArgs,
   type SetFloatLayoutAttributesAttrs,
   type SetFloatLayoutAttributesArgs,
 } from "./folio-tiptap-float-utils";
 
-export * from "./folio-tiptap-float-layout-node";
+export * from "./folio-tiptap-float-node";
 // export * from './components/ColumnActionButton';
 
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
-    folioTiptapFloatLayout: {
-      insertFolioTiptapFloatLayout: () => ReturnType;
+    folioTiptapFloat: {
+      insertFolioTiptapFloat: () => ReturnType;
       setFloatLayoutAttributes: (
         attrs: SetFloatLayoutAttributesAttrs,
       ) => ReturnType;
@@ -23,19 +23,19 @@ declare module "@tiptap/core" {
   }
 }
 
-export const FolioTiptapFloatLayoutNode = Node.create({
-  name: "folioTiptapFloatLayout",
+export const FolioTiptapFloatNode = Node.create({
+  name: "folioTiptapFloat",
   group: "block",
   defining: true,
   isolating: true,
   allowGapCursor: false,
-  content: "folioTiptapFloat block+",
+  content: "folioTiptapFloatAside{1} folioTiptapFloatMain{1}",
   draggable: false,
 
   addOptions() {
     return {
       HTMLAttributes: {
-        class: "f-tiptap-float-layout",
+        class: "f-tiptap-float",
       },
     };
   },
@@ -45,12 +45,12 @@ export const FolioTiptapFloatLayoutNode = Node.create({
       side: {
         default: "left",
         parseHTML: (element) =>
-          element.getAttribute("data-f-tiptap-float-layout-side") || "left",
+          element.getAttribute("data-f-tiptap-float-side") || "left",
       },
       size: {
         default: "medium",
         parseHTML: (element) =>
-          element.getAttribute("data-f-tiptap-float-layout-size") || "medium",
+          element.getAttribute("data-f-tiptap-float-size") || "medium",
       },
     };
   },
@@ -58,7 +58,7 @@ export const FolioTiptapFloatLayoutNode = Node.create({
   parseHTML() {
     return [
       {
-        tag: 'div[class="f-tiptap-float-layout"]',
+        tag: 'div[class="f-tiptap-float"]',
       },
     ];
   },
@@ -68,8 +68,8 @@ export const FolioTiptapFloatLayoutNode = Node.create({
       "div",
       mergeAttributes(
         {
-          "data-f-tiptap-float-layout-side": HTMLAttributes.side,
-          "data-f-tiptap-float-layout-size": HTMLAttributes.size,
+          "data-f-tiptap-float-side": HTMLAttributes.side,
+          "data-f-tiptap-float-size": HTMLAttributes.size,
         },
         this.options.HTMLAttributes,
         HTMLAttributes,
@@ -80,10 +80,10 @@ export const FolioTiptapFloatLayoutNode = Node.create({
 
   addCommands() {
     return {
-      insertFolioTiptapFloatLayout:
+      insertFolioTiptapFloat:
         () =>
         ({ tr, dispatch, editor }) => {
-          return insertFolioTiptapFloatLayout({ tr, dispatch, editor });
+          return insertFolioTiptapFloat({ tr, dispatch, editor });
         },
       setFloatLayoutAttributes:
         (attrs: SetFloatLayoutAttributesAttrs) =>
@@ -102,13 +102,13 @@ export const FolioTiptapFloatLayoutNode = Node.create({
   addKeyboardShortcuts() {
     return {
       'Tab': () => {
-        return goToFloatOrBack({
+        return goToFloatOrMain({
           state: this.editor.state,
           dispatch: this.editor.view.dispatch,
         });
       },
       'Shift-Tab': () => {
-        return goToFloatOrBack({
+        return goToFloatOrMain({
           state: this.editor.state,
           dispatch: this.editor.view.dispatch,
         });
@@ -117,4 +117,4 @@ export const FolioTiptapFloatLayoutNode = Node.create({
   },
 });
 
-export default FolioTiptapFloatLayoutNode;
+export default FolioTiptapFloatNode;
