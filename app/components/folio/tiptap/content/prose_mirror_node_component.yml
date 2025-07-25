@@ -21,7 +21,7 @@ nodes:
   folioTiptapColumns:
     tag: div
     static_attrs:
-      class: "f-tiptap-columns"
+      class: "f-tiptap-columns f-tiptap-avoid-external-layout"
   folioTiptapFloat:
     tag: div
     attrs:
@@ -32,7 +32,7 @@ nodes:
         data_attribute: "data-f-tiptap-float-size"
         default_value: "medium"
     static_attrs:
-      class: "f-tiptap-float"
+      class: "f-tiptap-float f-tiptap-avoid-external-layout"
   folioTiptapFloatAside:
     tag: aside
     static_attrs:

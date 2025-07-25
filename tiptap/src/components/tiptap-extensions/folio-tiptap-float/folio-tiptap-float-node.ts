@@ -68,6 +68,7 @@ export const FolioTiptapFloatNode = Node.create({
       "div",
       mergeAttributes(
         {
+          "class": "f-tiptap-float f-tiptap-avoid-external-layout",
           "data-f-tiptap-float-side": HTMLAttributes.side,
           "data-f-tiptap-float-size": HTMLAttributes.size,
         },

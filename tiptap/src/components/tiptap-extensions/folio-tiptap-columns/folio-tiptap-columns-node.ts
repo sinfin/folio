@@ -52,7 +52,10 @@ export const FolioTiptapColumnsNode = Node.create({
   },
 
   renderHTML({ HTMLAttributes }) {
-    return ['div', mergeAttributes({ "data-f-tiptap-columns-count": HTMLAttributes.count }, this.options.HTMLAttributes, HTMLAttributes), 0];
+    return ['div', mergeAttributes({
+      "data-f-tiptap-columns-count": HTMLAttributes.count,
+      "class": "f-tiptap-columns f-tiptap-avoid-external-layout",
+    }, this.options.HTMLAttributes, HTMLAttributes), 0];
   },
 
   addCommands() {

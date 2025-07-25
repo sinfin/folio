@@ -132,6 +132,7 @@ $f-tiptap__columns--min-horizontal-width: 550px !default;
 
   --f-tiptap__columns--gap: var(--f-tiptap__spacer);
   --f-tiptap__column--border-in-editor-only: 1px dashed #ccc;
+  --f-tiptap__float--aside-background-color-in-editor-only: var(--bs-body-bg);
 
   --f-tiptap__float--aside-margin-x: var(--f-tiptap__spacer);
   --f-tiptap__float--aside-margin-y: var(--f-tiptap__spacer);
@@ -139,6 +140,7 @@ $f-tiptap__columns--min-horizontal-width: 550px !default;
   --f-tiptap__float--aside-width-medium: 240px;
   --f-tiptap__float--aside-width-large: 300px;
   --f-tiptap__float--aside-float: left;
+  --f-tiptap__float--aside-offset: 0;
 
   --f-tiptap__table--border: 1px solid var(--tt-gray-light-a-200);
   --f-tiptap__table--background: transparent;
@@ -204,13 +206,15 @@ $f-tiptap__columns--min-horizontal-width: 550px !default;
     margin-right: calc(var(--f-tiptap__root--padding-x) * -1);
   }
 
-  .f-tiptap-columns,
-  .node-folioTiptapNode{
-    .f-tiptap-node,
-    .node-folioTiptapNode,
-    .f-tiptap-columns {
-      --f-tiptap__root--padding-x: 0;
+  .node-folioTiptapNode {
+    .f-tiptap-node {
+      margin-left: 0;
+      margin-right: 0;
     }
+  }
+
+  .f-tiptap-avoid-external-layout {
+    --f-tiptap__root--padding-x: 0;
   }
 
   a:not([class]) {
@@ -391,14 +395,22 @@ $f-tiptap__columns--min-horizontal-width: 550px !default;
     }
   }
 
+  .f-tiptap-float__main {
+    position: relative;
+    z-index: 1;
+  }
+
   .f-tiptap-float__aside {
     margin-bottom: var(--f-tiptap__float--aside-margin-y);
+    position: relative;
+    z-index: 2;
   }
 
   @container (min-width: 500px) {
     .f-tiptap-float__aside {
       float: var(--f-tiptap__float--aside-float);
       margin-right: var(--f-tiptap__float--aside-margin-x);
+      margin-left: var(--f-tiptap__float--aside-offset);
       width: var(--f-tiptap__float--aside-width-medium);
       position: relative;
       container-type: inline-size;
@@ -408,7 +420,7 @@ $f-tiptap__columns--min-horizontal-width: 550px !default;
 
     .f-tiptap-float[data-f-tiptap-float-side="right"] .f-tiptap-float__aside {
       --f-tiptap__float--aside-float: right;
-      margin-right: 0;
+      margin-right: var(--f-tiptap__float--aside-offset);
       margin-left: var(--f-tiptap__float--aside-margin-x);
     }
 
@@ -431,6 +443,10 @@ $f-tiptap__columns--min-horizontal-width: 550px !default;
     inset: 0;
     border: var(--f-tiptap__column--border-in-editor-only);
     border-radius: var(--f-tiptap-editor--border-radius);
+  }
+
+  .f-tiptap-editor & .f-tiptap-float__aside {
+    background-color: var(--f-tiptap__float--aside-background-color-in-editor-only);
   }
 
   .f-tiptap-styled-paragraph {
