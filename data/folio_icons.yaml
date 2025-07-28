@@ -222,6 +222,9 @@ menu_down:
 menu_left:
   width: 24
   height: 24
+menu_open:
+  width: 24
+  height: 24
 menu_right:
   width: 24
   height: 24
