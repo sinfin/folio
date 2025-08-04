@@ -1,14 +1,5 @@
 import React, { useState, createElement } from "react";
-import {
-  GripVertical,
-  Plus,
-  MoveUp,
-  MoveDown,
-  ArrowUpToLine,
-  ArrowDownToLine,
-  X,
-  SquarePen,
-} from "lucide-react";
+import { GripVertical, Plus, X, SquarePen } from "lucide-react";
 import type { Editor } from "@tiptap/react";
 import type { Node } from "@tiptap/pm/model";
 import { TextSelection } from "@tiptap/pm/state";
@@ -62,136 +53,11 @@ const handlePlusClick = ({
 
 const handleDragClick = () => {};
 
-type MoveDirection = "up" | "down" | "top" | "bottom";
-
 type TargetNodeInfo = {
   resultElement: Element | null;
   resultNode: Node | null;
   pos: number | null;
 };
-
-const moveNode = (
-  editor: Editor,
-  direction: MoveDirection,
-  targetNode: TargetNodeInfo,
-): boolean => {
-  try {
-    const { state } = editor;
-
-    if (!targetNode.resultNode || targetNode.pos === null) {
-      console.error("Invalid target node");
-      return false;
-    }
-
-    // Find the node's position in the document
-    const resolvedPos = state.doc.resolve(targetNode.pos);
-
-    // Work only with root nodes directly under the doc node
-    const depth = 1; // Root nodes are at depth 1
-    const parentDepth = 0; // Document is at depth 0
-    const nodeIndex = resolvedPos.index(parentDepth);
-    const parent = resolvedPos.node(parentDepth); // The document node
-
-    // Calculate target index
-    let targetIndex: number;
-    switch (direction) {
-      case "up":
-        if (nodeIndex === 0) return false;
-        targetIndex = nodeIndex - 1;
-        break;
-      case "down":
-        if (nodeIndex >= parent.childCount - 1) return false;
-        targetIndex = nodeIndex + 1;
-        break;
-      case "top":
-        if (nodeIndex === 0) return false;
-        targetIndex = 0;
-        break;
-      case "bottom":
-        if (nodeIndex >= parent.childCount - 1) return false;
-        targetIndex = parent.childCount - 1;
-        break;
-      default:
-        return false;
-    }
-
-    // Execute the move using a simpler approach
-    const success = editor
-      .chain()
-      .focus()
-      .command(({ tr }) => {
-        try {
-          // Use the node we already found from findElementNextToCoords
-          const currentNode = targetNode.resultNode;
-          const currentNodePos = targetNode.pos;
-
-          if (!currentNode || !currentNodePos) {
-            console.error("No node found at position");
-            return false;
-          }
-
-          // Calculate target position
-          let targetPos: number;
-          const parentStart = resolvedPos.start(0); // Start of document
-
-          // Remove the node from its current position first
-          tr.delete(currentNodePos, currentNodePos + currentNode.nodeSize);
-
-          // Calculate target position in the updated document
-          const updatedDoc = tr.doc;
-          const updatedParent = updatedDoc.resolve(parentStart).node(0);
-
-          if (targetIndex === 0) {
-            targetPos = parentStart;
-          } else {
-            // After removal, use targetIndex directly for both up and down movements
-            let effectiveTargetIndex = targetIndex;
-
-            // Calculate position by summing node sizes up to target index
-            targetPos = parentStart;
-            for (
-              let i = 0;
-              i < effectiveTargetIndex && i < updatedParent.childCount;
-              i++
-            ) {
-              targetPos += updatedParent.child(i).nodeSize;
-            }
-          }
-
-          // Insert at target position
-          tr.insert(targetPos, currentNode);
-
-          // Set selection to the moved node
-          const newNodeStart = targetPos + 1;
-          if (newNodeStart < tr.doc.content.size) {
-            tr.setSelection(TextSelection.create(tr.doc, newNodeStart));
-          }
-
-          return true;
-        } catch (error) {
-          console.error("Error in move transaction:", error);
-          return false;
-        }
-      })
-      .run();
-
-    return success;
-  } catch (error) {
-    console.error(`Error moving node ${direction}:`, error);
-    return false;
-  }
-};
-
-const moveNodeUp = (editor: Editor, targetNode: TargetNodeInfo): boolean =>
-  moveNode(editor, "up", targetNode);
-const moveNodeDown = (editor: Editor, targetNode: TargetNodeInfo): boolean =>
-  moveNode(editor, "down", targetNode);
-const moveNodeToTop = (editor: Editor, targetNode: TargetNodeInfo): boolean =>
-  moveNode(editor, "top", targetNode);
-const moveNodeToBottom = (
-  editor: Editor,
-  targetNode: TargetNodeInfo,
-): boolean => moveNode(editor, "bottom", targetNode);
 
 const removeNode = (editor: Editor, targetNode: TargetNodeInfo): boolean => {
   try {
@@ -202,8 +68,9 @@ const removeNode = (editor: Editor, targetNode: TargetNodeInfo): boolean => {
       return false;
     }
 
+    const resolvedPos = state.doc.resolve(targetNode.pos);
     const tr = state.tr;
-    tr.delete(targetNode.pos, targetNode.pos + targetNode.resultNode.nodeSize);
+    tr.delete(resolvedPos.before(1), resolvedPos.after(1));
     editor.view.dispatch(tr);
 
     return true;
@@ -233,44 +100,16 @@ const editFolioTiptapNode = (
 
 const TRANSLATIONS = {
   cs: {
-    moveUp: "Přesunout",
-    moveDown: "Přesunout",
-    moveToTop: "Nahoru",
-    moveToBottom: "Dolu",
     removeNode: "Odstranit",
     editFolioTiptapNode: "Upravit",
   },
   en: {
-    moveUp: "Move",
-    moveDown: "Move",
-    moveToTop: "Move to top",
-    moveToBottom: "Move to bottom",
     removeNode: "Remove",
     editFolioTiptapNode: "Edit",
   },
 };
 
 const DRAG_HANDLE_DROPDOWN_OPTIONS = [
-  {
-    type: "moveUp",
-    icon: MoveUp,
-    command: moveNodeUp,
-  },
-  {
-    type: "moveDown",
-    icon: MoveDown,
-    command: moveNodeDown,
-  },
-  {
-    type: "moveToTop",
-    icon: ArrowUpToLine,
-    command: moveNodeToTop,
-  },
-  {
-    type: "moveToBottom",
-    icon: ArrowDownToLine,
-    command: moveNodeToBottom,
-  },
   {
     type: "removeNode",
     icon: X,
