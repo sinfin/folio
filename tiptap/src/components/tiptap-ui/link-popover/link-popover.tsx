@@ -37,12 +37,18 @@ const TRANSLATIONS = {
     openTheLink: "Otevřít odkaz",
     openSettings: "Upravit odkaz",
     removeLink: "Odstranit odkaz",
+    placeholder: "Vložit URL odkazu …",
+    settings: "Nastavit odkaz",
+    openInNew: "Otevřít v novém okně",
   },
   en: {
     apply: "Apply",
     openTheLink: "Open the link",
     openSettings: "Edit link",
     removeLink: "Remove link",
+    placeholder: "Paste link URL …",
+    settings: "Link settings",
+    openInNew: "Open in new window",
   },
 };
 
@@ -64,7 +70,7 @@ export interface LinkData {
 export interface LinkMainProps {
   linkData: LinkData;
   setLinkData: React.Dispatch<React.SetStateAction<LinkData>>;
-  setLink: () => void;
+  setLink: (optionalNewData?: LinkData) => void;
   removeLink: () => void;
   active: boolean;
 }
@@ -136,8 +142,8 @@ export const useLinkHandler = (props: LinkHandlerProps) => {
         .extendMarkRange("link")
         .setLink({
           href: optionalNewData.href || linkData.href || "",
-          rel: optionalNewData.rel || linkData.rel,
-          target: optionalNewData.target || linkData.target,
+          rel: (typeof optionalNewData.rel === "undefined") ? linkData.rel : optionalNewData.rel,
+          target: (typeof optionalNewData.target === "undefined") ? linkData.target : optionalNewData.target,
         })
         .run();
 
@@ -225,67 +231,92 @@ const LinkMain: React.FC<LinkMainProps> = ({
   };
 
   return (
-    <>
-      <input
-        type="url"
-        placeholder="Paste a link..."
-        value={linkData.href || ""}
-        onChange={(e) =>
-          setLinkData({ ...linkData, href: e.target.value || null })
-        }
-        onKeyDown={handleKeyDown}
-        autoComplete="off"
-        autoCorrect="off"
-        autoCapitalize="off"
-        className="tiptap-input tiptap-input-clamp"
-      />
+    <div className="f-tiptap-link-popover">
+      <div className="tiptap-popover__rows">
+        <div className="tiptap-popover__row">
+          <input
+            type="url"
+            placeholder={translate(TRANSLATIONS, "placeholder")}
+            value={linkData.href || ""}
+            onChange={(e) =>
+              setLinkData({ ...linkData, href: e.target.value || null })
+            }
+            onKeyDown={handleKeyDown}
+            autoComplete="off"
+            autoCorrect="off"
+            autoCapitalize="off"
+            className="f-tiptap-link-popover__input"
+          />
 
-      <div className="tiptap-button-group" data-orientation="horizontal">
-        <Button
-          type="button"
-          onClick={() => setLink()}
-          title={translate(TRANSLATIONS, "apply")}
-          disabled={!linkData.href && !active}
-          data-style="ghost"
-        >
-          <CornerDownLeftIcon className="tiptap-button-icon" />
-        </Button>
+          <div className="tiptap-button-group" data-orientation="horizontal">
+            <Button
+              type="button"
+              onClick={() => setLink()}
+              title={translate(TRANSLATIONS, "apply")}
+              disabled={!linkData.href && !active}
+              data-style="ghost"
+            >
+              <CornerDownLeftIcon className="tiptap-button-icon" />
+            </Button>
+          </div>
 
-        <Button
-          type="button"
-          onClick={handleSettingsLink}
-          data-active-state={(linkData.rel || linkData.target) ? "on" : "off"}
-          title={translate(TRANSLATIONS, "openSettings")}
-          data-style="ghost"
-        >
-          <Settings className="tiptap-button-icon" />
-        </Button>
+          <Separator />
+
+          <div className="tiptap-button-group" data-orientation="horizontal">
+            <Button
+              type="button"
+              onClick={handleOpenLink}
+              title={translate(TRANSLATIONS, "openTheLink")}
+              disabled={!linkData.href && !active}
+              data-style="ghost"
+            >
+              <ExternalLinkIcon className="tiptap-button-icon" />
+            </Button>
+
+            <Button
+              type="button"
+              onClick={removeLink}
+              title={translate(TRANSLATIONS, "removeLink")}
+              disabled={!linkData.href && !active}
+              data-style="ghost"
+            >
+              <TrashIcon className="tiptap-button-icon" />
+            </Button>
+          </div>
+        </div>
+
+        <div className="tiptap-popover__row">
+          <Button
+            type="button"
+            onClick={handleSettingsLink}
+            data-active-state={linkData.rel ? "on" : "off"}
+            title={translate(TRANSLATIONS, "openSettings")}
+            data-style="ghost"
+            className="f-tiptap-link-popover__settings-button"
+          >
+            <Settings className="tiptap-button-icon" />
+            {translate(TRANSLATIONS, "settings")}
+          </Button>
+
+          <label className="f-tiptap-link-popover__checkbox-label">
+            <input
+              type="checkbox"
+              className="f-tiptap-link-popover__checkbox"
+              checked={linkData.target === "_blank"}
+              onChange={(e) => {
+                setLink({
+                  ...linkData,
+                  target: e.target.checked ? "_blank" : null,
+                })
+              }}
+            />
+            <span className="f-tiptap-link-popover__checkbox-text">
+              {translate(TRANSLATIONS, "openInNew")}
+            </span>
+          </label>
+        </div>
       </div>
-
-      <Separator />
-
-      <div className="tiptap-button-group" data-orientation="horizontal">
-        <Button
-          type="button"
-          onClick={handleOpenLink}
-          title={translate(TRANSLATIONS, "openTheLink")}
-          disabled={!linkData.href && !active}
-          data-style="ghost"
-        >
-          <ExternalLinkIcon className="tiptap-button-icon" />
-        </Button>
-
-        <Button
-          type="button"
-          onClick={removeLink}
-          title={translate(TRANSLATIONS, "removeLink")}
-          disabled={!linkData.href && !active}
-          data-style="ghost"
-        >
-          <TrashIcon className="tiptap-button-icon" />
-        </Button>
-      </div>
-    </>
+    </div>
   );
 };
 
