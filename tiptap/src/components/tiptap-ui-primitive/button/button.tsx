@@ -16,6 +16,7 @@ export interface ButtonProps
   className?: string
   showTooltip?: boolean
   tooltip?: React.ReactNode
+  spanTag?: boolean
   shortcutKeys?: string
 }
 
@@ -66,6 +67,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
       className = "",
+      spanTag,
       children,
       tooltip,
       showTooltip = true,
@@ -88,16 +90,29 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     )
 
     if (!tooltip || !showTooltip) {
-      return (
-        <button
-          className={`tiptap-button ${className}`.trim()}
-          ref={ref}
-          aria-label={ariaLabel}
-          {...props}
-        >
-          {children}
-        </button>
-      )
+      if (spanTag) {
+        return (
+          <span
+            className={`tiptap-button ${className}`.trim()}
+            ref={ref as React.Ref<HTMLSpanElement>}
+            aria-label={ariaLabel}
+            {...props}
+          >
+            {children}
+          </span>
+        )
+      } else {
+        return (
+          <button
+            className={`tiptap-button ${className}`.trim()}
+            ref={ref}
+            aria-label={ariaLabel}
+            {...props}
+          >
+            {children}
+          </button>
+        )
+      }
     }
 
     return (

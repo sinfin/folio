@@ -258,6 +258,7 @@ export function SmartDragHandleContent({
       >
         <DropdownMenuTrigger asChild>
           <Button
+            spanTag
             type="button"
             data-style="ghost"
             role="button"
