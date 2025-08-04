@@ -87,6 +87,11 @@ export function FolioEditor({
   const editor = useEditor({
     onUpdate,
     onCreate,
+    onDrop () {
+      for (const dropCursor of document.querySelectorAll('.prosemirror-dropcursor-block')) {
+        (dropCursor as HTMLElement).hidden = true;
+      }
+    },
     content: clearContent({ content: defaultContent, blockEditor }),
     autofocus: blockEditor,
     immediatelyRender: true,
