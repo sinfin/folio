@@ -48,6 +48,13 @@
     padding: 0.625rem;
   }
 
+  &[data-size="large-icon"] {
+    height: 24px + 2 * 4px;
+    min-width: 24px + 2 * 4px;
+    padding: 4px;
+    border-radius: 4px;
+  }
+
   /* button size small */
   &[data-size="small"] {
     font-size: 0.75rem;
@@ -91,6 +98,11 @@
   &[data-size="large"] .tiptap-button-icon {
     width: 1.125rem;
     height: 1.125rem;
+  }
+
+  &[data-size="large-icon"] .tiptap-button-icon {
+    width: 24px;
+    height: 24px;
   }
 
   &[data-size="small"] .tiptap-button-icon {

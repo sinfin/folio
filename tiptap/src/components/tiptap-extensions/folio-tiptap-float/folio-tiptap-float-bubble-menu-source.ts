@@ -5,6 +5,14 @@ import type { FolioEditorBubbleMenuSource } from '@/components/tiptap-editors/fo
 
 import { FolioTiptapFloatNode } from './folio-tiptap-float-node';
 import { AlignJustify, ArrowUpWideNarrow, ArrowDownWideNarrow, ArrowLeftToLine, ArrowRightToLine, X } from 'lucide-react';
+import {
+  ArrowCollapseLeft,
+  ArrowCollapseRight,
+  CloseIcon,
+  SizeLIcon,
+  SizeMIcon,
+  SizeSIcon,
+} from '@/components/tiptap-icons';
 
 import translate from "@/lib/i18n";
 
@@ -59,7 +67,7 @@ export const FOLIO_TIPTAP_FLOAT_BUBBLE_MENU_SOURCE: FolioEditorBubbleMenuSource 
       {
         key: "setFloatSideToLeft",
         title: translate(TRANSLATIONS, "setFloatSideToLeft"),
-        icon: ArrowLeftToLine,
+        icon: ArrowCollapseLeft,
         command: ({ editor }: { editor: Editor }) => {
           editor.chain().focus().setFolioTiptapFloatAttributes({ side: "left" }).run()
         }
@@ -67,7 +75,7 @@ export const FOLIO_TIPTAP_FLOAT_BUBBLE_MENU_SOURCE: FolioEditorBubbleMenuSource 
       {
         key: "cancelFloat",
         title: translate(TRANSLATIONS, "cancelFloat"),
-        icon: X,
+        icon: CloseIcon,
         command: ({ editor }: { editor: Editor }) => {
           editor.chain().focus().cancelFolioTiptapFloat().run()
         }
@@ -75,7 +83,7 @@ export const FOLIO_TIPTAP_FLOAT_BUBBLE_MENU_SOURCE: FolioEditorBubbleMenuSource 
       {
         key: "setFloatSideToRight",
         title: translate(TRANSLATIONS, "setFloatSideToRight"),
-        icon: ArrowRightToLine,
+        icon: ArrowCollapseRight,
         command: ({ editor }: { editor: Editor }) => {
           editor.chain().focus().setFolioTiptapFloatAttributes({ side: "right" }).run()
         }
@@ -85,7 +93,7 @@ export const FOLIO_TIPTAP_FLOAT_BUBBLE_MENU_SOURCE: FolioEditorBubbleMenuSource 
       {
         key: "setFloatSizeToSmall",
         title: translate(TRANSLATIONS, "setFloatSizeToSmall"),
-        icon: ArrowDownWideNarrow,
+        icon: SizeSIcon,
         command: ({ editor }: { editor: Editor }) => {
           editor.chain().focus().setFolioTiptapFloatAttributes({ size: "small" }).run()
         }
@@ -93,7 +101,7 @@ export const FOLIO_TIPTAP_FLOAT_BUBBLE_MENU_SOURCE: FolioEditorBubbleMenuSource 
       {
         key: "setFloatSizeToMedium",
         title: translate(TRANSLATIONS, "setFloatSizeToMedium"),
-        icon: AlignJustify,
+        icon: SizeMIcon,
         command: ({ editor }: { editor: Editor }) => {
           editor.chain().focus().setFolioTiptapFloatAttributes({ size: "medium" }).run()
         }
@@ -101,7 +109,7 @@ export const FOLIO_TIPTAP_FLOAT_BUBBLE_MENU_SOURCE: FolioEditorBubbleMenuSource 
       {
         key: "setFloatSizeToLarge",
         title: translate(TRANSLATIONS, "setFloatSizeToLarge"),
-        icon: ArrowUpWideNarrow,
+        icon: SizeLIcon,
         command: ({ editor }: { editor: Editor }) => {
           editor.chain().focus().setFolioTiptapFloatAttributes({ size: "large" }).run()
         }

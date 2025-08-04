@@ -84,6 +84,7 @@ export function FolioEditorBubbleMenu({
                 key={item.title}
                 type="button"
                 data-style="ghost"
+                data-size="large-icon"
                 role="button"
                 tabIndex={-1}
                 aria-label={item.title}
