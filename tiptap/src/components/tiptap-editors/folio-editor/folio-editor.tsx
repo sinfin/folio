@@ -70,7 +70,7 @@ interface FolioEditorProps {
   onUpdate?: (content: { editor: Editor }) => void;
   defaultContent?: JSONContent;
   type: "block" | "rich-text";
-  folioTiptapNodes: FolioTiptapNodeFromInput[];
+  folioTiptapConfig: FolioTiptapConfig;
 }
 
 export function FolioEditor({
@@ -78,7 +78,7 @@ export function FolioEditor({
   onUpdate,
   defaultContent,
   type,
-  folioTiptapNodes,
+  folioTiptapConfig,
 }: FolioEditorProps) {
   const windowSize = useWindowSize();
   const editorRef = React.useRef<HTMLDivElement>(null);
@@ -156,14 +156,14 @@ export function FolioEditor({
             }),
             FolioTiptapCommandsExtension.configure({
               suggestion:
-                blockEditor && folioTiptapNodes
+                (blockEditor && folioTiptapConfig.nodes && folioTiptapConfig.nodes.length)
                   ? {
                       ...folioTiptapCommandsSuggestion,
                       items: makeFolioTiptapCommandsSuggestionItems([
                         TextStylesCommandGroup,
                         ListsCommandGroup,
                         LayoutsCommandGroup,
-                        makeFolioTiptapNodesCommandGroup(folioTiptapNodes),
+                        makeFolioTiptapNodesCommandGroup(folioTiptapConfig.nodes),
                       ]),
                     }
                   : folioTiptapCommandsSuggestion
@@ -198,8 +198,6 @@ export function FolioEditor({
     };
   }, []);
 
-  // console.log('editor rendered', Number(new Date()))
-
   return (
     <EditorContext.Provider value={{ editor }}>
       <div
@@ -209,6 +207,7 @@ export function FolioEditor({
         <FolioEditorToolbar
           editor={editor}
           blockEditor={blockEditor}
+          folioTiptapConfig={folioTiptapConfig}
         />
 
         <div className="f-tiptap-editor__content-wrap">

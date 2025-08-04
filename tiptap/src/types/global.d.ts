@@ -60,6 +60,11 @@ declare global {
     type: string;
   }
 
+  interface FolioTiptapConfig {
+    nodes: FolioTiptapNodeFromInput[];
+    single_image_node_name?: string;
+  }
+
   interface FolioEditorCommandChain extends import("@tiptap/core").CommandChain {
     insertContent: (content: any) => FolioEditorCommandChain;
   }
@@ -69,7 +74,7 @@ declare global {
     onUpdate?: (content: { editor: TiptapEditor }) => void;
     defaultContent?: import("@tiptap/react").JSONContent;
     type: "rich-text" | "block";
-    folioTiptapNodes: FolioTiptapNodeFromInput[];
+    folioTiptapConfig: FolioTiptapConfig;
   }
 
   interface FolioEditorCommand {
@@ -109,7 +114,7 @@ declare global {
         root: ReturnType<typeof import("react-dom/client").createRoot> | null;
         init: (props: {
           node: HTMLElement;
-          folioTiptapNodes?: FolioTiptapNodeFromInput[];
+          folioTiptapConfig?: FolioTiptapConfig;
           type: "rich-text" | "block";
           onCreate?: (content: { editor: TiptapEditor }) => void;
           onUpdate?: (content: { editor: TiptapEditor }) => void;

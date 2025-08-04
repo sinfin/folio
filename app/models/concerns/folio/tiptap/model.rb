@@ -31,4 +31,8 @@ module Folio::Tiptap::Model
       end
     end
   end
+
+  def tiptap_config
+    Folio::Tiptap.config
+  end
 end

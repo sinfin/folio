@@ -65,6 +65,10 @@ window.Folio.Tiptap.init = (props) => {
     contentWithFolioTiptapNodeUniqueIds = addUniqueIdsToFolioTiptapNodes(props.content);
   }
 
+  const folioTiptapConfigDefaults = {
+    nodes: [],
+  }
+
   const root = createRoot(props.node);
   root.render(
     <StrictMode>
@@ -73,7 +77,7 @@ window.Folio.Tiptap.init = (props) => {
         onUpdate={onUpdate}
         defaultContent={contentWithFolioTiptapNodeUniqueIds}
         type={props.type}
-        folioTiptapNodes={props.folioTiptapNodes || []}
+        folioTiptapConfig={props.folioTiptapConfig ? { ...folioTiptapConfigDefaults, ...props.folioTiptapConfig } : folioTiptapConfigDefaults}
       />
     </StrictMode>,
   );
@@ -124,7 +128,7 @@ window.addEventListener("message", (e) => {
       window.Folio.Tiptap.init({
         node,
         type: node.dataset.tiptapType === "block" ? "block" : "rich-text",
-        folioTiptapNodes: e.data.folioTiptapNodes,
+        folioTiptapConfig: e.data.folioTiptapConfig,
         content: e.data.content,
       });
     }

@@ -6,6 +6,9 @@ class Folio::Tiptap::Node
   include ActiveModel::Attributes
   include ActiveModel::Translation
 
+  include Folio::RecursiveSubclasses
+  include Folio::StiPreload
+
   def self.tiptap_node(structure:)
     Folio::Tiptap::NodeBuilder.new(klass: self, structure:).build!
   end
@@ -86,5 +89,11 @@ class Folio::Tiptap::Node
     else
       fail ArgumentError, "Invalid Tiptap node type: #{attrs['type']}"
     end
+  end
+
+  def self.sti_paths
+    [
+      Rails.root.join("app/models/**/tiptap/node"),
+    ]
   end
 end

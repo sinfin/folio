@@ -9,7 +9,7 @@ import {
   ToolbarGroup,
   ToolbarSeparator,
 } from "@/components/tiptap-ui-primitive/toolbar";
-import { FolioTiptapNodeButton } from "@/components/tiptap-ui/folio-tiptap-node-button";
+import { FolioTiptapNodeButton, FolioTiptapNodeButtonForSingleImage } from "@/components/tiptap-ui/folio-tiptap-node-button";
 import { LinkPopover } from "@/components/tiptap-ui/link-popover";
 import { MarkButton } from "@/components/tiptap-ui/mark-button";
 import { UndoRedoButton } from "@/components/tiptap-ui/undo-redo-button";
@@ -63,6 +63,7 @@ type FolioEditorToolbarState = {
 interface FolioEditorToolbarProps {
   editor: Editor;
   blockEditor: boolean;
+  folioTiptapConfig?: FolioTiptapConfig;
 }
 
 const makeMarkEnabled =
@@ -242,9 +243,11 @@ const getToolbarState = ({
 const MainToolbarContent = ({
   blockEditor,
   editor,
+  folioTiptapConfig,
 }: {
   blockEditor: boolean;
   editor: Editor;
+  folioTiptapConfig?: FolioTiptapConfig;
 }) => {
   const editorState: FolioEditorToolbarState = useEditorState({
     editor,
@@ -350,6 +353,19 @@ const MainToolbarContent = ({
               editor={editor}
             />
           </ToolbarGroup>
+
+          {folioTiptapConfig && folioTiptapConfig.single_image_node_name ? (
+            <>
+              <ToolbarSeparator />
+
+              <ToolbarGroup>
+                <FolioTiptapNodeButtonForSingleImage
+                  editor={editor}
+                  nodeName={folioTiptapConfig.single_image_node_name}
+                />
+              </ToolbarGroup>
+            </>
+          ) : null}
         </>
       ) : null}
 
@@ -367,6 +383,7 @@ const MainToolbarContent = ({
 export function FolioEditorToolbar({
   editor,
   blockEditor,
+  folioTiptapConfig,
 }: FolioEditorToolbarProps) {
   if (!editor) return null;
 
@@ -375,6 +392,7 @@ export function FolioEditorToolbar({
       <MainToolbarContent
         blockEditor={blockEditor}
         editor={editor}
+        folioTiptapConfig={folioTiptapConfig}
       />
     </Toolbar>
   );

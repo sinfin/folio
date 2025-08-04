@@ -11,7 +11,7 @@ class TiptapInput < SimpleForm::Inputs::StringInput
                         origin: ENV["FOLIO_TIPTAP_DEV"] ? "*" : "",
                         type: tiptap_type,
                         render_url: @builder.template.render_nodes_console_api_tiptap_path,
-                        tiptap_nodes_json: tiptap_nodes_json(@builder.object.try(:folio_tiptap_nodes) || Folio::Tiptap.default_tiptap_nodes),
+                        tiptap_config_json:,
                       },
                       action: {
                         "message@window" => "onWindowMessage",
@@ -51,23 +51,7 @@ class TiptapInput < SimpleForm::Inputs::StringInput
   end
 
   private
-    def tiptap_nodes_json(node_names)
-      node_names.map do |node_name|
-        {
-          title: {
-            cs: node_name_in_locale(node_name, :cs),
-            en: node_name_in_locale(node_name, :en),
-          },
-          type: node_name,
-        }
-      end.to_json
-    end
-
-    def node_name_in_locale(node_name, locale)
-      if I18n.available_locales.include?(locale.to_sym)
-        I18n.with_locale(locale) { node_name.constantize.model_name.human }
-      else
-        I18n.with_locale(I18n.default_locale) { node_name.constantize.model_name.human }
-      end
+    def tiptap_config_json
+      (@builder.object.try(:tiptap_config) || Folio::Tiptap.config).to_input_json
     end
 end

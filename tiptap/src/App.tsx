@@ -8,7 +8,7 @@ interface AppProps {
   onCreate?: (content: { editor: TiptapEditor }) => void;
   defaultContent?: JSONContent;
   type?: "rich-text" | "block";
-  folioTiptapNodes: FolioTiptapNodeFromInput[];
+  folioTiptapConfig: FolioTiptapConfig;
 }
 
 function App({
@@ -16,7 +16,7 @@ function App({
   onUpdate,
   defaultContent,
   type,
-  folioTiptapNodes,
+  folioTiptapConfig,
 }: AppProps) {
   switch (type) {
     case "block":
@@ -27,7 +27,7 @@ function App({
           onUpdate={onUpdate}
           defaultContent={defaultContent}
           type={type as "block" | "rich-text"}
-          folioTiptapNodes={folioTiptapNodes}
+          folioTiptapConfig={folioTiptapConfig}
         />
       );
     default:

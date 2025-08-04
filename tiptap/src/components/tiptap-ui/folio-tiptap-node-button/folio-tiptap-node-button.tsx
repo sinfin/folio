@@ -15,6 +15,7 @@ import { makeUniqueId } from '@/components/tiptap-extensions/folio-tiptap-node';
 
 export interface FolioTiptapNodeButtonProps extends ButtonProps {
   editor: Editor | null;
+  disabled?: boolean;
 }
 
 export function insertFolioTiptapNode(
@@ -46,9 +47,7 @@ export function insertFolioTiptapNode(
 export const FolioTiptapNodeButton = React.forwardRef<
   HTMLButtonElement,
   FolioTiptapNodeButtonProps
->(({ editor: providedEditor, disabled }, ref) => {
-  const editor = useTiptapEditor(providedEditor);
-
+>(({ editor, disabled }, ref) => {
   const handleClick = React.useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       if (!e.defaultPrevented && !disabled && editor) {
