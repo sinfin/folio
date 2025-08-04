@@ -1,5 +1,5 @@
 import React, { useState, createElement } from "react";
-import { GripVertical, Plus, X, SquarePen } from "lucide-react";
+import { GripVertical, Plus } from "lucide-react";
 import type { Editor } from "@tiptap/react";
 import type { Node } from "@tiptap/pm/model";
 import { TextSelection } from "@tiptap/pm/state";
@@ -12,6 +12,7 @@ import {
   DropdownMenuItem,
   DropdownMenuGroup,
 } from "@/components/tiptap-ui-primitive/dropdown-menu";
+import { CloseIcon, PencilBoxIcon } from '@/components/tiptap-icons';
 
 import translate from "@/lib/i18n";
 
@@ -123,14 +124,14 @@ const TRANSLATIONS = {
 const DRAG_HANDLE_DROPDOWN_OPTIONS = [
   {
     type: "removeNode",
-    icon: X,
+    icon: CloseIcon,
     command: removeNode,
   },
 ];
 
 const DRAG_HANDLE_FOLIO_TIPTAP_NODE_OPTION = {
   type: "editFolioTiptapNode",
-  icon: SquarePen,
+  icon: PencilBoxIcon,
   command: editFolioTiptapNode,
 };
 
