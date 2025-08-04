@@ -70,7 +70,18 @@ const removeNode = (editor: Editor, targetNode: TargetNodeInfo): boolean => {
 
     const resolvedPos = state.doc.resolve(targetNode.pos);
     const tr = state.tr;
-    tr.delete(resolvedPos.before(1), resolvedPos.after(1));
+
+    let startPos, endPos
+
+    if (targetNode.resultNode.isLeaf || targetNode.resultNode.content.size === 0) {
+      startPos = targetNode.pos
+      endPos = targetNode.pos + targetNode.resultNode.nodeSize;
+    } else {
+      startPos = resolvedPos.before(1);
+      endPos = resolvedPos.after(1);
+    }
+
+    tr.delete(startPos, endPos);
     editor.view.dispatch(tr);
 
     return true;
