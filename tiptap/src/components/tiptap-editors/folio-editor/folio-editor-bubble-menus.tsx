@@ -35,6 +35,7 @@ export interface FolioEditorBubbleMenuSource {
   shouldShow: (params: FolioEditorBubbleMenuSourceShouldShowArgs) => boolean;
   items: FolioEditorBubbleMenuSourceItem[][];
   activeKeys?: (params: FolioEditorBubbleMenuSourceShouldShowArgs) => string[];
+  disabledKeys?: (params: FolioEditorBubbleMenuSourceShouldShowArgs) => string[];
   placement?: "top" | "right" | "bottom" | "left" | "top-start" | "top-end" | "right-start" | "right-end" | "bottom-start" | "bottom-end" | "left-start" | "left-end" | undefined;
 }
 
@@ -52,6 +53,7 @@ export function FolioEditorBubbleMenu({
   }
 
   const [activeKeys, setActiveKeys] = React.useState<string[]>([])
+  const [disabledKeys, setDisabledKeys] = React.useState<string[]>([])
 
   return (
     <BubbleMenu
@@ -59,11 +61,21 @@ export function FolioEditorBubbleMenu({
       shouldShow={({ editor, state }: FolioEditorBubbleMenuSourceShouldShowArgs) => {
         const show = source.shouldShow({ editor, state })
 
-        if (show && source.activeKeys) {
-          const newActiveKeys = source.activeKeys({ editor, state })
+        if (show) {
+          if (source.activeKeys) {
+            const newActiveKeys = source.activeKeys({ editor, state })
 
-          if (JSON.stringify(newActiveKeys) !== JSON.stringify(activeKeys)) {
-            setActiveKeys(newActiveKeys)
+            if (JSON.stringify(newActiveKeys) !== JSON.stringify(activeKeys)) {
+              setActiveKeys(newActiveKeys)
+            }
+          }
+
+          if (source.disabledKeys) {
+            const newDisabledKeys = source.disabledKeys({ editor, state })
+
+            if (JSON.stringify(newDisabledKeys) !== JSON.stringify(disabledKeys)) {
+              setDisabledKeys(newDisabledKeys)
+            }
           }
         }
 
@@ -78,6 +90,7 @@ export function FolioEditorBubbleMenu({
           {row.map((item) => {
             const Icon = item.icon;
             const active = activeKeys.indexOf(item.key) !== -1;
+            const disabled = disabledKeys.indexOf(item.key) !== -1;
 
             return (
               <Button
@@ -88,10 +101,11 @@ export function FolioEditorBubbleMenu({
                 role="button"
                 tabIndex={-1}
                 aria-label={item.title}
+                disabled={disabled}
                 data-active-state={active ? "on" : "off"}
                 aria-pressed={active}
                 tooltip={item.title}
-                onClick={() => {
+                onClick={disabled ? undefined : () => {
                   item.command({ editor });
                 }}
               >

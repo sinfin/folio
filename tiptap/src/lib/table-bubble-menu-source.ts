@@ -1,3 +1,4 @@
+import { findParentNode } from "@tiptap/core";
 import type { Editor } from "@tiptap/core";
 import type { FolioEditorBubbleMenuSource } from "@/components/tiptap-editors/folio-editor/folio-editor-bubble-menus";
 
@@ -20,8 +21,8 @@ const TRANSLATIONS = {
   cs: {
     addColumnAfter: "Přidat sloupec za",
     addColumnBefore: "Přidat sloupec před",
-    addRowAfter: "Přidat řádek za",
-    addRowBefore: "Přidat řádek před",
+    addRowAfter: "Přidat řádek nad",
+    addRowBefore: "Přidat řádek pod",
     deleteColumn: "Odstranit sloupec",
     deleteRow: "Odstranit řádek",
     deleteTable: "Odstranit tabulku",
@@ -34,8 +35,8 @@ const TRANSLATIONS = {
   en: {
     addColumnAfter: "Add column after",
     addColumnBefore: "Add column before",
-    addRowAfter: "Add row after",
-    addRowBefore: "Add row before",
+    addRowAfter: "Add row above",
+    addRowBefore: "Add row below",
     deleteColumn: "Remove column",
     deleteRow: "Remove row",
     deleteTable: "Remove table",
@@ -51,6 +52,19 @@ export const TABLE_BUBBLE_MENU_SOURCE: FolioEditorBubbleMenuSource = {
   pluginKey: "tableBubbleMenu",
   shouldShow: ({ editor, state }) => {
     return editor.isActive("table");
+  },
+  disabledKeys: ({ editor }) => {
+    const result = []
+
+    if (!editor.can().splitCell()) {
+      result.push("splitCell");
+    }
+
+    if (!editor.can().mergeCells()) {
+      result.push("mergeCells");
+    }
+
+    return result
   },
   items: [
     [
