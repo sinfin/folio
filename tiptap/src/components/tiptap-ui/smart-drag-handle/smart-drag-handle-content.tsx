@@ -35,20 +35,15 @@ const handlePlusClick = ({
     editor,
   });
 
-  if (!nodeToUse || !nodeToUse.resultNode || nodeToUse.pos === null) {
+  if (!nodeToUse || nodeToUse.pos === null) {
     console.error("No node found at the clicked position");
     return;
   }
 
-  const targetPos = nodeToUse.pos + nodeToUse.resultNode.nodeSize;
-
   editor
     .chain()
     .focus()
-    .insertContentAt(targetPos - 1, {
-      type: "paragraph",
-      content: [{ type: "text", text: "/" }],
-    })
+    .triggerFolioTiptapCommand(nodeToUse.pos)
     .run();
 };
 
