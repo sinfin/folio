@@ -1,4 +1,4 @@
-import { Columns2 } from "lucide-react";
+import { TableIcon } from "@/components/tiptap-icons";
 
 import {
   FolioTiptapColumnsCommand,
@@ -9,7 +9,7 @@ import {
 export const LayoutsCommandGroup: FolioEditorCommandGroup = {
   title: { cs: "Rozložení", en: "Layouts" },
   key: "layouts",
-  icon: Columns2,
+  icon: TableIcon,
   commands: [
     TableCommand,
     FolioTiptapColumnsCommand,

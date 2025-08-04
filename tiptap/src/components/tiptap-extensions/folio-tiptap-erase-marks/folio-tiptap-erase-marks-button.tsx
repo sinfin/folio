@@ -1,11 +1,12 @@
 import * as React from "react";
 import type { Range } from "@tiptap/core";
 import type { Editor, Content } from "@tiptap/react";
-import { Eraser } from "lucide-react";
 
 // --- UI Primitives ---
 import type { ButtonProps } from "@/components/tiptap-ui-primitive/button";
 import { Button } from "@/components/tiptap-ui-primitive/button";
+
+import { FormatEraseIcon } from '@/components/tiptap-icons';
 
 import translate from "@/lib/i18n";
 
@@ -74,7 +75,7 @@ export const FolioTiptapEraseMarksButton = React.forwardRef<
       disabled={!enabled}
       data-disabled={!enabled}
     >
-      <Eraser className="tiptap-button-icon" />
+      <FormatEraseIcon className="tiptap-button-icon" />
     </Button>
   );
 });
