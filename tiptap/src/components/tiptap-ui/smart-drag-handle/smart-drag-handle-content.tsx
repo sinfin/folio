@@ -232,64 +232,66 @@ export function SmartDragHandleContent({
       style={{ minHeight: nodeHeightPx || undefined }}
       ref={wrapRef}
     >
-      <Button
-        type="button"
-        data-style="ghost"
-        role="button"
-        tabIndex={-1}
-        aria-label="Plus"
-        onClick={(event) => {
-          handlePlusClick({ event, editor });
-        }}
-        className="f-tiptap-smart-drag-handle__button f-tiptap-smart-drag-handle__button--plus"
-      >
-        <Plus className="tiptap-button-icon" />
-      </Button>
+      <div className="f-tiptap-smart-drag-handle-content__flex">
+        <Button
+          type="button"
+          data-style="ghost"
+          role="button"
+          tabIndex={-1}
+          aria-label="Plus"
+          onClick={(event) => {
+            handlePlusClick({ event, editor });
+          }}
+          className="f-tiptap-smart-drag-handle__button f-tiptap-smart-drag-handle__button--plus"
+        >
+          <Plus className="tiptap-button-icon" />
+        </Button>
 
-      <DropdownMenu
-        open={openedDropdown === "drag"}
-        onOpenChange={(open: boolean) => {
-          setOpenedDropdown(open ? "drag" : null);
-        }}
-      >
-        <DropdownMenuTrigger asChild>
-          <Button
-            spanTag
-            type="button"
-            data-style="ghost"
-            role="button"
-            tabIndex={-1}
-            aria-label="Drag"
-            onClick={handleDragClick}
-            className="f-tiptap-smart-drag-handle__button f-tiptap-smart-drag-handle__button--drag"
-          >
-            <GripVertical className="tiptap-button-icon" />
-          </Button>
-        </DropdownMenuTrigger>
+        <DropdownMenu
+          open={openedDropdown === "drag"}
+          onOpenChange={(open: boolean) => {
+            setOpenedDropdown(open ? "drag" : null);
+          }}
+        >
+          <DropdownMenuTrigger asChild>
+            <Button
+              spanTag
+              type="button"
+              data-style="ghost"
+              role="button"
+              tabIndex={-1}
+              aria-label="Drag"
+              onClick={handleDragClick}
+              className="f-tiptap-smart-drag-handle__button f-tiptap-smart-drag-handle__button--drag"
+            >
+              <GripVertical className="tiptap-button-icon" />
+            </Button>
+          </DropdownMenuTrigger>
 
-        <DropdownMenuContent>
-          <DropdownMenuGroup>
-            {dragHandleButtonOptions.map((option) => (
-              <DropdownMenuItem key={option.type} asChild>
-                <Button
-                  type="button"
-                  data-style="ghost"
-                  role="button"
-                  tabIndex={-1}
-                  aria-label={translate(TRANSLATIONS, option.type)}
-                  className="f-tiptap-smart-drag-handle__dropdown-button"
-                  onClick={makeButtonOnClick(editor, option, setOpenedDropdown)}
-                >
-                  {createElement(option.icon, {
-                    className: "tiptap-button-icon",
-                  })}
-                  {translate(TRANSLATIONS, option.type)}
-                </Button>
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuGroup>
-        </DropdownMenuContent>
-      </DropdownMenu>
+          <DropdownMenuContent>
+            <DropdownMenuGroup>
+              {dragHandleButtonOptions.map((option) => (
+                <DropdownMenuItem key={option.type} asChild>
+                  <Button
+                    type="button"
+                    data-style="ghost"
+                    role="button"
+                    tabIndex={-1}
+                    aria-label={translate(TRANSLATIONS, option.type)}
+                    className="f-tiptap-smart-drag-handle__dropdown-button"
+                    onClick={makeButtonOnClick(editor, option, setOpenedDropdown)}
+                  >
+                    {createElement(option.icon, {
+                      className: "tiptap-button-icon",
+                    })}
+                    {translate(TRANSLATIONS, option.type)}
+                  </Button>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
     </div>
   );
 }

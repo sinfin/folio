@@ -1,18 +1,22 @@
 .f-tiptap-smart-drag-handle-content {
-  display: flex;
-  gap: 0.125rem;
-  align-items: flex-start;
   padding-right: 1rem;
-  position: relative;
 
-  &::after {
-    content: "";
-    display: block;
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background: var(--f-tiptap__root--background-color);
-    opacity: 0.9;
+  &__flex {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.125rem;
+    position: relative;
+
+    &::after {
+      content: "";
+      display: block;
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background: var(--f-tiptap__root--background-color);
+      opacity: 0.9;
+      border-radius: var(--tt-radius-lg, 0.75rem);
+    }
   }
 }
 
