@@ -95,6 +95,10 @@ body,
 
     & ~ div {
       z-index: 2;
+
+      &[tabindex="0"] {
+        z-index: 3;
+      }
     }
   }
 }
