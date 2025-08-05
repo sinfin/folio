@@ -1,13 +1,15 @@
 # frozen_string_literal: true
 
 class Folio::Tiptap::NodeBuilder
-  def initialize(klass:, structure:)
+  def initialize(klass:, structure:, tiptap_config: nil)
     @klass = klass
     @structure = convert_structure_to_hashes(structure)
+    @tiptap_config = get_tiptap_config(tiptap_config)
   end
 
   def build!
     build_structure!
+    handle_config!
   end
 
   private
@@ -336,5 +338,40 @@ class Folio::Tiptap::NodeBuilder
       end
 
       result
+    end
+
+    TIPTAP_CONFIG_HASH_WHITELIST = {
+      use_as_single_image_in_toolbar: [TrueClass, FalseClass],
+      autoclick_cover: [TrueClass, FalseClass],
+    }
+
+    def get_tiptap_config(tiptap_config_hash_or_nil)
+      if tiptap_config_hash_or_nil.is_a?(Hash)
+        tiptap_config_hash_or_nil.each do |key, value|
+          if value.nil?
+            fail ArgumentError, "Expected value for `#{key}` in tiptap_config to be present, got nil"
+          end
+
+          if TIPTAP_CONFIG_HASH_WHITELIST[key].nil?
+            fail ArgumentError, "Unknown key `#{key}` in tiptap_config. Allowed keys are: #{TIPTAP_CONFIG_HASH_WHITELIST.keys.join(', ')}"
+          end
+
+          unless TIPTAP_CONFIG_HASH_WHITELIST[key].any? { |klass| value.is_a?(klass) }
+            fail ArgumentError, "Expected value for `#{key}` in tiptap_config to be of type #{TIPTAP_CONFIG_HASH_WHITELIST[key]}, got #{value.class.name}"
+          end
+        end
+
+        tiptap_config_hash_or_nil
+      else
+        {}
+      end
+    end
+
+    def handle_config!
+      @klass.class_variable_set(:@@tiptap_config, @tiptap_config)
+
+      @klass.define_singleton_method :tiptap_config do
+        class_variable_get(:@@tiptap_config)
+      end
     end
 end

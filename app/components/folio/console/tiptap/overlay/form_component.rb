@@ -14,9 +14,7 @@ class Folio::Console::Tiptap::Overlay::FormComponent < Folio::Console::Applicati
     end
 
     def should_autoclick_cover?
-      @node.class.validators.any? do |validator|
-        validator.is_a?(ActiveModel::Validations::PresenceValidator) && validator.attributes.include?(:cover)
-      end
+      @node.class.tiptap_config[:autoclick_cover] == true
     end
 
     def render_input(f:, key:, attr_config:)

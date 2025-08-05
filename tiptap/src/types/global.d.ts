@@ -58,11 +58,14 @@ declare global {
   interface FolioTiptapNodeFromInput {
     title: { cs: string, en: string };
     type: string;
+    config: {
+      use_as_single_image_in_toolbar?: boolean;
+      autoclick_cover?: boolean;
+    }
   }
 
   interface FolioTiptapConfig {
     nodes: FolioTiptapNodeFromInput[];
-    single_image_node_name?: string;
   }
 
   interface FolioEditorCommandChain extends import("@tiptap/core").CommandChain {

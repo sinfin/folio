@@ -16,11 +16,11 @@ const TRANSLATIONS = {
 
 export interface FolioTiptapNodeButtonForSingleImageProps {
   editor: Editor;
-  nodeName?: string;
+  singleImageNodeForToolbar: FolioTiptapNodeFromInput | null;
 }
 
-export const FolioTiptapNodeButtonForSingleImage = ({ editor, nodeName }: FolioTiptapNodeButtonForSingleImageProps) => {
-  if (!nodeName) return
+export const FolioTiptapNodeButtonForSingleImage = ({ editor, singleImageNodeForToolbar }: FolioTiptapNodeButtonForSingleImageProps) => {
+  if (!singleImageNodeForToolbar) return
   if (!editor || !editor.isEditable) return null;
 
   const handleClick = React.useCallback(
@@ -28,12 +28,12 @@ export const FolioTiptapNodeButtonForSingleImage = ({ editor, nodeName }: FolioT
       window.top!.postMessage(
         {
           type: "f-tiptap-slash-command:selected",
-          attrs: { type: nodeName },
+          attrs: { type: singleImageNodeForToolbar.type },
         },
         "*",
       );
     },
-    [nodeName],
+    [singleImageNodeForToolbar],
   );
 
   const label = translate(TRANSLATIONS, "insert");

@@ -258,6 +258,18 @@ const MainToolbarContent = ({
     },
   });
 
+  const singleImageNodeForToolbar = React.useMemo(() => {
+    if (blockEditor && folioTiptapConfig?.nodes) {
+      const node = folioTiptapConfig.nodes.find((node) => (
+        node.config && node.config.use_as_single_image_in_toolbar
+      ))
+
+      return node || null;
+    }
+
+    return null;
+  }, [blockEditor, folioTiptapConfig && folioTiptapConfig.nodes])
+
   return (
     <>
       <Spacer />
@@ -354,14 +366,14 @@ const MainToolbarContent = ({
             />
           </ToolbarGroup>
 
-          {folioTiptapConfig && folioTiptapConfig.single_image_node_name ? (
+          {singleImageNodeForToolbar ? (
             <>
               <ToolbarSeparator />
 
               <ToolbarGroup>
                 <FolioTiptapNodeButtonForSingleImage
                   editor={editor}
-                  nodeName={folioTiptapConfig.single_image_node_name}
+                  singleImageNodeForToolbar={singleImageNodeForToolbar}
                 />
               </ToolbarGroup>
             </>

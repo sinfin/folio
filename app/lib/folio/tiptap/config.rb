@@ -3,19 +3,15 @@
 module Folio
   module Tiptap
     class Config
-      attr_accessor :node_names,
-                    :single_image_node_name
+      attr_accessor :node_names
 
-      def initialize(node_names: nil,
-                     single_image_node: nil)
+      def initialize(node_names: nil)
         @node_names = node_names || get_all_tiptap_node_names
-        @single_image_node_name = single_image_node || default_single_image_node_name
       end
 
       def to_h
         {
           node_names: @node_names,
-          single_image_node_name: @single_image_node_name,
         }
       end
 
@@ -32,11 +28,6 @@ module Folio
           Dir[Rails.root.join("app/models/**/tiptap/node/**/*.rb")].map do |path|
             path.gsub("#{Rails.root}/app/models/", "").delete_suffix(".rb").classify
           end
-        end
-
-        def default_single_image_node_name
-          unsafe_name = "#{Rails.application.class.name.deconstantize}::Tiptap::Node::Images::SingleImage"
-          unsafe_name if unsafe_name.safe_constantize
         end
 
         def node_name_in_locale(model_name, locale)
@@ -58,6 +49,7 @@ module Folio
                 en: node_name_in_locale(model_name, :en),
               },
               type: node_name,
+              config: node_klass.tiptap_config,
             }
           end
         end

@@ -6,8 +6,10 @@ class Folio::Tiptap::Node
   include ActiveModel::Attributes
   include ActiveModel::Translation
 
-  def self.tiptap_node(structure:)
-    Folio::Tiptap::NodeBuilder.new(klass: self, structure:).build!
+  def self.tiptap_node(structure:, tiptap_config: nil)
+    Folio::Tiptap::NodeBuilder.new(klass: self,
+                                   structure:,
+                                   tiptap_config:).build!
   end
 
   def logger
