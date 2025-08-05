@@ -54,6 +54,7 @@ body,
 
   &--block {
     min-height: 500px;
+    height: 100vh;
   }
 
   &--rich-text {
@@ -67,10 +68,6 @@ body,
     &.f-tiptap-editor--focused {
       border-color: var(--f-tiptap-editor--border-color--focused);
     }
-  }
-
-  .f-tiptap-iframe-content--console-aside &--block {
-    height: 100vh;
   }
 }
 

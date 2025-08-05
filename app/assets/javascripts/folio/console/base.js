@@ -121,6 +121,7 @@
 //= require folio/console/state/state
 //= require folio/console/tiptap/overlay/form_component
 //= require folio/console/tiptap/overlay_component
+//= require folio/console/tiptap/simple_form_wrap_component
 //= require folio/console/ui/tabs_component
 //= require folio/console/users/invite_and_copy/invite_and_copy
 

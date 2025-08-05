@@ -15,7 +15,7 @@
     flex: 0 0 100%
     min-height: 0
 
-  &__inner
+  &__scroller
     display: flex
     flex-direction: column
     flex: 0 1 100%
@@ -41,6 +41,7 @@
     z-index: 2
     padding: 0 var(--f-c-tiptap-simple-form-wrap-inner-padding)
     background: $body-bg
+    position: relative
 
   &__editors-bar-title
     font-weight: $font-weight-bold
@@ -55,6 +56,40 @@
   &__form-footer
     flex: 0 0 auto
 
+  &__editors-input-wrap
+    &,
+    .f-input-tiptap,
+    .form-group__custom-html,
+    .f-input-tiptap__inner,
+    .f-input-tiptap__iframe
+      height: 100% !important
+      max-height: 100% !important
+
+  &__editors-bar-scroll-trigger
+    align-items: center
+    cursor: pointer
+    display: flex
+    height: 24px
+    justify-content: center
+    left: 0
+    position: absolute
+    right: 0
+    top: -12px
+
+  &__editors-bar-scroll-ico
+    align-items: center
+    background: $dark-gray
+    border-radius: 24px
+    color: $white
+    display: flex
+    justify-content: center
+    transition: $transition-base
+    width: 24px
+    height: 24px
+
+  &[data-f-c-tiptap-simple-form-wrap-scrolled-to-bottom-value="true"] &__editors-bar-scroll-ico
+    transform: rotate(180deg)
+
   @include mq-mobile-menu
     --f-c-tiptap-simple-form-wrap-inner-padding: #{$f-c-layout-main-container__padding--mobile}
 
@@ -64,15 +99,26 @@
       bottom: 0
       box-shadow: 0px 5px 3px 0px rgba(0, 0, 0, 0.15), 2px 2px 15px 2px rgba(0, 0, 0, 0.15)
 
-    &__inner
+    &__editors
+      height: calc(100% - 53px)
+
+    &__iframe
+      height: 100% !important
+      max-height: 100% !important
+
+    &__scroller
+      display: block
       overflow-y: scroll
 
   @media screen and (min-width: 1700px)
-    &__inner
+    &__scroller
       display: grid
       grid-template-columns: 1fr 1fr
       grid-template-rows: auto 1fr
       grid-gap: 0
+
+    &__editors-bar-scroll-trigger
+      display: none
 
     &__fields
       overflow-y: scroll
@@ -87,12 +133,3 @@
     &__editors
       grid-column-start: 2
       grid-row-start: 2
-
-    &__editors-input-wrap
-      &,
-      .f-input-tiptap,
-      .form-group__custom-html,
-      .f-input-tiptap__inner,
-      .f-input-tiptap__iframe
-        height: 100% !important
-        max-height: 100% !important

@@ -18,4 +18,11 @@ class Folio::Console::Tiptap::SimpleFormWrapComponent < Folio::Console::Applicat
     @simple_form_options[:html] ||= {}
     @simple_form_options[:html][:class] = class_names.join(" ")
   end
+
+  def data
+    stimulus_controller("f-c-tiptap-simple-form-wrap",
+                        values: {
+                          scrolled_to_bottom: false,
+                        })
+  end
 end
