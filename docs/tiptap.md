@@ -147,8 +147,9 @@ end
 
 ### Supported Attribute Types
 
-The `Node` models are defined by calling `tiptap_node` method which uses the `Folio::Tiptap::NodeBuilder` and supports various attribute types:
+The `Node` models are defined by calling `tiptap_node` method which uses the `Folio::Tiptap::NodeBuilder` and supports various attribute types. Attributes can be defined using either the compact syntax (symbols, arrays, hashes) or the explicit hash format with a `:type` property. Under the hood, all compact definitions are converted to the hash format.
 
+#### Compact Syntax (recommended for simple cases):
 - `:string`, `:text`: Basic text attributes
 - `:rich_text`: JSON-stored rich text content (nested Tiptap structure)
 - `:url_json`: URL with metadata (href, title, target, etc.)
@@ -157,6 +158,61 @@ The `Node` models are defined by calling `tiptap_node` method which uses the `Fo
 - `:images`, `:documents`: Multiple Folio file attachments
 - `{ class_name: "Model" }`: belongs_to relationship
 - `{ class_name: "Model", has_many: true }`: has_many relationship
+
+#### Hash Format with :type property:
+All compact definitions are internally converted to hash format:
+- `{ type: :string }`, `{ type: :text }`: Basic text attributes
+- `{ type: :rich_text }`: JSON-stored rich text content
+- `{ type: :url_json }`: URL with metadata
+- `{ type: :collection, collection: [...] }`: Collection to pick from
+- `{ type: :folio_attachment, file_type: "Folio::File::Image", has_many: false, ... }`: File attachments
+- `{ type: :relation, class_name: "Model", has_many: false }`: Model relationships
+
+**Note**: The compact syntax is still fully supported and recommended for most use cases. The hash format is primarily used internally and for advanced customization.
+
+#### Example: Both Syntaxes
+
+Here's how the same node definition can be written in both compact and hash syntax:
+
+```rb
+# Compact syntax (recommended)
+class MyApp::ExampleNode < Folio::Tiptap::Node
+  tiptap_node structure: {
+    title: :string,
+    content: :rich_text,
+    button_url: :url_json,
+    background: %w[gray blue red],
+    cover: :image,
+    documents: :documents,
+    page: { class_name: "Folio::Page" },
+    related_pages: { class_name: "Folio::Page", has_many: true }
+  }
+end
+
+# Equivalent hash syntax (for reference)
+class MyApp::ExampleNode < Folio::Tiptap::Node
+  tiptap_node structure: {
+    title: { type: :string },
+    content: { type: :rich_text },
+    button_url: { type: :url_json },
+    background: { type: :collection, collection: %w[gray blue red] },
+    cover: { 
+      type: :folio_attachment,
+      file_type: "Folio::File::Image",
+      placement_class_name: "Folio::FilePlacement::Cover",
+      has_many: false
+    },
+    documents: { 
+      type: :folio_attachment,
+      file_type: "Folio::File::Document",
+      placement_class_name: "Folio::FilePlacement::Document",
+      has_many: true
+    },
+    page: { type: :relation, class_name: "Folio::Page", has_many: false },
+    related_pages: { type: :relation, class_name: "Folio::Page", has_many: true }
+  }
+end
+```
 
 ### File Attachments
 

@@ -19,9 +19,9 @@ class Folio::Tiptap::Node
 
     attributes.each do |key, value|
       if value.present?
-        key_definition = self.class.structure[key.to_sym]
+        attr_type = self.class.structure.dig(key.to_sym, :type)
 
-        if key_definition && key_definition.in?(%i[rich_text url_json]) && value.is_a?(Hash)
+        if attr_type && attr_type.in?(%i[rich_text url_json]) && value.is_a?(Hash)
           data[key.to_s] = value.to_json
         else
           data[key.to_s] = value
@@ -48,24 +48,24 @@ class Folio::Tiptap::Node
 
     permitted = []
 
-    self.class.structure.each do |key, type|
-      case type
+    self.class.structure.each do |key, attr_config|
+      case attr_config[:type]
       when :url_json
         permitted << key
         permitted << { key => ::Folio::Tiptap::ALLOWED_URL_JSON_KEYS }
-      when :image, :document, :audio, :video
-        permitted << "#{key}_id"
-        permitted << { "#{key}_placement_attributes" => %i[file_id _destroy] }
-      when :images, :documents
-        permitted << { "#{key.to_s.singularize}_ids" => [] }
-        permitted << { "#{key.to_s.singularize}_placements_attributes" => %i[file_id _destroy] }
-      when Hash
-        if type[:class_name]
-          if type[:has_many]
-            permitted << { "#{key.to_s.singularize}_ids" => [] }
-          else
-            permitted << "#{key}_id"
-          end
+      when :folio_attachment
+        if attr_config[:has_many]
+          permitted << { "#{key.to_s.singularize}_ids" => [] }
+          permitted << { "#{key.to_s.singularize}_placements_attributes" => %i[file_id _destroy] }
+        else
+          permitted << "#{key}_id"
+          permitted << { "#{key}_placement_attributes" => %i[file_id _destroy] }
+        end
+      when :relation
+        if attr_config[:has_many]
+          permitted << { "#{key.to_s.singularize}_ids" => [] }
+        else
+          permitted << "#{key}_id"
         end
       else
         permitted << key

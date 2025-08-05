@@ -3,81 +3,35 @@
 class Folio::Tiptap::NodeBuilder
   def initialize(klass:, structure:)
     @klass = klass
-    @structure = structure
+    @structure = convert_structure_to_hashes(structure)
   end
 
   def build!
     build_structure!
   end
 
-  def self.folio_attachments_file_class(type:)
-    case type
-    when :image, :images
-      Folio::File::Image
-    when :document, :documents
-      Folio::File::Document
-    when :audio
-      Folio::File::Audio
-    when :video
-      Folio::File::Video
-    else
-      fail ArgumentError, "Unsupported attachment type #{type}"
-    end
-  end
-
-  def self.folio_attachments_file_placements_class(type:)
-    case type
-    when :image
-      Folio::FilePlacement::Cover
-    when :images
-      Folio::FilePlacement::Image
-    when :document
-      Folio::FilePlacement::SingleDocument
-    when :documents
-      Folio::FilePlacement::Document
-    when :audio
-      Folio::FilePlacement::AudioCover
-    when :video
-      Folio::FilePlacement::VideoCover
-    else
-      fail ArgumentError, "Unsupported attachment type #{type}"
-    end
-  end
-
   private
     def build_structure!
-      @structure.each do |key, type|
+      @structure.each do |key, attr_config|
         if key == :type
           fail ArgumentError, "Cannot use reserved key `type` in tiptap_node definition"
         end
 
-        if type.is_a?(Hash) && type[:class_name]
-          if type[:has_many]
-            setup_structure_for_has_many(key:, class_name: type[:class_name])
-          else
-            setup_structure_for_belongs_to(key:, class_name: type[:class_name])
-          end
-        elsif type.is_a?(Array)
+        case attr_config[:type]
+        when :relation
+          setup_structure_for_relation(key:, attr_config:)
+        when :url_json
+          setup_structure_for_url_json(key:)
+        when :folio_attachment
+          setup_structure_for_folio_attachment(key:, attr_config:)
+        when :collection,
+             :string,
+             :text
           setup_structure_default(key:)
+        when :rich_text
+          setup_structure_for_rich_text(key:)
         else
-          case type
-          when :url_json
-            setup_structure_for_url_json(key:)
-          when :image,
-               :images,
-               :document,
-               :documents,
-               :audio,
-               :video
-            setup_structure_for_attachment(key:, type:)
-          when :rich_text
-            setup_structure_for_rich_text(key:)
-          when :string,
-               :text
-            setup_structure_default(key:)
-          else
-            fail ArgumentError, "Unsupported type #{type} in tiptap_node definition"
-          end
+          fail ArgumentError, "Unsupported type #{attr_config[:type]} in tiptap_node definition"
         end
       end
 
@@ -85,6 +39,14 @@ class Folio::Tiptap::NodeBuilder
 
       @klass.define_singleton_method :structure do
         class_variable_get(:@@structure)
+      end
+    end
+
+    def setup_structure_for_relation(key:, attr_config:)
+      if attr_config[:has_many]
+        setup_structure_for_has_many(key:, class_name: attr_config[:class_name])
+      else
+        setup_structure_for_belongs_to(key:, class_name: attr_config[:class_name])
       end
     end
 
@@ -135,15 +97,15 @@ class Folio::Tiptap::NodeBuilder
       end
     end
 
-    def setup_structure_for_attachment(key:, type:)
-      class_name = self.class.folio_attachments_file_class(type:).to_s
-      is_plural = type.to_s.end_with?("s")
+    def setup_structure_for_folio_attachment(key:, attr_config:)
+      attr_config[:attachment_key]
+      class_name = attr_config[:file_type]
 
-      if is_plural
+      if attr_config[:has_many]
         # Placeholder methods for compatibility with existing code in react_images/react_documents
         @klass.define_method "#{key.to_s.singularize}_placements" do
           send("#{key.to_s.singularize}_ids").map do |file_id|
-            Folio::Tiptap::NodeBuilder.folio_attachments_file_placements_class(type:).new(file_id:)
+            attr_config[:placement_class_name].constantize.new(file_id:)
           end
         end
 
@@ -179,12 +141,12 @@ class Folio::Tiptap::NodeBuilder
           file_id = send("#{key}_id")
 
           if file_id.present?
-            Folio::Tiptap::NodeBuilder.folio_attachments_file_placements_class(type:).new(file_id:)
+            attr_config[:placement_class_name].constantize.new(file_id:)
           end
         end
 
         @klass.define_method "build_#{key}_placement" do
-          Folio::Tiptap::NodeBuilder.folio_attachments_file_placements_class(type:).new
+          attr_config[:placement_class_name].constantize.new
         end
 
         @klass.define_method "#{key}_placement_attributes=" do |attributes|
@@ -293,5 +255,86 @@ class Folio::Tiptap::NodeBuilder
           fail ArgumentError, "Expected an Array of #{has_many_klass.name} for #{key}, got #{value}"
         end
       end
+    end
+
+    def convert_structure_to_hashes(structure)
+      result = {}
+
+      structure.each do |key, value|
+        if value.is_a?(Hash)
+          if value[:type].is_a?(Symbol)
+            result[key] = value
+          elsif value[:class_name].present?
+            result[key] = { type: :relation, class_name: value[:class_name], has_many: value[:has_many] || false }
+          else
+            fail ArgumentError, "Expected :type or :class_name in hash for #{key}, got #{value.inspect}"
+          end
+        elsif value.is_a?(Array)
+          result[key] = { type: :collection, collection: value }
+        elsif value.is_a?(Symbol)
+          case value
+          when :image
+            result[key] = {
+              type: :folio_attachment,
+              attachment_key: key,
+              placement_key: "#{key.to_s.singularize}_placement".to_sym,
+              placement_class_name: "Folio::FilePlacement::Cover",
+              file_type: "Folio::File::Image",
+              has_many: false
+            }
+          when :document
+            result[key] = {
+              type: :folio_attachment,
+              attachment_key: key,
+              placement_key: "#{key.to_s.singularize}_placement".to_sym,
+              placement_class_name: "Folio::FilePlacement::SingleDocument",
+              file_type: "Folio::File::Document",
+              has_many: false
+            }
+          when :audio
+            result[key] = {
+              type: :folio_attachment,
+              attachment_key: key,
+              placement_key: "#{key.to_s.singularize}_placement".to_sym,
+              placement_class_name: "Folio::FilePlacement::AudioCover",
+              file_type: "Folio::File::Audio",
+              has_many: false
+            }
+          when :video
+            result[key] = {
+              type: :folio_attachment,
+              attachment_key: key,
+              placement_key: "#{key.to_s.singularize}_placement".to_sym,
+              placement_class_name: "Folio::FilePlacement::VideoCover",
+              file_type: "Folio::File::Video",
+              has_many: false
+            }
+          when :images
+            result[key] = {
+              type: :folio_attachment,
+              attachment_key: key,
+              placement_key: "#{key.to_s.singularize}_placements".to_sym,
+              placement_class_name: "Folio::FilePlacement::Image",
+              file_type: "Folio::File::Image",
+              has_many: true
+            }
+          when :documents
+            result[key] = {
+              type: :folio_attachment,
+              attachment_key: key,
+              placement_key: "#{key.to_s.singularize}_placements".to_sym,
+              placement_class_name: "Folio::FilePlacement::Document",
+              file_type: "Folio::File::Document",
+              has_many: true
+            }
+          else
+            result[key] = { type: value }
+          end
+        else
+          fail ArgumentError, "Expected a Hash, Array or a Symbol for #{key}, got #{value.class.name}"
+        end
+      end
+
+      result
     end
 end

@@ -19,20 +19,22 @@ class Folio::Console::Tiptap::Overlay::FormComponent < Folio::Console::Applicati
       end
     end
 
-    def render_input(f:, key:, type:)
-      case type
+    def render_input(f:, key:, attr_config:)
+      case attr_config[:type]
       when :string, :text, :url_json, :rich_text
-        send("render_input_#{type}", f:, key:)
-      when :image, :document, :video, :audio
-        render_file_picker(f:, key:, type:)
-      when :images, :documents
-        render_react_files(f:, key:, type:)
-      when Array
-        render_collection_select(f:, key:, type:)
-      when Hash
-        render_relation_select(f:, key:, type:)
+        send("render_input_#{attr_config[:type]}", f:, key:)
+      when :folio_attachment
+        if attr_config[:has_many]
+          render_react_files(f:, key:, attr_config:)
+        else
+          render_file_picker(f:, key:, attr_config:)
+        end
+      when :collection
+        render_collection_select(f:, key:, attr_config:)
+      when :relation
+        render_relation_select(f:, key:, attr_config:)
       else
-        raise ArgumentError, "Unsupported input type: #{type}"
+        raise ArgumentError, "Unsupported input type: #{attr_config[:type]}"
       end
     end
 
@@ -77,26 +79,24 @@ class Folio::Console::Tiptap::Overlay::FormComponent < Folio::Console::Applicati
               as: :tiptap
     end
 
-    def render_file_picker(f:, key:, type:)
+    def render_file_picker(f:, key:, attr_config:)
       content_tag(:div, class: "f-c-tiptap-overlay-form__react-file-picker f-c-tiptap-overlay-form__react-file-picker--#{key}") do
         helpers.file_picker(f:,
-                            placement_key: "#{key}_placement",
-                            file_type: Folio::Tiptap::NodeBuilder.folio_attachments_file_class(type:).to_s)
+                            placement_key: attr_config[:placement_key],
+                            file_type: attr_config[:file_type])
       end
     end
 
-    def render_react_files(f:, key:, type:)
-      if type == :images
+    def render_react_files(f:, key:, attr_config:)
+      if attr_config[:file_type] == "Folio::File::Image"
         helper_name = :react_images
-        Folio::FilePlacement::Image
-      elsif type == :documents
+      elsif attr_config[:file_type] == "Folio::File::Document"
         helper_name = :react_documents
-        Folio::FilePlacement::Document
       else
         fail ArgumentError, "Unsupported type for react files: #{type}"
       end
 
-      selected_placements = @node.send("#{key.to_s.singularize}_placements")
+      selected_placements = @node.send(attr_config[:placement_key])
 
       helpers.send(helper_name,
                    selected_placements,
@@ -104,22 +104,22 @@ class Folio::Console::Tiptap::Overlay::FormComponent < Folio::Console::Applicati
                    type: "#{key.to_s.singularize}_placements")
     end
 
-    def render_relation_select(f:, key:, type:)
-      class_name = type[:class_name]
+    def render_relation_select(f:, key:, attr_config:)
+      class_name = attr_config[:class_name]
 
       unless class_name && class_name.constantize < ActiveRecord::Base
         fail ArgumentError, "Missing class_name for relation select"
       end
 
-      if type[:has_many]
-        render_relation_select_for_has_many(f:, key:, type:, class_name:)
+      if attr_config[:has_many]
+        render_relation_select_for_has_many(f:, key:, class_name:)
       else
-        render_relation_select_for_single(f:, key:, type:, class_name:)
+        render_relation_select_for_single(f:, key:, class_name:)
       end
     end
 
-    def render_collection_select(f:, key:, type:)
-      collection = type.map do |value|
+    def render_collection_select(f:, key:, attr_config:)
+      collection = attr_config[:collection].map do |value|
         [@node.class.human_attribute_name("#{key}/#{value}"), value]
       end
 
@@ -128,7 +128,7 @@ class Folio::Console::Tiptap::Overlay::FormComponent < Folio::Console::Applicati
               include_blank: false
     end
 
-    def render_relation_select_for_has_many(f:, key:, type:, class_name:)
+    def render_relation_select_for_has_many(f:, key:, class_name:)
       input_name = "#{key}_ids"
 
       collection = @node.send(key).map do |record|
@@ -140,7 +140,7 @@ class Folio::Console::Tiptap::Overlay::FormComponent < Folio::Console::Applicati
               hint: "TODO with a better remote multi-select"
     end
 
-    def render_relation_select_for_single(f:, key:, type:, class_name:)
+    def render_relation_select_for_single(f:, key:, class_name:)
       input_name = "#{key}_id"
       collection = []
       record = @node.send(key)
