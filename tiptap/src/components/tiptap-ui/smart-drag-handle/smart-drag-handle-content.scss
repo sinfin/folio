@@ -3,6 +3,17 @@
   gap: 0.125rem;
   align-items: flex-start;
   padding-right: 1rem;
+  position: relative;
+
+  &::after {
+    content: "";
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--f-tiptap__root--background-color);
+    opacity: 0.9;
+  }
 }
 
 .f-tiptap-smart-drag-handle__button,

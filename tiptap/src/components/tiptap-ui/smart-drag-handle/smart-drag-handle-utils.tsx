@@ -23,7 +23,19 @@ export function findElementNextToCoords(options: FindElementNextToCoords) {
     const relevantElements = elementsAtPoint.slice(0, proseMirrorIndex);
 
     if (relevantElements.length > 0) {
-      const currentElement = relevantElements[0];
+      let currentElement = relevantElements[0];
+      let currentDepthOneElement = currentElement
+      let sanity = 100
+
+      while (sanity > 0 && currentDepthOneElement.parentElement && !currentDepthOneElement.parentElement.classList.contains('f-tiptap-editor__tiptap-editor')) {
+        currentDepthOneElement = currentDepthOneElement.parentElement;
+        sanity--;
+      }
+
+      if (currentDepthOneElement) {
+        currentElement = currentDepthOneElement;
+      }
+
       targetElement = currentElement;
       documentPosition = editor.view.posAtDOM(currentElement, 0);
 

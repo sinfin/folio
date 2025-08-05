@@ -102,6 +102,7 @@ export function FolioEditor({
         autocorrect: "off",
         autocapitalize: "off",
         "aria-label": "Main content area, start typing to enter text.",
+        class: "f-tiptap-editor__tiptap-editor",
       },
     },
     extensions: [
