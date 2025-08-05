@@ -16,14 +16,26 @@
   border: 1px solid var(--f-tiptap-editor--border-color);
   box-shadow: var(--tt-shadow-elevated-md);
   color: inherit;
+  display: flex;
+  flex-direction: column;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1rem;
+  line-height: 1.2;
+  max-height: 100%;
+  max-width: 90%;
   overflow: hidden;
   width: 340px;
-  max-width: 90%;
-  font-size: 1rem;
-  font-family: Arial, Helvetica, sans-serif;
-  line-height: 1.2;
+  pointer-events: all;
 
   &__section {
+    flex: 0 0 auto;
+
+    &--scroll {
+      overflow-y: auto;
+      flex: 0 1 auto;
+      min-height: 0;
+    }
+
     & + & {
       border-top: 1px solid var(--f-tiptap-editor--border-color);
     }

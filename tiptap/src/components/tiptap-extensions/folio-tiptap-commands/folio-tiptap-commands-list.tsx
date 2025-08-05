@@ -160,7 +160,7 @@ export class FolioTiptapCommandsList extends React.Component<
     return (
       <div className="f-tiptap-commands-list">
         {this.props.items.length > 0 ? (
-          <div className="f-tiptap-commands-list__section">
+          <div className="f-tiptap-commands-list__section f-tiptap-commands-list__section--scroll">
             {this.props.items.map((group: FolioEditorCommandGroupForSuggestion) => (
               <React.Fragment key={group.title}>
                 <div className="f-tiptap-commands-list__section-heading">

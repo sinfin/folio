@@ -1,4 +1,4 @@
-import { computePosition, flip, offset } from "@floating-ui/dom";
+import { computePosition, flip, offset, size } from "@floating-ui/dom";
 import { ReactRenderer } from "@tiptap/react";
 import { Editor } from "@tiptap/core";
 import type { Range } from "@tiptap/core";
@@ -120,7 +120,15 @@ export const folioTiptapCommandsSuggestion = {
 
       computePosition(virtualElement, component.element as HTMLElement, {
         placement,
-        middleware: [flip(), offset(12)],
+        middleware: [flip(), offset(12), size({
+          apply( { availableWidth, availableHeight, elements }) {
+            Object.assign((component!.element as HTMLElement).style, {
+              maxWidth: `${Math.max(0, availableWidth)}px`,
+              maxHeight: `${Math.max(0, availableHeight)}px`,
+              pointerEvents: "none",
+            });
+          },
+        })],
       }).then((pos) => {
         (component!.element as HTMLElement).dataset.placement = pos.placement;
         Object.assign((component!.element as HTMLElement).style, {
@@ -128,6 +136,8 @@ export const folioTiptapCommandsSuggestion = {
           top: `${pos.y}px`,
           zIndex: "11",
           position: pos.strategy === "fixed" ? "fixed" : "absolute",
+          display: "flex",
+          flexDirection: "column"
         });
 
         Object.assign((backdrop!.element as HTMLElement).style, {
