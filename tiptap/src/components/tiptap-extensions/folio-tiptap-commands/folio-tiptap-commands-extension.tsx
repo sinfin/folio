@@ -14,7 +14,7 @@ interface CommandInterface {
 declare module '@tiptap/core' {
   interface Commands<ReturnType> {
     folioTiptapCommands: {
-      triggerFolioTiptapCommand: (pos: number | null) => ({ state, dispatch }: { state: EditorState; dispatch: any }) => boolean;
+      triggerFolioTiptapCommand: (pos: number | null) => ReturnType;
     }
   }
 }
@@ -55,7 +55,7 @@ export const FolioTiptapCommandsExtension = Extension.create({
   addCommands() {
     return {
       triggerFolioTiptapCommand:
-        (pos: number | null) =>
+        (pos) =>
           ({ state, dispatch }: { state: EditorState; dispatch: any }) => {
             const resolvedPos = pos === null ? state.selection.$from : state.doc.resolve(pos);
 
@@ -69,7 +69,7 @@ export const FolioTiptapCommandsExtension = Extension.create({
             let endPos
 
             if (node && (node.isLeaf || node.content.size === 0)) {
-              endPos = node.pos + node.nodeSize;
+              endPos = resolvedPos.start(1) + node.nodeSize;
             } else {
               endPos = resolvedPos.after(1);
             }
