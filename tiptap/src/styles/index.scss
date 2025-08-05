@@ -81,8 +81,16 @@ body,
   overflow: auto;
   padding: var(--f-tiptap-editor-content-wrap--padding-y) var(--f-tiptap-editor-content-wrap--padding-x) ;
   container-type: inline-size;
+}
 
-  @media screen and (max-width: 400px) {
+@media screen and (max-width: 468px) {
+  .f-tiptap-editor--block {
+    .f-tiptap-editor-toolbar {
+      order: 2;
+    }
+  }
+
+  .f-tiptap-editor__content-wrap {
     padding: var(--f-tiptap-editor-content-wrap--padding-y-mobile) var(--f-tiptap-editor-content-wrap--padding-x-mobile);
   }
 }

@@ -10,6 +10,8 @@
   display: flex;
   align-items: center;
   gap: 0.25rem;
+  padding: 0 1rem;
+  box-sizing: border-box;
 
   .f-tiptap-editor--rich-text & {
     border-top-left-radius: var(--f-tiptap-editor--border-radius);

@@ -272,8 +272,6 @@ const MainToolbarContent = ({
 
   return (
     <>
-      <Spacer />
-
       {blockEditor ? (
         <>
           <ToolbarGroup>
