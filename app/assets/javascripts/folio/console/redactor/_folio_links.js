@@ -50,6 +50,7 @@ window.Redactor.modules.link.prototype.open = function () {
   }
 
   document.activeElement.blur()
+  window.getSelection().removeAllRanges()
 
   const urlJson = {}
 
@@ -74,6 +75,25 @@ window.Redactor.modules.link.prototype.open = function () {
   }
 
   document.querySelector('.f-c-links-modal').dispatchEvent(new window.CustomEvent('f-c-links-modal:open', { detail }))
+  this.folioLinkModalOpen = true
+}
+
+window.Redactor.modules.link.prototype.handleAnyModalClosed = function () {
+  this.folioLinkModalOpen = false
+}
+
+window.Redactor.modules.link.prototype.linkModalClosed = function () {
+  if (this.folioLinkModalOpen) {
+    if (this.selectionMarkers) {
+      this.selection.restoreMarkers()
+    } else {
+      this.selection.restore()
+    }
+
+    this.selectionMarkers = false
+  }
+
+  this.handleAnyModalClosed()
 }
 
 window.Redactor.modules.link.prototype.saveUrlJson = function (urlJson) {
@@ -97,4 +117,6 @@ window.Redactor.modules.link.prototype.saveUrlJson = function (urlJson) {
   } else {
     this.insert(data)
   }
+
+  this.handleAnyModalClosed()
 }
