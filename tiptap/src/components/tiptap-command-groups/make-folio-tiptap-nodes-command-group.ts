@@ -20,6 +20,14 @@ export const makeFolioTiptapNodesCommandGroup = (folioTiptapNodes: FolioTiptapNo
     return command
   })
 
+  // sort commands by title
+  commands.sort((a, b) => {
+    const aTitle = a.title[document.documentElement.lang as "cs" | "en"] || a.title["en"];
+    const bTitle = b.title[document.documentElement.lang as "cs" | "en"] || b.title["en"];
+
+    return aTitle.localeCompare(bTitle);
+  });
+
   return {
     title: { cs: "Bloky", en: "Blocks" },
     key: "folioTiptapNodes",

@@ -1,6 +1,10 @@
 window.Folio.Stimulus.register('f-c-tiptap-overlay-form', class extends window.Stimulus.Controller {
   static targets = ["form"]
 
+  static values = {
+    autoclickCover: Boolean,
+  }
+
   connect () {
     window.setTimeout(() => {
       const firstInput = this.element.querySelector('.form-control')
@@ -11,6 +15,13 @@ window.Folio.Stimulus.register('f-c-tiptap-overlay-form', class extends window.S
     }, 200) // wait for css transition
 
     this.startReactNodes()
+
+    if (this.autoclickCoverValue) {
+      window.setTimeout(() => {
+        const btn = this.element.querySelector('.f-c-tiptap-overlay-form__react-file-picker--cover .f-c-file-picker__btn')
+        if (btn) btn.click()
+      }, 0)
+    }
   }
 
   disconnect () {

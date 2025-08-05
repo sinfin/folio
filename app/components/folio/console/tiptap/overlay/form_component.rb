@@ -7,7 +7,16 @@ class Folio::Console::Tiptap::Overlay::FormComponent < Folio::Console::Applicati
 
   private
     def data
-      stimulus_controller("f-c-tiptap-overlay-form")
+      stimulus_controller("f-c-tiptap-overlay-form",
+                          values: {
+                            autoclick_cover: should_autoclick_cover?,
+                          })
+    end
+
+    def should_autoclick_cover?
+      @node.class.validators.any? do |validator|
+        validator.is_a?(ActiveModel::Validations::PresenceValidator) && validator.attributes.include?(:cover)
+      end
     end
 
     def render_input(f:, key:, type:)
@@ -69,9 +78,11 @@ class Folio::Console::Tiptap::Overlay::FormComponent < Folio::Console::Applicati
     end
 
     def render_file_picker(f:, key:, type:)
-      helpers.file_picker(f:,
-                          placement_key: "#{key}_placement",
-                          file_type: Folio::Tiptap::NodeBuilder.folio_attachments_file_class(type:).to_s)
+      content_tag(:div, class: "f-c-tiptap-overlay-form__react-file-picker f-c-tiptap-overlay-form__react-file-picker--#{key}") do
+        helpers.file_picker(f:,
+                            placement_key: "#{key}_placement",
+                            file_type: Folio::Tiptap::NodeBuilder.folio_attachments_file_class(type:).to_s)
+      end
     end
 
     def render_react_files(f:, key:, type:)
@@ -138,6 +149,7 @@ class Folio::Console::Tiptap::Overlay::FormComponent < Folio::Console::Applicati
       f.input input_name,
               collection:,
               remote: true,
+              label: @node.class.human_attribute_name(key),
               reflection_class_name: class_name
     end
 
