@@ -94,8 +94,6 @@ export const FolioTiptapCommandsExtension = Extension.create({
           },
     };
   },
-
-
 });
 
 export default FolioTiptapCommandsExtension;

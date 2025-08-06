@@ -6,6 +6,7 @@ import { EditIcon } from "@/components/tiptap-icons/edit-icon";
 import { XIcon } from "@/components/tiptap-icons/x-icon";
 import { FolioTiptapNodeExtension } from "./folio-tiptap-node-extension";
 import { makeUniqueId } from './make-unique-id';
+import { postEditMessage } from './post-edit-message';
 
 import translate from "@/lib/i18n";
 
@@ -31,17 +32,6 @@ let htmlCache: StoredHtml[] = [];
 
 const storeHtmlToCache = ({ html, serializedAttrs }: StoredHtml) => {
   htmlCache = [{ html, serializedAttrs }, ...htmlCache.slice(0, 9)];
-};
-
-const postEditMessage = (attrs: any, uniqueId: string) => {
-  window.top!.postMessage(
-    {
-      type: "f-tiptap-node:click",
-      attrs,
-      uniqueId,
-    },
-    "*",
-  );
 };
 
 export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {

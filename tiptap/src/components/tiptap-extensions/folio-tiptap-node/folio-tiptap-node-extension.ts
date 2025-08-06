@@ -1,13 +1,25 @@
 import { mergeAttributes, Node, ReactNodeViewRenderer } from "@tiptap/react";
+import { findParentNode } from "@tiptap/core";
 import { FolioTiptapNode } from "@/components/tiptap-extensions/folio-tiptap-node";
+import { type EditorState } from "@tiptap/pm/state";
 
-import { makeUniqueId } from './make-unique-id.tsx';
+import { makeUniqueId } from './make-unique-id';
+import { moveFolioTiptapNode } from './move-folio-tiptap-node';
+import { postEditMessage } from './post-edit-message';
 
 export type FolioTiptapNodeOptions = Record<string, never>;
 
-/**
- * A TipTap node extension that creates a component wrapping API HTML content.
- */
+declare module '@tiptap/core' {
+  interface Commands<ReturnType> {
+    folioTiptapNode: {
+      moveFolioTiptapNodeUp: () => ReturnType
+      moveFolioTiptapNodeDown: () => ReturnType
+      editFolioTipapNode: () => ReturnType
+      removeFolioTiptapNode: () => ReturnType
+    }
+  }
+}
+
 export const FolioTiptapNodeExtension = Node.create<FolioTiptapNodeOptions>({
   name: "folioTiptapNode",
 
@@ -86,6 +98,52 @@ export const FolioTiptapNodeExtension = Node.create<FolioTiptapNodeOptions>({
 
   addNodeView() {
     return ReactNodeViewRenderer(FolioTiptapNode);
+  },
+
+  addCommands() {
+    return {
+      moveFolioTiptapNodeDown:
+        () =>
+          ({ state, dispatch }: { state: EditorState; dispatch: any }) => {
+            return moveFolioTiptapNode({ direction: "down", state, dispatch })
+          },
+      moveFolioTiptapNodeUp:
+        () =>
+          ({ state, dispatch }: { state: EditorState; dispatch: any }) => {
+            return moveFolioTiptapNode({ direction: "up", state, dispatch })
+          },
+      editFolioTipapNode:
+        () =>
+          ({ state, dispatch }: { state: EditorState; dispatch: any }) => {
+            // @ts-ignore - node does exist on selection!
+            const node = state.selection.node
+
+            if (!node || node.type.name !== this.name) {
+              return false;
+            }
+
+            const { uniqueId, ...attrsWithoutUniqueId } = node.attrs;
+            postEditMessage(attrsWithoutUniqueId, uniqueId);
+
+            return true;
+          },
+      removeFolioTiptapNode:
+        () =>
+          ({ state, dispatch }: { state: EditorState; dispatch: any }) => {
+            // @ts-ignore - node does exist on selection!
+            const node = state.selection.node
+
+            if (!node || node.type.name !== this.name) {
+              return false;
+            }
+
+            const tr = state.tr;
+            tr.deleteRange(state.selection.from, state.selection.to);
+            dispatch(tr);
+
+            return true
+          },
+    };
   },
 });
 

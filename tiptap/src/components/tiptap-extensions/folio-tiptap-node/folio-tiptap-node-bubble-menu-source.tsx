@@ -16,13 +16,13 @@ import translate from "@/lib/i18n";
 const TRANSLATIONS = {
   cs: {
     moveFolioTiptapNodeUp: "Posunout nahoru",
-    moveFolioTIptapNodeDown: "Posunout dolů",
+    moveFolioTiptapNodeDown: "Posunout dolů",
     editFolioTipapNode: "Upravit",
     removeFolioTiptapNode: "Odstranit",
   },
   en: {
     moveFolioTiptapNodeUp: "Move up",
-    moveFolioTIptapNodeDown: "Move down",
+    moveFolioTiptapNodeDown: "Move down",
     editFolioTipapNode: "Edit",
     removeFolioTiptapNode: "Remove",
   }
@@ -32,7 +32,20 @@ export const FOLIO_TIPTAP_NODE_BUBBLE_MENU_SOURCE: FolioEditorBubbleMenuSource =
   pluginKey: "folioTiptapNodeBubbleMenu",
   offset: ({rects}) => -rects.reference.height / 2 - rects.floating.height / 2,
   shouldShow: ({ editor, state }) => {
-    return window.innerWidth <= 468 && editor.isActive(FolioTiptapNodeExtension.name)
+    return editor.isActive(FolioTiptapNodeExtension.name)
+  },
+  disabledKeys: ({ state }) => {
+    const result = []
+
+    if (!state.doc.resolve(state.selection.from).nodeBefore) {
+      result.push("moveFolioTiptapNodeUp");
+    }
+
+    if (!state.doc.resolve(state.selection.to).nodeAfter) {
+      result.push("moveFolioTiptapNodeDown");
+    }
+
+    return result
   },
   items: [
     [
@@ -41,8 +54,7 @@ export const FOLIO_TIPTAP_NODE_BUBBLE_MENU_SOURCE: FolioEditorBubbleMenuSource =
         title: translate(TRANSLATIONS, "moveFolioTiptapNodeUp"),
         icon: ArrowUpIcon,
         command: ({ editor }: { editor: Editor }) => {
-          // editor.chain().focus().setFolioTiptapFloatAttributes({ side: "left" }).run()
-          console.log('moveFolioTiptapNodeUp')
+          editor.chain().focus().moveFolioTiptapNodeUp().run()
         }
       },
       {
@@ -50,8 +62,7 @@ export const FOLIO_TIPTAP_NODE_BUBBLE_MENU_SOURCE: FolioEditorBubbleMenuSource =
         title: translate(TRANSLATIONS, "moveFolioTiptapNodeDown"),
         icon: ArrowDownIcon,
         command: ({ editor }: { editor: Editor }) => {
-          // editor.chain().focus().setFolioTiptapFloatAttributes({ side: "left" }).run()
-          console.log('moveFolioTiptapNodeDown')
+          editor.chain().focus().moveFolioTiptapNodeDown().run()
         }
       },
       {
@@ -59,8 +70,7 @@ export const FOLIO_TIPTAP_NODE_BUBBLE_MENU_SOURCE: FolioEditorBubbleMenuSource =
         title: translate(TRANSLATIONS, "editFolioTipapNode"),
         icon: EditIcon,
         command: ({ editor }: { editor: Editor }) => {
-          // editor.chain().focus().setFolioTiptapFloatAttributes({ side: "left" }).run()
-          console.log('editFolioTipapNode')
+          editor.chain().focus().editFolioTipapNode().run()
         }
       },
       {
@@ -68,8 +78,7 @@ export const FOLIO_TIPTAP_NODE_BUBBLE_MENU_SOURCE: FolioEditorBubbleMenuSource =
         title: translate(TRANSLATIONS, "removeFolioTiptapNode"),
         icon: CloseIcon,
         command: ({ editor }: { editor: Editor }) => {
-          // editor.chain().focus().setFolioTiptapFloatAttributes({ side: "left" }).run()
-          console.log('removeFolioTiptapNode')
+          editor.chain().focus().removeFolioTiptapNode().run()
         }
       },
     ]
