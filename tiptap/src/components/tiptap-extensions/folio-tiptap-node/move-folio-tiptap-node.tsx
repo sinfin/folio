@@ -1,4 +1,4 @@
-import { type EditorState } from "@tiptap/pm/state";
+import { type EditorState, TextSelection } from "@tiptap/pm/state";
 
 interface MoveFolioTiptapNodeProps {
   direction: "up" | "down";
@@ -34,8 +34,10 @@ export const moveFolioTiptapNode = ({ direction, state, dispatch }: MoveFolioTip
   }
 
   const tr = state.tr
-    .deleteRange(state.selection.from, state.selection.to)
-    .insert(targetPos, node);
+
+  tr.deleteRange(state.selection.from, state.selection.to)
+  tr.insert(targetPos, node)
+  tr.setSelection(TextSelection.near(tr.doc.resolve(targetPos)))
 
   dispatch(tr);
 
