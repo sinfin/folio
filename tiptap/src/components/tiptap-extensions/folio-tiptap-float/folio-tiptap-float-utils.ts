@@ -163,7 +163,7 @@ export function cancelFolioTiptapFloat ({
     if (childNode.content && childNode.content.length > 0) {
       childNode.content.forEach((contentNode: NodeJson) => {
         if (contentNode) {
-          if (contentNode.type === "paragraph" && contentNode.content.length === 0) {
+          if (contentNode.type === "paragraph" && (!contentNode.content || contentNode.content.length === 0)) {
             // skip empty paragraphs
             return;
           }
