@@ -10,6 +10,7 @@ import { Button } from "@/components/tiptap-ui-primitive/button";
 import { FOLIO_TIPTAP_COLUMNS_BUBBLE_MENU_SOURCE } from "@/components/tiptap-extensions/folio-tiptap-columns/folio-tiptap-columns-bubble-menu-source";
 import { TABLE_BUBBLE_MENU_SOURCE } from '@/lib/table-bubble-menu-source';
 import { FOLIO_TIPTAP_FLOAT_BUBBLE_MENU_SOURCE } from '@/components/tiptap-extensions/folio-tiptap-float';
+import { FOLIO_TIPTAP_NODE_BUBBLE_MENU_SOURCE } from '@/components/tiptap-extensions/folio-tiptap-node';
 
 import "./folio-editor-bubble-menus.scss";
 
@@ -30,12 +31,24 @@ export interface FolioEditorBubbleMenuSourceShouldShowArgs {
   state: EditorState;
 }
 
+export interface FolioEditorBubbleMenuSourceOffsetArgs {
+  rects: {
+    reference: {
+      height: number;
+    }
+    floating: {
+      height: number;
+    }
+  }
+}
+
 export interface FolioEditorBubbleMenuSource {
   pluginKey: string;
   shouldShow: (params: FolioEditorBubbleMenuSourceShouldShowArgs) => boolean;
   items: FolioEditorBubbleMenuSourceItem[][];
   activeKeys?: (params: FolioEditorBubbleMenuSourceShouldShowArgs) => string[];
   disabledKeys?: (params: FolioEditorBubbleMenuSourceShouldShowArgs) => string[];
+  offset?: (params: FolioEditorBubbleMenuSourceOffsetArgs) => number;
   placement?: "top" | "right" | "bottom" | "left" | "top-start" | "top-end" | "right-start" | "right-end" | "bottom-start" | "bottom-end" | "left-start" | "left-end" | undefined;
 }
 
@@ -48,7 +61,7 @@ export function FolioEditorBubbleMenu({
 }) {
   const floatingUiOptions = {
     placement: source.placement || "bottom",
-    offset: 12,
+    offset: source.offset || 12,
     flip: true,
   }
 
@@ -119,34 +132,29 @@ export function FolioEditorBubbleMenu({
   );
 }
 
+const BUBBLE_MENU_SOURCES = [
+  FOLIO_TIPTAP_COLUMNS_BUBBLE_MENU_SOURCE,
+  TABLE_BUBBLE_MENU_SOURCE,
+  FOLIO_TIPTAP_FLOAT_BUBBLE_MENU_SOURCE,
+  FOLIO_TIPTAP_NODE_BUBBLE_MENU_SOURCE,
+]
+
 export function FolioEditorBubbleMenus({
   editor,
   blockEditor,
 }: FolioEditorBubbleMenusProps) {
   if (!editor) return null;
+  if (!blockEditor) return null;
 
   return (
     <>
-      {blockEditor && (
+      {BUBBLE_MENU_SOURCES.map((source) => (
         <FolioEditorBubbleMenu
           editor={editor}
-          source={FOLIO_TIPTAP_COLUMNS_BUBBLE_MENU_SOURCE}
+          source={source}
+          key={source.pluginKey}
         />
-      )}
-
-      {blockEditor && (
-        <FolioEditorBubbleMenu
-          editor={editor}
-          source={TABLE_BUBBLE_MENU_SOURCE}
-        />
-      )}
-
-      {blockEditor && (
-        <FolioEditorBubbleMenu
-          editor={editor}
-          source={FOLIO_TIPTAP_FLOAT_BUBBLE_MENU_SOURCE}
-        />
-      )}
+      ))}
     </>
   );
 }

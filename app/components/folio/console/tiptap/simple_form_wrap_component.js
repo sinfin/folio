@@ -16,7 +16,6 @@ window.Folio.Stimulus.register('f-c-tiptap-simple-form-wrap', class extends wind
   onScrollRaw (e) {
     const scroller = e.target
     this.scrolledToBottomValue = scroller.scrollHeight - scroller.scrollTop <= scroller.clientHeight + 1
-    console.log('this.scrolledTo...lue:', this.scrolledToBottomValue)
   }
 
   onScrollTriggerClick (e) {
@@ -35,7 +34,5 @@ window.Folio.Stimulus.register('f-c-tiptap-simple-form-wrap', class extends wind
         behavior: 'smooth',
       })
     }
-
-    console.log('onScrollTriggerClick')
   }
 })
