@@ -83,6 +83,13 @@ body,
   container-type: inline-size;
 }
 
+.f-tiptap-editor__content {
+  &--readonly {
+    user-select: none;
+    pointer-events: none;
+  }
+}
+
 @media screen and (max-width: 468px) {
   .f-tiptap-editor--block {
     .f-tiptap-editor-toolbar {

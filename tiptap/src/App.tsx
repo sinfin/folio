@@ -9,6 +9,7 @@ interface AppProps {
   defaultContent?: JSONContent;
   type?: "rich-text" | "block";
   folioTiptapConfig: FolioTiptapConfig;
+  readonly: boolean;
 }
 
 function App({
@@ -17,6 +18,7 @@ function App({
   defaultContent,
   type,
   folioTiptapConfig,
+  readonly,
 }: AppProps) {
   switch (type) {
     case "block":
@@ -28,6 +30,7 @@ function App({
           defaultContent={defaultContent}
           type={type as "block" | "rich-text"}
           folioTiptapConfig={folioTiptapConfig}
+          readonly={readonly}
         />
       );
     default:

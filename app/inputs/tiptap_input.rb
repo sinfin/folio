@@ -11,6 +11,7 @@ class TiptapInput < SimpleForm::Inputs::StringInput
                         origin: ENV["FOLIO_TIPTAP_DEV"] ? "*" : "",
                         type: tiptap_type,
                         render_url: @builder.template.render_nodes_console_api_tiptap_path,
+                        readonly: @builder.template.instance_variable_get(:@audited_audit).present?,
                         tiptap_config_json:,
                       },
                       action: {

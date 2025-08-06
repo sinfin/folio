@@ -3,6 +3,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
 
   static values = {
     loaded: { type: Boolean, default: false },
+    readonly: { type: Boolean, default: false },
     origin: String,
     type: String,
     renderUrl: String,
@@ -86,6 +87,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
       lang: document.documentElement.lang || 'en',
       folioTiptapConfig: this.tiptapConfigJsonValue ? JSON.parse(this.tiptapConfigJsonValue) : {},
       windowWidth: this.windowWidth,
+      readonly: this.readonlyValue,
     }
 
     if (this.originValue === "*") {

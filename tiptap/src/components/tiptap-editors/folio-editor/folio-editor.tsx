@@ -71,6 +71,7 @@ interface FolioEditorProps {
   defaultContent?: JSONContent;
   type: "block" | "rich-text";
   folioTiptapConfig: FolioTiptapConfig;
+  readonly: boolean;
 }
 
 export function FolioEditor({
@@ -79,6 +80,7 @@ export function FolioEditor({
   defaultContent,
   type,
   folioTiptapConfig,
+  readonly,
 }: FolioEditorProps) {
   const windowSize = useWindowSize();
   const editorRef = React.useRef<HTMLDivElement>(null);
@@ -96,6 +98,7 @@ export function FolioEditor({
     autofocus: blockEditor,
     immediatelyRender: true,
     shouldRerenderOnTransaction: false,
+    editable: !readonly,
     editorProps: {
       attributes: {
         autocomplete: "off",
@@ -199,31 +202,38 @@ export function FolioEditor({
     };
   }, []);
 
+  let contentClassName = "f-tiptap-editor__content f-tiptap-styles"
+  if (readonly) contentClassName += " f-tiptap-editor__content--readonly";
+
   return (
     <EditorContext.Provider value={{ editor }}>
       <div
         ref={editorRef}
         className={`f-tiptap-editor f-tiptap-editor--${blockEditor ? "block" : "rich-text"}`}
       >
-        <FolioEditorToolbar
-          editor={editor}
-          blockEditor={blockEditor}
-          folioTiptapConfig={folioTiptapConfig}
-        />
+        {readonly ? null : (
+          <FolioEditorToolbar
+            editor={editor}
+            blockEditor={blockEditor}
+            folioTiptapConfig={folioTiptapConfig}
+          />
+        )}
 
         <div className="f-tiptap-editor__content-wrap">
-          {blockEditor ? <SmartDragHandle editor={editor} /> : null}
+          {blockEditor && !readonly ? <SmartDragHandle editor={editor} /> : null}
 
           <EditorContent
             editor={editor}
             role="presentation"
-            className="f-tiptap-editor__content f-tiptap-styles"
+            className={contentClassName}
           />
 
-          <FolioEditorBubbleMenus
-            editor={editor}
-            blockEditor={blockEditor}
-          />
+          {readonly ? null : (
+            <FolioEditorBubbleMenus
+              editor={editor}
+              blockEditor={blockEditor}
+            />
+          )}
         </div>
       </div>
     </EditorContext.Provider>

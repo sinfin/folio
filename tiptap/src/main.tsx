@@ -78,6 +78,7 @@ window.Folio.Tiptap.init = (props) => {
         defaultContent={contentWithFolioTiptapNodeUniqueIds}
         type={props.type}
         folioTiptapConfig={props.folioTiptapConfig ? { ...folioTiptapConfigDefaults, ...props.folioTiptapConfig } : folioTiptapConfigDefaults}
+        readonly={props.readonly}
       />
     </StrictMode>,
   );
@@ -130,6 +131,7 @@ window.addEventListener("message", (e) => {
         type: node.dataset.tiptapType === "block" ? "block" : "rich-text",
         folioTiptapConfig: e.data.folioTiptapConfig,
         content: e.data.content,
+        readonly: !!e.data.readonly,
       });
     }
   } else if (e.data.type === "f-input-tiptap:window-resize") {
@@ -160,6 +162,7 @@ if (process.env.NODE_ENV !== "production" && window.top === window) {
           ? "block"
           : "rich-text",
       content: defaultContent,
+      readonly: false,
       onCreate: ({ editor }: { editor: TiptapEditor }) => {
         const json = removeUniqueIdsFromFolioTiptapNodes(editor.getJSON());
         if (typeof json !== "object" || json === null) {

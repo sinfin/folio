@@ -122,6 +122,7 @@ declare global {
           onCreate?: (content: { editor: TiptapEditor }) => void;
           onUpdate?: (content: { editor: TiptapEditor }) => void;
           content?: import("@tiptap/react").JSONContent;
+          readonly: boolean;
         }) => ReturnType<typeof import("react-dom/client").createRoot>;
         destroy: () => void;
         getHeight: () => number;
