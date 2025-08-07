@@ -42,7 +42,7 @@ $f-tiptap__columns--min-horizontal-width: 550px !default;
   --f-tiptap__blockquote--background: rgba(34, 35, 37, 1);
 
   --f-tiptap__hr--margin: 2rem;
-  --f-tiptap__hr--color: var(--bs-border-color);
+  --f-tiptap__hr--background: var(--bs-border-color);
   --f-tiptap__hr--height: 1px;
 
   --f-tiptap__headings--margin-top: 2rem;
@@ -391,7 +391,7 @@ $f-tiptap__columns--min-horizontal-width: 550px !default;
   }
 
   hr {
-    background-color: var(--f-tiptap__hr--color);
+    background: var(--f-tiptap__hr--background);
     border: none;
     height: var(--f-tiptap__hr--height);
     margin: var(--f-tiptap__hr--margin) 0;
