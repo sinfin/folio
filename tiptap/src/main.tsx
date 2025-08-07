@@ -118,7 +118,7 @@ window.addEventListener("message", (e) => {
         const link = document.createElement("link");
         link.rel = "stylesheet";
         link.href = e.data.stylesheetPath;
-        document.head.insertBefore(link, document.head.firstChild);
+        document.body.appendChild(link);
       }
 
       node.classList.toggle(

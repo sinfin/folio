@@ -21,8 +21,8 @@ const TRANSLATIONS = {
   cs: {
     addColumnAfter: "Přidat sloupec za",
     addColumnBefore: "Přidat sloupec před",
-    addRowAfter: "Přidat řádek nad",
-    addRowBefore: "Přidat řádek pod",
+    addRowAfter: "Přidat řádek pod",
+    addRowBefore: "Přidat řádek nad",
     deleteColumn: "Odstranit sloupec",
     deleteRow: "Odstranit řádek",
     deleteTable: "Odstranit tabulku",
@@ -35,8 +35,8 @@ const TRANSLATIONS = {
   en: {
     addColumnAfter: "Add column after",
     addColumnBefore: "Add column before",
-    addRowAfter: "Add row above",
-    addRowBefore: "Add row below",
+    addRowAfter: "Add row below",
+    addRowBefore: "Add row above",
     deleteColumn: "Remove column",
     deleteRow: "Remove row",
     deleteTable: "Remove table",
