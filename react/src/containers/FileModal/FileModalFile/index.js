@@ -351,13 +351,13 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
             <FileUsage filePlacements={fileModal.filePlacements} changeFilePlacementsPage={changeFilePlacementsPage} />
           </div>
         </div>
-      </div>
 
-      {file.attributes.bottom_html_api_url ? (
-        <div className="modal-body">
-          <AdditionalHtmlFromApi apiUrl={file.attributes.bottom_html_api_url} />
-        </div>
-      ) : null}
+        {file.attributes.subtitles_html_api_url ? (
+          <div className="mt-4">
+            <AdditionalHtmlFromApi apiUrl={file.attributes.subtitles_html_api_url} />
+          </div>
+        ) : null}
+      </div>
 
       {(fileModal.updating || fileModal.uploadingNew) && <span className='folio-loader' />}
     </div>

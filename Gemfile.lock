@@ -40,6 +40,7 @@ PATH
       gibbon
       httpparty
       invisible_captcha
+      iso-639
       jquery-rails
       jwt
       message_bus
@@ -400,6 +401,8 @@ GEM
       pp (>= 0.6.0)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
+    iso-639 (0.3.8)
+      csv
     jmespath (1.6.2)
     jquery-rails (4.6.0)
       rails-dom-testing (>= 1, < 3)

@@ -1,0 +1,73 @@
+.f-c-files-subtitle-form.accordion-item data=data
+  .f-c-files-subtitle-form__header.accordion-header id=accordion_header_id
+    button.accordion-button.f-c-files-subtitle-form__accordion-button(
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="##{accordion_body_id}"
+      aria-expanded=(@expanded ? "true" : "false")
+      aria-controls=accordion_body_id
+      class=(@expanded ? "" : "collapsed")
+    )
+      .f-c-files-subtitle-form__language-info
+        .f-c-files-subtitle-form__language-title
+          strong = display_name
+          - if @subtitle.last_error_message.present?
+            span.text-danger.ms-2.small = @subtitle.last_error_message
+          .ms-3.d-flex.align-items-center
+            = status_badge_for(@subtitle)
+
+  .f-c-files-subtitle-form__body.accordion-collapse.collapse(
+    id=accordion_body_id
+    class=(@expanded ? "show" : "")
+    aria-labelledby=accordion_header_id
+    data-bs-parent=".f-c-files-subtitles-form__languages"
+  )
+    .accordion-body.f-c-files-subtitle-form__accordion-body
+      .f-c-files-subtitle-form__content
+
+        .f-c-files-subtitle-form__loader.text-center.py-3 data-f-c-files-subtitle-form-target="loader" hidden=true
+          .spinner-border.spinner-border-sm role="status"
+            span.visually-hidden Loading...
+
+        - if @subtitle.persisted?
+          .f-c-files-subtitle-form__last-activity.text-muted.small.mb-3
+            = last_activity_text_for(@subtitle)
+
+        = form_for_subtitle do |f|
+          .mb-3
+            = f.input :enabled, as: :boolean,
+                      label: t('.enabled_label'),
+                      input_html: { id: "subtitle_#{@subtitle.language}_enabled" }
+
+          - if @subtitle.validation_errors.any?
+            .alert.alert-danger.alert-dismissible.fade.show.mb-3
+              strong = t('.validation_errors_title')
+              ul.mb-0
+                - @subtitle.validation_errors.each do |error|
+                  li = error
+              button.btn-close type="button" data-bs-dismiss="alert" aria-label="Close"
+
+          = f.input :text, as: :text,
+                    input_html: { rows: 15, id: "subtitle_#{@subtitle.language}_text" },
+                    label: t('.text_label'),
+                    hint: t('.text_hint')
+
+          .form-actions.d-flex.justify-content-between
+            .d-flex.gap-2
+              = f.submit t('.save'), class: 'btn btn-primary'
+              button.btn.btn-secondary(
+                type="button"
+                data-action="click->f-c-files-subtitle-form#cancelForm"
+              ) = t('.cancel')
+            .ms-auto
+              - if @subtitle.persisted?
+                button.btn.btn-danger.btn-sm(
+                  type="button"
+                  data-action="click->f-c-files-subtitle-form#deleteSubtitle"
+                  data-confirm=t('.delete_confirm')
+                ) = t('.delete_subtitle')
+              - else
+                button.btn.btn-outline-secondary.btn-sm(
+                  type="button"
+                  data-action="click->f-c-files-subtitle-form#removeNewSubtitle"
+                ) = t('.remove_new')

@@ -257,6 +257,10 @@ en:
         form_tabs:
           header_message:
             header_message: Message text
+          settings:
+            subtitle_settings: Subtitle Settings
+            subtitle_languages_hint: Enter language codes separated by commas (e.g., cs, en, de, es)
+            subtitle_auto_generation_enabled_hint: Enable automatic subtitle generation for new videos
       users:
         index:
           index_tabs/locked: Blocked
@@ -429,14 +433,76 @@ en:
           label: Automatic save
 
       files:
-        has_subtitles_form_component:
+        subtitle_form_component:
+          enabled_label: Enable subtitles
+          validation_errors_title: "Validation errors:"
+          text_label: Subtitle text
+          text_hint: Enter subtitles in VTT format
+          save: Save
+          cancel: Cancel
+          delete_subtitle: Delete
+          delete_confirm: Are you sure you want to delete this subtitle?
+          remove_new: Remove
+          last_manual_edit: "Manually edited %{time} ago"
+          last_transcription: "Transcribed %{time} ago"
+          no_activity: "No activity yet"
+          status:
+            processing: Processing
+            enabled: Ready
+            disabled: Disabled
+            disabled_with_errors: "Disabled (%{count} errors)"
+            empty: Empty
+
+        subtitles_form_component:
           title: Subtitles
-          subtitles_ready: Subtitles are ready.
-          subtitles_processing: Subtitles are being generated.
-          subtitles_failed: Failed to generate subtitles. You can enter them manually.
-          retranscribe_subtitles: Retranscribe subtitles
-          force_retranscribe_hint: Click to override current processing
-          submit: Save subtitles
+          retranscribe_subtitles: "Retranscribe Subtitles"
+          retranscribe_confirm: "Are you sure you want to retranscribe all subtitles? This will overwrite existing subtitles."
+          reload_player: "Reload Player"
+          reload_player_tooltip: "Reload the page to restart the video player"
+          transcription_in_progress: "Transcription in progress..."
+          transcription_failed: Transcription failed
+          started_time_ago: Started %{time} ago
+          enabled_label: Enable subtitles
+          add_missing_languages: Add Manual Translation
+          select_language: Select language...
+          add_language: Add Language
+          delete_subtitle: Delete
+          delete_subtitle_confirm: Are you sure you want to delete this subtitle?
+          delete_confirm: Are you sure you want to delete this subtitle?
+          remove_new: Remove
+
+          text_label: Subtitle text
+          text_hint: Enter subtitles in VTT format
+          validation_errors_title: "Validation errors:"
+          save: Save
+          cancel: Cancel
+          never_processed: Never processed
+          status:
+            processing: Processing
+            enabled: Ready
+            disabled: Disabled
+            disabled_with_errors: "Disabled (%{count} errors)"
+            empty: Empty
+          last_activity:
+            transcribed: "Transcribed %{time} ago"
+            edited: "Edited %{time} ago"
+            generic: "Activity %{time} ago"
+          last_manual_edit: "Manually edited %{time} ago"
+          last_transcription: "Transcribed %{time} ago"
+          no_activity: "No activity yet"
+          metadata:
+            transcription_service: "Service: %{service}"
+            attempts: "%{count} attempts"
+            validation_errors: "%{count} validation errors"
+
+      eleven_labs:
+        transcribe_subtitles_job:
+          errors:
+            file_too_large: "The file is larger than ElevenLabs file size limit, cannot do automatic transcription"
+            no_audio_detected: "No audio detected in video file"
+            cloud_storage_read_failed: "ElevenLabs couldn't read file from our cloud storage"
+
+
 
   date:
     formats:
