@@ -23,6 +23,9 @@ class Folio::Console::Tiptap::SimpleFormWrapComponent < Folio::Console::Applicat
     stimulus_controller("f-c-tiptap-simple-form-wrap",
                         values: {
                           scrolled_to_bottom: false,
+                        },
+                        action: {
+                          "f-input-tiptap:updateWordCount" => "updateWordCount",
                         })
   end
 end

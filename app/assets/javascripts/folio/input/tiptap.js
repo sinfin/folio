@@ -45,7 +45,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
         break
       case 'f-tiptap:updated':
         this.setHeight(e.data.height)
-        this.inputTarget.value = JSON.stringify(e.data.content)
+        this.setInputValue(e.data.content)
         break
       case 'f-tiptap-node:render':
         this.onRenderNodeMessage(e)
@@ -65,25 +65,62 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     }
   }
 
+  setInputValue (content) {
+    const textsArray = []
+
+    const recursivelyExtractTexts = (node) => {
+      if (node.type === 'text' && node.text) {
+        textsArray.push(node.text)
+      } else if (Array.isArray(node.content)) {
+        node.content.forEach(recursivelyExtractTexts)
+      }
+    }
+
+    recursivelyExtractTexts(content)
+
+    const text = textsArray.join('\n')
+    const wordCount = window.Folio.wordCount({ text })
+
+    const value = {
+      content,
+      text,
+      word_count: wordCount.words,
+      character_count: wordCount.characters,
+    }
+
+    this.inputTarget.value = JSON.stringify(value)
+
+    this.inputTarget.dispatchEvent(new window.Event("change", { bubbles: true }))
+    this.dispatch("updateWordCount", { detail: { wordCount } })
+  }
+
   setHeight (height) {
     if (typeof height !== 'number') return
     this.iframeTarget.style.height = `${height + 2}px`
   }
 
   sendStartMessage () {
-    let content = null
+    let value = null
 
     if (this.inputTarget.value) {
       try {
-        content = JSON.parse(this.inputTarget.value)
+        value = JSON.parse(this.inputTarget.value)
       } catch (e) {
         console.error('Failed to parse input value as JSON:', e)
       }
     }
 
+    if (value && typeof value.word_count === 'number' && typeof value.character_count === 'number') {
+      const wordCount = window.Folio.wordCount({
+        words: value.word_count,
+        characters: value.character_count
+      })
+      this.dispatch("updateWordCount", { detail: { wordCount } })
+    }
+
     const data = {
       type: 'f-input-tiptap:start',
-      content,
+      content: value ? value.content : null,
       lang: document.documentElement.lang || 'en',
       folioTiptapConfig: this.tiptapConfigJsonValue ? JSON.parse(this.tiptapConfigJsonValue) : {},
       windowWidth: this.windowWidth,

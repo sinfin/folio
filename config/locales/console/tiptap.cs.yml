@@ -6,6 +6,11 @@ cs:
         simple_form_wrap_component:
           editor_title: Editor
 
+        simple_form_wrap:
+          word_count_component:
+            words: Slov
+            characters: Znaků
+
         overlay:
           form_component:
             submit: Hotovo

@@ -1,5 +1,5 @@
 window.Folio.Stimulus.register('f-c-tiptap-simple-form-wrap', class extends window.Stimulus.Controller {
-  static targets = ["scrollIco", "scroller"]
+  static targets = ["scrollIco", "scroller", "wordCount"]
 
   static values = {
     scrolledToBottom: Boolean,
@@ -34,5 +34,12 @@ window.Folio.Stimulus.register('f-c-tiptap-simple-form-wrap', class extends wind
         behavior: 'smooth',
       })
     }
+  }
+
+  updateWordCount (e) {
+    const wordCount = e.detail && e.detail.wordCount
+    if (!wordCount) return
+    if (!this.hasWordCountTarget) return
+    this.wordCountTarget.dispatchEvent(new CustomEvent('f-c-tiptap-simple-form-wrap:updateWordCount', { detail: { wordCount } }))
   }
 })
