@@ -41,6 +41,13 @@ nodes:
     tag: div
     static_attrs:
       class: "f-tiptap-float__main"
+  folioTiptapStyledParagraph:
+    tag: p
+    static_attrs:
+      class: "f-tiptap-styled-paragraph"
+    attrs:
+      variant:
+        data_attribute: "data-f-tiptap-styled-paragraph-variant"
   hardBreak:
     tag: br
     self_closing: true

@@ -448,6 +448,60 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
     assert_selector(".f-tiptap-float .f-tiptap-float__main", text: "Main part")
   end
 
+  def test_render_folio_tiptap_styled_paragraph
+    prose_mirror_node = {
+      "type" => "folioTiptapStyledParagraph",
+      "content" => [
+        {
+          "type" => "text",
+          "text" => "hello",
+        },
+      ]
+    }
+
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+
+    assert_selector("p.f-tiptap-styled-paragraph")
+    assert_no_selector("p.f-tiptap-styled-paragraph[data-f-tiptap-styled-paragraph-variant='small']")
+    assert_no_selector("p.f-tiptap-styled-paragraph[data-f-tiptap-styled-paragraph-variant='large']")
+
+    prose_mirror_node = {
+      "type" => "folioTiptapStyledParagraph",
+      "content" => [
+        {
+          "type" => "text",
+          "text" => "hello",
+        },
+      ],
+      "attrs" => {
+        "variant" => "large",
+      }
+    }
+
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+
+    assert_no_selector("p.f-tiptap-styled-paragraph[data-f-tiptap-styled-paragraph-variant='small']")
+    assert_selector("p.f-tiptap-styled-paragraph[data-f-tiptap-styled-paragraph-variant='large']")
+
+    prose_mirror_node = {
+      "type" => "folioTiptapStyledParagraph",
+      "content" => [
+        {
+          "type" => "text",
+          "text" => "hello",
+        },
+      ],
+      "attrs" => {
+        "variant" => "small",
+      }
+    }
+
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+
+    assert_no_selector("p.f-tiptap-styled-paragraph[data-f-tiptap-styled-paragraph-variant='large']")
+    assert_selector("p.f-tiptap-styled-paragraph[data-f-tiptap-styled-paragraph-variant='small']")
+  end
+
   private
     def build_mock_record
       Object.new

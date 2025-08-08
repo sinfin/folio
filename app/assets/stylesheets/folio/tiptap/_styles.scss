@@ -478,7 +478,7 @@ $f-tiptap__columns--min-horizontal-width: 550px !default;
 
   .f-tiptap-styled-paragraph {
     @each $variant in small, large {
-      &[data-variant="#{$variant}"] {
+      &[data-f-tiptap-styled-paragraph-variant="#{$variant}"] {
         color: var(--f-tiptap__styled-paragraph-#{$variant}--color);
         font-family: var(--f-tiptap__styled-paragraph-#{$variant}--font-family);
         font-size: var(--f-tiptap__styled-paragraph-#{$variant}--font-size);

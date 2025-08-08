@@ -27,9 +27,9 @@ export const FolioTiptapStyledParagraph = Paragraph.extend<StyledParagraphOption
       variant: {
         default: null,
         parseHTML: (element: HTMLElement) =>
-          element.getAttribute("data-variant"),
+          element.getAttribute("data-f-tiptap-styled-paragraph-variant"),
         renderHTML: (attributes: { variant: string }) => ({
-          "data-variant": attributes.variant,
+          "data-f-tiptap-styled-paragraph-variant": attributes.variant,
         }),
       },
     };
