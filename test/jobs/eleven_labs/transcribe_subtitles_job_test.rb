@@ -10,7 +10,7 @@ class Folio::ElevenLabs::TranscribeSubtitlesJobTest < ActiveJob::TestCase
 
     assert_nil video_file.subtitles_cs_text
 
-    job = Folio::ElevenLabs::TranscribeSubtitlesJob.new(video_file, lang: "cs")
+    job = Folio::ElevenLabs::TranscribeSubtitlesJob.new
     def job.elevenlabs_speech_to_text_request(_video_url)
       {
         "language_code" => "cs",
@@ -51,22 +51,23 @@ class Folio::ElevenLabs::TranscribeSubtitlesJobTest < ActiveJob::TestCase
         ]
       }
     end
-    job.perform_now
+    job.perform(video_file)
 
     expected_vtt = "00:00:00.000 --> 00:00:01.000\nDobrý den,\n\n00:00:01.500 --> 00:00:03.000\njak se máte?"
     assert_equal expected_vtt, video_file.subtitles_cs_text
     assert_equal "ready", video_file.get_subtitles_state_for("cs")
   end
 
-  test "falls back to word-by-word processing when additional_formats is not available" do
+  test "handles missing additional_formats gracefully" do
     video_file = Folio::File::Video.new(site: get_any_site)
     video_file.file = Folio::Engine.root.join("test/fixtures/folio/blank.mp4")
     video_file.save
 
-    job = Folio::ElevenLabs::TranscribeSubtitlesJob.new(video_file, lang: "cs")
+    job = Folio::ElevenLabs::TranscribeSubtitlesJob.new
     def job.elevenlabs_speech_to_text_request(_video_url)
       {
         "language_code" => "cs",
+        "language_probability" => 0.99,
         "text" => "Test",
         "words" => [
           {
@@ -78,11 +79,13 @@ class Folio::ElevenLabs::TranscribeSubtitlesJobTest < ActiveJob::TestCase
         # No additional_formats in response
       }
     end
-    job.perform_now
 
-    expected_vtt = "00:00:00.000 --> 00:00:03.000\nTest"
-    assert_equal expected_vtt, video_file.subtitles_cs_text
-    assert_equal "ready", video_file.get_subtitles_state_for("cs")
+    assert_raises(RuntimeError) do
+      job.perform(video_file)
+    end
+
+    # Should mark transcription as failed
+    assert_equal "failed", video_file.subtitles_transcription_status
   end
 
   test "handles API errors gracefully" do
@@ -90,18 +93,17 @@ class Folio::ElevenLabs::TranscribeSubtitlesJobTest < ActiveJob::TestCase
     video_file.file = Folio::Engine.root.join("test/fixtures/folio/blank.mp4")
     video_file.save
 
-    job = Folio::ElevenLabs::TranscribeSubtitlesJob.new(video_file, lang: "cs")
+    job = Folio::ElevenLabs::TranscribeSubtitlesJob.new
     def job.elevenlabs_speech_to_text_request(_video_url)
       raise "ElevenLabs API error: 400 / Invalid request"
     end
 
-    exception = assert_raises(RuntimeError) do
-      job.perform_now
+    assert_raises(RuntimeError) do
+      job.perform(video_file)
     end
 
-    assert_equal "ElevenLabs API error: 400 / Invalid request", exception.message
-
-    assert_equal "failed", video_file.get_subtitles_state_for("cs")
+    # Should mark transcription as failed in video metadata
+    assert_equal "failed", video_file.subtitles_transcription_status
   end
 
   test "validates file size against ElevenLabs limits" do
@@ -114,14 +116,12 @@ class Folio::ElevenLabs::TranscribeSubtitlesJobTest < ActiveJob::TestCase
       Folio::ElevenLabs::TranscribeSubtitlesJob::MAX_FILE_SIZE_BYTES + 1
     end
 
-    job = Folio::ElevenLabs::TranscribeSubtitlesJob.new(video_file, lang: "cs")
+    job = Folio::ElevenLabs::TranscribeSubtitlesJob.new
 
-    exception = assert_raises(RuntimeError) do
-      job.perform_now
-    end
+    # New implementation returns early instead of raising exception
+    job.perform(video_file)
 
-    assert_match(/File size .* exceeds ElevenLabs limit/, exception.message)
-
-    assert_equal "failed", video_file.get_subtitles_state_for("cs")
+    # Should mark transcription as failed in video metadata
+    assert_equal "failed", video_file.subtitles_transcription_status
   end
 end

@@ -242,6 +242,24 @@ class Folio::Site < Folio::ApplicationRecord
     ]
   end
 
+  # Subtitle settings
+  def subtitle_languages
+    self[:subtitle_languages].presence || Rails.application.config.folio_files_video_enabled_subtitle_languages
+  end
+
+  # Virtual attribute for comma-separated form input
+  def subtitle_languages_string
+    subtitle_languages.join(', ')
+  end
+
+  def subtitle_languages_string=(value)
+    if value.present?
+      self.subtitle_languages = value.split(',').map(&:strip).reject(&:blank?)
+    else
+      self.subtitle_languages = []
+    end
+  end
+
   private
     def system_emails_should_be_valid
       %i[system_email system_email_copy].each do |attr|
@@ -292,11 +310,14 @@ end
 #  available_user_roles              :jsonb
 #  phone_secondary                   :string
 #  address_secondary                 :text
+#  subtitle_languages                :jsonb
+#  subtitle_auto_generation_enabled  :boolean          default(FALSE)
 #
 # Indexes
 #
-#  index_folio_sites_on_domain    (domain)
-#  index_folio_sites_on_position  (position)
-#  index_folio_sites_on_slug      (slug)
-#  index_folio_sites_on_type      (type)
+#  index_folio_sites_on_domain              (domain)
+#  index_folio_sites_on_position            (position)
+#  index_folio_sites_on_slug                (slug)
+#  index_folio_sites_on_subtitle_languages  (subtitle_languages) USING gin
+#  index_folio_sites_on_type                (type)
 #
