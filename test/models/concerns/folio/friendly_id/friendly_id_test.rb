@@ -59,4 +59,21 @@ class Folio::FriendlyIdTest < ActiveSupport::TestCase
     assert_equal "test-slug", article.slug
     assert article.update(slug: "test-slug")
   end
+
+  test "should validate slug uniqueness across multiple classes" do
+    site = get_any_site
+    page = create(:folio_page, slug: "test", site:)
+    article = TestArticle.create(title: "Test Article", slug: "test", site:, perex: "Test Perex")
+
+    # page with same slug exists, slug isn't valid
+    assert_equal 1, FriendlyId::Slug.where(slug: "test").count
+    assert article.errors.added?(:slug, :slug_not_unique_across_classes, sluggable_name: page.title, sluggable_type: page.model_name.human)
+
+    page.update!(slug: "foo")
+
+    # history slug exists, but it will be deleted, slug is valid
+    assert_equal 1, FriendlyId::Slug.where(slug: "test").count
+    assert article.update!(slug: "test")
+    assert_equal 1, FriendlyId::Slug.where(slug: "test").count
+  end
 end

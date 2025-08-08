@@ -53,6 +53,11 @@ module Folio::FriendlyId::SlugValidation::MultipleClasses
       friendly_id_slug = slug_validation_friendly_id_slug_from_given_classes_for(slug)
       return unless friendly_id_slug && friendly_id_slug.sluggable
 
+      if friendly_id_slug.sluggable.slug != friendly_id_slug.slug
+        friendly_id_slug.destroy
+        return
+      end
+
       errors.add(:slug,
                  :slug_not_unique_across_classes,
                  sluggable_name: friendly_id_slug.sluggable.to_label,
