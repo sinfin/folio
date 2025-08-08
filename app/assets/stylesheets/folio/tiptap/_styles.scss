@@ -27,6 +27,7 @@ $f-tiptap__columns--min-horizontal-width: 550px !default;
   --f-tiptap__spacer: 1rem;
 
   --f-tiptap__root--background-color: #ffffff;
+  --f-tiptap__root--color: inherit;
   --f-tiptap__root--font-family: inherit;
   --f-tiptap__root--font-size: inherit;
   --f-tiptap__root--line-height: inherit;
@@ -57,7 +58,7 @@ $f-tiptap__columns--min-horizontal-width: 550px !default;
   --f-tiptap__h3--margin-bottom: var(--f-tiptap__headings--margin-bottom);
   --f-tiptap__h4--margin-bottom: var(--f-tiptap__headings--margin-bottom);
 
-  --f-tiptap__headings--color: inherit;
+  --f-tiptap__headings--color: var(--f-tiptap__root--color);
   --f-tiptap__h1--color: var(--f-tiptap__headings--color);
   --f-tiptap__h2--color: var(--f-tiptap__headings--color);
   --f-tiptap__h3--color: var(--f-tiptap__headings--color);
@@ -183,6 +184,7 @@ $f-tiptap__columns--min-horizontal-width: 550px !default;
 
 .f-tiptap-styles {
   background: var(--f-tiptap__root--background-color);
+  color: var(--f-tiptap__root--color);
   container-type: inline-size;
   font-family: var(--f-tiptap__root--font-family);
   font-size: var(--f-tiptap__root--font-size);
@@ -210,7 +212,8 @@ $f-tiptap__columns--min-horizontal-width: 550px !default;
   .f-tiptap-node,
   .f-tiptap-columns,
   .f-tiptap-float,
-  .f-tiptap-styled-paragraph {
+  .f-tiptap-styled-paragraph,
+  .f-tiptap-invalid-node {
     margin-top: var(--f-tiptap__node--margin-top);
     margin-bottom: var(--f-tiptap__node--margin-bottom);
 

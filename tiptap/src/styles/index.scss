@@ -139,7 +139,8 @@ body,
   }
 }
 
-.f-tiptap-editor .node-folioTiptapNode {
+.f-tiptap-editor .node-folioTiptapNode,
+.f-tiptap-editor .node-folioTiptapInvalidNode {
   position: relative;
   z-index: 2;
 

@@ -1,4 +1,5 @@
 import type { JSONContent } from "@tiptap/react";
+import type { Editor } from "@tiptap/core";
 
 const BLOCK_EDITOR_ONLY_NODE_TYPES = [
   "table",
@@ -10,27 +11,39 @@ const BLOCK_EDITOR_ONLY_NODE_TYPES = [
   "folioTiptapFloatMain",
 ];
 
-// Type guard to ensure proper typing after filtering
-const isJSONContent = (node: JSONContent | undefined): node is JSONContent => !!node;
-
-const removeUnsupportedNodesInContent = (
-  content: JSONContent | undefined
-): JSONContent | undefined => {
+const replaceUnsupportedNodesInContent = ({
+  content,
+  schema
+}: {
+  content?: JSONContent | undefined;
+  schema: any; // Editor's schema type
+}): JSONContent | undefined => {
   if (!content) return content;
 
-  // If this is a node with a type to remove, return undefined (remove it)
-  if (content.type && BLOCK_EDITOR_ONLY_NODE_TYPES.includes(content.type)) {
+  // If this is a node not from schema, change it to folioTiptapInvalidNode
+  if (content.type && !schema.nodes[content.type]) {
     console.error(`Removed unsupported node type: ${content.type}`);
-    return undefined;
+    return {
+      type: "folioTiptapInvalidNode",
+      attrs: {
+        invalidNodeHash: content,
+      },
+    };
   }
 
   // If this node has children, process them recursively
   if (Array.isArray(content.content)) {
-    const filtered = content.content
-      .map(removeUnsupportedNodesInContent)
-      .filter(isJSONContent); // Only keep valid JSONContent nodes
+    const replaced: JSONContent[] = []
 
-    return { ...content, content: filtered };
+    content.content.forEach((child) => {
+      const handledChild = replaceUnsupportedNodesInContent({ content: child, schema })
+      if (handledChild) {
+        // If the child is a valid node, add it to the replaced array
+        replaced.push(handledChild);
+      }
+    })
+
+    return { ...content, content: replaced };
   }
 
   // Otherwise, return the node as is
@@ -39,20 +52,16 @@ const removeUnsupportedNodesInContent = (
 
 export const clearContent = ({
   content,
-  blockEditor,
+  editor,
 }: {
   content?: JSONContent;
-  blockEditor: boolean;
+  editor: Editor;
 }): JSONContent | undefined => {
   if (!content) {
     return content;
   }
 
-  if (blockEditor) {
-    return content;
-  }
-
-  return removeUnsupportedNodesInContent(content);
+  return replaceUnsupportedNodesInContent({ content, schema: editor.schema });
 };
 
 export default clearContent;

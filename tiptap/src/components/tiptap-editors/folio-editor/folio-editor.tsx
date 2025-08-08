@@ -32,6 +32,7 @@ import {
   FolioTiptapFloatAsideNode,
   FolioTiptapFloatMainNode,
 } from "@/components/tiptap-extensions/folio-tiptap-float";
+import { FolioTiptapInvalidNode } from '@/components/tiptap-extensions/folio-tiptap-invalid-node';
 
 import "@/components/tiptap-node/image-node/image-node.scss";
 import "@/components/tiptap-node/paragraph-node/paragraph-node.scss";
@@ -94,7 +95,6 @@ export function FolioEditor({
         (dropCursor as HTMLElement).hidden = true;
       }
     },
-    content: clearContent({ content: defaultContent, blockEditor }),
     autofocus: blockEditor,
     immediatelyRender: true,
     shouldRerenderOnTransaction: false,
@@ -126,6 +126,7 @@ export function FolioEditor({
       Typography,
       Superscript,
       Subscript,
+      FolioTiptapInvalidNode,
 
       ...(blockEditor
         ? [
@@ -201,6 +202,14 @@ export function FolioEditor({
       resizeObserver.disconnect();
     };
   }, []);
+
+  React.useEffect(() => {
+    const clearedContent = clearContent({ content: defaultContent, editor })
+
+    if (clearedContent) {
+      editor.commands.setContent(clearedContent)
+    }
+  }, [defaultContent])
 
   let contentClassName = "f-tiptap-editor__content f-tiptap-styles"
   if (readonly) contentClassName += " f-tiptap-editor__content--readonly";
