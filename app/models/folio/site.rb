@@ -249,12 +249,12 @@ class Folio::Site < Folio::ApplicationRecord
 
   # Virtual attribute for comma-separated form input
   def subtitle_languages_string
-    subtitle_languages.join(', ')
+    subtitle_languages.join(", ")
   end
 
   def subtitle_languages_string=(value)
     if value.present?
-      self.subtitle_languages = value.split(',').map(&:strip).reject(&:blank?)
+      self.subtitle_languages = value.split(",").map(&:strip).reject(&:blank?)
     else
       self.subtitle_languages = []
     end
