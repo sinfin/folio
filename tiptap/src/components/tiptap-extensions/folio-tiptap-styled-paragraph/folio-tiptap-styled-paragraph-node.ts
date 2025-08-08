@@ -9,8 +9,8 @@ export interface StyledParagraphOptions {
   variants: FolioTiptapStyledParagraphVariant[];
 }
 
-export const StyledParagraph = Paragraph.extend<StyledParagraphOptions>({
-  name: "styledParagraph",
+export const FolioTiptapStyledParagraph = Paragraph.extend<StyledParagraphOptions>({
+  name: "folioTiptapStyledParagraph",
 
   renderHTML({ HTMLAttributes }: { HTMLAttributes: Record<string, any> }) {
     return ["p", { ...HTMLAttributes, class: "f-tiptap-styled-paragraph" }, 0];

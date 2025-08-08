@@ -24,7 +24,7 @@ import {
   FolioTiptapColumnsNode,
 } from "@/components/tiptap-extensions/folio-tiptap-columns";
 import {
-  StyledParagraph,
+  FolioTiptapStyledParagraph,
   DEFAULT_FOLIO_TIPTAP_STYLED_PARAGRAPH_VARIANTS,
 } from "@/components/tiptap-extensions/folio-tiptap-styled-paragraph";
 import {
@@ -174,7 +174,7 @@ export function FolioEditor({
             }),
           ]
         : []),
-      StyledParagraph,
+      FolioTiptapStyledParagraph,
     ],
   });
 

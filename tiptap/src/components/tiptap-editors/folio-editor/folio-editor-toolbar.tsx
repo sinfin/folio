@@ -152,7 +152,7 @@ const toolbarStateMapping: FolioEditorToolbarStateMapping = {
   },
   textStyles: {
     enabled: ({ editor }) => editor.can().toggleNode("heading", "paragraph"),
-    active: ({ editor }) => editor!.isActive("heading") || editor!.isActive("styledParagraph"),
+    active: ({ editor }) => editor!.isActive("heading") || editor!.isActive("folioTiptapStyledParagraph"),
     value: ({ editor }) => {
       if (editor!.isActive("heading")) {
         const attr = editor!.getAttributes("heading");
@@ -160,11 +160,11 @@ const toolbarStateMapping: FolioEditorToolbarStateMapping = {
         if (attr && attr.level) {
           return `heading-${attr.level}`
         }
-      } else if (editor!.isActive("styledParagraph")) {
-        const attr = editor!.getAttributes("styledParagraph");
+      } else if (editor!.isActive("folioTiptapStyledParagraph")) {
+        const attr = editor!.getAttributes("folioTiptapStyledParagraph");
 
         if (attr && attr.variant) {
-          return `styledParagraph-${attr.variant}`;
+          return `folioTiptapStyledParagraph-${attr.variant}`;
         }
       } else if (editor!.isActive("paragraph")) {
         return "paragraph"

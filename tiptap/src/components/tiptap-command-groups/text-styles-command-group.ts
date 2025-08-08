@@ -5,8 +5,8 @@ import {
   HeadingThreeCommand,
   HeadingTwoCommand,
   ParagraphCommand,
-  StyledParagraphLargeCommand,
-  StyledParagraphSmallCommand,
+  FolioTiptapStyledParagraphLargeCommand,
+  FolioTiptapStyledParagraphSmallCommand,
 } from "@/components/tiptap-commands"
 
 export const TextStylesCommandGroup: FolioEditorCommandGroup = {
@@ -18,8 +18,8 @@ export const TextStylesCommandGroup: FolioEditorCommandGroup = {
     HeadingTwoCommand,
     HeadingThreeCommand,
     HeadingFourCommand,
-    StyledParagraphLargeCommand,
-    StyledParagraphSmallCommand,
+    FolioTiptapStyledParagraphLargeCommand,
+    FolioTiptapStyledParagraphSmallCommand,
   ]
 }
 
