@@ -8,6 +8,8 @@ import { FolioTiptapNodeExtension } from "./folio-tiptap-node-extension";
 import { makeUniqueId } from './make-unique-id';
 import { postEditMessage } from './post-edit-message';
 
+import { InvalidNodeIndicator } from '@/components/tiptap-ui/invalid-node-indicator';
+
 import translate from "@/lib/i18n";
 
 import "./folio-tiptap-node.scss";
@@ -16,10 +18,14 @@ const TRANSLATIONS = {
   cs: {
     remove: "Odstranit",
     edit: "Upravit",
+    errorMessage: "Tento obsah nebude veřejně zobrazen, protože při jeho zobrazení došlo k chybě. Můžete ho zkusit upravit nebo odstranit.",
+    invalidMessage: "Tento obsah nebude veřejně zobrazen. Můžete ho upravit nebo odstranit.",
   },
   en: {
     remove: "Remove",
     edit: "Edit",
+    errorMessage: "This content will not be publicly displayed because an error occurred while rendering it. You can try to edit or remove it.",
+    invalidMessage: "This content will not be publicly displayed. You can edit or remove it.",
   },
 };
 
@@ -34,6 +40,12 @@ const storeHtmlToCache = ({ html, serializedAttrs }: StoredHtml) => {
   htmlCache = [{ html, serializedAttrs }, ...htmlCache.slice(0, 9)];
 };
 
+interface RespnoseFromApiType {
+  html?: string;
+  invalid?: boolean;
+  errorMessage?: string;
+}
+
 export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
   const { uniqueId, ...attrsWithoutUniqueId } = props.node.attrs;
 
@@ -47,7 +59,7 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
   if (!uniqueId) return
 
   const [status, setStatus] = React.useState<string>("initial");
-  const [htmlFromApi, setHtmlFromApi] = React.useState<string>("");
+  const [responseFromApi, setResponseFromApi] = React.useState<RespnoseFromApiType>({});
 
   const wrapperRef = React.useRef<HTMLDivElement>(null);
 
@@ -78,7 +90,7 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
 
       if (cachedEntry) {
         setStatus("loaded");
-        setHtmlFromApi(cachedEntry.html);
+        setResponseFromApi({ html: cachedEntry.html });
         return;
       } else {
         setStatus("loading");
@@ -122,11 +134,16 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
       if (event.data.type === "f-input-tiptap:render-nodes") {
         event.data.nodes.forEach((node: any) => {
           if (node.unique_id === uniqueId) {
-            const serializedAttrs = JSON.stringify(attrsWithoutUniqueId);
-            storeHtmlToCache({ html: node.html, serializedAttrs });
+            if (node.html) {
+              const serializedAttrs = JSON.stringify(attrsWithoutUniqueId);
+              storeHtmlToCache({ html: node.html, serializedAttrs });
 
-            setHtmlFromApi(node.html);
-            setStatus("loaded");
+              setResponseFromApi({ html: node.html });
+              setStatus("loaded");
+            } else {
+              setResponseFromApi({ invalid: true, errorMessage: node.error_message });
+              setStatus("loaded");
+            }
           }
         });
       } else if (
@@ -135,7 +152,7 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
         event.data.uniqueId === uniqueId
       ) {
         if (event.data.node && event.data.node.attrs) {
-          setHtmlFromApi("");
+          setResponseFromApi({});
           setStatus("initial");
           props.updateAttributes(event.data.node.attrs);
         }
@@ -157,15 +174,23 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
       onDoubleClick={handleEditClick}
       ref={wrapperRef}
     >
-      {htmlFromApi ? (
+      {responseFromApi.html ? (
         <div
           className="f-tiptap-node__html"
-          dangerouslySetInnerHTML={{ __html: htmlFromApi }}
+          dangerouslySetInnerHTML={{ __html: responseFromApi.html }}
         />
       ) : (
-        <div className="f-tiptap-node__loader-wrap rounded">
-          <span className="folio-loader" />
-        </div>
+        responseFromApi.invalid ? (
+          <InvalidNodeIndicator
+            invalidNodeHash={props.node.toJSON()}
+            message={translate(TRANSLATIONS, responseFromApi.errorMessage ? 'errorMessage' : 'invalidMessage')}
+            errorMessage={responseFromApi.errorMessage}
+          />
+        ) : (
+          <div className="f-tiptap-node__loader-wrap rounded">
+            <span className="folio-loader" />
+          </div>
+        )
       )}
     </NodeViewWrapper>
   );

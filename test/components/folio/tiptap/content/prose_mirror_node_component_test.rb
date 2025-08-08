@@ -234,18 +234,15 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       "content" => [
         {
           "type" => "text",
-          "text" => "This should show error"
+          "text" => "This should be hidden, as it causes an error"
         }
       ]
     }
 
     render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
 
-    assert_selector(".f-tiptap-prose-mirror-node--error")
-    assert_text("TODO missing node_definition")
+    assert_text("")
   end
-
-
 
   def test_render_listItem_node
     prose_mirror_node = {

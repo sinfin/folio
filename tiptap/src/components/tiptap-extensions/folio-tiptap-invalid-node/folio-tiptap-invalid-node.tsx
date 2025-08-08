@@ -1,47 +1,27 @@
 import { Node, ReactNodeViewRenderer, NodeViewWrapper, type NodeViewProps } from "@tiptap/react";
-import { AlertCircleIcon } from '@/components/tiptap-icons';
+import { InvalidNodeIndicator } from '@/components/tiptap-ui/invalid-node-indicator';
 import translate from "@/lib/i18n";
-
-import "./folio-tiptap-invalid-node.scss"
 
 const CLASS_NAME = "f-tiptap-invalid-node";
 
 const TRANSLATIONS = {
   cs: {
-    title: "Nevalidní obsah",
-    hint: "Tento obsah nebude veřejně zobrazen. Můžete ho odstranit.",
+    message: "Tento obsah nebude veřejně zobrazen. Můžete ho odstranit.",
   },
   en: {
-    title: "Invalid content",
-    hint: "This content will not be publicly displayed. You can remove it.",
+    message: "This content will not be publicly displayed. You can remove it.",
   }
 }
 
-const DEFAULT_INVALID_NODE_HASH = {
-  type: "Unknown type"
-}
-
-const FolioTiptapInvalidNodeComponent: React.FC<NodeViewProps> = (props) => {
+export const FolioTiptapInvalidNodeComponent: React.FC<NodeViewProps> = (props) => {
   const { node } = props;
-  let invalidNodeHash = node && node.attrs && node.attrs.invalidNodeHash;
-  invalidNodeHash = invalidNodeHash || DEFAULT_INVALID_NODE_HASH;
 
   return (
     <NodeViewWrapper className={CLASS_NAME}>
-      <h4 className={`${CLASS_NAME}__title`}>
-        <AlertCircleIcon />
-        {translate(TRANSLATIONS, "title")}
-      </h4>
-
-      <p className={`${CLASS_NAME}__hint`}>
-        {translate(TRANSLATIONS, "hint")}
-      </p>
-
-      <pre className={`${CLASS_NAME}__pre`}>
-        <code>
-          {JSON.stringify(invalidNodeHash, null, 2)}
-        </code>
-      </pre>
+      <InvalidNodeIndicator
+        invalidNodeHash={node && node.attrs && node.attrs.invalidNodeHash}
+        message={translate(TRANSLATIONS, "message")}
+      />
     </NodeViewWrapper>
   );
 }

@@ -10,6 +10,17 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponent < ApplicationComponent
     @node_definition = NODES[@prose_mirror_node["type"]]
   end
 
+  def before_render
+    return if @node_definition.present?
+    raise ArgumentError, "Unknown ProseMirror node type: #{@prose_mirror_node['type']}"
+  rescue ArgumentError => e
+    rescue_component_error(e)
+  end
+
+  def render?
+    @node_definition
+  end
+
   private
     def resolve_tag_name(tag)
       if @node_definition["level_based_tag"] && @prose_mirror_node["attrs"] && @prose_mirror_node["attrs"]["level"]
@@ -60,7 +71,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponent < ApplicationComponent
       end
     end
 
-    def raw_custom_component_render
+    def custom_component_render
       component_klass = @node_definition["component_name"].constantize
 
       component = component_klass.new(record: @record,
@@ -69,10 +80,19 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponent < ApplicationComponent
       render(component)
     end
 
-    def safe_custom_component_render
-      raw_custom_component_render
-    rescue StandardError => e
-      Rails.logger.error("Error rendering ProseMirror node component: #{@node_definition['component_name']}")
+    def rescue_component_error(e)
+      Rails.logger.error("Error rendering ProseMirror node component: #{@prose_mirror_node['type']}")
+
+      if controller_instance = try(:controller)
+        variable_name = Folio::Tiptap::ContentComponent::CONTROLLER_VARIABLE_NAME
+        data = controller_instance.instance_variable_get(variable_name)
+
+        data ||= {}
+        data[:broken_nodes] ||= []
+        data[:broken_nodes] << { prose_mirror_node: @prose_mirror_node, error: e }
+
+        controller_instance.instance_variable_set(variable_name, data)
+      end
 
       if Rails.env.development? && ENV["FOLIO_DEBUG_TIPTAP_NODES"]
         raise e

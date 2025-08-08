@@ -82,6 +82,8 @@ class Folio::Console::Api::TiptapControllerTest < Folio::Console::BaseController
 
     assert_equal 1, hash["data"].size
     assert_equal "folioTiptapNode-1", hash["data"][0]["unique_id"]
+    assert_nil hash["data"][0]["invalid"]
+    assert_nil hash["data"][0]["error_message"]
 
     page = Capybara.string(hash["data"][0]["html"])
     assert page.has_css?(".d-tiptap-node-card")
@@ -104,8 +106,7 @@ class Folio::Console::Api::TiptapControllerTest < Folio::Console::BaseController
 
     assert_equal 1, hash["data"].size
     assert_equal "folioTiptapNode-1", hash["data"][0]["unique_id"]
-
-    page = Capybara.string(hash["data"][0]["html"])
-    assert page.has_css?(".f-c-tiptap-invalid-node")
+    assert_equal true, hash["data"][0]["invalid"]
+    assert_nil hash["data"][0]["error_message"]
   end
 end

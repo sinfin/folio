@@ -8,3 +8,7 @@
 
   /   pre: code
   /     = JSON.pretty_generate(tiptap_content)
+
+  - if broken_nodes_javascript_code
+    javascript:
+      #{broken_nodes_javascript_code}

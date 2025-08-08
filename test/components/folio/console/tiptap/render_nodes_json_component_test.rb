@@ -15,13 +15,16 @@ class Folio::Console::Tiptap::RenderNodesJsonComponentTest < Folio::Console::Com
     assert_equal 2, hash["data"].size
 
     assert_equal 1, hash["data"][0]["unique_id"]
+    assert hash["data"][0]["html"]
+    assert_nil hash["data"][0]["error_message"]
+    assert_nil hash["data"][0]["invalid"]
     page = Capybara.string(hash["data"][0]["html"])
     assert page.has_css?(".d-tiptap-node-card")
     assert_not page.has_css?(".f-c-tiptap-invalid-node")
 
     assert_equal 2, hash["data"][1]["unique_id"]
-    page = Capybara.string(hash["data"][1]["html"])
-    assert_not page.has_css?(".d-tiptap-node-card")
-    assert page.has_css?(".f-c-tiptap-invalid-node")
+    assert_nil hash["data"][1]["html"]
+    assert_nil hash["data"][1]["error_message"]
+    assert_equal true, hash["data"][1]["invalid"]
   end
 end

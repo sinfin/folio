@@ -1,6 +1,6 @@
-- if @node_definition
+- begin
   - if @node_definition["component_name"]
-    = safe_custom_component_render
+    = custom_component_render
   - elsif @node_definition["tag"]
     - if @node_definition["self_closing"] && @node_definition["tag"].is_a?(String)
       = content_tag(resolve_tag_name(@node_definition["tag"]), nil, resolve_tag_attributes)
@@ -10,7 +10,5 @@
           - @prose_mirror_node["content"].each do |child_node|
             = render(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: @record,
                                                                           prose_mirror_node: child_node))
-
-- else
-  p.f-tiptap-prose-mirror-node.f-tiptap-prose-mirror-node--error.text-danger
-    ' TODO missing node_definition for #{@prose_mirror_node["type"]}
+- rescue StandardError => e
+  - rescue_component_error(e)
