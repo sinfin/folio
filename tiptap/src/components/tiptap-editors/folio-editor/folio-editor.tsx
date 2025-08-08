@@ -207,7 +207,7 @@ export function FolioEditor({
     const clearedContent = clearContent({ content: defaultContent, editor })
 
     if (clearedContent) {
-      editor.commands.setContent(clearedContent)
+      editor.chain().setMeta('addToHistory', false).setContent(clearedContent).run()
     }
   }, [defaultContent])
 
