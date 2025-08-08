@@ -90,23 +90,19 @@ window.Folio.Stimulus.register('f-c-files-subtitle-form', class extends window.S
       
       this.showLoader()
       
-      window.Folio.Api.apiDelete(url).then((res) => {
-        if (res && res.success) {
-          // Clean up accordion state for this language
-          this.cleanupAccordionStateForLanguage(this.languageValue)
-          
-          // Remove this component from DOM after successful deletion
-          if (this.element && this.element.parentNode) {
-            this.element.remove()
-            
-            // Notify parent component about deletion
-            this.dispatch('subtitleDeleted', { 
-              detail: { language: this.languageValue },
-              bubbles: true 
-            })
-          }
-        } else {
-          window.alert(window.FolioConsole.translations.failedToDeleteSubtitle)
+      window.Folio.Api.apiDelete(url).then(() => {
+        // Clean up accordion state for this language
+        this.cleanupAccordionStateForLanguage(this.languageValue)
+
+        // Remove this component from DOM after successful deletion
+        if (this.element && this.element.parentNode) {
+          this.element.remove()
+
+          // Notify parent component about deletion
+          this.dispatch('subtitleDeleted', { 
+            detail: { language: this.languageValue },
+            bubbles: true 
+          })
         }
       }).catch((e) => {
         window.alert(window.FolioConsole.translations.errorGeneric.replace('%{message}', e.message))
