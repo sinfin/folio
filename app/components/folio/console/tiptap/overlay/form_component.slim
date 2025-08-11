@@ -10,6 +10,8 @@
         == cell('folio/console/ui/buttons', buttons_model)
 
     .f-c-tiptap-overlay-form__form-body
+      == cell('folio/console/form/errors', f, class_name: "mb-4")
+
       - form_rows.each do |row|
         .f-c-tiptap-overlay-form__form-row
           - row[:columns].each do |column|

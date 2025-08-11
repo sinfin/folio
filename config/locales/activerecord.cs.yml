@@ -319,6 +319,7 @@ cs:
     description: Popisek
     document_placement: Dokument
     document_placements: Dokumenty
+    documents: Dokumenty
     email: E-mail
     featured: Zvýrazněno
     figcaption: Popisek
@@ -394,6 +395,8 @@ cs:
       invalid_subtitle_block: má nevalidní text na řádku %{line}
 
     attributes:
+      documents:
+        blank: jsou povinné
       verified_captcha:
         invalid: Potvrďte prosím, že nejste robot 🤖
       type:
