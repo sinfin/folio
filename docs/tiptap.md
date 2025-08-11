@@ -154,7 +154,7 @@ The `Node` models are defined by calling `tiptap_node` method which uses the `Fo
 - `:rich_text`: JSON-stored rich text content (nested Tiptap structure)
 - `:url_json`: URL with metadata (href, title, target, etc.)
 - `[]`: Collection to pick from.
-- `:image`, `:document`, `:audio`, `:video`: Single Folio file attachments
+- `:image`, `:document`, `:audio_cover`, `:video_cover`: Single Folio file attachments
 - `:images`, `:documents`: Multiple Folio file attachments
 - `{ class_name: "Model" }`: belongs_to relationship
 - `{ class_name: "Model", has_many: true }`: has_many relationship

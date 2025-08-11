@@ -293,7 +293,7 @@ class Folio::Tiptap::NodeBuilder
               file_type: "Folio::File::Document",
               has_many: false
             }
-          when :audio
+          when :audio_cover
             result[key] = {
               type: :folio_attachment,
               attachment_key: key,
@@ -302,7 +302,7 @@ class Folio::Tiptap::NodeBuilder
               file_type: "Folio::File::Audio",
               has_many: false
             }
-          when :video
+          when :video_cover
             result[key] = {
               type: :folio_attachment,
               attachment_key: key,
