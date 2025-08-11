@@ -144,15 +144,18 @@ module Folio::Console::ReactHelper
         selected_placements
       end
 
+      selected_index = 0
+
       ordered.map do |fp|
         {
           id: fp.id,
+          selectedAt: fp.id.nil? ? (selected_index += 1) : nil,
           file_id: fp.file.id,
           alt: fp.alt,
           title: fp.title,
           file: Folio::Console::FileSerializer.new(fp.file)
                                               .serializable_hash[:data],
-        }
+        }.compact
       end.to_json
     end
 
