@@ -57,7 +57,7 @@ class Folio::NewsletterSubscription < Folio::ApplicationRecord
   end
 
   def self.csv_attribute_names
-    %i[id email created_at]
+    %i[id email created_at active]
   end
 
   def csv_attributes(controller = nil)
