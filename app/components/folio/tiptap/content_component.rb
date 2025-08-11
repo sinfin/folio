@@ -10,7 +10,7 @@ class Folio::Tiptap::ContentComponent < ApplicationComponent
   end
 
   def render?
-    tiptap_content.present?
+    tiptap_content.present? && tiptap_content["content"].present?
   end
 
   private

@@ -1,7 +1,7 @@
 .f-tiptap-content class=@class_name
   .container-fluid
     = render(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: @record,
-                                                                  prose_mirror_node: tiptap_content))
+                                                                  prose_mirror_node: tiptap_content["content"]))
 
   / .container-fluid.my-4
   /   h2 tiptap_content

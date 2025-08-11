@@ -902,13 +902,13 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
   private
     def build_mock_record(tiptap_content)
       mock_record = Object.new
-      mock_record.define_singleton_method(:tiptap_content) { tiptap_content }
+      mock_record.define_singleton_method(:tiptap_content) { { "content" => tiptap_content } }
       mock_record
     end
 
     def build_mock_record_with_custom_attribute(tiptap_content)
       mock_record = Object.new
-      mock_record.define_singleton_method(:custom_tiptap_content) { tiptap_content }
+      mock_record.define_singleton_method(:custom_tiptap_content) { { "content" => tiptap_content } }
       mock_record
     end
 end
