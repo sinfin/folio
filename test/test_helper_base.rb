@@ -58,6 +58,7 @@ class Cell::TestCase # do not inherit from ActiveSupport::TestCase
   include SitesHelper
 
   require Folio::Engine.root.join("test/support/create_atom_helper")
+  require Folio::Engine.root.join("test/support/create_test_tiptap_node_helper")
   require Folio::Engine.root.join("test/support/create_page_singleton_helper")
 
   attr_reader :site
@@ -143,6 +144,7 @@ end
 
 class Folio::ComponentTest < ViewComponent::TestCase
   require Folio::Engine.root.join("test/support/create_atom_helper")
+  require Folio::Engine.root.join("test/support/create_test_tiptap_node_helper")
   require Folio::Engine.root.join("test/support/create_page_singleton_helper")
 end
 

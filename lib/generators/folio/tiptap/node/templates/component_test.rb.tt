@@ -1,0 +1,13 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= node_component_name %>Test < Folio::ComponentTest
+  def test_render
+    node = create_test_tiptap_node(<%= node_model_name %>)
+
+    render_inline(<%= node_component_name %>.new(node:))
+
+    assert_selector(".<%= node_css_class_name %>")
+  end
+end
