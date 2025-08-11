@@ -32,6 +32,8 @@ class Folio::Tiptap::NodeBuilder
           setup_structure_default(key:)
         when :rich_text
           setup_structure_for_rich_text(key:)
+        when :integer
+          setup_structure_for_integer(key:)
         else
           fail ArgumentError, "Unsupported type #{attr_config[:type]} in tiptap_node definition"
         end
@@ -49,6 +51,22 @@ class Folio::Tiptap::NodeBuilder
         setup_structure_for_has_many(key:, class_name: attr_config[:class_name])
       else
         setup_structure_for_belongs_to(key:, class_name: attr_config[:class_name])
+      end
+    end
+
+    def setup_structure_for_integer(key:)
+      @klass.attribute key, type: :integer
+
+      @klass.define_method "#{key}=" do |value|
+        transformed_value = if value.nil?
+          nil
+        elsif value.is_a?(String) || value.is_a?(Numeric)
+          value.to_i
+        else
+          fail ArgumentError, "Expected a String or Number for #{key}, got #{value.class.name}"
+        end
+
+        super(transformed_value)
       end
     end
 

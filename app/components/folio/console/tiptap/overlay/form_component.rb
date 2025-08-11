@@ -19,7 +19,7 @@ class Folio::Console::Tiptap::Overlay::FormComponent < Folio::Console::Applicati
 
     def render_input(f:, key:, attr_config:)
       case attr_config[:type]
-      when :string, :text, :url_json, :rich_text
+      when :string, :text, :integer, :url_json, :rich_text
         send("render_input_#{attr_config[:type]}", f:, key:)
       when :folio_attachment
         if attr_config[:has_many]
@@ -58,6 +58,17 @@ class Folio::Console::Tiptap::Overlay::FormComponent < Folio::Console::Applicati
       f.input key,
               as: :string,
               character_counter: true
+    end
+
+    def render_input_integer(f:, key:)
+      f.input key,
+              as: :integer,
+              input_html: {
+                step: 1,
+                value: f.object.send(key) || f.object.class.structure[key][:default],
+                min: f.object.class.structure[key][:minimum],
+                max: f.object.class.structure[key][:maximum]
+              }
     end
 
     def render_input_text(f:, key:)

@@ -9,6 +9,7 @@ class Folio::Tiptap::NodeTest < ActiveSupport::TestCase
       text: :text,
       content: :rich_text,
       button_url_json: :url_json,
+      position: :integer,
       background: %w[gray blue],
       cover: :image,
       reports: :documents,
@@ -28,11 +29,13 @@ class Folio::Tiptap::NodeTest < ActiveSupport::TestCase
   test "attributes" do
     node = Node.new(title: "foo",
                     text: "foo bar",
+                    position: "3",
                     content: RICH_TEXT_HASH.to_json,
                     button_url_json: { href: "https://example.com", label: "Example" })
 
     assert_equal "foo", node.title
     assert_equal "foo bar", node.text
+    assert_equal 3, node.position
     assert_equal RICH_TEXT_HASH, node.content
     assert_equal({ "href" => "https://example.com", "label" => "Example" }, node.button_url_json)
   end
@@ -87,6 +90,7 @@ class Folio::Tiptap::NodeTest < ActiveSupport::TestCase
                     text: "bar",
                     background: "blue",
                     content: RICH_TEXT_HASH.to_json,
+                    position: 3,
                     cover:,
                     reports:,
                     page:,
@@ -99,6 +103,7 @@ class Folio::Tiptap::NodeTest < ActiveSupport::TestCase
     assert_equal 1, hash["attrs"]["version"]
     assert_equal "Folio::Tiptap::NodeTest::Node", hash["attrs"]["type"]
     assert_equal "foo", hash["attrs"]["data"]["title"]
+    assert_equal 3, hash["attrs"]["data"]["position"]
     assert_equal "blue", hash["attrs"]["data"]["background"]
     assert_equal RICH_TEXT_HASH.to_json, hash["attrs"]["data"]["content"]
     assert_equal URL_JSON_HASH.to_json, hash["attrs"]["data"]["button_url_json"]

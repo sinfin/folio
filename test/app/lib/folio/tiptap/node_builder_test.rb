@@ -9,6 +9,7 @@ class Folio::Tiptap::NodeBuilderTest < ActiveSupport::TestCase
       text: :text,
       content: :rich_text,
       button_url_json: :url_json,
+      position: :integer,
       background: %w[gray blue],
       cover: :image,
       reports: :documents,
@@ -23,6 +24,8 @@ class Folio::Tiptap::NodeBuilderTest < ActiveSupport::TestCase
 
   test "convert_structure_to_hashes" do
     assert_equal({ type: :string }, Node.structure[:title])
+
+    assert_equal({ type: :integer }, Node.structure[:position])
 
     assert_equal({ type: :url_json }, Node.structure[:button_url_json])
 

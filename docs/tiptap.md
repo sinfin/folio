@@ -151,6 +151,7 @@ The `Node` models are defined by calling `tiptap_node` method which uses the `Fo
 
 #### Compact Syntax (recommended for simple cases):
 - `:string`, `:text`: Basic text attributes
+- `:integer`: Integer attributes with automatic type conversion and validation
 - `:rich_text`: JSON-stored rich text content (nested Tiptap structure)
 - `:url_json`: URL with metadata (href, title, target, etc.)
 - `[]`: Collection to pick from.
@@ -162,6 +163,7 @@ The `Node` models are defined by calling `tiptap_node` method which uses the `Fo
 #### Hash Format with :type property:
 All compact definitions are internally converted to hash format:
 - `{ type: :string }`, `{ type: :text }`: Basic text attributes
+- `{ type: :integer }`: Integer attributes with automatic type conversion and validation
 - `{ type: :rich_text }`: JSON-stored rich text content
 - `{ type: :url_json }`: URL with metadata
 - `{ type: :collection, collection: [...] }`: Collection to pick from
@@ -179,6 +181,7 @@ Here's how the same node definition can be written in both compact and hash synt
 class MyApp::ExampleNode < Folio::Tiptap::Node
   tiptap_node structure: {
     title: :string,
+    priority: :integer,
     content: :rich_text,
     button_url: :url_json,
     background: %w[gray blue red],
@@ -212,6 +215,24 @@ class MyApp::ExampleNode < Folio::Tiptap::Node
     related_pages: { type: :relation, class_name: "Folio::Page", has_many: true }
   }
 end
+```
+
+#### Integer Attribute Behavior
+
+Integer attributes (`:integer` or `{ type: :integer }`) provide automatic type conversion and validation:
+
+- **Accepted input types**: String, Numeric, or nil
+- **Conversion**: String and Numeric values are automatically converted to integers using `.to_i`
+- **Validation**: Raises `ArgumentError` if value is not String, Numeric, or nil
+- **Nil handling**: nil values are preserved as nil (not converted to 0)
+
+```rb
+node = MyApp::ExampleNode.new
+node.priority = "42"     # String -> 42 (integer)
+node.priority = 3.14     # Float -> 3 (integer)
+node.priority = 100      # Integer -> 100 (unchanged)
+node.priority = nil      # nil -> nil (unchanged)
+node.priority = []       # Raises ArgumentError
 ```
 
 ### File Attachments
