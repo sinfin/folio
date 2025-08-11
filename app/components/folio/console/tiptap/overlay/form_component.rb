@@ -96,10 +96,12 @@ class Folio::Console::Tiptap::Overlay::FormComponent < Folio::Console::Applicati
 
       selected_placements = @node.send(attr_config[:placement_key])
 
-      helpers.send(helper_name,
-                   selected_placements,
-                   attachmentable: simple_form_as,
-                   type: "#{key.to_s.singularize}_placements")
+      content_tag(:div, class: "f-c-tiptap-overlay-form__react-files form-group") do
+        helpers.send(helper_name,
+                     selected_placements,
+                     attachmentable: simple_form_as,
+                     type: "#{key.to_s.singularize}_placements")
+      end
     end
 
     def render_relation_select(f:, key:, attr_config:)
@@ -118,7 +120,7 @@ class Folio::Console::Tiptap::Overlay::FormComponent < Folio::Console::Applicati
 
     def render_collection_select(f:, key:, attr_config:)
       collection = attr_config[:collection].map do |value|
-        [@node.class.human_attribute_name("#{key}/#{value}"), value]
+        [@node.class.human_attribute_name("#{key}/#{value.nil? ? "nil" : value}"), value]
       end
 
       f.input key,

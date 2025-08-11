@@ -26,7 +26,7 @@ module Folio
       private
         def get_all_tiptap_node_names
           Dir[Rails.root.join("app/models/**/tiptap/node/**/*.rb")].map do |path|
-            path.gsub("#{Rails.root}/app/models/", "").delete_suffix(".rb").classify
+            path.gsub("#{Rails.root}/app/models/", "").delete_suffix(".rb").camelize
           end
         end
 
