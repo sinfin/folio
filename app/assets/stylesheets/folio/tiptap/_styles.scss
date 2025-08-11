@@ -54,24 +54,24 @@ $f-tiptap-headings__levels: (
     "letter-spacing": null,
   ),
   "h2": (
-    "font-size": calc($f-tiptap-headings__font-size * 0.8),
-    "font-size--tablet": calc($f-tiptap-headings__font-size * 0.8),
-    "font-size--desktop": calc($f-tiptap-headings__font-size * 0.8),
+    "font-size": $f-tiptap-headings__font-size * 0.8,
+    "font-size--tablet": $f-tiptap-headings__font-size * 0.8,
+    "font-size--desktop": $f-tiptap-headings__font-size * 0.8,
   ),
   "h3": (
-    "font-size": calc($f-tiptap-headings__font-size * 0.6),
-    "font-size--tablet": calc($f-tiptap-headings__font-size * 0.6),
-    "font-size--desktop": calc($f-tiptap-headings__font-size * 0.6),
+    "font-size": $f-tiptap-headings__font-size * 0.6,
+    "font-size--tablet": $f-tiptap-headings__font-size * 0.6,
+    "font-size--desktop": $f-tiptap-headings__font-size * 0.6,
   ),
   "h4": (
-    "font-size": calc($f-tiptap-headings__font-size * 0.4),
-    "font-size--tablet": calc($f-tiptap-headings__font-size * 0.4),
-    "font-size--desktop": calc($f-tiptap-headings__font-size * 0.4),
+    "font-size": $f-tiptap-headings__font-size * 0.4,
+    "font-size--tablet": $f-tiptap-headings__font-size * 0.4,
+    "font-size--desktop": $f-tiptap-headings__font-size * 0.4,
   ),
   "h5": (
-    "font-size": calc($f-tiptap-headings__font-size * 0.4),
-    "font-size--tablet": calc($f-tiptap-headings__font-size * 0.4),
-    "font-size--desktop": calc($f-tiptap-headings__font-size * 0.4),
+    "font-size": $f-tiptap-headings__font-size * 0.4,
+    "font-size--tablet": $f-tiptap-headings__font-size * 0.4,
+    "font-size--desktop": $f-tiptap-headings__font-size * 0.4,
   ),
 );
 
