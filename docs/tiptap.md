@@ -412,16 +412,16 @@ All styling is controlled through CSS custom properties, making it easy to custo
 // Example: Corporate theme customization
 :root {
   // Brand colors
-  --f-tiptap__a--color: #0066cc;
-  --f-tiptap__headings--color: #2c3e50;
+  --f-tiptap-a__color: #0066cc;
+  --f-tiptap-headings__color: #2c3e50;
 
   // Typography
-  --f-tiptap__headings--font-family: 'Roboto', sans-serif;
-  --f-tiptap__code--font-family: 'Source Code Pro', monospace;
+  --f-tiptap-headings__font-family: 'Roboto', sans-serif;
+  --f-tiptap-code__font-family: 'Source Code Pro', monospace;
 
   // Spacing - more compact
   --f-tiptap__spacer: 0.75rem;
-  --f-tiptap__headings--margin-top: 1.5rem;
+  --f-tiptap-headings__margin-top: 1.5rem;
 
   // Task lists with brand colors
   --f-tiptap__ul-tasklist--background-color-active: #0066cc;

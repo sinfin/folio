@@ -12,8 +12,8 @@
   --f-tiptap-commands-list__small-opacity: .5;
 
   background: #ffffff;
-  border-radius: var(--f-tiptap-editor--border-radius);
-  border: 1px solid var(--f-tiptap-editor--border-color);
+  border-radius: var(--f-tiptap-editor__border-radius);
+  border: 1px solid var(--f-tiptap-editor__border-color);
   box-shadow: var(--tt-shadow-elevated-md);
   color: inherit;
   display: flex;
@@ -37,7 +37,7 @@
     }
 
     & + & {
-      border-top: 1px solid var(--f-tiptap-editor--border-color);
+      border-top: 1px solid var(--f-tiptap-editor__border-color);
     }
   }
 

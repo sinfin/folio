@@ -11,6 +11,14 @@ export default defineConfig({
       "@": resolve(fileURLToPath(new URL('./src', import.meta.url))),
     },
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        silenceDeprecations: ['global-builtin'],
+        quietDeps: true
+      }
+    }
+  },
   build: {
     outDir: 'dist',
     sourcemap: true,

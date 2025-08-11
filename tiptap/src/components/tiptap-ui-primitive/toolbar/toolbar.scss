@@ -14,8 +14,8 @@
   box-sizing: border-box;
 
   .f-tiptap-editor--rich-text & {
-    border-top-left-radius: var(--f-tiptap-editor--border-radius);
-    border-top-right-radius: var(--f-tiptap-editor--border-radius);
+    border-top-left-radius: var(--f-tiptap-editor__border-radius);
+    border-top-right-radius: var(--f-tiptap-editor__border-radius);
   }
 
   &__group {
