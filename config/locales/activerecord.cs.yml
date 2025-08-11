@@ -46,6 +46,7 @@ cs:
       folio/newsletter_subscription:
         created_at: Zapsáno dne
         email: E-mailová adresa
+        active: Aktivní
       folio/page:
         parent_id: Nadřazená stránka
         title: Název stránky
@@ -110,7 +111,7 @@ cs:
     errors:
       messages:
         indestructible: Záznam není možné odstranit.
-        file_format: 'není povolen. Povolené typy: %{types}'
+        file_format: "není povolen. Povolené typy: %{types}"
         wrong_namespace: Typ záznamu neodpovídá typu webové stránky.
       models:
         folio/atom/base:

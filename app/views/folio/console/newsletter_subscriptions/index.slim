@@ -3,5 +3,6 @@
 = catalogue(@newsletter_subscriptions)
   ruby:
     email(:email, sanitize: true)
-    attribute(:created_at)
+    date(:created_at)
+    boolean(:active)
     actions :destroy

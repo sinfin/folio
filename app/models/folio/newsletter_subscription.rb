@@ -16,6 +16,19 @@ class Folio::NewsletterSubscription < Folio::ApplicationRecord
 
   default_scope { order(id: :desc) }
 
+  scope :active, -> { where(active: true) }
+  scope :inactive, -> { where(active: false) }
+  scope :by_active, -> (bool) {
+    case bool
+    when true, "true"
+      active
+    when false, "false"
+      inactive
+    else
+      all
+    end
+  }
+
   pg_search_scope :by_query,
                   against: %i[email],
                   ignoring: :accents,
