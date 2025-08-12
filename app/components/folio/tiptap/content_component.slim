@@ -1,7 +1,6 @@
 .f-tiptap-content class=@class_name
   .container-fluid
-    = render(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: @record,
-                                                                  prose_mirror_node: tiptap_content["content"]))
+    = render(node_component)
 
   / .container-fluid.my-4
   /   h2 tiptap_content
@@ -9,6 +8,6 @@
   /   pre: code
   /     = JSON.pretty_generate(tiptap_content)
 
-  - if broken_nodes_javascript_code
+  - if javascript_code_for_broken_data
     javascript:
-      #{broken_nodes_javascript_code}
+      #{javascript_code_for_broken_data}

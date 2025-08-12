@@ -7,10 +7,16 @@
     - elsif @node_definition["tag"]
       = render_nested_tags(@node_definition["tag"]) do
         - if @prose_mirror_node["content"].present?
-          - @prose_mirror_node["content"].each do |child_node|
+          - @prose_mirror_node["content"].each_with_index do |child_node, index|
+            = call_lambda_if_present(index:, node: child_node, after: false)
+
             = render(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: @record,
                                                                           prose_mirror_node: child_node))
+
+            = call_lambda_if_present(index:, node: child_node, after: true)
+
         - elsif @node_definition["trailing_break_when_empty"]
           br.ProseMirror-trailingBreak
+
 - rescue StandardError => e
   - rescue_component_error(e)

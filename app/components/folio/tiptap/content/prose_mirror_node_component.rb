@@ -3,9 +3,14 @@
 class Folio::Tiptap::Content::ProseMirrorNodeComponent < ApplicationComponent
   NODES = YAML.load_file(File.join(__dir__, "prose_mirror_node_component.yml"))["nodes"].freeze
 
-  def initialize(record:, prose_mirror_node:)
+  def initialize(record:,
+                 prose_mirror_node:,
+                 lambda_before_node: nil,
+                 lambda_after_node: nil)
     @record = record
     @prose_mirror_node = prose_mirror_node
+    @lambda_before_node = lambda_before_node
+    @lambda_after_node = lambda_after_node
 
     @node_definition = NODES[@prose_mirror_node["type"]]
   end
@@ -96,6 +101,37 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponent < ApplicationComponent
         data ||= {}
         data[:broken_nodes] ||= []
         data[:broken_nodes] << { prose_mirror_node: @prose_mirror_node, error: e }
+
+        controller_instance.instance_variable_set(variable_name, data)
+      end
+
+      if Rails.env.development? && ENV["FOLIO_DEBUG_TIPTAP_NODES"]
+        raise e
+      end
+    end
+
+    def call_lambda_if_present(index:, node:, after: false)
+      lambda_to_be_called = after ? @lambda_after_node : @lambda_before_node
+
+      if lambda_to_be_called
+        begin
+          lambda_to_be_called.call(component: self, index:, node:)
+        rescue StandardError => e
+          rescue_lambda_error(e, after:)
+        end
+      end
+    end
+
+    def rescue_lambda_error(e, after: false)
+      Rails.logger.error("Error calling Folio::Tiptap::Content::ProseMirrorNodeComponent #{after ? "after" : "before"} lambda")
+
+      if controller_instance = try(:controller)
+        variable_name = Folio::Tiptap::ContentComponent::CONTROLLER_VARIABLE_NAME
+        data = controller_instance.instance_variable_get(variable_name)
+
+        data ||= {}
+        data[:broken_lambdas] ||= {}
+        data[:broken_lambdas][after ? :after : :before] ||= { error: e }
 
         controller_instance.instance_variable_set(variable_name, data)
       end

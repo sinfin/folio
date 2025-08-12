@@ -351,10 +351,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       ]
     }
 
-    component = Folio::Tiptap::Content::ProseMirrorNodeComponent.new(
-      record: build_mock_record,
-      prose_mirror_node:
-    )
+    component = Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:)
 
     # Component should initialize without errors
     render_inline(component)

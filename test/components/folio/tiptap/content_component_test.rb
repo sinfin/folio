@@ -899,6 +899,104 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
     assert_text("Non-empty text")
   end
 
+  def test_render_with_lambdas
+    prosemirror_json = {
+      "type" => "doc",
+      "content" => [
+        {
+          "type" => "paragraph",
+          "content" => [
+            {
+              "type" => "text",
+              "text" => "paragraph 1"
+            }
+          ]
+        },
+        {
+          "type" => "paragraph",
+          "content" => [
+            {
+              "type" => "text",
+              "text" => "paragraph 2"
+            }
+          ]
+        }
+      ]
+    }
+
+    model = build_mock_record(prosemirror_json)
+
+    lambda_before_root_node = -> (component:, node:, index:) do
+      component.content_tag(:p, "before #{index}", class: "lambda-before")
+    end
+
+    lambda_after_root_node = -> (component:, node:, index:) do
+      if index == 0
+        component.content_tag(:p, "after #{index}", class: "lambda-after")
+      end
+    end
+
+    render_inline(Folio::Tiptap::ContentComponent.new(record: model,
+                                                      lambda_before_root_node:,
+                                                      lambda_after_root_node:))
+
+    paragraphs = page.all("p").map(&:text)
+
+    assert_equal "before 0", paragraphs[0]
+    assert_equal "paragraph 1", paragraphs[1]
+    assert_equal "after 0", paragraphs[2]
+    assert_equal "before 1", paragraphs[3]
+    assert_equal "paragraph 2", paragraphs[4]
+    assert_nil paragraphs[5]
+  end
+
+  def test_render_with_broken_lambdas
+    prosemirror_json = {
+      "type" => "doc",
+      "content" => [
+        {
+          "type" => "paragraph",
+          "content" => [
+            {
+              "type" => "text",
+              "text" => "paragraph 1"
+            }
+          ]
+        },
+        {
+          "type" => "paragraph",
+          "content" => [
+            {
+              "type" => "text",
+              "text" => "paragraph 2"
+            }
+          ]
+        }
+      ]
+    }
+
+    model = build_mock_record(prosemirror_json)
+
+    lambda_before_root_node = -> (component:, node:, index:) do
+      raise "Simulated error in before lambda"
+    end
+
+    lambda_after_root_node = -> (component:, node:, index:) do
+      raise "Simulated error in after lambda"
+    end
+
+    render_inline(Folio::Tiptap::ContentComponent.new(record: model,
+                                                      lambda_before_root_node:,
+                                                      lambda_after_root_node:))
+
+    paragraphs = page.all("p").map(&:text)
+
+    assert_equal "paragraph 1", paragraphs[0]
+    assert_equal "paragraph 2", paragraphs[1]
+
+    assert page.html.include?("console.group('[Folio][Tiptap] Broken lambdas');")
+  end
+
   private
     def build_mock_record(tiptap_content)
       mock_record = Object.new
