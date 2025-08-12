@@ -304,6 +304,7 @@ en:
     state: State
     subtitle: Subtitle
     tag_list: Keywords
+    tiptap_content: Content
     title: Title
     to_label: Title
     url: URL

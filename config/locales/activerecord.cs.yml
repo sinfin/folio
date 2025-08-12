@@ -375,6 +375,7 @@ cs:
     state: Stav
     subtitle: Podtitulek
     tag_list: Klíčová slova
+    tiptap_content: Obsah
     title: Název
     to_label: Název
     url: URL
