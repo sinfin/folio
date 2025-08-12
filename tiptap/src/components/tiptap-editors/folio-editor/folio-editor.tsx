@@ -179,14 +179,14 @@ export function FolioEditor({
             }),
             FolioTiptapCommandsExtension.configure({
               suggestion:
-                (blockEditor && folioTiptapConfig.nodes && folioTiptapConfig.nodes.length)
+                blockEditor
                   ? {
                       ...folioTiptapCommandsSuggestion,
                       items: makeFolioTiptapCommandsSuggestionItems([
                         TextStylesCommandGroup,
                         ListsCommandGroup,
                         LayoutsCommandGroup,
-                        makeFolioTiptapNodesCommandGroup(folioTiptapConfig.nodes),
+                        ...(folioTiptapConfig.nodes && folioTiptapConfig.nodes.length ? [makeFolioTiptapNodesCommandGroup(folioTiptapConfig.nodes)] : []),
                       ]),
                     }
                   : folioTiptapCommandsSuggestion
