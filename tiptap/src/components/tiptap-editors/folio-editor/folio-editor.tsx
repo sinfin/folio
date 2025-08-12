@@ -25,7 +25,7 @@ import {
 } from "@/components/tiptap-extensions/folio-tiptap-columns";
 import {
   FolioTiptapStyledParagraph,
-  DEFAULT_FOLIO_TIPTAP_STYLED_PARAGRAPH_VARIANTS,
+  makeFolioTiptapStyledParagraphCommands,
 } from "@/components/tiptap-extensions/folio-tiptap-styled-paragraph";
 import {
   FolioTiptapFloatNode,
@@ -38,16 +38,17 @@ import "@/components/tiptap-node/image-node/image-node.scss";
 import "@/components/tiptap-node/paragraph-node/paragraph-node.scss";
 
 import {
-  TextStylesCommandGroup,
   ListsCommandGroup,
   LayoutsCommandGroup,
+  makeTextStylesCommandGroup,
   makeFolioTiptapNodesCommandGroup
 } from '@/components/tiptap-command-groups';
 
 // --- Tiptap UI ---
 import {
   FolioTiptapCommandsExtension,
-  folioTiptapCommandsSuggestion,
+  folioTiptapCommandsSuggestionWithoutItems,
+  makeFolioTiptapCommandsSuggestion,
   makeFolioTiptapCommandsSuggestionItems,
 } from "@/components/tiptap-extensions/folio-tiptap-commands";
 
@@ -86,6 +87,20 @@ export function FolioEditor({
   const windowSize = useWindowSize();
   const editorRef = React.useRef<HTMLDivElement>(null);
   const blockEditor = type === "block";
+
+  const folioTiptapStyledParagraphCommands = React.useMemo(() => {
+    if (folioTiptapConfig &&
+        folioTiptapConfig["styled_paragraph_variants"] &&
+        folioTiptapConfig["styled_paragraph_variants"].length) {
+      return makeFolioTiptapStyledParagraphCommands(folioTiptapConfig["styled_paragraph_variants"])
+    }
+
+    return []
+  }, [blockEditor, folioTiptapConfig && folioTiptapConfig["styled_paragraph_variants"]])
+
+  const textStylesCommandGroup = React.useMemo(() => {
+    return makeTextStylesCommandGroup(folioTiptapStyledParagraphCommands)
+  }, [folioTiptapStyledParagraphCommands])
 
   const editor = useEditor({
     onUpdate,
@@ -181,19 +196,21 @@ export function FolioEditor({
               suggestion:
                 blockEditor
                   ? {
-                      ...folioTiptapCommandsSuggestion,
+                      ...folioTiptapCommandsSuggestionWithoutItems,
                       items: makeFolioTiptapCommandsSuggestionItems([
-                        TextStylesCommandGroup,
+                        textStylesCommandGroup,
                         ListsCommandGroup,
                         LayoutsCommandGroup,
                         ...(folioTiptapConfig.nodes && folioTiptapConfig.nodes.length ? [makeFolioTiptapNodesCommandGroup(folioTiptapConfig.nodes)] : []),
                       ]),
                     }
-                  : folioTiptapCommandsSuggestion
+                  : makeFolioTiptapCommandsSuggestion({ textStylesCommandGroup })
             }),
           ]
         : []),
-      FolioTiptapStyledParagraph,
+      FolioTiptapStyledParagraph.configure({
+        variantCommands: folioTiptapStyledParagraphCommands,
+      }),
     ],
   });
 
@@ -242,6 +259,7 @@ export function FolioEditor({
           <FolioEditorToolbar
             editor={editor}
             blockEditor={blockEditor}
+            textStylesCommandGroup={textStylesCommandGroup}
             folioTiptapConfig={folioTiptapConfig}
           />
         )}

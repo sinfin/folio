@@ -18,7 +18,6 @@ import { FolioTiptapShowHtmlButton } from "@/components/tiptap-extensions/folio-
 import { FolioTiptapEraseMarksButton } from "@/components/tiptap-extensions/folio-tiptap-erase-marks/folio-tiptap-erase-marks-button"
 import { FolioEditorToolbarDropdown } from "./folio-editor-toolbar-dropdown"
 import {
-  TextStylesCommandGroup,
   ListsCommandGroup,
   LayoutsCommandGroup,
   TextAlignCommandGroup
@@ -64,6 +63,7 @@ interface FolioEditorToolbarProps {
   editor: Editor;
   blockEditor: boolean;
   folioTiptapConfig?: FolioTiptapConfig;
+  textStylesCommandGroup: FolioEditorCommandGroup;
 }
 
 const makeMarkEnabled =
@@ -244,10 +244,12 @@ const MainToolbarContent = ({
   blockEditor,
   editor,
   folioTiptapConfig,
+  textStylesCommandGroup,
 }: {
   blockEditor: boolean;
   editor: Editor;
   folioTiptapConfig?: FolioTiptapConfig;
+  textStylesCommandGroup: FolioEditorCommandGroup;
 }) => {
   const editorState: FolioEditorToolbarState = useEditorState({
     editor,
@@ -300,7 +302,7 @@ const MainToolbarContent = ({
       <ToolbarGroup>
         <FolioEditorToolbarDropdown
           editorState={editorState["textStyles"]}
-          commandGroup={TextStylesCommandGroup}
+          commandGroup={textStylesCommandGroup}
           editor={editor}
         />
 
@@ -394,6 +396,7 @@ export function FolioEditorToolbar({
   editor,
   blockEditor,
   folioTiptapConfig,
+  textStylesCommandGroup,
 }: FolioEditorToolbarProps) {
   if (!editor) return null;
 
@@ -403,6 +406,7 @@ export function FolioEditorToolbar({
         blockEditor={blockEditor}
         editor={editor}
         folioTiptapConfig={folioTiptapConfig}
+        textStylesCommandGroup={textStylesCommandGroup}
       />
     </Toolbar>
   );

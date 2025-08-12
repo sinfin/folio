@@ -12,7 +12,7 @@ import { FolioTiptapCommandsListBackdrop } from "./folio-tiptap-commands-list-ba
 
 import { markIcons } from "@/components/tiptap-ui/mark-button/mark-button";
 
-import { TextStylesCommandGroup, ListsCommandGroup } from '@/components/tiptap-command-groups';
+import { ListsCommandGroup } from '@/components/tiptap-command-groups';
 
 export const normalizeString = (string: string) =>
   string
@@ -85,9 +85,7 @@ const translateAndNormalizeTitles = (
   });
 };
 
-export const folioTiptapCommandsSuggestion = {
-  items: makeFolioTiptapCommandsSuggestionItems([ TextStylesCommandGroup, ListsCommandGroup ]),
-
+export const folioTiptapCommandsSuggestionWithoutItems = {
   allowSpaces: false,
 
   render: () => {
@@ -231,6 +229,13 @@ export const folioTiptapCommandsSuggestion = {
       },
     };
   },
+}
+
+export const makeFolioTiptapCommandsSuggestion = ({ textStylesCommandGroup }: { textStylesCommandGroup: FolioEditorCommandGroup }) => {
+  return ({
+    ...folioTiptapCommandsSuggestionWithoutItems,
+    items: makeFolioTiptapCommandsSuggestionItems([ textStylesCommandGroup, ListsCommandGroup ]),
+  })
 };
 
-export default folioTiptapCommandsSuggestion;
+export default makeFolioTiptapCommandsSuggestion;

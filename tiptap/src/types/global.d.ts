@@ -64,8 +64,15 @@ declare global {
     }
   }
 
+  interface StyledParagraphVariantFromInput {
+    variant: string;
+    title: { cs: string, en: string };
+    icon?: string;
+  }
+
   interface FolioTiptapConfig {
     nodes: FolioTiptapNodeFromInput[];
+    styled_paragraph_variants: StyledParagraphVariantFromInput[];
   }
 
   interface FolioEditorCommandChain extends import("@tiptap/core").CommandChain {

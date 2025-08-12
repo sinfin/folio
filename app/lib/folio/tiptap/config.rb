@@ -3,15 +3,19 @@
 module Folio
   module Tiptap
     class Config
-      attr_accessor :node_names
+      attr_accessor :node_names,
+                    :styled_paragraph_variants
 
-      def initialize(node_names: nil)
+      def initialize(node_names: nil,
+                     styled_paragraph_variants: nil)
         @node_names = node_names || get_all_tiptap_node_names
+        @styled_paragraph_variants = styled_paragraph_variants || default_styled_paragraph_variants
       end
 
       def to_h
         {
           node_names: @node_names,
+          styled_paragraph_variants: @styled_paragraph_variants,
         }
       end
 
@@ -52,6 +56,27 @@ module Folio
               config: node_klass.tiptap_config,
             }
           end
+        end
+
+        def default_styled_paragraph_variants
+          [
+            {
+              variant: "large",
+              title: {
+                cs: "Velký text",
+                en: "Large text",
+              },
+              icon: "arrow-up",
+            },
+            {
+              variant: "small",
+              title: {
+                cs: "Malý text",
+                en: "Small text",
+              },
+              icon: "arrow-down",
+            },
+          ]
         end
     end
   end

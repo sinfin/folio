@@ -1,12 +1,7 @@
 import Paragraph from "@tiptap/extension-paragraph";
 
-import {
-  FolioTiptapStyledParagraphVariant,
-  DEFAULT_FOLIO_TIPTAP_STYLED_PARAGRAPH_VARIANTS,
-} from "./default-folio-tiptap-styled-paragraph-variants";
-
 export interface StyledParagraphOptions {
-  variants: FolioTiptapStyledParagraphVariant[];
+  variantCommands: FolioEditorCommand[];
 }
 
 export const FolioTiptapStyledParagraph = Paragraph.extend<StyledParagraphOptions>({
@@ -18,7 +13,7 @@ export const FolioTiptapStyledParagraph = Paragraph.extend<StyledParagraphOption
 
   addOptions() {
     return {
-      variants: DEFAULT_FOLIO_TIPTAP_STYLED_PARAGRAPH_VARIANTS,
+      variantCommands: [],
     };
   },
 
