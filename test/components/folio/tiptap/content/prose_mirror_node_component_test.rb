@@ -668,6 +668,30 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
     assert_text("Not empty")
   end
 
+  def test_render_folio_tiptap_styled_wrap
+    prose_mirror_node = {
+      "type" => "folioTiptapStyledWrap",
+      "attrs" => {
+        "variant" => "gray-box"
+      },
+      "content" => [
+        {
+          "type" => "paragraph",
+          "content" => [
+            {
+              "type" => "text",
+              "text" => "text"
+            }
+          ]
+        }
+      ]
+    }
+
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+
+    assert_selector("div.f-tiptap-styled-wrap[data-f-tiptap-styled-wrap-variant='gray-box'] p")
+  end
+
   private
     def build_mock_record
       Object.new

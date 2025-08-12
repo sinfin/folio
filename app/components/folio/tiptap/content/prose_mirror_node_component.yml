@@ -48,6 +48,13 @@ nodes:
     attrs:
       variant:
         data_attribute: "data-f-tiptap-styled-paragraph-variant"
+  folioTiptapStyledWrap:
+    tag: div
+    static_attrs:
+      class: "f-tiptap-styled-wrap"
+    attrs:
+      variant:
+        data_attribute: "data-f-tiptap-styled-wrap-variant"
   hardBreak:
     tag: br
     self_closing: true
