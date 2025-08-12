@@ -14,7 +14,7 @@ import { Typography } from "@tiptap/extension-typography";
 import { Subscript } from "@tiptap/extension-subscript";
 import { Superscript } from "@tiptap/extension-superscript";
 import { Placeholder } from "@tiptap/extensions";
-import { TableKit } from '@tiptap/extension-table';
+import { TableKit, Table } from '@tiptap/extension-table';
 
 // --- Tiptap Node ---
 import { FolioTiptapNodeExtension } from "@/components/tiptap-extensions/folio-tiptap-node";
@@ -153,11 +153,29 @@ export function FolioEditor({
             FolioTiptapFloatNode,
             FolioTiptapFloatAsideNode,
             FolioTiptapFloatMainNode,
+            Table.extend({
+              parseHTML() {
+                return [
+                  {
+                    tag: 'div.f-tiptap-table-wrapper',
+                    contentElement: 'table',
+                  },
+                  { tag: 'table' },
+                ]
+              },
+              renderHTML({ HTMLAttributes }) {
+                return [
+                  'div',
+                  { class: 'f-tiptap-table-wrapper' },
+                  ['table', HTMLAttributes, 0]
+                ]
+              },
+            }).configure({
+              allowTableNodeSelection: true,
+              resizable: false,
+            }),
             TableKit.configure({
-              table: {
-                allowTableNodeSelection: true,
-                resizable: false,
-              }
+              table: false, // disable default table to use our custom one
             }),
             FolioTiptapCommandsExtension.configure({
               suggestion:

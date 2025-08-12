@@ -145,6 +145,7 @@ $f-tiptap-float__aside-offset--tablet: 0 !default;
 $f-tiptap-float__aside-offset--desktop: $f-tiptap-float__aside-offset--tablet !default;
 
 $f-tiptap-table__background: transparent !default;
+$f-tiptap-table__border: 1px solid var(--tt-gray-light-a-200) !default;
 $f-tiptap-table__cell-padding: 1rem !default;
 $f-tiptap-table__even-row-background: inherit !default;
 $f-tiptap-table__font-family: inherit !default;
@@ -154,18 +155,18 @@ $f-tiptap-table__odd-row-background: inherit !default;
 $f-tiptap-table__selected-background: var(--tt-brand-color-50) !default;
 $f-tiptap-table__selected-border: 1px solid var(--tt-brand-color-100) !default;
 $f-tiptap-table__vertical-align: top !default;
-$f-tiptap-table__border: 1px solid var(--tt-gray-light-a-200) !default;
 
-$f-tiptap-table-td__border-top: $f-tiptap-table__border !default;
 $f-tiptap-table-td__border-bottom: $f-tiptap-table__border !default;
 $f-tiptap-table-td__border-left: $f-tiptap-table__border !default;
 $f-tiptap-table-td__border-right: $f-tiptap-table__border !default;
-$f-tiptap-table-td__first-row-border-top: $f-tiptap-table-td__border-top !default;
-$f-tiptap-table-td__first-row-border-bottom: $f-tiptap-table-td__border-bottom !default;
-$f-tiptap-table-td__last-row-border-top: $f-tiptap-table-td__border-top !default;
-$f-tiptap-table-td__last-row-border-bottom: $f-tiptap-table-td__border-bottom !default;
+$f-tiptap-table-td__border-top: $f-tiptap-table__border !default;
 $f-tiptap-table-td__first-column-border-left: $f-tiptap-table-td__border-left !default;
+$f-tiptap-table-td__first-row-border-bottom: $f-tiptap-table-td__border-bottom !default;
+$f-tiptap-table-td__first-row-border-top: $f-tiptap-table-td__border-top !default;
 $f-tiptap-table-td__last-column-border-right: $f-tiptap-table-td__border-right !default;
+$f-tiptap-table-td__last-row-border-bottom: $f-tiptap-table-td__border-bottom !default;
+$f-tiptap-table-td__last-row-border-top: $f-tiptap-table-td__border-top !default;
+$f-tiptap-table-td__min-width: 5rem !default;
 
 :root {
   // TODO replace these --tt- defaults
@@ -222,7 +223,7 @@ $f-tiptap-table-td__last-column-border-right: $f-tiptap-table-td__border-right !
   blockquote,
   pre,
   table,
-  // .tableWrapper,
+  .f-tiptap-table-wrapper,
   .node-folioTiptapNode,
   .node-folioTiptapInvalidNode,
   .f-tiptap-node,
@@ -472,14 +473,14 @@ $f-tiptap-table-td__last-column-border-right: $f-tiptap-table-td__border-right !
     }
   }
 
-  // .tableWrapper {
-  //   max-width: 100%;
-  //   overflow-x: auto;
+  .f-tiptap-table-wrapper {
+    max-width: 100%;
+    overflow-x: auto;
 
-  //   table {
-  //     margin: 0;
-  //   }
-  // }
+    table {
+      margin: 0;
+    }
+  }
 
   table {
     background: $f-tiptap-table__background;
@@ -515,6 +516,8 @@ $f-tiptap-table-td__last-column-border-right: $f-tiptap-table-td__border-right !
     }
 
     td, th {
+      min-width: $f-tiptap-table-td__min-width;
+
       &:first-child {
         border-left: $f-tiptap-table-td__first-column-border-left;
       }

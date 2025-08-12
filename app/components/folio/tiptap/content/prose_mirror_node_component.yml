@@ -65,7 +65,9 @@ nodes:
   paragraph:
     tag: p
   table:
-    tag: [table, tbody]
+    tag: [div, table, tbody]
+    static_attrs:
+      class: "f-tiptap-table-wrapper"
   tableCell:
     tag: td
     has_attrs: true

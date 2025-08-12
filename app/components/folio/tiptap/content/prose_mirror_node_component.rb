@@ -65,8 +65,14 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponent < ApplicationComponent
           content_tag(resolve_tag_name(tags.first), &block)
         end
       else
-        content_tag(resolve_tag_name(tags.first)) do
-          render_nested_tags(tags[1..-1], top: false, &block)
+        if top
+          content_tag(resolve_tag_name(tags.first), resolve_tag_attributes) do
+            render_nested_tags(tags[1..-1], top: false, &block)
+          end
+        else
+          content_tag(resolve_tag_name(tags.first)) do
+            render_nested_tags(tags[1..-1], top: false, &block)
+          end
         end
       end
     end

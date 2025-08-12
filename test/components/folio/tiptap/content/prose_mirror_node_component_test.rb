@@ -502,6 +502,163 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
     assert_selector("p.f-tiptap-styled-paragraph[data-f-tiptap-styled-paragraph-variant='small']")
   end
 
+  def test_render_table_node
+    prose_mirror_node = {
+      "type" => "table",
+      "content" => [
+        {
+          "type" => "tableRow",
+          "content" => [
+            {
+              "type" => "tableHeader",
+              "content" => [
+                {
+                  "type" => "paragraph",
+                  "content" => [
+                    {
+                      "type" => "text",
+                      "text" => "Header 1"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type" => "tableHeader",
+              "content" => [
+                {
+                  "type" => "paragraph",
+                  "content" => [
+                    {
+                      "type" => "text",
+                      "text" => "Header 2"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type" => "tableRow",
+          "content" => [
+            {
+              "type" => "tableCell",
+              "content" => [
+                {
+                  "type" => "paragraph",
+                  "content" => [
+                    {
+                      "type" => "text",
+                      "text" => "Cell 1"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type" => "tableCell",
+              "content" => [
+                {
+                  "type" => "paragraph",
+                  "content" => [
+                    {
+                      "type" => "text",
+                      "text" => "Cell 2"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+
+    assert_selector(".f-tiptap-table-wrapper")
+    assert_selector(".f-tiptap-table-wrapper table")
+    assert_selector("th", count: 2)
+    assert_selector("td", count: 2)
+    assert_text("Header 1")
+    assert_text("Header 2")
+    assert_text("Cell 1")
+    assert_text("Cell 2")
+  end
+
+  def test_render_simple_table_with_single_cell
+    prose_mirror_node = {
+      "type" => "table",
+      "content" => [
+        {
+          "type" => "tableRow",
+          "content" => [
+            {
+              "type" => "tableCell",
+              "content" => [
+                {
+                  "type" => "paragraph",
+                  "content" => [
+                    {
+                      "type" => "text",
+                      "text" => "Single cell"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+
+    assert_selector(".f-tiptap-table-wrapper")
+    assert_selector(".f-tiptap-table-wrapper table")
+    assert_selector("td", count: 1)
+    assert_text("Single cell")
+  end
+
+  def test_render_table_with_empty_cells
+    prose_mirror_node = {
+      "type" => "table",
+      "content" => [
+        {
+          "type" => "tableRow",
+          "content" => [
+            {
+              "type" => "tableCell",
+              "content" => []
+            },
+            {
+              "type" => "tableCell",
+              "content" => [
+                {
+                  "type" => "paragraph",
+                  "content" => [
+                    {
+                      "type" => "text",
+                      "text" => "Not empty"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+
+    assert_selector(".f-tiptap-table-wrapper")
+    assert_selector(".f-tiptap-table-wrapper table")
+    assert_selector("td", count: 2)
+    assert_text("Not empty")
+  end
+
   private
     def build_mock_record
       Object.new
