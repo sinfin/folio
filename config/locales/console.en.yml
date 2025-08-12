@@ -382,6 +382,7 @@ en:
           title/image: Pick an image
           title/video: Pick a video
           title/audio: Pick an audio
+          title/document: Pick a file
 
       with_aside:
         hide: Hide

@@ -390,6 +390,7 @@ cs:
           title/image: Zvolte obrázek
           title/video: Zvolte video
           title/audio: Zvolte audio
+          title/document: Zvolte soubor
 
       with_aside:
         hide: Skrýt
