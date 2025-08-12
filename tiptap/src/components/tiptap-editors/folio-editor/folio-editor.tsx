@@ -265,6 +265,13 @@ export function FolioEditor({
     if (clearedContent) {
       editor.chain().setMeta('addToHistory', false).setContent(clearedContent).run()
     }
+
+    window.top!.postMessage(
+      {
+        type: "f-tiptap-editor:initialized-content",
+      },
+      "*",
+    );
   }, [defaultContent])
 
   let contentClassName = "f-tiptap-editor__content f-tiptap-styles"

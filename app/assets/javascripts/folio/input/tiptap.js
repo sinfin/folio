@@ -4,6 +4,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
   static values = {
     loaded: { type: Boolean, default: false },
     readonly: { type: Boolean, default: false },
+    ignoreValueChanges: { type: Boolean, default: true },
     origin: String,
     type: String,
     renderUrl: String,
@@ -60,6 +61,9 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
       case 'f-tiptap-editor:open-link-popover':
         this.openLinkPopover(e.data.urlJson)
         break
+      case 'f-tiptap-editor:initialized-content':
+        this.ignoreValueChangesValue = false
+        break
       case 'f-tiptap-editor:show-html':
         this.showHtmlInModal(e.data.html)
         break
@@ -92,8 +96,10 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
 
     this.inputTarget.value = JSON.stringify(value)
 
-    this.inputTarget.dispatchEvent(new window.Event("change", { bubbles: true }))
-    this.dispatch("updateWordCount", { detail: { wordCount } })
+    if (!this.ignoreValueChangesValue) {
+      this.inputTarget.dispatchEvent(new window.Event("change", { bubbles: true }))
+      this.dispatch("updateWordCount", { detail: { wordCount } })
+    }
   }
 
   setHeight (height) {
