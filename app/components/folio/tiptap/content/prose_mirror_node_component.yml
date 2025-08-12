@@ -64,6 +64,7 @@ nodes:
     has_attrs: true
   paragraph:
     tag: p
+    trailing_break_when_empty: true
   table:
     tag: [div, table, tbody]
     static_attrs:

@@ -6,9 +6,11 @@
       = content_tag(resolve_tag_name(@node_definition["tag"]), nil, resolve_tag_attributes)
     - elsif @node_definition["tag"]
       = render_nested_tags(@node_definition["tag"]) do
-        - if @prose_mirror_node["content"]
+        - if @prose_mirror_node["content"].present?
           - @prose_mirror_node["content"].each do |child_node|
             = render(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: @record,
                                                                           prose_mirror_node: child_node))
+        - elsif @node_definition["trailing_break_when_empty"]
+          br.ProseMirror-trailingBreak
 - rescue StandardError => e
   - rescue_component_error(e)

@@ -275,7 +275,19 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
     render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
 
     assert_selector("p")
-    # Should render empty paragraph
+    assert_selector("p br")
+    # Should render empty paragraph with trailing break
+  end
+
+  def test_render_paragraph_trailing_break_when_empty
+    prose_mirror_node = {
+      "type" => "paragraph"
+    }
+
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+
+    assert_selector("p")
+    assert_selector("p br")
   end
 
 
