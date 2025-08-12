@@ -16,7 +16,7 @@ class Folio::Tiptap::ContentComponent < ApplicationComponent
   end
 
   def render?
-    tiptap_content.present? && tiptap_content["content"].present?
+    tiptap_content.present? && tiptap_content[Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content]].present?
   end
 
   private
@@ -89,7 +89,7 @@ class Folio::Tiptap::ContentComponent < ApplicationComponent
     def node_component
       Folio::Tiptap::Content::ProseMirrorNodeComponent.new(
         record: @record,
-        prose_mirror_node: tiptap_content["content"],
+        prose_mirror_node: tiptap_content[Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content]],
         lambda_before_node: @lambda_before_root_node,
         lambda_after_node: @lambda_after_root_node
       )

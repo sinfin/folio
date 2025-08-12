@@ -8,6 +8,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     type: String,
     renderUrl: String,
     tiptapConfigJson: String,
+    tiptapContentJsonStructureJson: String,
   }
 
   connect () {
@@ -80,12 +81,13 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
 
     const text = textsArray.join('\n')
     const wordCount = window.Folio.wordCount({ text })
+    const valueKeys = this.valueKeys()
 
     const value = {
-      content,
-      text,
-      word_count: wordCount.words,
-      character_count: wordCount.characters,
+      [valueKeys['content']]: content,
+      [valueKeys['text']]: text,
+      [valueKeys['word_count']]: wordCount.words,
+      [valueKeys['character_count']]: wordCount.characters,
     }
 
     this.inputTarget.value = JSON.stringify(value)
@@ -99,6 +101,11 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     this.iframeTarget.style.height = `${height + 2}px`
   }
 
+  valueKeys () {
+    this.parsedValueKeys = this.parsedValueKeys || JSON.parse(this.tiptapContentJsonStructureJsonValue)
+    return this.parsedValueKeys
+  }
+
   sendStartMessage () {
     let value = null
 
@@ -110,17 +117,19 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
       }
     }
 
-    if (value && typeof value.word_count === 'number' && typeof value.character_count === 'number') {
+    const valueKeys = this.valueKeys()
+
+    if (value && typeof value[valueKeys['word_count']] === 'number' && typeof value[valueKeys['character_count']] === 'number') {
       const wordCount = window.Folio.wordCount({
-        words: value.word_count,
-        characters: value.character_count
+        words: value[valueKeys['word_count']],
+        characters: value[valueKeys['character_count']]
       })
       this.dispatch("updateWordCount", { detail: { wordCount } })
     }
 
     const data = {
       type: 'f-input-tiptap:start',
-      content: value ? value.content : null,
+      content: value ? value[valueKeys['content']] : null,
       lang: document.documentElement.lang || 'en',
       folioTiptapConfig: this.tiptapConfigJsonValue ? JSON.parse(this.tiptapConfigJsonValue) : {},
       windowWidth: this.windowWidth,

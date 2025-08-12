@@ -4,6 +4,13 @@ module Folio
   module Tiptap
     ALLOWED_URL_JSON_KEYS = %w[href label title rel target record_id record_type]
 
+    TIPTAP_CONTENT_JSON_STRUCTURE = {
+      content: "tiptap_content",
+      text: "text",
+      word_count: "word_count",
+      character_count: "character_count"
+    }
+
     def self.config
       @config ||= Folio::Tiptap::Config.new
     end

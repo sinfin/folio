@@ -13,6 +13,7 @@ class TiptapInput < SimpleForm::Inputs::StringInput
                         render_url: @builder.template.render_nodes_console_api_tiptap_path,
                         readonly: @builder.template.instance_variable_get(:@audited_audit).present?,
                         tiptap_config_json:,
+                        tiptap_content_json_structure_json: Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE.to_json,
                       },
                       action: {
                         "message@window" => "onWindowMessage",
