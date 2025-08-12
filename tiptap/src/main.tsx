@@ -68,6 +68,7 @@ window.Folio.Tiptap.init = (props) => {
   const folioTiptapConfigDefaults = {
     nodes: [],
     styled_paragraph_variants: [],
+    styled_wrap_variants: [],
   }
 
   const root = createRoot(props.node);

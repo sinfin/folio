@@ -28,6 +28,10 @@ import {
   makeFolioTiptapStyledParagraphCommands,
 } from "@/components/tiptap-extensions/folio-tiptap-styled-paragraph";
 import {
+  FolioTiptapStyledWrap,
+  makeFolioTiptapStyledWrapCommands,
+} from "@/components/tiptap-extensions/folio-tiptap-styled-wrap";
+import {
   FolioTiptapFloatNode,
   FolioTiptapFloatAsideNode,
   FolioTiptapFloatMainNode,
@@ -39,7 +43,7 @@ import "@/components/tiptap-node/paragraph-node/paragraph-node.scss";
 
 import {
   ListsCommandGroup,
-  LayoutsCommandGroup,
+  makeLayoutsCommandGroup,
   makeTextStylesCommandGroup,
   makeFolioTiptapNodesCommandGroup
 } from '@/components/tiptap-command-groups';
@@ -98,9 +102,23 @@ export function FolioEditor({
     return []
   }, [blockEditor, folioTiptapConfig && folioTiptapConfig["styled_paragraph_variants"]])
 
+  const folioTiptapStyledWrapCommands = React.useMemo(() => {
+    if (folioTiptapConfig &&
+        folioTiptapConfig["styled_wrap_variants"] &&
+        folioTiptapConfig["styled_wrap_variants"].length) {
+      return makeFolioTiptapStyledWrapCommands(folioTiptapConfig["styled_wrap_variants"])
+    }
+
+    return []
+  }, [blockEditor, folioTiptapConfig && folioTiptapConfig["styled_wrap_variants"]])
+
   const textStylesCommandGroup = React.useMemo(() => {
     return makeTextStylesCommandGroup(folioTiptapStyledParagraphCommands)
   }, [folioTiptapStyledParagraphCommands])
+
+  const layoutsCommandGroup = React.useMemo(() => {
+    return makeLayoutsCommandGroup(folioTiptapStyledWrapCommands)
+  }, [folioTiptapStyledWrapCommands])
 
   const editor = useEditor({
     onUpdate,
@@ -200,7 +218,7 @@ export function FolioEditor({
                       items: makeFolioTiptapCommandsSuggestionItems([
                         textStylesCommandGroup,
                         ListsCommandGroup,
-                        LayoutsCommandGroup,
+                        layoutsCommandGroup,
                         ...(folioTiptapConfig.nodes && folioTiptapConfig.nodes.length ? [makeFolioTiptapNodesCommandGroup(folioTiptapConfig.nodes)] : []),
                       ]),
                     }
@@ -210,6 +228,9 @@ export function FolioEditor({
         : []),
       FolioTiptapStyledParagraph.configure({
         variantCommands: folioTiptapStyledParagraphCommands,
+      }),
+      FolioTiptapStyledWrap.configure({
+        variantCommands: folioTiptapStyledWrapCommands,
       }),
     ],
   });
@@ -260,6 +281,7 @@ export function FolioEditor({
             editor={editor}
             blockEditor={blockEditor}
             textStylesCommandGroup={textStylesCommandGroup}
+            layoutsCommandGroup={layoutsCommandGroup}
             folioTiptapConfig={folioTiptapConfig}
           />
         )}

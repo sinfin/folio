@@ -1,0 +1,7 @@
+@import 'folio/tiptap/styles';
+
+.f-tiptap-styled-wrap[data-f-tiptap-styled-wrap-variant="gray-box"] {
+  background: $transparent-b300;
+  padding: 2 * $f-tiptap__spacer;
+  border-radius: $f-tiptap-codeblock__border-radius;
+}

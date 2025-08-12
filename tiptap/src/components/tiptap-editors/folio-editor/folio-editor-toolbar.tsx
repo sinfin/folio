@@ -19,7 +19,6 @@ import { FolioTiptapEraseMarksButton } from "@/components/tiptap-extensions/foli
 import { FolioEditorToolbarDropdown } from "./folio-editor-toolbar-dropdown"
 import {
   ListsCommandGroup,
-  LayoutsCommandGroup,
   TextAlignCommandGroup
 } from '@/components/tiptap-command-groups';
 
@@ -64,6 +63,7 @@ interface FolioEditorToolbarProps {
   blockEditor: boolean;
   folioTiptapConfig?: FolioTiptapConfig;
   textStylesCommandGroup: FolioEditorCommandGroup;
+  layoutsCommandGroup?: FolioEditorCommandGroup;
 }
 
 const makeMarkEnabled =
@@ -245,11 +245,13 @@ const MainToolbarContent = ({
   editor,
   folioTiptapConfig,
   textStylesCommandGroup,
+  layoutsCommandGroup,
 }: {
   blockEditor: boolean;
   editor: Editor;
   folioTiptapConfig?: FolioTiptapConfig;
   textStylesCommandGroup: FolioEditorCommandGroup;
+  layoutsCommandGroup?: FolioEditorCommandGroup;
 }) => {
   const editorState: FolioEditorToolbarState = useEditorState({
     editor,
@@ -358,13 +360,15 @@ const MainToolbarContent = ({
         <>
           <ToolbarSeparator />
 
-          <ToolbarGroup>
-            <FolioEditorToolbarDropdown
-              editorState={editorState["layouts"]}
-              commandGroup={LayoutsCommandGroup}
-              editor={editor}
-            />
-          </ToolbarGroup>
+          {layoutsCommandGroup && (
+            <ToolbarGroup>
+              <FolioEditorToolbarDropdown
+                editorState={editorState["layouts"]}
+                commandGroup={layoutsCommandGroup}
+                editor={editor}
+              />
+            </ToolbarGroup>
+          )}
 
           {singleImageNodeForToolbar ? (
             <>
@@ -397,6 +401,7 @@ export function FolioEditorToolbar({
   blockEditor,
   folioTiptapConfig,
   textStylesCommandGroup,
+  layoutsCommandGroup,
 }: FolioEditorToolbarProps) {
   if (!editor) return null;
 
@@ -407,6 +412,7 @@ export function FolioEditorToolbar({
         editor={editor}
         folioTiptapConfig={folioTiptapConfig}
         textStylesCommandGroup={textStylesCommandGroup}
+        layoutsCommandGroup={layoutsCommandGroup}
       />
     </Toolbar>
   );

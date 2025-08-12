@@ -70,9 +70,12 @@ declare global {
     icon?: string;
   }
 
+  interface StyledWrapVariantFromInput extends StyledParagraphVariantFromInput {}
+
   interface FolioTiptapConfig {
     nodes: FolioTiptapNodeFromInput[];
     styled_paragraph_variants: StyledParagraphVariantFromInput[];
+    styled_wrap_variants: StyledWrapVariantFromInput[];
   }
 
   interface FolioEditorCommandChain extends import("@tiptap/core").CommandChain {

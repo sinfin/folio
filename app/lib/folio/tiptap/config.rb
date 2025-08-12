@@ -4,18 +4,22 @@ module Folio
   module Tiptap
     class Config
       attr_accessor :node_names,
-                    :styled_paragraph_variants
+                    :styled_paragraph_variants,
+                    :styled_wrap_variants
 
       def initialize(node_names: nil,
-                     styled_paragraph_variants: nil)
+                     styled_paragraph_variants: nil,
+                     styled_wrap_variants: nil)
         @node_names = node_names || get_all_tiptap_node_names
         @styled_paragraph_variants = styled_paragraph_variants || default_styled_paragraph_variants
+        @styled_wrap_variants = styled_wrap_variants || default_styled_wrap_variants
       end
 
       def to_h
         {
           node_names: @node_names,
           styled_paragraph_variants: @styled_paragraph_variants,
+          styled_wrap_variants: @styled_wrap_variants,
         }
       end
 
@@ -77,6 +81,10 @@ module Folio
               icon: "arrow-down",
             },
           ]
+        end
+
+        def default_styled_wrap_variants
+          []
         end
     end
   end
