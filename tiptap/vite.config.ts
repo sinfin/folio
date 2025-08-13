@@ -14,7 +14,7 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        silenceDeprecations: ['global-builtin'],
+        silenceDeprecations: ['global-builtin', 'import', 'slash-div'],
         quietDeps: true
       }
     }

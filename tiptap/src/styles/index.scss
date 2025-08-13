@@ -9,8 +9,6 @@
   @return 1rem * strip-unit($px) / 16;
 }
 
-@import "../components/tiptap-ui/responsive-preview-buttons/responsive-preview-buttons-variables";
-
 :root {
   --f-tiptap-editor__transition: box-shadow 0.15s ease-in-out;
   --f-tiptap-editor__border-color: #c9cbcc;
@@ -72,7 +70,6 @@ body,
 .f-tiptap-editor__content-wrap {
   flex: 0 1 auto;
   position: relative;
-  overflow: auto;
   padding: var(--f-tiptap-editor-content-wrap__padding-y) var(--f-tiptap-editor-content-wrap__padding-x) ;
   container-type: inline-size;
 }
@@ -88,12 +85,6 @@ body,
   .f-tiptap-editor__content-wrap {
     padding-left: var(--f-tiptap-editor-content-wrap__padding-x-mobile);
     padding-right: var(--f-tiptap-editor-content-wrap__padding-x-mobile);
-
-    .f-tiptap-editor--responsive-preview & {
-      overflow: visible;
-      padding-left: var(--f-tiptap-editor-content-wrap__padding-x-mobile);
-      padding-right: calc(var(--f-tiptap-editor-content-wrap__padding-x-mobile) + 18px);
-    }
   }
 }
 
@@ -233,18 +224,6 @@ body,
   }
 }
 
-.f-tiptap-editor__responsive-outer-wrap {
-  position: relative;
-}
-
-.f-tiptap-editor__responsive-inner-wrap {
-  container-type: inline-size;
-
-  @media screen and (max-width: #{$f-tiptap-editor-responsive-preview-buttons__media-query-min-width - 1}) {
-    width: auto !important;
-  }
-}
-
 .f-tiptap-editor__content-handle {
   position: absolute;
   top: 0;
@@ -273,17 +252,4 @@ body,
   height: 36px;
   justify-content: center;
   width: 36px;
-}
-
-@media screen and (min-width: #{$f-tiptap-editor-responsive-preview-buttons__media-query-min-width}) {
-  .f-tiptap-editor--responsive-preview .f-tiptap-editor__content-handle {
-    display: block;
-  }
-
-  .f-tiptap-editor--responsive-preview .f-tiptap-editor__responsive-inner-wrap {
-    margin-left: auto;
-    margin-right: auto;
-    max-width: 100%;
-    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.20), 2px 2px 40px 0 rgba(0, 0, 0, 0.25);
-  }
 }

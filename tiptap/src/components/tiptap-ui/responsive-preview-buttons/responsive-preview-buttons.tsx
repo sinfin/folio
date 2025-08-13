@@ -19,10 +19,10 @@ const TRANSLATIONS = {
 }
 
 interface ResponsivePreviewButtonsProps {
-  setResponsivePreviewWidth: (width: number | null) => void;
+  setResponsivePreviewEnabled: (enabled: boolean) => void;
 }
 
-export const ResponsivePreviewButtons = ({ setResponsivePreviewWidth }: ResponsivePreviewButtonsProps) => {
+export const ResponsivePreviewButtons = ({ setResponsivePreviewEnabled }: ResponsivePreviewButtonsProps) => {
   const mobileLabel = translate(TRANSLATIONS, "mobile");
   const desktopLabel = translate(TRANSLATIONS, "desktop");
 
@@ -36,7 +36,7 @@ export const ResponsivePreviewButtons = ({ setResponsivePreviewWidth }: Responsi
         aria-label={mobileLabel}
         tooltip={mobileLabel}
         className="f-tiptap-editor-responsive-preview-buttons__button f-tiptap-editor-responsive-preview-buttons__button--mobile"
-        onClick={(e) => { (e.target as HTMLElement).blur(); setResponsivePreviewWidth(480) }}
+        onClick={(e) => { (e.target as HTMLElement).blur(); setResponsivePreviewEnabled(true) }}
       >
         <SmartphoneIcon className="tiptap-button-icon" />
       </Button>
@@ -48,7 +48,7 @@ export const ResponsivePreviewButtons = ({ setResponsivePreviewWidth }: Responsi
         aria-label={desktopLabel}
         tooltip={desktopLabel}
         className="f-tiptap-editor-responsive-preview-buttons__button f-tiptap-editor-responsive-preview-buttons__button--desktop"
-        onClick={(e) => { (e.target as HTMLElement).blur(); setResponsivePreviewWidth(null) }}
+        onClick={(e) => { (e.target as HTMLElement).blur(); setResponsivePreviewEnabled(false) }}
       >
         <MonitorIcon className="tiptap-button-icon" />
       </Button>
