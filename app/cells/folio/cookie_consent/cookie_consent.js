@@ -20,7 +20,7 @@ window.Folio.CookieConsent.changeRunAfterAcceptPushMethod = () => {
 }
 
 if (window.Folio.CookieConsent.configuration) {
-  window.Folio.CookieConsent.bindTurbolinks = typeof Turbolinks !== 'undefined'
+  window.Folio.CookieConsent.bindTurbolinks = ((typeof Turbolinks !== 'undefined') || window.Folio.CookieConsent.configuration.keep_attached_after_accept)
 
   if (window.Folio.CookieConsent.bindTurbolinks) {
     window.Folio.CookieConsent.detached = null
@@ -43,7 +43,7 @@ if (window.Folio.CookieConsent.configuration) {
   window.Folio.CookieConsent.onAccept = (cookie) => {
     window.Folio.CookieConsent.didAccept = true
 
-    if (window.Folio.CookieConsent.bindTurbolinks) {
+    if (window.Folio.CookieConsent.bindTurbolinks && !window.Folio.CookieConsent.configuration.keep_attached_after_accept) {
       window.Folio.CookieConsent.bindTurbolinks = false
 
       document.removeEventListener('turbolinks:load', window.Folio.CookieConsent.onLoad)
@@ -79,13 +79,13 @@ if (window.Folio.CookieConsent.configuration) {
   }
 
   window.Folio.Stimulus.register('f-cookie-consent-link', class extends window.Stimulus.Controller {
-    connect () {
+    connect() {
       if (!this.element.dataset.action) {
         this.element.dataset.action = "f-cookie-consent-link#click"
       }
     }
 
-    click (e) {
+    click(e) {
       e.preventDefault()
       window.Folio.CookieConsent.cookieConsent.showSettings()
     }

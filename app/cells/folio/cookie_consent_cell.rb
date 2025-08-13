@@ -126,6 +126,7 @@ class Folio::CookieConsentCell < Folio::ApplicationCell
       autoclear_cookies: true,
       page_scripts: true,
       languages: { I18n.locale => languages_hash },
+      keep_attached_after_accept: config[:keep_attached_after_accept] || false,
       gui_options: {
         consent_modal: {
           layout: "cloud",
