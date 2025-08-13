@@ -58,6 +58,7 @@ import {
 
 // --- Icons ---
 import { SmartDragHandle } from "@/components/tiptap-ui/smart-drag-handle";
+import { ArrowSplitVerticalIcon } from '@/components/tiptap-icons';
 
 // --- Hooks ---
 import { useWindowSize } from "@/hooks/use-window-size";
@@ -91,6 +92,7 @@ export function FolioEditor({
   const windowSize = useWindowSize();
   const editorRef = React.useRef<HTMLDivElement>(null);
   const blockEditor = type === "block";
+  const [responsivePreviewWidth, setResponsivePreviewWidth] = React.useState<number | null>(null)
 
   const folioTiptapStyledParagraphCommands = React.useMemo(() => {
     if (folioTiptapConfig &&
@@ -281,7 +283,7 @@ export function FolioEditor({
     <EditorContext.Provider value={{ editor }}>
       <div
         ref={editorRef}
-        className={`f-tiptap-editor f-tiptap-editor--${blockEditor ? "block" : "rich-text"}`}
+        className={`f-tiptap-editor f-tiptap-editor--${blockEditor ? "block" : "rich-text"}${responsivePreviewWidth ? " f-tiptap-editor--responsive-preview" : ""}`}
       >
         {readonly ? null : (
           <FolioEditorToolbar
@@ -290,23 +292,42 @@ export function FolioEditor({
             textStylesCommandGroup={textStylesCommandGroup}
             layoutsCommandGroup={layoutsCommandGroup}
             folioTiptapConfig={folioTiptapConfig}
+            setResponsivePreviewWidth={blockEditor ? setResponsivePreviewWidth : undefined}
           />
         )}
 
-        <div className="f-tiptap-editor__content-wrap">
-          {blockEditor && !readonly ? <SmartDragHandle editor={editor} /> : null}
+        <div className="f-tiptap-editor__responsive-outer-wrap">
+          <div className="f-tiptap-editor__responsive-inner-wrap" style={{ width: responsivePreviewWidth ? `${responsivePreviewWidth}px` : "auto" }}>
+            <div className="f-tiptap-editor__content-wrap">
+              {blockEditor && !readonly ? <SmartDragHandle editor={editor} /> : null}
 
-          <EditorContent
-            editor={editor}
-            role="presentation"
-            className={contentClassName}
-          />
+              <EditorContent
+                editor={editor}
+                role="presentation"
+                className={contentClassName}
+              />
 
-          {readonly ? null : (
-            <FolioEditorBubbleMenus
-              editor={editor}
-              blockEditor={blockEditor}
-            />
+              {readonly ? null : (
+                <FolioEditorBubbleMenus
+                  editor={editor}
+                  blockEditor={blockEditor}
+                />
+              )}
+            </div>
+          </div>
+
+          {responsivePreviewWidth && (
+            <div className="f-tiptap-editor__content-handle" style={{ left: `calc(50% + ${responsivePreviewWidth / 2 - 18}px)` }}>
+              <div className="f-tiptap-editor__content-handle-flex">
+                <div className="f-tiptap-editor__content-handle-icon-wrap">
+                  <ArrowSplitVerticalIcon />
+                </div>
+
+                <div className="f-tiptap-editor__content-handle-text">
+                  {`${responsivePreviewWidth}px`}
+                </div>
+              </div>
+            </div>
           )}
         </div>
       </div>

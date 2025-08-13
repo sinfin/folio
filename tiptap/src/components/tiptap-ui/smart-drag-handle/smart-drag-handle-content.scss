@@ -18,6 +18,14 @@
       border-radius: var(--tt-radius-lg, 0.75rem);
     }
   }
+
+  .f-tiptap-editor--responsive-preview & {
+    padding-right: 1.5rem;
+
+    &__flex::after {
+      background: none;
+    }
+  }
 }
 
 .f-tiptap-smart-drag-handle__button,

@@ -21,6 +21,7 @@ import {
   ListsCommandGroup,
   TextAlignCommandGroup
 } from '@/components/tiptap-command-groups';
+import { ResponsivePreviewButtons } from '@/components/tiptap-ui/responsive-preview-buttons';
 
 interface FolioEditorToolbarButtonStateMapping {
   enabled: (params: { editor: Editor }) => boolean;
@@ -64,6 +65,7 @@ interface FolioEditorToolbarProps {
   folioTiptapConfig?: FolioTiptapConfig;
   textStylesCommandGroup: FolioEditorCommandGroup;
   layoutsCommandGroup?: FolioEditorCommandGroup;
+  setResponsivePreviewWidth?: (width: number | null) => void;
 }
 
 const makeMarkEnabled =
@@ -246,12 +248,14 @@ const MainToolbarContent = ({
   folioTiptapConfig,
   textStylesCommandGroup,
   layoutsCommandGroup,
+  setResponsivePreviewWidth,
 }: {
   blockEditor: boolean;
   editor: Editor;
   folioTiptapConfig?: FolioTiptapConfig;
   textStylesCommandGroup: FolioEditorCommandGroup;
   layoutsCommandGroup?: FolioEditorCommandGroup;
+  setResponsivePreviewWidth?: (width: number | null) => void;
 }) => {
   const editorState: FolioEditorToolbarState = useEditorState({
     editor,
@@ -392,6 +396,10 @@ const MainToolbarContent = ({
       </ToolbarGroup>
 
       <Spacer />
+
+      {setResponsivePreviewWidth && (
+        <ResponsivePreviewButtons setResponsivePreviewWidth={setResponsivePreviewWidth} />
+      )}
     </>
   );
 };
@@ -402,6 +410,7 @@ export function FolioEditorToolbar({
   folioTiptapConfig,
   textStylesCommandGroup,
   layoutsCommandGroup,
+  setResponsivePreviewWidth,
 }: FolioEditorToolbarProps) {
   if (!editor) return null;
 
@@ -413,6 +422,7 @@ export function FolioEditorToolbar({
         folioTiptapConfig={folioTiptapConfig}
         textStylesCommandGroup={textStylesCommandGroup}
         layoutsCommandGroup={layoutsCommandGroup}
+        setResponsivePreviewWidth={setResponsivePreviewWidth}
       />
     </Toolbar>
   );
