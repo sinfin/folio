@@ -5,14 +5,18 @@ module Folio
     class Config
       attr_accessor :node_names,
                     :styled_paragraph_variants,
-                    :styled_wrap_variants
+                    :styled_wrap_variants,
+                    :schema
 
       def initialize(node_names: nil,
                      styled_paragraph_variants: nil,
-                     styled_wrap_variants: nil)
+                     styled_wrap_variants: nil,
+                     schema: nil)
         @node_names = node_names || get_all_tiptap_node_names
         @styled_paragraph_variants = styled_paragraph_variants || default_styled_paragraph_variants
         @styled_wrap_variants = styled_wrap_variants || default_styled_wrap_variants
+
+        @schema = schema || build_default_schema
       end
 
       def to_h
@@ -24,7 +28,7 @@ module Folio
       end
 
       def to_input_json
-        h = to_h.without(:node_names)
+        h = to_h.without(:node_names, :schema)
 
         h[:nodes] = tiptap_nodes_hash(@node_names)
 
@@ -85,6 +89,87 @@ module Folio
 
         def default_styled_wrap_variants
           []
+        end
+
+        def build_default_schema
+          {
+            nodes: {
+              "blockquote": {},
+              "bulletList": {},
+              "codeBlock": {},
+              "doc": {},
+              "folioTiptapColumn": {
+                "attributes" => {
+                  "index" => {
+                    "type" => "integer",
+                  },
+                }
+              },
+              "folioTiptapColumns": {
+                "attributes" => {
+                  "count" => {
+                    "type" => "integer",
+                  },
+                }
+              },
+              "folioTiptapFloat": {
+                "attributes" => {
+                  "side" => {
+                    "in" => %w[left right],
+                    "default" => "left",
+                  },
+                  "size" => {
+                    "in" => %w[small medium large],
+                    "default" => "medium",
+                  }
+                },
+              },
+              "folioTiptapFloatAside": {},
+              "folioTiptapFloatMain": {},
+              "folioTiptapInvalidNode": {},
+              "folioTiptapNode": {
+                "attributes" => {
+                  "version" => {
+                    "type" => "string",
+                  },
+                  "type" => {
+                    "type" => "string",
+                    "in" => @node_names,
+                  },
+                  "data" => {
+                    "type" => "hash",
+                  }
+                }
+              },
+              "folioTiptapStyledParagraph": {
+                "attributes" => {
+                  "variant" => {
+                    "in" => @styled_paragraph_variants.map { |v| v[:variant] },
+                  }
+                },
+                "disabled" => @styled_paragraph_variants.blank?,
+              },
+              "folioTiptapStyledWrap": {
+                "attributes" => {
+                  "variant" => {
+                    "in" => @styled_wrap_variants.map { |v| v[:variant] },
+                  }
+                },
+                "disabled" => @styled_wrap_variants.blank?,
+              },
+              "hardBreak": {},
+              "heading": {},
+              "horizontalRule": {},
+              "listItem": {},
+              "orderedList": {},
+              "paragraph": {},
+              "table": {},
+              "tableCell": {},
+              "tableHeader": {},
+              "tableRow": {},
+              "text": {},
+            }
+          }
         end
     end
   end
