@@ -6,17 +6,11 @@ module Folio::Tiptap::Model
   class_methods do
     def has_folio_tiptap_content(field = :tiptap_content)
       define_method("#{field}=") do |value|
-        if value.is_a?(Hash)
-          super(value)
-        elsif value.is_a?(String) && value.present?
-          begin
-            parsed_value = JSON.parse(value)
-            super(parsed_value)
-          rescue JSON::ParserError
-            Rails.logger.error "Did not assign an invalid JSON string for #{self} / #{field}: #{value}"
-          end
-        else
-          Rails.logger.error "Did not assign an invalid value type for #{self} / #{field}: #{value.class.name}"
+        ftc = Folio::Tiptap::Content.new(record: self)
+        result = ftc.convert_and_sanitize_value(value)
+
+        if result[:ok]
+          super(result[:value])
         end
       end
     end
@@ -31,11 +25,11 @@ module Folio::Tiptap::Model
   end
 
   included do
-    before_validation :convert_titap_fields_to_hashes
+    before_validation :convert_titap_fields_to_hashes_and_sanitize
     validate :validate_tiptap_fields
   end
 
-  def convert_titap_fields_to_hashes
+  def convert_titap_fields_to_hashes_and_sanitize
     self.class.folio_tiptap_fields.each do |field|
       value = send(field)
 
