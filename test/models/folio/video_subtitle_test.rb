@@ -11,28 +11,36 @@ class Folio::VideoSubtitleTest < ActiveSupport::TestCase
 
   test "validates presence of language" do
     @subtitle.language = nil
-    assert_not @subtitle.valid?
-    assert_includes @subtitle.errors[:language], "je povinná položka"
+    I18n.with_locale(:cs) do
+      assert_not @subtitle.valid?
+      assert_includes @subtitle.errors[:language], "je povinná položka"
+    end
   end
 
   test "validates uniqueness of language per video" do
     @subtitle.save!
     duplicate = Folio::VideoSubtitle.new(video: @video, language: "cs", format: "vtt")
-    assert_not duplicate.valid?
-    assert_includes duplicate.errors[:language], "již databáze obsahuje"
+    I18n.with_locale(:cs) do
+      assert_not duplicate.valid?
+      assert_includes duplicate.errors[:language], "již databáze obsahuje"
+    end
   end
 
   test "validates format inclusion" do
     @subtitle.format = "invalid"
-    assert_not @subtitle.valid?
-    assert_includes @subtitle.errors[:format], "není v seznamu povolených hodnot"
+    I18n.with_locale(:cs) do
+      assert_not @subtitle.valid?
+      assert_includes @subtitle.errors[:format], "není v seznamu povolených hodnot"
+    end
   end
 
   test "validates subtitle format when validate_content is true" do
     @subtitle.text = "Invalid VTT content"
     @subtitle.validate_content = true
-    assert_not @subtitle.valid?
-    assert_includes @subtitle.errors[:text], "má nevalidní text na řádku 1"
+    I18n.with_locale(:cs) do
+      assert_not @subtitle.valid?
+      assert_includes @subtitle.errors[:text], "má nevalidní text na řádku 1"
+    end
   end
 
   test "does not validate subtitle format by default" do
