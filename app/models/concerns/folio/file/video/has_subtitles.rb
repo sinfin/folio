@@ -3,9 +3,21 @@
 module Folio::File::Video::HasSubtitles
   extend ActiveSupport::Concern
 
+  included do
+    has_many :video_subtitles, class_name: "Folio::VideoSubtitle",
+             foreign_key: :video_id, dependent: :destroy
+
+    # Alias for backward compatibility
+    alias_method :subtitles, :video_subtitles
+  end
+
   class_methods do
     def enabled_subtitle_languages
-      Rails.application.config.folio_files_video_enabled_subtitle_languages
+      if Folio::Current.site&.subtitle_languages&.any?
+        Folio::Current.site.subtitle_languages
+      else
+        Rails.application.config.folio_files_video_enabled_subtitle_languages
+      end
     end
 
     def transcribe_subtitles_job_class
@@ -13,57 +25,70 @@ module Folio::File::Video::HasSubtitles
       # Folio::OpenAi::TranscribeSubtitlesJob        # for OpenAI Whisper
       # Folio::ElevenLabs::TranscribeSubtitlesJob    # for ElevenLabs
     end
-
-    def subtitles_enabled?
-      transcribe_subtitles_job_class.present?
-    end
   end
 
-  included do
-    # subtitles hash structure
-    # - state - processing, ready, failed
-    # - text - subtitles itself
-    store_accessor :additional_data, :subtitles
-    store :subtitles, accessors: self.enabled_subtitle_languages, prefix: :subtitles
-    enabled_subtitle_languages.each do |lang|
-      store :"subtitles_#{lang}", accessors: %w[enabled state text], prefix: :"subtitles_#{lang}"
+  def subtitle_for(language)
+    video_subtitles.for_language(language).first
+  end
+
+  def subtitle_for!(language)
+    subtitle_for(language) || video_subtitles.create!(language: language)
+  end
+
+  def subtitles_enabled?
+    site&.subtitle_auto_generation_enabled || false
+  end
+
+  # Backward compatibility methods
+  def set_subtitles_text_for(lang, text)
+    subtitle = subtitle_for!(lang)
+
+    # Check if this was auto-generated and mark manual override
+    if subtitle.auto_generated?
+      subtitle.update_transcription_metadata("state" => "manual_override")
     end
 
-    # if subtitle text is set, always set the state to ready
-    enabled_subtitle_languages.each do |lang|
-      define_method :"subtitles_#{lang}_text=" do |value|
-        send("subtitles_#{lang}_state=", "ready")
-        super(value)
-      end
-
-      define_method :"subtitles_#{lang}_enabled?" do |value|
-        send("subtitles_#{lang}_enabled")
-      end
-
-      after_initialize do
-        if send("subtitles_#{lang}_enabled").nil?
-          send("subtitles_#{lang}_enabled=", true)
-        end
-      end
-    end
-
-    validate :validate_subtitles_format
+    subtitle.text = text
+    subtitle.mark_manual_edit!
+    subtitle.save!
   end
 
   def set_subtitles_state_for(lang, state)
-    send("subtitles_#{lang}_state=", state.to_s)
-  end
-
-  def set_subtitles_text_for(lang, text)
-    send("subtitles_#{lang}_text=", text.to_s)
-  end
-
-  def get_subtitles_state_for(lang)
-    send("subtitles_#{lang}_state")
+    subtitle = subtitle_for!(lang)
+    case state.to_s
+    when "processing"
+      # This should only be called by transcription jobs
+      job_class = self.class.transcribe_subtitles_job_class
+      subtitle.start_transcription!(job_class) if job_class
+    when "ready"
+      # This should be called with text content
+      # For now, just mark as ready if called directly
+      subtitle.mark_transcription_ready!(subtitle.text || "")
+    when "failed"
+      subtitle.mark_transcription_failed!("Transcription failed")
+    end
   end
 
   def get_subtitles_text_for(lang)
-    send("subtitles_#{lang}_text")
+    subtitle_for(lang)&.text
+  end
+
+  def get_subtitles_state_for(lang)
+    subtitle = subtitle_for(lang)
+    return "pending" unless subtitle
+
+    if subtitle.auto_generated?
+      subtitle.transcription_state
+    else
+      subtitle.enabled? ? "ready" : "pending"
+    end
+  end
+
+  def get_subtitles_processing_started_at_for(lang)
+    subtitle = subtitle_for(lang)
+    return nil unless subtitle&.auto_generated?
+
+    subtitle.processing_started_at
   end
 
   def after_process
@@ -72,86 +97,126 @@ module Folio::File::Video::HasSubtitles
   end
 
   def transcribe_subtitles!(force: false)
-    return unless self.class.transcribe_subtitles_job_class.present?
+    return unless subtitles_enabled?
 
-    # Track which languages need processing
-    languages_to_process = []
-
-    self.class.enabled_subtitle_languages.each do |lang|
-      current_state = get_subtitles_state_for(lang)
-
-      # Skip if already ready and not forced
-      if current_state == "ready" && !force
-        next
-      end
-
-      # Skip if already processing and not forced (avoid duplicate jobs)
-      if current_state == "processing" && !force
-        next
-      end
-
-      # Add to processing list
-      languages_to_process << lang
-
-      # Set to processing state
-      send("subtitles_#{lang}=", { "state" => "processing" })
+    # Check if already processing (unless forced)
+    if !force && (subtitles_transcription_processing? || video_subtitles.any?(&:processing?))
+      return
     end
 
-    # Update database if we processed any languages
-    if languages_to_process.any?
-      update_columns(additional_data:, updated_at: Time.current)
+    # Start transcription job - ElevenLabs will determine the language
+    self.class.transcribe_subtitles_job_class.perform_later(self)
+  end
 
-      # Enqueue job for each language
-      languages_to_process.each do |lang|
-        self.class.transcribe_subtitles_job_class.perform_later(self, lang:)
+  # Check if subtitle transcription job is currently running
+  def subtitles_transcription_processing?
+    additional_data&.dig("subtitle_transcription", "status") == "processing"
+  end
+
+  # Get subtitle transcription status for UI display
+  def subtitles_transcription_status
+    additional_data&.dig("subtitle_transcription", "status")
+  end
+
+  # Get subtitle transcription error message if failed
+  def subtitles_transcription_error
+    additional_data&.dig("subtitle_transcription", "error_message")
+  end
+
+  # Get when subtitle transcription started
+  def subtitles_transcription_started_at
+    started_at = additional_data&.dig("subtitle_transcription", "started_at")
+    Time.parse(started_at) if started_at
+  rescue ArgumentError
+    nil
+  end
+
+  # Dynamic method generation for backward compatibility
+  def self.included(base)
+    super
+
+    base.class_eval do
+      after_initialize :define_language_methods
+    end
+  end
+
+  module ClassMethods
+    def define_subtitle_language_methods
+      # Only define methods if we have a database connection and the enabled languages are available
+      return unless defined?(Rails) && Rails.application&.initialized? &&
+                    respond_to?(:enabled_subtitle_languages)
+
+      begin
+        enabled_subtitle_languages.each do |lang|
+          define_method("subtitles_#{lang}") do
+            subtitle_for(lang)
+          end
+
+          define_method("subtitles_#{lang}_text") do
+            get_subtitles_text_for(lang)
+          end
+
+          define_method("subtitles_#{lang}_text=") do |value|
+            set_subtitles_text_for(lang, value)
+          end
+
+          define_method("subtitles_#{lang}_enabled?") do
+            subtitle_for(lang)&.enabled? || false
+          end
+
+          define_method("subtitles_#{lang}_state") do
+            get_subtitles_state_for(lang)
+          end
+
+          define_method("subtitles_#{lang}_processing_started_at") do
+            get_subtitles_processing_started_at_for(lang)
+          end
+        end
+      rescue => e
+        # Silently fail during class loading if database isn't ready
+        Rails.logger&.debug "Could not define subtitle language methods: #{e.message}"
       end
     end
   end
 
   private
-    def validate_subtitles_format
-      self.class.enabled_subtitle_languages.each do |lang|
-        validate_subtitles_format_for(lang)
-      end
+    def enabled_languages
+      site&.subtitle_languages&.any? ? site.subtitle_languages :
+        self.class.enabled_subtitle_languages
     end
 
-    def validate_subtitles_format_for(lang)
-      attribute_name = "subtitles_#{lang}_text"
-      value = get_subtitles_text_for(lang)
+    def define_language_methods
+      return unless self.class.respond_to?(:enabled_subtitle_languages)
 
-      return if value.blank?
+      begin
+        self.class.enabled_subtitle_languages.each do |lang|
+          define_singleton_method("subtitles_#{lang}") do
+            subtitle_for(lang)
+          end
 
-      errors.add(attribute_name, :invalid) unless value.is_a?(String)
+          define_singleton_method("subtitles_#{lang}_text") do
+            get_subtitles_text_for(lang)
+          end
 
-      lines = value.strip.lines
-      last_line_was_timecode = false
+          define_singleton_method("subtitles_#{lang}_text=") do |value|
+            set_subtitles_text_for(lang, value)
+          end
 
-      lines.each_with_index do |line, index|
-        stripped = line.strip
+          define_singleton_method("subtitles_#{lang}_enabled?") do
+            subtitle_for(lang)&.enabled? || false
+          end
 
-        if stripped.empty? || stripped.start_with?("NOTE")
-          # empty line or note/comment
-          last_line_was_timecode = false
-          next
+          define_singleton_method("subtitles_#{lang}_state") do
+            get_subtitles_state_for(lang)
+          end
+
+          define_singleton_method("subtitles_#{lang}_processing_started_at") do
+            get_subtitles_processing_started_at_for(lang)
+          end
         end
-
-        if /^\d+$/.match?(stripped)
-          # sequence number (optional)
-          last_line_was_timecode = false
-          next
-        end
-
-        if /\A\d{2}:\d{2}:\d{2}\.\d{3}\s-->\s\d{2}:\d{2}:\d{2}\.\d{3}/.match?(stripped)
-          # timecode line
-          last_line_was_timecode = true
-          next
-        end
-
-        # text line — must follow a timecode line
-        unless last_line_was_timecode
-          errors.add(attribute_name, :invalid_subtitle_block, line: index + 1)
-          return
-        end
+      rescue => e
+        # Silently fail during initialization if database isn't ready
+        Rails.logger&.debug "Could not define singleton subtitle methods: #{e.message}"
       end
     end
 end

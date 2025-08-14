@@ -88,7 +88,8 @@
 //= require folio/console/file/picker/thumb/thumb
 //= require folio/console/file/preview_reloader/preview_reloader
 //= require folio/console/file/processing_notifier/processing_notifier
-//= require folio/console/files/has_subtitles_form_component
+//= require folio/console/files/subtitles_form_component
+//= require folio/console/files/subtitle_form_component
 //= require folio/console/flash/flash
 //= require folio/console/folio_attributes_fields_component
 //= require folio/console/form/errors/errors

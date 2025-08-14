@@ -48,6 +48,7 @@ Gem::Specification.new do |s|
   s.add_dependency "friendly_id"
   s.add_dependency "gibbon" # for mailchimp requests
   s.add_dependency "invisible_captcha"
+  s.add_dependency "iso-639"
   s.add_dependency "jquery-rails"
   s.add_dependency "jwt"
   s.add_dependency "message_bus"
@@ -71,7 +72,7 @@ Gem::Specification.new do |s|
   s.add_dependency "recaptcha", "4.13.1"
   s.add_dependency "redcarpet"
   s.add_dependency "responders"
-  s.add_dependency "rubyzip"
+  s.add_dependency "rubyzip", "~> 2.4" # 3.0 have some api changes see https://github.com/rubyzip/rubyzip/wiki/Updating-to-version-3.x
   s.add_dependency "sass-rails"
   s.add_dependency "show_for"
   s.add_dependency "httpparty"
@@ -89,7 +90,7 @@ Gem::Specification.new do |s|
   s.add_dependency "whenever"
   s.add_dependency "redis"
   s.add_dependency "terser"
-  s.add_dependency "view_component"
+  s.add_dependency "view_component", "~> 3.0" # 4.0 Remove dependency on ActionView::Base
 
   s.add_development_dependency "better_errors"
   s.add_development_dependency "binding_of_caller" # used by BetterErrors

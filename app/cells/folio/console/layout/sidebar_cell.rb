@@ -174,7 +174,11 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
 
   def secondary_class_names
     links = []
-    links << link_for_site_class(Folio::Current.main_site, Folio::User) if show_users? && Folio::Current.user.superadmin?
+
+    if show_users? && Folio::Current.user.superadmin?
+      links << link_for_site_class(Folio::Current.enabled_site_for_crossdomain_devise || Folio::Current.site,
+                                   Folio::User)
+    end
 
     [
       {

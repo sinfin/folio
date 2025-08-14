@@ -261,6 +261,10 @@ cs:
         form_tabs:
           header_message:
             header_message: Text oznámení
+          settings:
+            subtitle_settings: Nastavení titulků
+            subtitle_languages_hint: Zadejte kódy jazyků oddělené čárkami (např. cs, en, de, es). Pořadí jazyků ovlivňuje pořadí titulků v přehrávači.
+            subtitle_auto_generation_enabled_hint: Povolit automatické generování titulků pro nová videa
       users:
         index:
           index_tabs/locked: Zablokovaní
@@ -386,6 +390,7 @@ cs:
           title/image: Zvolte obrázek
           title/video: Zvolte video
           title/audio: Zvolte audio
+          title/document: Zvolte soubor
 
       with_aside:
         hide: Skrýt
@@ -437,14 +442,77 @@ cs:
           label: Automatické ukládání
 
       files:
-        has_subtitles_form_component:
+
+        subtitle_form_component:
+          enabled_label: Povolit titulky
+          validation_errors_title: "Chyby validace:"
+          text_label: Text titulků
+          text_hint: Zadejte titulky ve formátu VTT
+          save: Uložit
+          cancel: Zrušit
+          delete_subtitle: Smazat
+          delete_confirm: Opravdu chcete smazat tyto titulky?
+          remove_new: Odebrat
+          last_manual_edit: "Ručně upraveno před %{time}"
+          last_transcription: "Vygenerováno před %{time}"
+          no_activity: "Zatím žádná aktivita"
+          status:
+            processing: Zpracovává se
+            enabled: Zapnuto
+            disabled: Vypnuto
+            disabled_with_errors: "Vypnuto (chyby: %{count})"
+            empty: Prázdné
+
+        subtitles_form_component:
           title: Titulky
-          subtitles_ready: Titulky připraveny
-          subtitles_processing: Probíhá generování titulků
-          subtitles_failed: Chyba generování titulků. Titulky lze zadat ručně.
-          retranscribe_subtitles: Vygenerovat znovu
-          force_retranscribe_hint: Kliknutím přepíšete probíhající proces
-          submit: Uložit titulky
+          retranscribe_subtitles: "Spustit automatický přepis"
+          retranscribe_confirm: "Opravdu chcete znovu spustit automatický přepis? Tato akce přepíše existující titulky."
+          reload_player: "Znovu načíst přehrávač"
+          reload_player_tooltip: "Obnovit stránku pro restart video přehrávače"
+          transcription_in_progress: "Probíhá přepis..."
+          transcription_failed: Přepis selhal
+          started_time_ago: Začal před %{time}
+          enabled_label: Povolit titulky
+          add_missing_languages: Přidat ruční překlad
+          select_language: Vyberte jazyk...
+          add_language: Přidat překlad
+          delete_subtitle: Smazat
+          delete_subtitle_confirm: Opravdu chcete smazat tyto titulky?
+          delete_confirm: Opravdu chcete smazat tyto titulky?
+          remove_new: Odebrat
+
+          text_label: Text titulků
+          text_hint: Zadejte titulky ve formátu VTT
+          validation_errors_title: "Chyby validace:"
+          save: Uložit
+          cancel: Zrušit
+          never_processed: Nikdy nezpracováno
+          status:
+            processing: Zpracovává se
+            enabled: Zapnuto
+            disabled: Vypnuto
+            disabled_with_errors: "Vypnuto (chyby: %{count})"
+            empty: Prázdné
+          last_activity:
+            transcribed: "Vygenerováno před %{time}"
+            edited: "Upraveno před %{time}"
+            generic: "Aktivita před %{time}"
+          last_manual_edit: "Ručně upraveno před %{time}"
+          last_transcription: "Vygenerováno před %{time}"
+          no_activity: "Zatím žádná aktivita"
+          metadata:
+            transcription_service: "Služba: %{service}"
+            attempts: "%{count} pokusů"
+            validation_errors: "%{count} chyb validace"
+
+      eleven_labs:
+        transcribe_subtitles_job:
+          errors:
+            file_too_large: "Soubor je větší než je limit ElevenLabs, nelze provést automatický přepis"
+            no_audio_detected: "Ve video souboru nebylo detekováno žádné audio"
+            cloud_storage_read_failed: "ElevenLabs nemohl načíst soubor z našeho cloudového úložiště"
+
+
 
   date:
     formats:

@@ -77,12 +77,23 @@ window.Folio.Stimulus.register('f-c-links-modal', class extends window.Stimulus.
 
   submit (e) {
     if (this.trigger) {
-      this.trigger.saveUrlJson(e.detail.data)
+      this.trigger.saveUrlJson.call(this.trigger, e.detail.data)
       this.trigger = null
     }
 
     window.Folio.Modal.close(this.element)
     this.formWrapTarget.innerHTML = ''
+  }
+
+  onModalClosed () {
+    // not present if submited as we clear this.trigger in submit callback
+    if (this.trigger) {
+      if (this.trigger.linkModalClosed) {
+        this.trigger.linkModalClosed.call(this.trigger)
+      }
+
+      this.trigger = null
+    }
   }
 
   onOpen (e) {

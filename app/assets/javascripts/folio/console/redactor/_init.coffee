@@ -1,12 +1,13 @@
 #= require folio/i18n
 
 blurCallback = (e) ->
+  return if @module.link.folioLinkModalOpen
+
   if window.FolioConsole and window.FolioConsole.HtmlAutoFormat and window.FolioConsole.HtmlAutoFormat.redactorBlurCallback
     window.FolioConsole.HtmlAutoFormat.redactorBlurCallback
       redactor: this
 
   e.target.dispatchEvent(new CustomEvent('focusout', { bubbles: true, detail: { redactor: true } }))
-
 
 focusCallback = (e) ->
   e.target.dispatchEvent(new CustomEvent('focusin', { bubbles: true, detail: { redactor: true } }))
@@ -104,7 +105,7 @@ window.folioConsoleInitRedactor = (node, options = {}, additional = {}) ->
   $R(node, $.extend({}, opts, additional, window.folioConsoleRedactorOptionsOverride, callbacksHash))
 
   if window.FolioConsole and window.FolioConsole.HtmlAutoFormat and window.FolioConsole.HtmlAutoFormat.addMissingAttributes
-    parent = node.closest('.redactor')
+    parent = node.closest('.redactor-box')
     if parent
       box = parent.querySelector('.redactor-in')
       if box

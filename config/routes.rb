@@ -193,7 +193,11 @@ Folio::Engine.routes.draw do
                 if klass.human_type == "video"
                   get :subtitles_html
                   post :retranscribe_subtitles
-                  patch :update_subtitles
+                  post "subtitles/:language", action: :create_subtitle
+                  patch "subtitles/:language", action: :update_subtitle
+                  delete "subtitles/:language", action: :delete_subtitle
+                  get "subtitles/:language/html", action: :subtitle_html
+                  get "subtitles/:language/new", action: :new_subtitle_html
                 end
               end
             end

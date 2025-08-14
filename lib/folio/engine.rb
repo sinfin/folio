@@ -153,6 +153,7 @@ module Folio
 
     config.folio_cookie_consent_configuration = {
       enabled: true,
+      keep_attached_after_accept: false,
       cookies: {
         necessary: [
           :cc_cookie,

@@ -222,6 +222,9 @@ menu_down:
 menu_left:
   width: 24
   height: 24
+menu_open:
+  width: 24
+  height: 24
 menu_right:
   width: 24
   height: 24
@@ -262,6 +265,9 @@ plus_circle_multiple_outline:
   width: 24
   height: 24
 podcast:
+  width: 24
+  height: 24
+power:
   width: 24
   height: 24
 print:
