@@ -175,7 +175,11 @@ class Folio::Page < Folio::ApplicationRecord
   end
 
   def folio_autosave_enabled?
-    Rails.application.config.folio_pages_autosave
+    if Rails.application.config.folio_pages_autosave
+      self.class.has_folio_tiptap?
+    else
+      false
+    end
   end
 
   def folio_html_sanitization_config
