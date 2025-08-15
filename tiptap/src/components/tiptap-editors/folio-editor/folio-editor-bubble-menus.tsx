@@ -11,6 +11,7 @@ import { FOLIO_TIPTAP_COLUMNS_BUBBLE_MENU_SOURCE } from "@/components/tiptap-ext
 import { TABLE_BUBBLE_MENU_SOURCE } from '@/lib/table-bubble-menu-source';
 import { FOLIO_TIPTAP_FLOAT_BUBBLE_MENU_SOURCE } from '@/components/tiptap-extensions/folio-tiptap-float';
 import { FOLIO_TIPTAP_NODE_BUBBLE_MENU_SOURCE } from '@/components/tiptap-extensions/folio-tiptap-node';
+import { FOLIO_TIPTAP_PAGES_BUBBLE_MENU_SOURCE } from '@/components/tiptap-extensions/folio-tiptap-pages';
 
 import "./folio-editor-bubble-menus.scss";
 
@@ -137,6 +138,7 @@ const BUBBLE_MENU_SOURCES = [
   TABLE_BUBBLE_MENU_SOURCE,
   FOLIO_TIPTAP_FLOAT_BUBBLE_MENU_SOURCE,
   FOLIO_TIPTAP_NODE_BUBBLE_MENU_SOURCE,
+  FOLIO_TIPTAP_PAGES_BUBBLE_MENU_SOURCE,
 ]
 
 export function FolioEditorBubbleMenus({

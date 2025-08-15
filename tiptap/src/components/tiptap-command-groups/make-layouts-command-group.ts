@@ -6,7 +6,12 @@ import {
   FolioTiptapFloatCommand,
 } from "@/components/tiptap-commands"
 
-export const makeLayoutsCommandGroup = (styledWrapCommands: FolioEditorCommand[]): FolioEditorCommandGroup => {
+interface MakeLayoutsCommandGroupProps {
+  folioTiptapStyledWrapCommands: FolioEditorCommand[];
+  folioTiptapPagesCommands: FolioEditorCommand[];
+}
+
+export const makeLayoutsCommandGroup = ({ folioTiptapStyledWrapCommands, folioTiptapPagesCommands }: MakeLayoutsCommandGroupProps): FolioEditorCommandGroup => {
   return {
     title: { cs: "Rozložení", en: "Layouts" },
     key: "layouts",
@@ -15,7 +20,8 @@ export const makeLayoutsCommandGroup = (styledWrapCommands: FolioEditorCommand[]
       TableCommand,
       FolioTiptapColumnsCommand,
       FolioTiptapFloatCommand,
-      ...styledWrapCommands,
+      ...folioTiptapStyledWrapCommands,
+      ...folioTiptapPagesCommands,
     ]
   }
 }

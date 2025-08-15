@@ -13,7 +13,6 @@ import { FolioTiptapNodeButton, FolioTiptapNodeButtonForSingleImage } from "@/co
 import { LinkPopover } from "@/components/tiptap-ui/link-popover";
 import { MarkButton } from "@/components/tiptap-ui/mark-button";
 import { UndoRedoButton } from "@/components/tiptap-ui/undo-redo-button";
-import { FolioTiptapColumnsButton } from "@/components/tiptap-extensions/folio-tiptap-columns";
 import { FolioTiptapShowHtmlButton } from "@/components/tiptap-extensions/folio-tiptap-show-html/folio-tiptap-show-html-button"
 import { FolioTiptapEraseMarksButton } from "@/components/tiptap-extensions/folio-tiptap-erase-marks/folio-tiptap-erase-marks-button"
 import { FolioEditorToolbarDropdown } from "./folio-editor-toolbar-dropdown"

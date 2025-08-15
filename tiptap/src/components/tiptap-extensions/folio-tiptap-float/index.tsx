@@ -1,6 +1,5 @@
 export * from "./folio-tiptap-float-node"
 export * from "./folio-tiptap-float-aside-node"
 export * from "./folio-tiptap-float-main-node"
-export * from "./folio-tiptap-float-button"
 export * from "./folio-tiptap-float-bubble-menu-source"
 export * from "./folio-tiptap-float-utils"

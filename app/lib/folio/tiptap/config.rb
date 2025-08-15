@@ -6,15 +6,18 @@ module Folio
       attr_accessor :node_names,
                     :styled_paragraph_variants,
                     :styled_wrap_variants,
-                    :schema
+                    :schema,
+                    :enable_pages
 
       def initialize(node_names: nil,
                      styled_paragraph_variants: nil,
                      styled_wrap_variants: nil,
-                     schema: nil)
+                     schema: nil,
+                     enable_pages: true)
         @node_names = node_names || get_all_tiptap_node_names
         @styled_paragraph_variants = styled_paragraph_variants || default_styled_paragraph_variants
         @styled_wrap_variants = styled_wrap_variants || default_styled_wrap_variants
+        @enable_pages = enable_pages
 
         @schema = schema || build_default_schema
       end

@@ -144,6 +144,12 @@ $f-tiptap-float__aside-offset: 0 !default;
 $f-tiptap-float__aside-offset--tablet: 0 !default;
 $f-tiptap-float__aside-offset--desktop: $f-tiptap-float__aside-offset--tablet !default;
 
+$f-tiptap-pages__gap-in-editor-only: 2rem !default;
+$f-tiptap-pages__margin-in-editor-only: $f-tiptap-pages__gap-in-editor-only 0 !default;
+
+$f-tiptap-page__primary-color-in-editor-only: #00B594 !default;
+$f-tiptap-page__border-in-editor-only: 2px dashed #{$f-tiptap-page__primary-color-in-editor-only} !default;
+
 $f-tiptap-table__background: transparent !default;
 $f-tiptap-table__border: 1px solid var(--tt-gray-light-a-200) !default;
 $f-tiptap-table__cell-padding: 1rem !default;
@@ -231,7 +237,8 @@ $f-tiptap-table-td__min-width: 5rem !default;
   .f-tiptap-float,
   .f-tiptap-styled-paragraph,
   .f-tiptap-styled-wrap,
-  .f-tiptap-invalid-node {
+  .f-tiptap-invalid-node,
+  .f-tiptap-pages {
     margin-top: $f-tiptap-node__margin-top;
     margin-bottom: $f-tiptap-node__margin-bottom;
 
@@ -557,6 +564,48 @@ $f-tiptap-table-td__min-width: 5rem !default;
     .selectedCell {
       background: $f-tiptap-table__selected-background;
       border: $f-tiptap-table__selected-border;
+    }
+  }
+
+  .f-tiptap-editor & .f-tiptap-pages {
+    display: flex;
+    flex-direction: column;
+    margin: $f-tiptap-pages__margin-in-editor-only;
+    gap: $f-tiptap-pages__gap-in-editor-only;
+    align-items: stretch;
+  }
+
+  .f-tiptap-editor & .f-tiptap-page {
+    position: relative;
+    flex: 0 0 auto;
+    min-height: 1rem;
+
+    &::before {
+      content: "";
+      pointer-events: none;
+      position: absolute;
+      display: block;
+      inset: 0;
+      border: $f-tiptap-page__border-in-editor-only;
+    }
+
+    &::after {
+      background: $f-tiptap-page__primary-color-in-editor-only;
+      border-radius: 4px 4px 0 0;
+      bottom: 100%;
+      color: #ffffff;
+      content: 'Paged content';
+      display: block;
+      font-size: 12px;
+      line-height: 1.4;
+      margin-bottom: -2px;
+      padding: 2px 7px;
+      position: absolute;
+      right: 0;
+
+      html[lang="cs"] & {
+        content: 'Stránkovaný obsah';
+      }
     }
   }
 

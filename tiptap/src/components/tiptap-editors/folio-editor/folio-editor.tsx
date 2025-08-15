@@ -24,6 +24,12 @@ import {
   FolioTiptapColumnsNode,
 } from "@/components/tiptap-extensions/folio-tiptap-columns";
 import {
+  FolioTiptapPagesExtension,
+  FolioTiptapPageNode,
+  FolioTiptapPagesNode,
+  makeFolioTiptapPagesCommands,
+} from "@/components/tiptap-extensions/folio-tiptap-pages";
+import {
   FolioTiptapStyledParagraph,
   makeFolioTiptapStyledParagraphCommands,
 } from "@/components/tiptap-extensions/folio-tiptap-styled-paragraph";
@@ -104,6 +110,16 @@ export function FolioEditor({
     return []
   }, [blockEditor, folioTiptapConfig && folioTiptapConfig["styled_paragraph_variants"]])
 
+  const folioTiptapPagesCommands = React.useMemo(() => {
+    if (folioTiptapConfig && folioTiptapConfig["enable_pages"]) {
+      return makeFolioTiptapPagesCommands(folioTiptapConfig["enable_pages"])
+    }
+
+    return []
+  }, [blockEditor, folioTiptapConfig && folioTiptapConfig["enable_pages"]])
+
+  console.log(folioTiptapPagesCommands)
+
   const folioTiptapStyledWrapCommands = React.useMemo(() => {
     if (folioTiptapConfig &&
         folioTiptapConfig["styled_wrap_variants"] &&
@@ -119,8 +135,8 @@ export function FolioEditor({
   }, [folioTiptapStyledParagraphCommands])
 
   const layoutsCommandGroup = React.useMemo(() => {
-    return makeLayoutsCommandGroup(folioTiptapStyledWrapCommands)
-  }, [folioTiptapStyledWrapCommands])
+    return makeLayoutsCommandGroup({ folioTiptapStyledWrapCommands, folioTiptapPagesCommands })
+  }, [folioTiptapStyledWrapCommands, folioTiptapPagesCommands])
 
   const editor = useEditor({
     onUpdate,
@@ -185,6 +201,9 @@ export function FolioEditor({
             FolioTiptapColumnsExtension,
             FolioTiptapColumnsNode,
             FolioTiptapColumnNode,
+            FolioTiptapPagesExtension,
+            FolioTiptapPagesNode,
+            FolioTiptapPageNode,
             FolioTiptapFloatNode,
             FolioTiptapFloatAsideNode,
             FolioTiptapFloatMainNode,

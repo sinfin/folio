@@ -76,6 +76,7 @@ declare global {
     nodes: FolioTiptapNodeFromInput[];
     styled_paragraph_variants: StyledParagraphVariantFromInput[];
     styled_wrap_variants: StyledWrapVariantFromInput[];
+    enable_pages: boolean;
   }
 
   interface FolioEditorCommandChain extends import("@tiptap/core").CommandChain {
