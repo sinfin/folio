@@ -118,8 +118,6 @@ export function FolioEditor({
     return []
   }, [blockEditor, folioTiptapConfig && folioTiptapConfig["enable_pages"]])
 
-  console.log(folioTiptapPagesCommands)
-
   const folioTiptapStyledWrapCommands = React.useMemo(() => {
     if (folioTiptapConfig &&
         folioTiptapConfig["styled_wrap_variants"] &&

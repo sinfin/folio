@@ -50,7 +50,7 @@ export const FolioTiptapColumnsNode = Node.create({
   addCommands() {
     return {
       insertFolioTiptapColumns:
-        (attrs) =>
+        () =>
           ({ tr, dispatch, editor }) => {
             const node = createColumns(editor.schema, 2);
 

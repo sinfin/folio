@@ -61,7 +61,7 @@ export function addOrDeletePage({
 
   if (dispatch && maybePages && maybePage) {
     const pages = maybePages.node;
-    let pageIndex = null
+    let pageIndex: null | number = null
 
     pages.content.forEach((childNode, pos, index) => {
       if (pageIndex !== null) return
@@ -79,7 +79,7 @@ export function addOrDeletePage({
 
     const pagesJSON = pages.toJSON();
 
-    let nextIndex = pageIndex;
+    let nextIndex: number = pageIndex;
 
     if (type === "delete") {
       // If we have 2 or fewer pages, replace the entire pages node with the combined contents
@@ -191,7 +191,7 @@ export function goToPage({
   if (dispatch && maybePages && maybePage) {
     const pages = maybePages.node;
     const page  = maybePage.node
-    let currentIndex = null;
+    let currentIndex: null | number = null;
 
     pages.content.forEach((childNode, pos, index) => {
       if (currentIndex !== null) return
@@ -207,7 +207,7 @@ export function goToPage({
       return false;
     }
 
-    let nextIndex = 0;
+    let nextIndex: number = 0;
 
     if (type === "before") {
       nextIndex = (currentIndex - 1 + pages.childCount) % pages.childCount;

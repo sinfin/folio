@@ -61,7 +61,7 @@ export function addOrDeleteColumn({
 
   if (dispatch && maybeColumns && maybeColumn) {
     const cols = maybeColumns.node;
-    let colIndex = null
+    let colIndex: null | number = null
 
     cols.content.forEach((childNode, pos, index) => {
       if (colIndex !== null) return
@@ -79,7 +79,7 @@ export function addOrDeleteColumn({
 
     const colsJSON = cols.toJSON();
 
-    let nextIndex = colIndex;
+    let nextIndex: number = colIndex;
 
     if (type === "delete") {
       // If we have 2 or fewer columns, replace the entire columns node with the combined contents
@@ -191,7 +191,7 @@ export function goToColumn({
   if (dispatch && maybeColumns && maybeColumn) {
     const cols = maybeColumns.node;
     const col = maybeColumn.node;
-    let currentIndex = null;
+    let currentIndex: null | number = null;
 
     cols.content.forEach((childNode, pos, index) => {
       if (currentIndex !== null) return

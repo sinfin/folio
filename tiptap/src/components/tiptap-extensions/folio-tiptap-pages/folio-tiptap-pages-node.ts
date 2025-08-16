@@ -62,7 +62,7 @@ export const FolioTiptapPagesNode = Node.create({
   addCommands() {
     return {
       insertFolioTiptapPages:
-        (attrs) =>
+        () =>
           ({ tr, dispatch, editor }) => {
             const node = createPages(editor.schema, 2);
 
