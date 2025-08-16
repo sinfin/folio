@@ -30,7 +30,7 @@ export const FolioTiptapShowHtmlButton = React.forwardRef<
       if (!e.defaultPrevented) {
         const html = editor.getHTML();
 
-        window.top!.postMessage(
+        window.parent!.postMessage(
           {
             type: "f-tiptap-editor:show-html",
             html,

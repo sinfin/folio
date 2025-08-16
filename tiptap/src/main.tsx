@@ -31,7 +31,7 @@ window.Folio.Tiptap.init = (props) => {
   }
 
   const onCreate = ({ editor }: { editor: TiptapEditor }) => {
-    window.top!.postMessage(
+    window.parent!.postMessage(
       {
         type: "f-tiptap:created",
         height: window.Folio.Tiptap.getHeight(),
@@ -45,7 +45,7 @@ window.Folio.Tiptap.init = (props) => {
   };
 
   const onUpdate = ({ editor }: { editor: TiptapEditor }) => {
-    window.top!.postMessage(
+    window.parent!.postMessage(
       {
         type: "f-tiptap:updated",
         content: removeUniqueIdsFromFolioTiptapNodes(editor.getJSON()),
@@ -152,7 +152,7 @@ window.addEventListener("message", (e) => {
 });
 
 // Only run this in dev and not in an iframe
-if (process.env.NODE_ENV !== "production" && window.top === window) {
+if (process.env.NODE_ENV !== "production" && window.parent === window) {
   const rootElement = document.getElementById("folio-tiptap-dev-root");
 
   if (rootElement) {
@@ -187,4 +187,4 @@ if (process.env.NODE_ENV !== "production" && window.top === window) {
   }
 }
 
-window.top!.postMessage({ type: "f-tiptap:javascript-evaluated" }, "*");
+window.parent!.postMessage({ type: "f-tiptap:javascript-evaluated" }, "*");

@@ -211,7 +211,7 @@ const LinkMain: React.FC<LinkMainProps> = ({
   };
 
   const handleSettingsLink = () => {
-    window.top!.postMessage(
+    window.parent!.postMessage(
       {
         type: "f-tiptap-editor:open-link-popover",
         urlJson: linkData,

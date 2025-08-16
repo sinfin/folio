@@ -25,7 +25,7 @@ export const FolioTiptapNodeButtonForSingleImage = ({ editor, singleImageNodeFor
 
   const handleClick = React.useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
-      window.top!.postMessage(
+      window.parent!.postMessage(
         {
           type: "f-tiptap-slash-command:selected",
           attrs: { type: singleImageNodeForToolbar.type },

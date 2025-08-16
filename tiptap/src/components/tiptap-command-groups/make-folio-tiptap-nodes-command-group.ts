@@ -7,7 +7,7 @@ export const makeFolioTiptapNodesCommandGroup = (folioTiptapNodes: FolioTiptapNo
       icon: Cuboid,
       key: `folioTiptapNode-${folioTiptapNode.type}`,
       command: ({ chain }) => {
-        window.top!.postMessage(
+        window.parent!.postMessage(
           {
             type: "f-tiptap-slash-command:selected",
             attrs: { type: folioTiptapNode.type },

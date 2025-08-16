@@ -265,7 +265,7 @@ export function FolioEditor({
 
     const resizeObserver = new ResizeObserver((entries) => {
       for (const entry of entries) {
-        window.top!.postMessage(
+        window.parent!.postMessage(
           {
             type: "f-tiptap-editor:resized",
             height: entry.contentRect.height,
@@ -289,7 +289,7 @@ export function FolioEditor({
       editor.chain().setMeta('addToHistory', false).setContent(clearedContent).run()
     }
 
-    window.top!.postMessage(
+    window.parent!.postMessage(
       {
         type: "f-tiptap-editor:initialized-content",
       },

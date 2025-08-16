@@ -95,7 +95,7 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
       } else {
         setStatus("loading");
 
-        window.top!.postMessage(
+        window.parent!.postMessage(
           {
             type: "f-tiptap-node:render",
             uniqueId,
