@@ -5,6 +5,7 @@ import {
   useEditor,
   type Editor,
 } from "@tiptap/react";
+import { findParentNode } from "@tiptap/core";
 
 // --- Tiptap Core Extensions ---
 import { StarterKit } from "@tiptap/starter-kit";
@@ -181,16 +182,19 @@ export function FolioEditor({
         ? [
             FolioTiptapNodeExtension,
             Placeholder.configure({
+              includeChildren: true,
               // Use a placeholder:
-              placeholder: ({ node }) => {
+              placeholder: ({ editor, node, pos }) => {
                 let key = "commandPlaceholder";
 
-                if (
-                  node.type.name === "heading" &&
-                  node.attrs.level &&
-                  [2, 3, 4].indexOf(node.attrs.level) !== -1
-                ) {
-                  key = `h${node.attrs.level}Placeholder`;
+                if (node.type.name === "heading") {
+                  const maybePages = findParentNode((node: any) => node.type.name === FolioTiptapPagesNode.name)(editor.state.selection);
+
+                  if (maybePages) {
+                    key = 'headingInPagesPlaceholder'
+                  } else if (node.attrs.level && [2, 3, 4].indexOf(node.attrs.level) !== -1) {
+                    key = `h${node.attrs.level}Placeholder`;
+                  }
                 }
 
                 return translate(TRANSLATIONS, key);

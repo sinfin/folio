@@ -4,9 +4,17 @@ import { type EditorState, TextSelection } from "@tiptap/pm/state";
 
 import { FolioTiptapPageNode, FolioTiptapPagesNode } from "./index";
 
-export function createPage(pageType: any, pageContent = null) {
+export function createPage(pageType: any, pageContent = null, schema: any = null) {
   if (pageContent) {
     return pageType.createChecked({}, pageContent);
+  }
+
+  if (schema) {
+    const defaultContent = [
+      schema.nodes.heading.createChecked({ level: 2 }),
+    ];
+
+    return pageType.createChecked({}, defaultContent);
   }
 
   return pageType.createAndFill({});
@@ -32,7 +40,7 @@ export function createPages(schema: any, pagesCount: any, pageContent = null) {
   const pages = [];
 
   for (let index = 0; index < pagesCount; index += 1) {
-    const page = createPage(types.page, pageContent);
+    const page = createPage(types.page, pageContent, schema);
 
     if (page) {
       // @ts-ignore
@@ -63,7 +71,7 @@ export function addOrDeletePage({
     const pages = maybePages.node;
     let pageIndex: null | number = null
 
-    pages.content.forEach((childNode, pos, index) => {
+    pages.content.forEach((childNode, _pos, index) => {
       if (pageIndex !== null) return
 
       if (childNode === maybePage.node) {
@@ -143,7 +151,8 @@ export function addOrDeletePage({
         type: FolioTiptapPageNode.name,
         content: [
           {
-            type: "paragraph",
+            type: "heading",
+            attrs: { level: 2 },
           },
         ],
       });
