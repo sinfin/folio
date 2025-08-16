@@ -1,14 +1,25 @@
 import { Node, mergeAttributes } from '@tiptap/core';
 import { TextSelection } from '@tiptap/pm/state';
 
+import translate from "@/lib/i18n";
+
 import { addOrDeletePage, createPages, goToPage } from './folio-tiptap-pages-utils';
 
 export * from './folio-tiptap-page-node';
 
+export const TRANSLATIONS = {
+  cs: {
+    label: "Stránkovaný obsah",
+  },
+  en: {
+    label: "Paged content"
+  }
+}
+
 declare module '@tiptap/core' {
   interface Commands<ReturnType> {
     pages: {
-      insertFolioTiptapPages: (attrs?: { count: number }) => ReturnType
+      insertFolioTiptapPages: () => ReturnType
       addFolioTiptapPageBefore: () => ReturnType
       addFolioTiptapPageAfter: () => ReturnType
       deleteFolioTiptapPage: () => ReturnType
@@ -29,15 +40,7 @@ export const FolioTiptapPagesNode = Node.create({
     return {
       HTMLAttributes: {
         class: 'f-tiptap-pages',
-      },
-    };
-  },
-
-  addAttributes() {
-    return {
-      count: {
-        default: 2,
-        parseHTML: element => element.getAttribute('data-f-tiptap-pages-count'),
+        "data-f-tiptap-pages-label": translate(TRANSLATIONS, "label"),
       },
     };
   },
@@ -52,7 +55,6 @@ export const FolioTiptapPagesNode = Node.create({
 
   renderHTML({ HTMLAttributes }) {
     return ['div', mergeAttributes({
-      "data-f-tiptap-pages-count": HTMLAttributes.count,
       "class": "f-tiptap-pages",
     }, this.options.HTMLAttributes, HTMLAttributes), 0];
   },
@@ -62,7 +64,7 @@ export const FolioTiptapPagesNode = Node.create({
       insertFolioTiptapPages:
         (attrs) =>
           ({ tr, dispatch, editor }) => {
-            const node = createPages(editor.schema, (attrs && attrs.count) || 2);
+            const node = createPages(editor.schema, 2);
 
             if (dispatch) {
               const offset = tr.selection.anchor + 1;

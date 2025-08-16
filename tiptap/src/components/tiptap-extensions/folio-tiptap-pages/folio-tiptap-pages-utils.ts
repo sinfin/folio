@@ -4,12 +4,12 @@ import { type EditorState, TextSelection } from "@tiptap/pm/state";
 
 import { FolioTiptapPageNode, FolioTiptapPagesNode } from "./index";
 
-export function createPage(pageType: any, index: any, pageContent = null) {
+export function createPage(pageType: any, pageContent = null) {
   if (pageContent) {
-    return pageType.createChecked({ index }, pageContent);
+    return pageType.createChecked({}, pageContent);
   }
 
-  return pageType.createAndFill({ index });
+  return pageType.createAndFill({});
 }
 
 export function getPagesNodeTypes(schema: any) {
@@ -32,7 +32,7 @@ export function createPages(schema: any, pagesCount: any, pageContent = null) {
   const pages = [];
 
   for (let index = 0; index < pagesCount; index += 1) {
-    const page = createPage(types.page, index, pageContent);
+    const page = createPage(types.page, pageContent);
 
     if (page) {
       // @ts-ignore
@@ -61,7 +61,22 @@ export function addOrDeletePage({
 
   if (dispatch && maybePages && maybePage) {
     const pages = maybePages.node;
-    const pageIndex = maybePage.node.attrs.index;
+    let pageIndex = null
+
+    pages.content.forEach((childNode, pos, index) => {
+      if (pageIndex !== null) return
+
+      if (childNode === maybePage.node) {
+        pageIndex = index;
+        return
+      }
+    })
+
+    if (pageIndex === null) {
+      console.warn("Current page not found in pages node");
+      return false;
+    }
+
     const pagesJSON = pages.toJSON();
 
     let nextIndex = pageIndex;
@@ -126,9 +141,6 @@ export function addOrDeletePage({
       nextIndex = type === "addBefore" ? pageIndex : pageIndex + 1;
       pagesJSON.content.splice(nextIndex, 0, {
         type: FolioTiptapPageNode.name,
-        attrs: {
-          index: pageIndex,
-        },
         content: [
           {
             type: "paragraph",
@@ -136,12 +148,6 @@ export function addOrDeletePage({
         ],
       });
     }
-
-    pagesJSON.attrs.pages = pagesJSON.content.length;
-
-    pagesJSON.content.forEach((pageJSON: any, index: any) => {
-      pageJSON.attrs.index = index;
-    });
 
     const nextCols = Node.fromJSON(state.schema, pagesJSON);
 
@@ -184,20 +190,40 @@ export function goToPage({
 
   if (dispatch && maybePages && maybePage) {
     const pages = maybePages.node;
+    const page  = maybePage.node
+    let currentIndex = null;
+
+    pages.content.forEach((childNode, pos, index) => {
+      if (currentIndex !== null) return
+
+      if (childNode === page) {
+        currentIndex = index;
+        return
+      }
+
+      index += 1;
+    })
+
+    if (currentIndex === null) {
+      console.warn("Current page not found in pages node");
+      return false;
+    }
+
     const pageIndex = maybePage.node.attrs.index;
 
     let nextIndex = 0;
 
     if (type === "before") {
-      nextIndex = (pageIndex - 1 + pages.attrs.count) % pages.attrs.count;
+      nextIndex = (currentIndex - 1 + pages.childCount) % pages.childCount;
     } else {
-      nextIndex = (pageIndex + 1) % pages.attrs.count;
+      nextIndex = (currentIndex + 1) % pages.childCount;
     }
 
     let nextSelectPos = maybePages.pos;
-    pages.content.forEach((page, pos, index) => {
+
+    pages.content.forEach((childNode, pos, index) => {
       if (index < nextIndex) {
-        nextSelectPos += page.nodeSize;
+        nextSelectPos += childNode.nodeSize;
       }
     });
 
@@ -205,6 +231,7 @@ export function goToPage({
 
     tr.setSelection(TextSelection.near(tr.doc.resolve(nextSelectPos)));
     dispatch(tr);
+
     return true;
   }
 

@@ -1,6 +1,6 @@
 import { BookOpenText } from "lucide-react";
 
-import { TRANSLATIONS } from './folio-tiptap-page-node';
+import { TRANSLATIONS } from './folio-tiptap-pages-node';
 
 export const makeFolioTiptapPagesCommands = (styledWrapVariants: StyledWrapVariantFromInput[]): FolioEditorCommand[] => {
   const command: FolioEditorCommand = {

@@ -144,7 +144,7 @@ $f-tiptap-float__aside-offset: 0 !default;
 $f-tiptap-float__aside-offset--tablet: 0 !default;
 $f-tiptap-float__aside-offset--desktop: $f-tiptap-float__aside-offset--tablet !default;
 
-$f-tiptap-pages__gap-in-editor-only: 2rem !default;
+$f-tiptap-pages__gap-in-editor-only: $f-tiptap__spacer !default;
 $f-tiptap-pages__margin-in-editor-only: $f-tiptap-pages__gap-in-editor-only 0 !default;
 
 $f-tiptap-page__primary-color-in-editor-only: #00B594 !default;
@@ -573,6 +573,22 @@ $f-tiptap-table-td__min-width: 5rem !default;
     margin: $f-tiptap-pages__margin-in-editor-only;
     gap: $f-tiptap-pages__gap-in-editor-only;
     align-items: stretch;
+
+    &::before {
+      background: $f-tiptap-page__primary-color-in-editor-only;
+      border-radius: 4px 4px 0 0;
+      bottom: 100%;
+      color: #ffffff;
+      content: attr(data-f-tiptap-pages-label);
+      display: block;
+      font-size: 12px;
+      line-height: 1.4;
+      margin-bottom: -2px;
+      padding: 2px 7px;
+      pointer-events: none;
+      position: absolute;
+      right: 0;
+    }
   }
 
   .f-tiptap-editor & .f-tiptap-page {
@@ -587,25 +603,6 @@ $f-tiptap-table-td__min-width: 5rem !default;
       display: block;
       inset: 0;
       border: $f-tiptap-page__border-in-editor-only;
-    }
-
-    &::after {
-      background: $f-tiptap-page__primary-color-in-editor-only;
-      border-radius: 4px 4px 0 0;
-      bottom: 100%;
-      color: #ffffff;
-      content: 'Paged content';
-      display: block;
-      font-size: 12px;
-      line-height: 1.4;
-      margin-bottom: -2px;
-      padding: 2px 7px;
-      position: absolute;
-      right: 0;
-
-      html[lang="cs"] & {
-        content: 'Stránkovaný obsah';
-      }
     }
   }
 
