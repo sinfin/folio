@@ -1,15 +1,14 @@
 import { Node, mergeAttributes } from '@tiptap/core';
 import { TextSelection } from '@tiptap/pm/state';
 
-import { addOrDeleteColumn, createColumns, goToColumn } from './utils';
+import { addOrDeleteColumn, createColumns, goToColumn } from './folio-tiptap-columns-utils';
 
 export * from './folio-tiptap-column-node';
-// export * from './components/ColumnActionButton';
 
 declare module '@tiptap/core' {
   interface Commands<ReturnType> {
     columns: {
-      insertFolioTiptapColumns: (attrs?: { count: number }) => ReturnType
+      insertFolioTiptapColumns: () => ReturnType
       addFolioTiptapColumnBefore: () => ReturnType
       addFolioTiptapColumnAfter: () => ReturnType
       deleteFolioTiptapColumn: () => ReturnType
@@ -34,15 +33,6 @@ export const FolioTiptapColumnsNode = Node.create({
     };
   },
 
-  addAttributes() {
-    return {
-      count: {
-        default: 2,
-        parseHTML: element => element.getAttribute('data-f-tiptap-columns-count'),
-      },
-    };
-  },
-
   parseHTML() {
     return [
       {
@@ -53,7 +43,6 @@ export const FolioTiptapColumnsNode = Node.create({
 
   renderHTML({ HTMLAttributes }) {
     return ['div', mergeAttributes({
-      "data-f-tiptap-columns-count": HTMLAttributes.count,
       "class": "f-tiptap-columns f-tiptap-avoid-external-layout",
     }, this.options.HTMLAttributes, HTMLAttributes), 0];
   },
@@ -63,7 +52,7 @@ export const FolioTiptapColumnsNode = Node.create({
       insertFolioTiptapColumns:
         (attrs) =>
           ({ tr, dispatch, editor }) => {
-            const node = createColumns(editor.schema, (attrs && attrs.count) || 2);
+            const node = createColumns(editor.schema, 2);
 
             if (dispatch) {
               const offset = tr.selection.anchor + 1;

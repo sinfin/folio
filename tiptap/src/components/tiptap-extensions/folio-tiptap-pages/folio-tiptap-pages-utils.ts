@@ -40,7 +40,7 @@ export function createPages(schema: any, pagesCount: any, pageContent = null) {
     }
   }
 
-  return types.pages.createChecked({ pageCount: pagesCount }, pages);
+  return types.pages.createChecked({}, pages);
 }
 
 export function addOrDeletePage({
@@ -149,10 +149,10 @@ export function addOrDeletePage({
       });
     }
 
-    const nextCols = Node.fromJSON(state.schema, pagesJSON);
+    const nextPages = Node.fromJSON(state.schema, pagesJSON);
 
     let nextSelectPos = maybePages.pos;
-    nextCols.content.forEach((page, pos, index) => {
+    nextPages.content.forEach((page, pos, index) => {
       if (index < nextIndex) {
         nextSelectPos += page.nodeSize;
       }
@@ -163,7 +163,7 @@ export function addOrDeletePage({
     tr.replaceWith(
       maybePages.pos,
       maybePages.pos + maybePages.node.nodeSize,
-      nextCols,
+      nextPages,
     ).setSelection(TextSelection.near(tr.doc.resolve(nextSelectPos)));
 
     dispatch(tr);
@@ -200,16 +200,12 @@ export function goToPage({
         currentIndex = index;
         return
       }
-
-      index += 1;
     })
 
     if (currentIndex === null) {
       console.warn("Current page not found in pages node");
       return false;
     }
-
-    const pageIndex = maybePage.node.attrs.index;
 
     let nextIndex = 0;
 

@@ -6,10 +6,10 @@ import { FolioTiptapColumnNode, FolioTiptapColumnsNode } from "./index";
 
 export function createColumn(colType: any, index: any, colContent = null) {
   if (colContent) {
-    return colType.createChecked({ index }, colContent);
+    return colType.createChecked({}, colContent);
   }
 
-  return colType.createAndFill({ index });
+  return colType.createAndFill({});
 }
 
 export function getColumnsNodeTypes(schema: any) {
@@ -32,7 +32,7 @@ export function createColumns(schema: any, colsCount: any, colContent = null) {
   const cols = [];
 
   for (let index = 0; index < colsCount; index += 1) {
-    const col = createColumn(types.column, index, colContent);
+    const col = createColumn(types.column, colContent);
 
     if (col) {
       // @ts-ignore
@@ -40,7 +40,7 @@ export function createColumns(schema: any, colsCount: any, colContent = null) {
     }
   }
 
-  return types.columns.createChecked({ columnCount: colsCount }, cols);
+  return types.columns.createChecked({}, cols);
 }
 
 export function addOrDeleteColumn({
@@ -61,7 +61,22 @@ export function addOrDeleteColumn({
 
   if (dispatch && maybeColumns && maybeColumn) {
     const cols = maybeColumns.node;
-    const colIndex = maybeColumn.node.attrs.index;
+    let colIndex = null
+
+    cols.content.forEach((childNode, pos, index) => {
+      if (colIndex !== null) return
+
+      if (childNode === maybeColumn.node) {
+        colIndex = index;
+        return
+      }
+    })
+
+    if (colIndex === null) {
+      console.warn("Current page not found in cols node");
+      return false;
+    }
+
     const colsJSON = cols.toJSON();
 
     let nextIndex = colIndex;
@@ -126,9 +141,6 @@ export function addOrDeleteColumn({
       nextIndex = type === "addBefore" ? colIndex : colIndex + 1;
       colsJSON.content.splice(nextIndex, 0, {
         type: FolioTiptapColumnNode.name,
-        attrs: {
-          index: colIndex,
-        },
         content: [
           {
             type: "paragraph",
@@ -136,12 +148,6 @@ export function addOrDeleteColumn({
         ],
       });
     }
-
-    colsJSON.attrs.cols = colsJSON.content.length;
-
-    colsJSON.content.forEach((colJSON: any, index: any) => {
-      colJSON.attrs.index = index;
-    });
 
     const nextCols = Node.fromJSON(state.schema, colsJSON);
 
@@ -184,14 +190,29 @@ export function goToColumn({
 
   if (dispatch && maybeColumns && maybeColumn) {
     const cols = maybeColumns.node;
-    const colIndex = maybeColumn.node.attrs.index;
+    const col = maybeColumn.node;
+    let currentIndex = null;
+
+    cols.content.forEach((childNode, pos, index) => {
+      if (currentIndex !== null) return
+
+      if (childNode === col) {
+        currentIndex = index;
+        return
+      }
+    })
+
+    if (currentIndex === null) {
+      console.warn("Current col not found in cols node");
+      return false;
+    }
 
     let nextIndex = 0;
 
     if (type === "before") {
-      nextIndex = (colIndex - 1 + cols.attrs.count) % cols.attrs.count;
+      nextIndex = (currentIndex - 1 + cols.childCount) % cols.childCount;
     } else {
-      nextIndex = (colIndex + 1) % cols.attrs.count;
+      nextIndex = (currentIndex + 1) % cols.childCount;
     }
 
     let nextSelectPos = maybeColumns.pos;
