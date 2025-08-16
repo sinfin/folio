@@ -7,17 +7,17 @@ module Folio
                     :styled_paragraph_variants,
                     :styled_wrap_variants,
                     :schema,
-                    :enable_pages
+                    :pages_component_class_name
 
       def initialize(node_names: nil,
                      styled_paragraph_variants: nil,
                      styled_wrap_variants: nil,
                      schema: nil,
-                     enable_pages: true)
+                     pages_component_class_name: nil)
         @node_names = node_names || get_all_tiptap_node_names
         @styled_paragraph_variants = styled_paragraph_variants || default_styled_paragraph_variants
         @styled_wrap_variants = styled_wrap_variants || default_styled_wrap_variants
-        @enable_pages = enable_pages
+        @pages_component_class_name = pages_component_class_name
 
         @schema = schema || build_default_schema
       end
@@ -27,13 +27,15 @@ module Folio
           node_names: @node_names,
           styled_paragraph_variants: @styled_paragraph_variants,
           styled_wrap_variants: @styled_wrap_variants,
+          pages_component_class_name: @pages_component_class_name
         }
       end
 
       def to_input_json
-        h = to_h.without(:node_names, :schema)
+        h = to_h.without(:node_names, :schema, :pages_component_class_name)
 
         h[:nodes] = tiptap_nodes_hash(@node_names)
+        h[:enable_pages] = @pages_component_class_name.present?
 
         h.to_json
       end
