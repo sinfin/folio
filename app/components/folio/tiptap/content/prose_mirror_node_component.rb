@@ -12,7 +12,13 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponent < ApplicationComponent
     @lambda_before_node = lambda_before_node
     @lambda_after_node = lambda_after_node
 
-    @node_definition = NODES[@prose_mirror_node["type"]]
+    if @prose_mirror_node["type"] == "folioTiptapPages"
+      if record.tiptap_config.pages_component_class_name
+        @node_definition = { "component_name" => record.tiptap_config.pages_component_class_name }
+      end
+    else
+      @node_definition = NODES[@prose_mirror_node["type"]]
+    end
   end
 
   def before_render
