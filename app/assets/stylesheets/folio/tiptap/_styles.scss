@@ -3,7 +3,7 @@ $f-tiptap__spacer: 1rem !default;
 $f-tiptap__media-min-width--tablet: 576px !default;
 $f-tiptap__media-min-width--desktop: 708px !default;
 
-$f-tiptap-root__background-color: #ffffff !default;
+$f-tiptap-root__background-color: transparent !default;
 $f-tiptap-root__color: inherit !default;
 $f-tiptap-root__font-family: inherit !default;
 $f-tiptap-root__font-size: inherit !default;
@@ -17,12 +17,18 @@ $f-tiptap-root__white-space: pre-wrap !default;
 $f-tiptap-root__word-break: break-word !default;
 
 $f-tiptap-node__margin-top: $f-tiptap__spacer !default;
+$f-tiptap-node__margin-top--tablet: $f-tiptap-node__margin-top !default;
+$f-tiptap-node__margin-top--desktop: $f-tiptap-node__margin-top--tablet !default;
 $f-tiptap-node__margin-bottom: $f-tiptap__spacer !default;
+$f-tiptap-node__margin-bottom--tablet: $f-tiptap-node__margin-bottom !default;
+$f-tiptap-node__margin-bottom--desktop: $f-tiptap-node__margin-bottom--tablet !default;
 
 $f-tiptap-blockquote__padding: 0.375em 0 0.375em 1em !default;
 $f-tiptap-blockquote__background: rgba(34, 35, 37, 1) !default;
 
 $f-tiptap-hr__margin: 2rem !default;
+$f-tiptap-hr__margin--tablet: $f-tiptap-hr__margin !default;
+$f-tiptap-hr__margin--desktop: $f-tiptap-hr__margin--tablet !default;
 $f-tiptap-hr__background: var(--bs-border-color) !default;
 $f-tiptap-hr__height: 1px !default;
 
@@ -203,6 +209,14 @@ $f-tiptap-table-td__min-width: 5rem !default;
   --f-tiptap-root__background-color: #{$f-tiptap-root__background-color};
   --f-tiptap-root__padding-x: #{$f-tiptap-root__padding-x};
 
+  --f-tiptap-node__margin-top: #{$f-tiptap-node__margin-top};
+  --f-tiptap-node__margin-bottom: #{$f-tiptap-node__margin-bottom};
+
+  --f-tiptap-headings__margin-top: #{$f-tiptap-headings__margin-top};
+  --f-tiptap-headings__margin-bottom: #{$f-tiptap-headings__margin-bottom};
+
+  --f-tiptap-hr__margin: #{$f-tiptap-hr__margin};
+
   --f-tiptap-code__border-radius: #{$f-tiptap-code__border-radius};
 }
 
@@ -241,8 +255,8 @@ $f-tiptap-table-td__min-width: 5rem !default;
   .f-tiptap-styled-wrap,
   .f-tiptap-invalid-node,
   .f-tiptap-pages {
-    margin-top: $f-tiptap-node__margin-top;
-    margin-bottom: $f-tiptap-node__margin-bottom;
+    margin-top: var(--f-tiptap-node__margin-top);
+    margin-bottom: var(--f-tiptap-node__margin-bottom);
 
     &:first-child {
       margin-top: 0;
@@ -324,8 +338,8 @@ $f-tiptap-table-td__min-width: 5rem !default;
     font-weight: $f-tiptap-headings__font-weight;
     letter-spacing: $f-tiptap-headings__letter-spacing;
     position: relative;
-    margin-top: $f-tiptap-headings__margin-top;
-    margin-bottom: $f-tiptap-headings__margin-bottom;
+    margin-top: var(--f-tiptap-headings__margin-top);
+    margin-bottom: var(--f-tiptap-headings__margin-bottom);
 
     strong {
       font-weight: inherit;
@@ -424,7 +438,26 @@ $f-tiptap-table-td__min-width: 5rem !default;
     background: $f-tiptap-hr__background;
     border: none;
     height: $f-tiptap-hr__height;
-    margin: $f-tiptap-hr__margin 0;
+    margin: var(--f-tiptap-hr__margin) 0;
+
+    .f-tiptap-editor & {
+      position: relative;
+      overflow: visible;
+
+      &::before {
+        content: "";
+        position: absolute;
+        top: calc(-1 * var(--f-tiptap-hr__margin) + #{$f-tiptap__spacer});
+        bottom: calc(-1 * var(--f-tiptap-hr__margin) + #{$f-tiptap__spacer});
+        left: 0;
+        right: 0;
+        display: block;
+      }
+
+      &.ProseMirror-selectednode::before {
+        background: var(--tt-selection-color);
+      }
+    }
   }
 
   .f-tiptap-columns {
@@ -629,6 +662,11 @@ $f-tiptap-table-td__min-width: 5rem !default;
 
   @container (min-width: #{$f-tiptap__media-min-width--tablet}) {
     --f-tiptap-root__padding-x: #{$f-tiptap-root__padding-x--tablet};
+    --f-tiptap-node__margin-top: #{$f-tiptap-node__margin-top--tablet};
+    --f-tiptap-node__margin-bottom: #{$f-tiptap-node__margin-bottom--tablet};
+    --f-tiptap-headings__margin-top: #{$f-tiptap-headings__margin-top--tablet};
+    --f-tiptap-headings__margin-bottom: #{$f-tiptap-headings__margin-bottom--tablet};
+    --f-tiptap-hr__margin: #{$f-tiptap-hr__margin--tablet};
 
     .f-tiptap-float {
       &::after {
@@ -704,6 +742,11 @@ $f-tiptap-table-td__min-width: 5rem !default;
 
   @container (min-width: #{$f-tiptap__media-min-width--desktop}) {
     --f-tiptap-root__padding-x: #{$f-tiptap-root__padding-x--desktop};
+    --f-tiptap-node__margin-top: #{$f-tiptap-node__margin-top--desktop};
+    --f-tiptap-node__margin-bottom: #{$f-tiptap-node__margin-bottom--desktop};
+    --f-tiptap-headings__margin-top: #{$f-tiptap-headings__margin-top--desktop};
+    --f-tiptap-headings__margin-bottom: #{$f-tiptap-headings__margin-bottom--desktop};
+    --f-tiptap-hr__margin: #{$f-tiptap-hr__margin--desktop};
 
     .f-tiptap-columns {
       gap: $f-tiptap-columns__gap--desktop;
