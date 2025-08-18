@@ -3,7 +3,6 @@ import { createRoot } from "react-dom/client";
 import "./styles/_variables.scss";
 import "./styles/_keyframe-animations.scss";
 import "./styles/index.scss";
-import "../../app/assets/stylesheets/folio/tiptap/_styles.scss";
 import App from "./App.tsx";
 
 import {
