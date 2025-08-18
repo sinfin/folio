@@ -120,16 +120,18 @@ export function FolioEditorToolbarDropdown({
       <DropdownMenuContent>
         <DropdownMenuGroup>
           {commandGroup.commands.map((command) => (
-            <DropdownMenuItem key={command.key} asChild>
-              <FolioEditorToolbarDropdownButton
-                active={editorState.value ? (command.key === editorState.value) : false}
-                enabled={editorState.enabled}
-                onClick={makeOnClick({ editor, command })}
-              >
-                <command.icon className="tiptap-button-icon" />
-                {command.title[document.documentElement.lang as keyof typeof command.title] || command.title.en}
-              </FolioEditorToolbarDropdownButton>
-            </DropdownMenuItem>
+            command.hideInToolbarDropdown ? null : (
+              <DropdownMenuItem key={command.key} asChild>
+                <FolioEditorToolbarDropdownButton
+                  active={editorState.value ? (command.key === editorState.value) : false}
+                  enabled={editorState.enabled}
+                  onClick={makeOnClick({ editor, command })}
+                >
+                  <command.icon className="tiptap-button-icon" />
+                  {command.title[document.documentElement.lang as keyof typeof command.title] || command.title.en}
+                </FolioEditorToolbarDropdownButton>
+              </DropdownMenuItem>
+            )
           ))}
         </DropdownMenuGroup>
       </DropdownMenuContent>

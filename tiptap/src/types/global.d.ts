@@ -97,6 +97,7 @@ declare global {
     key: string;
     keymap?: string;
     dontShowAsActiveInCollapsedToolbar?: boolean;
+    hideInToolbarDropdown?: boolean;
     command: (props: {
       chain: import("@tiptap/core").CommandChain;
     }) => void;

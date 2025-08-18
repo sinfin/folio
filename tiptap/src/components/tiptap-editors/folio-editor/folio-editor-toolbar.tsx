@@ -21,6 +21,8 @@ import {
   TextAlignCommandGroup
 } from '@/components/tiptap-command-groups';
 import { ResponsivePreviewButtons } from '@/components/tiptap-ui/responsive-preview-buttons';
+import { HorizontalRuleCommand } from '@/components/tiptap-commands';
+import { FolioEditorToolbarCommandButton } from './folio-editor-toolbar-command-button';
 
 interface FolioEditorToolbarButtonStateMapping {
   enabled: (params: { editor: Editor }) => boolean;
@@ -325,6 +327,11 @@ const MainToolbarContent = ({
         <MarkButton editor={editor} type="italic" />
         <MarkButton editor={editor} type="underline" />
         <MarkButton editor={editor} type="strike" />
+
+        <FolioEditorToolbarCommandButton
+          editor={editor}
+          command={HorizontalRuleCommand}
+        />
 
         <LinkPopover
           editor={editor}

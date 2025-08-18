@@ -4,6 +4,7 @@ import {
   FolioTiptapColumnsCommand,
   TableCommand,
   FolioTiptapFloatCommand,
+  HorizontalRuleCommand,
 } from "@/components/tiptap-commands"
 
 interface MakeLayoutsCommandGroupProps {
@@ -22,6 +23,7 @@ export const makeLayoutsCommandGroup = ({ folioTiptapStyledWrapCommands, folioTi
       FolioTiptapFloatCommand,
       ...folioTiptapStyledWrapCommands,
       ...folioTiptapPagesCommands,
+      HorizontalRuleCommand,
     ]
   }
 }

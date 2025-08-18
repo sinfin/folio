@@ -19,6 +19,9 @@
   --f-tiptap-editor-content-wrap__padding-y: 1rem;
   --f-tiptap-editor-content-wrap__padding-x-mobile: 1rem;
   --f-tiptap-editor-content-wrap__padding-y-mobile: 1rem;
+
+  // so that <hr> shows up
+  --bs-border-color: #c9cbcc;
 }
 
 html,
