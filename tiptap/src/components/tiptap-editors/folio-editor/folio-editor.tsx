@@ -292,6 +292,7 @@ export function FolioEditor({
     window.parent!.postMessage(
       {
         type: "f-tiptap-editor:initialized-content",
+        content: clearedContent,
       },
       "*",
     );

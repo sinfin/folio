@@ -34,6 +34,7 @@ window.Folio.Tiptap.init = (props) => {
     window.parent!.postMessage(
       {
         type: "f-tiptap:created",
+        content: removeUniqueIdsFromFolioTiptapNodes(editor.getJSON()),
         height: window.Folio.Tiptap.getHeight(),
       },
       "*",

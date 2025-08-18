@@ -62,6 +62,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
         this.openLinkPopover(e.data.urlJson)
         break
       case 'f-tiptap-editor:initialized-content':
+        this.setInputValue(e.data.content)
         this.ignoreValueChangesValue = false
         break
       case 'f-tiptap-editor:show-html':
@@ -73,15 +74,17 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
   setInputValue (content) {
     const textsArray = []
 
-    const recursivelyExtractTexts = (node) => {
-      if (node.type === 'text' && node.text) {
-        textsArray.push(node.text)
-      } else if (Array.isArray(node.content)) {
-        node.content.forEach(recursivelyExtractTexts)
+    if (content) {
+      const recursivelyExtractTexts = (node) => {
+        if (node.type === 'text' && node.text) {
+          textsArray.push(node.text)
+        } else if (Array.isArray(node.content)) {
+          node.content.forEach(recursivelyExtractTexts)
+        }
       }
-    }
 
-    recursivelyExtractTexts(content)
+      recursivelyExtractTexts(content)
+    }
 
     const text = textsArray.join('\n')
     const wordCount = window.Folio.wordCount({ text })
