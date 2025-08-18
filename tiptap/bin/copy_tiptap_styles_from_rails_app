@@ -4,6 +4,6 @@ rootDir="$( dirname "$0" )/../.."
 
 (
   cd "$rootDir/tiptap" || exit
-  mkdir -p "src/styles/tmp"
-  cp "../app/assets/stylesheets/folio/tiptap/_styles.scss" "src/styles/tmp/tiptap-from-app.scss"
+  mkdir -p "tmp"
+  cp "../app/assets/stylesheets/folio/tiptap/_styles.scss" "tmp/tiptap-styles-from-app.scss"
 )

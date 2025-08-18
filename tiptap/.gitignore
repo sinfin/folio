@@ -16,7 +16,7 @@ dist/assets/*
 dist-ssr
 *.local
 
-src/styles/tmp/tiptap-from-app.scss
+tmp/tiptap-styles-from-app.scss
 
 # Editor directories and files
 .vscode/*
