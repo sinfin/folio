@@ -182,7 +182,7 @@ export function SmartDragHandleContent({
   }
 
   const wrapRef = React.useRef<HTMLDivElement>(null);
-  const [nodeHeightPx, setNodeHeightPx] = React.useState<string | null>(null);
+  const [style, setStyle] = React.useState<object | undefined>(undefined);
 
   React.useEffect(() => {
     if (!wrapRef || !wrapRef.current || !editor) return;
@@ -202,13 +202,19 @@ export function SmartDragHandleContent({
 
     if (nodeToUse && nodeToUse.resultElement) {
       const nodeHeight = nodeToUse.resultElement.getBoundingClientRect().height;
-      return setNodeHeightPx(`${nodeHeight}px`);
+      if (nodeHeight) {
+        if (nodeHeight < 32) {
+          return setStyle({ transform: `translate(0, -${(32 - nodeHeight) / 2}px)` });
+        } else {
+          return setStyle({ minHeight: `${nodeHeight}px` });
+        }
+      }
     }
 
-    return setNodeHeightPx(null);
+    return setStyle(undefined);
   }, [
     selectedNodeData && selectedNodeData.y,
-    setNodeHeightPx,
+    setStyle,
     editor,
     wrapRef && wrapRef.current,
   ]);
@@ -229,7 +235,7 @@ export function SmartDragHandleContent({
   return (
     <div
       className="f-tiptap-smart-drag-handle-content"
-      style={{ minHeight: nodeHeightPx || undefined }}
+      style={style}
       ref={wrapRef}
     >
       <div className="f-tiptap-smart-drag-handle-content__flex">
