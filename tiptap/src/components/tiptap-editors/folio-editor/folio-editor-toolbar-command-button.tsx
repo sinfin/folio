@@ -27,7 +27,6 @@ export const FolioEditorToolbarCommandButton = React.forwardRef<
   );
 
   const label = command.title[document.documentElement.lang as keyof typeof command.title] || command.title.en;
-  console.log('FolioEditorToolbarCommandButton')
 
   return (
     <Button
