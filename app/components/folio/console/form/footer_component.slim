@@ -4,7 +4,7 @@
   ]
 
 div[
-  data=(@audit ? nil : data)
+  data=(read_only? ? nil : data)
   class=bem_class_name
   class=(@audit ? "f-c-form-footer--with-audit" : nil)
 ]
@@ -14,7 +14,7 @@ div[
 
   .f-c-form-footer__inner
     .container-fluid.f-c-form-footer__container
-      - unless @audit
+      - unless read_only?
         .f-c-form-footer__left
           - if @f
             == cell('folio/console/ui/button',
@@ -54,7 +54,7 @@ div[
                   data: { test_id: "preview-button" })
         - if @show_settings
           .f-c-form-footer__collapsible
-            .f-c-form-footer__collapsible-backdrop data=stimulus_action_unless_audit(click: "toggleCollapsed")
+            .f-c-form-footer__collapsible-backdrop data=stimulus_action_unless_readonly(click: "toggleCollapsed")
             .f-c-form-footer__collapsible-content
               - if @record
                 - unless @audit
@@ -66,7 +66,7 @@ div[
 
               .f-c-form-footer__settings
                 .f-c-form-footer__settings-toggle.small.text-muted[
-                  data=stimulus_action_unless_audit(click: "toggleSettings")
+                  data=stimulus_action_unless_readonly(click: "toggleSettings")
                 ]
                   == cell('folio/console/ui/with_icon',
                           t('.settings'),
@@ -75,7 +75,7 @@ div[
                           icon_options: { height: 16 })
 
                 .f-c-form-footer__settings-backdrop[
-                  data=stimulus_action_unless_audit(click: "toggleSettings")
+                  data=stimulus_action_unless_readonly(click: "toggleSettings")
                 ]
 
                 .f-c-form-footer__settings-content
@@ -93,7 +93,7 @@ div[
                     class: 'f-c-form-footer__btn f-c-form-footer__btn--collapsible',
                     variant: :gray,
                     icon: :dots_vertical,
-                    data: (stimulus_action_unless_audit(click: "toggleCollapsed") || {}).merge(test_id: "dropdown-button"))
+                    data: (stimulus_action_unless_readonly(click: "toggleCollapsed") || {}).merge(test_id: "dropdown-button"))
 
 javascript:
   if (window.sessionStorage.getItem('fCAutosaveUiState')) {
