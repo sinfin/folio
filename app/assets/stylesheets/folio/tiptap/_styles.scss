@@ -124,6 +124,8 @@ $f-tiptap__styled-paragraph-variants: (
   )
 ) !default;
 
+$f-tiptap__styled-wrap-variants: () !default;
+
 $f-tiptap-columns__min-horizontal-width: 550px !default;
 $f-tiptap-columns__gap: $f-tiptap__spacer !default;
 $f-tiptap-columns__gap--tablet: $f-tiptap-columns__gap !default;
@@ -472,11 +474,29 @@ $f-tiptap-table-td__min-width: 5rem !default;
   .f-tiptap-styled-paragraph {
     @each $variant, $map in $f-tiptap__styled-paragraph-variants {
       &[data-f-tiptap-styled-paragraph-variant="#{$variant}"] {
+        background-color: map-get($map, "background-color");
+        border-radius: map-get($map, "border-radius");
         color: map-get($map, "color");
         font-family: map-get($map, "font-family");
         font-size: map-get($map, "font-size");
         font-weight: map-get($map, "font-weight");
         line-height: map-get($map, "line-height");
+        padding: map-get($map, "padding");
+      }
+    }
+  }
+
+  .f-tiptap-styled-wrap {
+    @each $variant, $map in $f-tiptap__styled-wrap-variants {
+      &[data-f-tiptap-styled-wrap-variant="#{$variant}"] {
+        background-color: map-get($map, "background-color");
+        border-radius: map-get($map, "border-radius");
+        color: map-get($map, "color");
+        font-family: map-get($map, "font-family");
+        font-size: map-get($map, "font-size");
+        font-weight: map-get($map, "font-weight");
+        line-height: map-get($map, "line-height");
+        padding: map-get($map, "padding");
       }
     }
   }
