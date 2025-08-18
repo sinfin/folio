@@ -134,6 +134,6 @@ module Folio::Console::FormsHelper
                                                      static: opts[:static] || false,
                                                      share_preview:,
                                                      show_settings:,
-                                                     disabled_actions: opts[:disabled_actions]))
+                                                     disable_modifications: opts[:disable_modifications]))
   end
 end

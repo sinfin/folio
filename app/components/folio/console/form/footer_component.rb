@@ -3,14 +3,14 @@
 class Folio::Console::Form::FooterComponent < Folio::Console::ApplicationComponent
   bem_class_name :static
 
-  def initialize(f: nil, preview_path: nil, share_preview: false, show_settings: true, static: false, submit_label: nil, disabled_actions: false)
+  def initialize(f: nil, preview_path: nil, share_preview: false, show_settings: true, static: false, submit_label: nil, disable_modifications: false)
     @f = f
     @preview_path = preview_path
     @share_preview = share_preview
     @show_settings = show_settings
     @static = static
     @submit_label = submit_label
-    @disabled_actions = disabled_actions
+    @disable_modifications = disable_modifications
   end
 
   def before_render
@@ -79,7 +79,7 @@ class Folio::Console::Form::FooterComponent < Folio::Console::ApplicationCompone
   end
 
   def read_only?
-    @audit || @disabled_actions
+    @audit || @disable_modifications
   end
 
   def stimulus_action_unless_readonly(hash)

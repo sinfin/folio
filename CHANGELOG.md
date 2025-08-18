@@ -15,7 +15,7 @@ All notable changes to this project will be documented in this file.
 - `Folio::ElevenLabs::TranscribeSubtitlesJob` for automatic subtitles transcription using ElevenLabs (disabled by default)
 - default `devise_modules` moved to folio config, so each app can set their own set. Default are `%i[database_authenticatable recoverable rememberable trackable invitable timeoutable lockable]
 - added option `Rails.application.config.folio_cookie_consent_configuration[:keep_attached_after_accept]` (default false). Set it `true` if app allways display link to open cookies settings.
-- added `disabled_actions` option to `form_footer`
+- added `disabled_modifications` option to `form_footer`
 
 ## [6.5.1] - 2025-06-18
 
