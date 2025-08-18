@@ -4,13 +4,15 @@
     "headingInPagesPlaceholder": "Napište titulek stránky",
     "h2Placeholder": "Napište H2 titulek, nebo \"/\" pro příkazy",
     "h3Placeholder": "Napište H3 titulek, nebo \"/\" pro příkazy",
-    "h4Placeholder": "Napište H4 titulek, nebo \"/\" pro příkazy"
+    "h4Placeholder": "Napište H4 titulek, nebo \"/\" pro příkazy",
+    "singleHeadingPlaceholder": "Napište mezititulek, nebo \"/\" pro příkazy"
   },
   "en": {
     "commandPlaceholder": "Press \"/\" for commands",
     "headingInPagesPlaceholder": "Write page title",
     "h2Placeholder": "Write H2 heading or \"/\" for commands",
     "h3Placeholder": "Write H3 heading or \"/\" for commands",
-    "h4Placeholder": "Write H4 heading or \"/\" for commands"
+    "h4Placeholder": "Write H4 heading or \"/\" for commands",
+    "singleHeadingPlaceholder": "Write title or \"/\" for commands"
   }
 }

@@ -77,6 +77,7 @@ declare global {
     styled_paragraph_variants?: StyledParagraphVariantFromInput[];
     styled_wrap_variants?: StyledWrapVariantFromInput[];
     enable_pages?: boolean;
+    heading_levels?: import("@tiptap/extension-heading").Level[];
   }
 
   interface FolioEditorCommandChain extends import("@tiptap/core").CommandChain {

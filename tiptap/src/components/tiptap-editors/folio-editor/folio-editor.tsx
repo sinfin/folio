@@ -9,6 +9,7 @@ import { findParentNode } from "@tiptap/core";
 
 // --- Tiptap Core Extensions ---
 import { StarterKit } from "@tiptap/starter-kit";
+import type { Level } from "@tiptap/extension-heading";
 // import { Image } from "@tiptap/extension-image";
 import { TextAlign } from "@tiptap/extension-text-align";
 import { Typography } from "@tiptap/extension-typography";
@@ -129,9 +130,19 @@ export function FolioEditor({
     return []
   }, [blockEditor, folioTiptapConfig && folioTiptapConfig["styled_wrap_variants"]])
 
+  const folioTiptapHeadingLevels = React.useMemo(() => {
+    if (folioTiptapConfig &&
+        folioTiptapConfig["heading_levels"] &&
+        folioTiptapConfig["heading_levels"].length) {
+      return folioTiptapConfig["heading_levels"]
+    }
+
+    return [2, 3, 4] as Level[];
+  }, [blockEditor, folioTiptapConfig && folioTiptapConfig["heading_levels"]])
+
   const textStylesCommandGroup = React.useMemo(() => {
-    return makeTextStylesCommandGroup(folioTiptapStyledParagraphCommands)
-  }, [folioTiptapStyledParagraphCommands])
+    return makeTextStylesCommandGroup({ folioTiptapStyledParagraphCommands, folioTiptapHeadingLevels })
+  }, [folioTiptapStyledParagraphCommands, folioTiptapHeadingLevels])
 
   const layoutsCommandGroup = React.useMemo(() => {
     return makeLayoutsCommandGroup({ folioTiptapStyledWrapCommands, folioTiptapPagesCommands })
@@ -160,6 +171,9 @@ export function FolioEditor({
     },
     extensions: [
       StarterKit.configure({
+        heading: {
+          levels: folioTiptapHeadingLevels,
+        },
         link: {
           openOnClick: false,
           enableClickSelection: true,
@@ -192,6 +206,8 @@ export function FolioEditor({
 
                   if (maybePages) {
                     key = 'headingInPagesPlaceholder'
+                  } else if (folioTiptapHeadingLevels.length === 1) {
+                    key = 'singleHeadingPlaceholder'
                   } else if (node.attrs.level && [2, 3, 4].indexOf(node.attrs.level) !== -1) {
                     key = `h${node.attrs.level}Placeholder`;
                   }
