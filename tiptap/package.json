@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "bin/copy_tiptap_styles_from_rails_app; vite",
     "build": "tsc -b && vite build",
     "build:clean": "rm -rf dist && npm run build",
     "build:check": "tsc -b --noEmit",
