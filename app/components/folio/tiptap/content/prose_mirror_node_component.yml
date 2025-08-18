@@ -61,6 +61,10 @@ nodes:
   heading:
     tag: h2
     level_based_tag: true
+    attrs:
+      textAlign:
+        style_property: "text-align"
+        available_values: ["left", "center", "right"]
   horizontalRule:
     tag: hr
     self_closing: true

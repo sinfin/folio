@@ -53,6 +53,27 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
     assert_equal "text-align: center;", paragraph[:style]
   end
 
+  def test_render_aligned_heading_node
+    prose_mirror_node = {
+      "type" => "heading",
+      "attrs" => { "textAlign" => "center", "level" => 2 },
+      "content" => [
+        {
+          "type" => "text",
+          "text" => "This is a heading"
+        }
+      ]
+    }
+
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+
+    assert_selector("h2")
+    assert_text("This is a heading")
+
+    heading = page.find("h2")
+    assert_equal "text-align: center;", heading[:style]
+  end
+
   def test_render_heading_node_level_1
     prose_mirror_node = {
       "type" => "heading",
