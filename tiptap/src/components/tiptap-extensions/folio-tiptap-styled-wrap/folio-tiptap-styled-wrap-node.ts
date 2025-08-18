@@ -17,7 +17,7 @@ export const FolioTiptapStyledWrap = Node.create({
   },
 
   renderHTML({ HTMLAttributes }) {
-    return ["div", { ...HTMLAttributes, class: "f-tiptap-styled-wrap" }, 0];
+    return ["div", { ...HTMLAttributes, class: "f-tiptap-styled-wrap f-tiptap-avoid-external-layout" }, 0];
   },
 
   addOptions() {

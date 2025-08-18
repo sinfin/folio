@@ -51,7 +51,7 @@ nodes:
   folioTiptapStyledWrap:
     tag: div
     static_attrs:
-      class: "f-tiptap-styled-wrap"
+      class: "f-tiptap-styled-wrap f-tiptap-avoid-external-layout"
     attrs:
       variant:
         data_attribute: "data-f-tiptap-styled-wrap-variant"
