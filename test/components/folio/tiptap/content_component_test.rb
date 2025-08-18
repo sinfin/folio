@@ -399,7 +399,8 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
     model = build_mock_record(prosemirror_json)
     render_inline(Folio::Tiptap::ContentComponent.new(record: model))
 
-    assert_selector("br")
+    assert_equal 1, page.all("p").count
+    assert_equal 1, page.all("br").count
     assert_text("First line")
     assert_text("Second line")
   end
