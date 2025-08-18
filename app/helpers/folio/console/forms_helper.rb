@@ -133,6 +133,7 @@ module Folio::Console::FormsHelper
                                                      preview_path: opts[:preview_path],
                                                      static: opts[:static] || false,
                                                      share_preview:,
-                                                     show_settings:))
+                                                     show_settings:,
+                                                     disable_modifications: opts[:disable_modifications]))
   end
 end
