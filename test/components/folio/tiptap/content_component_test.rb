@@ -36,6 +36,33 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
     assert_text("Hello world")
   end
 
+  def test_render_with_aligned_paragraph
+    prosemirror_json = {
+      "type" => "doc",
+      "content" => [
+        {
+          "type" => "paragraph",
+          "attrs" => { "textAlign" => "center" },
+          "content" => [
+            {
+              "type" => "text",
+              "text" => "Hello world"
+            }
+          ]
+        }
+      ]
+    }
+
+    model = build_mock_record(prosemirror_json)
+    render_inline(Folio::Tiptap::ContentComponent.new(record: model))
+
+    assert_selector(".f-tiptap-content")
+    assert_selector(".f-tiptap-content__root")
+    paragraph = page.find("p")
+    assert_equal "text-align: center;", paragraph[:style]
+    assert_text("Hello world")
+  end
+
   def test_render_with_multiple_paragraphs
     prosemirror_json = {
       "type" => "doc",

@@ -72,6 +72,10 @@ nodes:
   paragraph:
     tag: p
     trailing_break_when_empty: true
+    attrs:
+      textAlign:
+        style_property: "text-align"
+        available_values: ["left", "center", "right"]
   table:
     tag: [div, table, tbody]
     static_attrs:

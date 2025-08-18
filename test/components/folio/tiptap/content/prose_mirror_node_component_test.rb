@@ -32,6 +32,27 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
     assert_text("This is a paragraph")
   end
 
+  def test_render_aligned_paragraph_node
+    prose_mirror_node = {
+      "type" => "paragraph",
+      "attrs" => { "textAlign" => "center" },
+      "content" => [
+        {
+          "type" => "text",
+          "text" => "This is a paragraph"
+        }
+      ]
+    }
+
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+
+    assert_selector("p")
+    assert_text("This is a paragraph")
+
+    paragraph = page.find("p")
+    assert_equal "text-align: center;", paragraph[:style]
+  end
+
   def test_render_heading_node_level_1
     prose_mirror_node = {
       "type" => "heading",

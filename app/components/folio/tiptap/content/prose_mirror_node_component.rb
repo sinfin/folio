@@ -55,8 +55,18 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponent < ApplicationComponent
         @node_definition["attrs"].each do |attr_name, attr_config|
           value = (@prose_mirror_node["attrs"].present? ? @prose_mirror_node["attrs"][attr_name] : nil) || attr_config["default_value"]
 
+          if attr_config["available_values"].present?
+            next unless attr_config["available_values"].include?(value)
+          end
+
           if value.present?
-            attrs[attr_config["data_attribute"]] = value
+            if attr_config["data_attribute"]
+              attrs[attr_config["data_attribute"]] = value
+            elsif attr_config["style_property"]
+              attrs["style"] ||= ""
+              spacer = attrs["style"].empty? ? "" : " "
+              attrs["style"] += "#{spacer}#{attr_config['style_property']}: #{value};"
+            end
           end
         end
       end
