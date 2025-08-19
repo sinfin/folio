@@ -71,17 +71,28 @@ body,
 }
 
 .f-tiptap-editor__content-wrap {
-  flex: 0 1 auto;
-  position: relative;
-  padding: var(--f-tiptap-editor-content-wrap__padding-y) var(--f-tiptap-editor-content-wrap__padding-x) ;
   container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  padding: var(--f-tiptap-editor-content-wrap__padding-y) var(--f-tiptap-editor-content-wrap__padding-x) ;
+  position: relative;
 }
 
 .f-tiptap-editor__content {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  width: 100%;
+
   &--readonly {
     user-select: none;
     pointer-events: none;
   }
+}
+
+.f-tiptap-editor__tiptap-editor {
+  flex: 1 0 auto;
 }
 
 @container (max-width: 700px) {

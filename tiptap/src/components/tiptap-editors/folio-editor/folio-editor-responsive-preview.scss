@@ -12,12 +12,16 @@
     position: relative;
     overflow: auto;
     flex: 0 0 100%;
+    display: flex;
+    flex-direction: column;
   }
 
   &__inner {
     position: relative;
     container-type: inline-size;
-    min-height: 100%;
+    flex: 1 0 100%;
+    display: flex;
+    flex-direction: column;
   }
 
   &__handle {
