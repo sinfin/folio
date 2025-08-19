@@ -1,5 +1,5 @@
 import type { Editor } from "@tiptap/react";
-import type { Node } from "@tiptap/pm/model";
+import type { Node, ResolvedPos } from "@tiptap/pm/model";
 
 export type FindElementNextToCoords = {
   x: number;
@@ -14,6 +14,7 @@ export function findElementNextToCoords(options: FindElementNextToCoords) {
   let targetNode: Node | null = null;
   let documentPosition: number | null = null;
   let currentX = x;
+  let resolvedPos: ResolvedPos | null = null;
 
   while (targetNode === null && currentX < window.innerWidth && currentX > 0) {
     const elementsAtPoint = document.elementsFromPoint(currentX, y);
@@ -41,7 +42,7 @@ export function findElementNextToCoords(options: FindElementNextToCoords) {
 
       if (documentPosition >= 0) {
         // Find the top-level node (direct child of doc)
-        const resolvedPos = editor.state.doc.resolve(documentPosition);
+        resolvedPos = editor.state.doc.resolve(documentPosition);
 
         // Get the node at depth 1 (direct child of doc)
         if (resolvedPos.depth >= 1) {
@@ -50,14 +51,8 @@ export function findElementNextToCoords(options: FindElementNextToCoords) {
 
         // If we couldn't find a node at depth 1, fall back to the original logic
         if (!targetNode) {
-          targetNode = editor.state.doc.nodeAt(
-            Math.max(documentPosition - 1, 0),
-          );
-          if (targetNode === null || targetNode.isText) {
-            targetNode = editor.state.doc.nodeAt(
-              Math.max(documentPosition - 1, 0),
-            );
-          }
+          targetNode = editor.state.doc.nodeAt(Math.max(documentPosition - 1, 0));
+
           if (!targetNode) {
             targetNode = editor.state.doc.nodeAt(Math.max(documentPosition, 0));
           }
@@ -78,5 +73,6 @@ export function findElementNextToCoords(options: FindElementNextToCoords) {
     resultElement: targetElement,
     resultNode: targetNode,
     pos: documentPosition !== null ? documentPosition : null,
+    resolvedPos,
   };
 }

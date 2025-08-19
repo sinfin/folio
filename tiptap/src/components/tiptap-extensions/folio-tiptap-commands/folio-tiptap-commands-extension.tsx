@@ -1,7 +1,9 @@
 import { Extension, Editor } from "@tiptap/core";
 import Suggestion from "@tiptap/suggestion";
 import type { Range } from "@tiptap/core";
-import { type EditorState, TextSelection, NodeSelection } from "@tiptap/pm/state";
+import { NodeSelection, TextSelection  } from "@tiptap/pm/state";
+import type { EditorState } from "@tiptap/pm/state";
+import type { ResolvedPos, Node } from "@tiptap/pm/model";
 
 interface CommandInterface {
   editor: Editor;
@@ -14,7 +16,7 @@ interface CommandInterface {
 declare module '@tiptap/core' {
   interface Commands<ReturnType> {
     folioTiptapCommands: {
-      triggerFolioTiptapCommand: (pos: number | null) => ReturnType;
+      triggerFolioTiptapCommand: (resolvedPos: ResolvedPos | null) => ReturnType;
     }
   }
 }
@@ -55,21 +57,24 @@ export const FolioTiptapCommandsExtension = Extension.create({
   addCommands() {
     return {
       triggerFolioTiptapCommand:
-        (pos) =>
+        (resolvedPos) =>
           ({ state, dispatch }: { state: EditorState; dispatch: any }) => {
-            const resolvedPos = pos === null ? state.selection.$from : state.doc.resolve(pos);
+            const resolvedPosWithFallback = resolvedPos || state.selection.$from;
 
-            if (!resolvedPos) {
+            if (!resolvedPosWithFallback) {
               console.error("Invalid resolved position");
               return false;
             }
 
-            let node = resolvedPos.node(1)
+            let node: Node | null = resolvedPosWithFallback.node(1)
 
-            if (!node && !pos) {
-              // For NodeSelection, get the selected node
-              if (state.selection instanceof NodeSelection) {
-                node = state.selection.node
+            if (!node) {
+              if (resolvedPos) {
+                node = state.doc.nodeAt(resolvedPos.pos);
+              } else {
+                if (state.selection instanceof NodeSelection) {
+                  node = state.selection.node
+                }
               }
             }
 
@@ -77,12 +82,12 @@ export const FolioTiptapCommandsExtension = Extension.create({
             let targetPos
 
             if (node && node.isLeaf) {
-              targetPos = resolvedPos.after(1) + node.nodeSize;
+              targetPos = resolvedPosWithFallback.after(1) + node.nodeSize;
             } else if (node && (node.type.name === "paragraph" && node.content.size === 0)) {
               shouldInsertParagraph = false
-              targetPos = resolvedPos.start(1);
+              targetPos = resolvedPosWithFallback.start(1);
             } else {
-              targetPos = resolvedPos.after(1);
+              targetPos = resolvedPosWithFallback.after(1);
             }
 
             // Insert a paragraph with "/" and place cursor after

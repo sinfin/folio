@@ -26,7 +26,7 @@ const handlePlusClick = ({
   event: React.MouseEvent;
   editor: Editor;
 }) => {
-  const rect = (event.target as HTMLElement).getBoundingClientRect();
+  const rect = (event.target as HTMLElement).closest('.drag-handle')!.getBoundingClientRect();
 
   const nodeToUse = findElementNextToCoords({
     x: rect.left,
@@ -35,7 +35,7 @@ const handlePlusClick = ({
     editor,
   });
 
-  if (!nodeToUse || nodeToUse.pos === null) {
+  if (!nodeToUse || nodeToUse.resolvedPos === null) {
     console.error("No node found at the clicked position");
     return;
   }
@@ -43,7 +43,7 @@ const handlePlusClick = ({
   editor
     .chain()
     .focus()
-    .triggerFolioTiptapCommand(nodeToUse.pos)
+    .triggerFolioTiptapCommand(nodeToUse.resolvedPos)
     .run();
 };
 
