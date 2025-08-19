@@ -5,12 +5,19 @@ $newsletter-subscriptions-form-border-radius: 24px !default
 $newsletter-subscriptions-form-btn-padding: 0 8px !default
 $newsletter-subscriptions-form-btn-color: #fff !default
 $newsletter-subscriptions-form-btn-bg-color: #000 !default
-$newsletter-subscriptions-form-btn-bg-color-hover: #696969 !default
+$newsletter-subscriptions-form-btn-bg-color-hover: #696969 !important !default
 $newsletter-subscriptions-form-btn-color-dark: #000 !default
 $newsletter-subscriptions-form-btn-bg-color-dark: #fff !default
 $newsletter-subscriptions-form-btn-bg-color-hover-dark: #fff !default
+$newsletter-subscriptions-form-btn-min-height: 24px !default
+$newsletter-subscriptions-form-btn-right: 13px !default
 $newsletter-subscriptions-form-btn-text-transform: none !default
-	
+$newsletter-subscriptions-form-btn-top: 9px !default
+$newsletter-subscriptions-form-at-button-top: $newsletter-subscriptions-form-btn-top !default
+$newsletter-subscriptions-form-at-button-right: 100px !default
+$newsletter-subscriptions-form-at-button-color: $newsletter-subscriptions-form-btn-bg-color !default
+$newsletter-subscriptions-form-at-button-color-hover: $newsletter-subscriptions-form-btn-bg-color-hover !default
+
 .f-newsletter-subscriptions-form
   position: relative
 
@@ -43,10 +50,10 @@ $newsletter-subscriptions-form-btn-text-transform: none !default
 
   &__btn
     position: absolute
-    top: 9px
-    right: 13px
+    top: $newsletter-subscriptions-form-btn-top
+    right: $newsletter-subscriptions-form-btn-right
     line-height: 21px
-    min-height: 24px
+    min-height: $newsletter-subscriptions-form-btn-min-height
     border: 0
     text-transform: $newsletter-subscriptions-form-btn-text-transform
     padding: $newsletter-subscriptions-form-btn-padding
@@ -63,6 +70,22 @@ $newsletter-subscriptions-form-btn-text-transform: none !default
 
       &:hover, &:focus
         background-color: $newsletter-subscriptions-form-btn-bg-color-hover-dark
+
+  &__at-button
+    position: absolute
+    top: $newsletter-subscriptions-form-at-button-top
+    right: $newsletter-subscriptions-form-at-button-right
+    width: 24px
+    height: 24px
+    color: $newsletter-subscriptions-form-at-button-color
+    cursor: pointer
+    transition: color 0.2s ease-in-out
+
+    &:hover, &:focus
+      color: $newsletter-subscriptions-form-at-button-color-hover
+
+  &__at-button-svg
+    vertical-align: unset
 
   &--persisted &__form
     visibility: hidden
