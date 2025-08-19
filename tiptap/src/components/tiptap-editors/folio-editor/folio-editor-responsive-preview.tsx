@@ -31,7 +31,6 @@ export function FolioEditorResponsivePreview({
     };
 
     const onMouseUp = () => {
-      console.log('onMouseUp')
       document.removeEventListener("mousemove", onMouseMove);
       document.removeEventListener("mouseup", onMouseUp);
     };
