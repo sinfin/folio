@@ -12,6 +12,16 @@ import type { ButtonProps } from "@/components/tiptap-ui-primitive/button";
 import { Button } from "@/components/tiptap-ui-primitive/button";
 
 import { makeUniqueId } from '@/components/tiptap-extensions/folio-tiptap-node';
+import translate from "@/lib/i18n";
+
+const TRANSLATIONS = {
+  cs: {
+    insert: "Vložit obsah",
+  },
+  en: {
+    insert: "Insert content",
+  },
+};
 
 export interface FolioTiptapNodeButtonProps extends ButtonProps {
   editor: Editor | null;
@@ -90,6 +100,8 @@ export const FolioTiptapNodeButton = React.forwardRef<
     return null;
   }
 
+  const label = translate(TRANSLATIONS, "insert");
+
   return (
     <Button
       ref={ref}
@@ -97,8 +109,8 @@ export const FolioTiptapNodeButton = React.forwardRef<
       data-style="ghost"
       role="button"
       tabIndex={-1}
-      aria-label="Add Folio Tiptap Node"
-      tooltip="Add Folio Tiptap Node"
+      aria-label={label}
+      tooltip={label}
       onClick={handleClick}
     >
       <Plus className="tiptap-button-icon" />

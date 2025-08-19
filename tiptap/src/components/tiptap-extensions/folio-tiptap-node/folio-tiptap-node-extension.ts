@@ -31,10 +31,6 @@ export const FolioTiptapNodeExtension = Node.create<FolioTiptapNodeOptions>({
 
   atom: true,
 
-  code: true,
-
-  isolating: true,
-
   addAttributes() {
     return {
       version: {

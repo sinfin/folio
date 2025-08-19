@@ -1,7 +1,7 @@
 import { Extension, Editor } from "@tiptap/core";
 import Suggestion from "@tiptap/suggestion";
 import type { Range } from "@tiptap/core";
-import { type EditorState, TextSelection } from "@tiptap/pm/state";
+import { type EditorState, TextSelection, NodeSelection } from "@tiptap/pm/state";
 
 interface CommandInterface {
   editor: Editor;
@@ -64,26 +64,44 @@ export const FolioTiptapCommandsExtension = Extension.create({
               return false;
             }
 
-            const node = resolvedPos.node(1)
+            let node = resolvedPos.node(1)
 
-            let endPos
+            if (!node && !pos) {
+              // For NodeSelection, get the selected node
+              if (state.selection instanceof NodeSelection) {
+                node = state.selection.node
+              }
+            }
 
-            if (node && (node.isLeaf || node.content.size === 0)) {
-              endPos = resolvedPos.start(1) + node.nodeSize;
+            let shouldInsertParagraph = true
+            let targetPos
+
+            if (node && node.isLeaf) {
+              targetPos = resolvedPos.after(1) + node.nodeSize;
+            } else if (node && (node.type.name === "paragraph" && node.content.size === 0)) {
+              shouldInsertParagraph = false
+              targetPos = resolvedPos.start(1);
             } else {
-              endPos = resolvedPos.after(1);
+              targetPos = resolvedPos.after(1);
             }
 
             // Insert a paragraph with "/" and place cursor after
             const tr = state.tr;
-            const paragraph = state.schema.nodes.paragraph.create({}, [
-              state.schema.text("/")
-            ]);
 
-            tr.insert(endPos, paragraph);
+            if (shouldInsertParagraph) {
+              const paragraph = state.schema.nodes.paragraph.create({}, [
+                state.schema.text("/")
+              ]);
+
+              tr.insert(targetPos, paragraph);
+            } else {
+              // If the node is a paragraph with no content, just insert "/"
+              const textNode = state.schema.text("/");
+              tr.insert(targetPos, textNode);
+            }
 
             // Place cursor after the "/"
-            const newPos = endPos + 2; // +1 for paragraph node, +1 for the "/" character
+            const newPos = targetPos + 1 + (shouldInsertParagraph ? 1 : 0);
             tr.setSelection(TextSelection.create(tr.doc, newPos));
 
             if (dispatch) {
