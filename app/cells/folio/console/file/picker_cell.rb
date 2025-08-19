@@ -34,4 +34,9 @@ class Folio::Console::File::PickerCell < Folio::ConsoleCell
       fail "Unknown human_type #{klass.human_type}"
     end
   end
+
+  # Extension hook for additional content after picker
+  def additional_content
+    nil
+  end
 end
