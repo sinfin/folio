@@ -86,7 +86,9 @@ class Folio::NewsletterSubscriptions::FormComponent < Folio::ApplicationComponen
             as: :email,
             label: false,
             placeholder:,
-            input_html: { class: "f-newsletter-subscriptions-form__input", id: nil },
+            input_html: { class: "f-newsletter-subscriptions-form__input",
+                          id: nil,
+                          data: stimulus_target("input") },
             wrapper_html: { class: "f-newsletter-subscriptions-form__group" }
   end
 
