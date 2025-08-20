@@ -9,9 +9,12 @@ class Folio::NewsletterSubscriptions::FormComponent < Folio::ApplicationComponen
                             submit_text
                             submit_icon
                             submit_icon_height
+                            submit_variant
+                            submit_size
                             message
                             button_class
-                            input_label]
+                            input_label
+                            input_show_at_button]
 
   bem_class_name :persisted, :invalid
 
@@ -52,7 +55,8 @@ class Folio::NewsletterSubscriptions::FormComponent < Folio::ApplicationComponen
     if klass
       render(klass.new(tag: :button,
                        label: submit_text,
-                       variant: :primary,
+                       variant: @view_options[:submit_variant].presence || :primary,
+                       size: @view_options[:submit_size].presence || :md,
                        type: :submit,
                        class_name: "f-newsletter-subscriptions-form__btn",
                        right_icon: @view_options[:submit_icon]&.to_sym.presence,
@@ -82,7 +86,9 @@ class Folio::NewsletterSubscriptions::FormComponent < Folio::ApplicationComponen
             as: :email,
             label: false,
             placeholder:,
-            input_html: { class: "f-newsletter-subscriptions-form__input", id: nil },
+            input_html: { class: "f-newsletter-subscriptions-form__input",
+                          id: nil,
+                          data: stimulus_target("input") },
             wrapper_html: { class: "f-newsletter-subscriptions-form__group" }
   end
 
