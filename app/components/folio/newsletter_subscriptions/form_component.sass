@@ -5,7 +5,7 @@ $newsletter-subscriptions-form-border-radius: 24px !default
 $newsletter-subscriptions-form-btn-padding: 0 8px !default
 $newsletter-subscriptions-form-btn-color: #fff !default
 $newsletter-subscriptions-form-btn-bg-color: #000 !default
-$newsletter-subscriptions-form-btn-bg-color-hover: #696969 !important !default
+$newsletter-subscriptions-form-btn-bg-color-hover: #696969 !default
 $newsletter-subscriptions-form-btn-color-dark: #000 !default
 $newsletter-subscriptions-form-btn-bg-color-dark: #fff !default
 $newsletter-subscriptions-form-btn-bg-color-hover-dark: #fff !default
@@ -48,7 +48,7 @@ $newsletter-subscriptions-form-at-button-color-hover: $newsletter-subscriptions-
   &__group input::placeholder
     color: $newsletter-subscriptions-form-input-placeholder-color
 
-  &__btn
+  & &__btn.btn
     position: absolute
     top: $newsletter-subscriptions-form-btn-top
     right: $newsletter-subscriptions-form-btn-right
