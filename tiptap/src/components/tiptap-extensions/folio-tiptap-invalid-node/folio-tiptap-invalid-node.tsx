@@ -17,7 +17,10 @@ export const FolioTiptapInvalidNodeComponent: React.FC<NodeViewProps> = (props) 
   const { node } = props;
 
   return (
-    <NodeViewWrapper className={CLASS_NAME}>
+    <NodeViewWrapper 
+      className={CLASS_NAME}
+      data-node-string={JSON.stringify(node.attrs.invalidNodeHash)}
+    >
       <InvalidNodeIndicator
         invalidNodeHash={node && node.attrs && node.attrs.invalidNodeHash}
         message={translate(TRANSLATIONS, "message")}

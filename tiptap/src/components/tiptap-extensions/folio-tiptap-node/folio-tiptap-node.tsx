@@ -171,6 +171,10 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
       className="f-tiptap-node"
       tabIndex={0}
       data-drag-handle=""
+      data-folio-tiptap-node-version={props.node.attrs.version}
+      data-folio-tiptap-node-type={props.node.attrs.type}
+      data-folio-tiptap-node-data={JSON.stringify(props.node.attrs.data)}
+      data-folio-tiptap-node-unique-id={props.node.attrs.uniqueId}
       onDoubleClick={handleEditClick}
       ref={wrapperRef}
     >

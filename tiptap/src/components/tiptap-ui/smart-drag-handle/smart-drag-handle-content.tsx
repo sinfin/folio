@@ -97,12 +97,16 @@ const copyNode = async (editor: Editor, targetNode: TargetNodeInfo, clipboardDat
       const html = targetNode.resultElement.outerHTML;
       const text = targetNode.resultElement.textContent || "";
 
-      await navigator.clipboard.write([
-        new ClipboardItem({
-          'text/html': new Blob([html], { type: 'text/html' }),
-          'text/plain': new Blob([text], { type: 'text/plain' }),
-        })
-      ]);
+      try {
+        await navigator.clipboard.write([
+          new ClipboardItem({
+            'text/html': new Blob([html], { type: 'text/html' }),
+            'text/plain': new Blob([text], { type: 'text/plain' }),
+          })
+        ]);
+      } catch (error) {
+        console.error("Failed to write to clipboard:", error);
+      }
 
       return { success: true, data: { html } };
     }
