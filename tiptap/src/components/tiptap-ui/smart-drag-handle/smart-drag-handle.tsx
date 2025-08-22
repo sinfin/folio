@@ -11,6 +11,8 @@ export function SmartDragHandle({ editor }: { editor: Editor }) {
     y: number;
   } | null>(null);
 
+  const [copiedToClipboardAt, setCopiedToClipboardAt] = React.useState<number | null>(null);
+
   return (
     <DragHandle
       editor={editor}
@@ -45,6 +47,8 @@ export function SmartDragHandle({ editor }: { editor: Editor }) {
       <SmartDragHandleContent
         editor={editor}
         selectedNodeData={selectedNodeData}
+        copiedToClipboardAt={copiedToClipboardAt}
+        setCopiedToClipboardAt={setCopiedToClipboardAt}
       />
     </DragHandle>
   )
