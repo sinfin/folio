@@ -19,7 +19,7 @@ export const FolioTiptapFloatMainNode = Node.create({
   parseHTML() {
     return [
       {
-        tag: 'div[class="f-tiptap-float__main"]',
+        tag: 'div.f-tiptap-float__main',
       },
     ];
   },

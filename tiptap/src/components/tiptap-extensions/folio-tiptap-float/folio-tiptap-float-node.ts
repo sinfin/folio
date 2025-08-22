@@ -60,7 +60,14 @@ export const FolioTiptapFloatNode = Node.create({
   parseHTML() {
     return [
       {
-        tag: 'div[class="f-tiptap-float"]',
+        tag: 'div.f-tiptap-float',
+        getAttrs: (element) => {
+          if (typeof element === 'string') return false;
+          return {
+            side: element.getAttribute('data-f-tiptap-float-side') || 'left',
+            size: element.getAttribute('data-f-tiptap-float-size') || 'medium',
+          };
+        },
       },
     ];
   },

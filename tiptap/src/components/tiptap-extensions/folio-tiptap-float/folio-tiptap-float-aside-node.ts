@@ -19,7 +19,10 @@ export const FolioTiptapFloatAsideNode = Node.create({
   parseHTML() {
     return [
       {
-        tag: 'div[class="f-tiptap-float__aside"]',
+        tag: 'aside.f-tiptap-float__aside',
+      },
+      {
+        tag: 'div.f-tiptap-float__aside',
       },
     ];
   },
