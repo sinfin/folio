@@ -36,7 +36,7 @@ export const FolioTiptapColumnsNode = Node.create({
   parseHTML() {
     return [
       {
-        tag: 'div[class="f-tiptap-columns"]',
+        tag: 'div.f-tiptap-columns',
       },
     ];
   },

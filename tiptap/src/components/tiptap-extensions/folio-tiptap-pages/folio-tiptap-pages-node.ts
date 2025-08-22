@@ -48,7 +48,7 @@ export const FolioTiptapPagesNode = Node.create({
   parseHTML() {
     return [
       {
-        tag: 'div[class="f-tiptap-pages"]',
+        tag: 'div.f-tiptap-pages',
       },
     ];
   },

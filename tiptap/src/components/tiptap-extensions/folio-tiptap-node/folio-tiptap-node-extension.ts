@@ -75,7 +75,23 @@ export const FolioTiptapNodeExtension = Node.create<FolioTiptapNodeOptions>({
   parseHTML() {
     return [
       {
-        tag: 'div[class="f-tiptap-node"]',
+        tag: 'div.f-tiptap-node',
+        getAttrs: (element) => {
+          if (typeof element === 'string') return false;
+          return {
+            version: parseInt(element.dataset.folioTiptapNodeVersion || "1", 10),
+            type: element.dataset.folioTiptapNodeType || "",
+            data: (() => {
+              try {
+                return JSON.parse(element.dataset.folioTiptapNodeData || "{}");
+              } catch (error) {
+                console.error("Error parsing folioTiptapNode data:", error);
+                return {};
+              }
+            })(),
+            uniqueId: makeUniqueId()
+          };
+        },
       },
     ]
   },

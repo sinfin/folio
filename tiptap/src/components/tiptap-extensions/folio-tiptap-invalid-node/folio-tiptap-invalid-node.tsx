@@ -65,7 +65,20 @@ export const FolioTiptapInvalidNode = Node.create<Record<string, never>>({
   parseHTML() {
     return [
       {
-        tag: `div[class="${CLASS_NAME}"]`,
+        tag: `div.${CLASS_NAME}`,
+        getAttrs: (element) => {
+          if (typeof element === 'string') return false;
+          return {
+            invalidNodeHash: (() => {
+              try {
+                return JSON.parse(element.getAttribute("data-node-string") || "{}");
+              } catch (error) {
+                console.error("Error parsing invalidNodeHash:", error);
+                return {};
+              }
+            })(),
+          };
+        },
       },
     ]
   },

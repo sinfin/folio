@@ -11,7 +11,13 @@ export const FolioTiptapStyledWrap = Node.create({
   parseHTML() {
     return [
       {
-        tag: 'div[class="f-tiptap-styled-wrap"]',
+        tag: 'div.f-tiptap-styled-wrap',
+        getAttrs: (element) => {
+          if (typeof element === 'string') return false;
+          return {
+            variant: element.getAttribute('data-f-tiptap-styled-wrap-variant') || null,
+          };
+        },
       },
     ];
   },
