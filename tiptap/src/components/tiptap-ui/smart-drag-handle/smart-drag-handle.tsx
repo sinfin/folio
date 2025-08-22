@@ -4,6 +4,11 @@ import { type Editor } from "@tiptap/react";
 
 import { SmartDragHandleContent } from "./smart-drag-handle-content";
 
+interface ClipboardData {
+  at: number | null;
+  html: string | null;
+}
+
 export function SmartDragHandle({ editor }: { editor: Editor }) {
   const [selectedNodeData, setSelectedNodeData] = React.useState<{
     type: string;
@@ -11,7 +16,7 @@ export function SmartDragHandle({ editor }: { editor: Editor }) {
     y: number;
   } | null>(null);
 
-  const [copiedToClipboardAt, setCopiedToClipboardAt] = React.useState<number | null>(null);
+  const [clipboardData, setClipboardData] = React.useState<ClipboardData>({ at: null, html: null });
 
   return (
     <DragHandle
@@ -47,8 +52,8 @@ export function SmartDragHandle({ editor }: { editor: Editor }) {
       <SmartDragHandleContent
         editor={editor}
         selectedNodeData={selectedNodeData}
-        copiedToClipboardAt={copiedToClipboardAt}
-        setCopiedToClipboardAt={setCopiedToClipboardAt}
+        clipboardData={clipboardData}
+        setClipboardData={setClipboardData}
       />
     </DragHandle>
   )

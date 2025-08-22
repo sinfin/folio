@@ -36,7 +36,7 @@ const handlePlusClick = ({
 
   const nodeToUse = findElementNextToCoords({
     x: rect.left,
-    y: rect.top,
+    y: rect.top + 16,
     direction: "right",
     editor,
   });
@@ -55,10 +55,20 @@ const handlePlusClick = ({
 
 const handleDragClick = () => {};
 
+type DragHandleButtonReturnType = {
+  success: boolean;
+  data?: { html?: string };
+}
+
 type TargetNodeInfo = {
   resultElement: Element | null;
   resultNode: Node | null;
   pos: number | null;
+};
+
+type ClipboardDataType = {
+  at: number | null;
+  html: string | null;
 };
 
 const getPosAtDepthOne = (editor: Editor, targetNode: TargetNodeInfo): { startPos: number, endPos: number } => {
@@ -81,28 +91,60 @@ const getPosAtDepthOne = (editor: Editor, targetNode: TargetNodeInfo): { startPo
   return { startPos, endPos }
 }
 
-const copyNode = async (editor: Editor, targetNode: TargetNodeInfo): Promise<boolean> => {
+const copyNode = async (editor: Editor, targetNode: TargetNodeInfo, clipboardData: ClipboardDataType): Promise<DragHandleButtonReturnType> => {
   try {
-    await navigator.clipboard.write([
-      new ClipboardItem({
-        'text/html': new Blob([targetNode.resultElement.outerHTML], { type: 'text/html' }),
-        'text/plain': new Blob([targetNode.resultElement.textContent], { type: 'text/plain' }),
-      })
-    ]);
+    if (targetNode && targetNode.resultElement) {
+      const html = targetNode.resultElement.outerHTML;
+      const text = targetNode.resultElement.textContent || "";
 
-    return true;
+      await navigator.clipboard.write([
+        new ClipboardItem({
+          'text/html': new Blob([html], { type: 'text/html' }),
+          'text/plain': new Blob([text], { type: 'text/plain' }),
+        })
+      ]);
+
+      return { success: true, data: { html } };
+    }
+
+    console.error("No target node found for copying");
+    return { success: false };
   } catch (error) {
     console.error("Error copying node:", error);
-    return false;
+    return { success: false };
   }
 }
 
-const pasteNode = (editor: Editor, targetNode: TargetNodeInfo): boolean => {
-  console.log('pasteNode')
-  return false
+const pasteNode = (editor: Editor, targetNode: TargetNodeInfo, clipboardData: ClipboardDataType): DragHandleButtonReturnType => {
+  try {
+    if (!clipboardData.html) {
+      return { success: false };
+    }
+
+    const { startPos, endPos } = getPosAtDepthOne(editor, targetNode);
+
+    // Check if the target node is an empty paragraph
+    const isEmptyParagraph = targetNode.resultNode?.type.name === 'paragraph' &&
+                             targetNode.resultNode.content.size === 0;
+
+    const tr = editor.state.tr;
+
+    if (isEmptyParagraph) {
+      // Use TipTap's insertContentAt to properly parse and insert HTML
+      editor.commands.insertContentAt(startPos, clipboardData.html);
+    } else {
+      // Insert after the current node
+      // Use TipTap's insertContentAt to properly parse and insert HTML
+      editor.commands.insertContentAt(endPos, clipboardData.html);
+    }
+    return { success: true };
+  } catch (error) {
+    console.error("Error pasting node:", error);
+    return { success: false };
+  }
 }
 
-const removeNode = (editor: Editor, targetNode: TargetNodeInfo): boolean => {
+const removeNode = (editor: Editor, targetNode: TargetNodeInfo, clipboardData: ClipboardDataType): DragHandleButtonReturnType => {
   try {
     const { startPos, endPos } = getPosAtDepthOne(editor, targetNode)
 
@@ -110,33 +152,34 @@ const removeNode = (editor: Editor, targetNode: TargetNodeInfo): boolean => {
       const tr = editor.state.tr;
       tr.delete(startPos, endPos);
       editor.view.dispatch(tr);
-      return true;
+      return { success: true };
     } else {
       console.error("Error removing node");
-      return false;
+      return { success: false };
     }
   } catch (error) {
     console.error("Error removing node:", error);
-    return false;
+    return { success: false };
   }
 };
 
 const editFolioTiptapNode = (
   editor: Editor,
   targetNode: TargetNodeInfo,
-): boolean => {
+  clipboardData: ClipboardDataType
+): DragHandleButtonReturnType => {
   if (!targetNode.resultNode || targetNode.pos === null) {
     console.error("Invalid target node");
-    return false;
+    return { success: false };
   }
 
   if (targetNode.resultElement) {
     const event = new CustomEvent("f-tiptap-node:edit");
     targetNode.resultElement.dispatchEvent(event);
-    return true;
+    return { success: true };
   }
 
-  return false;
+  return { success: false };
 };
 
 const TRANSLATIONS = {
@@ -167,7 +210,7 @@ const DRAG_HANDLE_DROPDOWN_OPTIONS = [
   },
 ];
 
-const DRAG_HANDLE_EMPTY_PARAGRAPH_OPTION = {
+const DRAG_HANDLE_PASTE_OPTION = {
   type: "pasteNode",
   icon: ClipboardPaste,
   command: pasteNode,
@@ -182,29 +225,32 @@ const DRAG_HANDLE_FOLIO_TIPTAP_NODE_OPTION = {
 const makeButtonOnClick =
   (
     editor: Editor,
-    option: { command: (editor: Editor, nodeInfo: TargetNodeInfo) => boolean },
+    option: { type: string; command: (editor: Editor, nodeInfo: TargetNodeInfo, clipboardData: ClipboardDataType) => DragHandleButtonReturnType | Promise<DragHandleButtonReturnType> },
     setOpenedDropdown: (value: string | null) => void,
-    setCopiedToClipboardAt: (at: number) => void,
+    clipboardData: ClipboardDataType,
+    setClipboardData: (data: { at: number | null; html: string | null }) => void,
   ) =>
-  (e: React.MouseEvent) => {
+  async (e: React.MouseEvent) => {
     const rect = document
       .querySelector(".f-tiptap-smart-drag-handle__button--drag")!
       .getBoundingClientRect();
 
     const nodeToUse = findElementNextToCoords({
       x: rect.left,
-      y: rect.top,
+      y: rect.top + 16,
       direction: "right",
       editor,
     });
 
     if (nodeToUse && nodeToUse.resultNode && nodeToUse.pos !== null) {
-      const success = option.command(editor, nodeToUse);
+      const { success, data } = await option.command(editor, nodeToUse, clipboardData);
 
       if (success) {
         setOpenedDropdown(null);
         if (option.type === "copyNode") {
-          setCopiedToClipboardAt(Date.now());
+          if (data && data.html) {
+            setClipboardData({ at: Date.now(), html: data.html });
+          }
         }
       }
     } else {
@@ -222,8 +268,8 @@ export interface SmartDragHandleContentProps {
     x: number;
     y: number;
   } | null;
-  copiedToClipboardAt: number | null;
-  setCopiedToClipboardAt: (at: number) => void;
+  clipboardData: ClipboardDataType;
+  setClipboardData: (data: { at: number | null; html: string | null }) => void;
 }
 
 const CHECK_ICON_DURATION = 1000
@@ -231,8 +277,8 @@ const CHECK_ICON_DURATION = 1000
 export function SmartDragHandleContent({
   editor,
   selectedNodeData,
-  copiedToClipboardAt,
-  setCopiedToClipboardAt,
+  clipboardData,
+  setClipboardData,
 }: SmartDragHandleContentProps) {
   const [openedDropdown, setOpenedDropdown] = useState<string | null>(null);
 
@@ -240,13 +286,13 @@ export function SmartDragHandleContent({
 
   // Force re-render after CHECK_ICON_DURATION seconds to swap icon back
   React.useEffect(() => {
-    if (copiedToClipboardAt) {
+    if (clipboardData.at) {
       const timeout = setTimeout(() => {
         forceUpdate();
       }, CHECK_ICON_DURATION);
       return () => clearTimeout(timeout);
     }
-  }, [copiedToClipboardAt]);
+  }, [clipboardData.at]);
 
   if (!editor) {
     return null;
@@ -290,7 +336,17 @@ export function SmartDragHandleContent({
     wrapRef && wrapRef.current,
   ]);
 
-  const optionsBase = DRAG_HANDLE_DROPDOWN_OPTIONS
+  let optionsBase
+
+  if (clipboardData.at) {
+    optionsBase = [
+      ...DRAG_HANDLE_DROPDOWN_OPTIONS.slice(0, 1),
+      DRAG_HANDLE_PASTE_OPTION,
+      ...DRAG_HANDLE_DROPDOWN_OPTIONS.slice(1),
+    ]
+  } else {
+    optionsBase = DRAG_HANDLE_DROPDOWN_OPTIONS
+  }
 
   const dragHandleButtonOptions = [
     ...(selectedNodeData && selectedNodeData.type === "folioTiptapNode"
@@ -340,7 +396,7 @@ export function SmartDragHandleContent({
               onClick={handleDragClick}
               className="f-tiptap-smart-drag-handle__button f-tiptap-smart-drag-handle__button--drag"
             >
-              {copiedToClipboardAt && Date.now() - copiedToClipboardAt < CHECK_ICON_DURATION ? (
+              {clipboardData.at && Date.now() - clipboardData.at < CHECK_ICON_DURATION ? (
                 <Check className="tiptap-button-icon" />
               ) : (
                 <GripVertical className="tiptap-button-icon" />
@@ -359,7 +415,7 @@ export function SmartDragHandleContent({
                     tabIndex={-1}
                     aria-label={translate(TRANSLATIONS, option.type)}
                     className="f-tiptap-smart-drag-handle__dropdown-button"
-                    onClick={makeButtonOnClick(editor, option, setOpenedDropdown, setCopiedToClipboardAt)}
+                    onClick={makeButtonOnClick(editor, option, setOpenedDropdown, clipboardData, setClipboardData)}
                   >
                     {createElement(option.icon, {
                       className: "tiptap-button-icon",
