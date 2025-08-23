@@ -2,6 +2,7 @@
 
 class Folio::File::Image < Folio::File
   include Folio::Sitemap::Image
+  include Folio::ImageMetadataExtraction
 
   validate_file_format
 
@@ -10,22 +11,60 @@ class Folio::File::Image < Folio::File
     after_assign { |file| file.metadata }
   end
 
-  # Get from metadata
+  # IPTC metadata accessors (prefer database fields over metadata compose)
   def title
-    metadata_compose(["Headline", "Title"])
+    headline.presence || metadata_compose(["Headline", "Title"])
   end
 
   def caption
-    metadata_compose(["Caption", "Description", "Abstract"])
+    description.presence || metadata_compose(["Caption", "Description", "Abstract"])
   end
 
-  def keywords
-    metadata_compose(["Keywords"])
+  def keywords_list
+    # Return JSONB array or fallback to legacy metadata
+    if keywords.present? && keywords.is_a?(Array)
+      keywords
+    else
+      metadata_compose(["Keywords"])&.split(/[,;]/)&.map(&:strip)&.compact || []
+    end
   end
 
   def geo_location
-    # Geographic location, e.g.: Limerick, Ireland
-    metadata_compose(["LocationName", "SubLocation", "City", "ProvinceState", "CountryName"])
+    # Build location from IPTC fields first, then fallback
+    location_parts = [sublocation, city, state_province, country].compact
+    if location_parts.any?
+      location_parts.join(", ")
+    else
+      metadata_compose(["LocationName", "SubLocation", "City", "ProvinceState", "CountryName"])
+    end
+  end
+
+  # Additional IPTC metadata accessors
+  def creator_list
+    creator.present? && creator.is_a?(Array) ? creator : []
+  end
+
+  def keywords_string
+    keywords_list.join(", ") if keywords_list.any?
+  end
+
+  def copyright_info
+    copyright_notice.presence
+  end
+
+  def location_coordinates
+    return nil unless gps_latitude.present? && gps_longitude.present?
+    [gps_latitude, gps_longitude]
+  end
+
+  def persons_shown_list
+    persons_shown.present? && persons_shown.is_a?(Array) ? persons_shown : []
+  end
+
+  # Manual metadata re-extraction (for existing images)
+  def extract_metadata!
+    return unless should_extract_metadata?
+    extract_image_metadata
   end
 
   def thumbnailable?
@@ -78,18 +117,60 @@ end
 #  attribution_source_url            :string
 #  attribution_copyright             :string
 #  attribution_licence               :string
+#  headline                          :string
+#  creator                           :jsonb
+#  caption_writer                    :string
+#  credit_line                       :string
+#  source                            :string
+#  copyright_notice                  :text
+#  copyright_marked                  :boolean          default(FALSE)
+#  usage_terms                       :text
+#  rights_usage_info                 :string
+#  keywords                          :jsonb
+#  intellectual_genre                :string
+#  subject_codes                     :jsonb
+#  scene_codes                       :jsonb
+#  event                             :string
+#  category                          :string
+#  urgency                           :integer
+#  persons_shown                     :jsonb
+#  persons_shown_details             :jsonb
+#  organizations_shown               :jsonb
+#  location_created                  :jsonb
+#  location_shown                    :jsonb
+#  sublocation                       :string
+#  city                              :string
+#  state_province                    :string
+#  country                           :string
+#  country_code                      :string(2)
+#  camera_make                       :string
+#  camera_model                      :string
+#  lens_info                         :string
+#  capture_date                      :datetime
+#  capture_date_offset               :string
+#  gps_latitude                      :decimal(10, 6)
+#  gps_longitude                     :decimal(10, 6)
+#  orientation                       :integer
 #
 # Indexes
 #
-#  index_folio_files_on_by_author                (to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((author)::text, ''::text)))) USING gin
-#  index_folio_files_on_by_file_name             (to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name)::text, ''::text)))) USING gin
-#  index_folio_files_on_by_file_name_for_search  (to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text)))) USING gin
-#  index_folio_files_on_created_at               (created_at)
-#  index_folio_files_on_file_name                (file_name)
-#  index_folio_files_on_hash_id                  (hash_id)
-#  index_folio_files_on_site_id                  (site_id)
-#  index_folio_files_on_type                     (type)
-#  index_folio_files_on_updated_at               (updated_at)
+#  index_folio_files_on_by_author                       (to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((author)::text, ''::text)))) USING gin
+#  index_folio_files_on_by_file_name                    (to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name)::text, ''::text)))) USING gin
+#  index_folio_files_on_by_file_name_for_search         (to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text)))) USING gin
+#  index_folio_files_on_capture_date                    (capture_date)
+#  index_folio_files_on_country_code                    (country_code)
+#  index_folio_files_on_created_at                      (created_at)
+#  index_folio_files_on_creator                         (creator) USING gin
+#  index_folio_files_on_file_name                       (file_name)
+#  index_folio_files_on_gps_latitude_and_gps_longitude  (gps_latitude,gps_longitude)
+#  index_folio_files_on_hash_id                         (hash_id)
+#  index_folio_files_on_keywords                        (keywords) USING gin
+#  index_folio_files_on_persons_shown                   (persons_shown) USING gin
+#  index_folio_files_on_site_id                         (site_id)
+#  index_folio_files_on_source                          (source)
+#  index_folio_files_on_subject_codes                   (subject_codes) USING gin
+#  index_folio_files_on_type                            (type)
+#  index_folio_files_on_updated_at                      (updated_at)
 #
 # Foreign Keys
 #

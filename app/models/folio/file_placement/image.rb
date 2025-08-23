@@ -4,6 +4,23 @@ class Folio::FilePlacement::Image < Folio::FilePlacement::Base
   include Folio::Sitemap::FilePlacement::Image
 
   folio_image_placement :image_placements
+
+  # Automatically inherit metadata from file when created
+  before_validation :copy_metadata_from_file, on: :create
+  
+  private
+  
+  def copy_metadata_from_file
+    return unless Rails.application.config.folio_image_metadata_copy_to_placements
+    return unless file.is_a?(Folio::File::Image)
+    
+    # Copy basic metadata that placements support
+    self.alt ||= file.alt || file.description
+    self.title ||= file.title || file.headline
+    
+    # Could also copy to caption if placement has that field
+    # self.caption ||= file.description if respond_to?(:caption=)
+  end
 end
 
 # == Schema Information
