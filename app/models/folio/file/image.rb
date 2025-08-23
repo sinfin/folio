@@ -61,11 +61,7 @@ class Folio::File::Image < Folio::File
     persons_shown.present? && persons_shown.is_a?(Array) ? persons_shown : []
   end
 
-  # Manual metadata re-extraction (for existing images)
-  def extract_metadata!
-    return unless should_extract_metadata?
-    extract_image_metadata
-  end
+
 
   def thumbnailable?
     true
@@ -100,7 +96,7 @@ end
 #  additional_data                   :json
 #  file_metadata                     :json
 #  hash_id                           :string
-#  author                            :string
+#  author_legacy                     :string
 #  description                       :text
 #  file_placements_size              :integer
 #  file_name_for_search              :string
@@ -111,7 +107,7 @@ end
 #  aasm_state                        :string
 #  remote_services_data              :json
 #  preview_track_duration_in_seconds :integer
-#  alt                               :string
+#  alt_legacy                        :string
 #  site_id                           :bigint(8)        not null
 #  attribution_source                :string
 #  attribution_source_url            :string
@@ -151,16 +147,33 @@ end
 #  gps_latitude                      :decimal(10, 6)
 #  gps_longitude                     :decimal(10, 6)
 #  orientation                       :integer
+#  alt                               :string
+#  author                            :string
+#  file_metadata_extracted_at        :datetime
+#  rights_usage_terms                :text
+#  web_statement                     :string
+#  supplemental_categories           :jsonb
+#  model_age_disclosure              :string
+#  minor_model_age_disclosure        :string
+#  image_supplier_image_id           :string
+#  country_name                      :string
+#  world_region                      :string
+#  job_id                            :string
+#  instructions                      :text
+#  transmit_reference                :string
+#  artwork_circulate_reference       :string
+#  gps_altitude                      :decimal(10, 3)
 #
 # Indexes
 #
-#  index_folio_files_on_by_author                       (to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((author)::text, ''::text)))) USING gin
+#  index_folio_files_on_by_author                       (to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((author_legacy)::text, ''::text)))) USING gin
 #  index_folio_files_on_by_file_name                    (to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name)::text, ''::text)))) USING gin
 #  index_folio_files_on_by_file_name_for_search         (to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text)))) USING gin
 #  index_folio_files_on_capture_date                    (capture_date)
 #  index_folio_files_on_country_code                    (country_code)
 #  index_folio_files_on_created_at                      (created_at)
 #  index_folio_files_on_creator                         (creator) USING gin
+#  index_folio_files_on_file_metadata_extracted_at      (file_metadata_extracted_at)
 #  index_folio_files_on_file_name                       (file_name)
 #  index_folio_files_on_gps_latitude_and_gps_longitude  (gps_latitude,gps_longitude)
 #  index_folio_files_on_hash_id                         (hash_id)
@@ -169,6 +182,7 @@ end
 #  index_folio_files_on_site_id                         (site_id)
 #  index_folio_files_on_source                          (source)
 #  index_folio_files_on_subject_codes                   (subject_codes) USING gin
+#  index_folio_files_on_supplemental_categories         (supplemental_categories) USING gin
 #  index_folio_files_on_type                            (type)
 #  index_folio_files_on_updated_at                      (updated_at)
 #

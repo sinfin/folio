@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_08_23_181609) do
+ActiveRecord::Schema[7.1].define(version: 2025_08_23_212219) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -304,7 +304,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_23_181609) do
     t.json "additional_data"
     t.json "file_metadata"
     t.string "hash_id"
-    t.string "author"
+    t.string "author_legacy"
     t.text "description"
     t.integer "file_placements_size"
     t.string "file_name_for_search"
@@ -315,7 +315,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_23_181609) do
     t.string "aasm_state"
     t.json "remote_services_data", default: {}
     t.integer "preview_track_duration_in_seconds"
-    t.string "alt"
+    t.string "alt_legacy"
     t.bigint "site_id", null: false
     t.string "attribution_source"
     t.string "attribution_source_url"
@@ -355,13 +355,30 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_23_181609) do
     t.decimal "gps_latitude", precision: 10, scale: 6
     t.decimal "gps_longitude", precision: 10, scale: 6
     t.integer "orientation"
-    t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((author)::text, ''::text)))", name: "index_folio_files_on_by_author", using: :gin
+    t.string "alt"
+    t.string "author"
+    t.datetime "file_metadata_extracted_at"
+    t.text "rights_usage_terms"
+    t.string "web_statement"
+    t.jsonb "supplemental_categories", default: []
+    t.string "model_age_disclosure"
+    t.string "minor_model_age_disclosure"
+    t.string "image_supplier_image_id"
+    t.string "country_name"
+    t.string "world_region"
+    t.string "job_id"
+    t.text "instructions"
+    t.string "transmit_reference"
+    t.string "artwork_circulate_reference"
+    t.decimal "gps_altitude", precision: 10, scale: 3
+    t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((author_legacy)::text, ''::text)))", name: "index_folio_files_on_by_author", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name)::text, ''::text)))", name: "index_folio_files_on_by_file_name", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text)))", name: "index_folio_files_on_by_file_name_for_search", using: :gin
     t.index ["capture_date"], name: "index_folio_files_on_capture_date"
     t.index ["country_code"], name: "index_folio_files_on_country_code"
     t.index ["created_at"], name: "index_folio_files_on_created_at"
     t.index ["creator"], name: "index_folio_files_on_creator", using: :gin
+    t.index ["file_metadata_extracted_at"], name: "index_folio_files_on_file_metadata_extracted_at"
     t.index ["file_name"], name: "index_folio_files_on_file_name"
     t.index ["gps_latitude", "gps_longitude"], name: "index_folio_files_on_gps_latitude_and_gps_longitude"
     t.index ["hash_id"], name: "index_folio_files_on_hash_id"
@@ -370,6 +387,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_23_181609) do
     t.index ["site_id"], name: "index_folio_files_on_site_id"
     t.index ["source"], name: "index_folio_files_on_source"
     t.index ["subject_codes"], name: "index_folio_files_on_subject_codes", using: :gin
+    t.index ["supplemental_categories"], name: "index_folio_files_on_supplemental_categories", using: :gin
     t.index ["type"], name: "index_folio_files_on_type"
     t.index ["updated_at"], name: "index_folio_files_on_updated_at"
   end

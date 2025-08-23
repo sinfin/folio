@@ -214,13 +214,13 @@ cs:
         one: Soubor
         other: Souborů
       folio/file/audio:
-        one: Audio stopa
-        few: Audio stopy
-        other: Audio stop
+        one: Audio
+        few: Audia
+        other: Audio souborů
       folio/file/video:
-        one: Video stopa
-        few: Video stopy
-        other: Video stop
+        one: Video
+        few: Videa
+        other: Video souborů
       folio/file/image:
         few: Obrázky
         one: Obrázek

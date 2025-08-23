@@ -88,6 +88,27 @@ module Folio::Console::Api::FileControllerBase
                         filename: "#{@klass.model_name.human(count: 2)}-#{Time.current.to_i}.zip")
   end
 
+  def extract_metadata
+    return render(json: { error: "Not supported for this file type" }, status: 422) unless folio_console_record.respond_to?(:extract_metadata!)
+    
+    # Force re-extraction even if metadata already exists
+    if folio_console_record.respond_to?(:extract_metadata!)
+      folio_console_record.extract_metadata!(force: true)
+      folio_console_record.reload
+      
+      render_record(folio_console_record, Folio::Console::FileSerializer, meta: {
+        flash: {
+          success: t("folio.console.files.metadata_extracted")
+        }
+      })
+    else
+      render json: { error: "Metadata extraction not available" }, status: 422
+    end
+  rescue => e
+    Rails.logger.error "Metadata extraction failed: #{e.message}"
+    render json: { error: t("folio.console.files.metadata_extraction_failed") }, status: 500
+  end
+
   private
     def folio_console_collection_includes
       [:tags, :file_placements]
@@ -111,6 +132,43 @@ module Folio::Console::Api::FileControllerBase
         :sensitive_content,
         :default_gravity,
         :alt,
+        # IPTC Core metadata fields
+        :headline,
+        :caption_writer,
+        :credit_line,
+        :source,
+        :copyright_notice,
+        :copyright_marked,
+        :usage_terms,
+        :rights_usage_info,
+        :intellectual_genre,
+        :event,
+        :category,
+        :urgency,
+        :sublocation,
+        :city,
+        :state_province,
+        :country,
+        :country_code,
+        # Technical metadata (read-only, but allow for serialization)
+        :camera_make,
+        :camera_model,
+        :lens_info,
+        :capture_date,
+        :gps_latitude,
+        :gps_longitude,
+        :orientation,
+        :file_metadata_extracted_at,
+        # JSONB array fields
+        { creator: [] },
+        { keywords: [] },
+        { subject_codes: [] },
+        { scene_codes: [] },
+        { persons_shown: [] },
+        { persons_shown_details: [] },
+        { organizations_shown: [] },
+        { location_created: [] },
+        { location_shown: [] }
       ]
 
       test_instance = @klass.new

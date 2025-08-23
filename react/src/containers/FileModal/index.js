@@ -15,7 +15,8 @@ import {
   uploadNewFileInsteadFailure,
   updatedFileModalFile,
   markModalFileAsUpdating,
-  changeFilePlacementsPage
+  changeFilePlacementsPage,
+  extractMetadata
 } from 'ducks/fileModal'
 
 import FileModalFile from './FileModalFile'
@@ -40,7 +41,43 @@ class FileModal extends Component {
         description: props.fileModal.file.attributes.description,
         preview_duration: props.fileModal.file.attributes.preview_duration,
         sensitive_content: props.fileModal.file.attributes.sensitive_content,
-        tags: props.fileModal.file.attributes.tags
+        tags: props.fileModal.file.attributes.tags,
+        // IPTC Core metadata fields
+        headline: props.fileModal.file.attributes.headline,
+        creator: props.fileModal.file.attributes.creator || [],
+        caption_writer: props.fileModal.file.attributes.caption_writer,
+        credit_line: props.fileModal.file.attributes.credit_line,
+        source: props.fileModal.file.attributes.source,
+        copyright_notice: props.fileModal.file.attributes.copyright_notice,
+        copyright_marked: props.fileModal.file.attributes.copyright_marked,
+        usage_terms: props.fileModal.file.attributes.usage_terms,
+        rights_usage_info: props.fileModal.file.attributes.rights_usage_info,
+        keywords: props.fileModal.file.attributes.keywords || [],
+        intellectual_genre: props.fileModal.file.attributes.intellectual_genre,
+        subject_codes: props.fileModal.file.attributes.subject_codes || [],
+        scene_codes: props.fileModal.file.attributes.scene_codes || [],
+        event: props.fileModal.file.attributes.event,
+        category: props.fileModal.file.attributes.category,
+        urgency: props.fileModal.file.attributes.urgency,
+        persons_shown: props.fileModal.file.attributes.persons_shown || [],
+        persons_shown_details: props.fileModal.file.attributes.persons_shown_details || [],
+        organizations_shown: props.fileModal.file.attributes.organizations_shown || [],
+        location_created: props.fileModal.file.attributes.location_created || [],
+        location_shown: props.fileModal.file.attributes.location_shown || [],
+        sublocation: props.fileModal.file.attributes.sublocation,
+        city: props.fileModal.file.attributes.city,
+        state_province: props.fileModal.file.attributes.state_province,
+        country: props.fileModal.file.attributes.country,
+        country_code: props.fileModal.file.attributes.country_code,
+        // Technical metadata (read-only)
+        camera_make: props.fileModal.file.attributes.camera_make,
+        camera_model: props.fileModal.file.attributes.camera_model,
+        lens_info: props.fileModal.file.attributes.lens_info,
+        capture_date: props.fileModal.file.attributes.capture_date,
+        gps_latitude: props.fileModal.file.attributes.gps_latitude,
+        gps_longitude: props.fileModal.file.attributes.gps_longitude,
+        orientation: props.fileModal.file.attributes.orientation,
+        file_metadata_extracted_at: props.fileModal.file.attributes.file_metadata_extracted_at
       }
 
       props.fileModal.file.attributes.file_modal_additional_fields.forEach((field) => {
@@ -181,6 +218,10 @@ class FileModal extends Component {
     this.setState({ ...this.state, [key]: value })
   }
 
+  extractMetadata = () => {
+    this.props.dispatch(extractMetadata(this.props.fileModal.fileType, this.props.fileModal.filesUrl, this.props.fileModal.file))
+  }
+
   render () {
     const { fileModal, readOnly, canDestroyFiles, taggable } = this.props
     const isOpen = fileModal.file !== null
@@ -208,6 +249,8 @@ class FileModal extends Component {
             changeFilePlacementsPage={this.changeFilePlacementsPage}
             readOnly={readOnly}
             autoFocusField={fileModal.autoFocusField}
+            extractMetadata={this.extractMetadata}
+            isExtractingMetadata={fileModal.extractingMetadata}
           />
         )}
       </ReactModal>

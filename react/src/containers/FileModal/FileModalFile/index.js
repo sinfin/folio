@@ -17,13 +17,14 @@ import FolioUiIcon from 'components/FolioUiIcon'
 import { fileFieldAutocompleteUrl } from 'constants/urls'
 
 import AdditionalHtmlFromApi from './AdditionalHtmlFromApi'
+import MetadataExtraction from 'components/MetadataExtraction'
 
 import MainImage from './styled/MainImage'
 import MainImageOuter from './styled/MainImageOuter'
 import MainImageInner from './styled/MainImageInner'
 import FileEditInput from './styled/FileEditInput'
 
-export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fileModal, onTagsChange, closeFileModal, saveModal, updateThumbnail, destroyThumbnail, readOnly, changeFilePlacementsPage, canDestroyFiles, taggable, autoFocusField }) => {
+export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fileModal, onTagsChange, closeFileModal, saveModal, updateThumbnail, destroyThumbnail, readOnly, changeFilePlacementsPage, canDestroyFiles, taggable, autoFocusField, extractMetadata, isExtractingMetadata }) => {
   const file = fileModal.file
   const isImage = file.attributes.human_type === 'image'
   const isAudio = file.attributes.human_type === 'audio'
@@ -332,6 +333,17 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
               <button type='button' className='btn btn-primary px-4' onClick={saveModal}>
                 {window.FolioConsole.translations.save}
               </button>
+            )}
+
+            {/* IPTC Metadata Extraction - only for images */}
+            {isImage && (
+              <MetadataExtraction
+                formState={formState}
+                onValueChange={onValueChange}
+                extractMetadata={extractMetadata}
+                readOnly={readOnly}
+                isExtracting={isExtractingMetadata}
+              />
             )}
           </div>
         </div>
