@@ -95,19 +95,6 @@ end
 #  alt                               :string
 #  author                            :string
 #  file_metadata_extracted_at        :datetime
-#  rights_usage_terms                :text
-#  web_statement                     :string
-#  supplemental_categories           :jsonb
-#  model_age_disclosure              :string
-#  minor_model_age_disclosure        :string
-#  image_supplier_image_id           :string
-#  country_name                      :string
-#  world_region                      :string
-#  job_id                            :string
-#  instructions                      :text
-#  transmit_reference                :string
-#  artwork_circulate_reference       :string
-#  gps_altitude                      :decimal(10, 3)
 #
 # Indexes
 #
@@ -127,7 +114,6 @@ end
 #  index_folio_files_on_site_id                         (site_id)
 #  index_folio_files_on_source                          (source)
 #  index_folio_files_on_subject_codes                   (subject_codes) USING gin
-#  index_folio_files_on_supplemental_categories         (supplemental_categories) USING gin
 #  index_folio_files_on_type                            (type)
 #  index_folio_files_on_updated_at                      (updated_at)
 #

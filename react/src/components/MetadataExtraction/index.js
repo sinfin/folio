@@ -10,48 +10,55 @@ import { fileFieldAutocompleteUrl } from 'constants/urls'
 
 export default ({ formState, onValueChange, extractMetadata, readOnly, isExtracting }) => {
   const [showAdvanced, setShowAdvanced] = useState(false)
+  const [showTechnical, setShowTechnical] = useState(false)
 
-  // IPTC Core fields
-  const coreFields = [
-    { key: 'headline', type: 'input', label: 'Headline' },
-    { key: 'creator', type: 'tags', label: 'Creator(s)' },
-    { key: 'caption_writer', type: 'input', label: 'Caption Writer' },
-    { key: 'credit_line', type: 'input', label: 'Credit Line' },
-    { key: 'source', type: 'input', label: 'Source' },
-    { key: 'copyright_notice', type: 'textarea', label: 'Copyright Notice' },
-    { key: 'usage_terms', type: 'textarea', label: 'Usage Terms' },
-    { key: 'rights_usage_info', type: 'input', label: 'Rights Usage Info (URL)' },
-    { key: 'keywords', type: 'tags', label: 'Keywords' }
+  // Essential metadata fields (for all files)
+  const essentialFields = [
+    { key: 'headline', type: 'input', label: 'Title/Headline', group: 'basic', priority: 'high' },
+    { key: 'description', type: 'textarea', label: 'Description', group: 'basic', priority: 'high' },
+    { key: 'keywords', type: 'tags', label: 'Keywords', group: 'basic', priority: 'high' }
   ]
 
-  // Advanced IPTC fields (show on demand)
-  const advancedFields = [
-    { key: 'intellectual_genre', type: 'input', label: 'Intellectual Genre' },
-    { key: 'subject_codes', type: 'tags', label: 'Subject Codes' },
-    { key: 'scene_codes', type: 'tags', label: 'Scene Codes' },
-    { key: 'event', type: 'input', label: 'Event' },
-    { key: 'persons_shown', type: 'tags', label: 'Persons Shown' },
-    { key: 'organizations_shown', type: 'tags', label: 'Organizations Shown' },
-    { key: 'sublocation', type: 'input', label: 'Sublocation' },
-    { key: 'city', type: 'input', label: 'City' },
-    { key: 'state_province', type: 'input', label: 'State/Province' },
-    { key: 'country', type: 'input', label: 'Country' },
-    { key: 'country_code', type: 'input', label: 'Country Code (2 chars)' }
+  // Rights and attribution (universal)
+  const rightsFields = [
+    { key: 'creator', type: 'tags', label: 'Creator(s)', group: 'rights', priority: 'medium' },
+    { key: 'copyright_notice', type: 'textarea', label: 'Copyright Notice', group: 'rights', priority: 'medium' },
+    { key: 'credit_line', type: 'input', label: 'Credit Line', group: 'rights', priority: 'medium' },
+    { key: 'source', type: 'input', label: 'Source', group: 'rights', priority: 'low' },
+    { key: 'rights_usage_terms', type: 'textarea', label: 'Usage Terms', group: 'rights', priority: 'low' }
   ]
 
+  // Advanced descriptive fields 
+  const descriptiveFields = [
+    { key: 'caption_writer', type: 'input', label: 'Caption Writer', group: 'descriptive', priority: 'low' },
+    { key: 'intellectual_genre', type: 'input', label: 'Genre', group: 'descriptive', priority: 'low' },
+    { key: 'subject_codes', type: 'tags', label: 'Subject Codes', group: 'descriptive', priority: 'low' },
+    { key: 'persons_shown', type: 'tags', label: 'Persons Shown', group: 'descriptive', priority: 'low' }
+  ]
+
+  // Location fields (for images)
+  const locationFields = [
+    { key: 'city', type: 'input', label: 'City', group: 'location', priority: 'medium' },
+    { key: 'state_province', type: 'input', label: 'State/Province', group: 'location', priority: 'medium' },
+    { key: 'country', type: 'input', label: 'Country', group: 'location', priority: 'medium' },
+    { key: 'country_code', type: 'input', label: 'Country Code (2 chars)', group: 'location', priority: 'low' }
+  ]
+
+  // Technical metadata (images only, read-only)
   const technicalFields = [
-    { key: 'camera_make', type: 'readonly', label: 'Camera Make' },
-    { key: 'camera_model', type: 'readonly', label: 'Camera Model' },
-    { key: 'lens_info', type: 'readonly', label: 'Lens Info' },
-    { key: 'capture_date', type: 'readonly', label: 'Capture Date' },
-    { key: 'gps_latitude', type: 'readonly', label: 'GPS Latitude' },
-    { key: 'gps_longitude', type: 'readonly', label: 'GPS Longitude' }
+    { key: 'capture_date', type: 'readonly', label: 'Capture Date', group: 'technical', priority: 'medium' },
+    { key: 'gps_latitude', type: 'readonly', label: 'GPS Latitude', group: 'technical', priority: 'low' },
+    { key: 'gps_longitude', type: 'readonly', label: 'GPS Longitude', group: 'technical', priority: 'low' },
+    { key: 'gps_altitude', type: 'readonly', label: 'GPS Altitude', group: 'technical', priority: 'low' }
   ]
 
   const hasExtractedMetadata = formState.file_metadata_extracted_at
-  const hasAnyMetadata = coreFields.some(field => formState[field.key]) || 
-                        advancedFields.some(field => formState[field.key]) ||
-                        technicalFields.some(field => formState[field.key])
+  const allFields = [...essentialFields, ...rightsFields, ...descriptiveFields, ...locationFields, ...technicalFields]
+  const hasAnyMetadata = allFields.some(field => formState[field.key])
+  
+  // Helper to check if we have location/GPS data
+  const hasLocationData = locationFields.some(field => formState[field.key]) || 
+                         formState.gps_latitude || formState.gps_longitude
 
   const renderField = (field) => {
     const value = formState[field.key] || (field.type === 'tags' ? [] : '')
@@ -81,7 +88,13 @@ export default ({ formState, onValueChange, extractMetadata, readOnly, isExtract
         )
       case 'readonly':
         return (
-          <p className='form-control-plaintext'>{value || <span className='text-muted'>Not available</span>}</p>
+          <div className='form-control-static'>
+            {value ? (
+              <span className='text-dark'>{value}</span>
+            ) : (
+              <span className='text-muted font-italic'>Not available</span>
+            )}
+          </div>
         )
       default:
         return (
@@ -91,28 +104,68 @@ export default ({ formState, onValueChange, extractMetadata, readOnly, isExtract
             name={field.key}
             url={fileFieldAutocompleteUrl(field.key)}
             disabled={readOnly}
+            className='form-control'
           />
         )
     }
   }
 
+  const renderFieldGroup = (fields, title, icon = null, collapsible = false) => {
+    const groupHasData = fields.some(field => formState[field.key])
+    
+    return (
+      <div className='metadata-field-group mb-4'>
+        <div className='d-flex align-items-center mb-3'>
+          {icon && <i className={`fas fa-${icon} mr-2 text-muted`}></i>}
+          <h6 className='mb-0 text-secondary font-weight-bold'>{title}</h6>
+          {groupHasData && <Badge color='light' className='ml-2 small'>has data</Badge>}
+        </div>
+        
+        <div className='row'>
+          {fields.map((field) => {
+            const hasValue = formState[field.key] && (
+              Array.isArray(formState[field.key]) ? formState[field.key].length > 0 : formState[field.key].toString().length > 0
+            )
+            
+            return (
+              <div key={field.key} className={field.priority === 'high' ? 'col-12 mb-3' : 'col-lg-6 mb-3'}>
+                <FormGroup className='mb-0'>
+                  <Label className={`form-label small ${hasValue ? 'font-weight-bold' : ''}`}>
+                    {window.FolioConsole.translations[`metadata/${field.key}`] || field.label}
+                    {field.priority === 'high' && <span className='text-danger ml-1'>*</span>}
+                  </Label>
+                  {readOnly && !hasValue ? (
+                    <div className='text-muted font-italic small'>Not filled</div>
+                  ) : (
+                    renderField(field)
+                  )}
+                </FormGroup>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className='metadata-extraction-section mt-4'>
-      <div className='d-flex align-items-center justify-content-between mb-3'>
-        <h5 className='mb-0'>
-          IPTC Metadata
+      {/* Header with extraction controls */}
+      <div className='d-flex align-items-center justify-content-between mb-4'>
+        <div>
+          <h5 className='mb-1'>Metadata</h5>
           {hasExtractedMetadata && (
-            <Badge color='success' className='ml-2 small'>
+            <small className='text-muted'>
               Auto-extracted {new Date(hasExtractedMetadata).toLocaleDateString()}
-            </Badge>
+            </small>
           )}
-        </h5>
+        </div>
         
         {!readOnly && (
           <FolioConsoleUiButton
             onClick={extractMetadata}
             disabled={isExtracting}
-            variant='secondary'
+            variant='primary'
             size='sm'
             icon='reload'
             label={isExtracting ? 'Extracting...' : 'Extract Metadata'}
@@ -121,31 +174,23 @@ export default ({ formState, onValueChange, extractMetadata, readOnly, isExtract
       </div>
 
       {!hasAnyMetadata && !readOnly && (
-        <div className='alert alert-info'>
-          <strong>No metadata found.</strong> Click "Extract Metadata" to automatically extract IPTC/EXIF data from this image.
+        <div className='alert alert-light border mb-4'>
+          <i className='fas fa-info-circle text-info mr-2'></i>
+          <strong>No metadata found.</strong> Click "Extract Metadata" to automatically extract IPTC/EXIF data from this file.
         </div>
       )}
 
-      {/* Core IPTC Fields */}
-      <div className='row'>
-        {coreFields.map((field) => (
-          <div key={field.key} className='col-lg-6 mb-3'>
-            <FormGroup>
-              <Label className='form-label'>
-                {window.FolioConsole.translations[`metadata/${field.key}`] || field.label}
-              </Label>
-              {readOnly && !formState[field.key] ? (
-                <p className='m-0 text-muted'>{window.FolioConsole.translations.blank}</p>
-              ) : (
-                renderField(field)
-              )}
-            </FormGroup>
-          </div>
-        ))}
-      </div>
+      {/* Essential fields - always visible */}
+      {renderFieldGroup(essentialFields, 'Essential Information', 'file-alt')}
+      
+      {/* Rights & Attribution - always visible */}  
+      {renderFieldGroup(rightsFields, 'Rights & Attribution', 'copyright')}
 
-      {/* Advanced Fields Toggle */}
-      <div className='mb-3'>
+      {/* Location fields - for images with location data */}
+      {hasLocationData && renderFieldGroup(locationFields, 'Location', 'map-marker-alt')}
+
+      {/* Advanced fields toggle */}
+      <div className='mb-3 pb-3 border-bottom'>
         <FolioConsoleUiButton
           onClick={() => setShowAdvanced(!showAdvanced)}
           variant='link'
@@ -157,43 +202,29 @@ export default ({ formState, onValueChange, extractMetadata, readOnly, isExtract
 
       {showAdvanced && (
         <>
-          <h6 className='mb-3'>Advanced IPTC Fields</h6>
-          <div className='row'>
-            {advancedFields.map((field) => (
-              <div key={field.key} className='col-lg-6 mb-3'>
-                <FormGroup>
-                  <Label className='form-label'>
-                    {window.FolioConsole.translations[`metadata/${field.key}`] || field.label}
-                  </Label>
-                  {readOnly && !formState[field.key] ? (
-                    <p className='m-0 text-muted'>{window.FolioConsole.translations.blank}</p>
-                  ) : (
-                    renderField(field)
-                  )}
-                </FormGroup>
-              </div>
-            ))}
+          {/* Descriptive fields */}
+          {renderFieldGroup(descriptiveFields, 'Descriptive', 'tags')}
+
+          {/* Technical metadata toggle - only for images */}
+          <div className='mb-3'>
+            <FolioConsoleUiButton
+              onClick={() => setShowTechnical(!showTechnical)}
+              variant='link'
+              size='sm'
+              icon={showTechnical ? 'arrow_up' : 'arrow_down'}
+              label={showTechnical ? 'Hide Technical Data' : 'Show Technical Data'}
+            />
           </div>
 
-          <h6 className='mb-3 mt-4'>Technical Metadata (Read-only)</h6>
-          <div className='row'>
-            {technicalFields.map((field) => (
-              <div key={field.key} className='col-lg-6 mb-3'>
-                <FormGroup>
-                  <Label className='form-label'>
-                    {window.FolioConsole.translations[`metadata/${field.key}`] || field.label}
-                  </Label>
-                  {renderField(field)}
-                </FormGroup>
-              </div>
-            ))}
-          </div>
+          {showTechnical && renderFieldGroup(technicalFields, 'Technical Metadata (Read-only)', 'camera')}
         </>
       )}
 
+      {/* Extraction info footer */}
       {hasExtractedMetadata && (
-        <div className='mt-3'>
+        <div className='mt-4 pt-3 border-top'>
           <small className='text-muted'>
+            <i className='fas fa-robot mr-1'></i>
             Metadata automatically extracted on {new Date(hasExtractedMetadata).toLocaleString()}.
             Only blank fields are populated during extraction to preserve manual edits.
           </small>

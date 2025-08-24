@@ -11,22 +11,29 @@ module Folio::BackwardCompatibleIptcMetadata
   # Instance methods for backward compatibility
   # author field - backward compatibility with IPTC creator
   def author
-    # Priority: new author field > first creator > legacy backup
+    # Always return creator array joined with commas (primary IPTC source)
+    return creator.join(", ") if creator.present? && creator.is_a?(Array) && creator.any?
+    # Fallbacks for legacy data
     return self[:author] if has_attribute?(:author) && self[:author].present?
-    return creator&.first if creator.present? && creator.is_a?(Array)
-    return self[:author_legacy] if has_attribute?(:author_legacy)
+    return self[:author_legacy] if has_attribute?(:author_legacy) && self[:author_legacy].present?
     nil
   end
   
   def author=(value)
     # Set both old and new fields for maximum compatibility
     if has_attribute?(:author)
-      self[:author] = value.to_s if value.present?
+      self[:author] = value.present? ? value.to_s : nil
     end
     
-    # Also update creator array for IPTC compliance
+    # Also update creator array for IPTC compliance - split by commas
     if has_attribute?(:creator)
-      self.creator = value.present? ? [value.to_s] : []
+      if value.present?
+        # Split by commas and clean up whitespace
+        creators = value.to_s.split(/[,;]/).map(&:strip).reject(&:blank?)
+        self.creator = creators
+      else
+        self.creator = []
+      end
     end
   end
   # alt field - backward compatibility

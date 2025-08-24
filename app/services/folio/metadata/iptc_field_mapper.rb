@@ -215,6 +215,14 @@ module Folio::Metadata
         normalize_array(value)
       },
       
+      # Country code must be ISO 3166-1 alpha-2 (2 chars max)
+      country_code: ->(value) {
+        return nil if value.blank?
+        code = value.to_s.strip.upcase
+        # Only take first 2 characters to ensure DB constraint compliance
+        code.length > 2 ? code[0..1] : code
+      },
+      
       # Structured location arrays - keep as JSONB
       location_created: ->(value) {
         case value
