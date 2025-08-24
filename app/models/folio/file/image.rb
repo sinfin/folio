@@ -4,7 +4,7 @@ class Folio::File::Image < Folio::File
   include Folio::Sitemap::Image
   include Folio::ImageMetadataExtraction
 
-  validate_file_format
+  validate_file_format(%w[jpeg png bmp gif svg tiff webp avif heic heif])
 
   dragonfly_accessor :file do
     after_assign :sanitize_filename
@@ -60,7 +60,6 @@ class Folio::File::Image < Folio::File
   def persons_shown_list
     persons_shown.present? && persons_shown.is_a?(Array) ? persons_shown : []
   end
-
 
 
   def thumbnailable?
