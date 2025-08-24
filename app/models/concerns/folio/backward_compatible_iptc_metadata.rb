@@ -56,7 +56,39 @@ module Folio::BackwardCompatibleIptcMetadata
       self.headline = value.to_s if value.present?
     end
   end
-  
+
+  # attribution_copyright ⇄ copyright_notice
+  def attribution_copyright
+    return copyright_notice if respond_to?(:copyright_notice) && copyright_notice.present?
+    return self[:attribution_copyright] if has_attribute?(:attribution_copyright) && self[:attribution_copyright].present?
+    nil
+  end
+
+  def attribution_copyright=(value)
+    if respond_to?(:copyright_notice=)
+      self.copyright_notice = value.presence
+    end
+    if has_attribute?(:attribution_copyright)
+      self[:attribution_copyright] = value.presence
+    end
+  end
+
+  # attribution_licence ⇄ rights_usage_terms
+  def attribution_licence
+    return rights_usage_terms if respond_to?(:rights_usage_terms) && rights_usage_terms.present?
+    return self[:attribution_licence] if has_attribute?(:attribution_licence) && self[:attribution_licence].present?
+    nil
+  end
+
+  def attribution_licence=(value)
+    if respond_to?(:rights_usage_terms=)
+      self.rights_usage_terms = value.presence
+    end
+    if has_attribute?(:attribution_licence)
+      self[:attribution_licence] = value.presence
+    end
+  end
+
   # Legacy method aliases for existing applications
   def author_name
     author

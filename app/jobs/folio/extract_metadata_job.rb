@@ -42,6 +42,9 @@ class Folio::ExtractMetadataJob < ApplicationJob
       
       image.update!(update_fields)
       Rails.logger.info "Updated #{update_fields.keys.count} metadata fields for image ##{image.id}"
+      
+      # Broadcast update for live refresh in console
+      broadcast_file_update(image) if respond_to?(:broadcast_file_update, true)
     else
       Rails.logger.debug "No metadata updates needed for image ##{image.id}"
     end

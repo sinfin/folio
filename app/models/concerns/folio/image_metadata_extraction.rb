@@ -67,6 +67,23 @@ module Folio::ImageMetadataExtraction
       
       self[field_name] = value
     end
+
+    # After mapping, merge extracted keywords into tag_list (if supported)
+    if mapped_fields[:keywords].present? && respond_to?(:tag_list=)
+      begin
+        existing = try(:tag_list)
+        existing_tags = case existing
+                        when String then existing.to_s.split(/[,;]/).map(&:strip).reject(&:blank?)
+                        when Array then existing.map(&:to_s).map(&:strip).reject(&:blank?)
+                        else []
+                        end
+        new_tags = Array(mapped_fields[:keywords]).map(&:to_s).map(&:strip).reject(&:blank?)
+        merged = (existing_tags + new_tags).uniq
+        self.tag_list = merged.join(", ")
+      rescue => e
+        Rails.logger.warn("Failed to merge keywords into tag_list for #{file_name}: #{e.message}")
+      end
+    end
   end
 
   private

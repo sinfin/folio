@@ -455,3 +455,39 @@ folio:
 ---
 
 *This specification is a living document and will be updated as the feature evolves.*
+
+## 2025-08 Update: Standard fields first, legacy as proxies
+
+- Write extraction results only to new IPTC-compliant columns (e.g., `headline`, `creator[]`, `copyright_notice`, `rights_usage_terms`, location fields, technical EXIF fields).
+- Legacy compatibility is ensured by model proxies where names or shapes differ:
+  - `author` ⇄ `creator[]`
+    - getter: returns `creator.join(', ')`
+    - setter: splits string by commas/semicolons and assigns to `creator[]`
+  - `attribution_copyright` ⇄ `copyright_notice`
+  - `attribution_licence` ⇄ `rights_usage_terms`
+- Unchanged fields do not use proxies (read/write as-is): `description`, `alt` (image), `source`, `attribution_source_url`.
+- Extraction never overwrites non-blank values (blank-field protection remains).
+
+### UI in File modal
+- Above-the-fold (for all file types, except where noted):
+  1. `headline`
+  2. `description`
+  3. `alt` (images only)
+  4. `author` (proxy for `creator[]`)
+  5. `source`
+  6. `attribution_source_url`
+  7. `copyright` (proxy for `copyright_notice`)
+  8. `licence` (proxy for `rights_usage_terms`)
+  9. Default crop (images only)
+- Advanced metadata: single collapsible section (default collapsed) with structured IPTC/technical fields as today.
+- Action row: `[Save] [Extract metadata] [short localized extraction info]`.
+- Video Subtitles section remains unchanged.
+
+### Keywords → tag_list
+- After mapping, extracted `keywords` are merged into `tag_list` (if supported on model) without removing existing tags; duplicates are removed.
+
+### Translations
+- UI strings are provided via `window.FolioConsole.translations` under `file/*` and `file/metadata/*` keys.
+
+### Overrides
+- If the host application injects its own file modal (e.g., economia-cms), its override is respected; Folio defaults apply otherwise.

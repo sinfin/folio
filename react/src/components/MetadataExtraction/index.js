@@ -1,17 +1,8 @@
-import React, { useState } from 'react'
-import { FormGroup, Label, Badge } from 'reactstrap'
-import TextareaAutosize from 'react-autosize-textarea'
-
-import AutocompleteInput from 'components/AutocompleteInput'
+import React from 'react'
+import { Badge } from 'reactstrap'
 import FolioConsoleUiButton from 'components/FolioConsoleUiButton'
-import TagsInput from 'components/TagsInput'
 
-import { fileFieldAutocompleteUrl } from 'constants/urls'
-
-export default ({ formState, onValueChange, extractMetadata, readOnly, isExtracting }) => {
-  const [showAdvanced, setShowAdvanced] = useState(false)
-  const [showTechnical, setShowTechnical] = useState(false)
-
+export default ({ formState, onValueChange, extractMetadata, readOnly, isExtracting, compact }) => {
   // Essential metadata fields (for all files)
   const essentialFields = [
     { key: 'headline', type: 'input', label: 'Title/Headline', group: 'basic', priority: 'high' },
@@ -52,38 +43,40 @@ export default ({ formState, onValueChange, extractMetadata, readOnly, isExtract
     { key: 'gps_altitude', type: 'readonly', label: 'GPS Altitude', group: 'technical', priority: 'low' }
   ]
 
-  const hasExtractedMetadata = formState.file_metadata_extracted_at
   const allFields = [...essentialFields, ...rightsFields, ...descriptiveFields, ...locationFields, ...technicalFields]
+
+  const hasExtractedMetadata = formState.file_metadata_extracted_at
   const hasAnyMetadata = allFields.some(field => formState[field.key])
-  
-  // Helper to check if we have location/GPS data
-  const hasLocationData = locationFields.some(field => formState[field.key]) || 
-                         formState.gps_latitude || formState.gps_longitude
 
   const renderField = (field) => {
-    const value = formState[field.key] || (field.type === 'tags' ? [] : '')
+    const value = formState[field.key]
     
     switch (field.type) {
-      case 'tags':
+      case 'tags': {
+        const str = Array.isArray(value) ? value.join(', ') : (value || '')
         return (
-          <TagsInput
-            value={Array.isArray(value) ? value : (value ? [value] : [])}
-            onTagsChange={(tags) => onValueChange(field.key, tags)}
-            disabled={readOnly}
-            noAutofocus
+          <input
+            className='form-control'
+            value={str}
+            onChange={(e) => onValueChange(field.key, e.currentTarget.value.split(/[,;]/).map(s => s.trim()).filter(Boolean))}
           />
         )
+      }
       case 'textarea':
         return (
-          <TextareaAutosize
-            name={field.key}
-            value={value}
-            onChange={(e) => onValueChange(field.key, e.currentTarget.value)}
+          <textarea
             className='form-control'
             rows={2}
-            maxRows={5}
-            disabled={readOnly}
-            async
+            value={value || ''}
+            onChange={(e) => onValueChange(field.key, e.currentTarget.value)}
+          />
+        )
+      case 'input':
+        return (
+          <input
+            className='form-control'
+            value={value || ''}
+            onChange={(e) => onValueChange(field.key, e.currentTarget.value)}
           />
         )
       case 'readonly':
@@ -98,132 +91,78 @@ export default ({ formState, onValueChange, extractMetadata, readOnly, isExtract
         )
       default:
         return (
-          <AutocompleteInput
-            value={value}
-            onChange={(e) => onValueChange(field.key, e.currentTarget.value)}
-            name={field.key}
-            url={fileFieldAutocompleteUrl(field.key)}
-            disabled={readOnly}
+          <input
             className='form-control'
+            value={value || ''}
+            onChange={(e) => onValueChange(field.key, e.currentTarget.value)}
           />
         )
     }
   }
 
-  const renderFieldGroup = (fields, title, icon = null, collapsible = false) => {
-    const groupHasData = fields.some(field => formState[field.key])
-    
-    return (
-      <div className='metadata-field-group mb-4'>
+  const renderFieldGroup = (fields, title, icon) => (
+    <div className='mb-4'>
+      {!compact && (
         <div className='d-flex align-items-center mb-3'>
-          {icon && <i className={`fas fa-${icon} mr-2 text-muted`}></i>}
+          <i className={`fas fa-${icon} mr-2 text-muted`}></i>
           <h6 className='mb-0 text-secondary font-weight-bold'>{title}</h6>
-          {groupHasData && <Badge color='light' className='ml-2 small'>has data</Badge>}
+          {fields.some(f => !!formState[f.key]) && <Badge color='light' className='ml-2 small'>{window.FolioConsole.translations['file/has_data'] || 'has data'}</Badge>}
         </div>
-        
-        <div className='row'>
-          {fields.map((field) => {
-            const hasValue = formState[field.key] && (
-              Array.isArray(formState[field.key]) ? formState[field.key].length > 0 : formState[field.key].toString().length > 0
-            )
-            
-            return (
-              <div key={field.key} className={field.priority === 'high' ? 'col-12 mb-3' : 'col-lg-6 mb-3'}>
-                <FormGroup className='mb-0'>
-                  <Label className={`form-label small ${hasValue ? 'font-weight-bold' : ''}`}>
-                    {window.FolioConsole.translations[`file/metadata/${field.key}`]
-                      || window.FolioConsole.translations[`metadata/${field.key}`]
-                      || field.label}
-                    {field.priority === 'high' && <span className='text-danger ml-1'>*</span>}
-                  </Label>
-                  {readOnly && !hasValue ? (
-                    <div className='text-muted font-italic small'>Not filled</div>
-                  ) : (
-                    renderField(field)
-                  )}
-                </FormGroup>
-              </div>
-            )
-          })}
-        </div>
+      )}
+      <div className='row'>
+        {fields.map((f) => (
+          <div className='col-12 mb-3' key={f.key}>
+            <div className='mb-0 form-group'>
+              <label className='form-label'>
+                {window.FolioConsole.translations[`file/metadata/${f.key}`]
+                  || window.FolioConsole.translations[`metadata/${f.key}`]
+                  || f.label}
+              </label>
+              {renderField(f)}
+            </div>
+          </div>
+        ))}
       </div>
-    )
-  }
+    </div>
+  )
 
   return (
-    <div className='metadata-extraction-section mt-4'>
-      {/* Header with extraction controls */}
-      <div className='d-flex align-items-center justify-content-between mb-4'>
-        <div>
-          <h5 className='mb-1'>Metadata</h5>
-          {hasExtractedMetadata && (
-            <small className='text-muted'>
-              Auto-extracted {new Date(hasExtractedMetadata).toLocaleDateString()}
-            </small>
+    <>
+      {!compact && (
+        <div className='d-flex align-items-center justify-content-between mb-4'>
+          <div>
+            <h5 className='mb-1'>Metadata</h5>
+            {hasExtractedMetadata && (
+              <small className='text-muted'>Auto-extracted {new Date(hasExtractedMetadata).toLocaleDateString()}</small>
+            )}
+          </div>
+          {!readOnly && (
+            <FolioConsoleUiButton
+              onClick={extractMetadata}
+              disabled={isExtracting}
+              variant='warning'
+              size='sm'
+              icon='reload'
+              label={isExtracting ? window.FolioConsole.translations['file/extracting'] : window.FolioConsole.translations['file/extract_metadata']}
+            />
           )}
         </div>
-        
-        {!readOnly && (
-          <FolioConsoleUiButton
-            onClick={extractMetadata}
-            disabled={isExtracting}
-            variant='primary'
-            size='sm'
-            icon='reload'
-            label={isExtracting ? window.FolioConsole.translations['file/extracting'] : window.FolioConsole.translations['file/extract_metadata']}
-          />
-        )}
-      </div>
+      )}
 
-      {!hasAnyMetadata && !readOnly && (
+      {!hasAnyMetadata && !readOnly && !compact && (
         <div className='alert alert-light border mb-4'>
           <i className='fas fa-info-circle text-info mr-2'></i>
           <strong>{window.FolioConsole.translations['file/no_metadata_found']}</strong> {window.FolioConsole.translations['file/no_metadata_description']}
         </div>
       )}
 
-      {/* Essential fields - always visible */}
       {renderFieldGroup(essentialFields, window.FolioConsole.translations['file/essential_information'], 'file-alt')}
-      
-      {/* Rights & Attribution - always visible */}  
       {renderFieldGroup(rightsFields, window.FolioConsole.translations['file/rights_attribution'], 'copyright')}
+      {renderFieldGroup(locationFields, window.FolioConsole.translations['file/location'], 'map-marker-alt')}
+      {renderFieldGroup(descriptiveFields, 'Descriptive', 'tags')}
+      {renderFieldGroup(technicalFields, window.FolioConsole.translations['file/technical_metadata_readonly'], 'camera')}
 
-      {/* Location fields - for images with location data */}
-      {hasLocationData && renderFieldGroup(locationFields, window.FolioConsole.translations['file/location'], 'map-marker-alt')}
-
-      {/* Advanced fields toggle */}
-      <div className='mb-3 pb-3 border-bottom'>
-        <FolioConsoleUiButton
-          onClick={() => setShowAdvanced(!showAdvanced)}
-          variant='link'
-          size='sm'
-          icon={showAdvanced ? 'arrow_up' : 'arrow_down'}
-          label={showAdvanced ? window.FolioConsole.translations['file/hide_advanced_fields'] : window.FolioConsole.translations['file/show_advanced_fields']}
-        />
-      </div>
-
-      {showAdvanced && (
-        <>
-          {/* Descriptive fields */}
-          {renderFieldGroup(descriptiveFields, 'Descriptive', 'tags')}
-
-          {/* Technical metadata toggle - only for images */}
-          <div className='mb-3'>
-            <FolioConsoleUiButton
-              onClick={() => setShowTechnical(!showTechnical)}
-              variant='link'
-              size='sm'
-              icon={showTechnical ? 'arrow_up' : 'arrow_down'}
-              label={showTechnical ? window.FolioConsole.translations['file/hide_technical_data'] : window.FolioConsole.translations['file/show_technical_data']}
-            />
-          </div>
-
-          {showTechnical && renderFieldGroup(technicalFields, window.FolioConsole.translations['file/technical_metadata_readonly'], 'camera')}
-        </>
-      )}
-
-      {/* Extraction info footer */}
-      {hasExtractedMetadata && (
+      {!compact && hasExtractedMetadata && (
         <div className='mt-4 pt-3 border-top'>
           <small className='text-muted'>
             <i className='fas fa-robot mr-1'></i>
@@ -233,6 +172,6 @@ export default ({ formState, onValueChange, extractMetadata, readOnly, isExtract
           </small>
         </div>
       )}
-    </div>
+    </>
   )
 }
