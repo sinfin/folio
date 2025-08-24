@@ -160,10 +160,12 @@ module Folio::Metadata
       ],
 
       capture_date: [
-        "DateTimeOriginal",      # EXIF original capture time (preferred)
+        "ExifIFD:DateTimeOriginal",      # EXIF original capture time (preferred)
         "XMP-photoshop:DateCreated",  # XMP fallback
         "XMP-xmp:CreateDate",     # XMP fallback
-        "CreateDate"              # EXIF fallback
+        "ExifIFD:CreateDate",            # EXIF fallback
+        "DateTimeOriginal",              # Fallback without prefix
+        "CreateDate"                     # Fallback without prefix
       ],
 
       gps_latitude: [
@@ -320,10 +322,11 @@ module Folio::Metadata
       creator: ->(value, metadata = {}) {
         case value
         when Array
-          value.map(&:to_s)
+          value.filter_map(&:to_s).reject(&:blank?)
         when String
-          [value.to_s]
-        else []
+          [value.to_s].compact.reject(&:blank?)
+        else
+          []
         end
       },
 
@@ -537,9 +540,12 @@ module Folio::Metadata
           case value
           when String
             # Parse and preserve timezone if present
-            # ExifTool formats: "2024:03:15 14:30:00+02:00" or "2024-03-15T14:30:00+02:00"
+            # ExifTool formats: "2024:03:15 14:30:00+02:00", "2024-03-15T14:30:00+02:00", or "2022:06:19 20:24:45"
             begin
-              parsed_time = Time.parse(value)
+              # Convert EXIF colon format to standard format for parsing
+              normalized_value = value.gsub(/^(\d{4}):(\d{2}):(\d{2})/, '\1-\2-\3')
+
+              parsed_time = Time.parse(normalized_value)
 
               # Extract and store offset for separate field if needed
               if value =~ /([+-]\d{2}:\d{2}|Z)$/
@@ -549,7 +555,8 @@ module Folio::Metadata
               else
                 { time: parsed_time, offset: nil }
               end
-            rescue
+            rescue => e
+              Rails.logger.warn("Failed to parse capture date '#{value}': #{e.message}") if defined?(Rails)
               nil
             end
           when Time, DateTime

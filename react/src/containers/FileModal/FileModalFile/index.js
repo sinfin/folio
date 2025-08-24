@@ -73,8 +73,6 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
                       <MainImage src={file.attributes.source_url} />
                     </MainImageInner>
                   </MainImageOuter>
-
-                  <div className='mt-2 small'>{file.attributes.file_width}×{file.attributes.file_height} px</div>
                 </div>
               ) : (
                 <div>
@@ -146,27 +144,78 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
             </div>
 
             <div className='f-c-file-metadata bg-light p-3 mb-3'>
-              <div className='d-flex justify-content-between align-items-center'>
-                <div className='d-flex align-items-center'>
-                  <span className='me-3'>
-                    <strong>ID:</strong> {file.attributes.id}
-                  </span>
-                  <span className='me-3 text-muted'>
-                    {file.attributes.file_mime_type}
-                  </span>
-                  <span className='me-3 text-muted'>
-                    <strong>Nahráno:</strong> {new Date(file.attributes.created_at).toLocaleDateString('cs-CZ', { 
-                      year: 'numeric', 
-                      month: '2-digit', 
-                      day: '2-digit',
-                      hour: '2-digit',
-                      minute: '2-digit'
-                    })}
-                  </span>
-                  {file.attributes.imported_from_photo_archive && (
-                    <span className='badge badge-info me-2'>
-                      {window.FolioConsole.translations.importedFromPhotoArchive}
+              <div className='d-flex justify-content-between align-items-start'>
+                <div className='flex-grow-1 me-3'>
+                  <div className='d-flex flex-wrap align-items-center gap-2 mb-2'>
+                    <span className='me-2'>
+                      <strong>ID:</strong> {file.attributes.id}
                     </span>
+                    {/* Technical info based on file type */}
+                    {isImage && (
+                      <>
+                        <span className='me-2 text-muted'>
+                          {file.attributes.file_width}×{file.attributes.file_height}px
+                        </span>
+                        <span className='me-2 text-muted'>
+                          {(file.attributes.file_size / 1024 / 1024).toFixed(1)}MB
+                        </span>
+                        <span className='me-2 text-muted'>
+                          {file.attributes.extension || file.attributes.file_mime_type}
+                        </span>
+                      </>
+                    )}
+                    {!isImage && (
+                      <>
+                        <span className='me-2 text-muted'>
+                          {file.attributes.file_mime_type}
+                        </span>
+                        {file.attributes.file_size && (
+                          <span className='me-2 text-muted'>
+                            {(file.attributes.file_size / 1024 / 1024).toFixed(1)}MB
+                          </span>
+                        )}
+                      </>
+                    )}
+                    {file.attributes.imported_from_photo_archive && (
+                      <span className='badge badge-info me-2'>
+                        {window.FolioConsole.translations.importedFromPhotoArchive}
+                      </span>
+                    )}
+                  </div>
+                  <div className='d-flex flex-wrap align-items-center gap-2'>
+                    <span className='me-2 text-muted'>
+                      <strong>Nahráno:</strong> {new Date(file.attributes.created_at).toLocaleDateString('cs-CZ', { 
+                        year: 'numeric', 
+                        month: '2-digit', 
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      })}
+                    </span>
+                    {file.attributes.capture_date && (
+                      <span className='me-2 text-muted'>
+                        <strong>Pořízeno:</strong> {new Date(file.attributes.capture_date).toLocaleDateString('cs-CZ', { 
+                          year: 'numeric', 
+                          month: '2-digit', 
+                          day: '2-digit'
+                        })}
+                      </span>
+                    )}
+                  </div>
+                  {/* Camera info row (only for images with camera data) */}
+                  {isImage && (file.attributes.camera_make || file.attributes.camera_model || file.attributes.lens_info) && (
+                    <div className='d-flex flex-wrap align-items-center gap-2'>
+                      {file.attributes.camera_make && file.attributes.camera_model && (
+                        <span className='me-2 text-muted small'>
+                          <strong>Kamera:</strong> {file.attributes.camera_make} {file.attributes.camera_model}
+                        </span>
+                      )}
+                      {file.attributes.lens_info && (
+                        <span className='me-2 text-muted small'>
+                          <strong>Objektiv:</strong> {file.attributes.lens_info}
+                        </span>
+                      )}
+                    </div>
                   )}
                 </div>
                 <div className='f-c-state'>

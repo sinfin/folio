@@ -31,12 +31,14 @@ end
 class ActiveSupport::TestCase
   require Folio::Engine.root.join("test/support/sites_helper")
   require Folio::Engine.root.join("test/support/method_invoking_matchers_helper")
+  require Folio::Engine.root.join("test/support/metadata_test_helpers")
 
   parallelize
 
   include FactoryBot::Syntax::Methods
   include MethodInvokingMatchersHelper
   include SitesHelper
+  include MetadataTestHelpers
 
   def setup
     super
