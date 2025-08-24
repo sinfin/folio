@@ -93,17 +93,25 @@ module Folio::ImageMetadataExtraction
     
     require 'open3'
     
-    options = Rails.application.config.folio_image_metadata_exiftool_options || ["-G1", "-struct", "-n"]
-    command = ["exiftool", "-j", *options, file.path]
-    
+    base_options = Rails.application.config.folio_image_metadata_exiftool_options || ["-G1", "-struct", "-n"]
+    command = ["exiftool", "-j", *base_options, file.path]
     stdout, stderr, status = Open3.capture3(*command)
-    
-    if status.success?
-      JSON.parse(stdout).first
-    else
-      Rails.logger.warn "ExifTool error for #{file_name}: #{stderr}"
-      nil
+    return JSON.parse(stdout).first if status.success?
+    Rails.logger.warn "ExifTool error for #{file_name}: #{stderr}"
+    # If initial read failed or produced mojibake, try IPTC charset candidates
+    begin
+      candidates = Array(Rails.application.config.folio_image_metadata_iptc_charset_candidates)
+      candidates.each do |cs|
+        opt = ["-charset", "iptc=#{cs}"]
+        stdout, stderr, status = Open3.capture3("exiftool", "-j", *(base_options + opt), file.path)
+        next unless status.success?
+        parsed = JSON.parse(stdout).first
+        return parsed if parsed.is_a?(Hash)
+      end
+    rescue => e
+      Rails.logger.warn "ExifTool charset retry failed for #{file_name}: #{e.message}"
     end
+    nil
   rescue JSON::ParserError => e
     Rails.logger.error "Failed to parse ExifTool output for #{file_name}: #{e.message}"
     nil

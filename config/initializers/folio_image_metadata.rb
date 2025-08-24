@@ -78,9 +78,27 @@ Rails.application.config.tap do |config|
   # Extract metadata to placements
   config.folio_image_metadata_copy_to_placements = true # default: true
   
-  # ExifTool command options
-  config.folio_image_metadata_exiftool_options = ["-G1", "-struct", "-n"] # default
+  # ExifTool command options  
+  # Force UTF-8 pro IPTC (většina moderních souborů má UTF-8 data i když 1:90 auto-detect nefunguje)
+  config.folio_image_metadata_exiftool_options = ["-G1", "-struct", "-n", "-charset", "iptc=utf8"] # default
+  # When IPTC encoding is wrong or not declared, try these ExifTool IPTC charset fallbacks (order matters)
+  config.folio_image_metadata_iptc_charset_candidates = %w[utf8 cp1250 iso-8859-2 cp1252]
   
   # Language priority for Lang Alt fields (dc:description, dc:rights, etc.)
   config.folio_image_metadata_locale_priority = [:en, "x-default"] # English first
+
+  # Known photo providers for heuristic source detection when Credit/Source is missing
+  # Host app can override/extend this list
+  config.folio_image_metadata_known_providers = [
+    { name: "Getty Images", patterns: [/\bgetty\b/i, /\bgetty images\b/i] },
+    { name: "iStock", patterns: [/\bistock\b/i] },
+    { name: "Shutterstock", patterns: [/\bshutterstock\b/i] },
+    { name: "Westend61", patterns: [/\bwestend61\b/i] },
+    { name: "Reuters", patterns: [/\breuters\b/i] },
+    { name: "AP", patterns: [/\bassociated press\b/i, /\b\bAP\b/i] },
+    { name: "Profimedia", patterns: [/\bprofimedia\b/i] },
+    { name: "ČTK", patterns: [/\bctk\b/i, /\bčtk\b/i] },
+    { name: "Unsplash", patterns: [/\bunsplash\b/i] },
+    { name: "Pexels", patterns: [/\bpexels\b/i] }
+  ]
 end

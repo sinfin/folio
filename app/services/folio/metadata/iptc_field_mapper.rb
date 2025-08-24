@@ -8,7 +8,8 @@ module Folio::Metadata
       # Core descriptive fields (IPTC Core)
       headline: [
         "XMP-photoshop:Headline",
-        "Headline"  # IIM fallback
+        "IPTC:Headline",  # IIM with group prefix
+        "Headline"        # IIM fallback
       ],
       
       description: [
@@ -30,7 +31,8 @@ module Folio::Metadata
       credit_line: [
         "XMP-iptcCore:CreditLine",
         "XMP-photoshop:Credit",
-        "Credit"  # IIM fallback
+        "Credit",  # IIM fallback
+        "IPTC:Credit"  # IIM fallback with group prefix
       ],
       
       source: [
@@ -55,6 +57,13 @@ module Folio::Metadata
       
       rights_usage_info: [
         "XMP-xmpRights:WebStatement"  # URL
+      ],
+
+      # Non-standard but widely used by agencies (PLUS namespace)
+      # Store licensor/provider page URL for attribution
+      attribution_source_url: [
+        "XMP-plus:LicensorURL",
+        "XMP-xmpRights:WebStatement"  # Fallback when LicensorURL missing
       ],
       
       # Classification
@@ -185,21 +194,57 @@ module Folio::Metadata
     
     # Special handling for complex fields
     COMPLEX_FIELD_PROCESSORS = {
+      headline: ->(value, metadata = {}) {
+        case value
+        when Array
+          value.compact.map(&:to_s).reject(&:blank?).join(', ')
+        else
+          value.to_s
+        end
+      },
       # Keep arrays as JSONB, don't concatenate to string
-      keywords: ->(value) {
-        normalize_array(value)
+      keywords: ->(value, metadata = {}) {
+        case value
+        when Array
+          value.map(&:to_s).compact.reject(&:blank?)
+        when String
+          [value.to_s].compact.reject(&:blank?)
+        else
+          []
+        end
       },
       
-      subject_codes: ->(value) {
-        normalize_array(value)
+      subject_codes: ->(value, metadata = {}) {
+        case value
+        when Array
+          value.map(&:to_s).compact.reject(&:blank?)
+        when String
+          [value.to_s].compact.reject(&:blank?)
+        else
+          []
+        end
       },
       
-      scene_codes: ->(value) {
-        normalize_array(value)
+      scene_codes: ->(value, metadata = {}) {
+        case value
+        when Array
+          value.map(&:to_s).compact.reject(&:blank?)
+        when String
+          [value.to_s].compact.reject(&:blank?)
+        else
+          []
+        end
       },
       
-      persons_shown: ->(value) {
-        normalize_array(value)
+      persons_shown: ->(value, metadata = {}) {
+        case value
+        when Array
+          value.map(&:to_s).compact.reject(&:blank?)
+        when String
+          [value.to_s].compact.reject(&:blank?)
+        else
+          []
+        end
       },
       
       persons_shown_details: ->(value) {
@@ -211,8 +256,15 @@ module Folio::Metadata
         end
       },
       
-      organizations_shown: ->(value) {
-        normalize_array(value)
+      organizations_shown: ->(value, metadata = {}) {
+        case value
+        when Array
+          value.map(&:to_s).compact.reject(&:blank?)
+        when String
+          [value.to_s].compact.reject(&:blank?)
+        else
+          []
+        end
       },
       
       # Country code must be ISO 3166-1 alpha-2 (2 chars max)
@@ -266,12 +318,73 @@ module Folio::Metadata
       },
       
       # Creator can be array or single value
-      creator: ->(value) {
+      creator: ->(value, metadata = {}) {
         case value
-        when Array then value  # Keep as array for JSONB storage
-        when String then [value]
+        when Array
+          value.map(&:to_s)
+        when String
+          [value.to_s]
         else []
         end
+      },
+
+      description: ->(value, metadata = {}) { 
+        value.to_s
+      },
+      credit_line: ->(value, metadata = {}) { 
+        value.to_s
+      },
+      source: ->(value, metadata = {}) { 
+        value.to_s
+      },
+      copyright_notice: ->(value, metadata = {}) { 
+        value.to_s
+      },
+      
+      # Additional text fields  
+      caption_writer: ->(value, metadata = {}) { 
+        value.to_s
+      },
+      usage_terms: ->(value, metadata = {}) { 
+        value.to_s
+      },
+      intellectual_genre: ->(value, metadata = {}) { 
+        value.to_s
+      },
+      event: ->(value, metadata = {}) { 
+        value.to_s
+      },
+      category: ->(value, metadata = {}) { 
+        value.to_s
+      },
+      sublocation: ->(value, metadata = {}) { 
+        value.to_s
+      },
+      city: ->(value, metadata = {}) { 
+        value.to_s
+      },
+      state_province: ->(value, metadata = {}) { 
+        value.to_s
+      },
+      country: ->(value, metadata = {}) { 
+        value.to_s
+      },
+      camera_make: ->(value, metadata = {}) { 
+        value.to_s
+      },
+      camera_model: ->(value, metadata = {}) { 
+        value.to_s
+      },
+      lens_info: ->(value, metadata = {}) { 
+        value.to_s
+      },
+      
+      # Legacy fields
+      alt: ->(value, metadata = {}) { 
+        value.to_s
+      },
+      author: ->(value, metadata = {}) { 
+        value.to_s
       }
     }.freeze
     
@@ -286,7 +399,7 @@ module Folio::Metadata
           if value.present?
             # Apply special processing if defined
             if processor = COMPLEX_FIELD_PROCESSORS[target_field]
-              # Pass full metadata for fields that need additional context (like GPS)
+              # Pass full metadata for fields that need additional context (like GPS or encoding repair)
               value = processor.arity == 2 ? processor.call(value, raw_metadata) : processor.call(value)
             end
             
@@ -294,6 +407,37 @@ module Folio::Metadata
           end
         end
         
+        # Derive provider/source name from credit_line if source is blank (common in Getty/Shutterstock)
+        if result[:source].blank? && result[:credit_line].present?
+          # If credit_line contains slash-delimited provider, take the last segment as provider name
+          credit = result[:credit_line].to_s
+          derived = credit.split('/').last.to_s.strip
+          result[:source] = derived.presence || credit
+        end
+        
+        # Heuristic provider detection if still blank: scan common fields for known providers
+        if result[:source].blank?
+          provider_list = (Rails.application.config.folio_image_metadata_known_providers || [])
+          haystack_values = [
+            raw_metadata["IPTC:CopyrightNotice"],
+            raw_metadata["XMP-dc:Rights"],
+            raw_metadata["IFD0:Software"],
+            raw_metadata["IPTC:OriginatingProgram"],
+            raw_metadata["Photoshop:WriterName"],
+            raw_metadata["Photoshop:ReaderName"]
+          ].compact.map { |v| v.is_a?(Array) ? v.join(' ') : v.to_s }.join(' \n ')
+          unless haystack_values.blank?
+            provider_list.each do |prov|
+              name = prov[:name]
+              patterns = Array(prov[:patterns])
+              if patterns.any? { |rx| haystack_values =~ rx }
+                result[:source] = name
+                break
+              end
+            end
+          end
+        end
+
         result
       end
       
@@ -307,6 +451,11 @@ module Folio::Metadata
       def extract_first_available_value(metadata, source_fields, locale: :en)
         source_fields.each do |field|
           value = metadata[field]
+          # If not found and the field is an unqualified IIM tag (no namespace),
+          # try with common group prefix used by ExifTool when -G1 is enabled
+          if value.blank? && !field.to_s.include?(":") && field.to_s =~ /[A-Za-z]/
+            value = metadata["IPTC:#{field}"]
+          end
           next if value.blank?
           
           # Handle Lang Alt structures (XMP dc:description, dc:rights, etc.)
@@ -411,6 +560,12 @@ module Folio::Metadata
           nil
         end
       end
+
+
+      
+
+
+
     end
   end
 end
