@@ -99,14 +99,48 @@ When an image is uploaded, the system automatically extracts and saves metadata 
 ```
 
 **Implementation notes:**
-- Uses ExifTool with `-G1 -struct -n` flags for namespace-qualified extraction
+- Uses ExifTool with `-G1 -struct -n -charset iptc=utf8` flags for namespace-qualified extraction
 - Mappings processed with XMP precedence over IPTC-IIM over EXIF
 - Only updates fields if they are blank (preserves user edits)
 - Runs after file processing completes
+- **UTF-8 charset handling**: Forces IPTC data to be read as UTF-8 to prevent mojibake in Czech/Slovak content
 
 📋 **[Complete Ruby mapping implementation →](image_metadata/iptc_metadata_mapping.md)**
 
-### 2. Configuration Options
+### 2. IPTC Charset Encoding
+
+**Problem**: JPEG files with Czech/Slovak characters in IPTC metadata often contain UTF-8 data, but ExifTool reads them as Latin-1 by default → creates mojibake (`ÄŒesk` instead of `Česk`).
+
+**Root Cause**: ExifTool ignores IPTC CodedCharacterSet (1:90) indicator and defaults to Latin-1 encoding, even when files contain UTF-8 data marked with `\x1b%G` UTF-8 indicator.
+
+**Solution**: Force UTF-8 charset in ExifTool configuration:
+
+```ruby
+# config/initializers/folio_image_metadata.rb
+config.folio_image_metadata_exiftool_options = ["-G1", "-struct", "-n", "-charset", "iptc=utf8"]
+```
+
+**Results**:
+- ✅ **Before**: `"ÄŒTK / Å imÃ¡nek VÃ­t"` (mojibake)
+- ✅ **After**: `"ČTK / Šimánek Vít"` (correct UTF-8)
+
+**Fallback for legacy files**:
+```ruby
+# When UTF-8 fails, try additional charsets
+config.folio_image_metadata_iptc_charset_candidates = %w[utf8 cp1250 iso-8859-2 cp1252]
+```
+
+**Verification**:
+```bash
+# Test raw ExifTool output
+exiftool -G1 -struct -n -charset iptc=utf8 -j file.jpg
+```
+
+Fields like `Caption-Abstract`, `IPTC:By-line` should contain proper Czech characters.
+
+📋 **[Detailed charset encoding guide →](image_metadata/charset_encoding.md)**
+
+### 3. Configuration Options
 
 Applications can configure metadata extraction behavior through initializers:
 
@@ -142,8 +176,11 @@ Rails.application.config.tap do |config|
   # Extract metadata to placements
   config.folio_image_metadata_copy_to_placements = true # default: true
   
-  # ExifTool command options
-  config.folio_image_metadata_exiftool_options = ["-G1", "-struct", "-n"] # default
+  # ExifTool command options  
+  # Force UTF-8 for IPTC (most modern files have UTF-8 data even when auto-detect fails)
+  config.folio_image_metadata_exiftool_options = ["-G1", "-struct", "-n", "-charset", "iptc=utf8"] # default
+  # When IPTC encoding is wrong or not declared, try these ExifTool IPTC charset fallbacks (order matters)
+  config.folio_image_metadata_iptc_charset_candidates = %w[utf8 cp1250 iso-8859-2 cp1252]
   
   # Language priority for Lang Alt fields (dc:description, dc:rights, etc.)
   config.folio_image_metadata_locale_priority = [:cs, :en, "x-default"] # Czech first, then English
@@ -151,7 +188,7 @@ Rails.application.config.tap do |config|
 end
 ```
 
-### 3. Conditional Processing
+### 4. Conditional Processing
 
 Metadata extraction only occurs when:
 - `exiftool` binary is available on the system
@@ -159,7 +196,7 @@ Metadata extraction only occurs when:
 - Target database fields are blank (no overwriting)
 - File is an image type (JPEG, PNG, TIFF, etc.)
 
-### 4. Image Placement Metadata
+### 5. Image Placement Metadata
 
 When creating new image placements, metadata can be automatically copied from the source image:
 
@@ -181,7 +218,7 @@ class Folio::FilePlacement::Image
 end
 ```
 
-### 5. Custom Mapping in Applications
+### 6. Custom Mapping in Applications
 
 Applications can define custom mapping logic:
 
