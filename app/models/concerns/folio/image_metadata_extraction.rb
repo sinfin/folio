@@ -12,13 +12,13 @@ module Folio::ImageMetadataExtraction
     return false unless Rails.application.config.folio_image_metadata_extraction_enabled
     return false unless is_a?(Folio::File::Image)
     return false unless file.present? && (file.respond_to?(:path) || file.is_a?(String))
-    
+
     # Don't extract during data migrations to avoid interfering with legacy migration
-    return false if Rails.env.test? && ENV['FOLIO_MIGRATION_MODE'] == 'true'
-    
+    return false if Rails.env.test? && ENV["FOLIO_MIGRATION_MODE"] == "true"
+
     # Check if we have new IPTC fields (backward compatibility)
     return false unless has_iptc_metadata_fields?
-    
+
     # Check if exiftool is available
     system("which exiftool > /dev/null 2>&1")
   end
@@ -34,10 +34,10 @@ module Folio::ImageMetadataExtraction
 
   def extract_image_metadata_sync
     return unless should_extract_metadata?
-    
+
     metadata = extract_raw_metadata_with_exiftool
     return unless metadata.present?
-    
+
     map_iptc_metadata(metadata)
     save if changed?
   rescue => e
@@ -55,16 +55,16 @@ module Folio::ImageMetadataExtraction
 
   def map_iptc_metadata(raw_metadata)
     return unless raw_metadata.present?
-    
+
     # Use the dedicated service for mapping
     mapped_fields = Folio::Metadata::IptcFieldMapper.map_metadata(raw_metadata)
     skip_fields = Rails.application.config.folio_image_metadata_skip_fields || []
-    
+
     mapped_fields.each do |field_name, value|
       next if skip_fields.include?(field_name)
       next if self[field_name].present? # Preserve existing data (blank field protection)
       next unless value.present?
-      
+
       self[field_name] = value
     end
 
@@ -76,7 +76,7 @@ module Folio::ImageMetadataExtraction
                         when String then existing.to_s.split(/[,;]/).map(&:strip).reject(&:blank?)
                         when Array then existing.map(&:to_s).map(&:strip).reject(&:blank?)
                         else []
-                        end
+        end
         new_tags = Array(mapped_fields[:keywords]).map(&:to_s).map(&:strip).reject(&:blank?)
         merged = (existing_tags + new_tags).uniq
         self.tag_list = merged.join(", ")
@@ -87,33 +87,32 @@ module Folio::ImageMetadataExtraction
   end
 
   private
+    def extract_raw_metadata_with_exiftool
+      return unless file.present? && File.exist?(file.path)
 
-  def extract_raw_metadata_with_exiftool
-    return unless file.present? && File.exist?(file.path)
-    
-    require 'open3'
-    
-    base_options = Rails.application.config.folio_image_metadata_exiftool_options || ["-G1", "-struct", "-n"]
-    command = ["exiftool", "-j", *base_options, file.path]
-    stdout, stderr, status = Open3.capture3(*command)
-    return JSON.parse(stdout).first if status.success?
-    Rails.logger.warn "ExifTool error for #{file_name}: #{stderr}"
-    # If initial read failed or produced mojibake, try IPTC charset candidates
-    begin
-      candidates = Array(Rails.application.config.folio_image_metadata_iptc_charset_candidates)
-      candidates.each do |cs|
-        opt = ["-charset", "iptc=#{cs}"]
-        stdout, stderr, status = Open3.capture3("exiftool", "-j", *(base_options + opt), file.path)
-        next unless status.success?
-        parsed = JSON.parse(stdout).first
-        return parsed if parsed.is_a?(Hash)
+      require "open3"
+
+      base_options = Rails.application.config.folio_image_metadata_exiftool_options || ["-G1", "-struct", "-n"]
+      command = ["exiftool", "-j", *base_options, file.path]
+      stdout, stderr, status = Open3.capture3(*command)
+      return JSON.parse(stdout).first if status.success?
+      Rails.logger.warn "ExifTool error for #{file_name}: #{stderr}"
+      # If initial read failed or produced mojibake, try IPTC charset candidates
+      begin
+        candidates = Array(Rails.application.config.folio_image_metadata_iptc_charset_candidates)
+        candidates.each do |cs|
+          opt = ["-charset", "iptc=#{cs}"]
+          stdout, stderr, status = Open3.capture3("exiftool", "-j", *(base_options + opt), file.path)
+          next unless status.success?
+          parsed = JSON.parse(stdout).first
+          return parsed if parsed.is_a?(Hash)
+        end
+      rescue => e
+        Rails.logger.warn "ExifTool charset retry failed for #{file_name}: #{e.message}"
       end
-    rescue => e
-      Rails.logger.warn "ExifTool charset retry failed for #{file_name}: #{e.message}"
+      nil
+    rescue JSON::ParserError => e
+      Rails.logger.error "Failed to parse ExifTool output for #{file_name}: #{e.message}"
+      nil
     end
-    nil
-  rescue JSON::ParserError => e
-    Rails.logger.error "Failed to parse ExifTool output for #{file_name}: #{e.message}"
-    nil
-  end
 end

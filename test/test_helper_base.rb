@@ -45,7 +45,7 @@ class ActiveSupport::TestCase
 
   def with_config(**config_overrides)
     original_values = {}
-    
+
     # Store original values
     config_overrides.each do |key, value|
       original_values[key] = Rails.application.config.send(key)

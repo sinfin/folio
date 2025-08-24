@@ -7,45 +7,44 @@ class Folio::FilePlacement::Image < Folio::FilePlacement::Base
 
   # Automatically inherit metadata from file when created
   before_validation :copy_metadata_from_file, on: :create
-  
+
   private
-  
-  def copy_metadata_from_file
-    return unless Rails.application.config.folio_image_metadata_copy_to_placements
-    return unless file.is_a?(Folio::File::Image)
-    
-    # Copy metadata with precedence: IPTC fields > legacy fields > metadata compose
-    copy_alt_text
-    copy_title_text
-    copy_caption_if_available
-  end
-  
-  def copy_alt_text
-    # Priority: placement alt > file description > file alt > headline > metadata compose
-    return if alt.present?
-    
-    self.alt = file.description.presence || 
-               file.alt.presence || 
-               file.headline.presence ||
-               file.metadata_compose(["Caption", "Description", "Abstract"])
-  end
-  
-  def copy_title_text
-    # Priority: placement title > file headline > file title > metadata compose
-    return if title.present?
-    
-    self.title = file.headline.presence ||
-                 file.title.presence ||
-                 file.metadata_compose(["Headline", "Title"])
-  end
-  
-  def copy_caption_if_available
-    # Copy to caption field if placement supports it
-    if respond_to?(:caption=) && caption.blank?
-      self.caption = file.description.presence ||
-                     file.metadata_compose(["Caption", "Description"])
+    def copy_metadata_from_file
+      return unless Rails.application.config.folio_image_metadata_copy_to_placements
+      return unless file.is_a?(Folio::File::Image)
+
+      # Copy metadata with precedence: IPTC fields > legacy fields > metadata compose
+      copy_alt_text
+      copy_title_text
+      copy_caption_if_available
     end
-  end
+
+    def copy_alt_text
+      # Priority: placement alt > file description > file alt > headline > metadata compose
+      return if alt.present?
+
+      self.alt = file.description.presence ||
+                 file.alt.presence ||
+                 file.headline.presence ||
+                 file.metadata_compose(["Caption", "Description", "Abstract"])
+    end
+
+    def copy_title_text
+      # Priority: placement title > file headline > file title > metadata compose
+      return if title.present?
+
+      self.title = file.headline.presence ||
+                   file.title.presence ||
+                   file.metadata_compose(["Headline", "Title"])
+    end
+
+    def copy_caption_if_available
+      # Copy to caption field if placement supports it
+      if respond_to?(:caption=) && caption.blank?
+        self.caption = file.description.presence ||
+                       file.metadata_compose(["Caption", "Description"])
+      end
+    end
 end
 
 # == Schema Information

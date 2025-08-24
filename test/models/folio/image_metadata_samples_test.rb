@@ -14,7 +14,7 @@ class Folio::File::ImageMetadataSamplesTest < ActiveSupport::TestCase
     skip "Test image not found" unless File.exist?(image_path)
 
     with_config(folio_image_metadata_extraction_enabled: true) do
-      image = create(:folio_file_image, 
+      image = create(:folio_file_image,
                      file: File.open(image_path),
                      site: @site,
                      description: nil,
@@ -182,7 +182,6 @@ class Folio::File::ImageMetadataSamplesTest < ActiveSupport::TestCase
 
     with_config(folio_image_metadata_extraction_enabled: true,
                 folio_image_metadata_copy_to_placements: true) do
-      
       image = create(:folio_file_image,
                      file: File.open(image_path),
                      site: @site,
@@ -190,8 +189,8 @@ class Folio::File::ImageMetadataSamplesTest < ActiveSupport::TestCase
                      author: nil)
 
       page = create(:folio_page, site: @site)
-      placement = create(:folio_image_placement, 
-                        file: image, 
+      placement = create(:folio_image_placement,
+                        file: image,
                         placement: page,
                         alt: nil,
                         title: nil)
@@ -203,21 +202,20 @@ class Folio::File::ImageMetadataSamplesTest < ActiveSupport::TestCase
   end
 
   private
+    def with_config(**config_overrides)
+      original_values = {}
 
-  def with_config(**config_overrides)
-    original_values = {}
-    
-    # Store original values
-    config_overrides.each do |key, value|
-      original_values[key] = Rails.application.config.send(key)
-      Rails.application.config.send("#{key}=", value)
-    end
+      # Store original values
+      config_overrides.each do |key, value|
+        original_values[key] = Rails.application.config.send(key)
+        Rails.application.config.send("#{key}=", value)
+      end
 
-    yield
-  ensure
-    # Restore original values
-    original_values.each do |key, value|
-      Rails.application.config.send("#{key}=", value)
+      yield
+    ensure
+      # Restore original values
+      original_values.each do |key, value|
+        Rails.application.config.send("#{key}=", value)
+      end
     end
-  end
 end

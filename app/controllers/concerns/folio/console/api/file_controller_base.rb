@@ -90,12 +90,12 @@ module Folio::Console::Api::FileControllerBase
 
   def extract_metadata
     return render(json: { error: "Not supported for this file type" }, status: 422) unless folio_console_record.respond_to?(:extract_metadata!)
-    
+
     # Force re-extraction even if metadata already exists
     if folio_console_record.respond_to?(:extract_metadata!)
       folio_console_record.extract_metadata!(force: true)
       folio_console_record.reload
-      
+
       render_record(folio_console_record, Folio::Console::FileSerializer, meta: {
         flash: {
           success: t("folio.console.files.metadata_extracted")

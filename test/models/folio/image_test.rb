@@ -18,12 +18,12 @@ class Folio::File::ImageTest < ActiveSupport::TestCase
         "Make" => "Canon",
         "Model" => "EOS R5"
       }
-      
+
       # Create image with blank fields to test extraction
       image = create(:folio_file_image, description: nil, author: nil)
       image.stub(:extract_raw_metadata_with_exiftool, metadata) do
         image.extract_image_metadata
-        
+
         assert_equal ["John Doe"], image.creator
         assert_equal "Test image description", image.description
         assert_equal "Test Headline", image.headline
@@ -36,19 +36,19 @@ class Folio::File::ImageTest < ActiveSupport::TestCase
   end
 
   test "preserves existing data during metadata extraction" do
-    image = create(:folio_file_image, 
+    image = create(:folio_file_image,
                    description: "Existing description",
                    headline: "Existing headline")
-    
+
     metadata = {
       "XMP-dc:description" => "New description from metadata",
       "XMP-photoshop:Headline" => "New headline from metadata",
       "XMP-dc:creator" => ["Author from metadata"]
     }
-    
+
     image.stub(:extract_raw_metadata_with_exiftool, metadata) do
       image.map_iptc_metadata(metadata)
-      
+
       # Should not overwrite existing data
       assert_equal "Existing description", image.description
       assert_equal "Existing headline", image.headline
@@ -62,10 +62,10 @@ class Folio::File::ImageTest < ActiveSupport::TestCase
       "GPSLatitude" => "50 deg 5' 23.28\" N",
       "GPSLongitude" => "14 deg 25' 15.12\" E"
     }
-    
+
     image = create(:folio_file_image)
     image.map_iptc_metadata(metadata)
-    
+
     assert_in_delta 50.089801, image.gps_latitude, 0.001
     assert_in_delta 14.420867, image.gps_longitude, 0.001
   end
@@ -74,10 +74,10 @@ class Folio::File::ImageTest < ActiveSupport::TestCase
     metadata = {
       "DateTimeOriginal" => "2024:01:15 14:30:25"
     }
-    
+
     image = create(:folio_file_image)
     image.map_iptc_metadata(metadata)
-    
+
     assert_equal Time.parse("2024-01-15 14:30:25"), image.capture_date
   end
 
@@ -85,17 +85,17 @@ class Folio::File::ImageTest < ActiveSupport::TestCase
     metadata = {
       "XMP-xmpRights:Marked" => "True"
     }
-    
+
     image = create(:folio_file_image)
     image.map_iptc_metadata(metadata)
-    
+
     assert_equal true, image.copyright_marked
   end
 
   test "respects configuration to disable extraction" do
     with_config(folio_image_metadata_extraction_enabled: false) do
       image = create(:folio_file_image)
-      
+
       assert_not image.should_extract_metadata?
     end
   end
@@ -107,10 +107,10 @@ class Folio::File::ImageTest < ActiveSupport::TestCase
         "XMP-photoshop:Category" => "News",
         "XMP-dc:creator" => ["John Doe"]
       }
-      
+
       image = create(:folio_file_image)
       image.map_iptc_metadata(metadata)
-      
+
       # Should skip configured fields
       assert_nil image.urgency
       assert_nil image.category
@@ -121,12 +121,12 @@ class Folio::File::ImageTest < ActiveSupport::TestCase
 
   test "metadata accessors work correctly" do
     image = create(:folio_file_image,
-                   headline: "IPTC Headline", 
+                   headline: "IPTC Headline",
                    keywords: ["tag1", "tag2"],
                    creator: ["Author One", "Author Two"],
                    gps_latitude: 50.0,
                    gps_longitude: 14.0)
-    
+
     assert_equal "IPTC Headline", image.title
     assert_equal ["tag1", "tag2"], image.keywords_list
     assert_equal "tag1, tag2", image.keywords_string
@@ -137,10 +137,10 @@ class Folio::File::ImageTest < ActiveSupport::TestCase
   test "geo_location builds from IPTC fields" do
     image = create(:folio_file_image,
                    sublocation: "Old Town",
-                   city: "Prague", 
+                   city: "Prague",
                    state_province: "Prague",
                    country: "Czech Republic")
-    
+
     assert_equal "Old Town, Prague, Prague, Czech Republic", image.geo_location
   end
 
@@ -152,9 +152,9 @@ class Folio::File::ImageTest < ActiveSupport::TestCase
         "cs" => "Czech description"
       }
     }
-    
+
     image = create(:folio_file_image)
-    
+
     # With default locale priority (en first)
     image.map_iptc_metadata(metadata)
     assert_equal "English description", image.description
@@ -165,10 +165,10 @@ class Folio::File::ImageTest < ActiveSupport::TestCase
     metadata = {
       "XMP-dc:creator" => ["Manual Author"]
     }
-    
+
     image.stub(:extract_raw_metadata_with_exiftool, metadata) do
       image.extract_metadata!
-      
+
       assert_equal ["Manual Author"], image.creator
     end
   end

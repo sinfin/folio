@@ -25,7 +25,7 @@ class Folio::File::Image < Folio::File
     if keywords.present? && keywords.is_a?(Array)
       keywords
     else
-      metadata_compose(["Keywords"])&.split(/[,;]/)&.map(&:strip)&.compact || []
+      metadata_compose(["Keywords"])&.split(/[,;]/)&.filter_map(&:strip) || []
     end
   end
 
