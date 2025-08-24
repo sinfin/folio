@@ -92,7 +92,7 @@ export default ({ formState, onValueChange, extractMetadata, readOnly, isExtract
             {value ? (
               <span className='text-dark'>{value}</span>
             ) : (
-              <span className='text-muted font-italic'>Not available</span>
+              <span className='text-muted font-italic'>{window.FolioConsole.translations['file/not_available']}</span>
             )}
           </div>
         )
@@ -131,7 +131,9 @@ export default ({ formState, onValueChange, extractMetadata, readOnly, isExtract
               <div key={field.key} className={field.priority === 'high' ? 'col-12 mb-3' : 'col-lg-6 mb-3'}>
                 <FormGroup className='mb-0'>
                   <Label className={`form-label small ${hasValue ? 'font-weight-bold' : ''}`}>
-                    {window.FolioConsole.translations[`metadata/${field.key}`] || field.label}
+                    {window.FolioConsole.translations[`file/metadata/${field.key}`]
+                      || window.FolioConsole.translations[`metadata/${field.key}`]
+                      || field.label}
                     {field.priority === 'high' && <span className='text-danger ml-1'>*</span>}
                   </Label>
                   {readOnly && !hasValue ? (
@@ -168,7 +170,7 @@ export default ({ formState, onValueChange, extractMetadata, readOnly, isExtract
             variant='primary'
             size='sm'
             icon='reload'
-            label={isExtracting ? 'Extracting...' : 'Extract Metadata'}
+            label={isExtracting ? window.FolioConsole.translations['file/extracting'] : window.FolioConsole.translations['file/extract_metadata']}
           />
         )}
       </div>
@@ -176,18 +178,18 @@ export default ({ formState, onValueChange, extractMetadata, readOnly, isExtract
       {!hasAnyMetadata && !readOnly && (
         <div className='alert alert-light border mb-4'>
           <i className='fas fa-info-circle text-info mr-2'></i>
-          <strong>No metadata found.</strong> Click "Extract Metadata" to automatically extract IPTC/EXIF data from this file.
+          <strong>{window.FolioConsole.translations['file/no_metadata_found']}</strong> {window.FolioConsole.translations['file/no_metadata_description']}
         </div>
       )}
 
       {/* Essential fields - always visible */}
-      {renderFieldGroup(essentialFields, 'Essential Information', 'file-alt')}
+      {renderFieldGroup(essentialFields, window.FolioConsole.translations['file/essential_information'], 'file-alt')}
       
       {/* Rights & Attribution - always visible */}  
-      {renderFieldGroup(rightsFields, 'Rights & Attribution', 'copyright')}
+      {renderFieldGroup(rightsFields, window.FolioConsole.translations['file/rights_attribution'], 'copyright')}
 
       {/* Location fields - for images with location data */}
-      {hasLocationData && renderFieldGroup(locationFields, 'Location', 'map-marker-alt')}
+      {hasLocationData && renderFieldGroup(locationFields, window.FolioConsole.translations['file/location'], 'map-marker-alt')}
 
       {/* Advanced fields toggle */}
       <div className='mb-3 pb-3 border-bottom'>
@@ -196,7 +198,7 @@ export default ({ formState, onValueChange, extractMetadata, readOnly, isExtract
           variant='link'
           size='sm'
           icon={showAdvanced ? 'arrow_up' : 'arrow_down'}
-          label={showAdvanced ? 'Hide Advanced Fields' : 'Show Advanced Fields'}
+          label={showAdvanced ? window.FolioConsole.translations['file/hide_advanced_fields'] : window.FolioConsole.translations['file/show_advanced_fields']}
         />
       </div>
 
@@ -212,11 +214,11 @@ export default ({ formState, onValueChange, extractMetadata, readOnly, isExtract
               variant='link'
               size='sm'
               icon={showTechnical ? 'arrow_up' : 'arrow_down'}
-              label={showTechnical ? 'Hide Technical Data' : 'Show Technical Data'}
+              label={showTechnical ? window.FolioConsole.translations['file/hide_technical_data'] : window.FolioConsole.translations['file/show_technical_data']}
             />
           </div>
 
-          {showTechnical && renderFieldGroup(technicalFields, 'Technical Metadata (Read-only)', 'camera')}
+          {showTechnical && renderFieldGroup(technicalFields, window.FolioConsole.translations['file/technical_metadata_readonly'], 'camera')}
         </>
       )}
 
@@ -225,8 +227,9 @@ export default ({ formState, onValueChange, extractMetadata, readOnly, isExtract
         <div className='mt-4 pt-3 border-top'>
           <small className='text-muted'>
             <i className='fas fa-robot mr-1'></i>
-            Metadata automatically extracted on {new Date(hasExtractedMetadata).toLocaleString()}.
-            Only blank fields are populated during extraction to preserve manual edits.
+            {window.FolioConsole.translations['file/metadata_extracted_at_prefix'] || 'Metadata automatically extracted on'} {new Date(hasExtractedMetadata).toLocaleString()}.
+            {' '}
+            {window.FolioConsole.translations['file/metadata_extracted_at_suffix'] || 'Only blank fields are populated during extraction to preserve manual edits.'}
           </small>
         </div>
       )}

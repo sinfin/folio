@@ -85,53 +85,95 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
             </div>
           )}
           <div className={(isImage || isVideo) ? 'col-lg-6 mb-3' : undefined}>
-            <FolioConsoleUiButtons className='mb-3'>
-              <FolioConsoleUiButton
-                href={file.attributes.source_url}
-                variant='secondary'
-                target='_blank'
-                rel='noopener noreferrer'
-                download={download}
-                icon='download'
-                label={window.FolioConsole.translations.downloadOriginal}
-              />
-
-              {(canDestroyFiles && !readOnly) && (
+            <div className='d-flex justify-content-between align-items-center mb-3'>
+              <FolioConsoleUiButtons>
                 <FolioConsoleUiButton
-                  class='overflow-hidden position-relative'
-                  icon='edit'
-                  variant='warning'
-                  label={window.FolioConsole.translations.replace}
-                >
-                  <FileEditInput type='file' onClick={onEditClick} onChange={(e) => uploadNewFileInstead(e.target.files[0])} />
-                </FolioConsoleUiButton>
-              )}
-
-              {(canDestroyFiles && !readOnly) && (
-                <FolioConsoleUiButton
-                  class={notAllowedCursor}
-                  onClick={onDeleteClick}
-                  disabled={indestructible}
-                  title={indestructible ? window.FolioConsole.translations.indestructibleFile : undefined}
-                  variant='danger'
-                  icon='delete'
-                  label={window.FolioConsole.translations.destroy}
+                  href={file.attributes.source_url}
+                  variant='secondary'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  download={download}
+                  icon='download'
+                  label={window.FolioConsole.translations.downloadOriginal}
                 />
+
+                {(canDestroyFiles && !readOnly) && (
+                  <FolioConsoleUiButton
+                    class='overflow-hidden position-relative'
+                    icon='edit'
+                    variant='warning'
+                    label={window.FolioConsole.translations.replace}
+                  >
+                    <FileEditInput type='file' onClick={onEditClick} onChange={(e) => uploadNewFileInstead(e.target.files[0])} />
+                  </FolioConsoleUiButton>
+                )}
+
+                {(canDestroyFiles && !readOnly) && (
+                  <FolioConsoleUiButton
+                    class={notAllowedCursor}
+                    onClick={onDeleteClick}
+                    disabled={indestructible}
+                    title={indestructible ? window.FolioConsole.translations.indestructibleFile : undefined}
+                    variant='danger'
+                    icon='delete'
+                    label={window.FolioConsole.translations.destroy}
+                  />
+                )}
+              </FolioConsoleUiButtons>
+              
+              {/* Sensitive content toggle next to buttons */}
+              {!readOnly && (
+                <div className='form-check form-switch'>
+                  <input
+                    className='form-check-input'
+                    type='checkbox'
+                    id='sensitiveContentToggle'
+                    checked={formState.sensitive_content || false}
+                    onChange={(e) => onValueChange('sensitive_content', e.currentTarget.checked)}
+                  />
+                  <label className='form-check-label text-muted' htmlFor='sensitiveContentToggle'>
+                    {window.FolioConsole.translations['file/sensitive_content']}
+                  </label>
+                </div>
               )}
-            </FolioConsoleUiButtons>
+              
+              {readOnly && formState.sensitive_content && (
+                <span className='badge badge-warning'>
+                  {window.FolioConsole.translations['file/sensitive_content']}
+                </span>
+              )}
+            </div>
 
-            <p>ID: {file.attributes.id}</p>
-
-            {file.attributes.imported_from_photo_archive && (
-              <p>{window.FolioConsole.translations.importedFromPhotoArchive}</p>
-            )}
-
-            <p className='mb-1'>{window.FolioConsole.translations.state}:</p>
-
-            <div className='f-c-state mb-3'>
-              <div className='f-c-state__state'>
-                <div className={`f-c-state__state-square f-c-state__state-square--color-${file.attributes.aasm_state_color}`} />
-                {file.attributes.aasm_state_human}
+            <div className='f-c-file-metadata bg-light p-3 mb-3'>
+              <div className='d-flex justify-content-between align-items-center'>
+                <div className='d-flex align-items-center'>
+                  <span className='me-3'>
+                    <strong>ID:</strong> {file.attributes.id}
+                  </span>
+                  <span className='me-3 text-muted'>
+                    {file.attributes.file_mime_type}
+                  </span>
+                  <span className='me-3 text-muted'>
+                    <strong>Nahráno:</strong> {new Date(file.attributes.created_at).toLocaleDateString('cs-CZ', { 
+                      year: 'numeric', 
+                      month: '2-digit', 
+                      day: '2-digit',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })}
+                  </span>
+                  {file.attributes.imported_from_photo_archive && (
+                    <span className='badge badge-info me-2'>
+                      {window.FolioConsole.translations.importedFromPhotoArchive}
+                    </span>
+                  )}
+                </div>
+                <div className='f-c-state'>
+                  <div className='f-c-state__state' role='status' aria-label={`${window.FolioConsole.translations.state}: ${file.attributes.aasm_state_human}`}>
+                    <div className={`f-c-state__state-square f-c-state__state-square--color-${file.attributes.aasm_state_color}`} aria-hidden='true' />
+                    <span className='f-c-state__text'>{file.attributes.aasm_state_human}</span>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -310,24 +352,7 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
               )
             }
 
-            {readOnly ? (
-              formState.sensitiveContent ? <p>{window.FolioConsole.translations.fileSensitiveContent}</p> : null
-            ) : (
-              <FormGroup>
-                <FormGroup check>
-                  <Label className='form-label' check>
-                    <Input
-                      type='checkbox'
-                      name='sensitive_content'
-                      onChange={(e) => onValueChange('sensitive_content', e.currentTarget.checked)}
-                      checked={formState.sensitive_content}
-                    />
-                    {' '}
-                    {window.FolioConsole.translations.fileSensitiveContent}
-                  </Label>
-                </FormGroup>
-              </FormGroup>
-            )}
+
 
             {!readOnly && (
               <button type='button' className='btn btn-primary px-4' onClick={saveModal}>

@@ -4,48 +4,63 @@ cs:
     console:
       file:
         picker:
-          add_file: Přidat soubor
+          add_file: 'Přidat soubor'
           hint:
-            Folio::File::Audio: "Podporované formáty: MP3, AAC do 1000 MB"
-            Folio::File::Video: "Podporované formáty: MP4, WebM do 1000 MB"
-        metadata_extracted: "Metadata byla úspěšně extrahována z obrázku"
-        metadata_extraction_failed: "Nepodařilo se extrahovat metadata z obrázku"
+            Folio::File::Audio: 'Podporované formáty: MP3, AAC do 1000 MB'
+            Folio::File::Video: 'Podporované formáty: MP4, WebM do 1000 MB'
+        metadata_extracted: 'Metadata byla úspěšně extrahována z obrázku'
+        metadata_extraction_failed: 'Nepodařilo se extrahovat metadata z obrázku'
+        uploaded: 'Nahráno'
+        sensitive_content: 'Citlivý obsah'
+        extract_metadata: 'Extrahovat metadata'
+        extracting: 'Extrahuje se...'
+        no_metadata_found: 'Metadata nenalezena.'
+        no_metadata_description: 'Klikněte na „Extrahovat metadata“ pro automatickou extrakci IPTC/EXIF dat z tohoto souboru.'
+        essential_information: 'Základní informace'
+        rights_attribution: 'Práva a autorství'
+        location: 'Lokalita'
+        show_advanced_fields: 'Zobrazit pokročilá pole'
+        hide_advanced_fields: 'Skrýt pokročilá pole'
+        show_technical_data: 'Zobrazit technická data'
+        hide_technical_data: 'Skrýt technická data'
+        technical_metadata_readonly: 'Technická metadata (pouze pro čtení)'
+        not_available: 'Nedostupné'
+        metadata_extracted_at_prefix: 'Metadata automaticky extrahována dne'
+        metadata_extracted_at_suffix: 'Při extrakci se vyplňují pouze prázdná pole, aby se zachovaly ruční úpravy.'
       files:
-        metadata_extracted: "Metadata byla úspěšně extrahována z obrázku"
-        metadata_extraction_failed: "Nepodařilo se extrahovat metadata z obrázku"
+        metadata_extracted: 'Metadata byla úspěšně extrahována z obrázku'
+        metadata_extraction_failed: 'Nepodařilo se extrahovat metadata z obrázku'
   metadata:
-    # IPTC Core pole
-    headline: "Titulek"
-    creator: "Autor(i)"
-    caption_writer: "Autor popisku"
-    credit_line: "Credit"
-    source: "Zdroj"
-    copyright_notice: "Copyright"
-    copyright_marked: "Copyright označen"
-    usage_terms: "Podmínky užití"
-    rights_usage_info: "URL k právům"
-    keywords: "Klíčová slova"
-    intellectual_genre: "Žánr"
-    subject_codes: "Předmětové kódy"
-    scene_codes: "Kódy scény"
-    event: "Událost"
-    category: "Kategorie"
-    urgency: "Naléhavost"
-    persons_shown: "Zobrazené osoby"
-    persons_shown_details: "Zobrazené osoby (detaily)"
-    organizations_shown: "Zobrazené organizace"
-    location_created: "Místo vytvoření"
-    location_shown: "Zobrazené místo"
-    sublocation: "Sublokace"
-    city: "Město"
-    state_province: "Stát/Kraj"
-    country: "Země"
-    country_code: "Kód země"
-    # Technická metadata
-    camera_make: "Značka fotoaparátu"
-    camera_model: "Model fotoaparátu"
-    lens_info: "Informace o objektivu"
-    capture_date: "Datum pořízení"
-    gps_latitude: "GPS šířka"
-    gps_longitude: "GPS délka"
-    orientation: "Orientace"
+    headline: 'Titulek'
+    creator: 'Autor(i)'
+    caption_writer: 'Autor popisku'
+    credit_line: 'Credit'
+    source: 'Zdroj'
+    copyright_notice: 'Copyright'
+    copyright_marked: 'Copyright označen'
+    usage_terms: 'Podmínky užití'
+    rights_usage_info: 'URL k právům'
+    keywords: 'Klíčová slova'
+    intellectual_genre: 'Žánr'
+    subject_codes: 'Předmětové kódy'
+    scene_codes: 'Kódy scény'
+    event: 'Událost'
+    category: 'Kategorie'
+    urgency: 'Naléhavost'
+    persons_shown: 'Zobrazené osoby'
+    persons_shown_details: 'Zobrazené osoby (detaily)'
+    organizations_shown: 'Zobrazené organizace'
+    location_created: 'Místo vytvoření'
+    location_shown: 'Zobrazené místo'
+    sublocation: 'Sublokace'
+    city: 'Město'
+    state_province: 'Stát/Kraj'
+    country: 'Země'
+    country_code: 'Kód země'
+    camera_make: 'Značka fotoaparátu'
+    camera_model: 'Model fotoaparátu'
+    lens_info: 'Informace o objektivu'
+    capture_date: 'Datum pořízení'
+    gps_latitude: 'GPS šířka'
+    gps_longitude: 'GPS délka'
+    orientation: 'Orientace'
