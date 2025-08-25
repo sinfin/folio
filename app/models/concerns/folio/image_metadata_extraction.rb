@@ -206,6 +206,31 @@ module Folio::ImageMetadataExtraction
       end
     end
 
+    # GPS getters prefer DB columns, fallback to raw metadata JSON
+    def gps_latitude
+      column_value = self[:gps_latitude]
+      return column_value if column_value.present?
+
+      raw = file_metadata&.dig("GPSLatitude") || file_metadata&.dig("Composite:GPSLatitude")
+      case raw
+      when Numeric then raw.to_f
+      when String then raw.to_f
+      else nil
+      end
+    end
+
+    def gps_longitude
+      column_value = self[:gps_longitude]
+      return column_value if column_value.present?
+
+      raw = file_metadata&.dig("GPSLongitude") || file_metadata&.dig("Composite:GPSLongitude")
+      case raw
+      when Numeric then raw.to_f
+      when String then raw.to_f
+      else nil
+      end
+    end
+
     def credit_line
       # Prefer processed data (UTF-8 fixed) over raw metadata
       file_metadata&.dig("credit_line") ||                    # ✅ Processed data (UTF-8)

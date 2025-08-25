@@ -44,6 +44,38 @@ export default ({ file }) => {
     return value
   }
 
+  const hasLatLon = () => {
+    const lat = file.attributes.gps_latitude
+    const lon = file.attributes.gps_longitude
+    return (lat || lat === 0) && (lon || lon === 0)
+  }
+
+  const renderGpsRow = () => {
+    const lat = Number(file.attributes.gps_latitude)
+    const lon = Number(file.attributes.gps_longitude)
+    if (!hasLatLon()) return null
+
+    const latStr = isFinite(lat) ? lat.toFixed(6) : String(lat)
+    const lonStr = isFinite(lon) ? lon.toFixed(6) : String(lon)
+    const googleUrl = `https://www.google.com/maps/search/?api=1&query=${latStr},${lonStr}`
+    const mapyUrl = `https://mapy.cz/zakladni?q=${encodeURIComponent(latStr + ', ' + lonStr)}`
+
+    return (
+      <tr>
+        <td className='text-muted fw-medium' style={{ width: '30%' }}>
+          {window.FolioConsole.translations['file/metadata/gps_coordinates'] || 'GPS'}
+        </td>
+        <td className='text-break'>
+          <span>{latStr}, {lonStr}</span>
+          {' '}
+          <a href={googleUrl} target='_blank' rel='noopener noreferrer'>Google Maps</a>
+          {' · '}
+          <a href={mapyUrl} target='_blank' rel='noopener noreferrer'>Mapy.cz</a>
+        </td>
+      </tr>
+    )
+  }
+
   const renderSectionHeader = (title, icon = 'info') => (
     <tr className='table-secondary'>
       <td colSpan='2' className='fw-bold text-uppercase small py-2'>
@@ -59,6 +91,11 @@ export default ({ file }) => {
     // Pretty-print structured IPTC location arrays (IPTC Extension)
     if (field.key === 'location_created' || field.key === 'location_shown') {
       value = formatLocationValue(value)
+    }
+
+    // Hide individual GPS rows if we have a combined GPS row
+    if ((field.key === 'gps_latitude' || field.key === 'gps_longitude') && hasLatLon()) {
+      return null
     }
     
     // Skip empty values
@@ -190,6 +227,7 @@ export default ({ file }) => {
             {sectionsWithData.map((section, sectionIndex) => (
               <React.Fragment key={`section-${sectionIndex}`}>
                 {renderSectionHeader(section.title, section.icon)}
+                {section.fields.some(f => f.key === 'gps_latitude' || f.key === 'gps_longitude') && renderGpsRow()}
                 {section.fields.map(field => renderMetadataRow(field))}
               </React.Fragment>
             ))}

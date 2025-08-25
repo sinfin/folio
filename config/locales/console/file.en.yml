@@ -27,6 +27,7 @@ en:
         technical_metadata_readonly: "Technical Metadata (Read-only)"
         descriptive_metadata: 'Descriptive Information'
         technical_metadata: 'Technical Information'
+        gps_coordinates: 'GPS Coordinates'
         rights_metadata: 'Rights & Attribution'
         location_metadata: 'Location Information'
         metadata_readonly_info: 'This metadata is extracted automatically from the file and is read-only. Use the form fields above to edit user-facing content.'

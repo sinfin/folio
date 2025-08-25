@@ -27,6 +27,7 @@ cs:
         technical_metadata_readonly: 'Technická metadata (pouze pro čtení)'
         descriptive_metadata: 'Popisná metadata'
         technical_metadata: 'Technická metadata'
+        gps_coordinates: 'GPS souřadnice'
         rights_metadata: 'Práva a autorství'
         location_metadata: 'Lokalita'
         metadata_readonly_info: 'Tato metadata jsou automaticky extrahována ze souboru a nelze je upravit. Pro editaci obsahu použijte formulářová pole výše.'
