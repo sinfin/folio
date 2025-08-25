@@ -45,7 +45,6 @@ class Folio::Console::FileSerializer
              :category,
              :urgency,
              :persons_shown,
-             :persons_shown_details,
              :organizations_shown,
              :location_created,
              :location_shown,
@@ -202,5 +201,103 @@ class Folio::Console::FileSerializer
         object.imported_from_photo_archive?
       end
     end
+  end
+
+  # JSON-based metadata getters for read-only display in UI
+  attribute :creator do |object|
+    object.respond_to?(:creator) ? object.creator : []
+  end
+
+  attribute :credit_line do |object|
+    object.respond_to?(:credit_line) ? object.credit_line : nil
+  end
+
+  attribute :copyright_notice do |object|
+    object.respond_to?(:copyright_notice) ? object.copyright_notice : nil
+  end
+
+  attribute :source_from_metadata do |object|
+    object.respond_to?(:source_from_metadata) ? object.source_from_metadata : nil
+  end
+
+  attribute :keywords_from_metadata do |object|
+    object.respond_to?(:keywords_from_metadata) ? object.keywords_from_metadata : []
+  end
+
+  attribute :city do |object|
+    object.respond_to?(:city) ? object.city : nil
+  end
+
+  attribute :country do |object|
+    object.respond_to?(:country) ? object.country : nil
+  end
+
+  attribute :country_code do |object|
+    object.respond_to?(:country_code) ? object.country_code : nil
+  end
+
+  attribute :intellectual_genre do |object|
+    object.respond_to?(:intellectual_genre) ? object.intellectual_genre : nil
+  end
+
+  attribute :event do |object|
+    object.respond_to?(:event) ? object.event : nil
+  end
+
+  attribute :caption_writer do |object|
+    object.respond_to?(:caption_writer) ? object.caption_writer : nil
+  end
+
+  attribute :urgency do |object|
+    object.respond_to?(:urgency) ? object.urgency : nil
+  end
+
+  attribute :category do |object|
+    object.respond_to?(:category) ? object.category : nil
+  end
+
+  attribute :sublocation do |object|
+    object.respond_to?(:sublocation) ? object.sublocation : nil
+  end
+
+  attribute :state_province do |object|
+    object.respond_to?(:state_province) ? object.state_province : nil
+  end
+
+  # Technical EXIF data
+  attribute :focal_length do |object|
+    object.respond_to?(:focal_length) ? object.focal_length : nil
+  end
+
+  attribute :aperture do |object|
+    object.respond_to?(:aperture) ? object.aperture : nil
+  end
+
+  attribute :shutter_speed do |object|
+    object.respond_to?(:shutter_speed) ? object.shutter_speed : nil
+  end
+
+  attribute :iso_speed do |object|
+    object.respond_to?(:iso_speed) ? object.iso_speed : nil
+  end
+
+  attribute :flash do |object|
+    object.respond_to?(:flash) ? object.flash : nil
+  end
+
+  attribute :white_balance do |object|
+    object.respond_to?(:white_balance) ? object.white_balance : nil
+  end
+
+  attribute :metering_mode do |object|
+    object.respond_to?(:metering_mode) ? object.metering_mode : nil
+  end
+
+  attribute :exposure_mode do |object|
+    object.respond_to?(:exposure_mode) ? object.exposure_mode : nil
+  end
+
+  attribute :exposure_compensation do |object|
+    object.respond_to?(:exposure_compensation) ? object.exposure_compensation : nil
   end
 end

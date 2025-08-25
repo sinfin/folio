@@ -34,78 +34,89 @@ Image metadata in global agencies follows international standards. The key is to
 
 ## Core Functionality
 
-### 1. Automatic Field Mapping
+### 1. JSON-Based Metadata Extraction & User Field Population
 
-When an image is uploaded, the system automatically extracts and saves metadata to database columns following **IPTC Photo Metadata Standard** with proper namespace precedence. **Existing data is never overwritten** - extraction only fills blank fields.
+When an image is uploaded, the system:
+1. **Extracts** all IPTC/EXIF/XMP metadata using ExifTool
+2. **Stores** complete raw metadata in `file_metadata` JSON column  
+3. **Populates** blank user-editable fields from extracted metadata
+4. **Preserves** all original metadata for display/analysis
 
-📋 **[Migration Guide with Backward Compatibility →](image_metadata/iptc_migration_with_aliases.md)**
-
-**Metadata Precedence (recommended by IPTC):**
-1. **XMP** (preferred, richest namespace support)
-2. **IPTC-IIM** (legacy compatibility)  
-3. **EXIF** (technical data: timestamp, GPS, camera settings)
-
-**Standard Field Mappings:**
+**Extraction Process:**
 ```ruby
-{
-  # Core descriptive fields
-  headline: ["XMP-photoshop:Headline", "Headline"],
-  description: ["XMP-dc:description", "Caption-Abstract", "ImageDescription"],
-  creator: ["XMP-dc:creator", "By-line", "Artist"],  # Store as JSONB array
-  caption_writer: ["XMP-photoshop:CaptionWriter"],
-  credit_line: ["XMP-iptcCore:CreditLine", "XMP-photoshop:Credit", "Credit"],
-  source: ["XMP-iptcCore:Source", "XMP-photoshop:Source", "Source"],
-  
-  # Rights management  
-  copyright_notice: ["XMP-photoshop:Copyright", "XMP-dc:rights"],
-  copyright_marked: ["XMP-xmpRights:Marked"],  # Boolean
-  usage_terms: ["XMP-xmpRights:UsageTerms"],
-  rights_usage_info: ["XMP-xmpRights:WebStatement"],  # URL
-  
-  # Classification (JSONB arrays)
-  keywords: ["XMP-dc:subject"],  # Store as JSONB array
-  intellectual_genre: ["XMP-iptcCore:IntellectualGenre"],
-  subject_codes: ["XMP-iptcCore:SubjectCode"],  # JSONB array
-  scene_codes: ["XMP-iptcCore:Scene"],  # JSONB array
-  event: ["XMP-iptcCore:Event"],  # Single string
-  
-  # Legacy fields (deprecated)
-  category: ["XMP-photoshop:Category", "Category"],
-  urgency: ["XMP-photoshop:Urgency", "Urgency"],
-  
-  # People and objects (JSONB arrays)
-  persons_shown: ["XMP-iptcExt:PersonInImage"],
-  persons_shown_details: ["XMP-iptcExt:PersonInImageWDetails"],
-  organizations_shown: ["XMP-iptcExt:OrganisationInImageName"],
-  
-  # Location data
-  location_created: ["XMP-iptcExt:LocationCreated"],  # JSONB array of structs
-  location_shown: ["XMP-iptcExt:LocationShown"],  # JSONB array of structs
-  sublocation: ["XMP-iptcCore:Location"],  # Neighborhood/venue
-  city: ["XMP-photoshop:City", "City"],
-  state_province: ["XMP-photoshop:State", "Province-State"],
-  country: ["XMP-iptcCore:CountryName", "Country-PrimaryLocationName", "Country"],
-  country_code: ["XMP-iptcCore:CountryCode", "Country-PrimaryLocationCode"],  # 2 chars
-  
-  # Technical metadata from EXIF
-  camera_make: ["Make"],
-  camera_model: ["Model"], 
-  lens_info: ["LensModel", "LensInfo"],
-  capture_date: ["DateTimeOriginal", "XMP-photoshop:DateCreated", "XMP-xmp:CreateDate", "CreateDate"],
-  gps_latitude: ["GPSLatitude"],
-  gps_longitude: ["GPSLongitude"],
-  orientation: ["Orientation"]
-}
+# 1. Extract raw metadata with namespace preservation
+raw_metadata = extract_raw_metadata_with_exiftool(file_path) 
+# => {
+#   "XMP-dc:Creator" => ["John Doe", "Jane Smith"],
+#   "XMP-photoshop:Headline" => "Breaking News Photo", 
+#   "XMP-iptcCore:CreditLine" => "Reuters",
+#   "Make" => "Canon", "Model" => "EOS R5",
+#   "DateTimeOriginal" => "2024:03:15 14:30:00",
+#   "GPSLatitude" => 50.0755, ...
+# }
+
+# 2. Store ALL metadata in JSON (never loses data)
+file.update!(file_metadata: raw_metadata)
+
+# 3. Auto-populate blank user fields (preserves existing values)
+populate_user_fields_from_metadata(file) if file.should_extract_metadata?
 ```
 
-**Implementation notes:**
-- Uses ExifTool with `-G1 -struct -n -charset iptc=utf8` flags for namespace-qualified extraction
-- Mappings processed with XMP precedence over IPTC-IIM over EXIF
-- Only updates fields if they are blank (preserves user edits)
-- Runs after file processing completes
-- **UTF-8 charset handling**: Forces IPTC data to be read as UTF-8 to prevent mojibake in Czech/Slovak content
+**User Field Population Logic:**
+```ruby
+def populate_user_fields_from_metadata(file)
+  # Only fill blank fields - never overwrite user data
+  if file.author.blank?
+    creators = extract_creators_from_json(file.file_metadata)
+    file.author = creators.join(", ") if creators.any?
+  end
+  
+  if file.description.blank?
+    headline = file.file_metadata&.dig("XMP-photoshop:Headline") ||
+               file.file_metadata&.dig("Headline")
+    file.description = headline if headline.present?
+  end
+  
+  if file.attribution_copyright.blank?
+    copyright = file.file_metadata&.dig("XMP-photoshop:Copyright") ||
+               file.file_metadata&.dig("XMP-dc:rights")
+    file.attribution_copyright = copyright if copyright.present?
+  end
+  
+  # Populate essential columns for business logic
+  file.capture_date = parse_capture_date_from_json(file.file_metadata) if file.capture_date.blank?
+  file.gps_latitude = file.file_metadata&.dig("GPSLatitude") if file.gps_latitude.blank?
+  file.gps_longitude = file.file_metadata&.dig("GPSLongitude") if file.gps_longitude.blank?
+end
+```
 
-📋 **[Complete Ruby mapping implementation →](image_metadata/iptc_metadata_mapping.md)**
+**Metadata Display (Read-Only Access):**
+All IPTC metadata accessible via getters that query the JSON:
+```ruby
+def headline
+  file_metadata&.dig("XMP-photoshop:Headline") || file_metadata&.dig("Headline")
+end
+
+def creator_list
+  creators = file_metadata&.dig("XMP-dc:Creator") || 
+            file_metadata&.dig("By-line") || file_metadata&.dig("Artist")
+  Array(creators).reject(&:blank?)
+end
+
+def credit_line_from_metadata
+  file_metadata&.dig("XMP-iptcCore:CreditLine") ||
+  file_metadata&.dig("Credit") || file_metadata&.dig("XMP-photoshop:Credit")  
+end
+```
+
+**Implementation Notes:**
+- Uses ExifTool with `-G1 -struct -n -charset iptc=utf8` flags
+- Preserves namespace information (`XMP-dc:Creator` vs `IPTC:By-line`)
+- **UTF-8 charset handling**: Prevents mojibake in Czech/Slovak content
+- All metadata always available in JSON, regardless of schema changes
+- User fields remain fully editable and indexed for search
+
+📋 **[Complete implementation details →](image_metadata/json_based_mapping.md)**
 
 ### 2. IPTC Charset Encoding
 
@@ -144,49 +155,52 @@ Fields like `Caption-Abstract`, `IPTC:By-line` should contain proper Czech chara
 
 Applications can configure metadata extraction behavior through initializers:
 
-```ruby
-# config/initializers/folio.rb
+```ruby  
+# config/initializers/folio_image_metadata.rb
 
 Rails.application.config.tap do |config|
   # Enable/disable metadata extraction globally
   config.folio_image_metadata_extraction_enabled = true # default: true
   
-  # Use IPTC-compliant field mappings (recommended)
-  config.folio_image_metadata_use_iptc_standard = true # default: true
+  # ExifTool command options for metadata extraction
+  # Force UTF-8 for IPTC to prevent Czech/Slovak mojibake
+  config.folio_image_metadata_exiftool_options = ["-G1", "-struct", "-n", "-charset", "iptc=utf8"]
   
-  # Custom field mappings (extends IPTC standard)
-  config.folio_image_metadata_custom_mappings = {
-    # Override IPTC mapping for specific fields
-    headline: ["XMP-custom:CompanyTitle", "XMP-photoshop:Headline", "Headline"],
-    
-    # Add completely custom fields
-    project_name: ["XMP-custom:ProjectName", "XMP-iptcExt:Event"],
-    internal_reference: ["XMP-custom:InternalRef"]
-  }
-  
-  # Fields to skip during extraction
-  config.folio_image_metadata_skip_fields = [:urgency, :categories]
-  
-  # Industry standard validation (optional)
-  config.folio_image_metadata_require_agency_fields = false # default: false
-  config.folio_image_metadata_required_fields = [
-    :creator, :credit_line, :copyright_notice, :source
-  ] # IPTC recommended fields for professional use
-  
-  # Extract metadata to placements
-  config.folio_image_metadata_copy_to_placements = true # default: true
-  
-  # ExifTool command options  
-  # Force UTF-8 for IPTC (most modern files have UTF-8 data even when auto-detect fails)
-  config.folio_image_metadata_exiftool_options = ["-G1", "-struct", "-n", "-charset", "iptc=utf8"] # default
-  # When IPTC encoding is wrong or not declared, try these ExifTool IPTC charset fallbacks (order matters)
+  # When UTF-8 fails, try these charset candidates for legacy files  
   config.folio_image_metadata_iptc_charset_candidates = %w[utf8 cp1250 iso-8859-2 cp1252]
   
-  # Language priority for Lang Alt fields (dc:description, dc:rights, etc.)
-  config.folio_image_metadata_locale_priority = [:cs, :en, "x-default"] # Czech first, then English
-  # Default: [:en, "x-default"]
+  # User field auto-population using IptcFieldMapper
+  config.folio_image_metadata_populate_user_fields = {
+    headline: :headline,                        # Uses IptcFieldMapper with fallbacks
+    author: :creator,                           # Uses IptcFieldMapper (array → joined string)  
+    description: :description,                  # Uses IptcFieldMapper with fallbacks
+    attribution_copyright: :copyright_notice,   # Uses IptcFieldMapper
+    attribution_source: :credit_line,          # Uses IptcFieldMapper with derived source
+    capture_date: :capture_date,                # Uses IptcFieldMapper with timezone parsing
+    gps_latitude: :gps_latitude,                # Uses IptcFieldMapper with decimal conversion
+    gps_longitude: :gps_longitude,              # Uses IptcFieldMapper with decimal conversion
+    # keywords: merged into tag_list automatically (no config needed)
+  }
+  
+  # Skip auto-population for specific fields (user controls these manually)
+  config.folio_image_metadata_skip_population_fields = []
+  
+  # Copy metadata to image placements
+  config.folio_image_metadata_copy_to_placements = true # default: true
+  
+  # Tags integration - merge extracted keywords into tag_list
+  config.folio_image_metadata_merge_keywords_to_tags = true # default: true
+  
+  # Language priority for multi-language XMP fields (dc:description, dc:rights, etc.)
+  config.folio_image_metadata_locale_priority = [:cs, :en, "x-default"] 
 end
 ```
+
+**Key Changes in JSON-Based Approach**:
+- ✅ **Simplified Config**: No complex field mappings, just population rules
+- ✅ **All Data Preserved**: Raw metadata always stored in JSON
+- ✅ **User Control**: Clear separation between auto-population and metadata display
+- ✅ **Charset Handling**: Built-in UTF-8 support with fallbacks
 
 ### 4. Conditional Processing
 
@@ -353,74 +367,208 @@ end
    - Metadata extraction hooks/events system
    - Testing tools and console commands
 
-## Database Schema Changes
+## Database Schema Strategy
 
-The feature requires additional columns in the `folio_files` table to store IPTC-compliant metadata:
+**Core Principle**: Metadata stays in JSON, only essential business-critical fields get dedicated columns.
+
+### Current Schema (Preserved + Headline)
+```ruby
+# Existing folio_files schema + headline field
+create_table "folio_files" do |t|
+  t.string "file_uid"
+  t.string "file_name" 
+  t.string "type"
+  t.text "thumbnail_sizes", default: "--- {}\n"
+  t.datetime "created_at", precision: nil, null: false
+  t.datetime "updated_at", precision: nil, null: false
+  t.integer "file_width"
+  t.integer "file_height"
+  t.bigint "file_size"
+  t.json "additional_data"
+  t.json "file_metadata"           # ← RAW IPTC/EXIF/XMP DATA STORED HERE
+  t.string "hash_id"
+  t.string "headline"              # ← USER EDITABLE (Titulek)
+  t.string "author"                # ← USER EDITABLE (Autor)
+  t.text "description"             # ← USER EDITABLE (Popis) 
+  t.integer "file_placements_size"
+  t.string "file_name_for_search"
+  t.boolean "sensitive_content", default: false
+  t.string "file_mime_type"
+  t.string "default_gravity"
+  t.integer "file_track_duration"
+  t.string "aasm_state"
+  t.json "remote_services_data", default: {}
+  t.integer "preview_track_duration_in_seconds"
+  t.string "alt"                   # ← USER EDITABLE (Alt, images only)
+  t.bigint "site_id", null: false
+  t.string "attribution_source"    # ← USER EDITABLE (Zdroj)
+  t.string "attribution_source_url" # ← USER EDITABLE (Zdroj URL)
+  t.string "attribution_copyright"  # ← USER EDITABLE (Copyright)
+  t.string "attribution_licence"    # ← USER EDITABLE (Licence)
+end
+```
+
+### New Columns (Minimal Addition)
+Only add columns that are **essential for business logic**, not available in original schema:
 
 ```ruby
-# db/migrate/add_iptc_metadata_fields_to_folio_files.rb
-class AddIptcMetadataFieldsToFolioFiles < ActiveRecord::Migration[7.0]
+# db/migrate/add_essential_metadata_fields_to_folio_files.rb
+class AddEssentialMetadataFieldsToFolioFiles < ActiveRecord::Migration[7.0]
   def change
-    # Core descriptive fields
+    # User-editable field for headline/title
     add_column :folio_files, :headline, :string
-    add_column :folio_files, :creator, :jsonb, default: []  # Array of creators
-    add_column :folio_files, :caption_writer, :string
-    add_column :folio_files, :credit_line, :string
-    add_column :folio_files, :source, :string
     
-    # Rights management
-    add_column :folio_files, :copyright_notice, :text
-    add_column :folio_files, :copyright_marked, :boolean, default: false
-    add_column :folio_files, :usage_terms, :text
-    add_column :folio_files, :rights_usage_info, :string  # URL
-    
-    # Classification (JSONB arrays for multi-value fields)
-    add_column :folio_files, :keywords, :jsonb, default: []
-    add_column :folio_files, :intellectual_genre, :string
-    add_column :folio_files, :subject_codes, :jsonb, default: []
-    add_column :folio_files, :scene_codes, :jsonb, default: []
-    add_column :folio_files, :event, :string  # Single event string
-    
-    # Legacy fields (for backwards compatibility)
-    add_column :folio_files, :category, :string
-    add_column :folio_files, :urgency, :integer
-    
-    # People and objects (JSONB arrays)
-    add_column :folio_files, :persons_shown, :jsonb, default: []
-    add_column :folio_files, :persons_shown_details, :jsonb, default: []
-    add_column :folio_files, :organizations_shown, :jsonb, default: []
-    
-    # Location data
-    add_column :folio_files, :location_created, :jsonb, default: []  # Array of structs
-    add_column :folio_files, :location_shown, :jsonb, default: []    # Array of structs
-    add_column :folio_files, :sublocation, :string  # Neighborhood/venue
-    add_column :folio_files, :city, :string
-    add_column :folio_files, :state_province, :string
-    add_column :folio_files, :country, :string
-    add_column :folio_files, :country_code, :string, limit: 2  # ISO 3166-1 alpha-2
-    
-    # Technical metadata
-    add_column :folio_files, :camera_make, :string
-    add_column :folio_files, :camera_model, :string
-    add_column :folio_files, :lens_info, :string
+    # Technical metadata - needed for display/sorting
     add_column :folio_files, :capture_date, :datetime
-    add_column :folio_files, :capture_date_offset, :string  # Store original timezone
-    add_column :folio_files, :gps_latitude, :decimal, precision: 10, scale: 6
-    add_column :folio_files, :gps_longitude, :decimal, precision: 10, scale: 6
-    add_column :folio_files, :orientation, :integer
-    
-    # Indexes for common searches (GIN for JSONB arrays)
-    add_index :folio_files, :creator, using: :gin
-    add_index :folio_files, :keywords, using: :gin
-    add_index :folio_files, :subject_codes, using: :gin
-    add_index :folio_files, :persons_shown, using: :gin
-    add_index :folio_files, :source
-    add_index :folio_files, :country_code
     add_index :folio_files, :capture_date
+    
+    # GPS coordinates - needed for geographic queries  
+    add_column :folio_files, :gps_latitude, :decimal, precision: 10, scale: 6
+    add_column :folio_files, :gps_longitude, :decimal, precision: 10, scale: 6 
     add_index :folio_files, [:gps_latitude, :gps_longitude]
+    
+    # Keywords merged into existing tag_list system (no new column needed)
   end
 end
 ```
+
+**Total: 4 new columns** vs original 30+ column approach.
+
+### Database Columns vs JSON Display
+
+**Database Columns** (User-Editable):
+```ruby
+# These are actual database columns - fully editable in forms
+file.headline              # "Major Event" (string column) 
+file.author                # "John Doe" (string column)
+file.description           # "Breaking news" (text column)
+file.alt                   # "Photo description" (string column)
+file.attribution_source    # "Reuters" (string column)
+file.attribution_source_url # "https://..." (string column)
+file.attribution_copyright  # "© 2024" (string column)
+file.attribution_licence    # "CC BY" (string column)
+
+# Auto-filled business columns (indexed/queryable)
+file.capture_date          # 2024-03-15 14:30:00 (datetime)
+file.gps_latitude         # 50.0755 (decimal)
+file.gps_longitude        # 14.4378 (decimal)
+```
+
+**JSON Display Getters** (Read-Only):
+```ruby
+# Simple getters for UI display (NOT used for auto-population)
+def creator
+  file_metadata&.dig("XMP-dc:Creator") || []
+end
+
+def credit_line  
+  file_metadata&.dig("XMP-iptcCore:CreditLine") || file_metadata&.dig("Credit")
+end
+
+def camera_make
+  file_metadata&.dig("Make") 
+end
+
+def camera_model
+  file_metadata&.dig("Model")
+end
+
+def copyright_notice
+  file_metadata&.dig("XMP-photoshop:Copyright")
+end
+```
+
+### Data Flow & Automatic Field Population
+
+**1. Metadata Extraction Process**:
+```ruby
+# After file upload, ExifTool extracts raw metadata
+raw_metadata = extract_raw_metadata_with_exiftool(file_path)
+# => { "XMP-dc:Creator" => ["John Doe"], "XMP-photoshop:Headline" => "News Photo", ... }
+
+# Store ALL raw metadata in file_metadata JSON
+file.update(file_metadata: raw_metadata)
+
+# ✅ Use IptcFieldMapper to map with fallbacks and special processing
+mapped_data = Folio::Metadata::IptcFieldMapper.map_metadata(raw_metadata)
+# => { headline: "News Photo", creator: ["John Doe"], capture_date: Time.parse(...), ... }
+
+# Automatically populate BLANK user fields from mapped data
+populate_user_fields_from_mapped_data(file, mapped_data)
+```
+
+**2. Auto-Population Logic** (Uses IptcFieldMapper with Fallbacks):
+```ruby
+def populate_user_fields_from_mapped_data(file, mapped_data)
+  # Only populate blank fields (never overwrite user data)
+  
+  # ✅ Editable database columns (uses IptcFieldMapper results)
+  file.headline = mapped_data[:headline] if file.headline.blank? && mapped_data[:headline].present?
+  file.author = Array(mapped_data[:creator]).join(", ") if file.author.blank? && mapped_data[:creator].present?
+  file.description = mapped_data[:description] || mapped_data[:headline] if file.description.blank?
+  file.attribution_copyright = mapped_data[:copyright_notice] if file.attribution_copyright.blank?
+  file.attribution_source = mapped_data[:credit_line] || mapped_data[:source] if file.attribution_source.blank?
+  
+  # ✅ Essential business columns (indexed/queryable)
+  file.capture_date = mapped_data[:capture_date] if file.capture_date.blank?
+  file.gps_latitude = mapped_data[:gps_latitude] if file.gps_latitude.blank?
+  file.gps_longitude = mapped_data[:gps_longitude] if file.gps_longitude.blank?
+  
+  # ✅ Merge keywords with existing tag_list system (no new column needed)
+  if file.respond_to?(:tag_list) && mapped_data[:keywords].present?
+    existing_tags = file.tag_list_array || []
+    new_keywords = Array(mapped_data[:keywords])
+    file.tag_list = (existing_tags + new_keywords).uniq
+  end
+  
+  file.save if file.changed?
+end
+```
+
+**3. Key Points**:
+
+✅ **IptcFieldMapper** handles all complexity:
+- **Fallback logic**: `XMP-photoshop:Headline` → `IPTC:Headline` → `Headline`
+- **COMPLEX_FIELD_PROCESSORS**: Special handling for dates, GPS, arrays
+- **Derived fields**: Source from credit_line if blank
+- **Locale support**: Multi-language metadata
+- **Provider detection**: Auto-detect Getty, Shutterstock, etc.
+
+✅ **Auto-population respects existing logic**:
+- All your fallback chains work exactly as before
+- `capture_date` parsing with timezone handling
+- `creator` array → joined string for `author` field
+- `keywords` array → merged into existing `tag_list` system
+
+✅ **Nothing is lost**:
+```ruby
+# These work exactly as they did before - using IptcFieldMapper
+mapped = IptcFieldMapper.map_metadata(file.file_metadata)
+mapped[:headline]        # Uses all defined fallbacks
+mapped[:creator]         # Properly processed array
+mapped[:capture_date]    # Parsed with timezone support
+mapped[:gps_latitude]    # Decimal conversion
+mapped[:keywords]        # Array merged into tag_list
+```
+
+**4. User vs Metadata Precedence**:
+```ruby
+# User-editable fields (what shows in form)
+file.author                    # "John Doe, Jane Smith" (user editable)
+file.description              # "User entered description" (user editable)
+file.attribution_copyright    # "© 2024 Reuters" (user editable)
+
+# Read-only metadata display (from JSON)
+file.creator                  # ["John Doe", "Jane Smith"] (from JSON)  
+file.headline                 # "Breaking News Photo" (from JSON)
+file.copyright_notice         # "© 2024 Reuters" (from JSON)
+```
+
+**5. Benefits**:
+- 🔒 **Data Safety**: Raw metadata preserved forever in JSON
+- 🚀 **Performance**: User fields indexed/searchable, metadata display cached  
+- 🎛️ **Flexibility**: Users can edit working copies, metadata stays pristine
+- 📊 **Analytics**: All original IPTC data available for reporting
 
 ## Migration Path
 
@@ -493,38 +641,100 @@ folio:
 
 *This specification is a living document and will be updated as the feature evolves.*
 
-## 2025-08 Update: Standard fields first, legacy as proxies
+## 2025-08 Update: JSON-Based Metadata with User Field Auto-Population
 
-- Write extraction results only to new IPTC-compliant columns (e.g., `headline`, `creator[]`, `copyright_notice`, `rights_usage_terms`, location fields, technical EXIF fields).
-- Legacy compatibility is ensured by model proxies where names or shapes differ:
-  - `author` ⇄ `creator[]`
-    - getter: returns `creator.join(', ')`
-    - setter: splits string by commas/semicolons and assigns to `creator[]`
-  - `attribution_copyright` ⇄ `copyright_notice`
-  - `attribution_licence` ⇄ `rights_usage_terms`
-- Unchanged fields do not use proxies (read/write as-is): `description`, `alt` (image), `source`, `attribution_source_url`.
-- Extraction never overwrites non-blank values (blank-field protection remains).
+**Core Architecture**:
+- All raw IPTC/EXIF/XMP metadata stored in `file_metadata` JSON column
+- User-editable fields remain as dedicated columns (`author`, `description`, `attribution_*`)  
+- Metadata extraction populates blank user fields from JSON data (one-time)
+- Advanced metadata displayed from JSON (read-only tables)
 
-### UI in File modal
-- Above-the-fold (for all file types, except where noted):
-  1. `headline`
-  2. `description`
-  3. `alt` (images only)
-  4. `author` (proxy for `creator[]`)
-  5. `source`
-  6. `attribution_source_url`
-  7. `copyright` (proxy for `copyright_notice`)
-  8. `licence` (proxy for `rights_usage_terms`)
-  9. Default crop (images only)
-- Advanced metadata: single collapsible section (default collapsed) with structured IPTC/technical fields as today.
-- Action row: `[Save] [Extract metadata] [short localized extraction info]`.
-- Video Subtitles section remains unchanged.
+**Data Flow**:
+1. **Extract** → Store raw metadata in JSON
+2. **Populate** → Fill blank user fields from JSON (author ← creator, description ← headline)
+3. **Display** → User fields editable, JSON metadata read-only
+4. **Preserve** → User edits never lost, JSON metadata always available
+
+**No Database Schema Explosion**: 4 new columns vs 30+ in original plan
+**No Data Loss**: All IPTC data preserved in JSON forever
+**User Control**: Clear separation between user fields and metadata display
+
+### UI in File Modal
+
+**Editable Fields** (Above-the-fold):
+1. `headline` - User editable (Titulek) 
+2. `description` - User editable (Popis)
+3. `alt` - User editable (Alt, images only)
+4. `author` - User editable (Autor)
+5. `attribution_source` - User editable (Zdroj)
+6. `attribution_source_url` - User editable (Zdroj URL)  
+7. `attribution_copyright` - User editable (Copyright)
+8. `attribution_licence` - User editable (Licence)
+9. Default crop (Výchozí ořez, images only)
+
+**Read-Only Metadata Display** (Collapsible "Advanced Metadata" section):
+- **Descriptive Metadata Table**: 
+  - Headline, Creator(s), Caption Writer, Credit Line, Source (from metadata)
+  - Keywords, Intellectual Genre, Subject Codes, Event, Category
+  - Persons Shown, Organizations Shown
+- **Technical Metadata Table**:
+  - Camera Make/Model, Lens Info, Capture Date, GPS Coordinates
+  - Dimensions, File Size, Orientation, Color Profile
+- **Rights Metadata Table**:
+  - Copyright Notice, Copyright Marked, Usage Terms, Rights URL
+- **Location Metadata Table**:
+  - Location Created/Shown, City, State/Province, Country
+
+**Action Row**: `[Save] [Extract metadata] [Re-extract metadata] [short localized extraction info]`
+
+**Key Principles**:
+- ✅ User fields are **never overwritten** by extraction
+- ✅ Metadata fields are **display-only** (organized tables, not form inputs)  
+- ✅ "Extract metadata" fills **only blank user fields** from extracted data
+- ✅ Advanced metadata shows **all available IPTC/EXIF data** from JSON
 
 ### Keywords → tag_list
-- After mapping, extracted `keywords` are merged into `tag_list` (if supported on model) without removing existing tags; duplicates are removed.
+- After extraction, keywords from `XMP-dc:Subject` (via IptcFieldMapper) are merged into existing `tag_list` system
+- No new `extracted_keywords` column needed - uses existing tag infrastructure  
+- Existing tags preserved, duplicates removed, keywords only added if `tag_list` supported
 
 ### Translations
 - UI strings are provided via `window.FolioConsole.translations` under `file/*` and `file/metadata/*` keys.
 
 ### Overrides
 - If the host application injects its own file modal (e.g., economia-cms), its override is respected; Folio defaults apply otherwise.
+
+---
+
+## Implementation Summary (JSON-Based Approach)
+
+### ✅ **What Changes**:
+1. **Database**: Add only 4 essential columns (`headline`, `capture_date`, `gps_latitude`, `gps_longitude`)
+2. **Storage**: All IPTC/EXIF/XMP metadata stored in existing `file_metadata` JSON column  
+3. **UI**: Advanced metadata becomes read-only display tables (no form inputs)
+4. **Population**: Auto-fill blank user fields from JSON metadata on upload
+5. **Display**: JSON metadata getters provide rich metadata for display/analytics
+6. **Keywords**: Merged into existing `tag_list` system (no new column needed)
+
+### ✅ **What Stays Same**:
+1. **User Fields**: `headline`, `author`, `description`, `alt`, `attribution_*` remain fully editable
+2. **ExifTool Integration**: Same extraction process with UTF-8 charset fix
+3. **Configuration**: Same configuration system, simplified options
+4. **Field Mappings**: Same IPTC standard mappings, just JSON-based access
+5. **Blank Protection**: Never overwrite user data
+
+### ✅ **Benefits**:
+- 🔒 **Data Safety**: Raw metadata never lost, always in JSON
+- 🚀 **Performance**: Essential fields indexed, metadata cached
+- 🎛️ **User Control**: Clear editable vs display-only separation
+- 🏗️ **Schema Stability**: Minimal database changes (4 vs 30+ columns)
+- 📊 **Analytics**: Full IPTC data available for reporting
+- 🌍 **Internationalization**: UTF-8 charset handling built-in
+
+### ✅ **Migration Strategy**:
+1. **Phase 1**: Add 4 new columns, implement JSON getters
+2. **Phase 2**: Update UI to show read-only metadata tables  
+3. **Phase 3**: Implement user field auto-population
+4. **Phase 4**: Add re-extraction capability
+
+This approach provides all the benefits of IPTC standard compliance while maintaining a clean, maintainable codebase and excellent user experience.

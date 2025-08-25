@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { FormGroup, Label, Input } from 'reactstrap'
 import TextareaAutosize from 'react-autosize-textarea'
 
@@ -17,7 +17,7 @@ import FolioUiIcon from 'components/FolioUiIcon'
 import { fileFieldAutocompleteUrl } from 'constants/urls'
 
 import AdditionalHtmlFromApi from './AdditionalHtmlFromApi'
-import MetadataExtraction from 'components/MetadataExtraction'
+import ReadOnlyMetadataDisplay from 'components/ReadOnlyMetadataDisplay'
 
 import MainImage from './styled/MainImage'
 import MainImageOuter from './styled/MainImageOuter'
@@ -48,7 +48,6 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
   }
 
   const additionalFields = file.attributes.file_modal_additional_fields
-  const [showAdvanced, setShowAdvanced] = useState(false)
 
   return (
     <div className='modal-content'>
@@ -202,21 +201,7 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
                       </span>
                     )}
                   </div>
-                  {/* Camera info row (only for images with camera data) */}
-                  {isImage && (file.attributes.camera_make || file.attributes.camera_model || file.attributes.lens_info) && (
-                    <div className='d-flex flex-wrap align-items-center gap-2'>
-                      {file.attributes.camera_make && file.attributes.camera_model && (
-                        <span className='me-2 text-muted small'>
-                          <strong>Kamera:</strong> {file.attributes.camera_make} {file.attributes.camera_model}
-                        </span>
-                      )}
-                      {file.attributes.lens_info && (
-                        <span className='me-2 text-muted small'>
-                          <strong>Objektiv:</strong> {file.attributes.lens_info}
-                        </span>
-                      )}
-                    </div>
-                  )}
+                  {/* Camera info row removed - not needed in summary */}
                 </div>
                 <div className='f-c-state'>
                   <div className='f-c-state__state' role='status' aria-label={`${window.FolioConsole.translations.state}: ${file.attributes.aasm_state_human}`}>
@@ -378,26 +363,7 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
               </FormGroup>
             )}
 
-            {/* Advanced metadata toggle */}
-            <div className='mb-3 pb-3 border-top'>
-              <FolioConsoleUiButton
-                onClick={() => setShowAdvanced(!showAdvanced)}
-                variant='link'
-                size='sm'
-                icon={showAdvanced ? 'arrow_up' : 'arrow_down'}
-                label={showAdvanced ? window.FolioConsole.translations['file/hide_advanced_fields'] : window.FolioConsole.translations['file/show_advanced_fields']}
-              />
-            </div>
-            {showAdvanced && (
-              <MetadataExtraction
-                formState={formState}
-                onValueChange={onValueChange}
-                extractMetadata={extractMetadata}
-                readOnly={readOnly}
-                isExtracting={isExtractingMetadata}
-                compact
-              />
-            )}
+
 
             {/* Tags section remains as is */}
             {taggable && (
@@ -430,10 +396,10 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
               </div>
             )}
 
-            {/* Action row: Save + Extract + info */}
+            {/* Action row: Save + Extract + Re-extract + info (according to documentation) */}
             {!readOnly && (
-              <div className='d-flex align-items-center mt-3'>
-                <button type='button' className='btn btn-primary px-4 me-2' onClick={saveModal}>
+              <div className='d-flex flex-wrap align-items-center mt-3 gap-2'>
+                <button type='button' className='btn btn-primary px-4' onClick={saveModal}>
                   {window.FolioConsole.translations.save}
                 </button>
                 <FolioConsoleUiButton
@@ -445,16 +411,19 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
                   label={isExtractingMetadata ? window.FolioConsole.translations['file/extracting'] : window.FolioConsole.translations['file/extract_metadata']}
                 />
                 {formState.file_metadata_extracted_at && (
-                  <small className='text-muted ms-3'>
-                    {window.FolioConsole.translations['file/metadata_extracted_at_prefix']}
+                  <small className='text-muted flex-grow-1'>
+                    {window.FolioConsole.translations['file/metadata_extracted_at_prefix'] || 'Extracted'}
                     {' '}
                     {new Date(formState.file_metadata_extracted_at).toLocaleString(document.documentElement.lang === 'cs' ? 'cs-CZ' : undefined)}
                     {' '}
-                    {window.FolioConsole.translations['file/metadata_extracted_at_suffix']}
+                    {window.FolioConsole.translations['file/metadata_extracted_at_suffix'] || '- only blank fields are populated'}
                   </small>
                 )}
               </div>
             )}
+
+            {/* Advanced metadata display - always visible */}
+            <ReadOnlyMetadataDisplay key={file.id} file={file} />
 
             {/* Additional fields untouched */}
             {additionalFields.map((additionalField) => (

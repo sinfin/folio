@@ -112,7 +112,13 @@ class FileModal extends Component {
 
   componentDidUpdate (prevProps) {
     if (this.props.fileModal.file) {
-      if (!prevProps.fileModal.file || (prevProps.fileModal.updating && this.props.fileModal.updating === false)) {
+      // Update state when: no previous file, update finished, OR file ID changed
+      const fileChanged = prevProps.fileModal.file && 
+                          this.props.fileModal.file.id !== prevProps.fileModal.file.id
+      
+      if (!prevProps.fileModal.file || 
+          (prevProps.fileModal.updating && this.props.fileModal.updating === false) ||
+          fileChanged) {
         const newState = {
           author: this.props.fileModal.file.attributes.author,
           attribution_source: this.props.fileModal.file.attributes.attribution_source,
@@ -122,9 +128,45 @@ class FileModal extends Component {
           alt: this.props.fileModal.file.attributes.alt,
           default_gravity: this.props.fileModal.file.attributes.default_gravity,
           description: this.props.fileModal.file.attributes.description,
+          headline: this.props.fileModal.file.attributes.headline,
           preview_duration: this.props.fileModal.file.attributes.preview_duration,
           sensitive_content: this.props.fileModal.file.attributes.sensitive_content,
-          tags: this.props.fileModal.file.attributes.tags
+          tags: this.props.fileModal.file.attributes.tags,
+          // IPTC Core metadata fields
+          creator: this.props.fileModal.file.attributes.creator || [],
+          caption_writer: this.props.fileModal.file.attributes.caption_writer,
+          credit_line: this.props.fileModal.file.attributes.credit_line,
+          source: this.props.fileModal.file.attributes.source,
+          copyright_notice: this.props.fileModal.file.attributes.copyright_notice,
+          copyright_marked: this.props.fileModal.file.attributes.copyright_marked,
+          usage_terms: this.props.fileModal.file.attributes.usage_terms,
+          rights_usage_info: this.props.fileModal.file.attributes.rights_usage_info,
+          keywords: this.props.fileModal.file.attributes.keywords || [],
+          intellectual_genre: this.props.fileModal.file.attributes.intellectual_genre,
+          subject_codes: this.props.fileModal.file.attributes.subject_codes || [],
+          scene_codes: this.props.fileModal.file.attributes.scene_codes || [],
+          event: this.props.fileModal.file.attributes.event,
+          category: this.props.fileModal.file.attributes.category,
+          urgency: this.props.fileModal.file.attributes.urgency,
+          persons_shown: this.props.fileModal.file.attributes.persons_shown || [],
+          persons_shown_details: this.props.fileModal.file.attributes.persons_shown_details || [],
+          organizations_shown: this.props.fileModal.file.attributes.organizations_shown || [],
+          location_created: this.props.fileModal.file.attributes.location_created || [],
+          location_shown: this.props.fileModal.file.attributes.location_shown || [],
+          sublocation: this.props.fileModal.file.attributes.sublocation,
+          city: this.props.fileModal.file.attributes.city,
+          state_province: this.props.fileModal.file.attributes.state_province,
+          country: this.props.fileModal.file.attributes.country,
+          country_code: this.props.fileModal.file.attributes.country_code,
+          // Technical metadata (read-only)
+          camera_make: this.props.fileModal.file.attributes.camera_make,
+          camera_model: this.props.fileModal.file.attributes.camera_model,
+          lens_info: this.props.fileModal.file.attributes.lens_info,
+          capture_date: this.props.fileModal.file.attributes.capture_date,
+          gps_latitude: this.props.fileModal.file.attributes.gps_latitude,
+          gps_longitude: this.props.fileModal.file.attributes.gps_longitude,
+          orientation: this.props.fileModal.file.attributes.orientation,
+          file_metadata_extracted_at: this.props.fileModal.file.attributes.file_metadata_extracted_at
         }
 
         this.props.fileModal.file.attributes.file_modal_additional_fields.forEach((field) => {
@@ -157,6 +199,31 @@ class FileModal extends Component {
           } else if (msg.data.type === 'replace-failure') {
             window.FolioConsole.Flash.alert(msg.data.errors.join('<br>'))
             this.props.dispatch(uploadNewFileInsteadFailure(this.props.fileModal.file))
+          }
+        }
+      }
+
+      // Handle metadata extraction completion
+      if (msg.type === 'Folio::File::MetadataExtracted' && msg.file) {
+        if (Number(msg.file.id) === Number(this.props.fileModal.file.id)) {
+          // Create updated file object with new metadata
+          const updatedFile = {
+            ...this.props.fileModal.file,
+            attributes: {
+              ...this.props.fileModal.file.attributes,
+              ...msg.file.attributes
+            }
+          }
+          
+          console.log('Metadata extraction completed, updating UI for file:', msg.file.id)
+          
+          // Update Redux store and component state
+          this.props.dispatch(updatedFileModalFile(updatedFile))
+          this.props.dispatch(updatedFiles(this.props.fileModal.fileType, [updatedFile]))
+          
+          // Show success notification
+          if (window.FolioConsole && window.FolioConsole.flash) {
+            window.FolioConsole.flash('success', 'Metadata successfully extracted and populated')
           }
         }
       }
@@ -234,6 +301,7 @@ class FileModal extends Component {
       >
         {fileModal.file && (
           <FileModalFile
+            key={fileModal.file.id}
             fileModal={fileModal}
             taggable={taggable}
             onTagsChange={this.onTagsChange}

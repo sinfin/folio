@@ -12,47 +12,20 @@ class Folio::ExtractMetadataJob < ApplicationJob
       return
     end
 
-    Rails.logger.info "Extracting metadata for image ##{image.id} (#{image.file_name})"
+    Rails.logger.info "Extracting metadata for image ##{image.id} (#{image.file_name}) asynchronously"
 
+    # Use our UTF-8 corrected extraction logic
     metadata = extract_raw_metadata_with_exiftool(image)
     return unless metadata.present?
 
-    mapped_fields = Folio::Metadata::IptcFieldMapper.map_metadata(metadata)
+    # Use the same logic as synchronous extraction
+    image.map_iptc_metadata(metadata)
+    image.save! if image.changed?
 
-    # Only update blank fields (preserve user edits)
-    update_fields = {}
-    skip_fields = Rails.application.config.folio_image_metadata_skip_fields || []
+    Rails.logger.info "Successfully extracted and mapped metadata for image ##{image.id}"
 
-    mapped_fields.each do |field, value|
-      next if skip_fields.include?(field)
-
-      # Check if field is blank (handles both nil and empty arrays/strings)
-      current_value = image.send(field) rescue nil
-      is_blank = current_value.blank? || (current_value.is_a?(Array) && current_value.empty?)
-
-      if is_blank && value.present?
-        update_fields[field] = value
-      end
-    end
-
-    if update_fields.any?
-      if image.respond_to?(:file_metadata_extracted_at)
-        update_fields[:file_metadata_extracted_at] = Time.current
-      end
-
-      image.update!(update_fields)
-      Rails.logger.info "Updated #{update_fields.keys.count} metadata fields for image ##{image.id}"
-
-      # Broadcast update for live refresh in console
-      broadcast_file_update(image) if respond_to?(:broadcast_file_update, true)
-    else
-      Rails.logger.debug "No metadata updates needed for image ##{image.id}"
-    end
-
-    # Cache raw metadata for future use
-    if image.respond_to?(:file_metadata) && !image.file_metadata.present?
-      image.update_column(:file_metadata, metadata)
-    end
+    # Broadcast update for live refresh in console using MessageBus
+    broadcast_file_update(image)
 
   rescue => e
     Rails.logger.error "Metadata extraction failed for file ##{image.id}: #{e.message}"
@@ -63,6 +36,42 @@ class Folio::ExtractMetadataJob < ApplicationJob
   end
 
   private
+    def broadcast_file_update(image)
+      # Broadcast file update via MessageBus for live UI refresh
+      return unless defined?(MessageBus)
+      return if message_bus_user_ids.blank?
+
+      message_data = {
+        type: "Folio::File::MetadataExtracted",
+        file: {
+          id: image.id,
+          type: image.class.name,
+          attributes: serialize_file_attributes(image)
+        }
+      }
+
+      MessageBus.publish(Folio::MESSAGE_BUS_CHANNEL, message_data, user_ids: message_bus_user_ids)
+      Rails.logger.debug "Broadcasted metadata update for file ##{image.id} to user_ids: #{message_bus_user_ids}"
+    end
+
+    def serialize_file_attributes(image)
+      # Return essential attributes for UI update
+      {
+        id: image.id,
+        headline: image.headline,
+        creator: image.creator,
+        credit_line: image.credit_line,
+        copyright_notice: image.copyright_notice,
+        keywords_from_metadata: image.keywords_from_metadata,
+        headline_from_metadata: image.headline_from_metadata,
+        file_metadata_extracted_at: image.file_metadata_extracted_at&.iso8601,
+        # Add other metadata fields as needed
+      }
+    rescue => e
+      Rails.logger.error "Failed to serialize file attributes for ##{image.id}: #{e.message}"
+      {}
+    end
+
     def extract_raw_metadata_with_exiftool(image)
       return unless image.file.present?
 
@@ -77,8 +86,9 @@ class Folio::ExtractMetadataJob < ApplicationJob
 
       require "open3"
 
-      options = Rails.application.config.folio_image_metadata_exiftool_options || ["-G1", "-struct", "-n"]
-      command = ["exiftool", "-j", *options, file_path]
+      base_options = Rails.application.config.folio_image_metadata_exiftool_options || ["-G1", "-struct", "-n"]
+      charset_options = ["-charset", "iptc=utf8"]
+      command = ["exiftool", "-j", *base_options, *charset_options, file_path]
 
       stdout, stderr, status = Open3.capture3(*command)
 

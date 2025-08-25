@@ -117,7 +117,7 @@ end
     assert_equal "Pre-existing description", image_file.description
     assert_equal "Pre-existing credit", image_file.credit_line
   ensure
-    image_file.file&.close if image_file
+    # Cleanup handled by factory teardown
   end
 
   test "handles arrays correctly for multi-value fields" do
@@ -215,6 +215,10 @@ end
 
   private
     def create_test_image(filename)
-      create(:folio_file_image, file: @test_images_dir.join(filename))
-end
+      image_file = create(:folio_file_image, file: @test_images_dir.join(filename))
+      # Manually trigger metadata extraction for testing
+      image_file.extract_image_metadata_sync if image_file.respond_to?(:extract_image_metadata_sync)
+      image_file.reload
+      image_file
+    end
 end

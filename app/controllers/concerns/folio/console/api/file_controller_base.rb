@@ -89,11 +89,16 @@ module Folio::Console::Api::FileControllerBase
   end
 
   def extract_metadata
-    return render(json: { error: "Not supported for this file type" }, status: 422) unless folio_console_record.respond_to?(:extract_metadata!)
+    return render(json: { error: "Not supported for this file type" }, status: 422) unless folio_console_record.respond_to?(:extract_image_metadata_sync)
 
-    # Force re-extraction even if metadata already exists
-    if folio_console_record.respond_to?(:extract_metadata!)
-      folio_console_record.extract_metadata!(force: true)
+    # Force re-extraction synchronously for immediate UI feedback
+    if folio_console_record.respond_to?(:extract_image_metadata_sync)
+      # Reset timestamp to force re-extraction
+      folio_console_record.update_column(:file_metadata_extracted_at, nil)
+
+      # Run synchronous extraction with populate
+      folio_console_record.extract_image_metadata_sync
+      folio_console_record.save! if folio_console_record.changed?
       folio_console_record.reload
 
       render_record(folio_console_record, Folio::Console::FileSerializer, meta: {
@@ -106,6 +111,7 @@ module Folio::Console::Api::FileControllerBase
     end
   rescue => e
     Rails.logger.error "Metadata extraction failed: #{e.message}"
+    Rails.logger.error e.backtrace.join("\n")
     render json: { error: t("folio.console.files.metadata_extraction_failed") }, status: 500
   end
 

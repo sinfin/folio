@@ -21,16 +21,12 @@ class Folio::File::Image < Folio::File
   end
 
   def keywords_list
-    # Return JSONB array or fallback to legacy metadata
-    if keywords.present? && keywords.is_a?(Array)
-      keywords
-    else
-      metadata_compose(["Keywords"])&.split(/[,;]/)&.filter_map(&:strip) || []
-    end
+    # Use JSON getter from concern
+    keywords_from_metadata
   end
 
   def geo_location
-    # Build location from IPTC fields first, then fallback
+    # Use JSON getters from concern
     location_parts = [sublocation, city, state_province, country].compact
     if location_parts.any?
       location_parts.join(", ")
@@ -41,7 +37,8 @@ class Folio::File::Image < Folio::File
 
   # Additional IPTC metadata accessors
   def creator_list
-    creator.present? && creator.is_a?(Array) ? creator : []
+    # Use JSON getter from concern
+    creator
   end
 
   def keywords_string
@@ -49,7 +46,8 @@ class Folio::File::Image < Folio::File
   end
 
   def copyright_info
-    copyright_notice.presence
+    # Use JSON getter from concern
+    copyright_notice
   end
 
   def location_coordinates
@@ -58,7 +56,8 @@ class Folio::File::Image < Folio::File
   end
 
   def persons_shown_list
-    persons_shown.present? && persons_shown.is_a?(Array) ? persons_shown : []
+    # Use JSON getter from concern
+    persons_shown_from_metadata
   end
 
 
@@ -70,7 +69,83 @@ class Folio::File::Image < Folio::File
     "image"
   end
 
+  # Override after_process hook to extract metadata synchronously during upload
+  def after_process
+    super
+
+    # Extract metadata synchronously during file processing
+    # (can't use should_extract_metadata? here as file is now available)
+    extract_image_metadata_during_processing if should_extract_metadata_during_processing?
+  end
+
   private
+    def should_extract_metadata_during_processing?
+      return false unless Rails.application.config.folio_image_metadata_extraction_enabled
+      return false unless file.present? && (file.respond_to?(:path) || file.is_a?(String))
+
+      # Skip extraction in test mode when explicitly disabled
+      return false if Rails.env.test? && ENV["FOLIO_SKIP_METADATA_EXTRACTION"] == "true"
+
+      # Check if we have new IPTC fields (backward compatibility)
+      return false unless has_iptc_metadata_fields?
+
+      # Check if metadata already extracted (avoid re-extraction)
+      return false if file_metadata_extracted_at.present?
+
+      # Check if exiftool is available
+      system("which exiftool > /dev/null 2>&1")
+    end
+
+    def extract_image_metadata_during_processing
+      # For S3/remote files, we need to download temporarily to extract metadata
+      # This works during upload when file is still being processed
+      file_path = get_file_path_for_extraction
+      return unless file_path && File.exist?(file_path)
+
+      Rails.logger.info "Extracting metadata for #{file_name} during processing..."
+
+      require "open3"
+
+      base_options = Rails.application.config.folio_image_metadata_exiftool_options || ["-G1", "-struct", "-n"]
+
+      # Always use UTF-8 charset for IPTC (our mojibake fix)
+      charset_options = ["-charset", "iptc=utf8"]
+      command = ["exiftool", "-j", *base_options, *charset_options, file_path]
+
+      Rails.logger.debug "ExifTool command: #{command.join(' ')}"
+
+      stdout, stderr, status = Open3.capture3(*command)
+
+      if status.success?
+        raw_metadata = JSON.parse(stdout).first
+        if raw_metadata.present?
+          map_iptc_metadata(raw_metadata)
+          Rails.logger.info "Successfully extracted metadata for #{file_name} with UTF-8 charset"
+        else
+          Rails.logger.warn "No metadata found for #{file_name}"
+        end
+      else
+        Rails.logger.warn "ExifTool error for #{file_name}: #{stderr}"
+      end
+
+    rescue => e
+      Rails.logger.error "Failed to extract metadata during processing for #{file_name}: #{e.message}"
+      Rails.logger.error e.backtrace.join("\n")
+    end
+
+    def get_file_path_for_extraction
+      # During processing, the file should still be available locally via Dragonfly
+      if file.respond_to?(:path) && file.path
+        file.path
+      elsif file.respond_to?(:url) && file.url
+        # For remote files, try to get temp file path from Dragonfly
+        begin
+          file.temp_object.path if file.respond_to?(:temp_object) && file.temp_object
+        rescue
+          nil
+        end
+      end
+    end
     def metadata_compose(tags)
       string_arr = tags.filter_map { |tag| file_metadata.try("[]", tag) }.uniq
       return nil if string_arr.size == 0
@@ -95,7 +170,7 @@ end
 #  additional_data                   :json
 #  file_metadata                     :json
 #  hash_id                           :string
-#  author_legacy                     :string
+#  author                            :string
 #  description                       :text
 #  file_placements_size              :integer
 #  file_name_for_search              :string
@@ -106,68 +181,31 @@ end
 #  aasm_state                        :string
 #  remote_services_data              :json
 #  preview_track_duration_in_seconds :integer
-#  alt_legacy                        :string
+#  alt                               :string
 #  site_id                           :bigint(8)        not null
 #  attribution_source                :string
 #  attribution_source_url            :string
 #  attribution_copyright             :string
 #  attribution_licence               :string
 #  headline                          :string
-#  creator                           :jsonb
-#  caption_writer                    :string
-#  credit_line                       :string
-#  source                            :string
-#  copyright_notice                  :text
-#  copyright_marked                  :boolean          default(FALSE)
-#  usage_terms                       :text
-#  rights_usage_info                 :string
-#  keywords                          :jsonb
-#  intellectual_genre                :string
-#  subject_codes                     :jsonb
-#  scene_codes                       :jsonb
-#  event                             :string
-#  category                          :string
-#  urgency                           :integer
-#  persons_shown                     :jsonb
-#  persons_shown_details             :jsonb
-#  organizations_shown               :jsonb
-#  location_created                  :jsonb
-#  location_shown                    :jsonb
-#  sublocation                       :string
-#  city                              :string
-#  state_province                    :string
-#  country                           :string
-#  country_code                      :string(2)
-#  camera_make                       :string
-#  camera_model                      :string
-#  lens_info                         :string
 #  capture_date                      :datetime
-#  capture_date_offset               :string
 #  gps_latitude                      :decimal(10, 6)
 #  gps_longitude                     :decimal(10, 6)
-#  orientation                       :integer
-#  alt                               :string
-#  author                            :string
 #  file_metadata_extracted_at        :datetime
 #
 # Indexes
 #
-#  index_folio_files_on_by_author                       (to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((author_legacy)::text, ''::text)))) USING gin
+#  index_folio_files_on_by_author                       (to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((author)::text, ''::text)))) USING gin
 #  index_folio_files_on_by_file_name                    (to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name)::text, ''::text)))) USING gin
 #  index_folio_files_on_by_file_name_for_search         (to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text)))) USING gin
 #  index_folio_files_on_capture_date                    (capture_date)
-#  index_folio_files_on_country_code                    (country_code)
 #  index_folio_files_on_created_at                      (created_at)
-#  index_folio_files_on_creator                         (creator) USING gin
 #  index_folio_files_on_file_metadata_extracted_at      (file_metadata_extracted_at)
 #  index_folio_files_on_file_name                       (file_name)
 #  index_folio_files_on_gps_latitude_and_gps_longitude  (gps_latitude,gps_longitude)
 #  index_folio_files_on_hash_id                         (hash_id)
-#  index_folio_files_on_keywords                        (keywords) USING gin
-#  index_folio_files_on_persons_shown                   (persons_shown) USING gin
+#  index_folio_files_on_headline                        (headline)
 #  index_folio_files_on_site_id                         (site_id)
-#  index_folio_files_on_source                          (source)
-#  index_folio_files_on_subject_codes                   (subject_codes) USING gin
 #  index_folio_files_on_type                            (type)
 #  index_folio_files_on_updated_at                      (updated_at)
 #
