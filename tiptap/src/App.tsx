@@ -10,6 +10,7 @@ interface AppProps {
   type?: "rich-text" | "block";
   folioTiptapConfig: FolioTiptapConfig;
   readonly: boolean;
+  initialScrollTop: number | null;
 }
 
 function App({
@@ -19,6 +20,7 @@ function App({
   type,
   folioTiptapConfig,
   readonly,
+  initialScrollTop,
 }: AppProps) {
   switch (type) {
     case "block":
@@ -31,6 +33,7 @@ function App({
           type={type as "block" | "rich-text"}
           folioTiptapConfig={folioTiptapConfig}
           readonly={readonly}
+          initialScrollTop={initialScrollTop}
         />
       );
     default:

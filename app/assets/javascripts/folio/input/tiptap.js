@@ -18,8 +18,17 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
       this.sendWindowResizeMessage()
     })
 
+    this.restoreScrollPositions()
     this.setWindowWidth()
     this.sendStartMessage()
+  }
+
+  disconnect () {
+    this.storeScrollPositions()
+  }
+
+  onWindowBeforeUnload () {
+    this.storeScrollPositions()
   }
 
   setWindowWidth (e) {
@@ -57,6 +66,9 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
         break
       case 'f-tiptap-editor:resized':
         this.setHeight(e.data.height)
+        break
+      case 'f-tiptap-editor:scrolled':
+        this.tiptapScrollTop = e.data.scrollTop
         break
       case 'f-tiptap-editor:open-link-popover':
         this.openLinkPopover(e.data.urlJson)
@@ -142,6 +154,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
       lang: document.documentElement.lang || 'en',
       folioTiptapConfig: this.tiptapConfigJsonValue ? JSON.parse(this.tiptapConfigJsonValue) : {},
       windowWidth: this.windowWidth,
+      tiptapScrollTop: this.tiptapScrollTop || 0,
       readonly: this.readonlyValue,
     }
 
@@ -245,5 +258,49 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     console.groupEnd()
 
     window.alert("HTML output logged to console.")
+  }
+
+  storeScrollPositions () {
+    if (this.typeValue !== "block") return
+    if (!this.tiptapScrollTop) return
+
+    const scroll = {
+      mainScroll: this.element.closest('.f-c-tiptap-simple-form-wrap__scroller').scrollTop,
+      mainHeight: this.element.closest('.f-c-tiptap-simple-form-wrap__scroller').clientHeight,
+      iframe: this.tiptapScrollTop,
+    }
+
+    window.sessionStorage.setItem('f-input-tiptap-scroll',
+                                  JSON.stringify({ at: Date.now(), scroll }))
+  }
+
+  restoreScrollPositions () {
+    if (this.typeValue !== "block") return
+
+    const stored = window.sessionStorage.getItem('f-input-tiptap-scroll')
+
+    if (!stored) return
+
+    try {
+      const storedData = JSON.parse(stored)
+      const now = Date.now()
+
+      if (now - storedData.at < 20000) { // 20 seconds
+        this.tiptapScrollTop = storedData.scroll.iframe
+
+        if (storedData.scroll.mainScroll) {
+          const scroller = this.element.closest('.f-c-tiptap-simple-form-wrap__scroller')
+          if (scroller) {
+            const heightDiff = scroller.scrollHeight - storedData.scroll.mainHeight
+            const scrollTop = Math.max(0, storedData.scroll.mainScroll + heightDiff)
+            scroller.scrollTop = scrollTop
+          }
+        }
+      }
+
+      window.sessionStorage.removeItem('f-input-tiptap-scroll')
+    } catch (e) {
+      console.error('Failed to restore scroll positions:', e)
+    }
   }
 })
