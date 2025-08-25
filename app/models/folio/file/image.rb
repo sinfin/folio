@@ -13,7 +13,7 @@ class Folio::File::Image < Folio::File
 
   # IPTC metadata accessors (prefer database fields over metadata compose)
   def title
-    headline.presence || metadata_compose(["Headline", "Title"])
+    headline.presence || headline_from_metadata.presence || metadata_compose(["Headline", "Title"])
   end
 
   def caption
@@ -76,6 +76,13 @@ class Folio::File::Image < Folio::File
     # Extract metadata synchronously during file processing
     # (can't use should_extract_metadata? here as file is now available)
     extract_image_metadata_during_processing if should_extract_metadata_during_processing?
+  end
+
+  # Make metadata_compose public for file_placement access
+  def metadata_compose(tags)
+    string_arr = tags.filter_map { |tag| file_metadata.try("[]", tag) }.uniq
+    return nil if string_arr.size == 0
+    string_arr.join(", ")
   end
 
   private
@@ -145,11 +152,6 @@ class Folio::File::Image < Folio::File
           nil
         end
       end
-    end
-    def metadata_compose(tags)
-      string_arr = tags.filter_map { |tag| file_metadata.try("[]", tag) }.uniq
-      return nil if string_arr.size == 0
-      string_arr.join(", ")
     end
 end
 

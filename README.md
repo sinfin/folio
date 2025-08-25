@@ -18,6 +18,74 @@ Folio is an open-source engine that turns any Rails application into a modern, m
 
 ## Development Setup
 
+### System Requirements
+
+**Core Requirements:**
+- Ruby 3.0+ (recommended: 3.3+)
+- Rails 7.0+
+- PostgreSQL 12+ (with JSONB support)
+- Redis (for background jobs and caching)
+- Node.js 16+ (for React components)
+
+### Image & Media Processing Tools
+
+**Required:**
+- `imagemagick` or `vips` - Image resizing and thumbnails
+
+**Optional but recommended:**
+- `exiftool` - EXIF/IPTC metadata extraction from images
+- `gifsicle` - Animated GIF optimization
+- `ffmpeg` - Video/audio file processing and thumbnails
+
+**Installation on macOS:**
+```bash
+# Using Homebrew
+brew install imagemagick vips gifsicle exiftool ffmpeg
+```
+
+**Installation on Ubuntu/Debian:**
+```bash
+sudo apt-get update
+sudo apt-get install imagemagick libvips-tools gifsicle libimage-exiftool-perl ffmpeg
+```
+
+**Installation on RedHat/CentOS:**
+```bash
+sudo yum install ImageMagick vips gifsicle perl-Image-ExifTool ffmpeg
+```
+
+**Optional Dependencies:**
+- `exiftool` - Required only if you want automatic EXIF/IPTC metadata extraction
+- `gifsicle` - Required only for animated GIF optimization
+- `ffmpeg` - Required only for video/audio processing
+
+**Cloud Storage (optional):**
+- AWS S3 or compatible storage (MinIO, DigitalOcean Spaces, etc.) for file storage
+- Configure with AWS credentials in your environment
+
+**Testing Dependencies:**
+- ChromeDriver or Selenium for system tests
+- Additional test databases can be configured for parallel testing
+
+**Verifying Installation:**
+```bash
+# Check installed tools
+which convert      # ImageMagick
+which vips        # Vips
+which gifsicle    # Gifsicle
+which exiftool    # ExifTool
+which ffmpeg      # FFmpeg
+
+# Check versions
+convert -version
+vips --version
+gifsicle --version
+exiftool -ver
+ffmpeg -version
+```
+
+**Note:** Core image processing (thumbnails, resizing) requires either ImageMagick or Vips. Other tools are optional but recommended for full functionality.
+
 ### Installing Yarn (for React components)
 
 The project includes React components in the `react/` directory. To work with these, you need Yarn package manager:

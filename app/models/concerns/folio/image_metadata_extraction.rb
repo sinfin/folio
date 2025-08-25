@@ -144,6 +144,7 @@ module Folio::ImageMetadataExtraction
       # Prefer processed data (UTF-8 fixed) over raw metadata
       creators = file_metadata&.dig("creator") ||                 # ✅ Processed data (UTF-8)
                  file_metadata&.dig("XMP-dc:Creator") ||
+                 file_metadata&.dig("XMP-dc:creator") ||          # lowercase variant
                  file_metadata&.dig("IPTC:By-line") ||             # Try IPTC first
                  file_metadata&.dig("By-line") ||                  # Raw fallback (may have mojibake)
                  file_metadata&.dig("Artist")
@@ -257,6 +258,14 @@ module Folio::ImageMetadataExtraction
 
     # Alias for backward compatibility
     alias_method :keywords, :keywords_from_metadata
+
+    def headline_from_metadata
+      # Prefer processed data (UTF-8 fixed) over raw metadata
+      file_metadata&.dig("headline") ||                      # ✅ Processed data (UTF-8)
+      file_metadata&.dig("XMP-photoshop:Headline") ||
+      file_metadata&.dig("IPTC:Headline") ||                 # Try IPTC first
+      file_metadata&.dig("Headline")                          # Raw fallback (may have mojibake)
+    end
 
     def city
       file_metadata&.dig("XMP-photoshop:City") ||

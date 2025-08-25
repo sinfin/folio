@@ -12,13 +12,15 @@ module Folio::Metadata
       ],
 
       description: [
-        "XMP-dc:Description",  # Lang Alt primary source
+        "XMP-dc:Description",  # Lang Alt primary source (uppercase)
+        "XMP-dc:description",  # Lang Alt primary source (lowercase)
         "Caption-Abstract",    # IIM fallback
         "ImageDescription"     # EXIF fallback
       ],
 
       creator: [
-        "XMP-dc:Creator",  # Array of names
+        "XMP-dc:Creator",  # Array of names (uppercase)
+        "XMP-dc:creator",  # Array of names (lowercase)
         "By-line",         # IIM fallback
         "Artist"           # EXIF fallback
       ],
@@ -67,7 +69,8 @@ module Folio::Metadata
 
       # Classification
       keywords: [
-        "XMP-dc:Subject"  # Array/bag, store as JSONB array
+        "XMP-dc:Subject",  # Array/bag, store as JSONB array (uppercase)
+        "XMP-dc:subject"   # Array/bag, store as JSONB array (lowercase)
       ],
 
       intellectual_genre: [

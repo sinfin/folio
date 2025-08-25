@@ -249,6 +249,174 @@ class Folio::File < Folio::ApplicationRecord
     {}
   end
 
+  # Basic source accessor for all file types (fallback for non-images)
+  def source
+    # For images, this will be overridden by source_from_metadata alias
+    # For other files, return attribution_source
+    attribution_source
+  end
+
+  # Metadata accessors for non-image files (fallbacks)
+  # These methods are defined in ImageMetadataExtraction concern for images,
+  # but need fallbacks for other file types to support API serialization
+
+  def copyright_marked
+    nil
+  end
+
+  def headline_from_metadata
+    nil
+  end
+
+  def keywords_from_metadata
+    []
+  end
+
+  def creator
+    []
+  end
+
+  def credit_line
+    nil
+  end
+
+  def copyright_notice
+    nil
+  end
+
+  def usage_terms
+    nil
+  end
+
+  def rights_usage_info
+    nil
+  end
+
+  def subject_codes
+    []
+  end
+
+  def scene_codes
+    []
+  end
+
+  def location_created
+    nil
+  end
+
+  def location_shown
+    nil
+  end
+
+  def orientation
+    nil
+  end
+
+  def camera_make
+    nil
+  end
+
+  def camera_model
+    nil
+  end
+
+  def lens_info
+    nil
+  end
+
+  def source_from_metadata
+    nil
+  end
+
+  def city
+    nil
+  end
+
+  def country
+    nil
+  end
+
+  def country_code
+    nil
+  end
+
+  def intellectual_genre
+    nil
+  end
+
+  def event
+    nil
+  end
+
+  def caption_writer
+    nil
+  end
+
+  def urgency
+    nil
+  end
+
+  def category
+    nil
+  end
+
+  def sublocation
+    nil
+  end
+
+  def state_province
+    nil
+  end
+
+  def focal_length
+    nil
+  end
+
+  def aperture
+    nil
+  end
+
+  def shutter_speed
+    nil
+  end
+
+  def iso_speed
+    nil
+  end
+
+  def flash
+    nil
+  end
+
+  def white_balance
+    nil
+  end
+
+  def metering_mode
+    nil
+  end
+
+  def exposure_mode
+    nil
+  end
+
+  def exposure_compensation
+    nil
+  end
+
+  def persons_shown_from_metadata
+    []
+  end
+
+  def organizations_shown_from_metadata
+    []
+  end
+
+  # Aliases for backward compatibility
+  alias_method :persons_shown, :persons_shown_from_metadata
+  alias_method :organizations_shown, :organizations_shown_from_metadata
+  alias_method :keywords, :keywords_from_metadata
+
   private
     def set_file_name_for_search
       self.file_name_for_search = self.class.sanitize_filename_for_search(file_name)
