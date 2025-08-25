@@ -14,6 +14,14 @@
     margin: 0 0 1rem !important;
   }
 
+  &__message {
+    margin: 0 0 1rem !important;
+
+    &:last-child {
+      margin-bottom: 0 !important;
+    }
+  }
+
   &__hint {
     margin: 1rem 0 !important;
   }

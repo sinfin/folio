@@ -198,7 +198,9 @@ export function FolioEditor({
 
       ...(blockEditor
         ? [
-            FolioTiptapNodeExtension,
+            FolioTiptapNodeExtension.configure({
+              nodes: folioTiptapConfig.nodes || [],
+            }),
             Placeholder.configure({
               includeChildren: true,
               // Use a placeholder:
@@ -305,7 +307,11 @@ export function FolioEditor({
   React.useEffect(() => {
     if (initializedContent) return
 
-    const clearedContent = clearContent({ content: defaultContent, editor })
+    const clearedContent = clearContent({ 
+      content: defaultContent, 
+      editor,
+      allowedFolioTiptapNodeTypes: folioTiptapConfig.nodes || []
+    })
 
     if (clearedContent) {
       editor.chain().setMeta('addToHistory', false).setContent(clearedContent).run()
