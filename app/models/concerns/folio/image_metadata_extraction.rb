@@ -44,8 +44,9 @@ module Folio::ImageMetadataExtraction
     metadata = extract_raw_metadata_with_exiftool
     return unless metadata.present?
 
-    map_iptc_metadata(metadata)
-    save if changed?
+    did_merge_or_update = map_iptc_metadata(metadata)
+    # Ensure we persist even if only tag_list changed (acts-as-taggable virtual attr)
+    save if changed? || did_merge_or_update
   rescue => e
     Rails.logger.error "Failed to extract metadata for #{file_name}: #{e.message}"
   end
@@ -111,29 +112,79 @@ module Folio::ImageMetadataExtraction
 
     def populate_user_fields_from_mapped_data(mapped_data)
       # Only populate blank fields (never overwrite user data)
+      updated = false
 
       # ✅ Editable database columns (uses IptcFieldMapper results)
-      self.headline = mapped_data[:headline] if headline.blank? && mapped_data[:headline].present?
-      self.author = Array(mapped_data[:creator]).join(", ") if author.blank? && mapped_data[:creator].present?
-      self.description = mapped_data[:description] || mapped_data[:headline] if description.blank?
-      self.attribution_copyright = mapped_data[:copyright_notice] if attribution_copyright.blank?
-      self.attribution_source = mapped_data[:credit_line] || mapped_data[:source] if attribution_source.blank?
+      if headline.blank? && mapped_data[:headline].present?
+        self.headline = mapped_data[:headline]
+        updated = true
+      end
+      if author.blank? && mapped_data[:creator].present?
+        self.author = Array(mapped_data[:creator]).join(", ")
+        updated = true
+      end
+      if description.blank?
+        new_desc = mapped_data[:description] || mapped_data[:headline]
+        if new_desc.present?
+          self.description = new_desc
+          updated = true
+        end
+      end
+      if attribution_copyright.blank? && mapped_data[:copyright_notice].present?
+        self.attribution_copyright = mapped_data[:copyright_notice]
+        updated = true
+      end
+      if attribution_source.blank?
+        src = mapped_data[:credit_line] || mapped_data[:source]
+        if src.present?
+          self.attribution_source = src
+          updated = true
+        end
+      end
 
       # ✅ Essential business columns (indexed/queryable)
-      self.capture_date = mapped_data[:capture_date] if capture_date.blank?
-      self.gps_latitude = mapped_data[:gps_latitude] if gps_latitude.blank?
-      self.gps_longitude = mapped_data[:gps_longitude] if gps_longitude.blank?
+      if capture_date.blank? && mapped_data[:capture_date].present?
+        self.capture_date = mapped_data[:capture_date]
+        updated = true
+      end
+      if gps_latitude.blank? && mapped_data[:gps_latitude].present?
+        self.gps_latitude = mapped_data[:gps_latitude]
+        updated = true
+      end
+      if gps_longitude.blank? && mapped_data[:gps_longitude].present?
+        self.gps_longitude = mapped_data[:gps_longitude]
+        updated = true
+      end
 
       # ✅ Merge keywords with existing tag_list system (no new column needed)
-      if respond_to?(:tag_list=) && mapped_data[:keywords].present?
+      should_merge = !(Rails.application.config.respond_to?(:folio_image_metadata_merge_keywords_to_tags) &&
+                       Rails.application.config.folio_image_metadata_merge_keywords_to_tags == false)
+      if should_merge && respond_to?(:tag_list=) && mapped_data[:keywords].present?
         begin
-          existing_tags = try(:tag_list_array) || []
-          new_keywords = Array(mapped_data[:keywords])
-          self.tag_list = (existing_tags + new_keywords).uniq
+          # Normalize: strings, stripped, dedupe case-insensitively
+          existing_tags = Array(tag_list.to_a).map { |t| t.to_s.strip }.reject(&:blank?)
+          keywords = Array(mapped_data[:keywords]).map { |t| t.to_s.strip }.reject(&:blank?)
+
+          # Case-insensitive union preserving order (existing first)
+          seen = {}
+          combined = []
+          (existing_tags + keywords).each do |t|
+            key = t.downcase
+            next if key.blank? || seen[key]
+            seen[key] = true
+            combined << t
+          end
+
+          if combined != existing_tags
+            self.tag_list = combined
+            updated = true
+          end
         rescue => e
           Rails.logger.warn("Failed to merge keywords into tag_list for #{file_name}: #{e.message}")
         end
       end
+
+      updated
     end
 
   # JSON-based metadata getters for read-only display

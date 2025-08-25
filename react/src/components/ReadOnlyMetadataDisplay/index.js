@@ -4,6 +4,46 @@ export default ({ file }) => {
   // Read-only metadata display as unified Folio-styled table
   const isImage = file?.attributes?.human_type === 'image'
 
+  const extractFirstPresent = (obj, keys) => {
+    for (const k of keys) {
+      const v = obj?.[k]
+      if (v !== undefined && v !== null && String(v).trim() !== '') return v
+    }
+    return null
+  }
+
+  const formatLocationStruct = (obj) => {
+    if (!obj || typeof obj !== 'object') return null
+    const parts = []
+    const sublocation = extractFirstPresent(obj, ['Sublocation', 'SubLocation'])
+    const city = extractFirstPresent(obj, ['City'])
+    const state = extractFirstPresent(obj, ['StateProvince', 'ProvinceState', 'State'])
+    const country = extractFirstPresent(obj, ['CountryName', 'Country'])
+    const countryCode = extractFirstPresent(obj, ['CountryCode'])
+    const name = extractFirstPresent(obj, ['LocationName', 'Name'])
+
+    if (sublocation) parts.push(sublocation)
+    if (city) parts.push(city)
+    if (state) parts.push(state)
+    if (country) parts.push(countryCode ? `${country} (${countryCode})` : country)
+    if (!parts.length && name) parts.push(name)
+
+    return parts.length ? parts.join(', ') : null
+  }
+
+  const formatLocationValue = (value) => {
+    if (Array.isArray(value)) {
+      const arr = value.map((v) => {
+        if (v && typeof v === 'object') return formatLocationStruct(v)
+        if (v === undefined || v === null) return null
+        return String(v)
+      }).filter((v) => v && String(v).trim() !== '')
+      return arr.join('; ')
+    }
+    if (value && typeof value === 'object') return formatLocationStruct(value)
+    return value
+  }
+
   const renderSectionHeader = (title, icon = 'info') => (
     <tr className='table-secondary'>
       <td colSpan='2' className='fw-bold text-uppercase small py-2'>
@@ -15,6 +55,11 @@ export default ({ file }) => {
 
   const renderMetadataRow = (field) => {
     let value = file.attributes[field.key]
+
+    // Pretty-print structured IPTC location arrays (IPTC Extension)
+    if (field.key === 'location_created' || field.key === 'location_shown') {
+      value = formatLocationValue(value)
+    }
     
     // Skip empty values
     if (!value || value === '' || (Array.isArray(value) && value.length === 0)) {

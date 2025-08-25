@@ -70,7 +70,9 @@ module Folio::Metadata
       # Classification
       keywords: [
         "XMP-dc:Subject",  # Array/bag, store as JSONB array (uppercase)
-        "XMP-dc:subject"   # Array/bag, store as JSONB array (lowercase)
+        "XMP-dc:subject",  # Array/bag, store as JSONB array (lowercase)
+        "IPTC:Keywords",   # IIM fallback (may be comma-separated String)
+        "Keywords"         # IIM fallback without group prefix
       ],
 
       intellectual_genre: [
@@ -206,13 +208,13 @@ module Folio::Metadata
           value.to_s
         end
       },
-      # Keep arrays as JSONB, don't concatenate to string
+      # Keep arrays as JSONB; for String fallbacks (IPTC:Keywords), split on commas/semicolons
       keywords: ->(value, metadata = {}) {
         case value
         when Array
           value.filter_map(&:to_s).reject(&:blank?)
         when String
-          [value.to_s].compact.reject(&:blank?)
+          value.split(/[;,]/).map { |s| s.to_s.strip }.reject(&:blank?)
         else
           []
         end

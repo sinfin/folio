@@ -39,7 +39,7 @@ cs:
         metadata_extraction_failed: 'Nepodařilo se extrahovat metadata z obrázku'
   metadata:
     headline: 'Titulek'
-    creator: 'Autor(i)'
+    creator: 'Autor'
     caption_writer: 'Autor popisku'
     credit_line: 'Credit'
     source: 'Zdroj'

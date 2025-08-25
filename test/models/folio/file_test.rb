@@ -176,3 +176,30 @@ class Folio::FileTest < ActiveSupport::TestCase
     end
   end
 end
+
+class Folio::FileImageMetadataKeywordsTest < ActiveSupport::TestCase
+  include ActiveJob::TestHelper
+
+  test "merges keywords into tag_list idempotently" do
+    image = create(:folio_file_image, tag_list: "alpha, beta")
+
+    # Simulate mapped metadata keywords
+    metadata = {
+      "XMP-dc:Subject" => ["Beta", "Gamma", " ", nil, "alpha"],
+    }
+
+    # Force synchronous extraction
+    image.stub(:extract_raw_metadata_with_exiftool, metadata) do
+      image.extract_image_metadata_sync
+    end
+
+    assert_equal %w[alpha beta gamma], image.reload.tag_list.sort
+
+    # Re-run to ensure idempotency (no duplicates)
+    image.stub(:extract_raw_metadata_with_exiftool, metadata) do
+      image.extract_image_metadata_sync
+    end
+
+    assert_equal %w[alpha beta gamma], image.reload.tag_list.sort
+  end
+end
