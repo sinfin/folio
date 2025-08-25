@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::ExtractMetadataJob < ApplicationJob
-  queue_as :low
+  queue_as :slow
 
   def perform(image, force: false)
     return unless image.is_a?(Folio::File::Image)
