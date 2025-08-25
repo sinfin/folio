@@ -188,6 +188,7 @@ Folio::Engine.routes.draw do
                 if klass.human_type == "image"
                   post :update_file_thumbnail
                   post :destroy_file_thumbnail
+                  post :extract_metadata
                 end
 
                 if klass.human_type == "video"

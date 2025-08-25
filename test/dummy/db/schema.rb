@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_07_16_062032) do
+ActiveRecord::Schema[7.1].define(version: 2025_08_24_213446) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -321,12 +321,21 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_16_062032) do
     t.string "attribution_source_url"
     t.string "attribution_copyright"
     t.string "attribution_licence"
+    t.string "headline"
+    t.datetime "capture_date"
+    t.decimal "gps_latitude", precision: 10, scale: 6
+    t.decimal "gps_longitude", precision: 10, scale: 6
+    t.datetime "file_metadata_extracted_at"
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((author)::text, ''::text)))", name: "index_folio_files_on_by_author", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name)::text, ''::text)))", name: "index_folio_files_on_by_file_name", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text)))", name: "index_folio_files_on_by_file_name_for_search", using: :gin
+    t.index ["capture_date"], name: "index_folio_files_on_capture_date"
     t.index ["created_at"], name: "index_folio_files_on_created_at"
+    t.index ["file_metadata_extracted_at"], name: "index_folio_files_on_file_metadata_extracted_at"
     t.index ["file_name"], name: "index_folio_files_on_file_name"
+    t.index ["gps_latitude", "gps_longitude"], name: "index_folio_files_on_gps_latitude_and_gps_longitude"
     t.index ["hash_id"], name: "index_folio_files_on_hash_id"
+    t.index ["headline"], name: "index_folio_files_on_headline"
     t.index ["site_id"], name: "index_folio_files_on_site_id"
     t.index ["type"], name: "index_folio_files_on_type"
     t.index ["updated_at"], name: "index_folio_files_on_updated_at"

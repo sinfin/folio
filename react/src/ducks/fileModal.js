@@ -21,6 +21,9 @@ const MARK_MODAL_FILE_AS_UPDATING = 'fileModal/MARK_MODAL_FILE_AS_UPDATING'
 const MARK_MODAL_FILE_AS_UPDATED = 'fileModal/MARK_MODAL_FILE_AS_UPDATED'
 const LOADED_FILE_MODAL_PLACEMENTS = 'fileModal/LOADED_FILE_MODAL_PLACEMENTS'
 const CHANGE_FILE_PLACEMENTS_PAGE = 'fileModal/CHANGE_FILE_PLACEMENTS_PAGE'
+const EXTRACT_METADATA = 'fileModal/EXTRACT_METADATA'
+const EXTRACT_METADATA_SUCCESS = 'fileModal/EXTRACT_METADATA_SUCCESS'
+const EXTRACT_METADATA_FAILURE = 'fileModal/EXTRACT_METADATA_FAILURE'
 
 // Actions
 
@@ -74,6 +77,10 @@ export function loadedFileModalPlacements (file, filePlacements, meta) {
 
 export function changeFilePlacementsPage (file, page) {
   return { type: CHANGE_FILE_PLACEMENTS_PAGE, file, page }
+}
+
+export function extractMetadata (fileType, filesUrl, file) {
+  return { type: EXTRACT_METADATA, fileType, filesUrl, file }
 }
 
 // Selectors
@@ -201,6 +208,27 @@ function * changeFilePlacementsPageSaga () {
   yield takeEvery(CHANGE_FILE_PLACEMENTS_PAGE, changeFilePlacementsPagePerform)
 }
 
+function * extractMetadataPerform (action) {
+  try {
+    const url = urlWithAffix(action.filesUrl, `/${action.file.id}/extract_metadata`)
+    const response = yield call(apiPost, url)
+    
+    yield put({ type: EXTRACT_METADATA_SUCCESS, file: response.data, meta: response.meta })
+    yield put({ type: UPDATE_FILE_SUCCESS, fileType: action.fileType, file: response.data, response: response.data })
+    
+    if (response.meta && response.meta.flash && response.meta.flash.success) {
+      window.FolioConsole.Flash.success(response.meta.flash.success)
+    }
+  } catch (e) {
+    yield put({ type: EXTRACT_METADATA_FAILURE, file: action.file, error: e.message })
+    window.FolioConsole.Flash.alert(e.message)
+  }
+}
+
+function * extractMetadataSaga () {
+  yield takeEvery(EXTRACT_METADATA, extractMetadataPerform)
+}
+
 export const fileModalSagas = [
   updateFileThumbnailSaga,
   uploadNewFileInsteadSaga,
@@ -208,7 +236,8 @@ export const fileModalSagas = [
   openFileModalSaga,
   closeFileModalSaga,
   changeFilePlacementsPageSaga,
-  destroyFileThumbnailSaga
+  destroyFileThumbnailSaga,
+  extractMetadataSaga
 ]
 
 // State
@@ -218,6 +247,7 @@ const initialState = {
   fileType: null,
   uploadingNew: false,
   updating: false,
+  extractingMetadata: false,
   filePlacements: {
     loading: false,
     records: [],
@@ -390,6 +420,40 @@ function modalReducer (state = initialState, action) {
         return {
           ...state,
           file: action.file
+        }
+      } else {
+        return state
+      }
+    }
+
+    case EXTRACT_METADATA: {
+      if (state.file && state.file.id === action.file.id) {
+        return {
+          ...state,
+          extractingMetadata: true
+        }
+      } else {
+        return state
+      }
+    }
+
+    case EXTRACT_METADATA_SUCCESS: {
+      if (state.file && state.file.id === action.file.id) {
+        return {
+          ...state,
+          file: action.file,
+          extractingMetadata: false
+        }
+      } else {
+        return state
+      }
+    }
+
+    case EXTRACT_METADATA_FAILURE: {
+      if (state.file && state.file.id === action.file.id) {
+        return {
+          ...state,
+          extractingMetadata: false
         }
       } else {
         return state

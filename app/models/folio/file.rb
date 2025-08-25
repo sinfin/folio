@@ -249,6 +249,174 @@ class Folio::File < Folio::ApplicationRecord
     {}
   end
 
+  # Basic source accessor for all file types (fallback for non-images)
+  def source
+    # For images, this will be overridden by source_from_metadata alias
+    # For other files, return attribution_source
+    attribution_source
+  end
+
+  # Metadata accessors for non-image files (fallbacks)
+  # These methods are defined in ImageMetadataExtraction concern for images,
+  # but need fallbacks for other file types to support API serialization
+
+  def copyright_marked
+    nil
+  end
+
+  def headline_from_metadata
+    nil
+  end
+
+  def keywords_from_metadata
+    []
+  end
+
+  def creator
+    []
+  end
+
+  def credit_line
+    nil
+  end
+
+  def copyright_notice
+    nil
+  end
+
+  def usage_terms
+    nil
+  end
+
+  def rights_usage_info
+    nil
+  end
+
+  def subject_codes
+    []
+  end
+
+  def scene_codes
+    []
+  end
+
+  def location_created
+    nil
+  end
+
+  def location_shown
+    nil
+  end
+
+  def orientation
+    nil
+  end
+
+  def camera_make
+    nil
+  end
+
+  def camera_model
+    nil
+  end
+
+  def lens_info
+    nil
+  end
+
+  def source_from_metadata
+    nil
+  end
+
+  def city
+    nil
+  end
+
+  def country
+    nil
+  end
+
+  def country_code
+    nil
+  end
+
+  def intellectual_genre
+    nil
+  end
+
+  def event
+    nil
+  end
+
+  def caption_writer
+    nil
+  end
+
+  def urgency
+    nil
+  end
+
+  def category
+    nil
+  end
+
+  def sublocation
+    nil
+  end
+
+  def state_province
+    nil
+  end
+
+  def focal_length
+    nil
+  end
+
+  def aperture
+    nil
+  end
+
+  def shutter_speed
+    nil
+  end
+
+  def iso_speed
+    nil
+  end
+
+  def flash
+    nil
+  end
+
+  def white_balance
+    nil
+  end
+
+  def metering_mode
+    nil
+  end
+
+  def exposure_mode
+    nil
+  end
+
+  def exposure_compensation
+    nil
+  end
+
+  def persons_shown_from_metadata
+    []
+  end
+
+  def organizations_shown_from_metadata
+    []
+  end
+
+  # Aliases for backward compatibility
+  alias_method :persons_shown, :persons_shown_from_metadata
+  alias_method :organizations_shown, :organizations_shown_from_metadata
+  alias_method :keywords, :keywords_from_metadata
+
   private
     def set_file_name_for_search
       self.file_name_for_search = self.class.sanitize_filename_for_search(file_name)
@@ -328,18 +496,27 @@ end
 #  attribution_source_url            :string
 #  attribution_copyright             :string
 #  attribution_licence               :string
+#  headline                          :string
+#  capture_date                      :datetime
+#  gps_latitude                      :decimal(10, 6)
+#  gps_longitude                     :decimal(10, 6)
+#  file_metadata_extracted_at        :datetime
 #
 # Indexes
 #
-#  index_folio_files_on_by_author                (to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((author)::text, ''::text)))) USING gin
-#  index_folio_files_on_by_file_name             (to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name)::text, ''::text)))) USING gin
-#  index_folio_files_on_by_file_name_for_search  (to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text)))) USING gin
-#  index_folio_files_on_created_at               (created_at)
-#  index_folio_files_on_file_name                (file_name)
-#  index_folio_files_on_hash_id                  (hash_id)
-#  index_folio_files_on_site_id                  (site_id)
-#  index_folio_files_on_type                     (type)
-#  index_folio_files_on_updated_at               (updated_at)
+#  index_folio_files_on_by_author                       (to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((author)::text, ''::text)))) USING gin
+#  index_folio_files_on_by_file_name                    (to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name)::text, ''::text)))) USING gin
+#  index_folio_files_on_by_file_name_for_search         (to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text)))) USING gin
+#  index_folio_files_on_capture_date                    (capture_date)
+#  index_folio_files_on_created_at                      (created_at)
+#  index_folio_files_on_file_metadata_extracted_at      (file_metadata_extracted_at)
+#  index_folio_files_on_file_name                       (file_name)
+#  index_folio_files_on_gps_latitude_and_gps_longitude  (gps_latitude,gps_longitude)
+#  index_folio_files_on_hash_id                         (hash_id)
+#  index_folio_files_on_headline                        (headline)
+#  index_folio_files_on_site_id                         (site_id)
+#  index_folio_files_on_type                            (type)
+#  index_folio_files_on_updated_at                      (updated_at)
 #
 # Foreign Keys
 #
