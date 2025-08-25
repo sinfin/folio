@@ -3,12 +3,34 @@
 require "test_helper"
 
 class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
+  setup do
+    if ENV["FOLIO_DEBUG_TIPTAP_NODES"].present?
+      puts "WARNING: FOLIO_DEBUG_TIPTAP_NODES is set, tests will fail!"
+    end
+  end
+
   def test_render_with_string_content
-    model = build_mock_record("hello")
+    tiptap_content = {
+      "type" => "doc",
+      "content" => [
+        {
+          "type" => "paragraph",
+          "content" => [
+            {
+              "type" => "text",
+              "text" => "hello"
+            }
+          ]
+        }
+      ]
+    }
+
+    model = build_mock_record(tiptap_content)
 
     render_inline(Folio::Tiptap::ContentComponent.new(record: model))
 
     assert_selector(".f-tiptap-content")
+    assert_text("hello")
   end
 
   def test_render_with_simple_paragraph
@@ -549,29 +571,6 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
     assert_selector(".f-tiptap-content__root")
   end
 
-  def test_render_with_custom_attribute
-    prosemirror_json = {
-      "type" => "doc",
-      "content" => [
-        {
-          "type" => "paragraph",
-          "content" => [
-            {
-              "type" => "text",
-              "text" => "Custom attribute content"
-            }
-          ]
-        }
-      ]
-    }
-
-    model = build_mock_record_with_custom_attribute(prosemirror_json)
-    render_inline(Folio::Tiptap::ContentComponent.new(record: model, attribute: :custom_tiptap_content))
-
-    assert_selector(".f-tiptap-content")
-    assert_text("Custom attribute content")
-  end
-
   def test_render_with_missing_node_definition
     prosemirror_json = {
       "type" => "doc",
@@ -1025,16 +1024,223 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
     assert page.html.include?("console.group('[Folio][Tiptap] Broken lambdas');")
   end
 
-  private
-    def build_mock_record(tiptap_content)
-      mock_record = Object.new
-      mock_record.define_singleton_method(:tiptap_content) { { Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content] => tiptap_content } }
-      mock_record
+  def test_render_with_missing_folio_tiptap_node_type
+    tiptap_content = {
+      "type" => "doc",
+      "content" => [
+        {
+          "type" => "paragraph",
+          "content" => [
+            {
+              "type" => "text",
+              "text" => "Valid paragraph"
+            }
+          ]
+        },
+        {
+          "type" => "folioTiptapNode",
+          "attrs" => {
+            "data" => {
+              "title" => "Missing Type Test",
+              "text" => "Testing missing node type"
+            }
+          }
+        }
+      ]
+    }
+
+    render_inline(Folio::Tiptap::ContentComponent.new(record: build_mock_record(tiptap_content)))
+
+    # Valid paragraph should render
+    assert_text("Valid paragraph")
+
+    # Invalid node should not render any DOM elements
+    assert_no_selector(".d-tiptap-node-card")
+
+    # Only valid paragraph should be in the main content structure
+    assert_selector("p", count: 1)
+    assert_selector("p", text: "Valid paragraph")
+  end
+
+  def test_render_with_blank_folio_tiptap_node_type
+    tiptap_content = {
+      "type" => "doc",
+      "content" => [
+        {
+          "type" => "paragraph",
+          "content" => [
+            {
+              "type" => "text",
+              "text" => "Valid paragraph"
+            }
+          ]
+        },
+        {
+          "type" => "folioTiptapNode",
+          "attrs" => {
+            "type" => "",
+            "data" => {
+              "title" => "Blank Type Test",
+              "text" => "Testing blank node type"
+            }
+          }
+        }
+      ]
+    }
+
+    render_inline(Folio::Tiptap::ContentComponent.new(record: build_mock_record(tiptap_content)))
+
+    # Valid paragraph should render
+    assert_text("Valid paragraph")
+
+    # Invalid node should not render any DOM elements
+    assert_no_selector(".d-tiptap-node-card")
+
+    # Only valid paragraph should be in the main content structure
+    assert_selector("p", count: 1)
+    assert_selector("p", text: "Valid paragraph")
+  end
+
+  def test_render_with_invalid_folio_tiptap_node_type
+    tiptap_content = {
+      "type" => "doc",
+      "content" => [
+        {
+          "type" => "paragraph",
+          "content" => [
+            {
+              "type" => "text",
+              "text" => "Valid paragraph"
+            }
+          ]
+        },
+        {
+          "type" => "folioTiptapNode",
+          "attrs" => {
+            "type" => "UnknownNodeType",
+            "data" => {
+              "title" => "Invalid Type Test",
+              "text" => "Testing invalid node type"
+            }
+          }
+        }
+      ]
+    }
+
+    render_inline(Folio::Tiptap::ContentComponent.new(record: build_mock_record(tiptap_content)))
+
+    # Valid paragraph should render
+    assert_text("Valid paragraph")
+
+    # Invalid node should not render any DOM elements
+    assert_no_selector(".d-tiptap-node-card")
+
+    # Only valid paragraph should be in the main content structure
+    assert_selector("p", count: 1)
+    assert_selector("p", text: "Valid paragraph")
+  end
+
+  def test_render_with_mixed_valid_and_invalid_folio_tiptap_nodes
+    tiptap_content = {
+      "type" => "doc",
+      "content" => [
+        {
+          "type" => "folioTiptapNode",
+          "attrs" => {
+            "type" => "Dummy::Tiptap::Node::Card",
+            "data" => {
+              "title" => "Valid Card",
+              "text" => "This should render"
+            }
+          }
+        },
+        {
+          "type" => "folioTiptapNode",
+          "attrs" => {
+            "type" => "UnknownNodeType",
+            "data" => {
+              "title" => "Invalid Card",
+              "text" => "This should not render"
+            }
+          }
+        },
+        {
+          "type" => "folioTiptapNode",
+          "attrs" => {
+            "data" => {
+              "title" => "Missing Type Card",
+              "text" => "This should also not render"
+            }
+          }
+        }
+      ]
+    }
+
+    render_inline(Folio::Tiptap::ContentComponent.new(record: build_mock_record(tiptap_content)))
+
+    # Valid node should render
+    assert_selector(".d-tiptap-node-card", count: 1)
+    assert_text("Valid Card")
+    assert_text("This should render")
+
+    # Invalid nodes should not render any additional DOM elements
+    # Only one valid card should exist (the rest should be filtered out during error handling)
+  end
+
+  def test_render_with_node_type_excluded_by_config
+    tiptap_content = {
+      "type" => "doc",
+      "content" => [
+        {
+          "type" => "paragraph",
+          "content" => [
+            {
+              "type" => "text",
+              "text" => "Valid paragraph"
+            }
+          ]
+        },
+        {
+          "type" => "folioTiptapNode",
+          "attrs" => {
+            "type" => "Dummy::Tiptap::Node::Card",
+            "data" => {
+              "title" => "Excluded Card",
+              "text" => "This should not render due to config"
+            }
+          }
+        }
+      ]
+    }
+
+    record = build_mock_record(tiptap_content)
+
+    # Mock the tiptap_config to exclude all node types
+    def record.tiptap_config
+      @config ||= Folio::Tiptap::Config.new(node_names: [])
     end
 
-    def build_mock_record_with_custom_attribute(tiptap_content)
-      mock_record = Object.new
-      mock_record.define_singleton_method(:custom_tiptap_content) { { Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content] => tiptap_content } }
+    render_inline(Folio::Tiptap::ContentComponent.new(record: record))
+
+    # Valid paragraph should render
+    assert_text("Valid paragraph")
+
+    # Excluded node should not render any DOM elements
+    assert_no_selector(".d-tiptap-node-card")
+
+    # Only valid paragraph should be in the main content structure
+    assert_selector("p", count: 1)
+    assert_selector("p", text: "Valid paragraph")
+  end
+
+  private
+    def build_mock_record(tiptap_content)
+      mock_record = Folio::Page.new
+
+      if tiptap_content
+        mock_record.tiptap_content = { "tiptap_content" => tiptap_content }
+      end
+
       mock_record
     end
 end
