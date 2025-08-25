@@ -2,6 +2,7 @@ import React from 'react'
 
 export default ({ file }) => {
   // Read-only metadata display as unified Folio-styled table
+  const isImage = file?.attributes?.human_type === 'image'
 
   const renderSectionHeader = (title, icon = 'info') => (
     <tr className='table-secondary'>
@@ -133,7 +134,9 @@ export default ({ file }) => {
   return (
     <div className='folio-console-metadata-table'>
       <h4 className='mb-3'>
-        {window.FolioConsole.translations['file/advanced_metadata'] || 'Advanced Metadata'}
+        {isImage
+          ? (window.FolioConsole.translations['file/advanced_metadata'] || 'Image Metadata (IPTC/XMP/EXIF)')
+          : (window.FolioConsole.translations['file/advanced_metadata_generic'] || 'Metadata')}
       </h4>
 
       <div className='table-responsive'>

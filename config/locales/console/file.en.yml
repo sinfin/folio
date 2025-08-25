@@ -21,6 +21,7 @@ en:
         location: "Location"
 
         advanced_metadata: "Image Metadata (IPTC/XMP/EXIF)"
+        advanced_metadata_generic: "Metadata"
         show_technical_data: "Show Technical Data"
         hide_technical_data: "Hide Technical Data"
         technical_metadata_readonly: "Technical Metadata (Read-only)"

@@ -404,20 +404,22 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
               </div>
             )}
 
-            {/* Action row: Save + Extract + Re-extract + info (according to documentation) */}
+            {/* Action row: Save + Extract (images only) + info */}
             {!readOnly && (
               <div className='d-flex flex-wrap align-items-center mt-3 gap-2'>
                 <button type='button' className='btn btn-primary px-4' onClick={saveModal}>
                   {window.FolioConsole.translations.save}
                 </button>
-                <FolioConsoleUiButton
-                  onClick={extractMetadata}
-                  disabled={isExtractingMetadata}
-                  variant='warning'
-                  size='sm'
-                  icon='reload'
-                  label={isExtractingMetadata ? window.FolioConsole.translations['file/extracting'] : window.FolioConsole.translations['file/extract_metadata']}
-                />
+                {isImage && (
+                  <FolioConsoleUiButton
+                    onClick={extractMetadata}
+                    disabled={isExtractingMetadata}
+                    variant='warning'
+                    size='sm'
+                    icon='reload'
+                    label={isExtractingMetadata ? window.FolioConsole.translations['file/extracting'] : window.FolioConsole.translations['file/extract_metadata']}
+                  />
+                )}
                 {formState.file_metadata_extracted_at && (
                   <small className='text-muted flex-grow-1'>
                     {window.FolioConsole.translations['file/metadata_extracted_at_prefix'] || 'Extracted'}

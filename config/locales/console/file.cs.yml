@@ -21,6 +21,7 @@ cs:
         location: 'Lokalita'
 
         advanced_metadata: 'Metadata fotografie (IPTC/XMP/EXIF)'
+        advanced_metadata_generic: 'Metadata'
         show_technical_data: 'Zobrazit technická data'
         hide_technical_data: 'Skrýt technická data'
         technical_metadata_readonly: 'Technická metadata (pouze pro čtení)'
