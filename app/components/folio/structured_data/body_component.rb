@@ -21,19 +21,24 @@ class Folio::StructuredData::BodyComponent < Folio::ApplicationComponent
     return if data.blank?
 
     @cache_key = if @record && Folio::Current.cache_key_base
-      ["folio/structured_data/body_component", @record.class.table_name, @record.id, @record.updated_at] + Folio::Current.cache_key_base
+      [
+        "folio/structured_data/body_component",
+        @record.class.table_name,
+        @record.id,
+        @record.updated_at,
+      ] + Folio::Current.cache_key_base
     end
 
     @structured_data = {
       "@context" => "https://schema.org",
-      "@graph" => data
+      "@graph" => data,
     }
   end
 
   def breadcrumbs_structured_data
-    breadcrumbs_data  ||= {
+    breadcrumbs_data ||= {
       "@type" => "BreadcrumbList",
-      "itemListElement" => []
+      "itemListElement" => [],
     }
 
     add_site_structured_data_breadcrumb(breadcrumbs_data)
@@ -60,20 +65,20 @@ class Folio::StructuredData::BodyComponent < Folio::ApplicationComponent
       "@type" => "ListItem",
       "position" => data["itemListElement"].size + 1,
       "name" => name,
-      "item" => url
+      "item" => url,
     }
   end
 
   def publisher_data
     data = {
       "@type" => "Organization",
-      "name" => Folio::Current.site.title
+      "name" => Folio::Current.site.title,
     }
 
     if Folio::Current.site.structured_data_config.present? && Folio::Current.site.structured_data_config[:icon_url].present?
       data["logo"] = {
         "@type" => "ImageObject",
-        "url" => Folio::Current.site.structured_data_config[:icon_url]
+        "url" => Folio::Current.site.structured_data_config[:icon_url],
       }
     end
 
@@ -91,7 +96,7 @@ class Folio::StructuredData::BodyComponent < Folio::ApplicationComponent
       "@type" => "WebSite",
       "url" => Folio::Current.site.env_aware_root_url,
       "name" => Folio::Current.site.title,
-      "publisher" => publisher_data
+      "publisher" => publisher_data,
     }
   end
 
@@ -106,14 +111,11 @@ class Folio::StructuredData::BodyComponent < Folio::ApplicationComponent
   def structured_data_hash_for_article_author
     authors_ary = @record.try(:cache_aware_published_authors) || @record.published_authors
 
-    if authors_ary.present?
-      author_for_hash = authors_ary.first
-      structured_data_hash_for_article_author_from(name: author_for_hash.full_name,
-                                                   url: url_for([author_for_hash, only_path: false]))
+    return unless authors_ary.present?
 
-    else
-      nil
-    end
+    author_for_hash = authors_ary.first
+    structured_data_hash_for_article_author_from(name: author_for_hash.full_name,
+                                                 url: url_for([author_for_hash, only_path: false]))
   end
 
   def structured_data_hash_for_article
@@ -134,7 +136,7 @@ class Folio::StructuredData::BodyComponent < Folio::ApplicationComponent
       "dateModified" => @record.try(:revised_at).present? ? @record.revised_at.iso8601 : nil,
       "keywords" => tags_ary.present? ? tags_ary.map(&:title) : nil,
       "author" => structured_data_hash_for_article_author,
-      "publisher" => publisher_data
+      "publisher" => publisher_data,
     }.compact
   end
 
