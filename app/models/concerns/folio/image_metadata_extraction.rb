@@ -458,12 +458,26 @@ module Folio::ImageMetadataExtraction
 
   private
     def extract_raw_metadata_with_exiftool
-      return unless file.present? && File.exist?(file.path)
+      return unless file.present?
+
+      file_path = nil
+      if file.respond_to?(:path) && file.path && File.exist?(file.path)
+        file_path = file.path
+      elsif file.respond_to?(:temp_object)
+        begin
+          tmp = file.temp_object
+          file_path = tmp.path if tmp && tmp.respond_to?(:path) && tmp.path && File.exist?(tmp.path)
+        rescue
+          file_path = nil
+        end
+      end
+
+      return unless file_path
 
       require "open3"
 
       base_options = Rails.application.config.folio_image_metadata_exiftool_options || ["-G1", "-struct", "-n"]
-      command = ["exiftool", "-j", *base_options, file.path]
+      command = ["exiftool", "-j", *base_options, file_path]
       stdout, stderr, status = Open3.capture3(*command)
       return JSON.parse(stdout).first if status.success?
       Rails.logger.warn "ExifTool error for #{file_name}: #{stderr}"
@@ -472,7 +486,7 @@ module Folio::ImageMetadataExtraction
         candidates = Array(Rails.application.config.folio_image_metadata_iptc_charset_candidates)
         candidates.each do |cs|
           opt = ["-charset", "iptc=#{cs}"]
-          stdout, stderr, status = Open3.capture3("exiftool", "-j", *(base_options + opt), file.path)
+          stdout, stderr, status = Open3.capture3("exiftool", "-j", *(base_options + opt), file_path)
           next unless status.success?
           parsed = JSON.parse(stdout).first
           return parsed if parsed.is_a?(Hash)
