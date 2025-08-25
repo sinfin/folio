@@ -50,8 +50,15 @@ class Folio::ExtractMetadataJob < ApplicationJob
         }
       }
 
-      MessageBus.publish(Folio::MESSAGE_BUS_CHANNEL, message_data, user_ids: message_bus_user_ids)
+      MessageBus.publish(Folio::MESSAGE_BUS_CHANNEL, message_data.to_json, user_ids: message_bus_user_ids)
       Rails.logger.debug "Broadcasted metadata update for file ##{image.id} to user_ids: #{message_bus_user_ids}"
+
+      # Also broadcast generic file update for global listeners (parity with subtitles jobs)
+      begin
+        super(image)
+      rescue NoMethodError
+        # Parent has no broadcast method; ignore
+      end
     end
 
     def serialize_file_attributes(image)

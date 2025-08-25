@@ -115,10 +115,13 @@ class FileModal extends Component {
       // Update state when: no previous file, update finished, OR file ID changed
       const fileChanged = prevProps.fileModal.file && 
                           this.props.fileModal.file.id !== prevProps.fileModal.file.id
+      const attrsChanged = prevProps.fileModal.file && prevProps.fileModal.file.attributes &&
+                           this.props.fileModal.file && this.props.fileModal.file.attributes &&
+                           prevProps.fileModal.file.attributes !== this.props.fileModal.file.attributes
       
       if (!prevProps.fileModal.file || 
           (prevProps.fileModal.updating && this.props.fileModal.updating === false) ||
-          fileChanged) {
+          fileChanged || attrsChanged) {
         const newState = {
           author: this.props.fileModal.file.attributes.author,
           attribution_source: this.props.fileModal.file.attributes.attribution_source,

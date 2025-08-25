@@ -101,6 +101,9 @@ module Folio::Console::Api::FileControllerBase
       folio_console_record.save! if folio_console_record.changed?
       folio_console_record.reload
 
+      # Broadcast for live UI update (MessageBus JSON payload)
+      broadcast_metadata_extracted(folio_console_record)
+
       render_record(folio_console_record, Folio::Console::FileSerializer, meta: {
         flash: {
           success: t("folio.console.files.metadata_extracted")
@@ -193,15 +196,53 @@ module Folio::Console::Api::FileControllerBase
     end
 
     def file_params
-      p = params.require(:file)
-                .require(:attributes)
-                .permit(*file_params_whitelist)
+      raw = params.require(:file)
+                   .require(:attributes)
+                   .permit(*file_params_whitelist)
 
-      if p[:tags].present? && p[:tag_list].blank?
-        p[:tag_list] = p.delete(:tags).join(",")
+      if raw[:tags].present? && raw[:tag_list].blank?
+        raw[:tag_list] = raw.delete(:tags).join(",")
       end
 
-      p
+      # Filter out any keys the model cannot write to (avoid unknown attribute errors)
+      writable_hash = {}
+      raw.to_h.each do |key, value|
+        if key.to_s == "tag_list" || folio_console_record.respond_to?("#{key}=")
+          writable_hash[key] = value
+        end
+      end
+
+      writable_hash
+    end
+
+    def broadcast_metadata_extracted(file)
+      return unless defined?(MessageBus)
+      user_ids = message_bus_user_ids
+      return if user_ids.blank?
+
+      begin
+        serialized = Folio::Console::FileSerializer.new(file).serializable_hash
+        attrs = serialized[:data][:attributes]
+      rescue
+        attrs = {}
+      end
+
+      message_data = {
+        type: "Folio::File::MetadataExtracted",
+        file: {
+          id: file.id,
+          type: file.class.name,
+          attributes: attrs
+        }
+      }
+
+      MessageBus.publish(Folio::MESSAGE_BUS_CHANNEL, message_data.to_json, user_ids: user_ids)
+    end
+
+    def message_bus_user_ids
+      @message_bus_user_ids ||= Folio::User.where.not(console_url: nil)
+                                           .where(console_url_updated_at: 1.hour.ago..)
+                                           .pluck(:id)
     end
 
     def index_json
