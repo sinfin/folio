@@ -19,8 +19,8 @@ en:
         essential_information: "Essential Information"
         rights_attribution: "Rights & Attribution"
         location: "Location"
-        show_advanced_fields: "Show Advanced Metadata (IPTC/XMP/EXIF)"
-        hide_advanced_fields: "Hide Advanced Metadata (IPTC/XMP/EXIF)"
+
+        advanced_metadata: "Image Metadata (IPTC/XMP/EXIF)"
         show_technical_data: "Show Technical Data"
         hide_technical_data: "Hide Technical Data"
         technical_metadata_readonly: "Technical Metadata (Read-only)"

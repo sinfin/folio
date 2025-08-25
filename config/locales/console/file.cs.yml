@@ -19,8 +19,8 @@ cs:
         essential_information: 'Základní informace'
         rights_attribution: 'Práva a autorství'
         location: 'Lokalita'
-        show_advanced_fields: 'Zobrazit pokročilá metadata (IPTC/XMP/EXIF)'
-        hide_advanced_fields: 'Skrýt pokročilá metadata (IPTC/XMP/EXIF)'
+
+        advanced_metadata: 'Metadata fotografie (IPTC/XMP/EXIF)'
         show_technical_data: 'Zobrazit technická data'
         hide_technical_data: 'Skrýt technická data'
         technical_metadata_readonly: 'Technická metadata (pouze pro čtení)'

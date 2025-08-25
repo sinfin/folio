@@ -132,10 +132,9 @@ export default ({ file }) => {
 
   return (
     <div className='folio-console-metadata-table'>
-      <h6 className='mb-3 text-secondary'>
-        <i className='fas fa-database me-2'></i>
-        Advanced Metadata
-      </h6>
+      <h4 className='mb-3'>
+        {window.FolioConsole.translations['file/advanced_metadata'] || 'Advanced Metadata'}
+      </h4>
 
       <div className='table-responsive'>
         <table className='table table-striped table-hover'>
