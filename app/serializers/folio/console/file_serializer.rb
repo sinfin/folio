@@ -300,4 +300,25 @@ class Folio::Console::FileSerializer
   attribute :exposure_compensation do |object|
     object.respond_to?(:exposure_compensation) ? object.exposure_compensation : nil
   end
+
+  # Additional metadata from IPTC/EXIF
+  attribute :software do |object|
+    object.respond_to?(:software) ? object.software : nil
+  end
+
+  attribute :description_from_metadata do |object|
+    object.respond_to?(:description_from_metadata) ? object.description_from_metadata : nil
+  end
+
+  attribute :capture_date_from_metadata do |object|
+    object.respond_to?(:capture_date_from_metadata) ? object.capture_date_from_metadata : nil
+  end
+
+  attribute :color_space do |object|
+    object.respond_to?(:color_space) ? object.color_space : nil
+  end
+
+  attribute :headline_from_metadata do |object|
+    object.respond_to?(:headline_from_metadata) ? object.headline_from_metadata : nil
+  end
 end

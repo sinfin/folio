@@ -185,6 +185,66 @@ module Folio::Metadata
         "Orientation"
       ],
 
+      # Additional technical metadata with formatting
+      focal_length: [
+        "ExifIFD:FocalLength",
+        "FocalLength"
+      ],
+
+      aperture: [
+        "ExifIFD:FNumber",
+        "Composite:Aperture",
+        "FNumber"
+      ],
+
+      shutter_speed: [
+        "ExifIFD:ExposureTime",
+        "Composite:ShutterSpeed",
+        "ExposureTime"
+      ],
+
+      iso_speed: [
+        "ExifIFD:ISO",
+        "ISO"
+      ],
+
+      flash: [
+        "ExifIFD:Flash",
+        "Flash"
+      ],
+
+      white_balance: [
+        "ExifIFD:WhiteBalance",
+        "WhiteBalance"
+      ],
+
+      exposure_mode: [
+        "ExifIFD:ExposureMode",
+        "ExposureMode"
+      ],
+
+      exposure_compensation: [
+        "ExifIFD:ExposureCompensation",
+        "ExposureCompensation"
+      ],
+
+      metering_mode: [
+        "ExifIFD:MeteringMode",
+        "MeteringMode"
+      ],
+
+      color_space: [
+        "ExifIFD:ColorSpace",
+        "ColorSpace"
+      ],
+
+      software: [
+        "IFD0:Software",
+        "Software"
+      ],
+
+
+
       # Legacy field mappings for backward compatibility
       author: [
         "XMP-dc:Creator",
@@ -392,22 +452,145 @@ module Folio::Metadata
       },
       author: ->(value, metadata = {}) {
         value.to_s
-      }
+      },
+
+      # Technical metadata with formatting
+      focal_length: ->(value, metadata = {}) {
+        return nil unless value
+        "#{value.to_f.round}mm"
+      },
+
+      aperture: ->(value, metadata = {}) {
+        return nil unless value
+        "f/#{value.to_f}"
+      },
+
+      shutter_speed: ->(value, metadata = {}) {
+        return nil unless value
+        speed = value.to_f
+        if speed < 1
+          "1/#{(1 / speed).round}s"
+        else
+          "#{speed}s"
+        end
+      },
+
+      iso_speed: ->(value, metadata = {}) {
+        value.to_s
+      },
+
+      flash: ->(value, metadata = {}) {
+        return nil unless value
+        locale = metadata[:_locale] || I18n.locale || :en
+
+        case value.to_i
+        when 0
+          I18n.t("folio.metadata.flash.not_used", locale: locale, default: "Not used")
+        when 1, 9, 13, 15, 16, 24, 25, 29, 31
+          I18n.t("folio.metadata.flash.used", locale: locale, default: "Used")
+        else
+          I18n.t("folio.metadata.flash.used_with_value",
+                 value: value, locale: locale, default: "Used (#{value})")
+        end
+      },
+
+      white_balance: ->(value, metadata = {}) {
+        return nil unless value
+        locale = metadata[:_locale] || I18n.locale || :en
+
+        case value.to_i
+        when 0
+          I18n.t("folio.metadata.white_balance.auto", locale: locale, default: "Auto")
+        when 1
+          I18n.t("folio.metadata.white_balance.manual", locale: locale, default: "Manual")
+        else
+          value.to_s
+        end
+      },
+
+      exposure_mode: ->(value, metadata = {}) {
+        return nil unless value
+        locale = metadata[:_locale] || I18n.locale || :en
+
+        case value.to_i
+        when 0
+          I18n.t("folio.metadata.exposure_mode.auto", locale: locale, default: "Auto")
+        when 1
+          I18n.t("folio.metadata.exposure_mode.manual", locale: locale, default: "Manual")
+        when 2
+          I18n.t("folio.metadata.exposure_mode.aperture_priority", locale: locale, default: "Aperture priority")
+        else
+          value.to_s
+        end
+      },
+
+      exposure_compensation: ->(value, metadata = {}) {
+        return nil unless value
+        comp = value.to_f
+        return "0" if comp == 0
+        "#{comp > 0 ? '+' : ''}#{comp.round(1)} EV"
+      },
+
+      metering_mode: ->(value, metadata = {}) {
+        return nil unless value
+        locale = metadata[:_locale] || I18n.locale || :en
+
+        case value.to_i
+        when 1
+          I18n.t("folio.metadata.metering_mode.average", locale: locale, default: "Average")
+        when 2
+          I18n.t("folio.metadata.metering_mode.center_weighted", locale: locale, default: "Center-weighted")
+        when 3
+          I18n.t("folio.metadata.metering_mode.spot", locale: locale, default: "Spot")
+        when 5
+          I18n.t("folio.metadata.metering_mode.matrix", locale: locale, default: "Matrix")
+        else
+          value.to_s
+        end
+      },
+
+      color_space: ->(value, metadata = {}) {
+        return nil unless value
+        locale = metadata[:_locale] || I18n.locale || :en
+
+        case value.to_i
+        when 1
+          I18n.t("folio.metadata.color_space.srgb", locale: locale, default: "sRGB")
+        when 65535
+          I18n.t("folio.metadata.color_space.adobe_rgb", locale: locale, default: "Adobe RGB")
+        else
+          value.to_s
+        end
+      },
+
+      software: ->(value, metadata = {}) {
+        value.to_s
+      },
+
+
     }.freeze
 
     class << self
       def map_metadata(raw_metadata, locale: nil)
-        locale ||= configured_locale_priority.first
+        locale ||= I18n.locale || configured_locale_priority.first
         result = {}
 
-        FIELD_MAPPINGS.each do |target_field, source_fields|
-          value = extract_first_available_value(raw_metadata, source_fields, locale: locale)
+        # Inject locale into metadata for processors
+        enhanced_metadata = raw_metadata.dup
+        enhanced_metadata[:_locale] = locale
+
+        # Allow app-specific field mappings to override defaults
+        field_mappings = effective_field_mappings
+
+        field_mappings.each do |target_field, source_fields|
+          value = extract_first_available_value(enhanced_metadata, source_fields, locale: locale)
 
           if value.present?
-            # Apply special processing if defined
-            if processor = COMPLEX_FIELD_PROCESSORS[target_field]
-              # Pass full metadata for fields that need additional context (like GPS or encoding repair)
-              value = processor.arity == 2 ? processor.call(value, raw_metadata) : processor.call(value)
+            # Apply special processing if defined (allow app overrides)
+            processors = effective_field_processors
+            if processor = processors[target_field]
+              # Pass enhanced metadata (with locale) for processors
+              value = processor.arity == 2 ? processor.call(value, enhanced_metadata) : processor.call(value)
             end
 
             result[target_field] = value
@@ -446,6 +629,34 @@ module Folio::Metadata
         end
 
         result
+      end
+
+      # Single method to get any field - used by models for delegation
+      def get_field(raw_metadata, field_name, record = nil, locale: nil)
+        return nil unless raw_metadata.present?
+
+        # Special handling for GPS fields that prefer DB column values
+        if [:gps_latitude, :gps_longitude].include?(field_name) && record
+          column_value = record[field_name]
+          return column_value if column_value.present?
+        end
+
+        mapped_data = map_metadata(raw_metadata, locale: locale)
+        mapped_data[field_name]
+      end
+
+      # Allow applications to override field mappings
+      def effective_field_mappings
+        app_mappings = Rails.application.config.respond_to?(:folio_image_metadata_field_mappings) ?
+                      Rails.application.config.folio_image_metadata_field_mappings : {}
+        FIELD_MAPPINGS.merge(app_mappings || {})
+      end
+
+      # Allow applications to override field processors
+      def effective_field_processors
+        app_processors = Rails.application.config.respond_to?(:folio_image_metadata_field_processors) ?
+                        Rails.application.config.folio_image_metadata_field_processors : {}
+        COMPLEX_FIELD_PROCESSORS.merge(app_processors || {})
       end
 
       # Configurable locale priority

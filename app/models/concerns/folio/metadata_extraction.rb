@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Folio::ImageMetadataExtraction
+module Folio::MetadataExtraction
   extend ActiveSupport::Concern
 
   included do

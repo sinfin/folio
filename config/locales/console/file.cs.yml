@@ -35,40 +35,80 @@ cs:
         metadata_extracted_at_prefix: 'Metadata automaticky extrahována dne'
         metadata_extracted_at_suffix: 'Při extrakci se vyplňují pouze prázdná pole, aby se zachovaly ruční úpravy.'
         has_data: 'obsahuje data'
+        
+        # Metadata field labels (used by React via _translations.slim)
+        metadata:
+          headline: 'Titulek'
+          description: 'Popis'
+          creator: 'Autor'
+          caption_writer: 'Autor popisku'
+          credit_line: 'Credit Line'
+          source: 'Zdroj'
+          copyright_notice: 'Copyright'
+          copyright_marked: 'Copyright označen'
+          usage_terms: 'Podmínky užití'
+          rights_url: 'URL práv'
+          keywords: 'Klíčová slova'
+          intellectual_genre: 'Intelektuální žánr'
+          subject_codes: 'Kódy předmětu'
+          scene_codes: 'Kódy scény'
+          event: 'Událost'
+          category: 'Kategorie'
+          urgency: 'Naléhavost'
+          persons_shown: 'Zobrazené osoby'
+          organizations_shown: 'Zobrazené organizace'
+          location_created: 'Místo vytvoření'
+          location_shown: 'Zobrazené místo'
+          sublocation: 'Místo'
+          city: 'Město'
+          state_province: 'Stát/Kraj'
+          country: 'Země'
+          country_code: 'Kód země'
+          camera_make: 'Výrobce fotoaparátu'
+          camera_model: 'Model fotoaparátu'
+          lens_info: 'Objektiv'
+          capture_date: 'Datum pořízení'
+          software: 'Software'
+          iso_speed: 'ISO'
+          aperture: 'Clona'
+          shutter_speed: 'Rychlost závěrky'
+          focal_length: 'Ohnisková vzdálenost'
+          flash: 'Blesk'
+          white_balance: 'Vyvážení bílé'
+          exposure_mode: 'Režim expozice'
+          exposure_compensation: 'Kompenzace expozice'
+          metering_mode: 'Režim měření'
+          orientation: 'Orientace'
+          color_space: 'Barevný prostor'
+          gps_coordinates: 'GPS souřadnice'
+          gps_latitude: 'GPS šířka'
+          gps_longitude: 'GPS délka'
+          flash:
+            not_used: "Nepoužit"
+            used: "Použit"
+            used_with_value: "Použit (%{value})"
+          
+          white_balance:
+            auto: "Auto"
+            manual: "Manuální"
+          
+          exposure_mode:
+            auto: "Auto"
+            manual: "Manuální"
+            aperture_priority: "Auto s prioritou clony"
+          
+          metering_mode:
+            average: "Průměrné"
+            center_weighted: "Středově vážené"
+            spot: "Bodové"
+            matrix: "Maticové"
+          
+          color_space:
+            srgb: "sRGB"
+            adobe_rgb: "Adobe RGB"
+
+          
       files:
         metadata_extracted: 'Metadata byla úspěšně extrahována z obrázku'
         metadata_extraction_failed: 'Nepodařilo se extrahovat metadata z obrázku'
-  metadata:
-    headline: 'Titulek'
-    creator: 'Autor'
-    caption_writer: 'Autor popisku'
-    credit_line: 'Credit'
-    source: 'Zdroj'
-    copyright_notice: 'Copyright'
-    copyright_marked: 'Copyright označen'
-    usage_terms: 'Podmínky užití'
-    rights_usage_info: 'URL k právům'
-    keywords: 'Klíčová slova'
-    intellectual_genre: 'Žánr'
-    subject_codes: 'Předmětové kódy'
-    scene_codes: 'Kódy scény'
-    event: 'Událost'
-    category: 'Kategorie'
-    urgency: 'Naléhavost'
-    persons_shown: 'Zobrazené osoby'
-    persons_shown_details: 'Zobrazené osoby (detaily)'
-    organizations_shown: 'Zobrazené organizace'
-    location_created: 'Místo vytvoření'
-    location_shown: 'Zobrazené místo'
-    sublocation: 'Sublokace'
-    city: 'Město'
-    state_province: 'Stát/Kraj'
-    country: 'Země'
-    country_code: 'Kód země'
-    camera_make: 'Značka fotoaparátu'
-    camera_model: 'Model fotoaparátu'
-    lens_info: 'Informace o objektivu'
-    capture_date: 'Datum pořízení'
-    gps_latitude: 'GPS šířka'
-    gps_longitude: 'GPS délka'
-    orientation: 'Orientace'
+      

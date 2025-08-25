@@ -134,10 +134,11 @@ export default ({ file }) => {
   // Descriptive Metadata Fields
   const descriptiveFields = [
     { key: 'headline_from_metadata', label: window.FolioConsole.translations['file/metadata/headline'] || 'Headline', type: 'text' },
-    { key: 'creator', label: window.FolioConsole.translations['file/metadata/creator'] || 'Creator(s)', type: 'array' },
-    { key: 'caption_writer', label: window.FolioConsole.translations['file/metadata/caption_writer'] || 'Caption Writer', type: 'text' },
+    { key: 'description_from_metadata', label: window.FolioConsole.translations['file/metadata/description'] || 'Description', type: 'text' },
+    { key: 'creator', label: window.FolioConsole.translations['file/metadata/creator'] || 'Creator', type: 'array' },
     { key: 'credit_line', label: window.FolioConsole.translations['file/metadata/credit_line'] || 'Credit Line', type: 'text' },
     { key: 'source_from_metadata', label: window.FolioConsole.translations['file/metadata/source'] || 'Source', type: 'text' },
+    { key: 'caption_writer', label: window.FolioConsole.translations['file/metadata/caption_writer'] || 'Caption Writer', type: 'text' },
     { key: 'keywords_from_metadata', label: window.FolioConsole.translations['file/metadata/keywords'] || 'Keywords', type: 'array' },
     { key: 'intellectual_genre', label: window.FolioConsole.translations['file/metadata/intellectual_genre'] || 'Intellectual Genre', type: 'text' },
     { key: 'subject_codes', label: window.FolioConsole.translations['file/metadata/subject_codes'] || 'Subject Codes', type: 'array' },
@@ -147,27 +148,29 @@ export default ({ file }) => {
     { key: 'organizations_shown_from_metadata', label: window.FolioConsole.translations['file/metadata/organizations_shown'] || 'Organizations Shown', type: 'array' }
   ]
 
-  // Technical Metadata Fields
+  // Technical Metadata Fields (already formatted by backend)
   const technicalFields = [
     { key: 'camera_make', label: window.FolioConsole.translations['file/metadata/camera_make'] || 'Camera Make', type: 'text' },
     { key: 'camera_model', label: window.FolioConsole.translations['file/metadata/camera_model'] || 'Camera Model', type: 'text' },
     { key: 'lens_info', label: window.FolioConsole.translations['file/metadata/lens_info'] || 'Lens Info', type: 'text' },
-    { key: 'capture_date', label: window.FolioConsole.translations['file/metadata/capture_date'] || 'Capture Date', type: 'date', includeTime: true },
-    { key: 'gps_latitude', label: window.FolioConsole.translations['file/metadata/gps_latitude'] || 'GPS Latitude', type: 'number', decimals: 6 },
-    { key: 'gps_longitude', label: window.FolioConsole.translations['file/metadata/gps_longitude'] || 'GPS Longitude', type: 'number', decimals: 6 },
-    { key: 'file_width', label: 'Šířka', type: 'text' },
-    { key: 'file_height', label: 'Výška', type: 'text' },
-    { key: 'file_size', label: 'Velikost souboru', type: 'filesize' },
-    { key: 'orientation', label: window.FolioConsole.translations['file/metadata/orientation'] || 'Orientation', type: 'text' },
-    { key: 'focal_length', label: window.FolioConsole.translations['file/metadata/focal_length'] || 'Focal Length', type: 'text' },
+    { key: 'capture_date_from_metadata', label: window.FolioConsole.translations['file/metadata/capture_date'] || 'Capture Date', type: 'date', includeTime: true },
+    { key: 'software', label: window.FolioConsole.translations['file/metadata/software'] || 'Software', type: 'text' },
+    { key: 'iso_speed', label: window.FolioConsole.translations['file/metadata/iso_speed'] || 'ISO Speed', type: 'text' },
     { key: 'aperture', label: window.FolioConsole.translations['file/metadata/aperture'] || 'Aperture', type: 'text' },
     { key: 'shutter_speed', label: window.FolioConsole.translations['file/metadata/shutter_speed'] || 'Shutter Speed', type: 'text' },
-    { key: 'iso_speed', label: window.FolioConsole.translations['file/metadata/iso_speed'] || 'ISO Speed', type: 'text' },
+    { key: 'focal_length', label: window.FolioConsole.translations['file/metadata/focal_length'] || 'Focal Length', type: 'text' },
     { key: 'flash', label: window.FolioConsole.translations['file/metadata/flash'] || 'Flash', type: 'text' },
     { key: 'white_balance', label: window.FolioConsole.translations['file/metadata/white_balance'] || 'White Balance', type: 'text' },
-    { key: 'metering_mode', label: window.FolioConsole.translations['file/metadata/metering_mode'] || 'Metering Mode', type: 'text' },
     { key: 'exposure_mode', label: window.FolioConsole.translations['file/metadata/exposure_mode'] || 'Exposure Mode', type: 'text' },
-    { key: 'exposure_compensation', label: window.FolioConsole.translations['file/metadata/exposure_compensation'] || 'Exposure Compensation', type: 'text' }
+    { key: 'exposure_compensation', label: window.FolioConsole.translations['file/metadata/exposure_compensation'] || 'Exposure Compensation', type: 'text' },
+    { key: 'metering_mode', label: window.FolioConsole.translations['file/metadata/metering_mode'] || 'Metering Mode', type: 'text' },
+    { key: 'orientation', label: window.FolioConsole.translations['file/metadata/orientation'] || 'Orientation', type: 'text' },
+    { key: 'color_space', label: window.FolioConsole.translations['file/metadata/color_space'] || 'Color Space', type: 'text' },
+    { key: 'file_width', label: window.FolioConsole.translations['fileWidth'] || 'Width', type: 'text' },
+    { key: 'file_height', label: window.FolioConsole.translations['fileHeight'] || 'Height', type: 'text' },
+    { key: 'file_size', label: window.FolioConsole.translations['fileSize'] || 'File Size', type: 'filesize' },
+    { key: 'gps_latitude', label: window.FolioConsole.translations['file/metadata/gps_latitude'] || 'GPS Latitude', type: 'number', decimals: 6 },
+    { key: 'gps_longitude', label: window.FolioConsole.translations['file/metadata/gps_longitude'] || 'GPS Longitude', type: 'number', decimals: 6 }
   ]
 
   // Rights Metadata Fields
