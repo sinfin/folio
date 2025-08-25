@@ -53,6 +53,16 @@ module Folio::Tiptap::Model
         errors.add(field, "must be a Hash or a valid JSON string")
         next
       end
+
+      unless value[Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content]].is_a?(Hash)
+        errors.add(field, "must have a '#{Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content]}' key with a Hash value")
+        next
+      end
+
+      if value[Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content]]["type"] != "doc"
+        errors.add(field, "root node must be of type 'doc'")
+        next
+      end
     end
   end
 

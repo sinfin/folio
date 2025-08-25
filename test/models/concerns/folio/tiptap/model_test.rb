@@ -28,49 +28,95 @@ class Folio::Tiptap::ModelTest < ActiveSupport::TestCase
     end
   end
 
+  test "requires doc as a root node" do
+    page = create(:folio_page)
+
+    Folio::Page.stub(:has_folio_tiptap?, true) do
+      page.tiptap_content = {
+        Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content] => {
+          "type" => "paragraph",
+          "content" => [
+            {
+              "type" => "text",
+              "text" => "Hello world"
+            }
+          ]
+        }
+      }
+
+      assert_not page.valid?
+      assert page.errors[:tiptap_content].present?, "requires doc as a root node"
+
+      page.tiptap_content = {
+        Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content] => {
+          "type" => "doc",
+          "content" => [
+            {
+              "type" => "paragraph",
+              "content" => [
+                {
+                  "type" => "text",
+                  "text" => "Hello world"
+                }
+              ]
+            }
+          ]
+        }
+      }
+
+      assert page.valid?
+    end
+  end
+
   private
     def dummy_tiptap_doc
       {
-        "type" => "doc",
-        "content" => [
-          {
-            "type" => "paragraph",
-            "content" => [
-              {
-                "type" => "text",
-                "text" => "Hello world"
-              }
-            ]
-          }
-        ]
+        Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content] => {
+          "type" => "doc",
+          "content" => [
+            {
+              "type" => "paragraph",
+              "content" => [
+                {
+                  "type" => "text",
+                  "text" => "Hello world"
+                }
+              ]
+            }
+          ]
+        }
       }
     end
 
     def xss_tiptap_doc
       {
-        "type" => "doc",
-        "content" => [
-          { "type" => "paragraph", "content" => [
-            { "type" => "text", "text" => "<script>alert('XSS')</script>" },
-            { "type" => "<script>alert('XSS')</script>", "text" => "<script>alert('XSS')</script>" },
-            { "type" => "text", "text" => "<strong><img onload='alert(\"XSS\")'</strong>" },
-            { "type" => "text", "text" => "<p>random HTML</p>" }
-          ] }
-        ]
+        Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content] => {
+          "type" => "doc",
+          "content" => [
+            { "type" => "paragraph", "content" => [
+              { "type" => "text", "text" => "<script>alert('XSS')</script>" },
+              { "type" => "<script>alert('XSS')</script>", "text" => "<script>alert('XSS')</script>" },
+              { "type" => "text", "text" => "<strong><img onload='alert(\"XSS\")'</strong>" },
+              { "type" => "text", "text" => "<p>random HTML</p>" }
+            ] }
+          ]
+        }
       }
     end
 
     def sanitized_tiptap_doc
       {
-        "type" => "doc",
-        "content" => [
-          { "type" => "paragraph", "content" => [
-            { "type" => "text", "text" => "alert('XSS')" },
-            { "type" => "alert('XSS')", "text" => "alert('XSS')" },
-            { "type" => "text", "text" => "" },
-            { "type" => "text", "text" => "random HTML" }
-          ] }
-        ]
+        Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content] => {
+          "type" => "doc",
+          "content" => [
+            { "type" => "paragraph", "content" => [
+              { "type" => "text", "text" => "alert('XSS')" },
+              { "type" => "alert('XSS')", "text" => "alert('XSS')" },
+              { "type" => "text", "text" => "" },
+              { "type" => "text", "text" => "random HTML" }
+            ] }
+          ]
+        }
       }
     end
 end
