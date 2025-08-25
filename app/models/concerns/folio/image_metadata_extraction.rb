@@ -161,15 +161,15 @@ module Folio::ImageMetadataExtraction
                        Rails.application.config.folio_image_metadata_merge_keywords_to_tags == false)
       if should_merge && respond_to?(:tag_list=) && mapped_data[:keywords].present?
         begin
-          # Normalize: strings, stripped, dedupe case-insensitively
-          existing_tags = Array(tag_list.to_a).map { |t| t.to_s.strip }.reject(&:blank?)
-          keywords = Array(mapped_data[:keywords]).map { |t| t.to_s.strip }.reject(&:blank?)
+          # Normalize: strings, stripped, lowercase for consistency
+          existing_tags = Array(tag_list.to_a).map { |t| t.to_s.strip.downcase }.reject(&:blank?)
+          keywords = Array(mapped_data[:keywords]).map { |t| t.to_s.strip.downcase }.reject(&:blank?)
 
           # Case-insensitive union preserving order (existing first)
           seen = {}
           combined = []
           (existing_tags + keywords).each do |t|
-            key = t.downcase
+            key = t
             next if key.blank? || seen[key]
             seen[key] = true
             combined << t
