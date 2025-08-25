@@ -734,6 +734,22 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
     assert_selector("div.f-tiptap-styled-wrap[data-f-tiptap-styled-wrap-variant='gray-box'] p")
   end
 
+  def test_component_handles_invalid_folio_tiptap_node_type
+    prose_mirror_node = {
+      "type" => "folioTiptapNode",
+      "attrs" => {
+        "type" => "unknown",
+        "data" => {
+          "title" => "UI Component Test",
+          "text" => "Testing the UI card component rendering"
+        }
+      }
+    }
+
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    assert_text("")
+  end
+
   private
     def build_mock_record
       Object.new

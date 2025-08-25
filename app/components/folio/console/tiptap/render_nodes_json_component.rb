@@ -8,14 +8,20 @@ class Folio::Console::Tiptap::RenderNodesJsonComponent < Folio::Console::Applica
   def components_array
     runner = []
 
-    @nodes_hash.each do |unique_id, node|
-      runner << render_node_component(unique_id, node)
+    @nodes_hash.each do |unique_id, hash|
+      if hash[:node]
+        runner << render_node_component(unique_id:, node: hash[:node])
+      elsif hash[:error]
+        runner << render_invalid_or_error(unique_id:, node: nil, error: hash[:error])
+      else
+        fail "Neither :node nor :error present in nodes_hash for unique_id #{unique_id}"
+      end
     end
 
     runner
   end
 
-  def render_node_component(unique_id, node)
+  def render_node_component(unique_id:, node:)
     if node.valid?
       component = node.class.view_component_class.new(node:, editor_preview: true)
 

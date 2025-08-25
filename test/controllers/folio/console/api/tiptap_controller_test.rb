@@ -109,4 +109,28 @@ class Folio::Console::Api::TiptapControllerTest < Folio::Console::BaseController
     assert_equal true, hash["data"][0]["invalid"]
     assert_nil hash["data"][0]["error_message"]
   end
+
+  test "render_nodes - unknown folioTiptapNode type" do
+    post render_nodes_console_api_tiptap_path(format: :json), params: {
+      "nodes" => [
+        {
+          "unique_id" => "folioTiptapNode-1",
+          "attrs" => {
+            "version" => 1,
+            "type" => "unknown",
+            "data" => { "title" => "asf" }
+          }
+        }
+      ]
+    }
+    assert_response :ok
+
+    hash = response.parsed_body
+
+    assert_equal 1, hash["data"].size
+    assert_equal "folioTiptapNode-1", hash["data"][0]["unique_id"]
+    assert_nil hash["data"][0]["html"]
+    assert_equal true, hash["data"][0]["invalid"]
+    assert_equal "Invalid Tiptap node type: unknown", hash["data"][0]["error_message"]
+  end
 end

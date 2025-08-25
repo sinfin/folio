@@ -253,6 +253,24 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTes
     assert_text("Dummy Card Component from API")
   end
 
+  def test_component_handles_invalid_folio_tiptap_node_type
+    # this should fail as we catch it in Folio::Tiptap::Content::ProseMirrorNodeComponent
+    prose_mirror_node = {
+      "type" => "folioTiptapNode",
+      "attrs" => {
+        "type" => "unknown",
+        "data" => {
+          "title" => "UI Component Test",
+          "text" => "Testing the UI card component rendering"
+        }
+      }
+    }
+
+    assert_raises(ArgumentError) do
+      render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    end
+  end
+
   private
     def build_mock_record
       Object.new
