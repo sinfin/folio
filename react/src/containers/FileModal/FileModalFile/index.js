@@ -72,6 +72,14 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
                       <MainImage src={file.attributes.source_url} />
                     </MainImageInner>
                   </MainImageOuter>
+
+                  <div className='mt-3'>
+                    <ThumbnailSizes
+                      file={file}
+                      updateThumbnail={updateThumbnail}
+                      destroyThumbnail={destroyThumbnail}
+                    />
+                  </div>
                 </div>
               ) : (
                 <div>
@@ -425,6 +433,10 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
             {/* Advanced metadata display - always visible */}
             <ReadOnlyMetadataDisplay key={file.id} file={file} />
 
+            <div className='mt-3'>
+              <FileUsage filePlacements={fileModal.filePlacements} changeFilePlacementsPage={changeFilePlacementsPage} />
+            </div>
+
             {/* Additional fields untouched */}
             {additionalFields.map((additionalField) => (
               <FormGroup key={additionalField.name}>
@@ -490,21 +502,6 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
           </div>
         </div>
 
-        <div className={isImage ? 'row mt-3' : 'mt-3'}>
-          {isImage && (
-            <div className='col-lg-7 mb-3'>
-              <ThumbnailSizes
-                file={file}
-                updateThumbnail={updateThumbnail}
-                destroyThumbnail={destroyThumbnail}
-              />
-            </div>
-          )}
-
-          <div className={isImage ? 'col-lg-5 mb-3' : undefined}>
-            <FileUsage filePlacements={fileModal.filePlacements} changeFilePlacementsPage={changeFilePlacementsPage} />
-          </div>
-        </div>
 
         {file.attributes.subtitles_html_api_url ? (
           <div className="mt-4">
