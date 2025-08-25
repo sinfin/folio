@@ -114,9 +114,9 @@ class Folio::File::ImageTest < ActiveSupport::TestCase
     # Set metadata via file_metadata hash and database attributes (simulating extraction result)
     image.update!(
       file_metadata: {
-        "headline" => "IPTC Headline",
+        "Headline" => "IPTC Headline",
         "Keywords" => ["tag1", "tag2"],
-        "creator" => ["Author One", "Author Two"]
+        "Artist" => ["Author One", "Author Two"]
       },
       gps_latitude: 50.0,
       gps_longitude: 14.0

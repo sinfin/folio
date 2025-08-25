@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::ExtractMetadataJob < ApplicationJob
+class Folio::ExtractMetadataJob < Folio::ApplicationJob
   queue_as :slow
 
   def perform(image, force: false)
@@ -39,7 +39,9 @@ class Folio::ExtractMetadataJob < ApplicationJob
     def broadcast_file_update(image)
       # Broadcast file update via MessageBus for live UI refresh
       return unless defined?(MessageBus)
-      return if message_bus_user_ids.blank?
+
+      user_ids = message_bus_user_ids
+      return if user_ids.blank?
 
       message_data = {
         type: "Folio::File::MetadataExtracted",
@@ -50,8 +52,8 @@ class Folio::ExtractMetadataJob < ApplicationJob
         }
       }
 
-      MessageBus.publish(Folio::MESSAGE_BUS_CHANNEL, message_data.to_json, user_ids: message_bus_user_ids)
-      Rails.logger.debug "Broadcasted metadata update for file ##{image.id} to user_ids: #{message_bus_user_ids}"
+      MessageBus.publish(Folio::MESSAGE_BUS_CHANNEL, message_data.to_json, user_ids: user_ids)
+      Rails.logger.debug "Broadcasted metadata update for file ##{image.id} to user_ids: #{user_ids}"
 
       # Also broadcast generic file update for global listeners (parity with subtitles jobs)
       begin
