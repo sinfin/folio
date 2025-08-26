@@ -16,9 +16,12 @@ class Folio::StructuredData::BodyComponent < Folio::ApplicationComponent
     data = []
 
     data << structured_data_hash_for_record if @record.present?
+    data << structured_data_hash_for_video_cover if @record.present?
     data << breadcrumbs_structured_data if @breadcrumbs.any?
 
     return if data.blank?
+
+    data = data.compact
 
     @cache_key = if @record && Folio::Current.cache_key_base
       [
@@ -79,6 +82,7 @@ class Folio::StructuredData::BodyComponent < Folio::ApplicationComponent
       data["logo"] = {
         "@type" => "ImageObject",
         "url" => Folio::Current.site.structured_data_config[:icon_url],
+        "description" => Folio::Current.site.title,
       }
     end
 
@@ -89,8 +93,13 @@ class Folio::StructuredData::BodyComponent < Folio::ApplicationComponent
     @record.respond_to?(:perex) && @record.class.to_s.match?(/::Article(\z|::)/)
   end
 
+  def author_record?
+    @record.respond_to?(:last_name) && @record.class.to_s.match?(/::Author(\z|::)/)
+  end
+
   def structured_data_hash_for_record
     return structured_data_hash_for_article if article_record?
+    return structured_data_hash_for_author if author_record?
 
     {
       "@type" => "WebSite",
@@ -100,11 +109,27 @@ class Folio::StructuredData::BodyComponent < Folio::ApplicationComponent
     }
   end
 
-  def structured_data_hash_for_article_author_from(name: nil, url: nil)
+  def structured_data_hash_for_article_author_from(name: nil, url: nil, cover: nil)
     {
       "@type" => "Person",
       "name" => name,
       "url" => url,
+      "image" => cover,
+    }.compact
+  end
+
+  def structured_data_hash_for_video_cover
+    video = @record.try(:cache_aware_video_cover) || @record.try(:video_cover)
+    return unless video.present?
+
+    {
+      "@type" => "VideoObject",
+      "name" => @record.title,
+      "description" => video.description || @record.perex,
+      "thumbnailUrl" => video.remote_cover_url,
+      "uploadDate" => video.created_at.iso8601,
+      "contentUrl" => Folio::S3.cdn_url_rewrite(video.file.remote_url),
+      "duration" => ActiveSupport::Duration.build(video.file_track_duration).iso8601,
     }.compact
   end
 
@@ -113,30 +138,64 @@ class Folio::StructuredData::BodyComponent < Folio::ApplicationComponent
 
     return unless authors_ary.present?
 
-    author_for_hash = authors_ary.first
-    structured_data_hash_for_article_author_from(name: author_for_hash.full_name,
-                                                 url: url_for([author_for_hash, only_path: false]))
+    authors_ary.map do |author_for_hash|
+      structured_data_hash_for_article_author_from(name: author_for_hash.full_name,
+                                                   url: url_for([author_for_hash, only_path: false]))
+    end
   end
 
   def structured_data_hash_for_article
     tags_ary = @record.try(:cache_aware_published_tags) || @record.try(:published_tags)
 
-    cover = @record.try(:cache_aware_cover) || @record.cover
+    cover_hash = structured_data_hash_for_cover(record_cover_thumb)
 
     {
       "@type" => @record.try(:structured_data_type) || "Article",
+      "url" => url_for([@record, only_path: false]),
+      "name" => Folio::Current.site.title,
       "mainEntityOfPage" => {
         "@type" => "WebPage",
         "@id" => url_for([@record, only_path: false]),
       },
       "headline" => @record.title,
       "description" => @record.perex,
-      "image" => cover.present? ? [cover.thumb(record_cover_thumb_size).url] : nil,
+      "image" => cover_hash.presence,
       "datePublished" => @record.published_at_with_fallback.iso8601,
       "dateModified" => @record.try(:revised_at).present? ? @record.revised_at.iso8601 : nil,
       "keywords" => tags_ary.present? ? tags_ary.map(&:title) : nil,
       "author" => structured_data_hash_for_article_author,
       "publisher" => publisher_data,
+    }.compact
+  end
+
+  def structured_data_hash_for_author
+    cover_hash = structured_data_hash_for_cover(record_cover_thumb)
+    social_links = @record.try(:social_links) || {}
+
+    if @record.email.present?
+      email_text = "mailto:#{@record.email}"
+    end
+
+    {
+      "@type" => "Person",
+      "url" => url_for([@record, only_path: false]),
+      "name" => "#{@record.full_name} - #{Folio::Current.site.title}",
+      "email" => email_text,
+      "jobTitle" => @record.try(:job_label).presence,
+      "sameAs" => social_links["twitter"].presence,
+      "image" => cover_hash.presence,
+    }.compact
+  end
+
+  def structured_data_hash_for_cover(cover)
+    return unless cover.present?
+
+    {
+      "@type" => "ImageObject",
+      "url" => cover.url,
+      "creditText" => cover.try(:author),
+      "width" => cover.width,
+      "height" => cover.height,
     }.compact
   end
 
