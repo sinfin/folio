@@ -38,7 +38,7 @@ module Folio::Tiptap::Model
           parsed_value = JSON.parse(value)
           send("#{field}=", parsed_value)
         rescue JSON::ParserError
-          errors.add(field, "is not a valid JSON string")
+          errors.add(field, :tiptap_invalid_json)
         end
       end
     end
@@ -50,17 +50,17 @@ module Folio::Tiptap::Model
       next if value.blank?
 
       unless value.is_a?(Hash)
-        errors.add(field, "must be a Hash or a valid JSON string")
+        errors.add(field, :tiptap_must_be_hash_or_json)
         next
       end
 
       unless value[Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content]].is_a?(Hash)
-        errors.add(field, "must have a '#{Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content]}' key with a Hash value")
+        errors.add(field, :tiptap_must_have_content_key, content_key: Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content])
         next
       end
 
       if value[Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content]]["type"] != "doc"
-        errors.add(field, "root node must be of type 'doc'")
+        errors.add(field, :tiptap_root_node_must_be_doc)
         next
       end
     end

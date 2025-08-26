@@ -187,6 +187,7 @@ cs:
           attributes:
             roles:
               not_available_for_site: "Role %{roles} nejsou všechny dostupné pro web '%{site}'."
+
       clonable:
         association_not_found: "Asociace '%{association}' neexistuje pro %{model}"
         attribute_not_found: "Atribut '%{attribute}' neexistuje pro %{model}"
@@ -394,6 +395,10 @@ cs:
       invalid_file_placement: nesplňuje požadavky
       slug_not_unique_across_classes: je již použita u záznamu "%{sluggable_name}" (%{sluggable_type})
       invalid_subtitle_block: má nevalidní text na řádku %{line}
+      tiptap_invalid_json: není platný JSON řetězec
+      tiptap_must_be_hash_or_json: musí být Hash nebo platný JSON řetězec
+      tiptap_must_have_content_key: "musí obsahovat klíč '%{content_key}' s Hash hodnotou"
+      tiptap_root_node_must_be_doc: kořenový uzel musí být typu 'doc'
 
     attributes:
       documents:
