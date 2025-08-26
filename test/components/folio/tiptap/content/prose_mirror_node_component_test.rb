@@ -3,6 +3,12 @@
 require "test_helper"
 
 class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTest
+  setup do
+    if ENV["FOLIO_DEBUG_TIPTAP_NODES"].present?
+      puts "WARNING: FOLIO_DEBUG_TIPTAP_NODES is set, tests will fail!"
+    end
+  end
+
   def test_render_simple_text_node
     prose_mirror_node = {
       "type" => "text",
@@ -734,8 +740,94 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
     assert_selector("div.f-tiptap-styled-wrap[data-f-tiptap-styled-wrap-variant='gray-box'] p")
   end
 
+  def test_component_handles_invalid_folio_tiptap_node_type
+    prose_mirror_node = {
+      "type" => "folioTiptapNode",
+      "attrs" => {
+        "type" => "unknown",
+        "data" => {
+          "title" => "UI Component Test",
+          "text" => "Testing the UI card component rendering"
+        }
+      }
+    }
+
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    assert_text("")
+  end
+
+  def test_component_handles_missing_folio_tiptap_node_type
+    prose_mirror_node = {
+      "type" => "folioTiptapNode",
+      "attrs" => {
+        "data" => {
+          "title" => "Missing Type Test",
+          "text" => "Testing missing node type"
+        }
+      }
+    }
+
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    assert_text("")
+  end
+
+  def test_component_handles_blank_folio_tiptap_node_type
+    prose_mirror_node = {
+      "type" => "folioTiptapNode",
+      "attrs" => {
+        "type" => "",
+        "data" => {
+          "title" => "Blank Type Test",
+          "text" => "Testing blank node type"
+        }
+      }
+    }
+
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    assert_text("")
+  end
+
+  def test_component_handles_nil_folio_tiptap_node_type
+    prose_mirror_node = {
+      "type" => "folioTiptapNode",
+      "attrs" => {
+        "type" => nil,
+        "data" => {
+          "title" => "Nil Type Test",
+          "text" => "Testing nil node type"
+        }
+      }
+    }
+
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    assert_text("")
+  end
+
+  def test_component_handles_node_type_excluded_by_config
+    prose_mirror_node = {
+      "type" => "folioTiptapNode",
+      "attrs" => {
+        "type" => "Dummy::Tiptap::Node::Card",
+        "data" => {
+          "title" => "Excluded Type Test",
+          "text" => "Testing node type excluded by config"
+        }
+      }
+    }
+
+    record = build_mock_record
+
+    # Mock the tiptap_config to exclude all node types
+    def record.tiptap_config
+      @config ||= Folio::Tiptap::Config.new(node_names: [])
+    end
+
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: record, prose_mirror_node:))
+    assert_text("")
+  end
+
   private
     def build_mock_record
-      Object.new
+      Folio::Page.new
     end
 end

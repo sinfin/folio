@@ -176,7 +176,7 @@ class Folio::Page < Folio::ApplicationRecord
 
   def folio_autosave_enabled?
     if Rails.application.config.folio_pages_autosave
-      self.class.has_folio_tiptap?
+      !self.class.has_folio_tiptap?
     else
       false
     end

@@ -28,7 +28,21 @@ class <%= application_namespace %>::Ui::RecordBarComponent < ApplicationComponen
         href: console_edit_href,
         size: :sm,
         icon: :alert_triangle,
-        label: "<span class=\"d-sm-none\">#{t(".broken_atom_mobile")}</span><span class=\"d-none d-sm-inline\">#{t(".broken_atom_desktop")}</span>".html_safe,
+        label: "<span class=\"d-sm-none\">#{t(".broken_content_mobile")}</span><span class=\"d-none d-sm-inline\">#{t(".broken_content_desktop")}</span>".html_safe,
+        variant: :danger,
+        target: "_blank",
+        data: { turbolinks: "false" }
+      }
+    end
+
+    tiptap_data = controller.instance_variable_get(Folio::Tiptap::ContentComponent::CONTROLLER_VARIABLE_NAME)
+
+    if tiptap_data && tiptap_data[:broken_nodes].present?
+      ary << {
+        href: console_edit_href,
+        size: :sm,
+        icon: :alert_triangle,
+        label: "<span class=\"d-sm-none\">#{t(".broken_content_mobile")}</span><span class=\"d-none d-sm-inline\">#{t(".broken_content_desktop")}</span>".html_safe,
         variant: :danger,
         target: "_blank",
         data: { turbolinks: "false" }

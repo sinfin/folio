@@ -87,6 +87,7 @@ interface FolioEditorProps {
   type: "block" | "rich-text";
   folioTiptapConfig: FolioTiptapConfig;
   readonly: boolean;
+  initialScrollTop: number | null;
 }
 
 export function FolioEditor({
@@ -96,11 +97,14 @@ export function FolioEditor({
   type,
   folioTiptapConfig,
   readonly,
+  initialScrollTop,
 }: FolioEditorProps) {
   const windowSize = useWindowSize();
   const editorRef = React.useRef<HTMLDivElement>(null);
   const blockEditor = type === "block";
   const [responsivePreviewEnabled, setResponsivePreviewEnabled] = React.useState<boolean>(false);
+  const [initializedContent, setInitializedContent] = React.useState<boolean>(false);
+  const [shouldScrollToInitial, setShouldScrollToInitial] = React.useState<number | null>(initialScrollTop);
 
   const folioTiptapStyledParagraphCommands = React.useMemo(() => {
     if (folioTiptapConfig &&
@@ -194,7 +198,9 @@ export function FolioEditor({
 
       ...(blockEditor
         ? [
-            FolioTiptapNodeExtension,
+            FolioTiptapNodeExtension.configure({
+              nodes: folioTiptapConfig.nodes || [],
+            }),
             Placeholder.configure({
               includeChildren: true,
               // Use a placeholder:
@@ -299,7 +305,13 @@ export function FolioEditor({
   }, []);
 
   React.useEffect(() => {
-    const clearedContent = clearContent({ content: defaultContent, editor })
+    if (initializedContent) return
+
+    const clearedContent = clearContent({ 
+      content: defaultContent, 
+      editor,
+      allowedFolioTiptapNodeTypes: folioTiptapConfig.nodes || []
+    })
 
     if (clearedContent) {
       editor.chain().setMeta('addToHistory', false).setContent(clearedContent).run()
@@ -312,10 +324,13 @@ export function FolioEditor({
       },
       "*",
     );
-  }, [defaultContent])
+
+    setInitializedContent(true);
+  }, [defaultContent, initializedContent])
 
   let contentClassName = "f-tiptap-editor__content f-tiptap-styles"
   if (readonly) contentClassName += " f-tiptap-editor__content--readonly";
+  if (!initializedContent) return null
 
   return (
     <EditorContext.Provider value={{ editor }}>
@@ -334,7 +349,11 @@ export function FolioEditor({
           />
         )}
 
-        <FolioEditorResponsivePreview enabled={responsivePreviewEnabled}>
+        <FolioEditorResponsivePreview
+          enabled={responsivePreviewEnabled}
+          shouldScrollToInitial={shouldScrollToInitial}
+          setShouldScrollToInitial={setShouldScrollToInitial}
+        >
           <div className="f-tiptap-editor__content-wrap">
             {blockEditor && !readonly ? <SmartDragHandle editor={editor} /> : null}
 

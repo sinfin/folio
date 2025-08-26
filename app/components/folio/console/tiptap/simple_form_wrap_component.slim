@@ -25,7 +25,7 @@
       .f-c-tiptap-simple-form-wrap__editors
         .f-c-tiptap-simple-form-wrap__editors-input-wrap
           - form.object.class.folio_tiptap_fields.each do |field|
-            = form.input field, as: :tiptap, block: true
+            = form.input field, as: :tiptap, block: true, error: false
 
     .f-c-tiptap-simple-form-wrap__form-footer
       = helpers.form_footer form, static: true

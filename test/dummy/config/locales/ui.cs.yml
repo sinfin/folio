@@ -55,5 +55,5 @@ cs:
       record_bar_component:
         edit_desktop: Upravit stránku
         edit_mobile: Upravit
-        broken_atom_desktop: Stránka obsahuje chybný blok
-        broken_atom_mobile: Chybný blok
+        broken_content_desktop: Stránka obsahuje chybný blok
+        broken_content_mobile: Chybný blok

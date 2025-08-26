@@ -49,5 +49,5 @@ topics_component:
 record_bar_component:
   edit_desktop: Edit page
   edit_mobile: Edit
-  broken_atom_desktop: Page contains a broken block
-  broken_atom_mobile: Broken block
+  broken_content_desktop: Page contains a broken block
+  broken_content_mobile: Broken block

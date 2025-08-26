@@ -5,8 +5,8 @@ require "test_helper"
 class Folio::Console::Tiptap::RenderNodesJsonComponentTest < Folio::Console::ComponentTest
   def test_render
     nodes_hash = {
-      1 => Dummy::Tiptap::Node::Card.new(title: "foo"),
-      2 => Dummy::Tiptap::Node::Card.new(content: "invalid"),
+      1 => { node: Dummy::Tiptap::Node::Card.new(title: "foo") },
+      2 => { node: Dummy::Tiptap::Node::Card.new(content: "invalid") },
     }
 
     c = render_inline(Folio::Console::Tiptap::RenderNodesJsonComponent.new(nodes_hash:))

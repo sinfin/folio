@@ -22,7 +22,9 @@ class Folio::Console::Api::TiptapController < Folio::Console::Api::BaseControlle
     @nodes_hash = {}
 
     params.require(:nodes).each do |node_attrs|
-      @nodes_hash[node_attrs[:unique_id]] = Folio::Tiptap::Node.new_from_attrs(node_attrs[:attrs])
+      @nodes_hash[node_attrs[:unique_id]] = { node: Folio::Tiptap::Node.new_from_attrs(node_attrs[:attrs]) }
+    rescue StandardError => e
+      @nodes_hash[node_attrs[:unique_id]] = { error: e }
     end
 
     render layout: false

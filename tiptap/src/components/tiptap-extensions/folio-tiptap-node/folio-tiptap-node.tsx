@@ -40,6 +40,24 @@ const storeHtmlToCache = ({ html, serializedAttrs }: StoredHtml) => {
   htmlCache = [{ html, serializedAttrs }, ...htmlCache.slice(0, 9)];
 };
 
+// Height storage functions
+const getStoredHeight = (serializedAttrs: string): number | null => {
+  try {
+    const stored = sessionStorage.getItem(`f-tiptap-node-height:${serializedAttrs}`);
+    return stored ? parseInt(stored, 10) : null;
+  } catch {
+    return null;
+  }
+};
+
+const storeHeight = (serializedAttrs: string, height: number) => {
+  try {
+    sessionStorage.setItem(`f-tiptap-node-height:${serializedAttrs}`, height.toString());
+  } catch {
+    // Ignore storage errors
+  }
+};
+
 interface RespnoseFromApiType {
   html?: string;
   invalid?: boolean;
@@ -62,6 +80,7 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
   const [responseFromApi, setResponseFromApi] = React.useState<RespnoseFromApiType>({});
 
   const wrapperRef = React.useRef<HTMLDivElement>(null);
+  const htmlRef = React.useRef<HTMLDivElement>(null);
 
   const handleEditClick = React.useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -83,6 +102,7 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
   React.useEffect(() => {
     if (status === "initial" && uniqueId) {
       const serializedAttrs = JSON.stringify(attrsWithoutUniqueId);
+
       // Check if we have cached HTML for these attributes
       const cachedEntry = htmlCache.find(
         (entry) => entry.serializedAttrs === serializedAttrs,
@@ -166,6 +186,17 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
     };
   }, [uniqueId, props, status]);
 
+  // Effect to measure and store height after HTML renders
+  React.useEffect(() => {
+    if (responseFromApi.html && htmlRef.current) {
+      const serializedAttrs = JSON.stringify(attrsWithoutUniqueId);
+      const height = htmlRef.current.offsetHeight;
+      if (height > 0) {
+        storeHeight(serializedAttrs, height);
+      }
+    }
+  }, [responseFromApi.html, attrsWithoutUniqueId]);
+
   return (
     <NodeViewWrapper
       className="f-tiptap-node"
@@ -180,6 +211,7 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
     >
       {responseFromApi.html ? (
         <div
+          ref={htmlRef}
           className="f-tiptap-node__html"
           dangerouslySetInnerHTML={{ __html: responseFromApi.html }}
         />
@@ -191,7 +223,14 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
             errorMessage={responseFromApi.errorMessage}
           />
         ) : (
-          <div className="f-tiptap-node__loader-wrap rounded">
+          <div
+            className="f-tiptap-node__loader-wrap rounded"
+            style={(() => {
+              const serializedAttrs = JSON.stringify(attrsWithoutUniqueId);
+              const height = getStoredHeight(serializedAttrs);
+              return height ? { height: `${height}px` } : undefined;
+            })()}
+          >
             <span className="folio-loader" />
           </div>
         )

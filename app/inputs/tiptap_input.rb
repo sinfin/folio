@@ -19,6 +19,7 @@ class TiptapInput < SimpleForm::Inputs::StringInput
                       action: {
                         "message@window" => "onWindowMessage",
                         "resize@window" => "onWindowResize",
+                        "beforeunload@window" => "onWindowBeforeUnload",
                         "orientationchange@window" => "onWindowResize",
                       })
 

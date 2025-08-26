@@ -1,13 +1,15 @@
-import { mergeAttributes, Node, ReactNodeViewRenderer } from "@tiptap/react";
-import { findParentNode } from "@tiptap/core";
+import { Node, ReactNodeViewRenderer } from "@tiptap/react";
 import { FolioTiptapNode } from "@/components/tiptap-extensions/folio-tiptap-node";
-import { type EditorState } from "@tiptap/pm/state";
+import { Plugin } from "@tiptap/pm/state";
+import type { CommandProps } from "@tiptap/core";
 
 import { makeUniqueId } from './make-unique-id';
 import { moveFolioTiptapNode } from './move-folio-tiptap-node';
 import { postEditMessage } from './post-edit-message';
 
-export type FolioTiptapNodeOptions = Record<string, never>;
+export type FolioTiptapNodeOptions = {
+  nodes?: FolioTiptapNodeFromInput[];
+};
 
 declare module '@tiptap/core' {
   interface Commands<ReturnType> {
@@ -67,7 +69,7 @@ export const FolioTiptapNodeExtension = Node.create<FolioTiptapNodeOptions>({
       },
       uniqueId: {
         default: "",
-        parseHTML: (element) => makeUniqueId()
+        parseHTML: () => makeUniqueId()
       },
     };
   },
@@ -78,9 +80,20 @@ export const FolioTiptapNodeExtension = Node.create<FolioTiptapNodeOptions>({
         tag: 'div.f-tiptap-node',
         getAttrs: (element) => {
           if (typeof element === 'string') return false;
+          
+          const nodeType = element.dataset.folioTiptapNodeType || "";
+          
+          // Check if this node type is allowed
+          if (this.options.nodes && this.options.nodes.length > 0) {
+            const allowedTypes = this.options.nodes.map(node => node.type);
+            if (!allowedTypes.includes(nodeType)) {
+              return false; // Reject this node if type is not allowed
+            }
+          }
+          
           return {
             version: parseInt(element.dataset.folioTiptapNodeVersion || "1", 10),
-            type: element.dataset.folioTiptapNodeType || "",
+            type: nodeType,
             data: (() => {
               try {
                 return JSON.parse(element.dataset.folioTiptapNodeData || "{}");
@@ -112,22 +125,58 @@ export const FolioTiptapNodeExtension = Node.create<FolioTiptapNodeOptions>({
     return ReactNodeViewRenderer(FolioTiptapNode);
   },
 
+  addProseMirrorPlugins() {
+    return [
+      new Plugin({
+        props: {
+          transformPastedHTML: (html: string) => {
+            // Only filter if we have allowed node types configured
+            if (!this.options.nodes || this.options.nodes.length === 0) {
+              return html;
+            }
+
+            // Extract allowed node types
+            const allowedTypes = this.options.nodes.map(node => node.type);
+
+            // Create a temporary DOM to parse and filter the HTML
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = html;
+            
+            // Find all f-tiptap-node elements
+            const nodeElements = tempDiv.querySelectorAll('div.f-tiptap-node');
+            
+            nodeElements.forEach((element) => {
+              const nodeType = element.getAttribute('data-folio-tiptap-node-type') || '';
+              
+              // Remove unsupported node types
+              if (!allowedTypes.includes(nodeType)) {
+                element.remove();
+              }
+            });
+            
+            return tempDiv.innerHTML;
+          },
+        },
+      }),
+    ];
+  },
+
   addCommands() {
     return {
       moveFolioTiptapNodeDown:
         () =>
-          ({ state, dispatch }: { state: EditorState; dispatch: any }) => {
+          ({ state, dispatch }: CommandProps) => {
             return moveFolioTiptapNode({ direction: "down", state, dispatch })
           },
       moveFolioTiptapNodeUp:
         () =>
-          ({ state, dispatch }: { state: EditorState; dispatch: any }) => {
+          ({ state, dispatch }: CommandProps) => {
             return moveFolioTiptapNode({ direction: "up", state, dispatch })
           },
       editFolioTipapNode:
         () =>
-          ({ state, dispatch }: { state: EditorState; dispatch: any }) => {
-            // @ts-ignore - node does exist on selection!
+          ({ state }: CommandProps) => {
+            // @ts-expect-error - node does exist on selection!
             const node = state.selection.node
 
             if (!node || node.type.name !== this.name) {
@@ -141,8 +190,8 @@ export const FolioTiptapNodeExtension = Node.create<FolioTiptapNodeOptions>({
           },
       removeFolioTiptapNode:
         () =>
-          ({ state, dispatch }: { state: EditorState; dispatch: any }) => {
-            // @ts-ignore - node does exist on selection!
+          ({ state, dispatch }: CommandProps) => {
+            // @ts-expect-error - node does exist on selection!
             const node = state.selection.node
 
             if (!node || node.type.name !== this.name) {
@@ -151,7 +200,7 @@ export const FolioTiptapNodeExtension = Node.create<FolioTiptapNodeOptions>({
 
             const tr = state.tr;
             tr.deleteRange(state.selection.from, state.selection.to);
-            dispatch(tr);
+            dispatch!(tr);
 
             return true
           },
