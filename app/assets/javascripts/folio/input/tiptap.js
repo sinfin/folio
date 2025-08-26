@@ -102,14 +102,18 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     const wordCount = window.Folio.wordCount({ text })
     const valueKeys = this.valueKeys()
 
-    const value = {
-      [valueKeys['content']]: content,
-      [valueKeys['text']]: text,
-      [valueKeys['word_count']]: wordCount.words,
-      [valueKeys['character_count']]: wordCount.characters,
-    }
+    if (content) {
+      const value = {
+        [valueKeys['content']]: content,
+        [valueKeys['text']]: text,
+        [valueKeys['word_count']]: wordCount.words,
+        [valueKeys['character_count']]: wordCount.characters,
+      }
 
-    this.inputTarget.value = JSON.stringify(value)
+      this.inputTarget.value = JSON.stringify(value)
+    } else {
+      this.inputTarget.value = ''
+    }
 
     if (!this.ignoreValueChangesValue) {
       this.inputTarget.dispatchEvent(new window.Event("change", { bubbles: true }))

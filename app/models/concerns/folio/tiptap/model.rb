@@ -41,6 +41,10 @@ module Folio::Tiptap::Model
           errors.add(field, :tiptap_invalid_json)
         end
       end
+
+      if value.is_a?(Hash) && value[Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content]].blank?
+        send("#{field}=", nil)
+      end
     end
   end
 
