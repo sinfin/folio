@@ -10,7 +10,7 @@ div class=class_name
     .f-c-show-header__right
       - if model.respond_to?(:aasm)
         .flex-shrink-0
-          == cell('folio/console/state', model)
+          == cell('folio/console/state', model, options[:state])
 
       - if options[:add]
         == cell('folio/console/ui/button',
