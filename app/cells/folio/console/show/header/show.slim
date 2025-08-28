@@ -10,7 +10,7 @@ div class=class_name
     .f-c-show-header__right
       - if model.respond_to?(:aasm)
         .flex-shrink-0
-          == cell('folio/console/state', model, options[:state])
+          == cell('folio/console/state', model, options[:state] || {})
 
       - if options[:add]
         == cell('folio/console/ui/button',
@@ -46,7 +46,6 @@ div class=class_name
                 label: t('folio.console.actions.destroy'),
                 'data-confirm' => t('folio.console.confirmation'),
                 'data-method' => :delete)
-
   - if options[:tabs]
     .mt-3
       == cell('folio/console/index/tabs', options[:tabs])
