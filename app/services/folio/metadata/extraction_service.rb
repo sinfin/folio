@@ -29,8 +29,8 @@ class Folio::Metadata::ExtractionService
 
     Rails.logger.info "Extracting metadata for image ##{@image.id} (#{@image.file_name})"
 
-    # Extract raw metadata using exiftool
-    metadata = extract_raw_metadata_with_exiftool
+    # Use Dragonfly's built-in metadata extraction (works for local + S3)
+    metadata = @image.file.metadata
     return unless metadata.present?
 
     # Map and store metadata
@@ -43,39 +43,13 @@ class Folio::Metadata::ExtractionService
   end
 
   # Extraction during file processing (synchronous)
+  # NOTE: Dragonfly automatically calls file.metadata via after_assign callback
+  # This method is kept for manual processing if needed
   def extract_during_processing!
-    return unless should_extract_during_processing?(@image)
-
     Rails.logger.info "Extracting metadata for #{@image.file_name} during processing..."
 
-    # For S3/remote files, we need to download temporarily to extract metadata
-    file_path = get_file_path_for_extraction(@image)
-    return unless file_path && File.exist?(file_path)
-
-    require "open3"
-
-    base_options = Rails.application.config.folio_image_metadata_exiftool_options || ["-G1", "-struct", "-n"]
-    charset_options = ["-charset", "iptc=utf8"]
-    command = ["exiftool", "-j", *base_options, *charset_options, file_path]
-
-    Rails.logger.debug "ExifTool command: #{command.join(' ')}"
-
-    stdout, stderr, status = Open3.capture3(*command)
-
-    if status.success?
-      raw_metadata = JSON.parse(stdout).first
-      if raw_metadata.present?
-        map_and_store_metadata(@image, raw_metadata)
-        Rails.logger.info "Successfully extracted metadata for #{@image.file_name} with UTF-8 charset"
-      else
-        Rails.logger.warn "No metadata found for #{@image.file_name}"
-      end
-    else
-      Rails.logger.warn "ExifTool error for #{@image.file_name}: #{stderr}"
-    end
-  rescue => e
-    Rails.logger.error "Failed to extract metadata during processing for #{@image.file_name}: #{e.message}"
-    Rails.logger.error e.backtrace.join("\n")
+    # Use the same simplified extraction as the main method
+    extract!(force: true)
   end
 
   private
@@ -84,45 +58,12 @@ class Folio::Metadata::ExtractionService
       return false unless image.is_a?(Folio::File::Image)
       return false unless image.file.present?
       return false if Rails.env.test? && ENV["FOLIO_SKIP_METADATA_EXTRACTION"] == "true"
+      return false unless image.has_attribute?(:headline) && image.has_attribute?(:file_metadata)
 
       # Skip if already extracted (unless forced)
-      if !force && image.respond_to?(:file_metadata_extracted_at) && image.file_metadata_extracted_at.present?
-        return false
-      end
+      return false if !force && image.file_metadata_extracted_at.present?
 
-      # Check if exiftool is available
-      system("which exiftool > /dev/null 2>&1")
-    end
-
-    def extract_raw_metadata_with_exiftool
-      return unless @image.file.present?
-
-      file_path = case @image.file
-                  when String
-                    @image.file
-                  else
-                    @image.file.respond_to?(:path) ? @image.file.path : nil
-      end
-
-      return unless file_path && File.exist?(file_path)
-
-      require "open3"
-
-      base_options = Rails.application.config.folio_image_metadata_exiftool_options || ["-G1", "-struct", "-n"]
-      charset_options = ["-charset", "iptc=utf8"]
-      command = ["exiftool", "-j", *base_options, *charset_options, file_path]
-
-      stdout, stderr, status = Open3.capture3(*command)
-
-      if status.success?
-        JSON.parse(stdout).first
-      else
-        Rails.logger.warn "ExifTool error for #{@image.file_name}: #{stderr}"
-        nil
-      end
-    rescue JSON::ParserError => e
-      Rails.logger.error "Failed to parse ExifTool output for #{@image.file_name}: #{e.message}"
-      nil
+      true
     end
 
     def map_and_store_metadata(image, raw_metadata)
@@ -182,31 +123,6 @@ class Folio::Metadata::ExtractionService
         merged_tags = (existing_tags + new_keywords).uniq { |tag| tag.downcase }
 
         image.tag_list = merged_tags
-      end
-    end
-
-    def should_extract_during_processing?(image)
-      return false unless Rails.application.config.folio_image_metadata_extraction_enabled
-      return false unless image.file.present? && (image.file.respond_to?(:path) || image.file.is_a?(String))
-      return false if Rails.env.test? && ENV["FOLIO_SKIP_METADATA_EXTRACTION"] == "true"
-      return false unless image.has_attribute?(:headline) && image.has_attribute?(:file_metadata)
-      return false if image.file_metadata_extracted_at.present?
-
-      # Check if exiftool is available
-      system("which exiftool > /dev/null 2>&1")
-    end
-
-    def get_file_path_for_extraction(image)
-      # During processing, the file should still be available locally via Dragonfly
-      if image.file.respond_to?(:path) && image.file.path
-        image.file.path
-      elsif image.file.respond_to?(:url) && image.file.url
-        # For remote files, try to get temp file path from Dragonfly
-        begin
-          image.file.temp_object.path if image.file.respond_to?(:temp_object) && image.file.temp_object
-        rescue
-          nil
-        end
       end
     end
 end
