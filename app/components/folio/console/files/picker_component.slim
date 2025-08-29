@@ -7,7 +7,7 @@
 ]
   = @f.label @placement_key, required: @required
 
-  = @f.simple_fields_for @placement_key, build: true do |fp|
+  = @f.simple_fields_for @placement_key, file_placement do |fp|
     = fp.hidden_field :id, data: stimulus_target("idInput")
 
     = fp.hidden_field :_destroy,

@@ -19,7 +19,7 @@ class Folio::Console::Files::PickerComponent < Folio::Console::ApplicationCompon
   end
 
   def file_placement
-    @file_placement ||= @f.object.send(@placement_key)
+    @file_placement ||= @f.object.send(@placement_key) || @f.object.send("build_#{@placement_key}")
   end
 
   def hint_for(fp)
