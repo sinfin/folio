@@ -27,25 +27,16 @@ class Folio::Console::FileSerializer
              :default_gravities_for_select,
              :aasm_state,
              :alt,
-             # Essential metadata fields (database columns)
              :headline,
              :capture_date,
              :gps_latitude,
              :gps_longitude,
              :file_metadata_extracted_at
 
-  # Dynamic metadata from JSON (for frontend consumption)
-  attribute :dynamic_metadata do |object|
-    object.respond_to?(:file_metadata) ? object.file_metadata || {} : {}
-  end
-
-  # Mapped metadata using IptcFieldMapper (unified metadata API)
+  # Mapped metadata using IptcFieldMapper
   attribute :mapped_metadata do |object|
     object.respond_to?(:mapped_metadata) ? object.mapped_metadata : {}
   end
-
-  # Legacy individual accessors - replaced by unified mapped_metadata
-  # (kept for backward compatibility, but deprecated)
 
   attribute :human_type do |object|
     object.class.human_type
@@ -186,8 +177,4 @@ class Folio::Console::FileSerializer
       end
     end
   end
-
-  # Legacy metadata attributes removed - use dynamic_metadata or image-specific accessors instead
-
-  # Technical EXIF data and additional metadata is now available via dynamic_metadata JSON attribute
 end

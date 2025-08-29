@@ -29,7 +29,7 @@ namespace :folio do
 
       images_without_metadata.find_each do |image|
         # Queue extraction job (background processing)
-        Folio::ExtractMetadataJob.perform_later(image)
+        Folio::Metadata::ExtractionJob.perform_later(image)
         queued_count += 1
 
         print "."

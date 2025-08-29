@@ -473,9 +473,9 @@ class Folio::Console::FileSerializer
   attribute :gps_longitude
   attribute :file_metadata_extracted_at
   
-  # Dynamic metadata from JSON (for frontend consumption)
-  attribute :dynamic_metadata do |object|
-    object.respond_to?(:file_metadata) ? object.file_metadata || {} : {}
+  # Mapped metadata using IptcFieldMapper (unified metadata API)
+  attribute :mapped_metadata do |object|
+    object.respond_to?(:mapped_metadata) ? object.mapped_metadata : {}
   end
   
   # Image-specific accessors (only for Image files)
@@ -515,7 +515,7 @@ end
 
 ### Asynchronous Processing
 
-- Metadata extraction runs in background jobs via `ExtractMetadataJob`
+- Metadata extraction runs in background jobs via `Folio::Metadata::ExtractionJob`
 - UI updates automatically via MessageBus without page reload
 - Large files don't block upload process
 

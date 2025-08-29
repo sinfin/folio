@@ -2,7 +2,7 @@
 
 class Folio::Metadata::ExtractionService
   def self.perform_later(image, force: false, user_id: nil)
-    Folio::ExtractMetadataJob.perform_later(image, force: force, user_id: user_id)
+    Folio::Metadata::ExtractionJob.perform_later(image, force: force, user_id: user_id)
   end
 
   def self.should_extract?(image)
