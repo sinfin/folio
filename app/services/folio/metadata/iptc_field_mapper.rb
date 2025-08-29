@@ -383,15 +383,15 @@ module Folio::Metadata
         result.is_a?(Hash) ? result[:time] : result
       },
 
-      # Creator can be array or single value
+      # Creator as joined string (better for UI display)
       creator: ->(value, metadata = {}) {
         case value
         when Array
-          value.filter_map(&:to_s).reject(&:blank?)
+          value.filter_map(&:to_s).reject(&:blank?).join(", ")
         when String
-          [value.to_s].compact.reject(&:blank?)
+          value.to_s
         else
-          []
+          ""
         end
       },
 
@@ -401,8 +401,17 @@ module Folio::Metadata
       credit_line: ->(value, metadata = {}) {
         value.to_s
       },
+
       source: ->(value, metadata = {}) {
-        value.to_s
+        # If source is not available, fallback to credit_line
+        if value.blank?
+          # Try to get credit_line from metadata
+          credit_sources = ["XMP-iptcCore:CreditLine", "XMP-photoshop:Credit", "Credit", "IPTC:Credit"]
+          credit_line = credit_sources.map { |field| metadata[field] }.find(&:present?)
+          credit_line&.to_s || ""
+        else
+          value.to_s
+        end
       },
       copyright_notice: ->(value, metadata = {}) {
         value.to_s

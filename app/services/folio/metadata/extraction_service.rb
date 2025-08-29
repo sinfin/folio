@@ -67,7 +67,7 @@ end
 
       # If IPTC:Headline has mojibake patterns, force fresh
       iptc_headline = cached_metadata["IPTC:Headline"]
-      return true if iptc_headline&.match?(/Ã|Ä|Å|â|ÄŸ|Å¡|Ã­|Ã¡|Ãº|Ã½|Ã©/)
+      return true if iptc_headline&.match?(/√|ƒ|Ã|Ä|Å|â|ÄŸ|Å¡|Ã­|Ã¡|Ãº|Ã½|Ã©|õ|°/)
 
       false
     end

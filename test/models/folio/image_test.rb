@@ -48,7 +48,7 @@ class Folio::File::ImageTest < ActiveSupport::TestCase
       image.save!
       image.reload
 
-      assert_equal ["John Doe"], image.file_metadata&.dig("creator")
+      assert_equal "John Doe", image.mapped_metadata[:creator]
       assert_equal "Test image description", image.description
       assert_equal "Test Headline", image.headline
       assert_equal ["keyword1", "keyword2"], image.file_metadata&.dig("keywords")
@@ -89,7 +89,7 @@ class Folio::File::ImageTest < ActiveSupport::TestCase
     assert_equal "Existing description", image.description
     assert_equal "Existing headline", image.headline
     # Mapped metadata should return metadata
-    assert_equal ["Author from metadata"], image.mapped_metadata[:creator]
+    assert_equal "Author from metadata", image.mapped_metadata[:creator]
   end
 
   test "handles GPS coordinates extraction" do
@@ -201,7 +201,7 @@ class Folio::File::ImageTest < ActiveSupport::TestCase
     # Test mapped metadata accessor
     mapped = image.mapped_metadata
     assert_equal "IPTC Headline", mapped[:headline]
-    assert_equal ["Author One", "Author Two"], mapped[:creator]
+    assert_equal "Author One, Author Two", mapped[:creator]
     assert_equal ["tag1", "tag2"], mapped[:keywords]
 
     # Test legacy accessors
@@ -274,7 +274,7 @@ class Folio::File::ImageTest < ActiveSupport::TestCase
   image.save!
 
   image.reload
-  assert_equal ["Manual Author"], image.file_metadata&.dig("creator")
+  assert_equal "Manual Author", image.mapped_metadata[:creator]
 end
 
   test "additional data - white" do

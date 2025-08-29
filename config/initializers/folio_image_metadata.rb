@@ -78,6 +78,9 @@ Rails.application.config.tap do |config|
   # Extract metadata to placements (TEMPORARILY DISABLED - functionality removed, will be reimplemented later)
   config.folio_image_metadata_copy_to_placements = false # default: true
 
+  # Merge extracted keywords into image tag_list
+  config.folio_image_metadata_merge_keywords_to_tags = true # default: true
+
   # ExifTool command options
   # Force UTF-8 pro IPTC (většina moderních souborů má UTF-8 data i když 1:90 auto-detect nefunguje)
   config.folio_image_metadata_exiftool_options = ["-G1", "-struct", "-n", "-charset", "iptc=utf8"] # default
