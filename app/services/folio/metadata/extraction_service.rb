@@ -27,18 +27,18 @@ class Folio::Metadata::ExtractionService
   def extract!(force: false, user_id: nil)
     return unless should_extract?(@image, force)
 
-    Rails.logger.info "Extracting metadata for image ##{@image.id}"
+    Rails.logger.info "Extracting metadata for image ##{@image.id} (#{@image.file_name})"
 
     # Extract raw metadata using exiftool
-    metadata = extract_raw_metadata_with_exiftool(@image)
+    metadata = extract_raw_metadata_with_exiftool
     return unless metadata.present?
 
     # Map and store metadata
     map_and_store_metadata(@image, metadata)
 
-    Rails.logger.info "Successfully extracted metadata for image ##{@image.id}"
+    Rails.logger.info "Successfully extracted and mapped metadata for image ##{@image.id}"
   rescue => e
-    Rails.logger.error "Metadata extraction failed for image ##{@image.id}: #{e.message}"
+    Rails.logger.error "Failed to extract metadata for #{@image.file_name}: #{e.message}"
     Rails.logger.error e.backtrace.join("\n") if Rails.env.development?
   end
 
@@ -94,38 +94,35 @@ class Folio::Metadata::ExtractionService
       system("which exiftool > /dev/null 2>&1")
     end
 
-    def extract_raw_metadata_with_exiftool(image)
-      # Get file path for extraction
-      file_path = get_file_path(image)
-      return nil unless file_path
+    def extract_raw_metadata_with_exiftool
+      return unless @image.file.present?
 
-      # Run exiftool with JSON output
-      cmd = "exiftool -json -all -charset utf8 #{Shellwords.escape(file_path)}"
-      output = `#{cmd} 2>/dev/null`
-
-      return nil unless $?.success?
-
-      JSON.parse(output).first
-    rescue JSON::ParserError => e
-      Rails.logger.error "Failed to parse exiftool JSON output: #{e.message}"
-      nil
-    end
-
-    def get_file_path(image)
-      return nil unless image.file.present?
-
-      if image.file.respond_to?(:path) && image.file.path.present?
-        image.file.path
-      elsif image.file.is_a?(String)
-        image.file
-      else
-        # For remote files, try to get temp file path
-        begin
-          image.file.temp_object.path if image.file.respond_to?(:temp_object) && image.file.temp_object
-        rescue
-          nil
-        end
+      file_path = case @image.file
+                  when String
+                    @image.file
+                  else
+                    @image.file.respond_to?(:path) ? @image.file.path : nil
       end
+
+      return unless file_path && File.exist?(file_path)
+
+      require "open3"
+
+      base_options = Rails.application.config.folio_image_metadata_exiftool_options || ["-G1", "-struct", "-n"]
+      charset_options = ["-charset", "iptc=utf8"]
+      command = ["exiftool", "-j", *base_options, *charset_options, file_path]
+
+      stdout, stderr, status = Open3.capture3(*command)
+
+      if status.success?
+        JSON.parse(stdout).first
+      else
+        Rails.logger.warn "ExifTool error for #{@image.file_name}: #{stderr}"
+        nil
+      end
+    rescue JSON::ParserError => e
+      Rails.logger.error "Failed to parse ExifTool output for #{@image.file_name}: #{e.message}"
+      nil
     end
 
     def map_and_store_metadata(image, raw_metadata)

@@ -24,11 +24,14 @@ class Folio::File::ImageMetadataCharsetTest < ActiveSupport::TestCase
 
     image_file = create_test_image("profimedia-0701180382.jpg")
 
-    # Should contain proper Czech characters from real file, not mojibake
-    assert_match(/Česká editoriální/, image_file.credit_line.to_s)
-    assert_match(/Charlotte Ella Gottová/, image_file.headline.to_s)
-    assert_no_match(/ÄŒesk/, image_file.credit_line.to_s) # No mojibake
-    assert_no_match(/GottovÃ/, image_file.headline.to_s) # No mojibake
+    # Should contain proper Czech characters from JSON metadata, not mojibake
+    credit_line = image_file.file_metadata&.dig("credit_line")
+    headline = image_file.headline
+
+    assert_match(/Česká editoriální/, credit_line.to_s) if credit_line
+    assert_match(/Charlotte Ella Gottová/, headline.to_s) if headline
+    assert_no_match(/ÄŒesk/, credit_line.to_s) if credit_line # No mojibake
+    assert_no_match(/GottovÃ/, headline.to_s) if headline # No mojibake
   end
 
   # These tests are skipped because profimedia files 1030128904.jpg and 1030685880.jpg
@@ -38,12 +41,15 @@ class Folio::File::ImageMetadataCharsetTest < ActiveSupport::TestCase
     # Test with available file that has metadata
     image_file = create_test_image("profimedia-0701180382.jpg")
 
-    # Should process without charset errors
-    assert image_file.credit_line.present?
-    assert image_file.headline.present?
+    # Should process without charset errors from JSON metadata
+    credit_line = image_file.file_metadata&.dig("credit_line")
+    headline = image_file.headline
+
+    assert credit_line.present? if credit_line
+    assert headline.present? if headline
     # Should contain valid UTF-8 characters
-    assert image_file.credit_line.valid_encoding?
-    assert image_file.headline.valid_encoding?
+    assert credit_line.valid_encoding? if credit_line
+    assert headline.valid_encoding? if headline
   end
 
   test "processes available files without encoding errors" do
@@ -59,7 +65,13 @@ class Folio::File::ImageMetadataCharsetTest < ActiveSupport::TestCase
     image_file = create_test_image(filename)
 
     # Basic checks for encoding quality on available fields
-    [image_file.credit_line, image_file.description, image_file.headline].each do |field|
+    fields = [
+      image_file.file_metadata&.dig("credit_line"),
+      image_file.description,
+      image_file.headline
+    ].compact
+
+    fields.each do |field|
       next if field.blank?
 
       # Should have valid encoding

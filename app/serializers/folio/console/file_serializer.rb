@@ -27,45 +27,41 @@ class Folio::Console::FileSerializer
              :default_gravities_for_select,
              :aasm_state,
              :alt,
-             # IPTC Core metadata fields
+             # Essential metadata fields (database columns)
              :headline,
-             :creator,
-             :caption_writer,
-             :credit_line,
-             :source,
-             :copyright_notice,
-             :copyright_marked,
-             :usage_terms,
-             :rights_usage_info,
-             :keywords,
-             :intellectual_genre,
-             :subject_codes,
-             :scene_codes,
-             :event,
-             :category,
-             :urgency,
-             :persons_shown,
-             :organizations_shown,
-             :location_created,
-             :location_shown,
-             :sublocation,
-             :city,
-             :state_province,
-             :country,
-             :country_code,
-             # Technical metadata
-             :camera_make,
-             :camera_model,
-             :lens_info,
              :capture_date,
              :gps_latitude,
              :gps_longitude,
-             :orientation,
              :file_metadata_extracted_at
 
   # Dynamic metadata from JSON (for frontend consumption)
   attribute :dynamic_metadata do |object|
     object.respond_to?(:file_metadata) ? object.file_metadata || {} : {}
+  end
+
+  # Image-specific metadata accessors (only for Image files)
+  attribute :creator_list do |object|
+    object.respond_to?(:creator_list) ? object.creator_list : []
+  end
+
+  attribute :keywords_list do |object|
+    object.respond_to?(:keywords_list) ? object.keywords_list : []
+  end
+
+  attribute :copyright_info do |object|
+    object.respond_to?(:copyright_info) ? object.copyright_info : nil
+  end
+
+  attribute :persons_shown_list do |object|
+    object.respond_to?(:persons_shown_list) ? object.persons_shown_list : []
+  end
+
+  attribute :location_coordinates do |object|
+    object.respond_to?(:location_coordinates) ? object.location_coordinates : nil
+  end
+
+  attribute :geo_location do |object|
+    object.respond_to?(:geo_location) ? object.geo_location : nil
   end
 
   attribute :human_type do |object|
@@ -208,122 +204,7 @@ class Folio::Console::FileSerializer
     end
   end
 
-  # JSON-based metadata getters for read-only display in UI
-  attribute :creator do |object|
-    object.respond_to?(:creator) ? object.creator : []
-  end
+  # Legacy metadata attributes removed - use dynamic_metadata or image-specific accessors instead
 
-  attribute :credit_line do |object|
-    object.respond_to?(:credit_line) ? object.credit_line : nil
-  end
-
-  attribute :copyright_notice do |object|
-    object.respond_to?(:copyright_notice) ? object.copyright_notice : nil
-  end
-
-  attribute :source_from_metadata do |object|
-    object.respond_to?(:source_from_metadata) ? object.source_from_metadata : nil
-  end
-
-  attribute :keywords_from_metadata do |object|
-    object.respond_to?(:keywords_from_metadata) ? object.keywords_from_metadata : []
-  end
-
-  attribute :city do |object|
-    object.respond_to?(:city) ? object.city : nil
-  end
-
-  attribute :country do |object|
-    object.respond_to?(:country) ? object.country : nil
-  end
-
-  attribute :country_code do |object|
-    object.respond_to?(:country_code) ? object.country_code : nil
-  end
-
-  attribute :intellectual_genre do |object|
-    object.respond_to?(:intellectual_genre) ? object.intellectual_genre : nil
-  end
-
-  attribute :event do |object|
-    object.respond_to?(:event) ? object.event : nil
-  end
-
-  attribute :caption_writer do |object|
-    object.respond_to?(:caption_writer) ? object.caption_writer : nil
-  end
-
-  attribute :urgency do |object|
-    object.respond_to?(:urgency) ? object.urgency : nil
-  end
-
-  attribute :category do |object|
-    object.respond_to?(:category) ? object.category : nil
-  end
-
-  attribute :sublocation do |object|
-    object.respond_to?(:sublocation) ? object.sublocation : nil
-  end
-
-  attribute :state_province do |object|
-    object.respond_to?(:state_province) ? object.state_province : nil
-  end
-
-  # Technical EXIF data
-  attribute :focal_length do |object|
-    object.respond_to?(:focal_length) ? object.focal_length : nil
-  end
-
-  attribute :aperture do |object|
-    object.respond_to?(:aperture) ? object.aperture : nil
-  end
-
-  attribute :shutter_speed do |object|
-    object.respond_to?(:shutter_speed) ? object.shutter_speed : nil
-  end
-
-  attribute :iso_speed do |object|
-    object.respond_to?(:iso_speed) ? object.iso_speed : nil
-  end
-
-  attribute :flash do |object|
-    object.respond_to?(:flash) ? object.flash : nil
-  end
-
-  attribute :white_balance do |object|
-    object.respond_to?(:white_balance) ? object.white_balance : nil
-  end
-
-  attribute :metering_mode do |object|
-    object.respond_to?(:metering_mode) ? object.metering_mode : nil
-  end
-
-  attribute :exposure_mode do |object|
-    object.respond_to?(:exposure_mode) ? object.exposure_mode : nil
-  end
-
-  attribute :exposure_compensation do |object|
-    object.respond_to?(:exposure_compensation) ? object.exposure_compensation : nil
-  end
-
-  # Additional metadata from IPTC/EXIF
-  attribute :software do |object|
-    object.respond_to?(:software) ? object.software : nil
-  end
-
-  attribute :description_from_metadata do |object|
-    object.respond_to?(:description_from_metadata) ? object.description_from_metadata : nil
-  end
-
-  attribute :capture_date_from_metadata do |object|
-    object.respond_to?(:capture_date_from_metadata) ? object.capture_date_from_metadata : nil
-  end
-
-  attribute :color_space do |object|
-    object.respond_to?(:color_space) ? object.color_space : nil
-  end
-
-  attribute :headline_from_metadata do |object|
-    object.respond_to?(:headline_from_metadata) ? object.headline_from_metadata : nil
-  end
+  # Technical EXIF data and additional metadata is now available via dynamic_metadata JSON attribute
 end
