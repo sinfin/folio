@@ -83,7 +83,7 @@ namespace :folio do
       puts "\nConfiguration:"
       puts "  Extraction enabled: #{Rails.application.config.folio_image_metadata_extraction_enabled}"
 
-      # ExifTool availability
+      # ExifTool availability (through Dragonfly)
       exiftool_available = system("which exiftool > /dev/null 2>&1")
       puts "  ExifTool available: #{exiftool_available}"
 
