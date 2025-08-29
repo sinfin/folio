@@ -169,8 +169,8 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
     this.removeParentOrElement()
   }
 
-  edit (e) {
-    if (!e || !e.params || !e.params.url) return
+  edit (url) {
+    if (!url) return
     if (!this.idValue) return
 
     const modal = document.querySelector('.f-c-files-show-modal')
@@ -179,9 +179,24 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
     modal.dispatchEvent(new CustomEvent('f-c-files-show-modal/show-file', {
       detail: {
         id: Number(this.idValue),
-        url: e.params.url
+        url
       }
     }))
+  }
+
+  selectFromModal () {
+    console.log('selectFromModal!')
+  }
+
+  primaryAction (e) {
+    e.preventDefault()
+
+    if (this.element.closest('.f-c-files-index-modal')) {
+      this.dispatch('select', { detail: { fileId: this.idValue } })
+    } else {
+      if (!e || !e.params || !e.params.url) return
+      this.edit(e.params.url)
+    }
   }
 
   removeParentOrElement () {

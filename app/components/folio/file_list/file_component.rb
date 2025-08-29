@@ -154,7 +154,7 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
   end
 
   def primary_action_data
-    @primary_action_data ||= stimulus_action({ click: "edit" }, { url: modal_api_url })
+    @primary_action_data ||= stimulus_action({ click: "primaryAction" }, { url: modal_api_url })
   end
 
   def download_href

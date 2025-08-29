@@ -144,7 +144,16 @@ window.Folio.Stimulus.register('f-c-files-picker', class extends window.Stimulus
     window.FolioConsole.Autosave.pause()
 
     const modal = document.querySelector('.f-c-files-index-modal')
-    modal.dispatchEvent(new CustomEvent('f-c-files-index-modal:openWithType', { detail: { fileType: this.fileTypeValue } }))
+    modal.dispatchEvent(new CustomEvent('f-c-files-index-modal:openWithType', {
+      detail: {
+        fileType: this.fileTypeValue,
+        trigger: this.element
+      }
+    }))
+  }
+
+  onSelectedFile (e) {
+    console.log('onSelectedFile', e.detail.fileId)
   }
 
   onFormControlModalClick (e) {

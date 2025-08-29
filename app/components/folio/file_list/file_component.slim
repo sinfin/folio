@@ -29,7 +29,7 @@ div data=data class=bem_class_name
               alt=@file.file_name
               width=@file.base_thumb.width
               height=@file.base_thumb.height
-              data=(@primary_action == :edit ? primary_action_data : nil)
+              data=primary_action_data
             ]
           - else
             = folio_icon(file_icon_key, height: 40)
@@ -50,7 +50,7 @@ div data=data class=bem_class_name
       .f-file-list-file__thead-label-wrap.small.text-muted
         span.f-file-list-file__thead-label = t('.thead/info')
     - else
-      - if @primary_action == :edit
+      - if primary_action_data
         .f-file-list-file__info-file-name.f-file-list-file__info-file-name--interactive[
           data=primary_action_data
         ]
@@ -143,7 +143,7 @@ div data=data class=bem_class_name
   ]
     .f-file-list-file__controls
       - if !@thead && !@template
-        - if @primary_action == :edit
+        - if primary_action_data
           div[
             class="f-file-list-file__control"
             class="f-file-list-file__control--primary"

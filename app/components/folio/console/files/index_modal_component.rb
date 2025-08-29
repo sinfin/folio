@@ -14,6 +14,8 @@ class Folio::Console::Files::IndexModalComponent < Folio::Console::ApplicationCo
                         },
                         action: {
                           "f-c-files-index-modal:openWithType" => "openWithType",
+                          "f-file-list-file:select" => "onFileSelect",
+                          "f-modal:closed" => "onModalClosed",
                         })
   end
 

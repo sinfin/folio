@@ -15,6 +15,9 @@ class Folio::Console::Files::PickerComponent < Folio::Console::ApplicationCompon
                         values: {
                           file_type: @file_klass.to_s,
                           has_file: (file_placement && file_placement.file && !file_placement.marked_for_destruction?) ? "true" : "false",
+                        },
+                        action: {
+                          "f-c-files-index-modal:selectedFile" => "onSelectedFile"
                         })
   end
 
