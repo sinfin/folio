@@ -52,9 +52,9 @@ module Folio::ImageMetadataExtraction
   end
 
   # Manual metadata extraction (for existing images)
-  def extract_metadata!(force: false)
+  def extract_metadata!(force: false, user_id: nil)
     if defined?(ActiveJob) && Rails.application.config.active_job.queue_adapter != :test
-      Folio::ExtractMetadataJob.perform_later(self, force: force)
+      Folio::ExtractMetadataJob.perform_later(self, force: force, user_id: user_id)
     else
       extract_image_metadata_sync
     end

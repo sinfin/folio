@@ -3,7 +3,8 @@
 class Folio::ExtractMetadataJob < Folio::ApplicationJob
   queue_as :slow
 
-  def perform(image, force: false)
+  def perform(image, force: false, user_id: nil)
+    @user_id = user_id
     return unless image.is_a?(Folio::File::Image)
     return unless image.should_extract_metadata?
 
@@ -39,9 +40,7 @@ class Folio::ExtractMetadataJob < Folio::ApplicationJob
     def broadcast_file_update(image)
       # Broadcast file update via MessageBus for live UI refresh
       return unless defined?(MessageBus)
-
-      user_ids = message_bus_user_ids
-      return if user_ids.blank?
+      return unless @user_id
 
       message_data = {
         type: "Folio::File::MetadataExtracted",
@@ -52,8 +51,8 @@ class Folio::ExtractMetadataJob < Folio::ApplicationJob
         }
       }
 
-      MessageBus.publish(Folio::MESSAGE_BUS_CHANNEL, message_data.to_json, user_ids: user_ids)
-      Rails.logger.debug "Broadcasted metadata update for file ##{image.id} to user_ids: #{user_ids}"
+      MessageBus.publish(Folio::MESSAGE_BUS_CHANNEL, message_data.to_json, user_ids: [@user_id])
+      Rails.logger.debug "Broadcasted metadata update for file ##{image.id} to user_ids: [#{@user_id}]"
 
       # Also broadcast generic file update for global listeners (parity with subtitles jobs)
       begin
@@ -61,7 +60,7 @@ class Folio::ExtractMetadataJob < Folio::ApplicationJob
       rescue NoMethodError
         # Parent has no broadcast method; ignore
       end
-    end
+end
 
     def serialize_file_attributes(image)
       # Return essential attributes for UI update

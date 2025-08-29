@@ -178,8 +178,7 @@ module Folio::Console::Api::FileControllerBase
 
     def broadcast_metadata_extracted(file)
       return unless defined?(MessageBus)
-      user_ids = message_bus_user_ids
-      return if user_ids.blank?
+      return unless Folio::Current.user
 
       begin
         serialized = Folio::Console::FileSerializer.new(file).serializable_hash
@@ -197,13 +196,7 @@ module Folio::Console::Api::FileControllerBase
         }
       }
 
-      MessageBus.publish(Folio::MESSAGE_BUS_CHANNEL, message_data.to_json, user_ids: user_ids)
-    end
-
-    def message_bus_user_ids
-      @message_bus_user_ids ||= Folio::User.where.not(console_url: nil)
-                                           .where(console_url_updated_at: 1.hour.ago..)
-                                           .pluck(:id)
+      MessageBus.publish(Folio::MESSAGE_BUS_CHANNEL, message_data.to_json, user_ids: [Folio::Current.user.id])
     end
 
     def index_json
