@@ -494,11 +494,11 @@ module Folio::Metadata
 
         case value.to_i
         when 0
-          I18n.t("folio.metadata.flash.not_used", locale: locale, default: "Not used")
+          I18n.t("folio.console.file.metadata.flash_values.not_used", locale: locale, default: "Not used")
         when 1, 9, 13, 15, 16, 24, 25, 29, 31
-          I18n.t("folio.metadata.flash.used", locale: locale, default: "Used")
+          I18n.t("folio.console.file.metadata.flash_values.used", locale: locale, default: "Used")
         else
-          I18n.t("folio.metadata.flash.used_with_value",
+          I18n.t("folio.console.file.metadata.flash_values.used_with_value",
                  value: value, locale: locale, default: "Used (#{value})")
         end
       },
@@ -509,9 +509,9 @@ module Folio::Metadata
 
         case value.to_i
         when 0
-          I18n.t("folio.metadata.white_balance.auto", locale: locale, default: "Auto")
+          I18n.t("folio.console.file.metadata.white_balance_values.auto", locale: locale, default: "Auto")
         when 1
-          I18n.t("folio.metadata.white_balance.manual", locale: locale, default: "Manual")
+          I18n.t("folio.console.file.metadata.white_balance_values.manual", locale: locale, default: "Manual")
         else
           value.to_s
         end
@@ -523,11 +523,11 @@ module Folio::Metadata
 
         case value.to_i
         when 0
-          I18n.t("folio.metadata.exposure_mode.auto", locale: locale, default: "Auto")
+          I18n.t("folio.console.file.metadata.exposure_mode_values.auto", locale: locale, default: "Auto")
         when 1
-          I18n.t("folio.metadata.exposure_mode.manual", locale: locale, default: "Manual")
+          I18n.t("folio.console.file.metadata.exposure_mode_values.manual", locale: locale, default: "Manual")
         when 2
-          I18n.t("folio.metadata.exposure_mode.aperture_priority", locale: locale, default: "Aperture priority")
+          I18n.t("folio.console.file.metadata.exposure_mode_values.aperture_priority", locale: locale, default: "Aperture priority")
         else
           value.to_s
         end
@@ -546,13 +546,13 @@ module Folio::Metadata
 
         case value.to_i
         when 1
-          I18n.t("folio.metadata.metering_mode.average", locale: locale, default: "Average")
+          I18n.t("folio.console.file.metadata.metering_mode_values.average", locale: locale, default: "Average")
         when 2
-          I18n.t("folio.metadata.metering_mode.center_weighted", locale: locale, default: "Center-weighted")
+          I18n.t("folio.console.file.metadata.metering_mode_values.center_weighted", locale: locale, default: "Center-weighted")
         when 3
-          I18n.t("folio.metadata.metering_mode.spot", locale: locale, default: "Spot")
+          I18n.t("folio.console.file.metadata.metering_mode_values.spot", locale: locale, default: "Spot")
         when 5
-          I18n.t("folio.metadata.metering_mode.matrix", locale: locale, default: "Matrix")
+          I18n.t("folio.console.file.metadata.metering_mode_values.matrix", locale: locale, default: "Matrix")
         else
           value.to_s
         end
@@ -564,9 +564,9 @@ module Folio::Metadata
 
         case value.to_i
         when 1
-          I18n.t("folio.metadata.color_space.srgb", locale: locale, default: "sRGB")
+          I18n.t("folio.console.file.metadata.color_space_values.srgb", locale: locale, default: "sRGB")
         when 65535
-          I18n.t("folio.metadata.color_space.adobe_rgb", locale: locale, default: "Adobe RGB")
+          I18n.t("folio.console.file.metadata.color_space_values.adobe_rgb", locale: locale, default: "Adobe RGB")
         else
           value.to_s
         end

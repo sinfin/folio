@@ -73,37 +73,40 @@ en:
           aperture: "Aperture"
           shutter_speed: "Shutter Speed"
           focal_length: "Focal Length"
-          flash: "Flash"
-          white_balance: "White Balance"
-          exposure_mode: "Exposure Mode"
+          # Field labels
+          flash_label: "Flash"
+          white_balance_label: "White Balance"
+          exposure_mode_label: "Exposure Mode"
           exposure_compensation: "Exposure Compensation"
-          metering_mode: "Metering Mode"
+          metering_mode_label: "Metering Mode"
           orientation: "Orientation"
-          color_space: "Color Space"
+          color_space_label: "Color Space"
           gps_coordinates: "GPS Coordinates"
           gps_latitude: "GPS Latitude"
           gps_longitude: "GPS Longitude"
-          flash:
+          
+          # Field values
+          flash_values:
             not_used: "Not used"
             used: "Used"
             used_with_value: "Used (%{value})"
           
-          white_balance:
+          white_balance_values:
             auto: "Auto"
             manual: "Manual"
           
-          exposure_mode:
+          exposure_mode_values:
             auto: "Auto"
             manual: "Manual"
             aperture_priority: "Aperture priority"
           
-          metering_mode:
+          metering_mode_values:
             average: "Average"
             center_weighted: "Center-weighted"
             spot: "Spot"
             matrix: "Matrix"
           
-          color_space:
+          color_space_values:
             srgb: "sRGB"
             adobe_rgb: "Adobe RGB"
           

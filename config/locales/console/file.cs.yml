@@ -73,37 +73,40 @@ cs:
           aperture: 'Clona'
           shutter_speed: 'Rychlost závěrky'
           focal_length: 'Ohnisková vzdálenost'
-          flash: 'Blesk'
-          white_balance: 'Vyvážení bílé'
-          exposure_mode: 'Režim expozice'
+          # Field labels
+          flash_label: 'Blesk'
+          white_balance_label: 'Vyvážení bílé'
+          exposure_mode_label: 'Režim expozice'
           exposure_compensation: 'Kompenzace expozice'
-          metering_mode: 'Režim měření'
+          metering_mode_label: 'Režim měření'
           orientation: 'Orientace'
-          color_space: 'Barevný prostor'
+          color_space_label: 'Barevný prostor'
           gps_coordinates: 'GPS souřadnice'
           gps_latitude: 'GPS šířka'
           gps_longitude: 'GPS délka'
-          flash:
+          
+          # Field values
+          flash_values:
             not_used: "Nepoužit"
             used: "Použit"
             used_with_value: "Použit (%{value})"
           
-          white_balance:
+          white_balance_values:
             auto: "Auto"
             manual: "Manuální"
           
-          exposure_mode:
+          exposure_mode_values:
             auto: "Auto"
             manual: "Manuální"
             aperture_priority: "Auto s prioritou clony"
           
-          metering_mode:
+          metering_mode_values:
             average: "Průměrné"
             center_weighted: "Středově vážené"
             spot: "Bodové"
             matrix: "Maticové"
           
-          color_space:
+          color_space_values:
             srgb: "sRGB"
             adobe_rgb: "Adobe RGB"
 
