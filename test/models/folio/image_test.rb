@@ -206,7 +206,6 @@ class Folio::File::ImageTest < ActiveSupport::TestCase
 
     # Test legacy accessors
     assert_equal "IPTC Headline", image.title
-    assert_equal "tag1, tag2", image.keywords_string
     assert_equal [50.0, 14.0], image.location_coordinates
   end
 

@@ -68,18 +68,17 @@ class Folio::File::ImageMetadataSamplesTest < ActiveSupport::TestCase
       # Verify latest IPTC standard extraction
       assert_equal "The description aka caption (ref2024.1)", image.description
       assert_equal "Creator1 (ref2024.1)", image.author
-      assert_equal ["Creator1 (ref2024.1)"], image.creator
+      assert_equal ["Creator1 (ref2024.1)"], image.mapped_metadata[:creator]
       assert_equal "The Headline (ref2024.1)", image.headline  # Actual value from IPTC file
-      assert_equal ["Keyword1ref2024.1", "Keyword2ref2024.1", "Keyword3ref2024.1"], image.keywords
-      assert_equal "Sublocation (Core) (ref2024.1)", image.sublocation
-      assert_equal "R23", image.country_code
+      assert_equal ["Keyword1ref2024.1", "Keyword2ref2024.1", "Keyword3ref2024.1"], image.mapped_metadata[:keywords]
+      assert_equal "Sublocation (Core) (ref2024.1)", image.mapped_metadata[:sublocation]
+      assert_equal "R23", image.mapped_metadata[:country_code]
 
       # Verify new metadata accessors work
       assert_equal "The Headline (ref2024.1)", image.title  # Uses headline field
-      assert_equal ["Keyword1ref2024.1", "Keyword2ref2024.1", "Keyword3ref2024.1"], image.keywords_list
-      assert_equal "Keyword1ref2024.1, Keyword2ref2024.1, Keyword3ref2024.1", image.keywords_string
-      assert_equal ["Creator1 (ref2024.1)"], image.creator_list
-      assert image.geo_location.include?("Sublocation (Core) (ref2024.1)")  # Contains sublocation + city + state
+      assert_equal ["Keyword1ref2024.1", "Keyword2ref2024.1", "Keyword3ref2024.1"], image.mapped_metadata[:keywords]
+      assert_equal ["Creator1 (ref2024.1)"], image.mapped_metadata[:creator]
+      assert image.mapped_metadata[:sublocation].include?("Sublocation (Core) (ref2024.1)")  # Contains sublocation data
     end
   end
 

@@ -31,10 +31,7 @@ class Folio::File::Image < Folio::File
     description.presence || mapped_metadata[:description]
   end
 
-  def keywords_string
-    keywords = mapped_metadata[:keywords] || []
-    keywords.join(", ") if keywords.any?
-  end
+
 
   # GPS coordinates helper
   def location_coordinates
