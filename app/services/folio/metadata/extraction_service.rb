@@ -42,25 +42,13 @@ class Folio::Metadata::ExtractionService
     Rails.logger.error e.backtrace.join("\n") if Rails.env.development?
 end
 
-  # Extraction during file processing (synchronous)
-  # NOTE: Dragonfly automatically calls file.metadata via after_assign callback
-  # This method is kept for manual processing if needed
-  def extract_during_processing!
-    Rails.logger.info "Extracting metadata for #{@image.file_name} during processing..."
-
-    # Use the same simplified extraction as the main method
-    extract!(force: true)
-  end
-
   private
     def should_extract?(image, force)
-      return false unless Rails.application.config.folio_image_metadata_extraction_enabled
+      # Use class method for basic validation
       return false unless image.is_a?(Folio::File::Image)
-      return false unless image.file.present?
-      return false if Rails.env.test? && ENV["FOLIO_SKIP_METADATA_EXTRACTION"] == "true"
-      return false unless image.has_attribute?(:headline) && image.has_attribute?(:file_metadata)
+      return false unless self.class.should_extract?(image)
 
-      # Skip if already extracted (unless forced)
+      # Instance-specific logic: skip if already extracted (unless forced)
       return false if !force && image.file_metadata_extracted_at.present?
 
       true
@@ -146,56 +134,31 @@ end
                     Rails.application.config.folio_image_metadata_merge_keywords_to_tags &&
                     mapped_data[:keywords].present?
 
+      existing_tags = image.tag_list || []
+      new_keywords = mapped_data[:keywords].map(&:to_s).map(&:strip).reject(&:blank?)
+      merged_tags = (existing_tags + new_keywords).uniq { |tag| tag.downcase }
+
+      # 1. Try to save all tags at once
       begin
-        existing_tags = image.tag_list || []
-        new_keywords = mapped_data[:keywords].map(&:to_s).map(&:strip).reject(&:blank?)
-        merged_tags = (existing_tags + new_keywords).uniq { |tag| tag.downcase }
-
-        # Filter problematic tags
-        safe_tags = filter_safe_tags(image, merged_tags)
-
-        if safe_tags.any?
-          image.tag_list = safe_tags
-          image.save!
-          Rails.logger.info "Successfully added #{safe_tags.size} tags to image ##{image.id}"
-        end
+        image.tag_list = merged_tags
+        image.save!
+        Rails.logger.info "Successfully added #{merged_tags.size} tags to image ##{image.id}"
+        return
       rescue => e
-        Rails.logger.warn "Failed to save tags for image ##{image.id}, continuing anyway: #{e.message}"
+        Rails.logger.warn "Failed to save all tags for image ##{image.id}: #{e.message}. Trying one by one..."
       end
+
+      # 2. If that fails, try one by one and ignore failures
+      successful_tags = existing_tags.dup
+      new_keywords.each do |tag|
+        test_tags = successful_tags + [tag]
+        image.tag_list = test_tags
+        image.save!
+        successful_tags << tag
+      rescue => e
+        Rails.logger.warn "Skipping problematic tag '#{tag}' for image ##{image.id}: #{e.message}"
+      end
+
+      Rails.logger.info "Successfully added #{successful_tags.size - existing_tags.size} of #{new_keywords.size} new tags to image ##{image.id}"
     end
-
-    private
-      def filter_safe_tags(image, tag_names)
-        return [] if tag_names.blank?
-
-        safe_tags = []
-        skipped_tags = []
-
-        tag_names.each do |tag_name|
-          # Check if this tag would cause the tenant issue
-          if tag_would_cause_tenant_issue?(tag_name.to_s, image.site_id)
-            skipped_tags << tag_name.to_s
-          else
-            safe_tags << tag_name.to_s
-          end
-        end
-
-        if skipped_tags.any?
-          Rails.logger.warn "Skipped problematic tags for image ##{image.id}: #{skipped_tags.join(', ')}"
-        end
-
-        safe_tags
-      end
-
-      def tag_would_cause_tenant_issue?(tag_name, site_id)
-        # Find if tag exists
-        tag = ActsAsTaggableOn::Tag.find_by(name: tag_name)
-        return false unless tag  # New tags are safe
-
-        # Check if tag has any taggings in this tenant
-        tenant_taggings_count = tag.taggings.where(tenant: site_id).count
-
-        # If tag exists but has no taggings in tenant, it's problematic
-        tenant_taggings_count == 0
-      end
 end

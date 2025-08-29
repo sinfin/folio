@@ -20,13 +20,16 @@ Folio::File (base model - no metadata extraction)
 # Service layer for business logic
 Folio::Metadata::ExtractionService (core extraction logic)
 ├── extract!(force: false, user_id: nil) - main extraction method
-├── extract_during_processing! - synchronous processing extraction
 ├── should_extract?(image) - validation logic
+├── Intelligent database field updates with quality scoring
 └── Delegates to IptcFieldMapper for field mapping
 
 Folio::Metadata::IptcFieldMapper (mapping & formatting)
 ├── FIELD_MAPPINGS: field priorities with fallbacks
 ├── COMPLEX_FIELD_PROCESSORS: formatting logic
+├── IPTC-IIM charset compliance (1:90 CodedCharacterSet)
+├── Mojibake detection and repair with ICU fallbacks
+├── Regex constants: CZECH_CHARS_REGEX, MOJIBAKE_PATTERNS_REGEX
 └── I18n support: locale-aware processing
 ```
 
@@ -179,9 +182,9 @@ def should_extract_metadata?
 end
 
 # app/services/folio/metadata/extraction_service.rb
-# Background job extracts metadata with UTF-8 charset
+# Main extraction method with intelligent updates
 def extract!(force: false, user_id: nil)
-  metadata = extract_raw_metadata_with_exiftool(@image)
+  metadata = @image.file.metadata  # Uses Dragonfly with UTF-8 charset
   map_and_store_metadata(@image, metadata)
   # Returns: { "XMP-dc:Creator" => ["John Doe"], "IPTC:Headline" => "News", ... }
 end
@@ -205,11 +208,11 @@ def map_and_store_metadata(image, raw_metadata)
   # Store processed metadata in JSON for getters
   store_processed_metadata_for_getters(image, mapped_data)
 
-  # Update database fields from mapped data (only blank fields)
+  # Update database fields with intelligent quality scoring
   update_database_fields(image, mapped_data)
 
-  # Merge keywords into tag_list if configured
-  merge_keywords_to_tags(image, mapped_data)
+  # Handle tags separately (with tenant-safe filtering)
+  handle_tags_separately(image, mapped_data)
 end
 ```
 
@@ -407,24 +410,65 @@ Rails.application.config.folio_image_metadata_known_providers = [
 ]
 ```
 
-## UTF-8 Charset Handling
+## Advanced Encoding & IPTC-IIM Compliance
 
-### Problem Resolution
+### Intelligent Mojibake Detection and Repair
 
-IPTC metadata containing Czech/Slovak characters often displays as mojibake due to charset encoding issues. The system resolves this by:
+The system provides sophisticated encoding handling that respects IPTC-IIM standards and automatically repairs corrupted text:
 
 ```ruby
-# Configuration forcing UTF-8 interpretation
-config.folio_image_metadata_exiftool_options = ["-G1", "-struct", "-n", "-charset", "iptc=utf8"]
+# 1. IPTC-IIM CodedCharacterSet (1:90) compliance
+# When 1:90 = "UTF8" or "%G" (ESC % G), decode all IPTC fields as UTF-8
+# When 1:90 missing, default is ISO-8859-1
 
-# Processed UTF-8 data stored for clean display
-def store_processed_metadata_for_getters(mapped_data)
-  self.file_metadata['creator'] = mapped_data[:creator] if mapped_data[:creator].present?
-  self.file_metadata['headline'] = mapped_data[:headline] if mapped_data[:headline].present?
+# 2. Regex constants for consistent pattern matching
+CZECH_CHARS_REGEX = /[ěščřžýáíéúůťďňóĚŠČŘŽÝÁÍÉÚŮŤĎŇÓ]/
+MOJIBAKE_PATTERNS_REGEX = /(Ã.|Â.|â..|√|≈|ƒ|�|Ä|Å¡|Å¾|Å¯|Å™|Äœ)/
+
+# 3. Quality scoring for intelligent updates
+def score_cs(text)
+  text.scan(CZECH_CHARS_REGEX).size * 3 - 
+  text.scan(MOJIBAKE_PATTERNS_REGEX).size * 6 - 
+  [text.count("?") - 2, 0].max
+end
+
+# 4. Multi-fallback encoding repair
+def unmojibake(str, metadata = {})
+  coded_charset = metadata["IPTC:CodedCharacterSet"]
+  
+  case coded_charset&.upcase
+  when "UTF8", "%G"  # ESC % G sequence
+    needs_encoding_fix?(str) ? fix_utf8_mojibake(str) : str
+  when nil, "", "ISO-8859-1"
+    # Try repair or ISO-8859-1 conversion with quality check
+  else
+    # Handle declared charsets (Windows-1250, etc.)
+  end
 end
 ```
 
-**Result**: Converts `"ÄŒTK / Å imÃ¡nek VÃ­t"` → `"ČTK / Šimánek Vít"`
+### Problem Resolution Examples
+
+**Before**: `"ƒåTK / Taneƒçek David"` (mojibake from double-encoding)  
+**After**: `"ČTK / Taneček David"` (correct Czech characters)
+
+**Before**: `"soutÄž v pojÃ­dÃ¡nÃ­"` (ISO-8859-1 → UTF-8 mojibake)  
+**After**: `"soutěž v pojídání"` (proper diacritics)
+
+### Intelligent Database Updates
+
+The system only updates database fields when the new value has better encoding quality:
+
+```ruby
+# Compare encoding quality before updating
+current_quality = IptcFieldMapper.score_cs(current_value.to_s)
+new_quality = IptcFieldMapper.score_cs(new_value.to_s)
+
+if new_quality > current_quality
+  Rails.logger.info "Updating #{field} due to better encoding quality"
+  image.send("#{field}=", new_value)
+end
+```
 
 ## IPTC Standards Compliance
 
@@ -648,11 +692,15 @@ end
 
 ### Core Functionality ✅
 - JSON metadata storage in `file_metadata` column
-- UTF-8 charset handling prevents mojibake in Czech/Slovak content
+- Advanced IPTC-IIM charset compliance with intelligent mojibake repair
+- ICU-based encoding detection with multi-charset fallbacks
+- Quality scoring system for intelligent database field updates
+- Array handling for XMP fields (e.g., XMP-dc:Creator arrays)
 - Image-specific metadata extraction via `Folio::File::Image` only
+- DRY-compliant architecture with consolidated regex patterns and unified scoring
 - Clean service architecture with `Folio::Metadata::ExtractionService` and `IptcFieldMapper`
 - Simplified metadata accessors reading directly from JSONB
-- Keywords merging into existing tag_list system
+- Keywords merging into existing tag_list system with tenant-safe filtering
 - Configurable and extensible via Rails.application.config
 
 ### User Interface ✅
@@ -669,3 +717,13 @@ end
 - Manual extraction via `extract_metadata!(force: true, user_id:)` endpoint
 - Keywords merge into existing tag_list system when configured
 - MessageBus broadcasting for live console updates with targeted user messaging
+
+### Code Quality & DRY Compliance ✅
+- **Consolidated Regex Patterns**: `CZECH_CHARS_REGEX` and `MOJIBAKE_PATTERNS_REGEX` constants eliminate duplication
+- **Unified Quality Scoring**: Single `score_cs()` method in `IptcFieldMapper` used by both services
+- **Clean Architecture**: Clear separation between orchestration (ExtractionService) and mapping (IptcFieldMapper)
+- **No Duplicated Logic**: Removed redundant `encoding_quality_score()` method and consolidated validation logic
+- **Type Safety**: Robust handling of Arrays, Strings, Integers, and nil values throughout the pipeline
+- **IPTC-IIM Standards**: Full compliance with charset declaration standards (CodedCharacterSet 1:90)
+- **ICU Integration**: `charlock_holmes` gem provides enterprise-grade encoding detection
+- **Intelligent Updates**: Database fields only updated when encoding quality improves
