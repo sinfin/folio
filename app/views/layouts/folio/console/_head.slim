@@ -26,3 +26,8 @@ meta[
 - if !Rails.env.test? || ENV['TEST_WITH_ASSETS'].present?
   = preload_link_tag font_path('Roboto-Regular.woff2')
   = preload_link_tag font_path('Roboto-Bold.woff2')
+
+  = render 'folio/console/partials/application_above_javascripts'
+
+  - if !Rails.env.test? || ENV['TEST_WITH_ASSETS'].present?
+    = javascript_include_tag 'folio/console/base'

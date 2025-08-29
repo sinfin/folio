@@ -42,6 +42,7 @@ require "premailer"
 require "premailer/rails"
 require "cells-rails"
 require "cells-slim"
+require "turbo-rails"
 
 require "dragonfly"
 require "dragonfly/s3_data_store"

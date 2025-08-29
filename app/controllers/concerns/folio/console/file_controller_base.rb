@@ -4,6 +4,7 @@ module Folio::Console::FileControllerBase
   extend ActiveSupport::Concern
 
   PAGY_ITEMS = 64
+  TURBO_FRAME_ID = "folio-console-file-index"
 
   included do
     before_action :set_file_for_show_modal, only: %i[index]

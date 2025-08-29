@@ -76,6 +76,7 @@ PATH
       slim-rails
       terser
       traco
+      turbo-rails
       turbolinks
       uglifier
       view_component (~> 3.0)
@@ -725,6 +726,9 @@ GEM
     traco (5.3.3)
       activerecord (>= 4.2)
     trailblazer-option (0.1.2)
+    turbo-rails (2.0.16)
+      actionpack (>= 7.1.0)
+      railties (>= 7.1.0)
     turbolinks (5.2.1)
       turbolinks-source (~> 5.2)
     turbolinks-source (5.2.0)
