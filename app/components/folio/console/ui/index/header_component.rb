@@ -1,24 +1,52 @@
 # frozen_string_literal: true
 
-class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
-  include SimpleForm::ActionViewExtensions::FormHelper
+class Folio::Console::Ui::Index::HeaderComponent < Folio::Console::ApplicationComponent
   include Folio::Console::Cell::IndexFilters
 
-  class_name "f-c-index-header", :subtitle
+  bem_class_name :subtitle
+
+  renders_one :right_content
+  renders_one :content_above_filters
+
+  def initialize(klass:,
+                 subtitle: nil,
+                 pagy: nil,
+                 pagy_options: nil,
+                 tabs: nil,
+                 csv: nil,
+                 by_label_query: false,
+                 file_list_uppy: nil,
+                 query_url: nil,
+                 query_autocomplete: nil,
+                 query_filters: nil,
+                 types: nil,
+                 new_button: true)
+    @klass = klass
+    @subtitle = subtitle
+    @pagy = pagy
+    @pagy_options = pagy_options
+    @tabs = tabs
+    @csv = csv
+    @by_label_query = by_label_query
+    @file_list_uppy = file_list_uppy
+    @query_url = query_url
+    @query_autocomplete = query_autocomplete
+    @query_filters = query_filters
+    @types = types
+    @new_button = new_button
+  end
 
   def title
-    options[:title] || model.model_name.human(count: 2)
+    @title || @klass.model_name.human(count: 2)
   end
 
   def query_url
-    if options[:query_url].is_a?(String)
-      options[:query_url]
-    elsif options[:query_url].is_a?(Symbol)
-      send(options[:query_url])
-    elsif options[:folio_console_merge]
-      through_aware_console_url_for(model, action: :merge)
+    if @query_url.is_a?(String)
+      @query_url
+    elsif @query_url.is_a?(Symbol)
+      send(@query_url)
     else
-      through_aware_console_url_for(model)
+      controller.through_aware_console_url_for(@klass)
     end
   end
 
@@ -33,13 +61,13 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
   end
 
   def query_autocomplete
-    return nil if options[:query_autocomplete] == false
+    return nil if @query_autocomplete == false
 
-    if model.new.respond_to?(:to_label)
-      opts = { klass: model.to_s }
+    if @klass.new.respond_to?(:to_label)
+      opts = { klass: @klass.to_s }
 
-      if options[:query_filters]
-        options[:query_filters].each do |key, val|
+      if @query_filters
+        @query_filters.each do |key, val|
           opts["filter_#{key}"] = val
         end
       end
@@ -60,15 +88,13 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
     if query_url
       joiner = query_url.include?("?") ? "&" : "?"
       "#{query_url}#{joiner}#{h.to_query}"
-    elsif options[:folio_console_merge]
-      through_aware_console_url_for(model, action: :merge, hash: h)
     else
-      through_aware_console_url_for(model, hash: h)
+      controller.through_aware_console_url_for(@klass, hash: h)
     end
   end
 
   def csv_path
-    if options[:csv] == true
+    if @csv == true
       h = {
         format: :csv,
         by_label_query: controller.params[:by_label_query],
@@ -82,17 +108,12 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
 
       safe_url_for(h)
     else
-      options[:csv].try(:[], :url) || options[:csv]
+      @csv.try(:[], :url) || @csv
     end
   end
 
   def title_url
     query_url
-  end
-
-  def show_transportable_dropdown?
-    ::Rails.application.config.folio_show_transportable_frontend &&
-    model.try(:transportable?)
   end
 
   def by_label_query_input(f)
@@ -103,7 +124,6 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
             input_html: {
               value: params[:by_label_query],
               id: nil,
-              placeholder: options[:by_label_query_placeholder],
               autocomplete: query_autocomplete ? nil : "off",
             })
   end
@@ -130,16 +150,6 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
   def has_visible_index_filters?
     index_filters.present? && index_filters.any? do |key, hash|
       !hash.is_a?(Hash) || (hash.try(:[], :as) != :hidden)
-    end
-  end
-
-  def pagy_options
-    if options[:pagy_options]
-      options[:pagy_options]
-    elsif options[:inside_pagination]
-      { inside: options[:inside_pagination] }
-    else
-      {}
     end
   end
 end
