@@ -309,8 +309,7 @@ class Folio::Tiptap::Content::TextComponentTest < Folio::ComponentTest
 
 
     # Should handle gracefully (might render nil/empty)
-    render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:))
-    # No assertions needed - just ensure it doesn't crash
+    assert render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:))
   end
 
   def test_xss_protection_plain_text

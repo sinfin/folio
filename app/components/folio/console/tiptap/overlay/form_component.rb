@@ -92,7 +92,7 @@ class Folio::Console::Tiptap::Overlay::FormComponent < Folio::Console::Applicati
       content_tag(:div, class: "f-c-tiptap-overlay-form__react-file-picker f-c-tiptap-overlay-form__react-file-picker--#{key}") do
         helpers.file_picker(f:,
                             placement_key: attr_config[:placement_key],
-                            file_type: attr_config[:file_type])
+                            file_klass: attr_config[:file_type].constantize)
       end
     end
 

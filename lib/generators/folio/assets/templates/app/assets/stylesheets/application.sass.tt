@@ -18,7 +18,6 @@
 @import 'folio/dropzone_component'
 @import 'folio/image/image'
 @import 'folio/input/phone'
-@import 'folio/lazyload'
 @import 'folio/leads/form_component'
 @import 'folio/lightbox'
 @import 'folio/loader'
