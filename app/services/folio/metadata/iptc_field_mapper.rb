@@ -2,6 +2,10 @@
 
 module Folio::Metadata
   class IptcFieldMapper
+    # Encoding fix constants
+    CZECH_CHARS_REGEX = /[ěščřžýáíéúůťďňóĚŠČŘŽÝÁÍÉÚŮŤĎŇÓ]/
+    MOJIBAKE_PATTERNS_REGEX = /(Ã.|Â.|â..|√|≈|ƒ|�|Ä|Å¡|Å¾|Å¯|Å™|Äœ)/
+
     # Complete mapping with namespace precedence
     FIELD_MAPPINGS = {
       # Core descriptive fields (IPTC Core)
@@ -592,7 +596,7 @@ module Folio::Metadata
         field_mappings = effective_field_mappings
 
         field_mappings.each do |target_field, source_fields|
-          value = extract_first_available_value(enhanced_metadata, source_fields, locale: locale)
+          value = extract_first_available_value(enhanced_metadata, source_fields, locale: locale, raw_metadata: raw_metadata)
 
           if value.present?
             # Apply special processing if defined (allow app overrides)
@@ -674,7 +678,7 @@ module Folio::Metadata
       end
 
       private
-        def extract_first_available_value(metadata, source_fields, locale: :en)
+        def extract_first_available_value(metadata, source_fields, locale: :en, raw_metadata: {})
           source_fields.each do |field|
             value = metadata[field]
             # If not found and the field is an unqualified IIM tag (no namespace),
@@ -686,16 +690,17 @@ module Folio::Metadata
 
             # Handle Lang Alt structures (XMP dc:description, dc:rights, etc.)
             if value.is_a?(Hash) && (value.key?("lang") || value.keys.any? { |k| k.to_s.include?("-") })
-              return extract_lang_alt(value, locale)
+              return extract_lang_alt(value, locale, raw_metadata: raw_metadata)
             end
 
-            return value
+            # Fix encoding issues in text values before returning
+            return unmojibake(value, raw_metadata)
           end
           nil
         end
 
         # Handle XMP Lang Alt structures with configurable priority
-        def extract_lang_alt(lang_alt, locale = :en)
+        def extract_lang_alt(lang_alt, locale = :en, raw_metadata: {})
           return lang_alt unless lang_alt.is_a?(Hash)
 
           # Get configured locale priority
@@ -711,22 +716,35 @@ module Folio::Metadata
             loc_str = loc.to_s
 
             # Try exact match
-            return lang_alt[loc_str] if lang_alt[loc_str].present?
+            if lang_alt[loc_str].present?
+              value = lang_alt[loc_str]
+              return unmojibake(value, raw_metadata)
+            end
 
             # Try with region (e.g., "cs-CZ")
-            return lang_alt["#{loc_str}-#{loc_str.upcase}"] if lang_alt["#{loc_str}-#{loc_str.upcase}"].present?
+            regional_key = "#{loc_str}-#{loc_str.upcase}"
+            if lang_alt[regional_key].present?
+              value = lang_alt[regional_key]
+              return unmojibake(value, raw_metadata)
+            end
 
             # Try any variant starting with locale (e.g., "en-US", "en-GB")
             lang_alt.each do |key, value|
-              return value if key.to_s.start_with?("#{loc_str}-") && value.present?
+              if key.to_s.start_with?("#{loc_str}-") && value.present?
+                return unmojibake(value, raw_metadata)
+              end
             end
           end
 
           # Fallback to x-default
-          return lang_alt["x-default"] if lang_alt["x-default"].present?
+          if lang_alt["x-default"].present?
+            value = lang_alt["x-default"]
+            return unmojibake(value, raw_metadata)
+          end
 
           # Last resort: first available value
-          lang_alt.values.first
+          first_value = lang_alt.values.first
+          unmojibake(first_value, raw_metadata)
         end
 
         # Normalize various inputs to clean arrays
@@ -789,6 +807,136 @@ module Folio::Metadata
           else
             nil
           end
+        end
+
+        def unmojibake(str, metadata = {})
+          return str if str.nil?
+
+          # Handle Arrays (e.g., XMP-dc:Creator)
+          if str.is_a?(Array)
+            return str.map { |item| unmojibake(item, metadata) }
+          end
+
+          # Only process Strings - return other types as-is
+          return str unless str.is_a?(String)
+          return str if str.empty?
+
+          # Check IPTC-IIM CodedCharacterSet (1:90) to respect standard
+          coded_charset = metadata["CodedCharacterSet"] || metadata["IPTC:CodedCharacterSet"]
+
+          # IPTC-IIM standard:
+          # - když 1:90 = "UTF8" (ESC % G), dekóduj všechna IPTC pole jako UTF-8
+          # - když 1:90 chybí, default je ISO-8859-1
+
+          case coded_charset&.to_s&.upcase
+          when "UTF8", "%G"
+            # Data should be UTF-8 (%G is ESC % G sequence for UTF-8)
+            # Only apply mojibake fix if text actually needs it
+            if needs_encoding_fix?(str)
+              return fix_utf8_mojibake(str)
+            else
+              return str  # Text is already correct UTF-8
+            end
+          when nil, "", "ISO-8859-1"
+            # Default IPTC encoding should be ISO-8859-1, but check if already UTF-8
+            # If text looks like it needs mojibake fix, apply it; otherwise try ISO-8859-1 conversion
+            if needs_encoding_fix?(str)
+              return fix_utf8_mojibake(str)
+            else
+              begin
+                # Try ISO-8859-1 to UTF-8 conversion
+                converted = str.dup.force_encoding("ISO-8859-1").encode("UTF-8", invalid: :replace, undef: :replace)
+                # Only use if it doesn't make things worse
+                if score_cs(converted) >= score_cs(str)
+                  return converted
+                else
+                  return str
+                end
+              rescue
+                return str
+              end
+            end
+          else
+            # Other declared charset, try to convert
+            begin
+              ruby_encoding = charset_to_ruby_name(coded_charset)
+              return str.dup.force_encoding(ruby_encoding).encode("UTF-8", invalid: :replace, undef: :replace)
+            rescue
+              # Fallback to unmojibake logic
+            end
+          end
+
+          # Fallback: apply full unmojibake logic for problematic cases
+          fix_utf8_mojibake(str)
+end
+
+        def fix_utf8_mojibake(str)
+          # 1) zkusi ICU (only if it detects non-UTF-8 encoding)
+          begin
+            require "charlock_holmes"
+            if det = CharlockHolmes::EncodingDetector.detect(str)
+              # Skip if already UTF-8 - likely false positive for mojibake
+              if det[:encoding] && det[:encoding] != "UTF-8" && det[:confidence] > 80
+                begin
+                  converted = CharlockHolmes::Converter.convert(str, det[:encoding], "UTF-8")
+                  # Only use if it actually improves the score
+                  if score_cs(converted) > score_cs(str)
+                    return converted
+                  end
+                rescue
+                  # Continue to fallback methods
+                end
+              end
+            end
+          rescue LoadError
+            # charlock_holmes not available, continue to fallback
+          end
+
+          # 2) kandidáti + reverse-bytes (double-mojibake)
+          csets = %w[Windows-1250 Windows-1252 ISO-8859-2 ISO-8859-1 MacRoman]
+          candidates = []
+
+          csets.each do |cs|
+            candidates << str.dup.force_encoding(cs).encode("UTF-8", invalid: :replace, undef: :replace) rescue nil
+            bytes = str.encode(cs, "UTF-8", invalid: :replace, undef: :replace) rescue nil
+            if bytes
+              candidates << bytes.force_encoding("UTF-8").encode("UTF-8", invalid: :replace, undef: :replace) rescue nil
+            end
+          end
+
+          candidates.compact.max_by { |t| score_cs(t) } || str
+        end
+
+        def needs_encoding_fix?(str)
+          return false if str.nil?
+
+          # Handle Arrays
+          if str.is_a?(Array)
+            return str.any? { |item| needs_encoding_fix?(item) }
+          end
+
+          # Only check Strings
+          return false unless str.is_a?(String)
+          return false if str.empty?
+
+          # Check if text contains common mojibake patterns indicating encoding issues
+          str.match?(MOJIBAKE_PATTERNS_REGEX)
+end
+
+        def charset_to_ruby_name(charset)
+          case charset.to_s.upcase
+          when "UTF8", "UTF-8" then "UTF-8"
+          when "ISO-8859-1", "LATIN1" then "ISO-8859-1"
+          when "ISO-8859-2", "LATIN2" then "ISO-8859-2"
+          when "WINDOWS-1250", "CP1250" then "Windows-1250"
+          when "WINDOWS-1252", "CP1252" then "Windows-1252"
+          when "MACROMAN" then "MacRoman"
+          else charset
+          end
+        end
+
+        def score_cs(text)
+          text.scan(CZECH_CHARS_REGEX).size * 3 - text.scan(MOJIBAKE_PATTERNS_REGEX).size * 6 - [text.count("?") - 2, 0].max
         end
     end
   end

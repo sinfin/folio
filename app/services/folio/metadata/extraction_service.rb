@@ -29,9 +29,8 @@ class Folio::Metadata::ExtractionService
 
     Rails.logger.info "Extracting metadata for image ##{@image.id} (#{@image.file_name})"
 
-    # Use Dragonfly's metadata (now with proper UTF-8 support)
-    # For existing images with corrupted cached metadata, use fresh extraction
-    metadata = needs_fresh_extraction? ? extract_fresh_metadata : @image.file.metadata
+    # Use Dragonfly's built-in metadata extraction (works for local + S3)
+    metadata = @image.file.metadata
     return unless metadata.present?
 
     # Map and store metadata
@@ -54,36 +53,6 @@ end
   end
 
   private
-    def needs_fresh_extraction?
-      # Check if cached metadata might be corrupted (from old UTF-8 configuration)
-      # If IPTC:Headline is missing but file likely has IPTC data, use fresh extraction
-      cached_metadata = @image.file.metadata
-
-      # If no cached metadata at all, force fresh
-      return true if cached_metadata.blank?
-
-      # If has metadata but no IPTC:Headline, likely from old analyser
-      return true if cached_metadata.present? && !cached_metadata.key?("IPTC:Headline")
-
-      # If IPTC:Headline has mojibake patterns, force fresh
-      iptc_headline = cached_metadata["IPTC:Headline"]
-      return true if iptc_headline&.match?(/√|ƒ|Ã|Ä|Å|â|ÄŸ|Å¡|Ã­|Ã¡|Ãº|Ã½|Ã©|õ|°/)
-
-      false
-    end
-
-    def extract_fresh_metadata
-      # Use fresh Dragonfly metadata extraction (bypasses cache)
-      # This ensures we always get metadata with current UTF-8 configuration
-
-      file_path = @image.file.path
-      content = Dragonfly.app.fetch_file(file_path)
-      content.metadata
-    rescue => e
-      Rails.logger.warn "Fresh Dragonfly extraction failed, falling back to cached: #{e.message}"
-      @image.file.metadata
-    end
-
     def should_extract?(image, force)
       return false unless Rails.application.config.folio_image_metadata_extraction_enabled
       return false unless image.is_a?(Folio::File::Image)
@@ -102,20 +71,20 @@ end
       image.file_metadata = raw_metadata
       image.file_metadata_extracted_at = Time.current
 
-      # Map using existing field mapper
+      # Map using existing field mapper (with encoding fixes)
       mapped_data = Folio::Metadata::IptcFieldMapper.map_metadata(raw_metadata)
 
-      # Store processed metadata in JSON for getters (key part!)
+      # Store processed metadata in JSON for getters
       store_processed_metadata_for_getters(image, mapped_data)
 
       # Update database fields from mapped data
       update_database_fields(image, mapped_data)
 
-      # Merge keywords into tag_list if configured
-      merge_keywords_to_tags(image, mapped_data)
-
-      # Save changes
+      # Save changes (without tags first)
       image.save! if image.changed?
+
+      # Handle tags separately - if they fail, continue anyway
+      handle_tags_separately(image, mapped_data)
     end
 
     def update_database_fields(image, mapped_data)
@@ -148,6 +117,15 @@ end
             image.send("#{db_field}=", value)
           elsif current_value.blank?
             image.send("#{db_field}=", value)
+          else
+            # Check if current value has mojibake and new value is better quality
+            current_quality = Folio::Metadata::IptcFieldMapper.send(:score_cs, current_value.to_s)
+            new_quality = Folio::Metadata::IptcFieldMapper.send(:score_cs, value.to_s)
+
+            if new_quality > current_quality
+              Rails.logger.info "Updating #{db_field} due to better encoding quality (#{current_quality} -> #{new_quality})"
+              image.send("#{db_field}=", value)
+            end
           end
         end
       end
@@ -163,24 +141,26 @@ end
       end
     end
 
-    def merge_keywords_to_tags(image, mapped_data)
-      # Merge keywords into tag_list if configured and available
-      if Rails.application.config.respond_to?(:folio_image_metadata_merge_keywords_to_tags) &&
-         Rails.application.config.folio_image_metadata_merge_keywords_to_tags &&
-         mapped_data[:keywords].present?
+    def handle_tags_separately(image, mapped_data)
+      return unless Rails.application.config.respond_to?(:folio_image_metadata_merge_keywords_to_tags) &&
+                    Rails.application.config.folio_image_metadata_merge_keywords_to_tags &&
+                    mapped_data[:keywords].present?
 
-        # Get existing tags and merge with new keywords
+      begin
         existing_tags = image.tag_list || []
         new_keywords = mapped_data[:keywords].map(&:to_s).map(&:strip).reject(&:blank?)
-
-        # Merge and deduplicate (case-insensitive)
         merged_tags = (existing_tags + new_keywords).uniq { |tag| tag.downcase }
 
-        # Filter out problematic tags to avoid breaking the extraction process
+        # Filter problematic tags
         safe_tags = filter_safe_tags(image, merged_tags)
 
-        # Assign only safe tags
-        image.tag_list = safe_tags if safe_tags.any?
+        if safe_tags.any?
+          image.tag_list = safe_tags
+          image.save!
+          Rails.logger.info "Successfully added #{safe_tags.size} tags to image ##{image.id}"
+        end
+      rescue => e
+        Rails.logger.warn "Failed to save tags for image ##{image.id}, continuing anyway: #{e.message}"
       end
     end
 
