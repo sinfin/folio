@@ -13,50 +13,33 @@ class Folio::File::Image < Folio::File
     after_assign { |file| file.metadata }
   end
 
-  # Legacy metadata accessors (simplified for backward compatibility)
+  # Unified metadata accessor via IptcFieldMapper
+  def mapped_metadata
+    @mapped_metadata ||= if file_metadata.present?
+      Folio::Metadata::IptcFieldMapper.map_metadata(file_metadata)
+    else
+      {}
+    end
+  end
+
+  # Shorthand for common fields (backward compatibility)
   def title
-    headline.presence || file_metadata&.dig("headline")
+    headline.presence || mapped_metadata[:headline]
   end
 
   def caption
-    description.presence || file_metadata&.dig("caption")
-  end
-
-  def keywords_list
-    file_metadata&.dig("keywords") || []
-  end
-
-  def geo_location
-    # Build from file_metadata JSON
-    location_parts = [
-      file_metadata&.dig("sublocation"),
-      file_metadata&.dig("city"),
-      file_metadata&.dig("state_province"),
-      file_metadata&.dig("country")
-    ].compact
-
-    location_parts.join(", ") if location_parts.any?
-  end
-
-  def creator_list
-    file_metadata&.dig("creator") || []
+    description.presence || mapped_metadata[:description]
   end
 
   def keywords_string
-    keywords_list.join(", ") if keywords_list.any?
+    keywords = mapped_metadata[:keywords] || []
+    keywords.join(", ") if keywords.any?
   end
 
-  def copyright_info
-    file_metadata&.dig("copyright_notice")
-  end
-
+  # GPS coordinates helper
   def location_coordinates
     return nil unless gps_latitude.present? && gps_longitude.present?
     [gps_latitude, gps_longitude]
-  end
-
-  def persons_shown_list
-    file_metadata&.dig("persons_shown") || []
   end
 
 

@@ -2,105 +2,47 @@
 
 namespace :folio do
   namespace :images do
-    desc "Extract IPTC metadata for existing images"
+    desc "Queue metadata extraction jobs for images without extracted metadata"
     task extract_metadata: :environment do
-      puts "Starting metadata extraction for existing images..."
+      unless Rails.application.config.folio_image_metadata_extraction_enabled
+        puts "Metadata extraction is disabled. Enable it in config/initializers/folio_image_metadata.rb"
+        exit 1
+      end
 
-      total_count = 0
-      processed_count = 0
-      error_count = 0
+      puts "Queuing metadata extraction jobs for images without extracted metadata..."
 
-      Folio::File::Image.find_each do |image|
-        total_count += 1
+      # Find images without extracted metadata
+      images_without_metadata = Folio::File::Image.where(file_metadata_extracted_at: nil)
+                                                  .where.not(file_uid: nil)
 
-        begin
-          # Skip if key metadata is already present
-          if image.creator.present? && image.description.present? && image.headline.present?
-            print "."
-            next
-          end
+      total_count = images_without_metadata.count
 
-          # Extract metadata
-          image.extract_metadata!
-          processed_count += 1
-          print "+"
-        rescue => e
-          error_count += 1
-          puts "\nError processing #{image.file_name}: #{e.message}"
-          print "E"
-        end
+      if total_count == 0
+        puts "No images found that need metadata extraction."
+        exit 0
+      end
+
+      puts "Found #{total_count} images without extracted metadata."
+      print "Queuing jobs"
+
+      queued_count = 0
+
+      images_without_metadata.find_each do |image|
+        # Queue extraction job (background processing)
+        Folio::ExtractMetadataJob.perform_later(image)
+        queued_count += 1
+
+        print "."
 
         # Progress indicator every 50 images
-        if total_count % 50 == 0
-          puts "\nProcessed: #{total_count} images (#{processed_count} updated, #{error_count} errors)"
+        if queued_count % 50 == 0
+          puts " #{queued_count}/#{total_count}"
+          print "Queuing jobs"
         end
       end
 
-      puts "\n\nMetadata extraction complete!"
-      puts "Total images: #{total_count}"
-      puts "Updated: #{processed_count}"
-      puts "Errors: #{error_count}"
-    end
-
-    desc "Extract IPTC metadata with namespace support (force re-extraction)"
-    task extract_metadata_force: :environment do
-      puts "Starting FORCED metadata extraction with IPTC namespace support..."
-
-      total_count = 0
-      processed_count = 0
-      error_count = 0
-
-      Folio::File::Image.find_each do |image|
-        total_count += 1
-
-        begin
-          next unless image.file.present? && File.exist?(image.file.path)
-
-          # Force re-extraction by temporarily clearing a field
-          original_headline = image.headline
-          image.headline = nil
-
-          # Extract with namespace grouping
-          require "open3"
-          stdout, stderr, status = Open3.capture3(
-            "exiftool", "-j", "-G1", "-struct", "-n", image.file.path
-          )
-
-          if status.success?
-            metadata = JSON.parse(stdout).first
-            image.map_iptc_metadata(metadata)
-
-            # Restore original headline if extraction didn't find anything
-            image.headline = original_headline if image.headline.blank?
-
-            if image.changed?
-              image.save!
-              processed_count += 1
-              print "+"
-            else
-              print "."
-            end
-          else
-            error_count += 1
-            puts "\nError processing #{image.file_name}: #{stderr}"
-            print "E"
-          end
-        rescue => e
-          error_count += 1
-          puts "\nError processing #{image.file_name}: #{e.message}"
-          print "E"
-        end
-
-        # Progress indicator every 50 images
-        if total_count % 50 == 0
-          puts "\nProcessed: #{total_count} images (#{processed_count} updated, #{error_count} errors)"
-        end
-      end
-
-      puts "\n\nForced IPTC metadata extraction complete!"
-      puts "Total images: #{total_count}"
-      puts "Updated: #{processed_count}"
-      puts "Errors: #{error_count}"
+      puts "\n\nQueued #{queued_count} metadata extraction jobs."
+      puts "Jobs will be processed in background. Check job queue status for progress."
     end
 
     desc "Show metadata extraction statistics"
@@ -111,18 +53,27 @@ namespace :folio do
       total_images = Folio::File::Image.count
       puts "Total images: #{total_images}"
 
-      # Check various metadata fields
+      if total_images == 0
+        puts "No images found."
+        exit 0
+      end
+
+      # Check extraction status
+      extracted_count = Folio::File::Image.where.not(file_metadata_extracted_at: nil).count
+      pending_count = total_images - extracted_count
+
+      puts "\nExtraction status:"
+      puts "  Extracted: #{extracted_count}/#{total_images} (#{(extracted_count.to_f / total_images * 100).round(1)}%)"
+      puts "  Pending: #{pending_count}/#{total_images} (#{(pending_count.to_f / total_images * 100).round(1)}%)"
+
+      # Check database field coverage
       fields_stats = {
         headline: Folio::File::Image.where.not(headline: [nil, ""]).count,
-        creator: Folio::File::Image.where("creator != '[]' AND creator IS NOT NULL").count,
         description: Folio::File::Image.where.not(description: [nil, ""]).count,
-        keywords: Folio::File::Image.where("keywords != '[]' AND keywords IS NOT NULL").count,
-        copyright_notice: Folio::File::Image.where.not(copyright_notice: [nil, ""]).count,
-        gps_coordinates: Folio::File::Image.where.not(gps_latitude: nil, gps_longitude: nil).count,
-        camera_info: Folio::File::Image.where.not(camera_make: [nil, ""]).count
+        gps_coordinates: Folio::File::Image.where.not(gps_latitude: nil, gps_longitude: nil).count
       }
 
-      puts "\nMetadata field coverage:"
+      puts "\nDatabase field coverage:"
       fields_stats.each do |field, count|
         percentage = total_images > 0 ? (count.to_f / total_images * 100).round(1) : 0
         puts "  #{field}: #{count}/#{total_images} (#{percentage}%)"
@@ -131,49 +82,13 @@ namespace :folio do
       # Configuration check
       puts "\nConfiguration:"
       puts "  Extraction enabled: #{Rails.application.config.folio_image_metadata_extraction_enabled}"
-      puts "  IPTC standard: #{Rails.application.config.folio_image_metadata_use_iptc_standard}"
-      puts "  Copy to placements: #{Rails.application.config.folio_image_metadata_copy_to_placements}"
 
       # ExifTool availability
       exiftool_available = system("which exiftool > /dev/null 2>&1")
       puts "  ExifTool available: #{exiftool_available}"
-    end
 
-    desc "Test metadata extraction on a single image"
-    task :test_extraction, [:image_id] => :environment do |_task, args|
-      image_id = args[:image_id]
-
-      if image_id.blank?
-        puts "Usage: rake folio:images:test_extraction[IMAGE_ID]"
-        exit 1
-      end
-
-      image = Folio::File::Image.find(image_id)
-      puts "Testing metadata extraction for: #{image.file_name}"
-      puts "Current metadata fields:"
-
-      # Show current state
-      %w[headline creator description keywords copyright_notice camera_make capture_date].each do |field|
-        value = image.send(field)
-        puts "  #{field}: #{value.inspect}"
-      end
-
-      puts "\nExtracting metadata..."
-      image.extract_metadata!
-
-      puts "Updated metadata fields:"
-      %w[headline creator description keywords copyright_notice camera_make capture_date].each do |field|
-        value = image.send(field)
-        puts "  #{field}: #{value.inspect}"
-      end
-
-      if image.changed?
-        puts "\nSaving changes..."
-        image.save!
-        puts "Done!"
-      else
-        puts "\nNo changes detected."
-      end
+      puts "\nTo queue extraction jobs for pending images:"
+      puts "  rails folio:images:extract_metadata"
     end
   end
 end

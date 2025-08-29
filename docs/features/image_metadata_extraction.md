@@ -353,37 +353,41 @@ Rails.application.config.folio_image_metadata_field_processors = {
 }
 ```
 
-### Custom Extractor Service
+### Custom Business Logic
 
-Replace the entire extraction service with your own business logic:
+Add custom methods to your Image model using the unified `mapped_metadata` API:
 
 ```ruby
-# app/services/my_app/custom_metadata_extractor.rb
-class MyApp::CustomMetadataExtractor < Folio::Metadata::Extractor
-  def headline
-    # Your custom headline logic
-    result = super
-    result&.prepend("[Custom] ")
-  end
-  
+# app/models/folio/file/image.rb (or via decorator)
+class Folio::File::Image
+  # Custom business methods using mapped_metadata
   def watermark_required?
-    # Custom business method
     !internal_photo? && !creative_commons?
   end
   
   def internal_photo?
-    credit_line&.include?("MyCompany") || 
-    get_field(:internal_photo_id).present?
+    mapped_metadata[:credit_line]&.include?("MyCompany") || 
+    mapped_metadata[:internal_photo_id].present?
   end
   
   def creative_commons?
-    copyright_notice&.include?("Creative Commons") ||
-    usage_terms&.include?("CC")
+    mapped_metadata[:copyright_notice]&.include?("Creative Commons") ||
+    mapped_metadata[:usage_terms]&.include?("CC")
+  end
+  
+  def display_headline
+    headline = mapped_metadata[:headline]
+    headline.present? ? "[Custom] #{headline}" : nil
+  end
+  
+  def photographer_info
+    {
+      name: mapped_metadata[:creator]&.first,
+      credit: mapped_metadata[:credit_line],
+      copyright: mapped_metadata[:copyright_notice]
+    }
   end
 end
-
-# config/initializers/folio_image_metadata.rb  
-Rails.application.config.folio_image_metadata_extractor_class = MyApp::CustomMetadataExtractor
 ```
 
 ### Known Providers Detection

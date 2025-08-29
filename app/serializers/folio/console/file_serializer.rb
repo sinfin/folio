@@ -39,30 +39,13 @@ class Folio::Console::FileSerializer
     object.respond_to?(:file_metadata) ? object.file_metadata || {} : {}
   end
 
-  # Image-specific metadata accessors (only for Image files)
-  attribute :creator_list do |object|
-    object.respond_to?(:creator_list) ? object.creator_list : []
+  # Mapped metadata using IptcFieldMapper (unified metadata API)
+  attribute :mapped_metadata do |object|
+    object.respond_to?(:mapped_metadata) ? object.mapped_metadata : {}
   end
 
-  attribute :keywords_list do |object|
-    object.respond_to?(:keywords_list) ? object.keywords_list : []
-  end
-
-  attribute :copyright_info do |object|
-    object.respond_to?(:copyright_info) ? object.copyright_info : nil
-  end
-
-  attribute :persons_shown_list do |object|
-    object.respond_to?(:persons_shown_list) ? object.persons_shown_list : []
-  end
-
-  attribute :location_coordinates do |object|
-    object.respond_to?(:location_coordinates) ? object.location_coordinates : nil
-  end
-
-  attribute :geo_location do |object|
-    object.respond_to?(:geo_location) ? object.geo_location : nil
-  end
+  # Legacy individual accessors - replaced by unified mapped_metadata
+  # (kept for backward compatibility, but deprecated)
 
   attribute :human_type do |object|
     object.class.human_type

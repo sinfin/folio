@@ -88,8 +88,8 @@ class Folio::File::ImageTest < ActiveSupport::TestCase
     # Should not overwrite existing data (auto-population only for blank fields)
     assert_equal "Existing description", image.description
     assert_equal "Existing headline", image.headline
-    # JSON getter should return metadata
-    assert_equal ["Author from metadata"], image.creator_list
+    # Mapped metadata should return metadata
+    assert_equal ["Author from metadata"], image.mapped_metadata[:creator]
   end
 
   test "handles GPS coordinates extraction" do
@@ -184,35 +184,48 @@ class Folio::File::ImageTest < ActiveSupport::TestCase
 
   test "metadata accessors work correctly" do
     image = create(:folio_file_image)
-    # Set metadata via file_metadata hash and database attributes (simulating extraction result)
+
+    # Simulate metadata extraction by setting raw ExifTool-like data
+    raw_metadata = {
+      "XMP-photoshop:Headline" => "IPTC Headline",
+      "XMP-dc:Creator" => ["Author One", "Author Two"],
+      "XMP-dc:Subject" => ["tag1", "tag2"]
+    }
+
     image.update!(
-      file_metadata: {
-        "headline" => "IPTC Headline",
-        "keywords" => ["tag1", "tag2"],
-        "creator" => ["Author One", "Author Two"]
-      },
+      file_metadata: raw_metadata,
       gps_latitude: 50.0,
       gps_longitude: 14.0
     )
 
+    # Test mapped metadata accessor
+    mapped = image.mapped_metadata
+    assert_equal "IPTC Headline", mapped[:headline]
+    assert_equal ["Author One", "Author Two"], mapped[:creator]
+    assert_equal ["tag1", "tag2"], mapped[:keywords]
+
+    # Test legacy accessors
     assert_equal "IPTC Headline", image.title
-    assert_equal ["tag1", "tag2"], image.keywords_list
     assert_equal "tag1, tag2", image.keywords_string
-    assert_equal ["Author One", "Author Two"], image.creator_list
     assert_equal [50.0, 14.0], image.location_coordinates
   end
 
-  test "geo_location builds from IPTC fields" do
+  test "mapped metadata builds location data correctly" do
     image = create(:folio_file_image)
-    # Set metadata via file_metadata hash (simulating extraction result)
-    image.update!(file_metadata: {
-      "sublocation" => "Old Town",
-      "city" => "Prague",
-      "state_province" => "Prague",
-      "country" => "Czech Republic"
-    })
+    # Set raw ExifTool-like metadata (simulating extraction result)
+    raw_metadata = {
+      "XMP-iptcCore:Location" => "Old Town",
+      "XMP-photoshop:City" => "Prague",
+      "XMP-photoshop:State" => "Prague",
+      "XMP-iptcCore:CountryName" => "Czech Republic"
+    }
+    image.update!(file_metadata: raw_metadata)
 
-    assert_equal "Old Town, Prague, Prague, Czech Republic", image.geo_location
+    mapped = image.mapped_metadata
+    assert_equal "Old Town", mapped[:sublocation]
+    assert_equal "Prague", mapped[:city]
+    assert_equal "Prague", mapped[:state_province]
+    assert_equal "Czech Republic", mapped[:country]
   end
 
   test "processes XMP Lang Alt structures" do

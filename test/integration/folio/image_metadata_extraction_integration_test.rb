@@ -43,19 +43,19 @@ class Folio::ImageMetadataExtractionIntegrationTest < ActionDispatch::Integratio
 
       # Verify extraction occurred and charset handling worked
       assert image_file.persisted?
-      assert image_file.credit_line.present?
+      assert image_file.mapped_metadata[:credit_line].present?
 
       # Verify UTF-8 characters are properly handled (should contain Czech characters)
-      assert_match(/[čšžýáíéůúČŠŽÝÁÍÉŮÚ]/, image_file.credit_line)
+      assert_match(/[čšžýáíéůúČŠŽÝÁÍÉŮÚ]/, image_file.mapped_metadata[:credit_line])
 
       # Verify no mojibake patterns (double-encoded characters)
-      assert_no_match(/Ã[^A-Za-z\s]/, image_file.credit_line)
-      assert_no_match(/Å [a-z]/, image_file.credit_line)
+      assert_no_match(/Ã[^A-Za-z\s]/, image_file.mapped_metadata[:credit_line])
+      assert_no_match(/Å [a-z]/, image_file.mapped_metadata[:credit_line])
 
       # Verify IPTC standard compliance
-      assert image_file.creator.is_a?(Array), "Creator should be stored as array"
+      assert image_file.mapped_metadata[:creator].is_a?(Array), "Creator should be stored as array"
       # Verify creator contains some meaningful content (not specifically ČTK)
-      assert image_file.creator.any? { |c| c.length > 2 }, "Creator should contain meaningful data"
+      assert image_file.mapped_metadata[:creator].any? { |c| c.length > 2 }, "Creator should contain meaningful data"
     ensure
       temp_file&.close
       temp_file&.unlink
@@ -85,9 +85,9 @@ class Folio::ImageMetadataExtractionIntegrationTest < ActionDispatch::Integratio
       # Collect results for analysis
       results << {
         filename: File.basename(original_path),
-        credit_line: image_file.credit_line.to_s,
-        keywords: Array(image_file.keywords).join(" "),
-        creator: Array(image_file.creator).join(", "),
+        credit_line: image_file.mapped_metadata[:credit_line].to_s,
+        keywords: Array(image_file.mapped_metadata[:keywords]).join(" "),
+        creator: Array(image_file.mapped_metadata[:creator]).join(", "),
         has_mojibake: detect_mojibake(image_file)
       }
 
@@ -146,17 +146,17 @@ class Folio::ImageMetadataExtractionIntegrationTest < ActionDispatch::Integratio
       # IPTC reference files should have complete metadata
       assert image_file.headline.present?, "Reference file should have headline"
       assert image_file.description.present?, "Reference file should have description"
-      assert image_file.creator.present?, "Reference file should have creator"
-      assert image_file.keywords.present?, "Reference file should have keywords"
-      assert image_file.credit_line.present?, "Reference file should have credit line"
+      assert image_file.mapped_metadata[:creator].present?, "Reference file should have creator"
+      assert image_file.mapped_metadata[:keywords].present?, "Reference file should have keywords"
+      assert image_file.mapped_metadata[:credit_line].present?, "Reference file should have credit line"
 
       # Should not contain encoding artifacts
       all_text = [
         image_file.headline,
         image_file.description,
-        image_file.credit_line,
-        Array(image_file.creator).join(" "),
-        Array(image_file.keywords).join(" ")
+        image_file.mapped_metadata[:credit_line],
+        Array(image_file.mapped_metadata[:creator]).join(" "),
+        Array(image_file.mapped_metadata[:keywords]).join(" ")
       ].join(" ")
 
       assert_no_match(/\uFFFD/, all_text, "Should not contain replacement characters")
@@ -226,7 +226,7 @@ class Folio::ImageMetadataExtractionIntegrationTest < ActionDispatch::Integratio
       assert image_file.persisted?, "File should save successfully"
 
       # Fields might be blank but should not contain invalid data
-      [image_file.description, image_file.credit_line, image_file.headline].each do |field|
+      [image_file.description, image_file.mapped_metadata[:credit_line], image_file.headline].each do |field|
         if field.present?
           assert_no_match(/\uFFFD/, field, "Should not contain replacement characters")
           assert_not field.include?("�"), "Should not contain invalid characters"
@@ -244,10 +244,10 @@ class Folio::ImageMetadataExtractionIntegrationTest < ActionDispatch::Integratio
       # Check common fields for mojibake patterns
       text_fields = [
         image_file.description,
-        image_file.credit_line,
+        image_file.mapped_metadata[:credit_line],
         image_file.headline,
-        Array(image_file.creator).join(" "),
-        Array(image_file.keywords).join(" ")
+        Array(image_file.mapped_metadata[:creator]).join(" "),
+        Array(image_file.mapped_metadata[:keywords]).join(" ")
       ].compact
 
       text_fields.any? do |field|
