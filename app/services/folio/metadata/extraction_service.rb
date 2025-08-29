@@ -119,13 +119,36 @@ end
     end
 
     def update_database_fields(image, mapped_data)
+      # Map metadata fields to actual database columns
+      field_mapping = {
+        creator: :author,
+        source: :attribution_source,
+        copyright_notice: :attribution_copyright,
+        # Direct mappings for existing fields
+        headline: :headline,
+        description: :description,
+        capture_date: :capture_date,
+        gps_latitude: :gps_latitude,
+        gps_longitude: :gps_longitude
+      }
+
       # Update database fields if they're blank (don't override user input)
       mapped_data.each do |field, value|
         next if value.blank?
 
-        # Only update if current field is blank
-        if image.respond_to?("#{field}=") && image.send(field).blank?
-          image.send("#{field}=", value)
+        # Get the actual database column name
+        db_field = field_mapping[field] || field
+
+        # Only update if current field is blank and the setter exists
+        if image.respond_to?("#{db_field}=")
+          current_value = image.send(db_field)
+
+          # Special handling for author field - overwrite if it contains JSON array string
+          if db_field == :author && current_value.present? && current_value.match?(/^\[.*\]$/)
+            image.send("#{db_field}=", value)
+          elsif current_value.blank?
+            image.send("#{db_field}=", value)
+          end
         end
       end
     end
