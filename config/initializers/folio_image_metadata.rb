@@ -75,8 +75,8 @@ Rails.application.config.tap do |config|
     # :creator, :credit_line, :copyright_notice, :source
   ] # IPTC recommended fields for professional use
 
-  # Extract metadata to placements
-  config.folio_image_metadata_copy_to_placements = true # default: true
+  # Extract metadata to placements (TEMPORARILY DISABLED - functionality removed, will be reimplemented later)
+  config.folio_image_metadata_copy_to_placements = false # default: true
 
   # ExifTool command options
   # Force UTF-8 pro IPTC (většina moderních souborů má UTF-8 data i když 1:90 auto-detect nefunguje)

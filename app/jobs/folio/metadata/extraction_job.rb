@@ -41,7 +41,7 @@ class Folio::Metadata::ExtractionJob < Folio::ApplicationJob
     end
 
     def serialize_file_attributes(image)
-      # Return essential attributes for UI update
+      # Return essential attributes for UI update including mapped_metadata for React
       {
         id: image.id,
         file_metadata_extracted_at: image.file_metadata_extracted_at&.iso8601,
@@ -50,7 +50,9 @@ class Folio::Metadata::ExtractionJob < Folio::ApplicationJob
         description: image.description,
         capture_date: image.capture_date&.iso8601,
         gps_latitude: image.gps_latitude,
-        gps_longitude: image.gps_longitude
+        gps_longitude: image.gps_longitude,
+        # Essential: Include mapped_metadata for ReadOnlyMetadataDisplay React component
+        mapped_metadata: image.respond_to?(:mapped_metadata) ? image.mapped_metadata : {}
       }
     rescue => e
       Rails.logger.error "Failed to serialize file attributes for ##{image.id}: #{e.message}"
