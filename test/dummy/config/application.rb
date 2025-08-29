@@ -20,6 +20,8 @@ module Dummy
     config.folio_newsletter_subscriptions = true
     config.folio_site_default_test_factory = :dummy_site
 
+    config.folio_tiptap_use_for_pages = true
+
     I18n.available_locales = [:cs, :en]
     I18n.default_locale = :cs
 

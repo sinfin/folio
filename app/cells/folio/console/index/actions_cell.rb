@@ -60,12 +60,14 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
         variant: :danger,
         method: :delete,
         confirm: true,
+        collapsed: true,
         url: -> (record) { through_aware_console_url_for(record, action: :discard, safe: true) },
       },
       undiscard: {
         name: :undiscard,
         icon: :arrow_u_left_top,
         method: :post,
+        collapsed: true,
         url: -> (record) { through_aware_console_url_for(record, action: :undiscard, safe: true) },
       },
       edit: {
@@ -102,7 +104,7 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
   def actions_ary
     acts = []
 
-    with_default = (options[:actions].presence || %i[edit destroy])
+    with_default = (options[:actions].presence || %i[preview edit destroy])
 
     with_default.each do |sym_or_hash|
       if sym_or_hash.is_a?(Symbol)
@@ -177,6 +179,12 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
 
       inner_content = if action[:url] && !action[:disabled]
         url = action[:url].is_a?(Proc) ? action[:url].call(model) : action[:url]
+
+        # reject named actions that should have an url
+        if url.blank? && action[:name] && default_actions[action[:name]] && default_actions[action[:name]][:url].present?
+          next
+        end
+
         link_to(ico, url, opts)
       else
         if action[:tooltip].present?
@@ -185,6 +193,9 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
           content_tag(:span, ico, opts)
         end
       end
+
+      # reject named actions that should have an url
+      next unless inner_content
 
       if action[:tooltip].present?
         content_tag(:span, inner_content, { data: stimulus_tooltip(action[:tooltip]) })

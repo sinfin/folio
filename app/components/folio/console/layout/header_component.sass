@@ -1,0 +1,71 @@
+$f-c-layout-header-color: $gray-medium-dark !default
+$f-c-layout-header-bg: $light-gray !default
+
+.f-c-layout-header
+  position: relative
+  color: $f-c-layout-header-color
+  background: $f-c-layout-header-bg
+
+  &__breadcrumbs
+    display: flex
+    align-items: center
+    flex-wrap: wrap
+
+  &__breadcrumb,
+  &__breadcrumb-inner
+    display: flex
+    align-items: center
+
+  &__breadcrumbs,
+  &__breadcrumb
+    gap: $grid-gutter-width / 6
+
+  &__inner
+    display: flex
+    align-items: stretch
+    min-height: 36px
+    gap: $grid-gutter-width / 2
+
+  &__current-user-link,
+  &__sign-out-link
+    display: flex
+    align-items: center
+    gap: $grid-gutter-width / 6
+
+  &__current-user-link
+    margin-left: auto
+
+  &__toggle
+    width: 50px
+    height: 100%
+    position: absolute
+    top: 0
+    left: 0
+    font-size: 16px
+    line-height: 35px
+    cursor: pointer
+    flex: 0 0 35px
+    margin-right: $spacer
+    border-radius: 0
+
+    &, &:hover, &:focus
+      border-color: $gray-800
+      background: $gray-800
+      color: $white
+
+  +mq-desktop-menu
+    &__toggle
+      display: none
+
+  +mq-mobile-menu
+    padding-left: 50px
+
+    &__breadcrumb
+      display: none
+
+      &--mobile
+        flex-direction: row-reverse
+        display: flex
+
+    &__breadcrumb-delimiter
+      transform: rotate(180deg)

@@ -1,317 +1,320 @@
-if (window.Redactor) {
-  window.FolioConsole = window.FolioConsole || {}
-  window.FolioConsole.HtmlAutoFormat = window.FolioConsole.HtmlAutoFormat || {}
+window.FolioConsole = window.FolioConsole || {}
+window.FolioConsole.HtmlAutoFormat = window.FolioConsole.HtmlAutoFormat || {}
 
-  window.FolioConsole.HtmlAutoFormat.CLASS_NAME = 'f-c-html-auto-format'
+window.FolioConsole.HtmlAutoFormat.CLASS_NAME = 'f-c-html-auto-format'
 
-  window.FolioConsole.HtmlAutoFormat.I18N = {
-    cs: {
-      undo: 'Automaticky nahrazeno%{before} <br> Kliknutím zrušíte',
-      redo: 'Opět nahradit%{before}'
-    },
-    en: {
-      undo: 'Automatically replaced%{before} <br> Click to cancel',
-      redo: 'Redo replacement%{before}'
+window.FolioConsole.HtmlAutoFormat.I18N = {
+  cs: {
+    undo: 'Automaticky nahrazeno%{before} <br> Kliknutím zrušíte',
+    redo: 'Opět nahradit%{before}'
+  },
+  en: {
+    undo: 'Automatically replaced%{before} <br> Click to cancel',
+    redo: 'Redo replacement%{before}'
+  }
+}
+
+window.FolioConsole.HtmlAutoFormat.MAPPINGS = {
+  commons: [
+    { from: '...', to: '…' },
+    { from: "''", to: '"' },
+    { from: '->', to: '→' },
+    { from: '-&gt;', to: '→' },
+    { from: '<-', to: '←' },
+    { from: '&lt;-', to: '←' },
+    { from: '<=', to: '≤' },
+    { from: '&lt;=', to: '≤' },
+    { from: '>=', to: '≥' },
+    { from: '&gt;=', to: '≥' },
+    { from: '!=', to: '≠' },
+    { from: '1/2', to: '½' },
+    { from: '1/4', to: '¼' },
+    { from: '3/4', to: '¾' },
+    { from: '^o', to: '°' },
+    { from: '(c)', to: '©' },
+    { from: '(r)', to: '®' },
+    { from: '(tm)', to: '™' },
+    { from: /(?<g1c>\s|&nbsp;)(?<g2s>-)(?<g3c>\s|&nbsp;)/, transform: { g2s: '–' }, cancelAfter: '-' }
+  ],
+  cs: [
+    { from: /(?<g1s>")(?<g2c>[^"]+)(?<g3s>")/, transform: { g1s: '„', g3s: '“' }, cancelAfter: '"' },
+    { from: /(?<g1s>')(?<g2c>[^']+)(?<g3s>')/, transform: { g1s: '‚', g3s: '‘' }, cancelAfter: "'" },
+    { from: /(?<g1s>["“”])(?<g2c>\w)/, transform: { g1s: '„' }, cancelAfter: '"' },
+    { from: /(?<g1c>\w)(?<g2s>["“”])/, transform: { g2s: '“' }, cancelAfter: '"' },
+    { from: /(?<g1s>['`])(?<g2c>\w)/, transform: { g1s: '‚' }, cancelAfter: "'" },
+    { from: /(?<g1c>\w)(?<g2s>['`])/, transform: { g2s: '‘' }, cancelAfter: "'" }
+  ]
+}
+
+window.FolioConsole.HtmlAutoFormat.UNDO_MAPPINGS = {
+  '„': '"',
+  '“': '"',
+  '‚': "'",
+  '‘': "'",
+  '–': '-'
+}
+
+window.FolioConsole.HtmlAutoFormat.MAPPINGS.commons.forEach((mapping) => {
+  if (mapping.to) {
+    window.FolioConsole.HtmlAutoFormat.UNDO_MAPPINGS[mapping.to] = mapping.from
+  }
+})
+
+window.FolioConsole.HtmlAutoFormat.redactorBlurCallback = ({ redactor }) => {
+  if (!window.FolioConsole.HtmlAutoFormat.enabled) return
+
+  const html = redactor.source.getCode()
+  const replaced = window.FolioConsole.HtmlAutoFormat.replace({ html, notify: true })
+
+  if (replaced !== html) {
+    redactor.source.setCode(replaced)
+  }
+}
+
+window.FolioConsole.HtmlAutoFormat.sanity = 0
+
+window.FolioConsole.HtmlAutoFormat.wrapInSpan = ({ string, notify }) => {
+  if (!window.FolioConsole.HtmlAutoFormat.span) {
+    window.FolioConsole.HtmlAutoFormat.span = document.createElement('span')
+    window.FolioConsole.HtmlAutoFormat.span.setAttribute('contenteditable', 'false')
+    window.FolioConsole.HtmlAutoFormat.span.className = window.FolioConsole.HtmlAutoFormat.CLASS_NAME
+    window.FolioConsole.HtmlAutoFormat.span.dataset.controller = window.FolioConsole.HtmlAutoFormat.CLASS_NAME
+  }
+
+  if (notify && window.FolioConsole.HtmlAutoFormat.UNDO_MAPPINGS[string]) {
+    window.FolioConsole.HtmlAutoFormat.span.classList.add('f-c-html-auto-format--notify')
+  } else {
+    window.FolioConsole.HtmlAutoFormat.span.classList.remove('f-c-html-auto-format--notify')
+  }
+
+  window.FolioConsole.HtmlAutoFormat.span.innerHTML = string
+
+  return window.FolioConsole.HtmlAutoFormat.span.outerHTML
+}
+
+window.FolioConsole.HtmlAutoFormat.useMapping = ({ mapping, textNode, notify }) => {
+  let replacedSomething = false
+  let html = ''
+
+  if (mapping.to) {
+    html = textNode.nodeValue.replace(mapping.from, (match, offset, string) => {
+      replacedSomething = true
+      return window.FolioConsole.HtmlAutoFormat.wrapInSpan({ string: match.replace(mapping.from, mapping.to), notify })
+    })
+  } else {
+    const match = mapping.from.exec(textNode.nodeValue)
+
+    if (match && match.groups) {
+      replacedSomething = true
+
+      const fromIndex = match.index
+      const matchLength = match[0].length
+      const toIndex = fromIndex + matchLength
+
+      html += match.input.slice(0, fromIndex)
+
+      Object.keys(match.groups).forEach((groupKey) => {
+        const string = match.groups[groupKey]
+
+        if (mapping.transform[groupKey]) {
+          html += window.FolioConsole.HtmlAutoFormat.wrapInSpan({ string: mapping.transform[groupKey], notify })
+        } else {
+          html += string
+        }
+      })
+
+      html += match.input.slice(toIndex)
     }
   }
 
-  window.FolioConsole.HtmlAutoFormat.MAPPINGS = {
-    commons: [
-      { from: '...', to: '…' },
-      { from: "''", to: '"' },
-      { from: '->', to: '→' },
-      { from: '-&gt;', to: '→' },
-      { from: '<-', to: '←' },
-      { from: '&lt;-', to: '←' },
-      { from: '<=', to: '≤' },
-      { from: '&lt;=', to: '≤' },
-      { from: '>=', to: '≥' },
-      { from: '&gt;=', to: '≥' },
-      { from: '!=', to: '≠' },
-      { from: '1/2', to: '½' },
-      { from: '1/4', to: '¼' },
-      { from: '3/4', to: '¾' },
-      { from: '^o', to: '°' },
-      { from: '(c)', to: '©' },
-      { from: '(r)', to: '®' },
-      { from: '(tm)', to: '™' },
-      { from: /(?<g1c>\s|&nbsp;)(?<g2s>-)(?<g3c>\s|&nbsp;)/, transform: { g2s: '–' }, cancelAfter: '-' }
-    ],
-    cs: [
-      { from: /(?<g1s>")(?<g2c>[^"]+)(?<g3s>")/, transform: { g1s: '„', g3s: '“' }, cancelAfter: '"' },
-      { from: /(?<g1s>')(?<g2c>[^']+)(?<g3s>')/, transform: { g1s: '‚', g3s: '‘' }, cancelAfter: "'" },
-      { from: /(?<g1s>["“”])(?<g2c>\w)/, transform: { g1s: '„' }, cancelAfter: '"' },
-      { from: /(?<g1c>\w)(?<g2s>["“”])/, transform: { g2s: '“' }, cancelAfter: '"' },
-      { from: /(?<g1s>['`])(?<g2c>\w)/, transform: { g1s: '‚' }, cancelAfter: "'" },
-      { from: /(?<g1c>\w)(?<g2s>['`])/, transform: { g2s: '‘' }, cancelAfter: "'" }
-    ]
+  if (replacedSomething) {
+    const fragment = document.createRange().createContextualFragment(html)
+    textNode.replaceWith(fragment)
+    return true
   }
 
-  window.FolioConsole.HtmlAutoFormat.UNDO_MAPPINGS = {
-    '„': '"',
-    '“': '"',
-    '‚': "'",
-    '‘': "'",
-    '–': '-'
-  }
+  return false
+}
+
+window.FolioConsole.HtmlAutoFormat.replaceInNode = ({ locale, node, notify }) => {
+  let replaced = false
 
   window.FolioConsole.HtmlAutoFormat.MAPPINGS.commons.forEach((mapping) => {
-    if (mapping.to) {
-      window.FolioConsole.HtmlAutoFormat.UNDO_MAPPINGS[mapping.to] = mapping.from
+    if (replaced) return
+
+    if (window.FolioConsole.HtmlAutoFormat.useMapping({ mapping, textNode: node, notify })) {
+      replaced = true
     }
   })
 
-  window.FolioConsole.HtmlAutoFormat.redactorBlurCallback = ({ redactor }) => {
-    if (!window.FolioConsole.HtmlAutoFormat.enabled) return
+  if (replaced) return true
 
-    const html = redactor.source.getCode()
-    const replaced = window.FolioConsole.HtmlAutoFormat.replace({ html, notify: true })
-
-    if (replaced !== html) {
-      redactor.source.setCode(replaced)
-    }
-  }
-
-  window.FolioConsole.HtmlAutoFormat.sanity = 0
-
-  window.FolioConsole.HtmlAutoFormat.wrapInSpan = ({ string, notify }) => {
-    if (!window.FolioConsole.HtmlAutoFormat.span) {
-      window.FolioConsole.HtmlAutoFormat.span = document.createElement('span')
-      window.FolioConsole.HtmlAutoFormat.span.setAttribute('contenteditable', 'false')
-      window.FolioConsole.HtmlAutoFormat.span.className = window.FolioConsole.HtmlAutoFormat.CLASS_NAME
-      window.FolioConsole.HtmlAutoFormat.span.dataset.controller = window.FolioConsole.HtmlAutoFormat.CLASS_NAME
-    }
-
-    if (notify && window.FolioConsole.HtmlAutoFormat.UNDO_MAPPINGS[string]) {
-      window.FolioConsole.HtmlAutoFormat.span.classList.add('f-c-html-auto-format--notify')
-    } else {
-      window.FolioConsole.HtmlAutoFormat.span.classList.remove('f-c-html-auto-format--notify')
-    }
-
-    window.FolioConsole.HtmlAutoFormat.span.innerHTML = string
-
-    return window.FolioConsole.HtmlAutoFormat.span.outerHTML
-  }
-
-  window.FolioConsole.HtmlAutoFormat.useMapping = ({ mapping, textNode, notify }) => {
-    let replacedSomething = false
-    let html = ''
-
-    if (mapping.to) {
-      html = textNode.nodeValue.replace(mapping.from, (match, offset, string) => {
-        replacedSomething = true
-        return window.FolioConsole.HtmlAutoFormat.wrapInSpan({ string: match.replace(mapping.from, mapping.to), notify })
-      })
-    } else {
-      const match = mapping.from.exec(textNode.nodeValue)
-
-      if (match && match.groups) {
-        replacedSomething = true
-
-        const fromIndex = match.index
-        const matchLength = match[0].length
-        const toIndex = fromIndex + matchLength
-
-        html += match.input.slice(0, fromIndex)
-
-        Object.keys(match.groups).forEach((groupKey) => {
-          const string = match.groups[groupKey]
-
-          if (mapping.transform[groupKey]) {
-            html += window.FolioConsole.HtmlAutoFormat.wrapInSpan({ string: mapping.transform[groupKey], notify })
-          } else {
-            html += string
-          }
-        })
-
-        html += match.input.slice(toIndex)
-      }
-    }
-
-    if (replacedSomething) {
-      const fragment = document.createRange().createContextualFragment(html)
-      textNode.replaceWith(fragment)
-      return true
-    }
-
-    return false
-  }
-
-  window.FolioConsole.HtmlAutoFormat.replaceInNode = ({ locale, node, notify }) => {
-    let replaced = false
-
-    window.FolioConsole.HtmlAutoFormat.MAPPINGS.commons.forEach((mapping) => {
+  if (window.FolioConsole.HtmlAutoFormat.MAPPINGS[locale]) {
+    window.FolioConsole.HtmlAutoFormat.MAPPINGS[locale].forEach((mapping) => {
       if (replaced) return
 
       if (window.FolioConsole.HtmlAutoFormat.useMapping({ mapping, textNode: node, notify })) {
         replaced = true
       }
     })
-
-    if (replaced) return true
-
-    if (window.FolioConsole.HtmlAutoFormat.MAPPINGS[locale]) {
-      window.FolioConsole.HtmlAutoFormat.MAPPINGS[locale].forEach((mapping) => {
-        if (replaced) return
-
-        if (window.FolioConsole.HtmlAutoFormat.useMapping({ mapping, textNode: node, notify })) {
-          replaced = true
-        }
-      })
-    }
-
-    return replaced
   }
 
-  window.FolioConsole.HtmlAutoFormat.loopNode = ({ node, locale, notify }) => {
-    if (!window.FolioConsole.HtmlAutoFormat.enabled) return
+  return replaced
+}
 
-    window.FolioConsole.HtmlAutoFormat.sanity -= 1
-    if (window.FolioConsole.HtmlAutoFormat.sanity < 0) return
+window.FolioConsole.HtmlAutoFormat.loopNode = ({ node, locale, notify }) => {
+  if (!window.FolioConsole.HtmlAutoFormat.enabled) return
 
-    if (node.tagName) {
-      if (node.tagName === 'SPAN' && node.classList.contains(window.FolioConsole.HtmlAutoFormat.CLASS_NAME)) {
-        return false
-      } else {
-        let shouldReloop = false
+  window.FolioConsole.HtmlAutoFormat.sanity -= 1
+  if (window.FolioConsole.HtmlAutoFormat.sanity < 0) return
 
-        for (const child of node.childNodes) {
-          if (window.FolioConsole.HtmlAutoFormat.loopNode({ node: child, locale, notify })) {
-            // if replacement is performed, reloop!
-            shouldReloop = true
-            break
-          }
-        }
-
-        if (shouldReloop) {
-          return window.FolioConsole.HtmlAutoFormat.loopNode({ node, locale, notify })
-        }
-      }
-
+  if (node.tagName) {
+    if (node.tagName === 'SPAN' && node.classList.contains(window.FolioConsole.HtmlAutoFormat.CLASS_NAME)) {
       return false
     } else {
-      return window.FolioConsole.HtmlAutoFormat.replaceInNode({ node, locale, notify })
-    }
-  }
+      let shouldReloop = false
 
-  window.FolioConsole.HtmlAutoFormat.replace = (opts) => {
-    if (!window.FolioConsole.HtmlAutoFormat.enabled) return
-
-    const locale = opts.locale || document.documentElement.lang
-
-    const div = document.createElement('div')
-    div.innerHTML = opts.html
-
-    window.FolioConsole.HtmlAutoFormat.sanity = 100000
-    window.FolioConsole.HtmlAutoFormat.loopNode({ node: div, locale, notify: opts.notify })
-
-    return div.innerHTML
-  }
-
-  window.FolioConsole.HtmlAutoFormat.onClick = (element) => {
-    if (!element) return
-    const reverted = element.classList.contains('f-c-html-auto-format--reverted')
-
-    window.FolioConsole.HtmlAutoFormat.removeTooltip(element)
-    const redactorGroup = element.closest('[data-controller="f-input-redactor"]')
-    const redactorInput = redactorGroup ? redactorGroup.querySelector('[data-f-input-redactor-target="input"]') : null
-
-    if (reverted) {
-      const parent = element.parentElement
-
-      element.insertAdjacentHTML('beforebegin', element.innerText)
-      element.remove()
-
-      if (redactorInput) {
-        const wasEnabled = window.FolioConsole.HtmlAutoFormat.enabled
-        window.FolioConsole.HtmlAutoFormat.enabled = true
-
-        window.Folio.Input.Redactor.updateByCurrentHtml(redactorInput)
-        const redactor = window.$R(redactorInput)
-        window.FolioConsole.HtmlAutoFormat.redactorBlurCallback({ redactor })
-
-        window.FolioConsole.HtmlAutoFormat.enabled = wasEnabled
-      } else if (!parent.closest('.redactor-box')) {
-        parent.innerHTML = window.FolioConsole.HtmlAutoFormat.replace({ html: parent.innerHTML })
+      for (const child of node.childNodes) {
+        if (window.FolioConsole.HtmlAutoFormat.loopNode({ node: child, locale, notify })) {
+          // if replacement is performed, reloop!
+          shouldReloop = true
+          break
+        }
       }
-    } else {
-      const revertTo = window.FolioConsole.HtmlAutoFormat.UNDO_MAPPINGS[element.innerText]
 
-      if (revertTo) {
-        element.innerHTML = revertTo
-        element.classList.add('f-c-html-auto-format--reverted')
-      } else {
-        element.remove()
+      if (shouldReloop) {
+        return window.FolioConsole.HtmlAutoFormat.loopNode({ node, locale, notify })
       }
     }
+
+    return false
+  } else {
+    return window.FolioConsole.HtmlAutoFormat.replaceInNode({ node, locale, notify })
+  }
+}
+
+window.FolioConsole.HtmlAutoFormat.replace = (opts) => {
+  if (!window.FolioConsole.HtmlAutoFormat.enabled) return
+
+  const locale = opts.locale || document.documentElement.lang
+
+  const div = document.createElement('div')
+  div.innerHTML = opts.html
+
+  window.FolioConsole.HtmlAutoFormat.sanity = 100000
+  window.FolioConsole.HtmlAutoFormat.loopNode({ node: div, locale, notify: opts.notify })
+
+  return div.innerHTML
+}
+
+window.FolioConsole.HtmlAutoFormat.onClick = (element) => {
+  if (!element) return
+  const reverted = element.classList.contains('f-c-html-auto-format--reverted')
+
+  window.FolioConsole.HtmlAutoFormat.removeTooltip(element)
+  const redactorGroup = element.closest('[data-controller="f-input-redactor"]')
+  const redactorInput = redactorGroup ? redactorGroup.querySelector('[data-f-input-redactor-target="input"]') : null
+
+  if (reverted) {
+    const parent = element.parentElement
+
+    element.insertAdjacentHTML('beforebegin', element.innerText)
+    element.remove()
 
     if (redactorInput) {
+      const wasEnabled = window.FolioConsole.HtmlAutoFormat.enabled
+      window.FolioConsole.HtmlAutoFormat.enabled = true
+
       window.Folio.Input.Redactor.updateByCurrentHtml(redactorInput)
+      const redactor = window.$R(redactorInput)
+      window.FolioConsole.HtmlAutoFormat.redactorBlurCallback({ redactor })
+
+      window.FolioConsole.HtmlAutoFormat.enabled = wasEnabled
+    } else if (!parent.closest('.redactor-box')) {
+      parent.innerHTML = window.FolioConsole.HtmlAutoFormat.replace({ html: parent.innerHTML })
+    }
+  } else {
+    const revertTo = window.FolioConsole.HtmlAutoFormat.UNDO_MAPPINGS[element.innerText]
+
+    if (revertTo) {
+      element.innerHTML = revertTo
+      element.classList.add('f-c-html-auto-format--reverted')
+    } else {
+      element.remove()
     }
   }
 
-  window.FolioConsole.HtmlAutoFormat.onMouseenter = (element) => {
-    if (!element) return
-    const reverted = element.classList.contains('f-c-html-auto-format--reverted')
-
-    let title = window.Folio.i18n(window.FolioConsole.HtmlAutoFormat.I18N, reverted ? 'redo' : 'undo')
-    let replacement = window.FolioConsole.HtmlAutoFormat.UNDO_MAPPINGS[element.innerText] || ''
-
-    if (replacement) {
-      replacement = `: ${replacement}`
-    }
-
-    title = title.replace('%{before}', replacement)
-
-    window.Folio.Tooltip.createTooltip({ element, title })
+  if (redactorInput) {
+    window.Folio.Input.Redactor.updateByCurrentHtml(redactorInput)
   }
-
-  window.FolioConsole.HtmlAutoFormat.onMouseleave = (element) => {
-    window.FolioConsole.HtmlAutoFormat.removeTooltip(element)
-  }
-
-  window.FolioConsole.HtmlAutoFormat.removeTooltip = (element) => {
-    if (!element) return
-    window.Folio.Tooltip.removeTooltip({ element })
-  }
-
-  window.Folio.Stimulus.register('f-c-html-auto-format', class extends window.Stimulus.Controller {
-    connect () {
-      if (this.element.classList.contains('f-c-html-auto-format--notify')) {
-        this.timeout = window.setTimeout(() => {
-          this.element.classList.remove('f-c-html-auto-format--notify')
-        }, 1000)
-      }
-
-      // do it this way so that we don't clutter the HTML in rich text with stimulus data attributes
-      this.onClick = (e) => { window.FolioConsole.HtmlAutoFormat.onClick(this.element) }
-      this.element.addEventListener('click', this.onClick)
-
-      this.onMouseenter = (e) => { window.FolioConsole.HtmlAutoFormat.onMouseenter(this.element) }
-      this.element.addEventListener('mouseenter', this.onMouseenter)
-
-      this.onMouseleave = (e) => { window.FolioConsole.HtmlAutoFormat.onMouseleave(this.element) }
-      this.element.addEventListener('mouseleave', this.onMouseleave)
-    }
-
-    disconnect () {
-      window.FolioConsole.HtmlAutoFormat.removeTooltip(this.element)
-
-      if (this.timeout) {
-        window.clearTimeout(this.timeout)
-        delete this.timeout
-      }
-
-      this.element.removeEventListener('click', this.onClick)
-      delete this.onClick
-
-      this.element.removeEventListener('mouseenter', this.onMouseenter)
-      delete this.onMouseenter
-
-      this.element.removeEventListener('mouseleave', this.onMouseleave)
-      delete this.onMouseleave
-    }
-  })
-} else {
-  console.error('Missing Redactor JS')
 }
+
+window.FolioConsole.HtmlAutoFormat.onMouseenter = (element) => {
+  if (!element) return
+  const reverted = element.classList.contains('f-c-html-auto-format--reverted')
+
+  let title = window.Folio.i18n(window.FolioConsole.HtmlAutoFormat.I18N, reverted ? 'redo' : 'undo')
+  let replacement = window.FolioConsole.HtmlAutoFormat.UNDO_MAPPINGS[element.innerText] || ''
+
+  if (replacement) {
+    replacement = `: ${replacement}`
+  }
+
+  title = title.replace('%{before}', replacement)
+
+  window.Folio.Tooltip.createTooltip({ element, title })
+}
+
+window.FolioConsole.HtmlAutoFormat.onMouseleave = (element) => {
+  window.FolioConsole.HtmlAutoFormat.removeTooltip(element)
+}
+
+window.FolioConsole.HtmlAutoFormat.removeTooltip = (element) => {
+  if (!element) return
+  window.Folio.Tooltip.removeTooltip({ element })
+}
+
+window.FolioConsole.HtmlAutoFormat.addMissingAttributes = (redactorWrap) => {
+  for (const span of redactorWrap.querySelectorAll('.f-c-html-auto-format')) {
+    span.setAttribute('contenteditable', 'false')
+    span.dataset.controller = window.FolioConsole.HtmlAutoFormat.CLASS_NAME
+  }
+}
+
+window.Folio.Stimulus.register('f-c-html-auto-format', class extends window.Stimulus.Controller {
+  connect () {
+    if (this.element.classList.contains('f-c-html-auto-format--notify')) {
+      this.timeout = window.setTimeout(() => {
+        this.element.classList.remove('f-c-html-auto-format--notify')
+      }, 1000)
+    }
+
+    // do it this way so that we don't clutter the HTML in rich text with stimulus data attributes
+    this.onClick = (e) => { window.FolioConsole.HtmlAutoFormat.onClick(this.element) }
+    this.element.addEventListener('click', this.onClick)
+
+    this.onMouseenter = (e) => { window.FolioConsole.HtmlAutoFormat.onMouseenter(this.element) }
+    this.element.addEventListener('mouseenter', this.onMouseenter)
+
+    this.onMouseleave = (e) => { window.FolioConsole.HtmlAutoFormat.onMouseleave(this.element) }
+    this.element.addEventListener('mouseleave', this.onMouseleave)
+  }
+
+  disconnect () {
+    window.FolioConsole.HtmlAutoFormat.removeTooltip(this.element)
+
+    if (this.timeout) {
+      window.clearTimeout(this.timeout)
+      delete this.timeout
+    }
+
+    this.element.removeEventListener('click', this.onClick)
+    delete this.onClick
+
+    this.element.removeEventListener('mouseenter', this.onMouseenter)
+    delete this.onMouseenter
+
+    this.element.removeEventListener('mouseleave', this.onMouseleave)
+    delete this.onMouseleave
+  }
+})

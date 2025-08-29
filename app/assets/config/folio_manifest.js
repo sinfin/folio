@@ -1,6 +1,9 @@
 //= link folio/console/react.css
 //= link folio/console/react.js
 
+//= link folio-tiptap.js
+//= link folio-tiptap.css
+
 //= link folio/console/atoms/previews/base.css
 //= link folio/console/atoms/previews/base.js
 

@@ -46,6 +46,8 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
     }
   }
 
+  const additionalFields = file.attributes.file_modal_additional_fields
+
   return (
     <div className='modal-content'>
       <div className='modal-header'>
@@ -118,6 +120,10 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
             </FolioConsoleUiButtons>
 
             <p>ID: {file.attributes.id}</p>
+
+            {file.attributes.imported_from_photo_archive && (
+              <p>{window.FolioConsole.translations.importedFromPhotoArchive}</p>
+            )}
 
             <p className='mb-1'>{window.FolioConsole.translations.state}:</p>
 
@@ -215,6 +221,51 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
               </div>
             )}
 
+            {additionalFields.map((additionalField) => (
+              <FormGroup key={additionalField.name}>
+                <Label className='form-label'>{additionalField.label}</Label>
+                {readOnly ? (
+                  <p className='m-0'>{formState[additionalField.name]}</p>
+                ) : (
+                  additionalField.type === 'text' ? (
+                    <TextareaAutosize
+                      name={additionalField.name}
+                      value={formState[additionalField.name]}
+                      onChange={(e) => onValueChange(additionalField.name, e.currentTarget.value)}
+                      type='text'
+                      className='form-control'
+                      rows={3}
+                      maxRows={10}
+                      async
+                    />
+                  ) : (
+                    additionalField.type === 'select' ? (
+                      <Input
+                        value={formState[additionalField.name]}
+                        onChange={(e) => onValueChange(additionalField.name, e.currentTarget.value)}
+                        name={additionalField.name}
+                        type='select'
+                        className='select'
+                      >
+                        {additionalField.collection.map((opt) => (
+                          <option value={opt[1]} key={opt[1] || '_blank'}>
+                            {opt[0]}
+                          </option>
+                        ))}
+                      </Input>
+
+                    ) : (
+                      <Input
+                        value={formState[additionalField.name]}
+                        onChange={(e) => onValueChange(additionalField.name, e.currentTarget.value)}
+                        name={additionalField.name}
+                      />
+                    )
+                  )
+                )}
+              </FormGroup>
+            ))}
+
             {
               isImage && (
                 <FormGroup>
@@ -300,6 +351,12 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
             <FileUsage filePlacements={fileModal.filePlacements} changeFilePlacementsPage={changeFilePlacementsPage} />
           </div>
         </div>
+
+        {file.attributes.subtitles_html_api_url ? (
+          <div className="mt-4">
+            <AdditionalHtmlFromApi apiUrl={file.attributes.subtitles_html_api_url} />
+          </div>
+        ) : null}
       </div>
 
       {(fileModal.updating || fileModal.uploadingNew) && <span className='folio-loader' />}

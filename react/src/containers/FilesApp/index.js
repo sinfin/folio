@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { uniqueId } from 'lodash'
 
-import { getFiles, messageBusFileUpdated, makeFilesLoadedSelector } from 'ducks/files'
+import { getFiles, messageBusFileUpdated, makeFilesLoadedSelector, uploadedFile } from 'ducks/files'
 import { openFileModal } from 'ducks/fileModal'
 
 import SingleSelect from 'containers/SingleSelect'
@@ -22,6 +22,13 @@ class FilesApp extends Component {
     this.listenOnMessageBus()
   }
 
+  componentWillUnmount () {
+    if (this.messageBusCallbackKey && window.Folio.MessageBus.callbacks[this.messageBusCallbackKey]) {
+      delete window.Folio.MessageBus.callbacks[this.messageBusCallbackKey]
+      this.messageBusCallbackKey = null
+    }
+  }
+
   loadFiles = (fileType, filesUrl) => {
     if (!this.props.filesLoaded) {
       this.props.dispatch(getFiles(fileType, filesUrl))
@@ -31,15 +38,24 @@ class FilesApp extends Component {
   listenOnMessageBus () {
     if (!window.Folio.MessageBus.callbacks) return
 
-    this.messageBusCallbackKey = `Folio::ApplicationJob/file_update-react-files-app-${uniqueId()}`
+    this.messageBusCallbackKey = `folio-react/FilesApp--${uniqueId()}`
 
-    window.Folio.MessageBus.callbacks[this.messageBusCallbackKey] = (data) => {
-      if (!data || data.type !== 'Folio::ApplicationJob/file_update') return
-      this.props.dispatch(messageBusFileUpdated(
-        this.props.app.fileType,
-        this.props.app.filesUrl,
-        data.data
-      ))
+    window.Folio.MessageBus.callbacks[this.messageBusCallbackKey] = (message) => {
+      if (!message) return
+
+      if (message.type === 'Folio::ApplicationJob/file_update') {
+        this.props.dispatch(messageBusFileUpdated(
+          this.props.app.fileType,
+          this.props.app.filesUrl,
+          message.data
+        ))
+      } else if (message.type === 'Folio::File/created') {
+        const file = message.data
+
+        if (this.props.app.fileType === file.attributes.type) {
+          this.props.dispatch(uploadedFile(this.props.app.fileType, file))
+        }
+      }
     }
   }
 

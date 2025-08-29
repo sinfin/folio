@@ -7,8 +7,6 @@ class Folio::User < Folio::ApplicationRecord
   include Folio::HasNewsletterSubscriptions
   include Folio::HasSiteRoles
 
-  has_sanitized_fields :email, :first_name, :last_name, :company_name, :nickname
-
   # used to validate before inviting from console in /console/users/new
   attribute :skip_password_validation, :boolean, default: false
 
@@ -20,13 +18,7 @@ class Folio::User < Folio::ApplicationRecord
   belongs_to :auth_site, class_name: "Folio::Site",
                          required: true
 
-  selected_device_modules = %i[
-    database_authenticatable
-    recoverable
-    rememberable
-    trackable
-    invitable
-  ]
+  selected_device_modules = Rails.application.config.folio_users_device_modules
 
   if Rails.application.config.folio_users_confirmable
     selected_device_modules << :confirmable
@@ -53,6 +45,10 @@ class Folio::User < Folio::ApplicationRecord
                              inverse_of: :user,
                              dependent: :destroy
 
+  has_many :conflicting_authentications, class_name: "Folio::Omniauth::Authentication",
+                             foreign_key: :conflict_user_id,
+                             inverse_of: :conflict_user,
+                             dependent: :destroy
 
   has_many :created_console_notes, class_name: "Folio::ConsoleNote",
                                    inverse_of: :created_by,
@@ -84,7 +80,11 @@ class Folio::User < Folio::ApplicationRecord
             presence: true,
             if: :born_at_required?
 
-  after_invitation_accepted :create_newsletter_subscriptions
+  validate :validate_password_complexity
+
+  if selected_device_modules.include?(:invitable)
+    after_invitation_accepted :create_newsletter_subscriptions
+  end
 
   before_update :update_has_generated_password
 
@@ -260,19 +260,6 @@ class Folio::User < Folio::ApplicationRecord
   end
 
   def self.controller_strong_params_for_create
-    address_strong_params = %i[
-      id
-      _destroy
-      name
-      company_name
-      address_line_1
-      address_line_2
-      zip
-      city
-      country_code
-      phone
-    ]
-
     [
       :first_name,
       :last_name,
@@ -281,8 +268,8 @@ class Folio::User < Folio::ApplicationRecord
       :phone,
       :subscribed_to_newsletter,
       :use_secondary_address,
-      primary_address_attributes: address_strong_params,
-      secondary_address_attributes: address_strong_params,
+      primary_address_attributes: Folio::Address::Primary.strong_params,
+      secondary_address_attributes: Folio::Address::Secondary.strong_params,
     ] + additional_controller_strong_params_for_create
   end
 
@@ -407,10 +394,24 @@ class Folio::User < Folio::ApplicationRecord
       site = ::Folio::Current.enabled_site_for_crossdomain_devise || ::Folio::Site.find(warden_params[:auth_site_id])
 
       user = site.auth_users.find_by(email:)
-      if user.nil? && Folio::Current.main_site.present? && site != Folio::Current.main_site
-        # user = Folio::User.superadmins.find_by(email:)
-        user = Folio::Current.main_site.auth_users.superadmins.find_by(email:)
+
+      if user.nil?
+        if Rails.application.config.folio_crossdomain_devise
+          crossdomain_site = Folio::Current.enabled_site_for_crossdomain_devise
+
+          if crossdomain_site.present? && site != crossdomain_site
+            user = crossdomain_site.auth_users.superadmins.find_by(email:)
+          end
+        else
+          user = Folio::User.superadmins.find_by(email:)
+        end
       end
+
+      # Store the auth site on the user instance for use in Folio::IsSiteLockable#active_for_authentication?
+      if user
+        user.instance_variable_set(:@authentication_site, site)
+      end
+
       user
     end
 
@@ -475,6 +476,23 @@ class Folio::User < Folio::ApplicationRecord
     def set_preferred_locale
       self.preferred_locale = I18n.locale.to_s if preferred_locale.blank?
     end
+
+    def validate_password_complexity
+      return if password.blank?
+      return unless Devise.password_length.include?(password.length)
+
+      if password.length < 48
+        has_uppercase = password =~ /[A-Z]/
+        has_lowercase = password =~ /[a-z]/
+        has_digit = password =~ /[0-9]/
+        has_special = password =~ /[^a-zA-Z0-9\s]/
+
+        errors.add(:password, :missing_uppercase) unless has_uppercase
+        errors.add(:password, :missing_lowercase) unless has_lowercase
+        errors.add(:password, :missing_digit) unless has_digit
+        errors.add(:password, :missing_special) unless has_special
+      end
+    end
 end
 
 # == Schema Information
@@ -533,6 +551,9 @@ end
 #  auth_site_id              :bigint(8)        not null
 #  preferred_locale          :string
 #  console_preferences       :jsonb
+#  failed_attempts           :integer          default(0), not null
+#  unlock_token              :string
+#  locked_at                 :datetime
 #
 # Indexes
 #

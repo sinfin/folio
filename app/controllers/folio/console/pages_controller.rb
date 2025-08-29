@@ -26,13 +26,26 @@ class Folio::Console::PagesController < Folio::Console::BaseController
       }.compact
     end
 
+    def additional_page_params
+      # to be overriden in main_app should it be needed
+      []
+    end
+
     def page_params
       params.require(:page)
-            .permit(*(Folio::Page.column_names - %w[id site_id] + ["tag_list"]),
+            .permit(*folio_using_traco_aware_param_names(:title, :perex, :slug, :meta_title, :meta_description),
+                    :type,
+                    :position,
+                    :published,
+                    :published_at,
+                    :locale,
+                    :tag_list,
                     :parent_id,
+                    :tiptap_content,
                     *atoms_strong_params,
                     *file_placements_strong_params,
-                    *console_notes_strong_params)
+                    *console_notes_strong_params,
+                    *additional_page_params)
     end
 
     def folio_console_record_includes

@@ -1,0 +1,5 @@
+# frozen_string_literal: true
+
+class <%= node_model_name %> < Folio::Tiptap::Node
+  tiptap_node structure: {}
+end

@@ -58,12 +58,7 @@ window.FolioConsole.Ui.Alert.create = (data) => {
   alert.dataset.controller = 'f-c-ui-alert'
 
   if (data.autohide !== false) {
-    const autohideDelay = typeof data.autohide === 'number' ? data.autohide : 5000
-
-    setTimeout(() => {
-      const close = alert.querySelector('.f-c-ui-alert__close')
-      if (close) close.click()
-    }, autohideDelay)
+    alert.dataset.fCUiAlertAutohideValue = 'true'
   }
 
   if (data.data) {
@@ -78,8 +73,31 @@ window.FolioConsole.Ui.Alert.create = (data) => {
 }
 
 window.Folio.Stimulus.register('f-c-ui-alert', class extends window.Stimulus.Controller {
+  static values = { autohide: Boolean }
+
+  connect () {
+    if (this.autohideValue) {
+      this.autohideTimeout = setTimeout(() => {
+        const closeBtn = this.element.querySelector('.f-c-ui-alert__close')
+        if (closeBtn) closeBtn.click()
+      }, 5000)
+    }
+  }
+
+  disconnect () {
+    this.clearAutohideTimeout()
+  }
+
   close (e) {
     e.preventDefault()
+    this.clearAutohideTimeout()
     this.element.parentNode.removeChild(this.element)
+  }
+
+  clearAutohideTimeout () {
+    if (this.autohideTimeout) {
+      clearTimeout(this.autohideTimeout)
+      this.autohideTimeout = null
+    }
   }
 })

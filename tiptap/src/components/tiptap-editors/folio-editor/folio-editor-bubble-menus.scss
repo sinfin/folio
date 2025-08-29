@@ -1,0 +1,20 @@
+.f-tiptap-editor-bubble-menu {
+  background: #ffffff;
+  border: 1px solid var(--f-tiptap-editor__border-color);
+  border-radius: var(--f-tiptap-editor__border-radius);
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.20), 2px 2px 40px 0 rgba(0, 0, 0, 0.25);
+  color: inherit;
+  display: flex;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1rem;
+  gap: 6px;
+  line-height: 1.2;
+  padding: 6px;
+  flex-direction: column;
+
+  &__row {
+    display: flex;
+    gap: 6px;
+    width: 100%;
+  }
+}

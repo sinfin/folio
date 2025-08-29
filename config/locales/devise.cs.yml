@@ -121,7 +121,7 @@ cs:
       omniauth_conflict:
         title: Přihlášení
         conflict: V minulosti jste se již přihlašoval pomocí e-mailu “%{email}”.
-        instructions: Posíme o dokončení přihlášení <strong>ověřením pomocí kliknutí na odkaz v mailu</strong>, který jsme vám zaslali.
+        instructions: Prosíme o dokončení přihlášení <strong>ověřením pomocí kliknutí na odkaz v mailu</strong>, který jsme vám zaslali.
         resend: E-mail nepřišel?
         resend_link: Zaslat znovu
 

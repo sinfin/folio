@@ -3,6 +3,21 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- **Help Documents**: New feature for displaying Markdown documentation within the console interface
+  - Configurable via `doc/help/index.yml` with support for categories, ordering, and custom paths
+  - Full Markdown support including code highlighting, tables, and Mermaid diagrams
+  - Automatic sidebar integration when configuration is detected
+  - Secure external library loading via `Folio.RemoteScripts` system
+- added `rel` and `target` to allowed rich text attributes
+- actions `destroy`, `discard` and `undiscard` are now by default collapsed in console index pages
+- `Folio::ElevenLabs::TranscribeSubtitlesJob` for automatic subtitles transcription using ElevenLabs (disabled by default)
+- default `devise_modules` moved to folio config, so each app can set their own set. Default are `%i[database_authenticatable recoverable rememberable trackable invitable timeoutable lockable]
+- added option `Rails.application.config.folio_cookie_consent_configuration[:keep_attached_after_accept]` (default false). Set it `true` if app allways display link to open cookies settings.
+- added `disabled_modifications` option to `form_footer`
+- added `calendar_filter` icon
+
 ### Changed
 
 - update ruby to 3.4.2
@@ -10,6 +25,85 @@ All notable changes to this project will be documented in this file.
 - default console `update` for `format: :json` now returns a JSON with changes instead of an empty hash
 - `Folio::Console::Ui::AjaxInputComponent` now expects API to return `{ name => new_value }` instead of `{ value: new_value }`
 - redid input autocomplete without jQuery UI
+
+## [6.5.1] - 2025-06-18
+
+### Added
+
+- support for custom submit label in `form_footer`
+- support for auto-hiding server-rendered flash messages
+- `Rails.application.config.folio_photo_archive_enabled` to enable photo archive feature
+- added photo archive filtering for image files
+- added information display in file modal for photos imported from photo archive
+
+### Fixed
+
+- hiding settings in `form_footer`
+- fix merges form using `form_footer` component instead of outdated cell
+- handle `HtmlAutoFormat` with `Folio::HtmlSanitization` - add missing attributes on redactor init when only the `f-c-html-auto-format` class remained
+- overriden `friendly_id` to use persisted values so that we don't form invalid URLs in console forms
+
+## [6.5.0] - 2025-06-09
+
+### Added
+
+- HTML sanitization of all string/json values using `Folio::HtmlSanitization::Model` concern included on `ApplicationRecord`
+
+## [6.4.1] - 2025-06-09
+
+### Added
+
+- `bottom_html_api_url` to files, used for new `HasSubtitlesFormComponent`
+
+### Changed
+
+- `cstypo` to use U+00A0 instead of nbsp entity, allowing us to remove `html_safe`
+
+## [6.4.0] - 2025-05-15
+
+### Added
+
+- `timeoutable` to `Folio::User` ; session will expire after 30 minutes of inactivity
+- `lockable` to `Folio::User` - lock user for 15 minutes after 5 unsuccessful attempts
+- password complexity validation to `Folio::User` - allow 8-128 characters, must include special/lower/upper/number if shorter than 48 characters
+- recaptcha to users/session/new
+
+### Changed
+
+- whitelist strong params instead of blacklisting - use `folio_using_traco_aware_param_names` for traco-translatable columns, use `additional_*_params` (i.e. `additional_user_params` ) to add more column names to the whitelist
+- updated `session_store` config with `expire_after` / `secure` / `httponly` / `same_site`
+- use Devise `paranoid` to avoid enumeration
+
+## [6.3.2] - 2025-05-15
+
+### Added
+- `Folio::File::Video::HasSubtitles` concern to Video files
+- `Rails.application.config.folio_files_video_enabled_subtitle_languages` to set subtitle languages
+- `Folio::OpenAi::TranscribeSubtitlesJob` for automatic subtitles transcription using OpenAI Whisper (disabled by default)
+
+- `file_modal_additional_fields` method to files for custom fields in console file modal
+
+### Changed
+- use `only_path: true` for file sidebar links when `folio_shared_files_between_sites`
+- allow hiding settings and 'share preview' in  `form_footer`
+
+## [6.3.1] - 2025-04-24
+
+### Added
+- `set_cache_control_headers` to set `Cache-Control` headers for unpublished records
+- console "CurrentUser" controller allowing users to change their e-mail and password
+
+### Changed
+- console `preview_url_for` - now defined in `Folio::Console::PreviewUrlFor` and expandable via `Rails.application.config.folio_console_preview_url_for_procs`
+- added `:preview` to the console actions default - hide it if URL is not available
+
+### Fixed
+- `react_ordered_multiselect` can now show button to fix required field
+- setting of `auth_site_id` caching wrong site in `Folio::Current`
+- double rendering (devise and Folio) in `require_no_athentication`, when user is signed in
+
+## Removed
+- `Folio::Current` override of `reset`
 
 ## [6.3.0] - 2025-04-03
 

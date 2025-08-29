@@ -147,7 +147,7 @@ class Folio::Users::InvitationsController < Devise::InvitationsController
 
       super
 
-      if resource.nil? && Folio::Current.user
+      if response.location.blank? && resource.nil? && Folio::Current.user
         set_flash_message(:alert, "already_authenticated", scope: "devise.failure")
         redirect_to after_sign_in_path_for(Folio::Current.user)
       end

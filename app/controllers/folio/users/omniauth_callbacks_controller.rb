@@ -44,13 +44,14 @@ class Folio::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksContr
       @user = Folio::User.new_from_auth(@auth)
 
       @user.assign_attributes(create_user_params)
-      @user.password = "#{Devise.friendly_token[0, 20]}a6C" # appendix to always fullfill standard requirements
+      @user.password = "#{Devise.friendly_token[0, 20]}$a6C" # appendix to always fulfill standard requirements
       @user.has_generated_password = true
 
       if @user.save
         session.delete(:pending_folio_authentication)
 
         @user.create_site_links_for([Folio::Current.site, source_site])
+        after_creating_new_user(@user)
 
         sign_in(resource_name, @user)
         set_flash_message!(:notice, :signed_in) if is_flashing_format?
@@ -124,6 +125,8 @@ class Folio::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksContr
           auth.user = Folio::Current.user
           auth.save!
 
+          after_creating_new_authentication(auth)
+
           if Folio::Current.user.reload.authentications.where(provider: auth.provider).size == 1
             msg = t("folio.users.omniauth_callbacks.added_provider",
                     provider: auth.human_provider)
@@ -196,5 +199,13 @@ class Folio::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksContr
     def source_site
       slug = session&.dig(Folio::Devise::CrossdomainHandler::SESSION_KEY, :target_site_slug)
       slug.present? ? Folio::Site.find_by(slug:) : nil
+    end
+
+    def after_creating_new_user(_user)
+      # TODO: implement stuff if needed
+    end
+
+    def after_creating_new_authentication(_authentication)
+      # TODO: implement stuff if needed
     end
 end

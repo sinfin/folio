@@ -57,27 +57,22 @@ class Folio::Console::Ui::ButtonCell < Folio::ConsoleCell
     end
 
     if model[:modal].present?
-      h[:data].merge!(stimulus_modal_toggle(model[:modal]))
+      h[:data] = stimulus_merge(h[:data], stimulus_modal_toggle(model[:modal]))
     end
 
     if model[:form_modal].present?
-      h[:data].merge!(stimulus_console_form_modal_trigger(model[:form_modal], title: model[:form_modal_title]))
+      h[:data] = stimulus_merge(h[:data], stimulus_console_form_modal_trigger(model[:form_modal], title: model[:form_modal_title]))
     end
 
     if model[:notification_modal].present?
-      if h[:data]["controller"]
-        h[:data]["controller"] += " f-c-ui-notification-modal-trigger"
-      else
-        h[:data]["controller"] = "f-c-ui-notification-modal-trigger"
-      end
-
-      if h[:data]["action"]
-        h[:data]["action"] += " f-c-ui-notification-modal-trigger#onClick"
-      else
-        h[:data]["action"] = "f-c-ui-notification-modal-trigger#onClick"
-      end
-
-      h[:data]["f-c-ui-notification-modal-trigger-data-value"] = model[:notification_modal].to_json
+      h[:data] = stimulus_merge(h[:data], stimulus_controller("f-c-ui-notification-modal-trigger",
+                                                              inline: true,
+                                                              action: {
+                                                                "click" => "onClick"
+                                                              },
+                                                              values: {
+                                                                data: model[:notification_modal].to_json
+                                                              }))
     end
 
     h

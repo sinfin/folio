@@ -18,6 +18,14 @@ cs:
         close: Zavřít
         create: Vytvořit
         destroy: Smazat
+        deleteSubtitleConfirm: Opravdu chcete smazat tyto titulky?
+        details: Detaily
+        errorGeneric: 'Chyba: %{message}'
+        failedToAddLanguage: Nepodařilo se přidat jazyk
+        failedToDeleteSubtitle: Nepodařilo se smazat titulky
+        invalidServerResponse: Neplatná odpověď serveru
+        languageAlreadyAdded: Tento jazyk už byl přidán
+        pleaseSelectLanguage: Prosím vyberte jazyk
         download: Stáhnout
         downloadOriginal: Stáhnout originál
         editOffset: Upravit ořez
@@ -50,6 +58,7 @@ cs:
         split: Rozdělit
         startSplittingAtom: Rozdělit na části
         state: Stav
+        subtitles: Titulky
         thumbnailSizes: Vygenerované verze
         title: Název
         usage: Použití
@@ -58,3 +67,7 @@ cs:
         usageUnused: Nepoužité
         usageUsed: Použité
         used: Již použité
+        photoArchivePlaceholder: Fotoarchiv...
+        photoArchiveFromPhotoArchive: Z fotoarchivu
+        photoArchiveNotFromPhotoArchive: Mimo fotoarchiv
+        importedFromPhotoArchive: Importováno z fotoarchivu

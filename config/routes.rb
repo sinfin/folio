@@ -42,6 +42,12 @@ Folio::Engine.routes.draw do
         get :input_rich_text
         get :input_tags
         get :input_url
+        get :input_tiptap
+      end
+
+      resource :current_user, only: %i[show] do
+        patch :update_email
+        patch :update_password
       end
 
       resources :attribute_types, except: %i[show] do
@@ -76,9 +82,17 @@ Folio::Engine.routes.draw do
 
       resources :menus, except: %i[show]
 
+      resources :help_documents, only: %i[index show]
+
       namespace :file do
         Rails.application.config.folio_file_types_for_routes.each do |type|
-          resources type.constantize.model_name.element.pluralize.to_sym, only: %i[index update]
+          resources type.constantize.model_name.element.pluralize.to_sym, only: %i[index update] do
+            member do
+              if type == "Folio::File::Video"
+                post :retranscribe_subtitles
+              end
+            end
+          end
         end
       end
 
@@ -124,7 +138,7 @@ Folio::Engine.routes.draw do
         post :transport, path: "transport(/:class_name/:id)"
       end
 
-      namespace :api do
+      namespace :api, constraints: -> (req) { req.format == :json } do
         resources :private_attachments, only: %i[create destroy]
 
         resource :links, only: [] do
@@ -160,6 +174,12 @@ Folio::Engine.routes.draw do
                        path: "merge/:klass/:original_id/:duplicate_id"
 
       namespace :api, constraints: -> (req) { req.format == :json } do
+        resource :tiptap, controller: :tiptap, only: [] do
+          post :edit_node
+          post :save_node
+          post :render_nodes
+        end
+
         namespace :file do
           Rails.application.config.folio_file_types_for_routes.each do |type|
             klass = type.constantize
@@ -189,6 +209,16 @@ Folio::Engine.routes.draw do
                 if klass.human_type == "image"
                   post :update_file_thumbnail
                   post :destroy_file_thumbnail
+                end
+
+                if klass.human_type == "video"
+                  get :subtitles_html
+                  post :retranscribe_subtitles
+                  post "subtitles/:language", action: :create_subtitle
+                  patch "subtitles/:language", action: :update_subtitle
+                  delete "subtitles/:language", action: :delete_subtitle
+                  get "subtitles/:language/html", action: :subtitle_html
+                  get "subtitles/:language/new", action: :new_subtitle_html
                 end
               end
             end
@@ -229,6 +259,11 @@ Folio::Engine.routes.draw do
     end
   end
 
+  resource :tiptap, path: "folio-tiptap", controller: :tiptap, only: [] do
+    get :block_editor, path: "block-editor"
+    get :rich_text_editor, path: "rich-text-editor"
+  end
+
   resource :csrf, only: %i[show], controller: :csrf
 
   if ::Rails.application.config.folio_leads_from_component_class_name
@@ -252,6 +287,12 @@ Folio::Engine.routes.draw do
 
       resource :ares, only: [], controller: "ares" do
         post :subject
+      end
+
+      namespace :file do
+        resources :videos, only: [] do
+          member { get :subtitles, path: "subtitles/:lang.vtt" }
+        end
       end
     end
   end

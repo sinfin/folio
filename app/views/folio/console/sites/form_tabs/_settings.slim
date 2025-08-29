@@ -4,6 +4,18 @@
 
 = f.input :copyright_info_source
 
+/ Subtitle Settings
+h4.mt-4.mb-3 = t('.subtitle_settings')
+
+.row
+  .col-md-4
+    = f.input :subtitle_auto_generation_enabled,
+              hint: t('.subtitle_auto_generation_enabled_hint')
+  .col-md-4
+    = f.input :subtitle_languages_string,
+              as: :string,
+              hint: t('.subtitle_languages_hint')
+
 = render partial: 'folio/console/sites/additional_form_fields', \
          locals: { f: f }
 

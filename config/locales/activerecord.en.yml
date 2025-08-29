@@ -35,6 +35,8 @@ en:
         file_size: File size
         preview_duration: How many seconds are free?
         used: Used
+        subtitles_cs_text: Subtitles (CZ)
+        subtitles_en_text: Subtitles (EN)
       folio/file/image:
         file_placements: Placements
         thumbnail_sizes: Generated versions
@@ -137,7 +139,7 @@ en:
     errors:
       messages:
         indestructible: The record cannot be removed.
-        file_format: '%{file_mime_type} is invalid. Allowed types: %{types}'
+        file_format: "%{file_mime_type} is invalid. Allowed types: %{types}"
         wrong_namespace: The record type does not match the site type.
         not_from_same_site: is not from the same site
       models:
@@ -304,6 +306,7 @@ en:
     state: State
     subtitle: Subtitle
     tag_list: Keywords
+    tiptap_content: Content
     title: Title
     to_label: Title
     url: URL
@@ -320,6 +323,11 @@ en:
       missing_file_description: is missing description
       invalid_file_placement: does not meet the requirements
       slug_not_unique_across_classes: is already used by the record "%{sluggable_name}" (%{sluggable_type})
+      invalid_subtitle_block: has invalid subtitle block near line %{line}
+      tiptap_invalid_json: is not a valid JSON string
+      tiptap_must_be_hash_or_json: must be a Hash or a valid JSON string
+      tiptap_must_have_content_key: "must have a '%{content_key}' key with a Hash value"
+      tiptap_root_node_must_be_doc: root node must be of type 'doc'
 
     attributes:
       verified_captcha:
@@ -330,3 +338,9 @@ en:
         already_exists: "Only one record of '%{class}' is allowed."
       author:
         missing_file_attribution: or source is required
+      password:
+        same_as_current_password: must not be the same as the current password
+        missing_uppercase: must contain a uppercase letter
+        missing_lowercase: must contain a lowercase letter
+        missing_digit: must contain a digit
+        missing_special: must contain a special character

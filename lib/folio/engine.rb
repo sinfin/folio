@@ -41,6 +41,7 @@ module Folio
     config.folio_console_files_additional_html_api_url_lambda = -> (file) { nil }
     config.folio_console_clonable_enabled = true
     config.folio_console_audited_revisions_limit = 50
+    config.folio_console_preview_url_for_procs = nil
 
     config.folio_newsletter_subscription_service = :mailchimp
     config.folio_server_names = []
@@ -82,6 +83,8 @@ module Folio
       { site_id: controller.send(:site_for_new_files).id }
     }
 
+    config.folio_photo_archive_enabled = false
+
     config.folio_console_links_mapping = {}
     config.folio_console_links_additional_filters = {}
 
@@ -90,12 +93,23 @@ module Folio
     config.folio_leads_from_component_class_name = nil
     config.folio_newsletter_subscriptions = false
 
+    config.folio_tiptap_use_for_pages = false
+
     config.folio_users_use_phone = false
     config.folio_users_require_phone = false
     config.folio_users_sign_out_everywhere = true
     config.folio_users_include_nickname = true
     config.folio_users_confirmable = false
     config.folio_users_confirm_email_change = true
+    config.folio_users_device_modules = %i[
+      database_authenticatable
+      recoverable
+      rememberable
+      trackable
+      invitable
+      timeoutable
+      lockable
+    ]
     config.folio_users_publicly_invitable = false
     config.folio_users_use_address = true
     config.folio_users_omniauth_providers = %i[facebook google_oauth2 twitter2 apple]
@@ -119,6 +133,7 @@ module Folio
     config.folio_files_require_attribution = false
     config.folio_files_require_alt = false
     config.folio_files_require_description = false
+    config.folio_files_video_enabled_subtitle_languages = %w[cs]
 
     config.folio_component_generator_parent_component_class_name_proc = -> (class_name) do
       if class_name.starts_with?("Folio::Console::")
@@ -138,6 +153,7 @@ module Folio
 
     config.folio_cookie_consent_configuration = {
       enabled: true,
+      keep_attached_after_accept: false,
       cookies: {
         necessary: [
           :cc_cookie,
@@ -160,6 +176,7 @@ module Folio
       app.config.assets.paths << self.root.join("node_modules")
       app.config.assets.paths << self.root.join("vendor/assets/javascripts")
       app.config.assets.paths << self.root.join("vendor/assets/bower_components")
+      app.config.assets.paths << self.root.join("tiptap/dist/assets")
       app.config.assets.precompile += %w[
         folio/console/base.css
         folio/console/base.js
@@ -176,11 +193,34 @@ module Folio
       end
     end
 
+    initializer :append_help_documents_to_sidebar do |app|
+      app.config.after_initialize do
+        if Folio::HelpDocument.config_exists?
+          # Add help documents link to the sidebar
+          app.config.folio_console_sidebar_appended_link_class_names += [
+            {
+              links: [
+                {
+                  label: :help,
+                  path: :console_help_documents_path,
+                  icon: :information_outline,
+                  required_ability: :access_help_documents
+                }
+              ]
+            }
+          ]
+        end
+      end
+    end
+
     initializer :add_folio_maintenance_middleware do |app|
       if ENV["FOLIO_MAINTENANCE"]
         require "rack/folio/maintenance_middleware"
         app.config.middleware.use(Rack::Folio::MaintenanceMiddleware)
       end
+    end
+
+    config.to_prepare do
     end
 
     def atoms_deprecations

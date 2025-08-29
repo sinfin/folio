@@ -33,6 +33,9 @@ class Folio::Page < Folio::ApplicationRecord
   include PgSearch::Model
   include Folio::Autosave::Model
 
+  include Folio::Tiptap::Model
+  has_folio_tiptap_content
+
   if Rails.application.config.folio_pages_audited
     include Folio::Audited::Model
 
@@ -172,7 +175,28 @@ class Folio::Page < Folio::ApplicationRecord
   end
 
   def folio_autosave_enabled?
-    Rails.application.config.folio_pages_autosave
+    if Rails.application.config.folio_pages_autosave
+      !self.class.has_folio_tiptap?
+    else
+      false
+    end
+  end
+
+  def folio_html_sanitization_config
+    if Rails.application.config.folio_pages_perex_richtext
+      {
+        enabled: true,
+        attributes: {
+          perex: :rich_text,
+        }
+      }
+    else
+      super
+    end
+  end
+
+  def self.has_folio_tiptap?
+    Rails.application.config.folio_tiptap_use_for_pages
   end
 
   private
@@ -217,6 +241,7 @@ end
 #  site_id               :bigint(8)
 #  atoms_data_for_search :text
 #  preview_token         :string
+#  tiptap_content        :jsonb
 #
 # Indexes
 #

@@ -1,0 +1,4 @@
+# frozen_string_literal: true
+
+class <%= node_component_name %> < <%= base_component_name %>
+end

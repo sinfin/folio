@@ -1,0 +1,19 @@
+---
+en:
+  folio:
+    console:
+      tiptap:
+        simple_form_wrap_component:
+          editor_title: Editor
+
+        simple_form_wrap:
+          word_count_component:
+            words: Words
+            characters: Characters
+
+        overlay:
+          form_component:
+            submit: Done
+
+        html_modal_component:
+          title: HTML code

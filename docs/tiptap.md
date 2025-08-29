@@ -1,0 +1,655 @@
+# Tiptap
+
+This chapter describes the Tiptap editor implementation in Folio. The aim is to provide a basic rich text editor and an advanced block editor.
+
+## Usage
+
+Simple rich text editor:
+
+```rb
+f.input :content_json, as: :tiptap
+```
+
+Block editor:
+
+```rb
+f.input :content_json, as: :tiptap, block: true
+```
+
+## Structure
+
+Since we need application-specific styles, we use iframes and the application layout.
+
+- new input type `TiptapInput` inherits from `SimpleForm::Inputs::StringInput`,
+  - can be used as `f.input :attribute, as: :tiptap`
+  - binds `f-input-tiptap` stimulus and adds HTML using the simple form `:custom_html` component
+  - HTML consists of a loader and an iframe pointing towards action `rich_text` or `block` action of `Folio::TiptapController` based on the `block` option
+- controller `Folio::TiptapController`
+  - inherits from `ApplicationController` and uses application layout in order to use application styles and javascripts
+  - defines actions `rich_text` and `block` which render a single `div` to be used
+  - sets a `@folio_tiptap = true` flag to be used in the layout to only yield the content without headers, footer, etc.
+- application layout must handle the `@folio_tiptap` flag to only yield the content without header, footer, etc.
+  - example:
+    ```slim
+    - if @folio_tiptap
+      = yield
+    - else
+      = render(Folio::StructuredData::BodyComponent.new(record: @record_for_meta_variables,
+                                                        breadcrumbs: @breadcrumbs_on_rails))
+
+      = render(Dummy::Ui::HeaderComponent.new)
+
+      = yield
+    ```
+
+## Implementation
+
+### Communication between iframe and parent window
+
+We use window messages extensively to communicate between the iframe and the parent window.
+
+- The input stimulus sends a `f-input-tiptap:start` message to the iframe window to try and initialize with JSON data from the hidden input. Available custom folio tiptap nodes are specified in it as well.
+  - If the javascript is initialized, it starts the editor via `window.Folio.Tiptap.init` defined in `main.tsx`.
+  - If it's not, nothing happens.
+- The iframe finishes loading the javascript and sends a `f-tiptap:javascript-evaluated` message to the top window to let the input know that the javascript has been evaluated.
+- The input handles the message and sends a `f-input-tiptap:start` message to the iframe window to try and initialize with JSON data from the hidden input.
+- The editor initializes with the JSON data from the window message and sends a `f-tiptap:created` message containing the content and editor height.
+- Any time the editor content is updated, it sends a `f-tiptap:updated` message containing the new content and editor height.
+- Any time the editor height changes, it sends a `f-tiptap-editor:resized` message containing the new height.
+
+### Editor types
+
+There are two types - **rich text** with basic editing functionality and **block** for advanced editing with more nodes including custom `folioTiptapNode`. Each editor type is tailored for different use cases:
+
+  - **Rich Text Editor**:
+    Provides a familiar WYSIWYG editing experience with basic formatting options such as bold, italic, underline, lists, links, and headings. This mode is ideal for simple content fields where users need to format text without complex layouts or embedded components. Usage:
+
+    ```rb
+    f.input :content_json, as: :tiptap
+    ```
+
+  - **Block Editor**:
+    Offers advanced editing capabilities, allowing users to compose content using a variety of nodes. In addition to standard text formatting, users can insert and rearrange custom nodes, such as tables, task lists or application-specific `folioTiptapNode` nodes rendering rails view components. Usage:
+
+    ```rb
+    f.input :content_json, as: :tiptap, block: true
+    ```
+
+### Data structure
+
+Tiptap content is stored as JSON following the ProseMirror document schema. The structure consists of:
+
+- **Root document**: Contains `type: "doc"` and a `content` array
+- **Nodes**: Each node has a `type` and may contain `content` (child nodes) and `attrs` (attributes)
+- **Marks**: Formatting like bold, italic stored as `marks` array within text nodes
+- **Custom nodes**: Application-specific nodes using `folioTiptapNode` type
+
+**Basic structure example:**
+```json
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Hello, ",
+          "marks": [{ "type": "bold" }]
+        },
+        {
+          "type": "text",
+          "text": "world!"
+        }
+      ]
+    }
+  ]
+}
+```
+
+**Custom Folio nodes structure:**
+```json
+{
+  "type": "folioTiptapNode",
+  "attrs": {
+    "version": 1,
+    "type": "MyApp::CustomNode",
+    "data": {
+      "title": "Custom Content",
+      "image_id": 123
+    }
+  }
+}
+```
+
+## Custom Node Implementation
+
+Folio provides a powerful system for creating custom Tiptap nodes that integrate seamlessly with Rails models and view components.
+
+### Node Definition
+
+Custom nodes inherit from `Folio::Tiptap::Node` and use the `tiptap_node` class method to define their structure. The `Folio::Tiptap::Node` is not an active record model and does not have a database table.
+
+```rb
+class MyApp::CustomNode < Folio::Tiptap::Node
+  tiptap_node structure: {
+    title: :string,
+    description: :text,
+    content: :rich_text,
+    image: :image,
+    background: ["gray", "blue"],
+    documents: :documents,
+    category: { class_name: "Category" },
+    reports: { class_name: "Report", has_many: true }
+  }
+end
+```
+
+### Supported Attribute Types
+
+The `Node` models are defined by calling `tiptap_node` method which uses the `Folio::Tiptap::NodeBuilder` and supports various attribute types. Attributes can be defined using either the compact syntax (symbols, arrays, hashes) or the explicit hash format with a `:type` property. Under the hood, all compact definitions are converted to the hash format.
+
+#### Compact Syntax (recommended for simple cases):
+- `:string`, `:text`: Basic text attributes
+- `:integer`: Integer attributes with automatic type conversion and validation
+- `:rich_text`: JSON-stored rich text content (nested Tiptap structure)
+- `:url_json`: URL with metadata (href, title, target, etc.)
+- `[]`: Collection to pick from.
+- `:image`, `:document`, `:audio_cover`, `:video_cover`: Single Folio file attachments
+- `:images`, `:documents`: Multiple Folio file attachments
+- `{ class_name: "Model" }`: belongs_to relationship
+- `{ class_name: "Model", has_many: true }`: has_many relationship
+
+#### Hash Format with :type property:
+All compact definitions are internally converted to hash format:
+- `{ type: :string }`, `{ type: :text }`: Basic text attributes
+- `{ type: :integer }`: Integer attributes with automatic type conversion and validation
+- `{ type: :rich_text }`: JSON-stored rich text content
+- `{ type: :url_json }`: URL with metadata
+- `{ type: :collection, collection: [...] }`: Collection to pick from
+- `{ type: :folio_attachment, file_type: "Folio::File::Image", has_many: false, ... }`: File attachments
+- `{ type: :relation, class_name: "Model", has_many: false }`: Model relationships
+
+**Note**: The compact syntax is still fully supported and recommended for most use cases. The hash format is primarily used internally and for advanced customization.
+
+#### Example: Both Syntaxes
+
+Here's how the same node definition can be written in both compact and hash syntax:
+
+```rb
+# Compact syntax (recommended)
+class MyApp::ExampleNode < Folio::Tiptap::Node
+  tiptap_node structure: {
+    title: :string,
+    priority: :integer,
+    content: :rich_text,
+    button_url: :url_json,
+    background: %w[gray blue red],
+    cover: :image,
+    documents: :documents,
+    page: { class_name: "Folio::Page" },
+    related_pages: { class_name: "Folio::Page", has_many: true }
+  }
+end
+
+# Equivalent hash syntax (for reference)
+class MyApp::ExampleNode < Folio::Tiptap::Node
+  tiptap_node structure: {
+    title: { type: :string },
+    content: { type: :rich_text },
+    button_url: { type: :url_json },
+    background: { type: :collection, collection: %w[gray blue red] },
+    cover: { 
+      type: :folio_attachment,
+      file_type: "Folio::File::Image",
+      placement_class_name: "Folio::FilePlacement::Cover",
+      has_many: false
+    },
+    documents: { 
+      type: :folio_attachment,
+      file_type: "Folio::File::Document",
+      placement_class_name: "Folio::FilePlacement::Document",
+      has_many: true
+    },
+    page: { type: :relation, class_name: "Folio::Page", has_many: false },
+    related_pages: { type: :relation, class_name: "Folio::Page", has_many: true }
+  }
+end
+```
+
+#### Integer Attribute Behavior
+
+Integer attributes (`:integer` or `{ type: :integer }`) provide automatic type conversion and validation:
+
+- **Accepted input types**: String, Numeric, or nil
+- **Conversion**: String and Numeric values are automatically converted to integers using `.to_i`
+- **Validation**: Raises `ArgumentError` if value is not String, Numeric, or nil
+- **Nil handling**: nil values are preserved as nil (not converted to 0)
+
+```rb
+node = MyApp::ExampleNode.new
+node.priority = "42"     # String -> 42 (integer)
+node.priority = 3.14     # Float -> 3 (integer)
+node.priority = 100      # Integer -> 100 (unchanged)
+node.priority = nil      # nil -> nil (unchanged)
+node.priority = []       # Raises ArgumentError
+```
+
+### File Attachments
+
+File attachments are handled through Folio's file system:
+
+```rb
+# Single image
+image: :image          # Creates image_id attribute + image_placement methods
+
+# Multiple documents
+documents: :documents  # Creates document_ids attribute + document_placements methods
+
+# The builder automatically creates compatible methods for Folio Console UI:
+# - File picker integration
+# - Placement management
+```
+
+### Model Relationships
+
+Custom nodes can reference other models:
+
+```rb
+# belongs_to relationship
+category: { class_name: "Category" }  # Creates category_id + category methods
+
+# has_many relationship
+tags: { class_name: "Tag", has_many: true }  # Creates tag_ids + tags methods
+
+# Usage in the node:
+node.category_id = 1
+node.category    # => Category.find(1)
+node.tag_ids = [1, 2, 3]
+node.tags       # => Tag.where(id: [1, 2, 3])
+```
+
+### Data Conversion
+
+The node system provides bidirectional conversion between Tiptap JSON and Ruby objects.
+
+#### Converting Node to Tiptap Format
+
+The `to_tiptap_node_hash` method converts the node to Tiptap format:
+
+```rb
+node.to_tiptap_node_hash
+# => {
+#      "type" => "folioTiptapNode",
+#      "attrs" => {
+#        "version" => 1,
+#        "type" => "MyApp::CustomNode",
+#        "data" => {
+#          "title" => "My Title",
+#          "image_id" => 123
+#        }
+#      }
+#    }
+```
+
+#### Converting Tiptap Format to Node
+
+The reverse conversion is handled by two key methods:
+
+**`new_from_attrs` (class method)**: Creates a new node instance from Tiptap attributes:
+
+```rb
+# From Tiptap JSON structure
+attrs = {
+  type: "MyApp::CustomNode",
+  data: {
+    title: "My Title",
+    image_id: "123"
+  }
+}
+
+node = Folio::Tiptap::Node.new_from_attrs(attrs)
+```
+
+**`assign_attributes_from_param_attrs` (instance method)**: Assigns attributes from params-style data with proper type casting and validation:
+
+```rb
+# Handles different attribute types appropriately
+node.assign_attributes_from_param_attrs({
+  data: {
+    title: "New Title",
+    image_id: "456",                    # String IDs converted to integers
+    document_ids: ["1", "2", "3"],      # Array of string IDs converted
+    rich_content: '{"type": "doc"}',    # JSON strings parsed
+    url_data: {                         # URL JSON filtered to allowed keys
+      href: "https://example.com",
+      title: "Link Title"
+    }
+  }
+})
+```
+
+The method handles:
+- **Type safety**: Validates the node class exists and inherits from `Folio::Tiptap::Node`
+- **Attribute filtering**: Only permits attributes defined in the node's structure
+- **Type casting**: Converts string IDs to integers, parses JSON strings
+- **File attachments**: Handles placement attributes for file relationships
+- **URL validation**: Filters URL JSON to only allowed keys and/or parses JSON strings
+
+### View Components
+
+Each custom node should have a corresponding view component:
+
+```rb
+# For MyApp::CustomNode, create:
+class MyApp::CustomNodeComponent < ViewComponent::Base
+  def initialize(node:, editor_preview: false)
+    @node = node
+    @editor_preview = editor_preview
+  end
+end
+```
+
+The component is automatically resolved using the `view_component_class` method.
+
+## Custom Node Rendering Process
+
+The `folioTiptapNode` rendering system provides seamless integration between the Tiptap editor and Rails view components through a message-passing architecture.
+
+### Rendering Flow
+
+1. **Node Display**: When a `folioTiptapNode` appears in the editor, the `FolioTiptapNode` React component is rendered
+2. **Render Request**: The component sends a `f-tiptap-node:render` message to the parent window with node attributes
+3. **API Call**: The parent window makes a request to `Folio::Console::Api::TiptapController#render_nodes`
+4. **Server Rendering**: The controller creates node instances and renders them using their view components
+5. **HTML Response**: The rendered HTML is sent back via `f-input-tiptap:render-nodes` message
+6. **Display**: The React component receives the HTML and displays it using `dangerouslySetInnerHTML`
+
+### Message Communication
+
+The system uses several window messages for communication:
+
+```js
+// From React component to parent window
+{
+  type: "f-tiptap-node:render",
+  uniqueId: 123,
+  attrs: {
+    version: 1,
+    type: "MyApp::CustomNode",
+    data: { title: "Hello" }
+  }
+}
+
+// From parent window to React component
+{
+  type: "f-input-tiptap:render-nodes",
+  nodes: [{
+    unique_id: 123,
+    html: "<div>Rendered content...</div>"
+  }]
+}
+```
+
+### Edit Overlay Integration
+
+When editing a node:
+
+1. Edit button click sends `f-tiptap-node:click` message with node attributes
+2. Parent window opens an overlay (using `Folio::Console::Tiptap::OverlayComponent` in the context of the console application outside of iframe) with the node's edit form
+3. Form submission sends `f-c-tiptap-overlay:saved` message back
+4. React component updates its attributes and re-renders
+
+### API Controller Details
+
+The `Folio::Console::Api::TiptapController` handles the `render_nodes` action, which creates node instances from the provided attributes and renders them via `Folio::Console::Tiptap::RenderNodesJsonComponent` using their associated view components, returning a JSON with HTML paired by node uniqueId that can be directly inserted into the editor.
+
+## CSS Styling System
+
+Folio Tiptap uses a comprehensive CSS styling system that ensures consistent appearance between the editor and the final rendered content in your application.
+
+### Architecture Overview
+
+The styling system is built around CSS custom properties (variables) and a shared stylesheet that works both in the Tiptap editor iframe and in your main application:
+
+- **`app/assets/stylesheets/folio/tiptap/_styles.scss`**: Contains all Tiptap-specific styles
+- **Shared Usage**: The same styles are used in both the editor iframe and your application's front-end
+- **CSS Variables**: All styling is customizable through CSS custom properties
+
+### How It Works
+
+1. **Editor Iframe**: The Tiptap editor loads your application layout, including the shared stylesheet
+2. **Content Container**: Editor content is wrapped in `.f-tiptap-styles` class
+3. **Application Rendering**: When displaying saved content, wrap it in the same `.f-tiptap-styles` class
+4. **Consistent Styling**: Both contexts use identical CSS, ensuring WYSIWYG accuracy
+
+### CSS Variables for Customization
+
+All styling is controlled through CSS custom properties, making it easy to customize:
+
+### Customization Examples
+
+```scss
+// Example: Corporate theme customization
+:root {
+  // Brand colors
+  --f-tiptap-a__color: #0066cc;
+  --f-tiptap-headings__color: #2c3e50;
+
+  // Typography
+  --f-tiptap-headings__font-family: 'Roboto', sans-serif;
+  --f-tiptap-code__font-family: 'Source Code Pro', monospace;
+
+  // Spacing - more compact
+  --f-tiptap__spacer: 0.75rem;
+  --f-tiptap-headings__margin-top: 1.5rem;
+
+  // Task lists with brand colors
+  --f-tiptap__ul-tasklist--background-color-active: #0066cc;
+  --f-tiptap__ul-tasklist--border-color-active: #0066cc;
+}
+```
+
+## Server-Side Rendering
+
+Folio provides a comprehensive server-side rendering system for Tiptap content through a set of view components that convert JSON content into HTML.
+
+### Content Component Overview
+
+The rendering system consists of several specialized components:
+
+- **`Folio::Tiptap::ContentComponent`**: Main entry point for rendering Tiptap content
+- **`Folio::Tiptap::Content::ProseMirrorNodeComponent`**: Handles standard ProseMirror nodes (paragraphs, headings, lists, etc.)
+- **`Folio::Tiptap::Content::TextComponent`**: Renders text nodes with formatting marks
+- **`Folio::Tiptap::Content::FolioTiptapNodeComponent`**: Renders custom `folioTiptapNode` instances
+
+### Basic Usage
+
+To render Tiptap content in your views:
+
+```slim
+/ Basic
+= render Folio::Tiptap::ContentComponent.new(record: @post)
+
+/ Custom attribute name
+= render Folio::Tiptap::ContentComponent.new(record: @post, attribute: :custom_content)
+```
+
+### Content Component Structure
+
+The main `ContentComponent` expects:
+- **`record`**: The model instance containing the Tiptap content
+- **`attribute`**: The attribute name (defaults to `:tiptap_content`)
+
+### ProseMirror Node Rendering
+
+The `ProseMirrorNodeComponent` handles standard HTML elements using configuration from `prose_mirror_node_component.yml`:
+
+```yaml
+# Example node configuration
+nodes:
+  paragraph:
+    tag: "p"
+  heading:
+    tag: "h1"
+    level_based: true  # Uses attrs.level for h1, h2, h3, etc.
+  blockquote:
+    tag: "blockquote"
+  hard_break:
+    tag: "br"
+    self_closing: true
+```
+
+**Features:**
+- **Level-based tags**: Headings automatically use correct tag (h1-h6) based on `level` attribute
+- **Attribute mapping**: Supports both direct attributes and data attributes
+- **Nested tag rendering**: Handles complex nested structures
+- **Self-closing tags**: Properly handles elements like `<br>` and `<hr>`
+
+### Text Component with Marks
+
+The `TextComponent` handles text formatting using `text_component.yml` configuration:
+
+```yaml
+# Example marks configuration
+marks:
+  bold:
+    tag: "strong"
+  italic:
+    tag: "em"
+  code:
+    tag: "code"
+  link:
+    tag: "a"
+    has_attrs: true
+    attrs: ["href", "title", "target"]
+```
+
+**Mark Processing:**
+- **Nested marks**: Multiple formatting marks are properly nested
+- **Attribute filtering**: Only allowed attributes are included for security
+- **HTML safety**: All text content is properly escaped
+
+### Custom Node Integration
+
+Custom `folioTiptapNode` instances are rendered through their associated view components:
+
+```ruby
+# The FolioTiptapNodeComponent automatically:
+# 1. Creates a node instance from the JSON attributes
+# 2. Resolves the appropriate view component class
+# 3. Renders the component with the node data
+
+# Example custom node rendering
+class MyApp::CustomNodeComponent < ApplicationComponent
+  def initialize(node:, editor_preview: false)
+    @node = node
+    @editor_preview = editor_preview
+  end
+end
+```
+
+### Rendering Flow
+
+1. **ContentComponent** receives the record and attribute
+2. **JSON parsing** converts stored JSON to Ruby hash structure
+3. **Node iteration** processes each node in the content array
+4. **Component selection** chooses appropriate component based on node type:
+   - `"text"` → `TextComponent`
+   - `"folioTiptapNode"` → `FolioTiptapNodeComponent`
+   - Other types → `ProseMirrorNodeComponent`
+5. **Recursive rendering** handles nested content structures
+
+### Security Considerations
+
+The rendering system includes several security measures:
+
+- **Attribute filtering**: Only whitelisted attributes are included
+- **HTML escaping**: All text content is properly escaped
+- **Safe HTML generation**: Uses Rails' `content_tag` helpers
+- **Custom node validation**: Node types are validated before instantiation
+
+### Styling Integration
+
+The rendered HTML works seamlessly with the CSS styling system, the root node adds the required `f-tiptap-styles` class name, which ensures consistent styling between the editor and the final rendered content.
+
+## Console Block Implementation
+
+Folio provides a specialized console interface for editing models with block-based Tiptap content using `simple_form_for_with_block_tiptap`.
+
+### Block Editor Form Helper
+
+The `simple_form_for_with_block_tiptap` helper creates a split-screen interface optimized for block editing:
+
+```rb
+# In console views (e.g., app/views/folio/console/pages/edit.slim)
+= simple_form_for_with_block_tiptap([:console, @page])
+```
+
+This helper:
+- Creates a form using `Folio::Console::Tiptap::SimpleFormWrapComponent`
+- Automatically renders block editors for designated fields
+- Provides a responsive layout that splits into form fields and editors
+- Integrates with the console layout using `content_for(:with_block_tiptap)`
+
+### Component Structure
+
+```slim
+.f-c-tiptap-simple-form-wrap
+  = simple_form_for(@simple_form_model, @simple_form_options)
+    .f-c-tiptap-simple-form-wrap__inner
+      .f-c-tiptap-simple-form-wrap__fields
+        // Regular form fields rendered here
+        // Uses the "_form" partial unless block is passed
+
+      .f-c-tiptap-simple-form-wrap__editors-bar
+        // Editor section title
+
+      .f-c-tiptap-simple-form-wrap__editors
+        // Automatic rendering of block editors
+        - form.object.class.folio_tiptap_fields.each do |field|
+          = form.input field, as: :tiptap, block: true
+```
+
+### Responsive Behavior
+
+**Desktop (≥1700px):**
+- Two-column grid layout
+- Form fields: scrollable left column
+- Editors: full-height right column
+- Editors bar: sticky at top of right column
+
+**Mobile/Tablet (<1700px):**
+- Single column layout
+- Form fields at top
+- Editors at bottom with sticky bar
+- Vertical scrolling for form fields
+
+### Usage Example
+
+Basic example rendering the `_form` partial:
+
+```slim
+/ edit.slim
+= simple_form_for_with_block_tiptap([:console, @page])
+```
+
+You can add custom form fields by passing a block. That makes the component skip the `_form` partial:
+
+```slim
+/ edit.slim
+= simple_form_for_with_block_tiptap([:console, @page]) do |f|
+  = f.input :title, required: true
+  = f.input :slug
+  = f.input :published_at, as: :datetime_picker
+  = f.input :meta_description, as: :text
+  / Block editors are still automatically added
+```
+
+## Development
+
+Tiptap development happens in the `tiptap` directory. It's developed as a separate Vite app that is built using `npm run build`. That produces `folio-tiptap.css` and `folio-tiptap.js` in `tiptap/dist/assets` which are in the assets pipeline path.
+
+To develop, run `npm install` and `npm run dev` in the `tiptap` directory. That starts a http://localhost:5173/ server.
+
+In case you need to develop folio-specific integrations, you can set the `FOLIO_TIPTAP_DEV=1` ENV value and  start the rails server (i.e. `FOLIO_TIPTAP_DEV=1 r s`). That uses the http://localhost:5173/ server instead of the `Folio::TiptapController` as the iframe src.

@@ -93,4 +93,12 @@ module Folio::Console::FileControllerBase
         by_used: [true, false],
       }
     end
+
+    def allowed_record_sites
+      if Rails.application.config.folio_shared_files_between_sites
+        [Folio::Current.main_site, Folio::Current.site]
+      else
+        [Folio::Current.site]
+      end
+    end
 end

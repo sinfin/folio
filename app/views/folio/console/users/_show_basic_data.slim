@@ -33,6 +33,7 @@
 
     = s.attribute :subscribed_to_newsletter
       = render(Folio::Console::Ui::BooleanToggleComponent.new(record: s.object,
+                                                              disabled: !can_now?(:update, s.object),
                                                               attribute: :subscribed_to_newsletter))
 
     = s.attribute :preferred_locale

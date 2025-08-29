@@ -127,7 +127,15 @@ SimpleForm::Inputs::Base.class_eval do
                       wrapper: true)
 
     if json
-      options[:value] ||= (object.try(attribute_name) || {}).to_json
+      value = input_html_options[:value] || object.try(attribute_name) || {}
+
+      input_html_options[:value] = if value.is_a?(Hash)
+        value.to_json
+      elsif value.is_a?(String)
+        value
+      else
+        fail "Expected a Hash or String for URL input, got #{value.class.name}"
+      end
     end
 
     options[:custom_html] = <<~HTML.html_safe

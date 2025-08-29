@@ -53,15 +53,13 @@ Dummy::Site.create!(title: "Dummy",
 puts "Created Folio::Site"
 
 puts "Creating Folio::User test@test.test (superadmin)"
-puts("Should call folio:seed_test_account task")
-Folio::User.create!(first_name: "Test",
-                    last_name: "Test",
-                    email: "test@test.test",
-                    password: "test@test.test",
-                    confirmed_at: Time.current,
-                    superadmin: true,
-                    auth_site_id: Folio::Site.first.id
-                   )
+superadmin = Folio::User.find_or_initialize_by(email: "test@test.test",
+                                               superadmin: true,
+                                               first_name: "Test",
+                                               last_name: "Dummy",
+                                               confirmed_at: Time.current,
+                                               auth_site: Folio::Site.first) { |u| u.password = "test@test.test" }
+superadmin.save!(validate: false)
 puts "Created Folio::User test@test.test (superadmin)"
 
 puts "Creating Dummy::Menu::Nestable"
@@ -151,27 +149,27 @@ end
 
 Folio::MenuItem.create!(menu:,
                         title: "Another link",
-                        url: "#another-link",
+                        url: "/another-link",
                         position: position += 1)
 
 Folio::MenuItem.create!(menu:,
                         title: "Another link",
-                        url: "#another-link",
+                        url: "/another-link",
                         position: position += 1)
 
 Folio::MenuItem.create!(menu:,
                         title: "Another link",
-                        url: "#another-link",
+                        url: "/another-link",
                         position: position += 1)
 
 Folio::MenuItem.create!(menu:,
                         title: "Another link",
-                        url: "#another-link",
+                        url: "/another-link",
                         position: position += 1)
 
 Folio::MenuItem.create!(menu:,
                         title: "Another link",
-                        url: "#another-link",
+                        url: "/another-link",
                         position: position + 1)
 
 puts "Created Dummy::Menu::Header"

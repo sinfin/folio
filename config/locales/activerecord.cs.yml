@@ -40,6 +40,9 @@ cs:
         file_size: Velikost souboru
         preview_duration: Kolik vteřin je zdarma?
         used: Použitý
+        subtitles_cs_enabled: Zobrazit titulky
+        subtitles_cs_text: Titulky (CZ)
+        subtitles_en_text: Titulky (EN)
       folio/file/image:
         file_placements: Použití
         thumbnail_sizes: Vygenerované verze
@@ -157,7 +160,7 @@ cs:
     errors:
       messages:
         indestructible: Záznam není možné odstranit.
-        file_format: '%{file_mime_type} není povolen. Povolené typy: %{types}'
+        file_format: "%{file_mime_type} není povolen. Povolené typy: %{types}"
         wrong_namespace: Typ záznamu neodpovídá typu webové stránky.
         not_from_same_site: není ze stejné stránky
       models:
@@ -187,6 +190,7 @@ cs:
           attributes:
             roles:
               not_available_for_site: "Role %{roles} nejsou všechny dostupné pro web '%{site}'."
+
       clonable:
         association_not_found: "Asociace '%{association}' neexistuje pro %{model}"
         attribute_not_found: "Atribut '%{attribute}' neexistuje pro %{model}"
@@ -319,6 +323,7 @@ cs:
     description: Popisek
     document_placement: Dokument
     document_placements: Dokumenty
+    documents: Dokumenty
     email: E-mail
     featured: Zvýrazněno
     figcaption: Popisek
@@ -374,6 +379,7 @@ cs:
     state: Stav
     subtitle: Podtitulek
     tag_list: Klíčová slova
+    tiptap_content: Obsah
     title: Název
     to_label: Název
     url: URL
@@ -391,13 +397,26 @@ cs:
       missing_file_description: nemá vyplněný popisek
       invalid_file_placement: nesplňuje požadavky
       slug_not_unique_across_classes: je již použita u záznamu "%{sluggable_name}" (%{sluggable_type})
+      invalid_subtitle_block: má nevalidní text na řádku %{line}
+      tiptap_invalid_json: není platný JSON řetězec
+      tiptap_must_be_hash_or_json: musí být Hash nebo platný JSON řetězec
+      tiptap_must_have_content_key: "musí obsahovat klíč '%{content_key}' s Hash hodnotou"
+      tiptap_root_node_must_be_doc: kořenový uzel musí být typu 'doc'
 
     attributes:
+      documents:
+        blank: jsou povinné
       verified_captcha:
         invalid: Potvrďte prosím, že nejste robot 🤖
       type:
-        already_exists_with_locale: "Je povolen jen jeden záznam '%{class}' pro stránky."
-        already_exists_with_locale: "Je povolen jen jeden záznam '%{class}' s 'locale = \"%{rec_locale}\"'."
+        already_exists_for_site: "Je povolen jen jeden záznam '%{class}' pro stránky."
+        already_exists_with_locale: 'Je povolen jen jeden záznam ''%{class}'' s ''locale = "%{rec_locale}"''.'
         already_exists: "Je povolen jen jeden záznam '%{class}'."
       author:
         missing_file_attribution: nebo zdroj je povinný
+      password:
+        same_as_current_password: nesmí být stejné jako aktuální heslo
+        missing_uppercase: musí obsahovat velké písmeno
+        missing_lowercase: musí obsahovat malé písmeno
+        missing_digit: musí obsahovat číslo
+        missing_special: musí obsahovat speciální znak

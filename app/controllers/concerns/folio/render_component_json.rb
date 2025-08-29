@@ -5,21 +5,24 @@ module Folio::RenderComponentJson
 
   private
     def render_component_json(component,
+                              meta: nil,
                               pagy: nil,
                               flash: nil,
                               collection_attribute: nil,
-                              meta: {},
-                              status: 200)
+                              status: 200,
+                              cache_key: nil)
+      meta_hash = meta || {}
+
       if pagy
-        meta[:pagy] = meta_from_pagy(pagy)
+        meta_hash[:pagy] = meta_from_pagy(pagy)
       end
 
       if flash
-        meta[:flash] = flash
+        meta_hash[:flash] = flash
       end
 
-      @meta = if meta.present?
-        ", \"meta\": #{meta.to_json}"
+      @meta = if meta_hash.present?
+        ", \"meta\": #{meta_hash.to_json}"
       end
 
       if collection_attribute
@@ -31,11 +34,13 @@ module Folio::RenderComponentJson
         render "folio/component_collection_json", status:, layout: false
       else
         @component = component
+        @cache_key = cache_key
+
         render "folio/component_json", status:, layout: false
       end
     end
 
-    def render_component_collection_json(component, pagy: nil, flash: nil, attribute: :id, status: 200)
-      render_component_json(component, pagy:, flash:, collection_attribute: attribute, status:)
+    def render_component_collection_json(component, meta: nil, pagy: nil, flash: nil, attribute: :id, status: 200)
+      render_component_json(component, meta:, pagy:, flash:, collection_attribute: attribute, status:)
     end
 end

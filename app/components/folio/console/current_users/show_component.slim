@@ -1,0 +1,70 @@
+.f-c-current-users-show data=data
+  h1 = t('.title')
+
+  - if can_now?(:update_email, @user)
+    .f-c-current-users-show__box[
+      class=(controller.action_name == "update_email" ? "f-c-current-users-show__box--active" : nil)
+    ]
+      h2.h3.f-c-current-users-show__box-title = t('.title/sign_in')
+
+      .f-c-current-users-show__box-value-wrap
+        - if @user.unconfirmed_email.present?
+          .mb-3.text-danger
+            = t('.unconfirmed_email', email: @user.email, unconfirmed_email: @user.unconfirmed_email)
+
+        strong
+          = @user.class.human_attribute_name(:email)
+          ' :
+        = @user.email_changed? ? @user.email_was : @user.email
+
+        .f-c-current-users-show__edit-btn-wrap.mt-3
+          == cell('folio/console/ui/button', edit_button_model)
+
+      .f-c-current-users-show__box-form-wrap
+        = helpers.simple_form_for @user, url: controller.folio.update_email_console_current_user_path, method: :patch do |f|
+          .f-devise__narrow
+            == cell('folio/devise/email_input', f)
+
+          == cell('folio/console/ui/buttons', form_buttons_model)
+
+  - if can_now?(:update_password, @user)
+    .f-c-current-users-show__box[
+      class=(controller.action_name == "update_password" ? "f-c-current-users-show__box--active" : nil)
+    ]
+      h2.h3.f-c-current-users-show__box-title = t('.title/password')
+
+      .f-c-current-users-show__box-value-wrap
+        .f-c-current-users-show__edit-btn-wrap
+          == cell('folio/console/ui/button', edit_button_model(label: t('.edit_password')))
+
+      .f-c-current-users-show__box-form-wrap
+        = helpers.simple_form_for @user, url: controller.folio.update_password_console_current_user_path, method: :patch do |f|
+          .f-devise__narrow
+            == cell("folio/devise/password_input",
+                    f,
+                    field: :current_password,
+                    label: t(".label/current_password"),
+                    autocomplete: "current-password")
+
+            == cell("folio/devise/password_input",
+                    f,
+                    field: :password,
+                    label: t(".label/password"),
+                    autocomplete: "new-password")
+
+            == cell("folio/devise/password_input",
+                    f,
+                    field: :password_confirmation,
+                    label: t(".label/password_confirmation"),
+                    autocomplete: "new-password")
+
+          == cell('folio/console/ui/buttons', form_buttons_model)
+
+  - if can_now?(:update, @user)
+    h2.h3 = t('.title/others')
+
+    == cell('folio/console/ui/button',
+            href: url_for([:edit, :console, @user]),
+            label: t('.edit_others'),
+            variant: :gray,
+            right_icon: :open_in_new)

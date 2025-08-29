@@ -1,10 +1,16 @@
 # frozen_string_literal: true
 
 class Folio::Console::Form::FooterComponent < Folio::Console::ApplicationComponent
-  def initialize(f: nil, preview_path: nil, share_preview: false)
+  bem_class_name :static
+
+  def initialize(f: nil, preview_path: nil, share_preview: false, show_settings: true, static: false, submit_label: nil, disable_modifications: false)
     @f = f
     @preview_path = preview_path
     @share_preview = share_preview
+    @show_settings = show_settings
+    @static = static
+    @submit_label = submit_label
+    @disable_modifications = disable_modifications
   end
 
   def before_render
@@ -72,8 +78,12 @@ class Folio::Console::Form::FooterComponent < Folio::Console::ApplicationCompone
     end
   end
 
-  def stimulus_action_unless_audit(hash)
-    return nil if @audit
+  def read_only?
+    @audit || @disable_modifications
+  end
+
+  def stimulus_action_unless_readonly(hash)
+    return nil if read_only?
     stimulus_action(hash)
   end
 end

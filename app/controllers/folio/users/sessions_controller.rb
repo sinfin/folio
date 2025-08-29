@@ -3,6 +3,9 @@
 class Folio::Users::SessionsController < Devise::SessionsController
   include Folio::Users::DeviseControllerBase
   include Folio::Captcha::HasTurnstileValidation
+  include Folio::Captcha::HasRecaptchaValidation
+
+  before_action :validate_recaptcha, only: :create
 
   protect_from_forgery prepend: true
 
@@ -109,6 +112,7 @@ class Folio::Users::SessionsController < Devise::SessionsController
       if Folio::Current.user && !request.format.json?
         set_flash_message!(:notice, :signed_in)
         redirect_to after_sign_in_path_for(Folio::Current.user)
+        after_sign_in
       else
         super
       end
@@ -133,6 +137,7 @@ class Folio::Users::SessionsController < Devise::SessionsController
     warden_exception_or_user = catch :warden do
       self.resource = warden.authenticate!(auth_options)
     end
+
     return nil if resource
 
     get_failure_flash_message(warden_exception_or_user)
@@ -153,6 +158,10 @@ class Folio::Users::SessionsController < Devise::SessionsController
   end
 
   def turnstile_failure_redirect_path
+    new_user_session_path
+  end
+
+  def recaptcha_failure_redirect_path
     new_user_session_path
   end
 end

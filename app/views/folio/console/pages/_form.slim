@@ -1,4 +1,6 @@
 / required for atom select filtering by site to work
+= form_header f
+
 = f.input :site_id, as: :hidden, atom_setting: :site_id
 
 = tabs [:content]
@@ -55,5 +57,7 @@
                            folio_perex: true
 
     = translated_inputs f, :meta_title, character_counter: true
-    = translated_inputs f, :meta_description, autosize: true,
-                                              character_counter: true
+    = translated_inputs f,
+                        :meta_description,
+                        autosize: true,
+                        character_counter: true

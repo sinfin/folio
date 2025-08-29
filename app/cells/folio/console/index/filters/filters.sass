@@ -43,7 +43,10 @@
     cursor: pointer
     display: flex
 
-  &--expanded &__toggle-ico
+    svg
+      transition: transform 0.2s ease
+
+  &--expanded &__toggle svg
     transform: rotate(180deg)
 
   &:not(&--expanded) &__filter--collapsible

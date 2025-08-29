@@ -1,0 +1,25 @@
+@import "@/styles/folio-tiptap-functions";
+@import "@/styles/folio-tiptap-variables";
+
+.f-tiptap-editor-responsive-preview-buttons {
+  display: none;
+  gap: px-to-rem(8px);
+
+  &__button {
+    pointer-events: none;;
+  }
+
+  .f-tiptap-editor:not(.f-tiptap-editor--responsive-preview) &__button--mobile,
+  .f-tiptap-editor--responsive-preview &__button--desktop {
+    opacity: 0.25;
+    pointer-events: all;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  @media screen and (min-width: 800px) {
+    display: flex;
+  }
+}

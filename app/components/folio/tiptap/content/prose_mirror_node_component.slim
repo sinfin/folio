@@ -1,0 +1,22 @@
+- begin
+  - if @node_definition["component_name"]
+    = custom_component_render
+  - elsif @node_definition["tag"]
+    - if @node_definition["self_closing"] && @node_definition["tag"].is_a?(String)
+      = tag(resolve_tag_name(@node_definition["tag"]), resolve_tag_attributes)
+    - elsif @node_definition["tag"]
+      = render_nested_tags(@node_definition["tag"]) do
+        - if @prose_mirror_node["content"].present?
+          - @prose_mirror_node["content"].each_with_index do |child_node, index|
+            = call_lambda_if_present(index:, node: child_node, after: false)
+
+            = render(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: @record,
+                                                                          prose_mirror_node: child_node))
+
+            = call_lambda_if_present(index:, node: child_node, after: true)
+
+        - elsif @node_definition["trailing_break_when_empty"]
+          br.ProseMirror-trailingBreak
+
+- rescue StandardError => e
+  - rescue_component_error(e)

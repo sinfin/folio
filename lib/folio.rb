@@ -16,6 +16,7 @@ require "sitemap_generator"
 require "acts-as-taggable-on"
 require "pg_search"
 require "turbolinks"
+require "view_component"
 
 require "slim"
 require "sass-rails"

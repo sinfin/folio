@@ -6,8 +6,19 @@ class Folio::Console::Dummy::Blog::AuthorsController < Folio::Console::BaseContr
   private
     def author_params
       params.require(:dummy_blog_author)
-            .permit(*(@klass.column_names - %w[id site_id]),
-                    *file_placements_strong_params)
+            .permit(:first_name,
+                    :last_name,
+                    :slug,
+                    :perex,
+                    :locale,
+                    :published,
+                    :featured,
+                    :position,
+                    :job,
+                    :meta_title,
+                    :meta_description,
+                    *file_placements_strong_params,
+                    social_links: @klass.social_link_sites)
     end
 
     def index_filters

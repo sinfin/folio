@@ -23,9 +23,6 @@ class Folio::Console::Ui::ModalComponent < Folio::Console::ApplicationComponent
   end
 
   def modal_data
-    stimulus_controller("f-modal",
-                        values: {
-                          open: @open
-                        })
+    stimulus_modal(open: @open)
   end
 end

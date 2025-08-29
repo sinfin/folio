@@ -302,8 +302,11 @@ class Folio::Console::BaseController < Folio::ApplicationController
     end
 
     def addresses_strong_params
-      [{ primary_address_attributes: base_address_attributes,
-         secondary_address_attributes: base_address_attributes }]
+      [
+        :use_secondary_address,
+        primary_address_attributes: base_address_attributes,
+        secondary_address_attributes: base_address_attributes
+      ]
     end
 
     def sti_hack(params, nested_name, relation_name)
@@ -465,7 +468,11 @@ class Folio::Console::BaseController < Folio::ApplicationController
       return url if valid_routes_parent
 
       begin
-        through_aware_console_url_for(record, action: :edit)
+        if include_through_record
+          through_aware_console_url_for(record, action: :edit)
+        else
+          url_for([:console, record, action: :edit])
+        end
       rescue NoMethodError, ActionController::RoutingError
         nil
       end
@@ -503,6 +510,8 @@ class Folio::Console::BaseController < Folio::ApplicationController
       return unless params[:id].present?
 
       name = folio_console_record_variable_name(plural: false)
+      return if instance_variable_get(name).present?
+
       if @klass.respond_to?(:friendly)
         instance_variable_set(name, @klass.by_site(allowed_record_sites).friendly.find(params[:id]))
       else
@@ -517,6 +526,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
       return unless param.present?
 
       name = "@#{through_record_name}"
+      return if instance_variable_get(name).present?
 
       through_klass = folio_console_controller_for_through.constantize
 
@@ -585,5 +595,35 @@ class Folio::Console::BaseController < Folio::ApplicationController
       return @collection_action unless @collection_action.nil?
 
       @collection_action = !member_action?
+    end
+
+    def traco_aware_param_names(*param_names_to_localize)
+      localized_params = []
+      locales_matcher = "(#{I18n.available_locales.join("|")})"
+
+      param_names_to_localize.each do |param_name|
+        found_localized_param = false
+
+        @klass.column_names.each do |column_name|
+          if column_name.match?(/\A#{param_name}_#{locales_matcher}\z/)
+            localized_params << column_name.to_sym
+            found_localized_param = true
+          end
+        end
+
+        unless found_localized_param
+          localized_params << param_name
+        end
+      end
+
+      localized_params
+    end
+
+    def folio_using_traco_aware_param_names(*param_names_to_localize)
+      if Rails.application.config.folio_using_traco
+        traco_aware_param_names(*param_names_to_localize)
+      else
+        param_names_to_localize
+      end
     end
 end

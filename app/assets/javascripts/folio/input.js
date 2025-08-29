@@ -10,4 +10,5 @@
 //= require folio/input/phone
 //= require folio/input/redactor
 //= require folio/input/tags
+//= require folio/input/tiptap
 //= require folio/input/url

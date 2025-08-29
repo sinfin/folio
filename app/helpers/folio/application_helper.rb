@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module Folio::ApplicationHelper
+  include Folio::MarkdownHelper
+
   def public_page_title
     title = @public_page_title.presence || I18n.t("head.title.default")
 

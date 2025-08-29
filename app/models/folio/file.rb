@@ -108,7 +108,10 @@ class Folio::File < Folio::ApplicationRecord
     event :process do
       transitions from: :unprocessed, to: :processing
       transitions from: READY_STATE, to: :processing
-      after :process_attached_file
+      after do
+        process_attached_file
+        after_process
+      end
     end
 
     event :processing_done do
@@ -182,6 +185,10 @@ class Folio::File < Folio::ApplicationRecord
   def destroy_attached_file
   end
 
+  def after_process
+    # override in main app if needed
+  end
+
   def attached_file_changed?
     (saved_changes[:file_uid] || changes[:file_uid]).present?
   end
@@ -224,9 +231,15 @@ class Folio::File < Folio::ApplicationRecord
 
   def screenshot_time_in_ffmpeg_format
     if file_track_duration
-      quarter = file_track_duration / 4  # take screenshot at 1/4 of the video
+      # For videos under 10 seconds: use 1/4 duration (current behavior)
+      # For videos 10+ seconds: use fixed 10 seconds (avoids long FFmpeg seeks)
+      screenshot_time = if file_track_duration < 10
+        file_track_duration / 4.0
+      else
+        10
+      end
 
-      seconds = quarter
+      seconds = screenshot_time.to_i
       minutes = seconds / 60
       seconds -= minutes * 60
       hours = minutes / 60
@@ -263,6 +276,10 @@ class Folio::File < Folio::ApplicationRecord
 
   def to_label
     file_name.presence || self.class.model_name.human
+  end
+
+  def file_modal_additional_fields
+    {}
   end
 
   private

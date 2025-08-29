@@ -57,6 +57,10 @@ module Folio::CraMediaCloud::FileProcessing
     nil
   end
 
+  def destroy_attached_file
+    delete_media_job_class.perform_later(remote_id, reference_id: remote_reference_id)
+  end
+
   def full_media_job_class
     Folio::CraMediaCloud::CreateMediaJob
   end
@@ -71,5 +75,9 @@ module Folio::CraMediaCloud::FileProcessing
 
   def processed_by
     "cra_media_cloud"
+  end
+
+  def upload_failed?
+    processing_state == "upload_failed"
   end
 end

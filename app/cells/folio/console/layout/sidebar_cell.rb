@@ -21,7 +21,11 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
         next unless group[:links].present?
 
         links = process_links(group[:links])
-        group.merge(links:) if links.present?
+        if links.present?
+          group.merge(links:)
+        else
+          nil
+        end
       end
     end
   end
@@ -39,13 +43,14 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
 
   def process_link_item(item)
     if item.is_a?(Array)
-      item.filter_map { |l| link_from(l) }
+      item.compact.filter_map { |l| link_from(l) }
     else
       link_from(item)
     end
   end
 
   def link_from(link_source)
+    return nil if link_source.nil?
     return if skip_link_class_names.include?(link_source)
 
     if link_source == :homepage
@@ -56,6 +61,10 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
     elsif link_source.is_a?(Hash) && (link_source[:klass] || link_source[:label]) && (link_source[:path] || link_source[:url_name])
       if link_source[:klass]
         return unless can_now?(:index, link_source[:klass].constantize)
+      end
+
+      if link_source[:required_ability]
+        return unless can_now?(link_source[:required_ability], Folio::Current.site)
       end
 
       label = if link_source[:label]
@@ -146,6 +155,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
   def main_class_names
     shared_links = []
     sites = (Folio::Current.site == Folio::Current.main_site || Folio::Current.user.superadmin?) ? Folio::Site.ordered : [Folio::Current.site]
+
     if ::Rails.application.config.folio_shared_files_between_sites
       shared_links = [{
         locale: Folio::Current.main_site.console_locale,
@@ -157,7 +167,6 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
       sites = Folio::Site.ordered
     end
 
-
     sites_links = sites.filter_map { |site| site_main_links(site) }
 
     shared_links + sites_links
@@ -165,7 +174,11 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
 
   def secondary_class_names
     links = []
-    links << link_for_site_class(Folio::Current.main_site, Folio::User) if show_users? && Folio::Current.user.superadmin?
+
+    if show_users? && Folio::Current.user.superadmin?
+      links << link_for_site_class(Folio::Current.enabled_site_for_crossdomain_devise || Folio::Current.site,
+                                   Folio::User)
+    end
 
     [
       {
@@ -251,10 +264,14 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
     end
 
     def file_links(site)
-      [ link_for_site_class(site, Folio::File::Image),
-        link_for_site_class(site, Folio::File::Video),
-        link_for_site_class(site, Folio::File::Audio),
-        link_for_site_class(site, Folio::File::Document)]
+      only_path = ::Rails.application.config.folio_shared_files_between_sites
+
+      [
+        link_for_site_class(site, Folio::File::Image, only_path:),
+        link_for_site_class(site, Folio::File::Video, only_path:),
+        link_for_site_class(site, Folio::File::Audio, only_path:),
+        link_for_site_class(site, Folio::File::Document, only_path:)
+      ]
     end
 
     def build_site_links_collapsible_block(site)
@@ -345,13 +362,22 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
       end
     end
 
-    def link_for_site_class(site, klass, params: {}, label: nil)
+    def link_for_site_class(site, klass, params: {}, label: nil, only_path: false)
       return nil unless can_now?(:index, klass, site:)
-      {
-        klass: klass.to_s,
-        label:,
-        path: url_for([:console, klass, only_path: false, host: site.env_aware_domain, params:])
-      }
+
+      if only_path
+        {
+          klass: klass.to_s,
+          label:,
+          path: url_for([:console, klass, only_path: true, params:])
+        }
+      else
+        {
+          klass: klass.to_s,
+          label:,
+          path: url_for([:console, klass, only_path: false, host: site.env_aware_domain, params:])
+        }
+      end
     end
 
     def can_now?(action, object, site: nil)

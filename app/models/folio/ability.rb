@@ -31,6 +31,9 @@ class Folio::Ability
   def folio_rules
     can [:stop_impersonating], Folio::User # anyone must be able to stop impersonating
 
+    can :update_email, @user
+    can :update_password, @user
+
     if user.superadmin?
       console_common_admin_rules
       can :do_anything, Folio::User
@@ -83,18 +86,23 @@ class Folio::Ability
     can :display_ui, site
     can [:new], Folio::User # new user do not belong to site yet
 
-    can :do_anything, Folio::SiteUserLink, { site_id: site.id }
-    can :do_anything, Folio::File, { site_id: Rails.application.config.folio_shared_files_between_sites ? [Folio::Current.main_site.id, site.id] : site.id }
-    can :do_anything, Folio::Page, { site_id: site.id }
-    can :do_anything, Folio::Menu, { site_id: site.id }
-    can :do_anything, Folio::Lead, { site_id: site.id }
-    can :do_anything, Folio::NewsletterSubscription, { site_id: site.id }
-    can :do_anything, Folio::EmailTemplate, { site_id: site.id }
-    can :do_anything, Folio::AttributeType, { site_id: site.id }
-    can :do_anything, Folio::ContentTemplate, { site_id: site.id }
-    # can :do_anything, Folio::ConsoleNote, target: { site_id: site.id } cannot be used, because it is polymorphic
+    # Help documents access - excluded for ghost role
+    unless user.roles_for(site: site) == [:ghost]
+      can :access_help_documents, site
+    end
 
-    can [:read, :update], Folio::Site, { id: site.id }
+    can :do_anything, Folio::SiteUserLink, { site: }
+    can :do_anything, Folio::File, { site: Rails.application.config.folio_shared_files_between_sites ? [Folio::Current.main_site, site] : site }
+    can :do_anything, Folio::Page, { site: }
+    can :do_anything, Folio::Menu, { site: }
+    can :do_anything, Folio::Lead, { site: }
+    can :do_anything, Folio::NewsletterSubscription, { site: }
+    can :do_anything, Folio::EmailTemplate, { site: }
+    can :do_anything, Folio::AttributeType, { site: }
+    can :do_anything, Folio::ContentTemplate, { site: }
+    # can :do_anything, Folio::ConsoleNote, target: { site: } cannot be used, because it is polymorphic
+
+    can %i[read update publish_header_message], Folio::Site, { id: site.id }
     can :read_managers, Folio::User
   end
 end

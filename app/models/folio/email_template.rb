@@ -138,6 +138,21 @@ class Folio::EmailTemplate < Folio::ApplicationRecord
     locales.sort
   end
 
+  def folio_html_sanitization_config
+    attributes_config = {}
+
+    attribute_names.each do |attribute_name|
+      if attribute_name.starts_with?("body_html")
+        attributes_config[attribute_name.to_sym] = :rich_text
+      end
+    end
+
+    {
+      enabled: true,
+      attributes: attributes_config,
+    }
+  end
+
   private
     def validate_subjects
       self.class.column_names.each do |column_name|

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_02_17_134355) do
+ActiveRecord::Schema[7.1].define(version: 2025_07_16_062032) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -424,6 +424,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_17_134355) do
     t.bigint "site_id"
     t.text "atoms_data_for_search"
     t.string "preview_token"
+    t.jsonb "tiptap_content"
     t.index "(((setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((title)::text, ''::text))), 'A'::\"char\") || setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE(perex, ''::text))), 'B'::\"char\")) || setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE(atoms_data_for_search, ''::text))), 'C'::\"char\")))", name: "index_folio_pages_on_by_query", using: :gin
     t.index ["ancestry"], name: "index_folio_pages_on_ancestry"
     t.index ["locale"], name: "index_folio_pages_on_locale"
@@ -519,9 +520,12 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_17_134355) do
     t.jsonb "available_user_roles", default: ["administrator", "manager"]
     t.string "phone_secondary"
     t.text "address_secondary"
+    t.jsonb "subtitle_languages", default: ["cs"]
+    t.boolean "subtitle_auto_generation_enabled", default: false
     t.index ["domain"], name: "index_folio_sites_on_domain"
     t.index ["position"], name: "index_folio_sites_on_position"
     t.index ["slug"], name: "index_folio_sites_on_slug"
+    t.index ["subtitle_languages"], name: "index_folio_sites_on_subtitle_languages", using: :gin
     t.index ["type"], name: "index_folio_sites_on_type"
   end
 
@@ -577,6 +581,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_17_134355) do
     t.bigint "auth_site_id", null: false
     t.string "preferred_locale"
     t.jsonb "console_preferences"
+    t.integer "failed_attempts", default: 0, null: false
+    t.string "unlock_token"
+    t.datetime "locked_at"
     t.index ["auth_site_id"], name: "index_folio_users_on_auth_site_id"
     t.index ["confirmation_token"], name: "index_folio_users_on_confirmation_token", unique: true
     t.index ["crossdomain_devise_token"], name: "index_folio_users_on_crossdomain_devise_token"
@@ -588,6 +595,22 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_17_134355) do
     t.index ["reset_password_token"], name: "index_folio_users_on_reset_password_token", unique: true
     t.index ["secondary_address_id"], name: "index_folio_users_on_secondary_address_id"
     t.index ["source_site_id"], name: "index_folio_users_on_source_site_id"
+  end
+
+  create_table "folio_video_subtitles", force: :cascade do |t|
+    t.bigint "video_id", null: false
+    t.string "language", null: false
+    t.string "format", default: "vtt"
+    t.text "text"
+    t.boolean "enabled", default: false
+    t.jsonb "metadata", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["enabled"], name: "index_folio_video_subtitles_on_enabled"
+    t.index ["language"], name: "index_folio_video_subtitles_on_language"
+    t.index ["metadata"], name: "index_folio_video_subtitles_on_metadata", using: :gin
+    t.index ["video_id", "language"], name: "index_folio_video_subtitles_on_video_id_and_language", unique: true
+    t.index ["video_id"], name: "index_folio_video_subtitles_on_video_id"
   end
 
   create_table "friendly_id_slugs", force: :cascade do |t|
@@ -646,4 +669,5 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_17_134355) do
   add_foreign_key "folio_site_user_links", "folio_sites", column: "site_id"
   add_foreign_key "folio_site_user_links", "folio_users", column: "user_id"
   add_foreign_key "folio_users", "folio_sites", column: "auth_site_id"
+  add_foreign_key "folio_video_subtitles", "folio_files", column: "video_id"
 end

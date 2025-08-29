@@ -96,11 +96,28 @@ en:
         update:
           success: Templates updated.
       create: Create
+      delete: Remove
       current_users:
         console_url_bar:
           title: This page is being edited by
           text: Wait for them to finish. If you edit now, you might lose the content you are working on.
-      delete: Remove
+        show_component:
+          title: My profile
+          title/sign_in: Login
+          title/password: Password
+          title/others: Contacts and other information
+          edit_others: Edit other information
+          edit_password: Change password
+          unconfirmed_email: We sent a link to confirm the change of email from %{email} to %{unconfirmed_email} to your email.
+          label/current_password: Current password
+          label/password: New password
+          label/password_confirmation: New password (confirmation)
+        update_password:
+          success: Password changed.
+          failure: Failed to change password.
+        update_email:
+          success: Email change started. Please confirm the change by clicking on the link we sent to your original email.
+          failure: Failed to change email.
       documents:
         edit:
           download: Download
@@ -231,6 +248,10 @@ en:
         form_tabs:
           header_message:
             header_message: Message text
+          settings:
+            subtitle_settings: Subtitle Settings
+            subtitle_languages_hint: Enter language codes separated by commas (e.g., cs, en, de, es)
+            subtitle_auto_generation_enabled_hint: Enable automatic subtitle generation for new videos
       users:
         index:
           index_tabs/locked: Blocked
@@ -255,6 +276,15 @@ en:
             paragraph: Keywords allow you to insert dynamic elements into an email that need to be generated. To use it, you need to insert the keyword with parentheses anywhere in the text. While sending the e-mail, it will be replaced by the given dynamic element.
             required: Required keywords
             optional: Other keywords
+      help_documents:
+        index:
+          title: Help Documentation
+          no_documents: No help documents available. Please create doc/help/index.yml file to configure help documents.
+        show:
+          back_to_list: Back to list
+          last_updated: "Last updated:"
+          not_found: Help document not found.
+        access_denied: You don't have permission to access help documentation.
       single_file_select:
         add_image: Add image
         add_video: Add video
@@ -280,8 +310,11 @@ en:
       layout:
         sidebar:
           homepage: Homepage
+          help: Help
           audio: Audios
           video: Videos
+        header_component:
+          sign_out: Sign out
       private_attachments:
         single_dropzone:
           download: Download
@@ -338,6 +371,7 @@ en:
           title/image: Pick an image
           title/video: Pick a video
           title/audio: Pick an audio
+          title/document: Pick a file
 
       with_aside:
         hide: Hide
@@ -387,6 +421,78 @@ en:
       autosave:
         toggle_component:
           label: Automatic save
+
+      files:
+        subtitle_form_component:
+          enabled_label: Enable subtitles
+          validation_errors_title: "Validation errors:"
+          text_label: Subtitle text
+          text_hint: Enter subtitles in VTT format
+          save: Save
+          cancel: Cancel
+          delete_subtitle: Delete
+          delete_confirm: Are you sure you want to delete this subtitle?
+          remove_new: Remove
+          last_manual_edit: "Manually edited %{time} ago"
+          last_transcription: "Transcribed %{time} ago"
+          no_activity: "No activity yet"
+          status:
+            processing: Processing
+            enabled: Ready
+            disabled: Disabled
+            disabled_with_errors: "Disabled (%{count} errors)"
+            empty: Empty
+
+        subtitles_form_component:
+          title: Subtitles
+          retranscribe_subtitles: "Retranscribe Subtitles"
+          retranscribe_confirm: "Are you sure you want to retranscribe all subtitles? This will overwrite existing subtitles."
+          reload_player: "Reload Player"
+          reload_player_tooltip: "Reload the page to restart the video player"
+          transcription_in_progress: "Transcription in progress..."
+          transcription_failed: Transcription failed
+          started_time_ago: Started %{time} ago
+          enabled_label: Enable subtitles
+          add_missing_languages: Add Manual Translation
+          select_language: Select language...
+          add_language: Add Language
+          delete_subtitle: Delete
+          delete_subtitle_confirm: Are you sure you want to delete this subtitle?
+          delete_confirm: Are you sure you want to delete this subtitle?
+          remove_new: Remove
+
+          text_label: Subtitle text
+          text_hint: Enter subtitles in VTT format
+          validation_errors_title: "Validation errors:"
+          save: Save
+          cancel: Cancel
+          never_processed: Never processed
+          status:
+            processing: Processing
+            enabled: Ready
+            disabled: Disabled
+            disabled_with_errors: "Disabled (%{count} errors)"
+            empty: Empty
+          last_activity:
+            transcribed: "Transcribed %{time} ago"
+            edited: "Edited %{time} ago"
+            generic: "Activity %{time} ago"
+          last_manual_edit: "Manually edited %{time} ago"
+          last_transcription: "Transcribed %{time} ago"
+          no_activity: "No activity yet"
+          metadata:
+            transcription_service: "Service: %{service}"
+            attempts: "%{count} attempts"
+            validation_errors: "%{count} validation errors"
+
+      eleven_labs:
+        transcribe_subtitles_job:
+          errors:
+            file_too_large: "The file is larger than ElevenLabs file size limit, cannot do automatic transcription"
+            no_audio_detected: "No audio detected in video file"
+            cloud_storage_read_failed: "ElevenLabs couldn't read file from our cloud storage"
+
+
 
   date:
     formats:

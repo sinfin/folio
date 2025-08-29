@@ -230,10 +230,7 @@ module Folio::Console::Api::FileControllerBase
     end
 
     def filter_params
-      params.permit(:by_file_name,
-                    :by_placement,
-                    :by_tags,
-                    :by_used)
+      params.permit(:by_file_name, :by_placement, :by_tags, :by_used, :by_photo_archive)
     end
 
     def file_params_whitelist
@@ -252,8 +249,14 @@ module Folio::Console::Api::FileControllerBase
         :alt,
       ]
 
-      if @klass.new.respond_to?("preview_duration=")
+      test_instance = @klass.new
+
+      if test_instance.respond_to?("preview_duration=")
         ary << :preview_duration
+      end
+
+      if test_instance.try(:file_modal_additional_fields).present?
+        ary += test_instance.file_modal_additional_fields.keys
       end
 
       ary << { tags: [] }

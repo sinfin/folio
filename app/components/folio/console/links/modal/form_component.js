@@ -37,6 +37,10 @@ window.Folio.Stimulus.register('f-c-links-modal-form', class extends window.Stim
       data.target = data.target[0]
     }
 
+    if (!data.label) {
+      data.label = ''
+    }
+
     if (data.record_id) {
       const idAsNumber = parseInt(data.record_id)
       if (idAsNumber) data.record_id = idAsNumber
@@ -54,7 +58,9 @@ window.Folio.Stimulus.register('f-c-links-modal-form', class extends window.Stim
 
       if (this.jsonValue) {
         if (!this.preferredLabelValue && typeof e.detail.urlJson.label !== 'undefined') {
-          this.labelInputTarget.value = e.detail.urlJson.label
+          if (this.hasLabelInputTarget) {
+            this.labelInputTarget.value = e.detail.urlJson.label
+          }
         }
 
         if (e.detail.urlJson.record_id && e.detail.urlJson.record_type) {

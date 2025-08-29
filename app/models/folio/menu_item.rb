@@ -19,6 +19,7 @@ class Folio::MenuItem < Folio::ApplicationRecord
   # Validations
   validate :validate_menu_available_targets_and_paths
   validate :validate_style
+  validate :validate_url
 
   before_validation :nullify_empty_rails_path
   before_validation :set_specific_relations
@@ -88,6 +89,20 @@ class Folio::MenuItem < Folio::ApplicationRecord
       if style.present? && menu.class.styles.exclude?(style)
         errors.add(:style, :invalid)
       end
+    end
+
+    def validate_url
+      return nil if url.blank?
+
+      # leave this here to avoid completely invalid URL before checking if it's relative
+      parsed_uri = URI.parse(url)
+
+      return if url.match?(/\.{0,2}\//) # allow relative URLs
+      return if parsed_uri.host.present? && parsed_uri.scheme.present? && parsed_uri.scheme.in?(%w[http https])
+
+      errors.add(:url, :invalid)
+    rescue URI::InvalidURIError
+      errors.add(:url, :invalid)
     end
 
     def nullify_empty_rails_path

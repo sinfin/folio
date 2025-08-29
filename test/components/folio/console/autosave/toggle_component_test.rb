@@ -9,9 +9,11 @@ class Folio::Console::Autosave::ToggleComponentTest < Folio::Console::ComponentT
         Rails.application.config.stub(:folio_pages_autosave, true) do
           record = create(:folio_page)
 
-          render_inline(Folio::Console::Autosave::ToggleComponent.new(record:))
+          record.stub(:folio_autosave_enabled?, true) do
+            render_inline(Folio::Console::Autosave::ToggleComponent.new(record:))
 
-          assert_selector(".f-c-autosave-toggle")
+            assert_selector(".f-c-autosave-toggle")
+          end
         end
       end
     end
@@ -23,9 +25,11 @@ class Folio::Console::Autosave::ToggleComponentTest < Folio::Console::ComponentT
         Rails.application.config.stub(:folio_pages_autosave, false) do
           record = create(:folio_page)
 
-          render_inline(Folio::Console::Autosave::ToggleComponent.new(record:))
+          record.stub(:folio_autosave_enabled?, false) do
+            render_inline(Folio::Console::Autosave::ToggleComponent.new(record:))
 
-          assert_no_selector(".f-c-autosave-toggle")
+            assert_no_selector(".f-c-autosave-toggle")
+          end
         end
       end
     end

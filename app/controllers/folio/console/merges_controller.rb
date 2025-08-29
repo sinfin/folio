@@ -19,8 +19,14 @@ class Folio::Console::MergesController < Folio::Console::BaseController
       end
 
       if merger_klass
-        @merger = merger_klass.new(@klass.find(original_id),
-                                   @klass.find(duplicate_id),
+        scope = if @klass.respond_to?(:by_site)
+          @klass.by_site(Folio::Current.site)
+        else
+          @klass
+        end
+
+        @merger = merger_klass.new(scope.find(original_id),
+                                   scope.find(duplicate_id),
                                    klass: @klass)
 
         add_breadcrumb @klass.model_name.human(count: 2),

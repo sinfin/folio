@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Vite + React + TS</title>
+  </head>
+  <body>
+    <div id="folio-tiptap-dev-root"></div>
+
+    <script type="text/javascript">
+      (() => {
+        const params = new URLSearchParams(window.location.search);
+        const value = params.get('yourParamName');
+
+        if (params.get('folio-iframe-stylesheet-url')) {
+          const link = document.createElement("link");
+          link.rel = "stylesheet";
+          link.href = params.get('folio-iframe-stylesheet-url')
+          document.body.appendChild(link);
+        }
+
+        const iframeValue = params.get("folio-iframe")
+
+        if (iframeValue === "rich-text") {
+          const node = document.getElementById("folio-tiptap-dev-root");
+          node.removeAttribute("id");
+          node.className =
+            "f-tiptap-iframe-content f-tiptap-iframe-content--rich-text";
+          node.dataset.tiptapType = "rich-text";
+        } else if (iframeValue === "block") {
+          const node = document.getElementById("folio-tiptap-dev-root");
+          node.removeAttribute("id");
+          node.className =
+            "f-tiptap-iframe-content f-tiptap-iframe-content--block";
+          node.dataset.tiptapType = "block";
+        } else if (params.get("tiptap-type") === "block") {
+          const node = document.getElementById("folio-tiptap-dev-root");
+          node.dataset.tiptapType = "block";
+        }
+
+        if (params.get('lang') === "cs") {
+          document.documentElement.lang = "cs"
+        }
+
+        const appStylesLink = document.createElement("link");
+        appStylesLink.rel = "stylesheet";
+        appStylesLink.href = "/tmp/tiptap-styles-from-app.scss";
+        document.head.prepend(appStylesLink);
+      })()
+    </script>
+
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

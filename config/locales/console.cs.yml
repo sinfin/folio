@@ -97,11 +97,28 @@ cs:
         update:
           success: Šablony upraveny.
       create: Vytvořit
+      delete: Smazat
       current_users:
         console_url_bar:
           title: Tuto stránku nyní upravuje
           text: Vyčkejte, až dokončí úpravy. Při současné úpravě by mohlo dojít ke ztrátě rozpracovaného obsahu.
-      delete: Smazat
+        show_component:
+          title: Můj profil
+          title/sign_in: Přihlašovací jméno
+          title/password: Heslo
+          title/others: Kontaktní a další údaje
+          edit_others: Upravit další údaje
+          edit_password: Změnit heslo
+          unconfirmed_email: Na email %{email} jsme vám odeslali odkaz pro potvrzení změny e‑mailu na %{unconfirmed_email}.
+          label/current_password: Aktuální heslo pro kontrolu
+          label/password: Nové heslo
+          label/password_confirmation: Nové heslo (kontrola)
+        update_password:
+          success: Heslo bylo změněno.
+          failure: Změna hesla se nezdařila.
+        update_email:
+          success: Změna e-mailu zahájena. Potvrďte prosím změnu kliknutím na odkaz, který jsme vám zaslali na váš původní e-mail.
+          failure: Změna e-mailu se nezdařila.
       documents:
         edit:
           download: Stáhnout
@@ -235,6 +252,10 @@ cs:
         form_tabs:
           header_message:
             header_message: Text oznámení
+          settings:
+            subtitle_settings: Nastavení titulků
+            subtitle_languages_hint: Zadejte kódy jazyků oddělené čárkami (např. cs, en, de, es). Pořadí jazyků ovlivňuje pořadí titulků v přehrávači.
+            subtitle_auto_generation_enabled_hint: Povolit automatické generování titulků pro nová videa
       users:
         index:
           index_tabs/locked: Zablokovaní
@@ -252,6 +273,15 @@ cs:
         invite_and_copy:
           button: Pozvat znovu a zkopírovat adresu
           failure: Pozvánka se nezdařila. Chyba byla reportována.
+      help_documents:
+        index:
+          title: Nápověda
+          no_documents: Nejsou k dispozici žádné dokumenty nápovědy. Pro konfiguraci nápovědy vytvořte soubor doc/help/index.yml.
+        show:
+          back_to_list: Zpět na seznam
+          last_updated: "Poslední aktualizace:"
+          not_found: Dokument nápovědy nebyl nalezen.
+        access_denied: Nemáte oprávnění k přístupu k dokumentaci nápovědy.
       email_templates:
         form:
           keywords:
@@ -284,8 +314,11 @@ cs:
       layout:
         sidebar:
           homepage: Úvodní stránka
+          help: Nápověda
           audio: Audiobanka
           video: Videobanka
+        header_component:
+          sign_out: Odhlásit se
       private_attachments:
         single_dropzone:
           download: Stáhnout
@@ -346,6 +379,7 @@ cs:
           title/image: Zvolte obrázek
           title/video: Zvolte video
           title/audio: Zvolte audio
+          title/document: Zvolte soubor
 
       with_aside:
         hide: Skrýt
@@ -395,6 +429,79 @@ cs:
       autosave:
         toggle_component:
           label: Automatické ukládání
+
+      files:
+
+        subtitle_form_component:
+          enabled_label: Povolit titulky
+          validation_errors_title: "Chyby validace:"
+          text_label: Text titulků
+          text_hint: Zadejte titulky ve formátu VTT
+          save: Uložit
+          cancel: Zrušit
+          delete_subtitle: Smazat
+          delete_confirm: Opravdu chcete smazat tyto titulky?
+          remove_new: Odebrat
+          last_manual_edit: "Ručně upraveno před %{time}"
+          last_transcription: "Vygenerováno před %{time}"
+          no_activity: "Zatím žádná aktivita"
+          status:
+            processing: Zpracovává se
+            enabled: Zapnuto
+            disabled: Vypnuto
+            disabled_with_errors: "Vypnuto (chyby: %{count})"
+            empty: Prázdné
+
+        subtitles_form_component:
+          title: Titulky
+          retranscribe_subtitles: "Spustit automatický přepis"
+          retranscribe_confirm: "Opravdu chcete znovu spustit automatický přepis? Tato akce přepíše existující titulky."
+          reload_player: "Znovu načíst přehrávač"
+          reload_player_tooltip: "Obnovit stránku pro restart video přehrávače"
+          transcription_in_progress: "Probíhá přepis..."
+          transcription_failed: Přepis selhal
+          started_time_ago: Začal před %{time}
+          enabled_label: Povolit titulky
+          add_missing_languages: Přidat ruční překlad
+          select_language: Vyberte jazyk...
+          add_language: Přidat překlad
+          delete_subtitle: Smazat
+          delete_subtitle_confirm: Opravdu chcete smazat tyto titulky?
+          delete_confirm: Opravdu chcete smazat tyto titulky?
+          remove_new: Odebrat
+
+          text_label: Text titulků
+          text_hint: Zadejte titulky ve formátu VTT
+          validation_errors_title: "Chyby validace:"
+          save: Uložit
+          cancel: Zrušit
+          never_processed: Nikdy nezpracováno
+          status:
+            processing: Zpracovává se
+            enabled: Zapnuto
+            disabled: Vypnuto
+            disabled_with_errors: "Vypnuto (chyby: %{count})"
+            empty: Prázdné
+          last_activity:
+            transcribed: "Vygenerováno před %{time}"
+            edited: "Upraveno před %{time}"
+            generic: "Aktivita před %{time}"
+          last_manual_edit: "Ručně upraveno před %{time}"
+          last_transcription: "Vygenerováno před %{time}"
+          no_activity: "Zatím žádná aktivita"
+          metadata:
+            transcription_service: "Služba: %{service}"
+            attempts: "%{count} pokusů"
+            validation_errors: "%{count} chyb validace"
+
+      eleven_labs:
+        transcribe_subtitles_job:
+          errors:
+            file_too_large: "Soubor je větší než je limit ElevenLabs, nelze provést automatický přepis"
+            no_audio_detected: "Ve video souboru nebylo detekováno žádné audio"
+            cloud_storage_read_failed: "ElevenLabs nemohl načíst soubor z našeho cloudového úložiště"
+
+
 
   date:
     formats:

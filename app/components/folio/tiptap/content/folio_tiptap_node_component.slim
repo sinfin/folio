@@ -1,0 +1,5 @@
+- if @prose_mirror_node["type"] == "doc"
+  = render(@node.class.view_component_class.new(node: @node))
+- else
+  .f-tiptap-node
+    = render(@node.class.view_component_class.new(node: @node))

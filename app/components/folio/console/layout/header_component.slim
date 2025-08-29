@@ -1,0 +1,51 @@
+.f-c-layout-header.small
+  == cell('folio/console/ui/button',
+          variant: :transparent,
+          icon: :menu,
+          class: "f-c-layout-header__toggle f-c-js-sidebar-toggle")
+
+  .container-fluid
+    .f-c-layout-header__inner
+      - if @breadcrumbs_on_rails
+        .f-c-layout-header__breadcrumbs
+          - @breadcrumbs_on_rails.each_with_index do |breadcrumb, i|
+            .f-c-layout-header__breadcrumb[
+              class=breadcrumb_position_class_name(i)
+            ]
+              - if breadcrumb.path
+                a.f-c-layout-header__breadcrumb-inner[
+                  class="f-c-layout-header__breadcrumb-inner--a"
+                  class="text-reset"
+                  href=breadcrumb.path
+                ]
+                  - if i.zero? && breadcrumb.path == "/console"
+                    = folio_icon(:home,
+                                 class: 'f-c-layout-header__breadcrumb-home-ico',
+                                 height: 16)
+                  - else
+                    = cstypo breadcrumb.name
+
+              - else
+                span.f-c-layout-header__breadcrumb-inner[
+                  class="f-c-layout-header__breadcrumb-inner--span"
+                ]
+                  = cstypo breadcrumb.name
+
+              - if @breadcrumbs_on_rails.size - 1 > i
+                = folio_icon(:chevron_right,
+                             class: "f-c-layout-header__breadcrumb-delimiter",
+                             height: 16)
+
+      - if Folio::Current.user
+        a.f-c-layout-header__current-user-link.text-reset[
+          href=controller.folio.console_current_user_path
+        ]
+          = folio_icon(:user_filled, height: 14)
+          = Folio::Current.user.email
+
+      - if log_out_path
+        a.f-c-layout-header__sign-out-link.text-reset[
+          href=log_out_path
+        ]
+          = folio_icon(:logout_variant, height: 14)
+          = t('.sign_out')

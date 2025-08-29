@@ -1,0 +1,144 @@
+.f-c-tiptap-simple-form-wrap
+  --f-c-tiptap-simple-form-wrap-inner-padding: #{$f-c-layout-main-container__padding}
+  --f-c-tiptap-simple-form-wrap-fields-background: #{$light-gray}
+
+  position: relative
+  z-index: 1
+  display: flex
+  flex-direction: column
+  flex: 1 1 auto
+  min-height: 0
+
+  .f-c-layout-body--with-audit &__scroller
+    pointer-events: all
+
+  .f-c-layout-body--with-audit &__fields
+    pointer-events: none
+
+  &__form
+    display: flex
+    flex-direction: column
+    flex: 0 0 100%
+    min-height: 0
+
+  &__scroller
+    display: flex
+    flex-direction: column
+    flex: 0 1 100%
+    min-height: 0
+
+  &__fields
+    padding: var(--f-c-tiptap-simple-form-wrap-inner-padding)
+    position: relative
+    z-index: 1
+    background: var(--f-c-tiptap-simple-form-wrap-fields-background)
+
+    .nav-tabs .nav-link.active
+      background: var(--f-c-tiptap-simple-form-wrap-fields-background)
+
+    .tab-pane > .form-group:last-child
+      margin-bottom: 0
+
+  &__editors
+    position: relative
+    z-index: 2
+
+  &__editors-bar
+    z-index: 2
+    padding: 0 var(--f-c-tiptap-simple-form-wrap-inner-padding)
+    background: $body-bg
+    position: relative
+    display: flex
+    align-items: center
+    gap: $grid-gutter-half
+
+  &__editors-bar-title
+    font-weight: $font-weight-bold
+    color: $gray-medium-dark
+    line-height: 36px
+
+  &__editors-input-wrap
+    position: relative
+    z-index: 3
+    background: $body-bg
+
+  &__form-footer
+    flex: 0 0 auto
+
+  &__editors-input-wrap
+    &,
+    .f-input-tiptap,
+    .form-group__custom-html,
+    .f-input-tiptap__inner,
+    .f-input-tiptap__iframe
+      height: 100% !important
+      max-height: 100% !important
+
+  &__editors-bar-scroll-trigger
+    align-items: center
+    cursor: pointer
+    display: flex
+    height: 24px
+    justify-content: center
+    left: 0
+    position: absolute
+    right: 0
+    top: -12px
+
+  &__editors-bar-scroll-ico
+    align-items: center
+    background: $dark-gray
+    border-radius: 24px
+    color: $white
+    display: flex
+    justify-content: center
+    transition: $transition-base
+    width: 24px
+    height: 24px
+
+  &[data-f-c-tiptap-simple-form-wrap-scrolled-to-bottom-value="true"] &__editors-bar-scroll-ico
+    transform: rotate(180deg)
+
+  @include mq-mobile-menu
+    --f-c-tiptap-simple-form-wrap-inner-padding: #{$f-c-layout-main-container__padding--mobile}
+
+  @media screen and (max-width: 1699px)
+    &__editors-bar
+      position: sticky
+      bottom: 0
+      box-shadow: 0px 5px 3px 0px rgba(0, 0, 0, 0.15), 2px 2px 15px 2px rgba(0, 0, 0, 0.15)
+
+    &__editors
+      height: calc(100% - 53px)
+
+    &__iframe
+      height: 100% !important
+      max-height: 100% !important
+
+    &__scroller
+      display: block
+      overflow-y: scroll
+
+  @media screen and (min-width: 1700px)
+    &__scroller
+      display: grid
+      grid-template-columns: 1fr 1fr
+      grid-template-rows: auto 1fr
+      grid-gap: 0
+
+    &__editors-bar-scroll-trigger
+      display: none
+
+    &__fields
+      overflow-y: scroll
+      grid-column: 1
+      grid-row: span 2 / span 2
+      border-right: 1px solid $border-color
+
+    &__editors-bar
+      grid-column: 2
+      grid-row: 1
+
+    &__editors
+      grid-column-start: 2
+      grid-row-start: 2

@@ -39,6 +39,7 @@ class Folio::Console::SitesController < Folio::Console::BaseController
         address
         address_secondary
         copyright_info_source
+        subtitle_auto_generation_enabled
       ]
 
       ary << :domain if @site != Folio::Current.main_site
@@ -47,6 +48,7 @@ class Folio::Console::SitesController < Folio::Console::BaseController
             .permit(*ary,
                     *@site.class.additional_params,
                     *file_placements_strong_params,
+                    :subtitle_languages_string,
                     social_links: Folio::Site.social_link_sites)
     end
 

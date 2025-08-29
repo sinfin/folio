@@ -40,11 +40,11 @@ class ActiveSupport::TestCase
 
   def setup
     super
-    Folio::Current.original_reset
+    Folio::Current.reset
   end
 
   def reset_folio_current(site_user_link)
-    ::Folio::Current.original_reset
+    ::Folio::Current.reset
     ::Folio::Current.nillify_site_records
     ::Folio::Current.user = site_user_link.user
 
@@ -58,12 +58,13 @@ class Cell::TestCase # do not inherit from ActiveSupport::TestCase
   include SitesHelper
 
   require Folio::Engine.root.join("test/support/create_atom_helper")
+  require Folio::Engine.root.join("test/support/create_test_tiptap_node_helper")
   require Folio::Engine.root.join("test/support/create_page_singleton_helper")
 
   attr_reader :site
 
   def setup
-    Folio::Current.original_reset
+    Folio::Current.reset
     @site = get_any_site
   end
 
@@ -143,6 +144,7 @@ end
 
 class Folio::ComponentTest < ViewComponent::TestCase
   require Folio::Engine.root.join("test/support/create_atom_helper")
+  require Folio::Engine.root.join("test/support/create_test_tiptap_node_helper")
   require Folio::Engine.root.join("test/support/create_page_singleton_helper")
 end
 

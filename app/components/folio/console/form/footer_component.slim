@@ -1,20 +1,27 @@
-.f-c-form-footer-spacer class=(@audit ? "f-c-form-footer-spacer--with-audit" : nil)
+- unless @static
+  .f-c-form-footer-spacer[
+    class=(@audit ? "f-c-form-footer-spacer--with-audit" : nil)
+  ]
 
-.f-c-form-footer data=(@audit ? nil : data) class=(@audit ? "f-c-form-footer--with-audit" : nil)
+div[
+  data=(read_only? ? nil : data)
+  class=bem_class_name
+  class=(@audit ? "f-c-form-footer--with-audit" : nil)
+]
   - if @audit && @record
     = render(Folio::Console::Audited::BarComponent.new(audit: @audit,
                                                        record: @record))
 
   .f-c-form-footer__inner
     .container-fluid.f-c-form-footer__container
-      - unless @audit
+      - unless read_only?
         .f-c-form-footer__left
           - if @f
             == cell('folio/console/ui/button',
                     type: :submit,
                     class: 'f-c-form-footer__btn f-c-form-footer__btn--submit',
                     variant: :primary,
-                    label: t("folio.console.actions.submit"),
+                    label: @submit_label || t("folio.console.actions.submit"),
                     icon: :check,
                     data: stimulus_target('submitButton').merge(test_id: "submit-button"),
                     html_left: content_tag(:span, nil, class: "f-c-form-footer__submit-btn-indicator", data: stimulus_target('submitButtonIndicator')))
@@ -45,48 +52,48 @@
                   icon: :open_in_new,
                   target: "_blank",
                   data: { test_id: "preview-button" })
+        - if @show_settings
+          .f-c-form-footer__collapsible
+            .f-c-form-footer__collapsible-backdrop data=stimulus_action_unless_readonly(click: "toggleCollapsed")
+            .f-c-form-footer__collapsible-content
+              - if @record
+                - unless @audit
+                  = render(Folio::Console::Autosave::ToggleComponent.new(record: @record))
 
-        .f-c-form-footer__collapsible
-          .f-c-form-footer__collapsible-backdrop data=stimulus_action_unless_audit(click: "toggleCollapsed")
-          .f-c-form-footer__collapsible-content
-            - if @record
-              - unless @audit
-                = render(Folio::Console::Autosave::ToggleComponent.new(record: @record))
+                = render(Folio::Console::Audited::DropdownComponent.new(audits: controller.instance_variable_get(:@audited_audits),
+                                                                        audit: @audit,
+                                                                        record: @record))
 
-              = render(Folio::Console::Audited::DropdownComponent.new(audits: controller.instance_variable_get(:@audited_audits),
-                                                                      audit: @audit,
-                                                                      record: @record))
+              .f-c-form-footer__settings
+                .f-c-form-footer__settings-toggle.small.text-muted[
+                  data=stimulus_action_unless_readonly(click: "toggleSettings")
+                ]
+                  == cell('folio/console/ui/with_icon',
+                          t('.settings'),
+                          hover: :underline,
+                          icon: :cog,
+                          icon_options: { height: 16 })
 
-            .f-c-form-footer__settings
-              .f-c-form-footer__settings-toggle.small.text-muted[
-                data=stimulus_action_unless_audit(click: "toggleSettings")
-              ]
-                == cell('folio/console/ui/with_icon',
-                        t('.settings'),
-                        hover: :underline,
-                        icon: :cog,
-                        icon_options: { height: 16 })
+                .f-c-form-footer__settings-backdrop[
+                  data=stimulus_action_unless_readonly(click: "toggleSettings")
+                ]
 
-              .f-c-form-footer__settings-backdrop[
-                data=stimulus_action_unless_audit(click: "toggleSettings")
-              ]
+                .f-c-form-footer__settings-content
+                  = render(Folio::Console::HtmlAutoFormat::ToggleComponent.new)
 
-              .f-c-form-footer__settings-content
-                = render(Folio::Console::HtmlAutoFormat::ToggleComponent.new)
+              - if @share_preview
+                .f-c-form-footer__share.small.text-muted data=stimulus_modal_toggle(Folio::Console::SharePreviewModalComponent::CLASS_NAME)
+                  == cell('folio/console/ui/with_icon',
+                          t('.share'),
+                          hover: :underline,
+                          icon: :link,
+                          icon_options: { height: 16 })
 
-            - if @share_preview
-              .f-c-form-footer__share.small.text-muted data=stimulus_modal_toggle(Folio::Console::SharePreviewModalComponent::CLASS_NAME)
-                == cell('folio/console/ui/with_icon',
-                        t('.share'),
-                        hover: :underline,
-                        icon: :link,
-                        icon_options: { height: 16 })
-
-          == cell('folio/console/ui/button',
-                  class: 'f-c-form-footer__btn f-c-form-footer__btn--collapsible',
-                  variant: :gray,
-                  icon: :dots_vertical,
-                  data: (stimulus_action_unless_audit(click: "toggleCollapsed") || {}).merge(test_id: "dropdown-button"))
+            == cell('folio/console/ui/button',
+                    class: 'f-c-form-footer__btn f-c-form-footer__btn--collapsible',
+                    variant: :gray,
+                    icon: :dots_vertical,
+                    data: (stimulus_action_unless_readonly(click: "toggleCollapsed") || {}).merge(test_id: "dropdown-button"))
 
 javascript:
   if (window.sessionStorage.getItem('fCAutosaveUiState')) {
