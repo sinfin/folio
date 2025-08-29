@@ -10,9 +10,7 @@ window.Folio.Stimulus.register('f-c-tiptap-overlay-form', class extends window.S
       const firstInput = this.element.querySelector('.form-control')
 
       if (firstInput) {
-        [
-          firstInput.focus()
-        ]
+        firstInput.focus()
       }
     }, 200) // wait for css transition
 

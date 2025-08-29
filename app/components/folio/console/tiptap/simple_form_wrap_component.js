@@ -6,7 +6,7 @@ window.Folio.Stimulus.register('f-c-tiptap-simple-form-wrap', class extends wind
   }
 
   connect () {
-    this.onScroll = Folio.throttle(this.onScrollRaw.bind(this))
+    this.onScroll = window.Folio.throttle(this.onScrollRaw.bind(this))
   }
 
   disconnect () {

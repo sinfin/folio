@@ -69,7 +69,7 @@ window.Folio.Stimulus.register('f-input-content-templates-menu', class extends w
       if (values[i]) {
         if (input.classList.contains('redactor-source')) {
           try {
-            const R = $R(input)
+            const R = window.$R(input)
             if (R && R.source) {
               R.source.setCode(values[i])
             }

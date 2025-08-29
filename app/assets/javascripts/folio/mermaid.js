@@ -5,8 +5,8 @@ window.Folio.Mermaid = {}
 window.Folio.Mermaid.CDN_URL = 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js'
 
 window.Folio.Mermaid.initialize = () => {
-  if (typeof mermaid !== 'undefined') {
-    mermaid.initialize({
+  if (typeof window.mermaid !== 'undefined') {
+    window.mermaid.initialize({
       startOnLoad: false,
       theme: 'default',
       themeVariables: {
@@ -33,8 +33,8 @@ window.Folio.Mermaid.innerBind = (el) => {
   })
 
   // Initialize mermaid for new elements
-  if (typeof mermaid !== 'undefined') {
-    mermaid.init(undefined, el.querySelectorAll('.mermaid'))
+  if (typeof window.mermaid !== 'undefined') {
+    window.mermaid.init(undefined, el.querySelectorAll('.mermaid'))
   }
 }
 

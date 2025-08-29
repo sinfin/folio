@@ -5,7 +5,7 @@ window.Folio.Stimulus.register('f-c-links-modal', class extends window.Stimulus.
     apiUrl: String,
     preferredLabel: String,
     disableLabel: { type: Boolean, default: false },
-    absoluteUrls: { type: Boolean, default: false },
+    absoluteUrls: { type: Boolean, default: false }
   }
 
   static targets = ['formWrap']
@@ -51,7 +51,7 @@ window.Folio.Stimulus.register('f-c-links-modal', class extends window.Stimulus.
       json: this.jsonValue,
       absolute_urls: this.absoluteUrlsValue,
       preferred_label: this.preferredLabelValue,
-      disable_label: this.disableLabelValue,
+      disable_label: this.disableLabelValue
     })
 
     window.Folio.Api.apiGet(url, null, this.abortController.signal).then((res) => {
@@ -77,6 +77,7 @@ window.Folio.Stimulus.register('f-c-links-modal', class extends window.Stimulus.
 
   submit (e) {
     if (this.trigger) {
+      // eslint-disable-next-line
       this.trigger.saveUrlJson.call(this.trigger, e.detail.data)
       this.trigger = null
     }
@@ -89,6 +90,7 @@ window.Folio.Stimulus.register('f-c-links-modal', class extends window.Stimulus.
     // not present if submited as we clear this.trigger in submit callback
     if (this.trigger) {
       if (this.trigger.linkModalClosed) {
+        // eslint-disable-next-line
         this.trigger.linkModalClosed.call(this.trigger)
       }
 
@@ -104,7 +106,7 @@ window.Folio.Stimulus.register('f-c-links-modal', class extends window.Stimulus.
         absoluteUrls: e.detail.absoluteUrls,
         json: e.detail.json,
         disableLabel: e.detail.disableLabel,
-        preferredLabel: e.detail.preferredLabel,
+        preferredLabel: e.detail.preferredLabel
       })
     }
   }

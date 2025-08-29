@@ -258,7 +258,7 @@ window.Folio.Stimulus.register('f-c-files-subtitles-form', class extends window.
   saveAccordionState (language, isOpen) {
     try {
       const storageKey = this.getAccordionStorageKey()
-      const currentState = JSON.parse(sessionStorage.getItem(storageKey) || '{}')
+      const currentState = JSON.parse(window.sessionStorage.getItem(storageKey) || '{}')
 
       if (isOpen) {
         currentState[language] = true
@@ -266,7 +266,7 @@ window.Folio.Stimulus.register('f-c-files-subtitles-form', class extends window.
         delete currentState[language]
       }
 
-      sessionStorage.setItem(storageKey, JSON.stringify(currentState))
+      window.sessionStorage.setItem(storageKey, JSON.stringify(currentState))
     } catch (error) {
       console.warn('Failed to save accordion state:', error)
     }
@@ -275,7 +275,7 @@ window.Folio.Stimulus.register('f-c-files-subtitles-form', class extends window.
   restoreAccordionState () {
     try {
       const storageKey = this.getAccordionStorageKey()
-      const savedState = JSON.parse(sessionStorage.getItem(storageKey) || '{}')
+      const savedState = JSON.parse(window.sessionStorage.getItem(storageKey) || '{}')
 
       Object.keys(savedState).forEach(language => {
         if (savedState[language]) {
@@ -297,9 +297,10 @@ window.Folio.Stimulus.register('f-c-files-subtitles-form', class extends window.
 
       if (accordionCollapse && accordionButton) {
         // Use Bootstrap's collapse API to open the accordion
-        const collapseInstance = new bootstrap.Collapse(accordionCollapse, {
+        const collapseInstance = new window.bootstrap.Collapse(accordionCollapse, {
           show: true
         })
+        console.log('TODO: cleanup collapseInstance on disconnect', collapseInstance)
 
         // Update button state
         accordionButton.classList.remove('collapsed')

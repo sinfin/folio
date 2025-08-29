@@ -187,7 +187,7 @@ window.Folio.Stimulus.register('f-c-files-subtitle-form', class extends window.S
   saveAccordionState (isOpen) {
     try {
       const storageKey = this.getAccordionStorageKey()
-      const currentState = JSON.parse(sessionStorage.getItem(storageKey) || '{}')
+      const currentState = JSON.parse(window.sessionStorage.getItem(storageKey) || '{}')
 
       if (isOpen) {
         currentState[this.languageValue] = true
@@ -195,7 +195,7 @@ window.Folio.Stimulus.register('f-c-files-subtitle-form', class extends window.S
         delete currentState[this.languageValue]
       }
 
-      sessionStorage.setItem(storageKey, JSON.stringify(currentState))
+      window.sessionStorage.setItem(storageKey, JSON.stringify(currentState))
     } catch (error) {
       console.warn('Failed to save accordion state:', error)
     }
@@ -204,7 +204,7 @@ window.Folio.Stimulus.register('f-c-files-subtitle-form', class extends window.S
   restoreAccordionState () {
     try {
       const storageKey = this.getAccordionStorageKey()
-      const savedState = JSON.parse(sessionStorage.getItem(storageKey) || '{}')
+      const savedState = JSON.parse(window.sessionStorage.getItem(storageKey) || '{}')
 
       if (savedState[this.languageValue]) {
         this.openAccordion()
@@ -220,9 +220,10 @@ window.Folio.Stimulus.register('f-c-files-subtitle-form', class extends window.S
 
     if (accordionCollapse && accordionButton) {
       // Use Bootstrap's collapse API to open the accordion
-      const collapseInstance = new bootstrap.Collapse(accordionCollapse, {
+      const collapseInstance = new window.bootstrap.Collapse(accordionCollapse, {
         show: true
       })
+      console.log('TODO: cleanup collapseInstance on disconnect', collapseInstance)
 
       // Update button state
       accordionButton.classList.remove('collapsed')
@@ -295,10 +296,10 @@ window.Folio.Stimulus.register('f-c-files-subtitle-form', class extends window.S
   cleanupAccordionStateForLanguage (language) {
     try {
       const storageKey = this.getAccordionStorageKey()
-      const currentState = JSON.parse(sessionStorage.getItem(storageKey) || '{}')
+      const currentState = JSON.parse(window.sessionStorage.getItem(storageKey) || '{}')
 
       delete currentState[language]
-      sessionStorage.setItem(storageKey, JSON.stringify(currentState))
+      window.sessionStorage.setItem(storageKey, JSON.stringify(currentState))
     } catch (error) {
       console.warn('Failed to cleanup accordion state:', error)
     }
