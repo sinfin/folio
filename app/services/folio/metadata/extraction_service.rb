@@ -176,7 +176,46 @@ end
         # Merge and deduplicate (case-insensitive)
         merged_tags = (existing_tags + new_keywords).uniq { |tag| tag.downcase }
 
-        image.tag_list = merged_tags
+        # Filter out problematic tags to avoid breaking the extraction process
+        safe_tags = filter_safe_tags(image, merged_tags)
+
+        # Assign only safe tags
+        image.tag_list = safe_tags if safe_tags.any?
       end
     end
+
+    private
+      def filter_safe_tags(image, tag_names)
+        return [] if tag_names.blank?
+
+        safe_tags = []
+        skipped_tags = []
+
+        tag_names.each do |tag_name|
+          # Check if this tag would cause the tenant issue
+          if tag_would_cause_tenant_issue?(tag_name.to_s, image.site_id)
+            skipped_tags << tag_name.to_s
+          else
+            safe_tags << tag_name.to_s
+          end
+        end
+
+        if skipped_tags.any?
+          Rails.logger.warn "Skipped problematic tags for image ##{image.id}: #{skipped_tags.join(', ')}"
+        end
+
+        safe_tags
+      end
+
+      def tag_would_cause_tenant_issue?(tag_name, site_id)
+        # Find if tag exists
+        tag = ActsAsTaggableOn::Tag.find_by(name: tag_name)
+        return false unless tag  # New tags are safe
+
+        # Check if tag has any taggings in this tenant
+        tenant_taggings_count = tag.taggings.where(tenant: site_id).count
+
+        # If tag exists but has no taggings in tenant, it's problematic
+        tenant_taggings_count == 0
+      end
 end
