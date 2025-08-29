@@ -3,8 +3,20 @@
 require "test_helper"
 
 class Folio::CraMediaCloud::MonitorProcessingJobTest < ActiveJob::TestCase
+  def with_unlocked_monitor_job(&block)
+    fake_redis = Class.new do
+      def set(*, **)
+        "OK" # emulate successful NX lock acquisition
+      end
+      def eval(*); end # no-op for lock release
+    end.new
+
+    # Wrap perform via instance stub
+    job = Folio::CraMediaCloud::MonitorProcessingJob.new
+    job.stub(:redis_client, fake_redis, &block)
+  end
+
   test "schedules progress checks for processing videos" do
-    # Create a video file in processing state
     video = create(:folio_file_video)
     video.update!(
       aasm_state: :processing,
@@ -15,14 +27,14 @@ class Folio::CraMediaCloud::MonitorProcessingJobTest < ActiveJob::TestCase
       }
     )
 
-    # Verify CheckProgressJob is scheduled
-    assert_enqueued_jobs 1, only: Folio::CraMediaCloud::CheckProgressJob do
-      Folio::CraMediaCloud::MonitorProcessingJob.perform_now
+    with_unlocked_monitor_job do
+      assert_enqueued_jobs 1, only: Folio::CraMediaCloud::CheckProgressJob do
+        Folio::CraMediaCloud::MonitorProcessingJob.perform_now
+      end
     end
   end
 
   test "skips videos that are already fully processed" do
-    # Create a video file that's already processed
     video = create(:folio_file_video)
     video.update!(
       aasm_state: :processing,
@@ -32,21 +44,22 @@ class Folio::CraMediaCloud::MonitorProcessingJobTest < ActiveJob::TestCase
       }
     )
 
-    # No jobs should be scheduled
-    assert_enqueued_jobs 0, only: Folio::CraMediaCloud::CheckProgressJob do
-      Folio::CraMediaCloud::MonitorProcessingJob.perform_now
+    with_unlocked_monitor_job do
+      assert_enqueued_jobs 0, only: Folio::CraMediaCloud::CheckProgressJob do
+        Folio::CraMediaCloud::MonitorProcessingJob.perform_now
+      end
     end
   end
 
   test "returns early when no processing videos exist" do
-    # No processing videos exist
-    assert_enqueued_jobs 0 do
-      Folio::CraMediaCloud::MonitorProcessingJob.perform_now
+    with_unlocked_monitor_job do
+      assert_enqueued_jobs 0 do
+        Folio::CraMediaCloud::MonitorProcessingJob.perform_now
+      end
     end
   end
 
   test "marks videos as failed after processing too long" do
-    # Create a video that's been processing for over 6 hours
     video = create(:folio_file_video)
     video.update!(
       aasm_state: :processing,
@@ -57,7 +70,9 @@ class Folio::CraMediaCloud::MonitorProcessingJobTest < ActiveJob::TestCase
       }
     )
 
-    Folio::CraMediaCloud::MonitorProcessingJob.perform_now
+    with_unlocked_monitor_job do
+      Folio::CraMediaCloud::MonitorProcessingJob.perform_now
+    end
 
     video.reload
     assert_equal "processing_failed", video.aasm_state

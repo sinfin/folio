@@ -58,6 +58,11 @@ end
 #  attribution_source_url            :string
 #  attribution_copyright             :string
 #  attribution_licence               :string
+#  headline                          :string
+#  capture_date                      :datetime
+#  gps_latitude                      :decimal(10, 6)
+#  gps_longitude                     :decimal(10, 6)
+#  file_metadata_extracted_at        :datetime
 #
 # Indexes
 #

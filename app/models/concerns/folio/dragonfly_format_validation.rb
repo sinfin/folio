@@ -4,7 +4,7 @@ module Folio::DragonflyFormatValidation
   extend ActiveSupport::Concern
 
   class_methods do
-    def validate_file_format(formats = %w[jpeg png bmp gif svg tiff webp])
+    def validate_file_format(formats = %w[jpeg png bmp gif svg tiff webp avif heic heif])
       mime_types = []
 
       formats.each do |f|

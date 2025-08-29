@@ -3,30 +3,40 @@
 class Folio::File::Image < Folio::File
   include Folio::Sitemap::Image
 
-  validate_file_format
+  validate_file_format(%w[jpeg png bmp gif svg tiff webp avif heic heif])
+
+  # Metadata extraction after image creation
+  after_commit :extract_metadata_async, on: :create, if: :should_extract_metadata?
 
   dragonfly_accessor :file do
     after_assign :sanitize_filename
     after_assign { |file| file.metadata }
   end
 
-  # Get from metadata
+  # Unified metadata accessor via IptcFieldMapper
+  def mapped_metadata
+    @mapped_metadata ||= if file_metadata.present?
+      Folio::Metadata::IptcFieldMapper.map_metadata(file_metadata)
+    else
+      {}
+    end
+  end
+
+  # Shorthand for common fields (backward compatibility)
   def title
-    metadata_compose(["Headline", "Title"])
+    headline.presence || mapped_metadata[:headline]
   end
 
   def caption
-    metadata_compose(["Caption", "Description", "Abstract"])
+    description.presence || mapped_metadata[:description]
   end
 
-  def keywords
-    metadata_compose(["Keywords"])
+  # GPS coordinates helper
+  def location_coordinates
+    return nil unless gps_latitude.present? && gps_longitude.present?
+    [gps_latitude, gps_longitude]
   end
 
-  def geo_location
-    # Geographic location, e.g.: Limerick, Ireland
-    metadata_compose(["LocationName", "SubLocation", "City", "ProvinceState", "CountryName"])
-  end
 
   def thumbnailable?
     true
@@ -36,12 +46,19 @@ class Folio::File::Image < Folio::File
     "image"
   end
 
-  private
-    def metadata_compose(tags)
-      string_arr = tags.filter_map { |tag| file_metadata.try("[]", tag) }.uniq
-      return nil if string_arr.size == 0
-      string_arr.join(", ")
-    end
+  # Manual metadata extraction (for existing images)
+  def extract_metadata!(force: false, user_id: nil)
+    Folio::Metadata::ExtractionService.new(self).extract!(force: force, user_id: user_id)
+  end
+
+  # Metadata extraction callbacks (delegate to service)
+  def should_extract_metadata?
+    Folio::Metadata::ExtractionService.should_extract?(self)
+  end
+
+  def extract_metadata_async
+    Folio::Metadata::ExtractionService.extract_async(self)
+  end
 end
 
 # == Schema Information
@@ -78,6 +95,11 @@ end
 #  attribution_source_url            :string
 #  attribution_copyright             :string
 #  attribution_licence               :string
+#  headline                          :string
+#  capture_date                      :datetime
+#  gps_latitude                      :decimal(10, 6)
+#  gps_longitude                     :decimal(10, 6)
+#  file_metadata_extracted_at        :datetime
 #
 # Indexes
 #

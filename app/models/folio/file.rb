@@ -249,6 +249,13 @@ class Folio::File < Folio::ApplicationRecord
     {}
   end
 
+  # Basic source accessor for all file types (fallback for non-images)
+  def source
+    # For images, this will be overridden by source_from_metadata alias
+    # For other files, return attribution_source
+    attribution_source
+  end
+
   private
     def set_file_name_for_search
       self.file_name_for_search = self.class.sanitize_filename_for_search(file_name)
@@ -328,6 +335,11 @@ end
 #  attribution_source_url            :string
 #  attribution_copyright             :string
 #  attribution_licence               :string
+#  headline                          :string
+#  capture_date                      :datetime
+#  gps_latitude                      :decimal(10, 6)
+#  gps_longitude                     :decimal(10, 6)
+#  file_metadata_extracted_at        :datetime
 #
 # Indexes
 #

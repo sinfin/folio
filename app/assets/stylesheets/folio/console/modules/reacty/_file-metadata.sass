@@ -1,0 +1,54 @@
+// File Metadata Component
+// Compact metadata display card for file modal
+
+.f-c-file-metadata
+  background-color: $gray-100
+  font-size: $font-size-sm
+  
+  .text-muted
+    color: $gray-600 !important
+  
+  strong
+    font-weight: $font-weight-semibold
+  
+  .f-c-state
+    margin: 0
+    
+    &__state
+      display: inline-flex
+      align-items: center
+      font-size: $font-size-sm
+    
+    &__state-square
+      width: 0.625rem
+      height: 0.625rem
+      margin-right: 0.375rem
+      border-radius: 50%
+    
+    &__text
+      font-weight: $font-weight-medium
+  
+  // Sensitive content toggle styling
+  .form-check.form-switch
+    .form-check-input
+      width: 2rem
+      height: 1rem
+    
+    .form-check-label
+      font-size: $font-size-sm
+      margin-left: 0.25rem
+
+// Responsive adjustments for mobile
++media-breakpoint-down(md)
+  .f-c-file-metadata
+    .d-flex:first-child
+      flex-direction: column
+      align-items: flex-start !important
+      gap: 0.5rem
+      
+    .d-flex:last-child
+      margin-top: 0.75rem
+      
+    span:not(:last-child)
+      margin-right: 0 !important
+      margin-bottom: 0.25rem
