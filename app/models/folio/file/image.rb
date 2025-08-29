@@ -105,19 +105,15 @@ end
 #
 # Indexes
 #
-#  index_folio_files_on_by_author                       (to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((author)::text, ''::text)))) USING gin
-#  index_folio_files_on_by_file_name                    (to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name)::text, ''::text)))) USING gin
-#  index_folio_files_on_by_file_name_for_search         (to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text)))) USING gin
-#  index_folio_files_on_capture_date                    (capture_date)
-#  index_folio_files_on_created_at                      (created_at)
-#  index_folio_files_on_file_metadata_extracted_at      (file_metadata_extracted_at)
-#  index_folio_files_on_file_name                       (file_name)
-#  index_folio_files_on_gps_latitude_and_gps_longitude  (gps_latitude,gps_longitude)
-#  index_folio_files_on_hash_id                         (hash_id)
-#  index_folio_files_on_headline                        (headline)
-#  index_folio_files_on_site_id                         (site_id)
-#  index_folio_files_on_type                            (type)
-#  index_folio_files_on_updated_at                      (updated_at)
+#  index_folio_files_on_by_author                (to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((author)::text, ''::text)))) USING gin
+#  index_folio_files_on_by_file_name             (to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name)::text, ''::text)))) USING gin
+#  index_folio_files_on_by_file_name_for_search  (to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text)))) USING gin
+#  index_folio_files_on_created_at               (created_at)
+#  index_folio_files_on_file_name                (file_name)
+#  index_folio_files_on_hash_id                  (hash_id)
+#  index_folio_files_on_site_id                  (site_id)
+#  index_folio_files_on_type                     (type)
+#  index_folio_files_on_updated_at               (updated_at)
 #
 # Foreign Keys
 #

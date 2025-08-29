@@ -329,13 +329,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_24_213446) do
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((author)::text, ''::text)))", name: "index_folio_files_on_by_author", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name)::text, ''::text)))", name: "index_folio_files_on_by_file_name", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text)))", name: "index_folio_files_on_by_file_name_for_search", using: :gin
-    t.index ["capture_date"], name: "index_folio_files_on_capture_date"
     t.index ["created_at"], name: "index_folio_files_on_created_at"
-    t.index ["file_metadata_extracted_at"], name: "index_folio_files_on_file_metadata_extracted_at"
     t.index ["file_name"], name: "index_folio_files_on_file_name"
-    t.index ["gps_latitude", "gps_longitude"], name: "index_folio_files_on_gps_latitude_and_gps_longitude"
     t.index ["hash_id"], name: "index_folio_files_on_hash_id"
-    t.index ["headline"], name: "index_folio_files_on_headline"
     t.index ["site_id"], name: "index_folio_files_on_site_id"
     t.index ["type"], name: "index_folio_files_on_type"
     t.index ["updated_at"], name: "index_folio_files_on_updated_at"
