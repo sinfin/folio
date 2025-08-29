@@ -4,7 +4,6 @@
   "standard": {
     "ignore": [
       "/app/assets/javascripts/folio/console/_cocoon-set-position.js",
-      "/app/assets/javascripts/folio/console/_data-auto-submit.js",
       "/app/assets/javascripts/folio/console/_data-change-value.js",
       "/app/assets/javascripts/folio/console/_data-cocoon-single-nested.js",
       "/app/assets/javascripts/folio/console/_data-destroy-association.js",

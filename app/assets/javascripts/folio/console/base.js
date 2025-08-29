@@ -39,6 +39,7 @@
 //= require folio/debounce
 //= require folio/throttle
 //= require folio/input
+//= require folio/form_auto_submit
 //= require folio/player_component
 //= require folio/image/image
 //= require folio/chart/chart
@@ -57,7 +58,6 @@
 
 //= require folio/console/turbo
 //= require folio/console/_cocoon-set-position
-//= require folio/console/_data-auto-submit
 //= require folio/console/_data-change-value
 //= require folio/console/_data-cocoon-single-nested
 //= require folio/console/_data-destroy-association
@@ -94,13 +94,14 @@
 //= require folio/console/files/batch/bar_component
 //= require folio/console/files/batch/form_component
 //= require folio/console/files/display_toggle_component
+//= require folio/console/files/index_modal_component
 //= require folio/console/files/picker/document_component
 //= require folio/console/files/picker/image_component
 //= require folio/console/files/picker_component
 //= require folio/console/files/show_component
 //= require folio/console/files/show_modal_component
-//= require folio/console/files/subtitles_form_component
 //= require folio/console/files/subtitle_form_component
+//= require folio/console/files/subtitles_form_component
 //= require folio/console/flash/flash
 //= require folio/console/folio_attributes_fields_component
 //= require folio/console/form/errors/errors

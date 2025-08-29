@@ -197,6 +197,11 @@ module Folio::StimulusHelper
                         inline: true)
   end
 
+  def stimulus_form_auto_submit
+    stimulus_controller("f-form-auto-submit",
+                        inline: true)
+  end
+
   def stimulus_turbolinks_form
     stimulus_controller("f-turbolinks-form",
                         action: { submit: "onSubmit" },
