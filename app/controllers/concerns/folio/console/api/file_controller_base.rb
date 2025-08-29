@@ -141,43 +141,12 @@ module Folio::Console::Api::FileControllerBase
         :sensitive_content,
         :default_gravity,
         :alt,
-        # IPTC Core metadata fields
+        # IPTC Core metadata fields (writable)
         :headline,
-        :caption_writer,
-        :credit_line,
-        :source,
-        :copyright_notice,
-        :copyright_marked,
-        :usage_terms,
-        :rights_usage_info,
-        :intellectual_genre,
-        :event,
-        :category,
-        :urgency,
-        :sublocation,
-        :city,
-        :state_province,
-        :country,
-        :country_code,
-        # Technical metadata (read-only, but allow for serialization)
-        :camera_make,
-        :camera_model,
-        :lens_info,
         :capture_date,
         :gps_latitude,
         :gps_longitude,
-        :orientation,
-        :file_metadata_extracted_at,
-        # JSONB array fields
-        { creator: [] },
-        { keywords: [] },
-        { subject_codes: [] },
-        { scene_codes: [] },
-        { persons_shown: [] },
-        { persons_shown_details: [] },
-        { organizations_shown: [] },
-        { location_created: [] },
-        { location_shown: [] }
+        :file_metadata_extracted_at
       ]
 
       test_instance = @klass.new
@@ -204,15 +173,7 @@ module Folio::Console::Api::FileControllerBase
         raw[:tag_list] = raw.delete(:tags).join(",")
       end
 
-      # Filter out any keys the model cannot write to (avoid unknown attribute errors)
-      writable_hash = {}
-      raw.to_h.each do |key, value|
-        if key.to_s == "tag_list" || folio_console_record.respond_to?("#{key}=")
-          writable_hash[key] = value
-        end
-      end
-
-      writable_hash
+      raw
     end
 
     def broadcast_metadata_extracted(file)
