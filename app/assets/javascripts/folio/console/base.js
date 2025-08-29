@@ -74,6 +74,7 @@
 //= require folio/console/ui/button/button
 //= require folio/console/ui/buttons/buttons
 //= require folio/console/ui/in_place_input_component
+//= require folio/console/ui/index/filters_component
 //= require folio/console/ui/notification_modal_component
 //= require folio/console/ui/pagy_component
 //= require folio/console/ui/tabs_component
@@ -107,7 +108,6 @@
 //= require folio/console/form/errors/errors
 //= require folio/console/form/footer_component
 //= require folio/console/form_modal_component
-//= require folio/console/index/filters/filters
 //= require folio/console/index/images/images
 //= require folio/console/index/position_buttons/position_buttons
 //= require folio/console/layout/sidebar/search/search

@@ -1,18 +1,18 @@
 = form do |f|
-  .f-c-index-filters__wrap
-    .f-c-index-filters__filters
+  .f-c-ui-index-filters__wrap
+    .f-c-ui-index-filters__filters
       - index_filters_hash.each do |key, config|
         - if config[:as] == :hidden
           = hidden_input(f, key, config)
         - else
           - filtered = filtered_by?(key)
 
-          .f-c-index-filters__filter[
+          .f-c-ui-index-filters__filter[
             class=collapsible_class_name(config)
             style=filter_style(config, filtered:)
           ]
             - if config[:as] == :numeric_range
-              .f-c-index-filters__numeric-range.input-group
+              .f-c-ui-index-filters__numeric-range.input-group
                 .input-group-prepend
                   = f.label "#{key}_from", label_for_key(key)
 
@@ -28,20 +28,21 @@
               = input(f, key)
 
     - if has_collapsible?
-      .f-c-index-filters__toggle-wrap
+      .f-c-ui-index-filters__toggle-wrap
         == cell('folio/console/ui/with_icon',
                 t('.collapsible_toggle'),
-                class: 'f-c-index-filters__toggle',
+                class: 'f-c-ui-index-filters__toggle',
+                data: stimulus_action(click: 'onToggleClick'),
                 right_icon: :menu_down)
 
-    .f-c-index-filters__cancel-wrap[
-      class=(filtered? ? nil : "f-c-index-filters__cancel-wrap--hidden")
+    .f-c-ui-index-filters__cancel-wrap[
+      class=(filtered? ? nil : "f-c-ui-index-filters__cancel-wrap--hidden")
     ]
       == cell('folio/console/ui/with_icon',
               t('.cancel'),
               href: cancel_url,
               icon: :close,
-              class: "text-danger f-c-index-filters__cancel")
+              class: "text-danger f-c-ui-index-filters__cancel")
 
     = f.input :by_label_query, as: :hidden,
                                input_html: { value: controller.params[:by_label_query] }

@@ -97,7 +97,9 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
       })
     }
 
-    this.loaderTarget.remove()
+    if (this.hasLoaderTarget) {
+      this.loaderTarget.remove()
+    }
   }
 
   uppyComplete (_result) {

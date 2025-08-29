@@ -43,8 +43,6 @@ window.Folio.Stimulus.register('f-c-ui-notification-modal', class extends window
 
   disconnect () {
     this.element.removeEventListener('hide.bs.modal', this.onBsModalHide)
-    this.bsModal.dispose()
-    delete this.bsModal
     delete this.trigger
     delete this.onCancel
   }
