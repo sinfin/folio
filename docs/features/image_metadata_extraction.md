@@ -15,7 +15,15 @@ The metadata system follows clean architecture principles with clear separation 
 Folio::File (base model - no metadata extraction)
 └── Folio::File::Image (Image files only)
     ├── Simplified metadata accessors (read from file_metadata JSONB)
-    └── Delegates to Folio::Metadata::ExtractionService
+    ├── Delegates to ExtractionJob (asynchronous processing)
+    └── Delegates to ExtractionService (synchronous processing)
+
+# Background job layer for asynchronous processing
+Folio::Metadata::ExtractionJob (ActiveJob background processing)
+├── queue_as :slow - uses slow queue for heavy operations
+├── perform(image, force: false, user_id: nil) - job entry point
+├── MessageBus broadcasting for live console UI updates
+└── Delegates to ExtractionService for actual processing
 
 # Service layer for business logic
 Folio::Metadata::ExtractionService (core extraction logic)
@@ -56,18 +64,7 @@ file_metadata_extracted_at: datetime # Extraction timestamp
 
 ## Setup and Configuration
 
-### 1. Database Migration
-
-Run the Folio migration to add essential metadata fields:
-
-```bash
-rails folio:install:migrations
-rails db:migrate
-```
-
-This adds 5 essential columns optimized for user editing and database queries, avoiding schema explosion.
-
-### 2. Basic Configuration
+### 1. Basic Configuration
 
 Create `config/initializers/folio_image_metadata.rb`:
 
@@ -101,64 +98,6 @@ Rails.application.configure do
   # Language priority for multi-language metadata (e.g., XMP Lang Alt fields)
   config.folio_image_metadata_locale_priority = [:en, "x-default"]
 end
-```
-
-### 3. I18n Setup
-
-Add metadata translations to your locale files:
-
-**config/locales/console/file.en.yml:**
-```yaml
-en:
-  folio:
-    console:
-      file:
-        # ... existing file translations
-        
-        # Metadata field labels (used by React via _translations.slim)
-        metadata:
-          headline: "Headline"
-          description: "Description"
-          creator: "Creator"
-          camera_make: "Camera Make"
-          flash: "Flash"
-          # ... more fields
-          
-  # Backend processor translations (used by IptcFieldMapper)
-  folio:
-    metadata:
-      flash:
-        not_used: "Not used"
-        used: "Used"
-        used_with_value: "Used (%{value})"
-      # ... more formatted values
-```
-
-**config/locales/console/file.cs.yml:**
-```yaml
-cs:
-  folio:
-    console:
-      file:
-        # ... existing file translations
-        
-        # Metadata field labels (used by React via _translations.slim)
-        metadata:
-          headline: "Titulek"
-          description: "Popis"
-          creator: "Autor" 
-          camera_make: "Výrobce fotoaparátu"
-          flash: "Blesk"
-          # ... more fields
-          
-  # Backend processor translations (used by IptcFieldMapper)
-  folio:
-    metadata:
-      flash:
-        not_used: "Nepoužit"
-        used: "Použit"
-        used_with_value: "Použit (%{value})"
-      # ... more formatted values
 ```
 
 ## Metadata Extraction Process
@@ -218,40 +157,22 @@ end
 
 ### 3. Dynamic Metadata Access
 
-Image files have simplified metadata accessors that read directly from the `file_metadata` JSONB field:
+**Principle**: Image files have simplified metadata accessors that intelligently fallback between database fields and extracted JSON metadata.
 
 ```ruby
-# app/models/folio/file/image.rb - Simplified accessors
+# Intelligent fallback: DB field → file_metadata JSON
 def title
   headline.presence || file_metadata&.dig("headline")
 end
-
-def caption
-  description.presence || file_metadata&.dig("caption")
-end
-
-def keywords_list
-  file_metadata&.dig("keywords") || []
-end
-
-def creator_list
-  file_metadata&.dig("creator") || []
-end
-
-def copyright_info
-  file_metadata&.dig("copyright_notice")
-end
-
-# Usage examples
-image.title                      # => "Actual headline" (database or JSON)
-image.creator_list               # => ["John Doe", "Jane Smith"]
-image.keywords_list              # => ["news", "politics"]
-image.copyright_info             # => "© 2024 ČTK"
-
-# Non-image files don't have metadata extraction
-document.respond_to?(:creator_list)  # => false
-video.respond_to?(:keywords_list)    # => false
 ```
+
+**Key Features**:
+- Database fields (user-editable) take priority over extracted metadata
+- JSONB field preserves complete raw and processed metadata
+- Only `Folio::File::Image` has metadata extraction (documents/videos don't)
+- Clean API: `image.mapped_metadata[:creator]`, `image.mapped_metadata[:keywords]`, `image.file_metadata`
+
+> **Implementation Details**: See [`app/models/folio/file/image.rb`](https://github.com/sinfin/folio/blob/master/app/models/folio/file/image.rb) for complete accessor methods.
 
 ## User Interface
 
@@ -501,38 +422,6 @@ ExifIFD:Flash → "Nepoužit" (localized)
 
 ## API Integration
 
-### Console File Serializer
-
-The serializer exposes metadata fields and includes dynamic metadata from JSON:
-
-```ruby
-# app/serializers/folio/console/file_serializer.rb
-class Folio::Console::FileSerializer
-  # Standard database fields
-  attribute :headline
-  attribute :author
-  attribute :description
-  attribute :capture_date
-  attribute :gps_latitude
-  attribute :gps_longitude
-  attribute :file_metadata_extracted_at
-  
-  # Mapped metadata using IptcFieldMapper (unified metadata API)
-  attribute :mapped_metadata do |object|
-    object.respond_to?(:mapped_metadata) ? object.mapped_metadata : {}
-  end
-  
-  # Image-specific accessors (only for Image files)
-  attribute :creator_list do |object|
-    object.respond_to?(:creator_list) ? object.creator_list : []
-  end
-  
-  attribute :keywords_list do |object|
-    object.respond_to?(:keywords_list) ? object.keywords_list : []
-  end
-end
-```
-
 ### Extraction Endpoint
 
 ```ruby
@@ -572,158 +461,26 @@ end
 
 ## Testing Framework
 
-```ruby
-# test/models/folio/image_test.rb
-class Folio::File::ImageTest < ActiveSupport::TestCase
-  test "extracts metadata via service" do
-    raw_metadata = {
-      "XMP-dc:Creator" => ["John Doe"],
-      "XMP-photoshop:Headline" => "Test Headline"
-    }
+**Testing Approach**: Comprehensive test coverage for metadata extraction, field mapping, and error handling scenarios.
 
-    image = create(:folio_file_image)
-    
-    # Simulate metadata extraction via service
-    mapped_data = Folio::Metadata::IptcFieldMapper.map_metadata(raw_metadata)
-    
-    # Store raw metadata and mapped data
-    image.file_metadata = raw_metadata
-    mapped_data.each { |field, value| image.file_metadata[field.to_s] = value if value.present? }
-    
-    # Update database fields
-    mapped_data.each do |field, value|
-      next if value.blank?
-      if image.respond_to?("#{field}=") && image.send(field).blank?
-        image.send("#{field}=", value)
-      end
-    end
-    
-    image.save!
-    image.reload
+**Key Test Areas**:
+- **Service Integration**: Tests complete extraction pipeline with real metadata
+- **Field Mapping**: Validates IPTC/XMP to database field mapping accuracy  
+- **I18n Support**: Ensures localized formatting (flash: "Nepoužit", white_balance: "Ruční")
+- **Error Handling**: Safe handling of metadata-less images and multiple extractions
+- **Force Parameter**: Respects `force: true/false` for re-extraction control
 
-    assert_equal "Test Headline", image.headline
-    assert_equal ["John Doe"], image.creator_list
-  end
-  
-  test "preserves existing user data during extraction" do
-    image = create(:folio_file_image, author: "Jane Smith", headline: "Existing headline")
-    
-    # Extraction should not overwrite existing data
-    raw_metadata = { "XMP-dc:Creator" => ["New Author"], "XMP-photoshop:Headline" => "New headline" }
-    mapped_data = Folio::Metadata::IptcFieldMapper.map_metadata(raw_metadata)
-    
-    # Only update blank fields
-    mapped_data.each do |field, value|
-      next if value.blank?
-      if image.respond_to?("#{field}=") && image.send(field).blank?
-        image.send("#{field}=", value)
-      end
-    end
-    
-    image.save!
-    
-    assert_equal "Jane Smith", image.author  # Preserved
-    assert_equal "Existing headline", image.headline  # Preserved
-  end
-  
-  test "handles non-image files gracefully" do
-    document = create(:folio_file_document)
-    assert_not document.respond_to?(:creator_list)
-    assert_not document.respond_to?(:extract_metadata!)
-  end
-end
-```
+> **Complete Test Suite**: See [`test/models/folio/image_test.rb`](https://github.com/sinfin/folio/blob/master/test/models/folio/image_test.rb) and [`test/services/folio/metadata/`](https://github.com/sinfin/folio/tree/master/test/services/folio/metadata) for full test implementations.
 
 ## Example Configuration
 
-Here's a complete example configuration for a Czech publishing house:
+**Configuration Principle**: Enable extraction, set locale priority, configure field mappings, and define provider patterns.
 
-```ruby
-# config/initializers/folio_image_metadata.rb
-Rails.application.configure do
-  # Basic setup
-  config.folio_image_metadata_extraction_enabled = true
-  config.folio_image_metadata_exiftool_options = ["-G1", "-struct", "-n", "-charset", "iptc=utf8"]
-  
-  # Czech language priority
-  config.folio_image_metadata_locale_priority = [:cs, :en, "x-default"]
-  
-  # Auto-population rules
-  config.folio_image_metadata_populate_user_fields = {
-    headline: :headline,
-    author: :creator,
-    description: :description,
-    attribution_copyright: :copyright_notice,
-    capture_date: :capture_date
-  }
-  
-  # Merge keywords and skip licence auto-population
-  config.folio_image_metadata_merge_keywords_to_tags = true
-  config.folio_image_metadata_skip_population_fields = ["attribution_licence"]
-  
-  # Czech agency detection
-  config.folio_image_metadata_known_providers = [
-    { name: "ČTK", patterns: [/ČTK/i, /Czech News Agency/i] },
-    { name: "Profimedia", patterns: [/Profimedia/i, /ProfiMedia/i] },
-    { name: "MAFRA", patterns: [/MAFRA/i, /iDNES/i] }
-  ]
-  
-  # Custom business logic
-  config.folio_image_metadata_field_processors = {
-    copyright_notice: ->(value, metadata = {}) {
-      result = value.to_s
-      
-      # Add publisher copyright if missing
-      if result.blank?
-        "© #{Date.current.year} Vydavatelství s.r.o."
-      elsif !result.include?("Vydavatelství")
-        "#{result} | Vydavatelství"
-      else
-        result
-      end
-    }
-  }
-end
-```
+**Key Configuration Areas**:
+- **Basic Setup**: `folio_image_metadata_extraction_enabled = true`
+- **ExifTool Options**: `["-G1", "-struct", "-n", "-charset", "iptc=utf8"]`
+- **Locale Priority**: `[:cs, :en, "x-default"]` for Czech sites
+- **Field Auto-Population**: Map extracted metadata to database columns
+- **Provider Detection**: Regex patterns for Getty Images, Shutterstock, etc.
 
----
-
-## Implementation Status
-
-### Core Functionality ✅
-- JSON metadata storage in `file_metadata` column
-- Advanced IPTC-IIM charset compliance with intelligent mojibake repair
-- ICU-based encoding detection with multi-charset fallbacks
-- Quality scoring system for intelligent database field updates
-- Array handling for XMP fields (e.g., XMP-dc:Creator arrays)
-- Image-specific metadata extraction via `Folio::File::Image` only
-- DRY-compliant architecture with consolidated regex patterns and unified scoring
-- Clean service architecture with `Folio::Metadata::ExtractionService` and `IptcFieldMapper`
-- Simplified metadata accessors reading directly from JSONB
-- Keywords merging into existing tag_list system with tenant-safe filtering
-- Configurable and extensible via Rails.application.config
-
-### User Interface ✅
-- Read-only metadata display in organized tables (Descriptive, Technical, Rights, Location)
-- User form fields remain fully editable above metadata display
-- Live UI updates via MessageBus without page reload
-- Automatic I18n integration for labels and formatted values
-- React state consistency between file switches
-
-### Backend Integration ✅
-- Migration adds only 8 essential metadata columns (minimal schema impact)
-- Service-based architecture with clear separation of concerns
-- Asynchronous extraction via background jobs with optional user context
-- Manual extraction via `extract_metadata!(force: true, user_id:)` endpoint
-- Keywords merge into existing tag_list system when configured
-- MessageBus broadcasting for live console updates with targeted user messaging
-
-### Code Quality & DRY Compliance ✅
-- **Consolidated Regex Patterns**: `CZECH_CHARS_REGEX` and `MOJIBAKE_PATTERNS_REGEX` constants eliminate duplication
-- **Unified Quality Scoring**: Single `score_cs()` method in `IptcFieldMapper` used by both services
-- **Clean Architecture**: Clear separation between orchestration (ExtractionService) and mapping (IptcFieldMapper)
-- **No Duplicated Logic**: Removed redundant `encoding_quality_score()` method and consolidated validation logic
-- **Type Safety**: Robust handling of Arrays, Strings, Integers, and nil values throughout the pipeline
-- **IPTC-IIM Standards**: Full compliance with charset declaration standards (CodedCharacterSet 1:90)
-- **ICU Integration**: `charlock_holmes` gem provides enterprise-grade encoding detection
-- **Intelligent Updates**: Database fields only updated when encoding quality improves
+> **Complete Configuration Examples**: See [`config/initializers/folio_image_metadata.rb`](https://github.com/sinfin/folio/blob/master/config/initializers/folio_image_metadata.rb) for full configuration options.
