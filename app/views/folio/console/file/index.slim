@@ -1,7 +1,5 @@
-turbo-frame[
-  id=Folio::Console::FileControllerBase::TURBO_FRAME_ID
-  data-turbo="true"
-]
+= render(Folio::Console::Ui::TurboFrameWithLoaderComponent.new(id: Folio::Console::FileControllerBase::TURBO_FRAME_ID,
+                                                               turbo_action: "advance"))
   = index_header file_list_uppy: true
 
   = render(Folio::FileListComponent.new(file_klass: @klass,

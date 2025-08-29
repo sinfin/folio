@@ -14,7 +14,7 @@ class Folio::Console::Ui::Index::HeaderComponent < Folio::Console::ApplicationCo
                  pagy_options: nil,
                  tabs: nil,
                  csv: nil,
-                 by_label_query: false,
+                 by_label_query: true,
                  file_list_uppy: nil,
                  query_url: nil,
                  query_autocomplete: nil,

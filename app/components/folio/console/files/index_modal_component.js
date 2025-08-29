@@ -4,8 +4,6 @@ window.Folio.Stimulus.register('f-c-files-index-modal', class extends window.Sti
     turboFrameId: String
   }
 
-  static targets = ['body']
-
   openWithType (e) {
     if (!e.detail.fileType) {
       window.alert('[Folio::Console::Files::IndexModalComponent] Missing fileType!')
@@ -18,11 +16,9 @@ window.Folio.Stimulus.register('f-c-files-index-modal', class extends window.Sti
       return
     }
 
-    for (const turboFrame of this.element.querySelectorAll('turbo-frame')) {
-      turboFrame.remove()
-    }
-
-    this.bodyTarget.insertAdjacentHTML('afterbegin', `<turbo-frame id="${this.turboFrameIdValue}" src="${url}" data-f-c-files-picker-target="turboFrame"></turbo-frame>`)
+    const frame = this.element.querySelector('turbo-frame')
+    frame.src = url
+    frame.disabled = false
 
     window.Folio.Modal.open(this.element)
   }

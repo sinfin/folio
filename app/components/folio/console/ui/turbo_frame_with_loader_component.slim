@@ -1,0 +1,13 @@
+.f-c-ui-turbo-frame-with-loader[
+  data-turbo="true"
+  style=style
+]
+  turbo-frame.f-c-ui-turbo-frame-with-loader__frame[
+    id=@id
+    disabled=@disabled
+    data-turbo-action=@turbo_action
+    complete=content?
+  ]
+    = content
+
+  span.folio-loader.f-c-ui-turbo-frame-with-loader__loader
