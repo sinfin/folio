@@ -31,8 +31,6 @@ class Folio::File::Image < Folio::File
     description.presence || mapped_metadata[:description]
   end
 
-
-
   # GPS coordinates helper
   def location_coordinates
     return nil unless gps_latitude.present? && gps_longitude.present?

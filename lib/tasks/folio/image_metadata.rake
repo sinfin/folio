@@ -45,6 +45,47 @@ namespace :folio do
       puts "Jobs will be processed in background. Check job queue status for progress."
     end
 
+    desc "Force re-extraction of metadata for all images (fixes UTF-8 issues)"
+    task force_reextract_all: :environment do
+      unless Rails.application.config.folio_image_metadata_extraction_enabled
+        puts "Metadata extraction is disabled. Enable it in config/initializers/folio_image_metadata.rb"
+        exit 1
+      end
+
+      puts "Force re-extracting metadata for ALL images..."
+      puts "This will fix UTF-8 encoding issues from old cached metadata."
+
+      all_images = Folio::File::Image.where.not(file_uid: nil)
+      total_count = all_images.count
+
+      if total_count == 0
+        puts "No images found."
+        exit 0
+      end
+
+      puts "Found #{total_count} images total."
+      print "Re-extracting"
+
+      processed_count = 0
+
+      all_images.find_each do |image|
+        # Force re-extraction with fresh metadata (bypasses cache)
+        Folio::Metadata::ExtractionService.new(image).extract!(force: true)
+        processed_count += 1
+
+        print "."
+
+        # Progress indicator every 50 images
+        if processed_count % 50 == 0
+          puts " #{processed_count}/#{total_count}"
+          print "Re-extracting"
+        end
+      end
+
+      puts "\n\nRe-extracted metadata for #{processed_count} images."
+      puts "UTF-8 encoding issues should now be fixed."
+    end
+
     desc "Show metadata extraction statistics"
     task metadata_stats: :environment do
       puts "Image Metadata Extraction Statistics"

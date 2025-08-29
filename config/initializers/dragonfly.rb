@@ -106,10 +106,24 @@ Dragonfly.app.configure do
       {}
     else
       begin
-        reader = MultiExiftool::Reader.new
-        reader.filenames = [content.file.path]
-        reader.read.try(:first).try(:to_hash)
-      rescue MultiExiftool::Error
+        # Use direct ExifTool call with proper UTF-8 charset handling for IPTC
+        require "open3"
+
+        command = ["exiftool", "-j", "-G1", "-struct", "-n", "-charset", "iptc=utf8", content.file.path]
+        stdout, stderr, status = Open3.capture3(*command)
+
+        if status.success?
+          parsed = JSON.parse(stdout)
+          parsed.first || {}
+        else
+          Rails.logger.warn "ExifTool error: #{stderr}" if defined?(Rails)
+          {}
+        end
+      rescue JSON::ParserError => e
+        Rails.logger.error "Failed to parse ExifTool JSON output: #{e.message}" if defined?(Rails)
+        {}
+      rescue => e
+        Rails.logger.error "ExifTool extraction failed: #{e.message}" if defined?(Rails)
         {}
       end
     end

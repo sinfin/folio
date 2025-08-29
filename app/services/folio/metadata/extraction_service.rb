@@ -29,8 +29,9 @@ class Folio::Metadata::ExtractionService
 
     Rails.logger.info "Extracting metadata for image ##{@image.id} (#{@image.file_name})"
 
-    # Use Dragonfly's built-in metadata extraction (works for local + S3)
-    metadata = @image.file.metadata
+    # Use Dragonfly's metadata (now with proper UTF-8 support)
+    # For existing images with corrupted cached metadata, use fresh extraction
+    metadata = needs_fresh_extraction? ? extract_fresh_metadata : @image.file.metadata
     return unless metadata.present?
 
     # Map and store metadata
@@ -40,7 +41,7 @@ class Folio::Metadata::ExtractionService
   rescue => e
     Rails.logger.error "Failed to extract metadata for #{@image.file_name}: #{e.message}"
     Rails.logger.error e.backtrace.join("\n") if Rails.env.development?
-  end
+end
 
   # Extraction during file processing (synchronous)
   # NOTE: Dragonfly automatically calls file.metadata via after_assign callback
@@ -53,6 +54,36 @@ class Folio::Metadata::ExtractionService
   end
 
   private
+    def needs_fresh_extraction?
+      # Check if cached metadata might be corrupted (from old UTF-8 configuration)
+      # If IPTC:Headline is missing but file likely has IPTC data, use fresh extraction
+      cached_metadata = @image.file.metadata
+
+      # If no cached metadata at all, force fresh
+      return true if cached_metadata.blank?
+
+      # If has metadata but no IPTC:Headline, likely from old analyser
+      return true if cached_metadata.present? && !cached_metadata.key?("IPTC:Headline")
+
+      # If IPTC:Headline has mojibake patterns, force fresh
+      iptc_headline = cached_metadata["IPTC:Headline"]
+      return true if iptc_headline&.match?(/Ã|Ä|Å|â|ÄŸ|Å¡|Ã­|Ã¡|Ãº|Ã½|Ã©/)
+
+      false
+    end
+
+    def extract_fresh_metadata
+      # Use fresh Dragonfly metadata extraction (bypasses cache)
+      # This ensures we always get metadata with current UTF-8 configuration
+
+      file_path = @image.file.path
+      content = Dragonfly.app.fetch_file(file_path)
+      content.metadata
+    rescue => e
+      Rails.logger.warn "Fresh Dragonfly extraction failed, falling back to cached: #{e.message}"
+      @image.file.metadata
+    end
+
     def should_extract?(image, force)
       return false unless Rails.application.config.folio_image_metadata_extraction_enabled
       return false unless image.is_a?(Folio::File::Image)
