@@ -2,6 +2,7 @@
 
 class Folio::File::Image < Folio::File
   include Folio::Sitemap::Image
+  include Folio::ImageMetadataExtraction
 
   validate_file_format(%w[jpeg png bmp gif svg tiff webp avif heic heif])
 

@@ -9,7 +9,6 @@ class Folio::File < Folio::ApplicationRecord
   include Folio::StiPreload
   include Folio::HasAasmStates
   include Folio::BelongsToSite
-  include Folio::MetadataExtraction
 
   READY_STATE = :ready
 
@@ -256,8 +255,6 @@ class Folio::File < Folio::ApplicationRecord
     # For other files, return attribution_source
     attribution_source
   end
-
-  # Metadata accessors are now handled by Folio::MetadataExtraction concern
 
   private
     def set_file_name_for_search

@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class Folio::MetadataExtractionIntegrationTest < ActionDispatch::IntegrationTest
+class Folio::ImageMetadataExtractionIntegrationTest < ActionDispatch::IntegrationTest
   def setup
     # Use the gem's fixtures directory, not the dummy app's
     gem_root = File.expand_path("../../..", __dir__)

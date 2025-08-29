@@ -11,11 +11,12 @@ The system provides a clean, extensible architecture with full I18n support and 
 The metadata system follows clean architecture principles with clear separation of concerns:
 
 ```ruby
-# Unified concern for all file types
-Folio::File (base model)
-├── include Folio::MetadataExtraction (universal concern)
-    ├── Image files: delegate to Extractor service
-    └── Non-image files: intelligent fallbacks
+# Image-specific metadata extraction
+Folio::File (base model - no metadata extraction)
+└── Folio::File::Image (Image files only)
+    └── include Folio::ImageMetadataExtraction
+        ├── IPTC/EXIF metadata extraction
+        └── Extractor service delegation
 
 # Service layer for business logic
 Folio::Metadata::IptcFieldMapper (mapping & formatting)
