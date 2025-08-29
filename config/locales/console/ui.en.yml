@@ -5,3 +5,14 @@ en:
       ui:
         in_place_input_component:
           blank: Blank
+
+        index:
+          filters_component:
+            cancel: Cancel filters
+            numeric_range:
+              from: From
+              to: To
+            collapsible_toggle: Detailed filter
+
+          header_component:
+            csv: CSV

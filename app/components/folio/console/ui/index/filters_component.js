@@ -22,9 +22,12 @@ window.Folio.Stimulus.register('f-c-ui-index-filters', class extends window.Stim
     }
 
     // Navigate to the clean URL
-    if (window.Turbo && this.element.closest('turbo-frame')) {
-      // Use Turbo navigation if we're inside a turbo-frame
-      window.Turbo.visit(url.toString())
+    const turboFrame = window.Turbo ? this.element.closest('turbo-frame') : null
+
+    if (turboFrame) {
+      // Use frame-targeted Turbo navigation to stay within the frame context
+      const frameId = turboFrame.getAttribute('id')
+      window.Turbo.visit(url.toString(), { frame: frameId })
     } else {
       // Use regular navigation otherwise
       window.location.href = url.toString()

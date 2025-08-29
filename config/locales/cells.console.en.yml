@@ -3,18 +3,8 @@ en:
   folio:
     console:
       index:
-        filters:
-          cancel: Cancel filters
-          numeric_range:
-            from: From
-            to: To
-          collapsible_toggle: Detailed filter
-
         new_button:
           add: Add
-
-        header:
-          csv: CSV
 
         no_records:
           filtered: No records match the specified filters.

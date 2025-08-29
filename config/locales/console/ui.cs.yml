@@ -5,3 +5,14 @@ cs:
       ui:
         in_place_input_component:
           blank: Nevyplněno
+
+        index:
+          filters_component:
+            cancel: Zrušit filtry
+            numeric_range:
+              from: Od
+              to: Do
+            collapsible_toggle: Podrobný filtr
+
+          header_component:
+            csv: CSV
