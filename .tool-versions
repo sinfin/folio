@@ -1,4 +1,4 @@
 # used by asdf libraries manager,
 # something like RVM for anything, not just ruby
-ruby 3.4.2
+ruby 3.3.9
 # nodejs 14.15.1
