@@ -2,43 +2,44 @@
 
 class Folio::File::Image < Folio::File
   include Folio::Sitemap::Image
-  include Folio::ImageMetadataExtraction
 
   validate_file_format(%w[jpeg png bmp gif svg tiff webp avif heic heif])
+
+  # Metadata extraction after image creation
+  after_commit :extract_metadata_async, on: :create, if: :should_extract_metadata?
 
   dragonfly_accessor :file do
     after_assign :sanitize_filename
     after_assign { |file| file.metadata }
   end
 
-  # IPTC metadata accessors (prefer database fields over metadata compose)
+  # Legacy metadata accessors (simplified for backward compatibility)
   def title
-    headline.presence || headline_from_metadata.presence || metadata_compose(["Headline", "Title"])
+    headline.presence || file_metadata&.dig("headline")
   end
 
   def caption
-    description.presence || metadata_compose(["Caption", "Description", "Abstract"])
+    description.presence || file_metadata&.dig("caption")
   end
 
   def keywords_list
-    # Use JSON getter from concern
-    keywords_from_metadata
+    file_metadata&.dig("keywords") || []
   end
 
   def geo_location
-    # Use JSON getters from concern
-    location_parts = [sublocation, city, state_province, country].compact
-    if location_parts.any?
-      location_parts.join(", ")
-    else
-      metadata_compose(["LocationName", "SubLocation", "City", "ProvinceState", "CountryName"])
-    end
+    # Build from file_metadata JSON
+    location_parts = [
+      file_metadata&.dig("sublocation"),
+      file_metadata&.dig("city"),
+      file_metadata&.dig("state_province"),
+      file_metadata&.dig("country")
+    ].compact
+
+    location_parts.join(", ") if location_parts.any?
   end
 
-  # Additional IPTC metadata accessors
   def creator_list
-    # Use JSON getter from concern
-    creator
+    file_metadata&.dig("creator") || []
   end
 
   def keywords_string
@@ -46,8 +47,7 @@ class Folio::File::Image < Folio::File
   end
 
   def copyright_info
-    # Use JSON getter from concern
-    copyright_notice
+    file_metadata&.dig("copyright_notice")
   end
 
   def location_coordinates
@@ -56,8 +56,7 @@ class Folio::File::Image < Folio::File
   end
 
   def persons_shown_list
-    # Use JSON getter from concern
-    persons_shown_from_metadata
+    file_metadata&.dig("persons_shown") || []
   end
 
 
@@ -69,90 +68,19 @@ class Folio::File::Image < Folio::File
     "image"
   end
 
-  # Override after_process hook to extract metadata synchronously during upload
-  def after_process
-    super
-
-    # Extract metadata synchronously during file processing
-    # (can't use should_extract_metadata? here as file is now available)
-    extract_image_metadata_during_processing if should_extract_metadata_during_processing?
+  # Manual metadata extraction (for existing images)
+  def extract_metadata!(force: false, user_id: nil)
+    Folio::Metadata::ExtractionService.new(self).extract!(force: force, user_id: user_id)
   end
 
-  # Make metadata_compose public for file_placement access
-  def metadata_compose(tags)
-    string_arr = tags.filter_map { |tag| file_metadata.try("[]", tag) }.uniq
-    return nil if string_arr.size == 0
-    string_arr.join(", ")
+  # Metadata extraction callbacks (delegate to service)
+  def should_extract_metadata?
+    Folio::Metadata::ExtractionService.should_extract?(self)
   end
 
-  private
-    def should_extract_metadata_during_processing?
-      return false unless Rails.application.config.folio_image_metadata_extraction_enabled
-      return false unless file.present? && (file.respond_to?(:path) || file.is_a?(String))
-
-      # Skip extraction in test mode when explicitly disabled
-      return false if Rails.env.test? && ENV["FOLIO_SKIP_METADATA_EXTRACTION"] == "true"
-
-      # Check if we have new IPTC fields (backward compatibility)
-      return false unless has_iptc_metadata_fields?
-
-      # Check if metadata already extracted (avoid re-extraction)
-      return false if file_metadata_extracted_at.present?
-
-      # Check if exiftool is available
-      system("which exiftool > /dev/null 2>&1")
-    end
-
-    def extract_image_metadata_during_processing
-      # For S3/remote files, we need to download temporarily to extract metadata
-      # This works during upload when file is still being processed
-      file_path = get_file_path_for_extraction
-      return unless file_path && File.exist?(file_path)
-
-      Rails.logger.info "Extracting metadata for #{file_name} during processing..."
-
-      require "open3"
-
-      base_options = Rails.application.config.folio_image_metadata_exiftool_options || ["-G1", "-struct", "-n"]
-
-      # Always use UTF-8 charset for IPTC (our mojibake fix)
-      charset_options = ["-charset", "iptc=utf8"]
-      command = ["exiftool", "-j", *base_options, *charset_options, file_path]
-
-      Rails.logger.debug "ExifTool command: #{command.join(' ')}"
-
-      stdout, stderr, status = Open3.capture3(*command)
-
-      if status.success?
-        raw_metadata = JSON.parse(stdout).first
-        if raw_metadata.present?
-          map_iptc_metadata(raw_metadata)
-          Rails.logger.info "Successfully extracted metadata for #{file_name} with UTF-8 charset"
-        else
-          Rails.logger.warn "No metadata found for #{file_name}"
-        end
-      else
-        Rails.logger.warn "ExifTool error for #{file_name}: #{stderr}"
-      end
-
-    rescue => e
-      Rails.logger.error "Failed to extract metadata during processing for #{file_name}: #{e.message}"
-      Rails.logger.error e.backtrace.join("\n")
-    end
-
-    def get_file_path_for_extraction
-      # During processing, the file should still be available locally via Dragonfly
-      if file.respond_to?(:path) && file.path
-        file.path
-      elsif file.respond_to?(:url) && file.url
-        # For remote files, try to get temp file path from Dragonfly
-        begin
-          file.temp_object.path if file.respond_to?(:temp_object) && file.temp_object
-        rescue
-          nil
-        end
-      end
-    end
+  def extract_metadata_async
+    Folio::Metadata::ExtractionService.extract_async(self)
+  end
 end
 
 # == Schema Information

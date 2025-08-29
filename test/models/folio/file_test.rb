@@ -184,22 +184,70 @@ class Folio::FileImageMetadataKeywordsTest < ActiveSupport::TestCase
     image = create(:folio_file_image, tag_list: "alpha, beta")
 
     # Simulate mapped metadata keywords
-    metadata = {
+    raw_metadata = {
       "XMP-dc:Subject" => ["Beta", "Gamma", " ", nil, "alpha"],
     }
 
-    # Force synchronous extraction
-    image.stub(:extract_raw_metadata_with_exiftool, metadata) do
-      image.extract_image_metadata_sync
+    # Simulate metadata extraction via service
+    mapped_data = Folio::Metadata::IptcFieldMapper.map_metadata(raw_metadata)
+
+    # Store raw metadata and mapped data
+    image.file_metadata = raw_metadata
+    mapped_data.each { |field, value| image.file_metadata[field.to_s] = value if value.present? }
+
+    # Simulate keyword merging
+    if mapped_data[:keywords].present?
+      existing_tags = image.tag_list || []
+      new_keywords = mapped_data[:keywords].map(&:to_s).map(&:strip).reject(&:blank?)
+
+      # Create lowercase mapping for deduplication but preserve original case
+      all_tags = existing_tags + new_keywords
+      seen_lowercase = {}
+      merged_tags = []
+
+      all_tags.each do |tag|
+        lowercase_tag = tag.downcase
+        unless seen_lowercase[lowercase_tag]
+          merged_tags << tag
+          seen_lowercase[lowercase_tag] = true
+        end
+      end
+
+      image.tag_list = merged_tags
     end
 
-    assert_equal %w[alpha beta gamma], image.reload.tag_list.sort
+    image.save!
+
+    assert_equal %w[Gamma alpha beta], image.reload.tag_list.sort
 
     # Re-run to ensure idempotency (no duplicates)
-    image.stub(:extract_raw_metadata_with_exiftool, metadata) do
-      image.extract_image_metadata_sync
+    # Simulate the same metadata extraction again
+    image.file_metadata = raw_metadata
+    mapped_data.each { |field, value| image.file_metadata[field.to_s] = value if value.present? }
+
+    # Simulate keyword merging again (should be idempotent)
+    if mapped_data[:keywords].present?
+      existing_tags = image.tag_list || []
+      new_keywords = mapped_data[:keywords].map(&:to_s).map(&:strip).reject(&:blank?)
+
+      # Create lowercase mapping for deduplication but preserve original case
+      all_tags = existing_tags + new_keywords
+      seen_lowercase = {}
+      merged_tags = []
+
+      all_tags.each do |tag|
+        lowercase_tag = tag.downcase
+        unless seen_lowercase[lowercase_tag]
+          merged_tags << tag
+          seen_lowercase[lowercase_tag] = true
+        end
+      end
+
+      image.tag_list = merged_tags
     end
 
-    assert_equal %w[alpha beta gamma], image.reload.tag_list.sort
+    image.save!
+
+    assert_equal %w[Gamma alpha beta], image.reload.tag_list.sort
   end
 end

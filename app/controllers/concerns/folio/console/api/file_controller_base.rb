@@ -89,16 +89,12 @@ module Folio::Console::Api::FileControllerBase
   end
 
   def extract_metadata
-    return render(json: { error: "Not supported for this file type" }, status: 422) unless folio_console_record.respond_to?(:extract_image_metadata_sync)
+    return render(json: { error: "Not supported for this file type" }, status: 422) unless folio_console_record.respond_to?(:extract_metadata!)
 
     # Force re-extraction synchronously for immediate UI feedback
-    if folio_console_record.respond_to?(:extract_image_metadata_sync)
-      # Reset timestamp to force re-extraction
-      folio_console_record.update_column(:file_metadata_extracted_at, nil)
-
-      # Run synchronous extraction with populate
-      folio_console_record.extract_image_metadata_sync
-      folio_console_record.save! if folio_console_record.changed?
+    if folio_console_record.respond_to?(:extract_metadata!)
+      # Run synchronous extraction with force flag
+      folio_console_record.extract_metadata!(force: true, user_id: Folio::Current.user&.id)
       folio_console_record.reload
 
       # Broadcast for live UI update (MessageBus JSON payload)

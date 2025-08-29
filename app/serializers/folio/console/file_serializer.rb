@@ -63,6 +63,11 @@ class Folio::Console::FileSerializer
              :orientation,
              :file_metadata_extracted_at
 
+  # Dynamic metadata from JSON (for frontend consumption)
+  attribute :dynamic_metadata do |object|
+    object.respond_to?(:file_metadata) ? object.file_metadata || {} : {}
+  end
+
   attribute :human_type do |object|
     object.class.human_type
   end
