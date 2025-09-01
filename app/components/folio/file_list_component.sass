@@ -1,10 +1,12 @@
 .f-file-list
+  --f-file-list__flex-gap: #{$grid-gutter-base}
+
   $accent-blue: #4C84FD !default
   container-type: inline-size
 
   &__flex
     display: flex
-    gap: $grid-gutter-base
+    gap: var(--f-file-list__flex-gap)
     flex-wrap: wrap
 
   &__flex-item
@@ -33,9 +35,21 @@
     &:hover
       text-decoration: underline
 
+  @for $i from 13 through 3
+    @container (max-width: #{($i * 168px) + (($i - 1) * 8px) + 1})
+      &__flex-item
+        width: calc((100% - (#{$i - 1} * var(--f-file-list__flex-gap))) / #{$i})
+
   @container (max-width: 599px)
+    &__flex-item
+      width: calc((100% - 2 * var(--f-file-list__flex-gap)) / 3)
+
     &--view-table &__flex
       border-top: 1px solid #000000
+
+  @container (max-width: 375px)
+    &__flex-item
+      width: calc((100% - var(--f-file-list__flex-gap)) / 2)
 
   @container (min-width: 600px)
     &--view-table &__flex
