@@ -73,4 +73,12 @@ class TiptapInput < SimpleForm::Inputs::StringInput
         { value_keys[:content] => latest_revision.content }
       end
     end
+
+    def latest_revision_created_at
+      return nil if @builder.object.new_record?
+      return nil unless @builder.object.respond_to?(:latest_tiptap_revision)
+
+      latest_revision = @builder.object.latest_tiptap_revision
+      latest_revision&.created_at&.iso8601
+    end
 end

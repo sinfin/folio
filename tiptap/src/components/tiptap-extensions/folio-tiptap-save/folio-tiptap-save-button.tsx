@@ -48,7 +48,9 @@ export const FolioTiptapSaveButton = React.forwardRef<
 
   React.useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
-      if (event.data?.type === 'f-input-tiptap:auto-saved') {
+      if (event.data?.type === 'f-input-tiptap:revision-time' && event.data.latestRevisionCreatedAt) {
+        setLastSavedAt(new Date(event.data.latestRevisionCreatedAt));
+      } else if (event.data?.type === 'f-input-tiptap:auto-saved') {
         setLastSavedAt(new Date(event.data.createdAt));
       }
     };

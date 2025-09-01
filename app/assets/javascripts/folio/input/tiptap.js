@@ -16,6 +16,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     autoSave: { type: Boolean, default: true },
     placementType: String,
     placementId: Number,
+    latestRevisionCreatedAt: String,
   }
 
   connect () {
@@ -86,6 +87,8 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
       case 'f-tiptap-editor:initialized-content':
         this.setInputValue(e.data.content, { isInitialization: true })
         this.ignoreValueChangesValue = false
+
+        this.sendRevisionTimeToEditor()
         break
       case 'f-tiptap-editor:show-html':
         this.showHtmlInModal(e.data.html)
@@ -129,7 +132,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
       this.inputTarget.dispatchEvent(new window.Event("change", { bubbles: true }))
       this.dispatch("updateWordCount", { detail: { wordCount } })
 
-      if (this.autoSaveValue && content && this.editorReady && !options.isInitialization) {
+      if (this.autoSaveValue && content && !options.isInitialization) {
         this.latestContent = content
         this.debouncedAutoSave()
       }
@@ -186,6 +189,16 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     }
 
     this.iframeTarget.contentWindow.postMessage(data, this.originValue || window.origin)
+  }
+
+  sendRevisionTimeToEditor () {
+    if (this.latestRevisionCreatedAtValue) {
+      const data = {
+        type: 'f-input-tiptap:revision-time',
+        latestRevisionCreatedAt: this.latestRevisionCreatedAtValue,
+      }
+      this.iframeTarget.contentWindow.postMessage(data, this.originValue || window.origin)
+    }
   }
 
   onRenderNodeMessage (e) {
