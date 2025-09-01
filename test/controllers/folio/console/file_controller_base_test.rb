@@ -12,6 +12,19 @@ class Folio::Console::FileControllerBaseTest < Folio::Console::BaseControllerTes
     test "#{klass} - index" do
       get url_for([:console, klass])
       assert_response :success
+      assert_select "turbo-frame[id=#{klass.console_turbo_frame_id}]"
+    end
+
+    test "#{klass} - index_for_modal" do
+      get url_for([:console, klass, action: :index_for_modal])
+      assert_response :success
+      assert_select "turbo-frame[id=#{klass.console_turbo_frame_id(modal: true)}]"
+    end
+
+    test "#{klass} - index_for_picker" do
+      get url_for([:console, klass, action: :index_for_picker])
+      assert_response :success
+      assert_select "turbo-frame[id=#{klass.console_turbo_frame_id(picker: true)}]"
     end
   end
 end

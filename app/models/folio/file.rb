@@ -282,6 +282,18 @@ class Folio::File < Folio::ApplicationRecord
     {}
   end
 
+  def self.console_turbo_frame_id(modal: false, picker: false)
+    base = "folio-console-#{model_name.route_key}"
+
+    if modal
+      "#{base}-index_for_modal"
+    elsif picker
+      "#{base}-index_for_picker"
+    else
+      "#{base}-index"
+    end
+  end
+
   private
     def set_file_name_for_search
       self.file_name_for_search = self.class.sanitize_filename_for_search(file_name)

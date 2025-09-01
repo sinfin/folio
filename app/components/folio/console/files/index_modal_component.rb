@@ -8,10 +8,7 @@ class Folio::Console::Files::IndexModalComponent < Folio::Console::ApplicationCo
 
   def data
     stimulus_controller(CLASS_NAME,
-                        values: {
-                          turbo_frame_urls:,
-                          turbo_frame_id: Folio::Console::FileControllerBase::TURBO_FRAME_ID,
-                        },
+                        values: { turbo_frame_config: },
                         action: {
                           "f-c-files-index-modal:openWithType" => "openWithType",
                           "f-file-list-file:select" => "onFileSelect",
@@ -19,13 +16,21 @@ class Folio::Console::Files::IndexModalComponent < Folio::Console::ApplicationCo
                         })
   end
 
-  def turbo_frame_urls
+  def turbo_frame_config
     h = {}
 
     Rails.application.config.folio_file_types_for_routes.each do |type|
-      h[type] = url_for([:console, type.constantize])
+      klass = type.constantize
+      h[type] = {
+        src: url_for([:console, klass]),
+        id: klass.console_turbo_frame_id(modal: true),
+      }
     end
 
-    h.to_json
+    h
+  end
+
+  def file_klasses
+    Rails.application.config.folio_file_types_for_routes.map(&:constantize)
   end
 end

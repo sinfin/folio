@@ -4,12 +4,26 @@ module Folio::Console::FileControllerBase
   extend ActiveSupport::Concern
 
   PAGY_ITEMS = 64
-  TURBO_FRAME_ID = "folio-console-file-index"
 
   included do
     before_action :set_file_for_show_modal, only: %i[index]
     before_action :set_pagy_options, only: %i[index]
     after_action :message_bus_broadcast_update, only: %i[update]
+  end
+
+  def index
+    @turbo_frame_id = @klass.console_turbo_frame_id(modal: action_name == "index_for_modal",
+                                                    picker: action_name == "index_for_picker")
+
+    super
+  end
+
+  def index_for_modal
+    index
+  end
+
+  def index_for_picker
+    index
   end
 
   private

@@ -2,7 +2,12 @@
                                                 size: "fullheight",
                                                 align_close_with_buttons: true,
                                                 data:))
-  .f-c-files-index-modal__inner
-    = render(Folio::Console::Ui::TurboFrameWithLoaderComponent.new(id: Folio::Console::FileControllerBase::TURBO_FRAME_ID,
-                                                                   disabled: true,
-                                                                   min_height: '375px'))
+  - file_klasses.each do |file_klass|
+    .f-c-files-index-modal__type[
+      data=stimulus_target("type").merge(type: file_klass.to_s)
+      hidden=true
+    ]
+      = render(Folio::Console::Ui::TurboFrameWithLoaderComponent.new(id: file_klass.console_turbo_frame_id(modal: true),
+                                                                     disabled: true,
+                                                                     src: url_for([:console, file_klass, action: :index_for_modal]),
+                                                                     min_height: '375px'))

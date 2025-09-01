@@ -46,7 +46,7 @@ class Folio::Console::Ui::Index::HeaderComponent < Folio::Console::ApplicationCo
     elsif @query_url.is_a?(Symbol)
       send(@query_url)
     else
-      controller.through_aware_console_url_for(@klass)
+      request.path
     end
   end
 

@@ -1,8 +1,9 @@
 window.Folio.Stimulus.register('f-c-files-index-modal', class extends window.Stimulus.Controller {
   static values = {
-    turboFrameUrls: Object,
-    turboFrameId: String
+    turboFrameConfig: Object
   }
+
+  static targets = ['type']
 
   disconnect () {
     delete this.triggerElement
@@ -14,12 +15,6 @@ window.Folio.Stimulus.register('f-c-files-index-modal', class extends window.Sti
       return
     }
 
-    const url = this.turboFrameUrlsValue[e.detail.fileType]
-    if (!url) {
-      window.alert(`[Folio::Console::Files::IndexModalComponent] Missing URL for fileType ${e.detail.fileType}!`)
-      return
-    }
-
     if (!e.detail.trigger) {
       window.alert('[Folio::Console::Files::IndexModalComponent] Missing trigger element!')
       return
@@ -27,11 +22,31 @@ window.Folio.Stimulus.register('f-c-files-index-modal', class extends window.Sti
 
     this.triggerElement = e.detail.trigger
 
-    const frame = this.element.querySelector('turbo-frame')
+    let typeElement
 
-    if (!frame.src || !frame.src.endsWith(url)) {
-      frame.src = url
-      frame.disabled = false
+    this.typeTargets.forEach((typeTarget) => {
+      const turboFrame = typeTarget.querySelector('turbo-frame')
+
+      if (typeTarget.dataset.type === e.detail.fileType) {
+        if (turboFrame.disabled) {
+          turboFrame.disabled = false
+        }
+
+        typeTarget.hidden = false
+
+        typeElement = typeTarget
+      } else {
+        if (!turboFrame.disabled) {
+          turboFrame.disabled = true
+        }
+
+        typeTarget.hidden = true
+      }
+    })
+
+    if (!typeElement) {
+      window.alert(`[Folio::Console::Files::IndexModalComponent] Invalid fileType: ${e.detail.fileType}!`)
+      return
     }
 
     window.Folio.Modal.open(this.element)

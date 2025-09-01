@@ -90,6 +90,11 @@ Folio::Engine.routes.draw do
       namespace :file do
         Rails.application.config.folio_file_types_for_routes.each do |type|
           resources type.constantize.model_name.element.pluralize.to_sym, only: %i[index update] do
+            collection do
+              get :index_for_modal
+              get :index_for_picker
+            end
+
             member do
               if type == "Folio::File::Video"
                 post :retranscribe_subtitles
