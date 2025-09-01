@@ -59,7 +59,7 @@ window.Folio.Stimulus.register('f-c-files-picker-image', class extends window.St
   addChangeOverlay () {
     const overlay = document.createElement('div')
     overlay.className = 'f-c-files-picker-image__action'
-    overlay.dataset.action = 'click->f-c-file-picker#onBtnClick'
+    overlay.dataset.action = 'click->f-c-files-picker#onBtnClick'
 
     if (window.FolioConsole && window.FolioConsole.Ui && window.FolioConsole.Ui.Button) {
       overlay.appendChild(window.FolioConsole.Ui.Button.create({

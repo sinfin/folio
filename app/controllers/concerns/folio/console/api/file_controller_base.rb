@@ -224,6 +224,10 @@ module Folio::Console::Api::FileControllerBase
       flash: { success: t("folio.console.api.file_controller_base.batch_update_success") })
   end
 
+  def file_picker_file_hash
+    render_record(folio_console_record, Folio::Console::FileSerializer)
+  end
+
   private
     def folio_console_collection_includes
       [:tags, :file_placements]

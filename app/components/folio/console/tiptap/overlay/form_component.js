@@ -18,7 +18,7 @@ window.Folio.Stimulus.register('f-c-tiptap-overlay-form', class extends window.S
 
     if (this.autoclickCoverValue) {
       window.setTimeout(() => {
-        const btn = this.element.querySelector('.f-c-tiptap-overlay-form__react-file-picker--cover .f-c-file-picker[data-f-c-file-picker-has-file-value="false"] .f-c-file-picker__btn')
+        const btn = this.element.querySelector('.f-c-tiptap-overlay-form__react-file-picker--cover .f-c-files-picker[data-f-c-files-picker-state-value="empty"] .f-c-files-picker__btn')
         if (btn) btn.click()
       }, 0)
     }

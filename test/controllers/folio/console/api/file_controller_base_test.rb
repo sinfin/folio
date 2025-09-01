@@ -218,5 +218,12 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
       assert_equal "foo", files.first.reload.author
       assert_equal "bar", files.first.reload.attribution_licence, "Don't update attribution_licence when blank"
     end
+
+    test "#{klass} - file_picker_file_hash" do
+      file = create(klass.model_name.singular)
+      get url_for([:file_picker_file_hash, :console, :api, file, format: :json])
+      assert_response(:success)
+      assert_equal(file.id, response.parsed_body["data"]["id"].to_i)
+    end
   end
 end

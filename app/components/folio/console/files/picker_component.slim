@@ -18,15 +18,18 @@
     = fp.hidden_field :file_id,
                       data: stimulus_target("fileIdInput")
 
-    .f-c-files-picker__content data=stimulus_target("content")
-      - if file_placement && file_placement.file && !file_placement.marked_for_destruction?
-        = render(content_component)
+    .f-c-files-picker__inner
+      .f-c-files-picker__content data=stimulus_target("content")
+        - if file_placement && file_placement.file && !file_placement.marked_for_destruction?
+          = render(content_component)
 
-    .f-c-files-picker__btn-wrap
-      = folio_console_ui_button(class: "f-c-files-picker__btn",
-                                variant: :success,
-                                icon: :plus,
-                                data: stimulus_action(click: 'onBtnClick'))
+      .f-c-files-picker__btn-wrap
+        = folio_console_ui_button(class: "f-c-files-picker__btn",
+                                  variant: :success,
+                                  icon: :plus,
+                                  data: stimulus_action(click: 'onBtnClick'))
+
+      span.folio-loader.f-c-files-picker__loader
 
     - if hint = hint_for(fp)
       small.f-c-files-picker__hint.form-text.text-muted

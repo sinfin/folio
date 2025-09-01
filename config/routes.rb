@@ -206,6 +206,8 @@ Folio::Engine.routes.draw do
               end
 
               member do
+                get :file_picker_file_hash
+
                 if klass.human_type == "image"
                   post :update_file_thumbnail
                   post :destroy_file_thumbnail

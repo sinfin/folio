@@ -29,7 +29,7 @@ export default function settingsToHash () {
           }
         } else if ($setting.hasClass('selectized')) {
           val = $setting[0].selectize.getValue()
-        } else if ($setting.hasClass('f-c-file-picker')) {
+        } else if ($setting.hasClass('f-c-files-picker')) {
           val = getJsonFromFilePicker($setting)
         } else if ($setting.hasClass('form-check-input')) {
           val = $setting[0].checked

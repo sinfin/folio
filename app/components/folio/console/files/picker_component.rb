@@ -14,10 +14,10 @@ class Folio::Console::Files::PickerComponent < Folio::Console::ApplicationCompon
     stimulus_controller("f-c-files-picker",
                         values: {
                           file_type: @file_klass.to_s,
-                          has_file: (file_placement && file_placement.file && !file_placement.marked_for_destruction?) ? "true" : "false",
+                          state:,
                         },
                         action: {
-                          "f-c-files-index-modal:selectedFile" => "onSelectedFile"
+                          "f-c-files-index-modal:selectedFile" => "onModalSelectedFile"
                         })
   end
 
@@ -39,6 +39,18 @@ class Folio::Console::Files::PickerComponent < Folio::Console::ApplicationCompon
       Folio::Console::Files::Picker::DocumentComponent.new(file: file_placement.file)
     else
       fail "Unknown human_type #{@file_klass.human_type}"
+    end
+  end
+
+  def state
+    if file_placement && file_placement.file
+      if file_placement.marked_for_destruction?
+        "marked-for-destruction"
+      else
+        "filled"
+      end
+    else
+      "empty"
     end
   end
 end

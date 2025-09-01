@@ -27,7 +27,7 @@ window.Folio.Stimulus.register('f-c-files-picker', class extends window.Stimulus
 
   static values = {
     fileType: String,
-    hasFile: Boolean,
+    state: String,
     inReact: { type: Boolean, default: false },
     reactFile: { type: Object, default: {} }
   }
@@ -37,16 +37,12 @@ window.Folio.Stimulus.register('f-c-files-picker', class extends window.Stimulus
       this.createFile(this.reactFileValue)
     }
 
-    this.boundOnSelected = this.onSelected.bind(this)
-    this.element.addEventListener(this.selectedEventName(), this.boundOnSelected)
-
     this.boundOnUpdated = this.onUpdated.bind(this)
     this.element.addEventListener(window.FolioConsole.Events.FOLIO_CONSOLE_FILE_UPDATED, this.boundOnUpdated)
   }
 
   disconnect () {
-    this.element.removeEventListener(this.selectedEventName(), this.boundOnSelected)
-    delete this.boundOnSelected
+    this.abort()
   }
 
   selectedEventName () {
@@ -64,30 +60,9 @@ window.Folio.Stimulus.register('f-c-files-picker', class extends window.Stimulus
 
       this.fileIdInputTarget.value = ''
 
-      this.hasFileValue = false
+      this.stateValue = this.idInputTarget.value ? 'marked-for-destruction' : 'empty'
       this.contentTarget.innerHTML = ''
 
-      this.triggerPreviewRefresh()
-    }
-  }
-
-  onSelected (e) {
-    if (!this.inReactValue) {
-      this.destroyInputTarget.value = '0'
-      this.destroyInputTarget.disabled = true
-
-      this.fileIdInputTarget.value = e.detail.file.id
-    }
-
-    this.contentTarget.innerHTML = ''
-    this.hasFileValue = true
-
-    this.createFile(e.detail.file)
-    this.updateAlt(e.detail.file)
-
-    if (this.inReactValue) {
-      this.triggerReactFileUpdate(e.detail.file)
-    } else {
       this.triggerPreviewRefresh()
     }
   }
@@ -152,8 +127,48 @@ window.Folio.Stimulus.register('f-c-files-picker', class extends window.Stimulus
     }))
   }
 
-  onSelectedFile (e) {
-    console.log('onSelectedFile', e.detail.fileId)
+  onModalSelectedFile (e) {
+    const id = e.detail.fileId
+    if (!id) return
+
+    const path = `${this.fileTypeValue.split('::').pop().toLowerCase()}s`
+    const url = `/console/api/file/${path}/${id}/file_picker_file_hash`
+
+    this.stateValue = 'selected-and-loading'
+    this.contentTarget.innerHTML = ''
+
+    if (!this.inReactValue) {
+      this.destroyInputTarget.value = '0'
+      this.destroyInputTarget.disabled = true
+      this.fileIdInputTarget.value = id
+    }
+
+    this.abort()
+    this.abortController = new AbortController()
+
+    window.Folio.Api.apiGet(url, null, this.abortController.signal).then((res) => {
+      if (res && res.data) {
+        this.createFile(res.data)
+        this.updateAlt(res.data)
+
+        if (this.inReactValue) {
+          this.triggerReactFileUpdate(res.data)
+        } else {
+          this.triggerPreviewRefresh()
+        }
+
+        this.stateValue = 'filled'
+      } else {
+        throw new Error('No data in response')
+      }
+    }).catch(() => { this.removeDropdown() })
+  }
+
+  abort () {
+    if (this.abortController) {
+      this.abortController.abort('abort')
+      delete this.abortController
+    }
   }
 
   onFormControlModalClick (e) {

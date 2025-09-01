@@ -1,5 +1,6 @@
 = render(Folio::Console::Ui::ModalComponent.new(class_name: CLASS_NAME,
-                                                size: :lg,
+                                                size: "fullheight",
+                                                align_close_with_buttons: true,
                                                 data:))
   .f-c-files-index-modal__inner
     = render(Folio::Console::Ui::TurboFrameWithLoaderComponent.new(id: Folio::Console::FileControllerBase::TURBO_FRAME_ID,
