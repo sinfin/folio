@@ -2,7 +2,6 @@ import React from "react";
 import { useEditorState } from "@tiptap/react";
 import { type Editor } from "@tiptap/react";
 
-import { Button } from "@/components/tiptap-ui-primitive/button";
 import { Spacer } from "@/components/tiptap-ui-primitive/spacer";
 import {
   Toolbar,
@@ -23,6 +22,7 @@ import {
 import { ResponsivePreviewButtons } from '@/components/tiptap-ui/responsive-preview-buttons';
 import { HorizontalRuleCommand } from '@/components/tiptap-commands';
 import { FolioEditorToolbarCommandButton } from './folio-editor-toolbar-command-button';
+import FolioTiptapSaveButton from "@/components/tiptap-extensions/folio-tiptap-save/folio-tiptap-save-button";
 
 interface FolioEditorToolbarButtonStateMapping {
   enabled: (params: { editor: Editor }) => boolean;
@@ -404,8 +404,16 @@ const MainToolbarContent = ({
       <Spacer />
 
       {setResponsivePreviewEnabled && (
-        <ResponsivePreviewButtons setResponsivePreviewEnabled={setResponsivePreviewEnabled} />
+        <ToolbarGroup>
+          <ResponsivePreviewButtons setResponsivePreviewEnabled={setResponsivePreviewEnabled} />
+        </ToolbarGroup>
       )}
+
+      <ToolbarSeparator />
+
+      <ToolbarGroup>
+        <FolioTiptapSaveButton editor={editor} />
+      </ToolbarGroup>
     </>
   );
 };
