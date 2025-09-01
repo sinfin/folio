@@ -26,7 +26,6 @@ module Folio::Tiptap::VersionedModel
 
   included do
     has_many :tiptap_revisions, as: :placement, class_name: "Folio::Tiptap::Revision", dependent: :destroy
-    before_save :sync_latest_tiptap_revision
     before_validation :convert_titap_fields_to_hashes_and_sanitize
     validate :validate_tiptap_fields
   end
@@ -90,12 +89,4 @@ module Folio::Tiptap::VersionedModel
   def tiptap_config
     Folio::Tiptap.config
   end
-
-  private
-    def sync_latest_tiptap_revision
-      latest_revision = latest_tiptap_revision
-      if latest_revision&.content.present?
-        self.tiptap_content = latest_revision.content
-      end
-    end
 end
