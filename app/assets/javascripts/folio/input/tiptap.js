@@ -1,6 +1,8 @@
 window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.Controller {
   static targets = ['input', 'iframe', 'loader']
 
+  static AUTO_SAVE_DELAY = 2000
+
   static values = {
     loaded: { type: Boolean, default: false },
     readonly: { type: Boolean, default: false },
@@ -8,8 +10,12 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     origin: String,
     type: String,
     renderUrl: String,
+    autoSaveUrl: String,
     tiptapConfigJson: String,
     tiptapContentJsonStructureJson: String,
+    autoSave: { type: Boolean, default: true },
+    placementType: String,
+    placementId: Number,
   }
 
   connect () {
@@ -17,6 +23,10 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
       this.setWindowWidth(e)
       this.sendWindowResizeMessage()
     })
+
+    this.debouncedAutoSave = window.Folio.debounce(() => {
+      this.performAutoSave()
+    }, this.constructor.AUTO_SAVE_DELAY)
 
     this.restoreScrollPositions()
     this.setWindowWidth()
@@ -306,5 +316,38 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     } catch (e) {
       console.error('Failed to restore scroll positions:', e)
     }
+  }
+
+  performAutoSave () {
+    if (!this.autoSaveValue || !this.autoSaveUrlValue || !this.placementTypeValue || !this.placementIdValue) return
+    if (!this.latestContent) return
+
+    const data = {
+      tiptap_revision: {
+        content: this.latestContent
+      },
+      placement: {
+        type: this.placementTypeValue,
+        id: this.placementIdValue
+      }
+    }
+
+    window.Folio.Api.apiPost(this.autoSaveUrlValue, data)
+      .then((response) => {
+        if (response && response.success) {
+          console.log('[Folio] [Tiptap] Auto-saved revision:', response.revision_number)
+
+          const autoSaveMessage = {
+            type: 'f-input-tiptap:auto-saved',
+            revisionId: response.revision_id,
+            revisionNumber: response.revision_number,
+            createdAt: response.created_at
+          }
+          this.iframeTarget.contentWindow.postMessage(autoSaveMessage, this.originValue || window.origin)
+        }
+      })
+      .catch((error) => {
+        console.warn('[Folio] [Tiptap] Auto-save failed:', error)
+      })
   }
 })
