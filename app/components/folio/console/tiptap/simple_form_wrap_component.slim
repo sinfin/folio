@@ -24,7 +24,7 @@
 
       - if form.object.new_record?
         .f-c-tiptap-simple-form-wrap__editors-autosave-info
-          == cell("folio/console/ui/alert", t('.new_record_alert'),
+          == cell("folio/console/ui/alert", t('.new_record_alert', model: form.object.class.model_name.human.downcase),
                                             variant: :warning,
                                             class_name: "m-0",
                                             closable: false)
