@@ -191,8 +191,14 @@ module Folio::Console::Api::FileControllerBase
 
     session[BATCH_SESSION_KEY][@klass.to_s]["file_ids"] = []
 
-    render_component_json(Folio::Console::Files::Batch::BarComponent.new(file_klass: @klass),
-      flash: { success: t("folio.console.api.file_controller_base.batch_delete_success") })
+    component = Folio::Console::Files::Batch::BarComponent.new(file_klass: @klass,
+                                                               change_to_propagate: {
+                                                                 change: "delete",
+                                                                 file_ids: @safe_file_ids,
+                                                               })
+
+    render_component_json(component,
+                          flash: { success: t("folio.console.api.file_controller_base.batch_delete_success") })
   end
 
   def batch_update
@@ -218,10 +224,17 @@ module Folio::Console::Api::FileControllerBase
       files.each { |file| file.update!(update_params) }
     end
 
+    session[BATCH_SESSION_KEY][@klass.to_s]["file_ids"] = []
     session[BATCH_SESSION_KEY][@klass.to_s]["form_open"] = false
 
-    render_component_json(Folio::Console::Files::Batch::BarComponent.new(file_klass: @klass),
-      flash: { success: t("folio.console.api.file_controller_base.batch_update_success") })
+    component = Folio::Console::Files::Batch::BarComponent.new(file_klass: @klass,
+                                                               change_to_propagate: {
+                                                                 change: "update",
+                                                                 file_ids: @safe_file_ids,
+                                                               })
+
+    render_component_json(component,
+                          flash: { success: t("folio.console.api.file_controller_base.batch_update_success") })
   end
 
   def file_picker_file_hash

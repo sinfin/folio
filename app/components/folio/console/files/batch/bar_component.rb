@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 class Folio::Console::Files::Batch::BarComponent < Folio::Console::ApplicationComponent
-  def initialize(file_klass:)
+  def initialize(file_klass:, change_to_propagate: nil)
     @file_klass = file_klass
+    @change_to_propagate = change_to_propagate
   end
 
   def data
@@ -11,6 +12,7 @@ class Folio::Console::Files::Batch::BarComponent < Folio::Console::ApplicationCo
                           base_api_url: url_for([:console, :api, @file_klass]),
                           status: "loaded",
                           file_ids_json: file_ids.to_json,
+                          change_to_propagate: (@change_to_propagate || {}).to_json,
                         },
                         action: {
                           "f-c-files-batch-bar/action" => "batchActionFromFile",

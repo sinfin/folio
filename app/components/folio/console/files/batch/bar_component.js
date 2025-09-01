@@ -4,10 +4,29 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
   static values = {
     baseApiUrl: String,
     status: String,
-    fileIdsJson: String
+    fileIdsJson: String,
+    changeToPropagate: Object
   }
 
   static targets = ['form']
+
+  changeToPropagateValueChanged (from, to) {
+    if (this.changeToPropagateValue && this.changeToPropagateValue.file_ids) {
+      let eventName
+
+      if (this.changeToPropagateValue.change === 'update') {
+        eventName = 'updated'
+      } else if (this.changeToPropagateValue.change === 'delete') {
+        eventName = 'deleted'
+      }
+
+      this.changeToPropagateValue.file_ids.forEach((fileId) => {
+        for (const fileElement of document.querySelectorAll(`.f-file-list-file[data-f-file-list-file-id-value="${fileId}"]`)) {
+          fileElement.dispatchEvent(new CustomEvent(`f-file-list-file:${eventName}`))
+        }
+      })
+    }
+  }
 
   disconnect () {
     this.abortAjax()

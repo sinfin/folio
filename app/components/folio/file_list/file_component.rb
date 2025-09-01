@@ -36,7 +36,8 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
                           batch_actions: @batch_actions,
                         },
                         action: @editable ? {
-                          "f-c-files-show/deleted@document": "filesShowDeleted"
+                          "f-file-list-file:updated": "fileUpdated",
+                          "f-file-list-file:deleted": "fileDeleted",
                         } : nil)
   end
 
