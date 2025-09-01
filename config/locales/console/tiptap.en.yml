@@ -5,6 +5,7 @@ en:
       tiptap:
         simple_form_wrap_component:
           editor_title: Editor
+          new_record_alert: Draft changes in the editor are not saved until you first save the article.
 
         simple_form_wrap:
           word_count_component:

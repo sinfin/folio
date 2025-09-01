@@ -13,7 +13,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     autoSaveUrl: String,
     tiptapConfigJson: String,
     tiptapContentJsonStructureJson: String,
-    autoSave: { type: Boolean, default: true },
+    autoSave: { type: Boolean, default: false },
     placementType: String,
     placementId: Number,
     latestRevisionCreatedAt: String,
@@ -88,7 +88,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
         this.setInputValue(e.data.content, { isInitialization: true })
         this.ignoreValueChangesValue = false
 
-        this.sendRevisionTimeToEditor()
+        this.sendSaveButtonInfo()
         break
       case 'f-tiptap-editor:show-html':
         this.showHtmlInModal(e.data.html)
@@ -191,14 +191,13 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     this.iframeTarget.contentWindow.postMessage(data, this.originValue || window.origin)
   }
 
-  sendRevisionTimeToEditor () {
-    if (this.latestRevisionCreatedAtValue) {
-      const data = {
-        type: 'f-input-tiptap:revision-time',
-        latestRevisionCreatedAt: this.latestRevisionCreatedAtValue,
-      }
-      this.iframeTarget.contentWindow.postMessage(data, this.originValue || window.origin)
+  sendSaveButtonInfo () {
+    const data = {
+      type: 'f-input-tiptap:save-button-info',
+      autoSaveEnabled: this.autoSaveValue,
+      latestRevisionCreatedAt: this.latestRevisionCreatedAtValue || null,
     }
+    this.iframeTarget.contentWindow.postMessage(data, this.originValue || window.origin)
   }
 
   onRenderNodeMessage (e) {

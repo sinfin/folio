@@ -5,6 +5,7 @@ cs:
       tiptap:
         simple_form_wrap_component:
           editor_title: Editor
+          new_record_alert: Rozepsané změny v editoru se neukládají, dokud článek poprvé neuložíte.
 
         simple_form_wrap:
           word_count_component:

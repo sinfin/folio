@@ -1,6 +1,6 @@
 import * as React from "react";
 import type { Editor } from "@tiptap/react";
-import { Save } from "lucide-react";
+import { Save, SaveOff } from "lucide-react";
 
 // --- UI Primitives ---
 import type { ButtonProps } from "@/components/tiptap-ui-primitive/button";
@@ -28,6 +28,7 @@ export const FolioTiptapSaveButton = React.forwardRef<
   FolioTiptapSaveButtonProps
 >(({ editor }, ref) => {
   const [lastSavedAt, setLastSavedAt] = React.useState<Date | null>(null);
+  const [autoSaveEnabled, setAutoSaveEnabled] = React.useState<boolean>(true);
 
   const handleClick = React.useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -50,8 +51,12 @@ export const FolioTiptapSaveButton = React.forwardRef<
 
   React.useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
-      if (event.data?.type === 'f-input-tiptap:revision-time' && event.data.latestRevisionCreatedAt) {
-        setLastSavedAt(new Date(event.data.latestRevisionCreatedAt));
+      if (event.data?.type === 'f-input-tiptap:save-button-info') {
+        setAutoSaveEnabled(event.data.autoSaveEnabled || false);
+
+        if (event.data.latestRevisionCreatedAt) {
+          setLastSavedAt(new Date(event.data.latestRevisionCreatedAt));
+        }
       } else if (event.data?.type === 'f-input-tiptap:auto-saved') {
         setLastSavedAt(new Date(event.data.createdAt));
       }
@@ -86,6 +91,21 @@ export const FolioTiptapSaveButton = React.forwardRef<
       });
       return `${translate(TRANSLATIONS, "saveOn")} ${dateTimeStr}`;
     }
+  }
+
+  if (!autoSaveEnabled) {
+    return (
+      <Button
+        ref={ref}
+        type="button"
+        data-style="ghost"
+        role="button"
+        tabIndex={-1}
+        style={{ pointerEvents: 'none' }}
+      >
+        <SaveOff className="tiptap-button-icon" color="#FF9A52" />
+      </Button>
+    );
   }
 
   return (
