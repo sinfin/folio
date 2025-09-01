@@ -19,8 +19,8 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
 
     window.Folio.RemoteScripts.run({
       key: 'uppy-js',
-      urls: ['https://unpkg.com/uppy@4.13.3/dist/uppy.min.js'],
-      cssUrls: ['https://unpkg.com/uppy@4.13.3/dist/uppy.min.css']
+      urls: ['https://releases.transloadit.com/uppy/v5.1.1/uppy.min.js'],
+      cssUrls: ['https://releases.transloadit.com/uppy/v5.1.1/uppy.min.css']
     }, () => {
       this.addCsLocale()
       this.init()
