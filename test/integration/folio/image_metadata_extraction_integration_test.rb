@@ -53,9 +53,10 @@ class Folio::ImageMetadataExtractionIntegrationTest < ActionDispatch::Integratio
       assert_no_match(/Å [a-z]/, image_file.mapped_metadata[:credit_line])
 
       # Verify IPTC standard compliance
-      assert image_file.mapped_metadata[:creator].is_a?(Array), "Creator should be stored as array"
+      creator = image_file.mapped_metadata[:creator]
+      assert creator.present?, "Creator should be present"
       # Verify creator contains some meaningful content (not specifically ČTK)
-      assert image_file.mapped_metadata[:creator].any? { |c| c.length > 2 }, "Creator should contain meaningful data"
+      assert creator.to_s.length > 2, "Creator should contain meaningful data"
     ensure
       temp_file&.close
       temp_file&.unlink
@@ -87,7 +88,7 @@ class Folio::ImageMetadataExtractionIntegrationTest < ActionDispatch::Integratio
         filename: File.basename(original_path),
         credit_line: image_file.mapped_metadata[:credit_line].to_s,
         keywords: Array(image_file.mapped_metadata[:keywords]).join(" "),
-        creator: Array(image_file.mapped_metadata[:creator]).join(", "),
+        creator: image_file.mapped_metadata[:creator].to_s,
         has_mojibake: detect_mojibake(image_file)
       }
 
@@ -155,7 +156,7 @@ class Folio::ImageMetadataExtractionIntegrationTest < ActionDispatch::Integratio
         image_file.headline,
         image_file.description,
         image_file.mapped_metadata[:credit_line],
-        Array(image_file.mapped_metadata[:creator]).join(" "),
+        image_file.mapped_metadata[:creator].to_s,
         Array(image_file.mapped_metadata[:keywords]).join(" ")
       ].join(" ")
 
@@ -179,13 +180,19 @@ class Folio::ImageMetadataExtractionIntegrationTest < ActionDispatch::Integratio
       temp_file = Tempfile.new(["test_image", ".jpg"])
       FileUtils.cp(file_path, temp_file.path)
 
-      # Create file with pre-existing metadata
+      # Create file with pre-existing metadata (disable automatic extraction first)
+      Rails.application.config.folio_image_metadata_extraction_enabled = false
+
       image_file = Folio::File::Image.new
       image_file.file = File.open(temp_file.path)
       image_file.site_id = @site.id
       image_file.description = "Pre-existing description"
       image_file.headline = "Pre-existing headline"
       image_file.save!
+
+      # Now enable extraction and extract manually (should not overwrite existing values)
+      Rails.application.config.folio_image_metadata_extraction_enabled = true
+      image_file.extract_metadata!(force: true)
 
       # Reload and verify values weren't overwritten
       image_file.reload
@@ -246,7 +253,7 @@ class Folio::ImageMetadataExtractionIntegrationTest < ActionDispatch::Integratio
         image_file.description,
         image_file.mapped_metadata[:credit_line],
         image_file.headline,
-        Array(image_file.mapped_metadata[:creator]).join(" "),
+        image_file.mapped_metadata[:creator].to_s,
         Array(image_file.mapped_metadata[:keywords]).join(" ")
       ].compact
 

@@ -373,16 +373,16 @@ module Folio::Metadata
 
       # With -n flag, ExifTool returns signed decimal directly
       gps_latitude: ->(value, metadata = {}) {
-        parse_gps_decimal(value)
+        Folio::Metadata::IptcFieldMapper.parse_gps_decimal(value)
       },
 
       gps_longitude: ->(value, metadata = {}) {
-        parse_gps_decimal(value)
+        Folio::Metadata::IptcFieldMapper.parse_gps_decimal(value)
       },
 
       # Proper datetime parsing with timezone support
       capture_date: ->(value) {
-        result = parse_capture_date(value)
+        result = Folio::Metadata::IptcFieldMapper.parse_capture_date(value)
         # Extract just the time for capture_date field
         result.is_a?(Hash) ? result[:time] : result
       },
@@ -675,269 +675,302 @@ module Folio::Metadata
       # Configurable locale priority
       def configured_locale_priority
         Rails.application.config.folio_image_metadata_locale_priority || [:en, "x-default"]
-      end
+end
 
-      private
-        def extract_first_available_value(metadata, source_fields, locale: :en, raw_metadata: {})
-          source_fields.each do |field|
-            value = metadata[field]
-            # If not found and the field is an unqualified IIM tag (no namespace),
-            # try with common group prefix used by ExifTool when -G1 is enabled
-            if value.blank? && !field.to_s.include?(":") && field.to_s =~ /[A-Za-z]/
-              value = metadata["IPTC:#{field}"]
-            end
-            next if value.blank?
+      # Parse GPS with -n flag (already signed decimal)
+      def parse_gps_decimal(value)
+        return nil if value.blank?
 
-            # Handle Lang Alt structures (XMP dc:description, dc:rights, etc.)
-            if value.is_a?(Hash) && (value.key?("lang") || value.keys.any? { |k| k.to_s.include?("-") })
-              return extract_lang_alt(value, locale, raw_metadata: raw_metadata)
-            end
-
-            # Fix encoding issues in text values before returning
-            return unmojibake(value, raw_metadata)
-          end
+        case value
+        when Numeric
+          value.to_f
+        when String
+          # With -n flag, ExifTool returns signed decimal directly
+          # e.g., -33.7490 for South, -118.2437 for West
+          value.to_f
+        else
           nil
         end
+      end
 
-        # Handle XMP Lang Alt structures with configurable priority
-        def extract_lang_alt(lang_alt, locale = :en, raw_metadata: {})
-          return lang_alt unless lang_alt.is_a?(Hash)
+      # Parse capture date with timezone awareness
+      def parse_capture_date(value)
+        return nil if value.blank?
 
-          # Get configured locale priority
-          locale_priority = configured_locale_priority
+        case value
+        when String
+          # Parse and preserve timezone if present
+          # ExifTool formats: "2024:03:15 14:30:00+02:00", "2024-03-15T14:30:00+02:00", or "2022:06:19 20:24:45"
+          begin
+            # Convert EXIF colon format to standard format for parsing
+            normalized_value = value.gsub(/^(\d{4}):(\d{2}):(\d{2})/, '\1-\2-\3')
 
-          # If specific locale requested, put it first
-          if locale && !locale_priority.include?(locale.to_s)
-            locale_priority = [locale.to_s] + locale_priority
+            parsed_time = Time.parse(normalized_value)
+
+            # Extract and store offset for separate field if needed
+            if value =~ /([+-]\d{2}:\d{2}|Z)$/
+              offset = $1
+              # Store in a hash to return both time and offset
+              { time: parsed_time, offset: offset }
+            else
+              { time: parsed_time, offset: nil }
+            end
+          rescue => e
+            Rails.logger.warn("Failed to parse capture date '#{value}': #{e.message}") if defined?(Rails)
+            nil
+          end
+        when Time, DateTime
+          { time: value, offset: value.formatted_offset }
+        else
+          nil
+        end
+      end
+
+        private
+          def extract_first_available_value(metadata, source_fields, locale: :en, raw_metadata: {})
+            source_fields.each do |field|
+              value = metadata[field]
+              # If not found and the field is an unqualified IIM tag (no namespace),
+              # try with common group prefix used by ExifTool when -G1 is enabled
+              if value.blank? && !field.to_s.include?(":") && field.to_s =~ /[A-Za-z]/
+                value = metadata["IPTC:#{field}"]
+              end
+              next if value.blank?
+
+              # Handle Lang Alt structures (XMP dc:description, dc:rights, etc.)
+              if value.is_a?(Hash) && (value.key?("lang") || value.keys.any? { |k| k.to_s.include?("-") })
+                return extract_lang_alt(value, locale, raw_metadata: raw_metadata)
+              end
+
+              # Fix encoding issues in text values before returning
+              return unmojibake(value, raw_metadata)
+            end
+            nil
           end
 
-          # Try each locale in priority order
-          locale_priority.each do |loc|
-            loc_str = loc.to_s
+          # Handle XMP Lang Alt structures with configurable priority
+          def extract_lang_alt(lang_alt, locale = :en, raw_metadata: {})
+            return lang_alt unless lang_alt.is_a?(Hash)
 
-            # Try exact match
-            if lang_alt[loc_str].present?
-              value = lang_alt[loc_str]
-              return unmojibake(value, raw_metadata)
+            # Get configured locale priority
+            locale_priority = configured_locale_priority
+
+            # If specific locale requested, put it first
+            if locale && !locale_priority.include?(locale.to_s)
+              locale_priority = [locale.to_s] + locale_priority
             end
 
-            # Try with region (e.g., "cs-CZ")
-            regional_key = "#{loc_str}-#{loc_str.upcase}"
-            if lang_alt[regional_key].present?
-              value = lang_alt[regional_key]
-              return unmojibake(value, raw_metadata)
-            end
+            # Try each locale in priority order
+            locale_priority.each do |loc|
+              loc_str = loc.to_s
 
-            # Try any variant starting with locale (e.g., "en-US", "en-GB")
-            lang_alt.each do |key, value|
-              if key.to_s.start_with?("#{loc_str}-") && value.present?
+              # Try exact match
+              if lang_alt[loc_str].present?
+                value = lang_alt[loc_str]
                 return unmojibake(value, raw_metadata)
               end
+
+              # Try with region (e.g., "cs-CZ")
+              regional_key = "#{loc_str}-#{loc_str.upcase}"
+              if lang_alt[regional_key].present?
+                value = lang_alt[regional_key]
+                return unmojibake(value, raw_metadata)
+              end
+
+              # Try any variant starting with locale (e.g., "en-US", "en-GB")
+              lang_alt.each do |key, value|
+                if key.to_s.start_with?("#{loc_str}-") && value.present?
+                  return unmojibake(value, raw_metadata)
+                end
+              end
+            end
+
+            # Fallback to x-default
+            if lang_alt["x-default"].present?
+              value = lang_alt["x-default"]
+              return unmojibake(value, raw_metadata)
+            end
+
+            # Last resort: first available value
+            first_value = lang_alt.values.first
+            unmojibake(first_value, raw_metadata)
+          end
+
+          # Normalize various inputs to clean arrays
+          def normalize_array(value)
+            case value
+            when Array
+              value.compact.reject(&:blank?)
+            when String
+              # Don't split - preserve original strings in arrays
+              [value]
+            else
+              []
             end
           end
 
-          # Fallback to x-default
-          if lang_alt["x-default"].present?
-            value = lang_alt["x-default"]
-            return unmojibake(value, raw_metadata)
-          end
+          # Parse capture date with timezone awareness
+          def self.parse_capture_date(value)
+            return nil if value.blank?
 
-          # Last resort: first available value
-          first_value = lang_alt.values.first
-          unmojibake(first_value, raw_metadata)
-        end
+            case value
+            when String
+              # Parse and preserve timezone if present
+              # ExifTool formats: "2024:03:15 14:30:00+02:00", "2024-03-15T14:30:00+02:00", or "2022:06:19 20:24:45"
+              begin
+                # Convert EXIF colon format to standard format for parsing
+                normalized_value = value.gsub(/^(\d{4}):(\d{2}):(\d{2})/, '\1-\2-\3')
 
-        # Normalize various inputs to clean arrays
-        def normalize_array(value)
-          case value
-          when Array
-            value.compact.reject(&:blank?)
-          when String
-            # Don't split - preserve original strings in arrays
-            [value]
-          else
-            []
-          end
-        end
+                parsed_time = Time.parse(normalized_value)
 
-        # Parse GPS with -n flag (already signed decimal)
-        def parse_gps_decimal(value)
-          return nil if value.blank?
-
-          case value
-          when Numeric
-            value.to_f
-          when String
-            # With -n flag, ExifTool returns signed decimal directly
-            # e.g., -33.7490 for South, -118.2437 for West
-            value.to_f
-          else
-            nil
-          end
-        end
-
-        # Parse capture date with timezone awareness
-        def parse_capture_date(value)
-          return nil if value.blank?
-
-          case value
-          when String
-            # Parse and preserve timezone if present
-            # ExifTool formats: "2024:03:15 14:30:00+02:00", "2024-03-15T14:30:00+02:00", or "2022:06:19 20:24:45"
-            begin
-              # Convert EXIF colon format to standard format for parsing
-              normalized_value = value.gsub(/^(\d{4}):(\d{2}):(\d{2})/, '\1-\2-\3')
-
-              parsed_time = Time.parse(normalized_value)
-
-              # Extract and store offset for separate field if needed
-              if value =~ /([+-]\d{2}:\d{2}|Z)$/
-                offset = $1
-                # Store in a hash to return both time and offset
-                { time: parsed_time, offset: offset }
-              else
-                { time: parsed_time, offset: nil }
+                # Extract and store offset for separate field if needed
+                if value =~ /([+-]\d{2}:\d{2}|Z)$/
+                  offset = $1
+                  # Store in a hash to return both time and offset
+                  { time: parsed_time, offset: offset }
+                else
+                  { time: parsed_time, offset: nil }
+                end
+              rescue => e
+                Rails.logger.warn("Failed to parse capture date '#{value}': #{e.message}") if defined?(Rails)
+                nil
               end
-            rescue => e
-              Rails.logger.warn("Failed to parse capture date '#{value}': #{e.message}") if defined?(Rails)
+            when Time, DateTime
+              { time: value, offset: value.formatted_offset }
+            else
               nil
             end
-          when Time, DateTime
-            { time: value, offset: value.formatted_offset }
-          else
-            nil
-          end
-        end
-
-        def unmojibake(str, metadata = {})
-          return str if str.nil?
-
-          # Handle Arrays (e.g., XMP-dc:Creator)
-          if str.is_a?(Array)
-            return str.map { |item| unmojibake(item, metadata) }
-          end
-
-          # Only process Strings - return other types as-is
-          return str unless str.is_a?(String)
-          return str if str.empty?
-
-          # Check IPTC-IIM CodedCharacterSet (1:90) to respect standard
-          coded_charset = metadata["CodedCharacterSet"] || metadata["IPTC:CodedCharacterSet"]
-
-          # IPTC-IIM standard:
-          # - když 1:90 = "UTF8" (ESC % G), dekóduj všechna IPTC pole jako UTF-8
-          # - když 1:90 chybí, default je ISO-8859-1
-
-          case coded_charset&.to_s&.upcase
-          when "UTF8", "%G"
-            # Data should be UTF-8 (%G is ESC % G sequence for UTF-8)
-            # Only apply mojibake fix if text actually needs it
-            if needs_encoding_fix?(str)
-              return fix_utf8_mojibake(str)
-            else
-              return str  # Text is already correct UTF-8
             end
-          when nil, "", "ISO-8859-1"
-            # Default IPTC encoding should be ISO-8859-1, but check if already UTF-8
-            # If text looks like it needs mojibake fix, apply it; otherwise try ISO-8859-1 conversion
-            if needs_encoding_fix?(str)
-              return fix_utf8_mojibake(str)
-            else
-              begin
-                # Try ISO-8859-1 to UTF-8 conversion
-                converted = str.dup.force_encoding("ISO-8859-1").encode("UTF-8", invalid: :replace, undef: :replace)
-                # Only use if it doesn't make things worse
-                if score_cs(converted) >= score_cs(str)
-                  return converted
-                else
-                  return str
-                end
-              rescue
-                return str
+
+          def unmojibake(str, metadata = {})
+            return str if str.nil?
+
+            # Handle Arrays (e.g., XMP-dc:Creator)
+            if str.is_a?(Array)
+              return str.map { |item| unmojibake(item, metadata) }
+            end
+
+            # Only process Strings - return other types as-is
+            return str unless str.is_a?(String)
+            return str if str.empty?
+
+            # Check IPTC-IIM CodedCharacterSet (1:90) to respect standard
+            coded_charset = metadata["CodedCharacterSet"] || metadata["IPTC:CodedCharacterSet"]
+
+            # IPTC-IIM standard:
+            # - když 1:90 = "UTF8" (ESC % G), dekóduj všechna IPTC pole jako UTF-8
+            # - když 1:90 chybí, default je ISO-8859-1
+
+            case coded_charset&.to_s&.upcase
+            when "UTF8", "%G"
+              # Data should be UTF-8 (%G is ESC % G sequence for UTF-8)
+              # Only apply mojibake fix if text actually needs it
+              if needs_encoding_fix?(str)
+                return fix_utf8_mojibake(str)
+              else
+                return str  # Text is already correct UTF-8
               end
-            end
-          else
-            # Other declared charset, try to convert
-            begin
-              ruby_encoding = charset_to_ruby_name(coded_charset)
-              return str.dup.force_encoding(ruby_encoding).encode("UTF-8", invalid: :replace, undef: :replace)
-            rescue
-              # Fallback to unmojibake logic
-            end
-          end
-
-          # Fallback: apply full unmojibake logic for problematic cases
-          fix_utf8_mojibake(str)
-end
-
-        def fix_utf8_mojibake(str)
-          # 1) zkusi ICU (only if it detects non-UTF-8 encoding)
-          begin
-            require "charlock_holmes"
-            if det = CharlockHolmes::EncodingDetector.detect(str)
-              # Skip if already UTF-8 - likely false positive for mojibake
-              if det[:encoding] && det[:encoding] != "UTF-8" && det[:confidence] > 80
+            when nil, "", "ISO-8859-1"
+              # Default IPTC encoding should be ISO-8859-1, but check if already UTF-8
+              # If text looks like it needs mojibake fix, apply it; otherwise try ISO-8859-1 conversion
+              if needs_encoding_fix?(str)
+                return fix_utf8_mojibake(str)
+              else
                 begin
-                  converted = CharlockHolmes::Converter.convert(str, det[:encoding], "UTF-8")
-                  # Only use if it actually improves the score
-                  if score_cs(converted) > score_cs(str)
+                  # Try ISO-8859-1 to UTF-8 conversion
+                  converted = str.dup.force_encoding("ISO-8859-1").encode("UTF-8", invalid: :replace, undef: :replace)
+                  # Only use if it doesn't make things worse
+                  if score_cs(converted) >= score_cs(str)
                     return converted
+                  else
+                    return str
                   end
                 rescue
-                  # Continue to fallback methods
+                  return str
                 end
               end
+            else
+              # Other declared charset, try to convert
+              begin
+                ruby_encoding = charset_to_ruby_name(coded_charset)
+                return str.dup.force_encoding(ruby_encoding).encode("UTF-8", invalid: :replace, undef: :replace)
+              rescue
+                # Fallback to unmojibake logic
+              end
             end
-          rescue LoadError
-            # charlock_holmes not available, continue to fallback
+
+            # Fallback: apply full unmojibake logic for problematic cases
+            fix_utf8_mojibake(str)
+  end
+
+          def fix_utf8_mojibake(str)
+            # 1) zkusi ICU (only if it detects non-UTF-8 encoding)
+            begin
+              require "charlock_holmes"
+              if det = CharlockHolmes::EncodingDetector.detect(str)
+                # Skip if already UTF-8 - likely false positive for mojibake
+                if det[:encoding] && det[:encoding] != "UTF-8" && det[:confidence] > 80
+                  begin
+                    converted = CharlockHolmes::Converter.convert(str, det[:encoding], "UTF-8")
+                    # Only use if it actually improves the score
+                    if score_cs(converted) > score_cs(str)
+                      return converted
+                    end
+                  rescue
+                    # Continue to fallback methods
+                  end
+                end
+              end
+            rescue LoadError
+              # charlock_holmes not available, continue to fallback
+            end
+
+            # 2) kandidáti + reverse-bytes (double-mojibake)
+            csets = %w[Windows-1250 Windows-1252 ISO-8859-2 ISO-8859-1 MacRoman]
+            candidates = []
+
+            csets.each do |cs|
+              candidates << str.dup.force_encoding(cs).encode("UTF-8", invalid: :replace, undef: :replace) rescue nil
+              bytes = str.encode(cs, "UTF-8", invalid: :replace, undef: :replace) rescue nil
+              if bytes
+                candidates << bytes.force_encoding("UTF-8").encode("UTF-8", invalid: :replace, undef: :replace) rescue nil
+              end
+            end
+
+            candidates.compact.max_by { |t| score_cs(t) } || str
           end
 
-          # 2) kandidáti + reverse-bytes (double-mojibake)
-          csets = %w[Windows-1250 Windows-1252 ISO-8859-2 ISO-8859-1 MacRoman]
-          candidates = []
+          def needs_encoding_fix?(str)
+            return false if str.nil?
 
-          csets.each do |cs|
-            candidates << str.dup.force_encoding(cs).encode("UTF-8", invalid: :replace, undef: :replace) rescue nil
-            bytes = str.encode(cs, "UTF-8", invalid: :replace, undef: :replace) rescue nil
-            if bytes
-              candidates << bytes.force_encoding("UTF-8").encode("UTF-8", invalid: :replace, undef: :replace) rescue nil
+            # Handle Arrays
+            if str.is_a?(Array)
+              return str.any? { |item| needs_encoding_fix?(item) }
+            end
+
+            # Only check Strings
+            return false unless str.is_a?(String)
+            return false if str.empty?
+
+            # Check if text contains common mojibake patterns indicating encoding issues
+            str.match?(MOJIBAKE_PATTERNS_REGEX)
+  end
+
+          def charset_to_ruby_name(charset)
+            case charset.to_s.upcase
+            when "UTF8", "UTF-8" then "UTF-8"
+            when "ISO-8859-1", "LATIN1" then "ISO-8859-1"
+            when "ISO-8859-2", "LATIN2" then "ISO-8859-2"
+            when "WINDOWS-1250", "CP1250" then "Windows-1250"
+            when "WINDOWS-1252", "CP1252" then "Windows-1252"
+            when "MACROMAN" then "MacRoman"
+            else charset
             end
           end
 
-          candidates.compact.max_by { |t| score_cs(t) } || str
-        end
-
-        def needs_encoding_fix?(str)
-          return false if str.nil?
-
-          # Handle Arrays
-          if str.is_a?(Array)
-            return str.any? { |item| needs_encoding_fix?(item) }
+          def score_cs(text)
+            text.scan(CZECH_CHARS_REGEX).size * 3 - text.scan(MOJIBAKE_PATTERNS_REGEX).size * 6 - [text.count("?") - 2, 0].max
           end
-
-          # Only check Strings
-          return false unless str.is_a?(String)
-          return false if str.empty?
-
-          # Check if text contains common mojibake patterns indicating encoding issues
-          str.match?(MOJIBAKE_PATTERNS_REGEX)
-end
-
-        def charset_to_ruby_name(charset)
-          case charset.to_s.upcase
-          when "UTF8", "UTF-8" then "UTF-8"
-          when "ISO-8859-1", "LATIN1" then "ISO-8859-1"
-          when "ISO-8859-2", "LATIN2" then "ISO-8859-2"
-          when "WINDOWS-1250", "CP1250" then "Windows-1250"
-          when "WINDOWS-1252", "CP1252" then "Windows-1252"
-          when "MACROMAN" then "MacRoman"
-          else charset
-          end
-        end
-
-        def score_cs(text)
-          text.scan(CZECH_CHARS_REGEX).size * 3 - text.scan(MOJIBAKE_PATTERNS_REGEX).size * 6 - [text.count("?") - 2, 0].max
-        end
     end
   end
 end

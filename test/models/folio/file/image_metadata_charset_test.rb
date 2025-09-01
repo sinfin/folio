@@ -105,8 +105,8 @@ end
     begin
       # This should work with UTF-8 (first candidate)
       image_file.save!
-      assert image_file.credit_line.present?
-      assert_match(/ČTK|Šimánek/, image_file.credit_line.to_s)
+      assert image_file.mapped_metadata[:credit_line].present?
+      assert_match(/ČTK|Šimánek/, image_file.mapped_metadata[:credit_line].to_s)
     ensure
       Rails.application.config.folio_image_metadata_iptc_charset_candidates = original_candidates
       image_file.file&.close

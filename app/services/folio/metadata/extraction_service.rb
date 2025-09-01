@@ -40,7 +40,7 @@ class Folio::Metadata::ExtractionService
   rescue => e
     Rails.logger.error "Failed to extract metadata for #{@image.file_name}: #{e.message}"
     Rails.logger.error e.backtrace.join("\n") if Rails.env.development?
-end
+  end
 
   private
     def should_extract?(image, force)
@@ -106,14 +106,17 @@ end
           elsif current_value.blank?
             image.send("#{db_field}=", value)
           else
-            # Check if current value has mojibake and new value is better quality
-            current_quality = Folio::Metadata::IptcFieldMapper.send(:score_cs, current_value.to_s)
-            new_quality = Folio::Metadata::IptcFieldMapper.send(:score_cs, value.to_s)
+            # Only check encoding quality if current value has mojibake patterns
+            if Folio::Metadata::IptcFieldMapper.send(:needs_encoding_fix?, current_value.to_s)
+              current_quality = Folio::Metadata::IptcFieldMapper.send(:score_cs, current_value.to_s)
+              new_quality = Folio::Metadata::IptcFieldMapper.send(:score_cs, value.to_s)
 
-            if new_quality > current_quality
-              Rails.logger.info "Updating #{db_field} due to better encoding quality (#{current_quality} -> #{new_quality})"
-              image.send("#{db_field}=", value)
+              if new_quality > current_quality
+                Rails.logger.info "Updating #{db_field} due to better encoding quality (#{current_quality} -> #{new_quality})"
+                image.send("#{db_field}=", value)
+              end
             end
+            # If no mojibake detected, preserve user input
           end
         end
       end
