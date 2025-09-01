@@ -20,6 +20,10 @@ module Folio::HasAttachments
                         placements_key: :image_placements,
                         placement: "Folio::FilePlacement::Image")
 
+    has_many_placements(:image_or_embeds,
+                        placements_key: :image_or_embed_placements,
+                        placement: "Folio::FilePlacement::ImageOrEmbed")
+
     has_many_placements(:documents,
                         placements_key: :document_placements,
                         placement: "Folio::FilePlacement::Document")

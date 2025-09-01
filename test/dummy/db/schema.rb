@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_16_062032) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_01_100256) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -284,6 +284,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_16_062032) do
     t.string "alt"
     t.string "placement_title"
     t.string "placement_title_type"
+    t.jsonb "folio_embed_data"
     t.index ["file_id"], name: "index_folio_file_placements_on_file_id"
     t.index ["placement_title"], name: "index_folio_file_placements_on_placement_title"
     t.index ["placement_title_type"], name: "index_folio_file_placements_on_placement_title_type"

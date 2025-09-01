@@ -24,20 +24,33 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
     title.presence || file.try(:file_name) || "error: empty file"
   end
 
-  def self.folio_file_placement(class_name, name = nil)
+  def self.folio_file_placement(class_name, name = nil, allow_embed: false)
     belongs_to :file, class_name:,
                       inverse_of: :file_placements,
-                      required: true
+                      required: allow_embed ? false : true
 
     belongs_to :placement, polymorphic: true,
                            inverse_of: name,
                            required: false,
                            touch: true
+
+    if allow_embed
+      define_method :folio_html_sanitization_config do
+        {
+          enabled: true,
+          attributes: {
+            folio_embed_data: :unsafe_html,
+          }
+        }
+      end
+
+      validate :validate_file_or_embed
+    end
   end
 
-  def self.folio_image_placement(name = nil)
+  def self.folio_image_placement(name = nil, allow_embed: false)
     include Folio::PregenerateThumbnails
-    folio_file_placement("Folio::File::Image", name)
+    folio_file_placement("Folio::File::Image", name, allow_embed:)
     self.class_eval { alias :image :file }
   end
 
@@ -101,16 +114,27 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
         end
       end
     end
+
+    def validate_file_or_embed
+      if folio_embed_data.present? && folio_embed_data["active"] == true
+        Folio::Embed.validate_record(record: self,
+                                     attribute_name: :folio_embed_data)
+      else
+        if file.blank?
+          errors.add(:file, :blank)
+        end
+      end
+    end
 end
 
 # == Schema Information
 #
 # Table name: folio_file_placements
 #
-#  id                   :bigint(8)        not null, primary key
+#  id                   :integer          not null, primary key
 #  placement_type       :string
-#  placement_id         :bigint(8)
-#  file_id              :bigint(8)
+#  placement_id         :integer
+#  file_id              :integer
 #  position             :integer
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
@@ -119,6 +143,7 @@ end
 #  alt                  :string
 #  placement_title      :string
 #  placement_title_type :string
+#  folio_embed_data     :jsonb
 #
 # Indexes
 #

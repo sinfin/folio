@@ -220,6 +220,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
         document_placement_attributes
         document_placements_attributes
         image_placements_attributes
+        image_or_embed_placements_attributes
       ]).each do |key|
         hash[key] = commons
       end

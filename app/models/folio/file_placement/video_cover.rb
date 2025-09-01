@@ -8,10 +8,10 @@ end
 #
 # Table name: folio_file_placements
 #
-#  id                   :bigint(8)        not null, primary key
+#  id                   :integer          not null, primary key
 #  placement_type       :string
-#  placement_id         :bigint(8)
-#  file_id              :bigint(8)
+#  placement_id         :integer
+#  file_id              :integer
 #  position             :integer
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
@@ -20,6 +20,7 @@ end
 #  alt                  :string
 #  placement_title      :string
 #  placement_title_type :string
+#  folio_embed_data     :jsonb
 #
 # Indexes
 #
