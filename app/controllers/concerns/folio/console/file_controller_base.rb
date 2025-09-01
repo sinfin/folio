@@ -58,7 +58,8 @@ module Folio::Console::FileControllerBase
 
     def set_pagy_options
       @pagy_options = {
-        reload_url: url_for([:pagination, :console, :api, @klass, page: params[:page]])
+        reload_url: url_for([:pagination, :console, :api, @klass, page: params[:page]]),
+        skip_default_layout_pagination: true,
       }
 
       if @klass.human_type == "image"

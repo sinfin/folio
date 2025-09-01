@@ -34,8 +34,10 @@ html.f-c-layout-html.f-html--show-sensitive-content lang=I18n.locale
       - else
         .f-c-layout-main-container.container-fluid
           = yield
-          = render(Folio::Console::Ui::PagyComponent.new(pagy: @pagy,
-                                                         options: @pagy_options))
+
+          - if @pagy_options.blank? || @pagy_options[:skip_default_layout_pagination] != true
+            = render(Folio::Console::Ui::PagyComponent.new(pagy: @pagy,
+                                                           options: @pagy_options))
 
     = yield :modals
 

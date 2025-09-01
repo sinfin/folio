@@ -11,6 +11,9 @@
                                         primary_action: :index,
                                         reload_pagy: true))
 
+  = render(Folio::Console::Ui::PagyComponent.new(pagy: @pagy,
+                                                 options: @pagy_options || {}))
+
   / .folio-react-wrap[
   /   data-file-type=@klass.to_s
   /   data-index-url=url_for([:console, @klass])
