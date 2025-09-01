@@ -11,6 +11,7 @@ class Folio::Console::UiController < Folio::Console::BaseController
       boolean_toggles
       buttons
       dropdowns
+      file_placements_multi_picker_fields
       in_place_inputs
       modals
       tabs
@@ -28,7 +29,7 @@ class Folio::Console::UiController < Folio::Console::BaseController
   end
 
   def in_place_inputs
-    @page = Folio::Page.last
+    @page = Folio::Page.first
 
     @autocomplete_url = folio.url_for([:field,
                                        :console,
@@ -40,7 +41,7 @@ class Folio::Console::UiController < Folio::Console::BaseController
   end
 
   def ajax_inputs
-    @page = Folio::Page.last
+    @page = Folio::Page.first
   end
 
   def update_ajax_inputs
@@ -58,7 +59,7 @@ class Folio::Console::UiController < Folio::Console::BaseController
 
     value = params.require(:value)
 
-    @page = Folio::Page.last
+    @page = Folio::Page.first
     @page.update!(name => value)
 
     render json: { data: { name => value } }
@@ -168,7 +169,7 @@ class Folio::Console::UiController < Folio::Console::BaseController
   end
 
   def input_autocomplete
-    @page = Folio::Page.last
+    @page = Folio::Page.first
     @autocomplete_collection = %w[dog cat mouse rat horse cow pig sheep goat chicken duck turkey]
   end
 
@@ -178,6 +179,22 @@ class Folio::Console::UiController < Folio::Console::BaseController
       { label: "Second", href: dropdowns_console_ui_path, icon: :alert },
       { label: "Third", href: dropdowns_console_ui_path, icon: :archive, icon_options: { class: "text-danger" } },
     ]
+  end
+
+  def file_placements_multi_picker_fields
+    @page = Folio::Page.first
+  end
+
+  def update_file_placements_multi_picker_fields
+    if Rails.env.production?
+      redirect_to file_placements_multi_picker_fields_console_ui_path, alert: "Don't do that in production"
+      return
+    end
+
+    @page = Folio::Page.first
+    @page.update(params.require(:page).permit(*file_placements_strong_params))
+
+    render :file_placements_multi_picker_fields
   end
 
   private

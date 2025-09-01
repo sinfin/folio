@@ -1,0 +1,7 @@
+.f-c-file-placements-multi-picker-fields data=data
+  .f-c-file-placements-multi-picker-fields__fields-wrap
+    = render(Folio::NestedFieldsComponent.new(f: @f, key: @placement_key)) do
+      .f-c-file-placements-multi-picker-fields__fields[
+        data=stimulus_target("fields")
+      ]
+        ' hello

@@ -26,6 +26,9 @@ Folio::Engine.routes.draw do
         get :ajax_inputs
         patch :update_ajax_inputs
 
+        get :file_placements_multi_picker_fields
+        patch :update_file_placements_multi_picker_fields
+
         get :alerts
         get :badges
         get :boolean_toggles
