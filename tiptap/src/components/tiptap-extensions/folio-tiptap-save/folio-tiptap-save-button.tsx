@@ -10,10 +10,12 @@ import translate from "@/lib/i18n";
 
 const TRANSLATIONS = {
   cs: {
-    save: "Uloženo v",
+    saveAt: "Uloženo v",
+    saveOn: "Uloženo",
   },
   en: {
-    save: "Saved at",
+    saveAt: "Saved at",
+    saveOn: "Saved on",
   },
 };
 
@@ -59,14 +61,32 @@ export const FolioTiptapSaveButton = React.forwardRef<
     return () => window.removeEventListener('message', handleMessage);
   }, []);
 
-  const baseLabel = translate(TRANSLATIONS, "save");
   const label = lastSavedAt
-    ? `${baseLabel} ${lastSavedAt.toLocaleTimeString("cs-CZ", {
+    ? formatSaveLabel(lastSavedAt)
+    : translate(TRANSLATIONS, "saveAt");
+
+  function formatSaveLabel(date: Date): string {
+    const now = new Date();
+    const isToday = date.toDateString() === now.toDateString();
+
+    if (isToday) {
+      // Time only for today: "Uloženo v 14:23" / "Saved at 14:23"
+      const timeStr = date.toLocaleTimeString("cs-CZ", {
         hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit'
-      })}`
-    : baseLabel;
+        minute: '2-digit'
+      });
+      return `${translate(TRANSLATIONS, "saveAt")} ${timeStr}`;
+    } else {
+      // Date + time for older saves: "Uloženo 31.8. 14:23" / "Saved on 31.8. 14:23"
+      const dateTimeStr = date.toLocaleDateString("cs-CZ", {
+        day: 'numeric',
+        month: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+      return `${translate(TRANSLATIONS, "saveOn")} ${dateTimeStr}`;
+    }
+  }
 
   return (
     <Button

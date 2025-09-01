@@ -79,6 +79,6 @@ class TiptapInput < SimpleForm::Inputs::StringInput
       return nil unless @builder.object.respond_to?(:latest_tiptap_revision)
 
       latest_revision = @builder.object.latest_tiptap_revision
-      latest_revision&.created_at&.iso8601
+      latest_revision&.created_at
     end
 end
