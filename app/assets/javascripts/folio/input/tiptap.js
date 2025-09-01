@@ -84,7 +84,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
         this.openLinkPopover(e.data.urlJson)
         break
       case 'f-tiptap-editor:initialized-content':
-        this.setInputValue(e.data.content)
+        this.setInputValue(e.data.content, { isInitialization: true })
         this.ignoreValueChangesValue = false
         break
       case 'f-tiptap-editor:show-html':
@@ -93,7 +93,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     }
   }
 
-  setInputValue (content) {
+  setInputValue (content, options = {}) {
     const textsArray = []
 
     if (content) {
@@ -128,6 +128,11 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     if (!this.ignoreValueChangesValue) {
       this.inputTarget.dispatchEvent(new window.Event("change", { bubbles: true }))
       this.dispatch("updateWordCount", { detail: { wordCount } })
+
+      if (this.autoSaveValue && content && this.editorReady && !options.isInitialization) {
+        this.latestContent = content
+        this.debouncedAutoSave()
+      }
     }
   }
 

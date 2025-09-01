@@ -15,10 +15,11 @@ class TiptapInput < SimpleForm::Inputs::StringInput
                         auto_save_url: @builder.template.console_api_tiptap_revisions_path,
                         placement_type: @builder.object.class.base_class.name,
                         placement_id: @builder.object.id,
+                        latest_revision_created_at: latest_revision_created_at,
                         readonly: @builder.template.instance_variable_get(:@audited_audit).present?,
                         tiptap_config_json:,
                         tiptap_content_json_structure_json: Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE.to_json,
-                      },
+                      }.compact,
                       action: {
                         "message@window" => "onWindowMessage",
                         "resize@window" => "onWindowResize",
@@ -27,7 +28,7 @@ class TiptapInput < SimpleForm::Inputs::StringInput
                       })
 
     input_html_options[:hidden] = true
-    input_html_options[:value] = input_html_options[:value] || @builder.object.send(attribute_name) || ""
+    input_html_options[:value] = input_html_options[:value] || latest_revision_content || @builder.object.send(attribute_name) || ""
 
     if input_html_options[:value].present? && input_html_options[:value].is_a?(Hash)
       input_html_options[:value] = input_html_options[:value].to_json
@@ -60,5 +61,16 @@ class TiptapInput < SimpleForm::Inputs::StringInput
   private
     def tiptap_config_json
       (@builder.object.try(:tiptap_config) || Folio::Tiptap.config).to_input_json
+    end
+
+    def latest_revision_content
+      return nil if @builder.object.new_record?
+      return nil unless @builder.object.respond_to?(:latest_tiptap_revision)
+
+      latest_revision = @builder.object.latest_tiptap_revision
+      if latest_revision&.content.present?
+        value_keys = Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE
+        { value_keys[:content] => latest_revision.content }
+      end
     end
 end
