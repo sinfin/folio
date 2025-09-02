@@ -9,6 +9,13 @@ class Folio::Console::FileControllerBaseTest < Folio::Console::BaseControllerTes
     Folio::File::Video,
     Folio::File::Audio,
   ].each do |klass|
+    test "#{klass} - show" do
+      file = create(klass.model_name.singular)
+      get url_for([:console, file])
+      assert_response :success
+      assert_select "turbo-frame[id=#{Folio::Console::Files::ShowComponent::TURBO_FRAME_ID}]"
+    end
+
     test "#{klass} - index" do
       get url_for([:console, klass])
       assert_response :success

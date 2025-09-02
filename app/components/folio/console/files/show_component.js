@@ -5,7 +5,8 @@ window.Folio.Stimulus.register('f-c-files-show', class extends window.Stimulus.C
     loading: Boolean,
     fileType: String,
     id: String,
-    showUrl: String
+    showUrl: String,
+    indexUrl: String
   }
 
   disconnect () {
@@ -40,6 +41,10 @@ window.Folio.Stimulus.register('f-c-files-show', class extends window.Stimulus.C
         }
 
         this.dispatch('deleted')
+
+        if (!this.element.closest('.modal')) {
+          window.Turbo.visit(this.indexUrlValue)
+        }
       }).catch((error) => {
         window.alert(`Could not delete file: ${error.message}`)
       }).finally(() => {
@@ -94,13 +99,7 @@ window.Folio.Stimulus.register('f-c-files-show', class extends window.Stimulus.C
   }
 
   messageBusSuccess (data) {
-    this.element.dispatchEvent(new CustomEvent('f-c-files-show-modal/show-file', {
-      bubbles: true,
-      detail: {
-        id: this.idValue,
-        url: this.showUrlValue
-      }
-    }))
+    window.Turbo.visit(this.showUrlValue, { frame: this.element.closest('turbo-frame').id })
   }
 
   messageBusFailure (data) {

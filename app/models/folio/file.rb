@@ -283,7 +283,7 @@ class Folio::File < Folio::ApplicationRecord
   end
 
   def self.console_turbo_frame_id(modal: false, picker: false)
-    base = "folio-console-#{model_name.route_key}"
+    base = "folio-console-file-#{model_name.route_key}"
 
     if modal
       "#{base}-index_for_modal"

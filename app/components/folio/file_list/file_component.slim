@@ -147,8 +147,11 @@ div data=data class=bem_class_name
           div[
             class="f-file-list-file__control"
             class="f-file-list-file__control--primary"
+            class="f-file-list-file__control--primary-#{@primary_action}"
             data=primary_action_data
           ]
+            - if @primary_action === "index_for_modal"
+              = folio_icon(:check_circle_outline)
 
         a[
           class="f-file-list-file__control"

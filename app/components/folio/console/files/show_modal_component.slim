@@ -1,11 +1,8 @@
-= render(Folio::Console::Ui::ModalComponent.new(title: @file ? @file.to_label : "{title}",
+= render(Folio::Console::Ui::ModalComponent.new(title: Folio::File.model_name.human,
                                                 class_name: CLASS_NAME,
                                                 size: :xl,
-                                                data:,
-                                                open: @file.present?)) do |c|
-  .f-c-files-show-modal__outer
-    .f-c-files-show-modal__inner data=stimulus_target("inner")
-      - if @file.present?
-        = render(Folio::Console::Files::ShowComponent.new(file: @file))
-
-    span.folio-loader.folio-loader--transparent.f-c-files-show-modal__loader
+                                                data:)) do |c|
+  = render(Folio::Console::Ui::TurboFrameWithLoaderComponent.new(id: Folio::Console::Files::ShowComponent::TURBO_FRAME_ID,
+                                                                 min_height: "525px"))
+    - if @file
+      = render(Folio::Console::Files::ShowComponent.new(file: @file))

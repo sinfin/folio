@@ -8,9 +8,10 @@ class Folio::Console::Files::ShowModalComponentTest < Folio::ComponentTest
       with_request_url "/console/file/images" do
         file = create(:folio_file_image)
 
-        render_inline(Folio::Console::Files::ShowModalComponent.new(file: file))
+        render_inline(Folio::Console::Files::ShowModalComponent.new(file:))
 
         assert_selector(".f-c-files-show-modal")
+        assert_selector(".f-c-files-show-modal .f-c-files-show")
       end
     end
   end
@@ -21,6 +22,7 @@ class Folio::Console::Files::ShowModalComponentTest < Folio::ComponentTest
         render_inline(Folio::Console::Files::ShowModalComponent.new)
 
         assert_selector(".f-c-files-show-modal")
+        assert_no_selector(".f-c-files-show-modal .f-c-files-show")
       end
     end
   end

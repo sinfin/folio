@@ -176,7 +176,7 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
     const modal = document.querySelector('.f-c-files-show-modal')
     if (!modal) return
 
-    modal.dispatchEvent(new CustomEvent('f-c-files-show-modal/show-file', {
+    modal.dispatchEvent(new CustomEvent('f-c-files-show-modal:openWithUrl', {
       detail: {
         id: Number(this.idValue),
         url
@@ -187,7 +187,7 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
   primaryAction (e) {
     e.preventDefault()
 
-    if (this.element.closest('.f-c-files-index-modal')) {
+    if (this.primaryAction === 'index_for_modal') {
       this.dispatch('select', { detail: { fileId: this.idValue } })
     } else {
       if (!e || !e.params || !e.params.url) return

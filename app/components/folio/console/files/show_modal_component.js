@@ -1,14 +1,6 @@
 window.Folio.Stimulus.register('f-c-files-show-modal', class extends window.Stimulus.Controller {
   static values = {
-    id: { type: String, default: '' },
-    url: { type: String, default: '' },
-    loading: { type: Boolean, default: true }
-  }
-
-  static targets = ['inner']
-
-  disconnect () {
-    this.abortLoad()
+    id: { type: String, default: '' }
   }
 
   idValueChanged (to, from) {
@@ -22,51 +14,24 @@ window.Folio.Stimulus.register('f-c-files-show-modal', class extends window.Stim
   }
 
   onModalClosed () {
-    this.element.querySelector('.f-c-ui-modal__title').textContent = ''
-    this.innerTarget.innerHTML = ''
     this.idValue = ''
-    this.urlValue = ''
+    this.element.querySelector('turbo-frame').src = ''
+    this.element.querySelector('turbo-frame').innerHTML = ''
   }
 
-  abortLoad () {
-    if (!this.abortController) return
-
-    this.abortController.abort()
-    delete this.abortController
-  }
-
-  onShowFile (e) {
+  openWithUrl (e) {
+    if (!e || !e.detail) return
     this.showFile({ id: e.detail.id, url: e.detail.url })
   }
 
   showFile ({ id, url }) {
     if (!id || !url) return
 
-    this.loadingValue = true
     this.idValue = id
-    this.urlValue = url
-
-    this.abortLoad()
-    this.abortController = new AbortController()
-
-    window.Folio.Api.apiGet(url, null, this.abortController.signal).then((response) => {
-      if (response.meta.title) {
-        this.element.querySelector('.f-c-ui-modal__title').textContent = response.meta.title
-      } else {
-        this.element.querySelector('.f-c-ui-modal__title').textContent = ''
-      }
-
-      this.innerTarget.innerHTML = response.data
-      this.loadingValue = false
-    }).catch((error) => {
-      window.FolioConsole.Flash.alert('Failed to load file ' + error.message)
-      this.idValue = ''
-      this.loadingValue = false
-    })
+    window.Turbo.visit(url, { frame: this.element.querySelector('turbo-frame').id })
   }
 
   onFileDeleted (e) {
     this.idValue = ''
-    this.loadingValue = false
   }
 })

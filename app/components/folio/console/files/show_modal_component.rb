@@ -7,17 +7,14 @@ class Folio::Console::Files::ShowModalComponent < ApplicationComponent
     @file = file
   end
 
-  def data
-    stimulus_controller("f-c-files-show-modal",
-                        values: {
-                          id: @file.try(:id),
-                          url: "",
-                          loading: @file.blank?,
-                        },
-                        action: {
-                          "f-c-files-show-modal/show-file" => "onShowFile",
-                          "f-c-files-show:deleted" => "onFileDeleted",
-                          "f-modal:closed" => "onModalClosed",
-                        })
-  end
+  private
+    def data
+      stimulus_controller("f-c-files-show-modal",
+                          values: { id: @file&.id.to_s },
+                          action: {
+                            "f-c-files-show-modal:openWithUrl" => "openWithUrl",
+                            "f-c-files-show:deleted" => "onFileDeleted",
+                            "f-modal:closed" => "onModalClosed",
+                          })
+    end
 end

@@ -155,7 +155,8 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
   end
 
   def primary_action_data
-    @primary_action_data ||= stimulus_action({ click: "primaryAction" }, { url: modal_api_url })
+    return nil unless @primary_action
+    @primary_action_data ||= stimulus_action({ click: "primaryAction" }, { url: controller.folio.url_for([:console, @file]) })
   end
 
   def download_href

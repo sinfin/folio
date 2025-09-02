@@ -26,6 +26,13 @@ module Folio::Console::FileControllerBase
     index
   end
 
+  def show
+    super
+    @skip_folio_files_show_modal = true
+    @file = folio_console_record
+    render "folio/console/file/show"
+  end
+
   private
     def file_params
       p = params.require(:file)

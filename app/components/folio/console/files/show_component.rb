@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Folio::Console::Files::ShowComponent < Folio::Console::ApplicationComponent
+  TURBO_FRAME_ID = "folio-console-file-show"
+
   def initialize(file:)
     @file = file
   end
@@ -11,7 +13,8 @@ class Folio::Console::Files::ShowComponent < Folio::Console::ApplicationComponen
                           loading: false,
                           id: @file.id,
                           file_type: @file.class.to_s,
-                          show_url: controller.folio.url_for([:console, :api, @file])
+                          show_url: controller.folio.url_for([:console, @file]),
+                          index_url: controller.folio.url_for([:console, @file.class])
                         },
                         action: {
                           "f-uppy:upload-success": "uppyUploadSuccess",
