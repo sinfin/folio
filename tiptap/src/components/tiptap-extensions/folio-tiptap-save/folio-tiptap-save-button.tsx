@@ -28,12 +28,12 @@ export const FolioTiptapSaveButton = React.forwardRef<
   FolioTiptapSaveButtonProps
 >(({ editor }, ref) => {
   const [lastSavedAt, setLastSavedAt] = React.useState<Date | null>(null);
-  const [autoSaveEnabled, setAutoSaveEnabled] = React.useState<boolean>(true);
+  const [newRecord, setNewRecord] = React.useState<boolean>(true);
 
   React.useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
       if (event.data?.type === 'f-input-tiptap:save-button-info') {
-        setAutoSaveEnabled(event.data.autoSaveEnabled || false);
+        setNewRecord(event.data.newRecord || false);
 
         if (event.data.latestRevisionCreatedAt) {
           setLastSavedAt(new Date(event.data.latestRevisionCreatedAt));
@@ -74,7 +74,7 @@ export const FolioTiptapSaveButton = React.forwardRef<
     }
   }
 
-  if (!autoSaveEnabled) {
+  if (newRecord) {
     return (
       <Button
         ref={ref}
@@ -89,7 +89,6 @@ export const FolioTiptapSaveButton = React.forwardRef<
     );
   }
 
-  // TODO: disable background color change on hover
   return (
     <Button
       ref={ref}

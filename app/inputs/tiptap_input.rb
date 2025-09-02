@@ -14,6 +14,7 @@ class TiptapInput < SimpleForm::Inputs::StringInput
                         render_url: @builder.template.render_nodes_console_api_tiptap_path,
                         auto_save: autosave_enabled?,
                         auto_save_url: @builder.template.console_api_tiptap_revisions_path,
+                        new_record: @builder.object.new_record?,
                         placement_type: @builder.object.class.base_class.name,
                         placement_id: @builder.object.id,
                         latest_revision_created_at: latest_revision_created_at,

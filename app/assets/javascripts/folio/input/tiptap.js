@@ -14,6 +14,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     tiptapConfigJson: String,
     tiptapContentJsonStructureJson: String,
     autoSave: { type: Boolean, default: false },
+    newRecord: { type: Boolean, default: false },
     placementType: String,
     placementId: Number,
     latestRevisionCreatedAt: String,
@@ -194,7 +195,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
   sendSaveButtonInfo () {
     const data = {
       type: 'f-input-tiptap:save-button-info',
-      autoSaveEnabled: this.autoSaveValue,
+      newRecord: this.newRecordValue,
       latestRevisionCreatedAt: this.latestRevisionCreatedAtValue || null,
     }
     this.iframeTarget.contentWindow.postMessage(data, this.originValue || window.origin)
