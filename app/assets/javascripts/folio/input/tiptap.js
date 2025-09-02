@@ -54,6 +54,10 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
       windowWidth: this.windowWidth,
     }
 
+    this.sendMessageToIframe(data)
+  }
+
+  sendMessageToIframe (data) {
     this.iframeTarget.contentWindow.postMessage(data, this.originValue || window.origin)
   }
 
@@ -137,13 +141,10 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
         this.debouncedAutoSave()
 
         if (this.hasUnsavedChangesValue) {
-          const continueMessage = { type: 'f-input-tiptap:continue-unsaved-changes' }
-          this.iframeTarget.contentWindow.postMessage(continueMessage, this.originValue || window.origin)
+          this.onContinueUnsavedChanges()
 
           // Send event to parent SimpleFormWrapComponent to hide AutosaveInfoComponent
           this.dispatch('tiptapContinueUnsavedChanges', { bubbles: true })
-
-          this.hasUnsavedChangesValue = false
         }
       }
     }
@@ -203,13 +204,12 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
       }
     }
 
-    this.iframeTarget.contentWindow.postMessage(data, this.originValue || window.origin)
+    this.sendMessageToIframe(data)
   }
 
   // Event received from AutosaveInfoComponent (through SimpleFormWrapComponent) after clicking 'continue'
   onContinueUnsavedChanges () {
-    const data = { type: 'f-input-tiptap:continue-unsaved-changes' }
-    this.iframeTarget.contentWindow.postMessage(data, this.originValue || window.origin)
+    this.sendMessageToIframe({ type: 'f-input-tiptap:continue-unsaved-changes' })
 
     this.hasUnsavedChangesValue = false
   }
@@ -260,7 +260,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
       nodes,
     }
 
-    this.iframeTarget.contentWindow.postMessage(data, this.originValue || window.origin)
+    this.sendMessageToIframe(data)
   }
 
   openLinkPopover (urlJson) {
@@ -280,7 +280,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
       urlJson,
     }
 
-    this.iframeTarget.contentWindow.postMessage(data, this.originValue || window.origin)
+    this.sendMessageToIframe(data)
   }
 
   showHtmlInModal (html) {
@@ -372,14 +372,13 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
             type: 'f-input-tiptap:auto-saved',
             updatedAt: response.updated_at
           }
-          this.iframeTarget.contentWindow.postMessage(autoSaveMessage, this.originValue || window.origin)
+          this.sendMessageToIframe(autoSaveMessage)
         }
       })
       .catch((error) => {
         console.warn('[Folio] [Tiptap] Auto-save failed:', error)
-        
-        const failedMessage = { type: 'f-input-tiptap:failed-to-autosave' }
-        this.iframeTarget.contentWindow.postMessage(failedMessage, this.originValue || window.origin)
+
+        this.sendMessageToIframe({ type: 'f-input-tiptap:failed-to-autosave' })
       })
   }
 })
