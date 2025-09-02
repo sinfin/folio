@@ -12,10 +12,12 @@ const TRANSLATIONS = {
   cs: {
     saveAt: "Uloženo v",
     saveOn: "Uloženo",
+    failedToAutosave: "Chyba ukládání rozpracovaného textu."
   },
   en: {
     saveAt: "Saved at",
     saveOn: "Saved on",
+    failedToAutosave: "Failed to autosave draft text."
   },
 };
 
@@ -32,15 +34,19 @@ export const FolioTiptapSaveButton = React.forwardRef<
     saveButtonInfo?.latestRevisionAt ? new Date(saveButtonInfo.latestRevisionAt) : null
   );
   const [hasUnsavedChanges, setHasUnsavedChanges] = React.useState<boolean>(saveButtonInfo?.hasUnsavedChanges ?? false);
-  
+  const [failedToAutosave, setFailedToAutosave] = React.useState<boolean>(false);
+
   const newRecord = saveButtonInfo?.newRecord ?? true;
 
   React.useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
       if (event.data?.type === 'f-input-tiptap:auto-saved') {
         setLastSavedAt(new Date(event.data.updatedAt));
+        setFailedToAutosave(false);
       } else if (event.data?.type === 'f-input-tiptap:continue-unsaved-changes') {
         setHasUnsavedChanges(false);
+      } else if (event.data?.type === 'f-input-tiptap:failed-to-autosave') {
+        setFailedToAutosave(true);
       }
     };
 
@@ -75,28 +81,44 @@ export const FolioTiptapSaveButton = React.forwardRef<
     }
   }
 
-  const getIcon = () => {
-    if (newRecord) return <SaveOff className="tiptap-button-icon" color="#FF9A52" />;
-    if (hasUnsavedChanges) return <AlertTriangle className="tiptap-button-icon" color="#FF9A52" />;
-    return null;
+  const getButtonState = () => {
+    if (newRecord) {
+      return {
+        icon: <SaveOff className="tiptap-button-icon" color="#FF9A52" />,
+        style: { pointerEvents: 'none' as const },
+        'aria-label': undefined,
+        tooltip: undefined,
+      };
+    }
+
+    if (hasUnsavedChanges) {
+      return {
+        icon: <AlertTriangle className="tiptap-button-icon" color="#FF9A52" />,
+        style: { pointerEvents: 'none' as const },
+        'aria-label': undefined,
+        tooltip: undefined,
+      };
+    }
+
+    if (failedToAutosave) {
+      const failedLabel = translate(TRANSLATIONS, "failedToAutosave");
+      return {
+        icon: <SaveOff className="tiptap-button-icon" color="#F0655D" />,
+        style: { cursor: 'default' },
+        'aria-label': failedLabel,
+        tooltip: failedLabel,
+      };
+    }
+
+    return {
+      icon: <Save className="tiptap-button-icon" color="#00B594" />,
+      style: { cursor: 'default' },
+      'aria-label': label,
+      tooltip: label,
+    };
   };
 
-  const icon = getIcon();
-
-  if (icon) {
-    return (
-      <Button
-        ref={ref}
-        type="button"
-        data-style="ghost"
-        role="button"
-        tabIndex={-1}
-        style={{ pointerEvents: 'none' }}
-      >
-        {icon}
-      </Button>
-    );
-  }
+  const buttonState = getButtonState();
 
   return (
     <Button
@@ -105,11 +127,11 @@ export const FolioTiptapSaveButton = React.forwardRef<
       data-style="ghost"
       role="button"
       tabIndex={-1}
-      aria-label={label}
-      tooltip={label}
-      style={{ cursor: 'default' }}
+      style={buttonState.style}
+      aria-label={buttonState['aria-label']}
+      tooltip={buttonState.tooltip}
     >
-      <Save className="tiptap-button-icon" color="#00B594" />
+      {buttonState.icon}
     </Button>
   );
 });

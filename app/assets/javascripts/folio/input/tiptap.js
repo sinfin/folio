@@ -377,6 +377,9 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
       })
       .catch((error) => {
         console.warn('[Folio] [Tiptap] Auto-save failed:', error)
+        
+        const failedMessage = { type: 'f-input-tiptap:failed-to-autosave' }
+        this.iframeTarget.contentWindow.postMessage(failedMessage, this.originValue || window.origin)
       })
   }
 })
