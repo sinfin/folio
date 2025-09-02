@@ -28,6 +28,7 @@ window.Folio.Stimulus.register('f-c-files-picker', class extends window.Stimulus
   static values = {
     fileType: String,
     state: String,
+    showUrlBase: String,
     inReact: { type: Boolean, default: false },
     reactFile: { type: Object, default: {} }
   }
@@ -173,7 +174,20 @@ window.Folio.Stimulus.register('f-c-files-picker', class extends window.Stimulus
 
   onFormControlModalClick (e) {
     e.preventDefault()
-    this.openModal({ trigger: e.currentTarget, file: JSON.parse(e.currentTarget.dataset.file) })
+    const fileData = JSON.parse(e.currentTarget.dataset.file)
+    if (!fileData || !fileData.id) return
+
+    const modal = document.querySelector('.f-c-files-show-modal')
+    if (!modal) return
+
+    const url = `${this.showUrlBaseValue}/${fileData.id}`
+
+    modal.dispatchEvent(new CustomEvent('f-c-files-show-modal:openWithUrl', {
+      detail: {
+        id: Number(fileData.id),
+        url
+      }
+    }))
   }
 
   openModal ({ trigger, file, autoFocusField }) {

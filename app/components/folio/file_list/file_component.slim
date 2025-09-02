@@ -166,7 +166,7 @@ div data=data class=bem_class_name
             class="f-file-list-file__control"
             class="f-file-list-file__control--edit"
             type="button"
-            data=stimulus_action("edit", { url: modal_api_url })
+            data=stimulus_action({ click: "edit" }, { url: show_url })
           ]
             = folio_icon(:edit_box)
 

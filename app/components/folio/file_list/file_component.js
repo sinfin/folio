@@ -169,7 +169,24 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
     this.removeParentOrElement()
   }
 
-  edit (url) {
+  edit (e) {
+    e.preventDefault()
+    if (!e || !e.params || !e.params.url) return
+    this.openShowModal(e.params.url)
+  }
+
+  primaryAction (e) {
+    e.preventDefault()
+
+    if (this.primaryAction === 'index_for_modal') {
+      this.dispatch('select', { detail: { fileId: this.idValue } })
+    } else if (this.primaryActionValue === 'index') {
+      if (!e || !e.params || !e.params.url) return
+      this.openShowModal(e.params.url)
+    }
+  }
+
+  openShowModal (url) {
     if (!url) return
     if (!this.idValue) return
 
@@ -182,17 +199,6 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
         url
       }
     }))
-  }
-
-  primaryAction (e) {
-    e.preventDefault()
-
-    if (this.primaryAction === 'index_for_modal') {
-      this.dispatch('select', { detail: { fileId: this.idValue } })
-    } else {
-      if (!e || !e.params || !e.params.url) return
-      this.edit(e.params.url)
-    }
   }
 
   removeParentOrElement () {

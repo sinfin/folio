@@ -49,16 +49,6 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
     "background-color: #{@file.additional_data["dominant_color"]}"
   end
 
-  def modal_api_url
-    return @modal_api_url unless @modal_api_url.nil?
-
-    @modal_api_url = if !@template && !@thead && @file.present? && @file_klass <= Folio::File
-      controller.folio.url_for([:console, :api, @file])
-    else
-      false
-    end
-  end
-
   def destroy_url
     return @destroy_url unless @destroy_url.nil?
 
@@ -154,9 +144,13 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
     ary
   end
 
+  def show_url
+    @show_url ||= controller.folio.url_for([:console, @file])
+  end
+
   def primary_action_data
     return nil unless @primary_action
-    @primary_action_data ||= stimulus_action({ click: "primaryAction" }, { url: controller.folio.url_for([:console, @file]) })
+    @primary_action_data ||= stimulus_action({ click: "primaryAction" }, { url: show_url })
   end
 
   def download_href
