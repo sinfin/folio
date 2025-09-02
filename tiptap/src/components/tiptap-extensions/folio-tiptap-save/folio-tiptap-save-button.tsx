@@ -1,6 +1,6 @@
 import * as React from "react";
 import type { Editor } from "@tiptap/react";
-import { Save, SaveOff } from "lucide-react";
+import { AlertTriangle, Save, SaveOff } from "lucide-react";
 
 // --- UI Primitives ---
 import type { ButtonProps } from "@/components/tiptap-ui-primitive/button";
@@ -29,17 +29,21 @@ export const FolioTiptapSaveButton = React.forwardRef<
 >(({ editor }, ref) => {
   const [lastSavedAt, setLastSavedAt] = React.useState<Date | null>(null);
   const [newRecord, setNewRecord] = React.useState<boolean>(true);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
       if (event.data?.type === 'f-input-tiptap:save-button-info') {
         setNewRecord(event.data.newRecord || false);
+        setHasUnsavedChanges(event.data.hasUnsavedChanges || false);
 
         if (event.data.latestRevisionCreatedAt) {
           setLastSavedAt(new Date(event.data.latestRevisionCreatedAt));
         }
       } else if (event.data?.type === 'f-input-tiptap:auto-saved') {
         setLastSavedAt(new Date(event.data.createdAt));
+      } else if (event.data?.type === 'f-input-tiptap:continue-unsaved-changes') {
+        setHasUnsavedChanges(false);
       }
     };
 
@@ -74,7 +78,15 @@ export const FolioTiptapSaveButton = React.forwardRef<
     }
   }
 
-  if (newRecord) {
+  const getIcon = () => {
+    if (newRecord) return <SaveOff className="tiptap-button-icon" color="#FF9A52" />;
+    if (hasUnsavedChanges) return <AlertTriangle className="tiptap-button-icon" color="#FF9A52" />;
+    return null;
+  };
+
+  const icon = getIcon();
+
+  if (icon) {
     return (
       <Button
         ref={ref}
@@ -84,7 +96,7 @@ export const FolioTiptapSaveButton = React.forwardRef<
         tabIndex={-1}
         style={{ pointerEvents: 'none' }}
       >
-        <SaveOff className="tiptap-button-icon" color="#FF9A52" />
+        {icon}
       </Button>
     );
   }
