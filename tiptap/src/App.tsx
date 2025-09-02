@@ -11,6 +11,7 @@ interface AppProps {
   folioTiptapConfig: FolioTiptapConfig;
   readonly: boolean;
   initialScrollTop: number | null;
+  saveButtonInfo?: FolioTiptapSaveButtonInfo;
 }
 
 function App({
@@ -21,6 +22,7 @@ function App({
   folioTiptapConfig,
   readonly,
   initialScrollTop,
+  saveButtonInfo,
 }: AppProps) {
   switch (type) {
     case "block":
@@ -34,6 +36,7 @@ function App({
           folioTiptapConfig={folioTiptapConfig}
           readonly={readonly}
           initialScrollTop={initialScrollTop}
+          saveButtonInfo={saveButtonInfo}
         />
       );
     default:

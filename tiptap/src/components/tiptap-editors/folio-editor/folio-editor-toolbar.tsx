@@ -67,6 +67,7 @@ interface FolioEditorToolbarProps {
   textStylesCommandGroup: FolioEditorCommandGroup;
   layoutsCommandGroup?: FolioEditorCommandGroup;
   setResponsivePreviewEnabled?: (enabled: boolean) => void;
+  saveButtonInfo?: FolioTiptapSaveButtonInfo;
 }
 
 const makeMarkEnabled =
@@ -250,6 +251,7 @@ const MainToolbarContent = ({
   textStylesCommandGroup,
   layoutsCommandGroup,
   setResponsivePreviewEnabled,
+  saveButtonInfo,
 }: {
   blockEditor: boolean;
   editor: Editor;
@@ -257,6 +259,7 @@ const MainToolbarContent = ({
   textStylesCommandGroup: FolioEditorCommandGroup;
   layoutsCommandGroup?: FolioEditorCommandGroup;
   setResponsivePreviewEnabled?: (enabled: boolean) => void;
+  saveButtonInfo?: FolioTiptapSaveButtonInfo;
 }) => {
   const editorState: FolioEditorToolbarState = useEditorState({
     editor,
@@ -413,7 +416,7 @@ const MainToolbarContent = ({
         <>
           <ToolbarSeparator />
           <ToolbarGroup>
-            <FolioTiptapSaveButton editor={editor} />
+            <FolioTiptapSaveButton editor={editor} saveButtonInfo={saveButtonInfo} />
           </ToolbarGroup>
         </>
       )}
@@ -428,6 +431,7 @@ export function FolioEditorToolbar({
   textStylesCommandGroup,
   layoutsCommandGroup,
   setResponsivePreviewEnabled,
+  saveButtonInfo,
 }: FolioEditorToolbarProps) {
   if (!editor) return null;
 
@@ -440,6 +444,7 @@ export function FolioEditorToolbar({
         textStylesCommandGroup={textStylesCommandGroup}
         layoutsCommandGroup={layoutsCommandGroup}
         setResponsivePreviewEnabled={setResponsivePreviewEnabled}
+        saveButtonInfo={saveButtonInfo}
       />
     </Toolbar>
   );

@@ -17,7 +17,7 @@ class TiptapInput < SimpleForm::Inputs::StringInput
                         new_record: @builder.object.new_record?,
                         placement_type: @builder.object.class.base_class.name,
                         placement_id: @builder.object.id,
-                        latest_revision_created_at: latest_revision_created_at,
+                        latest_revision_at: latest_revision_at,
                         has_unsaved_changes: has_unsaved_changes?,
                         readonly: @builder.template.instance_variable_get(:@audited_audit).present?,
                         tiptap_config_json:,
@@ -93,9 +93,9 @@ class TiptapInput < SimpleForm::Inputs::StringInput
       end
     end
 
-    def latest_revision_created_at
+    def latest_revision_at
       return nil unless autosave_enabled?
 
-      current_user_latest_revision&.created_at || @builder.object.updated_at
+      current_user_latest_revision&.updated_at || @builder.object.updated_at
     end
 end

@@ -17,7 +17,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     newRecord: { type: Boolean, default: false },
     placementType: String,
     placementId: Number,
-    latestRevisionCreatedAt: String,
+    latestRevisionAt: String,
     hasUnsavedChanges: { type: Boolean, default: false },
   }
 
@@ -89,8 +89,6 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
       case 'f-tiptap-editor:initialized-content':
         this.setInputValue(e.data.content, { isInitialization: true })
         this.ignoreValueChangesValue = false
-
-        this.sendSaveButtonInfo()
         break
       case 'f-tiptap-editor:show-html':
         this.showHtmlInModal(e.data.html)
@@ -180,6 +178,11 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
       windowWidth: this.windowWidth,
       tiptapScrollTop: this.tiptapScrollTop || 0,
       readonly: this.readonlyValue,
+      saveButtonInfo: {
+        newRecord: this.newRecordValue,
+        hasUnsavedChanges: this.hasUnsavedChangesValue,
+        latestRevisionAt: this.latestRevisionAtValue || null,
+      }
     }
 
     if (this.originValue === "*") {
@@ -190,16 +193,6 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
       }
     }
 
-    this.iframeTarget.contentWindow.postMessage(data, this.originValue || window.origin)
-  }
-
-  sendSaveButtonInfo () {
-    const data = {
-      type: 'f-input-tiptap:save-button-info',
-      newRecord: this.newRecordValue,
-      hasUnsavedChanges: this.hasUnsavedChangesValue,
-      latestRevisionCreatedAt: this.latestRevisionCreatedAtValue || null,
-    }
     this.iframeTarget.contentWindow.postMessage(data, this.originValue || window.origin)
   }
 
@@ -366,8 +359,6 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
 
           const autoSaveMessage = {
             type: 'f-input-tiptap:auto-saved',
-            revisionId: response.revision_id,
-            createdAt: response.created_at,
             updatedAt: response.updated_at
           }
           this.iframeTarget.contentWindow.postMessage(autoSaveMessage, this.originValue || window.origin)

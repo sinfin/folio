@@ -81,6 +81,12 @@ declare global {
     autosave?: boolean;
   }
 
+  interface FolioTiptapSaveButtonInfo {
+    newRecord: boolean;
+    hasUnsavedChanges: boolean;
+    latestRevisionAt: string | null;
+  }
+
   interface FolioEditorCommandChain extends import("@tiptap/core").CommandChain {
     insertContent: (content: any) => FolioEditorCommandChain;
   }
@@ -138,6 +144,7 @@ declare global {
           content?: import("@tiptap/react").JSONContent;
           readonly: boolean;
           scrollTop?: number;
+          saveButtonInfo?: FolioTiptapSaveButtonInfo;
         }) => ReturnType<typeof import("react-dom/client").createRoot>;
         destroy: () => void;
         getHeight: () => number;

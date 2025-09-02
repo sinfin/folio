@@ -83,6 +83,7 @@ window.Folio.Tiptap.init = (props) => {
         folioTiptapConfig={props.folioTiptapConfig ? { ...folioTiptapConfigDefaults, ...props.folioTiptapConfig } : folioTiptapConfigDefaults}
         readonly={props.readonly}
         initialScrollTop={props.scrollTop || null}
+        saveButtonInfo={props.saveButtonInfo}
       />
     </StrictMode>,
   );
@@ -137,6 +138,7 @@ window.addEventListener("message", (e) => {
         content: e.data.content,
         readonly: !!e.data.readonly,
         scrollTop: e.data.tiptapScrollTop || 0,
+        saveButtonInfo: e.data.saveButtonInfo,
       });
     }
   } else if (e.data.type === "f-input-tiptap:window-resize") {

@@ -21,27 +21,22 @@ const TRANSLATIONS = {
 
 export interface FolioTiptapSaveButtonProps extends ButtonProps {
   editor: Editor;
+  saveButtonInfo?: FolioTiptapSaveButtonInfo;
 }
 
 export const FolioTiptapSaveButton = React.forwardRef<
   HTMLButtonElement,
   FolioTiptapSaveButtonProps
->(({ editor }, ref) => {
-  const [lastSavedAt, setLastSavedAt] = React.useState<Date | null>(null);
-  const [newRecord, setNewRecord] = React.useState<boolean>(true);
-  const [hasUnsavedChanges, setHasUnsavedChanges] = React.useState<boolean>(false);
+>(({ editor, saveButtonInfo }, ref) => {
+  const [lastSavedAt, setLastSavedAt] = React.useState<Date | null>(
+    saveButtonInfo?.latestRevisionAt ? new Date(saveButtonInfo.latestRevisionAt) : null
+  );
+  const [hasUnsavedChanges, setHasUnsavedChanges] = React.useState<boolean>(saveButtonInfo?.hasUnsavedChanges ?? false);
 
   React.useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
-      if (event.data?.type === 'f-input-tiptap:save-button-info') {
-        setNewRecord(event.data.newRecord || false);
-        setHasUnsavedChanges(event.data.hasUnsavedChanges || false);
-
-        if (event.data.latestRevisionCreatedAt) {
-          setLastSavedAt(new Date(event.data.latestRevisionCreatedAt));
-        }
-      } else if (event.data?.type === 'f-input-tiptap:auto-saved') {
-        setLastSavedAt(new Date(event.data.createdAt));
+      if (event.data?.type === 'f-input-tiptap:auto-saved') {
+        setLastSavedAt(new Date(event.data.updatedAt));
       } else if (event.data?.type === 'f-input-tiptap:continue-unsaved-changes') {
         setHasUnsavedChanges(false);
       }
