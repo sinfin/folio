@@ -17,6 +17,19 @@ class Folio::Console::Api::TiptapRevisionsController < Folio::Console::Api::Base
     }
   end
 
+  def delete_revision
+    placement = find_placement
+    user = Folio::Current.user
+
+    revision = placement.tiptap_revisions.find_by(user: user)
+    if revision
+      revision.destroy!
+      render json: { success: true }
+    else
+      render json: { success: false }, status: :not_found
+    end
+  end
+
   private
     def revision_params
       params.require(:tiptap_revision).permit(content: {})

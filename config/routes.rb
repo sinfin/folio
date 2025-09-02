@@ -141,6 +141,7 @@ Folio::Engine.routes.draw do
         resources :tiptap_revisions, only: [] do
           collection do
             post :save_revision
+            delete :delete_revision
           end
         end
 

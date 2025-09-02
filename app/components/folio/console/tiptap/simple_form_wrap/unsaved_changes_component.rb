@@ -8,7 +8,12 @@ class Folio::Console::Tiptap::SimpleFormWrap::UnsavedChangesComponent < Folio::C
   end
 
   def data
-    stimulus_controller("f-c-tiptap-simple-form-wrap-unsaved-changes")
+    stimulus_controller("f-c-tiptap-simple-form-wrap-unsaved-changes",
+                        values: {
+                          placement_type: object.class.base_class.name,
+                          placement_id: object.id,
+                          delete_url: helpers.delete_revision_console_api_tiptap_revisions_path,
+                        })
   end
 
   private
