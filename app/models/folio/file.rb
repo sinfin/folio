@@ -249,13 +249,6 @@ class Folio::File < Folio::ApplicationRecord
     {}
   end
 
-  # Basic source accessor for all file types (fallback for non-images)
-  def source
-    # For images, this will be overridden by source_from_metadata alias
-    # For other files, return attribution_source
-    attribution_source
-  end
-
   private
     def set_file_name_for_search
       self.file_name_for_search = self.class.sanitize_filename_for_search(file_name)

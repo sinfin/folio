@@ -161,15 +161,15 @@ module Folio::Console::Api::FileControllerBase
     end
 
     def file_params
-      raw = params.require(:file)
-                   .require(:attributes)
-                   .permit(*file_params_whitelist)
+      p = params.require(:file)
+                  .require(:attributes)
+                  .permit(*file_params_whitelist)
 
-      if raw[:tags].present? && raw[:tag_list].blank?
-        raw[:tag_list] = raw.delete(:tags).join(",")
+      if p[:tags].present? && p[:tag_list].blank?
+        p[:tag_list] = p.delete(:tags).join(",")
       end
 
-      raw
+      p
     end
 
     def broadcast_metadata_extracted(file)
