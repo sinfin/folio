@@ -25,11 +25,11 @@ class Folio::Console::Files::Batch::BarComponent < Folio::Console::ApplicationCo
   end
 
   def file_ids
-    @file_ids ||= session.dig(Folio::Console::Api::FileControllerBase::BATCH_SESSION_KEY, @file_klass.to_s, "file_ids") || []
+    @file_ids ||= batch_service.get_file_ids
   end
 
   def form_open
-    @form_open ||= session.dig(Folio::Console::Api::FileControllerBase::BATCH_SESSION_KEY, @file_klass.to_s, "form_open") || false
+    @form_open ||= batch_service.form_open?
   end
 
   def files_ary
@@ -97,7 +97,7 @@ class Folio::Console::Files::Batch::BarComponent < Folio::Console::ApplicationCo
     return @download_hash unless @download_hash.nil?
 
     @download_hash = begin
-      h = session.dig(Folio::Console::Api::FileControllerBase::BATCH_SESSION_KEY, @file_klass.to_s, "download")
+      h = batch_service.get_download_status
 
       if h && h["timestamp"] && h["timestamp"] >= Folio::File::BatchDownloadJob::S3_FILE_LIFESPAN.ago.to_i
         h
@@ -106,4 +106,17 @@ class Folio::Console::Files::Batch::BarComponent < Folio::Console::ApplicationCo
       end
     end
   end
+
+  private
+    def session_id
+      session.id.public_id
+    end
+
+    def file_class_name
+      @file_klass.to_s
+    end
+
+    def batch_service
+      @batch_service ||= Folio::Console::Files::BatchService.new(session_id: session_id, file_class_name: file_class_name)
+    end
 end

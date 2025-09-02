@@ -25,9 +25,14 @@ class Folio::FileList::File::BatchCheckboxComponent < Folio::ApplicationComponen
   def selected_for_batch_actions?
     return false if @file.try(:id).blank?
 
-    file_ids = controller.session.dig(Folio::Console::Api::FileControllerBase::BATCH_SESSION_KEY, @file_klass.to_s, "file_ids")
-    return false if file_ids.blank?
-
-    file_ids.include?(@file.id)
+    batch_service.has_file?(@file.id)
   end
+
+  private
+    def batch_service
+      @batch_service ||= Folio::Console::Files::BatchService.new(
+        session_id: controller.session.id.public_id,
+        file_class_name: @file_klass.to_s
+      )
+    end
 end

@@ -199,6 +199,10 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
       file_ids = files.map(&:id)
       assert_equal 3, klass.where(id: file_ids).count
 
+      # init session so that we get the same session id in the next requests
+      get url_for([:batch_bar, :console, :api, klass, format: :json])
+      assert_response(:ok)
+
       post url_for([:handle_batch_queue, :console, :api, klass, format: :json]), params: { queue: { add: file_ids } }
       assert_response(:ok)
 

@@ -7,7 +7,7 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
                  file_klass: nil,
                  template: false,
                  thead: false,
-                 editable: true,
+                 editable: false,
                  destroyable: false,
                  selectable: false,
                  batch_actions: false,
@@ -145,12 +145,20 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
   end
 
   def show_url
-    @show_url ||= controller.folio.url_for([:console, @file])
+    @show_url ||= @file.is_a?(Folio::File) ? controller.folio.url_for([:console, @file]) : nil
   end
 
   def primary_action_data
     return nil unless @primary_action
-    @primary_action_data ||= stimulus_action({ click: "primaryAction" }, { url: show_url })
+    return @primary_action_data if defined?(@primary_action_data)
+
+    @primary_action_data = if @primary_action == "index"
+      if @editable
+        stimulus_action({ click: "primaryAction" }, { url: show_url })
+      end
+    else
+      stimulus_action({ click: "primaryAction" })
+    end
   end
 
   def download_href

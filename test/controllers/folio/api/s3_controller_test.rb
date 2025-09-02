@@ -82,7 +82,9 @@ class Folio::Api::S3ControllerTest < Folio::BaseControllerTest
     test "#{klass} - file_list_file" do
       file = create(klass.model_name.singular)
 
-      get file_list_file_folio_api_s3_path(file_id: file.id, file_type: file.class.to_s, format: :json)
+      get file_list_file_folio_api_s3_path(file_id: file.id,
+                                           file_type: file.class.to_s,
+                                           format: :json)
       assert_response :success
 
       json = response.parsed_body

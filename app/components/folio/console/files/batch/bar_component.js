@@ -158,8 +158,11 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
 
     window.Folio.Api[apiMethod](url, data, this.abortController.signal).then((res) => {
       if (res && res.data) {
-        this.element.outerHTML = res.data
-        this.statusValue = 'loaded'
+        if (this.element.parentNode) {
+          // only replace if still in the DOM
+          this.element.outerHTML = res.data
+          this.statusValue = 'loaded'
+        }
 
         if (callback) callback()
       } else {

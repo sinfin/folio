@@ -91,21 +91,14 @@ module Folio::Console::Api::FileControllerBase
                                                                 options: @pagy_options))
   end
 
-  BATCH_SESSION_KEY = "folio_files_console_batch"
-
   def handle_batch_queue
     queue = params.require(:queue)
     queue_add = queue[:add].is_a?(Array) ? Array(queue[:add]).map(&:to_i) : []
     queue_remove = queue[:remove].is_a?(Array) ? Array(queue[:remove]).map(&:to_i) : []
 
-    session[BATCH_SESSION_KEY] ||= {}
-    session[BATCH_SESSION_KEY][@klass.to_s] ||= {}
-
     persisted_file_ids = folio_console_records.where(id: queue_add + queue_remove).pluck(:id)
-    current_file_ids = session[BATCH_SESSION_KEY][@klass.to_s]["file_ids"] || []
-    new_file_ids = (current_file_ids + (persisted_file_ids & queue_add)) - queue_remove
 
-    session[BATCH_SESSION_KEY][@klass.to_s]["file_ids"] = new_file_ids.uniq
+    batch_service.handle_queue(queue_add, queue_remove, persisted_file_ids)
 
     render_batch_bar_component
   end
@@ -115,36 +108,32 @@ module Folio::Console::Api::FileControllerBase
   end
 
   def open_batch_form
-    session[BATCH_SESSION_KEY] ||= {}
-    session[BATCH_SESSION_KEY][@klass.to_s] ||= {}
-    session[BATCH_SESSION_KEY][@klass.to_s]["form_open"] = true
-
+    batch_service.set_form_open(true)
     render_batch_bar_component
   end
 
   def close_batch_form
-    session[BATCH_SESSION_KEY] ||= {}
-    session[BATCH_SESSION_KEY][@klass.to_s] ||= {}
-    session[BATCH_SESSION_KEY][@klass.to_s]["form_open"] = false
-
+    batch_service.set_form_open(false)
     render_batch_bar_component
   end
 
   def batch_download_success
-    download_hash = session.dig(BATCH_SESSION_KEY, @klass.to_s, "download")
+    download_hash = batch_service.get_download_status
 
     if download_hash && download_hash["pending"] && download_hash["timestamp"] && params[:url]
-      session[BATCH_SESSION_KEY][@klass.to_s]["download"] = { "url" => params[:url], "timestamp" => download_hash["timestamp"] }
+      new_status = { "url" => params[:url], "timestamp" => download_hash["timestamp"] }
+      batch_service.set_download_status(new_status)
     end
 
     render_batch_bar_component
   end
 
   def batch_download_failure
-    download_hash = session.dig(BATCH_SESSION_KEY, @klass.to_s, "download")
+    download_hash = batch_service.get_download_status
 
     if download_hash && download_hash["pending"] && download_hash["timestamp"] && params[:message]
-      session[BATCH_SESSION_KEY][@klass.to_s]["download"] = { "failure_message" => params[:message], "timestamp" => download_hash["timestamp"] }
+      new_status = { "failure_message" => params[:message], "timestamp" => download_hash["timestamp"] }
+      batch_service.set_download_status(new_status)
     end
 
     render_batch_bar_component
@@ -168,7 +157,8 @@ module Folio::Console::Api::FileControllerBase
                                                 user_id: Folio::Current.user.id,
                                                 site_id: Folio::Current.site.id)
 
-    session[BATCH_SESSION_KEY][@klass.to_s]["download"] = { "pending" => true, "timestamp" => Time.current.to_i, "s3_path" => s3_path }
+    download_status = { "pending" => true, "timestamp" => Time.current.to_i, "s3_path" => s3_path }
+    batch_service.set_download_status(download_status)
 
     render_batch_bar_component
   end
@@ -188,7 +178,7 @@ module Folio::Console::Api::FileControllerBase
       files.each { |file| file.destroy! }
     end
 
-    session[BATCH_SESSION_KEY][@klass.to_s]["file_ids"] = []
+    batch_service.clear_files
 
     component = Folio::Console::Files::Batch::BarComponent.new(file_klass: @klass,
                                                                change_to_propagate: {
@@ -223,8 +213,8 @@ module Folio::Console::Api::FileControllerBase
       files.each { |file| file.update!(update_params) }
     end
 
-    session[BATCH_SESSION_KEY][@klass.to_s]["file_ids"] = []
-    session[BATCH_SESSION_KEY][@klass.to_s]["form_open"] = false
+    batch_service.clear_files
+    batch_service.set_form_open(false)
 
     component = Folio::Console::Files::Batch::BarComponent.new(file_klass: @klass,
                                                                change_to_propagate: {
@@ -312,7 +302,7 @@ module Folio::Console::Api::FileControllerBase
     end
 
     def set_safe_file_ids
-      session_file_ids = session.dig(BATCH_SESSION_KEY, @klass.to_s, "file_ids") || []
+      batch_file_ids = batch_service.get_file_ids
       param_file_ids = params.require(:file_ids)
 
       if param_file_ids.is_a?(Array)
@@ -321,7 +311,7 @@ module Folio::Console::Api::FileControllerBase
         raise ActionController::BadRequest.new("Invalid file IDs")
       end
 
-      safe_file_ids = param_file_ids & session_file_ids
+      safe_file_ids = param_file_ids & batch_file_ids
 
       if safe_file_ids.size != param_file_ids.size
         raise ActionController::BadRequest.new("Invalid file IDs")
@@ -331,14 +321,14 @@ module Folio::Console::Api::FileControllerBase
     end
 
     def delete_s3_download_file
-      download_hash = session.dig(BATCH_SESSION_KEY, @klass.to_s, "download")
+      download_hash = batch_service.get_download_status
       return unless download_hash.is_a?(Hash)
 
       if download_hash["s3_path"].is_a?(String)
         run_delete_s3_job(s3_path: download_hash["s3_path"])
       end
 
-      session[BATCH_SESSION_KEY][@klass.to_s]["download"] = nil
+      batch_service.set_download_status(nil)
     end
 
     def run_delete_s3_job(s3_path:, wait: nil)
@@ -347,6 +337,11 @@ module Folio::Console::Api::FileControllerBase
       job = Folio::S3::DeleteJob
       job = job.set(wait:) if wait
       job.perform_later(s3_path:)
+    end
+
+    def batch_service
+      @batch_service ||= Folio::Console::Files::BatchService.new(session_id: session.id.public_id,
+                                                                 file_class_name: @klass.to_s)
     end
 
     def render_batch_bar_component
