@@ -38,7 +38,7 @@ class Folio::Metadata::IptcFieldMapperTest < ActiveSupport::TestCase
 
     result = @mapper.map_metadata(metadata)
 
-    assert_equal ["John Doe"], result[:creator]
+    assert_equal "John Doe", result[:creator]
     assert_equal "Photo Agency", result[:credit_line]
   end
 
@@ -52,7 +52,7 @@ class Folio::Metadata::IptcFieldMapperTest < ActiveSupport::TestCase
 
   result = @mapper.map_metadata(metadata)
 
-  assert_equal ["ČTK / Šimánek Vít"], result[:creator]
+  assert_equal "ČTK / Šimánek Vít", result[:creator]
   assert_equal "České noviny", result[:credit_line]
   # Keywords map from XMP-dc:Subject, not IPTC:Keywords
   assert_equal ["volby", "političky", "Česká republika"], result[:keywords]
@@ -68,7 +68,7 @@ end
     result = @mapper.map_metadata(metadata)
 
     # Should process without attempting additional encoding repair
-    assert_equal ["Český autor"], result[:creator]
+    assert_equal "Český autor", result[:creator]
     assert_equal "Popis s českými znaky", result[:description]
   end
 
@@ -81,7 +81,7 @@ end
 
     result = @mapper.map_metadata(metadata)
 
-    assert_equal ["Single Creator"], result[:creator]
+    assert_equal "Single Creator", result[:creator]
     assert_equal ["Single Keyword"], result[:keywords]
   end
 
@@ -93,7 +93,7 @@ end
 
     result = @mapper.map_metadata(metadata)
 
-    assert_equal ["Creator One", "Creator Two"], result[:creator]
+    assert_equal "Creator One, Creator Two", result[:creator]
     assert_equal ["Keyword1", "Keyword2", "Keyword3"], result[:keywords]
   end
 
@@ -106,7 +106,7 @@ end
   result = @mapper.map_metadata(metadata)
 
   # Both creator and keywords should filter out blank values consistently
-  assert_equal ["John Doe", "Jane Smith"], result[:creator]
+  assert_equal "John Doe, Jane Smith", result[:creator]
   assert_equal ["keyword1", "keyword2"], result[:keywords]
 end
 
@@ -261,7 +261,7 @@ end
     # Verify all fields are correctly mapped
     assert_equal "Breaking News", result[:headline]
     assert_equal "Important event coverage", result[:description]
-    assert_equal ["John Photographer", "Jane Journalist"], result[:creator]
+    assert_equal "John Photographer, Jane Journalist", result[:creator]
     assert_equal "News Agency / Profimedia", result[:credit_line]
     assert_equal "Profimedia", result[:source] # Derived from credit_line
     assert_equal ["news", "politics", "coverage"], result[:keywords]

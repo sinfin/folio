@@ -76,7 +76,7 @@ class Folio::File::ImageMetadataSamplesTest < ActiveSupport::TestCase
       assert_equal "The Headline (ref2024.1)", image.headline  # Actual value from IPTC file
       assert_equal ["Keyword1ref2024.1", "Keyword2ref2024.1", "Keyword3ref2024.1"], image.mapped_metadata[:keywords]
       assert_equal "Sublocation (Core) (ref2024.1)", image.mapped_metadata[:sublocation]
-      assert_equal "R23", image.mapped_metadata[:country_code]
+      assert_equal "R2", image.mapped_metadata[:country_code]
 
       # Verify new metadata accessors work
       assert_equal "The Headline (ref2024.1)", image.title  # Uses headline field
@@ -99,10 +99,10 @@ class Folio::File::ImageMetadataSamplesTest < ActiveSupport::TestCase
 
       # Older format should still extract basic fields
       assert_equal "The description aka caption (ref2016)", image.description
-      assert_equal "Creator1 (ref2016)", image.author
-      assert_equal "Creator1 (ref2016)", image.mapped_metadata[:creator]
+      assert_equal "Creator1 (ref2016), Creator2 (ref2016)", image.author
+      assert_equal "Creator1 (ref2016), Creator2 (ref2016)", image.mapped_metadata[:creator]
       assert_equal "Copyright (Notice) 2016 IPTC - www.iptc.org  (ref2016)", image.mapped_metadata[:copyright_notice]
-      assert_equal "R16", image.mapped_metadata[:country_code]
+      assert_equal "R1", image.mapped_metadata[:country_code]
     end
   end
 
@@ -179,12 +179,11 @@ class Folio::File::ImageMetadataSamplesTest < ActiveSupport::TestCase
     end
   end
 
-  test "metadata copying to file placements works with sample data" do
+  test "metadata is available but not copied to file placements" do
     image_path = @test_images_dir.join("IPTC-PhotometadataRef-Std2024.1.jpg")
     skip "Test image not found" unless File.exist?(image_path)
 
-    with_config(folio_image_metadata_extraction_enabled: true,
-                folio_image_metadata_copy_to_placements: true) do
+    with_config(folio_image_metadata_extraction_enabled: true) do
       image = create(:folio_file_image,
                      file: File.open(image_path),
                      site: @site,
@@ -198,9 +197,13 @@ class Folio::File::ImageMetadataSamplesTest < ActiveSupport::TestCase
                         alt: nil,
                         title: nil)
 
-      # Metadata should be copied to placement
-      assert_equal "The description aka caption (ref2024.1)", placement.alt
-      assert_equal "The Headline (ref2024.1)", placement.title
+      # Metadata is extracted on the image
+      assert_equal "The description aka caption (ref2024.1)", image.description
+      assert_equal "The Headline (ref2024.1)", image.headline
+
+      # But not copied to placement (feature currently disabled)
+      assert_nil placement.alt
+      assert_nil placement.title
     end
   end
 

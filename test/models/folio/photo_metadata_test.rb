@@ -10,7 +10,7 @@ module Folio
       image.save!
 
       assert_not_nil image.file_metadata
-      assert_equal ["city", "light", "night", "prague"], image.keywords_from_metadata
+      assert_equal ["city", "light", "night", "prague"], image.mapped_metadata[:keywords]
     end
 
     test "load metadata from different file types" do
