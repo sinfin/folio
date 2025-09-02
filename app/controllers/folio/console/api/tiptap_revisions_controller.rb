@@ -5,14 +5,14 @@ class Folio::Console::Api::TiptapRevisionsController < Folio::Console::Api::Base
     placement = find_placement
     revision = placement.create_tiptap_revision!(
       content: revision_params[:content],
-      user: current_user
+      user: Folio::Current.user
     )
 
     render json: {
       success: true,
       revision_id: revision.id,
       revision_number: revision.revision_number,
-      created_at: revision.created_at.iso8601
+      created_at: revision.created_at
     }
   end
 
