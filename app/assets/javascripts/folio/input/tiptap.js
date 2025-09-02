@@ -362,13 +362,13 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     window.Folio.Api.apiPost(this.autoSaveUrlValue, data)
       .then((response) => {
         if (response && response.success) {
-          console.log('[Folio] [Tiptap] Auto-saved revision:', response.revision_number)
+          console.log('[Folio] [Tiptap] Auto-saved revision:', response.revision_id)
 
           const autoSaveMessage = {
             type: 'f-input-tiptap:auto-saved',
             revisionId: response.revision_id,
-            revisionNumber: response.revision_number,
-            createdAt: response.created_at
+            createdAt: response.created_at,
+            updatedAt: response.updated_at
           }
           this.iframeTarget.contentWindow.postMessage(autoSaveMessage, this.originValue || window.origin)
         }

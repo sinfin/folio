@@ -1,18 +1,19 @@
 # frozen_string_literal: true
 
 class Folio::Console::Api::TiptapRevisionsController < Folio::Console::Api::BaseController
-  def create
+  def save_revision
     placement = find_placement
-    revision = placement.create_tiptap_revision!(
-      content: revision_params[:content],
-      user: Folio::Current.user
-    )
+    user = Folio::Current.user
+
+    revision = placement.tiptap_revisions.find_or_initialize_by(user: user)
+    revision.content = revision_params[:content]
+    revision.save!
 
     render json: {
       success: true,
       revision_id: revision.id,
-      revision_number: revision.revision_number,
-      created_at: revision.created_at
+      created_at: revision.created_at,
+      updated_at: revision.updated_at
     }
   end
 

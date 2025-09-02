@@ -28,6 +28,7 @@ module Folio::Tiptap::Model
     has_many :tiptap_revisions, as: :placement, class_name: "Folio::Tiptap::Revision", dependent: :destroy
     before_validation :convert_titap_fields_to_hashes_and_sanitize
     validate :validate_tiptap_fields
+    after_save :cleanup_tiptap_revisions_after_save, if: :autosave_enabled?
   end
 
   def convert_titap_fields_to_hashes_and_sanitize
@@ -79,24 +80,36 @@ module Folio::Tiptap::Model
     tiptap_config&.autosave == true
   end
 
-  def create_tiptap_revision!(content:, user: nil)
-    return unless autosave_enabled?
-
-    tiptap_revisions.create!(
-      content: content,
-      user: user
-    )
-  end
-
-  def latest_tiptap_revision
+  def latest_tiptap_revision(user: nil)
     return nil unless autosave_enabled?
 
-    tiptap_revisions.latest_first.first
+    target_user = user || Folio::Current.user
+    return nil unless target_user
+
+    tiptap_revisions.find_by(user: target_user)
   end
 
-  def tiptap_revision_count
-    return 0 unless autosave_enabled?
+  def has_tiptap_revision?(user: nil)
+    return false unless autosave_enabled?
 
-    tiptap_revisions.count
+    target_user = user || Folio::Current.user
+    return false unless target_user
+
+    tiptap_revisions.exists?(user: target_user)
   end
+
+  private
+    def cleanup_tiptap_revisions_after_save
+      # After saving the main model, remove only the current user's revision
+      # since their content is now persisted in the main tiptap_content field
+      # Other users' revisions should remain untouched
+      current_user = Folio::Current.user
+      return unless current_user
+
+      revision = tiptap_revisions.find_by(user: current_user)
+      if revision
+        revision.destroy
+        Rails.logger.info "Cleaned up tiptap revision for user #{current_user.id} after saving #{self.class.name}##{id}"
+      end
+    end
 end

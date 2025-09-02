@@ -34,8 +34,4 @@ class Folio::Console::Tiptap::SimpleFormWrapComponent < Folio::Console::Applicat
     config = object.try(:tiptap_config) || Folio::Tiptap.config
     config&.autosave == true
   end
-
-  def has_unsaved_changes?(object)
-    object.tiptap_revision_count(user: Folio::Current.user) > 0
-  end
 end
