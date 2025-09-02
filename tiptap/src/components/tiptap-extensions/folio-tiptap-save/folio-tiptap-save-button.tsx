@@ -109,7 +109,7 @@ export const FolioTiptapSaveButton = React.forwardRef<
       tooltip={label}
       style={{ cursor: 'default' }}
     >
-      <Save className="tiptap-button-icon" />
+      <Save className="tiptap-button-icon" color="#00B594" />
     </Button>
   );
 });
