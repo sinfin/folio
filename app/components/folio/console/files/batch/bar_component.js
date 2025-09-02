@@ -185,9 +185,15 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
 
     this.dispatchCheckboxEvents(fileIds, 'remove')
 
+    this.queue = this.queue || { add: [], remove: [] }
+    fileIds.forEach((id) => {
+      this.queue.remove.push(id)
+    })
+
     this.ajax({
-      url: `${this.baseApiUrlValue}/remove_from_batch`,
-      data: { file_ids: fileIds }
+      url: `${this.baseApiUrlValue}/handle_batch_queue`,
+      data: { queue: this.queue },
+      status: 'reloading'
     })
   }
 

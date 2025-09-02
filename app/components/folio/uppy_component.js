@@ -110,6 +110,7 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
 
   uppyUploadSuccess (file, result) {
     this.dispatch('upload-success', { detail: { file, result } })
+    this.uppy.removeFile(file.id)
   }
 
   addCsLocale () {
