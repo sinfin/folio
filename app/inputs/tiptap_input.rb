@@ -12,7 +12,7 @@ class TiptapInput < SimpleForm::Inputs::StringInput
                         origin: ENV["FOLIO_TIPTAP_DEV"] ? "*" : "",
                         type: tiptap_type,
                         render_url: @builder.template.render_nodes_console_api_tiptap_path,
-                        auto_save: !@builder.object.new_record?,
+                        auto_save: autosave_enabled?,
                         auto_save_url: @builder.template.console_api_tiptap_revisions_path,
                         placement_type: @builder.object.class.base_class.name,
                         placement_id: @builder.object.id,
@@ -65,8 +65,7 @@ class TiptapInput < SimpleForm::Inputs::StringInput
     end
 
     def latest_revision_content
-      return nil if @builder.object.new_record?
-      return nil unless @builder.object.respond_to?(:latest_tiptap_revision)
+      return nil unless autosave_enabled?
 
       latest_revision = @builder.object.latest_tiptap_revision
       if latest_revision&.content.present?
@@ -76,10 +75,16 @@ class TiptapInput < SimpleForm::Inputs::StringInput
     end
 
     def latest_revision_created_at
-      return nil if @builder.object.new_record?
-      return nil unless @builder.object.respond_to?(:latest_tiptap_revision)
+      return nil unless autosave_enabled?
 
       latest_revision = @builder.object.latest_tiptap_revision
-      latest_revision&.created_at || @builder.object.updated_at
+      latest_revision&.created_at
+    end
+
+    def autosave_enabled?
+      return false if @builder.object.new_record?
+
+      config = @builder.object.try(:tiptap_config) || Folio::Tiptap.config
+      config&.autosave == true
     end
 end

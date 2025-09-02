@@ -25,6 +25,7 @@ module Folio::Tiptap::Model
   end
 
   included do
+    has_many :tiptap_revisions, as: :placement, class_name: "Folio::Tiptap::Revision", dependent: :destroy
     before_validation :convert_titap_fields_to_hashes_and_sanitize
     validate :validate_tiptap_fields
   end
@@ -72,5 +73,30 @@ module Folio::Tiptap::Model
 
   def tiptap_config
     Folio::Tiptap.config
+  end
+
+  def autosave_enabled?
+    tiptap_config&.autosave == true
+  end
+
+  def create_tiptap_revision!(content:, user: nil)
+    return unless autosave_enabled?
+
+    tiptap_revisions.create!(
+      content: content,
+      user: user
+    )
+  end
+
+  def latest_tiptap_revision
+    return nil unless autosave_enabled?
+
+    tiptap_revisions.latest_first.first
+  end
+
+  def tiptap_revision_count
+    return 0 unless autosave_enabled?
+
+    tiptap_revisions.count
   end
 end

@@ -8,19 +8,22 @@ module Folio
                     :styled_wrap_variants,
                     :schema,
                     :pages_component_class_name,
-                    :heading_levels
+                    :heading_levels,
+                    :autosave
 
       def initialize(node_names: nil,
                      styled_paragraph_variants: nil,
                      styled_wrap_variants: nil,
                      schema: nil,
                      pages_component_class_name: nil,
-                     heading_levels: nil)
+                     heading_levels: nil,
+                     autosave: true)
         @node_names = node_names || get_all_tiptap_node_names
         @styled_paragraph_variants = styled_paragraph_variants || default_styled_paragraph_variants
         @styled_wrap_variants = styled_wrap_variants || default_styled_wrap_variants
         @pages_component_class_name = pages_component_class_name
         @heading_levels = heading_levels || default_heading_levels
+        @autosave = autosave
 
         @schema = schema || build_default_schema
       end
@@ -31,7 +34,8 @@ module Folio
           styled_paragraph_variants: @styled_paragraph_variants,
           styled_wrap_variants: @styled_wrap_variants,
           heading_levels: @heading_levels,
-          pages_component_class_name: @pages_component_class_name
+          pages_component_class_name: @pages_component_class_name,
+          autosave: @autosave
         }
       end
 
