@@ -26,11 +26,16 @@ class Folio::Console::Tiptap::SimpleFormWrapComponent < Folio::Console::Applicat
                         },
                         action: {
                           "f-input-tiptap:updateWordCount" => "updateWordCount",
+                          "f-c-tiptap-simple-form-wrap-unsaved-changes:continueUnsavedChanges" => "onContinueUnsavedChanges",
                         })
   end
 
   def autosave_enabled?(object)
     config = object.try(:tiptap_config) || Folio::Tiptap.config
     config&.autosave == true
+  end
+
+  def has_unsaved_changes?(object)
+    object.tiptap_revision_count(user: Folio::Current.user) > 0
   end
 end

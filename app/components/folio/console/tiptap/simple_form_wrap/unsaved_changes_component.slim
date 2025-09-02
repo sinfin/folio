@@ -1,0 +1,21 @@
+.f-c-tiptap-simple-form-wrap-unsaved_changes data=data
+  .f-c-tiptap-simple-form-wrap-unsaved_changes__top
+    = folio_icon(:alert,
+                  class: 'f-c-tiptap-simple-form-wrap-unsaved_changes__top-ico')
+
+    h3.f-c-tiptap-simple-form-wrap-unsaved_changes__top-label
+      = t('.title')
+
+  .f-c-tiptap-simple-form-wrap-unsaved_changes__middle
+    = latest_revision_info
+
+  .f-c-tiptap-simple-form-wrap-unsaved_changes__bottom
+    .f-c-tiptap-simple-form-wrap-unsaved_changes__buttons
+      == cell('folio/console/ui/button',
+              variant: :primary,
+              label: t('.continue'),
+              data: stimulus_action(click: "onContinueButtonClick"))
+      == cell('folio/console/ui/button',
+              variant: :tertiary,
+              label: t('.discard'),
+              data: stimulus_action(click: "onDiscardButtonClick"))

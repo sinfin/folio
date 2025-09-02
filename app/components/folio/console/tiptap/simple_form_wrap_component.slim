@@ -29,6 +29,8 @@
                                               variant: :warning,
                                               class_name: "m-0",
                                               closable: false)
+          - elsif has_unsaved_changes?(form.object)
+            = render(Folio::Console::Tiptap::SimpleFormWrap::UnsavedChangesComponent.new(object: form.object))
 
       .f-c-tiptap-simple-form-wrap__editors
         .f-c-tiptap-simple-form-wrap__editors-input-wrap

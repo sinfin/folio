@@ -42,4 +42,12 @@ window.Folio.Stimulus.register('f-c-tiptap-simple-form-wrap', class extends wind
     if (!this.hasWordCountTarget) return
     this.wordCountTarget.dispatchEvent(new CustomEvent('f-c-tiptap-simple-form-wrap:updateWordCount', { detail: { wordCount } }))
   }
+
+  onContinueUnsavedChanges (e) {
+    const tiptapInput = this.element.querySelector('[data-controller*="f-input-tiptap"]')
+
+    if (tiptapInput) {
+      tiptapInput.dispatchEvent(new CustomEvent('f-c-tiptap-simple-form-wrap:tiptapContinueUnsavedChanges'))
+    }
+  }
 })

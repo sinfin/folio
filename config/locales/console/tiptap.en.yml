@@ -11,6 +11,10 @@ en:
           word_count_component:
             words: Words
             characters: Characters
+          unsaved_changes_component:
+            title: The editor contains unsaved draft changes.
+            continue: Continue editing draft
+            discard: Discard draft changes
 
         overlay:
           form_component:

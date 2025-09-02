@@ -11,6 +11,10 @@ cs:
           word_count_component:
             words: Slov
             characters: Znaků
+          unsaved_changes_component:
+            title: Editor obsahuje neuložené rozepsané změny.
+            continue: Pokračovat v rozepsaném
+            discard: Zahodit rozepsané změny
 
         overlay:
           form_component:

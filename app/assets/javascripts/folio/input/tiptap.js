@@ -18,6 +18,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     placementType: String,
     placementId: Number,
     latestRevisionCreatedAt: String,
+    hasUnsavedChanges: { type: Boolean, default: false },
   }
 
   connect () {
@@ -196,7 +197,15 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     const data = {
       type: 'f-input-tiptap:save-button-info',
       newRecord: this.newRecordValue,
+      hasUnsavedChanges: this.hasUnsavedChangesValue,
       latestRevisionCreatedAt: this.latestRevisionCreatedAtValue || null,
+    }
+    this.iframeTarget.contentWindow.postMessage(data, this.originValue || window.origin)
+  }
+
+  onContinueUnsavedChanges (event) {
+    const data = {
+      type: 'f-input-tiptap:continue-unsaved-changes'
     }
     this.iframeTarget.contentWindow.postMessage(data, this.originValue || window.origin)
   }

@@ -18,6 +18,7 @@ class TiptapInput < SimpleForm::Inputs::StringInput
                         placement_type: @builder.object.class.base_class.name,
                         placement_id: @builder.object.id,
                         latest_revision_created_at: latest_revision_created_at,
+                        has_unsaved_changes: has_unsaved_changes?,
                         readonly: @builder.template.instance_variable_get(:@audited_audit).present?,
                         tiptap_config_json:,
                         tiptap_content_json_structure_json: Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE.to_json,
@@ -27,6 +28,7 @@ class TiptapInput < SimpleForm::Inputs::StringInput
                         "resize@window" => "onWindowResize",
                         "beforeunload@window" => "onWindowBeforeUnload",
                         "orientationchange@window" => "onWindowResize",
+                        "f-c-tiptap-simple-form-wrap:tiptapContinueUnsavedChanges" => "onContinueUnsavedChanges",
                       })
 
     input_html_options[:hidden] = true
@@ -65,21 +67,28 @@ class TiptapInput < SimpleForm::Inputs::StringInput
       (@builder.object.try(:tiptap_config) || Folio::Tiptap.config).to_input_json
     end
 
+    def current_user_latest_revision
+      @current_user_latest_revision ||= @builder.object.latest_tiptap_revision(user: Folio::Current.user)
+    end
+
+    def has_unsaved_changes?
+      false if @builder.object.new_record?
+      current_user_latest_revision.present?
+    end
+
     def latest_revision_content
       return nil unless autosave_enabled?
 
-      latest_revision = @builder.object.latest_tiptap_revision
-      if latest_revision&.content.present?
+      if current_user_latest_revision&.content.present?
         value_keys = Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE
-        { value_keys[:content] => latest_revision.content }
+        { value_keys[:content] => current_user_latest_revision.content }
       end
     end
 
     def latest_revision_created_at
       return nil unless autosave_enabled?
 
-      latest_revision = @builder.object.latest_tiptap_revision
-      latest_revision&.created_at || @builder.object.updated_at
+      current_user_latest_revision&.created_at
     end
 
     def autosave_enabled?
