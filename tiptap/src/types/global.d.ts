@@ -78,6 +78,7 @@ declare global {
     styled_wrap_variants?: StyledWrapVariantFromInput[];
     enable_pages?: boolean;
     heading_levels?: import("@tiptap/extension-heading").Level[];
+    autosave?: boolean;
   }
 
   interface FolioEditorCommandChain extends import("@tiptap/core").CommandChain {

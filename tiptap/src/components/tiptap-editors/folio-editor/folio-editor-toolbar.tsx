@@ -409,11 +409,14 @@ const MainToolbarContent = ({
         </ToolbarGroup>
       )}
 
-      <ToolbarSeparator />
-
-      <ToolbarGroup>
-        <FolioTiptapSaveButton editor={editor} />
-      </ToolbarGroup>
+      {folioTiptapConfig?.autosave && (
+        <>
+          <ToolbarSeparator />
+          <ToolbarGroup>
+            <FolioTiptapSaveButton editor={editor} />
+          </ToolbarGroup>
+        </>
+      )}
     </>
   );
 };

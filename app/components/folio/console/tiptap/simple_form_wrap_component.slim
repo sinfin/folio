@@ -22,12 +22,13 @@
           span.f-c-tiptap-simple-form-wrap__editors-bar-scroll-ico
             = folio_icon(:chevron_down, height: 16)
 
-      - if form.object.new_record?
+      - if autosave_enabled?(form.object)
         .f-c-tiptap-simple-form-wrap__editors-autosave-info
-          == cell("folio/console/ui/alert", t('.new_record_alert', model: form.object.class.model_name.human.downcase),
-                                            variant: :warning,
-                                            class_name: "m-0",
-                                            closable: false)
+          - if form.object.new_record?
+            == cell("folio/console/ui/alert", t('.new_record_alert', model: form.object.class.model_name.human.downcase),
+                                              variant: :warning,
+                                              class_name: "m-0",
+                                              closable: false)
 
       .f-c-tiptap-simple-form-wrap__editors
         .f-c-tiptap-simple-form-wrap__editors-input-wrap

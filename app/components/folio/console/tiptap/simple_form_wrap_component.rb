@@ -28,4 +28,9 @@ class Folio::Console::Tiptap::SimpleFormWrapComponent < Folio::Console::Applicat
                           "f-input-tiptap:updateWordCount" => "updateWordCount",
                         })
   end
+
+  def autosave_enabled?(object)
+    config = object.try(:tiptap_config) || Folio::Tiptap.config
+    config&.autosave == true
+  end
 end
