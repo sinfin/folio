@@ -1,7 +1,7 @@
 window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.Controller {
   static targets = ['input', 'iframe', 'loader']
 
-  static AUTO_SAVE_DELAY = 2000
+  static AUTO_SAVE_DELAY = 1000
 
   static values = {
     loaded: { type: Boolean, default: false },
