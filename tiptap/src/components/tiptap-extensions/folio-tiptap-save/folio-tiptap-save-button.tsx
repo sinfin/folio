@@ -32,6 +32,8 @@ export const FolioTiptapSaveButton = React.forwardRef<
     saveButtonInfo?.latestRevisionAt ? new Date(saveButtonInfo.latestRevisionAt) : null
   );
   const [hasUnsavedChanges, setHasUnsavedChanges] = React.useState<boolean>(saveButtonInfo?.hasUnsavedChanges ?? false);
+  
+  const newRecord = saveButtonInfo?.newRecord ?? true;
 
   React.useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
