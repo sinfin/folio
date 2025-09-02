@@ -69,12 +69,19 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
       assert_match("f-c-ui-pagy", response.parsed_body["data"])
     end
 
-    test "#{klass} - add_to_batch, remove_from_batch" do
+    test "#{klass} - batch_bar" do
+      get url_for([:batch_bar, :console, :api, klass, format: :json])
+      assert_response(:ok)
+    end
+
+    test "#{klass} - handle_batch_queue" do
       # cannot test session[*] sadly
       file = create(klass.model_name.singular)
 
-      post url_for([:add_to_batch, :console, :api, klass, format: :json]), params: {
-        file_ids: [file.id]
+      post url_for([:handle_batch_queue, :console, :api, klass, format: :json]), params: {
+        queue: {
+          add: [file.id],
+        }
       }
       assert_response(:ok)
 
@@ -82,8 +89,10 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
       assert_equal 1, parsed_component.css(".f-c-files-batch-bar").size
       assert_equal("1", parsed_component.css(".f-c-files-batch-bar__count").first.text.strip)
 
-      post url_for([:remove_from_batch, :console, :api, klass, format: :json]), params: {
-        file_ids: [file.id]
+      post url_for([:handle_batch_queue, :console, :api, klass, format: :json]), params: {
+        queue: {
+          remove: [file.id],
+        }
       }
       assert_response(:ok)
 
@@ -102,7 +111,7 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
       assert_response(:bad_request)
       assert_equal 3, klass.where(id: file_ids).count, "Don't delete file_ids that were not added to batch"
 
-      post url_for([:add_to_batch, :console, :api, klass, format: :json]), params: { file_ids: }
+      post url_for([:handle_batch_queue, :console, :api, klass, format: :json]), params: { queue: { add: file_ids } }
       assert_response(:ok)
 
       parsed_component = Nokogiri::HTML(response.parsed_body["data"])
@@ -140,7 +149,7 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
       assert_response(:bad_request)
       assert_equal 3, klass.where(id: file_ids).count, "Don't download file_ids that were not added to batch"
 
-      post url_for([:add_to_batch, :console, :api, klass, format: :json]), params: { file_ids: }
+      post url_for([:handle_batch_queue, :console, :api, klass, format: :json]), params: { queue: { add: file_ids } }
       assert_response(:ok)
 
       parsed_component = Nokogiri::HTML(response.parsed_body["data"])
@@ -190,7 +199,7 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
       file_ids = files.map(&:id)
       assert_equal 3, klass.where(id: file_ids).count
 
-      post url_for([:add_to_batch, :console, :api, klass, format: :json]), params: { file_ids: }
+      post url_for([:handle_batch_queue, :console, :api, klass, format: :json]), params: { queue: { add: file_ids } }
       assert_response(:ok)
 
       parsed_component = Nokogiri::HTML(response.parsed_body["data"])

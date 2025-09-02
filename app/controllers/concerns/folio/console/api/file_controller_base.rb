@@ -11,7 +11,7 @@ module Folio::Console::Api::FileControllerBase
   included do
     include Folio::S3::Client
     before_action :set_safe_file_ids, only: %i[batch_delete batch_download batch_update batch_download_success]
-    before_action :delete_s3_download_file, only: %i[add_to_batch remove_from_batch batch_delete cancel_batch_download]
+    before_action :delete_s3_download_file, only: %i[handle_batch_queue batch_delete cancel_batch_download]
   end
 
   def index
@@ -93,25 +93,24 @@ module Folio::Console::Api::FileControllerBase
 
   BATCH_SESSION_KEY = "folio_files_console_batch"
 
-  def add_to_batch
-    file_ids = folio_console_records.where(id: params.require(:file_ids)).pluck(:id)
+  def handle_batch_queue
+    queue = params.require(:queue)
+    queue_add = queue[:add].is_a?(Array) ? Array(queue[:add]).map(&:to_i) : []
+    queue_remove = queue[:remove].is_a?(Array) ? Array(queue[:remove]).map(&:to_i) : []
 
     session[BATCH_SESSION_KEY] ||= {}
     session[BATCH_SESSION_KEY][@klass.to_s] ||= {}
-    session[BATCH_SESSION_KEY][@klass.to_s]["file_ids"] ||= []
-    session[BATCH_SESSION_KEY][@klass.to_s]["file_ids"] += file_ids
-    session[BATCH_SESSION_KEY][@klass.to_s]["file_ids"].uniq!
+
+    persisted_file_ids = folio_console_records.where(id: queue_add + queue_remove).pluck(:id)
+    current_file_ids = session[BATCH_SESSION_KEY][@klass.to_s]["file_ids"] || []
+    new_file_ids = (current_file_ids + (persisted_file_ids & queue_add)) - queue_remove
+
+    session[BATCH_SESSION_KEY][@klass.to_s]["file_ids"] = new_file_ids.uniq
 
     render_batch_bar_component
   end
 
-  def remove_from_batch
-    file_ids = folio_console_records.where(id: params.require(:file_ids)).pluck(:id)
-
-    session[BATCH_SESSION_KEY] ||= {}
-    session[BATCH_SESSION_KEY][@klass.to_s] ||= {}
-    session[BATCH_SESSION_KEY][@klass.to_s]["file_ids"] = (session[BATCH_SESSION_KEY][@klass.to_s]["file_ids"] || []) - file_ids
-
+  def batch_bar
     render_batch_bar_component
   end
 

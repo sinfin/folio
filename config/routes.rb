@@ -198,8 +198,9 @@ Folio::Engine.routes.draw do
                 post :tag
                 get :pagination
 
-                post :add_to_batch
-                post :remove_from_batch
+                get :batch_bar
+
+                post :handle_batch_queue
 
                 post :open_batch_form
                 post :close_batch_form

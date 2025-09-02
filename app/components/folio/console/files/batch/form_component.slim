@@ -38,7 +38,8 @@
     == cell('folio/console/ui/buttons', form_buttons_model)
 
     - if @files.present?
-      p.mt-g = t('.selected_files')
+      p.mt-g
+        ' #{t('.selected_files')} (#{@files.size})
 
       .border-top
         = render(Folio::FileListComponent.new(file_klass: @file_klass,

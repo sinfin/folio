@@ -112,7 +112,7 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
     }
   }
 
-  reload ({ handleErrors = true, updatePagy = false }) {
+  reload ({ handleErrors = true, updatePagy = false, addToBatch = false }) {
     if (this.element.closest('.f-c-files-batch-form')) {
       return this.dispatch('reloadForm')
     }
@@ -123,6 +123,7 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
     url.searchParams.set('primary_action', this.primaryActionValue)
     url.searchParams.set('selectable', this.selectableValue)
     url.searchParams.set('batch_actions', this.batchActionsValue)
+    url.searchParams.set('add_to_batch', addToBatch)
     url.searchParams.set('editable', this.editableValue)
     url.searchParams.set('destroyable', this.destroyableValue)
 
@@ -146,6 +147,12 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
     }).then((response) => {
       this.element.outerHTML = response.data
 
+      if (response.meta && response.meta.reload_batch_bar) {
+        const batchBar = document.querySelector('.f-c-files-batch-bar')
+        if (!batchBar) return
+        batchBar.dispatchEvent(new CustomEvent('f-c-files-batch-bar:reload'))
+      }
+
       if (updatePagy && window.FolioConsole && window.FolioConsole.Ui && window.FolioConsole.Ui.Pagy) {
         window.FolioConsole.Ui.Pagy.reload()
       }
@@ -154,7 +161,7 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
 
   messageBusSuccess (data) {
     this.idValue = data.file_id
-    this.reload({ handleErrors: true, updatePagy: true })
+    this.reload({ handleErrors: true, updatePagy: true, addToBatch: this.batchActionsValue === true })
   }
 
   messageBusFailure (data) {

@@ -40,15 +40,43 @@ class Folio::Api::S3Controller < Folio::Api::BaseController
         batch_actions
       ].each do |param|
         if params[param]
-          props[param] = params[param]
+          props[param] = params[param].in? ["true", true]
         end
       end
+
+      add_to_batch = file_klass < Folio::File && params[:add_to_batch].in?(["true", true])
+
+      meta = if add_to_batch
+        { reload_batch_bar: true }
+      end
+
+      puts "-----"
+      puts "add_to_batch: #{add_to_batch}"
+
+      if add_to_batch
+        session_key = Folio::Console::Api::FileControllerBase::BATCH_SESSION_KEY
+
+        session[session_key] ||= {}
+        session[session_key][file_klass.to_s] ||= {}
+        session[session_key][file_klass.to_s]["file_ids"] = session[session_key][file_klass.to_s]["file_ids"] || []
+
+        puts "file_ids before: #{session[session_key][file_klass.to_s]["file_ids"].size} - #{session[session_key][file_klass.to_s]["file_ids"].join(", ")}"
+
+        unless session[session_key][file_klass.to_s]["file_ids"].include?(@file.id)
+          session[session_key][file_klass.to_s]["file_ids"] << @file.id
+          puts "added to batch - #{@file.id}"
+        end
+
+        session[session_key][file_klass.to_s]["form_open"] = true
+      end
+
+      puts "-----"
 
       if params[:primary_action].is_a?(String)
         props[:primary_action] = params[:primary_action].to_sym
       end
 
-      render_component_json(Folio::FileList::FileComponent.new(**props))
+      render_component_json(Folio::FileList::FileComponent.new(**props), meta:)
     else
       render json: {}, status: 404
     end

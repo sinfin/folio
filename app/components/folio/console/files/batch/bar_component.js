@@ -28,8 +28,16 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
     }
   }
 
+  connect () {
+    this.onReloadTrigger = window.Folio.throttle(() => {
+      console.log('onReloadTrigger')
+      this.onReloadTriggerRaw()
+    })
+  }
+
   disconnect () {
     this.abortAjax()
+    delete this.onReloadTrigger
   }
 
   abortAjax () {
@@ -67,10 +75,6 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
     })
   }
 
-  reloadForm () {
-    this.openForm()
-  }
-
   download () {
     this.ajax({
       url: `${this.baseApiUrlValue}/batch_download`,
@@ -93,48 +97,36 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
 
     const { action, id } = e.detail
 
-    let url = this.baseApiUrlValue
-    let checkboxAction
-    const data = {}
+    this.queue = this.queue || { add: [], remove: [] }
+
+    const url = this.baseApiUrlValue
 
     switch (action) {
       case 'add':
-        url = `${url}/add_to_batch`
-        data.file_ids = [id]
-        checkboxAction = 'add'
+        this.queue.add.push(id)
         break
       case 'remove':
-        url = `${url}/remove_from_batch`
-        data.file_ids = [id]
-        checkboxAction = 'remove'
+        this.queue.remove.push(id)
         break
       case 'add-all':
-        url = `${url}/add_to_batch`
-        data.file_ids = []
-        checkboxAction = 'add'
-
         for (const checkbox of document.querySelectorAll('.f-file-list-file-batch-checkbox__input')) {
           if (checkbox.value && checkbox.value !== 'all') {
             const numericId = parseInt(checkbox.value)
             if (numericId) {
               checkbox.checked = true
-              data.file_ids.push(numericId)
+              this.queue.add.push(numericId)
             }
           }
         }
 
         break
       case 'remove-all':
-        url = `${url}/remove_from_batch`
-        data.file_ids = []
-        checkboxAction = 'remove'
-
         for (const checkbox of document.querySelectorAll('.f-file-list-file-batch-checkbox__input:checked')) {
           if (checkbox.value && checkbox.value !== 'all') {
             const numericId = parseInt(checkbox.value)
             if (numericId) {
               checkbox.checked = false
-              data.file_ids.push(numericId)
+              this.queue.remove.push(numericId)
             }
           }
         }
@@ -142,13 +134,22 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
         break
     }
 
-    if (!url || !data) return
+    if (this.queue.add.length === 0 && this.queue.remove.length === 0) return
+
+    const addCallbackIds = this.queue.add ? [...this.queue.add] : []
+    const removeCallbackIds = this.queue.remove ? [...this.queue.remove] : []
 
     const callback = () => {
-      this.dispatchCheckboxEvents(data.file_ids, checkboxAction)
+      if (addCallbackIds) {
+        this.dispatchCheckboxEvents(addCallbackIds, 'add')
+      }
+
+      if (removeCallbackIds) {
+        this.dispatchCheckboxEvents(removeCallbackIds, 'remove')
+      }
     }
 
-    this.ajax({ url, data, status: 'reloading', callback })
+    this.ajax({ url: `${url}/handle_batch_queue`, data: { queue: this.queue }, status: 'reloading', callback })
   }
 
   ajax ({ url, data, callback, apiMethod = 'apiPost', status = 'loading' }) {
@@ -165,6 +166,9 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
         throw new Error('Failed to perform batch action')
       }
     }).catch((error) => {
+      console.log('if', 'error.name:', error.name, 'AbortError')
+      if (error.name === 'AbortError') return
+
       const message = error.message || 'An error occurred'
       window.FolioConsole.Flash.alert(message)
       this.statusValue = 'loaded'
@@ -210,6 +214,14 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
       for (const checkbox of checkboxes) {
         checkbox.dispatchEvent(new CustomEvent('f-c-files-batch-bar:batchUpdated', { detail: { action: checkboxAction } }))
       }
+    })
+  }
+
+  onReloadTriggerRaw () {
+    console.log('onReloadTriggerRaw')
+    this.ajax({
+      url: `${this.baseApiUrlValue}/batch_bar`,
+      apiMethod: 'apiGet'
     })
   }
 })

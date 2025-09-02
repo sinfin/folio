@@ -15,7 +15,8 @@ class Folio::Console::Files::Batch::BarComponent < Folio::Console::ApplicationCo
                           change_to_propagate: (@change_to_propagate || {}).to_json,
                         },
                         action: {
-                          "f-c-files-batch-bar/action" => "batchActionFromFile",
+                          "f-c-files-batch-bar:action" => "batchActionFromFile",
+                          "f-c-files-batch-bar:reload" => "onReloadTrigger",
                           "f-c-files-batch-bar:message" => "onMessage",
                           "f-c-files-batch-form:submit" => "submitForm",
                           "f-c-files-batch-form:cancel" => "cancelForm",
