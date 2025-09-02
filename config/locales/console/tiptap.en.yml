@@ -5,13 +5,13 @@ en:
       tiptap:
         simple_form_wrap_component:
           editor_title: Editor
-          new_record_alert: Draft changes in the editor are not saved until you first save the %{model}.
 
         simple_form_wrap:
           word_count_component:
             words: Words
             characters: Characters
-          unsaved_changes_component:
+          autosave_info_component:
+            new_record_alert: Draft changes in the editor are not saved until you first save the %{model}.
             title: The editor contains unsaved draft changes.
             continue: Continue editing draft
             discard: Discard draft changes

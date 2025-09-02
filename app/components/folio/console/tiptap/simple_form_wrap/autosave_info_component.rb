@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::Console::Tiptap::SimpleFormWrap::UnsavedChangesComponent < Folio::Console::ApplicationComponent
+class Folio::Console::Tiptap::SimpleFormWrap::AutosaveInfoComponent < Folio::Console::ApplicationComponent
   attr_reader :object
 
   def initialize(object:)
@@ -8,12 +8,25 @@ class Folio::Console::Tiptap::SimpleFormWrap::UnsavedChangesComponent < Folio::C
   end
 
   def data
-    stimulus_controller("f-c-tiptap-simple-form-wrap-unsaved-changes",
+    stimulus_controller("f-c-tiptap-simple-form-wrap-autosave-info",
                         values: {
                           placement_type: object.class.base_class.name,
                           placement_id: object.id,
                           delete_url: helpers.delete_revision_console_api_tiptap_revisions_path,
                         })
+  end
+
+  def render?
+    autosave_enabled?
+  end
+
+  def autosave_enabled?
+    config = object.try(:tiptap_config) || Folio::Tiptap.config
+    config&.autosave == true
+  end
+
+  def has_unsaved_changes?
+    object.has_tiptap_revision?
   end
 
   private

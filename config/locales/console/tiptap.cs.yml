@@ -5,13 +5,13 @@ cs:
       tiptap:
         simple_form_wrap_component:
           editor_title: Editor
-          new_record_alert: Rozepsané změny v editoru se neukládají, dokud %{model} poprvé neuložíte.
 
         simple_form_wrap:
           word_count_component:
             words: Slov
             characters: Znaků
-          unsaved_changes_component:
+          autosave_info_component:
+            new_record_alert: Rozepsané změny v editoru se neukládají, dokud %{model} poprvé neuložíte.
             title: Editor obsahuje neuložené rozepsané změny.
             continue: Pokračovat v rozepsaném
             discard: Zahodit rozepsané změny

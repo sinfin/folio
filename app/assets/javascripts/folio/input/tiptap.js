@@ -140,7 +140,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
           const continueMessage = { type: 'f-input-tiptap:continue-unsaved-changes' }
           this.iframeTarget.contentWindow.postMessage(continueMessage, this.originValue || window.origin)
 
-          // Send event to parent SimpleFormWrapComponent to hide UnsavedChangesComponent
+          // Send event to parent SimpleFormWrapComponent to hide AutosaveInfoComponent
           this.dispatch('tiptapContinueUnsavedChanges', { bubbles: true })
 
           this.hasUnsavedChangesValue = false
@@ -206,7 +206,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     this.iframeTarget.contentWindow.postMessage(data, this.originValue || window.origin)
   }
 
-  // Event received from UnsavedChangesComponent (through SimpleFormWrapComponent) after clicking 'continue'
+  // Event received from AutosaveInfoComponent (through SimpleFormWrapComponent) after clicking 'continue'
   onContinueUnsavedChanges () {
     const data = { type: 'f-input-tiptap:continue-unsaved-changes' }
     this.iframeTarget.contentWindow.postMessage(data, this.originValue || window.origin)

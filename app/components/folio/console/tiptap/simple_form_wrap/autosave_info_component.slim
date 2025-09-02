@@ -1,0 +1,27 @@
+.f-c-tiptap-simple-form-wrap-autosave-info
+  - if object.new_record?
+    == cell("folio/console/ui/alert", t('.new_record_alert', model: object.class.model_name.human.downcase),
+                                      variant: :warning,
+                                      class_name: "m-0",
+                                      closable: false)
+  - elsif has_unsaved_changes?
+    .f-c-tiptap-simple-form-wrap-autosave-info__unsaved_changes data=data
+      .f-c-tiptap-simple-form-wrap-autosave-info__top
+        = folio_icon(:alert,
+                      class: 'f-c-tiptap-simple-form-wrap-autosave-info__top-ico')
+        h3.f-c-tiptap-simple-form-wrap-autosave-info__top-label
+          = t('.title')
+
+      .f-c-tiptap-simple-form-wrap-autosave-info__middle
+        = latest_revision_info
+
+      .f-c-tiptap-simple-form-wrap-autosave-info__bottom
+        .f-c-tiptap-simple-form-wrap-autosave-info__buttons
+          == cell('folio/console/ui/button',
+                  variant: :primary,
+                  label: t('.continue'),
+                  data: stimulus_action(click: "onContinueButtonClick"))
+          == cell('folio/console/ui/button',
+                  variant: :tertiary,
+                  label: t('.discard'),
+                  data: stimulus_action(click: "onDiscardButtonClick"))

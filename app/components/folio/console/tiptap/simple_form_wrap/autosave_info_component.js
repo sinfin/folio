@@ -1,4 +1,4 @@
-window.Folio.Stimulus.register('f-c-tiptap-simple-form-wrap-unsaved-changes', class extends window.Stimulus.Controller {
+window.Folio.Stimulus.register('f-c-tiptap-simple-form-wrap-autosave-info', class extends window.Stimulus.Controller {
   static values = {
     placementType: String,
     placementId: Number,

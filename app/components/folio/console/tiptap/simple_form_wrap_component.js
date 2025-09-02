@@ -52,10 +52,10 @@ window.Folio.Stimulus.register('f-c-tiptap-simple-form-wrap', class extends wind
   }
 
   onTiptapContinueUnsavedChanges (e) {
-    const unsavedChangesComponent = this.element.querySelector('[data-controller*="f-c-tiptap-simple-form-wrap-unsaved-changes"]')
+    const autosaveInfoComponent = this.element.querySelector('[data-controller*="f-c-tiptap-simple-form-wrap-autosave-info"]')
     
-    if (unsavedChangesComponent) {
-      unsavedChangesComponent.style.display = 'none'
+    if (autosaveInfoComponent) {
+      autosaveInfoComponent.style.display = 'none'
     }
   }
 })
