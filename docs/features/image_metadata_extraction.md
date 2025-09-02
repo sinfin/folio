@@ -40,6 +40,9 @@ The metadata extraction system is pre-configured with sensible defaults. Key con
 - `folio_image_metadata_exiftool_options` - ExifTool command options for extraction
 - `folio_image_metadata_merge_keywords_to_tags` - Merge extracted keywords into tag system
 - `folio_image_metadata_locale_priority` - Language priority for multi-language metadata
+- `folio_image_metadata_iptc_charset_candidates` - Charset fallbacks for IPTC encoding repair
+- `folio_image_metadata_field_mappings` - Custom field mappings extending IPTC standard
+- `folio_image_metadata_field_processors` - Custom field processors for formatting and business logic
 
 > Complete configuration with all options available in [`config/initializers/folio_image_metadata.rb`](../config/initializers/folio_image_metadata.rb)
 
@@ -100,6 +103,7 @@ Rails.application.config.folio_image_metadata_field_mappings = {
 Add custom formatting and business logic with I18n support:
 
 ```ruby
+# config/initializers/folio_image_metadata.rb
 Rails.application.config.folio_image_metadata_field_processors = {
   aperture: ->(value) { value ? "f/#{value.to_f}" : nil }
 }
@@ -110,6 +114,7 @@ Rails.application.config.folio_image_metadata_field_processors = {
 Configure automatic source detection for photo agencies:
 
 ```ruby
+# config/initializers/folio_image_metadata.rb
 Rails.application.config.folio_image_metadata_known_providers = [
   { name: "ČTK", patterns: [/ČTK/i, /Czech News Agency/i] },
   { name: "Getty Images", patterns: [/Getty/i, /Getty Images/i] }

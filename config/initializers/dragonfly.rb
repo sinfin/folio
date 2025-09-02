@@ -109,7 +109,8 @@ Dragonfly.app.configure do
         # Use direct ExifTool call with proper UTF-8 charset handling for IPTC
         require "open3"
 
-        command = ["exiftool", "-j", "-G1", "-struct", "-n", "-charset", "iptc=utf8", content.file.path]
+        exiftool_options = Rails.application.config.folio_image_metadata_exiftool_options || ["-G1", "-struct", "-n", "-charset", "iptc=utf8"]
+        command = ["exiftool", "-j"] + exiftool_options + [content.file.path]
         stdout, stderr, status = Open3.capture3(*command)
 
         if status.success?

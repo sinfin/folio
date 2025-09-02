@@ -926,12 +926,14 @@ end
             end
 
             # 2) kandidáti + reverse-bytes (double-mojibake)
-            csets = %w[Windows-1250 Windows-1252 ISO-8859-2 ISO-8859-1 MacRoman]
+            csets = Rails.application.config.folio_image_metadata_iptc_charset_candidates || %w[utf8 cp1250 iso-8859-2 cp1252]
             candidates = []
 
             csets.each do |cs|
-              candidates << str.dup.force_encoding(cs).encode("UTF-8", invalid: :replace, undef: :replace) rescue nil
-              bytes = str.encode(cs, "UTF-8", invalid: :replace, undef: :replace) rescue nil
+              # Convert ExifTool charset notation to Ruby encoding name
+              ruby_encoding = charset_to_ruby_name(cs)
+              candidates << str.dup.force_encoding(ruby_encoding).encode("UTF-8", invalid: :replace, undef: :replace) rescue nil
+              bytes = str.encode(ruby_encoding, "UTF-8", invalid: :replace, undef: :replace) rescue nil
               if bytes
                 candidates << bytes.force_encoding("UTF-8").encode("UTF-8", invalid: :replace, undef: :replace) rescue nil
               end
@@ -957,13 +959,13 @@ end
   end
 
           def charset_to_ruby_name(charset)
-            case charset.to_s.upcase
-            when "UTF8", "UTF-8" then "UTF-8"
-            when "ISO-8859-1", "LATIN1" then "ISO-8859-1"
-            when "ISO-8859-2", "LATIN2" then "ISO-8859-2"
-            when "WINDOWS-1250", "CP1250" then "Windows-1250"
-            when "WINDOWS-1252", "CP1252" then "Windows-1252"
-            when "MACROMAN" then "MacRoman"
+            case charset.to_s.downcase
+            when "utf8", "utf-8" then "UTF-8"
+            when "iso-8859-1", "latin1" then "ISO-8859-1"
+            when "iso-8859-2", "latin2" then "ISO-8859-2"
+            when "windows-1250", "cp1250" then "Windows-1250"
+            when "windows-1252", "cp1252" then "Windows-1252"
+            when "macroman" then "MacRoman"
             else charset
             end
           end

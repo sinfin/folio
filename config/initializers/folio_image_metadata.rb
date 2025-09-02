@@ -64,7 +64,10 @@ Rails.application.config.tap do |config|
   }
 
   # Custom field mappings (extends IPTC standard)
-  config.folio_image_metadata_custom_mappings = {}
+  config.folio_image_metadata_field_mappings = {}
+
+  # Custom field processors (custom formatting and business logic with I18n support)
+  config.folio_image_metadata_field_processors = {}
 
   # Fields to skip during extraction
   config.folio_image_metadata_skip_fields = []
@@ -85,7 +88,7 @@ Rails.application.config.tap do |config|
   # Force UTF-8 pro IPTC (většina moderních souborů má UTF-8 data i když 1:90 auto-detect nefunguje)
   config.folio_image_metadata_exiftool_options = ["-G1", "-struct", "-n", "-charset", "iptc=utf8"] # default
   # When IPTC encoding is wrong or not declared, try these ExifTool IPTC charset fallbacks (order matters)
-  config.folio_image_metadata_iptc_charset_candidates = %w[utf8 cp1250 iso-8859-2 cp1252]
+  config.folio_image_metadata_iptc_charset_candidates = %w[utf8 cp1250 iso-8859-2 cp1252 iso-8859-1 macroman]
 
   # Language priority for Lang Alt fields (dc:description, dc:rights, etc.)
   config.folio_image_metadata_locale_priority = [:en, "x-default"] # English first
