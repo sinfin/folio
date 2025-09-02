@@ -37,6 +37,30 @@ class Folio::File::Image < Folio::File
     [gps_latitude, gps_longitude]
   end
 
+  # Human-friendly geo location for sitemaps and displays
+  # Prefers descriptive place fields, falls back to GPS coordinates
+  def geo_location
+    parts = []
+
+    # Prefer mapped descriptive fields when available
+    if mapped_metadata.present?
+      parts << mapped_metadata[:sublocation]
+      parts << mapped_metadata[:city]
+      parts << mapped_metadata[:state_province]
+      parts << mapped_metadata[:country]
+    end
+
+    human_location = parts.compact.reject(&:blank?).join(", ")
+    return human_location if human_location.present?
+
+    # Fallback to numeric coordinates
+    if gps_latitude.present? && gps_longitude.present?
+      return "#{gps_latitude},#{gps_longitude}"
+    end
+
+    nil
+  end
+
 
   def thumbnailable?
     true
