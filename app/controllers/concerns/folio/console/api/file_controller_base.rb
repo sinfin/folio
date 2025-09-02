@@ -179,6 +179,7 @@ module Folio::Console::Api::FileControllerBase
     end
 
     batch_service.clear_files
+    batch_service.set_form_open(false)
 
     component = Folio::Console::Files::Batch::BarComponent.new(file_klass: @klass,
                                                                change_to_propagate: {
