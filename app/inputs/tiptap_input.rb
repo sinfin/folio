@@ -78,7 +78,7 @@ class TiptapInput < SimpleForm::Inputs::StringInput
       return nil unless autosave_enabled?
 
       latest_revision = @builder.object.latest_tiptap_revision
-      latest_revision&.created_at
+      latest_revision&.created_at || @builder.object.updated_at
     end
 
     def autosave_enabled?
