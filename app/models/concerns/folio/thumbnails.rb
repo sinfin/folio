@@ -12,7 +12,7 @@ module Folio::Thumbnails
                         image/svg+xml]
 
   included do
-    serialize :thumbnail_sizes, Hash
+    serialize :thumbnail_sizes, type: Hash
     before_validation :reset_thumbnails
 
     after_save :run_set_additional_data_job

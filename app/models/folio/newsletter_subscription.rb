@@ -39,8 +39,8 @@ class Folio::NewsletterSubscription < Folio::ApplicationRecord
                     tsearch: { prefix: true }
                   }
 
-  serialize :tags, Array
-  serialize :merge_vars, Hash
+  serialize :tags, type: Array
+  serialize :merge_vars, type: Hash
 
   after_commit do
     if saved_changes? || destroyed?

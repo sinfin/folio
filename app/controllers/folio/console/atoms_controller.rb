@@ -25,7 +25,7 @@ class Folio::Console::AtomsController < Folio::Console::BaseController
                      .without("id", "placement_id")
                      .merge(placement: attrs[:placement_type].constantize.new,
                             position: i + 1)
-
+                            binding.pry
         @atoms[locale] << attrs["type"].constantize
                                        .new(props)
       end
