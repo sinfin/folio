@@ -66,7 +66,8 @@ export const FolioTiptapSaveButton = React.forwardRef<
       // Time only for today: "Uloženo v 14:23" / "Saved at 14:23"
       const timeStr = date.toLocaleTimeString("cs-CZ", {
         hour: '2-digit',
-        minute: '2-digit'
+        minute: '2-digit',
+        second: '2-digit'
       });
       return `${translate(TRANSLATIONS, "saveAt")} ${timeStr}`;
     } else {
