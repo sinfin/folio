@@ -147,6 +147,10 @@ class Folio::FileTest < ActiveSupport::TestCase
   test "validate_attribution_and_texts_if_needed" do
     I18n.with_locale(:cs) do
       file = create(:folio_file_image)
+      # Add placement so validations are enforced
+      page = create(:folio_page)
+      page.update!(cover: file)
+
       assert file.update(alt: "foo")
       assert file.update(alt: nil)
 
@@ -172,6 +176,35 @@ class Folio::FileTest < ActiveSupport::TestCase
         assert file.update!(author: "foo")
         assert_not file.update(author: nil)
         assert_equal "Autor nebo zdroj je povinný", file.errors.full_messages.join(". ")
+      end
+    end
+  end
+
+  test "validate_attribution_and_texts_if_needed skips validation for unused files" do
+    I18n.with_locale(:cs) do
+      # Create unused file (no placements)
+      unused_file = create(:folio_file_image, author: "test author", alt: "test alt", description: "test description")
+      assert_equal 0, unused_file.file_placements.count
+
+      # Create used file (with placement)
+      used_file = create(:folio_file_image, author: "test author", alt: "test alt", description: "test description")
+      page = create(:folio_page)
+      page.update!(cover: used_file)
+      assert used_file.file_placements.count > 0
+
+      Rails.application.config.stub(:folio_files_require_attribution, true) do
+        Rails.application.config.stub(:folio_files_require_alt, true) do
+          Rails.application.config.stub(:folio_files_require_description, true) do
+            # Unused file should allow clearing fields (for EXIF re-extraction)
+            assert unused_file.update(author: nil, attribution_source: nil, attribution_source_url: nil, alt: nil, description: nil)
+            assert_empty unused_file.errors.full_messages
+
+            # Used file should still enforce validations
+            assert_not used_file.update(author: nil, attribution_source: nil, attribution_source_url: nil, alt: nil, description: nil)
+            expected_errors = ["Autor nebo zdroj je povinný", "Alt je povinná položka", "Popis je povinná položka"]
+            assert_equal expected_errors, used_file.errors.full_messages
+          end
+        end
       end
     end
   end
