@@ -108,7 +108,7 @@ cs:
       create: Vytvořit
       delete: Smazat
       current_users:
-        console_url_bar:
+        console_url_bar_component:
           title: Tuto stránku nyní upravuje
           text: Vyčkejte, až dokončí úpravy. Při současné úpravě by mohlo dojít ke ztrátě rozpracovaného obsahu.
         show_component:

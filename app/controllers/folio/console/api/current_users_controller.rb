@@ -3,7 +3,7 @@
 class Folio::Console::Api::CurrentUsersController < Folio::Console::Api::BaseController
   def console_url_ping
     Folio::Current.user.update_console_url!(params.require(:url))
-    head 200
+    head 204
   end
 
   def update_console_preferences
