@@ -51,11 +51,26 @@ window.Folio.Stimulus.register('f-c-tiptap-simple-form-wrap', class extends wind
     }
   }
 
-  onTiptapContinueUnsavedChanges (e) {
+  callAutosaveInfoMethod(methodName) {
     const autosaveInfoComponent = this.element.querySelector('[data-controller*="f-c-tiptap-simple-form-wrap-autosave-info"]')
-    
+
     if (autosaveInfoComponent) {
-      autosaveInfoComponent.style.display = 'none'
+      const autosaveController = this.application.getControllerForElementAndIdentifier(autosaveInfoComponent, 'f-c-tiptap-simple-form-wrap-autosave-info')
+      if (autosaveController && autosaveController[methodName]) {
+        autosaveController[methodName]()
+      }
     }
+  }
+
+  onTiptapContinueUnsavedChanges (e) {
+    this.callAutosaveInfoMethod('hideUnsavedChanges')
+  }
+
+  onTiptapAutosaveFailed (e) {
+    this.callAutosaveInfoMethod('showFailedToSave')
+  }
+
+  onTiptapAutosaveSucceeded (e) {
+    this.callAutosaveInfoMethod('hideFailedToSave')
   }
 })

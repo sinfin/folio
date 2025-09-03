@@ -34,6 +34,8 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     this.restoreScrollPositions()
     this.setWindowWidth()
     this.sendStartMessage()
+
+    this.autosaveFailed = false
   }
 
   disconnect () {
@@ -373,12 +375,22 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
             updatedAt: response.updated_at
           }
           this.sendMessageToIframe(autoSaveMessage)
+
+          if (this.autosaveFailed) {
+            // Send event to parent SimpleFormWrapComponent to hide failed autosave alert
+            this.dispatch('tiptapAutosaveSucceeded', { bubbles: true })
+            this.autosaveFailed = false
+          }
         }
       })
       .catch((error) => {
         console.warn('[Folio] [Tiptap] Auto-save failed:', error)
 
         this.sendMessageToIframe({ type: 'f-input-tiptap:failed-to-autosave' })
+
+        // Send event to parent SimpleFormWrapComponent to show failed autosave alert
+        this.dispatch('tiptapAutosaveFailed', { bubbles: true })
+        this.autosaveFailed = true
       })
   }
 })

@@ -15,6 +15,7 @@ en:
             title: The editor contains unsaved draft changes.
             continue: Continue editing draft
             discard: Discard draft changes
+            failed_to_save: Connection error. Please check your internet connection.
 
         overlay:
           form_component:

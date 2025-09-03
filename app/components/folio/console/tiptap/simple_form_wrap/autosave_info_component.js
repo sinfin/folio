@@ -5,8 +5,10 @@ window.Folio.Stimulus.register('f-c-tiptap-simple-form-wrap-autosave-info', clas
     deleteUrl: String,
   }
 
+  static targets = ['unsavedChanges', 'failedToSave']
+
   onContinueButtonClick () {
-    this.element.style.display = 'none'
+    this.hideUnsavedChanges()
     this.dispatch('continueUnsavedChanges', { bubbles: true })
   }
 
@@ -27,5 +29,19 @@ window.Folio.Stimulus.register('f-c-tiptap-simple-form-wrap-autosave-info', clas
       .catch((error) => {
         console.warn('[Folio] [Tiptap] Discard failed:', error)
       })
+  }
+
+  hideUnsavedChanges () {
+    if (this.hasUnsavedChangesTarget) {
+      this.unsavedChangesTarget.style.display = 'none'
+    }
+  }
+
+  showFailedToSave () {
+    this.failedToSaveTarget.classList.remove('f-c-tiptap-simple-form-wrap-autosave-info__failed-to-save--hidden')
+  }
+
+  hideFailedToSave () {
+    this.failedToSaveTarget.classList.add('f-c-tiptap-simple-form-wrap-autosave-info__failed-to-save--hidden')
   }
 })
