@@ -16,9 +16,15 @@ class Folio::Users::InvitationsController < Devise::InvitationsController
 
   def create
     self.resource = invite_resource
-    resource_invited = resource.errors.empty?
-
-    resource.update_column(:source_site_id, source_site_for_user.id) if resource_invited
+    resource_invited = if resource.errors.empty?
+      resource.update_column(:source_site_id, source_site_for_user.id)
+      true
+    else
+      # when matching email is found, persisted resource is loaded
+      resource.id = nil
+      resource.instance_variable_set(:@new_record, true) # render NEW, not EDIT
+      false
+    end
 
     respond_to do |format|
       # need to override devise invitable here with devise default
