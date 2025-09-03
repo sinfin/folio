@@ -14,9 +14,9 @@ class TiptapInput < SimpleForm::Inputs::StringInput
                         render_url: @builder.template.render_nodes_console_api_tiptap_path,
                         auto_save: tiptap_autosave_enabled?,
                         auto_save_url: @builder.template.save_revision_console_api_tiptap_revisions_path,
-                        new_record: @builder.object.new_record?,
-                        placement_type: @builder.object.class.base_class.name,
-                        placement_id: @builder.object.id,
+                        new_record: safe_new_record?,
+                        placement_type: safe_placement_type,
+                        placement_id: safe_placement_id,
                         latest_revision_at: latest_revision_at,
                         has_unsaved_changes: has_unsaved_changes?,
                         readonly: @builder.template.instance_variable_get(:@audited_audit).present?,
@@ -68,9 +68,9 @@ class TiptapInput < SimpleForm::Inputs::StringInput
     end
 
     def tiptap_autosave_enabled?
-      return false if @builder.object.new_record?
+      return false if @builder.object.respond_to?(:new_record?) && @builder.object.new_record?
 
-      @builder.object.tiptap_autosave_enabled?
+      @builder.object.respond_to?(:tiptap_autosave_enabled?) && @builder.object.tiptap_autosave_enabled?
     end
 
     def current_user_latest_revision
@@ -78,7 +78,7 @@ class TiptapInput < SimpleForm::Inputs::StringInput
     end
 
     def has_unsaved_changes?
-      return false if @builder.object.new_record?
+      return false if safe_new_record?
 
       current_user_latest_revision.present?
     end
@@ -95,6 +95,27 @@ class TiptapInput < SimpleForm::Inputs::StringInput
     def latest_revision_at
       return nil unless tiptap_autosave_enabled?
 
-      current_user_latest_revision&.updated_at || @builder.object.updated_at
+      current_user_latest_revision&.updated_at || safe_updated_at
     end
+
+    private
+      def safe_new_record?
+        @builder.object.respond_to?(:new_record?) ? @builder.object.new_record? : false
+      end
+
+      def safe_placement_type
+        if @builder.object.class.respond_to?(:base_class)
+          @builder.object.class.base_class.name
+        else
+          @builder.object.class.name
+        end
+      end
+
+      def safe_placement_id
+        @builder.object.respond_to?(:id) ? @builder.object.id : nil
+      end
+
+      def safe_updated_at
+        @builder.object.respond_to?(:updated_at) ? @builder.object.updated_at : Time.current
+      end
 end

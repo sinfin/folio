@@ -103,6 +103,8 @@ module Folio::Tiptap::Model
       # After saving the main model:
       # 1. Mark all other users' revisions as superseded by current user
       # 2. Delete current user's revision (since content is now in main model)
+      return unless Folio::Current.user
+
       superseded_count = tiptap_revisions.where.not(user_id: Folio::Current.user.id)
                                          .update_all(superseded_by_user_id: Folio::Current.user.id)
 
