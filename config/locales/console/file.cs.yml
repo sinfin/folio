@@ -4,7 +4,114 @@ cs:
     console:
       file:
         picker:
-          add_file: Přidat soubor
+          add_file: 'Přidat soubor'
           hint:
-            Folio::File::Audio: "Podporované formáty: MP3, AAC do 1000 MB"
-            Folio::File::Video: "Podporované formáty: MP4, WebM do 1000 MB"
+            Folio::File::Audio: 'Podporované formáty: MP3, AAC do 1000 MB'
+            Folio::File::Video: 'Podporované formáty: MP4, WebM do 1000 MB'
+        metadata_extracted: 'Metadata byla úspěšně extrahována z obrázku'
+        metadata_extraction_failed: 'Nepodařilo se extrahovat metadata z obrázku'
+        uploaded: 'Nahráno'
+        sensitive_content: 'Citlivý obsah'
+        extract_metadata: 'Metadata'
+        extracting: 'Extrahuje se...'
+        no_metadata_found: 'Metadata nenalezena.'
+        no_metadata_description: 'Klikněte na „Extrahovat metadata“ pro automatickou extrakci IPTC/EXIF dat z tohoto souboru.'
+        essential_information: 'Základní informace'
+        rights_attribution: 'Práva a autorství'
+        location: 'Lokalita'
+
+        advanced_metadata: 'Metadata fotografie (IPTC/XMP/EXIF)'
+        advanced_metadata_generic: 'Metadata'
+        show_technical_data: 'Zobrazit technická data'
+        hide_technical_data: 'Skrýt technická data'
+        technical_metadata_readonly: 'Technická metadata (pouze pro čtení)'
+        descriptive_metadata: 'Popisná metadata'
+        technical_metadata: 'Technická metadata'
+        gps_coordinates: 'GPS souřadnice'
+        rights_metadata: 'Práva a autorství'
+        location_metadata: 'Lokalita'
+        metadata_readonly_info: 'Tato metadata jsou automaticky extrahována ze souboru a nelze je upravit. Pro editaci obsahu použijte formulářová pole výše.'
+        not_available: 'Nedostupné'
+        metadata_extracted_at_prefix: 'Metadata automaticky extrahována dne'
+        metadata_extracted_at_suffix: 'Při extrakci se vyplňují pouze prázdná pole, aby se zachovaly ruční úpravy.'
+        has_data: 'obsahuje data'
+        
+        # Metadata field labels (used by React via _translations.slim)
+        metadata:
+          headline: 'Titulek'
+          description: 'Popis'
+          creator: 'Autor'
+          caption_writer: 'Autor popisku'
+          credit_line: 'Credit Line'
+          source: 'Zdroj'
+          copyright_notice: 'Copyright'
+          copyright_marked: 'Copyright označen'
+          usage_terms: 'Podmínky užití'
+          rights_url: 'URL práv'
+          keywords: 'Klíčová slova'
+          intellectual_genre: 'Intelektuální žánr'
+          subject_codes: 'Kódy předmětu'
+          scene_codes: 'Kódy scény'
+          event: 'Událost'
+          category: 'Kategorie'
+          urgency: 'Naléhavost'
+          persons_shown: 'Zobrazené osoby'
+          organizations_shown: 'Zobrazené organizace'
+          location_created: 'Místo vytvoření'
+          location_shown: 'Zobrazené místo'
+          sublocation: 'Místo'
+          city: 'Město'
+          state_province: 'Stát/Kraj'
+          country: 'Země'
+          country_code: 'Kód země'
+          camera_make: 'Výrobce fotoaparátu'
+          camera_model: 'Model fotoaparátu'
+          lens_info: 'Objektiv'
+          capture_date: 'Datum pořízení'
+          software: 'Software'
+          iso_speed: 'ISO'
+          aperture: 'Clona'
+          shutter_speed: 'Rychlost závěrky'
+          focal_length: 'Ohnisková vzdálenost'
+          # Field labels
+          flash_label: 'Blesk'
+          white_balance_label: 'Vyvážení bílé'
+          exposure_mode_label: 'Režim expozice'
+          exposure_compensation: 'Kompenzace expozice'
+          metering_mode_label: 'Režim měření'
+          orientation: 'Orientace'
+          color_space_label: 'Barevný prostor'
+          gps_coordinates: 'GPS souřadnice'
+          gps_latitude: 'GPS šířka'
+          gps_longitude: 'GPS délka'
+          
+          # Field values
+          flash_values:
+            not_used: "Nepoužit"
+            used: "Použit"
+            used_with_value: "Použit (%{value})"
+          
+          white_balance_values:
+            auto: "Auto"
+            manual: "Manuální"
+          
+          exposure_mode_values:
+            auto: "Auto"
+            manual: "Manuální"
+            aperture_priority: "Auto s prioritou clony"
+          
+          metering_mode_values:
+            average: "Průměrné"
+            center_weighted: "Středově vážené"
+            spot: "Bodové"
+            matrix: "Maticové"
+          
+          color_space_values:
+            srgb: "sRGB"
+            adobe_rgb: "Adobe RGB"
+
+          
+      files:
+        metadata_extracted: 'Metadata byla úspěšně extrahována z obrázku'
+        metadata_extraction_failed: 'Nepodařilo se extrahovat metadata z obrázku'
+      

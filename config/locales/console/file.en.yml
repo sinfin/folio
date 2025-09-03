@@ -8,3 +8,108 @@ en:
           hint:
             Folio::File::Audio: "Supported formats: MP3, AAC do 1000 MB"
             Folio::File::Video: "Supported formats: MP4, WebM do 1000 MB"
+        metadata_extracted: "Metadata successfully extracted from image"
+        metadata_extraction_failed: "Failed to extract metadata from image"
+        uploaded: "Uploaded"
+        sensitive_content: "Sensitive content"
+        extract_metadata: "Metadata"
+        extracting: "Extracting..."
+        no_metadata_found: "No metadata found."
+        no_metadata_description: "Click \"Extract Metadata\" to automatically extract IPTC/EXIF data from this file."
+        essential_information: "Essential Information"
+        rights_attribution: "Rights & Attribution"
+        location: "Location"
+
+        advanced_metadata: "Image Metadata (IPTC/XMP/EXIF)"
+        advanced_metadata_generic: "Metadata"
+        show_technical_data: "Show Technical Data"
+        hide_technical_data: "Hide Technical Data"
+        technical_metadata_readonly: "Technical Metadata (Read-only)"
+        descriptive_metadata: 'Descriptive Information'
+        technical_metadata: 'Technical Information'
+        gps_coordinates: 'GPS Coordinates'
+        rights_metadata: 'Rights & Attribution'
+        location_metadata: 'Location Information'
+        metadata_readonly_info: 'This metadata is extracted automatically from the file and is read-only. Use the form fields above to edit user-facing content.'
+        not_available: "Not available"
+        metadata_extracted_at_prefix: "Metadata automatically extracted on"
+        metadata_extracted_at_suffix: "Only blank fields are populated during extraction to preserve manual edits."
+        has_data: "has data"
+        
+        # Metadata field labels (used by React via _translations.slim)
+        metadata:
+          headline: "Headline"
+          description: "Description"
+          creator: "Creator"
+          caption_writer: "Caption Writer"
+          credit_line: "Credit Line"
+          source: "Source"
+          copyright_notice: "Copyright Notice"
+          copyright_marked: "Copyright Marked"
+          usage_terms: "Usage Terms"
+          rights_url: "Rights URL"
+          keywords: "Keywords"
+          intellectual_genre: "Intellectual Genre"
+          subject_codes: "Subject Codes"
+          scene_codes: "Scene Codes"
+          event: "Event"
+          category: "Category"
+          urgency: "Urgency"
+          persons_shown: "Persons Shown"
+          organizations_shown: "Organizations Shown"
+          location_created: "Location Created"
+          location_shown: "Location Shown"
+          sublocation: "Sublocation"
+          city: "City"
+          state_province: "State/Province"
+          country: "Country"
+          country_code: "Country Code"
+          camera_make: "Camera Make"
+          camera_model: "Camera Model"
+          lens_info: "Lens Info"
+          capture_date: "Capture Date"
+          software: "Software"
+          iso_speed: "ISO Speed"
+          aperture: "Aperture"
+          shutter_speed: "Shutter Speed"
+          focal_length: "Focal Length"
+          # Field labels
+          flash_label: "Flash"
+          white_balance_label: "White Balance"
+          exposure_mode_label: "Exposure Mode"
+          exposure_compensation: "Exposure Compensation"
+          metering_mode_label: "Metering Mode"
+          orientation: "Orientation"
+          color_space_label: "Color Space"
+          gps_coordinates: "GPS Coordinates"
+          gps_latitude: "GPS Latitude"
+          gps_longitude: "GPS Longitude"
+          
+          # Field values
+          flash_values:
+            not_used: "Not used"
+            used: "Used"
+            used_with_value: "Used (%{value})"
+          
+          white_balance_values:
+            auto: "Auto"
+            manual: "Manual"
+          
+          exposure_mode_values:
+            auto: "Auto"
+            manual: "Manual"
+            aperture_priority: "Aperture priority"
+          
+          metering_mode_values:
+            average: "Average"
+            center_weighted: "Center-weighted"
+            spot: "Spot"
+            matrix: "Matrix"
+          
+          color_space_values:
+            srgb: "sRGB"
+            adobe_rgb: "Adobe RGB"
+          
+      files:
+        metadata_extracted: "Metadata successfully extracted from image"
+        metadata_extraction_failed: "Failed to extract metadata from image"

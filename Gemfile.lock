@@ -22,6 +22,7 @@ PATH
       babel-transpiler
       breadcrumbs_on_rails
       cancancan
+      charlock_holmes
       cocoon
       coffee-rails (~> 5.0)
       countries
@@ -239,6 +240,7 @@ GEM
     cells-slim (0.0.6)
       cells (>= 4.0.1, < 6.0.0)
       slim (~> 3.0)
+    charlock_holmes (0.7.9)
     childprocess (5.1.0)
       logger (~> 1.5)
     chronic (0.10.2)
@@ -763,6 +765,7 @@ GEM
 PLATFORMS
   arm64-darwin-22
   arm64-darwin-23
+  arm64-darwin-24
   x86_64-linux
 
 DEPENDENCIES

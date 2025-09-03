@@ -31,16 +31,35 @@ end
 class ActiveSupport::TestCase
   require Folio::Engine.root.join("test/support/sites_helper")
   require Folio::Engine.root.join("test/support/method_invoking_matchers_helper")
+  require Folio::Engine.root.join("test/support/metadata_test_helpers")
 
   parallelize
 
   include FactoryBot::Syntax::Methods
   include MethodInvokingMatchersHelper
   include SitesHelper
+  include MetadataTestHelpers
 
   def setup
     super
     Folio::Current.reset
+  end
+
+  def with_config(**config_overrides)
+    original_values = {}
+
+    # Store original values
+    config_overrides.each do |key, value|
+      original_values[key] = Rails.application.config.send(key)
+      Rails.application.config.send("#{key}=", value)
+    end
+
+    yield
+  ensure
+    # Restore original values
+    original_values.each do |key, value|
+      Rails.application.config.send("#{key}=", value)
+    end
   end
 
   def reset_folio_current(site_user_link)
