@@ -12,17 +12,12 @@ class Folio::Console::Tiptap::SimpleFormWrap::AutosaveInfoComponent < Folio::Con
                         values: {
                           placement_type: object.class.base_class.name,
                           placement_id: object.id,
-                          delete_url: helpers.delete_revision_console_api_tiptap_revisions_path,
+                          delete_url: controller.delete_revision_console_api_tiptap_revisions_path,
                         })
   end
 
   def render?
-    tiptap_autosave_enabled?
-  end
-
-  def tiptap_autosave_enabled?
-    config = object.try(:tiptap_config) || Folio::Tiptap.config
-    config&.autosave == true
+    object.tiptap_autosave_enabled?
   end
 
   def has_unsaved_changes?

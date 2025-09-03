@@ -102,7 +102,7 @@ class Folio::Console::CurrentUsers::ConsoleUrlBarComponent < Folio::Console::App
       stimulus_controller("f-c-current-users-console-url-bar",
                           values: {
                             api_url: controller.console_url_ping_console_api_current_user_url(format: :json),
-                            takeover_api_url: controller.takeover_console_api_tiptap_revisions_path,
+                            takeover_api_url: controller.takeover_revision_console_api_tiptap_revisions_path,
                             delete_revision_url: controller.delete_revision_console_api_tiptap_revisions_path,
                             from_user_id: other_user_at_url.present? ? other_user_at_url.id : nil,
                             record_id: @record&.id,

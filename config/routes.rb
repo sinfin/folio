@@ -142,7 +142,7 @@ Folio::Engine.routes.draw do
           collection do
             post :save_revision
             delete :delete_revision
-            post :takeover
+            post :takeover_revision
           end
         end
 

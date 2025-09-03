@@ -8,10 +8,7 @@ class Folio::Tiptap::Revision < Folio::ApplicationRecord
   belongs_to :superseded_by_user, class_name: "Folio::User", optional: true
 
   # content validation is intentionally minimal for auto-save
-  validates :user_id, uniqueness: {
-    scope: [:placement_type, :placement_id],
-    message: "can only have one revision per placement"
-  }
+  validates :user_id, uniqueness: { scope: [:placement_type, :placement_id] }
 
   def superseded?
     superseded_by_user_id.present?

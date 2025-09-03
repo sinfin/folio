@@ -415,6 +415,7 @@ const MainToolbarContent = ({
       {folioTiptapConfig?.autosave && (
         <>
           <ToolbarSeparator />
+
           <ToolbarGroup>
             <FolioTiptapSaveButton editor={editor} saveButtonInfo={saveButtonInfo} />
           </ToolbarGroup>

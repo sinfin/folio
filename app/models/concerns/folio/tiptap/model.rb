@@ -28,7 +28,7 @@ module Folio::Tiptap::Model
     has_many :tiptap_revisions, as: :placement, class_name: "Folio::Tiptap::Revision", dependent: :destroy
     before_validation :convert_titap_fields_to_hashes_and_sanitize
     validate :validate_tiptap_fields
-    after_save :cleanup_tiptap_revisions_after_save, if: :autosave_enabled?
+    after_save :cleanup_tiptap_revisions, if: :tiptap_autosave_enabled?
   end
 
   def convert_titap_fields_to_hashes_and_sanitize
@@ -99,7 +99,7 @@ module Folio::Tiptap::Model
   end
 
   private
-    def cleanup_tiptap_revisions_after_save
+    def cleanup_tiptap_revisions
       # After saving the main model:
       # 1. Mark all other users' revisions as superseded by current user
       # 2. Delete current user's revision (since content is now in main model)

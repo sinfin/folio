@@ -30,6 +30,9 @@ en:
             mass_destroy:
               success: Images destroyed
               failure: Failed to destroy images - %{msg}
+        tiptap_revisions:
+          takeover_revision:
+            no_revision_found: "No revision found for user %{user_id} on %{record_type}#%{record_id}"
         aasm:
           failure_title: Failure
           failure_detail: Failed to change the state.
@@ -117,7 +120,7 @@ en:
             back: Back
             outdated_title: The page was edited by %{edited_by} to a newer version (%{edited_at})
             outdated_text: You are working with an outdated version. To continue editing, you need to proceed with the current version.
-            outdated_continue: Continue with the current version
+            outdated_continue: Discard changes and continue with the current version
         show_component:
           title: My profile
           title/sign_in: Login

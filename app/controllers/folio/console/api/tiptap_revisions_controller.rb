@@ -30,13 +30,15 @@ class Folio::Console::Api::TiptapRevisionsController < Folio::Console::Api::Base
     end
   end
 
-  def takeover
+  def takeover_revision
     from_user = Folio::User.find(params[:from_user_id])
     record_class = params[:record_type].constantize
     record = record_class.find(params[:record_id])
 
     from_revision = record.tiptap_revisions.find_by(user: from_user)
-    return render json: { error: "No revision found for this user" }, status: :not_found unless from_revision
+    return render json: {
+      error: t(".no_revision_found", user_id: from_user.id, record_id: record.id, record_type: record.class.name)
+    }, status: :not_found unless from_revision
 
     to_revision = record.tiptap_revisions.find_or_initialize_by(user: Folio::Current.user)
     to_revision.content = from_revision.content

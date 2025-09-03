@@ -63,7 +63,7 @@ export const FolioTiptapSaveButton = React.forwardRef<
     const isToday = date.toDateString() === now.toDateString();
 
     if (isToday) {
-      // Time only for today: "Uloženo v 14:23" / "Saved at 14:23"
+      // Time only for today: "Uloženo v 14:23:45" / "Saved at 14:23:45"
       const timeStr = date.toLocaleTimeString("cs-CZ", {
         hour: '2-digit',
         minute: '2-digit',
@@ -71,7 +71,7 @@ export const FolioTiptapSaveButton = React.forwardRef<
       });
       return `${translate(TRANSLATIONS, "saveAt")} ${timeStr}`;
     } else {
-      // Date + time for older saves: "Uloženo 31.8. 14:23" / "Saved on 31.8. 14:23"
+      // Date + time for older saves: "Uloženo 31.8. 14:23:45" / "Saved on 31.8. 14:23:45"
       const dateTimeStr = date.toLocaleDateString("cs-CZ", {
         day: 'numeric',
         month: 'numeric',

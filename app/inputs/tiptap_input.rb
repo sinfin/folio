@@ -70,8 +70,7 @@ class TiptapInput < SimpleForm::Inputs::StringInput
     def tiptap_autosave_enabled?
       return false if @builder.object.new_record?
 
-      config = @builder.object.try(:tiptap_config) || Folio::Tiptap.config
-      config&.autosave == true
+      @builder.object.tiptap_autosave_enabled?
     end
 
     def current_user_latest_revision

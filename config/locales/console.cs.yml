@@ -30,6 +30,9 @@ cs:
             mass_destroy:
               success: Obrázky smazány
               failure: Obrázky se nepodařilo smazat - %{msg}
+        tiptap_revisions:
+          takeover_revision:
+            no_revision_found: "Nenalezena rozpracovaná verze pro uživatele %{user_id} u %{record_type}#%{record_id}"
         aasm:
           failure_title: Neúspěch
           failure_detail: Nepodařilo se změnit stav záznamu.
@@ -118,7 +121,7 @@ cs:
             back: Zpět
             outdated_title: Stránka byla upravena uživatelem %{edited_by} na novější verzi (%{edited_at})
             outdated_text: Pracujete s neaktuální verzí. Pro další editaci je potřeba pokračovat v aktualní verzi.
-            outdated_continue: Pokračovat s aktuální verzí
+            outdated_continue: Zahodit změny a pokračovat v aktuální verzi
         show_component:
           title: Můj profil
           title/sign_in: Přihlašovací jméno
