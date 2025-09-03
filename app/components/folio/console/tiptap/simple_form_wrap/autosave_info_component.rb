@@ -32,6 +32,6 @@ class Folio::Console::Tiptap::SimpleFormWrap::AutosaveInfoComponent < Folio::Con
   private
     def latest_revision_info
       latest_revision = object.latest_tiptap_revision(user: Folio::Current.user)
-      "#{l(latest_revision.created_at, format: :short)} – #{latest_revision.user.full_name}"
+      l(latest_revision.created_at, format: :short)
     end
 end
