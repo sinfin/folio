@@ -12,7 +12,7 @@ class TiptapInput < SimpleForm::Inputs::StringInput
                         origin: ENV["FOLIO_TIPTAP_DEV"] ? "*" : "",
                         type: tiptap_type,
                         render_url: @builder.template.render_nodes_console_api_tiptap_path,
-                        auto_save: autosave_enabled?,
+                        auto_save: tiptap_autosave_enabled?,
                         auto_save_url: @builder.template.save_revision_console_api_tiptap_revisions_path,
                         new_record: @builder.object.new_record?,
                         placement_type: @builder.object.class.base_class.name,
@@ -67,7 +67,7 @@ class TiptapInput < SimpleForm::Inputs::StringInput
       (@builder.object.try(:tiptap_config) || Folio::Tiptap.config).to_input_json
     end
 
-    def autosave_enabled?
+    def tiptap_autosave_enabled?
       return false if @builder.object.new_record?
 
       config = @builder.object.try(:tiptap_config) || Folio::Tiptap.config
@@ -75,7 +75,7 @@ class TiptapInput < SimpleForm::Inputs::StringInput
     end
 
     def current_user_latest_revision
-      @current_user_latest_revision ||= @builder.object.latest_tiptap_revision
+      @current_user_latest_revision ||= @builder.object.try(:latest_tiptap_revision)
     end
 
     def has_unsaved_changes?
@@ -85,7 +85,7 @@ class TiptapInput < SimpleForm::Inputs::StringInput
     end
 
     def latest_revision_content
-      return nil unless autosave_enabled?
+      return nil unless tiptap_autosave_enabled?
 
       if current_user_latest_revision&.content.present?
         value_keys = Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE
@@ -94,7 +94,7 @@ class TiptapInput < SimpleForm::Inputs::StringInput
     end
 
     def latest_revision_at
-      return nil unless autosave_enabled?
+      return nil unless tiptap_autosave_enabled?
 
       current_user_latest_revision&.updated_at || @builder.object.updated_at
     end

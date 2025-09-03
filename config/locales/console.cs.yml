@@ -111,6 +111,14 @@ cs:
         console_url_bar_component:
           title: Tuto stránku nyní upravuje
           text: Vyčkejte, až dokončí úpravy. Při současné úpravě by mohlo dojít ke ztrátě rozpracovaného obsahu.
+          autosave:
+            title: Tuto stránku nyní upravuje %{edited_by} (od %{edited_at})
+            text: Úpravou článku můžete smazat neuložené změny. Chcete přesto převzít úpravu?
+            takeover: Převzít úpravu
+            back: Zpět
+            outdated_title: Stránka byla upravena uživatelem %{edited_by} na novější verzi (%{edited_at})
+            outdated_text: Pracujete s neaktuální verzí. Pro další editaci je potřeba pokračovat v aktualní verzi.
+            outdated_continue: Pokračovat s aktuální verzí
         show_component:
           title: Můj profil
           title/sign_in: Přihlašovací jméno

@@ -17,10 +17,10 @@ class Folio::Console::Tiptap::SimpleFormWrap::AutosaveInfoComponent < Folio::Con
   end
 
   def render?
-    autosave_enabled?
+    tiptap_autosave_enabled?
   end
 
-  def autosave_enabled?
+  def tiptap_autosave_enabled?
     config = object.try(:tiptap_config) || Folio::Tiptap.config
     config&.autosave == true
   end
