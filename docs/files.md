@@ -57,10 +57,19 @@ Manual editing of file or placement models is only recommended for advanced use 
 ### Image Metadata Extraction
 Folio can automatically extract full **EXIF & IPTC** metadata from uploaded images when **exiftool** is available on the server.
 
+**Installation:**
 • Install on macOS: `brew install exiftool`  
 • Install on Ubuntu: `sudo apt install exiftool`
 
-Once installed, metadata of every new image is stored in `Folio::File::Image.file_metadata`.
+**How it works:**
+- Uses `multi_exiftool` gem via Dragonfly analyser
+- Metadata extracted automatically on image upload (`after_assign` callback)
+- All metadata stored as JSON in `file_metadata` database column
+- Available helper methods: `title`, `caption`, `keywords`, `geo_location`
+
+**Fill missing metadata:** `rake folio:file:fill_missing_metadata`
+
+📋 **[See full Image Metadata Extraction feature specification →](../features/image_metadata_extraction.md)**
 
 ---
 

@@ -9,9 +9,11 @@ class Folio::Console::FileSerializer
   attributes :id,
              :file_size,
              :file_name,
+             :file_mime_type,
              :file_width,
              :file_height,
              :type,
+             :created_at,
              :thumbnail_sizes,
              :author,
              :attribution_source,
@@ -24,7 +26,17 @@ class Folio::Console::FileSerializer
              :default_gravity,
              :default_gravities_for_select,
              :aasm_state,
-             :alt
+             :alt,
+             :headline,
+             :capture_date,
+             :gps_latitude,
+             :gps_longitude,
+             :file_metadata_extracted_at
+
+  # Mapped metadata using IptcFieldMapper
+  attribute :mapped_metadata do |object|
+    object.respond_to?(:mapped_metadata) ? object.mapped_metadata : {}
+  end
 
   attribute :human_type do |object|
     object.class.human_type

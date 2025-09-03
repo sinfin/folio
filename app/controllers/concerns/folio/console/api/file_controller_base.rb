@@ -231,6 +231,32 @@ module Folio::Console::Api::FileControllerBase
     render_record(folio_console_record, Folio::Console::FileSerializer)
   end
 
+  def extract_metadata
+    return render(json: { error: "Not supported for this file type" }, status: 422) unless folio_console_record.respond_to?(:extract_metadata!)
+
+    # Force re-extraction synchronously for immediate UI feedback
+    if folio_console_record.respond_to?(:extract_metadata!)
+      # Run synchronous extraction with force flag
+      folio_console_record.extract_metadata!(force: true, user_id: Folio::Current.user&.id)
+      folio_console_record.reload
+
+      # Broadcast for live UI update (MessageBus JSON payload)
+      broadcast_metadata_extracted(folio_console_record)
+
+      render_record(folio_console_record, Folio::Console::FileSerializer, meta: {
+        flash: {
+          success: t("folio.console.files.metadata_extracted")
+        }
+      })
+    else
+      render json: { error: "Metadata extraction not available" }, status: 422
+    end
+  rescue => e
+    Rails.logger.error "Metadata extraction failed: #{e.message}"
+    Rails.logger.error e.backtrace.join("\n")
+    render json: { error: t("folio.console.files.metadata_extraction_failed") }, status: 500
+  end
+
   private
     def folio_console_collection_includes
       [:tags, :file_placements]
@@ -254,6 +280,12 @@ module Folio::Console::Api::FileControllerBase
         :sensitive_content,
         :default_gravity,
         :alt,
+        # IPTC Core metadata fields (writable)
+        :headline,
+        :capture_date,
+        :gps_latitude,
+        :gps_longitude,
+        :file_metadata_extracted_at
       ]
 
       test_instance = @klass.new
@@ -273,14 +305,37 @@ module Folio::Console::Api::FileControllerBase
 
     def file_params
       p = params.require(:file)
-                .require(:attributes)
-                .permit(*file_params_whitelist)
+                  .require(:attributes)
+                  .permit(*file_params_whitelist)
 
       if p[:tags].present? && p[:tag_list].blank?
         p[:tag_list] = p.delete(:tags).join(",")
       end
 
       p
+    end
+
+    def broadcast_metadata_extracted(file)
+      return unless defined?(MessageBus)
+      return unless Folio::Current.user
+
+      begin
+        serialized = Folio::Console::FileSerializer.new(file).serializable_hash
+        attrs = serialized[:data][:attributes]
+      rescue
+        attrs = {}
+      end
+
+      message_data = {
+        type: "Folio::File::MetadataExtracted",
+        file: {
+          id: file.id,
+          type: file.class.name,
+          attributes: attrs
+        }
+      }
+
+      MessageBus.publish(Folio::MESSAGE_BUS_CHANNEL, message_data.to_json, user_ids: [Folio::Current.user.id])
     end
 
     def index_json

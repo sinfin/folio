@@ -34,14 +34,30 @@ class Folio::S3::ClientTest < ActiveSupport::TestCase
     end
 
     @instance.stub(:use_local_file_system?, false) do
-      url = @instance.test_aware_presign_url(s3_path:)
-      expected = s3_url_without_path + "test_files/" + s3_path
-      assert url.starts_with?(expected), "#{url} should start with #{expected}"
+      # Stub AWS presigner to avoid real AWS credential chain (SSO) during tests
+      fake_presigner = Class.new do
+        def initialize(url); @url = url; end
+        def presigned_url(*); @url; end
+      end.new(s3_url_without_path + "test_files/" + s3_path)
+
+      @instance.stub(:s3_presigner, fake_presigner) do
+        url = @instance.test_aware_presign_url(s3_path:)
+        expected = s3_url_without_path + "test_files/" + s3_path
+        assert url.starts_with?(expected), "#{url} should start with #{expected}"
+      end
     end
 
     @instance.stub(:use_local_file_system?, false) do
-      url =  Rails.env.stub(:test?, false) do
-        @instance.test_aware_presign_url(s3_path:)
+      # Non-test env branch: also stub presigner to keep test deterministic
+      fake_presigner = Class.new do
+        def initialize(url); @url = url; end
+        def presigned_url(*); @url; end
+      end.new(s3_url_without_path + s3_path)
+
+      url = Rails.env.stub(:test?, false) do
+        @instance.stub(:s3_presigner, fake_presigner) do
+          @instance.test_aware_presign_url(s3_path:)
+        end
       end
       expected = s3_url_without_path + s3_path
       assert url.starts_with?(expected), "#{url} should start with #{expected}"

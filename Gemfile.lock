@@ -23,6 +23,7 @@ PATH
       cancancan
       cells-rails
       cells-slim
+      charlock_holmes
       cocoon
       countries
       country_select
@@ -235,6 +236,7 @@ GEM
     cells-slim (0.0.6)
       cells (>= 4.0.1, < 6.0.0)
       slim (~> 3.0)
+    charlock_holmes (0.7.9)
     childprocess (5.1.0)
       logger (~> 1.5)
     chronic (0.10.2)
@@ -773,6 +775,7 @@ GEM
 PLATFORMS
   arm64-darwin-22
   arm64-darwin-23
+  arm64-darwin-24
   x86_64-linux
 
 DEPENDENCIES
