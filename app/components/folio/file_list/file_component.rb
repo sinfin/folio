@@ -152,7 +152,7 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
     return nil unless @primary_action
     return @primary_action_data if defined?(@primary_action_data)
 
-    @primary_action_data = if @primary_action == "index"
+    @primary_action_data = if @primary_action.to_s.in?(%w[edit index])
       if @editable
         stimulus_action({ click: "primaryAction" }, { url: show_url })
       end

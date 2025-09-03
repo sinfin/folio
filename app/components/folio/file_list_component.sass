@@ -35,6 +35,9 @@
     &:hover
       text-decoration: underline
 
+  &__blank:not([hidden]) + &__flex
+    margin-top: 2 * $grid-gutter-base
+
   @for $i from 13 through 3
     @container (max-width: #{($i * 168px) + (($i - 1) * 8px) + 1})
       &__flex-item

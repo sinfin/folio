@@ -188,7 +188,7 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
   primaryAction (e) {
     e.preventDefault()
 
-    if (this.primaryAction === 'index_for_modal') {
+    if (this.primaryActionValue === 'index_for_modal') {
       this.dispatch('select', { detail: { fileId: this.idValue } })
     } else if (this.primaryActionValue === 'index') {
       if (!e || !e.params || !e.params.url) return
@@ -229,6 +229,11 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
 
       window.Folio.Api.apiDelete(e.params.url).then(() => {
         this.removeParentOrElement()
+        // notify batch bar to reload
+        const batchBar = document.querySelector('.f-c-files-batch-bar')
+        if (batchBar) {
+          batchBar.dispatchEvent(new CustomEvent('f-c-files-batch-bar:reload'))
+        }
       }).catch((error) => {
         this.element.classList.remove('f-file-list-file--destroying')
         window.alert(`Failed to delete file: ${error.message}`)
