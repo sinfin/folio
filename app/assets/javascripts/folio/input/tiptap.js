@@ -1,6 +1,8 @@
 window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.Controller {
   static targets = ['input', 'iframe', 'loader']
 
+  static AUTO_SAVE_DELAY = 1000
+
   static values = {
     loaded: { type: Boolean, default: false },
     readonly: { type: Boolean, default: false },
@@ -8,8 +10,15 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     origin: String,
     type: String,
     renderUrl: String,
+    autoSaveUrl: String,
     tiptapConfigJson: String,
-    tiptapContentJsonStructureJson: String
+    tiptapContentJsonStructureJson: String,
+    autoSave: { type: Boolean, default: false },
+    newRecord: { type: Boolean, default: false },
+    placementType: String,
+    placementId: Number,
+    latestRevisionAt: String,
+    hasUnsavedChanges: { type: Boolean, default: false }
   }
 
   connect () {
@@ -18,9 +27,15 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
       this.sendWindowResizeMessage()
     })
 
+    this.debouncedAutoSave = window.Folio.debounce(() => {
+      this.performAutoSave()
+    }, this.constructor.AUTO_SAVE_DELAY)
+
     this.restoreScrollPositions()
     this.setWindowWidth()
     this.sendStartMessage()
+
+    this.autosaveFailed = false
   }
 
   disconnect () {
@@ -41,6 +56,10 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
       windowWidth: this.windowWidth
     }
 
+    this.sendMessageToIframe(data)
+  }
+
+  sendMessageToIframe (data) {
     this.iframeTarget.contentWindow.postMessage(data, this.originValue || window.origin)
   }
 
@@ -74,7 +93,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
         this.openLinkPopover(e.data.urlJson)
         break
       case 'f-tiptap-editor:initialized-content':
-        this.setInputValue(e.data.content)
+        this.setInputValue(e.data.content, { isInitialization: true })
         this.ignoreValueChangesValue = false
         break
       case 'f-tiptap-editor:show-html':
@@ -83,7 +102,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     }
   }
 
-  setInputValue (content) {
+  setInputValue (content, options = {}) {
     const textsArray = []
 
     if (content) {
@@ -118,6 +137,18 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     if (!this.ignoreValueChangesValue) {
       this.inputTarget.dispatchEvent(new window.Event('change', { bubbles: true }))
       this.dispatch('updateWordCount', { detail: { wordCount } })
+
+      if (this.autoSaveValue && content && !options.isInitialization) {
+        this.latestContent = content
+        this.debouncedAutoSave()
+
+        if (this.hasUnsavedChangesValue) {
+          this.onContinueUnsavedChanges()
+
+          // Send event to parent SimpleFormWrapComponent to hide AutosaveInfoComponent
+          this.dispatch('tiptapContinueUnsavedChanges', { bubbles: true })
+        }
+      }
     }
   }
 
@@ -159,7 +190,12 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
       folioTiptapConfig: this.tiptapConfigJsonValue ? JSON.parse(this.tiptapConfigJsonValue) : {},
       windowWidth: this.windowWidth,
       tiptapScrollTop: this.tiptapScrollTop || 0,
-      readonly: this.readonlyValue
+      readonly: this.readonlyValue,
+      saveButtonInfo: {
+        newRecord: this.newRecordValue,
+        hasUnsavedChanges: this.hasUnsavedChangesValue,
+        latestRevisionAt: this.latestRevisionAtValue || null
+      }
     }
 
     if (this.originValue === '*') {
@@ -170,7 +206,14 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
       }
     }
 
-    this.iframeTarget.contentWindow.postMessage(data, this.originValue || window.origin)
+    this.sendMessageToIframe(data)
+  }
+
+  // Event received from AutosaveInfoComponent (through SimpleFormWrapComponent) after clicking 'continue'
+  onContinueUnsavedChanges () {
+    this.sendMessageToIframe({ type: 'f-input-tiptap:autosave:continue-unsaved-changes' })
+
+    this.hasUnsavedChangesValue = false
   }
 
   onRenderNodeMessage (e) {
@@ -219,7 +262,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
       nodes
     }
 
-    this.iframeTarget.contentWindow.postMessage(data, this.originValue || window.origin)
+    this.sendMessageToIframe(data)
   }
 
   openLinkPopover (urlJson) {
@@ -239,7 +282,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
       urlJson
     }
 
-    this.iframeTarget.contentWindow.postMessage(data, this.originValue || window.origin)
+    this.sendMessageToIframe(data)
   }
 
   showHtmlInModal (html) {
@@ -306,5 +349,48 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     } catch (e) {
       console.error('Failed to restore scroll positions:', e)
     }
+  }
+
+  performAutoSave () {
+    if (!this.autoSaveValue || !this.autoSaveUrlValue || !this.placementTypeValue || !this.placementIdValue) return
+    if (!this.latestContent) return
+
+    const data = {
+      tiptap_revision: {
+        content: this.latestContent
+      },
+      placement: {
+        type: this.placementTypeValue,
+        id: this.placementIdValue
+      }
+    }
+
+    window.Folio.Api.apiPost(this.autoSaveUrlValue, data)
+      .then((response) => {
+        if (response && response.success) {
+          console.log('[Folio] [Tiptap] Auto-saved revision:', response.revision_id)
+
+          const autoSaveMessage = {
+            type: 'f-input-tiptap:autosave:auto-saved',
+            updatedAt: response.updated_at
+          }
+          this.sendMessageToIframe(autoSaveMessage)
+
+          if (this.autosaveFailed) {
+            // Send event to parent SimpleFormWrapComponent to hide failed autosave alert
+            this.dispatch('tiptapAutosaveSucceeded', { bubbles: true })
+            this.autosaveFailed = false
+          }
+        }
+      })
+      .catch((error) => {
+        console.warn('[Folio] [Tiptap] Auto-save failed:', error)
+
+        this.sendMessageToIframe({ type: 'f-input-tiptap:failed-to-autosave' })
+
+        // Send event to parent SimpleFormWrapComponent to show failed autosave alert
+        this.dispatch('tiptapAutosaveFailed', { bubbles: true })
+        this.autosaveFailed = true
+      })
   }
 })

@@ -43,6 +43,14 @@
   &__editors
     position: relative
     z-index: 2
+    display: flex
+    flex-direction: column
+
+  &__editors-autosave
+    flex: 0 0 auto
+
+  &__editors-input-wrap
+    flex: 1 1 100%
 
   &__editors-bar
     z-index: 2
@@ -108,6 +116,10 @@
       position: sticky
       bottom: 0
       box-shadow: 0px 5px 3px 0px rgba(0, 0, 0, 0.15), 2px 2px 15px 2px rgba(0, 0, 0, 0.15)
+
+      // Hide bottom shadow when autosave info is present
+      &:has(+ .f-c-tiptap-simple-form-wrap-autosave-info)
+        box-shadow: 0px -5px 3px 0px rgba(0, 0, 0, 0.15), 2px -2px 15px 2px rgba(0, 0, 0, 0.15)
 
     &__editors
       height: calc(100% - 53px)

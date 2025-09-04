@@ -402,6 +402,7 @@ cs:
       tiptap_must_be_hash_or_json: musí být Hash nebo platný JSON řetězec
       tiptap_must_have_content_key: "musí obsahovat klíč '%{content_key}' s Hash hodnotou"
       tiptap_root_node_must_be_doc: kořenový uzel musí být typu 'doc'
+      tiptap_multiple_folio_tiptap_pages: "obsahuje více než jednu stránkovanou část (%{count})"
 
     attributes:
       documents:

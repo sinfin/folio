@@ -21,6 +21,9 @@ cs:
         undiscard: Odarchivovat
       alt_prompt: Alternativní popisek obrázku
       api:
+        tiptap_revisions:
+          takeover_revision:
+            no_revision_found: "Nenalezena rozpracovaná verze pro uživatele %{user_id} u %{record_type}#%{record_id}"
         aasm:
           failure_title: Neúspěch
           failure_detail: Nepodařilo se změnit stav záznamu.
@@ -99,9 +102,17 @@ cs:
       create: Vytvořit
       delete: Smazat
       current_users:
-        console_url_bar:
+        console_url_bar_component:
           title: Tuto stránku nyní upravuje
           text: Vyčkejte, až dokončí úpravy. Při současné úpravě by mohlo dojít ke ztrátě rozpracovaného obsahu.
+          autosave:
+            title: Tuto stránku nyní upravuje %{edited_by} (od %{edited_at})
+            text: Úpravou článku můžete smazat neuložené změny. Chcete přesto převzít úpravu?
+            takeover: Převzít úpravu
+            back: Zpět
+            outdated_title: Stránka byla upravena uživatelem %{edited_by} na novější verzi (%{edited_at})
+            outdated_text: Pracujete s neaktuální verzí. Pro další editaci je potřeba pokračovat v aktualní verzi.
+            outdated_continue: Zahodit změny a pokračovat v aktuální verzi
         show_component:
           title: Můj profil
           title/sign_in: Přihlašovací jméno

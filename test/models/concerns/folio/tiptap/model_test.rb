@@ -68,6 +68,110 @@ class Folio::Tiptap::ModelTest < ActiveSupport::TestCase
     end
   end
 
+  test "validates folioTiptapPages node count" do
+    page = create(:folio_page)
+
+    Folio::Page.stub(:has_folio_tiptap?, true) do
+      # Test with no folioTiptapPages nodes - should be valid
+      page.tiptap_content = {
+        Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content] => {
+          "type" => "doc",
+          "content" => [
+            {
+              "type" => "paragraph",
+              "content" => [
+                {
+                  "type" => "text",
+                  "text" => "Hello world"
+                }
+              ]
+            }
+          ]
+        }
+      }
+
+      assert page.valid?, "should be valid with no folioTiptapPages nodes"
+
+      # Test with one folioTiptapPages node - should be valid
+      page.tiptap_content = {
+        Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content] => {
+          "type" => "doc",
+          "content" => [
+            {
+              "type" => "folioTiptapPages",
+              "content" => []
+            },
+            {
+              "type" => "paragraph",
+              "content" => [
+                {
+                  "type" => "text",
+                  "text" => "Hello world"
+                }
+              ]
+            }
+          ]
+        }
+      }
+
+      assert page.valid?, "should be valid with one folioTiptapPages node"
+
+      # Test with multiple folioTiptapPages nodes - should be invalid
+      page.tiptap_content = {
+        Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content] => {
+          "type" => "doc",
+          "content" => [
+            {
+              "type" => "folioTiptapPages",
+              "content" => []
+            },
+            {
+              "type" => "paragraph",
+              "content" => [
+                {
+                  "type" => "text",
+                  "text" => "Hello world"
+                }
+              ]
+            },
+            {
+              "type" => "folioTiptapPages",
+              "content" => []
+            }
+          ]
+        }
+      }
+
+      assert_not page.valid?, "should be invalid with multiple folioTiptapPages nodes"
+      assert page.errors[:tiptap_content].present?, "should have tiptap_content error"
+
+      # Test with nested folioTiptapPages nodes - should be invalid
+      page.tiptap_content = {
+        Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content] => {
+          "type" => "doc",
+          "content" => [
+            {
+              "type" => "someContainer",
+              "content" => [
+                {
+                  "type" => "folioTiptapPages",
+                  "content" => []
+                }
+              ]
+            },
+            {
+              "type" => "folioTiptapPages",
+              "content" => []
+            }
+          ]
+        }
+      }
+
+      assert_not page.valid?, "should be invalid with nested folioTiptapPages nodes"
+      assert page.errors[:tiptap_content].present?, "should have tiptap_content error for nested nodes"
+    end
+  end
+
   private
     def dummy_tiptap_doc
       {

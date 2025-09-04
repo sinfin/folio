@@ -148,6 +148,13 @@ Folio::Engine.routes.draw do
 
       namespace :api, constraints: -> (req) { req.format == :json } do
         resources :private_attachments, only: %i[create destroy]
+        resources :tiptap_revisions, only: [] do
+          collection do
+            post :save_revision
+            delete :delete_revision
+            post :takeover_revision
+          end
+        end
 
         resource :links, only: [] do
           get :control_bar

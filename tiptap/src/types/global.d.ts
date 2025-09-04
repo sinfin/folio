@@ -78,6 +78,13 @@ declare global {
     styled_wrap_variants?: StyledWrapVariantFromInput[];
     enable_pages?: boolean;
     heading_levels?: import("@tiptap/extension-heading").Level[];
+    autosave?: boolean;
+  }
+
+  interface FolioTiptapSaveButtonInfo {
+    newRecord: boolean;
+    hasUnsavedChanges: boolean;
+    latestRevisionAt: string | null;
   }
 
   interface FolioEditorCommandChain extends import("@tiptap/core").CommandChain {
@@ -137,6 +144,7 @@ declare global {
           content?: import("@tiptap/react").JSONContent;
           readonly: boolean;
           scrollTop?: number;
+          saveButtonInfo?: FolioTiptapSaveButtonInfo;
         }) => ReturnType<typeof import("react-dom/client").createRoot>;
         destroy: () => void;
         getHeight: () => number;

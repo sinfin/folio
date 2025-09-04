@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_01_100256) do
+ActiveRecord::Schema[7.1].define(version: 2025_09_01_121305) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -535,6 +535,19 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_01_100256) do
     t.index ["type"], name: "index_folio_sites_on_type"
   end
 
+  create_table "folio_tiptap_revisions", force: :cascade do |t|
+    t.string "placement_type", null: false
+    t.bigint "placement_id", null: false
+    t.bigint "user_id"
+    t.bigint "superseded_by_user_id"
+    t.jsonb "content", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["placement_type", "placement_id"], name: "index_folio_tiptap_revisions_on_placement"
+    t.index ["superseded_by_user_id"], name: "index_folio_tiptap_revisions_on_superseded_by_user_id"
+    t.index ["user_id"], name: "index_folio_tiptap_revisions_on_user_id"
+  end
+
   create_table "folio_users", force: :cascade do |t|
     t.string "email"
     t.string "encrypted_password", default: "", null: false
@@ -674,6 +687,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_01_100256) do
   add_foreign_key "folio_files", "folio_sites", column: "site_id"
   add_foreign_key "folio_site_user_links", "folio_sites", column: "site_id"
   add_foreign_key "folio_site_user_links", "folio_users", column: "user_id"
+  add_foreign_key "folio_tiptap_revisions", "folio_users", column: "superseded_by_user_id"
+  add_foreign_key "folio_tiptap_revisions", "folio_users", column: "user_id"
   add_foreign_key "folio_users", "folio_sites", column: "auth_site_id"
   add_foreign_key "folio_video_subtitles", "folio_files", column: "video_id"
 end

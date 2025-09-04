@@ -2,6 +2,7 @@ doctype html
 html[
   lang=I18n.locale
   class=(cookies[:image_sensitive_content] && "f-html--show-sensitive-content")
+  class=(@folio_tiptap ? "f-tiptap-application-html" : nil)
 ]
   head
     = render partial: 'layouts/folio/head'
@@ -15,7 +16,7 @@ html[
       = preload_link_tag '/fonts/Figtree-Bold.woff2'
       = preload_link_tag '/fonts/SpaceGrotesk-Bold.woff2'
 
-  body
+  body class=(@folio_tiptap ? "f-tiptap-application-body" : nil)
     - if @folio_tiptap
       = yield
     - else

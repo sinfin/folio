@@ -318,6 +318,10 @@ class Folio::File < Folio::ApplicationRecord
     end
 
     def validate_attribution_and_texts_if_needed
+      # Skip validations for unused files (no placements)
+      # This allows clearing metadata fields for EXIF re-extraction
+      return if file_placements.empty?
+
       if Rails.application.config.folio_files_require_attribution
         if author_changed? || attribution_source_changed? || attribution_source_url_changed?
           if author.blank? && attribution_source.blank? && attribution_source_url.blank?
