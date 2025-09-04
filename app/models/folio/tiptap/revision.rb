@@ -19,20 +19,23 @@ end
 #
 # Table name: folio_tiptap_revisions
 #
-#  id             :bigint(8)        not null, primary key
-#  placement_type :string           not null
-#  placement_id   :bigint(8)        not null
-#  user_id        :bigint(8)
-#  content        :jsonb            not null
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
+#  id                    :bigint(8)        not null, primary key
+#  placement_type        :string           not null
+#  placement_id          :bigint(8)        not null
+#  user_id               :bigint(8)
+#  superseded_by_user_id :bigint(8)
+#  content               :jsonb            not null
+#  created_at            :datetime         not null
+#  updated_at            :datetime         not null
 #
 # Indexes
 #
-#  index_folio_tiptap_revisions_on_placement  (placement_type,placement_id)
-#  index_folio_tiptap_revisions_on_user_id    (user_id)
+#  index_folio_tiptap_revisions_on_placement              (placement_type,placement_id)
+#  index_folio_tiptap_revisions_on_superseded_by_user_id  (superseded_by_user_id)
+#  index_folio_tiptap_revisions_on_user_id                (user_id)
 #
 # Foreign Keys
 #
+#  fk_rails_...  (superseded_by_user_id => folio_users.id)
 #  fk_rails_...  (user_id => folio_users.id)
 #
