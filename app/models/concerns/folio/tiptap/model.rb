@@ -28,7 +28,7 @@ module Folio::Tiptap::Model
     has_many :tiptap_revisions, as: :placement, class_name: "Folio::Tiptap::Revision", dependent: :destroy
     before_validation :convert_titap_fields_to_hashes_and_sanitize
     validate :validate_tiptap_fields
-    after_save :cleanup_tiptap_revisions_after_save, if: :autosave_enabled?
+    after_save :cleanup_tiptap_revisions, if: :tiptap_autosave_enabled?
   end
 
   def convert_titap_fields_to_hashes_and_sanitize
@@ -76,12 +76,12 @@ module Folio::Tiptap::Model
     Folio::Tiptap.config
   end
 
-  def autosave_enabled?
+  def tiptap_autosave_enabled?
     tiptap_config&.autosave == true
   end
 
   def latest_tiptap_revision(user: nil)
-    return nil unless autosave_enabled?
+    return nil unless tiptap_autosave_enabled?
 
     target_user = user || Folio::Current.user
     return nil unless target_user
@@ -90,7 +90,7 @@ module Folio::Tiptap::Model
   end
 
   def has_tiptap_revision?(user: nil)
-    return false unless autosave_enabled?
+    return false unless tiptap_autosave_enabled?
 
     target_user = user || Folio::Current.user
     return false unless target_user
@@ -99,17 +99,23 @@ module Folio::Tiptap::Model
   end
 
   private
-    def cleanup_tiptap_revisions_after_save
-      # After saving the main model, remove only the current user's revision
-      # since their content is now persisted in the main tiptap_content field
-      # Other users' revisions should remain untouched
-      current_user = Folio::Current.user
-      return unless current_user
+    def cleanup_tiptap_revisions
+      # After saving the main model:
+      # 1. Mark all other users' revisions as superseded by current user
+      # 2. Delete current user's revision (since content is now in main model)
+      return unless Folio::Current.user
 
-      revision = tiptap_revisions.find_by(user: current_user)
-      if revision
-        revision.destroy
-        Rails.logger.info "Cleaned up tiptap revision for user #{current_user.id} after saving #{self.class.name}##{id}"
+      superseded_count = tiptap_revisions.where.not(user_id: Folio::Current.user.id)
+                                         .update_all(superseded_by_user_id: Folio::Current.user.id)
+
+      current_user_revision = tiptap_revisions.find_by(user: Folio::Current.user)
+      if current_user_revision
+        current_user_revision.destroy
+        Rails.logger.info "Deleted tiptap revision for user #{Folio::Current.user.id} after saving #{self.class.name}##{id}"
+      end
+
+      if superseded_count > 0
+        Rails.logger.info "Marked #{superseded_count} tiptap revisions as superseded by user #{Folio::Current.user.id} after saving #{self.class.name}##{id}"
       end
     end
 end

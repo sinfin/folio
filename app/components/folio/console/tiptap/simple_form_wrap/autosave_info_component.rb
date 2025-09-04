@@ -12,17 +12,12 @@ class Folio::Console::Tiptap::SimpleFormWrap::AutosaveInfoComponent < Folio::Con
                         values: {
                           placement_type: object.class.base_class.name,
                           placement_id: object.id,
-                          delete_url: helpers.delete_revision_console_api_tiptap_revisions_path,
+                          delete_url: controller.delete_revision_console_api_tiptap_revisions_path,
                         })
   end
 
   def render?
-    autosave_enabled?
-  end
-
-  def autosave_enabled?
-    config = object.try(:tiptap_config) || Folio::Tiptap.config
-    config&.autosave == true
+    object.tiptap_autosave_enabled?
   end
 
   def has_unsaved_changes?
@@ -32,6 +27,6 @@ class Folio::Console::Tiptap::SimpleFormWrap::AutosaveInfoComponent < Folio::Con
   private
     def latest_revision_info
       latest_revision = object.latest_tiptap_revision(user: Folio::Current.user)
-      "#{l(latest_revision.created_at, format: :short)} – #{latest_revision.user.full_name}"
+      l(latest_revision.created_at, format: :short)
     end
 end

@@ -15,6 +15,7 @@ cs:
             title: Editor obsahuje neuložené rozepsané změny.
             continue: Pokračovat v rozepsaném
             discard: Zahodit rozepsané změny
+            failed_to_save: Chyba připojení k serveru. Prosíme zkontrolujte připojení k internetu.
 
         overlay:
           form_component:
