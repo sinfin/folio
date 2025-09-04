@@ -14,7 +14,7 @@ class Folio::Console::Users::HeaderActionsCell < Folio::ConsoleCell
       {
         href: url_for([:send_reset_password_email, :console, model]),
         confirm: true,
-        icon: :lock,
+        icon: :lock_open_outline,
         label: t(".send_reset_password_email"),
         variant: :warning,
       }
