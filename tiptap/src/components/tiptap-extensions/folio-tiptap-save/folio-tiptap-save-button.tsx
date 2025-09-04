@@ -40,12 +40,12 @@ export const FolioTiptapSaveButton = React.forwardRef<
 
   React.useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
-      if (event.data?.type === 'f-input-tiptap:auto-saved') {
+      if (event.data?.type === 'f-input-tiptap:autosave:auto-saved') {
         setLastSavedAt(new Date(event.data.updatedAt));
         setFailedToAutosave(false);
-      } else if (event.data?.type === 'f-input-tiptap:continue-unsaved-changes') {
+      } else if (event.data?.type === 'f-input-tiptap:autosave:continue-unsaved-changes') {
         setHasUnsavedChanges(false);
-      } else if (event.data?.type === 'f-input-tiptap:failed-to-autosave') {
+      } else if (event.data?.type === 'f-input-tiptap:autosave:failed-to-autosave') {
         setFailedToAutosave(true);
       }
     };

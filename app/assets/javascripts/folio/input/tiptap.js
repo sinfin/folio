@@ -209,7 +209,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
 
   // Event received from AutosaveInfoComponent (through SimpleFormWrapComponent) after clicking 'continue'
   onContinueUnsavedChanges () {
-    this.sendMessageToIframe({ type: 'f-input-tiptap:continue-unsaved-changes' })
+    this.sendMessageToIframe({ type: 'f-input-tiptap:autosave:continue-unsaved-changes' })
 
     this.hasUnsavedChangesValue = false
   }
@@ -369,7 +369,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
           console.log('[Folio] [Tiptap] Auto-saved revision:', response.revision_id)
 
           const autoSaveMessage = {
-            type: 'f-input-tiptap:auto-saved',
+            type: 'f-input-tiptap:autosave:auto-saved',
             updatedAt: response.updated_at
           }
           this.sendMessageToIframe(autoSaveMessage)
@@ -378,7 +378,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
       .catch((error) => {
         console.warn('[Folio] [Tiptap] Auto-save failed:', error)
 
-        this.sendMessageToIframe({ type: 'f-input-tiptap:failed-to-autosave' })
+        this.sendMessageToIframe({ type: 'f-input-tiptap:autosave:failed-to-autosave' })
       })
   }
 })
