@@ -5,18 +5,15 @@ h2 Buttons
 h3 Regular
 
 .my-g
-  == cell('folio/console/ui/buttons', @buttons_model)
+  = render(Folio::Console::Ui::ButtonsComponent.new(buttons: @buttons_model))
 
 .my-g
-  == cell('folio/console/ui/buttons',
-          @buttons_model.map { |h| { icon: :alert }.merge(h) })
+  = render(Folio::Console::Ui::ButtonsComponent.new(buttons: @buttons_model.map { |h| { icon: :alert }.merge(h) }))
 
 h3 Small
 
 .my-g
-  == cell('folio/console/ui/buttons',
-          @buttons_model.map { |h| { size: :sm }.merge(h) })
+  = render(Folio::Console::Ui::ButtonsComponent.new(buttons: @buttons_model.map { |h| { size: :sm }.merge(h) }))
 
 .my-g
-  == cell('folio/console/ui/buttons',
-          @buttons_model.map { |h| { size: :sm, icon: :alert }.merge(h) })
+  = render(Folio::Console::Ui::ButtonsComponent.new(buttons: @buttons_model.map { |h| { size: :sm, icon: :alert }.merge(h) }))

@@ -69,12 +69,13 @@
 //= require folio/console/modules/html_auto_format
 
 //= require folio/console/ui/ajax_input_component
-//= require folio/console/ui/alert/alert
+//= require folio/console/ui/alert_component
 //= require folio/console/ui/boolean_toggle_component
-//= require folio/console/ui/button/button
-//= require folio/console/ui/buttons/buttons
 //= require folio/console/ui/in_place_input_component
 //= require folio/console/ui/index/filters_component
+//= require folio/console/ui/button_component
+//= require folio/console/ui/buttons_component
+//= require folio/console/ui/flash_component
 //= require folio/console/ui/notification_modal_component
 //= require folio/console/ui/pagy_component
 //= require folio/console/ui/tabs_component
@@ -103,7 +104,6 @@
 //= require folio/console/files/show_modal_component
 //= require folio/console/files/subtitle_form_component
 //= require folio/console/files/subtitles_form_component
-//= require folio/console/flash/flash
 //= require folio/console/folio_attributes_fields_component
 //= require folio/console/form/errors/errors
 //= require folio/console/form/footer_component

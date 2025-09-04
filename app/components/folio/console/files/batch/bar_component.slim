@@ -16,13 +16,13 @@
 
       - buttons_data.each do |button_wrap_data, button_model|
         .f-c-files-batch-bar__button-wrap data=button_wrap_data
-          == cell("folio/console/ui/button", button_model)
+          = render(Folio::Console::Ui::ButtonComponent.new(**button_model))
 
-      = folio_console_ui_button(icon: :close,
-                                data: stimulus_action(click: "cancel"),
-                                variant: :icon,
-                                title: t('.cancel'),
-                                class_name: "ms-auto me-nh")
+      = render(Folio::Console::Ui::ButtonComponent.new(icon: :close,
+                                                       data: stimulus_action(click: "cancel"),
+                                                       variant: :icon,
+                                                       title: t('.cancel'),
+                                                       class_name: "ms-auto me-nh"))
 
     - if download_hash
       .f-c-files-batch-bar__download-outer-wrap
@@ -60,11 +60,11 @@
               .mb-2.text-center
                 == cell('folio/console/clipboard_copy', download_hash["url"], icon_height: 24)
 
-            = folio_console_ui_button(icon: :close,
-                                      data: stimulus_action(click: "cancelDownload"),
-                                      variant: :icon,
-                                      title: t('.cancel_download'),
-                                      class_name: "f-c-files-batch-bar__cancel-download-btn`")
+            = render(Folio::Console::Ui::ButtonComponent.new(icon: :close,
+                                                             data: stimulus_action(click: "cancelDownload"),
+                                                             variant: :icon,
+                                                             title: t('.cancel_download'),
+                                                             class_name: "f-c-files-batch-bar__cancel-download-btn`"))
 
   span.f-c-files-batch-bar__loader[
     class="folio-loader"

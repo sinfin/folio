@@ -13,4 +13,4 @@
   - if buttons.present?
     .f-c-current-users-console-url-bar__bottom
       .f-c-current-users-console-url-bar__buttons
-        == cell('folio/console/ui/buttons', buttons)
+        = render(Folio::Console::Ui::ButtonsComponent.new(buttons: buttons))

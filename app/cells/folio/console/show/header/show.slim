@@ -13,39 +13,34 @@ div class=class_name
           == cell('folio/console/state', model)
 
       - if options[:add]
-        == cell('folio/console/ui/button',
-                variant: :success,
-                href: options[:add][:href],
-                icon: :plus,
-                label: options[:add][:label],
-                class: "flex-shrink-0")
+        = render_view_component(Folio::Console::Ui::ButtonComponent.new(variant: :success,
+                                                                        href: options[:add][:href],
+                                                                        icon: :plus,
+                                                                        label: options[:add][:label],
+                                                                        class_name: "flex-shrink-0"))
 
       - if options[:right]
         == options[:right]
 
       - if preview_url
-        == cell('folio/console/ui/button',
-                href: preview_url,
-                variant: :secondary,
-                target: "_blank",
-                icon: :open_in_new,
-                label: t('folio.console.actions.preview'))
+        = render_view_component(Folio::Console::Ui::ButtonComponent.new(href: preview_url,
+                                                                        variant: :secondary,
+                                                                        target: "_blank",
+                                                                        icon: :open_in_new,
+                                                                        label: t('folio.console.actions.preview')))
 
       - if options[:edit] != false && edit_url && can_now?(:edit, model)
-        == cell('folio/console/ui/button',
-                href: edit_url,
-                variant: :secondary,
-                icon: :edit,
-                label: t('folio.console.actions.edit'))
+        = render_view_component(Folio::Console::Ui::ButtonComponent.new(href: edit_url,
+                                                                        variant: :secondary,
+                                                                        icon: :edit,
+                                                                        label: t('folio.console.actions.edit')))
 
       - if destroy_url && can_now?(:destroy, model)
-        == cell('folio/console/ui/button',
-                href: destroy_url,
-                variant: :danger,
-                icon: :delete,
-                label: t('folio.console.actions.destroy'),
-                'data-confirm' => t('folio.console.confirmation'),
-                'data-method' => :delete)
+        = render_view_component(Folio::Console::Ui::ButtonComponent.new(href: destroy_url,
+                                                                        variant: :danger,
+                                                                        icon: :delete,
+                                                                        label: t('folio.console.actions.destroy'),
+                                                                        data: { confirm: t('folio.console.confirmation'), method: :delete }))
 
   - if options[:tabs]
     .mt-3

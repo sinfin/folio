@@ -43,12 +43,12 @@ window.jQuery(document).on('folioConsoleAasmEventModalTrigger', '.f-c-aasm-email
     data: $form.serialize(),
     method: 'POST',
     error: function (jxHr) {
-      window.FolioConsole.Flash.flashMessageFromApiErrors(JSON.parse(jxHr.responseText))
+      window.FolioConsole.Ui.Flash.flashMessageFromApiErrors(JSON.parse(jxHr.responseText))
       return $modal.removeClass('f-c-aasm-email-modal--loading')
     },
     success: function (res) {
       $trigger.closest('.f-c-state').replaceWith(res.data)
-      window.FolioConsole.Flash.flashMessageFromMeta(res)
+      window.FolioConsole.Ui.Flash.flashMessageFromMeta(res)
       return $modal.removeClass('f-c-aasm-email-modal--loading').modal('hide')
     },
     complete: function () {

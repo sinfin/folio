@@ -1,0 +1,5 @@
+.f-c-ui-flash
+  - if @flash.present?
+    - @flash.each do |msg_type, message|
+      = render(Folio::Console::Ui::AlertComponent.new(variant: VARIANTS[msg_type.to_sym], flash: true))
+        = message

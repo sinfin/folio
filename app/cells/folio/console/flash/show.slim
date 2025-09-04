@@ -1,7 +1,0 @@
-.f-c-flash-wrap
-  - flashes.each do |msg_type, message|
-    == cell('folio/console/ui/alert',
-            message,
-            variant: VARIANTS[msg_type.to_sym],
-            flash: true,
-            autohide: autohide?)

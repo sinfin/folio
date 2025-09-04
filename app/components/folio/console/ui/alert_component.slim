@@ -1,12 +1,12 @@
 div[
-  class=class_name
-  class="f-c-ui-alert--#{variant}"
-  class=options[:class_name]
+  class=bem_class_name
+  class="f-c-ui-alert--#{@variant}"
+  class=@class_name
   role="alert"
   data=data
 ]
   .f-c-ui-alert__container.container-fluid
-    - if variant == :loader
+    - if @variant == :loader
       .f-c-ui-alert__loader-wrap
         .f-c-ui-alert__loader[
           class="folio-loader"
@@ -18,9 +18,9 @@ div[
       = folio_icon(icon_key, class: 'f-c-ui-alert__icon')
 
     .f-c-ui-alert__content
-      == model
+      = content
 
-    - if options[:closable] != false
+    - if @closable != false
       button.f-c-ui-alert__close[
         class="f-c-anti-container-fluid f-c-anti-container-fluid--padding"
         type="button"

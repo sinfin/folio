@@ -41,7 +41,7 @@ class Folio::Console::CurrentUsersControllerTest < Folio::Console::BaseControlle
       current_password: "foo",
     } }
     assert_response(:ok, "Password not changed")
-    assert_select(".f-c-flash-wrap", I18n.t("folio.console.current_users.update_password.failure"))
+    assert_select(".f-c-ui-flash", I18n.t("folio.console.current_users.update_password.failure"))
 
     @superadmin.reload
     assert @superadmin.valid_password?("Complex@Password.123"), "Password should not be changed"
@@ -56,7 +56,7 @@ class Folio::Console::CurrentUsersControllerTest < Folio::Console::BaseControlle
     assert_redirected_to folio.console_current_user_path, "Password changed"
     follow_redirect!
     assert_response(:ok)
-    assert_select(".f-c-flash-wrap", I18n.t("folio.console.current_users.update_password.success"))
+    assert_select(".f-c-ui-flash", I18n.t("folio.console.current_users.update_password.success"))
 
     @superadmin.reload
 
@@ -70,6 +70,6 @@ class Folio::Console::CurrentUsersControllerTest < Folio::Console::BaseControlle
       current_password: "Complex@Password.123456",
     } }
     assert_response(:ok, "Password not changed - it's the same")
-    assert_select(".f-c-flash-wrap", I18n.t("folio.console.current_users.update_password.failure"))
+    assert_select(".f-c-ui-flash", I18n.t("folio.console.current_users.update_password.failure"))
   end
 end

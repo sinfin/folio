@@ -1,8 +1,7 @@
 .f-c-layout-header.small
-  == cell('folio/console/ui/button',
-          variant: :transparent,
-          icon: :menu,
-          class: "f-c-layout-header__toggle f-c-js-sidebar-toggle")
+  = render(Folio::Console::Ui::ButtonComponent.new(variant: :transparent,
+                                                   icon: :menu,
+                                                   class_name: "f-c-layout-header__toggle f-c-js-sidebar-toggle"))
 
   .container-fluid
     .f-c-layout-header__inner

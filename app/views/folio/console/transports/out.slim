@@ -6,12 +6,11 @@ h2 = @record.to_label
   .me-g
     == cell('folio/console/clipboard_copy', h(@yaml), as_button: true)
 
-  == cell('folio/console/ui/button',
-          label: t('.download'),
-          icon: :download,
-          href: download_console_transport_path,
-          target: "_blank",
-          variant: :secondary)
+  = render(Folio::Console::Ui::ButtonComponent.new(label: t('.download'),
+                                                   icon: :download,
+                                                   href: download_console_transport_path,
+                                                   target: "_blank",
+                                                   variant: :secondary))
 
 pre
   code

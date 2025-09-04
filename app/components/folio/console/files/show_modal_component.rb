@@ -30,7 +30,7 @@ class Folio::Console::Files::ShowModalComponent < ApplicationComponent
         {
           data: button_data,
           label: t(".navigation_#{direction}"),
-          class: "f-c-files-show-modal__header-navigation-button",
+          class_name: "f-c-files-show-modal__header-navigation-button",
           icon: direction == "previous" ? :chevron_left : nil,
           right_icon: direction == "next" ? :chevron_right : nil,
           size: :sm,

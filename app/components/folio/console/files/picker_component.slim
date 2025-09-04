@@ -24,10 +24,10 @@
           = render(content_component)
 
       .f-c-files-picker__btn-wrap
-        = folio_console_ui_button(class: "f-c-files-picker__btn",
-                                  variant: :success,
-                                  icon: :plus,
-                                  data: stimulus_action(click: 'onBtnClick'))
+        = render(Folio::Console::Ui::ButtonComponent.new(class_name: "f-c-files-picker__btn",
+                                                         variant: :success,
+                                                         icon: :plus,
+                                                         data: stimulus_action(click: 'onBtnClick')))
 
       span.folio-loader.f-c-files-picker__loader
 

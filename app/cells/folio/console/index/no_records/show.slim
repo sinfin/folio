@@ -15,7 +15,6 @@
 
           - if model[:create_defaults_path]
             = simple_form_for "", method: :post, url: model[:create_defaults_path] do |f|
-              == cell('folio/console/ui/button',
-                      type: :submit,
-                      icon: :star,
-                      label: t('.create_defaults'))
+              = render_view_component(Folio::Console::Ui::ButtonComponent.new(type: :submit,
+                                                                              icon: :star,
+                                                                              label: t('.create_defaults')))

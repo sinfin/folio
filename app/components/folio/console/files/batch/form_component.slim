@@ -3,9 +3,9 @@
     .h3.m-0.flex-shrink-1.flex-grow-1
       = t('.title')
 
-    = folio_console_ui_button(icon: :close,
-                              data: stimulus_action(click: "cancel"),
-                              variant: :icon)
+    = render(Folio::Console::Ui::ButtonComponent.new(icon: :close,
+                                                     data: stimulus_action(click: "cancel"),
+                                                     variant: :icon))
 
   = form do |f|
     .row
@@ -35,7 +35,7 @@
       .col-12
         = input f, :description, autosize: true
 
-    == cell('folio/console/ui/buttons', form_buttons_model)
+    = render(Folio::Console::Ui::ButtonsComponent.new(buttons: form_buttons_model))
 
     - if @files.present?
       p.mt-g

@@ -307,7 +307,7 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
   storeUiState () {
     const atomsForm = document.querySelector('.f-c-simple-form-with-atoms__form-scroll')
     const atomsPreviews = document.querySelector('.f-c-simple-form-with-atoms__iframe')
-    const flash = document.querySelector('.f-c-flash-wrap')
+    const flash = document.querySelector('.f-c-ui-flash')
     const flashOffset = flash ? flash.offsetHeight : 0
 
     const data = {

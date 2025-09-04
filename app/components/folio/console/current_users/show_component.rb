@@ -7,7 +7,7 @@ class Folio::Console::CurrentUsers::ShowComponent < Folio::Console::ApplicationC
 
   def edit_button_model(label: nil)
     {
-      class: "f-c-current-users-show__edit-btn",
+      class_name: "f-c-current-users-show__edit-btn",
       variant: :gray,
       data: stimulus_action(click: "edit"),
       label: label || t("folio.console.actions.edit")

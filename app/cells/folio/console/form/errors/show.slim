@@ -12,10 +12,8 @@
           = dig_error_message(error)
 
         - if options[:buttons] != false
-          == cell('folio/console/ui/button',
-                  variant: 'danger',
-                  size: :sm,
-                  class: "f-c-form-errors__button \
-                          f-c-form-errors__button--hidden",
-                  data: button_data(error),
-                  label: t('.fix'))
+          = render_view_component(Folio::Console::Ui::ButtonComponent.new(variant: 'danger',
+                                                                          size: :sm,
+                                                                          class_name: "f-c-form-errors__button f-c-form-errors__button--hidden",
+                                                                          data: button_data(error),
+                                                                          label: t('.fix')))

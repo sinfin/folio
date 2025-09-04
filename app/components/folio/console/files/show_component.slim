@@ -7,20 +7,20 @@
     .col-lg
       .f-c-files-show__buttons-outer.mb-h
         .f-c-files-show__buttons
-          == cell("folio/console/ui/button", download_button_model)
+          = render(Folio::Console::Ui::ButtonComponent.new(**download_button_model))
 
           - if can_now?(:update, @file)
             = render(Folio::UppyComponent.new(file_type: @file.class.to_s,
                                               max_number_of_files: 1,
                                               existing_id: @file.id))
-              == cell("folio/console/ui/button", replace_button_model)
+              = render(Folio::Console::Ui::ButtonComponent.new(**replace_button_model))
 
           - if can_now?(:destroy, @file)
             - if @file.indestructible_reason
               .f-c-files-show__button-tooltip data=stimulus_tooltip(@file.indestructible_reason)
-                == cell("folio/console/ui/button", destroy_button_model)
+                = render(Folio::Console::Ui::ButtonComponent.new(**destroy_button_model))
             - else
-              == cell("folio/console/ui/button", destroy_button_model)
+              = render(Folio::Console::Ui::ButtonComponent.new(**destroy_button_model))
 
         - if @file.class.human_type == "image"
           = render(Folio::Console::Ui::BooleanToggleComponent.new(record: @file,

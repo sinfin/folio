@@ -39,8 +39,7 @@
         ]
           = t('folio.console.actions.edit')
 
-        == cell('folio/console/ui/button',
-                variant: :secondary,
-                onclick: "javascript:window.location.reload(true)",
-                icon: :reload,
-                label: t('.reload'))
+        = render_view_component(Folio::Console::Ui::ButtonComponent.new(variant: :secondary,
+                                                                        onclick: "javascript:window.location.reload(true)",
+                                                                        icon: :reload,
+                                                                        label: t('.reload')))

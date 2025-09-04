@@ -1,10 +1,10 @@
 .f-c-tiptap-simple-form-wrap-autosave-info data=data
   - if object.new_record?
     .f-c-tiptap-simple-form-wrap-autosave-info__new-record
-      == cell("folio/console/ui/alert", t('.new_record_alert', model: object.class.model_name.human.downcase),
-                                        variant: :warning,
-                                        class_name: "m-0",
-                                        closable: false)
+      = render(Folio::Console::Ui::AlertComponent.new(variant: :warning,
+                                                      class_name: "m-0",
+                                                      closable: false))
+        = t('.new_record_alert', model: object.class.model_name.human.downcase)
   - elsif has_unsaved_changes?
     .f-c-tiptap-simple-form-wrap-autosave-info__unsaved_changes data=stimulus_target("unsavedChanges")
       .f-c-tiptap-simple-form-wrap-autosave-info__top
@@ -18,20 +18,18 @@
 
       .f-c-tiptap-simple-form-wrap-autosave-info__bottom
         .f-c-tiptap-simple-form-wrap-autosave-info__buttons
-          == cell('folio/console/ui/button',
-                  variant: :primary,
-                  label: t('.continue'),
-                  data: stimulus_action(click: "onContinueButtonClick"))
-          == cell('folio/console/ui/button',
-                  variant: :tertiary,
-                  label: t('.discard'),
-                  data: stimulus_action(click: "onDiscardButtonClick"))
+          = render(Folio::Console::Ui::ButtonComponent.new(variant: :primary,
+                                                            label: t('.continue'),
+                                                            data: stimulus_action(click: "onContinueButtonClick")))
+          = render(Folio::Console::Ui::ButtonComponent.new(variant: :tertiary,
+                                                           label: t('.discard'),
+                                                           data: stimulus_action(click: "onDiscardButtonClick")))
 
   .f-c-tiptap-simple-form-wrap-autosave-info__failed-to-save[
     class="f-c-tiptap-simple-form-wrap-autosave-info__failed-to-save--hidden"
     data=stimulus_target("failedToSave")
   ]
-    == cell("folio/console/ui/alert", t('.failed_to_save'),
-                                      variant: :danger,
-                                      class_name: "m-0",
-                                      closable: false)
+    = render(Folio::Console::Ui::AlertComponent.new(variant: :danger,
+                                                    class_name: "m-0",
+                                                    closable: false))
+      = t('.failed_to_save')

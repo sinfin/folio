@@ -6,7 +6,7 @@
       = Folio::File.model_name.human
 
     .f-c-files-show-modal__header-navigation data=stimulus_target("navigation")
-      == cell('folio/console/ui/buttons', navigation_buttons_model)
+      = render(Folio::Console::Ui::ButtonsComponent.new(buttons: navigation_buttons_model))
 
   = render(Folio::Console::Ui::TurboFrameWithLoaderComponent.new(id: Folio::Console::Files::ShowComponent::TURBO_FRAME_ID,
                                                                  min_height: "525px"))

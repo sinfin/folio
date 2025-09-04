@@ -13,24 +13,20 @@ div[
     role="group"
     class="f-c-index-position-buttons__button-group"
   ]
-    == cell("folio/console/ui/button",
-            variant: :icon,
-            icon: :arrow_up,
-            class: "f-c-index-position-buttons__button",
-            "data-direction" => "up")
+    = render_view_component(Folio::Console::Ui::ButtonComponent.new(variant: :icon,
+                                                                    icon: :arrow_up,
+                                                                    class_name: "f-c-index-position-buttons__button",
+                                                                    data: { direction: "up" }))
 
-    == cell("folio/console/ui/button",
-            variant: :icon,
-            icon: :arrow_down,
-            class: "f-c-index-position-buttons__button",
-            "data-direction" => "down")
+    = render_view_component(Folio::Console::Ui::ButtonComponent.new(variant: :icon,
+                                                                    icon: :arrow_down,
+                                                                    class_name: "f-c-index-position-buttons__button",
+                                                                    data: { direction: "down" }))
 
     - unless options[:ancestry]
-      == cell("folio/console/ui/button",
-              variant: :icon,
-              icon: :drag,
-              tag: :span,
-              class: "f-c-index-position-buttons__button \
-                      f-c-index-position-buttons__button--handle")
+      = render_view_component(Folio::Console::Ui::ButtonComponent.new(variant: :icon,
+                                                                      icon: :drag,
+                                                                      tag: :span,
+                                                                      class_name: "f-c-index-position-buttons__button f-c-index-position-buttons__button--handle"))
 
     span.folio-loader.folio-loader--small.folio-loader--transparent

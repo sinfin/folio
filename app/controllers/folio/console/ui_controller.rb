@@ -106,7 +106,7 @@ class Folio::Console::UiController < Folio::Console::BaseController
       }
     }
 
-    @button_model_for_notifications_form = [
+    @buttons_model_for_notifications_form = [
       {
         variant: :info,
         label: "Modal with submit",
@@ -124,7 +124,7 @@ class Folio::Console::UiController < Folio::Console::BaseController
       }
     ]
 
-    @button_model_for_form_modals = [
+    @buttons_model_for_form_modals = [
       {
         variant: :info,
         label: "Folio::Current.user edit",
@@ -150,15 +150,15 @@ class Folio::Console::UiController < Folio::Console::BaseController
       error
       loader
     ].each do |variant|
-      flash.now[variant] = "#{variant.to_s.capitalize} #{@lorem_ipsum[0..15]} <a href=\"#{request.path}\">#{@lorem_ipsum[16..21]}</a> #{@lorem_ipsum[22..44]}."
+      flash.now[variant] = "#{variant.to_s.capitalize} #{@lorem_ipsum[0..15]} <a href=\"#{request.path}\">#{@lorem_ipsum[16..21]}</a> #{@lorem_ipsum[22..44]}.".html_safe
     end
 
     @buttons_model = [
-      { variant: :success, label: "Add success flash", onclick: "window.FolioConsole.Flash.flash({ content: 'New success message!', variant: 'success' })" },
-      { variant: :info, label: "Add info flash", onclick: "window.FolioConsole.Flash.flash({ content: 'New info message!', variant: 'info' })" },
-      { variant: :warning, label: "Add warning flash", onclick: "window.FolioConsole.Flash.flash({ content: 'New warning message!', variant: 'warning' })" },
-      { variant: :danger, label: "Add danger flash", onclick: "window.FolioConsole.Flash.flash({ content: 'New danger message!', variant: 'danger' })" },
-      { variant: :info, loader: true, label: "Add loader flash", onclick: "window.FolioConsole.Flash.flash({ content: 'New loader message!', variant: 'loader' })" },
+      { variant: :success, label: "Add success flash", onclick: "window.FolioConsole.Ui.Flash.flash({ content: 'New success message!', variant: 'success' })" },
+      { variant: :info, label: "Add info flash", onclick: "window.FolioConsole.Ui.Flash.flash({ content: 'New info message!', variant: 'info' })" },
+      { variant: :warning, label: "Add warning flash", onclick: "window.FolioConsole.Ui.Flash.flash({ content: 'New warning message!', variant: 'warning' })" },
+      { variant: :danger, label: "Add danger flash", onclick: "window.FolioConsole.Ui.Flash.flash({ content: 'New danger message!', variant: 'danger' })" },
+      { variant: :info, loader: true, label: "Add loader flash", onclick: "window.FolioConsole.Ui.Flash.flash({ content: 'New loader message!', variant: 'loader' })" },
     ]
   end
 

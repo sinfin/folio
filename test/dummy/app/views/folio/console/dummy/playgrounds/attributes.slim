@@ -5,6 +5,5 @@ h1 Attributes
                             Dummy::AttributeType::Page,
                             character_counter: 160)
 
-  == cell('folio/console/ui/button',
-          type: :submit,
-          label: "Submit")
+  = render(Folio::Console::Ui::ButtonComponent.new(type: :submit,
+                                                   label: "Submit")

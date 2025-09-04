@@ -24,11 +24,10 @@ div class=bem_class_name
     = right_content
 
   - if @csv
-    == cell('folio/console/ui/button',
-            variant: :tertiary,
-            href: csv_path,
-            icon: :download,
-            label: @csv.try(:[], :label) || "CSV")
+    = render(Folio::Console::Ui::ButtonComponent.new(variant: :tertiary,
+                                                     href: csv_path,
+                                                     icon: :download,
+                                                     label: @csv.try(:[], :label) || "CSV"))
 
   - if @new_button != false
     == cell('folio/console/index/new_button',

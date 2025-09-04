@@ -57,7 +57,7 @@ class Folio::Console::Links::Modal::UrlPickerComponent < Folio::Console::Applica
       data: stimulus_data(action: { click: "cancelFilters" }, target: "cancelButton"),
       variant: :danger,
       icon: :close,
-      class: "f-c-links-modal-url-picker__list-filters-cancel-button"
+      class_name: "f-c-links-modal-url-picker__list-filters-cancel-button"
     }
   end
 

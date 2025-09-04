@@ -50,12 +50,12 @@ window.FolioConsole.NotesCatalogueTooltip.onChange = (e) => {
 
       $tooltip.removeClass('f-c-console-notes-catalogue-tooltip--submitting')
 
-      window.FolioConsole.Flash.flashMessageFromMeta(res)
+      window.FolioConsole.Ui.Flash.flashMessageFromMeta(res)
     },
     error: (jxHr) => {
       if (jxHr.responseText) {
         try {
-          window.FolioConsole.Flash.flashMessageFromApiErrors(JSON.parse(jxHr.responseText))
+          window.FolioConsole.Ui.Flash.flashMessageFromApiErrors(JSON.parse(jxHr.responseText))
         } catch (_e) {}
       }
 

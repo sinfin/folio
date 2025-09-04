@@ -4,15 +4,11 @@
       - if @record
         .f-c-links-value__badges
           - if @record_site_title
-            == cell('folio/console/ui/badge',
-                    @record_site_title.truncate(10),
-                    variant: 'white',
-                    size: 'sm')
+            = render(Folio::Console::Ui::BadgeComponent.new(variant: 'white', size: 'sm'))
+              = @record_site_title.truncate(10)
 
-          == cell('folio/console/ui/badge',
-                  @record.class.model_name.human,
-                  variant: 'white',
-                  size: 'sm')
+          = render(Folio::Console::Ui::BadgeComponent.new(variant: 'white', size: 'sm'))
+            = @record.class.model_name.human
 
       .f-c-links-value__main
         .f-c-links-value__main-top

@@ -10,14 +10,16 @@ class Folio::Console::Index::NewButtonCell < Folio::ConsoleCell
       variant: :success,
       icon: :plus,
       label:,
+      data: {},
     }
 
     if model[:popover]
-      h["data-controller"] = "f-c-popover"
-      h["data-f-c-popover-content-value"] = model[:popover]
-      h["data-f-c-popover-placement-value"] = "bottom"
-      h["data-f-c-popover-trigger-value"] = "focus"
-
+      h[:data] = stimulus_controller("f-c-popover",
+                                     values: {
+                                      content: model[:popover],
+                                      placement: "bottom",
+                                      trigger: "focus",
+                                     })
       h
     elsif model[:file_list_uppy]
       h[:data] = stimulus_click_trigger(".f-file-list-trigger")

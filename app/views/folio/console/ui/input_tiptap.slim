@@ -6,9 +6,9 @@ h2 Input Tiptap
   h3 Block editor
 
   .my-4
-    = folio_console_ui_button(label: "Switch to rich text editor",
-                              href: input_tiptap_console_ui_path,
-                              variant: :gray)
+    = render(Folio::Console::Ui::ButtonComponent.new(label: "Switch to rich text editor",
+                                                     href: input_tiptap_console_ui_path,
+                                                     variant: :gray))
 
   = simple_form_for "", method: :get, url: request.path do |f|
     div
@@ -18,9 +18,9 @@ h2 Input Tiptap
   h3 Rich text editor
 
   .my-4
-    = folio_console_ui_button(label: "Switch to block editor",
-                              href: input_tiptap_console_ui_path(type: "block"),
-                              variant: :gray)
+    = render(Folio::Console::Ui::ButtonComponent.new(label: "Switch to block editor",
+                                                     href: input_tiptap_console_ui_path(type: "block"),
+                                                     variant: :gray))
 
   = simple_form_for "", method: :get, url: request.path do |f|
     = f.input :tiptap_json, as: :tiptap, input_html: { value: '{"type":"doc","content":[{"type":"paragraph","attrs":{"textAlign":null},"content":[{"type":"text","marks":[{"type":"bold"}],"text":"TipTap"},{"type":"text","text":" je moderní WYSIWYG editor postavený na ProseMirror frameworku, který poskytuje flexibilní a rozšiřitelnou platformu pro rich text editaci."}]}]}' }

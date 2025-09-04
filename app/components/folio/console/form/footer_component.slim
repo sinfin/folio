@@ -17,14 +17,16 @@ div[
       - unless read_only?
         .f-c-form-footer__left
           - if @f
-            == cell('folio/console/ui/button',
-                    type: :submit,
-                    class: 'f-c-form-footer__btn f-c-form-footer__btn--submit',
-                    variant: :primary,
-                    label: @submit_label || t("folio.console.actions.submit"),
-                    icon: :check,
-                    data: stimulus_target('submitButton').merge(test_id: "submit-button"),
-                    html_left: content_tag(:span, nil, class: "f-c-form-footer__submit-btn-indicator", data: stimulus_target('submitButtonIndicator')))
+            = render(Folio::Console::Ui::ButtonComponent.new(type: :submit,
+                                                             class_name: 'f-c-form-footer__btn f-c-form-footer__btn--submit',
+                                                             variant: :primary,
+                                                             label: t("folio.console.actions.submit"),
+                                                             icon: :check,
+                                                             data: stimulus_target('submitButton').merge(test_id: "submit-button"))) do |c|
+              - c.with_left
+                span.f-c-form-footer__submit-btn-indicator[
+                  data=stimulus_target('submitButtonIndicator')
+                ]
 
             .f-c-form-footer__status
               - if @record && @record.persisted?
@@ -44,14 +46,14 @@ div[
 
       .f-c-form-footer__right
         - if preview_path_with_default
-          == cell('folio/console/ui/button',
-                  href: preview_path_with_default,
-                  class: 'f-c-form-footer__btn f-c-form-footer__btn--preview',
-                  variant: :gray,
-                  label: t('folio.console.actions.preview'),
-                  icon: :open_in_new,
-                  target: "_blank",
-                  data: { test_id: "preview-button" })
+          = render(Folio::Console::Ui::ButtonComponent.new(href: preview_path_with_default,
+                                                           class_name: 'f-c-form-footer__btn f-c-form-footer__btn--preview',
+                                                           variant: :gray,
+                                                           label: t('folio.console.actions.preview'),
+                                                           icon: :open_in_new,
+                                                           target: "_blank",
+                                                           data: { test_id: "preview-button" }))
+
         - if @show_settings
           .f-c-form-footer__collapsible
             .f-c-form-footer__collapsible-backdrop data=stimulus_action_unless_readonly(click: "toggleCollapsed")
@@ -89,11 +91,18 @@ div[
                           icon: :link,
                           icon_options: { height: 16 })
 
-            == cell('folio/console/ui/button',
-                    class: 'f-c-form-footer__btn f-c-form-footer__btn--collapsible',
-                    variant: :gray,
-                    icon: :dots_vertical,
-                    data: (stimulus_action_unless_readonly(click: "toggleCollapsed") || {}).merge(test_id: "dropdown-button"))
+            - if @share_preview
+              .f-c-form-footer__share.small.text-muted data=stimulus_modal_toggle(Folio::Console::SharePreviewModalComponent::CLASS_NAME)
+                == cell('folio/console/ui/with_icon',
+                        t('.share'),
+                        hover: :underline,
+                        icon: :link,
+                        icon_options: { height: 16 })
+
+          = render(Folio::Console::Ui::ButtonComponent.new(class_name: 'f-c-form-footer__btn f-c-form-footer__btn--collapsible',
+                                                           variant: :gray,
+                                                           icon: :dots_vertical,
+                                                           data: (stimulus_action_unless_readonly(click: "toggleCollapsed") || {}).merge(test_id: "dropdown-button")))
 
 javascript:
   if (window.sessionStorage.getItem('fCAutosaveUiState')) {
@@ -124,7 +133,7 @@ javascript:
         return
       }
 
-      const flash = document.querySelector('.f-c-flash-wrap')
+      const flash = document.querySelector('.f-c-ui-flash')
       const flashOffset = flash ? flash.offsetHeight : 0
 
       if (data.atomsFormExpanded) {
