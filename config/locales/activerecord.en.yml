@@ -326,6 +326,7 @@ en:
       tiptap_must_be_hash_or_json: must be a Hash or a valid JSON string
       tiptap_must_have_content_key: "must have a '%{content_key}' key with a Hash value"
       tiptap_root_node_must_be_doc: root node must be of type 'doc'
+      tiptap_multiple_folio_tiptap_pages: "contains more than one paged content part (%{count})"
 
     attributes:
       verified_captcha:

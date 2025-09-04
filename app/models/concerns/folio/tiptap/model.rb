@@ -69,6 +69,12 @@ module Folio::Tiptap::Model
         errors.add(field, :tiptap_root_node_must_be_doc)
         next
       end
+
+      folio_tiptap_pages_count = count_folio_tiptap_pages_nodes(value[Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content]])
+      if folio_tiptap_pages_count > 1
+        errors.add(field, :tiptap_multiple_folio_tiptap_pages, count: folio_tiptap_pages_count)
+        next
+      end
     end
   end
 
@@ -99,6 +105,21 @@ module Folio::Tiptap::Model
   end
 
   private
+    def count_folio_tiptap_pages_nodes(node)
+      return 0 unless node.is_a?(Hash)
+
+      count = 0
+      count += 1 if node["type"] == "folioTiptapPages"
+
+      if node["content"].is_a?(Array)
+        node["content"].each do |child_node|
+          count += count_folio_tiptap_pages_nodes(child_node)
+        end
+      end
+
+      count
+    end
+
     def cleanup_tiptap_revisions
       # After saving the main model:
       # 1. Mark all other users' revisions as superseded by current user
