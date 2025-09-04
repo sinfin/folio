@@ -20,7 +20,7 @@ class Folio::Console::Files::DisplayToggleComponent < Folio::Console::Applicatio
 
   def data
     enabled = if Folio::Current.user && Folio::Current.user.console_preferences.present?
-      Folio::Current.user.console_preferences["images_table_view"]
+      Folio::Current.user.console_preferences["images_table_view"].present?
     else
       false
     end
