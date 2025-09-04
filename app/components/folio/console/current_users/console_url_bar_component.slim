@@ -1,0 +1,16 @@
+.f-c-current-users-console-url-bar data=data
+  .f-c-current-users-console-url-bar__top
+    = folio_icon(:alert,
+                  class: 'f-c-current-users-console-url-bar__top-ico')
+
+    .f-c-current-users-console-url-bar__top-label
+      = title
+
+  - if middle_text.present?
+    .f-c-current-users-console-url-bar__middle
+      = middle_text
+
+  - if buttons.present?
+    .f-c-current-users-console-url-bar__bottom
+      .f-c-current-users-console-url-bar__buttons
+        == cell('folio/console/ui/buttons', buttons)

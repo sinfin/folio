@@ -2,7 +2,6 @@ import React from "react";
 import { useEditorState } from "@tiptap/react";
 import { type Editor } from "@tiptap/react";
 
-import { Button } from "@/components/tiptap-ui-primitive/button";
 import { Spacer } from "@/components/tiptap-ui-primitive/spacer";
 import {
   Toolbar,
@@ -23,6 +22,7 @@ import {
 import { ResponsivePreviewButtons } from '@/components/tiptap-ui/responsive-preview-buttons';
 import { HorizontalRuleCommand } from '@/components/tiptap-commands';
 import { FolioEditorToolbarCommandButton } from './folio-editor-toolbar-command-button';
+import FolioTiptapSaveButton from "@/components/tiptap-extensions/folio-tiptap-save/folio-tiptap-save-button";
 
 interface FolioEditorToolbarButtonStateMapping {
   enabled: (params: { editor: Editor }) => boolean;
@@ -67,6 +67,7 @@ interface FolioEditorToolbarProps {
   textStylesCommandGroup: FolioEditorCommandGroup;
   layoutsCommandGroup?: FolioEditorCommandGroup;
   setResponsivePreviewEnabled?: (enabled: boolean) => void;
+  saveButtonInfo?: FolioTiptapSaveButtonInfo;
 }
 
 const makeMarkEnabled =
@@ -250,6 +251,7 @@ const MainToolbarContent = ({
   textStylesCommandGroup,
   layoutsCommandGroup,
   setResponsivePreviewEnabled,
+  saveButtonInfo,
 }: {
   blockEditor: boolean;
   editor: Editor;
@@ -257,6 +259,7 @@ const MainToolbarContent = ({
   textStylesCommandGroup: FolioEditorCommandGroup;
   layoutsCommandGroup?: FolioEditorCommandGroup;
   setResponsivePreviewEnabled?: (enabled: boolean) => void;
+  saveButtonInfo?: FolioTiptapSaveButtonInfo;
 }) => {
   const editorState: FolioEditorToolbarState = useEditorState({
     editor,
@@ -404,7 +407,19 @@ const MainToolbarContent = ({
       <Spacer />
 
       {setResponsivePreviewEnabled && (
-        <ResponsivePreviewButtons setResponsivePreviewEnabled={setResponsivePreviewEnabled} />
+        <ToolbarGroup>
+          <ResponsivePreviewButtons setResponsivePreviewEnabled={setResponsivePreviewEnabled} />
+        </ToolbarGroup>
+      )}
+
+      {folioTiptapConfig?.autosave && (
+        <>
+          <ToolbarSeparator />
+
+          <ToolbarGroup>
+            <FolioTiptapSaveButton editor={editor} saveButtonInfo={saveButtonInfo} />
+          </ToolbarGroup>
+        </>
       )}
     </>
   );
@@ -417,6 +432,7 @@ export function FolioEditorToolbar({
   textStylesCommandGroup,
   layoutsCommandGroup,
   setResponsivePreviewEnabled,
+  saveButtonInfo,
 }: FolioEditorToolbarProps) {
   if (!editor) return null;
 
@@ -429,6 +445,7 @@ export function FolioEditorToolbar({
         textStylesCommandGroup={textStylesCommandGroup}
         layoutsCommandGroup={layoutsCommandGroup}
         setResponsivePreviewEnabled={setResponsivePreviewEnabled}
+        saveButtonInfo={saveButtonInfo}
       />
     </Toolbar>
   );

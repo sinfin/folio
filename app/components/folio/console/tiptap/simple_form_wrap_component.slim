@@ -23,6 +23,10 @@
             = folio_icon(:chevron_down, height: 16)
 
       .f-c-tiptap-simple-form-wrap__editors
+        - if form.object.tiptap_autosave_enabled?
+          .f-c-tiptap-simple-form-wrap__editors-autosave
+            = render(Folio::Console::Tiptap::SimpleFormWrap::AutosaveInfoComponent.new(object: form.object))
+
         .f-c-tiptap-simple-form-wrap__editors-input-wrap
           - form.object.class.folio_tiptap_fields.each do |field|
             = form.input field, as: :tiptap, block: true, error: false
