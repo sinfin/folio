@@ -25,6 +25,9 @@ module Dummy
     I18n.available_locales = [:cs, :en]
     I18n.default_locale = :cs
 
+    # Load Folio gem locale files
+    config.i18n.load_path += Dir[Folio::Engine.root.join("config", "locales", "**", "*.yml")]
+
     # Custom error pages
     config.exceptions_app = self.routes
 

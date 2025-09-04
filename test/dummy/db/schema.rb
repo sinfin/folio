@@ -321,6 +321,11 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_01_121305) do
     t.string "attribution_source_url"
     t.string "attribution_copyright"
     t.string "attribution_licence"
+    t.string "headline"
+    t.datetime "capture_date"
+    t.decimal "gps_latitude", precision: 10, scale: 6
+    t.decimal "gps_longitude", precision: 10, scale: 6
+    t.datetime "file_metadata_extracted_at"
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((author)::text, ''::text)))", name: "index_folio_files_on_by_author", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name)::text, ''::text)))", name: "index_folio_files_on_by_file_name", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text)))", name: "index_folio_files_on_by_file_name_for_search", using: :gin

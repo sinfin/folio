@@ -4,6 +4,7 @@ class Folio::S3::CreateFileJob < Folio::S3::BaseJob
   def perform_for_valid(s3_path:, klass:, existing_id:, web_session_id:, user_id:, attributes:)
     broadcast_start(s3_path:, file_type: klass.to_s)
 
+    @user_id = user_id  # Store user_id for metadata extraction
     @file = prepare_file_model(klass, id: existing_id, web_session_id:, user_id:, attributes:)
     replacing_file = @file.persisted?
 
@@ -11,6 +12,11 @@ class Folio::S3::CreateFileJob < Folio::S3::BaseJob
       @file.file = downloaded_file(s3_path, tmpdir)
 
       if @file.save
+        # Trigger metadata extraction for image files (both new and replaced)
+        if @file.is_a?(Folio::File::Image)
+          trigger_metadata_extraction(@file, replacing_file: replacing_file)
+        end
+
         if replacing_file
           broadcast_replace_success(file: @file.reload, file_type: klass.to_s)
         else
@@ -86,5 +92,21 @@ class Folio::S3::CreateFileJob < Folio::S3::BaseJob
       end
 
       @file
+    end
+
+    def trigger_metadata_extraction(image, replacing_file: false)
+      # For replaced files, force extraction since it's new file content
+      force_extraction = replacing_file
+
+      # Only trigger if extraction should happen (or force for replaced files)
+      unless force_extraction || image.should_extract_metadata?
+        return
+      end
+
+      # Use extraction service directly to ensure MessageBus broadcasting with user_id from S3 job
+      Folio::Metadata::ExtractionService.perform_later(image, force: force_extraction, user_id: @user_id)
+    rescue => e
+      Rails.logger.error "Failed to trigger metadata extraction for image ##{image.id}: #{e.message}"
+      # Don't fail the upload if metadata extraction fails
     end
 end
