@@ -180,12 +180,12 @@ window.Folio.Stimulus.register('f-c-files-picker', class extends window.Stimulus
     const modal = document.querySelector('.f-c-files-show-modal')
     if (!modal) return
 
-    const url = `${this.showUrlBaseValue}/${fileData.id}`
-
-    modal.dispatchEvent(new CustomEvent('f-c-files-show-modal:openWithUrl', {
+    modal.dispatchEvent(new window.CustomEvent('f-c-files-show-modal:openForFileData', {
       detail: {
-        id: Number(fileData.id),
-        url
+        fileData: {
+          type: this.fileTypeValue,
+          id: fileData.id
+        }
       }
     }))
   }

@@ -10,6 +10,10 @@ cs:
           replace: Nahradit
           destroy: Smazat
 
+        show_modal_component:
+          navigation_next: Další
+          navigation_previous: Předchozí
+
         batch:
           bar_component:
             delete: Smazat

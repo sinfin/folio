@@ -181,8 +181,7 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
 
   edit (e) {
     e.preventDefault()
-    if (!e || !e.params || !e.params.url) return
-    this.openShowModal(e.params.url)
+    this.openShowModal()
   }
 
   primaryAction (e) {
@@ -191,22 +190,22 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
     if (this.primaryActionValue === 'index_for_modal') {
       this.dispatch('select', { detail: { fileId: this.idValue } })
     } else if (this.primaryActionValue === 'index') {
-      if (!e || !e.params || !e.params.url) return
-      this.openShowModal(e.params.url)
+      this.openShowModal()
     }
   }
 
-  openShowModal (url) {
-    if (!url) return
+  openShowModal () {
     if (!this.idValue) return
 
     const modal = document.querySelector('.f-c-files-show-modal')
     if (!modal) return
 
-    modal.dispatchEvent(new CustomEvent('f-c-files-show-modal:openWithUrl', {
+    modal.dispatchEvent(new window.CustomEvent('f-c-files-show-modal:openForFileData', {
       detail: {
-        id: Number(this.idValue),
-        url
+        fileData: {
+          type: this.fileTypeValue,
+          id: this.idValue
+        }
       }
     }))
   }

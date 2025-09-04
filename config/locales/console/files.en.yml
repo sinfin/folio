@@ -10,6 +10,10 @@ en:
           replace: Replace
           destroy: Delete
 
+        show_modal_component:
+          navigation_next: Next
+          navigation_previous: Previous
+
         batch:
           bar_component:
             delete: Delete
