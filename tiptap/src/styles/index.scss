@@ -24,20 +24,20 @@
   --bs-border-color: #c9cbcc;
 }
 
-html,
-body {
+.f-tiptap-application-html,
+.f-tiptap-application-body {
   overflow: hidden;
   min-width: 320px;
   margin: 0;
 }
 
-body {
+.f-tiptap-application-body {
   display: flex;
   flex-direction: column;
 }
 
-html,
-body,
+.f-tiptap-application-html,
+.f-tiptap-application-body,
 #folio-tiptap-dev-root,
 .f-tiptap-iframe-content {
   height: 100vh;
