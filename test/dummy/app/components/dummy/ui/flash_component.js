@@ -5,6 +5,7 @@ window.Dummy.Ui.Flash = {}
 window.Dummy.Ui.Flash.flash = (data) => {
   const alert = window.Dummy.Ui.Alert.create({
     ...data,
+    variant: data.variant || 'info',
     flash: true
   })
 
@@ -55,3 +56,20 @@ window.Dummy.Ui.Flash.flashMessageFromApiErrors = (response) => {
     window.Dummy.Ui.Flash.alert(flash)
   }
 }
+
+document.addEventListener('folio:flash', (event) => {
+  event.stopImmediatePropagation()
+
+  if (event.detail && event.detail.flash) {
+    const flashData = event.detail.flash
+
+    if (flashData.content) {
+      window.Dummy.Ui.Flash.flash({
+        content: flashData.content,
+        variant: flashData.variant || 'info'
+      })
+    } else {
+      console.error('Flash: Missing content in flash event:', { flashData })
+    }
+  }
+})

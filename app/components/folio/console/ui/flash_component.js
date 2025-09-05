@@ -17,6 +17,7 @@ window.FolioConsole.Ui.Flash.flash = (data) => {
 
   const alert = window.FolioConsole.Ui.Alert.create({
     ...data,
+    variant: data.variant || 'info',
     flash: true
   })
 
@@ -43,16 +44,16 @@ window.FolioConsole.Ui.Flash.success = (content, data = {}) => {
   })
 }
 
-window.FolioConsole.Flash.info = (content, data = {}) => {
-  return window.FolioConsole.Flash.flash({
+window.FolioConsole.Ui.Flash.info = (content, data = {}) => {
+  return window.FolioConsole.Ui.Flash.flash({
     ...data,
     content,
     variant: 'info'
   })
 }
 
-window.FolioConsole.Flash.alert = (content, data = {}) => {
-  return window.FolioConsole.Flash.flash({
+window.FolioConsole.Ui.Flash.alert = (content, data = {}) => {
+  return window.FolioConsole.Ui.Flash.flash({
     ...data,
     content,
     variant: 'danger'
@@ -92,7 +93,24 @@ if (window.Folio && window.Folio.MessageBus && window.Folio.MessageBus.callbacks
   window.Folio.MessageBus.callbacks['FolioConsole.Ui.Flash'] = (message) => {
     if (!message || message.type !== 'FolioConsole.Ui.Flash') return
     if (message.data && message.data.content) {
-      window.FolioConsole.Flash.flash(message.data)
+      window.FolioConsole.Ui.Flash.flash(message.data)
     }
   }
 }
+
+document.addEventListener('folio:flash', (event) => {
+  event.stopImmediatePropagation()
+
+  if (event.detail && event.detail.flash) {
+    const flashData = event.detail.flash
+
+    if (flashData.content) {
+      window.FolioConsole.Ui.Flash.flash({
+        content: flashData.content,
+        variant: flashData.variant || 'info'
+      })
+    } else {
+      console.error('Folio Console Flash: Missing content in flash event:', { flashData })
+    }
+  }
+})
