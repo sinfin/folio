@@ -72,14 +72,19 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
       this.catchCounter += 1
 
       if (this.catchCounter > 10) {
-        this.removeParentOrElement()
         const msg = `Failed to process file: ${error.message}`
 
-        if (window.FolioConsole && window.FolioConsole.Flash) {
-          window.FolioConsole.Flash.alert(msg)
-        } else {
-          window.alert(msg)
-        }
+        this.element.dispatchEvent(new CustomEvent('folio:flash', {
+          bubbles: true,
+          detail: {
+            flash: {
+              content: msg,
+              variant: 'danger'
+            }
+          }
+        }))
+
+        this.removeParentOrElement()
       }
 
       if (this.timeout) window.clearTimeout(this.timeout)
