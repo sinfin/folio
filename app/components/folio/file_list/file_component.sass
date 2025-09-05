@@ -78,6 +78,12 @@
     &:hover
       text-decoration: underline
 
+  &__info-item
+    white-space: nowrap
+    overflow: hidden
+    text-overflow: ellipsis
+    max-width: 150px
+
   &__part--warning
     color: $accent-orange
     cursor: help
@@ -340,3 +346,14 @@
 
       &--thead &__part
         padding-top: 0
+
+      &__info-item
+        max-width: 250px
+
+    @container (min-width: 800px)
+      &__info-item
+        max-width: 400px
+
+    @container (min-width: 1000px)
+      &__info-item
+        max-width: 600px

@@ -11,3 +11,4 @@ cs:
         thead/count: Použití
         thead/size: Velikost
         thead/tags: Klíčová slova
+        tags_count: "Celkem %{count} klíčových slov"

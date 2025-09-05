@@ -119,7 +119,15 @@ div data=data class=bem_class_name
           span.f-file-list-file__thead-label = t('.thead/tags')
       - elsif @file.tags.present?
         .f-file-list-file__tags
-          - @file.tags.each do |file_tag|
+          - if @file.tags.size > 6
+            - @file.tags.first(5).each do |file_tag|
+              span.f-file-list-file__tag = file_tag
+
+            span.f-file-list-file__tag title=t('.tags_count',
+                                               count: @file.tags.size)
+              ' &hellip;
+          - else
+            - @file.tags.each do |file_tag|
               span.f-file-list-file__tag = file_tag
 
   - if !@thead && !@template && @file.try(:file_list_source).present?

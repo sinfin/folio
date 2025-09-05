@@ -11,3 +11,4 @@ en:
         thead/count: Usage
         thead/size: Size
         thead/tags: Keywords
+        tags_count: "%{count} tags in total"
