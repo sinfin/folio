@@ -25,7 +25,7 @@ window.FolioConsole.Ui.Flash.flash = (data) => {
   if (modalBody) {
     modalBody.insertAdjacentElement('beforebegin', alert)
   } else {
-    const flashWrap = document.querySelector('.f-c-ui-wrap')
+    const flashWrap = document.querySelector('.f-c-ui-flash')
 
     if (flashWrap) {
       flashWrap.appendChild(alert)
