@@ -1,3 +1,4 @@
+//= require folio/i18n
 //= require folio/remote_scripts
 
 window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controller {
@@ -9,6 +10,21 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
   }
 
   static targets = ['trigger', 'loader']
+
+  static ERROR_MESSAGES = {
+    en: {
+      failedToLoadScripts: 'Failed to load upload component. Please refresh the page.',
+      failedToPrepareUpload: 'Failed to prepare file upload. Please try again.',
+      systemError: 'Upload failed due to a system error. Please try again.',
+      failedToInitialize: 'Failed to initialize upload component. Please refresh the page.'
+    },
+    cs: {
+      failedToLoadScripts: 'Nepodařilo se načíst komponentu pro nahrávání. Prosím obnovte stránku.',
+      failedToPrepareUpload: 'Nepodařilo se připravit nahrávání souboru. Zkuste to prosím znovu.',
+      systemError: 'Nahrávání selhalo kvůli systémové chybě. Zkuste to prosím znovu.',
+      failedToInitialize: 'Nepodařilo se inicializovat komponentu pro nahrávání. Prosím obnovte stránku.'
+    }
+  }
 
   connect () {
     window.folioUppyCounter = (window.folioUppyCounter || 0) + 1
@@ -26,7 +42,7 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
       this.init()
     }, (error) => {
       console.error('[Uppy] Failed to load Uppy scripts:', error)
-      this.showError('Failed to load upload component. Please refresh the page.')
+      this.showError(window.Folio.i18n(this.constructor.ERROR_MESSAGES, 'failedToLoadScripts'))
     })
   }
 
@@ -49,11 +65,14 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
         }
       }
 
+      if (document.documentElement.lang === 'cs') {
+        opts.locale = window.Uppy.locales.cs_CZ
+      }
+
       this.uppy = new window.Uppy.Uppy(opts)
 
       const dashboardOpts = {
-        inline: this.inlineValue,
-        locale: document.documentElement.lang === 'cs' ? window.Uppy.locales.cs_CZ : null
+        inline: this.inlineValue
       }
 
       if (this.inlineValue) {
@@ -73,7 +92,7 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
       if (this.existingIdValue) args.existing_id = this.existingIdValue
 
       this.uppy.use(window.Uppy.AwsS3, {
-        getUploadParameters (file) {
+        getUploadParameters: (file) => {
           return window.Folio.Api.apiPost('/folio/api/s3/before', { ...args, file_name: file.name })
             .then((response) => {
               file.name = response.file_name
@@ -87,7 +106,7 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
             })
             .catch((error) => {
               console.error('[Uppy] Failed to get S3 upload parameters:', error)
-              throw new Error('Failed to prepare file upload. Please try again.')
+              throw new Error(window.Folio.i18n(this.constructor.ERROR_MESSAGES, 'failedToPrepareUpload'))
             })
         }
       })
@@ -100,23 +119,9 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
         this.uppyComplete(result)
       })
 
-      this.uppy.on('upload-error', (file, error, response) => {
-        console.error('[Uppy] Upload failed for file:', file.name, error)
-        if (error.isNetworkError) {
-          this.showError('Upload failed due to network issues. Please check your connection and try again.')
-        } else {
-          this.showError(`Failed to upload ${file.name}: ${error.message}`)
-        }
-      })
-
       this.uppy.on('error', (error) => {
         console.error('[Uppy] System error:', error)
-        this.showError('Upload failed due to a system error. Please try again.')
-      })
-
-      this.uppy.on('restriction-failed', (file, error) => {
-        console.warn('[Uppy] File restriction failed:', file.name, error.message)
-        this.showError(`File ${file.name} was rejected: ${error.message}`)
+        this.showError(window.Folio.i18n(this.constructor.ERROR_MESSAGES, 'systemError'))
       })
 
       if (!this.inlineValue) {
@@ -130,26 +135,38 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
       }
     } catch (error) {
       console.error('[Uppy] Failed to initialize Uppy:', error)
-      this.showError('Failed to initialize upload component. Please refresh the page.')
+      this.showError(window.Folio.i18n(this.constructor.ERROR_MESSAGES, 'failedToInitialize'))
     }
   }
 
-  uppyComplete (_result) {
-    if (!this.inlineValue) {
+  uppyComplete (result) {
+    // Remove only successfully uploaded files
+    result.successful.forEach((file) => {
+      this.uppy.removeFile(file.id)
+    })
+
+    if (!this.inlineValue && result.failed.length === 0) {
       this.uppy.getPlugin('Dashboard').closeModal()
     }
   }
 
   uppyUploadSuccess (file, result) {
     this.dispatch('upload-success', { detail: { file, result } })
-    this.uppy.removeFile(file.id)
   }
 
   showError (message) {
     if (this.uppy) {
       this.uppy.info(message, 'error', 5000)
     } else {
-      console.error('[Uppy] Error (Uppy not initialized):', message)
+      this.element.dispatchEvent(new CustomEvent('folio:flash', {
+        bubbles: true,
+        detail: {
+          flash: {
+            content: message,
+            variant: 'danger'
+          }
+        }
+      }))
     }
 
     this.dispatch('upload-error-message', { detail: { message } })
