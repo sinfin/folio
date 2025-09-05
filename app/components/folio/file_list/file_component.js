@@ -1,4 +1,5 @@
 //= require folio/confirm
+//= require folio/i18n
 
 window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus.Controller {
   static targets = ['imagePart', 'loader', 'checkbox']
@@ -15,6 +16,19 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
     selectable: { type: Boolean, default: false },
     batchActions: { type: Boolean, default: false },
     primaryAction: { type: String, default: '' }
+  }
+
+  static ERROR_MESSAGES = {
+    en: {
+      failedToProcessFile: 'Failed to process file',
+      failedToFinishUploading: 'Failed to finished uploading file',
+      failedToDeleteFile: 'Failed to delete file'
+    },
+    cs: {
+      failedToProcessFile: 'Nepodařilo se zpracovat soubor',
+      failedToFinishUploading: 'Nepodařilo se dokončit nahrávání souboru',
+      failedToDeleteFile: 'Nepodařilo se smazat soubor'
+    }
   }
 
   connect () {
@@ -72,18 +86,7 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
       this.catchCounter += 1
 
       if (this.catchCounter > 10) {
-        const msg = `Failed to process file: ${error.message}`
-
-        this.element.dispatchEvent(new CustomEvent('folio:flash', {
-          bubbles: true,
-          detail: {
-            flash: {
-              content: msg,
-              variant: 'danger'
-            }
-          }
-        }))
-
+        this.errorFlashMessage(`${window.Folio.i18n(this.constructor.ERROR_MESSAGES, 'failedToProcessFile')}: ${error.message}`)
         this.removeParentOrElement()
       }
 
@@ -93,6 +96,18 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
         this.pingApi()
       }, this.catchCounter * 500)
     })
+  }
+
+  errorFlashMessage (content) {
+    this.element.dispatchEvent(new CustomEvent('folio:flash', {
+      bubbles: true,
+      detail: {
+        flash: {
+          content,
+          variant: 'danger'
+        }
+      }
+    }))
   }
 
   messageBusCallbackForCreate (event) {
@@ -148,7 +163,7 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
       if (!handleErrors) return
 
       this.removeParentOrElement()
-      window.alert(`Failed to process file: ${error.message}`)
+      this.errorFlashMessage(`${window.Folio.i18n(this.constructor.ERROR_MESSAGES, 'failedToProcessFile')}: ${error.message}`)
     }).then((response) => {
       if (this.element.parentNode) {
         // only replace if still in the DOM
@@ -173,14 +188,7 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
   }
 
   messageBusFailure (data) {
-    const msg = `Failed to finished uploading file - ${data.errors.join(', ')}`
-
-    if (window.FolioConsole && window.FolioConsole.Flash && window.FolioConsole.Flash.alert) {
-      window.FolioConsole.Flash.alert(msg)
-    } else {
-      window.alert(msg)
-    }
-
+    this.errorFlashMessage(`${window.Folio.i18n(this.constructor.ERROR_MESSAGES, 'failedToFinishUploading')} - ${data.errors.join(', ')}`)
     this.removeParentOrElement()
   }
 
@@ -240,7 +248,7 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
         }
       }).catch((error) => {
         this.element.classList.remove('f-file-list-file--destroying')
-        window.alert(`Failed to delete file: ${error.message}`)
+        this.errorFlashMessage(`${window.Folio.i18n(this.constructor.ERROR_MESSAGES, 'failedToDeleteFile')}: ${error.message}`)
       })
     }, 'delete')
   }
