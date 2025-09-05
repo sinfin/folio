@@ -11,7 +11,7 @@
         span.me-3
           = dig_error_message(error)
 
-        - if options[:buttons] != false
+        - if show_fix_button?(error)
           == cell('folio/console/ui/button',
                   variant: 'danger',
                   size: :sm,
