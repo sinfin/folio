@@ -64,6 +64,8 @@ class Folio::Console::Files::ShowComponent < Folio::Console::ApplicationComponen
 
   def table_row_keys
     %i[
+      headline
+      description
       author
       attribution_source
       attribution_source_url

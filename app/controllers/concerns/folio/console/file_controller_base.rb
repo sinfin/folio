@@ -36,13 +36,14 @@ module Folio::Console::FileControllerBase
   private
     def file_params
       p = params.require(:file)
-                .permit(:tag_list,
+                .permit(:headline,
+                        :description,
+                        :tag_list,
                         :author,
                         :attribution_source,
                         :attribution_source_url,
                         :attribution_copyright,
                         :attribution_licence,
-                        :description,
                         :sensitive_content,
                         :default_gravity,
                         :alt,

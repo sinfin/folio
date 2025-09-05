@@ -52,6 +52,7 @@ window.Folio.Stimulus.register('f-input-autocomplete', class extends window.Stim
     this.element.addEventListener('focus', this.boundOnFocus)
 
     this.boundOnCancel = () => { this.removeDropdown() }
+    this.element.addEventListener('f-c-ui-ajax-input:success', this.boundOnCancel)
     this.element.addEventListener('f-c-ui-ajax-input:cancel', this.boundOnCancel)
   }
 
@@ -78,6 +79,7 @@ window.Folio.Stimulus.register('f-input-autocomplete', class extends window.Stim
     }
 
     if (this.boundOnCancel) {
+      this.element.removeEventListener('f-c-ui-ajax-input:success', this.boundOnCancel)
       this.element.removeEventListener('f-c-ui-ajax-input:cancel', this.boundOnCancel)
       delete this.boundOnCancel
     }

@@ -49,6 +49,7 @@ window.Folio.Stimulus.register('f-c-ui-in-place-input', class extends window.Sti
       const input = this.element.querySelector('.f-c-ui-ajax-input__input')
       if (!input) return
 
+      input.dispatchEvent(new CustomEvent('autosize:update'))
       input.focus()
       input.setSelectionRange(-1, -1)
     }
