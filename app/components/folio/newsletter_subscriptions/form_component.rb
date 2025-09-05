@@ -14,7 +14,8 @@ class Folio::NewsletterSubscriptions::FormComponent < Folio::ApplicationComponen
                             message
                             button_class
                             input_label
-                            input_show_at_button]
+                            input_show_at_button
+                            turnstile_appearance]
 
   bem_class_name :persisted, :invalid
 
@@ -99,5 +100,9 @@ class Folio::NewsletterSubscriptions::FormComponent < Folio::ApplicationComponen
 
   def remember_option_keys
     REMEMBER_OPTION_KEYS
+  end
+
+  def turnstile_appearance
+    @view_options[:turnstile_appearance].presence || "interaction-only"
   end
 end
