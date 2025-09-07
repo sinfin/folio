@@ -21,7 +21,7 @@ window.Folio.Tiptap.getHeight = () => {
   
   // Ensure we have a reasonable minimum height
   const height = editor.clientHeight;
-  return Math.max(height, 120); // Minimum 120px height
+  return Math.max(height, 150); // Minimum 150px height
 }
 
 window.Folio.Tiptap.init = (props) => {
