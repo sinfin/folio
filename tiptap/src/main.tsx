@@ -17,7 +17,11 @@ window.Folio.Tiptap.root = window.Folio.Tiptap.root || null;
 
 window.Folio.Tiptap.getHeight = () => {
   const editor = document.querySelector(".f-tiptap-editor")
-  return editor ? editor.clientHeight : 0;
+  if (!editor) return 0;
+  
+  // Ensure we have a reasonable minimum height
+  const height = editor.clientHeight;
+  return Math.max(height, 120); // Minimum 120px height
 }
 
 window.Folio.Tiptap.init = (props) => {
@@ -30,6 +34,7 @@ window.Folio.Tiptap.init = (props) => {
   }
 
   const onCreate = ({ editor }: { editor: TiptapEditor }) => {
+    // Send initial message immediately
     window.parent!.postMessage(
       {
         type: "f-tiptap:created",
@@ -38,6 +43,17 @@ window.Folio.Tiptap.init = (props) => {
       },
       "*",
     );
+
+    // Send a delayed height update to ensure DOM is fully rendered
+    setTimeout(() => {
+      window.parent!.postMessage(
+        {
+          type: "f-tiptap-editor:resized",
+          height: window.Folio.Tiptap.getHeight(),
+        },
+        "*",
+      );
+    }, 100);
 
     if (props.onCreate) {
       props.onCreate({ editor });
