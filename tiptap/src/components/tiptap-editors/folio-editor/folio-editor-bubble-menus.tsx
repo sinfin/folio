@@ -78,18 +78,12 @@ export function FolioEditorBubbleMenu({
         if (show) {
           if (source.activeKeys) {
             const newActiveKeys = source.activeKeys({ editor, state })
-
-            if (JSON.stringify(newActiveKeys) !== JSON.stringify(activeKeys)) {
-              setActiveKeys(newActiveKeys)
-            }
+            setActiveKeys(newActiveKeys)
           }
 
           if (source.disabledKeys) {
             const newDisabledKeys = source.disabledKeys({ editor, state })
-
-            if (JSON.stringify(newDisabledKeys) !== JSON.stringify(disabledKeys)) {
-              setDisabledKeys(newDisabledKeys)
-            }
+            setDisabledKeys(newDisabledKeys)
           }
         }
 

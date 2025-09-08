@@ -1,9 +1,27 @@
 import { mergeAttributes, Node, ReactNodeViewRenderer } from "@tiptap/react";
+import { FolioTiptapPageView } from "./folio-tiptap-page-view";
 
 export const FolioTiptapPageNode = Node.create({
   name: 'folioTiptapPage',
   content: 'block+',
   isolating: true,
+
+  addAttributes() {
+    return {
+      collapsed: {
+        default: false,
+        parseHTML: element => element.getAttribute('data-collapsed') === 'true',
+        renderHTML: attributes => {
+          if (attributes.collapsed) {
+            return {
+              'data-collapsed': 'true',
+            };
+          }
+          return {};
+        },
+      },
+    };
+  },
 
   addOptions() {
     return {
@@ -23,6 +41,10 @@ export const FolioTiptapPageNode = Node.create({
 
   renderHTML({ HTMLAttributes }) {
     return ['div', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes), 0];
+  },
+
+  addNodeView() {
+    return ReactNodeViewRenderer(FolioTiptapPageView);
   },
 });
 

@@ -34,6 +34,19 @@ export const FOLIO_TIPTAP_PAGES_BUBBLE_MENU_SOURCE: FolioEditorBubbleMenuSource 
   shouldShow: ({ editor, state }) => {
     return editor.isActive(FolioTiptapPagesNode.name)
   },
+  disabledKeys: ({ editor }) => {
+    const result = []
+
+    if (!editor.can().moveFolioTiptapPageUp()) {
+      result.push("moveFolioTiptapPageUp");
+    }
+
+    if (!editor.can().moveFolioTiptapPageDown()) {
+      result.push("moveFolioTiptapPageDown");
+    }
+
+    return result
+  },
   items: [
     [
       {

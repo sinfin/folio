@@ -1,8 +1,6 @@
 import { Node, mergeAttributes } from '@tiptap/core';
 import { TextSelection } from '@tiptap/pm/state';
 
-import translate from "@/lib/i18n";
-
 import {
   addOrDeletePage,
   createPages,
@@ -47,7 +45,6 @@ export const FolioTiptapPagesNode = Node.create({
     return {
       HTMLAttributes: {
         class: 'f-tiptap-pages',
-        "data-f-tiptap-pages-label": translate(TRANSLATIONS, "label"),
       },
     };
   },

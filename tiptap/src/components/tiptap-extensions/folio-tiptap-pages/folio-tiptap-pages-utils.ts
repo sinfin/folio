@@ -197,7 +197,7 @@ export function moveFolioTiptapPage({
     (node: Node) => node.type.name === FolioTiptapPageNode.name,
   )(state.selection);
 
-  if (dispatch && maybePages && maybePage) {
+  if (maybePages && maybePage) {
     const pages = maybePages.node;
     let currentIndex: null | number = null;
 
@@ -263,6 +263,46 @@ export function moveFolioTiptapPage({
       maybePages.pos + maybePages.node.nodeSize,
       nextPages,
     ).setSelection(TextSelection.near(tr.doc.resolve(nextSelectPos)));
+
+    if (dispatch) {
+      dispatch(tr);
+    }
+
+    return true;
+  }
+
+  return false;
+}
+
+export function toggleFolioTiptapPageCollapsed({
+  state,
+  dispatch,
+  node,
+  getPos,
+}: {
+  state: EditorState;
+  dispatch: any;
+  node: Node;
+  getPos: () => number | undefined;
+}) {
+  if (dispatch && node.type.name === FolioTiptapPageNode.name) {
+    const currentCollapsed = node.attrs.collapsed || false;
+
+    const tr = state.tr;
+    const pos = getPos()
+
+    if (typeof pos !== "number") {
+      return false;
+    }
+
+    tr.setNodeMarkup(
+      pos,
+      undefined,
+      {
+        ...node.attrs,
+        collapsed: !currentCollapsed,
+      }
+    );
 
     dispatch(tr);
     return true;
