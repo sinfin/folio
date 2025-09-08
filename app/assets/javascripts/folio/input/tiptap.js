@@ -386,7 +386,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
       .catch((error) => {
         console.warn('[Folio] [Tiptap] Auto-save failed:', error)
 
-        this.sendMessageToIframe({ type: 'f-input-tiptap:failed-to-autosave' })
+        this.sendMessageToIframe({ type: 'f-input-tiptap:autosave:failed-to-autosave' })
 
         // Send event to parent SimpleFormWrapComponent to show failed autosave alert
         this.dispatch('tiptapAutosaveFailed', { bubbles: true })
