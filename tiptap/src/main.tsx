@@ -44,17 +44,6 @@ window.Folio.Tiptap.init = (props) => {
       "*",
     );
 
-    // Send a delayed height update to ensure DOM is fully rendered
-    setTimeout(() => {
-      window.parent!.postMessage(
-        {
-          type: "f-tiptap-editor:resized",
-          height: window.Folio.Tiptap.getHeight(),
-        },
-        "*",
-      );
-    }, 100);
-
     if (props.onCreate) {
       props.onCreate({ editor });
     }
