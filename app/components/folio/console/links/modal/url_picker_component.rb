@@ -3,9 +3,10 @@
 class Folio::Console::Links::Modal::UrlPickerComponent < Folio::Console::ApplicationComponent
   include Folio::Console::Cell::IndexFilters
 
-  def initialize(url_json:, absolute_urls: false)
+  def initialize(url_json:, absolute_urls: false, default_custom_url: false)
     @url_json = url_json
     @absolute_urls = absolute_urls
+    @default_custom_url = default_custom_url
   end
 
   def before_render
@@ -24,7 +25,11 @@ class Folio::Console::Links::Modal::UrlPickerComponent < Folio::Console::Applica
 
   def tabs
     @tabs ||= begin
-      first_active = @record.present? || @url_json[:href].blank?
+      if @default_custom_url
+        first_active = false
+      else
+        first_active = @record.present? || @url_json[:href].blank?
+      end
 
       [
         { label: t(".tab/pick"), key: :pick, active: first_active },
@@ -49,6 +54,7 @@ class Folio::Console::Links::Modal::UrlPickerComponent < Folio::Console::Applica
                           filtering: false,
                           autofocus_input: tabs[1][:active],
                           absolute_urls: @absolute_urls,
+                          default_custom_url: @default_custom_url,
                         })
   end
 

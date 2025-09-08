@@ -141,7 +141,7 @@ cs:
       other_than: musí být rozdílný/á/é od %{count}
       present: musí být prázdný/á/é
       required: musí existovat
-      taken: již databáze obsahuje
+      taken: již je v databázi
       too_long: je příliš dlouhý/á/é (max. %{count} znaků)
       too_short: je příliš krátký/á/é (min. %{count} znaků)
       wrong_length: nemá správnou délku (očekáváno %{count} znaků)

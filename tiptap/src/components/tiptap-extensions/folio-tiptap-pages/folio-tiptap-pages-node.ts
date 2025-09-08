@@ -1,9 +1,12 @@
 import { Node, mergeAttributes } from '@tiptap/core';
 import { TextSelection } from '@tiptap/pm/state';
 
-import translate from "@/lib/i18n";
-
-import { addOrDeletePage, createPages, goToPage } from './folio-tiptap-pages-utils';
+import {
+  addOrDeletePage,
+  createPages,
+  goToPage,
+  moveFolioTiptapPage
+} from './folio-tiptap-pages-utils';
 
 export * from './folio-tiptap-page-node';
 
@@ -23,6 +26,8 @@ declare module '@tiptap/core' {
       addFolioTiptapPageBefore: () => ReturnType
       addFolioTiptapPageAfter: () => ReturnType
       deleteFolioTiptapPage: () => ReturnType
+      moveFolioTiptapPageUp: () => ReturnType
+      moveFolioTiptapPageDown: () => ReturnType
     }
   }
 }
@@ -40,7 +45,6 @@ export const FolioTiptapPagesNode = Node.create({
     return {
       HTMLAttributes: {
         class: 'f-tiptap-pages',
-        "data-f-tiptap-pages-label": translate(TRANSLATIONS, "label"),
       },
     };
   },
@@ -90,6 +94,16 @@ export const FolioTiptapPagesNode = Node.create({
         () =>
           ({ dispatch, state }) => {
             return addOrDeletePage({ dispatch, state, type: 'delete' });
+          },
+      moveFolioTiptapPageUp:
+        () =>
+          ({ dispatch, state }) => {
+            return moveFolioTiptapPage({ state, dispatch, type: 'up' });
+          },
+      moveFolioTiptapPageDown:
+        () =>
+          ({ dispatch, state }) => {
+            return moveFolioTiptapPage({ state, dispatch, type: 'down' });
           },
     };
   },

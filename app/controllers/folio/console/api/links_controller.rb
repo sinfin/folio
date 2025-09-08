@@ -12,12 +12,14 @@ class Folio::Console::Api::LinksController < Folio::Console::Api::BaseController
 
     json = params[:json] != false && params[:json] != "false"
     absolute_urls = params[:absolute_urls] == true || params[:absolute_urls] == "true"
+    default_custom_url = params[:default_custom_url] == true || params[:default_custom_url] == "true"
 
     render_component_json(Folio::Console::Links::Modal::FormComponent.new(url_json:,
                                                                           json:,
                                                                           absolute_urls:,
                                                                           disable_label: params[:disable_label].to_s == "true",
-                                                                          preferred_label: params[:preferred_label].presence))
+                                                                          preferred_label: params[:preferred_label].presence,
+                                                                          default_custom_url:))
   end
 
   def control_bar
@@ -35,11 +37,13 @@ class Folio::Console::Api::LinksController < Folio::Console::Api::BaseController
 
     json = params[:json] != false && params[:json] != "false"
     absolute_urls = params[:absolute_urls] == true || params[:absolute_urls] == "true"
+    default_custom_url = params[:default_custom_url] == true || params[:default_custom_url] == "true"
 
     render_component_json(Folio::Console::Links::ControlBarComponent.new(url_json:,
                                                                          href:,
                                                                          json:,
-                                                                         absolute_urls:))
+                                                                         absolute_urls:,
+                                                                         default_custom_url:))
   end
 
   def value

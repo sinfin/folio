@@ -5,7 +5,7 @@ import {
   useEditor,
   type Editor,
 } from "@tiptap/react";
-import { findParentNode } from "@tiptap/core";
+import { findParentNode, findChildren } from "@tiptap/core";
 
 // --- Tiptap Core Extensions ---
 import { StarterKit } from "@tiptap/starter-kit";
@@ -210,9 +210,15 @@ export function FolioEditor({
                 let key = "commandPlaceholder";
 
                 if (node.type.name === "heading") {
-                  const maybePages = findParentNode((node: any) => node.type.name === FolioTiptapPagesNode.name)(editor.state.selection);
+                  const maybePage = findParentNode((node: any) => node.type.name === FolioTiptapPageNode.name)(editor.state.selection);
+                  let isFirstInPage = false
 
-                  if (maybePages) {
+                  if (maybePage) {
+                    const allTitlesInPage = findChildren(maybePage.node, (node: any) => node.type.name === "heading");
+                    isFirstInPage = allTitlesInPage[0].node === node;
+                  }
+
+                  if (isFirstInPage) {
                     key = 'headingInPagesPlaceholder'
                   } else if (folioTiptapHeadingLevels.length === 1) {
                     key = 'singleHeadingPlaceholder'
@@ -309,8 +315,8 @@ export function FolioEditor({
   React.useEffect(() => {
     if (initializedContent) return
 
-    const clearedContent = clearContent({ 
-      content: defaultContent, 
+    const clearedContent = clearContent({
+      content: defaultContent,
       editor,
       allowedFolioTiptapNodeTypes: folioTiptapConfig.nodes || []
     })

@@ -152,11 +152,13 @@ $f-tiptap-float__aside-offset: 0 !default;
 $f-tiptap-float__aside-offset--tablet: 0 !default;
 $f-tiptap-float__aside-offset--desktop: $f-tiptap-float__aside-offset--tablet !default;
 
-$f-tiptap-pages__gap-in-editor-only: $f-tiptap__spacer !default;
+$f-tiptap-pages__gap-in-editor-only: 0.5rem !default;
 $f-tiptap-pages__margin-in-editor-only: $f-tiptap-pages__gap-in-editor-only 0 !default;
 
 $f-tiptap-page__primary-color-in-editor-only: #00B594 !default;
 $f-tiptap-page__border-in-editor-only: 2px dashed #{$f-tiptap-page__primary-color-in-editor-only} !default;
+$f-tiptap-page__error-color-in-editor-only: #F0655D !default;
+$f-tiptap-page__error-border-in-editor-only: 2px dashed #{$f-tiptap-page__error-color-in-editor-only} !default;
 
 $f-tiptap-table__background: transparent !default;
 $f-tiptap-table__border: 1px solid var(--tt-gray-light-a-200) !default;
@@ -627,27 +629,56 @@ $f-tiptap-table-td__min-width: 5rem !default;
     gap: $f-tiptap-pages__gap-in-editor-only;
     margin: $f-tiptap-pages__margin-in-editor-only;
     position: relative;
-
-    &::before {
-      background: $f-tiptap-page__primary-color-in-editor-only;
-      border-radius: 4px 4px 0 0;
-      bottom: 100%;
-      color: #ffffff;
-      content: attr(data-f-tiptap-pages-label);
-      display: block;
-      font-size: 12px;
-      line-height: 1.4;
-      margin-bottom: -2px;
-      padding: 2px 7px;
-      pointer-events: none;
-      position: absolute;
-      right: 0;
-    }
+    counter-reset: f-tiptap-page-number 0;
   }
 
   .f-tiptap-editor & .f-tiptap-page {
     position: relative;
     flex: 0 0 auto;
+    counter-increment: f-tiptap-page-number 1;
+  }
+
+  .f-tiptap-editor & .f-tiptap-page__toggle-wrap {
+    display: flex;
+    justify-content: flex-end;
+    cursor: pointer;
+  }
+
+  .f-tiptap-editor & .f-tiptap-page__toggle-ico {
+    width: 16px;
+    height: 16px;
+  }
+
+  .f-tiptap-editor & .f-tiptap-page__toggle {
+    background: $f-tiptap-page__primary-color-in-editor-only;
+    border-radius: 4px 4px 0 0;
+    bottom: 100%;
+    color: #ffffff;
+    display: block;
+    font-size: 12px;
+    line-height: 1.4;
+    margin-bottom: -2px;
+    padding: 2px 4px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    &::before {
+      display: inline;
+      content: "Page " counter(f-tiptap-page-number);
+    }
+
+    html[lang="cs"] &::before {
+      content: "Stránka " counter(f-tiptap-page-number);
+    }
+  }
+
+  .f-tiptap-editor & .f-tiptap-page--invalid .f-tiptap-page__toggle {
+    background: $f-tiptap-page__error-color-in-editor-only;
+  }
+
+  .f-tiptap-editor & .f-tiptap-page__content {
+    position: relative;
     min-height: 1rem;
 
     &::before {
@@ -657,6 +688,32 @@ $f-tiptap-table-td__min-width: 5rem !default;
       display: block;
       inset: 0;
       border: $f-tiptap-page__border-in-editor-only;
+    }
+  }
+
+  .f-tiptap-editor & .f-tiptap-page--invalid h2:first-of-type::before,
+  .f-tiptap-editor & .f-tiptap-page__title-placeholder.is-empty::before {
+    color: #F4DEDD;
+    content: "Missing page heading" !important;
+
+    html[lang="cs"] & {
+      content: "Chybí titulek stránky" !important;
+    }
+  }
+
+  .f-tiptap-editor & .f-tiptap-page--invalid .f-tiptap-page__content::before {
+    border: $f-tiptap-page__error-border-in-editor-only
+  }
+
+  .f-tiptap-editor & .f-tiptap-page--collapsed .f-tiptap-page__content div[data-node-view-content-react] {
+    > * {
+      display: none;
+    }
+
+    > h2:first-of-type {
+      display: block;
+      margin-top: 0;
+      margin-bottom: 0;
     }
   }
 

@@ -133,7 +133,8 @@
 .f-tiptap-editor p.is-empty,
 .f-tiptap-editor h2.is-empty,
 .f-tiptap-editor h3.is-empty,
-.f-tiptap-editor h4.is-empty {
+.f-tiptap-editor h4.is-empty,
+.f-tiptap-editor .f-tiptap-page--invalid h2:first-of-type {
   position: relative;
 
   &::before {

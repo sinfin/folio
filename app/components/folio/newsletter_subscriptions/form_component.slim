@@ -29,7 +29,7 @@ div class=bem_class_name data=data
     span.folio-loader.f-newsletter-subscriptions-form__loader
 
     - if !@persisted
-      = render(Folio::Captcha::TurnstileComponent.new(appearance: "interaction-only"))
+      = render(Folio::Captcha::TurnstileComponent.new(appearance: turnstile_appearance))
 
   - if @persisted
     .f-newsletter-subscriptions-form__message

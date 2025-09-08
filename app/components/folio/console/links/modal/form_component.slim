@@ -1,6 +1,7 @@
 .f-c-links-modal-form data=data
   = render(Folio::Console::Links::Modal::UrlPickerComponent.new(url_json: @url_json,
-                                                                absolute_urls: @absolute_urls))
+                                                                absolute_urls: @absolute_urls,
+                                                                default_custom_url: @default_custom_url))
 
   = simple_form_for "",
                     url: "#",

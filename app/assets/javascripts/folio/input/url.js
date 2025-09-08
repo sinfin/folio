@@ -30,6 +30,7 @@ window.Folio.Input.Url.initFormGroup = (formGroup, opts = {}) => {
   formGroup.setAttribute('data-f-c-input-form-group-url-loaded-value', 'false')
   formGroup.setAttribute('data-f-c-input-form-group-url-json-value', opts.json ? 'true' : 'false')
   formGroup.setAttribute('data-f-c-input-form-group-only-path-value', opts.absoluteUrls ? 'true' : 'false')
+  formGroup.setAttribute('data-f-c-input-form-group-default-custom-url-value', opts.defaultCustomUrl ? 'true' : 'false')
   formGroup.setAttribute('data-action', 'f-c-input-form-group-url:edit->f-c-input-form-group-url#edit f-c-input-form-group-url:remove->f-c-input-form-group-url#remove')
 
   formGroup.insertAdjacentHTML('beforeend', `
@@ -49,7 +50,8 @@ window.Folio.Stimulus.register('f-c-input-form-group-url', class extends window.
   static values = {
     loaded: Boolean,
     json: Boolean,
-    absoluteUrls: { type: Boolean, default: false }
+    absoluteUrls: { type: Boolean, default: false },
+    defaultCustomUrl: { type: Boolean, default: false }
   }
 
   static targets = ['input']
@@ -83,7 +85,7 @@ window.Folio.Stimulus.register('f-c-input-form-group-url', class extends window.
     }
 
     const baseUrl = '/console/api/links/control_bar'
-    const data = { json: this.jsonValue, absolute_urls: this.absoluteUrlsValue }
+    const data = { json: this.jsonValue, absolute_urls: this.absoluteUrlsValue, default_custom_url: this.defaultCustomUrlValue }
 
     if (this.jsonValue) {
       data.url_json = this.inputTarget.value || '{}'
@@ -130,11 +132,13 @@ window.Folio.Stimulus.register('f-c-input-form-group-url', class extends window.
 
     const json = e.detail.json !== false
     const absoluteUrls = e.detail.absoluteUrls === true
+    const defaultCustomUrl = e.detail.defaultCustomUrl === true
 
     const detail = {
       urlJson,
       json,
       absoluteUrls,
+      defaultCustomUrl,
       trigger: this
     }
 

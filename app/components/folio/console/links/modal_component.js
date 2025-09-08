@@ -24,12 +24,13 @@ window.Folio.Stimulus.register('f-c-links-modal', class extends window.Stimulus.
     }
   }
 
-  openWithUrlJson ({ urlJson, trigger, json, absoluteUrls, preferredLabel, disableLabel }) {
+  openWithUrlJson ({ urlJson, trigger, json, absoluteUrls, preferredLabel, disableLabel, defaultCustomUrl }) {
     this.trigger = trigger
     this.preferredLabelValue = preferredLabel
     this.disableLabelValue = disableLabel === true
     this.jsonValue = json !== false
     this.absoluteUrlsValue = absoluteUrls === true
+    this.defaultCustomUrl = defaultCustomUrl === true
 
     this.loadForm(urlJson)
 
@@ -50,6 +51,7 @@ window.Folio.Stimulus.register('f-c-links-modal', class extends window.Stimulus.
       url_json: JSON.stringify(urlJson),
       json: this.jsonValue,
       absolute_urls: this.absoluteUrlsValue,
+      default_custom_url: this.defaultCustomUrl,
       preferred_label: this.preferredLabelValue,
       disable_label: this.disableLabelValue
     })
@@ -106,7 +108,8 @@ window.Folio.Stimulus.register('f-c-links-modal', class extends window.Stimulus.
         absoluteUrls: e.detail.absoluteUrls,
         json: e.detail.json,
         disableLabel: e.detail.disableLabel,
-        preferredLabel: e.detail.preferredLabel
+        preferredLabel: e.detail.preferredLabel,
+        defaultCustomUrl: e.detail.defaultCustomUrl
       })
     }
   }
