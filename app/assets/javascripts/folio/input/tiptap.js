@@ -191,7 +191,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
       windowWidth: this.windowWidth,
       tiptapScrollTop: this.tiptapScrollTop || 0,
       readonly: this.readonlyValue,
-      saveButtonInfo: {
+      autosaveIndicatorInfo: {
         newRecord: this.newRecordValue,
         hasUnsavedChanges: this.hasUnsavedChangesValue,
         latestRevisionAt: this.latestRevisionAtValue || null,
