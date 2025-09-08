@@ -26,9 +26,10 @@ class Folio::Console::Form::ErrorsCell < Folio::ConsoleCell
   end
 
   def show_fix_button?(error)
-    buttons_enabled = options[:buttons] != false
-    hide_for = Array(options[:hide_btn_for]).map(&:to_s)
+    return false if options[:buttons] == false
 
-    buttons_enabled && hide_for.exclude?(error.attribute.to_s)
+    hide_for = Array(options[:hide_fix_error_btn]).map(&:to_s)
+
+    hide_for.exclude?(error.attribute.to_s)
   end
 end
