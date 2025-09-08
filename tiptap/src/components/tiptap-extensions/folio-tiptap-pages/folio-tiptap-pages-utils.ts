@@ -181,6 +181,96 @@ export function addOrDeletePage({
   return true;
 }
 
+export function moveFolioTiptapPage({
+  state,
+  dispatch,
+  type,
+}: {
+  state: EditorState;
+  dispatch: any;
+  type: "up" | "down";
+}) {
+  const maybePages = findParentNode(
+    (node: Node) => node.type.name === FolioTiptapPagesNode.name,
+  )(state.selection);
+  const maybePage = findParentNode(
+    (node: Node) => node.type.name === FolioTiptapPageNode.name,
+  )(state.selection);
+
+  if (dispatch && maybePages && maybePage) {
+    const pages = maybePages.node;
+    let currentIndex: null | number = null;
+
+    pages.content.forEach((childNode, _pos, index) => {
+      if (currentIndex !== null) return;
+
+      if (childNode === maybePage.node) {
+        currentIndex = index;
+        return;
+      }
+    });
+
+    if (currentIndex === null) {
+      console.warn("Current page not found in pages node");
+      return false;
+    }
+
+    let targetIndex: number;
+
+    if (type === "up") {
+      // Can't move up if already at the top
+      if (currentIndex === 0) {
+        return false;
+      }
+      targetIndex = currentIndex - 1;
+    } else {
+      // Can't move down if already at the bottom
+      if (currentIndex === pages.childCount - 1) {
+        return false;
+      }
+      targetIndex = currentIndex + 1;
+    }
+
+    // Check if the target node is also a folioTiptapPage
+    const targetNode = pages.content.maybeChild(targetIndex);
+    if (!targetNode || targetNode.type.name !== FolioTiptapPageNode.name) {
+      return false;
+    }
+
+    const pagesJSON = pages.toJSON();
+
+    // Swap pages in the content array
+    const currentPage = pagesJSON.content[currentIndex];
+    const targetPage = pagesJSON.content[targetIndex];
+
+    pagesJSON.content[currentIndex] = targetPage;
+    pagesJSON.content[targetIndex] = currentPage;
+
+    const nextPages = Node.fromJSON(state.schema, pagesJSON);
+
+    // Calculate the new cursor position - should be in the moved page
+    let nextSelectPos = maybePages.pos;
+    nextPages.content.forEach((page, pos, index) => {
+      if (index < targetIndex) {
+        nextSelectPos += page.nodeSize;
+      }
+    });
+
+    const tr = state.tr;
+
+    tr.replaceWith(
+      maybePages.pos,
+      maybePages.pos + maybePages.node.nodeSize,
+      nextPages,
+    ).setSelection(TextSelection.near(tr.doc.resolve(nextSelectPos)));
+
+    dispatch(tr);
+    return true;
+  }
+
+  return false;
+}
+
 export function goToPage({
   state,
   dispatch,
@@ -199,7 +289,7 @@ export function goToPage({
 
   if (dispatch && maybePages && maybePage) {
     const pages = maybePages.node;
-    const page  = maybePage.node
+    const page = maybePage.node;
     let currentIndex: null | number = null;
 
     pages.content.forEach((childNode, pos, index) => {
