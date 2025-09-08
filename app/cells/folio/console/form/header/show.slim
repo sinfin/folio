@@ -24,4 +24,4 @@
       == cell('folio/console/index/tabs', options[:tabs])
 
   - if model.try(:object).try(:errors).present?
-    == cell('folio/console/form/errors', model)
+    == cell('folio/console/form/errors', model, options.slice(:hide_fix_error_btn))
