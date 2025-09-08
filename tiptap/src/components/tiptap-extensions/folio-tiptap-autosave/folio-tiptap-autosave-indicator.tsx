@@ -45,22 +45,22 @@ function formatSaveLabel(date: Date): string {
   }
 }
 
-export interface FolioTiptapSaveButtonProps extends ButtonProps {
+export interface FolioTiptapAutosaveIndicatorProps extends ButtonProps {
   editor: Editor;
-  saveButtonInfo?: FolioTiptapSaveButtonInfo;
+  autosaveIndicatorInfo?: FolioTiptapAutosaveIndicatorInfo;
 }
 
-export const FolioTiptapSaveButton = React.forwardRef<
+export const FolioTiptapAutosaveIndicator = React.forwardRef<
   HTMLButtonElement,
-  FolioTiptapSaveButtonProps
->(({ editor, saveButtonInfo }, ref) => {
+  FolioTiptapAutosaveIndicatorProps
+>(({ editor, autosaveIndicatorInfo }, ref) => {
   const [lastSavedAt, setLastSavedAt] = React.useState<Date | null>(
-    saveButtonInfo?.latestRevisionAt ? new Date(saveButtonInfo.latestRevisionAt) : null
+    autosaveIndicatorInfo?.latestRevisionAt ? new Date(autosaveIndicatorInfo.latestRevisionAt) : null
   );
-  const [hasUnsavedChanges, setHasUnsavedChanges] = React.useState<boolean>(saveButtonInfo?.hasUnsavedChanges ?? false);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = React.useState<boolean>(autosaveIndicatorInfo?.hasUnsavedChanges ?? false);
   const [failedToAutosave, setFailedToAutosave] = React.useState<boolean>(false);
 
-  const newRecord = saveButtonInfo?.newRecord ?? true;
+  const newRecord = autosaveIndicatorInfo?.newRecord ?? true;
 
   React.useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
@@ -105,7 +105,8 @@ export const FolioTiptapSaveButton = React.forwardRef<
       const failedLabel = translate(TRANSLATIONS, "failedToAutosave");
       return {
         icon: <SaveOff className="tiptap-button-icon" color="#F0655D" />,
-        style: { cursor: 'default' },
+        style: { cursor: 'help' },
+        'data-no-hover': 'true',
         'aria-label': failedLabel,
         tooltip: failedLabel,
       };
@@ -113,7 +114,8 @@ export const FolioTiptapSaveButton = React.forwardRef<
 
     return {
       icon: <Save className="tiptap-button-icon" color="#00B594" />,
-      style: { cursor: 'default' },
+      style: { cursor: 'help' },
+      'data-no-hover': 'true',
       'aria-label': label,
       tooltip: label,
     };
@@ -129,6 +131,7 @@ export const FolioTiptapSaveButton = React.forwardRef<
       role="button"
       tabIndex={-1}
       style={buttonState.style}
+      data-no-hover={buttonState['data-no-hover']}
       aria-label={buttonState['aria-label']}
       tooltip={buttonState.tooltip}
     >
@@ -137,6 +140,6 @@ export const FolioTiptapSaveButton = React.forwardRef<
   );
 });
 
-FolioTiptapSaveButton.displayName = "FolioTiptapSaveButton";
+FolioTiptapAutosaveIndicator.displayName = "FolioTiptapAutosaveIndicator";
 
-export default FolioTiptapSaveButton;
+export default FolioTiptapAutosaveIndicator;

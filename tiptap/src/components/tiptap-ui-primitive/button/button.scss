@@ -225,7 +225,7 @@
   }
 
   /* hover state of a button */
-  &:hover,
+  &:hover:not([data-no-hover="true"]),
   &[data-active-item="true"]:not([disabled]) {
     background-color: var(--tt-button-hover-bg-color);
     color: var(--tt-button-hover-text-color);

@@ -88,7 +88,7 @@ interface FolioEditorProps {
   folioTiptapConfig: FolioTiptapConfig;
   readonly: boolean;
   initialScrollTop: number | null;
-  saveButtonInfo?: FolioTiptapSaveButtonInfo;
+  autosaveIndicatorInfo?: FolioTiptapAutosaveIndicatorInfo;
 }
 
 export function FolioEditor({
@@ -99,7 +99,7 @@ export function FolioEditor({
   folioTiptapConfig,
   readonly,
   initialScrollTop,
-  saveButtonInfo,
+  autosaveIndicatorInfo,
 }: FolioEditorProps) {
   const windowSize = useWindowSize();
   const editorRef = React.useRef<HTMLDivElement>(null);
@@ -354,7 +354,7 @@ export function FolioEditor({
             layoutsCommandGroup={layoutsCommandGroup}
             folioTiptapConfig={folioTiptapConfig}
             setResponsivePreviewEnabled={blockEditor ? setResponsivePreviewEnabled : undefined}
-            saveButtonInfo={saveButtonInfo}
+            autosaveIndicatorInfo={autosaveIndicatorInfo}
           />
         )}
 
