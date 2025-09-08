@@ -3,6 +3,7 @@
 class Folio::Console::Api::TiptapRevisionsController < Folio::Console::Api::BaseController
   def save_revision
     placement = find_placement
+    authorize!(:update, placement)
     user = Folio::Current.user
 
     revision = placement.tiptap_revisions.find_or_initialize_by(user: user)
@@ -19,6 +20,7 @@ class Folio::Console::Api::TiptapRevisionsController < Folio::Console::Api::Base
 
   def delete_revision
     placement = find_placement
+    authorize!(:update, placement)
     user = Folio::Current.user
 
     revision = placement.tiptap_revisions.find_by(user: user)
@@ -34,6 +36,7 @@ class Folio::Console::Api::TiptapRevisionsController < Folio::Console::Api::Base
     from_user = Folio::User.find(params[:from_user_id])
     record_class = params[:record_type].constantize
     record = record_class.find(params[:record_id])
+    authorize!(:update, record)
 
     from_revision = record.tiptap_revisions.find_by(user: from_user)
     return render json: {
