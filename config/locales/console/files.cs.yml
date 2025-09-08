@@ -20,6 +20,13 @@ cs:
           metadata_component:
             no_metadata: Žádná metadata
 
+          file_placements_component:
+            no_file_placements: Žádné použití
+            th/type: Typ použití
+            th/placement_type: Typ záznamu
+            th/placement_label: Záznam
+            th/created_at: Vytvořeno
+
         batch:
           bar_component:
             delete: Smazat

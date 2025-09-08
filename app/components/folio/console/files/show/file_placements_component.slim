@@ -1,0 +1,48 @@
+.f-c-files-show-file-placements
+  - if @file_placements.blank?
+    .small = t('.no_file_placements')
+  - else
+    table.f-c-files-show-file-placements__table.table
+      thead
+        tr
+          th.f-c-files-show-file-placements__td = t('.th/type')
+          th.f-c-files-show-file-placements__td = t('.th/placement_type')
+          th.f-c-files-show-file-placements__td = t('.th/placement_label')
+          th.f-c-files-show-file-placements__td = t('.th/created_at')
+          th.f-c-files-show-file-placements__td
+
+      - @file_placements.each do |file_placement|
+        - next if file_placement.placement.blank?
+        - action = placement_action(file_placement.placement)
+
+        tr.small
+          td.f-c-files-show-file-placements__td
+            = file_placement.model_name.human
+
+          td.f-c-files-show-file-placements__td
+            = file_placement.placement.model_name.human
+
+          td.f-c-files-show-file-placements__td
+            - if action[:url]
+              a href=action[:url] target="_href"
+                = placement_label(file_placement.placement)
+            - else
+              = placement_label(file_placement.placement)
+
+          td.f-c-files-show-file-placements__td
+            = l(file_placement.created_at, format: :console_short)
+
+          td.f-c-files-show-file-placements__td
+            - if action[:url]
+              a.f-c-files-show-file-placements__action[
+                href=action[:url]
+                target="_blank"
+                class="text-reset"
+              ]
+                - if action[:type] == :show
+                  = folio_icon(:eye, height: 16)
+                - else
+                  = folio_icon(:edit_box, height: 16)
+
+    - if @pagy && @pagy.pages > 1
+      = render(Folio::Console::Ui::PagyComponent.new(pagy: @pagy))

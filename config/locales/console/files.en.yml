@@ -20,6 +20,13 @@ en:
           metadata_component:
             no_metadata: No metadata
 
+          file_placements_component:
+            no_file_placements: No usage
+            th/type: Usage type
+            th/placement_type: Record type
+            th/placement_label: Record
+            th/created_at: Created at
+
         batch:
           bar_component:
             delete: Delete

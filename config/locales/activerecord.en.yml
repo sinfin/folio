@@ -235,6 +235,15 @@ en:
         few: Attribute
         other: Attributes
 
+      folio/file_placement/audio_cover: Audio
+      folio/file_placement/cover: Image
+      folio/file_placement/document: File
+      folio/file_placement/image: Gallery image
+      folio/file_placement/image_or_embed: Gallery image
+      folio/file_placement/og_image: OG image
+      folio/file_placement/single_document: File
+      folio/file_placement/video_cover: Video
+
     state_machines:
       folio/lead:
         state:

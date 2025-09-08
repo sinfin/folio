@@ -96,6 +96,8 @@ Folio::Engine.routes.draw do
             end
 
             member do
+              get :file_placements
+
               if type == "Folio::File::Video"
                 post :retranscribe_subtitles
               end

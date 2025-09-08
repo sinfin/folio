@@ -296,6 +296,15 @@ cs:
         one: Atribut
         other: Atributů
 
+      folio/file_placement/audio_cover: Audio stopa
+      folio/file_placement/cover: Obrázek
+      folio/file_placement/document: Soubor
+      folio/file_placement/image: Obrázek galerie
+      folio/file_placement/image_or_embed: Obrázek galerie
+      folio/file_placement/og_image: OG obrázek
+      folio/file_placement/single_document: Soubor
+      folio/file_placement/video_cover: Video stopa
+
     state_machines:
       folio/lead:
         state:

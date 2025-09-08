@@ -33,6 +33,10 @@ module Folio::Console::FileControllerBase
     render "folio/console/file/show"
   end
 
+  def file_placements
+    show
+  end
+
   private
     def file_params
       p = params.require(:file)
