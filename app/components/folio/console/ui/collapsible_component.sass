@@ -1,0 +1,32 @@
+.f-c-ui-collapsible
+  margin: px-to-rem(16px) 0
+  border-top: 1px solid $border-color
+  border-bottom: 1px solid $border-color
+
+  & + &
+    margin-top: - px-to-rem(16px)
+    border-top: 0
+
+  &__toggle
+    align-items: center
+    color: $gray-medium-dark
+    cursor: pointer
+    display: flex
+    font-weight: $font-weight-bold
+    gap: px-to-rem(16px)
+    padding: px-to-rem(8px) 0
+
+  &__title
+    flex: 1 1 auto
+
+  &__chevron
+    flex: 0 0 auto
+
+  &__content
+    padding: 0 0 px-to-rem(8px)
+
+  &[data-f-c-ui-collapsible-collapsed-value="true"] &__content
+    display: none
+
+  &[data-f-c-ui-collapsible-collapsed-value="false"] &__chevron
+    transform: rotate(180deg)

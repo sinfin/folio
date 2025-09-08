@@ -71,11 +71,12 @@
 //= require folio/console/ui/ajax_input_component
 //= require folio/console/ui/alert_component
 //= require folio/console/ui/boolean_toggle_component
-//= require folio/console/ui/in_place_input_component
-//= require folio/console/ui/index/filters_component
 //= require folio/console/ui/button_component
 //= require folio/console/ui/buttons_component
+//= require folio/console/ui/collapsible_component
 //= require folio/console/ui/flash_component
+//= require folio/console/ui/in_place_input_component
+//= require folio/console/ui/index/filters_component
 //= require folio/console/ui/notification_modal_component
 //= require folio/console/ui/pagy_component
 //= require folio/console/ui/tabs_component

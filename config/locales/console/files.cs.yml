@@ -9,10 +9,16 @@ cs:
           download: Stáhnout originál
           replace: Nahradit
           destroy: Smazat
+          title/metadata: EXIF a IPTC data (%{count})
+          title/usage: Použití (%{count})
 
         show_modal_component:
           navigation_next: Další
           navigation_previous: Předchozí
+
+        show:
+          metadata_component:
+            no_metadata: Žádná metadata
 
         batch:
           bar_component:

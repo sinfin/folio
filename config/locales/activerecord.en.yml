@@ -263,6 +263,7 @@ en:
     figcaption: Caption
     file: File
     first_name: First name
+    headline: Title
     is_active: Active
     last_name: Last name
     last_sign_in_at: Last sign in

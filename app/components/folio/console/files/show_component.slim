@@ -56,4 +56,12 @@
                                                                      as: :file,
                                                                      autocomplete: autocomplete_for(key)))
 
+      .f-c-files-show__collapsibles
+        - if @file.respond_to?(:mapped_metadata)
+          = render(Folio::Console::Ui::CollapsibleComponent.new(title: t('.title/metadata', count: @file.mapped_metadata.size)))
+            = render(Folio::Console::Files::Show::MetadataComponent.new(file: @file))
+
+        = render(Folio::Console::Ui::CollapsibleComponent.new(title: t('.title/usage', count: 0)))
+          ' usage
+
   span.folio-loader.folio-loader--outset-8.f-c-files-show__loader

@@ -9,10 +9,16 @@ en:
           download: Download original
           replace: Replace
           destroy: Delete
+          title/metadata: EXIF and IPTC data (%{count})
+          title/usage: Usage (%{count})
 
         show_modal_component:
           navigation_next: Next
           navigation_previous: Previous
+
+        show:
+          metadata_component:
+            no_metadata: No metadata
 
         batch:
           bar_component:

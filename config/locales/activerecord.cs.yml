@@ -330,6 +330,7 @@ cs:
     file: Soubor
     file_mime_type: Typ souboru
     first_name: Jméno
+    headline: Titulek
     image_placements: Obrázky
     is_active: Aktivní
     last_name: Příjmení
