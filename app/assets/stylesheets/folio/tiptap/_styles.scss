@@ -691,6 +691,16 @@ $f-tiptap-table-td__min-width: 5rem !default;
     }
   }
 
+  .f-tiptap-editor & .f-tiptap-page--invalid h2:first-of-type::before,
+  .f-tiptap-editor & .f-tiptap-page__title-placeholder.is-empty::before {
+    color: #F4DEDD;
+    content: "Missing page heading" !important;
+
+    html[lang="cs"] & {
+      content: "Chybí titulek stránky" !important;
+    }
+  }
+
   .f-tiptap-editor & .f-tiptap-page--invalid .f-tiptap-page__content::before {
     border: $f-tiptap-page__error-border-in-editor-only
   }
