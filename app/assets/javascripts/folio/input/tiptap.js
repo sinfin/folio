@@ -10,10 +10,10 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     origin: String,
     type: String,
     renderUrl: String,
-    autoSaveUrl: String,
+    autosaveUrl: String,
     tiptapConfigJson: String,
     tiptapContentJsonStructureJson: String,
-    autoSave: { type: Boolean, default: false },
+    autosave: { type: Boolean, default: false },
     newRecord: { type: Boolean, default: false },
     placementType: String,
     placementId: Number,
@@ -138,7 +138,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
       this.inputTarget.dispatchEvent(new window.Event("change", { bubbles: true }))
       this.dispatch("updateWordCount", { detail: { wordCount } })
 
-      if (this.autoSaveValue && content && !options.isInitialization) {
+      if (this.autosaveValue && content && !options.isInitialization) {
         this.latestContent = content
         this.debouncedAutoSave()
 
@@ -352,7 +352,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
   }
 
   performAutoSave () {
-    if (!this.autoSaveValue || !this.autoSaveUrlValue || !this.placementTypeValue || !this.placementIdValue) return
+    if (!this.autosaveValue || !this.autosaveUrlValue || !this.placementTypeValue || !this.placementIdValue) return
     if (!this.latestContent) return
 
     const data = {
@@ -365,16 +365,16 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
       }
     }
 
-    window.Folio.Api.apiPost(this.autoSaveUrlValue, data)
+    window.Folio.Api.apiPost(this.autosaveUrlValue, data)
       .then((response) => {
         if (response && response.success) {
           console.log('[Folio] [Tiptap] Auto-saved revision:', response.revision_id)
 
-          const autoSaveMessage = {
+          const autosaveMessage = {
             type: 'f-input-tiptap:autosave:auto-saved',
             updatedAt: response.updated_at
           }
-          this.sendMessageToIframe(autoSaveMessage)
+          this.sendMessageToIframe(autosaveMessage)
 
           if (this.autosaveFailed) {
             // Send event to parent SimpleFormWrapComponent to hide failed autosave alert
