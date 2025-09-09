@@ -43,6 +43,21 @@ const addHeadingToStartofPage = ({ editor, getPos }: { editor: any; getPos: () =
   editor.view.dispatch(tr);
 }
 
+const goToEndOfPage = ({ event, editor, getPos }: { event: React.MouseEvent; editor: any; getPos: () => number | undefined }) => {
+  event.preventDefault()
+  event.stopPropagation()
+
+  const pos = getPos()
+
+  if (typeof pos !== 'number') return false;
+
+  // Shift by one as getPos() marks the beginning, not the inside
+  const resolvedPos = editor.state.doc.resolve(pos + 1)
+  const endPos = resolvedPos.end(resolvedPos.depth)
+  const tr = editor.state.tr.setSelection(TextSelection.create(editor.state.doc, endPos - 1))
+  editor.view.dispatch(tr)
+}
+
 export const FolioTiptapPageView: React.FC<FolioTiptapPageViewProps> = ({ node, getPos, editor }) => {
   if (!editor) return
 
@@ -90,6 +105,11 @@ export const FolioTiptapPageView: React.FC<FolioTiptapPageViewProps> = ({ node, 
         {showPlaceholder ? <h2 className="f-tiptap-page__title-placeholder is-empty" data-placeholder={translate(TRANSLATIONS, 'missingHeading')} onClick={() => { addHeadingToStartofPage({ editor, getPos }) }}><br className="ProseMirror-trailingBreak" /></h2> : null}
         <NodeViewContent />
       </div>
+
+      <span
+        className="f-tiptap-page__content-click-trigger"
+        onClick={(event) => goToEndOfPage({ event, editor, getPos })}
+      />
     </NodeViewWrapper>
   );
 };
