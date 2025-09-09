@@ -30,6 +30,5 @@
     data=stimulus_target("failedToSave")
   ]
     = render(Folio::Console::Ui::AlertComponent.new(variant: :danger,
-                                                    class_name: "m-0",
-                                                    closable: false))
+                                                    class_name: "m-0"))
       = t('.failed_to_save')

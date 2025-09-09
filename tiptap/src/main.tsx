@@ -17,7 +17,11 @@ window.Folio.Tiptap.root = window.Folio.Tiptap.root || null;
 
 window.Folio.Tiptap.getHeight = () => {
   const editor = document.querySelector(".f-tiptap-editor")
-  return editor ? editor.clientHeight : 0;
+  if (!editor) return 0;
+  
+  // Ensure we have a reasonable minimum height
+  const height = editor.clientHeight;
+  return Math.max(height, 150); // Minimum 150px height
 }
 
 window.Folio.Tiptap.init = (props) => {
@@ -83,7 +87,7 @@ window.Folio.Tiptap.init = (props) => {
         folioTiptapConfig={props.folioTiptapConfig ? { ...folioTiptapConfigDefaults, ...props.folioTiptapConfig } : folioTiptapConfigDefaults}
         readonly={props.readonly}
         initialScrollTop={props.scrollTop || null}
-        saveButtonInfo={props.saveButtonInfo}
+        autosaveIndicatorInfo={props.autosaveIndicatorInfo}
       />
     </StrictMode>,
   );
@@ -138,7 +142,7 @@ window.addEventListener("message", (e) => {
         content: e.data.content,
         readonly: !!e.data.readonly,
         scrollTop: e.data.tiptapScrollTop || 0,
-        saveButtonInfo: e.data.saveButtonInfo,
+        autosaveIndicatorInfo: e.data.autosaveIndicatorInfo,
       });
     }
   } else if (e.data.type === "f-input-tiptap:window-resize") {

@@ -11,7 +11,6 @@ import { useTiptapEditor } from "@/hooks/use-tiptap-editor";
 import type { ButtonProps } from "@/components/tiptap-ui-primitive/button";
 import { Button } from "@/components/tiptap-ui-primitive/button";
 
-import { makeUniqueId } from '@/components/tiptap-extensions/folio-tiptap-node';
 import translate from "@/lib/i18n";
 
 const TRANSLATIONS = {
@@ -38,16 +37,7 @@ export function insertFolioTiptapNode(
   }
 
   try {
-    const nodeWithUniqueId = {
-      ...node,
-      attrs: {
-        ...node.attrs,
-        uniqueId: node.attrs.uniqueId || makeUniqueId(),
-      },
-    }
-
-    const result = editor.commands.insertContent(nodeWithUniqueId);
-    return result;
+    return editor.commands.insertFolioTiptapNode(node);
   } catch (error) {
     console.error("insertFolioTiptapNode error", error);
     return false;

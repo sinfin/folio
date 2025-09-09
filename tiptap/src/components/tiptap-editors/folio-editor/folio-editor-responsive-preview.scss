@@ -11,6 +11,8 @@
   &__scroll {
     position: relative;
     overflow: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
     flex: 0 0 100%;
     display: flex;
     flex-direction: column;

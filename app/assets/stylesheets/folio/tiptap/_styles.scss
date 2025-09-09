@@ -642,6 +642,8 @@ $f-tiptap-table-td__min-width: 5rem !default;
     display: flex;
     justify-content: flex-end;
     cursor: pointer;
+    position: relative;
+    z-index: 3;
   }
 
   .f-tiptap-editor & .f-tiptap-page__toggle-ico {
@@ -680,6 +682,7 @@ $f-tiptap-table-td__min-width: 5rem !default;
   .f-tiptap-editor & .f-tiptap-page__content {
     position: relative;
     min-height: 1rem;
+    z-index: 2;
 
     &::before {
       content: "";
@@ -689,6 +692,25 @@ $f-tiptap-table-td__min-width: 5rem !default;
       inset: 0;
       border: $f-tiptap-page__border-in-editor-only;
     }
+
+    .ProseMirror-gapcursor:last-child {
+      position: relative;
+
+      &::before {
+        content: " ";
+        display: block;
+      }
+    }
+  }
+
+  .f-tiptap-editor & .f-tiptap-page__content-click-trigger {
+    position: absolute;
+    top: -1 * $f-tiptap-pages__gap-in-editor-only;
+    bottom: -1 * $f-tiptap-pages__gap-in-editor-only;
+    left: -100vw;
+    right: -100vw;
+    z-index: 1;
+    display: block;
   }
 
   .f-tiptap-editor & .f-tiptap-page--invalid h2:first-of-type::before,
