@@ -689,6 +689,15 @@ $f-tiptap-table-td__min-width: 5rem !default;
       inset: 0;
       border: $f-tiptap-page__border-in-editor-only;
     }
+
+    .ProseMirror-gapcursor:last-child {
+      position: relative;
+
+      &::before {
+        content: " ";
+        display: block;
+      }
+    }
   }
 
   .f-tiptap-editor & .f-tiptap-page--invalid h2:first-of-type::before,

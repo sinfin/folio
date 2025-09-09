@@ -7,6 +7,9 @@ export const makeFolioTiptapNodesCommandGroup = (folioTiptapNodes: FolioTiptapNo
       icon: Cuboid,
       key: `folioTiptapNode-${folioTiptapNode.type}`,
       command: ({ chain }) => {
+        // blur editor to prevent input
+        document.activeElement instanceof HTMLElement && document.activeElement.blur();
+
         window.parent!.postMessage(
           {
             type: "f-tiptap-slash-command:selected",
