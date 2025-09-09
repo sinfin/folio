@@ -34,7 +34,6 @@ window.Folio.Tiptap.init = (props) => {
   }
 
   const onCreate = ({ editor }: { editor: TiptapEditor }) => {
-    // Send initial message immediately
     window.parent!.postMessage(
       {
         type: "f-tiptap:created",
