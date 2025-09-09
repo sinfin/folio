@@ -46,11 +46,30 @@ class Folio::Tiptap::NodeTest < ActiveSupport::TestCase
 
     node = Node.new(title: "foo", cover:, reports:)
 
-    assert_equal cover, node.cover
-    assert_equal cover.id, node.cover_id
+    assert node.cover.is_a?(Folio::File::Image)
+    assert_equal cover.id, node.cover.id
+
+    assert node.cover_placement.is_a?(Folio::FilePlacement::Tiptap)
+    assert_equal cover.id, node.cover_placement.file_id
+
+    assert node.cover_placement_attributes
+    assert_equal cover.id, node.cover_placement_attributes["file_id"]
+
+    assert_equal 2, node.reports.size
+
+    assert node.reports[0].is_a?(Folio::File::Document)
+    assert node.reports[1].is_a?(Folio::File::Document)
 
     assert_equal reports.map(&:id).sort, node.reports.map(&:id).sort
-    assert_equal reports.map(&:id).sort, node.report_ids.sort
+
+    assert_equal 2, node.report_placements.size
+
+    assert node.report_placements[0].is_a?(Folio::FilePlacement::Tiptap)
+    assert node.report_placements[1].is_a?(Folio::FilePlacement::Tiptap)
+    assert_equal reports.map(&:id).sort, node.report_placements.map(&:file_id).sort
+
+    assert node.report_placements_attributes
+    assert_equal reports.map(&:id).sort, node.report_placements_attributes.map { |h| h["file_id"] }.sort
   end
 
   test "attachments via file_placements" do
@@ -59,12 +78,12 @@ class Folio::Tiptap::NodeTest < ActiveSupport::TestCase
     node = Node.new(title: "foo", cover_placement_attributes: { file_id: cover.id })
 
     assert_equal cover, node.cover
-    assert_equal cover.id, node.cover_id
+    assert_equal cover.id, node.cover_placement.file_id
 
     node.assign_attributes(cover_placement_attributes: { _destroy: "1" })
 
     assert_nil node.cover
-    assert_nil node.cover_id
+    assert_nil node.cover_placement
   end
 
   test "relations" do
@@ -107,8 +126,8 @@ class Folio::Tiptap::NodeTest < ActiveSupport::TestCase
     assert_equal "blue", hash["attrs"]["data"]["background"]
     assert_equal RICH_TEXT_HASH.to_json, hash["attrs"]["data"]["content"]
     assert_equal URL_JSON_HASH.to_json, hash["attrs"]["data"]["button_url_json"]
-    assert_equal cover.id, hash["attrs"]["data"]["cover_id"]
-    assert_equal reports.map(&:id).sort, hash["attrs"]["data"]["report_ids"].sort
+    assert_equal cover.id, hash["attrs"]["data"]["cover_placement_attributes"]["file_id"]
+    assert_equal reports.map(&:id).sort, hash["attrs"]["data"]["report_placements_attributes"].map { |attrs| attrs["file_id"] }.sort
     assert_equal page.id, hash["attrs"]["data"]["page_id"]
     assert_equal related_pages.map(&:id).sort, hash["attrs"]["data"]["related_page_ids"].sort
   end
@@ -147,10 +166,13 @@ class Folio::Tiptap::NodeTest < ActiveSupport::TestCase
     assert_equal("blue", node.background)
 
     assert_equal image, node.cover
-    assert_equal image.id, node.cover_id
+    assert_equal image.id, node.cover.id
+    assert_equal image.id, node.cover_placement.file_id
+    assert_equal image.id, node.cover_placement_attributes["file_id"]
 
-    assert_equal [document], node.reports
-    assert_equal [document.id], node.report_ids
+    assert_equal [document.id], node.reports.map(&:id)
+    assert_equal [document.id], node.report_placements.map(&:file_id)
+    assert_equal [document.id], node.report_placements_attributes.map { |attrs| attrs["file_id"] }
 
     assert_equal page, node.page
     assert_equal page.id, node.page_id

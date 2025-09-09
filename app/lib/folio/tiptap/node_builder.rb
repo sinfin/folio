@@ -120,76 +120,192 @@ class Folio::Tiptap::NodeBuilder
     def setup_structure_for_folio_attachment(key:, attr_config:)
       attr_config[:attachment_key]
       class_name = attr_config[:file_type]
+      file_klass = class_name.constantize
 
       if attr_config[:has_many]
-        # Placeholder methods for compatibility with existing code in react_images/react_documents
-        @klass.define_method "#{key.to_s.singularize}_placements" do
-          send("#{key.to_s.singularize}_ids").map do |file_id|
-            attr_config[:placement_class_name].constantize.new(file_id:)
-          end
-        end
+        # Store data in XXX_placements_attributes as array of hashes with file_id, title and alt
+        #
+        # Example:
+        #   image_placements_attributes: [
+        #     { "file_id" => 1, "title" => "Custom title", "alt" => "Custom alt" },
+        #     { "file_id" => 2, "alt" => "Custom alt" },
+        #     { "file_id" => 3 },
+        #   ]
+        @klass.attribute "#{key.to_s.singularize}_placements_attributes", type: :json, array: true, default: []
 
+        # Override setter to enforce structure and whitelist keys
         @klass.define_method "#{key.to_s.singularize}_placements_attributes=" do |attributes|
           ary = []
 
-          if attributes.nil?
-            return send("#{key.to_s.singularize}_ids=", [])
-          end
-
-          if attributes.is_a?(Hash)
-            ary = attributes.values
-          elsif attributes.is_a?(Array)
-            ary = attributes
-          else
-            fail ArgumentError, "Expected attributes to be a Hash or Array, got #{attributes.class.name}"
-          end
-
-          file_ids = []
-          ary.each do |value|
-            if value[:file_id] && value[:_destroy] != "1"
-              file_ids << value[:file_id].to_i
+          if attributes.present?
+            if attributes.is_a?(Hash)
+              ary = attributes.values
+            elsif attributes.is_a?(Array)
+              ary = attributes
+            else
+              fail ArgumentError, "Expected attributes to be a Hash or Array, got #{attributes.class.name}"
             end
           end
 
-          send("#{key.to_s.singularize}_ids=", file_ids)
+          whitelisted = []
+
+          ary.each do |raw_value|
+            value = raw_value.with_indifferent_access
+
+            if value[:file_id] && value[:_destroy] != "1"
+              whitelisted << {
+                "file_id" => value[:file_id].to_i,
+                "title" => value[:title].presence,
+                "alt" => value[:alt].presence,
+              }.compact
+            end
+          end
+
+          super(whitelisted)
         end
 
-        setup_structure_for_has_many(key:, class_name:)
-      else
-        # Placeholder methods for compatibility with existing code in Folio::Console::File::PickerCell.
-        @klass.define_method "#{key}_placement" do
-          file_id = send("#{key}_id")
+        # Placeholder placements getter for compatibility with existing code
+        @klass.define_method "#{key.to_s.singularize}_placements" do
+          send("#{key.to_s.singularize}_placements_attributes").map do |attrs|
+            Folio::FilePlacement::Tiptap.new(file_id: attrs["file_id"],
+                                             title: attrs["title"],
+                                             alt: attrs["alt"])
+          end
+        end
 
-          if file_id.present?
-            attr_config[:placement_class_name].constantize.new(file_id:)
+        # Files getter for compatibility with existing code
+        @klass.define_method(key) do
+          ids = send("#{key.to_s.singularize}_placements_attributes").map { |attrs| attrs["file_id"] }
+
+          if ids.present?
+            file_klass.where(id: ids).to_a
+          else
+            []
+          end
+        end
+
+        # Files setter for compatibility with existing code
+        @klass.define_method("#{key}=") do |value|
+          if value.is_a?(Array) && value.all? { |v| v.is_a?(file_klass) }
+            attributes_ary = value.map do |file|
+              {
+                "file_id" => file.id,
+                "title" => file.title.presence,
+                "alt" => file.alt.presence,
+              }.compact
+            end
+
+            send("#{key.to_s.singularize}_placements_attributes=", attributes_ary)
+          else
+            fail ArgumentError, "Expected an Array of #{file_klass.name} for #{key}, got #{value}"
+          end
+        end
+
+        # Files ids setter for compatibility with existing code
+        @klass.define_method("#{key.to_s.singularize}_ids=") do |raw_ary|
+          raw_ary ||= []
+
+          unless raw_ary.is_a?(Array)
+            fail ArgumentError, "Expected an Array for #{key.to_s.singularize}_ids, got #{raw_ary.class.name}"
+          end
+
+          ary = []
+
+          raw_ary.each do |raw_value|
+            if raw_value.present?
+              if raw_value.is_a?(String)
+                ary << raw_value.to_i
+              elsif raw_value.is_a?(Integer)
+                ary << raw_value
+              else
+                fail ArgumentError, "Expected a String or Integer for #{key.to_s.singularize}_ids, got #{raw_value.class.name}"
+              end
+            end
+          end
+
+          files = file_klass.where(id: ary)
+
+          send("#{key.to_s.singularize}=", files)
+        end
+      else
+        # Store data in XXX_placement_attributes as a hash with file_id, title and alt
+        #
+        # Example:
+        #   cover_placements_attributes: {
+        #     "file_id" => 1, "title" => "Custom title", "alt" => "Custom alt"
+        #   }
+        @klass.attribute "#{key}_placement_attributes", type: :json
+
+        # Override setter to enforce structure and whitelist keys
+        @klass.define_method "#{key}_placement_attributes=" do |raw_value|
+          value = raw_value.with_indifferent_access
+
+          if value[:file_id] && value[:_destroy] != "1"
+            super({
+              "file_id" => value[:file_id].to_i,
+              "title" => value[:title].presence,
+              "alt" => value[:alt].presence,
+            }.compact)
+          else
+            super(nil)
+          end
+        end
+
+        # File getter for compatibility with existing code
+        @klass.define_method(key) do
+          attrs = send("#{key}_placement_attributes")
+
+          if attrs && attrs["file_id"]
+            file_klass.find_by(id: attrs["file_id"])
+          end
+        end
+
+        # File setter for compatibility with existing code
+        @klass.define_method("#{key}=") do |file|
+          if file.nil?
+            send("#{key}_placement_attributes=", nil)
+          elsif file.is_a?(file_klass)
+            send("#{key}_placement_attributes=", {
+              "file_id" => file.id,
+              "title" => file.title.presence,
+              "alt" => file.alt.presence,
+            }.compact)
+          else
+            fail ArgumentError, "Expected a #{file_klass.name} for #{key}, got #{value.class.name}"
+          end
+        end
+
+        # Placeholder methods for compatibility with Folio::Console::Files::PickerComponent
+        @klass.define_method "#{key}_placement" do
+          attrs = send("#{key}_placement_attributes")
+
+          if attrs && attrs["file_id"].present?
+            Folio::FilePlacement::Tiptap.new(file_id: attrs["file_id"],
+                                             title: attrs["title"],
+                                             alt: attrs["alt"])
           end
         end
 
         @klass.define_method "build_#{key}_placement" do
-          attr_config[:placement_class_name].constantize.new
+          Folio::FilePlacement::Tiptap.new
         end
 
-        @klass.define_method "#{key}_placement_attributes=" do |attributes|
-          if attributes[:_destroy] == "1"
-            send("#{key}_id=", nil)
-          else
-            id = if attributes[:file_id].present?
-              if attributes[:file_id].is_a?(String)
-                attributes[:file_id].to_i
-              elsif attributes[:file_id].is_a?(Integer)
-                attributes[:file_id]
-              else
-                fail ArgumentError, "Expected a String or Integer for file_id, got #{attributes[:file_id].class.name}"
-              end
+        @klass.define_method("#{key}_id=") do |raw_value|
+          value = if raw_value.present?
+            if raw_value.is_a?(String)
+              raw_value.to_i
+            elsif raw_value.is_a?(Integer)
+              raw_value
             else
-              nil
+              fail ArgumentError, "Expected a String or Integer for #{key}_id, got #{raw_value.class.name}"
             end
-
-            send("#{key}_id=", id)
+          else
+            nil
           end
-        end
 
-        setup_structure_for_belongs_to(key:, class_name:)
+          file = file_klass.find_by(id: value)
+          send("#{key}=", file)
+        end
       end
     end
 
@@ -298,7 +414,6 @@ class Folio::Tiptap::NodeBuilder
               type: :folio_attachment,
               attachment_key: key,
               placement_key: "#{key.to_s.singularize}_placement".to_sym,
-              placement_class_name: "Folio::FilePlacement::Cover",
               file_type: "Folio::File::Image",
               has_many: false
             }
@@ -307,7 +422,6 @@ class Folio::Tiptap::NodeBuilder
               type: :folio_attachment,
               attachment_key: key,
               placement_key: "#{key.to_s.singularize}_placement".to_sym,
-              placement_class_name: "Folio::FilePlacement::SingleDocument",
               file_type: "Folio::File::Document",
               has_many: false
             }
@@ -316,7 +430,6 @@ class Folio::Tiptap::NodeBuilder
               type: :folio_attachment,
               attachment_key: key,
               placement_key: "#{key.to_s.singularize}_placement".to_sym,
-              placement_class_name: "Folio::FilePlacement::AudioCover",
               file_type: "Folio::File::Audio",
               has_many: false
             }
@@ -325,7 +438,6 @@ class Folio::Tiptap::NodeBuilder
               type: :folio_attachment,
               attachment_key: key,
               placement_key: "#{key.to_s.singularize}_placement".to_sym,
-              placement_class_name: "Folio::FilePlacement::VideoCover",
               file_type: "Folio::File::Video",
               has_many: false
             }
@@ -334,7 +446,6 @@ class Folio::Tiptap::NodeBuilder
               type: :folio_attachment,
               attachment_key: key,
               placement_key: "#{key.to_s.singularize}_placements".to_sym,
-              placement_class_name: "Folio::FilePlacement::Image",
               file_type: "Folio::File::Image",
               has_many: true
             }
@@ -343,7 +454,6 @@ class Folio::Tiptap::NodeBuilder
               type: :folio_attachment,
               attachment_key: key,
               placement_key: "#{key.to_s.singularize}_placements".to_sym,
-              placement_class_name: "Folio::FilePlacement::Document",
               file_type: "Folio::File::Document",
               has_many: true
             }

@@ -33,7 +33,6 @@ class Folio::Tiptap::NodeBuilderTest < ActiveSupport::TestCase
       type: :folio_attachment,
       attachment_key: :cover,
       placement_key: :cover_placement,
-      placement_class_name: "Folio::FilePlacement::Cover",
       file_type: "Folio::File::Image",
       has_many: false
     }, Node.structure[:cover])
@@ -42,7 +41,6 @@ class Folio::Tiptap::NodeBuilderTest < ActiveSupport::TestCase
       type: :folio_attachment,
       attachment_key: :reports,
       placement_key: :report_placements,
-      placement_class_name: "Folio::FilePlacement::Document",
       file_type: "Folio::File::Document",
       has_many: true
     }, Node.structure[:reports])
