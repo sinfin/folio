@@ -12,6 +12,10 @@ en:
           title/metadata: EXIF and IPTC data (%{count})
           title/usage: Usage (%{count})
 
+        picker_component:
+          alt: Alt
+          description: Description
+
         show_modal_component:
           navigation_next: Next
           navigation_previous: Previous

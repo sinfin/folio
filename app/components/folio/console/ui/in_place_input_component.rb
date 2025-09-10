@@ -1,18 +1,30 @@
 # frozen_string_literal: true
 
 class Folio::Console::Ui::InPlaceInputComponent < Folio::Console::ApplicationComponent
-  def initialize(attribute:, record:, as: nil, cleave: false, autocomplete: nil)
+  bem_class_name :compact
+
+  def initialize(attribute:,
+                 record:,
+                 as: nil,
+                 cleave: false,
+                 autocomplete: nil,
+                 value_prefix: nil,
+                 f: nil,
+                 compact: false)
     @attribute = attribute
     @record = record
     @value = record.send(attribute)
     @cleave = cleave
     @textarea = !cleave && @record.class.columns_hash[attribute.to_s].type == :text
     @as = as
-    @autocomplete = autocomplete
+    @autocomplete = f ? nil : autocomplete
+    @value_prefix = value_prefix
+    @f = f
+    @compact = compact
   end
 
   def url
-    url_for([:console, @record])
+    @f ? nil : url_for([:console, @record])
   end
 
   def data
@@ -29,6 +41,10 @@ class Folio::Console::Ui::InPlaceInputComponent < Folio::Console::ApplicationCom
   end
 
   def name
-    "#{@as || @record.model_name.param_key}[#{@attribute}]"
+    if @f
+      @attribute
+    else
+      "#{@as || @record.model_name.param_key}[#{@attribute}]"
+    end
   end
 end

@@ -10,23 +10,26 @@
       = "#{@label}:"
 
   .f-c-ui-ajax-input__inner
-    *input_tag
-      - if @collection
-        - if @placeholder && !@disabled
-          option value=""
-            = @placeholder
+    - if @f
+      = f_input
+    - else
+      *input_tag
+        - if @collection
+          - if @placeholder && !@disabled
+            option value=""
+              = @placeholder
 
-        - if @disabled && @value
-          option value=@value selected=true
-            = @formatted_value || @value
-        - else
-          - @collection.each do |label, value|
-            - value ||= label
-            option value=value selected=(value == @value)
-              = label
+          - if @disabled && @value
+            option value=@value selected=true
+              = @formatted_value || @value
+          - else
+            - @collection.each do |label, value|
+              - value ||= label
+              option value=value selected=(value == @value)
+                = label
 
-      - elsif @textarea
-        = @value
+        - elsif @textarea
+          = @value
 
     .f-c-ui-ajax-input__right
       span.text-success[

@@ -6,6 +6,7 @@ window.Folio.Stimulus.register('f-c-ui-ajax-input', class extends window.Stimulu
 
   static values = {
     cleave: Boolean,
+    remote: Boolean,
     url: String,
     originalValue: String,
     method: String
@@ -28,11 +29,23 @@ window.Folio.Stimulus.register('f-c-ui-ajax-input', class extends window.Stimulu
     }
   }
 
+  preventSubmit (e) {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      e.stopPropagation()
+    }
+  }
+
   onKeyUp (e) {
     const value = this.cleave ? this.cleave.getRawValue() : this.inputTarget.value
 
     if (e.key === 'Enter') {
-      if (this.inputTarget.tagName !== 'TEXTAREA') {
+      const skipInTextarea = this.inputTarget.tagName === 'TEXTAREA' && !(e.ctrlKey || e.metaKey)
+
+      if (!skipInTextarea) {
+        e.preventDefault()
+        e.stopPropagation()
+
         if (this.inputTarget.getAttribute('data-f-input-autocomplete-has-active-dropdown-value') === 'true') {
           return
         }
@@ -92,43 +105,51 @@ window.Folio.Stimulus.register('f-c-ui-ajax-input', class extends window.Stimulu
 
     if (this.element.classList.contains('f-c-ui-ajax-input--loading')) return false
 
-    this.element.classList.add('f-c-ui-ajax-input--loading')
+    if (this.remoteValue) {
+      this.element.classList.add('f-c-ui-ajax-input--loading')
 
-    const apiFn = this.methodValue === 'POST' ? window.Folio.Api.apiPost : window.Folio.Api.apiPatch
+      const apiFn = this.methodValue === 'POST' ? window.Folio.Api.apiPost : window.Folio.Api.apiPatch
 
-    const name = this.inputTarget.name
+      const name = this.inputTarget.name
 
-    const rawData = {}
-    rawData[name] = this.cleave ? this.cleave.getRawValue() : this.inputTarget.value
+      const rawData = {}
+      rawData[name] = this.cleave ? this.cleave.getRawValue() : this.inputTarget.value
 
-    const data = window.Folio.formToHash(rawData)
+      const data = window.Folio.formToHash(rawData)
 
-    apiFn(this.urlValue, data).then((res) => {
-      const key = name.replace(/^.+\[(.+)\]$/, '$1')
-      const newValue = res.data[key] || ''
+      apiFn(this.urlValue, data).then((res) => {
+        const key = name.replace(/^.+\[(.+)\]$/, '$1')
+        const newValue = res.data[key] || ''
 
-      if (this.cleave) {
-        this.cleave.setRawValue(newValue)
-      } else {
-        this.inputTarget.value = newValue
+        this.successCallback(newValue)
+      }).catch((err) => {
+        this.tooltipTarget.innerHTML = err.message
+        this.element.classList.add('f-c-ui-ajax-input--failure')
+      }).finally(() => {
+        this.element.classList.remove('f-c-ui-ajax-input--loading')
+        this.element.classList.remove('f-c-ui-ajax-input--dirty')
+      })
+    } else {
+      this.successCallback(this.cleave ? this.cleave.getRawValue() : this.inputTarget.value)
+    }
+  }
+
+  successCallback (newValue) {
+    if (this.cleave) {
+      this.cleave.setRawValue(newValue)
+    } else {
+      this.inputTarget.value = newValue
+    }
+
+    this.originalValueValue = newValue
+    this.inputTarget.blur()
+    this.inputTarget.dispatchEvent(new CustomEvent('f-c-ui-ajax-input:success', { bubbles: true, detail: { value: newValue } }))
+
+    this.element.classList.add('f-c-ui-ajax-input--success')
+    setTimeout(() => {
+      if (this && this.element) {
+        this.element.classList.remove('f-c-ui-ajax-input--success')
       }
-
-      this.originalValueValue = newValue
-      this.inputTarget.blur()
-      this.inputTarget.dispatchEvent(new CustomEvent('f-c-ui-ajax-input:success', { bubbles: true, detail: { value: newValue } }))
-
-      this.element.classList.add('f-c-ui-ajax-input--success')
-      setTimeout(() => {
-        if (this && this.element) {
-          this.element.classList.remove('f-c-ui-ajax-input--success')
-        }
-      }, 3000)
-    }).catch((err) => {
-      this.tooltipTarget.innerHTML = err.message
-      this.element.classList.add('f-c-ui-ajax-input--failure')
-    }).finally(() => {
-      this.element.classList.remove('f-c-ui-ajax-input--loading')
-      this.element.classList.remove('f-c-ui-ajax-input--dirty')
-    })
+    }, 3000)
   }
 })

@@ -12,6 +12,10 @@ cs:
           title/metadata: EXIF a IPTC data (%{count})
           title/usage: Použití (%{count})
 
+        picker_component:
+          alt: Alt
+          description: Popisek
+
         show_modal_component:
           navigation_next: Další
           navigation_previous: Předchozí

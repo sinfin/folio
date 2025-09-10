@@ -203,6 +203,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
       commons = %i[id
                    title
                    alt
+                   description
                    tag_list
                    file_id
                    position

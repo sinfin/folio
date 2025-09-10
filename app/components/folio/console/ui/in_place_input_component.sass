@@ -7,6 +7,8 @@
     display: flex
     align-items: center
     gap: px-to-rem(4px)
+
+  &:not(&--compact) &__content-wrap
     min-height: $input-height
 
   &__content-flex
@@ -37,6 +39,7 @@
 
   &__content,
   &__content-blank,
+  &__content-prefix,
   &__toggle-ico,
   &__success-ico
     position: relative

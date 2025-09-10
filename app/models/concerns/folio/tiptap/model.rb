@@ -66,9 +66,12 @@ module Folio::Tiptap::Model
           next if config[:type] != :folio_attachment
 
           if config[:has_many]
-            new_file_placements += instance.send("#{key.to_s.singularize}_placements")
+            instance.send("#{key.to_s.singularize}_placements").each do |file_placement|
+              new_file_placements << file_placement if file_placement
+            end
           else
-            new_file_placements << instance.send("#{key}_placement")
+            file_placement = instance.send("#{key}_placement")
+            new_file_placements << file_placement if file_placement
           end
         end
       end

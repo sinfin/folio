@@ -36,15 +36,15 @@
         = hint
 
     - if @file_klass.human_type == "image"
-      small.f-c-files-picker__alt.form-text.text-muted
-        span.f-c-files-picker__alt-label<>
-          ' alt:
+      .f-c-files-picker__in-place-inputs.small.text-muted
+        = render(Folio::Console::Ui::InPlaceInputComponent.new(attribute: :description,
+                                                               record: fp.object,
+                                                               f: fp,
+                                                               compact: true,
+                                                               value_prefix: "#{t('.description')}:"))
 
-        span.f-c-files-picker__alt-value<> data=stimulus_target("altValue")
-          - if file_placement && file_placement.file && !file_placement.marked_for_destruction?
-            = file_placement.file.alt
-
-        = folio_icon(:edit,
-                     height: 12,
-                     class: 'f-c-files-picker__alt-ico',
-                     data: { action: "click->f-c-files-picker#onAltClick" })
+        = render(Folio::Console::Ui::InPlaceInputComponent.new(attribute: :alt,
+                                                               record: fp.object,
+                                                               f: fp,
+                                                               compact: true,
+                                                               value_prefix: "#{t('.alt')}:"))
