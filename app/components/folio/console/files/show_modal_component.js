@@ -110,7 +110,8 @@ window.Folio.Stimulus.register('f-c-files-show-modal', class extends window.Stim
 
   setFileDataValueWithNavigation ({ id, type }) {
     const fileSelector = `.f-file-list-file[data-f-file-list-file-file-type-value="${type}"][data-f-file-list-file-editable-value="true"]`
-    const fileListFile = document.querySelector(`${fileSelector}[data-f-file-list-file-id-value="${id}"]`)
+    // don't use files in hidden modal
+    const fileListFile = document.querySelector(`.f-c-layout-main ${fileSelector}[data-f-file-list-file-id-value="${id}"], .modal.show ${fileSelector}[data-f-file-list-file-id-value="${id}"]`)
 
     let previousId = null
     let nextId = null
