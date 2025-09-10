@@ -16,6 +16,10 @@ module Folio::HasAttachments
     after_save :run_file_placements_after_save!
     after_save_commit :run_pregenerate_thumbnails_check_job_if_needed
 
+    has_many_placements(:tiptap_files,
+                        placements_key: :tiptap_placements,
+                        placement: "Folio::FilePlacement::Tiptap")
+
     has_many_placements(:images,
                         placements_key: :image_placements,
                         placement: "Folio::FilePlacement::Image")

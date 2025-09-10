@@ -82,7 +82,11 @@ class Folio::Tiptap::Node
     "#{self}Component".constantize
   end
 
-  def self.new_from_attrs(attrs)
+  def self.new_from_attributes(attrs)
+    new_from_params(ActionController::Parameters.new(attrs))
+  end
+
+  def self.new_from_params(attrs)
     klass = attrs.require(:type).safe_constantize
 
     if klass && klass < Folio::Tiptap::Node
@@ -98,5 +102,27 @@ class Folio::Tiptap::Node
     [
       Rails.root.join("app/models/**/tiptap/node"),
     ]
+  end
+
+  def self.instances_from_tiptap_content(content)
+    nodes = []
+
+    if content.is_a?(Array)
+      content.each do |node|
+        nodes.concat(instances_from_tiptap_content(node))
+      end
+    elsif content.is_a?(Hash)
+      if content["type"] == "folioTiptapNode"
+        begin
+          nodes << new_from_attributes(content["attrs"])
+        rescue ArgumentError => e
+          Rails.logger.error("Folio::Tiptap::Node.instances_from_tiptap_content: #{e.message}")
+        end
+      elsif content["content"].is_a?(Array) && content["content"].present?
+        nodes.concat(instances_from_tiptap_content(content["content"]))
+      end
+    end
+
+    nodes
   end
 end

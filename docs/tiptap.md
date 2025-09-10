@@ -296,7 +296,7 @@ node.to_tiptap_node_hash
 
 The reverse conversion is handled by two key methods:
 
-**`new_from_attrs` (class method)**: Creates a new node instance from Tiptap attributes:
+**`new_from_params` (class method)**: Creates a new node instance from Tiptap attributes:
 
 ```rb
 # From Tiptap JSON structure
@@ -308,7 +308,7 @@ attrs = {
   }
 }
 
-node = Folio::Tiptap::Node.new_from_attrs(attrs)
+node = Folio::Tiptap::Node.new_from_params(attrs)
 ```
 
 **`assign_attributes_from_param_attrs` (instance method)**: Assigns attributes from params-style data with proper type casting and validation:

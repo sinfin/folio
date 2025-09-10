@@ -172,6 +172,56 @@ class Folio::Tiptap::ModelTest < ActiveSupport::TestCase
     end
   end
 
+  test "keeps a set of Folio::FilePlacement::Tiptap placements based on tiptap_content" do
+    make_tiptap_content = lambda do |content|
+      {
+        Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content] => {
+          "type" => "doc",
+          "content" => [
+            {
+              "type" => "paragraph",
+              "content" => content
+            }
+          ]
+        }
+      }
+    end
+
+    cover = create(:folio_file_image)
+    reports = [create(:folio_file_document)]
+
+    node = Dummy::Tiptap::Node::Card.new(title: "card",
+                                         cover:,
+                                         reports:)
+
+    page = create(:folio_page, tiptap_content: nil)
+    assert_equal 0, page.tiptap_placements.count
+
+    page.update!(tiptap_content: make_tiptap_content.call([
+      node.to_tiptap_node_hash,
+    ]))
+    assert_equal 2, page.tiptap_placements.count
+
+    page.update!(tiptap_content: make_tiptap_content.call([
+      node.to_tiptap_node_hash,
+      node.to_tiptap_node_hash,
+    ]))
+    assert_equal 4, page.tiptap_placements.count
+
+    page.update!(tiptap_content: make_tiptap_content.call([
+      {
+        "type" => "paragraph",
+        "content" => [
+          {
+            "type" => "text",
+            "text" => "Hello world"
+          }
+        ]
+      }
+    ]))
+    assert_equal 0, page.tiptap_placements.count
+  end
+
   private
     def dummy_tiptap_doc
       {

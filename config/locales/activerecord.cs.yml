@@ -303,6 +303,7 @@ cs:
       folio/file_placement/image_or_embed: Obrázek galerie
       folio/file_placement/og_image: OG obrázek
       folio/file_placement/single_document: Soubor
+      folio/file_placement/tiptap: Obsah
       folio/file_placement/video_cover: Video stopa
 
     state_machines:

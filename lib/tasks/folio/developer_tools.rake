@@ -120,6 +120,8 @@ namespace :folio do
 
         if changed
           record.update_column(:tiptap_content, { Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content] => new_content })
+          # to trigger tiptap file placements creation
+          record.save
           print(".")
         else
           print("s")

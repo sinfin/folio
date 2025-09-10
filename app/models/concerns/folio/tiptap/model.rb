@@ -27,6 +27,7 @@ module Folio::Tiptap::Model
   included do
     has_many :tiptap_revisions, as: :placement, class_name: "Folio::Tiptap::Revision", dependent: :destroy
     before_validation :convert_titap_fields_to_hashes_and_sanitize
+    before_validation :update_tiptap_file_placements
     validate :validate_tiptap_fields
     after_save :cleanup_tiptap_revisions, if: :tiptap_autosave_enabled?
   end
@@ -48,6 +49,56 @@ module Folio::Tiptap::Model
         send("#{field}=", nil)
       end
     end
+  end
+
+  def update_tiptap_file_placements
+    new_file_placements = []
+
+    self.class.folio_tiptap_fields.each do |field|
+      value = send(field)
+      next if value.blank?
+
+      content = value[Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content]]
+      next if content.blank?
+
+      Folio::Tiptap::Node.instances_from_tiptap_content(content).each do |instance|
+        instance.class.structure.each do |key, config|
+          next if config[:type] != :folio_attachment
+
+          if config[:has_many]
+            new_file_placements += instance.send("#{key.to_s.singularize}_placements")
+          else
+            new_file_placements << instance.send("#{key}_placement")
+          end
+        end
+      end
+    end
+
+    # check existing tiptap_placements and map by file_id, remove unused, add new
+    persisted_tiptap_placements_ary = tiptap_placements.to_a.select(&:persisted?)
+    new_attributes = []
+
+    new_file_placements.each do |new_file_placement|
+      persisted_placement = persisted_tiptap_placements_ary.find do |pp|
+        new_attributes.none? { |attrs| attrs[:id] == pp.id } &&
+        pp.file_id == new_file_placement.file_id
+      end
+
+      new_attributes << {
+        id: persisted_placement.try(:id),
+        file_id: new_file_placement.file_id,
+        title: new_file_placement.title,
+        alt: new_file_placement.alt,
+      }
+    end
+
+    persisted_tiptap_placements_ary.each do |persisted_placement|
+      if new_attributes.none? { |attrs| attrs[:id] == persisted_placement.id }
+        new_attributes << { id: persisted_placement.id, _destroy: true }
+      end
+    end
+
+    self.tiptap_placements_attributes = new_attributes
   end
 
   def validate_tiptap_fields
