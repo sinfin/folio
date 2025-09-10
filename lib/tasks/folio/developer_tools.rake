@@ -65,5 +65,73 @@ namespace :folio do
         end
       end
     end
+
+    desc "update tiptap nodes from legacy key_id syntax to the key_placement_attributes one"
+    task idp_correct_tiptap_node_attachments: :environment do
+      class_name = ENV["CLASS_NAME"]
+      fail "Please provide CLASS_NAME env variable, e.g. CLASS_NAME=Folio::Page" if class_name.blank?
+      scope = class_name.constantize.where.not(tiptap_content: nil)
+      count = scope.count
+
+      if count.zero?
+        puts "[folio:developer_tools:idp_correct_tiptap_node_attachments] Nothing to do, exiting."
+        next
+      end
+
+      count_length = count.to_s.length
+      dots_page_by = 100
+
+      i = 0
+      scope.find_each do |record|
+        i += 1
+
+        # find any folioTiptapNode nodes
+        # change cover_id: num to cover_placement_attributes: { file_id: num }
+        # change video_cover_id: num to video_cover_placement_attributes: { file_id: num }
+        # no others should be needed
+        content = record.tiptap_content[Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content]]
+        changed = false
+
+        loop_content_and_replace = ->(node) {
+          if node && node["content"].present?
+            node["content"].each do |child|
+              loop_content_and_replace.call(child)
+            end
+          end
+
+          if node["type"] == "folioTiptapNode"
+            puts node
+            if node["attrs"] && node["attrs"]["data"]
+              if file_id = node["attrs"]["data"].delete("cover_id")
+                node["attrs"]["data"]["cover_placement_attributes"] = { "file_id" => file_id }
+                changed = true
+              end
+              if file_id = node["attrs"]["data"].delete("video_cover_id")
+                node["attrs"]["data"]["video_cover_placement_attributes"] = { "file_id" => file_id }
+                changed = true
+              end
+            end
+          end
+
+          node
+        }
+
+        new_content = loop_content_and_replace.call(content)
+
+        if changed
+          record.update_column(:tiptap_content, { Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content] => new_content })
+          print(".")
+        else
+          print("s")
+        end
+
+        if i % dots_page_by == 0
+          print " #{i.to_s.rjust(count_length)} / #{count} (#{(i.to_f / count * 100).round(2)}%)"
+          puts ""
+        end
+      end
+
+      puts "\n[folio:developer_tools:idp_correct_tiptap_node_attachments] Done."
+    end
   end
 end
