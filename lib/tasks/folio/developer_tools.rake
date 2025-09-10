@@ -100,7 +100,6 @@ namespace :folio do
           end
 
           if node["type"] == "folioTiptapNode"
-            puts node
             if node["attrs"] && node["attrs"]["data"]
               if file_id = node["attrs"]["data"].delete("cover_id")
                 node["attrs"]["data"]["cover_placement_attributes"] = { "file_id" => file_id }
