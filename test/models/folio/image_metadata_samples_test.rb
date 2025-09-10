@@ -192,18 +192,18 @@ class Folio::File::ImageMetadataSamplesTest < ActiveSupport::TestCase
 
       page = create(:folio_page, site: @site)
       placement = create(:folio_image_placement,
-                        file: image,
-                        placement: page,
-                        alt: nil,
-                        title: nil)
+                         file: image,
+                         placement: page,
+                         alt: nil,
+                         title: nil)
 
       # Metadata is extracted on the image
       assert_equal "The description aka caption (ref2024.1)", image.description
       assert_equal "The Headline (ref2024.1)", image.headline
 
-      # But not copied to placement (feature currently disabled)
-      assert_nil placement.alt
-      assert_nil placement.title
+      # And copied to placement
+      assert_equal "The description aka caption (ref2024.1)", placement.description
+      assert_equal "The Headline (ref2024.1)", placement.title
     end
   end
 

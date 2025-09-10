@@ -18,6 +18,8 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
   after_create :run_file_after_save_job!
   after_destroy :run_file_after_save_job!
 
+  before_create :imprint_file_texts
+
   attr_accessor :dont_run_after_save_jobs
 
   def to_label
@@ -86,6 +88,10 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
     end
   end
 
+  def self.non_nillifiable_fields
+    %w[alt title description]
+  end
+
   private
     def validate_file_attribution_and_texts_if_needed
       return if file.blank?
@@ -125,6 +131,23 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
         end
       end
     end
+
+    def imprint_file_texts
+      return if !title.nil? && !alt.nil? && !description.nil?
+      return if file.blank?
+
+      if title.nil?
+        self.title = file.headline.presence
+      end
+
+      if alt.nil?
+        self.alt = file.alt.presence
+      end
+
+      if description.nil?
+        self.description = file.description.presence
+      end
+    end
 end
 
 # == Schema Information
@@ -144,6 +167,7 @@ end
 #  placement_title      :string
 #  placement_title_type :string
 #  folio_embed_data     :jsonb
+#  description          :text
 #
 # Indexes
 #

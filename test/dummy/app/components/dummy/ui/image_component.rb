@@ -76,8 +76,12 @@ class Dummy::Ui::ImageComponent < ApplicationComponent
     else
       if placement.is_a?(Folio::FilePlacement::Base)
         file = placement.file
+        alt_fallback = placement.alt || file.alt
+        description_fallback = placement.description || file.description
       else
         file = placement
+        alt_fallback = file.alt
+        description_fallback = file.description
       end
 
       normal = file.thumb(@size)
@@ -86,7 +90,8 @@ class Dummy::Ui::ImageComponent < ApplicationComponent
         file:,
         normal:,
         src: normal.url,
-        alt: @alt || file.try(:alt) || file.try(:description) || "",
+        alt: @alt || alt_fallback || "",
+        description: (@description || description_fallback).presence,
         title: @title,
         width: normal[:width],
         height: normal[:height],

@@ -15,6 +15,7 @@ class Folio::Console::Ui::ImageComponent < Folio::Console::ApplicationComponent
                  cover: false,
                  hover_zoom: false,
                  alt: nil,
+                 description: nil,
                  title: nil,
                  cap_width: false,
                  force_width: false,
@@ -33,6 +34,7 @@ class Folio::Console::Ui::ImageComponent < Folio::Console::ApplicationComponent
     @cover = cover
     @hover_zoom = hover_zoom
     @alt = alt
+    @description = description
     @title = title
     @cap_width = cap_width
     @force_width = force_width
@@ -67,7 +69,8 @@ class Folio::Console::Ui::ImageComponent < Folio::Console::ApplicationComponent
 
       @data = {
         alt: @alt || "",
-        title: @title || "",
+        title: @title,
+        description: @description,
         src: placement[:normal],
         srcset: placement[:retina] ? "#{placement[:normal]} 1x, #{placement[:retina]} #{RETINA_MULTIPLIER}x" : nil,
         webp_src: placement[:webp_normal],
@@ -77,8 +80,12 @@ class Folio::Console::Ui::ImageComponent < Folio::Console::ApplicationComponent
     else
       if placement.is_a?(Folio::FilePlacement::Base)
         file = placement.file
+        alt_fallback = placement.alt || file.alt
+        description_fallback = placement.description || file.description
       else
         file = placement
+        alt_fallback = file.alt
+        description_fallback = file.description
       end
 
       normal = file.thumb(@size)
@@ -87,7 +94,8 @@ class Folio::Console::Ui::ImageComponent < Folio::Console::ApplicationComponent
         file:,
         normal:,
         src: normal.url,
-        alt: @alt || file.try(:alt) || file.try(:description) || "",
+        alt: @alt || alt_fallback || "",
+        description: (@description || description_fallback).presence,
         title: @title,
         width: normal[:width],
         height: normal[:height],

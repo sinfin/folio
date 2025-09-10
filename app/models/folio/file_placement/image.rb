@@ -23,6 +23,7 @@ end
 #  placement_title      :string
 #  placement_title_type :string
 #  folio_embed_data     :jsonb
+#  description          :text
 #
 # Indexes
 #
