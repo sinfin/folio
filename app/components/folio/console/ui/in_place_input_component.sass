@@ -61,3 +61,20 @@
   &:not(&--success) &__success-ico,
   &--success &__toggle-ico
     display: none
+
+  &--value-line-clamp-2 &__content,
+  &--value-line-clamp-3 &__content
+    -webkit-box-orient: vertical
+    display: -webkit-box
+    max-height: 32px
+    overflow: hidden
+    text-overflow: ellipsis
+    word-break: break-word
+
+  &--value-line-clamp-2 &__content
+    -webkit-line-clamp: 2
+    line-clamp: 2
+
+  &--value-line-clamp-3 &__content
+    -webkit-line-clamp: 3
+    line-clamp: 3

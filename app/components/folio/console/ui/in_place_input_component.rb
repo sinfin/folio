@@ -9,6 +9,7 @@ class Folio::Console::Ui::InPlaceInputComponent < Folio::Console::ApplicationCom
                  cleave: false,
                  autocomplete: nil,
                  value_prefix: nil,
+                 value_line_clamp: nil,
                  f: nil,
                  data: nil,
                  textarea: nil,
@@ -21,6 +22,7 @@ class Folio::Console::Ui::InPlaceInputComponent < Folio::Console::ApplicationCom
     @as = as
     @autocomplete = f ? nil : autocomplete
     @value_prefix = value_prefix
+    @value_line_clamp = value_line_clamp
     @f = f
     @data = data
     @compact = compact

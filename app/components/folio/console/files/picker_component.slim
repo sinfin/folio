@@ -43,6 +43,7 @@
                                                                compact: true,
                                                                textarea: true,
                                                                data: stimulus_target('description'),
+                                                               value_line_clamp: 2,
                                                                value_prefix: "#{t('.description')}:"))
 
         = render(Folio::Console::Ui::InPlaceInputComponent.new(attribute: :alt,
@@ -51,4 +52,5 @@
                                                                compact: true,
                                                                textarea: true,
                                                                data: stimulus_target('alt'),
+                                                               value_line_clamp: 2,
                                                                value_prefix: "#{t('.alt')}:"))
