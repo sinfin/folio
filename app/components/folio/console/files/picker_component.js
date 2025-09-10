@@ -28,7 +28,6 @@ window.Folio.Stimulus.register('f-c-files-picker', class extends window.Stimulus
   static values = {
     fileType: String,
     state: String,
-    showUrlBase: String,
     inReact: { type: Boolean, default: false },
     reactFile: { type: Object, default: {} }
   }
@@ -44,10 +43,6 @@ window.Folio.Stimulus.register('f-c-files-picker', class extends window.Stimulus
 
   disconnect () {
     this.abort()
-  }
-
-  selectedEventName () {
-    return `folioConsoleModalSingleSelect/${this.fileTypeValue}/selected`
   }
 
   clear () {

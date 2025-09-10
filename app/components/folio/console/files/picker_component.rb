@@ -14,7 +14,6 @@ class Folio::Console::Files::PickerComponent < Folio::Console::ApplicationCompon
     stimulus_controller("f-c-files-picker",
                         values: {
                           file_type: @file_klass.to_s,
-                          show_url_base: url_for([:console, @file_klass]),
                           state:,
                         },
                         action: {

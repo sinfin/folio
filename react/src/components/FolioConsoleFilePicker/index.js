@@ -1,6 +1,5 @@
 import React from 'react'
 
-import FolioUiIcon from 'components/FolioUiIcon'
 import FolioConsoleUiButton from 'components/FolioConsoleUiButton'
 
 const I18N = {
@@ -45,6 +44,7 @@ class FolioConsoleFilePicker extends React.PureComponent {
   render () {
     const data = {
       'data-controller': 'f-c-files-picker',
+      'data-action': 'f-c-files-index-modal:selectedFile->f-c-files-picker#onModalSelectedFile',
       'data-f-c-files-picker-file-type-value': this.props.attachmentType.file_type,
       'data-f-c-files-picker-state-value': this.props.file ? 'filled' : 'empty',
       'data-f-c-files-picker-in-react-value': 'true',
@@ -72,16 +72,6 @@ class FolioConsoleFilePicker extends React.PureComponent {
             />
           </div>
         </div>
-
-        <small className='f-c-files-picker__alt form-text text-muted'>
-          <span className='f-c-files-picker__alt-label'>alt:</span>
-          {' '}
-          <span className='f-c-files-picker__alt-value' data-f-c-files-picker-target='altValue'>
-            {this.props.file ? (this.props.file.attributes.alt || '') : ''}
-          </span>
-          {' '}
-          <FolioUiIcon name='edit' height={12} class='f-c-files-picker__alt-ico' data={{ action: 'click->f-c-files-picker#onAltClick' }} />
-        </small>
 
         <span className='folio-loader f-c-files-picker__loader' />
       </div>
