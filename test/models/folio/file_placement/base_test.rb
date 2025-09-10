@@ -5,7 +5,10 @@ require "test_helper"
 class Folio::FilePlacement::BaseTest < ActiveSupport::TestCase
   test "folio_files_require_attribution" do
     page = create(:folio_page)
-    image = create(:folio_file_image, author: nil, attribution_source: nil, attribution_source_url: nil)
+    image = create(:folio_file_image,
+                   author: nil,
+                   attribution_source: nil,
+                   attribution_source_url: nil)
 
     I18n.with_locale(:cs) do
       Rails.application.config.stub(:folio_files_require_attribution, true) do
@@ -18,6 +21,32 @@ class Folio::FilePlacement::BaseTest < ActiveSupport::TestCase
       Rails.application.config.stub(:folio_files_require_attribution, true) do
         assert_not page.save
         assert_equal "Obrázek nesplňuje požadavky", page.errors.full_messages.join(". ")
+      end
+
+      image.update(author: "foo")
+
+      Rails.application.config.stub(:folio_files_require_attribution, true) do
+        assert page.save
+      end
+
+      image.update(author: nil)
+
+      Rails.application.config.stub(:folio_files_require_attribution, true) do
+        assert_not page.save
+        assert_equal "Obrázek nesplňuje požadavky", page.errors.full_messages.join(". ")
+      end
+
+      image.update(attribution_source: "foo", description: "foo")
+
+      Rails.application.config.stub(:folio_files_require_attribution, true) do
+        assert page.save
+      end
+
+      image.update!(description: nil)
+      page.cover_placement.update!(description: "bar")
+
+      Rails.application.config.stub(:folio_files_require_attribution, true) do
+        assert page.save
       end
     end
   end

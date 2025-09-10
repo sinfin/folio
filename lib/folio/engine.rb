@@ -130,9 +130,11 @@ module Folio
 
     config.folio_console_react_modal_types = config.folio_file_types_for_routes
 
+    # folio_files_require_attribution = requires either author or source+description
     config.folio_files_require_attribution = false
     config.folio_files_require_alt = false
     config.folio_files_require_description = false
+
     config.folio_files_video_enabled_subtitle_languages = %w[cs]
 
     config.folio_component_generator_parent_component_class_name_proc = -> (class_name) do

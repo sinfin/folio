@@ -80,8 +80,8 @@ class Folio::Console::Ui::ImageComponent < Folio::Console::ApplicationComponent
     else
       if placement.is_a?(Folio::FilePlacement::Base)
         file = placement.file
-        alt_fallback = placement.alt || file.alt
-        description_fallback = placement.description || file.description
+        alt_fallback = placement.alt_with_fallback
+        description_fallback = placement.description_with_fallback
       else
         file = placement
         alt_fallback = file.alt

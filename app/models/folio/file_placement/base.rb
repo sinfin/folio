@@ -92,20 +92,39 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
     %w[alt title description]
   end
 
+  def alt_with_fallback
+    if alt.nil?
+      file.try(:alt)
+    else
+      alt
+    end
+  end
+
+  def description_with_fallback
+    if description.nil?
+      file.try(:description)
+    else
+      description
+    end
+  end
+
   private
     def validate_file_attribution_and_texts_if_needed
       return if file.blank?
 
       if Rails.application.config.folio_files_require_attribution
-        if placement.class.try(:ignore_folio_files_require_attribution) != true
-          if file.author.blank? && file.attribution_source.blank? && file.attribution_source_url.blank?
-            errors.add(:file, :missing_file_attribution)
+        if placement.try(:ignore_folio_files_require_attribution?) != true
+          if file.author.blank?
+            source_is_blank = file.attribution_source.blank? && file.attribution_source_url.blank?
+            if source_is_blank || description_with_fallback.blank?
+              errors.add(:file, :missing_file_attribution)
+            end
           end
         end
       end
 
       if Rails.application.config.folio_files_require_alt
-        if placement.class.try(:ignore_folio_files_require_alt) != true
+        if placement.try(:ignore_folio_files_require_alt?) != true
           if file.class.human_type == "image" && file.alt.blank?
             errors.add(:file, :missing_file_alt)
           end
@@ -113,7 +132,7 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
       end
 
       if Rails.application.config.folio_files_require_description
-        if placement.class.try(:ignore_folio_files_require_description) != true
+        if placement.try(:ignore_folio_files_require_description?) != true
           if file.description.blank?
             errors.add(:file, :missing_file_description)
           end
