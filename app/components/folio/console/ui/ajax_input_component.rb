@@ -52,16 +52,18 @@ class Folio::Console::Ui::AjaxInputComponent < Folio::Console::ApplicationCompon
       cleave: @cleave,
       original_value: @value,
       method: @method,
+    }, action: {
+      "f-c-ui-ajax-input:setValue" => "setValueFromEvent",
     })
   end
 
   def input_data
     h = stimulus_data(action: {
-                        keyup: :onKeyUp,
-                        keydown: :preventSubmit,
-                        keypress: :preventSubmit,
-                        change: :onKeyUp,
-                        blur: :onBlur
+                        "keyup" => "onKeyUp",
+                        "keydown" => "preventSubmit",
+                        "keypress" => "preventSubmit",
+                        "change" => "onKeyUp",
+                        "blur" => "onBlur",
                       },
                       target: "input")
 
@@ -96,6 +98,7 @@ class Folio::Console::Ui::AjaxInputComponent < Folio::Console::ApplicationCompon
 
   def f_input
     @f.input @name,
+             as: @textarea ? :text : nil,
              wrapper: false,
              label: false,
              input_html: {

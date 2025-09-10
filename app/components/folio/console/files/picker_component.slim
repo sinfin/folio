@@ -41,10 +41,14 @@
                                                                record: fp.object,
                                                                f: fp,
                                                                compact: true,
+                                                               textarea: true,
+                                                               data: stimulus_target('description'),
                                                                value_prefix: "#{t('.description')}:"))
 
         = render(Folio::Console::Ui::InPlaceInputComponent.new(attribute: :alt,
                                                                record: fp.object,
                                                                f: fp,
                                                                compact: true,
+                                                               textarea: true,
+                                                               data: stimulus_target('alt'),
                                                                value_prefix: "#{t('.alt')}:"))

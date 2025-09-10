@@ -31,7 +31,10 @@ window.Folio.Stimulus.register('f-c-ui-ajax-input', class extends window.Stimulu
 
   preventSubmit (e) {
     if (e.key === 'Enter') {
-      e.preventDefault()
+      if (e.target.tagName !== 'TEXTAREA') {
+        e.preventDefault()
+      }
+
       e.stopPropagation()
     }
   }
@@ -151,5 +154,21 @@ window.Folio.Stimulus.register('f-c-ui-ajax-input', class extends window.Stimulu
         this.element.classList.remove('f-c-ui-ajax-input--success')
       }
     }, 3000)
+  }
+
+  setValueFromEvent (e) {
+    if (!e.detail || typeof e.detail.value !== 'string') return
+
+    this.element.classList.remove('f-c-ui-ajax-input--dirty')
+    this.element.classList.remove('f-c-ui-ajax-input--success')
+    this.element.classList.remove('f-c-ui-ajax-input--failure')
+
+    if (this.cleave) {
+      this.cleave.setRawValue(e.detail.value)
+    } else {
+      this.inputTarget.value = e.detail.value
+    }
+
+    this.originalValueValue = e.detail.value
   }
 })

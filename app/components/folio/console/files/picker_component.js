@@ -23,7 +23,7 @@ window.FolioConsole.Files.Picker.addControlsForStimulusController = (opts) => {
 }
 
 window.Folio.Stimulus.register('f-c-files-picker', class extends window.Stimulus.Controller {
-  static targets = ['idInput', 'content', 'fileIdInput', 'destroyInput', 'altValue']
+  static targets = ['idInput', 'content', 'fileIdInput', 'destroyInput', 'alt', 'description']
 
   static values = {
     fileType: String,
@@ -51,7 +51,7 @@ window.Folio.Stimulus.register('f-c-files-picker', class extends window.Stimulus
   }
 
   clear () {
-    this.updateAlt()
+    this.updateAltAndDescription()
 
     if (this.inReactValue) {
       this.triggerReactFileUpdate(null)
@@ -72,13 +72,22 @@ window.Folio.Stimulus.register('f-c-files-picker', class extends window.Stimulus
     if (e.detail.file) {
       this.contentTarget.innerHTML = ''
       this.createFile(e.detail.file)
-      this.updateAlt(e.detail.file)
+      this.updateAltAndDescription(e.detail.file)
     }
   }
 
-  updateAlt (file) {
-    if (!this.hasAltValueTarget) return
-    this.altValueTarget.innerHTML = file ? (file.attributes.alt || '') : ''
+  updateAltAndDescription (file) {
+    if (this.hasAltTarget) {
+      this.altTarget.dispatchEvent(new window.CustomEvent('f-c-ui-in-place-input:setValue', {
+        detail: { value: file && file.attributes ? (file.attributes.alt || '') : '' }
+      }))
+    }
+
+    if (this.hasDescriptionTarget) {
+      this.descriptionTarget.dispatchEvent(new window.CustomEvent('f-c-ui-in-place-input:setValue', {
+        detail: { value: file && file.attributes ? (file.attributes.description || '') : '' }
+      }))
+    }
   }
 
   triggerReactFileUpdate (file) {
@@ -150,7 +159,7 @@ window.Folio.Stimulus.register('f-c-files-picker', class extends window.Stimulus
     window.Folio.Api.apiGet(url, null, this.abortController.signal).then((res) => {
       if (res && res.data) {
         this.createFile(res.data)
-        this.updateAlt(res.data)
+        this.updateAltAndDescription(res.data)
 
         if (this.inReactValue) {
           this.triggerReactFileUpdate(res.data)

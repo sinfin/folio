@@ -10,16 +10,19 @@ class Folio::Console::Ui::InPlaceInputComponent < Folio::Console::ApplicationCom
                  autocomplete: nil,
                  value_prefix: nil,
                  f: nil,
+                 data: nil,
+                 textarea: nil,
                  compact: false)
     @attribute = attribute
     @record = record
     @value = record.send(attribute)
     @cleave = cleave
-    @textarea = !cleave && @record.class.columns_hash[attribute.to_s].type == :text
+    @textarea = textarea || (!cleave && @record.class.columns_hash[attribute.to_s].type == :text)
     @as = as
     @autocomplete = f ? nil : autocomplete
     @value_prefix = value_prefix
     @f = f
+    @data = data
     @compact = compact
   end
 
@@ -27,9 +30,10 @@ class Folio::Console::Ui::InPlaceInputComponent < Folio::Console::ApplicationCom
     @f ? nil : url_for([:console, @record])
   end
 
-  def data
+  def wrap_data
     stimulus_controller("f-c-ui-in-place-input",
                         action: {
+                          "f-c-ui-in-place-input:setValue" => "setValueFromEvent",
                           "f-c-ui-ajax-input:success" => "onSuccess",
                           "f-c-ui-ajax-input:cancel" => "onCancel",
                           "f-c-ui-ajax-input:blur" => "onBlur",
@@ -37,7 +41,7 @@ class Folio::Console::Ui::InPlaceInputComponent < Folio::Console::ApplicationCom
                         values: {
                           editing: false,
                           has_autocomplete: !!@autocomplete,
-                        })
+                        }).merge(@data || {})
   end
 
   def name

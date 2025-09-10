@@ -54,4 +54,16 @@ window.Folio.Stimulus.register('f-c-ui-in-place-input', class extends window.Sti
       input.setSelectionRange(-1, -1)
     }
   }
+
+  setValueFromEvent (e) {
+    if (!e.detail || typeof e.detail.value !== 'string') return
+
+    this.editingValue = false
+    this.contentTarget.innerHTML = e.detail.value || ''
+
+    const inputWrap = this.element.querySelector('.f-c-ui-ajax-input')
+    inputWrap.dispatchEvent(new window.CustomEvent('f-c-ui-ajax-input:setValue', {
+      detail: { value: e.detail.value }
+    }))
+  }
 })
