@@ -53,6 +53,8 @@ module Folio::HasAttachments
                       placement: "Folio::FilePlacement::OgImage")
 
     attr_accessor :dont_run_file_placements_after_save
+
+    validate :validate_file_placements_if_needed
   end
 
   class_methods do
@@ -165,6 +167,21 @@ module Folio::HasAttachments
     og_image.presence || cover
   end
 
+  def should_validate_file_placements_attribution_if_needed?
+    # only validate if published by default
+    read_attribute(:published) == true
+  end
+
+  def should_validate_file_placements_alt_if_needed?
+    # only validate if published by default
+    read_attribute(:published) == true
+  end
+
+  def should_validate_file_placements_description_if_needed?
+    # only validate if published by default
+    read_attribute(:published) == true
+  end
+
   private
     def run_file_placements_after_save!
       return if dont_run_file_placements_after_save
@@ -174,5 +191,60 @@ module Folio::HasAttachments
     def run_pregenerate_thumbnails_check_job_if_needed
       return unless self.class.run_pregenerate_thumbnails_check_job?
       Folio::PregenerateThumbnails::CheckJob.perform_later(self)
+    end
+
+    def validate_file_placements_if_needed
+      all_placements_ary = []
+      has_invalid_file_placements = false
+
+      self.class.folio_attachment_keys.each do |type, keys|
+        if type == :has_many
+          keys.each do |association|
+            all_placements_ary += send(association).to_a
+          end
+        else
+          keys.each do |association|
+            placement = send(association)
+            all_placements_ary << placement if placement
+          end
+        end
+      end
+
+      if Rails.application.config.folio_files_require_attribution
+        if should_validate_file_placements_attribution_if_needed?
+          all_placements_ary.each do |placement|
+            placement.validate_attribution_if_needed
+            if placement.errors[:file].present?
+              has_invalid_file_placements = true
+            end
+          end
+        end
+      end
+
+      if Rails.application.config.folio_files_require_alt
+        if should_validate_file_placements_alt_if_needed?
+          all_placements_ary.each do |placement|
+            placement.validate_alt_if_needed
+            if placement.errors[:file].present?
+              has_invalid_file_placements = true
+            end
+          end
+        end
+      end
+
+      if Rails.application.config.folio_files_require_description
+        if should_validate_file_placements_description_if_needed?
+          all_placements_ary.each do |placement|
+            placement.validate_description_if_needed
+            if placement.errors[:file].present?
+              has_invalid_file_placements = true
+            end
+          end
+        end
+      end
+
+      if has_invalid_file_placements
+        errors.add(:base, :has_invalid_file_placements)
+      end
     end
 end

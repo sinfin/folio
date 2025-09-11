@@ -11,7 +11,9 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
   validates :type,
             presence: true
 
-  validate :validate_file_attribution_and_texts_if_needed
+  validate :validate_attribution_if_needed
+  validate :validate_alt_if_needed
+  validate :validate_description_if_needed
 
   after_save :run_after_save_job!
   after_touch :run_after_save_job!
@@ -108,38 +110,43 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
     end
   end
 
-  private
-    def validate_file_attribution_and_texts_if_needed
-      return if file.blank?
+  def validate_attribution_if_needed
+    return unless Rails.application.config.folio_files_require_attribution
+    return if errors[:file].present? && errors[:file].include?(:missing_file_attribution)
+    return if file.blank?
+    return if placement && !placement.should_validate_file_placements_attribution_if_needed?
 
-      if Rails.application.config.folio_files_require_attribution
-        if placement.try(:ignore_folio_files_require_attribution?) != true
-          if file.author.blank?
-            source_is_blank = file.attribution_source.blank? && file.attribution_source_url.blank?
-            if source_is_blank || description_with_fallback.blank?
-              errors.add(:file, :missing_file_attribution)
-            end
-          end
-        end
-      end
-
-      if Rails.application.config.folio_files_require_alt
-        if placement.try(:ignore_folio_files_require_alt?) != true
-          if file.class.human_type == "image" && file.alt.blank?
-            errors.add(:file, :missing_file_alt)
-          end
-        end
-      end
-
-      if Rails.application.config.folio_files_require_description
-        if placement.try(:ignore_folio_files_require_description?) != true
-          if file.description.blank?
-            errors.add(:file, :missing_file_description)
-          end
-        end
+    if file.author.blank?
+      source_is_blank = file.attribution_source.blank? && file.attribution_source_url.blank?
+      if source_is_blank || description_with_fallback.blank?
+        errors.add(:file, :missing_file_attribution)
       end
     end
+  end
 
+  def validate_alt_if_needed
+    return unless Rails.application.config.folio_files_require_alt
+    return if errors[:file].present? && errors[:file].include?(:missing_file_alt)
+    return if file.blank?
+    return if placement && !placement.should_validate_file_placements_alt_if_needed?
+
+    if file.class.human_type == "image" && alt_with_fallback.blank?
+      errors.add(:file, :missing_file_alt)
+    end
+  end
+
+  def validate_description_if_needed
+    return unless Rails.application.config.folio_files_require_description
+    return if errors[:file].present? && errors[:file].include?(:missing_file_description)
+    return if file.blank?
+    return if placement && !placement.should_validate_file_placements_description_if_needed?
+
+    if file.description.blank?
+      errors.add(:file, :missing_file_description)
+    end
+  end
+
+  private
     def validate_file_or_embed
       if folio_embed_data.present? && folio_embed_data["active"] == true
         Folio::Embed.validate_record(record: self,

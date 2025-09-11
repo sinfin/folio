@@ -13,14 +13,15 @@ class Folio::FilePlacement::BaseTest < ActiveSupport::TestCase
     I18n.with_locale(:cs) do
       Rails.application.config.stub(:folio_files_require_attribution, true) do
         assert_not page.update(cover: image)
-        assert_equal "Obrázek nesplňuje požadavky. Soubor nemá vyplněného autora nebo zdroj", page.errors.full_messages.join(". ")
+        assert_equal(["nesplňuje požadavky"], page.errors.messages[:cover_placement])
+        assert_equal(["nemá vyplněného autora nebo zdroj"], page.errors.messages[:"cover_placement.file"])
       end
 
       assert page.update(cover: image)
 
       Rails.application.config.stub(:folio_files_require_attribution, true) do
         assert_not page.save
-        assert_equal "Obrázek nesplňuje požadavky", page.errors.full_messages.join(". ")
+        assert_equal(["nesplňuje požadavky"], page.errors.messages[:cover_placement])
       end
 
       image.update(author: "foo")
@@ -33,7 +34,7 @@ class Folio::FilePlacement::BaseTest < ActiveSupport::TestCase
 
       Rails.application.config.stub(:folio_files_require_attribution, true) do
         assert_not page.save
-        assert_equal "Obrázek nesplňuje požadavky", page.errors.full_messages.join(". ")
+        assert_equal(["nesplňuje požadavky"], page.errors.messages[:cover_placement])
       end
 
       image.update(attribution_source: "foo", description: "foo")
@@ -58,14 +59,17 @@ class Folio::FilePlacement::BaseTest < ActiveSupport::TestCase
     I18n.with_locale(:cs) do
       Rails.application.config.stub(:folio_files_require_alt, true) do
         assert_not page.update(cover: image)
-        assert_equal "Obrázek nesplňuje požadavky. Soubor nemá vyplněný alt", page.errors.full_messages.join(". ")
+        page.errors.messages
+        assert_equal(["nesplňuje požadavky"], page.errors.messages[:cover_placement])
+        assert_equal(["nemá vyplněný alt"], page.errors.messages[:"cover_placement.file"])
+        assert_equal(["obsahuje neplatná nastavení souborů"], page.errors.messages[:base])
       end
 
       assert page.update(cover: image)
 
       Rails.application.config.stub(:folio_files_require_alt, true) do
         assert_not page.save
-        assert_equal "Obrázek nesplňuje požadavky", page.errors.full_messages.join(". ")
+        assert_equal(["nesplňuje požadavky"], page.errors.messages[:cover_placement])
       end
     end
   end
@@ -77,14 +81,15 @@ class Folio::FilePlacement::BaseTest < ActiveSupport::TestCase
     I18n.with_locale(:cs) do
       Rails.application.config.stub(:folio_files_require_description, true) do
         assert_not page.update(cover: image)
-        assert_equal "Obrázek nesplňuje požadavky. Soubor nemá vyplněný popisek", page.errors.full_messages.join(". ")
+        assert_equal(["nesplňuje požadavky"], page.errors.messages[:cover_placement])
+        assert_equal(["nemá vyplněný popisek"], page.errors.messages[:"cover_placement.file"])
       end
 
       assert page.update(cover: image)
 
       Rails.application.config.stub(:folio_files_require_description, true) do
         assert_not page.save
-        assert_equal "Obrázek nesplňuje požadavky", page.errors.full_messages.join(". ")
+        assert_equal(["nesplňuje požadavky"], page.errors.messages[:cover_placement])
       end
     end
   end

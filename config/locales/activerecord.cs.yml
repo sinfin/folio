@@ -401,19 +401,20 @@ cs:
   errors:
     messages:
       at_least_one: Vyplňte alespoň jedno políčko.
-      invalid_count: musí být přesně %{count}
       color_mode_without_wrapper: nelze nastavit na tmavý bez zvolení obalu
-      missing_file_attribution: nemá vyplněného autora nebo zdroj
-      missing_file_alt: nemá vyplněný alt
-      missing_file_description: nemá vyplněný popisek
+      has_invalid_file_placements: obsahuje neplatná nastavení souborů
+      invalid_count: musí být přesně %{count}
       invalid_file_placement: nesplňuje požadavky
-      slug_not_unique_across_classes: je již použita u záznamu "%{sluggable_name}" (%{sluggable_type})
       invalid_subtitle_block: má nevalidní text na řádku %{line}
+      missing_file_alt: nemá vyplněný alt
+      missing_file_attribution: nemá vyplněného autora nebo zdroj
+      missing_file_description: nemá vyplněný popisek
+      slug_not_unique_across_classes: je již použita u záznamu "%{sluggable_name}" (%{sluggable_type})
       tiptap_invalid_json: není platný JSON řetězec
+      tiptap_multiple_folio_tiptap_pages: "obsahuje více než jednu stránkovanou část (%{count})"
       tiptap_must_be_hash_or_json: musí být Hash nebo platný JSON řetězec
       tiptap_must_have_content_key: "musí obsahovat klíč '%{content_key}' s Hash hodnotou"
       tiptap_root_node_must_be_doc: kořenový uzel musí být typu 'doc'
-      tiptap_multiple_folio_tiptap_pages: "obsahuje více než jednu stránkovanou část (%{count})"
 
     attributes:
       documents:
