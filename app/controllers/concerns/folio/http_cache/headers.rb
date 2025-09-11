@@ -24,10 +24,12 @@ module Folio
 
           if should_cache_response?
             ttl = calculate_cache_ttl(record)
-            set_public_cache_headers(ttl)
 
+            # Set freshness headers first (they may set Cache-Control)
             if record && (Rails.application.config.folio_cache_headers_include_etag || Rails.application.config.folio_cache_headers_include_last_modified)
-              set_freshness_headers(record)
+              set_freshness_headers(record, ttl)
+            else
+              set_public_cache_headers(ttl)
             end
           else
             set_private_cache_headers
@@ -58,18 +60,30 @@ module Folio
         end
 
         def set_private_cache_headers
-          response.headers["Cache-Control"] = "private, no-cache"
+          response.headers["Cache-Control"] = "no-cache"
         end
 
-        def set_freshness_headers(record)
+        def set_freshness_headers(record, ttl)
           return unless record
 
           timestamp = calculate_last_modified_timestamp(record)
 
           if Rails.application.config.folio_cache_headers_include_last_modified && timestamp
             fresh_when(record, last_modified: timestamp, public: true)
+            # Override Cache-Control to include our TTL
+            response.headers["Cache-Control"] = "max-age=#{ttl}, public, s-maxage=#{ttl}"
           elsif Rails.application.config.folio_cache_headers_include_etag
             fresh_when(record, public: true)
+            # Override Cache-Control to include our TTL
+            response.headers["Cache-Control"] = "max-age=#{ttl}, public, s-maxage=#{ttl}"
+          end
+
+          # Ensure Vary header is set
+          existing_vary = response.headers["Vary"].to_s
+          vary_values = existing_vary.split(",").map(&:strip)
+          unless vary_values.include?("Accept-Encoding")
+            vary_values << "Accept-Encoding"
+            response.headers["Vary"] = vary_values.reject(&:blank?).join(", ")
           end
         end
 
