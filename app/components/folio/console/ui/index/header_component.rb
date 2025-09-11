@@ -9,6 +9,7 @@ class Folio::Console::Ui::Index::HeaderComponent < Folio::Console::ApplicationCo
   renders_one :content_above_filters
 
   def initialize(klass:,
+                 title: nil,
                  subtitle: nil,
                  pagy: nil,
                  pagy_options: nil,
@@ -22,6 +23,7 @@ class Folio::Console::Ui::Index::HeaderComponent < Folio::Console::ApplicationCo
                  types: nil,
                  new_button: true)
     @klass = klass
+    @title = title
     @subtitle = subtitle
     @pagy = pagy
     @pagy_options = pagy_options
