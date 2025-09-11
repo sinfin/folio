@@ -79,7 +79,7 @@ export default ({ file }) => {
   const renderSectionHeader = (title, icon = 'info') => (
     <tr className='table-secondary'>
       <td colSpan='2' className='fw-bold text-uppercase small py-2'>
-        <i className={`fas fa-${icon} me-2`}></i>
+        <i className={`fas fa-${icon} me-2`} />
         {title}
       </td>
     </tr>
@@ -98,19 +98,19 @@ export default ({ file }) => {
     if ((field.key === 'gps_latitude' || field.key === 'gps_longitude') && hasLatLon()) {
       return null
     }
-    
+
     // Skip empty values
     if (!value || value === '' || (Array.isArray(value) && value.length === 0)) {
       return null
     }
-    
+
     // Format different value types
     if (Array.isArray(value)) {
       value = value.join(', ')
     } else if (field.type === 'date' && value) {
-      value = new Date(value).toLocaleDateString('cs-CZ', { 
-        year: 'numeric', 
-        month: '2-digit', 
+      value = new Date(value).toLocaleDateString('cs-CZ', {
+        year: 'numeric',
+        month: '2-digit',
         day: '2-digit',
         ...(field.includeTime ? { hour: '2-digit', minute: '2-digit' } : {})
       })
@@ -210,7 +210,7 @@ export default ({ file }) => {
   if (sectionsWithData.length === 0) {
     return (
       <div className='text-center text-muted py-4'>
-        <i className='fas fa-info-circle fa-2x mb-2'></i>
+        <i className='fas fa-info-circle fa-2x mb-2' />
         <p className='mb-0'>
           {window.FolioConsole.translations['file/no_metadata_description'] || 'Try extracting metadata to populate these fields.'}
         </p>
@@ -239,7 +239,6 @@ export default ({ file }) => {
           </tbody>
         </table>
       </div>
-
 
     </div>
   )

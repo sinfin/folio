@@ -81,8 +81,8 @@ import { FolioEditorResponsivePreview } from './folio-editor-responsive-preview'
 import type { JSONContent } from "@tiptap/react";
 
 interface FolioEditorProps {
-  onCreate?: (content: { editor: Editor }) => void;
-  onUpdate?: (content: { editor: Editor }) => void;
+  onCreate?: (props: { editor: Editor }) => void;
+  onUpdate?: (props: { editor: Editor }) => void;
   defaultContent?: JSONContent;
   type: "block" | "rich-text";
   folioTiptapConfig: FolioTiptapConfig;
@@ -106,6 +106,7 @@ export function FolioEditor({
   const blockEditor = type === "block";
   const [responsivePreviewEnabled, setResponsivePreviewEnabled] = React.useState<boolean>(false);
   const [initializedContent, setInitializedContent] = React.useState<boolean>(false);
+  const [editorCreated, setEditorCreated] = React.useState<boolean>(false);
   const [shouldScrollToInitial, setShouldScrollToInitial] = React.useState<number | null>(initialScrollTop);
 
   const folioTiptapStyledParagraphCommands = React.useMemo(() => {
@@ -156,7 +157,12 @@ export function FolioEditor({
 
   const editor = useEditor({
     onUpdate,
-    onCreate,
+    onCreate (props: { editor: Editor }) {
+      setEditorCreated(true)
+      if (onCreate) {
+        onCreate(props)
+      }
+    },
     onDrop () {
       for (const dropCursor of document.querySelectorAll('.prosemirror-dropcursor-block')) {
         (dropCursor as HTMLElement).hidden = true;
@@ -313,6 +319,7 @@ export function FolioEditor({
   }, []);
 
   React.useEffect(() => {
+    if (!editorCreated) return
     if (initializedContent) return
 
     const clearedContent = clearContent({
@@ -322,8 +329,10 @@ export function FolioEditor({
     })
 
     if (clearedContent) {
-      editor.chain().setMeta('addToHistory', false).setContent(clearedContent).run()
+      editor.commands.setContent(clearedContent, { emitUpdate: false, errorOnInvalidContent: false })
     }
+
+    setInitializedContent(true);
 
     window.parent!.postMessage(
       {
@@ -332,13 +341,11 @@ export function FolioEditor({
       },
       "*",
     );
-
-    setInitializedContent(true);
-  }, [defaultContent, initializedContent])
+  }, [defaultContent, initializedContent, editorCreated])
 
   let contentClassName = "f-tiptap-editor__content f-tiptap-styles"
   if (readonly) contentClassName += " f-tiptap-editor__content--readonly";
-  if (!initializedContent) return null
+  if (!editorCreated || !initializedContent) return null
 
   return (
     <EditorContext.Provider value={{ editor }}>

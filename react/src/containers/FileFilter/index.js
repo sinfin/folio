@@ -93,22 +93,22 @@ class FileFilter extends Component {
 
           {photoArchiveEnabled && (
             <div className='col-12 col-sm-6 col-xl-2'>
-            <FormGroup className='mb-2 mb-xl-0'>
-              <Input
-                type='select'
-                value={filters.photo_archive}
-                onChange={this.onInputChange}
-                placeholder={window.FolioConsole.translations.photoArchiveFilter}
-                name='photo_archive'
-                className='form-control--select select'
-                required
-              >
-                <option value=''>{window.FolioConsole.translations.photoArchivePlaceholder}</option>
-                <option value='from_photo_archive'>{window.FolioConsole.translations.photoArchiveFromPhotoArchive}</option>
-                <option value='not_from_photo_archive'>{window.FolioConsole.translations.photoArchiveNotFromPhotoArchive}</option>
-              </Input>
-            </FormGroup>
-          </div>
+              <FormGroup className='mb-2 mb-xl-0'>
+                <Input
+                  type='select'
+                  value={filters.photo_archive}
+                  onChange={this.onInputChange}
+                  placeholder={window.FolioConsole.translations.photoArchiveFilter}
+                  name='photo_archive'
+                  className='form-control--select select'
+                  required
+                >
+                  <option value=''>{window.FolioConsole.translations.photoArchivePlaceholder}</option>
+                  <option value='from_photo_archive'>{window.FolioConsole.translations.photoArchiveFromPhotoArchive}</option>
+                  <option value='not_from_photo_archive'>{window.FolioConsole.translations.photoArchiveNotFromPhotoArchive}</option>
+                </Input>
+              </FormGroup>
+            </div>
           )}
 
           {taggable && (

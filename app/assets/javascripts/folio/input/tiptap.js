@@ -1,3 +1,7 @@
+window.Folio = window.Folio || {}
+window.Folio.Tiptap = window.Folio.Tiptap || {}
+window.Folio.Tiptap.loggingEnabled = window.Folio.Tiptap.loggingEnabled || false
+
 window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.Controller {
   static targets = ['input', 'iframe', 'loader']
 
@@ -42,6 +46,14 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     this.storeScrollPositions()
   }
 
+  log ({ title, message }) {
+    if (!window.Folio.Tiptap.loggingEnabled) return
+
+    console.group(`[Folio][Input][Tiptap] ${title}`)
+    console.log(typeof message === 'object' ? JSON.stringify(message) : message)
+    console.groupEnd()
+  }
+
   onWindowBeforeUnload () {
     this.storeScrollPositions()
   }
@@ -60,6 +72,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
   }
 
   sendMessageToIframe (data) {
+    this.log({ title: 'sendMessageToIframe', message: data })
     this.iframeTarget.contentWindow.postMessage(data, this.originValue || window.origin)
   }
 
@@ -67,6 +80,8 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     if (this.originValue !== '*' && e.origin !== window.origin) return
     if (e.source !== this.iframeTarget.contentWindow) return
     if (!e.data) return
+
+    this.log({ title: 'onWindowMessage', message: e.data })
 
     switch (e.data.type) {
       case 'f-tiptap:created':
@@ -317,8 +332,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
       iframe: this.tiptapScrollTop
     }
 
-    window.sessionStorage.setItem('f-input-tiptap-scroll',
-      JSON.stringify({ at: Date.now(), scroll }))
+    window.sessionStorage.setItem('f-input-tiptap-scroll', JSON.stringify({ at: Date.now(), scroll }))
   }
 
   restoreScrollPositions () {

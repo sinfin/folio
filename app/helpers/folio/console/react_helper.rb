@@ -161,19 +161,23 @@ module Folio::Console::ReactHelper
     param_base = "#{f.object_name}[#{through}_attributes]"
 
     items = []
-    removed_ids = []
+    removed_items = []
 
     f.object.send(through).each do |record|
-      if record.marked_for_destruction?
-        removed_ids << record.id if record.id
+      through_record = through_klass.find(record.send(reflection.foreign_key))
+      hash = {
+        id: record.id,
+        label: through_record.to_console_label,
+        value: through_record.id,
+        _destroy: record.marked_for_destruction?,
+      }
+
+      if hash[:_destroy]
+        if hash[:id]
+          removed_items << hash
+        end
       else
-        through_record = through_klass.find(record.send(reflection.foreign_key))
-        items << {
-          id: record.id,
-          label: through_record.to_console_label,
-          value: through_record.id,
-          _destroy: record.marked_for_destruction?,
-        }
+        items << hash
       end
     end
 
@@ -206,7 +210,7 @@ module Folio::Console::ReactHelper
           "data-name" => "#{f.object_name}[#{relation_name}]",
           "data-param-base" => param_base,
           "data-foreign-key" => reflection.foreign_key,
-          "data-removed-ids" => removed_ids.to_json,
+          "data-removed-items" => removed_items.to_json,
           "data-items" => items.to_json,
           "data-url" => url,
           "data-sortable" => sortable ? "1" : "0",
