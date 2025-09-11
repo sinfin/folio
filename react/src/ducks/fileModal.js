@@ -212,10 +212,10 @@ function * extractMetadataPerform (action) {
   try {
     const url = urlWithAffix(action.filesUrl, `/${action.file.id}/extract_metadata`)
     const response = yield call(apiPost, url)
-    
+
     yield put({ type: EXTRACT_METADATA_SUCCESS, file: response.data, meta: response.meta })
     yield put({ type: UPDATE_FILE_SUCCESS, fileType: action.fileType, file: response.data, response: response.data })
-    
+
     if (response.meta && response.meta.flash && response.meta.flash.success) {
       window.FolioConsole.Flash.success(response.meta.flash.success)
     }

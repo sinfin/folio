@@ -78,13 +78,13 @@ class FileModal extends Component {
   componentDidUpdate (prevProps) {
     if (this.props.fileModal.file) {
       // Update state when: no previous file, update finished, OR file ID changed
-      const fileChanged = prevProps.fileModal.file && 
+      const fileChanged = prevProps.fileModal.file &&
                           this.props.fileModal.file.id !== prevProps.fileModal.file.id
       const attrsChanged = prevProps.fileModal.file && prevProps.fileModal.file.attributes &&
                            this.props.fileModal.file && this.props.fileModal.file.attributes &&
                            prevProps.fileModal.file.attributes !== this.props.fileModal.file.attributes
-      
-      if (!prevProps.fileModal.file || 
+
+      if (!prevProps.fileModal.file ||
           (prevProps.fileModal.updating && this.props.fileModal.updating === false) ||
           fileChanged || attrsChanged) {
         const newState = {
@@ -147,13 +147,13 @@ class FileModal extends Component {
               ...msg.file.attributes
             }
           }
-          
+
           console.log('Metadata extraction completed, updating UI for file:', msg.file.id)
-          
+
           // Update Redux store and component state
           this.props.dispatch(updatedFileModalFile(updatedFile))
           this.props.dispatch(updatedFiles(this.props.fileModal.fileType, [updatedFile]))
-          
+
           // Show success notification
           if (window.FolioConsole && window.FolioConsole.flash) {
             window.FolioConsole.flash('success', 'Metadata successfully extracted and populated')

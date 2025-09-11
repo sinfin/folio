@@ -126,7 +126,7 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
                   />
                 )}
               </FolioConsoleUiButtons>
-              
+
               {/* Sensitive content toggle next to buttons */}
               {!readOnly && (
                 <div className='form-check form-switch'>
@@ -142,7 +142,7 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
                   </label>
                 </div>
               )}
-              
+
               {readOnly && formState.sensitive_content && (
                 <span className='badge badge-warning'>
                   {window.FolioConsole.translations['file/sensitive_content']}
@@ -191,9 +191,9 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
                   </div>
                   <div className='d-flex flex-wrap align-items-center gap-2'>
                     <span className='me-2 text-muted'>
-                      <strong>Nahráno:</strong> {new Date(file.attributes.created_at).toLocaleDateString('cs-CZ', { 
-                        year: 'numeric', 
-                        month: '2-digit', 
+                      <strong>Nahráno:</strong> {new Date(file.attributes.created_at).toLocaleDateString('cs-CZ', {
+                        year: 'numeric',
+                        month: '2-digit',
                         day: '2-digit',
                         hour: '2-digit',
                         minute: '2-digit'
@@ -201,9 +201,9 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
                     </span>
                     {file.attributes.capture_date && (
                       <span className='me-2 text-muted'>
-                        <strong>Pořízeno:</strong> {new Date(file.attributes.capture_date).toLocaleDateString('cs-CZ', { 
-                          year: 'numeric', 
-                          month: '2-digit', 
+                        <strong>Pořízeno:</strong> {new Date(file.attributes.capture_date).toLocaleDateString('cs-CZ', {
+                          year: 'numeric',
+                          month: '2-digit',
                           day: '2-digit'
                         })}
                       </span>
@@ -371,8 +371,6 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
               </FormGroup>
             )}
 
-
-
             {/* Tags section remains as is */}
             {taggable && (
               <div className='form-group string optional file_tag_list'>
@@ -504,9 +502,8 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
           </div>
         </div>
 
-
         {file.attributes.subtitles_html_api_url ? (
-          <div className="mt-4">
+          <div className='mt-4'>
             <AdditionalHtmlFromApi apiUrl={file.attributes.subtitles_html_api_url} />
           </div>
         ) : null}
