@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 Folio::Engine.routes.draw do
+  # AwsFileHandler endpoints starting as '/aws_file_handler'
+  mount AwsFileHandler::Engine => "/"
+
   get "/400", to: "errors#page400", via: :all
   get "/403", to: "errors#page403", via: :all
   get "/404", to: "errors#page404", via: :all

@@ -17,6 +17,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_08_191904) do
   enable_extension "unaccent"
 
   create_folio_unaccent
+  enable_extension "uuid-ossp"
 
   create_table "audits", force: :cascade do |t|
     t.bigint "auditable_id"
@@ -41,6 +42,26 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_08_191904) do
     t.index ["placement_version"], name: "index_audits_on_placement_version"
     t.index ["request_uuid"], name: "index_audits_on_request_uuid"
     t.index ["user_id", "user_type"], name: "user_index"
+  end
+
+  create_table "aws_file_handler_files", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name", null: false
+    t.string "mime_type"
+    t.string "aasm_state", default: "initialized", null: false
+    t.jsonb "custom_data", default: {}, null: false
+    t.string "s3_type_directory", null: false
+    t.string "s3_path"
+    t.string "reference_key"
+    t.jsonb "metadata", default: {}, null: false
+    t.jsonb "metadata_rekognition", default: {}, null: false
+    t.bigint "user_id"
+    t.string "typeable_type"
+    t.bigint "typeable_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["reference_key"], name: "index_aws_file_handler_files_on_reference_key", where: "(reference_key IS NOT NULL)"
+    t.index ["typeable_type", "typeable_id"], name: "index_aws_file_handler_files_on_typeable"
+    t.index ["user_id"], name: "index_aws_file_handler_files_on_user_id"
   end
 
   create_table "dummy_blog_articles", force: :cascade do |t|

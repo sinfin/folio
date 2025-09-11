@@ -9,6 +9,7 @@ class Folio::File < Folio::ApplicationRecord
   include Folio::StiPreload
   include Folio::HasAasmStates
   include Folio::BelongsToSite
+  include AwsFileHandler::FileTypeable
 
   READY_STATE = :ready
 
