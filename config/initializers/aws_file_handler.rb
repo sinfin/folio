@@ -191,8 +191,6 @@ AwsFileHandler.configure do |config|
   # Examples:
   # config.controller_new_file = proc do |controller, params, aws_file|
   #   current_user = Folio::User.find(controller.session[:user_id])
-  #
-  #   # Check if the user can process uploading the file.
   #   if controller.can? :create, AwsFileHandler::File, user: current_user
   #     # This is association to your model. It's the opposite of the `aws_file` association in the
   #     # `AwsFileHandler::FileTypeable` concern.
@@ -228,7 +226,7 @@ AwsFileHandler.configure do |config|
   #     return true
   #   end
   #
-  #   # Or you can raise exception, and it'll be handled by AwsFileHandler::ApplicationController but with some
+  #   # Or you can raise exception, and it'll be handled by AwsFileHandler::FileController but with some
   #   # default HTTP code
   #   controller.head :forbidden
   #
@@ -278,16 +276,14 @@ AwsFileHandler.configure do |config|
   #   current_user = Folio::User.find(controller.session[:user_id])
   #
   #   # Check if the user can process uploading the file.
-  #   if controller.can? :create, AwsFileHandler::File, user: current_user
-  #     # This is an association to your model. It's the opposite of the `aws_file` association in the
-  #     # `AwsFileHandler::FileTypeable` concern. Do it here and in `controller_uploaded_file` if you didn't set it in the
-  #     # `/file/new` action already!
-  #     aws_file.typeable = aws_file.custom_data[:class].constantize.new
+  #   return true if controller.can? :create, AwsFileHandler::File, user: current_user
   #
-  #     return true
-  #   end
+  #   # This is an association to your model. It's the opposite of the `aws_file` association in the
+  #   # `AwsFileHandler::FileTypeable` concern. Do it here and in `controller_uploaded_file` if you didn't set it in the
+  #   # `/file/new` action already!
+  #   aws_file.typeable = aws_file.custom_data[:class].constantize.new
   #
-  #   # Or you can raise an exception, and it'll be handled by AwsFileHandler::ApplicationController but with some
+  #   # Or you can raise an exception, and it'll be handled by AwsFileHandler::FileController but with some
   #   # default HTTP code
   #   controller.head :forbidden
   #
@@ -331,34 +327,4 @@ AwsFileHandler.configure do |config|
     # TODO: fill data required for typeable instance
     aws_file.typeable = aws_file.custom_data[:class].constantize.new
   end
-
-  # This block is called in the `/file/uploaded` action. It's for setting up the file before processing it as uploaded.
-  # It's the same as `/file/sent` but it's called from AWS, so the request shouldn't be checked, and it should always
-  # pass otherwise, lambda will try it again.
-  #
-  # NOTE: If you didn't set typeable object `aws_file.typeable` in the new action, you should do it here!
-  #
-  # Parameters:
-  #   `controller` controller instance
-  #   `params` params from request
-  #   `aws_file` created instance of AwsFileHandler::File
-  #
-  # Examples:
-  # config.controller_uploaded_file = proc do |controller, params, aws_file|
-  #   # This is an association to your model. It's the opposite of the `aws_file` association in the
-  #   # `AwsFileHandler::FileTypeable` concern. Do it here and in `controller_sent_file` if you didn't set it in the
-  #   # `/file/new` action already!
-  #   aws_file.typeable = aws_file.custom_data[:class].constantize.new
-  # end
-  # config.controller_sent_file = nil # default
-
-  # This block is called when uncaught exception is raised in any of the gem's controller action.
-  #
-  # Parameters:
-  #   `controller` controller instance
-  #   `exception` exception raised in any action
-  #
-  # Examples:
-  # config.controller_rescue_from = proc { |controller, exception| controller.head :internal_server_error } # default
-  # config.controller_rescue_from = nil
 end
