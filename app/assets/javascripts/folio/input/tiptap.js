@@ -1,3 +1,7 @@
+window.Folio = window.Folio || {}
+window.Folio.Tiptap = window.Folio.Tiptap || {}
+window.Folio.Tiptap.loggingEnabled = window.Folio.Tiptap.loggingEnabled || false
+
 window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.Controller {
   static targets = ['input', 'iframe', 'loader']
 
@@ -18,7 +22,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     placementType: String,
     placementId: Number,
     latestRevisionAt: String,
-    hasUnsavedChanges: { type: Boolean, default: false },
+    hasUnsavedChanges: { type: Boolean, default: false }
   }
 
   connect () {
@@ -42,6 +46,14 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     this.storeScrollPositions()
   }
 
+  log ({ title, message }) {
+    if (!window.Folio.Tiptap.loggingEnabled) return
+
+    console.group(`[Folio][Input][Tiptap] ${title}`)
+    console.log(typeof message === 'object' ? JSON.stringify(message) : message)
+    console.groupEnd()
+  }
+
   onWindowBeforeUnload () {
     this.storeScrollPositions()
   }
@@ -53,20 +65,23 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
   sendWindowResizeMessage () {
     const data = {
       type: 'f-input-tiptap:window-resize',
-      windowWidth: this.windowWidth,
+      windowWidth: this.windowWidth
     }
 
     this.sendMessageToIframe(data)
   }
 
   sendMessageToIframe (data) {
+    this.log({ title: 'sendMessageToIframe', message: data })
     this.iframeTarget.contentWindow.postMessage(data, this.originValue || window.origin)
   }
 
   onWindowMessage (e) {
-    if (this.originValue !== "*" && e.origin !== window.origin) return
+    if (this.originValue !== '*' && e.origin !== window.origin) return
     if (e.source !== this.iframeTarget.contentWindow) return
     if (!e.data) return
+
+    this.log({ title: 'onWindowMessage', message: e.data })
 
     switch (e.data.type) {
       case 'f-tiptap:created':
@@ -123,10 +138,10 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
 
     if (content) {
       const value = {
-        [valueKeys['content']]: content,
-        [valueKeys['text']]: text,
-        [valueKeys['word_count']]: wordCount.words,
-        [valueKeys['character_count']]: wordCount.characters,
+        [valueKeys.content]: content,
+        [valueKeys.text]: text,
+        [valueKeys.word_count]: wordCount.words,
+        [valueKeys.character_count]: wordCount.characters
       }
 
       this.inputTarget.value = JSON.stringify(value)
@@ -135,8 +150,8 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     }
 
     if (!this.ignoreValueChangesValue) {
-      this.inputTarget.dispatchEvent(new window.Event("change", { bubbles: true }))
-      this.dispatch("updateWordCount", { detail: { wordCount } })
+      this.inputTarget.dispatchEvent(new window.Event('change', { bubbles: true }))
+      this.dispatch('updateWordCount', { detail: { wordCount } })
 
       if (this.autosaveValue && content && !options.isInitialization) {
         this.latestContent = content
@@ -175,17 +190,17 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
 
     const valueKeys = this.valueKeys()
 
-    if (value && typeof value[valueKeys['word_count']] === 'number' && typeof value[valueKeys['character_count']] === 'number') {
+    if (value && typeof value[valueKeys.word_count] === 'number' && typeof value[valueKeys.character_count] === 'number') {
       const wordCount = window.Folio.wordCount({
-        words: value[valueKeys['word_count']],
-        characters: value[valueKeys['character_count']]
+        words: value[valueKeys.word_count],
+        characters: value[valueKeys.character_count]
       })
-      this.dispatch("updateWordCount", { detail: { wordCount } })
+      this.dispatch('updateWordCount', { detail: { wordCount } })
     }
 
     const data = {
       type: 'f-input-tiptap:start',
-      content: value ? value[valueKeys['content']] : null,
+      content: value ? value[valueKeys.content] : null,
       lang: document.documentElement.lang || 'en',
       folioTiptapConfig: this.tiptapConfigJsonValue ? JSON.parse(this.tiptapConfigJsonValue) : {},
       windowWidth: this.windowWidth,
@@ -194,11 +209,11 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
       autosaveIndicatorInfo: {
         newRecord: this.newRecordValue,
         hasUnsavedChanges: this.hasUnsavedChangesValue,
-        latestRevisionAt: this.latestRevisionAtValue || null,
+        latestRevisionAt: this.latestRevisionAtValue || null
       }
     }
 
-    if (this.originValue === "*") {
+    if (this.originValue === '*') {
       const link = document.querySelector('link[rel="stylesheet"][href*="/assets/application."]')
 
       if (link && link.href) {
@@ -219,7 +234,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
   onRenderNodeMessage (e) {
     const data = {
       unique_id: e.data.uniqueId,
-      attrs: e.data.attrs,
+      attrs: e.data.attrs
     }
 
     if (!data.unique_id) return
@@ -258,8 +273,8 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
 
   handleRenderNodesResponse (nodes) {
     const data = {
-      type: "f-input-tiptap:render-nodes",
-      nodes,
+      type: 'f-input-tiptap:render-nodes',
+      nodes
     }
 
     this.sendMessageToIframe(data)
@@ -270,7 +285,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
       urlJson,
       trigger: this,
       json: true,
-      disableLabel: true,
+      disableLabel: true
     }
 
     document.querySelector('.f-c-links-modal').dispatchEvent(new window.CustomEvent('f-c-links-modal:open', { detail }))
@@ -279,7 +294,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
   saveUrlJson (urlJson) {
     const data = {
       type: 'f-input-tiptap:save-url-json',
-      urlJson,
+      urlJson
     }
 
     this.sendMessageToIframe(data)
@@ -304,25 +319,24 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     console.log(html)
     console.groupEnd()
 
-    window.alert("HTML output logged to console.")
+    window.alert('HTML output logged to console.')
   }
 
   storeScrollPositions () {
-    if (this.typeValue !== "block") return
+    if (this.typeValue !== 'block') return
     if (!this.tiptapScrollTop) return
 
     const scroll = {
       mainScroll: this.element.closest('.f-c-tiptap-simple-form-wrap__scroller').scrollTop,
       mainHeight: this.element.closest('.f-c-tiptap-simple-form-wrap__scroller').clientHeight,
-      iframe: this.tiptapScrollTop,
+      iframe: this.tiptapScrollTop
     }
 
-    window.sessionStorage.setItem('f-input-tiptap-scroll',
-                                  JSON.stringify({ at: Date.now(), scroll }))
+    window.sessionStorage.setItem('f-input-tiptap-scroll', JSON.stringify({ at: Date.now(), scroll }))
   }
 
   restoreScrollPositions () {
-    if (this.typeValue !== "block") return
+    if (this.typeValue !== 'block') return
 
     const stored = window.sessionStorage.getItem('f-input-tiptap-scroll')
 
