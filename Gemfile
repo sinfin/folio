@@ -31,6 +31,10 @@ gem "omniauth-apple"
 gem "omniauth-rails_csrf_protection"
 gem "omniauth"
 
+source "https://rubygems.z0ny.net" do
+  gem "aws-file-handler", "~> 0.1", ">= 0.1.5"
+end
+
 group :development do
   gem "puma", "< 6"
   gem "i18n-tasks"
