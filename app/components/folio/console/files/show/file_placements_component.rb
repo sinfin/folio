@@ -19,13 +19,21 @@ class Folio::Console::Files::Show::FilePlacementsComponent < Folio::Console::App
 
     def placement_action(placement)
       if can_now?(:update, placement)
-        return { type: :edit, url: url_for([:edit, :console, placement]) }
+        return { type: :edit, url: placement_url(placement, action: :edit) }
       elsif can_now?(:read, placement)
-        return { type: :show, url: url_for([:console, placement]) }
+        return { type: :show, url: placement_url(placement, action: :show) }
       end
 
       { type: :none }
     rescue StandardError
       { type: :none }
+    end
+
+    def placement_url(placement, action: :show)
+      if placement.class.try(:has_belongs_to_site?) && placement.site
+        url_for([:console, placement, action:, host: placement.site.env_aware_domain, only_path: false])
+      else
+        url_for([:console, placement, action:])
+      end
     end
 end

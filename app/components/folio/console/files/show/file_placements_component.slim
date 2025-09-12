@@ -14,20 +14,25 @@
       - @file_placements.each do |file_placement|
         - next if file_placement.placement.blank?
         - action = placement_action(file_placement.placement)
+        - placement = file_placement.placement.is_a?(Folio::Atom::Base) ? file_placement.placement.placement : file_placement.placement
 
         tr.small
           td.f-c-files-show-file-placements__td
-            = file_placement.model_name.human
+            = placement.model_name.human
+
+            - if file_placement.placement.is_a?(Folio::Atom::Base)
+              .text-muted
+                ' (#{t('.in_atom')})
 
           td.f-c-files-show-file-placements__td
-            = file_placement.placement.model_name.human
+            = placement.model_name.human
 
           td.f-c-files-show-file-placements__td
             - if action[:url]
               a href=action[:url] target="_href"
-                = placement_label(file_placement.placement)
+                = placement_label(placement)
             - else
-              = placement_label(file_placement.placement)
+              = placement_label(placement)
 
           td.f-c-files-show-file-placements__td
             = l(file_placement.created_at, format: :console_short)

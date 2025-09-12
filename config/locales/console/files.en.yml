@@ -30,6 +30,7 @@ en:
             th/placement_type: Record type
             th/placement_label: Record
             th/created_at: Created at
+            in_atom: content chapter
 
         batch:
           bar_component:
