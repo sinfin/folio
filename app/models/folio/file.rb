@@ -278,7 +278,7 @@ class Folio::File < Folio::ApplicationRecord
     file_name.presence || self.class.model_name.human
   end
 
-  def file_modal_additional_fields
+  def console_show_additional_fields
     {}
   end
 
@@ -292,6 +292,10 @@ class Folio::File < Folio::ApplicationRecord
     else
       "#{base}-index"
     end
+  end
+
+  def console_show_additional_preview_component
+    # to be overriden in main_app should be needed
   end
 
   private

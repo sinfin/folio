@@ -49,7 +49,6 @@ Rails.application.routes.draw do
           get :private_attachments
           get :report
           get :required_inputs
-          get :additional_html_for_video_files_modal
           get :uppy
           get :tiptap_form
 

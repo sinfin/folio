@@ -134,40 +134,9 @@ class Folio::Console::FileSerializer
     object.try(:preview_duration)
   end
 
-  attribute :additional_html_api_url do |object|
-    Rails.application.config.folio_console_files_additional_html_api_url_lambda.call(object)
-  end
-
-  attribute :subtitles_html_api_url do |object|
-    if object.is_a?(Folio::File::Video) && object.try(:subtitles_enabled?)
-      Folio::Engine.routes
-                   .url_helpers
-                   .subtitles_html_console_api_file_video_path(object)
-    end
-  end
-
   attribute :file_modal_additional_fields do |object|
-    object.file_modal_additional_fields.map do |name, hash|
-      h = {
-        name:,
-        type: hash[:type],
-        label: hash[:label] || object.class.human_attribute_name(name),
-        value: object.send(name),
-      }
-
-      if hash[:collection]
-        if hash[:include_blank] != false
-          h[:collection] = [["", ""]]
-        else
-          h[:value] ||= hash[:collection][0][1]
-          h[:collection] = []
-        end
-
-        h[:collection] += hash[:collection]
-      end
-
-      h
-    end
+    # obsolete
+    []
   end
 
   attribute :imported_from_photo_archive do |object|
