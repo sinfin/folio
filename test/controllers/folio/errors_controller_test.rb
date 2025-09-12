@@ -30,8 +30,8 @@ class Folio::ErrorsControllerTest < ActionDispatch::IntegrationTest
       get "/500"
       assert_response :internal_server_error
       cache_control = response.get_header("Cache-Control")
-      # 500 errors get no-cache (not cacheable due to server error)
-      assert_match(/no-cache/, cache_control)
+      # 500 errors get no-store (not cacheable due to server error)
+      assert_equal "no-store", cache_control
       assert_select "h1", "500"
     end
   end

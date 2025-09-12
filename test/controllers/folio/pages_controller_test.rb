@@ -65,9 +65,12 @@ class Folio::PagesControllerTest < Folio::BaseControllerTest
       folio_cache_headers_enabled: true,
       folio_cache_headers_default_ttl: 60,
     ) do
+      # Sign out to test public cache (BaseControllerTest auto-signs in superadmin)
+      sign_out @superadmin
+
       get url_for(@page)
       assert_response(:ok)
-      # With cache headers enabled, pages get public cache with TTL
+      # With cache headers enabled, pages get public cache with TTL for anonymous users
       cache_control = response.get_header("Cache-Control")
       assert_match(/public/, cache_control)
       assert_match(/max-age=/, cache_control)
