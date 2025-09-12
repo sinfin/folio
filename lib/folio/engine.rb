@@ -129,7 +129,7 @@ module Folio
 
     config.folio_console_react_modal_types = config.folio_file_types_for_routes
 
-    # folio_files_require_attribution = requires either author or source+description
+    # folio_files_require_attribution = requires either author or source/source url
     config.folio_files_require_attribution = false
     config.folio_files_require_alt = false
     config.folio_files_require_description = false

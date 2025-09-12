@@ -93,11 +93,8 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
     ary = []
 
     if Rails.application.config.folio_files_require_attribution
-      if @file.author.blank?
-        source_is_blank = @file.attribution_source.blank? && @file.attribution_source_url.blank?
-        if source_is_blank || @file.description.blank?
-          ary << I18n.t("errors.messages.missing_file_attribution").capitalize
-        end
+      if @file.author.blank? && @file.attribution_source.blank? && @file.attribution_source_url.blank?
+        ary << I18n.t("errors.messages.missing_file_attribution").capitalize
       end
     end
 
