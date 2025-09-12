@@ -7,6 +7,7 @@ module Folio::ApplicationControllerBase
   include Folio::RenderComponentJson
   include Folio::SetCurrentRequestDetails
   include Folio::SetMetaVariables
+  include Folio::HttpCache::Headers
 
   included do
     include Pagy::Backend
@@ -26,6 +27,9 @@ module Folio::ApplicationControllerBase
     add_flash_types :success, :warning, :info
 
     rescue_from CanCan::AccessDenied, with: :handle_can_can_access_denied
+
+    # Apply basic HTTP cache headers after each action when enabled
+    after_action :set_cache_control_headers
   end
 
   def set_i18n_locale
@@ -149,12 +153,6 @@ module Folio::ApplicationControllerBase
       else
         @error_code = 403
         render "folio/errors/show", status: @error_code
-      end
-    end
-
-    def set_cache_control_headers(record: nil)
-      if record && record.respond_to?(:published?) && !record.published?
-        no_store
       end
     end
 end
