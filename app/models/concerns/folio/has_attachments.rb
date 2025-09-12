@@ -168,16 +168,22 @@ module Folio::HasAttachments
   end
 
   def should_validate_file_placements_attribution_if_needed?
+    return false unless Rails.application.config.folio_files_require_attribution
+
     # only validate if published by default
     read_attribute(:published) == true
   end
 
   def should_validate_file_placements_alt_if_needed?
+    return false unless Rails.application.config.folio_files_require_alt
+
     # only validate if published by default
     read_attribute(:published) == true
   end
 
   def should_validate_file_placements_description_if_needed?
+    return false unless Rails.application.config.folio_files_require_description
+
     # only validate if published by default
     read_attribute(:published) == true
   end
@@ -210,35 +216,29 @@ module Folio::HasAttachments
         end
       end
 
-      if Rails.application.config.folio_files_require_attribution
-        if should_validate_file_placements_attribution_if_needed?
-          all_placements_ary.each do |placement|
-            placement.validate_attribution_if_needed
-            if placement.errors[:file].present?
-              has_invalid_file_placements = true
-            end
+      if should_validate_file_placements_attribution_if_needed?
+        all_placements_ary.each do |placement|
+          placement.validate_attribution_if_needed
+          if placement.errors[:file].present?
+            has_invalid_file_placements = true
           end
         end
       end
 
-      if Rails.application.config.folio_files_require_alt
-        if should_validate_file_placements_alt_if_needed?
-          all_placements_ary.each do |placement|
-            placement.validate_alt_if_needed
-            if placement.errors[:file].present?
-              has_invalid_file_placements = true
-            end
+      if should_validate_file_placements_alt_if_needed?
+        all_placements_ary.each do |placement|
+          placement.validate_alt_if_needed
+          if placement.errors[:file].present?
+            has_invalid_file_placements = true
           end
         end
       end
 
-      if Rails.application.config.folio_files_require_description
-        if should_validate_file_placements_description_if_needed?
-          all_placements_ary.each do |placement|
-            placement.validate_description_if_needed
-            if placement.errors[:file].present?
-              has_invalid_file_placements = true
-            end
+      if should_validate_file_placements_description_if_needed?
+        all_placements_ary.each do |placement|
+          placement.validate_description_if_needed
+          if placement.errors[:file].present?
+            has_invalid_file_placements = true
           end
         end
       end

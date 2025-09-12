@@ -123,10 +123,14 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
   end
 
   def validate_attribution_if_needed
-    return unless Rails.application.config.folio_files_require_attribution
     return if errors[:file].present? && errors[:file].include?(:missing_file_attribution)
     return if file.blank?
-    return if placement && !placement.should_validate_file_placements_attribution_if_needed?
+
+    if placement
+      return unless placement.should_validate_file_placements_attribution_if_needed?
+    else
+      return unless Rails.application.config.folio_files_require_attribution
+    end
 
     if file.author.blank? && file.attribution_source.blank? && file.attribution_source_url.blank?
       errors.add(:file, :missing_file_attribution)
@@ -134,10 +138,14 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
   end
 
   def validate_alt_if_needed
-    return unless Rails.application.config.folio_files_require_alt
     return if errors[:file].present? && errors[:file].include?(:missing_file_alt)
     return if file.blank?
-    return if placement && !placement.should_validate_file_placements_alt_if_needed?
+
+    if placement
+      return unless placement.should_validate_file_placements_alt_if_needed?
+    else
+      return unless Rails.application.config.folio_files_require_alt
+    end
 
     if file.class.human_type == "image" && alt_with_fallback.blank?
       errors.add(:file, :missing_file_alt)
@@ -145,10 +153,14 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
   end
 
   def validate_description_if_needed
-    return unless Rails.application.config.folio_files_require_description
     return if errors[:file].present? && errors[:file].include?(:missing_file_description)
     return if file.blank?
-    return if placement && !placement.should_validate_file_placements_description_if_needed?
+
+    if placement
+      return unless placement.should_validate_file_placements_description_if_needed?
+    else
+      return unless Rails.application.config.folio_files_require_description
+    end
 
     if file.description.blank?
       errors.add(:file, :missing_file_description)
