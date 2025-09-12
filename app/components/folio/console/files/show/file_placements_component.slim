@@ -13,8 +13,8 @@
 
       - @file_placements.each do |file_placement|
         - next if file_placement.placement.blank?
-        - action = placement_action(file_placement.placement)
         - placement = file_placement.placement.is_a?(Folio::Atom::Base) ? file_placement.placement.placement : file_placement.placement
+        - action = placement_action(placement)
 
         tr.small
           td.f-c-files-show-file-placements__td
