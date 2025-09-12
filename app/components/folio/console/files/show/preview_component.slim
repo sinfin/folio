@@ -19,3 +19,6 @@
           | ×
           = @file.file_height
           | px
+
+  - elsif @human_type == "video" || @human_type == "audio"
+    = render(Folio::PlayerComponent.new(file: @file))
