@@ -14,9 +14,26 @@ Configuration:
     After running the generator, you can customize the cache behavior by:
     
     1. Adjusting settings in config/initializers/cache_headers.rb
-    2. Overriding set_cache_control_headers method in specific controllers
+    2. Overriding cache_timestamp_columns method to specify which columns to use
+    3. Calling set_cache_control_headers(record: @model) for ETag/Last-Modified headers
     
     For emergency cache control, set environment variable:
     - FOLIO_CACHE_TTL_MULTIPLIER=0 to disable all caching
     - FOLIO_CACHE_TTL_MULTIPLIER=0.5 to halve cache times
     - FOLIO_CACHE_TTL_MULTIPLIER=2.0 to double cache times
+
+Explicit Record Usage:
+    Cache headers provide basic public caching by default via after_action.
+    For ETag and Last-Modified headers, explicitly call with record:
+    
+    Example usage:
+        def show
+          @article = Article.find(params[:id])
+          # Basic cache headers applied automatically via after_action
+          set_cache_control_headers(record: @article)  # Adds ETag/Last-Modified
+        end
+        
+        def index
+          @articles = Article.published
+          # Only basic cache headers (no record-specific headers)
+        end

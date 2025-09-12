@@ -75,13 +75,9 @@ class Folio::HttpCacheHeadersTest < ActionDispatch::IntegrationTest
       get console_pages_path
       assert_response :success
 
-      # Console paths are handled by ErrorsControllerBase which sets cache headers
-      # Since console pages are not 404, they get no-store (only 404 gets cached)
+      # Console paths get explicit private, no-store headers for security
       cache_control = response.get_header("Cache-Control")
-
-      # Console controllers include ErrorsControllerBase, which now only caches 404 errors
-      # Non-404 responses (like console pages) get no-store
-      assert_equal "no-store", cache_control, "Console pages should get no-store (only 404 errors are cached)"
+      assert_equal "private, no-store", cache_control, "Console pages should get private, no-store for security"
     end
   end
 
@@ -240,20 +236,24 @@ class Folio::HttpCacheHeadersTest < ActionDispatch::IntegrationTest
 
   test "emergency TTL multiplier works with 404 pages" do
     # Test that 404 pages also respect the multiplier
+    get "/404"
+
+    if response.status != 404
+      skip "404 error handling not available in test environment"
+      return
+    end
+
     ENV["FOLIO_CACHE_TTL_MULTIPLIER"] = "0.5"
 
     begin
+      # Re-run the request with the multiplier set
       get "/404"
 
-      if response.status == 404
-        # 404 pages should have shorter TTL (quarter of default, min 15s)
-        # With 0.5 multiplier: 60 * 0.5 = 30, then 30/4 = 7.5, but min 15s
-        cache_control = response.get_header("Cache-Control")
-        if cache_control&.include?("public")
-          assert_match(/max-age=15/, cache_control, "404 pages should have minimum 15s TTL even with multiplier")
-        end
-      else
-        skip "404 error handling not available in test environment"
+      # 404 pages should have shorter TTL (quarter of default, min 15s)
+      # With 0.5 multiplier: 60 * 0.5 = 30, then 30/4 = 7.5, but min 15s
+      cache_control = response.get_header("Cache-Control")
+      if cache_control&.include?("public")
+        assert_match(/max-age=15/, cache_control, "404 pages should have minimum 15s TTL even with multiplier")
       end
     ensure
       ENV.delete("FOLIO_CACHE_TTL_MULTIPLIER")

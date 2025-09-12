@@ -13,7 +13,7 @@ module Folio
           # No auto-detection - controllers must explicitly provide record if needed
 
           if record && record.respond_to?(:published?) && !record.published?
-            no_store
+            response.headers["Cache-Control"] = "no-store"
             log_cache_decision("no_store", "unpublished_record", record: record)
             return
           end
@@ -26,7 +26,7 @@ module Folio
           # Check emergency cache TTL multiplier from ENV
           multiplier = ENV["FOLIO_CACHE_TTL_MULTIPLIER"]&.to_f
           if multiplier == 0.0
-            no_store
+            response.headers["Cache-Control"] = "no-store"
             log_cache_decision("no_store", "emergency_cache_disabled", multiplier: multiplier)
             return
           end
@@ -38,20 +38,23 @@ module Folio
           end
 
           unless should_set_cache_headers?
-            skip_reason = if request.path.starts_with?("/console")
-              "console_path"
+            if request.path.starts_with?("/console")
+              # Console/admin must never be cached - contains sensitive data
+              response.headers["Cache-Control"] = "private, no-store"
+              log_cache_decision("no_store", "console_path", path: request.path)
             elsif request.path.starts_with?("/users")
-              "users_path"
+              # User routes should not be cached
+              response.headers["Cache-Control"] = "private, no-store"
+              log_cache_decision("no_store", "users_path", path: request.path)
             else
-              "other_excluded_path"
+              log_cache_decision("skip", "other_excluded_path", path: request.path)
             end
-            log_cache_decision("skip", skip_reason, path: request.path)
             return
           end
 
           # Preview mode should never be cached - contains unpublished content
           if params[Folio::Publishable::PREVIEW_PARAM_NAME].present?
-            no_store
+            response.headers["Cache-Control"] = "no-store"
             log_cache_decision("no_store", "preview_mode", preview_token: params[Folio::Publishable::PREVIEW_PARAM_NAME])
             return
           end
@@ -97,7 +100,12 @@ module Folio
         end
 
         def should_cache_response?
-          return false unless request.get? && response.status.to_i >= 200 && response.status.to_i < 300
+          return false unless request.get?
+
+          # Allow caching for 2xx responses and 404 errors (temporary missing content)
+          # 500+ errors are not cached as they indicate server problems
+          status = response.status.to_i
+          return false unless (status >= 200 && status < 300) || status == 404
 
           # Special paths that should be cached regardless of user login status
           return true if is_static_content_path?
@@ -215,13 +223,33 @@ module Folio
 
         # Default Last-Modified calculation. Apps can override in their controllers.
         def calculate_last_modified_timestamp(record)
-          record.updated_at if record.respond_to?(:updated_at)
+          return unless record
+
+          timestamps = []
+
+          # Iterate through configured timestamp columns
+          cache_timestamp_columns.each do |column|
+            next unless record.respond_to?(column)
+
+            value = record.public_send(column)
+            # Safely collect timestamps, ensuring we only add Time-like objects
+            if value.respond_to?(:to_time)
+              timestamps << value
+            end
+          end
+
+          timestamps.compact.max
+        rescue => e
+          Rails.logger.error "[Cache Headers] Error calculating last_modified_timestamp for #{record.class.name}##{record.try(:id)}: #{e.message}"
+          Rails.logger.error "[Cache Headers] Configured columns: #{cache_timestamp_columns.inspect}"
+          nil
         end
 
         # Declared for clarity, apps can override.
         def cache_timestamp_columns
           [:updated_at]
         end
+
 
         # Logging cache header decisions for debugging (non-production only)
         def log_cache_decision(action, rule_name, **details)
