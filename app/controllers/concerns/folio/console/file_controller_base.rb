@@ -56,10 +56,6 @@ module Folio::Console::FileControllerBase
 
       test_instance = @klass.new
 
-      if test_instance.respond_to?("preview_duration=")
-        ary << :preview_duration
-      end
-
       if test_instance.try(:console_show_additional_fields).present?
         ary += test_instance.console_show_additional_fields.keys
       end
@@ -142,5 +138,21 @@ module Folio::Console::FileControllerBase
       else
         [Folio::Current.site]
       end
+    end
+
+    def response_with_json_for_valid_update
+      data = {}
+
+      folio_console_params.keys.each do |key|
+        change = folio_console_record.saved_changes[key]
+
+        if change && change[1]
+          data[key] = change[1]
+        elsif key == "preview_duration"
+          data[key] = folio_console_record.preview_duration
+        end
+      end
+
+      render json: { data: }, status: 200
     end
 end

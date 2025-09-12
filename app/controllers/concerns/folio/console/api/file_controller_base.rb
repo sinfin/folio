@@ -290,10 +290,6 @@ module Folio::Console::Api::FileControllerBase
 
       test_instance = @klass.new
 
-      if test_instance.respond_to?("preview_duration=")
-        ary << :preview_duration
-      end
-
       if test_instance.try(:console_show_additional_fields).present?
         ary += test_instance.console_show_additional_fields.keys
       end

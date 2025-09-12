@@ -62,20 +62,22 @@ class Folio::Console::Files::ShowComponent < Folio::Console::ApplicationComponen
     }
   end
 
-  def table_row_keys
-    %i[
-      headline
-      description
-      author
-      attribution_source
-      attribution_source_url
-      attribution_copyright
-      attribution_licence
-      alt
-    ]
+  def table_rows
+    {
+      headline: {},
+      description: {},
+      author: {},
+      attribution_source: {},
+      attribution_source_url: {},
+      attribution_copyright: {},
+      attribution_licence: {},
+      alt: {},
+    }.merge(@file.console_show_additional_fields)
   end
 
-  def autocomplete_for(key)
+  def autocomplete_for(key:, config:)
+    return nil if config && (config[:as] == :integer || config[:collection])
+
     controller.folio.url_for([:field,
                               :console,
                               :api,

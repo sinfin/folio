@@ -51,7 +51,7 @@ class Folio::File < Folio::ApplicationRecord
     when false, "false"
       left_joins(:file_placements).where(folio_file_placements: { id: nil })
     else
-      noen
+      none
     end
   end
 
@@ -280,7 +280,13 @@ class Folio::File < Folio::ApplicationRecord
   end
 
   def console_show_additional_fields
-    {}
+    if respond_to?(:preview_duration) && respond_to?(:preview_duration=)
+      {
+        preview_duration: { as: :integer }
+      }
+    else
+      {}
+    end
   end
 
   def self.console_turbo_frame_id(modal: false, picker: false)

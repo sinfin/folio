@@ -320,6 +320,7 @@ module Folio::Console::DefaultActions
 
         folio_console_params.keys.each do |key|
           change = folio_console_record.saved_changes[key]
+
           if change && change[1]
             data[key] = change[1]
           end
