@@ -30,6 +30,7 @@ cs:
             th/placement_type: Typ záznamu
             th/placement_label: Záznam
             th/created_at: Vytvořeno
+            in_atom: kapitola obsahu
 
         batch:
           bar_component:
