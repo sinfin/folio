@@ -123,8 +123,9 @@ window.Folio.Stimulus.register('f-c-ui-ajax-input', class extends window.Stimulu
       apiFn(this.urlValue, data).then((res) => {
         const key = name.replace(/^.+\[(.+)\]$/, '$1')
         const newValue = res.data[key] || ''
+        const newLabel = res.meta && res.meta.labels ? res.meta.labels[key] : null
 
-        this.successCallback(newValue)
+        this.successCallback(newValue, newLabel)
       }).catch((err) => {
         this.tooltipTarget.innerHTML = err.message
         this.element.classList.add('f-c-ui-ajax-input--failure')
@@ -137,7 +138,7 @@ window.Folio.Stimulus.register('f-c-ui-ajax-input', class extends window.Stimulu
     }
   }
 
-  successCallback (newValue) {
+  successCallback (newValue, newLabel) {
     if (this.cleave) {
       this.cleave.setRawValue(newValue)
     } else {
@@ -146,7 +147,7 @@ window.Folio.Stimulus.register('f-c-ui-ajax-input', class extends window.Stimulu
 
     this.originalValueValue = newValue
     this.inputTarget.blur()
-    this.inputTarget.dispatchEvent(new CustomEvent('f-c-ui-ajax-input:success', { bubbles: true, detail: { value: newValue } }))
+    this.inputTarget.dispatchEvent(new CustomEvent('f-c-ui-ajax-input:success', { bubbles: true, detail: { value: newValue, label: newLabel } }))
 
     this.element.classList.add('f-c-ui-ajax-input--success')
     setTimeout(() => {

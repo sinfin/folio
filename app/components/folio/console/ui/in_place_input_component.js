@@ -25,7 +25,7 @@ window.Folio.Stimulus.register('f-c-ui-in-place-input', class extends window.Sti
   }
 
   onSuccess (e) {
-    this.contentTarget.innerHTML = e.detail.value || ''
+    this.contentTarget.innerHTML = e.detail.label || e.detail.value || ''
     this.editingValue = false
     this.element.classList.add('f-c-ui-in-place-input--success')
 
@@ -49,9 +49,13 @@ window.Folio.Stimulus.register('f-c-ui-in-place-input', class extends window.Sti
       const input = this.element.querySelector('.f-c-ui-ajax-input__input')
       if (!input) return
 
-      input.dispatchEvent(new CustomEvent('autosize:update'))
       input.focus()
-      input.setSelectionRange(-1, -1)
+      if (input.tagName === 'INPUT') {
+        input.setSelectionRange(-1, -1)
+      } else if (input.tagName === 'TEXTAREA') {
+        input.setSelectionRange(-1, -1)
+        input.dispatchEvent(new CustomEvent('autosize:update'))
+      }
     }
   }
 

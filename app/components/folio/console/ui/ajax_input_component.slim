@@ -25,6 +25,7 @@
           - else
             - @collection.each do |label, value|
               - value ||= label
+
               option value=value selected=(value == @value)
                 = label
 
