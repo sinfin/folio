@@ -13,12 +13,14 @@ class Folio::Console::Ui::InPlaceInputComponent < Folio::Console::ApplicationCom
                  f: nil,
                  data: nil,
                  textarea: nil,
+                 collection: nil,
                  compact: false)
     @attribute = attribute
     @record = record
     @value = record.send(attribute)
     @cleave = cleave
     @textarea = textarea || (!cleave && @record.class.columns_hash[attribute.to_s] && @record.class.columns_hash[attribute.to_s].type == :text)
+    @collection = collection
     @as = as
     @autocomplete = f ? nil : autocomplete
     @value_prefix = value_prefix
@@ -52,5 +54,14 @@ class Folio::Console::Ui::InPlaceInputComponent < Folio::Console::ApplicationCom
     else
       "#{@as || @record.model_name.param_key}[#{@attribute}]"
     end
+  end
+
+  def value_or_label_from_collection
+    if @value && @collection
+      item = @collection.find { |_label, value| value == @value }
+      return item[0] if item
+    end
+
+    @value
   end
 end

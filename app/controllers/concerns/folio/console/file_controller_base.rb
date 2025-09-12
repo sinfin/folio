@@ -142,17 +142,25 @@ module Folio::Console::FileControllerBase
 
     def response_with_json_for_valid_update
       data = {}
+      meta = {}
 
       folio_console_params.keys.each do |key|
         change = folio_console_record.saved_changes[key]
 
         if change && change[1]
+          if key.to_s.ends_with?("_id")
+            if label = folio_console_record.try(key.to_s.chomp("_id")).try(:to_label)
+              meta[:labels] ||= {}
+              meta[:labels][key] = label
+            end
+          end
+
           data[key] = change[1]
         elsif key == "preview_duration"
           data[key] = folio_console_record.preview_duration
         end
       end
 
-      render json: { data: }, status: 200
+      render json: { data:, meta: }, status: 200
     end
 end
