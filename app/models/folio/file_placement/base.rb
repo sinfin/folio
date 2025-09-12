@@ -128,11 +128,8 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
     return if file.blank?
     return if placement && !placement.should_validate_file_placements_attribution_if_needed?
 
-    if file.author.blank?
-      source_is_blank = file.attribution_source.blank? && file.attribution_source_url.blank?
-      if source_is_blank || description_with_fallback.blank?
-        errors.add(:file, :missing_file_attribution)
-      end
+    if file.author.blank? && file.attribution_source.blank? && file.attribution_source_url.blank?
+      errors.add(:file, :missing_file_attribution)
     end
   end
 

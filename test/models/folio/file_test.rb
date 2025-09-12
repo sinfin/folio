@@ -174,7 +174,7 @@ class Folio::FileTest < ActiveSupport::TestCase
 
       Rails.application.config.stub(:folio_files_require_attribution, true) do
         assert file.update!(author: "foo", attribution_source: "bar")
-        assert_not file.update(author: nil)
+        assert_not file.update(author: nil, attribution_source: nil)
         assert_equal "Autor nebo zdroj je povinný", file.errors.full_messages.join(". ")
       end
     end

@@ -335,13 +335,9 @@ class Folio::File < Folio::ApplicationRecord
       if Rails.application.config.folio_files_require_attribution
         if author_changed? ||
            attribution_source_changed? ||
-           attribution_source_url_changed? ||
-           description_changed?
-          if author.blank?
-            source_is_blank = attribution_source.blank? && attribution_source_url.blank?
-            if source_is_blank || description.blank?
-              errors.add(:author, :missing_file_attribution)
-            end
+           attribution_source_url_changed?
+          if author.blank? && attribution_source.blank? && attribution_source_url.blank?
+            errors.add(:author, :missing_file_attribution)
           end
         end
       end
