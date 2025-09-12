@@ -53,16 +53,20 @@
           == cell("folio/console/state", @file, active: false)
 
       .f-c-files-show__table
-        - table_row_keys.each do |key|
+        - table_rows.each do |key, config|
           .f-c-files-show__tr
             .f-c-files-show__th
               = @file.class.human_attribute_name(key)
 
             .f-c-files-show__td
-              = render(Folio::Console::Ui::InPlaceInputComponent.new(attribute: key,
-                                                                     record: @file,
-                                                                     as: :file,
-                                                                     autocomplete: autocomplete_for(key)))
+              - if config[:collection]
+                ' collection
+              - else
+                = render(Folio::Console::Ui::InPlaceInputComponent.new(attribute: key,
+                                                                       record: @file,
+                                                                       cleave: config && config[:as] == :integer,
+                                                                       as: :file,
+                                                                       autocomplete: autocomplete_for(key:, config:)))
 
       .f-c-files-show__collapsibles
         - if @file.respond_to?(:mapped_metadata)

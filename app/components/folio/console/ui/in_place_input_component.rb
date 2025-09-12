@@ -18,7 +18,7 @@ class Folio::Console::Ui::InPlaceInputComponent < Folio::Console::ApplicationCom
     @record = record
     @value = record.send(attribute)
     @cleave = cleave
-    @textarea = textarea || (!cleave && @record.class.columns_hash[attribute.to_s].type == :text)
+    @textarea = textarea || (!cleave && @record.class.columns_hash[attribute.to_s] && @record.class.columns_hash[attribute.to_s].type == :text)
     @as = as
     @autocomplete = f ? nil : autocomplete
     @value_prefix = value_prefix
