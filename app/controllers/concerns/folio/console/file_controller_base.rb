@@ -39,19 +39,33 @@ module Folio::Console::FileControllerBase
 
   private
     def file_params
+      ary = [
+        :headline,
+        :description,
+        :tag_list,
+        :author,
+        :attribution_source,
+        :attribution_source_url,
+        :attribution_copyright,
+        :attribution_licence,
+        :sensitive_content,
+        :default_gravity,
+        :alt,
+        tags: []
+      ]
+
+      test_instance = @klass.new
+
+      if test_instance.respond_to?("preview_duration=")
+        ary << :preview_duration
+      end
+
+      if test_instance.try(:console_show_additional_fields).present?
+        ary += test_instance.console_show_additional_fields.keys
+      end
+
       p = params.require(:file)
-                .permit(:headline,
-                        :description,
-                        :tag_list,
-                        :author,
-                        :attribution_source,
-                        :attribution_source_url,
-                        :attribution_copyright,
-                        :attribution_licence,
-                        :sensitive_content,
-                        :default_gravity,
-                        :alt,
-                        tags: [])
+                .permit(*ary)
 
       if p[:tags].present? && p[:tag_list].blank?
         p[:tag_list] = p.delete(:tags).join(",")

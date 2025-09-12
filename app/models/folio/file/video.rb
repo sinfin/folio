@@ -5,7 +5,7 @@ class Folio::File::Video < Folio::File
 
   validate_file_format %w[video/mp4 video/webm]
 
-  def file_modal_additional_fields
+  def console_show_additional_fields
     additional_fields = {}
 
     self.class.enabled_subtitle_languages.each do |lang|

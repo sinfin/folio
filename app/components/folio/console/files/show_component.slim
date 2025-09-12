@@ -1,8 +1,12 @@
 .f-c-files-show data=data
   .f-c-files-show__row.row
-    - if @file.class.human_type != "document"
+    - if Folio::Console::Files::Show::PreviewComponent.should_render?(@file.class.human_type) || @file.console_show_additional_preview_component
       .col-lg-6.f-c-files-show__preview-col
         = render(Folio::Console::Files::Show::PreviewComponent.new(file: @file))
+
+        - if @file.console_show_additional_preview_component
+          .f-c-files-show__additional-preview-wrap
+            = render(@file.console_show_additional_preview_component)
 
     .col-lg
       .f-c-files-show__buttons-outer.mb-h
@@ -68,5 +72,9 @@
         = render(Folio::Console::Ui::CollapsibleComponent.new(title: t('.title/usage', count: @file.file_placements_size || 0),
                                                               collapsed: controller.action_name != "file_placements"))
           = render(Folio::Console::Files::Show::FilePlacementsComponent.new(file: @file))
+
+  - if @file.class.human_type == "video" && @file.try(:subtitles_enabled?)
+    .f-c-files-show__subtitles-wrap
+      = render(Folio::Console::Files::SubtitlesFormComponent.new(file: @file))
 
   span.folio-loader.folio-loader--outset-8.f-c-files-show__loader
