@@ -63,6 +63,7 @@ en:
         title: Title
         usage: Usage
         usageFilter: Search by usage
+        usedIn: Used in
         usagePlaceholder: Usage...
         usageUnused: Unused
         usageUsed: Used

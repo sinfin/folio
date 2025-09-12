@@ -63,6 +63,7 @@ cs:
         title: Název
         usage: Použití
         usageFilter: Hledat dle použití
+        usedIn: Použito v
         usagePlaceholder: Využití...
         usageUnused: Nepoužité
         usageUsed: Použité

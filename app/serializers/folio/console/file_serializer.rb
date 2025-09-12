@@ -12,7 +12,6 @@ class Folio::Console::FileSerializer
              :file_width,
              :file_height,
              :type,
-             :thumbnail_sizes,
              :author,
              :attribution_source,
              :attribution_source_url,
@@ -164,5 +163,20 @@ class Folio::Console::FileSerializer
         object.imported_from_photo_archive?
       end
     end
+  end
+
+  attribute :thumbnail_sizes do |object|
+    sizes = object.try(:thumbnail_sizes) || {}
+    
+    # Add usage information for each thumbnail size
+    if sizes.is_a?(Hash) && object.respond_to?(:find_thumbnail_size_usage)
+      sizes.each do |size_key, size_data|
+        next unless size_data.is_a?(Hash)
+        
+        size_data[:usage] = object.find_thumbnail_size_usage(size_key)
+      end
+    end
+    
+    sizes
   end
 end

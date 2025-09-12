@@ -196,6 +196,33 @@ class Folio::File < Folio::ApplicationRecord
     end
   end
 
+  def find_thumbnail_size_usage(size_key)
+    usage_descriptions = []
+    
+    # Find all file placements that might use this size
+    file_placements.includes(:placement).each do |file_placement|
+      placement = file_placement.placement
+      next unless placement
+      
+      # Try to determine the context based on placement type and class
+      if placement.is_a?(Folio::Atom::Base)
+        parent_placement = placement.placement
+        if parent_placement
+          usage_descriptions << "#{parent_placement.class.model_name.human}: #{parent_placement.to_label}"
+        else
+          usage_descriptions << "#{placement.class.model_name.human}"
+        end
+      else
+        usage_descriptions << "#{placement.class.model_name.human}: #{placement.to_label}"
+      end
+    end
+    
+    usage_descriptions.uniq.first(3) # Limit to first 3 to avoid clutter
+  rescue StandardError => e
+    Rails.logger.warn "Error finding thumbnail usage for #{size_key}: #{e.message}"
+    []
+  end
+
   def thumbnailable?
     false
   end
