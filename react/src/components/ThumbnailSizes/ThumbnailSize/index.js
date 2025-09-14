@@ -61,7 +61,7 @@ class ThumbnailSize extends React.Component {
                 </div>
               </div>
               
-              {thumb.usage && thumb.usage.length > 0 && (
+              {thumb.usage && Array.isArray(thumb.usage) && thumb.usage.length > 0 && (
                 <div className='mt-1 text-muted' style={{ fontSize: '0.75rem' }}>
                   {window.FolioConsole.translations.usedIn}: {thumb.usage.join(', ')}
                 </div>
