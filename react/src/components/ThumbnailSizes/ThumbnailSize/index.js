@@ -52,20 +52,12 @@ class ThumbnailSize extends React.Component {
               {thumb._saving ? null : <RawPicture src={this.props.thumb.url} webpSrc={this.props.thumb.webp_url} imageStyle={{ height: height, width: width }} alt={thumbKey} />}
             </div>
 
-            <div className='mt-2 pt-1 small'>
-              <div className='d-flex align-items-center'>
-                {thumbKey}
+            <div className='mt-2 pt-1 small d-flex align-items-center'>
+              {thumbKey}
 
-                <div className='ps-3 ms-auto fa cursor-pointer' onClick={this.destroy}>
-                  <FolioUiIcon name='delete' />
-                </div>
+              <div className='ps-3 ms-auto fa cursor-pointer' onClick={this.destroy}>
+                <FolioUiIcon name='delete' />
               </div>
-              
-              {thumb.usage && Array.isArray(thumb.usage) && thumb.usage.length > 0 && (
-                <div className='mt-1 text-muted' style={{ fontSize: '0.75rem' }}>
-                  {window.FolioConsole.translations.usedIn}: {thumb.usage.join(', ')}
-                </div>
-              )}
             </div>
 
             {editable && (
