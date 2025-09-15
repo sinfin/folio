@@ -184,6 +184,8 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
       class_names.each do |class_name|
         klass = class_name.safe_constantize
         if klass && klass < ActiveRecord::Base
+          show_model_names ||= klass.try(:folio_console_show_model_names_in_react_select?)
+
           scope = klass.accessible_by(Folio::Current.ability)
 
           scope = scope.by_site(Folio::Current.site) if scope.respond_to?(:by_site)
@@ -211,7 +213,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
 
           response += scope.first(30).map do |record|
             text = record.to_console_label
-            text = "#{klass.model_name.human} - #{text}" if show_model_names
+            text = "#{text} – #{record.class.model_name.human}" if show_model_names
 
             {
               id: record.id,
