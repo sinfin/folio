@@ -68,7 +68,8 @@
 
       .f-c-files-show__collapsibles
         - if @file.respond_to?(:mapped_metadata)
-          = render(Folio::Console::Ui::CollapsibleComponent.new(title: t('.title/metadata', count: @file.mapped_metadata.size)))
+          = render(Folio::Console::Ui::CollapsibleComponent.new(title: t('.title/metadata', count: @file.mapped_metadata.size),
+                                                                collapsed: controller.params[:uncollapse] != "metadata"))
             = render(Folio::Console::Files::Show::MetadataComponent.new(file: @file))
 
         = render(Folio::Console::Ui::CollapsibleComponent.new(title: t('.title/usage', count: @file.file_placements_size || 0),

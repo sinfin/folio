@@ -22,4 +22,14 @@
                 = value
 
   - else
-    .small = t('.no_metadata')
+    p.small.mb-2 = t('.no_metadata')
+
+  - if @file.respond_to?(:extract_metadata!)
+    = simple_form_for([:console, @file],
+                      url: url_for([:extract_metadata, :console, @file]),
+                      method: :post) do |f|
+      = render(Folio::Console::Ui::ButtonComponent.new(variant: :warning,
+                                                       size: :sm,
+                                                       icon: :reload,
+                                                       type: :submit,
+                                                       label: t('.extract_metadata')))

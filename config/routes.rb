@@ -100,6 +100,7 @@ Folio::Engine.routes.draw do
 
             member do
               get :file_placements
+              post :extract_metadata
 
               if type == "Folio::File::Video"
                 post :retranscribe_subtitles
