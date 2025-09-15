@@ -23,6 +23,7 @@ cs:
         show:
           metadata_component:
             no_metadata: Žádná metadata
+            extract_metadata: Znovu extrahovat metadata
 
           file_placements_component:
             no_file_placements: Žádné použití

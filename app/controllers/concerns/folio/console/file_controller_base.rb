@@ -30,11 +30,21 @@ module Folio::Console::FileControllerBase
     super
     @skip_folio_files_show_modal = true
     @file = folio_console_record
-    render "folio/console/file/show"
+    # need specific content_type to avoid double rendering error via turbo
+    render "folio/console/file/show", content_type: "text/html"
   end
 
   def file_placements
     show
+  end
+
+  def extract_metadata
+    if folio_console_record.respond_to?(:extract_metadata!)
+      folio_console_record.extract_metadata!(force: true,
+                                             user_id: Folio::Current.user&.id)
+    end
+
+    redirect_to url_for([:console, folio_console_record, uncollapse: "metadata"])
   end
 
   private

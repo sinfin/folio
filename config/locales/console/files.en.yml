@@ -23,6 +23,7 @@ en:
         show:
           metadata_component:
             no_metadata: No metadata
+            extract_metadata: Extract metadata again
 
           file_placements_component:
             no_file_placements: No usage
