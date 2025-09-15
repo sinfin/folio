@@ -1,4 +1,6 @@
 .f-c-ui-input-with-buttons
+  --f-c-ui-input-with-buttons__padding-right: 36px
+
   position: relative
 
   &__input
@@ -9,10 +11,10 @@
     margin: 0
 
   &__input .form-control
-    padding-right: add($input-height, $input-padding-x)
+    padding-right: var(--f-c-ui-input-with-buttons__padding-right)
 
-  &--2 &__input .form-control
-    padding-right: add($input-height, $input-height, $input-padding-x)
+  &--2
+    --f-c-ui-input-with-buttons__padding-right: #{2 * 36px}
 
   &__button
     position: absolute

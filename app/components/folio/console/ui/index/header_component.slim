@@ -1,4 +1,4 @@
-div class=bem_class_name
+div class=bem_class_name data=data
   .f-c-ui-index-header__titles
     h1.f-c-ui-index-header__h1
       a.text-reset.text-decoration-none href=title_url
@@ -11,9 +11,8 @@ div class=bem_class_name
 
   - if @klass.respond_to?(:by_label_query) && @by_label_query != false
     = query_form do |f|
-      == cell('folio/console/ui/input_with_buttons',
-              input: by_label_query_input(f),
-              buttons: query_buttons)
+      = render(Folio::Console::Ui::InputWithButtonsComponent.new(input: by_label_query_input(f),
+                                                                 buttons_kwargs: query_buttons_kwargs))
 
       - if controller.send(:index_filters_keys).present?
         - controller.send(:index_filters_keys).each do |key|
