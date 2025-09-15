@@ -41,15 +41,16 @@ end
 #
 # Table name: dummy_blog_author_article_links
 #
-#  id                    :bigint(8)        not null, primary key
-#  dummy_blog_author_id   :bigint(8)
-#  dummy_blog_article_id :bigint(8)
+#  id                    :integer          not null, primary key
+#  dummy_blog_author_id  :integer
+#  dummy_blog_article_id :integer
 #  position              :integer
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
 #
 # Indexes
 #
-#  dummy_blog_author_article_links_a_id  (dummy_blog_article_id)
-#  dummy_blog_author_article_links_t_id  (dummy_blog_author_id)
+#  dummy_blog_author_article_links_a_id               (dummy_blog_article_id)
+#  dummy_blog_author_article_links_t_id               (dummy_blog_author_id)
+#  index_dummy_blog_author_article_links_on_position  (position)
 #

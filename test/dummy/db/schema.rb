@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_10_085009) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_15_090051) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -160,6 +160,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_10_085009) do
     t.index ["published"], name: "index_dummy_blog_topics_on_published"
     t.index ["site_id"], name: "index_dummy_blog_topics_on_site_id"
     t.index ["slug"], name: "index_dummy_blog_topics_on_slug"
+  end
+
+  create_table "dummy_test_records", force: :cascade do |t|
+    t.string "title"
+    t.boolean "published"
+    t.datetime "published_at"
+    t.datetime "published_from"
+    t.datetime "published_until"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "folio_addresses", force: :cascade do |t|
