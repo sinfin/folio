@@ -196,11 +196,10 @@ class Folio::Console::Ui::Index::FiltersComponent < Folio::Console::ApplicationC
     end
 
     def input_group_append
-      render(Folio::Console::Ui::ButtonComponent.new(
-           class_name: "f-c-ui-index-filters__reset-input",
-           variant: :medium_dark,
-           data: stimulus_action(click: "onResetInputClick"),
-           icon: :close))
+      render(Folio::Console::Ui::ButtonComponent.new(class_name: "f-c-ui-index-filters__reset-input",
+                                                     variant: :medium_dark,
+                                                     data: stimulus_action(click: "onResetInputClick"),
+                                                     icon: :close))
     end
 
     def collapsible_class_name(config)
