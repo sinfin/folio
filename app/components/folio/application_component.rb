@@ -125,4 +125,8 @@ class Folio::ApplicationComponent < ViewComponent::Base
       "fs-adaptive fs-adaptive--small"
     end
   end
+
+  def cell(*args)
+    helpers.cell(*args)
+  end
 end

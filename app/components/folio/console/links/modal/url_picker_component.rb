@@ -81,7 +81,7 @@ class Folio::Console::Links::Modal::UrlPickerComponent < Folio::Console::Applica
       },
     }
 
-    simple_form_for("", opts, &block)
+    helpers.simple_form_for("", opts, &block)
   end
 
   def class_names_collection

@@ -89,7 +89,7 @@ Gem::Specification.new do |s|
   s.add_dependency "whenever"
   s.add_dependency "redis"
   s.add_dependency "terser"
-  s.add_dependency "view_component", "~> 3.0" # 4.0 Remove dependency on ActionView::Base
+  s.add_dependency "view_component", "~> 4.0"
   s.add_dependency "turbo-rails"
 
   s.add_development_dependency "better_errors"
