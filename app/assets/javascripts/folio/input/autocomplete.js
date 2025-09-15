@@ -45,6 +45,15 @@ window.Folio.Stimulus.register('f-input-autocomplete', class extends window.Stim
     this.boundOnInput = this.onInput.bind(this)
     this.element.addEventListener('input', this.boundOnInput)
 
+    this.preventEnterSubmit = (e) => {
+      if (e.key === 'Enter' && this.hasActiveDropdownValue) {
+        e.preventDefault()
+        e.stopPropagation()
+      }
+    }
+    this.element.addEventListener('keydown', this.preventEnterSubmit)
+    this.element.addEventListener('keypress', this.preventEnterSubmit)
+
     this.boundOnKeyup = this.onKeyup.bind(this)
     this.element.addEventListener('keyup', this.boundOnKeyup)
 
@@ -84,6 +93,12 @@ window.Folio.Stimulus.register('f-input-autocomplete', class extends window.Stim
       delete this.boundOnCancel
     }
 
+    if (this.preventEnterSubmit) {
+      this.element.removeEventListener('keydown', this.preventEnterSubmit)
+      this.element.removeEventListener('keypress', this.preventEnterSubmit)
+      delete this.preventEnterSubmit
+    }
+
     this.removeDropdown()
   }
 
@@ -119,6 +134,7 @@ window.Folio.Stimulus.register('f-input-autocomplete', class extends window.Stim
 
   setValue (value) {
     this.element.value = value
+    this.dispatch('selected')
     this.element.dispatchEvent(new Event('change'))
     this.removeDropdown()
   }

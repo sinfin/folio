@@ -57,6 +57,7 @@
 //= require daterangepicker.min
 
 //= require folio/console/turbo
+
 //= require folio/console/_cocoon-set-position
 //= require folio/console/_data-change-value
 //= require folio/console/_data-cocoon-single-nested
@@ -67,6 +68,7 @@
 //= require folio/console/modules/with_aside
 //= require folio/console/modules/input/url
 //= require folio/console/modules/html_auto_format
+//= require folio/console/tagsinput/tagsinput
 
 //= require folio/console/ui/ajax_input_component
 //= require folio/console/ui/alert_component
@@ -77,6 +79,7 @@
 //= require folio/console/ui/flash_component
 //= require folio/console/ui/in_place_input_component
 //= require folio/console/ui/index/filters_component
+//= require folio/console/ui/index/header_component
 //= require folio/console/ui/notification_modal_component
 //= require folio/console/ui/pagy_component
 //= require folio/console/ui/tabs_component

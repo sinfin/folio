@@ -56,7 +56,10 @@ class Folio::Console::Ui::Index::HeaderComponent < Folio::Console::ApplicationCo
     opts = {
       url: query_url,
       method: :get,
-      html: { class: "f-c-index-header__form" },
+      html: {
+        class: "f-c-index-header__form",
+        data: stimulus_action("f-input-autocomplete:selected" => "onQueryAutocompleteSelected")
+      },
     }
 
     helpers.simple_form_for("", opts, &block)
@@ -130,22 +133,21 @@ class Folio::Console::Ui::Index::HeaderComponent < Folio::Console::ApplicationCo
             })
   end
 
-  def query_buttons
-    return [] # TODO: component
-
-    submit = cell("folio/console/ui/button",
-                  variant: :icon,
-                  type: :submit,
-                  icon: :magnify)
+  def query_buttons_kwargs
+    submit = {
+      variant: :icon,
+      type: :submit,
+      icon: :magnify
+    }
 
     if controller.params[:by_label_query].present?
-      [
-        cell("folio/console/ui/button",
-             variant: :icon,
-             href: query_reset_url,
-             icon: :close),
-        submit
-      ]
+      close = {
+        variant: :icon,
+        href: query_reset_url,
+        icon: :close
+      }
+
+      [close, submit]
     else
       [submit]
     end
@@ -155,5 +157,9 @@ class Folio::Console::Ui::Index::HeaderComponent < Folio::Console::ApplicationCo
     index_filters.present? && index_filters.any? do |key, hash|
       !hash.is_a?(Hash) || (hash.try(:[], :as) != :hidden)
     end
+  end
+
+  def data
+    stimulus_controller("f-c-ui-index-header")
   end
 end
