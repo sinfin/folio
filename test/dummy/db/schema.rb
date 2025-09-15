@@ -10,14 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_11_152614) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_15_090051) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
   enable_extension "unaccent"
 
   create_folio_unaccent
-  enable_extension "uuid-ossp"
 
   create_table "audits", force: :cascade do |t|
     t.bigint "auditable_id"
@@ -42,26 +41,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_11_152614) do
     t.index ["placement_version"], name: "index_audits_on_placement_version"
     t.index ["request_uuid"], name: "index_audits_on_request_uuid"
     t.index ["user_id", "user_type"], name: "user_index"
-  end
-
-  create_table "aws_file_handler_files", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "name", null: false
-    t.string "mime_type"
-    t.string "aasm_state", default: "initialized", null: false
-    t.jsonb "custom_data", default: {}, null: false
-    t.string "s3_type_directory", null: false
-    t.string "s3_path"
-    t.string "reference_key"
-    t.jsonb "metadata", default: {}, null: false
-    t.jsonb "metadata_rekognition", default: {}, null: false
-    t.bigint "user_id"
-    t.string "typeable_type"
-    t.bigint "typeable_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["reference_key"], name: "index_aws_file_handler_files_on_reference_key", where: "(reference_key IS NOT NULL)"
-    t.index ["typeable_type", "typeable_id"], name: "index_aws_file_handler_files_on_typeable"
-    t.index ["user_id"], name: "index_aws_file_handler_files_on_user_id"
   end
 
   create_table "dummy_blog_articles", force: :cascade do |t|
@@ -181,6 +160,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_11_152614) do
     t.index ["published"], name: "index_dummy_blog_topics_on_published"
     t.index ["site_id"], name: "index_dummy_blog_topics_on_site_id"
     t.index ["slug"], name: "index_dummy_blog_topics_on_slug"
+  end
+
+  create_table "dummy_test_records", force: :cascade do |t|
+    t.string "title"
+    t.boolean "published"
+    t.datetime "published_at"
+    t.datetime "published_from"
+    t.datetime "published_until"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "folio_addresses", force: :cascade do |t|
