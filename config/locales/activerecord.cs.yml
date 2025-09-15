@@ -368,6 +368,8 @@ cs:
     published: Zveřejněno
     published_at: Zveřejněno k datu
     published_dates: Datum
+    published_within: Zveřejněno v období
+    published_within_dates: Zveřejněno v období
     secondary_address: Adresa - doplňková
     secondary_button_label: Text druhého tlačítka
     secondary_button_url: Odkaz druhého tlačítka

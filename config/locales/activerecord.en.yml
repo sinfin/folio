@@ -295,6 +295,8 @@ en:
     published: Published
     published_at: Published at
     published_dates: Date
+    published_within: Published within
+    published_within_dates: Published within
     secondary_address: Secondary address
     secondary_button_label: Secondary button label
     secondary_button_url: Secondary button URL

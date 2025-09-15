@@ -244,7 +244,6 @@ class Folio::PublishableTest < ActiveSupport::TestCase
     assert_equal false, object.published?
     assert_equal false, object.published
 
-
     t = 1.minute.from_now
     object.publish!(published_from: t)
 
@@ -266,5 +265,49 @@ class Folio::PublishableTest < ActiveSupport::TestCase
     assert_equal true, object.published
     assert_equal t2, object.published_from
     assert_equal t, object.published_until
+  end
+
+  class TestRecordWithPublishableWithin < Dummy::TestRecord
+    include Folio::Publishable::Within
+
+    scope :ordered, -> { order(id: :asc) }
+
+    def self.use_preview_tokens?
+      false
+    end
+
+    def self.require_published_date_for_publishing?
+      true
+    end
+  end
+
+  test "by_published_within_dates" do
+    TestRecordWithPublishableWithin.create!(title: "one",
+                                            published: true,
+                                            published_from: DateTime.new(2024, 2, 2, 8, 0, 0),
+                                            published_until: DateTime.new(2024, 2, 5, 8, 0, 0))
+
+    TestRecordWithPublishableWithin.create!(title: "two",
+                                            published: true,
+                                            published_from: DateTime.new(2024, 2, 4, 8, 0, 0),
+                                            published_until: DateTime.new(2024, 2, 10, 8, 0, 0))
+
+    {
+      "14. 09. 2025 - 15. 09. 2025" => %w[],
+      "02. 02. 2024 - 02. 02. 2024" => %w[one],
+      "04. 02. 2024 - 02. 02. 2024" => %w[],
+      "04. 02. 2024 - 04. 02. 2024" => %w[one two],
+      "04. 02. 2024 - 05. 02. 2024" => %w[one two],
+      "05. 02. 2024 - 05. 02. 2024" => %w[one two],
+      "05. 02. 2024 - 06. 02. 2024" => %w[one two],
+      "06. 02. 2024 - 08. 02. 2024" => %w[two],
+      "06. 02. 2024 - 12. 02. 2024" => %w[two],
+      "01. 01. 1990 - 24. 12. 2100" => %w[one two],
+    }.each do |dates, titles|
+      scope = TestRecordWithPublishableWithin.ordered
+                                             .by_published_within_dates(dates)
+
+      assert_equal titles, scope.pluck(:title), "Expected #{titles.inspect} for #{dates.inspect}"
+    end
   end
 end
