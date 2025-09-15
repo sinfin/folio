@@ -1,7 +1,20 @@
 .f-c-file-placements-multi-picker-fields data=data
   .f-c-file-placements-multi-picker-fields__fields-wrap
-    = render(Folio::NestedFieldsComponent.new(f: @f, key: @placement_key)) do
+    = render(Folio::NestedFieldsComponent.new(f: @f,
+                                              key: @placement_key,
+                                              add: false)) do
       .f-c-file-placements-multi-picker-fields__fields[
         data=stimulus_target("fields")
       ]
         ' hello
+
+  .f-c-file-placements-multi-picker-fields__source
+    - if @placement_klass.try(:folio_file_placement_supports_embed?)
+      .f-c-file-placements-multi-picker-fields__source-header
+        = render(Folio::Console::Ui::TabsComponent.new(tabs:,
+                                                       no_margin: true))
+
+    .f-c-file-placements-multi-picker-fields__source-iframe-wrap[
+      data=stimulus_target("iframeWrap")
+    ]
+      span.folio-loader

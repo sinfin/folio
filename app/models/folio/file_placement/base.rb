@@ -39,6 +39,10 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
                            touch: true
 
     if allow_embed
+      define_singleton_method :folio_file_placement_supports_embed? do
+        true
+      end
+
       define_method :folio_html_sanitization_config do
         {
           enabled: true,

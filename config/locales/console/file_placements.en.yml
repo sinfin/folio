@@ -1,0 +1,9 @@
+---
+en:
+  folio:
+    console:
+      file_placements:
+        multi_picker_fields_component:
+          add_embed: Add Embed (HTML code)
+          select/image: Select image
+          select/default: Select file

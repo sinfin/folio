@@ -97,6 +97,7 @@
 //= require folio/console/current_users/show_component
 //= require folio/console/file/preview_reloader/preview_reloader
 //= require folio/console/file/processing_notifier/processing_notifier
+//= require folio/console/file_placements/multi_picker_fields_component
 //= require folio/console/files/batch/bar_component
 //= require folio/console/files/batch/form_component
 //= require folio/console/files/display_toggle_component

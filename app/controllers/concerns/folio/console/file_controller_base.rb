@@ -23,6 +23,8 @@ module Folio::Console::FileControllerBase
   end
 
   def index_for_picker
+    @barebone_layout_for_turbo_frame = true
+
     index
   end
 

@@ -11,6 +11,29 @@ class Folio::Console::FilePlacements::MultiPickerFieldsComponent < Folio::Consol
 
   private
     def data
-      stimulus_controller("f-c-file-placements-multi-picker-fields")
+      stimulus_controller("f-c-file-placements-multi-picker-fields",
+                          values: {
+                            iframe_src:,
+                          })
+    end
+
+    def iframe_src
+      url_for([:index_for_picker, :console, @file_klass])
+    end
+
+    def tabs
+      [
+        {
+          label: t(".select/#{@file_klass.human_type}", default: t(".select/default")),
+          active: true,
+        },
+        {
+          icon: :plus_circle,
+          label: t(".add_embed"),
+          dont_bind_tab_toggle: true,
+          text_color: "green",
+          data: stimulus_action(click: "onAddEmbedClick"),
+        }
+      ]
     end
 end

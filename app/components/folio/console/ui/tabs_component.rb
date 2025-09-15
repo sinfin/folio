@@ -3,8 +3,11 @@
 class Folio::Console::Ui::TabsComponent < Folio::Console::ApplicationComponent
   ID_PREFIX = "tab-"
 
-  def initialize(tabs:)
+  bem_class_name :no_margin
+
+  def initialize(tabs:, no_margin: false)
     @tabs = tabs
+    @no_margin = no_margin
   end
 
   def count_class_name(color = nil)
@@ -33,12 +36,14 @@ class Folio::Console::Ui::TabsComponent < Folio::Console::ApplicationComponent
       tag[:tag] = :a
       tag[:href] = tab[:href]
       tag[:data][:href] = tab[:href]
-    else
-      tag[:tag] = :button
-      tag[:type] = "button"
-      tag[:data]["bs-toggle"] = "tab"
-      tag[:data]["bs-target"] = "##{ID_PREFIX}#{tab[:key]}"
-      tag[:data][:href] = "##{ID_PREFIX}#{tab[:key]}"
+    elsif tab[:dont_bind_tab_toggle]
+      tag[:class] += " f-c-ui-tabs__nav-link--no-toggle"
+    else !tab[:dont_bind_tab_toggle]
+         tag[:tag] = :button
+         tag[:type] = "button"
+         tag[:data]["bs-toggle"] = "tab"
+         tag[:data]["bs-target"] = "##{ID_PREFIX}#{tab[:key]}"
+         tag[:data][:href] = "##{ID_PREFIX}#{tab[:key]}"
     end
 
     if tab[:data]
