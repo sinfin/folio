@@ -239,6 +239,57 @@ module Folio::Publishable
                 Time.current)
         end
       }
+
+      scope :by_published_within_dates, -> (date_range_str) {
+        if require_published_date_for_publishing?
+          if date_range_str.present?
+            from, to = date_range_str.split(/ ?- ?/)
+
+            begin
+              from_date_time = DateTime.parse(from)
+
+              to_date_time = if to
+                DateTime.parse(to)
+              else
+                Time.current
+              end
+
+              if from_date_time > to_date_time
+                none
+              else
+                where_sql = <<~SQL
+                  #{table_name}.published = :published_boolean AND
+                  (
+                    #{table_name}.published_from IS NOT NULL
+                    AND
+                    #{table_name}.published_from <= :to_date_time_eod
+                  ) AND (
+                    #{table_name}.published_until IS NULL
+                    OR
+                    (
+                      #{table_name}.published_until >= :from_date_time_bod
+                    )
+                  )
+                SQL
+
+                where(where_sql, {
+                  published_boolean: true,
+                  from_date_time_bod: from_date_time.beginning_of_day,
+                  from_date_time_eod: from_date_time.end_of_day,
+                  to_date_time_bod: to_date_time.beginning_of_day,
+                  to_date_time_eod: to_date_time.end_of_day,
+                })
+              end
+            rescue StandardError
+              none
+            end
+          else
+            none
+          end
+        else
+          where(published: true)
+        end
+      }
     end
 
     class_methods do
