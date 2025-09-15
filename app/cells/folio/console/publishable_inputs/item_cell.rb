@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::Console::PublishableInputs::ItemCell < Folio::ConsoleCell
-  class_name "f-c-publishable-inputs-item", :date?, :active?, :date_restricted?
+  class_name "f-c-publishable-inputs-item", :date?, :active?, :error?, :date_restricted?
 
   def f
     model[:f]
@@ -59,6 +59,14 @@ class Folio::Console::PublishableInputs::ItemCell < Folio::ConsoleCell
     elsif date_between? && record.published_from.present? && record.published_until.present?
       now < record.published_from || now > record.published_until
     end
+  end
+
+  def error?
+    return true if f.object.errors.has_key?(field)
+    return true if date_at? && f.object.errors.has_key?("#{field}_at")
+    return true if date_between? && (f.object.errors.has_key?("#{field}_from") || f.object.errors.has_key?("#{field}_until"))
+
+    false
   end
 
   def input_html(class_name_element = nil, placeholder: nil, checkbox: false)
