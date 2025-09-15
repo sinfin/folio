@@ -59,7 +59,7 @@ class Folio::Console::Ui::Index::HeaderComponent < Folio::Console::ApplicationCo
       html: { class: "f-c-index-header__form" },
     }
 
-    simple_form_for("", opts, &block)
+    helpers.simple_form_for("", opts, &block)
   end
 
   def query_autocomplete

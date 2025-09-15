@@ -54,7 +54,7 @@ class Folio::Console::Files::SubtitleFormComponent < Folio::Console::Application
       }
     }
 
-    simple_form_for(@subtitle, opts, &block)
+    helpers.simple_form_for(@subtitle, opts, &block)
   end
 
   def status_badge_for(subtitle)

@@ -8,7 +8,7 @@ class Dummy::Ui::MenuToolbar::HeaderSearchComponent < ApplicationComponent
       html: { class: "d-ui-menu-toolbar-header-search__form", id: nil, data: stimulus_target("form") },
     }
 
-    simple_form_for("", opts, &block)
+    helpers.simple_form_for("", opts, &block)
   end
 
   def query_input(f)

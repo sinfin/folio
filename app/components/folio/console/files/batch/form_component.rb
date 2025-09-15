@@ -17,7 +17,7 @@ class Folio::Console::Files::Batch::FormComponent < Folio::Console::ApplicationC
       html: { class: "f-c-files-batch-form__form", data: stimulus_action(submit: "onSubmit") },
     }
 
-    simple_form_for(@file_klass.new, opts, &block)
+    helpers.simple_form_for(@file_klass.new, opts, &block)
   end
 
   def form_buttons_model

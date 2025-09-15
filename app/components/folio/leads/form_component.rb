@@ -11,7 +11,7 @@ class Folio::Leads::FormComponent < ApplicationComponent
       html: { class: "f-leads-form__form", id: nil, data: stimulus_data(action: "onFormSubmit", target: "form") },
     }
 
-    simple_form_for(@lead, opts, &block)
+    helpers.simple_form_for(@lead, opts, &block)
   end
 
   def data

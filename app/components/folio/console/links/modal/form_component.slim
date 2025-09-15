@@ -3,11 +3,11 @@
                                                                 absolute_urls: @absolute_urls,
                                                                 default_custom_url: @default_custom_url))
 
-  = simple_form_for "",
-                    url: "#",
-                    method: :get,
-                    html: { class: "f-c-links-modal-form__form" },
-                    data: stimulus_action(submit: "onSubmit") do |f|
+  = helpers.simple_form_for("",
+                            url: "#",
+                            method: :get,
+                            html: { class: "f-c-links-modal-form__form" },
+                            data: stimulus_action(submit: "onSubmit")) do |f|
     = f.hidden_field :href, value: @url_json[:href] || "",
                             data: stimulus_target("hrefInput")
 
