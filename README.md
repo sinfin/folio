@@ -186,6 +186,7 @@ Full English documentation lives in the `docs/` folder:
 | Extending & Customisation | [docs/extending.md](docs/extending.md) |
 | Concerns | [docs/concerns.md](docs/concerns.md) |
 | Jobs | [docs/jobs.md](docs/jobs.md) |
+| Cache Management | [docs/cache.md](docs/cache.md) |
 | Seeding | [docs/seeding.md](docs/seeding.md) |
 | Sitemaps | [docs/sitemap.md](docs/sitemap.md) |
 | FAQ | [docs/faq.md](docs/faq.md) |
