@@ -133,11 +133,13 @@ module Folio
             base_ttl = (base_ttl * multiplier).round
           end
 
-          # Use shorter TTL for error pages (404 etc.) - they might be temporary
-          if response.status.to_i >= 400
-            [base_ttl / 4, 15].max  # quarter of default TTL, minimum 15s
+          # 404 pages use same TTL as regular pages to prevent attack vectors
+          # Other error pages (500+) use shorter TTL as they indicate server problems
+          status = response.status.to_i
+          if status >= 500
+            [base_ttl / 4, 15].max  # quarter of default TTL, minimum 15s for server errors
           else
-            base_ttl
+            base_ttl  # 404 and 2xx use same TTL
           end
         end
 
