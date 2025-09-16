@@ -3,6 +3,8 @@ $medium-gray: #E8E8E8 !default
 .f-c-files-picker-image
   width: 168px
   height: 168px
+  max-width: 100%
+  max-height: 100%
   background: $medium-gray
   border-radius: $border-radius
   overflow: hidden
@@ -10,6 +12,10 @@ $medium-gray: #E8E8E8 !default
   display: flex
   align-items: center
   justify-content: center
+
+  .f-c-files-picker--size-138 &
+    width: 138px
+    height: 138px
 
   &__img
     max-width: 100%

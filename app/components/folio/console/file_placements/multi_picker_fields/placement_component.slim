@@ -1,0 +1,17 @@
+.f-c-file-placements-multi-picker-fields-placement data=data
+  .f-c-file-placements-multi-picker-fields-placement__flex
+    .f-c-file-placements-multi-picker-fields-placement__picker
+      = render(Folio::Console::Files::PickerComponent.new(f: @g,
+                                                          file_placement: @g.object,
+                                                          file_klass: @g.object.class.folio_file_placement_file_klass,
+                                                          darker: true,
+                                                          size: 138))
+
+    .f-c-file-placements-multi-picker-fields-placement__fields
+      .f-c-file-placements-multi-picker-fields-placement__field
+        = @g.input :description,
+                   autosize: true,
+                   input_html: {  rows: 1 }
+
+      .f-c-file-placements-multi-picker-fields-placement__field
+        = @g.input :alt

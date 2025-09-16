@@ -42,6 +42,9 @@ class Folio::NestedFieldsComponent < Folio::ApplicationComponent
                         values: {
                           key: @key,
                           sortableBound: false,
+                        },
+                        action: {
+                          "f-nested-fields:addMultipleWithAttributes" => "onAddMultipleWithAttributesTrigger",
                         })
   end
 

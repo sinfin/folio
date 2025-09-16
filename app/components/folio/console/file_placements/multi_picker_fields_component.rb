@@ -19,6 +19,9 @@ class Folio::Console::FilePlacements::MultiPickerFieldsComponent < Folio::Consol
       stimulus_controller("f-c-file-placements-multi-picker-fields",
                           values: {
                             iframe_src:,
+                          },
+                          action: {
+                            "f-c-files-batch-bar:addToPicker" => "onBatchBarAddToPicker",
                           })
     end
 

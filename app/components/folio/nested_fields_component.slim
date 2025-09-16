@@ -16,7 +16,7 @@
         data=stimulus_target('fields')
         hidden=@g.object.marked_for_destruction?
       ]
-        == content
+        = content
 
         = @g.hidden_field :id, class: "f-nested-fields__id-input"
 
@@ -58,10 +58,13 @@
         - remove_instance_variable(:@__vc_content)
 
   - if @add
-    .f-nested-fields__add data=stimulus_action(click: 'onAddClick')
+    .f-nested-fields__add[
+      data=stimulus_action(click: 'onAddClick')
+      hidden=(@add == :hidden)
+    ]
       - if @add == true
         = add_button
-      - else
+      - elsif @add != :hidden
         == @add
 
       template.f-nested-fields__template[

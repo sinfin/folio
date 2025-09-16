@@ -93,9 +93,11 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
   }
 
   batchActionFromFile (e) {
-    this.abortAjax()
+    this.batchAction({ action: e.detail.action, ids: e.detail.ids })
+  }
 
-    const { action, ids } = e.detail
+  batchAction ({ action, ids }) {
+    this.abortAjax()
 
     this.queue = this.queue || { add: [], remove: [] }
 
@@ -227,7 +229,6 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
   }
 
   onReloadTriggerRaw () {
-    console.log('onReloadTriggerRaw')
     this.ajax({
       url: `${this.baseApiUrlValue}/batch_bar`,
       apiMethod: 'apiGet'
@@ -235,7 +236,14 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
   }
 
   addToPicker () {
-    console.log('addToPicker')
+    this.dispatch('addToPicker', {
+      detail: {
+        fileIds: JSON.parse(this.fileIdsJsonValue)
+      }
+    })
+
+    // TODO remove all
+    // this.batchAction({ action: 'remove-all' })
   }
 })
 

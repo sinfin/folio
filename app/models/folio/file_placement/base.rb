@@ -38,6 +38,10 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
                            required: false,
                            touch: true
 
+    define_singleton_method :folio_file_placement_file_klass do
+      class_name.constantize
+    end
+
     if allow_embed
       define_singleton_method :folio_file_placement_supports_embed? do
         true

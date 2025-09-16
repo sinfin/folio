@@ -6,5 +6,10 @@ h2 File Placements Multi Picker Fields
   = simple_form_for(@page, url: update_file_placements_multi_picker_fields_console_ui_path) do |f|
     = render(Folio::Console::FilePlacements::MultiPickerFieldsComponent.new(f:,
                                                                             placement_klass: Folio::FilePlacement::ImageOrEmbed))
+
+    = render(Folio::Console::Ui::ButtonComponent.new(type: :submit,
+                                                     variant: :primary,
+                                                     label: t("folio.console.actions.submit"),
+                                                     icon: :check))
 - else
   p No page found. Create a page first to be used for this showcase.

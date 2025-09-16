@@ -54,6 +54,13 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
     this.element.dispatchEvent(new CustomEvent('f-nested-fields:add', { bubbles: true }))
   }
 
+  nodeFromTemplate () {
+    const html = this.htmlFromTemplate()
+    const element = document.createElement('div')
+    element.innerHTML = html
+    return element.firstChild
+  }
+
   htmlFromTemplate () {
     const html = this.templateTarget.innerHTML
 
@@ -176,5 +183,23 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
 
   onSortUpdate (e) {
     this.redoPositions()
+  }
+
+  onAddMultipleWithAttributesTrigger (e) {
+    if (!e || !e.detail || !e.detail.attributesCollection || e.detail.attributesCollection.length < 1) throw new Error('Invalid event data - missing attributes')
+
+    e.detail.attributesCollection.forEach((attributes) => {
+      const node = this.nodeFromTemplate()
+
+      Object.keys(attributes).forEach((key) => {
+        node.setAttribute(key, attributes[key])
+      })
+
+      this.fieldsWrapTarget.insertAdjacentElement('beforeend', node)
+    })
+
+    this.redoPositions()
+    this.dispatch('add', { detail: { field: this.fieldsTargets[this.fieldsTargets.length - 1] } })
+    this.element.dispatchEvent(new CustomEvent('f-nested-fields:add', { bubbles: true }))
   }
 })
