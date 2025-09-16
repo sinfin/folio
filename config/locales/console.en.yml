@@ -435,7 +435,8 @@ en:
 
       files:
         media_source_select_component:
-          no_media_source: Blank
+          blank: No media source
+          max_usage_count: "Max usage count:"
 
         subtitle_form_component:
           enabled_label: Enable subtitles

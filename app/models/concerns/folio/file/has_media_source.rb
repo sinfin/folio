@@ -7,6 +7,7 @@ module Folio::File::HasMediaSource
     belongs_to :media_source, class_name: "Folio::MediaSource", optional: true
     has_one :media_source_snapshot,
             class_name: "Folio::File::MediaSourceSnapshot",
+            foreign_key: :file_id,
             dependent: :destroy
 
     after_update :create_media_source_snapshot, if: :saved_change_to_media_source_id?
@@ -47,14 +48,10 @@ module Folio::File::HasMediaSource
     media_source_snapshot.can_be_used_on_site?(site)
   end
 
-  def console_show_additional_fields
+  def console_show_prepended_fields
     fields = super
 
     fields[:media_source_id] = {}
-
-    if media_source_snapshot
-      fields[:max_usage_count] = { as: :integer }
-    end
 
     fields
   end

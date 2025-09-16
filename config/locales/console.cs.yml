@@ -444,6 +444,7 @@ cs:
       files:
         media_source_select_component:
           blank: Nevyplněno
+          max_usage_count: "Maximální počet použití:"
 
         subtitle_form_component:
           enabled_label: Povolit titulky

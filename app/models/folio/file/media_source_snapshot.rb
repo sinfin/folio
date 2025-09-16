@@ -27,7 +27,6 @@ end
 #
 #  id              :bigint(8)        not null, primary key
 #  file_id         :bigint(8)        not null
-#  media_source_id :bigint(8)        not null
 #  max_usage_count :integer          not null
 #  sites           :integer          not null, is an Array
 #  created_at      :datetime         not null
@@ -36,7 +35,6 @@ end
 # Indexes
 #
 #  index_folio_file_media_source_snapshots_on_file_id          (file_id)
-#  index_folio_file_media_source_snapshots_on_media_source_id  (media_source_id)
 #  index_folio_file_media_source_snapshots_on_sites            (sites) USING gin
 #
 # Foreign Keys

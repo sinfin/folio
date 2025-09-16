@@ -63,7 +63,9 @@ class Folio::Console::Files::ShowComponent < Folio::Console::ApplicationComponen
   end
 
   def table_rows
-    {
+    rows = @file.console_show_prepended_fields
+
+    rows.merge!({
       headline: {},
       description: {},
       author: {},
@@ -72,7 +74,11 @@ class Folio::Console::Files::ShowComponent < Folio::Console::ApplicationComponen
       attribution_copyright: {},
       attribution_licence: {},
       alt: {},
-    }.merge(@file.console_show_additional_fields)
+    })
+
+    rows.merge!(@file.console_show_additional_fields)
+
+    rows
   end
 
   def autocomplete_for(key:, config:)
