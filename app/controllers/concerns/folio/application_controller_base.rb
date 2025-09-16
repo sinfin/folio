@@ -105,6 +105,11 @@ module Folio::ApplicationControllerBase
     end
 
     def set_cookies_for_log
+      # Skip log cookies for cache-friendly anonymous requests (prevents Cloudflare BYPASS)
+      if should_skip_cookies_for_cache?
+        return
+      end
+
       if session_id = session.id.try(:public_id)
         cookies.signed[:s_for_log] = session_id unless cookies.signed[:s_for_log] == session_id
       else
@@ -119,6 +124,19 @@ module Folio::ApplicationControllerBase
         end
       end
     end
+
+    def should_skip_cookies_for_cache?
+      # Skip cookies if cache optimization is enabled and this is a cache-friendly request
+      return false unless Rails.application.config.respond_to?(:folio_cache_skip_session_for_public) &&
+                          Rails.application.config.folio_cache_skip_session_for_public
+
+      # Same logic as in cache headers - only skip for anonymous GET requests to non-admin paths
+      request.get? &&
+        !Folio::Current.user.present? &&
+        !controller_path.include?("console") &&
+        !controller_path.include?("admin") &&
+        !controller_path.include?("api")
+      end
 
     def current_site_based_layout
       Folio::Current.site ? Folio::Current.site.layout_name : "folio/application"

@@ -239,6 +239,59 @@ This will create tmp/caching-dev.txt
 Documentation: docs/cache.md
 ```
 
+## Cloudflare Cache Optimization
+
+### Problem: Set-Cookie Headers Cause BYPASS
+
+Cloudflare automatically sets `cf-cache-status: BYPASS` for responses with `Set-Cookie` headers, preventing CDN caching. Rails applications commonly send:
+
+- **Session cookies** (`_session_id`) - Rails default behavior
+- **Log cookies** (`s_for_log`, `u_for_log`) - Folio tracking cookies
+
+### Solution: Session Skip for Public Responses
+
+Enable cache-friendly mode that skips session cookies for anonymous users:
+
+```bash
+# Enable in production for Cloudflare optimization
+FOLIO_CACHE_SKIP_SESSION=true rails server
+```
+
+**What it does:**
+- Skips Rails session cookies for public cache responses
+- Skips Folio log cookies for anonymous users  
+- Allows Cloudflare to cache instead of BYPASS
+- Maintains cookies for signed-in users (private cache)
+- **Note:** Business-specific cookies (like UTM tracking) maintain their own logic
+
+**Safety:**
+- ✅ Safe for anonymous content that doesn't need session state
+- ✅ CSRF protection still works via meta tags
+- ✅ User authentication unaffected
+- ✅ Flash messages work normally for signed-in users
+
+### Configuration
+
+```ruby
+# config/initializers/cache_headers.rb
+Rails.application.config.folio_cache_skip_session_for_public = true
+
+# or via ENV
+ENV["FOLIO_CACHE_SKIP_SESSION"] = "true"
+```
+
+### Testing Cloudflare Cache
+
+```bash
+# Without session skip (will get BYPASS)
+curl -I https://yoursite.com/ | grep -E "set-cookie|cf-cache"
+
+# With session skip enabled  
+FOLIO_CACHE_SKIP_SESSION=true rails server
+curl -I https://yoursite.com/ | grep -E "set-cookie|cf-cache"
+# Should see no set-cookie headers for anonymous requests
+```
+
 ## Common Development Workflows
 
 ### Testing Cache Headers
