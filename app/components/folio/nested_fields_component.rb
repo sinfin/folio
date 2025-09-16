@@ -45,6 +45,7 @@ class Folio::NestedFieldsComponent < Folio::ApplicationComponent
                         },
                         action: {
                           "f-nested-fields:addMultipleWithAttributes" => "onAddMultipleWithAttributesTrigger",
+                          "f-nested-fields:removeFields" => "onRemoveFieldsTrigger",
                         })
   end
 

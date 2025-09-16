@@ -19,3 +19,23 @@
   turbo-frame[busy] + &__loader
     opacity: 1
     pointer-events: all
+
+  &__error
+    align-items: center
+    color: $danger
+    flex-direction: column
+    gap: $grid-gutter-base
+    justify-content: center
+    min-height: 100%
+    text-align: center
+
+  &__error,
+  &--error &__frame
+    display: none
+
+  &--error &__error
+    display: flex
+
+  &__error-status
+    &:empty
+      display: none

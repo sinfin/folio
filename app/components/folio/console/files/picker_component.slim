@@ -1,6 +1,7 @@
 .f-c-files-picker[
   data=data
   class="form-group"
+  class=(@as_file_placement ? "f-c-files-picker--file-placement" : nil)
   class="f-c-files-picker--as-#{@file_klass.human_type}"
   class="f-c-files-picker--size-#{@size}"
   class=(@darker ? "f-c-files-picker--darker" : nil)

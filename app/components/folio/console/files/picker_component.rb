@@ -35,9 +35,12 @@ class Folio::Console::Files::PickerComponent < Folio::Console::ApplicationCompon
     stimulus_controller("f-c-files-picker",
                         values: {
                           file_type: @file_klass.to_s,
+                          serialized_file_json: "",
+                          as_file_placement: @as_file_placement,
                           state:,
                         },
                         action: {
+                          "f-c-files-picker:fillWithFile" => "onFillWithFile",
                           "f-c-files-index-modal:selectedFile" => "onModalSelectedFile"
                         })
   end

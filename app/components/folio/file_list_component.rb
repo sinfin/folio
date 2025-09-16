@@ -9,10 +9,12 @@ class Folio::FileListComponent < Folio::ApplicationComponent
                  selectable: false,
                  removable_from_batch: nil,
                  batch_actions: false,
+                 batch_actions_multi_picker: false,
                  primary_action: nil,
                  allow_thumbnail_view: true,
                  thead: true,
-                 reload_pagy: false)
+                 reload_pagy: false,
+                 serialize_files: false)
     @file_klass = file_klass
     @files = files
     @uploadable = uploadable
@@ -21,10 +23,12 @@ class Folio::FileListComponent < Folio::ApplicationComponent
     @removable_from_batch = removable_from_batch.nil? ? batch_actions : removable_from_batch
     @selectable = selectable
     @batch_actions = batch_actions
+    @batch_actions_multi_picker = batch_actions_multi_picker
     @primary_action = primary_action
     @allow_thumbnail_view = allow_thumbnail_view
     @thead = thead
     @reload_pagy = reload_pagy
+    @serialize_files = serialize_files
   end
 
   def data

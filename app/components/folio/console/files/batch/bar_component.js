@@ -1,3 +1,4 @@
+//= require folio/add_params_to_url
 //= require folio/confirm
 
 window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimulus.Controller {
@@ -5,7 +6,8 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
     baseApiUrl: String,
     status: String,
     fileIdsJson: String,
-    changeToPropagate: Object
+    changeToPropagate: Object,
+    multiPicker: Boolean
   }
 
   static targets = ['form']
@@ -158,7 +160,13 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
     this.statusValue = status
     this.abortController = new AbortController()
 
-    window.Folio.Api[apiMethod](url, data, this.abortController.signal).then((res) => {
+    let fullUrl = url
+
+    if (this.multiPickerValue) {
+      fullUrl = window.Folio.addParamsToUrl(fullUrl, { multi_picker: '1' })
+    }
+
+    window.Folio.Api[apiMethod](fullUrl, data, this.abortController.signal).then((res) => {
       if (res && res.data) {
         if (this.element.parentNode) {
           // only replace if still in the DOM
@@ -238,12 +246,11 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
   addToPicker () {
     this.dispatch('addToPicker', {
       detail: {
-        fileIds: JSON.parse(this.fileIdsJsonValue)
+        files: JSON.parse(this.element.dataset.serializedFiles)
       }
     })
 
-    // TODO remove all
-    // this.batchAction({ action: 'remove-all' })
+    this.batchAction({ action: 'remove-all' })
   }
 })
 

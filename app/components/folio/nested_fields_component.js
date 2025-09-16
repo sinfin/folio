@@ -81,22 +81,26 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
 
     window.Folio.Confirm.confirm(() => {
       const fields = e.target.closest('.f-nested-fields__fields')
-      const idInput = fields.querySelector('.f-nested-fields__id-input')
-
-      if (idInput && idInput.value) {
-        const destroyInput = fields.querySelector('.f-nested-fields__destroy-input')
-
-        destroyInput.value = '1'
-        fields.hidden = true
-        this.destroyedWrapTarget.appendChild(fields)
-      } else {
-        fields.remove()
-      }
-
-      this.redoPositions()
-      this.dispatch('destroyed')
-      this.element.dispatchEvent(new CustomEvent('f-nested-fields:destroyed', { bubbles: true }))
+      this.destroyFields(fields)
     }, 'remove')
+  }
+
+  destroyFields (fields) {
+    const idInput = fields.querySelector('.f-nested-fields__id-input')
+
+    if (idInput && idInput.value) {
+      const destroyInput = fields.querySelector('.f-nested-fields__destroy-input')
+
+      destroyInput.value = '1'
+      fields.hidden = true
+      this.destroyedWrapTarget.appendChild(fields)
+    } else {
+      fields.remove()
+    }
+
+    this.redoPositions()
+    this.dispatch('destroyed')
+    this.element.dispatchEvent(new CustomEvent('f-nested-fields:destroyed', { bubbles: true }))
   }
 
   onPositionUpClick (e) {
@@ -201,5 +205,13 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
     this.redoPositions()
     this.dispatch('add', { detail: { field: this.fieldsTargets[this.fieldsTargets.length - 1] } })
     this.element.dispatchEvent(new CustomEvent('f-nested-fields:add', { bubbles: true }))
+  }
+
+  onRemoveFieldsTrigger (e) {
+    if (!e || !e.target) return
+    const fields = e.target.closest('.f-nested-fields__fields')
+
+    if (!fields) return
+    this.destroyFields(fields)
   }
 })

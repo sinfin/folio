@@ -192,9 +192,9 @@ class Folio::Console::UiController < Folio::Console::BaseController
     end
 
     @page = Folio::Page.first
-    @page.update(params.require(:page).permit(*file_placements_strong_params))
+    @page.update!(params.require(:page).permit(*file_placements_strong_params))
 
-    render :file_placements_multi_picker_fields
+    redirect_to file_placements_multi_picker_fields_console_ui_path, success: "Updated placements"
   end
 
   private

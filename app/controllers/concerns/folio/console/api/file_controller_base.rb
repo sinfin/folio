@@ -397,6 +397,7 @@ module Folio::Console::Api::FileControllerBase
     end
 
     def render_batch_bar_component
-      render_component_json(Folio::Console::Files::Batch::BarComponent.new(file_klass: @klass))
+      render_component_json(Folio::Console::Files::Batch::BarComponent.new(file_klass: @klass,
+                                                                           multi_picker:  params[:multi_picker] == "1"))
     end
 end

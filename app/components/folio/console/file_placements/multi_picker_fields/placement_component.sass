@@ -4,6 +4,7 @@
   background: $medium-gray
   border-radius: $border-radius
   padding: var(--f-c-file-placements-multi-picker-fields-placement__spacer)
+  position: relative
 
   .form-group
     margin: 0
@@ -11,6 +12,7 @@
   &__flex
     display: flex
     gap: var(--f-c-file-placements-multi-picker-fields-placement__spacer)
+    min-height: 138px
 
   &__picker
     flex: 0 0 auto
@@ -21,3 +23,10 @@
     flex-direction: column
     flex: 1 1 auto
     gap: var(--f-c-file-placements-multi-picker-fields-placement__spacer)
+
+  &[data-f-c-file-placements-multi-picker-fields-placement-state-value="loading"] &__flex
+    visibility: hidden
+    pointer-events: none
+
+  &:not([data-f-c-file-placements-multi-picker-fields-placement-state-value="loading"]) &__loader
+    display: none

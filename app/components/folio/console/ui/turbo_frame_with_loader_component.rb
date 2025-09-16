@@ -25,4 +25,12 @@ class Folio::Console::Ui::TurboFrameWithLoaderComponent < Folio::Console::Applic
         "min-height: #{@min_height};"
       end
     end
+
+    def data
+      stimulus_controller("f-c-ui-turbo-frame-with-loader",
+                          action: {
+                            "turbo:frame-render" => "onFrameRender",
+                            "turbo:frame-missing" => "onFrameMissing"
+                          }).merge(turbo: "true")
+    end
 end

@@ -16,6 +16,8 @@
                                         uploadable: true,
                                         batch_actions: true,
                                         primary_action: action_name,
+                                        batch_actions_multi_picker: action_name == "index_for_picker",
+                                        serialize_files: action_name == "index_for_modal",
                                         reload_pagy: true))
 
   = render(Folio::Console::Ui::PagyComponent.new(pagy: @pagy,

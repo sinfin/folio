@@ -9,7 +9,7 @@ class Folio::Console::FilePlacements::MultiPickerFields::PlacementComponent < Fo
     def data
       stimulus_controller("f-c-file-placements-multi-picker-fields-placement",
                           values: {
-                            file_id: @g.object.file_id || "",
+                            state: @g.object.file_id.blank? ? "loading" : "filled",
                           })
     end
 end

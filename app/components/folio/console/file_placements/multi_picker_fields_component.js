@@ -14,12 +14,12 @@ window.Folio.Stimulus.register('f-c-file-placements-multi-picker-fields', class 
     const fields = this.element.querySelector('.f-nested-fields')
     if (!fields) throw new Error('f-nested-fields not found')
 
-    const fileIds = e.detail.fileIds
-    if (!fileIds || fileIds.length < 1) throw new Error('fileIds not provided')
+    const files = e.detail.files
+    if (!files || files.length < 1) throw new Error('files not provided')
 
-    const attributesCollection = fileIds.map((fileId) => {
+    const attributesCollection = files.map((file) => {
       return {
-        'data-file-id': fileId
+        'data-file': JSON.stringify(file)
       }
     })
 

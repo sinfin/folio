@@ -1,6 +1,6 @@
 div[
   class=bem_class_name
-  data-turbo="true"
+  data=data
   style=style
 ]
   turbo-frame.f-c-ui-turbo-frame-with-loader__frame[
@@ -12,5 +12,21 @@ div[
     complete=!!content?
   ]
     = content
+
+  .f-c-ui-turbo-frame-with-loader__error[
+    style=style
+  ]
+    = folio_icon(:close,
+                 height: 96,
+                 class_name: "f-c-ui-turbo-frame-with-loader__error-icon")
+
+    .lead.fw-bold = t('.error_title')
+
+    div = t('.error_message')
+
+    .f-c-ui-turbo-frame-with-loader__error-status[
+      class="small"
+      data=stimulus_target("errorStatus")
+    ]
 
   span.folio-loader.f-c-ui-turbo-frame-with-loader__loader
