@@ -81,5 +81,17 @@ module Folio::File::HasMediaSource
         max_usage_count: media_source.max_usage_count,
         sites: sites_for_snapshot
       )
+
+      updates = {}
+
+      if attribution_licence.blank? && media_source.licence.present?
+        updates[:attribution_licence] = media_source.licence
+      end
+
+      if attribution_copyright.blank? && media_source.copyright_text.present?
+        updates[:attribution_copyright] = media_source.copyright_text
+      end
+
+      update_columns(updates) if updates.any?
     end
 end
