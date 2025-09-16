@@ -10,11 +10,26 @@ class Folio::MediaSource < ApplicationRecord
 
   validates :title, presence: true
 
+  before_destroy :check_usage_before_destroy
+
   scope :ordered, -> { order(id: :asc) }
 
   scope :by_site_slug, -> (slug) do
     joins(:sites).where(folio_sites: { slug: })
   end
+
+  def indestructible_reason
+    return nil unless assigned_media_count&.positive?
+    I18n.t("folio.media_source.cannot_destroy_with_assigned_media", count: assigned_media_count)
+  end
+
+  private
+    def check_usage_before_destroy
+      if indestructible_reason.present?
+        errors.add(:base, indestructible_reason)
+        throw(:abort)
+      end
+    end
 end
 
 # == Schema Information
