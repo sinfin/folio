@@ -58,6 +58,7 @@ if Rails.env.development?
     system "bundle exec annotate --models"
   end
 
+
   Rake::Task["db:migrate"].enhance do
     Rake::Task["app:annotate_models"].invoke
   rescue RuntimeError
