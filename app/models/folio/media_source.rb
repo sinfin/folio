@@ -11,6 +11,10 @@ class Folio::MediaSource < ApplicationRecord
   validates :title, presence: true
 
   scope :ordered, -> { order(id: :asc) }
+
+  scope :by_site_slug, -> (slug) do
+    joins(:sites).where(folio_sites: { slug: })
+  end
 end
 
 # == Schema Information

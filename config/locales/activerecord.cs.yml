@@ -53,7 +53,7 @@ cs:
         licence: Licence
         max_usage_count: Max. použití
         copyright_text: Copyright text
-        sites: Titul
+        site: Titul
         assigned_media_count: Přiřazeno obrázků
       folio/menu:
         type: Druh menu

@@ -11,7 +11,7 @@
     attribute(:copyright_text)
 
     if Rails.application.config.folio_shared_files_between_sites
-      attribute(:sites) do |record|
+      attribute(:site) do |record|
         if record.sites.any?
           record.sites.map(&:to_label).join("<br />")
         else

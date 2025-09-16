@@ -47,7 +47,7 @@ en:
         licence: Licence
         max_usage_count: Max. usage count
         copyright_text: Copyright text
-        sites: Sites
+        site: Site
         assigned_media_count: Assigned media count
       folio/menu:
         locale: Version

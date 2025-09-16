@@ -4,8 +4,18 @@ class Folio::Console::MediaSourcesController < Folio::Console::BaseController
   folio_console_controller_for "Folio::MediaSource"
 
   private
+    def shared_files_between_sites?
+      Rails.application.config.folio_shared_files_between_sites
+    end
+
+    def index_filters
+      {
+        by_site_slug: Folio::Site.ordered.map { |site| [site.to_label, site.slug] }
+      }
+    end
+
     def media_source_params
-      if Rails.application.config.folio_shared_files_between_sites
+      if shared_files_between_sites?
         params.require(:media_source)
               .permit(:title,
                       :licence,
