@@ -132,8 +132,8 @@ end
 #
 # Table name: folio_menu_items
 #
-#  id            :integer          not null, primary key
-#  menu_id       :integer
+#  id            :bigint(8)        not null, primary key
+#  menu_id       :bigint(8)
 #  ancestry      :string
 #  title         :string
 #  rails_path    :string
@@ -141,7 +141,7 @@ end
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
 #  target_type   :string
-#  target_id     :integer
+#  target_id     :bigint(8)
 #  url           :string
 #  open_in_new   :boolean
 #  style         :string
