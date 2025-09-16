@@ -25,6 +25,12 @@ Cache-Control: max-age=60, must-revalidate, stale-while-revalidate=15, stale-if-
 # Unpublished content - not cacheable
 Cache-Control: no-store
 
+# 404 error pages - same TTL as regular pages (attack prevention)
+Cache-Control: max-age=60, must-revalidate
+
+# Server errors (500+) - shorter TTL
+Cache-Control: max-age=15, must-revalidate
+
 # Admin/console paths - never cached
 Cache-Control: private, no-store
 

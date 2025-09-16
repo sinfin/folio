@@ -59,7 +59,7 @@ FOLIO_CACHE_HEADERS_SWR=30 rails server
 ## Test URLs
 
 - `/` - Home page (should cache)
-- `/non-existent-page` - 404 error page (Cache-Control: no-store)
+- `/non-existent-page` - 404 error page (Cache-Control: same as regular pages)
 - `/console` - Admin area (Cache-Control: private, no-store)
 - `/test?view=dummy/ui/buttons` - Test controller (should cache if published)
 
@@ -74,9 +74,21 @@ Vary: Accept-Encoding, X-Auth-State
 X-Auth-State: anonymous
 ```
 
-### Unpublished/Error Content
+### 404 Error Pages (Attack Prevention)
+```
+Cache-Control: max-age=60, must-revalidate
+# Same TTL as regular pages to prevent DoS attacks via 404 spam
+```
+
+### Unpublished/Preview Content
 ```
 Cache-Control: no-store
+```
+
+### Server Error Pages (500+)
+```
+Cache-Control: max-age=15, must-revalidate
+# Shorter TTL as server errors indicate temporary problems
 ```
 
 ### Admin/Console Areas
