@@ -5,15 +5,18 @@ window.Folio.Stimulus.register('f-c-form-errors', class extends window.Stimulus.
     const form = this.element.closest('form')
     if (!form) return
 
-    const formGroups = form.querySelectorAll('.form-group-invalid, .form-group.has-danger')
+    const nodes = form.querySelectorAll('.form-group-invalid, .form-group.has-danger, .form-control.is-invalid')
+    if (!nodes.length) return
 
-    if (!formGroups.length) return
-
-    for (const formGroup of formGroups) {
-      const input = formGroup.querySelector('.form-control')
+    for (const node of nodes) {
+      const input = node.classList.contains('form-control') ? node : node.querySelector('.form-control')
       if (!input) continue
 
-      let key = input.name || input.getAttribute('data-name') // input.getAttribute("data-name") is for react_ordered_multiselect
+      const formGroup = node.classList.contains('form-control')
+        ? (input.closest('.form-group') || input.parentElement)
+        : node
+
+      let key = input.name || input.getAttribute('data-name') // react_ordered_multiselect
       if (!key) continue
 
       key = key.match(/\[(.+)\]$/)
@@ -28,7 +31,8 @@ window.Folio.Stimulus.register('f-c-form-errors', class extends window.Stimulus.
       this.buttonTargets.forEach((buttonTarget) => {
         if (found) return
         if (!buttonTarget.classList.contains('f-c-form-errors__button--hidden')) return
-        if (buttonTarget.dataset.errorField !== key) return
+        const btnKey = buttonTarget.dataset.errorField
+        if (btnKey !== key && !key.endsWith(`.${btnKey}`)) return
         buttonTarget.classList.remove('f-c-form-errors__button--hidden')
         buttonTarget.formGroup = formGroup
         found = true
@@ -62,7 +66,9 @@ window.Folio.Stimulus.register('f-c-form-errors', class extends window.Stimulus.
 
     btn.formGroup.scrollIntoView({ behavior: 'smooth', block: 'center' })
 
-    window.FolioConsole.DangerBoxShadowBlink.blinkFormGroup(btn.formGroup)
+    if (window.FolioConsole && window.FolioConsole.DangerBoxShadowBlink && window.FolioConsole.DangerBoxShadowBlink.blinkFormGroup) {
+      window.FolioConsole.DangerBoxShadowBlink.blinkFormGroup(btn.formGroup)
+    }
 
     const input = btn.formGroup.querySelector('.form-control')
     if (input) input.focus()
