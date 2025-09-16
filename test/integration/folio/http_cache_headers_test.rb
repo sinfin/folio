@@ -29,7 +29,10 @@ class Folio::HttpCacheHeadersTest < ActionDispatch::IntegrationTest
       get url_for(page)
       assert_response :ok
 
-      assert_equal "max-age=60, public, s-maxage=60", response.get_header("Cache-Control")
+      cache_control = response.get_header("Cache-Control")
+      assert_includes cache_control, "public", "Should have public directive"
+      assert_includes cache_control, "max-age=60", "Should have correct TTL"
+      assert_includes cache_control, "must-revalidate", "Should have must-revalidate directive"
       vary_header = response.get_header("Vary") || ""
       assert_includes vary_header, "Accept-Encoding", "Should vary by encoding"
       assert_includes vary_header, "X-Auth-State", "Should vary by authentication state"
@@ -169,7 +172,10 @@ class Folio::HttpCacheHeadersTest < ActionDispatch::IntegrationTest
       begin
         get url_for(page)
         assert_response :ok
-        assert_equal "max-age=30, public, s-maxage=30", response.get_header("Cache-Control")
+        cache_control = response.get_header("Cache-Control")
+        assert_includes cache_control, "public", "Should have public directive"
+        assert_includes cache_control, "max-age=30", "Should have scaled TTL"
+        assert_includes cache_control, "must-revalidate", "Should have must-revalidate directive"
         assert_includes (response.get_header("Vary") || ""), "Accept-Encoding"
         assert response.get_header("ETag").present?
       ensure
@@ -191,7 +197,10 @@ class Folio::HttpCacheHeadersTest < ActionDispatch::IntegrationTest
       begin
         get url_for(page)
         assert_response :ok
-        assert_equal "max-age=120, public, s-maxage=120", response.get_header("Cache-Control")
+        cache_control = response.get_header("Cache-Control")
+        assert_includes cache_control, "public", "Should have public directive"
+        assert_includes cache_control, "max-age=120", "Should have scaled TTL"
+        assert_includes cache_control, "must-revalidate", "Should have must-revalidate directive"
       ensure
         ENV.delete("FOLIO_CACHE_TTL_MULTIPLIER")
       end
@@ -211,7 +220,10 @@ class Folio::HttpCacheHeadersTest < ActionDispatch::IntegrationTest
       begin
         get url_for(page)
         assert_response :ok
-        assert_equal "max-age=60, public, s-maxage=60", response.get_header("Cache-Control")
+        cache_control = response.get_header("Cache-Control")
+        assert_includes cache_control, "public", "Should have public directive"
+        assert_includes cache_control, "max-age=60", "Should have default TTL"
+        assert_includes cache_control, "must-revalidate", "Should have must-revalidate directive"
       ensure
         ENV.delete("FOLIO_CACHE_TTL_MULTIPLIER")
       end
@@ -230,33 +242,36 @@ class Folio::HttpCacheHeadersTest < ActionDispatch::IntegrationTest
 
       get url_for(page)
       assert_response :ok
-      assert_equal "max-age=60, public, s-maxage=60", response.get_header("Cache-Control")
+      cache_control = response.get_header("Cache-Control")
+      assert_includes cache_control, "public", "Should have public directive"
+      assert_includes cache_control, "max-age=60", "Should have default TTL"
+      assert_includes cache_control, "must-revalidate", "Should have must-revalidate directive"
     end
   end
 
   test "emergency TTL multiplier works with 404 pages" do
-    # Test that 404 pages also respect the multiplier
-    get "/404"
+    # Test that 404 pages also respect the multiplier and use same TTL as regular pages
+    with_config(
+      folio_cache_headers_enabled: true,
+      folio_cache_headers_default_ttl: 60,
+    ) do
+      # Test that 404 status code uses same TTL calculation as 200 (unit test)
+      # This prevents DoS attacks by ensuring 404 responses are cached normally
+      controller = ApplicationController.new
 
-    if response.status != 404
-      skip "404 error handling not available in test environment"
-      return
-    end
+      # Mock response with 404 status
+      mock_response = ActionDispatch::Response.new
+      mock_response.status = 404
+      controller.instance_variable_set(:@_response, mock_response)
 
-    ENV["FOLIO_CACHE_TTL_MULTIPLIER"] = "0.5"
+      ttl_404 = controller.send(:calculate_cache_ttl, nil)
 
-    begin
-      # Re-run the request with the multiplier set
-      get "/404"
+      # Mock response with 200 status
+      mock_response.status = 200
+      ttl_200 = controller.send(:calculate_cache_ttl, nil)
 
-      # 404 pages should have shorter TTL (quarter of default, min 15s)
-      # With 0.5 multiplier: 60 * 0.5 = 30, then 30/4 = 7.5, but min 15s
-      cache_control = response.get_header("Cache-Control")
-      if cache_control&.include?("public")
-        assert_match(/max-age=15/, cache_control, "404 pages should have minimum 15s TTL even with multiplier")
-      end
-    ensure
-      ENV.delete("FOLIO_CACHE_TTL_MULTIPLIER")
+      assert_equal ttl_200, ttl_404, "404 pages should have same TTL as regular pages to prevent DoS attacks"
+      assert_equal 60, ttl_404, "Should use default TTL for 404 pages"
     end
   end
 
