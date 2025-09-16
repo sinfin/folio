@@ -59,12 +59,15 @@
               = @file.class.human_attribute_name(key)
 
             .f-c-files-show__td
-              = render(Folio::Console::Ui::InPlaceInputComponent.new(attribute: key,
-                                                                     record: @file,
-                                                                     collection: config && config[:collection],
-                                                                     cleave: config && config[:as] == :integer,
-                                                                     as: :file,
-                                                                     autocomplete: autocomplete_for(key:, config:)))
+              - if key == :media_source_id
+                = render(Folio::Console::Files::MediaSourceSelectComponent.new(file: @file))
+              - else
+                = render(Folio::Console::Ui::InPlaceInputComponent.new(attribute: key,
+                                                                       record: @file,
+                                                                       collection: config && config[:collection],
+                                                                       cleave: config && config[:as] == :integer,
+                                                                       as: :file,
+                                                                       autocomplete: autocomplete_for(key:, config:)))
 
       .f-c-files-show__collapsibles
         - if @file.respond_to?(:mapped_metadata)

@@ -1,0 +1,12 @@
+.f-c-files-media-source-select data=data
+  / - if @file.media_source.blank?
+  = helpers.simple_form_for([@file], url: form_url, remote: true, method: :patch, as: :file) do |f|
+    = f.input(:media_source_id,
+             as: :select,
+             label: false,
+             remote: autocomplete_url,
+             reflection_class_name: "Folio::MediaSource",
+             include_blank: t('.blank'),
+             wrapper_html: { class: "mb-0" })
+  / - else
+  /   span = "media source present! #{@file.media_source.id}"

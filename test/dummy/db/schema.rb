@@ -338,12 +338,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_15_131324) do
     t.decimal "gps_latitude", precision: 10, scale: 6
     t.decimal "gps_longitude", precision: 10, scale: 6
     t.datetime "file_metadata_extracted_at"
+    t.bigint "media_source_id"
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((author)::text, ''::text)))", name: "index_folio_files_on_by_author", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name)::text, ''::text)))", name: "index_folio_files_on_by_file_name", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text)))", name: "index_folio_files_on_by_file_name_for_search", using: :gin
     t.index ["created_at"], name: "index_folio_files_on_created_at"
     t.index ["file_name"], name: "index_folio_files_on_file_name"
     t.index ["hash_id"], name: "index_folio_files_on_hash_id"
+    t.index ["media_source_id"], name: "index_folio_files_on_media_source_id"
     t.index ["site_id"], name: "index_folio_files_on_site_id"
     t.index ["type"], name: "index_folio_files_on_type"
     t.index ["updated_at"], name: "index_folio_files_on_updated_at"
@@ -718,6 +720,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_15_131324) do
 
   add_foreign_key "folio_console_notes", "folio_sites", column: "site_id"
   add_foreign_key "folio_content_templates", "folio_sites", column: "site_id"
+  add_foreign_key "folio_files", "folio_media_sources", column: "media_source_id"
   add_foreign_key "folio_files", "folio_sites", column: "site_id"
   add_foreign_key "folio_media_source_site_links", "folio_media_sources", column: "media_source_id"
   add_foreign_key "folio_media_source_site_links", "folio_sites", column: "site_id"

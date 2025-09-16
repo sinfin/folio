@@ -442,6 +442,8 @@ cs:
           label: Automatické ukládání
 
       files:
+        media_source_select_component:
+          blank: Nevyplněno
 
         subtitle_form_component:
           enabled_label: Povolit titulky

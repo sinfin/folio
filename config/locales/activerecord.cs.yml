@@ -39,6 +39,7 @@ cs:
         file_mime_type: Typ souboru
         file_size: Velikost souboru
         preview_duration: Kolik vteřin je zdarma?
+        media_source_id: Omezení použití
         used: Použitý
         subtitles_cs_enabled: Zobrazit titulky
         subtitles_cs_text: Titulky (CZ)
@@ -54,6 +55,7 @@ cs:
         max_usage_count: Max. použití
         copyright_text: Copyright text
         site: Titul
+        sites: Titul
         assigned_media_count: Přiřazeno obrázků
       folio/menu:
         type: Druh menu

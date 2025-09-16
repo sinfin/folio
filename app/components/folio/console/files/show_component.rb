@@ -64,6 +64,7 @@ class Folio::Console::Files::ShowComponent < Folio::Console::ApplicationComponen
 
   def table_rows
     {
+      media_source_id: {},
       headline: {},
       description: {},
       author: {},

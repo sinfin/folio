@@ -434,6 +434,9 @@ en:
           label: Automatic save
 
       files:
+        media_source_select_component:
+          no_media_source: Blank
+
         subtitle_form_component:
           enabled_label: Enable subtitles
           validation_errors_title: "Validation errors:"

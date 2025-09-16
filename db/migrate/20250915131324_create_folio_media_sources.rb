@@ -25,5 +25,7 @@ class CreateFolioMediaSources < ActiveRecord::Migration[8.0]
     end
 
     add_index :folio_media_source_site_links, [:media_source_id, :site_id], unique: true, name: "index_folio_media_source_site_links_unique"
+
+    add_reference :folio_files, :media_source, null: true, foreign_key: { to_table: :folio_media_sources }
   end
 end

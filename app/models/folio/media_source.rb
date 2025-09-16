@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::MediaSource < ApplicationRecord
+class Folio::MediaSource < Folio::ApplicationRecord
   include Folio::BelongsToSite
 
   has_many :media_source_site_links, class_name: "Folio::MediaSourceSiteLink", dependent: :destroy
@@ -12,7 +12,7 @@ class Folio::MediaSource < ApplicationRecord
 
   before_destroy :check_usage_before_destroy
 
-  scope :ordered, -> { order(id: :asc) }
+  scope :ordered, -> { order(id: :desc) }
 
   scope :by_site_slug, -> (slug) do
     joins(:sites).where(folio_sites: { slug: })
