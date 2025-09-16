@@ -145,13 +145,13 @@ module Folio
 
         def set_public_cache_headers(ttl)
           # Enhanced cache headers matching current production format
-          # max-age=30, must-revalidate, stale-while-revalidate=15, stale-if-error=300
+          # public, max-age=30, must-revalidate, stale-while-revalidate=15, stale-if-error=300
           stale_while_revalidate = Rails.application.config.respond_to?(:folio_cache_headers_stale_while_revalidate) ?
                                    Rails.application.config.folio_cache_headers_stale_while_revalidate : 15
           stale_if_error = Rails.application.config.respond_to?(:folio_cache_headers_stale_if_error) ?
                            Rails.application.config.folio_cache_headers_stale_if_error : 300
 
-          response.headers["Cache-Control"] = "max-age=#{ttl}, must-revalidate, stale-while-revalidate=#{stale_while_revalidate}, stale-if-error=#{stale_if_error}"
+          response.headers["Cache-Control"] = "public, max-age=#{ttl}, must-revalidate, stale-while-revalidate=#{stale_while_revalidate}, stale-if-error=#{stale_if_error}"
 
           # Add Vary headers for compression and authentication state
           existing_vary = response.headers["Vary"].to_s
@@ -212,11 +212,11 @@ module Folio
           if Rails.application.config.folio_cache_headers_include_last_modified && timestamp
             fresh_when(record, last_modified: timestamp, public: true)
             # Override Cache-Control to match production format
-            response.headers["Cache-Control"] = "max-age=#{ttl}, must-revalidate, stale-while-revalidate=#{stale_while_revalidate}, stale-if-error=#{stale_if_error}"
+            response.headers["Cache-Control"] = "public, max-age=#{ttl}, must-revalidate, stale-while-revalidate=#{stale_while_revalidate}, stale-if-error=#{stale_if_error}"
           elsif Rails.application.config.folio_cache_headers_include_etag
             fresh_when(record, public: true)
             # Override Cache-Control to match production format
-            response.headers["Cache-Control"] = "max-age=#{ttl}, must-revalidate, stale-while-revalidate=#{stale_while_revalidate}, stale-if-error=#{stale_if_error}"
+            response.headers["Cache-Control"] = "public, max-age=#{ttl}, must-revalidate, stale-while-revalidate=#{stale_while_revalidate}, stale-if-error=#{stale_if_error}"
           end
 
           # Ensure Vary header is set with both compression and auth state
