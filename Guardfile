@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative "lib/guard/standard_js"
+
 guard :rubocop, cli: ["--autocorrect-all"] do
   watch(/^(app|config|db|test)\/.+\.rb$/)
   watch(/^lib\/.+\.(rb|rake)$/)
