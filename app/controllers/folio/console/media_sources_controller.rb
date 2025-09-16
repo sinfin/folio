@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 class Folio::Console::MediaSourcesController < Folio::Console::BaseController
-  folio_console_controller_for "Folio::MediaSource"
+  folio_console_controller_for "Folio::MediaSource" do
+    @media_sources = @media_sources.with_assigned_media_counts
+  end
 
   private
     def shared_files_between_sites?
