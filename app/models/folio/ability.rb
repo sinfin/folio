@@ -43,6 +43,7 @@ class Folio::Ability
 
       can :do_anything, Folio::PrivateAttachment
       can :do_anything, Folio::ConsoleNote
+      can :do_anything, Folio::MediaSource
 
       can :set_administrator, Folio::Site
       can :set_manager, Folio::Site
@@ -59,6 +60,7 @@ class Folio::Ability
         can :read_administrators, Folio::Site
         can :set_administrator, Folio::Site
         can :set_manager, Folio::Site
+        can :do_anything, Folio::MediaSource
 
       elsif user.has_role?(site:, role: :manager)
 
