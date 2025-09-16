@@ -13,9 +13,6 @@
         let $res
         $res = window.jQuery($.parseHTML(res))
         $catalogue.replaceWith($res.find('.f-c-catalogue--ancestry').first())
-        return window.folioLazyloadInstances.forEach(function (lazyLoad) {
-          return lazyLoad.update()
-        })
       },
       error: function () {
         return $catalogue.removeClass('f-c-catalogue--loading')
