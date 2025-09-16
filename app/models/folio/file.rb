@@ -47,9 +47,9 @@ class Folio::File < Folio::ApplicationRecord
   scope :by_used, -> (used) do
     case used
     when true, "true"
-      joins(:file_placements)
+      where(Folio::FilePlacement::Base.where(Folio::FilePlacement::Base.arel_table[:file_id].eq(arel_table[:id])).arel.exists)
     when false, "false"
-      left_joins(:file_placements).where(folio_file_placements: { id: nil })
+      where(Folio::FilePlacement::Base.where(Folio::FilePlacement::Base.arel_table[:file_id].eq(arel_table[:id])).arel.exists.not)
     else
       none
     end
