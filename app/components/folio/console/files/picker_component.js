@@ -214,6 +214,9 @@ window.Folio.Stimulus.register('f-c-files-picker', class extends window.Stimulus
         const file = JSON.parse(this.serializedFileJsonValue)
         this.createFile(file)
         this.updateAltAndDescription(file)
+        this.destroyInputTarget.value = '0'
+        this.destroyInputTarget.disabled = true
+        this.fileIdInputTarget.value = file.id
         this.stateValue = 'filled'
       } catch (error) {
         console.error('Error parsing serialized file JSON:', error)
