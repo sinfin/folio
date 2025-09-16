@@ -7,7 +7,7 @@ end
 #
 # Table name: folio_addresses
 #
-#  id                        :integer          not null, primary key
+#  id                        :bigint(8)        not null, primary key
 #  name                      :string
 #  company_name              :string
 #  address_line_1            :string

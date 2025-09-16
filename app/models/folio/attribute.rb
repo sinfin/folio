@@ -30,10 +30,10 @@ end
 #
 # Table name: folio_attributes
 #
-#  id                      :integer          not null, primary key
-#  folio_attribute_type_id :integer
+#  id                      :bigint(8)        not null, primary key
+#  folio_attribute_type_id :bigint(8)
 #  placement_type          :string
-#  placement_id            :integer
+#  placement_id            :bigint(8)
 #  value                   :string
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null

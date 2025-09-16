@@ -15,7 +15,7 @@ PATH
       acts-as-taggable-on
       after_commit_everywhere
       ancestry
-      annotate
+      annot8
       audited
       aws-sdk-s3
       babel-transpiler
@@ -170,9 +170,9 @@ GEM
       activesupport
     ancestry (4.3.3)
       activerecord (>= 5.2.6)
-    annotate (2.6.5)
-      activerecord (>= 2.3.0)
-      rake (>= 0.8.7)
+    annot8 (1.0.1)
+      activerecord (>= 8.0.0, < 9)
+      rake (>= 10.4, < 14.0)
     ast (2.4.3)
     audited (5.8.0)
       activerecord (>= 5.2, < 8.2)
