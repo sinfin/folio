@@ -79,7 +79,7 @@
 //= require folio/console/ui/flash_component
 //= require folio/console/ui/in_place_input_component
 //= require folio/console/ui/index/filters_component
-//= require folio/console/ui/index/header_component
+//= require folio/console/ui/index/header/query_form_component
 //= require folio/console/ui/notification_modal_component
 //= require folio/console/ui/pagy_component
 //= require folio/console/ui/tabs_component
