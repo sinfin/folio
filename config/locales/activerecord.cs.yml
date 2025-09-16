@@ -49,6 +49,12 @@ cs:
       folio/lead:
         created_at: Odesláno
         note: Zpráva
+      folio/media_source:
+        licence: Licence
+        max_usage_count: Max. použití
+        copyright_text: Copyright text
+        sites: Titul
+        assigned_media_count: Přiřazeno obrázků
       folio/menu:
         type: Druh menu
         menu_items: Odkazy
@@ -233,6 +239,10 @@ cs:
         few: Formuláře
         one: Formulář
         other: Formulářů
+      folio/media_source:
+        few: Zdroje médií
+        one: Zdroj médií
+        other: Zdrojů médií
       folio/menu:
         few: Menu
         one: Menu

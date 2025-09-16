@@ -43,6 +43,12 @@ en:
       folio/lead:
         created_at: Sent at
         note: Message
+      folio/media_source:
+        licence: Licence
+        max_usage_count: Max. usage count
+        copyright_text: Copyright text
+        sites: Sites
+        assigned_media_count: Assigned media count
       folio/menu:
         locale: Version
         type: Type
@@ -192,6 +198,9 @@ en:
       folio/lead:
         one: Lead
         other: Leads
+      folio/media_source:
+        one: Media source
+        other: Media sources
       folio/menu:
         one: Menu
         other: Menus

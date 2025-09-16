@@ -1,0 +1,20 @@
+= index_header
+
+= catalogue(@media_sources)
+  ruby:
+    id
+    attribute(:title)
+
+    attribute(:licence)
+
+    attribute(:max_usage_count)
+
+    attribute(:copyright_text)
+
+    attribute(:sites) do |record|
+      record.sites.map(&:to_label).join("<br />")
+    end
+
+    attribute(:assigned_media_count)
+
+    actions

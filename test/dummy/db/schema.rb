@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_15_090051) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_15_131324) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -363,6 +363,27 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_15_090051) do
     t.index ["site_id"], name: "index_folio_leads_on_site_id"
   end
 
+  create_table "folio_media_source_site_links", force: :cascade do |t|
+    t.bigint "media_source_id", null: false
+    t.bigint "site_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["media_source_id", "site_id"], name: "index_folio_media_source_site_links_unique", unique: true
+    t.index ["media_source_id"], name: "index_folio_media_source_site_links_on_media_source_id"
+    t.index ["site_id"], name: "index_folio_media_source_site_links_on_site_id"
+  end
+
+  create_table "folio_media_sources", force: :cascade do |t|
+    t.string "title", null: false
+    t.string "licence"
+    t.string "copyright_text"
+    t.integer "max_usage_count", default: 1
+    t.integer "assigned_media_count", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["title"], name: "index_folio_media_sources_on_title"
+  end
+
   create_table "folio_menu_items", force: :cascade do |t|
     t.bigint "menu_id"
     t.string "ancestry"
@@ -696,6 +717,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_15_090051) do
   add_foreign_key "folio_console_notes", "folio_sites", column: "site_id"
   add_foreign_key "folio_content_templates", "folio_sites", column: "site_id"
   add_foreign_key "folio_files", "folio_sites", column: "site_id"
+  add_foreign_key "folio_media_source_site_links", "folio_media_sources", column: "media_source_id"
+  add_foreign_key "folio_media_source_site_links", "folio_sites", column: "site_id"
   add_foreign_key "folio_site_user_links", "folio_sites", column: "site_id"
   add_foreign_key "folio_site_user_links", "folio_users", column: "user_id"
   add_foreign_key "folio_tiptap_revisions", "folio_users", column: "superseded_by_user_id"

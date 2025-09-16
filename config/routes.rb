@@ -83,6 +83,8 @@ Folio::Engine.routes.draw do
         end
       end
 
+      resources :media_sources, except: %i[show]
+
       resources :menus, except: %i[show]
 
       resources :help_documents, only: %i[index show]
