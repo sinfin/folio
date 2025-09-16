@@ -43,6 +43,8 @@ cs:
             cancel_download: Zrušit stahování
             cancel: Zavřít hromadné akce
             download_failure: Nepodařilo se přípravit soubory ke stažení
+            add_to_picker/default: Vybrat
+            add_to_picker/image: Vybrat do galerie
 
           form_component:
             title: Hromadné nastavení souborů

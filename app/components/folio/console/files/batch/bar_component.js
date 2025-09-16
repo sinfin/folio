@@ -233,6 +233,10 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
       apiMethod: 'apiGet'
     })
   }
+
+  addToPicker () {
+    console.log('addToPicker')
+  }
 })
 
 window.Folio.MessageBus.callbacks['f-c-files-batch-bar'] = (message) => {

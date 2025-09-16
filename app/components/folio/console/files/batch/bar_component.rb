@@ -90,6 +90,13 @@ class Folio::Console::Files::Batch::BarComponent < Folio::Console::ApplicationCo
       }]
     end
 
+    ary << [{ add_to_picker: "true" }, {
+      variant: :success,
+      icon: :arrow_up,
+      label: t(".add_to_picker/#{@file_klass.human_type}", default: t(".add_to_picker/default")),
+      data: stimulus_action("addToPicker"),
+    }]
+
     ary
   end
 

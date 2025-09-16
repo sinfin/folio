@@ -15,7 +15,9 @@
         = folio_icon(:content_copy, class: 'f-c-files-batch-bar__icon')
 
       - buttons_data.each do |button_wrap_data, button_model|
-        .f-c-files-batch-bar__button-wrap data=button_wrap_data
+        .f-c-files-batch-bar__button-wrap[
+          data=button_wrap_data
+        ]
           = render(Folio::Console::Ui::ButtonComponent.new(**button_model))
 
       = render(Folio::Console::Ui::ButtonComponent.new(icon: :close,

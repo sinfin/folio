@@ -63,6 +63,13 @@
     height: 22px
     position: relative
 
+  &__button-wrap[data-add-to-picker="true"],
+  .f-file-list--primary-action-index_for_picker &__button-wrap
+    display: none
+
+  .f-file-list--primary-action-index_for_picker &__button-wrap[data-add-to-picker="true"]
+    display: block
+
   &[data-f-c-files-batch-bar-count-value="0"]
     display: none
 
