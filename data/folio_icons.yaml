@@ -144,6 +144,9 @@ file_document:
 flag:
   width: 24
   height: 24
+form_select:
+  width: 24
+  height: 24
 format_align_center:
   width: 24
   height: 24
@@ -292,6 +295,9 @@ send_clock:
   width: 24
   height: 24
 send_lock:
+  width: 24
+  height: 24
+speedometer:
   width: 24
   height: 24
 square_outline:
