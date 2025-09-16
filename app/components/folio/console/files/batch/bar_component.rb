@@ -1,10 +1,14 @@
 # frozen_string_literal: true
 
 class Folio::Console::Files::Batch::BarComponent < Folio::Console::ApplicationComponent
-  def initialize(file_klass:, change_to_propagate: nil, multi_picker: false)
+  def initialize(file_klass:,
+                 change_to_propagate: nil,
+                 multi_picker: false,
+                 updated_at: nil)
     @file_klass = file_klass
     @change_to_propagate = change_to_propagate
     @multi_picker = multi_picker
+    @updated_at = updated_at || Time.current
   end
 
   def data
@@ -15,6 +19,7 @@ class Folio::Console::Files::Batch::BarComponent < Folio::Console::ApplicationCo
                           file_ids_json: file_ids.to_json,
                           change_to_propagate: (@change_to_propagate || {}).to_json,
                           multi_picker: @multi_picker,
+                          updated_at: @updated_at.iso8601,
                         },
                         action: {
                           "f-c-files-batch-bar:action" => "batchActionFromFile",

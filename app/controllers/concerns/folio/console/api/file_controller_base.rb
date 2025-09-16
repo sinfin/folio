@@ -100,6 +100,7 @@ module Folio::Console::Api::FileControllerBase
 
     batch_service.handle_queue(queue_add, queue_remove, persisted_file_ids)
 
+    dispatch_batch_bar_message
     render_batch_bar_component
   end
 
@@ -109,11 +110,13 @@ module Folio::Console::Api::FileControllerBase
 
   def open_batch_form
     batch_service.set_form_open(true)
+    dispatch_batch_bar_message
     render_batch_bar_component
   end
 
   def close_batch_form
     batch_service.set_form_open(false)
+    dispatch_batch_bar_message
     render_batch_bar_component
   end
 
@@ -125,6 +128,7 @@ module Folio::Console::Api::FileControllerBase
       batch_service.set_download_status(new_status)
     end
 
+    dispatch_batch_bar_message
     render_batch_bar_component
   end
 
@@ -136,10 +140,12 @@ module Folio::Console::Api::FileControllerBase
       batch_service.set_download_status(new_status)
     end
 
+    dispatch_batch_bar_message
     render_batch_bar_component
   end
 
   def cancel_batch_download
+    dispatch_batch_bar_message
     render_batch_bar_component
   end
 
@@ -160,6 +166,7 @@ module Folio::Console::Api::FileControllerBase
     download_status = { "pending" => true, "timestamp" => Time.current.to_i, "s3_path" => s3_path }
     batch_service.set_download_status(download_status)
 
+    dispatch_batch_bar_message
     render_batch_bar_component
   end
 
@@ -181,14 +188,9 @@ module Folio::Console::Api::FileControllerBase
     batch_service.clear_files
     batch_service.set_form_open(false)
 
-    component = Folio::Console::Files::Batch::BarComponent.new(file_klass: @klass,
-                                                               change_to_propagate: {
-                                                                 change: "delete",
-                                                                 file_ids: @safe_file_ids,
-                                                               })
-
-    render_component_json(component,
-                          flash: { success: t("folio.console.api.file_controller_base.batch_delete_success") })
+    dispatch_batch_bar_message
+    render_batch_bar_component(change_to_propagate: { change: "delete", file_ids: @safe_file_ids },
+                               flash: { success: t("folio.console.api.file_controller_base.batch_delete_success") })
   end
 
   def batch_update
@@ -214,17 +216,11 @@ module Folio::Console::Api::FileControllerBase
       files.each { |file| file.update!(update_params) }
     end
 
-    batch_service.clear_files
     batch_service.set_form_open(false)
 
-    component = Folio::Console::Files::Batch::BarComponent.new(file_klass: @klass,
-                                                               change_to_propagate: {
-                                                                 change: "update",
-                                                                 file_ids: @safe_file_ids,
-                                                               })
-
-    render_component_json(component,
-                          flash: { success: t("folio.console.api.file_controller_base.batch_update_success") })
+    dispatch_batch_bar_message
+    render_batch_bar_component(change_to_propagate: { change: "update", file_ids: @safe_file_ids },
+                               flash: { success: t("folio.console.api.file_controller_base.batch_update_success") })
   end
 
   def file_picker_file_hash
@@ -396,8 +392,27 @@ module Folio::Console::Api::FileControllerBase
                                                                  file_class_name: @klass.to_s)
     end
 
-    def render_batch_bar_component
-      render_component_json(Folio::Console::Files::Batch::BarComponent.new(file_klass: @klass,
-                                                                           multi_picker:  params[:multi_picker] == "1"))
+    def dispatch_batch_bar_message
+      if Folio::Current.user
+        @batch_bar_updated_at = Time.current
+
+        MessageBus.publish Folio::MESSAGE_BUS_CHANNEL,
+                           {
+                             type: "Folio::Console::Files::Batch::BarComponent/reload",
+                             data: {
+                              updated_at: @batch_bar_updated_at.iso8601,
+                             }
+                           }.to_json,
+                           user_ids: [Folio::Current.user.id]
+      end
+    end
+
+    def render_batch_bar_component(flash: nil, change_to_propagate: nil)
+      component = Folio::Console::Files::Batch::BarComponent.new(file_klass: @klass,
+                                                                 updated_at: @batch_bar_updated_at || Time.current,
+                                                                 multi_picker:  params[:multi_picker] == "1",
+                                                                 change_to_propagate:)
+
+      render_component_json(component, flash:)
     end
 end

@@ -7,7 +7,8 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
     status: String,
     fileIdsJson: String,
     changeToPropagate: Object,
-    multiPicker: Boolean
+    multiPicker: Boolean,
+    updatedAt: String
   }
 
   static targets = ['form']
@@ -32,9 +33,10 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
 
   connect () {
     this.onReloadTrigger = window.Folio.throttle(() => {
-      console.log('onReloadTrigger')
       this.onReloadTriggerRaw()
     })
+
+    this.correctCheckboxes()
   }
 
   disconnect () {
@@ -140,23 +142,10 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
 
     if (this.queue.add.length === 0 && this.queue.remove.length === 0) return
 
-    const addCallbackIds = this.queue.add ? [...this.queue.add] : []
-    const removeCallbackIds = this.queue.remove ? [...this.queue.remove] : []
-
-    const callback = () => {
-      if (addCallbackIds) {
-        this.dispatchCheckboxEvents(addCallbackIds, 'add')
-      }
-
-      if (removeCallbackIds) {
-        this.dispatchCheckboxEvents(removeCallbackIds, 'remove')
-      }
-    }
-
-    this.ajax({ url: `${url}/handle_batch_queue`, data: { queue: this.queue }, status: 'reloading', callback })
+    this.ajax({ url: `${url}/handle_batch_queue`, data: { queue: this.queue }, status: 'reloading' })
   }
 
-  ajax ({ url, data, callback, apiMethod = 'apiPost', status = 'loading' }) {
+  ajax ({ url, data, apiMethod = 'apiPost', status = 'loading' }) {
     this.statusValue = status
     this.abortController = new AbortController()
 
@@ -172,18 +161,30 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
           // only replace if still in the DOM
           this.element.outerHTML = res.data
           this.statusValue = 'loaded'
-        }
 
-        if (callback) callback()
+          if (res.meta && res.meta.flash && res.meta.flash.success) {
+            this.element.dispatchEvent(new CustomEvent('folio:flash', {
+              bubbles: true,
+              detail: { flash: { content: res.meta.flash.success, variant: 'success' } }
+            }))
+          }
+        }
       } else {
         throw new Error('Failed to perform batch action')
       }
     }).catch((error) => {
-      console.log('if', 'error.name:', error.name, 'AbortError')
       if (error.name === 'AbortError') return
 
-      const message = error.message || 'An error occurred'
-      window.FolioConsole.Flash.alert(message)
+      this.element.dispatchEvent(new CustomEvent('folio:flash', {
+        bubbles: true,
+        detail: {
+          flash: {
+            content: error.message || 'An error occurred',
+            variant: 'danger'
+          }
+        }
+      }))
+
       this.statusValue = 'loaded'
     }).finally(() => {
       delete this.abortController
@@ -212,7 +213,20 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
 
     const { message } = e.detail
 
-    if (message.type === 'Folio::File::BatchDownloadJob/success') {
+    if (message.type === 'Folio::Console::Files::Batch::BarComponent/reload') {
+      if (this.statusValue !== 'reloading' && message.data && message.data.updated_at) {
+        try {
+          const newUpdatedAt = new Date(message.data.updated_at)
+          const formerUpdatedAt = new Date(this.updatedAtValue)
+
+          if (newUpdatedAt && formerUpdatedAt && newUpdatedAt > formerUpdatedAt) {
+            this.onReloadTrigger()
+          }
+        } catch (e) {
+          console.error('Error handling message dates')
+        }
+      }
+    } else if (message.type === 'Folio::File::BatchDownloadJob/success') {
       this.ajax({
         url: `${this.baseApiUrlValue}/batch_download_success`,
         data: { file_ids: JSON.parse(this.fileIdsJsonValue), url: message.data.url }
@@ -225,15 +239,13 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
     }
   }
 
-  dispatchCheckboxEvents (fileIds, checkboxAction) {
-    fileIds.forEach((fileId) => {
-      const selector = `.f-file-list-file-batch-checkbox__input[value="${fileId}"]`
-      const checkboxes = document.querySelectorAll(selector)
+  correctCheckboxes () {
+    const fileIds = JSON.parse(this.fileIdsJsonValue)
+    console.log('correctCheckboxes', fileIds)
 
-      for (const checkbox of checkboxes) {
-        checkbox.dispatchEvent(new CustomEvent('f-c-files-batch-bar:batchUpdated', { detail: { action: checkboxAction } }))
-      }
-    })
+    for (const checkbox of document.querySelectorAll('.f-file-list-file-batch-checkbox__input')) {
+      checkbox.checked = fileIds.includes(parseInt(checkbox.value, 10))
+    }
   }
 
   onReloadTriggerRaw () {
@@ -257,7 +269,8 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
 window.Folio.MessageBus.callbacks['f-c-files-batch-bar'] = (message) => {
   if (!message) return
   if (!message.type) return
-  if (!message.type.startsWith('Folio::File::BatchDownloadJob')) return
+
+  if (message.type !== 'Folio::Console::Files::Batch::BarComponent/reload' && !message.type.startsWith('Folio::File::BatchDownloadJob')) return
 
   for (const bar of document.querySelectorAll('.f-c-files-batch-bar')) {
     bar.dispatchEvent(new CustomEvent('f-c-files-batch-bar:message', { detail: { message } }))
