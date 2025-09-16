@@ -27,7 +27,6 @@ class Folio::File < Folio::ApplicationRecord
   # Relations
   has_many :file_placements, class_name: "Folio::FilePlacement::Base"
   has_many :placements, through: :file_placements
-  belongs_to :media_source, class_name: "Folio::MediaSource", optional: true
 
   # Validations
   validates :file, :type,
@@ -285,8 +284,6 @@ class Folio::File < Folio::ApplicationRecord
     if respond_to?(:preview_duration) && respond_to?(:preview_duration=)
       fields[:preview_duration] = { as: :integer }
     end
-
-    fields[:media_source_id] = {}
 
     fields
   end

@@ -40,6 +40,7 @@ cs:
         file_size: Velikost souboru
         preview_duration: Kolik vteřin je zdarma?
         media_source_id: Omezení použití
+        max_usage_count: Maximální počet použití
         used: Použitý
         subtitles_cs_enabled: Zobrazit titulky
         subtitles_cs_text: Titulky (CZ)
