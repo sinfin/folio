@@ -95,7 +95,7 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
   batchActionFromFile (e) {
     this.abortAjax()
 
-    const { action, id } = e.detail
+    const { action, ids } = e.detail
 
     this.queue = this.queue || { add: [], remove: [] }
 
@@ -103,10 +103,10 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
 
     switch (action) {
       case 'add':
-        this.queue.add.push(id)
+        this.queue.add = [...this.queue.add, ...ids]
         break
       case 'remove':
-        this.queue.remove.push(id)
+        this.queue.remove = [...this.queue.remove, ...ids]
         break
       case 'add-all':
         for (const checkbox of document.querySelectorAll('.f-file-list-file-batch-checkbox__input')) {

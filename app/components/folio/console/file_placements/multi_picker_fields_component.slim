@@ -14,7 +14,7 @@
         = render(Folio::Console::Ui::TabsComponent.new(tabs:,
                                                        no_margin: true))
 
-    .f-c-file-placements-multi-picker-fields__source-iframe-wrap[
-      data=stimulus_target("iframeWrap")
-    ]
-      span.folio-loader
+    .f-c-file-placements-multi-picker-fields__source-frame-wrap
+      = render(Folio::Console::Ui::TurboFrameWithLoaderComponent.new(id: @turbo_frame_id,
+                                                                     src: @turbo_frame_src,
+                                                                     lazy: true))

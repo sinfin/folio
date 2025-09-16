@@ -1,6 +1,9 @@
 = render(Folio::Console::Ui::TurboFrameWithLoaderComponent.new(id: @turbo_frame_id,
                                                                turbo_action: "advance"))
-  = index_header file_list_uppy: true
+  - if action_name == "index_for_picker"
+    = render(Folio::Console::Ui::Index::FiltersComponent.new(klass: @klass))
+  - else
+    = index_header file_list_uppy: true
 
   = render(Folio::FileListComponent.new(file_klass: @klass,
                                         files: controller.instance_variable_get(controller.send(:folio_console_record_variable_name, plural: true)),

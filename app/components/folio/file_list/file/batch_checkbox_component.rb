@@ -11,6 +11,7 @@ class Folio::FileList::File::BatchCheckboxComponent < Folio::ApplicationComponen
     stimulus_controller("f-file-list-file-batch-checkbox",
                         action: {
                           "f-c-files-batch-bar:batchUpdated" => "batchUpdated",
+                          "f-file-list-file-batch-checkbox:toggle" => "onToggleTriggered",
                         })
   end
 

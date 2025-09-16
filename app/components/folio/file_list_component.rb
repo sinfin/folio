@@ -78,4 +78,10 @@ class Folio::FileListComponent < Folio::ApplicationComponent
   def new_file
     @new_file ||= @file_klass.new
   end
+
+  def primary_action_class_name
+    if @primary_action
+      "f-file-list--primary-action-#{@primary_action}"
+    end
+  end
 end

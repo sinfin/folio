@@ -10,6 +10,11 @@ class Folio::Console::FilePlacements::MultiPickerFieldsComponent < Folio::Consol
   end
 
   private
+    def before_render
+      @turbo_frame_id = @file_klass.console_turbo_frame_id(picker: true)
+      @turbo_frame_src = url_for([:index_for_picker, :console, @file_klass])
+    end
+
     def data
       stimulus_controller("f-c-file-placements-multi-picker-fields",
                           values: {
