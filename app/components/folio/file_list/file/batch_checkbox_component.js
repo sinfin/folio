@@ -57,7 +57,7 @@
       const batchBar = document.querySelector('.f-c-files-batch-bar')
       if (!batchBar) return false
 
-      const fileList = this.element.closest('.f-file-list--primary-action-index_for_picker')
+      const fileList = this.element.closest('.f-file-list--primary-action-index_for_picker, .f-file-list--primary-action-index')
       if (!fileList) return false
 
       const selectedInput = fileList.querySelector(`.f-file-list-file-batch-checkbox__input[value="${lastCheckedId}"]`)
