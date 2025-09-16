@@ -43,7 +43,6 @@ class Folio::Ability
 
       can :do_anything, Folio::PrivateAttachment
       can :do_anything, Folio::ConsoleNote
-      can :do_anything, Folio::MediaSource
 
       can :set_administrator, Folio::Site
       can :set_manager, Folio::Site
@@ -60,7 +59,6 @@ class Folio::Ability
         can :read_administrators, Folio::Site
         can :set_administrator, Folio::Site
         can :set_manager, Folio::Site
-        can :do_anything, Folio::MediaSource
 
       elsif user.has_role?(site:, role: :manager)
 
@@ -95,6 +93,7 @@ class Folio::Ability
 
     can :do_anything, Folio::SiteUserLink, { site: }
     can :do_anything, Folio::File, { site: Rails.application.config.folio_shared_files_between_sites ? [Folio::Current.main_site, site] : site }
+    can :do_anything, Folio::MediaSource, { site: Rails.application.config.folio_shared_files_between_sites ? [Folio::Current.main_site, site] : site }
     can :do_anything, Folio::Page, { site: }
     can :do_anything, Folio::Menu, { site: }
     can :do_anything, Folio::Lead, { site: }

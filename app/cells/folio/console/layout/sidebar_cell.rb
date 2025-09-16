@@ -270,7 +270,8 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
         link_for_site_class(site, Folio::File::Image, only_path:),
         link_for_site_class(site, Folio::File::Video, only_path:),
         link_for_site_class(site, Folio::File::Audio, only_path:),
-        link_for_site_class(site, Folio::File::Document, only_path:)
+        link_for_site_class(site, Folio::File::Document, only_path:),
+        link_for_site_class(site, Folio::MediaSource, only_path:)
       ]
     end
 

@@ -10,6 +10,8 @@ class CreateFolioMediaSources < ActiveRecord::Migration[8.0]
       t.integer :max_usage_count, default: 1
       t.integer :assigned_media_count, default: 0
 
+      t.references :site, null: false, foreign_key: { to_table: :folio_sites }
+
       t.timestamps
     end
 

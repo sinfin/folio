@@ -379,8 +379,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_15_131324) do
     t.string "copyright_text"
     t.integer "max_usage_count", default: 1
     t.integer "assigned_media_count", default: 0
+    t.bigint "site_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["site_id"], name: "index_folio_media_sources_on_site_id"
     t.index ["title"], name: "index_folio_media_sources_on_title"
   end
 
@@ -719,6 +721,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_15_131324) do
   add_foreign_key "folio_files", "folio_sites", column: "site_id"
   add_foreign_key "folio_media_source_site_links", "folio_media_sources", column: "media_source_id"
   add_foreign_key "folio_media_source_site_links", "folio_sites", column: "site_id"
+  add_foreign_key "folio_media_sources", "folio_sites", column: "site_id"
   add_foreign_key "folio_site_user_links", "folio_sites", column: "site_id"
   add_foreign_key "folio_site_user_links", "folio_users", column: "user_id"
   add_foreign_key "folio_tiptap_revisions", "folio_users", column: "superseded_by_user_id"
