@@ -11,8 +11,10 @@
 
     attribute(:copyright_text)
 
-    attribute(:sites) do |record|
-      record.sites.map(&:to_label).join("<br />")
+    if Rails.application.config.folio_shared_files_between_sites
+      attribute(:sites) do |record|
+        record.sites.map(&:to_label).join("<br />")
+      end
     end
 
     attribute(:assigned_media_count)

@@ -5,6 +5,7 @@
 = f.input :copyright_text
 = f.input :max_usage_count
 
-= react_ordered_multiselect(f, :sites, sortable: false)
+- if Rails.application.config.folio_shared_files_between_sites
+  = react_ordered_multiselect(f, :sites, sortable: false)
 
 = form_footer f
