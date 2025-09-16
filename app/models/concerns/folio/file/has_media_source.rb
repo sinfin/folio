@@ -10,17 +10,22 @@ module Folio::File::HasMediaSource
             foreign_key: :file_id,
             dependent: :destroy
 
+    attribute :max_usage_count, :string
+
     after_update :create_media_source_snapshot, if: :saved_change_to_media_source_id?
   end
 
   def max_usage_count
-    media_source_snapshot&.max_usage_count
+    # Return virtual attribute if set (for JSON responses), otherwise from snapshot
+    super.presence || media_source_snapshot&.max_usage_count
   end
 
   def max_usage_count=(value)
     if media_source_snapshot
       media_source_snapshot.update(max_usage_count: value)
     end
+    # Set virtual attribute for JSON serialization
+    super(value&.to_s)
   end
 
   def media_source_sites
@@ -54,6 +59,10 @@ module Folio::File::HasMediaSource
     fields[:media_source_id] = {}
 
     fields
+  end
+
+  def self.console_additional_permitted_params
+    [:max_usage_count]
   end
 
   private
