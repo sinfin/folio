@@ -65,7 +65,16 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
     const html = this.templateTarget.innerHTML
 
     let rxp = new RegExp(`\\[f-nested-fields-template-${this.keyValue}\\]`, 'g')
-    const newId = new Date().getTime()
+
+    this.newIds = this.newIds || []
+    let newId = new Date().getTime()
+
+    while (this.newIds.includes(newId)) {
+      newId += 1
+    }
+
+    this.newIds.push(newId)
+
     let newHtml = html.replace(rxp, `[${newId}]`)
 
     if (newHtml === html) {
