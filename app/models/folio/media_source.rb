@@ -9,6 +9,8 @@ class Folio::MediaSource < ApplicationRecord
   accepts_nested_attributes_for :media_source_site_links, allow_destroy: true
 
   validates :title, presence: true
+
+  scope :ordered, -> { order(id: :asc) }
 end
 
 # == Schema Information

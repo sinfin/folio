@@ -2,18 +2,21 @@
 
 = catalogue(@media_sources)
   ruby:
-    id
     attribute(:title)
 
     attribute(:licence)
 
-    attribute(:max_usage_count)
+    attribute(:max_usage_count) { record.max_usage_count || "-" }
 
     attribute(:copyright_text)
 
     if Rails.application.config.folio_shared_files_between_sites
       attribute(:sites) do |record|
-        record.sites.map(&:to_label).join("<br />")
+        if record.sites.any?
+          record.sites.map(&:to_label).join("<br />")
+        else
+          "-"
+        end
       end
     end
 
