@@ -7,9 +7,8 @@ class Folio::Leads::FormComponent < ApplicationComponent
     @lead = lead || Folio::Lead.new
   end
 
-  def before_render
-    # This component requires session for CSRF and form functionality
-    require_session_for_component!("lead_form_csrf_and_flash")
+  def session_requirement_reason
+    "lead_form_csrf_and_flash"
   end
 
   def form(&block)

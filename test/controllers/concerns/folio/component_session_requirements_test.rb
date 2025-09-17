@@ -93,4 +93,54 @@ class Folio::ComponentSessionRequirementsTest < ActionController::TestCase
     assert_not_nil @controller.component_session_requirements
     assert_equal [], @controller.component_session_requirements
   end
+
+  test "analyze_page_session_requirements detects component session needs" do
+    # Mock atom with session requirements
+    atom_with_session = Class.new do
+      include Folio::ComponentSessionHelper
+
+      def requires_session?
+        true
+      end
+
+      def session_requirement_reason
+        "mock_atom_csrf"
+      end
+    end.new
+
+    # Mock atom without session requirements
+    atom_without_session = Class.new do
+      include Folio::ComponentSessionHelper
+
+      def requires_session?
+        false
+      end
+    end.new
+
+    # Mock page with atoms
+    page = Object.new
+    page.define_singleton_method(:respond_to?) { |method| method == :atoms }
+    page.define_singleton_method(:atoms) { [atom_with_session, atom_without_session] }
+
+    @controller.send(:initialize_component_session_requirements)
+    @controller.send(:analyze_page_session_requirements, page)
+
+    assert @controller.send(:component_requires_session?)
+    assert_equal 1, @controller.component_session_requirements.length
+
+    requirement = @controller.component_session_requirements.first
+    assert_equal "mock_atom_csrf", requirement[:reason]
+    assert requirement[:component].include?("atom")
+  end
+
+  test "analyze_page_session_requirements handles page without atoms gracefully" do
+    page = Object.new
+    page.define_singleton_method(:respond_to?) { |method| false }
+
+    @controller.send(:initialize_component_session_requirements)
+    @controller.send(:analyze_page_session_requirements, page)
+
+    assert_not @controller.send(:component_requires_session?)
+    assert_equal [], @controller.component_session_requirements
+  end
 end

@@ -12,12 +12,7 @@ module Folio
         def set_cache_control_headers(record: nil)
           # No auto-detection - controllers must explicitly provide record if needed
 
-          if record && record.respond_to?(:published?) && !record.published?
-            response.headers["Cache-Control"] = "no-store"
-            log_cache_decision("no_store", "unpublished_record", record: record)
-            return
-          end
-
+          # Check global cache headers configuration first
           unless Rails.application.config.respond_to?(:folio_cache_headers_enabled) && Rails.application.config.folio_cache_headers_enabled
             log_cache_decision("skip", "cache_headers_disabled")
             return
@@ -34,6 +29,13 @@ module Folio
           # Respect headers set earlier in the request lifecycle
           if response.headers["Cache-Control"].present?
             log_cache_decision("skip", "cache_control_already_set", headers: response.headers["Cache-Control"])
+            return
+          end
+
+          # Check record-specific conditions
+          if record && record.respond_to?(:published?) && !record.published?
+            response.headers["Cache-Control"] = "no-store"
+            log_cache_decision("no_store", "unpublished_record", record: record)
             return
           end
 
@@ -130,13 +132,18 @@ module Folio
         end
 
         def should_skip_session_for_cache?
+          # Check global session skipping configuration first
+          # This prevents Set-Cookie headers that cause Cloudflare BYPASS
+          unless Rails.application.config.respond_to?(:folio_cache_skip_session_for_public) &&
+                 Rails.application.config.folio_cache_skip_session_for_public
+            return false
+          end
+
           # Don't skip session if RequiresSession concern has explicitly enabled it
           return false if request.session_options[:skip] == false
 
-          # Enable session skipping when explicitly configured
-          # This prevents Set-Cookie headers that cause Cloudflare BYPASS
-          Rails.application.config.respond_to?(:folio_cache_skip_session_for_public) &&
-          Rails.application.config.folio_cache_skip_session_for_public
+          # All checks passed - can skip session for cache efficiency
+          true
         end
 
         def skip_session_for_cache_efficiency

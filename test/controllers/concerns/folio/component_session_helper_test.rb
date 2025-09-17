@@ -7,82 +7,78 @@ class Folio::ComponentSessionHelperTest < ActiveSupport::TestCase
   class TestComponent < ApplicationComponent
     include Folio::ComponentSessionHelper
 
-    def initialize(require_session: false)
+    def initialize(require_session: false, session_reason: nil)
       @require_session = require_session
+      @session_reason = session_reason
     end
 
-    def before_render
-      require_session_for_component!("test_component_reason") if @require_session
+    def requires_session?
+      @require_session
     end
 
-    # Make method public for testing
-    public :require_session_for_component!
+    def session_requirement_reason
+      @session_reason || "test_component_reason"
+    end
   end
 
-  # Mock controller for testing
-  class MockController
-    attr_accessor :component_session_requirements
+  # Test component that doesn't require session
+  class NoSessionComponent < ApplicationComponent
+    include Folio::ComponentSessionHelper
 
-    def require_session_for_component!(reason)
-      @component_session_requirements ||= []
-      @component_session_requirements << reason
+    def requires_session?
+      false
+    end
+
+    def session_requirement_reason
+      "no_session_needed"
     end
   end
 
   def setup
-    @controller = MockController.new
-    @component = TestComponent.new
-
-    # Mock the controller method in the component
-    @component.define_singleton_method(:controller) { @controller }
+    @component = TestComponent.new(require_session: true, session_reason: "test_csrf")
+    @no_session_component = NoSessionComponent.new
   end
 
   test "includes concern properly" do
     assert_includes TestComponent.ancestors, Folio::ComponentSessionHelper
-    assert_respond_to @component, :require_session_for_component!
+    assert_respond_to @component, :requires_session?
+    assert_respond_to @component, :session_requirement_reason
+    assert_respond_to @component, :session_requirement
   end
 
-  test "require_session_for_component! exists and handles missing helpers gracefully" do
-    # Test that the method exists - it will log a warning but not crash
-    # Since helpers isn't available in test context, it should gracefully handle this
-    assert_nothing_raised do
-      @component.require_session_for_component!("test_reason")
-    end
+  test "requires_session? returns correct boolean" do
+    assert @component.requires_session?
+    assert_not @no_session_component.requires_session?
   end
 
-  test "require_session_for_component! handles missing controller gracefully" do
-    # Component without helpers/controller context
-    @component.define_singleton_method(:helpers) { nil }
-
-    assert_nothing_raised do
-      @component.require_session_for_component!("test_reason")
-    end
+  test "session_requirement_reason returns custom reason" do
+    assert_equal "test_csrf", @component.session_requirement_reason
+    assert_equal "no_session_needed", @no_session_component.session_requirement_reason
   end
 
-  test "require_session_for_component! handles controller without method gracefully" do
-    # Mock helpers but controller without method
-    helpers = Object.new
-    helpers.define_singleton_method(:controller) { Object.new }
-    helpers.define_singleton_method(:respond_to?) { |method| method == :controller }
+  test "session_requirement returns hash with details" do
+    requirement = @component.session_requirement
 
-    @component.define_singleton_method(:helpers) { helpers }
-
-    assert_nothing_raised do
-      @component.require_session_for_component!("test_reason")
-    end
+    assert_kind_of Hash, requirement
+    assert_equal "test_csrf", requirement[:reason]
+    assert_equal "#{@component.class.name}_atom", requirement[:component]
+    assert_kind_of Time, requirement[:timestamp]
   end
 
-  test "require_session_for_component! handles multiple calls gracefully" do
-    # Mock helpers to avoid the ViewComponent error
-    @component.define_singleton_method(:helpers) do
-      # Return a mock that will trigger the fallback path
-      Object.new
-    end
+  test "default session_requirement_reason when not overridden" do
+    default_component = TestComponent.new
+    assert_equal "test_component_reason", default_component.session_requirement_reason
+  end
 
-    # Test that multiple calls don't cause errors
-    assert_nothing_raised do
-      @component.require_session_for_component!("reason_1")
-      @component.require_session_for_component!("reason_2")
-    end
+  test "session_requirement includes component class name" do
+    requirement = @component.session_requirement
+    expected_component = "Folio::ComponentSessionHelperTest::TestComponent_atom"
+    assert_equal expected_component, requirement[:component]
+  end
+
+  test "session_requirement timestamp is recent" do
+    requirement = @component.session_requirement
+    assert requirement[:timestamp] > 1.second.ago
+    assert requirement[:timestamp] <= Time.current
   end
 end

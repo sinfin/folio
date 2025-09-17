@@ -27,9 +27,8 @@ class Folio::NewsletterSubscriptions::FormComponent < Folio::ApplicationComponen
     @invalid = @newsletter_subscription.errors.present?
   end
 
-  def before_render
-    # This component requires session for CSRF and Turnstile functionality
-    require_session_for_component!("newsletter_subscription_csrf_and_turnstile")
+  def session_requirement_reason
+    "newsletter_subscription_csrf_and_turnstile"
   end
 
   def form(&block)

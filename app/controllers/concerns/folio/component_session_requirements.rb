@@ -45,6 +45,20 @@ module Folio
         super if defined?(super)
       end
 
+      # Override from cache headers concern
+      def should_skip_session_for_cache?
+        # Auto-analyze @page if it exists and has atoms
+        if defined?(@page) && @page&.respond_to?(:atoms)
+          analyze_page_session_requirements(@page)
+        end
+
+        # If any component requires session, don't skip session
+        return false if component_requires_session?
+
+        # Delegate to parent implementation
+        super if defined?(super)
+      end
+
       # Helper method components can call to indicate session requirement
       def require_session_for_component!(reason)
         @component_session_requirements ||= []
@@ -53,10 +67,19 @@ module Folio
           component: caller_locations(1, 1).first&.label || "unknown",
           timestamp: Time.current
         }
+      end
 
-        # Log for debugging (non-production only)
-        unless Rails.env.production?
-          Rails.logger.debug "[ComponentSession] Session required by component: #{reason}"
+      # Analyze page atoms to determine session requirements before cache headers are set
+      # This is necessary because components render AFTER cache headers, creating a timing issue
+      def analyze_page_session_requirements(page)
+        return unless page.respond_to?(:atoms)
+
+        page.atoms.each do |atom|
+          # Check if atom declares session requirements via ComponentSessionHelper concern
+          if atom.respond_to?(:requires_session?) && atom.requires_session?
+            @component_session_requirements ||= []
+            @component_session_requirements << atom.session_requirement
+          end
         end
       end
   end

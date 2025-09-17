@@ -25,18 +25,17 @@ class Folio::NewsletterSubscriptions::FormComponentTest < Folio::ComponentTest
   end
 
   def test_requires_session_for_component
-    with_controller_class(ApplicationController) do
-      # Mock the controller to track session requirements
-      vc_test_controller.define_singleton_method(:require_session_for_component!) do |reason|
-        @component_session_requirements ||= []
-        @component_session_requirements << reason
-      end
+    component = Folio::NewsletterSubscriptions::FormComponent.new
 
-      render_inline(Folio::NewsletterSubscriptions::FormComponent.new)
+    # Test polymorphic API
+    assert component.requires_session?
+    assert_equal "newsletter_subscription_csrf_and_turnstile", component.session_requirement_reason
 
-      requirements = vc_test_controller.instance_variable_get(:@component_session_requirements)
-      assert_includes requirements, "newsletter_subscription_csrf_and_turnstile"
-    end
+    # Test session requirement hash structure
+    requirement = component.session_requirement
+    assert_equal "newsletter_subscription_csrf_and_turnstile", requirement[:reason]
+    assert requirement[:component].include?("FormComponent")
+    assert_kind_of Time, requirement[:timestamp]
   end
 
   def test_renders_with_subscription_instance
@@ -54,20 +53,10 @@ class Folio::NewsletterSubscriptions::FormComponentTest < Folio::ComponentTest
         placeholder: "Custom placeholder"
       }
 
-      # Mock session requirement tracking
-      vc_test_controller.define_singleton_method(:require_session_for_component!) do |reason|
-        @component_session_requirements ||= []
-        @component_session_requirements << reason
-      end
-
       render_inline(Folio::NewsletterSubscriptions::FormComponent.new(view_options: view_options))
 
       assert_text "Custom Submit"
       assert_selector("input[placeholder='Custom placeholder']")
-
-      # Verify session requirement was called
-      requirements = vc_test_controller.instance_variable_get(:@component_session_requirements)
-      assert_includes requirements, "newsletter_subscription_csrf_and_turnstile"
     end
   end
 end

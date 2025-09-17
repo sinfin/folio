@@ -10,18 +10,17 @@ class Folio::Leads::FormComponentTest < Folio::ComponentTest
   end
 
   def test_requires_session_for_component
-    with_controller_class(ApplicationController) do
-      # Mock the controller to track session requirements
-      vc_test_controller.define_singleton_method(:require_session_for_component!) do |reason|
-        @component_session_requirements ||= []
-        @component_session_requirements << reason
-      end
+    component = Folio::Leads::FormComponent.new
 
-      render_inline(Folio::Leads::FormComponent.new)
+    # Test polymorphic API
+    assert component.requires_session?
+    assert_equal "lead_form_csrf_and_flash", component.session_requirement_reason
 
-      requirements = vc_test_controller.instance_variable_get(:@component_session_requirements)
-      assert_includes requirements, "lead_form_csrf_and_flash"
-    end
+    # Test session requirement hash structure
+    requirement = component.session_requirement
+    assert_equal "lead_form_csrf_and_flash", requirement[:reason]
+    assert requirement[:component].include?("FormComponent")
+    assert_kind_of Time, requirement[:timestamp]
   end
 
   def test_renders_with_lead_instance
