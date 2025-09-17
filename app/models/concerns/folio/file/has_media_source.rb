@@ -30,7 +30,7 @@ module Folio::File::HasMediaSource
     return true if media_source.blank?
 
     if Rails.application.config.folio_shared_files_between_sites
-      allowed_sites.include?(site)
+      allowed_sites.empty? || allowed_sites.include?(site)
     else
       self.site == site
     end
@@ -69,28 +69,20 @@ module Folio::File::HasMediaSource
     end
 
     def copy_media_source_data
-      if attribution_licence.blank? && media_source.licence.present?
-        self.attribution_licence = media_source.licence
+      {
+        attribution_licence: :licence,
+        attribution_copyright: :copyright_text,
+        attribution_max_usage_count: :max_usage_count
+      }.each do |file_attr, media_source_attr|
+        if self.send(file_attr).blank? && media_source.send(media_source_attr).present?
+          self.send("#{file_attr}=", media_source.send(media_source_attr))
+        end
       end
 
-      if attribution_copyright.blank? && media_source.copyright_text.present?
-        self.attribution_copyright = media_source.copyright_text
-      end
-
-      if attribution_max_usage_count.blank? && media_source.max_usage_count.present?
-        self.attribution_max_usage_count = media_source.max_usage_count
-      end
-
-      file_site_links.destroy_all
-
-      sites_for_file = if Rails.application.config.folio_shared_files_between_sites
-        media_source.allowed_sites.any? ? media_source.allowed_sites : [site]
-      else
-        [site]
-      end
-
-      sites_for_file.each do |site_obj|
-        file_site_links.build(site: site_obj)
+      if Rails.application.config.folio_shared_files_between_sites && file_site_links.empty?
+        media_source.allowed_sites.each do |site_obj|
+          file_site_links.build(site: site_obj)
+        end
       end
     end
 
