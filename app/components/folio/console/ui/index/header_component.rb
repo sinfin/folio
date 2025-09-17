@@ -55,7 +55,7 @@ class Folio::Console::Ui::Index::HeaderComponent < Folio::Console::ApplicationCo
         end
       end
 
-      safe_url_for(h)
+      controller.try(:safe_url_for, h)
     else
       @csv.try(:[], :url) || @csv
     end

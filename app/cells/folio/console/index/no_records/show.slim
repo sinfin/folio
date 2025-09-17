@@ -4,9 +4,9 @@
   - else
     .card.card--medium-gray
       .card-body
-        h3.card-text.mt-0 = t('.none')
+        h3.card-text.m-0 = t('.none')
 
-        .d-flex.align-items-center.gap-h
+        .d-flex.align-items-center.gap-h.f-c-index-no-records__bottom.mt-3
           - unless model[:new_button] == false
             == cell('folio/console/index/new_button', model)
 
