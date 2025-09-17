@@ -50,8 +50,15 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
   add () {
     this.fieldsWrapTarget.insertAdjacentHTML('beforeend', this.htmlFromTemplate())
     this.redoPositions()
-    this.dispatch('add', { detail: { field: this.fieldsTargets[this.fieldsTargets.length - 1] } })
-    this.element.dispatchEvent(new CustomEvent('f-nested-fields:add', { bubbles: true }))
+    this.dispatchRequiredEvents('add', { field: this.fieldsTargets[this.fieldsTargets.length - 1] })
+  }
+
+  dispatchRequiredEvents (name, data = {}) {
+    const count = this.fieldsWrapTarget.querySelectorAll('.f-nested-fields__fields').length
+    const detail = { ...data, count }
+
+    this.dispatch(name, { detail })
+    this.element.dispatchEvent(new CustomEvent(`f-nested-fields:${name}`, { detail, bubbles: true }))
   }
 
   nodeFromTemplate () {
@@ -108,8 +115,7 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
     }
 
     this.redoPositions()
-    this.dispatch('destroyed')
-    this.element.dispatchEvent(new CustomEvent('f-nested-fields:destroyed', { bubbles: true }))
+    this.dispatchRequiredEvents('destroyed')
   }
 
   onPositionUpClick (e) {
@@ -212,8 +218,7 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
     })
 
     this.redoPositions()
-    this.dispatch('add', { detail: { field: this.fieldsTargets[this.fieldsTargets.length - 1] } })
-    this.element.dispatchEvent(new CustomEvent('f-nested-fields:add', { bubbles: true }))
+    this.dispatchRequiredEvents('add', { field: this.fieldsTargets[this.fieldsTargets.length - 1] })
   }
 
   onRemoveFieldsTrigger (e) {
