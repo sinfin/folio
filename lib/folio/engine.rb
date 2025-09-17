@@ -178,6 +178,12 @@ module Folio
       }
     }
 
+    initializer :append_folio_autoload_paths do |app|
+      # Add component concerns to autoload paths so they can be included properly
+      app.config.autoload_paths += [self.root.join("app/components/concerns")]
+      app.config.eager_load_paths += [self.root.join("app/components/concerns")]
+    end
+
     initializer :append_folio_assets_paths do |app|
       app.config.assets.paths << self.root.join("app/cells")
       app.config.assets.paths << self.root.join("app/components")

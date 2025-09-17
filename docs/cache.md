@@ -151,6 +151,77 @@ Skip caching for debugging:
 http://localhost:3000/articles/123?skip_global_cache=1
 ```
 
+## Component Session Requirements
+
+When cache optimization is active (`FOLIO_CACHE_SKIP_SESSION=true`), components that need session state (forms, interactive elements) can declare their requirements using the polymorfic `ComponentSessionHelper` concern. This automatically disables session skipping when needed.
+
+The system uses **polymorphic override pattern** - components that need session include a concern and declare their requirements, which are automatically detected by the cache headers system.
+
+### Form Components Implementation
+
+Components that need session state include the helper concern and override the `session_requirement_reason` method:
+
+```ruby
+class MyFormComponent < ApplicationComponent
+  include Folio::ComponentSessionHelper
+
+  def session_requirement_reason
+    "contact_form_csrf"
+  end
+end
+```
+
+### Automatic Detection
+
+The HTTP cache headers system automatically detects components with session requirements:
+
+```ruby
+# In Folio::HttpCache::Headers
+def should_skip_session_for_cache?
+  # Global configuration check first
+  unless Rails.application.config.folio_cache_skip_session_for_public
+    return false
+  end
+
+  # Automatic detection of ComponentSessionRequirements concern
+  # No manual class name checking needed!
+  super if defined?(super)
+end
+```
+
+### Component Session Requirements Concern
+
+Controllers automatically get the concern via `ApplicationControllerBase`:
+
+```ruby
+# Automatically included in all controllers
+include Folio::ComponentSessionRequirements
+
+# Provides polymorphic override
+def should_skip_session_for_cache?
+  # Auto-analyze @page if exists
+  if defined?(@page) && @page&.respond_to?(:atoms)
+    analyze_page_session_requirements(@page)
+  end
+  
+  # Check if any component requires session
+  return false if component_requires_session?
+
+  # Delegate to parent (Headers concern)
+  super if defined?(super)
+end
+```
+
+### How It Works
+
+1. **Components declare** their session needs via `session_requirement_reason` method
+2. **Headers concern** automatically analyzes page atoms for session requirements  
+3. **Polymorphic override** in ComponentSessionRequirements prevents session skipping if needed
+4. **Cache optimization** is disabled automatically when forms are present
+5. **Result**: Forms work correctly on cached pages with clean architecture
+
+See **[Component Session Requirements Documentation](component-session-requirements.md)** for detailed implementation guide.
+
 ## Development Tools Integration
 
 ### Smart MiniProfiler Management
@@ -237,6 +308,112 @@ MiniProfiler: Auto-enabled
 To enable: rails dev:cache
 This will create tmp/caching-dev.txt
 Documentation: docs/cache.md
+```
+
+## Cloudflare Cache Optimization
+
+### Problem: Set-Cookie Headers Cause BYPASS
+
+Cloudflare automatically sets `cf-cache-status: BYPASS` for responses with `Set-Cookie` headers, preventing CDN caching. Rails applications commonly send:
+
+- **Session cookies** (`_session_id`) - Rails default behavior
+- **Log cookies** (`s_for_log`, `u_for_log`) - Folio tracking cookies
+
+### Solution: Session Skip for Public Responses
+
+Enable cache-friendly mode that skips session cookies for anonymous users:
+
+```bash
+# Enable in production for Cloudflare optimization
+FOLIO_CACHE_SKIP_SESSION=true rails server
+```
+
+**What it does:**
+- Skips Rails session cookies for public cache responses
+- Skips Folio log cookies for anonymous users  
+- Allows Cloudflare to cache instead of BYPASS
+- Maintains cookies for signed-in users (private cache)
+- **Note:** Business-specific cookies (like UTM tracking) maintain their own logic
+
+**Safety:**
+- ✅ Safe for anonymous content that doesn't need session state
+- ✅ CSRF protection still works via meta tags
+- ✅ User authentication unaffected
+- ✅ Flash messages work normally for signed-in users
+
+### Configuration
+
+```ruby
+# config/initializers/cache_headers.rb
+Rails.application.config.folio_cache_skip_session_for_public = true
+
+# or via ENV
+ENV["FOLIO_CACHE_SKIP_SESSION"] = "true"
+```
+
+### Testing Cloudflare Cache
+
+```bash
+# Without session skip (will get BYPASS)
+curl -I https://yoursite.com/ | grep -E "set-cookie|cf-cache"
+
+# With session skip enabled  
+FOLIO_CACHE_SKIP_SESSION=true rails server
+curl -I https://yoursite.com/ | grep -E "set-cookie|cf-cache"
+# Should see no set-cookie headers for anonymous requests
+```
+
+## Form and Interactive Components
+
+### Built-in Session Management
+
+Folio automatically handles session requirements for form controllers:
+
+```ruby
+# Folio::LeadsController - automatically requires session for form submissions
+class Folio::LeadsController < Folio::ApplicationController
+  include Folio::RequiresSession
+  requires_session_for :form_functionality, only: [:create]
+end
+
+# Folio::Api::NewsletterSubscriptionsController - session for newsletter signups
+class Folio::Api::NewsletterSubscriptionsController < Folio::Api::BaseController
+  include Folio::RequiresSession
+  requires_session_for :newsletter_subscription, only: [:create]
+end
+```
+
+### Component Integration
+
+Form components automatically declare session requirements using the polymorphic pattern:
+
+```ruby
+# Lead forms require session for CSRF and flash messages
+class Folio::Leads::FormComponent < ApplicationComponent
+  include Folio::ComponentSessionHelper
+
+  def initialize(lead: nil)
+    @lead = lead || Folio::Lead.new
+  end
+
+  def session_requirement_reason
+    "lead_form_csrf_and_flash"
+  end
+end
+
+# Newsletter forms require session for CSRF and Turnstile
+class Folio::NewsletterSubscriptions::FormComponent < ApplicationComponent
+  include Folio::ComponentSessionHelper
+
+  def initialize(newsletter_subscription: nil, view_options: {})
+    @newsletter_subscription = newsletter_subscription || Folio::NewsletterSubscription.new
+    @view_options = view_options
+  end
+
+  def session_requirement_reason
+    "newsletter_subscription_csrf_and_turnstile"
+  end
+end
 ```
 
 ## Common Development Workflows
