@@ -318,8 +318,6 @@ cs:
     address_secondary: Druhá adresa
     article: Článek
     atoms: Kapitoly
-    cs_atoms: Kapitoly (CZ)
-    en_atoms: Kapitoly (EN)
     audio_cover_placement: Audio stopa
     button_label: Text tlačítka
     button_url: Odkaz tlačítka
@@ -329,18 +327,22 @@ cs:
     count: Počet
     cover: Obrázek
     cover_placement: Obrázek
+    cs_atoms: Kapitoly (CZ)
     current_password: Aktuální heslo pro kontrolu
     description: Popisek
     document_placement: Dokument
     document_placements: Dokumenty
     documents: Dokumenty
     email: E-mail
+    en_atoms: Kapitoly (EN)
     featured: Zvýrazněno
     figcaption: Popisek
     file: Soubor
     file_mime_type: Typ souboru
     first_name: Jméno
+    folio_embed_data: HTML kód
     headline: Titulek
+    image_or_embed_placements: Obrázky galerie
     image_placements: Obrázky
     is_active: Aktivní
     last_name: Příjmení
@@ -380,9 +382,9 @@ cs:
     social_links/appstore: Appstore
     social_links/facebook: Facebook
     social_links/google_play: Google play
-    social_links/linktree: Linktree
     social_links/instagram: Instagram
     social_links/linkedin: LinkedIn
+    social_links/linktree: Linktree
     social_links/messenger: Messenger
     social_links/pinterest: Pinterest
     social_links/tiktok: TikTok
@@ -435,3 +437,9 @@ cs:
         missing_lowercase: musí obsahovat malé písmeno
         missing_digit: musí obsahovat číslo
         missing_special: musí obsahovat speciální znak
+      folio_embed_data:
+        invalid: nemá platnou hodnotu
+      image_placements:
+        invalid_file_placement: nesplňují požadavky
+      image_or_embed_placements:
+        invalid_file_placement: nesplňují požadavky

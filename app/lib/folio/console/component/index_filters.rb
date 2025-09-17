@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Folio::Console::Cell::IndexFilters
+module Folio::Console::Component::IndexFilters
   def index_filters
     if controller.respond_to?(:index_filters, true)
       controller.send(:index_filters)

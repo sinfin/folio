@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::Console::Links::Modal::UrlPickerComponent < Folio::Console::ApplicationComponent
-  include Folio::Console::Cell::IndexFilters
+  include Folio::Console::Component::IndexFilters
 
   def initialize(url_json:, absolute_urls: false, default_custom_url: false)
     @url_json = url_json

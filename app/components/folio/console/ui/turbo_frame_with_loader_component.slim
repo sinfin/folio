@@ -1,5 +1,6 @@
-.f-c-ui-turbo-frame-with-loader[
-  data-turbo="true"
+div[
+  class=bem_class_name
+  data=data
   style=style
 ]
   turbo-frame.f-c-ui-turbo-frame-with-loader__frame[
@@ -7,8 +8,25 @@
     disabled=@disabled
     data-turbo-action=@turbo_action
     src=@src
+    loading=(@lazy ? "lazy" : nil)
     complete=!!content?
   ]
     = content
+
+  .f-c-ui-turbo-frame-with-loader__error[
+    style=style
+  ]
+    = folio_icon(:close,
+                 height: 96,
+                 class_name: "f-c-ui-turbo-frame-with-loader__error-icon")
+
+    .lead.fw-bold = t('.error_title')
+
+    div = t('.error_message')
+
+    .f-c-ui-turbo-frame-with-loader__error-status[
+      class="small"
+      data=stimulus_target("errorStatus")
+    ]
 
   span.folio-loader.f-c-ui-turbo-frame-with-loader__loader

@@ -1,29 +1,22 @@
 # frozen_string_literal: true
 
 class Folio::Console::Ui::Index::FiltersComponent < Folio::Console::ApplicationComponent
-  include Folio::Console::Cell::IndexFilters
+  include Folio::Console::Component::IndexFilters
 
   def initialize(klass:)
     @klass = klass
   end
 
   private
-    def form(&block)
-      opts = {
-        method: :get,
-        url: request.path,
-        html: {
-          class: "f-c-ui-index-filters #{form_expanded_class_name} f-c-anti-container-fluid f-c-anti-container-fluid--padded",
-          data:,
-        }
-      }
-
-      helpers.simple_form_for "", opts, &block
-    end
-
     def data
       stimulus_controller("f-c-ui-index-filters",
-                          action: { "change" => "onChange", "submit" => "onSubmit" })
+                          values: {
+                            url: request.path,
+                          },
+                          action: {
+                            "change" => "onChange",
+                            "folioCustomChange" => "onChange"
+                          })
     end
 
     def form_expanded_class_name

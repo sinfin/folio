@@ -1,4 +1,33 @@
 .f-c-file-placements-multi-picker-fields
-  &__fields
-    min-height: 145px
-    position: relative
+  container-type: inline-size
+  margin: 0 0 $grid-gutter-width
+
+  &__flex
+    display: flex
+    flex-direction: column
+    align-items: stretch
+    gap: px-to-rem(18px)
+
+  &[data-f-c-file-placements-multi-picker-fields-empty-value="false"] &__empty,
+  &[data-f-c-file-placements-multi-picker-fields-empty-value="true"] .f-nested-fields
+    display: none
+
+  @container (min-width: 1500px)
+    &__flex
+      display: flex
+      flex-direction: row
+      gap: 0
+      gap: px-to-rem(24px)
+
+    &__fields
+      flex: 0 0 790px
+      border-right: 1px solid $medium-gray
+      padding-right: $f-c-layout-main-container__padding
+
+    &__source
+      flex: 1 1 auto
+      padding-left: $f-c-layout-main-container__padding
+      padding-right: $f-c-layout-main-container__padding
+
+    .f-c-files-batch-bar .f-c-files-batch-bar__button-wrap[data-add-to-picker="true"] .f-c-ui-button__icon
+      transform: rotate(270deg)

@@ -1,9 +1,14 @@
 # frozen_string_literal: true
 
 class Folio::Console::Files::Batch::BarComponent < Folio::Console::ApplicationComponent
-  def initialize(file_klass:, change_to_propagate: nil)
+  def initialize(file_klass:,
+                 change_to_propagate: nil,
+                 multi_picker: false,
+                 updated_at: nil)
     @file_klass = file_klass
     @change_to_propagate = change_to_propagate
+    @multi_picker = multi_picker
+    @updated_at = updated_at || Time.current
   end
 
   def data
@@ -13,6 +18,8 @@ class Folio::Console::Files::Batch::BarComponent < Folio::Console::ApplicationCo
                           status: "loaded",
                           file_ids_json: file_ids.to_json,
                           change_to_propagate: (@change_to_propagate || {}).to_json,
+                          multi_picker: @multi_picker,
+                          updated_at: @updated_at.iso8601,
                         },
                         action: {
                           "f-c-files-batch-bar:action" => "batchActionFromFile",
@@ -21,7 +28,7 @@ class Folio::Console::Files::Batch::BarComponent < Folio::Console::ApplicationCo
                           "f-c-files-batch-form:submit" => "submitForm",
                           "f-c-files-batch-form:cancel" => "cancelForm",
                           "f-file-list-file:reloadForm" => "reloadForm",
-                        })
+                        }).merge(serialized_files: serialized_files_json)
   end
 
   def file_ids
@@ -90,6 +97,13 @@ class Folio::Console::Files::Batch::BarComponent < Folio::Console::ApplicationCo
       }]
     end
 
+    ary << [{ add_to_picker: "true" }, {
+      variant: :success,
+      icon: :arrow_up,
+      label: t(".add_to_picker/#{@file_klass.human_type}", default: t(".add_to_picker/default")),
+      data: stimulus_action("addToPicker"),
+    }]
+
     ary
   end
 
@@ -118,5 +132,13 @@ class Folio::Console::Files::Batch::BarComponent < Folio::Console::ApplicationCo
 
     def batch_service
       @batch_service ||= Folio::Console::Files::BatchService.new(session_id: session_id, file_class_name: file_class_name)
+    end
+
+    def serialized_files_json
+      if @multi_picker
+        Folio::Console::FileSerializer.new(files_ary)
+                                      .serializable_hash[:data]
+                                      .to_json
+      end
     end
 end

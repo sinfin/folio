@@ -79,10 +79,11 @@
 //= require folio/console/ui/flash_component
 //= require folio/console/ui/in_place_input_component
 //= require folio/console/ui/index/filters_component
-//= require folio/console/ui/index/header_component
+//= require folio/console/ui/index/header/query_form_component
 //= require folio/console/ui/notification_modal_component
 //= require folio/console/ui/pagy_component
 //= require folio/console/ui/tabs_component
+//= require folio/console/ui/turbo_frame_with_loader_component
 
 //= require folio/console/addresses/fields/fields
 //= require folio/console/atoms/layout_switch/layout_switch
@@ -97,6 +98,8 @@
 //= require folio/console/current_users/show_component
 //= require folio/console/file/preview_reloader/preview_reloader
 //= require folio/console/file/processing_notifier/processing_notifier
+//= require folio/console/file_placements/multi_picker_fields/placement_component
+//= require folio/console/file_placements/multi_picker_fields_component
 //= require folio/console/files/batch/bar_component
 //= require folio/console/files/batch/form_component
 //= require folio/console/files/display_toggle_component
@@ -140,7 +143,6 @@
 //= require folio/console/tiptap/simple_form_wrap/autosave_info_component
 //= require folio/console/tiptap/simple_form_wrap/word_count_component
 //= require folio/console/tiptap/simple_form_wrap_component
-//= require folio/console/ui/tabs_component
 //= require folio/console/users/invite_and_copy/invite_and_copy
 
 //= require folio/console/main_app

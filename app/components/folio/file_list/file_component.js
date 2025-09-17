@@ -202,8 +202,15 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
 
     if (this.primaryActionValue === 'index_for_modal') {
       this.dispatch('select', { detail: { fileId: this.idValue } })
+    } else if (this.primaryActionValue === 'index_for_picker') {
+      this.toggleBatch(e)
     } else if (this.primaryActionValue === 'index') {
-      this.openShowModal()
+      const batchBar = document.querySelector('.f-c-files-batch-bar')
+      if (batchBar && batchBar.getAttribute('data-f-c-files-batch-bar-file-ids-json-value') !== '[]') {
+        this.toggleBatch(e)
+      } else {
+        this.openShowModal()
+      }
     }
   }
 
@@ -259,6 +266,12 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
 
   fileDeleted (_e) {
     this.removeParentOrElement()
+  }
+
+  toggleBatch (e) {
+    for (const checkbox of this.element.querySelectorAll('.f-file-list-file-batch-checkbox')) {
+      checkbox.dispatchEvent(new CustomEvent('f-file-list-file-batch-checkbox:toggle', { detail: { shiftKey: e.shiftKey } }))
+    }
   }
 })
 

@@ -1,9 +1,9 @@
-window.Folio.Stimulus.register('f-c-ui-index-filters', class extends window.Stimulus.Controller {
+window.Folio.Stimulus.register('f-c-ui-index-header-query-form', class extends window.Stimulus.Controller {
   static values = {
     url: String
   }
 
-  onChange () {
+  onQueryAutocompleteSelected (e) {
     this.submit()
   }
 
@@ -15,7 +15,7 @@ window.Folio.Stimulus.register('f-c-ui-index-filters', class extends window.Stim
       const value = formControl.value
 
       if (value && value.toString().trim() !== '') {
-        newParams.push([formControl.name.replace(/f-c-ui-index-filters\[([^]+)\]/, '$1'), value])
+        newParams.push([formControl.name.replace(/f-c-ui-index-header-query-form\[([^]+)\]/, '$1'), value])
       }
     }
 
@@ -46,21 +46,10 @@ window.Folio.Stimulus.register('f-c-ui-index-filters', class extends window.Stim
     }
   }
 
-  onToggleClick (e) {
-    e.preventDefault()
-    this.element.classList.toggle('f-c-ui-index-filters--expanded')
-  }
-
-  onResetInputClick (e) {
-    e.preventDefault()
-
-    const group = e.target.closest('.input-group')
-    if (!group) return
-
-    const input = group.querySelector('.form-control')
-    if (!input) return
-
-    input.value = ''
-    this.submit()
+  onInputKeypress (e) {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      this.submit()
+    }
   }
 })

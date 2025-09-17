@@ -2,7 +2,10 @@
   --f-file-list__flex-gap: #{$grid-gutter-base}
 
   $accent-blue: #4C84FD !default
-  container-type: inline-size
+  user-select: none
+
+  &__container
+    container-type: inline-size
 
   &__flex
     display: flex
@@ -35,7 +38,7 @@
     &:hover
       text-decoration: underline
 
-  &__blank:not([hidden]) + &__flex
+  &__blank:not([hidden]) + &__container
     margin-top: 2 * $grid-gutter-base
 
   @for $i from 13 through 3
