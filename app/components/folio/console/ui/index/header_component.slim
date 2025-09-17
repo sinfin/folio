@@ -10,14 +10,10 @@ div class=bem_class_name data=data
           = @subtitle
 
   - if @klass.respond_to?(:by_label_query) && @by_label_query != false
-    = query_form do |f|
-      = render(Folio::Console::Ui::InputWithButtonsComponent.new(input: by_label_query_input(f),
-                                                                 buttons_kwargs: query_buttons_kwargs))
-
-      - if controller.send(:index_filters_keys).present?
-        - controller.send(:index_filters_keys).each do |key|
-          - if controller.params[key].present?
-            = f.hidden_field key, value: controller.params[key], id: nil
+    = render(Folio::Console::Ui::Index::Header::QueryFormComponent.new(klass: @klass,
+                                                                       query_url: handled_query_url,
+                                                                       query_autocomplete: @query_autocomplete,
+                                                                       query_filters: @query_filters))
 
   - if right_content?
     = right_content

@@ -29,7 +29,9 @@ window.Folio.Stimulus.register('f-c-files-picker', class extends window.Stimulus
     fileType: String,
     state: String,
     inReact: { type: Boolean, default: false },
-    reactFile: { type: Object, default: {} }
+    reactFile: { type: Object, default: {} },
+    serializedFileJson: String,
+    asFilePlacement: { type: Boolean, default: false }
   }
 
   connect () {
@@ -195,6 +197,8 @@ window.Folio.Stimulus.register('f-c-files-picker', class extends window.Stimulus
   }
 
   onFormControlDestroyClick (e) {
+    if (this.asFilePlacementValue) return
+
     e.preventDefault()
     if (!window.confirm(window.FolioConsole.translations.removePrompt)) return
     this.clear()
@@ -202,5 +206,21 @@ window.Folio.Stimulus.register('f-c-files-picker', class extends window.Stimulus
 
   triggerPreviewRefresh () {
     this.element.dispatchEvent(new window.CustomEvent('folioConsoleCustomChange', { bubbles: true }))
+  }
+
+  serializedFileJsonValueChanged (to) {
+    if (to && this.stateValue !== 'filled') {
+      try {
+        const file = JSON.parse(this.serializedFileJsonValue)
+        this.createFile(file)
+        this.updateAltAndDescription(file)
+        this.destroyInputTarget.value = '0'
+        this.destroyInputTarget.disabled = true
+        this.fileIdInputTarget.value = file.id
+        this.stateValue = 'filled'
+      } catch (error) {
+        console.error('Error parsing serialized file JSON:', error)
+      }
+    }
   }
 })

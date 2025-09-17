@@ -2,7 +2,7 @@
 
 class Folio::Console::Index::NoRecordsCell < Folio::ConsoleCell
   include SimpleForm::ActionViewExtensions::FormHelper
-  include Folio::Console::Cell::IndexFilters
+  include Folio::Console::Component::IndexFilters
 
   def new_link
     url = model[:url].presence || through_aware_console_url_for(model, action: :new, safe: true)

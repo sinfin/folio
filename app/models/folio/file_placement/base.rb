@@ -38,7 +38,15 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
                            required: false,
                            touch: true
 
+    define_singleton_method :folio_file_placement_file_klass do
+      class_name.constantize
+    end
+
     if allow_embed
+      define_singleton_method :folio_file_placement_supports_embed? do
+        true
+      end
+
       define_method :folio_html_sanitization_config do
         {
           enabled: true,
@@ -165,6 +173,11 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
     if file.description.blank?
       errors.add(:file, :missing_file_description)
     end
+  end
+
+  # override setter so that active gets set as a boolean instead of a string
+  def folio_embed_data=(value)
+    super(Folio::Embed.normalize_setter_value(value))
   end
 
   private

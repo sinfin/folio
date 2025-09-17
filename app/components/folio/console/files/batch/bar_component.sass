@@ -63,6 +63,13 @@
     height: 22px
     position: relative
 
+  &__button-wrap[data-add-to-picker="true"],
+  .f-file-list--primary-action-index_for_picker &__button-wrap
+    display: none
+
+  .f-file-list--primary-action-index_for_picker &__button-wrap[data-add-to-picker="true"]
+    display: block
+
   &[data-f-c-files-batch-bar-count-value="0"]
     display: none
 
@@ -74,3 +81,10 @@
 
   &[data-f-c-files-batch-bar-status-value="loading"] &__flex
     opacity: 0
+
+  .f-file-list:not(.f-file-list--primary-action-index_for_picker) &__form-wrap ~ &__flex,
+  &__form-wrap ~ &__download-outer-wrap
+    display: none
+
+  .f-file-list--primary-action-index_for_picker &__form-wrap
+    display: none

@@ -10,7 +10,36 @@ class Folio::Console::FilePlacements::MultiPickerFieldsComponent < Folio::Consol
   end
 
   private
+    def before_render
+      @turbo_frame_id = @file_klass.console_turbo_frame_id(picker: true)
+      @turbo_frame_src = url_for([:index_for_picker, :console, @file_klass])
+    end
+
     def data
-      stimulus_controller("f-c-file-placements-multi-picker-fields")
+      stimulus_controller("f-c-file-placements-multi-picker-fields",
+                          values: {
+                            empty: @f.object.send(@placement_key).blank?,
+                          },
+                          action: {
+                            "f-c-files-batch-bar:addToPicker" => "onBatchBarAddToPicker",
+                            "f-nested-fields:add" => "onCountChange",
+                            "f-nested-fields:destroyed" => "onCountChange",
+                          })
+    end
+
+    def tabs
+      [
+        {
+          label: t(".select/#{@file_klass.human_type}", default: t(".select/default")),
+          active: true,
+        },
+        {
+          icon: :plus_circle,
+          label: t(".add_embed"),
+          dont_bind_tab_toggle: true,
+          text_color: "green",
+          data: stimulus_action(click: "onAddEmbedClick"),
+        }
+      ]
     end
 end

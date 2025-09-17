@@ -1,0 +1,52 @@
+.f-c-file-placements-multi-picker-fields-placement[
+  data=data
+]
+  .f-c-file-placements-multi-picker-fields-placement__flex
+    - unless embed?
+      .f-c-file-placements-multi-picker-fields-placement__picker[
+        data=stimulus_target('pickerWrap')
+      ]
+        = render(Folio::Console::Files::PickerComponent.new(f: @g,
+                                                            file_placement: @g.object,
+                                                            file_klass: @g.object.class.folio_file_placement_file_klass,
+                                                            darker: true,
+                                                            size: 138))
+
+    .f-c-file-placements-multi-picker-fields-placement__fields
+      div[
+        class="f-c-file-placements-multi-picker-fields-placement__field"
+        class="f-c-file-placements-multi-picker-fields-placement__field--description"
+      ]
+        = @g.input :description,
+                   autosize: true,
+                   input_html: { rows: 1, data: stimulus_target("description") }
+
+      - unless embed?
+        div[
+          class="f-c-file-placements-multi-picker-fields-placement__field"
+          class="f-c-file-placements-multi-picker-fields-placement__field--alt"
+          data=stimulus_target('altWrap')
+        ]
+          = @g.input :alt,
+                     input_html: { data: stimulus_target("alt") }
+
+      - if @g.object.class.try(:folio_file_placement_supports_embed?)
+        div[
+          class="f-c-file-placements-multi-picker-fields-placement__field"
+          class="f-c-file-placements-multi-picker-fields-placement__field--folio_embed_data"
+          data=stimulus_target("embedFieldsWrap")
+        ]
+          = @g.simple_fields_for :folio_embed_data, embed_data_with_defaults do |h|
+            = h.hidden_field :active, value: true, disabled: !embed?
+
+            = h.input :html,
+                      disabled: !embed?,
+                      as: :text,
+                      autosize: true,
+                      label: t('.embed_html_label'),
+                      input_html: { value: embed_data_with_defaults["html"], rows: 1 }
+
+  span.f-c-file-placements-multi-picker-fields-placement__loader[
+    class="folio-loader"
+    class="folio-loader--transparent"
+  ]

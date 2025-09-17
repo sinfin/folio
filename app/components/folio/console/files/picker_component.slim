@@ -1,13 +1,16 @@
 .f-c-files-picker[
   data=data
   class="form-group"
+  class=(@as_file_placement ? "f-c-files-picker--file-placement" : nil)
   class="f-c-files-picker--as-#{@file_klass.human_type}"
+  class="f-c-files-picker--size-#{@size}"
   class=(@darker ? "f-c-files-picker--darker" : nil)
   class="f-c-js-atoms-placement-setting"
 ]
-  = @f.label @placement_key, required: @required
+  - unless @as_file_placement
+    = @f.label @placement_key, required: @required
 
-  = @f.simple_fields_for @placement_key, file_placement do |fp|
+  = placement_aware_fields_for do |fp|
     = fp.hidden_field :id, data: stimulus_target("idInput")
 
     = fp.hidden_field :_destroy,
@@ -20,7 +23,7 @@
 
     .f-c-files-picker__inner
       .f-c-files-picker__content data=stimulus_target("content")
-        - if file_placement && file_placement.file && !file_placement.marked_for_destruction?
+        - if @file_placement && @file_placement.file && !@file_placement.marked_for_destruction?
           = render(content_component)
 
       .f-c-files-picker__btn-wrap
@@ -31,26 +34,27 @@
 
       span.folio-loader.f-c-files-picker__loader
 
-    - if hint = hint_for(fp)
-      small.f-c-files-picker__hint.form-text.text-muted
-        = hint
+    - unless @as_file_placement
+      - if hint = hint_for(fp)
+        small.f-c-files-picker__hint.form-text.text-muted
+          = hint
 
-    - if @file_klass.human_type == "image"
-      .f-c-files-picker__in-place-inputs.small.text-muted
-        = render(Folio::Console::Ui::InPlaceInputComponent.new(attribute: :description,
-                                                               record: fp.object,
-                                                               f: fp,
-                                                               compact: true,
-                                                               textarea: true,
-                                                               data: stimulus_target('description'),
-                                                               value_line_clamp: 2,
-                                                               value_prefix: "#{t('.description')}:"))
+      - if @file_klass.human_type == "image"
+        .f-c-files-picker__in-place-inputs.small.text-muted
+          = render(Folio::Console::Ui::InPlaceInputComponent.new(attribute: :description,
+                                                                 record: fp.object,
+                                                                 f: fp,
+                                                                 compact: true,
+                                                                 textarea: true,
+                                                                 data: stimulus_target('description'),
+                                                                 value_line_clamp: 2,
+                                                                 value_prefix: "#{t('.description')}:"))
 
-        = render(Folio::Console::Ui::InPlaceInputComponent.new(attribute: :alt,
-                                                               record: fp.object,
-                                                               f: fp,
-                                                               compact: true,
-                                                               textarea: true,
-                                                               data: stimulus_target('alt'),
-                                                               value_line_clamp: 2,
-                                                               value_prefix: "#{t('.alt')}:"))
+          = render(Folio::Console::Ui::InPlaceInputComponent.new(attribute: :alt,
+                                                                 record: fp.object,
+                                                                 f: fp,
+                                                                 compact: true,
+                                                                 textarea: true,
+                                                                 data: stimulus_target('alt'),
+                                                                 value_line_clamp: 2,
+                                                                 value_prefix: "#{t('.alt')}:"))

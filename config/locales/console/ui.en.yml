@@ -16,3 +16,7 @@ en:
 
           header_component:
             csv: CSV
+
+        turbo_frame_with_loader_component:
+          error_title: There was an error loading the content
+          error_message: Please try again by reloading the page.

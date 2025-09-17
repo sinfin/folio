@@ -6,65 +6,67 @@
     .f-c-files-batch-bar__form-wrap
       = render(Folio::Console::Files::Batch::FormComponent.new(file_klass: @file_klass,
                                                                files: files_ary))
-  - else
-    .f-c-files-batch-bar__flex
-      .f-c-files-batch-bar__count-and-ico
-        .f-c-files-batch-bar__count.h3.m-0
-          = files_ary.size
 
-        = folio_icon(:content_copy, class: 'f-c-files-batch-bar__icon')
+  .f-c-files-batch-bar__flex
+    .f-c-files-batch-bar__count-and-ico
+      .f-c-files-batch-bar__count.h3.m-0
+        = files_ary.size
 
-      - buttons_data.each do |button_wrap_data, button_model|
-        .f-c-files-batch-bar__button-wrap data=button_wrap_data
-          = render(Folio::Console::Ui::ButtonComponent.new(**button_model))
+      = folio_icon(:content_copy, class: 'f-c-files-batch-bar__icon')
 
-      = render(Folio::Console::Ui::ButtonComponent.new(icon: :close,
-                                                       data: stimulus_action(click: "cancel"),
-                                                       variant: :icon,
-                                                       title: t('.cancel'),
-                                                       class_name: "ms-auto me-nh"))
+    - buttons_data.each do |button_wrap_data, button_model|
+      .f-c-files-batch-bar__button-wrap[
+        data=button_wrap_data
+      ]
+        = render(Folio::Console::Ui::ButtonComponent.new(**button_model))
 
-    - if download_hash
-      .f-c-files-batch-bar__download-outer-wrap
-        .f-c-files-batch-bar__download-wrap
-          - if download_hash["failure_message"]
+    = render(Folio::Console::Ui::ButtonComponent.new(icon: :close,
+                                                     data: stimulus_action(click: "cancel"),
+                                                     variant: :icon,
+                                                     title: t('.cancel'),
+                                                     class_name: "ms-auto me-nh"))
+
+  - if download_hash
+    .f-c-files-batch-bar__download-outer-wrap
+      .f-c-files-batch-bar__download-wrap
+        - if download_hash["failure_message"]
+          .f-c-files-batch-bar__download
+            .f-c-files-batch-bar__download-failure
+              p.text-danger = t('.download_failure')
+
+              p.m-0.small = download_hash["failure_message"]
+
+        - else
+          - if download_hash["url"]
             .f-c-files-batch-bar__download
-              .f-c-files-batch-bar__download-failure
-                p.text-danger = t('.download_failure')
+              .f-c-files-batch-bar__download-content.flex-grow-1.flex-shrink-1
+                p.mb-2 #{t('.download_label')}:
 
-                p.m-0.small = download_hash["failure_message"]
+                - if download_hash["url"]
+                  a.f-c-files-batch-bar__download-link[
+                    href=download_hash["url"]
+                    target="_blank"
+                    title=download_hash["url"]
+                  ]
+                    = download_hash["url"]
 
           - else
-            - if download_hash["url"]
-              .f-c-files-batch-bar__download
-                .f-c-files-batch-bar__download-content.flex-grow-1.flex-shrink-1
-                  p.mb-2 #{t('.download_label')}:
+            .f-c-files-batch-bar__download-pending
+              .f-c-files-batch-bar__download-pending-loader-wrap
+                span.folio-loader.folio-loader--small.folio-loader--transparent
 
-                  - if download_hash["url"]
-                    a.f-c-files-batch-bar__download-link[
-                      href=download_hash["url"]
-                      target="_blank"
-                      title=download_hash["url"]
-                    ]
-                      = download_hash["url"]
+              span = t('.download_pending')
 
-            - else
-              .f-c-files-batch-bar__download-pending
-                .f-c-files-batch-bar__download-pending-loader-wrap
-                  span.folio-loader.folio-loader--small.folio-loader--transparent
+        .f-c-files-batch-bar__download-controls.me-nh
+          - if download_hash["url"]
+            .mb-2.text-center
+              == cell('folio/console/clipboard_copy', download_hash["url"], icon_height: 24)
 
-                span = t('.download_pending')
-
-          .f-c-files-batch-bar__download-controls.me-nh
-            - if download_hash["url"]
-              .mb-2.text-center
-                == cell('folio/console/clipboard_copy', download_hash["url"], icon_height: 24)
-
-            = render(Folio::Console::Ui::ButtonComponent.new(icon: :close,
-                                                             data: stimulus_action(click: "cancelDownload"),
-                                                             variant: :icon,
-                                                             title: t('.cancel_download'),
-                                                             class_name: "f-c-files-batch-bar__cancel-download-btn`"))
+          = render(Folio::Console::Ui::ButtonComponent.new(icon: :close,
+                                                           data: stimulus_action(click: "cancelDownload"),
+                                                           variant: :icon,
+                                                           title: t('.cancel_download'),
+                                                           class_name: "f-c-files-batch-bar__cancel-download-btn`"))
 
   span.f-c-files-batch-bar__loader[
     class="folio-loader"

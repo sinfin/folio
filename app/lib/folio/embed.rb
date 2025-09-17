@@ -22,11 +22,36 @@ module Folio
     def self.valid_data?(embed_data)
       return false if embed_data.blank?
       return false unless embed_data.is_a?(Hash)
+      return false unless embed_data["active"] == true
 
       return true if embed_data["html"].present?
       return true if embed_data["type"].in?(SUPPORTED_TYPES) && embed_data["url"].present?
 
       false
+    end
+
+    def self.hash_strong_params_keys
+      %i[
+        active
+        html
+        type
+        url
+      ]
+    end
+
+    def self.normalize_setter_value(value)
+      if value.is_a?(Hash)
+        active = value["active"].in?([true, "true"])
+
+        {
+          "active" => active,
+          "html" => value["html"].presence,
+          "type" => value["type"].presence,
+          "url" => value["url"].presence,
+        }.compact
+      else
+        nil
+      end
     end
   end
 end
