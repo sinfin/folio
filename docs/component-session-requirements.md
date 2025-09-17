@@ -6,16 +6,16 @@ This document describes how Folio handles session requirements from components u
 
 When cache optimization is enabled (`FOLIO_CACHE_SKIP_SESSION=true`), Folio normally skips session cookies for anonymous users to improve Cloudflare cache hit rates. However, some components (like forms) require session state for CSRF tokens, captcha validation, or flash messages.
 
-The Component Session Requirements system uses **polymorphic override pattern** - components that need session include a concern and override methods, which are automatically detected by the cache headers system without manual class name checking.
+The Component Session Requirements system uses **polymorphic override pattern** - atom models that need session include a concern and override methods, which are automatically detected by the cache headers system without manual class name checking.
 
 ## How It Works
 
-### 1. Components Declare Session Requirements
+### 1. Atom Models Declare Session Requirements
 
-Components that need session state (forms, interactive elements) include the helper concern and override the `session_requirement_reason` method:
+Atom models that correspond to form components include the helper concern and override the `session_requirement_reason` method:
 
 ```ruby
-class MyFormComponent < ApplicationComponent
+class YourApp::Atom::Forms::Contact::Form < Folio::Atom::Base
   include Folio::ComponentSessionHelper
 
   def session_requirement_reason
@@ -67,65 +67,91 @@ end
 
 ## Usage Examples
 
-### Form Components
+### Architecture Overview
+
+There are **two different approaches** for different component types:
+
+1. **Atom-based Components** - Have both atom model and ViewComponent
+2. **Standalone Components** - Only have ViewComponent, no model
+
+The key difference is **timing**: cache headers must be set **before** component rendering, but components render **during** the view phase. Therefore:
+
+- **Atom models** enable automatic detection before rendering
+- **Standalone components** require manual controller registration
+
+### 1. Atom-based Components (Recommended)
+
+For atom-based components, add `ComponentSessionHelper` **only to the atom model**:
 
 ```ruby
-class Project::Leads::FormComponent < ApplicationComponent
+# ATOM MODEL - handles session requirements for cache headers
+class YourApp::Atom::Forms::Leads::Form < Folio::Atom::Base
   include Folio::ComponentSessionHelper
 
-  def initialize(lead: nil)
-    @lead = lead || Folio::Lead.new
+  def session_requirement_reason
+    "lead_atom_form_csrf"
   end
+end
+```
+
+The corresponding ViewComponent doesn't need any session-related code - it just handles rendering.
+
+### 2. Standalone Components
+
+For components without atom models, use manual registration in the controller:
+
+```ruby
+# CONTROLLER - register session requirements manually
+class SomeController < ApplicationController
+  before_action :register_form_session_requirement, only: [:form_page]
+  
+  private
+    def register_form_session_requirement
+      require_session_for_component!("standalone_form_csrf")
+    end
+end
+```
+
+The ViewComponent itself doesn't need any session-related code.
+
+### Additional Atom Model Examples
+
+```ruby
+# Newsletter subscription atom model  
+class YourApp::Atom::Forms::Newsletters::Form < Folio::Atom::Base
+  include Folio::ComponentSessionHelper
+
+  def session_requirement_reason
+    "newsletter_subscription_csrf_and_turnstile"
+  end
+end
+
+# Lead form atom model
+class YourApp::Atom::Forms::Leads::Form < Folio::Atom::Base
+  include Folio::ComponentSessionHelper
 
   def session_requirement_reason
     "lead_form_csrf_and_flash"
   end
-
-  def form(&block)
-    helpers.simple_form_for(@lead, { url: leads_path }, &block)
-  end
 end
 ```
 
-### Newsletter Signup Components
+## How It Works
 
-```ruby
-class Folio::NewsletterSubscriptions::FormComponent < ApplicationComponent
-  include Folio::ComponentSessionHelper
+Session requirements are handled at different points in the request lifecycle depending on component type:
 
-  def initialize(newsletter_subscription: nil, view_options: {})
-    @newsletter_subscription = newsletter_subscription || Folio::NewsletterSubscription.new
-    @view_options = view_options
-  end
+**For atom-based components:**
+- Session requirements are declared in the **atom model** using `ComponentSessionHelper`
+- The controller automatically analyzes `@page.atoms` during `before_action`
+- Cache headers are set accordingly in `after_action`
 
-  def session_requirement_reason
-    "newsletter_subscription_csrf_and_turnstile"  
-  end
-end
-```
-
-### Atom Components
-
-Atom components can also declare session requirements, ensuring they work on any page:
-
-```ruby
-class Project::Atom::Forms::Leads::FormComponent < ApplicationComponent
-  include Folio::ComponentSessionHelper
-
-  def initialize(atom:, atom_options: {})
-    @atom = atom
-    @atom_options = atom_options
-  end
-
-  def session_requirement_reason
-    "lead_atom_form"
-  end
-end
-```
+**For standalone components:**  
+- Session requirements must be registered manually in the controller
+- Use `require_session_for_component!("reason")` in a `before_action` callback
 
 ## Implementation Details
 
-### ComponentSessionHelper (for Components)
+### ComponentSessionHelper (for Atom Models Only)
 
 ```ruby
 module Folio::ComponentSessionHelper

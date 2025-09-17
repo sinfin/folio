@@ -3,7 +3,6 @@
 class Folio::NewsletterSubscriptions::FormComponent < Folio::ApplicationComponent
   include SimpleForm::ActionViewExtensions::FormHelper
   include ActionView::Helpers::FormOptionsHelper
-  include Folio::ComponentSessionHelper
 
   REMEMBER_OPTION_KEYS = %i[application_namespace
                             placeholder
@@ -25,10 +24,6 @@ class Folio::NewsletterSubscriptions::FormComponent < Folio::ApplicationComponen
     @view_options = view_options
     @persisted = @newsletter_subscription.persisted?
     @invalid = @newsletter_subscription.errors.present?
-  end
-
-  def session_requirement_reason
-    "newsletter_subscription_csrf_and_turnstile"
   end
 
   def form(&block)

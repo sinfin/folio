@@ -59,6 +59,20 @@ module Folio
         super if defined?(super)
       end
 
+      # Override from cache headers concern
+      def should_use_private_cache?
+        # Auto-analyze @page if it exists and has atoms
+        if defined?(@page) && @page&.respond_to?(:atoms)
+          analyze_page_session_requirements(@page)
+        end
+
+        # If any component requires session, use private cache
+        return true if component_requires_session?
+
+        # Delegate to parent implementation (signed-in users)
+        super if defined?(super)
+      end
+
       # Helper method components can call to indicate session requirement
       def require_session_for_component!(reason)
         @component_session_requirements ||= []
