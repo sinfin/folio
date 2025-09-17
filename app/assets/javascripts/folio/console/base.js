@@ -104,7 +104,6 @@
 //= require folio/console/files/batch/form_component
 //= require folio/console/files/display_toggle_component
 //= require folio/console/files/index_modal_component
-//= require folio/console/files/media_source_select_component
 //= require folio/console/files/picker/document_component
 //= require folio/console/files/picker/image_component
 //= require folio/console/files/picker_component

@@ -9,6 +9,7 @@ module Folio::File::HasMediaSource
     has_many :allowed_sites, through: :file_site_links, source: :site
 
     before_save :handle_media_source_changes
+    after_save :broadcast_show_reload_if_needed
   end
 
   def media_source_sites
@@ -38,9 +39,13 @@ module Folio::File::HasMediaSource
   def console_show_prepended_fields
     fields = super
 
-    fields[:media_source_id] = {}
+    fields[:usage_limits] = {}
 
     fields
+  end
+
+  def should_broadcast_show_reload_message?
+    saved_changes.key?("media_source_id")
   end
 
   private
@@ -87,5 +92,17 @@ module Folio::File::HasMediaSource
       sites_for_file.each do |site_obj|
         file_site_links.build(site: site_obj)
       end
+    end
+
+    def broadcast_show_reload_if_needed
+      return unless should_broadcast_show_reload_message?
+      return unless defined?(MessageBus) && Folio::Current.user
+
+      MessageBus.publish Folio::MESSAGE_BUS_CHANNEL,
+                         {
+                           type: "f-c-files-show:reload",
+                           data: { id: id },
+                         }.to_json,
+                         user_ids: [Folio::Current.user.id]
     end
 end

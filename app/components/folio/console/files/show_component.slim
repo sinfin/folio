@@ -59,7 +59,7 @@
               = @file.class.human_attribute_name(key)
 
             .f-c-files-show__td
-              - if key == :media_source_id
+              - if key == :usage_limits
                 = render(Folio::Console::Files::MediaSourceSelectComponent.new(file: @file))
               - else
                 = render(Folio::Console::Ui::InPlaceInputComponent.new(attribute: key,

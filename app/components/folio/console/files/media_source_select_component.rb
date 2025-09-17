@@ -4,8 +4,4 @@ class Folio::Console::Files::MediaSourceSelectComponent < Folio::Console::Applic
   def initialize(file:)
     @file = file
   end
-
-  def data
-    stimulus_controller("f-c-files-media-source-select")
-  end
 end

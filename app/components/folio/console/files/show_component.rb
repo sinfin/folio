@@ -18,7 +18,8 @@ class Folio::Console::Files::ShowComponent < Folio::Console::ApplicationComponen
                         },
                         action: {
                           "f-uppy:upload-success": "uppyUploadSuccess",
-                          "f-c-files-show/message": "messageBusCallback"
+                          "f-c-files-show/message": "messageBusCallback",
+                          "f-c-files-show:reload": "messageBusSuccess"
                         })
   end
 
