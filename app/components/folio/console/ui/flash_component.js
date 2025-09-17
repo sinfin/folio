@@ -98,6 +98,7 @@ if (window.Folio && window.Folio.MessageBus && window.Folio.MessageBus.callbacks
   }
 }
 
+// FIXME: not catching events it seems
 document.addEventListener('folio:flash', (event) => {
   event.stopImmediatePropagation()
 
