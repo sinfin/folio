@@ -8,7 +8,7 @@ module Folio::File::HasMediaSource
     has_many :file_site_links, class_name: "Folio::FileSiteLink", foreign_key: :file_id, dependent: :destroy
     has_many :allowed_sites, through: :file_site_links, source: :site
 
-    before_save :handle_media_source_changes
+    before_save :handle_attribution_source_changes
     after_save :broadcast_show_reload_if_needed
   end
 
@@ -49,17 +49,28 @@ module Folio::File::HasMediaSource
   end
 
   private
-    def handle_media_source_changes
-      if attribution_source_changed? && attribution_source.present?
-        found_media_source = Folio::MediaSource.accessible_by(Folio::Current.ability)
-                                               .find_by(title: attribution_source)
+    def handle_attribution_source_changes
+      if attribution_source_changed?
+        if attribution_source.present?
+          if Rails.application.config.folio_shared_files_between_sites
+            found_media_source = Folio::MediaSource.accessible_by(Folio::Current.ability)
+                                                   .find_by(title: attribution_source)
+          else
+            found_media_source = Folio::MediaSource.by_site(Folio::Current.site)
+                                                   .accessible_by(Folio::Current.ability)
+                                                   .find_by(title: attribution_source)
+          end
 
-        unless Rails.application.config.folio_shared_files_between_sites
-          found_media_source = nil unless found_media_source&.allowed_sites&.include?(site)
-        end
-
-        if found_media_source
-          self.media_source = found_media_source
+          if found_media_source
+            self.media_source = found_media_source
+          elsif media_source.present?
+            # attribution_source changed to something that does not map to Folio::MediaSource
+            # -> remove link
+            self.media_source = nil
+          end
+        elsif media_source.present?
+          # attribution_source cleared -> remove link
+          self.media_source = nil
         end
       end
 
