@@ -1,28 +1,23 @@
 .f-c-file-placements-multi-picker-fields
   container-type: inline-size
-  margin: $grid-gutter-width 0
-
-  &:first-child
-    margin-top: 0
-
-  &:last-child
-    margin-bottom: 0
+  margin: 0 0 $grid-gutter-width
 
   &__flex
     display: flex
     flex-direction: column
     align-items: stretch
-    gap: px-to-rem(24px)
+    gap: px-to-rem(18px)
 
-  &__fields
-    min-height: 145px
-    position: relative
+  &[data-f-c-file-placements-multi-picker-fields-empty-value="false"] &__empty,
+  &[data-f-c-file-placements-multi-picker-fields-empty-value="true"] .f-nested-fields
+    display: none
 
   @container (min-width: 1500px)
     &__flex
       display: flex
       flex-direction: row
       gap: 0
+      gap: px-to-rem(24px)
 
     &__fields
       flex: 0 0 790px

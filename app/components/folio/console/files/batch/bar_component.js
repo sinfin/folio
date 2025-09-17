@@ -194,7 +194,9 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
   cancel () {
     const fileIds = JSON.parse(this.fileIdsJsonValue)
 
-    this.dispatchCheckboxEvents(fileIds, 'remove')
+    for (const checkbox of document.querySelectorAll('.f-file-list-file-batch-checkbox__input:checked')) {
+      checkbox.checked = false
+    }
 
     this.queue = this.queue || { add: [], remove: [] }
     fileIds.forEach((id) => {

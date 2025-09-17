@@ -18,15 +18,13 @@ class Folio::Console::FilePlacements::MultiPickerFieldsComponent < Folio::Consol
     def data
       stimulus_controller("f-c-file-placements-multi-picker-fields",
                           values: {
-                            iframe_src:,
+                            empty: @f.object.send(@placement_key).blank?,
                           },
                           action: {
                             "f-c-files-batch-bar:addToPicker" => "onBatchBarAddToPicker",
+                            "f-nested-fields:add" => "onCountChange",
+                            "f-nested-fields:destroyed" => "onCountChange",
                           })
-    end
-
-    def iframe_src
-      url_for([:index_for_picker, :console, @file_klass])
     end
 
     def tabs

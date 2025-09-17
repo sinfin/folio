@@ -7,6 +7,7 @@ en:
           add_embed: Add Embed (HTML code)
           select/image: Select image
           select/default: Select file
+          empty: No files selected. Click a file from the list to select.
 
         multi_picker_fields:
           placement_component:

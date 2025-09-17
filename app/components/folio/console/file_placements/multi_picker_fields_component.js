@@ -1,4 +1,8 @@
 window.Folio.Stimulus.register('f-c-file-placements-multi-picker-fields', class extends window.Stimulus.Controller {
+  static values = {
+    empty: Boolean
+  }
+
   onAddEmbedClick () {
     const fields = this.element.querySelector('.f-nested-fields')
     if (!fields) throw new Error('f-nested-fields not found')
@@ -26,5 +30,14 @@ window.Folio.Stimulus.register('f-c-file-placements-multi-picker-fields', class 
     fields.dispatchEvent(new CustomEvent('f-nested-fields:addMultipleWithAttributes', {
       detail: { attributesCollection }
     }))
+  }
+
+  onCountChange () {
+    const placements = this.element.querySelectorAll('.f-c-file-placements-multi-picker-fields-placement')
+    const empty = placements.length === 0
+
+    if (empty !== this.emptyValue) {
+      this.emptyValue = empty
+    }
   }
 })
