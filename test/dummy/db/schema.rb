@@ -395,7 +395,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_15_131324) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["site_id"], name: "index_folio_media_sources_on_site_id"
-    t.index ["title"], name: "index_folio_media_sources_on_title"
+    t.index ["title"], name: "index_folio_media_sources_on_title", unique: true
   end
 
   create_table "folio_menu_items", force: :cascade do |t|

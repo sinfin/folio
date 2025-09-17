@@ -9,7 +9,7 @@ class Folio::MediaSource < Folio::ApplicationRecord
 
   accepts_nested_attributes_for :media_source_site_links, allow_destroy: true
 
-  validates :title, presence: true
+  validates :title, presence: true, uniqueness: true
 
   before_destroy :check_usage_before_destroy
 
@@ -64,7 +64,7 @@ end
 # Indexes
 #
 #  index_folio_media_sources_on_site_id  (site_id)
-#  index_folio_media_sources_on_title    (title)
+#  index_folio_media_sources_on_title    (title) UNIQUE
 #
 # Foreign Keys
 #

@@ -14,7 +14,7 @@ class CreateFolioMediaSources < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :folio_media_sources, :title
+    add_index :folio_media_sources, :title, unique: true
 
     create_table :folio_media_source_site_links do |t|
       t.references :media_source, null: false, foreign_key: { to_table: :folio_media_sources }
