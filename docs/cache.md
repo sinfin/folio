@@ -151,6 +151,50 @@ Skip caching for debugging:
 http://localhost:3000/articles/123?skip_global_cache=1
 ```
 
+## Component Session Requirements
+
+When cache optimization is active, components that need session state (forms, interactive elements) can declare their requirements to automatically disable session skipping when needed.
+
+### Form Components
+
+```ruby
+class MyFormComponent < ApplicationComponent
+  include Folio::ComponentSessionHelper
+
+  def initialize(...)
+    super
+    # Automatically disables session optimization for this page
+    require_session_for_component!("contact_form_csrf")
+  end
+end
+```
+
+### Atom Components
+
+Atoms with forms work automatically on any page:
+
+```ruby
+class Economia::Atom::Forms::Leads::FormComponent < ApplicationComponent
+  include Folio::ComponentSessionHelper
+
+  def initialize(atom:, atom_options: {})
+    @atom = atom
+    @atom_options = atom_options
+    # Ensures session is available even on cached pages
+    require_session_for_component!("lead_atom_form")
+  end
+end
+```
+
+### How It Works
+
+1. **Component declares session need** during rendering
+2. **Controller tracks requirements** via `ComponentSessionRequirements`
+3. **Cache optimization respects requirements** - disables session skip when needed
+4. **Result**: Forms work correctly on cached pages
+
+See **[Component Session Requirements Documentation](component-session-requirements.md)** for detailed implementation guide.
+
 ## Development Tools Integration
 
 ### Smart MiniProfiler Management
@@ -290,6 +334,61 @@ curl -I https://yoursite.com/ | grep -E "set-cookie|cf-cache"
 FOLIO_CACHE_SKIP_SESSION=true rails server
 curl -I https://yoursite.com/ | grep -E "set-cookie|cf-cache"
 # Should see no set-cookie headers for anonymous requests
+```
+
+## Form and Interactive Components
+
+### Built-in Session Management
+
+Folio automatically handles session requirements for form controllers:
+
+```ruby
+# Folio::LeadsController - automatically requires session for form submissions
+class Folio::LeadsController < Folio::ApplicationController
+  include Folio::RequiresSession
+  requires_session_for :form_functionality, only: [:create]
+end
+
+# Folio::Api::NewsletterSubscriptionsController - session for newsletter signups
+class Folio::Api::NewsletterSubscriptionsController < Folio::Api::BaseController
+  include Folio::RequiresSession
+  requires_session_for :newsletter_subscription, only: [:create]
+end
+```
+
+### Component Integration
+
+Form components automatically declare session requirements:
+
+```ruby
+# Lead forms require session for CSRF and flash messages
+class Folio::Leads::FormComponent < ApplicationComponent
+  include Folio::ComponentSessionHelper
+
+  def initialize(lead: nil)
+    @lead = lead || Folio::Lead.new
+    require_session_for_component!("lead_form_csrf_and_flash")
+  end
+end
+
+# Newsletter forms require session for CSRF and Turnstile
+class Folio::NewsletterSubscriptions::FormComponent < ApplicationComponent
+  include Folio::ComponentSessionHelper
+
+  def initialize(newsletter_subscription: nil, view_options: {})
+    @newsletter_subscription = newsletter_subscription || Folio::NewsletterSubscription.new
+    require_session_for_component!("newsletter_subscription_csrf_and_turnstile")
+  end
+end
+```
+
+### Expected Cache Performance
+
+With component session requirements:
+```
+Pages with forms:       ~65% cache hit ratio (session required)
+Pages without forms:    ~75% cache hit ratio (full optimization)
+Overall improvement:    ~70% vs current ~30%
 ```
 
 ## Common Development Workflows

@@ -1,8 +1,15 @@
 # frozen_string_literal: true
 
 class Folio::Leads::FormComponent < ApplicationComponent
+  include Folio::ComponentSessionHelper
+
   def initialize(lead: nil)
     @lead = lead || Folio::Lead.new
+  end
+
+  def before_render
+    # This component requires session for CSRF and form functionality
+    require_session_for_component!("lead_form_csrf_and_flash")
   end
 
   def form(&block)

@@ -69,8 +69,10 @@ module Folio
               log_cache_decision_with_headers("private", reason, ttl: ttl, user: Folio::Current.user&.id)
             else
               # Public cache - Cloudflare will cache this
-              # Skip session cookies to prevent Cloudflare BYPASS
-              skip_session_for_cache_efficiency if should_skip_session_for_cache?
+              # Skip session cookies to prevent Cloudflare BYPASS (only if no components need session)
+              if should_skip_session_for_cache?
+                skip_session_for_cache_efficiency
+              end
 
               if record && (Rails.application.config.folio_cache_headers_include_etag || Rails.application.config.folio_cache_headers_include_last_modified)
                 set_freshness_headers(record, ttl)
@@ -103,7 +105,7 @@ module Folio
         end
 
         def should_cache_response?
-          return false unless request.get?
+          return false unless request.get? || request.head?
 
           # Allow caching for 2xx responses and 404 errors (temporary missing content)
           # 500+ errors are not cached as they indicate server problems
@@ -128,6 +130,9 @@ module Folio
         end
 
         def should_skip_session_for_cache?
+          # Don't skip session if RequiresSession concern has explicitly enabled it
+          return false if request.session_options[:skip] == false
+
           # Enable session skipping when explicitly configured
           # This prevents Set-Cookie headers that cause Cloudflare BYPASS
           Rails.application.config.respond_to?(:folio_cache_skip_session_for_public) &&

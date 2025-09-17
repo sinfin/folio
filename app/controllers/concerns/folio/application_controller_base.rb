@@ -8,6 +8,7 @@ module Folio::ApplicationControllerBase
   include Folio::SetCurrentRequestDetails
   include Folio::SetMetaVariables
   include Folio::HttpCache::Headers
+  include Folio::ComponentSessionRequirements
 
   included do
     include Pagy::Backend
@@ -129,6 +130,9 @@ module Folio::ApplicationControllerBase
       # Skip cookies if cache optimization is enabled and this is a cache-friendly request
       return false unless Rails.application.config.respond_to?(:folio_cache_skip_session_for_public) &&
                           Rails.application.config.folio_cache_skip_session_for_public
+
+      # If any component requires session, don't skip cookies (handled by ComponentSessionRequirements)
+      return false if respond_to?(:component_requires_session?) && component_requires_session?
 
       # Same logic as in cache headers - only skip for anonymous GET requests to non-admin paths
       request.get? &&
