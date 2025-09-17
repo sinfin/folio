@@ -17,7 +17,7 @@ class TiptapInput < SimpleForm::Inputs::StringInput
                         new_record: safe_new_record?,
                         placement_type: safe_placement_type,
                         placement_id: safe_placement_id,
-                        latest_revision_at: latest_revision_at,
+                        latest_revision_at: latest_revision_at&.iso8601,
                         has_unsaved_changes: has_unsaved_changes?,
                         readonly: @builder.template.instance_variable_get(:@audited_audit).present?,
                         tiptap_config_json:,
