@@ -38,12 +38,14 @@ class Folio::Console::Ui::TabsComponent < Folio::Console::ApplicationComponent
       tag[:data][:href] = tab[:href]
     elsif tab[:dont_bind_tab_toggle]
       tag[:class] += " f-c-ui-tabs__nav-link--no-toggle"
-    else !tab[:dont_bind_tab_toggle]
-         tag[:tag] = :button
-         tag[:type] = "button"
-         tag[:data]["bs-toggle"] = "tab"
-         tag[:data]["bs-target"] = "##{ID_PREFIX}#{tab[:key]}"
-         tag[:data][:href] = "##{ID_PREFIX}#{tab[:key]}"
+      tag[:tag] = :button
+      tag[:type] = "button"
+    else
+      tag[:tag] = :button
+      tag[:type] = "button"
+      tag[:data]["bs-toggle"] = "tab"
+      tag[:data]["bs-target"] = "##{ID_PREFIX}#{tab[:key]}"
+      tag[:data][:href] = "##{ID_PREFIX}#{tab[:key]}"
     end
 
     if tab[:data]

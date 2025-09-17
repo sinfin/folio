@@ -82,7 +82,7 @@
               @g = ff
               supports_position = @position && @g.object.respond_to?(:position)
 
-            == content
+            = content
 
             - if @destroy || supports_position
               .f-nested-fields__controls
