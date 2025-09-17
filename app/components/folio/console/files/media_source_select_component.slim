@@ -1,23 +1,13 @@
 .f-c-files-media-source-select data=data
-  - if @file.media_source_snapshot.blank?
-    = helpers.simple_form_for([@file], url: form_url, remote: true, method: :patch, as: :file) do |f|
-      = f.input(:media_source_id,
-               as: :select,
-               label: false,
-               remote: autocomplete_url,
-               reflection_class_name: "Folio::MediaSource",
-               include_blank: t('.blank'),
-               wrapper_html: { class: "mb-0" })
-  - else
-    .f-c-files-media-source-select__usage-limits
-      .f-c-files-media-source-select__max-usage-count
-        = folio_icon(:speedometer, height: 16)
-        span = t(".max_usage_count")
-        = render(Folio::Console::Ui::InPlaceInputComponent.new(attribute: :max_usage_count,
-                                                                record: @file,
-                                                                as: :file))
+  .f-c-files-media-source-select__usage-limits
+    .f-c-files-media-source-select__max-usage-count
+      = folio_icon(:speedometer, height: 16)
+      span = t(".max_usage_count")
+      = render(Folio::Console::Ui::InPlaceInputComponent.new(attribute: :attribution_max_usage_count,
+                                                              record: @file,
+                                                              as: :file))
 
-      .f-c-files-media-source-select__sites
-        = folio_icon(:form_select, height: 16)
-        - if @file.media_source_sites.present?
-          span = @file.media_source_sites
+    .f-c-files-media-source-select__sites
+      = folio_icon(:form_select, height: 16)
+      - if @file.media_source_sites.present?
+        span = @file.media_source_sites

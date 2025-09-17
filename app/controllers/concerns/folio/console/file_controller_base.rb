@@ -77,10 +77,6 @@ module Folio::Console::FileControllerBase
         ary += test_instance.console_show_additional_fields.keys
       end
 
-      if @klass.include?(Folio::File::HasMediaSource)
-        ary += Folio::File::HasMediaSource.console_additional_permitted_params
-      end
-
       p = params.require(:file)
                 .permit(*ary)
 

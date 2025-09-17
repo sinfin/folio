@@ -50,7 +50,7 @@ en:
         max_usage_count: Max. usage count
         copyright_text: Copyright text
         site: Site
-        sites: Site
+        allowed_sites: Site
         assigned_media_count: Assigned media count
       folio/menu:
         locale: Version

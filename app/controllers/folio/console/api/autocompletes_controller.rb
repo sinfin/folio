@@ -91,11 +91,21 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
              .keys
       end
 
+      if klass &&
+         klass.included_modules.include?(Folio::File::HasMediaSource) &&
+         field == "attribution_source"
+        media_source_titles = get_media_source_titles_for_autocomplete(q)
+
+        media_source_set = media_source_titles.to_set
+        existing_without_media_source = ary.reject { |title| media_source_set.include?(title) }
+        ary = media_source_titles + existing_without_media_source
+      end
+
       if q.present?
         ary.select! { |item| item.downcase.parameterize.include?(q) }
       end
 
-      render json: { data: ary }
+      render json: { data: ary.first(10) }
     else
       render json: { data: [] }
     end
@@ -256,5 +266,19 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
 
     def apply_param_scope(scope)
       default_apply_param_scope(scope)
+    end
+
+    def get_media_source_titles_for_autocomplete(q)
+      scope = Folio::MediaSource.accessible_by(Folio::Current.ability)
+
+      unless Rails.application.config.folio_shared_files_between_sites
+        scope = scope.by_site(Folio::Current.site) if scope.respond_to?(:by_site)
+      end
+
+      if q.present?
+        scope = scope.where("title ILIKE ?", "%#{q}%")
+      end
+
+      scope.pluck(:title).compact
     end
 end

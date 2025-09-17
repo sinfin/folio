@@ -5,7 +5,7 @@ module Folio::File::HasMediaSource
 
   included do
     belongs_to :media_source, class_name: "Folio::MediaSource", optional: true
-    has_many :file_site_links, class_name: "Folio::FileSiteLink", dependent: :destroy
+    has_many :file_site_links, class_name: "Folio::FileSiteLink", foreign_key: :file_id, dependent: :destroy
     has_many :allowed_sites, through: :file_site_links, source: :site
 
     before_save :copy_media_source_data, if: :media_source_id_changed?
@@ -41,10 +41,6 @@ module Folio::File::HasMediaSource
     fields[:media_source_id] = {}
 
     fields
-  end
-
-  def self.console_additional_permitted_params
-    [:attribution_max_usage_count]
   end
 
   private

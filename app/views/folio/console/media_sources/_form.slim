@@ -6,6 +6,6 @@
 = f.input :max_usage_count, min: 1
 
 - if Rails.application.config.folio_shared_files_between_sites
-  = react_ordered_multiselect(f, :sites, sortable: false)
+  = react_ordered_multiselect(f, :allowed_sites, sortable: false)
 
 = form_footer f
