@@ -8,7 +8,7 @@ module Folio::File::HasMediaSource
     has_many :file_site_links, class_name: "Folio::FileSiteLink", foreign_key: :file_id, dependent: :destroy
     has_many :allowed_sites, through: :file_site_links, source: :site
 
-    before_save :copy_media_source_data, if: :media_source_id_changed?
+    before_save :handle_media_source_changes
   end
 
   def media_source_sites
@@ -44,9 +44,26 @@ module Folio::File::HasMediaSource
   end
 
   private
-    def copy_media_source_data
-      return unless media_source && media_source_id_changed?
+    def handle_media_source_changes
+      if attribution_source_changed? && attribution_source.present?
+        found_media_source = Folio::MediaSource.accessible_by(Folio::Current.ability)
+                                               .find_by(title: attribution_source)
 
+        unless Rails.application.config.folio_shared_files_between_sites
+          found_media_source = nil unless found_media_source&.allowed_sites&.include?(site)
+        end
+
+        if found_media_source
+          self.media_source = found_media_source
+        end
+      end
+
+      if media_source && media_source_id_changed?
+        copy_media_source_data
+      end
+    end
+
+    def copy_media_source_data
       if attribution_licence.blank? && media_source.licence.present?
         self.attribution_licence = media_source.licence
       end
