@@ -39,7 +39,7 @@ module Folio::File::HasMediaSource
   def console_show_prepended_fields
     fields = super
 
-    fields[:usage_limits] = {}
+    fields[:usage_constraints] = {}
 
     fields
   end
