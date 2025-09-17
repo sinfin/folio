@@ -20,6 +20,9 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
   after_create :run_file_after_save_job!
   after_destroy :run_file_after_save_job!
 
+  after_commit :update_file_usage_count, on: [:create, :destroy]
+  after_commit :update_file_usage_count_on_file_change, on: [:update], if: :saved_change_to_file_id?
+
   before_create :imprint_file_texts
 
   attr_accessor :dont_run_after_save_jobs
@@ -202,6 +205,18 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
 
       if description.nil?
         self.description = file.description.presence
+      end
+    end
+
+    def update_file_usage_count
+      return unless file_id.present?
+
+      file&.update_usage_count!
+    end
+
+    def update_file_usage_count_on_file_change
+      [file_id_before_last_save, file_id].compact.uniq.each do |f_id|
+        Folio::File.find_by(id: f_id)&.update_usage_count!
       end
     end
 end

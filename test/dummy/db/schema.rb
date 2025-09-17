@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_15_131324) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_17_133815) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -350,6 +350,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_15_131324) do
     t.datetime "file_metadata_extracted_at"
     t.bigint "media_source_id"
     t.integer "attribution_max_usage_count"
+    t.integer "usage_count", default: 0, null: false
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((author)::text, ''::text)))", name: "index_folio_files_on_by_author", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name)::text, ''::text)))", name: "index_folio_files_on_by_file_name", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text)))", name: "index_folio_files_on_by_file_name_for_search", using: :gin
@@ -360,6 +361,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_15_131324) do
     t.index ["site_id"], name: "index_folio_files_on_site_id"
     t.index ["type"], name: "index_folio_files_on_type"
     t.index ["updated_at"], name: "index_folio_files_on_updated_at"
+    t.index ["usage_count"], name: "index_folio_files_on_usage_count"
   end
 
   create_table "folio_leads", force: :cascade do |t|

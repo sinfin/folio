@@ -17,13 +17,9 @@ module Folio::File::HasMediaSource
     allowed_sites.pluck(:title).join(", ")
   end
 
-  def current_usage_count
-    file_placements_size || file_placements.count
-  end
-
   def usage_limit_exceeded?
     return false unless attribution_max_usage_count&.positive?
-    current_usage_count >= attribution_max_usage_count
+    usage_count >= attribution_max_usage_count
   end
 
   def can_be_used_on_site?(site)
@@ -102,10 +98,10 @@ module Folio::File::HasMediaSource
       return unless defined?(MessageBus) && Folio::Current.user
 
       MessageBus.publish Folio::MESSAGE_BUS_CHANNEL,
-                         {
-                           type: "f-c-files-show:reload",
-                           data: { id: id },
-                         }.to_json,
-                         user_ids: [Folio::Current.user.id]
+                          {
+                            type: "f-c-files-show:reload",
+                            data: { id: id },
+                          }.to_json,
+                          user_ids: [Folio::Current.user.id]
     end
 end

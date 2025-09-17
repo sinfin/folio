@@ -131,6 +131,7 @@ end
 #  file_metadata_extracted_at        :datetime
 #  media_source_id                   :bigint(8)
 #  attribution_max_usage_count       :integer
+#  usage_count                       :integer          default(0), not null
 #
 # Indexes
 #
@@ -144,6 +145,7 @@ end
 #  index_folio_files_on_site_id                  (site_id)
 #  index_folio_files_on_type                     (type)
 #  index_folio_files_on_updated_at               (updated_at)
+#  index_folio_files_on_usage_count              (usage_count)
 #
 # Foreign Keys
 #
