@@ -175,6 +175,11 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
     end
   end
 
+  # override setter so that active gets set as a boolean instead of a string
+  def folio_embed_data=(value)
+    super(Folio::Embed.normalize_setter_value(value))
+  end
+
   private
     def validate_file_or_embed
       if folio_embed_data.present? && folio_embed_data["active"] == true

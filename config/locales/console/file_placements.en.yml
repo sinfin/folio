@@ -7,3 +7,7 @@ en:
           add_embed: Add Embed (HTML code)
           select/image: Select image
           select/default: Select file
+
+        multi_picker_fields:
+          placement_component:
+            embed_html_label: HTML code

@@ -225,7 +225,9 @@ class Folio::Console::BaseController < Folio::ApplicationController
         hash[key] = commons
       end
 
-      hash[:image_or_embed_placements_attributes] = commons + %i[folio_embed_data]
+      hash[:image_or_embed_placements_attributes] = commons + [{
+        folio_embed_data:  Folio::Embed.hash_strong_params_keys
+      }]
 
       [hash]
     end

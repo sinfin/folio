@@ -1,13 +1,13 @@
 window.Folio.Stimulus.register('f-c-file-placements-multi-picker-fields', class extends window.Stimulus.Controller {
-  static targets = []
-
-  static values = {}
-
-  connect () {
-  }
-
   onAddEmbedClick () {
-    console.log('onAddEmbedClick')
+    const fields = this.element.querySelector('.f-nested-fields')
+    if (!fields) throw new Error('f-nested-fields not found')
+
+    const attributesCollection = [{ 'data-embed': 'true' }]
+
+    fields.dispatchEvent(new CustomEvent('f-nested-fields:addMultipleWithAttributes', {
+      detail: { attributesCollection }
+    }))
   }
 
   onBatchBarAddToPicker (e) {

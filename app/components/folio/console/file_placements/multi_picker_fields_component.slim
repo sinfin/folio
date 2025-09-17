@@ -1,6 +1,8 @@
 .f-c-file-placements-multi-picker-fields data=data
   .f-c-file-placements-multi-picker-fields__flex
     .f-c-file-placements-multi-picker-fields__fields
+      = content
+
       = folio_nested_fields(@f, @placement_key, add: :hidden) do |g|
         = render(Folio::Console::FilePlacements::MultiPickerFields::PlacementComponent.new(g:))
 

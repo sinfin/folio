@@ -7,3 +7,7 @@ cs:
           add_embed: Přidat Embed (HTML kód)
           select/image: Vybrat obrázek
           select/default: Vybrat soubor
+
+        multi_picker_fields:
+          placement_component:
+            embed_html_label: HTML kód
