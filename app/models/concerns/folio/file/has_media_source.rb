@@ -32,14 +32,6 @@ module Folio::File::HasMediaSource
     end
   end
 
-  def console_show_prepended_fields
-    fields = super
-
-    fields[:usage_constraints] = {}
-
-    fields
-  end
-
   def should_broadcast_show_reload_message?
     saved_changes.key?("media_source_id")
   end

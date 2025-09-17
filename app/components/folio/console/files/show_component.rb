@@ -64,7 +64,11 @@ class Folio::Console::Files::ShowComponent < Folio::Console::ApplicationComponen
   end
 
   def table_rows
-    rows = @file.console_show_prepended_fields
+    rows = {}
+
+    if @file.class.included_modules.include?(Folio::File::HasMediaSource)
+      rows = { usage_constraints: {} }
+    end
 
     rows.merge!({
       headline: {},
