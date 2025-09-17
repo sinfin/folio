@@ -12,8 +12,8 @@
 
     if Rails.application.config.folio_shared_files_between_sites
       attribute(:sites) do |record|
-        if record.sites.any?
-          record.sites.map(&:to_label).join("<br />")
+        if record.allowed_sites.any?
+          record.allowed_sites.map(&:to_label).join("<br />")
         else
           "-"
         end

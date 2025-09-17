@@ -4,7 +4,7 @@ class Folio::MediaSource < Folio::ApplicationRecord
   include Folio::BelongsToSite
 
   has_many :media_source_site_links, class_name: "Folio::MediaSourceSiteLink", dependent: :destroy
-  has_many :sites, through: :media_source_site_links, class_name: "Folio::Site"
+  has_many :allowed_sites, through: :media_source_site_links, source: :site, class_name: "Folio::Site"
   has_many :files, class_name: "Folio::File", foreign_key: :media_source_id
 
   accepts_nested_attributes_for :media_source_site_links, allow_destroy: true
@@ -16,7 +16,7 @@ class Folio::MediaSource < Folio::ApplicationRecord
   scope :ordered, -> { order(id: :desc) }
 
   scope :by_site_slug, -> (slug) do
-    joins(:sites).where(folio_sites: { slug: })
+    joins(:allowed_sites).where(folio_sites: { slug: })
   end
 
   def self.with_assigned_media_counts

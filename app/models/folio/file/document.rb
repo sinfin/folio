@@ -46,6 +46,7 @@ end
 #  gps_longitude                     :decimal(10, 6)
 #  file_metadata_extracted_at        :datetime
 #  media_source_id                   :bigint(8)
+#  attribution_max_usage_count       :integer
 #
 # Indexes
 #

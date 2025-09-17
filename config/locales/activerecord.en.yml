@@ -36,7 +36,7 @@ en:
         preview_duration: How many seconds are free?
         used: Used
         media_source_id: Usage constraints
-        max_usage_count: Max usage count
+        attribution_max_usage_count: Max usage count
         subtitles_cs_text: Subtitles (CZ)
         subtitles_en_text: Subtitles (EN)
       folio/file/image:

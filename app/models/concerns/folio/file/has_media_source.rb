@@ -5,52 +5,34 @@ module Folio::File::HasMediaSource
 
   included do
     belongs_to :media_source, class_name: "Folio::MediaSource", optional: true
-    has_one :media_source_snapshot,
-            class_name: "Folio::File::MediaSourceSnapshot",
-            foreign_key: :file_id,
-            dependent: :destroy
+    has_many :file_site_links, class_name: "Folio::FileSiteLink", dependent: :destroy
+    has_many :allowed_sites, through: :file_site_links, source: :site
 
-    attribute :max_usage_count, :string
-
-    after_update :create_media_source_snapshot, if: :saved_change_to_media_source_id?
-  end
-
-  def max_usage_count
-    # Return virtual attribute if set (for JSON responses), otherwise from snapshot
-    super.presence || media_source_snapshot&.max_usage_count
-  end
-
-  def max_usage_count=(value)
-    if media_source_snapshot
-      media_source_snapshot.update(max_usage_count: value)
-    end
-    # Set virtual attribute for JSON serialization
-    super(value&.to_s)
+    before_save :copy_media_source_data, if: :media_source_id_changed?
   end
 
   def media_source_sites
-    return nil unless media_source_snapshot&.sites&.any?
-
-    site_ids = media_source_snapshot.sites
-    Folio::Site.where(id: site_ids).pluck(:title).join(", ")
+    return nil unless allowed_sites.any?
+    allowed_sites.pluck(:title).join(", ")
   end
 
-  def increment_usage!
-    if media_source_snapshot&.max_usage_count
-      current_usage = usage_count || 0
-      if current_usage >= media_source_snapshot.max_usage_count
-        errors.add(:base, "Usage limit exceeded")
-        return false
-      end
-    end
+  def current_usage_count
+    file_placements_size || file_placements.count
+  end
 
-    increment!(:usage_count)
+  def usage_limit_exceeded?
+    return false unless attribution_max_usage_count&.positive?
+    current_usage_count >= attribution_max_usage_count
   end
 
   def can_be_used_on_site?(site)
-    return true unless media_source_snapshot&.sites&.any?
+    return true if media_source.blank?
 
-    media_source_snapshot.can_be_used_on_site?(site)
+    if Rails.application.config.folio_shared_files_between_sites
+      allowed_sites.include?(site)
+    else
+      self.site == site
+    end
   end
 
   def console_show_prepended_fields
@@ -62,36 +44,35 @@ module Folio::File::HasMediaSource
   end
 
   def self.console_additional_permitted_params
-    [:max_usage_count]
+    [:attribution_max_usage_count]
   end
 
   private
-    def create_media_source_snapshot
-      return unless media_source_id && media_source
-
-      media_source_snapshot&.destroy
-
-      sites_for_snapshot = if Rails.application.config.folio_shared_files_between_sites
-        media_source.sites.any? ? media_source.sites.pluck(:id) : [site_id]
-      else
-        [site_id]
-      end
-
-      create_media_source_snapshot!(
-        max_usage_count: media_source.max_usage_count,
-        sites: sites_for_snapshot
-      )
-
-      updates = {}
+    def copy_media_source_data
+      return unless media_source && media_source_id_changed?
 
       if attribution_licence.blank? && media_source.licence.present?
-        updates[:attribution_licence] = media_source.licence
+        self.attribution_licence = media_source.licence
       end
 
       if attribution_copyright.blank? && media_source.copyright_text.present?
-        updates[:attribution_copyright] = media_source.copyright_text
+        self.attribution_copyright = media_source.copyright_text
       end
 
-      update_columns(updates) if updates.any?
+      if attribution_max_usage_count.blank? && media_source.max_usage_count.present?
+        self.attribution_max_usage_count = media_source.max_usage_count
+      end
+
+      file_site_links.destroy_all
+
+      sites_for_file = if Rails.application.config.folio_shared_files_between_sites
+        media_source.allowed_sites.any? ? media_source.allowed_sites : [site]
+      else
+        [site]
+      end
+
+      sites_for_file.each do |site_obj|
+        file_site_links.build(site: site_obj)
+      end
     end
 end
