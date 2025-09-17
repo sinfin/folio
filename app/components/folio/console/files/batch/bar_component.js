@@ -161,13 +161,6 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
           // only replace if still in the DOM
           this.element.outerHTML = res.data
           this.statusValue = 'loaded'
-
-          if (res.meta && res.meta.flash && res.meta.flash.success) {
-            this.element.dispatchEvent(new CustomEvent('folio:flash', {
-              bubbles: true,
-              detail: { flash: { content: res.meta.flash.success, variant: 'success' } }
-            }))
-          }
         }
       } else {
         throw new Error('Failed to perform batch action')
