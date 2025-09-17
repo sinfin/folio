@@ -32,9 +32,8 @@ window.Folio.Stimulus.register('f-c-file-placements-multi-picker-fields', class 
     }))
   }
 
-  onCountChange () {
-    const placements = this.element.querySelectorAll('.f-c-file-placements-multi-picker-fields-placement')
-    const empty = placements.length === 0
+  onCountChange (e) {
+    const empty = e && e.detail && e.detail.count === 0
 
     if (empty !== this.emptyValue) {
       this.emptyValue = empty
