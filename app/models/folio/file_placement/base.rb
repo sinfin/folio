@@ -110,12 +110,8 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
     end
   end
 
-  def self.non_nillifiable_fields
-    %w[alt title description]
-  end
-
   def alt_with_fallback
-    if alt.nil?
+    if alt.blank?
       file.try(:alt)
     else
       alt
@@ -123,7 +119,7 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
   end
 
   def description_with_fallback
-    if description.nil?
+    if description.blank?
       file.try(:description)
     else
       description
