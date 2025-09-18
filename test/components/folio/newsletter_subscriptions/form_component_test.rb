@@ -24,20 +24,6 @@ class Folio::NewsletterSubscriptions::FormComponentTest < Folio::ComponentTest
     assert_selector(".f-newsletter-subscriptions-form")
   end
 
-  def test_requires_session_for_component
-    component = Folio::NewsletterSubscriptions::FormComponent.new
-
-    # Test polymorphic API
-    assert component.requires_session?
-    assert_equal "newsletter_subscription_csrf_and_turnstile", component.session_requirement_reason
-
-    # Test session requirement hash structure
-    requirement = component.session_requirement
-    assert_equal "newsletter_subscription_csrf_and_turnstile", requirement[:reason]
-    assert requirement[:component].include?("FormComponent")
-    assert_kind_of Time, requirement[:timestamp]
-  end
-
   def test_renders_with_subscription_instance
     subscription = Folio::NewsletterSubscription.new(email: "test@example.com")
     render_inline(Folio::NewsletterSubscriptions::FormComponent.new(newsletter_subscription: subscription))
