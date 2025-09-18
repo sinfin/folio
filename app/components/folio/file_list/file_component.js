@@ -218,7 +218,7 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
       }
     } else if (this.primaryActionValue === 'index') {
       const batchBar = document.querySelector('.f-c-files-batch-bar')
-      if (batchBar && batchBar.getAttribute('data-f-c-files-batch-bar-file-ids-json-value') !== '[]') {
+      if (batchBar && !batchBar.hidden) {
         this.toggleBatch(e)
       } else {
         this.openShowModal()
