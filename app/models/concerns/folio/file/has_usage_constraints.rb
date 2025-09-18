@@ -20,7 +20,7 @@ module Folio::File::HasUsageConstraints
 
         if Rails.application.config.folio_shared_files_between_sites
           usable_by_limit.where(
-            "media_source_id IS NULL OR NOT EXISTS (SELECT 1 FROM folio_file_site_links WHERE folio_file_site_links.file_id = folio_files.id) OR EXISTS (SELECT 1 FROM folio_file_site_links WHERE folio_file_site_links.file_id = folio_files.id AND folio_file_site_links.site_id = ?)",
+            "NOT EXISTS (SELECT 1 FROM folio_file_site_links WHERE folio_file_site_links.file_id = folio_files.id) OR EXISTS (SELECT 1 FROM folio_file_site_links WHERE folio_file_site_links.file_id = folio_files.id AND folio_file_site_links.site_id = ?)",
             Folio::Current.site.id
           )
         else
