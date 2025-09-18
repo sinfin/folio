@@ -159,7 +159,17 @@ div data=data class=bem_class_name
             data=primary_action_data
           ]
             - if @primary_action === "index_for_modal"
-              = folio_icon(:check_circle_outline)
+              div[
+                class="f-file-list-file__control-primary-icon-wrap"
+                class="f-file-list-file__control-primary-icon-wrap--index_for_modal"
+              ]
+                = folio_icon(:check_circle_outline)
+            - elsif @primary_action === "index_for_picker"
+              div[
+                class="f-file-list-file__control-primary-icon-wrap"
+                class="f-file-list-file__control-primary-icon-wrap--index_for_picker"
+              ]
+                = folio_icon(:arrow_up)
 
         a[
           class="f-file-list-file__control"

@@ -14,7 +14,7 @@ window.Folio.Stimulus.register('f-c-file-placements-multi-picker-fields', class 
     }))
   }
 
-  onBatchBarAddToPicker (e) {
+  onAddToPicker (e) {
     const fields = this.element.querySelector('.f-nested-fields')
     if (!fields) throw new Error('f-nested-fields not found')
 

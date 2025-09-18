@@ -122,9 +122,6 @@
       z-index: 5
       display: block
 
-    &[data-f-file-list-file-primary-action-value="index_for_picker"] .f-file-list-file__part--batch-actions
-      pointer-events: none
-
     &__control
       width: 3 * $grid-gutter-base
       height: 3 * $grid-gutter-base
@@ -142,7 +139,8 @@
         height: auto
         background: none
 
-      &--primary-index_for_modal
+      &--primary-index_for_modal,
+      &--primary-index_for_picker
         background-color: rgba(255, 255, 255, 0.66)
 
       &--edit
@@ -153,6 +151,13 @@
         top: 0
         right: 0
         display: none
+
+    &__control-primary-icon-wrap
+      width: 48px
+      height: 48px
+      display: flex
+      align-items: center
+      justify-content: center
 
     &:hover .f-file-list-file__control
       opacity: 1
@@ -194,6 +199,12 @@
       width: 24px + 2 * 8px
       z-index: 4
       display: block
+
+  .f-file-list--view-grid .f-c-files-batch-bar:not([hidden]) ~ .f-file-list__container &__control-primary-icon-wrap--index_for_picker
+    display: none
+
+  .f-file-list--view-grid .f-c-files-batch-bar:not([hidden]) ~ .f-file-list__container &__part--batch-actions
+    pointer-events: none
 
   .f-file-list--view-grid .f-c-files-batch-bar[hidden] ~ .f-file-list__container .f-file-list-file &__part--batch-actions
     opacity: 0
