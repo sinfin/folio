@@ -423,6 +423,7 @@ cs:
       invalid_count: musí být přesně %{count}
       invalid_file_placement: nesplňuje požadavky
       invalid_subtitle_block: má nevalidní text na řádku %{line}
+      file_published_usage_limit_exceeded: "maximální počet použití: %{count}"
       missing_file_alt: nemá vyplněný alt
       missing_file_attribution: nemá vyplněného autora nebo zdroj
       missing_file_description: nemá vyplněný popisek

@@ -349,6 +349,7 @@ en:
       invalid_count: must be exactly %{count}
       invalid_file_placement: does not meet the requirements
       invalid_subtitle_block: has invalid subtitle block near line %{line}
+      file_published_usage_limit_exceeded: "max usage count: %{count}"
       missing_file_alt: is missing alt
       missing_file_attribution: is missing author or source
       missing_file_description: is missing description

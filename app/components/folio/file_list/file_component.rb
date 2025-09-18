@@ -114,6 +114,10 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
       end
     end
 
+    if @file.class.included_modules.include?(Folio::File::HasUsageConstraints) && @file.usage_limit_exceeded?
+      ary << usage_limit_exceeded_html
+    end
+
     @unmet_requirements = ary.presence || false
   end
 
@@ -121,6 +125,15 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
     unmet_requirements.map do |str|
       content_tag(:p, str, class: "mb-0 text-danger")
     end.join(" ")
+  end
+
+  def usage_limit_exceeded_html
+    icon_html = folio_icon(:speedometer, height: 16, class: "text-danger")
+    text_html = content_tag(:span, I18n.t("errors.messages.file_published_usage_limit_exceeded", count: @file.attribution_max_usage_count).capitalize)
+
+    content_tag(:span, class: "d-flex align-items-center gap-2") do
+      icon_html + text_html
+    end
   end
 
   def file_information_rows
