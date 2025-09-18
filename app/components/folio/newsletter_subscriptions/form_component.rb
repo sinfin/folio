@@ -19,16 +19,17 @@ class Folio::NewsletterSubscriptions::FormComponent < Folio::ApplicationComponen
 
   bem_class_name :persisted, :invalid
 
-  def initialize(newsletter_subscription: nil, view_options: {})
+  def initialize(newsletter_subscription: nil, view_options: {}, form_url: nil)
     @newsletter_subscription = newsletter_subscription || Folio::NewsletterSubscription.new
     @view_options = view_options
+    @form_url = form_url
     @persisted = @newsletter_subscription.persisted?
     @invalid = @newsletter_subscription.errors.present?
   end
 
   def form(&block)
     opts = {
-      url: controller.folio.folio_api_newsletter_subscriptions_path,
+      url: @form_url.presence || controller.folio.folio_api_newsletter_subscriptions_path,
       html: {
         class: "f-newsletter-subscriptions-form__form",
         id: nil,
