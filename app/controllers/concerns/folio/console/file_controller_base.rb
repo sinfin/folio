@@ -204,13 +204,13 @@ module Folio::Console::FileControllerBase
     def apply_site_filtering_for_non_index_context
       return if action_name == "index"
       return unless @klass.included_modules.include?(Folio::File::HasUsageConstraints)
-      return unless Rails.application.config.folio_shared_files_between_sites
 
       collection_name = folio_console_record_variable_name(plural: true)
       collection = instance_variable_get(collection_name)
 
-      filtered_collection = collection.by_allowed_site(Folio::Current.site)
+      # Filter for usable files (includes both usage limits and site restrictions)
+      collection = collection.by_usage_constraints("usable")
 
-      instance_variable_set(collection_name, filtered_collection)
+      instance_variable_set(collection_name, collection)
     end
 end
