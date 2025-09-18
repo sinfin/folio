@@ -10,6 +10,8 @@ module Folio::Publishable
       before_validation :generate_preview_token
       before_validation :set_published_date_automatically_if_needed
 
+      validate :validate_files_usage_limits_if_publishing
+
       after_commit :update_file_usage_counts_on_publish_change,
                    if: :should_update_file_usage_counts?
 
@@ -98,6 +100,44 @@ module Folio::Publishable
                  .compact
 
         files.each(&:update_published_usage_count!)
+      end
+
+      def validate_files_usage_limits_if_publishing
+        return unless published_changed? && published == true
+        return unless self.class.respond_to?(:has_folio_attachments?) && self.class.has_folio_attachments?
+
+        get_files_with_usage_constraints.each do |file|
+          if file.usage_limit_exceeded?
+            errors.add(:base, I18n.t("errors.messages.cannot_publish_with_files_over_usage_limit",
+                                     name: file.file_name,
+                                     limit: file.attribution_max_usage_count))
+          end
+        end
+      end
+
+      def get_files_with_usage_constraints
+        # Get unique file types that have HasUsageConstraints concern
+        file_types_with_constraints = Folio::FilePlacement::Base
+          .joins(:file)
+          .where(placement_id: id, placement_type: self.class.base_class.name)
+          .distinct
+          .pluck("folio_files.type")
+          .compact
+          .select { |type| type.constantize.included_modules.include?(Folio::File::HasUsageConstraints) }
+          .uniq
+
+        return [] if file_types_with_constraints.empty?
+
+        Folio::File
+          .joins(:file_placements)
+          .where(
+            type: file_types_with_constraints,
+            file_placements: {
+              placement_id: id,
+              placement_type: self.class.base_class.name
+            }
+          )
+          .distinct
       end
   end
 
