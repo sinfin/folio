@@ -10,6 +10,9 @@ module Folio::Publishable
       before_validation :generate_preview_token
       before_validation :set_published_date_automatically_if_needed
 
+      after_commit :update_file_usage_counts_on_publish_change,
+                   if: :should_update_file_usage_counts?
+
       scope :published, -> { folio_published }
 
       scope :unpublished, -> { folio_unpublished }
@@ -80,6 +83,21 @@ module Folio::Publishable
       end
 
       def set_published_date_automatically_if_needed
+      end
+
+      def should_update_file_usage_counts?
+        saved_changes.key?("published")
+      end
+
+      def update_file_usage_counts_on_publish_change
+        files = Folio::FilePlacement::Base
+                 .where(placement_id: id, placement_type: self.class.base_class.name)
+                 .includes(:file)
+                 .map(&:file)
+                 .uniq
+                 .compact
+
+        files.each(&:update_published_usage_count!)
       end
   end
 

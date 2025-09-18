@@ -304,9 +304,35 @@ class Folio::File < Folio::ApplicationRecord
     # to be overriden in main_app should be needed
   end
 
-    update_column(:published_usage_count, new_count) if published_usage_count != new_count
+  def calculate_published_usage_count
+    placement_types = file_placements.distinct.pluck(:placement_type)
+    return 0 if placement_types.empty?
+
+    published_conditions = placement_types.map do |type|
+      klass = type.constantize
+      table_name = klass.table_name
+
+      if klass.column_names.include?("published")
+        "(folio_file_placements.placement_type = '#{type}' AND EXISTS (SELECT 1 FROM #{table_name} WHERE #{table_name}.id = folio_file_placements.placement_id AND #{table_name}.published = true))"
+      else
+        # For classes without published, assume published
+        "folio_file_placements.placement_type = '#{type}'"
+      end
+    rescue NameError
+      # If class doesn't exist, assume published
+      "folio_file_placements.placement_type = '#{type}'"
+    end
+
+    file_placements
+      .where(published_conditions.join(" OR "))
+      .distinct
+      .count("CONCAT(placement_type, ':', placement_id)")
   end
 
+  def update_published_usage_count!
+    new_count = calculate_published_usage_count
+    update_column(:published_usage_count, new_count) if published_usage_count != new_count
+  end
 
   private
     def set_file_name_for_search
