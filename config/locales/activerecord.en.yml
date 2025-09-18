@@ -333,7 +333,7 @@ en:
     messages:
       at_least_one: Fill at least one of the fields.
       color_mode_without_wrapper: cannot be set to dark without selecting a wrapper
-      has_invalid_file_placements: contains invalid file configurations
+      has_invalid_file_placements: Some files do not meet the requirements
       invalid_count: must be exactly %{count}
       invalid_file_placement: does not meet the requirements
       invalid_subtitle_block: has invalid subtitle block near line %{line}

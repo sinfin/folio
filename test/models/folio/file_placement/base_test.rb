@@ -62,7 +62,7 @@ class Folio::FilePlacement::BaseTest < ActiveSupport::TestCase
         page.errors.messages
         assert_equal(["nesplňuje požadavky"], page.errors.messages[:cover_placement])
         assert_equal(["nemá vyplněný alt"], page.errors.messages[:"cover_placement.file"])
-        assert_equal(["obsahuje neplatná nastavení souborů"], page.errors.messages[:base])
+        assert_equal(["Některé soubory nesplňují požadavky"], page.errors.messages[:base])
       end
 
       assert page.update(cover: image)
