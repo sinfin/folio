@@ -60,7 +60,7 @@
 
             .f-c-files-show__td
               - if key == :usage_constraints
-                = render(Folio::Console::Files::MediaSourceSelectComponent.new(file: @file))
+                = render(Folio::Console::Files::UsageConstraintsComponent.new(file: @file))
               - else
                 = render(Folio::Console::Ui::InPlaceInputComponent.new(attribute: key,
                                                                        record: @file,

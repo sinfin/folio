@@ -442,10 +442,6 @@ cs:
           label: Automatické ukládání
 
       files:
-        media_source_select_component:
-          blank: Nevyplněno
-          max_usage_count: "Maximální počet použití:"
-
         subtitle_form_component:
           enabled_label: Povolit titulky
           validation_errors_title: "Chyby validace:"
@@ -507,6 +503,9 @@ cs:
             transcription_service: "Služba: %{service}"
             attempts: "%{count} pokusů"
             validation_errors: "%{count} chyb validace"
+
+        usage_constraints_component:
+          max_usage_count: "Maximální počet použití:"
 
       eleven_labs:
         transcribe_subtitles_job:

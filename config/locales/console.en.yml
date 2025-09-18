@@ -434,10 +434,6 @@ en:
           label: Automatic save
 
       files:
-        media_source_select_component:
-          blank: No media source
-          max_usage_count: "Max usage count:"
-
         subtitle_form_component:
           enabled_label: Enable subtitles
           validation_errors_title: "Validation errors:"
@@ -499,6 +495,9 @@ en:
             transcription_service: "Service: %{service}"
             attempts: "%{count} attempts"
             validation_errors: "%{count} validation errors"
+
+        usage_constraints_component:
+          max_usage_count: "Max usage count:"
 
       eleven_labs:
         transcribe_subtitles_job:

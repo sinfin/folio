@@ -1,13 +1,13 @@
-.f-c-files-media-source-select
-  .f-c-files-media-source-select__usage-limits
-    .f-c-files-media-source-select__max-usage-count
+.f-c-files-usage-constraints
+  .f-c-files-usage-constraints__usage-limits
+    .f-c-files-usage-constraints__max-usage-count
       = folio_icon(:speedometer, height: 16)
       span = t(".max_usage_count")
       = render(Folio::Console::Ui::InPlaceInputComponent.new(attribute: :attribution_max_usage_count,
                                                               record: @file,
                                                               as: :file))
 
-    .f-c-files-media-source-select__sites
+    .f-c-files-usage-constraints__sites
       = folio_icon(:form_select, height: 16)
       - if @file.media_source_sites.present?
         span = @file.media_source_sites
