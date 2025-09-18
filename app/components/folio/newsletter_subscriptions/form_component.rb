@@ -28,7 +28,7 @@ class Folio::NewsletterSubscriptions::FormComponent < Folio::ApplicationComponen
 
   def form(&block)
     opts = {
-      url: controller.folio.folio_api_newsletter_subscriptions_path,
+      url: controller.folio.folio_api_newsletter_subscriptions_url(only_path: false),
       html: {
         class: "f-newsletter-subscriptions-form__form",
         id: nil,
