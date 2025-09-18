@@ -43,12 +43,16 @@ module Folio
       if value.is_a?(Hash)
         active = value["active"].in?([true, "true"])
 
-        {
-          "active" => active,
-          "html" => value["html"].presence,
-          "type" => value["type"].presence,
-          "url" => value["url"].presence,
-        }.compact
+        if active
+          {
+            "active" => active,
+            "html" => value["html"].presence,
+            "type" => value["type"].presence,
+            "url" => value["url"].presence,
+          }.compact
+        else
+          nil
+        end
       else
         nil
       end
