@@ -13,11 +13,11 @@ class Folio::MergerTest < ActiveSupport::TestCase
     @site = get_any_site
     original = create(:folio_page, title: "foo", slug: "foo", site: @site)
     original_atom = create_atom(Dummy::Atom::Contents::Text, :content, placement: original)
-    original_cover = create(:folio_cover_placement, placement: original)
+    original_cover = create(:folio_file_placement_cover, placement: original)
 
     duplicate = create(:folio_page, title: "bar", slug: "bar", site: @site)
     duplicate_atom = create_atom(Dummy::Atom::Contents::Text, :content, placement: duplicate)
-    duplicate_cover = create(:folio_cover_placement, placement: duplicate)
+    duplicate_cover = create(:folio_file_placement_cover, placement: duplicate)
 
     merger = Folio::Page::Merger.new(original.reload, duplicate.reload)
 

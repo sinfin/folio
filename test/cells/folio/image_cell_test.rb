@@ -15,7 +15,7 @@ class Folio::ImageCellTest < Cell::TestCase
     assert html.has_css?(".f-image")
     assert html.has_css?(".f-image__fallback")
 
-    placement = create(:folio_image_placement)
+    placement = create(:folio_file_placement_image)
     html = cell("folio/image", placement).(:show)
     assert_not html.has_css?(".f-image")
 

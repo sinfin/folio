@@ -59,17 +59,22 @@ FactoryBot.define do
 
   factory :folio_page_cookies, parent: :folio_page, class: "Folio::Page::Cookies"
 
-  factory :folio_document_placement, class: "Folio::FilePlacement::Document" do
-    association :file, factory: :folio_file_document
-    association :placement, factory: :folio_page
-  end
-
-  factory :folio_image_placement, class: "Folio::FilePlacement::Image" do
+  factory :folio_file_placement_cover, class: "Folio::FilePlacement::Cover" do
     association :file, factory: :folio_file_image
     association :placement, factory: :folio_page
   end
 
-  factory :folio_cover_placement, class: "Folio::FilePlacement::Cover" do
+  factory :folio_file_placement_document, class: "Folio::FilePlacement::Document" do
+    association :file, factory: :folio_file_document
+    association :placement, factory: :folio_page
+  end
+
+  factory :folio_file_placement_image, class: "Folio::FilePlacement::Image" do
+    association :file, factory: :folio_file_image
+    association :placement, factory: :folio_page
+  end
+
+  factory :folio_file_placement_image_or_embed, class: "Folio::FilePlacement::ImageOrEmbed" do
     association :file, factory: :folio_file_image
     association :placement, factory: :folio_page
   end
