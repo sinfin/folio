@@ -55,27 +55,29 @@ window.Folio.Stimulus.register('f-c-files-show-modal', class extends window.Stim
   }
 
   bindKeyboardEvents () {
-    this.handleKeydown = this.handleKeydown.bind(this)
-    document.addEventListener('keydown', this.handleKeydown)
+    this.handleKeyup = this.handleKeyup.bind(this)
+    document.addEventListener('keyup', this.handleKeyup)
   }
 
   unbindKeyboardEvents () {
-    if (this.handleKeydown) {
-      document.removeEventListener('keydown', this.handleKeydown)
-      delete this.handleKeydown
+    if (this.handleKeyup) {
+      document.removeEventListener('keyup', this.handleKeyup)
+      delete this.handleKeyup
     }
   }
 
-  handleKeydown (e) {
+  handleKeyup (e) {
     if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable)) {
       return
     }
 
     if (e.key === 'Escape') {
+      e.stopImmediatePropagation()
       e.preventDefault()
       window.Folio.Modal.close(this.element)
     } else if (e.key === 'ArrowLeft') {
       if (this.fileDataValue.previousId) {
+        e.stopImmediatePropagation()
         e.preventDefault()
         this.setFileDataValueWithNavigation({
           id: this.fileDataValue.previousId,
@@ -84,6 +86,7 @@ window.Folio.Stimulus.register('f-c-files-show-modal', class extends window.Stim
       }
     } else if (e.key === 'ArrowRight') {
       if (this.fileDataValue.nextId) {
+        e.stopImmediatePropagation()
         e.preventDefault()
         this.setFileDataValueWithNavigation({
           id: this.fileDataValue.nextId,
