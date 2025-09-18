@@ -1,10 +1,11 @@
 div[
   class=bem_class_name
   class=(@value_line_clamp ? "f-c-ui-in-place-input--value-line-clamp-#{@value_line_clamp}" : nil)
+  class=(@disabled ? "f-c-ui-in-place-input--disabled" : nil)
   data=wrap_data
 ]
   .f-c-ui-in-place-input__content-wrap data=stimulus_target("contentWrap")
-    .f-c-ui-in-place-input__content-flex data=stimulus_action(click: "toggle")
+    .f-c-ui-in-place-input__content-flex data=(@disabled ? {} : stimulus_action(click: "toggle"))
       - if @value_prefix.present?
         span.f-c-ui-in-place-input__content-prefix
           = @value_prefix
@@ -22,17 +23,19 @@ div[
                    height: 12,
                    class: "flex-grow-0 flex-shrink-0 f-c-ui-in-place-input__success-ico")
 
-      = folio_icon(:edit,
-                   height: 12,
-                   class: "flex-grow-0 flex-shrink-0 f-c-ui-in-place-input__toggle-ico")
+      - unless @disabled
+        = folio_icon(:edit,
+                     height: 12,
+                     class: "flex-grow-0 flex-shrink-0 f-c-ui-in-place-input__toggle-ico")
 
-  .f-c-ui-in-place-input__input-wrap data=stimulus_target("inputWrap")
-    = render(Folio::Console::Ui::AjaxInputComponent.new(name:,
-                                                        url:,
-                                                        value: @value,
-                                                        cleave: @cleave,
-                                                        textarea: @textarea,
-                                                        collection: @collection,
-                                                        force_cancel: true,
-                                                        autocomplete: @autocomplete,
-                                                        f: @f))
+  - unless @disabled
+    .f-c-ui-in-place-input__input-wrap data=stimulus_target("inputWrap")
+      = render(Folio::Console::Ui::AjaxInputComponent.new(name:,
+                                                          url:,
+                                                          value: @value,
+                                                          cleave: @cleave,
+                                                          textarea: @textarea,
+                                                          collection: @collection,
+                                                          force_cancel: true,
+                                                          autocomplete: @autocomplete,
+                                                          f: @f))

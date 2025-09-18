@@ -4,4 +4,8 @@ class Folio::Console::Files::UsageConstraintsComponent < Folio::Console::Applica
   def initialize(file:)
     @file = file
   end
+
+  def can_edit?
+    Folio::Current.ability.can?(:edit_usage_constraints, @file)
+  end
 end

@@ -78,3 +78,12 @@
   &--value-line-clamp-3 &__content
     -webkit-line-clamp: 3
     line-clamp: 3
+
+  &--disabled &__content-flex
+    cursor: text
+
+    &::after
+      display: none
+
+    &:hover::after
+      opacity: 0
