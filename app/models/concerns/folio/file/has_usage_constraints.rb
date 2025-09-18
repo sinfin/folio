@@ -40,23 +40,16 @@ module Folio::File::HasUsageConstraints
     end
   end
 
-  def media_source_sites
-    return nil unless allowed_sites.any?
-    allowed_sites.pluck(:title).join(", ")
-  end
-
   def usage_limit_exceeded?
     return false unless attribution_max_usage_count&.positive?
     published_usage_count >= attribution_max_usage_count
   end
 
   def can_be_used_on_site?(site)
-    return true if media_source.blank?
-
     if Rails.application.config.folio_shared_files_between_sites
       allowed_sites.empty? || allowed_sites.include?(site)
     else
-      self.site == site
+      true
     end
   end
 

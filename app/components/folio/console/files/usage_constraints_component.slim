@@ -10,5 +10,5 @@
 
     .f-c-files-usage-constraints__sites
       = folio_icon(:form_select, height: 12)
-      - if @file.media_source_sites.present?
-        span = @file.media_source_sites
+      - if @file.allowed_sites.present?
+        span = @file.allowed_sites.pluck(:title).join(", ")
