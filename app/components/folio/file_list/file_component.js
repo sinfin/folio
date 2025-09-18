@@ -265,6 +265,10 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
         if (batchBar) {
           batchBar.dispatchEvent(new CustomEvent('f-c-files-batch-bar:reload'))
         }
+
+        for (const fileElement of document.querySelectorAll(`.f-file-list-file[data-f-file-list-file-id-value="${this.idValue}"]`)) {
+          fileElement.dispatchEvent(new CustomEvent('f-file-list-file:deleted'))
+        }
       }).catch((error) => {
         this.element.classList.remove('f-file-list-file--destroying')
         this.errorFlashMessage(`${window.Folio.i18n(this.constructor.ERROR_MESSAGES, 'failedToDeleteFile')}: ${error.message}`)
