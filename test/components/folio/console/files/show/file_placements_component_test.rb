@@ -13,7 +13,7 @@ class Folio::Console::Files::Show::FilePlacementsComponentTest < Folio::Console:
   end
 
   def test_render_with_placements
-    file = create(:folio_cover_placement).file
+    file = create(:folio_file_placement_cover).file
 
     render_inline(Folio::Console::Files::Show::FilePlacementsComponent.new(file:))
 

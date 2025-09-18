@@ -191,7 +191,7 @@ class Folio::File::ImageMetadataSamplesTest < ActiveSupport::TestCase
                      author: nil)
 
       page = create(:folio_page, site: @site)
-      placement = create(:folio_image_placement,
+      placement = create(:folio_file_placement_image,
                          file: image,
                          placement: page,
                          alt: nil,
