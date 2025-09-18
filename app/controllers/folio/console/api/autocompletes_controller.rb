@@ -92,7 +92,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
       end
 
       if klass &&
-         klass.included_modules.include?(Folio::File::HasMediaSource) &&
+         klass.included_modules.include?(Folio::File::HasUsageConstraints) &&
          field == "attribution_source"
         media_source_titles = get_media_source_titles_for_autocomplete(q)
 

@@ -2,7 +2,7 @@
 
 class Folio::File::Image < Folio::File
   include Folio::Sitemap::Image
-  include Folio::File::HasMediaSource
+  include Folio::File::HasUsageConstraints
 
   validate_file_format(%w[jpeg png bmp gif svg tiff webp avif heic heif])
 

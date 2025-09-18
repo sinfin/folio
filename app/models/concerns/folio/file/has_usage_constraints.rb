@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Folio::File::HasMediaSource
+module Folio::File::HasUsageConstraints
   extend ActiveSupport::Concern
 
   included do

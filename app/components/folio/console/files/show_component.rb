@@ -66,7 +66,7 @@ class Folio::Console::Files::ShowComponent < Folio::Console::ApplicationComponen
   def table_rows
     rows = {}
 
-    if @file.class.included_modules.include?(Folio::File::HasMediaSource)
+    if @file.class.included_modules.include?(Folio::File::HasUsageConstraints)
       rows = { usage_constraints: {} }
     end
 
