@@ -255,7 +255,13 @@ module Folio::Console::Api::FileControllerBase
 
   private
     def folio_console_collection_includes
-      [:tags, :file_placements]
+      includes = [:tags, :file_placements]
+
+      if @klass.included_modules.include?(Folio::File::HasUsageConstraints)
+        includes << :allowed_sites
+      end
+
+      includes
     end
 
     def filter_params

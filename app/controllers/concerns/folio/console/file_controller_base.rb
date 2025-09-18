@@ -95,6 +95,16 @@ module Folio::Console::FileControllerBase
       [:tags]
     end
 
+    def folio_console_collection_includes
+      includes = [:tags]
+
+      if @klass.included_modules.include?(Folio::File::HasUsageConstraints)
+        includes << :allowed_sites
+      end
+
+      includes
+    end
+
     def index_view_name
       "folio/console/file/index"
     end
