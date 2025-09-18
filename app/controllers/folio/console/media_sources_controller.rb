@@ -6,10 +6,6 @@ class Folio::Console::MediaSourcesController < Folio::Console::BaseController
   end
 
   private
-    def shared_files_between_sites?
-      Rails.application.config.folio_shared_files_between_sites
-    end
-
     def index_filters
       {
         by_allowed_site_slug: Folio::Site.ordered.map { |site| [site.to_label, site.slug] }
@@ -17,7 +13,7 @@ class Folio::Console::MediaSourcesController < Folio::Console::BaseController
     end
 
     def media_source_params
-      if shared_files_between_sites?
+      if Rails.application.config.folio_shared_files_between_sites
         params.require(:media_source)
               .permit(:title,
                       :licence,
@@ -30,6 +26,14 @@ class Folio::Console::MediaSourcesController < Folio::Console::BaseController
                       :licence,
                       :copyright_text,
                       :max_usage_count)
+      end
+    end
+
+    def allowed_record_sites
+      if Rails.application.config.folio_shared_files_between_sites
+        [Folio::Current.main_site, Folio::Current.site]
+      else
+        [Folio::Current.site]
       end
     end
 end
