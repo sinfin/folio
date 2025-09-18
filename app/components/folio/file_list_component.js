@@ -12,7 +12,7 @@ window.Folio.Stimulus.register('f-file-list', class extends window.Stimulus.Cont
   }
 
   uppyUploadSuccess (event) {
-    const { file, result } = event.detail
+    const { file } = event.detail
 
     const fileElement = this.fileTemplateTarget.content.children[0].cloneNode(true)
     fileElement.dataset.fFileListFileTemplateDataValue = JSON.stringify({
@@ -20,7 +20,7 @@ window.Folio.Stimulus.register('f-file-list', class extends window.Stimulus.Cont
     })
 
     fileElement.dataset.fFileListFileJwtValue = file.jwt
-    fileElement.dataset.fFileListFileS3PathValue = new URL(result.uploadURL).pathname.replace(/^\//, '')
+    fileElement.dataset.fFileListFileS3PathValue = file.s3_path
     fileElement.dataset.fFileListFileFileTypeValue = this.fileTypeValue
     fileElement.querySelector('.f-file-list-file__info-file-name').innerText = file.name
 
