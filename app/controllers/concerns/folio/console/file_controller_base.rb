@@ -61,6 +61,7 @@ module Folio::Console::FileControllerBase
         :attribution_source_url,
         :attribution_copyright,
         :attribution_licence,
+        :attribution_max_usage_count,
         :sensitive_content,
         :default_gravity,
         :alt,
