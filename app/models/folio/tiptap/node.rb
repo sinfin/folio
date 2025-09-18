@@ -56,12 +56,22 @@ class Folio::Tiptap::Node
         permitted << key
         permitted << { key => ::Folio::Tiptap::ALLOWED_URL_JSON_KEYS }
       when :folio_attachment
+        strong_params = [
+          :file_id,
+          :title,
+          :alt,
+          :description,
+          :position,
+          :_destroy,
+          folio_embed_data: Folio::Embed.hash_strong_params_keys,
+        ]
+
         if attr_config[:has_many]
           permitted << { "#{key.to_s.singularize}_ids" => [] }
-          permitted << { "#{key.to_s.singularize}_placements_attributes" => %i[file_id _destroy] }
+          permitted << { "#{key.to_s.singularize}_placements_attributes" => strong_params }
         else
           permitted << "#{key}_id"
-          permitted << { "#{key}_placement_attributes" => %i[file_id _destroy] }
+          permitted << { "#{key}_placement_attributes" => strong_params }
         end
       when :relation
         if attr_config[:has_many]

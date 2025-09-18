@@ -123,7 +123,7 @@ class Folio::Tiptap::NodeBuilder
       file_klass = class_name.constantize
 
       if attr_config[:has_many]
-        # Store data in XXX_placements_attributes as array of hashes with file_id, title and alt
+        # Store data in XXX_placements_attributes as array of hashes with file_id, title, alt, description and folio_embed_data
         #
         # Example:
         #   image_placements_attributes: [
@@ -157,6 +157,8 @@ class Folio::Tiptap::NodeBuilder
                 "file_id" => value[:file_id].to_i,
                 "title" => value[:title].presence,
                 "alt" => value[:alt].presence,
+                "description" => value[:description].presence,
+                "folio_embed_data" => Folio::Embed.normalize_setter_value(value[:folio_embed_data])
               }.compact
             end
           end
@@ -169,7 +171,9 @@ class Folio::Tiptap::NodeBuilder
           send("#{key.to_s.singularize}_placements_attributes").map do |attrs|
             Folio::FilePlacement::Tiptap.new(file_id: attrs["file_id"],
                                              title: attrs["title"],
-                                             alt: attrs["alt"])
+                                             alt: attrs["alt"],
+                                             description: attrs["description"],
+                                             folio_embed_data: attrs["folio_embed_data"])
           end
         end
 
@@ -192,6 +196,7 @@ class Folio::Tiptap::NodeBuilder
                 "file_id" => file.id,
                 "title" => file.title.presence,
                 "alt" => file.alt.presence,
+                "description" => file.description.presence,
               }.compact
             end
 
@@ -228,7 +233,7 @@ class Folio::Tiptap::NodeBuilder
           send("#{key.to_s.singularize}=", files)
         end
       else
-        # Store data in XXX_placement_attributes as a hash with file_id, title and alt
+        # Store data in XXX_placement_attributes as a hash with file_id, title, alt, description and folio_embed_data
         #
         # Example:
         #   cover_placements_attributes: {
@@ -245,6 +250,8 @@ class Folio::Tiptap::NodeBuilder
               "file_id" => value[:file_id].to_i,
               "title" => value[:title].presence,
               "alt" => value[:alt].presence,
+              "description" => value[:description].presence,
+              "folio_embed_data" => Folio::Embed.normalize_setter_value(value[:folio_embed_data])
             }.compact)
           else
             super(nil)
@@ -269,6 +276,7 @@ class Folio::Tiptap::NodeBuilder
               "file_id" => file.id,
               "title" => file.title.presence,
               "alt" => file.alt.presence,
+              "description" => file.description.presence,
             }.compact)
           else
             fail ArgumentError, "Expected a #{file_klass.name} for #{key}, got #{value.class.name}"
@@ -282,7 +290,9 @@ class Folio::Tiptap::NodeBuilder
           if attrs && attrs["file_id"].present?
             Folio::FilePlacement::Tiptap.new(file_id: attrs["file_id"],
                                              title: attrs["title"],
-                                             alt: attrs["alt"])
+                                             alt: attrs["alt"],
+                                             description: attrs["description"],
+                                             folio_embed_data: attrs["folio_embed_data"])
           end
         end
 
