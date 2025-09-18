@@ -16,7 +16,7 @@ class Folio::MediaSource < Folio::ApplicationRecord
 
   scope :ordered, -> { order(id: :desc) }
 
-  scope :by_site_slug, -> (slug) do
+  scope :by_allowed_site_slug, -> (slug) do
     joins(:allowed_sites).where(folio_sites: { slug: })
   end
 

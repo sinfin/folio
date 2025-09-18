@@ -24,6 +24,7 @@ cs:
       folio/content_template:
         content: Obsah
       folio/file:
+        allowed_site: Titul
         author: Autor
         attribution_copyright: Copyright
         attribution_source: Zdroj
@@ -39,6 +40,7 @@ cs:
         description: Popis
         file_mime_type: Typ souboru
         file_size: Velikost souboru
+        media_source: Zdroj
         preview_duration: Kolik vteřin je zdarma?
         used: Použitý
         usage_constraints: Omezení použití
@@ -57,7 +59,7 @@ cs:
         licence: Licence
         max_usage_count: Max. použití
         copyright_text: Copyright text
-        site: Titul
+        allowed_site: Titul
         allowed_sites: Titul
         assigned_media_count: Přiřazeno obrázků
       folio/menu:

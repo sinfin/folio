@@ -147,6 +147,8 @@ module Folio::Console::FileControllerBase
 
       if @klass.included_modules.include?(Folio::File::HasUsageConstraints)
         filters[:by_usage_constraints] = @klass.usage_constraints_for_select
+        filters[:by_allowed_site_slug] = Folio::Site.ordered.map { |site| [site.to_label, site.slug] }
+        filters[:by_media_source] = { klass: "Folio::MediaSource", order_scope: :ordered }
       end
 
       filters

@@ -24,6 +24,14 @@ module Folio::File::HasUsageConstraints
       end
     end
 
+    scope :by_allowed_site_slug, -> (slug) do
+      joins(:allowed_sites).where(folio_sites: { slug: })
+    end
+
+    scope :by_media_source, -> (media_source_id) do
+      joins(:media_source).where(folio_media_sources: { id: media_source_id })
+    end
+
     def self.usage_constraints_for_select
       [
         [I18n.t(".activerecord.attributes.folio/file.usage_constraints/usable"), "usable"],

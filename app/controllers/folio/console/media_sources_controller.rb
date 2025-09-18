@@ -12,7 +12,7 @@ class Folio::Console::MediaSourcesController < Folio::Console::BaseController
 
     def index_filters
       {
-        by_site_slug: Folio::Site.ordered.map { |site| [site.to_label, site.slug] }
+        by_allowed_site_slug: Folio::Site.ordered.map { |site| [site.to_label, site.slug] }
       }
     end
 
