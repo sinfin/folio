@@ -44,8 +44,18 @@ module Folio::File::HasUsageConstraints
       end
     end
 
+    scope :by_allowed_site, -> (site) do
+      left_joins(:allowed_sites).where(
+        "folio_sites.id IS NULL OR folio_sites.id = ?",
+        site.id
+      )
+    end
+
     scope :by_allowed_site_slug, -> (slug) do
-      joins(:allowed_sites).where(folio_sites: { slug: })
+      left_joins(:allowed_sites).where(
+        "folio_sites.id IS NULL OR folio_sites.slug = ?",
+        slug
+      )
     end
 
     scope :by_media_source, -> (media_source_id) do
