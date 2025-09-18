@@ -304,12 +304,7 @@ class Folio::File < Folio::ApplicationRecord
     # to be overriden in main_app should be needed
   end
 
-  def update_usage_count!
-    # TODO: only published placements should be counted towards usage
-    new_count = file_placements
-                  .distinct
-                  .count("CONCAT(placement_type, ':', placement_id)")
-    update_column(:usage_count, new_count) if usage_count != new_count
+    update_column(:published_usage_count, new_count) if published_usage_count != new_count
   end
 
 
@@ -406,7 +401,7 @@ end
 #  file_metadata_extracted_at        :datetime
 #  media_source_id                   :bigint(8)
 #  attribution_max_usage_count       :integer
-#  usage_count                       :integer          default(0), not null
+#  published_usage_count             :integer          default(0), not null
 #
 # Indexes
 #
@@ -417,10 +412,10 @@ end
 #  index_folio_files_on_file_name                (file_name)
 #  index_folio_files_on_hash_id                  (hash_id)
 #  index_folio_files_on_media_source_id          (media_source_id)
+#  index_folio_files_on_published_usage_count    (published_usage_count)
 #  index_folio_files_on_site_id                  (site_id)
 #  index_folio_files_on_type                     (type)
 #  index_folio_files_on_updated_at               (updated_at)
-#  index_folio_files_on_usage_count              (usage_count)
 #
 # Foreign Keys
 #

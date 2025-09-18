@@ -350,7 +350,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_17_133815) do
     t.datetime "file_metadata_extracted_at"
     t.bigint "media_source_id"
     t.integer "attribution_max_usage_count"
-    t.integer "usage_count", default: 0, null: false
+    t.integer "published_usage_count", default: 0, null: false
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((author)::text, ''::text)))", name: "index_folio_files_on_by_author", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name)::text, ''::text)))", name: "index_folio_files_on_by_file_name", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text)))", name: "index_folio_files_on_by_file_name_for_search", using: :gin
@@ -358,10 +358,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_17_133815) do
     t.index ["file_name"], name: "index_folio_files_on_file_name"
     t.index ["hash_id"], name: "index_folio_files_on_hash_id"
     t.index ["media_source_id"], name: "index_folio_files_on_media_source_id"
+    t.index ["published_usage_count"], name: "index_folio_files_on_published_usage_count"
     t.index ["site_id"], name: "index_folio_files_on_site_id"
     t.index ["type"], name: "index_folio_files_on_type"
     t.index ["updated_at"], name: "index_folio_files_on_updated_at"
-    t.index ["usage_count"], name: "index_folio_files_on_usage_count"
   end
 
   create_table "folio_leads", force: :cascade do |t|

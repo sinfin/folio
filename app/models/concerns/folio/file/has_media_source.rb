@@ -19,7 +19,7 @@ module Folio::File::HasMediaSource
 
   def usage_limit_exceeded?
     return false unless attribution_max_usage_count&.positive?
-    usage_count >= attribution_max_usage_count
+    published_usage_count >= attribution_max_usage_count
   end
 
   def can_be_used_on_site?(site)
