@@ -1,4 +1,8 @@
-div data=data class=bem_class_name
+div[
+  data=data
+  class=bem_class_name
+  class=(unmet_requirements.present? ? "f-file-list-file--unmet-requirements" : nil)
+]
   - if @batch_actions
     div[
       class="f-file-list-file__part"
