@@ -25,6 +25,7 @@ en:
         attribution_source: Source
         attribution_source_url: Source URL
         attribution_licence: Licence
+        attribution_max_usage_count: Max usage count
         default_gravity/center: Center
         default_gravity/east: East
         default_gravity/north: North
@@ -36,7 +37,8 @@ en:
         preview_duration: How many seconds are free?
         used: Used
         usage_constraints: Usage constraints
-        attribution_max_usage_count: Max usage count
+        usage_constraints/usable: Použitelné
+        usage_constraints/unusable: Nepoužitelné
         subtitles_cs_text: Subtitles (CZ)
         subtitles_en_text: Subtitles (EN)
       folio/file/image:

@@ -35,7 +35,7 @@ cs:
         metadata_extracted_at_prefix: 'Metadata automaticky extrahována dne'
         metadata_extracted_at_suffix: 'Při extrakci se vyplňují pouze prázdná pole, aby se zachovaly ruční úpravy.'
         has_data: 'obsahuje data'
-        
+
         # Metadata field labels (used by React via _translations.slim)
         metadata:
           headline: 'Titulek'
@@ -84,34 +84,32 @@ cs:
           gps_coordinates: 'GPS souřadnice'
           gps_latitude: 'GPS šířka'
           gps_longitude: 'GPS délka'
-          
+
           # Field values
           flash_values:
             not_used: "Nepoužit"
             used: "Použit"
             used_with_value: "Použit (%{value})"
-          
+
           white_balance_values:
             auto: "Auto"
             manual: "Manuální"
-          
+
           exposure_mode_values:
             auto: "Auto"
             manual: "Manuální"
             aperture_priority: "Auto s prioritou clony"
-          
+
           metering_mode_values:
             average: "Průměrné"
             center_weighted: "Středově vážené"
             spot: "Bodové"
             matrix: "Maticové"
-          
+
           color_space_values:
             srgb: "sRGB"
             adobe_rgb: "Adobe RGB"
 
-          
       files:
         metadata_extracted: 'Metadata byla úspěšně extrahována z obrázku'
         metadata_extraction_failed: 'Nepodařilo se extrahovat metadata z obrázku'
-      

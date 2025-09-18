@@ -12,6 +12,24 @@ module Folio::File::HasUsageConstraints
 
     before_save :handle_attribution_source_changes
     after_save :broadcast_show_reload_if_needed
+
+    scope :by_usage_constraints, -> (constraint_status) do
+      case constraint_status
+      when "usable", "true"
+        where("attribution_max_usage_count IS NULL OR published_usage_count < attribution_max_usage_count")
+      when "unusable", "false"
+        where("attribution_max_usage_count > 0 AND published_usage_count >= attribution_max_usage_count")
+      else
+        none
+      end
+    end
+
+    def self.usage_constraints_for_select
+      [
+        [I18n.t(".activerecord.attributes.folio/file.usage_constraints/usable"), "usable"],
+        [I18n.t(".activerecord.attributes.folio/file.usage_constraints/unusable"), "unusable"],
+      ]
+    end
   end
 
   def media_source_sites

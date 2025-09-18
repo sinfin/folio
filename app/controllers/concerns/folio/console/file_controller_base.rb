@@ -141,9 +141,15 @@ module Folio::Console::FileControllerBase
     end
 
     def index_filters
-      {
-        by_used: [true, false],
+      filters = {
+        by_used: [true, false]
       }
+
+      if @klass.included_modules.include?(Folio::File::HasUsageConstraints)
+        filters[:by_usage_constraints] = @klass.usage_constraints_for_select
+      end
+
+      filters
     end
 
     def allowed_record_sites

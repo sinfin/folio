@@ -29,6 +29,7 @@ cs:
         attribution_source: Zdroj
         attribution_source_url: Zdroj URL
         attribution_licence: Licence
+        attribution_max_usage_count: Maximální počet použití
         default_gravity/center: Uprostřed
         default_gravity/east: Vpravo
         default_gravity/north: Nahoře
@@ -39,9 +40,10 @@ cs:
         file_mime_type: Typ souboru
         file_size: Velikost souboru
         preview_duration: Kolik vteřin je zdarma?
-        usage_constraints: Omezení použití
-        attribution_max_usage_count: Maximální počet použití
         used: Použitý
+        usage_constraints: Omezení použití
+        usage_constraints/usable: Použitelné
+        usage_constraints/unusable: Nepoužitelné
         subtitles_cs_enabled: Zobrazit titulky
         subtitles_cs_text: Titulky (CZ)
         subtitles_en_text: Titulky (EN)
