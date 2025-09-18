@@ -250,11 +250,12 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
   }
 
   addToPicker () {
-    this.dispatch('addToPicker', {
+    this.element.dispatchEvent(new CustomEvent('f-c-file-placements-multi-picker-fields:addToPicker', {
+      bubbles: true,
       detail: {
         files: JSON.parse(this.element.dataset.serializedFiles)
       }
-    })
+    }))
 
     this.batchAction({ action: 'remove-all' })
   }

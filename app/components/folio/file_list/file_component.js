@@ -15,7 +15,8 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
     destroyable: { type: Boolean, default: false },
     selectable: { type: Boolean, default: false },
     batchActions: { type: Boolean, default: false },
-    primaryAction: { type: String, default: '' }
+    primaryAction: { type: String, default: '' },
+    serializedFileJson: String
   }
 
   static ERROR_MESSAGES = {
@@ -203,7 +204,18 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
     if (this.primaryActionValue === 'index_for_modal') {
       this.dispatch('select', { detail: { fileId: this.idValue } })
     } else if (this.primaryActionValue === 'index_for_picker') {
-      this.toggleBatch(e)
+      const batchBar = document.querySelector('.f-c-files-batch-bar')
+      console.log('if', 'this.serialized...lue:', this.serializedFileJsonValue, 'batchBar:', batchBar, 'batchBar.hidden:', batchBar.hidden)
+      if (this.serializedFileJsonValue && batchBar && batchBar.hidden) {
+        this.element.dispatchEvent(new CustomEvent('f-c-file-placements-multi-picker-fields:addToPicker', {
+          bubbles: true,
+          detail: {
+            files: [JSON.parse(this.serializedFileJsonValue)]
+          }
+        }))
+      } else {
+        this.toggleBatch(e)
+      }
     } else if (this.primaryActionValue === 'index') {
       const batchBar = document.querySelector('.f-c-files-batch-bar')
       if (batchBar && batchBar.getAttribute('data-f-c-files-batch-bar-file-ids-json-value') !== '[]') {

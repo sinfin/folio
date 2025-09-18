@@ -54,6 +54,7 @@ class Folio::FileListComponent < Folio::ApplicationComponent
       selectable: @selectable,
       batch_actions: @batch_actions || @removable_from_batch,
       primary_action: @primary_action,
+      serialize: @serialize_files,
     }
 
     @file_args.merge(file:, template:, thead:)

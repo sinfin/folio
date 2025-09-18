@@ -11,6 +11,7 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
                  destroyable: false,
                  selectable: false,
                  batch_actions: false,
+                 serialize: false,
                  primary_action: nil)
     @file = file
     throw ArgumentError, "File is nil" if @file.nil?
@@ -22,6 +23,7 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
     @selectable = selectable
     @batch_actions = batch_actions
     @primary_action = primary_action
+    @serialize = serialize
   end
 
   def data
@@ -34,6 +36,7 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
                           editable: @editable,
                           destroyable: @destroyable,
                           batch_actions: @batch_actions,
+                          serialized_file_json:,
                         },
                         action: @editable ? {
                           "f-file-list-file:updated": "fileUpdated",
@@ -180,6 +183,14 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
       FILE_ICON_KEYS[human_type] || FILE_ICON_KEYS["default"]
     else
       FILE_ICON_KEYS["default"]
+    end
+  end
+
+  def serialized_file_json
+    if @serialize && @file && @file.id
+      Folio::Console::FileSerializer.new(@file).serializable_hash[:data].to_json
+    else
+      ""
     end
   end
 end

@@ -21,7 +21,7 @@ class Folio::Console::FilePlacements::MultiPickerFieldsComponent < Folio::Consol
                             empty: @f.object.send(@placement_key).blank?,
                           },
                           action: {
-                            "f-c-files-batch-bar:addToPicker" => "onBatchBarAddToPicker",
+                            "f-c-file-placements-multi-picker-fields:addToPicker" => "onAddToPicker",
                             "f-nested-fields:add" => "onCountChange",
                             "f-nested-fields:destroyed" => "onCountChange",
                           })
