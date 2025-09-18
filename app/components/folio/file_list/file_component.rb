@@ -128,7 +128,7 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
   end
 
   def usage_limit_exceeded_html
-    icon_html = folio_icon(:speedometer, height: 16, class: "text-danger")
+    icon_html = folio_icon(:speedometer, height: 12, class: "text-danger")
     text_html = content_tag(:span, I18n.t("errors.messages.file_published_usage_limit_exceeded", count: @file.attribution_max_usage_count).capitalize)
 
     content_tag(:span, class: "d-flex align-items-center gap-2") do
