@@ -16,9 +16,29 @@ module Folio::File::HasUsageConstraints
     scope :by_usage_constraints, -> (constraint_status) do
       case constraint_status
       when "usable", "true"
-        where("attribution_max_usage_count IS NULL OR published_usage_count < attribution_max_usage_count")
+        usable_by_limit = where("attribution_max_usage_count IS NULL OR published_usage_count < attribution_max_usage_count")
+
+        if Rails.application.config.folio_shared_files_between_sites
+          usable_by_limit.where(
+            "media_source_id IS NULL OR NOT EXISTS (SELECT 1 FROM folio_file_site_links WHERE folio_file_site_links.file_id = folio_files.id) OR EXISTS (SELECT 1 FROM folio_file_site_links WHERE folio_file_site_links.file_id = folio_files.id AND folio_file_site_links.site_id = ?)",
+            Folio::Current.site.id
+          )
+        else
+          usable_by_limit
+        end
       when "unusable", "false"
-        where("attribution_max_usage_count > 0 AND published_usage_count >= attribution_max_usage_count")
+        unusable_by_limit = where("attribution_max_usage_count > 0 AND published_usage_count >= attribution_max_usage_count")
+
+        if Rails.application.config.folio_shared_files_between_sites
+          unusable_by_site = where(
+            "media_source_id IS NOT NULL AND EXISTS (SELECT 1 FROM folio_file_site_links WHERE folio_file_site_links.file_id = folio_files.id) AND NOT EXISTS (SELECT 1 FROM folio_file_site_links WHERE folio_file_site_links.file_id = folio_files.id AND folio_file_site_links.site_id = ?)",
+            Folio::Current.site.id
+          )
+
+          where(id: unusable_by_limit.select(:id).union(unusable_by_site.select(:id)))
+        else
+          unusable_by_limit
+        end
       else
         none
       end
