@@ -10,6 +10,7 @@ class Folio::MediaSource < Folio::ApplicationRecord
   accepts_nested_attributes_for :media_source_site_links, allow_destroy: true
 
   validates :title, presence: true, uniqueness: true
+  validates :max_usage_count, numericality: { greater_than: 0, allow_nil: true }
 
   before_destroy :check_usage_before_destroy
 

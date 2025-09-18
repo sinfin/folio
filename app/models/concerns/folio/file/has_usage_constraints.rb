@@ -8,6 +8,8 @@ module Folio::File::HasUsageConstraints
     has_many :file_site_links, class_name: "Folio::FileSiteLink", foreign_key: :file_id, dependent: :destroy
     has_many :allowed_sites, through: :file_site_links, source: :site
 
+    validates :attribution_max_usage_count, numericality: { greater_than: 0, allow_nil: true }
+
     before_save :handle_attribution_source_changes
     after_save :broadcast_show_reload_if_needed
   end
