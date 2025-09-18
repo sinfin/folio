@@ -111,8 +111,8 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
         }
       })
 
-      this.uppy.on('upload-success', (file, result) => {
-        this.uppyUploadSuccess(file, result)
+      this.uppy.on('upload-success', (file) => {
+        this.uppyUploadSuccess(file)
       })
 
       this.uppy.on('complete', (result) => {
@@ -150,8 +150,8 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
     }
   }
 
-  uppyUploadSuccess (file, result) {
-    this.dispatch('upload-success', { detail: { file, result } })
+  uppyUploadSuccess (file) {
+    this.dispatch('upload-success', { detail: { file } })
   }
 
   showError (message) {
