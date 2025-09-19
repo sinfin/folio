@@ -6,7 +6,7 @@ class Folio::Console::Files::UsageConstraintsComponent < Folio::Console::Applica
   end
 
   def can_edit?
-    Folio::Current.ability.can?(:edit_usage_constraints, @file)
+    Folio::Current.ability&.can?(:edit_usage_constraints, @file) || false
   end
 
   def allowed_sites_collection

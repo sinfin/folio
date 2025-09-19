@@ -92,11 +92,9 @@ module Folio::File::HasUsageConstraints
       if attribution_source_changed?
         if attribution_source.present?
           if Rails.application.config.folio_shared_files_between_sites
-            found_media_source = Folio::MediaSource.accessible_by(Folio::Current.ability)
-                                                   .find_by(title: attribution_source)
+            found_media_source = Folio::MediaSource.find_by(title: attribution_source)
           else
             found_media_source = Folio::MediaSource.by_site(Folio::Current.site)
-                                                   .accessible_by(Folio::Current.ability)
                                                    .find_by(title: attribution_source)
           end
 
