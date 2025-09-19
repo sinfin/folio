@@ -16,14 +16,8 @@
     opacity: 0.5
 
   &--unmet-requirements
-    position: relative
-
-    &::after
-      content: ''
-      position: absolute
-      inset: 0
-      background: rgba(0, 0, 0, 0.5)
-      z-index: 2
+    color: white !important
+    background-color: rgba(0, 0, 0, 0.25) !important
 
   &__part
     position: relative
@@ -115,6 +109,14 @@
   .f-file-list--view-grid > .f-file-list__container &
     background-color: $overlays-black-100
     border-radius: $border-radius
+
+    &--unmet-requirements::after
+      content: ''
+      position: absolute
+      inset: 0
+      background: rgba(0, 0, 0, 0.5)
+      z-index: 2
+      pointer-events: none
 
     &__part:empty
       display: none
