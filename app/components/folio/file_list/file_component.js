@@ -6,6 +6,7 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
 
   static values = {
     id: { type: String, default: '' },
+    loadFromId: { type: Boolean, default: false },
     templateData: { type: String, default: '' },
     jwt: { type: String, default: '' },
     s3Path: { type: String, default: '' },
@@ -33,6 +34,11 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
   }
 
   connect () {
+    if (this.loadFromIdValue) {
+      this.reload({ handleErrors: true })
+      return
+    }
+
     if (this.templateDataValue) {
       this.fillTemplate()
     }
@@ -128,7 +134,9 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
   messageBusCallbackGeneric (event) {
     const message = event.detail.message
 
-    if (message.type === 'Folio::Console::FileControllerBase/file_updated' || (message.type === 'Folio::S3::CreateFileJob' && message.data.type === 'replace-success')) {
+    if (message.type === 'Folio::Console::FileControllerBase/file_updated' ||
+        message.type === 'Folio::ApplicationJob/file_update' ||
+        (message.type === 'Folio::S3::CreateFileJob' && message.data.type === 'replace-success')) {
       this.reload({ handleErrors: false })
     }
   }
@@ -296,7 +304,7 @@ if (window.Folio && window.Folio.MessageBus && window.Folio.MessageBus.callbacks
     if (!message) return
     let selector
 
-    if (message.type === 'Folio::Console::FileControllerBase/file_updated') {
+    if (message.type === 'Folio::Console::FileControllerBase/file_updated' || message.type === 'Folio::ApplicationJob/file_update') {
       selector = `.f-file-list-file[data-f-file-list-file-id-value="${message.data.id}"]`
     } else if (message.type === 'Folio::S3::CreateFileJob') {
       selector = `.f-file-list-file[data-f-file-list-file-s3-path-value="${message.data.s3_path}"], .f-file-list-file[data-f-file-list-file-id-value="${message.data.file_id}"]`
