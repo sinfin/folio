@@ -114,13 +114,16 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
       end
     end
 
-    if @file.class.included_modules.include?(Folio::File::HasUsageConstraints) && @file.usage_limit_exceeded?
-      ary << usage_limit_exceeded_html
+    if @file.class.included_modules.include?(Folio::File::HasUsageConstraints)
+      if @file.usage_limit_exceeded?
+        ary << usage_limit_exceeded_html
+      end
+
+      if !@file.can_be_used_on_site?(Folio::Current.site)
+        ary << site_restriction_html
+      end
     end
 
-    if @file.class.included_modules.include?(Folio::File::HasUsageConstraints) && !@file.can_be_used_on_site?(Folio::Current.site)
-      ary << site_restriction_html
-    end
 
     @unmet_requirements = ary.presence || false
   end

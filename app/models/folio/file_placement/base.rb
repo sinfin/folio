@@ -14,6 +14,7 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
   validate :validate_attribution_if_needed
   validate :validate_alt_if_needed
   validate :validate_description_if_needed
+  validate :validate_usage_limit_if_published_placement, on: [:create, :update], if: :should_validate_usage_limit?
 
   after_save :run_after_save_job!
   after_touch :run_after_save_job!
@@ -217,6 +218,30 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
     def update_file_published_usage_count_on_file_change
       [file_id_before_last_save, file_id].compact.uniq.each do |f_id|
         Folio::File.find_by(id: f_id)&.update_published_usage_count!
+      end
+    end
+
+    def should_validate_usage_limit?
+      return true if new_record?
+
+      file_id_changed?
+    end
+
+    def validate_usage_limit_if_published_placement
+      return if file.blank? || placement.blank?
+      return unless file.class.included_modules.include?(Folio::File::HasUsageConstraints)
+      return unless placement.respond_to?(:published) && placement.published == true
+
+      # Check if this file is already used in this placement - if so, no new usage is added
+      existing_placement = Folio::FilePlacement::Base
+        .where(placement_id: placement_id, placement_type: placement_type, file_id: file_id)
+        .where.not(id: id)
+        .exists?
+
+      return if existing_placement
+
+      if file.usage_limit_exceeded?
+        errors.add(:file, I18n.t("errors.messages.file_usage_limit_exceeded"))
       end
     end
 end
