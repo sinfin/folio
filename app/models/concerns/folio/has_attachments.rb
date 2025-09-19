@@ -55,6 +55,10 @@ module Folio::HasAttachments
     attr_accessor :dont_run_file_placements_after_save
 
     validate :validate_file_placements_if_needed
+    validate :validate_files_usage_limits_if_publishing
+
+    after_commit :update_file_usage_counts_on_publish_change,
+                 if: :should_update_file_usage_counts?
   end
 
   class_methods do
@@ -249,5 +253,66 @@ module Folio::HasAttachments
       if has_invalid_file_placements
         errors.add(:base, :has_invalid_file_placements)
       end
+    end
+
+    def should_update_file_usage_counts?
+      # Only for publishable objects that have published status
+      return false unless respond_to?(:saved_changes)
+      return false unless respond_to?(:published)
+
+      saved_changes.key?("published")
+    end
+
+    def update_file_usage_counts_on_publish_change
+      files = Folio::FilePlacement::Base
+               .where(placement_id: id, placement_type: self.class.base_class.name)
+               .includes(:file)
+               .map(&:file)
+               .uniq
+               .compact
+
+      files.each(&:update_published_usage_count!)
+    end
+
+    def validate_files_usage_limits_if_publishing
+      # Only validate if object is being published
+      return unless respond_to?(:published_changed?) && respond_to?(:published)
+      return unless published_changed? && published == true
+
+      get_files_with_usage_constraints.each do |file|
+        if file.usage_limit_exceeded?
+          errors.add(:base, I18n.t("errors.messages.cannot_publish_with_files_over_usage_limit",
+                                   name: file.file_name,
+                                   limit: file.attribution_max_usage_count))
+        end
+      end
+    end
+
+    def get_files_with_usage_constraints
+      # Get unique file types that have HasUsageConstraints concern
+      file_types_with_constraints = Folio::FilePlacement::Base
+        .joins("INNER JOIN folio_files ON folio_files.id = folio_file_placements.file_id")
+        .where(placement_id: id, placement_type: self.class.base_class.name)
+        .distinct
+        .pluck("folio_files.type")
+        .compact
+        .select { |type| type.constantize.included_modules.include?(Folio::File::HasUsageConstraints) }
+        .uniq
+
+      return [] if file_types_with_constraints.empty?
+
+      file_ids = Folio::File
+        .joins(:file_placements)
+        .where(
+          type: file_types_with_constraints,
+          file_placements: {
+            placement_id: id,
+            placement_type: self.class.base_class.name
+          }
+        )
+        .distinct
+        .pluck(:id)
+
+      Folio::File.where(id: file_ids)
     end
 end

@@ -241,7 +241,9 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
       return if existing_placement
 
       if file.usage_limit_exceeded?
-        errors.add(:file, I18n.t("errors.messages.file_usage_limit_exceeded"))
+        errors.add(:file, I18n.t("errors.messages.cannot_publish_with_files_over_usage_limit",
+                                  name: file.file_name,
+                                  limit: file.attribution_max_usage_count))
       end
     end
 end
