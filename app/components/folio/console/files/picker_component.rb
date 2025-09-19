@@ -5,6 +5,7 @@ class Folio::Console::Files::PickerComponent < Folio::Console::ApplicationCompon
                  file_klass:,
                  file_placement: nil,
                  placement_key: nil,
+                 in_place_inputs: nil,
                  hint: nil,
                  darker: false,
                  size: "default",
@@ -17,6 +18,7 @@ class Folio::Console::Files::PickerComponent < Folio::Console::ApplicationCompon
     @required = required
     @file_placement = file_placement
     @size = size
+    @in_place_inputs = in_place_inputs
 
     if @file_placement
       @as_file_placement = true
