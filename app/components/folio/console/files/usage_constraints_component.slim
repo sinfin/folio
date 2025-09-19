@@ -10,5 +10,9 @@
 
     .f-c-files-usage-constraints__sites
       = folio_icon(:form_select, height: 12)
-      - if @file.allowed_sites.present?
-        span = @file.allowed_sites.pluck(:title).join(", ")
+      = render(Folio::Console::Ui::InPlaceInputComponent.new(attribute: :allowed_site_ids,
+                                                              record: @file,
+                                                              as: :file,
+                                                              collection: allowed_sites_collection,
+                                                              multiple: true,
+                                                              disabled: !can_edit?))

@@ -2,6 +2,7 @@ div[
   class=bem_class_name
   class=(@value_line_clamp ? "f-c-ui-in-place-input--value-line-clamp-#{@value_line_clamp}" : nil)
   class=(@disabled ? "f-c-ui-in-place-input--disabled" : nil)
+  class=(@multiple ? "f-c-ui-in-place-input--multiple" : nil)
   data=wrap_data
 ]
   .f-c-ui-in-place-input__content-wrap data=stimulus_target("contentWrap")
@@ -38,4 +39,5 @@ div[
                                                           collection: @collection,
                                                           force_cancel: true,
                                                           autocomplete: @autocomplete,
+                                                          multiple: @multiple,
                                                           f: @f))

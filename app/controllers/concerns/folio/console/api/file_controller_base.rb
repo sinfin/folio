@@ -285,6 +285,7 @@ module Folio::Console::Api::FileControllerBase
         :attribution_source_url,
         :attribution_copyright,
         :attribution_licence,
+        :attribution_max_usage_count,
         :description,
         :sensitive_content,
         :default_gravity,
@@ -304,6 +305,7 @@ module Folio::Console::Api::FileControllerBase
       end
 
       ary << { tags: [] }
+      ary << { allowed_site_ids: [] }
 
       ary
     end

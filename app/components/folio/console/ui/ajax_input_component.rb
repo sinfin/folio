@@ -21,7 +21,8 @@ class Folio::Console::Ui::AjaxInputComponent < Folio::Console::ApplicationCompon
                  disabled: false,
                  rows: 1,
                  force_cancel: false,
-                 autocomplete: nil)
+                 autocomplete: nil,
+                 multiple: false)
     @name = name
     @url = url
     @value = value
@@ -43,6 +44,7 @@ class Folio::Console::Ui::AjaxInputComponent < Folio::Console::ApplicationCompon
     @collection = collection
     @autocomplete = autocomplete
     @force_cancel = force_cancel
+    @multiple = multiple
   end
 
   def data
@@ -125,6 +127,7 @@ class Folio::Console::Ui::AjaxInputComponent < Folio::Console::ApplicationCompon
       if @collection
         h[:tag] = :select
         h[:class] = "form-select f-c-ui-ajax-input__input f-c-ui-ajax-input__input--select"
+        h[:multiple] = @multiple
       else
         h[:tag] = :input
         h[:value] = formatted_value

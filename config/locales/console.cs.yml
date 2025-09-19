@@ -506,6 +506,7 @@ cs:
 
         usage_constraints_component:
           max_usage_count: "Maximální počet použití:"
+          allowed_sites_blank: Nevyplněno
 
       eleven_labs:
         transcribe_subtitles_job:
@@ -513,8 +514,6 @@ cs:
             file_too_large: "Soubor je větší než je limit ElevenLabs, nelze provést automatický přepis"
             no_audio_detected: "Ve video souboru nebylo detekováno žádné audio"
             cloud_storage_read_failed: "ElevenLabs nemohl načíst soubor z našeho cloudového úložiště"
-
-
 
   date:
     formats:

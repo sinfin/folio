@@ -498,6 +498,7 @@ en:
 
         usage_constraints_component:
           max_usage_count: "Max usage count:"
+          allowed_sites_blank: Blank
 
       eleven_labs:
         transcribe_subtitles_job:

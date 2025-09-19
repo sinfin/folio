@@ -115,15 +115,32 @@ window.Folio.Stimulus.register('f-c-ui-ajax-input', class extends window.Stimulu
 
       const name = this.inputTarget.name
 
-      const rawData = {}
-      rawData[name] = this.cleave ? this.cleave.getRawValue() : this.inputTarget.value
-
-      const data = window.Folio.formToHash(rawData)
+      let data
+      
+      if (this.inputTarget.multiple) {
+        const selectedValues = Array.from(this.inputTarget.selectedOptions).map(option => option.value)
+        const [mainKey, subKey] = name.split('[')
+        
+        data = { [mainKey]: { [subKey.replace(']', '')]: selectedValues } }
+      } else {
+        const rawData = { [name]: this.cleave ? this.cleave.getRawValue() : this.inputTarget.value }
+        data = window.Folio.formToHash(rawData)
+      }
 
       apiFn(this.urlValue, data).then((res) => {
         const key = name.replace(/^.+\[(.+)\]$/, '$1')
-        const newValue = res.data[key] || ''
-        const newLabel = res.meta && res.meta.labels ? res.meta.labels[key] : null
+        
+        let newValue, newLabel
+        
+        if (this.inputTarget.multiple) {
+          // For multiselect, prefer API data if available, fallback to DOM
+          newValue = res.data?.attributes?.[key] || res.data?.[key] || 
+                     Array.from(this.inputTarget.selectedOptions).map(option => option.value)
+          newLabel = Array.from(this.inputTarget.selectedOptions).map(option => option.text).join(', ')
+        } else {
+          newValue = res.data?.attributes?.[key] || res.data?.[key] || ''
+          newLabel = res.meta?.labels?.[key] || null
+        }
 
         this.successCallback(newValue, newLabel)
       }).catch((err) => {

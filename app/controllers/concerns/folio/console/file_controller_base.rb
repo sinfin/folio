@@ -65,7 +65,8 @@ module Folio::Console::FileControllerBase
         :sensitive_content,
         :default_gravity,
         :alt,
-        tags: []
+        tags: [],
+        allowed_site_ids: []
       ]
 
       test_instance = @klass.new

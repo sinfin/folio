@@ -15,7 +15,8 @@ class Folio::Console::Ui::InPlaceInputComponent < Folio::Console::ApplicationCom
                  textarea: nil,
                  collection: nil,
                  compact: false,
-                 disabled: false)
+                 disabled: false,
+                 multiple: false)
     @attribute = attribute
     @record = record
     @value = record.send(attribute)
@@ -30,6 +31,7 @@ class Folio::Console::Ui::InPlaceInputComponent < Folio::Console::ApplicationCom
     @data = data
     @compact = compact
     @disabled = disabled
+    @multiple = multiple
   end
 
   def url
@@ -60,8 +62,16 @@ class Folio::Console::Ui::InPlaceInputComponent < Folio::Console::ApplicationCom
 
   def value_or_label_from_collection
     if @value && @collection
-      item = @collection.find { |_label, value| value == @value }
-      return item[0] if item
+      if @multiple && @value.respond_to?(:map)
+        labels = @value.map do |v|
+          item = @collection.find { |_label, value| value.to_s == v.to_s }
+          item ? item[0] : v
+        end
+        return labels.join(", ")
+      else
+        item = @collection.find { |_label, value| value == @value }
+        return item[0] if item
+      end
     end
 
     @value
