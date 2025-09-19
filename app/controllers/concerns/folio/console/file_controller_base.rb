@@ -16,8 +16,6 @@ module Folio::Console::FileControllerBase
     @turbo_frame_id = @klass.console_turbo_frame_id(modal: action_name == "index_for_modal",
                                                     picker: action_name == "index_for_picker")
 
-    apply_site_filtering_for_non_index_context
-
     super
   end
 
@@ -199,18 +197,5 @@ module Folio::Console::FileControllerBase
       end
 
       render json: { data:, meta: }, status: 200
-    end
-
-    def apply_site_filtering_for_non_index_context
-      return if action_name == "index"
-      return unless @klass.included_modules.include?(Folio::File::HasUsageConstraints)
-
-      collection_name = folio_console_record_variable_name(plural: true)
-      collection = instance_variable_get(collection_name)
-
-      # Filter for usable files (includes both usage limits and site restrictions)
-      collection = collection.by_usage_constraints("usable")
-
-      instance_variable_set(collection_name, collection)
     end
 end
