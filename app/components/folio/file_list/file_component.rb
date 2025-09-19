@@ -31,6 +31,7 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
                         values: {
                           file_type: @file_klass.to_s,
                           id: @file ? @file.id : "",
+                          loaded: true,
                           primary_action: @primary_action,
                           selectable: @selectable,
                           editable: @editable,

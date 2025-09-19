@@ -38,6 +38,7 @@ class Folio::FileListComponent < Folio::ApplicationComponent
                           reload_pagy: @reload_pagy,
                         },
                         action: {
+                          "f-file-list/message" => "onMessage",
                           "f-uppy:upload-success": "uppyUploadSuccess",
                           "f-c-files-display-toggle:table-view-change": "tableViewChange",
                         })
