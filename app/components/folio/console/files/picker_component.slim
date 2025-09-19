@@ -34,7 +34,7 @@
 
       span.folio-loader.f-c-files-picker__loader
 
-    - unless @as_file_placement
+    - if !@as_file_placement && @in_place_inputs != false
       - if hint = hint_for(fp)
         small.f-c-files-picker__hint.form-text.text-muted
           = hint
