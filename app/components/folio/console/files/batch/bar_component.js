@@ -51,6 +51,10 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
     delete this.abortController
   }
 
+  reloadForm () {
+    this.openForm()
+  }
+
   openForm () {
     this.ajax({
       url: `${this.baseApiUrlValue}/open_batch_form`
