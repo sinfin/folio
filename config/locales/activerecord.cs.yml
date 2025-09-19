@@ -426,6 +426,7 @@ cs:
       has_invalid_file_placements: Některé soubory nesplňují požadavky
       invalid_count: musí být přesně %{count}
       cannot_publish_with_files_over_usage_limit: "%{name} má vyčerpaný limit použití (%{limit})"
+      cannot_publish_with_files_restricted_to_site: "%{name} není určen pro tuto stránku (povolený jen na: %{allowed_sites})"
       invalid_file_placement: nesplňuje požadavky
       invalid_subtitle_block: má nevalidní text na řádku %{line}
       file_published_usage_limit_exceeded: "maximální počet použití: %{count}"

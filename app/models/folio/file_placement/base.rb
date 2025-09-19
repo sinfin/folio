@@ -245,6 +245,12 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
                                   name: file.file_name,
                                   limit: file.attribution_max_usage_count))
       end
+
+      if !file.can_be_used_on_site?(Folio::Current.site)
+        errors.add(:base, I18n.t("errors.messages.cannot_publish_with_files_restricted_to_site",
+                                 name: file.file_name,
+                                 allowed_sites: file.allowed_sites.pluck(:title).join(", ")))
+      end
     end
 end
 
