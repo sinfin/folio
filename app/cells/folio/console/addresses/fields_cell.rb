@@ -3,6 +3,10 @@
 class Folio::Console::Addresses::FieldsCell < Folio::ConsoleCell
   include ActionView::Helpers::FormOptionsHelper
 
+  def disabled_fields?
+    options[:disabled] == true
+  end
+
   def cols
     options[:cols] || [
       [Folio::Address::Primary, :primary_address, nil],
@@ -26,9 +30,9 @@ class Folio::Console::Addresses::FieldsCell < Folio::ConsoleCell
       g.input(key, only: g.object.class.countries_whitelist,
                    priority: g.object.class.priority_countries(locale: I18n.locale),
                    include_blank: false,
-                   disabled: options[:disabled])
+                   disabled: disabled_fields?)
     else
-      g.input(key, required:, disabled: options[:disabled])
+      g.input(key, required:, disabled: disabled_fields?)
     end
   end
 
