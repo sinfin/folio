@@ -213,7 +213,6 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
       this.dispatch('select', { detail: { fileId: this.idValue } })
     } else if (this.primaryActionValue === 'index_for_picker') {
       const batchBar = document.querySelector('.f-c-files-batch-bar')
-      console.log('if', 'this.serialized...lue:', this.serializedFileJsonValue, 'batchBar:', batchBar, 'batchBar.hidden:', batchBar.hidden)
       if (this.serializedFileJsonValue && batchBar && batchBar.hidden) {
         this.element.dispatchEvent(new CustomEvent('f-c-file-placements-multi-picker-fields:addToPicker', {
           bubbles: true,
