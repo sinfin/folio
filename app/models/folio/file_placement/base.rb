@@ -24,11 +24,13 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
 
   attr_accessor :dont_run_after_save_jobs
 
+  attr_accessor :inside_nested_attributes
+
   def to_label
     title.presence || file.try(:file_name) || "error: empty file"
   end
 
-  def self.folio_file_placement(class_name, name = nil, allow_embed: false)
+  def self.folio_file_placement(class_name, name = nil, allow_embed: false, has_many: false)
     belongs_to :file, class_name:,
                       inverse_of: :file_placements,
                       required: allow_embed ? false : true
@@ -62,16 +64,18 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
         false
       end
     end
+
+    after_commit :update_placement_counts_unless_inside_nested_attributes
   end
 
-  def self.folio_image_placement(name = nil, allow_embed: false)
+  def self.folio_image_placement(name = nil, allow_embed: false, has_many: false)
     include Folio::PregenerateThumbnails
-    folio_file_placement("Folio::File::Image", name, allow_embed:)
+    folio_file_placement("Folio::File::Image", name, allow_embed:, has_many:)
     self.class_eval { alias :image :file }
   end
 
-  def self.folio_document_placement(name = nil)
-    folio_file_placement("Folio::File::Document", name)
+  def self.folio_document_placement(name = nil, has_many: false)
+    folio_file_placement("Folio::File::Document", name, has_many:)
   end
 
   def run_after_save_job!
@@ -106,7 +110,7 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
     end
   end
 
-  def audited_hash_key_fallback
+  def placement_key
     reflection = self.class.reflect_on_association(:placement)
 
     if reflection && reflection.options
@@ -215,6 +219,13 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
       if description.nil?
         self.description = file.description.presence
       end
+    end
+
+    def update_placement_counts_unless_inside_nested_attributes
+      return if inside_nested_attributes
+      return if placement.nil?
+      return if placement_key.blank?
+      placement.update_file_placement_count_if_needed!(placement_key:)
     end
 end
 

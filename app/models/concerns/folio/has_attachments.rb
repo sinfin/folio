@@ -16,6 +16,9 @@ module Folio::HasAttachments
     after_save :run_file_placements_after_save!
     after_save_commit :run_pregenerate_thumbnails_check_job_if_needed
 
+    attr_accessor :should_update_file_placement_counts
+    before_save :update_file_placement_counts_if_needed
+
     has_many_placements(:tiptap_files,
                         placements_key: :tiptap_placements,
                         placement: "Folio::FilePlacement::Tiptap")
@@ -80,7 +83,9 @@ module Folio::HasAttachments
                through: placements_key
 
       accepts_nested_attributes_for placements_key, allow_destroy: true, reject_if: proc { |attributes|
-        if attributes["file_id"] || attributes["file"]
+        if attributes["_destroy"].in?(["1", 1, true]) && attributes["id"].blank?
+          true
+        elsif attributes["file_id"] || attributes["file"]
           required_file_type = placement.constantize.reflections["file"].options[:class_name]
           file = attributes["file"] || Folio::File.find_by(id: attributes["file_id"])
           !file || !file.is_a?(required_file_type.constantize)
@@ -91,6 +96,17 @@ module Folio::HasAttachments
           attributes["id"].blank?
         end
       }
+
+      # override setter so that it adds a "inside_nested_attributes" bool to each hash
+      define_method("#{placements_key}_attributes=") do |attributes|
+        new_attributes = attributes.map do |hash|
+          { inside_nested_attributes: true }.merge(hash)
+        end
+
+        self.should_update_file_placement_counts = true
+
+        super(new_attributes)
+      end
     end
 
     def has_one_placement(target, placement:, placement_key: nil)
@@ -110,7 +126,9 @@ module Folio::HasAttachments
               through: placement_key
 
       accepts_nested_attributes_for placement_key, allow_destroy: true, reject_if: proc { |attributes|
-        if attributes["file_id"] || attributes["file"]
+        if attributes["_destroy"].in?(["1", 1, true]) && attributes["id"].blank?
+          true
+        elsif attributes["file_id"] || attributes["file"]
           required_file_type = placement.constantize.reflections["file"].options[:class_name]
           file = attributes["file"] || Folio::File.find_by(id: attributes["file_id"])
           !file || !file.is_a?(required_file_type.constantize)
@@ -189,6 +207,25 @@ module Folio::HasAttachments
 
     # only validate if published by default
     read_attribute(:published) == true
+  end
+
+  def update_file_placement_counts_if_needed
+    return unless should_update_file_placement_counts == true
+
+    self.class.folio_attachment_keys[:has_many].each do |placement_key|
+      if respond_to?("#{placement_key}_count=")
+        count = send(placement_key).reject(&:marked_for_destruction?).size
+
+        send("#{placement_key}_count=", count) if send("#{placement_key}_count") != count
+      end
+    end
+  end
+
+  def update_file_placement_count_if_needed!(placement_key:)
+    return unless respond_to?("#{placement_key}_count=")
+
+    count = send(placement_key).count
+    send("#{placement_key}_count=", count) if send("#{placement_key}_count") != count
   end
 
   private
