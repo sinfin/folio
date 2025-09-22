@@ -114,7 +114,7 @@ module Folio
         end
 
         def input_sanitized_as_rich_text
-          "<p>fixed#{utf_nbsp}space script-alert('xss') absolute-a-<a href=\"https://www.google.com/\" target=\"_blank\" rel=\"noopener noreferrer\">a</a> relative-a-<a href=\"/foo\" target=\"_self\" rel=\"nofollow\">a</a> hash-a-<a href=\"#foo\" target=\"_parent\" rel=\"bookmark\">a</a> xss-a-<a target=\"_blank\" rel=\"noopener\">a</a> img-<img> input- bar &amp; baz lt&lt; gt&gt;</p>"
+          "<p>fixed&nbsp;space script-alert('xss') absolute-a-<a href=\"https://www.google.com/\" target=\"_blank\" rel=\"noopener noreferrer\">a</a> relative-a-<a href=\"/foo\" target=\"_self\" rel=\"nofollow\">a</a> hash-a-<a href=\"#foo\" target=\"_parent\" rel=\"bookmark\">a</a> xss-a-<a target=\"_blank\" rel=\"noopener\">a</a> img-<img> input- bar &amp; baz lt&lt; gt&gt;</p>"
         end
     end
   end
