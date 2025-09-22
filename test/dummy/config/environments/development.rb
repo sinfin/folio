@@ -38,21 +38,7 @@ Rails.application.configure do
     puts "=" * 80 + "\n"
   else
     config.action_controller.perform_caching = false
-
     config.cache_store = :null_store
-
-    # Cache disabled banner
-    puts "\n" + "=" * 80
-    puts "❌ FOLIO DEVELOPMENT CACHE: DISABLED"
-    puts "=" * 80
-    puts "Store: :null_store (no caching)"
-    puts "Fragment caching is OFF"
-    puts "Cache headers are OFF"
-    puts "MiniProfiler: Auto-enabled"
-    puts "To enable: rails dev:cache"
-    puts "This will create tmp/caching-dev.txt"
-    puts "Documentation: docs/cache.md"
-    puts "=" * 80 + "\n"
   end
 
   # ActionMailer Config
