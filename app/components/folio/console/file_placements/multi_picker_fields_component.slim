@@ -9,7 +9,7 @@
         = render(Folio::Console::FilePlacements::MultiPickerFields::PlacementComponent.new(g:))
 
     .f-c-file-placements-multi-picker-fields__source
-      - if @placement_klass.try(:folio_file_placement_supports_embed?)
+      - if @placement_klass.folio_file_placement_supports_embed?
         .f-c-file-placements-multi-picker-fields__source-header
           = render(Folio::Console::Ui::TabsComponent.new(tabs:,
                                                          no_margin: true))

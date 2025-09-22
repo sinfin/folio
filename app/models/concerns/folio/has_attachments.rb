@@ -84,7 +84,7 @@ module Folio::HasAttachments
           required_file_type = placement.constantize.reflections["file"].options[:class_name]
           file = attributes["file"] || Folio::File.find_by(id: attributes["file_id"])
           !file || !file.is_a?(required_file_type.constantize)
-        elsif placement.constantize.try(:folio_file_placement_supports_embed?)
+        elsif placement.constantize.folio_file_placement_supports_embed?
           active = attributes.dig("folio_embed_data", "active")
           active != true && active != "true"
         else

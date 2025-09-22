@@ -57,6 +57,10 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
       end
 
       validate :validate_file_or_embed
+    else
+      define_singleton_method :folio_file_placement_supports_embed? do
+        false
+      end
     end
   end
 
@@ -174,6 +178,14 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
   # override setter so that active gets set as a boolean instead of a string
   def folio_embed_data=(value)
     super(Folio::Embed.normalize_setter_value(value))
+  end
+
+  def active_embed?
+    if self.class.folio_file_placement_supports_embed?
+      folio_embed_data.present? && folio_embed_data["active"] == true
+    else
+      false
+    end
   end
 
   private
