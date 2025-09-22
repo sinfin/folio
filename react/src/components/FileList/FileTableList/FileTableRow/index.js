@@ -94,9 +94,9 @@ const FileTableRow = ({
 
       {massSelect && (
         <div className='f-c-file-table__td f-c-file-table__td--extension'>
-          {file.attributes.file_placements_size ? (
+          {file.attributes.file_placements_count ? (
             <div className='f-c-file-table__file-placements-count'>
-              {file.attributes.file_placements_size}
+              {file.attributes.file_placements_count}
             </div>
           ) : null}
         </div>

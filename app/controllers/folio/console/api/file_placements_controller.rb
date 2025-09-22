@@ -7,8 +7,8 @@ class Folio::Console::Api::FilePlacementsController < Folio::Console::Api::BaseC
 
     pagination, records = pagy(file.file_placements, items: 20)
 
-    if file.file_placements_size != pagination.count
-      file.update_column(:file_placements_size, pagination.count)
+    if file.file_placements_count != pagination.count
+      file.update_column(:file_placements_count, pagination.count)
     end
 
     render_records(records,

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_15_090051) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_22_094005) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -318,7 +318,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_15_090051) do
     t.string "hash_id"
     t.string "author"
     t.text "description"
-    t.integer "file_placements_size"
+    t.integer "file_placements_count", default: 0, null: false
     t.string "file_name_for_search"
     t.boolean "sensitive_content", default: false
     t.string "file_mime_type"

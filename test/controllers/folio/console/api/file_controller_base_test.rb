@@ -119,7 +119,7 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
       assert_equal("3", parsed_component.css(".f-c-files-batch-bar__count").first.text.strip)
 
       # make file indestructible
-      files.first.update_column(:file_placements_size, 1)
+      files.first.update_column(:file_placements_count, 1)
 
       delete url_for([:batch_delete, :console, :api, klass, format: :json]), params: { file_ids: }
 
@@ -127,7 +127,7 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
       assert_equal 3, klass.where(id: file_ids).count, "Don't delete file_ids when some of them are indestructible"
 
       # make file destructible
-      files.first.update_column(:file_placements_size, 0)
+      files.first.update_column(:file_placements_count, 0)
 
       delete url_for([:batch_delete, :console, :api, klass, format: :json]), params: { file_ids: }
 

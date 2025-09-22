@@ -454,13 +454,13 @@ function filesReducer (rawState = initialState, action) {
       if (action.select) {
         massSelectedIds = [...massSelectedIds, action.file.id]
 
-        if (action.file.attributes.file_placements_size) {
+        if (action.file.attributes.file_placements_count) {
           massSelectedIndestructibleIds = [...massSelectedIndestructibleIds, action.file.id]
         }
       } else {
         massSelectedIds = without(massSelectedIds, action.file.id)
 
-        if (action.file.attributes.file_placements_size) {
+        if (action.file.attributes.file_placements_count) {
           massSelectedIndestructibleIds = without(massSelectedIndestructibleIds, action.file.id)
         }
       }

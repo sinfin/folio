@@ -99,13 +99,59 @@ module Folio::HasAttachments
 
       # override setter so that it adds a "inside_nested_attributes" bool to each hash
       define_method("#{placements_key}_attributes=") do |attributes|
-        new_attributes = attributes.map do |hash|
+        attributes_array = if attributes.is_a?(Hash)
+          attributes.values
+        else
+          Array(attributes)
+        end
+
+        new_attributes = attributes_array.filter_map do |hash|
+          next hash unless hash.is_a?(Hash)
           { inside_nested_attributes: true }.merge(hash)
         end
 
         self.should_update_file_placement_counts = true
 
-        super(new_attributes)
+        # Convert back to original format if it was a hash
+        final_attributes = if attributes.is_a?(Hash)
+          new_attributes.each_with_index.to_h { |attrs, index| [index.to_s, attrs] }
+        else
+          new_attributes
+        end
+
+        super(final_attributes)
+      end
+
+      # Override collection setter to handle counter cache updates for has_many :through
+      define_method("#{targets}=") do |new_files|
+        # Track affected files before assignment to update their counters
+        old_files = respond_to?(targets) ? send(targets).to_a : []
+
+        # Call original setter (Rails handles placement creation/destruction)
+        result = super(new_files)
+
+        # Update counter cache for all affected files after the bulk operation
+        # Use Arel for proper SQL generation and parameter binding
+        affected_files = (old_files + Array(new_files)).uniq.compact
+        affected_files.each do |file|
+          # Manually recalculate and update the counter cache
+          current_count = file.file_placements.count
+          if file.file_placements_count != current_count
+            # Use Arel to build a proper UPDATE statement
+            table = file.class.arel_table
+            update_manager = Arel::UpdateManager.new
+            update_manager.table(table)
+            update_manager.set([
+              [table[:file_placements_count], current_count]
+            ])
+            update_manager.where(table[:id].eq(file.id))
+
+            file.class.connection.execute(update_manager.to_sql)
+            file.file_placements_count = current_count # Update in-memory value
+          end
+        end
+
+        result
       end
     end
 

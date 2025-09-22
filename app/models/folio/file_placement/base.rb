@@ -33,7 +33,8 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
   def self.folio_file_placement(class_name, name = nil, allow_embed: false, has_many: false)
     belongs_to :file, class_name:,
                       inverse_of: :file_placements,
-                      required: allow_embed ? false : true
+                      required: allow_embed ? false : true,
+                      counter_cache: :file_placements_count
 
     belongs_to :placement, polymorphic: true,
                            inverse_of: name,

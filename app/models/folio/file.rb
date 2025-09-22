@@ -152,10 +152,7 @@ class Folio::File < Folio::ApplicationRecord
     }
   end
 
-  def update_file_placements_size!
-    update_columns(file_placements_size: file_placements.count,
-                   updated_at: current_time_from_proper_timezone)
-  end
+
 
   def self.hash_id_additional_classes
     [Folio::PrivateAttachment]
@@ -251,13 +248,13 @@ class Folio::File < Folio::ApplicationRecord
   end
 
   def indestructible_reason
-    return nil if file_placements_size == 0
-    return nil if file_placements_size.nil?
+    return nil if file_placements_count == 0
+    return nil if file_placements_count.nil?
     I18n.t("folio.file.cannot_destroy_file_with_placements")
   end
 
   def file_list_count
-    file_placements_size
+    file_placements_count
   end
 
   def file_list_source
@@ -376,7 +373,7 @@ end
 #  hash_id                           :string
 #  author                            :string
 #  description                       :text
-#  file_placements_size              :integer
+#  file_placements_count             :integer          default(0), not null
 #  file_name_for_search              :string
 #  sensitive_content                 :boolean          default(FALSE)
 #  file_mime_type                    :string

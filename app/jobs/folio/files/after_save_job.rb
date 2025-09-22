@@ -13,7 +13,7 @@ class Folio::Files::AfterSaveJob < Folio::ApplicationJob
 
     placements = file.file_placements
 
-    file.update_column(:file_placements_size, placements.size)
+    file.update_column(:file_placements_count, placements.size)
 
     # touch placements to bust cache
     placements.find_each do |placement|
