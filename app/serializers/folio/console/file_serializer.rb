@@ -21,7 +21,7 @@ class Folio::Console::FileSerializer
              :attribution_copyright,
              :attribution_licence,
              :description,
-             :file_placements_size,
+             :file_placements_count,
              :sensitive_content,
              :default_gravity,
              :default_gravities_for_select,

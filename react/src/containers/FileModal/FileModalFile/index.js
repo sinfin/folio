@@ -32,7 +32,7 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
   let download = file.attributes.file_name
   if (download.indexOf('.') === -1) { download = undefined }
 
-  let indestructible = !!file.attributes.file_placements_size
+  let indestructible = !!file.attributes.file_placements_count
 
   if (indestructible && !fileModal.filePlacements.loading && fileModal.filePlacements.records.length === 0) {
     indestructible = false
