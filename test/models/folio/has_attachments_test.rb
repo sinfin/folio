@@ -3,6 +3,18 @@
 require "test_helper"
 
 class Folio::HasAttachmentsTest < ActiveSupport::TestCase
+  class CounterTestPage < Folio::Page
+    attr_accessor :image_placements_count
+
+    def update_column(name, value)
+      if name.to_sym == :image_placements_count
+        self.image_placements_count = value
+      else
+        super
+      end
+    end
+  end
+
   test "has_one_document_placement" do
     class MyFilePlacement < Folio::FilePlacement::Base
       folio_document_placement :my_file_placement
@@ -65,14 +77,6 @@ class Folio::HasAttachmentsTest < ActiveSupport::TestCase
   end
 
   test "file placement counter implementation" do
-    class CounterTestPage < Folio::Page
-      attr_accessor :image_placements_count
-
-      attr_writer :image_placements_count
-
-      attr_reader :image_placements_count
-    end
-
     image1 = create(:folio_file_image)
     image2 = create(:folio_file_image)
     image3 = create(:folio_file_image)
@@ -129,5 +133,18 @@ class Folio::HasAttachmentsTest < ActiveSupport::TestCase
     page.save!
 
     assert_equal 3, page.image_placements_count, "Counter should be updated when setting images directly"
+  end
+
+  test "file placement counter implementation via direct destruction of placement" do
+    page = CounterTestPage.create!(title: "Counter Test Page", site: get_any_site)
+
+    page.update!(image_placements_attributes: [
+      { file_id: create(:folio_file_image).id },
+    ])
+
+    assert_equal 1, page.image_placements_count
+
+    page.image_placements.reload.last.destroy!
+    assert_equal 0, page.reload.image_placements_count
   end
 end

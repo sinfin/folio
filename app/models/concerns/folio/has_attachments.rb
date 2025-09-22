@@ -271,7 +271,10 @@ module Folio::HasAttachments
     return unless respond_to?("#{placement_key}_count=")
 
     count = send(placement_key).count
-    send("#{placement_key}_count=", count) if send("#{placement_key}_count") != count
+
+    if send("#{placement_key}_count") != count
+      update_column("#{placement_key}_count", count)
+    end
   end
 
   private
