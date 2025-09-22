@@ -6,7 +6,7 @@ class Folio::File::Image < Folio::File
   validate_file_format(%w[jpeg png bmp gif svg tiff webp avif heic heif])
 
   # Metadata extraction after image creation
-  after_commit :extract_metadata_async, on: :create, if: :should_extract_metadata?
+  after_commit :extract_metadata_async, if: :should_extract_metadata?
 
   dragonfly_accessor :file do
     after_assign :sanitize_filename
