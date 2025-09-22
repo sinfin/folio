@@ -30,7 +30,7 @@
           = @g.input :alt,
                      input_html: { data: stimulus_target("alt") }
 
-      - if @g.object.class.try(:folio_file_placement_supports_embed?)
+      - if @g.object.class.folio_file_placement_supports_embed?
         div[
           class="f-c-file-placements-multi-picker-fields-placement__field"
           class="f-c-file-placements-multi-picker-fields-placement__field--folio_embed_data"
