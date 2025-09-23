@@ -174,6 +174,14 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
     this.debouncedSortableInit()
   }
 
+  sortableHandleSelector () {
+    if (this.element.classList.contains('f-nested-fields--fully-draggable')) {
+      return '.f-nested-fields__sortable-backdrop'
+    } else {
+      return '.f-nested-fields__control--sortable-handle'
+    }
+  }
+
   initSortable () {
     window.Folio.RemoteScripts.run('html5sortable', () => {
       if (this.sortableBound) {
@@ -181,7 +189,7 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
       } else {
         window.sortable(this.fieldsWrapTarget, {
           items: '.f-nested-fields__fields',
-          handle: '.f-nested-fields__control--sortable-handle',
+          handle: this.sortableHandleSelector(),
           placeholder: '<div class="f-nested-fields__sortable-placeholder"><div class="f-nested-fields__sortable-placeholder-inner"></div></div>'
         })
 

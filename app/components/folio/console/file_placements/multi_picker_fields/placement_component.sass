@@ -7,6 +7,13 @@
   padding: var(--f-c-file-placements-multi-picker-fields-placement__spacer)
   position: relative
   transition: box-shadow $transition-duration ease-in-out
+  pointer-events: none
+
+  &__picker,
+  .form-control,
+  .form-label__tooltip,
+  &__non-unique-span,
+    pointer-events: auto
 
   &--non-unique-file-id
     background: #f4dedd
@@ -18,16 +25,19 @@
     display: none
 
   &__non-unique
+    flex: 0 0 auto
+
+  &__non-unique-span
     align-items: center
     cursor: pointer
-    display: flex
-    flex: 0 0 auto
+    display: inline-flex
     gap: px-to-rem(8px)
 
   .form-group
     margin: 0
 
   &__flex
+    align-items: flex-start
     display: flex
     gap: var(--f-c-file-placements-multi-picker-fields-placement__spacer)
     min-height: 138px
