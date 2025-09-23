@@ -35,7 +35,7 @@ class Folio::Console::FolioAttributesFieldsComponent < Folio::Console::Applicati
   def data
     stimulus_controller("f-c-folio-attributes-fields",
                         action: {
-                          "f-nested-fields:add" => "onNestedFieldsAdd",
+                          "f-nested-fields:added" => "onNestedFieldsAdded",
                         })
   end
 

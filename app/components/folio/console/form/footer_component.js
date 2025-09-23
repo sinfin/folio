@@ -332,7 +332,7 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
     window.FolioConsole.Autosave.restoreUiState({ clear: true })
   }
 
-  onNestedFieldsAdd () {
+  onNestedFieldsAdded () {
     this.pauseAutosave()
   }
 
