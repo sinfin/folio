@@ -12,4 +12,40 @@ window.Folio.Stimulus.register('f-c-ui-tabs', class extends window.Stimulus.Cont
         { expires: inFifteenSeconds, path: '' })
     }
   }
+
+  connect () {
+    const activeLink = this.element.querySelector('.f-c-ui-tabs__nav-link.active')
+
+    if (activeLink) {
+      this.propagateEventToTabPane(activeLink, 'show')
+      this.propagateEventToTabPane(activeLink, 'shown')
+    }
+  }
+
+  onShow (e) {
+    this.propagateEventToTabPane(e.target, 'show')
+  }
+
+  onShown (e) {
+    this.propagateEventToTabPane(e.target, 'shown')
+  }
+
+  onHide (e) {
+    this.propagateEventToTabPane(e.target, 'hide')
+  }
+
+  onHidden (e) {
+    this.propagateEventToTabPane(e.target, 'hidden')
+  }
+
+  propagateEventToTabPane (target, eventName) {
+    const selector = target.dataset.bsTarget || target.dataset.href
+
+    if (selector) {
+      const tabPane = document.getElementById(selector.replace('#', ''))
+      if (tabPane) {
+        tabPane.dispatchEvent(new CustomEvent(`f-c-ui-tabs:${eventName}`, { bubbles: true }))
+      }
+    }
+  }
 })

@@ -72,6 +72,10 @@ class Folio::Console::Ui::TabsComponent < Folio::Console::ApplicationComponent
     stimulus_controller("f-c-ui-tabs",
                         action: {
                           "beforeunload@window" => "onBeforeUnload",
+                          "show.bs.tab" => "onShow",
+                          "shown.bs.tab" => "onShown",
+                          "hide.bs.tab" => "onHide",
+                          "hidden.bs.tab" => "onHidden",
                         })
   end
 end
