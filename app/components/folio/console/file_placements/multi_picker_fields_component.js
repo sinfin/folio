@@ -3,6 +3,34 @@ window.Folio.Stimulus.register('f-c-file-placements-multi-picker-fields', class 
     empty: Boolean
   }
 
+  static targets = ['source']
+
+  connect () {
+    this.hookOntoTabbedTiptapFormWrap()
+  }
+
+  hookOntoTabbedTiptapFormWrap () {
+    if (this.hookedOntoTabbedTiptapFormWrap) return
+    if (!this.hasSourceTarget) return
+
+    const tabPane = this.element.closest('.f-c-ui-tabs-tab-pane')
+    if (!tabPane) return
+
+    tabPane.classList.add('f-c-file-placements-multi-picker-fields-tab')
+
+    const tiptapFormWrap = tabPane.closest('.f-c-tiptap-simple-form-wrap')
+    if (!tiptapFormWrap) return
+
+    this.dispatch('hookOntoFormWrap', {
+      detail: {
+        element: this.element,
+        source: this.sourceTarget
+      }
+    })
+
+    this.hookedOntoTabbedTiptapFormWrap = true
+  }
+
   onAddEmbedClick () {
     const fields = this.element.querySelector('.f-nested-fields')
     if (!fields) throw new Error('f-nested-fields not found')
@@ -15,6 +43,10 @@ window.Folio.Stimulus.register('f-c-file-placements-multi-picker-fields', class 
   }
 
   onAddToPicker (e) {
+    // stopPropagation so that .f-c-tiptap-simple-form-wrap doesn't catch it as well
+    // only make it catch when the source div is detached to the editor part
+    e.stopPropagation()
+
     const fields = this.element.querySelector('.f-nested-fields')
     if (!fields) throw new Error('f-nested-fields not found')
 

@@ -12,7 +12,9 @@
         = render(Folio::Console::FilePlacements::MultiPickerFields::PlacementComponent.new(g:,
                                                                                            non_unique_file_id: non_unique_file_ids.include?(g.object.file_id)))
 
-    .f-c-file-placements-multi-picker-fields__source
+    .f-c-file-placements-multi-picker-fields__source[
+      data=stimulus_target('source')
+    ]
       - if @placement_klass.folio_file_placement_supports_embed?
         .f-c-file-placements-multi-picker-fields__source-header
           = render(Folio::Console::Ui::TabsComponent.new(tabs:,

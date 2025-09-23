@@ -73,4 +73,28 @@ window.Folio.Stimulus.register('f-c-tiptap-simple-form-wrap', class extends wind
   onTiptapAutosaveSucceeded (e) {
     this.callAutosaveInfoMethod('hideFailedToSave')
   }
+
+  onAddToMultiPicker (e) {
+    const multiPickers = this.element.querySelectorAll('.f-c-file-placements-multi-picker-fields')
+
+    if (multiPickers.length > 1) {
+      throw new Error('More than 1 multi pickers found')
+    } else if (multiPickers.length === 0) {
+      throw new Error('No multi pickers found')
+    }
+
+    multiPickers[0].dispatchEvent(new CustomEvent('f-c-file-placements-multi-picker-fields:addToPicker', {
+      detail: e.detail
+    }))
+  }
+
+  onMultiPickerHookOntoFormWrap (e) {
+    const source = e.detail.source
+
+    const wrapper = document.createElement('div')
+    wrapper.classList.add('.f-c-tiptap-simple-form-wrap__multi-picker-wrap')
+
+    wrapper.appendChild(source)
+    this.scrollerTarget.appendChild(wrapper)
+  }
 })
