@@ -54,7 +54,12 @@ div[
                       as: :text,
                       autosize: true,
                       label: t('.embed_html_label'),
-                      input_html: { value: embed_data_with_defaults["html"], rows: 1 }
+                      wrapper_html: { class: ("form-group-invalid" if embed_data_has_errors?) },
+                      input_html: { value: embed_data_with_defaults["html"], rows: 1, class: ("is-invalid" if embed_data_has_errors?) }
+
+            - if embed_data_has_errors?
+              .invalid-feedback.d-block
+                = @g.object.errors[:folio_embed_data].join(', ')
 
   span.f-c-file-placements-multi-picker-fields-placement__loader[
     class="folio-loader"
