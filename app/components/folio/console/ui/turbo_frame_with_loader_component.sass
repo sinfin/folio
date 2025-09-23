@@ -15,8 +15,8 @@
     position: relative
     z-index: 1
 
-  turbo-frame:empty + &__loader,
-  turbo-frame[busy] + &__loader
+  turbo-frame:empty ~ &__loader,
+  turbo-frame[busy] ~ &__loader
     opacity: 1
     pointer-events: all
 
