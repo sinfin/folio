@@ -6,7 +6,7 @@ window.Folio.Stimulus.register('f-c-folio-attributes-fields', class extends wind
     this.onTypeChange(select)
   }
 
-  onNestedFieldsAdd (e) {
+  onNestedFieldsAdded (e) {
     if (e && e.detail && e.detail.field) {
       window.setTimeout(() => {
         e.detail.field.querySelector('.f-c-folio-attributes-fields__type-select').focus()

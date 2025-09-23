@@ -22,7 +22,7 @@ class Folio::Console::FilePlacements::MultiPickerFieldsComponent < Folio::Consol
                           },
                           action: {
                             "f-c-file-placements-multi-picker-fields:addToPicker" => "onAddToPicker",
-                            "f-nested-fields:add" => "onCountChange",
+                            "f-nested-fields:added" => "onCountChange",
                             "f-nested-fields:destroyed" => "onCountChange",
                           })
     end
