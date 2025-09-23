@@ -149,9 +149,10 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
       this.inputTarget.value = ''
     }
 
+    this.dispatch('updateWordCount', { detail: { wordCount } })
+
     if (!this.ignoreValueChangesValue) {
       this.inputTarget.dispatchEvent(new window.Event('change', { bubbles: true }))
-      this.dispatch('updateWordCount', { detail: { wordCount } })
 
       if (this.autosaveValue && content && !options.isInitialization) {
         this.latestContent = content
