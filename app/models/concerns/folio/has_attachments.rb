@@ -56,8 +56,6 @@ module Folio::HasAttachments
                       placement: "Folio::FilePlacement::OgImage")
 
     attr_accessor :dont_run_file_placements_after_save
-
-    validate :validate_file_placements_if_needed
   end
 
   class_methods do
@@ -76,7 +74,7 @@ module Folio::HasAttachments
                dependent: :destroy,
                foreign_key: :placement_id
 
-      validates_associated placements_key, message: :invalid_file_placement
+      validates_associated placements_key, message: :invalid_file_placements
 
       has_many targets,
                source: :file,
@@ -165,7 +163,7 @@ module Folio::HasAttachments
               dependent: :destroy,
               foreign_key: :placement_id
 
-      validates_associated placement_key, message: :invalid_file_placement
+      validates_associated placement_key, message: :invalid_file_placements
 
       has_one target,
               source: :file,
@@ -286,54 +284,5 @@ module Folio::HasAttachments
     def run_pregenerate_thumbnails_check_job_if_needed
       return unless self.class.run_pregenerate_thumbnails_check_job?
       Folio::PregenerateThumbnails::CheckJob.perform_later(self)
-    end
-
-    def validate_file_placements_if_needed
-      all_placements_ary = []
-      has_invalid_file_placements = false
-
-      self.class.folio_attachment_keys.each do |type, keys|
-        if type == :has_many
-          keys.each do |association|
-            all_placements_ary += send(association).to_a
-          end
-        else
-          keys.each do |association|
-            placement = send(association)
-            all_placements_ary << placement if placement
-          end
-        end
-      end
-
-      if should_validate_file_placements_attribution_if_needed?
-        all_placements_ary.each do |placement|
-          placement.validate_attribution_if_needed
-          if placement.errors.where(:file).present?
-            has_invalid_file_placements = true
-          end
-        end
-      end
-
-      if should_validate_file_placements_alt_if_needed?
-        all_placements_ary.each do |placement|
-          placement.validate_alt_if_needed
-          if placement.errors.where(:alt).present?
-            has_invalid_file_placements = true
-          end
-        end
-      end
-
-      if should_validate_file_placements_description_if_needed?
-        all_placements_ary.each do |placement|
-          placement.validate_description_if_needed
-          if placement.errors.where(:description).present?
-            has_invalid_file_placements = true
-          end
-        end
-      end
-
-      if has_invalid_file_placements
-        errors.add(:base, :has_invalid_file_placements)
-      end
     end
 end

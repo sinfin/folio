@@ -24,7 +24,7 @@ div[
           = t('.non_unique_file_id')
 
       - if @g.object.errors.where(:file).present?
-        .invalid-feedback.d-block
+        .invalid-feedback.d-block.m-0 data-name=@placement_key
           = @g.object.errors.where(:file).map(&:full_message).join(" ")
 
       div[
@@ -62,7 +62,7 @@ div[
                       input_html: { value: embed_data_with_defaults["html"], rows: 1, class: ("is-invalid" if embed_data_has_errors?) }
 
             - if embed_data_has_errors?
-              .invalid-feedback.d-block
+              .invalid-feedback.d-block.m-0
                 = @g.object.errors[:folio_embed_data].join(', ')
 
   span.f-c-file-placements-multi-picker-fields-placement__loader[
