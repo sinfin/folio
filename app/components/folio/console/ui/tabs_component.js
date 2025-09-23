@@ -1,7 +1,13 @@
 window.Folio.Stimulus.register('f-c-ui-tabs', class extends window.Stimulus.Controller {
   static targets = ['hiddenInput']
 
+  static values = {
+    useCookiesForActive: Boolean
+  }
+
   onBeforeUnload () {
+    if (!this.useCookiesForActiveValue) return
+
     const activeLink = this.element.querySelector('.f-c-ui-tabs__nav-link.active')
 
     if (activeLink) {

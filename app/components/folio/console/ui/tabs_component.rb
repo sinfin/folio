@@ -5,9 +5,10 @@ class Folio::Console::Ui::TabsComponent < Folio::Console::ApplicationComponent
 
   bem_class_name :no_margin
 
-  def initialize(tabs:, no_margin: false)
+  def initialize(tabs:, no_margin: false, use_cookies_for_active: false)
     @tabs = tabs
     @no_margin = no_margin
+    @use_cookies_for_active = use_cookies_for_active
   end
 
   def count_class_name(color = nil)
@@ -72,6 +73,9 @@ class Folio::Console::Ui::TabsComponent < Folio::Console::ApplicationComponent
 
   def data
     stimulus_controller("f-c-ui-tabs",
+                        values: {
+                          use_cookies_for_active: @use_cookies_for_active || false,
+                        },
                         action: {
                           "beforeunload@window" => "onBeforeUnload",
                           "show.bs.tab" => "onShow",

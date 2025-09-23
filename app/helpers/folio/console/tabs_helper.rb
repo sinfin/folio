@@ -42,7 +42,8 @@ module Folio::Console::TabsHelper
         end
       end
 
-      render(Folio::Console::Ui::TabsComponent.new(tabs: ary))
+      render(Folio::Console::Ui::TabsComponent.new(tabs: ary,
+                                                   use_cookies_for_active: true))
     end
   end
 
