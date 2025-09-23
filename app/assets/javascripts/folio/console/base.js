@@ -82,6 +82,7 @@
 //= require folio/console/ui/index/header/query_form_component
 //= require folio/console/ui/notification_modal_component
 //= require folio/console/ui/pagy_component
+//= require folio/console/ui/tabs/tab_pane_component
 //= require folio/console/ui/tabs_component
 //= require folio/console/ui/turbo_frame_with_loader_component
 
