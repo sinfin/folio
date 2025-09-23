@@ -5,7 +5,10 @@
 
       .f-c-file-placements-multi-picker-fields__empty = t('.empty')
 
-      = folio_nested_fields(@f, @placement_key, add: :hidden) do |g|
+      = folio_nested_fields(@f,
+                            @placement_key,
+                            fully_draggable: true,
+                            add: :hidden) do |g|
         = render(Folio::Console::FilePlacements::MultiPickerFields::PlacementComponent.new(g:,
                                                                                            non_unique_file_id: non_unique_file_ids.include?(g.object.file_id)))
 

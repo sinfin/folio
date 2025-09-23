@@ -1,4 +1,8 @@
-.f-nested-fields data=data class=@class_name
+div[
+  class=bem_class_name
+  class=@class_name
+  data=data
+]
   .f-nested-fields__destroyed-wrap[
     data=stimulus_target('destroyedWrap')
     hidden=true
@@ -16,7 +20,8 @@
         data=stimulus_target('fields')
         hidden=@g.object.marked_for_destruction?
       ]
-        = content
+        .f-nested-fields__fields-content
+          = content
 
         = @g.hidden_field :id, class: "f-nested-fields__id-input"
 
@@ -40,7 +45,7 @@
             - if supports_position
               = @g.hidden_field :position, class: "f-nested-fields__position-input"
 
-              .f-nested-fields__control[
+              .f-nested-fields__control.f-nested-fields__control--arrow[
                 data=stimulus_action(click: 'onPositionUpClick')
               ]
                 = folio_icon(:arrow_up, height: 24)
@@ -50,10 +55,13 @@
               ]
                 = folio_icon(:drag, height: 24)
 
-              .f-nested-fields__control[
+              .f-nested-fields__control.f-nested-fields__control--arrow[
                 data=stimulus_action(click: 'onPositionDownClick')
               ]
                 = folio_icon(:arrow_down, height: 24)
+
+        - if supports_position && @fully_draggable
+          .f-nested-fields__sortable-backdrop
 
         - remove_instance_variable(:@__vc_content)
 
@@ -82,7 +90,8 @@
               @g = ff
               supports_position = @position && @g.object.respond_to?(:position)
 
-            = content
+            .f-nested-fields__fields-content
+              = content
 
             - if @destroy || supports_position
               .f-nested-fields__controls
@@ -104,7 +113,7 @@
                 - if supports_position
                   = @g.hidden_field :position, class: "f-nested-fields__position-input"
 
-                  .f-nested-fields__control[
+                  .f-nested-fields__control.f-nested-fields__control--arrow[
                     data=stimulus_action(click: 'onPositionUpClick')
                   ]
                     = folio_icon(:arrow_up, height: 24)
@@ -114,9 +123,12 @@
                   ]
                     = folio_icon(:drag, height: 24)
 
-                  .f-nested-fields__control[
+                  .f-nested-fields__control.f-nested-fields__control--arrow[
                     data=stimulus_action(click: 'onPositionDownClick')
                   ]
                     = folio_icon(:arrow_down, height: 24)
+
+            - if supports_position && @fully_draggable
+              .f-nested-fields__sortable-backdrop
 
             - remove_instance_variable(:@__vc_content)

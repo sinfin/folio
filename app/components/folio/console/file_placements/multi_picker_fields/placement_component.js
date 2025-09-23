@@ -70,6 +70,7 @@ window.Folio.Stimulus.register('f-c-file-placements-multi-picker-fields-placemen
 
   onNonUniqueClick (e) {
     e.preventDefault()
+
     const input = this.element.querySelector('.f-c-files-picker__input--file_id')
     const fileId = input.value
     const otherInputs = this.element.closest('.f-nested-fields__fields-wrap').querySelectorAll(`.f-c-files-picker__input--file_id[value="${fileId}"]`)
