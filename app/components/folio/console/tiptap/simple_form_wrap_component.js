@@ -100,9 +100,14 @@ window.Folio.Stimulus.register('f-c-tiptap-simple-form-wrap', class extends wind
     this.fieldsTarget.insertAdjacentElement('afterend', wrapper)
 
     this.multiPickerHooked = true
+    this.checkTabsForMultiPicker()
   }
 
   onTabsChange () {
+    this.checkTabsForMultiPicker()
+  }
+
+  checkTabsForMultiPicker () {
     if (!this.multiPickerHooked) return
 
     const activeLink = this.element.querySelector('.f-c-ui-tabs__nav-link.active')
