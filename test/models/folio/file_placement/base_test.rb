@@ -14,7 +14,7 @@ class Folio::FilePlacement::BaseTest < ActiveSupport::TestCase
       Rails.application.config.stub(:folio_files_require_attribution, true) do
         assert_not page.update(cover: image)
         assert_equal(["nesplňuje požadavky"], page.errors.messages[:cover_placement])
-        assert_equal(["nemá vyplněného autora nebo zdroj"], page.errors.messages[:"cover_placement.file"])
+        assert_equal(["\"#{image.file_name}\" (##{image.id}) využitý pro \"Obrázek\" nemá vyplněného autora nebo zdroj"], page.errors.messages[:"cover_placement.file"])
       end
 
       assert page.update(cover: image)
@@ -68,7 +68,7 @@ class Folio::FilePlacement::BaseTest < ActiveSupport::TestCase
       Rails.application.config.stub(:folio_files_require_alt, true) do
         assert_not page.update(cover: image)
         assert_equal(["nesplňuje požadavky"], page.errors.messages[:cover_placement])
-        assert_equal(["je povinná položka"], page.errors.messages[:"cover_placement.alt"])
+        assert_equal(["pro \"#{image.file_name}\" (##{image.id}) je pro \"Obrázek\" povinný"], page.errors.messages[:"cover_placement.alt"])
         assert_equal(["Některé soubory nesplňují požadavky"], page.errors.messages[:base])
       end
 
@@ -91,7 +91,7 @@ class Folio::FilePlacement::BaseTest < ActiveSupport::TestCase
       Rails.application.config.stub(:folio_files_require_description, true) do
         assert_not page.update(cover: image)
         assert_equal(["nesplňuje požadavky"], page.errors.messages[:cover_placement])
-        assert_equal(["je povinná položka"], page.errors.messages[:"cover_placement.description"])
+        assert_equal(["pro \"#{image.file_name}\" (##{image.id}) je pro \"Obrázek\" povinný"], page.errors.messages[:"cover_placement.description"])
       end
 
       Rails.application.config.stub(:folio_files_require_description, false) do
