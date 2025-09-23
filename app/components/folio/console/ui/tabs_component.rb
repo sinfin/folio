@@ -61,6 +61,8 @@ class Folio::Console::Ui::TabsComponent < Folio::Console::ApplicationComponent
       tag["aria-selected"] = "true"
     end
 
+    tag[:data] = stimulus_merge(tag[:data], stimulus_action(click: "onClick"))
+
     tag
   end
 
