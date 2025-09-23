@@ -5,27 +5,39 @@ window.Folio.Stimulus.register('f-c-form-errors', class extends window.Stimulus.
     const form = this.element.closest('form')
     if (!form) return
 
-    const nodes = form.querySelectorAll('.form-group-invalid, .form-group.has-danger, .form-control.is-invalid')
+    const nodes = form.querySelectorAll('.form-group-invalid, .form-group.has-danger, .form-control.is-invalid, .f-c-file-placements-multi-picker-fields-placement .invalid-feedback')
     if (!nodes.length) return
 
     for (const node of nodes) {
-      const input = node.classList.contains('form-control') ? node : node.querySelector('.form-control')
-      if (!input) continue
+      let inputOrDiv
+
+      if (node.classList.contains('form-control')) {
+        inputOrDiv = node
+      } else if (node.classList.contains('invalid-feedback')) {
+        inputOrDiv = node
+      } else {
+        inputOrDiv = node.querySelector('.form-control')
+      }
+
+      if (!inputOrDiv) continue
 
       const formGroup = node.classList.contains('form-control')
-        ? (input.closest('.form-group') || input.parentElement)
+        ? (inputOrDiv.closest('.form-group') || inputOrDiv.parentElement)
         : node
 
-      let key = input.name || input.getAttribute('data-name') // react_ordered_multiselect
+      let key = inputOrDiv.name || inputOrDiv.getAttribute('data-name') // react_ordered_multiselect
       if (!key) continue
 
-      key = key.match(/\[(.+)\]$/)
-      if (!key) continue
+      if (!inputOrDiv.classList.contains('invalid-feedback')) {
+        key = key.match(/\[(.+)\]$/)
+        if (!key) continue
 
-      key = key[1]
-      if (!key) continue
+        key = key[1]
+        if (!key) continue
 
-      key = key.replace('_attributes', '').replace(/\]\[\d*\]\[/, '.')
+        key = key.replace('_attributes', '').replace(/\]\[\d*\]\[/, '.')
+      }
+
       let found = false
 
       this.buttonTargets.forEach((buttonTarget) => {
@@ -56,11 +68,9 @@ window.Folio.Stimulus.register('f-c-form-errors', class extends window.Stimulus.
     const tab = btn.formGroup.closest('.tab-pane')
 
     if (tab && !tab.classList.contains('active')) {
-      for (const tabLink of document.querySelectorAll('.nav-tabs .nav-link')) {
-        if (tabLink.href.split('#').pop() === tab.id) {
-          tabLink.click()
-          break
-        }
+      const navLink = document.querySelector(`.f-c-ui-tabs__nav-link[data-bs-target="#${tab.id}"]`)
+      if (navLink) {
+        navLink.click()
       }
     }
 

@@ -3,9 +3,10 @@
 class Folio::Console::FilePlacements::MultiPickerFields::PlacementComponent < Folio::Console::ApplicationComponent
   bem_class_name :non_unique_file_id
 
-  def initialize(g:, non_unique_file_id: false)
+  def initialize(g:, non_unique_file_id: false, placement_key:)
     @g = g
     @non_unique_file_id = non_unique_file_id
+    @placement_key = placement_key
   end
 
   private

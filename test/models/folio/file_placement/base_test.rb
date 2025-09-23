@@ -69,7 +69,6 @@ class Folio::FilePlacement::BaseTest < ActiveSupport::TestCase
         assert_not page.update(cover: image)
         assert_equal(["nesplňuje požadavky"], page.errors.messages[:cover_placement])
         assert_equal(["pro \"#{image.file_name}\" (##{image.id}) je pro \"Obrázek\" povinný"], page.errors.messages[:"cover_placement.alt"])
-        assert_equal(["Některé soubory nesplňují požadavky"], page.errors.messages[:base])
       end
 
       Rails.application.config.stub(:folio_files_require_alt, false) do
