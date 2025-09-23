@@ -2,6 +2,9 @@
   container-type: inline-size
   margin: 0 0 $grid-gutter-width
 
+  &:last-child
+    margin-bottom: 0
+
   .f-nested-fields__fields-content
     pointer-events: none
 
@@ -32,5 +35,6 @@
       padding-left: $f-c-layout-main-container__padding
       padding-right: $f-c-layout-main-container__padding
 
-    .f-c-files-batch-bar .f-c-files-batch-bar__button-wrap[data-add-to-picker="true"] .f-c-ui-button__icon
+    .f-c-files-batch-bar .f-c-files-batch-bar__button-wrap[data-add-to-picker="true"] .f-c-ui-button__icon,
+    .f-file-list-file__control-primary-icon-wrap--index_for_picker
       transform: rotate(270deg)

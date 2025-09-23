@@ -114,6 +114,11 @@
   &[data-f-c-tiptap-simple-form-wrap-scrolled-to-bottom-value="true"] &__editors-bar-scroll-ico
     transform: rotate(180deg)
 
+  &:not(&--multi-picker-visible) &__multi-picker-wrap,
+  &--multi-picker-visible &__editors-bar,
+  &--multi-picker-visible &__editors
+    display: none
+
   @include mq-mobile-menu
     --f-c-tiptap-simple-form-wrap-inner-padding: #{$f-c-layout-main-container__padding--mobile}
 
@@ -138,6 +143,10 @@
       display: block
       overflow-y: scroll
 
+    &__multi-picker-wrap
+      background: var(--f-c-tiptap-simple-form-wrap-fields-background)
+      padding: 0 var(--f-c-tiptap-simple-form-wrap-inner-padding) var(--f-c-tiptap-simple-form-wrap-inner-padding)
+
   @media screen and (min-width: 1700px)
     &__scroller
       display: grid
@@ -161,3 +170,13 @@
     &__editors
       grid-column-start: 2
       grid-row-start: 2
+
+    &__multi-picker-wrap
+      overflow-y: scroll
+      grid-column: 2
+      grid-row: span 2 / span 2
+      padding: 2px var(--f-c-tiptap-simple-form-wrap-inner-padding) var(--f-c-tiptap-simple-form-wrap-inner-padding)
+
+      .f-c-files-batch-bar .f-c-files-batch-bar__button-wrap[data-add-to-picker="true"] .f-c-ui-button__icon,
+      .f-file-list-file__control-primary-icon-wrap--index_for_picker
+        transform: rotate(270deg)

@@ -1,5 +1,5 @@
 window.Folio.Stimulus.register('f-c-tiptap-simple-form-wrap', class extends window.Stimulus.Controller {
-  static targets = ['scrollIco', 'scroller', 'wordCount']
+  static targets = ['scrollIco', 'scroller', 'wordCount', 'fields']
 
   static values = {
     scrolledToBottom: Boolean
@@ -92,9 +92,21 @@ window.Folio.Stimulus.register('f-c-tiptap-simple-form-wrap', class extends wind
     const source = e.detail.source
 
     const wrapper = document.createElement('div')
-    wrapper.classList.add('.f-c-tiptap-simple-form-wrap__multi-picker-wrap')
+
+    // add containter-fluid to extend index filters
+    wrapper.className = 'f-c-tiptap-simple-form-wrap__multi-picker-wrap container-fluid'
 
     wrapper.appendChild(source)
-    this.scrollerTarget.appendChild(wrapper)
+    this.fieldsTarget.insertAdjacentElement('afterend', wrapper)
+
+    this.multiPickerHooked = true
+  }
+
+  onTabsChange () {
+    if (!this.multiPickerHooked) return
+
+    const activeLink = this.element.querySelector('.f-c-ui-tabs__nav-link.active')
+    const visible = activeLink.classList.contains('f-c-file-placements-multi-picker-fields-nav-link')
+    this.element.classList.toggle('f-c-tiptap-simple-form-wrap--multi-picker-visible', visible)
   }
 })

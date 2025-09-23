@@ -38,7 +38,9 @@ class Folio::Console::FilePlacements::MultiPickerFieldsComponent < Folio::Consol
           label: t(".add_embed"),
           dont_bind_tab_toggle: true,
           text_color: "green",
-          data: stimulus_action(click: "onAddEmbedClick"),
+          data: stimulus_controller("f-c-file-placements-multi-picker-fields-add-embed",
+                                    inline: true,
+                                    action: { click: "onAddEmbedClick" })
         }
       ]
     end
