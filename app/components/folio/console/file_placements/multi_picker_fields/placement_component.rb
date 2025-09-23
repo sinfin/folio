@@ -33,4 +33,9 @@ class Folio::Console::FilePlacements::MultiPickerFields::PlacementComponent < Fo
       return "filled" if embed?
       @g.object.file_id.blank? ? "loading" : "filled"
     end
+
+    def embed_data_has_errors?
+      return @embed_data_has_errors if defined?(@embed_data_has_errors)
+      @embed_data_has_errors = @g.object.errors[:folio_embed_data].present?
+    end
 end
