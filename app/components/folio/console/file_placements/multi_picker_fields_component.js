@@ -57,7 +57,15 @@ window.Folio.Stimulus.register('f-c-file-placements-multi-picker-fields', class 
     }))
   }
 
-  onCountChange (e) {
+  onAdded (e) {
+    this.onCountChange(e, true)
+  }
+
+  onDestroyed (e) {
+    this.onCountChange(e, false)
+  }
+
+  onCountChange (e, added) {
     const empty = e && e.detail && e.detail.count === 0
 
     if (empty !== this.emptyValue) {
@@ -67,7 +75,24 @@ window.Folio.Stimulus.register('f-c-file-placements-multi-picker-fields', class 
     // setTimeout to ensure DOM is updated first
     window.setTimeout(() => {
       this.handleDuplicates()
+      if (added) {
+        this.focusNewlyAdded(e)
+      }
     }, 0)
+  }
+
+  focusNewlyAdded (e) {
+    const placements = this.element.querySelectorAll('.f-c-file-placements-multi-picker-fields-placement')
+    if (placements.length < 1) return
+
+    const lastPlacement = placements[placements.length - 1]
+    if (!lastPlacement) return
+
+    const input = lastPlacement.querySelector('.f-c-file-placements-multi-picker-fields-placement__field--description .form-control')
+    if (!input) return
+
+    lastPlacement.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    input.focus()
   }
 
   handleDuplicates () {
