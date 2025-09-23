@@ -60,8 +60,8 @@ class Folio::Console::Ui::AjaxInputComponent < Folio::Console::ApplicationCompon
   def input_data
     h = stimulus_data(action: {
                         "keyup" => "onKeyUp",
-                        "keydown" => "preventSubmit",
-                        "keypress" => "preventSubmit",
+                        "keydown" => "onKeyDownAndPress",
+                        "keypress" => "onKeyDownAndPress",
                         "change" => "onKeyUp",
                         "blur" => "onBlur",
                       },
