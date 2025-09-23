@@ -60,4 +60,11 @@ class Folio::Console::FilePlacements::MultiPickerFieldsComponent < Folio::Consol
         h.select { |_, v| v > 1 }.keys
       end
     end
+
+    def placement_component(g)
+      component_klass = Folio::Console::FilePlacements::MultiPickerFields::PlacementComponent
+      non_unique_file_id = non_unique_file_ids.include?(g.object.file_id)
+
+      render(component_klass.new(g:, non_unique_file_id:))
+    end
 end
