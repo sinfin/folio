@@ -32,12 +32,7 @@ window.Folio.Stimulus.register('f-c-ui-ajax-input', class extends window.Stimulu
   onKeyDownAndPress (e) {
     if (e.key === 'Enter') {
       e.stopPropagation()
-
-      if (e.target.tagName === 'TEXTAREA' && e.shiftKey) {
-        // allow shift+enter to insert a new line
-      } else {
-        e.preventDefault()
-      }
+      e.preventDefault()
     }
   }
 
@@ -119,6 +114,11 @@ window.Folio.Stimulus.register('f-c-ui-ajax-input', class extends window.Stimulu
 
       const rawData = {}
       rawData[name] = this.cleave ? this.cleave.getRawValue() : this.inputTarget.value
+
+      // replace new lines if it's a string
+      if (typeof rawData[name] === 'string') {
+        rawData[name] = rawData[name].replace(/\r?\n/g, ' ')
+      }
 
       const data = window.Folio.formToHash(rawData)
 
