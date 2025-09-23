@@ -42,4 +42,20 @@ class Folio::Console::FilePlacements::MultiPickerFieldsComponent < Folio::Consol
         }
       ]
     end
+
+    def non_unique_file_ids
+      @non_unique_file_ids ||= begin
+        h = {}
+
+        @f.object.send(@placement_key).each do |placement|
+          next if placement.marked_for_destruction?
+          next if placement.file_id.blank?
+
+          h[placement.file_id] ||= 0
+          h[placement.file_id] += 1
+        end
+
+        h.select { |_, v| v > 1 }.keys
+      end
+    end
 end

@@ -1,4 +1,5 @@
-.f-c-file-placements-multi-picker-fields-placement[
+div[
+  class=bem_class_name
   data=data
 ]
   .f-c-file-placements-multi-picker-fields-placement__flex
@@ -13,6 +14,13 @@
                                                             size: 138))
 
     .f-c-file-placements-multi-picker-fields-placement__fields
+      .f-c-file-placements-multi-picker-fields-placement__non-unique[
+        class="small text-danger"
+        data=stimulus_action(click: "onNonUniqueClick")
+      ]
+        = folio_icon(:alert)
+        = t('.non_unique_file_id')
+
       div[
         class="f-c-file-placements-multi-picker-fields-placement__field"
         class="f-c-file-placements-multi-picker-fields-placement__field--description"

@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
 class Folio::Console::FilePlacements::MultiPickerFields::PlacementComponent < Folio::Console::ApplicationComponent
-  def initialize(g:)
+  bem_class_name :non_unique_file_id
+
+  def initialize(g:, non_unique_file_id: false)
     @g = g
+    @non_unique_file_id = non_unique_file_id
   end
 
   private
@@ -11,6 +14,9 @@ class Folio::Console::FilePlacements::MultiPickerFields::PlacementComponent < Fo
                           values: {
                             state:,
                             embed: embed?,
+                          },
+                          action: {
+                            "f-c-file-placements-multi-picker-fields-placement:highlight" => "onHighlight",
                           })
     end
 
