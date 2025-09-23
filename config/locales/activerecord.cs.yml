@@ -412,6 +412,9 @@ cs:
       invalid_subtitle_block: má nevalidní text na řádku %{line}
       missing_file_alt: nemá vyplněný alt
       missing_file_attribution: nemá vyplněného autora nebo zdroj
+      missing_file_attribution_with_file_details: '"%{file_name}" (#%{file_id}) využitý pro "%{placement_type}" nemá vyplněného autora nebo zdroj'
+      alt_blank_with_file_details: 'pro "%{file_name}" (#%{file_id}) je pro "%{placement_type}" povinný'
+      description_blank_with_file_details: 'pro "%{file_name}" (#%{file_id}) je pro "%{placement_type}" povinný'
       missing_file_description: nemá vyplněný popisek
       slug_not_unique_across_classes: je již použita u záznamu "%{sluggable_name}" (%{sluggable_type})
       tiptap_invalid_json: není platný JSON řetězec

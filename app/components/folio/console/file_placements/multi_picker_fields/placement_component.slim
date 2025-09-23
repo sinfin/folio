@@ -23,6 +23,10 @@ div[
           = folio_icon(:alert)
           = t('.non_unique_file_id')
 
+      - if @g.object.errors.where(:file).present?
+        .invalid-feedback.d-block
+          = @g.object.errors.where(:file).map(&:full_message).join(" ")
+
       div[
         class="f-c-file-placements-multi-picker-fields-placement__field"
         class="f-c-file-placements-multi-picker-fields-placement__field--description"

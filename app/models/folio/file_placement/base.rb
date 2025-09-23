@@ -137,6 +137,7 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
 
   def validate_attribution_if_needed
     return if errors[:file].present? && errors.of_kind?(:file, :missing_file_attribution)
+    return if errors[:file].present? && errors.of_kind?(:file, :missing_file_attribution_with_file_details)
     return if file.blank?
 
     if placement
@@ -146,13 +147,22 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
     end
 
     if file.author.blank? && file.attribution_source.blank? && file.attribution_source_url.blank?
-      errors.add(:file, :missing_file_attribution)
+      if file.id && file.file_name
+        errors.add(:file,
+                   :missing_file_attribution_with_file_details,
+                   file_id: file.id,
+                   file_name: file.file_name,
+                   placement_type: model_name.human)
+      else
+        errors.add(:file, :missing_file_attribution)
+      end
     end
   end
 
   def validate_alt_if_needed
     return if errors[:file].present? && errors.of_kind?(:file, :missing_file_alt)
     return if errors[:alt].present? && errors.of_kind?(:alt, :blank)
+    return if errors[:alt].present? && errors.of_kind?(:alt, :alt_blank_with_file_details)
     return if file.blank?
 
     if placement
@@ -162,7 +172,15 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
     end
 
     if file.class.human_type == "image" && alt_with_fallback.blank?
-      errors.add(:alt, :blank)
+      if file.id && file.file_name
+        errors.add(:alt,
+                   :alt_blank_with_file_details,
+                   file_id: file.id,
+                   file_name: file.file_name,
+                   placement_type: model_name.human)
+      else
+        errors.add(:alt, :blank)
+      end
     end
   end
 
@@ -178,7 +196,15 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
     end
 
     if description_with_fallback.blank?
-      errors.add(:description, :blank)
+      if file.id && file.file_name
+        errors.add(:description,
+                   :description_blank_with_file_details,
+                   file_id: file.id,
+                   file_name: file.file_name,
+                   placement_type: model_name.human)
+      else
+        errors.add(:description, :blank)
+      end
     end
   end
 

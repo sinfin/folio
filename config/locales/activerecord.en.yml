@@ -340,6 +340,9 @@ en:
       missing_file_alt: is missing alt
       missing_file_attribution: is missing author or source
       missing_file_description: is missing description
+      missing_file_attribution_with_file_details: '"%{file_name}" (#%{file_id}) in %{placement_type} is missing author or source'
+      alt_blank_with_file_details: 'for "%{file_name}" (#%{file_id}) in %{placement_type} is required'
+      description_blank_with_file_details: 'for "%{file_name}" (#%{file_id}) in %{placement_type} is required'
       slug_not_unique_across_classes: is already used by the record "%{sluggable_name}" (%{sluggable_type})
       tiptap_invalid_json: is not a valid JSON string
       tiptap_multiple_folio_tiptap_pages: "contains more than one paged content part (%{count})"
