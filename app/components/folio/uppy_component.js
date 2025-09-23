@@ -35,8 +35,8 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
 
     window.Folio.RemoteScripts.run({
       key: 'uppy-js',
-      urls: ['https://releases.transloadit.com/uppy/v5.1.1/uppy.min.js'],
-      cssUrls: ['https://releases.transloadit.com/uppy/v5.1.1/uppy.min.css']
+      urls: ['https://releases.transloadit.com/uppy/v5.1.2/uppy.min.js'],
+      cssUrls: ['https://releases.transloadit.com/uppy/v5.1.2/uppy.min.css']
     }, () => {
       this.addCsLocale()
       this.init()
@@ -173,6 +173,257 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
   }
 
   addCsLocale () {
-    window.Uppy.locales.cs_CZ = { strings: { addMore: 'P\u0159idat dal\u0161\xED', addMoreFiles: 'P\u0159idat dal\u0161\xED soubory', addingMoreFiles: 'P\u0159id\xE1v\xE1n\xED dal\u0161\xEDch soubor\u016F', allowAccessDescription: 'Pokud chcete po\u0159izovat fotografie va\u0161\xEDm za\u0159\xEDzen\xEDm, povolte pros\xEDm p\u0159\xEDstup ke kame\u0159e.', allowAccessTitle: 'Povolte pros\xEDm p\u0159\xEDstup ke kame\u0159e.', authenticateWith: 'P\u0159ipojit k %{pluginName}', authenticateWithTitle: 'Pros\xEDm p\u0159ihlaste se k %{pluginName} pro v\xFDb\u011Br soubor\u016F', back: 'Zp\u011Bt', browse: 'proch\xE1zet', browseFiles: 'proch\xE1zet', cancel: 'Zru\u0161it', cancelUpload: 'Zru\u0161it nahr\xE1v\xE1n\xED', chooseFiles: 'Vyberte soubory', closeModal: 'Zav\u0159\xEDt dialog', companionError: 'Spojen\xED s modulem Companion se nezda\u0159ilo', complete: 'Hotovo', connectedToInternet: 'P\u0159ipojeno k internetu', copyLink: 'Zkop\xEDrovat odkaz', copyLinkToClipboardFallback: 'Zkop\xEDrujte odkaz n\xED\u017Ee', copyLinkToClipboardSuccess: 'Odkaz zkop\xEDrov\xE1n do schr\xE1nky', creatingAssembly: 'Nahr\xE1v\xE1n\xED se p\u0159ipravuje...', creatingAssemblyFailed: 'Transloadit: Nelze vytvo\u0159it Assembly', dashboardTitle: 'Nahr\xE1t soubory', dashboardWindowTitle: 'Okno pro nahr\xE1n\xED soubor\u016F. (Stiskn\u011Bte ESC pro zav\u0159en\xED.)', dataUploadedOfTotal: '%{complete} z %{total}', done: 'Dokon\u010Deno', dropHereOr: 'P\u0159et\xE1hn\u011Bte soubory sem nebo %{browse}', dropHint: 'P\u0159et\xE1hn\u011Bte soubory sem', dropPasteBoth: 'P\u0159et\xE1hn\u011Bte soubory sem, vlo\u017Ete je, nebo %{browse}', dropPasteFiles: 'P\u0159et\xE1hn\u011Bte soubory sem, vlo\u017Ete je, nebo %{browse}', dropPasteFolders: 'P\u0159et\xE1hn\u011Bte soubory sem, vlo\u017Ete je, nebo %{browse}', dropPasteImportBoth: 'P\u0159et\xE1hn\u011Bte soubory sem, vlo\u017Ete je, %{browse} nebo je importujte', dropPasteImportFiles: 'P\u0159et\xE1hn\u011Bte soubory sem, vlo\u017Ete je, %{browse} nebo je importujte', dropPasteImportFolders: 'P\u0159et\xE1hn\u011Bte soubory sem, vlo\u017Ete je, %{browse} nebo je importujte', editFile: 'Upravit soubor', editing: 'Upravujete %{file}', emptyFolderAdded: 'Nebyly p\u0159id\xE1ny \u017E\xE1dn\xE9 soubory, adres\xE1\u0159 je pr\xE1zdn\xFD.', encoding: 'P\u0159ev\xE1d\u011Bn\xED...', enterCorrectUrl: 'Chybn\xE1 URL: Ujist\u011Bte se, \u017Ee vkl\xE1d\xE1te p\u0159\xEDm\xFD odkaz na soubor.', enterUrlToImport: 'Vlo\u017Ete URL pro import souboru.', exceedsSize: 'Tento soubor p\u0159ekra\u010Duje maxim\xE1ln\xED povolenou velikost: %{size}', failedToFetch: 'Modulu Companion se nepoda\u0159ilo st\xE1hnout soubor z t\xE9to URL, zkontrolujte pros\xEDm, jestli je URL spr\xE1vn\xE1.', failedToUpload: 'Nepoda\u0159ilo se nahr\xE1t soubor %{file}', fileSource: 'Zdroj souboru: %{name}', filesUploadedOfTotal: { 0: '%{complete} z %{smart_count} souboru nahr\xE1no', 1: '%{complete} z %{smart_count} soubor\u016F nahr\xE1no', 2: '%{complete} z %{smart_count} soubor\u016F nahr\xE1no' }, filter: 'Filtrovat', finishEditingFile: 'Dokon\u010Dit editaci souboru', folderAdded: { 0: 'P\u0159id\xE1n %{smart_count} soubor z adres\xE1\u0159e %{folder}', 1: 'P\u0159id\xE1ny %{smart_count} soubory z adres\xE1\u0159e %{folder}', 2: 'P\u0159id\xE1no %{smart_count} soubor\u016F z adres\xE1\u0159e %{folder}' }, generatingThumbnails: 'Vytv\xE1\u0159\xED se miniatury...', import: 'Importovat', importFrom: 'Importovat z %{name}', loading: 'Nahr\xE1v\xE1n\xED...', logOut: 'Odhl\xE1sit', myDevice: 'Moje za\u0159\xEDzen\xED', noFilesFound: 'Nenalezeny \u017E\xE1dn\xE9 soubory ani adres\xE1\u0159e', noInternetConnection: 'Nep\u0159ipojeno k internetu', openFolderNamed: 'Otev\u0159\xEDt adres\xE1\u0159 %{name}', pause: 'Pozastavit', pauseUpload: 'Pozastavit nahr\xE1v\xE1n\xED', paused: 'Pozastaveno', poweredBy: 'Vytvo\u0159eno pomoc\xED %{uppy}', processingXFiles: { 0: 'Zpracov\xE1n\xED %{smart_count} souboru', 1: 'Zpracov\xE1n\xED %{smart_count} soubor\u016F', 2: 'Zpracov\xE1n\xED %{smart_count} soubor\u016F' }, removeFile: 'Odebrat soubor', resetFilter: 'Reset filtru', resume: 'Pok\u0159a\u010Dovat', resumeUpload: 'Pokra\u010Dovat v nahr\xE1v\xE1n\xED', retry: 'Opakovat', retryUpload: 'Opakovat nahr\xE1v\xE1n\xED', saveChanges: 'Ulo\u017Eit zm\u011Bny', selectFileNamed: 'Vybrat soubor %{name}', selectX: { 0: 'Vybrat %{smart_count}', 1: 'Vybrat %{smart_count}', 2: 'Vybrat %{smart_count}' }, smile: '\xDAsm\u011Bv pros\xEDm!', startRecording: 'Spustit nahr\xE1v\xE1n\xED videa', stopRecording: 'Zastavit nahr\xE1v\xE1n\xED videa', takePicture: 'Po\u0159\xEDdit fotografii', timedOut: 'Stav nahr\xE1v\xE1n\xED se nezm\u011Bnil %{seconds} sekund, nahr\xE1v\xE1n\xED se ukon\u010Duje.', unselectFileNamed: 'Zru\u0161it v\xFDb\u011Br souboru %{name}', upload: 'Nahr\xE1t', uploadComplete: 'Nahr\xE1n\xED dokon\u010Deno', uploadFailed: 'Nahr\xE1n\xED se nezda\u0159ilo', uploadPaused: 'Nahr\xE1n\xED dokon\u010Deno', uploadXFiles: { 0: 'Nahr\xE1t %{smart_count} soubor', 1: 'Nahr\xE1t %{smart_count} soubory', 2: 'Nahr\xE1t %{smart_count} soubor\u016F' }, uploadXNewFiles: { 0: 'Nahr\xE1t +%{smart_count} soubor', 1: 'Nahr\xE1t +%{smart_count} soubory', 2: 'Nahr\xE1t +%{smart_count} soubor\u016F' }, uploading: 'Nahr\xE1v\xE1n\xED', uploadingXFiles: { 0: 'Nahr\xE1v\xE1n\xED %{smart_count} souboru', 1: 'Nahr\xE1v\xE1n\xED %{smart_count} soubor\u016F', 2: 'Nahr\xE1v\xE1n\xED %{smart_count} soubor\u016F' }, xFilesSelected: { 0: '%{smart_count} soubor vybr\xE1n', 1: '%{smart_count} soubory vybr\xE1ny', 2: '%{smart_count} soubor\u016F vybr\xE1no' }, xMoreFilesAdded: { 0: '%{smart_count} dal\u0161\xED soubor p\u0159id\xE1n', 1: '%{smart_count} dal\u0161\xED soubory p\u0159id\xE1ny', 2: '%{smart_count} dal\u0161\xEDch soubor\u016F p\u0159id\xE1no' }, xTimeLeft: '%{time} zb\xFDv\xE1', youCanOnlyUploadFileTypes: 'Lze nahr\xE1t pouze n\xE1sleduj\xEDc\xED typy soubor\u016F: %{types}', youCanOnlyUploadX: { 0: 'Lze nahr\xE1t pouze %{smart_count} soubor', 1: 'Lze nahr\xE1t pouze %{smart_count} soubory', 2: 'Lze nahr\xE1t pouze %{smart_count} soubor\u016F' }, youHaveToAtLeastSelectX: { 0: 'Je t\u0159eba vybrat alespo\u0148 %{smart_count} soubor', 1: 'Je t\u0159eba vybrat alespo\u0148 %{smart_count} soubory', 2: 'Je t\u0159eba vybrat alespo\u0148 %{smart_count} soubor\u016F' } } }
+    if (window.Uppy.locales.cs_CZ) return
+
+    window.Uppy.locales.cs_CZ = {
+      pluralize: (n) => {
+        if (n === 1) return 0
+        if (n > 1 && n < 5) return 1
+        return 2
+      },
+      strings: {
+        addBulkFilesFailed: {
+          0: 'Nepodařilo se přidat %{smart_count} soubor kvůli vnitřní chybě',
+          1: 'Nepodařilo se přidat %{smart_count} soubory kvůli vnitřní chybě',
+          2: 'Nepodařilo se přidat %{smart_count} souborů kvůli vnitřní chybě'
+        },
+        addedNumFiles: {
+          0: 'Přidán %{numFiles} soubor',
+          1: 'Přidány %{numFiles} soubory',
+          2: 'Přidáno %{numFiles} souborů'
+        },
+        addingMoreFiles: 'Přidávání dalších souborů',
+        additionalRestrictionsFailed: {
+          0: '%{count} další omezení nebylo splněno',
+          1: '%{count} další omezení nebyla splněna',
+          2: '%{count} další omezení nebyly splněny'
+        },
+        addMore: 'Přidat další',
+        addMoreFiles: 'Přidat další soubory',
+        aggregateExceedsSize: 'Vybrali jste %{size} souborů, ale maximální povolená velikost je %{sizeAllowed}',
+        allFilesFromFolderNamed: 'Všechny soubory ze složky %{name}',
+        allowAccessDescription: 'Pokud chcete pořizovat fotografie vaším zařízením, povolte prosím přístup ke kameře.',
+        allowAccessTitle: 'Povolte prosím přístup ke kameře.',
+        allowAudioAccessDescription: 'Chcete-li nahrávat zvuk, povolte pro tento web přístup k mikrofonu.',
+        allowAudioAccessTitle: 'Povolte přístup ke svému mikrofonu',
+        aspectRatioLandscape: 'Oříznout krajinně (16:9)',
+        aspectRatioPortrait: 'Oříznout portrétově (9:16)',
+        aspectRatioSquare: 'Oříznout čtvercově',
+        authAborted: 'Autentizace byla přerušena',
+        authenticate: 'Připojit',
+        authenticateWith: 'Připojit k %{pluginName}',
+        authenticateWithTitle: 'Prosím přihlaste se k %{pluginName} pro výběr souborů',
+        back: 'Zpět',
+        browse: 'procházet',
+        browseFiles: 'procházet soubory',
+        browseFolders: 'procházet složky',
+        cancel: 'Zrušit',
+        cancelUpload: 'Zrušit nahrávání',
+        closeModal: 'Zavřít dialog',
+        companionError: 'Spojení s modulem Companion se nezdařilo',
+        companionUnauthorizeHint: 'Chcete-li zrušit autorizaci k vašemu %{provider} účtu, přejděte prosím na %{url}',
+        complete: 'Hotovo',
+        compressedX: {
+          0: 'Uložen %{size} komprimovaný obrázek',
+          1: 'Uloženy %{size} komprimované obrázky',
+          2: 'Uloženo %{size} komprimovaných obrázků'
+        },
+        compressingImages: 'Komprese obrázků...',
+        connectedToInternet: 'Připojeno k internetu',
+        copyLink: 'Zkopírovat odkaz',
+        copyLinkToClipboardFallback: 'Zkopírujte odkaz níže',
+        copyLinkToClipboardSuccess: 'Odkaz zkopírován do schránky',
+        creatingAssembly: 'Nahrávání se připravuje...',
+        creatingAssemblyFailed: 'Transloadit: Nelze vytvořit Assembly',
+        dashboardTitle: 'Nahrát soubory',
+        dashboardWindowTitle: 'Okno pro nahrání souborů. (Stiskněte ESC pro zavření.)',
+        dataUploadedOfTotal: '%{complete} z %{total}',
+        dataUploadedOfUnknown: {
+          0: '%{complete} neznámý',
+          1: '%{complete} neznámý',
+          2: '%{complete} neznámých'
+        },
+        discardMediaFile: 'Zahodit mediální soubor',
+        discardRecordedFile: 'Zahodit nahraný soubor',
+        done: 'Dokončeno',
+        dropHint: 'Přetáhněte soubory sem',
+        dropPasteBoth: 'Přetáhněte soubory sem, vložte je, nebo %{browse}',
+        dropPasteFiles: 'Přetáhněte soubory sem, vložte je, nebo %{browse}',
+        dropPasteFolders: 'Přetáhněte soubory sem, vložte je, nebo %{browse}',
+        dropPasteImportBoth: 'Přetáhněte soubory sem, vložte je, %{browse} nebo je importujte',
+        dropPasteImportFiles: 'Přetáhněte soubory sem, vložte je, %{browse} nebo je importujte',
+        dropPasteImportFolders: 'Přetáhněte soubory sem, vložte je, %{browse} nebo je importujte',
+        editFile: 'Upravit soubor',
+        editFileWithFilename: 'Upravit soubor %{file}',
+        editImage: 'Upravit obrázek',
+        editing: 'Upravujete %{file}',
+        emptyFolderAdded: 'Nebyly přidány žádné soubory, adresář je prázdný',
+        encoding: 'Převádění...',
+        enterCorrectUrl: 'Chybná URL: Ujistěte se, že vkládáte přímý odkaz na soubor',
+        enterTextToSearch: 'Vložte text pro vyhledání obrázků',
+        enterUrlToImport: 'Vložte URL pro import souboru',
+        error: 'Chyba',
+        exceedsSize: 'Tento soubor překračuje maximální povolenou velikost: %{size}',
+        failedToFetch: 'Modulu Companion se nepodařilo stáhnout soubor z této URL, zkontrolujte prosím, jestli je URL správná',
+        failedToUpload: 'Nepodařilo se nahrát soubor %{file}',
+        fileSource: 'Zdroj souboru: %{name}',
+        filesUploadedOfTotal: {
+          0: '%{complete} z %{smart_count} souboru nahráno',
+          1: '%{complete} z %{smart_count} souborů nahráno',
+          2: '%{complete} z %{smart_count} souborů nahráno'
+        },
+        filter: 'Filtrovat',
+        finishEditingFile: 'Dokončit editaci souboru',
+        flipHorizontal: 'Překlopit vodorovně',
+        folderAdded: {
+          0: 'Přidán %{smart_count} soubor z adresáře %{folder}',
+          1: 'Přidány %{smart_count} soubory z adresáře %{folder}',
+          2: 'Přidáno %{smart_count} souborů z adresáře %{folder}'
+        },
+        folderAlreadyAdded: 'Složka "%{folder}" již byla přidána',
+        generatingThumbnails: 'Vytváří se miniatury...',
+        import: 'Importovat',
+        importFiles: 'Importovat soubory z:',
+        importFrom: 'Importovat z %{name}',
+        inferiorSize: 'Tento soubor je menší než povolená velikost %{size}',
+        loadedXFiles: {
+          0: 'Načten %{numFiles} soubor',
+          1: 'Načteny %{smart_count} soubory',
+          2: 'Načteno %{smart_count} souborů'
+        },
+        loading: 'Nahrávání...',
+        logIn: 'Přihlásit se',
+        logOut: 'Odhlásit',
+        micDisabled: 'Přístup k mikrofonu odepřen uživatelem',
+        missingRequiredMetaField: 'Chybí povinná meta pole',
+        missingRequiredMetaFieldOnFile: 'Chybí povinná meta pole v %{fileName}',
+        missingRequiredMetaFields: {
+          0: 'Chybí povinné pole metadat: %{fields}.',
+          1: 'Chybí povinná pole metadat: %{fields}.',
+          2: 'Chybí povinná pole metadat: %{fields}.'
+        },
+        myDevice: 'Moje zařízení',
+        noAudioDescription: 'Chcete-li nahrávat zvuk, připojte mikrofon nebo jiné vstupní zvukové zařízení',
+        noAudioTitle: 'Mikrofon není k dispozici',
+        noCameraDescription: 'Chcete-li pořizovat snímky nebo nahrávat video, připojte kameru',
+        noCameraTitle: 'Kamera není k dispozici',
+        noDuplicates: "Nelze znovu přidat stejný soubor '%{fileName}'",
+        noFilesFound: 'Nenalezeny žádné soubory ani adresáře',
+        noInternetConnection: 'Nepřipojeno k internetu',
+        noMoreFilesAllowed: 'Nelze přidat další soubory',
+        noSearchResults: 'Bohužel pro toto hledání nejsou žádné výsledky',
+        openFolderNamed: 'Otevřít adresář %{name}',
+        pause: 'Pozastavit',
+        paused: 'Pozastaveno',
+        pauseUpload: 'Pozastavit nahrávání',
+        pickFiles: 'Vyberte soubory',
+        pickPhotos: 'Vyberte fotografie',
+        pleaseWait: 'Prosím čekejte',
+        pluginNameAudio: 'Zvuk',
+        pluginNameCamera: 'Kamera',
+        pluginNameScreenCapture: 'Záznam obrazovky',
+        pluginNameUrl: 'Odkaz',
+        pluginWebdavInputLabel: 'WebDAV URL souboru (např. z ownCloudu nebo Nextcloudu)',
+        poweredBy: 'Vytvořeno pomocí %{uppy}',
+        processingXFiles: {
+          0: 'Zpracování %{smart_count} souboru',
+          1: 'Zpracování %{smart_count} souborů',
+          2: 'Zpracování %{smart_count} souborů'
+        },
+        recording: 'Záznam',
+        recordingLength: 'Délka nahrávky %{recording_length}',
+        recordingStoppedMaxSize: 'Nahrávání bylo zastaveno, protože velikost souboru brzy překročí limit',
+        recordVideoBtn: 'Záznam videa',
+        recoveredAllFiles: 'Obnovili jsme všechny soubory. Nyní můžete pokračovat v nahrávání.',
+        recoveredXFiles: {
+          0: 'Nepodařilo se nám plně obnovit 1 soubor. Vyberte jej znovu a obnovte nahrávání.',
+          1: 'Nepodařilo se nám plně obnovit %{smart_count} soubory. Vyberte je znovu a obnovte nahrávání.',
+          2: 'Nepodařilo se nám plně obnovit %{smart_count} souborů. Vyberte je znovu a obnovte nahrávání.'
+        },
+        removeFile: 'Odebrat soubor',
+        reSelect: 'Re-výběr',
+        resetFilter: 'Reset filtru',
+        resetSearch: 'Resetovat vyhledávání',
+        resume: 'Pokřačovat',
+        resumeUpload: 'Pokračovat v nahrávání',
+        retry: 'Opakovat',
+        retryUpload: 'Opakovat nahrávání',
+        revert: 'Resetovat',
+        rotate: 'Otočit o 90°',
+        save: 'Uložit',
+        saveChanges: 'Uložit změny',
+        search: 'Vyhledat',
+        searchImages: 'Vyhledat obrázky',
+        selectX: {
+          0: 'Vybrat %{smart_count}',
+          1: 'Vybrat %{smart_count}',
+          2: 'Vybrat %{smart_count}'
+        },
+        sessionRestored: 'Relace obnovena',
+        showErrorDetails: 'Zobrazit podrobnosti o chybě',
+        signInWithGoogle: 'Přihlaste se pomocí Google',
+        smile: 'Úsměv prosím!',
+        startAudioRecording: 'Spustit nahrávání zvuku',
+        startCapturing: 'Spustit snímání obrazovky',
+        startRecording: 'Spustit nahrávání videa',
+        stopAudioRecording: 'Zastavit nahrávání zvuku',
+        stopCapturing: 'Zastavit snímání obrazovky',
+        stopRecording: 'Zastavit nahrávání videa',
+        streamActive: 'Stream je aktivní',
+        streamPassive: 'Stream je pasivní',
+        submitRecordedFile: 'Odeslat nahraný soubor',
+        takePicture: 'Pořídit fotografii',
+        takePictureBtn: 'Pořídit fotografii',
+        takeScreenshot: 'Pořídit snímek obrazovky',
+        unselectFileNamed: 'Zrušit výběr souboru %{name}',
+        unnamed: 'Nepojmenovaný',
+        upload: 'Nahrát',
+        uploadComplete: 'Nahrání dokončeno',
+        uploadFailed: 'Nahrání se nezdařilo',
+        uploading: 'Nahrávání',
+        uploadingXFiles: {
+          0: 'Nahrávání %{smart_count} souboru',
+          1: 'Nahrávání %{smart_count} souborů',
+          2: 'Nahrávání %{smart_count} souborů'
+        },
+        uploadPaused: 'Nahrání dokončeno',
+        uploadStalled: 'Nahrávání neproběhlo po dobu %{seconds} sekund. Možná to budete chtít zkusit znovu.',
+        uploadXFiles: {
+          0: 'Nahrát %{smart_count} soubor',
+          1: 'Nahrát %{smart_count} soubory',
+          2: 'Nahrát %{smart_count} souborů'
+        },
+        uploadXNewFiles: {
+          0: 'Nahrát +%{smart_count} soubor',
+          1: 'Nahrát +%{smart_count} soubory',
+          2: 'Nahrát +%{smart_count} souborů'
+        },
+        xFilesSelected: {
+          0: '%{smart_count} soubor vybrán',
+          1: '%{smart_count} soubory vybrány',
+          2: '%{smart_count} souborů vybráno'
+        },
+        xMoreFilesAdded: {
+          0: '%{smart_count} další soubor přidán',
+          1: '%{smart_count} další soubory přidány',
+          2: '%{smart_count} dalších souborů přidáno'
+        },
+        xTimeLeft: '%{time} zbývá',
+        youCanOnlyUploadFileTypes: 'Lze nahrát pouze následující typy souborů: %{types}',
+        youCanOnlyUploadX: {
+          0: 'Lze nahrát pouze %{smart_count} soubor',
+          1: 'Lze nahrát pouze %{smart_count} soubory',
+          2: 'Lze nahrát pouze %{smart_count} souborů'
+        },
+        youHaveToAtLeastSelectX: {
+          0: 'Je třeba vybrat alespoň %{smart_count} soubor',
+          1: 'Je třeba vybrat alespoň %{smart_count} soubory',
+          2: 'Je třeba vybrat alespoň %{smart_count} souborů'
+        },
+        zoomIn: 'Přiblížit',
+        zoomOut: 'Oddálit'
+
+      }
+    }
   }
 })
