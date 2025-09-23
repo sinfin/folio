@@ -29,13 +29,15 @@ window.Folio.Stimulus.register('f-c-ui-ajax-input', class extends window.Stimulu
     }
   }
 
-  preventSubmit (e) {
+  onKeyDownAndPress (e) {
     if (e.key === 'Enter') {
-      if (e.target.tagName !== 'TEXTAREA') {
+      e.stopPropagation()
+
+      if (e.target.tagName === 'TEXTAREA' && e.shiftKey) {
+        // allow shift+enter to insert a new line
+      } else {
         e.preventDefault()
       }
-
-      e.stopPropagation()
     }
   }
 
@@ -43,7 +45,7 @@ window.Folio.Stimulus.register('f-c-ui-ajax-input', class extends window.Stimulu
     const value = this.cleave ? this.cleave.getRawValue() : this.inputTarget.value
 
     if (e.key === 'Enter') {
-      const skipInTextarea = this.inputTarget.tagName === 'TEXTAREA' && !(e.ctrlKey || e.metaKey)
+      const skipInTextarea = this.inputTarget.tagName === 'TEXTAREA' && e.shiftKey
 
       if (!skipInTextarea) {
         e.preventDefault()
