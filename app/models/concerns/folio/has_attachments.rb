@@ -308,7 +308,7 @@ module Folio::HasAttachments
       if should_validate_file_placements_attribution_if_needed?
         all_placements_ary.each do |placement|
           placement.validate_attribution_if_needed
-          if placement.errors[:file].present?
+          if placement.errors.where(:file).present?
             has_invalid_file_placements = true
           end
         end
@@ -317,7 +317,7 @@ module Folio::HasAttachments
       if should_validate_file_placements_alt_if_needed?
         all_placements_ary.each do |placement|
           placement.validate_alt_if_needed
-          if placement.errors[:file].present?
+          if placement.errors.where(:alt).present?
             has_invalid_file_placements = true
           end
         end
@@ -326,7 +326,7 @@ module Folio::HasAttachments
       if should_validate_file_placements_description_if_needed?
         all_placements_ary.each do |placement|
           placement.validate_description_if_needed
-          if placement.errors[:file].present?
+          if placement.errors.where(:description).present?
             has_invalid_file_placements = true
           end
         end

@@ -136,7 +136,7 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
   end
 
   def validate_attribution_if_needed
-    return if errors[:file].present? && errors[:file].include?(:missing_file_attribution)
+    return if errors[:file].present? && errors.of_kind?(:file, :missing_file_attribution)
     return if file.blank?
 
     if placement
@@ -151,7 +151,8 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
   end
 
   def validate_alt_if_needed
-    return if errors[:file].present? && errors[:file].include?(:missing_file_alt)
+    return if errors[:file].present? && errors.of_kind?(:file, :missing_file_alt)
+    return if errors[:alt].present? && errors.of_kind?(:alt, :blank)
     return if file.blank?
 
     if placement
@@ -161,12 +162,13 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
     end
 
     if file.class.human_type == "image" && alt_with_fallback.blank?
-      errors.add(:file, :missing_file_alt)
+      errors.add(:alt, :blank)
     end
   end
 
   def validate_description_if_needed
-    return if errors[:file].present? && errors[:file].include?(:missing_file_description)
+    return if errors[:file].present? && errors.of_kind?(:file, :missing_file_description)
+    return if errors[:description].present? && errors.of_kind?(:description, :blank)
     return if file.blank?
 
     if placement
@@ -175,8 +177,8 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
       return unless Rails.application.config.folio_files_require_description
     end
 
-    if file.description.blank?
-      errors.add(:file, :missing_file_description)
+    if description_with_fallback.blank?
+      errors.add(:description, :blank)
     end
   end
 

@@ -24,27 +24,35 @@ class Folio::FilePlacement::BaseTest < ActiveSupport::TestCase
         assert_equal(["nesplňuje požadavky"], page.errors.messages[:cover_placement])
       end
 
-      image.update(author: "foo")
+      Rails.application.config.stub(:folio_files_require_attribution, false) do
+        image.update(author: "foo")
+      end
 
       Rails.application.config.stub(:folio_files_require_attribution, true) do
         assert page.save
       end
 
-      image.update(author: nil)
+      Rails.application.config.stub(:folio_files_require_attribution, false) do
+        image.update(author: nil)
+      end
 
       Rails.application.config.stub(:folio_files_require_attribution, true) do
         assert_not page.save
         assert_equal(["nesplňuje požadavky"], page.errors.messages[:cover_placement])
       end
 
-      image.update(attribution_source: "foo", description: "foo")
+      Rails.application.config.stub(:folio_files_require_attribution, false) do
+        image.update(attribution_source: "foo", description: "foo")
+      end
 
       Rails.application.config.stub(:folio_files_require_attribution, true) do
         assert page.save
       end
 
-      image.update!(description: nil)
-      page.cover_placement.update!(description: "bar")
+      Rails.application.config.stub(:folio_files_require_attribution, false) do
+        image.update!(description: nil)
+        page.cover_placement.update!(description: "bar")
+      end
 
       Rails.application.config.stub(:folio_files_require_attribution, true) do
         assert page.save
@@ -59,13 +67,14 @@ class Folio::FilePlacement::BaseTest < ActiveSupport::TestCase
     I18n.with_locale(:cs) do
       Rails.application.config.stub(:folio_files_require_alt, true) do
         assert_not page.update(cover: image)
-        page.errors.messages
         assert_equal(["nesplňuje požadavky"], page.errors.messages[:cover_placement])
-        assert_equal(["nemá vyplněný alt"], page.errors.messages[:"cover_placement.file"])
+        assert_equal(["je povinná položka"], page.errors.messages[:"cover_placement.alt"])
         assert_equal(["Některé soubory nesplňují požadavky"], page.errors.messages[:base])
       end
 
-      assert page.update(cover: image)
+      Rails.application.config.stub(:folio_files_require_alt, false) do
+        assert page.update(cover: image)
+      end
 
       Rails.application.config.stub(:folio_files_require_alt, true) do
         assert_not page.save
@@ -82,10 +91,12 @@ class Folio::FilePlacement::BaseTest < ActiveSupport::TestCase
       Rails.application.config.stub(:folio_files_require_description, true) do
         assert_not page.update(cover: image)
         assert_equal(["nesplňuje požadavky"], page.errors.messages[:cover_placement])
-        assert_equal(["nemá vyplněný popisek"], page.errors.messages[:"cover_placement.file"])
+        assert_equal(["je povinná položka"], page.errors.messages[:"cover_placement.description"])
       end
 
-      assert page.update(cover: image)
+      Rails.application.config.stub(:folio_files_require_description, false) do
+        assert page.update(cover: image)
+      end
 
       Rails.application.config.stub(:folio_files_require_description, true) do
         assert_not page.save
