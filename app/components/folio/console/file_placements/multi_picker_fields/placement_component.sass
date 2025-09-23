@@ -6,6 +6,23 @@
   min-height: 145px
   padding: var(--f-c-file-placements-multi-picker-fields-placement__spacer)
   position: relative
+  transition: box-shadow $transition-duration ease-in-out
+
+  &--non-unique-file-id
+    background: #f4dedd
+
+  &--highlighted
+    box-shadow: 0 0 12px 2px $red !important
+
+  &:not(&--non-unique-file-id) &__non-unique
+    display: none
+
+  &__non-unique
+    align-items: center
+    cursor: pointer
+    display: flex
+    flex: 0 0 auto
+    gap: px-to-rem(8px)
 
   .form-group
     margin: 0
@@ -23,7 +40,23 @@
     display: flex
     flex-direction: column
     flex: 1 1 auto
-    gap: var(--f-c-file-placements-multi-picker-fields-placement__spacer)
+    gap: calc(0.5 * var(--f-c-file-placements-multi-picker-fields-placement__spacer))
+
+  &__field
+    flex: 0 0 auto
+
+  &__field--description
+    flex: 1 0 auto
+    display: flex
+    flex-direction: column
+
+    .form-group
+      flex: 1 0 auto
+      display: flex
+      flex-direction: column
+
+    .form-control
+      flex: 1 0 auto
 
   &[data-f-c-file-placements-multi-picker-fields-placement-state-value="loading"] &__flex
     visibility: hidden

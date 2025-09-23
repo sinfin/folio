@@ -11,14 +11,18 @@
     = @f.label @placement_key, required: @required
 
   = placement_aware_fields_for do |fp|
-    = fp.hidden_field :id, data: stimulus_target("idInput")
+    = fp.hidden_field :id,
+                      data: stimulus_target("idInput"),
+                      class: "f-c-files-picker__input f-c-files-picker__input--id"
 
     = fp.hidden_field :_destroy,
                       value: fp.object.marked_for_destruction? ? "1" : "0",
                       disabled: !fp.object.marked_for_destruction?,
+                      class: "f-c-files-picker__input f-c-files-picker__input--destroy",
                       data: stimulus_target("destroyInput")
 
     = fp.hidden_field :file_id,
+                      class: "f-c-files-picker__input f-c-files-picker__input--file_id",
                       data: stimulus_target("fileIdInput")
 
     .f-c-files-picker__inner
