@@ -30,6 +30,9 @@
           = render(Folio::Console::Ui::BooleanToggleComponent.new(record: s.object,
                                                                   attribute: :subscribed_to_newsletter))
 
+        = render partial: "folio/console/users/additional_show_for_fields",
+                  locals: { s: s }
+
   - if @user.admin_note.present?
     .col-lg-4
       .card
