@@ -22,9 +22,10 @@ class Folio::Console::UiController < Folio::Console::BaseController
     @inputs = %i[
       autocomplete
       date_time
-      url
+      embed
       rich_text
       tiptap
+      url
     ].sort
   end
 

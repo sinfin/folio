@@ -1,0 +1,10 @@
+---
+cs:
+  folio:
+    input:
+      embed:
+        inner_component:
+          label/html: HTML kód
+          label/html_or_url: HTML kód nebo URL
+          label/url: Použít URL odkaz místo HTML kódu
+          hint/url: Například https://youtu.be/jNQXAC9IVRw

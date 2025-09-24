@@ -39,7 +39,7 @@ module Folio
       ]
     end
 
-    def self.normalize_setter_value(value)
+    def self.normalize_value(value)
       if value.is_a?(Hash)
         active = value["active"].in?([true, "true"])
 

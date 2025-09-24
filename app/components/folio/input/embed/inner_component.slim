@@ -1,0 +1,12 @@
+.f-input-embed-inner
+  = helpers.simple_fields_for @folio_embed_data do |f|
+    = f.input :html,
+              as: :text,
+              autosize: true,
+              label: html_label,
+              input_html: { rows: 1 }
+
+    .f-input-embed-inner__url-wrap
+      = f.input :url,
+                as: :string,
+                label: false

@@ -1,0 +1,10 @@
+---
+en:
+  folio:
+    input:
+      embed:
+        inner_component:
+          label/html: HTML code
+          label/html_or_url: HTML code or URL
+          label/url: Use URL link instead of HTML code
+          hint/url: For example https://youtu.be/jNQXAC9IVRw

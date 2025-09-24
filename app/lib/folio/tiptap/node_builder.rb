@@ -158,7 +158,7 @@ class Folio::Tiptap::NodeBuilder
                 "title" => value[:title].presence,
                 "alt" => value[:alt].presence,
                 "description" => value[:description].presence,
-                "folio_embed_data" => Folio::Embed.normalize_setter_value(value[:folio_embed_data])
+                "folio_embed_data" => Folio::Embed.normalize_value(value[:folio_embed_data])
               }.compact
             end
           end
@@ -251,7 +251,7 @@ class Folio::Tiptap::NodeBuilder
               "title" => value[:title].presence,
               "alt" => value[:alt].presence,
               "description" => value[:description].presence,
-              "folio_embed_data" => Folio::Embed.normalize_setter_value(value[:folio_embed_data])
+              "folio_embed_data" => Folio::Embed.normalize_value(value[:folio_embed_data])
             }.compact)
           else
             super(nil)
