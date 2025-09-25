@@ -2,9 +2,24 @@
 
 module Folio
   module Embed
-    SUPPORTED_TYPES = %w[
-      instagram
-    ]
+    SUPPORTED_TYPES = {
+      "facebook" => %r{https://www\.facebook\.com/([a-zA-Z0-9\-_]+)/?},
+      "instagram" => %r{https://www\.instagram\.com/p/([a-zA-Z0-9\-_]+)/?},
+      "linkedin" => %r{https://www\.linkedin\.com/in/([a-zA-Z0-9\-_]+)/?},
+      "pinterest" => %r{https://www\.pinterest\.com/pin/([a-zA-Z0-9\-_]+)/?},
+      "tiktok" => %r{https://www\.tiktok\.com/@([a-zA-Z0-9\-_]+)/?},
+      "twitter" => %r{https://twitter\.com/([a-zA-Z0-9\-_]+)/?},
+      "youtube" => %r{https://www\.youtube\.com/watch\?v=([a-zA-Z0-9\-_]+)/?},
+    }
+
+    TYPE_REGEX = Regexp.new(
+      "^(" +
+      SUPPORTED_TYPES.map do |type, regex|
+        "(?<#{type}>#{regex.source})"
+      end.join("|") +
+      ")$",
+      Regexp::EXTENDED
+    )
 
     def self.validate_record(record:, attribute_name: :embed_data)
       embed_data = record.send(attribute_name)
@@ -25,9 +40,25 @@ module Folio
       return :blank unless embed_data["active"] == true
 
       return nil if embed_data["html"].present?
-      return nil if embed_data["type"].in?(SUPPORTED_TYPES) && embed_data["url"].present?
+
+      type = embed_data["type"].presence
+      if type.in?(SUPPORTED_TYPES.keys)
+        if SUPPORTED_TYPES[type].match?(embed_data["url"])
+          return nil
+        else
+          return :invalid
+        end
+      end
 
       :blank
+    end
+
+    def self.url_type(url)
+      match = TYPE_REGEX.match(url)
+      return nil unless match
+
+      # Find which named capture group matched
+      match.named_captures.find { |name, value| value&.present? }&.first
     end
 
     def self.hash_strong_params_keys

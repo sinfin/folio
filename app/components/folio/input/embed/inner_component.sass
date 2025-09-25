@@ -11,6 +11,7 @@
   .form-group
     margin: 0
 
-  &__html-label--html,
-  &__url-wrap
+  &__url-wrap,
+  &[data-f-input-embed-inner-state-value="blank"] &__html-label--html,
+  &:not([data-f-input-embed-inner-state-value="blank"]) &__html-label--html-or-url
     display: none

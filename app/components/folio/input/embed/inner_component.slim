@@ -1,12 +1,13 @@
-.f-input-embed-inner
-  = helpers.simple_fields_for @folio_embed_data do |f|
+.f-input-embed-inner data=data
+  = helpers.simple_fields_for "" do |f|
     = f.input :html,
               as: :text,
               autosize: true,
               label: html_label,
-              input_html: { rows: 1 }
+              input_html: { rows: 1, value: html_value, data: stimulus_target("htmlInput") }
 
     .f-input-embed-inner__url-wrap
       = f.input :url,
                 as: :string,
-                label: false
+                label: false,
+                input_html: { value: url_value, data: stimulus_target("urlInput") }

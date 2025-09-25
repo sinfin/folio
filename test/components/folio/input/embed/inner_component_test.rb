@@ -4,9 +4,7 @@ require "test_helper"
 
 class Folio::Input::Embed::InnerComponentTest < Folio::ComponentTest
   def test_render
-    model = "hello"
-
-    render_inline(Folio::Input::Embed::InnerComponent.new(model:))
+    render_inline(Folio::Input::Embed::InnerComponent.new(folio_embed_data: {}))
 
     assert_selector(".f-input-embed-inner")
   end

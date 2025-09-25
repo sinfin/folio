@@ -1,9 +1,38 @@
+ruby:
+  tabs = [
+    {
+      label: "Empty",
+      href: request.path,
+      active: !params[:tab].in?(%w[html url]),
+      folio_embed_data: nil,
+    },
+    {
+      label: "HTML",
+      href: "#{request.path}?tab=html",
+      active: params[:tab] == "html",
+      folio_embed_data: { "active" => true, "html" => '<iframe width="560" height="315" src="https://www.youtube.com/embed/8DPcXHMGMBc?si=D0qtVp8LBUJWDTsp" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' },
+    },
+    {
+      label: "URL",
+      href: "#{request.path}?tab=url",
+      active: params[:tab] == "url",
+      folio_embed_data: { "active" => true, "url" => 'https://www.youtube.com/watch?v=8DPcXHMGMBc', 'type' => 'youtube' },
+    },
+  ]
+
 h1: a.f-c-unlink href=console_ui_path Folio Console UI
 
 h2 Input Embed
 
-h3 Block editor
+= render(Folio::Console::Ui::TabsComponent.new(tabs:))
 
-= simple_form_for "", method: :get, url: request.path do |f|
-  div
-    = f.input :folio_embed_data, as: :embed
+- tabs.each do |tab|
+  - next unless tab[:active]
+
+  h3 = tab[:label]
+
+  = simple_form_for "", method: :get, url: tab[:href] do |f|
+    div
+      = f.input :folio_embed_data,
+                as: :embed,
+                input_html: { value: tab[:folio_embed_data] }
