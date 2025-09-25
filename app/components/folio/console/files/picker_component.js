@@ -223,4 +223,13 @@ window.Folio.Stimulus.register('f-c-files-picker', class extends window.Stimulus
       }
     }
   }
+
+  onFileDeleted (e) {
+    if (this.element.closest('.f-c-file-placements-multi-picker-fields-placement')) {
+      // let the parent handle it
+      return
+    }
+
+    this.clear()
+  }
 })
