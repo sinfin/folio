@@ -33,7 +33,7 @@
 
     .row
       .col-12
-        = input f, :description, autosize: true
+        = input f, :description, autosize: true, input_html: { rows: 1 }
 
     = render(Folio::Console::Ui::ButtonsComponent.new(buttons: form_buttons_model))
 
