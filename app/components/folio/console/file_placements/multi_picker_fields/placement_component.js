@@ -14,7 +14,7 @@ window.Folio.Stimulus.register('f-c-file-placements-multi-picker-fields-placemen
         this.stateValue = 'filled'
       } else {
         console.error('Failed to fill from parent! Removing .f-c-file-placements-multi-picker-fields-placement')
-        this.element.dispatchEvent(new CustomEvent('f-nested-fields:removeFields', { bubbles: true }))
+        this.removeFields()
       }
     }
   }
@@ -93,5 +93,13 @@ window.Folio.Stimulus.register('f-c-file-placements-multi-picker-fields-placemen
     this.highlightTimeout = window.setTimeout(() => {
       this.element.classList.remove('f-c-file-placements-multi-picker-fields-placement--highlighted')
     }, 500)
+  }
+
+  onFileDeleted (e) {
+    this.removeFields()
+  }
+
+  removeFields () {
+    this.element.dispatchEvent(new CustomEvent('f-nested-fields:removeFields', { bubbles: true }))
   }
 })
