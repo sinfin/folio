@@ -8,7 +8,6 @@ window.Folio.Stimulus.register('f-c-files-batch-form', class extends window.Stim
   submit () {
     const data = {}
 
-    // Only add non-empty values
     for (const formControl of this.element.querySelectorAll('input, .form-control')) {
       data[formControl.name] = formControl.value
     }
