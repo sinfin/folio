@@ -48,7 +48,7 @@ window.Folio.Stimulus.register('f-input-autocomplete', class extends window.Stim
     this.preventEnterSubmit = (e) => {
       if (e.key === 'Enter' && this.hasActiveDropdownValue) {
         e.preventDefault()
-        e.stopPropagation()
+        e.stopImmediatePropagation()
       }
     }
     this.element.addEventListener('keydown', this.preventEnterSubmit)
