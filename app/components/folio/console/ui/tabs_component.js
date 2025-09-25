@@ -56,7 +56,9 @@ window.Folio.Stimulus.register('f-c-ui-tabs', class extends window.Stimulus.Cont
   }
 
   onClick (e) {
-    e.preventDefault()
-    e.target.blur()
+    if (!e.target.href) {
+      e.preventDefault()
+      e.target.blur()
+    }
   }
 })
