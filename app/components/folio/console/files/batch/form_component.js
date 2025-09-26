@@ -9,7 +9,9 @@ window.Folio.Stimulus.register('f-c-files-batch-form', class extends window.Stim
     const data = {}
 
     for (const formControl of this.element.querySelectorAll('input, .form-control')) {
-      data[formControl.name] = formControl.value
+      if (formControl.name) {
+        data[formControl.name] = formControl.value
+      }
     }
 
     this.dispatch('submit', { detail: { data: window.Folio.formToHash(data) } })
