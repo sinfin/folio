@@ -96,6 +96,7 @@ class Folio::File < Folio::ApplicationRecord
   after_save :run_after_save_job
   after_commit :process!, if: :attached_file_changed?
   after_destroy :destroy_attached_file
+  after_destroy :dispatch_destroyed_message
 
   attr_accessor :dont_run_after_save_jobs
 
@@ -350,6 +351,21 @@ class Folio::File < Folio::ApplicationRecord
           errors.add(:description, :blank)
         end
       end
+    end
+
+    def dispatch_destroyed_message
+      message_bus_user_ids = Folio::User.where.not(console_url: nil)
+                                        .where(console_url_updated_at: 1.hour.ago..)
+                                        .pluck(:id)
+
+      return if message_bus_user_ids.blank?
+
+      MessageBus.publish Folio::MESSAGE_BUS_CHANNEL,
+                         {
+                           type: "Folio::File/destroyed",
+                           data: { id: },
+                         }.to_json,
+                         user_ids: message_bus_user_ids
     end
 end
 
