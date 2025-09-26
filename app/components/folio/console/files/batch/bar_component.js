@@ -244,7 +244,10 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
     let allChecked = true
     let allCheckbox
 
-    for (const checkbox of document.querySelectorAll('.f-file-list-file-batch-checkbox__input')) {
+    const fileList = this.element.closest('.f-file-list')
+    if (!fileList) return
+
+    for (const checkbox of fileList.querySelectorAll('.f-file-list-file-batch-checkbox__input')) {
       if (checkbox.value === 'all') {
         allCheckbox = checkbox
         continue
