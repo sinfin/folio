@@ -21,6 +21,7 @@ class Folio::Console::Ui::AjaxInputComponent < Folio::Console::ApplicationCompon
                  disabled: false,
                  rows: 1,
                  force_cancel: false,
+                 use_saved_indicator: true,
                  autocomplete: nil)
     @name = name
     @url = url
@@ -43,6 +44,7 @@ class Folio::Console::Ui::AjaxInputComponent < Folio::Console::ApplicationCompon
     @collection = collection
     @autocomplete = autocomplete
     @force_cancel = force_cancel
+    @use_saved_indicator = use_saved_indicator
   end
 
   def data
@@ -52,6 +54,7 @@ class Folio::Console::Ui::AjaxInputComponent < Folio::Console::ApplicationCompon
       cleave: @cleave,
       original_value: @value,
       method: @method,
+      use_saved_indicator: @use_saved_indicator,
     }, action: {
       "f-c-ui-ajax-input:setValue" => "setValueFromEvent",
     })
