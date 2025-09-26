@@ -1,9 +1,13 @@
 .f-c-ui-pagy
   margin: $grid-gutter-width 0
   color: $gray-medium-dark
-  display: flex
-  gap: $grid-gutter-half $grid-gutter-width
-  flex-wrap: wrap
+  container-type: inline-size
+
+  &__flex
+    align-items: center
+    display: flex
+    flex-wrap: wrap
+    gap: $grid-gutter-half $grid-gutter-width
 
   &__info
     max-width: 100%
@@ -14,9 +18,11 @@
     margin-top: 0
 
   &__nav
-    display: flex
     align-items: center
-    flex: 0 0 auto
+    container-type: inline-size
+    display: flex
+    flex: 1 1 auto
+    justify-content: flex-end
     margin: -5px 0 -5px auto
     position: relative
     top: -1px
@@ -44,10 +50,11 @@
     line-height: 24px
     min-width: 24px
     height: 24px
-    border-radius: 100%
+    border-radius: 12px
     text-align: center
 
-  &__page--page a
+  &__page--page a,
+  &__page-current
     padding: 0 $spacer / 2
 
   &__page--current:before,
@@ -57,7 +64,7 @@
   &__page--current
     background: $dark-gray
     color: $white
-    flex: 0 0 24px
+    flex: 0 0 auto
 
   &__ico
     line-height: 24px
@@ -67,33 +74,42 @@
   &--with-middle
     align-items: center
 
-  +media-breakpoint-up(md)
+  @container (min-width: 700px)
     &--with-middle &__info,
     &--with-middle &__nav
       margin: 0
-      flex: 0 0 calc((100% - #{2 * $grid-gutter-width}) * 2 / 5)
+      flex: 0 0 calc(((100% - #{2 * $grid-gutter-width}) - 72px) / 2)
 
     &--with-middle &__nav
       justify-content: flex-end
 
     &--with-middle &__middle
-      flex: 0 0 calc((100% - #{2 * $grid-gutter-width}) * 1 / 5)
+      flex: 0 0 72px
       display: flex
       align-items: center
       justify-content: center
 
-  +media-breakpoint-down(sm)
-    &__nav
-      justify-content: center
+  @container (max-width: 580px)
+    &__flex
+      flex-direction: column
+      align-items: center
 
-  @media screen and (max-width: 500px)
+    &__nav
+      align-self: stretch
+      width: 100%
+      justify-content: center
+      margin: 0
+
+  @container (max-width: 360px)
+    &__page--page-minus-2,
+    &__page--page-plus-2
+      display: none
+
+  @container (max-width: 280px)
     &__page
       display: none
 
-    &__page--with-ico,
-    &__page--current
+    &__page--prev,
+    &__page--current,
+    &__page--next,
       display: block
-
-    &__page--next
-      &:before
-        display: none !important

@@ -27,4 +27,12 @@ class Folio::Console::Ui::PagyComponent < Folio::Console::ApplicationComponent
                           action: { "f-c-ui-pagy/reload" => "reload" })
     end
   end
+
+  def page_class(item)
+    if item < @pagy.page
+      "f-c-ui-pagy__page--page-minus-#{@pagy.page - item}"
+    elsif item > @pagy.page
+      "f-c-ui-pagy__page--page-plus-#{item - @pagy.page}"
+    end
+  end
 end
