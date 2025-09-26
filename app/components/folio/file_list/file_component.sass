@@ -71,18 +71,15 @@
     background: $gray-200
     color: $gray-600
 
+  &__info-item
+    overflow-wrap: break-word
+
   &__info-file-name--interactive
     color: $accent-blue
     cursor: pointer
 
     &:hover
       text-decoration: underline
-
-  &__info-item
-    white-space: nowrap
-    overflow: hidden
-    text-overflow: ellipsis
-    max-width: 150px
 
   &__part--warning
     color: $accent-orange
@@ -242,6 +239,9 @@
     align-items: center
     gap: px-to-rem(8px)
 
+    .f-file-list-file__image-wrap
+      width: 50px
+
     .f-file-list-file__control--disabled
       opacity: 0.5
       cursor: not-allowed
@@ -351,23 +351,9 @@
       &__part--controls
         display: table-cell
 
-      &__part--info
-        width: 90%
-
       &__part--extension
         width: 0
         white-space: nowrap
 
       &--thead &__part
         padding-top: 0
-
-      &__info-item
-        max-width: 250px
-
-    @container (min-width: 800px)
-      &__info-item
-        max-width: 400px
-
-    @container (min-width: 1000px)
-      &__info-item
-        max-width: 600px
