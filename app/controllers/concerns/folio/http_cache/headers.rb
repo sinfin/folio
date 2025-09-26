@@ -103,7 +103,7 @@ module Folio
         end
 
         def should_set_cache_headers?
-          !request.path.starts_with?("/console") && !request.path.starts_with?("/users")
+          !request.path.starts_with?("/console") && !request.path.starts_with?("/users") && !request.path.starts_with?("/folio/api/s3")
         end
 
         def should_cache_response?
