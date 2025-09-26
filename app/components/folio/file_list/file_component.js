@@ -138,6 +138,8 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
         message.type === 'Folio::ApplicationJob/file_update' ||
         (message.type === 'Folio::S3::CreateFileJob' && message.data.type === 'replace-success')) {
       this.reload({ handleErrors: false })
+    } else if (message.type === 'Folio::File/destroyed') {
+      this.fileDestroyed()
     }
   }
 
@@ -269,15 +271,6 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
 
       window.Folio.Api.apiDelete(e.params.url).then(() => {
         this.removeParentOrElement()
-        // notify batch bar to reload
-        const batchBar = document.querySelector('.f-c-files-batch-bar')
-        if (batchBar) {
-          batchBar.dispatchEvent(new CustomEvent('f-c-files-batch-bar:reload'))
-        }
-
-        for (const fileElement of document.querySelectorAll(`.f-file-list-file[data-f-file-list-file-id-value="${this.idValue}"]`)) {
-          fileElement.dispatchEvent(new CustomEvent('Folio::File/deleted', { bubbles: true }))
-        }
       }).catch((error) => {
         this.element.classList.remove('f-file-list-file--destroying')
         this.errorFlashMessage(`${window.Folio.i18n(this.constructor.ERROR_MESSAGES, 'failedToDeleteFile')}: ${error.message}`)
@@ -289,8 +282,13 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
     this.reload({ handleErrors: true })
   }
 
-  fileDeleted (_e) {
+  fileDestroyed (_e) {
     this.removeParentOrElement()
+
+    const batchBar = document.querySelector('.f-c-files-batch-bar')
+    if (batchBar) {
+      batchBar.dispatchEvent(new CustomEvent('f-c-files-batch-bar:reload'))
+    }
   }
 
   toggleBatch (e) {
@@ -305,7 +303,9 @@ if (window.Folio && window.Folio.MessageBus && window.Folio.MessageBus.callbacks
     if (!message) return
     let selector
 
-    if (message.type === 'Folio::Console::FileControllerBase/file_updated' || message.type === 'Folio::ApplicationJob/file_update') {
+    if (message.type === 'Folio::Console::FileControllerBase/file_updated' ||
+        message.type === 'Folio::ApplicationJob/file_update' ||
+        message.type === 'Folio::File/destroyed') {
       selector = `.f-file-list-file[data-f-file-list-file-id-value="${message.data.id}"]`
     } else if (message.type === 'Folio::S3::CreateFileJob') {
       selector = `.f-file-list-file[data-f-file-list-file-s3-path-value="${message.data.s3_path}"], .f-file-list-file[data-f-file-list-file-id-value="${message.data.file_id}"]`

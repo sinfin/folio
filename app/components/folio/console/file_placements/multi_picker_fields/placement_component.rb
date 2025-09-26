@@ -17,7 +17,7 @@ class Folio::Console::FilePlacements::MultiPickerFields::PlacementComponent < Fo
                             embed: embed?,
                           },
                           action: {
-                            "Folio::File/deleted" => "onFileDeleted",
+                            "f-c-files-picker:fileDestroyed" => "onFileDestroyed",
                             "f-c-file-placements-multi-picker-fields-placement:highlight" => "onHighlight",
                           })
     end
