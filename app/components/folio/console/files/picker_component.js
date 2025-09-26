@@ -224,12 +224,24 @@ window.Folio.Stimulus.register('f-c-files-picker', class extends window.Stimulus
     }
   }
 
-  onFileDeleted (e) {
+  onFileDestroyed (e) {
     if (this.element.closest('.f-c-file-placements-multi-picker-fields-placement')) {
-      // let the parent handle it
+      // let the parent handle it - the event bubbles
       return
     }
 
     this.clear()
   }
 })
+
+if (window.Folio && window.Folio.MessageBus && window.Folio.MessageBus.callbacks) {
+  window.Folio.MessageBus.callbacks['f-c-files-picker'] = (message) => {
+    if (!message) return
+
+    if (message.type === 'Folio::File/destroyed' && message.data && message.data.id) {
+      for (const input of document.querySelectorAll(`.f-c-files-picker__input--file_id[value="${message.data.id}"]`)) {
+        input.closest('.f-c-files-picker').dispatchEvent(new CustomEvent('f-c-files-picker:fileDestroyed', { bubbles: true }))
+      }
+    }
+  }
+}

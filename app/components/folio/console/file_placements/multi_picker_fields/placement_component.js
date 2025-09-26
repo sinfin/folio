@@ -95,7 +95,7 @@ window.Folio.Stimulus.register('f-c-file-placements-multi-picker-fields-placemen
     }, 500)
   }
 
-  onFileDeleted (e) {
+  onFileDestroyed (e) {
     this.removeFields()
   }
 
