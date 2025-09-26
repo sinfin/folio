@@ -25,6 +25,7 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
 
       this.changeToPropagateValue.file_ids.forEach((fileId) => {
         for (const fileElement of document.querySelectorAll(`.f-file-list-file[data-f-file-list-file-id-value="${fileId}"]`)) {
+          if (fileElement.closest('.f-c-files-batch-bar')) continue
           fileElement.dispatchEvent(new CustomEvent(`f-file-list-file:${eventName}`))
         }
       })

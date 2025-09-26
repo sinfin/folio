@@ -176,6 +176,8 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
       this.removeParentOrElement()
       this.errorFlashMessage(`${window.Folio.i18n(this.constructor.ERROR_MESSAGES, 'failedToProcessFile')}: ${error.message}`)
     }).then((response) => {
+      this.catchCounter = 0
+
       if (this.element.parentNode) {
         // only replace if still in the DOM
         this.element.outerHTML = response.data

@@ -41,6 +41,7 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
                         },
                         action: @editable ? {
                           "f-file-list-file:updated": "fileUpdated",
+                          "f-file-list-file:deleted": "fileDestroyed",
                         } : nil)
   end
 
