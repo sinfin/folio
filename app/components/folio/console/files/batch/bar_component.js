@@ -241,10 +241,23 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
 
   correctCheckboxes () {
     const fileIds = JSON.parse(this.fileIdsJsonValue)
+    let allChecked = true
+    let allCheckbox
 
     for (const checkbox of document.querySelectorAll('.f-file-list-file-batch-checkbox__input')) {
+      if (checkbox.value === 'all') {
+        allCheckbox = checkbox
+        continue
+      }
+
       checkbox.checked = fileIds.includes(parseInt(checkbox.value, 10))
+
+      if (!checkbox.checked) {
+        allChecked = false
+      }
     }
+
+    allCheckbox.checked = allChecked
   }
 
   onReloadTriggerRaw () {
