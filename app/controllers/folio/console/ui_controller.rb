@@ -49,20 +49,21 @@ class Folio::Console::UiController < Folio::Console::BaseController
       raise ActionController::BadRequest.new("Can only do this in development")
     end
 
-    name = params.require(:name)
+    @page = Folio::Page.first
 
-    if %w[title meta_title meta_description].exclude?(name)
-      raise ActionController::BadRequest.new("Invalid name #{name}")
+    permitted = params.permit(:title,
+                              :meta_title,
+                              :meta_description)
+
+    @page.update!(permitted)
+
+    h = {}
+
+    permitted.keys.each do |k|
+      h[k] = @page.send(k)
     end
 
-    name = name.to_sym
-
-    value = params.require(:value)
-
-    @page = Folio::Page.first
-    @page.update!(name => value)
-
-    render json: { data: { name => value } }
+    render json: { data: h }
   end
 
   def tabs
