@@ -178,6 +178,13 @@ FactoryBot.define do
     trait :superadmin do
       superadmin { true }
     end
+
+    trait :manager do
+      after(:create) do |user|
+        safely_set_roles_for(user, ["manager"], user.auth_site)
+        user.reload
+      end
+    end
   end
 
   factory :folio_omniauth_authentication, class: "Folio::Omniauth::Authentication" do
