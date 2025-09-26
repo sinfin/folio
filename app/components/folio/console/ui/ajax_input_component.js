@@ -9,7 +9,8 @@ window.Folio.Stimulus.register('f-c-ui-ajax-input', class extends window.Stimulu
     remote: Boolean,
     url: String,
     originalValue: String,
-    method: String
+    method: String,
+    useSavedIndicator: Boolean
   }
 
   connect () {
@@ -151,12 +152,14 @@ window.Folio.Stimulus.register('f-c-ui-ajax-input', class extends window.Stimulu
     this.inputTarget.blur()
     this.inputTarget.dispatchEvent(new CustomEvent('f-c-ui-ajax-input:success', { bubbles: true, detail: { value: newValue, label: newLabel } }))
 
-    this.element.classList.add('f-c-ui-ajax-input--success')
-    setTimeout(() => {
-      if (this && this.element) {
-        this.element.classList.remove('f-c-ui-ajax-input--success')
-      }
-    }, 3000)
+    if (this.useSavedIndicatorValue) {
+      this.element.classList.add('f-c-ui-ajax-input--success')
+      setTimeout(() => {
+        if (this && this.element && this.element.parentNode) {
+          this.element.classList.remove('f-c-ui-ajax-input--success')
+        }
+      }, 3000)
+    }
   }
 
   setValueFromEvent (e) {
