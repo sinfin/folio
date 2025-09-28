@@ -1,0 +1,6 @@
+# frozen_string_literal: true
+
+Folio::Console::Api::LinksController.class_eval do
+  # Add custom behavior for links controller here
+  # This override allows you to customize the links functionality
+end
