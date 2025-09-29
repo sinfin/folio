@@ -208,6 +208,7 @@ module Folio::Console::Api::FileControllerBase
                                   :attribution_licence,
                                   :alt,
                                   :tag_list,
+                                  :headline,
                                   :description)
                           .to_h
                           .select { |_, value| value.present? }
