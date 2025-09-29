@@ -4,12 +4,18 @@ window.Folio.Stimulus.register('f-c-files-show-modal', class extends window.Stim
     urlMappings: Object
   }
 
-  static targets = ['navigation', 'navigationButtonPrevious', 'navigationButtonNext']
+  static targets = ['navigation', 'navigationButtonPrevious', 'navigationButtonNext', 'customTitle']
 
   fileDataValueChanged (to, from) {
     if (to === from) return
 
-    const { id, type, previousId, nextId } = to || {}
+    const {
+      id,
+      type,
+      fileName,
+      previousId,
+      nextId
+    } = to || {}
 
     if (previousId || nextId) {
       this.navigationTarget.hidden = false
@@ -22,6 +28,8 @@ window.Folio.Stimulus.register('f-c-files-show-modal', class extends window.Stim
     }
 
     if (id) {
+      this.customTitleTarget.textContent = fileName || ''
+
       if (type && this.urlMappingsValue && this.urlMappingsValue[type]) {
         const url = `${this.urlMappingsValue[type]}/${id}`
         window.Turbo.visit(url, { frame: this.element.querySelector('turbo-frame').id })
@@ -81,7 +89,8 @@ window.Folio.Stimulus.register('f-c-files-show-modal', class extends window.Stim
         e.preventDefault()
         this.setFileDataValueWithNavigation({
           id: this.fileDataValue.previousId,
-          type: this.fileDataValue.type
+          type: this.fileDataValue.type,
+          fileName: this.fileDataValue.previousFileName
         })
       }
     } else if (e.key === 'ArrowRight') {
@@ -90,7 +99,8 @@ window.Folio.Stimulus.register('f-c-files-show-modal', class extends window.Stim
         e.preventDefault()
         this.setFileDataValueWithNavigation({
           id: this.fileDataValue.nextId,
-          type: this.fileDataValue.type
+          type: this.fileDataValue.type,
+          fileName: this.fileDataValue.nextFileName
         })
       }
     }
@@ -107,17 +117,20 @@ window.Folio.Stimulus.register('f-c-files-show-modal', class extends window.Stim
 
     this.setFileDataValueWithNavigation({
       id: e.detail.fileData.id,
-      type: e.detail.fileData.type
+      type: e.detail.fileData.type,
+      fileName: e.detail.fileData.fileName
     })
   }
 
-  setFileDataValueWithNavigation ({ id, type }) {
+  setFileDataValueWithNavigation ({ id, type, fileName }) {
     const fileSelector = `.f-file-list-file[data-f-file-list-file-file-type-value="${type}"][data-f-file-list-file-editable-value="true"]`
     // don't use files in hidden modal
     const fileListFile = document.querySelector(`.f-c-layout-main ${fileSelector}[data-f-file-list-file-id-value="${id}"], .modal.show ${fileSelector}[data-f-file-list-file-id-value="${id}"]`)
 
     let previousId = null
+    let previousFileName = null
     let nextId = null
+    let nextFileName = null
 
     if (fileListFile) {
       const fileListFileParent = fileListFile.closest('.f-file-list__flex-item')
@@ -126,6 +139,7 @@ window.Folio.Stimulus.register('f-c-files-show-modal', class extends window.Stim
         const nextFile = fileListFileParent.nextElementSibling.querySelector(fileSelector)
         if (nextFile) {
           nextId = Number(nextFile.dataset.fFileListFileIdValue)
+          nextFileName = nextFile.dataset.fFileListFileFileNameValue
         }
       }
 
@@ -133,6 +147,7 @@ window.Folio.Stimulus.register('f-c-files-show-modal', class extends window.Stim
         const previousFile = fileListFileParent.previousElementSibling.querySelector(fileSelector)
         if (previousFile) {
           previousId = Number(previousFile.dataset.fFileListFileIdValue)
+          previousFileName = previousFile.dataset.fFileListFileFileNameValue
         }
       }
     }
@@ -140,8 +155,11 @@ window.Folio.Stimulus.register('f-c-files-show-modal', class extends window.Stim
     this.fileDataValue = {
       id,
       type,
+      fileName,
       previousId,
-      nextId
+      previousFileName,
+      nextId,
+      nextFileName
     }
   }
 
@@ -152,14 +170,16 @@ window.Folio.Stimulus.register('f-c-files-show-modal', class extends window.Stim
       if (this.fileDataValue.previousId) {
         this.setFileDataValueWithNavigation({
           id: this.fileDataValue.previousId,
-          type: this.fileDataValue.type
+          type: this.fileDataValue.type,
+          fileName: this.fileDataValue.previousFileName
         })
       }
     } else {
       if (this.fileDataValue.nextId) {
         this.setFileDataValueWithNavigation({
           id: this.fileDataValue.nextId,
-          type: this.fileDataValue.type
+          type: this.fileDataValue.type,
+          fileName: this.fileDataValue.nextFileName
         })
       }
     }
