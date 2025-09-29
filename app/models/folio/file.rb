@@ -66,6 +66,8 @@ class Folio::File < Folio::ApplicationRecord
     by_file_name_for_search(sanitize_filename_for_search(query))
   end
 
+  scope :by_query, -> (query) { by_file_name_for_search(sanitize_filename_for_search(query)) }
+
   pg_search_scope :by_file_name_for_search,
                   against: [:file_name_for_search],
                   ignoring: :accents,
