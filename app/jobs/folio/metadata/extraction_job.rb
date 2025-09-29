@@ -3,6 +3,8 @@
 class Folio::Metadata::ExtractionJob < Folio::ApplicationJob
   queue_as :slow
 
+  discard_on ActiveJob::DeserializationError
+
   def perform(image, force: false, user_id: nil)
     @user_id = user_id
     return unless image.is_a?(Folio::File::Image)
