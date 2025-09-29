@@ -64,14 +64,14 @@ class Folio::Console::Files::ShowComponent < Folio::Console::ApplicationComponen
 
   def table_rows
     {
+      attribution_source: {},
+      author: {},
       headline: {},
       description: {},
-      author: {},
-      attribution_source: {},
+      alt: {},
       attribution_source_url: {},
       attribution_copyright: {},
       attribution_licence: {},
-      alt: {},
     }.merge(@file.console_show_additional_fields)
   end
 
