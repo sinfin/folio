@@ -27,7 +27,9 @@ class Folio::Console::Ui::ButtonComponent < Folio::Console::ApplicationComponent
                  aria: nil,
                  dropzone: nil,
                  form_modal: nil,
-                 form_modal_title: nil)
+                 form_modal_title: nil,
+                 form_action: nil,
+                 form_method: nil)
     @variant = variant == :medium_dark ? "medium-dark" : variant
     @size = size
     @icon_height = icon_height || default_icon_height
@@ -52,6 +54,8 @@ class Folio::Console::Ui::ButtonComponent < Folio::Console::ApplicationComponent
     @dropzone = dropzone # TODO dropzone
     @form_modal = form_modal
     @form_modal_title = form_modal_title
+    @form_action = form_action
+    @form_method = form_method
   end
 
   def tag
@@ -69,6 +73,8 @@ class Folio::Console::Ui::ButtonComponent < Folio::Console::ApplicationComponent
       h[:title] = @title if @title
     else
       h[:type] = @type
+      h[:formaction] = @form_action if @form_action.present?
+      h[:formmethod] = @form_method if @form_method.present?
     end
 
     h[:class] = "f-c-ui-button btn btn-#{@variant}"
