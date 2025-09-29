@@ -101,7 +101,6 @@ module Folio
           "config/initializers/assets.rb",
           "config/initializers/folio.rb",
           "config/initializers/namespace.rb",
-          "config/initializers/raven.rb",
           "config/initializers/sentry.rb",
           "config/initializers/smtp.rb",
           "config/locales/application_namespace_path/menu.cs.yml",
