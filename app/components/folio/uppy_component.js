@@ -6,7 +6,8 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
     fileType: String,
     inline: Boolean,
     maxNumberOfFiles: Number,
-    existingId: String
+    existingId: String,
+    allowedFormats: String
   }
 
   static targets = ['trigger', 'loader']
@@ -59,10 +60,18 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
     try {
       const opts = {}
 
+      const restrictions = {}
+
       if (this.maxNumberOfFilesValue) {
-        opts.restrictions = {
-          maxNumberOfFiles: this.maxNumberOfFilesValue
-        }
+        restrictions.maxNumberOfFiles = this.maxNumberOfFilesValue
+      }
+
+      if (this.allowedFormatsValue) {
+        restrictions.allowedFileTypes = this.allowedFormatsValue.split(',')
+      }
+
+      if (Object.keys(restrictions).length > 0) {
+        opts.restrictions = restrictions
       }
 
       if (document.documentElement.lang === 'cs') {

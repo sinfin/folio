@@ -3,7 +3,7 @@
 class Folio::File::Image < Folio::File
   include Folio::Sitemap::Image
 
-  validate_file_format(%w[jpeg png bmp gif svg tiff webp avif heic heif])
+  validate_file_format(%w[jpeg png gif svg tiff webp avif heic heif])
 
   # Metadata extraction after image creation
   after_commit :extract_metadata_async, if: :should_extract_metadata?
