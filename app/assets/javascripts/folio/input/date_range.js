@@ -9,7 +9,7 @@ window.Folio.Input.DateRange.i18n = {
   cs: {
     config: {
       locale: {
-        format: 'DD. MM. YYYY',
+        format: 'D. M. YYYY',
         separator: ' - ',
         applyLabel: 'Potvrdit',
         cancelLabel: 'Zrušit',
@@ -38,7 +38,7 @@ window.Folio.Input.DateRange.i18n = {
   en: {
     config: {
       locale: {
-        format: 'DD. MM. YYYY',
+        format: 'D. M. YYYY',
         separator: ' - '
       },
       showCustomRangeLabel: true,
