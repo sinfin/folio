@@ -35,7 +35,6 @@ cs:
         default_gravity/south: Dole
         default_gravity/west: Vlevo
         default_gravity: Výchozí ořez
-        description: Popis
         file_mime_type: Typ souboru
         file_size: Velikost souboru
         preview_duration: Kolik vteřin je zdarma?
