@@ -165,6 +165,8 @@ window.Folio.Stimulus.register('f-c-files-show-modal', class extends window.Stim
 
   onNavigationClick (e) {
     e.preventDefault()
+    const btn = e.target.closest('.f-c-ui-button')
+    if (btn) btn.blur()
 
     if (e.currentTarget.dataset.direction === 'previous') {
       if (this.fileDataValue.previousId) {
