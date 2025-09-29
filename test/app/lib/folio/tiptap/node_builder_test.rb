@@ -62,4 +62,39 @@ class Folio::Tiptap::NodeBuilderTest < ActiveSupport::TestCase
       has_many: true
     }, Node.structure[:related_pages])
   end
+
+  test "url_json sanitizes href values" do
+    node = Node.new
+
+    # Test safe href values are preserved
+    node.button_url_json = { "href" => "https://example.com", "label" => "Visit" }
+    assert_equal "https://example.com", node.button_url_json["href"]
+    assert_equal "Visit", node.button_url_json["label"]
+
+    node.button_url_json = { "href" => "mailto:test@example.com", "label" => "Email" }
+    assert_equal "mailto:test@example.com", node.button_url_json["href"]
+
+    node.button_url_json = { "href" => "tel:+1234567890", "label" => "Call" }
+    assert_equal "tel:+1234567890", node.button_url_json["href"]
+
+    # Test dangerous href values are removed
+    node.button_url_json = { "href" => "javascript:alert('xss')", "label" => "Click" }
+    assert_nil node.button_url_json["href"]
+    assert_equal "Click", node.button_url_json["label"]
+
+    node.button_url_json = { "href" => "data:text/html,<script>alert('xss')</script>", "label" => "Click" }
+    assert_nil node.button_url_json["href"]
+
+    node.button_url_json = { "href" => "vbscript:msgbox('xss')", "label" => "Click" }
+    assert_nil node.button_url_json["href"]
+
+    node.button_url_json = { "href" => "file:///etc/passwd", "label" => "Click" }
+    assert_nil node.button_url_json["href"]
+
+    # Test that other attributes are preserved when href is removed
+    node.button_url_json = { "href" => "javascript:alert('xss')", "label" => "Click", "title" => "My Link" }
+    assert_nil node.button_url_json["href"]
+    assert_equal "Click", node.button_url_json["label"]
+    assert_equal "My Link", node.button_url_json["title"]
+  end
 end

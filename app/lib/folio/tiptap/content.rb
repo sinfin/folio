@@ -44,15 +44,49 @@ class Folio::Tiptap::Content
       scrubbed
     end
 
+    sanitize_href = lambda do |href_value|
+      return nil if href_value.blank?
+
+      # Use Rails' sanitizer to check if href is safe
+      test_link = "<a href=\"#{href_value}\">test</a>"
+      sanitized_link = ActionController::Base.helpers.sanitize(test_link)
+
+      # If href was stripped, it's unsafe
+      if sanitized_link == "<a>test</a>"
+        Rails.logger.warn "Removed unsafe href from tiptap link: #{href_value}"
+        return nil
+      end
+
+      # Extract href from sanitized result
+      if match = sanitized_link.match(/href="([^"]*)"/)
+        return match[1]
+      end
+
+      href_value
+    end
+
     traverse_and_scrub = lambda do |hash|
       hash.each do |key, value|
         scrubbed_key = scrub.call(key.to_s)
 
         case value
         when String
-          hash[scrubbed_key] = scrub.call(value)
+          # Special handling for href in link marks
+          if key == "href" && hash["type"] == "link"
+            hash[scrubbed_key] = sanitize_href.call(value)
+          else
+            hash[scrubbed_key] = scrub.call(value)
+          end
         when Hash
-          hash[scrubbed_key] = traverse_and_scrub.call(value)
+          # Check if this is a link mark attrs hash
+          if key == "attrs" && hash["type"] == "link" && value.is_a?(Hash) && value["href"]
+            # Clone the attrs hash and sanitize href
+            sanitized_attrs = value.dup
+            sanitized_attrs["href"] = sanitize_href.call(value["href"])
+            hash[scrubbed_key] = traverse_and_scrub.call(sanitized_attrs)
+          else
+            hash[scrubbed_key] = traverse_and_scrub.call(value)
+          end
         when Array
           hash[scrubbed_key] = value.map do |item|
             if item.is_a?(String)
