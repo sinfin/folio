@@ -55,8 +55,6 @@ class Folio::S3::CreateFileJob < Folio::S3::BaseJob
               ".png"
             when "image/gif"
               ".gif"
-            when "image/bmp"
-              ".bmp"
             when "image/svg", "image/svg+xml"
               ".svg"
             else
