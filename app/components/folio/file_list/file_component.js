@@ -11,6 +11,7 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
     jwt: { type: String, default: '' },
     s3Path: { type: String, default: '' },
     fileType: String,
+    fileName: String,
     templateUrl: { type: String, default: '' },
     editable: { type: Boolean, default: false },
     destroyable: { type: Boolean, default: false },
@@ -249,7 +250,8 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
       detail: {
         fileData: {
           type: this.fileTypeValue,
-          id: this.idValue
+          id: this.idValue,
+          fileName: this.fileNameValue
         }
       }
     }))
