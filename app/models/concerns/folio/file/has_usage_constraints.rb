@@ -35,7 +35,11 @@ module Folio::File::HasUsageConstraints
             Folio::Current.site.id
           )
 
-          where(id: unusable_by_limit.select(:id).union(unusable_by_site.select(:id)))
+          where("(attribution_max_usage_count > 0 AND published_usage_count >= attribution_max_usage_count) OR " \
+                "(media_source_id IS NOT NULL AND EXISTS (SELECT 1 FROM folio_file_site_links WHERE folio_file_site_links.file_id = folio_files.id) AND NOT EXISTS (SELECT 1 FROM folio_file_site_links
+                WHERE folio_file_site_links.file_id = folio_files.id AND folio_file_site_links.site_id = ?))",
+                Folio::Current.site.id)
+
         else
           unusable_by_limit
         end
