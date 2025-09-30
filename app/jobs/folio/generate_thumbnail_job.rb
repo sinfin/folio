@@ -3,13 +3,8 @@
 class Folio::GenerateThumbnailJob < Folio::ApplicationJob
   queue_as :slow
 
-  discard_on(ActiveJob::DeserializationError) do |job, e|
-    Sentry.capture_exception(e) if defined?(Sentry)
-  end
-
-  discard_on(Dragonfly::Job::Fetch::NotFound) do |job, e|
-    Sentry.capture_exception(e) if defined?(Sentry)
-  end
+  discard_on(ActiveJob::DeserializationError)
+  discard_on(Dragonfly::Job::Fetch::NotFound)
 
   def perform(image, size, quality, x: nil, y: nil, force: false)
     return if image.file_mime_type.include?("svg")
