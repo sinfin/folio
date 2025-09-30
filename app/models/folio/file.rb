@@ -21,6 +21,49 @@ class Folio::File < Folio::ApplicationRecord
     west
   ]
 
+  CANCAN_MAPPINGS = {
+    create: %i[
+      create
+      new
+    ],
+    update: %i[
+      batch_update
+      close_batch_form
+      create_subtitle
+      delete_subtitle
+      destroy_file_thumbnail
+      edit
+      extract_metadata
+      open_batch_form
+      retranscribe_subtitles
+      update
+      update_file_thumbnail
+      update_subtitle
+    ],
+    read: %i[
+      batch_bar
+      batch_download
+      batch_download_failure
+      batch_download_success
+      cancel_batch_download
+      file_picker_file_hash
+      file_placements
+      handle_batch_queue
+      index
+      index_for_modal
+      index_for_picker
+      new_subtitle_html
+      pagination
+      show
+      subtitle_html
+      subtitles_html
+    ],
+    destroy: %i[
+      batch_delete
+      destroy
+    ]
+  }
+
   dragonfly_accessor :file do
     after_assign :sanitize_filename
   end

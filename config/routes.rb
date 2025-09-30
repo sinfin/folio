@@ -208,7 +208,6 @@ Folio::Engine.routes.draw do
 
             resources key, only: %i[index show update destroy] do
               collection do
-                post :tag
                 get :pagination
 
                 get :batch_bar

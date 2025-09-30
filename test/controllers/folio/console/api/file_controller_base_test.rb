@@ -40,20 +40,6 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
       assert_not klass.exists?(file.id)
     end
 
-    test "#{klass} - tag" do
-      files = create_list(klass.model_name.singular, 2)
-      assert_equal([], files.first.tag_list)
-      assert_equal([], files.second.tag_list)
-
-      post url_for([:tag, :console, :api, klass, format: :json]), params: {
-        file_ids: files.pluck(:id),
-        tags: ["a", "b"],
-      }
-
-      assert_equal(["a", "b"], files.first.reload.tag_list.sort)
-      assert_equal(["a", "b"], files.second.reload.tag_list.sort)
-    end
-
     test "#{klass} - show" do
       file = create(klass.model_name.singular)
       get url_for([:console, :api, file, format: :json])
