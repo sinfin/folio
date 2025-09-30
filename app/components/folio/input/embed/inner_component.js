@@ -3,24 +3,35 @@ window.Folio.Stimulus.register('f-input-embed-inner', class extends window.Stimu
     state: String
   }
 
-  static targets = ['urlInput', 'htmlInput']
+  static targets = ['input', 'previewWrap', 'iframe']
 
   onInput (e) {
     this.updateStateBasedOnInputs()
   }
 
-  // updateStateBasedOnInputs () {
-  //   const newState = this.getNewStateBasedOnInputs()
-  //   if (!newState) return
-  //   if (newState == this.stateValue) return
+  stateValueChanged (to, from) {
+    this.updatePreview()
+  }
 
-  //   this.stateValue = newState
-  // }
+  updatePreview () {
+    if (!this.iframeLoaded) {
+      if (!this.hasIframeTarget) {
+        this.previewWrapTarget.innerHTML = '<iframe class="f-input-embed-inner__iframe" src="/folio/embed"></iframe>'
+      }
+    }
+  }
 
-  // getNewStateBasedOnInputs () {
-  //   const htmlValue = this.htmlInputTarget.value.trim()
-  //   if (htmlValue) {
-  //     if (htmlValue)
-  //   }
-  // }
+  onWindowMessage (e) {
+    if (e.origin !== window.origin) return
+    if (!e.data) return
+    if (!this.hasIframeTarget) return
+    if (e.source !== this.iframeTarget.contentWindow) return
+
+    switch (e.data.type) {
+      case 'f-embed:javascript-evaluated':
+        this.iframeLoaded = true
+        this.updatePreview()
+        break
+    }
+  }
 })
