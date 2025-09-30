@@ -372,7 +372,7 @@ export const DropdownMenuGroup = React.forwardRef<
   DropdownMenuGroupProps
 >(({ children, label, className, ...props }, ref) => {
   const context = useDropdownMenuContext()
-  const style = {}
+  const style: React.CSSProperties = {}
 
   if (context.maxHeight) {
     style.maxHeight = `${context.maxHeight}px`
