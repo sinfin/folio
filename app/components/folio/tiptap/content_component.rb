@@ -7,12 +7,16 @@ class Folio::Tiptap::ContentComponent < ApplicationComponent
                  attribute: :tiptap_content,
                  class_name: nil,
                  lambda_before_root_node: nil,
-                 lambda_after_root_node: nil)
+                 lambda_after_root_node: nil,
+                 node_type_blacklist: nil,
+                 lambda_for_blacklisted: nil)
     @record = record
     @attribute = attribute
     @class_name = class_name
     @lambda_before_root_node = lambda_before_root_node
     @lambda_after_root_node = lambda_after_root_node
+    @node_type_blacklist = node_type_blacklist
+    @lambda_for_blacklisted = lambda_for_blacklisted
   end
 
   def render?
@@ -91,7 +95,9 @@ class Folio::Tiptap::ContentComponent < ApplicationComponent
         record: @record,
         prose_mirror_node: tiptap_content[Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content]],
         lambda_before_node: @lambda_before_root_node,
-        lambda_after_node: @lambda_after_root_node
+        lambda_after_node: @lambda_after_root_node,
+        node_type_blacklist: @node_type_blacklist,
+        lambda_for_blacklisted: @lambda_for_blacklisted,
       )
     end
 end

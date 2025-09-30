@@ -6,11 +6,15 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponent < ApplicationComponent
   def initialize(record:,
                  prose_mirror_node:,
                  lambda_before_node: nil,
-                 lambda_after_node: nil)
+                 lambda_after_node: nil,
+                 node_type_blacklist: nil,
+                 lambda_for_blacklisted: nil)
     @record = record
     @prose_mirror_node = prose_mirror_node
     @lambda_before_node = lambda_before_node
     @lambda_after_node = lambda_after_node
+    @node_type_blacklist = node_type_blacklist
+    @lambda_for_blacklisted = lambda_for_blacklisted
 
     if @prose_mirror_node["type"] == "folioTiptapPages"
       if record.tiptap_config.pages_component_class_name
