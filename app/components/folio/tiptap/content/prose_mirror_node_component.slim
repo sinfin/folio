@@ -1,5 +1,8 @@
 - begin
-  - if @node_definition["component_name"]
+  - if @node_type_blacklist && @node_type_blacklist.include?(@prose_mirror_node["type"])
+    - if @lambda_for_blacklisted
+      = @lambda_for_blacklisted.call(@prose_mirror_node)
+  - elsif @node_definition["component_name"]
     = custom_component_render
   - elsif @node_definition["tag"]
     - if @node_definition["self_closing"] && @node_definition["tag"].is_a?(String)
@@ -11,7 +14,9 @@
             = call_lambda_if_present(index:, node: child_node, after: false)
 
             = render(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: @record,
-                                                                          prose_mirror_node: child_node))
+                                                                          prose_mirror_node: child_node,
+                                                                          node_type_blacklist: @node_type_blacklist,
+                                                                          lambda_for_blacklisted: @lambda_for_blacklisted))
 
             = call_lambda_if_present(index:, node: child_node, after: true)
 

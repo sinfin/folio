@@ -9,19 +9,19 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
     end
   end
 
-  def test_render_simple_text_node
+  test "render simple text node" do
     prose_mirror_node = {
       "type" => "text",
       "text" => "Hello world"
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
 
     # Text nodes render the TextComponent directly, which just outputs text
     assert_text("Hello world")
   end
 
-  def test_render_paragraph_node
+  test "render paragraph node" do
     prose_mirror_node = {
       "type" => "paragraph",
       "content" => [
@@ -32,13 +32,13 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       ]
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
 
     assert_selector("p")
     assert_text("This is a paragraph")
   end
 
-  def test_render_aligned_paragraph_node
+  test "render aligned paragraph node" do
     prose_mirror_node = {
       "type" => "paragraph",
       "attrs" => { "textAlign" => "center" },
@@ -50,7 +50,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       ]
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
 
     assert_selector("p")
     assert_text("This is a paragraph")
@@ -59,7 +59,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
     assert_equal "text-align: center;", paragraph[:style]
   end
 
-  def test_render_aligned_heading_node
+  test "render aligned heading node" do
     prose_mirror_node = {
       "type" => "heading",
       "attrs" => { "textAlign" => "center", "level" => 2 },
@@ -71,7 +71,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       ]
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
 
     assert_selector("h2")
     assert_text("This is a heading")
@@ -80,7 +80,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
     assert_equal "text-align: center;", heading[:style]
   end
 
-  def test_render_heading_node_level_1
+  test "render heading node level 1" do
     prose_mirror_node = {
       "type" => "heading",
       "attrs" => { "level" => 1 },
@@ -92,13 +92,13 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       ]
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
 
     # Now that we have dynamic heading levels
     assert_selector("h1", text: "Main Heading")
   end
 
-  def test_render_heading_node_with_different_level
+  test "render heading node with different level" do
     prose_mirror_node = {
       "type" => "heading",
       "attrs" => { "level" => 3 },
@@ -110,13 +110,13 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       ]
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
 
     # Now that we have dynamic heading levels
     assert_selector("h3", text: "Sub Heading")
   end
 
-  def test_render_blockquote_node
+  test "render blockquote node" do
     prose_mirror_node = {
       "type" => "blockquote",
       "content" => [
@@ -132,13 +132,13 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       ]
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
 
     assert_selector("blockquote")
     assert_text("This is a quoted text")
   end
 
-  def test_render_bulletList_node
+  test "render bulletList node" do
     prose_mirror_node = {
       "type" => "bulletList",
       "content" => [
@@ -173,7 +173,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       ]
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
 
     assert_selector("ul")
     assert_selector("li", count: 2)
@@ -181,7 +181,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
     assert_text("Second item")
   end
 
-  def test_render_orderedList_node
+  test "render orderedList node" do
     prose_mirror_node = {
       "type" => "orderedList",
       "attrs" => { "start" => 1 },
@@ -203,14 +203,14 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       ]
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
 
     assert_selector("ol")
     assert_selector("li")
     assert_text("Step one")
   end
 
-  def test_render_doc_node_with_class
+  test "render doc node with class" do
     prose_mirror_node = {
       "type" => "doc",
       "content" => [
@@ -226,13 +226,13 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       ]
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
 
     assert_selector("div.f-tiptap-content__root")
     assert_text("Document content")
   end
 
-  def test_render_folio_tiptap_node
+  test "render folio tiptap node" do
     prose_mirror_node = {
       "type" => "folioTiptapNode",
       "attrs" => {
@@ -241,14 +241,14 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       }
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
 
     # Should render the FolioTiptapNodeComponent with the card
     assert_selector(".d-tiptap-node-card")
     assert_text("Test Card")
   end
 
-  def test_render_nested_structure
+  test "render nested structure" do
     prose_mirror_node = {
       "type" => "bulletList",
       "content" => [
@@ -269,14 +269,14 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       ]
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
 
     assert_selector("ul")
     assert_selector("li p")
     assert_text("Item with formatted text")
   end
 
-  def test_render_unsupported_node_type
+  test "render unsupported node type" do
     prose_mirror_node = {
       "type" => "unsupported_node",
       "content" => [
@@ -287,12 +287,12 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       ]
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
 
     assert_text("")
   end
 
-  def test_render_listItem_node
+  test "render listItem node" do
     prose_mirror_node = {
       "type" => "listItem",
       "content" => [
@@ -308,31 +308,31 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       ]
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
 
     assert_selector("li")
     assert_text("List item content")
   end
 
-  def test_render_empty_content_array
+  test "render empty content array" do
     prose_mirror_node = {
       "type" => "paragraph",
       "content" => []
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
 
     assert_selector("p")
     assert_selector("p br")
     # Should render empty paragraph with trailing break
   end
 
-  def test_render_paragraph_trailing_break_when_empty
+  test "render paragraph trailing break when empty" do
     prose_mirror_node = {
       "type" => "paragraph"
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
 
     assert_selector("p")
     assert_selector("p br")
@@ -340,7 +340,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
 
 
 
-  def test_render_multiple_text_nodes_in_paragraph
+  test "render multiple text nodes in paragraph" do
     prose_mirror_node = {
       "type" => "paragraph",
       "content" => [
@@ -355,13 +355,13 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       ]
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
 
     assert_selector("p")
     assert_text("First partsecond part")
   end
 
-  def test_render_complex_structure_with_multiple_levels
+  test "render complex structure with multiple levels" do
     prose_mirror_node = {
       "type" => "blockquote",
       "content" => [
@@ -381,14 +381,14 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       ]
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
 
     assert_selector("blockquote")
     assert_selector("blockquote p")
     assert_text("Quoted paragraph with multiple text nodes")
   end
 
-  def test_component_initialization_with_all_parameters
+  test "component initialization with all parameters" do
     prose_mirror_node = {
       "type" => "paragraph",
       "content" => [
@@ -399,14 +399,14 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       ]
     }
 
-    component = Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:)
+    component = Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:)
 
     # Component should initialize without errors
     render_inline(component)
     assert_selector("p", text: "Test initialization")
   end
 
-  def test_render_folio_tiptap_columns
+  test "render folio tiptap columns" do
     prose_mirror_node = {
       "type" => "folioTiptapColumns",
       "content" => [
@@ -431,14 +431,14 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       ]
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
 
     assert_selector(".f-tiptap-columns")
     assert_selector(".f-tiptap-columns .f-tiptap-column:first-child", text: "First part")
     assert_selector(".f-tiptap-columns .f-tiptap-column:last-child", text: "Second part")
   end
 
-  def test_render_folio_tiptap_float
+  test "render folio tiptap float" do
     prose_mirror_node = {
       "type" => "folioTiptapFloat",
       "content" => [
@@ -463,7 +463,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       ]
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
 
     assert_selector(".f-tiptap-float")
     assert_selector(".f-tiptap-float[data-f-tiptap-float-size='medium']")
@@ -496,7 +496,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       ]
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
 
     assert_selector(".f-tiptap-float")
     assert_selector(".f-tiptap-float[data-f-tiptap-float-size='large']")
@@ -505,7 +505,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
     assert_selector(".f-tiptap-float .f-tiptap-float__main", text: "Main part")
   end
 
-  def test_render_folio_tiptap_styled_paragraph
+  test "render folio tiptap styled paragraph" do
     prose_mirror_node = {
       "type" => "folioTiptapStyledParagraph",
       "content" => [
@@ -516,7 +516,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       ]
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
 
     assert_selector("p.f-tiptap-styled-paragraph")
     assert_no_selector("p.f-tiptap-styled-paragraph[data-f-tiptap-styled-paragraph-variant='small']")
@@ -535,7 +535,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       }
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
 
     assert_no_selector("p.f-tiptap-styled-paragraph[data-f-tiptap-styled-paragraph-variant='small']")
     assert_selector("p.f-tiptap-styled-paragraph[data-f-tiptap-styled-paragraph-variant='large']")
@@ -553,13 +553,13 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       }
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
 
     assert_no_selector("p.f-tiptap-styled-paragraph[data-f-tiptap-styled-paragraph-variant='large']")
     assert_selector("p.f-tiptap-styled-paragraph[data-f-tiptap-styled-paragraph-variant='small']")
   end
 
-  def test_render_table_node
+  test "render table node" do
     prose_mirror_node = {
       "type" => "table",
       "content" => [
@@ -632,7 +632,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       ]
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
 
     assert_selector(".f-tiptap-table-wrapper")
     assert_selector(".f-tiptap-table-wrapper table")
@@ -644,7 +644,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
     assert_text("Cell 2")
   end
 
-  def test_render_simple_table_with_single_cell
+  test "render simple table with single cell" do
     prose_mirror_node = {
       "type" => "table",
       "content" => [
@@ -670,7 +670,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       ]
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
 
     assert_selector(".f-tiptap-table-wrapper")
     assert_selector(".f-tiptap-table-wrapper table")
@@ -678,7 +678,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
     assert_text("Single cell")
   end
 
-  def test_render_table_with_empty_cells
+  test "render table with empty cells" do
     prose_mirror_node = {
       "type" => "table",
       "content" => [
@@ -708,7 +708,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       ]
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
 
     assert_selector(".f-tiptap-table-wrapper")
     assert_selector(".f-tiptap-table-wrapper table")
@@ -716,7 +716,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
     assert_text("Not empty")
   end
 
-  def test_render_folio_tiptap_styled_wrap
+  test "render folio tiptap styled wrap" do
     prose_mirror_node = {
       "type" => "folioTiptapStyledWrap",
       "attrs" => {
@@ -735,12 +735,12 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       ]
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
 
     assert_selector("div.f-tiptap-styled-wrap[data-f-tiptap-styled-wrap-variant='gray-box'] p")
   end
 
-  def test_component_handles_invalid_folio_tiptap_node_type
+  test "component handles invalid folio tiptap node type" do
     prose_mirror_node = {
       "type" => "folioTiptapNode",
       "attrs" => {
@@ -752,11 +752,11 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       }
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
     assert_text("")
   end
 
-  def test_component_handles_missing_folio_tiptap_node_type
+  test "component handles missing folio tiptap node type" do
     prose_mirror_node = {
       "type" => "folioTiptapNode",
       "attrs" => {
@@ -767,11 +767,11 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       }
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
     assert_text("")
   end
 
-  def test_component_handles_blank_folio_tiptap_node_type
+  test "component handles blank folio tiptap node type" do
     prose_mirror_node = {
       "type" => "folioTiptapNode",
       "attrs" => {
@@ -783,11 +783,11 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       }
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
     assert_text("")
   end
 
-  def test_component_handles_nil_folio_tiptap_node_type
+  test "component handles nil folio tiptap node type" do
     prose_mirror_node = {
       "type" => "folioTiptapNode",
       "attrs" => {
@@ -799,11 +799,11 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       }
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
     assert_text("")
   end
 
-  def test_component_handles_node_type_excluded_by_config
+  test "component handles node type excluded by config" do
     prose_mirror_node = {
       "type" => "folioTiptapNode",
       "attrs" => {
@@ -815,7 +815,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       }
     }
 
-    record = build_mock_record
+    record = Folio::Page.new
 
     # Mock the tiptap_config to exclude all node types
     def record.tiptap_config
@@ -826,8 +826,285 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
     assert_text("")
   end
 
-  private
-    def build_mock_record
-      Folio::Page.new
+  test "render with node type blacklist filtering specific nodes" do
+    prose_mirror_node = {
+      "type" => "bulletList",
+      "content" => [
+        {
+          "type" => "listItem",
+          "content" => [
+            {
+              "type" => "paragraph",
+              "content" => [
+                {
+                  "type" => "text",
+                  "text" => "This paragraph should be filtered"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type" => "listItem",
+          "content" => [
+            {
+              "type" => "heading",
+              "attrs" => { "level" => 2 },
+              "content" => [
+                {
+                  "type" => "text",
+                  "text" => "This heading should render"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(
+      record: Folio::Page.new,
+      prose_mirror_node: prose_mirror_node,
+      node_type_blacklist: ["paragraph"]
+    ))
+
+    # List structure should render
+    assert_selector("ul")
+    assert_selector("li", count: 2)
+
+    # Paragraph should be filtered out
+    assert_no_selector("p")
+    assert_no_text("This paragraph should be filtered")
+
+    # Heading should render normally
+    assert_selector("h2", text: "This heading should render")
+  end
+
+  test "render with node type blacklist and lambda for blacklisted" do
+    prose_mirror_node = {
+      "type" => "blockquote",
+      "content" => [
+        {
+          "type" => "paragraph",
+          "content" => [
+            {
+              "type" => "text",
+              "text" => "Blacklisted paragraph content"
+            }
+          ]
+        },
+        {
+          "type" => "heading",
+          "attrs" => { "level" => 3 },
+          "content" => [
+            {
+              "type" => "text",
+              "text" => "Normal heading"
+            }
+          ]
+        }
+      ]
+    }
+
+    lambda_for_blacklisted = -> (node) do
+      "<span class='filtered-node'>FILTERED: #{node['type']}</span>".html_safe
     end
+
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(
+      record: Folio::Page.new,
+      prose_mirror_node: prose_mirror_node,
+      node_type_blacklist: ["paragraph"],
+      lambda_for_blacklisted: lambda_for_blacklisted
+    ))
+
+    # Blockquote should render
+    assert_selector("blockquote")
+
+    # Paragraph should be replaced with lambda output
+    assert_selector(".filtered-node", text: "FILTERED: paragraph")
+    assert_no_text("Blacklisted paragraph content")
+
+    # Heading should render normally
+    assert_selector("h3", text: "Normal heading")
+  end
+
+  test "render with node type blacklist propagated to nested children" do
+    prose_mirror_node = {
+      "type" => "doc",
+      "content" => [
+        {
+          "type" => "bulletList",
+          "content" => [
+            {
+              "type" => "listItem",
+              "content" => [
+                {
+                  "type" => "paragraph",
+                  "content" => [
+                    {
+                      "type" => "text",
+                      "text" => "Nested paragraph to filter"
+                    }
+                  ]
+                },
+                {
+                  "type" => "bulletList",
+                  "content" => [
+                    {
+                      "type" => "listItem",
+                      "content" => [
+                        {
+                          "type" => "paragraph",
+                          "content" => [
+                            {
+                              "type" => "text",
+                              "text" => "Deeply nested paragraph to filter"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(
+      record: Folio::Page.new,
+      prose_mirror_node: prose_mirror_node,
+      node_type_blacklist: ["paragraph"]
+    ))
+
+    # List structures should render
+    assert_selector("ul")
+    assert_selector("li")
+
+    # All paragraphs should be filtered, including deeply nested ones
+    assert_no_selector("p")
+    assert_no_text("Nested paragraph to filter")
+    assert_no_text("Deeply nested paragraph to filter")
+  end
+
+  test "render with node type blacklist complex nested structure" do
+    prose_mirror_node = {
+      "type" => "doc",
+      "content" => [
+        {
+          "type" => "heading",
+          "attrs" => { "level" => 1 },
+          "content" => [
+            {
+              "type" => "text",
+              "text" => "Main Title"
+            }
+          ]
+        },
+        {
+          "type" => "blockquote",
+          "content" => [
+            {
+              "type" => "paragraph",
+              "content" => [
+                {
+                  "type" => "text",
+                  "text" => "Quote paragraph to filter"
+                }
+              ]
+            },
+            {
+              "type" => "bulletList",
+              "content" => [
+                {
+                  "type" => "listItem",
+                  "content" => [
+                    {
+                      "type" => "paragraph",
+                      "content" => [
+                        {
+                          "type" => "text",
+                          "text" => "List paragraph to filter"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+
+    lambda_for_blacklisted = -> (node) do
+      "[FILTERED]"
+    end
+
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(
+      record: Folio::Page.new,
+      prose_mirror_node: prose_mirror_node,
+      node_type_blacklist: ["paragraph"],
+      lambda_for_blacklisted: lambda_for_blacklisted
+    ))
+
+    # Heading should render
+    assert_selector("h1", text: "Main Title")
+
+    # Blockquote structure should render
+    assert_selector("blockquote")
+
+    # All paragraphs should be replaced with lambda output
+    assert_text("[FILTERED]")
+    assert_no_text("Quote paragraph to filter")
+    assert_no_text("List paragraph to filter")
+
+    # List structure should still render
+    assert_selector("ul")
+    assert_selector("li")
+  end
+
+  test "render with node type blacklist no effect when empty" do
+    prose_mirror_node = {
+      "type" => "paragraph",
+      "content" => [
+        {
+          "type" => "text",
+          "text" => "Should render normally"
+        }
+      ]
+    }
+
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(
+      record: Folio::Page.new,
+      prose_mirror_node: prose_mirror_node,
+      node_type_blacklist: []
+    ))
+
+    # Should render normally with empty blacklist
+    assert_selector("p", text: "Should render normally")
+  end
+
+  test "render with node type blacklist no effect when nil" do
+    prose_mirror_node = {
+      "type" => "paragraph",
+      "content" => [
+        {
+          "type" => "text",
+          "text" => "Should render normally"
+        }
+      ]
+    }
+
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(
+      record: Folio::Page.new,
+      prose_mirror_node: prose_mirror_node,
+      node_type_blacklist: nil
+    ))
+
+    # Should render normally with nil blacklist
+    assert_selector("p", text: "Should render normally")
+  end
 end
