@@ -10,6 +10,7 @@ require "webmock/minitest"
 require Folio::Engine.root.join("test/support/omniauth_helper")
 require Folio::Engine.root.join("test/support/action_mailer_test_helper")
 require Folio::Engine.root.join("test/support/capybara_helper")
+require Folio::Engine.root.join("test/support/tiptap_helper")
 
 Rails.application.config.active_job.queue_adapter = :test
 
@@ -30,7 +31,6 @@ end
 
 class ActiveSupport::TestCase
   require Folio::Engine.root.join("test/support/sites_helper")
-  require Folio::Engine.root.join("test/support/tiptap_helper")
   require Folio::Engine.root.join("test/support/method_invoking_matchers_helper")
   require Folio::Engine.root.join("test/support/metadata_test_helpers")
 
