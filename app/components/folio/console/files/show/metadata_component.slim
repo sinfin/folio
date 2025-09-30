@@ -24,7 +24,7 @@
   - else
     p.small.mb-2 = t('.no_metadata')
 
-  - if @file.respond_to?(:extract_metadata!)
+  - if @file.respond_to?(:extract_metadata!) && can_now?(:extract_metadata, @file)
     = helpers.simple_form_for([:console, @file],
                               url: url_for([:extract_metadata, :console, @file]),
                               method: :post) do |f|

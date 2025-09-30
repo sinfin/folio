@@ -50,17 +50,6 @@ module Folio::Console::FileControllerBase
     redirect_to url_for([:console, folio_console_record, uncollapse: "metadata"])
   end
 
-  def authorize!(authorization_action, resource_instance)
-    case authorization_action
-    when :index_for_modal, :index_for_picker
-      super(:index, resource_instance)
-    when :file_placements
-      super(:show, resource_instance)
-    else
-      super
-    end
-  end
-
   def update
     turbo_frame_header = request.headers["Turbo-Frame"]
 
