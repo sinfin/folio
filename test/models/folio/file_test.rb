@@ -166,7 +166,7 @@ class Folio::FileTest < ActiveSupport::TestCase
       Rails.application.config.stub(:folio_files_require_description, true) do
         assert file.update!(description: "foo")
         assert_not file.update(description: nil)
-        assert_equal "Popis je povinná položka", file.errors.full_messages.join(". ")
+        assert_equal "Popisek je povinná položka", file.errors.full_messages.join(". ")
       end
 
       assert file.update(author: "foo", attribution_source: nil, attribution_source_url: nil)
