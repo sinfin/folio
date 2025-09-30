@@ -343,6 +343,15 @@ export function FolioEditor({
     );
   }, [defaultContent, initializedContent, editorCreated])
 
+  const onContentWrapClick = React.useCallback((e) => {
+    if (e.target.classList.contains('f-tiptap-editor__content-wrap')) {
+      // Clicked on the wrap, not the editor itself
+      if (editor && editor.view && editor.view.dom) {
+        editor.view.focus()
+      }
+    }
+  }, [editor])
+
   let contentClassName = "f-tiptap-editor__content f-tiptap-styles"
   if (readonly) contentClassName += " f-tiptap-editor__content--readonly";
   if (!editorCreated || !initializedContent) return null
@@ -370,7 +379,7 @@ export function FolioEditor({
           shouldScrollToInitial={shouldScrollToInitial}
           setShouldScrollToInitial={setShouldScrollToInitial}
         >
-          <div className="f-tiptap-editor__content-wrap">
+          <div className="f-tiptap-editor__content-wrap" onClick={onContentWrapClick}>
             {blockEditor && !readonly ? <SmartDragHandle editor={editor} /> : null}
 
             <EditorContent
