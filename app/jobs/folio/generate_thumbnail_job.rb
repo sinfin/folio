@@ -7,6 +7,10 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
     Sentry.capture_exception(e) if defined?(Sentry)
   end
 
+  discard_on(Dragonfly::Job::Fetch::NotFound) do |job, e|
+    Sentry.capture_exception(e) if defined?(Sentry)
+  end
+
   def perform(image, size, quality, x: nil, y: nil, force: false)
     return if image.file_mime_type.include?("svg")
 
