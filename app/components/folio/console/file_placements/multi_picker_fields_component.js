@@ -3,10 +3,56 @@ window.Folio.Stimulus.register('f-c-file-placements-multi-picker-fields', class 
     empty: Boolean
   }
 
-  static targets = ['source']
+  static targets = ['source', 'flex']
 
   connect () {
     this.hookOntoTabbedTiptapFormWrap()
+
+    if (!this.hookedOntoTabbedTiptapFormWrap) {
+      this.handleLayoutOutsideOfTiptap()
+    }
+  }
+
+  disconnect () {
+    if (this.resizeHandler) {
+      window.removeEventListener('resize', this.resizeHandler)
+      delete this.resizeHandler
+    }
+
+    if (this.resizeHandlerRaw) {
+      window.removeEventListener('orientationchange', this.resizeHandlerRaw)
+      delete this.resizeHandlerRaw
+    }
+  }
+
+  handleLayoutOutsideOfTiptap () {
+    this.resizeHandlerRaw = () => {
+      const elementWidth = this.element.offsetWidth
+      const elementRect = this.element.getBoundingClientRect()
+      const viewportHeight = window.innerHeight
+
+      if (elementWidth >= 1500 && viewportHeight >= 1000) {
+        this.element.classList.add('f-c-file-placements-multi-picker-fields--scrollable')
+
+        const yPosition = elementRect.top
+        const footerHeight = 68
+        const containerPadding = 48
+        const availableHeight = viewportHeight - yPosition - footerHeight - containerPadding
+
+        this.flexTarget.style.maxHeight = `${availableHeight}px`
+      } else {
+        this.element.classList.remove('f-c-file-placements-multi-picker-fields--scrollable')
+        this.flexTarget.style.maxHeight = ''
+      }
+    }
+
+    this.resizeHandler = window.Folio.debounce(() => {
+      this.resizeHandlerRaw()
+    }, 100)
+
+    window.addEventListener('resize', this.resizeHandler)
+    window.addEventListener('orientationchange', this.resizeHandlerRaw)
+    this.resizeHandlerRaw()
   }
 
   hookOntoTabbedTiptapFormWrap () {
