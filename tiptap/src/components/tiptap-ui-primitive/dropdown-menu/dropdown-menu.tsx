@@ -8,6 +8,7 @@ import {
   FloatingPortal,
   offset,
   shift,
+  size,
   useClick,
   useDismiss,
   useFloating,
@@ -64,6 +65,7 @@ function useDropdownMenu({
     `${side}-${align}` as Placement
   )
   const [activeIndex, setActiveIndex] = React.useState<number | null>(null)
+  const [maxHeight, setMaxHeight] = React.useState<number | null>(null)
 
   const open = controlledOpen ?? uncontrolledOpen
   const setOpen = setControlledOpen ?? setUncontrolledOpen
@@ -75,7 +77,17 @@ function useDropdownMenu({
     open,
     onOpenChange: setOpen,
     placement: currentPlacement,
-    middleware: [offset({ mainAxis: 4 }), flip(), shift({ padding: 4 })],
+    middleware: [
+      offset({ mainAxis: 4 }),
+      flip(),
+      shift({ padding: 4 }),
+      size({
+        apply({ availableHeight }) {
+          const calculatedMaxHeight = availableHeight - 16
+          setMaxHeight(calculatedMaxHeight)
+        },
+      }),
+    ],
     whileElementsMounted: autoUpdate,
   })
 
@@ -124,10 +136,11 @@ function useDropdownMenu({
       elementsRef,
       labelsRef,
       updatePosition,
+      maxHeight,
       ...interactions,
       ...floating,
     }),
-    [open, setOpen, activeIndex, interactions, floating, updatePosition]
+    [open, setOpen, activeIndex, interactions, floating, updatePosition, maxHeight]
   )
 }
 
@@ -358,6 +371,13 @@ export const DropdownMenuGroup = React.forwardRef<
   HTMLDivElement,
   DropdownMenuGroupProps
 >(({ children, label, className, ...props }, ref) => {
+  const context = useDropdownMenuContext()
+  const style = {}
+
+  if (context.maxHeight) {
+    style.maxHeight = `${context.maxHeight}px`
+  }
+
   return (
     <div
       {...props}
@@ -365,6 +385,7 @@ export const DropdownMenuGroup = React.forwardRef<
       role="group"
       aria-label={label}
       className={`tiptap-button-group ${className || ""}`}
+      style={style}
     >
       {children}
     </div>
