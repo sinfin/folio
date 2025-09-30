@@ -203,38 +203,41 @@ export function FolioEditor({
       Superscript,
       Subscript,
       FolioTiptapInvalidNode,
+      Placeholder.configure({
+        includeChildren: true,
+        // Use a placeholder:
+        placeholder: ({ editor, node, pos }) => {
+          if (blockEditor) {
+            let key = "commandPlaceholder";
 
+            if (node.type.name === "heading") {
+              const maybePage = findParentNode((node: any) => node.type.name === FolioTiptapPageNode.name)(editor.state.selection);
+              let isFirstInPage = false
+
+              if (maybePage) {
+                const allTitlesInPage = findChildren(maybePage.node, (node: any) => node.type.name === "heading");
+                isFirstInPage = allTitlesInPage[0].node === node;
+              }
+
+              if (isFirstInPage) {
+                key = 'headingInPagesPlaceholder'
+              } else if (folioTiptapHeadingLevels.length === 1) {
+                key = 'singleHeadingPlaceholder'
+              } else if (node.attrs.level && [2, 3, 4].indexOf(node.attrs.level) !== -1) {
+                key = `h${node.attrs.level}Placeholder`;
+              }
+            }
+
+            return translate(TRANSLATIONS, key);
+          } else {
+            return translate(TRANSLATIONS, 'defaultPlaceholder');
+          }
+        },
+      }),
       ...(blockEditor
         ? [
             FolioTiptapNodeExtension.configure({
               nodes: folioTiptapConfig.nodes || [],
-            }),
-            Placeholder.configure({
-              includeChildren: true,
-              // Use a placeholder:
-              placeholder: ({ editor, node, pos }) => {
-                let key = "commandPlaceholder";
-
-                if (node.type.name === "heading") {
-                  const maybePage = findParentNode((node: any) => node.type.name === FolioTiptapPageNode.name)(editor.state.selection);
-                  let isFirstInPage = false
-
-                  if (maybePage) {
-                    const allTitlesInPage = findChildren(maybePage.node, (node: any) => node.type.name === "heading");
-                    isFirstInPage = allTitlesInPage[0].node === node;
-                  }
-
-                  if (isFirstInPage) {
-                    key = 'headingInPagesPlaceholder'
-                  } else if (folioTiptapHeadingLevels.length === 1) {
-                    key = 'singleHeadingPlaceholder'
-                  } else if (node.attrs.level && [2, 3, 4].indexOf(node.attrs.level) !== -1) {
-                    key = `h${node.attrs.level}Placeholder`;
-                  }
-                }
-
-                return translate(TRANSLATIONS, key);
-              },
             }),
             FolioTiptapColumnsExtension,
             FolioTiptapColumnsNode,
@@ -343,8 +346,8 @@ export function FolioEditor({
     );
   }, [defaultContent, initializedContent, editorCreated])
 
-  const onContentWrapClick = React.useCallback((e) => {
-    if (e.target.classList.contains('f-tiptap-editor__content-wrap')) {
+  const onContentWrapClick = React.useCallback((e: React.MouseEvent<HTMLElement>) => {
+    if ((e.target as HTMLElement).classList.contains('f-tiptap-editor__content-wrap')) {
       // Clicked on the wrap, not the editor itself
       if (editor && editor.view && editor.view.dom) {
         editor.view.focus()
