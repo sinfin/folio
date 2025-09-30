@@ -38,3 +38,19 @@
     .f-c-files-batch-bar .f-c-files-batch-bar__button-wrap[data-add-to-picker="true"] .f-c-ui-button__icon,
     .f-file-list-file__control-primary-icon-wrap--index_for_picker
       transform: rotate(270deg)
+
+    &--scrollable
+      margin: 0 0 0 (( -8px ))
+
+    // so that error highlight works and isn't cut off by overflow
+    &--scrollable &__fields
+      padding-left: 8px
+
+    &--scrollable &__fields,
+    &--scrollable &__source
+      overflow-x: visible
+      overflow-y: auto
+
+  @media screen and (min-width: 1783px)
+    .f-file-list-file__control-primary-icon-wrap--index_for_picker
+      transform: rotate(270deg)
