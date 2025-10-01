@@ -237,6 +237,11 @@ $f-tiptap-table-td__min-width: 5rem !default;
   white-space: $f-tiptap-root__white-space;
   word-break: $f-tiptap-root__word-break;
 
+  .f-tiptap-styles {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
   .container-fluid {
     padding: 0;
   }
