@@ -70,12 +70,22 @@
                                                                        autocomplete: autocomplete_for(key:, config:)))
 
       .f-c-files-show__collapsibles
+        = render(Folio::Console::Ui::CollapsibleComponent.new(title: @file.class.human_attribute_name(:tag_list)))
+          = helpers.simple_form_for [:console, @file], as: :file do |f|
+            = f.input :tag_list,
+                      as: :tags,
+                      label: false,
+                      input_html: { class: Folio::Console::Ui::CollapsibleComponent::FOCUS_INPUT_CLASS_NAME }
+
+            = render(Folio::Console::Ui::ButtonComponent.new(type: :submit,
+                                                             label: t('folio.console.actions.save')))
+
         - if @file.respond_to?(:mapped_metadata)
           = render(Folio::Console::Ui::CollapsibleComponent.new(title: t('.title/metadata', count: @file.mapped_metadata.size),
                                                                 collapsed: controller.params[:uncollapse] != "metadata"))
             = render(Folio::Console::Files::Show::MetadataComponent.new(file: @file))
 
-        = render(Folio::Console::Ui::CollapsibleComponent.new(title: t('.title/usage', count: @file.file_placements_size || 0),
+        = render(Folio::Console::Ui::CollapsibleComponent.new(title: t('.title/usage', count: @file.file_placements_count),
                                                               collapsed: controller.action_name != "file_placements"))
           = render(Folio::Console::Files::Show::FilePlacementsComponent.new(file: @file))
 

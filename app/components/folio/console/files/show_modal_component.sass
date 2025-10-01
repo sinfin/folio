@@ -4,3 +4,7 @@
     display: flex
     flex: 0 0 auto
     margin-left: auto
+
+  &__title-custom:empty,
+  &__title-custom:not(:empty) + &__title-default
+    display: none

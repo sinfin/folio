@@ -3,6 +3,8 @@
 class Folio::GenerateMissingThumbWebpJob < Folio::ApplicationJob
   queue_as :slow
 
+  discard_on ActiveJob::DeserializationError
+
   def perform(image)
     return if image.file_mime_type.include?("svg")
     return if image.animated_gif?

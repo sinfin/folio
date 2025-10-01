@@ -113,6 +113,24 @@ class Folio::Tiptap::NodeBuilder
           v.is_a?(String) ? v.strip.presence : nil
         end.compact
 
+        # Sanitize href values to prevent dangerous URLs
+        if whitelisted["href"].present?
+          # Use Rails' sanitizer to check if href is safe
+          test_link = "<a href=\"#{whitelisted["href"]}\">test</a>"
+          sanitized_link = ActionController::Base.helpers.sanitize(test_link)
+
+          # If href was stripped, it's unsafe
+          if sanitized_link == "<a>test</a>"
+            Rails.logger.warn "Removed unsafe href from tiptap node url_json: #{whitelisted["href"]}" if defined?(Rails.logger)
+            whitelisted.delete("href")
+          else
+            # Extract href from sanitized result
+            if match = sanitized_link.match(/href="([^"]*)"/)
+              whitelisted["href"] = match[1]
+            end
+          end
+        end
+
         super(whitelisted)
       end
     end

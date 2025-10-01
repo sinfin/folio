@@ -20,6 +20,49 @@ class Folio::File < Folio::ApplicationRecord
     west
   ]
 
+  CANCAN_MAPPINGS = {
+    create: %i[
+      create
+      new
+    ],
+    update: %i[
+      batch_update
+      close_batch_form
+      create_subtitle
+      delete_subtitle
+      destroy_file_thumbnail
+      edit
+      extract_metadata
+      open_batch_form
+      retranscribe_subtitles
+      update
+      update_file_thumbnail
+      update_subtitle
+    ],
+    read: %i[
+      batch_bar
+      batch_download
+      batch_download_failure
+      batch_download_success
+      cancel_batch_download
+      file_picker_file_hash
+      file_placements
+      handle_batch_queue
+      index
+      index_for_modal
+      index_for_picker
+      new_subtitle_html
+      pagination
+      show
+      subtitle_html
+      subtitles_html
+    ],
+    destroy: %i[
+      batch_delete
+      destroy
+    ]
+  }
+
   dragonfly_accessor :file do
     after_assign :sanitize_filename
   end
@@ -66,6 +109,8 @@ class Folio::File < Folio::ApplicationRecord
     by_file_name_for_search(sanitize_filename_for_search(query))
   end
 
+  scope :by_query, -> (query) { by_file_name_for_search(sanitize_filename_for_search(query)) }
+
   pg_search_scope :by_file_name_for_search,
                   against: [:file_name_for_search],
                   ignoring: :accents,
@@ -96,6 +141,7 @@ class Folio::File < Folio::ApplicationRecord
   after_save :run_after_save_job
   after_commit :process!, if: :attached_file_changed?
   after_destroy :destroy_attached_file
+  after_destroy :dispatch_destroyed_message
 
   attr_accessor :dont_run_after_save_jobs
 
@@ -151,10 +197,7 @@ class Folio::File < Folio::ApplicationRecord
     }
   end
 
-  def update_file_placements_size!
-    update_columns(file_placements_size: file_placements.count,
-                   updated_at: current_time_from_proper_timezone)
-  end
+
 
   def self.hash_id_additional_classes
     [Folio::PrivateAttachment]
@@ -250,13 +293,13 @@ class Folio::File < Folio::ApplicationRecord
   end
 
   def indestructible_reason
-    return nil if file_placements_size == 0
-    return nil if file_placements_size.nil?
+    return nil if file_placements_count == 0
+    return nil if file_placements_count.nil?
     I18n.t("folio.file.cannot_destroy_file_with_placements")
   end
 
   def file_list_count
-    file_placements_size
+    file_placements_count
   end
 
   def file_list_source
@@ -384,6 +427,21 @@ class Folio::File < Folio::ApplicationRecord
         end
       end
     end
+
+    def dispatch_destroyed_message
+      message_bus_user_ids = Folio::User.where.not(console_url: nil)
+                                        .where(console_url_updated_at: 1.hour.ago..)
+                                        .pluck(:id)
+
+      return if message_bus_user_ids.blank?
+
+      MessageBus.publish Folio::MESSAGE_BUS_CHANNEL,
+                         {
+                           type: "Folio::File/destroyed",
+                           data: { id: },
+                         }.to_json,
+                         user_ids: message_bus_user_ids
+    end
 end
 
 # == Schema Information
@@ -405,7 +463,7 @@ end
 #  hash_id                           :string
 #  author                            :string
 #  description                       :text
-#  file_placements_size              :integer
+#  file_placements_count             :integer          default(0), not null
 #  file_name_for_search              :string
 #  sensitive_content                 :boolean          default(FALSE)
 #  file_mime_type                    :string

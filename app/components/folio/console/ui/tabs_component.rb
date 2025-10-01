@@ -5,9 +5,10 @@ class Folio::Console::Ui::TabsComponent < Folio::Console::ApplicationComponent
 
   bem_class_name :no_margin
 
-  def initialize(tabs:, no_margin: false)
+  def initialize(tabs:, no_margin: false, use_cookies_for_active: false)
     @tabs = tabs
     @no_margin = no_margin
+    @use_cookies_for_active = use_cookies_for_active
   end
 
   def count_class_name(color = nil)
@@ -16,18 +17,14 @@ class Folio::Console::Ui::TabsComponent < Folio::Console::ApplicationComponent
     end
   end
 
-  def href(tab)
-    tab[:href] || "##{ID_PREFIX}#{tab[:key]}"
-  end
-
   def text_color_class_name(tab)
     if tab[:text_color]
-      "f-c-ui-tabs__nav-link--color-#{tab[:text_color]}"
+      " f-c-ui-tabs__nav-link--color-#{tab[:text_color]}"
     end
   end
 
   def link_tag(tab)
-    tag = { class: "nav-link f-c-ui-tabs__nav-link #{text_color_class_name(tab)}", role: "tab" }
+    tag = { class: "nav-link f-c-ui-tabs__nav-link#{text_color_class_name(tab)}", role: "tab" }
 
     tag[:data] ||= {}
     tag[:data][:key] = tab[:key]
@@ -61,6 +58,8 @@ class Folio::Console::Ui::TabsComponent < Folio::Console::ApplicationComponent
       tag["aria-selected"] = "true"
     end
 
+    tag[:data] = stimulus_merge(tag[:data], stimulus_action(click: "onClick"))
+
     tag
   end
 
@@ -70,8 +69,15 @@ class Folio::Console::Ui::TabsComponent < Folio::Console::ApplicationComponent
 
   def data
     stimulus_controller("f-c-ui-tabs",
+                        values: {
+                          use_cookies_for_active: @use_cookies_for_active || false,
+                        },
                         action: {
                           "beforeunload@window" => "onBeforeUnload",
+                          "show.bs.tab" => "onShow",
+                          "shown.bs.tab" => "onShown",
+                          "hide.bs.tab" => "onHide",
+                          "hidden.bs.tab" => "onHidden",
                         })
   end
 end

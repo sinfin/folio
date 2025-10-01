@@ -40,20 +40,6 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
       assert_not klass.exists?(file.id)
     end
 
-    test "#{klass} - tag" do
-      files = create_list(klass.model_name.singular, 2)
-      assert_equal([], files.first.tag_list)
-      assert_equal([], files.second.tag_list)
-
-      post url_for([:tag, :console, :api, klass, format: :json]), params: {
-        file_ids: files.pluck(:id),
-        tags: ["a", "b"],
-      }
-
-      assert_equal(["a", "b"], files.first.reload.tag_list.sort)
-      assert_equal(["a", "b"], files.second.reload.tag_list.sort)
-    end
-
     test "#{klass} - show" do
       file = create(klass.model_name.singular)
       get url_for([:console, :api, file, format: :json])
@@ -119,7 +105,7 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
       assert_equal("3", parsed_component.css(".f-c-files-batch-bar__count").first.text.strip)
 
       # make file indestructible
-      files.first.update_column(:file_placements_size, 1)
+      files.first.update_column(:file_placements_count, 1)
 
       delete url_for([:batch_delete, :console, :api, klass, format: :json]), params: { file_ids: }
 
@@ -127,7 +113,7 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
       assert_equal 3, klass.where(id: file_ids).count, "Don't delete file_ids when some of them are indestructible"
 
       # make file destructible
-      files.first.update_column(:file_placements_size, 0)
+      files.first.update_column(:file_placements_count, 0)
 
       delete url_for([:batch_delete, :console, :api, klass, format: :json]), params: { file_ids: }
 

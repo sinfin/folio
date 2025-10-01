@@ -21,6 +21,7 @@ class Folio::Console::Ui::AjaxInputComponent < Folio::Console::ApplicationCompon
                  disabled: false,
                  rows: 1,
                  force_cancel: false,
+                 use_saved_indicator: true,
                  autocomplete: nil,
                  multiple: false)
     @name = name
@@ -45,6 +46,7 @@ class Folio::Console::Ui::AjaxInputComponent < Folio::Console::ApplicationCompon
     @autocomplete = autocomplete
     @force_cancel = force_cancel
     @multiple = multiple
+    @use_saved_indicator = use_saved_indicator
   end
 
   def data
@@ -54,6 +56,7 @@ class Folio::Console::Ui::AjaxInputComponent < Folio::Console::ApplicationCompon
       cleave: @cleave,
       original_value: @value,
       method: @method,
+      use_saved_indicator: @use_saved_indicator,
     }, action: {
       "f-c-ui-ajax-input:setValue" => "setValueFromEvent",
     })
@@ -62,8 +65,8 @@ class Folio::Console::Ui::AjaxInputComponent < Folio::Console::ApplicationCompon
   def input_data
     h = stimulus_data(action: {
                         "keyup" => "onKeyUp",
-                        "keydown" => "preventSubmit",
-                        "keypress" => "preventSubmit",
+                        "keydown" => "onKeyDownAndPress",
+                        "keypress" => "onKeyDownAndPress",
                         "change" => "onKeyUp",
                         "blur" => "onBlur",
                       },

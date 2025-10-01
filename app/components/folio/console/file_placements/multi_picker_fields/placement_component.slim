@@ -1,4 +1,5 @@
-.f-c-file-placements-multi-picker-fields-placement[
+div[
+  class=bem_class_name
   data=data
 ]
   .f-c-file-placements-multi-picker-fields-placement__flex
@@ -13,6 +14,19 @@
                                                             size: 138))
 
     .f-c-file-placements-multi-picker-fields-placement__fields
+      .f-c-file-placements-multi-picker-fields-placement__non-unique[
+        class="small text-danger"
+      ]
+        span.f-c-file-placements-multi-picker-fields-placement__non-unique-span[
+          data=stimulus_action(click: "onNonUniqueClick")
+        ]
+          = folio_icon(:alert)
+          = t('.non_unique_file_id')
+
+      - if @g.object.errors.where(:file).present?
+        .invalid-feedback.d-block.m-0 data-name=@placement_key
+          = @g.object.errors.where(:file).map(&:full_message).join(" ")
+
       div[
         class="f-c-file-placements-multi-picker-fields-placement__field"
         class="f-c-file-placements-multi-picker-fields-placement__field--description"
@@ -30,7 +44,7 @@
           = @g.input :alt,
                      input_html: { data: stimulus_target("alt") }
 
-      - if @g.object.class.try(:folio_file_placement_supports_embed?)
+      - if @g.object.class.folio_file_placement_supports_embed?
         div[
           class="f-c-file-placements-multi-picker-fields-placement__field"
           class="f-c-file-placements-multi-picker-fields-placement__field--folio_embed_data"
@@ -44,7 +58,12 @@
                       as: :text,
                       autosize: true,
                       label: t('.embed_html_label'),
-                      input_html: { value: embed_data_with_defaults["html"], rows: 1 }
+                      wrapper_html: { class: ("form-group-invalid" if embed_data_has_errors?) },
+                      input_html: { value: embed_data_with_defaults["html"], rows: 1, class: ("is-invalid" if embed_data_has_errors?) }
+
+            - if embed_data_has_errors?
+              .invalid-feedback.d-block.m-0
+                = @g.object.errors[:folio_embed_data].join(', ')
 
   span.f-c-file-placements-multi-picker-fields-placement__loader[
     class="folio-loader"

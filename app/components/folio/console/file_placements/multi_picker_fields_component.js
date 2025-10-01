@@ -3,18 +3,89 @@ window.Folio.Stimulus.register('f-c-file-placements-multi-picker-fields', class 
     empty: Boolean
   }
 
-  onAddEmbedClick () {
-    const fields = this.element.querySelector('.f-nested-fields')
-    if (!fields) throw new Error('f-nested-fields not found')
+  static targets = ['source', 'flex']
 
-    const attributesCollection = [{ 'data-embed': 'true' }]
+  connect () {
+    this.hookOntoTabbedTiptapFormWrap()
 
-    fields.dispatchEvent(new CustomEvent('f-nested-fields:addMultipleWithAttributes', {
-      detail: { attributesCollection }
-    }))
+    if (!this.hookedOntoTabbedTiptapFormWrap) {
+      this.handleLayoutOutsideOfTiptap()
+    }
+  }
+
+  disconnect () {
+    if (this.resizeHandler) {
+      window.removeEventListener('resize', this.resizeHandler)
+      delete this.resizeHandler
+    }
+
+    if (this.resizeHandlerRaw) {
+      window.removeEventListener('orientationchange', this.resizeHandlerRaw)
+      delete this.resizeHandlerRaw
+    }
+  }
+
+  handleLayoutOutsideOfTiptap () {
+    this.resizeHandlerRaw = () => {
+      const elementWidth = this.element.offsetWidth
+      const elementRect = this.element.getBoundingClientRect()
+      const viewportHeight = window.innerHeight
+
+      if (elementWidth >= 1500 && viewportHeight >= 1000) {
+        this.element.classList.add('f-c-file-placements-multi-picker-fields--scrollable')
+
+        const yPosition = elementRect.top
+        const footerHeight = 68
+        const containerPadding = 48
+        const availableHeight = viewportHeight - yPosition - footerHeight - containerPadding
+
+        this.flexTarget.style.maxHeight = `${availableHeight}px`
+      } else {
+        this.element.classList.remove('f-c-file-placements-multi-picker-fields--scrollable')
+        this.flexTarget.style.maxHeight = ''
+      }
+    }
+
+    this.resizeHandler = window.Folio.debounce(() => {
+      this.resizeHandlerRaw()
+    }, 100)
+
+    window.addEventListener('resize', this.resizeHandler)
+    window.addEventListener('orientationchange', this.resizeHandlerRaw)
+    this.resizeHandlerRaw()
+  }
+
+  hookOntoTabbedTiptapFormWrap () {
+    if (this.hookedOntoTabbedTiptapFormWrap) return
+    if (!this.hasSourceTarget) return
+
+    const tabPane = this.element.closest('.f-c-ui-tabs-tab-pane')
+    if (!tabPane) return
+
+    const tabLink = document.querySelector(`.f-c-ui-tabs__nav-link[data-bs-target="#${tabPane.id}"], .f-c-ui-tabs__nav-link[data-bs-href="#${tabPane.id}"]`)
+    if (!tabLink) return
+
+    tabLink.classList.add('f-c-file-placements-multi-picker-fields-nav-link')
+    tabPane.classList.add('f-c-file-placements-multi-picker-fields-tab')
+
+    const tiptapFormWrap = tabPane.closest('.f-c-tiptap-simple-form-wrap')
+    if (!tiptapFormWrap) return
+
+    this.dispatch('hookOntoFormWrap', {
+      detail: {
+        element: this.element,
+        source: this.sourceTarget
+      }
+    })
+
+    this.hookedOntoTabbedTiptapFormWrap = true
   }
 
   onAddToPicker (e) {
+    // stopPropagation so that .f-c-tiptap-simple-form-wrap doesn't catch it as well
+    // only make it catch when the source div is detached to the editor part
+    e.stopPropagation()
+
     const fields = this.element.querySelector('.f-nested-fields')
     if (!fields) throw new Error('f-nested-fields not found')
 
@@ -32,11 +103,77 @@ window.Folio.Stimulus.register('f-c-file-placements-multi-picker-fields', class 
     }))
   }
 
-  onCountChange (e) {
+  onAdded (e) {
+    this.onCountChange(e, true)
+  }
+
+  onDestroyed (e) {
+    this.onCountChange(e, false)
+  }
+
+  onCountChange (e, added) {
     const empty = e && e.detail && e.detail.count === 0
 
     if (empty !== this.emptyValue) {
       this.emptyValue = empty
     }
+
+    // setTimeout to ensure DOM is updated first
+    window.setTimeout(() => {
+      this.handleDuplicates()
+      if (added) {
+        this.focusNewlyAdded(e)
+      }
+    }, 0)
+  }
+
+  focusNewlyAdded (e) {
+    const placements = this.element.querySelectorAll('.f-c-file-placements-multi-picker-fields-placement')
+    if (placements.length < 1) return
+
+    const lastPlacement = placements[placements.length - 1]
+    if (!lastPlacement) return
+
+    const input = lastPlacement.querySelector('.f-c-file-placements-multi-picker-fields-placement__field--description .form-control')
+    if (!input) return
+
+    lastPlacement.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    input.focus()
+  }
+
+  handleDuplicates () {
+    const placementsHash = {}
+
+    for (const placement of this.element.querySelectorAll('.f-c-file-placements-multi-picker-fields-placement[data-f-c-file-placements-multi-picker-fields-placement-state-value="filled"]')) {
+      const destroyInput = placement.closest('.f-nested-fields__fields').querySelector('.f-nested-fields__destroy-input')
+
+      if (destroyInput && destroyInput.value !== '1') {
+        const fileIdInput = placement.querySelector('.f-c-files-picker__input--file_id')
+
+        if (fileIdInput && fileIdInput.value) {
+          placementsHash[fileIdInput.value] = placementsHash[fileIdInput.value] || []
+          placementsHash[fileIdInput.value].push(placement)
+        }
+      }
+    }
+
+    Object.values(placementsHash).forEach((placements) => {
+      placements.forEach((placement) => {
+        placement.classList.toggle('f-c-file-placements-multi-picker-fields-placement--non-unique-file-id', placements.length > 1)
+      })
+    })
+  }
+})
+
+window.Folio.Stimulus.register('f-c-file-placements-multi-picker-fields-add-embed', class extends window.Stimulus.Controller {
+  onAddEmbedClick () {
+    const fields = this.element.closest('form').querySelector('.f-nested-fields')
+    if (!fields) throw new Error('f-nested-fields not found')
+
+    const attributesCollection = [{ 'data-embed': 'true' }]
+
+    fields.dispatchEvent(new CustomEvent('f-nested-fields:addMultipleWithAttributes', {
+      detail: { attributesCollection }
+    }))
   }
 })

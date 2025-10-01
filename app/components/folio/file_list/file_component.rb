@@ -30,6 +30,7 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
     stimulus_controller("f-file-list-file",
                         values: {
                           file_type: @file_klass.to_s,
+                          file_name: @file ? @file.file_name : "",
                           id: @file ? @file.id : "",
                           loaded: true,
                           primary_action: @primary_action,
@@ -41,7 +42,7 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
                         },
                         action: @editable ? {
                           "f-file-list-file:updated": "fileUpdated",
-                          "f-file-list-file:deleted": "fileDeleted",
+                          "f-file-list-file:deleted": "fileDestroyed",
                         } : nil)
   end
 

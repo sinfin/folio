@@ -12,3 +12,4 @@ cs:
         multi_picker_fields:
           placement_component:
             embed_html_label: HTML kód
+            non_unique_file_id: "Duplicita: Obrázek je již přiřazen do galerie"

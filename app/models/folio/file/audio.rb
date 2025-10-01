@@ -27,7 +27,7 @@ end
 #  hash_id                           :string
 #  author                            :string
 #  description                       :text
-#  file_placements_size              :integer
+#  file_placements_count             :integer          default(0), not null
 #  file_name_for_search              :string
 #  sensitive_content                 :boolean          default(FALSE)
 #  file_mime_type                    :string

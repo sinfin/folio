@@ -48,7 +48,6 @@ class Folio::OpenAi::TranscribeSubtitlesJob < Folio::ApplicationJob
         subtitle.mark_transcription_failed!(e.message)
       end
 
-      Raven.capture_exception(e) if defined?(Raven)
       Sentry.capture_exception(e) if defined?(Sentry)
     ensure
       if audio_tempfile

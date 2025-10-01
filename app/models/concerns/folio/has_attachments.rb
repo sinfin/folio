@@ -16,6 +16,9 @@ module Folio::HasAttachments
     after_save :run_file_placements_after_save!
     after_save_commit :run_pregenerate_thumbnails_check_job_if_needed
 
+    attr_accessor :should_update_file_placement_counts
+    before_save :update_file_placement_counts_if_needed
+
     has_many_placements(:tiptap_files,
                         placements_key: :tiptap_placements,
                         placement: "Folio::FilePlacement::Tiptap")
@@ -77,24 +80,83 @@ module Folio::HasAttachments
                dependent: :destroy,
                foreign_key: :placement_id
 
-      validates_associated placements_key, message: :invalid_file_placement
+      validates_associated placements_key, message: :invalid_file_placements
 
       has_many targets,
                source: :file,
                through: placements_key
 
       accepts_nested_attributes_for placements_key, allow_destroy: true, reject_if: proc { |attributes|
-        if attributes["file_id"] || attributes["file"]
+        if attributes["_destroy"].in?(["1", 1, true]) && attributes["id"].blank?
+          true
+        elsif attributes["file_id"] || attributes["file"]
           required_file_type = placement.constantize.reflections["file"].options[:class_name]
           file = attributes["file"] || Folio::File.find_by(id: attributes["file_id"])
           !file || !file.is_a?(required_file_type.constantize)
-        elsif placement.constantize.try(:folio_file_placement_supports_embed?)
+        elsif placement.constantize.folio_file_placement_supports_embed?
           active = attributes.dig("folio_embed_data", "active")
           active != true && active != "true"
         else
           attributes["id"].blank?
         end
       }
+
+      # override setter so that it adds a "inside_nested_attributes" bool to each hash
+      define_method("#{placements_key}_attributes=") do |attributes|
+        attributes_array = if attributes.is_a?(Hash)
+          attributes.values
+        else
+          Array(attributes)
+        end
+
+        new_attributes = attributes_array.filter_map do |hash|
+          next hash unless hash.is_a?(Hash)
+          { inside_nested_attributes: true }.merge(hash)
+        end
+
+        self.should_update_file_placement_counts = true
+
+        # Convert back to original format if it was a hash
+        final_attributes = if attributes.is_a?(Hash)
+          new_attributes.each_with_index.to_h { |attrs, index| [index.to_s, attrs] }
+        else
+          new_attributes
+        end
+
+        super(final_attributes)
+      end
+
+      # Override collection setter to handle counter cache updates for has_many :through
+      define_method("#{targets}=") do |new_files|
+        # Track affected files before assignment to update their counters
+        old_files = respond_to?(targets) ? send(targets).to_a : []
+
+        # Call original setter (Rails handles placement creation/destruction)
+        result = super(new_files)
+
+        # Update counter cache for all affected files after the bulk operation
+        # Use Arel for proper SQL generation and parameter binding
+        affected_files = (old_files + Array(new_files)).uniq.compact
+        affected_files.each do |file|
+          # Manually recalculate and update the counter cache
+          current_count = file.file_placements.count
+          if file.file_placements_count != current_count
+            # Use Arel to build a proper UPDATE statement
+            table = file.class.arel_table
+            update_manager = Arel::UpdateManager.new
+            update_manager.table(table)
+            update_manager.set([
+              [table[:file_placements_count], current_count]
+            ])
+            update_manager.where(table[:id].eq(file.id))
+
+            file.class.connection.execute(update_manager.to_sql)
+            file.file_placements_count = current_count # Update in-memory value
+          end
+        end
+
+        result
+      end
     end
 
     def has_one_placement(target, placement:, placement_key: nil)
@@ -114,7 +176,9 @@ module Folio::HasAttachments
               through: placement_key
 
       accepts_nested_attributes_for placement_key, allow_destroy: true, reject_if: proc { |attributes|
-        if attributes["file_id"] || attributes["file"]
+        if attributes["_destroy"].in?(["1", 1, true]) && attributes["id"].blank?
+          true
+        elsif attributes["file_id"] || attributes["file"]
           required_file_type = placement.constantize.reflections["file"].options[:class_name]
           file = attributes["file"] || Folio::File.find_by(id: attributes["file_id"])
           !file || !file.is_a?(required_file_type.constantize)
@@ -193,6 +257,28 @@ module Folio::HasAttachments
 
     # only validate if published by default
     read_attribute(:published) == true
+  end
+
+  def update_file_placement_counts_if_needed
+    return unless should_update_file_placement_counts == true
+
+    self.class.folio_attachment_keys[:has_many].each do |placement_key|
+      if respond_to?("#{placement_key}_count=")
+        count = send(placement_key).reject(&:marked_for_destruction?).size
+
+        send("#{placement_key}_count=", count) if send("#{placement_key}_count") != count
+      end
+    end
+  end
+
+  def update_file_placement_count_if_needed!(placement_key:)
+    return unless respond_to?("#{placement_key}_count=")
+
+    count = send(placement_key).count
+
+    if send("#{placement_key}_count") != count
+      update_column("#{placement_key}_count", count)
+    end
   end
 
   private

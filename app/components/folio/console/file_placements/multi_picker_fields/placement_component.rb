@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
 class Folio::Console::FilePlacements::MultiPickerFields::PlacementComponent < Folio::Console::ApplicationComponent
-  def initialize(g:)
+  bem_class_name :non_unique_file_id
+
+  def initialize(g:, non_unique_file_id: false, placement_key:)
     @g = g
+    @non_unique_file_id = non_unique_file_id
+    @placement_key = placement_key
   end
 
   private
@@ -11,6 +15,10 @@ class Folio::Console::FilePlacements::MultiPickerFields::PlacementComponent < Fo
                           values: {
                             state:,
                             embed: embed?,
+                          },
+                          action: {
+                            "f-c-files-picker:fileDestroyed" => "onFileDestroyed",
+                            "f-c-file-placements-multi-picker-fields-placement:highlight" => "onHighlight",
                           })
     end
 
@@ -26,5 +34,10 @@ class Folio::Console::FilePlacements::MultiPickerFields::PlacementComponent < Fo
     def state
       return "filled" if embed?
       @g.object.file_id.blank? ? "loading" : "filled"
+    end
+
+    def embed_data_has_errors?
+      return @embed_data_has_errors if defined?(@embed_data_has_errors)
+      @embed_data_has_errors = @g.object.errors[:folio_embed_data].present?
     end
 end

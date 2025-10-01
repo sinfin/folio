@@ -412,7 +412,7 @@ const MainToolbarContent = ({
         </ToolbarGroup>
       )}
 
-      {folioTiptapConfig?.autosave && (
+      {folioTiptapConfig?.autosave && blockEditor && (
         <>
           <ToolbarSeparator />
 

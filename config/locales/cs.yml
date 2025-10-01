@@ -86,8 +86,8 @@ cs:
 
   date:
     formats:
-      folio_short: "%d. %m. %Y"
+      folio_short: "%-d. %-m. %Y"
 
   time:
     formats:
-      folio_short: "%d. %m. %Y, %H:%M"
+      folio_short: "%-d. %-m. %Y, %H:%M"

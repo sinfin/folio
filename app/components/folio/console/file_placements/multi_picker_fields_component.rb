@@ -22,8 +22,8 @@ class Folio::Console::FilePlacements::MultiPickerFieldsComponent < Folio::Consol
                           },
                           action: {
                             "f-c-file-placements-multi-picker-fields:addToPicker" => "onAddToPicker",
-                            "f-nested-fields:add" => "onCountChange",
-                            "f-nested-fields:destroyed" => "onCountChange",
+                            "f-nested-fields:added" => "onAdded",
+                            "f-nested-fields:destroyed" => "onDestroyed",
                           })
     end
 
@@ -38,8 +38,33 @@ class Folio::Console::FilePlacements::MultiPickerFieldsComponent < Folio::Consol
           label: t(".add_embed"),
           dont_bind_tab_toggle: true,
           text_color: "green",
-          data: stimulus_action(click: "onAddEmbedClick"),
+          data: stimulus_controller("f-c-file-placements-multi-picker-fields-add-embed",
+                                    inline: true,
+                                    action: { click: "onAddEmbedClick" })
         }
       ]
+    end
+
+    def non_unique_file_ids
+      @non_unique_file_ids ||= begin
+        h = {}
+
+        @f.object.send(@placement_key).each do |placement|
+          next if placement.marked_for_destruction?
+          next if placement.file_id.blank?
+
+          h[placement.file_id] ||= 0
+          h[placement.file_id] += 1
+        end
+
+        h.select { |_, v| v > 1 }.keys
+      end
+    end
+
+    def placement_component(g)
+      component_klass = Folio::Console::FilePlacements::MultiPickerFields::PlacementComponent
+      non_unique_file_id = non_unique_file_ids.include?(g.object.file_id)
+
+      render(component_klass.new(g:, non_unique_file_id:, placement_key: @placement_key))
     end
 end

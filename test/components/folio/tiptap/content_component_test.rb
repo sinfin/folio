@@ -9,7 +9,7 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
     end
   end
 
-  def test_render_with_string_content
+  test "render with string content" do
     tiptap_content = {
       "type" => "doc",
       "content" => [
@@ -25,7 +25,8 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
       ]
     }
 
-    model = build_mock_record(tiptap_content)
+    model = Folio::Page.new
+    model.tiptap_content = { "tiptap_content" => tiptap_content }
 
     render_inline(Folio::Tiptap::ContentComponent.new(record: model))
 
@@ -33,7 +34,7 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
     assert_text("hello")
   end
 
-  def test_render_with_simple_paragraph
+  test "render with simple paragraph" do
     prosemirror_json = {
       "type" => "doc",
       "content" => [
@@ -49,7 +50,8 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
       ]
     }
 
-    model = build_mock_record(prosemirror_json)
+    model = Folio::Page.new
+    model.tiptap_content = { "tiptap_content" => prosemirror_json }
     render_inline(Folio::Tiptap::ContentComponent.new(record: model))
 
     assert_selector(".f-tiptap-content")
@@ -58,7 +60,7 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
     assert_text("Hello world")
   end
 
-  def test_render_with_aligned_paragraph
+  test "render with aligned paragraph" do
     prosemirror_json = {
       "type" => "doc",
       "content" => [
@@ -75,7 +77,8 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
       ]
     }
 
-    model = build_mock_record(prosemirror_json)
+    model = Folio::Page.new
+    model.tiptap_content = { "tiptap_content" => prosemirror_json }
     render_inline(Folio::Tiptap::ContentComponent.new(record: model))
 
     assert_selector(".f-tiptap-content")
@@ -85,7 +88,7 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
     assert_text("Hello world")
   end
 
-  def test_render_with_multiple_paragraphs
+  test "render with multiple paragraphs" do
     prosemirror_json = {
       "type" => "doc",
       "content" => [
@@ -110,7 +113,8 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
       ]
     }
 
-    model = build_mock_record(prosemirror_json)
+    model = Folio::Page.new
+    model.tiptap_content = { "tiptap_content" => prosemirror_json }
     render_inline(Folio::Tiptap::ContentComponent.new(record: model))
 
     assert_selector("p", count: 2)
@@ -118,7 +122,7 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
     assert_text("Second paragraph")
   end
 
-  def test_render_with_headings
+  test "render with headings" do
     prosemirror_json = {
       "type" => "doc",
       "content" => [
@@ -155,7 +159,8 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
       ]
     }
 
-    model = build_mock_record(prosemirror_json)
+    model = Folio::Page.new
+    model.tiptap_content = { "tiptap_content" => prosemirror_json }
     render_inline(Folio::Tiptap::ContentComponent.new(record: model))
 
     # Now that we have dynamic heading levels
@@ -164,7 +169,7 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
     assert_selector("h3", text: "Section Header")
   end
 
-  def test_render_with_text_content
+  test "render with text content" do
     prosemirror_json = {
       "type" => "doc",
       "content" => [
@@ -185,7 +190,8 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
       ]
     }
 
-    model = build_mock_record(prosemirror_json)
+    model = Folio::Page.new
+    model.tiptap_content = { "tiptap_content" => prosemirror_json }
     render_inline(Folio::Tiptap::ContentComponent.new(record: model))
 
     # Now that marks are applied, we should see formatted text
@@ -194,7 +200,7 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
     assert_text("This is plain text")
   end
 
-  def test_render_with_comprehensive_text_formatting
+  test "render with comprehensive text formatting" do
     prosemirror_json = {
       "type" => "doc",
       "content" => [
@@ -263,7 +269,8 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
       ]
     }
 
-    model = build_mock_record(prosemirror_json)
+    model = Folio::Page.new
+    model.tiptap_content = { "tiptap_content" => prosemirror_json }
     render_inline(Folio::Tiptap::ContentComponent.new(record: model))
 
     # Test that all formatting marks are properly applied
@@ -274,7 +281,7 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
     assert_selector("a[href='https://example.com'][target='_blank']", text: "a link")
   end
 
-  def test_render_with_bulletList
+  test "render with bulletList" do
     prosemirror_json = {
       "type" => "doc",
       "content" => [
@@ -314,7 +321,8 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
       ]
     }
 
-    model = build_mock_record(prosemirror_json)
+    model = Folio::Page.new
+    model.tiptap_content = { "tiptap_content" => prosemirror_json }
     render_inline(Folio::Tiptap::ContentComponent.new(record: model))
 
     assert_selector("ul")
@@ -323,7 +331,7 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
     assert_text("Second item")
   end
 
-  def test_render_with_orderedList
+  test "render with orderedList" do
     prosemirror_json = {
       "type" => "doc",
       "content" => [
@@ -350,7 +358,8 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
       ]
     }
 
-    model = build_mock_record(prosemirror_json)
+    model = Folio::Page.new
+    model.tiptap_content = { "tiptap_content" => prosemirror_json }
     render_inline(Folio::Tiptap::ContentComponent.new(record: model))
 
     assert_selector("ol")
@@ -358,7 +367,7 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
     assert_text("Step one")
   end
 
-  def test_render_with_blockquote
+  test "render with blockquote" do
     prosemirror_json = {
       "type" => "doc",
       "content" => [
@@ -379,14 +388,15 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
       ]
     }
 
-    model = build_mock_record(prosemirror_json)
+    model = Folio::Page.new
+    model.tiptap_content = { "tiptap_content" => prosemirror_json }
     render_inline(Folio::Tiptap::ContentComponent.new(record: model))
 
     assert_selector("blockquote")
     assert_text("This is a quote from someone famous.")
   end
 
-  def test_render_with_horizontalRule
+  test "render with horizontalRule" do
     prosemirror_json = {
       "type" => "doc",
       "content" => [
@@ -414,7 +424,8 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
       ]
     }
 
-    model = build_mock_record(prosemirror_json)
+    model = Folio::Page.new
+    model.tiptap_content = { "tiptap_content" => prosemirror_json }
     render_inline(Folio::Tiptap::ContentComponent.new(record: model))
 
     assert_selector("hr")
@@ -422,7 +433,7 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
     assert_text("Content below")
   end
 
-  def test_render_with_hardBreak_in_paragraph
+  test "render with hardBreak in paragraph" do
     prosemirror_json = {
       "type" => "doc",
       "content" => [
@@ -445,7 +456,8 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
       ]
     }
 
-    model = build_mock_record(prosemirror_json)
+    model = Folio::Page.new
+    model.tiptap_content = { "tiptap_content" => prosemirror_json }
     render_inline(Folio::Tiptap::ContentComponent.new(record: model))
 
     assert_equal 1, page.all("p").count
@@ -454,7 +466,7 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
     assert_text("Second line")
   end
 
-  def test_render_with_complex_nested_structure
+  test "render with complex nested structure" do
     prosemirror_json = {
       "type" => "doc",
       "content" => [
@@ -513,7 +525,8 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
       ]
     }
 
-    model = build_mock_record(prosemirror_json)
+    model = Folio::Page.new
+    model.tiptap_content = { "tiptap_content" => prosemirror_json }
     render_inline(Folio::Tiptap::ContentComponent.new(record: model))
 
     assert_selector("h1", text: "Article Title")
@@ -523,7 +536,7 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
     assert_selector("blockquote", text: "A relevant quote to support the argument.")
   end
 
-  def test_render_with_folio_tiptap_node
+  test "render with folio tiptap node" do
     prosemirror_json = {
       "type" => "doc",
       "content" => [
@@ -540,7 +553,8 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
       ]
     }
 
-    model = build_mock_record(prosemirror_json)
+    model = Folio::Page.new
+    model.tiptap_content = { "tiptap_content" => prosemirror_json }
     render_inline(Folio::Tiptap::ContentComponent.new(record: model))
 
     # Should render the node's view component with the card class
@@ -550,28 +564,29 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
     assert_text("Test Card")
   end
 
-  def test_render_empty_content
-    model = build_mock_record(nil)
+  test "render empty content" do
+    model = Folio::Page.new
 
     render_inline(Folio::Tiptap::ContentComponent.new(record: model))
 
     assert_no_selector(".f-tiptap-content")
   end
 
-  def test_render_empty_document
+  test "render empty document" do
     prosemirror_json = {
       "type" => "doc",
       "content" => []
     }
 
-    model = build_mock_record(prosemirror_json)
+    model = Folio::Page.new
+    model.tiptap_content = { "tiptap_content" => prosemirror_json }
     render_inline(Folio::Tiptap::ContentComponent.new(record: model))
 
     assert_selector(".f-tiptap-content")
     assert_selector(".f-tiptap-content__root")
   end
 
-  def test_render_with_missing_node_definition
+  test "render with missing node definition" do
     prosemirror_json = {
       "type" => "doc",
       "content" => [
@@ -587,13 +602,14 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
       ]
     }
 
-    model = build_mock_record(prosemirror_json)
+    model = Folio::Page.new
+    model.tiptap_content = { "tiptap_content" => prosemirror_json }
     render_inline(Folio::Tiptap::ContentComponent.new(record: model))
 
     assert_text("")
   end
 
-  def test_render_with_table_structure
+  test "render with table structure" do
     prosemirror_json = {
       "type" => "doc",
       "content" => [
@@ -675,7 +691,8 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
       ]
     }
 
-    model = build_mock_record(prosemirror_json)
+    model = Folio::Page.new
+    model.tiptap_content = { "tiptap_content" => prosemirror_json }
     render_inline(Folio::Tiptap::ContentComponent.new(record: model))
 
     # Tables should render with table > tbody structure due to nested tags
@@ -688,7 +705,7 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
     assert_selector("td", text: "Cell 2")
   end
 
-  def test_render_with_nested_formatting_marks
+  test "render with nested formatting marks" do
     prosemirror_json = {
       "type" => "doc",
       "content" => [
@@ -724,7 +741,8 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
       ]
     }
 
-    model = build_mock_record(prosemirror_json)
+    model = Folio::Page.new
+    model.tiptap_content = { "tiptap_content" => prosemirror_json }
     render_inline(Folio::Tiptap::ContentComponent.new(record: model))
 
     # Test nested formatting is applied correctly
@@ -734,7 +752,7 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
     assert_selector("a[href='https://example.com']")
   end
 
-  def test_render_with_subscript_and_superscript
+  test "render with subscript and superscript" do
     prosemirror_json = {
       "type" => "doc",
       "content" => [
@@ -764,7 +782,8 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
       ]
     }
 
-    model = build_mock_record(prosemirror_json)
+    model = Folio::Page.new
+    model.tiptap_content = { "tiptap_content" => prosemirror_json }
     render_inline(Folio::Tiptap::ContentComponent.new(record: model))
 
     assert_selector("sub", text: "2")
@@ -773,7 +792,7 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
     assert_text("O and energy equals mc")
   end
 
-  def test_render_with_all_heading_levels
+  test "render with all heading levels" do
     prosemirror_json = {
       "type" => "doc",
       "content" => [
@@ -810,7 +829,8 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
       ]
     }
 
-    model = build_mock_record(prosemirror_json)
+    model = Folio::Page.new
+    model.tiptap_content = { "tiptap_content" => prosemirror_json }
     render_inline(Folio::Tiptap::ContentComponent.new(record: model))
 
     assert_selector("h1", text: "Level 1")
@@ -821,7 +841,7 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
     assert_selector("h6", text: "Level 6")
   end
 
-  def test_render_with_mixed_self_closing_and_content_nodes
+  test "render with mixed self closing and content nodes" do
     prosemirror_json = {
       "type" => "doc",
       "content" => [
@@ -843,7 +863,8 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
       ]
     }
 
-    model = build_mock_record(prosemirror_json)
+    model = Folio::Page.new
+    model.tiptap_content = { "tiptap_content" => prosemirror_json }
     render_inline(Folio::Tiptap::ContentComponent.new(record: model))
 
     assert_selector("br")
@@ -853,7 +874,7 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
     assert_text("After rule")
   end
 
-  def test_render_text_with_special_characters
+  test "render text with special characters" do
     prosemirror_json = {
       "type" => "doc",
       "content" => [
@@ -869,14 +890,15 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
       ]
     }
 
-    model = build_mock_record(prosemirror_json)
+    model = Folio::Page.new
+    model.tiptap_content = { "tiptap_content" => prosemirror_json }
     render_inline(Folio::Tiptap::ContentComponent.new(record: model))
 
     assert_selector("p")
     assert_text("Special chars: <>&\"' and unicode: 🚀 ñáéíóú")
   end
 
-  def test_render_with_whitespace_content
+  test "render with whitespace content" do
     prosemirror_json = {
       "type" => "doc",
       "content" => [
@@ -892,14 +914,15 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
       ]
     }
 
-    model = build_mock_record(prosemirror_json)
+    model = Folio::Page.new
+    model.tiptap_content = { "tiptap_content" => prosemirror_json }
     render_inline(Folio::Tiptap::ContentComponent.new(record: model))
 
     assert_selector("p")
     assert_text("  Multiple   spaces   ")
   end
 
-  def test_render_with_empty_text_nodes
+  test "render with empty text nodes" do
     prosemirror_json = {
       "type" => "doc",
       "content" => [
@@ -919,14 +942,15 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
       ]
     }
 
-    model = build_mock_record(prosemirror_json)
+    model = Folio::Page.new
+    model.tiptap_content = { "tiptap_content" => prosemirror_json }
     render_inline(Folio::Tiptap::ContentComponent.new(record: model))
 
     assert_selector("p")
     assert_text("Non-empty text")
   end
 
-  def test_render_with_lambdas
+  test "render with lambdas" do
     prosemirror_json = {
       "type" => "doc",
       "content" => [
@@ -951,7 +975,8 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
       ]
     }
 
-    model = build_mock_record(prosemirror_json)
+    model = Folio::Page.new
+    model.tiptap_content = { "tiptap_content" => prosemirror_json }
 
     lambda_before_root_node = -> (component:, node:, index:) do
       component.content_tag(:p, "before #{index}", class: "lambda-before")
@@ -977,7 +1002,7 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
     assert_nil paragraphs[5]
   end
 
-  def test_render_with_broken_lambdas
+  test "render with broken lambdas" do
     prosemirror_json = {
       "type" => "doc",
       "content" => [
@@ -1002,7 +1027,8 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
       ]
     }
 
-    model = build_mock_record(prosemirror_json)
+    model = Folio::Page.new
+    model.tiptap_content = { "tiptap_content" => prosemirror_json }
 
     lambda_before_root_node = -> (component:, node:, index:) do
       raise "Simulated error in before lambda"
@@ -1024,7 +1050,7 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
     assert page.html.include?("console.group('[Folio][Tiptap] Broken lambdas');")
   end
 
-  def test_render_with_missing_folio_tiptap_node_type
+  test "render with missing folio tiptap node type" do
     tiptap_content = {
       "type" => "doc",
       "content" => [
@@ -1049,7 +1075,9 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
       ]
     }
 
-    render_inline(Folio::Tiptap::ContentComponent.new(record: build_mock_record(tiptap_content)))
+    model = Folio::Page.new
+    model.tiptap_content = { "tiptap_content" => tiptap_content }
+    render_inline(Folio::Tiptap::ContentComponent.new(record: model))
 
     # Valid paragraph should render
     assert_text("Valid paragraph")
@@ -1062,7 +1090,7 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
     assert_selector("p", text: "Valid paragraph")
   end
 
-  def test_render_with_blank_folio_tiptap_node_type
+  test "render with blank folio tiptap node type" do
     tiptap_content = {
       "type" => "doc",
       "content" => [
@@ -1088,7 +1116,9 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
       ]
     }
 
-    render_inline(Folio::Tiptap::ContentComponent.new(record: build_mock_record(tiptap_content)))
+    model = Folio::Page.new
+    model.tiptap_content = { "tiptap_content" => tiptap_content }
+    render_inline(Folio::Tiptap::ContentComponent.new(record: model))
 
     # Valid paragraph should render
     assert_text("Valid paragraph")
@@ -1101,7 +1131,7 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
     assert_selector("p", text: "Valid paragraph")
   end
 
-  def test_render_with_invalid_folio_tiptap_node_type
+  test "render with invalid folio tiptap node type" do
     tiptap_content = {
       "type" => "doc",
       "content" => [
@@ -1127,7 +1157,9 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
       ]
     }
 
-    render_inline(Folio::Tiptap::ContentComponent.new(record: build_mock_record(tiptap_content)))
+    model = Folio::Page.new
+    model.tiptap_content = { "tiptap_content" => tiptap_content }
+    render_inline(Folio::Tiptap::ContentComponent.new(record: model))
 
     # Valid paragraph should render
     assert_text("Valid paragraph")
@@ -1140,7 +1172,7 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
     assert_selector("p", text: "Valid paragraph")
   end
 
-  def test_render_with_mixed_valid_and_invalid_folio_tiptap_nodes
+  test "render with mixed valid and invalid folio tiptap nodes" do
     tiptap_content = {
       "type" => "doc",
       "content" => [
@@ -1176,7 +1208,9 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
       ]
     }
 
-    render_inline(Folio::Tiptap::ContentComponent.new(record: build_mock_record(tiptap_content)))
+    model = Folio::Page.new
+    model.tiptap_content = { "tiptap_content" => tiptap_content }
+    render_inline(Folio::Tiptap::ContentComponent.new(record: model))
 
     # Valid node should render
     assert_selector(".d-tiptap-node-card", count: 1)
@@ -1187,7 +1221,7 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
     # Only one valid card should exist (the rest should be filtered out during error handling)
   end
 
-  def test_render_with_node_type_excluded_by_config
+  test "render with node type excluded by config" do
     tiptap_content = {
       "type" => "doc",
       "content" => [
@@ -1213,7 +1247,8 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
       ]
     }
 
-    record = build_mock_record(tiptap_content)
+    record = Folio::Page.new
+    record.tiptap_content = { "tiptap_content" => tiptap_content }
 
     # Mock the tiptap_config to exclude all node types
     def record.tiptap_config
@@ -1233,14 +1268,244 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
     assert_selector("p", text: "Valid paragraph")
   end
 
-  private
-    def build_mock_record(tiptap_content)
-      mock_record = Folio::Page.new
+  test "render with node type blacklist filtering paragraphs" do
+    prosemirror_json = {
+      "type" => "doc",
+      "content" => [
+        {
+          "type" => "heading",
+          "attrs" => { "level" => 1 },
+          "content" => [
+            {
+              "type" => "text",
+              "text" => "Title"
+            }
+          ]
+        },
+        {
+          "type" => "paragraph",
+          "content" => [
+            {
+              "type" => "text",
+              "text" => "This paragraph should be filtered out"
+            }
+          ]
+        },
+        {
+          "type" => "bulletList",
+          "content" => [
+            {
+              "type" => "listItem",
+              "content" => [
+                {
+                  "type" => "paragraph",
+                  "content" => [
+                    {
+                      "type" => "text",
+                      "text" => "This nested paragraph should also be filtered"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
 
-      if tiptap_content
-        mock_record.tiptap_content = { "tiptap_content" => tiptap_content }
-      end
+    model = Folio::Page.new
+    model.tiptap_content = { "tiptap_content" => prosemirror_json }
 
-      mock_record
+    render_inline(Folio::Tiptap::ContentComponent.new(
+      record: model,
+      node_type_blacklist: ["paragraph"]
+    ))
+
+    # Heading should render (not blacklisted)
+    assert_selector("h1", text: "Title")
+
+    # Paragraphs should be filtered out
+    assert_no_selector("p")
+    assert_no_text("This paragraph should be filtered out")
+    assert_no_text("This nested paragraph should also be filtered")
+
+    # List structure should render but without paragraph content
+    assert_selector("ul")
+    assert_selector("li")
+  end
+
+  test "render with node type blacklist and lambda for blacklisted" do
+    prosemirror_json = {
+      "type" => "doc",
+      "content" => [
+        {
+          "type" => "heading",
+          "attrs" => { "level" => 1 },
+          "content" => [
+            {
+              "type" => "text",
+              "text" => "Title"
+            }
+          ]
+        },
+        {
+          "type" => "paragraph",
+          "content" => [
+            {
+              "type" => "text",
+              "text" => "Blacklisted paragraph"
+            }
+          ]
+        },
+        {
+          "type" => "blockquote",
+          "content" => [
+            {
+              "type" => "paragraph",
+              "content" => [
+                {
+                  "type" => "text",
+                  "text" => "Nested blacklisted paragraph"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+
+    model = Folio::Page.new
+    model.tiptap_content = { "tiptap_content" => prosemirror_json }
+
+    lambda_for_blacklisted = -> (node) do
+      "[FILTERED: #{node['type']}]"
     end
+
+    render_inline(Folio::Tiptap::ContentComponent.new(
+      record: model,
+      node_type_blacklist: ["paragraph"],
+      lambda_for_blacklisted: lambda_for_blacklisted
+    ))
+
+    # Heading should render normally
+    assert_selector("h1", text: "Title")
+
+    # Blacklisted paragraphs should be replaced with lambda output
+    assert_text("[FILTERED: paragraph]")
+
+    # Blockquote should render but its paragraph content should be replaced
+    assert_selector("blockquote")
+  end
+
+  test "render with node type blacklist multiple types" do
+    prosemirror_json = {
+      "type" => "doc",
+      "content" => [
+        {
+          "type" => "heading",
+          "attrs" => { "level" => 1 },
+          "content" => [
+            {
+              "type" => "text",
+              "text" => "Should render"
+            }
+          ]
+        },
+        {
+          "type" => "paragraph",
+          "content" => [
+            {
+              "type" => "text",
+              "text" => "Should be filtered"
+            }
+          ]
+        },
+        {
+          "type" => "blockquote",
+          "content" => [
+            {
+              "type" => "paragraph",
+              "content" => [
+                {
+                  "type" => "text",
+                  "text" => "Should also be filtered"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+
+    model = Folio::Page.new
+    model.tiptap_content = { "tiptap_content" => prosemirror_json }
+
+    render_inline(Folio::Tiptap::ContentComponent.new(
+      record: model,
+      node_type_blacklist: ["paragraph", "blockquote"]
+    ))
+
+    # Only heading should render
+    assert_selector("h1", text: "Should render")
+    assert_no_selector("p")
+    assert_no_selector("blockquote")
+    assert_no_text("Should be filtered")
+    assert_no_text("Should also be filtered")
+  end
+
+  test "render with empty node type blacklist" do
+    prosemirror_json = {
+      "type" => "doc",
+      "content" => [
+        {
+          "type" => "paragraph",
+          "content" => [
+            {
+              "type" => "text",
+              "text" => "Should render normally"
+            }
+          ]
+        }
+      ]
+    }
+
+    model = Folio::Page.new
+    model.tiptap_content = { "tiptap_content" => prosemirror_json }
+
+    render_inline(Folio::Tiptap::ContentComponent.new(
+      record: model,
+      node_type_blacklist: []
+    ))
+
+    # Everything should render normally with empty blacklist
+    assert_selector("p", text: "Should render normally")
+  end
+
+  test "render with nil node type blacklist" do
+    prosemirror_json = {
+      "type" => "doc",
+      "content" => [
+        {
+          "type" => "paragraph",
+          "content" => [
+            {
+              "type" => "text",
+              "text" => "Should render normally"
+            }
+          ]
+        }
+      ]
+    }
+
+    model = Folio::Page.new
+    model.tiptap_content = { "tiptap_content" => prosemirror_json }
+
+    render_inline(Folio::Tiptap::ContentComponent.new(
+      record: model,
+      node_type_blacklist: nil
+    ))
+
+    # Everything should render normally with nil blacklist
+    assert_selector("p", text: "Should render normally")
+  end
 end

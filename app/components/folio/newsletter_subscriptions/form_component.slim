@@ -29,7 +29,8 @@ div class=bem_class_name data=data
     span.folio-loader.f-newsletter-subscriptions-form__loader
 
     - if !@persisted
-      = render(Folio::Captcha::TurnstileComponent.new(appearance: turnstile_appearance))
+      = render(Folio::Captcha::TurnstileComponent.new(appearance: turnstile_appearance,
+                                                      submit_button_class_name: "f-newsletter-subscriptions-form__btn"))
 
   - if @persisted
     .f-newsletter-subscriptions-form__message

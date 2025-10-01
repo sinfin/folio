@@ -14,8 +14,14 @@ window.Folio.Stimulus.register('f-c-file-placements-multi-picker-fields-placemen
         this.stateValue = 'filled'
       } else {
         console.error('Failed to fill from parent! Removing .f-c-file-placements-multi-picker-fields-placement')
-        this.element.dispatchEvent(new CustomEvent('f-nested-fields:removeFields', { bubbles: true }))
+        this.removeFields()
       }
+    }
+  }
+
+  disconnect () {
+    if (this.highlightTimeout) {
+      window.clearTimeout(this.highlightTimeout)
     }
   }
 
@@ -60,5 +66,40 @@ window.Folio.Stimulus.register('f-c-file-placements-multi-picker-fields-placemen
     }
 
     return false
+  }
+
+  onNonUniqueClick (e) {
+    e.preventDefault()
+
+    const input = this.element.querySelector('.f-c-files-picker__input--file_id')
+    const fileId = input.value
+    const otherInputs = this.element.closest('.f-nested-fields__fields-wrap').querySelectorAll(`.f-c-files-picker__input--file_id[value="${fileId}"]`)
+
+    for (const otherInput of otherInputs) {
+      if (otherInput !== input) {
+        const placement = otherInput.closest('.f-c-file-placements-multi-picker-fields-placement')
+
+        if (placement) {
+          placement.scrollIntoView({ behavior: 'smooth', block: 'center' })
+          placement.dispatchEvent(new CustomEvent('f-c-file-placements-multi-picker-fields-placement:highlight'))
+          break
+        }
+      }
+    }
+  }
+
+  onHighlight (e) {
+    this.element.classList.add('f-c-file-placements-multi-picker-fields-placement--highlighted')
+    this.highlightTimeout = window.setTimeout(() => {
+      this.element.classList.remove('f-c-file-placements-multi-picker-fields-placement--highlighted')
+    }, 500)
+  }
+
+  onFileDestroyed (e) {
+    this.removeFields()
+  }
+
+  removeFields () {
+    this.element.dispatchEvent(new CustomEvent('f-nested-fields:removeFields', { bubbles: true }))
   }
 })

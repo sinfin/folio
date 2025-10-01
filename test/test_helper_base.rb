@@ -10,6 +10,7 @@ require "webmock/minitest"
 require Folio::Engine.root.join("test/support/omniauth_helper")
 require Folio::Engine.root.join("test/support/action_mailer_test_helper")
 require Folio::Engine.root.join("test/support/capybara_helper")
+require Folio::Engine.root.join("test/support/tiptap_helper")
 
 Rails.application.config.active_job.queue_adapter = :test
 
@@ -38,6 +39,7 @@ class ActiveSupport::TestCase
   include FactoryBot::Syntax::Methods
   include MethodInvokingMatchersHelper
   include SitesHelper
+  include TiptapHelper
   include MetadataTestHelpers
 
   def setup

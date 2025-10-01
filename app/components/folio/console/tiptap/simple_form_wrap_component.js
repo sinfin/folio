@@ -1,5 +1,5 @@
 window.Folio.Stimulus.register('f-c-tiptap-simple-form-wrap', class extends window.Stimulus.Controller {
-  static targets = ['scrollIco', 'scroller', 'wordCount']
+  static targets = ['scrollIco', 'scroller', 'wordCount', 'fields']
 
   static values = {
     scrolledToBottom: Boolean
@@ -72,5 +72,46 @@ window.Folio.Stimulus.register('f-c-tiptap-simple-form-wrap', class extends wind
 
   onTiptapAutosaveSucceeded (e) {
     this.callAutosaveInfoMethod('hideFailedToSave')
+  }
+
+  onAddToMultiPicker (e) {
+    const multiPickers = this.element.querySelectorAll('.f-c-file-placements-multi-picker-fields')
+
+    if (multiPickers.length > 1) {
+      throw new Error('More than 1 multi pickers found')
+    } else if (multiPickers.length === 0) {
+      throw new Error('No multi pickers found')
+    }
+
+    multiPickers[0].dispatchEvent(new CustomEvent('f-c-file-placements-multi-picker-fields:addToPicker', {
+      detail: e.detail
+    }))
+  }
+
+  onMultiPickerHookOntoFormWrap (e) {
+    const source = e.detail.source
+
+    const wrapper = document.createElement('div')
+
+    // add containter-fluid to extend index filters
+    wrapper.className = 'f-c-tiptap-simple-form-wrap__multi-picker-wrap container-fluid'
+
+    wrapper.appendChild(source)
+    this.fieldsTarget.insertAdjacentElement('afterend', wrapper)
+
+    this.multiPickerHooked = true
+    this.checkTabsForMultiPicker()
+  }
+
+  onTabsChange () {
+    this.checkTabsForMultiPicker()
+  }
+
+  checkTabsForMultiPicker () {
+    if (!this.multiPickerHooked) return
+
+    const activeLink = this.element.querySelector('.f-c-ui-tabs__nav-link.active')
+    const visible = activeLink.classList.contains('f-c-file-placements-multi-picker-fields-nav-link')
+    this.element.classList.toggle('f-c-tiptap-simple-form-wrap--multi-picker-visible', visible)
   }
 })

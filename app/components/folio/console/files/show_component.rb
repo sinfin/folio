@@ -71,19 +71,17 @@ class Folio::Console::Files::ShowComponent < Folio::Console::ApplicationComponen
     end
 
     rows.merge!({
+      attribution_source: {},
+      author: {},
       headline: {},
       description: {},
-      author: {},
-      attribution_source: {},
+      alt: {},
       attribution_source_url: {},
       attribution_copyright: {},
       attribution_licence: {},
-      alt: {},
     })
 
     rows.merge!(@file.console_show_additional_fields)
-
-    rows
   end
 
   def autocomplete_for(key:, config:)

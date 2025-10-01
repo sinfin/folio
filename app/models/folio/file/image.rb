@@ -4,10 +4,10 @@ class Folio::File::Image < Folio::File
   include Folio::Sitemap::Image
   include Folio::File::HasUsageConstraints
 
-  validate_file_format(%w[jpeg png bmp gif svg tiff webp avif heic heif])
+  validate_file_format(%w[jpeg png gif svg tiff webp avif heic heif])
 
   # Metadata extraction after image creation
-  after_commit :extract_metadata_async, on: :create, if: :should_extract_metadata?
+  after_commit :extract_metadata_async, if: :should_extract_metadata?
 
   dragonfly_accessor :file do
     after_assign :sanitize_filename
@@ -109,7 +109,7 @@ end
 #  hash_id                           :string
 #  author                            :string
 #  description                       :text
-#  file_placements_size              :integer
+#  file_placements_count             :integer          default(0), not null
 #  file_name_for_search              :string
 #  sensitive_content                 :boolean          default(FALSE)
 #  file_mime_type                    :string

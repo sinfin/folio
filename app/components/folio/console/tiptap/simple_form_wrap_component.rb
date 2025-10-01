@@ -30,6 +30,9 @@ class Folio::Console::Tiptap::SimpleFormWrapComponent < Folio::Console::Applicat
                           "f-input-tiptap:tiptapContinueUnsavedChanges" => "onTiptapContinueUnsavedChanges",
                           "f-input-tiptap:tiptapAutosaveFailed" => "onTiptapAutosaveFailed",
                           "f-input-tiptap:tiptapAutosaveSucceeded" => "onTiptapAutosaveSucceeded",
+                          "f-c-file-placements-multi-picker-fields:addToPicker" => "onAddToMultiPicker",
+                          "f-c-file-placements-multi-picker-fields:hookOntoFormWrap" => "onMultiPickerHookOntoFormWrap",
+                          "f-c-ui-tabs:shown" => "onTabsChange",
                         })
   end
 end

@@ -50,6 +50,18 @@ module Folio::Console::FileControllerBase
     redirect_to url_for([:console, folio_console_record, uncollapse: "metadata"])
   end
 
+  def update
+    turbo_frame_header = request.headers["Turbo-Frame"]
+
+    if turbo_frame_header == "folio-console-file-show"
+      @file = folio_console_record
+      @file.update(file_params)
+      render "folio/console/file/show", content_type: "text/html"
+    else
+      super
+    end
+  end
+
   private
     def file_params
       ary = [

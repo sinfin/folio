@@ -60,7 +60,7 @@ class Folio::Console::Form::FooterComponent < Folio::Console::ApplicationCompone
                           "atomsFormShown@document" => "onDocumentAtomsFormShown",
                           "shown.bs.tab@document" => "onDocumentBsTabShown",
                           "submit@document" => "onDocumentSubmit",
-                          "f-nested-fields:add@document" => "onNestedFieldsAdd",
+                          "f-nested-fields:added@document" => "onNestedFieldsAdded",
                           "f-nested-fields:destroyed@document" => "onNestedFieldsDestroyed",
                           "f-input-collection-remote-select:open@document" => "onSelect2Open",
                           "f-input-collection-remote-select:close@document" => "onSelect2Close",

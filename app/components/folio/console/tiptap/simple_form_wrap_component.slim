@@ -3,7 +3,7 @@
     .f-c-tiptap-simple-form-wrap__scroller[
       data=stimulus_data(action: { scroll: 'onScroll' }, target: "scroller")
     ]
-      .f-c-tiptap-simple-form-wrap__fields
+      .f-c-tiptap-simple-form-wrap__fields data=stimulus_target("fields")
         - if content?
           - @f = form
           = content

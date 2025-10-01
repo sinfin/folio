@@ -3,7 +3,15 @@
                                                 data:)) do |c|
   - c.with_header
     .modal-title.f-c-ui-modal__title
-      = Folio::File.model_name.human
+      .f-c-ui-modal__title[
+        class="f-c-files-show-modal__title-custom"
+        data=stimulus_target("customTitle")
+      ]
+
+      .f-c-ui-modal__title[
+        class="f-c-files-show-modal__title-default"
+      ]
+        = Folio::File.model_name.human
 
     .f-c-files-show-modal__header-navigation data=stimulus_target("navigation")
       = render(Folio::Console::Ui::ButtonsComponent.new(buttons: navigation_buttons_model))

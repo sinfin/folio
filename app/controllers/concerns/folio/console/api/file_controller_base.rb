@@ -59,23 +59,6 @@ module Folio::Console::Api::FileControllerBase
     render json: { status: 200 }
   end
 
-  def tag
-    tag_params = params.permit(:author, :description, :alt, file_ids: [], tags: [])
-
-    files = Folio::File.where(id: tag_params[:file_ids])
-
-    Folio::File.transaction do
-      files.each do |f|
-        f.update!(tag_list: tag_params[:tags],
-                  author: tag_params[:author],
-                  description: tag_params[:description],
-                  alt: tag_params[:alt])
-      end
-    end
-
-    render_records(files, Folio::Console::FileSerializer)
-  end
-
   def pagination
     @pagy, _records = pagy(folio_console_records, items: Folio::Console::FileControllerBase::PAGY_ITEMS)
 
@@ -208,6 +191,7 @@ module Folio::Console::Api::FileControllerBase
                                   :attribution_licence,
                                   :alt,
                                   :tag_list,
+                                  :headline,
                                   :description)
                           .to_h
                           .select { |_, value| value.present? }

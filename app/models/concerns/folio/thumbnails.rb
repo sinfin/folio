@@ -7,7 +7,6 @@ module Folio::Thumbnails
   IMAGE_MIME_TYPES = %w[image/png
                         image/jpeg
                         image/gif
-                        image/bmp
                         image/svg
                         image/svg+xml]
 

@@ -1,16 +1,31 @@
+//= require folio/form_to_hash
+
 window.Folio.Stimulus.register('f-c-files-batch-form', class extends window.Stimulus.Controller {
-  onSubmit (e) {
-    e.preventDefault()
-    const data = window.Folio.formToHash(e.target)
-
-    this.dispatch('submit', { detail: { data } })
-  }
-
   cancel () {
     this.dispatch('cancel')
   }
 
+  submit () {
+    const data = {}
+
+    for (const formControl of this.element.querySelectorAll('input, .form-control')) {
+      if (formControl.name) {
+        data[formControl.name] = formControl.value
+      }
+    }
+
+    this.dispatch('submit', { detail: { data: window.Folio.formToHash(data) } })
+  }
+
   fileReloaded () {
     this.dispatch('reload')
+  }
+
+  onKeypress (e) {
+    if (e.key !== 'Enter') return
+    if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') return
+
+    e.preventDefault()
+    this.submit()
   }
 })

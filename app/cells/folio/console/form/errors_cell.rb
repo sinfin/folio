@@ -20,6 +20,7 @@ class Folio::Console::Form::ErrorsCell < Folio::ConsoleCell
   def button_data(error)
     {
       "error-field" => error.attribute,
+      "error-type" => (error.options && error.options[:message]) || error.type,
       "f-c-form-errors-target" => "button",
       "action" => "f-c-form-errors#onButtonClick"
     }

@@ -3,7 +3,7 @@
 class Folio::Api::S3Controller < Folio::Api::BaseController
   include Folio::S3::Client
 
-  before_action :authenticate_s3!
+  before_action :authenticate_s3!, except: %i[file_list_file]
   before_action :get_file_name_and_s3_path, only: %i[before]
 
   def before # return settings for S3 file upload
@@ -25,6 +25,8 @@ class Folio::Api::S3Controller < Folio::Api::BaseController
 
   # Folio::FileList::FileComponent created from a template waits for a message from the S3 job. Once it gets it, it will ping this endpoint to get the render component with the file
   def file_list_file
+    fail CanCan::AccessDenied unless can_now?(:access_console)
+
     file_type = params.require(:file_type)
     file_klass = file_type.safe_constantize
 

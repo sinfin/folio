@@ -36,8 +36,11 @@ window.Folio.Stimulus.register('f-c-files-show', class extends window.Stimulus.C
       this.abortController = new AbortController()
 
       window.Folio.Api.apiDelete(e.params.url, null, this.abortController.signal).then(() => {
-        for (const fileElement of document.querySelectorAll(`.f-file-list-file[data-f-file-list-file-id-value="${this.idValue}"]`)) {
-          fileElement.dispatchEvent(new CustomEvent('f-file-list-file:deleted'))
+        const fileSelector = `.f-file-list-file[data-f-file-list-file-id-value="${this.idValue}"]`
+        const pickerSelector = `.f-c-files-picker__input--file_id[value="${this.idValue}"]`
+
+        for (const element of document.querySelectorAll(`${fileSelector}, ${pickerSelector}`)) {
+          element.dispatchEvent(new CustomEvent('Folio::File/deleted', { bubbles: true }))
         }
 
         this.dispatch('deleted')

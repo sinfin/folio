@@ -14,20 +14,20 @@ module Folio
         return
       end
 
-      unless valid_data?(embed_data)
-        record.errors.add(attribute_name, :invalid)
+      if invalid_reason = invalid_reason_for(embed_data)
+        record.errors.add(attribute_name, invalid_reason)
       end
     end
 
-    def self.valid_data?(embed_data)
-      return false if embed_data.blank?
-      return false unless embed_data.is_a?(Hash)
-      return false unless embed_data["active"] == true
+    def self.invalid_reason_for(embed_data)
+      return :blank if embed_data.blank?
+      return :invalid unless embed_data.is_a?(Hash)
+      return :blank unless embed_data["active"] == true
 
-      return true if embed_data["html"].present?
-      return true if embed_data["type"].in?(SUPPORTED_TYPES) && embed_data["url"].present?
+      return nil if embed_data["html"].present?
+      return nil if embed_data["type"].in?(SUPPORTED_TYPES) && embed_data["url"].present?
 
-      false
+      :blank
     end
 
     def self.hash_strong_params_keys

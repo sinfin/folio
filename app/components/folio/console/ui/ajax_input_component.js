@@ -9,7 +9,8 @@ window.Folio.Stimulus.register('f-c-ui-ajax-input', class extends window.Stimulu
     remote: Boolean,
     url: String,
     originalValue: String,
-    method: String
+    method: String,
+    useSavedIndicator: Boolean
   }
 
   connect () {
@@ -29,13 +30,10 @@ window.Folio.Stimulus.register('f-c-ui-ajax-input', class extends window.Stimulu
     }
   }
 
-  preventSubmit (e) {
+  onKeyDownAndPress (e) {
     if (e.key === 'Enter') {
-      if (e.target.tagName !== 'TEXTAREA') {
-        e.preventDefault()
-      }
-
       e.stopPropagation()
+      e.preventDefault()
     }
   }
 
@@ -43,7 +41,7 @@ window.Folio.Stimulus.register('f-c-ui-ajax-input', class extends window.Stimulu
     const value = this.cleave ? this.cleave.getRawValue() : this.inputTarget.value
 
     if (e.key === 'Enter') {
-      const skipInTextarea = this.inputTarget.tagName === 'TEXTAREA' && !(e.ctrlKey || e.metaKey)
+      const skipInTextarea = this.inputTarget.tagName === 'TEXTAREA' && e.shiftKey
 
       if (!skipInTextarea) {
         e.preventDefault()
@@ -116,25 +114,34 @@ window.Folio.Stimulus.register('f-c-ui-ajax-input', class extends window.Stimulu
       const name = this.inputTarget.name
 
       let data
-      
+
       if (this.inputTarget.multiple) {
         const selectedValues = Array.from(this.inputTarget.selectedOptions).map(option => option.value)
         const [mainKey, subKey] = name.split('[')
-        
+
         data = { [mainKey]: { [subKey.replace(']', '')]: selectedValues } }
       } else {
         const rawData = { [name]: this.cleave ? this.cleave.getRawValue() : this.inputTarget.value }
         data = window.Folio.formToHash(rawData)
       }
+      const rawData = {}
+      rawData[name] = this.cleave ? this.cleave.getRawValue() : this.inputTarget.value
+
+      // replace new lines if it's a string
+      if (typeof rawData[name] === 'string') {
+        rawData[name] = rawData[name].replace(/\r?\n/g, ' ')
+      }
+
+      // const data = window.Folio.formToHash(rawData)
 
       apiFn(this.urlValue, data).then((res) => {
         const key = name.replace(/^.+\[(.+)\]$/, '$1')
-        
+
         let newValue, newLabel
-        
+
         if (this.inputTarget.multiple) {
           // For multiselect, prefer API data if available, fallback to DOM
-          newValue = res.data?.attributes?.[key] || res.data?.[key] || 
+          newValue = res.data?.attributes?.[key] || res.data?.[key] ||
                      Array.from(this.inputTarget.selectedOptions).map(option => option.value)
           newLabel = Array.from(this.inputTarget.selectedOptions).map(option => option.text).join(', ')
         } else {
@@ -166,12 +173,14 @@ window.Folio.Stimulus.register('f-c-ui-ajax-input', class extends window.Stimulu
     this.inputTarget.blur()
     this.inputTarget.dispatchEvent(new CustomEvent('f-c-ui-ajax-input:success', { bubbles: true, detail: { value: newValue, label: newLabel } }))
 
-    this.element.classList.add('f-c-ui-ajax-input--success')
-    setTimeout(() => {
-      if (this && this.element) {
-        this.element.classList.remove('f-c-ui-ajax-input--success')
-      }
-    }, 3000)
+    if (this.useSavedIndicatorValue) {
+      this.element.classList.add('f-c-ui-ajax-input--success')
+      setTimeout(() => {
+        if (this && this.element && this.element.parentNode) {
+          this.element.classList.remove('f-c-ui-ajax-input--success')
+        }
+      }, 3000)
+    }
   }
 
   setValueFromEvent (e) {

@@ -166,7 +166,7 @@ class Folio::FileTest < ActiveSupport::TestCase
       Rails.application.config.stub(:folio_files_require_description, true) do
         assert file.update!(description: "foo")
         assert_not file.update(description: nil)
-        assert_equal "Popis je povinná položka", file.errors.full_messages.join(". ")
+        assert_equal "Popisek je povinná položka", file.errors.full_messages.join(". ")
       end
 
       assert file.update(author: "foo", attribution_source: nil, attribution_source_url: nil)
@@ -180,33 +180,120 @@ class Folio::FileTest < ActiveSupport::TestCase
     end
   end
 
-  test "validate_attribution_and_texts_if_needed skips validation for unused files" do
-    I18n.with_locale(:cs) do
-      # Create unused file (no placements)
-      unused_file = create(:folio_file_image, author: "test author", alt: "test alt", description: "test description")
-      assert_equal 0, unused_file.file_placements.count
+  test "file_placements_count counter cache works across placement types" do
+    # Test Rails native counter cache behavior with STI placements
 
-      # Create used file (with placement)
-      used_file = create(:folio_file_image, author: "test author", alt: "test alt", description: "test description")
-      page = create(:folio_page)
-      page.update!(cover: used_file)
-      assert used_file.file_placements.count > 0
+    # Create a file and verify initial state
+    file = create(:folio_file_image)
+    assert_equal 0, file.file_placements_count
 
-      Rails.application.config.stub(:folio_files_require_attribution, true) do
-        Rails.application.config.stub(:folio_files_require_alt, true) do
-          Rails.application.config.stub(:folio_files_require_description, true) do
-            # Unused file should allow clearing fields (for EXIF re-extraction)
-            assert unused_file.update(author: nil, attribution_source: nil, attribution_source_url: nil, alt: nil, description: nil)
-            assert_empty unused_file.errors.full_messages
+    # Create placements of different types to test STI counter cache
+    page = create(:folio_page)
 
-            # Used file should still enforce validations
-            assert_not used_file.update(author: nil, attribution_source: nil, attribution_source_url: nil, alt: nil, description: nil)
-            expected_errors = ["Autor nebo zdroj je povinný", "Alt je povinná položka", "Popis je povinná položka"]
-            assert_equal expected_errors, used_file.errors.full_messages
-          end
-        end
-      end
+    # Test Cover placement (via factory)
+    cover_placement = create(:folio_file_placement_cover, file: file, placement: page)
+    assert_equal 1, file.reload.file_placements_count
+
+    # Test Image placement (via factory)
+    image_placement = create(:folio_file_placement_image, file: file, placement: page)
+    assert_equal 2, file.reload.file_placements_count
+
+    # Test direct placement creation
+    direct_placement = Folio::FilePlacement::Image.create!(file: file, placement: page, title: "direct_image")
+    assert_equal 3, file.reload.file_placements_count
+
+    # Test direct placement destruction
+    direct_placement.destroy!
+    assert_equal 2, file.reload.file_placements_count
+
+    # Test destroying other placements
+    image_placement.destroy!
+    assert_equal 1, file.reload.file_placements_count
+
+    cover_placement.destroy!
+    assert_equal 0, file.reload.file_placements_count
+
+    # Verify counter accuracy by comparing with actual count
+    assert_equal file.file_placements.count, file.file_placements_count
+  end
+
+  test "file_placements_count counter cache works with has_many through collection assignment" do
+    # Test the broken case: using page.images = [files] or page.update!(images: [files])
+
+    file1 = create(:folio_file_image)
+    file2 = create(:folio_file_image)
+    file3 = create(:folio_file_image)
+
+    page = create(:folio_page)
+
+    # Verify initial state
+    assert_equal 0, file1.file_placements_count
+    assert_equal 0, file2.file_placements_count
+    assert_equal 0, file3.file_placements_count
+
+    # Test collection assignment via update!
+    page.update!(images: [file1, file2])
+
+    # These should work but currently fail due to Rails counter cache not working with has_many :through
+    assert_equal 1, file1.reload.file_placements_count, "file1 should have 1 placement after collection assignment"
+    assert_equal 1, file2.reload.file_placements_count, "file2 should have 1 placement after collection assignment"
+    assert_equal 0, file3.reload.file_placements_count, "file3 should have 0 placements"
+
+    # Test replacing collection
+    page.update!(images: [file2, file3])
+
+    assert_equal 0, file1.reload.file_placements_count, "file1 should have 0 placements after removal"
+    assert_equal 1, file2.reload.file_placements_count, "file2 should still have 1 placement"
+    assert_equal 1, file3.reload.file_placements_count, "file3 should have 1 placement after addition"
+
+    # Test clearing collection
+    page.update!(images: [])
+
+    assert_equal 0, file1.reload.file_placements_count, "file1 should have 0 placements after clear"
+    assert_equal 0, file2.reload.file_placements_count, "file2 should have 0 placements after clear"
+    assert_equal 0, file3.reload.file_placements_count, "file3 should have 0 placements after clear"
+
+    # Verify counter accuracy by comparing with actual count
+    assert_equal file1.file_placements.count, file1.file_placements_count
+    assert_equal file2.file_placements.count, file2.file_placements_count
+    assert_equal file3.file_placements.count, file3.file_placements_count
+  end
+
+  test "file_placements_count counter cache not updated when validation fails" do
+    # Test that counter caches are not modified when update fails due to validation errors
+
+    file1 = create(:folio_file_image)
+    file2 = create(:folio_file_image)
+
+    page = create(:folio_page)
+
+    # Set up initial state with some images
+    page.update!(images: [file1])
+
+    # Verify initial state
+    assert_equal 1, file1.reload.file_placements_count
+    assert_equal 0, file2.reload.file_placements_count
+
+    # Store initial counter values
+    initial_file1_count = file1.file_placements_count
+    initial_file2_count = file2.file_placements_count
+
+    # Try to update with nil title (should fail validation) and new images
+    assert_raises(ActiveRecord::RecordInvalid) do
+      page.update!(title: nil, images: [file1, file2])
     end
+
+    # Counter caches should remain unchanged after failed validation
+    assert_equal initial_file1_count, file1.reload.file_placements_count, "file1 counter should not change on validation failure"
+    assert_equal initial_file2_count, file2.reload.file_placements_count, "file2 counter should not change on validation failure"
+
+    # Verify the actual placements also didn't change
+    assert_equal 1, file1.file_placements.count, "file1 should still have 1 placement"
+    assert_equal 0, file2.file_placements.count, "file2 should still have 0 placements"
+
+    # Verify counter accuracy by comparing with actual count
+    assert_equal file1.file_placements.count, file1.file_placements_count
+    assert_equal file2.file_placements.count, file2.file_placements_count
   end
 end
 

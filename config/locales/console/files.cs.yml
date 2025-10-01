@@ -37,7 +37,7 @@ cs:
           bar_component:
             delete: Smazat
             download: Stáhnout
-            settings: Hromadné nastavení
+            settings: Hromadné úpravy
             download_label: Soubory připraveny ke stažení
             download_pending: Probíhá příprava souborů ke stažení
             cancel_download: Zrušit stahování
@@ -47,7 +47,7 @@ cs:
             add_to_picker/image: Vybrat do galerie
 
           form_component:
-            title: Hromadné nastavení souborů
+            title: Hromadné úpravy souborů
             selected_files: Vybrané soubory
             has_values_placeholder: Různé hodnoty
             has_values_hint: Různé hodnoty. Při změně se aktualizují všechny. Pro zachování hodnot ponechte prázdné.

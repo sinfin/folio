@@ -42,6 +42,7 @@ class Folio::Console::Files::PickerComponent < Folio::Console::ApplicationCompon
                           state:,
                         },
                         action: {
+                          "f-c-files-picker:fileDestroyed" => "onFileDestroyed",
                           "f-c-files-picker:fillWithFile" => "onFillWithFile",
                           "f-c-files-index-modal:selectedFile" => "onModalSelectedFile"
                         })

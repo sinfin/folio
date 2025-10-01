@@ -28,14 +28,17 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
 
   attr_accessor :dont_run_after_save_jobs
 
+  attr_accessor :inside_nested_attributes
+
   def to_label
     title.presence || file.try(:file_name) || "error: empty file"
   end
 
-  def self.folio_file_placement(class_name, name = nil, allow_embed: false)
+  def self.folio_file_placement(class_name, name = nil, allow_embed: false, has_many: false)
     belongs_to :file, class_name:,
                       inverse_of: :file_placements,
-                      required: allow_embed ? false : true
+                      required: allow_embed ? false : true,
+                      counter_cache: :file_placements_count
 
     belongs_to :placement, polymorphic: true,
                            inverse_of: name,
@@ -61,17 +64,23 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
       end
 
       validate :validate_file_or_embed
+    else
+      define_singleton_method :folio_file_placement_supports_embed? do
+        false
+      end
     end
+
+    after_commit :update_placement_counts_unless_inside_nested_attributes
   end
 
-  def self.folio_image_placement(name = nil, allow_embed: false)
+  def self.folio_image_placement(name = nil, allow_embed: false, has_many: false)
     include Folio::PregenerateThumbnails
-    folio_file_placement("Folio::File::Image", name, allow_embed:)
+    folio_file_placement("Folio::File::Image", name, allow_embed:, has_many:)
     self.class_eval { alias :image :file }
   end
 
-  def self.folio_document_placement(name = nil)
-    folio_file_placement("Folio::File::Document", name)
+  def self.folio_document_placement(name = nil, has_many: false)
+    folio_file_placement("Folio::File::Document", name, has_many:)
   end
 
   def run_after_save_job!
@@ -106,7 +115,7 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
     end
   end
 
-  def audited_hash_key_fallback
+  def placement_key
     reflection = self.class.reflect_on_association(:placement)
 
     if reflection && reflection.options
@@ -131,7 +140,8 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
   end
 
   def validate_attribution_if_needed
-    return if errors[:file].present? && errors[:file].include?(:missing_file_attribution)
+    return if errors[:file].present? && errors.of_kind?(:file, :missing_file_attribution)
+    return if errors[:file].present? && errors.of_kind?(:file, :missing_file_attribution_with_file_details)
     return if file.blank?
 
     if placement
@@ -141,12 +151,22 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
     end
 
     if file.author.blank? && file.attribution_source.blank? && file.attribution_source_url.blank?
-      errors.add(:file, :missing_file_attribution)
+      if file.id && file.file_name
+        errors.add(:file,
+                   :missing_file_attribution_with_file_details,
+                   file_id: file.id,
+                   file_name: file.file_name,
+                   placement_type: model_name.human)
+      else
+        errors.add(:file, :missing_file_attribution)
+      end
     end
   end
 
   def validate_alt_if_needed
-    return if errors[:file].present? && errors[:file].include?(:missing_file_alt)
+    return if errors[:file].present? && errors.of_kind?(:file, :missing_file_alt)
+    return if errors[:alt].present? && errors.of_kind?(:alt, :blank)
+    return if errors[:alt].present? && errors.of_kind?(:alt, :alt_blank_with_file_details)
     return if file.blank?
 
     if placement
@@ -156,12 +176,21 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
     end
 
     if file.class.human_type == "image" && alt_with_fallback.blank?
-      errors.add(:file, :missing_file_alt)
+      if file.id && file.file_name
+        errors.add(:alt,
+                   :alt_blank_with_file_details,
+                   file_id: file.id,
+                   file_name: file.file_name,
+                   placement_type: model_name.human)
+      else
+        errors.add(:alt, :blank)
+      end
     end
   end
 
   def validate_description_if_needed
-    return if errors[:file].present? && errors[:file].include?(:missing_file_description)
+    return if errors[:file].present? && errors.of_kind?(:file, :missing_file_description)
+    return if errors[:description].present? && errors.of_kind?(:description, :blank)
     return if file.blank?
 
     if placement
@@ -170,14 +199,30 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
       return unless Rails.application.config.folio_files_require_description
     end
 
-    if file.description.blank?
-      errors.add(:file, :missing_file_description)
+    if description_with_fallback.blank?
+      if file.id && file.file_name
+        errors.add(:description,
+                   :description_blank_with_file_details,
+                   file_id: file.id,
+                   file_name: file.file_name,
+                   placement_type: model_name.human)
+      else
+        errors.add(:description, :blank)
+      end
     end
   end
 
   # override setter so that active gets set as a boolean instead of a string
   def folio_embed_data=(value)
     super(Folio::Embed.normalize_setter_value(value))
+  end
+
+  def active_embed?
+    if self.class.folio_file_placement_supports_embed?
+      folio_embed_data.present? && folio_embed_data["active"] == true
+    else
+      false
+    end
   end
 
   private
@@ -251,6 +296,13 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
                                  name: file.file_name,
                                  allowed_sites: file.allowed_sites.pluck(:title).join(", ")))
       end
+    end
+
+    def update_placement_counts_unless_inside_nested_attributes
+      return if inside_nested_attributes
+      return if placement.nil?
+      return if placement_key.blank?
+      placement.update_file_placement_count_if_needed!(placement_key:)
     end
 end
 
