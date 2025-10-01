@@ -163,7 +163,7 @@ module Folio::HasAttachments
               dependent: :destroy,
               foreign_key: :placement_id
 
-      validates_associated placement_key, message: :invalid_file_placements
+      validates_associated placement_key, message: :invalid_file_placement
 
       has_one target,
               source: :file,
