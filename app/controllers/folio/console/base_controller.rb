@@ -382,12 +382,12 @@ class Folio::Console::BaseController < Folio::ApplicationController
 
     def console_show_or_edit_path(record, other_params: {}, include_through_record: true)
       return nil if record.nil?
-
+      # sometimes domains matters in routing, so wee need full url
       begin
         url = if include_through_record
-          through_aware_console_url_for(record, hash: other_params)
+          through_aware_console_url_for(record, hash: other_params.merge(only_path: false))
         else
-          url_for([:console, record, other_params])
+          url_for([:console, record, other_params], only_path: false)
         end
       rescue NoMethodError, ActionController::RoutingError
         return nil
