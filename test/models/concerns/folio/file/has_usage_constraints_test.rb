@@ -7,27 +7,6 @@ class Folio::File::HasUsageConstraintsTest < ActiveSupport::TestCase
     @site = create_and_host_site
   end
 
-  private
-    def with_sharing(enabled, &block)
-      with_config(folio_shared_files_between_sites: enabled) do
-        Folio::Current.site = @site if enabled
-        yield
-      end
-    end
-
-    def img(attrs = {})
-      create(:folio_file_image, { site: @site }.merge(attrs))
-    end
-
-    def link_to_site(file, site)
-      file.file_site_links.create!(site: site)
-      file
-    end
-
-    def media_source(title: "MS")
-      create(:folio_media_source, title:, site: @site)
-    end
-
   # usable / true, shared OFF
   test "by_usage_constraints 'usable' without sharing filters by usage limit only" do
     with_sharing(false) do
@@ -122,5 +101,27 @@ class Folio::File::HasUsageConstraintsTest < ActiveSupport::TestCase
     create(:folio_file_image, site: @site)
     assert_empty Folio::File::Image.by_usage_constraints("unknown")
     assert_empty Folio::File::Image.by_usage_constraints(nil)
+  end
+
+  private
+
+  def with_sharing(enabled, &block)
+    with_config(folio_shared_files_between_sites: enabled) do
+      Folio::Current.site = @site if enabled
+      yield
+    end
+  end
+
+  def img(attrs = {})
+    create(:folio_file_image, { site: @site }.merge(attrs))
+  end
+
+  def link_to_site(file, site)
+    file.file_site_links.create!(site: site)
+    file
+  end
+
+  def media_source(title: "MS")
+    create(:folio_media_source, title:, site: @site)
   end
 end
