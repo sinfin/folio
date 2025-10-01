@@ -39,9 +39,9 @@ cs:
     - pátek
     - sobota
     formats:
-      default: "%d. %m. %Y"
-      long: "%d. %B %Y"
-      short: "%d %b"
+      default: "%-d. %-m. %Y"
+      long: "%-d. %B %Y"
+      short: "%-d %b"
     month_names:
     -
     - leden
@@ -214,7 +214,7 @@ cs:
   time:
     am: am
     formats:
-      default: "%a %d. %B %Y %H:%M %z"
-      long: "%A %d. %B %Y %H:%M"
-      short: "%d. %m. %Y %H:%M"
+      default: "%a %-d. %B %Y %H:%M %z"
+      long: "%A %-d. %B %Y %H:%M"
+      short: "%-d. %-m. %Y %H:%M"
     pm: pm
