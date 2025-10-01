@@ -57,7 +57,7 @@ module Folio::File::HasUsageConstraints
 
     scope :by_allowed_site_slug, -> (slug) do
       left_joins(:allowed_sites).where(
-        "folio_sites.id IS NULL OR folio_sites.slug = ?",
+        "folio_sites.slug = ?",
         slug
       )
     end
