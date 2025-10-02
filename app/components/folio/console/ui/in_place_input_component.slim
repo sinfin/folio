@@ -5,18 +5,22 @@ div[
 ]
   .f-c-ui-in-place-input__content-wrap data=stimulus_target("contentWrap")
     .f-c-ui-in-place-input__content-flex data=stimulus_action(click: "toggle")
-      - if @value_prefix.present?
-        span.f-c-ui-in-place-input__content-prefix
-          = @value_prefix
-
-      span.f-c-ui-in-place-input__content[
-        class="flex-grow-0 flex-shrink-1"
-        data=stimulus_target("content")
+      .f-c-ui-in-place-input__content-inner[
+        data=stimulus_target("contentInner")
+        title=value_or_label_from_collection
       ]
-        = value_or_label_from_collection
+        - if @value_prefix.present?
+          span.f-c-ui-in-place-input__content-prefix<>
+            = @value_prefix
 
-      span.f-c-ui-in-place-input__content-blank.text-muted
-        = t('.blank')
+        span.f-c-ui-in-place-input__content[
+          class="flex-grow-0 flex-shrink-1"
+          data=stimulus_target("content")
+        ]
+          = value_or_label_from_collection
+
+        span.f-c-ui-in-place-input__content-blank.text-muted
+          = t('.blank')
 
       = folio_icon(:check,
                    height: 12,
