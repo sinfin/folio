@@ -1,5 +1,5 @@
 window.Folio.Stimulus.register('f-c-ui-in-place-input', class extends window.Stimulus.Controller {
-  static targets = ['content', 'inputWrap', 'contentWrap']
+  static targets = ['content', 'inputWrap', 'contentWrap', 'contentInner']
 
   static values = {
     editing: Boolean,
@@ -26,6 +26,7 @@ window.Folio.Stimulus.register('f-c-ui-in-place-input', class extends window.Sti
 
   onSuccess (e) {
     this.contentTarget.innerHTML = e.detail.label || e.detail.value || ''
+    this.contentInnerTarget.title = e.detail.label || e.detail.value || ''
     this.editingValue = false
     this.element.classList.add('f-c-ui-in-place-input--success')
 
@@ -64,6 +65,7 @@ window.Folio.Stimulus.register('f-c-ui-in-place-input', class extends window.Sti
 
     this.editingValue = false
     this.contentTarget.innerHTML = e.detail.value || ''
+    this.contentInnerTarget.title = e.detail.value || ''
 
     const inputWrap = this.element.querySelector('.f-c-ui-ajax-input')
     inputWrap.dispatchEvent(new window.CustomEvent('f-c-ui-ajax-input:setValue', {
