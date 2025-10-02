@@ -3,9 +3,12 @@
 class Folio::Console::Ui::PagyComponent < Folio::Console::ApplicationComponent
   include Pagy::Frontend
 
-  def initialize(pagy:, options: nil)
+  bem_class_name :no_margin
+
+  def initialize(pagy:, options: nil, no_margin: false)
     @pagy = pagy
     @options = options || {}
+    @no_margin = no_margin
   end
 
   def render?

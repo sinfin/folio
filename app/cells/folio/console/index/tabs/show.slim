@@ -1,3 +1,4 @@
 .f-c-index-tabs
   .f-c-anti-container-fluid.f-c-anti-container-fluid--padded
-    = render_view_component(Folio::Console::Ui::TabsComponent.new(tabs:))
+    = render_view_component(Folio::Console::Ui::TabsComponent.new(tabs:,
+                                                                  no_margin: true))
