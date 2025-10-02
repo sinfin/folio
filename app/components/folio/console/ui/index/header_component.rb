@@ -38,50 +38,69 @@ class Folio::Console::Ui::Index::HeaderComponent < Folio::Console::ApplicationCo
     @new_button = new_button
   end
 
-  def title
-    @title || @klass.model_name.human(count: 2)
-  end
+  private
+    def title
+      @title || @klass.model_name.human(count: 2)
+    end
 
-  def csv_path
-    if @csv == true
-      h = {
-        format: :csv,
-        by_label_query: controller.params[:by_label_query],
-      }
+    def csv_path
+      if @csv == true
+        h = {
+          format: :csv,
+          by_label_query: controller.params[:by_label_query],
+        }
 
-      index_filters_hash.keys.each do |key|
-        if controller.params[key].present?
-          h[key] = controller.params[key]
+        index_filters_hash.keys.each do |key|
+          if controller.params[key].present?
+            h[key] = controller.params[key]
+          end
+        end
+
+        controller.try(:safe_url_for, h)
+      else
+        @csv.try(:[], :url) || @csv
+      end
+    end
+
+    def handled_query_url
+      @handled_query_url ||= if @query_url.is_a?(String)
+        @query_url
+      elsif @query_url.is_a?(Symbol)
+        send(@query_url)
+      else
+        request.path
+      end
+    end
+
+    def title_url
+      handled_query_url
+    end
+
+    def has_visible_index_filters?
+      index_filters.present? && index_filters.any? do |key, hash|
+        !hash.is_a?(Hash) || (hash.try(:[], :as) != :hidden)
+      end
+    end
+
+    def data
+      stimulus_controller("f-c-ui-index-header")
+    end
+
+    def titles_length_class_name
+      max_length = 0
+
+      [title, @subtitle].each do |str|
+        if str.is_a?(String)
+          max_length = str.length if str.length > max_length
         end
       end
 
-      controller.try(:safe_url_for, h)
-    else
-      @csv.try(:[], :url) || @csv
+      if max_length < 20
+        "f-c-ui-index-header__titles--short"
+      elsif max_length > 40
+        "f-c-ui-index-header__titles--long"
+      else
+        nil
+      end
     end
-  end
-
-  def handled_query_url
-    @handled_query_url ||= if @query_url.is_a?(String)
-      @query_url
-    elsif @query_url.is_a?(Symbol)
-      send(@query_url)
-    else
-      request.path
-    end
-  end
-
-  def title_url
-    handled_query_url
-  end
-
-  def has_visible_index_filters?
-    index_filters.present? && index_filters.any? do |key, hash|
-      !hash.is_a?(Hash) || (hash.try(:[], :as) != :hidden)
-    end
-  end
-
-  def data
-    stimulus_controller("f-c-ui-index-header")
-  end
 end

@@ -1,13 +1,18 @@
 .f-c-ui-index-header
+  display: flex
+  flex-direction: column
+  gap: $f-c-ui-index-header-gap
   margin: 0 0 $grid-gutter-width
   position: relative
-  display: flex
-  gap: $grid-gutter-half
-  align-items: center
-  flex-wrap: wrap
 
   &--subtitle
     align-items: flex-start
+
+  &__top
+    display: flex
+    gap: $grid-gutter-half
+    align-items: center
+    flex-wrap: wrap
 
   &__btn
     margin-left: $grid-gutter-half
@@ -30,21 +35,21 @@
   .modal-body &
     padding-right: 48px
 
-  +mq-desktop-menu
-    &__titles
-      flex: 2 1 auto
+  &__titles
+    flex: 1 1 40%
 
-    &__btn
-      flex: 0 0 auto
+    &--short
+      flex: 1 1 30%
 
-    &__form
-      flex: 3 1 auto
-      min-width: 0
-      max-width: 320px
-      width: 50%
+    &--long
+      flex: 1 1 50%
 
-  +mq-mobile-menu
-    &__btn--new
-      position: absolute
-      top: 5px
-      right: 0
+  &__right
+    align-items: center
+    display: flex
+    flex-wrap: wrap
+    flex: 0 1 auto
+    gap: $f-c-ui-index-header-gap
+
+  &__pagy
+    padding-top: $grid-gutter-width - $f-c-ui-index-header-gap
