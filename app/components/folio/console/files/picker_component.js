@@ -61,7 +61,7 @@ window.Folio.Stimulus.register('f-c-files-picker', class extends window.Stimulus
       this.stateValue = this.idInputTarget.value ? 'marked-for-destruction' : 'empty'
       this.contentTarget.innerHTML = ''
 
-      this.triggerPreviewRefresh()
+      this.dispatchChangeEvent()
     }
   }
 
@@ -148,6 +148,7 @@ window.Folio.Stimulus.register('f-c-files-picker', class extends window.Stimulus
       this.destroyInputTarget.value = '0'
       this.destroyInputTarget.disabled = true
       this.fileIdInputTarget.value = id
+      window.setTimeout(() => { this.dispatchChangeEvent() }, 0)
     }
 
     this.abort()
@@ -160,8 +161,6 @@ window.Folio.Stimulus.register('f-c-files-picker', class extends window.Stimulus
 
         if (this.inReactValue) {
           this.triggerReactFileUpdate(res.data)
-        } else {
-          this.triggerPreviewRefresh()
         }
 
         this.stateValue = 'filled'
@@ -204,10 +203,6 @@ window.Folio.Stimulus.register('f-c-files-picker', class extends window.Stimulus
     this.clear()
   }
 
-  triggerPreviewRefresh () {
-    this.element.dispatchEvent(new window.CustomEvent('folioConsoleCustomChange', { bubbles: true }))
-  }
-
   serializedFileJsonValueChanged (to) {
     if (to && this.stateValue !== 'filled') {
       try {
@@ -217,6 +212,7 @@ window.Folio.Stimulus.register('f-c-files-picker', class extends window.Stimulus
         this.destroyInputTarget.value = '0'
         this.destroyInputTarget.disabled = true
         this.fileIdInputTarget.value = file.id
+        this.dispatchChangeEvent()
         this.stateValue = 'filled'
       } catch (error) {
         console.error('Error parsing serialized file JSON:', error)
@@ -231,6 +227,10 @@ window.Folio.Stimulus.register('f-c-files-picker', class extends window.Stimulus
     }
 
     this.clear()
+  }
+
+  dispatchChangeEvent () {
+    this.fileIdInputTarget.dispatchEvent(new CustomEvent('change', { bubbles: true }))
   }
 })
 
