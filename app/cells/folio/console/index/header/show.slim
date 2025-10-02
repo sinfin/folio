@@ -38,6 +38,9 @@
     .f-c-index-header__transportable-dropdown
       == cell('folio/console/transportable/dropdown', model)
 
+- if options[:above_tabs]
+  == options[:above_tabs]
+
 - if options[:tabs]
   .f-c-index-header__tabs-wrap
     == cell('folio/console/index/tabs',
