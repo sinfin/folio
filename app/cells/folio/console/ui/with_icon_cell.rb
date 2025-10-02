@@ -13,6 +13,7 @@ class Folio::Console::Ui::WithIconCell < Folio::ConsoleCell
       h[:tag] = :a
       h[:target] = options[:target]
       h[:href] = options[:href]
+      h[:"data-method"] = options[:method]
     end
 
     h
