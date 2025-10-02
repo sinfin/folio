@@ -1,0 +1,24 @@
+h1: a.f-c-unlink href=console_ui_path Folio Console UI
+
+h2 Clipboard
+
+h3 Regular
+
+.my-g
+  = render(Folio::Console::Ui::ClipboardComponent.new(text: "hello!"))
+
+h3 As a button
+
+.my-g.d-flex.gap-3
+  = render(Folio::Console::Ui::ClipboardComponent.new(text: "hello!",
+                                                      as_button: true))
+
+  = render(Folio::Console::Ui::ClipboardComponent.new(text: "hello!",
+                                                      as_button: true,
+                                                      button_label: "success",
+                                                      button_variant: :success))
+
+  = render(Folio::Console::Ui::ClipboardComponent.new(text: "hello!",
+                                                      as_button: true,
+                                                      button_label: "danger",
+                                                      button_variant: :danger))

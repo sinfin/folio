@@ -18,7 +18,6 @@
       "/app/cells/folio/console/atoms/layout_switch/layout_switch.js",
       "/app/cells/folio/console/atoms/locale_switch/locale_switch.js",
       "/app/cells/folio/console/catalogue/catalogue.js",
-      "/app/cells/folio/console/clipboard_copy/clipboard_copy.js",
       "/app/cells/folio/console/index/position_buttons/_ancestry.js",
       "/app/cells/folio/console/index/position_buttons/_regular.js",
       "/app/cells/folio/console/layout/sidebar/search/search.js",
