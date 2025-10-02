@@ -1,49 +1,55 @@
 div class=bem_class_name data=data
-  .f-c-ui-index-header__titles
-    h1.f-c-ui-index-header__h1
-      a.text-reset.text-decoration-none href=title_url
-        = title
-
-    - if @subtitle.present?
-      h2.f-c-ui-index-header__h2
+  .f-c-ui-index-header__top
+    .f-c-ui-index-header__titles[
+      class=titles_length_class_name
+    ]
+      h1.f-c-ui-index-header__h1
         a.text-reset.text-decoration-none href=title_url
-          = @subtitle
+          = title
 
-  - if @klass.respond_to?(:by_label_query) && @by_label_query != false
-    = render(Folio::Console::Ui::Index::Header::QueryFormComponent.new(klass: @klass,
-                                                                       query_url: handled_query_url,
-                                                                       query_autocomplete: @query_autocomplete,
-                                                                       query_filters: @query_filters))
+      - if @subtitle.present?
+        h2.f-c-ui-index-header__h2
+          a.text-reset.text-decoration-none href=title_url
+            = @subtitle
 
-  - if right_content?
-    = right_content
+    .f-c-ui-index-header__right
+      - if @klass.respond_to?(:by_label_query) && @by_label_query != false
+        = render(Folio::Console::Ui::Index::Header::QueryFormComponent.new(klass: @klass,
+                                                                           query_url: handled_query_url,
+                                                                           query_autocomplete: @query_autocomplete,
+                                                                           query_filters: @query_filters))
 
-  - if @csv
-    = render(Folio::Console::Ui::ButtonComponent.new(variant: :tertiary,
-                                                     href: csv_path,
-                                                     icon: :download,
-                                                     label: @csv.try(:[], :label) || "CSV"))
+      - if right_content?
+        = right_content
 
-  - if @new_button != false
-    == cell('folio/console/index/new_button',
-            klass: @klass,
-            file_list_uppy: @file_list_uppy,
-            types: @types,
-            header: true)
+      - if @csv
+        = render(Folio::Console::Ui::ButtonComponent.new(variant: :tertiary,
+                                                         href: csv_path,
+                                                         icon: :download,
+                                                         label: @csv.try(:[], :label) || "CSV"))
 
-- if @tabs
-  .f-c-ui-index-header__tabs-wrap
-    == cell('folio/console/index/tabs',
-            @tabs,
-            index_filters_keys: controller.send(:index_filters_keys),
-            params: controller.params)
+      - if @new_button != false
+        == cell('folio/console/index/new_button',
+                klass: @klass,
+                file_list_uppy: @file_list_uppy,
+                types: @types,
+                header: true)
 
-- if content_above_filters?
-  = content_above_filters
+  - if @tabs
+    .f-c-ui-index-header__tabs-wrap
+      == cell('folio/console/index/tabs',
+              @tabs,
+              index_filters_keys: controller.send(:index_filters_keys),
+              params: controller.params)
 
-- if has_visible_index_filters?
-  = render(Folio::Console::Ui::Index::FiltersComponent.new(klass: @klass))
+  - if content_above_filters?
+    = content_above_filters
 
-- if @pagy
-  = render(Folio::Console::Ui::PagyComponent.new(pagy: @pagy,
-                                                 options: @pagy_options || {}))
+  - if has_visible_index_filters?
+    = render(Folio::Console::Ui::Index::FiltersComponent.new(klass: @klass))
+
+  - if @pagy
+    .f-c-ui-index-header__pagy
+      = render(Folio::Console::Ui::PagyComponent.new(pagy: @pagy,
+                                                     options: @pagy_options || {},
+                                                     no_margin: true))
