@@ -20,3 +20,6 @@ cs:
         turbo_frame_with_loader_component:
           error_title: Při načítání obsahu došlo k chybě
           error_message: Zkuste to prosím znovu přenačtením stránky.
+
+        clipboard_component:
+          copy: Kopírovat
