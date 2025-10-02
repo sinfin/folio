@@ -194,8 +194,8 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
         })
 
         if (window.FolioConsole && window.FolioConsole.Autosave) {
-          this.onSortStart = (e) => { window.FolioConsole.Autosave.pause() }
-          this.onSortStop = (e) => { window.FolioConsole.Autosave.resume() }
+          this.onSortStart = (e) => { window.FolioConsole.Autosave.pause({ target: this.element }) }
+          this.onSortStop = (e) => { window.FolioConsole.Autosave.resume({ target: this.element }) }
 
           this.fieldsWrapTarget.addEventListener('sortstart', this.onSortStart)
           this.fieldsWrapTarget.addEventListener('sortstop', this.onSortStop)

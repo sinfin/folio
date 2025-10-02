@@ -10,16 +10,18 @@ window.FolioConsole.Autosave.enabledChangeCallback = () => {
   }
 }
 
-window.FolioConsole.Autosave.resume = () => {
+window.FolioConsole.Autosave.resume = (props) => {
   const footer = document.querySelector('.f-c-form-footer')
   if (!footer) return
-  footer.dispatchEvent(new CustomEvent('f-c-form-footer:resumeAutosave', { bubbles: true }))
+  const target = props && props.target ? props.target : undefined
+  footer.dispatchEvent(new CustomEvent('f-c-form-footer:resumeAutosave', { bubbles: true, detail: { target } }))
 }
 
-window.FolioConsole.Autosave.pause = () => {
+window.FolioConsole.Autosave.pause = (props) => {
   const footer = document.querySelector('.f-c-form-footer')
   if (!footer) return
-  footer.dispatchEvent(new CustomEvent('f-c-form-footer:pauseAutosave', { bubbles: true }))
+  const target = props && props.target ? props.target : undefined
+  footer.dispatchEvent(new CustomEvent('f-c-form-footer:pauseAutosave', { bubbles: true, detail: { target } }))
 }
 
 window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.Controller {
@@ -118,21 +120,26 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
         case 'atomsInsertShown':
           this.pauseAutosave()
           break
-        case 'atomsInsertHidden':
-          this.resumeAutosave()
-          break
       }
     }
   }
 
   isFromProperForm (e) {
-    const form = this.element.closest('form')
     const targetForm = e.target.closest('form')
+    const form = this.element.closest('form')
     return form === targetForm
+  }
+
+  isFromBlacklistedTarget (e) {
+    if (e.detail && e.detail.redactor) return true
+    const target = (e.detail && e.detail.target) || e.target
+    if (target.closest('.f-c-ui-modal, .f-c-file-placements-multi-picker-fields')) return true
+    return false
   }
 
   onDocumentInput (e) {
     if (!this.isFromProperForm(e)) return
+    if (this.isFromBlacklistedTarget(e)) return
 
     if (e && e.target && e.target.tagName === 'SELECT') {
       this.pauseAutosave()
@@ -145,7 +152,7 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
 
     this.statusValue = 'unsaved'
 
-    if (e.detail && e.detail.redactor) return
+    if (this.isFromBlacklistedTarget(e)) return
 
     if (this.shouldAbortBasedOnElement({ element: document.activeElement, target: e.target })) {
       return
@@ -159,12 +166,14 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
     this.queueAutosaveIfPossible(element)
   }
 
-  onResumeAutosave () {
+  onResumeAutosave (e) {
+    if (this.isFromBlacklistedTarget(e)) return
     this.resumeAutosave()
   }
 
   onDocumentFocusout (e) {
     if (!this.autosaveEnabledValue || !window.FolioConsole.Autosave.enabled) return
+    if (this.isFromBlacklistedTarget(e)) return
     this.resumeAutosave(e.target)
   }
 
@@ -190,7 +199,8 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
     }
   }
 
-  onPauseAutosave () {
+  onPauseAutosave (e) {
+    if (this.isFromBlacklistedTarget(e)) return
     this.pauseAutosave()
   }
 
@@ -336,16 +346,17 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
     this.pauseAutosave()
   }
 
-  onNestedFieldsDestroyed () {
+  onNestedFieldsDestroyed (e) {
+    if (this.isFromBlacklistedTarget(e)) {
+      this.statusValue = 'unsaved'
+      return
+    }
+
     this.queueAutosaveIfPossible()
   }
 
   onModalOpened () {
     this.pauseAutosave()
-  }
-
-  onModalClosed () {
-    this.queueAutosaveIfPossible()
   }
 
   autosavePausedValueChanged (to, from) {
