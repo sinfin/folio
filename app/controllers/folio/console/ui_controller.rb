@@ -10,6 +10,7 @@ class Folio::Console::UiController < Folio::Console::BaseController
       badges
       boolean_toggles
       buttons
+      clipboard
       dropdowns
       file_placements_multi_picker_fields
       in_place_inputs

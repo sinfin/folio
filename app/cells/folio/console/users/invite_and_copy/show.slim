@@ -5,7 +5,8 @@
     ]
 
     .mt-3
-      == cell('folio/console/clipboard_copy', url, as_button: true)
+      = render_view_component(Folio::Console::Ui::ClipboardComponent.new(text: url,
+                                                                         as_button: true))
 
   - else
     button.btn.btn-primary.f-c-users-invite-and-copy__button[

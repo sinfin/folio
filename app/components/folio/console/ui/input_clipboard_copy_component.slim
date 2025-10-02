@@ -2,6 +2,5 @@
   input.f-c-ui-input-clipboard-copy__input.form-control value=@string
 
   .f-c-ui-input-clipboard-copy__copy
-    == cell('folio/console/clipboard_copy',
-            @string,
-            icon_height: 24)
+    = render(Folio::Console::Ui::ClipboardComponent.new(text: @string,
+                                                        icon_height: 24))
