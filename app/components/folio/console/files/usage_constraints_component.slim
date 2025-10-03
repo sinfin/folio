@@ -1,0 +1,18 @@
+.f-c-files-usage-constraints
+  .f-c-files-usage-constraints__usage-limits
+    .f-c-files-usage-constraints__max-usage-count
+      = folio_icon(:speedometer, height: 12)
+      = render(Folio::Console::Ui::InPlaceInputComponent.new(attribute: :attribution_max_usage_count,
+                                                              record: @file,
+                                                              as: :file,
+                                                              disabled: !can_edit?,
+                                                              value_prefix: t(".max_usage_count")))
+
+    .f-c-files-usage-constraints__sites
+      = folio_icon(:form_select, height: 12)
+      = render(Folio::Console::Ui::InPlaceInputComponent.new(attribute: :allowed_site_ids,
+                                                              record: @file,
+                                                              as: :file,
+                                                              collection: allowed_sites_collection,
+                                                              multiple: true,
+                                                              disabled: !can_edit?))

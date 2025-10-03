@@ -30,8 +30,11 @@
   &__inner
     position: relative
     flex: 1 1 auto
+    display: flex
+    align-items: stretch
 
   &__input
+    flex: 1 1 auto
     position: relative
     z-index: 1
     padding-right: px-to-rem(2 * 28px + 2 * 4px)
@@ -42,6 +45,20 @@
       &::-webkit-outer-spin-button,
       &::-webkit-inner-spin-button
         -webkit-appearance: none
+
+  // Improve native multi-select usability/look
+  &__input--select
+    &[multiple]
+      padding-right: px-to-rem(12px)
+
+      // Place the action buttons to the side for multi-selects
+      & ~ .f-c-ui-ajax-input__right
+        position: static
+        right: auto
+        height: auto
+        align-items: center
+        display: flex
+        margin-left: px-to-rem(8px)
 
   &__right
     position: absolute

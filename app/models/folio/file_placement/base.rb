@@ -14,11 +14,15 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
   validate :validate_attribution_if_needed
   validate :validate_alt_if_needed
   validate :validate_description_if_needed
+  validate :validate_usage_limit_if_published_placement, on: [:create, :update], if: :should_validate_usage_limit?
 
   after_save :run_after_save_job!
   after_touch :run_after_save_job!
   after_create :run_file_after_save_job!
   after_destroy :run_file_after_save_job!
+
+  after_commit :update_file_published_usage_count, on: [:create, :destroy]
+  after_commit :update_file_published_usage_count_on_file_change, on: [:update], if: :saved_change_to_file_id?
 
   before_create :imprint_file_texts
 
@@ -247,6 +251,50 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
 
       if description.nil?
         self.description = file.description.presence
+      end
+    end
+
+    def update_file_published_usage_count
+      return unless file_id.present?
+
+      file&.update_published_usage_count!
+    end
+
+    def update_file_published_usage_count_on_file_change
+      [file_id_before_last_save, file_id].compact.uniq.each do |f_id|
+        Folio::File.find_by(id: f_id)&.update_published_usage_count!
+      end
+    end
+
+    def should_validate_usage_limit?
+      return true if new_record?
+
+      file_id_changed?
+    end
+
+    def validate_usage_limit_if_published_placement
+      return if file.blank? || placement.blank?
+      return unless file.class.included_modules.include?(Folio::File::HasUsageConstraints)
+      return unless placement.respond_to?(:published) && placement.published == true
+
+      # Check if this file is already used in this placement - if so, no new usage is added
+      existing_placement = Folio::FilePlacement::Base
+        .where(placement_id: placement_id, placement_type: placement_type, file_id: file_id)
+        .where.not(id: id)
+        .exists?
+
+      return if existing_placement
+
+      if file.usage_limit_exceeded?
+        errors.add(:file, I18n.t("errors.messages.cannot_publish_with_files_over_usage_limit",
+                                  name: file.file_name,
+                                  limit: file.attribution_max_usage_count))
+      end
+
+      if !file.can_be_used_on_site?(Folio::Current.site)
+        errors.add(:base, I18n.t("errors.messages.cannot_publish_with_files_restricted_to_site",
+                                 name: file.file_name,
+                                 allowed_sites: file.allowed_sites.pluck(:title).join(", ")))
       end
     end
 

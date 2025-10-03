@@ -87,6 +87,8 @@ Folio::Engine.routes.draw do
 
       resources :menus
 
+      resources :media_sources, except: %i[show]
+
       resources :help_documents, only: %i[index show]
 
       namespace :file do

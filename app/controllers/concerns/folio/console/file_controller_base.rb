@@ -72,10 +72,12 @@ module Folio::Console::FileControllerBase
         :attribution_source_url,
         :attribution_copyright,
         :attribution_licence,
+        :attribution_max_usage_count,
         :sensitive_content,
         :default_gravity,
         :alt,
-        tags: []
+        tags: [],
+        allowed_site_ids: []
       ]
 
       test_instance = @klass.new
@@ -101,6 +103,16 @@ module Folio::Console::FileControllerBase
 
     def folio_console_record_includes
       [:tags]
+    end
+
+    def folio_console_collection_includes
+      includes = [:tags]
+
+      if @klass.try(:has_usage_constraints?)
+        includes << :allowed_sites
+      end
+
+      includes
     end
 
     def index_view_name
@@ -151,9 +163,20 @@ module Folio::Console::FileControllerBase
     end
 
     def index_filters
-      {
-        by_used: [true, false],
+      filters = {
+        by_used: [true, false]
       }
+
+      if @klass.included_modules.include?(Folio::File::HasUsageConstraints)
+        filters[:by_usage_constraints] = @klass.usage_constraints_for_select
+        filters[:by_media_source] = { klass: "Folio::MediaSource", order_scope: :ordered }
+
+        if Rails.application.config.folio_shared_files_between_sites
+          filters[:by_allowed_site_slug] = Folio::Site.ordered.map { |site| [site.to_label, site.slug] }
+        end
+      end
+
+      filters
     end
 
     def allowed_record_sites
