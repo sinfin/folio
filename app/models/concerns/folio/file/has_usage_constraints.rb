@@ -29,15 +29,12 @@ module Folio::File::HasUsageConstraints
       when "unusable", "false"
         unusable_by_limit = where("attribution_max_usage_count > 0 AND published_usage_count >= attribution_max_usage_count")
 
+        # Files are unusable if:
+        # 1. Usage limit exceeded (published_usage_count >= attribution_max_usage_count)
+        # 2. File has site restrictions, but the current site is not in the allowed list
         if Rails.application.config.folio_shared_files_between_sites
-          unusable_by_site = where(
-            "media_source_id IS NOT NULL AND EXISTS (SELECT 1 FROM folio_file_site_links WHERE folio_file_site_links.file_id = folio_files.id) AND NOT EXISTS (SELECT 1 FROM folio_file_site_links WHERE folio_file_site_links.file_id = folio_files.id AND folio_file_site_links.site_id = ?)",
-            Folio::Current.site.id
-          )
-
           where("(attribution_max_usage_count > 0 AND published_usage_count >= attribution_max_usage_count) OR " \
-                "(media_source_id IS NOT NULL AND EXISTS (SELECT 1 FROM folio_file_site_links WHERE folio_file_site_links.file_id = folio_files.id) AND NOT EXISTS (SELECT 1 FROM folio_file_site_links
-                WHERE folio_file_site_links.file_id = folio_files.id AND folio_file_site_links.site_id = ?))",
+                "(media_source_id IS NOT NULL AND EXISTS (SELECT 1 FROM folio_file_site_links WHERE folio_file_site_links.file_id = folio_files.id) AND NOT EXISTS (SELECT 1 FROM folio_file_site_links WHERE folio_file_site_links.file_id = folio_files.id AND folio_file_site_links.site_id = ?))",
                 Folio::Current.site.id)
 
         else
@@ -92,15 +89,20 @@ module Folio::File::HasUsageConstraints
   end
 
   private
+
+  def find_media_source_for(attribution_source)
+    if Rails.application.config.folio_shared_files_between_sites
+      Folio::MediaSource.find_by(title: attribution_source)
+    else
+      Folio::MediaSource.by_site(Folio::Current.site)
+                         .find_by(title: attribution_source)
+    end
+  end
+
     def handle_attribution_source_changes
       if attribution_source_changed?
         if attribution_source.present?
-          if Rails.application.config.folio_shared_files_between_sites
-            found_media_source = Folio::MediaSource.find_by(title: attribution_source)
-          else
-            found_media_source = Folio::MediaSource.by_site(Folio::Current.site)
-                                                   .find_by(title: attribution_source)
-          end
+          found_media_source = find_media_source_for(attribution_source)
 
           if found_media_source
             self.media_source = found_media_source

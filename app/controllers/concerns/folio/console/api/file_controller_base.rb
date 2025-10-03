@@ -288,10 +288,7 @@ module Folio::Console::Api::FileControllerBase
         ary += test_instance.console_show_additional_fields.keys
       end
 
-      ary << { tags: [] }
-      ary << { allowed_site_ids: [] }
-
-      ary
+      ary + [{ tags: [] }, { allowed_site_ids: [] }]
     end
 
     def file_params

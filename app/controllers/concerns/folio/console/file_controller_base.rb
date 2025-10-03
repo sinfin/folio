@@ -109,7 +109,7 @@ module Folio::Console::FileControllerBase
     def folio_console_collection_includes
       includes = [:tags]
 
-      if @klass.included_modules.include?(Folio::File::HasUsageConstraints)
+      if @klass.try(:has_usage_constraints?)
         includes << :allowed_sites
       end
 

@@ -120,7 +120,7 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
         ary << usage_limit_exceeded_html
       end
 
-      if !@file.can_be_used_on_site?(Folio::Current.site)
+      unless @file.can_be_used_on_site?(Folio::Current.site)
         ary << site_restriction_html
       end
     end
