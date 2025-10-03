@@ -383,7 +383,7 @@ module Folio::HasAttachments
     def get_files_with_usage_constraints
       # Get unique file types that have HasUsageConstraints concern
       file_types_with_constraints = Folio::FilePlacement::Base
-        .joins("INNER JOIN folio_files ON folio_files.id = folio_file_placements.file_id")
+        .joins(:file)
         .where(placement_id: id, placement_type: self.class.base_class.name)
         .distinct
         .pluck("folio_files.type")
