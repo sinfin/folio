@@ -89,15 +89,14 @@ module Folio::File::HasUsageConstraints
   end
 
   private
-
-  def find_media_source_for(attribution_source)
-    if Rails.application.config.folio_shared_files_between_sites
-      Folio::MediaSource.find_by(title: attribution_source)
-    else
-      Folio::MediaSource.by_site(Folio::Current.site)
-                         .find_by(title: attribution_source)
+    def find_media_source_for(attribution_source)
+      if Rails.application.config.folio_shared_files_between_sites
+        Folio::MediaSource.find_by(title: attribution_source)
+      else
+        Folio::MediaSource.by_site(Folio::Current.site)
+                           .find_by(title: attribution_source)
+      end
     end
-  end
 
     def handle_attribution_source_changes
       if attribution_source_changed?

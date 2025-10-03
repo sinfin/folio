@@ -303,6 +303,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_22_094005) do
     t.index ["type"], name: "index_folio_file_placements_on_type"
   end
 
+  create_table "folio_file_site_links", force: :cascade do |t|
+    t.bigint "file_id", null: false
+    t.bigint "site_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["file_id", "site_id"], name: "index_folio_file_site_links_unique", unique: true
+    t.index ["file_id"], name: "index_folio_file_site_links_on_file_id"
+    t.index ["site_id"], name: "index_folio_file_site_links_on_site_id"
+  end
+
   create_table "folio_files", force: :cascade do |t|
     t.string "file_uid"
     t.string "file_name"
@@ -338,12 +348,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_22_094005) do
     t.decimal "gps_latitude", precision: 10, scale: 6
     t.decimal "gps_longitude", precision: 10, scale: 6
     t.datetime "file_metadata_extracted_at"
+    t.bigint "media_source_id"
+    t.integer "attribution_max_usage_count"
+    t.integer "published_usage_count", default: 0, null: false
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((author)::text, ''::text)))", name: "index_folio_files_on_by_author", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name)::text, ''::text)))", name: "index_folio_files_on_by_file_name", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text)))", name: "index_folio_files_on_by_file_name_for_search", using: :gin
     t.index ["created_at"], name: "index_folio_files_on_created_at"
     t.index ["file_name"], name: "index_folio_files_on_file_name"
     t.index ["hash_id"], name: "index_folio_files_on_hash_id"
+    t.index ["media_source_id"], name: "index_folio_files_on_media_source_id"
+    t.index ["published_usage_count"], name: "index_folio_files_on_published_usage_count"
     t.index ["site_id"], name: "index_folio_files_on_site_id"
     t.index ["type"], name: "index_folio_files_on_type"
     t.index ["updated_at"], name: "index_folio_files_on_updated_at"
@@ -361,6 +376,28 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_22_094005) do
     t.string "aasm_state", default: "submitted"
     t.bigint "site_id"
     t.index ["site_id"], name: "index_folio_leads_on_site_id"
+  end
+
+  create_table "folio_media_source_site_links", force: :cascade do |t|
+    t.bigint "media_source_id", null: false
+    t.bigint "site_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["media_source_id", "site_id"], name: "index_folio_media_source_site_links_unique", unique: true
+    t.index ["media_source_id"], name: "index_folio_media_source_site_links_on_media_source_id"
+    t.index ["site_id"], name: "index_folio_media_source_site_links_on_site_id"
+  end
+
+  create_table "folio_media_sources", force: :cascade do |t|
+    t.string "title", null: false
+    t.string "licence"
+    t.string "copyright_text"
+    t.integer "max_usage_count", default: 1
+    t.bigint "site_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["site_id"], name: "index_folio_media_sources_on_site_id"
+    t.index ["title"], name: "index_folio_media_sources_on_title", unique: true
   end
 
   create_table "folio_menu_items", force: :cascade do |t|
@@ -695,7 +732,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_22_094005) do
 
   add_foreign_key "folio_console_notes", "folio_sites", column: "site_id"
   add_foreign_key "folio_content_templates", "folio_sites", column: "site_id"
+  add_foreign_key "folio_file_site_links", "folio_files", column: "file_id"
+  add_foreign_key "folio_file_site_links", "folio_sites", column: "site_id"
+  add_foreign_key "folio_files", "folio_media_sources", column: "media_source_id"
   add_foreign_key "folio_files", "folio_sites", column: "site_id"
+  add_foreign_key "folio_media_source_site_links", "folio_media_sources", column: "media_source_id"
+  add_foreign_key "folio_media_source_site_links", "folio_sites", column: "site_id"
+  add_foreign_key "folio_media_sources", "folio_sites", column: "site_id"
   add_foreign_key "folio_site_user_links", "folio_sites", column: "site_id"
   add_foreign_key "folio_site_user_links", "folio_users", column: "user_id"
   add_foreign_key "folio_tiptap_revisions", "folio_users", column: "superseded_by_user_id"
