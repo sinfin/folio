@@ -121,6 +121,14 @@ FactoryBot.define do
     site { get_current_or_existing_site_or_create_from_factory }
   end
 
+  factory :folio_media_source, class: "Folio::MediaSource" do
+    sequence(:title) { |n| "Media Source #{n}" }
+    licence { "CC BY 4.0" }
+    copyright_text { "Copyright" }
+    max_usage_count { 5 }
+    site { get_current_or_existing_site_or_create_from_factory }
+  end
+
   factory :folio_menu, class: "Folio::Menu" do
     locale { :cs }
     sequence(:title) { |i| "Menu #{i}" }

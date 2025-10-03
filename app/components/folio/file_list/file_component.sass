@@ -15,6 +15,10 @@
     pointer-events: none
     opacity: 0.5
 
+  &--unmet-requirements
+    color: white !important
+    background-color: rgba(0, 0, 0, 0.25) !important
+
   &__part
     position: relative
     display: none
@@ -103,6 +107,14 @@
     background-color: $overlays-black-100
     border-radius: $border-radius
 
+    &--unmet-requirements::after
+      content: ''
+      position: absolute
+      inset: 0
+      background: rgba(0, 0, 0, 0.5)
+      z-index: 2
+      pointer-events: none
+
     &__part:empty
       display: none
 
@@ -173,7 +185,7 @@
     &__part--count,
     &__part--source
       position: absolute
-      z-index: 1
+      z-index: 3
       left: 0
       right: 0
       text-align: center

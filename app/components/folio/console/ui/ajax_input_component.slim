@@ -20,13 +20,22 @@
               = @placeholder
 
           - if @disabled && @value
-            option value=@value selected=true
-              = @formatted_value || @value
+            - if @multiple && @value.is_a?(Array)
+              - @value.each do |v|
+                option value=v selected=true
+                  = v
+            - else
+              option value=@value selected=true
+                = @formatted_value || @value
           - else
             - @collection.each do |label, value|
               - value ||= label
+              - if @multiple && @value.is_a?(Array)
+                - selected = @value.include?(value.to_s) || @value.include?(value.to_i)
+              - else
+                - selected = value == @value
 
-              option value=value selected=(value == @value)
+              option value=value selected=selected
                 = label
 
         - elsif @textarea

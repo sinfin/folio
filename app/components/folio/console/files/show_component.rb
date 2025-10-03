@@ -18,7 +18,8 @@ class Folio::Console::Files::ShowComponent < Folio::Console::ApplicationComponen
                         },
                         action: {
                           "f-uppy:upload-success": "uppyUploadSuccess",
-                          "f-c-files-show/message": "messageBusCallback"
+                          "f-c-files-show/message": "messageBusCallback",
+                          "f-c-files-show:reload": "messageBusSuccess"
                         })
   end
 
@@ -63,7 +64,13 @@ class Folio::Console::Files::ShowComponent < Folio::Console::ApplicationComponen
   end
 
   def table_rows
-    {
+    rows = {}
+
+    if @file.class.included_modules.include?(Folio::File::HasUsageConstraints)
+      rows = { usage_constraints: {} }
+    end
+
+    rows.merge!({
       attribution_source: {},
       author: {},
       headline: {},
@@ -72,7 +79,9 @@ class Folio::Console::Files::ShowComponent < Folio::Console::ApplicationComponen
       attribution_source_url: {},
       attribution_copyright: {},
       attribution_licence: {},
-    }.merge(@file.console_show_additional_fields)
+    })
+
+    rows.merge!(@file.console_show_additional_fields)
   end
 
   def autocomplete_for(key:, config:)
