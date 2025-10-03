@@ -115,13 +115,23 @@ window.Folio.Stimulus.register('f-c-files-show', class extends window.Stimulus.C
 if (window.Folio && window.Folio.MessageBus && window.Folio.MessageBus.callbacks) {
   window.Folio.MessageBus.callbacks['f-c-files-show'] = (message) => {
     if (!message) return
-    if (message.type !== 'Folio::S3::CreateFileJob') return
+    
+    if (message.type === 'Folio::S3::CreateFileJob') {
+      const selector = `.f-c-files-show[data-f-c-files-show-id-value="${message.data.file_id}"]`
+      const targets = document.querySelectorAll(selector)
 
-    const selector = `.f-c-files-show[data-f-c-files-show-id-value="${message.data.file_id}"]`
-    const targets = document.querySelectorAll(selector)
+      for (const target of targets) {
+        target.dispatchEvent(new CustomEvent('f-c-files-show/message', { detail: { message } }))
+      }
+    }
+    
+    if (message.type === 'f-c-files-show:reload') {
+      const selector = `.f-c-files-show[data-f-c-files-show-id-value="${message.data.id}"]`
+      const targets = document.querySelectorAll(selector)
 
-    for (const target of targets) {
-      target.dispatchEvent(new CustomEvent('f-c-files-show/message', { detail: { message } }))
+      for (const target of targets) {
+        target.dispatchEvent(new CustomEvent('f-c-files-show:reload'))
+      }
     }
   }
 }

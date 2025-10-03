@@ -323,13 +323,13 @@ class Folio::File < Folio::ApplicationRecord
   end
 
   def console_show_additional_fields
+    fields = {}
+
     if respond_to?(:preview_duration) && respond_to?(:preview_duration=)
-      {
-        preview_duration: { as: :integer }
-      }
-    else
-      {}
+      fields[:preview_duration] = { as: :integer }
     end
+
+    fields
   end
 
   def self.console_turbo_frame_id(modal: false, picker: false)
@@ -346,6 +346,36 @@ class Folio::File < Folio::ApplicationRecord
 
   def console_show_additional_preview_component
     # to be overriden in main_app should be needed
+  end
+
+  def calculate_published_usage_count
+    placement_types = file_placements.distinct.pluck(:placement_type)
+    return 0 if placement_types.empty?
+
+    published_conditions = placement_types.map do |type|
+      klass = type.constantize
+      table_name = klass.table_name
+
+      if klass.column_names.include?("published")
+        "(folio_file_placements.placement_type = '#{type}' AND EXISTS (SELECT 1 FROM #{table_name} WHERE #{table_name}.id = folio_file_placements.placement_id AND #{table_name}.published = true))"
+      else
+        # For classes without published, assume published
+        "folio_file_placements.placement_type = '#{type}'"
+      end
+    rescue NameError
+      # If class doesn't exist, assume published
+      "folio_file_placements.placement_type = '#{type}'"
+    end
+
+    file_placements
+      .where(published_conditions.join(" OR "))
+      .distinct
+      .count("CONCAT(placement_type, ':', placement_id)")
+  end
+
+  def update_published_usage_count!
+    new_count = calculate_published_usage_count
+    update_column(:published_usage_count, new_count) if published_usage_count != new_count
   end
 
   private
@@ -454,6 +484,9 @@ end
 #  gps_latitude                      :decimal(10, 6)
 #  gps_longitude                     :decimal(10, 6)
 #  file_metadata_extracted_at        :datetime
+#  media_source_id                   :bigint(8)
+#  attribution_max_usage_count       :integer
+#  published_usage_count             :integer          default(0), not null
 #
 # Indexes
 #
@@ -463,11 +496,14 @@ end
 #  index_folio_files_on_created_at               (created_at)
 #  index_folio_files_on_file_name                (file_name)
 #  index_folio_files_on_hash_id                  (hash_id)
+#  index_folio_files_on_media_source_id          (media_source_id)
+#  index_folio_files_on_published_usage_count    (published_usage_count)
 #  index_folio_files_on_site_id                  (site_id)
 #  index_folio_files_on_type                     (type)
 #  index_folio_files_on_updated_at               (updated_at)
 #
 # Foreign Keys
 #
+#  fk_rails_...  (media_source_id => folio_media_sources.id)
 #  fk_rails_...  (site_id => folio_sites.id)
 #

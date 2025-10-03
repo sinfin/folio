@@ -1,10 +1,12 @@
 div[
   class=bem_class_name
   class=(@value_line_clamp ? "f-c-ui-in-place-input--value-line-clamp-#{@value_line_clamp}" : nil)
+  class=(@disabled ? "f-c-ui-in-place-input--disabled" : nil)
+  class=(@multiple ? "f-c-ui-in-place-input--multiple" : nil)
   data=wrap_data
 ]
   .f-c-ui-in-place-input__content-wrap data=stimulus_target("contentWrap")
-    .f-c-ui-in-place-input__content-flex data=stimulus_action(click: "toggle")
+    .f-c-ui-in-place-input__content-flex data=stimulus_action(@disabled ? {} : stimulus_action(click: "toggle"))
       .f-c-ui-in-place-input__content-inner[
         data=stimulus_target("contentInner")
         title=value_or_label_from_collection
@@ -26,18 +28,21 @@ div[
                    height: 12,
                    class: "flex-grow-0 flex-shrink-0 f-c-ui-in-place-input__success-ico")
 
-      = folio_icon(:edit,
-                   height: 12,
-                   class: "flex-grow-0 flex-shrink-0 f-c-ui-in-place-input__toggle-ico")
+      - unless @disabled
+        = folio_icon(:edit,
+                     height: 12,
+                     class: "flex-grow-0 flex-shrink-0 f-c-ui-in-place-input__toggle-ico")
 
-  .f-c-ui-in-place-input__input-wrap data=stimulus_target("inputWrap")
-    = render(Folio::Console::Ui::AjaxInputComponent.new(name:,
-                                                        url:,
-                                                        value: @value,
-                                                        cleave: @cleave,
-                                                        textarea: @textarea,
-                                                        collection: @collection,
-                                                        force_cancel: true,
-                                                        autocomplete: @autocomplete,
-                                                        use_saved_indicator: false,
-                                                        f: @f))
+  - unless @disabled
+    .f-c-ui-in-place-input__input-wrap data=stimulus_target("inputWrap")
+      = render(Folio::Console::Ui::AjaxInputComponent.new(name:,
+                                                          url:,
+                                                          value: @value,
+                                                          cleave: @cleave,
+                                                          textarea: @textarea,
+                                                          collection: @collection,
+                                                          force_cancel: true,
+                                                          autocomplete: @autocomplete,
+                                                          multiple: @multiple,
+                                                          use_saved_indicator: false,
+                                                          f: @f))

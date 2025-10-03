@@ -24,11 +24,13 @@ cs:
       folio/content_template:
         content: Obsah
       folio/file:
+        allowed_site: Titul
         author: Autor
         attribution_copyright: Copyright
         attribution_source: Zdroj
         attribution_source_url: Zdroj URL
         attribution_licence: Licence
+        attribution_max_usage_count: Maximální počet použití
         default_gravity/center: Uprostřed
         default_gravity/east: Vpravo
         default_gravity/north: Nahoře
@@ -37,8 +39,12 @@ cs:
         default_gravity: Výchozí ořez
         file_mime_type: Typ souboru
         file_size: Velikost souboru
+        media_source: Zdroj
         preview_duration: Kolik vteřin je zdarma?
         used: Použitý
+        usage_constraints: Omezení použití
+        usage_constraints/usable: Použitelné
+        usage_constraints/unusable: Nepoužitelné
         subtitles_cs_enabled: Zobrazit titulky
         subtitles_cs_text: Titulky (CZ)
         subtitles_en_text: Titulky (EN)
@@ -48,6 +54,13 @@ cs:
       folio/lead:
         created_at: Odesláno
         note: Zpráva
+      folio/media_source:
+        licence: Licence
+        max_usage_count: Max. použití
+        copyright_text: Copyright text
+        allowed_site: Titul
+        allowed_sites: Titul
+        assigned_media_count: Přiřazeno obrázků
       folio/menu:
         type: Druh menu
         menu_items: Odkazy
@@ -232,6 +245,10 @@ cs:
         few: Formuláře
         one: Formulář
         other: Formulářů
+      folio/media_source:
+        few: Zdroje médií
+        one: Zdroj médií
+        other: Zdrojů médií
       folio/menu:
         few: Menu
         one: Menu
@@ -407,9 +424,12 @@ cs:
       color_mode_without_wrapper: nelze nastavit na tmavý bez zvolení obalu
       has_invalid_file_placements: Některé soubory nesplňují požadavky
       invalid_count: musí být přesně %{count}
+      cannot_publish_with_files_over_usage_limit: "%{name} má vyčerpaný limit použití (%{limit})"
+      cannot_publish_with_files_restricted_to_site: "%{name} není určen pro tuto stránku (povolený jen na: %{allowed_sites})"
       invalid_file_placement: nesplňuje požadavky
       invalid_file_placements: nesplňují požadavky
       invalid_subtitle_block: má nevalidní text na řádku %{line}
+      file_published_usage_limit_exceeded: "maximální počet použití: %{count}"
       missing_file_alt: nemá vyplněný alt
       missing_file_attribution: nemá vyplněného autora nebo zdroj
       missing_file_attribution_with_file_details: '"%{file_name}" (#%{file_id}) využitý pro "%{placement_type}" nemá vyplněného autora nebo zdroj'

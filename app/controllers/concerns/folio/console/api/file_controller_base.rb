@@ -239,11 +239,24 @@ module Folio::Console::Api::FileControllerBase
 
   private
     def folio_console_collection_includes
-      [:tags, :file_placements]
+      includes = [:tags, :file_placements]
+
+      if @klass.included_modules.include?(Folio::File::HasUsageConstraints)
+        includes << :allowed_sites
+      end
+
+      includes
     end
 
     def filter_params
-      params.permit(:by_file_name, :by_placement, :by_tags, :by_used, :by_photo_archive)
+      params.permit(:by_file_name,
+                    :by_placement,
+                    :by_tags,
+                    :by_used,
+                    :by_photo_archive,
+                    :by_usage_constraints,
+                    :by_allowed_site_slug,
+                    :by_media_source)
     end
 
     def file_params_whitelist
@@ -256,6 +269,7 @@ module Folio::Console::Api::FileControllerBase
         :attribution_source_url,
         :attribution_copyright,
         :attribution_licence,
+        :attribution_max_usage_count,
         :description,
         :sensitive_content,
         :default_gravity,
@@ -274,9 +288,7 @@ module Folio::Console::Api::FileControllerBase
         ary += test_instance.console_show_additional_fields.keys
       end
 
-      ary << { tags: [] }
-
-      ary
+      ary + [{ tags: [] }, { allowed_site_ids: [] }]
     end
 
     def file_params

@@ -35,7 +35,7 @@ en:
         metadata_extracted_at_prefix: "Metadata automatically extracted on"
         metadata_extracted_at_suffix: "Only blank fields are populated during extraction to preserve manual edits."
         has_data: "has data"
-        
+
         # Metadata field labels (used by React via _translations.slim)
         metadata:
           headline: "Headline"
@@ -84,32 +84,32 @@ en:
           gps_coordinates: "GPS Coordinates"
           gps_latitude: "GPS Latitude"
           gps_longitude: "GPS Longitude"
-          
+
           # Field values
           flash_values:
             not_used: "Not used"
             used: "Used"
             used_with_value: "Used (%{value})"
-          
+
           white_balance_values:
             auto: "Auto"
             manual: "Manual"
-          
+
           exposure_mode_values:
             auto: "Auto"
             manual: "Manual"
             aperture_priority: "Aperture priority"
-          
+
           metering_mode_values:
             average: "Average"
             center_weighted: "Center-weighted"
             spot: "Spot"
             matrix: "Matrix"
-          
+
           color_space_values:
             srgb: "sRGB"
             adobe_rgb: "Adobe RGB"
-          
+
       files:
         metadata_extracted: "Metadata successfully extracted from image"
         metadata_extraction_failed: "Failed to extract metadata from image"
