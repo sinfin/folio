@@ -350,8 +350,6 @@ cs:
           in: Nahradit z YAML
           out: Uložit do YAML
           in_new: Vytvořit nový z YAML
-      clipboard_copy:
-        copy: Kopírovat
       catalogue_sort_arrows:
         sort_asc: Řadit vzestupně
         sort_desc: Řadit sestupně

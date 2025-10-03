@@ -56,7 +56,6 @@ class Folio::Console::Form::FooterComponent < Folio::Console::ApplicationCompone
                           "focusout@document" => "onDocumentFocusout",
                           "folioConsoleCustomChange@document" => "onDocumentChange",
                           "fCPageReload" => "reloadPageWhenPossible",
-                          "atomsFormHidden@document" => "onDocumentAtomsFormHidden",
                           "atomsFormShown@document" => "onDocumentAtomsFormShown",
                           "shown.bs.tab@document" => "onDocumentBsTabShown",
                           "submit@document" => "onDocumentSubmit",
@@ -65,7 +64,6 @@ class Folio::Console::Form::FooterComponent < Folio::Console::ApplicationCompone
                           "f-input-collection-remote-select:open@document" => "onSelect2Open",
                           "f-input-collection-remote-select:close@document" => "onSelect2Close",
                           "f-modal:opened@document" => "onModalOpened",
-                          "f-modal:closed@document" => "onModalClosed",
                           "f-c-form-footer:resumeAutosave" => "onResumeAutosave",
                           "f-c-form-footer:pauseAutosave" => "onPauseAutosave",
                         })

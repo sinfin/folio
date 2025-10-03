@@ -60,7 +60,8 @@
         .f-c-files-batch-bar__download-controls.me-nh
           - if download_hash["url"]
             .mb-2.text-center
-              == cell('folio/console/clipboard_copy', download_hash["url"], icon_height: 24)
+              = render(Folio::Console::Ui::ClipboardComponent.new(text: download_hash["url"],
+                                                                  icon_height: 24))
 
           = render(Folio::Console::Ui::ButtonComponent.new(icon: :close,
                                                            data: stimulus_action(click: "cancelDownload"),
