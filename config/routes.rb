@@ -54,13 +54,13 @@ Folio::Engine.routes.draw do
         patch :update_password
       end
 
-      resources :attribute_types, except: %i[show] do
+      resources :attribute_types do
         collection do
           post :set_positions
         end
       end
 
-      resources :pages, except: %i[show] do
+      resources :pages do
         collection do
           post :set_positions
           get :merge
@@ -84,7 +84,7 @@ Folio::Engine.routes.draw do
         end
       end
 
-      resources :menus, except: %i[show]
+      resources :menus
 
       resources :help_documents, only: %i[index show]
 

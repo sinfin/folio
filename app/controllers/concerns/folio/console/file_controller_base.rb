@@ -30,7 +30,6 @@ module Folio::Console::FileControllerBase
   end
 
   def show
-    super
     @skip_folio_files_show_modal = true
     @file = folio_console_record
     # need specific content_type to avoid double rendering error via turbo

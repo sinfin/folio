@@ -75,6 +75,9 @@ class Folio::Console::UsersController < Folio::Console::BaseController
     end
   end
 
+  def show
+  end
+
   private
     def after_impersonate_path
       Rails.application.config.folio_users_after_impersonate_path_proc.call(self, @user)
