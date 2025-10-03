@@ -37,6 +37,7 @@ module Folio::Console::DefaultActions
   end
 
   def show
+    redirect_to through_aware_console_url_for(folio_console_record, action: :edit)
   end
 
   def edit
