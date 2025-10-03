@@ -6,12 +6,17 @@ def create_and_host_site(key: nil, attributes: {})
 
   @site = factory.send(:class_name).constantize.last || create(key_with_fallback, attributes)
 
-  Rails.application.routes.default_url_options[:host] = @site.domain
-  Rails.application.routes.default_url_options[:only_path] = false
-
-  if self.respond_to?(:host!)
-    host!(@site.domain)
-  end
+  host_domain!(@site.env_aware_domain)
 
   @site
+end
+
+def host_domain!(env_aware_domain)
+  Rails.application.routes.default_url_options[:host] = env_aware_domain
+  Rails.application.routes.default_url_options[:only_path] = false
+  Rails.application.config.action_mailer.default_url_options[:host] = env_aware_domain
+
+  if self.respond_to?(:host!)
+    host!(env_aware_domain)
+  end
 end
