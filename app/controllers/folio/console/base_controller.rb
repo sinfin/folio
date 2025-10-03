@@ -407,13 +407,8 @@ class Folio::Console::BaseController < Folio::ApplicationController
 
       return unless through_record
 
-      if did_override_default_show_method?
-        add_breadcrumb(through_record.to_label,
-                       console_show_or_edit_path(through_record, include_through_record: false))
-      else
-        add_breadcrumb(through_record.to_label,
-                       through_aware_console_url_for(folio_console_record, action: :edit))
-      end
+      add_breadcrumb(through_record.to_label,
+                     console_show_or_edit_path(through_record, include_through_record: false))
     end
 
     def add_collection_breadcrumbs
