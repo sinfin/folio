@@ -58,11 +58,11 @@ Rails.application.routes.draw do
         end
 
         namespace :blog do
-          resources :articles, except: %i[show]
-          resources :authors, except: %i[show] do
+          resources :articles
+          resources :authors do
             post :set_positions, on: :collection
           end
-          resources :topics, except: %i[show] do
+          resources :topics do
             post :set_positions, on: :collection
           end
         end

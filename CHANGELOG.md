@@ -24,6 +24,7 @@ All notable changes to this project will be documented in this file.
 - default console `update` for `format: :json` now returns a JSON with changes instead of an empty hash
 - `Folio::Console::Ui::AjaxInputComponent` now expects API to return `{ name => new_value }` instead of `{ value: new_value }`
 - redid input autocomplete without jQuery UI
+- default console `show` action now redirects to `edit` - make sure you have your `show` actions explicitely defined on controllers and are not using `super`
 
 ## [6.5.1] - 2025-06-18
 
