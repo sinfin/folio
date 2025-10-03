@@ -28,6 +28,12 @@ class Folio::Console::PagesControllerTest < Folio::Console::BaseControllerTest
     assert_response :success
   end
 
+  test "show" do
+    page = create(:folio_page)
+    get url_for([:console, page])
+    assert_redirected_to url_for([:edit, :console, page])
+  end
+
   test "update" do
     page = create(:folio_page)
     assert_not_equal "foo", page.title

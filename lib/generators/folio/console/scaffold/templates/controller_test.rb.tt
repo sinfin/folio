@@ -28,6 +28,14 @@ class Folio::Console::<%= controller_class_name %>ControllerTest < Folio::Consol
     assert_response :success
   end
 
+  test "show" do
+    model = create(:<%= singular_table_name %>)
+
+    get url_for([<%= test_path_args_for_record_s %>])
+
+    assert_redirected_to url_for([:edit, <%= test_path_args_for_record_s %>])
+  end
+
   test "edit" do
     model = create(:<%= singular_table_name %>)
 

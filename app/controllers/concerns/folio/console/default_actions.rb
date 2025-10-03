@@ -37,6 +37,7 @@ module Folio::Console::DefaultActions
   end
 
   def show
+    redirect_to through_aware_console_url_for(folio_console_record, action: :edit)
   end
 
   def edit
@@ -281,7 +282,7 @@ module Folio::Console::DefaultActions
       else
         if folio_console_record.persisted?
           begin
-            if action_name == "create"
+            if action_name == "create" && did_override_default_show_method?
               console_show_or_edit_path(folio_console_record,
                                         other_params: { prevalidate: prevalidate ? 1 : nil })
             else
@@ -336,5 +337,9 @@ module Folio::Console::DefaultActions
 
     def index_pagy_items_per_page
       Pagy::DEFAULT[:items]
+    end
+
+    def did_override_default_show_method?
+      self.method(:show).owner == self.class
     end
 end
