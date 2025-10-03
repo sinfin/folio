@@ -141,8 +141,8 @@ window.Folio.Stimulus.register('f-c-ui-ajax-input', class extends window.Stimulu
 
         if (this.inputTarget.multiple) {
           // For multiselect, prefer API data if available, fallback to DOM
-          selectedOptions  = Array.from(this.inputTarget.selectedOptions)
-          newValue = res.data?.attributes?.[key] || res.data?.[key] || selectedOption.map.map(option => option.value)
+          const selectedOptions = Array.from(this.inputTarget.selectedOptions)
+          newValue = res.data?.attributes?.[key] || res.data?.[key] || selectedOptions.map.map(option => option.value)
           newLabel = selectedOptions.map(option => option.text).join(', ')
         } else {
           newValue = res.data?.attributes?.[key] || res.data?.[key] || ''

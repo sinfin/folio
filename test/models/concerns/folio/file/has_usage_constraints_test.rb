@@ -104,24 +104,23 @@ class Folio::File::HasUsageConstraintsTest < ActiveSupport::TestCase
   end
 
   private
-
-  def with_sharing(enabled, &block)
-    with_config(folio_shared_files_between_sites: enabled) do
-      Folio::Current.site = @site if enabled
-      yield
+    def with_sharing(enabled, &block)
+      with_config(folio_shared_files_between_sites: enabled) do
+        Folio::Current.site = @site if enabled
+        yield
+      end
     end
-  end
 
-  def img(attrs = {})
-    create(:folio_file_image, { site: @site }.merge(attrs))
-  end
+    def img(attrs = {})
+      create(:folio_file_image, { site: @site }.merge(attrs))
+    end
 
-  def link_to_site(file, site)
-    file.file_site_links.create!(site: site)
-    file
-  end
+    def link_to_site(file, site)
+      file.file_site_links.create!(site: site)
+      file
+    end
 
-  def media_source(title: "MS")
-    create(:folio_media_source, title:, site: @site)
-  end
+    def media_source(title: "MS")
+      create(:folio_media_source, title:, site: @site)
+    end
 end
