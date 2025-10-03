@@ -54,6 +54,7 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
       e.returnValue = 'Changes you made may not be saved.'
       return 'Changes you made may not be saved.'
     }
+    window.addEventListener('beforeunload', this.onBeforeUnload)
   }
 
   unbindUnload () {
