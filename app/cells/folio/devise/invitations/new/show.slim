@@ -1,5 +1,5 @@
 .f-devise-invitations-new[
-  data=(options[:modal] ? stimulus_controller('f-devise-modal-form') : nil)
+  data=data
 ]
   = form do |f|
     = title model[:title]
@@ -26,7 +26,11 @@
 
     .f-devise__errors
 
-    = submit_button(f, t('.sign_up'))
+    button.btn.btn-primary[
+      type="submit"
+      data-f-devise-invitations-new-target="submitButton"
+    ]
+      = t('.sign_up')
 
     - @f = nil
 

@@ -1,12 +1,16 @@
-window.Folio.Stimulus.register('f-devise-omniauth-forms-trigger', class extends window.Stimulus.Controller {
-  static values = { provider: String }
+window.Folio.Stimulus.register('f-devise-omniauth-forms', class extends window.Stimulus.Controller {
+  static targets = ['button']
 
-  click (e) {
-    e.preventDefault()
-    const btn = document.querySelector(`.f-devise-omniauth-forms__button[data-provider="${this.providerValue}"]`)
+  // Method called from parent controller to disable/enable buttons
+  setDisabled(disabled) {
+    this.buttonTargets.forEach(button => {
+      button.disabled = disabled
 
-    if (btn) {
-      btn.click()
-    }
+      if (disabled) {
+        button.classList.add('disabled')
+      } else {
+        button.classList.remove('disabled')
+      }
+    })
   }
 })

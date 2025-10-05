@@ -15,6 +15,14 @@ class Folio::User < Folio::ApplicationRecord
   # used to handle address validation when changing password
   attr_accessor :devise_resetting_password
 
+  # used to validate registration agreement checkboxes
+  attr_accessor :age_agreement, :terms_agreement
+
+  def validate_agreements_acceptance
+    errors.add(:terms_agreement, :accepted) if terms_agreement && terms_agreement != "1"
+    errors.add(:age_agreement, :accepted) if age_agreement && age_agreement != "1"
+  end
+
   belongs_to :source_site, class_name: "Folio::Site",
                            required: false
 
@@ -214,6 +222,8 @@ class Folio::User < Folio::ApplicationRecord
       :phone,
       :subscribed_to_newsletter,
       :use_secondary_address,
+      :terms_agreement,
+      :age_agreement,
       primary_address_attributes: address_strong_params,
       secondary_address_attributes: address_strong_params,
     ] + additional_controller_strong_params_for_create

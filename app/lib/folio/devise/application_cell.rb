@@ -111,4 +111,12 @@ class Folio::Devise::ApplicationCell < Folio::ApplicationCell
   def application_namespace_path
     application_namespace.underscore
   end
+
+  def terms_link
+    ""
+  end
+
+  def privacy_link
+    ""
+  end
 end

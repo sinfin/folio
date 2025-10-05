@@ -1,0 +1,23 @@
+= @f.input :age_agreement,
+           label: t('.age_agreement'),
+           as: :boolean,
+           required: true,
+           input_html: { \
+             id: "user_age_agreement_#{SecureRandom.hex(4)}", \
+             data: { \
+               f_devise_invitations_new_target: 'ageAgreement', \
+               action: 'change->f-devise-invitations-new#onAgreementChange' \
+             } \
+           }
+
+= @f.input :terms_agreement,
+           label: t('.terms_agreement', terms_link:, privacy_link:).html_safe,
+           as: :boolean,
+           required: true,
+           input_html: { \
+             id: "user_terms_agreement_#{SecureRandom.hex(4)}", \
+             data: { \
+               f_devise_invitations_new_target: 'termsAgreement', \
+               action: 'change->f-devise-invitations-new#onAgreementChange' \
+             } \
+           }

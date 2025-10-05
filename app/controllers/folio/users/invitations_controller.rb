@@ -107,7 +107,21 @@ class Folio::Users::InvitationsController < Devise::InvitationsController
     user_invitation_path
   end
 
+  protected
+    def invite_resource
+      super do |user|
+        user.validate_agreements_acceptance
+      end
+    end
+
   private
+    def invite_params
+      h = devise_parameter_sanitizer.sanitize(:invite).to_h
+      h["terms_agreement"] = params[:user][:terms_agreement] if params.dig(:user, :terms_agreement)
+      h["age_agreement"] = params[:user][:age_agreement] if params.dig(:user, :age_agreement)
+      h
+    end
+
     def update_resource_params
       h = params.require(:user)
                 .permit(*Folio::User.controller_strong_params_for_create)

@@ -39,6 +39,8 @@ en:
           title: Sign up
           gdpr_content: By submitting the form, I acknowledge that my personal data will be processed in accordance with our privacy policy and I agree to the general terms and conditions.
           failure: Failed to submit the registration. Please try again later.
+          age_agreement: I confirm that I am 18 years old or older
+          terms_agreement: I agree to the %{terms_link} and have read the %{privacy_link} and agree to the general terms and conditions.
 
         show:
           title: E-mail confirmation
