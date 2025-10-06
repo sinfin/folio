@@ -5,7 +5,11 @@ window.Folio = window.Folio || {}
 window.Folio.Input = window.Folio.Input || {}
 
 window.Folio.Input.Autosize = {}
-window.Folio.Input.Autosize.intersectionObserver = window.Folio.intersectionObserver()
+window.Folio.Input.Autosize.intersectionObserver = window.Folio.intersectionObserver({
+  callback: (entry) => {
+    entry.target.dispatchEvent(new CustomEvent('autosize:update'))
+  }
+})
 
 window.Folio.Input.Autosize.bind = (input) => {
   window.autosize(input)

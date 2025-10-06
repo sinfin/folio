@@ -6,7 +6,12 @@ window.Folio.intersectionObserver = (options = {}) => {
   manager.handleIntersect = (entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        entry.target.dispatchEvent(new CustomEvent('f-observer:intersect'))
+        if (options.callback) {
+          options.callback(entry)
+        } else {
+          entry.target.dispatchEvent(new CustomEvent('f-observer:intersect'))
+        }
+
         manager.unobserve(entry.target)
       }
     })
