@@ -6,7 +6,7 @@ div[
   data=wrap_data
 ]
   .f-c-ui-in-place-input__content-wrap data=stimulus_target("contentWrap")
-    .f-c-ui-in-place-input__content-flex data=stimulus_action(@disabled ? {} : stimulus_action(click: "toggle"))
+    .f-c-ui-in-place-input__content-flex data=(@disabled ? {} : stimulus_action(click: "toggle"))
       .f-c-ui-in-place-input__content-inner[
         data=stimulus_target("contentInner")
         title=value_or_label_from_collection
