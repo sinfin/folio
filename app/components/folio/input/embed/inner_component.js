@@ -3,7 +3,7 @@ window.Folio.Stimulus.register('f-input-embed-inner', class extends window.Stimu
     state: String
   }
 
-  static targets = ['input', 'previewWrap', 'iframe']
+  static targets = ['input', 'previewWrap', 'box']
 
   onInput (e) {
     this.updateStateBasedOnInputs()
@@ -14,24 +14,16 @@ window.Folio.Stimulus.register('f-input-embed-inner', class extends window.Stimu
   }
 
   updatePreview () {
-    if (!this.iframeLoaded) {
-      if (!this.hasIframeTarget) {
-        this.previewWrapTarget.innerHTML = '<iframe class="f-input-embed-inner__iframe" src="/folio/embed"></iframe>'
-      }
-    }
+    this.boxTarget.dispatchEvent(new CustomEvent('f-input-embed-inner:update', {
+      detail: {
+        state: this.stateValue,
+        folioEmbedData: this.getFolioEmbedData()
+      },
+      bubbles: true
+    }))
   }
 
-  onWindowMessage (e) {
-    if (e.origin !== window.origin) return
-    if (!e.data) return
-    if (!this.hasIframeTarget) return
-    if (e.source !== this.iframeTarget.contentWindow) return
-
-    switch (e.data.type) {
-      case 'f-embed:javascript-evaluated':
-        this.iframeLoaded = true
-        this.updatePreview()
-        break
-    }
+  getFolioEmbedData () {
+    return {}
   }
 })

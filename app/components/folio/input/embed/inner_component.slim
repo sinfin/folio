@@ -7,4 +7,6 @@
                 label: t('.label'),
                 input_html: { rows: 1, value:, data: stimulus_target("input") }
 
-  .f-input-embed-inner__preview-wrap data=stimulus_target("previewWrap")
+  .f-input-embed-inner__preview-wrap
+    = render(Folio::Embed::BoxComponent.new(folio_embed_data: @folio_embed_data,
+                                            data: stimulus_target("box")))

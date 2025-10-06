@@ -9,7 +9,7 @@ window.Folio.intersectionObserver = (options = {}) => {
         if (options.callback) {
           options.callback(entry)
         } else {
-          entry.target.dispatchEvent(new CustomEvent('f-observer:intersect'))
+          entry.target.dispatchEvent(new CustomEvent('f-observer:intersect', { bubbles: true, detail: { entry } }))
         }
 
         manager.unobserve(entry.target)

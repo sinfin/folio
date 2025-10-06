@@ -20,7 +20,11 @@ module Rack
       end
 
       def self.embed_html
-        @embed_html ||= ::File.read(::Folio::Engine.root.join("data/embed/dist/folio-embed-dist.html"))
+        if Rails.env.development? && ENV["FOLIO_EMBED_DEV"]
+          ::File.read(::Folio::Engine.root.join("data/embed/dist/folio-embed-dist.html"))
+        else
+          @embed_html ||= ::File.read(::Folio::Engine.root.join("data/embed/dist/folio-embed-dist.html"))
+        end
       end
     end
   end

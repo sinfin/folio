@@ -13,7 +13,6 @@ class Folio::Input::Embed::InnerComponent < ApplicationComponent
                           },
                           action: {
                             "input" => "onInput",
-                            "message@window" => "onWindowMessage"
                           })
     end
 
