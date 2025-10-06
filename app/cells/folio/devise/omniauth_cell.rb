@@ -8,11 +8,7 @@ class Folio::Devise::OmniauthCell < Folio::Devise::ApplicationCell
   def button_data(provider)
     controller_name = Folio::Devise::Omniauth::FormsCell::STIMULUS_CONTROLLER_NAME
 
-    {
-      "controller" => controller_name,
-      "#{controller_name}-provider-value" => provider,
-      "action" => "click->#{controller_name}#click"
-    }
+    stimulus_controller(controller_name, values: { provider: }, action: "click->#{controller_name}#click")
   end
 
   def data
