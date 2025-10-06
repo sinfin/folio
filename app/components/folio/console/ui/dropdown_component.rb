@@ -10,11 +10,11 @@ class Folio::Console::Ui::DropdownComponent < Folio::Console::ApplicationCompone
   private
     def cell_content_for_link(link)
       data = if link[:modal]
-        modal_hash = stimulus_modal_toggle(@modal).merge({
+        modal_hash = stimulus_modal_toggle(link[:modal]).merge({
           "toggle" => "modal",
-          "target" => @modal,
+          "target" => link[:modal],
           "bs-toggle" => "modal",
-          "bs-target" => @modal,
+          "bs-target" => link[:modal],
         })
 
         if link[:data]
