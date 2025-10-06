@@ -107,13 +107,6 @@ class Folio::Users::InvitationsController < Devise::InvitationsController
     user_invitation_path
   end
 
-  protected
-    def invite_resource
-      super do |user|
-        user.validate_agreements_acceptance
-      end
-    end
-
   private
     def invite_params
       h = devise_parameter_sanitizer.sanitize(:invite).to_h

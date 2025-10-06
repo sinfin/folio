@@ -18,6 +18,8 @@ class Folio::User < Folio::ApplicationRecord
   # used to validate registration agreement checkboxes
   attr_accessor :age_agreement, :terms_agreement
 
+  validate :validate_agreements_acceptance, on: :create
+
   def validate_agreements_acceptance
     errors.add(:terms_agreement, :accepted) if terms_agreement && terms_agreement != "1"
     errors.add(:age_agreement, :accepted) if age_agreement && age_agreement != "1"
