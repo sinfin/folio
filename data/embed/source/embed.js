@@ -50,14 +50,24 @@
         break
       }
 
-      case 'twitter':
-        container.innerHTML = `
-          <blockquote class="twitter-tweet">
-            <a target="_blank" href="${url}">View on Twitter</a>
-          </blockquote>
-        `
+      case 'twitter': {
+        const statusMatch = url.match(/\/status\/(\d+)/)
+        const statusId = statusMatch?.[1]
+        
+        if (statusId) {
+          container.innerHTML = `
+            <blockquote class="twitter-tweet" data-conversation="none" data-dnt="true" data-theme="light">
+              <p lang="en" dir="ltr"></p>
+              <a href="${url}">View this Tweet</a>
+            </blockquote>
+          `
+        }
         loadTwitterScript()
         break
+      }
+        loadTwitterScript()
+        break
+      }
 
       case 'facebook':
         container.innerHTML = `
@@ -104,8 +114,33 @@
       const script = document.createElement('script')
       script.src = 'https://platform.twitter.com/widgets.js'
       script.async = true
+      script.onload = () => {
+        if (window.twttr && window.twttr.widgets) {
+          window.twttr.widgets.load().then(() => {
+            // Handle tweet embeds
+            const tweets = document.querySelectorAll('.twitter-tweet')
+            tweets.forEach(tweet => {
+              const url = tweet.querySelector('a')?.href
+              if (url && window.twttr.widgets.createTweet) {
+                const statusMatch = url.match(/status\/(\d+)/)
+                if (statusMatch) {
+                  const tweetId = statusMatch[1]
+                  window.twttr.widgets.createTweet(tweetId, tweet.parentElement, {
+                    conversation: 'none',
+                    theme: 'light'
+                  }).then(element => {
+                    if (element) {
+                      tweet.style.display = 'none'
+                    }
+                  })
+                }
+              }
+            })
+          })
+        }
+      }
       document.head.appendChild(script)
-    } else if (window.twttr) {
+    } else if (window.twttr && window.twttr.widgets) {
       window.twttr.widgets.load()
     }
   }
