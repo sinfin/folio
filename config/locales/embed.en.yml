@@ -4,6 +4,6 @@ en:
     input:
       embed:
         inner_component:
-          hint: "Embedded code or link (e.g., https://youtu.be/jNQXAC9IVRw)"
+          hint: "Embedded code or link (e.g., https://www.youtube.com/watch?v=video-id)"
           invalid_url: "Invalid URL. Try one of the supported sites:"
           label: HTML code or URL

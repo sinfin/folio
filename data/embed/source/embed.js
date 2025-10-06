@@ -69,10 +69,12 @@
         break
 
       case 'pinterest': {
-        const pinId = url.match(/\/pin\/([a-zA-Z0-9\-_]+)/)?.[1]
+        const match = url.match(/\/pin\/(?:[^/]*--)?([0-9]+)/)
+        const pinId = match?.[1]
         if (pinId) {
+          const canonicalUrl = `https://pinterest.com/pin/${pinId}/`
           container.innerHTML = `
-            <a data-pin-do="embedPin" href="${url}">View on Pinterest</a>
+            <a data-pin-do="embedPin" data-pin-width="medium" href="${canonicalUrl}"></a>
           `
           loadPinterestScript()
         }
@@ -124,6 +126,13 @@
       const script = document.createElement('script')
       script.src = 'https://assets.pinterest.com/js/pinit.js'
       script.async = true
+      script.onload = () => {
+        setTimeout(() => {
+          if (window.PinUtils) {
+            window.PinUtils.build()
+          }
+        }, 100)
+      }
       document.head.appendChild(script)
     } else if (window.PinUtils) {
       window.PinUtils.build()
