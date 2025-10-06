@@ -49,7 +49,7 @@ div class=bem_class_name data=data
     = render(Folio::Console::Ui::Index::FiltersComponent.new(klass: @klass))
 
   - if @pagy
-    .f-c-ui-index-header__pagy
-      = render(Folio::Console::Ui::PagyComponent.new(pagy: @pagy,
-                                                     options: @pagy_options || {},
-                                                     no_margin: true))
+    = render(Folio::Console::Ui::PagyComponent.new(pagy: @pagy,
+                                                   options: @pagy_options || {},
+                                                   no_margin: true,
+                                                   index_header: true))
