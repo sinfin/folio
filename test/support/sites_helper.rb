@@ -37,6 +37,8 @@ module SitesHelper
     def host_domain(env_aware_domain)
       Rails.application.routes.default_url_options[:host] = env_aware_domain
       Rails.application.routes.default_url_options[:only_path] = false
+
+      Rails.application.config.action_mailer.default_url_options ||= {}
       Rails.application.config.action_mailer.default_url_options[:host] = env_aware_domain
 
       if self.respond_to?(:host!)
