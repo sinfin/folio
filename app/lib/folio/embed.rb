@@ -3,13 +3,11 @@
 module Folio
   module Embed
     SUPPORTED_TYPES = {
-      "facebook" => %r{https://www\.facebook\.com/([a-zA-Z0-9\-_]+)/?},
-      "instagram" => %r{https://www\.instagram\.com/p/([a-zA-Z0-9\-_]+)/?},
-      "linkedin" => %r{https://www\.linkedin\.com/in/([a-zA-Z0-9\-_]+)/?},
-      "pinterest" => %r{https://www\.pinterest\.com/pin/([a-zA-Z0-9\-_]+)/?},
-      "tiktok" => %r{https://www\.tiktok\.com/@([a-zA-Z0-9\-_]+)/?},
-      "twitter" => %r{https://twitter\.com/([a-zA-Z0-9\-_]+)/?},
-      "youtube" => %r{https://www\.youtube\.com/watch\?v=([a-zA-Z0-9\-_]+)/?},
+      "facebook" => %r{https://(?:www\.)?facebook\.com/(?:groups/[0-9]+/permalink/[0-9]+|[a-zA-Z0-9\-_.]+/posts/[0-9]+|[a-zA-Z0-9\-_.]+)/?},
+      "instagram" => %r{https://(?:www\.)?instagram\.com/(?:p|reel)/([a-zA-Z0-9\-_]+)/?},
+      "pinterest" => %r{https://(?:www\.)?pinterest\.com/pin/([a-zA-Z0-9\-_]+)/?},
+      "twitter" => %r{https://(?:www\.)?(?:twitter\.com|x\.com)/([a-zA-Z0-9\-_]+)/?},
+      "youtube" => %r{https://(?:www\.youtube\.com/watch\?v=|youtu\.be/)([a-zA-Z0-9\-_]+)/?},
     }
 
     TYPE_REGEX = Regexp.new(

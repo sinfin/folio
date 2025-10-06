@@ -5,7 +5,38 @@
                 as: :text,
                 autosize: true,
                 label: t('.label'),
+                hint: t('.hint'),
                 input_html: { rows: 1, value:, data: stimulus_target("input") }
+
+  .f-input-embed-inner__invalid-url
+    p = t('.invalid_url')
+
+    table.f-input-embed-inner__table.table.m-0
+      tr
+        td.f-input-embed-inner__th Facebook:
+        td = link_to("https://www.facebook.com/username",
+                     "https://www.facebook.com/username",
+                     target: "_blank")
+      tr
+        td.f-input-embed-inner__th Instagram:
+        td = link_to("https://www.instagram.com/p/post-id",
+                     "https://www.instagram.com/p/post-id",
+                     target: "_blank")
+      tr
+        td.f-input-embed-inner__th Pinterest:
+        td = link_to("https://www.pinterest.com/pin/pin-id",
+                     "https://www.pinterest.com/pin/pin-id",
+                     target: "_blank")
+      tr
+        td.f-input-embed-inner__th Twitter:
+        td = link_to("https://twitter.com/username",
+                     "https://twitter.com/username",
+                     target: "_blank")
+      tr
+        td.f-input-embed-inner__th YouTube:
+        td = link_to("https://www.youtube.com/watch?v=video-id",
+                     "https://www.youtube.com/watch?v=video-id",
+                     target: "_blank")
 
   .f-input-embed-inner__preview-wrap
     = render(Folio::Embed::BoxComponent.new(folio_embed_data: @folio_embed_data,

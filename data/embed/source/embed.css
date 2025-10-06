@@ -10,8 +10,9 @@
 
 .f-embed-html,
 .f-embed-body {
-  background: #fff;
+  background: transparent;
   font-size: 16px;
+  overflow: hidden;
 }
 
 .f-embed__loader {
@@ -45,4 +46,8 @@
   position: absolute;
   top: 50%;
   left: 50%;
+}
+
+.f-embed__container iframe {
+  display: block;
 }

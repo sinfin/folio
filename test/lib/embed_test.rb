@@ -17,25 +17,11 @@ class Folio::EmbedTest < ActiveSupport::TestCase
     assert_equal "instagram", Folio::Embed.url_type("https://www.instagram.com/p/testpost/")
   end
 
-  test "url_type returns correct type for linkedin URLs" do
-    assert_equal "linkedin", Folio::Embed.url_type("https://www.linkedin.com/in/testprofile")
-    assert_equal "linkedin", Folio::Embed.url_type("https://www.linkedin.com/in/test-profile")
-    assert_equal "linkedin", Folio::Embed.url_type("https://www.linkedin.com/in/test_profile")
-    assert_equal "linkedin", Folio::Embed.url_type("https://www.linkedin.com/in/testprofile/")
-  end
-
   test "url_type returns correct type for pinterest URLs" do
     assert_equal "pinterest", Folio::Embed.url_type("https://www.pinterest.com/pin/testpin")
     assert_equal "pinterest", Folio::Embed.url_type("https://www.pinterest.com/pin/test-pin")
     assert_equal "pinterest", Folio::Embed.url_type("https://www.pinterest.com/pin/test_pin")
     assert_equal "pinterest", Folio::Embed.url_type("https://www.pinterest.com/pin/testpin/")
-  end
-
-  test "url_type returns correct type for tiktok URLs" do
-    assert_equal "tiktok", Folio::Embed.url_type("https://www.tiktok.com/@testuser")
-    assert_equal "tiktok", Folio::Embed.url_type("https://www.tiktok.com/@test-user")
-    assert_equal "tiktok", Folio::Embed.url_type("https://www.tiktok.com/@test_user")
-    assert_equal "tiktok", Folio::Embed.url_type("https://www.tiktok.com/@testuser/")
   end
 
   test "url_type returns correct type for twitter URLs" do
@@ -62,7 +48,6 @@ class Folio::EmbedTest < ActiveSupport::TestCase
   end
 
   test "url_type returns nil for malformed social media URLs" do
-    assert_nil Folio::Embed.url_type("https://facebook.com/testpage")
     assert_nil Folio::Embed.url_type("https://www.instagram.com/testuser")
     assert_nil Folio::Embed.url_type("https://www.linkedin.com/testprofile")
     assert_nil Folio::Embed.url_type("https://www.youtube.com/testvideo")

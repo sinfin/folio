@@ -11,7 +11,13 @@
   .form-group
     margin: 0
 
-  &__url-wrap,
-  &[data-f-input-embed-inner-state-value="blank"] &__html-label--html,
-  &:not([data-f-input-embed-inner-state-value="blank"]) &__html-label--html-or-url
+  &:not([data-f-input-embed-inner-state-value^="valid-"]) &__preview-wrap,
+  &:not([data-f-input-embed-inner-state-value="invalid-url"]) &__invalid-url
     display: none
+
+  &__table
+    background: transparent
+
+  &__th
+    white-space: nowrap
+    width: 0

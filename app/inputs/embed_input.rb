@@ -2,12 +2,7 @@
 
 class EmbedInput < SimpleForm::Inputs::StringInput
   def input(wrapper_options = {})
-    register_stimulus("f-input-embed",
-                      wrapper: true,
-                      values: {},
-                      action: {
-                        "message@window" => "onWindowMessage",
-                      })
+    register_stimulus("f-input-embed", wrapper: true)
 
     input_html_options[:hidden] = true
 

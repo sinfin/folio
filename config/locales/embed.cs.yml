@@ -4,5 +4,6 @@ cs:
     input:
       embed:
         inner_component:
-          label: HTML kód nebo URL
           hint: "Vložený kód nebo odkaz (např.: https://youtu.be/jNQXAC9IVRw)"
+          invalid_url: "Neplatná URL. Zkuste jednu z podporovaných stránek:"
+          label: HTML kód nebo URL

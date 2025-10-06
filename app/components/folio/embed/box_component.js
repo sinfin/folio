@@ -38,11 +38,11 @@ window.Folio.Stimulus.register('f-embed-box', class extends window.Stimulus.Cont
     if (!this.intersectedValue) return
     if (!this.folioEmbedDataValue) return
 
-    if (this.hasIframeTarget) {
-      this.iframeTarget.contentWindow.location.reload()
-    } else {
-      this.element.insertAdjacentHTML('afterbegin', '<iframe class="f-embed-box__iframe" src="/folio/embed" data-f-embed-box-target="iframe"></iframe>')
-    }
+    this.iframeTargets.forEach((iframeTarget) => {
+      iframeTarget.remove()
+    })
+
+    this.element.insertAdjacentHTML('afterbegin', '<iframe class="f-embed-box__iframe" src="/folio/embed" data-f-embed-box-target="iframe"></iframe>')
   }
 
   intersectedValueChanged (newValue, _oldValue) {
@@ -50,6 +50,7 @@ window.Folio.Stimulus.register('f-embed-box', class extends window.Stimulus.Cont
   }
 
   folioEmbedDataValueChanged (newValue, _oldValue) {
+    console.log('folioEmbedDataV...ged', 'newValue:', newValue, '_oldValue:', _oldValue)
     this.load()
   }
 
@@ -65,7 +66,17 @@ window.Folio.Stimulus.register('f-embed-box', class extends window.Stimulus.Cont
       case 'f-embed:javascript-evaluated':
         this.sendFolioEmbedDataToIframe()
         break
+      case 'f-embed:rendered-embed':
+        this.loaderTarget.hidden = true
+        break
+      case 'f-embed:resized':
+        this.handleEmbedResized(e.data)
+        break
     }
+  }
+
+  handleEmbedResized (data) {
+    this.iframeTarget.style.height = `${data.height}px`
   }
 
   sendFolioEmbedDataToIframe () {
@@ -76,7 +87,7 @@ window.Folio.Stimulus.register('f-embed-box', class extends window.Stimulus.Cont
   }
 
   onInnerUpdate (e) {
-    this.load()
-    console.log('onInnerUpdate', e)
+    console.log('onInnerUpdate', e.detail.folioEmbedData)
+    this.folioEmbedDataValue = e.detail.folioEmbedData
   }
 })

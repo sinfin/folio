@@ -10,6 +10,8 @@ class Folio::Input::Embed::InnerComponent < ApplicationComponent
       stimulus_controller("f-input-embed-inner",
                           values: {
                             state:,
+                            supported_types: supported_types_json,
+                            folio_embed_data: folio_embed_data_json,
                           },
                           action: {
                             "input" => "onInput",
@@ -38,5 +40,13 @@ class Folio::Input::Embed::InnerComponent < ApplicationComponent
       end
 
       "blank"
+    end
+
+    def supported_types_json
+      Folio::Embed::SUPPORTED_TYPES.transform_values(&:source).to_json
+    end
+
+    def folio_embed_data_json
+      (@folio_embed_data || {}).to_json
     end
 end
