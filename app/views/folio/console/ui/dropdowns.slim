@@ -10,3 +10,7 @@ h3 With content
 
 = render(Folio::Console::Ui::DropdownComponent.new(links: @links))
   span Content
+
+h3 With button
+
+= render(Folio::Console::Ui::DropdownComponent.new(links: @links, button: { label: "button", icon: :plus }))
