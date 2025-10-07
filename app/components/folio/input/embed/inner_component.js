@@ -7,6 +7,10 @@ window.Folio.Stimulus.register('f-input-embed-inner', class extends window.Stimu
 
   static targets = ['input', 'previewWrap', 'box']
 
+  connect () {
+    this.handleFolioEmbedDataChange = true
+  }
+
   onInput (e) {
     this.updateStateBasedOnInputs()
   }
@@ -16,7 +20,18 @@ window.Folio.Stimulus.register('f-input-embed-inner', class extends window.Stimu
   }
 
   folioEmbedDataValueChanged (to, from) {
+    if (!this.handleFolioEmbedDataChange) return
+
     this.updatePreview()
+    this.dispatchInputUpdate()
+  }
+
+  dispatchInputUpdate () {
+    this.dispatch('folio-embed-data-changed', {
+      detail: {
+        folioEmbedData: this.folioEmbedDataValue
+      }
+    })
   }
 
   updateStateBasedOnInputs () {

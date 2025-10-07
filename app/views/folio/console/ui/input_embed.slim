@@ -16,7 +16,7 @@ ruby:
       label: "URL",
       href: "#{request.path}?tab=url",
       active: params[:tab] == "url",
-      folio_embed_data: { "active" => true, "url" => 'https://www.youtube.com/watch?v=8DPcXHMGMBc', 'type' => 'youtube' },
+      folio_embed_data: { "active" => true, 'type' => 'youtube', "url" => 'https://www.youtube.com/watch?v=8DPcXHMGMBc' },
     },
   ]
 
@@ -35,4 +35,26 @@ h2 Input Embed
     div
       = f.input :folio_embed_data,
                 as: :embed,
-                input_html: { value: tab[:folio_embed_data] }
+                input_html: { value: tab[:folio_embed_data], id: "folio-console-ui-input-embed-demo-input" }
+
+  h4 Input value
+
+  p The JSON is automatically refreshed every second for this UI demo only. Input value change is immediate.
+
+  pre
+    code id="folio-console-ui-input-embed-demo-code"
+      = JSON.pretty_generate(tab[:folio_embed_data])
+
+  javascript:
+    (() => {
+      const timeout = window.setInterval(() => {
+        const code = document.getElementById('folio-console-ui-input-embed-demo-code')
+
+        if (code) {
+          const input = document.getElementById('folio-console-ui-input-embed-demo-input')
+          code.innerText = JSON.stringify(JSON.parse(input.value || '{}'), null, 2)
+        } else {
+          window.clearTimeout(timeout)
+        }
+      }, 1000)
+    })()
