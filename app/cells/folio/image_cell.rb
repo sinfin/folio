@@ -256,6 +256,7 @@ class Folio::ImageCell < Folio::ApplicationCell
       h[:tag] = :a
       h[:href] = options[:href]
       h[:target] = options[:target]
+      h[:rel] = options[:rel]
     elsif model && lightboxable?
       if options[:lightbox].is_a?(Hash)
         h = h.merge(options[:lightbox])
