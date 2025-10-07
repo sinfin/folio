@@ -52,7 +52,7 @@ h2 Input Embed
 
         if (code) {
           const input = document.getElementById('folio-console-ui-input-embed-demo-input')
-          code.innerText = JSON.stringify(JSON.parse(input.value || '{}'), null, 2)
+          code.innerText = input.value ? JSON.stringify(JSON.parse(input.value), null, 2) : ""
         } else {
           window.clearTimeout(timeout)
         }
