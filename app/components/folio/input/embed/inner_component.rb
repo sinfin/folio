@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
 class Folio::Input::Embed::InnerComponent < ApplicationComponent
-  def initialize(folio_embed_data:)
+  bem_class_name :compact
+
+  def initialize(folio_embed_data:, compact: false)
     @folio_embed_data = folio_embed_data
+    @compact = compact
   end
 
   private
@@ -48,5 +51,9 @@ class Folio::Input::Embed::InnerComponent < ApplicationComponent
 
     def folio_embed_data_json
       (@folio_embed_data || {}).to_json
+    end
+
+    def html_or_url_input_id
+      "f-input-embed-inner__input-#{SecureRandom.hex(10)}"
     end
 end

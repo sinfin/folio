@@ -1,4 +1,4 @@
-.f-input-embed-inner data=data
+div class=bem_class_name data=data
   .f-input-embed-inner__input-wrap
     = helpers.simple_fields_for "" do |f|
       = f.input :html_or_url,
@@ -6,7 +6,7 @@
                 autosize: true,
                 label: t('.label'),
                 hint: t('.hint'),
-                input_html: { rows: 1, value:, data: stimulus_target("input") }
+                input_html: { rows: 1, value:, data: stimulus_target("input"), id: html_or_url_input_id }
 
   .f-input-embed-inner__invalid-url
     p = t('.invalid_url')

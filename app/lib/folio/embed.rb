@@ -68,19 +68,23 @@ module Folio
     end
 
     def self.normalize_value(value)
-      if value.is_a?(Hash)
-        active = value["active"].in?([true, "true"])
+      hash = if value.is_a?(Hash)
+        value.stringify_keys
+      elsif value.is_a?(String)
+        (JSON.parse(value) rescue {}) || {}
+      else
+        {}
+      end
 
-        if active
-          {
-            "active" => active,
-            "html" => value["html"].presence,
-            "type" => value["type"].presence,
-            "url" => value["url"].presence,
-          }.compact
-        else
-          nil
-        end
+      active = hash["active"].in?([true, "true"])
+
+      if active
+        {
+          "active" => active,
+          "html" => hash["html"].presence,
+          "type" => hash["type"].presence,
+          "url" => hash["url"].presence,
+        }.compact
       else
         nil
       end

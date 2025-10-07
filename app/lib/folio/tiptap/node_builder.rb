@@ -82,7 +82,7 @@ class Folio::Tiptap::NodeBuilder
         transformed_value = if value.nil?
           nil
         elsif value.is_a?(String)
-          JSON.parse(value) rescue {}
+          (JSON.parse(value) rescue {}) || {}
         elsif value.is_a?(Hash)
           value.stringify_keys
         else
@@ -102,7 +102,7 @@ class Folio::Tiptap::NodeBuilder
         end
 
         transformed_value = if value.is_a?(String)
-          JSON.parse(value) rescue {}
+          (JSON.parse(value) rescue {}) || {}
         elsif value.is_a?(Hash)
           value.stringify_keys
         else

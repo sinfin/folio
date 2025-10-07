@@ -1,12 +1,14 @@
 .f-input-embed-inner
   align-items: stretch
-  background: $medium-gray
-  border-radius: 4px
   display: flex
   flex-direction: column
   gap: px-to-rem(16px)
-  padding: px-to-rem(24px)
   position: relative
+
+  &:not(&--compact)
+    border-radius: 4px
+    background: $medium-gray
+    padding: px-to-rem(24px)
 
   .form-group
     margin: 0

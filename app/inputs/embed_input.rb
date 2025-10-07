@@ -26,6 +26,8 @@ class EmbedInput < SimpleForm::Inputs::StringInput
       else
         {}
       end
+    else
+      @builder.object.send(attribute_name).presence || {}
     end
 
     if Folio::Embed.invalid_reason_for(source_hash).nil?
@@ -35,7 +37,8 @@ class EmbedInput < SimpleForm::Inputs::StringInput
     end
 
     options[:custom_html] = @builder.template.capture do
-      @builder.template.render(Folio::Input::Embed::InnerComponent.new(folio_embed_data:))
+      @builder.template.render(Folio::Input::Embed::InnerComponent.new(folio_embed_data:,
+                                                                       compact: options[:compact]))
     end
 
     merged_input_options[:value] = folio_embed_data.to_json
