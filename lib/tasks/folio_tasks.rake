@@ -37,6 +37,8 @@ namespace :folio do
 
     FileUtils.mkdir_p to_folder
     FileUtils.cp_r(from_folder, to_folder)
+
+    puts "⚠️ Content of Redactor assets is licensed, therefore you need to copy source code from existing installation."
   end
 
   desc "Setup .env from .env.sample"
