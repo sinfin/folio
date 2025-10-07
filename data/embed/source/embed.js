@@ -3,6 +3,10 @@
     const container = document.createElement('div')
     container.className = 'f-embed__container'
 
+    if (new URLSearchParams(window.location.search).get('centered') === '1') {
+      container.classList.add('f-embed__container--centered')
+    }
+
     if (data.html) {
       container.innerHTML = data.html
       return container
@@ -33,6 +37,7 @@
               allowfullscreen>
             </iframe>
           `
+          container.classList.add('f-embed__container--youtube')
         }
         break
       }
@@ -44,7 +49,11 @@
             <blockquote class="instagram-media" data-instgrm-permalink="${url}">
               <a target="_blank" href="${url}">View this post on Instagram</a>
             </blockquote>
+
+            <span class="f-embed__loader f-embed__loader--instagram"></span>
           `
+          container.classList.add('f-embed__container--instagram')
+
           loadInstagramScript()
         }
         break
@@ -53,18 +62,17 @@
       case 'twitter': {
         const statusMatch = url.match(/\/status\/(\d+)/)
         const statusId = statusMatch?.[1]
-        
+
         if (statusId) {
           container.innerHTML = `
             <blockquote class="twitter-tweet" data-conversation="none" data-dnt="true" data-theme="light">
               <p lang="en" dir="ltr"></p>
-              <a href="${url}">View this Tweet</a>
+              <a target="_blank" href="${url}">View this Tweet</a>
             </blockquote>
+            <span class="f-embed__loader f-embed__loader--twitter"></span>
           `
+          container.classList.add('f-embed__container--twitter')
         }
-        loadTwitterScript()
-        break
-      }
         loadTwitterScript()
         break
       }
@@ -72,9 +80,11 @@
       case 'facebook':
         container.innerHTML = `
           <div class="fb-post" data-href="${url}">
+            <span class="f-embed__loader f-embed__loader--facebook"></span>
             <a target="_blank" href="${url}">View on Facebook</a>
           </div>
         `
+        container.classList.add('f-embed__container--facebook')
         loadFacebookScript()
         break
 
@@ -86,6 +96,7 @@
           container.innerHTML = `
             <a data-pin-do="embedPin" data-pin-width="medium" href="${canonicalUrl}"></a>
           `
+          container.classList.add('f-embed__container--pinterest')
           loadPinterestScript()
         }
         break
@@ -103,6 +114,11 @@
       const script = document.createElement('script')
       script.src = 'https://www.instagram.com/embed.js'
       script.async = true
+      script.onload = () => {
+        if (window.instgrm && window.instgrm.Embeds) {
+          window.instgrm.Embeds.process()
+        }
+      }
       document.head.appendChild(script)
     } else if (window.instgrm) {
       window.instgrm.Embeds.process()
@@ -147,10 +163,19 @@
 
   const loadFacebookScript = () => {
     if (!window.FB && !document.querySelector('script[src*="facebook.net/sdk"]')) {
+      const div = document.createElement('div')
+      div.id = 'fb-root'
+      document.body.insertAdjacentElement('afterbegin', div)
+
       const script = document.createElement('script')
-      script.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v18.0'
+      script.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v23.0'
       script.async = true
-      document.head.appendChild(script)
+      script.onload = () => {
+        if (window.FB) {
+          window.FB.XFBML.parse()
+        }
+      }
+      document.body.insertAdjacentElement('afterbegin', script)
     } else if (window.FB) {
       window.FB.XFBML.parse()
     }
@@ -162,11 +187,9 @@
       script.src = 'https://assets.pinterest.com/js/pinit.js'
       script.async = true
       script.onload = () => {
-        setTimeout(() => {
-          if (window.PinUtils) {
-            window.PinUtils.build()
-          }
-        }, 100)
+        if (window.PinUtils) {
+          window.PinUtils.build()
+        }
       }
       document.head.appendChild(script)
     } else if (window.PinUtils) {

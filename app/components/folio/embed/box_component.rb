@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
 class Folio::Embed::BoxComponent < ApplicationComponent
-  def initialize(folio_embed_data: {}, data: nil)
+  def initialize(folio_embed_data: {},
+                 data: nil,
+                 centered: true)
     @folio_embed_data = folio_embed_data.is_a?(Hash) ? folio_embed_data : {}
     @data = data
+    @centered = centered
   end
 
   private
@@ -12,6 +15,7 @@ class Folio::Embed::BoxComponent < ApplicationComponent
                               values: {
                                 folio_embed_data: @folio_embed_data.to_json,
                                 intersected: false,
+                                centered: @centered,
                               },
                               action: {
                                 "message@window" => "onWindowMessage",

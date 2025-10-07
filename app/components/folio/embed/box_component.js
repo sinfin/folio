@@ -13,7 +13,8 @@ window.Folio.Embed.Box.intersectionObserver = window.Folio.intersectionObserver(
 window.Folio.Stimulus.register('f-embed-box', class extends window.Stimulus.Controller {
   static values = {
     intersected: Boolean,
-    folioEmbedData: Object
+    folioEmbedData: Object,
+    centered: Boolean
   }
 
   static targets = ['iframe', 'loader']
@@ -42,7 +43,7 @@ window.Folio.Stimulus.register('f-embed-box', class extends window.Stimulus.Cont
       iframeTarget.remove()
     })
 
-    this.element.insertAdjacentHTML('afterbegin', '<iframe class="f-embed-box__iframe" src="/folio/embed" data-f-embed-box-target="iframe"></iframe>')
+    this.element.insertAdjacentHTML('afterbegin', `<iframe class="f-embed-box__iframe" src="/folio/embed?centered=${this.centeredValue ? '1' : '0'}" data-f-embed-box-target="iframe"></iframe>`)
   }
 
   intersectedValueChanged (newValue, _oldValue) {
@@ -50,7 +51,6 @@ window.Folio.Stimulus.register('f-embed-box', class extends window.Stimulus.Cont
   }
 
   folioEmbedDataValueChanged (newValue, _oldValue) {
-    console.log('folioEmbedDataV...ged', 'newValue:', newValue, '_oldValue:', _oldValue)
     this.load()
   }
 
@@ -87,7 +87,6 @@ window.Folio.Stimulus.register('f-embed-box', class extends window.Stimulus.Cont
   }
 
   onInnerUpdate (e) {
-    console.log('onInnerUpdate', e.detail.folioEmbedData)
     this.folioEmbedDataValue = e.detail.folioEmbedData
   }
 })

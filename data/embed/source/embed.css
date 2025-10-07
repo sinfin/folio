@@ -16,11 +16,27 @@
 }
 
 .f-embed__loader {
-  position: fixed;
-  inset: 0;
   background: rgba(255, 255, 255, 0.8);
-  z-index: 2;
+  display: block;
   font-size: 16px;
+  inset: 0;
+  pointer-events: none;
+  position: fixed;
+  z-index: 2;
+}
+
+.f-embed__loader--instagram {
+  max-width: 328px;
+  min-height: 536px;
+}
+
+.f-embed__loader--twitter:last-child {
+  display: block;
+}
+
+.instagram-media-rendered ~ .f-embed__loader,
+.twitter-tweet:not(.twitter-tweet-rendered) {
+  display: none;
 }
 
 .f-embed__loader:before,
@@ -48,6 +64,37 @@
   left: 50%;
 }
 
+.f-embed__container {
+  position: relative;
+}
+
+.f-embed__container--centered {
+  text-align: center;
+  margin: 0 auto;
+}
+
+.f-embed__container .f-embed__loader {
+  position: absolute;
+}
+
 .f-embed__container iframe {
   display: block;
+}
+
+.f-embed__container--centered iframe {
+  margin: 0 auto;
+}
+
+.f-embed__container--instagram {
+  min-height: 536px;
+  max-width: 326px;
+}
+
+.f-embed__container--twitter {
+  max-width: 550px;
+  min-height: 320px;
+}
+
+.f-embed__container--twitter .f-embed__loader:not(:last-child) {
+  display: none;
 }
