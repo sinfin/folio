@@ -63,6 +63,7 @@ class Folio::Tiptap::Node
           :description,
           :position,
           :_destroy,
+          :folio_embed_data,
           folio_embed_data: Folio::Embed.hash_strong_params_keys,
         ]
 
