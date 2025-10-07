@@ -7,3 +7,4 @@ en:
           hint: "Embedded code or link (e.g., https://www.youtube.com/watch?v=video-id)"
           invalid_url: "Invalid URL. Try one of the supported sites:"
           label: HTML code or URL
+          preview: Preview

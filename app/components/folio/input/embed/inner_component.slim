@@ -34,5 +34,8 @@
                      target: "_blank")
 
   .f-input-embed-inner__preview-wrap
+    label.f-input-embed-inner__preview-label.form-label = t('.preview')
+
     = render(Folio::Embed::BoxComponent.new(folio_embed_data: @folio_embed_data,
-                                            data: stimulus_target("box")))
+                                            data: stimulus_target("box"),
+                                            centered: false))
