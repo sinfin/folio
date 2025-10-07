@@ -3,7 +3,6 @@
 module Folio
   module Embed
     SUPPORTED_TYPES = {
-      "facebook" => %r{https://(?:www\.)?facebook\.com/(?:groups/[0-9]+/permalink/[0-9]+|[a-zA-Z0-9\-_.]+/posts/[0-9]+|[a-zA-Z0-9\-_.]+)/?},
       "instagram" => %r{https://(?:www\.)?instagram\.com/(?:p|reel)/([a-zA-Z0-9\-_]+)/?},
       "pinterest" => %r{https://(?:\w+\.)?pinterest\.com/pin/(?:[^/]*--)?([0-9]+)/?},
       "twitter" => %r{https://(?:www\.)?(?:twitter\.com|x\.com)/[a-zA-Z0-9\-_]+/status/([0-9]+)/?},

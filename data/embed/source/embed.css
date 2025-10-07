@@ -66,6 +66,7 @@
 
 .f-embed__container {
   position: relative;
+  min-height: 150px;
 }
 
 .f-embed__container--centered {

@@ -77,17 +77,6 @@
         break
       }
 
-      case 'facebook':
-        container.innerHTML = `
-          <div class="fb-post" data-href="${url}">
-            <span class="f-embed__loader f-embed__loader--facebook"></span>
-            <a target="_blank" href="${url}">View on Facebook</a>
-          </div>
-        `
-        container.classList.add('f-embed__container--facebook')
-        loadFacebookScript()
-        break
-
       case 'pinterest': {
         const match = url.match(/\/pin\/(?:[^/]*--)?([0-9]+)/)
         const pinId = match?.[1]
@@ -158,26 +147,6 @@
       document.head.appendChild(script)
     } else if (window.twttr && window.twttr.widgets) {
       window.twttr.widgets.load()
-    }
-  }
-
-  const loadFacebookScript = () => {
-    if (!window.FB && !document.querySelector('script[src*="facebook.net/sdk"]')) {
-      const div = document.createElement('div')
-      div.id = 'fb-root'
-      document.body.insertAdjacentElement('afterbegin', div)
-
-      const script = document.createElement('script')
-      script.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v23.0'
-      script.async = true
-      script.onload = () => {
-        if (window.FB) {
-          window.FB.XFBML.parse()
-        }
-      }
-      document.body.insertAdjacentElement('afterbegin', script)
-    } else if (window.FB) {
-      window.FB.XFBML.parse()
     }
   }
 
