@@ -10,6 +10,11 @@ class Folio::UserFlowTest < Folio::CapybaraTest
 
     assert_difference("Folio::User.count", 1) do
       page.find(".f-devise--invitations-new .form-control").set "test@test.test"
+
+      # Check required agreement checkboxes
+      page.find(".f-devise--invitations-new input[name='user[age_agreement]']").set(true)
+      page.find(".f-devise--invitations-new input[name='user[terms_agreement]']").set(true)
+
       page.find(".f-devise--invitations-new [type=\"submit\"]").click
     end
 

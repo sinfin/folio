@@ -48,6 +48,10 @@ cs:
           title: Registrace
           gdpr_content: Odesláním formuláře beru na vědomí, že mé osobní údaje budou zpracovány dle našich zásad ochrany osobních údajů a souhlasím se všeobecnými obchodními podmínkami.
           failure: Registrace se nezdařila. Zkuste to prosím znovu.
+          age_agreement: Potvrzuji, že je mi 18 let nebo více
+          terms_agreement: Souhlasím s %{terms_link} a seznámil/a jsem se s %{privacy_link}
+          terms_link_text: obchodními podmínkami
+          privacy_link_text: zásadami ochrany osobních údajů
 
         show:
           title: Potvrzení e-mailu
