@@ -34,6 +34,8 @@ class Folio::Tiptap::NodeBuilder
           setup_structure_for_rich_text(key:)
         when :integer
           setup_structure_for_integer(key:)
+        when :embed
+          setup_structure_for_embed(key:)
         else
           fail ArgumentError, "Unsupported type #{attr_config[:type]} in tiptap_node definition"
         end
@@ -132,6 +134,23 @@ class Folio::Tiptap::NodeBuilder
         end
 
         super(whitelisted)
+      end
+    end
+
+    def setup_structure_for_embed(key:)
+      @klass.attribute key, type: :json
+
+      @klass.define_method "#{key}=" do |value|
+        super(Folio::Embed.normalize_value(value))
+      end
+
+      @klass.define_method :folio_html_sanitization_config do
+        {
+          enabled: true,
+          attributes: {
+            key => :unsafe_html,
+          }
+        }
       end
     end
 
@@ -485,6 +504,8 @@ class Folio::Tiptap::NodeBuilder
               file_type: "Folio::File::Document",
               has_many: true
             }
+          when :embed
+            result[key] = { type: :embed }
           else
             result[key] = { type: value }
           end
