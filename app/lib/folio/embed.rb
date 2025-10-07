@@ -89,5 +89,20 @@ module Folio
         nil
       end
     end
+
+    def self.sanitize_value(raw_value)
+      normalized_value = normalize_value(raw_value)
+
+      if normalized_value
+        {
+          "active" => normalized_value["active"],
+          "html" => normalized_value["html"].is_a?(String) ? normalized_value["html"] : nil,
+          "type" => normalized_value["type"].is_a?(String) ? Folio::HtmlSanitization.sanitize_value_as_string(value: normalized_value["type"]) : nil,
+          "url" => normalized_value["url"].is_a?(String) ? Folio::HtmlSanitization.sanitize_value_as_string(value: normalized_value["url"]) : nil,
+        }.compact
+      else
+        nil
+      end
+    end
   end
 end

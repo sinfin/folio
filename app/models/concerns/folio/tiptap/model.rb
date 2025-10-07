@@ -140,6 +140,20 @@ module Folio::Tiptap::Model
     tiptap_config&.autosave == true
   end
 
+  def folio_html_sanitization_config
+    config = if respond_to?(:folio_html_sanitize)
+      super
+    else
+      Folio::HtmlSanitization::Model::DEFAULT_CONFIG
+    end
+
+    self.class.folio_tiptap_fields.each do |field|
+      config[:attributes][field.to_sym] = :tiptap_content
+    end
+
+    config
+  end
+
   def latest_tiptap_revision(user: nil)
     return nil unless tiptap_autosave_enabled?
 

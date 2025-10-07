@@ -5,16 +5,18 @@ module Folio
     module Model
       extend ActiveSupport::Concern
 
+      DEFAULT_CONFIG = {
+        enabled: true,
+        attributes: {},
+      }
+
       included do
         before_validation :folio_html_sanitize
       end
 
       # This method can be overridden in the model to provide custom sanitization configuration.
       def folio_html_sanitization_config
-        {
-          enabled: true,
-          attributes: {},
-        }
+        DEFAULT_CONFIG
       end
 
       private
