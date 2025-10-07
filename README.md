@@ -198,14 +198,30 @@ Start with the [Overview](docs/overview.md) and follow the *Quick Start* guide.
 ## Contributing
 
 1. Fork the repo and create your branch (`git checkout -b feature/my-thing`).
-2. Run the dummy app for development: `bundle exec rails app:folio:prepare_dummy_app`.
-3. Commit your changes (`git commit -am 'Add new thing'`).
-4. Push the branch (`git push origin feature/my-thing`).
-5. Open a Pull Request.
+2. Install dummy app for development: 
+    ```
+    bundle
+    rails app:folio:prepare_dummy_app
+    ```
+3. Set these `.env` variables:
+    ```
+    S3_BUCKET_NAME=***
+    AWS_ACCESS_KEY_ID=***
+    AWS_SECRET_ACCESS_KEY=***
+    AWS_SESSION_TOKEN=***
+    ```
+4. Prepare database:
+    ```
+    rails db:create
+    rails db:migrate
+    rails db:seed
+    ```
+5. Run tests: `rails test`
+6. Run app: `rails server` (app should be running at http://dummy.localhost:3000/)
 
-See `docs/testing.md` for the test setup.
+When making changes, follow project convetions (see [Overview](docs/overview.md)).
 
----
+Publish changes to new branch and open a pull request.
 
 ## License
 
