@@ -289,7 +289,7 @@ en:
     figcaption: Caption
     file: File
     first_name: First name
-    folio_embed_data: HTML code
+    folio_embed_data: HTML code or URL
     headline: Title
     image_or_embed_placements: Gallery images
     image_placements: Images
