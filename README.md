@@ -219,6 +219,8 @@ Start with the [Overview](docs/overview.md) and follow the *Quick Start* guide.
 5. Run tests: `rails test`
 6. Run app: `rails server` (app should be running at http://dummy.localhost:3000/)
 
+Use seeded test account (see `lib/tasks/folio_tasks.rake`) for authentication.
+
 When making changes, follow project convetions (see [Overview](docs/overview.md)).
 
 Publish changes to new branch and open a pull request.
