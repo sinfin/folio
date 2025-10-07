@@ -25,6 +25,29 @@ module Folio
         @record
       end
 
+      def self.sanitize_href(string)
+        if string.is_a?(String)
+          return nil if string.blank?
+
+          # Use Rails' sanitizer to check if href is safe
+          test_link = "<a href=\"#{string}\">test</a>"
+          sanitized_link = ActionController::Base.helpers.sanitize(test_link)
+
+          # If href was stripped, it's unsafe
+          if sanitized_link == "<a>test</a>"
+            Rails.logger.warn "Removed unsafe href from tiptap link: #{string}"
+            return nil
+          end
+
+          # Extract href from sanitized result
+          if match = sanitized_link.match(/href="([^"]*)"/)
+            return match[1]
+          end
+
+          string
+        end
+      end
+
       private
         def attributes_config
           @attributes_config ||= @record.folio_html_sanitization_config[:attributes]
@@ -48,7 +71,7 @@ module Folio
             when :string
               sanitize_attribute_as_string(attribute:, value:)
             when :tiptap_content
-              sanitize_attribute_as_tiptap_content(attribute:, value:)
+              # No sanitization here - handled in tiptap content setter
             else
               raise ArgumentError, "Unknown attribute config: #{attribute_config.inspect}"
             end
@@ -104,76 +127,6 @@ module Folio
 
         def sanitize_attribute_as_string(attribute:, value:)
           handle_hash_or_string_attribute(attribute:, value:, sanitize_method: :sanitize_value_as_string, logger_info: :string)
-        end
-
-        def sanitize_attribute_as_tiptap_content(attribute:, value:)
-          return unless value.is_a?(Hash)
-
-          embed_keys = {}
-
-          sanitize_tiptap_content_proc = Proc.new do |data|
-            if data.is_a?(Hash)
-              if data["type"] == "folioTiptapNode" && data["attrs"].present? && data["attrs"]["type"].is_a?(String)
-                if embed_keys[data["attrs"]["type"]].nil?
-                  node_klass = data["attrs"]["type"].safe_constantize
-
-                  if node_klass && node_klass < Folio::Tiptap::Node
-                    node_klass_embed_keys = node_klass.structure.filter_map do |key, config|
-                      if config[:type] == :embed
-                        key.to_s
-                      end
-                    end
-
-                    embed_keys[data["attrs"]["type"]] = node_klass_embed_keys.presence
-                  end
-
-                  embed_keys[data["attrs"]["type"]] ||= false
-                end
-
-                if embed_keys[data["attrs"]["type"]]
-                  mapped = data["attrs"]["data"].map do |key, value|
-                    if key == "data"
-                      sanitized_data = value.map do |data_key, data_value|
-                        if embed_keys[data["attrs"]["type"]].include?(data_key)
-                          [data_key, Folio::Embed.sanitize_value(data_value)]
-                        else
-                          [data_key, sanitize_tiptap_content_proc.call(data_value)]
-                        end
-                      end
-
-                      [key, sanitized_data.to_h]
-                    else
-                      [key, sanitize_tiptap_content_proc.call(value)]
-                    end
-                  end
-
-                  return {
-                    "type" => data["type"],
-                    "attrs" => {
-                      "type" => data["attrs"]["type"],
-                      "version" => data["version"].is_a?(Integer) ? data["version"] : 1,
-                      "data" => mapped.to_h,
-                    }
-                  }
-                end
-              end
-
-              data.transform_values { |v| sanitize_tiptap_content_proc.call(v) }
-            elsif data.is_a?(Array)
-              data.map { |item| sanitize_tiptap_content_proc.call(item) }
-            elsif data.is_a?(String)
-              sanitize_value_as_string(value: data)
-            else
-              data
-            end
-          end
-
-          sanitized_value = sanitize_tiptap_content_proc.call(value.deep_dup)
-
-          if value != sanitized_value
-            @record.send("#{attribute}=", sanitized_value)
-            log(attribute:, message: "Sanitized as tiptap_content")
-          end
         end
 
         def sanitize_attribute_via_proc(attribute:, value:, proc:)

@@ -149,6 +149,20 @@ module Folio
                   },
                 }
               },
+              {
+                "type" => "folioTiptapNode",
+                "attrs" => {
+                  "type" => "Dummy::Tiptap::Node::Embed",
+                  "data" => {
+                    "folio_embed_data" => {
+                      "active" => true,
+                      "url" => "https://www.youtube.com/watch?v={id}",
+                      "foo" => unsafe_input,
+                      "type" => "unsupported",
+                    }
+                  },
+                }
+              },
             ]
           } })
 
@@ -159,22 +173,26 @@ module Folio
 
           assert_equal("folioTiptapNode", content[1]["type"])
           assert_equal("Dummy::Tiptap::Node::Embed", content[1]["attrs"]["type"])
-          assert_equal(input_sanitized_as_string, content[1]["attrs"]["data"]["folio_embed_data"]["active"])
-          assert_equal(input_sanitized_as_string, content[1]["attrs"]["data"]["folio_embed_data"]["url"])
-          assert_equal(input_sanitized_as_string, content[1]["attrs"]["data"]["folio_embed_data"]["type"])
-          assert_equal(input_sanitized_as_string, content[1]["attrs"]["data"]["folio_embed_data"]["foo"])
+          assert_nil(content[1]["attrs"]["data"]["folio_embed_data"])
 
           assert_equal("folioTiptapNode", content[2]["type"])
           assert_equal("Dummy::Tiptap::Node::Embed", content[2]["attrs"]["type"])
           assert_equal(true, content[2]["attrs"]["data"]["folio_embed_data"]["active"])
           assert_equal("https://www.youtube.com/watch?v={id}", content[2]["attrs"]["data"]["folio_embed_data"]["url"])
-          assert_equal(input_sanitized_as_string, content[2]["attrs"]["data"]["folio_embed_data"]["foo"])
+          assert_nil(content[2]["attrs"]["data"]["folio_embed_data"]["foo"])
           assert_equal("youtube", content[2]["attrs"]["data"]["folio_embed_data"]["type"])
 
           assert_equal("folioTiptapNode", content[3]["type"])
           assert_equal("Dummy::Tiptap::Node::Embed", content[3]["attrs"]["type"])
           assert_equal(true, content[3]["attrs"]["data"]["folio_embed_data"]["active"])
           assert_equal(unsafe_input, content[3]["attrs"]["data"]["folio_embed_data"]["html"])
+
+          assert_equal("folioTiptapNode", content[4]["type"])
+          assert_equal("Dummy::Tiptap::Node::Embed", content[4]["attrs"]["type"])
+          assert_equal(true, content[4]["attrs"]["data"]["folio_embed_data"]["active"])
+          assert_nil(content[4]["attrs"]["data"]["folio_embed_data"]["url"])
+          assert_nil(content[4]["attrs"]["data"]["folio_embed_data"]["foo"])
+          assert_nil(content[4]["attrs"]["data"]["folio_embed_data"]["type"])
         end
       end
 

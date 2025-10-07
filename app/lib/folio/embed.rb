@@ -94,11 +94,19 @@ module Folio
       normalized_value = normalize_value(raw_value)
 
       if normalized_value
+        type = if normalized_value["type"].in?(SUPPORTED_TYPES.keys)
+          normalized_value["type"]
+        end
+
         {
           "active" => normalized_value["active"],
-          "html" => normalized_value["html"].is_a?(String) ? normalized_value["html"] : nil,
-          "type" => normalized_value["type"].is_a?(String) ? Folio::HtmlSanitization.sanitize_value_as_string(value: normalized_value["type"]) : nil,
-          "url" => normalized_value["url"].is_a?(String) ? Folio::HtmlSanitization.sanitize_value_as_string(value: normalized_value["url"]) : nil,
+          "html" => if normalized_value["html"].is_a?(String)
+                      normalized_value["html"]
+                    end,
+          "type" => type,
+          "url" => if type && normalized_value["url"].is_a?(String)
+                     Loofah.fragment(normalized_value["url"]).text(encode_special_chars: false)
+                   end
         }.compact
       else
         nil
