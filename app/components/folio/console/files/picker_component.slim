@@ -54,11 +54,15 @@
                                                                  value_line_clamp: 2,
                                                                  value_prefix: "#{t('.description')}:"))
 
-          = render(Folio::Console::Ui::InPlaceInputComponent.new(attribute: :alt,
-                                                                 record: fp.object,
-                                                                 f: fp,
-                                                                 compact: true,
-                                                                 textarea: true,
-                                                                 data: stimulus_target('alt'),
-                                                                 value_line_clamp: 2,
-                                                                 value_prefix: "#{t('.alt')}:"))
+          .f-c-files-picker__alt-row
+            = render(Folio::Console::Ui::InPlaceInputComponent.new(attribute: :alt,
+                                                                   record: fp.object,
+                                                                   f: fp,
+                                                                   compact: true,
+                                                                   textarea: true,
+                                                                   data: stimulus_target('alt'),
+                                                                   value_line_clamp: 2,
+                                                                   value_prefix: "#{t('.alt')}:"))
+
+            span.f-c-files-picker__alt-ico.text-warning title=t('errors.messages.missing_file_alt')
+              = folio_icon(:alert)
