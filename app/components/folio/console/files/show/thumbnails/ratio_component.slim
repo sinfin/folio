@@ -1,14 +1,14 @@
 tbody.f-c-files-show-thumbnails-ratio
   tr
-    td.f-c-files-show-thumbnails-ratio__title colspan="4"
+    td.f-c-files-show-thumbnails-ratio__title colspan="3"
       h4.m-0.pt-3
         = @ratio
 
   - @thumbnail_size_keys.each_with_index do |thumbnail_size_key, i|
     tr
       td = thumbnail_size_key
-      td jpg
-      td webp
+      td
+        = render(Folio::Console::Files::Show::Thumbnails::Ratio::ThumbnailComponent.new(thumbnail: @file.thumbnail_sizes[thumbnail_size_key]))
 
       - if i.zero?
         td rowspan=(@thumbnail_size_keys.length)
