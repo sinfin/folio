@@ -1,0 +1,15 @@
+tbody.f-c-files-show-thumbnails-ratio
+  tr
+    td.f-c-files-show-thumbnails-ratio__title colspan="4"
+      h4.m-0.pt-3
+        = @ratio
+
+  - @thumbnail_size_keys.each_with_index do |thumbnail_size_key, i|
+    tr
+      td = thumbnail_size_key
+      td jpg
+      td webp
+
+      - if i.zero?
+        td rowspan=(@thumbnail_size_keys.length)
+          ' actions
