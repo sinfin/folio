@@ -40,6 +40,11 @@ en:
             type/shrink: Versions with shrink only (>)
             type/cover: Versions with fit (^)
 
+          thumbnails:
+            ratio_component:
+              all_versions: "All generated versions:"
+              edit: Edit crop
+
         batch:
           bar_component:
             delete: Delete

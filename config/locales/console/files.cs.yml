@@ -40,6 +40,11 @@ cs:
             type/shrink: Verze pouze se zmenšením (>)
             type/cover: Verze s přizpůsobením (^)
 
+          thumbnails:
+            ratio_component:
+              all_versions: "Všechny vygenerované verze:"
+              edit: Upravit ořez
+
         batch:
           bar_component:
             delete: Smazat

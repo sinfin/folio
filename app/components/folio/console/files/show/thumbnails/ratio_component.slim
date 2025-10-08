@@ -7,6 +7,19 @@
 
         = button
 
+      .f-c-files-show-thumbnails-ratio__img-wrap.mt-3
+        - if image_url
+          img.f-c-files-show-thumbnails-ratio__img[
+            loading="lazy"
+            src=image_url
+          ]
+        - else
+          = folio_icon(:close)
+
     .f-c-files-show-thumbnails-ratio__thumbs
-      - @thumbnail_size_keys.each do |thumbnail_size_key|
-        = render(Folio::Console::Files::Show::Thumbnails::Ratio::ThumbnailComponent.new(thumbnail_size_key:, thumbnail: @file.thumbnail_sizes[thumbnail_size_key]))
+      .f-c-files-show-thumbnails-ratio__thumbs-title.text-muted
+        = t('.all_versions')
+
+      .f-c-files-show-thumbnails-ratio__thumbs-flex.mt-3
+        - @thumbnail_size_keys.each do |thumbnail_size_key|
+          = render(Folio::Console::Files::Show::Thumbnails::Ratio::ThumbnailComponent.new(thumbnail_size_key:, thumbnail: @file.thumbnail_sizes[thumbnail_size_key]))
