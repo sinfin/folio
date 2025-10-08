@@ -1,20 +1,21 @@
 .f-c-files-show-thumbnails-ratio
   .f-c-files-show-thumbnails-ratio__box
-    .f-c-files-show-thumbnails-ratio__left
-      .f-c-files-show-thumbnails-ratio__left-top
-        h4.f-c-files-show-thumbnails-ratio__title.m-0
-          = @ratio
+    - if @ratio != "regular"
+      .f-c-files-show-thumbnails-ratio__left
+        .f-c-files-show-thumbnails-ratio__left-top
+          h4.f-c-files-show-thumbnails-ratio__title.m-0
+            = @ratio
 
-        = button
+          = button
 
-      .f-c-files-show-thumbnails-ratio__img-wrap.mt-3
-        - if image_url
-          img.f-c-files-show-thumbnails-ratio__img[
-            loading="lazy"
-            src=image_url
-          ]
-        - else
-          = folio_icon(:close)
+        .f-c-files-show-thumbnails-ratio__img-wrap.mt-3
+          - if image_url
+            img.f-c-files-show-thumbnails-ratio__img[
+              loading="lazy"
+              src=image_url
+            ]
+          - else
+            = folio_icon(:close)
 
     .f-c-files-show-thumbnails-ratio__thumbs
       .f-c-files-show-thumbnails-ratio__thumbs-title.text-muted

@@ -36,12 +36,6 @@ class Folio::Console::Files::Show::ThumbnailsComponentTest < Folio::Console::Com
     ].sort
 
     expected = {
-      "regular" => {
-        "1:1" => %w[250x250 500x500],
-        "4:7" => %w[400x700 800x1400],
-        "120:*" => %w[120x],
-        "*:240" => %w[x240],
-      },
       "crop" => {
         "1:1" => %w[
           60x60#
@@ -65,11 +59,17 @@ class Folio::Console::Files::Show::ThumbnailsComponentTest < Folio::Console::Com
           740x480#
         ]
       },
-      "shrink" => {
-        "5:4" => %w[
+      "regular" => {
+        "regular" => %w[
+          250x250
+          500x500
+          400x700
+          800x1400
+          120x
+          x240
           2560x2048>
         ]
-      }
+      },
     }
 
     assert_equal expected, Folio::Console::Files::Show::ThumbnailsComponent.group_thumbnail_size_keys(keys)

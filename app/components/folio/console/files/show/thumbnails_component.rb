@@ -9,31 +9,17 @@ class Folio::Console::Files::Show::ThumbnailsComponent < Folio::Console::Applica
     grouped = {}
 
     keys.each do |key|
-      suffix = "regular"
-
       if key.end_with?("#")
         suffix = "crop"
         dimensions = key[0..-2]
-      elsif key.end_with?(">")
-        suffix = "shrink"
-        dimensions = key[0..-2]
-      elsif key.end_with?("^")
-        suffix = "cover"
-        dimensions = key[0..-2]
-      else
-        dimensions = key
-      end
 
-      width_str, height_str = dimensions.split("x", 2)
-
-      aspect_ratio = if width_str.nil? || width_str.empty?
-        "*:#{height_str}"
-      elsif height_str.nil? || height_str.empty?
-        "#{width_str}:*"
-      else
+        width_str, height_str = dimensions.split("x", 2)
         width, height = width_str.to_i, height_str.to_i
         gcd = width.gcd(height)
-        "#{width / gcd}:#{height / gcd}"
+        aspect_ratio = "#{width / gcd}:#{height / gcd}"
+      else
+        suffix = "regular"
+        aspect_ratio = "regular"
       end
 
       grouped[suffix] ||= {}
@@ -41,44 +27,54 @@ class Folio::Console::Files::Show::ThumbnailsComponent < Folio::Console::Applica
       grouped[suffix][aspect_ratio] << key
     end
 
-    grouped.each do |suffix, ratios|
-      # Sort aspect ratios by their product (width * height of simplified ratio)
-      sorted_ratios = ratios.sort_by do |ratio, _|
-        if ratio.include?("*")
-          # Handle special cases with missing dimensions
-          if ratio.start_with?("*:")
-            ratio.split(":")[1].to_i
-          elsif ratio.end_with?(":*")
-            ratio.split(":")[0].to_i
-          else
-            0
-          end
+    # Sort "regular" keys by area, with specific priority order
+    if grouped["regular"] && grouped["regular"]["regular"]
+      grouped["regular"]["regular"] = grouped["regular"]["regular"].sort_by do |key|
+        dimensions = key.gsub(/[>^]$/, "")
+        width_str, height_str = dimensions.split("x", 2)
+        has_suffix = key.end_with?(">") || key.end_with?("^")
+
+        if width_str.nil? || width_str.empty?
+          # Height only (e.g., "x240") - group 2, sort by height
+          [2, height_str.to_i]
+        elsif height_str.nil? || height_str.empty?
+          # Width only (e.g., "120x") - group 2, sort by width
+          [2, width_str.to_i]
+        elsif has_suffix
+          # Complete dimensions with suffix (e.g., "2560x2048>") - group 3, sort by area
+          [3, width_str.to_i * height_str.to_i]
         else
-          width, height = ratio.split(":").map(&:to_i)
-          width * height
-        end
-      end
-
-      grouped[suffix] = Hash[sorted_ratios]
-
-      # Sort keys within each ratio by area
-      grouped[suffix].each do |ratio, keys_array|
-        grouped[suffix][ratio] = keys_array.sort_by do |key|
-          dimensions = key.gsub(/[#>^]$/, "")
-          width_str, height_str = dimensions.split("x", 2)
-
-          if width_str.nil? || width_str.empty?
-            height_str.to_i
-          elsif height_str.nil? || height_str.empty?
-            width_str.to_i
-          else
-            width_str.to_i * height_str.to_i
-          end
+          # Complete dimensions without suffix - group 1, sort by area
+          [1, width_str.to_i * height_str.to_i]
         end
       end
     end
 
-    grouped
+    # Sort crop aspect ratios and their keys
+    if grouped["crop"]
+      sorted_ratios = grouped["crop"].sort_by do |ratio, _|
+        width, height = ratio.split(":").map(&:to_i)
+        width * height
+      end
+
+      grouped["crop"] = Hash[sorted_ratios]
+
+      # Sort keys within each ratio by area
+      grouped["crop"].each do |ratio, keys_array|
+        grouped["crop"][ratio] = keys_array.sort_by do |key|
+          dimensions = key.end_with?("#") ? key[0..-2] : key
+          width_str, height_str = dimensions.split("x", 2)
+          width_str.to_i * height_str.to_i
+        end
+      end
+    end
+
+    # Ensure order: crop first, then regular
+    result = {}
+    result["crop"] = grouped["crop"] if grouped["crop"]
+    result["regular"] = grouped["regular"] if grouped["regular"]
+
+    result
   end
 
   private

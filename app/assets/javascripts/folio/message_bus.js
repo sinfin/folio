@@ -66,6 +66,10 @@ window.Folio.MessageBus.callbacks['Folio::GenerateThumbnailJob'] = (data) => {
     img.src = data.data.url
   }
 
+  for (const img of document.querySelectorAll(`img[src='${data.data.temporary_url}&webp=1']`)) {
+    img.src = data.data.webp_url
+  }
+
   for (const img of document.querySelectorAll(`img[srcset*='${data.data.temporary_url}']`)) {
     img.srcset = img.srcset.replace(data.data.temporary_url, data.data.url)
   }
