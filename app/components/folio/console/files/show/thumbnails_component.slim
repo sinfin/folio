@@ -2,20 +2,13 @@
   h2.mt-0 = t('.title')
 
   - if @file.thumbnail_sizes.present?
-    table.f-c-files-show-thumbnails__table.table.table-compact
-      - i = -1
-      - self.class.group_thumbnail_size_keys(@file.thumbnail_sizes.keys).each do |type, ratios|
-        - i += 1
-        tbody
-          tr
-            td colspan="3"
-              h3.m-0 class=(i.zero? ? nil : "pt-4")
-                = t(".type/#{type}")
+    - self.class.group_thumbnail_size_keys(@file.thumbnail_sizes.keys).each do |type, ratios|
+      h3 = t(".type/#{type}")
 
-        - ratios.each do |ratio, thumbnail_size_keys|
-          = render(Folio::Console::Files::Show::Thumbnails::RatioComponent.new(file: @file,
-                                                                               ratio:,
-                                                                               thumbnail_size_keys:))
+      - ratios.each do |ratio, thumbnail_size_keys|
+        = render(Folio::Console::Files::Show::Thumbnails::RatioComponent.new(file: @file,
+                                                                             ratio:,
+                                                                             thumbnail_size_keys:))
 
   - else
     p = t('.no_thumbnails_yet')

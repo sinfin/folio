@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 class Folio::Console::Files::Show::Thumbnails::Ratio::ThumbnailComponent < Folio::Console::ApplicationComponent
-  def initialize(thumbnail:)
+  def initialize(thumbnail:, thumbnail_size_key:)
     @thumbnail = thumbnail.is_a?(Hash) ? thumbnail : {}
+    @thumbnail_size_key = thumbnail_size_key
   end
 
   private

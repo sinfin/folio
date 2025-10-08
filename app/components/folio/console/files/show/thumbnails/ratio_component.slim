@@ -1,15 +1,12 @@
-tbody.f-c-files-show-thumbnails-ratio
-  tr
-    td.f-c-files-show-thumbnails-ratio__title colspan="3"
-      h4.m-0.pt-3
-        = @ratio
+.f-c-files-show-thumbnails-ratio
+  .f-c-files-show-thumbnails-ratio__box
+    .f-c-files-show-thumbnails-ratio__left
+      .f-c-files-show-thumbnails-ratio__left-top
+        h4.f-c-files-show-thumbnails-ratio__title.m-0
+          = @ratio
 
-  - @thumbnail_size_keys.each_with_index do |thumbnail_size_key, i|
-    tr
-      td = thumbnail_size_key
-      td
-        = render(Folio::Console::Files::Show::Thumbnails::Ratio::ThumbnailComponent.new(thumbnail: @file.thumbnail_sizes[thumbnail_size_key]))
+        = button
 
-      - if i.zero?
-        td rowspan=(@thumbnail_size_keys.length)
-          ' actions
+    .f-c-files-show-thumbnails-ratio__thumbs
+      - @thumbnail_size_keys.each do |thumbnail_size_key|
+        = render(Folio::Console::Files::Show::Thumbnails::Ratio::ThumbnailComponent.new(thumbnail_size_key:, thumbnail: @file.thumbnail_sizes[thumbnail_size_key]))

@@ -1,3 +1,28 @@
 .f-c-files-show-thumbnails-ratio
-  + & &__title
-    padding-top: 1em
+  &__box
+    background: $medium-gray
+    border-radius: $border-radius
+    display: flex
+    flex-wrap: wrap
+    gap: $grid-gutter-width
+    padding: $grid-gutter-half
+    margin: $grid-gutter-half 0
+
+  &__left
+    max-width: 290px
+    width: 100%
+    flex: 0 0 auto
+
+  &__thumbs
+    display: flex
+    flex-wrap: wrap
+    flex: 1 0 auto
+    gap: $grid-gutter-half
+    width: 290px
+
+  &__left-top
+    align-items: center
+    display: flex
+    flex-wrap: wrap
+    gap: $grid-gutter-base
+    justify-content: space-between
