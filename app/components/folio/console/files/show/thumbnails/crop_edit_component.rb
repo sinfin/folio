@@ -9,7 +9,7 @@ class Folio::Console::Files::Show::Thumbnails::CropEditComponent < Folio::Consol
 
   private
     def before_render
-      @can_update = can_now?(:update, @file)
+      @can_update = can_now?(:update, @file) && @file.file_width.present? && @file.file_height.present?
     end
 
     def image_url
@@ -70,6 +70,24 @@ class Folio::Console::Files::Show::Thumbnails::CropEditComponent < Folio::Consol
       stimulus_controller("f-c-files-show-thumbnails-crop-edit",
                           values: {
                             state: "viewing",
+                            image_src: Folio::S3.url_rewrite(@file.file.remote_url),
+                            cropper_data: cropper_data.to_json,
                           })
+    end
+
+    def editor_inner_style
+      if @file.file_width > @file.file_height
+        "width: 100%; aspect-ratio: #{@file.file_width} / #{@file.file_height};"
+      else
+        "height: 100%; aspect-ratio: #{@file.file_width} / #{@file.file_height};"
+      end
+    end
+
+    def cropper_data
+      width, height = @ratio.split(":", 2).map(&:to_i)
+
+      {
+        aspect_ratio: width.to_f / height.to_f,
+      }
     end
 end

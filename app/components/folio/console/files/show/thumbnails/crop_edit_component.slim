@@ -1,4 +1,6 @@
-.f-c-files-show-thumbnails-crop-edit data=data
+.f-c-files-show-thumbnails-crop-edit[
+  data=data
+]
   .f-c-files-show-thumbnails-crop-edit__top
     h4.f-c-files-show-thumbnails-crop-edit__title.m-0
       = @ratio
@@ -6,6 +8,23 @@
     - if @can_update
       = buttons
       = buttons_while_editing
+
+  .f-c-files-show-thumbnails-crop-edit__editor.mt-3[
+    data=stimulus_target("editor")
+  ]
+    .f-c-files-show-thumbnails-crop-edit__editor-inner[
+      style=editor_inner_style
+      data=stimulus_target("editorInner")
+    ]
+      img.f-c-files-show-thumbnails-crop-edit__editor-img[
+        src=Folio::S3.url_rewrite(@file.file.remote_url)
+        data=stimulus_target("editorImage")
+      ]
+
+    span.f-c-files-show-thumbnails-crop-edit__editor-loader[
+      class="folio-loader"
+      class="folio-loader--transparent"
+    ]
 
   .f-c-files-show-thumbnails-crop-edit__img-wrap.mt-3
     - if image_url
