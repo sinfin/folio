@@ -43,6 +43,8 @@ cs:
           thumbnails:
             ratio_component:
               all_versions: "Všechny vygenerované verze:"
+
+            crop_edit_component:
               edit: Upravit ořez
 
         batch:

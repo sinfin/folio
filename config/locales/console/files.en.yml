@@ -43,6 +43,8 @@ en:
           thumbnails:
             ratio_component:
               all_versions: "All generated versions:"
+
+            crop_edit_component:
               edit: Edit crop
 
         batch:

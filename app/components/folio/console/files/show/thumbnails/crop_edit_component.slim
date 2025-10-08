@@ -1,0 +1,17 @@
+.f-c-files-show-thumbnails-crop-edit data=data
+  .f-c-files-show-thumbnails-crop-edit__top
+    h4.f-c-files-show-thumbnails-crop-edit__title.m-0
+      = @ratio
+
+    - if @can_update
+      = buttons
+      = buttons_while_editing
+
+  .f-c-files-show-thumbnails-crop-edit__img-wrap.mt-3
+    - if image_url
+      img.f-c-files-show-thumbnails-crop-edit__img[
+        loading="lazy"
+        src=image_url
+      ]
+    - else
+      = folio_icon(:close)

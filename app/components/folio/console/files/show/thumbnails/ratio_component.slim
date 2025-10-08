@@ -2,20 +2,9 @@
   .f-c-files-show-thumbnails-ratio__box
     - if @ratio != "regular"
       .f-c-files-show-thumbnails-ratio__left
-        .f-c-files-show-thumbnails-ratio__left-top
-          h4.f-c-files-show-thumbnails-ratio__title.m-0
-            = @ratio
-
-          = button
-
-        .f-c-files-show-thumbnails-ratio__img-wrap.mt-3
-          - if image_url
-            img.f-c-files-show-thumbnails-ratio__img[
-              loading="lazy"
-              src=image_url
-            ]
-          - else
-            = folio_icon(:close)
+        = render(Folio::Console::Files::Show::Thumbnails::CropEditComponent.new(file: @file,
+                                                                                ratio: @ratio,
+                                                                                thumbnail_size_keys: @thumbnail_size_keys))
 
     .f-c-files-show-thumbnails-ratio__thumbs
       .f-c-files-show-thumbnails-ratio__thumbs-title.text-muted

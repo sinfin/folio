@@ -1,0 +1,24 @@
+.f-c-files-show-thumbnails-crop-edit
+  &__top
+    align-items: center
+    display: flex
+    flex-wrap: wrap
+    gap: $grid-gutter-base
+    justify-content: space-between
+    min-height: 28px
+
+  &__img-wrap
+    align-items: center
+    display: flex
+    aspect-ratio: 1 / 1
+    justify-content: center
+    background: $gray
+
+  &__img
+    display: block
+    max-height: 100%
+    max-width: 100%
+
+  &:not([data-f-c-files-show-thumbnails-crop-edit-state-value="viewing"]) &__buttons,
+  &:not([data-f-c-files-show-thumbnails-crop-edit-state-value="editing"]) &__buttons-while-editing
+    display: none
