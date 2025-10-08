@@ -237,6 +237,84 @@ module Folio::Console::Api::FileControllerBase
     render json: { error: t("folio.console.files.metadata_extraction_failed") }, status: 500
   end
 
+  def update_thumbnails_crop
+    @file = folio_console_record
+
+    crop = params.require(:crop)
+    fail ActionController::BadRequest.new("Invalid crop params") unless crop.is_a?(ActionController::Parameters)
+
+    x = crop.require(:x).to_f
+    y = crop.require(:y).to_f
+    fail ActionController::BadRequest.new("Invalid crop params") if x.negative? || y.negative?
+
+    ratio = params.require(:ratio)
+    fail ActionController::BadRequest.new("Invalid crop params") unless ratio.is_a?(String) && ratio.match?(/\A\d+:\d+\z/)
+
+    thumbnail_size_keys = params.require(:thumbnail_size_keys)
+    fail ActionController::BadRequest.new("Invalid crop params") unless thumbnail_size_keys.is_a?(Array) && thumbnail_size_keys.all? { |k| k.is_a?(String) }
+
+    thumbnail_configuration = @file.thumbnail_configuration || {}
+    thumbnail_configuration["ratios"] ||= {}
+    thumbnail_configuration["ratios"][ratio] ||= {}
+    thumbnail_configuration["ratios"][ratio]["crop"] = { "x" => x, "y" => y }
+
+    thumb_uids_to_destroy = []
+    thumbnail_sizes = @file.thumbnail_sizes || {}
+
+    thumbnail_size_keys.each do |size_key|
+      if thumbnail_sizes[size_key].is_a?(Hash)
+        if thumbnail_sizes[size_key]["uid"].is_a?(String)
+          thumb_uids_to_destroy << thumbnail_sizes[size_key]["uid"]
+        end
+        if thumbnail_sizes[size_key]["webp_uid"].is_a?(String)
+          thumb_uids_to_destroy << thumbnail_sizes[size_key]["webp_uid"]
+        end
+      end
+
+      # hackily extracted from app/models/concerns/folio/thumbnails.rb
+      size = size_key.match(/\d+x?\d+/)[0]
+      width, height = size_key.split("x").map(&:to_i)
+      url = "https://doader.com/#{size}?image=#{@file.id}"
+
+      thumbnail_sizes[size_key] = {
+        uid: nil,
+        signature: nil,
+        x: nil,
+        y: nil,
+        url:,
+        width:,
+        height:,
+        quality: Folio::Thumbnails::DEFAULT_QUALITY,
+        started_generating_at: Time.current,
+        temporary_url: url,
+      }
+    end
+
+    @file.dont_run_after_save_jobs = true
+
+    @file.update!(thumbnail_configuration:,
+                  thumbnail_sizes:,
+                  updated_at: @file.send(:current_time_from_proper_timezone))
+
+    thumbnail_size_keys.each do |size_key|
+      Folio::GenerateThumbnailJob.perform_later(@file,
+                                                size_key,
+                                                Folio::Thumbnails::DEFAULT_QUALITY,
+                                                force: true,
+                                                x:,
+                                                y:)
+    end
+
+    thumb_uids_to_destroy.uniq.each do |uid|
+      Dragonfly.app.datastore.destroy(uid)
+    end
+
+    render_component_json(Folio::Console::Files::Show::Thumbnails::RatioComponent.new(file: @file,
+                                                                                      ratio:,
+                                                                                      thumbnail_size_keys:,
+                                                                                      updated_thumbnails_crop: true))
+  end
+
   private
     def folio_console_collection_includes
       includes = [:tags, :file_placements]

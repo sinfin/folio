@@ -4,6 +4,8 @@
 module Folio::Thumbnails
   extend ActiveSupport::Concern
 
+  DEFAULT_QUALITY = 82
+
   IMAGE_MIME_TYPES = %w[image/png
                         image/jpeg
                         image/gif
@@ -62,7 +64,8 @@ module Folio::Thumbnails
 
   # Use w_x_h = 400x250# or similar
   #
-  def thumb(w_x_h, quality: 82, immediate: false, force: false, x: nil, y: nil)
+  def thumb(w_x_h, quality: nil, immediate: false, force: false, x: nil, y: nil)
+    quality ||= DEFAULT_QUALITY
     fail_for_non_images
 
     if Rails.env.test? && !try(:additional_data).try(:[], "generate_thumbnails_in_test")
@@ -94,7 +97,19 @@ module Folio::Thumbnails
                 # already added via a parallel process
                 OpenStruct.new(thumbs_hash_with_rewritten_urls(thumbnail_sizes[w_x_h]))
               else
-                update(thumbnail_sizes: (thumbnail_sizes || {}).merge(w_x_h => {
+                previous_uids = []
+
+                if thumbnail_sizes && thumbnail_sizes[w_x_h].present?
+                  previous_uids << thumbnail_sizes[w_x_h][:uid] if thumbnail_sizes[w_x_h][:uid].present?
+                  previous_uids << thumbnail_sizes[w_x_h][:webp_uid] if thumbnail_sizes[w_x_h][:webp_uid].present?
+                end
+
+                if respond_to?(:dont_run_after_save_jobs)
+                  self.dont_run_after_save_jobs = true
+                end
+
+                # note that similiar logic was extracted to app/controllers/concerns/folio/console/api/file_controller_base.rb so make sure to update both if needed
+                did_update = update(thumbnail_sizes: (thumbnail_sizes || {}).merge(w_x_h => {
                   uid: nil,
                   signature: nil,
                   x: nil,
@@ -106,6 +121,16 @@ module Folio::Thumbnails
                   started_generating_at: Time.current,
                   temporary_url: url,
                 }))
+
+                if did_update
+                  begin
+                    previous_uids.each do |previous_uid|
+                      Dragonfly.app.datastore.destroy(previous_uid) if previous_uid
+                    end
+                  rescue StandardError
+                    Rails.logger.error("Failed to delete previous thumbnail uid(s): #{previous_uids.join(', ')}")
+                  end
+                end
 
                 nil
               end

@@ -76,10 +76,14 @@ class Folio::Console::Files::Show::ThumbnailsComponentTest < Folio::Console::Com
   end
 
   test "render" do
-    file = create(:folio_file_image)
+    with_controller_class(Folio::Console::File::ImagesController) do
+      with_request_url "/console/file/images" do
+        file = create(:folio_file_image)
 
-    render_inline(Folio::Console::Files::Show::ThumbnailsComponent.new(file:))
+        render_inline(Folio::Console::Files::Show::ThumbnailsComponent.new(file:))
 
-    assert_selector(".f-c-files-show-thumbnails")
+        assert_selector(".f-c-files-show-thumbnails")
+      end
+    end
   end
 end

@@ -4,7 +4,8 @@
       .f-c-files-show-thumbnails-ratio__left
         = render(Folio::Console::Files::Show::Thumbnails::CropEditComponent.new(file: @file,
                                                                                 ratio: @ratio,
-                                                                                thumbnail_size_keys: @thumbnail_size_keys))
+                                                                                thumbnail_size_keys: @thumbnail_size_keys,
+                                                                                updated_thumbnails_crop: @updated_thumbnails_crop))
 
     .f-c-files-show-thumbnails-ratio__thumbs
       .f-c-files-show-thumbnails-ratio__thumbs-title.text-muted

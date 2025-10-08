@@ -1,8 +1,9 @@
 window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class extends window.Stimulus.Controller {
   static values = {
-    state: Boolean,
-    imageSrc: String,
-    cropperData: Object
+    state: String,
+    cropperData: Object,
+    apiUrl: String,
+    apiData: Object
   }
 
   static targets = ['editorImage', 'editorInner']
@@ -56,12 +57,26 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
 
     const cropData = {
       x: Math.floor((cropperSelection.x / cropperImage.offsetWidth) * 10000) / 10000,
-      y: Math.floor((cropperSelection.y / cropperImage.offsetHeight) * 10000) / 10000,
+      y: Math.floor((cropperSelection.y / cropperImage.offsetHeight) * 10000) / 10000
     }
 
-    console.log('saving cropData', cropData)
+    const data = {
+      ...this.apiDataValue,
+      crop: { x: cropData.x, y: cropData.y }
+    }
 
     this.stateValue = 'saving'
+
+    window.Folio.Api.apiPatch(this.apiUrlValue, data).then((res) => {
+      if (res && res.data) {
+        this.element.closest('.f-c-files-show-thumbnails-ratio').outerHTML = res.data
+      } else {
+        throw new Error('Invalid response from server')
+      }
+    }).catch((err) => {
+      console.error('Failed to save crop', err)
+      this.stateValue = 'editing'
+    })
   }
 
   cancelEditing () {
@@ -125,5 +140,11 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
     this.cropper = null
     this.cropperSelection = null
     this.boundaryConstraintHandler = null
+  }
+
+  thumbnailUpdated () {
+    if (this.stateValue === 'waiting-for-thumbnail') {
+      this.stateValue = 'viewing'
+    }
   }
 })

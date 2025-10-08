@@ -38,6 +38,7 @@ class Folio::File < Folio::ApplicationRecord
       update
       update_file_thumbnail
       update_subtitle
+      update_thumbnails_crop
     ],
     read: %i[
       batch_bar
@@ -486,6 +487,7 @@ end
 #  media_source_id                   :bigint(8)
 #  attribution_max_usage_count       :integer
 #  published_usage_count             :integer          default(0), not null
+#  thumbnail_configuration           :jsonb
 #
 # Indexes
 #

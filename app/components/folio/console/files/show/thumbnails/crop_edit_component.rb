@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 class Folio::Console::Files::Show::Thumbnails::CropEditComponent < Folio::Console::ApplicationComponent
-  def initialize(file:, ratio:, thumbnail_size_keys:)
+  def initialize(file:, ratio:, thumbnail_size_keys:, updated_thumbnails_crop: false)
     @file = file
     @ratio = ratio
     @thumbnail_size_keys = thumbnail_size_keys
+    @updated_thumbnails_crop = updated_thumbnails_crop
   end
 
   private
@@ -15,9 +16,13 @@ class Folio::Console::Files::Show::Thumbnails::CropEditComponent < Folio::Consol
     def image_url
       return nil if @thumbnail_size_keys.empty?
 
-      valid_keys = @thumbnail_size_keys.reject do |key|
-        url = @file.thumb(key).url
-        url&.start_with?("https://doader")
+      valid_keys = if @updated_thumbnails_crop
+        @thumbnail_size_keys
+      else
+        @thumbnail_size_keys.reject do |key|
+          url = @file.thumb(key).url
+          url&.start_with?("https://doader")
+        end
       end
 
       return nil if valid_keys.empty?
@@ -69,9 +74,13 @@ class Folio::Console::Files::Show::Thumbnails::CropEditComponent < Folio::Consol
     def data
       stimulus_controller("f-c-files-show-thumbnails-crop-edit",
                           values: {
-                            state: "viewing",
-                            image_src: Folio::S3.url_rewrite(@file.file.remote_url),
+                            state: @updated_thumbnails_crop ? "waiting-for-thumbnail" : "viewing",
                             cropper_data: cropper_data.to_json,
+                            api_url: url_for([:console, :api, @file, action: :update_thumbnails_crop]),
+                            api_data: api_data.to_json,
+                          },
+                          action: {
+                            "Folio::GenerateThumbnailJob/updated" => "thumbnailUpdated"
                           })
     end
 
@@ -88,6 +97,13 @@ class Folio::Console::Files::Show::Thumbnails::CropEditComponent < Folio::Consol
 
       {
         aspect_ratio: width.to_f / height.to_f,
+      }
+    end
+
+    def api_data
+      {
+        thumbnail_size_keys: @thumbnail_size_keys,
+        ratio: @ratio,
       }
     end
 end

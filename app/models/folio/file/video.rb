@@ -66,6 +66,7 @@ end
 #  media_source_id                   :bigint(8)
 #  attribution_max_usage_count       :integer
 #  published_usage_count             :integer          default(0), not null
+#  thumbnail_configuration           :jsonb
 #
 # Indexes
 #
