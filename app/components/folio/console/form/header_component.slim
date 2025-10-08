@@ -1,0 +1,33 @@
+.f-c-form-header
+  .f-c-form-header__inner
+    .f-c-form-header__title-wrap
+      - if @left
+        .f-c-form-header__left
+          = @left
+
+      div
+        h1.m-0 class=@title_class_name
+          - if @title
+            = @title
+          - elsif record.new_record?
+            = record.class.model_name.human
+          - else
+            = sanitize(record.to_label)
+
+        - if @subtitle
+          h2.f-c-form-header__h2
+            = sanitize(@subtitle)
+
+      - if @sti_badge && @model.try(:object)
+        = render(Folio::Console::Ui::StiBadgeComponent.new(record: @model.object))
+
+    - if @right
+      .f-c-form-header__right
+        = @right
+
+  - if @tabs
+    .mt-3
+      == cell('folio/console/index/tabs', @tabs)
+
+  - if @model.try(:object).try(:errors).present?
+    == cell('folio/console/form/errors', @model, @hide_fix_error_btn)
