@@ -33,6 +33,13 @@ en:
             th/created_at: Created at
             in_atom: content chapter
 
+          thumbnails_component:
+            title: Versions and sizes
+            type/regular: Versions without crop
+            type/crop: Versions with crop (#)
+            type/shrink: Versions with shrink only (>)
+            type/cover: Versions with fit (^)
+
         batch:
           bar_component:
             delete: Delete
