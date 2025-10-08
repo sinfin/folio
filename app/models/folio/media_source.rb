@@ -12,7 +12,8 @@ class Folio::MediaSource < Folio::ApplicationRecord
   validates :title, presence: true, uniqueness: true
   validates :max_usage_count, numericality: { greater_than: 0, allow_nil: true }
 
-  before_destroy :check_usage_before_destroy
+  before_destroy :nullify_attached_files_attributes
+  after_commit :broadcast_files_reload, on: :destroy
 
   scope :ordered, -> { order(id: :desc) }
 
@@ -41,11 +42,47 @@ class Folio::MediaSource < Folio::ApplicationRecord
   end
 
   private
-    def check_usage_before_destroy
-      if indestructible_reason.present?
-        errors.add(:base, indestructible_reason)
-        throw(:abort)
+
+    def nullify_attached_files_attributes
+      ids = files.ids
+      @nullified_file_ids = ids
+      return true if ids.blank?
+
+      scope = Folio::File.where(id: ids)
+
+      scope.update_all(media_source_id: nil)
+      clear_field_if_equal(scope, :attribution_source, title)
+      clear_field_if_equal(scope, :attribution_max_usage_count, max_usage_count)
+      clear_field_if_equal(scope, :attribution_licence, licence)
+      clear_field_if_equal(scope, :attribution_copyright, copyright_text)
+
+      # Remove only site links that correspond to this media source's allowed sites
+      site_ids = media_source_site_links.pluck(:site_id)
+      if site_ids.present?
+        Folio::FileSiteLink.where(file_id: ids, site_id: site_ids).delete_all
       end
+
+      true
+    end
+
+    # Nullifies `column` for all records in scope where the current value equals `value`.
+    def clear_field_if_equal(scope, column, value)
+      return if value.blank?
+
+      scope.where(column => value).update_all(column => nil)
+    end
+
+    def broadcast_files_reload
+      return unless @nullified_file_ids.present?
+      return unless defined?(MessageBus) && Folio::Current.user
+
+      @nullified_file_ids.each do |fid|
+        MessageBus.publish Folio::MESSAGE_BUS_CHANNEL,
+                           { type: "f-c-files-show:reload", data: { id: fid } }.to_json,
+                           user_ids: [Folio::Current.user.id]
+      end
+    ensure
+      @nullified_file_ids = nil
     end
 end
 
