@@ -140,36 +140,36 @@ class Folio::Tiptap::Node
 
   private
 
-  def validate_site_attachment_allowed
-    site = Folio::Current.site
-    structure = self.class.respond_to?(:structure) && self.class.structure
-    return unless site && structure
+    def validate_site_attachment_allowed
+      site = Folio::Current.site
+      structure = self.class.respond_to?(:structure) && self.class.structure
+      return unless site && structure
 
-    has_invalid_attachment = structure.any? do |key, cfg|
-      next false unless cfg[:type] == :folio_attachment
-      next false unless (file_klass = cfg[:file_type]&.safe_constantize)
+      has_invalid_attachment = structure.any? do |key, cfg|
+        next false unless cfg[:type] == :folio_attachment
+        next false unless (file_klass = cfg[:file_type]&.safe_constantize)
 
-      if cfg[:has_many]
-        placements = send("#{key.to_s.singularize}_placements_attributes") || []
-        placements.any? { |h| file_invalid_for_site?(h, file_klass, site) }
-      else
-        placement = send("#{key}_placement_attributes")
-        file_invalid_for_site?(placement, file_klass, site)
+        if cfg[:has_many]
+          placements = send("#{key.to_s.singularize}_placements_attributes") || []
+          placements.any? { |h| file_invalid_for_site?(h, file_klass, site) }
+        else
+          placement = send("#{key}_placement_attributes")
+          file_invalid_for_site?(placement, file_klass, site)
+        end
       end
+
+      errors.add(:base, I18n.t("folio.tiptap.errors.file_not_allowed_for_site")) if has_invalid_attachment
+    rescue StandardError => e
+      Rails.logger.error("Folio::Tiptap site validation error: #{e.message}") if defined?(Rails)
     end
 
-    errors.add(:base, I18n.t("folio.tiptap.errors.file_not_allowed_for_site")) if has_invalid_attachment
-  rescue StandardError => e
-    Rails.logger.error("Folio::Tiptap site validation error: #{e.message}") if defined?(Rails)
-  end
+    def file_invalid_for_site?(placement_hash, file_klass, site)
+      return false unless placement_hash
 
-  def file_invalid_for_site?(placement_hash, file_klass, site)
-    return false unless placement_hash
+      file_id = placement_hash["file_id"] || placement_hash[:file_id]
+      return false unless file_id
 
-    file_id = placement_hash["file_id"] || placement_hash[:file_id]
-    return false unless file_id
-
-    file = file_klass.find_by(id: file_id)
-    file && !file.can_be_used_on_site?(site)
-  end
+      file = file_klass.find_by(id: file_id)
+      file && !file.can_be_used_on_site?(site)
+    end
 end
