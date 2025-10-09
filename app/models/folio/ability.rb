@@ -85,6 +85,7 @@ class Folio::Ability
     can :multisearch_console, site
     can :display_ui, site
     can [:new], Folio::User # new user do not belong to site yet
+    can :read, ActsAsTaggableOn::Tag
 
     # Help documents access - excluded for ghost role
     unless user.roles_for(site: site) == [:ghost]
