@@ -3,6 +3,7 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
     state: String,
     cropperData: Object,
     apiUrl: String,
+    mode: String,
     apiData: Object
   }
 
@@ -17,12 +18,15 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
     }, () => {
       this.stateValue = 'setting-cropperjs'
 
+      const imageWidth = parseFloat(this.editorImageTarget.getAttribute('width'))
+      const imageHeight = parseFloat(this.editorImageTarget.getAttribute('height'))
+
       this.cropper = new window.Cropper.default(this.editorImageTarget, { // eslint-disable-line new-cap
         template: `
           <cropper-canvas background>
-            <cropper-image image-fit="contain"></cropper-image>
+            <cropper-image image-fit="none" style="width: ${imageWidth}px; height: ${imageHeight}px;"></cropper-image>
             <cropper-shade hidden></cropper-shade>
-            <cropper-selection initial-coverage="1" aspect-ratio="${this.cropperDataValue.aspect_ratio}" movable>
+            <cropper-selection x="${this.cropperDataValue.x}" y="${this.cropperDataValue.y}" width="${this.cropperDataValue.selection_width}" height="${this.cropperDataValue.selection_height}" movable precise>
               <cropper-grid role="grid" bordered covered></cropper-grid>
               <cropper-crosshair centered></cropper-crosshair>
               <cropper-handle action="move" theme-color="rgba(255, 255, 255, 0.35)"></cropper-handle>
@@ -33,7 +37,6 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
 
       setTimeout(() => {
         this.setupImageBoundaryConstraint()
-        this.setDefaultCropSelection()
         setTimeout(() => { this.stateValue = 'editing' }, 0)
       }, 0)
     }, () => {
@@ -90,18 +93,30 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
 
     this.boundaryConstraintHandler = (event) => {
       const selection = event.detail
-      const cropperCanvasRect = cropperCanvas.getBoundingClientRect()
       const cropperImageRect = cropperImage.getBoundingClientRect()
 
-      const imageSelection = {
-        x: cropperImageRect.left - cropperCanvasRect.left,
-        y: cropperImageRect.top - cropperCanvasRect.top,
-        width: cropperImageRect.width,
-        height: cropperImageRect.height
+      if (selection.x < 0 || selection.y < 0) {
+        return event.preventDefault()
       }
 
-      if (!this.selectionWithinBounds(selection, imageSelection)) {
-        event.preventDefault()
+      if (this.modeValue === 'fixed-width') {
+        if (selection.x !== 0) {
+          return event.preventDefault()
+        }
+
+        // y + height cannot exceed image height
+        if ((selection.y + selection.height) > cropperImageRect.height) {
+          return event.preventDefault()
+        }
+      } else if (this.modeValue === 'fixed-height') {
+        if (selection.y !== 0) {
+          return event.preventDefault()
+        }
+
+        // x + width cannot exceed image width
+        if ((selection.x + selection.width) > cropperImageRect.width) {
+          return event.preventDefault()
+        }
       }
     }
 
@@ -116,28 +131,6 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
       (selection.x + selection.width) <= Math.ceil(bounds.x + bounds.width) &&
       (selection.y + selection.height) <= Math.ceil(bounds.y + bounds.height)
     )
-  }
-
-  setDefaultCropSelection () {
-    if (this.cropperDataValue.x === undefined || this.cropperDataValue.y === undefined) return
-
-    const container = this.editorImageTarget.parentElement
-    const cropperCanvas = container.querySelector('cropper-canvas')
-    const cropperImage = container.querySelector('cropper-image')
-    const cropperSelection = container.querySelector('cropper-selection')
-
-    if (!cropperCanvas || !cropperImage || !cropperSelection) {
-      return
-    }
-
-    const imageWidth = cropperImage.offsetWidth
-    const imageHeight = cropperImage.offsetHeight
-
-    const x = this.cropperDataValue.x * imageWidth
-    const y = this.cropperDataValue.y * imageHeight
-
-    cropperSelection.x = x
-    cropperSelection.y = y
   }
 
   disconnect () {
