@@ -120,10 +120,10 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
 
   selectionWithinBounds (selection, bounds) {
     return (
-      selection.x >= bounds.x &&
-      selection.y >= bounds.y &&
-      (selection.x + selection.width) <= (bounds.x + bounds.width) &&
-      (selection.y + selection.height) <= (bounds.y + bounds.height)
+      selection.x >= Math.floor(bounds.x) &&
+      selection.y >= Math.floor(bounds.y) &&
+      (selection.x + selection.width) <= Math.ceil(bounds.x + bounds.width) &&
+      (selection.y + selection.height) <= Math.ceil(bounds.y + bounds.height)
     )
   }
 
