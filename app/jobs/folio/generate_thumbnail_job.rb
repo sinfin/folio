@@ -117,7 +117,10 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
             x_px = [((x || 0) * fill_width_f.ceil).floor, fill_width_f.floor - crop_width_f].min
             y_px = [((y || 0) * fill_height_f.ceil).floor, fill_height_f.floor - crop_height_f].min
 
-            geometry = "#{crop_width_f.to_i}x#{crop_height_f.to_i}+#{x_px.floor}+#{y_px.floor}"
+            safe_x_px = [x_px, 0].max
+            safe_y_px = [y_px, 0].max
+
+            geometry = "#{crop_width_f.to_i}x#{crop_height_f.to_i}+#{safe_x_px}+#{safe_y_px}"
           end
         end
 
