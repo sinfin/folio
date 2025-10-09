@@ -108,7 +108,7 @@ module Folio::Thumbnails
                   self.dont_run_after_save_jobs = true
                 end
 
-                # note that similiar logic was extracted to app/controllers/concerns/folio/console/api/file_controller_base.rb so make sure to update both if needed
+                # note that similar logic was extracted to app/controllers/concerns/folio/console/api/file_controller_base.rb so make sure to update both if needed
                 did_update = update(thumbnail_sizes: (thumbnail_sizes || {}).merge(w_x_h => {
                   uid: nil,
                   signature: nil,

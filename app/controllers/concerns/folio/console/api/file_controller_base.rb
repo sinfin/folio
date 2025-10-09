@@ -272,7 +272,9 @@ module Folio::Console::Api::FileControllerBase
       end
 
       # hackily extracted from app/models/concerns/folio/thumbnails.rb
-      size = size_key.match(/\d+x?\d+/)[0]
+      match = size_key.match(/\d+x?\d+/)
+      next unless match
+      size = match[0]
       width, height = size_key.split("x").map(&:to_i)
       url = "https://doader.com/#{size}?image=#{@file.id}"
 
@@ -305,8 +307,12 @@ module Folio::Console::Api::FileControllerBase
                                                 y:)
     end
 
-    thumb_uids_to_destroy.uniq.each do |uid|
-      Dragonfly.app.datastore.destroy(uid)
+    begin
+      thumb_uids_to_destroy.uniq.each do |uid|
+        Dragonfly.app.datastore.destroy(uid)
+      end
+    rescue StandardError => e
+      Rails.logger.error("Failed to destroy old thumbnail UID #{uid}: #{e.message}")
     end
 
     render_component_json(Folio::Console::Files::Show::Thumbnails::RatioComponent.new(file: @file,

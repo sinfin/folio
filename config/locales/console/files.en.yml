@@ -32,6 +32,7 @@ en:
             th/placement_label: Record
             th/created_at: Created at
             in_atom: content chapter
+            no_thumbnails_yet: No versions generated yet
 
           thumbnails_component:
             title: Versions and sizes
