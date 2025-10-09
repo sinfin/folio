@@ -4,7 +4,8 @@ window.Folio.Stimulus.register('f-c-files-subtitle-form', class extends window.S
   static values = {
     language: String,
     fileId: Number,
-    persisted: Boolean
+    persisted: Boolean,
+    subtitlesReloadUrl: String
   }
 
   connect () {
@@ -94,6 +95,10 @@ window.Folio.Stimulus.register('f-c-files-subtitle-form', class extends window.S
         // Clean up accordion state for this language
         this.cleanupAccordionStateForLanguage(this.languageValue)
 
+        // Capture parent root before removing this element so we can reload it
+        const parentRoot = this.element.closest('.f-c-files-subtitles-form')
+        const parentLoader = parentRoot ? parentRoot.querySelector('.f-c-files-subtitles-form__loader') : null
+
         // Remove this component from DOM after successful deletion
         if (this.element && this.element.parentNode) {
           this.element.remove()
@@ -104,6 +109,9 @@ window.Folio.Stimulus.register('f-c-files-subtitle-form', class extends window.S
             bubbles: true
           })
         }
+
+        // Additionally, ensure dropdown refreshes like "retranscribe"
+        this.reloadEntireSubtitlesForm(parentRoot, parentLoader)
       }).catch((e) => {
         window.alert(window.FolioConsole.translations.errorGeneric.replace('%{message}', e.message))
       }).finally(() => {
@@ -240,6 +248,33 @@ window.Folio.Stimulus.register('f-c-files-subtitle-form', class extends window.S
       // Reinitialize accordion state after reload
       this.initializeAccordionState()
     })
+  }
+
+  reloadEntireSubtitlesForm (providedRoot = null, providedLoader = null) {
+    try {
+      if (!this.subtitlesReloadUrlValue) return
+
+      const parentRoot = providedRoot || this.element.closest('.f-c-files-subtitles-form')
+      if (!parentRoot) return
+
+      const parentLoader = providedLoader || parentRoot.querySelector('.f-c-files-subtitles-form__loader')
+      if (parentLoader) parentLoader.hidden = false
+
+      // Fetch and replace the subtitles form component
+      window.Folio.Api.apiGet(this.subtitlesReloadUrlValue).then((res) => {
+        if (res && res.data) {
+          parentRoot.outerHTML = res.data
+        } else {
+          window.alert(window.FolioConsole.translations.invalidServerResponse)
+        }
+      }).catch((e) => {
+        window.alert(window.FolioConsole.translations.errorGeneric.replace('%{message}', e.message))
+      }).finally(() => {
+        if (parentLoader) parentLoader.hidden = true
+      })
+    } catch (error) {
+      console.warn('Failed to reload subtitles form:', error)
+    }
   }
 
   buildPayload (formData) {
