@@ -96,10 +96,6 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
         if size.include?("#")
           _m, crop_width_f, crop_height_f = size.match(/(\d+)x(\d+)/).to_a.map(&:to_f)
 
-          if crop_width_f > image.file_width || crop_height_f > image.file_height || !x.nil? || !y.nil?
-            thumbnail = thumbnail.thumb("#{crop_width_f.to_i}x#{crop_height_f.to_i}^", format:)
-          end
-
           # Check for stored thumbnail configuration if x and y are nil
           if x.nil? && y.nil? && image.respond_to?(:thumbnail_configuration) && image.thumbnail_configuration.present?
             # Simplify the ratio (e.g., 16:9, 4:3, 1:1)
@@ -115,19 +111,24 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
             end
           end
 
-          if !x.nil? || !y.nil?
-            image_width_f = image.file_width.to_f
-            image_height_f = image.file_height.to_f
+          if crop_width_f > image.file_width || crop_height_f > image.file_height || !x.nil? || !y.nil?
+            thumbnail = thumbnail.thumb("#{crop_width_f.to_i}x#{crop_height_f.to_i}^", format:)
+          end
 
-            fill_width_f = if image_width_f / image_height_f > crop_width_f / crop_height_f
-              # original is wider than the required thumb rectangle -> reduce height
-              image_width_f * crop_height_f / image_height_f
+          if !x.nil? || !y.nil?
+            # Use thumbnail dimensions if image was resized, otherwise use original dimensions
+            current_width_f = thumbnail.width.to_f
+            current_height_f = thumbnail.height.to_f
+
+            fill_width_f = if current_width_f / current_height_f > crop_width_f / crop_height_f
+              # current is wider than the required thumb rectangle -> reduce height
+              current_width_f * crop_height_f / current_height_f
             else
-              # original is narrower than the required crop rectangle -> reduce width
+              # current is narrower than the required crop rectangle -> reduce width
               crop_width_f
             end
 
-            fill_height_f = fill_width_f * image_height_f / image_width_f
+            fill_height_f = fill_width_f * current_height_f / current_width_f
 
             x_px = [((x || 0) * fill_width_f.ceil).floor, fill_width_f.floor - crop_width_f].min
             y_px = [((y || 0) * fill_height_f.ceil).floor, fill_height_f.floor - crop_height_f].min
