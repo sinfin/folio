@@ -22,19 +22,10 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
           <cropper-canvas background>
             <cropper-image image-fit="contain"></cropper-image>
             <cropper-shade hidden></cropper-shade>
-            <cropper-handle action="select" plain></cropper-handle>
             <cropper-selection initial-coverage="1" aspect-ratio="${this.cropperDataValue.aspect_ratio}" movable>
               <cropper-grid role="grid" bordered covered></cropper-grid>
               <cropper-crosshair centered></cropper-crosshair>
               <cropper-handle action="move" theme-color="rgba(255, 255, 255, 0.35)"></cropper-handle>
-              <cropper-handle action="n-resize"></cropper-handle>
-              <cropper-handle action="e-resize"></cropper-handle>
-              <cropper-handle action="s-resize"></cropper-handle>
-              <cropper-handle action="w-resize"></cropper-handle>
-              <cropper-handle action="ne-resize"></cropper-handle>
-              <cropper-handle action="nw-resize"></cropper-handle>
-              <cropper-handle action="se-resize"></cropper-handle>
-              <cropper-handle action="sw-resize"></cropper-handle>
             </cropper-selection>
           </cropper-canvas>
         `
@@ -58,10 +49,10 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
 
     if (!cropperSelection || !cropperImage) return this.cancelEditing()
 
-    const cropData = {
-      x: Math.floor((cropperSelection.x / cropperImage.offsetWidth) * 10000) / 10000,
-      y: Math.floor((cropperSelection.y / cropperImage.offsetHeight) * 10000) / 10000
-    }
+    const x = Math.floor((cropperSelection.x / cropperImage.offsetWidth) * 10000) / 10000
+    const y = Math.floor((cropperSelection.y / cropperImage.offsetHeight) * 10000) / 10000
+
+    const cropData = { x: Math.max(0, x), y: Math.max(0, y) }
 
     const data = {
       ...this.apiDataValue,
