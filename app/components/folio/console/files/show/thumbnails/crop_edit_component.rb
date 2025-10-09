@@ -95,9 +95,20 @@ class Folio::Console::Files::Show::Thumbnails::CropEditComponent < Folio::Consol
     def cropper_data
       width, height = @ratio.split(":", 2).map(&:to_i)
 
-      {
+      data = {
         aspect_ratio: width.to_f / height.to_f,
       }
+
+      if @file.thumbnail_configuration.present? &&
+         @file.thumbnail_configuration["ratios"].present? &&
+         @file.thumbnail_configuration["ratios"][@ratio].present? &&
+         @file.thumbnail_configuration["ratios"][@ratio]["crop"].present?
+        crop = @file.thumbnail_configuration["ratios"][@ratio]["crop"]
+        data[:x] = crop["x"].to_f if crop["x"].is_a?(Numeric)
+        data[:y] = crop["y"].to_f if crop["y"].is_a?(Numeric)
+      end
+
+      data
     end
 
     def api_data

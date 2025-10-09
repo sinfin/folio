@@ -15,6 +15,8 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
       key: 'cropperjs',
       urls: ['https://cdnjs.cloudflare.com/ajax/libs/cropperjs/2.0.1/cropper.min.js']
     }, () => {
+      this.stateValue = 'setting-cropperjs'
+
       this.cropper = new window.Cropper.default(this.editorImageTarget, { // eslint-disable-line new-cap
         template: `
           <cropper-canvas background>
@@ -40,8 +42,9 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
 
       setTimeout(() => {
         this.setupImageBoundaryConstraint()
+        this.setDefaultCropSelection()
+        setTimeout(() => { this.stateValue = 'editing' }, 0)
       }, 0)
-      this.stateValue = 'editing'
     }, () => {
       this.stateValue = 'error-loading-javascript'
     })
@@ -122,6 +125,28 @@ window.Folio.Stimulus.register('f-c-files-show-thumbnails-crop-edit', class exte
       (selection.x + selection.width) <= (bounds.x + bounds.width) &&
       (selection.y + selection.height) <= (bounds.y + bounds.height)
     )
+  }
+
+  setDefaultCropSelection () {
+    if (this.cropperDataValue.x === undefined || this.cropperDataValue.y === undefined) return
+
+    const container = this.editorImageTarget.parentElement
+    const cropperCanvas = container.querySelector('cropper-canvas')
+    const cropperImage = container.querySelector('cropper-image')
+    const cropperSelection = container.querySelector('cropper-selection')
+
+    if (!cropperCanvas || !cropperImage || !cropperSelection) {
+      return
+    }
+
+    const imageWidth = cropperImage.offsetWidth
+    const imageHeight = cropperImage.offsetHeight
+
+    const x = this.cropperDataValue.x * imageWidth
+    const y = this.cropperDataValue.y * imageHeight
+
+    cropperSelection.x = x
+    cropperSelection.y = y
   }
 
   disconnect () {

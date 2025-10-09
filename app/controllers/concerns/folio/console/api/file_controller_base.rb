@@ -239,6 +239,7 @@ module Folio::Console::Api::FileControllerBase
 
   def update_thumbnails_crop
     @file = folio_console_record
+    fail ActionController::BadRequest.new("Only available for images") if @file.class.human_type != "image"
 
     crop = params.require(:crop)
     fail ActionController::BadRequest.new("Invalid crop params") unless crop.is_a?(ActionController::Parameters)
