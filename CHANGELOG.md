@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file.
 - added option `Rails.application.config.folio_cookie_consent_configuration[:keep_attached_after_accept]` (default false). Set it `true` if app allways display link to open cookies settings.
 - added `disabled_modifications` option to `form_footer`
 - added `calendar_filter` icon
+- added `thumbnail_configuration` to `Folio::File` to store crop data per-ratio, set via a new `Folio::Console::Files::Show::Thumbnails::CropEditComponent` and `update_thumbnails_crop` API
 
 ### Changed
 
