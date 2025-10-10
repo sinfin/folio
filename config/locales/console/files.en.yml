@@ -32,6 +32,21 @@ en:
             th/placement_label: Record
             th/created_at: Created at
             in_atom: content chapter
+            no_thumbnails_yet: No versions generated yet
+
+          thumbnails_component:
+            title: Versions and sizes
+            type/regular: Versions without crop
+            type/crop: Versions with crop (#)
+            type/shrink: Versions with shrink only (>)
+            type/cover: Versions with fit (^)
+
+          thumbnails:
+            ratio_component:
+              all_versions: "All generated versions:"
+
+            crop_edit_component:
+              edit: Edit crop
 
         batch:
           bar_component:

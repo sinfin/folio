@@ -224,5 +224,50 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
       assert_response(:success)
       assert_equal(file.id, response.parsed_body["data"]["id"].to_i)
     end
+
+    if klass.human_type == "image"
+      test "#{klass} - update_thumbnails_crop" do
+        file = create(klass.model_name.singular)
+
+        # Set initial thumbnail_sizes to verify they get cleared
+        file.update!(thumbnail_sizes: {
+          "160x90#" => { "uid" => "test_uid_1", "webp_uid" => "test_webp_uid_1" },
+          "320x180#" => { "uid" => "test_uid_2", "webp_uid" => "test_webp_uid_2" }
+        })
+
+        patch url_for([:update_thumbnails_crop, :console, :api, file, format: :json]), params: {
+          crop: {
+            x: 0.0,
+            y: 0.1,
+          },
+          ratio: "16:9",
+          thumbnail_size_keys: ["160x90#", "320x180#"]
+        }
+
+        assert_response(:success)
+        assert response.parsed_body["data"].present?
+
+        file.reload
+
+        # Check thumbnail_configuration is updated
+        assert_equal 0.0, file.thumbnail_configuration["ratios"]["16:9"]["crop"]["x"]
+        assert_equal 0.1, file.thumbnail_configuration["ratios"]["16:9"]["crop"]["y"]
+
+        # Check thumbnail_sizes are reset with new structure
+        assert_nil file.thumbnail_sizes["160x90#"][:uid]
+        assert_nil file.thumbnail_sizes["160x90#"][:signature]
+        assert_equal 160, file.thumbnail_sizes["160x90#"][:width]
+        assert_equal 90, file.thumbnail_sizes["160x90#"][:height]
+        assert file.thumbnail_sizes["160x90#"][:url].present?
+        assert file.thumbnail_sizes["160x90#"][:started_generating_at].present?
+
+        assert_nil file.thumbnail_sizes["320x180#"][:uid]
+        assert_nil file.thumbnail_sizes["320x180#"][:signature]
+        assert_equal 320, file.thumbnail_sizes["320x180#"][:width]
+        assert_equal 180, file.thumbnail_sizes["320x180#"][:height]
+        assert file.thumbnail_sizes["320x180#"][:url].present?
+        assert file.thumbnail_sizes["320x180#"][:started_generating_at].present?
+      end
+    end
   end
 end

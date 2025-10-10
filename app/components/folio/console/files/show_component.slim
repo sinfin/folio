@@ -89,7 +89,10 @@
                                                               collapsed: controller.action_name != "file_placements"))
           = render(Folio::Console::Files::Show::FilePlacementsComponent.new(file: @file))
 
-  - if @file.class.human_type == "video" && @file.try(:subtitles_enabled?)
+  - if @file.class.human_type == "image"
+    .f-c-files-show__thumbnails-wrap
+      = render(Folio::Console::Files::Show::ThumbnailsComponent.new(file: @file))
+  - elsif @file.class.human_type == "video" && @file.try(:subtitles_enabled?)
     .f-c-files-show__subtitles-wrap
       = render(Folio::Console::Files::SubtitlesFormComponent.new(file: @file))
 

@@ -164,7 +164,10 @@ module Folio::Console::FileControllerBase
 
     def index_filters
       filters = {
-        by_used: [true, false]
+        by_used: [true, false],
+        by_tag_id: {
+          klass: "ActsAsTaggableOn::Tag",
+        },
       }
 
       if @klass.included_modules.include?(Folio::File::HasUsageConstraints)
