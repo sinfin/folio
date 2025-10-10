@@ -108,6 +108,7 @@
 //= require folio/console/files/picker/document_component
 //= require folio/console/files/picker/image_component
 //= require folio/console/files/picker_component
+//= require folio/console/files/show/thumbnails/crop_edit_component
 //= require folio/console/files/show_component
 //= require folio/console/files/show_modal_component
 //= require folio/console/files/subtitle_form_component
