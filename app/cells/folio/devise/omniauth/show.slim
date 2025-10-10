@@ -12,6 +12,7 @@
       button.f-devise-omniauth__button[
         class=omniauth_button_class_name
         type="button"
+        disabled=(disabled_by_default? ? 'disabled' : nil)
         data=button_data(key)
       ]
         = omniauth_button_icon(key)

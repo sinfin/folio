@@ -14,4 +14,8 @@ class Folio::Devise::OmniauthCell < Folio::Devise::ApplicationCell
   def data
     stimulus_controller("f-devise-omniauth")
   end
+
+  def disabled_by_default?
+    model == 'registrations'
+  end
 end
