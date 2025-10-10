@@ -139,7 +139,6 @@ class Folio::Tiptap::Node
   end
 
   private
-
     def validate_site_attachment_allowed
       site = Folio::Current.site
       structure = self.class.respond_to?(:structure) && self.class.structure

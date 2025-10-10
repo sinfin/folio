@@ -42,7 +42,6 @@ class Folio::MediaSource < Folio::ApplicationRecord
   end
 
   private
-
     def nullify_attached_files_attributes
       ids = files.ids
       @nullified_file_ids = ids
