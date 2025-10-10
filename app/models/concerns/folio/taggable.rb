@@ -8,5 +8,6 @@ module Folio::Taggable
     acts_as_taggable_tenant :site_id
 
     scope :by_tag, -> (tag) { tagged_with(tag) }
+    scope :by_tag_id, -> (tag_id) { by_tag(ActsAsTaggableOn::Tag.find_by_id(tag_id)) }
   end
 end

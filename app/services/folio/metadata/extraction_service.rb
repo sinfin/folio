@@ -9,6 +9,11 @@ class Folio::Metadata::ExtractionService
     return false unless Rails.application.config.folio_image_metadata_extraction_enabled
     return false unless image.file.present?
     return false if Rails.env.test? && ENV["FOLIO_SKIP_METADATA_EXTRACTION"] == "true"
+
+    if image.is_a?(Folio::File)
+      return false if image.file_metadata_extracted_at.present? && !image.attached_file_changed?
+    end
+
     image.has_attribute?(:headline) && image.has_attribute?(:file_metadata)
   end
 
