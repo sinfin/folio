@@ -57,11 +57,11 @@ export interface FolioEditorBubbleMenuSource {
 export function FolioEditorBubbleMenu({
   editor,
   source,
-  activeMenusRef,
+  activeMenus,
 }: {
   editor: Editor;
   source: FolioEditorBubbleMenuSource;
-  activeMenusRef: React.MutableRefObject<Map<string, number>>;
+  activeMenus: Map<string, number>;
 }) {
   const floatingUiOptions = {
     placement: source.placement || "bottom",
@@ -73,20 +73,20 @@ export function FolioEditorBubbleMenu({
   const [disabledKeys, setDisabledKeys] = React.useState<string[]>([])
 
   const registerMenu = (sourceKey, priority) => {
-    activeMenusRef.current.set(sourceKey, priority)
+    activeMenus.set(sourceKey, priority)
   }
 
   // Helper to unregister a menu
   const unregisterMenu = (sourceKey) => {
-    activeMenusRef.current.delete(sourceKey)
+    activeMenus.delete(sourceKey)
   }
 
   const hasHighestPriority = (sourceKey, sourcePriority) => {
-    if (activeMenusRef.current.size === 0) return false
-    if (!activeMenusRef.current.has(sourceKey)) return false
+    if (activeMenus.size === 0) return false
+    if (!activeMenus.has(sourceKey)) return false
 
     let highestPriority = -Infinity
-    for (const [id, priority] of activeMenusRef.current.entries()) {
+    for (const [id, priority] of activeMenus.entries()) {
       if (priority > highestPriority) {
         highestPriority = priority
       }
@@ -176,7 +176,7 @@ export function FolioEditorBubbleMenus({
   if (!editor) return null;
   if (!blockEditor) return null;
 
-  const activeMenusRef = React.useRef(new Map())
+  const activeMenus = new Map()
 
   return (
     <>
@@ -185,7 +185,7 @@ export function FolioEditorBubbleMenus({
           editor={editor}
           source={source}
           key={source.pluginKey}
-          activeMenusRef={activeMenusRef}
+          activeMenus={activeMenus}
         />
       ))}
     </>
