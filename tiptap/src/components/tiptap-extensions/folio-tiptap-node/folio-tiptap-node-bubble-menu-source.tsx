@@ -30,6 +30,7 @@ const TRANSLATIONS = {
 
 export const FOLIO_TIPTAP_NODE_BUBBLE_MENU_SOURCE: FolioEditorBubbleMenuSource = {
   pluginKey: "folioTiptapNodeBubbleMenu",
+  priority: 1,
   offset: ({rects}) => -rects.reference.height / 2 - rects.floating.height / 2,
   shouldShow: ({ editor, state }) => {
     return editor.isActive(FolioTiptapNodeExtension.name)

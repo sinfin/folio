@@ -50,6 +50,7 @@ const TRANSLATIONS = {
 
 export const TABLE_BUBBLE_MENU_SOURCE: FolioEditorBubbleMenuSource = {
   pluginKey: "tableBubbleMenu",
+  priority: 2,
   shouldShow: ({ editor, state }) => {
     return editor.isActive("table");
   },

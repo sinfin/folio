@@ -45,6 +45,7 @@ export interface FolioEditorBubbleMenuSourceOffsetArgs {
 
 export interface FolioEditorBubbleMenuSource {
   pluginKey: string;
+  priority: number;
   shouldShow: (params: FolioEditorBubbleMenuSourceShouldShowArgs) => boolean;
   items: FolioEditorBubbleMenuSourceItem[][];
   activeKeys?: (params: FolioEditorBubbleMenuSourceShouldShowArgs) => string[];
@@ -56,9 +57,11 @@ export interface FolioEditorBubbleMenuSource {
 export function FolioEditorBubbleMenu({
   editor,
   source,
+  activeMenusRef,
 }: {
   editor: Editor;
   source: FolioEditorBubbleMenuSource;
+  activeMenusRef: React.MutableRefObject<Map<string, number>>;
 }) {
   const floatingUiOptions = {
     placement: source.placement || "bottom",
@@ -69,11 +72,42 @@ export function FolioEditorBubbleMenu({
   const [activeKeys, setActiveKeys] = React.useState<string[]>([])
   const [disabledKeys, setDisabledKeys] = React.useState<string[]>([])
 
+  const registerMenu = (sourceKey, priority) => {
+    activeMenusRef.current.set(sourceKey, priority)
+  }
+
+  // Helper to unregister a menu
+  const unregisterMenu = (sourceKey) => {
+    activeMenusRef.current.delete(sourceKey)
+  }
+
+  const hasHighestPriority = (sourceKey, sourcePriority) => {
+    if (activeMenusRef.current.size === 0) return false
+    if (!activeMenusRef.current.has(sourceKey)) return false
+
+    let highestPriority = -Infinity
+    for (const [id, priority] of activeMenusRef.current.entries()) {
+      if (priority > highestPriority) {
+        highestPriority = priority
+      }
+    }
+
+    return sourcePriority >= highestPriority
+  }
+
   return (
     <BubbleMenu
       pluginKey={source.pluginKey}
       shouldShow={({ editor, state }: FolioEditorBubbleMenuSourceShouldShowArgs) => {
-        const show = source.shouldShow({ editor, state })
+        const wantsToShow = source.shouldShow({ editor, state })
+        let show = false
+
+        if (wantsToShow) {
+          registerMenu(source.pluginKey, source.priority)
+          show = hasHighestPriority(source.pluginKey, source.priority)
+        } else {
+          unregisterMenu(source.pluginKey)
+        }
 
         if (show) {
           if (source.activeKeys) {
@@ -142,6 +176,8 @@ export function FolioEditorBubbleMenus({
   if (!editor) return null;
   if (!blockEditor) return null;
 
+  const activeMenusRef = React.useRef(new Map())
+
   return (
     <>
       {BUBBLE_MENU_SOURCES.map((source) => (
@@ -149,6 +185,7 @@ export function FolioEditorBubbleMenus({
           editor={editor}
           source={source}
           key={source.pluginKey}
+          activeMenusRef={activeMenusRef}
         />
       ))}
     </>
