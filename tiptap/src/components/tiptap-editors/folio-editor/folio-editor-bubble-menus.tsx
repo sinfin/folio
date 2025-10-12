@@ -76,7 +76,6 @@ export function FolioEditorBubbleMenu({
     activeMenus.set(sourceKey, priority)
   }
 
-  // Helper to unregister a menu
   const unregisterMenu = (sourceKey) => {
     activeMenus.delete(sourceKey)
   }
