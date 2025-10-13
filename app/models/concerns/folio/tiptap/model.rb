@@ -61,7 +61,8 @@ module Folio::Tiptap::Model
       content = value[Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content]]
       next if content.blank?
 
-      Folio::Tiptap::Node.instances_from_tiptap_content(content).each do |instance|
+      model_site = respond_to?(:site) ? site : nil
+      Folio::Tiptap::Node.instances_from_tiptap_content(content, site: model_site).each do |instance|
         instance.class.structure.each do |key, config|
           next if config[:type] != :folio_attachment
 

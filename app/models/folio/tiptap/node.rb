@@ -119,22 +119,22 @@ class Folio::Tiptap::Node
     ]
   end
 
-  def self.instances_from_tiptap_content(content)
+  def self.instances_from_tiptap_content(content, site: nil)
     nodes = []
 
     if content.is_a?(Array)
       content.each do |node|
-        nodes.concat(instances_from_tiptap_content(node))
+        nodes.concat(instances_from_tiptap_content(node, site: site))
       end
     elsif content.is_a?(Hash)
       if content["type"] == "folioTiptapNode"
         begin
-          nodes << new_from_attributes(content["attrs"])
+          nodes << new_from_attributes(content["attrs"], site: site)
         rescue ArgumentError => e
           Rails.logger.error("Folio::Tiptap::Node.instances_from_tiptap_content: #{e.message}")
         end
       elsif content["content"].is_a?(Array) && content["content"].present?
-        nodes.concat(instances_from_tiptap_content(content["content"]))
+        nodes.concat(instances_from_tiptap_content(content["content"], site: site))
       end
     end
 
