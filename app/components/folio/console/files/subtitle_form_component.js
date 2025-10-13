@@ -108,7 +108,6 @@ window.Folio.Stimulus.register('f-c-files-subtitle-form', class extends window.S
           this.element.remove()
         }
 
-        // Additionally, ensure dropdown refreshes like "retranscribe"
         this.reloadEntireSubtitlesForm(parentRoot, parentLoader)
       }).catch((e) => {
         window.alert(window.FolioConsole.translations.errorGeneric.replace('%{message}', e.message))
