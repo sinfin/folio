@@ -12,7 +12,7 @@ export const moveFolioTiptapNode = ({ direction, state, dispatch }: MoveFolioTip
     return false;
   }
 
-  // @ts-ignore - node does exist on selection!
+  // @ts-expect-error - node does exist on selection!
   const node = state.selection.node
 
   if (!node || node.type.name !== "folioTiptapNode") {

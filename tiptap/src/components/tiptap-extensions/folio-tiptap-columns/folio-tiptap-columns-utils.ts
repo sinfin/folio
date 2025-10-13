@@ -35,7 +35,6 @@ export function createColumns(schema: any, colsCount: any, colContent = null) {
     const col = createColumn(types.column, colContent);
 
     if (col) {
-      // @ts-ignore
       cols.push(col);
     }
   }

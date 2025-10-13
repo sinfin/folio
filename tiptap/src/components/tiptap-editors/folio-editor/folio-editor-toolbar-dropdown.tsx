@@ -7,7 +7,6 @@ import {
   DropdownMenuItem,
   DropdownMenuGroup,
 } from "@/components/tiptap-ui-primitive/dropdown-menu"
-import translate from "@/lib/i18n";
 import { ChevronDownIcon } from "@/components/tiptap-icons/chevron-down-icon"
 import { Button } from "@/components/tiptap-ui-primitive/button"
 

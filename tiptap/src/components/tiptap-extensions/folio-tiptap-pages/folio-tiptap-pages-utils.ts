@@ -43,7 +43,6 @@ export function createPages(schema: any, pagesCount: any, pageContent = null) {
     const page = createPage(types.page, pageContent, schema);
 
     if (page) {
-      // @ts-ignore
       pages.push(page);
     }
   }

@@ -1,4 +1,4 @@
-import { mergeAttributes, Node, ReactNodeViewRenderer } from "@tiptap/react";
+import { mergeAttributes, Node } from "@tiptap/react";
 
 export const FolioTiptapColumnNode = Node.create({
   name: 'folioTiptapColumn',

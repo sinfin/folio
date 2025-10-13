@@ -54,7 +54,6 @@ export const setFolioTiptapFloatAttributes = ({
   tr,
   dispatch,
   state,
-  editor,
 }: SetFloatLayoutAttributesArgs) => {
   const floatNode = findParentNode(
     (node: Node) => node.type.name === FolioTiptapFloatNode.name,
@@ -147,7 +146,6 @@ export function cancelFolioTiptapFloat ({
   tr,
   dispatch,
   state,
-  editor,
 }: CancelFolioTiptapFloatArgs) {
   const floatNode = findParentNode(
     (node: Node) => node.type.name === FolioTiptapFloatNode.name,

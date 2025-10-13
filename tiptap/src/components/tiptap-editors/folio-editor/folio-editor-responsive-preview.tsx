@@ -43,7 +43,7 @@ export function FolioEditorResponsivePreview({
 
     document.addEventListener("mousemove", onMouseMove);
     document.addEventListener("mouseup", onMouseUp);
-  }, [enabled, responsivePreviewWidth]);
+  }, [responsivePreviewWidth]);
 
   // scroll to initial position
   React.useEffect(() => {
@@ -55,7 +55,7 @@ export function FolioEditorResponsivePreview({
         }
       }, 0)
     }
-  }, [shouldScrollToInitial, setShouldScrollToInitial, scrollRef.current]);
+  }, [shouldScrollToInitial, setShouldScrollToInitial]);
 
   // debounced onScroll
   const onScroll = React.useCallback(debounce(() => {

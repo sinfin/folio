@@ -1,10 +1,6 @@
 import * as React from "react";
 import type { NodeViewProps } from "@tiptap/react";
 import { NodeViewWrapper } from "@tiptap/react";
-import { Button } from "@/components/tiptap-ui-primitive/button";
-import { EditIcon } from "@/components/tiptap-icons/edit-icon";
-import { XIcon } from "@/components/tiptap-icons/x-icon";
-import { FolioTiptapNodeExtension } from "./folio-tiptap-node-extension";
 import { makeUniqueId } from './make-unique-id';
 import { postEditMessage } from './post-edit-message';
 
