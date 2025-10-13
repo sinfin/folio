@@ -6,8 +6,8 @@ export const HorizontalRuleCommand: FolioEditorCommand = {
   key: "horizontalRule",
   hideInToolbarDropdown: true,
   command: ({ chain }) => {
-    chain.insertContent({ type: "horizontalRule" })
-  }
-}
+    chain.insertContent({ type: "horizontalRule" });
+  },
+};
 
 export default HorizontalRuleCommand;

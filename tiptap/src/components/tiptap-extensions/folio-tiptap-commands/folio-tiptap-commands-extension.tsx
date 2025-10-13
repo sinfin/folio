@@ -1,7 +1,7 @@
 import { Extension, Editor } from "@tiptap/core";
 import Suggestion from "@tiptap/suggestion";
 import type { Range } from "@tiptap/core";
-import { NodeSelection, TextSelection  } from "@tiptap/pm/state";
+import { NodeSelection, TextSelection } from "@tiptap/pm/state";
 import type { ResolvedPos, Node } from "@tiptap/pm/model";
 
 interface CommandInterface {
@@ -12,11 +12,13 @@ interface CommandInterface {
   };
 }
 
-declare module '@tiptap/core' {
+declare module "@tiptap/core" {
   interface Commands<ReturnType> {
     folioTiptapCommands: {
-      triggerFolioTiptapCommand: (resolvedPos: ResolvedPos | null) => ReturnType;
-    }
+      triggerFolioTiptapCommand: (
+        resolvedPos: ResolvedPos | null,
+      ) => ReturnType;
+    };
   }
 }
 
@@ -27,16 +29,12 @@ export const FolioTiptapCommandsExtension = Extension.create({
     return {
       suggestion: {
         char: "/",
-        command: ({
-          editor,
-          range,
-          props,
-        }: CommandInterface) => {
-          const chain = editor.chain()
-          chain.focus()
-          chain.deleteRange(range)
+        command: ({ editor, range, props }: CommandInterface) => {
+          const chain = editor.chain();
+          chain.focus();
+          chain.deleteRange(range);
 
-          props.command({ chain })
+          props.command({ chain });
 
           chain.run();
         },
@@ -57,63 +55,67 @@ export const FolioTiptapCommandsExtension = Extension.create({
     return {
       triggerFolioTiptapCommand:
         (resolvedPos) =>
-           ({ state, dispatch }: CommandParams) => {
-            const resolvedPosWithFallback = resolvedPos || state.selection.$from;
+        ({ state, dispatch }: CommandParams) => {
+          const resolvedPosWithFallback = resolvedPos || state.selection.$from;
 
-            if (!resolvedPosWithFallback) {
-              console.error("Invalid resolved position");
-              return false;
-            }
+          if (!resolvedPosWithFallback) {
+            console.error("Invalid resolved position");
+            return false;
+          }
 
-            let node: Node | null = resolvedPosWithFallback.node(1)
+          let node: Node | null = resolvedPosWithFallback.node(1);
 
-            if (!node) {
-              if (resolvedPos) {
-                node = state.doc.nodeAt(resolvedPos.pos);
-              } else {
-                if (state.selection instanceof NodeSelection) {
-                  node = state.selection.node
-                }
+          if (!node) {
+            if (resolvedPos) {
+              node = state.doc.nodeAt(resolvedPos.pos);
+            } else {
+              if (state.selection instanceof NodeSelection) {
+                node = state.selection.node;
               }
             }
+          }
 
-            let shouldInsertParagraph = true
-            let targetPos
+          let shouldInsertParagraph = true;
+          let targetPos;
 
-            if (node && node.isLeaf) {
-              targetPos = resolvedPosWithFallback.after(1) + node.nodeSize;
-            } else if (node && (node.type.name === "paragraph" && node.content.size === 0)) {
-              shouldInsertParagraph = false
-              targetPos = resolvedPosWithFallback.start(1);
-            } else {
-              targetPos = resolvedPosWithFallback.after(1);
-            }
+          if (node && node.isLeaf) {
+            targetPos = resolvedPosWithFallback.after(1) + node.nodeSize;
+          } else if (
+            node &&
+            node.type.name === "paragraph" &&
+            node.content.size === 0
+          ) {
+            shouldInsertParagraph = false;
+            targetPos = resolvedPosWithFallback.start(1);
+          } else {
+            targetPos = resolvedPosWithFallback.after(1);
+          }
 
-            // Insert a paragraph with "/" and place cursor after
-            const tr = state.tr;
+          // Insert a paragraph with "/" and place cursor after
+          const tr = state.tr;
 
-            if (shouldInsertParagraph) {
-              const paragraph = state.schema.nodes.paragraph.create({}, [
-                state.schema.text("/")
-              ]);
+          if (shouldInsertParagraph) {
+            const paragraph = state.schema.nodes.paragraph.create({}, [
+              state.schema.text("/"),
+            ]);
 
-              tr.insert(targetPos, paragraph);
-            } else {
-              // If the node is a paragraph with no content, just insert "/"
-              const textNode = state.schema.text("/");
-              tr.insert(targetPos, textNode);
-            }
+            tr.insert(targetPos, paragraph);
+          } else {
+            // If the node is a paragraph with no content, just insert "/"
+            const textNode = state.schema.text("/");
+            tr.insert(targetPos, textNode);
+          }
 
-            // Place cursor after the "/"
-            const newPos = targetPos + 1 + (shouldInsertParagraph ? 1 : 0);
-            tr.setSelection(TextSelection.create(tr.doc, newPos));
+          // Place cursor after the "/"
+          const newPos = targetPos + 1 + (shouldInsertParagraph ? 1 : 0);
+          tr.setSelection(TextSelection.create(tr.doc, newPos));
 
-            if (dispatch) {
-              dispatch(tr);
-            }
+          if (dispatch) {
+            dispatch(tr);
+          }
 
-            return true;
-          },
+          return true;
+        },
     };
   },
 });

@@ -1,4 +1,4 @@
-import { HeadingThreeIcon } from "@/components/tiptap-icons/heading-three-icon"
+import { HeadingThreeIcon } from "@/components/tiptap-icons/heading-three-icon";
 
 export const HeadingThreeCommand: FolioEditorCommand = {
   title: { cs: "Nadpis H3", en: "Heading H3" },
@@ -6,8 +6,8 @@ export const HeadingThreeCommand: FolioEditorCommand = {
   key: "heading-3",
   keymap: "###",
   command: ({ chain }) => {
-    chain.setNode("heading", { level: 3 })
-  }
-}
+    chain.setNode("heading", { level: 3 });
+  },
+};
 
 export default HeadingThreeCommand;

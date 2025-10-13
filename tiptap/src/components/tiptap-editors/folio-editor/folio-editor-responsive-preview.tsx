@@ -1,9 +1,9 @@
 import * as React from "react";
 
-import { debounce } from '@/lib/debounce';
-import { ArrowSplitVerticalIcon } from '@/components/tiptap-icons';
+import { debounce } from "@/lib/debounce";
+import { ArrowSplitVerticalIcon } from "@/components/tiptap-icons";
 
-import "./folio-editor-responsive-preview.scss"
+import "./folio-editor-responsive-preview.scss";
 
 interface FolioEditorResponsivePreviewProps {
   enabled: boolean;
@@ -20,30 +20,37 @@ export function FolioEditorResponsivePreview({
   setShouldScrollToInitial,
   children,
 }: FolioEditorResponsivePreviewProps) {
-  const [responsivePreviewWidth, setResponsivePreviewWidth] = React.useState<number>(MINIMUM_WIDTH)
+  const [responsivePreviewWidth, setResponsivePreviewWidth] =
+    React.useState<number>(MINIMUM_WIDTH);
   const scrollRef = React.useRef<HTMLDivElement>(null);
 
-  const onMouseDown = React.useCallback((event: React.MouseEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    event.stopPropagation();
+  const onMouseDown = React.useCallback(
+    (event: React.MouseEvent<HTMLDivElement>) => {
+      event.preventDefault();
+      event.stopPropagation();
 
-    const startX = event.clientX;
-    const startWidth = responsivePreviewWidth
+      const startX = event.clientX;
+      const startWidth = responsivePreviewWidth;
 
-    const onMouseMove = (moveEvent: MouseEvent) => {
-      const newWidth = Math.max(startWidth + 2 * (moveEvent.clientX - startX), MINIMUM_WIDTH)
-      const cappedNewWidth = Math.min(window.innerWidth - 36, newWidth)
-      setResponsivePreviewWidth(cappedNewWidth);
-    };
+      const onMouseMove = (moveEvent: MouseEvent) => {
+        const newWidth = Math.max(
+          startWidth + 2 * (moveEvent.clientX - startX),
+          MINIMUM_WIDTH,
+        );
+        const cappedNewWidth = Math.min(window.innerWidth - 36, newWidth);
+        setResponsivePreviewWidth(cappedNewWidth);
+      };
 
-    const onMouseUp = () => {
-      document.removeEventListener("mousemove", onMouseMove);
-      document.removeEventListener("mouseup", onMouseUp);
-    };
+      const onMouseUp = () => {
+        document.removeEventListener("mousemove", onMouseMove);
+        document.removeEventListener("mouseup", onMouseUp);
+      };
 
-    document.addEventListener("mousemove", onMouseMove);
-    document.addEventListener("mouseup", onMouseUp);
-  }, [responsivePreviewWidth]);
+      document.addEventListener("mousemove", onMouseMove);
+      document.addEventListener("mouseup", onMouseUp);
+    },
+    [responsivePreviewWidth],
+  );
 
   // scroll to initial position
   React.useEffect(() => {
@@ -53,22 +60,26 @@ export function FolioEditorResponsivePreview({
         if (scrollRef.current) {
           scrollRef.current.scrollTop = shouldScrollToInitial;
         }
-      }, 0)
+      }, 0);
     }
   }, [shouldScrollToInitial, setShouldScrollToInitial]);
 
   // debounced onScroll
-  const onScroll = React.useMemo(() => debounce(() => {
-    if (scrollRef.current) {
-      window.parent!.postMessage(
-        {
-          type: "f-tiptap-editor:scrolled",
-          scrollTop: scrollRef.current.scrollTop,
-        },
-        "*",
-      );
-    }
-  }), []);
+  const onScroll = React.useMemo(
+    () =>
+      debounce(() => {
+        if (scrollRef.current) {
+          window.parent!.postMessage(
+            {
+              type: "f-tiptap-editor:scrolled",
+              scrollTop: scrollRef.current.scrollTop,
+            },
+            "*",
+          );
+        }
+      }),
+    [],
+  );
 
   return (
     <div className="f-tiptap-editor-responsive-preview">
@@ -79,7 +90,12 @@ export function FolioEditorResponsivePreview({
       >
         <div
           className="f-tiptap-editor-responsive-preview__inner"
-          style={{ width: (enabled && responsivePreviewWidth) ? `${responsivePreviewWidth}px` : "auto" }}
+          style={{
+            width:
+              enabled && responsivePreviewWidth
+                ? `${responsivePreviewWidth}px`
+                : "auto",
+          }}
         >
           {children}
         </div>
@@ -103,5 +119,5 @@ export function FolioEditorResponsivePreview({
         </div>
       ) : null}
     </div>
-  )
+  );
 }

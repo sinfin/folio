@@ -1,4 +1,4 @@
-import * as React from "react"
+import * as React from "react";
 
 export const TableDeleteRow = React.memo(
   ({ className, ...props }: React.SVGProps<SVGSVGElement>) => {
@@ -17,8 +17,8 @@ export const TableDeleteRow = React.memo(
           fill="currentColor"
         />
       </svg>
-    )
-  }
-)
+    );
+  },
+);
 
-TableDeleteRow.displayName = "TableDeleteRow"
+TableDeleteRow.displayName = "TableDeleteRow";

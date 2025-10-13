@@ -1,1 +1,1 @@
-export * from "./folio-tiptap-invalid-node"
+export * from "./folio-tiptap-invalid-node";

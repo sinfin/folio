@@ -1,9 +1,9 @@
-import * as React from "react"
+import * as React from "react";
 
 interface WindowSizeState {
-  width: number
-  height: number
-  offsetTop: number
+  width: number;
+  height: number;
+  offsetTop: number;
 }
 
 /**
@@ -15,18 +15,18 @@ export function useWindowSize(): WindowSizeState {
     width: 0,
     height: 0,
     offsetTop: 0,
-  })
+  });
 
   React.useEffect(() => {
-    handleResize()
+    handleResize();
 
     function handleResize() {
-      if (typeof window === "undefined") return
+      if (typeof window === "undefined") return;
 
-      const vp = window.visualViewport
-      if (!vp) return
+      const vp = window.visualViewport;
+      if (!vp) return;
 
-      const { width = 0, height = 0, offsetTop = 0 } = vp
+      const { width = 0, height = 0, offsetTop = 0 } = vp;
 
       // Only update state if values have changed
       setWindowSize((state) => {
@@ -35,26 +35,26 @@ export function useWindowSize(): WindowSizeState {
           height === state.height &&
           offsetTop === state.offsetTop
         ) {
-          return state
+          return state;
         }
 
-        return { width, height, offsetTop }
-      })
+        return { width, height, offsetTop };
+      });
     }
 
-    const visualViewport = window.visualViewport
+    const visualViewport = window.visualViewport;
     if (visualViewport) {
-      visualViewport.addEventListener("resize", handleResize)
-      visualViewport.addEventListener("scroll", handleResize)
+      visualViewport.addEventListener("resize", handleResize);
+      visualViewport.addEventListener("scroll", handleResize);
     }
 
     return () => {
       if (visualViewport) {
-        visualViewport.removeEventListener("resize", handleResize)
-        visualViewport.removeEventListener("scroll", handleResize)
+        visualViewport.removeEventListener("resize", handleResize);
+        visualViewport.removeEventListener("scroll", handleResize);
       }
-    }
-  }, [])
+    };
+  }, []);
 
-  return windowSize
+  return windowSize;
 }

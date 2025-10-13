@@ -1,6 +1,8 @@
 import { Cuboid } from "lucide-react";
 
-export const makeFolioTiptapNodesCommandGroup = (folioTiptapNodes: FolioTiptapNodeFromInput[]): FolioEditorCommandGroup => {
+export const makeFolioTiptapNodesCommandGroup = (
+  folioTiptapNodes: FolioTiptapNodeFromInput[],
+): FolioEditorCommandGroup => {
   const commands = folioTiptapNodes.map((folioTiptapNode) => {
     const command: FolioEditorCommand = {
       title: folioTiptapNode.title,
@@ -19,16 +21,18 @@ export const makeFolioTiptapNodesCommandGroup = (folioTiptapNodes: FolioTiptapNo
           },
           "*",
         );
-      }
-    }
+      },
+    };
 
-    return command
-  })
+    return command;
+  });
 
   // sort commands by title
   commands.sort((a, b) => {
-    const aTitle = a.title[document.documentElement.lang as "cs" | "en"] || a.title["en"];
-    const bTitle = b.title[document.documentElement.lang as "cs" | "en"] || b.title["en"];
+    const aTitle =
+      a.title[document.documentElement.lang as "cs" | "en"] || a.title["en"];
+    const bTitle =
+      b.title[document.documentElement.lang as "cs" | "en"] || b.title["en"];
 
     return aTitle.localeCompare(bTitle);
   });
@@ -38,7 +42,7 @@ export const makeFolioTiptapNodesCommandGroup = (folioTiptapNodes: FolioTiptapNo
     key: "folioTiptapNodes",
     icon: Cuboid,
     commands,
-  }
-}
+  };
+};
 
 export default makeFolioTiptapNodesCommandGroup;

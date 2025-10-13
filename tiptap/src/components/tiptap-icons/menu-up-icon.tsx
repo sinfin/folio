@@ -1,4 +1,4 @@
-import * as React from "react"
+import * as React from "react";
 
 export const MenuUpIcon = React.memo(
   ({ className, ...props }: React.SVGProps<SVGSVGElement>) => {
@@ -12,10 +12,10 @@ export const MenuUpIcon = React.memo(
         xmlns="http://www.w3.org/2000/svg"
         {...props}
       >
-        <path d="M7 15L12 10L17 15H7Z" fill="currentColor"/>
+        <path d="M7 15L12 10L17 15H7Z" fill="currentColor" />
       </svg>
-    )
-  }
-)
+    );
+  },
+);
 
-MenuUpIcon.displayName = "MenuUpIcon"
+MenuUpIcon.displayName = "MenuUpIcon";

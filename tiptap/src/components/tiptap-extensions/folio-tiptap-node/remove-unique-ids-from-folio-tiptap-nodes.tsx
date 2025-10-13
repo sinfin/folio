@@ -1,4 +1,6 @@
-export const removeUniqueIdsFromFolioTiptapNodes = (node: import("@tiptap/react").JSONContent) => {
+export const removeUniqueIdsFromFolioTiptapNodes = (
+  node: import("@tiptap/react").JSONContent,
+) => {
   // Copy the node to avoid mutating the original
   const newNode = { ...node };
 
@@ -10,10 +12,10 @@ export const removeUniqueIdsFromFolioTiptapNodes = (node: import("@tiptap/react"
 
   // If the node has children (content), recursively process them
   if (newNode.content && Array.isArray(newNode.content)) {
-    newNode.content = newNode.content.map(child => removeUniqueIdsFromFolioTiptapNodes(child));
+    newNode.content = newNode.content.map((child) =>
+      removeUniqueIdsFromFolioTiptapNodes(child),
+    );
   }
 
   return newNode;
 };
-
-

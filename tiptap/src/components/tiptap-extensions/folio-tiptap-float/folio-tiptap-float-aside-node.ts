@@ -1,16 +1,16 @@
-import { Node, mergeAttributes } from '@tiptap/core';
+import { Node, mergeAttributes } from "@tiptap/core";
 
-export * from './folio-tiptap-float-node';
+export * from "./folio-tiptap-float-node";
 
 export const FolioTiptapFloatAsideNode = Node.create({
-  name: 'folioTiptapFloatAside',
+  name: "folioTiptapFloatAside",
   isolating: true,
-  content: 'block+',
+  content: "block+",
 
   addOptions() {
     return {
       HTMLAttributes: {
-        class: 'f-tiptap-float__aside',
+        class: "f-tiptap-float__aside",
       },
     };
   },
@@ -18,16 +18,24 @@ export const FolioTiptapFloatAsideNode = Node.create({
   parseHTML() {
     return [
       {
-        tag: 'aside.f-tiptap-float__aside',
+        tag: "aside.f-tiptap-float__aside",
       },
       {
-        tag: 'div.f-tiptap-float__aside',
+        tag: "div.f-tiptap-float__aside",
       },
     ];
   },
 
   renderHTML({ HTMLAttributes }) {
-    return ['aside', mergeAttributes({ "class": "f-tiptap-float__aside" }, this.options.HTMLAttributes, HTMLAttributes), 0];
+    return [
+      "aside",
+      mergeAttributes(
+        { class: "f-tiptap-float__aside" },
+        this.options.HTMLAttributes,
+        HTMLAttributes,
+      ),
+      0,
+    ];
   },
 });
 

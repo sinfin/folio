@@ -5,8 +5,8 @@ export const FolioTiptapFloatCommand: FolioEditorCommand = {
   icon: FormatImageLeft,
   key: "folioTiptapFloat",
   command: ({ chain }) => {
-    chain.insertFolioTiptapFloat()
-  }
-}
+    chain.insertFolioTiptapFloat();
+  },
+};
 
 export default FolioTiptapFloatCommand;

@@ -1,10 +1,10 @@
-import { AlignLeftIcon } from "@/components/tiptap-icons/align-left-icon"
+import { AlignLeftIcon } from "@/components/tiptap-icons/align-left-icon";
 
 import {
   TextAlignLeftCommand,
   TextAlignCenterCommand,
   TextAlignRightCommand,
-} from "@/components/tiptap-commands"
+} from "@/components/tiptap-commands";
 
 export const TextAlignCommandGroup: FolioEditorCommandGroup = {
   title: { cs: "Zarovnání", en: "Text align" },
@@ -14,7 +14,7 @@ export const TextAlignCommandGroup: FolioEditorCommandGroup = {
     TextAlignLeftCommand,
     TextAlignCenterCommand,
     TextAlignRightCommand,
-  ]
-}
+  ],
+};
 
 export default TextAlignCommandGroup;
