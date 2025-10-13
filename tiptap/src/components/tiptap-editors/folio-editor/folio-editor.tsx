@@ -206,6 +206,7 @@ export function FolioEditor({
         heading: {
           levels: folioTiptapHeadingLevels,
         },
+        gapcursor: false,
         link: {
           openOnClick: false,
           enableClickSelection: true,
