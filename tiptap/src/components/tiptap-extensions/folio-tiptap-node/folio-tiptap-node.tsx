@@ -62,7 +62,13 @@ interface RespnoseFromApiType {
 
 export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
   const { uniqueId, ...attrsWithoutUniqueId } = props.node.attrs;
-  const { updateAttributes } = props;
+  const { updateAttributes: propsUpdateAttributes } = props;
+  
+  // Memoize updateAttributes to prevent unnecessary re-renders
+  const updateAttributes = React.useCallback(
+    (attrs: Record<string, unknown>) => propsUpdateAttributes(attrs),
+    [propsUpdateAttributes]
+  );
 
   // All hooks must be declared before any conditional returns
   const [status, setStatus] = React.useState<string>("initial");
