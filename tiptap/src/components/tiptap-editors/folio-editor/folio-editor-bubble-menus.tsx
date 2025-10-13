@@ -72,15 +72,15 @@ export function FolioEditorBubbleMenu({
   const [activeKeys, setActiveKeys] = React.useState<string[]>([])
   const [disabledKeys, setDisabledKeys] = React.useState<string[]>([])
 
-  const registerMenu = (sourceKey, priority) => {
+  const registerMenu = (sourceKey: string, priority: number) => {
     activeMenus.set(sourceKey, priority)
   }
 
-  const unregisterMenu = (sourceKey) => {
+  const unregisterMenu = (sourceKey: string) => {
     activeMenus.delete(sourceKey)
   }
 
-  const hasHighestPriority = (sourceKey, sourcePriority) => {
+  const hasHighestPriority = (sourceKey: string, sourcePriority: number) => {
     if (activeMenus.size === 0) return false
     if (!activeMenus.has(sourceKey)) return false
 
