@@ -73,8 +73,6 @@ export function FolioEditorToolbarDropdown({
   commandGroup,
   editor,
 }: FolioEditorToolbarDropdownProps) {
-  if (!editor) return
-
   const [isOpen, setIsOpen] = React.useState(false)
 
   const handleOnOpenChange = React.useCallback(
@@ -91,6 +89,8 @@ export function FolioEditorToolbarDropdown({
       return null
     }
   }, [editorState.value, commandGroup.commands])
+
+  if (!editor) return null;
 
   const activeItem = getActiveItem()
   const ActiveIcon = activeItem ? activeItem.icon : commandGroup.icon;

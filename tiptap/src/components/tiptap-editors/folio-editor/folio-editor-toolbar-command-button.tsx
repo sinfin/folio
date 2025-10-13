@@ -14,10 +14,9 @@ export const FolioEditorToolbarCommandButton = React.forwardRef<
   HTMLButtonElement,
   FolioEditorToolbarCommandButtonProps
 >(({ editor, command }, ref) => {
-  if (!editor) return
-
   const handleClick = React.useCallback(
     () => {
+      if (!editor) return;
       const chain = editor.chain()
       chain.focus()
       command.command({ chain })
@@ -27,6 +26,8 @@ export const FolioEditorToolbarCommandButton = React.forwardRef<
   );
 
   const label = command.title[document.documentElement.lang as keyof typeof command.title] || command.title.en;
+
+  if (!editor) return null;
 
   return (
     <Button

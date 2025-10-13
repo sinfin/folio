@@ -1,10 +1,10 @@
 import { findParentNode } from "@tiptap/core";
-import { Node } from "@tiptap/pm/model";
-import { type EditorState, TextSelection } from "@tiptap/pm/state";
+import { Node, NodeType, Schema } from "@tiptap/pm/model";
+import { type EditorState, TextSelection, Transaction } from "@tiptap/pm/state";
 
 import { FolioTiptapColumnNode, FolioTiptapColumnsNode } from "./index";
 
-export function createColumn(colType: any, index: any, colContent = null) {
+export function createColumn(colType: NodeType, colContent = null) {
   if (colContent) {
     return colType.createChecked({}, colContent);
   }
@@ -12,7 +12,7 @@ export function createColumn(colType: any, index: any, colContent = null) {
   return colType.createAndFill({});
 }
 
-export function getColumnsNodeTypes(schema: any) {
+export function getColumnsNodeTypes(schema: Schema) {
   if (schema.cached.columnsNodeTypes) {
     return schema.cached.columnsNodeTypes;
   }
@@ -27,7 +27,7 @@ export function getColumnsNodeTypes(schema: any) {
   return roles;
 }
 
-export function createColumns(schema: any, colsCount: any, colContent = null) {
+export function createColumns(schema: Schema, colsCount: number, colContent = null) {
   const types = getColumnsNodeTypes(schema);
   const cols = [];
 
@@ -48,7 +48,7 @@ export function addOrDeleteColumn({
   type,
 }: {
   state: EditorState;
-  dispatch: any;
+  dispatch: (tr: Transaction) => void;
   type: "addBefore" | "addAfter" | "delete";
 }) {
   const maybeColumns = findParentNode(
@@ -85,7 +85,7 @@ export function addOrDeleteColumn({
       if (colsJSON.content.length <= 2) {
         // Collect all content from all columns
         const allContent = [];
-        colsJSON.content.forEach((column: { content: any[]; }) => {
+        colsJSON.content.forEach((column: { content: Node[]; }) => {
           if (column.content && column.content.length > 0) {
             allContent.push(...column.content);
           }
@@ -177,7 +177,7 @@ export function goToColumn({
   type,
 }: {
   state: EditorState;
-  dispatch: any;
+  dispatch: (tr: Transaction) => void;
   type: "before" | "after";
 }) {
   const maybeColumns = findParentNode(

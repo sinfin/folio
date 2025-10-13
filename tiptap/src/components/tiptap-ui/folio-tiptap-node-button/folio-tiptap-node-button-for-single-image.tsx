@@ -20,21 +20,21 @@ export interface FolioTiptapNodeButtonForSingleImageProps {
 }
 
 export const FolioTiptapNodeButtonForSingleImage = ({ editor, singleImageNodeForToolbar }: FolioTiptapNodeButtonForSingleImageProps) => {
-  if (!singleImageNodeForToolbar) return
-  if (!editor || !editor.isEditable) return null;
-
   const handleClick = React.useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
+    () => {
       window.parent!.postMessage(
         {
           type: "f-tiptap-slash-command:selected",
-          attrs: { type: singleImageNodeForToolbar.type },
+          attrs: { type: singleImageNodeForToolbar?.type },
         },
         "*",
       );
     },
     [singleImageNodeForToolbar],
   );
+
+  if (!singleImageNodeForToolbar) return
+  if (!editor || !editor.isEditable) return null;
 
   const label = translate(TRANSLATIONS, "insert");
 

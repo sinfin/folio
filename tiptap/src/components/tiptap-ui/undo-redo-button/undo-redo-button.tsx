@@ -73,7 +73,7 @@ export const UndoRedoButton = React.forwardRef<
       editor: providedEditor,
       action,
       className = "",
-      active,
+
       enabled,
       children,
       ...buttonProps

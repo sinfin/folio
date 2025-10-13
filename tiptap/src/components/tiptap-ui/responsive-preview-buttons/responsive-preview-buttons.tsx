@@ -2,7 +2,6 @@ import * as React from "react"
 import { MonitorIcon, SmartphoneIcon } from '@/components/tiptap-icons';
 import translate from "@/lib/i18n";
 
-import type { ButtonProps } from "@/components/tiptap-ui-primitive/button";
 import { Button } from "@/components/tiptap-ui-primitive/button";
 
 import "./responsive-preview-buttons.scss"

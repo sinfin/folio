@@ -167,7 +167,9 @@ const PopoverTrigger = React.forwardRef<HTMLElement, TriggerElementProps>(
     const context = usePopoverContext()
     const childrenRef = React.isValidElement(children)
       ? parseInt(React.version, 10) >= 19
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ? (children.props as any).ref
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         : (children as any).ref
       : undefined
     const ref = useMergeRefs([context.refs.setReference, propRef, childrenRef])
@@ -178,6 +180,7 @@ const PopoverTrigger = React.forwardRef<HTMLElement, TriggerElementProps>(
         context.getReferenceProps({
           ref,
           ...props,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           ...(children.props as any),
           "data-state": context.open ? "open" : "closed",
         })
@@ -226,7 +229,9 @@ const PopoverContent = React.forwardRef<HTMLDivElement, PopoverContentProps>(
     const context = usePopoverContext()
     const childrenRef = React.isValidElement(children)
       ? parseInt(React.version, 10) >= 19
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ? (children.props as any).ref
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         : (children as any).ref
       : undefined
     const ref = useMergeRefs([context.refs.setFloating, propRef, childrenRef])
@@ -258,6 +263,7 @@ const PopoverContent = React.forwardRef<HTMLDivElement, PopoverContentProps>(
       asChild && React.isValidElement(children) ? (
         React.cloneElement(children, {
           ...contentProps,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           ...(children.props as any),
         })
       ) : (

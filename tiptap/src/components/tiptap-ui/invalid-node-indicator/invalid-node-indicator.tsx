@@ -22,7 +22,7 @@ const DEFAULT_INVALID_NODE_HASH = {
 }
 
 interface InvalidNodeIndicatorProps {
-  invalidNodeHash?: Record<string, any>;
+  invalidNodeHash?: Record<string, unknown>;
   message?: string;
   errorMessage?: string;
 }

@@ -1,9 +1,9 @@
-import { type EditorState, TextSelection } from "@tiptap/pm/state";
+import { type EditorState, TextSelection, type Transaction } from "@tiptap/pm/state";
 
 interface MoveFolioTiptapNodeProps {
   direction: "up" | "down";
   state: EditorState;
-  dispatch: any;
+  dispatch: (tr: Transaction) => void;
 }
 
 export const moveFolioTiptapNode = ({ direction, state, dispatch }: MoveFolioTiptapNodeProps): boolean => {

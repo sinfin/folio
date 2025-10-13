@@ -58,7 +58,7 @@ export function FolioEditorResponsivePreview({
   }, [shouldScrollToInitial, setShouldScrollToInitial]);
 
   // debounced onScroll
-  const onScroll = React.useCallback(debounce(() => {
+  const onScroll = React.useMemo(() => debounce(() => {
     if (scrollRef.current) {
       window.parent!.postMessage(
         {
@@ -68,7 +68,7 @@ export function FolioEditorResponsivePreview({
         "*",
       );
     }
-  }), [scrollRef]);
+  }), []);
 
   return (
     <div className="f-tiptap-editor-responsive-preview">

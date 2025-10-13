@@ -82,27 +82,32 @@ export const FolioTiptapPagesNode = Node.create({
           },
       addFolioTiptapPageBefore:
         () =>
-          ({ dispatch, state }) => {
+          ({ dispatch, state }: CommandParams) => {
+            if (!dispatch) return false;
             return addOrDeletePage({ dispatch, state, type: 'addBefore' });
           },
       addFolioTiptapPageAfter:
         () =>
-          ({ dispatch, state }) => {
+          ({ dispatch, state }: CommandParams) => {
+            if (!dispatch) return false;
             return addOrDeletePage({ dispatch, state, type: 'addAfter' });
           },
       deleteFolioTiptapPage:
         () =>
-          ({ dispatch, state }) => {
+          ({ dispatch, state }: CommandParams) => {
+            if (!dispatch) return false;
             return addOrDeletePage({ dispatch, state, type: 'delete' });
           },
       moveFolioTiptapPageUp:
         () =>
-          ({ dispatch, state }) => {
+          ({ dispatch, state }: CommandParams) => {
+            if (!dispatch) return false;
             return moveFolioTiptapPage({ state, dispatch, type: 'up' });
           },
       moveFolioTiptapPageDown:
         () =>
-          ({ dispatch, state }) => {
+          ({ dispatch, state }: CommandParams) => {
+            if (!dispatch) return false;
             return moveFolioTiptapPage({ state, dispatch, type: 'down' });
           },
     };
