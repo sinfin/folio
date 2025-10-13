@@ -7,7 +7,8 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
     inline: Boolean,
     maxNumberOfFiles: Number,
     existingId: String,
-    allowedFormats: String
+    allowedFormats: String,
+    maxFileSize: Number
   }
 
   static targets = ['trigger', 'loader']
@@ -70,6 +71,10 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
         restrictions.allowedFileTypes = this.allowedFormatsValue.split(',')
       }
 
+      if (this.maxFileSizeValue) {
+        restrictions.maxFileSize = this.maxFileSizeValue
+      }
+
       if (Object.keys(restrictions).length > 0) {
         opts.restrictions = restrictions
       }
@@ -101,6 +106,7 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
       if (this.existingIdValue) args.existing_id = this.existingIdValue
 
       this.uppy.use(window.Uppy.AwsS3, {
+        shouldUseMultipart: false,
         getUploadParameters: (file) => {
           return window.Folio.Api.apiPost('/folio/api/s3/before', { ...args, file_name: file.name })
             .then((response) => {
