@@ -2,7 +2,7 @@ import * as React from "react";
 import { type Editor } from "@tiptap/react";
 
 import { Button } from "@/components/tiptap-ui-primitive/button";
-import { ImageIcon } from '@/components/tiptap-icons';
+import { ImageIcon } from "@/components/tiptap-icons";
 import translate from "@/lib/i18n";
 
 const TRANSLATIONS = {
@@ -19,21 +19,21 @@ export interface FolioTiptapNodeButtonForSingleImageProps {
   singleImageNodeForToolbar: FolioTiptapNodeFromInput | null;
 }
 
-export const FolioTiptapNodeButtonForSingleImage = ({ editor, singleImageNodeForToolbar }: FolioTiptapNodeButtonForSingleImageProps) => {
-  const handleClick = React.useCallback(
-    () => {
-      window.parent!.postMessage(
-        {
-          type: "f-tiptap-slash-command:selected",
-          attrs: { type: singleImageNodeForToolbar?.type },
-        },
-        "*",
-      );
-    },
-    [singleImageNodeForToolbar],
-  );
+export const FolioTiptapNodeButtonForSingleImage = ({
+  editor,
+  singleImageNodeForToolbar,
+}: FolioTiptapNodeButtonForSingleImageProps) => {
+  const handleClick = React.useCallback(() => {
+    window.parent!.postMessage(
+      {
+        type: "f-tiptap-slash-command:selected",
+        attrs: { type: singleImageNodeForToolbar?.type },
+      },
+      "*",
+    );
+  }, [singleImageNodeForToolbar]);
 
-  if (!singleImageNodeForToolbar) return
+  if (!singleImageNodeForToolbar) return;
   if (!editor || !editor.isEditable) return null;
 
   const label = translate(TRANSLATIONS, "insert");
@@ -51,8 +51,9 @@ export const FolioTiptapNodeButtonForSingleImage = ({ editor, singleImageNodeFor
       <ImageIcon className="tiptap-button-icon" />
     </Button>
   );
-}
+};
 
-FolioTiptapNodeButtonForSingleImage.displayName = "FolioTiptapNodeButtonForSingleImage";
+FolioTiptapNodeButtonForSingleImage.displayName =
+  "FolioTiptapNodeButtonForSingleImage";
 
 export default FolioTiptapNodeButtonForSingleImage;

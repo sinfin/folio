@@ -1,4 +1,4 @@
-import * as React from "react"
+import * as React from "react";
 
 export const ArrowDownIcon = React.memo(
   ({ className, ...props }: React.SVGProps<SVGSVGElement>) => {
@@ -12,10 +12,13 @@ export const ArrowDownIcon = React.memo(
         xmlns="http://www.w3.org/2000/svg"
         {...props}
       >
-        <path d="M11.0001 4H13.0001V16L18.5001 10.5L19.9201 11.92L12.0001 19.84L4.08008 11.92L5.50008 10.5L11.0001 16V4Z" fill="currentColor"/>
+        <path
+          d="M11.0001 4H13.0001V16L18.5001 10.5L19.9201 11.92L12.0001 19.84L4.08008 11.92L5.50008 10.5L11.0001 16V4Z"
+          fill="currentColor"
+        />
       </svg>
-    )
-  }
-)
+    );
+  },
+);
 
-ArrowDownIcon.displayName = "ArrowDownIcon"
+ArrowDownIcon.displayName = "ArrowDownIcon";

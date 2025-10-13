@@ -1,21 +1,22 @@
-import { Node } from '@tiptap/core';
+import { Node } from "@tiptap/core";
 
 export const FolioTiptapStyledWrap = Node.create({
   name: "folioTiptapStyledWrap",
   defining: false,
   isolating: true,
   allowGapCursor: false,
-  content: 'block+',
+  content: "block+",
   group: "block",
 
   parseHTML() {
     return [
       {
-        tag: 'div.f-tiptap-styled-wrap',
+        tag: "div.f-tiptap-styled-wrap",
         getAttrs: (element) => {
-          if (typeof element === 'string') return false;
+          if (typeof element === "string") return false;
           return {
-            variant: element.getAttribute('data-f-tiptap-styled-wrap-variant') || null,
+            variant:
+              element.getAttribute("data-f-tiptap-styled-wrap-variant") || null,
           };
         },
       },
@@ -23,7 +24,14 @@ export const FolioTiptapStyledWrap = Node.create({
   },
 
   renderHTML({ HTMLAttributes }) {
-    return ["div", { ...HTMLAttributes, class: "f-tiptap-styled-wrap f-tiptap-avoid-external-layout" }, 0];
+    return [
+      "div",
+      {
+        ...HTMLAttributes,
+        class: "f-tiptap-styled-wrap f-tiptap-avoid-external-layout",
+      },
+      0,
+    ];
   },
 
   addOptions() {

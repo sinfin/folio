@@ -1,4 +1,4 @@
-import * as React from "react"
+import * as React from "react";
 
 export const TableMergeCells = React.memo(
   ({ className, ...props }: React.SVGProps<SVGSVGElement>) => {
@@ -17,8 +17,8 @@ export const TableMergeCells = React.memo(
           fill="currentColor"
         />
       </svg>
-    )
-  }
-)
+    );
+  },
+);
 
-TableMergeCells.displayName = "TableMergeCells"
+TableMergeCells.displayName = "TableMergeCells";

@@ -1,6 +1,8 @@
 import { Box } from "lucide-react";
 
-export const makeFolioTiptapStyledWrapCommands = (styledWrapVariants: StyledWrapVariantFromInput[]): FolioEditorCommand[] => {
+export const makeFolioTiptapStyledWrapCommands = (
+  styledWrapVariants: StyledWrapVariantFromInput[],
+): FolioEditorCommand[] => {
   const commands = styledWrapVariants.map((styledWrapVariant) => {
     const command: FolioEditorCommand = {
       title: styledWrapVariant.title,
@@ -13,25 +15,27 @@ export const makeFolioTiptapStyledWrapCommands = (styledWrapVariants: StyledWrap
           content: [
             {
               type: "paragraph",
-              content: []
-            }
-          ]
-        })
-      }
-    }
+              content: [],
+            },
+          ],
+        });
+      },
+    };
 
-    return command
-  })
+    return command;
+  });
 
   // sort commands by title
   commands.sort((a, b) => {
-    const aTitle = a.title[document.documentElement.lang as "cs" | "en"] || a.title["en"];
-    const bTitle = b.title[document.documentElement.lang as "cs" | "en"] || b.title["en"];
+    const aTitle =
+      a.title[document.documentElement.lang as "cs" | "en"] || a.title["en"];
+    const bTitle =
+      b.title[document.documentElement.lang as "cs" | "en"] || b.title["en"];
 
     return aTitle.localeCompare(bTitle);
   });
 
-  return commands
-}
+  return commands;
+};
 
 export default makeFolioTiptapStyledWrapCommands;

@@ -139,8 +139,14 @@ export const useLinkHandler = (props: LinkHandlerProps) => {
         .extendMarkRange("link")
         .setLink({
           href: optionalNewData.href || linkData.href || "",
-          rel: (typeof optionalNewData.rel === "undefined") ? linkData.rel : optionalNewData.rel,
-          target: (typeof optionalNewData.target === "undefined") ? linkData.target : optionalNewData.target,
+          rel:
+            typeof optionalNewData.rel === "undefined"
+              ? linkData.rel
+              : optionalNewData.rel,
+          target:
+            typeof optionalNewData.target === "undefined"
+              ? linkData.target
+              : optionalNewData.target,
         })
         .run();
 
@@ -304,7 +310,7 @@ const LinkMain: React.FC<LinkMainProps> = ({
                 setLink({
                   ...linkData,
                   target: e.target.checked ? "_blank" : null,
-                })
+                });
               }}
             />
             <span className="f-tiptap-link-popover__checkbox-text">

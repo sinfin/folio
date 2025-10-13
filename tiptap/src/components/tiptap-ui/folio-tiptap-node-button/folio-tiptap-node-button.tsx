@@ -50,11 +50,7 @@ export const FolioTiptapNodeButton = React.forwardRef<
   const handleClick = React.useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       if (!e.defaultPrevented && !disabled && editor) {
-        editor
-          .chain()
-          .focus()
-          .triggerFolioTiptapCommand(null)
-          .run();
+        editor.chain().focus().triggerFolioTiptapCommand(null).run();
       }
     },
     [disabled, editor],

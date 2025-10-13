@@ -1,4 +1,4 @@
-import * as React from "react"
+import * as React from "react";
 
 export const SizeLIcon = React.memo(
   ({ className, ...props }: React.SVGProps<SVGSVGElement>) => {
@@ -12,10 +12,10 @@ export const SizeLIcon = React.memo(
         xmlns="http://www.w3.org/2000/svg"
         {...props}
       >
-        <path d="M9 7V17H15V15H11V7H9Z" fill="currentColor"/>
+        <path d="M9 7V17H15V15H11V7H9Z" fill="currentColor" />
       </svg>
-    )
-  }
-)
+    );
+  },
+);
 
-SizeLIcon.displayName = "SizeLIcon"
+SizeLIcon.displayName = "SizeLIcon";

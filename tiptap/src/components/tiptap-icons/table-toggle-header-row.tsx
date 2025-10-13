@@ -1,4 +1,4 @@
-import * as React from "react"
+import * as React from "react";
 
 export const TableToggleHeaderRow = React.memo(
   ({ className, ...props }: React.SVGProps<SVGSVGElement>) => {
@@ -12,8 +12,8 @@ export const TableToggleHeaderRow = React.memo(
         className={className}
         {...props}
       >
-        <rect x="6" y="7" width="4" height="3" fill="currentColor"/>
-        <rect x="14" y="7" width="4" height="3" fill="currentColor"/>
+        <rect x="6" y="7" width="4" height="3" fill="currentColor" />
+        <rect x="14" y="7" width="4" height="3" fill="currentColor" />
         <path
           fillRule="evenodd"
           clipRule="evenodd"
@@ -21,8 +21,8 @@ export const TableToggleHeaderRow = React.memo(
           fill="currentColor"
         />
       </svg>
-    )
-  }
-)
+    );
+  },
+);
 
-TableToggleHeaderRow.displayName = "TableToggleHeaderRow"
+TableToggleHeaderRow.displayName = "TableToggleHeaderRow";

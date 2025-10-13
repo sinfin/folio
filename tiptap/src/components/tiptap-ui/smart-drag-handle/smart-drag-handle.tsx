@@ -16,7 +16,10 @@ export function SmartDragHandle({ editor }: { editor: Editor }) {
     y: number;
   } | null>(null);
 
-  const [clipboardData, setClipboardData] = React.useState<ClipboardData>({ at: null, html: null });
+  const [clipboardData, setClipboardData] = React.useState<ClipboardData>({
+    at: null,
+    html: null,
+  });
 
   return (
     <DragHandle
@@ -31,12 +34,14 @@ export function SmartDragHandle({ editor }: { editor: Editor }) {
               type: node.type.name,
               x: rect.x,
               y: rect.y,
-            }
+            };
 
-            if (selectedNodeData &&
-                selectedNodeData.type === newData.type &&
-                selectedNodeData.x === newData.x &&
-                selectedNodeData.y === newData.y) {
+            if (
+              selectedNodeData &&
+              selectedNodeData.type === newData.type &&
+              selectedNodeData.x === newData.x &&
+              selectedNodeData.y === newData.y
+            ) {
               return;
             }
 
@@ -56,5 +61,5 @@ export function SmartDragHandle({ editor }: { editor: Editor }) {
         setClipboardData={setClipboardData}
       />
     </DragHandle>
-  )
+  );
 }
