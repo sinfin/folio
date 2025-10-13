@@ -24,9 +24,4 @@ class Folio::Console::Form::HeaderComponent < Folio::Console::ApplicationCompone
   def record
     @model.try(:object) || @model
   end
-
-  # todo seems to be unused
-  def translations
-    cell("folio/console/pages/translations", record, as_pills: true)
-  end
 end

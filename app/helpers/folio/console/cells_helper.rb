@@ -33,11 +33,6 @@ module Folio
         opts[:right] = capture(&block)
       end
 
-      opts[:form_errors_shown] = @form_errors_shown # todo seems to be unused
-
-      # todo html_safe?
-      # cell("folio/console/form/header", f, opts).show.html_safe
-
       render(Folio::Console::Form::HeaderComponent.new(model: f,
                                                       title: opts[:title],
                                                       title_class_name: opts[:title_class_name],
