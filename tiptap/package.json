@@ -11,6 +11,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
+    "format:file": "prettier --write",
     "format:check": "prettier --check .",
     "preview": "vite preview",
     "type-check": "tsc --noEmit"
