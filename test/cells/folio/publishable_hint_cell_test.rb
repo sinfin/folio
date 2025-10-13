@@ -5,7 +5,7 @@ require "test_helper"
 class Folio::PublishableHintCellTest < ActionDispatch::IntegrationTest
   include Warden::Test::Helpers
 
-  test "publishable_hint" do
+  test "publishable_hint_component" do
     create_and_host_site
 
     @page = create(:folio_page)
