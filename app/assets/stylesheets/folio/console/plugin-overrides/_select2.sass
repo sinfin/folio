@@ -5,11 +5,37 @@
     min-width: 200px
 
   .select2-selection
-    background-color: $form-select-bg
-    background-image: escape-svg($form-select-indicator)
-    background-repeat: no-repeat
-    background-position: $form-select-bg-position
-    background-size: $form-select-bg-size
+    &::before
+      content: ""
+      position: absolute
+      top: 1px
+      right: 28px
+      width: 20px
+      height: calc(100% - 2px)
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.00) 0%, $form-select-bg 100%)
+
+    &::after
+      content: ""
+      position: absolute
+      top: 1px
+      right: 6px
+      width: 24px
+      height: calc(100% - 2px)
+      border-radius: $border-radius
+      background-color: $form-select-bg
+      background-image: escape-svg($form-select-indicator)
+      background-repeat: no-repeat
+      background-position: center center
+      // todo
+      // background-size: $form-select-bg-size
+      background-size: 14px 14px
+
+    .form-group--with-controls.input-group--filled &
+      &::before
+        right: 52px
+
+      &::after
+        right: 30px
 
   .select2-selection--single
     border-radius: $border-radius
@@ -45,7 +71,8 @@
         text-indent: 0
         font-size: px-to-rem(20px)
 
-      .input-group &
+      .input-group &,
+      .form-group--with-controls &
         display: none
 
     .select2-selection__placeholder
@@ -98,3 +125,18 @@
     min-height: 300px
     height: 60vh
     max-height: 600px
+
+.form-group--with-controls
+  position: relative
+
+  .form-group__controls
+    display: inline-flex
+    align-items: center
+    position: absolute
+    right: 1px
+    top: 1px
+    height: calc(100% - 2px)
+    padding-right: 6px
+    border-radius: $border-radius
+    z-index: 99999
+    background-color: $form-select-bg

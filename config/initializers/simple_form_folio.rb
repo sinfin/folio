@@ -37,6 +37,22 @@ SimpleForm.setup do |config|
 
     b.use :custom_html, wrap_with: { tag: "div", class: "form-group__custom-html" }
   end
+  
+  config.wrappers :with_controls, tag: "div", class: "form-group form-group--with-controls", error_class: "form-group-invalid" do |b|
+    b.use :html5
+    b.use :placeholder
+    b.optional :maxlength
+    b.optional :minlength
+    b.optional :pattern
+    b.optional :min_max
+    b.optional :readonly
+
+    b.use :input, class: "form-control", error_class: "is-invalid"
+    b.use :full_error, wrap_with: { tag: "div", class: "invalid-feedback" }
+    b.use :hint,  wrap_with: { tag: "small", class: "form-text" }
+
+    b.use :controls, wrap_with: { tag: "div", class: "form-group__controls" }
+  end
 
   config.wrappers :input_group, tag: "div", class: "input-group", error_class: "form-group-invalid" do |b|
     b.use :html5

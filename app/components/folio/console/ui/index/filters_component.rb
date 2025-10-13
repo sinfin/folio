@@ -195,6 +195,14 @@ class Folio::Console::Ui::Index::FiltersComponent < Folio::Console::ApplicationC
                                                      icon: :close))
     end
 
+    def clear_button
+      render(Folio::Console::Ui::ButtonComponent.new(class_name: "f-c-ui-index-filters__clear-button",
+                                                       variant: :mini,
+                                                       data: stimulus_action(click: "onClearButtonClick"),
+                                                       icon: :close,
+                                                       icon_height: 16))
+    end
+
     def collapsible_class_name(config)
       if config[:collapsed]
         "f-c-ui-index-filters__filter--collapsible"

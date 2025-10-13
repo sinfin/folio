@@ -63,4 +63,17 @@ window.Folio.Stimulus.register('f-c-ui-index-filters', class extends window.Stim
     input.value = ''
     this.submit()
   }
+
+  onClearButtonClick (e) {
+    e.preventDefault()
+
+    const formGroup = e.target.closest('.form-group')
+    if (!formGroup) return
+
+    const select = formGroup.querySelector('.select2-hidden-accessible')
+    if (!select) return
+
+    select.value = ''
+    this.submit()
+  }
 })
