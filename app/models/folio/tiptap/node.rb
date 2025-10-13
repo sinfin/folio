@@ -142,35 +142,28 @@ class Folio::Tiptap::Node
   end
 
   private
+
     def validate_site_attachment_allowed
-      structure = self.class.respond_to?(:structure) && self.class.structure
-      return unless @site && structure
+      return unless @site && self.class.respond_to?(:structure)
 
-      has_invalid_attachment = structure.any? do |key, cfg|
-        next false unless cfg[:type] == :folio_attachment
-        next false unless (file_klass = cfg[:file_type]&.safe_constantize)
+      self.class.structure.each do |key, cfg|
+        next unless cfg[:type] == :folio_attachment
+        next unless (file_klass = cfg[:file_type]&.safe_constantize)
 
-        if cfg[:has_many]
-          placements = send("#{key.to_s.singularize}_placements_attributes") || []
-          placements.any? { |h| file_invalid_for_site?(h, file_klass, @site) }
-        else
-          placement = send("#{key}_placement_attributes")
-          file_invalid_for_site?(placement, file_klass, @site)
+        placements = cfg[:has_many] ? send("#{key.to_s.singularize}_placements_attributes") || [] : [send("#{key}_placement_attributes")].compact
+
+        placements.each do |placement|
+          file_id = placement["file_id"] || placement[:file_id]
+          next unless file_id
+
+          file = file_klass.find_by(id: file_id)
+          if file && !file.can_be_used_on_site?(@site)
+            errors.add(:base, I18n.t("folio.tiptap.errors.file_not_allowed_for_site"))
+            return
+          end
         end
       end
-
-      errors.add(:base, I18n.t("folio.tiptap.errors.file_not_allowed_for_site")) if has_invalid_attachment
     rescue StandardError => e
       Rails.logger.error("Folio::Tiptap site validation error: #{e.message}") if defined?(Rails)
-    end
-
-    def file_invalid_for_site?(placement_hash, file_klass, site)
-      return false unless placement_hash
-
-      file_id = placement_hash["file_id"] || placement_hash[:file_id]
-      return false unless file_id
-
-      file = file_klass.find_by(id: file_id)
-      file && !file.can_be_used_on_site?(site)
     end
 end
