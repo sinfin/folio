@@ -4,8 +4,7 @@ window.Folio.Stimulus.register('f-c-files-subtitle-form', class extends window.S
   static values = {
     language: String,
     fileId: Number,
-    persisted: Boolean,
-    subtitlesReloadUrl: String
+    persisted: Boolean
   }
 
   connect () {

@@ -27,8 +27,7 @@ class Folio::Console::Files::SubtitleFormComponent < Folio::Console::Application
                         values: {
                           language: @subtitle.language,
                           file_id: @file.id,
-                          persisted: @subtitle.persisted?,
-                          subtitles_reload_url: helpers.url_for([:subtitles_html, :console, :api, @file, format: :json])
+                          persisted: @subtitle.persisted?
                         })
   end
 
