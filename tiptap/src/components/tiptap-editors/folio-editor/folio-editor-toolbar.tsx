@@ -83,11 +83,11 @@ const makeMarkActive =
 const toolbarStateMapping: FolioEditorToolbarStateMapping = {
   undo: {
     enabled: ({ editor }) => editor!.can().undo(),
-    active: ({ editor }) => false,
+    active: () => false,
   },
   redo: {
     enabled: ({ editor }) => editor!.can().redo(),
-    active: ({ editor }) => false,
+    active: () => false,
   },
   bold: { enabled: makeMarkEnabled("bold"), active: makeMarkActive("bold") },
   italic: {
@@ -152,7 +152,7 @@ const toolbarStateMapping: FolioEditorToolbarStateMapping = {
 
       return hasAnyMarks
     },
-    active: ({ editor }) => false,
+    active: () => false,
   },
   textStyles: {
     enabled: ({ editor }) => editor.can().toggleNode("heading", "paragraph"),
@@ -193,7 +193,7 @@ const toolbarStateMapping: FolioEditorToolbarStateMapping = {
   layouts: {
     onlyInBlockEditor: true,
     enabled: ({ editor }) => editor.can().insertFolioTiptapColumns() || editor.can().insertTable(),
-    active: ({ editor }) => false,
+    active: () => false,
     value: ({ editor }) => {
       if (editor.isActive("folioTiptapColumns")) {
         return "folioTiptapColumns";
@@ -280,7 +280,7 @@ const MainToolbarContent = ({
     }
 
     return null;
-  }, [blockEditor, folioTiptapConfig && folioTiptapConfig.nodes])
+  }, [blockEditor, folioTiptapConfig])
 
   return (
     <>

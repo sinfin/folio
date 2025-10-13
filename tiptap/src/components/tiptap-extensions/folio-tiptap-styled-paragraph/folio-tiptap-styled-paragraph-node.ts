@@ -21,7 +21,7 @@ export const FolioTiptapStyledParagraph = Paragraph.extend<StyledParagraphOption
     ];
   },
 
-  renderHTML({ HTMLAttributes }: { HTMLAttributes: Record<string, any> }) {
+  renderHTML({ HTMLAttributes }: { HTMLAttributes: Record<string, unknown> }) {
     return ["p", { ...HTMLAttributes, class: "f-tiptap-styled-paragraph" }, 0];
   },
 

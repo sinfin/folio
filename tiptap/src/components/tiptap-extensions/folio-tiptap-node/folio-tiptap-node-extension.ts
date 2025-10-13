@@ -20,7 +20,7 @@ declare module '@tiptap/core' {
       moveFolioTiptapNodeDown: () => ReturnType
       editFolioTipapNode: () => ReturnType
       removeFolioTiptapNode: () => ReturnType
-      insertFolioTiptapNode: (nodeHash: any) => ReturnType
+       insertFolioTiptapNode: (nodeHash: { attrs: Record<string, unknown> }) => ReturnType
     }
   }
 }
@@ -167,7 +167,7 @@ export const FolioTiptapNodeExtension = Node.create<FolioTiptapNodeOptions>({
   addCommands() {
     return {
       insertFolioTiptapNode:
-        (nodeHash: any) =>
+         (nodeHash: { attrs: Record<string, unknown> }) =>
           ({ tr, dispatch, editor }: CommandProps) => {
             const node = editor.schema.nodes.folioTiptapNode.createChecked({
               ...nodeHash.attrs,
@@ -219,11 +219,13 @@ export const FolioTiptapNodeExtension = Node.create<FolioTiptapNodeOptions>({
       moveFolioTiptapNodeDown:
         () =>
           ({ state, dispatch }: CommandProps) => {
+            if (!dispatch) return false;
             return moveFolioTiptapNode({ direction: "down", state, dispatch })
           },
       moveFolioTiptapNodeUp:
         () =>
           ({ state, dispatch }: CommandProps) => {
+            if (!dispatch) return false;
             return moveFolioTiptapNode({ direction: "up", state, dispatch })
           },
       editFolioTipapNode:

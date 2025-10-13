@@ -6,6 +6,7 @@ import {
   type Editor,
 } from "@tiptap/react";
 import { findParentNode, findChildren } from "@tiptap/core";
+import { Node } from "@tiptap/pm/model";
 
 // --- Tiptap Core Extensions ---
 import { StarterKit } from "@tiptap/starter-kit";
@@ -68,8 +69,6 @@ import {
 import { SmartDragHandle } from "@/components/tiptap-ui/smart-drag-handle";
 
 // --- Hooks ---
-import { useWindowSize } from "@/hooks/use-window-size";
-
 import translate from "@/lib/i18n";
 import clearContent from "@/lib/clear-content";
 
@@ -101,7 +100,6 @@ export function FolioEditor({
   initialScrollTop,
   autosaveIndicatorInfo,
 }: FolioEditorProps) {
-  const windowSize = useWindowSize();
   const editorRef = React.useRef<HTMLDivElement>(null);
   const blockEditor = type === "block";
   const [responsivePreviewEnabled, setResponsivePreviewEnabled] = React.useState<boolean>(false);
@@ -117,7 +115,7 @@ export function FolioEditor({
     }
 
     return []
-  }, [blockEditor, folioTiptapConfig && folioTiptapConfig["styled_paragraph_variants"]])
+  }, [folioTiptapConfig])
 
   const folioTiptapPagesCommands = React.useMemo(() => {
     if (folioTiptapConfig && folioTiptapConfig["enable_pages"]) {
@@ -125,7 +123,7 @@ export function FolioEditor({
     }
 
     return []
-  }, [blockEditor, folioTiptapConfig && folioTiptapConfig["enable_pages"]])
+  }, [folioTiptapConfig])
 
   const folioTiptapStyledWrapCommands = React.useMemo(() => {
     if (folioTiptapConfig &&
@@ -135,7 +133,7 @@ export function FolioEditor({
     }
 
     return []
-  }, [blockEditor, folioTiptapConfig && folioTiptapConfig["styled_wrap_variants"]])
+  }, [folioTiptapConfig])
 
   const folioTiptapHeadingLevels = React.useMemo(() => {
     if (folioTiptapConfig &&
@@ -145,7 +143,7 @@ export function FolioEditor({
     }
 
     return [2, 3, 4] as Level[];
-  }, [blockEditor, folioTiptapConfig && folioTiptapConfig["heading_levels"]])
+  }, [folioTiptapConfig])
 
   const textStylesCommandGroup = React.useMemo(() => {
     return makeTextStylesCommandGroup({ folioTiptapStyledParagraphCommands, folioTiptapHeadingLevels })
@@ -206,16 +204,16 @@ export function FolioEditor({
       Placeholder.configure({
         includeChildren: true,
         // Use a placeholder:
-        placeholder: ({ editor, node, pos }) => {
+        placeholder: ({ editor, node }) => {
           if (blockEditor) {
             let key = "commandPlaceholder";
 
             if (node.type.name === "heading") {
-              const maybePage = findParentNode((node: any) => node.type.name === FolioTiptapPageNode.name)(editor.state.selection);
+              const maybePage = findParentNode((node: Node) => node.type.name === FolioTiptapPageNode.name)(editor.state.selection);
               let isFirstInPage = false
 
               if (maybePage) {
-                const allTitlesInPage = findChildren(maybePage.node, (node: any) => node.type.name === "heading");
+                const allTitlesInPage = findChildren(maybePage.node, (node: Node) => node.type.name === "heading");
                 isFirstInPage = allTitlesInPage[0].node === node;
               }
 
@@ -344,7 +342,7 @@ export function FolioEditor({
       },
       "*",
     );
-  }, [defaultContent, initializedContent, editorCreated])
+  }, [defaultContent, initializedContent, editorCreated, editor, folioTiptapConfig])
 
   const onContentWrapClick = React.useCallback((e: React.MouseEvent<HTMLElement>) => {
     if ((e.target as HTMLElement).classList.contains('f-tiptap-editor__content-wrap')) {

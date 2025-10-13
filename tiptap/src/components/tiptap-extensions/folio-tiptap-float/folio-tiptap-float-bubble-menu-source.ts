@@ -4,7 +4,6 @@ import type { Editor } from '@tiptap/core';
 import type { FolioEditorBubbleMenuSource } from '@/components/tiptap-editors/folio-editor/folio-editor-bubble-menus';
 
 import { FolioTiptapFloatNode } from './folio-tiptap-float-node';
-import { AlignJustify, ArrowUpWideNarrow, ArrowDownWideNarrow, ArrowLeftToLine, ArrowRightToLine, X } from 'lucide-react';
 import {
   ArrowCollapseLeft,
   ArrowCollapseRight,
@@ -38,7 +37,7 @@ const TRANSLATIONS = {
 export const FOLIO_TIPTAP_FLOAT_BUBBLE_MENU_SOURCE: FolioEditorBubbleMenuSource = {
   pluginKey: "folioTiptapFloatBubbleMenu",
   priority: 1,
-  shouldShow: ({ editor, state }) => {
+  shouldShow: ({ editor }) => {
     return editor.isActive(FolioTiptapFloatNode.name)
   },
   activeKeys: ({ editor }) => {

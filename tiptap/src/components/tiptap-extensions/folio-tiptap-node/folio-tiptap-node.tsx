@@ -1,10 +1,6 @@
 import * as React from "react";
 import type { NodeViewProps } from "@tiptap/react";
 import { NodeViewWrapper } from "@tiptap/react";
-import { Button } from "@/components/tiptap-ui-primitive/button";
-import { EditIcon } from "@/components/tiptap-icons/edit-icon";
-import { XIcon } from "@/components/tiptap-icons/x-icon";
-import { FolioTiptapNodeExtension } from "./folio-tiptap-node-extension";
 import { makeUniqueId } from './make-unique-id';
 import { postEditMessage } from './post-edit-message';
 
@@ -66,16 +62,15 @@ interface RespnoseFromApiType {
 
 export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
   const { uniqueId, ...attrsWithoutUniqueId } = props.node.attrs;
+  const { updateAttributes: propsUpdateAttributes } = props;
+  
+  // Memoize updateAttributes to prevent unnecessary re-renders
+  const updateAttributes = React.useCallback(
+    (attrs: Record<string, unknown>) => propsUpdateAttributes(attrs),
+    [propsUpdateAttributes]
+  );
 
-  // set uniqueId if one is not present
-  React.useEffect(() => {
-    if (!uniqueId) {
-      props.updateAttributes({ uniqueId: makeUniqueId() });
-    }
-  }, [uniqueId]);
-
-  if (!uniqueId) return
-
+  // All hooks must be declared before any conditional returns
   const [status, setStatus] = React.useState<string>("initial");
   const [responseFromApi, setResponseFromApi] = React.useState<RespnoseFromApiType>({});
 
@@ -92,11 +87,18 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
   );
 
   const handleDomEditEvent = React.useCallback(
-    (e: Event) => {
+     () => {
       postEditMessage(attrsWithoutUniqueId, uniqueId);
     },
     [attrsWithoutUniqueId, uniqueId],
   );
+
+  // set uniqueId if one is not present
+  React.useEffect(() => {
+    if (!uniqueId) {
+      updateAttributes({ uniqueId: makeUniqueId() });
+    }
+   }, [uniqueId, updateAttributes]);
 
   // Effect to fetch HTML content from API
   React.useEffect(() => {
@@ -125,7 +127,7 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
         );
       }
     }
-  }, [status, uniqueId]);
+   }, [status, uniqueId, attrsWithoutUniqueId]);
 
   // Effect to handle edit event
   React.useEffect(() => {
@@ -152,7 +154,7 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
         return;
 
       if (event.data.type === "f-input-tiptap:render-nodes") {
-        event.data.nodes.forEach((node: any) => {
+        event.data.nodes.forEach((node: { unique_id: string; html?: string; error_message?: string }) => {
           if (node.unique_id === uniqueId) {
             if (node.html) {
               const serializedAttrs = JSON.stringify(attrsWithoutUniqueId);
@@ -174,7 +176,7 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
         if (event.data.node && event.data.node.attrs) {
           setResponseFromApi({});
           setStatus("initial");
-          props.updateAttributes(event.data.node.attrs);
+          updateAttributes(event.data.node.attrs);
         }
       }
     };
@@ -184,7 +186,7 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
     return () => {
       window.removeEventListener("message", handleMessage);
     };
-  }, [uniqueId, props, status]);
+  }, [uniqueId, attrsWithoutUniqueId, status, updateAttributes]);
 
   // Effect to measure and store height after HTML renders
   React.useEffect(() => {
@@ -196,6 +198,8 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
       }
     }
   }, [responseFromApi.html, attrsWithoutUniqueId]);
+
+  if (!uniqueId) return null;
 
   return (
     <NodeViewWrapper

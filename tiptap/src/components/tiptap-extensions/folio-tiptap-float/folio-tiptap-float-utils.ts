@@ -1,12 +1,12 @@
-import { type EditorState, TextSelection } from "@tiptap/pm/state";
+import { type EditorState, TextSelection, type Transaction } from "@tiptap/pm/state";
 import { Node } from "@tiptap/pm/model";
 import { findParentNode, type Editor } from "@tiptap/core";
 import { FolioTiptapFloatNode } from "./folio-tiptap-float-node";
 import { FolioTiptapFloatAsideNode } from "./folio-tiptap-float-aside-node";
 
 export interface InsertFolioTiptapFloatArgs {
-  tr: any; // Transaction type from ProseMirror
-  dispatch?: (tr: any) => void; // Dispatch function for the transaction (optional)
+  tr: Transaction; // Transaction type from ProseMirror
+  dispatch?: (tr: Transaction) => void; // Dispatch function for the transaction (optional)
   editor: Editor;
 }
 
@@ -54,7 +54,6 @@ export const setFolioTiptapFloatAttributes = ({
   tr,
   dispatch,
   state,
-  editor,
 }: SetFloatLayoutAttributesArgs) => {
   const floatNode = findParentNode(
     (node: Node) => node.type.name === FolioTiptapFloatNode.name,
@@ -97,7 +96,7 @@ export function goToFolioTiptapFloatAsideOrMain({
   dispatch,
 }: {
   state: EditorState;
-  dispatch: any;
+  dispatch: (tr: Transaction) => void;
 }) {
   const floatNode = findParentNode(
     (node: Node) => node.type.name === FolioTiptapFloatNode.name,
@@ -147,7 +146,6 @@ export function cancelFolioTiptapFloat ({
   tr,
   dispatch,
   state,
-  editor,
 }: CancelFolioTiptapFloatArgs) {
   const floatNode = findParentNode(
     (node: Node) => node.type.name === FolioTiptapFloatNode.name,

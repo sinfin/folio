@@ -6,9 +6,11 @@ export const makeFolioTiptapNodesCommandGroup = (folioTiptapNodes: FolioTiptapNo
       title: folioTiptapNode.title,
       icon: Cuboid,
       key: `folioTiptapNode-${folioTiptapNode.type}`,
-      command: ({ chain }) => {
+      command: () => {
         // blur editor to prevent input
-        document.activeElement instanceof HTMLElement && document.activeElement.blur();
+        if (document.activeElement instanceof HTMLElement) {
+          document.activeElement.blur();
+        }
 
         window.parent!.postMessage(
           {

@@ -1,11 +1,10 @@
 "use client";
 
 import * as React from "react";
-import type { Editor, Content } from "@tiptap/react";
+import type { Editor } from "@tiptap/react";
 import { Plus } from "lucide-react";
 
 // --- Hooks ---
-import { useTiptapEditor } from "@/hooks/use-tiptap-editor";
 
 // --- UI Primitives ---
 import type { ButtonProps } from "@/components/tiptap-ui-primitive/button";
@@ -29,7 +28,7 @@ export interface FolioTiptapNodeButtonProps extends ButtonProps {
 
 export function insertFolioTiptapNode(
   editor: Editor | null,
-  node: any,
+  node: { attrs: Record<string, unknown> },
 ): boolean {
   if (!editor) {
     console.log("No editor available for insertFolioTiptapNode");
@@ -58,7 +57,7 @@ export const FolioTiptapNodeButton = React.forwardRef<
           .run();
       }
     },
-    [disabled],
+    [disabled, editor],
   );
 
   React.useEffect(() => {

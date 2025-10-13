@@ -1,10 +1,10 @@
 import { findParentNode } from "@tiptap/core";
-import { Node } from "@tiptap/pm/model";
-import { type EditorState, TextSelection } from "@tiptap/pm/state";
+import { Node, NodeType, Schema } from "@tiptap/pm/model";
+import { type EditorState, TextSelection, Transaction } from "@tiptap/pm/state";
 
 import { FolioTiptapPageNode, FolioTiptapPagesNode } from "./index";
 
-export function createPage(pageType: any, pageContent = null, schema: any = null) {
+export function createPage(pageType: NodeType, pageContent = null, schema: Schema | null = null) {
   if (pageContent) {
     return pageType.createChecked({}, pageContent);
   }
@@ -20,7 +20,7 @@ export function createPage(pageType: any, pageContent = null, schema: any = null
   return pageType.createAndFill({});
 }
 
-export function getPagesNodeTypes(schema: any) {
+export function getPagesNodeTypes(schema: Schema) {
   if (schema.cached.pagesNodeTypes) {
     return schema.cached.pagesNodeTypes;
   }
@@ -35,7 +35,7 @@ export function getPagesNodeTypes(schema: any) {
   return roles;
 }
 
-export function createPages(schema: any, pagesCount: any, pageContent = null) {
+export function createPages(schema: Schema, pagesCount: number, pageContent = null) {
   const types = getPagesNodeTypes(schema);
   const pages = [];
 
@@ -43,7 +43,6 @@ export function createPages(schema: any, pagesCount: any, pageContent = null) {
     const page = createPage(types.page, pageContent, schema);
 
     if (page) {
-      // @ts-ignore
       pages.push(page);
     }
   }
@@ -57,7 +56,7 @@ export function addOrDeletePage({
   type,
 }: {
   state: EditorState;
-  dispatch: any;
+  dispatch: (tr: Transaction) => void;
   type: "addBefore" | "addAfter" | "delete";
 }) {
   const maybePages = findParentNode(
@@ -94,7 +93,7 @@ export function addOrDeletePage({
       if (pagesJSON.content.length <= 2) {
         // Collect all content from all pages
         const allContent = [];
-        pagesJSON.content.forEach((page: { content: any[]; }) => {
+        pagesJSON.content.forEach((page: { content: Node[]; }) => {
           if (page.content && page.content.length > 0) {
             allContent.push(...page.content);
           }
@@ -187,7 +186,7 @@ export function moveFolioTiptapPage({
   type,
 }: {
   state: EditorState;
-  dispatch: any;
+  dispatch: (tr: Transaction) => void;
   type: "up" | "down";
 }) {
   const maybePages = findParentNode(
@@ -281,7 +280,7 @@ export function toggleFolioTiptapPageCollapsed({
   getPos,
 }: {
   state: EditorState;
-  dispatch: any;
+  dispatch: (tr: Transaction) => void;
   node: Node;
   getPos: () => number | undefined;
 }) {
@@ -317,7 +316,7 @@ export function goToPage({
   type,
 }: {
   state: EditorState;
-  dispatch: any;
+  dispatch: (tr: Transaction) => void;
   type: "before" | "after";
 }) {
   const maybePages = findParentNode(

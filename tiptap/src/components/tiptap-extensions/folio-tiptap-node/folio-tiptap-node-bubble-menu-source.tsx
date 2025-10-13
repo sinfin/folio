@@ -1,5 +1,3 @@
-import { findParentNode } from "@tiptap/core";
-import { Node } from "@tiptap/pm/model";
 import type { Editor } from '@tiptap/core';
 import type { FolioEditorBubbleMenuSource } from '@/components/tiptap-editors/folio-editor/folio-editor-bubble-menus';
 
@@ -32,7 +30,7 @@ export const FOLIO_TIPTAP_NODE_BUBBLE_MENU_SOURCE: FolioEditorBubbleMenuSource =
   pluginKey: "folioTiptapNodeBubbleMenu",
   priority: 1,
   offset: ({rects}) => -rects.reference.height / 2 - rects.floating.height / 2,
-  shouldShow: ({ editor, state }) => {
+  shouldShow: ({ editor }) => {
     return editor.isActive(FolioTiptapNodeExtension.name)
   },
   disabledKeys: ({ state }) => {
