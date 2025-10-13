@@ -1,19 +1,11 @@
 import type { JSONContent } from "@tiptap/react";
 import type { Editor } from "@tiptap/core";
+import type { Schema } from "@tiptap/pm/model";
 
 export type FolioTiptapNodeFromInput = {
   type: string;
 };
 
-const BLOCK_EDITOR_ONLY_NODE_TYPES = [
-  "table",
-  "folioTiptapNode",
-  "folioTiptapColumns",
-  "folioTiptapColumn",
-  "folioTiptapFloat",
-  "folioTiptapFloatAside",
-  "folioTiptapFloatMain",
-];
 
 const replaceUnsupportedNodesInContent = ({
   content,
@@ -21,7 +13,7 @@ const replaceUnsupportedNodesInContent = ({
   allowedNodeTypes
 }: {
   content?: JSONContent | undefined;
-  schema: any; // Editor's schema type
+  schema: Schema;
   allowedNodeTypes?: string[];
 }): JSONContent | undefined => {
   if (!content) return content;

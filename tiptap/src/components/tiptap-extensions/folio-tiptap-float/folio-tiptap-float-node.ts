@@ -5,9 +5,7 @@ import {
   cancelFolioTiptapFloat,
   setFolioTiptapFloatAttributes,
   goToFolioTiptapFloatAsideOrMain,
-  type InsertFolioTiptapFloatArgs,
   type SetFloatLayoutAttributesAttrs,
-  type SetFloatLayoutAttributesArgs,
 } from "./folio-tiptap-float-utils";
 
 export * from "./folio-tiptap-float-node";

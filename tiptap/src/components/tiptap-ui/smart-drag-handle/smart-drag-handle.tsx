@@ -1,4 +1,4 @@
-import React, { useState, createElement } from "react";
+import React from "react";
 import DragHandle from "@tiptap/extension-drag-handle-react";
 import { type Editor } from "@tiptap/react";
 

@@ -1,5 +1,4 @@
 import { Node, mergeAttributes } from '@tiptap/core';
-import { TextSelection } from '@tiptap/pm/state';
 
 export * from './folio-tiptap-float-node';
 

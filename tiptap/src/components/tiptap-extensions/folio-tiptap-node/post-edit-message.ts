@@ -1,4 +1,4 @@
-export const postEditMessage = (attrs: any, uniqueId: string) => {
+export const postEditMessage = (attrs: Record<string, unknown>, uniqueId: string) => {
   window.parent!.postMessage(
     {
       type: "f-tiptap-node:click",

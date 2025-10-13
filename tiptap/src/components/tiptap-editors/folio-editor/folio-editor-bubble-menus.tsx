@@ -4,7 +4,6 @@ import { BubbleMenu } from "@tiptap/react/menus";
 import { type EditorState } from "@tiptap/pm/state";
 import type { Editor } from "@tiptap/core";
 
-import type { ButtonProps } from "@/components/tiptap-ui-primitive/button";
 import { Button } from "@/components/tiptap-ui-primitive/button";
 
 import { FOLIO_TIPTAP_COLUMNS_BUBBLE_MENU_SOURCE } from "@/components/tiptap-extensions/folio-tiptap-columns/folio-tiptap-columns-bubble-menu-source";
@@ -85,7 +84,7 @@ export function FolioEditorBubbleMenu({
     if (!activeMenus.has(sourceKey)) return false
 
     let highestPriority = -Infinity
-    for (const [id, priority] of activeMenus.entries()) {
+    for (const [, priority] of activeMenus.entries()) {
       if (priority > highestPriority) {
         highestPriority = priority
       }

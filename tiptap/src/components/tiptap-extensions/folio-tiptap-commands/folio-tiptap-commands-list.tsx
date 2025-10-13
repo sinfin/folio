@@ -1,6 +1,5 @@
 import React from "react";
 import translate from "@/lib/i18n";
-import type { Range, Editor } from "@tiptap/core";
 import { X } from 'lucide-react';
 
 import "./folio-tiptap-commands-list.scss";
@@ -137,7 +136,6 @@ export class FolioTiptapCommandsList extends React.Component<
 
   componentDidUpdate(
     prevProps: FolioTiptapCommandsListProps,
-    _prevState: FolioTiptapCommandsListState,
   ) {
     let previousItemsCount = 0;
     prevProps.items.forEach((group) => {

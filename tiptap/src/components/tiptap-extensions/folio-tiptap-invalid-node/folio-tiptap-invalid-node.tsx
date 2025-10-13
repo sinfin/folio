@@ -44,7 +44,7 @@ export const FolioTiptapInvalidNode = Node.create<Record<string, never>>({
 
   isolating: true,
 
-  renderHTML({ HTMLAttributes }: { HTMLAttributes: Record<string, any> }) {
+  renderHTML({ HTMLAttributes }: { HTMLAttributes: Record<string, unknown> }) {
     return ["div", { ...HTMLAttributes, class: CLASS_NAME }, 0];
   },
 

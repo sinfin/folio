@@ -1,9 +1,9 @@
-import { type EditorState, TextSelection } from "@tiptap/pm/state";
+import { type EditorState, TextSelection, type Transaction } from "@tiptap/pm/state";
 
 interface MoveFolioTiptapNodeProps {
   direction: "up" | "down";
   state: EditorState;
-  dispatch: any;
+  dispatch: (tr: Transaction) => void;
 }
 
 export const moveFolioTiptapNode = ({ direction, state, dispatch }: MoveFolioTiptapNodeProps): boolean => {
@@ -12,7 +12,7 @@ export const moveFolioTiptapNode = ({ direction, state, dispatch }: MoveFolioTip
     return false;
   }
 
-  // @ts-ignore - node does exist on selection!
+  // @ts-expect-error - node does exist on selection!
   const node = state.selection.node
 
   if (!node || node.type.name !== "folioTiptapNode") {

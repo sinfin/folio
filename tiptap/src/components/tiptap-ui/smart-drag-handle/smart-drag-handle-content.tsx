@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import type { Editor } from "@tiptap/react";
 import type { Node } from "@tiptap/pm/model";
-import { TextSelection } from "@tiptap/pm/state";
+
 
 import { Button } from "@/components/tiptap-ui-primitive/button";
 import {
@@ -91,7 +91,11 @@ const getPosAtDepthOne = (editor: Editor, targetNode: TargetNodeInfo): { startPo
   return { startPos, endPos }
 }
 
-const copyNode = async (editor: Editor, targetNode: TargetNodeInfo, clipboardData: ClipboardDataType): Promise<DragHandleButtonReturnType> => {
+const copyNode = async (
+  editor: Editor,
+  targetNode: TargetNodeInfo,
+  _: ClipboardDataType
+): Promise<DragHandleButtonReturnType> => {
   try {
     if (targetNode && targetNode.resultElement) {
       const html = targetNode.resultElement.outerHTML;
@@ -131,8 +135,6 @@ const pasteNode = (editor: Editor, targetNode: TargetNodeInfo, clipboardData: Cl
     const isEmptyParagraph = targetNode.resultNode?.type.name === 'paragraph' &&
                              targetNode.resultNode.content.size === 0;
 
-    const tr = editor.state.tr;
-
     if (isEmptyParagraph) {
       // Use TipTap's insertContentAt to properly parse and insert HTML
       editor.commands.insertContentAt(startPos, clipboardData.html);
@@ -148,7 +150,11 @@ const pasteNode = (editor: Editor, targetNode: TargetNodeInfo, clipboardData: Cl
   }
 }
 
-const removeNode = (editor: Editor, targetNode: TargetNodeInfo, clipboardData: ClipboardDataType): DragHandleButtonReturnType => {
+const removeNode = (
+  editor: Editor,
+  targetNode: TargetNodeInfo,
+  _: ClipboardDataType
+): DragHandleButtonReturnType => {
   try {
     const { startPos, endPos } = getPosAtDepthOne(editor, targetNode)
 
@@ -170,7 +176,7 @@ const removeNode = (editor: Editor, targetNode: TargetNodeInfo, clipboardData: C
 const editFolioTiptapNode = (
   editor: Editor,
   targetNode: TargetNodeInfo,
-  clipboardData: ClipboardDataType
+  _: ClipboardDataType
 ): DragHandleButtonReturnType => {
   if (!targetNode.resultNode || targetNode.pos === null) {
     console.error("Invalid target node");
@@ -234,7 +240,7 @@ const makeButtonOnClick =
     clipboardData: ClipboardDataType,
     setClipboardData: (data: { at: number | null; html: string | null }) => void,
   ) =>
-  async (e: React.MouseEvent) => {
+  async () => {
     const rect = document
       .querySelector(".f-tiptap-smart-drag-handle__button--drag")!
       .getBoundingClientRect();
@@ -285,8 +291,9 @@ export function SmartDragHandleContent({
   setClipboardData,
 }: SmartDragHandleContentProps) {
   const [openedDropdown, setOpenedDropdown] = useState<string | null>(null);
-
   const [, forceUpdate] = React.useReducer(x => x + 1, 0);
+  const wrapRef = React.useRef<HTMLDivElement>(null);
+  const [style] = React.useState<object | undefined>(undefined);
 
   // Force re-render after CHECK_ICON_DURATION seconds to swap icon back
   React.useEffect(() => {
@@ -298,47 +305,13 @@ export function SmartDragHandleContent({
     }
   }, [clipboardData.at]);
 
+
+
   if (!editor) {
     return null;
   }
 
-  const wrapRef = React.useRef<HTMLDivElement>(null);
-  const [style, setStyle] = React.useState<object | undefined>(undefined);
 
-  React.useEffect(() => {
-    if (!wrapRef || !wrapRef.current || !editor) return;
-    if (!selectedNodeData || !selectedNodeData.y) return;
-
-    // y changed -> other node -> close
-    if (openedDropdown) {
-      setOpenedDropdown(null);
-    }
-
-    const nodeToUse = findElementNextToCoords({
-      x: selectedNodeData.x,
-      y: selectedNodeData.y,
-      direction: "right",
-      editor,
-    });
-
-    if (nodeToUse && nodeToUse.resultElement) {
-      const nodeHeight = nodeToUse.resultElement.getBoundingClientRect().height;
-      if (nodeHeight) {
-        if (nodeHeight < 32) {
-          return setStyle({ transform: `translate(0, -${(32 - nodeHeight) / 2}px)` });
-        } else {
-          return setStyle({ minHeight: `${nodeHeight}px` });
-        }
-      }
-    }
-
-    return setStyle(undefined);
-  }, [
-    selectedNodeData && selectedNodeData.y,
-    setStyle,
-    editor,
-    wrapRef && wrapRef.current,
-  ]);
 
   let optionsBase
 
