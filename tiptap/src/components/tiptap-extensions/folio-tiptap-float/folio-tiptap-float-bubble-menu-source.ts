@@ -37,6 +37,7 @@ const TRANSLATIONS = {
 
 export const FOLIO_TIPTAP_FLOAT_BUBBLE_MENU_SOURCE: FolioEditorBubbleMenuSource = {
   pluginKey: "folioTiptapFloatBubbleMenu",
+  priority: 1,
   shouldShow: ({ editor, state }) => {
     return editor.isActive(FolioTiptapFloatNode.name)
   },
