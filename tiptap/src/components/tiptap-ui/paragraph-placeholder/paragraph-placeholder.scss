@@ -3,11 +3,11 @@
   display: none;
   cursor: pointer;
 
-  .f-tiptap-page:hover
-    .f-tiptap-page__content:has(
-      [data-node-view-content-react] > *:last-child:not(p)
-    )
-    & {
+  .f-tiptap-page:hover:has([data-node-view-content-react] > div:last-child) &,
+  .f-tiptap-float__aside:hover:has([data-node-view-content-react] > div:last-child) &,
+  .f-tiptap-float__main:hover:has([data-node-view-content-react] > div:last-child) &,
+  .f-tiptap-column:hover:has([data-node-view-content-react] > div:last-child) &,
+  .f-tiptap-styled-wrap:hover:has([data-node-view-content-react] > div:last-child) & {
     display: block;
   }
 }

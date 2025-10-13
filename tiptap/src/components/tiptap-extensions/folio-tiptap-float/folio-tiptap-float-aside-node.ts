@@ -1,4 +1,6 @@
 import { Node, mergeAttributes } from "@tiptap/core";
+import { ReactNodeViewRenderer } from "@tiptap/react";
+import FolioTiptapFloatAsideView from "./folio-tiptap-float-aside-view";
 
 export * from "./folio-tiptap-float-node";
 
@@ -36,6 +38,13 @@ export const FolioTiptapFloatAsideNode = Node.create({
       ),
       0,
     ];
+  },
+
+  addNodeView() {
+    return ReactNodeViewRenderer(FolioTiptapFloatAsideView, {
+      as: "aside",
+      className: "node-folioTiptapFloatAside f-tiptap-float__aside",
+    });
   },
 });
 
