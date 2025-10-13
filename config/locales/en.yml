@@ -13,6 +13,9 @@ en:
         subtitle_languages_string: Subtitle Languages
         subtitle_auto_generation_enabled: Auto-generate Subtitles
   folio:
+    tiptap:
+      errors:
+        file_not_allowed_for_site: "The photo cannot be used on this website, it belongs to another domain."
     nested_fields_component:
       add: Add
 
