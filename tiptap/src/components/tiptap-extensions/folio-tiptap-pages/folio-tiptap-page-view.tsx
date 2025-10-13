@@ -4,6 +4,7 @@ import { findChildren, type Editor } from "@tiptap/core";
 import { TextSelection } from "@tiptap/pm/state";
 import { toggleFolioTiptapPageCollapsed } from "./folio-tiptap-pages-utils";
 import { MenuDownIcon, MenuUpIcon } from "@/components/tiptap-icons";
+import ParagraphPlaceholder from "@/components/tiptap-ui/paragraph-placeholder/paragraph-placeholder";
 
 import translate from "@/lib/i18n";
 
@@ -138,6 +139,7 @@ export const FolioTiptapPageView: React.FC<FolioTiptapPageViewProps> = ({
           </h2>
         ) : null}
         <NodeViewContent />
+        <ParagraphPlaceholder editor={editor} getPos={getPos} />
       </div>
 
       <span
