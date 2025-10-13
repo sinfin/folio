@@ -5,8 +5,16 @@
 When making any code changes to this project, ALWAYS run these commands in order:
 
 1. **Lint Check**: `npm run lint` - Fix any linting errors before proceeding
-2. **Format Code**: `npm run format` - Apply consistent code formatting  
+2. **Format Code**: `npm run format:file [files]` - Apply consistent code formatting to changed files only
 3. **Type Check**: `npm run build:check` - Verify TypeScript compilation
+
+### For Single File Changes
+
+When working on a single file, you can format just that file:
+
+```bash
+npm run format:file src/components/my-component.tsx
+```
 
 ## Project Structure Notes
 
