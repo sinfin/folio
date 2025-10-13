@@ -1,1 +1,1 @@
-export * from "./folio-editor"
+export * from "./folio-editor";

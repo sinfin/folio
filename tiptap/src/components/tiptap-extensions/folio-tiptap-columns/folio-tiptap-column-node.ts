@@ -1,14 +1,14 @@
 import { mergeAttributes, Node } from "@tiptap/react";
 
 export const FolioTiptapColumnNode = Node.create({
-  name: 'folioTiptapColumn',
-  content: 'block+',
+  name: "folioTiptapColumn",
+  content: "block+",
   isolating: true,
 
   addOptions() {
     return {
       HTMLAttributes: {
-        class: 'f-tiptap-column',
+        class: "f-tiptap-column",
       },
     };
   },
@@ -16,13 +16,17 @@ export const FolioTiptapColumnNode = Node.create({
   parseHTML() {
     return [
       {
-        tag: 'div.f-tiptap-column',
+        tag: "div.f-tiptap-column",
       },
     ];
   },
 
   renderHTML({ HTMLAttributes }) {
-    return ['div', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes), 0];
+    return [
+      "div",
+      mergeAttributes(this.options.HTMLAttributes, HTMLAttributes),
+      0,
+    ];
   },
 });
 

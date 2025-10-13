@@ -1,4 +1,4 @@
-import * as React from "react"
+import * as React from "react";
 
 export const AddColumnBefore = React.memo(
   ({ className, ...props }: React.SVGProps<SVGSVGElement>) => {
@@ -21,7 +21,7 @@ export const AddColumnBefore = React.memo(
           <path d="M21.593 11.998H15.19M18.39 15.201V8.8" />
         </g>
       </svg>
-    )
-  }
-)
-AddColumnBefore.displayName = "AddColumnBefore"
+    );
+  },
+);
+AddColumnBefore.displayName = "AddColumnBefore";

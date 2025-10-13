@@ -1,6 +1,6 @@
 import React from "react";
 import translate from "@/lib/i18n";
-import { X } from 'lucide-react';
+import { X } from "lucide-react";
 
 import "./folio-tiptap-commands-list.scss";
 
@@ -47,7 +47,7 @@ export class FolioTiptapCommandsList extends React.Component<
       command: ({ chain }: { chain: FolioEditorCommandChain }) => {
         if (this.props.query) {
           // insert space to disable suggestion
-          chain.insertContent(`/${this.props.query} `)
+          chain.insertContent(`/${this.props.query} `);
         }
       },
     });
@@ -134,9 +134,7 @@ export class FolioTiptapCommandsList extends React.Component<
     }
   }
 
-  componentDidUpdate(
-    prevProps: FolioTiptapCommandsListProps,
-  ) {
+  componentDidUpdate(prevProps: FolioTiptapCommandsListProps) {
     let previousItemsCount = 0;
     prevProps.items.forEach((group) => {
       previousItemsCount += group.commandsForSuggestion.length;
@@ -159,52 +157,62 @@ export class FolioTiptapCommandsList extends React.Component<
       <div className="f-tiptap-commands-list">
         {this.props.items.length > 0 ? (
           <div className="f-tiptap-commands-list__section f-tiptap-commands-list__section--scroll">
-            {this.props.items.map((group: FolioEditorCommandGroupForSuggestion) => (
-              <React.Fragment key={group.title}>
-                <div className="f-tiptap-commands-list__section-heading">
-                  {group.title}
-                </div>
+            {this.props.items.map(
+              (group: FolioEditorCommandGroupForSuggestion) => (
+                <React.Fragment key={group.title}>
+                  <div className="f-tiptap-commands-list__section-heading">
+                    {group.title}
+                  </div>
 
-                <ul className="f-tiptap-commands-list__section-ul">
-                  {group.commandsForSuggestion.map((commandsForSuggestion: FolioEditorCommandForSuggestion) => {
-                    index += 1;
+                  <ul className="f-tiptap-commands-list__section-ul">
+                    {group.commandsForSuggestion.map(
+                      (
+                        commandsForSuggestion: FolioEditorCommandForSuggestion,
+                      ) => {
+                        index += 1;
 
-                    const ItemIcon = commandsForSuggestion.icon;
-                    const itemIndex = index
+                        const ItemIcon = commandsForSuggestion.icon;
+                        const itemIndex = index;
 
-                    return (
-                      <li
-                        className="f-tiptap-commands-list__section-li"
-                        key={`${group.title}-${commandsForSuggestion.title}`}
-                      >
-                        <button
-                          type="button"
-                          className="f-tiptap-commands-list__item f-tiptap-commands-list__item--active"
-                          data-selected={String(
-                            index === this.state.selectedIndex,
-                          )}
-                          onClick={() => this.selectItem(commandsForSuggestion)}
-                          onMouseOver={() => this.setSelectedIndex(itemIndex)}
-                        >
-                          <span className="f-tiptap-commands-list__item-inner">
-                            {ItemIcon ? (
-                              <ItemIcon className="f-tiptap-commands-list__item-icon" />
-                            ) : null}
-                            <span className="f-tiptap-commands-list__item-label">
-                              {commandsForSuggestion.title}
-                            </span>
-                            <span
-                              className="f-tiptap-commands-list__item-keymap"
-                              data-keymap={commandsForSuggestion.keymap}
-                            ></span>
-                          </span>
-                        </button>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </React.Fragment>
-            ))}
+                        return (
+                          <li
+                            className="f-tiptap-commands-list__section-li"
+                            key={`${group.title}-${commandsForSuggestion.title}`}
+                          >
+                            <button
+                              type="button"
+                              className="f-tiptap-commands-list__item f-tiptap-commands-list__item--active"
+                              data-selected={String(
+                                index === this.state.selectedIndex,
+                              )}
+                              onClick={() =>
+                                this.selectItem(commandsForSuggestion)
+                              }
+                              onMouseOver={() =>
+                                this.setSelectedIndex(itemIndex)
+                              }
+                            >
+                              <span className="f-tiptap-commands-list__item-inner">
+                                {ItemIcon ? (
+                                  <ItemIcon className="f-tiptap-commands-list__item-icon" />
+                                ) : null}
+                                <span className="f-tiptap-commands-list__item-label">
+                                  {commandsForSuggestion.title}
+                                </span>
+                                <span
+                                  className="f-tiptap-commands-list__item-keymap"
+                                  data-keymap={commandsForSuggestion.keymap}
+                                ></span>
+                              </span>
+                            </button>
+                          </li>
+                        );
+                      },
+                    )}
+                  </ul>
+                </React.Fragment>
+              ),
+            )}
           </div>
         ) : null}
 

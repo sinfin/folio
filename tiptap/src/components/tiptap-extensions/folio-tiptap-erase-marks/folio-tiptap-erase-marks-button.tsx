@@ -6,7 +6,7 @@ import type { Editor } from "@tiptap/react";
 import type { ButtonProps } from "@/components/tiptap-ui-primitive/button";
 import { Button } from "@/components/tiptap-ui-primitive/button";
 
-import { FormatEraseIcon } from '@/components/tiptap-icons';
+import { FormatEraseIcon } from "@/components/tiptap-icons";
 
 import translate from "@/lib/i18n";
 
@@ -50,7 +50,12 @@ export const FolioTiptapEraseMarksButton = React.forwardRef<
             };
 
             // remove node marks
-            editor.chain().focus().setTextSelection(range).unsetAllMarks().run();
+            editor
+              .chain()
+              .focus()
+              .setTextSelection(range)
+              .unsetAllMarks()
+              .run();
           }
         } else {
           editor.chain().focus().unsetAllMarks().run();

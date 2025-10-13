@@ -1,4 +1,4 @@
-import * as React from "react"
+import * as React from "react";
 
 export const LoaderIcon = React.memo(
   ({ className, ...props }: React.SVGProps<SVGSVGElement>) => {
@@ -69,8 +69,8 @@ export const LoaderIcon = React.memo(
           opacity="0.9"
         />
       </svg>
-    )
-  }
-)
+    );
+  },
+);
 
-LoaderIcon.displayName = "LoaderIcon"
+LoaderIcon.displayName = "LoaderIcon";

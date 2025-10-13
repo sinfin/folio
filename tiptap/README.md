@@ -14,14 +14,17 @@ React + TypeScript + Vite app that provides Tiptap editor implementation for Fol
 This is a Vite-based React application. To get started:
 
 1. **Install dependencies:**
+
    ```bash
    npm install
    ```
 
 2. **Start development server:**
+
    ```bash
    npm run dev
    ```
+
    This starts a development server at http://localhost:5173/
 
 3. **For Folio integration testing:**
@@ -42,6 +45,7 @@ This is a Vite-based React application. To get started:
 ## Build Output
 
 The build process generates:
+
 - `folio-tiptap.css` - Stylesheet for the editor
 - `folio-tiptap.js` - JavaScript bundle
 

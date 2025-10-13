@@ -1,1 +1,1 @@
-export * from "./invalid-node-indicator"
+export * from "./invalid-node-indicator";

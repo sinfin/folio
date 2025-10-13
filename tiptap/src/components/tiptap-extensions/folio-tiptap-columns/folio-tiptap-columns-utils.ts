@@ -27,7 +27,11 @@ export function getColumnsNodeTypes(schema: Schema) {
   return roles;
 }
 
-export function createColumns(schema: Schema, colsCount: number, colContent = null) {
+export function createColumns(
+  schema: Schema,
+  colsCount: number,
+  colContent = null,
+) {
   const types = getColumnsNodeTypes(schema);
   const cols = [];
 
@@ -60,16 +64,16 @@ export function addOrDeleteColumn({
 
   if (dispatch && maybeColumns && maybeColumn) {
     const cols = maybeColumns.node;
-    let colIndex: null | number = null
+    let colIndex: null | number = null;
 
     cols.content.forEach((childNode, pos, index) => {
-      if (colIndex !== null) return
+      if (colIndex !== null) return;
 
       if (childNode === maybeColumn.node) {
         colIndex = index;
-        return
+        return;
       }
-    })
+    });
 
     if (colIndex === null) {
       console.warn("Current page not found in cols node");
@@ -85,7 +89,7 @@ export function addOrDeleteColumn({
       if (colsJSON.content.length <= 2) {
         // Collect all content from all columns
         const allContent = [];
-        colsJSON.content.forEach((column: { content: Node[]; }) => {
+        colsJSON.content.forEach((column: { content: Node[] }) => {
           if (column.content && column.content.length > 0) {
             allContent.push(...column.content);
           }
@@ -193,13 +197,13 @@ export function goToColumn({
     let currentIndex: null | number = null;
 
     cols.content.forEach((childNode, pos, index) => {
-      if (currentIndex !== null) return
+      if (currentIndex !== null) return;
 
       if (childNode === col) {
         currentIndex = index;
-        return
+        return;
       }
-    })
+    });
 
     if (currentIndex === null) {
       console.warn("Current col not found in cols node");

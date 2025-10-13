@@ -1,9 +1,9 @@
-import React, { useMemo } from 'react';
-import { NodeViewContent, NodeViewWrapper, NodeViewProps } from '@tiptap/react';
-import { findChildren, type Editor } from '@tiptap/core';
-import { TextSelection } from '@tiptap/pm/state';
-import { toggleFolioTiptapPageCollapsed } from './folio-tiptap-pages-utils';
-import { MenuDownIcon, MenuUpIcon } from '@/components/tiptap-icons';
+import React, { useMemo } from "react";
+import { NodeViewContent, NodeViewWrapper, NodeViewProps } from "@tiptap/react";
+import { findChildren, type Editor } from "@tiptap/core";
+import { TextSelection } from "@tiptap/pm/state";
+import { toggleFolioTiptapPageCollapsed } from "./folio-tiptap-pages-utils";
+import { MenuDownIcon, MenuUpIcon } from "@/components/tiptap-icons";
 
 import translate from "@/lib/i18n";
 
@@ -14,14 +14,19 @@ const TRANSLATIONS = {
   en: {
     missingHeading: "Missing page heading",
   },
-}
+};
 
 type FolioTiptapPageViewProps = NodeViewProps;
 
-
-const addHeadingToStartofPage = ({ editor, getPos }: { editor: Editor; getPos: () => number | undefined }) => {
+const addHeadingToStartofPage = ({
+  editor,
+  getPos,
+}: {
+  editor: Editor;
+  getPos: () => number | undefined;
+}) => {
   const pos = getPos();
-  if (typeof pos !== 'number') return;
+  if (typeof pos !== "number") return;
 
   // Create a level 2 heading node
   const headingNode = editor.schema.nodes.heading.create({ level: 2 });
@@ -39,26 +44,40 @@ const addHeadingToStartofPage = ({ editor, getPos }: { editor: Editor; getPos: (
 
   // Dispatch the transaction
   editor.view.dispatch(tr);
-}
+};
 
-const goToEndOfPage = ({ event, editor, getPos }: { event: React.MouseEvent; editor: Editor; getPos: () => number | undefined }) => {
-  event.preventDefault()
-  event.stopPropagation()
+const goToEndOfPage = ({
+  event,
+  editor,
+  getPos,
+}: {
+  event: React.MouseEvent;
+  editor: Editor;
+  getPos: () => number | undefined;
+}) => {
+  event.preventDefault();
+  event.stopPropagation();
 
-  const pos = getPos()
+  const pos = getPos();
 
-  if (typeof pos !== 'number') return false;
+  if (typeof pos !== "number") return false;
 
   // Shift by one as getPos() marks the beginning, not the inside
-  const resolvedPos = editor.state.doc.resolve(pos + 1)
-  const endPos = resolvedPos.end(resolvedPos.depth)
-  const tr = editor.state.tr.setSelection(TextSelection.create(editor.state.doc, endPos - 1))
-  editor.view.dispatch(tr)
-}
+  const resolvedPos = editor.state.doc.resolve(pos + 1);
+  const endPos = resolvedPos.end(resolvedPos.depth);
+  const tr = editor.state.tr.setSelection(
+    TextSelection.create(editor.state.doc, endPos - 1),
+  );
+  editor.view.dispatch(tr);
+};
 
-export const FolioTiptapPageView: React.FC<FolioTiptapPageViewProps> = ({ node, getPos, editor }) => {
+export const FolioTiptapPageView: React.FC<FolioTiptapPageViewProps> = ({
+  node,
+  getPos,
+  editor,
+}) => {
   const headingNodes = useMemo(() => {
-    return findChildren(node, (child) => child.type.name === 'heading');
+    return findChildren(node, (child) => child.type.name === "heading");
   }, [node]);
 
   const filledHeadingNode = useMemo(() => {
@@ -76,31 +95,48 @@ export const FolioTiptapPageView: React.FC<FolioTiptapPageViewProps> = ({ node, 
     });
   };
 
-  let className = "f-tiptap-page"
+  let className = "f-tiptap-page";
 
-  const invalid = !filledHeadingNode
+  const invalid = !filledHeadingNode;
 
   // only show placeholder if it's invalid and there's not a single heading node present
-  const showPlaceholder = headingNodes.length === 0
+  const showPlaceholder = headingNodes.length === 0;
 
   if (invalid) {
-    className += " f-tiptap-page--invalid"
+    className += " f-tiptap-page--invalid";
   }
 
   if (node.attrs.collapsed) {
-    className += " f-tiptap-page--collapsed"
+    className += " f-tiptap-page--collapsed";
   }
 
   return (
     <NodeViewWrapper className={className}>
-      <div className="f-tiptap-page__toggle-wrap" onClick={handleToggleCollapsed}>
+      <div
+        className="f-tiptap-page__toggle-wrap"
+        onClick={handleToggleCollapsed}
+      >
         <div className="f-tiptap-page__toggle">
-          {node.attrs.collapsed ? <MenuDownIcon className="f-tiptap-page__toggle-ico" /> : <MenuUpIcon className="f-tiptap-page__toggle-ico" />}
+          {node.attrs.collapsed ? (
+            <MenuDownIcon className="f-tiptap-page__toggle-ico" />
+          ) : (
+            <MenuUpIcon className="f-tiptap-page__toggle-ico" />
+          )}
         </div>
       </div>
 
       <div className="f-tiptap-page__content">
-        {showPlaceholder ? <h2 className="f-tiptap-page__title-placeholder is-empty" data-placeholder={translate(TRANSLATIONS, 'missingHeading')} onClick={() => { addHeadingToStartofPage({ editor, getPos }) }}><br className="ProseMirror-trailingBreak" /></h2> : null}
+        {showPlaceholder ? (
+          <h2
+            className="f-tiptap-page__title-placeholder is-empty"
+            data-placeholder={translate(TRANSLATIONS, "missingHeading")}
+            onClick={() => {
+              addHeadingToStartofPage({ editor, getPos });
+            }}
+          >
+            <br className="ProseMirror-trailingBreak" />
+          </h2>
+        ) : null}
         <NodeViewContent />
       </div>
 

@@ -1,10 +1,10 @@
 import * as React from "react";
 import type { NodeViewProps } from "@tiptap/react";
 import { NodeViewWrapper } from "@tiptap/react";
-import { makeUniqueId } from './make-unique-id';
-import { postEditMessage } from './post-edit-message';
+import { makeUniqueId } from "./make-unique-id";
+import { postEditMessage } from "./post-edit-message";
 
-import { InvalidNodeIndicator } from '@/components/tiptap-ui/invalid-node-indicator';
+import { InvalidNodeIndicator } from "@/components/tiptap-ui/invalid-node-indicator";
 
 import translate from "@/lib/i18n";
 
@@ -14,14 +14,18 @@ const TRANSLATIONS = {
   cs: {
     remove: "Odstranit",
     edit: "Upravit",
-    errorMessage: "Tento obsah nebude veřejně zobrazen, protože při jeho zobrazení došlo k chybě. Můžete ho zkusit upravit nebo odstranit.",
-    invalidMessage: "Tento obsah nebude veřejně zobrazen. Můžete ho upravit nebo odstranit.",
+    errorMessage:
+      "Tento obsah nebude veřejně zobrazen, protože při jeho zobrazení došlo k chybě. Můžete ho zkusit upravit nebo odstranit.",
+    invalidMessage:
+      "Tento obsah nebude veřejně zobrazen. Můžete ho upravit nebo odstranit.",
   },
   en: {
     remove: "Remove",
     edit: "Edit",
-    errorMessage: "This content will not be publicly displayed because an error occurred while rendering it. You can try to edit or remove it.",
-    invalidMessage: "This content will not be publicly displayed. You can edit or remove it.",
+    errorMessage:
+      "This content will not be publicly displayed because an error occurred while rendering it. You can try to edit or remove it.",
+    invalidMessage:
+      "This content will not be publicly displayed. You can edit or remove it.",
   },
 };
 
@@ -39,7 +43,9 @@ const storeHtmlToCache = ({ html, serializedAttrs }: StoredHtml) => {
 // Height storage functions
 const getStoredHeight = (serializedAttrs: string): number | null => {
   try {
-    const stored = sessionStorage.getItem(`f-tiptap-node-height:${serializedAttrs}`);
+    const stored = sessionStorage.getItem(
+      `f-tiptap-node-height:${serializedAttrs}`,
+    );
     return stored ? parseInt(stored, 10) : null;
   } catch {
     return null;
@@ -48,7 +54,10 @@ const getStoredHeight = (serializedAttrs: string): number | null => {
 
 const storeHeight = (serializedAttrs: string, height: number) => {
   try {
-    sessionStorage.setItem(`f-tiptap-node-height:${serializedAttrs}`, height.toString());
+    sessionStorage.setItem(
+      `f-tiptap-node-height:${serializedAttrs}`,
+      height.toString(),
+    );
   } catch {
     // Ignore storage errors
   }
@@ -63,16 +72,17 @@ interface RespnoseFromApiType {
 export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
   const { uniqueId, ...attrsWithoutUniqueId } = props.node.attrs;
   const { updateAttributes: propsUpdateAttributes } = props;
-  
+
   // Memoize updateAttributes to prevent unnecessary re-renders
   const updateAttributes = React.useCallback(
     (attrs: Record<string, unknown>) => propsUpdateAttributes(attrs),
-    [propsUpdateAttributes]
+    [propsUpdateAttributes],
   );
 
   // All hooks must be declared before any conditional returns
   const [status, setStatus] = React.useState<string>("initial");
-  const [responseFromApi, setResponseFromApi] = React.useState<RespnoseFromApiType>({});
+  const [responseFromApi, setResponseFromApi] =
+    React.useState<RespnoseFromApiType>({});
 
   const wrapperRef = React.useRef<HTMLDivElement>(null);
   const htmlRef = React.useRef<HTMLDivElement>(null);
@@ -86,19 +96,16 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
     [attrsWithoutUniqueId, uniqueId],
   );
 
-  const handleDomEditEvent = React.useCallback(
-     () => {
-      postEditMessage(attrsWithoutUniqueId, uniqueId);
-    },
-    [attrsWithoutUniqueId, uniqueId],
-  );
+  const handleDomEditEvent = React.useCallback(() => {
+    postEditMessage(attrsWithoutUniqueId, uniqueId);
+  }, [attrsWithoutUniqueId, uniqueId]);
 
   // set uniqueId if one is not present
   React.useEffect(() => {
     if (!uniqueId) {
       updateAttributes({ uniqueId: makeUniqueId() });
     }
-   }, [uniqueId, updateAttributes]);
+  }, [uniqueId, updateAttributes]);
 
   // Effect to fetch HTML content from API
   React.useEffect(() => {
@@ -127,7 +134,7 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
         );
       }
     }
-   }, [status, uniqueId, attrsWithoutUniqueId]);
+  }, [status, uniqueId, attrsWithoutUniqueId]);
 
   // Effect to handle edit event
   React.useEffect(() => {
@@ -154,20 +161,29 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
         return;
 
       if (event.data.type === "f-input-tiptap:render-nodes") {
-        event.data.nodes.forEach((node: { unique_id: string; html?: string; error_message?: string }) => {
-          if (node.unique_id === uniqueId) {
-            if (node.html) {
-              const serializedAttrs = JSON.stringify(attrsWithoutUniqueId);
-              storeHtmlToCache({ html: node.html, serializedAttrs });
+        event.data.nodes.forEach(
+          (node: {
+            unique_id: string;
+            html?: string;
+            error_message?: string;
+          }) => {
+            if (node.unique_id === uniqueId) {
+              if (node.html) {
+                const serializedAttrs = JSON.stringify(attrsWithoutUniqueId);
+                storeHtmlToCache({ html: node.html, serializedAttrs });
 
-              setResponseFromApi({ html: node.html });
-              setStatus("loaded");
-            } else {
-              setResponseFromApi({ invalid: true, errorMessage: node.error_message });
-              setStatus("loaded");
+                setResponseFromApi({ html: node.html });
+                setStatus("loaded");
+              } else {
+                setResponseFromApi({
+                  invalid: true,
+                  errorMessage: node.error_message,
+                });
+                setStatus("loaded");
+              }
             }
-          }
-        });
+          },
+        );
       } else if (
         event.data &&
         event.data.type === "f-c-tiptap-overlay:saved" &&
@@ -219,25 +235,26 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
           className="f-tiptap-node__html"
           dangerouslySetInnerHTML={{ __html: responseFromApi.html }}
         />
+      ) : responseFromApi.invalid ? (
+        <InvalidNodeIndicator
+          invalidNodeHash={props.node.toJSON()}
+          message={translate(
+            TRANSLATIONS,
+            responseFromApi.errorMessage ? "errorMessage" : "invalidMessage",
+          )}
+          errorMessage={responseFromApi.errorMessage}
+        />
       ) : (
-        responseFromApi.invalid ? (
-          <InvalidNodeIndicator
-            invalidNodeHash={props.node.toJSON()}
-            message={translate(TRANSLATIONS, responseFromApi.errorMessage ? 'errorMessage' : 'invalidMessage')}
-            errorMessage={responseFromApi.errorMessage}
-          />
-        ) : (
-          <div
-            className="f-tiptap-node__loader-wrap rounded"
-            style={(() => {
-              const serializedAttrs = JSON.stringify(attrsWithoutUniqueId);
-              const height = getStoredHeight(serializedAttrs);
-              return height ? { height: `${height}px` } : undefined;
-            })()}
-          >
-            <span className="folio-loader" />
-          </div>
-        )
+        <div
+          className="f-tiptap-node__loader-wrap rounded"
+          style={(() => {
+            const serializedAttrs = JSON.stringify(attrsWithoutUniqueId);
+            const height = getStoredHeight(serializedAttrs);
+            return height ? { height: `${height}px` } : undefined;
+          })()}
+        >
+          <span className="folio-loader" />
+        </div>
       )}
     </NodeViewWrapper>
   );

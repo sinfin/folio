@@ -1,6 +1,6 @@
-import '@tiptap/core';
+import "@tiptap/core";
 
-declare module '@tiptap/core' {
+declare module "@tiptap/core" {
   interface Commands<ReturnType> {
     /**
      * Inserts a FolioTiptapFloat node.
@@ -10,6 +10,8 @@ declare module '@tiptap/core' {
     /**
      * Sets attributes for the FolioTiptapFloat node.
      */
-    setFolioTiptapFloatAttributes: (attrs: Record<string, unknown>) => ReturnType;
+    setFolioTiptapFloatAttributes: (
+      attrs: Record<string, unknown>,
+    ) => ReturnType;
   }
 }
