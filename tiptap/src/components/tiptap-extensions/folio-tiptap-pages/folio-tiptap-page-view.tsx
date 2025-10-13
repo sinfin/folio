@@ -111,8 +111,12 @@ export const FolioTiptapPageView: React.FC<FolioTiptapPageViewProps> = ({
     className += " f-tiptap-page--collapsed";
   }
 
+  const dataAttributes = node.attrs.collapsed
+    ? { "data-collapsed": "true" }
+    : {};
+
   return (
-    <NodeViewWrapper className={className}>
+    <NodeViewWrapper className={className} {...dataAttributes}>
       <div
         className="f-tiptap-page__toggle-wrap"
         onClick={handleToggleCollapsed}

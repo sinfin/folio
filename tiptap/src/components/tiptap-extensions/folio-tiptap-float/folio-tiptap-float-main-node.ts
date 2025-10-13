@@ -1,4 +1,6 @@
 import { Node, mergeAttributes } from "@tiptap/core";
+import { ReactNodeViewRenderer } from "@tiptap/react";
+import FolioTiptapFloatMainView from "./folio-tiptap-float-main-view";
 
 export * from "./folio-tiptap-float-node";
 
@@ -33,6 +35,13 @@ export const FolioTiptapFloatMainNode = Node.create({
       ),
       0,
     ];
+  },
+
+  addNodeView() {
+    return ReactNodeViewRenderer(FolioTiptapFloatMainView, {
+      as: "main",
+      className: "node-folioTiptapFloatMain f-tiptap-float__main",
+    });
   },
 });
 
