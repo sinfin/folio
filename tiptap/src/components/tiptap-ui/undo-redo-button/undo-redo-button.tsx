@@ -73,8 +73,8 @@ export const UndoRedoButton = React.forwardRef<
       editor: providedEditor,
       action,
       className = "",
-
       enabled,
+      active,
       children,
       ...buttonProps
     },
@@ -112,10 +112,12 @@ export const UndoRedoButton = React.forwardRef<
         className={className.trim()}
         disabled={!enabled}
         data-style="ghost"
+        data-active-state={active ? "on" : "off"}
         data-disabled={!enabled}
         role="button"
         tabIndex={-1}
         aria-label={actionLabel}
+        aria-pressed={active}
         tooltip={actionLabel}
         shortcutKeys={shortcutKey}
         onClick={handleClick}
