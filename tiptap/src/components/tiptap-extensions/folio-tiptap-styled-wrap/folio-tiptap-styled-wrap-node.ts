@@ -1,4 +1,6 @@
 import { Node } from "@tiptap/core";
+import { ReactNodeViewRenderer } from "@tiptap/react";
+import FolioTiptapStyledWrapView from "./folio-tiptap-styled-wrap-view";
 
 export const FolioTiptapStyledWrap = Node.create({
   name: "folioTiptapStyledWrap",
@@ -51,5 +53,9 @@ export const FolioTiptapStyledWrap = Node.create({
         }),
       },
     };
+  },
+
+  addNodeView() {
+    return ReactNodeViewRenderer(FolioTiptapStyledWrapView);
   },
 });

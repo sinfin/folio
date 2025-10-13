@@ -1,4 +1,6 @@
 import { mergeAttributes, Node } from "@tiptap/react";
+import { ReactNodeViewRenderer } from "@tiptap/react";
+import FolioTiptapColumnView from "./folio-tiptap-column-view";
 
 export const FolioTiptapColumnNode = Node.create({
   name: "folioTiptapColumn",
@@ -27,6 +29,12 @@ export const FolioTiptapColumnNode = Node.create({
       mergeAttributes(this.options.HTMLAttributes, HTMLAttributes),
       0,
     ];
+  },
+
+  addNodeView() {
+    return ReactNodeViewRenderer(FolioTiptapColumnView, {
+      className: "node-folioTiptapColumn f-tiptap-column",
+    });
   },
 });
 
