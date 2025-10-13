@@ -33,7 +33,7 @@ module Folio
         opts[:right] = capture(&block)
       end
 
-      render(Folio::Console::Form::HeaderComponent.new(model: f,
+      render(Folio::Console::Form::HeaderComponent.new(f: f,
                                                       title: opts[:title],
                                                       title_class_name: opts[:title_class_name],
                                                       subtitle: opts[:subtitle],
@@ -41,7 +41,7 @@ module Folio
                                                       right: opts[:right],
                                                       sti_badge: opts[:sti_badge],
                                                       tabs: opts[:tabs],
-                                                      hide_fix_error_btn: opts.slice(:hide_fix_error_btn)))
+                                                      hide_fix_error_btn: opts[:hide_fix_error_btn]))
     end
   end
 end

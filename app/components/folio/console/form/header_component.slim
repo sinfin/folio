@@ -18,8 +18,8 @@
           h2.f-c-form-header__h2
             = sanitize(@subtitle)
 
-      - if @sti_badge && @model.try(:object)
-        = render(Folio::Console::Ui::StiBadgeComponent.new(record: @model.object))
+      - if @sti_badge && @f.try(:object)
+        = render(Folio::Console::Ui::StiBadgeComponent.new(record: @f.object))
 
     - if @right
       .f-c-form-header__right
@@ -29,5 +29,5 @@
     .mt-3
       == cell('folio/console/index/tabs', @tabs)
 
-  - if @model.try(:object).try(:errors).present?
-    == cell('folio/console/form/errors', @model, @hide_fix_error_btn)
+  - if @f.try(:object).try(:errors).present?
+    == cell('folio/console/form/errors', @f, @hide_fix_error_btn)

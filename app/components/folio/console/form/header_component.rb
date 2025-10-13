@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::Console::Form::HeaderComponent < Folio::Console::ApplicationComponent
-  def initialize(model:,
+  def initialize(f:,
                 title:,
                 title_class_name: nil,
                 subtitle: nil,
@@ -10,7 +10,7 @@ class Folio::Console::Form::HeaderComponent < Folio::Console::ApplicationCompone
                 sti_badge: false,
                 tabs: nil,
                 hide_fix_error_btn: false)
-    @model = model
+    @f = f
     @title = title
     @title_class_name = title_class_name
     @subtitle = subtitle
@@ -22,6 +22,6 @@ class Folio::Console::Form::HeaderComponent < Folio::Console::ApplicationCompone
   end
 
   def record
-    @model.try(:object) || @model
+    @f.try(:object) || @f
   end
 end
