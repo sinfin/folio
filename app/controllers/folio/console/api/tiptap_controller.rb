@@ -22,7 +22,8 @@ class Folio::Console::Api::TiptapController < Folio::Console::Api::BaseControlle
     @nodes_hash = {}
 
     params.require(:nodes).each do |node_attrs|
-      @nodes_hash[node_attrs[:unique_id]] = { node: Folio::Tiptap::Node.new_from_params(node_attrs[:attrs]) }
+      @nodes_hash[node_attrs[:unique_id]] = { node: Folio::Tiptap::Node.new_from_params(node_attrs[:attrs],
+                                                                                        site: Folio::Current.site) }
     rescue StandardError => e
       @nodes_hash[node_attrs[:unique_id]] = { error: e }
     end
@@ -37,6 +38,7 @@ class Folio::Console::Api::TiptapController < Folio::Console::Api::BaseControlle
 
       if node_klass < Folio::Tiptap::Node
         @node = node_klass.new
+        @node.site = Folio::Current.site
         @node.assign_attributes_from_param_attrs(tiptap_node_attrs)
       else
         fail ArgumentError, "Invalid Tiptap node type: #{params[:tiptap_node_type]}"

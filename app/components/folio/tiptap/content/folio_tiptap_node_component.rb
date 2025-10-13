@@ -5,7 +5,9 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponent < ApplicationComponent
     @record = record
     @prose_mirror_node = prose_mirror_node
 
-    @node = Folio::Tiptap::Node.new_from_params(ActionController::Parameters.new(@prose_mirror_node["attrs"]))
+    site = @record.respond_to?(:site) ? @record.site : nil
+    @node = Folio::Tiptap::Node.new_from_params(ActionController::Parameters.new(@prose_mirror_node["attrs"]),
+                                                site: site)
     validate_node_type!
   end
 

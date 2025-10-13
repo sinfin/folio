@@ -6,6 +6,8 @@ class Folio::Tiptap::Node
   include ActiveModel::Attributes
   include ActiveModel::Translation
 
+  attr_accessor :site
+
   validate :validate_site_attachment_allowed
 
   def self.tiptap_node(structure:, tiptap_config: nil)
@@ -94,15 +96,16 @@ class Folio::Tiptap::Node
     "#{self}Component".constantize
   end
 
-  def self.new_from_attributes(attrs)
-    new_from_params(ActionController::Parameters.new(attrs))
+  def self.new_from_attributes(attrs, site: nil)
+    new_from_params(ActionController::Parameters.new(attrs), site: site)
   end
 
-  def self.new_from_params(attrs)
+  def self.new_from_params(attrs, site: nil)
     klass = attrs.require(:type).safe_constantize
 
     if klass && klass < Folio::Tiptap::Node
       node = klass.new
+      node.site = site
       node.assign_attributes_from_param_attrs(attrs)
       node
     else
@@ -140,9 +143,8 @@ class Folio::Tiptap::Node
 
   private
     def validate_site_attachment_allowed
-      site = Folio::Current.site
       structure = self.class.respond_to?(:structure) && self.class.structure
-      return unless site && structure
+      return unless @site && structure
 
       has_invalid_attachment = structure.any? do |key, cfg|
         next false unless cfg[:type] == :folio_attachment
@@ -150,10 +152,10 @@ class Folio::Tiptap::Node
 
         if cfg[:has_many]
           placements = send("#{key.to_s.singularize}_placements_attributes") || []
-          placements.any? { |h| file_invalid_for_site?(h, file_klass, site) }
+          placements.any? { |h| file_invalid_for_site?(h, file_klass, @site) }
         else
           placement = send("#{key}_placement_attributes")
-          file_invalid_for_site?(placement, file_klass, site)
+          file_invalid_for_site?(placement, file_klass, @site)
         end
       end
 
