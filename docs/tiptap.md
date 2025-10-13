@@ -686,3 +686,5 @@ Tiptap development happens in the `tiptap` directory. It's developed as a separa
 To develop, run `npm install` and `npm run dev` in the `tiptap` directory. That starts a http://localhost:5173/ server.
 
 In case you need to develop folio-specific integrations, you can set the `FOLIO_TIPTAP_DEV=1` ENV value and  start the rails server (i.e. `FOLIO_TIPTAP_DEV=1 r s`). That uses the http://localhost:5173/ server instead of the `Folio::TiptapController` as the iframe src.
+
+Before committing changes, run `npm run build:check` to validate TypeScript compilation without generating output files.

@@ -43,7 +43,7 @@ export function FolioEditorResponsivePreview({
 
     document.addEventListener("mousemove", onMouseMove);
     document.addEventListener("mouseup", onMouseUp);
-  }, [enabled, responsivePreviewWidth]);
+  }, [responsivePreviewWidth]);
 
   // scroll to initial position
   React.useEffect(() => {
@@ -55,10 +55,10 @@ export function FolioEditorResponsivePreview({
         }
       }, 0)
     }
-  }, [shouldScrollToInitial, setShouldScrollToInitial, scrollRef.current]);
+  }, [shouldScrollToInitial, setShouldScrollToInitial]);
 
   // debounced onScroll
-  const onScroll = React.useCallback(debounce(() => {
+  const onScroll = React.useMemo(() => debounce(() => {
     if (scrollRef.current) {
       window.parent!.postMessage(
         {
@@ -68,7 +68,7 @@ export function FolioEditorResponsivePreview({
         "*",
       );
     }
-  }), [scrollRef]);
+  }), []);
 
   return (
     <div className="f-tiptap-editor-responsive-preview">

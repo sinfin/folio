@@ -70,7 +70,7 @@ declare global {
     icon?: string;
   }
 
-  interface StyledWrapVariantFromInput extends StyledParagraphVariantFromInput {}
+  type StyledWrapVariantFromInput = StyledParagraphVariantFromInput;
 
   interface FolioTiptapConfig {
     nodes?: FolioTiptapNodeFromInput[];
@@ -87,8 +87,17 @@ declare global {
     latestRevisionAt: string | null;
   }
 
-  interface FolioEditorCommandChain extends import("@tiptap/core").CommandChain {
-    insertContent: (content: any) => FolioEditorCommandChain;
+  // Import CommandChain type for the interface below
+  type CommandChain = import("@tiptap/core").CommandChain;
+  
+  // Common command parameters type for TipTap extensions
+  type CommandParams = { 
+    dispatch: ((tr: import("@tiptap/pm/state").Transaction) => void) | undefined; 
+    state: import("@tiptap/pm/state").EditorState;
+  };
+
+  interface FolioEditorCommandChain extends CommandChain {
+    insertContent: (content: import("@tiptap/react").JSONContent | string) => FolioEditorCommandChain;
   }
 
   interface FolioEditor extends TiptapEditor {

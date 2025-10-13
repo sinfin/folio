@@ -3,14 +3,10 @@ import { ReactRenderer } from "@tiptap/react";
 import { Editor } from "@tiptap/core";
 import type { Range } from "@tiptap/core";
 
-import { Pilcrow } from "lucide-react";
-
 import {
   FolioTiptapCommandsList,
 } from "./folio-tiptap-commands-list";
 import { FolioTiptapCommandsListBackdrop } from "./folio-tiptap-commands-list-backdrop";
-
-import { markIcons } from "@/components/tiptap-ui/mark-button/mark-button";
 
 import { ListsCommandGroup } from '@/components/tiptap-command-groups';
 
@@ -119,7 +115,7 @@ export const folioTiptapCommandsSuggestionWithoutItems = {
       computePosition(virtualElement, component.element as HTMLElement, {
         placement,
         middleware: [flip(), offset(12), size({
-          apply( { availableWidth, availableHeight, elements }) {
+           apply({ availableWidth, availableHeight }) {
             Object.assign((component!.element as HTMLElement).style, {
               maxWidth: `${Math.max(0, availableWidth)}px`,
               maxHeight: `${Math.max(0, availableHeight)}px`,

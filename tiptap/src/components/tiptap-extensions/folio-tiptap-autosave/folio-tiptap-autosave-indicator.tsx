@@ -53,7 +53,7 @@ export interface FolioTiptapAutosaveIndicatorProps extends ButtonProps {
 export const FolioTiptapAutosaveIndicator = React.forwardRef<
   HTMLButtonElement,
   FolioTiptapAutosaveIndicatorProps
->(({ editor, autosaveIndicatorInfo }, ref) => {
+>(({ autosaveIndicatorInfo }, ref) => {
   const [lastSavedAt, setLastSavedAt] = React.useState<Date | null>(
     autosaveIndicatorInfo?.latestRevisionAt ? new Date(autosaveIndicatorInfo.latestRevisionAt) : null
   );

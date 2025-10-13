@@ -1,6 +1,6 @@
 import * as React from "react";
 import type { Range } from "@tiptap/core";
-import type { Editor, Content } from "@tiptap/react";
+import type { Editor } from "@tiptap/react";
 
 // --- UI Primitives ---
 import type { ButtonProps } from "@/components/tiptap-ui-primitive/button";
@@ -57,7 +57,7 @@ export const FolioTiptapEraseMarksButton = React.forwardRef<
         }
       }
     },
-    [],
+    [editor],
   );
 
   const label = translate(TRANSLATIONS, "erase");

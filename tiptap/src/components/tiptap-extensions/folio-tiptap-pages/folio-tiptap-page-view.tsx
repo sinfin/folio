@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { NodeViewContent, NodeViewWrapper, NodeViewProps } from '@tiptap/react';
-import { findChildren } from '@tiptap/core';
+import { findChildren, type Editor } from '@tiptap/core';
 import { TextSelection } from '@tiptap/pm/state';
 import { toggleFolioTiptapPageCollapsed } from './folio-tiptap-pages-utils';
 import { MenuDownIcon, MenuUpIcon } from '@/components/tiptap-icons';
@@ -16,12 +16,10 @@ const TRANSLATIONS = {
   },
 }
 
-interface FolioTiptapPageViewProps extends NodeViewProps {
-  // Additional props can be added here if needed
-}
+type FolioTiptapPageViewProps = NodeViewProps;
 
 
-const addHeadingToStartofPage = ({ editor, getPos }: { editor: any; getPos: () => number | undefined }) => {
+const addHeadingToStartofPage = ({ editor, getPos }: { editor: Editor; getPos: () => number | undefined }) => {
   const pos = getPos();
   if (typeof pos !== 'number') return;
 
@@ -43,7 +41,7 @@ const addHeadingToStartofPage = ({ editor, getPos }: { editor: any; getPos: () =
   editor.view.dispatch(tr);
 }
 
-const goToEndOfPage = ({ event, editor, getPos }: { event: React.MouseEvent; editor: any; getPos: () => number | undefined }) => {
+const goToEndOfPage = ({ event, editor, getPos }: { event: React.MouseEvent; editor: Editor; getPos: () => number | undefined }) => {
   event.preventDefault()
   event.stopPropagation()
 
@@ -59,8 +57,6 @@ const goToEndOfPage = ({ event, editor, getPos }: { event: React.MouseEvent; edi
 }
 
 export const FolioTiptapPageView: React.FC<FolioTiptapPageViewProps> = ({ node, getPos, editor }) => {
-  if (!editor) return
-
   const headingNodes = useMemo(() => {
     return findChildren(node, (child) => child.type.name === 'heading');
   }, [node]);
@@ -68,6 +64,8 @@ export const FolioTiptapPageView: React.FC<FolioTiptapPageViewProps> = ({ node, 
   const filledHeadingNode = useMemo(() => {
     return headingNodes.find((child) => child.node.content.size > 0);
   }, [headingNodes]);
+
+  if (!editor) return null;
 
   const handleToggleCollapsed = () => {
     toggleFolioTiptapPageCollapsed({
@@ -83,7 +81,7 @@ export const FolioTiptapPageView: React.FC<FolioTiptapPageViewProps> = ({ node, 
   const invalid = !filledHeadingNode
 
   // only show placeholder if it's invalid and there's not a single heading node present
-  let showPlaceholder = headingNodes.length === 0
+  const showPlaceholder = headingNodes.length === 0
 
   if (invalid) {
     className += " f-tiptap-page--invalid"

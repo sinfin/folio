@@ -2,7 +2,6 @@ import { Extension, Editor } from "@tiptap/core";
 import Suggestion from "@tiptap/suggestion";
 import type { Range } from "@tiptap/core";
 import { NodeSelection, TextSelection  } from "@tiptap/pm/state";
-import type { EditorState } from "@tiptap/pm/state";
 import type { ResolvedPos, Node } from "@tiptap/pm/model";
 
 interface CommandInterface {
@@ -58,7 +57,7 @@ export const FolioTiptapCommandsExtension = Extension.create({
     return {
       triggerFolioTiptapCommand:
         (resolvedPos) =>
-          ({ state, dispatch }: { state: EditorState; dispatch: any }) => {
+           ({ state, dispatch }: CommandParams) => {
             const resolvedPosWithFallback = resolvedPos || state.selection.$from;
 
             if (!resolvedPosWithFallback) {

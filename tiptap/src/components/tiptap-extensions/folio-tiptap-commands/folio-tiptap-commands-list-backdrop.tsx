@@ -1,6 +1,4 @@
 import React from "react";
-import type { Editor } from "@tiptap/react";
-import type { Range } from "@tiptap/core";
 import { X } from 'lucide-react';
 
 import { type FolioTiptapCommandsListProps, type FolioTiptapCommandsListState } from "./folio-tiptap-commands-list";

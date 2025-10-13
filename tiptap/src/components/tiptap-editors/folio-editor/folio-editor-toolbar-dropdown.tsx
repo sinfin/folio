@@ -7,7 +7,6 @@ import {
   DropdownMenuItem,
   DropdownMenuGroup,
 } from "@/components/tiptap-ui-primitive/dropdown-menu"
-import translate from "@/lib/i18n";
 import { ChevronDownIcon } from "@/components/tiptap-icons/chevron-down-icon"
 import { Button } from "@/components/tiptap-ui-primitive/button"
 
@@ -74,8 +73,6 @@ export function FolioEditorToolbarDropdown({
   commandGroup,
   editor,
 }: FolioEditorToolbarDropdownProps) {
-  if (!editor) return
-
   const [isOpen, setIsOpen] = React.useState(false)
 
   const handleOnOpenChange = React.useCallback(
@@ -92,6 +89,8 @@ export function FolioEditorToolbarDropdown({
       return null
     }
   }, [editorState.value, commandGroup.commands])
+
+  if (!editor) return null;
 
   const activeItem = getActiveItem()
   const ActiveIcon = activeItem ? activeItem.icon : commandGroup.icon;

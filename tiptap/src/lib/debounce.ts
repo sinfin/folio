@@ -1,4 +1,4 @@
-export const debounce = <T extends (...args: any[]) => any>(
+export const debounce = <T extends (...args: unknown[]) => unknown>(
   func: T,
   wait?: number,
   immediate?: boolean
@@ -13,7 +13,8 @@ export const debounce = <T extends (...args: any[]) => any>(
     immediate = false
   }
 
-  return function (this: any, ...args: Parameters<T>) {
+  return function (this: unknown, ...args: Parameters<T>) {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const context = this
     
     const later = () => {

@@ -5,11 +5,11 @@ declare module '@tiptap/core' {
     /**
      * Inserts a FolioTiptapFloat node.
      */
-    insertFolioTiptapFloat: (attrs?: Record<string, any>) => ReturnType;
+    insertFolioTiptapFloat: (attrs?: Record<string, unknown>) => ReturnType;
 
     /**
      * Sets attributes for the FolioTiptapFloat node.
      */
-    setFolioTiptapFloatAttributes: (attrs: Record<string, any>) => ReturnType;
+    setFolioTiptapFloatAttributes: (attrs: Record<string, unknown>) => ReturnType;
   }
 }
