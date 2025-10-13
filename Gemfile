@@ -32,7 +32,7 @@ gem "omniauth-rails_csrf_protection"
 gem "omniauth"
 
 source "https://rubygems.z0ny.net" do
-  gem "aws-file-handler", "~> 0.1", ">= 0.1.5"
+  gem "aws-file-handler", "~> 0.1", ">= 0.1.7"
 end
 
 group :development do
