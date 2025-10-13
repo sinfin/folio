@@ -1,4 +1,4 @@
-== cell('folio/publishable_hint', @ancestry_any_unpublished || @page)
+= render(Folio::PublishableHintComponent.new(model: @ancestry_any_unpublished || @page))
 
 - cache @cache_key
   .container

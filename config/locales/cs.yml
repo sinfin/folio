@@ -52,7 +52,7 @@ cs:
         title: Nastavení
         title_long: Nastavení stránky %{site}
 
-    publishable_hint:
+    publishable_hint_component:
       hint: Stránka je až do publikování viditelná jen pro přihlášené administrátory.
       preview_token_hint: Stránka je až do publikování viditelná jen na této adrese.
     image:

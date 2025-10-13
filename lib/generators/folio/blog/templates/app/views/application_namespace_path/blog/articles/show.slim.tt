@@ -1,5 +1,5 @@
 = render_folio_cache
-  == cell('folio/publishable_hint', @article)
+  = render(Folio::PublishableHintComponent.new(model: @article))
 
   = render(<%= application_namespace %>::Blog::Articles::ShowHeaderComponent.new(article: @article,
                                                           breadcrumbs: @breadcrumbs_on_rails))

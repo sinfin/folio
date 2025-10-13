@@ -51,7 +51,7 @@ en:
       settings:
         title: Settings
         title_long: Settings for site %{site}
-    publishable_hint:
+    publishable_hint_component:
       hint: Until publishing, this page is visible to logged in administrators only.
       preview_token_hint: Until publishing, this page is visible on this URL only.
     image:

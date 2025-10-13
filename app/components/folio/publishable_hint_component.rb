@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::PublishableHintCell < Folio::ApplicationCell
+class Folio::PublishableHintComponent < Folio::ApplicationComponent
   def show
     render if model && forced_or_unpublished?
   end
