@@ -12,7 +12,7 @@ class Folio::MediaSource < Folio::ApplicationRecord
   validates :title, presence: true, uniqueness: true
   validates :max_usage_count, numericality: { greater_than: 0, allow_nil: true }
 
-  before_destroy :nullify_attached_files_attributes
+  before_destroy :nullify_attached_files_attributes, prepend: true
   after_commit :broadcast_files_reload, on: :destroy
 
   scope :ordered, -> { order(id: :desc) }
@@ -49,17 +49,16 @@ class Folio::MediaSource < Folio::ApplicationRecord
 
       scope = Folio::File.where(id: ids)
 
+      Folio::FileSiteLink
+        .where(file_id: ids)
+        .where("site_id = ? OR site_id IN (SELECT site_id FROM folio_media_source_site_links WHERE media_source_id = ?)",
+               site_id, id)
+        .delete_all
       scope.update_all(media_source_id: nil)
       clear_field_if_equal(scope, :attribution_source, title)
       clear_field_if_equal(scope, :attribution_max_usage_count, max_usage_count)
       clear_field_if_equal(scope, :attribution_licence, licence)
       clear_field_if_equal(scope, :attribution_copyright, copyright_text)
-
-      # Remove only site links that correspond to this media source's allowed sites
-      site_ids = media_source_site_links.pluck(:site_id)
-      if site_ids.present?
-        Folio::FileSiteLink.where(file_id: ids, site_id: site_ids).delete_all
-      end
 
       true
     end
