@@ -11,6 +11,8 @@ class Folio::Embed::BoxComponent < ApplicationComponent
 
   private
     def wrap_data
+      return nil if inside_dev_tiptap?
+
       h = stimulus_controller("f-embed-box",
                               values: {
                                 folio_embed_data: @folio_embed_data.to_json,
@@ -28,5 +30,10 @@ class Folio::Embed::BoxComponent < ApplicationComponent
       else
         h
       end
+    end
+
+    def inside_dev_tiptap?
+      return @inside_dev_tiptap if defined?(@inside_dev_tiptap)
+      @inside_dev_tiptap = ENV["FOLIO_TIPTAP_DEV"].present? && controller.is_a?(Folio::Console::Api::TiptapController) && controller.action_name == "render_nodes"
     end
 end

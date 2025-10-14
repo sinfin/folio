@@ -1,2 +1,14 @@
-.f-embed-box data=wrap_data
-  span.f-embed-box__loader.folio-loader data=stimulus_target("loader")
+- if inside_dev_tiptap?
+  .f-embed-box class="f-embed-box--inside-tiptap"
+    div[
+      class="p-4 rounded border"
+      style="background: #e8e8e8; overflow-wrap: break-word;"
+    ]
+      h4.mt-0 Embed / FOLIO_TIPTAP_DEV
+
+      - if @folio_embed_data.present?
+        pre.bg-white
+          code = JSON.pretty_generate(@folio_embed_data)
+- else
+  .f-embed-box data=wrap_data
+    span.f-embed-box__loader.folio-loader data=stimulus_target("loader")
