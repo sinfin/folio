@@ -118,6 +118,7 @@ class Folio::Console::Ui::Index::FiltersComponent < Folio::Console::ApplicationC
                      value: controller.params[key],
                      placeholder: "#{label_for_key(key)}...",
                    },
+                   wrapper: :input_group,
                    wrapper_html: { class: "f-c-ui-index-filters__date-range-input-wrap input-group--#{controller.params[key].present? ? "filled" : "empty"}" },
                    clear_button: controller.params[key].present?
     end
@@ -184,13 +185,13 @@ class Folio::Console::Ui::Index::FiltersComponent < Folio::Console::ApplicationC
                    label: false,
                    wrapper: :input_group,
                    wrapper_html: { class: "input-group--#{controller.params[key].present? ? "filled" : "empty"}" },
-                   input_group_append: controller.params[key].present? ? input_group_append : nil
+                   clear_button: controller.params[key].present?
     end
 
     def input_group_append
       render(Folio::Console::Ui::ButtonComponent.new(class_name: "f-c-ui-index-filters__reset-input",
                                                      variant: :medium_dark,
-                                                     data: stimulus_action(click: "onResetInputClick"),
+                                                     data: stimulus_action(click: "onClearButtonClick"),
                                                      icon: :close))
     end
 

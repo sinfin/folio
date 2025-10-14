@@ -51,27 +51,13 @@ window.Folio.Stimulus.register('f-c-ui-index-filters', class extends window.Stim
     this.element.classList.toggle('f-c-ui-index-filters--expanded')
   }
 
-  // todo will be removed
-  onResetInputClick (e) {
-    e.preventDefault()
-
-    const group = e.target.closest('.input-group')
-    if (!group) return
-
-    const input = group.querySelector('.form-control')
-    if (!input) return
-
-    input.value = ''
-    this.submit()
-  }
-
   onClearButtonClick (e) {
     e.preventDefault()
 
-    const formGroup = e.target.closest('.form-group')
-    if (!formGroup) return
+    const inputGroup = e.target.closest('.input-group')
+    if (!inputGroup) return
 
-    const input = formGroup.querySelector('.form-control')
+    const input = inputGroup.querySelector('.form-control')
     if (!input) return
 
     input.value = ''
