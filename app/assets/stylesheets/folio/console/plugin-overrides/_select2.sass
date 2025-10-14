@@ -30,7 +30,7 @@
       // background-size: $form-select-bg-size
       background-size: 14px 14px
 
-    .form-group--with-controls.input-group--filled &
+    .form-group:has(.form-group__input-controls).input-group--filled &
       &::before
         right: 52px
 
@@ -72,7 +72,8 @@
         font-size: px-to-rem(20px)
 
       .input-group &,
-      .form-group--with-controls &
+      .form-group &,
+      .form-group:has(.form-group__input-controls) &
         display: none
 
     .select2-selection__placeholder
@@ -125,18 +126,3 @@
     min-height: 300px
     height: 60vh
     max-height: 600px
-
-.form-group--with-controls
-  position: relative
-
-  .form-group__controls
-    display: inline-flex
-    align-items: center
-    position: absolute
-    right: 1px
-    top: 1px
-    height: calc(100% - 2px)
-    padding-right: 6px
-    border-radius: $border-radius
-    z-index: 99999
-    background-color: $form-select-bg

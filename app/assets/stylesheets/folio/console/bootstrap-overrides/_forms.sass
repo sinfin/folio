@@ -48,6 +48,21 @@ legend
     .redactor-box
       box-shadow: 0 0 12px 2px $red !important
 
+  &:has(&__input-controls)
+    position: relative
+
+  &__input-controls
+    display: inline-flex
+    align-items: center
+    position: absolute
+    right: 1px
+    top: 1px
+    height: calc(100% - 2px)
+    padding-right: 6px
+    border-radius: $border-radius
+    z-index: 99999
+    background-color: $form-select-bg
+
 .form-control,
 .form-select,
 .form-check-input
