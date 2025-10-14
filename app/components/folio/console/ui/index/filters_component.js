@@ -51,6 +51,7 @@ window.Folio.Stimulus.register('f-c-ui-index-filters', class extends window.Stim
     this.element.classList.toggle('f-c-ui-index-filters--expanded')
   }
 
+  // todo will be removed
   onResetInputClick (e) {
     e.preventDefault()
 
@@ -70,10 +71,10 @@ window.Folio.Stimulus.register('f-c-ui-index-filters', class extends window.Stim
     const formGroup = e.target.closest('.form-group')
     if (!formGroup) return
 
-    const select = formGroup.querySelector('.select2-hidden-accessible')
-    if (!select) return
+    const input = formGroup.querySelector('.form-control')
+    if (!input) return
 
-    select.value = ''
+    input.value = ''
     this.submit()
   }
 })
