@@ -1,19 +1,22 @@
-import { HeadingIcon } from '@/components/tiptap-icons/heading-icon';
+import { HeadingIcon } from "@/components/tiptap-icons/heading-icon";
 
 import {
   HeadingFourCommand,
   HeadingThreeCommand,
   HeadingTwoCommand,
   ParagraphCommand,
-} from "@/components/tiptap-commands"
+} from "@/components/tiptap-commands";
 
 interface MakeTextStylesCommandGroupProps {
   folioTiptapStyledParagraphCommands: FolioEditorCommand[];
   folioTiptapHeadingLevels: number[];
 }
 
-export const makeTextStylesCommandGroup = ({ folioTiptapStyledParagraphCommands, folioTiptapHeadingLevels }: MakeTextStylesCommandGroupProps): FolioEditorCommandGroup => {
-  const headingCommands = []
+export const makeTextStylesCommandGroup = ({
+  folioTiptapStyledParagraphCommands,
+  folioTiptapHeadingLevels,
+}: MakeTextStylesCommandGroupProps): FolioEditorCommandGroup => {
+  const headingCommands = [];
 
   if (folioTiptapHeadingLevels) {
     if (folioTiptapHeadingLevels.includes(2)) {
@@ -28,7 +31,7 @@ export const makeTextStylesCommandGroup = ({ folioTiptapStyledParagraphCommands,
   }
 
   if (folioTiptapHeadingLevels.length === 1) {
-    headingCommands[0].title = { cs: "Mezititulek", en: "Title" }
+    headingCommands[0].title = { cs: "Mezititulek", en: "Title" };
   }
 
   return {
@@ -39,8 +42,8 @@ export const makeTextStylesCommandGroup = ({ folioTiptapStyledParagraphCommands,
       ParagraphCommand,
       ...headingCommands,
       ...folioTiptapStyledParagraphCommands,
-    ]
-  }
-}
+    ],
+  };
+};
 
 export default makeTextStylesCommandGroup;

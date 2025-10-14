@@ -7,6 +7,8 @@
   var ADVANCED_OPTIONS, EMAIL_OPTIONS, FOLIO_REDACTOR_I18N, OPTIONS, PEREX_OPTIONS, blurCallback, changedCallback, focusCallback;
 
   blurCallback = function(e) {
+    if (this.module && this.module.link && this.module.link.folioLinkModalOpen) return
+
     if (window.FolioConsole && window.FolioConsole.HtmlAutoFormat && window.FolioConsole.HtmlAutoFormat.redactorBlurCallback) {
       window.FolioConsole.HtmlAutoFormat.redactorBlurCallback({
         redactor: this

@@ -1,4 +1,4 @@
-import * as React from "react"
+import * as React from "react";
 
 export const AlertCircleIcon = React.memo(
   ({ className, ...props }: React.SVGProps<SVGSVGElement>) => {
@@ -31,8 +31,8 @@ export const AlertCircleIcon = React.memo(
           fill="currentColor"
         />
       </svg>
-    )
-  }
-)
+    );
+  },
+);
 
-AlertCircleIcon.displayName = "AlertCircleIcon"
+AlertCircleIcon.displayName = "AlertCircleIcon";

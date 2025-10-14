@@ -1,4 +1,3 @@
-import { findParentNode } from "@tiptap/core";
 import type { Editor } from "@tiptap/core";
 import type { FolioEditorBubbleMenuSource } from "@/components/tiptap-editors/folio-editor/folio-editor-bubble-menus";
 
@@ -50,11 +49,12 @@ const TRANSLATIONS = {
 
 export const TABLE_BUBBLE_MENU_SOURCE: FolioEditorBubbleMenuSource = {
   pluginKey: "tableBubbleMenu",
-  shouldShow: ({ editor, state }) => {
+  priority: 2,
+  shouldShow: ({ editor }) => {
     return editor.isActive("table");
   },
   disabledKeys: ({ editor }) => {
-    const result = []
+    const result = [];
 
     if (!editor.can().splitCell()) {
       result.push("splitCell");
@@ -64,7 +64,7 @@ export const TABLE_BUBBLE_MENU_SOURCE: FolioEditorBubbleMenuSource = {
       result.push("mergeCells");
     }
 
-    return result
+    return result;
   },
   items: [
     [
@@ -170,6 +170,6 @@ export const TABLE_BUBBLE_MENU_SOURCE: FolioEditorBubbleMenuSource = {
           editor.chain().focus().deleteTable().run();
         },
       },
-    ]
+    ],
   ],
 };

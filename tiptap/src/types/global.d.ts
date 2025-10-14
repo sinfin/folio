@@ -56,21 +56,21 @@ declare global {
   }
 
   interface FolioTiptapNodeFromInput {
-    title: { cs: string, en: string };
+    title: { cs: string; en: string };
     type: string;
     config: {
       use_as_single_image_in_toolbar?: boolean;
       autoclick_cover?: boolean;
-    }
+    };
   }
 
   interface StyledParagraphVariantFromInput {
     variant: string;
-    title: { cs: string, en: string };
+    title: { cs: string; en: string };
     icon?: string;
   }
 
-  interface StyledWrapVariantFromInput extends StyledParagraphVariantFromInput {}
+  type StyledWrapVariantFromInput = StyledParagraphVariantFromInput;
 
   interface FolioTiptapConfig {
     nodes?: FolioTiptapNodeFromInput[];
@@ -87,8 +87,21 @@ declare global {
     latestRevisionAt: string | null;
   }
 
-  interface FolioEditorCommandChain extends import("@tiptap/core").CommandChain {
-    insertContent: (content: any) => FolioEditorCommandChain;
+  // Import CommandChain type for the interface below
+  type CommandChain = import("@tiptap/core").CommandChain;
+
+  // Common command parameters type for TipTap extensions
+  type CommandParams = {
+    dispatch:
+      | ((tr: import("@tiptap/pm/state").Transaction) => void)
+      | undefined;
+    state: import("@tiptap/pm/state").EditorState;
+  };
+
+  interface FolioEditorCommandChain extends CommandChain {
+    insertContent: (
+      content: import("@tiptap/react").JSONContent | string,
+    ) => FolioEditorCommandChain;
   }
 
   interface FolioEditor extends TiptapEditor {
@@ -106,9 +119,7 @@ declare global {
     keymap?: string;
     dontShowAsActiveInCollapsedToolbar?: boolean;
     hideInToolbarDropdown?: boolean;
-    command: (props: {
-      chain: import("@tiptap/core").CommandChain;
-    }) => void;
+    command: (props: { chain: import("@tiptap/core").CommandChain }) => void;
   }
 
   interface FolioEditorCommandGroup {
@@ -123,7 +134,8 @@ declare global {
     normalizedTitle: string;
   }
 
-  interface FolioEditorCommandGroupForSuggestion extends FolioEditorCommandGroup {
+  interface FolioEditorCommandGroupForSuggestion
+    extends FolioEditorCommandGroup {
     title: string;
     key: string;
     commandsForSuggestion: FolioEditorCommandForSuggestion[];

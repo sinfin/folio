@@ -38,6 +38,7 @@ class Folio::File < Folio::ApplicationRecord
       update
       update_file_thumbnail
       update_subtitle
+      update_thumbnails_crop
     ],
     read: %i[
       batch_bar
@@ -109,7 +110,12 @@ class Folio::File < Folio::ApplicationRecord
     by_file_name_for_search(sanitize_filename_for_search(query))
   end
 
-  scope :by_query, -> (query) { by_file_name_for_search(sanitize_filename_for_search(query)) }
+  pg_search_scope :by_query,
+                  against: [:file_name, :headline, :description],
+                  ignoring: :accents,
+                  using: {
+                    tsearch: { prefix: true }
+                  }
 
   pg_search_scope :by_file_name_for_search,
                   against: [:file_name_for_search],
@@ -486,6 +492,7 @@ end
 #  media_source_id                   :bigint(8)
 #  attribution_max_usage_count       :integer
 #  published_usage_count             :integer          default(0), not null
+#  thumbnail_configuration           :jsonb
 #
 # Indexes
 #

@@ -1,4 +1,4 @@
-import * as React from "react"
+import * as React from "react";
 
 export const TableAddColumnAfter = React.memo(
   ({ className, ...props }: React.SVGProps<SVGSVGElement>) => {
@@ -17,8 +17,8 @@ export const TableAddColumnAfter = React.memo(
           fill="currentColor"
         />
       </svg>
-    )
-  }
-)
+    );
+  },
+);
 
-TableAddColumnAfter.displayName = "TableAddColumnAfter"
+TableAddColumnAfter.displayName = "TableAddColumnAfter";

@@ -33,6 +33,21 @@ cs:
             th/created_at: Vytvořeno
             in_atom: kapitola obsahu
 
+          thumbnails_component:
+            title: Verze a velikosti
+            type/regular: Verze bez ořezu
+            type/crop: Verze s ořezem (#)
+            type/shrink: Verze pouze se zmenšením (>)
+            type/cover: Verze s přizpůsobením (^)
+            no_thumbnails_yet: Zatím nebyly vygenerovány žádné verze
+
+          thumbnails:
+            ratio_component:
+              all_versions: "Všechny vygenerované verze:"
+
+            crop_edit_component:
+              edit: Upravit ořez
+
         batch:
           bar_component:
             delete: Smazat

@@ -1,5 +1,5 @@
 @function strip-unit($number) {
-  @if type-of($number) == 'number' and not unitless($number) {
+  @if type-of($number) == "number" and not unitless($number) {
     @return $number / ($number * 0 + 1);
   }
   @return $number;
@@ -53,7 +53,9 @@
   }
 
   &--rich-text {
-    --f-tiptap-editor-content-wrap__padding-x: var(--f-tiptap-editor-content-wrap__padding-x-rich-text);
+    --f-tiptap-editor-content-wrap__padding-x: var(
+      --f-tiptap-editor-content-wrap__padding-x-rich-text
+    );
 
     border: 1px solid var(--f-tiptap-editor__border-color);
     border-radius: var(--f-tiptap-editor__border-radius);
@@ -75,7 +77,8 @@
   display: flex;
   flex-direction: column;
   flex: 1 0 auto;
-  padding: var(--f-tiptap-editor-content-wrap__padding-y) var(--f-tiptap-editor-content-wrap__padding-x) ;
+  padding: var(--f-tiptap-editor-content-wrap__padding-y)
+    var(--f-tiptap-editor-content-wrap__padding-x);
   position: relative;
 }
 
@@ -110,7 +113,8 @@
   }
 
   .f-tiptap-editor__content-wrap {
-    padding: var(--f-tiptap-editor-content-wrap__padding-y-mobile) var(--f-tiptap-editor-content-wrap__padding-x-mobile);
+    padding: var(--f-tiptap-editor-content-wrap__padding-y-mobile)
+      var(--f-tiptap-editor-content-wrap__padding-x-mobile);
   }
 }
 
@@ -185,9 +189,11 @@
 
 .f-c-tiptap-invalid-node {
   align-items: center;
-  background: #F0655D;
+  background: #f0655d;
   border-radius: 4px;
-  box-shadow: 0px 5px 3px 0px rgba(0, 0, 0, 0.15), 2px 2px 15px 2px rgba(0, 0, 0, 0.15);
+  box-shadow:
+    0px 5px 3px 0px rgba(0, 0, 0, 0.15),
+    2px 2px 15px 2px rgba(0, 0, 0, 0.15);
   color: #ffffff;
   display: flex;
   flex-direction: column;
@@ -262,7 +268,9 @@
   align-items: center;
   background: #ffffff;
   border-radius: 4px;
-  box-shadow: 0 5px 3px 0 rgba(0, 0, 0, 0.15), 2px 2px 15px 2px rgba(0, 0, 0, 0.15);
+  box-shadow:
+    0 5px 3px 0 rgba(0, 0, 0, 0.15),
+    2px 2px 15px 2px rgba(0, 0, 0, 0.15);
   display: flex;
   height: 36px;
   justify-content: center;

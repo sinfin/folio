@@ -1,27 +1,18 @@
 import type { JSONContent } from "@tiptap/react";
 import type { Editor } from "@tiptap/core";
+import type { Schema } from "@tiptap/pm/model";
 
 export type FolioTiptapNodeFromInput = {
   type: string;
 };
 
-const BLOCK_EDITOR_ONLY_NODE_TYPES = [
-  "table",
-  "folioTiptapNode",
-  "folioTiptapColumns",
-  "folioTiptapColumn",
-  "folioTiptapFloat",
-  "folioTiptapFloatAside",
-  "folioTiptapFloatMain",
-];
-
 const replaceUnsupportedNodesInContent = ({
   content,
   schema,
-  allowedNodeTypes
+  allowedNodeTypes,
 }: {
   content?: JSONContent | undefined;
-  schema: any; // Editor's schema type
+  schema: Schema;
   allowedNodeTypes?: string[];
 }): JSONContent | undefined => {
   if (!content) return content;
@@ -38,7 +29,11 @@ const replaceUnsupportedNodesInContent = ({
   }
 
   // If this is a folioTiptapNode, check if its type is allowed
-  if (content.type === "folioTiptapNode" && allowedNodeTypes && allowedNodeTypes.length > 0) {
+  if (
+    content.type === "folioTiptapNode" &&
+    allowedNodeTypes &&
+    allowedNodeTypes.length > 0
+  ) {
     const nodeType = content.attrs?.type;
     if (nodeType && !allowedNodeTypes.includes(nodeType)) {
       console.error(`Removed disallowed folioTiptapNode type: ${nodeType}`);
@@ -53,15 +48,19 @@ const replaceUnsupportedNodesInContent = ({
 
   // If this node has children, process them recursively
   if (Array.isArray(content.content)) {
-    const replaced: JSONContent[] = []
+    const replaced: JSONContent[] = [];
 
     content.content.forEach((child) => {
-      const handledChild = replaceUnsupportedNodesInContent({ content: child, schema, allowedNodeTypes })
+      const handledChild = replaceUnsupportedNodesInContent({
+        content: child,
+        schema,
+        allowedNodeTypes,
+      });
       if (handledChild) {
         // If the child is a valid node, add it to the replaced array
         replaced.push(handledChild);
       }
-    })
+    });
 
     return { ...content, content: replaced };
   }
@@ -83,8 +82,14 @@ export const clearContent = ({
     return content;
   }
 
-  const allowedNodeTypes = allowedFolioTiptapNodeTypes?.map(node => node.type);
-  return replaceUnsupportedNodesInContent({ content, schema: editor.schema, allowedNodeTypes });
+  const allowedNodeTypes = allowedFolioTiptapNodeTypes?.map(
+    (node) => node.type,
+  );
+  return replaceUnsupportedNodesInContent({
+    content,
+    schema: editor.schema,
+    allowedNodeTypes,
+  });
 };
 
 export default clearContent;

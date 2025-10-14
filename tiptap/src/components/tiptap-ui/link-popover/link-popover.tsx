@@ -1,11 +1,8 @@
 import * as React from "react";
-import { isNodeSelection, type Editor } from "@tiptap/react";
+import { type Editor } from "@tiptap/react";
 import { Settings } from "lucide-react";
 
 import translate from "@/lib/i18n";
-
-// --- Hooks ---
-import { useTiptapEditor } from "@/hooks/use-tiptap-editor";
 
 // --- Icons ---
 import { CornerDownLeftIcon } from "@/components/tiptap-icons/corner-down-left-icon";
@@ -14,7 +11,7 @@ import { LinkIcon } from "@/components/tiptap-icons/link-icon";
 import { TrashIcon } from "@/components/tiptap-icons/trash-icon";
 
 // --- Lib ---
-import { isMarkInSchema, sanitizeUrl } from "@/lib/tiptap-utils";
+import { sanitizeUrl } from "@/lib/tiptap-utils";
 
 // --- UI Primitives ---
 import type { ButtonProps } from "@/components/tiptap-ui-primitive/button";
@@ -105,7 +102,7 @@ export const useLinkHandler = (props: LinkHandlerProps) => {
       });
       onLinkActive?.();
     }
-  }, [editorState.active, onLinkActive, linkData]);
+  }, [editorState.active, onLinkActive, linkData, editor]);
 
   React.useEffect(() => {
     if (!editorState.active) return;
@@ -130,7 +127,7 @@ export const useLinkHandler = (props: LinkHandlerProps) => {
     return () => {
       editor.off("selectionUpdate", updateLinkState);
     };
-  }, [editorState.active, onLinkActive, linkData]);
+  }, [editorState.active, onLinkActive, linkData, editor]);
 
   const setLink = React.useCallback(
     (optionalNewData: LinkData = DEFAULT_STATE) => {
@@ -142,8 +139,14 @@ export const useLinkHandler = (props: LinkHandlerProps) => {
         .extendMarkRange("link")
         .setLink({
           href: optionalNewData.href || linkData.href || "",
-          rel: (typeof optionalNewData.rel === "undefined") ? linkData.rel : optionalNewData.rel,
-          target: (typeof optionalNewData.target === "undefined") ? linkData.target : optionalNewData.target,
+          rel:
+            typeof optionalNewData.rel === "undefined"
+              ? linkData.rel
+              : optionalNewData.rel,
+          target:
+            typeof optionalNewData.target === "undefined"
+              ? linkData.target
+              : optionalNewData.target,
         })
         .run();
 
@@ -151,7 +154,7 @@ export const useLinkHandler = (props: LinkHandlerProps) => {
 
       onSetLink?.();
     },
-    [editor, onSetLink, linkData.href],
+    [editor, onSetLink, linkData.href, linkData.rel, linkData.target],
   );
 
   const removeLink = React.useCallback(() => {
@@ -307,7 +310,7 @@ const LinkMain: React.FC<LinkMainProps> = ({
                 setLink({
                   ...linkData,
                   target: e.target.checked ? "_blank" : null,
-                })
+                });
               }}
             />
             <span className="f-tiptap-link-popover__checkbox-text">

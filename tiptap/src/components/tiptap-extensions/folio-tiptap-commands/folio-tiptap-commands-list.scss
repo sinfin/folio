@@ -8,8 +8,8 @@
   --f-tiptap-commands-list__item--min-height: 48px;
   --f-tiptap-commands-list__item--padding: 8px 16px;
 
-  --f-tiptap-commands-list__small-font-size: .75rem;
-  --f-tiptap-commands-list__small-opacity: .5;
+  --f-tiptap-commands-list__small-font-size: 0.75rem;
+  --f-tiptap-commands-list__small-opacity: 0.5;
 
   background: #ffffff;
   border-radius: var(--f-tiptap-editor__border-radius);
@@ -86,7 +86,9 @@
     font-family: inherit;
     overflow-wrap: break-word;
 
-    &, &:hover, &:focus {
+    &,
+    &:hover,
+    &:focus {
       color: inherit;
       outline: 0;
       box-shadow: none;

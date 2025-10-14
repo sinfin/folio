@@ -233,6 +233,8 @@ Folio::Engine.routes.draw do
                   post :update_file_thumbnail
                   post :destroy_file_thumbnail
                   post :extract_metadata
+
+                  patch :update_thumbnails_crop
                 end
 
                 if klass.human_type == "video"

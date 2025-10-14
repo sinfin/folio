@@ -225,7 +225,9 @@
   }
 
   /* hover state of a button */
-  &:hover:not([data-no-hover="true"]),
+  &:hover:not([data-no-hover="true"]):not([disabled]):not(
+      [data-disabled="true"]
+    ),
   &[data-active-item="true"]:not([disabled]) {
     background-color: var(--tt-button-hover-bg-color);
     color: var(--tt-button-hover-text-color);
@@ -263,7 +265,7 @@
       color: var(--tt-button-active-dropdown-arrows-color);
     }
 
-    &:hover {
+    &:hover:not([disabled]):not([data-disabled="true"]) {
       background-color: var(--tt-button-active-hover-bg-color);
     }
 
@@ -285,7 +287,7 @@
         color: var(--tt-button-active-dropdown-arrows-color-emphasized);
       }
 
-      &:hover {
+      &:hover:not([disabled]):not([data-disabled="true"]) {
         background-color: var(--tt-button-active-hover-bg-color-emphasized);
       }
     }
@@ -308,7 +310,7 @@
         color: var(--tt-button-active-dropdown-arrows-color-subdued);
       }
 
-      &:hover {
+      &:hover:not([disabled]):not([data-disabled="true"]) {
         background-color: var(--tt-button-active-hover-bg-color-subdued);
 
         .tiptap-button-icon {

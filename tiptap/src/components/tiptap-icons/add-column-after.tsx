@@ -1,4 +1,4 @@
-import * as React from "react"
+import * as React from "react";
 
 export const AddColumnAfter = React.memo(
   ({ className, ...props }: React.SVGProps<SVGSVGElement>) => {
@@ -19,8 +19,8 @@ export const AddColumnAfter = React.memo(
         <rect width="10" height="20" x="2" y="2" rx="2" />
         <path d="M21.593 11.998H15.19M18.39 15.201V8.8" />
       </svg>
-    )
-  }
-)
+    );
+  },
+);
 
-AddColumnAfter.displayName = "AddColumnAfter"
+AddColumnAfter.displayName = "AddColumnAfter";

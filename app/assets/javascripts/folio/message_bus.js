@@ -64,6 +64,18 @@ window.Folio.MessageBus.callbacks['Folio::GenerateThumbnailJob'] = (data) => {
 
   for (const img of document.querySelectorAll(`img[src='${data.data.temporary_url}']`)) {
     img.src = data.data.url
+    img.dispatchEvent(new CustomEvent('Folio::GenerateThumbnailJob/updated', { bubbles: true }))
+
+    const a = img.closest('a[href="' + data.data.temporary_url + '"]')
+    if (a) a.href = data.data.url
+  }
+
+  for (const img of document.querySelectorAll(`img[src='${data.data.temporary_url}&webp=1']`)) {
+    img.src = data.data.webp_url
+    img.dispatchEvent(new CustomEvent('Folio::GenerateThumbnailJob/updated', { bubbles: true }))
+
+    const a = img.closest('a[href="' + data.data.temporary_url + '&webp=1"]')
+    if (a) a.href = data.data.webp_url
   }
 
   for (const img of document.querySelectorAll(`img[srcset*='${data.data.temporary_url}']`)) {

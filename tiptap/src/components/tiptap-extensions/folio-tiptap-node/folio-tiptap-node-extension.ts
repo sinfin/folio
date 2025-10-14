@@ -2,26 +2,28 @@ import { Node, ReactNodeViewRenderer } from "@tiptap/react";
 import { FolioTiptapNode } from "@/components/tiptap-extensions/folio-tiptap-node";
 import { Plugin } from "@tiptap/pm/state";
 import type { CommandProps } from "@tiptap/core";
-import { TextSelection } from '@tiptap/pm/state';
-import { Fragment } from '@tiptap/pm/model';
+import { TextSelection } from "@tiptap/pm/state";
+import { Fragment } from "@tiptap/pm/model";
 
-import { makeUniqueId } from './make-unique-id';
-import { moveFolioTiptapNode } from './move-folio-tiptap-node';
-import { postEditMessage } from './post-edit-message';
+import { makeUniqueId } from "./make-unique-id";
+import { moveFolioTiptapNode } from "./move-folio-tiptap-node";
+import { postEditMessage } from "./post-edit-message";
 
 export type FolioTiptapNodeOptions = {
   nodes?: FolioTiptapNodeFromInput[];
 };
 
-declare module '@tiptap/core' {
+declare module "@tiptap/core" {
   interface Commands<ReturnType> {
     folioTiptapNode: {
-      moveFolioTiptapNodeUp: () => ReturnType
-      moveFolioTiptapNodeDown: () => ReturnType
-      editFolioTipapNode: () => ReturnType
-      removeFolioTiptapNode: () => ReturnType
-      insertFolioTiptapNode: (nodeHash: any) => ReturnType
-    }
+      moveFolioTiptapNodeUp: () => ReturnType;
+      moveFolioTiptapNodeDown: () => ReturnType;
+      editFolioTipapNode: () => ReturnType;
+      removeFolioTiptapNode: () => ReturnType;
+      insertFolioTiptapNode: (nodeHash: {
+        attrs: Record<string, unknown>;
+      }) => ReturnType;
+    };
   }
 }
 
@@ -41,22 +43,22 @@ export const FolioTiptapNodeExtension = Node.create<FolioTiptapNodeOptions>({
       version: {
         default: 1,
         parseHTML: (element) => {
-          let version
+          let version;
 
           try {
-            const raw = element.dataset.folioTiptapNodeVersion || "1"
+            const raw = element.dataset.folioTiptapNodeVersion || "1";
             version = parseInt(raw, 10);
           } catch (error) {
             console.error("Error parsing folioTiptapNode version:", error);
             version = 1; // Fallback to default version
           }
 
-          return version
-        }
+          return version;
+        },
       },
       type: {
         default: "",
-        parseHTML: (element) => element.dataset.folioTiptapNodeType || ""
+        parseHTML: (element) => element.dataset.folioTiptapNodeType || "",
       },
       data: {
         default: {},
@@ -68,11 +70,11 @@ export const FolioTiptapNodeExtension = Node.create<FolioTiptapNodeOptions>({
             console.error("Error parsing folioTiptapNode data:", error);
             return {};
           }
-        }
+        },
       },
       uniqueId: {
         default: "",
-        parseHTML: () => makeUniqueId()
+        parseHTML: () => makeUniqueId(),
       },
     };
   },
@@ -80,22 +82,25 @@ export const FolioTiptapNodeExtension = Node.create<FolioTiptapNodeOptions>({
   parseHTML() {
     return [
       {
-        tag: 'div.f-tiptap-node',
+        tag: "div.f-tiptap-node",
         getAttrs: (element) => {
-          if (typeof element === 'string') return false;
+          if (typeof element === "string") return false;
 
           const nodeType = element.dataset.folioTiptapNodeType || "";
 
           // Check if this node type is allowed
           if (this.options.nodes && this.options.nodes.length > 0) {
-            const allowedTypes = this.options.nodes.map(node => node.type);
+            const allowedTypes = this.options.nodes.map((node) => node.type);
             if (!allowedTypes.includes(nodeType)) {
               return false; // Reject this node if type is not allowed
             }
           }
 
           return {
-            version: parseInt(element.dataset.folioTiptapNodeVersion || "1", 10),
+            version: parseInt(
+              element.dataset.folioTiptapNodeVersion || "1",
+              10,
+            ),
             type: nodeType,
             data: (() => {
               try {
@@ -105,22 +110,22 @@ export const FolioTiptapNodeExtension = Node.create<FolioTiptapNodeOptions>({
                 return {};
               }
             })(),
-            uniqueId: makeUniqueId()
+            uniqueId: makeUniqueId(),
           };
         },
       },
-    ]
+    ];
   },
 
   renderHTML({ HTMLAttributes }) {
     return [
       "div",
       {
-        "class": "f-tiptap-node",
+        class: "f-tiptap-node",
         "data-folio-tiptap-node-version": HTMLAttributes.version,
         "data-folio-tiptap-node-type": HTMLAttributes.type,
         "data-folio-tiptap-node-data": JSON.stringify(HTMLAttributes.data),
-      }
+      },
     ];
   },
 
@@ -139,17 +144,18 @@ export const FolioTiptapNodeExtension = Node.create<FolioTiptapNodeOptions>({
             }
 
             // Extract allowed node types
-            const allowedTypes = this.options.nodes.map(node => node.type);
+            const allowedTypes = this.options.nodes.map((node) => node.type);
 
             // Create a temporary DOM to parse and filter the HTML
-            const tempDiv = document.createElement('div');
+            const tempDiv = document.createElement("div");
             tempDiv.innerHTML = html;
 
             // Find all f-tiptap-node elements
-            const nodeElements = tempDiv.querySelectorAll('div.f-tiptap-node');
+            const nodeElements = tempDiv.querySelectorAll("div.f-tiptap-node");
 
             nodeElements.forEach((element) => {
-              const nodeType = element.getAttribute('data-folio-tiptap-node-type') || '';
+              const nodeType =
+                element.getAttribute("data-folio-tiptap-node-type") || "";
 
               // Remove unsupported node types
               if (!allowedTypes.includes(nodeType)) {
@@ -167,96 +173,104 @@ export const FolioTiptapNodeExtension = Node.create<FolioTiptapNodeOptions>({
   addCommands() {
     return {
       insertFolioTiptapNode:
-        (nodeHash: any) =>
-          ({ tr, dispatch, editor }: CommandProps) => {
-            const node = editor.schema.nodes.folioTiptapNode.createChecked({
+        (nodeHash: { attrs: Record<string, unknown> }) =>
+        ({ tr, dispatch, editor }: CommandProps) => {
+          const node = editor.schema.nodes.folioTiptapNode.createChecked(
+            {
               ...nodeHash.attrs,
               uniqueId: nodeHash.attrs.uniqueId || makeUniqueId(),
-            }, null);
+            },
+            null,
+          );
 
-            if (dispatch) {
-              editor.view.dom.focus()
+          if (dispatch) {
+            editor.view.dom.focus();
 
-              const selection = tr.selection;
-              const $pos = tr.doc.resolve(selection.anchor);
+            const selection = tr.selection;
+            const $pos = tr.doc.resolve(selection.anchor);
 
-              // Check if we're at the end of a parent node (depth > 1 means we're inside something)
-              // We use depth - 1 because the max-depth is the paragraph with slash
-              const isAtEndOfParent = $pos.depth > 2 && $pos.pos + 1 === $pos.end($pos.depth - 1);
+            // Check if we're at the end of a parent node (depth > 1 means we're inside something)
+            // We use depth - 1 because the max-depth is the paragraph with slash
+            const isAtEndOfParent =
+              $pos.depth > 2 && $pos.pos + 1 === $pos.end($pos.depth - 1);
 
-              if (isAtEndOfParent) {
-                // Insert node + paragraph using fragment
-                const paragraphNode = editor.schema.nodes.paragraph.create();
-                const fragment = Fragment.from([node, paragraphNode]);
+            if (isAtEndOfParent) {
+              // Insert node + paragraph using fragment
+              const paragraphNode = editor.schema.nodes.paragraph.create();
+              const fragment = Fragment.from([node, paragraphNode]);
 
-                // Replace the whole paragraph - the -1 is the node opening
-                const start = $pos.start($pos.depth) - 1
+              // Replace the whole paragraph - the -1 is the node opening
+              const start = $pos.start($pos.depth) - 1;
 
-                // The +1 is the node closing
-                const end = $pos.end($pos.depth) + 1
-                tr.replaceWith(start, end, fragment);
+              // The +1 is the node closing
+              const end = $pos.end($pos.depth) + 1;
+              tr.replaceWith(start, end, fragment);
 
-                // Set selection to the beginning of the paragraph (after the node)
-                // start + folioTipapNode (leaf -> 1)
-                const paragraphPos = start + 1
-                tr.setSelection(TextSelection.near(tr.doc.resolve(paragraphPos + 1)));
-              } else {
-                // Just insert the node
-                tr.replaceSelectionWith(node);
+              // Set selection to the beginning of the paragraph (after the node)
+              // start + folioTipapNode (leaf -> 1)
+              const paragraphPos = start + 1;
+              tr.setSelection(
+                TextSelection.near(tr.doc.resolve(paragraphPos + 1)),
+              );
+            } else {
+              // Just insert the node
+              tr.replaceSelectionWith(node);
 
-                // Move after the inserted node
-                const offset = tr.selection.anchor;
-                tr.setSelection(TextSelection.near(tr.doc.resolve(offset)));
-              }
-
-              tr.scrollIntoView();
-              dispatch(tr)
+              // Move after the inserted node
+              const offset = tr.selection.anchor;
+              tr.setSelection(TextSelection.near(tr.doc.resolve(offset)));
             }
 
-            return true;
-          },
+            tr.scrollIntoView();
+            dispatch(tr);
+          }
+
+          return true;
+        },
 
       moveFolioTiptapNodeDown:
         () =>
-          ({ state, dispatch }: CommandProps) => {
-            return moveFolioTiptapNode({ direction: "down", state, dispatch })
-          },
+        ({ state, dispatch }: CommandProps) => {
+          if (!dispatch) return false;
+          return moveFolioTiptapNode({ direction: "down", state, dispatch });
+        },
       moveFolioTiptapNodeUp:
         () =>
-          ({ state, dispatch }: CommandProps) => {
-            return moveFolioTiptapNode({ direction: "up", state, dispatch })
-          },
+        ({ state, dispatch }: CommandProps) => {
+          if (!dispatch) return false;
+          return moveFolioTiptapNode({ direction: "up", state, dispatch });
+        },
       editFolioTipapNode:
         () =>
-          ({ state }: CommandProps) => {
-            // @ts-expect-error - node does exist on selection!
-            const node = state.selection.node
+        ({ state }: CommandProps) => {
+          // @ts-expect-error - node does exist on selection!
+          const node = state.selection.node;
 
-            if (!node || node.type.name !== this.name) {
-              return false;
-            }
+          if (!node || node.type.name !== this.name) {
+            return false;
+          }
 
-            const { uniqueId, ...attrsWithoutUniqueId } = node.attrs;
-            postEditMessage(attrsWithoutUniqueId, uniqueId);
+          const { uniqueId, ...attrsWithoutUniqueId } = node.attrs;
+          postEditMessage(attrsWithoutUniqueId, uniqueId);
 
-            return true;
-          },
+          return true;
+        },
       removeFolioTiptapNode:
         () =>
-          ({ state, dispatch }: CommandProps) => {
-            // @ts-expect-error - node does exist on selection!
-            const node = state.selection.node
+        ({ state, dispatch }: CommandProps) => {
+          // @ts-expect-error - node does exist on selection!
+          const node = state.selection.node;
 
-            if (!node || node.type.name !== this.name) {
-              return false;
-            }
+          if (!node || node.type.name !== this.name) {
+            return false;
+          }
 
-            const tr = state.tr;
-            tr.deleteRange(state.selection.from, state.selection.to);
-            dispatch!(tr);
+          const tr = state.tr;
+          tr.deleteRange(state.selection.from, state.selection.to);
+          dispatch!(tr);
 
-            return true
-          },
+          return true;
+        },
     };
   },
 });
