@@ -76,7 +76,6 @@ module Folio::Console::Component::IndexFilters
                  remote: url,
                  include_blank: "#{label_for_key(key)}...",
                  wrapper_html: { class: "input-group--#{controller.params[key].present? ? "filled" : "empty"}" },
-                 wrapper: :with_controls,
-                 clear_button: controller.params[key].present? ? clear_button : nil
+                 clear_button: controller.params[key].present?
   end
 end
