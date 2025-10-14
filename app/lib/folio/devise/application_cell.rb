@@ -52,6 +52,7 @@ class Folio::Devise::ApplicationCell < Folio::ApplicationCell
   def email_input(f, opts = {})
     f.input :email, opts.merge(required: true,
                                disabled: opts[:disabled],
+                               label: opts[:label] || t("folio.devise.email"),
                                input_html: {
                                 autofocus: opts[:autofocus].nil? ? true : opts[:autofocus],
                                 autocomplete: "email",

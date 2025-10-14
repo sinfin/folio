@@ -27,8 +27,9 @@ cs:
       submit: Odeslat
       forgotten_password_link: Zapomenuté heslo?
       invite_button: Vytvořit nový účet
-      sign_in_link: Již u nás máte účet?
-      sign_in_link_inner: Přihlaste se
+      sign_in_link: Již u nás máš účet?
+      sign_in_link_inner: Přihlas se
+      email: "E-mail "
 
       resource_form:
         email_label: E-mail (slouží pro přihlášení)
@@ -64,6 +65,7 @@ cs:
           title: Přihlášení
           sign_in: Přihlásit se
           failure: Přihlášení se nezdařilo. Zkuste to prosím znovu.
+          or_email: Nebo e-mail
 
         create:
           invalid: Neplatný e-mail nebo heslo
@@ -109,8 +111,8 @@ cs:
           google_oauth2: Google
           twitter2: Twitter
 
-        sessions: "Přihlaste se pomocí:"
-        registrations: "Zaregistujte se pomocí:"
+        sessions: "Přihlas se pomocí"
+        registrations: "Zaregistuj se pomocí"
         or: "Nebo:"
         authentications:
           list:

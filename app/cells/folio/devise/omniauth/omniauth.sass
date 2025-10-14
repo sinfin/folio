@@ -1,5 +1,5 @@
 .f-devise-omniauth
-  margin: 1.5 * $spacer 0
+  margin: $spacer 0
 
   &__p
     margin: $spacer 0
@@ -7,20 +7,15 @@
   &__button
     display: inline-flex
     align-items: center
-
-  .f-devise-omniauth-icon
-    margin: -5px 10px -5px 0
+    text-transform: none
 
   +media-breakpoint-up(sm)
     &__buttons
       display: flex
       flex-wrap: wrap
-      margin-bottom: - $spacer
-      margin-right: - $spacer
 
     &__button
-      margin-right: $spacer
-      margin-bottom: $spacer
+      border: none
 
   +media-breakpoint-only(xs)
     &__button

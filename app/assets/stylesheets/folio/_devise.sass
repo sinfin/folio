@@ -14,18 +14,19 @@ $folio-devise-modal-registrations-max-width: $folio-devise-modal-max-width !defa
     display: flex
 
   &__submit-wrap
-    margin-top: 2 * $spacer
+    margin-top: $spacer
 
   &__submit-btn
     padding-left: 2.5 * $spacer
     padding-right: 2.5 * $spacer
+    text-transform: none
 
   &__under-submit-links
     margin-top: $spacer
     font-size: $font-size-sm
 
   &__bottom-action-wrap
-    margin-top: 2 * $spacer
+    margin-top: $spacer
 
   &__group
     margin: 2 * $spacer 0
@@ -41,6 +42,22 @@ $folio-devise-modal-registrations-max-width: $folio-devise-modal-max-width !defa
   &__col
     padding: 0 $grid-gutter-width / 2
     flex: 1 1 auto
+
+  &__fieldset-wrap
+    display: flex
+    flex-direction: column
+    gap: px-to-rem(10px)
+    margin: $spacer 0
+    padding: $spacer
+    border-radius: px-to-rem(20px)
+    background: $shade-100
+    max-width: 420px
+
+  &__fieldset
+    margin: 0
+
+    .form-label
+      font-weight: 400
 
   &__danger
     color: $folio-devise-danger-color
