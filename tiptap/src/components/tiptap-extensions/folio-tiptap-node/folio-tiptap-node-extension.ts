@@ -275,11 +275,7 @@ export const FolioTiptapNodeExtension = Node.create<FolioTiptapNodeOptions>({
       };
     }
 
-    return [
-      new Plugin({
-        props: pluginProps,
-      }),
-    ];
+    return [new Plugin({ props: pluginProps })];
   },
 
   addCommands() {

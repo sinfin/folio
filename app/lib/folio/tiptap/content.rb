@@ -25,6 +25,7 @@ class Folio::Tiptap::Content
     return { ok: false } if hash_value.nil?
 
     content_key = Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content]
+
     if hash_value[content_key].is_a?(String)
       begin
         hash_value[content_key] = JSON.parse(hash_value[content_key])
