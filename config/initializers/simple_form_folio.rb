@@ -20,6 +20,7 @@ SimpleForm.setup do |config|
 
     b.use :flag, wrap_with: { tag: "div", class: "form-group__flag" }
     b.use :custom_html, wrap_with: { tag: "div", class: "form-group__custom-html" }
+    b.use :input_controls, wrap_with: { tag: "div", class: "form-group__input-controls" }
   end
 
   config.wrappers :with_custom_html, tag: "div", class: "form-group form-group--with-custom-html", error_class: "form-group-invalid" do |b|
@@ -36,22 +37,7 @@ SimpleForm.setup do |config|
     b.use :hint,  wrap_with: { tag: "small", class: "form-text" }
 
     b.use :custom_html, wrap_with: { tag: "div", class: "form-group__custom-html" }
-  end
-
-  config.wrappers :with_controls, tag: "div", class: "form-group form-group--with-controls", error_class: "form-group-invalid" do |b|
-    b.use :html5
-    b.use :placeholder
-    b.optional :maxlength
-    b.optional :minlength
-    b.optional :pattern
-    b.optional :min_max
-    b.optional :readonly
-
-    b.use :input, class: "form-control", error_class: "is-invalid"
-    b.use :full_error, wrap_with: { tag: "div", class: "invalid-feedback" }
-    b.use :hint,  wrap_with: { tag: "small", class: "form-text" }
-
-    b.use :controls, wrap_with: { tag: "div", class: "form-group__controls" }
+    b.use :input_controls, wrap_with: { tag: "div", class: "form-group__input-controls" }
   end
 
   config.wrappers :input_group, tag: "div", class: "input-group", error_class: "form-group-invalid" do |b|
@@ -69,6 +55,7 @@ SimpleForm.setup do |config|
 
     b.use :input_group_append, wrap_with: { tag: "div", class: "input-group-append" }
     b.use :custom_html, wrap_with: { tag: "div", class: "form-group__custom-html" }
+    b.use :input_controls, wrap_with: { tag: "div", class: "form-group__input-controls" }
   end
 end
 

@@ -152,8 +152,9 @@ SimpleForm::Inputs::Base.class_eval do
     @builder.text_field(attribute_name, merged_input_options)
   end
 
-  def add_clear_button
-    options[:wrapper] = :with_controls
-    options[:clear_button] = @builder.template.render(Folio::Console::Ui::ClearButtonComponent.new)
+  def add_clear_button(wrapper_options: nil, options: nil)
+    if options && options[:clear_button].present?
+      options[:input_controls] = @builder.template.render(Folio::Console::Ui::ClearButtonComponent.new)
+    end
   end
 end
