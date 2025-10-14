@@ -5,7 +5,7 @@ module Folio
     SUPPORTED_TYPES = {
       "instagram" => %r{https://(?:www\.)?instagram\.com/(?:p|reel)/([a-zA-Z0-9\-_]+)/?},
       "pinterest" => %r{https://(?:\w+\.)?pinterest\.com/pin/([a-zA-Z0-9\-_]+)/?},
-      "twitter" => %r{https://(?:www\.)?(?:twitter\.com|x\.com)/([a-zA-Z0-9\-_]+)/?},
+      "twitter" => %r{https://(?:www\.)?(?:twitter\.com|x\.com)/([a-zA-Z0-9\-_]+)(?:/.*)?/?},
       "youtube" => %r{https://(?:www\.youtube\.com/watch\?v=|youtu\.be/)([a-zA-Z0-9\-_]+)/?},
     }
 
@@ -18,7 +18,7 @@ module Folio
       Regexp::EXTENDED
     )
 
-    def self.validate_record(record:, attribute_name: :embed_data)
+    def self.validate_record(record:, attribute_name: :folio_embed_data)
       embed_data = record.send(attribute_name)
 
       if embed_data.blank?

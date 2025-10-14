@@ -1,3 +1,3 @@
 .d-tiptap-node.d-tiptap-node-embed
   .container-fluid
-    = @node.to_tiptap_node_hash
+    = render(Folio::Embed::BoxComponent.new(folio_embed_data: @node.folio_embed_data))

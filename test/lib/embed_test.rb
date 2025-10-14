@@ -22,6 +22,7 @@ class Folio::EmbedTest < ActiveSupport::TestCase
     assert_equal "twitter", Folio::Embed.url_type("https://twitter.com/test-user")
     assert_equal "twitter", Folio::Embed.url_type("https://twitter.com/test_user")
     assert_equal "twitter", Folio::Embed.url_type("https://twitter.com/testuser/")
+    assert_equal "twitter", Folio::Embed.url_type("https://twitter.com/testuser/status/1234567890")
   end
 
   test "url_type returns correct type for youtube URLs" do

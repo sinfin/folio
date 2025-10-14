@@ -80,6 +80,11 @@ class Folio::Tiptap::Node
         else
           permitted << "#{key}_id"
         end
+      when :embed
+        permitted += [
+          key,
+          { key => Folio::Embed.hash_strong_params_keys },
+        ]
       else
         permitted << key
       end

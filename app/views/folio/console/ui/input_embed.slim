@@ -43,7 +43,8 @@ h2 Input Embed
 
   pre
     code id="folio-console-ui-input-embed-demo-code"
-      = JSON.pretty_generate(tab[:folio_embed_data])
+      - if tab[:folio_embed_data]
+        = JSON.pretty_generate(tab[:folio_embed_data])
 
   javascript:
     (() => {
