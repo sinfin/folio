@@ -2,12 +2,8 @@
 
 module Folio
   module Embed
-    SUPPORTED_TYPES = {
-      "instagram" => %r{https://(?:www\.)?instagram\.com/(?:p|reel)/([a-zA-Z0-9\-_]+)/?},
-      "pinterest" => %r{https://(?:\w+\.)?pinterest\.com/pin/([a-zA-Z0-9\-_]+)/?},
-      "twitter" => %r{https://(?:www\.)?(?:twitter\.com|x\.com)/([a-zA-Z0-9\-_]+)(?:/.*)?/?},
-      "youtube" => %r{https://(?:www\.youtube\.com/watch\?v=|youtu\.be/)([a-zA-Z0-9\-_]+)/?},
-    }
+    SUPPORTED_TYPES = JSON.load_file(Folio::Engine.root.join("data", "embed", "source", "types.json"))
+                          .transform_values { |pattern| Regexp.new(pattern) }
 
     TYPE_REGEX = Regexp.new(
       "^(" +

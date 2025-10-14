@@ -267,6 +267,7 @@ export function FolioEditor({
         ? [
             FolioTiptapNodeExtension.configure({
               nodes: folioTiptapConfig.nodes || [],
+              embedNodeClassName: folioTiptapConfig["embed_node_class_name"],
             }),
             FolioTiptapColumnsExtension,
             FolioTiptapColumnsNode,

@@ -79,6 +79,7 @@ declare global {
     enable_pages?: boolean;
     heading_levels?: import("@tiptap/extension-heading").Level[];
     autosave?: boolean;
+    embed_node_class_name?: string;
   }
 
   interface FolioTiptapAutosaveIndicatorInfo {

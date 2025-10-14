@@ -26,9 +26,9 @@
         if (params.get("folio-iframe-javascript-url")) {
           const script = document.createElement("script");
           script.src = params.get("folio-iframe-javascript-url");
-          script.async = true
-          script.defer = true
-          document.body.appendChild(script);
+          script.async = true;
+          script.defer = true;
+          document.head.appendChild(script);
         }
 
         const iframeValue = params.get("folio-iframe");

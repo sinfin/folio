@@ -4,13 +4,40 @@ import { Plugin } from "@tiptap/pm/state";
 import type { CommandProps } from "@tiptap/core";
 import { TextSelection } from "@tiptap/pm/state";
 import { Fragment } from "@tiptap/pm/model";
+import type { EditorView } from "@tiptap/pm/view";
+import type { Slice } from "@tiptap/pm/model";
 
 import { makeUniqueId } from "./make-unique-id";
 import { moveFolioTiptapNode } from "./move-folio-tiptap-node";
 import { postEditMessage } from "./post-edit-message";
+import embedTypes from "@/../../data/embed/source/types.json";
+
+const EMBED_URL_PATTERNS = Object.entries(embedTypes).reduce(
+  (acc, [type, pattern]) => {
+    acc[type] = new RegExp(`^${pattern}$`);
+    return acc;
+  },
+  {} as Record<string, RegExp>,
+);
+
+function detectEmbedUrlType(url: string): string | null {
+  for (const [type, pattern] of Object.entries(EMBED_URL_PATTERNS)) {
+    if (pattern.test(url)) {
+      return type;
+    }
+  }
+  return null;
+}
+
+function detectFacebookIframe(html: string): boolean {
+  return /<iframe[^>]*src="https:\/\/www\.facebook\.com\/plugins\/[^"]*"[^>]*>/.test(
+    html,
+  );
+}
 
 export type FolioTiptapNodeOptions = {
   nodes?: FolioTiptapNodeFromInput[];
+  embedNodeClassName?: string;
 };
 
 declare module "@tiptap/core" {
@@ -134,38 +161,123 @@ export const FolioTiptapNodeExtension = Node.create<FolioTiptapNodeOptions>({
   },
 
   addProseMirrorPlugins() {
+    const pluginProps: {
+      transformPastedHTML?: (html: string) => string;
+      handlePaste?: (
+        view: EditorView,
+        event: ClipboardEvent,
+        slice: Slice,
+      ) => boolean;
+    } = {
+      transformPastedHTML: (html: string) => {
+        // Only filter if we have allowed node types configured
+        if (!this.options.nodes || this.options.nodes.length === 0) {
+          return html;
+        }
+
+        // Extract allowed node types
+        const allowedTypes = this.options.nodes.map((node) => node.type);
+
+        // Create a temporary DOM to parse and filter the HTML
+        const tempDiv = document.createElement("div");
+        tempDiv.innerHTML = html;
+
+        // Find all f-tiptap-node elements
+        const nodeElements = tempDiv.querySelectorAll("div.f-tiptap-node");
+
+        nodeElements.forEach((element) => {
+          const nodeType =
+            element.getAttribute("data-folio-tiptap-node-type") || "";
+
+          // Remove unsupported node types
+          if (!allowedTypes.includes(nodeType)) {
+            element.remove();
+          }
+        });
+
+        return tempDiv.innerHTML;
+      },
+    };
+
+    // Only add handlePaste if embedNodeClassName is configured
+    if (this.options.embedNodeClassName) {
+      pluginProps.handlePaste = (view, event, _slice) => {
+        const clipboardText = event.clipboardData?.getData("text/plain");
+        const clipboardHTML = event.clipboardData?.getData("text/html");
+
+        if (clipboardText) {
+          const trimmedText = clipboardText.trim();
+          const embedType = detectEmbedUrlType(trimmedText);
+          if (embedType) {
+            // Create an embed node for URL embeds
+            view.dispatch(
+              view.state.tr.replaceSelectionWith(
+                this.type.create({
+                  type: this.options.embedNodeClassName,
+                  version: 1,
+                  uniqueId: makeUniqueId(),
+                  data: {
+                    folio_embed_data: {
+                      active: true,
+                      type: embedType,
+                      url: trimmedText,
+                    },
+                  },
+                }),
+              ),
+            );
+            return true;
+          }
+
+          // Check if plain text contains Facebook iframe HTML
+          if (detectFacebookIframe(trimmedText)) {
+            // Create an embed node for Facebook HTML embeds pasted as text
+            view.dispatch(
+              view.state.tr.replaceSelectionWith(
+                this.type.create({
+                  type: this.options.embedNodeClassName,
+                  version: 1,
+                  uniqueId: makeUniqueId(),
+                  data: {
+                    folio_embed_data: {
+                      active: true,
+                      html: trimmedText,
+                    },
+                  },
+                }),
+              ),
+            );
+            return true;
+          }
+        }
+
+        if (clipboardHTML && detectFacebookIframe(clipboardHTML)) {
+          // Create an embed node for Facebook HTML embeds
+          view.dispatch(
+            view.state.tr.replaceSelectionWith(
+              this.type.create({
+                type: this.options.embedNodeClassName,
+                version: 1,
+                uniqueId: makeUniqueId(),
+                data: {
+                  folio_embed_data: {
+                    active: true,
+                    html: clipboardHTML,
+                  },
+                },
+              }),
+            ),
+          );
+          return true;
+        }
+
+        return false; // Let other handlers process the paste
+      };
+    }
+
     return [
       new Plugin({
-        props: {
-          transformPastedHTML: (html: string) => {
-            // Only filter if we have allowed node types configured
-            if (!this.options.nodes || this.options.nodes.length === 0) {
-              return html;
-            }
-
-            // Extract allowed node types
-            const allowedTypes = this.options.nodes.map((node) => node.type);
-
-            // Create a temporary DOM to parse and filter the HTML
-            const tempDiv = document.createElement("div");
-            tempDiv.innerHTML = html;
-
-            // Find all f-tiptap-node elements
-            const nodeElements = tempDiv.querySelectorAll("div.f-tiptap-node");
-
-            nodeElements.forEach((element) => {
-              const nodeType =
-                element.getAttribute("data-folio-tiptap-node-type") || "";
-
-              // Remove unsupported node types
-              if (!allowedTypes.includes(nodeType)) {
-                element.remove();
-              }
-            });
-
-            return tempDiv.innerHTML;
-          },
-        },
+        props: pluginProps,
       }),
     ];
   },
