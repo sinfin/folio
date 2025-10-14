@@ -2,6 +2,7 @@ $folio-devise-danger-color: $danger !default
 $folio-devise-narrow-max-width: 307px !default
 $folio-devise-modal-max-width: 640px !default
 $folio-devise-modal-registrations-max-width: $folio-devise-modal-max-width !default
+$folio-devise-fieldset-wrap-background: #F2F2F2 !default
 
 .f-devise
   &__narrow
@@ -50,7 +51,7 @@ $folio-devise-modal-registrations-max-width: $folio-devise-modal-max-width !defa
     margin: $spacer 0
     padding: $spacer
     border-radius: px-to-rem(20px)
-    background: $shade-100
+    background: $folio-devise-fieldset-wrap-background
     max-width: 420px
 
   &__fieldset
