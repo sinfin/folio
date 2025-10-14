@@ -7,8 +7,8 @@ module Folio
 
       DEFAULT_CONFIG = {
         enabled: true,
-        attributes: {},
-      }
+        attributes: {}.freeze,
+      }.freeze
 
       included do
         before_validation :folio_html_sanitize

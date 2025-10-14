@@ -5,10 +5,12 @@ class Folio::Tiptap::NodeBuilder
     @klass = klass
     @structure = convert_structure_to_hashes(structure)
     @tiptap_config = get_tiptap_config(tiptap_config)
+    @embed_keys = []
   end
 
   def build!
     build_structure!
+    setup_html_sanitization_config!
     handle_config!
   end
 
@@ -144,14 +146,8 @@ class Folio::Tiptap::NodeBuilder
         super(Folio::Embed.normalize_value(value))
       end
 
-      @klass.define_method :folio_html_sanitization_config do
-        {
-          enabled: true,
-          attributes: {
-            key => :unsafe_html,
-          }
-        }
-      end
+      # Track embed keys for later sanitization config setup
+      @embed_keys << key
     end
 
     def setup_structure_for_folio_attachment(key:, attr_config:)
@@ -549,6 +545,26 @@ class Folio::Tiptap::NodeBuilder
 
       @klass.define_singleton_method :tiptap_config do
         class_variable_get(:@@tiptap_config)
+      end
+    end
+
+    def setup_html_sanitization_config!
+      return if @embed_keys.empty?
+
+      embed_keys = @embed_keys # capture for closure
+
+      @klass.define_method :folio_html_sanitization_config do
+        attributes_config = {}
+
+        # Add all embed keys to the sanitization config
+        embed_keys.each do |key|
+          attributes_config[key] = :unsafe_html
+        end
+
+        {
+          enabled: true,
+          attributes: attributes_config
+        }
       end
     end
 end

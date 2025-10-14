@@ -144,7 +144,7 @@ module Folio::Tiptap::Model
     config = if respond_to?(:folio_html_sanitize)
       super
     else
-      Folio::HtmlSanitization::Model::DEFAULT_CONFIG
+      Folio::HtmlSanitization::Model::DEFAULT_CONFIG.deep_dup
     end
 
     self.class.folio_tiptap_fields.each do |field|

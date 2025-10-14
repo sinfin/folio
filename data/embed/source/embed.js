@@ -114,6 +114,8 @@
     }
   }
 
+  let twitterLoading = false
+
   const loadTwitterScript = () => {
     if (!window.twttr && !document.querySelector('script[src*="twitter.com/widgets"]')) {
       const script = document.createElement('script')
@@ -121,7 +123,9 @@
       script.async = true
       script.onload = () => {
         if (window.twttr && window.twttr.widgets) {
+          twitterLoading = true
           window.twttr.widgets.load().then(() => {
+            twitterLoading = false
             // Handle tweet embeds
             const tweets = document.querySelectorAll('.twitter-tweet')
             tweets.forEach(tweet => {
@@ -145,8 +149,11 @@
         }
       }
       document.head.appendChild(script)
-    } else if (window.twttr && window.twttr.widgets) {
-      window.twttr.widgets.load()
+    } else if (window.twttr && window.twttr.widgets && !twitterLoading) {
+      twitterLoading = true
+      window.twttr.widgets.load().then(() => {
+        twitterLoading = false
+      })
     }
   }
 
