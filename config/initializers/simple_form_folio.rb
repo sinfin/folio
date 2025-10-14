@@ -37,7 +37,7 @@ SimpleForm.setup do |config|
 
     b.use :custom_html, wrap_with: { tag: "div", class: "form-group__custom-html" }
   end
-  
+
   config.wrappers :with_controls, tag: "div", class: "form-group form-group--with-controls", error_class: "form-group-invalid" do |b|
     b.use :html5
     b.use :placeholder
