@@ -1,32 +1,25 @@
 # frozen_string_literal: true
 
 class Folio::PublishableHintComponent < Folio::ApplicationComponent
-  def initialize(model:, hint: nil)
-    @model = model
-    @hint = hint
+  def initialize(record: nil, force: false, hint: nil)
+    @record = record
+    @force = force
+    @hint = hint || default_hint
   end
 
   def render?
-    @model && forced_or_unpublished?
+    return true if @force
+    return false if @record.blank?
+    return false if @record.published?
+    true
   end
 
   private
-
-  attr_reader :model
-
-  def forced_or_unpublished?
-    @model == true || !@model.published?
-  end
-
-  def default_hint
-    if controller.params[Folio::Publishable::PREVIEW_PARAM_NAME]
-      t(".preview_token_hint")
-    else
-      t(".hint")
+    def default_hint
+      if controller.params[Folio::Publishable::PREVIEW_PARAM_NAME]
+        t(".preview_token_hint")
+      else
+        t(".hint")
+      end
     end
-  end
-
-  def options
-    { hint: @hint }
-  end
 end

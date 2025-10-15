@@ -26,7 +26,7 @@ All notable changes to this project will be documented in this file.
 - `Folio::Console::Ui::AjaxInputComponent` now expects API to return `{ name => new_value }` instead of `{ value: new_value }`
 - redid input autocomplete without jQuery UI
 - default console `show` action now redirects to `edit` - make sure you have your `show` actions explicitely defined on controllers and are not using `super`
-- converted `Folio::PublishableHintCell` to `Folio::PublishableHintComponent` ViewComponent - replace `cell('folio/publishable_hint', model)` calls with `render(Folio::PublishableHintComponent.new(model: model))`
+- converted `Folio::PublishableHintCell` to `Folio::PublishableHintComponent` ViewComponent - replace `cell('folio/publishable_hint', model)` calls with `render(Folio::PublishableHintComponent.new(record: model))` or use `force: true` parameter
 
 ## [6.5.1] - 2025-06-18
 
