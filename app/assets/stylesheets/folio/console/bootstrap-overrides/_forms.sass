@@ -77,8 +77,13 @@ legend
 
   .input-group--filled:has(.form-group__input-controls) &
     background-position: right 34px center
-    border-top-right-radius: $border-radius !important
-    border-bottom-right-radius: $border-radius !important
+    padding-right: 52px
+
+  .input-group.select:has(&)::before
+    +form-clear-button-gradient
+
+  .input-group--filled.select:has(&)::before
+    right: 52px
 
 .form-control.date_range
   border-top-right-radius: $border-radius !important
@@ -102,3 +107,9 @@ legend
       display: inline-block
       font-weight: $font-weight-bold
       color: $orange
+
+.input-group--filled:has(.form-group__input-controls)
+  .form-control
+    border-top-right-radius: $border-radius !important
+    border-bottom-right-radius: $border-radius !important
+    padding-right: 36px

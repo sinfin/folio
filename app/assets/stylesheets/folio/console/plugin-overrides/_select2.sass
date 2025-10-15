@@ -7,13 +7,7 @@
 
   .select2-selection
     &::before
-      content: ""
-      position: absolute
-      top: 1px
-      right: 28px
-      width: 20px
-      height: calc(100% - 2px)
-      background: linear-gradient(90deg, rgba(255, 255, 255, 0.00) 0%, $form-select-bg 100%)
+      +form-clear-button-gradient
 
     &::after
       content: ""
@@ -47,7 +41,7 @@
 
     .select2-selection__rendered
       line-height: $input-height
-      padding: 0 $input-padding-x
+      padding: 0 36px 0 $input-padding-x
 
     .select2-selection__arrow
       display: none
