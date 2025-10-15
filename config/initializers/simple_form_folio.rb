@@ -53,7 +53,6 @@ SimpleForm.setup do |config|
     b.use :full_error, wrap_with: { tag: "div", class: "invalid-feedback" }
     b.use :hint,  wrap_with: { tag: "small", class: "form-text" }
 
-    b.use :input_group_append, wrap_with: { tag: "div", class: "input-group-append" }
     b.use :custom_html, wrap_with: { tag: "div", class: "form-group__custom-html" }
     b.use :input_controls, wrap_with: { tag: "div", class: "form-group__input-controls" }
   end
