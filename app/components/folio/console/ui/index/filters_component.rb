@@ -161,7 +161,7 @@ class Folio::Console::Ui::Index::FiltersComponent < Folio::Console::ApplicationC
                    },
                    wrapper_html: { class: "f-c-ui-index-filters__text-autocomplete-wrap input-group--#{controller.params[key].present? ? "filled" : "empty"}" },
                    wrapper: :input_group,
-                   input_group_append: controller.params[key].present? ? input_group_append : nil
+                   clear_button: controller.params[key].present?
     end
 
     def autocomplete_input(f, key, url:)
