@@ -23,6 +23,14 @@
           document.body.appendChild(link);
         }
 
+        if (params.get("folio-iframe-javascript-url")) {
+          const script = document.createElement("script");
+          script.src = params.get("folio-iframe-javascript-url");
+          script.async = true;
+          script.defer = true;
+          document.head.appendChild(script);
+        }
+
         const iframeValue = params.get("folio-iframe");
 
         if (iframeValue === "rich-text") {

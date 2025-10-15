@@ -227,6 +227,11 @@ module Folio
       end
     end
 
+    initializer :add_folio_embed_middleware do |app|
+      load Folio::Engine.root.join("app/lib/rack/folio/embed_middleware.rb")
+      app.config.middleware.use(Rack::Folio::EmbedMiddleware)
+    end
+
     initializer :add_folio_maintenance_middleware do |app|
       if ENV["FOLIO_MAINTENANCE"]
         require "rack/folio/maintenance_middleware"

@@ -215,6 +215,14 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
     }
   }, [responseFromApi.html, attrsWithoutUniqueId]);
 
+  // Memoize HTML content to prevent iframe reloading on re-renders
+  const memoizedHtml = React.useMemo(() => {
+    if (responseFromApi.html) {
+      return { __html: responseFromApi.html };
+    }
+    return undefined;
+  }, [responseFromApi.html]);
+
   if (!uniqueId) return null;
 
   return (
@@ -233,7 +241,7 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
         <div
           ref={htmlRef}
           className="f-tiptap-node__html"
-          dangerouslySetInnerHTML={{ __html: responseFromApi.html }}
+          dangerouslySetInnerHTML={memoizedHtml}
         />
       ) : responseFromApi.invalid ? (
         <InvalidNodeIndicator

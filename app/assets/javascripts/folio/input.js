@@ -5,6 +5,7 @@
 //= require folio/input/content_templates
 //= require folio/input/date_range
 //= require folio/input/date_time
+//= require folio/input/embed
 //= require folio/input/multiselect
 //= require folio/input/numeral
 //= require folio/input/phone

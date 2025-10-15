@@ -1,0 +1,25 @@
+.f-input-embed-inner
+  align-items: stretch
+  display: flex
+  flex-direction: column
+  gap: px-to-rem(16px)
+  position: relative
+
+  &:not(&--compact)
+    border-radius: 4px
+    background: $medium-gray
+    padding: px-to-rem(24px)
+
+  .form-group
+    margin: 0
+
+  &:not([data-f-input-embed-inner-state-value^="valid-"]) &__preview-wrap,
+  &:not([data-f-input-embed-inner-state-value="invalid-url"]) &__invalid-url
+    display: none
+
+  &__table
+    background: transparent
+
+  &__th
+    white-space: nowrap
+    width: 0
