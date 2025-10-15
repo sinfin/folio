@@ -25,10 +25,6 @@
 
                   = numeric_range_input(f, key, type: "to")
 
-                  - if filtered
-                    .form-group__input-controls
-                      = render(Folio::Console::Ui::ClearButtonComponent.new)
-
               - else
                 = input(f, key)
 

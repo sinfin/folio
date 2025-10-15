@@ -15,8 +15,10 @@
 
   &__numeric-range
     background: #DBDBDB
+    border-radius: $border-radius
+    flex-wrap: nowrap      
 
-  &__numeric-range > &__numeric-range-input
+  &__numeric-range > .input-group > &__numeric-range-input
     width: 65px
     flex: 0 0 auto
     appearance: textfield
@@ -26,10 +28,25 @@
       appearance: none
       margin: 0
 
+  &__numeric-range > .input-group:nth-last-child(2) > &__numeric-range-input
+    border-top-right-radius: 0
+    border-bottom-right-radius: 0
+
+  &__numeric-range > .input-group:last-child > &__numeric-range-input
+    border-top-left-radius: 0
+    border-bottom-left-radius: 0
+    border-top-right-radius: $border-radius !important
+    border-bottom-right-radius: $border-radius !important
+
+  &__numeric-range > .input-group:has(.form-group__input-controls) > &__numeric-range-input
+    padding-right: 36px
+    width: 100px
+
   &__numeric-range .input-group-prepend
     display: flex
     align-items: center
     flex: 1 1 auto
+    white-space: nowrap
 
     label
       margin: 0

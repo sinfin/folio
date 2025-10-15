@@ -134,7 +134,8 @@ class Folio::Console::Ui::Index::FiltersComponent < Folio::Console::ApplicationC
                           placeholder: t(".numeric_range.#{type}"),
                           type: "number",
                         },
-                        wrapper: false
+                        wrapper: :input_group,
+                        clear_button: controller.params[full_key].present?
     end
 
     def text_input(f, key)
