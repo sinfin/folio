@@ -94,8 +94,15 @@ module Folio::HasAttachments
           file = attributes["file"] || Folio::File.find_by(id: attributes["file_id"])
           !file || !file.is_a?(required_file_type.constantize)
         elsif placement.constantize.folio_file_placement_supports_embed?
-          active = attributes.dig("folio_embed_data", "active")
-          active != true && active != "true"
+          folio_embed_data = if attributes["folio_embed_data"].is_a?(String)
+            (JSON.parse(attributes["folio_embed_data"]) rescue {}) || {}
+          elsif attributes["folio_embed_data"].is_a?(Hash)
+            attributes["folio_embed_data"]
+          else
+            {}
+          end
+
+          folio_embed_data["active"] != true && folio_embed_data["active"] != "true"
         else
           attributes["id"].blank?
         end

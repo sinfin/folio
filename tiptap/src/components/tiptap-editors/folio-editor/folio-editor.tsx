@@ -6,7 +6,7 @@ import {
   type Editor,
 } from "@tiptap/react";
 import { findParentNode, findChildren } from "@tiptap/core";
-import { Node } from "@tiptap/pm/model";
+import { Node as ProseMirrorNode } from "@tiptap/pm/model";
 
 // --- Tiptap Core Extensions ---
 import { StarterKit } from "@tiptap/starter-kit";
@@ -233,14 +233,16 @@ export function FolioEditor({
 
             if (node.type.name === "heading") {
               const maybePage = findParentNode(
-                (node: Node) => node.type.name === FolioTiptapPageNode.name,
+                (parentNode: ProseMirrorNode) =>
+                  parentNode.type.name === FolioTiptapPageNode.name,
               )(editor.state.selection);
               let isFirstInPage = false;
 
               if (maybePage) {
                 const allTitlesInPage = findChildren(
                   maybePage.node,
-                  (node: Node) => node.type.name === "heading",
+                  (childNode: ProseMirrorNode) =>
+                    childNode.type.name === "heading",
                 );
                 isFirstInPage = allTitlesInPage[0].node === node;
               }
@@ -267,6 +269,7 @@ export function FolioEditor({
         ? [
             FolioTiptapNodeExtension.configure({
               nodes: folioTiptapConfig.nodes || [],
+              embedNodeClassName: folioTiptapConfig["embed_node_class_name"],
             }),
             FolioTiptapColumnsExtension,
             FolioTiptapColumnsNode,

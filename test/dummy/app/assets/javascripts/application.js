@@ -21,6 +21,7 @@
 //= require folio/dropzone_component
 //= require folio/tooltip
 //= require folio/uppy_component
+//= require folio/embed/box_component
 
 //= require folio/image/image
 
