@@ -3,8 +3,16 @@
     const container = document.createElement('div')
     container.className = 'f-embed__container'
 
-    if (new URLSearchParams(window.location.search).get('centered') === '1') {
+    const urlParams = new URLSearchParams(window.location.search)
+    
+    if (urlParams.get('centered') === '1') {
       container.classList.add('f-embed__container--centered')
+    }
+
+    const backgroundColor = urlParams.get('backgroundColor')
+    if (backgroundColor && /^#[0-9A-Fa-f]{6}$/.test(backgroundColor)) {
+      document.documentElement.style.backgroundColor = backgroundColor
+      document.body.style.backgroundColor = backgroundColor
     }
 
     if (data.html) {
