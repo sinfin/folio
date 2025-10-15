@@ -75,6 +75,11 @@ legend
 .form-control.select
   @extend .form-select
 
+  .input-group--filled:has(.form-group__input-controls) &
+    background-position: right 34px center
+    border-top-right-radius: $border-radius !important
+    border-bottom-right-radius: $border-radius !important
+
 .form-text
   display: block
 
