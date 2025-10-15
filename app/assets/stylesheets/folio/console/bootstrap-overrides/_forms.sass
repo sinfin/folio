@@ -77,13 +77,13 @@ legend
 
   .input-group--filled:has(.form-group__input-controls) &
     background-position: right 34px center
-    padding-right: 52px
+    padding-right: $form-clear-button-gradient-right--filled
 
   .input-group.select:has(&)::before
     +form-clear-button-gradient
 
   .input-group--filled.select:has(&)::before
-    right: 52px
+    right: $form-clear-button-gradient-right--filled
 
 .form-control.date_range
   border-top-right-radius: $border-radius !important
@@ -112,4 +112,4 @@ legend
   .form-control
     border-top-right-radius: $border-radius !important
     border-bottom-right-radius: $border-radius !important
-    padding-right: 36px
+    padding-right: $form-select-indicator-padding
