@@ -6,6 +6,7 @@ class Folio::User < Folio::ApplicationRecord
   include Folio::HasAddresses
   include Folio::HasNewsletterSubscriptions
   include Folio::HasSiteRoles
+  include AwsFileHandler::Userable
 
   # used to validate before inviting from console in /console/users/new
   attribute :skip_password_validation, :boolean, default: false
