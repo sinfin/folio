@@ -14,7 +14,8 @@ window.Folio.Stimulus.register('f-embed-box', class extends window.Stimulus.Cont
   static values = {
     intersected: Boolean,
     folioEmbedData: Object,
-    centered: Boolean
+    centered: Boolean,
+    backgroundColor: String
   }
 
   static targets = ['iframe', 'loader']
@@ -43,7 +44,20 @@ window.Folio.Stimulus.register('f-embed-box', class extends window.Stimulus.Cont
       iframeTarget.remove()
     })
 
-    this.element.insertAdjacentHTML('afterbegin', `<iframe class="f-embed-box__iframe" src="/folio/embed?centered=${this.centeredValue ? '1' : '0'}" data-f-embed-box-target="iframe"></iframe>`)
+    const params = new URLSearchParams()
+
+    if (this.centeredValue) {
+      params.set('centered', '1')
+    }
+
+    if (this.backgroundColorValue) {
+      params.set('backgroundColor', this.backgroundColorValue)
+    }
+
+    const queryString = params.toString()
+    const src = queryString ? `/folio/embed?${queryString}` : '/folio/embed'
+
+    this.element.insertAdjacentHTML('afterbegin', `<iframe class="f-embed-box__iframe" src="${src}" data-f-embed-box-target="iframe"></iframe>`)
   }
 
   intersectedValueChanged (newValue, _oldValue) {
