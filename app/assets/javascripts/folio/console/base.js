@@ -88,7 +88,7 @@
 //= require folio/console/ui/tabs_component
 //= require folio/console/ui/turbo_frame_with_loader_component
 
-//= require folio/console/addresses/fields/fields
+//= require folio/console/addresses/fields_component
 //= require folio/console/atoms/layout_switch/layout_switch
 //= require folio/console/atoms/locale_switch/locale_switch
 //= require folio/console/atoms/previews/error_component
