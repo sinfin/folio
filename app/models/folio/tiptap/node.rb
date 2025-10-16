@@ -6,10 +6,6 @@ class Folio::Tiptap::Node
   include ActiveModel::Attributes
   include ActiveModel::Translation
 
-  attr_accessor :site
-
-  validate :validate_site_attachment_allowed
-
   def self.tiptap_node(structure:, tiptap_config: nil)
     Folio::Tiptap::NodeBuilder.new(klass: self,
                                    structure:,
@@ -102,16 +98,15 @@ class Folio::Tiptap::Node
     "#{self}Component".constantize
   end
 
-  def self.new_from_attributes(attrs, site: nil)
-    new_from_params(ActionController::Parameters.new(attrs), site: site)
+  def self.new_from_attributes(attrs)
+    new_from_params(ActionController::Parameters.new(attrs))
   end
 
-  def self.new_from_params(attrs, site: nil)
+  def self.new_from_params(attrs)
     klass = attrs.require(:type).safe_constantize
 
     if klass && klass < Folio::Tiptap::Node
       node = klass.new
-      node.site = site
       node.assign_attributes_from_param_attrs(attrs)
       node
     else
@@ -125,51 +120,25 @@ class Folio::Tiptap::Node
     ]
   end
 
-  def self.instances_from_tiptap_content(content, site: nil)
+  def self.instances_from_tiptap_content(content)
     nodes = []
 
     if content.is_a?(Array)
       content.each do |node|
-        nodes.concat(instances_from_tiptap_content(node, site: site))
+        nodes.concat(instances_from_tiptap_content(node))
       end
     elsif content.is_a?(Hash)
       if content["type"] == "folioTiptapNode"
         begin
-          nodes << new_from_attributes(content["attrs"], site: site)
+          nodes << new_from_attributes(content["attrs"])
         rescue ArgumentError => e
           Rails.logger.error("Folio::Tiptap::Node.instances_from_tiptap_content: #{e.message}")
         end
       elsif content["content"].is_a?(Array) && content["content"].present?
-        nodes.concat(instances_from_tiptap_content(content["content"], site: site))
+        nodes.concat(instances_from_tiptap_content(content["content"]))
       end
     end
 
     nodes
   end
-
-  private
-
-    def validate_site_attachment_allowed
-      return unless @site && self.class.respond_to?(:structure)
-
-      self.class.structure.each do |key, cfg|
-        next unless cfg[:type] == :folio_attachment
-        next unless (file_klass = cfg[:file_type]&.safe_constantize)
-
-        placements = cfg[:has_many] ? send("#{key.to_s.singularize}_placements_attributes") || [] : [send("#{key}_placement_attributes")].compact
-
-        placements.each do |placement|
-          file_id = placement["file_id"] || placement[:file_id]
-          next unless file_id
-
-          file = file_klass.find_by(id: file_id)
-          if file && !file.can_be_used_on_site?(@site)
-            errors.add(:base, I18n.t("folio.tiptap.errors.file_not_allowed_for_site"))
-            return
-          end
-        end
-      end
-    rescue StandardError => e
-      Rails.logger.error("Folio::Tiptap site validation error: #{e.message}") if defined?(Rails)
-    end
 end

@@ -38,7 +38,6 @@ class Folio::Console::Api::TiptapController < Folio::Console::Api::BaseControlle
 
       if node_klass < Folio::Tiptap::Node
         @node = node_klass.new
-        @node.site = Folio::Current.site
         @node.assign_attributes_from_param_attrs(tiptap_node_attrs)
       else
         fail ArgumentError, "Invalid Tiptap node type: #{params[:tiptap_node_type]}"
