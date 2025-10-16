@@ -3,7 +3,7 @@
   display: none;
   cursor: pointer;
 
-  .f-tiptap-page:hover:has([data-node-view-content-react] > div:last-child) &,
+  .f-tiptap-page:not(.f-tiptap-page--collapsed):hover:has([data-node-view-content-react] > div:last-child) &,
   .f-tiptap-float__aside:hover:has(
       [data-node-view-content-react] > div:last-child
     )
