@@ -8,7 +8,7 @@ class Folio::PublishableHintComponentTest < Folio::ComponentTest
 
     render_inline(Folio::PublishableHintComponent.new(record: page))
 
-    assert_no_selector(".folio-publishable-hint")
+    assert_no_selector(".f-publishable-hint")
   end
 
   test "renders for unpublished record" do
@@ -16,19 +16,19 @@ class Folio::PublishableHintComponentTest < Folio::ComponentTest
 
     render_inline(Folio::PublishableHintComponent.new(record: page))
 
-    assert_selector(".folio-publishable-hint")
+    assert_selector(".f-publishable-hint")
   end
 
   test "does not render when record is nil and force is false" do
     render_inline(Folio::PublishableHintComponent.new(record: nil))
 
-    assert_no_selector(".folio-publishable-hint")
+    assert_no_selector(".f-publishable-hint")
   end
 
   test "renders when force is true" do
     render_inline(Folio::PublishableHintComponent.new(force: true))
 
-    assert_selector(".folio-publishable-hint")
+    assert_selector(".f-publishable-hint")
   end
 
   test "renders custom hint when provided" do
@@ -37,7 +37,7 @@ class Folio::PublishableHintComponentTest < Folio::ComponentTest
 
     render_inline(Folio::PublishableHintComponent.new(record: page, hint: custom_hint))
 
-    assert_selector(".folio-publishable-hint")
+    assert_selector(".f-publishable-hint")
     assert_text(custom_hint)
   end
 end
