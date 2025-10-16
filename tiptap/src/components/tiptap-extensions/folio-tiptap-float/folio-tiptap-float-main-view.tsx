@@ -12,7 +12,11 @@ export const FolioTiptapFloatMainView: React.FC<
   return (
     <NodeViewWrapper>
       <NodeViewContent />
-      <ParagraphPlaceholder editor={editor} getPos={getPos} />
+      <ParagraphPlaceholder
+        editor={editor}
+        getPos={getPos}
+        target="float-main"
+      />
     </NodeViewWrapper>
   );
 };

@@ -17,9 +17,11 @@ const TRANSLATIONS = {
 export const ParagraphPlaceholder = ({
   editor,
   getPos,
+  target,
 }: {
   editor: Editor;
   getPos?: () => number | undefined;
+  target: string;
 }) => {
   const onClick = React.useCallback(() => {
     if (getPos) {
@@ -49,7 +51,10 @@ export const ParagraphPlaceholder = ({
   if (!editor || !editor.isEditable) return null;
 
   return (
-    <p className="f-tiptap-paragraph-placeholder" onClick={onClick}>
+    <p
+      className={`f-tiptap-paragraph-placeholder f-tiptap-paragraph-placeholder--target-${target}`}
+      onClick={onClick}
+    >
       {translate(TRANSLATIONS, "placeholder")}
     </p>
   );
