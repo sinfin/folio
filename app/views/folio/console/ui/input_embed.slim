@@ -1,0 +1,61 @@
+ruby:
+  tabs = [
+    {
+      label: "Empty",
+      href: request.path,
+      active: !params[:tab].in?(%w[html url]),
+      folio_embed_data: nil,
+    },
+    {
+      label: "HTML",
+      href: "#{request.path}?tab=html",
+      active: params[:tab] == "html",
+      folio_embed_data: { "active" => true, "html" => '<iframe width="560" height="315" src="https://www.youtube.com/embed/8DPcXHMGMBc?si=D0qtVp8LBUJWDTsp" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' },
+    },
+    {
+      label: "URL",
+      href: "#{request.path}?tab=url",
+      active: params[:tab] == "url",
+      folio_embed_data: { "active" => true, 'type' => 'youtube', "url" => 'https://www.youtube.com/watch?v=8DPcXHMGMBc' },
+    },
+  ]
+
+h1: a.f-c-unlink href=console_ui_path Folio Console UI
+
+h2 Input Embed
+
+= render(Folio::Console::Ui::TabsComponent.new(tabs:))
+
+- tabs.each do |tab|
+  - next unless tab[:active]
+
+  h3 = tab[:label]
+
+  = simple_form_for "", method: :get, url: tab[:href] do |f|
+    div
+      = f.input :folio_embed_data,
+                as: :embed,
+                input_html: { value: tab[:folio_embed_data], id: "folio-console-ui-input-embed-demo-input" }
+
+  h4 Input value
+
+  p The JSON is automatically refreshed every second for this UI demo only. Input value change is immediate.
+
+  pre
+    code id="folio-console-ui-input-embed-demo-code"
+      - if tab[:folio_embed_data]
+        = JSON.pretty_generate(tab[:folio_embed_data])
+
+  javascript:
+    (() => {
+      const timeout = window.setInterval(() => {
+        const code = document.getElementById('folio-console-ui-input-embed-demo-code')
+
+        if (code) {
+          const input = document.getElementById('folio-console-ui-input-embed-demo-input')
+          code.innerText = input.value ? JSON.stringify(JSON.parse(input.value), null, 2) : ""
+        } else {
+          window.clearTimeout(timeout)
+        }
+      }, 1000)
+    })()

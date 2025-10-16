@@ -5,10 +5,12 @@ class Folio::Tiptap::NodeBuilder
     @klass = klass
     @structure = convert_structure_to_hashes(structure)
     @tiptap_config = get_tiptap_config(tiptap_config)
+    @embed_keys = []
   end
 
   def build!
     build_structure!
+    setup_html_sanitization_config!
     handle_config!
   end
 
@@ -34,6 +36,8 @@ class Folio::Tiptap::NodeBuilder
           setup_structure_for_rich_text(key:)
         when :integer
           setup_structure_for_integer(key:)
+        when :embed
+          setup_structure_for_embed(key:)
         else
           fail ArgumentError, "Unsupported type #{attr_config[:type]} in tiptap_node definition"
         end
@@ -82,7 +86,7 @@ class Folio::Tiptap::NodeBuilder
         transformed_value = if value.nil?
           nil
         elsif value.is_a?(String)
-          JSON.parse(value) rescue {}
+          (JSON.parse(value) rescue {}) || {}
         elsif value.is_a?(Hash)
           value.stringify_keys
         else
@@ -102,7 +106,7 @@ class Folio::Tiptap::NodeBuilder
         end
 
         transformed_value = if value.is_a?(String)
-          JSON.parse(value) rescue {}
+          (JSON.parse(value) rescue {}) || {}
         elsif value.is_a?(Hash)
           value.stringify_keys
         else
@@ -133,6 +137,17 @@ class Folio::Tiptap::NodeBuilder
 
         super(whitelisted)
       end
+    end
+
+    def setup_structure_for_embed(key:)
+      @klass.attribute key, type: :json
+
+      @klass.define_method "#{key}=" do |value|
+        super(Folio::Embed.normalize_value(value))
+      end
+
+      # Track embed keys for later sanitization config setup
+      @embed_keys << key
     end
 
     def setup_structure_for_folio_attachment(key:, attr_config:)
@@ -176,7 +191,7 @@ class Folio::Tiptap::NodeBuilder
                 "title" => value[:title].presence,
                 "alt" => value[:alt].presence,
                 "description" => value[:description].presence,
-                "folio_embed_data" => Folio::Embed.normalize_setter_value(value[:folio_embed_data])
+                "folio_embed_data" => Folio::Embed.normalize_value(value[:folio_embed_data])
               }.compact
             end
           end
@@ -269,7 +284,7 @@ class Folio::Tiptap::NodeBuilder
               "title" => value[:title].presence,
               "alt" => value[:alt].presence,
               "description" => value[:description].presence,
-              "folio_embed_data" => Folio::Embed.normalize_setter_value(value[:folio_embed_data])
+              "folio_embed_data" => Folio::Embed.normalize_value(value[:folio_embed_data])
             }.compact)
           else
             super(nil)
@@ -485,6 +500,8 @@ class Folio::Tiptap::NodeBuilder
               file_type: "Folio::File::Document",
               has_many: true
             }
+          when :embed
+            result[key] = { type: :embed }
           else
             result[key] = { type: value }
           end
@@ -528,6 +545,26 @@ class Folio::Tiptap::NodeBuilder
 
       @klass.define_singleton_method :tiptap_config do
         class_variable_get(:@@tiptap_config)
+      end
+    end
+
+    def setup_html_sanitization_config!
+      return if @embed_keys.empty?
+
+      embed_keys = @embed_keys # capture for closure
+
+      @klass.define_method :folio_html_sanitization_config do
+        attributes_config = {}
+
+        # Add all embed keys to the sanitization config
+        embed_keys.each do |key|
+          attributes_config[key] = :unsafe_html
+        end
+
+        {
+          enabled: true,
+          attributes: attributes_config
+        }
       end
     end
 end

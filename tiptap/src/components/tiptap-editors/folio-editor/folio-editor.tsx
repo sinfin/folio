@@ -6,15 +6,15 @@ import {
   type Editor,
 } from "@tiptap/react";
 import { findParentNode, findChildren } from "@tiptap/core";
-import { Node } from "@tiptap/pm/model";
+import { Node as ProseMirrorNode } from "@tiptap/pm/model";
 
 // --- Tiptap Core Extensions ---
 import { StarterKit } from "@tiptap/starter-kit";
 import type { Level } from "@tiptap/extension-heading";
 // import { Image } from "@tiptap/extension-image";
 import { TextAlign } from "@tiptap/extension-text-align";
-import { Typography } from "@tiptap/extension-typography";
 import { Subscript } from "@tiptap/extension-subscript";
+import { createTypographyExtension } from "@/lib/typography-config";
 import { Superscript } from "@tiptap/extension-superscript";
 import { Placeholder } from "@tiptap/extensions";
 import { TableKit, Table } from "@tiptap/extension-table";
@@ -220,7 +220,7 @@ export function FolioEditor({
         alignments: ["left", "center", "right"],
         types: ["heading", "paragraph"],
       }),
-      Typography,
+      createTypographyExtension(),
       Superscript,
       Subscript,
       FolioTiptapInvalidNode,
@@ -233,14 +233,16 @@ export function FolioEditor({
 
             if (node.type.name === "heading") {
               const maybePage = findParentNode(
-                (node: Node) => node.type.name === FolioTiptapPageNode.name,
+                (parentNode: ProseMirrorNode) =>
+                  parentNode.type.name === FolioTiptapPageNode.name,
               )(editor.state.selection);
               let isFirstInPage = false;
 
               if (maybePage) {
                 const allTitlesInPage = findChildren(
                   maybePage.node,
-                  (node: Node) => node.type.name === "heading",
+                  (childNode: ProseMirrorNode) =>
+                    childNode.type.name === "heading",
                 );
                 isFirstInPage = allTitlesInPage[0].node === node;
               }
@@ -267,6 +269,7 @@ export function FolioEditor({
         ? [
             FolioTiptapNodeExtension.configure({
               nodes: folioTiptapConfig.nodes || [],
+              embedNodeClassName: folioTiptapConfig["embed_node_class_name"],
             }),
             FolioTiptapColumnsExtension,
             FolioTiptapColumnsNode,

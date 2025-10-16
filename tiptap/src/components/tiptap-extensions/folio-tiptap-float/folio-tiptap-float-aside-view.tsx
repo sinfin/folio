@@ -12,7 +12,11 @@ export const FolioTiptapFloatAsideView: React.FC<
   return (
     <NodeViewWrapper>
       <NodeViewContent />
-      <ParagraphPlaceholder editor={editor} getPos={getPos} />
+      <ParagraphPlaceholder
+        editor={editor}
+        getPos={getPos}
+        target="float-aside"
+      />
     </NodeViewWrapper>
   );
 };

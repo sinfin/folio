@@ -25,6 +25,7 @@ class Folio::Tiptap::Content
     return { ok: false } if hash_value.nil?
 
     content_key = Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content]
+
     if hash_value[content_key].is_a?(String)
       begin
         hash_value[content_key] = JSON.parse(hash_value[content_key])
@@ -34,7 +35,101 @@ class Folio::Tiptap::Content
       end
     end
 
-    scrub = lambda do |string|
+    {
+      ok: true,
+      value: traverse_and_scrub(hash_value.deep_dup),
+    }
+  end
+
+  private
+    def sanitize_href(string)
+      Folio::HtmlSanitization::Sanitizer.sanitize_href(string)
+    end
+
+    def sanitize_folio_tiptap_node(data)
+      @embed_keys ||= {}
+
+      if @embed_keys[data["attrs"]["type"]].nil?
+        node_klass = data["attrs"]["type"].safe_constantize
+
+        if node_klass && node_klass < Folio::Tiptap::Node
+          node_klass_embed_keys = node_klass.structure.filter_map do |key, config|
+            if config[:type] == :embed
+              key.to_s
+            end
+          end
+
+          @embed_keys[data["attrs"]["type"]] = node_klass_embed_keys.presence
+        end
+
+        @embed_keys[data["attrs"]["type"]] ||= false
+      end
+
+      if @embed_keys[data["attrs"]["type"]]
+        mapped_data = data["attrs"]["data"].map do |key, value|
+          if @embed_keys[data["attrs"]["type"]].include?(key)
+            [key, Folio::Embed.sanitize_value(value)]
+          else
+            [key, traverse_and_scrub(value)]
+          end
+        end
+
+        {
+          "type" => data["type"],
+          "attrs" => {
+            "type" => data["attrs"]["type"],
+            "version" => data["version"].is_a?(Integer) ? data["version"] : 1,
+            "data" => mapped_data.to_h,
+          }
+        }
+      else
+        # regular scrub
+        data.transform_values { |v| traverse_and_scrub(v) }
+      end
+    end
+
+    def sanitize_link_hash(data)
+      mapped = data.map do |k, v|
+        if k == "attrs"
+          mapped_link = v.map do |link_key, link_value|
+            if link_key == "href"
+              [link_key, sanitize_href(link_value)]
+            else
+              [link_key, traverse_and_scrub(link_value)]
+            end
+          end
+
+          [k, mapped_link.to_h]
+        else
+          [k, traverse_and_scrub(v)]
+        end
+      end
+
+      mapped.to_h
+    end
+
+    def traverse_and_scrub(data)
+      if data.is_a?(Hash)
+        if data["type"] == "folioTiptapNode" && data["attrs"].present? && data["attrs"]["type"].is_a?(String)
+          return sanitize_folio_tiptap_node(data)
+        end
+
+        # Handle link marks with href sanitization
+        if data["type"] == "link" && data["attrs"].is_a?(Hash) && data["attrs"]["href"]
+          return sanitize_link_hash(data)
+        end
+
+        data.transform_values { |v| traverse_and_scrub(v) }
+      elsif data.is_a?(Array)
+        data.map { |item| traverse_and_scrub(item) }
+      elsif data.is_a?(String)
+        scrub(data)
+      else
+        data
+      end
+    end
+
+    def scrub(string)
       scrubbed = Loofah.fragment(string).text(encode_special_chars: false)
 
       if scrubbed != string
@@ -43,72 +138,4 @@ class Folio::Tiptap::Content
 
       scrubbed
     end
-
-    sanitize_href = lambda do |href_value|
-      return nil if href_value.blank?
-
-      # Use Rails' sanitizer to check if href is safe
-      test_link = "<a href=\"#{href_value}\">test</a>"
-      sanitized_link = ActionController::Base.helpers.sanitize(test_link)
-
-      # If href was stripped, it's unsafe
-      if sanitized_link == "<a>test</a>"
-        Rails.logger.warn "Removed unsafe href from tiptap link: #{href_value}"
-        return nil
-      end
-
-      # Extract href from sanitized result
-      if match = sanitized_link.match(/href="([^"]*)"/)
-        return match[1]
-      end
-
-      href_value
-    end
-
-    traverse_and_scrub = lambda do |hash|
-      hash.each do |key, value|
-        scrubbed_key = scrub.call(key.to_s)
-
-        case value
-        when String
-          # Special handling for href in link marks
-          if key == "href" && hash["type"] == "link"
-            hash[scrubbed_key] = sanitize_href.call(value)
-          else
-            hash[scrubbed_key] = scrub.call(value)
-          end
-        when Hash
-          # Check if this is a link mark attrs hash
-          if key == "attrs" && hash["type"] == "link" && value.is_a?(Hash) && value["href"]
-            # Clone the attrs hash and sanitize href
-            sanitized_attrs = value.dup
-            sanitized_attrs["href"] = sanitize_href.call(value["href"])
-            hash[scrubbed_key] = traverse_and_scrub.call(sanitized_attrs)
-          else
-            hash[scrubbed_key] = traverse_and_scrub.call(value)
-          end
-        when Array
-          hash[scrubbed_key] = value.map do |item|
-            if item.is_a?(String)
-              scrub.call(item)
-            elsif item.is_a?(Hash)
-              traverse_and_scrub.call(item)
-            else
-              item
-            end
-          end
-        when NilClass, TrueClass, FalseClass, Numeric
-          hash[scrubbed_key] = value
-        else
-          Rails.logger.error "Did not scrub an unsupported value type for #{self} / #{field}: #{value.class.name}"
-          hash[scrubbed_key] = value
-        end
-      end
-    end
-
-    {
-      ok: true,
-      value: traverse_and_scrub.call(hash_value),
-    }
-  end
 end

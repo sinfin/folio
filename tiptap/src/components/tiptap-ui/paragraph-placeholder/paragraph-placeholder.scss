@@ -3,11 +3,24 @@
   display: none;
   cursor: pointer;
 
-  .f-tiptap-page:hover:has([data-node-view-content-react] > div:last-child) &,
-  .f-tiptap-float__aside:hover:has([data-node-view-content-react] > div:last-child) &,
-  .f-tiptap-float__main:hover:has([data-node-view-content-react] > div:last-child) &,
-  .f-tiptap-column:hover:has([data-node-view-content-react] > div:last-child) &,
-  .f-tiptap-styled-wrap:hover:has([data-node-view-content-react] > div:last-child) & {
+  .f-tiptap-page:not(.f-tiptap-page--collapsed):hover:has(
+      [data-node-view-content-react] > div:last-child
+    )
+    &--target-page,
+  .f-tiptap-float__aside:hover:has(
+      [data-node-view-content-react] > div:last-child
+    )
+    &--target-float-aside,
+  .f-tiptap-float__main:hover:has(
+      [data-node-view-content-react] > div:last-child
+    )
+    &--target-float-main,
+  .f-tiptap-column:hover:has([data-node-view-content-react] > div:last-child)
+    &--target-column,
+  .f-tiptap-styled-wrap:hover:has(
+      [data-node-view-content-react] > div:last-child
+    )
+    &--target-styled-wrap {
     display: block;
   }
 }

@@ -10,6 +10,7 @@ class Folio::Tiptap::NodeBuilderTest < ActiveSupport::TestCase
       content: :rich_text,
       button_url_json: :url_json,
       position: :integer,
+      folio_embed_data: :embed,
       background: %w[gray blue],
       cover: :image,
       reports: :documents,
@@ -61,6 +62,8 @@ class Folio::Tiptap::NodeBuilderTest < ActiveSupport::TestCase
       class_name: "Folio::Page",
       has_many: true
     }, Node.structure[:related_pages])
+
+    assert_equal({ type: :embed }, Node.structure[:folio_embed_data])
   end
 
   test "url_json sanitizes href values" do
@@ -96,5 +99,67 @@ class Folio::Tiptap::NodeBuilderTest < ActiveSupport::TestCase
     assert_nil node.button_url_json["href"]
     assert_equal "Click", node.button_url_json["label"]
     assert_equal "My Link", node.button_url_json["title"]
+  end
+
+  test "embed attribute gets normalized correctly" do
+    # Test with hash input
+    node = Node.new(folio_embed_data: {
+      "active" => true,
+      "type" => "youtube",
+      "url" => "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      "html" => "<iframe>...</iframe>"
+    })
+
+    assert_equal true, node.folio_embed_data["active"]
+    assert_equal "youtube", node.folio_embed_data["type"]
+    assert_equal "https://www.youtube.com/watch?v=dQw4w9WgXcQ", node.folio_embed_data["url"]
+    assert_equal "<iframe>...</iframe>", node.folio_embed_data["html"]
+  end
+
+  test "embed attribute gets normalized from string" do
+    # Test with JSON string input
+    node = Node.new(folio_embed_data: '{"active": true, "type": "youtube", "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"}')
+
+    assert_equal true, node.folio_embed_data["active"]
+    assert_equal "youtube", node.folio_embed_data["type"]
+    assert_equal "https://www.youtube.com/watch?v=dQw4w9WgXcQ", node.folio_embed_data["url"]
+  end
+
+  test "embed attribute returns nil when inactive" do
+    # Test with inactive embed
+    node = Node.new(folio_embed_data: {
+      "active" => false,
+      "type" => "youtube",
+      "url" => "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+    })
+
+    assert_nil node.folio_embed_data
+  end
+
+  test "embed attribute handles edge cases" do
+    # Test with nil input
+    node = Node.new(folio_embed_data: nil)
+    assert_nil node.folio_embed_data
+
+    # Test with empty hash
+    node.folio_embed_data = {}
+    assert_nil node.folio_embed_data
+
+    # Test with invalid JSON string
+    node.folio_embed_data = "invalid json"
+    assert_nil node.folio_embed_data
+
+    # Test with active string value
+    node.folio_embed_data = { "active" => "true", "type" => "youtube" }
+    assert_equal true, node.folio_embed_data["active"]
+    assert_equal "youtube", node.folio_embed_data["type"]
+  end
+
+  test "embed folio_html_sanitization_config is set correctly" do
+    node = Node.new
+    config = node.folio_html_sanitization_config
+
+    assert config[:enabled]
+    assert_equal :unsafe_html, config[:attributes][:folio_embed_data]
   end
 end
