@@ -51,6 +51,7 @@ cs:
           failure: Registrace se nezdařila. Zkuste to prosím znovu.
           age_agreement: Potvrzuji, že je mi 18 let nebo více
           terms_agreement: Souhlasím s %{terms_link} a seznámil/a jsem se s %{privacy_link}
+          terms_agreement_author: Souhlasím s %{terms_link} a seznámil/a jsem se s %{privacy_link} a zavazuji se nabízet pouze produkty a/nebo služby, které splňují právní předpisy EU.
           terms_link_text: obchodními podmínkami
           privacy_link_text: zásadami ochrany osobních údajů
 

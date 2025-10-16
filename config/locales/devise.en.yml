@@ -42,6 +42,9 @@ en:
           failure: Failed to submit the registration. Please try again later.
           age_agreement: I confirm that I am 18 years old or older
           terms_agreement: I agree to the %{terms_link} and have read the %{privacy_link} and agree to the general terms and conditions.
+          terms_agreement_author: I agree to the %{terms_link} and have read the %{privacy_link} and agree to the general terms and conditions and agree to offer only products and/or services that comply with EU law.
+          terms_link_text: terms and conditions
+          privacy_link_text: privacy policy
 
         show:
           title: E-mail confirmation

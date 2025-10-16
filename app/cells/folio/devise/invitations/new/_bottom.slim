@@ -1,6 +1,6 @@
 .f-devise__fieldset-wrap
   = @f.input :terms_agreement,
-             label: t('.terms_agreement', terms_link:, privacy_link:).html_safe,
+             label: terms_agreement_label.html_safe,
              as: :boolean,
              required: true,
              wrapper_html: { class: 'f-devise__fieldset' },

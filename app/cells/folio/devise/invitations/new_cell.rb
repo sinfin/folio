@@ -27,4 +27,12 @@ class Folio::Devise::Invitations::NewCell < Folio::Devise::ApplicationCell
 
     h
   end
+
+  def terms_agreement_label
+    if model[:author_registration]
+      t(".terms_agreement_author", terms_link:, privacy_link:)
+    else
+      t(".terms_agreement", terms_link:, privacy_link:)
+    end
+  end
 end
