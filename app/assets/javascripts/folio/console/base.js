@@ -76,6 +76,7 @@
 //= require folio/console/ui/boolean_toggle_component
 //= require folio/console/ui/button_component
 //= require folio/console/ui/buttons_component
+//= require folio/console/ui/clear_button_component
 //= require folio/console/ui/clipboard_component
 //= require folio/console/ui/collapsible_component
 //= require folio/console/ui/flash_component

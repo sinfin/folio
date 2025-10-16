@@ -15,7 +15,8 @@ class Folio::Console::Ui::Index::FiltersComponent < Folio::Console::ApplicationC
                           },
                           action: {
                             "change" => "onChange",
-                            "folioCustomChange" => "onChange"
+                            "folioCustomChange" => "onChange",
+                            "f-c-ui-clear-button:click" => "onClearButtonClick"
                           })
     end
 
