@@ -3,33 +3,33 @@ cs:
   flash:
     actions:
       create:
-        alert: "Nepodařilo se vytvořit: %{resource_name}."
-        error: "Nepodařilo se vytvořit: %{resource_name}."
+        alert: "Nepodařilo se vytvořit: %{resource_name}"
+        error: "Nepodařilo se vytvořit: %{resource_name}"
         notice: "%{resource_name} vytvořen(a)."
         success: "%{resource_name} vytvořen(a)."
       destroy:
-        alert: "Nepodařilo se smazat: %{resource_name}."
-        error: "Nepodařilo se smazat: %{resource_name}."
+        alert: "Nepodařilo se smazat: %{resource_name}"
+        error: "Nepodařilo se smazat: %{resource_name}"
         notice: "%{resource_name} smazán(a)."
         success: "%{resource_name} smazán(a)."
       discard:
-        alert: "Nepodařilo se archivovat: %{resource_name}."
-        error: "Nepodařilo se archivovat: %{resource_name}."
+        alert: "Nepodařilo se archivovat: %{resource_name}"
+        error: "Nepodařilo se archivovat: %{resource_name}"
         notice: "%{resource_name} archivován(a)."
         success: "%{resource_name} archivován(a)."
       undiscard:
-        alert: "Nepodařilo se odarchivovat: %{resource_name}."
-        error: "Nepodařilo se odarchivovat: %{resource_name}."
+        alert: "Nepodařilo se odarchivovat: %{resource_name}"
+        error: "Nepodařilo se odarchivovat: %{resource_name}"
         notice: "%{resource_name} odarchivován(a)."
         success: "%{resource_name} odarchivován(a)."
       update:
-        alert: "Nepodařilo se upravit: %{resource_name}."
-        error: "Nepodařilo se upravit: %{resource_name}."
+        alert: "Nepodařilo se upravit: %{resource_name}"
+        error: "Nepodařilo se upravit: %{resource_name}"
         notice: "%{resource_name} upraven(a)."
         success: "%{resource_name} upraven(a)."
       cancel:
-        alert: "Nepodařilo se stornovat: %{resource_name}."
-        error: "Nepodařilo se stornovat: %{resource_name}."
+        alert: "Nepodařilo se stornovat: %{resource_name}"
+        error: "Nepodařilo se stornovat: %{resource_name}"
         notice: "%{resource_name} stornován(a)."
         success: "%{resource_name} stornován(a)."
       event:
@@ -38,7 +38,7 @@ cs:
         notice: "Stav záznamu upraven."
         success: "Stav záznamu upraven."
       confirm:
-        alert: "Nepodařilo se potvrdit: %{resource_name}."
-        error: "Nepodařilo se potvrdit: %{resource_name}."
+        alert: "Nepodařilo se potvrdit: %{resource_name}"
+        error: "Nepodařilo se potvrdit: %{resource_name}"
         notice: "%{resource_name} potvrzen(a)."
         success: "%{resource_name} potvrzen(a)."
