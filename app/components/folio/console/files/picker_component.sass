@@ -36,6 +36,15 @@ $medium-gray: #E8E8E8 !default
     margin-top: px-to-rem(8px)
     align-items: stretch
 
+  &__alt-row
+    display: flex
+    align-items: center
+    gap: px-to-rem(6px)
+
+    // Hide the warning icon when the in-place content has a value
+    .f-c-ui-in-place-input:has(.f-c-ui-in-place-input__content:not(:empty)) + .f-c-files-picker__alt-ico
+      display: none
+
   &--darker &__btn-wrap
     background: $gray
 
@@ -73,7 +82,7 @@ $medium-gray: #E8E8E8 !default
     &:hover
       color: $black
 
-  &[data-f-c-files-picker-state-value="empty"] &__alt,
-  &[data-f-c-files-picker-state-value="marked-for-destruction"] &__alt
+  &[data-f-c-files-picker-state-value="empty"] &__alt-ico,
+  &[data-f-c-files-picker-state-value="marked-for-destruction"] &__alt-ico
   &:not([data-f-c-files-picker-state-value="selected-and-loading"]) &__loader
     display: none
