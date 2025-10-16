@@ -1,15 +1,34 @@
 .select2-container--default
+  margin-left: 0 !important
   outline: 0
 
   .select2-dropdown
     min-width: 200px
 
   .select2-selection
-    background-color: $form-select-bg
-    background-image: escape-svg($form-select-indicator)
-    background-repeat: no-repeat
-    background-position: $form-select-bg-position
-    background-size: $form-select-bg-size
+    &::before
+      +form-clear-button-gradient
+
+    &::after
+      content: ""
+      position: absolute
+      top: 1px
+      right: 6px
+      width: 24px
+      height: calc(100% - 2px)
+      border-radius: $border-radius
+      background-color: $form-select-bg
+      background-image: escape-svg($form-select-indicator)
+      background-repeat: no-repeat
+      background-position: center center
+      background-size: $form-select-bg-size
+
+    .input-group:has(.form-group__input-controls).input-group--filled &
+      &::before
+        right: $form-clear-button-gradient-right--filled
+
+      &::after
+        right: 30px
 
   .select2-selection--single
     border-radius: $border-radius
@@ -22,7 +41,7 @@
 
     .select2-selection__rendered
       line-height: $input-height
-      padding: 0 $input-padding-x
+      padding: 0 $form-select-indicator-padding 0 $input-padding-x
 
     .select2-selection__arrow
       display: none
@@ -45,7 +64,8 @@
         text-indent: 0
         font-size: px-to-rem(20px)
 
-      .input-group &
+      .input-group &,
+      .input-group:has(.form-group__input-controls) &
         display: none
 
     .select2-selection__placeholder

@@ -51,13 +51,13 @@ window.Folio.Stimulus.register('f-c-ui-index-filters', class extends window.Stim
     this.element.classList.toggle('f-c-ui-index-filters--expanded')
   }
 
-  onResetInputClick (e) {
+  onClearButtonClick (e) {
     e.preventDefault()
 
-    const group = e.target.closest('.input-group')
-    if (!group) return
+    const inputGroup = e.target.closest('.input-group')
+    if (!inputGroup) return
 
-    const input = group.querySelector('.form-control')
+    const input = inputGroup.querySelector('.form-control')
     if (!input) return
 
     input.value = ''

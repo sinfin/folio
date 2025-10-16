@@ -15,8 +15,10 @@
 
   &__numeric-range
     background: #DBDBDB
+    border-radius: $border-radius
+    flex-wrap: nowrap      
 
-  &__numeric-range > &__numeric-range-input
+  &__numeric-range > .input-group > &__numeric-range-input
     width: 65px
     flex: 0 0 auto
     appearance: textfield
@@ -26,10 +28,25 @@
       appearance: none
       margin: 0
 
+  &__numeric-range > .input-group:nth-last-child(2) > &__numeric-range-input
+    border-top-right-radius: 0
+    border-bottom-right-radius: 0
+
+  &__numeric-range > .input-group:last-child > &__numeric-range-input
+    border-top-left-radius: 0
+    border-bottom-left-radius: 0
+    border-top-right-radius: $border-radius !important
+    border-bottom-right-radius: $border-radius !important
+
+  &__numeric-range > .input-group:has(.form-group__input-controls) > &__numeric-range-input
+    padding-right: $form-select-indicator-padding
+    width: 100px
+
   &__numeric-range .input-group-prepend
     display: flex
     align-items: center
     flex: 1 1 auto
+    white-space: nowrap
 
     label
       margin: 0
@@ -55,35 +72,6 @@
 
   &:not(&--expanded) &__filter--collapsible
     display: none
-
-  &__autocomplete-wrap
-    position: relative
-
-    // TODO @mreq pseudo-font-awesome-icon
-    // &:before
-    //   +pseudo-font-awesome-icon($fa-var-chevron-down)
-    //   position: absolute
-    //   top: 0
-    //   right: 0
-    //   width: 30px
-    //   height: $input-height
-    //   pointer-events: none
-    //   z-index: 2
-    //   display: flex
-    //   align-items: center
-    //   justify-content: center
-
-    &:after
-      content: ''
-      display: block
-      position: absolute
-      top: 5px
-      right: 30px
-      width: 0
-      bottom: 5px
-      pointer-events: none
-      z-index: 2
-      border-left: 1px solid $input-border-color
 
   &__autocomplete-input
     position: relative
@@ -161,3 +149,6 @@
     &__toggle-wrap + &__cancel-wrap
       text-align: right
       justify-content: flex-end
+
+    &__numeric-range > .input-group:has(.form-group__input-controls) > &__numeric-range-input
+      width: 100%
