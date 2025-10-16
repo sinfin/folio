@@ -39,6 +39,7 @@ class Folio::Console::PublishableInputs::ItemCell < Folio::ConsoleCell
     b[:id] = nil if options[:no_input_ids]
     b[:name] = nil if options[:no_input_names]
     b[:placeholder] = placeholder
+    b[:disabled] = true if options[:disabled] || !can_field?
 
     if checkbox
       b["data-action"] = "f-c-publishable-inputs-item#onCheckboxChange"
