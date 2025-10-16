@@ -146,7 +146,8 @@ module Folio::Console::FileControllerBase
     end
 
     def message_bus_broadcast_update
-      return if folio_console_record.saved_changes.blank?
+      # In case of updating attributes like site etc we also need to broadcast
+      return if folio_console_record.saved_changes.blank? && !params[:file].present?
 
       user_ids = Folio::User.where.not(console_url: nil)
                             .where(console_url_updated_at: 1.hour.ago..)
