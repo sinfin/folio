@@ -15,7 +15,8 @@ class Folio::Console::Ui::Index::FiltersComponent < Folio::Console::ApplicationC
                           },
                           action: {
                             "change" => "onChange",
-                            "folioCustomChange" => "onChange"
+                            "folioCustomChange" => "onChange",
+                            "f-c-ui-clear-button:click" => "onClearButtonClick"
                           })
     end
 
@@ -120,7 +121,7 @@ class Folio::Console::Ui::Index::FiltersComponent < Folio::Console::ApplicationC
                    },
                    wrapper: :input_group,
                    wrapper_html: { class: "f-c-ui-index-filters__date-range-input-wrap input-group--#{controller.params[key].present? ? "filled" : "empty"}" },
-                   input_group_append: controller.params[key].present? ? input_group_append : nil
+                   clear_button: controller.params[key].present?
     end
 
     def numeric_range_input(f, key, type:)
@@ -134,7 +135,8 @@ class Folio::Console::Ui::Index::FiltersComponent < Folio::Console::ApplicationC
                           placeholder: t(".numeric_range.#{type}"),
                           type: "number",
                         },
-                        wrapper: false
+                        wrapper: :input_group,
+                        clear_button: controller.params[full_key].present?
     end
 
     def text_input(f, key)
@@ -146,7 +148,7 @@ class Folio::Console::Ui::Index::FiltersComponent < Folio::Console::ApplicationC
                    },
                    wrapper_html: { class: "f-c-ui-index-filters__text-input-wrap input-group--#{controller.params[key].present? ? "filled" : "empty"}" },
                    wrapper: :input_group,
-                   input_group_append: controller.params[key].present? ? input_group_append : nil
+                   clear_button: controller.params[key].present?
     end
 
     def text_autocomplete_input(f, key, url:)
@@ -161,7 +163,7 @@ class Folio::Console::Ui::Index::FiltersComponent < Folio::Console::ApplicationC
                    },
                    wrapper_html: { class: "f-c-ui-index-filters__text-autocomplete-wrap input-group--#{controller.params[key].present? ? "filled" : "empty"}" },
                    wrapper: :input_group,
-                   input_group_append: controller.params[key].present? ? input_group_append : nil
+                   clear_button: controller.params[key].present?
     end
 
     def autocomplete_input(f, key, url:)
@@ -175,7 +177,7 @@ class Folio::Console::Ui::Index::FiltersComponent < Folio::Console::ApplicationC
                    },
                    wrapper_html: { class: "f-c-ui-index-filters__autocomplete-wrap input-group--#{controller.params[key].present? ? "filled" : "empty"}" },
                    wrapper: :input_group,
-                   input_group_append: controller.params[key].present? ? input_group_append : nil
+                   clear_button: controller.params[key].present?
     end
 
     def collection_input(f, key)
@@ -185,14 +187,7 @@ class Folio::Console::Ui::Index::FiltersComponent < Folio::Console::ApplicationC
                    label: false,
                    wrapper: :input_group,
                    wrapper_html: { class: "input-group--#{controller.params[key].present? ? "filled" : "empty"}" },
-                   input_group_append: controller.params[key].present? ? input_group_append : nil
-    end
-
-    def input_group_append
-      render(Folio::Console::Ui::ButtonComponent.new(class_name: "f-c-ui-index-filters__reset-input",
-                                                     variant: :medium_dark,
-                                                     data: stimulus_action(click: "onResetInputClick"),
-                                                     icon: :close))
+                   clear_button: controller.params[key].present?
     end
 
     def collapsible_class_name(config)

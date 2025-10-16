@@ -4,6 +4,8 @@ SimpleForm::Inputs::CollectionSelectInput.class_eval do
   def input(wrapper_options = nil)
     iho = input_html_options || {}
 
+    add_clear_button(options:)
+
     if options[:remote]
       reflection_class_name = options[:reflection_class_name] || reflection.try(:class_name)
 

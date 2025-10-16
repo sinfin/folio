@@ -1,0 +1,6 @@
+.f-c-ui-clear-button data=data
+  = render(Folio::Console::Ui::ButtonComponent.new(class_name: "f-c-ui-clear-button__btn",
+                                                  variant: :mini,
+                                                  icon: :close,
+                                                  icon_height: 16,
+                                                  data: stimulus_action(click: "onClick")))
