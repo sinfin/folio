@@ -13,9 +13,6 @@ cs:
         subtitle_languages_string: Jazyky titulků
         subtitle_auto_generation_enabled: Automatické generování titulků
   folio:
-    tiptap:
-      errors:
-        file_not_allowed_for_site: "Fotku nelze použít v tomto webu, patří do jiné domény."
     nested_fields_component:
       add: Přidat
 
