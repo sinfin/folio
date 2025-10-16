@@ -16,6 +16,6 @@ class Folio::Devise::OmniauthCell < Folio::Devise::ApplicationCell
   end
 
   def disabled_by_default?
-    model == 'registrations'
+    model == "registrations"
   end
 end
