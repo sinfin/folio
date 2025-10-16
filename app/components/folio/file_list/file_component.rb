@@ -34,7 +34,7 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
                           id: @file ? @file.id : "",
                           loaded: true,
                           primary_action: @primary_action,
-                          selectable: @selectable,
+                          selectable: @selectable && allow_selection_for_site?,
                           editable: @editable,
                           destroyable: @destroyable,
                           batch_actions: @batch_actions,
@@ -186,7 +186,7 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
     return false if @file.blank?
 
     if @file.class.included_modules.include?(Folio::File::HasUsageConstraints)
-      @file.can_be_used_on_site?(Folio::Current.site)
+      @file.can_be_used_on_site?(Folio::Current.site) && !@file.usage_limit_exceeded?
     else
       true
     end
