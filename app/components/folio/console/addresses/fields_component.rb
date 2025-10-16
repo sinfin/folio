@@ -3,10 +3,10 @@
 class Folio::Console::Addresses::FieldsComponent < Folio::Console::ApplicationComponent
   include ActionView::Helpers::FormOptionsHelper
 
-  attr_reader :user, :options
+  attr_reader :model, :options
 
-  def initialize(user:, **options)
-    @user = user
+  def initialize(model:, **options)
+    @model = model
     @options = options
   end
 
