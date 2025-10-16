@@ -201,7 +201,7 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
         stimulus_action({ click: "primaryAction" }, { url: show_url })
       end
     else
-      if @primary_action.to_s == 'index_for_modal' && !allow_selection_for_site?
+      if @primary_action.to_s != 'index' && !allow_selection_for_site?
         nil
       else
         stimulus_action({ click: "primaryAction" })
