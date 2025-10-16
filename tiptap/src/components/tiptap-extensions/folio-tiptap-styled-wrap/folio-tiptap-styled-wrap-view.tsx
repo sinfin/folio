@@ -19,7 +19,11 @@ export const FolioTiptapStyledWrapView: React.FC<
   return (
     <NodeViewWrapper className={className} {...dataAttributes}>
       <NodeViewContent />
-      <ParagraphPlaceholder editor={editor} getPos={getPos} />
+      <ParagraphPlaceholder
+        editor={editor}
+        getPos={getPos}
+        target="styled-wrap"
+      />
     </NodeViewWrapper>
   );
 };

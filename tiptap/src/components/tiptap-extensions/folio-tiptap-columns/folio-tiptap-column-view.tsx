@@ -13,7 +13,7 @@ export const FolioTiptapColumnView: React.FC<FolioTiptapColumnViewProps> = ({
   return (
     <NodeViewWrapper>
       <NodeViewContent />
-      <ParagraphPlaceholder editor={editor} getPos={getPos} />
+      <ParagraphPlaceholder editor={editor} getPos={getPos} target="column" />
     </NodeViewWrapper>
   );
 };

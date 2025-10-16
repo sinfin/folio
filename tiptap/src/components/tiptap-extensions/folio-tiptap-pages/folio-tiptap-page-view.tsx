@@ -143,7 +143,7 @@ export const FolioTiptapPageView: React.FC<FolioTiptapPageViewProps> = ({
           </h2>
         ) : null}
         <NodeViewContent />
-        <ParagraphPlaceholder editor={editor} getPos={getPos} />
+        <ParagraphPlaceholder editor={editor} getPos={getPos} target="page" />
       </div>
 
       <span
