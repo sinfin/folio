@@ -3,13 +3,15 @@
 require "test_helper"
 
 class Folio::PublishableHintComponentTest < Folio::ComponentTest
-  def test_render_with_force
-    render_inline(Folio::PublishableHintComponent.new(force: true))
+  test "does not render for published record" do
+    page = create(:folio_page, published: true)
 
-    assert_selector(".folio-publishable-hint")
+    render_inline(Folio::PublishableHintComponent.new(record: page))
+
+    assert_no_selector(".folio-publishable-hint")
   end
 
-  def test_render_with_unpublished_page
+  test "renders for unpublished record" do
     page = create(:folio_page, published: false)
 
     render_inline(Folio::PublishableHintComponent.new(record: page))
@@ -17,25 +19,25 @@ class Folio::PublishableHintComponentTest < Folio::ComponentTest
     assert_selector(".folio-publishable-hint")
   end
 
-  def test_not_render_with_published_page
-    page = create(:folio_page, published: true)
-
-    render_inline(Folio::PublishableHintComponent.new(record: page))
-
-    assert_no_selector(".folio-publishable-hint")
-  end
-
-  def test_not_render_with_nil_record
+  test "does not render when record is nil and force is false" do
     render_inline(Folio::PublishableHintComponent.new(record: nil))
 
     assert_no_selector(".folio-publishable-hint")
   end
 
-  def test_render_with_force_overrides_published_page
-    page = create(:folio_page, published: true)
-
-    render_inline(Folio::PublishableHintComponent.new(record: page, force: true))
+  test "renders when force is true" do
+    render_inline(Folio::PublishableHintComponent.new(force: true))
 
     assert_selector(".folio-publishable-hint")
+  end
+
+  test "renders custom hint when provided" do
+    page = create(:folio_page, published: false)
+    custom_hint = "Custom warning message"
+
+    render_inline(Folio::PublishableHintComponent.new(record: page, hint: custom_hint))
+
+    assert_selector(".folio-publishable-hint")
+    assert_text(custom_hint)
   end
 end

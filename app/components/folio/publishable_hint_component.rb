@@ -4,7 +4,7 @@ class Folio::PublishableHintComponent < Folio::ApplicationComponent
   def initialize(record: nil, force: false, hint: nil)
     @record = record
     @force = force
-    @hint = hint || default_hint
+    @hint = hint
   end
 
   def render?
@@ -14,12 +14,11 @@ class Folio::PublishableHintComponent < Folio::ApplicationComponent
     true
   end
 
-  private
-    def default_hint
-      if controller.params[Folio::Publishable::PREVIEW_PARAM_NAME]
-        t(".preview_token_hint")
-      else
-        t(".hint")
-      end
+  def default_hint
+    if controller.params[Folio::Publishable::PREVIEW_PARAM_NAME]
+      t(".preview_token_hint")
+    else
+      t(".hint")
     end
+  end
 end
