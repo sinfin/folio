@@ -34,7 +34,7 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
                           id: @file ? @file.id : "",
                           loaded: true,
                           primary_action: @primary_action,
-                          selectable: @selectable,
+                          selectable: @selectable && allow_selection_for_site?,
                           editable: @editable,
                           destroyable: @destroyable,
                           batch_actions: @batch_actions,
@@ -182,6 +182,16 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
     @show_url ||= @file.is_a?(Folio::File) ? controller.folio.url_for([:console, @file]) : nil
   end
 
+  def allow_selection_for_site?
+    return false if @file.blank?
+
+    if @file.class.included_modules.include?(Folio::File::HasUsageConstraints)
+      @file.can_be_used_on_site?(Folio::Current.site) && !@file.usage_limit_exceeded?
+    else
+      true
+    end
+  end
+
   def primary_action_data
     return nil unless @primary_action
     return @primary_action_data if defined?(@primary_action_data)
@@ -191,7 +201,11 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
         stimulus_action({ click: "primaryAction" }, { url: show_url })
       end
     else
-      stimulus_action({ click: "primaryAction" })
+      if @primary_action.to_s != "index" && !allow_selection_for_site?
+        nil
+      else
+        stimulus_action({ click: "primaryAction" })
+      end
     end
   end
 
