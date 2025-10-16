@@ -56,7 +56,7 @@
     - if ::Rails.application.config.folio_users_use_address
       .row
         .col-lg-8
-          == cell('folio/console/addresses/fields', f)
+          == render(Folio::Console::Addresses::FieldsComponent.new(model: f.object))
 
     - if File.exist?(Rails.root.join("app/views/folio/console/users/_additional_form_fields.slim"))
       = render partial: "folio/console/users/additional_form_fields",

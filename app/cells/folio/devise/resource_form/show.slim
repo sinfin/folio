@@ -43,7 +43,7 @@
                             keep_password: true)
 
     - if show_address?(f)
-      == cell('folio/addresses/fields', f, model)
+      == render(Folio::Console::Addresses::FieldsComponent.new(model: f.object))
 
     = render(:_bottom)
 

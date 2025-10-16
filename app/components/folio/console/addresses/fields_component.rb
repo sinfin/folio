@@ -1,7 +1,14 @@
 # frozen_string_literal: true
 
-class Folio::Console::Addresses::FieldsCell < Folio::ConsoleCell
+class Folio::Console::Addresses::FieldsComponent < Folio::Console::ApplicationComponent
   include ActionView::Helpers::FormOptionsHelper
+
+  attr_reader :user, :options
+
+  def initialize(user:, **options)
+    @user = user
+    @options = options
+  end
 
   def cols
     options[:cols] || [
