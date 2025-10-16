@@ -60,7 +60,7 @@ class Folio::FileList::FileComponentTest < Folio::ComponentTest
   def test_allow_selection_for_site_returns_true_when_site_is_allowed
     if Rails.application.config.folio_shared_files_between_sites
       site1 = create(:folio_site, domain: "site1.localhost", type: "Folio::Site")
-      site2 = create(:folio_site, domain: "site2.localhost", type: "Folio::Site")
+      create(:folio_site, domain: "site2.localhost", type: "Folio::Site")
       file = create(:folio_file_image)
 
       Folio::FileSiteLink.create!(file:, site: site1)
@@ -74,7 +74,7 @@ class Folio::FileList::FileComponentTest < Folio::ComponentTest
 
   def test_allow_selection_for_site_returns_false_when_both_conditions_fail
     if Rails.application.config.folio_shared_files_between_sites
-      site1 = create(:folio_site, domain: "site1.localhost", type: "Folio::Site")
+      create(:folio_site, domain: "site1.localhost", type: "Folio::Site")
       site2 = create(:folio_site, domain: "site2.localhost", type: "Folio::Site")
       file = create(:folio_file_image, attribution_max_usage_count: 10, published_usage_count: 10)
       Folio::Current.site = site2
