@@ -14,7 +14,7 @@ import embedTypes from "@/../../data/embed/source/types.json";
 
 const EMBED_URL_PATTERNS = Object.entries(embedTypes).reduce(
   (acc, [type, pattern]) => {
-    acc[type] = new RegExp(`^${pattern}$`);
+    acc[type] = new RegExp(pattern);
     return acc;
   },
   {} as Record<string, RegExp>,
