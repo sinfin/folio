@@ -56,4 +56,11 @@ class Folio::Input::Embed::InnerComponent < ApplicationComponent
     def html_or_url_input_id
       "f-input-embed-inner__input-#{SecureRandom.hex(10)}"
     end
+
+    def hint
+      helpers.safe_join [
+        content_tag(:span, t(".hint"), class: "f-input-embed-inner__hint f-input-embed-inner__hint--regular"),
+        content_tag(:span, t(".invalid_url"), class: "f-input-embed-inner__hint f-input-embed-inner__hint--invalid"),
+      ]
+    end
 end

@@ -5,6 +5,6 @@ cs:
       embed:
         inner_component:
           hint: "Vložený kód nebo odkaz (např.: https://www.youtube.com/watch?v=video-id)"
-          invalid_url: "Neplatná URL. Zkuste jednu z podporovaných stránek:"
-          label: HTML kód nebo URL
+          invalid_url: Tento odkaz není podporovaný. Zkuste vložit HTML kód.
+          label: HTML kód nebo URL odkaz
           preview: Náhled

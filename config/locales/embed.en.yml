@@ -5,6 +5,6 @@ en:
       embed:
         inner_component:
           hint: "Embedded code or link (e.g., https://www.youtube.com/watch?v=video-id)"
-          invalid_url: "Invalid URL. Try one of the supported sites:"
+          invalid_url: This link is not supported. Please try pasting HTML code.
           label: HTML code or URL
           preview: Preview

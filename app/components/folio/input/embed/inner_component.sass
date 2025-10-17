@@ -14,8 +14,13 @@
     margin: 0
 
   &:not([data-f-input-embed-inner-state-value^="valid-"]) &__preview-wrap,
-  &:not([data-f-input-embed-inner-state-value="invalid-url"]) &__invalid-url
+  &[data-f-input-embed-inner-state-value="invalid-url"] &__hint--regular,
+  &:not([data-f-input-embed-inner-state-value="invalid-url"]) &__hint--invalid
     display: none
+
+  &[data-f-input-embed-inner-state-value="invalid-url"] .form-label,
+  &__hint--invalid
+    color: $danger
 
   &__table
     background: transparent

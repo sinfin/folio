@@ -356,7 +356,7 @@ cs:
     file: Soubor
     file_mime_type: Typ souboru
     first_name: Jméno
-    folio_embed_data: HTML kód nebo URL
+    folio_embed_data: HTML kód nebo URL odkaz
     headline: Titulek
     image_or_embed_placements: Obrázky galerie
     image_placements: Obrázky
