@@ -13,6 +13,15 @@
   background: transparent;
   font-size: 16px;
   overflow: hidden;
+  color: #000;
+}
+
+.f-embed-body--dark-background {
+  color: #fff;
+}
+
+.f-embed-body--dark-background a {
+  color: inherit;
 }
 
 .f-embed__loader {
@@ -37,6 +46,11 @@
 .f-embed__container--instagram .instagram-media-rendered ~ .f-embed__loader,
 .f-embed__container--twitter .twitter-tweet:not(.twitter-tweet-rendered) {
   display: none;
+}
+
+.twitter-tweet {
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .f-embed__loader:before,
