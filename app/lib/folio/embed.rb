@@ -10,7 +10,7 @@ module Folio
       SUPPORTED_TYPES.map do |type, regex|
         "(?<#{type}>#{regex.source})"
       end.join("|") +
-      ")$",
+      ")",
       Regexp::EXTENDED
     )
 
