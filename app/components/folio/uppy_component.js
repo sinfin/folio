@@ -1,4 +1,5 @@
 //= require folio/i18n
+//= require folio/parameterize
 //= require folio/remote_scripts
 
 window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controller {
@@ -55,6 +56,18 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
     delete this.uppy
   }
 
+  parameterizeFileName (fileName) {
+    if (!fileName) return fileName
+
+    return fileName.split('.').map((part) => {
+      return window.Folio.parameterize(part)
+    }).join('.')
+  }
+
+  s3BeforeUrl (file) {
+    return `/aws_file_handler/api/file/new/${this.parameterizeFileName(file.name)}`
+  }
+
   init () {
     if (this.uppy) return
 
@@ -102,21 +115,20 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
         target: document.body
       })
 
-      const args = { type: this.fileTypeValue }
-      if (this.existingIdValue) args.existing_id = this.existingIdValue
-
       this.uppy.use(window.Uppy.AwsS3, {
         shouldUseMultipart: false,
         getUploadParameters: (file) => {
-          return window.Folio.Api.apiPost('/folio/api/s3/before', { ...args, file_name: file.name })
+          return window.Folio.Api.apiGet(this.s3BeforeUrl(file))
             .then((response) => {
               file.name = response.file_name
               file.s3_path = response.s3_path
               file.jwt = response.jwt
+              file.id = response.id
 
               return {
                 method: 'PUT',
-                url: response.s3_url
+                url: response.s3_url,
+                id: response.id
               }
             })
             .catch((error) => {
