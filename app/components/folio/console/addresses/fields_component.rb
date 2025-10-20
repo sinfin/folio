@@ -2,6 +2,7 @@
 
 class Folio::Console::Addresses::FieldsComponent < Folio::Console::ApplicationComponent
   include ActionView::Helpers::FormOptionsHelper
+  include Folio::Cell::HtmlSafeFieldsFor
 
   attr_reader :model, :options
 
