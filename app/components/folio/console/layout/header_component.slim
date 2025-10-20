@@ -36,9 +36,7 @@
                              height: 16)
 
       - if Folio::Current.user
-        a.f-c-layout-header__current-user-link.text-reset[
-          href=controller.folio.console_current_user_path
-        ]
+        .f-c-layout-header__current-user-link.text-reset
           = folio_icon(:user_filled, height: 14)
           = Folio::Current.user.email
 
