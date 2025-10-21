@@ -427,6 +427,7 @@ cs:
       invalid_count: musí být přesně %{count}
       cannot_publish_with_files_over_usage_limit: "%{name} má vyčerpaný limit použití (%{limit})"
       cannot_publish_with_files_restricted_to_site: "%{name} není určen pro tuto stránku (povolený jen na: %{allowed_sites})"
+      cannot_publish_with_files_without_media_source: "%{name} nemá vyplněný zdroj médií"
       invalid_file_placement: nesplňuje požadavky
       invalid_file_placements: nesplňují požadavky
       invalid_subtitle_block: má nevalidní text na řádku %{line}

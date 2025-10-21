@@ -127,12 +127,14 @@ module Folio::File::HasUsageConstraints
         attribution_copyright: :copyright_text,
         attribution_max_usage_count: :max_usage_count
       }.each do |file_attr, media_source_attr|
-        if self.send(file_attr).blank? && media_source.send(media_source_attr).present?
+        if media_source.send(media_source_attr).present?
           self.send("#{file_attr}=", media_source.send(media_source_attr))
         end
       end
 
-      if Rails.application.config.folio_shared_files_between_sites && file_site_links.empty?
+      if Rails.application.config.folio_shared_files_between_sites
+        file_site_links.destroy_all
+
         media_source.allowed_sites.each do |site_obj|
           file_site_links.build(site: site_obj)
         end

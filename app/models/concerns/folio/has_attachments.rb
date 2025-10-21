@@ -384,6 +384,11 @@ module Folio::HasAttachments
                                    name: file.file_name,
                                    allowed_sites: file.allowed_sites.pluck(:title).join(", ")))
         end
+
+        if !file.media_source.present?
+          errors.add(:base, I18n.t("errors.messages.cannot_publish_with_files_without_media_source",
+                                   name: file.file_name))
+        end
       end
     end
 

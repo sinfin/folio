@@ -103,6 +103,86 @@ class Folio::File::HasUsageConstraintsTest < ActiveSupport::TestCase
     assert_empty Folio::File::Image.by_usage_constraints(nil)
   end
 
+  # media source prefilling
+  test "prefills attribution fields when media source is assigned" do
+    ms = media_source(title: "Getty Images")
+    ms.update!(
+      licence: "Commercial License",
+      copyright_text: "© 2024 Getty Images",
+      max_usage_count: 5
+    )
+
+    image = img(
+      attribution_source: ms.title,
+      attribution_licence: nil,
+      attribution_copyright: nil,
+      attribution_max_usage_count: nil
+    )
+
+    assert_equal ms, image.media_source
+    assert_equal "Commercial License", image.attribution_licence
+    assert_equal "© 2024 Getty Images", image.attribution_copyright
+    assert_equal 5, image.attribution_max_usage_count
+  end
+
+  test "replaces attribution fields when media source changes" do
+    ms1 = media_source(title: "Source A")
+    ms1.update!(licence: "License A", copyright_text: "Copyright A", max_usage_count: 1)
+
+    ms2 = create(:folio_media_source, title: "Source B", site: @site)
+    ms2.update!(licence: "License B", copyright_text: "Copyright B", max_usage_count: 10)
+
+    image = img(attribution_source: ms1.title)
+
+    # Initially has Source A data
+    assert_equal "License A", image.attribution_licence
+    assert_equal "Copyright A", image.attribution_copyright
+    assert_equal 1, image.attribution_max_usage_count
+
+    # Change to Source B
+    image.update!(attribution_source: ms2.title)
+
+    # Should replace with Source B data
+    assert_equal ms2, image.media_source
+    assert_equal "License B", image.attribution_licence
+    assert_equal "Copyright B", image.attribution_copyright
+    assert_equal 10, image.attribution_max_usage_count
+  end
+
+  # publishing validation
+  test "cannot publish article with images without media_source" do
+    article = create(:dummy_blog_article, site: @site, published: false)
+    image_without_source = img(media_source: nil, attribution_source: nil)
+
+    article.image_placements.create!(file: image_without_source)
+
+    article.published = true
+
+    assert_not article.valid?
+    assert article.errors[:base].any? { |msg| msg.include?(image_without_source.file_name) }
+  end
+
+  test "can publish article with images that have media_source" do
+    article = create(:dummy_blog_article, site: @site, published: false)
+    ms = media_source(title: "Getty Images")
+    image_with_source = img(media_source: ms, attribution_source: ms.title)
+
+    article.image_placements.create!(file: image_with_source)
+
+    article.published = true
+
+    assert article.valid?
+  end
+
+  test "can save unpublished article with images without media_source" do
+    article = create(:dummy_blog_article, site: @site, published: false)
+    image_without_source = img(media_source: nil, attribution_source: nil)
+
+    article.image_placements.create!(file: image_without_source)
+
+    assert article.valid?
+  end
+
   private
     def with_sharing(enabled, &block)
       with_config(folio_shared_files_between_sites: enabled) do
