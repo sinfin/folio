@@ -399,6 +399,25 @@ if (process.env.NODE_ENV !== "production" && window.parent === window) {
       readonly: false,
       folioTiptapConfig: {
         enable_pages: true,
+        styled_paragraph_variants: [
+          {
+            variant: "small",
+            title: {
+              cs: "Malý text",
+              en: "Small text",
+            },
+            icon: "arrow-down",
+          },
+          {
+            variant: "custom-heading",
+            class_name: "custom-heading",
+            tag: "h6",
+            title: {
+              cs: "Mezititulek",
+              en: "Custom heading",
+            },
+          },
+        ],
       },
       onCreate: ({ editor }: { editor: TiptapEditor }) => {
         const json = removeUniqueIdsFromFolioTiptapNodes(editor.getJSON());

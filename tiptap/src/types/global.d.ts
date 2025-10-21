@@ -68,6 +68,8 @@ declare global {
     variant: string;
     title: { cs: string; en: string };
     icon?: string;
+    tag?: string;
+    class_name?: string;
   }
 
   type StyledWrapVariantFromInput = StyledParagraphVariantFromInput;

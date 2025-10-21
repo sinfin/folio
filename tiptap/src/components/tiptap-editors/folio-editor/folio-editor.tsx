@@ -327,6 +327,7 @@ export function FolioEditor({
           ]
         : []),
       FolioTiptapStyledParagraph.configure({
+        variants: folioTiptapConfig["styled_paragraph_variants"] || [],
         variantCommands: folioTiptapStyledParagraphCommands,
       }),
       FolioTiptapStyledWrap.configure({

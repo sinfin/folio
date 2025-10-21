@@ -25,7 +25,6 @@ Folio::Page.class_eval do
                                     cs: "Mezititulek",
                                     en: "Custom heading",
                                   },
-                                  icon: "heading",
                                 },
                               ],
                               styled_wrap_variants: [{
