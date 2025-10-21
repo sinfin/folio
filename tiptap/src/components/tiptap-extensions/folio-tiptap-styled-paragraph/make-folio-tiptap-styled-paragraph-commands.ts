@@ -1,4 +1,10 @@
-import { AArrowDown, AArrowUp, Star, Heading } from "lucide-react";
+import {
+  AArrowDown,
+  AArrowUp,
+  Star,
+  Heading,
+  MessageSquareQuote,
+} from "lucide-react";
 import {
   HeadingOneIcon,
   HeadingTwoIcon,
@@ -22,6 +28,8 @@ export const makeFolioTiptapStyledParagraphCommands = (
         return AArrowDown;
       case "heading":
         return Heading;
+      case "message-square-quote":
+        return MessageSquareQuote;
     }
 
     switch (tagString) {
