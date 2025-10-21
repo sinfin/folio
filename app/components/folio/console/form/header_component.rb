@@ -21,7 +21,12 @@ class Folio::Console::Form::HeaderComponent < Folio::Console::ApplicationCompone
     @hide_fix_error_btn = hide_fix_error_btn
   end
 
-  def record
-    @f.try(:object) || @f
-  end
+  private
+    def record
+      return @record if defined?(@record)
+
+      @record = if @f.try(:object).is_a?(ActiveRecord::Base)
+        @f.object
+      end
+    end
 end

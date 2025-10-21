@@ -9,14 +9,17 @@
         h1.m-0 class=@title_class_name
           - if @title
             = @title
-          - elsif record.new_record?
-            = record.class.model_name.human
+          - elsif record
+            - if record.new_record?
+              = record.class.model_name.human
+            - else
+              = helpers.sanitize(record.to_label)
           - else
-            = sanitize(record.to_label)
+            ' Form
 
         - if @subtitle
           h2.f-c-form-header__h2
-            = sanitize(@subtitle)
+            = helpers.sanitize(@subtitle)
 
       - if @sti_badge && @f.try(:object)
         = render(Folio::Console::Ui::StiBadgeComponent.new(record: @f.object))

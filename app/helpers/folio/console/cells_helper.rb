@@ -27,21 +27,5 @@ module Folio
     def show_header(model, opts = {})
       cell("folio/console/show/header", model, opts).show.html_safe
     end
-
-    def form_header(f, opts = {}, &block)
-      if block_given?
-        opts[:right] = capture(&block)
-      end
-
-      render(Folio::Console::Form::HeaderComponent.new(f: f,
-                                                      title: opts[:title],
-                                                      title_class_name: opts[:title_class_name],
-                                                      subtitle: opts[:subtitle],
-                                                      left: opts[:left],
-                                                      right: opts[:right],
-                                                      sti_badge: opts[:sti_badge],
-                                                      tabs: opts[:tabs],
-                                                      hide_fix_error_btn: opts[:hide_fix_error_btn]))
-    end
   end
 end
