@@ -67,7 +67,8 @@
                                                                        collection: config && config[:collection],
                                                                        cleave: config && config[:as] == :integer,
                                                                        as: :file,
-                                                                       autocomplete: autocomplete_for(key:, config:)))
+                                                                       autocomplete: autocomplete_for(key:, config:),
+                                                                       warning: warning_for(key)))
 
       .f-c-files-show__collapsibles
         = render(Folio::Console::Ui::CollapsibleComponent.new(title: @file.class.human_attribute_name(:tag_list)))

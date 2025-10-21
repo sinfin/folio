@@ -1,5 +1,5 @@
 window.Folio.Stimulus.register('f-c-ui-in-place-input', class extends window.Stimulus.Controller {
-  static targets = ['content', 'inputWrap', 'contentWrap', 'contentInner']
+  static targets = ['content', 'inputWrap', 'contentWrap', 'contentInner', 'warning']
 
   static values = {
     editing: Boolean,
@@ -29,6 +29,11 @@ window.Folio.Stimulus.register('f-c-ui-in-place-input', class extends window.Sti
     this.contentInnerTarget.title = e.detail.label || e.detail.value || ''
     this.editingValue = false
     this.element.classList.add('f-c-ui-in-place-input--success')
+
+    // Hide warning if value is no longer blank
+    if (this.hasWarningTarget && (e.detail.label || e.detail.value)) {
+      this.warningTarget.remove()
+    }
 
     window.setTimeout(() => {
       this.element.classList.remove('f-c-ui-in-place-input--success')

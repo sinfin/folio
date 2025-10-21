@@ -41,7 +41,8 @@
   &__content-blank,
   &__content-prefix,
   &__toggle-ico,
-  &__success-ico
+  &__success-ico,
+  &__warning
     position: relative
     z-index: 2
 
@@ -52,11 +53,16 @@
       display: none
 
   &__toggle-ico,
-  &__success-ico
+  &__success-ico,
+  &__warning
     flex: 0 0 auto
 
   &__success-ico
     color: $success
+
+  &__warning
+    color: $warning
+    cursor: help
 
   &:not(&--success) &__success-ico,
   &--success &__toggle-ico
