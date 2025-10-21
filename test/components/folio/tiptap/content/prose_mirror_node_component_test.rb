@@ -559,6 +559,113 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
     assert_selector("p.f-tiptap-styled-paragraph[data-f-tiptap-styled-paragraph-variant='small']")
   end
 
+  test "render folio tiptap styled paragraph with custom tag and class" do
+    record = Folio::Page.new
+
+    # Mock the tiptap_config to include styled paragraph variants
+    def record.tiptap_config
+      @config ||= Folio::Tiptap::Config.new(
+        styled_paragraph_variants: [
+          {
+            variant: "custom-heading",
+            tag: "h6",
+            class_name: "custom-heading",
+            title: { cs: "Mezititulek", en: "Custom heading" }
+          },
+          {
+            variant: "small",
+            title: { cs: "Malý text", en: "Small text" }
+          }
+        ]
+      )
+    end
+
+    # Test custom tag and class
+    prose_mirror_node = {
+      "type" => "folioTiptapStyledParagraph",
+      "content" => [
+        {
+          "type" => "text",
+          "text" => "Custom heading content",
+        },
+      ],
+      "attrs" => {
+        "variant" => "custom-heading",
+      }
+    }
+
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: record, prose_mirror_node:))
+
+    # Should render as h6 with both base class and custom class
+    assert_selector("h6.f-tiptap-styled-paragraph.custom-heading[data-f-tiptap-styled-paragraph-variant='custom-heading']")
+    assert_text("Custom heading content")
+    assert_no_selector("p")
+  end
+
+  test "render folio tiptap styled paragraph with variant not in config" do
+    record = Folio::Page.new
+
+    # Mock the tiptap_config with only one variant
+    def record.tiptap_config
+      @config ||= Folio::Tiptap::Config.new(
+        styled_paragraph_variants: [
+          {
+            variant: "small",
+            title: { cs: "Malý text", en: "Small text" }
+          }
+        ]
+      )
+    end
+
+    # Test variant that's not in config - should fallback to default p tag
+    prose_mirror_node = {
+      "type" => "folioTiptapStyledParagraph",
+      "content" => [
+        {
+          "type" => "text",
+          "text" => "Unknown variant content",
+        },
+      ],
+      "attrs" => {
+        "variant" => "unknown-variant",
+      }
+    }
+
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: record, prose_mirror_node:))
+
+    # Should fallback to default p tag with base class only
+    assert_selector("p.f-tiptap-styled-paragraph[data-f-tiptap-styled-paragraph-variant='unknown-variant']")
+    assert_text("Unknown variant content")
+  end
+
+  test "render folio tiptap styled paragraph with empty config" do
+    record = Folio::Page.new
+
+    # Mock the tiptap_config with empty styled paragraph variants
+    def record.tiptap_config
+      @config ||= Folio::Tiptap::Config.new(styled_paragraph_variants: [])
+    end
+
+    prose_mirror_node = {
+      "type" => "folioTiptapStyledParagraph",
+      "content" => [
+        {
+          "type" => "text",
+          "text" => "Default content",
+        },
+      ],
+      "attrs" => {
+        "variant" => "some-variant",
+      }
+    }
+
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: record, prose_mirror_node:))
+
+    # Should fallback to default p tag
+    assert_selector("p.f-tiptap-styled-paragraph[data-f-tiptap-styled-paragraph-variant='some-variant']")
+    assert_text("Default content")
+  end
+
   test "render table node" do
     prose_mirror_node = {
       "type" => "table",
