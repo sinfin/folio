@@ -111,13 +111,26 @@ javascript:
       w.document.addEventListener("readystatechange", (event) => {
         callback()
       }, { once: true })
+
+      const receiveMessage = (e) => {
+        if (e.origin !== window.origin) return;
+        if (e.data.type !== 'atomsListeningToMessages') return
+
+        window.FolioConsole.Autosave.atomsListeningToMessages = true
+        window.removeEventListener('message', receiveMessage)
+        callback()
+      };
+
+      window.addEventListener('message', receiveMessage, false);
     }
 
     window.FolioConsole.Autosave.restoreUiState = ({ clear }) => {
       const string = window.sessionStorage.getItem('fCAutosaveUiState')
       if (!string) return
 
-      if (clear) window.sessionStorage.removeItem('fCAutosaveUiState')
+      if (clear && window.FolioConsole.Autosave.atomsListeningToMessages) {
+        window.sessionStorage.removeItem('fCAutosaveUiState')
+      }
 
       const data = JSON.parse(string)
 

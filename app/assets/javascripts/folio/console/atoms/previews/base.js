@@ -295,13 +295,17 @@
     });
   };
 
-  handleNewHtml = function () {
+  handleNewHtml = function (opts) {
     bindSortables()
     sendResizeMessage()
+    if (!opts || opts.scroll !== false) {
+      restoreScrollTop()
+    }
     return window.jQuery(document).trigger('folioConsoleReplacedHtml')
   }
 
   handleWillReplaceHtml = function () {
+    storeScrollTop()
     unbindSortables()
     return window.jQuery(document).trigger('folioConsoleWillReplaceHtml')
   }
@@ -436,6 +440,10 @@
   window.addEventListener('message', receiveMessage, false);
 
   $(function() {
+    window.parent.postMessage({
+      type: 'atomsListeningToMessages'
+    }, window.origin);
+
     setMediaQuery();
     handleNewHtml({
       scroll: false
