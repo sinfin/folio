@@ -1,4 +1,4 @@
-= render(Folio::PublishableHintComponent.new(record: @ancestry_any_unpublished || @page))
+= render(Folio::Publishable::HintComponent.new(record: @ancestry_any_unpublished || @page))
 
 - cache @cache_key
   .container

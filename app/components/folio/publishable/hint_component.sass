@@ -1,18 +1,21 @@
 $f-publishable-hint-position-fixed: false !default
 $f-publishable-hint-background: #ffc107 !default
 $f-publishable-hint-color: #000000 !default
+$f-publishable-hint-z-index: 1 !default
 
 .f-publishable-hint
-  font-weight: bold
-  text-align: center
-  color: $f-publishable-hint-color
   background: $f-publishable-hint-background
+  color: $f-publishable-hint-color
+  font-weight: bold
   padding: 15px
+  position: relative
+  text-align: center
+  z-index: $f-publishable-hint-z-index
 
   @if $f-publishable-hint-position-fixed
-    position: fixed
-    top: 0
     left: 0
-    right: 0
     min-width: 320px
+    position: fixed
+    right: 0
+    top: 0
     z-index: 9999

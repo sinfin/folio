@@ -51,9 +51,10 @@ en:
       settings:
         title: Settings
         title_long: Settings for site %{site}
-    publishable_hint_component:
-      hint: Until publishing, this page is visible to logged in administrators only.
-      preview_token_hint: Until publishing, this page is visible on this URL only.
+    publishable:
+      hint_component:
+        hint: Until publishing, this page is visible to logged in administrators only.
+        preview_token_hint: Until publishing, this page is visible on this URL only.
     image:
       sensitive_content_title: This image contains sensitive content. To see it, verify your age.
     sensitive_content_modal:

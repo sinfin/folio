@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::PublishableHintComponent < Folio::ApplicationComponent
+class Folio::Publishable::HintComponent < Folio::ApplicationComponent
   def initialize(record: nil, force: false, hint: nil)
     @record = record
     @force = force

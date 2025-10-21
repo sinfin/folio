@@ -4,4 +4,4 @@
 
   = render_atoms_in_molecules(@page.atoms_in_molecules)
 
-  = render(Folio::PublishableHintComponent.new(record: @page))
+  = render(Folio::Publishable::HintComponent.new(record: @page))

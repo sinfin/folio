@@ -28,7 +28,7 @@ All notable changes to this project will be documented in this file.
 - default console `show` action now redirects to `edit` - make sure you have your `show` actions explicitely defined on controllers and are not using `super`
 - Cells -> ViewComponents refactoring:
   - Folio::Console::Form::HeaderCell -> Folio::Console::Form::HeaderComponent
-  - Folio::PublishableHintCell -> Folio::PublishableHintComponent
+  - Folio::PublishableHintCell -> Folio::Publishable::HintComponent
 
 ## [6.5.1] - 2025-06-18
 
