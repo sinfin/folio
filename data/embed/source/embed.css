@@ -96,17 +96,24 @@
   display: block;
 }
 
+.f-embed__container--centered .instagram-media,
+.f-embed__container--centered .instagram-media-registered,
 .f-embed__container--centered iframe {
-  margin: 0 auto;
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.f-embed__container:has(.instagram-media-registered) iframe.instagram-media {
+  visibility: hidden;
 }
 
 .f-embed__container--instagram {
   min-height: 536px;
-  max-width: 326px;
 }
 
 .f-embed__container--twitter {
-  max-width: 550px;
   min-height: 320px;
 }
 
