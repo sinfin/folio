@@ -1,4 +1,4 @@
-import * as React from "react"
+import * as React from "react";
 
 export const TableToggleHeaderColumn = React.memo(
   ({ className, ...props }: React.SVGProps<SVGSVGElement>) => {
@@ -21,8 +21,8 @@ export const TableToggleHeaderColumn = React.memo(
           fill="currentColor"
         />
       </svg>
-    )
-  }
-)
+    );
+  },
+);
 
-TableToggleHeaderColumn.displayName = "TableToggleHeaderColumn"
+TableToggleHeaderColumn.displayName = "TableToggleHeaderColumn";

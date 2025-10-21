@@ -25,8 +25,5 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": [
-    "vite.config.ts",
-    "vite.config.*.ts"
-  ]
+  "include": ["vite.config.ts", "vite.config.*.ts"]
 }

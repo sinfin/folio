@@ -6,8 +6,8 @@ export const ParagraphCommand: FolioEditorCommand = {
   key: "paragraph",
   dontShowAsActiveInCollapsedToolbar: true,
   command: ({ chain }) => {
-    chain.setNode("paragraph")
-  }
-}
+    chain.setNode("paragraph");
+  },
+};
 
 export default ParagraphCommand;

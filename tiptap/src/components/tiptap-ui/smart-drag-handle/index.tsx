@@ -1,1 +1,1 @@
-export * from "./smart-drag-handle"
+export * from "./smart-drag-handle";

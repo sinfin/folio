@@ -6,12 +6,31 @@ Folio::Page.class_eval do
   end
 
   def tiptap_config
-    Folio::Tiptap::Config.new(styled_wrap_variants: [
-      {
-        variant: "gray-box",
-        title: { cs: "Šedý box", en: "Gray box" },
-        pages_component_class_name: "UnusedDummyClassNameToEnableInTiptap"
-      }
-    ])
+    Folio::Tiptap::Config.new(embed_node_class_name: "Dummy::Tiptap::Node::Embed",
+                              pages_component_class_name: "UnusedDummyClassNameToEnableInTiptap",
+                              styled_paragraph_variants: [
+                                {
+                                  variant: "small",
+                                  title: {
+                                    cs: "Malý text",
+                                    en: "Small text",
+                                  },
+                                  icon: "arrow-down",
+                                },
+                                {
+                                  variant: "custom-heading",
+                                  tag: "h5",
+                                  class_name: "custom-heading",
+                                  title: {
+                                    cs: "Mezititulek",
+                                    en: "Custom heading",
+                                  },
+                                },
+                              ],
+                              styled_wrap_variants: [{
+                                variant: "gray-box",
+                                title: { cs: "Šedý box",
+                                en: "Gray box" },
+                              }])
   end
 end

@@ -1,18 +1,20 @@
 import { findParentNode } from "@tiptap/core";
-import { Node } from "@tiptap/pm/model";
-import { type EditorState, TextSelection } from "@tiptap/pm/state";
+import { Node, NodeType, Schema } from "@tiptap/pm/model";
+import { type EditorState, TextSelection, Transaction } from "@tiptap/pm/state";
 
 import { FolioTiptapPageNode, FolioTiptapPagesNode } from "./index";
 
-export function createPage(pageType: any, pageContent = null, schema: any = null) {
+export function createPage(
+  pageType: NodeType,
+  pageContent = null,
+  schema: Schema | null = null,
+) {
   if (pageContent) {
     return pageType.createChecked({}, pageContent);
   }
 
   if (schema) {
-    const defaultContent = [
-      schema.nodes.heading.createChecked({ level: 2 }),
-    ];
+    const defaultContent = [schema.nodes.heading.createChecked({ level: 2 })];
 
     return pageType.createChecked({}, defaultContent);
   }
@@ -20,7 +22,7 @@ export function createPage(pageType: any, pageContent = null, schema: any = null
   return pageType.createAndFill({});
 }
 
-export function getPagesNodeTypes(schema: any) {
+export function getPagesNodeTypes(schema: Schema) {
   if (schema.cached.pagesNodeTypes) {
     return schema.cached.pagesNodeTypes;
   }
@@ -35,7 +37,11 @@ export function getPagesNodeTypes(schema: any) {
   return roles;
 }
 
-export function createPages(schema: any, pagesCount: any, pageContent = null) {
+export function createPages(
+  schema: Schema,
+  pagesCount: number,
+  pageContent = null,
+) {
   const types = getPagesNodeTypes(schema);
   const pages = [];
 
@@ -43,7 +49,6 @@ export function createPages(schema: any, pagesCount: any, pageContent = null) {
     const page = createPage(types.page, pageContent, schema);
 
     if (page) {
-      // @ts-ignore
       pages.push(page);
     }
   }
@@ -57,7 +62,7 @@ export function addOrDeletePage({
   type,
 }: {
   state: EditorState;
-  dispatch: any;
+  dispatch: (tr: Transaction) => void;
   type: "addBefore" | "addAfter" | "delete";
 }) {
   const maybePages = findParentNode(
@@ -69,16 +74,16 @@ export function addOrDeletePage({
 
   if (dispatch && maybePages && maybePage) {
     const pages = maybePages.node;
-    let pageIndex: null | number = null
+    let pageIndex: null | number = null;
 
     pages.content.forEach((childNode, _pos, index) => {
-      if (pageIndex !== null) return
+      if (pageIndex !== null) return;
 
       if (childNode === maybePage.node) {
         pageIndex = index;
-        return
+        return;
       }
-    })
+    });
 
     if (pageIndex === null) {
       console.warn("Current page not found in pages node");
@@ -94,7 +99,7 @@ export function addOrDeletePage({
       if (pagesJSON.content.length <= 2) {
         // Collect all content from all pages
         const allContent = [];
-        pagesJSON.content.forEach((page: { content: any[]; }) => {
+        pagesJSON.content.forEach((page: { content: Node[] }) => {
           if (page.content && page.content.length > 0) {
             allContent.push(...page.content);
           }
@@ -115,9 +120,7 @@ export function addOrDeletePage({
         );
 
         // Position cursor at the start of the replaced content
-        tr.setSelection(
-          TextSelection.near(tr.doc.resolve(maybePages.pos + 1)),
-        );
+        tr.setSelection(TextSelection.near(tr.doc.resolve(maybePages.pos + 1)));
 
         dispatch(tr);
         return true;
@@ -187,7 +190,7 @@ export function moveFolioTiptapPage({
   type,
 }: {
   state: EditorState;
-  dispatch: any;
+  dispatch: (tr: Transaction) => void;
   type: "up" | "down";
 }) {
   const maybePages = findParentNode(
@@ -281,7 +284,7 @@ export function toggleFolioTiptapPageCollapsed({
   getPos,
 }: {
   state: EditorState;
-  dispatch: any;
+  dispatch: (tr: Transaction) => void;
   node: Node;
   getPos: () => number | undefined;
 }) {
@@ -289,20 +292,16 @@ export function toggleFolioTiptapPageCollapsed({
     const currentCollapsed = node.attrs.collapsed || false;
 
     const tr = state.tr;
-    const pos = getPos()
+    const pos = getPos();
 
     if (typeof pos !== "number") {
       return false;
     }
 
-    tr.setNodeMarkup(
-      pos,
-      undefined,
-      {
-        ...node.attrs,
-        collapsed: !currentCollapsed,
-      }
-    );
+    tr.setNodeMarkup(pos, undefined, {
+      ...node.attrs,
+      collapsed: !currentCollapsed,
+    });
 
     dispatch(tr);
     return true;
@@ -317,7 +316,7 @@ export function goToPage({
   type,
 }: {
   state: EditorState;
-  dispatch: any;
+  dispatch: (tr: Transaction) => void;
   type: "before" | "after";
 }) {
   const maybePages = findParentNode(
@@ -333,13 +332,13 @@ export function goToPage({
     let currentIndex: null | number = null;
 
     pages.content.forEach((childNode, pos, index) => {
-      if (currentIndex !== null) return
+      if (currentIndex !== null) return;
 
       if (childNode === page) {
         currentIndex = index;
-        return
+        return;
       }
-    })
+    });
 
     if (currentIndex === null) {
       console.warn("Current page not found in pages node");

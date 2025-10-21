@@ -85,8 +85,7 @@ $enable-folio-dark-mode: true !default
 $enable-folio-dark-mode-based-on-prefers-color-scheme: true !default
 
 @if $enable-folio-dark-mode
-  [data-bs-theme="dark"],
-  .folio-inversed-loader
+  [data-bs-theme="dark"]
     --folio-loader-background: #{$folio-loader-inverse-background}
     --folio-loader-foreground: #{$folio-loader-inverse-foreground}
     --folio-loader-foreground-transparent: #{rgba($folio-loader-inverse-foreground, 0.2)}
@@ -97,3 +96,8 @@ $enable-folio-dark-mode-based-on-prefers-color-scheme: true !default
       --folio-loader-background: #{$folio-loader-inverse-background}
       --folio-loader-foreground: #{$folio-loader-inverse-foreground}
       --folio-loader-foreground-transparent: #{rgba($folio-loader-inverse-foreground, 0.2)}
+
+.folio-inversed-loader
+  --folio-loader-background: #{$folio-loader-inverse-background}
+  --folio-loader-foreground: #{$folio-loader-inverse-foreground}
+  --folio-loader-foreground-transparent: #{rgba($folio-loader-inverse-foreground, 0.2)}

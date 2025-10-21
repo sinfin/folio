@@ -94,16 +94,15 @@ window.Folio.Stimulus.register('f-c-files-subtitle-form', class extends window.S
         // Clean up accordion state for this language
         this.cleanupAccordionStateForLanguage(this.languageValue)
 
-        // Remove this component from DOM after successful deletion
-        if (this.element && this.element.parentNode) {
-          this.element.remove()
+        this.dispatch('subtitleDeleted', {
+          detail: { language: this.languageValue },
+          bubbles: true
+        })
 
-          // Notify parent component about deletion
-          this.dispatch('subtitleDeleted', {
-            detail: { language: this.languageValue },
-            bubbles: true
-          })
-        }
+        // Dispatch reload event to parent - parent will handle reloading via Stimulus action
+        this.dispatch('reload', {
+          bubbles: true
+        })
       }).catch((e) => {
         window.alert(window.FolioConsole.translations.errorGeneric.replace('%{message}', e.message))
       }).finally(() => {
@@ -123,15 +122,13 @@ window.Folio.Stimulus.register('f-c-files-subtitle-form', class extends window.S
     // Clean up accordion state for this language
     this.cleanupAccordionStateForLanguage(this.languageValue)
 
-    // Remove this component from DOM
+    this.dispatch('newSubtitleRemoved', {
+      detail: { language: this.languageValue },
+      bubbles: true
+    })
+
     if (this.element && this.element.parentNode) {
       this.element.remove()
-
-      // Notify parent component about removal
-      this.dispatch('newSubtitleRemoved', {
-        detail: { language: this.languageValue },
-        bubbles: true
-      })
     }
   }
 

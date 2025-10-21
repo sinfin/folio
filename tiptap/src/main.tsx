@@ -7,8 +7,8 @@ import App from "./App.tsx";
 
 import {
   addUniqueIdsToFolioTiptapNodes,
-  removeUniqueIdsFromFolioTiptapNodes
-} from '@/components/tiptap-extensions/folio-tiptap-node';
+  removeUniqueIdsFromFolioTiptapNodes,
+} from "@/components/tiptap-extensions/folio-tiptap-node";
 
 // Initialize the Folio namespace if it doesn't exist
 window.Folio = window.Folio || {};
@@ -16,13 +16,13 @@ window.Folio.Tiptap = window.Folio.Tiptap || {};
 window.Folio.Tiptap.root = window.Folio.Tiptap.root || null;
 
 window.Folio.Tiptap.getHeight = () => {
-  const editor = document.querySelector(".f-tiptap-editor")
+  const editor = document.querySelector(".f-tiptap-editor");
   if (!editor) return 0;
-  
+
   // Ensure we have a reasonable minimum height
   const height = editor.clientHeight;
   return Math.max(height, 150); // Minimum 150px height
-}
+};
 
 window.Folio.Tiptap.init = (props) => {
   if (window.Folio.Tiptap.root) {
@@ -63,10 +63,12 @@ window.Folio.Tiptap.init = (props) => {
     }
   };
 
-  let contentWithFolioTiptapNodeUniqueIds
+  let contentWithFolioTiptapNodeUniqueIds;
 
   if (props.content) {
-    contentWithFolioTiptapNodeUniqueIds = addUniqueIdsToFolioTiptapNodes(props.content);
+    contentWithFolioTiptapNodeUniqueIds = addUniqueIdsToFolioTiptapNodes(
+      props.content,
+    );
   }
 
   const folioTiptapConfigDefaults = {
@@ -74,7 +76,7 @@ window.Folio.Tiptap.init = (props) => {
     styled_paragraph_variants: [],
     styled_wrap_variants: [],
     enable_pages: false,
-  }
+  };
 
   const root = createRoot(props.node);
   root.render(
@@ -84,7 +86,11 @@ window.Folio.Tiptap.init = (props) => {
         onUpdate={onUpdate}
         defaultContent={contentWithFolioTiptapNodeUniqueIds}
         type={props.type}
-        folioTiptapConfig={props.folioTiptapConfig ? { ...folioTiptapConfigDefaults, ...props.folioTiptapConfig } : folioTiptapConfigDefaults}
+        folioTiptapConfig={
+          props.folioTiptapConfig
+            ? { ...folioTiptapConfigDefaults, ...props.folioTiptapConfig }
+            : folioTiptapConfigDefaults
+        }
         readonly={props.readonly}
         initialScrollTop={props.scrollTop || null}
         autosaveIndicatorInfo={props.autosaveIndicatorInfo}
@@ -164,9 +170,227 @@ if (process.env.NODE_ENV !== "production" && window.parent === window) {
   const rootElement = document.getElementById("folio-tiptap-dev-root");
 
   if (rootElement) {
-    const type = (rootElement as HTMLElement).dataset.tiptapType === "block" ? "block" : "rich-text"
+    const type =
+      (rootElement as HTMLElement).dataset.tiptapType === "block"
+        ? "block"
+        : "rich-text";
 
-    const defaultContent = type === "rich-text" ? {"type":"doc","content":[{"type":"paragraph","attrs":{"textAlign":null},"content":[{"type":"text","text":"Lorem 1 ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor "},{"type":"text","marks":[{"type":"link","attrs":{"href":"/asf","target":null,"rel":null,"class":null}}],"text":"incididunt ut labore"},{"type":"text","text":" et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}]}]} : {"type":"doc","content":[{"type":"paragraph","attrs":{"textAlign":null},"content":[{"type":"text","text":"Lorem 1 ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor "},{"type":"text","marks":[{"type":"link","attrs":{"href":"/asf","target":null,"rel":null,"class":null}}],"text":"incididunt ut labore"},{"type":"text","text":" et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}]},{"type":"table","content":[{"type":"tableRow","content":[{"type":"tableHeader","attrs":{"colspan":1,"rowspan":1,"colwidth":null},"content":[{"type":"paragraph","attrs":{"textAlign":null},"content":[{"type":"text","text":"1"}]}]},{"type":"tableHeader","attrs":{"colspan":1,"rowspan":1,"colwidth":null},"content":[{"type":"paragraph","attrs":{"textAlign":null},"content":[{"type":"text","text":"2"}]}]}]},{"type":"tableRow","content":[{"type":"tableCell","attrs":{"colspan":1,"rowspan":1,"colwidth":null},"content":[{"type":"paragraph","attrs":{"textAlign":null},"content":[{"type":"text","text":"3"}]}]},{"type":"tableCell","attrs":{"colspan":1,"rowspan":1,"colwidth":null},"content":[{"type":"paragraph","attrs":{"textAlign":null},"content":[{"type":"text","text":"4"}]}]}]}]},{"type":"paragraph","attrs":{"textAlign":null},"content":[{"type":"text","text":"Lorem 2 ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}]},{"type":"folioTiptapFloat","attrs":{"side":"left","size":"medium"},"content":[{"type":"folioTiptapFloatAside","content":[{"type":"paragraph","attrs":{"textAlign":null},"content":[{"type":"text","text":"Floated to the left lorem 2 ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "}]}]},{"type":"folioTiptapFloatMain","content":[{"type":"paragraph","attrs":{"textAlign":null},"content":[{"type":"text","text":"Lorem main ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.  proident, sunt in culpa qui officia deserunt mollit anim id est laborum, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}]}]}]},{"type":"paragraph","attrs":{"textAlign":null},"content":[{"type":"text","text":"Lorem 3 ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}]},{"type":"horizontalRule"},{"type":"paragraph","attrs":{"textAlign":null},"content":[{"type":"text","text":"Lorem 4 ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}]},{"type":"paragraph","attrs":{"textAlign":null},"content":[{"type":"text","text":"Lorem 5 ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}]},{"type":"paragraph","attrs":{"textAlign":null},"content":[{"type":"text","text":"Lorem 6 ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}]}]}
+    const defaultContent =
+      type === "rich-text"
+        ? {
+            type: "doc",
+            content: [
+              {
+                type: "paragraph",
+                attrs: { textAlign: null },
+                content: [
+                  {
+                    type: "text",
+                    text: "Lorem 1 ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor ",
+                  },
+                  {
+                    type: "text",
+                    marks: [
+                      {
+                        type: "link",
+                        attrs: {
+                          href: "/asf",
+                          target: null,
+                          rel: null,
+                          class: null,
+                        },
+                      },
+                    ],
+                    text: "incididunt ut labore",
+                  },
+                  {
+                    type: "text",
+                    text: " et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                  },
+                ],
+              },
+            ],
+          }
+        : {
+            type: "doc",
+            content: [
+              {
+                type: "paragraph",
+                attrs: { textAlign: null },
+                content: [
+                  {
+                    type: "text",
+                    text: "Lorem 1 ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor ",
+                  },
+                  {
+                    type: "text",
+                    marks: [
+                      {
+                        type: "link",
+                        attrs: {
+                          href: "/asf",
+                          target: null,
+                          rel: null,
+                          class: null,
+                        },
+                      },
+                    ],
+                    text: "incididunt ut labore",
+                  },
+                  {
+                    type: "text",
+                    text: " et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                  },
+                ],
+              },
+              {
+                type: "table",
+                content: [
+                  {
+                    type: "tableRow",
+                    content: [
+                      {
+                        type: "tableHeader",
+                        attrs: { colspan: 1, rowspan: 1, colwidth: null },
+                        content: [
+                          {
+                            type: "paragraph",
+                            attrs: { textAlign: null },
+                            content: [{ type: "text", text: "1" }],
+                          },
+                        ],
+                      },
+                      {
+                        type: "tableHeader",
+                        attrs: { colspan: 1, rowspan: 1, colwidth: null },
+                        content: [
+                          {
+                            type: "paragraph",
+                            attrs: { textAlign: null },
+                            content: [{ type: "text", text: "2" }],
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                  {
+                    type: "tableRow",
+                    content: [
+                      {
+                        type: "tableCell",
+                        attrs: { colspan: 1, rowspan: 1, colwidth: null },
+                        content: [
+                          {
+                            type: "paragraph",
+                            attrs: { textAlign: null },
+                            content: [{ type: "text", text: "3" }],
+                          },
+                        ],
+                      },
+                      {
+                        type: "tableCell",
+                        attrs: { colspan: 1, rowspan: 1, colwidth: null },
+                        content: [
+                          {
+                            type: "paragraph",
+                            attrs: { textAlign: null },
+                            content: [{ type: "text", text: "4" }],
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                type: "paragraph",
+                attrs: { textAlign: null },
+                content: [
+                  {
+                    type: "text",
+                    text: "Lorem 2 ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                  },
+                ],
+              },
+              {
+                type: "folioTiptapFloat",
+                attrs: { side: "left", size: "medium" },
+                content: [
+                  {
+                    type: "folioTiptapFloatAside",
+                    content: [
+                      {
+                        type: "paragraph",
+                        attrs: { textAlign: null },
+                        content: [
+                          {
+                            type: "text",
+                            text: "Floated to the left lorem 2 ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                  {
+                    type: "folioTiptapFloatMain",
+                    content: [
+                      {
+                        type: "paragraph",
+                        attrs: { textAlign: null },
+                        content: [
+                          {
+                            type: "text",
+                            text: "Lorem main ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.  proident, sunt in culpa qui officia deserunt mollit anim id est laborum, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                type: "paragraph",
+                attrs: { textAlign: null },
+                content: [
+                  {
+                    type: "text",
+                    text: "Lorem 3 ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                  },
+                ],
+              },
+              { type: "horizontalRule" },
+              {
+                type: "paragraph",
+                attrs: { textAlign: null },
+                content: [
+                  {
+                    type: "text",
+                    text: "Lorem 4 ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                  },
+                ],
+              },
+              {
+                type: "paragraph",
+                attrs: { textAlign: null },
+                content: [
+                  {
+                    type: "text",
+                    text: "Lorem 5 ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                  },
+                ],
+              },
+              {
+                type: "paragraph",
+                attrs: { textAlign: null },
+                content: [
+                  {
+                    type: "text",
+                    text: "Lorem 6 ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                  },
+                ],
+              },
+            ],
+          };
 
     window.Folio.Tiptap.init({
       node: rootElement,
@@ -175,6 +399,25 @@ if (process.env.NODE_ENV !== "production" && window.parent === window) {
       readonly: false,
       folioTiptapConfig: {
         enable_pages: true,
+        styled_paragraph_variants: [
+          {
+            variant: "small",
+            title: {
+              cs: "Malý text",
+              en: "Small text",
+            },
+            icon: "arrow-down",
+          },
+          {
+            variant: "custom-heading",
+            class_name: "custom-heading",
+            tag: "h6",
+            title: {
+              cs: "Mezititulek",
+              en: "Custom heading",
+            },
+          },
+        ],
       },
       onCreate: ({ editor }: { editor: TiptapEditor }) => {
         const json = removeUniqueIdsFromFolioTiptapNodes(editor.getJSON());

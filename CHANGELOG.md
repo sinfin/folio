@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- **Embed System**: Complete rewrite of embed functionality with new input and display components
+  - `EmbedInput` for form integration with real-time validation and preview
+  - `Folio::Embed::BoxComponent` for iframe-based display with lazy loading
+  - Support for YouTube, Instagram, Pinterest, and Twitter/X embeds via URL
+  - `Folio::Embed::Validation` concern for model validation
+  - Middleware serving pre-built HTML at `/folio/embed` for iframe content
+  - TipTap integration with embed node support
 - **Help Documents**: New feature for displaying Markdown documentation within the console interface
   - Configurable via `doc/help/index.yml` with support for categories, ordering, and custom paths
   - Full Markdown support including code highlighting, tables, and Mermaid diagrams

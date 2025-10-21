@@ -3,16 +3,10 @@ import { ReactRenderer } from "@tiptap/react";
 import { Editor } from "@tiptap/core";
 import type { Range } from "@tiptap/core";
 
-import { Pilcrow } from "lucide-react";
-
-import {
-  FolioTiptapCommandsList,
-} from "./folio-tiptap-commands-list";
+import { FolioTiptapCommandsList } from "./folio-tiptap-commands-list";
 import { FolioTiptapCommandsListBackdrop } from "./folio-tiptap-commands-list-backdrop";
 
-import { markIcons } from "@/components/tiptap-ui/mark-button/mark-button";
-
-import { ListsCommandGroup } from '@/components/tiptap-command-groups';
+import { ListsCommandGroup } from "@/components/tiptap-command-groups";
 
 export const normalizeString = (string: string) =>
   string
@@ -30,23 +24,38 @@ interface SuggestionProps {
   event: KeyboardEvent;
 }
 
-export const makeFolioTiptapCommandsSuggestionItems = (groups: FolioEditorCommandGroup[]) => {
+export const makeFolioTiptapCommandsSuggestionItems = (
+  groups: FolioEditorCommandGroup[],
+) => {
   return ({ query }: { editor: Editor; query: string }) => {
     const normalizedQuery = normalizeString(query);
 
     return translateAndNormalizeTitles(groups)
-      .map((group: FolioEditorCommandGroupForSuggestion): FolioEditorCommandGroupForSuggestion | null => {
-        const matchingCommands = group.commandsForSuggestion.filter((commandForSuggestion: FolioEditorCommandForSuggestion) => {
-          return commandForSuggestion.normalizedTitle.indexOf(normalizedQuery) !== -1;
-        });
+      .map(
+        (
+          group: FolioEditorCommandGroupForSuggestion,
+        ): FolioEditorCommandGroupForSuggestion | null => {
+          const matchingCommands = group.commandsForSuggestion.filter(
+            (commandForSuggestion: FolioEditorCommandForSuggestion) => {
+              return (
+                commandForSuggestion.normalizedTitle.indexOf(
+                  normalizedQuery,
+                ) !== -1
+              );
+            },
+          );
 
-        if (matchingCommands.length > 0) {
-          return { ...group, commandsForSuggestion: matchingCommands };
-        }
+          if (matchingCommands.length > 0) {
+            return { ...group, commandsForSuggestion: matchingCommands };
+          }
 
-        return null;
-      })
-      .filter((group): group is FolioEditorCommandGroupForSuggestion => group !== null);
+          return null;
+        },
+      )
+      .filter(
+        (group): group is FolioEditorCommandGroupForSuggestion =>
+          group !== null,
+      );
   };
 };
 
@@ -66,21 +75,23 @@ const translateAndNormalizeTitles = (
     return {
       title: groupTitle,
       key: group.key,
-      commandsForSuggestion: group.commands.map((command: FolioEditorCommand) => {
-        let itemTitle;
+      commandsForSuggestion: group.commands.map(
+        (command: FolioEditorCommand) => {
+          let itemTitle;
 
-        if (typeof command.title === "string") {
-          itemTitle = command.title;
-        } else {
-          itemTitle = command.title[lang] || command.title.en;
-        }
+          if (typeof command.title === "string") {
+            itemTitle = command.title;
+          } else {
+            itemTitle = command.title[lang] || command.title.en;
+          }
 
-        return {
-          ...command,
-          title: itemTitle,
-          normalizedTitle: normalizeString(itemTitle),
-        };
-      }),
+          return {
+            ...command,
+            title: itemTitle,
+            normalizedTitle: normalizeString(itemTitle),
+          };
+        },
+      ),
     } as FolioEditorCommandGroupForSuggestion;
   });
 };
@@ -118,15 +129,19 @@ export const folioTiptapCommandsSuggestionWithoutItems = {
 
       computePosition(virtualElement, component.element as HTMLElement, {
         placement,
-        middleware: [flip(), offset(12), size({
-          apply( { availableWidth, availableHeight, elements }) {
-            Object.assign((component!.element as HTMLElement).style, {
-              maxWidth: `${Math.max(0, availableWidth)}px`,
-              maxHeight: `${Math.max(0, availableHeight)}px`,
-              pointerEvents: "none",
-            });
-          },
-        })],
+        middleware: [
+          flip(),
+          offset(12),
+          size({
+            apply({ availableWidth, availableHeight }) {
+              Object.assign((component!.element as HTMLElement).style, {
+                maxWidth: `${Math.max(0, availableWidth)}px`,
+                maxHeight: `${Math.max(0, availableHeight)}px`,
+                pointerEvents: "none",
+              });
+            },
+          }),
+        ],
       }).then((pos) => {
         (component!.element as HTMLElement).dataset.placement = pos.placement;
         Object.assign((component!.element as HTMLElement).style, {
@@ -135,7 +150,7 @@ export const folioTiptapCommandsSuggestionWithoutItems = {
           zIndex: "11",
           position: pos.strategy === "fixed" ? "fixed" : "absolute",
           display: "flex",
-          flexDirection: "column"
+          flexDirection: "column",
         });
 
         Object.assign((backdrop!.element as HTMLElement).style, {
@@ -229,13 +244,20 @@ export const folioTiptapCommandsSuggestionWithoutItems = {
       },
     };
   },
-}
+};
 
-export const makeFolioTiptapCommandsSuggestion = ({ textStylesCommandGroup }: { textStylesCommandGroup: FolioEditorCommandGroup }) => {
-  return ({
+export const makeFolioTiptapCommandsSuggestion = ({
+  textStylesCommandGroup,
+}: {
+  textStylesCommandGroup: FolioEditorCommandGroup;
+}) => {
+  return {
     ...folioTiptapCommandsSuggestionWithoutItems,
-    items: makeFolioTiptapCommandsSuggestionItems([ textStylesCommandGroup, ListsCommandGroup ]),
-  })
+    items: makeFolioTiptapCommandsSuggestionItems([
+      textStylesCommandGroup,
+      ListsCommandGroup,
+    ]),
+  };
 };
 
 export default makeFolioTiptapCommandsSuggestion;

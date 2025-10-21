@@ -1,16 +1,17 @@
 import React from "react";
-import type { Editor } from "@tiptap/react";
-import type { Range } from "@tiptap/core";
-import { X } from 'lucide-react';
+import { X } from "lucide-react";
 
-import { type FolioTiptapCommandsListProps, type FolioTiptapCommandsListState } from "./folio-tiptap-commands-list";
+import {
+  type FolioTiptapCommandsListProps,
+  type FolioTiptapCommandsListState,
+} from "./folio-tiptap-commands-list";
 
 export class FolioTiptapCommandsListBackdrop extends React.Component<
   FolioTiptapCommandsListProps,
   FolioTiptapCommandsListState
 > {
-  close () {
-    console.log('close')
+  close() {
+    console.log("close");
 
     this.props.command({
       title: "",
@@ -18,11 +19,11 @@ export class FolioTiptapCommandsListBackdrop extends React.Component<
       icon: X,
       key: "commandListBackdrop",
       command: ({ chain }: { chain: FolioEditorCommandChain }) => {
-        console.log('commandListBackdrop', this.props.query)
+        console.log("commandListBackdrop", this.props.query);
         if (this.props.query) {
           // insert space to disable suggestion
-          console.log('insertContent')
-          chain.insertContent(` `)
+          console.log("insertContent");
+          chain.insertContent(` `);
         }
       },
     });
@@ -30,7 +31,10 @@ export class FolioTiptapCommandsListBackdrop extends React.Component<
 
   render() {
     return (
-      <div className="f-tiptap-commands-list-backdrop" onClick={() => this.close()} />
+      <div
+        className="f-tiptap-commands-list-backdrop"
+        onClick={() => this.close()}
+      />
     );
   }
 }

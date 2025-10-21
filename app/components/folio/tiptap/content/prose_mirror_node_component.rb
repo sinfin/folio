@@ -20,6 +20,8 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponent < ApplicationComponent
       if record.tiptap_config.pages_component_class_name
         @node_definition = { "component_name" => record.tiptap_config.pages_component_class_name }
       end
+    elsif @prose_mirror_node["type"] == "folioTiptapStyledParagraph"
+      @node_definition = build_styled_paragraph_definition
     else
       @node_definition = NODES[@prose_mirror_node["type"]]
     end
@@ -158,6 +160,49 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponent < ApplicationComponent
 
       if Rails.env.development? && ENV["FOLIO_DEBUG_TIPTAP_NODES"]
         raise e
+      end
+    end
+
+    def build_styled_paragraph_definition
+      variant = @prose_mirror_node.dig("attrs", "variant")
+      variant_config = find_variant_config(variant)
+
+      tag = variant_config&.dig(:tag) || variant_config&.dig("tag") || "p"
+      css_class = build_styled_paragraph_classes(variant_config)
+
+      definition = {
+        "tag" => tag,
+        "static_attrs" => {
+          "class" => css_class
+        }
+      }
+
+      if variant.present?
+        definition["static_attrs"]["data-f-tiptap-styled-paragraph-variant"] = variant
+      end
+
+      definition
+    end
+
+    def find_variant_config(variant)
+      return nil unless variant.present?
+      return nil unless @record.respond_to?(:tiptap_config)
+      return nil unless @record.tiptap_config.respond_to?(:styled_paragraph_variants)
+
+      variants = @record.tiptap_config.styled_paragraph_variants
+      return nil unless variants.is_a?(Array)
+
+      variants.find { |v| v[:variant] == variant || v["variant"] == variant }
+    end
+
+    def build_styled_paragraph_classes(variant_config)
+      base_class = "f-tiptap-styled-paragraph"
+      custom_class = variant_config&.dig(:class_name) || variant_config&.dig("class_name")
+
+      if custom_class.present?
+        "#{base_class} #{custom_class}"
+      else
+        base_class
       end
     end
 end

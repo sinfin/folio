@@ -50,20 +50,7 @@ div[
           class="f-c-file-placements-multi-picker-fields-placement__field--folio_embed_data"
           data=stimulus_target("embedFieldsWrap")
         ]
-          = @g.simple_fields_for :folio_embed_data, embed_data_with_defaults do |h|
-            = h.hidden_field :active, value: true, disabled: !embed?
-
-            = h.input :html,
-                      disabled: !embed?,
-                      as: :text,
-                      autosize: true,
-                      label: t('.embed_html_label'),
-                      wrapper_html: { class: ("form-group-invalid" if embed_data_has_errors?) },
-                      input_html: { value: embed_data_with_defaults["html"], rows: 1, class: ("is-invalid" if embed_data_has_errors?) }
-
-            - if embed_data_has_errors?
-              .invalid-feedback.d-block.m-0
-                = @g.object.errors[:folio_embed_data].join(', ')
+          = folio_embed_data_input(@g)
 
   span.f-c-file-placements-multi-picker-fields-placement__loader[
     class="folio-loader"

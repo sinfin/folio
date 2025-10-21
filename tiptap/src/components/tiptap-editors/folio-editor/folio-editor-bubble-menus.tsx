@@ -4,14 +4,13 @@ import { BubbleMenu } from "@tiptap/react/menus";
 import { type EditorState } from "@tiptap/pm/state";
 import type { Editor } from "@tiptap/core";
 
-import type { ButtonProps } from "@/components/tiptap-ui-primitive/button";
 import { Button } from "@/components/tiptap-ui-primitive/button";
 
 import { FOLIO_TIPTAP_COLUMNS_BUBBLE_MENU_SOURCE } from "@/components/tiptap-extensions/folio-tiptap-columns/folio-tiptap-columns-bubble-menu-source";
-import { TABLE_BUBBLE_MENU_SOURCE } from '@/lib/table-bubble-menu-source';
-import { FOLIO_TIPTAP_FLOAT_BUBBLE_MENU_SOURCE } from '@/components/tiptap-extensions/folio-tiptap-float';
-import { FOLIO_TIPTAP_NODE_BUBBLE_MENU_SOURCE } from '@/components/tiptap-extensions/folio-tiptap-node';
-import { FOLIO_TIPTAP_PAGES_BUBBLE_MENU_SOURCE } from '@/components/tiptap-extensions/folio-tiptap-pages';
+import { TABLE_BUBBLE_MENU_SOURCE } from "@/lib/table-bubble-menu-source";
+import { FOLIO_TIPTAP_FLOAT_BUBBLE_MENU_SOURCE } from "@/components/tiptap-extensions/folio-tiptap-float";
+import { FOLIO_TIPTAP_NODE_BUBBLE_MENU_SOURCE } from "@/components/tiptap-extensions/folio-tiptap-node";
+import { FOLIO_TIPTAP_PAGES_BUBBLE_MENU_SOURCE } from "@/components/tiptap-extensions/folio-tiptap-pages";
 
 import "./folio-editor-bubble-menus.scss";
 
@@ -36,11 +35,11 @@ export interface FolioEditorBubbleMenuSourceOffsetArgs {
   rects: {
     reference: {
       height: number;
-    }
+    };
     floating: {
       height: number;
-    }
-  }
+    };
+  };
 }
 
 export interface FolioEditorBubbleMenuSource {
@@ -49,9 +48,24 @@ export interface FolioEditorBubbleMenuSource {
   shouldShow: (params: FolioEditorBubbleMenuSourceShouldShowArgs) => boolean;
   items: FolioEditorBubbleMenuSourceItem[][];
   activeKeys?: (params: FolioEditorBubbleMenuSourceShouldShowArgs) => string[];
-  disabledKeys?: (params: FolioEditorBubbleMenuSourceShouldShowArgs) => string[];
+  disabledKeys?: (
+    params: FolioEditorBubbleMenuSourceShouldShowArgs,
+  ) => string[];
   offset?: (params: FolioEditorBubbleMenuSourceOffsetArgs) => number;
-  placement?: "top" | "right" | "bottom" | "left" | "top-start" | "top-end" | "right-start" | "right-end" | "bottom-start" | "bottom-end" | "left-start" | "left-end" | undefined;
+  placement?:
+    | "top"
+    | "right"
+    | "bottom"
+    | "left"
+    | "top-start"
+    | "top-end"
+    | "right-start"
+    | "right-end"
+    | "bottom-start"
+    | "bottom-end"
+    | "left-start"
+    | "left-end"
+    | undefined;
 }
 
 export function FolioEditorBubbleMenu({
@@ -67,60 +81,63 @@ export function FolioEditorBubbleMenu({
     placement: source.placement || "bottom",
     offset: source.offset || 12,
     flip: true,
-  }
+  };
 
-  const [activeKeys, setActiveKeys] = React.useState<string[]>([])
-  const [disabledKeys, setDisabledKeys] = React.useState<string[]>([])
+  const [activeKeys, setActiveKeys] = React.useState<string[]>([]);
+  const [disabledKeys, setDisabledKeys] = React.useState<string[]>([]);
 
   const registerMenu = (sourceKey: string, priority: number) => {
-    activeMenus.set(sourceKey, priority)
-  }
+    activeMenus.set(sourceKey, priority);
+  };
 
   const unregisterMenu = (sourceKey: string) => {
-    activeMenus.delete(sourceKey)
-  }
+    activeMenus.delete(sourceKey);
+  };
 
   const hasHighestPriority = (sourceKey: string, sourcePriority: number) => {
-    if (activeMenus.size === 0) return false
-    if (!activeMenus.has(sourceKey)) return false
+    if (activeMenus.size === 0) return false;
+    if (!activeMenus.has(sourceKey)) return false;
 
-    let highestPriority = -Infinity
-    for (const [id, priority] of activeMenus.entries()) {
+    let highestPriority = -Infinity;
+    for (const [, priority] of activeMenus.entries()) {
       if (priority > highestPriority) {
-        highestPriority = priority
+        highestPriority = priority;
       }
     }
 
-    return sourcePriority >= highestPriority
-  }
+    return sourcePriority >= highestPriority;
+  };
 
   return (
     <BubbleMenu
       pluginKey={source.pluginKey}
-      shouldShow={({ editor, state }: FolioEditorBubbleMenuSourceShouldShowArgs) => {
-        const wantsToShow = source.shouldShow({ editor, state })
-        let show = false
+      shouldShow={({
+        editor,
+        state,
+      }: FolioEditorBubbleMenuSourceShouldShowArgs) => {
+        const wantsToShow = source.shouldShow({ editor, state });
+        let show = false;
 
         if (wantsToShow) {
-          registerMenu(source.pluginKey, source.priority)
-          show = hasHighestPriority(source.pluginKey, source.priority)
+          registerMenu(source.pluginKey, source.priority);
+          show = hasHighestPriority(source.pluginKey, source.priority);
         } else {
-          unregisterMenu(source.pluginKey)
+          unregisterMenu(source.pluginKey);
         }
 
         if (show) {
           if (source.activeKeys) {
-            const newActiveKeys = source.activeKeys({ editor, state })
-            setActiveKeys(newActiveKeys)
+            const newActiveKeys = source.activeKeys({ editor, state });
+            setActiveKeys(newActiveKeys);
           }
 
           if (source.disabledKeys) {
-            const newDisabledKeys = source.disabledKeys({ editor, state })
-            setDisabledKeys(newDisabledKeys)
+            const newDisabledKeys = source.disabledKeys({ editor, state });
+            setDisabledKeys(newDisabledKeys);
           }
         }
 
-        return show
+        return show;
       }}
       options={floatingUiOptions}
       className="f-tiptap-editor-bubble-menu"
@@ -146,9 +163,13 @@ export function FolioEditorBubbleMenu({
                 data-active-state={active ? "on" : "off"}
                 aria-pressed={active}
                 tooltip={item.title}
-                onClick={disabled ? undefined : () => {
-                  item.command({ editor });
-                }}
+                onClick={
+                  disabled
+                    ? undefined
+                    : () => {
+                        item.command({ editor });
+                      }
+                }
               >
                 <Icon className="tiptap-button-icon" />
               </Button>
@@ -166,7 +187,7 @@ const BUBBLE_MENU_SOURCES = [
   FOLIO_TIPTAP_FLOAT_BUBBLE_MENU_SOURCE,
   FOLIO_TIPTAP_NODE_BUBBLE_MENU_SOURCE,
   FOLIO_TIPTAP_PAGES_BUBBLE_MENU_SOURCE,
-]
+];
 
 export function FolioEditorBubbleMenus({
   editor,
@@ -175,7 +196,7 @@ export function FolioEditorBubbleMenus({
   if (!editor) return null;
   if (!blockEditor) return null;
 
-  const activeMenus = new Map()
+  const activeMenus = new Map();
 
   return (
     <>

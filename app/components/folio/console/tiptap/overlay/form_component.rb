@@ -31,6 +31,8 @@ class Folio::Console::Tiptap::Overlay::FormComponent < Folio::Console::Applicati
         render_collection_select(f:, key:, attr_config:)
       when :relation
         render_relation_select(f:, key:, attr_config:)
+      when :embed
+        render_embed_input(f:, key:, attr_config:)
       else
         raise ArgumentError, "Unsupported input type: #{attr_config[:type]}"
       end
@@ -162,6 +164,11 @@ class Folio::Console::Tiptap::Overlay::FormComponent < Folio::Console::Applicati
               remote: true,
               label: @node.class.human_attribute_name(key),
               reflection_class_name: class_name
+    end
+
+    def render_embed_input(f:, key:, attr_config:)
+      f.input key, as: :embed,
+                   centered: true
     end
 
     def buttons_model

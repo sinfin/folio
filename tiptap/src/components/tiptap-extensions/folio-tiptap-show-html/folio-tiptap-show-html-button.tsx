@@ -39,7 +39,7 @@ export const FolioTiptapShowHtmlButton = React.forwardRef<
         );
       }
     },
-    [],
+    [editor],
   );
 
   const label = translate(TRANSLATIONS, "showHtml");

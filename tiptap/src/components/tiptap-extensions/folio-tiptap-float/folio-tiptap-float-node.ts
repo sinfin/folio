@@ -5,9 +5,7 @@ import {
   cancelFolioTiptapFloat,
   setFolioTiptapFloatAttributes,
   goToFolioTiptapFloatAsideOrMain,
-  type InsertFolioTiptapFloatArgs,
   type SetFloatLayoutAttributesAttrs,
-  type SetFloatLayoutAttributesArgs,
 } from "./folio-tiptap-float-utils";
 
 export * from "./folio-tiptap-float-node";
@@ -60,12 +58,12 @@ export const FolioTiptapFloatNode = Node.create({
   parseHTML() {
     return [
       {
-        tag: 'div.f-tiptap-float',
+        tag: "div.f-tiptap-float",
         getAttrs: (element) => {
-          if (typeof element === 'string') return false;
+          if (typeof element === "string") return false;
           return {
-            side: element.getAttribute('data-f-tiptap-float-side') || 'left',
-            size: element.getAttribute('data-f-tiptap-float-size') || 'medium',
+            side: element.getAttribute("data-f-tiptap-float-side") || "left",
+            size: element.getAttribute("data-f-tiptap-float-size") || "medium",
           };
         },
       },
@@ -77,7 +75,7 @@ export const FolioTiptapFloatNode = Node.create({
       "div",
       mergeAttributes(
         {
-          "class": "f-tiptap-float f-tiptap-avoid-external-layout",
+          class: "f-tiptap-float f-tiptap-avoid-external-layout",
           "data-f-tiptap-float-side": HTMLAttributes.side,
           "data-f-tiptap-float-size": HTMLAttributes.size,
         },
@@ -116,13 +114,13 @@ export const FolioTiptapFloatNode = Node.create({
 
   addKeyboardShortcuts() {
     return {
-      'Tab': () => {
+      Tab: () => {
         return goToFolioTiptapFloatAsideOrMain({
           state: this.editor.state,
           dispatch: this.editor.view.dispatch,
         });
       },
-      'Shift-Tab': () => {
+      "Shift-Tab": () => {
         return goToFolioTiptapFloatAsideOrMain({
           state: this.editor.state,
           dispatch: this.editor.view.dispatch,

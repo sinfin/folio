@@ -1,101 +1,101 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { Separator } from "@/components/tiptap-ui-primitive/separator"
-import "@/components/tiptap-ui-primitive/toolbar/toolbar.scss"
+import * as React from "react";
+import { Separator } from "@/components/tiptap-ui-primitive/separator";
+import "@/components/tiptap-ui-primitive/toolbar/toolbar.scss";
 
-type BaseProps = React.HTMLAttributes<HTMLDivElement>
+type BaseProps = React.HTMLAttributes<HTMLDivElement>;
 
 interface ToolbarProps extends BaseProps {
-  variant?: "floating" | "fixed"
+  variant?: "floating" | "fixed";
 }
 
 const mergeRefs = <T,>(
-  refs: Array<React.RefObject<T> | React.Ref<T> | null | undefined>
+  refs: Array<React.RefObject<T> | React.Ref<T> | null | undefined>,
 ): React.RefCallback<T> => {
   return (value) => {
     refs.forEach((ref) => {
       if (typeof ref === "function") {
-        ref(value)
+        ref(value);
       } else if (ref != null) {
-        ;(ref as React.MutableRefObject<T | null>).current = value
+        (ref as React.MutableRefObject<T | null>).current = value;
       }
-    })
-  }
-}
+    });
+  };
+};
 
 const useObserveVisibility = (
   ref: React.RefObject<HTMLElement | null>,
-  callback: () => void
+  callback: () => void,
 ): void => {
   React.useEffect(() => {
-    const element = ref.current
-    if (!element) return
+    const element = ref.current;
+    if (!element) return;
 
-    let isMounted = true
+    let isMounted = true;
 
     if (isMounted) {
-      requestAnimationFrame(callback)
+      requestAnimationFrame(callback);
     }
 
     const observer = new MutationObserver(() => {
       if (isMounted) {
-        requestAnimationFrame(callback)
+        requestAnimationFrame(callback);
       }
-    })
+    });
 
     observer.observe(element, {
       childList: true,
       subtree: true,
       attributes: true,
-    })
+    });
 
     return () => {
-      isMounted = false
-      observer.disconnect()
-    }
-  }, [ref, callback])
-}
+      isMounted = false;
+      observer.disconnect();
+    };
+  }, [ref, callback]);
+};
 
 const useToolbarKeyboardNav = (
-  toolbarRef: React.RefObject<HTMLDivElement | null>
+  toolbarRef: React.RefObject<HTMLDivElement | null>,
 ): void => {
   React.useEffect(() => {
-    const toolbar = toolbarRef.current
-    if (!toolbar) return
+    const toolbar = toolbarRef.current;
+    if (!toolbar) return;
 
     const getFocusableElements = () =>
       Array.from(
         toolbar.querySelectorAll<HTMLElement>(
-          'button:not([disabled]), [role="button"]:not([disabled]), [tabindex="0"]:not([disabled])'
-        )
-      )
+          'button:not([disabled]), [role="button"]:not([disabled]), [tabindex="0"]:not([disabled])',
+        ),
+      );
 
     const navigateToIndex = (
       e: KeyboardEvent,
       targetIndex: number,
-      elements: HTMLElement[]
+      elements: HTMLElement[],
     ) => {
-      e.preventDefault()
-      let nextIndex = targetIndex
+      e.preventDefault();
+      let nextIndex = targetIndex;
 
       if (nextIndex >= elements.length) {
-        nextIndex = 0
+        nextIndex = 0;
       } else if (nextIndex < 0) {
-        nextIndex = elements.length - 1
+        nextIndex = elements.length - 1;
       }
 
-      elements[nextIndex]?.focus()
-    }
+      elements[nextIndex]?.focus();
+    };
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      const focusableElements = getFocusableElements()
-      if (!focusableElements.length) return
+      const focusableElements = getFocusableElements();
+      if (!focusableElements.length) return;
 
-      const currentElement = document.activeElement as HTMLElement
-      const currentIndex = focusableElements.indexOf(currentElement)
+      const currentElement = document.activeElement as HTMLElement;
+      const currentIndex = focusableElements.indexOf(currentElement);
 
-      if (!toolbar.contains(currentElement)) return
+      if (!toolbar.contains(currentElement)) return;
 
       const keyActions: Record<string, () => void> = {
         ArrowRight: () =>
@@ -108,169 +108,169 @@ const useToolbarKeyboardNav = (
         Home: () => navigateToIndex(e, 0, focusableElements),
         End: () =>
           navigateToIndex(e, focusableElements.length - 1, focusableElements),
-      }
+      };
 
-      const action = keyActions[e.key]
+      const action = keyActions[e.key];
       if (action) {
-        action()
+        action();
       }
-    }
+    };
 
     const handleFocus = (e: FocusEvent) => {
-      const target = e.target as HTMLElement
+      const target = e.target as HTMLElement;
       if (toolbar.contains(target)) {
-        target.setAttribute("data-focus-visible", "true")
+        target.setAttribute("data-focus-visible", "true");
       }
-    }
+    };
 
     const handleBlur = (e: FocusEvent) => {
-      const target = e.target as HTMLElement
+      const target = e.target as HTMLElement;
       if (toolbar.contains(target)) {
-        target.removeAttribute("data-focus-visible")
+        target.removeAttribute("data-focus-visible");
       }
-    }
+    };
 
-    toolbar.addEventListener("keydown", handleKeyDown)
-    toolbar.addEventListener("focus", handleFocus, true)
-    toolbar.addEventListener("blur", handleBlur, true)
+    toolbar.addEventListener("keydown", handleKeyDown);
+    toolbar.addEventListener("focus", handleFocus, true);
+    toolbar.addEventListener("blur", handleBlur, true);
 
-    const focusableElements = getFocusableElements()
+    const focusableElements = getFocusableElements();
     focusableElements.forEach((element) => {
-      element.addEventListener("focus", handleFocus)
-      element.addEventListener("blur", handleBlur)
-    })
+      element.addEventListener("focus", handleFocus);
+      element.addEventListener("blur", handleBlur);
+    });
 
     return () => {
-      toolbar.removeEventListener("keydown", handleKeyDown)
-      toolbar.removeEventListener("focus", handleFocus, true)
-      toolbar.removeEventListener("blur", handleBlur, true)
+      toolbar.removeEventListener("keydown", handleKeyDown);
+      toolbar.removeEventListener("focus", handleFocus, true);
+      toolbar.removeEventListener("blur", handleBlur, true);
 
-      const focusableElements = getFocusableElements()
+      const focusableElements = getFocusableElements();
       focusableElements.forEach((element) => {
-        element.removeEventListener("focus", handleFocus)
-        element.removeEventListener("blur", handleBlur)
-      })
-    }
-  }, [toolbarRef])
-}
+        element.removeEventListener("focus", handleFocus);
+        element.removeEventListener("blur", handleBlur);
+      });
+    };
+  }, [toolbarRef]);
+};
 
 const useToolbarVisibility = (
-  ref: React.RefObject<HTMLDivElement | null>
+  ref: React.RefObject<HTMLDivElement | null>,
 ): boolean => {
-  const [isVisible, setIsVisible] = React.useState(true)
-  const isMountedRef = React.useRef(false)
+  const [isVisible, setIsVisible] = React.useState(true);
+  const isMountedRef = React.useRef(false);
 
   React.useEffect(() => {
-    isMountedRef.current = true
+    isMountedRef.current = true;
     return () => {
-      isMountedRef.current = false
-    }
-  }, [])
+      isMountedRef.current = false;
+    };
+  }, []);
 
   const checkVisibility = React.useCallback(() => {
-    if (!isMountedRef.current) return
+    if (!isMountedRef.current) return;
 
-    const toolbar = ref.current
-    if (!toolbar) return
+    const toolbar = ref.current;
+    if (!toolbar) return;
 
     // Check if any group has visible children
     const hasVisibleChildren = Array.from(toolbar.children).some((child) => {
-      if (!(child instanceof HTMLElement)) return false
+      if (!(child instanceof HTMLElement)) return false;
       if (child.getAttribute("role") === "group") {
-        return child.children.length > 0
+        return child.children.length > 0;
       }
-      return false
-    })
+      return false;
+    });
 
-    setIsVisible(hasVisibleChildren)
-  }, [ref])
+    setIsVisible(hasVisibleChildren);
+  }, [ref]);
 
-  useObserveVisibility(ref, checkVisibility)
-  return isVisible
-}
+  useObserveVisibility(ref, checkVisibility);
+  return isVisible;
+};
 
 const useGroupVisibility = (
-  ref: React.RefObject<HTMLDivElement | null>
+  ref: React.RefObject<HTMLDivElement | null>,
 ): boolean => {
-  const [isVisible, setIsVisible] = React.useState(true)
-  const isMountedRef = React.useRef(false)
+  const [isVisible, setIsVisible] = React.useState(true);
+  const isMountedRef = React.useRef(false);
 
   React.useEffect(() => {
-    isMountedRef.current = true
+    isMountedRef.current = true;
     return () => {
-      isMountedRef.current = false
-    }
-  }, [])
+      isMountedRef.current = false;
+    };
+  }, []);
 
   const checkVisibility = React.useCallback(() => {
-    if (!isMountedRef.current) return
+    if (!isMountedRef.current) return;
 
-    const group = ref.current
-    if (!group) return
+    const group = ref.current;
+    if (!group) return;
 
     const hasVisibleChildren = Array.from(group.children).some((child) => {
-      if (!(child instanceof HTMLElement)) return false
-      return true
-    })
+      if (!(child instanceof HTMLElement)) return false;
+      return true;
+    });
 
-    setIsVisible(hasVisibleChildren)
-  }, [ref])
+    setIsVisible(hasVisibleChildren);
+  }, [ref]);
 
-  useObserveVisibility(ref, checkVisibility)
-  return isVisible
-}
+  useObserveVisibility(ref, checkVisibility);
+  return isVisible;
+};
 
 const useSeparatorVisibility = (
-  ref: React.RefObject<HTMLDivElement | null>
+  ref: React.RefObject<HTMLDivElement | null>,
 ): boolean => {
-  const [isVisible, setIsVisible] = React.useState(true)
-  const isMountedRef = React.useRef(false)
+  const [isVisible, setIsVisible] = React.useState(true);
+  const isMountedRef = React.useRef(false);
 
   React.useEffect(() => {
-    isMountedRef.current = true
+    isMountedRef.current = true;
     return () => {
-      isMountedRef.current = false
-    }
-  }, [])
+      isMountedRef.current = false;
+    };
+  }, []);
 
   const checkVisibility = React.useCallback(() => {
-    if (!isMountedRef.current) return
+    if (!isMountedRef.current) return;
 
-    const separator = ref.current
-    if (!separator) return
+    const separator = ref.current;
+    if (!separator) return;
 
-    const prevSibling = separator.previousElementSibling as HTMLElement
-    const nextSibling = separator.nextElementSibling as HTMLElement
+    const prevSibling = separator.previousElementSibling as HTMLElement;
+    const nextSibling = separator.nextElementSibling as HTMLElement;
 
     if (!prevSibling || !nextSibling) {
-      setIsVisible(false)
-      return
+      setIsVisible(false);
+      return;
     }
 
     const areBothGroups =
       prevSibling.getAttribute("role") === "group" &&
-      nextSibling.getAttribute("role") === "group"
+      nextSibling.getAttribute("role") === "group";
 
     const haveBothChildren =
-      prevSibling.children.length > 0 && nextSibling.children.length > 0
+      prevSibling.children.length > 0 && nextSibling.children.length > 0;
 
-    setIsVisible(areBothGroups && haveBothChildren)
-  }, [ref])
+    setIsVisible(areBothGroups && haveBothChildren);
+  }, [ref]);
 
-  useObserveVisibility(ref, checkVisibility)
-  return isVisible
-}
+  useObserveVisibility(ref, checkVisibility);
+  return isVisible;
+};
 
 export const Toolbar = React.forwardRef<HTMLDivElement, ToolbarProps>(
   ({ children, className, variant = "fixed", ...props }, ref) => {
-    const toolbarRef = React.useRef<HTMLDivElement>(null)
-    const isVisible = useToolbarVisibility(toolbarRef)
+    const toolbarRef = React.useRef<HTMLDivElement>(null);
+    const isVisible = useToolbarVisibility(toolbarRef);
 
-    useToolbarKeyboardNav(toolbarRef)
+    useToolbarKeyboardNav(toolbarRef);
 
     // console.log('toolbar rendered', Number(new Date()))
 
-    if (!isVisible) return null
+    if (!isVisible) return null;
 
     return (
       <div
@@ -283,18 +283,18 @@ export const Toolbar = React.forwardRef<HTMLDivElement, ToolbarProps>(
       >
         {children}
       </div>
-    )
-  }
-)
+    );
+  },
+);
 
-Toolbar.displayName = "Toolbar"
+Toolbar.displayName = "Toolbar";
 
 export const ToolbarGroup = React.forwardRef<HTMLDivElement, BaseProps>(
   ({ children, className, ...props }, ref) => {
-    const groupRef = React.useRef<HTMLDivElement>(null)
-    const isVisible = useGroupVisibility(groupRef)
+    const groupRef = React.useRef<HTMLDivElement>(null);
+    const isVisible = useGroupVisibility(groupRef);
 
-    if (!isVisible) return null
+    if (!isVisible) return null;
 
     return (
       <div
@@ -305,18 +305,18 @@ export const ToolbarGroup = React.forwardRef<HTMLDivElement, BaseProps>(
       >
         {children}
       </div>
-    )
-  }
-)
+    );
+  },
+);
 
-ToolbarGroup.displayName = "ToolbarGroup"
+ToolbarGroup.displayName = "ToolbarGroup";
 
 export const ToolbarSeparator = React.forwardRef<HTMLDivElement, BaseProps>(
   ({ ...props }, ref) => {
-    const separatorRef = React.useRef<HTMLDivElement>(null)
-    const isVisible = useSeparatorVisibility(separatorRef)
+    const separatorRef = React.useRef<HTMLDivElement>(null);
+    const isVisible = useSeparatorVisibility(separatorRef);
 
-    if (!isVisible) return null
+    if (!isVisible) return null;
 
     return (
       <Separator
@@ -325,8 +325,8 @@ export const ToolbarSeparator = React.forwardRef<HTMLDivElement, BaseProps>(
         decorative
         {...props}
       />
-    )
-  }
-)
+    );
+  },
+);
 
-ToolbarSeparator.displayName = "ToolbarSeparator"
+ToolbarSeparator.displayName = "ToolbarSeparator";

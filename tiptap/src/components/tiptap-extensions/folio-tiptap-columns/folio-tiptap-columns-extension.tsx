@@ -1,5 +1,5 @@
-import { Extension } from '@tiptap/core';
+import { Extension } from "@tiptap/core";
 
-export const FolioTiptapColumnsExtension = Extension.create<any>({
-  name: 'folioTiptapColumnsExtension',
+export const FolioTiptapColumnsExtension = Extension.create({
+  name: "folioTiptapColumnsExtension",
 });

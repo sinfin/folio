@@ -154,6 +154,7 @@ The `Node` models are defined by calling `tiptap_node` method which uses the `Fo
 - `:integer`: Integer attributes with automatic type conversion and validation
 - `:rich_text`: JSON-stored rich text content (nested Tiptap structure)
 - `:url_json`: URL with metadata (href, title, target, etc.)
+- `:embed`: Embed data with support for various platforms (YouTube, Instagram, etc.)
 - `[]`: Collection to pick from.
 - `:image`, `:document`, `:audio_cover`, `:video_cover`: Single Folio file attachments
 - `:images`, `:documents`: Multiple Folio file attachments
@@ -166,6 +167,7 @@ All compact definitions are internally converted to hash format:
 - `{ type: :integer }`: Integer attributes with automatic type conversion and validation
 - `{ type: :rich_text }`: JSON-stored rich text content
 - `{ type: :url_json }`: URL with metadata
+- `{ type: :embed }`: Embed data with automatic normalization and validation
 - `{ type: :collection, collection: [...] }`: Collection to pick from
 - `{ type: :folio_attachment, file_type: "Folio::File::Image", has_many: false, ... }`: File attachments
 - `{ type: :relation, class_name: "Model", has_many: false }`: Model relationships
@@ -184,6 +186,7 @@ class MyApp::ExampleNode < Folio::Tiptap::Node
     priority: :integer,
     content: :rich_text,
     button_url: :url_json,
+    folio_embed_data: :embed,
     background: %w[gray blue red],
     cover: :image,
     documents: :documents,
@@ -198,6 +201,7 @@ class MyApp::ExampleNode < Folio::Tiptap::Node
     title: { type: :string },
     content: { type: :rich_text },
     button_url: { type: :url_json },
+    folio_embed_data: { type: :embed },
     background: { type: :collection, collection: %w[gray blue red] },
     cover: { 
       type: :folio_attachment,
@@ -216,6 +220,35 @@ class MyApp::ExampleNode < Folio::Tiptap::Node
   }
 end
 ```
+
+#### Embed Attribute Behavior
+
+Embed attributes (`:embed` or `{ type: :embed }`) provide social media and video embed functionality with automatic normalization:
+
+- **Accepted input types**: Hash, String (JSON), or nil
+- **Normalization**: Uses `Folio::Embed.normalize_value()` to ensure proper format
+- **Structure**: Results in a hash with `active`, `html`, `type`, and `url` fields
+- **Validation**: Only active embeds with valid data are preserved
+- **HTML Sanitization**: Configured for unsafe HTML handling (embed content)
+
+```rb
+node = MyApp::ExampleNode.new
+node.folio_embed_data = {
+  "active" => true,
+  "type" => "youtube",
+  "url" => "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+  "html" => "<iframe>...</iframe>"
+}
+
+# JSON string input
+node.folio_embed_data = '{"active": true, "type": "youtube", "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"}'
+
+# Inactive embeds return nil
+node.folio_embed_data = { "active" => false }
+node.folio_embed_data  # => nil
+```
+
+**Supported embed types**: YouTube, Instagram, Pinterest, Twitter/X. The `Folio::Embed` module handles URL detection and validation for supported platforms.
 
 #### Integer Attribute Behavior
 
@@ -653,3 +686,5 @@ Tiptap development happens in the `tiptap` directory. It's developed as a separa
 To develop, run `npm install` and `npm run dev` in the `tiptap` directory. That starts a http://localhost:5173/ server.
 
 In case you need to develop folio-specific integrations, you can set the `FOLIO_TIPTAP_DEV=1` ENV value and  start the rails server (i.e. `FOLIO_TIPTAP_DEV=1 r s`). That uses the http://localhost:5173/ server instead of the `Folio::TiptapController` as the iframe src.
+
+Before committing changes, run `npm run build:check` to validate TypeScript compilation without generating output files.

@@ -7,7 +7,7 @@ window.Folio.Stimulus.register('f-c-tiptap-overlay-form', class extends window.S
 
   connect () {
     window.setTimeout(() => {
-      const firstInput = this.element.querySelector('.form-control')
+      const firstInput = this.element.querySelector('.form-control:not([hidden]):not([disabled])')
 
       if (firstInput) {
         firstInput.focus()

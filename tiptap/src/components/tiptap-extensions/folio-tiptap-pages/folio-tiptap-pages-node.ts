@@ -1,50 +1,52 @@
-import { Node, mergeAttributes } from '@tiptap/core';
-import { TextSelection } from '@tiptap/pm/state';
+import { Node, mergeAttributes } from "@tiptap/core";
+import { ReactNodeViewRenderer } from "@tiptap/react";
+import { TextSelection } from "@tiptap/pm/state";
 
 import {
   addOrDeletePage,
   createPages,
   goToPage,
-  moveFolioTiptapPage
-} from './folio-tiptap-pages-utils';
+  moveFolioTiptapPage,
+} from "./folio-tiptap-pages-utils";
+import { FolioTiptapPagesView } from "./folio-tiptap-pages-view";
 
-export * from './folio-tiptap-page-node';
+export * from "./folio-tiptap-page-node";
 
 export const TRANSLATIONS = {
   cs: {
     label: "Stránkovaný obsah",
   },
   en: {
-    label: "Paged content"
-  }
-}
+    label: "Paged content",
+  },
+};
 
-declare module '@tiptap/core' {
+declare module "@tiptap/core" {
   interface Commands<ReturnType> {
     pages: {
-      insertFolioTiptapPages: () => ReturnType
-      addFolioTiptapPageBefore: () => ReturnType
-      addFolioTiptapPageAfter: () => ReturnType
-      deleteFolioTiptapPage: () => ReturnType
-      moveFolioTiptapPageUp: () => ReturnType
-      moveFolioTiptapPageDown: () => ReturnType
-    }
+      insertFolioTiptapPages: () => ReturnType;
+      addFolioTiptapPageBefore: () => ReturnType;
+      addFolioTiptapPageAfter: () => ReturnType;
+      deleteFolioTiptapPage: () => ReturnType;
+      moveFolioTiptapPageUp: () => ReturnType;
+      moveFolioTiptapPageDown: () => ReturnType;
+    };
   }
 }
 
 export const FolioTiptapPagesNode = Node.create({
-  name: 'folioTiptapPages',
-  group: 'block',
+  name: "folioTiptapPages",
+  group: "block",
   defining: true,
   isolating: true,
   allowGapCursor: false,
-  content: 'folioTiptapPage{2,}',
+  content: "folioTiptapPage{2,}",
   draggable: true,
 
   addOptions() {
     return {
       HTMLAttributes: {
-        class: 'f-tiptap-pages',
+        class: "f-tiptap-pages",
       },
     };
   },
@@ -52,76 +54,95 @@ export const FolioTiptapPagesNode = Node.create({
   parseHTML() {
     return [
       {
-        tag: 'div.f-tiptap-pages',
+        tag: "div.f-tiptap-pages",
       },
     ];
   },
 
   renderHTML({ HTMLAttributes }) {
-    return ['div', mergeAttributes({
-      "class": "f-tiptap-pages",
-    }, this.options.HTMLAttributes, HTMLAttributes), 0];
+    return [
+      "div",
+      mergeAttributes(
+        {
+          class: "f-tiptap-pages",
+        },
+        this.options.HTMLAttributes,
+        HTMLAttributes,
+      ),
+      0,
+    ];
   },
 
   addCommands() {
     return {
       insertFolioTiptapPages:
         () =>
-          ({ tr, dispatch, editor }) => {
-            const node = createPages(editor.schema, 2);
+        ({ tr, dispatch, editor }) => {
+          const node = createPages(editor.schema, 2);
 
-            if (dispatch) {
-              const offset = tr.selection.anchor + 1;
+          if (dispatch) {
+            const offset = tr.selection.anchor + 1;
 
-              tr.replaceSelectionWith(node)
-                .scrollIntoView()
-                .setSelection(TextSelection.near(tr.doc.resolve(offset)));
-            }
+            tr.replaceSelectionWith(node)
+              .scrollIntoView()
+              .setSelection(TextSelection.near(tr.doc.resolve(offset)));
+          }
 
-            return true;
-          },
+          return true;
+        },
       addFolioTiptapPageBefore:
         () =>
-          ({ dispatch, state }) => {
-            return addOrDeletePage({ dispatch, state, type: 'addBefore' });
-          },
+        ({ dispatch, state }: CommandParams) => {
+          if (!dispatch) return false;
+          return addOrDeletePage({ dispatch, state, type: "addBefore" });
+        },
       addFolioTiptapPageAfter:
         () =>
-          ({ dispatch, state }) => {
-            return addOrDeletePage({ dispatch, state, type: 'addAfter' });
-          },
+        ({ dispatch, state }: CommandParams) => {
+          if (!dispatch) return false;
+          return addOrDeletePage({ dispatch, state, type: "addAfter" });
+        },
       deleteFolioTiptapPage:
         () =>
-          ({ dispatch, state }) => {
-            return addOrDeletePage({ dispatch, state, type: 'delete' });
-          },
+        ({ dispatch, state }: CommandParams) => {
+          if (!dispatch) return false;
+          return addOrDeletePage({ dispatch, state, type: "delete" });
+        },
       moveFolioTiptapPageUp:
         () =>
-          ({ dispatch, state }) => {
-            return moveFolioTiptapPage({ state, dispatch, type: 'up' });
-          },
+        ({ dispatch, state }: CommandParams) => {
+          if (!dispatch) return false;
+          return moveFolioTiptapPage({ state, dispatch, type: "up" });
+        },
       moveFolioTiptapPageDown:
         () =>
-          ({ dispatch, state }) => {
-            return moveFolioTiptapPage({ state, dispatch, type: 'down' });
-          },
+        ({ dispatch, state }: CommandParams) => {
+          if (!dispatch) return false;
+          return moveFolioTiptapPage({ state, dispatch, type: "down" });
+        },
     };
+  },
+
+  addNodeView() {
+    return ReactNodeViewRenderer(FolioTiptapPagesView, {
+      className: "node-folioTiptapPages f-tiptap-pages",
+    });
   },
 
   addKeyboardShortcuts() {
     return {
-      'Tab': () => {
+      Tab: () => {
         return goToPage({
           state: this.editor.state,
           dispatch: this.editor.view.dispatch,
-          type: 'after',
+          type: "after",
         });
       },
-      'Shift-Tab': () => {
+      "Shift-Tab": () => {
         return goToPage({
           state: this.editor.state,
           dispatch: this.editor.view.dispatch,
-          type: 'before',
+          type: "before",
         });
       },
     };

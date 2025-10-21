@@ -25,10 +25,16 @@ export function findElementNextToCoords(options: FindElementNextToCoords) {
 
     if (relevantElements.length > 0) {
       let currentElement = relevantElements[0];
-      let currentDepthOneElement = currentElement
-      let sanity = 100
+      let currentDepthOneElement = currentElement;
+      let sanity = 100;
 
-      while (sanity > 0 && currentDepthOneElement.parentElement && !currentDepthOneElement.parentElement.classList.contains('f-tiptap-editor__tiptap-editor')) {
+      while (
+        sanity > 0 &&
+        currentDepthOneElement.parentElement &&
+        !currentDepthOneElement.parentElement.classList.contains(
+          "f-tiptap-editor__tiptap-editor",
+        )
+      ) {
         currentDepthOneElement = currentDepthOneElement.parentElement;
         sanity--;
       }
@@ -51,7 +57,9 @@ export function findElementNextToCoords(options: FindElementNextToCoords) {
 
         // If we couldn't find a node at depth 1, fall back to the original logic
         if (!targetNode) {
-          targetNode = editor.state.doc.nodeAt(Math.max(documentPosition - 1, 0));
+          targetNode = editor.state.doc.nodeAt(
+            Math.max(documentPosition - 1, 0),
+          );
 
           if (!targetNode) {
             targetNode = editor.state.doc.nodeAt(Math.max(documentPosition, 0));

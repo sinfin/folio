@@ -41,13 +41,13 @@ class TiptapInput < SimpleForm::Inputs::StringInput
     merged_input_options = merge_wrapper_options(input_html_options, wrapper_options)
 
     src = if ENV["FOLIO_TIPTAP_DEV"]
-      stylesheet_url = if ENV["FOLIO_TIPTAP_DEV"]
-        site = Folio::Current.site
-        path = site.layout_assets_stylesheets_path
-        "#{site.env_aware_root_url}#{@builder.template.stylesheet_path(path)}"
-      end
+      site = Folio::Current.site
 
-      "http://localhost:5173/?folio-iframe=#{tiptap_type}&folio-iframe-stylesheet-url=#{stylesheet_url}"
+      stylesheet_url = "#{site.env_aware_root_url}#{@builder.template.stylesheet_path(site.layout_assets_stylesheets_path)}"
+      javascript_url = "#{site.env_aware_root_url}#{@builder.template.javascript_path(site.layout_assets_javascripts_path)}"
+
+
+      "http://localhost:5173/?folio-iframe=#{tiptap_type}&folio-iframe-stylesheet-url=#{stylesheet_url}&folio-iframe-javascript-url=#{javascript_url}"
     else
       "/folio-tiptap/#{tiptap_type}-editor"
     end

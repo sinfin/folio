@@ -1,5 +1,5 @@
-import * as React from "react"
-import type { Placement } from "@floating-ui/react"
+import * as React from "react";
+import type { Placement } from "@floating-ui/react";
 import {
   autoUpdate,
   flip,
@@ -18,39 +18,39 @@ import {
   useMergeRefs,
   useRole,
   useTypeahead,
-} from "@floating-ui/react"
-import "@/components/tiptap-ui-primitive/dropdown-menu/dropdown-menu.scss"
-import { Separator } from "@/components/tiptap-ui-primitive/separator"
+} from "@floating-ui/react";
+import "@/components/tiptap-ui-primitive/dropdown-menu/dropdown-menu.scss";
+import { Separator } from "@/components/tiptap-ui-primitive/separator";
 
 interface DropdownMenuOptions {
-  initialOpen?: boolean
-  open?: boolean
-  onOpenChange?: (open: boolean) => void
-  side?: "top" | "right" | "bottom" | "left"
-  align?: "start" | "center" | "end"
+  initialOpen?: boolean;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  side?: "top" | "right" | "bottom" | "left";
+  align?: "start" | "center" | "end";
 }
 
 interface DropdownMenuProps extends DropdownMenuOptions {
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 
 type ContextType = ReturnType<typeof useDropdownMenu> & {
   updatePosition: (
     side: "top" | "right" | "bottom" | "left",
-    align: "start" | "center" | "end"
-  ) => void
-}
+    align: "start" | "center" | "end",
+  ) => void;
+};
 
-const DropdownMenuContext = React.createContext<ContextType | null>(null)
+const DropdownMenuContext = React.createContext<ContextType | null>(null);
 
 function useDropdownMenuContext() {
-  const context = React.useContext(DropdownMenuContext)
+  const context = React.useContext(DropdownMenuContext);
   if (!context) {
     throw new Error(
-      "DropdownMenu components must be wrapped in <DropdownMenu />"
-    )
+      "DropdownMenu components must be wrapped in <DropdownMenu />",
+    );
   }
-  return context
+  return context;
 }
 
 function useDropdownMenu({
@@ -60,18 +60,18 @@ function useDropdownMenu({
   side = "bottom",
   align = "start",
 }: DropdownMenuOptions) {
-  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(initialOpen)
+  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(initialOpen);
   const [currentPlacement, setCurrentPlacement] = React.useState<Placement>(
-    `${side}-${align}` as Placement
-  )
-  const [activeIndex, setActiveIndex] = React.useState<number | null>(null)
-  const [maxHeight, setMaxHeight] = React.useState<number | null>(null)
+    `${side}-${align}` as Placement,
+  );
+  const [activeIndex, setActiveIndex] = React.useState<number | null>(null);
+  const [maxHeight, setMaxHeight] = React.useState<number | null>(null);
 
-  const open = controlledOpen ?? uncontrolledOpen
-  const setOpen = setControlledOpen ?? setUncontrolledOpen
+  const open = controlledOpen ?? uncontrolledOpen;
+  const setOpen = setControlledOpen ?? setUncontrolledOpen;
 
-  const elementsRef = React.useRef<Array<HTMLElement | null>>([])
-  const labelsRef = React.useRef<Array<string | null>>([])
+  const elementsRef = React.useRef<Array<HTMLElement | null>>([]);
+  const labelsRef = React.useRef<Array<string | null>>([]);
 
   const floating = useFloating({
     open,
@@ -83,15 +83,15 @@ function useDropdownMenu({
       shift({ padding: 4 }),
       size({
         apply({ availableHeight }) {
-          const calculatedMaxHeight = availableHeight - 16
-          setMaxHeight(calculatedMaxHeight)
+          const calculatedMaxHeight = availableHeight - 16;
+          setMaxHeight(calculatedMaxHeight);
         },
       }),
     ],
     whileElementsMounted: autoUpdate,
-  })
+  });
 
-  const { context } = floating
+  const { context } = floating;
 
   const interactions = useInteractions([
     useClick(context, {
@@ -115,17 +115,17 @@ function useDropdownMenu({
       onMatch: open ? setActiveIndex : undefined,
       activeIndex,
     }),
-  ])
+  ]);
 
   const updatePosition = React.useCallback(
     (
       newSide: "top" | "right" | "bottom" | "left",
-      newAlign: "start" | "center" | "end"
+      newAlign: "start" | "center" | "end",
     ) => {
-      setCurrentPlacement(`${newSide}-${newAlign}` as Placement)
+      setCurrentPlacement(`${newSide}-${newAlign}` as Placement);
     },
-    []
-  )
+    [],
+  );
 
   return React.useMemo(
     () => ({
@@ -140,12 +140,20 @@ function useDropdownMenu({
       ...interactions,
       ...floating,
     }),
-    [open, setOpen, activeIndex, interactions, floating, updatePosition, maxHeight]
-  )
+    [
+      open,
+      setOpen,
+      activeIndex,
+      interactions,
+      floating,
+      updatePosition,
+      maxHeight,
+    ],
+  );
 }
 
 export function DropdownMenu({ children, ...options }: DropdownMenuProps) {
-  const dropdown = useDropdownMenu(options)
+  const dropdown = useDropdownMenu(options);
   return (
     <DropdownMenuContext.Provider value={dropdown}>
       <FloatingList
@@ -155,32 +163,32 @@ export function DropdownMenu({ children, ...options }: DropdownMenuProps) {
         {children}
       </FloatingList>
     </DropdownMenuContext.Provider>
-  )
+  );
 }
 
 interface DropdownMenuTriggerProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  asChild?: boolean
+  asChild?: boolean;
 }
 
 export const DropdownMenuTrigger = React.forwardRef<
   HTMLButtonElement,
   DropdownMenuTriggerProps
 >(({ children, asChild = false, ...props }, propRef) => {
-  const context = useDropdownMenuContext()
+  const context = useDropdownMenuContext();
   const childrenRef = React.isValidElement(children)
     ? parseInt(React.version, 10) >= 19
       ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (children as { props: { ref?: React.Ref<any> } }).props.ref
       : // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (children as any).ref
-    : undefined
-  const ref = useMergeRefs([context.refs.setReference, propRef, childrenRef])
+    : undefined;
+  const ref = useMergeRefs([context.refs.setReference, propRef, childrenRef]);
 
   if (asChild && React.isValidElement(children)) {
     const dataAttributes = {
       "data-state": context.open ? "open" : "closed",
-    }
+    };
 
     return React.cloneElement(
       children,
@@ -191,8 +199,8 @@ export const DropdownMenuTrigger = React.forwardRef<
         "aria-expanded": context.open,
         "aria-haspopup": "menu" as const,
         ...dataAttributes,
-      })
-    )
+      }),
+    );
   }
 
   return (
@@ -205,18 +213,18 @@ export const DropdownMenuTrigger = React.forwardRef<
     >
       {children}
     </button>
-  )
-})
+  );
+});
 
-DropdownMenuTrigger.displayName = "DropdownMenuTrigger"
+DropdownMenuTrigger.displayName = "DropdownMenuTrigger";
 
 interface DropdownMenuContentProps
   extends React.HTMLAttributes<HTMLDivElement> {
-  orientation?: "vertical" | "horizontal"
-  side?: "top" | "right" | "bottom" | "left"
-  align?: "start" | "center" | "end"
-  portal?: boolean
-  portalProps?: Omit<React.ComponentProps<typeof FloatingPortal>, "children">
+  orientation?: "vertical" | "horizontal";
+  side?: "top" | "right" | "bottom" | "left";
+  align?: "start" | "center" | "end";
+  portal?: boolean;
+  portalProps?: Omit<React.ComponentProps<typeof FloatingPortal>, "children">;
 }
 
 export const DropdownMenuContent = React.forwardRef<
@@ -234,16 +242,16 @@ export const DropdownMenuContent = React.forwardRef<
       portalProps = {},
       ...props
     },
-    propRef
+    propRef,
   ) => {
-    const context = useDropdownMenuContext()
-    const ref = useMergeRefs([context.refs.setFloating, propRef])
+    const context = useDropdownMenuContext();
+    const ref = useMergeRefs([context.refs.setFloating, propRef]);
 
     React.useEffect(() => {
-      context.updatePosition(side, align)
-    }, [context, side, align])
+      context.updatePosition(side, align);
+    }, [context, side, align]);
 
-    if (!context.open) return null
+    if (!context.open) return null;
 
     const content = (
       <FloatingFocusManager
@@ -272,22 +280,22 @@ export const DropdownMenuContent = React.forwardRef<
           {props.children}
         </div>
       </FloatingFocusManager>
-    )
+    );
 
     if (portal) {
-      return <FloatingPortal {...portalProps}>{content}</FloatingPortal>
+      return <FloatingPortal {...portalProps}>{content}</FloatingPortal>;
     }
 
-    return content
-  }
-)
+    return content;
+  },
+);
 
-DropdownMenuContent.displayName = "DropdownMenuContent"
+DropdownMenuContent.displayName = "DropdownMenuContent";
 
 interface DropdownMenuItemProps extends React.HTMLAttributes<HTMLDivElement> {
-  asChild?: boolean
-  disabled?: boolean
-  onSelect?: () => void
+  asChild?: boolean;
+  disabled?: boolean;
+  onSelect?: () => void;
 }
 
 export const DropdownMenuItem = React.forwardRef<
@@ -296,28 +304,28 @@ export const DropdownMenuItem = React.forwardRef<
 >(
   (
     { children, disabled, asChild = false, onSelect, className, ...props },
-    ref
+    ref,
   ) => {
-    const context = useDropdownMenuContext()
-    const item = useListItem({ label: disabled ? null : children?.toString() })
-    const isActive = context.activeIndex === item.index
+    const context = useDropdownMenuContext();
+    const item = useListItem({ label: disabled ? null : children?.toString() });
+    const isActive = context.activeIndex === item.index;
 
     const handleSelect = React.useCallback(
       (event: React.MouseEvent<HTMLDivElement>) => {
-        if (disabled) return
-        onSelect?.()
-        props.onClick?.(event)
-        context.setOpen(false)
+        if (disabled) return;
+        onSelect?.();
+        props.onClick?.(event);
+        context.setOpen(false);
       },
-      [context, disabled, onSelect, props]
-    )
+      [context, disabled, onSelect, props],
+    );
 
     const itemProps: React.HTMLAttributes<HTMLDivElement> & {
-      ref: React.Ref<HTMLDivElement>
-      role: string
-      tabIndex: number
-      "aria-disabled"?: boolean
-      "data-highlighted"?: boolean
+      ref: React.Ref<HTMLDivElement>;
+      role: string;
+      tabIndex: number;
+      "aria-disabled"?: boolean;
+      "data-highlighted"?: boolean;
     } = {
       ref: useMergeRefs([item.ref, ref]),
       role: "menuitem",
@@ -329,53 +337,53 @@ export const DropdownMenuItem = React.forwardRef<
         ...props,
         onClick: handleSelect,
       }),
-    }
+    };
 
     if (asChild && React.isValidElement(children)) {
       const childProps = children.props as {
-        onClick?: (event: React.MouseEvent<HTMLElement>) => void
-      }
+        onClick?: (event: React.MouseEvent<HTMLElement>) => void;
+      };
 
       // Create merged props without adding onClick directly to the props object
       const mergedProps = {
         ...itemProps,
         ...(typeof children.props === "object" ? children.props : {}),
-      }
+      };
 
       // Handle onClick separately based on the element type
       const eventHandlers = {
         onClick: (event: React.MouseEvent<HTMLElement>) => {
           // Cast the event to make it compatible with handleSelect
-          handleSelect(event as unknown as React.MouseEvent<HTMLDivElement>)
-          childProps.onClick?.(event)
+          handleSelect(event as unknown as React.MouseEvent<HTMLDivElement>);
+          childProps.onClick?.(event);
         },
-      }
+      };
 
       return React.cloneElement(children, {
         ...mergedProps,
         ...eventHandlers,
-      })
+      });
     }
 
-    return <div {...itemProps}>{children}</div>
-  }
-)
+    return <div {...itemProps}>{children}</div>;
+  },
+);
 
-DropdownMenuItem.displayName = "DropdownMenuItem"
+DropdownMenuItem.displayName = "DropdownMenuItem";
 
 interface DropdownMenuGroupProps extends React.HTMLAttributes<HTMLDivElement> {
-  label?: string
+  label?: string;
 }
 
 export const DropdownMenuGroup = React.forwardRef<
   HTMLDivElement,
   DropdownMenuGroupProps
 >(({ children, label, className, ...props }, ref) => {
-  const context = useDropdownMenuContext()
-  const style: React.CSSProperties = {}
+  const context = useDropdownMenuContext();
+  const style: React.CSSProperties = {};
 
   if (context.maxHeight) {
-    style.maxHeight = `${context.maxHeight}px`
+    style.maxHeight = `${context.maxHeight}px`;
   }
 
   return (
@@ -389,10 +397,10 @@ export const DropdownMenuGroup = React.forwardRef<
     >
       {children}
     </div>
-  )
-})
+  );
+});
 
-DropdownMenuGroup.displayName = "DropdownMenuGroup"
+DropdownMenuGroup.displayName = "DropdownMenuGroup";
 
 export const DropdownMenuSeparator = React.forwardRef<
   React.ElementRef<typeof Separator>,
@@ -403,5 +411,5 @@ export const DropdownMenuSeparator = React.forwardRef<
     className={`tiptap-dropdown-menu-separator ${className || ""}`}
     {...props}
   />
-))
-DropdownMenuSeparator.displayName = Separator.displayName
+));
+DropdownMenuSeparator.displayName = Separator.displayName;

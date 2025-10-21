@@ -6,7 +6,7 @@
   gap: px-to-rem(8px);
 
   &__button {
-    pointer-events: none;;
+    pointer-events: none;
   }
 
   .f-tiptap-editor:not(.f-tiptap-editor--responsive-preview) &__button--mobile,

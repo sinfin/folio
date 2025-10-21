@@ -52,6 +52,7 @@
 //= require folio/file_list_component
 //= require folio/file_list/file_component
 //= require folio/file_list/file/batch_checkbox_component
+//= require folio/embed/box_component
 
 // must be under folio/input
 //= require daterangepicker.min
@@ -75,6 +76,7 @@
 //= require folio/console/ui/boolean_toggle_component
 //= require folio/console/ui/button_component
 //= require folio/console/ui/buttons_component
+//= require folio/console/ui/clear_button_component
 //= require folio/console/ui/clipboard_component
 //= require folio/console/ui/collapsible_component
 //= require folio/console/ui/flash_component

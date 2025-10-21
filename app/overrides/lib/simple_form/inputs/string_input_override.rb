@@ -2,6 +2,8 @@
 
 SimpleForm::Inputs::StringInput.class_eval do
   def input(wrapper_options = nil)
+    add_clear_button(options:)
+
     if input_type == :url
       register_url_input(json: false, wrapper_options:, options:)
     else
