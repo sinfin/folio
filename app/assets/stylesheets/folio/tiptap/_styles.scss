@@ -260,8 +260,7 @@ $f-tiptap-table-td__min-width: 5rem !default;
   .f-tiptap-float,
   .f-tiptap-styled-paragraph,
   .f-tiptap-styled-wrap,
-  .f-tiptap-invalid-node,
-  .f-tiptap-pages {
+  .f-tiptap-invalid-node {
     margin-top: var(--f-tiptap-node__margin-top);
     margin-bottom: var(--f-tiptap-node__margin-bottom);
 
@@ -628,13 +627,16 @@ $f-tiptap-table-td__min-width: 5rem !default;
   }
 
   .f-tiptap-editor & .f-tiptap-pages {
+    margin: $f-tiptap-pages__margin-in-editor-only;
+    counter-reset: f-tiptap-page-number 0;
+  }
+
+  .f-tiptap-editor & .f-tiptap-pages__content > div[data-node-view-content-react] {
     align-items: stretch;
     display: flex;
     flex-direction: column;
     gap: $f-tiptap-pages__gap-in-editor-only;
-    margin: $f-tiptap-pages__margin-in-editor-only;
     position: relative;
-    counter-reset: f-tiptap-page-number 0;
   }
 
   .f-tiptap-editor & .f-tiptap-page {
