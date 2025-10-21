@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { NodeViewContent, NodeViewWrapper, NodeViewProps } from "@tiptap/react";
 import { findParentNode } from "@tiptap/core";
 import { toggleFolioTiptapPageCollapsed } from "./folio-tiptap-pages-utils";
+import "./folio-tiptap-pages-view.scss";
 
 type FolioTiptapPagesViewProps = NodeViewProps;
 
