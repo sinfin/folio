@@ -33,6 +33,7 @@ class Folio::Embed::BoxComponent < ApplicationComponent
                               },
                               action: {
                                 "message@window" => "onWindowMessage",
+                                "f-embed-box:load" => "onLoadTrigger",
                                 "f-observer:intersect" => "onIntersect",
                                 "f-input-embed-inner:update" => "onInnerUpdate",
                               })

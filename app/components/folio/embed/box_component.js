@@ -10,6 +10,14 @@ window.Folio.Embed.Box.intersectionObserver = window.Folio.intersectionObserver(
   }
 })
 
+window.Folio.Embed.Box.load = (element) => {
+  if (element && element.classList.contains('f-embed-box')) {
+    if (element.dataset.fEmbedBoxIntersectedValue === 'false') {
+      element.dispatchEvent(new CustomEvent('f-embed-box:load', { bubbles: true }))
+    }
+  }
+}
+
 window.Folio.Stimulus.register('f-embed-box', class extends window.Stimulus.Controller {
   static values = {
     intersected: Boolean,
@@ -34,6 +42,13 @@ window.Folio.Stimulus.register('f-embed-box', class extends window.Stimulus.Cont
 
   unbindIntersectionObserver () {
     window.Folio.Embed.Box.intersectionObserver.unobserve(this.element)
+  }
+
+  onLoadTrigger () {
+    if (this.intersectedValue) return
+
+    this.unbindIntersectionObserver()
+    this.intersectedValue = true
   }
 
   load () {
