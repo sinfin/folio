@@ -86,9 +86,15 @@ FactoryBot.define do
     description { "description" }
   end
 
+  factory :media_source, class: "Folio::MediaSource" do
+    sequence(:title) { |n| "Media Source #{n}" }
+    licence { "CC BY 4.0" }
+  end
+
   factory :folio_file_image, parent: :folio_file, class: "Folio::File::Image" do
     file { Folio::Engine.root.join("test/fixtures/folio/test.gif") }
     site { get_current_or_existing_site_or_create_from_factory }
+    media_source { create(:media_source, title: "Source A") }
 
     trait :black do
       file { Folio::Engine.root.join("test/fixtures/folio/test-black.gif") }
