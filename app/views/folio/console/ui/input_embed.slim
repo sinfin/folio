@@ -3,7 +3,7 @@ ruby:
     {
       label: "Empty",
       href: request.path,
-      active: !params[:tab].in?(%w[html url]),
+      active: !params[:tab].in?(%w[html url centered centered-and-background]),
       folio_embed_data: nil,
     },
     {
@@ -18,6 +18,18 @@ ruby:
       active: params[:tab] == "url",
       folio_embed_data: { "active" => true, 'type' => 'youtube', "url" => 'https://www.youtube.com/watch?v=8DPcXHMGMBc' },
     },
+    {
+      label: "Centered",
+      href: "#{request.path}?tab=centered",
+      active: params[:tab] == "centered",
+      folio_embed_data: { "active" => true, 'type' => 'youtube', "url" => 'https://www.youtube.com/watch?v=8DPcXHMGMBc' },
+    },
+    {
+      label: "Centered and background",
+      href: "#{request.path}?tab=centered-and-background",
+      active: params[:tab] == "centered-and-background",
+      folio_embed_data: { "active" => true, 'type' => 'youtube', "url" => 'https://www.youtube.com/watch?v=8DPcXHMGMBc' },
+    }
   ]
 
 h1: a.f-c-unlink href=console_ui_path Folio Console UI
@@ -35,6 +47,8 @@ h2 Input Embed
     div
       = f.input :folio_embed_data,
                 as: :embed,
+                centered: tab[:label].start_with?("Centered"),
+                background_color: tab[:label] == "Centered and background" ? "#333333" : nil,
                 input_html: { value: tab[:folio_embed_data], id: "folio-console-ui-input-embed-demo-input" }
 
   h4 Input value

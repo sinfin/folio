@@ -13,4 +13,5 @@ div class=bem_class_name data=data
 
     = render(Folio::Embed::BoxComponent.new(folio_embed_data: @folio_embed_data,
                                             data: stimulus_target("box"),
-                                            centered: false))
+                                            background_color: @background_color,
+                                            centered: @centered))

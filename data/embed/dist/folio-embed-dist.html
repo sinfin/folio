@@ -47,11 +47,6 @@
   z-index: 2;
 }
 
-.f-embed__loader--instagram {
-  max-width: 328px;
-  min-height: 536px;
-}
-
 .f-embed__loader--twitter:last-child {
   display: block;
 }
@@ -62,8 +57,13 @@
 }
 
 .twitter-tweet {
-  margin-left: auto;
-  margin-right: auto;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.f-embed__container--centered .twitter-tweet {
+  margin-left: auto !important;
+  margin-right: auto !important;
 }
 
 .f-embed__loader:before,
@@ -89,6 +89,13 @@
   position: absolute;
   top: 50%;
   left: 50%;
+}
+
+.f-embed-body--dark-background .f-embed__loader:before {
+  border-top: 0.45em solid rgba(255, 255, 255, 0.2);
+  border-right: 0.45em solid rgba(255, 255, 255, 0.2);
+  border-bottom: 0.45em solid rgba(255, 255, 255, 0.2);
+  border-left: 0.45em solid rgba(255, 255, 255, 1);
 }
 
 .f-embed__container {

@@ -1,5 +1,8 @@
 - if inside_dev_tiptap?
-  .f-embed-box class="f-embed-box--inside-tiptap" class=@class_name
+  .f-embed-box[
+    class="f-embed-box--inside-tiptap"
+    class=@class_name
+  ]
     div[
       class="p-4 rounded border"
       style="background: #e8e8e8; overflow-wrap: break-word;"
@@ -10,5 +13,15 @@
         pre.bg-white
           code = JSON.pretty_generate(@folio_embed_data)
 - else
-  .f-embed-box data=wrap_data class=@class_name
-    span.f-embed-box__loader.folio-loader data=stimulus_target("loader")
+  .f-embed-box[
+    data=wrap_data
+    class=@class_name
+    class=(@low_luminance ? "folio-inversed-loader" : nil)
+    style=@style
+  ]
+    span[
+      class="f-embed-box__loader"
+      class="folio-loader folio-loader--transparent"
+      style=@style
+      data=stimulus_target("loader")
+    ]

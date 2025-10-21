@@ -50,9 +50,7 @@ div[
           class="f-c-file-placements-multi-picker-fields-placement__field--folio_embed_data"
           data=stimulus_target("embedFieldsWrap")
         ]
-          = @g.input :folio_embed_data,
-                     as: :embed,
-                     compact: true
+          = folio_embed_data_input(@g)
 
   span.f-c-file-placements-multi-picker-fields-placement__loader[
     class="folio-loader"

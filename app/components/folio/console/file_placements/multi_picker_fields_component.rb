@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 class Folio::Console::FilePlacements::MultiPickerFieldsComponent < Folio::Console::ApplicationComponent
-  def initialize(f:, placement_klass:)
+  def initialize(f:, placement_klass:, embed_input_options: nil)
     @f = f
     @placement_klass = placement_klass
+    @embed_input_options = embed_input_options
 
     @placement_key = placement_klass.reflect_on_association(:placement).options[:inverse_of]
     @file_klass = placement_klass.reflect_on_association(:file).options[:class_name].constantize
@@ -65,6 +66,9 @@ class Folio::Console::FilePlacements::MultiPickerFieldsComponent < Folio::Consol
       component_klass = Folio::Console::FilePlacements::MultiPickerFields::PlacementComponent
       non_unique_file_id = non_unique_file_ids.include?(g.object.file_id)
 
-      render(component_klass.new(g:, non_unique_file_id:, placement_key: @placement_key))
+      render(component_klass.new(g:,
+                                 non_unique_file_id:,
+                                 placement_key: @placement_key,
+                                 embed_input_options: @embed_input_options))
     end
 end

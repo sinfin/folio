@@ -3,9 +3,14 @@
 class Folio::Input::Embed::InnerComponent < ApplicationComponent
   bem_class_name :compact
 
-  def initialize(folio_embed_data:, compact: false)
+  def initialize(folio_embed_data:,
+                 compact: false,
+                 centered: false,
+                 background_color: nil)
     @folio_embed_data = folio_embed_data
     @compact = compact
+    @centered = centered
+    @background_color = background_color
   end
 
   private
