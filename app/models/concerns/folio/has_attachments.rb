@@ -379,13 +379,13 @@ module Folio::HasAttachments
                                    limit: file.attribution_max_usage_count))
         end
 
-        if !file.can_be_used_on_site?(Folio::Current.site)
+        unless file.can_be_used_on_site?(Folio::Current.site)
           errors.add(:base, I18n.t("errors.messages.cannot_publish_with_files_restricted_to_site",
                                    name: file.file_name,
                                    allowed_sites: file.allowed_sites.pluck(:title).join(", ")))
         end
 
-        if !file.media_source.present?
+        unless file.media_source.present?
           errors.add(:base, I18n.t("errors.messages.cannot_publish_with_files_without_media_source",
                                    name: file.file_name))
         end
