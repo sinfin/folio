@@ -175,7 +175,7 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
       return unless Rails.application.config.folio_files_require_alt
     end
 
-    if file.class.human_type == "image" && alt_with_fallback.blank?
+    if missing_alt?
       if file.id && file.file_name
         errors.add(:alt,
                    :alt_blank_with_file_details,
@@ -186,6 +186,12 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
         errors.add(:alt, :blank)
       end
     end
+  end
+
+  def missing_alt?
+    return false if file.blank?
+
+    file.class.human_type == "image" && alt_with_fallback.blank?
   end
 
   def validate_description_if_needed
@@ -199,7 +205,7 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
       return unless Rails.application.config.folio_files_require_description
     end
 
-    if description_with_fallback.blank?
+    if missing_description?
       if file.id && file.file_name
         errors.add(:description,
                    :description_blank_with_file_details,
@@ -210,6 +216,12 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
         errors.add(:description, :blank)
       end
     end
+  end
+
+  def missing_description?
+    return false if file.blank?
+
+    description_with_fallback.blank?
   end
 
   # override setter so that active gets set as a boolean instead of a string

@@ -114,7 +114,6 @@ class Folio::Console::Files::ShowComponent < Folio::Console::ApplicationComponen
       :missing_file_attribution if Rails.application.config.folio_files_require_attribution &&
                                    @file.attribution_source.blank?
     end
-
     return nil unless message_key
 
     "#{@file.class.human_attribute_name(key)} #{I18n.t("errors.messages.blank")}"

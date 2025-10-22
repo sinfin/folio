@@ -25,3 +25,8 @@
 
   - if model.try(:object).try(:errors).present?
     == cell('folio/console/form/errors', model, options.slice(:hide_fix_error_btn))
+
+  - if model.try(:object) && model.object.respond_to?(:soft_warnings_for_file_placements)
+    - __warnings = model.object.soft_warnings_for_file_placements
+    - if __warnings.present?
+      == cell('folio/console/form/warnings', nil, warnings: __warnings)

@@ -266,6 +266,53 @@ module Folio::HasAttachments
     read_attribute(:published) == true
   end
 
+  def soft_warnings_for_file_placements
+    collect_all_placements
+      .reject(&:marked_for_destruction?)
+      .select { |placement| placement.file.present? }
+      .flat_map { |placement| generate_warnings_for_placement(placement) }
+      .compact
+  end
+
+  private
+
+    def collect_all_placements
+      self.class.folio_attachment_keys.flat_map do |type, keys|
+        keys.flat_map do |association|
+          type == :has_many ? send(association).to_a : send(association)
+        end
+      end.compact
+    end
+
+    def generate_warnings_for_placement(placement)
+      file = placement.file
+      placement_type = placement.model_name.human
+      warnings = []
+
+      if placement.missing_alt?
+        warnings << I18n.t("folio.console.soft_warnings.missing_alt",
+                          file_name: file.file_name,
+                          file_id: file.id,
+                          placement_type: placement_type)
+      end
+
+      if placement.missing_description?
+        warnings << I18n.t("folio.console.soft_warnings.missing_description",
+                          file_name: file.file_name,
+                          file_id: file.id,
+                          placement_type: placement_type)
+      end
+
+      if file.author.blank? || file.attribution_source.blank? && file.attribution_source_url.blank?
+        warnings << I18n.t("folio.console.soft_warnings.missing_attribution",
+                          file_name: file.file_name,
+                          file_id: file.id,
+                          placement_type: placement_type)
+      end
+
+      warnings
+    end
+
   def update_file_placement_counts_if_needed
     return unless should_update_file_placement_counts == true
 
