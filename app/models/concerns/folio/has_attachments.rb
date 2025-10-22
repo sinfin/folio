@@ -292,7 +292,6 @@ module Folio::HasAttachments
       if placement.missing_alt?
         warnings << I18n.t("folio.console.soft_warnings.missing_alt",
                           file_name: file.file_name,
-                          file_id: file.id,
                           placement_type: placement_type)
       end
 
