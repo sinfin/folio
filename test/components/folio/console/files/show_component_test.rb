@@ -14,4 +14,123 @@ class Folio::Console::Files::ShowComponentTest < Folio::Console::ComponentTest
       end
     end
   end
+
+  def test_warning_for_returns_nil_when_file_has_no_placements
+    image = create(:folio_file_image, file_placements_count: 0)
+    component = Folio::Console::Files::ShowComponent.new(file: image)
+
+    assert_nil component.warning_for(:alt)
+    assert_nil component.warning_for(:description)
+    assert_nil component.warning_for(:author)
+  end
+
+  def test_warning_for_alt_returns_nil_when_validation_is_disabled
+    Rails.application.config.stubs(:folio_files_require_alt).returns(false)
+    image = create(:folio_file_image, alt: nil, file_placements_count: 1)
+    component = Folio::Console::Files::ShowComponent.new(file: image)
+
+    assert_nil component.warning_for(:alt)
+  end
+
+  def test_warning_for_alt_returns_message_when_blank_and_validation_enabled
+    Rails.application.config.stubs(:folio_files_require_alt).returns(true)
+    image = create(:folio_file_image, alt: nil, file_placements_count: 1)
+    component = Folio::Console::Files::ShowComponent.new(file: image)
+
+    warning = component.warning_for(:alt)
+    assert_not_nil warning
+    assert_includes warning, I18n.t("errors.messages.blank")
+    assert_includes warning, image.class.human_attribute_name(:alt)
+  end
+
+  def test_warning_for_alt_returns_nil_when_has_value
+    Rails.application.config.stubs(:folio_files_require_alt).returns(true)
+    image = create(:folio_file_image, alt: "Some alt text", file_placements_count: 1)
+    component = Folio::Console::Files::ShowComponent.new(file: image)
+
+    assert_nil component.warning_for(:alt)
+  end
+
+  def test_warning_for_description_returns_nil_when_validation_is_disabled
+    Rails.application.config.stubs(:folio_files_require_description).returns(false)
+    image = create(:folio_file_image, description: nil, file_placements_count: 1)
+    component = Folio::Console::Files::ShowComponent.new(file: image)
+
+    assert_nil component.warning_for(:description)
+  end
+
+  def test_warning_for_description_returns_message_when_blank_and_validation_enabled
+    Rails.application.config.stubs(:folio_files_require_description).returns(true)
+    image = create(:folio_file_image, description: nil, file_placements_count: 1)
+    component = Folio::Console::Files::ShowComponent.new(file: image)
+
+    warning = component.warning_for(:description)
+    assert_not_nil warning
+    assert_includes warning, I18n.t("errors.messages.blank")
+    assert_includes warning, image.class.human_attribute_name(:description)
+  end
+
+  def test_warning_for_description_returns_nil_when_has_value
+    Rails.application.config.stubs(:folio_files_require_description).returns(true)
+    image = create(:folio_file_image, description: "Some description", file_placements_count: 1)
+    component = Folio::Console::Files::ShowComponent.new(file: image)
+
+    assert_nil component.warning_for(:description)
+  end
+
+  def test_warning_for_attribution_returns_nil_when_validation_is_disabled
+    Rails.application.config.stubs(:folio_files_require_attribution).returns(false)
+    image = create(:folio_file_image, author: nil, attribution_source: nil, file_placements_count: 1)
+    component = Folio::Console::Files::ShowComponent.new(file: image)
+
+    assert_nil component.warning_for(:author)
+    assert_nil component.warning_for(:attribution_source)
+  end
+
+  def test_warning_for_author_returns_message_when_all_attribution_fields_blank
+    Rails.application.config.stubs(:folio_files_require_attribution).returns(true)
+    image = create(:folio_file_image, author: nil, attribution_source: nil, attribution_source_url: nil, file_placements_count: 1)
+    component = Folio::Console::Files::ShowComponent.new(file: image)
+
+    warning = component.warning_for(:author)
+    assert_not_nil warning
+    assert_includes warning, I18n.t("errors.messages.blank")
+    assert_includes warning, image.class.human_attribute_name(:author)
+  end
+
+  def test_warning_for_author_returns_nil_when_author_has_value
+    Rails.application.config.stubs(:folio_files_require_attribution).returns(true)
+    image = create(:folio_file_image, author: "John Doe", attribution_source: nil, attribution_source_url: nil, file_placements_count: 1)
+    component = Folio::Console::Files::ShowComponent.new(file: image)
+
+    assert_nil component.warning_for(:author)
+  end
+
+  def test_warning_for_attribution_source_returns_message_when_all_attribution_fields_blank
+    Rails.application.config.stubs(:folio_files_require_attribution).returns(true)
+    image = create(:folio_file_image, author: nil, attribution_source: nil, attribution_source_url: nil, file_placements_count: 1)
+    component = Folio::Console::Files::ShowComponent.new(file: image)
+
+    warning = component.warning_for(:attribution_source)
+    assert_not_nil warning
+    assert_includes warning, I18n.t("errors.messages.blank")
+    assert_includes warning, image.class.human_attribute_name(:attribution_source)
+  end
+
+  def test_warning_for_attribution_source_returns_nil_when_has_value
+    Rails.application.config.stubs(:folio_files_require_attribution).returns(true)
+    image = create(:folio_file_image, author: nil, attribution_source: "Getty Images", attribution_source_url: nil, file_placements_count: 1)
+    component = Folio::Console::Files::ShowComponent.new(file: image)
+
+    assert_nil component.warning_for(:attribution_source)
+  end
+
+  def test_warning_for_alt_does_not_show_for_non_image_files
+    document = create(:folio_file_document, file_placements_count: 1)
+    component = Folio::Console::Files::ShowComponent.new(file: document)
+
+    Rails.application.config.stubs(:folio_files_require_alt).returns(true)
+
+    assert_nil component.warning_for(:alt)
+  end
 end

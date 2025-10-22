@@ -101,16 +101,22 @@ class Folio::Console::Files::ShowComponent < Folio::Console::ApplicationComponen
 
     message_key = case key
     when :alt
-      "missing_file_alt" if Rails.application.config.folio_files_require_alt && @file.class.human_type == "image" && @file.alt.blank?
+      :missing_file_alt if Rails.application.config.folio_files_require_alt &&
+                           @file.class.human_type == "image" &&
+                           @file.alt.blank?
     when :description
-      "missing_file_description" if Rails.application.config.folio_files_require_description && @file.description.blank?
+      :missing_file_description if Rails.application.config.folio_files_require_description &&
+                                   @file.description.blank?
     when :author
-      "missing_file_attribution" if Rails.application.config.folio_files_require_attribution && @file.author.blank?
+      :missing_file_attribution if Rails.application.config.folio_files_require_attribution &&
+                                   @file.author.blank?
     when :attribution_source
-      "missing_file_attribution" if Rails.application.config.folio_files_require_attribution && @file.attribution_source.blank?
+      :missing_file_attribution if Rails.application.config.folio_files_require_attribution &&
+                                   @file.attribution_source.blank?
     end
+
     return nil unless message_key
 
-    helpers.t("errors.messages.#{message_key}")
+    "#{@file.class.human_attribute_name(key)} #{I18n.t("errors.messages.blank")}"
   end
 end
