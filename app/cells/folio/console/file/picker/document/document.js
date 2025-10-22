@@ -35,7 +35,8 @@ window.Folio.Stimulus.register('f-c-file-picker-document', class extends window.
 
     const name = document.createElement('div')
     name.className = 'f-c-file-picker-document__name'
-    name.innerText = fileAttributes.file_name || 'Unknown file name'
+    const fileName = fileAttributes.file_name || 'Unknown file name'
+    name.innerHTML = fileName.replace(/_/g, '_<wbr>')
     div.appendChild(name)
 
     const size = document.createElement('div')
