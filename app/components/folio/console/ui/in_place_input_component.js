@@ -30,7 +30,6 @@ window.Folio.Stimulus.register('f-c-ui-in-place-input', class extends window.Sti
     this.editingValue = false
     this.element.classList.add('f-c-ui-in-place-input--success')
 
-    // Hide warning if value is no longer blank
     if (this.hasWarningTarget && (e.detail.label || e.detail.value)) {
       this.warningTarget.remove()
     }

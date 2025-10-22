@@ -96,14 +96,12 @@ class Folio::File::HasUsageConstraintsTest < ActiveSupport::TestCase
     end
   end
 
-  # default/else
   test "by_usage_constraints with unknown value returns none" do
     create(:folio_file_image, site: @site)
     assert_empty Folio::File::Image.by_usage_constraints("unknown")
     assert_empty Folio::File::Image.by_usage_constraints(nil)
   end
 
-  # media source prefilling
   test "prefills attribution fields when media source is assigned" do
     ms = media_source(title: "Getty Images")
     ms.update!(
@@ -134,22 +132,18 @@ class Folio::File::HasUsageConstraintsTest < ActiveSupport::TestCase
 
     image = img(attribution_source: ms1.title)
 
-    # Initially has Source A data
     assert_equal "License A", image.attribution_licence
     assert_equal "Copyright A", image.attribution_copyright
     assert_equal 1, image.attribution_max_usage_count
 
-    # Change to Source B
     image.update!(attribution_source: ms2.title)
 
-    # Should replace with Source B data
     assert_equal ms2, image.media_source
     assert_equal "License B", image.attribution_licence
     assert_equal "Copyright B", image.attribution_copyright
     assert_equal 10, image.attribution_max_usage_count
   end
 
-  # publishing validation
   test "cannot publish article with images without media_source" do
     article = create(:dummy_blog_article, site: @site, published: false)
     image_without_source = img(media_source: nil, attribution_source: nil)

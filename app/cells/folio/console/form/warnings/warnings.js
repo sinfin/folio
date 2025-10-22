@@ -5,13 +5,11 @@ window.Folio.Stimulus.register('f-c-form-warnings', class extends window.Stimulu
     if (this._shouldShowFromStorage()) this._reveal()
   }
 
-  // Triggered via submit@document (see data-action on the box)
   show () {
     this._markForNextRender()
     this._reveal()
   }
 
-  // helpers
   _storageKey () {
     return `fCFormWarnings:${this.keyValue || window.location.pathname}`
   }
@@ -35,4 +33,3 @@ window.Folio.Stimulus.register('f-c-form-warnings', class extends window.Stimulu
     if (this.element.querySelector('li')) this.element.classList.remove('d-none')
   }
 })
-
