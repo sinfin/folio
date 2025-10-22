@@ -6,7 +6,7 @@ cs:
         warnings:
           notification: "Varování: následující kritéria nejsou splněna"
       soft_warnings:
-        missing_alt: '„%{file_name}“ (#%{file_id}) nemá vyplněný alt'
+        missing_alt: '„%{file_name}“ nemá vyplněný alt'
         missing_description: '„%{file_name}“ nemá vyplněný popisek'
         missing_attribution: '„%{file_name}“ nemá vyplněného autora nebo zdroj'
   activerecord:
