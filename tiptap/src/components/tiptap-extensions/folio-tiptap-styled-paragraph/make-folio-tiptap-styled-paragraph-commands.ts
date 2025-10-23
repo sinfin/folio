@@ -3,7 +3,7 @@ import {
   AArrowUp,
   Star,
   Heading,
-  MessageSquareQuote,
+  MessageCircleQuestionMark,
 } from "lucide-react";
 import {
   HeadingOneIcon,
@@ -28,8 +28,8 @@ export const makeFolioTiptapStyledParagraphCommands = (
         return AArrowDown;
       case "heading":
         return Heading;
-      case "message-square-quote":
-        return MessageSquareQuote;
+      case "message-circle-question-mark":
+        return MessageCircleQuestionMark;
     }
 
     switch (tagString) {
