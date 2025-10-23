@@ -521,9 +521,9 @@ cs:
 
   time:
     formats:
-      console_short: "%-d. %-m. %Y, %H:%M"
-      console_short_with_seconds: "%-d. %-m. %Y, %H:%M:%S"
+      console_short: "%-d. %-m. %Y, %-H:%M"
+      console_short_with_seconds: "%-d. %-m. %Y, %-H:%M:%S"
       console_group_by_day: "%a %-d. %B. %Y"
       console_short_date: "%-d. %-m. %Y"
-      console_short_time: "%H:%M"
+      console_short_time: "%-H:%M"
       console_html_datetime: "%Y-%m-%dT%H:%M:%S%z"
