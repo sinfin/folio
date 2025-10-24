@@ -3,10 +3,18 @@
 require "test_helper"
 
 class Folio::Console::CurrentUsersControllerTest < Folio::Console::BaseControllerTest
-  test "show" do
-    get folio.console_current_user_path
-    assert_response(:ok)
-    assert_select("h1", I18n.t("folio.console.current_users.show_component.title"))
+  test "show (enabled and disabled)" do
+    with_profile_enabled(true) do
+      get folio.console_current_user_path
+      assert_response(:ok)
+      assert_select("h1", I18n.t("folio.console.current_users.show_component.title"))
+    end
+
+    with_profile_enabled(false) do
+      get folio.console_root_path
+      follow_redirect! if response.redirect?
+      assert_response(:ok)
+    end
   end
 
   test "update_email" do
@@ -72,4 +80,23 @@ class Folio::Console::CurrentUsersControllerTest < Folio::Console::BaseControlle
     assert_response(:ok, "Password not changed - it's the same")
     assert_select(".f-c-ui-flash", I18n.t("folio.console.current_users.update_password.failure"))
   end
+
+  private
+    def with_profile_enabled(value)
+      Rails.application.config.stub(:folio_console_current_user_profile_enabled, value) do
+        reload_routes
+        yield
+      end
+    ensure
+      reload_routes
+    end
+
+    def reload_routes
+      if defined?(Folio::Engine)
+        Folio::Engine.reload_routes! if Folio::Engine.respond_to?(:reload_routes!)
+        Folio::Engine.routes_reloader.reload! if Folio::Engine.respond_to?(:routes_reloader)
+      end
+
+      Rails.application.reload_routes!
+    end
 end
