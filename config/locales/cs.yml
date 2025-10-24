@@ -90,4 +90,4 @@ cs:
 
   time:
     formats:
-      folio_short: "%-d. %-m. %Y, %H:%M"
+      folio_short: "%-d. %-m. %Y, %-H:%M"
