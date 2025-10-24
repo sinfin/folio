@@ -3,10 +3,16 @@
 require "test_helper"
 
 class Folio::Console::CurrentUsersControllerTest < Folio::Console::BaseControllerTest
-  test "show" do
-    get folio.console_current_user_path
-    assert_response(:ok)
-    assert_select("h1", I18n.t("folio.console.current_users.show_component.title"))
+  test "show (enabled and disabled)" do
+    with_profile_enabled(true) do
+      get folio.console_current_user_path
+      assert_response(:ok)
+      assert_select("h1", I18n.t("folio.console.current_users.show_component.title"))
+    end
+
+    with_profile_enabled(false) do
+      assert_not folio.respond_to?(:console_current_user_path), "Route helper should not exist when disabled"
+    end
   end
 
   test "update_email" do
@@ -71,5 +77,35 @@ class Folio::Console::CurrentUsersControllerTest < Folio::Console::BaseControlle
     } }
     assert_response(:ok, "Password not changed - it's the same")
     assert_select(".f-c-ui-flash", I18n.t("folio.console.current_users.update_password.failure"))
+  end
+
+  private
+
+  def with_profile_enabled(value)
+    original_app = Rails.application.config.folio_console_current_user_profile_enabled
+    original_engine = if defined?(Folio::Engine) && Folio::Engine.respond_to?(:config)
+                        Folio::Engine.config.folio_console_current_user_profile_enabled
+                      end
+
+    Rails.application.config.folio_console_current_user_profile_enabled = value
+    if defined?(Folio::Engine) && Folio::Engine.respond_to?(:config)
+      Folio::Engine.config.folio_console_current_user_profile_enabled = value
+    end
+    reload_routes
+    yield
+  ensure
+    Rails.application.config.folio_console_current_user_profile_enabled = original_app unless original_app.nil?
+    if defined?(Folio::Engine) && Folio::Engine.respond_to?(:config)
+      Folio::Engine.config.folio_console_current_user_profile_enabled = original_engine unless original_engine.nil?
+    end
+    reload_routes
+  end
+
+  def reload_routes
+    if defined?(Folio::Engine)
+      Folio::Engine.reload_routes! if Folio::Engine.respond_to?(:reload_routes!)
+      Folio::Engine.routes_reloader.reload! if Folio::Engine.respond_to?(:routes_reloader)
+    end
+    Rails.application.reload_routes!
   end
 end
