@@ -1,4 +1,5 @@
-.f-c-ui-index-filters[
+div[
+  class=bem_class_name
   class=form_expanded_class_name
   class="f-c-anti-container-fluid f-c-anti-container-fluid--padded"
   data=data
@@ -30,7 +31,7 @@
                 = input(f, key)
 
       - if has_collapsible?
-        .f-c-ui-index-filters__toggle-wrap
+        .f-c-ui-index-filters__toggle-wrap.small
           == cell('folio/console/ui/with_icon',
                   t('.collapsible_toggle'),
                   class: 'f-c-ui-index-filters__toggle',

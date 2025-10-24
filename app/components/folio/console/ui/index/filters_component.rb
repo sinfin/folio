@@ -3,8 +3,11 @@
 class Folio::Console::Ui::Index::FiltersComponent < Folio::Console::ApplicationComponent
   include Folio::Console::Component::IndexFilters
 
-  def initialize(klass:)
+  bem_class_name :hide_cancel_wrap
+
+  def initialize(klass:, hide_cancel_wrap: false)
     @klass = klass
+    @hide_cancel_wrap = hide_cancel_wrap
   end
 
   private
