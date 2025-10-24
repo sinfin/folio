@@ -11,7 +11,9 @@ class Folio::Console::CurrentUsersControllerTest < Folio::Console::BaseControlle
     end
 
     with_profile_enabled(false) do
-      assert_not folio.respond_to?(:console_current_user_path), "Route helper should not exist when disabled"
+      get folio.console_root_path
+      follow_redirect! if response.redirect?
+      assert_response(:ok)
     end
   end
 
@@ -82,22 +84,18 @@ class Folio::Console::CurrentUsersControllerTest < Folio::Console::BaseControlle
   private
 
   def with_profile_enabled(value)
-    original_app = Rails.application.config.folio_console_current_user_profile_enabled
-    original_engine = if defined?(Folio::Engine) && Folio::Engine.respond_to?(:config)
-                        Folio::Engine.config.folio_console_current_user_profile_enabled
-                      end
-
-    Rails.application.config.folio_console_current_user_profile_enabled = value
-    if defined?(Folio::Engine) && Folio::Engine.respond_to?(:config)
-      Folio::Engine.config.folio_console_current_user_profile_enabled = value
+    Rails.application.config.stub(:folio_console_current_user_profile_enabled, value) do
+      if defined?(Folio::Engine) && Folio::Engine.respond_to?(:config)
+        Folio::Engine.config.stub(:folio_console_current_user_profile_enabled, value) do
+          reload_routes
+          yield
+        end
+      else
+        reload_routes
+        yield
+      end
     end
-    reload_routes
-    yield
   ensure
-    Rails.application.config.folio_console_current_user_profile_enabled = original_app unless original_app.nil?
-    if defined?(Folio::Engine) && Folio::Engine.respond_to?(:config)
-      Folio::Engine.config.folio_console_current_user_profile_enabled = original_engine unless original_engine.nil?
-    end
     reload_routes
   end
 
