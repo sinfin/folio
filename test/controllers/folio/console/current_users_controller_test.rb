@@ -82,28 +82,21 @@ class Folio::Console::CurrentUsersControllerTest < Folio::Console::BaseControlle
   end
 
   private
-
-  def with_profile_enabled(value)
-    Rails.application.config.stub(:folio_console_current_user_profile_enabled, value) do
-      if defined?(Folio::Engine) && Folio::Engine.respond_to?(:config)
-        Folio::Engine.config.stub(:folio_console_current_user_profile_enabled, value) do
-          reload_routes
-          yield
-        end
-      else
+    def with_profile_enabled(value)
+      Rails.application.config.stub(:folio_console_current_user_profile_enabled, value) do
         reload_routes
         yield
       end
+    ensure
+      reload_routes
     end
-  ensure
-    reload_routes
-  end
 
-  def reload_routes
-    if defined?(Folio::Engine)
-      Folio::Engine.reload_routes! if Folio::Engine.respond_to?(:reload_routes!)
-      Folio::Engine.routes_reloader.reload! if Folio::Engine.respond_to?(:routes_reloader)
+    def reload_routes
+      if defined?(Folio::Engine)
+        Folio::Engine.reload_routes! if Folio::Engine.respond_to?(:reload_routes!)
+        Folio::Engine.routes_reloader.reload! if Folio::Engine.respond_to?(:routes_reloader)
+      end
+
+      Rails.application.reload_routes!
     end
-    Rails.application.reload_routes!
-  end
 end
