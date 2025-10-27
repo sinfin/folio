@@ -296,12 +296,13 @@ module Folio::HasAttachments
     end
   end
 
-  private
   def soft_warnings_for_file_placements
     collect_all_placements
       .reject(&:marked_for_destruction?)
       .flat_map(&:console_warnings)
   end
+
+  private
 
     def run_file_placements_after_save!
       return if dont_run_file_placements_after_save
