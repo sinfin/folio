@@ -103,4 +103,79 @@ class Folio::FilePlacement::BaseTest < ActiveSupport::TestCase
       end
     end
   end
+
+  test "console_warnings returns empty array when no file" do
+    placement = Folio::FilePlacement::Cover.new
+
+    assert_equal [], placement.console_warnings
+  end
+
+  test "console_warnings returns warning for missing alt" do
+    image = create(:folio_file_image, alt: nil)
+    page = create(:folio_page)
+    placement = page.create_cover_placement(file: image)
+
+    warnings = placement.console_warnings
+
+    assert_equal 1, warnings.length
+    assert_match(/#{image.file_name}/, warnings.first)
+    assert_match(/alt/, warnings.first.downcase)
+  end
+
+  test "console_warnings returns warning for missing description" do
+    image = create(:folio_file_image, description: nil, alt: "test")
+    page = create(:folio_page)
+    placement = page.create_cover_placement(file: image)
+
+    warnings = placement.console_warnings
+
+    assert_equal 1, warnings.length
+    assert_match(/#{image.file_name}/, warnings.first)
+    assert_match(/description|popisek/i, warnings.first)
+  end
+
+  test "console_warnings returns warning for missing attribution" do
+    image = create(:folio_file_image,
+                   author: nil,
+                   attribution_source: nil,
+                   attribution_source_url: nil,
+                   alt: "test",
+                   description: "test")
+    page = create(:folio_page)
+    placement = page.create_cover_placement(file: image)
+
+    warnings = placement.console_warnings
+
+    assert_equal 1, warnings.length
+    assert_match(/#{image.file_name}/, warnings.first)
+    assert_match(/attribution|author|autora|zdroj/i, warnings.first)
+  end
+
+  test "console_warnings returns multiple warnings" do
+    image = create(:folio_file_image,
+                   alt: nil,
+                   description: nil,
+                   author: nil,
+                   attribution_source: nil,
+                   attribution_source_url: nil)
+    page = create(:folio_page)
+    placement = page.create_cover_placement(file: image)
+
+    warnings = placement.console_warnings
+
+    assert_equal 3, warnings.length
+  end
+
+  test "console_warnings returns empty array when all fields are filled" do
+    image = create(:folio_file_image,
+                   alt: "test alt",
+                   description: "test description",
+                   author: "test author")
+    page = create(:folio_page)
+    placement = page.create_cover_placement(file: image)
+
+    warnings = placement.console_warnings
+
+    assert_equal [], warnings
+  end
 end
