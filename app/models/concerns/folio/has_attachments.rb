@@ -300,6 +300,7 @@ module Folio::HasAttachments
     collect_all_placements
       .reject(&:marked_for_destruction?)
       .flat_map(&:console_warnings)
+      .uniq
   end
 
   private
