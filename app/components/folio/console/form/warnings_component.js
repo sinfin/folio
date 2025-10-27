@@ -2,7 +2,7 @@ window.Folio.Stimulus.register('f-c-form-warnings', class extends window.Stimulu
   static values = { recordKey: String }
 
   connect () {
-    if (this._shouldShowFromStorage()) this._reveal()
+    this._reveal()
   }
 
   show () {
@@ -16,17 +16,6 @@ window.Folio.Stimulus.register('f-c-form-warnings', class extends window.Stimulu
 
   _markForNextRender () {
     try { window.sessionStorage.setItem(this._storageKey(), '1') } catch (_) {}
-  }
-
-  _shouldShowFromStorage () {
-    try {
-      const key = this._storageKey()
-      if (window.sessionStorage.getItem(key) === '1') {
-        window.sessionStorage.removeItem(key)
-        return true
-      }
-    } catch (_) {}
-    return false
   }
 
   _reveal () {
