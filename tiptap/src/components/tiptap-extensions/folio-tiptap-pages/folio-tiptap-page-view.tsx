@@ -5,6 +5,7 @@ import { TextSelection } from "@tiptap/pm/state";
 import { toggleFolioTiptapPageCollapsed } from "./folio-tiptap-pages-utils";
 import { MenuDownIcon, MenuUpIcon } from "@/components/tiptap-icons";
 import ParagraphPlaceholder from "@/components/tiptap-ui/paragraph-placeholder/paragraph-placeholder";
+import "./folio-tiptap-page-view.scss";
 
 import translate from "@/lib/i18n";
 

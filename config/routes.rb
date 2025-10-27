@@ -50,9 +50,11 @@ Folio::Engine.routes.draw do
         get :input_url
       end
 
-      resource :current_user, only: %i[show] do
-        patch :update_email
-        patch :update_password
+      if ::Rails.application.config.folio_console_current_user_profile_enabled
+        resource :current_user, only: %i[show] do
+          patch :update_email
+          patch :update_password
+        end
       end
 
       resources :attribute_types do

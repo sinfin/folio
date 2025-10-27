@@ -27,6 +27,7 @@ module Folio
 
     config.folio_console_locale = :cs
     config.folio_console_report_redirect = :console_pages_path
+    config.folio_console_current_user_profile_enabled = true
     config.folio_console_sidebar_link_class_names = nil
     config.folio_console_sidebar_prepended_link_class_names = []
     config.folio_console_sidebar_appended_link_class_names = []

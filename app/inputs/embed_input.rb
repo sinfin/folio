@@ -40,6 +40,8 @@ class EmbedInput < SimpleForm::Inputs::StringInput
 
     options[:custom_html] = @builder.template.capture do
       @builder.template.render(Folio::Input::Embed::InnerComponent.new(folio_embed_data:,
+                                                                       centered: !!options[:centered],
+                                                                       background_color: options[:background_color],
                                                                        compact: options[:compact]))
     end
 

@@ -167,7 +167,8 @@ class Folio::Console::Tiptap::Overlay::FormComponent < Folio::Console::Applicati
     end
 
     def render_embed_input(f:, key:, attr_config:)
-      f.input key, as: :embed
+      f.input key, as: :embed,
+                   centered: true
     end
 
     def buttons_model

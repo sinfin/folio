@@ -112,9 +112,11 @@
     &__toggle-wrap
       margin-left: $grid-gutter-width
 
-    &__cancel-wrap
-      &--hidden
-        visibility: hidden
+    &__cancel-wrap--hidden
+      visibility: hidden
+
+    &--hide-cancel-wrap &__cancel-wrap--hidden
+      display: none
 
     &__filter
       flex: 0 0 auto

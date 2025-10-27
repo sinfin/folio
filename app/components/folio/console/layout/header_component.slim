@@ -36,11 +36,16 @@
                              height: 16)
 
       - if Folio::Current.user
-        a.f-c-layout-header__current-user-link.text-reset[
-          href=controller.folio.console_current_user_path
-        ]
-          = folio_icon(:user_filled, height: 14)
-          = Folio::Current.user.email
+        - if Rails.application.config.folio_console_current_user_profile_enabled
+          a.f-c-layout-header__current-user-link.text-reset[
+            href=controller.folio.console_current_user_path
+            ]
+            = folio_icon(:user_filled, height: 14)
+            = Folio::Current.user.email
+        - else
+          .f-c-layout-header__current-user-link.text-muted
+            = folio_icon(:user_filled, height: 14)
+            = Folio::Current.user.email
 
       - if log_out_path
         a.f-c-layout-header__sign-out-link.text-reset[

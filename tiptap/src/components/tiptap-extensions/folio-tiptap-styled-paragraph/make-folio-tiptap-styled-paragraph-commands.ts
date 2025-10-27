@@ -1,13 +1,52 @@
-import { AArrowDown, AArrowUp, Star } from "lucide-react";
+import {
+  AArrowDown,
+  AArrowUp,
+  Star,
+  Heading,
+  MessageCircleQuestionMark,
+} from "lucide-react";
+import {
+  HeadingOneIcon,
+  HeadingTwoIcon,
+  HeadingThreeIcon,
+  HeadingFourIcon,
+  HeadingFiveIcon,
+  HeadingSixIcon,
+} from "@/components/tiptap-icons";
 
 export const makeFolioTiptapStyledParagraphCommands = (
   styledParagraphVariants: StyledParagraphVariantFromInput[],
 ): FolioEditorCommand[] => {
-  const icon = (any: string | undefined) => {
-    if (any === "arrow-up") {
-      return AArrowUp;
-    } else if (any === "arrow-down") {
-      return AArrowDown;
+  const icon = (
+    iconString: string | undefined,
+    tagString: string | undefined,
+  ) => {
+    switch (iconString) {
+      case "arrow-up":
+        return AArrowUp;
+      case "arrow-down":
+        return AArrowDown;
+      case "heading":
+        return Heading;
+      case "message-circle-question-mark":
+        return MessageCircleQuestionMark;
+    }
+
+    switch (tagString) {
+      case "h1":
+        return HeadingOneIcon;
+      case "h2":
+        return HeadingTwoIcon;
+      case "h3":
+        return HeadingThreeIcon;
+      case "h4":
+        return HeadingFourIcon;
+      case "h5":
+        return HeadingFiveIcon;
+      case "h6":
+        return HeadingSixIcon;
+      default:
+        return Star;
     }
 
     return Star;
@@ -16,12 +55,14 @@ export const makeFolioTiptapStyledParagraphCommands = (
   const commands = styledParagraphVariants.map((styledParagraphVariant) => {
     const command: FolioEditorCommand = {
       title: styledParagraphVariant.title,
-      icon: icon(styledParagraphVariant.icon),
+      icon: icon(styledParagraphVariant.icon, styledParagraphVariant.tag),
       key: `styledParagraphVariant-${styledParagraphVariant.variant}`,
       command: ({ chain }) => {
-        chain.setNode("folioTiptapStyledParagraph", {
+        const attrs: Record<string, string> = {
           variant: styledParagraphVariant.variant,
-        });
+        };
+
+        chain.setNode("folioTiptapStyledParagraph", attrs);
       },
     };
 

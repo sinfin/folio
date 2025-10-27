@@ -1,4 +1,5 @@
 import { Node, mergeAttributes } from "@tiptap/core";
+import { ReactNodeViewRenderer } from "@tiptap/react";
 import { TextSelection } from "@tiptap/pm/state";
 
 import {
@@ -7,6 +8,7 @@ import {
   goToPage,
   moveFolioTiptapPage,
 } from "./folio-tiptap-pages-utils";
+import { FolioTiptapPagesView } from "./folio-tiptap-pages-view";
 
 export * from "./folio-tiptap-page-node";
 
@@ -119,6 +121,12 @@ export const FolioTiptapPagesNode = Node.create({
           return moveFolioTiptapPage({ state, dispatch, type: "down" });
         },
     };
+  },
+
+  addNodeView() {
+    return ReactNodeViewRenderer(FolioTiptapPagesView, {
+      className: "node-folioTiptapPages f-tiptap-pages",
+    });
   },
 
   addKeyboardShortcuts() {
