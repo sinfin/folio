@@ -26,7 +26,6 @@
   - if model.try(:object).try(:errors).present?
     == cell('folio/console/form/errors', model, options.slice(:hide_fix_error_btn))
 
-  - if model.try(:object) && model.object.respond_to?(:soft_warnings_for_file_placements)
-    - warnings = model.object.soft_warnings_for_file_placements
-    - if warnings.present?
-      == cell('folio/console/form/warnings', nil, warnings: , record_key: "#{controller.controller_path}-#{model.object.id}")
+  - if soft_warnings.present?
+    = render_view_component(Folio::Console::Form::WarningsComponent.new(warnings: soft_warnings,
+                                                                        record_key: "#{controller.controller_path}-#{record.id}"))

@@ -224,6 +224,35 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
     description_with_fallback.blank?
   end
 
+  def console_warnings
+    return [] if file.blank?
+
+    warnings = []
+    placement_type = model_name.human
+
+    if missing_alt?
+      warnings << I18n.t("folio.console.soft_warnings.missing_alt",
+                        file_name: file.file_name,
+                        placement_type: placement_type)
+    end
+
+    if missing_description?
+      warnings << I18n.t("folio.console.soft_warnings.missing_description",
+                        file_name: file.file_name,
+                        file_id: file.id,
+                        placement_type: placement_type)
+    end
+
+    if file.author.blank? || file.attribution_source.blank? && file.attribution_source_url.blank?
+      warnings << I18n.t("folio.console.soft_warnings.missing_attribution",
+                        file_name: file.file_name,
+                        file_id: file.id,
+                        placement_type: placement_type)
+    end
+
+    warnings
+  end
+
   # override setter so that active gets set as a boolean instead of a string
   def folio_embed_data=(value)
     super(Folio::Embed.normalize_value(value))

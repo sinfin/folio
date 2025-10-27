@@ -1,5 +1,5 @@
 window.Folio.Stimulus.register('f-c-form-warnings', class extends window.Stimulus.Controller {
-  static values = { key: String }
+  static values = { recordKey: String }
 
   connect () {
     if (this._shouldShowFromStorage()) this._reveal()
@@ -11,7 +11,7 @@ window.Folio.Stimulus.register('f-c-form-warnings', class extends window.Stimulu
   }
 
   _storageKey () {
-    return `fCFormWarnings:${this.keyValue || window.location.pathname}`
+    return `fCFormWarnings:${this.recordKeyValue || window.location.pathname}`
   }
 
   _markForNextRender () {
