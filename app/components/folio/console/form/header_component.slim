@@ -36,3 +36,7 @@
     == cell('folio/console/form/errors',
             @f,
             hide_fix_error_btn: @hide_fix_error_btn)
+
+  - if soft_warnings.present?
+    = render(Folio::Console::Form::WarningsComponent.new(warnings: soft_warnings,
+                                                         record_key: "#{controller.controller_path}-#{record.id}"))
