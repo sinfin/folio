@@ -266,14 +266,6 @@ module Folio::HasAttachments
     read_attribute(:published) == true
   end
 
-  def soft_warnings_for_file_placements
-    collect_all_placements
-      .reject(&:marked_for_destruction?)
-      .flat_map(&:console_warnings)
-  end
-
-  private
-
     def collect_all_placements
       self.class.folio_attachment_keys.flat_map do |type, keys|
         keys.flat_map do |association|
@@ -305,6 +297,12 @@ module Folio::HasAttachments
   end
 
   private
+  def soft_warnings_for_file_placements
+    collect_all_placements
+      .reject(&:marked_for_destruction?)
+      .flat_map(&:console_warnings)
+  end
+
     def run_file_placements_after_save!
       return if dont_run_file_placements_after_save
       file_placements.find_each(&:run_after_save_job!)
