@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
 class Folio::Console::Links::ControlBarComponent < Folio::Console::ApplicationComponent
-  def initialize(url_json: {}, href: nil, json: true, absolute_urls: false, default_custom_url: false)
+  def initialize(url_json: {}, href: nil, json: true, absolute_urls: false, default_custom_url: false, disabled_button: true)
     @url_json = url_json
 
     @json = json
     @absolute_urls = absolute_urls
     @default_custom_url = default_custom_url
+    @disabled_button = disabled_button
 
     if @url_json.blank?
       @url_json = { href: }
@@ -28,6 +29,7 @@ class Folio::Console::Links::ControlBarComponent < Folio::Console::ApplicationCo
                           json: @json,
                           absolute_urls: @absolute_urls,
                           default_custom_url: @default_custom_url,
+                          disabled_button: @disabled_button
                         })
   end
 end

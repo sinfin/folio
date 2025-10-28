@@ -14,4 +14,5 @@
     = render(Folio::Console::Ui::ButtonComponent.new(variant: :success,
                                                      label: t('.add_link'),
                                                      icon: :link,
+                                                     disabled: @disabled_button,
                                                      data: stimulus_action(click: "onAddClick")))
