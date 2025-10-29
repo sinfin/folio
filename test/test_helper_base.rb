@@ -53,7 +53,7 @@ class ActiveSupport::TestCase
     # Store original values
     config_overrides.each do |key, value|
       original_values[key] = Rails.application.config.send(key)
-      Rails.application.config.send("#{key}=", value)
+      Rails.application.config.send("#{key}=", value) # TODO: Refactor to use stub, this vesion is not thread safe
     end
 
     yield
