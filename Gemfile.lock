@@ -778,7 +778,7 @@ GEM
 GEM
   remote: https://rubygems.z0ny.net/
   specs:
-    aws-file-handler (0.1.8)
+    aws-file-handler (0.1.9)
       aasm
       aws-sdk-s3
       aws-sdk-sqs
@@ -791,7 +791,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  aws-file-handler (~> 0.1, >= 0.1.8)!
+  aws-file-handler (~> 0.1, >= 0.1.9)!
   better_errors
   binding_of_caller
   capybara
