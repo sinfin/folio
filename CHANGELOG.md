@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- - `:disable_button` option to URL inputs
 - **Embed System**: Complete rewrite of embed functionality with new input and display components
   - `EmbedInput` for form integration with real-time validation and preview
   - `Folio::Embed::BoxComponent` for iframe-based display with lazy loading
