@@ -120,6 +120,7 @@ SimpleForm::Inputs::Base.class_eval do
                         json:,
                         absolute_urls: (options && options[:absolute_urls]) || false,
                         default_custom_url: (options && options[:default_custom_url]) || false,
+                        disabled_button: (options && options[:disabled_button]) || false,
                       },
                       action: {
                         "f-c-input-form-group-url:edit" => "edit",

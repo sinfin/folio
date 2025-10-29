@@ -51,7 +51,8 @@ window.Folio.Stimulus.register('f-c-input-form-group-url', class extends window.
     loaded: Boolean,
     json: Boolean,
     absoluteUrls: { type: Boolean, default: false },
-    defaultCustomUrl: { type: Boolean, default: false }
+    defaultCustomUrl: { type: Boolean, default: false },
+    disabledButton: { type: Boolean, default: false },
   }
 
   static targets = ['input']
@@ -85,7 +86,7 @@ window.Folio.Stimulus.register('f-c-input-form-group-url', class extends window.
     }
 
     const baseUrl = '/console/api/links/control_bar'
-    const data = { json: this.jsonValue, absolute_urls: this.absoluteUrlsValue, default_custom_url: this.defaultCustomUrlValue }
+    const data = { json: this.jsonValue, absolute_urls: this.absoluteUrlsValue, default_custom_url: this.defaultCustomUrlValue, disabled_button: this.disabledButtonValue }
 
     if (this.jsonValue) {
       data.url_json = this.inputTarget.value || '{}'
@@ -133,12 +134,14 @@ window.Folio.Stimulus.register('f-c-input-form-group-url', class extends window.
     const json = e.detail.json !== false
     const absoluteUrls = e.detail.absoluteUrls === true
     const defaultCustomUrl = e.detail.defaultCustomUrl === true
+    const disabledButton = e.detail.disabledButton === true
 
     const detail = {
       urlJson,
       json,
       absoluteUrls,
       defaultCustomUrl,
+      disabledButton,
       trigger: this
     }
 
