@@ -16,7 +16,8 @@ class Folio::Console::Ui::InPlaceInputComponent < Folio::Console::ApplicationCom
                  collection: nil,
                  compact: false,
                  disabled: false,
-                 multiple: false)
+                 multiple: false,
+                 warning: nil)
     @attribute = attribute
     @record = record
     @value = record.send(attribute)
@@ -32,6 +33,7 @@ class Folio::Console::Ui::InPlaceInputComponent < Folio::Console::ApplicationCom
     @compact = compact
     @disabled = disabled
     @multiple = multiple
+    @warning = warning
   end
 
   def url

@@ -21,6 +21,12 @@ class Folio::Console::Form::HeaderComponent < Folio::Console::ApplicationCompone
     @hide_fix_error_btn = hide_fix_error_btn
   end
 
+  def soft_warnings
+    return [] unless record&.respond_to?(:soft_warnings_for_file_placements)
+
+    record.soft_warnings_for_file_placements
+  end
+
   private
     def record
       return @record if defined?(@record)

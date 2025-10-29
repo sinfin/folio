@@ -89,6 +89,7 @@ FactoryBot.define do
   factory :folio_file_image, parent: :folio_file, class: "Folio::File::Image" do
     file { Folio::Engine.root.join("test/fixtures/folio/test.gif") }
     site { get_current_or_existing_site_or_create_from_factory }
+    association :media_source, factory: :folio_media_source
 
     trait :black do
       file { Folio::Engine.root.join("test/fixtures/folio/test-black.gif") }

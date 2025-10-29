@@ -354,6 +354,7 @@ en:
       invalid_count: must be exactly %{count}
       cannot_publish_with_files_over_usage_limit: "%{name} exceeds usage limit (%{limit})"
       cannot_publish_with_files_restricted_to_site: "%{name} is not allowed on this site (allowed only on: %{allowed_sites})"
+      cannot_publish_with_files_without_media_source: "%{name} does not have a media source assigned"
       invalid_file_placement: does not meet the requirements
       invalid_file_placements: do not meet the requirements
       invalid_subtitle_block: has invalid subtitle block near line %{line}

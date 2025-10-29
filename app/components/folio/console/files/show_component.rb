@@ -95,4 +95,32 @@ class Folio::Console::Files::ShowComponent < Folio::Console::ApplicationComponen
                               field: key,
                               only_path: true])
   end
+
+  def warning_for(key)
+    return nil unless @file.file_placements_count > 0
+    return nil unless should_warn_for?(key)
+
+    "#{@file.class.human_attribute_name(key)} #{I18n.t("errors.messages.blank")}"
+  end
+
+  private
+    def should_warn_for?(key)
+      case key
+      when :alt
+        Rails.application.config.folio_files_require_alt &&
+          @file.class.human_type == "image" &&
+          @file.alt.blank?
+      when :description
+        Rails.application.config.folio_files_require_description &&
+          @file.description.blank?
+      when :author
+        Rails.application.config.folio_files_require_attribution &&
+          @file.author.blank?
+      when :attribution_source
+        Rails.application.config.folio_files_require_attribution &&
+          @file.attribution_source.blank?
+      else
+        false
+      end
+    end
 end

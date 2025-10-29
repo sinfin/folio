@@ -28,6 +28,10 @@ div[
                    height: 12,
                    class: "flex-grow-0 flex-shrink-0 f-c-ui-in-place-input__success-ico")
 
+      - if @warning.present?
+        .f-c-ui-in-place-input__warning data=stimulus_tooltip(@warning, variant: :popover).merge(stimulus_target("warning"))
+          = folio_icon(:alert, width: 24, height: 24)
+
       - unless @disabled
         = folio_icon(:edit,
                      height: 12,

@@ -266,6 +266,14 @@ module Folio::HasAttachments
     read_attribute(:published) == true
   end
 
+    def collect_all_placements
+      self.class.folio_attachment_keys.flat_map do |type, keys|
+        keys.flat_map do |association|
+          type == :has_many ? send(association).to_a : send(association)
+        end
+      end.compact
+    end
+
   def update_file_placement_counts_if_needed
     return unless should_update_file_placement_counts == true
 
@@ -288,7 +296,15 @@ module Folio::HasAttachments
     end
   end
 
+  def soft_warnings_for_file_placements
+    collect_all_placements
+      .reject(&:marked_for_destruction?)
+      .flat_map(&:console_warnings)
+      .uniq
+  end
+
   private
+
     def run_file_placements_after_save!
       return if dont_run_file_placements_after_save
       file_placements.find_each(&:run_after_save_job!)
@@ -379,10 +395,15 @@ module Folio::HasAttachments
                                    limit: file.attribution_max_usage_count))
         end
 
-        if !file.can_be_used_on_site?(Folio::Current.site)
+        unless file.can_be_used_on_site?(Folio::Current.site)
           errors.add(:base, I18n.t("errors.messages.cannot_publish_with_files_restricted_to_site",
                                    name: file.file_name,
                                    allowed_sites: file.allowed_sites.pluck(:title).join(", ")))
+        end
+
+        unless file.attribution_source.present?
+          errors.add(:base, I18n.t("errors.messages.cannot_publish_with_files_without_media_source",
+                                   name: file.file_name))
         end
       end
     end
