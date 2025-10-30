@@ -5,6 +5,8 @@ class Folio::Metadata::ExtractionJob < Folio::ApplicationJob
 
   discard_on ActiveJob::DeserializationError
 
+  unique :until_and_while_executing
+
   def perform(image, force: false, user_id: nil)
     @user_id = user_id
     return unless image.is_a?(Folio::File::Image)

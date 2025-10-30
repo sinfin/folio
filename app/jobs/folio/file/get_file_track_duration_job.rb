@@ -5,9 +5,7 @@ class Folio::File::GetFileTrackDurationJob < Folio::ApplicationJob
 
   queue_as :default
 
-  unique :until_and_while_executing,
-         lock_ttl: 10.minutes,
-         on_conflict: :log
+  unique :until_and_while_executing
 
   def perform(file_path, human_type)
     if %w[audio video].include?(human_type)

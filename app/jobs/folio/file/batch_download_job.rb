@@ -7,9 +7,7 @@ class Folio::File::BatchDownloadJob < Folio::ApplicationJob
 
   queue_as :slow
 
-  unique :until_and_while_executing,
-         lock_ttl: 10.minutes,
-         on_conflict: :log
+  unique :until_and_while_executing
 
   retry_on StandardError, wait: :exponentially_longer, attempts: 1
 

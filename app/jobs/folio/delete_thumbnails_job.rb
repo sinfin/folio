@@ -3,9 +3,7 @@
 class Folio::DeleteThumbnailsJob < Folio::ApplicationJob
   queue_as :slow
 
-  unique :until_and_while_executing,
-         lock_ttl: 1.minute,
-         on_conflict: :log
+  unique :until_and_while_executing
 
   def perform(thumbnail_sizes)
     thumbnail_sizes.each do |size, values|

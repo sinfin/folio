@@ -7,6 +7,8 @@ class Folio::S3::BaseJob < Folio::ApplicationJob
 
   retry_on StandardError, wait: :exponentially_longer, attempts: 1
 
+  unique :until_and_while_executing
+
   def perform(s3_path:, type:, message_bus_client_id: nil, existing_id: nil, web_session_id: nil, user_id: nil, attributes: {})
     return unless s3_path
     return unless type

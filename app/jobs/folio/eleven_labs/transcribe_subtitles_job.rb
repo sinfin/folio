@@ -5,6 +5,8 @@ class Folio::ElevenLabs::TranscribeSubtitlesJob < Folio::ApplicationJob
 
   queue_as :default
 
+  unique :until_and_while_executing
+
   # ElevenLabs file size limit for cloud storage URLs
   MAX_FILE_SIZE_BYTES = 1536.megabytes
 

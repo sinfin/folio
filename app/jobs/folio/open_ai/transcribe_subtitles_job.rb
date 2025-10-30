@@ -5,6 +5,8 @@ class Folio::OpenAi::TranscribeSubtitlesJob < Folio::ApplicationJob
 
   queue_as :default
 
+  unique :until_and_while_executing
+
   def perform(video_file)
     raise "only video files can be transcribed" unless video_file.is_a?(Folio::File::Video)
 

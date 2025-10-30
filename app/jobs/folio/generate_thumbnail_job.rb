@@ -6,9 +6,7 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
   discard_on(ActiveJob::DeserializationError)
   discard_on(Dragonfly::Job::Fetch::NotFound)
 
-  unique :until_and_while_executing,
-         lock_ttl: 1.minute,
-         on_conflict: :log
+  unique :until_and_while_executing
 
   def perform(image, size, quality, x: nil, y: nil, force: false)
     return if image.file_mime_type.include?("svg")
