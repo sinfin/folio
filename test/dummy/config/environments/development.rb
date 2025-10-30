@@ -75,26 +75,6 @@ Rails.application.configure do
 
   if ENV["DEV_QUEUE_ADAPTER"].present?
     config.active_job.queue_adapter = ENV["DEV_QUEUE_ADAPTER"]
-
-    if ENV["DEV_QUEUE_ADAPTER"] == "sidekiq"
-      Sidekiq.configure_server do |config|
-        config.client_middleware do |chain|
-          chain.add SidekiqUniqueJobs::Middleware::Client
-        end
-
-        config.server_middleware do |chain|
-          chain.add SidekiqUniqueJobs::Middleware::Server
-        end
-
-        SidekiqUniqueJobs::Server.configure(config)
-      end
-
-      Sidekiq.configure_client do |config|
-        config.client_middleware do |chain|
-          chain.add SidekiqUniqueJobs::Middleware::Client
-        end
-      end
-    end
   end
 
   # Print deprecation notices to the Rails logger.

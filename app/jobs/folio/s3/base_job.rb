@@ -5,7 +5,7 @@ class Folio::S3::BaseJob < Folio::ApplicationJob
 
   queue_as :default
 
-  adapter_aware_sidekiq_options(retry: false)
+  retry_on StandardError, wait: :exponentially_longer, attempts: 1
 
   def perform(s3_path:, type:, message_bus_client_id: nil, existing_id: nil, web_session_id: nil, user_id: nil, attributes: {})
     return unless s3_path

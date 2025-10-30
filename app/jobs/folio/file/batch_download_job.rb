@@ -7,15 +7,11 @@ class Folio::File::BatchDownloadJob < Folio::ApplicationJob
 
   queue_as :slow
 
-  adapter_aware_sidekiq_options(
-    lock: :until_and_while_executing,
-    lock_ttl: 10.minutes.to_i,
-    on_conflict: {
-      client: :reject,
-      server: :raise
-    },
-    retry: false
-  )
+  unique :until_and_while_executing,
+         lock_ttl: 10.minutes,
+         on_conflict: :log
+
+  retry_on StandardError, wait: :exponentially_longer, attempts: 1
 
   def perform(s3_path:, file_class_name:, file_ids:, user_id:, site_id:)
     file_klass = file_class_name.constantize
