@@ -6,6 +6,15 @@ class Folio::Files::AfterSaveJob < Folio::ApplicationJob
   # Discard if file no longer exists
   discard_on ActiveJob::DeserializationError
 
+  if respond_to?(:sidekiq_options)
+    sidekiq_options lock: :until_and_while_executing,
+                    lock_ttl: 10.minutes.to_i,
+                    on_conflict: {
+                      client: :log,
+                      server: :raise
+                    }
+  end
+
   # use SQL commands only!
   # save/update would cause an infinite loop as this is hooked in after_save
   def perform(file)

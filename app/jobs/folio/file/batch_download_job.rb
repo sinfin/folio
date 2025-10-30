@@ -7,6 +7,15 @@ class Folio::File::BatchDownloadJob < Folio::ApplicationJob
 
   queue_as :slow
 
+  if respond_to?(:sidekiq_options)
+    sidekiq_options lock: :until_and_while_executing,
+                    lock_ttl: 10.minutes.to_i,
+                    on_conflict: {
+                      client: :log,
+                      server: :raise
+                    }
+  end
+
   if defined?(sidekiq_options)
     sidekiq_options retry: false
   end
