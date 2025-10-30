@@ -90,9 +90,11 @@
     margin: 0
 
   +media-breakpoint-up(sm)
-    &__wrap
+    &__wrap,
+    &__actions
       display: flex
       align-items: flex-start
+      gap: $grid-gutter-base
 
     &__filters
       display: flex
@@ -101,20 +103,27 @@
       gap: $grid-gutter-width / 3
       flex: 1 1 auto
 
-    &__cancel-wrap,
-    &__toggle-wrap
-      line-height: $input-height
-      display: flex
-      align-items: center
-      flex: 0 0 auto
+    &__actions
+      align-self: stretch
+      flex-wrap: wrap
+      flex: 0 1 auto
+      justify-content: flex-end
 
     &__cancel-wrap,
     &__toggle-wrap
-      margin-left: $grid-gutter-width
+      align-items: center
+      display: flex
+      flex: 0 0 auto
+      line-height: 1
+      min-height: $input-height
+
+    &__toggle-wrap + &__cancel-wrap
+      margin-top: auto
 
     &__cancel-wrap--hidden
       visibility: hidden
 
+    &__toggle-wrap + &__cancel-wrap--hidden,
     &--hide-cancel-wrap &__cancel-wrap--hidden
       display: none
 

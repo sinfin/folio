@@ -30,21 +30,24 @@ div[
               - else
                 = input(f, key)
 
-      - if has_collapsible?
-        .f-c-ui-index-filters__toggle-wrap.small
-          == cell('folio/console/ui/with_icon',
-                  t('.collapsible_toggle'),
-                  class: 'f-c-ui-index-filters__toggle',
-                  data: stimulus_action(click: 'onToggleClick'),
-                  right_icon: :menu_down)
+      .f-c-ui-index-filters__actions
+        - if @collapsible
+          .f-c-ui-index-filters__toggle-wrap
+            == cell('folio/console/ui/with_icon',
+                    t('.collapsible_toggle'),
+                    class: 'f-c-ui-index-filters__toggle small',
+                    data: stimulus_action(click: 'onToggleClick'),
+                    right_icon: :menu_down,
+                    icon_options: { height: 16 })
 
-      .f-c-ui-index-filters__cancel-wrap[
-        class=(filtered? ? nil : "f-c-ui-index-filters__cancel-wrap--hidden")
-      ]
-        == cell('folio/console/ui/with_icon',
-                t('.cancel'),
-                href: cancel_url,
-                icon: :close,
-                class: "text-danger f-c-ui-index-filters__cancel")
+        .f-c-ui-index-filters__cancel-wrap[
+          class=(filtered? ? nil : "f-c-ui-index-filters__cancel-wrap--hidden")
+        ]
+          == cell('folio/console/ui/with_icon',
+                  t('.cancel'),
+                  href: cancel_url,
+                  icon: :close,
+                  icon_options: { height: 16 },
+                  class: "text-danger f-c-ui-index-filters__cancel small")
 
       = hidden_input(f, :by_label_query, { value: controller.params[:by_label_query] })

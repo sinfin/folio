@@ -11,6 +11,10 @@ class Folio::Console::Ui::Index::FiltersComponent < Folio::Console::ApplicationC
   end
 
   private
+    def before_render
+      @collapsible = index_filters_hash.any? { |_key, config| config[:collapsed] }
+    end
+
     def data
       stimulus_controller("f-c-ui-index-filters",
                           values: {
@@ -25,7 +29,7 @@ class Folio::Console::Ui::Index::FiltersComponent < Folio::Console::ApplicationC
 
     def form_expanded_class_name
       return nil unless filtered?
-      return nil unless has_collapsible?
+      return nil unless @collapsible
 
       if index_filters_hash.any? { |key, config| config[:collapsed] && filtered_by?(key) }
         "f-c-ui-index-filters--expanded"
@@ -215,11 +219,6 @@ class Folio::Console::Ui::Index::FiltersComponent < Folio::Console::ApplicationC
       end
 
       "width: #{width}"
-    end
-
-    def has_collapsible?
-      return @has_collapsible unless @has_collapsible.nil?
-      @has_collapsible = index_filters_hash.any? { |_key, config| config[:collapsed] }
     end
 
     def hidden_input(f, key, config)
