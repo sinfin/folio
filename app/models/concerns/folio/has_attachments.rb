@@ -266,13 +266,13 @@ module Folio::HasAttachments
     read_attribute(:published) == true
   end
 
-    def collect_all_placements
-      self.class.folio_attachment_keys.flat_map do |type, keys|
-        keys.flat_map do |association|
-          type == :has_many ? send(association).to_a : send(association)
-        end
-      end.compact
-    end
+  def collect_all_placements
+    self.class.folio_attachment_keys.flat_map do |type, keys|
+      keys.flat_map do |association|
+        type == :has_many ? send(association).to_a : send(association)
+      end
+    end.compact
+  end
 
   def update_file_placement_counts_if_needed
     return unless should_update_file_placement_counts == true
@@ -304,7 +304,6 @@ module Folio::HasAttachments
   end
 
   private
-
     def run_file_placements_after_save!
       return if dont_run_file_placements_after_save
       file_placements.find_each(&:run_after_save_job!)
