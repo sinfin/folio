@@ -3,14 +3,14 @@
 class Folio::Files::RestartProcessingMediaJob < Folio::ApplicationJob
   queue_as :slow
 
-  if respond_to?(:sidekiq_options)
-    sidekiq_options lock: :until_and_while_executing,
-                    lock_ttl: 1.minute.to_i,
-                    on_conflict: {
-                      client: :log,
-                      server: :raise
-                    }
-  end
+  adapter_aware_sidekiq_options(
+    lock: :until_and_while_executing,
+    lock_ttl: 1.minute.to_i,
+    on_conflict: {
+      client: :reject,
+      server: :raise
+    }
+  )
 
   def perform
     Folio::File.processing.find_each do |file|

@@ -5,14 +5,14 @@ class Folio::Files::SetAdditionalDataJob < Folio::ApplicationJob
 
   discard_on(ActiveJob::DeserializationError)
 
-  if respond_to?(:sidekiq_options)
-    sidekiq_options lock: :until_and_while_executing,
-                    lock_ttl: 10.minutes.to_i,
-                    on_conflict: {
-                      client: :log,
-                      server: :raise
-                    }
-  end
+  adapter_aware_sidekiq_options(
+    lock: :until_and_while_executing,
+    lock_ttl: 10.minutes.to_i,
+    on_conflict: {
+      client: :reject,
+      server: :raise
+    }
+  )
 
   def perform(file_model)
     additional_data = file_model.additional_data || {}

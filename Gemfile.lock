@@ -825,6 +825,9 @@ DEPENDENCIES
   rubocop-rails_config
   rubocop-rake
   selenium-webdriver
+  sidekiq
+  sidekiq-cron
+  sidekiq-unique-jobs
   sprockets (~> 4.0)
   sprockets-rails
   vcr

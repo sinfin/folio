@@ -6,15 +6,15 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
   discard_on(ActiveJob::DeserializationError)
   discard_on(Dragonfly::Job::Fetch::NotFound)
 
-  if respond_to?(:sidekiq_options)
-    sidekiq_options lock: :until_and_while_executing,
-                    lock_ttl: 1.minute.to_i,
-                    lock_args_method: :lock_args,
-                    on_conflict: {
-                      client: :log,
-                      server: :raise
-                    }
-  end
+  adapter_aware_sidekiq_options(
+    lock: :until_and_while_executing,
+    lock_ttl: 1.minute.to_i,
+    lock_args_method: :lock_args,
+    on_conflict: {
+      client: :reject,
+      server: :raise
+    }
+  )
 
   def perform(image, size, quality, x: nil, y: nil, force: false)
     return if image.file_mime_type.include?("svg")

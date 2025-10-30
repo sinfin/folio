@@ -31,6 +31,10 @@ gem "omniauth-apple"
 gem "omniauth-rails_csrf_protection"
 gem "omniauth"
 
+gem "sidekiq-cron"
+gem "sidekiq"
+gem "sidekiq-unique-jobs"
+
 group :development do
   gem "puma", "< 6"
   gem "i18n-tasks"

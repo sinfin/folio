@@ -5,6 +5,16 @@ class Folio::GenerateMissingThumbWebpJob < Folio::ApplicationJob
 
   discard_on ActiveJob::DeserializationError
 
+  adapter_aware_sidekiq_options(
+    lock: :until_and_while_executing,
+    lock_ttl: 1.minute.to_i,
+    lock_args_method: :lock_args,
+    on_conflict: {
+      client: :reject,
+      server: :raise
+    }
+  )
+
   def perform(image)
     return if image.file_mime_type.include?("svg")
     return if image.animated_gif?
@@ -27,6 +37,21 @@ class Folio::GenerateMissingThumbWebpJob < Folio::ApplicationJob
       if changed
         image.update!(thumbnail_sizes:)
       end
+    end
+  end
+
+  # Define what makes a job unique - only image ID matters for deduplication
+  def self.lock_args(args)
+    image = args[0]
+
+    # Handle both direct objects and GlobalID serialized objects
+    if image.respond_to?(:to_global_id)
+      [image.to_global_id.to_s]
+    elsif image.is_a?(Hash) && image["_aj_globalid"]
+      [image["_aj_globalid"]]
+    else
+      # Fallback - use first argument
+      [image]
     end
   end
 

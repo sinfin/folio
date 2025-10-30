@@ -3,6 +3,15 @@
 class Folio::InvalidUsersCheckJob < Folio::ApplicationJob
   queue_as :slow
 
+  adapter_aware_sidekiq_options(
+    lock: :until_and_while_executing,
+    lock_ttl: 5.minutes.to_i,
+    on_conflict: {
+      client: :reject,
+      server: :raise
+    }
+  )
+
   class InvalidUsersError < StandardError
   end
 
