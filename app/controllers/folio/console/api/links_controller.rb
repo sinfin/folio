@@ -35,6 +35,8 @@ class Folio::Console::Api::LinksController < Folio::Console::Api::BaseController
       params[:href]
     end
 
+    disabled = params[:disabled] == true || params[:disabled] == "true"
+
     json = params[:json] != false && params[:json] != "false"
     absolute_urls = params[:absolute_urls] == true || params[:absolute_urls] == "true"
     default_custom_url = params[:default_custom_url] == true || params[:default_custom_url] == "true"
@@ -42,6 +44,7 @@ class Folio::Console::Api::LinksController < Folio::Console::Api::BaseController
     render_component_json(Folio::Console::Links::ControlBarComponent.new(url_json:,
                                                                          href:,
                                                                          json:,
+                                                                         disabled:,
                                                                          absolute_urls:,
                                                                          default_custom_url:))
   end

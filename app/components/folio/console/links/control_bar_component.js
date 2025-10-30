@@ -1,12 +1,15 @@
 window.Folio.Stimulus.register('f-c-links-control-bar', class extends window.Stimulus.Controller {
   static values = {
     json: Boolean,
+    disabled: Boolean,
     absoluteUrls: { type: Boolean, default: false },
     defaultCustomUrl: { type: Boolean, default: false }
   }
 
   onAddClick (e) {
     e.preventDefault()
+
+    if (this.disabledValue) return
 
     this.element.dispatchEvent(new CustomEvent('f-c-input-form-group-url:edit', {
       bubbles: true,

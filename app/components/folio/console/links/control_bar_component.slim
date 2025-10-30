@@ -5,7 +5,8 @@
   ]
     - if @url_json.present?
       = render(Folio::Console::Links::ValueComponent.new(url_json: @url_json,
-                                                         json: @json))
+                                                         json: @json,
+                                                         disabled: @disabled))
 
   .f-c-links-control-bar__button-wrap[
     data=stimulus_target("buttonWrap")
@@ -14,4 +15,5 @@
     = render(Folio::Console::Ui::ButtonComponent.new(variant: :success,
                                                      label: t('.add_link'),
                                                      icon: :link,
+                                                     disabled: @disabled,
                                                      data: stimulus_action(click: "onAddClick")))

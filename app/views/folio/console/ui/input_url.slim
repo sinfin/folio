@@ -13,6 +13,14 @@ h2 Input URL
 
     = f.input :link, as: :url
 
+  h3 Blank - href - disabled
+
+  .f-c-uidemo-wrap
+    pre.f-c-uidemo-pre hidden=true
+      code.f-c-uidemo-code
+
+    = f.input :link, as: :url, disabled: true
+
   h3 Blank - JSON
 
   .f-c-uidemo-wrap
@@ -60,6 +68,15 @@ h2 Input URL
 
   hr.my-5
 
+  h3 With data - JSON - disabled
+
+  .f-c-uidemo-wrap
+    pre.f-c-uidemo-pre: code.f-c-uidemo-code = JSON.pretty_generate(data)
+
+    = f.input :link_json_with_data, as: :url_json, input_html: { value: data.to_json }, disabled: true
+
+  hr.my-5
+
   h3 Richtext uses links as well
 
   = f.input :rich_text,
@@ -70,7 +87,7 @@ h2 Input URL
 
   = render(Folio::Console::Ui::ButtonComponent.new(type: :submit,
                                                    variant: :primary,
-                                                   label: t("folio.console.actions.submit"))
+                                                   label: t("folio.console.actions.submit")))
 
 javascript:
   for (const wrap of document.querySelectorAll('.f-c-uidemo-wrap')) {

@@ -50,6 +50,7 @@ window.Folio.Stimulus.register('f-c-input-form-group-url', class extends window.
   static values = {
     loaded: Boolean,
     json: Boolean,
+    disabled: Boolean,
     absoluteUrls: { type: Boolean, default: false },
     defaultCustomUrl: { type: Boolean, default: false }
   }
@@ -85,7 +86,12 @@ window.Folio.Stimulus.register('f-c-input-form-group-url', class extends window.
     }
 
     const baseUrl = '/console/api/links/control_bar'
-    const data = { json: this.jsonValue, absolute_urls: this.absoluteUrlsValue, default_custom_url: this.defaultCustomUrlValue }
+    const data = {
+      json: this.jsonValue,
+      absolute_urls: this.absoluteUrlsValue,
+      default_custom_url: this.defaultCustomUrlValue,
+      disabled: this.disabledValue
+    }
 
     if (this.jsonValue) {
       data.url_json = this.inputTarget.value || '{}'
@@ -118,6 +124,8 @@ window.Folio.Stimulus.register('f-c-input-form-group-url', class extends window.
   }
 
   edit (e) {
+    if (this.disabledValue) return
+
     const value = this.inputTarget.value
     let urlJson = {}
 
@@ -146,6 +154,8 @@ window.Folio.Stimulus.register('f-c-input-form-group-url', class extends window.
   }
 
   saveUrlJson (data) {
+    if (this.disabledValue) return
+
     let value
 
     if (this.jsonValue) {
