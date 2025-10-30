@@ -33,7 +33,7 @@ gem "omniauth"
 
 gem "sidekiq-cron"
 gem "sidekiq"
-gem 'activejob-uniqueness', require: 'active_job/uniqueness/sidekiq_patch'
+gem "activejob-uniqueness", require: "active_job/uniqueness/sidekiq_patch"
 
 group :development do
   gem "puma", "< 6"
