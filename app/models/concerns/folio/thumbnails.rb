@@ -87,7 +87,7 @@ module Folio::Thumbnails
 
           return OpenStruct.new(thumbs_hash_with_rewritten_urls(image.thumbnail_sizes[w_x_h]))
         else
-          # With sidekiq-unique-jobs, we can simply queue the job without complex database coordination
+          # With activejob-uniqueness, we can simply queue the job without complex database coordination
           url = temporary_url(w_x_h)
           Folio::GenerateThumbnailJob.perform_later(self, w_x_h, quality, force:, x:, y:)
         end

@@ -23,10 +23,10 @@ class Folio::ThumbnailsTest < ActiveSupport::TestCase
     assert_equal 111, result1.width
     assert_equal 111, result1.height
 
-    # Second call should also queue a job (sidekiq-unique-jobs handles deduplication)
+    # Second call should also queue a job (activejob-uniqueness handles deduplication)
     image.thumb(THUMB_SIZE)
     # Note: The actual deduplication happens at the sidekiq level, not here
-    # So we might see 2 enqueued jobs, but sidekiq-unique-jobs will deduplicate them
+    # So we might see 2 enqueued jobs, but activejob-uniqueness will deduplicate them
 
     perform_enqueued_jobs
 

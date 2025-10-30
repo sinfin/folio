@@ -280,7 +280,7 @@ module Folio::Console::Api::FileControllerBase
       url = "https://doader.com/#{size}?image=#{@file.id}"
 
       # Clear existing thumbnail and mark for regeneration
-      # With sidekiq-unique-jobs, we don't need started_generating_at coordination
+      # With activejob-uniqueness, we don't need started_generating_at coordination
       thumbnail_sizes[size_key] = {
         uid: nil,
         signature: nil,
