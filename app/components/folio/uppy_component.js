@@ -88,7 +88,8 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
       this.uppy = new window.Uppy.Uppy(opts)
 
       const dashboardOpts = {
-        inline: this.inlineValue
+        inline: this.inlineValue,
+        closeModalOnClickOutside: true
       }
 
       if (this.allowedFormatsValue) {
