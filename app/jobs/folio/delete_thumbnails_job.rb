@@ -3,6 +3,10 @@
 class Folio::DeleteThumbnailsJob < Folio::ApplicationJob
   queue_as :slow
 
+  unique :until_and_while_executing,
+         lock_ttl: 1.minute,
+         on_conflict: :log
+
   def perform(thumbnail_sizes)
     thumbnail_sizes.each do |size, values|
       Dragonfly.app.destroy(values[:uid]) if values[:uid]

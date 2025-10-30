@@ -1,9 +1,13 @@
 # frozen_string_literal: true
 
-class Folio::File::GetFileTrackDurationJob < ApplicationJob
+class Folio::File::GetFileTrackDurationJob < Folio::ApplicationJob
   include Folio::Shell
 
   queue_as :default
+
+  unique :until_and_while_executing,
+         lock_ttl: 10.minutes,
+         on_conflict: :log
 
   def perform(file_path, human_type)
     if %w[audio video].include?(human_type)

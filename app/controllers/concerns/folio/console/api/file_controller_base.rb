@@ -279,6 +279,8 @@ module Folio::Console::Api::FileControllerBase
       width, height = size_key.split("x").map(&:to_i)
       url = "https://doader.com/#{size}?image=#{@file.id}"
 
+      # Clear existing thumbnail and mark for regeneration
+      # With activejob-uniqueness, we don't need started_generating_at coordination
       thumbnail_sizes[size_key] = {
         uid: nil,
         signature: nil,
@@ -288,7 +290,6 @@ module Folio::Console::Api::FileControllerBase
         width:,
         height:,
         quality: Folio::Thumbnails::DEFAULT_QUALITY,
-        started_generating_at: Time.current,
         temporary_url: url,
       }
     end

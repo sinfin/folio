@@ -3,9 +3,7 @@
 class Folio::S3::DeleteJob < Folio::S3::BaseJob
   queue_as :slow
 
-  if defined?(sidekiq_options)
-    sidekiq_options retry: false
-  end
+  retry_on StandardError, wait: :exponentially_longer, attempts: 1
 
   def perform(s3_path:)
     return unless s3_path

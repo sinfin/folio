@@ -6,6 +6,10 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
   discard_on(ActiveJob::DeserializationError)
   discard_on(Dragonfly::Job::Fetch::NotFound)
 
+  unique :until_and_while_executing,
+         lock_ttl: 1.minute,
+         on_conflict: :log
+
   def perform(image, size, quality, x: nil, y: nil, force: false)
     return if image.file_mime_type.include?("svg")
 
@@ -43,6 +47,24 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
     broadcast_file_update(image)
 
     image
+  end
+
+  # Define what makes a job unique - only image ID and size matter for deduplication
+  # This prevents duplicate jobs for same thumbnail with different quality/force/x/y values
+  def lock_key_arguments
+    # For ActiveJob, arguments are: [image, size, quality, { x: nil, y: nil, force: false }]
+    # We only want to use image and size for uniqueness
+    image, size = arguments[0], arguments[1]
+
+    # Handle both direct objects and GlobalID serialized objects
+    if image.respond_to?(:to_global_id)
+      [image.to_global_id.to_s, size]
+    elsif image.is_a?(Hash) && image["_aj_globalid"]
+      [image["_aj_globalid"], size]
+    else
+      # Fallback - use first two arguments
+      [image, size]
+    end
   end
 
   private

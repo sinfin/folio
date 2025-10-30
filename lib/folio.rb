@@ -17,6 +17,7 @@ require "acts-as-taggable-on"
 require "pg_search"
 require "turbolinks"
 require "view_component"
+require "active_job/uniqueness/sidekiq_patch"
 
 require "slim"
 require "sass-rails"

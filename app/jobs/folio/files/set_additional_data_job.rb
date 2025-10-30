@@ -5,6 +5,10 @@ class Folio::Files::SetAdditionalDataJob < Folio::ApplicationJob
 
   discard_on(ActiveJob::DeserializationError)
 
+  unique :until_and_while_executing,
+         lock_ttl: 10.minutes,
+         on_conflict: :log
+
   def perform(file_model)
     additional_data = file_model.additional_data || {}
 

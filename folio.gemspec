@@ -77,6 +77,7 @@ Gem::Specification.new do |s|
   s.add_dependency "httpparty"
   s.add_dependency "sidekiq-cron", "~> 1.10.1"
   s.add_dependency "sidekiq", "~> 6.5"
+  s.add_dependency "activejob-uniqueness"
   s.add_dependency "simple_form"
   s.add_dependency "sitemap_generator"
   s.add_dependency "cells-slim"

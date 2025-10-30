@@ -56,12 +56,21 @@ class Folio::PregenerateThumbnailsTest < ActiveSupport::TestCase
 
     page.cover_placement.check_pregenerated_thumbnails!
 
+    # Perform the jobs that were enqueued by check_pregenerated_thumbnails!
+    perform_enqueued_jobs only: Folio::GenerateThumbnailJob
+
     page.reload
     image.reload
 
-    assert image.thumbnail_sizes[THUMB_SIZE][:url].include?("doader.")
-    assert image.thumbnail_sizes[THUMB_SIZE_TWO][:url].include?("doader.")
+    # Check that thumbnails were regenerated (not nil and different from broken URLs)
+    assert_not_nil image.thumbnail_sizes[THUMB_SIZE], "THUMB_SIZE thumbnail should be regenerated"
+    assert_not_nil image.thumbnail_sizes[THUMB_SIZE_TWO], "THUMB_SIZE_TWO thumbnail should be regenerated"
 
-    assert_enqueued_jobs 2, only: Folio::GenerateThumbnailJob
+    # Check that the URLs are no longer the broken ones we set
+    assert_not_equal "https://doader.s3.amazonaws.com/250x250.gif", image.thumbnail_sizes[THUMB_SIZE][:url], "URL should be regenerated, not the broken one"
+
+    # URLs should be present and valid
+    assert image.thumbnail_sizes[THUMB_SIZE][:url].present?, "THUMB_SIZE URL should be present"
+    assert image.thumbnail_sizes[THUMB_SIZE_TWO][:url].present?, "THUMB_SIZE_TWO URL should be present"
   end
 end

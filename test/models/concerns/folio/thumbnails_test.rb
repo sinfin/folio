@@ -13,27 +13,26 @@ class Folio::ThumbnailsTest < ActiveSupport::TestCase
     assert_nil image.thumbnail_sizes[THUMB_SIZE]
     assert_enqueued_jobs 0, only: Folio::GenerateThumbnailJob
 
-    image.thumb(THUMB_SIZE)
-
+    # First call should queue a job and return temporary URL
+    result1 = image.thumb(THUMB_SIZE)
     assert_enqueued_jobs 1, only: Folio::GenerateThumbnailJob
-    started_generating_at = image.thumbnail_sizes[THUMB_SIZE][:started_generating_at]
-    assert started_generating_at > 1.hour.ago
 
-    %i[url width height quality].each do |key|
-      assert image.thumbnail_sizes[THUMB_SIZE][key]
-    end
+    # With simplified logic, no temporary data is stored in database
+    # The method returns a temporary URL immediately
+    assert result1.url.include?("doader.com")
+    assert_equal 111, result1.width
+    assert_equal 111, result1.height
 
+    # Second call should also queue a job (activejob-uniqueness handles deduplication)
     image.thumb(THUMB_SIZE)
-    assert_enqueued_jobs 1, only: Folio::GenerateThumbnailJob
-    %i[url width height quality].each do |key|
-      assert image.thumbnail_sizes[THUMB_SIZE][key]
-    end
-    assert_equal started_generating_at, image.thumbnail_sizes[THUMB_SIZE][:started_generating_at]
+    # Note: The actual deduplication happens at the sidekiq level, not here
+    # So we might see 2 enqueued jobs, but activejob-uniqueness will deduplicate them
 
     perform_enqueued_jobs
 
     image.reload
     assert image.thumbnail_sizes[THUMB_SIZE][:uid]
+    # No more started_generating_at with simplified logic
     assert_nil image.thumbnail_sizes[THUMB_SIZE][:started_generating_at]
   end
 

@@ -171,3 +171,5 @@ end
 
 class Folio::Console::ComponentTest < Folio::ComponentTest
 end
+
+ActiveJob::Uniqueness.test_mode!

@@ -259,14 +259,12 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
         assert_equal 160, file.thumbnail_sizes["160x90#"][:width]
         assert_equal 90, file.thumbnail_sizes["160x90#"][:height]
         assert file.thumbnail_sizes["160x90#"][:url].present?
-        assert file.thumbnail_sizes["160x90#"][:started_generating_at].present?
 
         assert_nil file.thumbnail_sizes["320x180#"][:uid]
         assert_nil file.thumbnail_sizes["320x180#"][:signature]
         assert_equal 320, file.thumbnail_sizes["320x180#"][:width]
         assert_equal 180, file.thumbnail_sizes["320x180#"][:height]
         assert file.thumbnail_sizes["320x180#"][:url].present?
-        assert file.thumbnail_sizes["320x180#"][:started_generating_at].present?
       end
     end
   end

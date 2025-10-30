@@ -87,59 +87,9 @@ module Folio::Thumbnails
 
           return OpenStruct.new(thumbs_hash_with_rewritten_urls(image.thumbnail_sizes[w_x_h]))
         else
-          if thumbnail_sizes && thumbnail_sizes[w_x_h] && thumbnail_sizes[w_x_h][:started_generating_at] && thumbnail_sizes[w_x_h][:started_generating_at] > 5.minutes.ago
-            return OpenStruct.new(thumbnail_sizes[w_x_h])
-          else
-            url = temporary_url(w_x_h)
-
-            response = self.reload.with_lock do
-              if !force && thumbnail_sizes && thumbnail_sizes[w_x_h] && thumbnail_sizes[w_x_h][:uid]
-                # already added via a parallel process
-                OpenStruct.new(thumbs_hash_with_rewritten_urls(thumbnail_sizes[w_x_h]))
-              else
-                previous_uids = []
-
-                if thumbnail_sizes && thumbnail_sizes[w_x_h].present?
-                  previous_uids << thumbnail_sizes[w_x_h][:uid] if thumbnail_sizes[w_x_h][:uid].present?
-                  previous_uids << thumbnail_sizes[w_x_h][:webp_uid] if thumbnail_sizes[w_x_h][:webp_uid].present?
-                end
-
-                if respond_to?(:dont_run_after_save_jobs)
-                  self.dont_run_after_save_jobs = true
-                end
-
-                # note that similar logic was extracted to app/controllers/concerns/folio/console/api/file_controller_base.rb so make sure to update both if needed
-                did_update = update(thumbnail_sizes: (thumbnail_sizes || {}).merge(w_x_h => {
-                  uid: nil,
-                  signature: nil,
-                  x: nil,
-                  y: nil,
-                  url:,
-                  width:,
-                  height:,
-                  quality:,
-                  started_generating_at: Time.current,
-                  temporary_url: url,
-                }))
-
-                if did_update
-                  begin
-                    previous_uids.each do |previous_uid|
-                      Dragonfly.app.datastore.destroy(previous_uid) if previous_uid
-                    end
-                  rescue StandardError
-                    Rails.logger.error("Failed to delete previous thumbnail uid(s): #{previous_uids.join(', ')}")
-                  end
-                end
-
-                nil
-              end
-            end
-
-            return response if response
-
-            Folio::GenerateThumbnailJob.perform_later(self, w_x_h, quality, force:, x:, y:)
-          end
+          # With activejob-uniqueness, we can simply queue the job without complex database coordination
+          url = temporary_url(w_x_h)
+          Folio::GenerateThumbnailJob.perform_later(self, w_x_h, quality, force:, x:, y:)
         end
       end
 
