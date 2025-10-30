@@ -18,13 +18,15 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
       failedToLoadScripts: 'Failed to load upload component. Please refresh the page.',
       failedToPrepareUpload: 'Failed to prepare file upload. Please try again.',
       systemError: 'Upload failed due to a system error. Please try again.',
-      failedToInitialize: 'Failed to initialize upload component. Please refresh the page.'
+      failedToInitialize: 'Failed to initialize upload component. Please refresh the page.',
+      supportedFormats: 'Supported formats: %{formats}'
     },
     cs: {
       failedToLoadScripts: 'Nepodařilo se načíst komponentu pro nahrávání. Prosím obnovte stránku.',
       failedToPrepareUpload: 'Nepodařilo se připravit nahrávání souboru. Zkuste to prosím znovu.',
       systemError: 'Nahrávání selhalo kvůli systémové chybě. Zkuste to prosím znovu.',
-      failedToInitialize: 'Nepodařilo se inicializovat komponentu pro nahrávání. Prosím obnovte stránku.'
+      failedToInitialize: 'Nepodařilo se inicializovat komponentu pro nahrávání. Prosím obnovte stránku.',
+      supportedFormats: 'Podporované formáty: %{formats}'
     }
   }
 
@@ -87,6 +89,16 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
 
       const dashboardOpts = {
         inline: this.inlineValue
+      }
+
+      if (this.allowedFormatsValue) {
+        const formattedFormats = this.allowedFormatsValue.split(',')
+          .map(format => format.trim().toUpperCase().split('/', 2).pop().replace('SVG+XML', 'SVG'))
+          .join(', ')
+
+        const supportedFormatsLabel = window.Folio.i18n(this.constructor.ERROR_MESSAGES, 'supportedFormats')
+
+        dashboardOpts.note = supportedFormatsLabel.replace('%{formats}', formattedFormats)
       }
 
       if (this.inlineValue) {
