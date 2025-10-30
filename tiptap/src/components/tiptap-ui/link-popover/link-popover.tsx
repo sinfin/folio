@@ -37,6 +37,10 @@ const TRANSLATIONS = {
     placeholder: "Vložit URL odkazu …",
     settings: "Nastavit odkaz",
     openInNew: "Otevřít v novém okně",
+    linkStyle: "Styl odkazu",
+    normalLink: "Běžný odkaz",
+    primaryButton: "Primární tlačítko",
+    secondaryButton: "Sekundární tlačítko",
   },
   en: {
     apply: "Apply",
@@ -46,6 +50,10 @@ const TRANSLATIONS = {
     placeholder: "Paste link URL …",
     settings: "Link settings",
     openInNew: "Open in new window",
+    linkStyle: "Link style",
+    normalLink: "Normal link",
+    primaryButton: "Primary button",
+    secondaryButton: "Secondary button",
   },
 };
 
@@ -60,6 +68,7 @@ export interface LinkData {
   href: string | null;
   rel: string | null;
   target: string | null;
+  class: string | null;
   // recordId: number | null
   // recordType: string | null
 }
@@ -76,6 +85,7 @@ const DEFAULT_STATE: LinkData = {
   href: null,
   rel: null,
   target: null,
+  class: null,
   // recordId: null,
   // recordType: null,
 };
@@ -97,6 +107,7 @@ export const useLinkHandler = (props: LinkHandlerProps) => {
         href: linkAttributes.href || null,
         rel: linkAttributes.rel || null,
         target: linkAttributes.target || null,
+        class: linkAttributes.class || null,
         // recordId: linkAttributes.recordId || null,
         // recordType: linkAttributes.recordType || null,
       });
@@ -114,6 +125,7 @@ export const useLinkHandler = (props: LinkHandlerProps) => {
         href: linkAttributes.href || null,
         rel: linkAttributes.rel || null,
         target: linkAttributes.target || null,
+        class: linkAttributes.class || null,
         // recordId: linkAttributes.recordId || null,
         // recordType: linkAttributes.recordType || null,
       });
@@ -147,6 +159,10 @@ export const useLinkHandler = (props: LinkHandlerProps) => {
             typeof optionalNewData.target === "undefined"
               ? linkData.target
               : optionalNewData.target,
+          class:
+            typeof optionalNewData.class === "undefined"
+              ? linkData.class
+              : optionalNewData.class,
         })
         .run();
 
@@ -154,7 +170,7 @@ export const useLinkHandler = (props: LinkHandlerProps) => {
 
       onSetLink?.();
     },
-    [editor, onSetLink, linkData.href, linkData.rel, linkData.target],
+    [editor, onSetLink, linkData.href, linkData.rel, linkData.target, linkData.class],
   );
 
   const removeLink = React.useCallback(() => {
@@ -289,6 +305,34 @@ const LinkMain: React.FC<LinkMainProps> = ({
         </div>
 
         <div className="tiptap-popover__row">
+          <label className="f-tiptap-link-popover__select-label">
+            <span className="f-tiptap-link-popover__select-label-text">
+              {translate(TRANSLATIONS, "linkStyle")}
+            </span>
+            <select
+              className="f-tiptap-link-popover__select"
+              value={linkData.class || ""}
+              onChange={(e) => {
+                setLink({
+                  ...linkData,
+                  class: e.target.value || null,
+                });
+              }}
+            >
+              <option value="">
+                {translate(TRANSLATIONS, "normalLink")}
+              </option>
+              <option value="button button--primary">
+                {translate(TRANSLATIONS, "primaryButton")}
+              </option>
+              <option value="button button--secondary">
+                {translate(TRANSLATIONS, "secondaryButton")}
+              </option>
+            </select>
+          </label>
+        </div>
+
+        <div className="tiptap-popover__row">
           <Button
             type="button"
             onClick={handleSettingsLink}
@@ -365,6 +409,7 @@ export function LinkPopover({ editor, editorState }: LinkPopoverProps) {
             href: event.data.urlJson.href || null,
             rel: event.data.urlJson.rel || null,
             target: event.data.urlJson.target || null,
+            class: event.data.urlJson.class || null,
             // recordId: event.data.urlJson.recordId || null,
             // recordType: event.data.urlJson.recordType || null,
           };

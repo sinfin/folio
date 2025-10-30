@@ -213,6 +213,7 @@ export function FolioEditor({
           HTMLAttributes: {
             rel: null,
             target: null,
+            class: null,
           },
         },
       }),
