@@ -38,6 +38,7 @@
 //= require folio/confirm
 //= require folio/debounce
 //= require folio/throttle
+//= require folio/thumbnails
 //= require folio/input
 //= require folio/form_auto_submit
 //= require folio/player_component

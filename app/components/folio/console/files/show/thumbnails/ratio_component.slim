@@ -13,4 +13,6 @@
 
       .f-c-files-show-thumbnails-ratio__thumbs-flex.mt-3
         - @thumbnail_size_keys.each do |thumbnail_size_key|
-          = render(Folio::Console::Files::Show::Thumbnails::Ratio::ThumbnailComponent.new(thumbnail_size_key:, thumbnail: @file.thumbnail_sizes[thumbnail_size_key]))
+          = render(Folio::Console::Files::Show::Thumbnails::Ratio::ThumbnailComponent.new(thumbnail_size_key:,
+                                                                                          thumbnail: @file.thumbnail_sizes[thumbnail_size_key],
+                                                                                          file: @file))

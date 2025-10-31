@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 class Folio::Console::Files::Show::Thumbnails::Ratio::ThumbnailComponent < Folio::Console::ApplicationComponent
-  def initialize(thumbnail:, thumbnail_size_key:)
+  def initialize(thumbnail:, thumbnail_size_key:, file:)
     @thumbnail = thumbnail.is_a?(Hash) ? thumbnail : {}
     @thumbnail_size_key = thumbnail_size_key
+    @file = file
   end
 
   private
@@ -15,12 +16,18 @@ class Folio::Console::Files::Show::Thumbnails::Ratio::ThumbnailComponent < Folio
           "jpg"
         end
 
-        [extension.presence || "jpg", Folio::S3.cdn_url_rewrite(@thumbnail[:url])]
+        url = if @thumbnail[:url].include?("doader.com")
+          @file.temporary_url(@thumbnail_size_key)
+        else
+          Folio::S3.cdn_url_rewrite(@thumbnail[:url])
+        end
+
+        [extension.presence || "jpg", url]
       else
         ["jpg", nil]
       end
 
-      webp = if @thumbnail[:webp_url].present?
+      webp = if @thumbnail[:webp_url].present? && !@thumbnail[:webp_url].include?("doader.com")
         extension = begin
           File.extname(@thumbnail[:webp_url]).delete_prefix(".").downcase
         rescue StandardError
@@ -28,12 +35,12 @@ class Folio::Console::Files::Show::Thumbnails::Ratio::ThumbnailComponent < Folio
         end
 
         [extension || "webp", Folio::S3.cdn_url_rewrite(@thumbnail[:webp_url])]
-      elsif jpg[1].present? && jpg[1].start_with?("https://doader")
-        ["webp", "#{jpg[1]}&webp=1"]
-      else
-        ["webp", nil]
       end
 
-      [jpg, webp]
+      if webp
+        [jpg, webp]
+      else
+        [jpg]
+      end
     end
 end

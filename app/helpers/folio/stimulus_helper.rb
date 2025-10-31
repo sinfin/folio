@@ -224,7 +224,9 @@ module Folio::StimulusHelper
     runner
   end
 
-  def stimulus_thumbnail
+  def stimulus_thumbnail(src: nil)
+    return if src && !src.include?("doader.com")
+
     stimulus_controller("f-thumbnail", inline: true)
   end
 

@@ -106,7 +106,8 @@ window.Folio.Thumbnails.handleResponse = (response) => {
             url: thumbnail.url,
             ready: thumbnail.ready,
             originalData: matchingData
-          }
+          },
+          bubbles: true
         }))
       }
     }
@@ -263,41 +264,31 @@ window.Folio.Thumbnails.stopTimer = () => {
 }
 
 if (window.Folio.MessageBus) {
-  window.Folio.Thumbnails.updateMessageBusImageElements = (selector, newSrc, temporaryUrl, newHref = null) => {
-    try {
-      for (const img of document.querySelectorAll(selector)) {
-        img.src = newSrc
-        img.dispatchEvent(new CustomEvent(window.Folio.Thumbnails.JOB_EVENT_NAME, { bubbles: true }))
-
-        const a = img.closest(`a[href="${temporaryUrl}"]`)
-        if (a && newHref) a.href = newHref
-      }
-    } catch (error) {
-      console.warn('Error updating image elements:', error)
-    }
-  }
-
   window.Folio.MessageBus.callbacks[window.Folio.Thumbnails.JOB_TYPE] = (data) => {
     if (!data || data.type !== window.Folio.Thumbnails.JOB_TYPE) return
-    if (!data.data?.temporary_url || !data.data?.url) return
+    if (!data.data?.id || !data.data?.size || !data.data?.url) return
 
-    // Update regular images
-    window.Folio.Thumbnails.updateMessageBusImageElements(
-      `img[src='${data.data.temporary_url}']`,
-      data.data.url,
-      data.data.temporary_url,
-      data.data.url
-    )
+    // Trigger the polling system's event for elements waiting for this thumbnail
+    const thumbnailEvent = new CustomEvent(window.Folio.Thumbnails.EVENT_NAME, {
+      detail: {
+        id: data.data.id,
+        size: data.data.size,
+        url: data.data.url,
+        ready: true,
+        width: data.data.width,
+        height: data.data.height
+      },
+      bubbles: true
+    })
 
-    // Update lightbox data
-    try {
-      for (const element of document.querySelectorAll(`[data-lightbox-src='${data.data.temporary_url}']`)) {
-        element.dataset.lightboxSrc = data.data.url
-        if (data.data.width) element.dataset.lightboxWidth = data.data.width
-        if (data.data.height) element.dataset.lightboxHeight = data.data.height
+    // Dispatch to all elements that might be waiting for this thumbnail
+    for (const [element, elementData] of window.Folio.Thumbnails.scheduled.entries()) {
+      const matchingData = elementData.find(item =>
+        item.id === data.data.id.toString() && item.size === data.data.size
+      )
+      if (matchingData) {
+        element.dispatchEvent(thumbnailEvent)
       }
-    } catch (error) {
-      console.warn('Error updating lightbox data:', error)
     }
   }
 }
