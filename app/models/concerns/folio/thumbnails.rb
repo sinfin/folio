@@ -139,7 +139,9 @@ module Folio::Thumbnails
 
   def temporary_url(w_x_h)
     size = w_x_h.match(/\d+x?\d+/)[0]
-    "https://doader.com/#{size}?image=#{id}&size=#{w_x_h}"
+    # URL encode the size parameter to handle special characters like #
+    encoded_size = ERB::Util.url_encode(w_x_h)
+    "https://doader.com/#{size}?image=#{id}&size=#{encoded_size}"
   end
 
   def landscape?
