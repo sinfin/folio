@@ -4,12 +4,9 @@
 ]
   div class="d-flex gap-4 align-items-start"
     - if @node.cover
-      img[
-        src=@node.cover.admin_thumb.url
-        height="125"
-        loading="lazy"
-        style="flex: 0 0 125px; max-width: 50%;"
-      ]
+      div style="flex: 0 0 125px; max-width: 50%;"
+        = render(Dummy::Ui::ImageComponent.new(placement: @node.cover_placement,
+                                               size: '300x300#'))
 
     div class="d-flex flex-column gap-3 align-items-start flex-grow-1" style="min-width: 100px;"
       h2.m-0 Dummy Card Component from API

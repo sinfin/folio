@@ -224,6 +224,12 @@ module Folio::StimulusHelper
     runner
   end
 
+  def stimulus_thumbnail(src: nil)
+    return if src && !src.include?("doader.com")
+
+    stimulus_controller("f-thumbnail", inline: true)
+  end
+
   def stimulus_cookie_consent_link
     stimulus_controller("f-cookie-consent-link",
                         action: { click: "click" },

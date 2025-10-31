@@ -318,6 +318,8 @@ Folio::Engine.routes.draw do
         post :subject
       end
 
+      resource :thumbnails, only: %i[show]
+
       namespace :file do
         resources :videos, only: [] do
           member { get :subtitles, path: "subtitles/:lang.vtt" }

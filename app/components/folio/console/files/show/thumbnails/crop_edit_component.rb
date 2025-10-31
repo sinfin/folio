@@ -14,6 +14,7 @@ class Folio::Console::Files::Show::Thumbnails::CropEditComponent < Folio::Consol
     end
 
     def image_url
+      return @image_url if @image_url
       return nil if @thumbnail_size_keys.empty?
 
       valid_keys = if @updated_thumbnails_crop
@@ -40,7 +41,11 @@ class Folio::Console::Files::Show::Thumbnails::CropEditComponent < Folio::Consol
         end
       end
 
-      @file.thumb(highest_area_key).url
+      @image_url = @file.thumb(highest_area_key).url
+    end
+
+    def image_data
+      stimulus_thumbnail(src: image_url)
     end
 
     def buttons_while_editing
@@ -81,7 +86,7 @@ class Folio::Console::Files::Show::Thumbnails::CropEditComponent < Folio::Consol
                             mode:,
                           },
                           action: {
-                            "Folio::GenerateThumbnailJob/updated" => "thumbnailUpdated"
+                            "f-thumbnail:newData" => "thumbnailUpdated"
                           })
     end
 
