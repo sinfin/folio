@@ -22,7 +22,7 @@ class Folio::Api::ThumbnailsController < Folio::Api::BaseController
     # Create cache key from the reduced thumbnail parameters
     cache_key = "thumbnails/#{Digest::MD5.hexdigest(thumbnail_params.to_json)}"
 
-    # Use fragment cache with 3-second expiration
+    # Use fragment cache with 2-second expiration
     thumbnails_data = if Rails.application.config.action_controller.perform_caching
       Rails.cache.fetch(cache_key, expires_in: 2.seconds) do
         process_thumbnail_params(thumbnail_params)
@@ -30,6 +30,10 @@ class Folio::Api::ThumbnailsController < Folio::Api::BaseController
     else
       process_thumbnail_params(thumbnail_params)
     end
+
+    # Set cache headers to match fragment cache duration (2 seconds)
+    # Short TTL because thumbnail status changes rapidly during generation
+    response.headers["Cache-Control"] = "max-age=2, must-revalidate, stale-while-revalidate=1, stale-if-error=10"
 
     render json: thumbnails_data
   end
