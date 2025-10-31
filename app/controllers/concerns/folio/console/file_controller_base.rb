@@ -76,6 +76,7 @@ module Folio::Console::FileControllerBase
         :sensitive_content,
         :default_gravity,
         :alt,
+        :slug,
         tags: [],
         allowed_site_ids: []
       ]

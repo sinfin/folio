@@ -365,7 +365,8 @@ module Folio::Console::Api::FileControllerBase
         :capture_date,
         :gps_latitude,
         :gps_longitude,
-        :file_metadata_extracted_at
+        :file_metadata_extracted_at,
+        :slug
       ]
 
       test_instance = @klass.new
