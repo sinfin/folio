@@ -1,3 +1,9 @@
+- src = Folio::File::Image.first.thumb('100x100#').url
+img[
+  src=src
+  data=stimulus_thumbnail(src:)
+]
+
 - if @page.present?
   = render_atoms_in_molecules @page.atoms_in_molecules
 - else

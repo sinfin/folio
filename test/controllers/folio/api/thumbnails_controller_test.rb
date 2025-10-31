@@ -1,0 +1,196 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class Folio::Api::ThumbnailsControllerTest < ActionDispatch::IntegrationTest
+  include Devise::Test::IntegrationHelpers
+
+  setup do
+    @site = get_current_or_existing_site_or_create_from_factory
+    @image1 = create(:folio_file_image, site: @site, additional_data: { "generate_thumbnails_in_test" => true })
+    @image2 = create(:folio_file_image, site: @site, additional_data: { "generate_thumbnails_in_test" => true })
+    @audio = create(:folio_file_audio, site: @site)
+  end
+
+  test "should get thumbnails for valid image IDs with sizes" do
+    thumbnails_params = [
+      { id: @image1.id, size: "100x100" },
+      { id: @image2.id, size: "200x200" }
+    ]
+
+    get folio_api_thumbnails_path, params: { thumbnails: thumbnails_params }
+
+    assert_response :success
+    json_response = JSON.parse(response.body)
+
+    assert_equal 2, json_response.length
+
+    # Check first image response
+    image1_response = json_response.find { |item| item["id"] == @image1.id }
+    assert_not_nil image1_response
+    assert_not_nil image1_response["url"]
+    assert image1_response["url"].present?
+
+    # Check second image response
+    image2_response = json_response.find { |item| item["id"] == @image2.id }
+    assert_not_nil image2_response
+    assert_not_nil image2_response["url"]
+    assert image2_response["url"].present?
+  end
+
+  test "should include webp_url when available" do
+    thumbnails_params = [
+      { id: @image1.id, size: "100x100" }
+    ]
+
+    get folio_api_thumbnails_path, params: { thumbnails: thumbnails_params }
+
+    assert_response :success
+    json_response = JSON.parse(response.body)
+
+    image_response = json_response.first
+    # webp_url might be nil or present depending on thumbnail generation
+    assert image_response.key?("webp_url")
+  end
+
+  test "should handle missing file IDs gracefully" do
+    non_existent_id = @image1.id + @image2.id + 9999
+    thumbnails_params = [
+      { id: @image1.id, size: "100x100" },
+      { id: non_existent_id, size: "200x200" }
+    ]
+
+    get folio_api_thumbnails_path, params: { thumbnails: thumbnails_params }
+
+    assert_response :success
+    json_response = JSON.parse(response.body)
+
+    # Should only return data for existing files
+    assert_equal 1, json_response.length
+    assert_equal @image1.id, json_response.first["id"]
+  end
+
+  test "should handle non-image files gracefully" do
+    thumbnails_params = [
+      { id: @image1.id, size: "100x100" },
+      { id: @audio.id, size: "200x200" }
+    ]
+
+    get folio_api_thumbnails_path, params: { thumbnails: thumbnails_params }
+
+    assert_response :success
+    json_response = JSON.parse(response.body)
+
+    # Should only return data for image files
+    assert_equal 1, json_response.length
+    assert_equal @image1.id, json_response.first["id"]
+  end
+
+  test "should handle empty thumbnails parameter" do
+    get folio_api_thumbnails_path, params: { thumbnails: [] }
+
+    assert_response :success
+    json_response = JSON.parse(response.body)
+    assert_equal [], json_response
+  end
+
+  test "should handle missing thumbnails parameter" do
+    get folio_api_thumbnails_path
+
+    assert_response :success
+    json_response = JSON.parse(response.body)
+    assert_equal [], json_response
+  end
+
+  test "should handle malformed thumbnails parameter" do
+    get folio_api_thumbnails_path, params: { thumbnails: "invalid" }
+
+    assert_response :success
+    json_response = JSON.parse(response.body)
+    assert_equal [], json_response
+  end
+
+  test "should handle thumbnails without id parameter" do
+    thumbnails_params = [
+      { size: "100x100" },
+      { id: @image1.id, size: "200x200" }
+    ]
+
+    get folio_api_thumbnails_path, params: { thumbnails: thumbnails_params }
+
+    assert_response :success
+    json_response = JSON.parse(response.body)
+
+    # Should only return data for requests with valid id
+    assert_equal 1, json_response.length
+    assert_equal @image1.id, json_response.first["id"]
+  end
+
+  test "should handle thumbnails without size parameter" do
+    thumbnails_params = [
+      { id: @image1.id },
+      { id: @image2.id, size: "200x200" }
+    ]
+
+    get folio_api_thumbnails_path, params: { thumbnails: thumbnails_params }
+
+    assert_response :success
+    json_response = JSON.parse(response.body)
+
+    # Should only return data for requests with valid size
+    assert_equal 1, json_response.length
+    assert_equal @image2.id, json_response.first["id"]
+  end
+
+  test "should return consistent response format" do
+    thumbnails_params = [
+      { id: @image1.id, size: "100x100" }
+    ]
+
+    get folio_api_thumbnails_path, params: { thumbnails: thumbnails_params }
+
+    assert_response :success
+    json_response = JSON.parse(response.body)
+
+    image_response = json_response.first
+    assert image_response.key?("id")
+    assert image_response.key?("url")
+    assert image_response.key?("webp_url")
+    assert_equal @image1.id, image_response["id"]
+  end
+
+  test "should handle multiple requests for same file with different sizes" do
+    thumbnails_params = [
+      { id: @image1.id, size: "100x100" },
+      { id: @image1.id, size: "200x200" }
+    ]
+
+    get folio_api_thumbnails_path, params: { thumbnails: thumbnails_params }
+
+    assert_response :success
+    json_response = JSON.parse(response.body)
+
+    # Should return separate entries for different sizes
+    assert_equal 2, json_response.length
+
+    sizes = json_response.map { |item| item["size"] }
+    assert_includes sizes, "100x100"
+    assert_includes sizes, "200x200"
+  end
+
+  test "should limit requests to 50 to prevent abuse" do
+    # Create 60 thumbnail requests (exceeding the 50 limit)
+    thumbnails_params = []
+    60.times do |i|
+      thumbnails_params << { id: @image1.id, size: "100x100" }
+    end
+
+    get folio_api_thumbnails_path, params: { thumbnails: thumbnails_params }
+
+    assert_response :success
+    json_response = JSON.parse(response.body)
+
+    # Should only process the first 50 requests
+    assert_equal 50, json_response.length
+  end
+end

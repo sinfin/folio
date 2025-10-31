@@ -139,12 +139,7 @@ module Folio::Thumbnails
 
   def temporary_url(w_x_h)
     size = w_x_h.match(/\d+x?\d+/)[0]
-    "https://doader.com/#{size}?image=#{id}"
-  end
-
-  def temporary_s3_url(w_x_h)
-    size = w_x_h.match(/\d+x?\d+/)[0]
-    "https://doader.s3.amazonaws.com/#{size}?image=#{id}"
+    "https://doader.com/#{size}?image=#{id}&size=#{w_x_h}"
   end
 
   def landscape?
