@@ -275,4 +275,24 @@ class Folio::Api::ThumbnailsControllerTest < ActionDispatch::IntegrationTest
     assert_equal 100, height_only_response["width"]
     assert_equal 50, height_only_response["height"]
   end
+
+  test "should set appropriate cache headers" do
+    thumbnails_params = [
+      { id: @image1.id, size: "100x100" }
+    ]
+
+    get folio_api_thumbnails_path, params: { thumbnails: thumbnails_params }
+
+    assert_response :success
+
+    # Check that cache headers are set correctly to match fragment cache duration
+    cache_control = response.headers["Cache-Control"]
+    assert_not_nil cache_control, "Cache-Control header should be present"
+
+    # Verify the cache header components match the 2-second fragment cache
+    assert_includes cache_control, "max-age=2", "Should have max-age=2 to match fragment cache"
+    assert_includes cache_control, "must-revalidate", "Should have must-revalidate"
+    assert_includes cache_control, "stale-while-revalidate=1", "Should have stale-while-revalidate=1"
+    assert_includes cache_control, "stale-if-error=10", "Should have stale-if-error=10"
+  end
 end

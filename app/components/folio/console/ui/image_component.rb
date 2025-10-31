@@ -149,6 +149,14 @@ class Folio::Console::Ui::ImageComponent < Folio::Console::ApplicationComponent
 
       @data = h
     end
+
+    if @data
+      if @data[:src] && @data[:src].include?("doader.com")
+        @data[:image_data] = stimulus_thumbnail
+      end
+    end
+
+    @data
   end
 
   def wrap_style

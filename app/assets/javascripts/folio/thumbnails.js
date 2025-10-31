@@ -104,7 +104,6 @@ window.Folio.Thumbnails.handleResponse = (response) => {
             id: thumbnail.id,
             size: thumbnail.size,
             url: thumbnail.url,
-            webp_url: thumbnail.webp_url,
             ready: thumbnail.ready,
             originalData: matchingData
           }
@@ -160,63 +159,22 @@ window.Folio.Stimulus.register(window.Folio.Thumbnails.CONTROLLER_NAME, class ex
     const data = []
 
     try {
-      let image, source
+      // Only handle img elements with src attributes
+      let image = null
 
       if (this.element.tagName.toLowerCase() === 'img') {
         image = this.element
-        const picture = image.closest('picture')
-
-        if (picture) {
-          source = picture.querySelector('source')
-        }
-      } else if (this.element.tagName.toLowerCase() === 'picture') {
-        image = this.element.querySelector('img')
-        source = this.element.querySelector('source')
       }
 
-      if (image) {
-        if (image.src) {
-          const result = this.dataFromString(image.src)
-          if (result) data.push(result)
-        }
-
-        if (image.srcset) {
-          const results = this.dataFromSrcset(image.srcset)
-          data.push(...results)
-        }
-      }
-
-      if (source && source.srcset) {
-        const results = this.dataFromSrcset(source.srcset)
-        data.push(...results)
+      if (image && image.src) {
+        const result = this.dataFromString(image.src)
+        if (result) data.push(result)
       }
     } catch (error) {
       console.warn('Error extracting thumbnail data:', error)
     }
 
     return data
-  }
-
-  dataFromSrcset (srcset) {
-    if (!srcset || typeof srcset !== 'string') return []
-
-    const results = []
-    try {
-      const srcsetParts = srcset.split(',').map(part => part.trim())
-
-      for (const part of srcsetParts) {
-        if (!part) continue
-        const url = part.split(/\s+/)[0] // Get URL before any descriptor (1x, 2x, etc.)
-        if (url) {
-          const result = this.dataFromString(url)
-          if (result) results.push(result)
-        }
-      }
-    } catch (error) {
-      console.warn('Error parsing srcset:', error)
-    }
-
-    return results
   }
 
   dataFromString (string) {
@@ -229,7 +187,7 @@ window.Folio.Stimulus.register(window.Folio.Thumbnails.CONTROLLER_NAME, class ex
       const id = params.get('image')
       const size = params.get('size')
 
-      // Only return data if we have all three components: url, id, and size
+      // Only return data if we have all components: url, id, and size
       if (string && id && size) {
         return {
           url: string,
@@ -247,50 +205,18 @@ window.Folio.Stimulus.register(window.Folio.Thumbnails.CONTROLLER_NAME, class ex
 
   updateImageSources (thumbnailData) {
     try {
-      let image, source
+      let image = null
 
       if (this.element.tagName.toLowerCase() === 'img') {
         image = this.element
-        const picture = image.closest('picture')
-
-        if (picture) {
-          source = picture.querySelector('source')
-        }
-      } else if (this.element.tagName.toLowerCase() === 'picture') {
-        image = this.element.querySelector('img')
-        source = this.element.querySelector('source')
       }
 
-      // Update img src and srcset
-      if (image) {
-        this.updateImageElement(image, thumbnailData)
-      }
-
-      // Update source srcset
-      if (source) {
-        this.updateSourceElement(source, thumbnailData)
+      // Update img src if it matches the thumbnail
+      if (image && this.urlMatches(image.src, thumbnailData)) {
+        image.src = thumbnailData.url
       }
     } catch (error) {
       console.warn('Error updating image sources:', error)
-    }
-  }
-
-  updateImageElement (image, thumbnailData) {
-    // Update src if it matches the thumbnail
-    if (image.src && this.urlMatches(image.src, thumbnailData)) {
-      image.src = thumbnailData.url
-    }
-
-    // Update srcset if it exists
-    if (image.srcset) {
-      image.srcset = this.updateSrcset(image.srcset, thumbnailData)
-    }
-  }
-
-  updateSourceElement (source, thumbnailData) {
-    // Update srcset if it exists
-    if (source.srcset) {
-      source.srcset = this.updateSrcset(source.srcset, thumbnailData)
     }
   }
 
@@ -304,30 +230,6 @@ window.Folio.Stimulus.register(window.Folio.Thumbnails.CONTROLLER_NAME, class ex
       return id === thumbnailData.id.toString() && size === thumbnailData.size
     } catch (error) {
       return false
-    }
-  }
-
-  updateSrcset (srcset, thumbnailData) {
-    if (!srcset || typeof srcset !== 'string') return srcset
-
-    try {
-      const srcsetParts = srcset.split(',').map(part => part.trim())
-
-      return srcsetParts.map(part => {
-        if (!part) return part
-
-        const urlPart = part.split(/\s+/)[0]
-        const descriptor = part.substring(urlPart.length).trim()
-
-        if (this.urlMatches(urlPart, thumbnailData)) {
-          return descriptor ? `${thumbnailData.url} ${descriptor}` : thumbnailData.url
-        }
-
-        return part
-      }).join(', ')
-    } catch (error) {
-      console.warn('Error updating srcset:', error)
-      return srcset
     }
   }
 
@@ -376,25 +278,6 @@ if (window.Folio.MessageBus) {
       data.data.temporary_url,
       data.data.url
     )
-
-    // Update WebP images
-    if (data.data.webp_url) {
-      window.Folio.Thumbnails.updateMessageBusImageElements(
-        `img[src='${data.data.temporary_url}&webp=1']`,
-        data.data.webp_url,
-        `${data.data.temporary_url}&webp=1`,
-        data.data.webp_url
-      )
-    }
-
-    // Update srcset attributes
-    try {
-      for (const img of document.querySelectorAll(`img[srcset*='${data.data.temporary_url}']`)) {
-        img.srcset = img.srcset.replace(data.data.temporary_url, data.data.url)
-      }
-    } catch (error) {
-      console.warn('Error updating srcset attributes:', error)
-    }
 
     // Update lightbox data
     try {

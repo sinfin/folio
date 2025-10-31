@@ -1,6 +1,6 @@
 *tag
   - if @data
-    picture.d-ui-image__picture data=@data[:picture_data]
+    picture.d-ui-image__picture
       - if @data[:webp_srcset]
         source[
           srcset=@data[:webp_srcset]
@@ -13,6 +13,7 @@
         title=@data[:title]
         alt=@data[:alt]
         loading=(@lazy ? "lazy" : nil)
+        data=@data[:image_data]
       ]
 
   - else
