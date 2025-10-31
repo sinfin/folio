@@ -322,6 +322,10 @@ class Folio::File < Folio::ApplicationRecord
     file_name.presence || self.class.model_name.human
   end
 
+  def console_show_additional_buttons_props(controller:)
+    []
+  end
+
   def console_show_additional_fields
     fields = {}
 
