@@ -14,7 +14,7 @@ window.Folio.Thumbnails.API_URL = '/folio/api/thumbnails.json'
 window.Folio.Thumbnails.state = 'idle'
 window.Folio.Thumbnails.timeout = null
 window.Folio.Thumbnails.scheduled = new Map() // Map of element -> data
-window.Folio.Thumbnails.LOAD_INTERVAL = 3000 // 3 seconds
+window.Folio.Thumbnails.LOAD_INTERVAL = 2100 // 2 seconds and a bit - cache is set to 2s
 
 window.Folio.Thumbnails.schedule = ({ data, element }) => {
   // Add element and its data to scheduled collection
@@ -48,9 +48,13 @@ window.Folio.Thumbnails.load = () => {
       size: item.size
     }))
 
-    window.Folio.Api.apiGet(window.Folio.Thumbnails.API_URL, { thumbnails: thumbnailRequests }).then((res) => {
-      // TODO: Handle successful response
-      console.log('Thumbnails loaded:', res)
+    // Build URL with query parameters for GET request
+    const url = new URL(window.Folio.Thumbnails.API_URL, window.location.origin)
+    url.searchParams.set('thumbnails', JSON.stringify(thumbnailRequests))
+
+    window.Folio.Api.apiGet(url.toString()).then((res) => {
+      // Handle the response and dispatch events for ready thumbnails
+      window.Folio.Thumbnails.handleResponse(res)
     }).catch((error) => {
       console.error('Error loading thumbnails:', error)
     }).finally(() => {
@@ -76,6 +80,38 @@ window.Folio.Thumbnails.remove = ({ element }) => {
     window.Folio.Thumbnails.stopTimer()
     window.Folio.Thumbnails.state = 'idle'
   }
+}
+
+window.Folio.Thumbnails.handleResponse = (response) => {
+  if (!Array.isArray(response)) return
+
+  // Process each thumbnail in the response
+  response.forEach(thumbnail => {
+    // Only handle ready thumbnails
+    if (!thumbnail.ready || !thumbnail.url) return
+
+    // Find elements that match this thumbnail
+    for (const [element, elementData] of window.Folio.Thumbnails.scheduled.entries()) {
+      // Check if any of the element's thumbnail data matches this response
+      const matchingData = elementData.find(data =>
+        data.id === thumbnail.id.toString() && data.size === thumbnail.size
+      )
+
+      if (matchingData) {
+        // Dispatch event to the element with the new thumbnail data
+        element.dispatchEvent(new CustomEvent(window.Folio.Thumbnails.EVENT_NAME, {
+          detail: {
+            id: thumbnail.id,
+            size: thumbnail.size,
+            url: thumbnail.url,
+            webp_url: thumbnail.webp_url,
+            ready: thumbnail.ready,
+            originalData: matchingData
+          }
+        }))
+      }
+    }
+  })
 }
 
 window.Folio.Thumbnails.clearTimer = () => {
@@ -104,7 +140,8 @@ window.Folio.Stimulus.register(window.Folio.Thumbnails.CONTROLLER_NAME, class ex
 
     if (data.length) {
       this.handleNewData = (e) => {
-        console.log('handleNewData', e.detail)
+        this.updateImageSources(e.detail)
+        this.cleanup()
       }
 
       this.element.addEventListener(window.Folio.Thumbnails.EVENT_NAME, this.handleNewData)
@@ -116,12 +153,7 @@ window.Folio.Stimulus.register(window.Folio.Thumbnails.CONTROLLER_NAME, class ex
   }
 
   disconnect () {
-    if (this.handleNewData) {
-      window.Folio.Thumbnails.remove({ element: this.element })
-
-      this.element.removeEventListener(window.Folio.Thumbnails.EVENT_NAME, this.handleNewData)
-      delete this.handleNewData
-    }
+    this.cleanup()
   }
 
   getData () {
@@ -211,6 +243,106 @@ window.Folio.Stimulus.register(window.Folio.Thumbnails.CONTROLLER_NAME, class ex
     }
 
     return null
+  }
+
+  updateImageSources (thumbnailData) {
+    try {
+      let image, source
+
+      if (this.element.tagName.toLowerCase() === 'img') {
+        image = this.element
+        const picture = image.closest('picture')
+
+        if (picture) {
+          source = picture.querySelector('source')
+        }
+      } else if (this.element.tagName.toLowerCase() === 'picture') {
+        image = this.element.querySelector('img')
+        source = this.element.querySelector('source')
+      }
+
+      // Update img src and srcset
+      if (image) {
+        this.updateImageElement(image, thumbnailData)
+      }
+
+      // Update source srcset
+      if (source) {
+        this.updateSourceElement(source, thumbnailData)
+      }
+    } catch (error) {
+      console.warn('Error updating image sources:', error)
+    }
+  }
+
+  updateImageElement (image, thumbnailData) {
+    // Update src if it matches the thumbnail
+    if (image.src && this.urlMatches(image.src, thumbnailData)) {
+      image.src = thumbnailData.url
+    }
+
+    // Update srcset if it exists
+    if (image.srcset) {
+      image.srcset = this.updateSrcset(image.srcset, thumbnailData)
+    }
+  }
+
+  updateSourceElement (source, thumbnailData) {
+    // Update srcset if it exists
+    if (source.srcset) {
+      source.srcset = this.updateSrcset(source.srcset, thumbnailData)
+    }
+  }
+
+  urlMatches (url, thumbnailData) {
+    try {
+      const parsedUrl = new URL(url)
+      const params = new URLSearchParams(parsedUrl.search)
+      const id = params.get('image')
+      const size = params.get('size')
+
+      return id === thumbnailData.id.toString() && size === thumbnailData.size
+    } catch (error) {
+      return false
+    }
+  }
+
+  updateSrcset (srcset, thumbnailData) {
+    if (!srcset || typeof srcset !== 'string') return srcset
+
+    try {
+      const srcsetParts = srcset.split(',').map(part => part.trim())
+
+      return srcsetParts.map(part => {
+        if (!part) return part
+
+        const urlPart = part.split(/\s+/)[0]
+        const descriptor = part.substring(urlPart.length).trim()
+
+        if (this.urlMatches(urlPart, thumbnailData)) {
+          return descriptor ? `${thumbnailData.url} ${descriptor}` : thumbnailData.url
+        }
+
+        return part
+      }).join(', ')
+    } catch (error) {
+      console.warn('Error updating srcset:', error)
+      return srcset
+    }
+  }
+
+  cleanup () {
+    if (this.handleNewData) {
+      // Remove from scheduled collection
+      window.Folio.Thumbnails.remove({ element: this.element })
+
+      // Remove event listener
+      this.element.removeEventListener(window.Folio.Thumbnails.EVENT_NAME, this.handleNewData)
+      delete this.handleNewData
+    }
+
+    // Remove controller from element
+    this.element.dataset.controller = this.element.dataset.controller.replace(window.Folio.Thumbnails.CONTROLLER_REGEX, '')
   }
 })
 

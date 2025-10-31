@@ -28,14 +28,30 @@ class Folio::Api::ThumbnailsControllerTest < ActionDispatch::IntegrationTest
     # Check first image response
     image1_response = json_response.find { |item| item["id"] == @image1.id }
     assert_not_nil image1_response
-    assert_not_nil image1_response["url"]
-    assert image1_response["url"].present?
+    assert image1_response.key?("url")
+    assert image1_response.key?("ready")
+
+    # URL might be nil if thumbnail isn't ready yet
+    if image1_response["ready"]
+      assert_not_nil image1_response["url"]
+      assert image1_response["url"].present?
+    else
+      assert_nil image1_response["url"]
+    end
 
     # Check second image response
     image2_response = json_response.find { |item| item["id"] == @image2.id }
     assert_not_nil image2_response
-    assert_not_nil image2_response["url"]
-    assert image2_response["url"].present?
+    assert image2_response.key?("url")
+    assert image2_response.key?("ready")
+
+    # URL might be nil if thumbnail isn't ready yet
+    if image2_response["ready"]
+      assert_not_nil image2_response["url"]
+      assert image2_response["url"].present?
+    else
+      assert_nil image2_response["url"]
+    end
   end
 
   test "should include webp_url when available" do
@@ -156,6 +172,7 @@ class Folio::Api::ThumbnailsControllerTest < ActionDispatch::IntegrationTest
     assert image_response.key?("id")
     assert image_response.key?("url")
     assert image_response.key?("webp_url")
+    assert image_response.key?("ready")
     assert_equal @image1.id, image_response["id"]
   end
 
@@ -192,5 +209,28 @@ class Folio::Api::ThumbnailsControllerTest < ActionDispatch::IntegrationTest
 
     # Should only process the first 50 requests
     assert_equal 50, json_response.length
+  end
+
+  test "should return ready status and handle URLs appropriately" do
+    thumbnails_params = [
+      { id: @image1.id, size: "100x100" }
+    ]
+
+    get folio_api_thumbnails_path, params: { thumbnails: thumbnails_params }
+
+    assert_response :success
+    json_response = JSON.parse(response.body)
+
+    image_response = json_response.first
+    assert image_response.key?("ready")
+
+    # If ready is true, url should be present and not contain doader.com
+    if image_response["ready"]
+      assert_not_nil image_response["url"]
+      assert_not image_response["url"].include?("doader.com"), "Ready thumbnail should not contain doader.com"
+    else
+      # If ready is false, url should be nil
+      assert_nil image_response["url"], "Not-ready thumbnail should have nil URL"
+    end
   end
 end

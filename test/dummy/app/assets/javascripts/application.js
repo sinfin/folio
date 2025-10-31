@@ -4,7 +4,6 @@
 
 //= require folio/api
 //= require folio/stimulus
-//= require folio/message_bus
 //= require folio/remote_scripts
 //= require folio/thumbnails
 

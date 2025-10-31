@@ -4,6 +4,16 @@ class Folio::Api::ThumbnailsController < Folio::Api::BaseController
   def show
     # Handle missing or malformed thumbnails parameter
     thumbnail_params = params[:thumbnails]
+
+    # If thumbnails parameter is a string (from URL query), parse it as JSON
+    if thumbnail_params.is_a?(String)
+      begin
+        thumbnail_params = JSON.parse(thumbnail_params)
+      rescue JSON::ParserError
+        return render json: []
+      end
+    end
+
     return render json: [] unless thumbnail_params.is_a?(Array)
 
     # Limit the number of entries to prevent abuse
@@ -14,7 +24,7 @@ class Folio::Api::ThumbnailsController < Folio::Api::BaseController
 
     # Use fragment cache with 3-second expiration
     thumbnails_data = if Rails.application.config.action_controller.perform_caching
-      Rails.cache.fetch(cache_key, expires_in: 3.seconds) do
+      Rails.cache.fetch(cache_key, expires_in: 2.seconds) do
         process_thumbnail_params(thumbnail_params)
       end
     else
@@ -65,11 +75,21 @@ class Folio::Api::ThumbnailsController < Folio::Api::BaseController
           # Skip private thumbnails
           next if thumb_result.try(:private)
 
+          # Get URLs and check if they're ready (don't contain doader.com placeholder)
+          url = thumb_result.url
+          webp_url = thumb_result.try(:webp_url)
+
+          # Check if thumbnail is ready - both URL and WebP URL must not contain doader.com
+          url_ready = url.present? && !url.include?("doader.com")
+          webp_url_ready = webp_url.blank? || !webp_url.include?("doader.com")
+          ready = url_ready && webp_url_ready
+
           thumbnails_data << {
             id: file.id,
             size: file_param[:size],
-            url: thumb_result.url,
-            webp_url: thumb_result.try(:webp_url)
+            url: ready ? url : nil,
+            webp_url: ready ? webp_url : nil,
+            ready: ready
           }
         rescue => e
           # Log error but continue processing other parameters
