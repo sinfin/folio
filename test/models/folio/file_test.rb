@@ -302,7 +302,8 @@ class Folio::FileTest < ActiveSupport::TestCase
     file1 = create(:folio_file_image, file_name: "test-image.jpg")
 
     # Verify the slug was generated from filename (this should naturally happen)
-    expected_slug = file1.slug || "test-image"  # FriendlyId should generate this
+    assert_not_nil file1.slug, "Slug should be present after creation"
+    expected_slug = file1.slug
 
     # Now set a headline and see if our reset functionality works
     file1.update!(headline: "New Headline")

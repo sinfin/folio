@@ -483,9 +483,6 @@ class Folio::File < Folio::ApplicationRecord
     def slug_matches_default_format?
       return false unless slug.present?
 
-      # Generate what the default slug would be for this file
-      hash_id_for_slug
-
       # Check if current slug matches the pattern of default generated slugs
       # Default slugs are either just the filename base or filename-base-hash
       file_name_base = file_name.present? ? file_name.split(".", 2)[0].parameterize : "file"
