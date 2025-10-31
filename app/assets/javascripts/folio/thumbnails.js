@@ -77,7 +77,7 @@ window.Folio.Thumbnails.remove = ({ element }) => {
 
   // Stop timer if no more elements are scheduled
   if (window.Folio.Thumbnails.scheduled.size === 0) {
-    window.Folio.Thumbnails.stopTimer()
+    window.Folio.Thumbnails.clearTimer()
     window.Folio.Thumbnails.state = 'idle'
   }
 }
@@ -258,10 +258,6 @@ window.Folio.Stimulus.register(window.Folio.Thumbnails.CONTROLLER_NAME, class ex
     this.removeController()
   }
 })
-
-window.Folio.Thumbnails.stopTimer = () => {
-  window.Folio.Thumbnails.clearTimer()
-}
 
 if (window.Folio.MessageBus) {
   window.Folio.MessageBus.callbacks[window.Folio.Thumbnails.JOB_TYPE] = (data) => {
