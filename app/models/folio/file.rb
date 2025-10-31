@@ -2,7 +2,7 @@
 
 class Folio::File < Folio::ApplicationRecord
   include Folio::DragonflyFormatValidation
-  include Folio::HasHashId
+  include Folio::FriendlyId
   include Folio::SanitizeFilename
   include Folio::Taggable
   include Folio::Thumbnails
@@ -203,12 +203,6 @@ class Folio::File < Folio::ApplicationRecord
     }
   end
 
-
-
-  def self.hash_id_additional_classes
-    [Folio::PrivateAttachment]
-  end
-
   def self.human_type
     "document"
   end
@@ -384,6 +378,29 @@ class Folio::File < Folio::ApplicationRecord
   end
 
   private
+    def slug_candidates
+      %i[slug headline hash_id_for_slug to_label]
+    end
+
+    def hash_id_for_slug
+      new_slug = nil
+      hash = nil
+
+      loop do
+        new_slug_base = file_name.present? ? file_name.split(".", 2)[0] : "file"
+        new_slug = hash ? "#{new_slug_base}-#{hash}" : new_slug_base
+
+        exists = self.class.base_class.exists?(slug: new_slug)
+
+        break unless exists
+
+        hash = SecureRandom.urlsafe_base64(8)
+                           .gsub(/-|_/, ("a".."z").to_a[rand(26)])
+      end
+
+      new_slug
+    end
+
     def set_file_name_for_search
       self.file_name_for_search = self.class.sanitize_filename_for_search(file_name)
     end
@@ -466,7 +483,7 @@ end
 #  file_size                         :bigint(8)
 #  additional_data                   :json
 #  file_metadata                     :json
-#  hash_id                           :string
+#  slug                              :string
 #  author                            :string
 #  description                       :text
 #  file_placements_count             :integer          default(0), not null
@@ -501,10 +518,10 @@ end
 #  index_folio_files_on_by_file_name_for_search  (to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text)))) USING gin
 #  index_folio_files_on_created_at               (created_at)
 #  index_folio_files_on_file_name                (file_name)
-#  index_folio_files_on_hash_id                  (hash_id)
 #  index_folio_files_on_media_source_id          (media_source_id)
 #  index_folio_files_on_published_usage_count    (published_usage_count)
 #  index_folio_files_on_site_id                  (site_id)
+#  index_folio_files_on_slug                     (slug)
 #  index_folio_files_on_type                     (type)
 #  index_folio_files_on_updated_at               (updated_at)
 #

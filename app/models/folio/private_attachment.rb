@@ -36,10 +36,6 @@ class Folio::PrivateAttachment < Folio::ApplicationRecord
     end
   end
 
-  def self.hash_id_additional_classes
-    [Folio::File]
-  end
-
   def to_h
     {
       file_size:,

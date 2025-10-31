@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_08_191904) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_31_141402) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -325,7 +325,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_08_191904) do
     t.bigint "file_size"
     t.json "additional_data"
     t.json "file_metadata"
-    t.string "hash_id"
+    t.string "slug"
     t.string "author"
     t.text "description"
     t.integer "file_placements_count", default: 0, null: false
@@ -357,10 +357,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_08_191904) do
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text)))", name: "index_folio_files_on_by_file_name_for_search", using: :gin
     t.index ["created_at"], name: "index_folio_files_on_created_at"
     t.index ["file_name"], name: "index_folio_files_on_file_name"
-    t.index ["hash_id"], name: "index_folio_files_on_hash_id"
     t.index ["media_source_id"], name: "index_folio_files_on_media_source_id"
     t.index ["published_usage_count"], name: "index_folio_files_on_published_usage_count"
     t.index ["site_id"], name: "index_folio_files_on_site_id"
+    t.index ["slug"], name: "index_folio_files_on_slug"
     t.index ["type"], name: "index_folio_files_on_type"
     t.index ["updated_at"], name: "index_folio_files_on_updated_at"
   end
