@@ -74,6 +74,7 @@ class Folio::Console::Files::ShowComponent < Folio::Console::ApplicationComponen
       attribution_source: {},
       author: {},
       headline: {},
+      slug: {},
       description: {},
       alt: {},
       attribution_source_url: {},
@@ -85,6 +86,7 @@ class Folio::Console::Files::ShowComponent < Folio::Console::ApplicationComponen
   end
 
   def autocomplete_for(key:, config:)
+    return nil if key == :slug
     return nil if config && (config[:as] == :integer || config[:collection])
 
     controller.folio.url_for([:field,

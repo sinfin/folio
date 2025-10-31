@@ -295,6 +295,60 @@ class Folio::FileTest < ActiveSupport::TestCase
     assert_equal file1.file_placements.count, file1.file_placements_count
     assert_equal file2.file_placements.count, file2.file_placements_count
   end
+
+  test "slug reset functionality" do
+    # Test 1: Reset default filename-based slug when headline changes
+    # Create file without headline first, so slug gets generated from file_name
+    file1 = create(:folio_file_image, file_name: "test-image.jpg")
+
+    # Verify the slug was generated from filename (this should naturally happen)
+    assert_not_nil file1.slug, "Slug should be present after creation"
+    expected_slug = file1.slug
+
+    # Now set a headline and see if our reset functionality works
+    file1.update!(headline: "New Headline")
+
+    # If the original slug matched default format, it should be reset
+    if expected_slug == "test-image" || expected_slug.match?(/\Atest-image-[a-z0-9]+\z/)
+      assert_nil file1.slug, "Default format slug should be reset when headline changes"
+    end
+
+    # Test 2: Don't reset custom slug
+    file2 = create(:folio_file_image, file_name: "test-image.jpg")
+    # Force a custom slug that doesn't match default format
+    file2.slug = "my-custom-slug"
+    file2.save!(validate: false)  # Skip validations to avoid FriendlyId interference
+
+    assert_equal "my-custom-slug", file2.reload.slug
+    file2.update!(headline: "New Headline")
+    assert_equal "my-custom-slug", file2.reload.slug, "Custom slug should not be reset"
+
+    # Test 3: Don't reset when other attributes change
+    file3 = create(:folio_file_image, file_name: "test-image.jpg")
+    original_slug = file3.slug
+
+    file3.update!(description: "New description")
+    assert_equal original_slug, file3.reload.slug, "Slug should not change when non-headline attributes change"
+  end
+
+  test "slug_matches_default_format? method" do
+    file = build(:folio_file_image, file_name: "test-image.jpg")
+
+    # Should match filename-based slugs
+    file.slug = "test-image"
+    assert file.send(:slug_matches_default_format?)
+
+    # Should match filename with hash
+    file.slug = "test-image-abc123"
+    assert file.send(:slug_matches_default_format?)
+
+    # Should not match custom slugs
+    file.slug = "my-custom-slug"
+    assert_not file.send(:slug_matches_default_format?)
+
+    file.slug = nil
+    assert_not file.send(:slug_matches_default_format?)
+  end
 end
 
 class Folio::FileImageMetadataKeywordsTest < ActiveSupport::TestCase

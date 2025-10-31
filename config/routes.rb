@@ -331,9 +331,9 @@ Folio::Engine.routes.draw do
   get "/folio/ui", to: "ui#ui"
   get "/folio/ui/mobile_typo", to: "ui#mobile_typo"
 
-  get "/download/:hash_id(/*name)", to: "downloads#show",
-                                    as: :download,
-                                    constraints: { name: /.*/ }
+  get "/download/:slug(/*name)", to: "downloads#show",
+                                 as: :download,
+                                 constraints: { name: /.*/ }
 
   get "/robots.txt" => "robots#index"
 

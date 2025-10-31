@@ -11,6 +11,9 @@
     .col-lg
       .f-c-files-show__buttons-outer.mb-h
         .f-c-files-show__buttons
+          - @file.console_show_additional_buttons_props(controller:).each do |props|
+            = render(Folio::Console::Ui::ButtonComponent.new(**props))
+
           = render(Folio::Console::Ui::ButtonComponent.new(**download_button_model))
 
           - if can_now?(:update, @file)

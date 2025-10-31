@@ -41,6 +41,7 @@ cs:
         file_size: Velikost souboru
         media_source: Zdroj
         preview_duration: Kolik vteřin je zdarma?
+        slug: Slug
         used: Použitý
         usage_constraints: Omezení použití
         usage_constraints/usable: Použitelné

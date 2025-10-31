@@ -24,7 +24,7 @@ end
 #  file_size                         :bigint(8)
 #  additional_data                   :json
 #  file_metadata                     :json
-#  hash_id                           :string
+#  slug                              :string
 #  author                            :string
 #  description                       :text
 #  file_placements_count             :integer          default(0), not null
@@ -59,10 +59,10 @@ end
 #  index_folio_files_on_by_file_name_for_search  (to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text)))) USING gin
 #  index_folio_files_on_created_at               (created_at)
 #  index_folio_files_on_file_name                (file_name)
-#  index_folio_files_on_hash_id                  (hash_id)
 #  index_folio_files_on_media_source_id          (media_source_id)
 #  index_folio_files_on_published_usage_count    (published_usage_count)
 #  index_folio_files_on_site_id                  (site_id)
+#  index_folio_files_on_slug                     (slug)
 #  index_folio_files_on_type                     (type)
 #  index_folio_files_on_updated_at               (updated_at)
 #
