@@ -1,8 +1,6 @@
 - src = Folio::File::Image.first.thumb('100x100#').url
-img[
-  src=src
-  data=stimulus_thumbnail(src:)
-]
+= render(Dummy::Ui::ImageComponent.new(placement: Folio::File::Image.first,
+                                       size: '100x100#'))
 
 - if @page.present?
   = render_atoms_in_molecules @page.atoms_in_molecules

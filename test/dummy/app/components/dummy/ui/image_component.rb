@@ -117,6 +117,16 @@ class Dummy::Ui::ImageComponent < ApplicationComponent
 
       @data = h
     end
+
+    if @data
+      if @data[:src] && @data[:src].include?("doader.com")
+        @data[:picture_data] = stimulus_thumbnail
+      elsif @data[:srcset] && @data[:srcset].include?("doader.com")
+        @data[:picture_data] = stimulus_thumbnail
+      end
+    end
+
+    @data
   end
 
   def wrap_style

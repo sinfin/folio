@@ -107,4 +107,90 @@ class Folio::ThumbnailsTest < ActiveSupport::TestCase
     assert_equal 0.5, thumbnail[:x]
     assert_equal 0.1, thumbnail[:y]
   end
+
+  test "proportional sizing for non-cropping thumbnails" do
+    # Create an image with known dimensions that result in clean calculations
+    image = create(:folio_file_image)
+    image.update_columns(file_width: 1000, file_height: 500)
+
+    # Test standard proportional sizing (100x100 on 1000x500 should give 100x50)
+    result = image.thumb("100x100")
+    assert_equal 100, result.width
+    assert_equal 50, result.height
+
+    # Test width-only sizing (200x on 1000x500 should give 200x100)
+    result = image.thumb("200x")
+    assert_equal 200, result.width
+    assert_equal 100, result.height
+
+    # Test height-only sizing (x100 on 1000x500 should give 200x100)
+    result = image.thumb("x100")
+    assert_equal 200, result.width
+    assert_equal 100, result.height
+  end
+
+  test "exact sizing for cropping thumbnails with hash" do
+    # Create an image with known dimensions
+    image = create(:folio_file_image)
+    image.update_columns(file_width: 1000, file_height: 500)
+
+    # Test cropping mode - should return exact dimensions regardless of aspect ratio
+    result = image.thumb("100x100#")
+    assert_equal 100, result.width
+    assert_equal 100, result.height
+
+    # Test rectangular crop
+    result = image.thumb("300x150#")
+    assert_equal 300, result.width
+    assert_equal 150, result.height
+  end
+
+  test "proportional sizing with tall images" do
+    # Create a tall image (portrait) with clean ratios
+    image = create(:folio_file_image)
+    image.update_columns(file_width: 400, file_height: 800)
+
+    # Test proportional sizing (100x100 on 400x800 should give 50x100)
+    result = image.thumb("100x100")
+    assert_equal 50, result.width
+    assert_equal 100, result.height
+
+    # Test width-only sizing (200x on 400x800 should give 200x400)
+    result = image.thumb("200x")
+    assert_equal 200, result.width
+    assert_equal 400, result.height
+  end
+
+  test "proportional sizing with square images" do
+    # Create a square image
+    image = create(:folio_file_image)
+    image.update_columns(file_width: 800, file_height: 800)
+
+    # Test proportional sizing (100x100 on 800x800 should give 100x100)
+    result = image.thumb("100x100")
+    assert_equal 100, result.width
+    assert_equal 100, result.height
+
+    # Test width-only sizing (150x on 800x800 should give 150x150)
+    result = image.thumb("150x")
+    assert_equal 150, result.width
+    assert_equal 150, result.height
+  end
+
+  test "proportional sizing edge cases" do
+    image = create(:folio_file_image)
+
+    # Test with very small original dimensions that scale cleanly
+    image.update_columns(file_width: 20, file_height: 10)
+    # Requesting larger than original should scale up proportionally
+    result = image.thumb("100x100")
+    assert_equal 100, result.width
+    assert_equal 50, result.height
+
+    # Test with zero dimensions (should return [0, 0])
+    image.update_columns(file_width: 0, file_height: 500)
+    result = image.thumb("100x100")
+    assert_equal 0, result.width
+    assert_equal 0, result.height
+  end
 end

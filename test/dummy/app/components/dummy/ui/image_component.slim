@@ -1,6 +1,6 @@
 *tag
   - if @data
-    picture.d-ui-image__picture
+    picture.d-ui-image__picture data=@data[:picture_data]
       - if @data[:webp_srcset]
         source[
           srcset=@data[:webp_srcset]

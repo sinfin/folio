@@ -89,6 +89,8 @@ class Folio::Api::ThumbnailsController < Folio::Api::BaseController
             size: file_param[:size],
             url: ready ? url : nil,
             webp_url: ready ? webp_url : nil,
+            width: thumb_result.width,
+            height: thumb_result.height,
             ready: ready
           }
         rescue => e

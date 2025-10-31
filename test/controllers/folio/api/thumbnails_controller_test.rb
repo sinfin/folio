@@ -172,6 +172,8 @@ class Folio::Api::ThumbnailsControllerTest < ActionDispatch::IntegrationTest
     assert image_response.key?("id")
     assert image_response.key?("url")
     assert image_response.key?("webp_url")
+    assert image_response.key?("width")
+    assert image_response.key?("height")
     assert image_response.key?("ready")
     assert_equal @image1.id, image_response["id"]
   end
@@ -232,5 +234,45 @@ class Folio::Api::ThumbnailsControllerTest < ActionDispatch::IntegrationTest
       # If ready is false, url should be nil
       assert_nil image_response["url"], "Not-ready thumbnail should have nil URL"
     end
+  end
+
+  test "should return correct proportional dimensions in thumbnail data" do
+    # Set up an image with known dimensions for predictable calculations
+    @image1.update_columns(file_width: 1000, file_height: 500)
+
+    thumbnails_params = [
+      { id: @image1.id, size: "100x100" },    # Should give 100x50 (proportional)
+      { id: @image1.id, size: "100x100#" },   # Should give 100x100 (cropped)
+      { id: @image1.id, size: "200x" },       # Should give 200x100 (width-only)
+      { id: @image1.id, size: "x50" }         # Should give 100x50 (height-only)
+    ]
+
+    get folio_api_thumbnails_path, params: { thumbnails: thumbnails_params }
+
+    assert_response :success
+    json_response = JSON.parse(response.body)
+    assert_equal 4, json_response.length
+
+    # Find responses by size
+    proportional_response = json_response.find { |item| item["size"] == "100x100" }
+    cropped_response = json_response.find { |item| item["size"] == "100x100#" }
+    width_only_response = json_response.find { |item| item["size"] == "200x" }
+    height_only_response = json_response.find { |item| item["size"] == "x50" }
+
+    # Test proportional sizing (100x100 on 1000x500 should give 100x50)
+    assert_equal 100, proportional_response["width"]
+    assert_equal 50, proportional_response["height"]
+
+    # Test cropped sizing (should give exact dimensions)
+    assert_equal 100, cropped_response["width"]
+    assert_equal 100, cropped_response["height"]
+
+    # Test width-only sizing (200x on 1000x500 should give 200x100)
+    assert_equal 200, width_only_response["width"]
+    assert_equal 100, width_only_response["height"]
+
+    # Test height-only sizing (x50 on 1000x500 should give 100x50)
+    assert_equal 100, height_only_response["width"]
+    assert_equal 50, height_only_response["height"]
   end
 end
