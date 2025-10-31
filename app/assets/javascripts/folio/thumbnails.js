@@ -147,12 +147,22 @@ window.Folio.Stimulus.register(window.Folio.Thumbnails.CONTROLLER_NAME, class ex
 
       window.Folio.Thumbnails.schedule({ data, element: this.element })
     } else {
-      this.element.dataset.controller = this.element.dataset.controller.replace(window.Folio.Thumbnails.CONTROLLER_REGEX, '')
+      this.removeController()
     }
   }
 
   disconnect () {
     this.cleanup()
+  }
+
+  removeController () {
+    if (!this.element.dataset.controller) return
+
+    if (this.element.dataset.controller === window.Folio.Thumbnails.CONTROLLER_NAME) {
+      delete this.element.dataset.controller
+    } else {
+      this.element.dataset.controller = this.element.dataset.controller.replace(window.Folio.Thumbnails.CONTROLLER_REGEX, '')
+    }
   }
 
   getData () {
@@ -244,7 +254,7 @@ window.Folio.Stimulus.register(window.Folio.Thumbnails.CONTROLLER_NAME, class ex
     }
 
     // Remove controller from element
-    this.element.dataset.controller = this.element.dataset.controller.replace(window.Folio.Thumbnails.CONTROLLER_REGEX, '')
+    this.removeController()
   }
 })
 
