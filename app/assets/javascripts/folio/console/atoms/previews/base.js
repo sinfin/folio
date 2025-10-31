@@ -7,6 +7,7 @@
 //= require folio/message_bus
 //= require folio/debounce
 //= require folio/lightbox
+//= require folio/thumbnails
 //= require folio/console/atoms/previews/main_app
 //= require folio/console/file/preview_reloader/preview_reloader
 
