@@ -66,7 +66,7 @@ module Folio::Console::Api::FileControllerBase
       reload_url: url_for([:pagination, :console, :api, @klass, page: params[:page]])
     }
 
-    if @klass.human_type == "image"
+    if %w[image video].include?(@klass.human_type)
       @pagy_options[:middle_component] = Folio::Console::Files::DisplayToggleComponent.new
     end
 

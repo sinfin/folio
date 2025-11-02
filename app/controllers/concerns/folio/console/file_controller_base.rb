@@ -135,7 +135,7 @@ module Folio::Console::FileControllerBase
         skip_default_layout_pagination: true,
       }
 
-      if @klass.human_type == "image"
+      if %w[image video].include?(@klass.human_type)
         @pagy_options[:middle_component] = Folio::Console::Files::DisplayToggleComponent.new
       end
 
