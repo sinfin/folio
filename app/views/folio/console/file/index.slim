@@ -14,7 +14,7 @@
                                         editable: true,
                                         destroyable: true,
                                         uploadable: true,
-                                        batch_actions: true,
+                                        batch_actions: action_name != "index_for_modal",
                                         primary_action: action_name,
                                         batch_actions_multi_picker: action_name == "index_for_picker",
                                         serialize_files: action_name == "index_for_modal" || action_name == "index_for_picker",
