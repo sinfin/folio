@@ -40,6 +40,21 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
       assert_not klass.exists?(file.id)
     end
 
+    test "#{klass} - destroy indestructible" do
+      file = create(klass.model_name.singular)
+      assert klass.exists?(file.id)
+      file.update_column(:file_placements_count, 1)
+
+      delete url_for([:console, :api, file, format: :json])
+
+      assert_response(:unprocessable_entity)
+      assert klass.exists?(file.id)
+      assert_equal 1, response.parsed_body["errors"].size
+      assert_equal 422, response.parsed_body["errors"].first["status"]
+      assert_equal "ActiveRecord::RecordNotDestroyed", response.parsed_body["errors"].first["title"]
+      assert_equal I18n.t("folio.file.cannot_destroy_file_with_placements"), response.parsed_body["errors"].first["detail"]
+    end
+
     test "#{klass} - show" do
       file = create(klass.model_name.singular)
       get url_for([:console, :api, file, format: :json])
