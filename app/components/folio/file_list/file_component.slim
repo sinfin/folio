@@ -202,3 +202,9 @@ div[
             data=(indestructible_reason ? stimulus_tooltip(indestructible_reason) : stimulus_action("destroy", { url: destroy_url }))
           ]
             = folio_icon(:delete)
+
+        - if @primary_action == "index_for_modal"
+          .f-file-list-file__select-btn-wrap
+            = render(Folio::Console::Ui::ButtonComponent.new(variant: :success,
+                                                             label: t('.select'),
+                                                             data: primary_action_data))

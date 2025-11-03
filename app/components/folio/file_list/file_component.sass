@@ -244,6 +244,9 @@
     top: 0
     left: 0
 
+  &__select-btn-wrap
+    display: none
+
   .f-file-list--view-table > .f-file-list__container &
     background: transparent
     border-radius: 0
@@ -283,6 +286,10 @@
 
     &__control--primary
       display: none
+
+    &__select-btn-wrap
+      padding-left: px-to-rem(8px)
+      display: block
 
     @container (max-width: 599px)
       border-bottom: 1px solid #000000

@@ -62,7 +62,7 @@ class Folio::FileListComponent < Folio::ApplicationComponent
   end
 
   def view_class_names
-    if @allow_thumbnail_view && @file_klass.try(:human_type) == "image"
+    if @allow_thumbnail_view && %w[image video].include?(@file_klass.human_type)
       if Folio::Current.user && Folio::Current.user.console_preferences.present? && Folio::Current.user.console_preferences["images_table_view"]
         "f-file-list--view-changeable f-file-list--view-table"
       else
