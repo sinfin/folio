@@ -92,6 +92,7 @@ class Folio::Ability
       can :access_help_documents, site
     end
 
+    can :do_anything, AwsFileHandler::File
     can :do_anything, Folio::SiteUserLink, { site: }
     can :do_anything, Folio::File, { site: Rails.application.config.folio_shared_files_between_sites ? [Folio::Current.main_site, site] : site }
     can :edit_usage_constraints, Folio::File, { site: Rails.application.config.folio_shared_files_between_sites ? [Folio::Current.main_site, site] : site }

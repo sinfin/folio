@@ -236,11 +236,8 @@ AwsFileHandler.configure do |config|
   # end
   # config.controller_new_file = true # default
   config.controller_new_file = proc do |controller, params, aws_file|
-    current_user = Folio::User.find(controller.session[:user_id])
-
-    # TODO: fix this condition
-    if controller.can? :create, AwsFileHandler::File, user: current_user
-      aws_file.user = current_user
+    if controller.current_user.can_now?(:create, AwsFileHandler::File)
+      aws_file.user = controller.current_user
 
       file_klass = params.require(:type).safe_constantize
 

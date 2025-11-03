@@ -64,10 +64,6 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
     }).join('.')
   }
 
-  s3BeforeUrl (file) {
-    return `/aws_file_handler/api/file/new/${this.parameterizeFileName(file.name)}`
-  }
-
   init () {
     if (this.uppy) return
 
@@ -118,7 +114,7 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
       this.uppy.use(window.Uppy.AwsS3, {
         shouldUseMultipart: false,
         getUploadParameters: (file) => {
-          return window.Folio.Api.apiGet(this.s3BeforeUrl(file))
+          return window.Folio.Api.apiPost('/aws_file_handler/api/file/new', { filename: file.name, type: this.fileTypeValue })
             .then((response) => {
               file.name = response.file_name
               file.s3_path = response.s3_path
