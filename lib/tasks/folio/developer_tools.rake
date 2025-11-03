@@ -145,7 +145,7 @@ namespace :folio do
 
       Folio::File.find_in_batches(batch_size: batch_size) do |files|
         files.each do |file|
-          file.update_published_usage_count!
+          file.update_file_placements_counts!
         end
 
         processed += files.size

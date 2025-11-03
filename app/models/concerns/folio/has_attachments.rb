@@ -379,7 +379,7 @@ module Folio::HasAttachments
                .uniq
                .compact
 
-      files.each(&:update_published_usage_count!)
+      files.each(&:update_file_placements_counts!)
     end
 
     def validate_files_usage_limits_if_publishing

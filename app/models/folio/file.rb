@@ -377,9 +377,15 @@ class Folio::File < Folio::ApplicationRecord
       .count("CONCAT(placement_type, ':', placement_id)")
   end
 
-  def update_published_usage_count!
-    new_count = calculate_published_usage_count
-    update_column(:published_usage_count, new_count) if published_usage_count != new_count
+  def update_file_placements_counts!
+    published_count = calculate_published_usage_count
+    placements_count = file_placements.count
+
+    updates = {}
+    updates[:published_usage_count] = published_count if published_usage_count != published_count
+    updates[:file_placements_count] = placements_count if file_placements_count != placements_count
+
+    update_columns(updates) if updates.any?
   end
 
   private

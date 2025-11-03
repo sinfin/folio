@@ -37,8 +37,7 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
   def self.folio_file_placement(class_name, name = nil, allow_embed: false, has_many: false)
     belongs_to :file, class_name:,
                       inverse_of: :file_placements,
-                      required: allow_embed ? false : true,
-                      counter_cache: :file_placements_count
+                      required: allow_embed ? false : true
 
     belongs_to :placement, polymorphic: true,
                            inverse_of: name,
@@ -298,12 +297,12 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
     def update_file_published_usage_count
       return unless file_id.present?
 
-      file&.update_published_usage_count!
+      file&.update_file_placements_counts!
     end
 
     def update_file_published_usage_count_on_file_change
       [file_id_before_last_save, file_id].compact.uniq.each do |f_id|
-        Folio::File.find_by(id: f_id)&.update_published_usage_count!
+        Folio::File.find_by(id: f_id)&.update_file_placements_counts!
       end
     end
 
