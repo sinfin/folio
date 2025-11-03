@@ -34,7 +34,7 @@ module Folio::Thumbnails
     before_validation :reset_thumbnails
 
     after_save :run_set_additional_data_job
-    before_destroy :delete_thumbnails
+    after_destroy :delete_thumbnails
   end
 
   def thumbs_hash_with_rewritten_urls(hash)
