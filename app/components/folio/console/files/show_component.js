@@ -49,7 +49,7 @@ window.Folio.Stimulus.register('f-c-files-show', class extends window.Stimulus.C
           window.Turbo.visit(this.indexUrlValue)
         }
       }).catch((error) => {
-        window.alert(`Could not delete file: ${error.message}`)
+        window.FolioConsole.Ui.Flash.alert(error.message)
       }).finally(() => {
         this.loadingValue = false
         delete this.abortController
