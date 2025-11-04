@@ -25,6 +25,10 @@ cs:
         subject: Ověření přihlášení
     failure:
       user_locked: Váš účet byl zablokován. Prosím kontaktujte správce.
+      magic_link_invalid: Neplatný nebo expirovaný přihlašovací odkaz.
+    passwordless:
+      not_found_in_database: Uživatel s tímto emailem nebyl nalezen.
+      magic_link_sent: Přihlašovací odkaz byl odeslán na váš email. Pro přihlášení následujte odkaz v emailu.
 
   folio:
     devise:

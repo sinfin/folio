@@ -20,6 +20,7 @@ Rails.application.routes.draw do
 
   devise_for :users, class_name: "Folio::User",
                      module: "dummy/folio/users",
+                     controllers: { magic_links: "dummy/folio/users/magic_links" },
                      omniauth_providers: Rails.application.config.folio_users_omniauth_providers
 
   devise_scope :user do

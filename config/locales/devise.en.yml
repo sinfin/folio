@@ -16,6 +16,10 @@ en:
       signed_up_but_locked: Signed up successfully. Unfortunately, you cannot sign in because your account is blocked.
     failure:
       user_locked: Your account was blocked. Please contact the site administrator.
+      magic_link_invalid: Invalid or expired login link.
+    passwordless:
+      not_found_in_database: Could not find a user for that email address
+      magic_link_sent: A login link has been sent to your email address. Please follow the link to log in to your account.
 
   folio:
     devise:

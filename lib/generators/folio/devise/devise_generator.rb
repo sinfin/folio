@@ -34,6 +34,7 @@ class Folio::DeviseGenerator < Rails::Generators::Base
     str = <<~'RUBY'
       devise_for :users, class_name: "Folio::User",
                          module: "application_namespace_path/folio/users",
+                         controllers: { magic_links: "application_namespace_path/folio/users/magic_links" },
                          omniauth_providers: Rails.application.config.folio_users_omniauth_providers
 
       devise_scope :user do
