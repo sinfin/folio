@@ -357,7 +357,7 @@ Devise.setup do |config|
   config.passwordless_tokenizer = "SignedGlobalIDTokenizer"
 
   # Time period after a magic login link is sent out that it will be valid for.
-  config.passwordless_login_within = 20.minutes
+  config.passwordless_login_within = 10.minutes
 
   # The secret key used to generate passwordless login tokens. The default value
   # is nil, which means defer to Devise's `secret_key` config value. Changing this
