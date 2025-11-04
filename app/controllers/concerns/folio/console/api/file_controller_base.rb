@@ -79,7 +79,8 @@ module Folio::Console::Api::FileControllerBase
     @pagy, _records = pagy(folio_console_records, items: Folio::Console::FileControllerBase::PAGY_ITEMS)
 
     @pagy_options = {
-      reload_url: url_for([:pagination, :console, :api, @klass, page: params[:page]])
+      reload_url: url_for([:pagination, :console, :api, @klass, page: params[:page]]),
+      request_path: pagination_request_path
     }
 
     if %w[image video].include?(@klass.human_type)
@@ -446,6 +447,29 @@ module Folio::Console::Api::FileControllerBase
       else
         [Folio::Current.site]
       end
+    end
+
+    def pagination_request_path
+      if request.referrer.present?
+        begin
+          uri = URI.parse(request.referrer)
+          referrer_path = uri.path
+
+          # Check if referrer is a console file path (index, index_for_modal, or index_for_picker)
+          # Match patterns like:
+          # - /console/file/images
+          # - /console/file/images/index_for_modal
+          # - /console/file/images/index_for_picker
+          file_path_pattern = %r{/console/file/#{@klass.model_name.element.pluralize}(?:/(?:index_for_modal|index_for_picker))?$}
+
+          return referrer_path if referrer_path.match?(file_path_pattern)
+        rescue URI::InvalidURIError
+          # Fallback if referrer can't be parsed
+        end
+      end
+
+      # Fallback to default
+      url_for([:console, @klass, only_path: true])
     end
 
     def set_safe_file_ids

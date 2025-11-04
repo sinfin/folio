@@ -20,7 +20,11 @@ class Folio::Console::Ui::PagyComponent < Folio::Console::ApplicationComponent
   end
 
   def link
-    @link ||= pagy_anchor(@pagy)
+    @link ||= if @options && @options[:request_path]
+      pagy_anchor(@pagy, request_path: @options[:request_path])
+    else
+      pagy_anchor(@pagy)
+    end
   end
 
   def icon(code)
