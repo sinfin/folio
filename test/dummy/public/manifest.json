@@ -1,6 +1,6 @@
 {
-    "name": "",
-    "short_name": "",
+    "short_name": "Dummy",
+    "name": "Dummy App",
     "icons": [
         {
             "src": "/android-chrome-192x192.png",
@@ -13,7 +13,11 @@
             "type": "image/png"
         }
     ],
-    "theme_color": "#ffffff",
+    "id": "/?source=pwa",
+    "start_url": "/?source=pwa",
     "background_color": "#ffffff",
-    "display": "standalone"
+    "display": "standalone",
+    "scope": "/",
+    "theme_color": "#ffffff",
+    "description": "Dummy App based on Folio CMS"
 }
