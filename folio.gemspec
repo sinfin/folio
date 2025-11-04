@@ -38,6 +38,7 @@ Gem::Specification.new do |s|
   s.add_dependency "devise-bootstrap-views"
   s.add_dependency "devise-i18n"
   s.add_dependency "devise"
+  s.add_dependency "devise-passwordless"
   # s.add_dependency "discard"
   s.add_dependency "dotenv-rails"
   s.add_dependency "dragonfly"
