@@ -8,7 +8,8 @@ en:
         instructions: "to finish signing in via %{provider} click the link bellow:"
         button: Sign in
         footer: If you don't want to sign in, ignore this e-mail. Your account will not be updated unless you click the link.
-
+      magic_link:
+        subject: Login confirmation
     omniauth_callbacks:
       signed_in: Signed in successfully.
       signed_up: Signed up successfully.
