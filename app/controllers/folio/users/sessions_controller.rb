@@ -77,6 +77,31 @@ class Folio::Users::SessionsController < Devise::SessionsController
     end
   end
 
+  def login_confirmation
+    @user_id = session[:login_confirmation_user_id]
+    @email = session[:login_confirmation_email]
+
+    redirect_to main_app.new_user_session_path unless @user_id
+  end
+
+  def resend_login_confirmation
+    user_id = session[:login_confirmation_user_id]
+
+    if user_id
+      user = Folio::User.find_by(id: user_id)
+
+      if user
+        user.send_magic_link(email: user.email)
+        flash[:notice] = t("folio.users.sessions.login_confirmation.resent")
+      else
+        flash[:error] = I18n.t("folio.devise.sessions.create.invalid")
+        return redirect_to main_app.new_user_session_path
+      end
+    end
+
+    redirect_to main_app.users_auth_login_confirmation_path
+  end
+
   def get_failure_flash_message(warden_exception_or_user)
     if warden_exception_or_user.is_a?(Hash)
       if warden_exception_or_user[:message].nil?

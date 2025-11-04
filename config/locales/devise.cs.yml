@@ -143,3 +143,10 @@ cs:
 
         resolve_conflict:
           invalid_conflict_token_flash: Odkaz již není platný. Zkuste se přihlásit znovu.
+
+      sessions:
+        login_confirmation:
+          title: Ověření přihlášení
+          message: Prosím potvrďte přihlášení kliknutím na odkaz, který jsme zaslali na zadaný e-mail %{email}. Potvrzující e-mail by měl přijít během několika minut.
+          resend_button: Znovu zaslat ověřovací email
+          resent: Ověřovací e-mail byl znovu zaslán.

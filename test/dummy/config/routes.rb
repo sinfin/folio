@@ -30,6 +30,9 @@ Rails.application.routes.draw do
     get "/users/auth/resolve_conflict", to: "dummy/folio/users/omniauth_callbacks#resolve_conflict"
     get "/users/auth/new_user", to: "dummy/folio/users/omniauth_callbacks#new_user"
     post "/users/auth/create_user", to: "dummy/folio/users/omniauth_callbacks#create_user"
+
+    get "/users/auth/login_confirmation", to: "dummy/folio/users/sessions#login_confirmation"
+    post "/users/auth/resend_login_confirmation", to: "dummy/folio/users/sessions#resend_login_confirmation"
   end
 
   resource :test, only: [:show]

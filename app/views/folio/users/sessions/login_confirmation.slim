@@ -1,0 +1,7 @@
+.container.justify-content-center
+  h1 = t('.title')
+
+  p = t('.message', email: @email)
+
+  .mt-4
+    = link_to t('.resend_button'), "/users/auth/resend_login_confirmation", method: :post

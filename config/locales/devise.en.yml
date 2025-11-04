@@ -133,3 +133,10 @@ en:
 
         resolve_conflict:
           invalid_conflict_token_flash: Link is no longer valid. Try to sign in again.
+
+      sessions:
+        login_confirmation:
+          title: Login verification
+          message: Please confirm your login by clicking the link we have sent to the provided email %{email}. The confirmation email should arrive within a few minutes.
+          resend_button: Resend verification email
+          resent: Verification email was resent.
