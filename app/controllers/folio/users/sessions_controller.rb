@@ -29,42 +29,63 @@ class Folio::Users::SessionsController < Devise::SessionsController
   end
 
   def create
+    # User is logged in before this happens and it messes with the last_sign_in_at timestamp
+    warden.logout(resource_name) if warden.authenticated?(resource_name)
+    reset_session
+
     if invited_user?
       render plain: invitation_controller.process("create")
     else
       respond_to do |format|
         format.html do
-          exception_message = try_to_authenticate_resource
+          resource = find_and_validate_user
 
           if resource
-            set_flash_message!(:notice, :signed_in)
-            sign_in(resource_name, resource)
+            if resource.needs_magic_link_verification?
+              resource.send_magic_link(email: resource.email)
 
-            yield resource if block_given?
-            respond_with resource, location: after_sign_in_path_for(resource)
+              session[:login_confirmation_user_id] = resource.id
+              session[:login_confirmation_email] = resource.email
+              return redirect_to main_app.users_auth_login_confirmation_path
+            else
+              sign_in(resource_name, resource)
+              set_flash_message!(:notice, :signed_in)
+
+              yield resource if block_given?
+              respond_with resource, location: after_sign_in_path_for(resource)
+            end
           else
             session[:user_email] = params[:user][:email]
-            redirect_to main_app.new_user_session_path, flash: { alert: exception_message }
+            redirect_to main_app.new_user_session_path, flash: { alert: @exception_message || I18n.t("folio.devise.sessions.create.invalid") }
           end
         end
 
         format.json do
           store_sign_in_location
-          exception_message = try_to_authenticate_resource
+          resource = find_and_validate_user
 
           if resource
-            sign_in(resource_name, resource)
+            if resource.needs_magic_link_verification?(request)
+              resource.send_magic_link(email: resource.email)
 
-            @force_flash = true
-            set_flash_message!(:notice, :signed_in)
-            render json: { data: { url: after_sign_in_path_for(resource) } }, status: 200
+              render json: {
+                data: { redirect: main_app.users_auth_login_confirmation_path }
+              }, status: 200
+            else
+              sign_in(resource_name, resource)
+
+              @force_flash = true
+              set_flash_message!(:notice, :signed_in)
+              render json: { data: { url: after_sign_in_path_for(resource) } }, status: 200
+            end
           else
+            exception_message = @exception_message || I18n.t("folio.devise.sessions.create.invalid")
             errors = [{ status: 401, title: "Unauthorized", detail: exception_message }]
             cell_flash = ActionDispatch::Flash::FlashHash.new
             cell_flash[:alert] = exception_message
 
             html = cell("folio/devise/sessions/new",
-                        resource: resource || Folio::User.new(email: params[:user][:email]),
+                        resource: Folio::User.new(email: params[:user][:email]),
                         resource_name: :user,
                         modal: true,
                         flash: cell_flash,
@@ -181,5 +202,27 @@ class Folio::Users::SessionsController < Devise::SessionsController
 
   def turnstile_failure_redirect_path
     new_user_session_path
+  end
+
+  def find_and_validate_user
+    @exception_message = nil
+
+    return nil unless params[:user]&.dig(:email).present? && params[:user]&.dig(:password).present?
+
+    user = resource_class.find_for_database_authentication(email: params[:user][:email], auth_site_id: params[:user][:auth_site_id])
+
+    return nil unless user
+
+    if user.valid_password?(params[:user][:password])
+      if user.respond_to?(:active_for_authentication?) && !user.active_for_authentication?
+        @exception_message = get_failure_flash_message({ message: user.inactive_message })
+        return nil
+      end
+
+      user
+    else
+      @exception_message = get_failure_flash_message({ message: nil })
+      nil
+    end
   end
 end

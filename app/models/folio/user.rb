@@ -400,6 +400,11 @@ class Folio::User < Folio::ApplicationRecord
     false
   end
 
+  def needs_magic_link_verification?
+    return false if superadmin?
+    last_sign_in_at.nil? || last_sign_in_at < 1.month.ago
+  end
+
   private
     # Override of Devise method to scope authentication by zone.
     def self.find_for_authentication(warden_params)
