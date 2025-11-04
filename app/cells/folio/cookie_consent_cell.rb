@@ -261,7 +261,7 @@ class Folio::CookieConsentCell < Folio::ApplicationCell
   end
 
   def log_error(msg, extra: nil)
-    Raven.capture_message(msg, extra:)
+    Sentry.capture_message(msg, extra:)
   rescue StandardError
   end
 end

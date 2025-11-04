@@ -49,7 +49,7 @@ module Folio::HasNewsletterSubscriptions
                                  subscribable: self)
 
           unless did_create
-            Raven.capture_message("NewsletterSubscription for #{self.class.model_name.human} ##{id} - email \"#{subscription_email}\", site \"#{site.domain}\" - failed to create.") if defined?(Raven)
+            Sentry.capture_message("NewsletterSubscription for #{self.class.model_name.human} ##{id} - email \"#{subscription_email}\", site \"#{site.domain}\" - failed to create.") if defined?(Sentry)
           end
         end
       end
@@ -79,7 +79,7 @@ module Folio::HasNewsletterSubscriptions
                              active: should_subscribe_to_newsletter?)
 
       unless did_update
-        Raven.capture_message("NewsletterSubscription for #{self.class.model_name.human} ##{id} - email \"#{subscription_email}\" - failed to update.") if defined?(Raven)
+        Sentry.capture_message("NewsletterSubscription for #{self.class.model_name.human} ##{id} - email \"#{subscription_email}\" - failed to update.") if defined?(Sentry)
       end
     end
 
