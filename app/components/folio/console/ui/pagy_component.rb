@@ -20,10 +20,19 @@ class Folio::Console::Ui::PagyComponent < Folio::Console::ApplicationComponent
   end
 
   def link
-    @link ||= if @options && @options[:request_path]
-      pagy_anchor(@pagy, request_path: @options[:request_path])
+    @link ||= pagy_anchor(@pagy)
+  end
+
+  # Override pagy_url_for to use custom request_path when provided
+  def pagy_url_for(page, opts = {})
+    url = super(page, opts)
+    if @options && @options[:request_path]
+      # Replace the path portion with custom path, preserving query string
+      uri = URI.parse(url)
+      uri.path = @options[:request_path]
+      uri.to_s
     else
-      pagy_anchor(@pagy)
+      url
     end
   end
 
