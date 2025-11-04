@@ -271,7 +271,11 @@ module Folio::Thumbnails
     def delete_thumbnails
       if self.try(:thumbnail_sizes).present?
         Folio::DeleteThumbnailsJob.perform_later(self.thumbnail_sizes)
-        self.thumbnail_sizes = {}
+
+        # Destroying freezes the record and setting here would throw a FrozenError
+        unless destroyed?
+          self.thumbnail_sizes = {}
+        end
       end
     end
 

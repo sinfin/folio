@@ -40,6 +40,22 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
       assert_not klass.exists?(file.id)
     end
 
+    if klass.new.thumbnailable?
+      test "#{klass} - destroy with thumbnail_sizes" do
+        file = create(klass.model_name.singular)
+
+        # Set thumbnail_sizes to trigger the FrozenError scenario before the fix
+        file.update!(thumbnail_sizes: { "160x90#" => { uid: "test_uid" } })
+
+        assert klass.exists?(file.id)
+
+        delete url_for([:console, :api, file, format: :json])
+
+        assert_response(:success)
+        assert_not klass.exists?(file.id)
+      end
+    end
+
     test "#{klass} - destroy indestructible" do
       file = create(klass.model_name.singular)
       assert klass.exists?(file.id)
