@@ -3,7 +3,9 @@ ruby:
   javascript ||= Folio::Current.site.layout_assets_javascripts_path
   skip_javascript ||= false
   meta_viewport ||= "width=device-width, initial-scale=1, shrink-to-fit=no"
-  turbolinks_cache_control = "no-cache" unless defined?(turbolinks_cache_control)
+  if !defined?(turbolinks_cache_control) || turbolinks_cache_control.nil?
+    turbolinks_cache_control = "no-cache"
+  end
   skip_cookie_consent ||= false
 
 meta content=("text/html; charset=UTF-8") http-equiv="Content-Type"
