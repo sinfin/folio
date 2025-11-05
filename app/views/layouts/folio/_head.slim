@@ -3,13 +3,7 @@ ruby:
   javascript ||= Folio::Current.site.layout_assets_javascripts_path
   skip_javascript ||= false
   meta_viewport ||= "width=device-width, initial-scale=1, shrink-to-fit=no"
-  # When HTTP cache headers are enabled, don't interfere with Turbolinks cache control
-  # This prevents Turbolinks from overriding Cache-Control headers set by set_cache_control_headers
-  if defined?(Rails) && Rails.application.config.respond_to?(:folio_cache_headers_enabled) && Rails.application.config.folio_cache_headers_enabled
-    turbolinks_cache_control ||= nil
-  else
-    turbolinks_cache_control ||= "no-cache"
-  end
+  turbolinks_cache_control = "no-cache" unless defined?(turbolinks_cache_control)
   skip_cookie_consent ||= false
 
 meta content=("text/html; charset=UTF-8") http-equiv="Content-Type"
