@@ -28,7 +28,8 @@ class Folio::Console::PublishableInputsCell < Folio::ConsoleCell
       ary += options[:additional_fields] if options[:additional_fields]
 
       ary.filter do |field|
-        f.object.respond_to?(field)
+        field_name = field.is_a?(Hash) ? field[:field] : field
+        f.object.respond_to?(field_name)
       end
     end
   end
