@@ -69,6 +69,10 @@ class Folio::Console::Ui::ButtonCell < Folio::ConsoleCell
       h[:data]["f-c-ui-notification-modal-trigger-data-value"] = model[:notification_modal].to_json
     end
 
+    if model[:form_modal].present?
+      h[:data] = stimulus_merge(h[:data], stimulus_console_form_modal_trigger(model[:form_modal], title: model[:form_modal_title]))
+    end
+
     h
   end
 

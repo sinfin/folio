@@ -88,6 +88,13 @@ module Folio::StimulusHelper
     stimulus_data(outlets:)
   end
 
+  def stimulus_modal
+    stimulus_controller("f-modal",
+                        action: {
+                          "f-modal-toggle:toggle" => "onToggleClick",
+                        })
+  end
+
   def stimulus_modal_toggle(target, dialog: nil)
     stimulus_controller("f-modal-toggle",
                         values: { target:, dialog: },
@@ -97,6 +104,13 @@ module Folio::StimulusHelper
 
   def stimulus_modal_close
     stimulus_controller("f-modal-close",
+                        action: { click: "click" },
+                        inline: true)
+  end
+
+  def stimulus_console_form_modal_trigger(url, title: "")
+    stimulus_controller("f-c-form-modal-trigger",
+                        values: { url:, title: },
                         action: { click: "click" },
                         inline: true)
   end
@@ -122,5 +136,21 @@ module Folio::StimulusHelper
     end
 
     result
+  end
+
+  def stimulus_merge(*data_hashes)
+    runner = {}
+
+    data_hashes.each do |data|
+      data.each do |key, value|
+        if runner[key].present?
+          runner[key] += " #{value}"
+        else
+          runner[key] = value
+        end
+      end
+    end
+
+    runner
   end
 end

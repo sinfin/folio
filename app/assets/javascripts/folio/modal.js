@@ -1,3 +1,16 @@
+window.Folio = window.Folio || {}
+window.Folio.Modal = window.Folio.Modal || {}
+
+window.Folio.Modal.open = (modal) => {
+  modal.dataset.fModalOpenValue = 'true'
+  return true
+}
+
+window.Folio.Modal.close = (modal) => {
+  modal.dataset.fModalOpenValue = 'false'
+  return true
+}
+
 window.Folio.Stimulus.register('f-modal', class extends window.Stimulus.Controller {
   static values = {
     open: Boolean

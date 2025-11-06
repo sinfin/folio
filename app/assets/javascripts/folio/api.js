@@ -29,24 +29,24 @@ const jsonError = (json) => {
   if (json.error) {
     return json.error
   } else if (json.errors) {
-    const parts = []
-
-    json.errors.forEach((err) => {
+    return json.errors.map((err) => {
       if (err.title && err.title.indexOf('::') === -1) {
-        parts.push(err.title)
+        return `${err.title}: ${err.detail}`
       }
 
-      parts.push(err.detail)
-    })
-
-    return parts.join(' ')
+      return err.detail
+    }).join('<br>')
   }
 
   return null
 }
 
-function checkResponse (response) {
+const makeCheckResponse = (asHtml) => (response) => {
   if (response.ok) return Promise.resolve(response)
+
+  if (asHtml && response.redirected) {
+    return Promise.resolve(response)
+  }
 
   return response.json()
     .catch(() => Promise.reject(new Error(fallbackMessage(response))))
@@ -77,6 +77,24 @@ function responseToJson (response) {
 
 function responseToHtml (response) {
   if (response.status === 204) return Promise.resolve('')
+
+  if (response.redirected) {
+    if (response.url) {
+      const urlObj = new URL(response.url)
+      const queryParams = urlObj.searchParams
+      const anchor = queryParams.get("_anchor")
+
+      if (anchor) {
+        queryParams.delete("_anchor")
+        urlObj.search = queryParams.toString()
+        return Promise.resolve(`{ "data": { "redirected": "${urlObj}#${anchor}" }}`)
+      }
+
+      return Promise.resolve(`{ "data": { "redirected": "${response.url}" }}`)
+    }
+
+    return Promise.resolve('{ "data": { "redirected": true }}')
+  }
   return response.text()
 }
 
@@ -107,7 +125,7 @@ window.Folio.Api.api = (method, url, body, signal) => {
   // need to have this extra for MS Edge
   if (body) data.body = JSON.stringify(body)
 
-  return fetch(url, data).then(checkResponse).then(responseToJson).then(flashMessageFromMeta)
+  return fetch(url, data).then(makeCheckResponse(false)).then(responseToJson).then(window.Folio.Api.flashMessageFromMeta)
 }
 
 window.Folio.Api.apiPost = (url, body, signal) => {
@@ -143,7 +161,8 @@ window.Folio.Api.htmlApi = (method, url, body, signal) => {
   // need to have this extra for MS Edge
   if (body) data.body = JSON.stringify(body)
 
-  return fetch(url, data).then(checkResponse).then(responseToHtml).then(flashMessageFromMeta)
+  return fetch(url, data).then(makeCheckResponse(true)).then(responseToHtml).then(window.Folio.Api.flashMessageFromMeta)
+
 }
 
 window.Folio.Api.apiHtmlGet = (url, body = null, signal) => {
@@ -152,6 +171,10 @@ window.Folio.Api.apiHtmlGet = (url, body = null, signal) => {
 
 window.Folio.Api.apiHtmlPost = (url, body) => {
   return window.Folio.Api.htmlApi('POST', url, body)
+}
+
+window.Folio.Api.apiHtmlPatch = (url, body) => {
+  return window.Folio.Api.htmlApi('PATCH', url, body)
 }
 
 window.Folio.Api.apiXhrFilePut = (url, file) => {

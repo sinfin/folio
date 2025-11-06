@@ -92,6 +92,10 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
         data[:confirm] = nil
       end
 
+      if action[:form_modal].present?
+        data = stimulus_merge(data, stimulus_console_form_modal_trigger(action[:form_modal], title: action[:form_modal_title]))
+      end
+
       opts = {
         title: t("folio.console.actions.#{action[:name]}"),
         method: action[:method],

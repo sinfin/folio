@@ -1,2 +1,4 @@
-= simple_form_for([:console, @user]) do |f|
-  = render 'form', f: f
+/ not really required, but is used in /console/ui/modals demo
+div class=Folio::Console::FormModalComponent::TARGET_FORM_CLASS_NAME
+  = simple_form_for([:console, @user]) do |f|
+    = render 'form', f: f

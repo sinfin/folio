@@ -74,7 +74,7 @@ class Folio::Console::UiController < Folio::Console::BaseController
   end
 
   def modals
-    @button_model = {
+    @button_model_for_notifications_message = {
       variant: :info,
       label: "Info modal",
       notification_modal: {
@@ -84,7 +84,7 @@ class Folio::Console::UiController < Folio::Console::BaseController
       }
     }
 
-    @form_button_models = [
+    @button_model_for_notifications_form = [
       {
         variant: :info,
         label: "Modal with submit",
@@ -101,6 +101,22 @@ class Folio::Console::UiController < Folio::Console::BaseController
         type: :submit,
       }
     ]
+
+    if user = Folio::User.first
+      @button_model_for_form_modals = [
+        {
+          variant: :info,
+          label: "Folio::User edit",
+          form_modal: url_for([:edit, :console, user]),
+        },
+        {
+          variant: :info,
+          label: "Folio::User edit custom title",
+          form_modal: url_for([:edit, :console, user]),
+          form_modal_title: "custom title",
+        },
+      ]
+    end
   end
 
   def alerts

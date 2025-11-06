@@ -31,6 +31,7 @@
 //= require folio/api
 //= require folio/s3_upload
 //= require folio/message_bus
+//= require folio/modal
 //= require folio/remote_scripts
 
 //= require folio/lazyload
@@ -44,6 +45,7 @@
 //= require folio/chart/chart
 //= require folio/ui/icon/icon
 //= require folio/click_trigger
+//= require folio/form_to_hash
 
 // must be under folio/input
 //= require daterangepicker.min
@@ -69,6 +71,8 @@
 //= require folio/console/ui/button/button
 //= require folio/console/ui/buttons/buttons
 //= require folio/console/ui/notification_modal/notification_modal
+
+//= require folio/console/form_modal_component
 
 //= require folio/console/aasm/email_modal/email_modal
 //= require folio/console/accounts/invite_and_copy/invite_and_copy
