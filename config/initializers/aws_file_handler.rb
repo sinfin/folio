@@ -358,6 +358,22 @@ AwsFileHandler.configure do |config|
   # config.controller_rescue_from = proc { |controller, exception| controller.head :internal_server_error } # default
   # config.controller_rescue_from = nil
   config.controller_rescue_from = proc do |controller, exception|
-    controller.send(:render_error, exception, :internal_server_error)
+    status = :internal_server_error
+
+    if ENV["FOLIO_API_DONT_RESCUE_ERRORS"] && (Rails.env.development? || Rails.env.test?)
+      raise e
+    end
+
+    Sentry.capture_exception(e) if defined?(Sentry)
+
+    errors = [
+      {
+        status: Rack::Utils::SYMBOL_TO_STATUS_CODE[status] || status,
+        title: e.class.name,
+        detail: e.message,
+      }
+    ]
+
+    render json: { errors: errors }, status: status
   end
 end
