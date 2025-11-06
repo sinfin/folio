@@ -374,6 +374,6 @@ AwsFileHandler.configure do |config|
       }
     ]
 
-    render json: { errors: errors }, status: status
+    controller.render json: { errors: errors }, status: status
   end
 end
