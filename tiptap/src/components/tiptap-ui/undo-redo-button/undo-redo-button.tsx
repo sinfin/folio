@@ -8,6 +8,9 @@ import { useTiptapEditor } from "@/hooks/use-tiptap-editor";
 import { Redo2Icon } from "@/components/tiptap-icons/redo2-icon";
 import { Undo2Icon } from "@/components/tiptap-icons/undo2-icon";
 
+// --- Lib ---
+import translate from "@/lib/i18n";
+
 // --- UI Primitives ---
 import type { ButtonProps } from "@/components/tiptap-ui-primitive/button";
 import { Button } from "@/components/tiptap-ui-primitive/button";
@@ -40,10 +43,20 @@ export const historyShortcutKeys: Partial<Record<HistoryAction, string>> = {
   redo: "Ctrl-Shift-z",
 };
 
-export const historyActionLabels: Record<HistoryAction, string> = {
-  undo: "Undo",
-  redo: "Redo",
+const TRANSLATIONS = {
+  cs: {
+    undo: "Zpět",
+    redo: "Znovu",
+  },
+  en: {
+    undo: "Undo",
+    redo: "Redo",
+  },
 };
+
+export function getHistoryActionLabel(action: HistoryAction): string {
+  return translate(TRANSLATIONS, action);
+}
 
 /**
  * Executes a history action on the editor.
@@ -88,7 +101,7 @@ export const UndoRedoButton = React.forwardRef<
     }, [editor, action, enabled]);
 
     const Icon = historyIcons[action];
-    const actionLabel = historyActionLabels[action];
+    const actionLabel = getHistoryActionLabel(action);
     const shortcutKey = historyShortcutKeys[action];
 
     const handleClick = React.useCallback(

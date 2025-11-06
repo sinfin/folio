@@ -15,6 +15,7 @@ import { UnderlineIcon } from "@/components/tiptap-icons/underline-icon";
 
 // --- Lib ---
 import { isMarkInSchema } from "@/lib/tiptap-utils";
+import translate from "@/lib/i18n";
 
 // --- UI Primitives ---
 import type { ButtonProps } from "@/components/tiptap-ui-primitive/button";
@@ -66,6 +67,27 @@ export const markShortcutKeys: Partial<Record<Mark, string>> = {
   code: "Ctrl-e",
   superscript: "Ctrl-.",
   subscript: "Ctrl-,",
+};
+
+const TRANSLATIONS = {
+  cs: {
+    bold: "Tučné",
+    italic: "Kurzíva",
+    underline: "Podtržené",
+    strike: "Přeškrtnuté",
+    code: "Kód",
+    superscript: "Horní index",
+    subscript: "Dolní index",
+  },
+  en: {
+    bold: "Bold",
+    italic: "Italic",
+    underline: "Underline",
+    strike: "Strike",
+    code: "Code",
+    superscript: "Superscript",
+    subscript: "Subscript",
+  },
 };
 
 export function canToggleMark(editor: Editor | null, type: Mark): boolean {
@@ -125,7 +147,7 @@ export function shouldShowMarkButton(params: {
 }
 
 export function getFormattedMarkName(type: Mark): string {
-  return type.charAt(0).toUpperCase() + type.slice(1);
+  return translate(TRANSLATIONS, type);
 }
 
 export function useMarkState(
@@ -211,7 +233,7 @@ export const MarkButton = React.forwardRef<HTMLButtonElement, MarkButtonProps>(
         data-disabled={isDisabled}
         role="button"
         tabIndex={-1}
-        aria-label={type}
+        aria-label={formattedName}
         aria-pressed={isActive}
         tooltip={formattedName}
         shortcutKeys={shortcutKey}

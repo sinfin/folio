@@ -37,6 +37,7 @@ const TRANSLATIONS = {
     placeholder: "Vložit URL odkazu …",
     settings: "Nastavit odkaz",
     openInNew: "Otevřít v novém okně",
+    link: "Odkaz",
   },
   en: {
     apply: "Apply",
@@ -46,6 +47,7 @@ const TRANSLATIONS = {
     placeholder: "Paste link URL …",
     settings: "Link settings",
     openInNew: "Open in new window",
+    link: "Link",
   },
 };
 
@@ -181,6 +183,7 @@ export const useLinkHandler = (props: LinkHandlerProps) => {
 
 export const LinkButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, children, ...props }, ref) => {
+    const label = translate(TRANSLATIONS, "link");
     return (
       <Button
         type="button"
@@ -188,8 +191,8 @@ export const LinkButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
         data-style="ghost"
         role="button"
         tabIndex={-1}
-        aria-label="Link"
-        tooltip="Link"
+        aria-label={label}
+        tooltip={label}
         ref={ref}
         {...props}
       >
