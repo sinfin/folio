@@ -13,7 +13,7 @@ AwsFileHandler.configure do |config|
   # Secret to sign and verify JWT tokens.
   config.jwt_file_processing_secret = ENV.fetch("AWS_FILE_HANDLER_JWT_FILE_PROCESSING_SECRET")
   # API token for communication from AWS notification lambda to our backend.
-  config.api_token = ENV.fetch("AWS_FILE_HANDLER_API_TOKEN")
+  config.api_token = ENV.fetch("AWS_FILE_HANDLER_API_TOKEN", nil)
   # SQS queue name for sending messages to uploading lambda.
   config.upload_lambda_queue = ENV.fetch("AWS_FILE_HANDLER_UPLOAD_LAMBDA_QUEUE")
   # SQS queue name for sending messages to processing lambda.
@@ -225,7 +225,7 @@ AwsFileHandler.configure do |config|
   #     # optional (any data as hash)
   #     aws_file.custom_data = { type: "image", class: Folio::File::Image }
   #
-  #     return true
+  #     next true
   #   end
   #
   #   # Or you can raise exception, and it'll be handled by AwsFileHandler::ApplicationController but with some
@@ -243,13 +243,13 @@ AwsFileHandler.configure do |config|
 
       unless file_klass && Rails.application.config.folio_direct_s3_upload_class_names.any? { |class_name| file_klass <= class_name.constantize }
         controller.head :forbidden
-        return false
+        next false
       end
 
       aws_file.s3_type_directory = file_klass.name.underscore
       aws_file.custom_data = { class: file_klass }
 
-      return true
+      next true
     end
 
     # Or you can raise exception, and it'll be handled by AwsFileHandler::FileController but with some
@@ -281,7 +281,7 @@ AwsFileHandler.configure do |config|
   #     # `/file/new` action already!
   #     aws_file.typeable = aws_file.custom_data[:class].constantize.new
   #
-  #     return true
+  #     next true
   #   end
   #
   #   # Or you can raise an exception, and it'll be handled by AwsFileHandler::ApplicationController but with some
@@ -292,10 +292,7 @@ AwsFileHandler.configure do |config|
   # end
   # config.controller_sent_file = true # default
   config.controller_sent_file = proc do |controller, params, aws_file|
-    current_user = Folio::User.find(controller.session[:user_id])
-
-    # TODO: fix this condition
-    return true if controller.can? :create, AwsFileHandler::File, user: current_user
+    next true if controller.current_user.can_now?(:create, AwsFileHandler::File)
 
     # Logic should be same except request verification
     AwsFileHandler.configuration.controller_uploaded_file(controller, params, aws_file)
@@ -358,4 +355,7 @@ AwsFileHandler.configure do |config|
   # Examples:
   # config.controller_rescue_from = proc { |controller, exception| controller.head :internal_server_error } # default
   # config.controller_rescue_from = nil
+  config.controller_rescue_from = proc do |controller, exception|
+    controller.send(:render_error, exception, :internal_server_error)
+  end
 end
