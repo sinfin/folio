@@ -292,10 +292,12 @@ AwsFileHandler.configure do |config|
   # end
   # config.controller_sent_file = true # default
   config.controller_sent_file = proc do |controller, params, aws_file|
-    next true if controller.current_user.can_now?(:create, AwsFileHandler::File)
+    if controller.current_user.can_now?(:create, AwsFileHandler::File)
+      # Logic should be same except request verification
+      AwsFileHandler.configuration.controller_uploaded_file(controller, params, aws_file)
 
-    # Logic should be same except request verification
-    AwsFileHandler.configuration.controller_uploaded_file(controller, params, aws_file)
+      next true
+    end
 
     head :forbidden
 
