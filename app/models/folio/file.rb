@@ -481,9 +481,8 @@ class Folio::File < Folio::ApplicationRecord
       return unless slug.present?
       return unless slug_matches_default_format?
 
-      # Clear the current slug and remove all historical slugs
+      # Clear the current slug
       self.slug = nil
-      clear_friendly_id_slugs
     end
 
     def slug_matches_default_format?
@@ -494,11 +493,6 @@ class Folio::File < Folio::ApplicationRecord
       file_name_base = file_name.present? ? file_name.split(".", 2)[0].parameterize : "file"
 
       slug == file_name_base || slug.match?(/\A#{Regexp.escape(file_name_base)}-[a-z0-9]+\z/)
-    end
-
-    def clear_friendly_id_slugs
-      # Remove all friendly_id slug history for this record
-      FriendlyId::Slug.where(sluggable: self).delete_all
     end
 end
 
