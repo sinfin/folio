@@ -361,16 +361,16 @@ AwsFileHandler.configure do |config|
     status = :internal_server_error
 
     if ENV["FOLIO_API_DONT_RESCUE_ERRORS"] && (Rails.env.development? || Rails.env.test?)
-      raise e
+      raise exception
     end
 
-    Sentry.capture_exception(e) if defined?(Sentry)
+    Sentry.capture_exception(exception) if defined?(Sentry)
 
     errors = [
       {
         status: Rack::Utils::SYMBOL_TO_STATUS_CODE[status] || status,
-        title: e.class.name,
-        detail: e.message,
+        title: exception.class.name,
+        detail: exception.message,
       }
     ]
 
