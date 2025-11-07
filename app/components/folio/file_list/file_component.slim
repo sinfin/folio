@@ -203,7 +203,7 @@ div[
           ]
             = folio_icon(:delete)
 
-        - if @primary_action == "index_for_modal"
+        - if @primary_action.to_s == "index_for_modal"
           .f-file-list-file__select-btn-wrap
             = render(Folio::Console::Ui::ButtonComponent.new(variant: :success,
                                                              label: t('.select'),
