@@ -37,6 +37,7 @@ Folio::Engine.routes.draw do
         get :dropdowns
         get :in_place_inputs
         get :modals
+        get :steps
         get :tabs
         get :tooltips
         get :warning_ribbons

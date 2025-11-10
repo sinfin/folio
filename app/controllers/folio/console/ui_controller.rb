@@ -15,6 +15,7 @@ class Folio::Console::UiController < Folio::Console::BaseController
       file_placements_multi_picker_fields
       in_place_inputs
       modals
+      steps
       tabs
       tooltips
       warning_ribbons
@@ -201,6 +202,20 @@ class Folio::Console::UiController < Folio::Console::BaseController
     else
       render :file_placements_multi_picker_fields
     end
+  end
+
+  def steps
+    steps = [
+      { label: "First step", href: "#{request.path}" },
+      { label: "Second step", href: "#{request.path}?step=2" },
+      { label: "Third step", href: "#{request.path}?step=3" },
+    ]
+
+    @steps_kwargs = [
+      { steps:, current_index: 0 },
+      { steps:, current_index: 1 },
+      { steps:, current_index: 2 },
+    ]
   end
 
   private
