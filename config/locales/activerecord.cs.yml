@@ -356,6 +356,8 @@ cs:
     figcaption: Popisek
     file: Soubor
     file_mime_type: Typ souboru
+    file_width: Šířka obrázku
+    file_height: Výška obrázku
     first_name: Jméno
     folio_embed_data: HTML kód nebo URL odkaz
     headline: Titulek

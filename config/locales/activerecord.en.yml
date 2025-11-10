@@ -288,6 +288,8 @@ en:
     featured: Featured
     figcaption: Caption
     file: File
+    file_height: Image height
+    file_width: Image width
     first_name: First name
     folio_embed_data: HTML code or URL
     headline: Title
