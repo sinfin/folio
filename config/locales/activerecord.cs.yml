@@ -465,7 +465,36 @@ cs:
         missing_special: musí obsahovat speciální znak
       folio_embed_data:
         invalid: nemá platnou hodnotu
-      image_placements:
+      _invalid_file_placements: &invalid_file_placements
         invalid_file_placements: nesplňují požadavky
-      image_or_embed_placements:
-        invalid_file_placements: nesplňují požadavky
+      image_placements: *invalid_file_placements
+      image_or_embed_placements: *invalid_file_placements
+      # Masculine attributes (mužský rod)
+      _masculine_errors: &masculine_errors
+        too_long: je příliš dlouhý (max. %{count} znaků)
+        too_short: je příliš krátký (min. %{count} znaků)
+        empty: nesmí být prázdný
+        blank: je povinná položka
+      # Feminine attributes (ženský rod)
+      _feminine_errors: &feminine_errors
+        too_long: je příliš dlouhá (max. %{count} znaků)
+        too_short: je příliš krátká (min. %{count} znaků)
+        empty: nesmí být prázdná
+        blank: je povinná položka
+      # Neuter attributes (střední rod)
+      _neuter_errors: &neuter_errors
+        too_long: je příliš dlouhé (max. %{count} znaků)
+        too_short: je příliš krátké (min. %{count} znaků)
+        empty: nesmí být prázdné
+        blank: je povinná položka
+      title: *masculine_errors
+      description: *masculine_errors
+      email: *masculine_errors
+      content: *masculine_errors
+      perex: *masculine_errors
+      slug: *feminine_errors
+      meta_title: *masculine_errors
+      meta_description: *masculine_errors
+      subtitle: *masculine_errors
+      headline: *masculine_errors
+      name: *neuter_errors

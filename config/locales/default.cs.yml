@@ -133,7 +133,7 @@ cs:
       accepted: musí být potvrzeno
       blank: je povinná položka
       confirmation: nebylo potvrzeno
-      empty: nesmí být prázdný/á/é
+      empty: nesmí být prázdné
       equal_to: musí být rovno %{count}
       even: musí být sudé číslo
       exclusion: je vyhrazeno pro jiný účel
@@ -147,12 +147,12 @@ cs:
       not_a_number: není číslo
       not_an_integer: musí být celé číslo
       odd: musí být liché číslo
-      other_than: musí být rozdílný/á/é od %{count}
-      present: musí být prázdný/á/é
+      other_than: musí být rozdílné od %{count}
+      present: musí být prázdné
       required: musí existovat
       taken: již je v databázi
-      too_long: je příliš dlouhý/á/é (max. %{count} znaků)
-      too_short: je příliš krátký/á/é (min. %{count} znaků)
+      too_long: přesahuje maximální délku (max. %{count} znaků)
+      too_short: nedosahuje minimální délky (min. %{count} znaků)
       wrong_length: nemá správnou délku (očekáváno %{count} znaků)
     template:
       body: 'Následující pole obsahují chybně vyplněné údaje: '
