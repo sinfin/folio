@@ -5,9 +5,9 @@ require "test_helper"
 class Folio::Console::Ui::StepsComponentTest < Folio::Console::ComponentTest
   def test_render
     steps = [
-      { label: "First step", href: "#{request.path}" },
-      { label: "Second step", href: "#{request.path}?step=2" },
-      { label: "Third step", href: "#{request.path}?step=3" },
+      { label: "First step", href: "/" },
+      { label: "Second step", href: "/?step=2" },
+      { label: "Third step", href: "/?step=3" },
     ]
 
     render_inline(Folio::Console::Ui::StepsComponent.new(steps:))
