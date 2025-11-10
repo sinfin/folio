@@ -27,6 +27,7 @@ window.Folio.Stimulus.register('f-c-files-picker', class extends window.Stimulus
 
   static values = {
     fileType: String,
+    fileName: String,
     state: String,
     inReact: { type: Boolean, default: false },
     reactFile: { type: Object, default: {} },
@@ -92,6 +93,8 @@ window.Folio.Stimulus.register('f-c-files-picker', class extends window.Stimulus
   }
 
   createFile (serializedFile) {
+    this.fileNameValue = serializedFile.attributes.file_name || ''
+
     switch (serializedFile.attributes.human_type) {
       case 'audio':
       case 'video':
@@ -189,7 +192,8 @@ window.Folio.Stimulus.register('f-c-files-picker', class extends window.Stimulus
       detail: {
         fileData: {
           type: this.fileTypeValue,
-          id: fileData.id
+          id: fileData.id,
+          fileName: this.fileNameValue
         }
       }
     }))
