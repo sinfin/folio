@@ -6,6 +6,7 @@
     - if @url_json.present?
       = render(Folio::Console::Links::ValueComponent.new(url_json: @url_json,
                                                          json: @json,
+                                                         absolute_urls: @absolute_urls,
                                                          disabled: @disabled))
 
   .f-c-links-control-bar__button-wrap[
