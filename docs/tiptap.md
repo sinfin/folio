@@ -383,15 +383,16 @@ class MyApp::CustomNodeComponent < ViewComponent::Base
 end
 ```
 
-The `tiptap_content_information` hash contains rendering context:
+The `tiptap_content_information` hash contains rendering context. It is automatically passed through the component hierarchy and updated for each child node. All keys are always present, with some having `nil` or `false` default values:
+
 - `record`: The record being rendered
 - `attribute`: The attribute name (e.g., `:tiptap_content`)
-- `depth`: Current node depth in the tree (depth 0 is doc, depth 1 is root nodes directly under doc)
+- `depth`: Current node depth in the tree (depth 0 for doc, depth 1 for root nodes directly under doc, depth 2+ for root node children).
+- `node`: Current node (the doc node at depth 0, then child nodes at depth > 0)
+- `root_node`: Root node (nil at depth 0, set to the root node at depth 1 and below)
+- `root_index`: Index of the root node within the document (nil at depth 0, set for root nodes at depth 1 and their direct children at depth 2)
+- `editor_preview`: Boolean indicating editor preview mode (false by default, true in editor preview context)
 - `root_node_count`: Total number of root nodes
-- `node`: Current node (for child nodes)
-- `root_node`: Root node (for depth 0)
-- `root_index`: Index of root node (for depth 0 and 1)
-- `editor_preview`: Boolean indicating editor preview mode
 
 The component is automatically resolved using the `view_component_class` method.
 
