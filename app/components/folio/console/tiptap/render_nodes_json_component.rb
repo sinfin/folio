@@ -30,7 +30,9 @@ class Folio::Console::Tiptap::RenderNodesJsonComponent < Folio::Console::Applica
         root_node_count: 0,
         editor_preview: true
       }
-      component = node.class.view_component_class.new(node:, tiptap_content_information:)
+
+      component = node.class.view_component_class.new(node:,
+                                                      tiptap_content_information:)
 
       {
         "unique_id" => unique_id,

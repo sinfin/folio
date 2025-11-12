@@ -2,11 +2,11 @@
 
 require "test_helper"
 
-class <%= node_component_name %>Test < Folio::ComponentTest
+class <%= node_component_name %>Test < Folio::Tiptap::NodeComponentTest
   def test_render
     node = create_test_tiptap_node(<%= node_model_name %>)
 
-    render_inline(<%= node_component_name %>.new(node:))
+    render_inline(<%= node_component_name %>.new(node:, tiptap_content_information:))
 
     assert_selector(".<%= node_css_class_name %>")
   end

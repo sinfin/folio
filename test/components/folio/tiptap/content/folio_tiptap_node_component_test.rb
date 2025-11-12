@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTest
+class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::Tiptap::NodeComponentTest
   setup do
     if ENV["FOLIO_DEBUG_TIPTAP_NODES"].present?
       puts "WARNING: FOLIO_DEBUG_TIPTAP_NODES is set, tests will fail!"
@@ -354,14 +354,5 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTes
   private
     def build_mock_record
       Folio::Page.new
-    end
-
-    def tiptap_content_information(record: nil)
-      {
-        record: record || build_mock_record,
-        attribute: :tiptap_content,
-        depth: 0,
-        root_node_count: 0
-      }
     end
 end
