@@ -376,12 +376,22 @@ Each custom node should have a corresponding view component:
 ```rb
 # For MyApp::CustomNode, create:
 class MyApp::CustomNodeComponent < ViewComponent::Base
-  def initialize(node:, editor_preview: false)
+  def initialize(node:, tiptap_content_information:)
     @node = node
-    @editor_preview = editor_preview
+    @tiptap_content_information = tiptap_content_information
   end
 end
 ```
+
+The `tiptap_content_information` hash contains rendering context:
+- `record`: The record being rendered
+- `attribute`: The attribute name (e.g., `:tiptap_content`)
+- `depth`: Current node depth in the tree (depth 0 is doc, depth 1 is root nodes directly under doc)
+- `root_node_count`: Total number of root nodes
+- `node`: Current node (for child nodes)
+- `root_node`: Root node (for depth 0)
+- `root_index`: Index of root node (for depth 0 and 1)
+- `editor_preview`: Boolean indicating editor preview mode
 
 The component is automatically resolved using the `view_component_class` method.
 
@@ -575,9 +585,9 @@ Custom `folioTiptapNode` instances are rendered through their associated view co
 
 # Example custom node rendering
 class MyApp::CustomNodeComponent < ApplicationComponent
-  def initialize(node:, editor_preview: false)
+  def initialize(node:, tiptap_content_information:)
     @node = node
-    @editor_preview = editor_preview
+    @tiptap_content_information = tiptap_content_information
   end
 end
 ```
