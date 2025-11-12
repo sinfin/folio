@@ -170,12 +170,13 @@ class Folio::ComponentTest < ViewComponent::TestCase
 end
 
 class Folio::Tiptap::NodeComponentTest < Folio::ComponentTest
-  def tiptap_content_information(record: nil, attribute: :tiptap_content, depth: 0, root_node_count: 0, **options)
+  def tiptap_content_information(record: nil, attribute: :tiptap_content, depth: 0, root_node_count: 0, editor_preview: false, **options)
     {
-      record: record,
-      attribute: attribute,
-      depth: depth,
-      root_node_count: root_node_count
+      record:,
+      attribute:,
+      depth:,
+      root_node_count:,
+      editor_preview:,
     }.merge(options)
   end
 end
