@@ -17,10 +17,24 @@ class Folio::Tiptap::ContentComponent < ApplicationComponent
     @lambda_after_root_node = lambda_after_root_node
     @node_type_blacklist = node_type_blacklist
     @lambda_for_blacklisted = lambda_for_blacklisted
+
+    @tiptap_content_information = {
+      record: @record,
+      attribute: @attribute,
+      depth: 0,
+      node: prose_mirror_node,
+      root_node: nil,
+      editor_preview: false,
+      root_node_count: if prose_mirror_node && prose_mirror_node["content"].present?
+                         prose_mirror_node["content"].length
+                       else
+                         0
+                       end
+    }
   end
 
   def render?
-    tiptap_content.present? && tiptap_content[Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content]].present?
+    prose_mirror_node.present?
   end
 
   private
@@ -90,14 +104,19 @@ class Folio::Tiptap::ContentComponent < ApplicationComponent
       end
     end
 
+    def prose_mirror_node
+      @prose_mirror_node ||= tiptap_content.present? ? tiptap_content[Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content]] : nil
+    end
+
     def node_component
       Folio::Tiptap::Content::ProseMirrorNodeComponent.new(
         record: @record,
-        prose_mirror_node: tiptap_content[Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content]],
+        prose_mirror_node:,
         lambda_before_node: @lambda_before_root_node,
         lambda_after_node: @lambda_after_root_node,
         node_type_blacklist: @node_type_blacklist,
         lambda_for_blacklisted: @lambda_for_blacklisted,
+        tiptap_content_information: @tiptap_content_information,
       )
     end
 end

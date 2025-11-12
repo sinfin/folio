@@ -5,6 +5,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponent < ApplicationComponent
 
   def initialize(record:,
                  prose_mirror_node:,
+                 tiptap_content_information:,
                  lambda_before_node: nil,
                  lambda_after_node: nil,
                  node_type_blacklist: nil,
@@ -15,6 +16,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponent < ApplicationComponent
     @lambda_after_node = lambda_after_node
     @node_type_blacklist = node_type_blacklist
     @lambda_for_blacklisted = lambda_for_blacklisted
+    @tiptap_content_information = tiptap_content_information
 
     if @prose_mirror_node["type"] == "folioTiptapPages"
       if record.tiptap_config.pages_component_class_name
@@ -108,7 +110,8 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponent < ApplicationComponent
       component_klass = @node_definition["component_name"].constantize
 
       component = component_klass.new(record: @record,
-                                      prose_mirror_node: @prose_mirror_node)
+                                      prose_mirror_node: @prose_mirror_node,
+                                      tiptap_content_information: @tiptap_content_information)
 
       render(component)
     end
@@ -132,12 +135,12 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponent < ApplicationComponent
       end
     end
 
-    def call_lambda_if_present(index:, node:, after: false)
+    def call_lambda_if_present(tiptap_content_information:, after: false)
       lambda_to_be_called = after ? @lambda_after_node : @lambda_before_node
 
       if lambda_to_be_called
         begin
-          lambda_to_be_called.call(component: self, index:, node:)
+          lambda_to_be_called.call(component: self, tiptap_content_information:)
         rescue StandardError => e
           rescue_lambda_error(e, after:)
         end
@@ -203,6 +206,27 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponent < ApplicationComponent
         "#{base_class} #{custom_class}"
       else
         base_class
+      end
+    end
+
+    def tiptap_content_information_for_child(child_node:, index:)
+      current_depth = @tiptap_content_information[:depth]
+      child_depth = current_depth + 1
+      case current_depth
+      when 0
+        # doc node
+        @tiptap_content_information.merge(depth: child_depth,
+                                          node: child_node,
+                                          root_node: child_node,
+                                          root_index: index)
+      when 1
+        # root node - right under doc
+        @tiptap_content_information.merge(depth: child_depth,
+                                          node: child_node,
+                                          root_index: index)
+      else
+        @tiptap_content_information.merge(depth: child_depth,
+                                          node: child_node)
       end
     end
 end

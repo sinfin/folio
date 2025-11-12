@@ -376,12 +376,23 @@ Each custom node should have a corresponding view component:
 ```rb
 # For MyApp::CustomNode, create:
 class MyApp::CustomNodeComponent < ViewComponent::Base
-  def initialize(node:, editor_preview: false)
+  def initialize(node:, tiptap_content_information:)
     @node = node
-    @editor_preview = editor_preview
+    @tiptap_content_information = tiptap_content_information
   end
 end
 ```
+
+The `tiptap_content_information` hash contains rendering context. It is automatically passed through the component hierarchy and updated for each child node. All keys are always present, with some having `nil` or `false` default values:
+
+- `record`: The record being rendered
+- `attribute`: The attribute name (e.g., `:tiptap_content`)
+- `depth`: Current node depth in the tree (depth 0 for doc, depth 1 for root nodes directly under doc, depth 2+ for root node children).
+- `node`: Current node (the doc node at depth 0, then child nodes at depth > 0)
+- `root_node`: Root node (nil at depth 0, set to the root node at depth 1 and below)
+- `root_index`: Index of the root node within the document (nil at depth 0, set for root nodes at depth 1 and their direct children at depth 2)
+- `editor_preview`: Boolean indicating editor preview mode (false by default, true in editor preview context)
+- `root_node_count`: Total number of root nodes
 
 The component is automatically resolved using the `view_component_class` method.
 
@@ -575,9 +586,9 @@ Custom `folioTiptapNode` instances are rendered through their associated view co
 
 # Example custom node rendering
 class MyApp::CustomNodeComponent < ApplicationComponent
-  def initialize(node:, editor_preview: false)
+  def initialize(node:, tiptap_content_information:)
     @node = node
-    @editor_preview = editor_preview
+    @tiptap_content_information = tiptap_content_information
   end
 end
 ```

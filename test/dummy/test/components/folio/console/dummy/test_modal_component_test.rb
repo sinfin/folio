@@ -4,9 +4,7 @@ require "test_helper"
 
 class Folio::Console::Dummy::TestModalComponentTest < Folio::Console::ComponentTest
   def test_render
-    model = "hello"
-
-    render_inline(Folio::Console::Dummy::TestModalComponent.new(model:))
+    render_inline(Folio::Console::Dummy::TestModalComponent.new)
 
     assert_selector(".f-c-dummy-test-modal")
   end

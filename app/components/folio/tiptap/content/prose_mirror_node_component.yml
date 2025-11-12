@@ -3,8 +3,10 @@ nodes:
     tag: div
     static_attrs:
       class: "f-tiptap-content__root f-tiptap-styles"
+
   text:
     component_name: Folio::Tiptap::Content::TextComponent
+
   folioTiptapNode:
     component_name: Folio::Tiptap::Content::FolioTiptapNodeComponent
 

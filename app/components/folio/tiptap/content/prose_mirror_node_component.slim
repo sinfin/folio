@@ -11,14 +11,17 @@
       = render_nested_tags(@node_definition["tag"]) do
         - if @prose_mirror_node["content"].present?
           - @prose_mirror_node["content"].each_with_index do |child_node, index|
-            = call_lambda_if_present(index:, node: child_node, after: false)
+            - tiptap_content_information = tiptap_content_information_for_child(child_node:, index:)
+
+            = call_lambda_if_present(tiptap_content_information:, after: false)
 
             = render(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: @record,
                                                                           prose_mirror_node: child_node,
+                                                                          tiptap_content_information:,
                                                                           node_type_blacklist: @node_type_blacklist,
                                                                           lambda_for_blacklisted: @lambda_for_blacklisted))
 
-            = call_lambda_if_present(index:, node: child_node, after: true)
+            = call_lambda_if_present(tiptap_content_information:, after: true)
 
         - elsif @node_definition["trailing_break_when_empty"]
           br.ProseMirror-trailingBreak

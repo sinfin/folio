@@ -169,6 +169,18 @@ class Folio::ComponentTest < ViewComponent::TestCase
   require Folio::Engine.root.join("test/support/create_page_singleton_helper")
 end
 
+class Folio::Tiptap::NodeComponentTest < Folio::ComponentTest
+  def tiptap_content_information(record: nil, attribute: :tiptap_content, depth: 0, root_node_count: 0, editor_preview: false, **options)
+    {
+      record:,
+      attribute:,
+      depth:,
+      root_node_count:,
+      editor_preview:,
+    }.merge(options)
+  end
+end
+
 class Folio::Console::ComponentTest < Folio::ComponentTest
 end
 

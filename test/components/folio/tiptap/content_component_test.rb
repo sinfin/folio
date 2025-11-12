@@ -978,13 +978,13 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
     model = Folio::Page.new
     model.tiptap_content = { "tiptap_content" => prosemirror_json }
 
-    lambda_before_root_node = -> (component:, node:, index:) do
-      component.content_tag(:p, "before #{index}", class: "lambda-before")
+    lambda_before_root_node = -> (component:, tiptap_content_information:) do
+      component.content_tag(:p, "before #{tiptap_content_information[:root_index]}", class: "lambda-before")
     end
 
-    lambda_after_root_node = -> (component:, node:, index:) do
-      if index == 0
-        component.content_tag(:p, "after #{index}", class: "lambda-after")
+    lambda_after_root_node = -> (component:, tiptap_content_information:) do
+      if tiptap_content_information[:root_index] == 0
+        component.content_tag(:p, "after #{tiptap_content_information[:root_index]}", class: "lambda-after")
       end
     end
 
@@ -1507,5 +1507,53 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
 
     # Everything should render normally with nil blacklist
     assert_selector("p", text: "Should render normally")
+  end
+
+  test "render with lambda_before_root_node" do
+    prosemirror_json = {
+      "type" => "doc",
+      "content" => [
+        {
+          "type" => "paragraph",
+          "content" => [
+            {
+              "type" => "text",
+              "text" => "First paragraph"
+            }
+          ]
+        },
+        {
+          "type" => "paragraph",
+          "content" => [
+            {
+              "type" => "text",
+              "text" => "Second paragraph"
+            }
+          ]
+        }
+      ]
+    }
+
+    record = Folio::Page.new
+    record.tiptap_content = { "tiptap_content" => prosemirror_json }
+
+    lambda_before_root_node = -> (component:, tiptap_content_information:) do
+      component.content_tag(:span, "Before node #{tiptap_content_information[:root_index]}", class: "lambda-before-root-node")
+    end
+
+    render_inline(Folio::Tiptap::ContentComponent.new(record:, lambda_before_root_node:))
+
+    # Check the rendered order: span, paragraph, span, paragraph
+    elements = page.all("span.lambda-before-root-node, p")
+
+    assert_equal 4, elements.count
+    assert_equal "span", elements[0].tag_name
+    assert_equal "Before node 0", elements[0].text
+    assert_equal "p", elements[1].tag_name
+    assert_equal "First paragraph", elements[1].text
+    assert_equal "span", elements[2].tag_name
+    assert_equal "Before node 1", elements[2].text
+    assert_equal "p", elements[3].tag_name
+    assert_equal "Second paragraph", elements[3].text
   end
 end
