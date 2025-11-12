@@ -172,7 +172,7 @@ class Folio::StructuredData::BodyComponent < Folio::ApplicationComponent
     cover_hash = structured_data_hash_for_cover(record_cover_thumb)
     social_links = @record.try(:social_links) || {}
 
-    if @record.email.present?
+    if @record.try(:email).present?
       email_text = "mailto:#{@record.email}"
     end
 
