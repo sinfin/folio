@@ -13,7 +13,7 @@ export const TableToggleHeaderColumn = React.memo(
         {...props}
       >
         <rect x="6" y="7" width="4" height="3" fill="currentColor" />
-        <rect x="14" y="7" width="4" height="3" fill="currentColor" />
+        <rect x="6" y="14" width="4" height="3" fill="currentColor" />
         <path
           fillRule="evenodd"
           clipRule="evenodd"
