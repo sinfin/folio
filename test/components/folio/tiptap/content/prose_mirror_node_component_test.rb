@@ -15,7 +15,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       "text" => "Hello world"
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:, prose_mirror_node_depth: 0, tiptap_content_information:))
 
     # Text nodes render the TextComponent directly, which just outputs text
     assert_text("Hello world")
@@ -32,7 +32,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       ]
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:, prose_mirror_node_depth: 0, tiptap_content_information:))
 
     assert_selector("p")
     assert_text("This is a paragraph")
@@ -50,7 +50,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       ]
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:, prose_mirror_node_depth: 0, tiptap_content_information:))
 
     assert_selector("p")
     assert_text("This is a paragraph")
@@ -71,7 +71,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       ]
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:, prose_mirror_node_depth: 0, tiptap_content_information:))
 
     assert_selector("h2")
     assert_text("This is a heading")
@@ -92,7 +92,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       ]
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:, prose_mirror_node_depth: 0, tiptap_content_information:))
 
     # Now that we have dynamic heading levels
     assert_selector("h1", text: "Main Heading")
@@ -110,7 +110,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       ]
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:, prose_mirror_node_depth: 0, tiptap_content_information:))
 
     # Now that we have dynamic heading levels
     assert_selector("h3", text: "Sub Heading")
@@ -132,7 +132,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       ]
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:, prose_mirror_node_depth: 0, tiptap_content_information:))
 
     assert_selector("blockquote")
     assert_text("This is a quoted text")
@@ -173,7 +173,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       ]
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:, prose_mirror_node_depth: 0, tiptap_content_information:))
 
     assert_selector("ul")
     assert_selector("li", count: 2)
@@ -203,7 +203,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       ]
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:, prose_mirror_node_depth: 0, tiptap_content_information:))
 
     assert_selector("ol")
     assert_selector("li")
@@ -226,7 +226,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       ]
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:, prose_mirror_node_depth: 0, tiptap_content_information:))
 
     assert_selector("div.f-tiptap-content__root")
     assert_text("Document content")
@@ -241,7 +241,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       }
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:, prose_mirror_node_depth: 0, tiptap_content_information:))
 
     # Should render the FolioTiptapNodeComponent with the card
     assert_selector(".d-tiptap-node-card")
@@ -269,7 +269,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       ]
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:, prose_mirror_node_depth: 0, tiptap_content_information:))
 
     assert_selector("ul")
     assert_selector("li p")
@@ -287,7 +287,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       ]
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:, prose_mirror_node_depth: 0, tiptap_content_information:))
 
     assert_text("")
   end
@@ -308,7 +308,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       ]
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:, prose_mirror_node_depth: 0, tiptap_content_information:))
 
     assert_selector("li")
     assert_text("List item content")
@@ -320,7 +320,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       "content" => []
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:, prose_mirror_node_depth: 0, tiptap_content_information:))
 
     assert_selector("p")
     assert_selector("p br")
@@ -332,7 +332,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       "type" => "paragraph"
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:, prose_mirror_node_depth: 0, tiptap_content_information:))
 
     assert_selector("p")
     assert_selector("p br")
@@ -355,7 +355,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       ]
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:, prose_mirror_node_depth: 0, tiptap_content_information:))
 
     assert_selector("p")
     assert_text("First partsecond part")
@@ -381,7 +381,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       ]
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:, prose_mirror_node_depth: 0, tiptap_content_information:))
 
     assert_selector("blockquote")
     assert_selector("blockquote p")
@@ -399,7 +399,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       ]
     }
 
-    component = Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:)
+    component = Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:, prose_mirror_node_depth: 0, tiptap_content_information:)
 
     # Component should initialize without errors
     render_inline(component)
@@ -431,7 +431,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       ]
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:, prose_mirror_node_depth: 0, tiptap_content_information:))
 
     assert_selector(".f-tiptap-columns")
     assert_selector(".f-tiptap-columns .f-tiptap-column:first-child", text: "First part")
@@ -463,7 +463,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       ]
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:, prose_mirror_node_depth: 0, tiptap_content_information:))
 
     assert_selector(".f-tiptap-float")
     assert_selector(".f-tiptap-float[data-f-tiptap-float-size='medium']")
@@ -496,7 +496,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       ]
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:, prose_mirror_node_depth: 0, tiptap_content_information:))
 
     assert_selector(".f-tiptap-float")
     assert_selector(".f-tiptap-float[data-f-tiptap-float-size='large']")
@@ -516,7 +516,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       ]
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:, prose_mirror_node_depth: 0, tiptap_content_information:))
 
     assert_selector("p.f-tiptap-styled-paragraph")
     assert_no_selector("p.f-tiptap-styled-paragraph[data-f-tiptap-styled-paragraph-variant='small']")
@@ -535,7 +535,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       }
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:, prose_mirror_node_depth: 0, tiptap_content_information:))
 
     assert_no_selector("p.f-tiptap-styled-paragraph[data-f-tiptap-styled-paragraph-variant='small']")
     assert_selector("p.f-tiptap-styled-paragraph[data-f-tiptap-styled-paragraph-variant='large']")
@@ -553,7 +553,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       }
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:, prose_mirror_node_depth: 0, tiptap_content_information:))
 
     assert_no_selector("p.f-tiptap-styled-paragraph[data-f-tiptap-styled-paragraph-variant='large']")
     assert_selector("p.f-tiptap-styled-paragraph[data-f-tiptap-styled-paragraph-variant='small']")
@@ -594,7 +594,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       }
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record:, prose_mirror_node:, prose_mirror_node_depth: 0, tiptap_content_information: tiptap_content_information(record:)))
 
     # Should render as h6 with both base class and custom class
     assert_selector("h6.f-tiptap-styled-paragraph.custom-heading[data-f-tiptap-styled-paragraph-variant='custom-heading']")
@@ -631,7 +631,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       }
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record:, prose_mirror_node:, prose_mirror_node_depth: 0, tiptap_content_information: tiptap_content_information(record:)))
 
     # Should fallback to default p tag with base class only
     assert_selector("p.f-tiptap-styled-paragraph[data-f-tiptap-styled-paragraph-variant='unknown-variant']")
@@ -659,7 +659,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       }
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record:, prose_mirror_node:, prose_mirror_node_depth: 0, tiptap_content_information: tiptap_content_information(record:)))
 
     # Should fallback to default p tag
     assert_selector("p.f-tiptap-styled-paragraph[data-f-tiptap-styled-paragraph-variant='some-variant']")
@@ -739,7 +739,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       ]
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:, prose_mirror_node_depth: 0, tiptap_content_information:))
 
     assert_selector(".f-tiptap-table-wrapper")
     assert_selector(".f-tiptap-table-wrapper table")
@@ -777,7 +777,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       ]
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:, prose_mirror_node_depth: 0, tiptap_content_information:))
 
     assert_selector(".f-tiptap-table-wrapper")
     assert_selector(".f-tiptap-table-wrapper table")
@@ -815,7 +815,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       ]
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:, prose_mirror_node_depth: 0, tiptap_content_information:))
 
     assert_selector(".f-tiptap-table-wrapper")
     assert_selector(".f-tiptap-table-wrapper table")
@@ -842,7 +842,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       ]
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:, prose_mirror_node_depth: 0, tiptap_content_information:))
 
     assert_selector("div.f-tiptap-styled-wrap[data-f-tiptap-styled-wrap-variant='gray-box'] p")
   end
@@ -859,7 +859,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       }
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:, prose_mirror_node_depth: 0, tiptap_content_information:))
     assert_text("")
   end
 
@@ -874,7 +874,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       }
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:, prose_mirror_node_depth: 0, tiptap_content_information:))
     assert_text("")
   end
 
@@ -890,7 +890,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       }
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:, prose_mirror_node_depth: 0, tiptap_content_information:))
     assert_text("")
   end
 
@@ -906,7 +906,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       }
     }
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:, prose_mirror_node_depth: 0, tiptap_content_information:))
     assert_text("")
   end
 
@@ -929,7 +929,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
       @config ||= Folio::Tiptap::Config.new(node_names: [])
     end
 
-    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record:, prose_mirror_node:, prose_mirror_node_depth: 0, tiptap_content_information: tiptap_content_information(record:)))
     assert_text("")
   end
 
@@ -972,6 +972,8 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
     render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(
       record: Folio::Page.new,
       prose_mirror_node: prose_mirror_node,
+      prose_mirror_node_depth: 0,
+      tiptap_content_information:,
       node_type_blacklist: ["paragraph"]
     ))
 
@@ -1020,6 +1022,8 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
     render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(
       record: Folio::Page.new,
       prose_mirror_node: prose_mirror_node,
+      prose_mirror_node_depth: 0,
+      tiptap_content_information:,
       node_type_blacklist: ["paragraph"],
       lambda_for_blacklisted: lambda_for_blacklisted
     ))
@@ -1083,6 +1087,8 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
     render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(
       record: Folio::Page.new,
       prose_mirror_node: prose_mirror_node,
+      prose_mirror_node_depth: 0,
+      tiptap_content_information:,
       node_type_blacklist: ["paragraph"]
     ))
 
@@ -1153,6 +1159,8 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
     render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(
       record: Folio::Page.new,
       prose_mirror_node: prose_mirror_node,
+      prose_mirror_node_depth: 0,
+      tiptap_content_information:,
       node_type_blacklist: ["paragraph"],
       lambda_for_blacklisted: lambda_for_blacklisted
     ))
@@ -1187,6 +1195,8 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
     render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(
       record: Folio::Page.new,
       prose_mirror_node: prose_mirror_node,
+      prose_mirror_node_depth: 0,
+      tiptap_content_information:,
       node_type_blacklist: []
     ))
 
@@ -1208,10 +1218,22 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::ComponentTes
     render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(
       record: Folio::Page.new,
       prose_mirror_node: prose_mirror_node,
+      prose_mirror_node_depth: 0,
+      tiptap_content_information:,
       node_type_blacklist: nil
     ))
 
     # Should render normally with nil blacklist
     assert_selector("p", text: "Should render normally")
   end
+
+  private
+    def tiptap_content_information(record: nil)
+      {
+        record: record || Folio::Page.new,
+        attribute: :tiptap_content,
+        depth: 0,
+        root_node_count: 0
+      }
+    end
 end

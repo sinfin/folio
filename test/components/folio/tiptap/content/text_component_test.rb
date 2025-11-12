@@ -9,7 +9,7 @@ class Folio::Tiptap::Content::TextComponentTest < Folio::ComponentTest
       "text" => "Hello world"
     }
 
-    render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:, tiptap_content_information:))
 
     assert_text("Hello world")
   end
@@ -21,7 +21,7 @@ class Folio::Tiptap::Content::TextComponentTest < Folio::ComponentTest
       "text" => "Bold text"
     }
 
-    render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:, tiptap_content_information:))
 
     # TextComponent now renders text with marks applied
     assert_selector("strong", text: "Bold text")
@@ -34,7 +34,7 @@ class Folio::Tiptap::Content::TextComponentTest < Folio::ComponentTest
       "text" => "Italic text"
     }
 
-    render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:, tiptap_content_information:))
 
     # TextComponent now renders text with marks applied
     assert_selector("em", text: "Italic text")
@@ -47,7 +47,7 @@ class Folio::Tiptap::Content::TextComponentTest < Folio::ComponentTest
       "text" => "Underlined text"
     }
 
-    render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:, tiptap_content_information:))
 
     # TextComponent now renders text with marks applied
     assert_selector("u", text: "Underlined text")
@@ -60,7 +60,7 @@ class Folio::Tiptap::Content::TextComponentTest < Folio::ComponentTest
       "text" => "Strikethrough text"
     }
 
-    render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:, tiptap_content_information:))
 
     # TextComponent now renders text with marks applied
     assert_selector("strike", text: "Strikethrough text")
@@ -73,7 +73,7 @@ class Folio::Tiptap::Content::TextComponentTest < Folio::ComponentTest
       "text" => "console.log('hello')"
     }
 
-    render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:, tiptap_content_information:))
 
     # TextComponent now renders text with marks applied
     assert_selector("code", text: "console.log('hello')")
@@ -86,7 +86,7 @@ class Folio::Tiptap::Content::TextComponentTest < Folio::ComponentTest
       "text" => "2"
     }
 
-    render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:, tiptap_content_information:))
 
     # TextComponent now renders text with marks applied
     assert_selector("sub", text: "2")
@@ -99,7 +99,7 @@ class Folio::Tiptap::Content::TextComponentTest < Folio::ComponentTest
       "text" => "2"
     }
 
-    render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:, tiptap_content_information:))
 
     # TextComponent now renders text with marks applied
     assert_selector("sup", text: "2")
@@ -121,7 +121,7 @@ class Folio::Tiptap::Content::TextComponentTest < Folio::ComponentTest
       "text" => "Visit our website"
     }
 
-    render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:, tiptap_content_information:))
 
     # TextComponent now renders text with marks applied
     assert_selector("a[href='https://example.com'][target='_blank']", text: "Visit our website")
@@ -138,7 +138,7 @@ class Folio::Tiptap::Content::TextComponentTest < Folio::ComponentTest
       "text" => "Bold, italic, and underlined"
     }
 
-    render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:, tiptap_content_information:))
 
     # TextComponent now renders text with nested marks applied
     # The exact nesting may vary based on implementation
@@ -160,7 +160,7 @@ class Folio::Tiptap::Content::TextComponentTest < Folio::ComponentTest
       "text" => "Bold link"
     }
 
-    render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:, tiptap_content_information:))
 
     # TextComponent now renders text with marks applied
     # The exact nesting may vary (link with bold or bold with link)
@@ -173,7 +173,7 @@ class Folio::Tiptap::Content::TextComponentTest < Folio::ComponentTest
       "text" => ""
     }
 
-    component = Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:)
+    component = Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:, tiptap_content_information:)
     render_inline(component)
 
     # Should render empty text content (no visible text)
@@ -186,7 +186,7 @@ class Folio::Tiptap::Content::TextComponentTest < Folio::ComponentTest
       "text" => "Special chars: <>&\"'"
     }
 
-    render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:, tiptap_content_information:))
 
     assert_text("Special chars: <>&\"'")
   end
@@ -197,7 +197,7 @@ class Folio::Tiptap::Content::TextComponentTest < Folio::ComponentTest
       "text" => "Unicode: 🚀 ñáéíóú 中文"
     }
 
-    render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:, tiptap_content_information:))
 
     assert_text("Unicode: 🚀 ñáéíóú 中文")
   end
@@ -208,7 +208,7 @@ class Folio::Tiptap::Content::TextComponentTest < Folio::ComponentTest
       "text" => "Line one\nLine two\nLine three"
     }
 
-    render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:, tiptap_content_information:))
 
     assert_text("Line one\nLine two\nLine three")
   end
@@ -219,7 +219,7 @@ class Folio::Tiptap::Content::TextComponentTest < Folio::ComponentTest
       "text" => "  Multiple   spaces   and   tabs  "
     }
 
-    render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:, tiptap_content_information:))
 
     # HTML normalizes whitespace, so leading/trailing spaces may be trimmed
     assert_text("Multiple   spaces   and   tabs")
@@ -242,7 +242,7 @@ class Folio::Tiptap::Content::TextComponentTest < Folio::ComponentTest
       "text" => "Email us"
     }
 
-    render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:, tiptap_content_information:))
 
     # TextComponent now renders text with marks applied
     assert_selector("a[href='mailto:test@example.com']", text: "Email us")
@@ -256,7 +256,7 @@ class Folio::Tiptap::Content::TextComponentTest < Folio::ComponentTest
       "text" => "Plain text without formatting"
     }
 
-    render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:, tiptap_content_information:))
 
     assert_text("Plain text without formatting")
   end
@@ -268,7 +268,7 @@ class Folio::Tiptap::Content::TextComponentTest < Folio::ComponentTest
       "text" => "Text with empty marks array"
     }
 
-    render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:, tiptap_content_information:))
 
     assert_text("Text with empty marks array")
   end
@@ -280,7 +280,7 @@ class Folio::Tiptap::Content::TextComponentTest < Folio::ComponentTest
       "text" => long_text
     }
 
-    render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:, tiptap_content_information:))
 
     assert_text(long_text)
   end
@@ -293,6 +293,7 @@ class Folio::Tiptap::Content::TextComponentTest < Folio::ComponentTest
 
     component = Folio::Tiptap::Content::TextComponent.new(
       record: build_mock_record,
+      tiptap_content_information:,
       prose_mirror_node:
     )
 
@@ -309,7 +310,7 @@ class Folio::Tiptap::Content::TextComponentTest < Folio::ComponentTest
 
 
     # Should handle gracefully (might render nil/empty)
-    assert render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:))
+    assert render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:, tiptap_content_information:))
   end
 
   def test_xss_protection_plain_text
@@ -318,7 +319,7 @@ class Folio::Tiptap::Content::TextComponentTest < Folio::ComponentTest
       "text" => "<script>alert('XSS')</script>Dangerous content"
     }
 
-    render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:, tiptap_content_information:))
 
     # Script tags should be escaped, not executed
     assert_text("<script>alert('XSS')</script>Dangerous content")
@@ -333,7 +334,7 @@ class Folio::Tiptap::Content::TextComponentTest < Folio::ComponentTest
       "text" => "<script>alert('XSS')</script>Bold dangerous content"
     }
 
-    render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:, tiptap_content_information:))
 
     # Script tags should be escaped within the bold tag
     assert_selector("strong", text: "<script>alert('XSS')</script>Bold dangerous content")
@@ -355,7 +356,7 @@ class Folio::Tiptap::Content::TextComponentTest < Folio::ComponentTest
       "text" => "<script>alert('XSS')</script>Malicious link text"
     }
 
-    render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::TextComponent.new(record: build_mock_record, prose_mirror_node:, tiptap_content_information:))
 
     # Script tags should be escaped within the link
     assert_selector("a[href='https://example.com']", text: "<script>alert('XSS')</script>Malicious link text")
@@ -366,5 +367,14 @@ class Folio::Tiptap::Content::TextComponentTest < Folio::ComponentTest
   private
     def build_mock_record
       Object.new
+    end
+
+    def tiptap_content_information(record: nil)
+      {
+        record: record || build_mock_record,
+        attribute: :tiptap_content,
+        depth: 0,
+        root_node_count: 0
+      }
     end
 end

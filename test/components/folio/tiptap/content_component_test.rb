@@ -978,13 +978,13 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
     model = Folio::Page.new
     model.tiptap_content = { "tiptap_content" => prosemirror_json }
 
-    lambda_before_root_node = -> (component:, node:, index:) do
-      component.content_tag(:p, "before #{index}", class: "lambda-before")
+    lambda_before_root_node = -> (component:, tiptap_content_information:) do
+      component.content_tag(:p, "before #{tiptap_content_information[:root_index]}", class: "lambda-before")
     end
 
-    lambda_after_root_node = -> (component:, node:, index:) do
-      if index == 0
-        component.content_tag(:p, "after #{index}", class: "lambda-after")
+    lambda_after_root_node = -> (component:, tiptap_content_information:) do
+      if tiptap_content_information[:root_index] == 0
+        component.content_tag(:p, "after #{tiptap_content_information[:root_index]}", class: "lambda-after")
       end
     end
 

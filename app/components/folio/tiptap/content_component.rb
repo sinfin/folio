@@ -23,15 +23,15 @@ class Folio::Tiptap::ContentComponent < ApplicationComponent
       attribute: @attribute,
       depth: 0,
       root_node_count: if prose_mirror_node && prose_mirror_node["content"].present?
-        prose_mirror_node["content"].length
-      else
-        0
-      end
+                         prose_mirror_node["content"].length
+                       else
+                         0
+                       end
     }
   end
 
   def render?
-    tiptap_content.present? && tiptap_content[Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content]].present?
+    prose_mirror_node.present?
   end
 
   private
@@ -102,7 +102,7 @@ class Folio::Tiptap::ContentComponent < ApplicationComponent
     end
 
     def prose_mirror_node
-      @prose_mirror_node ||= tiptap_content[Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content]]
+      @prose_mirror_node ||= tiptap_content.present? ? tiptap_content[Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content]] : nil
     end
 
     def node_component

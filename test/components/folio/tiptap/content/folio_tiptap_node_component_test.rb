@@ -18,7 +18,7 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTes
       }
     }
 
-    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:, tiptap_content_information:))
 
     assert_selector(".d-tiptap-node-card")
   end
@@ -35,7 +35,7 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTes
       }
     }
 
-    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:, tiptap_content_information:))
 
     assert_selector(".d-tiptap-node-card")
   end
@@ -56,7 +56,7 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTes
       }
     }
 
-    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:, tiptap_content_information:))
 
     assert_selector(".d-tiptap-node-card")
     assert_text("Gallery Card")
@@ -79,7 +79,7 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTes
       }
     }
 
-    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:, tiptap_content_information:))
 
     assert_selector(".d-tiptap-node-card")
     assert_text("Testimonial Card")
@@ -94,7 +94,7 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTes
       }
     }
 
-    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:, tiptap_content_information:))
 
     assert_selector(".d-tiptap-node-card")
   end
@@ -107,7 +107,7 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTes
       }
     }
 
-    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:, tiptap_content_information:))
 
     assert_selector(".d-tiptap-node-card")
   end
@@ -125,7 +125,7 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTes
       }
     }
 
-    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:, tiptap_content_information:))
 
     assert_selector(".d-tiptap-node-card")
     assert_text("Test Title")
@@ -147,7 +147,7 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTes
       }
     }
 
-    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:, tiptap_content_information:))
 
     assert_selector(".d-tiptap-node-card")
     # The component displays attributes as JSON, so special chars will be escaped
@@ -174,7 +174,7 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTes
       }
     }
 
-    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:, tiptap_content_information:))
 
     assert_selector(".d-tiptap-node-card")
     assert_text("Embed Card")
@@ -197,7 +197,7 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTes
       }
     }
 
-    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:, tiptap_content_information:))
 
     assert_selector(".d-tiptap-node-card")
     assert_text("Mixed Data Card")
@@ -215,7 +215,7 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTes
       }
     }
 
-    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:, tiptap_content_information:))
 
     assert_selector(".d-tiptap-node-card")
     # The CardComponent displays attributes as JSON
@@ -237,7 +237,7 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTes
 
 
     # The component should still render even with validation errors
-    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:, tiptap_content_information:))
     assert_selector(".d-tiptap-node-card")
   end
 
@@ -253,7 +253,7 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTes
       }
     }
 
-    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+    render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:, tiptap_content_information:))
 
     assert_selector(".d-tiptap-node-card")
     assert_text("Dummy Card Component from API")
@@ -273,7 +273,7 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTes
     }
 
     assert_raises(ArgumentError) do
-      render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+      render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:, tiptap_content_information:))
     end
   end
 
@@ -289,7 +289,7 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTes
     }
 
     assert_raises(ActionController::ParameterMissing, "Node type is required but was not provided") do
-      render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+      render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:, tiptap_content_information:))
     end
   end
 
@@ -306,7 +306,7 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTes
     }
 
     assert_raises(ActionController::ParameterMissing, "Node type is required but was not provided") do
-      render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+      render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:, tiptap_content_information:))
     end
   end
 
@@ -323,7 +323,7 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTes
     }
 
     assert_raises(ActionController::ParameterMissing, "Node type is required but was not provided") do
-      render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:))
+      render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: build_mock_record, prose_mirror_node:, tiptap_content_information:))
     end
   end
 
@@ -347,12 +347,21 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::ComponentTes
     end
 
     assert_raises(ArgumentError, "Node type 'Dummy::Tiptap::Node::Card' is not supported. Allowed types: ") do
-      render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: record, prose_mirror_node:))
+      render_inline(Folio::Tiptap::Content::FolioTiptapNodeComponent.new(record: record, prose_mirror_node:, tiptap_content_information: tiptap_content_information(record: record)))
     end
   end
 
   private
     def build_mock_record
       Folio::Page.new
+    end
+
+    def tiptap_content_information(record: nil)
+      {
+        record: record || build_mock_record,
+        attribute: :tiptap_content,
+        depth: 0,
+        root_node_count: 0
+      }
     end
 end

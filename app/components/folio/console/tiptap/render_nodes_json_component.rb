@@ -23,7 +23,13 @@ class Folio::Console::Tiptap::RenderNodesJsonComponent < Folio::Console::Applica
 
   def render_node_component(unique_id:, node:)
     if node.valid?
-      component = node.class.view_component_class.new(node:, editor_preview: true)
+      tiptap_content_information = {
+        record: node,
+        attribute: :tiptap_content,
+        depth: 0,
+        root_node_count: 0
+      }
+      component = node.class.view_component_class.new(node:, tiptap_content_information:, editor_preview: true)
 
       {
         "unique_id" => unique_id,
