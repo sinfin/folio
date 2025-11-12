@@ -6,16 +6,16 @@ class Folio::MediaSourceTest < ActiveSupport::TestCase
   test "validations" do
     media_source = Folio::MediaSource.new
     assert_not media_source.valid?
-    assert_includes media_source.errors[:title], "je povinná položka"
+    assert_includes media_source.errors.details[:title].map { |e| e[:error] }, :blank
 
     create(:folio_media_source, title: "Existing Title")
     media_source.title = "Existing Title"
     assert_not media_source.valid?
-    assert_includes media_source.errors[:title], "již je v databázi"
+    assert_includes media_source.errors.details[:title].map { |e| e[:error] }, :taken
 
     media_source.max_usage_count = 0
     assert_not media_source.valid?
-    assert_includes media_source.errors[:max_usage_count], "musí být větší než 0"
+    assert_includes media_source.errors.details[:max_usage_count].map { |e| e[:error] }, :greater_than
   end
 
   test "scopes" do
