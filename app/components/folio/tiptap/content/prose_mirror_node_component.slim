@@ -17,7 +17,6 @@
 
             = render(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: @record,
                                                                           prose_mirror_node: child_node,
-                                                                          prose_mirror_node_depth: @prose_mirror_node_depth + 1,
                                                                           tiptap_content_information:,
                                                                           node_type_blacklist: @node_type_blacklist,
                                                                           lambda_for_blacklisted: @lambda_for_blacklisted))

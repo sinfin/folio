@@ -113,7 +113,6 @@ class Folio::Tiptap::ContentComponent < ApplicationComponent
         lambda_after_node: @lambda_after_root_node,
         node_type_blacklist: @node_type_blacklist,
         lambda_for_blacklisted: @lambda_for_blacklisted,
-        prose_mirror_node_depth: 0,
         tiptap_content_information: @tiptap_content_information,
       )
     end

@@ -5,7 +5,6 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponent < ApplicationComponent
 
   def initialize(record:,
                  prose_mirror_node:,
-                 prose_mirror_node_depth:,
                  tiptap_content_information:,
                  lambda_before_node: nil,
                  lambda_after_node: nil,
@@ -17,7 +16,6 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponent < ApplicationComponent
     @lambda_after_node = lambda_after_node
     @node_type_blacklist = node_type_blacklist
     @lambda_for_blacklisted = lambda_for_blacklisted
-    @prose_mirror_node_depth = prose_mirror_node_depth
     @tiptap_content_information = tiptap_content_information
 
     if @prose_mirror_node["type"] == "folioTiptapPages"
@@ -212,20 +210,22 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponent < ApplicationComponent
     end
 
     def tiptap_content_information_for_child(child_node:, index:)
-      case @prose_mirror_node_depth
+      current_depth = @tiptap_content_information[:depth]
+      child_depth = current_depth + 1
+      case current_depth
       when 0
         # doc node
-        @tiptap_content_information.merge(depth: @prose_mirror_node_depth,
+        @tiptap_content_information.merge(depth: child_depth,
                                           node: child_node,
                                           root_node: child_node,
                                           root_index: index)
       when 1
         # root node - right under doc
-        @tiptap_content_information.merge(depth: @prose_mirror_node_depth,
+        @tiptap_content_information.merge(depth: child_depth,
                                           node: child_node,
                                           root_index: index)
       else
-        @tiptap_content_information.merge(depth: @prose_mirror_node_depth,
+        @tiptap_content_information.merge(depth: child_depth,
                                           node: child_node)
       end
     end
