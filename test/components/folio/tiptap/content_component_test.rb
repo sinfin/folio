@@ -1537,8 +1537,8 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
     record = Folio::Page.new
     record.tiptap_content = { "tiptap_content" => prosemirror_json }
 
-    lambda_before_root_node = -> (component:, index:, node:) do
-      component.content_tag(:span, "Before node", class: "lambda-before-root-node")
+    lambda_before_root_node = -> (component:, tiptap_content_information:) do
+      component.content_tag(:span, "Before node #{tiptap_content_information[:root_index]}", class: "lambda-before-root-node")
     end
 
     render_inline(Folio::Tiptap::ContentComponent.new(record:, lambda_before_root_node:))
@@ -1548,11 +1548,11 @@ class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
 
     assert_equal 4, elements.count
     assert_equal "span", elements[0].tag_name
-    assert_equal "Before node", elements[0].text
+    assert_equal "Before node 0", elements[0].text
     assert_equal "p", elements[1].tag_name
     assert_equal "First paragraph", elements[1].text
     assert_equal "span", elements[2].tag_name
-    assert_equal "Before node", elements[2].text
+    assert_equal "Before node 1", elements[2].text
     assert_equal "p", elements[3].tag_name
     assert_equal "Second paragraph", elements[3].text
   end

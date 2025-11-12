@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 class <%= base_component_name %> < ApplicationComponent
-  def initialize(node:, editor_preview: false)
+  def initialize(node:, tiptap_content_information:, editor_preview: false)
     @node = node
+    @tiptap_content_information = tiptap_content_information
     @editor_preview = editor_preview
   end
 end

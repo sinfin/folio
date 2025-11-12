@@ -3,9 +3,10 @@
 class Folio::Tiptap::Content::TextComponent < ApplicationComponent
   MARKS = YAML.load_file(File.join(__dir__, "text_component.yml"))["marks"].freeze
 
-  def initialize(record:, prose_mirror_node:)
+  def initialize(record:, prose_mirror_node:, tiptap_content_information:)
     @record = record
     @prose_mirror_node = prose_mirror_node
+    @tiptap_content_information = tiptap_content_information
   end
 
   def text
