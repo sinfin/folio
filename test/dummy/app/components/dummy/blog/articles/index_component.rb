@@ -20,14 +20,14 @@ class Dummy::Blog::Articles::IndexComponent < ApplicationComponent
 
   def before_render
     articles = @articles_scope.published
-                              .by_locale(locale)
+                              .by_locale(I18n.locale)
                               .by_site(Folio::Current.site)
 
     @topics = if @topic
       nil
     else
       scope = Dummy::Blog::Topic.published
-                                  .by_locale(locale)
+                                  .by_locale(I18n.locale)
                                   .by_site(Folio::Current.site)
                                   .ordered
 
