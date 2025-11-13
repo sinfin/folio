@@ -8,6 +8,7 @@ import arrayMove from 'utils/arrayMove'
 import combineAtoms from 'utils/combineAtoms'
 import settingsToHash from 'utils/settingsToHash'
 import atomsDefaultDataFromStructure from 'utils/atomsDefaultDataFromStructure'
+import repositionAtoms from 'utils/repositionAtoms'
 
 // Constants
 
@@ -516,7 +517,7 @@ function atomsReducer (state = initialState, action) {
         ...state,
         atoms: {
           ...state.atoms,
-          [action.rootKey]: atoms
+          [action.rootKey]: repositionAtoms(atoms)
         }
       }
     }
@@ -543,7 +544,7 @@ function atomsReducer (state = initialState, action) {
         destroyedIds,
         atoms: {
           ...state.atoms,
-          [state.form.rootKey]: atoms
+          [state.form.rootKey]: repositionAtoms(atoms)
         },
         form: {
           ...initialState.form
@@ -648,7 +649,7 @@ function atomsReducer (state = initialState, action) {
         ...state,
         atoms: {
           ...state.atoms,
-          [action.rootKey]: atoms
+          [action.rootKey]: repositionAtoms(atoms)
         }
       }
     }
@@ -1004,7 +1005,7 @@ function atomsReducer (state = initialState, action) {
         },
         atoms: {
           ...state.atoms,
-          [action.rootKey]: atoms
+          [action.rootKey]: repositionAtoms(atoms)
         }
       }
     }
