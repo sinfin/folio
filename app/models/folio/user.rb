@@ -218,6 +218,10 @@ class Folio::User < Folio::ApplicationRecord
     []
   end
 
+  def additional_show_for_attributes
+    []
+  end
+
   def authenticatable_salt
     "#{super}#{sign_out_salt_part}"
   end

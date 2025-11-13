@@ -5,6 +5,7 @@
       href=button[:href]
       target=button[:target]
       data-confirm=(button[:confirm] ? t('folio.console.confirmation') : nil)
+      data-method=button[:method]
     ]
       span.mi = button[:icon]
       = button[:label]

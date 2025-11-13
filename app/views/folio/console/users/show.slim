@@ -33,6 +33,8 @@
                 span.mr-2
                   = ns.active ? icon("check-circle") : icon("times-circle")
                 = ns.site.pretty_domain.capitalize
+      - @user.additional_show_for_attributes.each do |attr|
+        = s.attribute attr
 
   - if @user.admin_note.present?
     .col-lg-4
