@@ -9,6 +9,7 @@ import {
   addUniqueIdsToFolioTiptapNodes,
   removeUniqueIdsFromFolioTiptapNodes,
 } from "@/components/tiptap-extensions/folio-tiptap-node";
+import { removeTrailingEmptyParagraph } from "@/lib/remove-trailing-empty-paragraph";
 
 // Initialize the Folio namespace if it doesn't exist
 window.Folio = window.Folio || {};
@@ -37,7 +38,9 @@ window.Folio.Tiptap.init = (props) => {
     window.parent!.postMessage(
       {
         type: "f-tiptap:created",
-        content: removeUniqueIdsFromFolioTiptapNodes(editor.getJSON()),
+        content: removeTrailingEmptyParagraph(
+          removeUniqueIdsFromFolioTiptapNodes(editor.getJSON()),
+        ),
         height: window.Folio.Tiptap.getHeight(),
       },
       "*",
@@ -52,7 +55,9 @@ window.Folio.Tiptap.init = (props) => {
     window.parent!.postMessage(
       {
         type: "f-tiptap:updated",
-        content: removeUniqueIdsFromFolioTiptapNodes(editor.getJSON()),
+        content: removeTrailingEmptyParagraph(
+          removeUniqueIdsFromFolioTiptapNodes(editor.getJSON()),
+        ),
         height: window.Folio.Tiptap.getHeight(),
       },
       "*",
@@ -420,14 +425,18 @@ if (process.env.NODE_ENV !== "production" && window.parent === window) {
         ],
       },
       onCreate: ({ editor }: { editor: TiptapEditor }) => {
-        const json = removeUniqueIdsFromFolioTiptapNodes(editor.getJSON());
+        const json = removeTrailingEmptyParagraph(
+          removeUniqueIdsFromFolioTiptapNodes(editor.getJSON()),
+        );
         if (typeof json !== "object" || json === null) {
           throw new Error("getJSON must return a hash");
         }
         console.log("onCreate", json);
       },
       onUpdate: ({ editor }: { editor: TiptapEditor }) => {
-        const json = removeUniqueIdsFromFolioTiptapNodes(editor.getJSON());
+        const json = removeTrailingEmptyParagraph(
+          removeUniqueIdsFromFolioTiptapNodes(editor.getJSON()),
+        );
         if (typeof json !== "object" || json === null) {
           throw new Error("getJSON must return a hash");
         }
