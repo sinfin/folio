@@ -59,7 +59,10 @@ declare global {
     title: { cs: string; en: string };
     type: string;
     config: {
-      use_as_single_image_in_toolbar?: boolean;
+      toolbar: {
+        icon: string;
+        slot: string;
+      },
       autoclick_cover?: boolean;
     };
   }

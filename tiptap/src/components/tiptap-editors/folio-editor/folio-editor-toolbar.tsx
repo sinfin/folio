@@ -8,16 +8,14 @@ import {
   ToolbarGroup,
   ToolbarSeparator,
 } from "@/components/tiptap-ui-primitive/toolbar";
-import {
-  FolioTiptapNodeButton,
-  FolioTiptapNodeButtonForSingleImage,
-} from "@/components/tiptap-ui/folio-tiptap-node-button";
+import { FolioTiptapNodeButton } from "@/components/tiptap-ui/folio-tiptap-node-button";
 import { LinkPopover } from "@/components/tiptap-ui/link-popover";
 import { MarkButton } from "@/components/tiptap-ui/mark-button";
 import { UndoRedoButton } from "@/components/tiptap-ui/undo-redo-button";
 import { FolioTiptapShowHtmlButton } from "@/components/tiptap-extensions/folio-tiptap-show-html/folio-tiptap-show-html-button";
 import { FolioTiptapEraseMarksButton } from "@/components/tiptap-extensions/folio-tiptap-erase-marks/folio-tiptap-erase-marks-button";
 import { FolioEditorToolbarDropdown } from "./folio-editor-toolbar-dropdown";
+import { FolioEditorToolbarSlot } from "./folio-editor-toolbar-slot";
 import {
   ListsCommandGroup,
   TextAlignCommandGroup,
@@ -287,17 +285,25 @@ const MainToolbarContent = ({
     },
   });
 
-  const singleImageNodeForToolbar = React.useMemo(() => {
+  const nodesForSlots = React.useMemo(() => {
     if (blockEditor && folioTiptapConfig?.nodes) {
-      const node = folioTiptapConfig.nodes.find(
-        (node) => node.config && node.config.use_as_single_image_in_toolbar,
-      );
+      const nodes: Record<string, FolioTiptapNodeConfig[]> = {};
 
-      return node || null;
+      folioTiptapConfig.nodes.forEach((node) => {
+        const slot = node.config?.toolbar?.slot;
+
+        if (slot) {
+          if (!nodes[slot]) {
+            nodes[slot] = [];
+          }
+
+          nodes[slot].push(node);
+        }
+      });
+
+      return nodes;
     }
-
-    return null;
-  }, [blockEditor, folioTiptapConfig]);
+  })
 
   return (
     <>
@@ -400,18 +406,9 @@ const MainToolbarContent = ({
             </ToolbarGroup>
           )}
 
-          {singleImageNodeForToolbar ? (
-            <>
-              <ToolbarSeparator />
-
-              <ToolbarGroup>
-                <FolioTiptapNodeButtonForSingleImage
-                  editor={editor}
-                  singleImageNodeForToolbar={singleImageNodeForToolbar}
-                />
-              </ToolbarGroup>
-            </>
-          ) : null}
+          <ToolbarGroup>
+            <FolioEditorToolbarSlot editor={editor} nodes={nodesForSlots["after_layouts"]}/>
+          </ToolbarGroup>
         </>
       ) : null}
 
