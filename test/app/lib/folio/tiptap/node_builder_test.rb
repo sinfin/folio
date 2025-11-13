@@ -162,4 +162,54 @@ class Folio::Tiptap::NodeBuilderTest < ActiveSupport::TestCase
     assert config[:enabled]
     assert_equal :unsafe_html, config[:attributes][:folio_embed_data]
   end
+
+  test "tiptap_config validates toolbar hash structure successfully" do
+      # Define a node class with valid toolbar configuration
+      valid_node_class = Class.new(Folio::Tiptap::Node) do
+        tiptap_node structure: {
+          title: :string,
+        }, tiptap_config: {
+          toolbar: { icon: "image", slot: "after_layouts" },
+        }
+      end
+
+      # Should initialize without error
+      node = valid_node_class.new
+      assert_not_nil node
+    end
+
+  test "tiptap_config fails with invalid toolbar hash structure" do
+    # Test with non-String icon value
+    assert_raises(ArgumentError) do
+      Class.new(Folio::Tiptap::Node) do
+        tiptap_node structure: {
+          title: :string,
+        }, tiptap_config: {
+          toolbar: { icon: 123, slot: "after_layouts" },
+        }
+      end
+    end
+
+    # Test with non-String slot value
+    assert_raises(ArgumentError) do
+      Class.new(Folio::Tiptap::Node) do
+        tiptap_node structure: {
+          title: :string,
+        }, tiptap_config: {
+          toolbar: { icon: "image", slot: true },
+        }
+      end
+    end
+
+    # Test with missing required keys
+    assert_raises(ArgumentError) do
+      Class.new(Folio::Tiptap::Node) do
+        tiptap_node structure: {
+          title: :string,
+        }, tiptap_config: {
+          toolbar: { icon: "image" },
+        }
+      end
+    end
+  end
 end
