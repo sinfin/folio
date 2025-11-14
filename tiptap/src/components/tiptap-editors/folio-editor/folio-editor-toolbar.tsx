@@ -19,6 +19,7 @@ import { FolioEditorToolbarSlot } from "./folio-editor-toolbar-slot";
 import {
   ListsCommandGroup,
   TextAlignCommandGroup,
+  TextDecorationCommandGroup,
 } from "@/components/tiptap-command-groups";
 import { ResponsivePreviewButtons } from "@/components/tiptap-ui/responsive-preview-buttons";
 import { HorizontalRuleCommand } from "@/components/tiptap-commands";
@@ -217,6 +218,26 @@ const toolbarStateMapping: FolioEditorToolbarStateMapping = {
       return undefined;
     },
   },
+  textDecorations: {
+    enabled: () => true,
+    active: ({ editor }) =>
+      editor.isActive("italic") || editor.isActive("underline"),
+    value: ({ editor }) => {
+      if (editor.isActive("italic")) {
+        return "italic";
+      } else if (editor.isActive("underline")) {
+        return "underline";
+      } else if (editor.isActive("strike")) {
+        return "strike";
+      } else if (editor.isActive("superscript")) {
+        return "superscript";
+      } else if (editor.isActive("subscript")) {
+        return "subscript";
+      }
+
+      return undefined;
+    }
+  },
 };
 
 const getToolbarState = ({
@@ -350,9 +371,12 @@ const MainToolbarContent = ({
 
       <ToolbarGroup>
         <MarkButton editor={editor} type="bold" />
-        <MarkButton editor={editor} type="italic" />
-        <MarkButton editor={editor} type="underline" />
-        <MarkButton editor={editor} type="strike" />
+
+        <FolioEditorToolbarDropdown
+          editorState={editorState["textDecorations"]}
+          commandGroup={TextDecorationCommandGroup}
+          editor={editor}
+        />
 
         <FolioEditorToolbarCommandButton
           editor={editor}
@@ -363,17 +387,6 @@ const MainToolbarContent = ({
       </ToolbarGroup>
 
       <ToolbarSeparator />
-
-      {blockEditor && (
-        <>
-          <ToolbarGroup>
-            <MarkButton editor={editor} type="superscript" />
-            <MarkButton editor={editor} type="subscript" />
-          </ToolbarGroup>
-
-          <ToolbarSeparator />
-        </>
-      )}
 
       <ToolbarGroup>
         <FolioTiptapEraseMarksButton
