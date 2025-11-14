@@ -406,9 +406,7 @@ const MainToolbarContent = ({
             </ToolbarGroup>
           )}
 
-          <ToolbarGroup>
-            <FolioEditorToolbarSlot editor={editor} nodes={nodesForSlots["after_layouts"]}/>
-          </ToolbarGroup>
+          <FolioEditorToolbarSlot editor={editor} nodes={nodesForSlots["after_layouts"]}/>
         </>
       ) : null}
 
