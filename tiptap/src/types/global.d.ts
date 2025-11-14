@@ -59,7 +59,7 @@ declare global {
     title: { cs: string; en: string };
     type: string;
     config: {
-      toolbar: {
+      toolbar?: {
         icon: string;
         slot: string;
       },
