@@ -29,8 +29,9 @@ import FolioTiptapAutosaveIndicator from "@/components/tiptap-extensions/folio-t
 interface FolioEditorToolbarButtonStateMapping {
   enabled: (params: { editor: Editor }) => boolean;
   active: (params: { editor: Editor }) => boolean;
-  value?: (params: { editor: Editor }) => string | undefined;
+  values?: (params: { editor: Editor }) => string | undefined;
   onlyInBlockEditor?: true;
+  multiselect?: true;
 }
 
 interface FolioEditorToolbarStateMapping {
@@ -53,7 +54,8 @@ interface FolioEditorToolbarStateMapping {
 export interface FolioEditorToolbarButtonState {
   enabled: boolean;
   active: boolean;
-  value?: string;
+  values?: string;
+  multiselect?: boolean;
 }
 
 type FolioEditorToolbarKey = keyof FolioEditorToolbarStateMapping;
@@ -122,13 +124,13 @@ const toolbarStateMapping: FolioEditorToolbarStateMapping = {
     active: ({ editor }) =>
       editor.isActive({ textAlign: "center" }) ||
       editor.isActive({ textAlign: "right" }),
-    value: ({ editor }) => {
+    values: ({ editor }) => {
       if (editor.isActive({ textAlign: "left" })) {
-        return "align-left";
+        return ["align-left"];
       } else if (editor.isActive({ textAlign: "center" })) {
-        return "align-center";
+        return ["align-center"];
       } else if (editor.isActive({ textAlign: "right" })) {
-        return "align-right";
+        return ["align-right"];
       }
 
       return undefined;
@@ -168,21 +170,21 @@ const toolbarStateMapping: FolioEditorToolbarStateMapping = {
     active: ({ editor }) =>
       editor!.isActive("heading") ||
       editor!.isActive("folioTiptapStyledParagraph"),
-    value: ({ editor }) => {
+    values: ({ editor }) => {
       if (editor!.isActive("heading")) {
         const attr = editor!.getAttributes("heading");
 
         if (attr && attr.level) {
-          return `heading-${attr.level}`;
+          return [`heading-${attr.level}`];
         }
       } else if (editor!.isActive("folioTiptapStyledParagraph")) {
         const attr = editor!.getAttributes("folioTiptapStyledParagraph");
 
         if (attr && attr.variant) {
-          return `folioTiptapStyledParagraph-${attr.variant}`;
+          return [`folioTiptapStyledParagraph-${attr.variant}`];
         }
       } else if (editor!.isActive("paragraph")) {
-        return "paragraph";
+        return ["paragraph"];
       }
 
       return undefined;
@@ -193,11 +195,11 @@ const toolbarStateMapping: FolioEditorToolbarStateMapping = {
       editor.can().toggleBulletList() || editor.can().toggleOrderedList(),
     active: ({ editor }) =>
       editor.isActive("bulletList") || editor.isActive("orderedList"),
-    value: ({ editor }) => {
+    values: ({ editor }) => {
       if (editor.isActive("bulletList")) {
-        return "bulletList";
+        return ["bulletList"];
       } else if (editor.isActive("orderedList")) {
-        return "orderedList";
+        return ["orderedList"];
       }
 
       return undefined;
@@ -208,34 +210,35 @@ const toolbarStateMapping: FolioEditorToolbarStateMapping = {
     enabled: ({ editor }) =>
       editor.can().insertFolioTiptapColumns() || editor.can().insertTable(),
     active: () => false,
-    value: ({ editor }) => {
+    values: ({ editor }) => {
       if (editor.isActive("folioTiptapColumns")) {
-        return "folioTiptapColumns";
+        return ["folioTiptapColumns"];
       } else if (editor.isActive("table")) {
-        return "table";
+        return ["table"];
       }
 
       return undefined;
     },
   },
   textDecorations: {
+    multiselect: true,
     enabled: () => true,
     active: ({ editor }) =>
-      editor.isActive("italic") || editor.isActive("underline"),
-    value: ({ editor }) => {
-      if (editor.isActive("italic")) {
-        return "italic";
-      } else if (editor.isActive("underline")) {
-        return "underline";
-      } else if (editor.isActive("strike")) {
-        return "strike";
-      } else if (editor.isActive("superscript")) {
-        return "superscript";
-      } else if (editor.isActive("subscript")) {
-        return "subscript";
-      }
+      editor.isActive("italic") ||
+        editor.isActive("underline") ||
+        editor.isActive("strike") ||
+        editor.isActive("superscript") ||
+        editor.isActive("subscript"),
+    values: ({ editor }) => {
+      const values: string[] = [];
 
-      return undefined;
+      if (editor.isActive("italic")) values.push("italic");
+      if (editor.isActive("underline")) values.push("underline");
+      if (editor.isActive("strike")) values.push("strike");
+      if (editor.isActive("superscript")) values.push("superscript");
+      if (editor.isActive("subscript")) values.push("subscript");
+
+      return values;
     }
   },
 };
@@ -261,10 +264,11 @@ const getToolbarState = ({
   if (editor && editor.isEditable) {
     keys.forEach((key: keyof FolioEditorToolbarStateMapping) => {
       state[key] = {
+        multiselect: toolbarStateMapping[key].multiselect,
         enabled: toolbarStateMapping[key].enabled({ editor }),
         active: toolbarStateMapping[key].active({ editor }),
-        value: toolbarStateMapping[key].value
-          ? toolbarStateMapping[key].value({ editor })
+        values: toolbarStateMapping[key].values
+          ? toolbarStateMapping[key].values({ editor })
           : undefined,
       };
     });
