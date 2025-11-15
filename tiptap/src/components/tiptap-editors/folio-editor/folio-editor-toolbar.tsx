@@ -324,7 +324,7 @@ const MainToolbarContent = ({
 
       return nodes;
     }
-  })
+  }, [blockEditor, folioTiptapConfig])
 
   return (
     <>
