@@ -377,13 +377,6 @@ const MainToolbarContent = ({
           commandGroup={TextDecorationCommandGroup}
           editor={editor}
         />
-
-        <FolioEditorToolbarCommandButton
-          editor={editor}
-          command={HorizontalRuleCommand}
-        />
-
-        <LinkPopover editor={editor} editorState={editorState["link"]} />
       </ToolbarGroup>
 
       <ToolbarSeparator />
@@ -393,6 +386,14 @@ const MainToolbarContent = ({
           editor={editor}
           enabled={editorState["erase"].enabled}
         />
+      </ToolbarGroup>
+
+      <ToolbarSeparator />
+
+      <ToolbarGroup>
+        <LinkPopover editor={editor} editorState={editorState["link"]} />
+
+        <FolioEditorToolbarSlot editor={editor} nodes={nodesForSlots["after_link"]}/>
       </ToolbarGroup>
 
       <ToolbarSeparator />
@@ -419,7 +420,14 @@ const MainToolbarContent = ({
             </ToolbarGroup>
           )}
 
+          <ToolbarSeparator />
+
           <FolioEditorToolbarSlot editor={editor} nodes={nodesForSlots["after_layouts"]}/>
+
+          <FolioEditorToolbarCommandButton
+            editor={editor}
+            command={HorizontalRuleCommand}
+          />
         </>
       ) : null}
 
