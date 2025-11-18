@@ -4,12 +4,7 @@ import { type Editor } from "@tiptap/react";
 import { Button } from "@/components/tiptap-ui-primitive/button";
 import translate from "@/lib/i18n";
 
-import {
-  Video,
-  Image,
-  Newspaper,
-  Plus
-} from "lucide-react";
+import { Video, Image, Newspaper, Plus } from "lucide-react";
 
 export interface FolioEditorToolbarSlotButton {
   editor: Editor;
@@ -19,7 +14,7 @@ export interface FolioEditorToolbarSlotButton {
 const TRANSLATIONS = {
   cs: "Vložit",
   en: "Insert",
-}
+};
 
 export const FolioEditorToolbarSlotButton = ({
   editor,
@@ -47,19 +42,19 @@ export const FolioEditorToolbarSlotButton = ({
         console.warn(`Unknown icon string: ${iconString}`);
         return Plus;
     }
-  }
+  };
 
   if (!node) return;
   if (!editor || !editor.isEditable) return null;
 
   const translations = {
     cs: {
-      insert: node.title.cs || TRANSLATIONS.cs
+      insert: node.title.cs || TRANSLATIONS.cs,
     },
     en: {
-      insert: node.title.en || TRANSLATIONS.en
-    }
-  }
+      insert: node.title.en || TRANSLATIONS.en,
+    },
+  };
 
   const label = translate(translations, "insert");
   const IconComponent = icon(node.config.toolbar?.icon);
@@ -79,7 +74,6 @@ export const FolioEditorToolbarSlotButton = ({
   );
 };
 
-FolioEditorToolbarSlotButton.displayName =
-  "FolioEditorToolbarSlotButton";
+FolioEditorToolbarSlotButton.displayName = "FolioEditorToolbarSlotButton";
 
 export default FolioEditorToolbarSlotButton;

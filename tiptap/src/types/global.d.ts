@@ -62,7 +62,7 @@ declare global {
       toolbar?: {
         icon: string;
         slot: string;
-      },
+      };
       autoclick_cover?: boolean;
     };
   }
@@ -99,8 +99,8 @@ declare global {
   // Common command parameters type for TipTap extensions
   type CommandParams = {
     dispatch:
-    | ((tr: import("@tiptap/pm/state").Transaction) => void)
-    | undefined;
+      | ((tr: import("@tiptap/pm/state").Transaction) => void)
+      | undefined;
     state: import("@tiptap/pm/state").EditorState;
   };
 
@@ -193,4 +193,4 @@ declare module "@tiptap/react" {
   }
 }
 
-export { };
+export {};

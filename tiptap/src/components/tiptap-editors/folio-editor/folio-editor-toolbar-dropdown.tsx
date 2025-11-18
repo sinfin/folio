@@ -86,7 +86,7 @@ export function FolioEditorToolbarDropdown({
         commandGroup.commands.find(
           (command) =>
             !command.dontShowAsActiveInCollapsedToolbar &&
-            values.includes(command.key)
+            values.includes(command.key),
         ) || null
       );
     } else {
@@ -97,7 +97,10 @@ export function FolioEditorToolbarDropdown({
   if (!editor) return null;
 
   const activeItem = getActiveItem();
-  const ActiveIcon = (activeItem && !editorState.multiselect) ? activeItem.icon : commandGroup.icon;
+  const ActiveIcon =
+    activeItem && !editorState.multiselect
+      ? activeItem.icon
+      : commandGroup.icon;
   const tooltip =
     commandGroup.title[
       document.documentElement.lang as keyof typeof commandGroup.title

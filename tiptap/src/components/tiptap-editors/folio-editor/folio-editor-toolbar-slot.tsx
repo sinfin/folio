@@ -9,7 +9,10 @@ export interface FolioEditorToolbarSlotProps {
   nodes: FolioTiptapNodeFromInput[] | undefined;
 }
 
-export function FolioEditorToolbarSlot ({ editor, nodes }: FolioEditorToolbarSlotProps) {
+export function FolioEditorToolbarSlot({
+  editor,
+  nodes,
+}: FolioEditorToolbarSlotProps) {
   if (!editor || !nodes || nodes.length === 0) {
     return null;
   }

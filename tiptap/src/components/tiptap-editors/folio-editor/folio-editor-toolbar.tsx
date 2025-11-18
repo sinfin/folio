@@ -226,10 +226,10 @@ const toolbarStateMapping: FolioEditorToolbarStateMapping = {
     enabled: () => true,
     active: ({ editor }) =>
       editor.isActive("italic") ||
-        editor.isActive("underline") ||
-        editor.isActive("strike") ||
-        editor.isActive("superscript") ||
-        editor.isActive("subscript"),
+      editor.isActive("underline") ||
+      editor.isActive("strike") ||
+      editor.isActive("superscript") ||
+      editor.isActive("subscript"),
     values: ({ editor }) => {
       const values: string[] = [];
 
@@ -240,7 +240,7 @@ const toolbarStateMapping: FolioEditorToolbarStateMapping = {
       if (editor.isActive("subscript")) values.push("subscript");
 
       return values;
-    }
+    },
   },
 };
 
@@ -329,7 +329,7 @@ const MainToolbarContent = ({
     }
 
     return nodes;
-  }, [blockEditor, folioTiptapConfig])
+  }, [blockEditor, folioTiptapConfig]);
 
   return (
     <>
@@ -398,7 +398,10 @@ const MainToolbarContent = ({
       <ToolbarGroup>
         <LinkPopover editor={editor} editorState={editorState["link"]} />
 
-        <FolioEditorToolbarSlot editor={editor} nodes={nodesForSlots["after_link"]}/>
+        <FolioEditorToolbarSlot
+          editor={editor}
+          nodes={nodesForSlots["after_link"]}
+        />
       </ToolbarGroup>
 
       <ToolbarSeparator />
@@ -427,7 +430,10 @@ const MainToolbarContent = ({
 
           <ToolbarSeparator />
 
-          <FolioEditorToolbarSlot editor={editor} nodes={nodesForSlots["after_layouts"]}/>
+          <FolioEditorToolbarSlot
+            editor={editor}
+            nodes={nodesForSlots["after_layouts"]}
+          />
 
           <FolioEditorToolbarCommandButton
             editor={editor}
