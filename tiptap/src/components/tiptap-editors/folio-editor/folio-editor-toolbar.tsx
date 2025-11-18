@@ -8,19 +8,18 @@ import {
   ToolbarGroup,
   ToolbarSeparator,
 } from "@/components/tiptap-ui-primitive/toolbar";
-import {
-  FolioTiptapNodeButton,
-  FolioTiptapNodeButtonForSingleImage,
-} from "@/components/tiptap-ui/folio-tiptap-node-button";
+import { FolioTiptapNodeButton } from "@/components/tiptap-ui/folio-tiptap-node-button";
 import { LinkPopover } from "@/components/tiptap-ui/link-popover";
 import { MarkButton } from "@/components/tiptap-ui/mark-button";
 import { UndoRedoButton } from "@/components/tiptap-ui/undo-redo-button";
 import { FolioTiptapShowHtmlButton } from "@/components/tiptap-extensions/folio-tiptap-show-html/folio-tiptap-show-html-button";
 import { FolioTiptapEraseMarksButton } from "@/components/tiptap-extensions/folio-tiptap-erase-marks/folio-tiptap-erase-marks-button";
 import { FolioEditorToolbarDropdown } from "./folio-editor-toolbar-dropdown";
+import { FolioEditorToolbarSlot } from "./folio-editor-toolbar-slot";
 import {
   ListsCommandGroup,
   TextAlignCommandGroup,
+  TextDecorationCommandGroup,
 } from "@/components/tiptap-command-groups";
 import { ResponsivePreviewButtons } from "@/components/tiptap-ui/responsive-preview-buttons";
 import { HorizontalRuleCommand } from "@/components/tiptap-commands";
@@ -30,8 +29,9 @@ import FolioTiptapAutosaveIndicator from "@/components/tiptap-extensions/folio-t
 interface FolioEditorToolbarButtonStateMapping {
   enabled: (params: { editor: Editor }) => boolean;
   active: (params: { editor: Editor }) => boolean;
-  value?: (params: { editor: Editor }) => string | undefined;
+  values?: (params: { editor: Editor }) => string[] | undefined;
   onlyInBlockEditor?: true;
+  multiselect?: true;
 }
 
 interface FolioEditorToolbarStateMapping {
@@ -49,12 +49,14 @@ interface FolioEditorToolbarStateMapping {
   textStyles: FolioEditorToolbarButtonStateMapping;
   textAlign: FolioEditorToolbarButtonStateMapping;
   layouts: FolioEditorToolbarButtonStateMapping;
+  textDecorations: FolioEditorToolbarButtonStateMapping;
 }
 
 export interface FolioEditorToolbarButtonState {
   enabled: boolean;
   active: boolean;
-  value?: string;
+  values?: string[];
+  multiselect?: boolean;
 }
 
 type FolioEditorToolbarKey = keyof FolioEditorToolbarStateMapping;
@@ -123,13 +125,13 @@ const toolbarStateMapping: FolioEditorToolbarStateMapping = {
     active: ({ editor }) =>
       editor.isActive({ textAlign: "center" }) ||
       editor.isActive({ textAlign: "right" }),
-    value: ({ editor }) => {
+    values: ({ editor }) => {
       if (editor.isActive({ textAlign: "left" })) {
-        return "align-left";
+        return ["align-left"];
       } else if (editor.isActive({ textAlign: "center" })) {
-        return "align-center";
+        return ["align-center"];
       } else if (editor.isActive({ textAlign: "right" })) {
-        return "align-right";
+        return ["align-right"];
       }
 
       return undefined;
@@ -169,21 +171,21 @@ const toolbarStateMapping: FolioEditorToolbarStateMapping = {
     active: ({ editor }) =>
       editor!.isActive("heading") ||
       editor!.isActive("folioTiptapStyledParagraph"),
-    value: ({ editor }) => {
+    values: ({ editor }) => {
       if (editor!.isActive("heading")) {
         const attr = editor!.getAttributes("heading");
 
         if (attr && attr.level) {
-          return `heading-${attr.level}`;
+          return [`heading-${attr.level}`];
         }
       } else if (editor!.isActive("folioTiptapStyledParagraph")) {
         const attr = editor!.getAttributes("folioTiptapStyledParagraph");
 
         if (attr && attr.variant) {
-          return `folioTiptapStyledParagraph-${attr.variant}`;
+          return [`folioTiptapStyledParagraph-${attr.variant}`];
         }
       } else if (editor!.isActive("paragraph")) {
-        return "paragraph";
+        return ["paragraph"];
       }
 
       return undefined;
@@ -194,11 +196,11 @@ const toolbarStateMapping: FolioEditorToolbarStateMapping = {
       editor.can().toggleBulletList() || editor.can().toggleOrderedList(),
     active: ({ editor }) =>
       editor.isActive("bulletList") || editor.isActive("orderedList"),
-    value: ({ editor }) => {
+    values: ({ editor }) => {
       if (editor.isActive("bulletList")) {
-        return "bulletList";
+        return ["bulletList"];
       } else if (editor.isActive("orderedList")) {
-        return "orderedList";
+        return ["orderedList"];
       }
 
       return undefined;
@@ -209,14 +211,35 @@ const toolbarStateMapping: FolioEditorToolbarStateMapping = {
     enabled: ({ editor }) =>
       editor.can().insertFolioTiptapColumns() || editor.can().insertTable(),
     active: () => false,
-    value: ({ editor }) => {
+    values: ({ editor }) => {
       if (editor.isActive("folioTiptapColumns")) {
-        return "folioTiptapColumns";
+        return ["folioTiptapColumns"];
       } else if (editor.isActive("table")) {
-        return "table";
+        return ["table"];
       }
 
       return undefined;
+    },
+  },
+  textDecorations: {
+    multiselect: true,
+    enabled: () => true,
+    active: ({ editor }) =>
+      editor.isActive("italic") ||
+      editor.isActive("underline") ||
+      editor.isActive("strike") ||
+      editor.isActive("superscript") ||
+      editor.isActive("subscript"),
+    values: ({ editor }) => {
+      const values: string[] = [];
+
+      if (editor.isActive("italic")) values.push("italic");
+      if (editor.isActive("underline")) values.push("underline");
+      if (editor.isActive("strike")) values.push("strike");
+      if (editor.isActive("superscript")) values.push("superscript");
+      if (editor.isActive("subscript")) values.push("subscript");
+
+      return values;
     },
   },
 };
@@ -242,10 +265,11 @@ const getToolbarState = ({
   if (editor && editor.isEditable) {
     keys.forEach((key: keyof FolioEditorToolbarStateMapping) => {
       state[key] = {
+        multiselect: toolbarStateMapping[key].multiselect,
         enabled: toolbarStateMapping[key].enabled({ editor }),
         active: toolbarStateMapping[key].active({ editor }),
-        value: toolbarStateMapping[key].value
-          ? toolbarStateMapping[key].value({ editor })
+        values: toolbarStateMapping[key].values
+          ? toolbarStateMapping[key].values({ editor })
           : undefined,
       };
     });
@@ -287,16 +311,24 @@ const MainToolbarContent = ({
     },
   });
 
-  const singleImageNodeForToolbar = React.useMemo(() => {
-    if (blockEditor && folioTiptapConfig?.nodes) {
-      const node = folioTiptapConfig.nodes.find(
-        (node) => node.config && node.config.use_as_single_image_in_toolbar,
-      );
+  const nodesForSlots = React.useMemo(() => {
+    const nodes: Record<string, FolioTiptapNodeFromInput[]> = {};
 
-      return node || null;
+    if (blockEditor && folioTiptapConfig?.nodes) {
+      folioTiptapConfig.nodes.forEach((node) => {
+        const slot = node.config?.toolbar?.slot;
+
+        if (slot) {
+          if (!nodes[slot]) {
+            nodes[slot] = [];
+          }
+
+          nodes[slot].push(node);
+        }
+      });
     }
 
-    return null;
+    return nodes;
   }, [blockEditor, folioTiptapConfig]);
 
   return (
@@ -344,35 +376,31 @@ const MainToolbarContent = ({
 
       <ToolbarGroup>
         <MarkButton editor={editor} type="bold" />
-        <MarkButton editor={editor} type="italic" />
-        <MarkButton editor={editor} type="underline" />
-        <MarkButton editor={editor} type="strike" />
 
-        <FolioEditorToolbarCommandButton
+        <FolioEditorToolbarDropdown
+          editorState={editorState["textDecorations"]}
+          commandGroup={TextDecorationCommandGroup}
           editor={editor}
-          command={HorizontalRuleCommand}
         />
-
-        <LinkPopover editor={editor} editorState={editorState["link"]} />
       </ToolbarGroup>
 
       <ToolbarSeparator />
-
-      {blockEditor && (
-        <>
-          <ToolbarGroup>
-            <MarkButton editor={editor} type="superscript" />
-            <MarkButton editor={editor} type="subscript" />
-          </ToolbarGroup>
-
-          <ToolbarSeparator />
-        </>
-      )}
 
       <ToolbarGroup>
         <FolioTiptapEraseMarksButton
           editor={editor}
           enabled={editorState["erase"].enabled}
+        />
+      </ToolbarGroup>
+
+      <ToolbarSeparator />
+
+      <ToolbarGroup>
+        <LinkPopover editor={editor} editorState={editorState["link"]} />
+
+        <FolioEditorToolbarSlot
+          editor={editor}
+          nodes={nodesForSlots["after_link"]}
         />
       </ToolbarGroup>
 
@@ -400,18 +428,17 @@ const MainToolbarContent = ({
             </ToolbarGroup>
           )}
 
-          {singleImageNodeForToolbar ? (
-            <>
-              <ToolbarSeparator />
+          <ToolbarSeparator />
 
-              <ToolbarGroup>
-                <FolioTiptapNodeButtonForSingleImage
-                  editor={editor}
-                  singleImageNodeForToolbar={singleImageNodeForToolbar}
-                />
-              </ToolbarGroup>
-            </>
-          ) : null}
+          <FolioEditorToolbarSlot
+            editor={editor}
+            nodes={nodesForSlots["after_layouts"]}
+          />
+
+          <FolioEditorToolbarCommandButton
+            editor={editor}
+            command={HorizontalRuleCommand}
+          />
         </>
       ) : null}
 

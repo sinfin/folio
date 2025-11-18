@@ -79,23 +79,28 @@ export function FolioEditorToolbarDropdown({
   }, []);
 
   const getActiveItem = React.useCallback(() => {
-    if (editorState.value) {
+    const values = editorState.values;
+
+    if (values) {
       return (
         commandGroup.commands.find(
           (command) =>
             !command.dontShowAsActiveInCollapsedToolbar &&
-            command.key === editorState.value,
+            values.includes(command.key),
         ) || null
       );
     } else {
       return null;
     }
-  }, [editorState.value, commandGroup.commands]);
+  }, [editorState.values, commandGroup.commands]);
 
   if (!editor) return null;
 
   const activeItem = getActiveItem();
-  const ActiveIcon = activeItem ? activeItem.icon : commandGroup.icon;
+  const ActiveIcon =
+    activeItem && !editorState.multiselect
+      ? activeItem.icon
+      : commandGroup.icon;
   const tooltip =
     commandGroup.title[
       document.documentElement.lang as keyof typeof commandGroup.title
@@ -128,8 +133,8 @@ export function FolioEditorToolbarDropdown({
               <DropdownMenuItem key={command.key} asChild>
                 <FolioEditorToolbarDropdownButton
                   active={
-                    editorState.value
-                      ? command.key === editorState.value
+                    editorState.values
+                      ? editorState.values.includes(command.key)
                       : false
                   }
                   enabled={editorState.enabled}

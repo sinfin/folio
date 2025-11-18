@@ -513,8 +513,9 @@ class Folio::Tiptap::NodeBuilder
       result
     end
 
+    # Whitelist of allowed keys and their value types in tiptap_config hash, hashes cannot include keys not listed here.
     TIPTAP_CONFIG_HASH_WHITELIST = {
-      use_as_single_image_in_toolbar: [TrueClass, FalseClass],
+      toolbar: { icon: String, slot: String },
       autoclick_cover: [TrueClass, FalseClass],
     }
 
@@ -529,8 +530,14 @@ class Folio::Tiptap::NodeBuilder
             fail ArgumentError, "Unknown key `#{key}` in tiptap_config. Allowed keys are: #{TIPTAP_CONFIG_HASH_WHITELIST.keys.join(', ')}"
           end
 
-          unless TIPTAP_CONFIG_HASH_WHITELIST[key].any? { |klass| value.is_a?(klass) }
-            fail ArgumentError, "Expected value for `#{key}` in tiptap_config to be of type #{TIPTAP_CONFIG_HASH_WHITELIST[key]}, got #{value.class.name}"
+          if TIPTAP_CONFIG_HASH_WHITELIST[key].is_a?(Hash)
+            unless TIPTAP_CONFIG_HASH_WHITELIST[key].all? { |k, klass| value[k].is_a?(klass) }
+              raise ArgumentError, "Expected value for `#{key}` in tiptap_config to be a Hash with keys #{TIPTAP_CONFIG_HASH_WHITELIST[key].map { |k, v| "#{k}: #{v}" }.join(', ')}, got #{value.inspect}"
+            end
+          else
+            unless TIPTAP_CONFIG_HASH_WHITELIST[key].any? { |klass| value.is_a?(klass) }
+              raise ArgumentError, "Expected value for `#{key}` in tiptap_config to be of type #{TIPTAP_CONFIG_HASH_WHITELIST[key]}, got #{value.class.name}"
+            end
           end
         end
 

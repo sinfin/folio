@@ -37,6 +37,7 @@ All notable changes to this project will be documented in this file.
 - Cells -> ViewComponents refactoring:
   - Folio::Console::Form::HeaderCell -> Folio::Console::Form::HeaderComponent
   - Folio::PublishableHintCell -> Folio::Publishable::HintComponent
+- generalized tiptap_config.use_as_single_image_in_toolbar -> tiptap_config.toolbar with icon and slot names
 
 ## [6.5.1] - 2025-06-18
 

@@ -11,3 +11,8 @@ export * from "./table-command";
 export * from "./text-align-center-command";
 export * from "./text-align-left-command";
 export * from "./text-align-right-command";
+export * from "./text-decoration-italic-command";
+export * from "./text-decoration-underline-command";
+export * from "./text-decoration-superscript-command";
+export * from "./text-decoration-subscript-command";
+export * from "./text-decoration-strike-command";
