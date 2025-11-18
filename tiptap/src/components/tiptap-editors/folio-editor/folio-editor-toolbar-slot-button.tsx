@@ -69,7 +69,7 @@ export const FolioEditorToolbarSlotButton = ({
       tooltip={label}
       onClick={handleClick}
     >
-      <IconComponent />
+      <IconComponent size={16} />
     </Button>
   );
 };
