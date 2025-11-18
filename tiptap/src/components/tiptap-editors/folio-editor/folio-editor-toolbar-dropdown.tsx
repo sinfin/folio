@@ -79,12 +79,14 @@ export function FolioEditorToolbarDropdown({
   }, []);
 
   const getActiveItem = React.useCallback(() => {
-    if (editorState.values) {
+    const values = editorState.values;
+
+    if (values) {
       return (
         commandGroup.commands.find(
           (command) =>
             !command.dontShowAsActiveInCollapsedToolbar &&
-            editorState.values.includes(command.key)
+            values.includes(command.key)
         ) || null
       );
     } else {

@@ -10,7 +10,7 @@ import {
 
 export const TextDecorationCommandGroup: FolioEditorCommandGroup = {
   title: { cs: "Dekorace textu", en: "Text Decorations" },
-  key: "text-decorations",
+  key: "textDecorations",
   icon: ItalicIcon,
   commands: [
     TextDecorationItalicCommand,

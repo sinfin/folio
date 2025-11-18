@@ -29,7 +29,7 @@ import FolioTiptapAutosaveIndicator from "@/components/tiptap-extensions/folio-t
 interface FolioEditorToolbarButtonStateMapping {
   enabled: (params: { editor: Editor }) => boolean;
   active: (params: { editor: Editor }) => boolean;
-  values?: (params: { editor: Editor }) => string | undefined;
+  values?: (params: { editor: Editor }) => string[] | undefined;
   onlyInBlockEditor?: true;
   multiselect?: true;
 }
@@ -49,12 +49,13 @@ interface FolioEditorToolbarStateMapping {
   textStyles: FolioEditorToolbarButtonStateMapping;
   textAlign: FolioEditorToolbarButtonStateMapping;
   layouts: FolioEditorToolbarButtonStateMapping;
+  textDecorations: FolioEditorToolbarButtonStateMapping;
 }
 
 export interface FolioEditorToolbarButtonState {
   enabled: boolean;
   active: boolean;
-  values?: string;
+  values?: string[];
   multiselect?: boolean;
 }
 
@@ -311,9 +312,9 @@ const MainToolbarContent = ({
   });
 
   const nodesForSlots = React.useMemo(() => {
-    if (blockEditor && folioTiptapConfig?.nodes) {
-      const nodes: Record<string, FolioTiptapNodeConfig[]> = {};
+    const nodes: Record<string, FolioTiptapNodeFromInput[]> = {};
 
+    if (blockEditor && folioTiptapConfig?.nodes) {
       folioTiptapConfig.nodes.forEach((node) => {
         const slot = node.config?.toolbar?.slot;
 
@@ -325,9 +326,9 @@ const MainToolbarContent = ({
           nodes[slot].push(node);
         }
       });
-
-      return nodes;
     }
+
+    return nodes;
   }, [blockEditor, folioTiptapConfig])
 
   return (

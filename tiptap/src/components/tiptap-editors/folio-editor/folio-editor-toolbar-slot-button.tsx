@@ -2,8 +2,14 @@ import * as React from "react";
 import { type Editor } from "@tiptap/react";
 
 import { Button } from "@/components/tiptap-ui-primitive/button";
-import { DynamicIcon } from 'lucide-react/dynamic';
 import translate from "@/lib/i18n";
+
+import {
+  Video,
+  Image,
+  Newspaper,
+  Plus
+} from "lucide-react";
 
 export interface FolioEditorToolbarSlotButton {
   editor: Editor;
@@ -29,6 +35,20 @@ export const FolioEditorToolbarSlotButton = ({
     );
   }, [node]);
 
+  const icon = (iconString: string | undefined) => {
+    switch (iconString) {
+      case "image":
+        return Image;
+      case "video":
+        return Video;
+      case "newspaper":
+        return Newspaper;
+      default:
+        console.warn(`Unknown icon string: ${iconString}`);
+        return Plus;
+    }
+  }
+
   if (!node) return;
   if (!editor || !editor.isEditable) return null;
 
@@ -42,7 +62,7 @@ export const FolioEditorToolbarSlotButton = ({
   }
 
   const label = translate(translations, "insert");
-  const iconName = node.config.toolbar?.icon || "plus";
+  const IconComponent = icon(node.config.toolbar?.icon);
 
   return (
     <Button
@@ -54,7 +74,7 @@ export const FolioEditorToolbarSlotButton = ({
       tooltip={label}
       onClick={handleClick}
     >
-      <DynamicIcon name={iconName} className="tiptap-button-icon" />
+      <IconComponent />
     </Button>
   );
 };
