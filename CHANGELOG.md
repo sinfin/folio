@@ -39,6 +39,10 @@ All notable changes to this project will be documented in this file.
   - Folio::PublishableHintCell -> Folio::Publishable::HintComponent
 - generalized tiptap_config.use_as_single_image_in_toolbar -> tiptap_config.toolbar with icon and slot names
 
+### Fixed
+
+- file_list/file_component info-file-name doesn't break on long names
+
 ## [6.5.1] - 2025-06-18
 
 ### Added
