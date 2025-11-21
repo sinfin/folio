@@ -5,10 +5,47 @@ h2 Input Tags
 = simple_form_for "", method: :get, url: request.path do |f|
   h3 Demo for URL input modal
 
+  p
+    | Steps to replicate
+    <br>
+    | 1. Click "Open modal" button to open the modal.
+    <br>
+    | 2. Click "Reload input" button inside the modal twice
+    <br>
+    | 3. Voila! selectize onBlur now doesn't trigger on either of the two inputs.
+
   .f-c-uidemo-wrap
     pre: code.f-c-uidemo-code
 
-    = f.input :tags,
-              as: :tags,
-              collection: Folio::Console::Links::Modal::FormComponent::VALID_REL_VALUES,
-              delimiter: " "
+    div id="reload-div"
+      = f.input :tags,
+                as: :tags,
+                collection: Folio::Console::Links::Modal::FormComponent::VALID_REL_VALUES,
+                delimiter: " "
+
+    button.f-btn id="open-modal-btn" type="button" data=stimulus_modal_toggle(".input-tags-modal")
+      | Open modal
+
+- content_for(:modals) do
+  = render(Folio::Console::Ui::ModalComponent.new(title: 'foo',
+                                                  class_name: "input-tags-modal show",
+                                                  size: :lg))
+    = simple_form_for "", method: :get, url: request.path do |f|
+      button.f-c-button.f-c-button--secondary type="button" id="reload-btn"
+        | Reload input
+
+      = f.input :tags,
+                as: :tags,
+                collection: Folio::Console::Links::Modal::FormComponent::VALID_REL_VALUES,
+                delimiter: " "
+
+javascript:
+  // replace innerHTML to simulate dynamic content loading
+  var container = document.getElementById("reload-div");
+  var content = container.innerHTML;
+
+  document.addEventListener("click", function(event) {
+    if (!event.target.matches("#reload-btn")) return;
+
+    container.innerHTML = content;
+  });

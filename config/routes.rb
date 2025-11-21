@@ -49,6 +49,7 @@ Folio::Engine.routes.draw do
         get :input_tags
         get :input_tiptap
         get :input_url
+        get :input_tags
       end
 
       if ::Rails.application.config.folio_console_current_user_profile_enabled

@@ -69,6 +69,7 @@ window.Folio.Stimulus.register('f-input-tags', class extends window.Stimulus.Con
     this.initializing = !this.element.selectize
 
     if (this.initializing) {
+      console.log('connect')
       window.Folio.Input.Tags.bind(this.element, {
         url: this.urlValue,
         tagsContext: this.tagsContextValue,
@@ -81,5 +82,6 @@ window.Folio.Stimulus.register('f-input-tags', class extends window.Stimulus.Con
   disconnect () {
     if (this.initializing) return
     window.Folio.Input.Tags.unbind(this.element)
+    console.log('disconnect')
   }
 })
