@@ -102,10 +102,6 @@ module Folio::Console::FileControllerBase
       file_params
     end
 
-    def folio_console_record_includes
-      [:tags]
-    end
-
     def folio_console_collection_includes
       includes = [:tags]
 

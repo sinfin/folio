@@ -47,8 +47,4 @@ class Folio::Console::PagesController < Folio::Console::BaseController
                     *console_notes_strong_params,
                     *additional_page_params)
     end
-
-    def folio_console_record_includes
-      [cover_placement: :file]
-    end
 end

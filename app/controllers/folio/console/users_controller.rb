@@ -164,10 +164,6 @@ class Folio::Console::UsersController < Folio::Console::BaseController
       []
     end
 
-    def folio_console_record_includes
-      []
-    end
-
     def site_user_links_params
       ary = if @user && can_now?(:set_superadmin, @user)
         [:superadmin]
