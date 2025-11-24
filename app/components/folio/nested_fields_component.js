@@ -276,7 +276,7 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
     const performAutoScroll = () => {
       if (lastMouseY === null) {
         edgeTime = 0
-        rafId = requestAnimationFrame(performAutoScroll)
+        rafId = window.requestAnimationFrame(performAutoScroll)
         return
       }
 
@@ -290,7 +290,7 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
         // Early exit if not near edges
         if (mouseY >= scrollSensitivity && mouseY <= viewportHeight - scrollSensitivity) {
           edgeTime = 0
-          rafId = requestAnimationFrame(performAutoScroll)
+          rafId = window.requestAnimationFrame(performAutoScroll)
           return
         }
 
@@ -344,7 +344,7 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
         if (relativeY >= scrollSensitivity && relativeY <= containerHeight - scrollSensitivity) {
           edgeTime = 0
           cachedRect = null // Clear cache when not scrolling
-          rafId = requestAnimationFrame(performAutoScroll)
+          rafId = window.requestAnimationFrame(performAutoScroll)
           return
         }
 
@@ -368,7 +368,7 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
         }
       }
 
-      rafId = requestAnimationFrame(performAutoScroll)
+      rafId = window.requestAnimationFrame(performAutoScroll)
     }
 
     const onMouseMove = (e) => updateMousePosition(e)
@@ -381,7 +381,7 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
     this.fieldsWrapTarget.addEventListener('dragover', onDragOver, { passive: true, capture: true })
     this.fieldsWrapTarget.addEventListener('drag', onDrag, { passive: true, capture: true })
 
-    rafId = requestAnimationFrame(performAutoScroll)
+    rafId = window.requestAnimationFrame(performAutoScroll)
 
     this.autoScrollCleanup = () => {
       document.removeEventListener('mousemove', onMouseMove, { capture: true })
@@ -390,7 +390,7 @@ window.Folio.Stimulus.register('f-nested-fields', class extends window.Stimulus.
       this.fieldsWrapTarget.removeEventListener('dragover', onDragOver, { capture: true })
       this.fieldsWrapTarget.removeEventListener('drag', onDrag, { capture: true })
       if (rafId !== null) {
-        cancelAnimationFrame(rafId)
+        window.cancelAnimationFrame(rafId)
         rafId = null
       }
       lastMouseY = null
