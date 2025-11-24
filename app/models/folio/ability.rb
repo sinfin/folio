@@ -47,6 +47,8 @@ class Folio::Ability
       can :set_administrator, Folio::Site
       can :set_manager, Folio::Site
 
+      can :display_miniprofiler, Folio::Site
+
       return
     end
 
