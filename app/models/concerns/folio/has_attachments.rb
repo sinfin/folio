@@ -331,8 +331,11 @@ module Folio::HasAttachments
         end
       end
 
+      # Filter out placements marked for destruction - they will be removed anyway
+      placements_to_validate = all_placements_ary.reject(&:marked_for_destruction?)
+
       if should_validate_file_placements_attribution_if_needed?
-        all_placements_ary.each do |placement|
+        placements_to_validate.each do |placement|
           placement.validate_attribution_if_needed
           if placement.errors[:file].present?
             has_invalid_file_placements = true
@@ -341,7 +344,7 @@ module Folio::HasAttachments
       end
 
       if should_validate_file_placements_alt_if_needed?
-        all_placements_ary.each do |placement|
+        placements_to_validate.each do |placement|
           placement.validate_alt_if_needed
           if placement.errors[:file].present?
             has_invalid_file_placements = true
@@ -350,7 +353,7 @@ module Folio::HasAttachments
       end
 
       if should_validate_file_placements_description_if_needed?
-        all_placements_ary.each do |placement|
+        placements_to_validate.each do |placement|
           placement.validate_description_if_needed
           if placement.errors[:file].present?
             has_invalid_file_placements = true

@@ -147,4 +147,40 @@ class Folio::HasAttachmentsTest < ActiveSupport::TestCase
     page.image_placements.reload.last.destroy!
     assert_equal 0, page.reload.image_placements_count
   end
+
+  test "does not validate placements marked for destruction" do
+    # Ensure config is false initially so test works regardless of global config
+    page = nil
+    placement_id = nil
+
+    Rails.application.config.stub(:folio_files_require_attribution, false) do
+      page = create(:folio_page, published: true)
+      invalid_image = create(:folio_file_image,
+                             author: nil,
+                             attribution_source: nil,
+                             attribution_source_url: nil)
+
+      # Create an invalid placement (with config false, this will succeed)
+      page.update!(image_placements_attributes: [
+        { file_id: invalid_image.id, position: 1 }
+      ])
+      placement_id = page.image_placements.first.id
+    end
+
+    # With attribution required and page published, this should fail validation
+    Rails.application.config.stub(:folio_files_require_attribution, true) do
+      page.reload
+      assert_not page.valid?
+      assert page.errors[:base].present?
+
+      # Now mark the invalid placement for destruction
+      page.update(image_placements_attributes: [
+        { id: placement_id, _destroy: true }
+      ])
+
+      # Page should be valid now since the invalid placement is being removed
+      assert page.valid?, "Page should be valid when invalid placement is marked for destruction"
+      assert page.errors[:base].blank?, "Should not have validation errors for marked_for_destruction placements"
+    end
+  end
 end
