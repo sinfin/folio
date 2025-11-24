@@ -71,6 +71,12 @@ module Folio::File::HasUsageConstraints
     end
   end
 
+  class_methods do
+    def has_usage_constraints?
+      true
+    end
+  end
+
   def usage_limit_exceeded?
     return false unless attribution_max_usage_count&.positive?
     published_usage_count >= attribution_max_usage_count
