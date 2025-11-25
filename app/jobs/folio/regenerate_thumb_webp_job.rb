@@ -27,7 +27,8 @@ class Folio::RegenerateThumbWebpJob < Folio::ApplicationJob
       end
 
       if changed
-        image.update!(thumbnail_sizes:)
+        image.thumbnail_sizes = thumbnail_sizes
+        image.save!(validate: false)
       end
     end
   end
