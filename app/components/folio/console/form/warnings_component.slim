@@ -1,8 +1,23 @@
-.f-c-form-warnings.alert.alert-warning.d-none data=data
-  - if notification.present?
-    .fw-bold.mb-2 = notification
+.f-c-form-warnings.alert.alert-warning data=data
+  h3.mt-0 = t('.title')
 
   ul
-    - @warnings.each_with_index do |warning, i|
-      li.d-flex.align-items-center class=(i.zero? ? nil : 'mt-2')
-        span.me-3 = warning
+    - @warnings.each_with_index do |group, group_index|
+      - file = group[:file]
+      - warnings = group[:warnings]
+
+      li.mt-2
+        - if file.present?
+          - if can_now?(:show, file)
+            span.fw-bold.f-c-form-warnings__file-trigger[
+              data=file_label_data(file)
+            ]
+              = file_label(file)
+          - else
+            span.fw-bold data=file_label_data(file)
+              = file_label(file)
+
+          span
+            ' :
+
+        = warnings_text(warnings)

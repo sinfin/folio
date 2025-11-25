@@ -297,10 +297,25 @@ module Folio::HasAttachments
   end
 
   def soft_warnings_for_file_placements
+    grouped = {}
+
     collect_all_placements
       .reject(&:marked_for_destruction?)
-      .flat_map(&:console_warnings)
-      .uniq
+      .each do |placement|
+        next if placement.file.blank?
+        next unless placement.file.id
+
+        file_id = placement.file.id
+        grouped[file_id] ||= { file: placement.file, warnings: [] }
+
+        placement.console_warnings.each do |warning|
+          grouped[file_id][:warnings] << warning unless grouped[file_id][:warnings].include?(warning)
+        end
+      end
+
+    grouped.values.map do |group|
+      { file: group[:file], warnings: group[:warnings].uniq }
+    end
   end
 
   private
