@@ -377,7 +377,7 @@ en:
           missing_alt: is missing alt
           missing_description: is missing description
           missing_attribution: is missing author or source
-          title: "The following files criteria are not met"
+          title: "The following files criteria are not met:"
 
       react:
         modal_component:
