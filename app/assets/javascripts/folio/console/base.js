@@ -117,8 +117,8 @@
 //= require folio/console/files/subtitles_form_component
 //= require folio/console/folio_attributes_fields_component
 //= require folio/console/form/errors/errors
-//= require folio/console/form/warnings_component
 //= require folio/console/form/footer_component
+//= require folio/console/form/warnings_component
 //= require folio/console/form_modal_component
 //= require folio/console/index/images/images
 //= require folio/console/index/position_buttons/position_buttons
