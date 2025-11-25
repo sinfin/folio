@@ -143,7 +143,6 @@ class Folio::File < Folio::ApplicationRecord
   before_validation :set_file_track_duration, if: :file_uid_changed?
   before_validation :set_video_file_dimensions, if: :file_uid_changed?
   before_save :set_file_name_for_search, if: :file_name_changed?
-  before_save :reset_slug_if_headline_changed, if: :headline_changed?
   before_destroy :check_usage_before_destroy
   after_save :run_after_save_job
   after_commit :process!, if: :attached_file_changed?
@@ -398,14 +397,21 @@ class Folio::File < Folio::ApplicationRecord
       hash = nil
 
       loop do
-        new_slug_base = file_name.present? ? file_name.split(".", 2)[0] : "file"
+        # Parameterize filename base to match strip_and_downcase_slug behavior
+        new_slug_base = if file_name.present?
+          file_name.split(".", 2)[0].parameterize
+        else
+          "file"
+        end
         new_slug = hash ? "#{new_slug_base}-#{hash}" : new_slug_base
 
         exists = self.class.base_class.exists?(slug: new_slug)
 
         break unless exists
 
+        # Generate lowercase hash to match strip_and_downcase_slug formatting
         hash = SecureRandom.urlsafe_base64(8)
+                           .downcase
                            .gsub(/-|_/, ("a".."z").to_a[rand(26)])
       end
 
@@ -475,24 +481,6 @@ class Folio::File < Folio::ApplicationRecord
                            data: { id: },
                          }.to_json,
                          user_ids: message_bus_user_ids
-    end
-
-    def reset_slug_if_headline_changed
-      return unless slug.present?
-      return unless slug_matches_default_format?
-
-      # Clear the current slug
-      self.slug = nil
-    end
-
-    def slug_matches_default_format?
-      return false unless slug.present?
-
-      # Check if current slug matches the pattern of default generated slugs
-      # Default slugs are either just the filename base or filename-base-hash
-      file_name_base = file_name.present? ? file_name.split(".", 2)[0].parameterize : "file"
-
-      slug == file_name_base || slug.match?(/\A#{Regexp.escape(file_name_base)}-[a-z0-9]+\z/)
     end
 end
 

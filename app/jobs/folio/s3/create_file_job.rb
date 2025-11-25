@@ -11,8 +11,13 @@ class Folio::S3::CreateFileJob < Folio::S3::BaseJob
     Dir.mktmpdir("folio-file-s3") do |tmpdir|
       @file.file = downloaded_file(s3_path, tmpdir)
 
-      if @file.save
-        # Trigger metadata extraction for image files (both new and replaced)
+      # Extract metadata synchronously before save for image files (to ensure headline is available for slug generation)
+      if @file.is_a?(Folio::File::Image) && !replacing_file
+        @file.extract_metadata!(save: false)
+      end
+
+      if save_file_with_slug_retry
+        # Trigger async metadata extraction for image files if not already extracted synchronously
         if @file.is_a?(Folio::File::Image)
           trigger_metadata_extraction(@file, replacing_file: replacing_file)
         end
@@ -92,9 +97,24 @@ class Folio::S3::CreateFileJob < Folio::S3::BaseJob
       @file
     end
 
+    def save_file_with_slug_retry
+      return true if @file.save
+
+      # If slug uniqueness validation failed, clear slug and retry once
+      if @file.errors[:slug].present? && @file.errors[:slug].any? { |e| e.type == :taken }
+        @file.slug = nil  # Clear slug to trigger regeneration (will use hash_id_for_slug fallback)
+        return @file.save
+      end
+
+      false
+    end
+
     def trigger_metadata_extraction(image, replacing_file: false)
       # For replaced files, force extraction since it's new file content
       force_extraction = replacing_file
+
+      # Skip if metadata was already extracted synchronously before save
+      return if image.file_metadata_extracted_at.present? && !replacing_file
 
       # Only trigger if extraction should happen (or force for replaced files)
       unless force_extraction || image.should_extract_metadata?
