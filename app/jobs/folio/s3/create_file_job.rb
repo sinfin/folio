@@ -13,7 +13,12 @@ class Folio::S3::CreateFileJob < Folio::S3::BaseJob
 
       # Extract metadata synchronously before save for image files (to ensure headline is available for slug generation)
       if @file.is_a?(Folio::File::Image) && !replacing_file
-        @file.extract_metadata!(save: false)
+        begin
+          @file.extract_metadata!(save: false)
+        rescue => e
+          Rails.logger.warn "Metadata extraction failed during upload: #{e.message}"
+          # Don't fail the upload if metadata extraction fails
+        end
       end
 
       if save_file_with_slug_retry
