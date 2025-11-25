@@ -80,38 +80,10 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
           started_at = rs_data["processing_step_started_at"]
           Rails.logger.info("MonitorProcessingJob: Video ##{video.id} is in creating_media_job state, started_at: #{started_at}")
 
-          if started_at
-            elapsed_time = Time.current - Time.parse(started_at)
-
-            # Mark as failed if stuck in creating_media_job for more than 3 hours
-            if elapsed_time > 3.hours
-              Rails.logger.error("MonitorProcessingJob: Video ##{video.id} stuck in creating_media_job for #{(elapsed_time / 1.hour).round(1)} hours, marking as failed")
-              rs_data.merge!({
-                "processing_state" => "upload_failed",
-                "error_message" => "Upload stuck in creating_media_job state for #{(elapsed_time / 1.hour).round(1)} hours",
-                "processing_step_started_at" => Time.current.iso8601
-              })
-              video.update_column(:remote_services_data, rs_data)
-              next
-            end
-
-            # Check if upload is genuinely stuck vs. just taking a long time
-            begin
-              if !upload_is_stuck?(video, Time.parse(started_at))
-                Rails.logger.info("MonitorProcessingJob: Video ##{video.id} upload appears to be progressing, not retrying yet")
-                next
-              end
-            rescue => e
-              Rails.logger.error("MonitorProcessingJob: Error checking if upload is stuck for video ##{video.id}: #{e.message}")
-              # If we can't check, assume it's stuck if it's been more than 30 minutes
-              elapsed_minutes = elapsed_time / 1.minute
-              if elapsed_minutes < 30
-                Rails.logger.info("MonitorProcessingJob: Video ##{video.id} upload check failed but elapsed time (#{elapsed_minutes.round(0)}min) is short, skipping retry")
-                next
-              else
-                Rails.logger.warn("MonitorProcessingJob: Video ##{video.id} upload check failed and elapsed time (#{elapsed_minutes.round(0)}min) is long, proceeding with retry")
-              end
-            end
+          # Check if upload is genuinely stuck vs. just taking a long time
+          if started_at && !upload_is_stuck?(video, Time.parse(started_at))
+            Rails.logger.info("MonitorProcessingJob: Video ##{video.id} upload appears to be progressing, not retrying yet")
+            next
           end
 
           # Check if there's actually a running CreateMediaJob for this video
