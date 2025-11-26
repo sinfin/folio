@@ -296,58 +296,46 @@ class Folio::FileTest < ActiveSupport::TestCase
     assert_equal file2.file_placements.count, file2.file_placements_count
   end
 
-  test "slug reset functionality" do
-    # Test 1: Reset default filename-based slug when headline changes
-    # Create file without headline first, so slug gets generated from file_name
-    file1 = create(:folio_file_image, file_name: "test-image.jpg")
+  test "slug does not reset when headline changes" do
+    # Slug reset functionality has been removed - headline is now extracted before save
+    # so slug is generated from headline from the start, eliminating the need for reset
+    file = create(:folio_file_image, file_name: "test-image.jpg")
+    original_slug = file.slug
 
-    # Verify the slug was generated from filename (this should naturally happen)
-    assert_not_nil file1.slug, "Slug should be present after creation"
-    expected_slug = file1.slug
-
-    # Now set a headline and see if our reset functionality works
-    file1.update!(headline: "New Headline")
-
-    # If the original slug matched default format, it should be reset
-    if expected_slug == "test-image" || expected_slug.match?(/\Atest-image-[a-z0-9]+\z/)
-      assert_nil file1.slug, "Default format slug should be reset when headline changes"
-    end
-
-    # Test 2: Don't reset custom slug
-    file2 = create(:folio_file_image, file_name: "test-image.jpg")
-    # Force a custom slug that doesn't match default format
-    file2.slug = "my-custom-slug"
-    file2.save!(validate: false)  # Skip validations to avoid FriendlyId interference
-
-    assert_equal "my-custom-slug", file2.reload.slug
-    file2.update!(headline: "New Headline")
-    assert_equal "my-custom-slug", file2.reload.slug, "Custom slug should not be reset"
-
-    # Test 3: Don't reset when other attributes change
-    file3 = create(:folio_file_image, file_name: "test-image.jpg")
-    original_slug = file3.slug
-
-    file3.update!(description: "New description")
-    assert_equal original_slug, file3.reload.slug, "Slug should not change when non-headline attributes change"
+    # Slug should remain unchanged when headline is updated after creation
+    file.update!(headline: "New Headline")
+    assert_equal original_slug, file.reload.slug, "Slug should not change when headline is updated after creation"
   end
 
-  test "slug_matches_default_format? method" do
-    file = build(:folio_file_image, file_name: "test-image.jpg")
+  test "slug is generated from extracted headline during initial creation" do
+    # Verify that when metadata extraction happens synchronously before save (as in create_file_job),
+    # the slug is generated from the extracted headline
+    with_config(folio_image_metadata_extraction_enabled: true) do
+      headline = "Test Headline From Metadata"
+      metadata = {
+        "XMP-photoshop:Headline" => headline,
+        "XMP-dc:creator" => ["Test Creator"]
+      }
 
-    # Should match filename-based slugs
-    file.slug = "test-image"
-    assert file.send(:slug_matches_default_format?)
+      # Create new image file (not persisted yet, simulating create_file_job scenario)
+      file = build(:folio_file_image, file_name: "test-image.jpg", headline: nil, slug: nil)
 
-    # Should match filename with hash
-    file.slug = "test-image-abc123"
-    assert file.send(:slug_matches_default_format?)
+      # Mock file.metadata to return our test metadata
+      file.file.stub(:metadata, metadata) do
+        # Simulate synchronous metadata extraction before save (as done in create_file_job)
+        file.extract_metadata!(save: false)
 
-    # Should not match custom slugs
-    file.slug = "my-custom-slug"
-    assert_not file.send(:slug_matches_default_format?)
+        # Verify headline was extracted
+        assert_equal headline, file.headline, "Headline should be extracted from metadata"
 
-    file.slug = nil
-    assert_not file.send(:slug_matches_default_format?)
+        # Save the file
+        file.save!
+
+        # Verify slug was generated from headline
+        expected_slug = headline.parameterize
+        assert_equal expected_slug, file.reload.slug, "Slug should be generated from extracted headline"
+      end
+    end
   end
 end
 
