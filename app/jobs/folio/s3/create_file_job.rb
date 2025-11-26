@@ -106,7 +106,7 @@ class Folio::S3::CreateFileJob < Folio::S3::BaseJob
       return true if @file.save
 
       # If slug uniqueness validation failed, clear slug and retry once
-      if @file.errors[:slug].present? && @file.errors[:slug].any? { |e| e.type == :taken }
+      if @file.errors[:slug].present? && @file.errors[:slug].any? { |e| e.type == :taken || e.type == :slug_not_unique_across_classes }
         @file.slug = nil  # Clear slug to trigger regeneration (will use hash_id_for_slug fallback)
         return @file.save
       end

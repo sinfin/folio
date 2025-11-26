@@ -306,6 +306,37 @@ class Folio::FileTest < ActiveSupport::TestCase
     file.update!(headline: "New Headline")
     assert_equal original_slug, file.reload.slug, "Slug should not change when headline is updated after creation"
   end
+
+  test "slug is generated from extracted headline during initial creation" do
+    # Verify that when metadata extraction happens synchronously before save (as in create_file_job),
+    # the slug is generated from the extracted headline
+    with_config(folio_image_metadata_extraction_enabled: true) do
+      headline = "Test Headline From Metadata"
+      metadata = {
+        "XMP-photoshop:Headline" => headline,
+        "XMP-dc:creator" => ["Test Creator"]
+      }
+
+      # Create new image file (not persisted yet, simulating create_file_job scenario)
+      file = build(:folio_file_image, file_name: "test-image.jpg", headline: nil, slug: nil)
+
+      # Mock file.metadata to return our test metadata
+      file.file.stub(:metadata, metadata) do
+        # Simulate synchronous metadata extraction before save (as done in create_file_job)
+        file.extract_metadata!(save: false)
+
+        # Verify headline was extracted
+        assert_equal headline, file.headline, "Headline should be extracted from metadata"
+
+        # Save the file
+        file.save!
+
+        # Verify slug was generated from headline
+        expected_slug = headline.parameterize
+        assert_equal expected_slug, file.reload.slug, "Slug should be generated from extracted headline"
+      end
+    end
+  end
 end
 
 class Folio::FileImageMetadataKeywordsTest < ActiveSupport::TestCase
