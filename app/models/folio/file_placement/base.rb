@@ -227,17 +227,26 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
     return [] if file.blank?
 
     warnings = []
+    placement_type = model_name.human
 
     if missing_alt?
-      warnings << :missing_alt
+      warnings << I18n.t("folio.console.soft_warnings.missing_alt",
+                        file_name: file.file_name,
+                        placement_type: placement_type)
     end
 
     if missing_description?
-      warnings << :missing_description
+      warnings << I18n.t("folio.console.soft_warnings.missing_description",
+                        file_name: file.file_name,
+                        file_id: file.id,
+                        placement_type: placement_type)
     end
 
     if file.author.blank? || file.attribution_source.blank? && file.attribution_source_url.blank?
-      warnings << :missing_attribution
+      warnings << I18n.t("folio.console.soft_warnings.missing_attribution",
+                        file_name: file.file_name,
+                        file_id: file.id,
+                        placement_type: placement_type)
     end
 
     warnings

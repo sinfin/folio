@@ -1,18 +1,24 @@
 window.Folio.Stimulus.register('f-c-form-warnings', class extends window.Stimulus.Controller {
-  openFileShowModal (e) {
-    e.preventDefault()
+  static values = { recordKey: String }
 
-    const trigger = e.currentTarget
-    const fileDataJson = trigger.dataset.fileData
-    const fileData = fileDataJson ? JSON.parse(fileDataJson) : null
+  connect () {
+    this._reveal()
+  }
 
-    if (!fileData) return
+  show () {
+    this._markForNextRender()
+    this._reveal()
+  }
 
-    const modal = document.querySelector('.f-c-files-show-modal')
-    if (!modal) return
+  _storageKey () {
+    return `fCFormWarnings:${this.recordKeyValue || window.location.pathname}`
+  }
 
-    modal.dispatchEvent(new window.CustomEvent('f-c-files-show-modal:openForFileData', {
-      detail: { fileData }
-    }))
+  _markForNextRender () {
+    try { window.sessionStorage.setItem(this._storageKey(), '1') } catch (_) {}
+  }
+
+  _reveal () {
+    if (this.element.querySelector('li')) this.element.classList.remove('d-none')
   }
 })

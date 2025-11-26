@@ -1,5 +1,14 @@
 ---
 en:
+  folio:
+    console:
+      form:
+        warnings_component:
+          notification: "Warning: the following criteria are not met"
+      soft_warnings:
+        missing_alt: '"%{file_name}" is missing alt'
+        missing_description: '"%{file_name}" is missing description'
+        missing_attribution: '"%{file_name}" is missing author or source'
   activerecord:
     errors:
       messages:

@@ -3,108 +3,68 @@
 require "test_helper"
 
 class Folio::Console::Form::WarningsComponentTest < Folio::Console::ComponentTest
-  def setup
-    super
-    @superadmin = create(:folio_user, :superadmin)
-    Folio::Current.user = @superadmin
-    Folio::Current.reset_ability!
-  end
-
-  def teardown
-    Folio::Current.user = nil
-    super
-  end
-
   def test_render_with_warnings
-    file1 = create(:folio_file_image, file_name: "test1.jpg")
-    file2 = create(:folio_file_image, file_name: "test2.jpg")
-    warnings = [
-      { file: file1, warnings: [:missing_alt, :missing_attribution] },
-      { file: file2, warnings: [:missing_description] }
-    ]
+    warnings = ["Warning 1", "Warning 2", "Warning 3"]
 
-    with_controller_class(Folio::Console::BaseController) do
-      with_request_url "/console/file/images" do
-        render_inline(Folio::Console::Form::WarningsComponent.new(warnings: warnings, record_key: "test-key"))
-      end
-    end
+    render_inline(Folio::Console::Form::WarningsComponent.new(warnings: warnings, record_key: "test-key"))
 
     assert_selector(".f-c-form-warnings")
-    assert_selector("li", count: 2)
-    assert_text("test1.jpg")
-    assert_text("test2.jpg")
+    assert_selector(".f-c-form-warnings.alert.alert-warning.d-none")
+    assert_selector("li", count: 3)
+    assert_text("Warning 1")
+    assert_text("Warning 2")
+    assert_text("Warning 3")
   end
 
   def test_render_with_empty_warnings
     render_inline(Folio::Console::Form::WarningsComponent.new(warnings: []))
 
-    assert_no_selector(".f-c-form-warnings")
+    assert_selector(".f-c-form-warnings")
+    assert_selector("li", count: 0)
   end
 
-  def test_file_link_when_readable
-    file = create(:folio_file_image, file_name: "test.jpg")
-    warnings = [{ file: file, warnings: [:missing_alt] }]
+  def test_render_with_notification
+    warnings = ["Warning 1"]
 
-    with_controller_class(Folio::Console::BaseController) do
-      with_request_url "/console/file/images" do
-        render_inline(Folio::Console::Form::WarningsComponent.new(warnings: warnings))
-      end
-    end
+    render_inline(Folio::Console::Form::WarningsComponent.new(warnings: warnings))
 
-    assert_selector("span.fw-bold.f-c-form-warnings__file-trigger")
-    assert_text("test.jpg")
+    assert_selector(".fw-bold.mb-2")
+    assert_text(I18n.t("folio.console.form.warnings_component.notification"))
   end
 
-  def test_file_name_plain_text_when_not_readable
-    file = create(:folio_file_image, file_name: "test.jpg")
-    warnings = [{ file: file, warnings: [:missing_alt] }]
+  def test_render_with_record_key
+    warnings = ["Warning 1"]
 
-    # Set user to nil to test non-readable case
-    Folio::Current.user = nil
+    render_inline(Folio::Console::Form::WarningsComponent.new(warnings: warnings, record_key: "articles-123"))
 
-    with_controller_class(Folio::Console::BaseController) do
-      with_request_url "/console/file/images" do
-        render_inline(Folio::Console::Form::WarningsComponent.new(warnings: warnings))
-      end
-    end
-
-    assert_selector("span.fw-bold")
-    assert_no_selector(".f-c-form-warnings__file-trigger")
-    assert_text("test.jpg")
+    assert_selector(".f-c-form-warnings[data-f-c-form-warnings-record-key-value='articles-123']")
   end
 
-  def test_combines_warnings_with_common_prefix
-    file = create(:folio_file_image, file_name: "test.jpg")
-    warnings = [{ file: file, warnings: [:missing_alt, :missing_description] }]
+  def test_render_without_record_key
+    warnings = ["Warning 1"]
 
-    I18n.with_locale(:cs) do
-      with_controller_class(Folio::Console::BaseController) do
-        with_request_url "/console/file/images" do
-          render_inline(Folio::Console::Form::WarningsComponent.new(warnings: warnings))
-        end
-      end
+    render_inline(Folio::Console::Form::WarningsComponent.new(warnings: warnings))
 
-      # Should combine "nemá vyplněný alt, nemá vyplněný popisek" -> "nemá vyplněný alt a popisek"
-      assert_text("nemá vyplněný alt a popisek")
-      assert_no_text("nemá vyplněný alt, nemá vyplněný popisek")
-    end
+    assert_selector(".f-c-form-warnings")
   end
 
-  def test_combines_multiple_warnings_with_common_prefix
-    file = create(:folio_file_image, file_name: "test.jpg")
-    warnings = [{ file: file, warnings: [:missing_alt, :missing_description, :missing_attribution] }]
+  def test_stimulus_controller_data
+    warnings = ["Warning 1"]
 
-    I18n.with_locale(:cs) do
-      with_controller_class(Folio::Console::BaseController) do
-        with_request_url "/console/file/images" do
-          render_inline(Folio::Console::Form::WarningsComponent.new(warnings: warnings))
-        end
-      end
+    render_inline(Folio::Console::Form::WarningsComponent.new(warnings: warnings, record_key: "test-123"))
 
-      # Should combine all warnings: "nemá vyplněný alt, nemá vyplněný popisek, nemá vyplněného autora nebo zdroj"
-      # -> "nemá vyplněný alt, popisek a autora nebo zdroj"
-      assert_text("nemá vyplněný alt, popisek a autora nebo zdroj")
-      assert_no_text("nemá vyplněný alt, nemá vyplněný popisek")
-    end
+    assert_selector(".f-c-form-warnings[data-controller='f-c-form-warnings']")
+    assert_selector("[data-action*='submit@document->f-c-form-warnings#show']")
+  end
+
+  def test_warning_items_structure
+    warnings = ["First warning", "Second warning"]
+
+    render_inline(Folio::Console::Form::WarningsComponent.new(warnings: warnings))
+
+    assert_selector("ul")
+    assert_selector("li.d-flex.align-items-center", count: 2)
+    assert_selector("li:first-child:not(.mt-2)")
+    assert_selector("li:nth-child(2).mt-2")
   end
 end

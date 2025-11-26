@@ -1,5 +1,14 @@
 ---
 cs:
+  folio:
+    console:
+      form:
+        warnings_component:
+          notification: "Varování: následující kritéria nejsou splněna"
+      soft_warnings:
+        missing_alt: '„%{file_name}“ nemá vyplněný alt'
+        missing_description: '„%{file_name}“ nemá vyplněný popisek'
+        missing_attribution: '„%{file_name}“ nemá vyplněného autora nebo zdroj'
   activerecord:
     errors:
       messages:

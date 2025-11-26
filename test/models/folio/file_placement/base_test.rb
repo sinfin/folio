@@ -118,8 +118,8 @@ class Folio::FilePlacement::BaseTest < ActiveSupport::TestCase
     warnings = placement.console_warnings
 
     assert_equal 1, warnings.length
-    assert_match(/alt/i, warnings.first)
-    assert_no_match(/#{image.file_name}/, warnings.first)
+    assert_match(/#{image.file_name}/, warnings.first)
+    assert_match(/alt/, warnings.first.downcase)
   end
 
   test "console_warnings returns warning for missing description" do
@@ -130,8 +130,8 @@ class Folio::FilePlacement::BaseTest < ActiveSupport::TestCase
     warnings = placement.console_warnings
 
     assert_equal 1, warnings.length
+    assert_match(/#{image.file_name}/, warnings.first)
     assert_match(/description|popisek/i, warnings.first)
-    assert_no_match(/#{image.file_name}/, warnings.first)
   end
 
   test "console_warnings returns warning for missing attribution" do
@@ -147,8 +147,8 @@ class Folio::FilePlacement::BaseTest < ActiveSupport::TestCase
     warnings = placement.console_warnings
 
     assert_equal 1, warnings.length
+    assert_match(/#{image.file_name}/, warnings.first)
     assert_match(/attribution|author|autora|zdroj/i, warnings.first)
-    assert_no_match(/#{image.file_name}/, warnings.first)
   end
 
   test "console_warnings returns multiple warnings" do
