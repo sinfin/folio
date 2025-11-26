@@ -411,30 +411,12 @@ module Folio::HasAttachments
     end
 
     def get_files_with_usage_constraints
-      # Get unique file types that have HasUsageConstraints concern
-      file_types_with_constraints = Folio::FilePlacement::Base
-                                      .joins("INNER JOIN folio_files ON folio_files.id = folio_file_placements.file_id")
-        .where(placement_id: id, placement_type: self.class.base_class.name)
-        .distinct
-        .pluck("folio_files.type")
-        .compact
-        .select { |type| type.constantize.included_modules.include?(Folio::File::HasUsageConstraints) }
-        .uniq
+      # Collect placements from in-memory associations to respect unsaved changes from nested attributes
+      placements = collect_all_placements.reject(&:marked_for_destruction?)
 
-      return [] if file_types_with_constraints.empty?
+      # Get files from placements that have HasUsageConstraints concern
+      files = placements.filter_map(&:file).compact.uniq
 
-      file_ids = Folio::File
-        .joins(:file_placements)
-        .where(
-          type: file_types_with_constraints,
-          file_placements: {
-            placement_id: id,
-            placement_type: self.class.base_class.name
-          }
-        )
-        .distinct
-        .pluck(:id)
-
-      Folio::File.where(id: file_ids)
+      files.select { |file| file.class.included_modules.include?(Folio::File::HasUsageConstraints) }
     end
 end
