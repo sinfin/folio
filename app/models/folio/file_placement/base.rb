@@ -242,7 +242,7 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
                         placement_type: placement_type)
     end
 
-    if file.author.blank? || file.attribution_source.blank? && file.attribution_source_url.blank?
+    if file.author.blank? && file.attribution_source.blank? && file.attribution_source_url.blank?
       warnings << I18n.t("folio.console.soft_warnings.missing_attribution",
                         file_name: file.file_name,
                         file_id: file.id,

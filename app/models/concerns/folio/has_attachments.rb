@@ -400,7 +400,7 @@ module Folio::HasAttachments
                                    allowed_sites: file.allowed_sites.pluck(:title).join(", ")))
         end
 
-        unless file.attribution_source.present? && file.author.present
+        if file.author.blank? && file.attribution_source.blank? && file.attribution_source_url.blank?
           errors.add(:base, I18n.t("errors.messages.cannot_publish_with_files_without_media_source",
                                    name: file.file_name))
         end
