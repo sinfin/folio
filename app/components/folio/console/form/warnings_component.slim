@@ -17,4 +17,7 @@
             span.fw-bold data=file_label_data(file)
               = file_label(file)
 
-        '  #{warnings_text(warnings)}
+          span
+            ' :
+
+        = warnings_text(warnings)

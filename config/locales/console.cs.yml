@@ -381,7 +381,7 @@ cs:
           missing_alt: nemá vyplněný alt
           missing_description: nemá vyplněný popisek
           missing_attribution: nemá vyplněného autora nebo zdroj
-          title: "Následující kritéria souborů nejsou splněna:"
+          title: "Následující kritéria souborů nejsou splněna"
 
       share_preview_modal_component:
         title: Sdílet náhled
