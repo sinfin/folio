@@ -77,4 +77,79 @@ class Folio::CraMediaCloud::MonitorProcessingJobTest < ActiveJob::TestCase
     video.reload
     assert_equal "processing_failed", video.aasm_state
   end
+
+  test "upload_is_stuck? returns false for small file within timeout" do
+    video = create(:folio_file_video, file_size: 10.megabytes)
+    upload_started_at = 2.minutes.ago
+
+    job = Folio::CraMediaCloud::MonitorProcessingJob.new
+    result = job.send(:upload_is_stuck?, video, upload_started_at)
+
+    assert_equal false, result
+  end
+
+  test "upload_is_stuck? returns true for small file exceeding timeout" do
+    video = create(:folio_file_video, file_size: 10.megabytes)
+    upload_started_at = 6.minutes.ago
+
+    job = Folio::CraMediaCloud::MonitorProcessingJob.new
+    result = job.send(:upload_is_stuck?, video, upload_started_at)
+
+    assert_equal true, result
+  end
+
+  test "upload_is_stuck? calculates timeout based on file size" do
+    # 200MB file should get: 5 minutes base + (200MB / 100MB) * 1 minute = 7 minutes total
+    video = create(:folio_file_video, file_size: 200.megabytes)
+    
+    # Within timeout (6 minutes < 7 minutes)
+    upload_started_at = 6.minutes.ago
+    job = Folio::CraMediaCloud::MonitorProcessingJob.new
+    result = job.send(:upload_is_stuck?, video, upload_started_at)
+    assert_equal false, result
+
+    # Exceeding timeout (8 minutes > 7 minutes)
+    upload_started_at = 8.minutes.ago
+    result = job.send(:upload_is_stuck?, video, upload_started_at)
+    assert_equal true, result
+  end
+
+  test "upload_is_stuck? caps timeout at 30 minutes for very large files" do
+    # 5GB file would calculate to: 5 minutes + (5000MB / 100MB) * 1 minute = 55 minutes
+    # But should be capped at 30 minutes
+    video = create(:folio_file_video, file_size: 5.gigabytes)
+    
+    # Within capped timeout (25 minutes < 30 minutes)
+    upload_started_at = 25.minutes.ago
+    job = Folio::CraMediaCloud::MonitorProcessingJob.new
+    result = job.send(:upload_is_stuck?, video, upload_started_at)
+    assert_equal false, result
+
+    # Exceeding capped timeout (35 minutes > 30 minutes)
+    upload_started_at = 35.minutes.ago
+    result = job.send(:upload_is_stuck?, video, upload_started_at)
+    assert_equal true, result
+  end
+
+  test "upload_is_stuck? handles nil file_size" do
+    video = create(:folio_file_video, file_size: nil)
+    upload_started_at = 2.minutes.ago
+
+    job = Folio::CraMediaCloud::MonitorProcessingJob.new
+    result = job.send(:upload_is_stuck?, video, upload_started_at)
+
+    # Should use base timeout of 5 minutes
+    assert_equal false, result
+  end
+
+  test "upload_is_stuck? handles zero file_size" do
+    video = create(:folio_file_video, file_size: 0)
+    upload_started_at = 2.minutes.ago
+
+    job = Folio::CraMediaCloud::MonitorProcessingJob.new
+    result = job.send(:upload_is_stuck?, video, upload_started_at)
+
+    # Should use base timeout of 5 minutes
+    assert_equal false, result
+  end
 end

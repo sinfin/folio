@@ -366,6 +366,34 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
       false
     end
 
+    def upload_is_stuck?(video, upload_started_at)
+      rs_data = video.remote_services_data || {}
+      rs_data["upload_progress"]
+
+      # Calculate appropriate timeout based on file size
+      file_size = video.file_size || 0
+      base_timeout = 5.minutes # Base timeout for small files
+
+      # Add extra time for large files (1 minute per 100MB)
+      size_based_timeout = (file_size / 100.megabytes) * 1.minute
+      total_timeout = base_timeout + size_based_timeout
+
+      # Cap the timeout at 30 minutes for very large files
+      total_timeout = [total_timeout, 30.minutes].min
+
+      elapsed_time = Time.current - upload_started_at
+
+      Rails.logger.debug("MonitorProcessingJob: Video ##{video.id} upload timeout check: elapsed #{elapsed_time.round(0)}s, timeout #{total_timeout.round(0)}s")
+
+      # Fallback to time-based check if no progress data
+      if elapsed_time > total_timeout
+        Rails.logger.warn("MonitorProcessingJob: Video ##{video.id} upload timeout: #{elapsed_time.round(0)}s > #{total_timeout.round(0)}s")
+        return true
+      end
+
+      false
+    end
+
     def redis_client
       # Modern Redis connection approach replacing deprecated Redis.current
       @redis_client ||= Redis.new(
