@@ -823,6 +823,140 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::Tiptap::Node
     assert_text("Not empty")
   end
 
+  test "render table with rowspan and colspan" do
+    prose_mirror_node = {
+      "type" => "table",
+      "content" => [
+        {
+          "type" => "tableRow",
+          "content" => [
+            {
+              "type" => "tableCell",
+              "attrs" => {
+                "colspan" => 1,
+                "rowspan" => 2,
+                "colwidth" => nil
+              },
+              "content" => [
+                {
+                  "type" => "paragraph",
+                  "attrs" => {
+                    "textAlign" => nil
+                  },
+                  "content" => [
+                    {
+                      "text" => "rowspan",
+                      "type" => "text"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type" => "tableCell",
+              "attrs" => {
+                "colspan" => 2,
+                "rowspan" => 1,
+                "colwidth" => nil
+              },
+              "content" => [
+                {
+                  "type" => "paragraph",
+                  "attrs" => {
+                    "textAlign" => nil
+                  },
+                  "content" => [
+                    {
+                      "text" => "colspan",
+                      "type" => "text"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type" => "tableRow",
+          "content" => [
+            {
+              "type" => "tableCell",
+              "attrs" => {
+                "colspan" => 1,
+                "rowspan" => 1,
+                "colwidth" => nil
+              },
+              "content" => [
+                {
+                  "type" => "paragraph",
+                  "attrs" => {
+                    "textAlign" => nil
+                  },
+                  "content" => [
+                    {
+                      "text" => "a",
+                      "type" => "text"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type" => "tableCell",
+              "attrs" => {
+                "colspan" => 1,
+                "rowspan" => 1,
+                "colwidth" => nil
+              },
+              "content" => [
+                {
+                  "type" => "paragraph",
+                  "attrs" => {
+                    "textAlign" => nil
+                  },
+                  "content" => [
+                    {
+                      "text" => "b",
+                      "type" => "text"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+
+    render_inline(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: Folio::Page.new, prose_mirror_node:, tiptap_content_information: tiptap_content_information(record: Folio::Page.new)))
+
+    assert_selector(".f-tiptap-table-wrapper")
+    assert_selector(".f-tiptap-table-wrapper table")
+
+    table_wrapper = page.find(".f-tiptap-table-wrapper")
+
+    # Check cell with "rowspan" text - should have rowspan="2" and no colspan (since colspan=1 is default)
+    rowspan_cell = table_wrapper.all("td").find { |td| td.text == "rowspan" }
+    assert_equal "2", rowspan_cell[:rowspan]
+    assert_nil rowspan_cell[:colspan]
+
+    # Check cell with "colspan" text - should have colspan="2" and no rowspan (since rowspan=1 is default)
+    colspan_cell = table_wrapper.all("td").find { |td| td.text == "colspan" }
+    assert_equal "2", colspan_cell[:colspan]
+    assert_nil colspan_cell[:rowspan]
+
+    # Check cell with "a" text - should have no rowspan or colspan attributes (both are 1, which is default)
+    # Find the first one in the second row (after the rowspan cell)
+    cell_a = table_wrapper.all("td").find { |td| td.text == "a" && td[:rowspan].nil? }
+    assert_nil cell_a[:rowspan]
+    assert_nil cell_a[:colspan]
+
+    # Check cell with "b" text - should have no rowspan or colspan attributes (both are 1, which is default)
+    cell_b = table_wrapper.all("td").find { |td| td.text == "b" }
+    assert_nil cell_b[:rowspan]
+    assert_nil cell_b[:colspan]
+  end
+
   test "render folio tiptap styled wrap" do
     prose_mirror_node = {
       "type" => "folioTiptapStyledWrap",

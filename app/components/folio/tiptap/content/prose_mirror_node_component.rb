@@ -74,6 +74,16 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponent < ApplicationComponent
               attrs["style"] ||= ""
               spacer = attrs["style"].empty? ? "" : " "
               attrs["style"] += "#{spacer}#{attr_config['style_property']}: #{value};"
+            elsif attr_config["html_attribute"]
+              html_attr_name = attr_config["html_attribute"]
+              # Only skip when value is 1 for colspan/rowspan (since 1 is the default and can be omitted)
+              if html_attr_name == "colspan" || html_attr_name == "rowspan"
+                if value != 1
+                  attrs[html_attr_name] = value.to_s
+                end
+              else
+                attrs[html_attr_name] = value.to_s
+              end
             end
           end
         end
