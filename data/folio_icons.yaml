@@ -273,6 +273,9 @@ power:
 print:
   width: 24
   height: 24
+qrcode:
+  width: 24
+  height: 24
 quote:
   width: 48
   height: 48
