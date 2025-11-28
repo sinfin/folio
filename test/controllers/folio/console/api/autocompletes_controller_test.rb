@@ -100,6 +100,73 @@ class Folio::Console::Api::AutocompletesControllerTest < Folio::Console::BaseCon
     assert_equal(401, json["errors"][0]["status"])
   end
 
+  test "show pagination" do
+    # Create 30 pages matching query to test pagination
+    30.times { |i| create(:folio_page, title: "Foo page #{i + 1}") }
+
+    # Test page 1
+    get console_api_autocomplete_path(klass: "Folio::Page", q: "Foo", page: 1)
+    json = JSON.parse(response.body)
+    assert_equal 25, json["data"].size
+    assert json["meta"].present?
+    assert_equal 1, json["meta"]["page"]
+    assert_equal 2, json["meta"]["pages"]
+    assert json["meta"]["next"].present?
+
+    # Test page 2
+    get console_api_autocomplete_path(klass: "Folio::Page", q: "Foo", page: 2)
+    json = JSON.parse(response.body)
+    assert_equal 5, json["data"].size
+    assert json["meta"].present?
+    assert_equal 2, json["meta"]["page"]
+    assert_equal 2, json["meta"]["pages"]
+    assert_nil json["meta"]["next"]
+  end
+
+  test "show pagination backward compatibility" do
+    create(:folio_page, title: "Foo bar baz")
+    # Request without page parameter should default to page 1
+    get console_api_autocomplete_path(klass: "Folio::Page", q: "foo")
+    json = JSON.parse(response.body)
+    assert_equal(["Foo bar baz"], json["data"])
+    # Should still work without meta for backward compatibility, but we'll add it
+    assert json["meta"].present? || json["data"].present?
+  end
+
+  test "react_select pagination" do
+    # Create 30 pages matching query to test pagination
+    30.times { |i| create(:folio_page, title: "Foo page #{i + 1}") }
+
+    # Test page 1
+    get react_select_console_api_autocomplete_path(class_names: "Folio::Page", q: "Foo", page: 1)
+    json = JSON.parse(response.body)
+    assert_equal 25, json["data"].size
+    assert json["meta"].present?
+    assert_equal 1, json["meta"]["page"]
+    assert_equal 2, json["meta"]["pages"]
+    assert json["meta"]["next"].present?
+
+    # Test page 2
+    get react_select_console_api_autocomplete_path(class_names: "Folio::Page", q: "Foo", page: 2)
+    json = JSON.parse(response.body)
+    assert_equal 5, json["data"].size
+    assert json["meta"].present?
+    assert_equal 2, json["meta"]["page"]
+    assert_equal 2, json["meta"]["pages"]
+    assert_nil json["meta"]["next"]
+  end
+
+  test "react_select pagination backward compatibility" do
+    create(:folio_page, title: "Foo bar baz")
+    # Request without page parameter should default to page 1
+    get react_select_console_api_autocomplete_path(class_names: "Folio::Page", q: "foo")
+    json = JSON.parse(response.body)
+    assert_equal 1, json["data"].size
+    assert_equal "Foo bar baz", json["data"][0]["text"]
+    # Should still work without meta for backward compatibility, but we'll add it
+    assert json["meta"].present? || json["data"].present?
+  end
+
   test "it respects accessible_by scope" do
     same_part = "emailme"
     superadmin = create(:folio_user, superadmin: true, email: "#{same_part}@supedamin.com", first_name: "Superadmin")

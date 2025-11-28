@@ -1,10 +1,13 @@
 # frozen_string_literal: true
 
 class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseController
+  AUTOCOMPLETE_PAGY_ITEMS = 25
+
   def show
     klass = params.require(:klass).safe_constantize
     q = params[:q]
     p_order = params[:order_scope]
+    p_page = params[:page]&.to_i || 1
 
     if klass &&
        klass < ActiveRecord::Base &&
@@ -34,12 +37,10 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
         scope = scope.unscope(:order).send(p_order)
       end
 
-      scope = scope.limit(25)
-                   .filter_map(&:to_autocomplete_label)
-                   .uniq
-                   .first(10)
+      pagination, records = pagy(scope, page: p_page, items: AUTOCOMPLETE_PAGY_ITEMS)
+      scope = records.filter_map(&:to_autocomplete_label).uniq
 
-      render json: { data: scope }
+      render json: { data: scope, meta: meta_from_pagy(pagination) }
     else
       render json: { data: [] }
     end
@@ -135,7 +136,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
         scope = scope.unscope(:order).send(p_order)
       end
 
-      render_selectize_options(scope.limit(25), label_method: params[:label_method])
+      render_selectize_options(scope.limit(AUTOCOMPLETE_PAGY_ITEMS), label_method: params[:label_method])
     else
       render_selectize_options([])
     end
@@ -169,7 +170,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
         scope = scope.includes(*klass.folio_console_select2_includes)
       end
 
-      pagination, records = pagy(scope, items: 25)
+      pagination, records = pagy(scope, items: AUTOCOMPLETE_PAGY_ITEMS)
 
       render_select2_options(records,
                              label_method: params[:label_method],
@@ -185,13 +186,16 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
     q = params[:q]
     p_order = params[:order_scope]
     p_without = params[:without]
+    p_page = params[:page]&.to_i || 1
 
     if class_names
-      response = []
+      []
 
       show_model_names = class_names.size > 1
 
-      class_names.each do |class_name|
+      # For single class, use pagy; for multiple classes, collect all then paginate array
+      if class_names.size == 1
+        class_name = class_names.first
         klass = class_name.safe_constantize
         if klass && klass < ActiveRecord::Base
           show_model_names ||= klass.try(:folio_console_show_model_names_in_react_select?)
@@ -221,7 +225,9 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
 
           scope = filter_by_atom_setting_params(scope)
 
-          response += scope.first(30).map do |record|
+          pagination, records = pagy(scope, page: p_page, items: AUTOCOMPLETE_PAGY_ITEMS)
+
+          response = records.map do |record|
             text = record.to_console_label
             text = "#{text} – #{record.class.model_name.human}" if show_model_names
 
@@ -233,10 +239,84 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
               type: klass.to_s
             }
           end
+
+          render json: { data: response, meta: meta_from_pagy(pagination) }
+          return
         end
+      else
+        # Multiple classes: collect from each, then paginate combined array
+        all_records = []
+
+        class_names.each do |class_name|
+          klass = class_name.safe_constantize
+          if klass && klass < ActiveRecord::Base
+            show_model_names ||= klass.try(:folio_console_show_model_names_in_react_select?)
+
+            scope = klass.accessible_by(Folio::Current.ability)
+
+            scope = scope.by_site(Folio::Current.site) if scope.respond_to?(:by_site)
+            scope = apply_param_scope(scope)
+
+            if p_without.present?
+              scope = scope.where.not(id: p_without.split(","))
+            end
+
+            if q.present?
+              scope = scope.by_label_query(q)
+            else
+              scope = scope.all
+            end
+
+            if klass.respond_to?(:filter_by_atom_form_fields)
+              scope = scope.filter_by_atom_form_fields(params[:atom_form_fields] || {})
+            end
+
+            if p_order.present? && scope.respond_to?(p_order)
+              scope = scope.unscope(:order).send(p_order)
+            end
+
+            scope = filter_by_atom_setting_params(scope)
+
+            # Get enough records to cover pagination (estimate pages needed)
+            # For simplicity, get AUTOCOMPLETE_PAGY_ITEMS * 2 from each class
+            all_records += scope.limit(AUTOCOMPLETE_PAGY_ITEMS * 2).to_a
+          end
+        end
+
+        # Paginate the combined array manually
+        total_count = all_records.size
+        total_pages = (total_count.to_f / AUTOCOMPLETE_PAGY_ITEMS).ceil
+        offset = (p_page - 1) * AUTOCOMPLETE_PAGY_ITEMS
+        paginated_records = all_records[offset, AUTOCOMPLETE_PAGY_ITEMS] || []
+
+        response = paginated_records.map do |record|
+          text = record.to_console_label
+          text = "#{text} – #{record.class.model_name.human}" if show_model_names
+
+          {
+            id: record.id,
+            text:,
+            label: text,
+            value: Folio::Console::StiHelper.sti_record_to_select_value(record),
+            type: record.class.to_s
+          }
+        end
+
+        # Create pagination meta manually
+        pagination_meta = {
+          page: p_page,
+          pages: total_pages,
+          from: offset + 1,
+          to: [offset + AUTOCOMPLETE_PAGY_ITEMS, total_count].min,
+          count: total_count,
+          next: p_page < total_pages ? p_page + 1 : nil
+        }
+
+        render json: { data: response, meta: pagination_meta }
+        return
       end
 
-      render json: { data: response }
+      render json: { data: [] }
     else
       render json: { data: [] }
     end

@@ -5,6 +5,7 @@ import ReactSelect, { components } from 'react-select'
 import CreatableSelect from 'react-select/creatable'
 import AsyncSelect from 'react-select/async'
 import AsyncCreatableSelect from 'react-select/async-creatable'
+import { AsyncPaginate } from 'react-select-async-paginate'
 
 import { apiGet } from 'utils/api'
 import settingsToHash from 'utils/settingsToHash'
@@ -14,6 +15,8 @@ import formatOption from './formatOption'
 import formatOptions from './formatOptions'
 import formatCreateLabel from './formatCreateLabel'
 import makeNoOptionsMessage from './makeNoOptionsMessage'
+
+const AUTOCOMPLETE_PAGY_ITEMS = 25
 
 const Input = (props) => {
   const { dataTestId } = props.selectProps
@@ -84,67 +87,195 @@ class Select extends React.Component {
     if (!createable) SelectComponent = ReactSelect
 
     if (async) {
-      if (createable) {
-        SelectComponent = AsyncCreatableSelect
-      } else {
-        SelectComponent = AsyncSelect
-      }
-
-      loadOptionsRaw = (inputValue, handle) => {
-        let data = ''
-        const params = new URLSearchParams()
-
-        if (asyncData) {
-          Object.keys(asyncData).forEach((key) => {
-            params.set(`atom_form_fields[${key}]`, asyncData[key])
-          })
+      // Use AsyncPaginate for pagination support, but fall back to AsyncSelect for selectize mode
+      if (selectize) {
+        // Selectize mode doesn't support pagination, use old AsyncSelect
+        if (createable) {
+          SelectComponent = AsyncCreatableSelect
+        } else {
+          SelectComponent = AsyncSelect
         }
 
-        if (addAtomSettings) {
-          const settingsUrlData = {}
-          const settingsHash = settingsToHash()
+        loadOptionsRaw = (inputValue, handle) => {
+          let data = ''
+          const params = new URLSearchParams()
 
-          Object.keys(settingsHash).forEach((key) => {
-            if (key !== 'loading') {
-              Object.keys(settingsHash[key]).forEach((locale) => {
-                let fullKey
+          if (asyncData) {
+            Object.keys(asyncData).forEach((key) => {
+              params.set(`atom_form_fields[${key}]`, asyncData[key])
+            })
+          }
 
-                if (locale && locale !== 'null') {
-                  fullKey = `by_atom_setting_${key}_${locale}`
-                } else {
-                  fullKey = `by_atom_setting_${key}`
-                }
+          if (addAtomSettings) {
+            const settingsUrlData = {}
+            const settingsHash = settingsToHash()
 
-                settingsUrlData[fullKey] = settingsHash[key][locale]
-              })
-            }
-          })
+            Object.keys(settingsHash).forEach((key) => {
+              if (key !== 'loading') {
+                Object.keys(settingsHash[key]).forEach((locale) => {
+                  let fullKey
 
-          Object.keys(settingsUrlData).forEach((key) => {
-            params.set(key, settingsUrlData[key])
-          })
-        }
+                  if (locale && locale !== 'null') {
+                    fullKey = `by_atom_setting_${key}_${locale}`
+                  } else {
+                    fullKey = `by_atom_setting_${key}`
+                  }
 
-        data = params.toString()
-        if (data !== '') data = `&${data}`
+                  settingsUrlData[fullKey] = settingsHash[key][locale]
+                })
+              }
+            })
 
-        const join = async.indexOf('?') === -1 ? '?' : '&'
-        apiGet(`${async}${join}q=${inputValue}${data}`)
-          .catch(() => handle([]))
-          .then((res) => {
-            if (res) {
-              if (selectize) {
+            Object.keys(settingsUrlData).forEach((key) => {
+              params.set(key, settingsUrlData[key])
+            })
+          }
+
+          data = params.toString()
+          if (data !== '') data = `&${data}`
+
+          const join = async.indexOf('?') === -1 ? '?' : '&'
+          apiGet(`${async}${join}q=${inputValue}${data}`)
+            .catch(() => handle([]))
+            .then((res) => {
+              if (res) {
                 handle(res.data)
               } else {
-                handle(formatOptions(res.data))
+                handle([])
+              }
+            })
+        }
+      } else {
+        // Use AsyncPaginate for pagination support
+        // Note: AsyncCreatablePaginate is not available in older versions compatible with React 16
+        // So we use AsyncCreatableSelect (without pagination) for creatable selects
+        if (createable) {
+          SelectComponent = AsyncCreatableSelect
+          // For creatable selects, use the old loadOptions format without pagination
+          loadOptionsRaw = (inputValue, handle) => {
+            let data = ''
+            const params = new URLSearchParams()
+
+            if (asyncData) {
+              Object.keys(asyncData).forEach((key) => {
+                params.set(`atom_form_fields[${key}]`, asyncData[key])
+              })
+            }
+
+            if (addAtomSettings) {
+              const settingsUrlData = {}
+              const settingsHash = settingsToHash()
+
+              Object.keys(settingsHash).forEach((key) => {
+                if (key !== 'loading') {
+                  Object.keys(settingsHash[key]).forEach((locale) => {
+                    let fullKey
+
+                    if (locale && locale !== 'null') {
+                      fullKey = `by_atom_setting_${key}_${locale}`
+                    } else {
+                      fullKey = `by_atom_setting_${key}`
+                    }
+
+                    settingsUrlData[fullKey] = settingsHash[key][locale]
+                  })
+                }
+              })
+
+              Object.keys(settingsUrlData).forEach((key) => {
+                params.set(key, settingsUrlData[key])
+              })
+            }
+
+            data = params.toString()
+            if (data !== '') data = `&${data}`
+
+            const join = async.indexOf('?') === -1 ? '?' : '&'
+            apiGet(`${async}${join}q=${inputValue}${data}`)
+              .catch(() => handle([]))
+              .then((res) => {
+                if (res) {
+                  handle(formatOptions(res.data))
+                } else {
+                  handle([])
+                }
+              })
+          }
+        } else {
+          SelectComponent = AsyncPaginate
+
+          loadOptionsRaw = async (inputValue, loadedOptions, additional) => {
+          let data = ''
+          const params = new URLSearchParams()
+
+          // Calculate page from loadedOptions length
+          const page = Math.floor(loadedOptions.length / AUTOCOMPLETE_PAGY_ITEMS) + 1
+          params.set('page', page)
+
+          if (asyncData) {
+            Object.keys(asyncData).forEach((key) => {
+              params.set(`atom_form_fields[${key}]`, asyncData[key])
+            })
+          }
+
+          if (addAtomSettings) {
+            const settingsUrlData = {}
+            const settingsHash = settingsToHash()
+
+            Object.keys(settingsHash).forEach((key) => {
+              if (key !== 'loading') {
+                Object.keys(settingsHash[key]).forEach((locale) => {
+                  let fullKey
+
+                  if (locale && locale !== 'null') {
+                    fullKey = `by_atom_setting_${key}_${locale}`
+                  } else {
+                    fullKey = `by_atom_setting_${key}`
+                  }
+
+                  settingsUrlData[fullKey] = settingsHash[key][locale]
+                })
+              }
+            })
+
+            Object.keys(settingsUrlData).forEach((key) => {
+              params.set(key, settingsUrlData[key])
+            })
+          }
+
+          data = params.toString()
+          if (data !== '') data = `&${data}`
+
+          const join = async.indexOf('?') === -1 ? '?' : '&'
+          try {
+            const res = await apiGet(`${async}${join}q=${inputValue}${data}`)
+            if (res) {
+              const formattedOptions = formatOptions(res.data)
+              // Check if there are more pages
+              const hasMore = res.meta && res.meta.page < res.meta.pages
+              return {
+                options: formattedOptions,
+                hasMore: hasMore
               }
             } else {
-              handle([])
+              return {
+                options: [],
+                hasMore: false
+              }
             }
-          })
+          } catch (error) {
+            return {
+              options: [],
+              hasMore: false
+            }
+          }
+          }
+        }
       }
 
-      loadOptions = debounce(loadOptionsRaw, 300, { leading: true, trailing: true })
+      if (loadOptionsRaw) {
+        loadOptions = debounce(loadOptionsRaw, 300, { leading: true, trailing: true })
+      }
     }
 
     let formattedValue = null
