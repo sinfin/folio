@@ -49,7 +49,7 @@ class OrderedMultiselectApp extends React.Component {
       // Fallback to value if no id available
       itemId = option.value
     }
-    
+
     // Transform to {id, label} format expected by Redux
     const item = {
       id: itemId,

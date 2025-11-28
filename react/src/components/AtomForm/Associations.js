@@ -14,14 +14,14 @@ const recordToReactSelectOption = (record) => {
 
 const reactSelectOptionToRecord = (option) => {
   if (!option) return null
-  
+
   // Extract id and type with fallbacks
   // option.value is the STI string like "Economia::List::Category -=- 48"
   // option.id is the numeric ID from the API response
   // option.type is the class name like "Economia::List::Category"
   let id = option.id
   let type = option.type
-  
+
   if (id === undefined && typeof option.value === 'string' && option.value.includes(' -=- ')) {
     // Extract numeric ID and type from STI format: "Class -=- 48" -> {id: 48, type: "Class"}
     const parts = option.value.split(' -=- ')
@@ -35,7 +35,7 @@ const reactSelectOptionToRecord = (option) => {
     // Fallback to value if no id available
     id = option.value
   }
-  
+
   // Pass through all fields from option, ensuring required ones are set
   return {
     ...option, // Pass through all fields (id, text, label, value, type, etc.)
@@ -59,7 +59,7 @@ class Associations extends React.PureComponent {
   }
 
   render () {
-    const { atom, asyncData, index, onBlur, onFocus, addAtomSettings } = this.props
+    const { atom, asyncData, onBlur, onFocus, addAtomSettings } = this.props
     const { associations } = atom.record.meta
 
     return (

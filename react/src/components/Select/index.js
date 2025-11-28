@@ -3,7 +3,6 @@ import { debounce } from 'lodash'
 
 import ReactSelect, { components } from 'react-select'
 import CreatableSelect from 'react-select/creatable'
-import AsyncSelect from 'react-select/async'
 import AsyncCreatableSelect from 'react-select/async-creatable'
 import { AsyncPaginate } from 'react-select-async-paginate'
 
@@ -83,7 +82,7 @@ class Select extends React.Component {
 
   render () {
     const { isClearable, createable, value, options, rawOptions, onChange, innerRef, async, asyncData, addAtomSettings, defaultOptions, placeholder, dataTestId, menuPlacement, ...rest } = this.props
-    
+
     // Format value early so we can use it in loadOptions
     let formattedValue = null
     if (value) {
@@ -215,95 +214,113 @@ class Select extends React.Component {
           SelectComponent = AsyncPaginate
 
           loadOptionsRaw = async (inputValue, loadedOptions, additional) => {
-          let data = ''
-          const params = new URLSearchParams()
+            let data = ''
+            const params = new URLSearchParams()
 
-          // Calculate page from loadedOptions length
-          const page = Math.floor(loadedOptions.length / AUTOCOMPLETE_PAGY_ITEMS) + 1
-          params.set('page', page)
+            // Calculate page from loadedOptions length
+            const page = Math.floor(loadedOptions.length / AUTOCOMPLETE_PAGY_ITEMS) + 1
+            params.set('page', page)
 
-          if (asyncData) {
-            Object.keys(asyncData).forEach((key) => {
-              params.set(`atom_form_fields[${key}]`, asyncData[key])
-            })
-          }
+            if (asyncData) {
+              Object.keys(asyncData).forEach((key) => {
+                params.set(`atom_form_fields[${key}]`, asyncData[key])
+              })
+            }
 
-          if (addAtomSettings) {
-            const settingsUrlData = {}
-            const settingsHash = settingsToHash()
+            if (addAtomSettings) {
+              const settingsUrlData = {}
+              const settingsHash = settingsToHash()
 
-            Object.keys(settingsHash).forEach((key) => {
-              if (key !== 'loading') {
-                Object.keys(settingsHash[key]).forEach((locale) => {
-                  let fullKey
+              Object.keys(settingsHash).forEach((key) => {
+                if (key !== 'loading') {
+                  Object.keys(settingsHash[key]).forEach((locale) => {
+                    let fullKey
 
-                  if (locale && locale !== 'null') {
-                    fullKey = `by_atom_setting_${key}_${locale}`
-                  } else {
-                    fullKey = `by_atom_setting_${key}`
-                  }
+                    if (locale && locale !== 'null') {
+                      fullKey = `by_atom_setting_${key}_${locale}`
+                    } else {
+                      fullKey = `by_atom_setting_${key}`
+                    }
 
-                  settingsUrlData[fullKey] = settingsHash[key][locale]
-                })
-              }
-            })
+                    settingsUrlData[fullKey] = settingsHash[key][locale]
+                  })
+                }
+              })
 
-            Object.keys(settingsUrlData).forEach((key) => {
-              params.set(key, settingsUrlData[key])
-            })
-          }
+              Object.keys(settingsUrlData).forEach((key) => {
+                params.set(key, settingsUrlData[key])
+              })
+            }
 
-          data = params.toString()
-          if (data !== '') data = `&${data}`
+            data = params.toString()
+            if (data !== '') data = `&${data}`
 
-          const join = async.indexOf('?') === -1 ? '?' : '&'
-          try {
-            const res = await apiGet(`${async}${join}q=${inputValue}${data}`)
-            if (res) {
+            const join = async.indexOf('?') === -1 ? '?' : '&'
+            try {
+              const res = await apiGet(`${async}${join}q=${inputValue}${data}`)
+              if (res) {
               // Transform API response, passing through all fields
               // Ensure value and label are always set for react-select compatibility
-              const formattedOptions = res.data.map((item) => ({
-                ...item, // Pass through all fields from API (id, text, label, value, type, etc.)
-                value: item.value || item.id, // Ensure value is set for react-select
-                label: item.label || item.text || '' // Ensure label is set for react-select
-              }))
-              
-              // Ensure selected value is included in options so react-select can display it
-              // This is critical for AsyncSelect/AsyncPaginate which only use options from loadOptions
-              // Use a Set to track existing values to prevent duplicates
-              const existingValues = new Set(formattedOptions.map(opt => opt.value))
-              const finalOptions = [...formattedOptions]
-              
-              // Only include selected value if:
-              // 1. No search query (inputValue is empty/undefined), OR
-              // 2. Selected value matches the search query (label contains inputValue)
-              const shouldIncludeSelected = !inputValue || inputValue.trim() === ''
-              
-              if (formattedValue && !this.props.isMulti && shouldIncludeSelected) {
-                const selectedValue = formattedValue
-                // Only add if not already present in the API results
-                if (selectedValue && selectedValue.value && !existingValues.has(selectedValue.value)) {
+                const formattedOptions = res.data.map((item) => ({
+                  ...item, // Pass through all fields from API (id, text, label, value, type, etc.)
+                  value: item.value || item.id, // Ensure value is set for react-select
+                  label: item.label || item.text || '' // Ensure label is set for react-select
+                }))
+
+                // Ensure selected value is included in options so react-select can display it
+                // This is critical for AsyncSelect/AsyncPaginate which only use options from loadOptions
+                // Use a Set to track existing values to prevent duplicates
+                const existingValues = new Set(formattedOptions.map(opt => opt.value))
+                const finalOptions = [...formattedOptions]
+
+                // Only include selected value if:
+                // 1. No search query (inputValue is empty/undefined), OR
+                // 2. Selected value matches the search query (label contains inputValue)
+                const shouldIncludeSelected = !inputValue || inputValue.trim() === ''
+
+                if (formattedValue && !this.props.isMulti && shouldIncludeSelected) {
+                  const selectedValue = formattedValue
+                  // Only add if not already present in the API results
+                  if (selectedValue && selectedValue.value && !existingValues.has(selectedValue.value)) {
                   // Prepend selected value so it appears first
-                  finalOptions.unshift(selectedValue)
-                  existingValues.add(selectedValue.value)
-                }
-              } else if (formattedValue && this.props.isMulti && Array.isArray(formattedValue) && shouldIncludeSelected) {
-                formattedValue.forEach(selectedVal => {
-                  if (selectedVal && selectedVal.value && !existingValues.has(selectedVal.value)) {
-                    finalOptions.push(selectedVal)
-                    existingValues.add(selectedVal.value)
+                    finalOptions.unshift(selectedValue)
+                    existingValues.add(selectedValue.value)
                   }
-                })
-              }
-              
-              // Check if there are more pages
-              const hasMore = res.meta && res.meta.page < res.meta.pages
-              return {
-                options: finalOptions,
-                hasMore: hasMore
-              }
-            } else {
+                } else if (formattedValue && this.props.isMulti && Array.isArray(formattedValue) && shouldIncludeSelected) {
+                  formattedValue.forEach(selectedVal => {
+                    if (selectedVal && selectedVal.value && !existingValues.has(selectedVal.value)) {
+                      finalOptions.push(selectedVal)
+                      existingValues.add(selectedVal.value)
+                    }
+                  })
+                }
+
+                // Check if there are more pages
+                const hasMore = res.meta && res.meta.page < res.meta.pages
+                return {
+                  options: finalOptions,
+                  hasMore: hasMore
+                }
+              } else {
               // Only include selected value if no search query
+                const shouldIncludeSelected = !inputValue || inputValue.trim() === ''
+                const finalOptions = []
+                if (shouldIncludeSelected) {
+                  if (formattedValue && !this.props.isMulti && formattedValue.value) {
+                    finalOptions.push(formattedValue)
+                  } else if (formattedValue && this.props.isMulti && Array.isArray(formattedValue)) {
+                    formattedValue.forEach(val => {
+                      if (val && val.value) finalOptions.push(val)
+                    })
+                  }
+                }
+                return {
+                  options: finalOptions,
+                  hasMore: false
+                }
+              }
+            } catch (error) {
+            // Only include selected value if no search query
               const shouldIncludeSelected = !inputValue || inputValue.trim() === ''
               const finalOptions = []
               if (shouldIncludeSelected) {
@@ -320,24 +337,6 @@ class Select extends React.Component {
                 hasMore: false
               }
             }
-          } catch (error) {
-            // Only include selected value if no search query
-            const shouldIncludeSelected = !inputValue || inputValue.trim() === ''
-            const finalOptions = []
-            if (shouldIncludeSelected) {
-              if (formattedValue && !this.props.isMulti && formattedValue.value) {
-                finalOptions.push(formattedValue)
-              } else if (formattedValue && this.props.isMulti && Array.isArray(formattedValue)) {
-                formattedValue.forEach(val => {
-                  if (val && val.value) finalOptions.push(val)
-                })
-              }
-            }
-            return {
-              options: finalOptions,
-              hasMore: false
-            }
-          }
           }
         }
       }
@@ -357,7 +356,7 @@ class Select extends React.Component {
     // For async selects, loadOptions handles including the selected value
     // So we don't need to modify defaultOptions - let react-select handle it normally
     // The selected value will be included via loadOptions when it's called
-    let handledDefaultOptions = defaultOptions
+    const handledDefaultOptions = defaultOptions
 
     return (
       <SelectComponent
