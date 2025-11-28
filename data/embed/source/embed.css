@@ -127,3 +127,9 @@
 .f-embed__container--twitter .f-embed__loader:not(:last-child) {
   display: none;
 }
+
+.f-embed__blockquote--instagram {
+  max-width: 540px;
+  width: -webkit-calc(100% - 2px);
+  width: calc(100% - 2px);
+}
