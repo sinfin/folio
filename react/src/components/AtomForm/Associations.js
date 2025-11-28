@@ -14,24 +14,35 @@ const recordToReactSelectOption = (record) => {
 
 const reactSelectOptionToRecord = (option) => {
   if (!option) return null
+  
+  // Extract id and type with fallbacks
   // option.value is the STI string like "Economia::List::Category -=- 48"
   // option.id is the numeric ID from the API response
-  // Use option.id if available, otherwise extract ID from STI value string
+  // option.type is the class name like "Economia::List::Category"
   let id = option.id
+  let type = option.type
+  
   if (id === undefined && typeof option.value === 'string' && option.value.includes(' -=- ')) {
-    // Extract numeric ID from STI format: "Class -=- 48" -> 48
+    // Extract numeric ID and type from STI format: "Class -=- 48" -> {id: 48, type: "Class"}
     const parts = option.value.split(' -=- ')
-    id = parts.length > 1 ? parts[1] : option.value
+    if (parts.length > 1) {
+      id = parts[1]
+      type = type || parts[0] // Use type from option if available, otherwise extract from value
+    } else {
+      id = option.value
+    }
   } else if (id === undefined) {
     // Fallback to value if no id available
     id = option.value
   }
   
+  // Pass through all fields from option, ensuring required ones are set
   return {
-    id: id,
-    text: option.label,
-    label: option.label,
-    value: option.value
+    ...option, // Pass through all fields (id, text, label, value, type, etc.)
+    id: id, // Override with extracted/fallback id
+    type: type || option.type, // Ensure type is set
+    text: option.text || option.label, // Ensure text is set
+    label: option.label || option.text || '' // Ensure label is set
   }
 }
 

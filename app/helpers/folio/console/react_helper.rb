@@ -182,12 +182,12 @@ module Folio::Console::ReactHelper
     end
 
     url = Folio::Engine.routes.url_helpers.url_for([
-                                                     :selectize,
+                                                     :react_select,
                                                      :console,
                                                      :api,
                                                      :autocomplete,
                                                      {
-                                                       klass: through_klass.to_s,
+                                                       class_names: through_klass.to_s,
                                                        scope: scope,
                                                        order_scope: order_scope,
                                                        only_path: true

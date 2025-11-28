@@ -269,12 +269,12 @@ class Select extends React.Component {
           try {
             const res = await apiGet(`${async}${join}q=${inputValue}${data}`)
             if (res) {
-              // Transform API response from {id, text, label, value, type} to {value, label, id}
-              // Keep id for proper record conversion later
+              // Transform API response, passing through all fields
+              // Ensure value and label are always set for react-select compatibility
               const formattedOptions = res.data.map((item) => ({
-                value: item.value || item.id,
-                label: item.label || item.text || '',
-                id: item.id // Preserve id for record conversion
+                ...item, // Pass through all fields from API (id, text, label, value, type, etc.)
+                value: item.value || item.id, // Ensure value is set for react-select
+                label: item.label || item.text || '' // Ensure label is set for react-select
               }))
               
               // Ensure selected value is included in options so react-select can display it
