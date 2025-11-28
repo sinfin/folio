@@ -42,12 +42,16 @@ class Select extends React.Component {
       return this.props.onChange(value)
     } else if (this.props.isMulti) {
       if (value) {
-        return this.props.onChange(value.map((item) => item.value))
+        // For multi-select, pass array of option objects (not just values)
+        // This allows parent components to access full option data (value, label, id, etc.)
+        return this.props.onChange(value)
       } else {
         return this.props.onChange([])
       }
     } else {
-      return this.props.onChange(value ? value.value : null)
+      // For single select, pass the full option object (not just value.value)
+      // This allows parent components to access full option data (value, label, id, etc.)
+      return this.props.onChange(value)
     }
   }
 
@@ -81,6 +85,21 @@ class Select extends React.Component {
 
   render () {
     const { isClearable, createable, value, options, rawOptions, onChange, innerRef, selectize, async, asyncData, addAtomSettings, defaultOptions, placeholder, dataTestId, menuPlacement, ...rest } = this.props
+    
+    // Format value early so we can use it in loadOptions
+    let formattedValue = null
+    if (value) {
+      if (selectize) {
+        formattedValue = value
+      } else {
+        // Check if value is already in react-select format {value, label}
+        if (typeof value === 'object' && value !== null && 'value' in value && 'label' in value) {
+          formattedValue = this.props.isMulti ? [value] : value
+        } else {
+          formattedValue = this.props.isMulti ? formatOptions(value) : formatOption(value)
+        }
+      }
+    }
     let SelectComponent = CreatableSelect
     let loadOptions, loadOptionsRaw
 
@@ -250,22 +269,81 @@ class Select extends React.Component {
           try {
             const res = await apiGet(`${async}${join}q=${inputValue}${data}`)
             if (res) {
-              const formattedOptions = formatOptions(res.data)
+              // Transform API response from {id, text, label, value, type} to {value, label, id}
+              // Keep id for proper record conversion later
+              const formattedOptions = res.data.map((item) => ({
+                value: item.value || item.id,
+                label: item.label || item.text || '',
+                id: item.id // Preserve id for record conversion
+              }))
+              
+              // Ensure selected value is included in options so react-select can display it
+              // This is critical for AsyncSelect/AsyncPaginate which only use options from loadOptions
+              // Use a Set to track existing values to prevent duplicates
+              const existingValues = new Set(formattedOptions.map(opt => opt.value))
+              const finalOptions = [...formattedOptions]
+              
+              // Only include selected value if:
+              // 1. No search query (inputValue is empty/undefined), OR
+              // 2. Selected value matches the search query (label contains inputValue)
+              const shouldIncludeSelected = !inputValue || inputValue.trim() === ''
+              
+              if (formattedValue && !this.props.isMulti && shouldIncludeSelected) {
+                const selectedValue = formattedValue
+                // Only add if not already present in the API results
+                if (selectedValue && selectedValue.value && !existingValues.has(selectedValue.value)) {
+                  // Prepend selected value so it appears first
+                  finalOptions.unshift(selectedValue)
+                  existingValues.add(selectedValue.value)
+                }
+              } else if (formattedValue && this.props.isMulti && Array.isArray(formattedValue) && shouldIncludeSelected) {
+                formattedValue.forEach(selectedVal => {
+                  if (selectedVal && selectedVal.value && !existingValues.has(selectedVal.value)) {
+                    finalOptions.push(selectedVal)
+                    existingValues.add(selectedVal.value)
+                  }
+                })
+              }
+              
               // Check if there are more pages
               const hasMore = res.meta && res.meta.page < res.meta.pages
               return {
-                options: formattedOptions,
+                options: finalOptions,
                 hasMore: hasMore
               }
             } else {
+              // Only include selected value if no search query
+              const shouldIncludeSelected = !inputValue || inputValue.trim() === ''
+              const finalOptions = []
+              if (shouldIncludeSelected) {
+                if (formattedValue && !this.props.isMulti && formattedValue.value) {
+                  finalOptions.push(formattedValue)
+                } else if (formattedValue && this.props.isMulti && Array.isArray(formattedValue)) {
+                  formattedValue.forEach(val => {
+                    if (val && val.value) finalOptions.push(val)
+                  })
+                }
+              }
               return {
-                options: [],
+                options: finalOptions,
                 hasMore: false
               }
             }
           } catch (error) {
+            // Only include selected value if no search query
+            const shouldIncludeSelected = !inputValue || inputValue.trim() === ''
+            const finalOptions = []
+            if (shouldIncludeSelected) {
+              if (formattedValue && !this.props.isMulti && formattedValue.value) {
+                finalOptions.push(formattedValue)
+              } else if (formattedValue && this.props.isMulti && Array.isArray(formattedValue)) {
+                formattedValue.forEach(val => {
+                  if (val && val.value) finalOptions.push(val)
+                })
+              }
+            }
             return {
-              options: [],
+              options: finalOptions,
               hasMore: false
             }
           }
@@ -278,22 +356,17 @@ class Select extends React.Component {
       }
     }
 
-    let formattedValue = null
-
-    if (value) {
-      if (selectize) {
-        formattedValue = value
-      } else {
-        formattedValue = this.props.isMulti ? formatOptions(value) : formatOption(value)
-      }
-    }
-
     let handledOptions
     if (options) {
       handledOptions = formatOptions(options)
     } else if (rawOptions) {
       handledOptions = rawOptions
     }
+
+    // For async selects, loadOptions handles including the selected value
+    // So we don't need to modify defaultOptions - let react-select handle it normally
+    // The selected value will be included via loadOptions when it's called
+    let handledDefaultOptions = defaultOptions
 
     return (
       <SelectComponent
@@ -302,7 +375,7 @@ class Select extends React.Component {
         classNamePrefix='react-select'
         value={formattedValue}
         options={handledOptions}
-        defaultOptions={defaultOptions}
+        defaultOptions={handledDefaultOptions}
         formatCreateLabel={formatCreateLabel}
         onChange={this.onChange}
         noOptionsMessage={makeNoOptionsMessage(options)}

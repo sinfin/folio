@@ -35,7 +35,13 @@ class OrderedMultiselectApp extends React.Component {
     this.onSelect(e.detail.entry)
   }
 
-  onSelect = (item) => {
+  onSelect = (option) => {
+    // option is {value, label} from react-select
+    // Transform to {id, label} format expected by Redux
+    const item = {
+      id: option.value,
+      label: option.label
+    }
     document.querySelector('.f-c-r-ordered-multiselect-app').dispatchEvent(new window.Event('change', { bubbles: true }))
     this.props.dispatch(addItem(item))
   }
@@ -109,7 +115,6 @@ class OrderedMultiselectApp extends React.Component {
           defaultOptions
           addAtomSettings
           menuPlacement={orderedMultiselect.menuPlacement}
-          selectize
         />
 
         <Serialized orderedMultiselect={orderedMultiselect} />
