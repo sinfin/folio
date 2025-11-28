@@ -230,8 +230,6 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
     p_page = params[:page]&.to_i || 1
 
     if class_names
-      []
-
       show_model_names = class_names.size > 1
 
       # For single class, use pagy; for multiple classes, collect all then paginate array

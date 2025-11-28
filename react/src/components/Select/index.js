@@ -99,7 +99,6 @@ class Select extends React.Component {
     if (!createable) SelectComponent = ReactSelect
 
     if (async) {
-      // Use AsyncPaginate for pagination support
       if (createable) {
         // Creatable selects don't support pagination in react-select-async-paginate v0.4.1
         // Use AsyncCreatableSelect without pagination
@@ -145,182 +144,111 @@ class Select extends React.Component {
 
           const join = async.indexOf('?') === -1 ? '?' : '&'
           apiGet(`${async}${join}q=${inputValue}${data}`)
-            .catch(() => handle([]))
             .then((res) => {
               if (res) {
-                handle(res.data)
+                handle(formatOptions(res.data))
               } else {
                 handle([])
               }
             })
+            .catch(() => {
+              handle([])
+            })
         }
       } else {
         // Use AsyncPaginate for pagination support
-        // Note: AsyncCreatablePaginate is not available in older versions compatible with React 16
-        // So we use AsyncCreatableSelect (without pagination) for creatable selects
-        if (createable) {
-          SelectComponent = AsyncCreatableSelect
-          // For creatable selects, use the old loadOptions format without pagination
-          loadOptionsRaw = (inputValue, handle) => {
-            let data = ''
-            const params = new URLSearchParams()
+        SelectComponent = AsyncPaginate
 
-            if (asyncData) {
-              Object.keys(asyncData).forEach((key) => {
-                params.set(`atom_form_fields[${key}]`, asyncData[key])
-              })
-            }
+        loadOptionsRaw = async (inputValue, loadedOptions, additional) => {
+          let data = ''
+          const params = new URLSearchParams()
 
-            if (addAtomSettings) {
-              const settingsUrlData = {}
-              const settingsHash = settingsToHash()
+          // Calculate page from loadedOptions length
+          const page = Math.floor(loadedOptions.length / AUTOCOMPLETE_PAGY_ITEMS) + 1
+          params.set('page', page)
 
-              Object.keys(settingsHash).forEach((key) => {
-                if (key !== 'loading') {
-                  Object.keys(settingsHash[key]).forEach((locale) => {
-                    let fullKey
-
-                    if (locale && locale !== 'null') {
-                      fullKey = `by_atom_setting_${key}_${locale}`
-                    } else {
-                      fullKey = `by_atom_setting_${key}`
-                    }
-
-                    settingsUrlData[fullKey] = settingsHash[key][locale]
-                  })
-                }
-              })
-
-              Object.keys(settingsUrlData).forEach((key) => {
-                params.set(key, settingsUrlData[key])
-              })
-            }
-
-            data = params.toString()
-            if (data !== '') data = `&${data}`
-
-            const join = async.indexOf('?') === -1 ? '?' : '&'
-            apiGet(`${async}${join}q=${inputValue}${data}`)
-              .catch(() => handle([]))
-              .then((res) => {
-                if (res) {
-                  handle(formatOptions(res.data))
-                } else {
-                  handle([])
-                }
-              })
+          if (asyncData) {
+            Object.keys(asyncData).forEach((key) => {
+              params.set(`atom_form_fields[${key}]`, asyncData[key])
+            })
           }
-        } else {
-          SelectComponent = AsyncPaginate
 
-          loadOptionsRaw = async (inputValue, loadedOptions, additional) => {
-            let data = ''
-            const params = new URLSearchParams()
+          if (addAtomSettings) {
+            const settingsUrlData = {}
+            const settingsHash = settingsToHash()
 
-            // Calculate page from loadedOptions length
-            const page = Math.floor(loadedOptions.length / AUTOCOMPLETE_PAGY_ITEMS) + 1
-            params.set('page', page)
+            Object.keys(settingsHash).forEach((key) => {
+              if (key !== 'loading') {
+                Object.keys(settingsHash[key]).forEach((locale) => {
+                  let fullKey
 
-            if (asyncData) {
-              Object.keys(asyncData).forEach((key) => {
-                params.set(`atom_form_fields[${key}]`, asyncData[key])
-              })
-            }
+                  if (locale && locale !== 'null') {
+                    fullKey = `by_atom_setting_${key}_${locale}`
+                  } else {
+                    fullKey = `by_atom_setting_${key}`
+                  }
 
-            if (addAtomSettings) {
-              const settingsUrlData = {}
-              const settingsHash = settingsToHash()
+                  settingsUrlData[fullKey] = settingsHash[key][locale]
+                })
+              }
+            })
 
-              Object.keys(settingsHash).forEach((key) => {
-                if (key !== 'loading') {
-                  Object.keys(settingsHash[key]).forEach((locale) => {
-                    let fullKey
+            Object.keys(settingsUrlData).forEach((key) => {
+              params.set(key, settingsUrlData[key])
+            })
+          }
 
-                    if (locale && locale !== 'null') {
-                      fullKey = `by_atom_setting_${key}_${locale}`
-                    } else {
-                      fullKey = `by_atom_setting_${key}`
-                    }
+          data = params.toString()
+          if (data !== '') data = `&${data}`
 
-                    settingsUrlData[fullKey] = settingsHash[key][locale]
-                  })
-                }
-              })
-
-              Object.keys(settingsUrlData).forEach((key) => {
-                params.set(key, settingsUrlData[key])
-              })
-            }
-
-            data = params.toString()
-            if (data !== '') data = `&${data}`
-
-            const join = async.indexOf('?') === -1 ? '?' : '&'
-            try {
-              const res = await apiGet(`${async}${join}q=${inputValue}${data}`)
-              if (res) {
+          const join = async.indexOf('?') === -1 ? '?' : '&'
+          try {
+            const res = await apiGet(`${async}${join}q=${inputValue}${data}`)
+            if (res) {
               // Transform API response, passing through all fields
               // Ensure value and label are always set for react-select compatibility
-                const formattedOptions = res.data.map((item) => ({
-                  ...item, // Pass through all fields from API (id, text, label, value, type, etc.)
-                  value: item.value || item.id, // Ensure value is set for react-select
-                  label: item.label || item.text || '' // Ensure label is set for react-select
-                }))
+              const formattedOptions = res.data.map((item) => ({
+                ...item, // Pass through all fields from API (id, text, label, value, type, etc.)
+                value: item.value || item.id, // Ensure value is set for react-select
+                label: item.label || item.text || '' // Ensure label is set for react-select
+              }))
 
-                // Ensure selected value is included in options so react-select can display it
-                // This is critical for AsyncSelect/AsyncPaginate which only use options from loadOptions
-                // Use a Set to track existing values to prevent duplicates
-                const existingValues = new Set(formattedOptions.map(opt => opt.value))
-                const finalOptions = [...formattedOptions]
+              // Ensure selected value is included in options so react-select can display it
+              // This is critical for AsyncSelect/AsyncPaginate which only use options from loadOptions
+              // Use a Set to track existing values to prevent duplicates
+              const existingValues = new Set(formattedOptions.map(opt => opt.value))
+              const finalOptions = [...formattedOptions]
 
-                // Only include selected value if:
-                // 1. No search query (inputValue is empty/undefined), OR
-                // 2. Selected value matches the search query (label contains inputValue)
-                const shouldIncludeSelected = !inputValue || inputValue.trim() === ''
+              // Only include selected value if:
+              // 1. No search query (inputValue is empty/undefined), OR
+              // 2. Selected value matches the search query (label contains inputValue)
+              const shouldIncludeSelected = !inputValue || inputValue.trim() === ''
 
-                if (formattedValue && !this.props.isMulti && shouldIncludeSelected) {
-                  const selectedValue = formattedValue
-                  // Only add if not already present in the API results
-                  if (selectedValue && selectedValue.value && !existingValues.has(selectedValue.value)) {
+              if (formattedValue && !this.props.isMulti && shouldIncludeSelected) {
+                const selectedValue = formattedValue
+                // Only add if not already present in the API results
+                if (selectedValue && selectedValue.value && !existingValues.has(selectedValue.value)) {
                   // Prepend selected value so it appears first
-                    finalOptions.unshift(selectedValue)
-                    existingValues.add(selectedValue.value)
+                  finalOptions.unshift(selectedValue)
+                  existingValues.add(selectedValue.value)
+                }
+              } else if (formattedValue && this.props.isMulti && Array.isArray(formattedValue) && shouldIncludeSelected) {
+                formattedValue.forEach(selectedVal => {
+                  if (selectedVal && selectedVal.value && !existingValues.has(selectedVal.value)) {
+                    finalOptions.push(selectedVal)
+                    existingValues.add(selectedVal.value)
                   }
-                } else if (formattedValue && this.props.isMulti && Array.isArray(formattedValue) && shouldIncludeSelected) {
-                  formattedValue.forEach(selectedVal => {
-                    if (selectedVal && selectedVal.value && !existingValues.has(selectedVal.value)) {
-                      finalOptions.push(selectedVal)
-                      existingValues.add(selectedVal.value)
-                    }
-                  })
-                }
-
-                // Check if there are more pages
-                const hasMore = res.meta && res.meta.page < res.meta.pages
-                return {
-                  options: finalOptions,
-                  hasMore: hasMore
-                }
-              } else {
-              // Only include selected value if no search query
-                const shouldIncludeSelected = !inputValue || inputValue.trim() === ''
-                const finalOptions = []
-                if (shouldIncludeSelected) {
-                  if (formattedValue && !this.props.isMulti && formattedValue.value) {
-                    finalOptions.push(formattedValue)
-                  } else if (formattedValue && this.props.isMulti && Array.isArray(formattedValue)) {
-                    formattedValue.forEach(val => {
-                      if (val && val.value) finalOptions.push(val)
-                    })
-                  }
-                }
-                return {
-                  options: finalOptions,
-                  hasMore: false
-                }
+                })
               }
-            } catch (error) {
-            // Only include selected value if no search query
+
+              // Check if there are more pages
+              const hasMore = res.meta && res.meta.page < res.meta.pages
+              return {
+                options: finalOptions,
+                hasMore: hasMore
+              }
+            } else {
+              // Only include selected value if no search query
               const shouldIncludeSelected = !inputValue || inputValue.trim() === ''
               const finalOptions = []
               if (shouldIncludeSelected) {
@@ -336,6 +264,23 @@ class Select extends React.Component {
                 options: finalOptions,
                 hasMore: false
               }
+            }
+          } catch (error) {
+            // Only include selected value if no search query
+            const shouldIncludeSelected = !inputValue || inputValue.trim() === ''
+            const finalOptions = []
+            if (shouldIncludeSelected) {
+              if (formattedValue && !this.props.isMulti && formattedValue.value) {
+                finalOptions.push(formattedValue)
+              } else if (formattedValue && this.props.isMulti && Array.isArray(formattedValue)) {
+                formattedValue.forEach(val => {
+                  if (val && val.value) finalOptions.push(val)
+                })
+              }
+            }
+            return {
+              options: finalOptions,
+              hasMore: false
             }
           }
         }
