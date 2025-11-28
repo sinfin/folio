@@ -140,19 +140,21 @@
 .f-tiptap-editor h4.is-empty,
 .f-tiptap-editor .f-tiptap-page--invalid h2:first-of-type {
   position: relative;
+  //display: flex;
+  //flex-direction: column-reverse;
 
   &::before {
     color: #adb5bd;
     content: attr(data-placeholder);
     pointer-events: none;
-    position: absolute;
-    top: 0;
-    left: 0;
-    white-space: nowrap;
+    white-space: pre-wrap;
+    overflow: hidden;
     text-overflow: ellipsis;
     max-width: 100%;
-    overflow: hidden;
-    height: 100%;
+    height: auto;
+    display: block;
+    color: red;
+    //margin-top: -1.8rem;
   }
 }
 
