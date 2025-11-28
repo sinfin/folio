@@ -38,18 +38,16 @@ class Select extends React.Component {
   }
 
   onChange = (value) => {
-    if (this.props.selectize) {
-      return this.props.onChange(value)
-    } else if (this.props.isMulti) {
+    if (this.props.isMulti) {
       if (value) {
-        // For multi-select, pass array of option objects (not just values)
+        // For multi-select, pass array of option objects
         // This allows parent components to access full option data (value, label, id, etc.)
         return this.props.onChange(value)
       } else {
         return this.props.onChange([])
       }
     } else {
-      // For single select, pass the full option object (not just value.value)
+      // For single select, pass the full option object
       // This allows parent components to access full option data (value, label, id, etc.)
       return this.props.onChange(value)
     }
@@ -84,20 +82,16 @@ class Select extends React.Component {
   }
 
   render () {
-    const { isClearable, createable, value, options, rawOptions, onChange, innerRef, selectize, async, asyncData, addAtomSettings, defaultOptions, placeholder, dataTestId, menuPlacement, ...rest } = this.props
+    const { isClearable, createable, value, options, rawOptions, onChange, innerRef, async, asyncData, addAtomSettings, defaultOptions, placeholder, dataTestId, menuPlacement, ...rest } = this.props
     
     // Format value early so we can use it in loadOptions
     let formattedValue = null
     if (value) {
-      if (selectize) {
-        formattedValue = value
+      // Check if value is already in react-select format {value, label}
+      if (typeof value === 'object' && value !== null && 'value' in value && 'label' in value) {
+        formattedValue = this.props.isMulti ? [value] : value
       } else {
-        // Check if value is already in react-select format {value, label}
-        if (typeof value === 'object' && value !== null && 'value' in value && 'label' in value) {
-          formattedValue = this.props.isMulti ? [value] : value
-        } else {
-          formattedValue = this.props.isMulti ? formatOptions(value) : formatOption(value)
-        }
+        formattedValue = this.props.isMulti ? formatOptions(value) : formatOption(value)
       }
     }
     let SelectComponent = CreatableSelect
@@ -106,14 +100,11 @@ class Select extends React.Component {
     if (!createable) SelectComponent = ReactSelect
 
     if (async) {
-      // Use AsyncPaginate for pagination support, but fall back to AsyncSelect for selectize mode
-      if (selectize) {
-        // Selectize mode doesn't support pagination, use old AsyncSelect
-        if (createable) {
-          SelectComponent = AsyncCreatableSelect
-        } else {
-          SelectComponent = AsyncSelect
-        }
+      // Use AsyncPaginate for pagination support
+      if (createable) {
+        // Creatable selects don't support pagination in react-select-async-paginate v0.4.1
+        // Use AsyncCreatableSelect without pagination
+        SelectComponent = AsyncCreatableSelect
 
         loadOptionsRaw = (inputValue, handle) => {
           let data = ''
