@@ -222,4 +222,25 @@ class Folio::Console::Api::AutocompletesControllerTest < Folio::Console::BaseCon
     assert_equal(["#{manager.to_autocomplete_label} <#{manager.email}>"],
                  JSON.parse(response.body)["data"].collect { |r| r["text"] })
   end
+
+  test "applies ordered_for_folio_console_selects scope when available" do
+    create(:folio_page, title: "B Page")
+    create(:folio_page, title: "A Page")
+
+    # Stub the scope on Folio::Page to verify it's called
+    called = false
+    Folio::Page.define_singleton_method(:ordered_for_folio_console_selects) do
+      called = true
+      order(title: :asc)
+    end
+
+    get react_select_console_api_autocomplete_path(class_names: "Folio::Page")
+    json = JSON.parse(response.body)
+
+    assert called, "ordered_for_folio_console_selects scope should be called"
+    assert_equal ["A Page", "B Page"], json["data"].map { |r| r["text"] }
+
+    # Clean up
+    Folio::Page.singleton_class.remove_method(:ordered_for_folio_console_selects)
+  end
 end

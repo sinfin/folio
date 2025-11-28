@@ -33,8 +33,25 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
 
       scope = scope.by_label_query(q) if q.present?
 
+      scope, has_type_ordering = apply_ordered_for_folio_console_selects(scope, klass)
+
       if p_order.present? && scope.respond_to?(p_order)
-        scope = scope.unscope(:order).send(p_order)
+        if has_type_ordering
+          # Type ordering is primary, add p_order as secondary
+          scope = scope.send(p_order)
+        else
+          # No type ordering, unscope and apply p_order as primary
+          scope = scope.unscope(:order).send(p_order)
+        end
+      elsif q.blank? && p_order.blank? && scope.respond_to?(:ordered)
+        # No query and no order scope, use default ordered scope
+        if has_type_ordering
+          # Type ordering is primary, add ordered as secondary
+          scope = scope.ordered
+        else
+          # No type ordering, unscope and apply ordered as primary
+          scope = scope.unscope(:order).ordered
+        end
       end
 
       pagination, records = pagy(scope, page: p_page, items: AUTOCOMPLETE_PAGY_ITEMS)
@@ -132,8 +149,20 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
 
       scope = scope.by_label_query(q) if q.present?
 
+      scope, has_type_ordering = apply_ordered_for_folio_console_selects(scope, klass)
+
       if p_order.present? && scope.respond_to?(p_order)
-        scope = scope.unscope(:order).send(p_order)
+        if has_type_ordering
+          scope = scope.send(p_order)
+        else
+          scope = scope.unscope(:order).send(p_order)
+        end
+      elsif q.blank? && p_order.blank? && scope.respond_to?(:ordered)
+        if has_type_ordering
+          scope = scope.ordered
+        else
+          scope = scope.unscope(:order).ordered
+        end
       end
 
       render_selectize_options(scope.limit(AUTOCOMPLETE_PAGY_ITEMS), label_method: params[:label_method])
@@ -162,8 +191,20 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
 
       scope = scope.by_label_query(q) if q.present?
 
+      scope, has_type_ordering = apply_ordered_for_folio_console_selects(scope, klass)
+
       if p_order.present? && scope.respond_to?(p_order)
-        scope = scope.unscope(:order).send(p_order)
+        if has_type_ordering
+          scope = scope.send(p_order)
+        else
+          scope = scope.unscope(:order).send(p_order)
+        end
+      elsif q.blank? && p_order.blank? && scope.respond_to?(:ordered)
+        if has_type_ordering
+          scope = scope.ordered
+        else
+          scope = scope.unscope(:order).ordered
+        end
       end
 
       if klass.respond_to?(:folio_console_select2_includes)
@@ -219,8 +260,20 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
             scope = scope.filter_by_atom_form_fields(params[:atom_form_fields] || {})
           end
 
+          scope, has_type_ordering = apply_ordered_for_folio_console_selects(scope, klass)
+
           if p_order.present? && scope.respond_to?(p_order)
-            scope = scope.unscope(:order).send(p_order)
+            if has_type_ordering
+              scope = scope.send(p_order)
+            else
+              scope = scope.unscope(:order).send(p_order)
+            end
+          elsif q.blank? && p_order.blank? && scope.respond_to?(:ordered)
+            if has_type_ordering
+              scope = scope.ordered
+            else
+              scope = scope.unscope(:order).ordered
+            end
           end
 
           scope = filter_by_atom_setting_params(scope)
@@ -271,8 +324,20 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
               scope = scope.filter_by_atom_form_fields(params[:atom_form_fields] || {})
             end
 
+            scope, has_type_ordering = apply_ordered_for_folio_console_selects(scope, klass)
+
             if p_order.present? && scope.respond_to?(p_order)
-              scope = scope.unscope(:order).send(p_order)
+              if has_type_ordering
+                scope = scope.send(p_order)
+              else
+                scope = scope.unscope(:order).send(p_order)
+              end
+            elsif q.blank? && p_order.blank? && scope.respond_to?(:ordered)
+              if has_type_ordering
+                scope = scope.ordered
+              else
+                scope = scope.unscope(:order).ordered
+              end
             end
 
             scope = filter_by_atom_setting_params(scope)
@@ -323,6 +388,21 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
   end
 
   private
+    def apply_ordered_for_folio_console_selects(scope, klass)
+      return [scope, false] unless klass.respond_to?(:ordered_for_folio_console_selects)
+
+      # Store existing order values before unscope
+      existing_order = scope.order_values.dup
+      # Unscope order and apply type ordering as primary
+      scope = scope.unscope(:order).ordered_for_folio_console_selects
+      # Re-apply existing order as secondary ordering
+      if existing_order.present?
+        scope = scope.order(existing_order)
+      end
+
+      [scope, true]
+    end
+
     def filter_by_atom_setting_params(scope)
       params.keys.each do |key|
         next unless key.starts_with?("by_atom_setting_")
