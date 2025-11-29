@@ -18,6 +18,34 @@ import {
   RectangleHorizontal,
   List,
   Star,
+  Video,
+  Image,
+  Newspaper,
+  Heading,
+  AlignLeft,
+  Quote,
+  Minus,
+  FileDown,
+  LayoutGrid,
+  Grid3x3,
+  GalleryVertical,
+  ImagePlus,
+  User,
+  CreditCard,
+  Square,
+  SquareStack,
+  Layers,
+  FolderOpen,
+  LayoutList,
+  ArrowRight,
+  Home,
+  Tag,
+  Mail,
+  Link,
+  Play,
+  Monitor,
+  FormInput,
+  Send,
   type LucideIcon,
 } from "lucide-react";
 
@@ -28,6 +56,59 @@ const GROUP_ICONS: Record<string, LucideIcon> = {
   cards: RectangleHorizontal,
   listings: List,
   special: Star,
+};
+
+// Built-in node icons (same as in folio-editor-toolbar-slot-button.tsx)
+const NODE_ICONS: Record<string, LucideIcon> = {
+  // Standard icons
+  image: Image,
+  video: Video,
+  newspaper: Newspaper,
+  plus: Plus,
+
+  // Content icons
+  content_text: FileText,
+  content_title: Heading,
+  content_lead: AlignLeft,
+  quote: Quote,
+  content_divider: Minus,
+  content_documents: FileDown,
+  file_text: FileText,
+
+  // Image icons
+  image_gallery: Images,
+  image_grid: LayoutGrid,
+  image_masonry: Grid3x3,
+  image_one_two: GalleryVertical,
+  image_with_text: ImagePlus,
+  image_wrapping: ImagePlus,
+
+  // Card icons
+  user: User,
+  rectangle_horizontal: RectangleHorizontal,
+  card_visual: CreditCard,
+  card_size: Square,
+  card_full: SquareStack,
+  card_padded: Layers,
+
+  // Listing icons
+  list: List,
+  listing_news: Newspaper,
+  listing_projects: FolderOpen,
+  listing_project_card: LayoutList,
+  arrow_right: ArrowRight,
+
+  // Special icons
+  hero_banner: Monitor,
+  home: Home,
+  tag: Tag,
+  contact_form: Mail,
+  link: Link,
+  play: Play,
+
+  // Form icons
+  form: FormInput,
+  send: Send,
 };
 
 // Get custom icons from window.Folio.Tiptap.customIcons
@@ -64,6 +145,11 @@ const getIcon = (
       size?: number;
       className?: string;
     }>;
+  }
+
+  // Check built-in node icons
+  if (NODE_ICONS[iconString]) {
+    return NODE_ICONS[iconString];
   }
 
   // Check built-in group icons
