@@ -314,11 +314,16 @@ export function FolioEditor({
                       layoutsCommandGroup,
                       ...(folioTiptapConfig.nodes &&
                       folioTiptapConfig.nodes.length
-                        ? [
-                            makeFolioTiptapNodesCommandGroup(
+                        ? (() => {
+                            const nodeGroups = makeFolioTiptapNodesCommandGroup(
                               folioTiptapConfig.nodes,
-                            ),
-                          ]
+                              folioTiptapConfig.toolbar_groups,
+                            );
+                            // Handle both single group and array of groups
+                            return Array.isArray(nodeGroups)
+                              ? nodeGroups
+                              : [nodeGroups];
+                          })()
                         : []),
                     ]),
                   }
