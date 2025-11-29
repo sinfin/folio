@@ -448,6 +448,7 @@ const MainToolbarContent = ({
           <FolioEditorToolbarNodeGroups
             editor={editor}
             nodes={groupedNodes}
+            toolbarGroupsConfig={folioTiptapConfig?.toolbar_groups}
           />
 
           <FolioEditorToolbarCommandButton

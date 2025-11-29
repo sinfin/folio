@@ -38,8 +38,14 @@ const getCustomIcons = (): Record<string, React.ComponentType> => {
   return w.Folio?.Tiptap?.customIcons || {};
 };
 
-// Get toolbar groups configuration from window.Folio.Tiptap.toolbarGroups
-const getToolbarGroups = (): FolioTiptapToolbarGroup[] => {
+// Get toolbar groups configuration - check config prop first, then window fallback
+const getToolbarGroups = (
+  configGroups?: FolioTiptapToolbarGroup[],
+): FolioTiptapToolbarGroup[] => {
+  if (configGroups && configGroups.length > 0) {
+    return configGroups;
+  }
+  // Fallback to window.Folio.Tiptap.toolbarGroups for backwards compatibility
   const w = window as unknown as {
     Folio?: { Tiptap?: { toolbarGroups?: FolioTiptapToolbarGroup[] } };
   };
@@ -149,18 +155,20 @@ function NodeDropdown({
 export interface FolioEditorToolbarNodeGroupsProps {
   editor: Editor | null;
   nodes: FolioTiptapNodeFromInput[] | undefined;
+  toolbarGroupsConfig?: FolioTiptapToolbarGroup[];
 }
 
 export function FolioEditorToolbarNodeGroups({
   editor,
   nodes,
+  toolbarGroupsConfig,
 }: FolioEditorToolbarNodeGroupsProps) {
   if (!editor || !editor.isEditable || !nodes || nodes.length === 0) {
     return null;
   }
 
-  // Get toolbar groups configuration from project
-  const toolbarGroups = getToolbarGroups();
+  // Get toolbar groups configuration from config prop or window fallback
+  const toolbarGroups = getToolbarGroups(toolbarGroupsConfig);
 
   // Group nodes by dropdown_group
   const groupedNodes: Record<string, FolioTiptapNodeFromInput[]> = {};

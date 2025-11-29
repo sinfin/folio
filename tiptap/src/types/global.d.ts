@@ -93,6 +93,7 @@ declare global {
     heading_levels?: import("@tiptap/extension-heading").Level[];
     autosave?: boolean;
     embed_node_class_name?: string;
+    toolbar_groups?: FolioTiptapToolbarGroup[];
   }
 
   interface FolioTiptapAutosaveIndicatorInfo {
