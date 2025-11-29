@@ -110,6 +110,17 @@ const ICON_MAP: Record<string, React.ComponentType<{ size?: number }>> = {
   send: Send,
 };
 
+// Get custom icons from window.Folio.Tiptap.customIcons (defined by project)
+const getCustomIcons = (): Record<
+  string,
+  React.ComponentType<{ size?: number }>
+> => {
+  const w = window as unknown as {
+    Folio?: { Tiptap?: { customIcons?: Record<string, React.ComponentType> } };
+  };
+  return w.Folio?.Tiptap?.customIcons || {};
+};
+
 export const FolioEditorToolbarSlotButton = ({
   editor,
   node,
@@ -125,11 +136,20 @@ export const FolioEditorToolbarSlotButton = ({
   }, [node]);
 
   const icon = (iconString: string | undefined) => {
+    // First check project-defined custom icons
+    const customIcons = getCustomIcons();
+    if (iconString && customIcons[iconString]) {
+      return customIcons[iconString];
+    }
+    // Then check built-in icons
     if (iconString && ICON_MAP[iconString]) {
       return ICON_MAP[iconString];
     }
     if (iconString) {
-      console.warn(`Unknown icon string: ${iconString}, using Plus as fallback`);
+      console.warn(
+        `Unknown icon string: ${iconString}, using Plus as fallback. ` +
+          `Define custom icons in window.Folio.Tiptap.customIcons`,
+      );
     }
     return Plus;
   };
