@@ -10,7 +10,8 @@ module Folio
                     :pages_component_class_name,
                     :heading_levels,
                     :autosave,
-                    :embed_node_class_name
+                    :embed_node_class_name,
+                    :toolbar_groups
 
       def initialize(node_names: nil,
                      styled_paragraph_variants: nil,
@@ -19,7 +20,8 @@ module Folio
                      pages_component_class_name: nil,
                      heading_levels: nil,
                      autosave: true,
-                     embed_node_class_name: nil)
+                     embed_node_class_name: nil,
+                     toolbar_groups: nil)
         @node_names = node_names || get_all_tiptap_node_names
         @styled_paragraph_variants = styled_paragraph_variants || default_styled_paragraph_variants
         @styled_wrap_variants = styled_wrap_variants || default_styled_wrap_variants
@@ -27,6 +29,7 @@ module Folio
         @heading_levels = heading_levels || default_heading_levels
         @autosave = autosave
         @embed_node_class_name = embed_node_class_name
+        @toolbar_groups = toolbar_groups || []
 
         @schema = schema || build_default_schema
       end
@@ -39,7 +42,8 @@ module Folio
           heading_levels: @heading_levels,
           pages_component_class_name: @pages_component_class_name,
           autosave: @autosave,
-          embed_node_class_name: @embed_node_class_name
+          embed_node_class_name: @embed_node_class_name,
+          toolbar_groups: @toolbar_groups
         }
       end
 
@@ -48,6 +52,7 @@ module Folio
 
         h[:nodes] = tiptap_nodes_hash(@node_names)
         h[:enable_pages] = @pages_component_class_name.present?
+        h[:toolbar_groups] = @toolbar_groups if @toolbar_groups.present?
 
         h.to_json
       end
