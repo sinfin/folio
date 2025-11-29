@@ -62,9 +62,17 @@ declare global {
       toolbar?: {
         icon: string;
         slot: string;
+        dropdown_group?: string;
       };
       autoclick_cover?: boolean;
     };
+  }
+
+  interface FolioTiptapToolbarGroup {
+    key: string;
+    title: { cs: string; en: string };
+    icon: string;
+    order?: number;
   }
 
   interface StyledParagraphVariantFromInput {
