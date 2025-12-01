@@ -128,12 +128,49 @@ class Folio::Console::Files::BatchService
     end
 
     def redis_client
-      @redis_client ||= Redis.new(
-        url: ENV.fetch("REDIS_URL", "redis://localhost:6379/0"),
-        timeout: ENV.fetch("REDIS_TIMEOUT", 5).to_i,
-        reconnect_attempts: ENV.fetch("REDIS_RECONNECT_ATTEMPTS", 3).to_i,
-        reconnect_delay: ENV.fetch("REDIS_RECONNECT_DELAY", 0.5).to_f,
-        reconnect_delay_max: ENV.fetch("REDIS_RECONNECT_DELAY_MAX", 5.0).to_f,
-      )
+      @redis_client ||= begin
+        # Build base Redis configuration
+        redis_options = {
+          url: ENV.fetch("REDIS_URL", "redis://localhost:6379/0"),
+          timeout: ENV.fetch("REDIS_TIMEOUT", 5).to_i,
+          reconnect_attempts: ENV.fetch("REDIS_RECONNECT_ATTEMPTS", 3).to_i,
+        }
+
+        # Add reconnect_delay parameters only if redis-client supports them
+        # redis-client >= 0.23 removed support for reconnect_delay/reconnect_delay_max
+        if redis_client_supports_reconnect_delay?
+          reconnect_delay = ENV.fetch("REDIS_RECONNECT_DELAY", 0.5).to_f
+          reconnect_delay_max = ENV.fetch("REDIS_RECONNECT_DELAY_MAX", 5.0).to_f
+          redis_options.merge!(
+            reconnect_delay: reconnect_delay,
+            reconnect_delay_max: reconnect_delay_max,
+          )
+        end
+
+        Redis.new(redis_options)
+      end
+    end
+
+    # Check if the current redis-client version supports reconnect_delay parameters
+    # Versions >= 0.23 removed support for these parameters
+    def redis_client_supports_reconnect_delay?
+      return false unless defined?(RedisClient)
+
+      # Check version if available (most reliable method)
+      if RedisClient.const_defined?(:VERSION)
+        version = Gem::Version.new(RedisClient::VERSION)
+        # reconnect_delay was removed in redis-client 0.23+
+        return version < Gem::Version.new("0.23.0")
+      end
+
+      # Fallback: check method signature if version is not available
+      begin
+        config_class = RedisClient::Config
+        method_params = config_class.instance_method(:initialize).parameters.map { |_, name| name }
+        return method_params.include?(:reconnect_delay)
+      rescue
+        # If we can't inspect, assume newer version without support
+        false
+      end
     end
 end
