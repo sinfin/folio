@@ -101,7 +101,7 @@ class Folio::CraMediaCloud::MonitorProcessingJobTest < ActiveJob::TestCase
   test "upload_is_stuck? calculates timeout based on file size" do
     # 200MB file should get: 5 minutes base + (200MB / 100MB) * 1 minute = 7 minutes total
     video = create(:folio_file_video, file_size: 200.megabytes)
-    
+
     # Within timeout (6 minutes < 7 minutes)
     upload_started_at = 6.minutes.ago
     job = Folio::CraMediaCloud::MonitorProcessingJob.new
@@ -118,7 +118,7 @@ class Folio::CraMediaCloud::MonitorProcessingJobTest < ActiveJob::TestCase
     # 5GB file would calculate to: 5 minutes + (5000MB / 100MB) * 1 minute = 55 minutes
     # But should be capped at 30 minutes
     video = create(:folio_file_video, file_size: 5.gigabytes)
-    
+
     # Within capped timeout (25 minutes < 30 minutes)
     upload_started_at = 25.minutes.ago
     job = Folio::CraMediaCloud::MonitorProcessingJob.new
