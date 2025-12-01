@@ -339,13 +339,11 @@ export const FolioTiptapNodeExtension = Node.create<FolioTiptapNodeOptions>({
       moveFolioTiptapNodeDown:
         () =>
         ({ state, dispatch }: CommandProps) => {
-          if (!dispatch) return false;
           return moveFolioTiptapNode({ direction: "down", state, dispatch });
         },
       moveFolioTiptapNodeUp:
         () =>
         ({ state, dispatch }: CommandProps) => {
-          if (!dispatch) return false;
           return moveFolioTiptapNode({ direction: "up", state, dispatch });
         },
       editFolioTipapNode:
