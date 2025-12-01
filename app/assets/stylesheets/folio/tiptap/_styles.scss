@@ -3,7 +3,7 @@ $f-tiptap__spacer: 1rem !default;
 $f-tiptap__media-min-width--tablet: 576px !default;
 $f-tiptap__media-min-width--desktop: 708px !default;
 
-$f-tiptap-root__background-color: transparent !default;
+$f-tiptap-root__background-color: var(--bs-body-bg, #ffffff) !default;
 $f-tiptap-root__color: inherit !default;
 $f-tiptap-root__font-family: inherit !default;
 $f-tiptap-root__font-size: inherit !default;
