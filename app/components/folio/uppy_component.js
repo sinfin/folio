@@ -70,7 +70,14 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
       }
 
       if (this.allowedFormatsValue) {
-        restrictions.allowedFileTypes = this.allowedFormatsValue.split(',')
+        const allowedTypes = this.allowedFormatsValue.split(',').map(type => type.trim())
+
+        // Add .mov extension if video/quicktime is allowed
+        if (allowedTypes.includes('video/quicktime') && !allowedTypes.includes('.mov')) {
+          allowedTypes.push('.mov')
+        }
+
+        restrictions.allowedFileTypes = allowedTypes
       }
 
       if (this.maxFileSizeValue) {
@@ -94,7 +101,7 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
 
       if (this.allowedFormatsValue) {
         const formattedFormats = this.allowedFormatsValue.split(',')
-          .map(format => format.trim().toUpperCase().split('/', 2).pop().replace('SVG+XML', 'SVG'))
+          .map(format => format.trim().toUpperCase().split('/', 2).pop().replace('SVG+XML', 'SVG').replace('QUICKTIME', 'MOV'))
           .join(', ')
 
         const supportedFormatsLabel = window.Folio.i18n(this.constructor.ERROR_MESSAGES, 'supportedFormats')
