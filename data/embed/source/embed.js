@@ -114,7 +114,7 @@
         const postId = url.match(/\/p\/([a-zA-Z0-9\-_]+)/)?.[1]
         if (postId) {
           container.innerHTML = `
-            <blockquote class="instagram-media" data-instgrm-permalink="${url}">
+            <blockquote class="instagram-media f-embed__blockquote--instagram" data-instgrm-permalink="${url}">
               <a target="_blank" href="${url}">View this post on Instagram</a>
             </blockquote>
 
