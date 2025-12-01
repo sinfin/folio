@@ -4,7 +4,48 @@ import { type Editor } from "@tiptap/react";
 import { Button } from "@/components/tiptap-ui-primitive/button";
 import translate from "@/lib/i18n";
 
-import { Video, Image, Newspaper, Plus } from "lucide-react";
+import {
+  Video,
+  Image,
+  Newspaper,
+  Plus,
+  // Content icons
+  FileText,
+  Heading,
+  AlignLeft,
+  Quote,
+  Minus,
+  FileDown,
+  // Image icons
+  Images,
+  LayoutGrid,
+  Grid3x3,
+  GalleryVertical,
+  ImagePlus,
+  // Card icons
+  User,
+  RectangleHorizontal,
+  CreditCard,
+  Square,
+  SquareStack,
+  Layers,
+  ImageOff,
+  // Listing icons
+  List,
+  FolderOpen,
+  LayoutList,
+  ArrowRight,
+  // Special icons
+  Home,
+  Tag,
+  Mail,
+  Link,
+  Play,
+  Monitor,
+  // Form icons
+  FormInput,
+  Send,
+} from "lucide-react";
 
 export interface FolioEditorToolbarSlotButton {
   editor: Editor;
@@ -14,6 +55,70 @@ export interface FolioEditorToolbarSlotButton {
 const TRANSLATIONS = {
   cs: "Vložit",
   en: "Insert",
+};
+
+// Mapping icon strings to lucide-react components
+const ICON_MAP: Record<string, React.ComponentType<{ size?: number }>> = {
+  // Standard icons
+  image: Image,
+  video: Video,
+  newspaper: Newspaper,
+  plus: Plus,
+
+  // Content icons
+  content_text: FileText,
+  content_title: Heading,
+  content_lead: AlignLeft,
+  quote: Quote,
+  content_divider: Minus,
+  content_documents: FileDown,
+  file_text: FileText,
+
+  // Image icons
+  image_gallery: Images,
+  image_grid: LayoutGrid,
+  image_masonry: Grid3x3,
+  image_one_two: GalleryVertical,
+  image_with_text: ImagePlus,
+  image_wrapping: ImagePlus,
+
+  // Card icons
+  user: User,
+  rectangle_horizontal: RectangleHorizontal,
+  card_visual: CreditCard,
+  card_size: Square,
+  card_full: SquareStack,
+  card_padded: Layers,
+
+  // Listing icons
+  list: List,
+  listing_news: Newspaper,
+  listing_projects: FolderOpen,
+  listing_project_card: LayoutList,
+  arrow_right: ArrowRight,
+
+  // Special icons
+  hero_banner: Monitor,
+  home: Home,
+  tag: Tag,
+  contact_form: Mail,
+  link: Link,
+  play: Play,
+
+  // Form icons
+  form: FormInput,
+  send: Send,
+};
+
+// Get custom icons from window.Folio.Tiptap.customIcons (defined by project)
+const getCustomIcons = (): Record<
+  string,
+  React.ComponentType<{ size?: number }>
+> => {
+  const w = window as unknown as {
+    Folio?: { Tiptap?: { customIcons?: Record<string, React.ComponentType> } };
+  };
+  return w.Folio?.Tiptap?.customIcons || {};
 };
 
 export const FolioEditorToolbarSlotButton = ({
@@ -31,17 +136,22 @@ export const FolioEditorToolbarSlotButton = ({
   }, [node]);
 
   const icon = (iconString: string | undefined) => {
-    switch (iconString) {
-      case "image":
-        return Image;
-      case "video":
-        return Video;
-      case "newspaper":
-        return Newspaper;
-      default:
-        console.warn(`Unknown icon string: ${iconString}`);
-        return Plus;
+    // First check project-defined custom icons
+    const customIcons = getCustomIcons();
+    if (iconString && customIcons[iconString]) {
+      return customIcons[iconString];
     }
+    // Then check built-in icons
+    if (iconString && ICON_MAP[iconString]) {
+      return ICON_MAP[iconString];
+    }
+    if (iconString) {
+      console.warn(
+        `Unknown icon string: ${iconString}, using Plus as fallback. ` +
+          `Define custom icons in window.Folio.Tiptap.customIcons`,
+      );
+    }
+    return Plus;
   };
 
   if (!node) return;
