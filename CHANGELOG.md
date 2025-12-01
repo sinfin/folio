@@ -42,6 +42,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - file_list/file_component info-file-name doesn't break on long names
+- instagram embeds from url loading with small width
 
 ## [6.5.1] - 2025-06-18
 
