@@ -28,4 +28,5 @@ npm run format:file src/components/my-component.tsx
 - Use existing utility functions and follow established patterns
 - Maintain consistent import organization (external libs first, then internal)
 - Follow the existing SCSS variable and mixin conventions
+- Prefer early returns over nested if statements for better readability
 - Never commit without running the full command sequence above
