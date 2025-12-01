@@ -156,6 +156,42 @@
   }
 }
 
+// In float aside, force empty paragraphs to use webkit clamp for placeholder text
+.f-tiptap-editor .f-tiptap-float__aside p.is-empty {
+  &::before {
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: auto;
+    max-height: 100%;
+    line-height: inherit;
+  }
+}
+
+// Offset placeholder in float main to account for aside width
+// Only apply at tablet and above where float layout is active
+// Uses CSS custom properties set on .f-tiptap-float based on data attributes
+@media (min-width: 576px) {
+  // When aside is on the left, offset placeholder left by aside width + margin
+  .f-tiptap-editor .f-tiptap-float[data-f-tiptap-float-side="left"] .f-tiptap-float__main p.is-empty {
+    &::before {
+      left: calc(var(--f-tiptap-float__aside-width) + var(--f-tiptap-float__aside-margin-x));
+    }
+  }
+
+  // When aside is on the right, cap placeholder width by constraining right edge
+  .f-tiptap-editor .f-tiptap-float[data-f-tiptap-float-side="right"] .f-tiptap-float__main p.is-empty {
+    &::before {
+      left: 0;
+      right: calc(var(--f-tiptap-float__aside-width) + var(--f-tiptap-float__aside-margin-x));
+    }
+  }
+}
+
 .f-tiptap-editor .node-folioTiptapNode,
 .f-tiptap-editor .node-folioTiptapInvalidNode {
   position: relative;
