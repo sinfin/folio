@@ -487,6 +487,10 @@ $f-tiptap-table-td__min-width: 5rem !default;
   }
 
   .f-tiptap-float {
+    // Default values for CSS custom properties (below 576px, float layout is not active)
+    --f-tiptap-float__aside-width: 0;
+    --f-tiptap-float__aside-margin-x: 0;
+    --f-tiptap-float__aside-offset: 0;
     position: relative;
   }
 
@@ -517,25 +521,22 @@ $f-tiptap-table-td__min-width: 5rem !default;
     background-color: $f-tiptap-float__aside-background-color-in-editor-only;
   }
 
-  // Container query for float aside placeholder - uses the aside's container context
-  // When the aside is narrow, use two-line placeholder
-  .f-tiptap-float__aside {
-    // Get numeric line-height value for multiline placeholder - use variable if numeric, otherwise default to 1.5
-    $multiline-placeholder-line-height: if(
-      type-of($f-tiptap-root__line-height) == "number",
-      $f-tiptap-root__line-height,
-      1.5
-    );
+  // Force two-line placeholder for empty paragraphs that are only child of [data-node-view-content-react]
+  // Get numeric line-height value for multiline placeholder - use variable if numeric, otherwise default to 1.5
+  $multiline-placeholder-line-height: if(
+    type-of($f-tiptap-root__line-height) == "number",
+    $f-tiptap-root__line-height,
+    1.5
+  );
 
-    // When the aside is narrow (max-width covers small and some medium sizes), use two-line placeholder
-    @container (max-width: 250px) {
-      p.is-empty,
-      p:has(.ProseMirror-trailingBreak) {
-        // Use 2lh (line-height unit) - represents 2 line-heights of the element
-        // Fallback for browsers that don't support lh unit, using calculated numeric value
-        min-height: calc(2 * 1em * #{$multiline-placeholder-line-height});
-        min-height: 2lh; // Modern browsers: 2 line-heights
-      }
+  .f-tiptap-float__aside,
+  .f-tiptap-float__main {
+    [data-node-view-content-react] > p.is-empty:only-child,
+    [data-node-view-content-react] > p:has(.ProseMirror-trailingBreak):only-child {
+      // Use 2lh (line-height unit) - represents 2 line-heights of the element
+      // Fallback for browsers that don't support lh unit, using calculated numeric value
+      min-height: calc(2 * 1em * #{$multiline-placeholder-line-height});
+      min-height: 2lh; // Modern browsers: 2 line-heights
     }
   }
 
@@ -670,6 +671,7 @@ $f-tiptap-table-td__min-width: 5rem !default;
       --f-tiptap-float__aside-width: #{$f-tiptap-float__aside-width-medium};
       --f-tiptap-float__aside-side: left;
       --f-tiptap-float__aside-margin-x: #{$f-tiptap-float__aside-margin-x--tablet};
+      --f-tiptap-float__aside-offset: #{$f-tiptap-float__aside-offset--tablet};
 
       &::after {
         content: "";
@@ -764,6 +766,11 @@ $f-tiptap-table-td__min-width: 5rem !default;
 
     .f-tiptap-columns {
       gap: $f-tiptap-columns__gap--desktop;
+    }
+
+    .f-tiptap-float {
+      --f-tiptap-float__aside-margin-x: #{$f-tiptap-float__aside-margin-x--desktop};
+      --f-tiptap-float__aside-offset: #{$f-tiptap-float__aside-offset--desktop};
     }
 
     .f-tiptap-float__aside {
