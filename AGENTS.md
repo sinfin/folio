@@ -64,9 +64,8 @@ All commits must use semantic commit messages:
 **Types:** `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
 
 **Examples:**
-- `feat(sway): add screen recording functionality`
-- `fix(python): resolve import error in file_utils`
-- `refactor(sway): abstract common patterns to dotfiles module`
-- `docs: update AGENTS.md with commit guidelines`
+- `feat(nested_fields): add sortable auto scroll`
+- `chore(react): standardjs lint`
+- `docs(tiptap): add early returns preference to AGENTS.md`
 
 Scope is optional but recommended for clarity. Describe the final state/outcome, not the implementation steps. Keep the message concise and focused on what was achieved.
