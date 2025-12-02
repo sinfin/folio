@@ -219,10 +219,10 @@ class Select extends React.Component {
               const existingValues = new Set(formattedOptions.map(opt => opt.value))
               const finalOptions = [...formattedOptions]
 
-              // Only include selected value if:
-              // 1. No search query (inputValue is empty/undefined), OR
-              // 2. Selected value matches the search query (label contains inputValue)
-              const shouldIncludeSelected = !inputValue || inputValue.trim() === ''
+              // Only include selected value on the first page (when loadedOptions is empty)
+              // and when there's no search query. Don't prepend on subsequent pages.
+              const isFirstPage = loadedOptions.length === 0
+              const shouldIncludeSelected = isFirstPage && (!inputValue || inputValue.trim() === '')
 
               if (formattedValue && !this.props.isMulti && shouldIncludeSelected) {
                 const selectedValue = formattedValue
