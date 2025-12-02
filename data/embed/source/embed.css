@@ -38,7 +38,8 @@
   display: block;
 }
 
-.f-embed__container--instagram .instagram-media-rendered ~ .f-embed__loader,
+.instagram-media-rendered ~ .f-embed__loader,
+.twitter-tweet-rendered ~ .f-embed__loader,
 .f-embed__container--twitter .twitter-tweet:not(.twitter-tweet-rendered) {
   display: none;
 }
@@ -126,4 +127,10 @@
 
 .f-embed__container--twitter .f-embed__loader:not(:last-child) {
   display: none;
+}
+
+.f-embed__blockquote--instagram {
+  max-width: 540px;
+  width: -webkit-calc(100% - 2px);
+  width: calc(100% - 2px);
 }

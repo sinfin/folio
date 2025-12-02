@@ -29,19 +29,19 @@ class Folio::Metadata::ExtractionService
     @image = image
   end
 
-  def extract!(force: false, user_id: nil)
+  def extract!(force: false, user_id: nil, save: true)
     return unless should_extract?(@image, force)
 
-    Rails.logger.info "Extracting metadata for image ##{@image.id} (#{@image.file_name})"
+    Rails.logger.info "Extracting metadata for #{@image.persisted? ? "image ##{@image.id}" : "new image"} (#{@image.file_name})"
 
     # Use Dragonfly's built-in metadata extraction (works for local + S3)
     metadata = @image.file.metadata
     return unless metadata.present?
 
     # Map and store metadata
-    map_and_store_metadata(@image, metadata)
+    map_and_store_metadata(@image, metadata, save: save)
 
-    Rails.logger.info "Successfully extracted and mapped metadata for image ##{@image.id}"
+    Rails.logger.info "Successfully extracted and mapped metadata for #{@image.persisted? ? "image ##{@image.id}" : "new image"}"
   rescue => e
     Rails.logger.error "Failed to extract metadata for #{@image.file_name}: #{e.message}"
     Rails.logger.error e.backtrace.join("\n") if Rails.env.development?
@@ -59,7 +59,7 @@ class Folio::Metadata::ExtractionService
       true
     end
 
-    def map_and_store_metadata(image, raw_metadata)
+    def map_and_store_metadata(image, raw_metadata, save: true)
       # Store raw metadata in JSON column
       image.file_metadata = raw_metadata
       image.file_metadata_extracted_at = Time.current
@@ -73,11 +73,13 @@ class Folio::Metadata::ExtractionService
       # Update database fields from mapped data
       update_database_fields(image, mapped_data)
 
-      # Save changes (without tags first)
-      image.save! if image.changed?
+      # Save changes (without tags first) unless save is disabled
+      if save
+        image.save! if image.changed?
 
-      # Handle tags separately - if they fail, continue anyway
-      handle_tags_separately(image, mapped_data)
+        # Handle tags separately - if they fail, continue anyway
+        handle_tags_separately(image, mapped_data)
+      end
     end
 
     def update_database_fields(image, mapped_data)

@@ -89,8 +89,18 @@ nodes:
   tableCell:
     tag: td
     has_attrs: true
+    attrs:
+      colspan:
+        html_attribute: "colspan"
+      rowspan:
+        html_attribute: "rowspan"
   tableHeader:
     tag: th
     has_attrs: true
+    attrs:
+      colspan:
+        html_attribute: "colspan"
+      rowspan:
+        html_attribute: "rowspan"
   tableRow:
     tag: tr

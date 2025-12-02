@@ -76,8 +76,8 @@ class Folio::File::Image < Folio::File
   end
 
   # Manual metadata extraction (for existing images)
-  def extract_metadata!(force: false, user_id: nil)
-    Folio::Metadata::ExtractionService.new(self).extract!(force: force, user_id: user_id)
+  def extract_metadata!(force: false, user_id: nil, save: true)
+    Folio::Metadata::ExtractionService.new(self).extract!(force: force, user_id: user_id, save: save)
   end
 
   # Metadata extraction callbacks (delegate to service)

@@ -59,6 +59,11 @@ app/components/
   - Keep components focused and single-purpose
 - **Styling:**
   - Use SASS with BEM methodology
+  - Block (B) is generated from component class name: first letter (lowercase) of top-level namespace + rest of namespace path in kebab-case
+    - Example: `MyApp::Blog::PostComponent` → Block is `"m-blog-post"`
+    - Special case: `Folio::Console::` → `f-c`
+  - Elements (E) and Modifiers (M) follow standard BEM: `__element` and `--modifier`
+    - Example: `m-blog-post__button` (element), `m-blog-post__button--active` (modifier)
   - Scope styles to the component
 - **JavaScript Integration:**
   - Use Stimulus for behavior

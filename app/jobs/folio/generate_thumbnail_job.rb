@@ -26,7 +26,8 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
     image.reload.with_lock do
       thumbnail_sizes = image.thumbnail_sizes || {}
       image.dont_run_after_save_jobs = true
-      image.update!(thumbnail_sizes: thumbnail_sizes.merge(size => new_thumb))
+      image.thumbnail_sizes = thumbnail_sizes.merge(size => new_thumb)
+      image.save!(validate: false)
     end
 
     MessageBus.publish Folio::MESSAGE_BUS_CHANNEL,

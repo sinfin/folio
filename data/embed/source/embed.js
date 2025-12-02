@@ -114,7 +114,7 @@
         const postId = url.match(/\/p\/([a-zA-Z0-9\-_]+)/)?.[1]
         if (postId) {
           container.innerHTML = `
-            <blockquote class="instagram-media" data-instgrm-permalink="${url}">
+            <blockquote class="instagram-media f-embed__blockquote--instagram" data-instgrm-permalink="${url}">
               <a target="_blank" href="${url}">View this post on Instagram</a>
             </blockquote>
 
@@ -194,25 +194,6 @@
           twitterLoading = true
           window.twttr.widgets.load().then(() => {
             twitterLoading = false
-            // Handle tweet embeds
-            const tweets = document.querySelectorAll('.twitter-tweet')
-            tweets.forEach(tweet => {
-              const url = tweet.querySelector('a')?.href
-              if (url && window.twttr.widgets.createTweet) {
-                const statusMatch = url.match(/status\/(\d+)/)
-                if (statusMatch) {
-                  const tweetId = statusMatch[1]
-                  window.twttr.widgets.createTweet(tweetId, tweet.parentElement, {
-                    conversation: 'none',
-                    theme: 'light'
-                  }).then(element => {
-                    if (element) {
-                      tweet.style.display = 'none'
-                    }
-                  })
-                }
-              }
-            })
           })
         }
       }

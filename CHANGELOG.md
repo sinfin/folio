@@ -25,6 +25,7 @@ All notable changes to this project will be documented in this file.
 - added `disabled_modifications` option to `form_footer`
 - added `calendar_filter` icon
 - added `thumbnail_configuration` to `Folio::File` to store crop data per-ratio, set via a new `Folio::Console::Files::Show::Thumbnails::CropEditComponent` and `update_thumbnails_crop` API
+- support for MOV (video/quicktime) files
 
 ### Changed
 
@@ -42,6 +43,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - file_list/file_component info-file-name doesn't break on long names
+- instagram embeds from url loading with small width
 
 ## [6.5.1] - 2025-06-18
 
