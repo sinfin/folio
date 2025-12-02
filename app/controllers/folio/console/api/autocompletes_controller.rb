@@ -230,6 +230,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
     p_page = params[:page]&.to_i || 1
 
     if class_names
+      # Show model names only when there are multiple classes
       show_model_names = class_names.size > 1
 
       # For single class, use pagy; for multiple classes, collect all then paginate array
@@ -237,7 +238,6 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
         class_name = class_names.first
         klass = class_name.safe_constantize
         if klass && klass < ActiveRecord::Base
-          show_model_names ||= klass.try(:folio_console_show_model_names_in_react_select?)
 
           scope = klass.accessible_by(Folio::Current.ability)
 
@@ -301,7 +301,6 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
         class_names.each do |class_name|
           klass = class_name.safe_constantize
           if klass && klass < ActiveRecord::Base
-            show_model_names ||= klass.try(:folio_console_show_model_names_in_react_select?)
 
             scope = klass.accessible_by(Folio::Current.ability)
 
