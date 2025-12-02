@@ -4,7 +4,6 @@ class Folio::File < Folio::ApplicationRecord
   include Folio::DragonflyFormatValidation
   include Folio::FriendlyId
   include Folio::SanitizeFilename
-  include Folio::Taggable
   include Folio::Thumbnails
   include Folio::StiPreload
   include Folio::HasAasmStates
@@ -64,6 +63,23 @@ class Folio::File < Folio::ApplicationRecord
     ]
   }
 
+  # override Folio::Taggable
+  acts_as_taggable_on :tags
+  unless Rails.application.config.folio_shared_files_between_sites
+    acts_as_taggable_tenant :site_id
+  end
+
+  scope :by_tag, -> (tag) { tagged_with(tag) }
+  scope :by_tag_id, -> (tag_id) { by_tag(ActsAsTaggableOn::Tag.find_by_id(tag_id)) }
+  scope :by_tags, -> (tags) do
+    if tags.is_a?(String)
+      tagged_with(tags.split(","))
+    else
+      tagged_with(tags)
+    end
+  end
+
+
   dragonfly_accessor :file do
     after_assign :sanitize_filename
   end
@@ -95,14 +111,6 @@ class Folio::File < Folio::ApplicationRecord
       where(Folio::FilePlacement::Base.where(Folio::FilePlacement::Base.arel_table[:file_id].eq(arel_table[:id])).arel.exists.not)
     else
       none
-    end
-  end
-
-  scope :by_tags, -> (tags) do
-    if tags.is_a?(String)
-      tagged_with(tags.split(","))
-    else
-      tagged_with(tags)
     end
   end
 

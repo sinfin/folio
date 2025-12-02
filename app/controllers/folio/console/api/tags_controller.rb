@@ -7,10 +7,10 @@ class Folio::Console::Api::TagsController < Folio::Console::Api::BaseController
 
     tenant_site_ids = [Folio::Current.site.id]
     if Rails.application.config.folio_shared_files_between_sites
-      tenant_site_ids << Folio::Current.main_site.id
+      tenant_site_ids += [Folio::Current.main_site.id, nil]
     end
     scope = ActsAsTaggableOn::Tag.joins(:taggings)
-                                 .where(taggings: { context:, tenant: tenant_site_ids.compact.uniq })
+                                 .where(taggings: { context:, tenant: tenant_site_ids.uniq })
 
     if q.present?
       scope = scope.by_label_query(q)
