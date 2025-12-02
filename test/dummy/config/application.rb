@@ -3,6 +3,7 @@
 require_relative "boot"
 
 require "rails/all"
+require "devise/passwordless"
 
 Bundler.require(*Rails.groups)
 require "folio"

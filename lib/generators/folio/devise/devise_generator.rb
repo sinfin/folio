@@ -34,6 +34,7 @@ class Folio::DeviseGenerator < Rails::Generators::Base
     str = <<~'RUBY'
       devise_for :users, class_name: "Folio::User",
                          module: "application_namespace_path/folio/users",
+                         controllers: { magic_links: "application_namespace_path/folio/users/magic_links" },
                          omniauth_providers: Rails.application.config.folio_users_omniauth_providers
 
       devise_scope :user do
@@ -44,6 +45,9 @@ class Folio::DeviseGenerator < Rails::Generators::Base
         get "/users/auth/resolve_conflict", to: "application_namespace_path/folio/users/omniauth_callbacks#resolve_conflict"
         get "/users/auth/new_user", to: "application_namespace_path/folio/users/omniauth_callbacks#new_user"
         post "/users/auth/create_user", to: "application_namespace_path/folio/users/omniauth_callbacks#create_user"
+
+        get "/users/auth/login_confirmation", to: "application_namespace_path/folio/users/sessions#login_confirmation"
+        post "/users/auth/resend_login_confirmation", to: "application_namespace_path/folio/users/sessions#resend_login_confirmation"
       end
     RUBY
 

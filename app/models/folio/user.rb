@@ -26,6 +26,7 @@ class Folio::User < Folio::ApplicationRecord
     rememberable
     trackable
     invitable
+    magic_link_authenticatable
   ]
 
   if Rails.application.config.folio_users_confirmable
@@ -397,6 +398,11 @@ class Folio::User < Folio::ApplicationRecord
 
   def born_at_required?
     false
+  end
+
+  def needs_magic_link_verification?
+    return false if superadmin?
+    last_sign_in_at.nil? || last_sign_in_at < 1.month.ago
   end
 
   private
