@@ -1,6 +1,1 @@
 Refer to Folio's AGENTS.md - check the installed gem folder (run `bundle show folio` to find the path), then see `AGENTS.md` in that directory
-
-## Application-Specific Guidelines
-
-[Add your application-specific guidelines here]
-
