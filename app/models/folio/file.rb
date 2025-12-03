@@ -6,6 +6,7 @@ class Folio::File < Folio::ApplicationRecord
   include Folio::SanitizeFilename
   include Folio::Thumbnails
   include Folio::StiPreload
+  include Folio::Taggable
   include Folio::HasAasmStates
   include Folio::BelongsToSite
 
@@ -63,14 +64,6 @@ class Folio::File < Folio::ApplicationRecord
     ]
   }
 
-  # override Folio::Taggable
-  acts_as_taggable_on :tags
-  unless Rails.application.config.folio_shared_files_between_sites
-    acts_as_taggable_tenant :site_id
-  end
-
-  scope :by_tag, -> (tag) { tagged_with(tag) }
-  scope :by_tag_id, -> (tag_id) { by_tag(ActsAsTaggableOn::Tag.find_by_id(tag_id)) }
   scope :by_tags, -> (tags) do
     if tags.is_a?(String)
       tagged_with(tags.split(","))
