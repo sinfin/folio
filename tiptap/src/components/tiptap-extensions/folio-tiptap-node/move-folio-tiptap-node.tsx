@@ -7,7 +7,7 @@ import {
 interface MoveFolioTiptapNodeProps {
   direction: "up" | "down";
   state: EditorState;
-  dispatch: (tr: Transaction) => void;
+  dispatch?: (tr: Transaction) => void;
 }
 
 export const moveFolioTiptapNode = ({
@@ -46,13 +46,15 @@ export const moveFolioTiptapNode = ({
       state.selection.to + targetNodeAtSameDepth.nodeSize - deletedNodeShift;
   }
 
-  const tr = state.tr;
+  if (dispatch) {
+    const tr = state.tr;
 
-  tr.deleteRange(state.selection.from, state.selection.to);
-  tr.insert(targetPos, node);
-  tr.setSelection(TextSelection.near(tr.doc.resolve(targetPos)));
+    tr.deleteRange(state.selection.from, state.selection.to);
+    tr.insert(targetPos, node);
+    tr.setSelection(TextSelection.near(tr.doc.resolve(targetPos)));
 
-  dispatch(tr);
+    dispatch(tr);
+  }
 
   return true;
 };

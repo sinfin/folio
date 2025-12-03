@@ -55,7 +55,9 @@ export const ParagraphPlaceholder = ({
       className={`f-tiptap-paragraph-placeholder f-tiptap-paragraph-placeholder--target-${target}`}
       onClick={onClick}
     >
-      {translate(TRANSLATIONS, "placeholder")}
+      <span className="f-tiptap-paragraph-placeholder__span">
+        {translate(TRANSLATIONS, "placeholder")}
+      </span>
     </p>
   );
 };
