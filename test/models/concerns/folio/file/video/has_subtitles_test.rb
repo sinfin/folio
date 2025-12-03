@@ -4,9 +4,11 @@ require "test_helper"
 
 class Folio::File::Video::HasSubtitlesTest < ActiveSupport::TestCase
   def setup
-    @site = create_and_host_site
-    @site.update(subtitle_languages: ["cs", "en"])
-    @video = create(:folio_file_video, site: @site)
+    Rails.application.config.stub(:folio_shared_files_between_sites, false) do
+      @site = create_and_host_site
+      @site.update(subtitle_languages: ["cs", "en"])
+      @video = create(:folio_file_video, site: @site)
+    end
   end
 
   test "has_many video_subtitles relationship" do

@@ -95,9 +95,9 @@ class Folio::Ability
     end
 
     can :do_anything, Folio::SiteUserLink, { site: }
-    can :do_anything, Folio::File, { site: Rails.application.config.folio_shared_files_between_sites ? [Folio::Current.main_site, site] : site }
-    can :edit_usage_constraints, Folio::File, { site: Rails.application.config.folio_shared_files_between_sites ? [Folio::Current.main_site, site] : site }
-    can :do_anything, Folio::MediaSource, { site: Rails.application.config.folio_shared_files_between_sites ? [Folio::Current.main_site, site] : site }
+    can :do_anything, Folio::File, { site: [Folio::File.correct_site(site), site].uniq }
+    can :edit_usage_constraints, Folio::File, { site: [Folio::File.correct_site(site), site].uniq }
+    can :do_anything, Folio::MediaSource, { site: [Folio::File.correct_site(site), site].uniq }
     can :do_anything, Folio::Page, { site: }
     can :do_anything, Folio::Menu, { site: }
     can :do_anything, Folio::Lead, { site: }

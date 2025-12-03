@@ -30,8 +30,6 @@ class Folio::Console::MediaSourcesController < Folio::Console::BaseController
     end
 
     def allowed_record_sites
-      return [Folio::Current.main_site, Folio::Current.site] if Rails.application.config.folio_shared_files_between_sites
-
-      [Folio::Current.site]
+      [Folio::File.correct_site(Folio::Current.site), Folio::Current.site].uniq
     end
 end

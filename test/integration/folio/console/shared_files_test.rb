@@ -3,7 +3,7 @@
 require "test_helper"
 
 class Folio::Console::SharedFilesTest < Folio::Console::BaseControllerTest
-  attr_reader :main_site, :site_lvh, :lvh_image, :shared_image
+  attr_reader :main_site, :site_lvh, :lvh_image, :main_site_image
 
   def setup
     # not calling `super` for reason
@@ -11,14 +11,15 @@ class Folio::Console::SharedFilesTest < Folio::Console::BaseControllerTest
     @site_lvh = create_site(attributes: { domain: "lvh.me", locale: "en" }, force: true)
     Folio.instance_variable_set(:@main_site, nil) # to clear the cached version from other tests
     @superadmin = create(:folio_user, :superadmin, auth_site: main_site)
-
-    @lvh_image = create(:folio_file_image, site: site_lvh)
-    @shared_image = create(:folio_file_image, :black, site: main_site)
-    assert_not_equal lvh_image.file_name, shared_image.file_name
   end
 
-  test "`config.folio_shared_files_between_sites` is true: files stored under main_site are available at any site, not the other way" do
+  test "`config.folio_shared_files_between_sites` is true: files are always stored under main_site" do
     Rails.application.config.stub(:folio_shared_files_between_sites, true) do
+      @main_site_image = create(:folio_file_image, :black, site: main_site, slug: "main_site_image")
+      @lvh_image = create(:folio_file_image, site: site_lvh, slug: "lvh_image") # site will be overwriten to main_site
+      assert_not_equal lvh_image.file_name, main_site_image.file_name
+      assert_equal main_site, lvh_image.site
+
       [main_site, site_lvh].each do |site|
         host_site(site)
         sign_in superadmin
@@ -30,14 +31,10 @@ class Folio::Console::SharedFilesTest < Folio::Console::BaseControllerTest
 
         assert_response :success, response.body
 
-        assert file_data_in_json(response.body, shared_image).present?,
-                "Data #{shared_image.file_name} not found in response for `#{site.domain}`"
-        if site == main_site
-          assert_nil file_data_in_json(response.body, lvh_image), response.body
-        else
-          assert file_data_in_json(response.body, lvh_image).present?,
+        assert file_data_in_json(response.body, main_site_image).present?,
+                "Data #{main_site_image.file_name} not found in response for `#{site.domain}`"
+        assert file_data_in_json(response.body, lvh_image).present?,
                   "Data #{lvh_image.file_name} not found in response for `#{site.domain}`"
-        end
       end
     end
   end
@@ -103,6 +100,11 @@ class Folio::Console::SharedFilesTest < Folio::Console::BaseControllerTest
 
   test "`config.folio_shared_files_between_sites` is false: files are available only at theirs site" do
     Rails.application.config.stub(:folio_shared_files_between_sites, false) do
+      @main_site_image = create(:folio_file_image, :black, site: main_site, slug: "main_site_image")
+      @lvh_image = create(:folio_file_image, site: site_lvh, slug: "lvh_image") # site will not be overwriten to main_site
+      assert_not_equal lvh_image.file_name, main_site_image.file_name
+      assert_equal site_lvh, lvh_image.site
+
       [main_site, site_lvh].each do |site|
         host_site(site)
         sign_in superadmin
@@ -115,11 +117,11 @@ class Folio::Console::SharedFilesTest < Folio::Console::BaseControllerTest
         assert_response :success, response.body
 
         if site == main_site
-          assert file_data_in_json(response.body, shared_image).present?,
-               "Data #{shared_image.file_name} not found in response for `#{site.domain}`"
+          assert file_data_in_json(response.body, main_site_image).present?,
+               "Data #{main_site_image.file_name} not found in response for `#{site.domain}`"
           assert_nil file_data_in_json(response.body, lvh_image), response.body
         else
-          assert_nil file_data_in_json(response.body, shared_image), response.body
+          assert_nil file_data_in_json(response.body, main_site_image), response.body
           assert file_data_in_json(response.body, lvh_image).present?,
                  "Data #{lvh_image.file_name} not found in response for `#{site.domain}`"
         end

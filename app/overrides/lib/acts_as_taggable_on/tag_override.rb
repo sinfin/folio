@@ -12,12 +12,9 @@ ActsAsTaggableOn::Tag.class_eval do
   scope :ordered, -> { order(name: :asc) }
 
   scope :by_site, -> (site) {
-    tenant_site_ids = [site]
-    if Rails.application.config.folio_shared_files_between_sites
-      tenant_site_ids += [Folio::Current.main_site&.id, nil]
-    end
+    tenant_site_ids = [Folio::File.correct_site(Folio::Current.site), Folio::Current.site].uniq.collect(&:id)
 
-    joins(:taggings).where(taggings: { tenant: tenant_site_ids.uniq })
+    joins(:taggings).where(taggings: { tenant: tenant_site_ids })
                     .select("DISTINCT ON (tags.name) tags.*")
                     .reorder("tags.name, tags.taggings_count")
   }
