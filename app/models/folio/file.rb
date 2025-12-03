@@ -150,6 +150,7 @@ class Folio::File < Folio::ApplicationRecord
 
   before_validation :set_file_track_duration, if: :file_uid_changed?
   before_validation :set_video_file_dimensions, if: :file_uid_changed?
+  before_validation :set_correct_site
   before_save :set_file_name_for_search, if: :file_name_changed?
   before_destroy :check_usage_before_destroy
   after_save :run_after_save_job
@@ -188,6 +189,9 @@ class Folio::File < Folio::ApplicationRecord
     end
   end
 
+  def self.correct_site(site)
+    Rails.application.config.folio_shared_files_between_sites ? Folio::Current.main_site : site
+  end
 
   def title
     file_name
@@ -489,6 +493,10 @@ class Folio::File < Folio::ApplicationRecord
                            data: { id: },
                          }.to_json,
                          user_ids: message_bus_user_ids
+    end
+
+    def set_correct_site
+      self.site = Folio::File.correct_site(self.site)
     end
 end
 
