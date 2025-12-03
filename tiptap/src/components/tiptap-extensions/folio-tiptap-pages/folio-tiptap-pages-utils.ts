@@ -62,7 +62,7 @@ export function addOrDeletePage({
   type,
 }: {
   state: EditorState;
-  dispatch: (tr: Transaction) => void;
+  dispatch?: (tr: Transaction) => void;
   type: "addBefore" | "addAfter" | "delete";
 }) {
   const maybePages = findParentNode(
@@ -72,7 +72,11 @@ export function addOrDeletePage({
     (node: Node) => node.type.name === FolioTiptapPageNode.name,
   )(state.selection);
 
-  if (dispatch && maybePages && maybePage) {
+  if (!maybePages || !maybePage) {
+    return false;
+  }
+
+  if (dispatch) {
     const pages = maybePages.node;
     let pageIndex: null | number = null;
 
@@ -190,7 +194,7 @@ export function moveFolioTiptapPage({
   type,
 }: {
   state: EditorState;
-  dispatch: (tr: Transaction) => void;
+  dispatch?: (tr: Transaction) => void;
   type: "up" | "down";
 }) {
   const maybePages = findParentNode(

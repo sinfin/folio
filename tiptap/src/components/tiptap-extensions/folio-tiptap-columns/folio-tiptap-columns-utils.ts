@@ -52,7 +52,7 @@ export function addOrDeleteColumn({
   type,
 }: {
   state: EditorState;
-  dispatch: (tr: Transaction) => void;
+  dispatch?: (tr: Transaction) => void;
   type: "addBefore" | "addAfter" | "delete";
 }) {
   const maybeColumns = findParentNode(
@@ -62,7 +62,11 @@ export function addOrDeleteColumn({
     (node: Node) => node.type.name === FolioTiptapColumnNode.name,
   )(state.selection);
 
-  if (dispatch && maybeColumns && maybeColumn) {
+  if (!maybeColumns || !maybeColumn) {
+    return false;
+  }
+
+  if (dispatch) {
     const cols = maybeColumns.node;
     let colIndex: null | number = null;
 

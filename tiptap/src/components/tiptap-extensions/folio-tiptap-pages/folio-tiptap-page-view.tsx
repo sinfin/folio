@@ -4,7 +4,7 @@ import { findChildren, type Editor } from "@tiptap/core";
 import { TextSelection } from "@tiptap/pm/state";
 import { toggleFolioTiptapPageCollapsed } from "./folio-tiptap-pages-utils";
 import { MenuDownIcon, MenuUpIcon } from "@/components/tiptap-icons";
-import ParagraphPlaceholder from "@/components/tiptap-ui/paragraph-placeholder/paragraph-placeholder";
+import HasParagraphPlaceholder from "@/components/tiptap-ui/paragraph-placeholder/has-paragraph-placeholder";
 import "./folio-tiptap-page-view.scss";
 
 import translate from "@/lib/i18n";
@@ -143,8 +143,9 @@ export const FolioTiptapPageView: React.FC<FolioTiptapPageViewProps> = ({
             <br className="ProseMirror-trailingBreak" />
           </h2>
         ) : null}
-        <NodeViewContent />
-        <ParagraphPlaceholder editor={editor} getPos={getPos} target="page" />
+        <HasParagraphPlaceholder editor={editor} getPos={getPos} target="page">
+          <NodeViewContent />
+        </HasParagraphPlaceholder>
       </div>
 
       <span
