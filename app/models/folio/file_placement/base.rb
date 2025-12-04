@@ -228,15 +228,33 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
 
     warnings = []
 
-    if missing_alt?
+    should_check_alt = if placement&.respond_to?(:should_validate_file_placements_alt_if_needed?)
+      placement.should_validate_file_placements_alt_if_needed?(for_console_form_warning: true)
+    else
+      Rails.application.config.folio_files_require_alt
+    end
+
+    if should_check_alt && missing_alt?
       warnings << :missing_alt
     end
 
-    if missing_description?
+    should_check_description = if placement&.respond_to?(:should_validate_file_placements_description_if_needed?)
+      placement.should_validate_file_placements_description_if_needed?(for_console_form_warning: true)
+    else
+      Rails.application.config.folio_files_require_description
+    end
+
+    if should_check_description && missing_description?
       warnings << :missing_description
     end
 
-    if file.author.blank? || file.attribution_source.blank? && file.attribution_source_url.blank?
+    should_check_attribution = if placement&.respond_to?(:should_validate_file_placements_attribution_if_needed?)
+      placement.should_validate_file_placements_attribution_if_needed?(for_console_form_warning: true)
+    else
+      Rails.application.config.folio_files_require_attribution
+    end
+
+    if should_check_attribution && (file.author.blank? && file.attribution_source.blank? && file.attribution_source_url.blank?)
       warnings << :missing_attribution
     end
 

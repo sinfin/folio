@@ -245,22 +245,25 @@ module Folio::HasAttachments
     og_image.presence || cover
   end
 
-  def should_validate_file_placements_attribution_if_needed?
+  def should_validate_file_placements_attribution_if_needed?(for_console_form_warning: false)
     return false unless Rails.application.config.folio_files_require_attribution
+    return true if for_console_form_warning
 
     # only validate if published by default
     read_attribute(:published) == true
   end
 
-  def should_validate_file_placements_alt_if_needed?
+  def should_validate_file_placements_alt_if_needed?(for_console_form_warning: false)
     return false unless Rails.application.config.folio_files_require_alt
+    return true if for_console_form_warning
 
     # only validate if published by default
     read_attribute(:published) == true
   end
 
-  def should_validate_file_placements_description_if_needed?
+  def should_validate_file_placements_description_if_needed?(for_console_form_warning: false)
     return false unless Rails.application.config.folio_files_require_description
+    return true if for_console_form_warning
 
     # only validate if published by default
     read_attribute(:published) == true

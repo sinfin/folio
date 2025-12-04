@@ -115,11 +115,12 @@ class Folio::FilePlacement::BaseTest < ActiveSupport::TestCase
     page = create(:folio_page)
     placement = page.create_cover_placement(file: image)
 
-    warnings = placement.console_warnings
+    Rails.application.config.stub(:folio_files_require_alt, true) do
+      warnings = placement.console_warnings
 
-    assert_equal 1, warnings.length
-    assert_match(/alt/i, warnings.first)
-    assert_no_match(/#{image.file_name}/, warnings.first)
+      assert_equal 1, warnings.length
+      assert_includes warnings, :missing_alt
+    end
   end
 
   test "console_warnings returns warning for missing description" do
@@ -127,11 +128,12 @@ class Folio::FilePlacement::BaseTest < ActiveSupport::TestCase
     page = create(:folio_page)
     placement = page.create_cover_placement(file: image)
 
-    warnings = placement.console_warnings
+    Rails.application.config.stub(:folio_files_require_description, true) do
+      warnings = placement.console_warnings
 
-    assert_equal 1, warnings.length
-    assert_match(/description|popisek/i, warnings.first)
-    assert_no_match(/#{image.file_name}/, warnings.first)
+      assert_equal 1, warnings.length
+      assert_includes warnings, :missing_description
+    end
   end
 
   test "console_warnings returns warning for missing attribution" do
@@ -144,11 +146,12 @@ class Folio::FilePlacement::BaseTest < ActiveSupport::TestCase
     page = create(:folio_page)
     placement = page.create_cover_placement(file: image)
 
-    warnings = placement.console_warnings
+    Rails.application.config.stub(:folio_files_require_attribution, true) do
+      warnings = placement.console_warnings
 
-    assert_equal 1, warnings.length
-    assert_match(/attribution|author|autora|zdroj/i, warnings.first)
-    assert_no_match(/#{image.file_name}/, warnings.first)
+      assert_equal 1, warnings.length
+      assert_includes warnings, :missing_attribution
+    end
   end
 
   test "console_warnings returns multiple warnings" do
@@ -161,9 +164,18 @@ class Folio::FilePlacement::BaseTest < ActiveSupport::TestCase
     page = create(:folio_page)
     placement = page.create_cover_placement(file: image)
 
-    warnings = placement.console_warnings
+    Rails.application.config.stub(:folio_files_require_alt, true) do
+      Rails.application.config.stub(:folio_files_require_description, true) do
+        Rails.application.config.stub(:folio_files_require_attribution, true) do
+          warnings = placement.console_warnings
 
-    assert_equal 3, warnings.length
+          assert_equal 3, warnings.length
+          assert_includes warnings, :missing_alt
+          assert_includes warnings, :missing_description
+          assert_includes warnings, :missing_attribution
+        end
+      end
+    end
   end
 
   test "console_warnings returns empty array when all fields are filled" do
