@@ -30,8 +30,8 @@
       p = t('.invalid')
 
       .my-4.pb-3
-        = render(Folio::Console::Ui::ValidationBoxComponent.new(errors: model.original.errors,
-                                                                record: model.original))
+        = render_view_component(Folio::Console::Ui::ValidationBoxComponent.new(errors: model.original.errors,
+                                                                               record: model.original))
 
       .d-flex
         a.btn.btn-primary.me-2[
