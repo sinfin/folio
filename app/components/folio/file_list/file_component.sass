@@ -30,9 +30,6 @@
     z-index: 1
     position: relative
     aspect-ratio: 1 / 1
-    display: flex
-    align-items: center
-    justify-content: center
 
   &__image-bg
     position: absolute
@@ -42,14 +39,15 @@
     opacity: 0.75
 
   &__image
-    max-width: 100%
-    max-height: 100%
-    width: auto
-    height: auto
-    flex: 0 1 auto
-    position: relative
-    z-index: 2
     cursor: pointer
+    height: 100%
+    left: 0
+    object-fit: contain
+    object-position: center
+    position: absolute
+    top: 0
+    width: 100%
+    z-index: 2
 
   &__count,
   &__source,
