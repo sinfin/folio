@@ -20,7 +20,8 @@
     opacity: $f-c-btn-hover-opacity
 
 .btn-sm
-  min-height: $input-height-sm
+  --#{$prefix}btn-padding-y: 0.15rem
+  min-height: 24px
   gap: $grid-gutter-width / 5
 
 .btn-primary,
@@ -37,6 +38,11 @@
 .btn-medium-dark
   --#{$prefix}btn-bg: #{$gray-medium-dark}
   --#{$prefix}btn-color: #{$white}
+
+.btn-white
+  --#{$prefix}btn-color: #{$black}
+  --#{$prefix}btn-bg: #{$white}
+  font-weight: $font-weight-normal
 
 .btn-mini
   --#{$prefix}btn-color: #{$black}

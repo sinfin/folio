@@ -23,3 +23,11 @@ cs:
 
         clipboard_component:
           copy: Kopírovat
+
+        validation_box_component:
+          fix: Opravit
+          errors: Doplňte chybějící povinné údaje, prosím.
+          warnings: "Varování: následující kritéria nejsou splněna"
+          missing_alt: nemá vyplněný alt
+          missing_description: nemá vyplněný popisek
+          missing_attribution: nemá vyplněného autora nebo zdroj

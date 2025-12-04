@@ -30,7 +30,8 @@
       p = t('.invalid')
 
       .my-4.pb-3
-        == cell('folio/console/form/errors', nil, errors: model.original.errors)
+        = render(Folio::Console::Ui::ValidationBoxComponent.new(errors: model.original.errors,
+                                                                record: model.original))
 
       .d-flex
         a.btn.btn-primary.me-2[

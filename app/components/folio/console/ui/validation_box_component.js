@@ -1,4 +1,4 @@
-window.Folio.Stimulus.register('f-c-form-errors', class extends window.Stimulus.Controller {
+window.Folio.Stimulus.register('f-c-ui-validation-box', class extends window.Stimulus.Controller {
   static targets = ['button']
 
   connect () {
@@ -42,10 +42,10 @@ window.Folio.Stimulus.register('f-c-form-errors', class extends window.Stimulus.
 
       this.buttonTargets.forEach((buttonTarget) => {
         if (found) return
-        if (!buttonTarget.classList.contains('f-c-form-errors__button--hidden')) return
+        if (!buttonTarget.hidden) return
         const btnKey = buttonTarget.dataset.errorField
         if (btnKey !== key && !key.endsWith(`.${btnKey}`)) return
-        buttonTarget.classList.remove('f-c-form-errors__button--hidden')
+        buttonTarget.hidden = false
         buttonTarget.formGroup = formGroup
         found = true
       })
@@ -82,5 +82,22 @@ window.Folio.Stimulus.register('f-c-form-errors', class extends window.Stimulus.
 
     const input = btn.formGroup.querySelector('.form-control')
     if (input) input.focus()
+  }
+
+  openFileShowModal (e) {
+    e.preventDefault()
+
+    const trigger = e.currentTarget
+    const fileDataJson = trigger.dataset.fileData
+    const fileData = fileDataJson ? JSON.parse(fileDataJson) : null
+
+    if (!fileData) return
+
+    const modal = document.querySelector('.f-c-files-show-modal')
+    if (!modal) return
+
+    modal.dispatchEvent(new window.CustomEvent('f-c-files-show-modal:openForFileData', {
+      detail: { fileData }
+    }))
   }
 })

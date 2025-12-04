@@ -1,19 +1,58 @@
 # frozen_string_literal: true
 
-class Folio::Console::Form::WarningsComponent < Folio::Console::ApplicationComponent
-  def initialize(warnings:, record_key: nil)
-    @warnings = warnings
-    @record_key = record_key
+class Folio::Console::Ui::ValidationBoxComponent < Folio::Console::ApplicationComponent
+  def initialize(errors: nil,
+                 warnings: nil,
+                 record:,
+                 class_name: nil)
+    @errors = errors
+    @warnings = errors.present? ? nil : warnings
+    @variant = @errors.present? ? :danger : :warning
+    @record = record
+    @class_name = class_name
   end
 
   def render?
-    @warnings.present?
+    @errors.present? || @warnings.present?
   end
 
   private
     def data
-      stimulus_controller("f-c-form-warnings")
+      stimulus_controller("f-c-ui-validation-box")
     end
+
+    # Danger variant methods
+
+    def dig_error_message(error)
+      if ie = error.try(:inner_error)
+        dig_error_message(ie)
+      else
+        error.full_message
+      end
+    end
+
+    def button_data(error)
+      {
+        "error-field" => error.attribute,
+        "error-type" => (error.options && error.options[:message]) || error.type,
+        "f-c-ui-validation-box-target" => "button",
+        "action" => "f-c-ui-validation-box#onButtonClick"
+      }
+    end
+
+    def show_fix_button?(error)
+      return true if button_blacklist.blank?
+
+      button_blacklist.exclude?(error.attribute.to_s)
+    end
+
+    def button_blacklist
+      @button_blacklist ||= if @record.respond_to?(:folio_console_ui_validation_box_button_blacklist)
+        Array(@record.folio_console_ui_validation_box_button_blacklist).map(&:to_s)
+      end
+    end
+
+    # Warning variant methods
 
     def can_read_file?(file)
       return false if file.blank?
@@ -74,10 +113,8 @@ class Folio::Console::Form::WarningsComponent < Folio::Console::ApplicationCompo
       end
     end
 
-    def file_label_data(file)
-      return nil unless can_now?(:show, file)
-
-      stimulus_action(click: "openFileShowModal").merge(file_data: {
+    def file_button_data(file)
+      stimulus_action(click: "openFileShowModal").merge("file-data": {
         type: file.class.name,
         id: file.id,
         fileName: file.file_name,
