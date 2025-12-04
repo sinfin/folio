@@ -79,19 +79,16 @@ export const FolioTiptapColumnsNode = Node.create({
       addFolioTiptapColumnBefore:
         () =>
         ({ dispatch, state }: CommandParams) => {
-          if (!dispatch) return false;
           return addOrDeleteColumn({ dispatch, state, type: "addBefore" });
         },
       addFolioTiptapColumnAfter:
         () =>
         ({ dispatch, state }: CommandParams) => {
-          if (!dispatch) return false;
           return addOrDeleteColumn({ dispatch, state, type: "addAfter" });
         },
       deleteFolioTiptapColumn:
         () =>
         ({ dispatch, state }: CommandParams) => {
-          if (!dispatch) return false;
           return addOrDeleteColumn({ dispatch, state, type: "delete" });
         },
     };

@@ -1,6 +1,6 @@
 import React from "react";
 import { NodeViewContent, NodeViewWrapper, NodeViewProps } from "@tiptap/react";
-import ParagraphPlaceholder from "@/components/tiptap-ui/paragraph-placeholder/paragraph-placeholder";
+import HasParagraphPlaceholder from "@/components/tiptap-ui/paragraph-placeholder/has-paragraph-placeholder";
 
 type FolioTiptapFloatAsideViewProps = NodeViewProps;
 
@@ -11,12 +11,13 @@ export const FolioTiptapFloatAsideView: React.FC<
 
   return (
     <NodeViewWrapper>
-      <NodeViewContent />
-      <ParagraphPlaceholder
+      <HasParagraphPlaceholder
         editor={editor}
         getPos={getPos}
         target="float-aside"
-      />
+      >
+        <NodeViewContent />
+      </HasParagraphPlaceholder>
     </NodeViewWrapper>
   );
 };
