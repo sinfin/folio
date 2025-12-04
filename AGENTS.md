@@ -17,6 +17,7 @@ After editing any code files, automatically format and lint them using the appro
 ### Ruby/Ruby on Rails
 - Format & Lint: `bundle exec rubocop --autocorrect-all <file_path>`
 - Note: Guard automatically runs rubocop on Ruby files when they change. For manual runs, use the command above.
+- When spanning method arguments across multiple lines, align arguments with the opening parenthesis
 
 ### JavaScript
 - Format & Lint: `npx standard --fix <file_path>`
