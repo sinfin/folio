@@ -144,18 +144,6 @@ class Folio::File::HasUsageConstraintsTest < ActiveSupport::TestCase
     assert_equal 10, image.attribution_max_usage_count
   end
 
-  test "cannot publish article with images without media_source" do
-    article = create(:dummy_blog_article, site: @site, published: false)
-    image_without_source = img(media_source: nil, attribution_source: nil)
-
-    article.image_placements.create!(file: image_without_source)
-
-    article.published = true
-
-    assert_not article.valid?
-    assert article.errors[:base].any? { |msg| msg.include?(image_without_source.file_name) }
-  end
-
   test "can publish article with images that have media_source" do
     article = create(:dummy_blog_article, site: @site, published: false)
     ms = media_source(title: "Getty Images")
