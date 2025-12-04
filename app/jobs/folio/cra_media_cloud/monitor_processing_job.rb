@@ -415,14 +415,6 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
       ENV.fetch("REDIS_RECONNECT_ATTEMPTS", 3).to_i
     end
 
-    def redis_reconnect_delay
-      ENV.fetch("REDIS_RECONNECT_DELAY", 0.5).to_f
-    end
-
-    def redis_reconnect_delay_max
-      ENV.fetch("REDIS_RECONNECT_DELAY_MAX", 5).to_f
-    end
-
     def another_monitor_job_running?
       # Skip lock in test environment for deterministic behavior
       return false if Rails.env.test?
