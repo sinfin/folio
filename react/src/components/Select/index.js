@@ -1,5 +1,4 @@
 import React from 'react'
-import { debounce } from 'lodash'
 
 import ReactSelect, { components } from 'react-select'
 import CreatableSelect from 'react-select/creatable'
@@ -94,7 +93,8 @@ class Select extends React.Component {
       }
     }
     let SelectComponent = CreatableSelect
-    let loadOptions, loadOptionsRaw
+    let loadOptions
+    let useDebounceTimeout = false
 
     if (!createable) SelectComponent = ReactSelect
 
@@ -104,7 +104,7 @@ class Select extends React.Component {
         // Use AsyncCreatableSelect without pagination
         SelectComponent = AsyncCreatableSelect
 
-        loadOptionsRaw = (inputValue, handle) => {
+        loadOptions = (inputValue, handle) => {
           let data = ''
           const params = new URLSearchParams()
 
@@ -158,8 +158,9 @@ class Select extends React.Component {
       } else {
         // Use AsyncPaginate for pagination support
         SelectComponent = AsyncPaginate
+        useDebounceTimeout = true
 
-        loadOptionsRaw = async (inputValue, loadedOptions, additional) => {
+        loadOptions = async (inputValue, loadedOptions, additional) => {
           let data = ''
           const params = new URLSearchParams()
 
@@ -285,10 +286,6 @@ class Select extends React.Component {
           }
         }
       }
-
-      if (loadOptionsRaw) {
-        loadOptions = debounce(loadOptionsRaw, 300, { leading: true, trailing: true })
-      }
     }
 
     let handledOptions
@@ -326,6 +323,7 @@ class Select extends React.Component {
         components={{ Input }}
         dataTestId={dataTestId}
         menuPlacement={menuPlacement}
+        debounceTimeout={useDebounceTimeout ? 250 : undefined}
         {...rest}
       />
     )
