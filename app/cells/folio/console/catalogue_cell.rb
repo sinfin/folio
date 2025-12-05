@@ -428,9 +428,9 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
       else
         base = klass.human_attribute_name(attr)
 
-        if allow_sorting && arrows = cell("folio/console/catalogue_sort_arrows",
-                                          klass:,
-                                          attr:).show
+        component = Folio::Console::CatalogueSortArrowsComponent.new(klass:, attr:)
+        if allow_sorting && component.render?
+          arrows = render_view_component(component)
           content_tag(:span, "#{base} #{arrows}", class: "f-c-catalogue__label-with-arrows")
         else
           base
