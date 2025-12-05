@@ -6,10 +6,10 @@
   - if @errors.present?
     div: strong = t('.errors')
 
-    ul
+    ul.f-c-ui-validation-box__ul
       - @errors.each_with_index do |error, i|
-        li.d-flex.align-items-center class=(i.zero? ? nil : 'mt-2')
-          span.me-3
+        li class="f-c-ui-validation-box__li"
+          span
             = dig_error_message(error)
 
           - if show_fix_button?(error)
@@ -23,13 +23,13 @@
   - elsif @warnings.present?
     div: strong = t('.warnings')
 
-    ul
+    ul.f-c-ui-validation-box__ul
       - @warnings.each_with_index do |group, group_index|
         - file = group[:file]
         - warnings = group[:warnings]
 
-        li.d-flex.align-items-center class=(group_index.zero? ? nil : 'mt-2')
-          span.me-3
+        li class="f-c-ui-validation-box__li"
+          span
             - if file.present?
               = file_label(file)
             '  #{warnings_text(warnings)}

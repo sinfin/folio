@@ -309,16 +309,16 @@ module Folio::HasAttachments
         next unless placement.file.id
 
         file_id = placement.file.id
-        grouped[file_id] ||= { file: placement.file, warnings: [] }
 
         placement.console_warnings.each do |warning|
+          next if warning.blank?
+
+          grouped[file_id] ||= { file: placement.file, warnings: [] }
           grouped[file_id][:warnings] << warning unless grouped[file_id][:warnings].include?(warning)
         end
       end
 
-    grouped.values.map do |group|
-      { file: group[:file], warnings: group[:warnings].uniq }
-    end
+    grouped.values
   end
 
   private
