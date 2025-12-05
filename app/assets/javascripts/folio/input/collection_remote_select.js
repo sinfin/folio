@@ -24,6 +24,7 @@ window.Folio.Input.CollectionRemoteSelect.bind = (input, { includeBlank, url }) 
     ajax: {
       url: url || $input.data('url'),
       dataType: 'JSON',
+      delay: 250,
       minimumInputLength: 0,
       cache: false,
       data: (params) => {
