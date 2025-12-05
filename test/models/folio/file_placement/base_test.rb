@@ -17,7 +17,9 @@ class Folio::FilePlacement::BaseTest < ActiveSupport::TestCase
         assert_equal(["\"#{image.file_name}\" (##{image.id}) využitý pro \"Obrázek\" nemá vyplněného autora nebo zdroj"], page.errors.messages[:"cover_placement.file"])
       end
 
-      assert page.update(cover: image)
+      Rails.application.config.stub(:folio_files_require_attribution, false) do
+        assert page.update(cover: image)
+      end
 
       Rails.application.config.stub(:folio_files_require_attribution, true) do
         assert_not page.save
@@ -186,8 +188,14 @@ class Folio::FilePlacement::BaseTest < ActiveSupport::TestCase
     page = create(:folio_page)
     placement = page.create_cover_placement(file: image)
 
-    warnings = placement.console_warnings
+    Rails.application.config.stub(:folio_files_require_alt, true) do
+      Rails.application.config.stub(:folio_files_require_description, true) do
+        Rails.application.config.stub(:folio_files_require_attribution, true) do
+          warnings = placement.console_warnings
 
-    assert_equal [], warnings
+          assert_equal [], warnings
+        end
+      end
+    end
   end
 end
