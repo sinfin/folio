@@ -379,7 +379,7 @@ module Folio::HasAttachments
         end
       end
 
-      if has_invalid_file_placements
+      if has_invalid_file_placements && errors.blank?
         errors.add(:base, :has_invalid_file_placements)
       end
     end
