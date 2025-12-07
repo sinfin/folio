@@ -1,20 +1,18 @@
 # Development Guidelines for AI Assistants
 
-## Required Commands After Code Changes
+## Code Formatting and Linting
 
-When making any code changes to this project, ALWAYS run these commands in order:
+After editing any code files, automatically format and lint them using the appropriate tools for that language.
 
-1. **Lint Check**: `npm run lint` - Fix any linting errors before proceeding
-2. **Format Code**: `npm run format:file [files]` - Apply consistent code formatting to changed files only
-3. **Type Check**: `npm run build:check` - Verify TypeScript compilation
+### JavaScript
+- Format: `npm run format:file <file_path>`
+- Lint: `npx eslint --fix <file_path>`
+- Note: This overrides the standard JavaScript formatting/linting from the root AGENTS.md. Use eslint and prettier instead of `npx standard --fix`.
 
-### For Single File Changes
-
-When working on a single file, you can format just that file:
-
-```bash
-npm run format:file src/components/my-component.tsx
-```
+### TypeScript
+- Format: `npm run format:file <file_path>`
+- Lint: `npx eslint --fix <file_path>`
+- Type Check: `npm run build:check` - Verify TypeScript compilation after making changes
 
 ## Project Structure Notes
 
@@ -28,4 +26,5 @@ npm run format:file src/components/my-component.tsx
 - Use existing utility functions and follow established patterns
 - Maintain consistent import organization (external libs first, then internal)
 - Follow the existing SCSS variable and mixin conventions
+- Prefer early returns over nested if statements for better readability
 - Never commit without running the full command sequence above

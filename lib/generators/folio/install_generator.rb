@@ -75,6 +75,7 @@ module Folio
 
       def copy_templates
         [
+          "AGENTS.md",
           ".env.sample",
           "app/assets/config/manifest.js",
           "app/controllers/application_controller.rb",
