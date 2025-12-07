@@ -172,7 +172,9 @@ namespace :folio do
 
           file_types = ["Folio::File", "Folio::File::Audio", "Folio::File::Video", "Folio::File::Image", "Folio::File::Document"]
           puts("Updating taggigs for file types: #{file_types.join(", ")}")
-          wrong_taggings_scope = ActsAsTaggableOn::Tagging.where(taggable_type: file_types).where.not(tenant: correct_site.id)
+          wrong_taggings_scope = ActsAsTaggableOn::Tagging.where(taggable_type: file_types)
+                                                          .where(id: ActsAsTaggableOn::Tagging.where.not(tenant: correct_site.id)
+                                                                                              .or(ActsAsTaggableOn::Tagging.where(tenant: nil)))
           puts "Updating #{wrong_taggings_scope.count} taggings"
           ActsAsTaggableOn::Tagging.where(id: wrong_taggings_scope).update_all(tenant: correct_site.id)
           puts "Taggings updated"
