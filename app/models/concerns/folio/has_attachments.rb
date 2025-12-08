@@ -245,6 +245,8 @@ module Folio::HasAttachments
     og_image.presence || cover
   end
 
+  # @param for_console_form_warning [Boolean] When true, shows validation warnings in console form
+  #   even if article is unpublished. When false, only validates for published articles.
   def should_validate_file_placements_attribution_if_needed?(for_console_form_warning: false)
     return false unless Rails.application.config.folio_files_require_attribution
     return true if for_console_form_warning
@@ -253,6 +255,8 @@ module Folio::HasAttachments
     read_attribute(:published) == true
   end
 
+  # @param for_console_form_warning [Boolean] When true, shows validation warnings in console form
+  #   even if article is unpublished. When false, only validates for published articles.
   def should_validate_file_placements_alt_if_needed?(for_console_form_warning: false)
     return false unless Rails.application.config.folio_files_require_alt
     return true if for_console_form_warning
@@ -261,6 +265,8 @@ module Folio::HasAttachments
     read_attribute(:published) == true
   end
 
+  # @param for_console_form_warning [Boolean] When true, shows validation warnings in console form
+  #   even if article is unpublished. When false, only validates for published articles.
   def should_validate_file_placements_description_if_needed?(for_console_form_warning: false)
     return false unless Rails.application.config.folio_files_require_description
     return true if for_console_form_warning
