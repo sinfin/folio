@@ -23,7 +23,7 @@ export const TRANSLATIONS = {
 
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
-    pages: {
+    folioTiptapPages: {
       insertFolioTiptapPages: () => ReturnType;
       addFolioTiptapPageBefore: () => ReturnType;
       addFolioTiptapPageAfter: () => ReturnType;
@@ -93,31 +93,26 @@ export const FolioTiptapPagesNode = Node.create({
       addFolioTiptapPageBefore:
         () =>
         ({ dispatch, state }: CommandParams) => {
-          if (!dispatch) return false;
           return addOrDeletePage({ dispatch, state, type: "addBefore" });
         },
       addFolioTiptapPageAfter:
         () =>
         ({ dispatch, state }: CommandParams) => {
-          if (!dispatch) return false;
           return addOrDeletePage({ dispatch, state, type: "addAfter" });
         },
       deleteFolioTiptapPage:
         () =>
         ({ dispatch, state }: CommandParams) => {
-          if (!dispatch) return false;
           return addOrDeletePage({ dispatch, state, type: "delete" });
         },
       moveFolioTiptapPageUp:
         () =>
         ({ dispatch, state }: CommandParams) => {
-          if (!dispatch) return false;
           return moveFolioTiptapPage({ state, dispatch, type: "up" });
         },
       moveFolioTiptapPageDown:
         () =>
         ({ dispatch, state }: CommandParams) => {
-          if (!dispatch) return false;
           return moveFolioTiptapPage({ state, dispatch, type: "down" });
         },
     };

@@ -43,6 +43,12 @@ After editing any code files, automatically format and lint them using the appro
   - Elements (E) and Modifiers (M) follow standard BEM: `__element` and `--modifier`
     - Example: `m-blog-post__button` (element), `m-blog-post__button--active` (modifier)
 - Stimulus: Use `stimulus_controller("controller-name", values: {...}, action: {...}, classes: [...])` helper for JavaScript behavior
+- Testing: Always test against rendered content, not instance methods
+- Ruby code:
+  - Most ViewComponent instance methods can be private
+  - Prefer ViewComponents over partials
+  - Prefer ViewComponents over HTML-generating helpers
+  - Prefer slots over passing markup as an argument
 - See [docs/components.md](docs/components.md) for detailed component guidelines
 
 ## File Formatting Standards
@@ -64,9 +70,8 @@ All commits must use semantic commit messages:
 **Types:** `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
 
 **Examples:**
-- `feat(sway): add screen recording functionality`
-- `fix(python): resolve import error in file_utils`
-- `refactor(sway): abstract common patterns to dotfiles module`
-- `docs: update AGENTS.md with commit guidelines`
+- `feat(nested_fields): add sortable auto scroll`
+- `chore(react): standardjs lint`
+- `docs(tiptap): add early returns preference to AGENTS.md`
 
 Scope is optional but recommended for clarity. Describe the final state/outcome, not the implementation steps. Keep the message concise and focused on what was achieved.
