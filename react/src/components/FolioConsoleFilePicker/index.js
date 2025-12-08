@@ -59,7 +59,7 @@ class FolioConsoleFilePicker extends React.PureComponent {
       >
         <label className='string optional form-label'>{this.props.attachmentType.label}</label>
 
-        <div className="f-c-files-picker__inner">
+        <div className='f-c-files-picker__inner'>
           <div className='f-c-files-picker__content' data-f-c-files-picker-target='content' />
 
           <div className='f-c-files-picker__btn-wrap'>

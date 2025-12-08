@@ -9,7 +9,12 @@ class TagsInput extends React.Component {
   }
 
   onChange = (tags) => {
-    this.props.onTagsChange(tags)
+    // Extract values from option objects if tags is an array of objects
+    // Tags are stored as strings, so we need to convert {value, label} -> value
+    const tagValues = tags && Array.isArray(tags) && tags.length > 0 && typeof tags[0] === 'object'
+      ? tags.map(tag => tag.value || tag)
+      : tags
+    this.props.onTagsChange(tagValues)
   }
 
   onKeyDown = (e) => {

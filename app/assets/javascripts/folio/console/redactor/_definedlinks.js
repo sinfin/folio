@@ -56,6 +56,7 @@ if (window.Redactor) {
           ajax: {
             url,
             dataType: 'JSON',
+            delay: 250,
             minimumInputLength: 0,
             cache: false,
             data: function (params) {
