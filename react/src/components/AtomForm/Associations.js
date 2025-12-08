@@ -16,9 +16,9 @@ const reactSelectOptionToRecord = (option) => {
   if (!option) return null
 
   // Extract id and type with fallbacks
-  // option.value is the STI string like "Economia::List::Category -=- 48"
+  // option.value is the STI string like "MyProject::List::Category -=- 48"
   // option.id is the numeric ID from the API response
-  // option.type is the class name like "Economia::List::Category"
+  // option.type is the class name like "MyProject::List::Category"
   let id = option.id
   let type = option.type
 

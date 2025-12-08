@@ -37,7 +37,7 @@ class OrderedMultiselectApp extends React.Component {
 
   onSelect = (option) => {
     // option is {value, label, id} from react-select
-    // value is the STI string like "Economia::List::Category -=- 310"
+    // value is the STI string like "MyProject::List::Category -=- 310"
     // id is the numeric ID like 310
     // Use id for the item ID, fallback to extracting from value if id not available
     let itemId = option.id

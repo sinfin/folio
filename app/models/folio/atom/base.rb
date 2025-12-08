@@ -148,8 +148,8 @@ class Folio::Atom::Base < Folio::ApplicationRecord
       record = send(key)
       if record
         # Check if any class in the association definition forces showing model names
-        # This way, if the definition allows Economia::List (base class), model names
-        # will be shown even if a subclass like Economia::List::Category is selected
+        # This way, if the definition allows MyProject::List (base class), model names
+        # will be shown even if a subclass like MyProject::List::Category is selected
         association_def = klass::ASSOCIATIONS[key]
         class_names = if association_def.is_a?(Hash)
           association_def[:klasses] || []
