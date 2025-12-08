@@ -210,4 +210,16 @@ module Folio::Console::FileControllerBase
 
       render json: { data:, meta: }, status: 200
     end
+
+    def load_belongs_to_site_resource
+      return if ::Rails.application.config.folio_shared_files_between_sites
+
+      super
+    end
+
+    def filter_records_by_belongs_to_site
+      return if ::Rails.application.config.folio_shared_files_between_sites
+
+      super
+    end
 end

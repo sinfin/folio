@@ -6,6 +6,7 @@ Rails.application.config.folio_pages_autosave = true
 Rails.application.config.folio_pages_ancestry = !Rails.env.test?
 Rails.application.config.folio_users_publicly_invitable = true # to make more test run
 Rails.application.config.folio_shared_files_between_sites = true
+Rails.application.config.folio_files_require_attribution = ENV["FOLIO_FILES_REQUIRE_ATTRIBUTION"].present?
 
 Rails.application.config.folio_console_links_mapping = {
   "Dummy::Blog::Article" => Proc.new { |controller, instance| controller.main_app.url_for(instance) }

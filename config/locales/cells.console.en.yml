@@ -10,10 +10,6 @@ en:
           filtered: No records match the specified filters.
           none: There are no records yet.
 
-      form:
-        errors:
-          fix: Fix
-
       layout:
         sidebar:
           settings: Settings

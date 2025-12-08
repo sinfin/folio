@@ -148,6 +148,101 @@ class Folio::HasAttachmentsTest < ActiveSupport::TestCase
     assert_equal 0, page.reload.image_placements_count
   end
 
+  test "validate_files_usage_limits_if_publishing - allows publishing with only author" do
+    file = create(:folio_file_image,
+                  author: "Test Author",
+                  attribution_source: nil,
+                  attribution_source_url: nil)
+
+    page = create(:folio_page, :unpublished, site: get_any_site)
+    page.cover_placement = create(:folio_file_placement_cover,
+                                  file: file,
+                                  placement: page)
+
+    page.published = true
+    assert page.valid?
+    assert_empty page.errors[:base]
+  end
+
+  test "validate_files_usage_limits_if_publishing - allows publishing with only attribution_source" do
+    file = create(:folio_file_image,
+                  author: nil,
+                  attribution_source: "Test Source",
+                  attribution_source_url: nil)
+
+    page = create(:folio_page, :unpublished, site: get_any_site)
+    page.cover_placement = create(:folio_file_placement_cover,
+                                  file: file,
+                                  placement: page)
+
+    page.published = true
+    assert page.valid?
+    assert_empty page.errors[:base]
+  end
+
+  test "validate_files_usage_limits_if_publishing - allows publishing with only attribution_source_url" do
+    file = create(:folio_file_image,
+                  author: nil,
+                  attribution_source: nil,
+                  attribution_source_url: "http://example.com")
+
+    page = create(:folio_page, :unpublished, site: get_any_site)
+    page.cover_placement = create(:folio_file_placement_cover,
+                                  file: file,
+                                  placement: page)
+
+    page.published = true
+    assert page.valid?
+    assert_empty page.errors[:base]
+  end
+
+  test "validate_files_usage_limits_if_publishing - allows publishing with author and attribution_source" do
+    file = create(:folio_file_image,
+                  author: "Test Author",
+                  attribution_source: "Test Source",
+                  attribution_source_url: nil)
+
+    page = create(:folio_page, :unpublished, site: get_any_site)
+    page.cover_placement = create(:folio_file_placement_cover,
+                                  file: file,
+                                  placement: page)
+
+    page.published = true
+    assert page.valid?
+    assert_empty page.errors[:base]
+  end
+
+  test "validate_files_usage_limits_if_publishing - allows publishing with all attribution fields present" do
+    file = create(:folio_file_image,
+                  author: "Test Author",
+                  attribution_source: "Test Source",
+                  attribution_source_url: "http://example.com")
+
+    page = create(:folio_page, :unpublished, site: get_any_site)
+    page.cover_placement = create(:folio_file_placement_cover,
+                                  file: file,
+                                  placement: page)
+
+    page.published = true
+    assert page.valid?
+    assert_empty page.errors[:base]
+  end
+
+  test "validate_files_usage_limits_if_publishing - only validates usage limits when publishing" do
+    file = create(:folio_file_image,
+                  author: nil,
+                  attribution_source: nil,
+                  attribution_source_url: nil)
+
+    page = create(:folio_page, :unpublished, site: get_any_site)
+    page.cover_placement = create(:folio_file_placement_cover,
+                                  file: file,
+                                  placement: page)
+
+    assert page.valid?
+    assert_empty page.errors[:base]
+  end
+
   test "does not validate placements marked for destruction" do
     # Ensure config is false initially so test works regardless of global config
     page = nil

@@ -151,8 +151,10 @@ class Folio::FileTest < ActiveSupport::TestCase
       page = create(:folio_page)
       page.update!(cover: file)
 
-      assert file.update(alt: "foo")
-      assert file.update(alt: nil)
+      Rails.application.config.stub(:folio_files_require_alt, false) do
+        assert file.update(alt: "foo")
+        assert file.update(alt: nil)
+      end
 
       Rails.application.config.stub(:folio_files_require_alt, true) do
         assert file.update!(alt: "foo")
@@ -160,8 +162,10 @@ class Folio::FileTest < ActiveSupport::TestCase
         assert_equal "Alt je povinná položka", file.errors.full_messages.join(". ")
       end
 
-      assert file.update(description: "foo")
-      assert file.update(description: nil)
+      Rails.application.config.stub(:folio_files_require_description, false) do
+        assert file.update(description: "foo")
+        assert file.update(description: nil)
+      end
 
       Rails.application.config.stub(:folio_files_require_description, true) do
         assert file.update!(description: "foo")
@@ -169,8 +173,10 @@ class Folio::FileTest < ActiveSupport::TestCase
         assert_equal "Popisek je povinná položka", file.errors.full_messages.join(". ")
       end
 
-      assert file.update(author: "foo", attribution_source: nil, attribution_source_url: nil)
-      assert file.update(author: nil)
+      Rails.application.config.stub(:folio_files_require_attribution, false) do
+        assert file.update(author: "foo", attribution_source: nil, attribution_source_url: nil)
+        assert file.update(author: nil)
+      end
 
       Rails.application.config.stub(:folio_files_require_attribution, true) do
         assert file.update!(author: "foo", attribution_source: "bar")

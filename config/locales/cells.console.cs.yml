@@ -10,10 +10,6 @@ cs:
           filtered: Zadaným filtrům neodpovídají žádné záznamy.
           none: Zde zatím nejsou žádné záznamy.
 
-      form:
-        errors:
-          fix: Opravit
-
       layout:
         sidebar:
           settings: Nastavení

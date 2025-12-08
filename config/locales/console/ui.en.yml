@@ -23,3 +23,11 @@ en:
 
         clipboard_component:
           copy: Copy
+
+        validation_box_component:
+          fix: Fix
+          errors: Please fill in the missing required fields.
+          warnings: "Warning: the following criteria are not met"
+          missing_alt: is missing alt
+          missing_description: is missing description
+          missing_attribution: is missing author or source

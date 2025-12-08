@@ -13,7 +13,7 @@
             - if record.new_record?
               = record.class.model_name.human
             - else
-              = helpers.sanitize(record.to_label)
+              = helpers.sanitize(record.to_label).presence || record.class.model_name.human
           - else
             ' Form
 
@@ -33,10 +33,9 @@
       == cell('folio/console/index/tabs', @tabs)
 
   - if @f.try(:object).try(:errors).present?
-    == cell('folio/console/form/errors',
-            @f,
-            hide_fix_error_btn: @hide_fix_error_btn)
+    = render(Folio::Console::Ui::ValidationBoxComponent.new(errors: @f.object.errors,
+                                                            record:))
 
   - if soft_warnings.present?
-    = render(Folio::Console::Form::WarningsComponent.new(warnings: soft_warnings,
-                                                         record_key: "#{controller.controller_path}-#{record.id}"))
+    = render(Folio::Console::Ui::ValidationBoxComponent.new(warnings: soft_warnings,
+                                                            record:))

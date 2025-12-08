@@ -18,6 +18,7 @@ class Folio::Console::Ui::ButtonComponent < Folio::Console::ApplicationComponent
                  tag: :button,
                  type: :button,
                  disabled: false,
+                 hidden: false,
                  onclick: nil,
                  href: nil,
                  rel: nil,
@@ -42,6 +43,7 @@ class Folio::Console::Ui::ButtonComponent < Folio::Console::ApplicationComponent
     @data = data
     @tag = tag
     @disabled = disabled
+    @hidden = hidden
     @type = type
     @href = href
     @target = target
@@ -63,6 +65,7 @@ class Folio::Console::Ui::ButtonComponent < Folio::Console::ApplicationComponent
       tag: @tag,
       data: @data,
       disabled: @disabled,
+      hidden: @hidden.presence,
     }
 
     if @href

@@ -88,6 +88,7 @@
 //= require folio/console/ui/pagy_component
 //= require folio/console/ui/tabs_component
 //= require folio/console/ui/turbo_frame_with_loader_component
+//= require folio/console/ui/validation_box_component
 
 //= require folio/console/addresses/fields/fields
 //= require folio/console/atoms/layout_switch/layout_switch
@@ -116,8 +117,6 @@
 //= require folio/console/files/subtitle_form_component
 //= require folio/console/files/subtitles_form_component
 //= require folio/console/folio_attributes_fields_component
-//= require folio/console/form/errors/errors
-//= require folio/console/form/warnings_component
 //= require folio/console/form/footer_component
 //= require folio/console/form_modal_component
 //= require folio/console/index/images/images

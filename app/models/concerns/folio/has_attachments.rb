@@ -245,22 +245,25 @@ module Folio::HasAttachments
     og_image.presence || cover
   end
 
-  def should_validate_file_placements_attribution_if_needed?
+  def should_validate_file_placements_attribution_if_needed?(for_console_form_warning: false)
     return false unless Rails.application.config.folio_files_require_attribution
+    return true if for_console_form_warning
 
     # only validate if published by default
     read_attribute(:published) == true
   end
 
-  def should_validate_file_placements_alt_if_needed?
+  def should_validate_file_placements_alt_if_needed?(for_console_form_warning: false)
     return false unless Rails.application.config.folio_files_require_alt
+    return true if for_console_form_warning
 
     # only validate if published by default
     read_attribute(:published) == true
   end
 
-  def should_validate_file_placements_description_if_needed?
+  def should_validate_file_placements_description_if_needed?(for_console_form_warning: false)
     return false unless Rails.application.config.folio_files_require_description
+    return true if for_console_form_warning
 
     # only validate if published by default
     read_attribute(:published) == true
@@ -297,10 +300,25 @@ module Folio::HasAttachments
   end
 
   def soft_warnings_for_file_placements
+    grouped = {}
+
     collect_all_placements
       .reject(&:marked_for_destruction?)
-      .flat_map(&:console_warnings)
-      .uniq
+      .each do |placement|
+        next if placement.file.blank?
+        next unless placement.file.id
+
+        file_id = placement.file.id
+
+        placement.console_warnings.each do |warning|
+          next if warning.blank?
+
+          grouped[file_id] ||= { file: placement.file, warnings: [] }
+          grouped[file_id][:warnings] << warning unless grouped[file_id][:warnings].include?(warning)
+        end
+      end
+
+    grouped.values
   end
 
   private
@@ -361,7 +379,7 @@ module Folio::HasAttachments
         end
       end
 
-      if has_invalid_file_placements
+      if has_invalid_file_placements && errors.blank?
         errors.add(:base, :has_invalid_file_placements)
       end
     end
@@ -401,11 +419,6 @@ module Folio::HasAttachments
           errors.add(:base, I18n.t("errors.messages.cannot_publish_with_files_restricted_to_site",
                                    name: file.file_name,
                                    allowed_sites: file.allowed_sites.pluck(:title).join(", ")))
-        end
-
-        unless file.attribution_source.present?
-          errors.add(:base, I18n.t("errors.messages.cannot_publish_with_files_without_media_source",
-                                   name: file.file_name))
         end
       end
     end

@@ -342,6 +342,7 @@ en:
     tag: Keyword
     tag_list: Keywords
     tiptap_content: Content
+    tiptap_placements: Files in content
     title: Title
     to_label: Title
     url: URL

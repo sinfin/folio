@@ -227,26 +227,35 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
     return [] if file.blank?
 
     warnings = []
-    placement_type = model_name.human
 
-    if missing_alt?
-      warnings << I18n.t("folio.console.soft_warnings.missing_alt",
-                        file_name: file.file_name,
-                        placement_type: placement_type)
+    should_check_alt = if placement&.respond_to?(:should_validate_file_placements_alt_if_needed?)
+      placement.should_validate_file_placements_alt_if_needed?(for_console_form_warning: true)
+    else
+      Rails.application.config.folio_files_require_alt
     end
 
-    if missing_description?
-      warnings << I18n.t("folio.console.soft_warnings.missing_description",
-                        file_name: file.file_name,
-                        file_id: file.id,
-                        placement_type: placement_type)
+    if should_check_alt && missing_alt?
+      warnings << :missing_alt
     end
 
-    if file.author.blank? || file.attribution_source.blank? && file.attribution_source_url.blank?
-      warnings << I18n.t("folio.console.soft_warnings.missing_attribution",
-                        file_name: file.file_name,
-                        file_id: file.id,
-                        placement_type: placement_type)
+    should_check_description = if placement&.respond_to?(:should_validate_file_placements_description_if_needed?)
+      placement.should_validate_file_placements_description_if_needed?(for_console_form_warning: true)
+    else
+      Rails.application.config.folio_files_require_description
+    end
+
+    if should_check_description && missing_description?
+      warnings << :missing_description
+    end
+
+    should_check_attribution = if placement&.respond_to?(:should_validate_file_placements_attribution_if_needed?)
+      placement.should_validate_file_placements_attribution_if_needed?(for_console_form_warning: true)
+    else
+      Rails.application.config.folio_files_require_attribution
+    end
+
+    if should_check_attribution && (file.author.blank? && file.attribution_source.blank? && file.attribution_source_url.blank?)
+      warnings << :missing_attribution
     end
 
     warnings

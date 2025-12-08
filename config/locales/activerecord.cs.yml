@@ -415,6 +415,7 @@ cs:
     tag: Klíčové slovo
     tag_list: Klíčová slova
     tiptap_content: Obsah
+    tiptap_placements: Soubory v obsahu
     title: Název
     to_label: Název
     url: URL
