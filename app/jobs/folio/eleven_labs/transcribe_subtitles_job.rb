@@ -206,8 +206,8 @@ class Folio::ElevenLabs::TranscribeSubtitlesJob < Folio::ApplicationJob
       end
 
       # Convert SRT format to VTT format
-      # SRT uses format: "00:00:01,234 --> 00:00:02,567"
-      # VTT uses format: "00:00:01.234 --> 00:00:02.567"
+      # SRT uses format: "00:00:01,234 --> 00:00:02,567" , decimal separator is ","
+      # VTT uses format: "00:00:01.234 --> 00:00:02.567" , decimal separator is "."
       vtt_content = srt_content.gsub(/(\d{2}:\d{2}:\d{2}),(\d{3})/) { "#{$1}.#{$2}" }
 
       # Remove SRT sequence numbers (standalone numbers on their own lines)
