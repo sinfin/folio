@@ -33,15 +33,26 @@ class Folio::Console::Api::AasmController < Folio::Console::Api::BaseController
           end
 
           if record.errors.any?
-            return render json: {
-                      errors: record.errors.full_messages.map { |message|
-                        {
-                          status: 422,
-                          title: t(".invalid_record_title"),
-                          detail: message
-                        }
-                      }
-                    }, status: 422
+            error_response = {
+              errors: record.errors.full_messages.map { |message|
+                {
+                  status: 422,
+                  title: t(".invalid_record_title"),
+                  detail: message
+                }
+              }
+            }
+
+            if params[:reload_form].present?
+              validation_box = Folio::Console::Ui::ValidationBoxComponent.new(
+                errors: record.errors,
+                record: record
+              )
+              validation_box_html = render_to_string(validation_box, layout: false)
+              error_response[:meta] = { validation_box_html: validation_box_html }
+            end
+
+            return render json: error_response, status: 422
           end
 
           render json: {
@@ -55,7 +66,7 @@ class Folio::Console::Api::AasmController < Folio::Console::Api::BaseController
           render_failure("invalid_event")
         end
       else
-        render_failure("invalid_record")
+        render_failure("invalid_record", record: record)
       end
     else
       render_failure
@@ -63,8 +74,8 @@ class Folio::Console::Api::AasmController < Folio::Console::Api::BaseController
   end
 
   private
-    def render_failure(base = "failure")
-      render json: {
+    def render_failure(base = "failure", record: nil)
+      error_response = {
         errors: [
           {
             status: 422,
@@ -72,7 +83,18 @@ class Folio::Console::Api::AasmController < Folio::Console::Api::BaseController
             detail: t(".#{base}_detail")
           }
         ]
-      }, status: 422
+      }
+
+      if params[:reload_form].present? && record.present? && record.errors.any?
+        validation_box = Folio::Console::Ui::ValidationBoxComponent.new(
+          errors: record.errors,
+          record: record
+        )
+        validation_box_html = render_to_string(validation_box, layout: false)
+        error_response[:meta] = { validation_box_html: validation_box_html }
+      end
+
+      render json: error_response, status: 422
     end
 
     def handle_record_before_event(record)
