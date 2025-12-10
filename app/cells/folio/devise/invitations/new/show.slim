@@ -1,6 +1,6 @@
 .f-devise-invitations-new[
   data=data
-  class=(model[:author_registration] ? "f-devise-invitations-new--author-registration" : nil)
+  class=author_registration_css_class
 ]
   = form do |f|
     = title model[:title]
