@@ -266,7 +266,7 @@ class Folio::HasAttachmentsTest < ActiveSupport::TestCase
     Rails.application.config.stub(:folio_files_require_attribution, true) do
       page.reload
       assert_not page.valid?
-      assert page.errors[:base].present?
+      assert page.errors[:image_placements].present?
 
       # Now mark the invalid placement for destruction
       page.update(image_placements_attributes: [
@@ -275,7 +275,7 @@ class Folio::HasAttachmentsTest < ActiveSupport::TestCase
 
       # Page should be valid now since the invalid placement is being removed
       assert page.valid?, "Page should be valid when invalid placement is marked for destruction"
-      assert page.errors[:base].blank?, "Should not have validation errors for marked_for_destruction placements"
+      assert page.errors[:image_placements].blank?, "Should not have validation errors for marked_for_destruction placements"
     end
   end
 
@@ -320,7 +320,7 @@ class Folio::HasAttachmentsTest < ActiveSupport::TestCase
 
     # Page should be valid now with the new valid image (not validating the old invalid one from DB)
     assert page.valid?, "Page should be valid when invalid cover is replaced with valid cover - should validate new file from memory, not old one from DB"
-    assert page.errors[:base].blank?, "Should not have validation errors for valid cover image"
+    assert page.errors[:cover_placement].blank?, "Should not have validation errors for valid cover image"
 
     assert page.save, "Page should save successfully with valid cover image"
 
