@@ -75,12 +75,12 @@ class Folio::Console::Api::AasmController < Folio::Console::Api::BaseController
           record:
         )
         validation_box_html = render_to_string(validation_box, layout: false)
+        detail_key = "#{base}_form_detail"
         error_response = {
           errors: [
             {
               status: 422,
-              title: t(".#{base}_title"),
-              detail: t(".#{base}_detail")
+              title: t(".#{detail_key}", default: t(".#{base}_detail")),
             }
           ],
           meta: { validation_box_html: }
