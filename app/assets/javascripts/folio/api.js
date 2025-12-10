@@ -56,12 +56,12 @@ const makeCheckResponse = (asHtml) => (response) => {
       }
 
       const err = jsonError(json)
+      const error = err ? new Error(err) : new Error(fallbackMessage(response))
 
-      if (err) {
-        return Promise.reject(new Error(err))
-      } else {
-        return Promise.reject(new Error(fallbackMessage(response)))
-      }
+      // Attach the JSON response to the error so it can be accessed in catch blocks
+      error.responseData = json
+
+      return Promise.reject(error)
     })
 }
 

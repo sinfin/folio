@@ -32,10 +32,11 @@
     .mt-3
       == cell('folio/console/index/tabs', @tabs)
 
-  - if @f.try(:object).try(:errors).present?
-    = render(Folio::Console::Ui::ValidationBoxComponent.new(errors: @f.object.errors,
-                                                            record:))
+  .f-c-form-header__validation-boxes
+    - if @f.try(:object).try(:errors).present?
+      = render(Folio::Console::Ui::ValidationBoxComponent.new(errors: @f.object.errors,
+                                                              record:))
 
-  - if soft_warnings.present?
-    = render(Folio::Console::Ui::ValidationBoxComponent.new(warnings: soft_warnings,
-                                                            record:))
+    - if soft_warnings.present?
+      = render(Folio::Console::Ui::ValidationBoxComponent.new(warnings: soft_warnings,
+                                                              record:))
