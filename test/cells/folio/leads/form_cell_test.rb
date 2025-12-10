@@ -19,6 +19,8 @@ class Folio::Leads::FormCellTest < Cell::TestCase
 
   test "shows note from option" do
     html = cell("folio/leads/form", nil, note: "foo").(:show)
-    assert_equal "foo", html.find("textarea").value
+    # Find textarea that is NOT inside recaptcha div
+    textarea = html.all("textarea").reject { |t| t[:name] == "g-recaptcha-response" }.first
+    assert_equal "foo", textarea.value
   end
 end

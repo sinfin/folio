@@ -35,4 +35,8 @@ class Folio::Devise::Invitations::NewCell < Folio::Devise::ApplicationCell
       t(".terms_agreement", terms_link:, privacy_link:)
     end
   end
+
+  def author_registration_css_class
+    model[:author_registration] ? "f-devise-invitations-new--author-registration" : nil
+  end
 end

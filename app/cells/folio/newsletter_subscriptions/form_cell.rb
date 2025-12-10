@@ -2,6 +2,7 @@
 
 class Folio::NewsletterSubscriptions::FormCell < Folio::ApplicationCell
   include SimpleForm::ActionViewExtensions::FormHelper
+  include ::Recaptcha::ClientHelper
 
   def newsletter_subscription
     @newsletter_subscription ||= model || Folio::NewsletterSubscription.new(email: "@")

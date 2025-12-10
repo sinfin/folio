@@ -52,6 +52,7 @@ cs:
         active: Aktivní
         created_at: Zapsáno dne
         email: E-mailová adresa
+        verified_captcha: Ověření reCAPTCHA
       folio/page:
         parent_id: Nadřazená stránka
         title: Název stránky
@@ -155,6 +156,8 @@ cs:
           attributes:
             email:
               invalid: není platná
+            verified_captcha:
+              invalid: Ověření reCAPTCHA selhalo. Prosím zkuste to znovu.
         folio/user:
           attributes:
             phone:
