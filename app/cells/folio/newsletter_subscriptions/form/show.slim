@@ -12,14 +12,14 @@ div class=wrap_class
       .form-group.m-0
         label = options[:input_label]
 
-    - if ENV['RECAPTCHA_SITE_KEY'].present? && \
-         ENV['RECAPTCHA_SECRET_KEY'].present?
-      .f-newsletter-subscriptions-form__recaptcha.form-group
-        = recaptcha_tags(script: false)
-        = f.error :verified_captcha, class: 'invalid-feedback d-block'
-
     .position-relative
       = input(f)
+
+      - if ENV['RECAPTCHA_SITE_KEY'].present? && \
+          ENV['RECAPTCHA_SECRET_KEY'].present?
+        .f-newsletter-subscriptions-form__recaptcha.form-group
+          = recaptcha_tags(script: false)
+          = f.error :verified_captcha, class: 'invalid-feedback d-block'
 
       button.f-newsletter-subscriptions-form__btn[
         type="submit"
