@@ -5,6 +5,7 @@ class Folio::NewsletterSubscriptionsController < Folio::ApplicationController
     attrs = newsletter_subscription_params
 
     @newsletter_subscription = Folio::NewsletterSubscription.new(attrs)
+    @newsletter_subscription = check_recaptcha_if_needed(@newsletter_subscription)
 
     if !Rails.application.config.folio_site_is_a_singleton
       @newsletter_subscription.site = current_site
@@ -32,5 +33,14 @@ class Folio::NewsletterSubscriptionsController < Folio::ApplicationController
       else
         {}
       end
+    end
+
+    def check_recaptcha_if_needed(newsletter_subscription)
+      if ENV["RECAPTCHA_SITE_KEY"].present? &&
+         ENV["RECAPTCHA_SECRET_KEY"].present?
+        newsletter_subscription.verified_captcha = verify_recaptcha(model: newsletter_subscription)
+      end
+
+      newsletter_subscription
     end
 end

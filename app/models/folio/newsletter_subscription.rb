@@ -3,6 +3,8 @@
 class Folio::NewsletterSubscription < Folio::ApplicationRecord
   include Folio::BelongsToSite
 
+  attr_accessor :verified_captcha
+
   has_sanitized_fields :email
 
   belongs_to :subscribable, polymorphic: true,
@@ -16,6 +18,7 @@ class Folio::NewsletterSubscription < Folio::ApplicationRecord
             uniqueness: { scope: :site_id }
 
   validate :validate_belongs_to_subscribable_site
+  validate :validate_verified_captcha
 
   default_scope { order(id: :desc) }
 
@@ -92,6 +95,13 @@ class Folio::NewsletterSubscription < Folio::ApplicationRecord
       return if Rails.application.config.folio_site_is_a_singleton
 
       errors.add(:site, :invalid) unless site.in?(self.class.subscribable_sites)
+    end
+
+    def validate_verified_captcha
+      return if verified_captcha == true
+      return if verified_captcha.nil?
+
+      errors.add(:verified_captcha, :invalid)
     end
 end
 

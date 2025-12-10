@@ -46,6 +46,7 @@ en:
       folio/newsletter_subscription:
         created_at: Subscribed at
         email: E-mail address
+        verified_captcha: reCAPTCHA verification
       folio/page:
         parent_id: Parent page
         title: Page title
@@ -115,6 +116,8 @@ en:
           attributes:
             email:
               invalid: Invalid e-mail address
+            verified_captcha:
+              invalid: reCAPTCHA verification failed. Please try again.
         folio/user:
           attributes:
             phone:
