@@ -25,6 +25,7 @@ All notable changes to this project will be documented in this file.
 - added `disabled_modifications` option to `form_footer`
 - added `calendar_filter` icon
 - added `thumbnail_configuration` to `Folio::File` to store crop data per-ratio, set via a new `Folio::Console::Files::Show::Thumbnails::CropEditComponent` and `update_thumbnails_crop` API
+- added `Folio::File.correct_site(current_site)` return corect site for files depending on `Rails.application.config.folio_shared_files_between_sites`
 - support for MOV (video/quicktime) files
 
 ### Changed

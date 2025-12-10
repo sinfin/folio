@@ -119,6 +119,6 @@ class Folio::Api::S3Controller < Folio::Api::BaseController
     end
 
     def site_for_new_files
-      Rails.application.config.folio_shared_files_between_sites ? Folio::Current.main_site : Folio::Current.site
+      Folio::File.correct_site(Folio::Current.site)
     end
 end

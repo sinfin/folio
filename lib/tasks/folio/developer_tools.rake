@@ -154,5 +154,34 @@ namespace :folio do
         puts "Processed #{processed}/#{total_count} files (#{percentage}%)"
       end
     end
+
+    desc "Set correct site for files and theirs tags accorfing to Rails.application.config.folio_shared_files_between_sites setting"
+    task idp_set_correct_site_for_files_and_tags: :environment do
+      Rails.logger.silence do
+        puts "[folio:developer_tools:idp_set_correct_site_for_files_and_tags] Setting correct site for files."
+
+        if Rails.application.config.folio_shared_files_between_sites
+          correct_site = Folio::File.correct_site(nil)
+          raise "correct_site is nil" if correct_site.blank?
+          puts "correct_site for all files: #{correct_site.domain}"
+
+          wrong_files_scope = Folio::File.where.not(site: correct_site)
+          puts "Updating #{wrong_files_scope.count} files"
+          Folio::File.where(id: wrong_files_scope).update_all(site_id: correct_site.id)
+          puts "Files updated"
+
+          file_types = ["Folio::File", "Folio::File::Audio", "Folio::File::Video", "Folio::File::Image", "Folio::File::Document"]
+          puts("Updating taggigs for file types: #{file_types.join(", ")}")
+          wrong_taggings_scope = ActsAsTaggableOn::Tagging.where(taggable_type: file_types)
+                                                          .where(id: ActsAsTaggableOn::Tagging.where.not(tenant: correct_site.id)
+                                                                                              .or(ActsAsTaggableOn::Tagging.where(tenant: nil)))
+          puts "Updating #{wrong_taggings_scope.count} taggings"
+          ActsAsTaggableOn::Tagging.where(id: wrong_taggings_scope).update_all(tenant: correct_site.id)
+          puts "Taggings updated"
+        else
+          puts "no sharing files is set, do nothing"
+        end
+      end
+    end
   end
 end

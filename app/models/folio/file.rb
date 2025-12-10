@@ -4,11 +4,12 @@ class Folio::File < Folio::ApplicationRecord
   include Folio::DragonflyFormatValidation
   include Folio::FriendlyId
   include Folio::SanitizeFilename
-  include Folio::Taggable
   include Folio::Thumbnails
   include Folio::StiPreload
+  include Folio::Taggable
   include Folio::HasAasmStates
   include Folio::BelongsToSite
+  include Folio::FilesSharedAccrossSites if Rails.application.config.folio_shared_files_between_sites
 
   READY_STATE = :ready
 
@@ -64,6 +65,15 @@ class Folio::File < Folio::ApplicationRecord
     ]
   }
 
+  scope :by_tags, -> (tags) do
+    if tags.is_a?(String)
+      tagged_with(tags.split(","))
+    else
+      tagged_with(tags)
+    end
+  end
+
+
   dragonfly_accessor :file do
     after_assign :sanitize_filename
   end
@@ -95,14 +105,6 @@ class Folio::File < Folio::ApplicationRecord
       where(Folio::FilePlacement::Base.where(Folio::FilePlacement::Base.arel_table[:file_id].eq(arel_table[:id])).arel.exists.not)
     else
       none
-    end
-  end
-
-  scope :by_tags, -> (tags) do
-    if tags.is_a?(String)
-      tagged_with(tags.split(","))
-    else
-      tagged_with(tags)
     end
   end
 
@@ -180,6 +182,9 @@ class Folio::File < Folio::ApplicationRecord
     end
   end
 
+  def self.correct_site(site)
+    Rails.application.config.folio_shared_files_between_sites ? Folio::Current.main_site : site
+  end
 
   def title
     file_name
