@@ -10,9 +10,8 @@
                                                            href: restore_url,
                                                            data: { confirm: t("folio.console.confirmation"), method: :post }))
 
-      == cell('folio/console/ui/with_icon',
-              t('.show_current'),
-              href: show_url,
-              right_icon: :close,
-              icon_options: { height: 16 },
-              class: "f-c-audited-bar__current-link small")
+      = render(Folio::Console::Ui::WithIconComponent.new(t('.show_current'),
+                                                          href: show_url,
+                                                          right_icon: :close,
+                                                          icon_options: { height: 16 },
+                                                          html_class: "f-c-audited-bar__current-link small"))

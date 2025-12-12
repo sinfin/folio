@@ -1,5 +1,4 @@
 .f-c-ui-warning-ribbon class=@class_name
-  == cell('folio/console/ui/with_icon',
-          @text,
-          icon: :alert,
-          icon_options: { width: 16 })
+  = render(Folio::Console::Ui::WithIconComponent.new(@text,
+                                                      icon: :alert,
+                                                      icon_options: { width: 16 }))

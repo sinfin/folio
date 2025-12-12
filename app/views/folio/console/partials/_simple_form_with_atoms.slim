@@ -6,10 +6,9 @@
           class="f-c-simple-form-with-atoms__title"
           class='f-c-simple-form-with-atoms__title--clickable'
         ]
-          == cell('folio/console/ui/with_icon',
-                  t('.settings'),
-                  icon: :cog,
-                  html: content_tag(:div, "", class: "f-c-simple-form-with-atoms__title-arrow"))
+          = render(Folio::Console::Ui::WithIconComponent.new(t('.settings'),
+                                                               icon: :cog,
+                                                               html: content_tag(:div, "", class: "f-c-simple-form-with-atoms__title-arrow")))
 
         .f-c-simple-form-with-atoms__form-scroll[
           class="f-c-simple-form-with-atoms__dirty-wrap"
@@ -58,9 +57,8 @@
               .f-c-simple-form-with-atoms__title.container-fluid[
                 class=(index > 0 ? 'invisible' : nil)
               ]
-                == cell('folio/console/ui/with_icon',
-                        t('.editor'),
-                        icon: :view_dashboard_variant_outline)
+                = render(Folio::Console::Ui::WithIconComponent.new(t('.editor'),
+                                                                    icon: :view_dashboard_variant_outline))
 
                 - if index.zero?
                   - keys.each_with_index do |key, i|

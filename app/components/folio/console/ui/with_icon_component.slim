@@ -1,0 +1,12 @@
+*{tag: tag_name, **tag_attributes}
+  - if @icon
+    = folio_icon(@icon, @icon_options || {})
+
+  - if @message.present?
+    span.f-c-ui-with-icon__span = @message
+
+  - if @right_icon
+    = folio_icon(@right_icon, @icon_options || {})
+
+  - if @html
+    == @html

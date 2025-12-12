@@ -33,21 +33,19 @@ div[
       .f-c-ui-index-filters__actions
         - if @collapsible
           .f-c-ui-index-filters__toggle-wrap
-            == cell('folio/console/ui/with_icon',
-                    t('.collapsible_toggle'),
-                    class: 'f-c-ui-index-filters__toggle small',
-                    data: stimulus_action(click: 'onToggleClick'),
-                    right_icon: :menu_down,
-                    icon_options: { height: 16 })
+            = render(Folio::Console::Ui::WithIconComponent.new(t('.collapsible_toggle'),
+                                                    html_class: 'f-c-ui-index-filters__toggle small',
+                                                    data: stimulus_action(click: 'onToggleClick'),
+                                                    right_icon: :menu_down,
+                                                    icon_options: { height: 16 }))
 
         .f-c-ui-index-filters__cancel-wrap[
           class=(filtered? ? nil : "f-c-ui-index-filters__cancel-wrap--hidden")
         ]
-          == cell('folio/console/ui/with_icon',
-                  t('.cancel'),
-                  href: cancel_url,
-                  icon: :close,
-                  icon_options: { height: 16 },
-                  class: "text-danger f-c-ui-index-filters__cancel small")
+          = render(Folio::Console::Ui::WithIconComponent.new(t('.cancel'),
+                                                               href: cancel_url,
+                                                               icon: :close,
+                                                               icon_options: { height: 16 },
+                                                               html_class: "text-danger f-c-ui-index-filters__cancel small"))
 
       = hidden_input(f, :by_label_query, { value: controller.params[:by_label_query] })

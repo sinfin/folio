@@ -1,9 +1,8 @@
-== cell('folio/console/ui/with_icon',
-        options[:label] || t('folio.console.actions.add'),
-        class: "f-c-new-record-modal__toggle",
-        href: "#add",
-        icon: :plus,
-        tag: { \
-          "data-target" => ".#{modal_class_name}", \
-          "data-class" => model.to_s \
-        })
+== render_view_component(Folio::Console::Ui::WithIconComponent.new(options[:label] || t('folio.console.actions.add'),
+                                                                    html_class: "f-c-new-record-modal__toggle",
+                                                                    href: "#add",
+                                                                    icon: :plus,
+                                                                    data: { \
+                                                                      "target" => ".#{modal_class_name}", \
+                                                                      "class" => model.to_s \
+                                                                    }))

@@ -42,6 +42,7 @@ All notable changes to this project will be documented in this file.
   - Folio::Console::Ui::WarningRibbonCell -> Folio::Console::Ui::WarningRibbonComponent
   - Folio::Console::ConsoleNotes::CatalogueTooltipCell -> Folio::Console::ConsoleNotes::CatalogueTooltipComponent
   - Folio::Console::CatalogueSortArrowsCell -> Folio::Console::CatalogueSortArrowsComponent
+  - Folio::Console::Ui::WithIconCell -> Folio::Console::Ui::WithIconComponent
 - generalized tiptap_config.use_as_single_image_in_toolbar -> tiptap_config.toolbar with icon and slot names
 
 ### Fixed
