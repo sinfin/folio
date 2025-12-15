@@ -106,7 +106,9 @@ class Folio::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksContr
     def bind_user_and_redirect
       auth = Folio::Omniauth::Authentication.from_request(request)
 
-      if request.env["omniauth.origin"] && Folio::Site.any? { |site| request.env["omniauth.origin"].include?(site.env_aware_domain) }
+      if session[stored_location_key_for(:user)].nil? &&
+         request.env["omniauth.origin"] &&
+         Folio::Site.any? { |site| request.env["omniauth.origin"].include?(site.env_aware_domain) }
         store_location_for(:user, request.env["omniauth.origin"])
       end
 
