@@ -402,7 +402,7 @@ class Folio::User < Folio::ApplicationRecord
   private
     # Override of Devise method to scope authentication by zone.
     def self.find_for_authentication(warden_params)
-      email = warden_params[:email]
+      email = warden_params[:email]&.strip&.downcase
       site = ::Folio::Current.enabled_site_for_crossdomain_devise || ::Folio::Site.find(warden_params[:auth_site_id])
 
       user = site.auth_users.find_by(email:)
