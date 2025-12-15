@@ -240,6 +240,11 @@ module Folio
       end
     end
 
+    initializer :env_flags_warning do |app|
+      load Folio::Engine.root.join("lib/folio/env_flags.rb")
+      Folio::EnvFlags.warn_if_present
+    end
+
     config.to_prepare do
     end
 

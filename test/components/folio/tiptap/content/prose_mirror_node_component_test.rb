@@ -3,12 +3,6 @@
 require "test_helper"
 
 class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::Tiptap::NodeComponentTest
-  setup do
-    if ENV["FOLIO_DEBUG_TIPTAP_NODES"].present?
-      puts "WARNING: FOLIO_DEBUG_TIPTAP_NODES is set, tests will fail!"
-    end
-  end
-
   test "render simple text node" do
     prose_mirror_node = {
       "type" => "text",
