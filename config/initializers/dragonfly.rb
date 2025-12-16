@@ -113,14 +113,6 @@ Dragonfly.app.configure do
     end
   end
 
-  processor :animated_gif_resize do |content, raw_size, *args|
-    fail "Missing gifsicle binary." if shell("which", "gifsicle").blank?
-    size = raw_size.match(/\d+x\d+/)[0] # get rid of resize options which gifsicle doesn't understand
-    content.shell_update do |old_path, new_path|
-      "gifsicle --resize-fit #{size} #{old_path} --output #{new_path}"
-    end
-  end
-
   processor :ffmpeg_screenshot_to_jpg do |content, screenshot_time_in_ffmpeg_format, *args|
     content.shell_update ext: "jpg" do |old_path, new_path|
       "ffmpeg -y -i #{old_path} -ss #{screenshot_time_in_ffmpeg_format} -frames:v 1 #{new_path}"

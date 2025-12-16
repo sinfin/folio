@@ -44,7 +44,8 @@ class Folio::ThumbnailsTest < ActiveSupport::TestCase
       assert image.thumb(THUMB_SIZE)
     end
 
-    assert image.reload.thumbnail_sizes[THUMB_SIZE][:uid].ends_with?(".gif")
+    # GIFs are converted to JPG for thumbnails to avoid libvips GIF writer issues
+    assert image.reload.thumbnail_sizes[THUMB_SIZE][:uid].ends_with?(".jpg")
   end
 
   test "uses default x/y from thumbnail_configuration when cropping" do

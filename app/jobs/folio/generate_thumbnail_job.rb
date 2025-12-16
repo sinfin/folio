@@ -91,94 +91,90 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
       end
 
       make_webp = true
+      add_white_background = false
+      format = :jpg
 
-      if image.animated_gif?
-        thumbnail = image_file(image).animated_gif_resize(size)
-        make_webp = false
-        format = :gif
-      else
-        add_white_background = false
-        format = :jpg
-
-        if image.try(:file_mime_type) == "image/png"
-          if Rails.application.config.folio_dragonfly_keep_png
-            format = :png
-            add_white_background = false
-          else
-            add_white_background = true
-          end
-        elsif image.try(:file_mime_type) == "application/pdf"
-          # TODO frame
+      if image.try(:file_mime_type) == "image/png"
+        if Rails.application.config.folio_dragonfly_keep_png
+          format = :png
+          add_white_background = false
+        else
           add_white_background = true
         end
-
-        thumbnail = image_file(image)
-        geometry = size
-
-        if size.include?("#")
-          _m, crop_width_f, crop_height_f = size.match(/(\d+)x(\d+)/).to_a.map(&:to_f)
-
-          # Check for stored thumbnail configuration if x and y are nil
-          if x.nil? && y.nil? && image.respond_to?(:thumbnail_configuration) && image.thumbnail_configuration.present?
-            # Simplify the ratio (e.g., 16:9, 4:3, 1:1)
-            gcd = crop_width_f.to_i.gcd(crop_height_f.to_i)
-            ratio = "#{(crop_width_f.to_i / gcd)}:#{(crop_height_f.to_i / gcd)}"
-
-            if image.thumbnail_configuration["ratios"].present? &&
-               image.thumbnail_configuration["ratios"][ratio].present? &&
-               image.thumbnail_configuration["ratios"][ratio]["crop"].present?
-              crop_config = image.thumbnail_configuration["ratios"][ratio]["crop"]
-              x = crop_config["x"].to_f if crop_config["x"].is_a?(Numeric)
-              y = crop_config["y"].to_f if crop_config["y"].is_a?(Numeric)
-            end
-          end
-
-          # Use thumbnail dimensions instead of stored dimensions to handle fallback images
-          thumbnail_width = thumbnail.width || image.file_width || 0
-          thumbnail_height = thumbnail.height || image.file_height || 0
-
-          if crop_width_f > thumbnail_width || crop_height_f > thumbnail_height || !x.nil? || !y.nil?
-            thumbnail = thumbnail.thumb("#{crop_width_f.to_i}x#{crop_height_f.to_i}^", format:)
-          end
-
-          if !x.nil? || !y.nil?
-            # Use thumbnail dimensions if image was resized, otherwise use original dimensions
-            current_width_f = thumbnail.width.to_f
-            current_height_f = thumbnail.height.to_f
-
-            fill_width_f = if current_width_f / current_height_f > crop_width_f / crop_height_f
-              # current is wider than the required thumb rectangle -> reduce height
-              current_width_f * crop_height_f / current_height_f
-            else
-              # current is narrower than the required crop rectangle -> reduce width
-              crop_width_f
-            end
-
-            fill_height_f = fill_width_f * current_height_f / current_width_f
-
-            x_px = [((x || 0) * fill_width_f.ceil).floor, fill_width_f.floor - crop_width_f].min
-            y_px = [((y || 0) * fill_height_f.ceil).floor, fill_height_f.floor - crop_height_f].min
-
-            safe_x_px = [x_px.floor, 0].max
-            safe_y_px = [y_px.floor, 0].max
-
-            geometry = "#{crop_width_f.to_i}x#{crop_height_f.to_i}+#{safe_x_px}+#{safe_y_px}"
-          end
-        end
-
-        if add_white_background
-          format = :jpg
-          thumbnail = thumbnail.encode("jpg", output_options: { background: 255 })
-          thumbnail.meta["mime_type"] = "image/jpeg"
-        end
-
-        thumbnail = thumbnail.thumb(geometry, format:)
-        thumbnail = thumbnail.convert_grayscale_to_srgb(format:) if image.jpg? && format == :jpg
-        thumbnail = thumbnail.normalize_profiles_via_liblcms2 if image.jpg? && format == :jpg
-        thumbnail = thumbnail.jpegoptim if format == :jpg
-
-        thumbnail
+      elsif image.try(:file_mime_type) == "image/gif"
+        format = :jpg
+        add_white_background = true
+      elsif image.try(:file_mime_type) == "application/pdf"
+        # TODO frame
+        add_white_background = true
       end
+
+      thumbnail = image_file(image)
+      geometry = size
+
+      if size.include?("#")
+        _m, crop_width_f, crop_height_f = size.match(/(\d+)x(\d+)/).to_a.map(&:to_f)
+
+        # Check for stored thumbnail configuration if x and y are nil
+        if x.nil? && y.nil? && image.respond_to?(:thumbnail_configuration) && image.thumbnail_configuration.present?
+          # Simplify the ratio (e.g., 16:9, 4:3, 1:1)
+          gcd = crop_width_f.to_i.gcd(crop_height_f.to_i)
+          ratio = "#{(crop_width_f.to_i / gcd)}:#{(crop_height_f.to_i / gcd)}"
+
+          if image.thumbnail_configuration["ratios"].present? &&
+             image.thumbnail_configuration["ratios"][ratio].present? &&
+             image.thumbnail_configuration["ratios"][ratio]["crop"].present?
+            crop_config = image.thumbnail_configuration["ratios"][ratio]["crop"]
+            x = crop_config["x"].to_f if crop_config["x"].is_a?(Numeric)
+            y = crop_config["y"].to_f if crop_config["y"].is_a?(Numeric)
+          end
+        end
+
+        # Use thumbnail dimensions instead of stored dimensions to handle fallback images
+        thumbnail_width = thumbnail.width || image.file_width || 0
+        thumbnail_height = thumbnail.height || image.file_height || 0
+
+        if crop_width_f > thumbnail_width || crop_height_f > thumbnail_height || !x.nil? || !y.nil?
+          thumbnail = thumbnail.thumb("#{crop_width_f.to_i}x#{crop_height_f.to_i}^", format:)
+        end
+
+        if !x.nil? || !y.nil?
+          # Use thumbnail dimensions if image was resized, otherwise use original dimensions
+          current_width_f = thumbnail.width.to_f
+          current_height_f = thumbnail.height.to_f
+
+          fill_width_f = if current_width_f / current_height_f > crop_width_f / crop_height_f
+            # current is wider than the required thumb rectangle -> reduce height
+            current_width_f * crop_height_f / current_height_f
+          else
+            # current is narrower than the required crop rectangle -> reduce width
+            crop_width_f
+          end
+
+          fill_height_f = fill_width_f * current_height_f / current_width_f
+
+          x_px = [((x || 0) * fill_width_f.ceil).floor, fill_width_f.floor - crop_width_f].min
+          y_px = [((y || 0) * fill_height_f.ceil).floor, fill_height_f.floor - crop_height_f].min
+
+          safe_x_px = [x_px.floor, 0].max
+          safe_y_px = [y_px.floor, 0].max
+
+          geometry = "#{crop_width_f.to_i}x#{crop_height_f.to_i}+#{safe_x_px}+#{safe_y_px}"
+        end
+      end
+
+      if add_white_background
+        format = :jpg
+        thumbnail = thumbnail.encode("jpg", output_options: { background: 255 })
+        thumbnail.meta["mime_type"] = "image/jpeg"
+      end
+
+      thumbnail = thumbnail.thumb(geometry, format:)
+      thumbnail = thumbnail.convert_grayscale_to_srgb(format:) if image.jpg? && format == :jpg
+      thumbnail = thumbnail.normalize_profiles_via_liblcms2 if image.jpg? && format == :jpg
+      thumbnail = thumbnail.jpegoptim if format == :jpg
+
+      thumbnail
 
       if image.file_name
         case format.to_sym
