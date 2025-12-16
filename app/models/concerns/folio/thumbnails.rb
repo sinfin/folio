@@ -35,6 +35,12 @@ module Folio::Thumbnails
 
     after_save :run_set_additional_data_job
     after_destroy :delete_thumbnails
+
+    # Validate image dimensions for thumbnailable files (images)
+    validates :file_width, :file_height,
+              presence: true,
+              numericality: { greater_than: 0 },
+              if: :thumbnailable?
   end
 
   def thumbs_hash_with_rewritten_urls(hash)
