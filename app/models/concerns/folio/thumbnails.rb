@@ -40,7 +40,7 @@ module Folio::Thumbnails
     validates :file_width, :file_height,
               presence: true,
               numericality: { greater_than: 0 },
-              if: :thumbnailable?
+              if: :should_validate_image_dimensions?
   end
 
   def thumbs_hash_with_rewritten_urls(hash)
@@ -270,6 +270,10 @@ module Folio::Thumbnails
   end
 
   private
+    def should_validate_image_dimensions?
+      thumbnailable? && file_uid.present?
+    end
+
     def reset_thumbnails
       delete_thumbnails if file_uid_changed? && has_attribute?("thumbnail_sizes")
     end
