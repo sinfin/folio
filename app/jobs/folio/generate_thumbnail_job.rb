@@ -266,7 +266,7 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
       thumbnail
     rescue Dragonfly::Job::Fetch::NotFound
       missing_image_path = Folio::Engine.root.join("data/images/missing-image.png")
-      thumbnail = Dragonfly.app.create(File.open(missing_image_path))
+      thumbnail = Dragonfly.app.create(File.binread(missing_image_path))
       thumbnail.name = image.file_name || "missing-image.png"
       thumbnail.meta["mime_type"] = "image/png"
       thumbnail
