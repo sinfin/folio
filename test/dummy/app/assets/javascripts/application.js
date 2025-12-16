@@ -5,7 +5,6 @@
 //= require folio/api
 //= require folio/stimulus
 //= require folio/remote_scripts
-//= require folio/thumbnails
 
 //= require folio/confirm
 //= require folio/cookie_consent/cookie_consent
