@@ -173,5 +173,57 @@ class Folio::UserTest < ActiveSupport::TestCase
 
     user.password = "Short, but 2 complex!"
     assert user.valid?
+  test "find_for_authentication with uppercase email" do
+    site = create(:folio_site, type: "Folio::Site")
+    user = create(:folio_user, email: "test@example.com", auth_site: site)
+
+    found_user = Folio::User.find_for_authentication(
+      email: "TEST@EXAMPLE.COM",
+      auth_site_id: site.id
+    )
+    assert_equal user.id, found_user.id
+  end
+
+  test "find_for_authentication with mixed case email" do
+    site = create(:folio_site, type: "Folio::Site")
+    user = create(:folio_user, email: "test@example.com", auth_site: site)
+
+    found_user = Folio::User.find_for_authentication(
+      email: "Test@Example.Com",
+      auth_site_id: site.id
+    )
+    assert_equal user.id, found_user.id
+  end
+
+  test "find_for_authentication with leading and trailing whitespace" do
+    site = create(:folio_site, type: "Folio::Site")
+    user = create(:folio_user, email: "test@example.com", auth_site: site)
+
+    found_user = Folio::User.find_for_authentication(
+      email: "  test@example.com  ",
+      auth_site_id: site.id
+    )
+    assert_equal user.id, found_user.id
+  end
+
+  test "find_for_authentication with whitespace and uppercase" do
+    site = create(:folio_site, type: "Folio::Site")
+    user = create(:folio_user, email: "test@example.com", auth_site: site)
+
+    found_user = Folio::User.find_for_authentication(
+      email: "  TEST@EXAMPLE.COM  ",
+      auth_site_id: site.id
+    )
+    assert_equal user.id, found_user.id
+  end
+
+  test "find_for_authentication with nil email does not crash" do
+    site = create(:folio_site, type: "Folio::Site")
+
+    found_user = Folio::User.find_for_authentication(
+      email: nil,
+      auth_site_id: site.id
+    )
+    assert_nil found_user
   end
 end
