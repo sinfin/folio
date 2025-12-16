@@ -16,7 +16,7 @@ gem "rack-mini-profiler"
 gem "sprockets", "~> 4.0"
 gem "sprockets-rails"
 
-gem "dragonfly_libvips", github: "sinfin/dragonfly_libvips", branch: "folio-v7" # could not be in gemspec, because of GITHUB
+gem "dragonfly_libvips", github: "sinfin/dragonfly_libvips", branch: "more_geometry" # could not be in gemspec, because of GITHUB
 # gem "dragonfly_libvips", path: "../dragonfly_libvips"
 
 gem "cells-rails", "~> 0.1.5"
