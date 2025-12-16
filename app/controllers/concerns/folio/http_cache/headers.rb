@@ -155,7 +155,11 @@ module Folio
         end
 
         def calculate_cache_ttl(record)
-          base_ttl = (Rails.application.config.respond_to?(:folio_cache_headers_default_ttl) && Rails.application.config.folio_cache_headers_default_ttl) || 60
+          base_ttl = if Rails.application.config.respond_to?(:folio_cache_headers_default_ttl) && Rails.application.config.folio_cache_headers_default_ttl
+            Rails.application.config.folio_cache_headers_default_ttl.to_i
+          else
+            15
+          end
 
           # Apply emergency multiplier from ENV if set
           multiplier = ENV["FOLIO_CACHE_TTL_MULTIPLIER"]&.to_f

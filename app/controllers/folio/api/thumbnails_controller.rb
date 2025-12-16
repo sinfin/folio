@@ -22,23 +22,38 @@ class Folio::Api::ThumbnailsController < Folio::Api::BaseController
     # Create cache key from the reduced thumbnail parameters
     cache_key = "thumbnails/#{Digest::MD5.hexdigest(thumbnail_params.to_json)}"
 
-    # Use fragment cache with 2-second expiration
+    # Calculate cache duration as half of default cache header TTL (5-10 seconds)
+    cache_ttl = thumbnail_cache_ttl
+
+    # Use fragment cache with dynamic expiration (half of default cache header, 5-10 seconds)
     thumbnails_data = if Rails.application.config.action_controller.perform_caching
-      Rails.cache.fetch(cache_key, expires_in: 2.seconds) do
+      Rails.cache.fetch(cache_key, expires_in: cache_ttl.seconds) do
         process_thumbnail_params(thumbnail_params)
       end
     else
       process_thumbnail_params(thumbnail_params)
     end
 
-    # Set cache headers to match fragment cache duration (2 seconds)
-    # Short TTL because thumbnail status changes rapidly during generation
-    response.headers["Cache-Control"] = "max-age=2, must-revalidate, stale-while-revalidate=1, stale-if-error=10"
+    # Set cache headers to match fragment cache duration (5-10 seconds)
+    # Half of default cache header TTL because thumbnail status changes during generation
+    stale_while_revalidate = [cache_ttl / 4, 1].max
+    stale_if_error = cache_ttl * 5
+    response.headers["Cache-Control"] = "max-age=#{cache_ttl}, must-revalidate, stale-while-revalidate=#{stale_while_revalidate}, stale-if-error=#{stale_if_error}"
 
     render json: thumbnails_data
   end
 
   private
+    def thumbnail_cache_ttl
+      base_ttl = if Rails.application.config.respond_to?(:folio_cache_headers_default_ttl) && Rails.application.config.folio_cache_headers_default_ttl
+        Rails.application.config.folio_cache_headers_default_ttl.to_i
+      else
+        15
+      end
+      # Calculate half of default TTL, capped between 5 and 10 seconds
+      [[(base_ttl / 2.0).round, 10].min, 5].max
+    end
+
     def process_thumbnail_params(thumbnail_params)
       thumbnails_data = []
 

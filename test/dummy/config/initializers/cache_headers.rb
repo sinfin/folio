@@ -7,17 +7,17 @@
 # MASTER SWITCH - enables entire cache headers system
 # Default: enabled in dummy app for testing, opt-in for real applications
 Rails.application.config.folio_cache_headers_enabled =
-  ENV.fetch("FOLIO_CACHE_HEADERS_ENABLED") { "true" }.to_s.in?(["true", "1"])
+  ENV.fetch("FOLIO_CACHE_HEADERS_ENABLED") { "false" }.to_s.in?(["true", "1"])
 
 Rails.application.config.folio_cache_headers_default_ttl =
-  ENV.fetch("FOLIO_CACHE_HEADERS_TTL") { "60" }.to_i
+  ENV.fetch("FOLIO_CACHE_HEADERS_TTL") { "15" }.to_i
 
 # Header inclusion settings
 Rails.application.config.folio_cache_headers_include_etag =
-  ENV.fetch("FOLIO_CACHE_HEADERS_ETAG") { "true" }.to_s.in?(["true", "1"])
+  ENV.fetch("FOLIO_CACHE_HEADERS_ETAG") { "false" }.to_s.in?(["true", "1"])
 
 Rails.application.config.folio_cache_headers_include_last_modified =
-  ENV.fetch("FOLIO_CACHE_HEADERS_LAST_MODIFIED") { "true" }.to_s.in?(["true", "1"])
+  ENV.fetch("FOLIO_CACHE_HEADERS_LAST_MODIFIED") { "false" }.to_s.in?(["true", "1"])
 
 Rails.application.config.folio_cache_headers_include_cache_tags =
   ENV.fetch("FOLIO_CACHE_HEADERS_TAGS") { "false" }.to_s.in?(["true", "1"])

@@ -289,10 +289,11 @@ class Folio::Api::ThumbnailsControllerTest < ActionDispatch::IntegrationTest
     cache_control = response.headers["Cache-Control"]
     assert_not_nil cache_control, "Cache-Control header should be present"
 
-    # Verify the cache header components match the 2-second fragment cache
-    assert_includes cache_control, "max-age=2", "Should have max-age=2 to match fragment cache"
+    # Verify the cache header components match the dynamic fragment cache (half of default TTL, 5-10 seconds)
+    # With default TTL of 15, half is 8 seconds (rounded from 7.5)
+    assert_includes cache_control, "max-age=8", "Should have max-age=8 to match fragment cache (half of default 15s TTL)"
     assert_includes cache_control, "must-revalidate", "Should have must-revalidate"
-    assert_includes cache_control, "stale-while-revalidate=1", "Should have stale-while-revalidate=1"
-    assert_includes cache_control, "stale-if-error=10", "Should have stale-if-error=10"
+    assert_includes cache_control, "stale-while-revalidate=2", "Should have stale-while-revalidate=2"
+    assert_includes cache_control, "stale-if-error=40", "Should have stale-if-error=40"
   end
 end

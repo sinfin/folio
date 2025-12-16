@@ -63,7 +63,7 @@ class Folio::PagesControllerTest < Folio::BaseControllerTest
   test "published does not have a no-cache Cache-Control header" do
     with_config(
       folio_cache_headers_enabled: true,
-      folio_cache_headers_default_ttl: 60,
+      folio_cache_headers_default_ttl: 15,
     ) do
       # Sign out to test public cache (BaseControllerTest auto-signs in superadmin)
       sign_out @superadmin
@@ -79,11 +79,16 @@ class Folio::PagesControllerTest < Folio::BaseControllerTest
   end
 
   test "unpublished does have a no-cache Cache-Control header" do
-    @page.update!(published: false)
+    with_config(
+      folio_cache_headers_enabled: true,
+      folio_cache_headers_default_ttl: 15,
+    ) do
+      @page.update!(published: false)
 
-    get url_for([@page, preview: @page.preview_token])
-    assert_response(:ok)
-    assert_not_equal ActionDispatch::Http::Cache::Response::DEFAULT_CACHE_CONTROL, response.get_header("Cache-Control")
-    assert_equal "no-store", response.get_header("Cache-Control")
+      get url_for([@page, preview: @page.preview_token])
+      assert_response(:ok)
+      assert_not_equal ActionDispatch::Http::Cache::Response::DEFAULT_CACHE_CONTROL, response.get_header("Cache-Control")
+      assert_equal "no-store", response.get_header("Cache-Control")
+    end
   end
 end

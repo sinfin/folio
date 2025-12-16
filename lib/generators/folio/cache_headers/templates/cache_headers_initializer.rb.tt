@@ -8,13 +8,13 @@ Rails.application.config.folio_cache_headers_enabled = true
 
 # Default TTL for public cache (in seconds)
 # This affects how long CDNs and browsers will cache your pages
-Rails.application.config.folio_cache_headers_default_ttl = 60
+Rails.application.config.folio_cache_headers_default_ttl = 15
 
 # Include ETag headers for conditional requests (recommended)
-Rails.application.config.folio_cache_headers_include_etag = true
+Rails.application.config.folio_cache_headers_include_etag = false
 
-# Include Last-Modified headers for conditional requests (recommended) 
-Rails.application.config.folio_cache_headers_include_last_modified = true
+# Include Last-Modified headers for conditional requests (recommended)
+Rails.application.config.folio_cache_headers_include_last_modified = false
 
 # Emergency cache control via environment variable
 # Set FOLIO_CACHE_TTL_MULTIPLIER=0 to disable all caching
