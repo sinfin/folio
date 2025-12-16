@@ -227,6 +227,9 @@ module Folio::StimulusHelper
   def stimulus_thumbnail(src: nil)
     return if src && !src.include?("doader.com")
 
+    # Only enable thumbnail loading in console or unpublished preview contexts
+    return unless folio_thumbnails_enabled?
+
     stimulus_controller("f-thumbnail", inline: true)
   end
 
@@ -235,4 +238,31 @@ module Folio::StimulusHelper
                         action: { click: "click" },
                         inline: true)
   end
+
+  private
+    def folio_thumbnails_enabled?
+      return @folio_thumbnails_enabled unless @folio_thumbnails_enabled.nil?
+
+      @folio_thumbnails_enabled = compute_folio_thumbnails_enabled
+    end
+
+    def compute_folio_thumbnails_enabled
+      # Guard for ViewComponent initialization phase when controller isn't available yet
+      return false unless respond_to?(:controller) && controller.present?
+
+      # Console context - check if current controller inherits from console base
+      return true if controller.is_a?(Folio::Console::BaseController)
+
+      # Preview context - require BOTH: preview param AND unpublished record
+      # (similar to eco_robots_noindex? in Economia::Metadata::HeadComponent)
+      if controller.params[Folio::Publishable::PREVIEW_PARAM_NAME].present?
+        record = controller.instance_variable_get(:@record_for_meta_variables)
+        return true if record.respond_to?(:published?) && !record.published?
+      end
+
+      false
+    rescue ActionView::Template::Error
+      # ViewComponent raises this when controller is accessed before rendering
+      false
+    end
 end

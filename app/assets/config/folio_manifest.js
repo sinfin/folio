@@ -10,6 +10,8 @@
 //= link folio/console/base.js
 //= link folio/console/base.css
 
+//= link folio/thumbnails.js
+
 //= link folio/input/date_time/svg-sprite.svg
 //= link folio/input/date_time/input-background-ico.svg
 
