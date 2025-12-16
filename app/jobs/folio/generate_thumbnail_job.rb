@@ -4,7 +4,6 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
   queue_as :slow
 
   discard_on(ActiveJob::DeserializationError)
-  discard_on(Dragonfly::Job::Fetch::NotFound)
 
   unique :until_and_while_executing
 
@@ -134,7 +133,11 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
             end
           end
 
-          if crop_width_f > image.file_width || crop_height_f > image.file_height || !x.nil? || !y.nil?
+          # Use thumbnail dimensions instead of stored dimensions to handle fallback images
+          thumbnail_width = thumbnail.width || image.file_width || 0
+          thumbnail_height = thumbnail.height || image.file_height || 0
+
+          if crop_width_f > thumbnail_width || crop_height_f > thumbnail_height || !x.nil? || !y.nil?
             thumbnail = thumbnail.thumb("#{crop_width_f.to_i}x#{crop_height_f.to_i}^", format:)
           end
 
@@ -260,6 +263,12 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
         thumbnail.meta["mime_type"] = image.file_mime_type
       end
 
+      thumbnail
+    rescue Dragonfly::Job::Fetch::NotFound
+      missing_image_path = Folio::Engine.root.join("data/images/missing-image.png")
+      thumbnail = Dragonfly.app.create(File.open(missing_image_path))
+      thumbnail.name = image.file_name || "missing-image.png"
+      thumbnail.meta["mime_type"] = "image/png"
       thumbnail
     end
 
