@@ -15,7 +15,11 @@
         == translated_inputs f, :title, folio_label: true
         == translated_inputs f, :slug
 
-    - unless f.object.class.try(:singleton?)
+    - if f.object.class.try(:singleton?)
+      = f.input :type, as: :string, \
+                       disabled: true, \
+                       input_html: { value: f.object.class.model_name.human }
+    - else
       - collection = Folio::Page.recursive_subclasses_for_select
       - if collection.size > 1
         = f.input :type, collection: collection, \
