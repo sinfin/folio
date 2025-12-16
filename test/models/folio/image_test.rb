@@ -277,6 +277,16 @@ class Folio::File::ImageTest < ActiveSupport::TestCase
   assert_equal "Manual Author", image.mapped_metadata[:creator]
 end
 
+  test "extracts dimensions from misnamed file (WebP with .jpg extension)" do
+    # This tests the fix for dragonfly_libvips handling files where the extension
+    # doesn't match the actual file format (e.g., WebP saved as .jpg)
+    image = create(:folio_file_image, file: Folio::Engine.root.join("test/fixtures/folio/test_webp_misnamed.jpg"))
+    image.reload
+
+    assert_equal 100, image.file_width, "Should extract width from misnamed WebP file"
+    assert_equal 100, image.file_height, "Should extract height from misnamed WebP file"
+  end
+
   test "additional data - white" do
     image = create(:folio_file_image, file: Folio::Engine.root.join("test/fixtures/folio/test.gif"))
     assert_nil image.reload.additional_data
