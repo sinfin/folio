@@ -35,4 +35,8 @@ class Folio::Devise::Invitations::NewCell < Folio::Devise::ApplicationCell
       t(".terms_agreement", terms_link:, privacy_link:)
     end
   end
+
+  def author_registration_class_name
+    "f-devise-invitations-new--author-registration" if model[:author_registration]
+  end
 end
