@@ -4,6 +4,7 @@ class Folio::User < Folio::ApplicationRecord
   include Folio::Audited::Model
   include Folio::Devise::DeliverLater
   include Folio::HasAddresses
+  include Folio::HasConsoleUrl
   include Folio::HasNewsletterSubscriptions
   include Folio::HasSiteRoles
 
@@ -108,10 +109,6 @@ class Folio::User < Folio::ApplicationRecord
     subselect = Folio::Address::Base.where("identification_number LIKE ?", "%#{q}%").select(:id)
     where(primary_address_id: subselect).or(where(secondary_address_id: subselect))
   }
-
-  scope :currently_editing_url, -> (url) do
-    where(console_url: url).where("console_url_updated_at > ?", 5.minutes.ago)
-  end
 
   scope :locked_for, -> (site) {
     joins(:site_user_links).merge(Folio::SiteUserLink.by_site(site).locked)
@@ -293,11 +290,6 @@ class Folio::User < Folio::ApplicationRecord
       su_links = site_user_links.by_site(site)
       su_links.create!(roles: []) if su_links.blank?
     end
-  end
-
-  def update_console_url!(console_url)
-    update_columns(console_url:,
-                   console_url_updated_at: Time.current)
   end
 
   def can_manage_sidekiq?
