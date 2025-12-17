@@ -203,7 +203,7 @@
           const size = params.get('size')
 
           // Only return data if we have all components: url, id, and size
-          if (string && id && size) {
+          if (id && size) {
             return {
               url: string,
               id,

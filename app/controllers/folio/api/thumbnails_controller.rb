@@ -2,6 +2,11 @@
 
 class Folio::Api::ThumbnailsController < Folio::Api::BaseController
   def show
+    # Calculate cache duration as half of default cache header TTL (5-10 seconds)
+    cache_ttl = thumbnail_cache_ttl
+
+    set_public_cache_headers(cache_ttl)
+
     # Handle missing or malformed thumbnails parameter
     thumbnail_params = params[:thumbnails]
 
@@ -22,9 +27,6 @@ class Folio::Api::ThumbnailsController < Folio::Api::BaseController
     # Create cache key from the reduced thumbnail parameters
     cache_key = "thumbnails/#{Digest::MD5.hexdigest(thumbnail_params.to_json)}"
 
-    # Calculate cache duration as half of default cache header TTL (5-10 seconds)
-    cache_ttl = thumbnail_cache_ttl
-
     # Use fragment cache with dynamic expiration (half of default cache header, 5-10 seconds)
     thumbnails_data = if Rails.application.config.action_controller.perform_caching
       Rails.cache.fetch(cache_key, expires_in: cache_ttl.seconds) do
@@ -33,12 +35,6 @@ class Folio::Api::ThumbnailsController < Folio::Api::BaseController
     else
       process_thumbnail_params(thumbnail_params)
     end
-
-    # Set cache headers to match fragment cache duration (5-10 seconds)
-    # Half of default cache header TTL because thumbnail status changes during generation
-    stale_while_revalidate = [cache_ttl / 4, 1].max
-    stale_if_error = cache_ttl * 5
-    response.headers["Cache-Control"] = "max-age=#{cache_ttl}, must-revalidate, stale-while-revalidate=#{stale_while_revalidate}, stale-if-error=#{stale_if_error}"
 
     render json: thumbnails_data
   end

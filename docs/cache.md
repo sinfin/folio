@@ -103,6 +103,34 @@ class ArticlesController < ApplicationController
 end
 ```
 
+### Custom Cache Headers in Controllers
+
+If you need to set custom cache headers that differ from the automatic system, you can call the cache header methods directly in your action. The automatic `after_action` callback will detect that headers are already set and skip:
+
+```ruby
+class Api::ThumbnailsController < Api::BaseController
+  def show
+    cache_ttl = calculate_custom_ttl
+    
+    # Set public cache headers early in the action
+    set_public_cache_headers(cache_ttl)
+    
+    # ... rest of action logic ...
+  end
+end
+```
+
+**How it works:**
+- Setting headers early in the action ensures they're in place before the `after_action` callback runs
+- The automatic cache headers system checks if `Cache-Control` is already set (line 30 in `Folio::HttpCache::Headers`)
+- If headers are present, it skips and logs: `"cache_control_already_set"`
+- This prevents the automatic system from adding `private` for signed-in users or other automatic behavior
+
+**Available methods:**
+- `set_public_cache_headers(ttl)` - Sets public cache headers with Vary headers
+- `set_private_cache_headers_with_ttl(ttl)` - Sets private cache headers with TTL
+- `set_private_cache_headers` - Sets `no-cache` headers
+
 ## Fragment Caching
 
 ### Folio Cache Patterns
