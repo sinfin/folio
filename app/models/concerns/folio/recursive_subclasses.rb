@@ -29,9 +29,9 @@ module Folio::RecursiveSubclasses
       )
     end
 
-    def type_collection_for_select(type_collection)
-      type_collection.map do |type|
-        [type.model_name.human, type]
+    def type_collection_for_select(klass_collection)
+      klass_collection.map do |klass|
+        [klass.model_name.human, klass.to_s]
       end
     end
   end
