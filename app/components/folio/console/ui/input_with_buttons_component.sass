@@ -17,10 +17,20 @@
     --f-c-ui-input-with-buttons__padding-right: #{2 * 36px}
 
   &__button
+    align-items: center
+    display: flex
+    height: $input-height
+    justify-content: center
     position: absolute
-    top: 0
     right: 0
+    top: 0
+    width: $input-height
     z-index: 2
+
+    .btn-sm
+      --#{$prefix}btn-padding-y: 0
+      min-height: 20px
+      min-width: 24px
 
     &--1
       right: $input-height
