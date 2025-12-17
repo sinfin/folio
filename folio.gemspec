@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   s.add_dependency "rails", "~> 6.1"
   s.add_dependency "pg", "~> 1.2.3"
   s.add_dependency "pg_search", "= 2.3.2"
-  s.add_dependency "friendly_id", "~> 5.3.0"
+  s.add_dependency "friendly_id", ">= 5.3.0"
   s.add_dependency "ancestry", "~> 4.1.0"
   s.add_dependency "mini_racer", ">= 0.4.0"  # Relaxed for macOS Sequoia compatibility
   s.add_dependency "mini_magick"
