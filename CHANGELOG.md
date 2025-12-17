@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- **Console URL Rewriter**: Extract console URL tracking into `Folio::HasConsoleUrl` concern with configurable URL rewriting via `folio_rewriter_lambda_for_has_console_url` lambda, enabling multiple related URLs (e.g. `/homepages/future` and `/homepages/current`) to be treated as equivalent for concurrent editing detection
 - **Embed System**: Complete rewrite of embed functionality with new input and display components
   - `EmbedInput` for form integration with real-time validation and preview
   - `Folio::Embed::BoxComponent` for iframe-based display with lazy loading
