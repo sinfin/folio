@@ -116,11 +116,16 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
       thumbnail = image_file(image)
       geometry = size
 
+      # Force center gravity for fallback images
+      if thumbnail.meta["fallback_image"] && size.include?("#")
+        geometry = size.sub(/#\w*\z/, "#c")
+      end
+
       if size.include?("#")
         _m, crop_width_f, crop_height_f = size.match(/(\d+)x(\d+)/).to_a.map(&:to_f)
 
-        # Check for stored thumbnail configuration if x and y are nil
-        if x.nil? && y.nil? && image.respond_to?(:thumbnail_configuration) && image.thumbnail_configuration.present?
+        # Check for stored thumbnail configuration if x and y are nil (skip for fallback images)
+        if x.nil? && y.nil? && !thumbnail.meta["fallback_image"] && image.respond_to?(:thumbnail_configuration) && image.thumbnail_configuration.present?
           # Simplify the ratio (e.g., 16:9, 4:3, 1:1)
           gcd = crop_width_f.to_i.gcd(crop_height_f.to_i)
           ratio = "#{(crop_width_f.to_i / gcd)}:#{(crop_height_f.to_i / gcd)}"
@@ -269,6 +274,7 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
       thumbnail = Dragonfly.app.create(File.binread(missing_image_path))
       thumbnail.name = image.file_name || "missing-image.png"
       thumbnail.meta["mime_type"] = "image/png"
+      thumbnail.meta["fallback_image"] = true
       thumbnail
     end
 
