@@ -80,6 +80,28 @@ class Folio::HasConsoleUrlTest < ActiveSupport::TestCase
     end
   end
 
+  test "update_console_url! handles nil url" do
+    user.update_console_url!("http://example.com/console/pages/1/edit")
+    assert_not_nil user.console_url
+
+    user.update_console_url!(nil)
+
+    assert_nil user.console_url
+    assert_not_nil user.console_url_updated_at
+  end
+
+  test "update_console_url! handles nil url with rewriter configured" do
+    with_console_url_rewriter do
+      user.update_console_url!("http://example.com/console/homepages/future")
+      assert_not_nil user.console_url
+
+      user.update_console_url!(nil)
+
+      assert_nil user.console_url
+      assert_not_nil user.console_url_updated_at
+    end
+  end
+
   private
     def with_console_url_rewriter
       rewriter = ->(url) { url.gsub(%r{/homepages/(future|current)\z}, "/homepages/*") }

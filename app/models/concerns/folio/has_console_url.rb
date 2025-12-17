@@ -4,6 +4,8 @@ module Folio::HasConsoleUrl
   extend ActiveSupport::Concern
 
   def self.rewrite_console_url(url)
+    return url if url.nil?
+
     rewriter = Rails.application.config.folio_rewriter_lambda_for_has_console_url
     return url if rewriter.nil?
 
