@@ -48,6 +48,18 @@ class Folio::ThumbnailsTest < ActiveSupport::TestCase
     assert image.reload.thumbnail_sizes[THUMB_SIZE][:uid].ends_with?(".jpg")
   end
 
+  test "works for tiff" do
+    image = create(:folio_file_image, file: Folio::Engine.root.join("test/fixtures/folio/test.tiff"), additional_data: { "generate_thumbnails_in_test" => true })
+    assert image
+
+    perform_enqueued_jobs do
+      assert image.thumb(THUMB_SIZE)
+    end
+
+    # TIFFs are converted to JPG for thumbnails to avoid extract_area errors
+    assert image.reload.thumbnail_sizes[THUMB_SIZE][:uid].ends_with?(".jpg")
+  end
+
   test "uses default x/y from thumbnail_configuration when cropping" do
     image = create(:folio_file_image, additional_data: { "generate_thumbnails_in_test" => true })
 

@@ -104,6 +104,10 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
       elsif image.try(:file_mime_type) == "image/gif"
         format = :jpg
         add_white_background = true
+      elsif image.try(:file_mime_type)&.include?("tiff")
+        # TIFF files can have multiple pages/layers that cause extract_area errors
+        format = :jpg
+        add_white_background = true
       elsif image.try(:file_mime_type) == "application/pdf"
         # TODO frame
         add_white_background = true
