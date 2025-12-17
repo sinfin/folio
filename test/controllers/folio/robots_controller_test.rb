@@ -21,4 +21,3 @@ class Folio::RobotsControllerTest < ActionDispatch::IntegrationTest
     assert_match(/^Sitemap:/, response.body)
   end
 end
-
