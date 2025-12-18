@@ -13,8 +13,8 @@ cs:
           autosave_info_component:
             new_record_alert: Rozepsané změny v editoru se neukládají, dokud %{model} poprvé neuložíte.
             title: Editor obsahuje neuložené rozepsané změny.
-            continue: Pokračovat v rozepsaném
-            discard: Zahodit rozepsané změny
+            continue: Použít moji verzi
+            discard: Použít verzi jiného uživatele
             failed_to_save: Chyba připojení k serveru. Prosíme zkontrolujte připojení k internetu.
 
         overlay:
