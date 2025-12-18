@@ -43,6 +43,8 @@ module Folio
     config.folio_console_audited_revisions_limit = 50
     config.folio_console_preview_url_for_procs = nil
 
+    config.folio_rewriter_lambda_for_has_console_url = nil
+
     config.folio_newsletter_subscription_service = :mailchimp
     config.folio_server_names = []
     config.folio_image_spacer_background_fallback = nil
