@@ -292,13 +292,14 @@ class Folio::File < Folio::ApplicationRecord
     end
 
     seconds = screenshot_time.to_i
-    milliseconds = ((screenshot_time - seconds) * 100).to_i
+    # FFmpeg uses centiseconds (hundredths of a second), not milliseconds
+    centiseconds = ((screenshot_time - seconds) * 100).to_i
     minutes = seconds / 60
     seconds -= minutes * 60
     hours = minutes / 60
     minutes -= hours * 60
 
-    "#{hours.to_s.rjust(2, '0')}:#{minutes.to_s.rjust(2, '0')}:#{seconds.to_s.rjust(2, '0')}.#{milliseconds.to_s.ljust(2, '0')}"
+    "#{hours.to_s.rjust(2, '0')}:#{minutes.to_s.rjust(2, '0')}:#{seconds.to_s.rjust(2, '0')}.#{centiseconds.to_s.rjust(2, '0')}"
   end
 
   def indestructible_reason

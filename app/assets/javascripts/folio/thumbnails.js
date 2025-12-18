@@ -202,7 +202,7 @@
           const id = params.get('image')
           const size = params.get('size')
 
-          // Only return data if we have all components: url, id, and size
+          // Only return data if we have required components: id and size
           if (id && size) {
             return {
               url: string,
