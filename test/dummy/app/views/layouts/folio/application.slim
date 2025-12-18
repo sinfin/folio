@@ -16,6 +16,9 @@ html[
       = preload_link_tag '/fonts/Figtree-Bold.woff2'
       = preload_link_tag '/fonts/SpaceGrotesk-Bold.woff2'
 
+      - if @folio_tiptap || (params[Folio::Publishable::PREVIEW_PARAM_NAME].present? && @record_for_meta_variables.try(:published?) == false)
+        = javascript_include_tag('folio/thumbnails', defer: true)
+
   body class=(@folio_tiptap ? "f-tiptap-application-body" : nil)
     - if @folio_tiptap
       = yield

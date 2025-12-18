@@ -61,6 +61,36 @@ rails test           # run all tests
 
 Parallel testing is enabled by default (`parallelize` in `test_helper_base.rb`).
 
+To run tests sequentially (useful for debugging):
+
+```sh
+PARALLEL_WORKERS=1 rails test
+```
+
+---
+
+## Troubleshooting
+
+### Tests Hang Indefinitely in Parallel Mode
+
+If tests hang during parallel execution with errors like:
+
+```
+DRb::DRbConnError: drbunix:/tmp/druby12345.0 - No such file or directory
+```
+
+This is usually caused by **stale database connections** from a previous interrupted test run. The "idle in transaction" connections hold locks that block parallel test workers from setting up their test databases.
+
+**Solution:** Terminate stale connections before running tests:
+
+```sh
+psql -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname LIKE 'your_app_test%' AND state = 'idle in transaction';" your_app_test
+```
+
+Replace `your_app_test` with your actual test database name (e.g., `folio_test`).
+
+**Prevention:** Always allow test runs to complete gracefully. If you must interrupt (`Ctrl+C`), the cleanup should handle connections, but occasionally stale connections remain.
+
 ---
 
 ## Best Practices

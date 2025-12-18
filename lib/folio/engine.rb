@@ -132,9 +132,9 @@ module Folio
 
     # Cache headers configuration (Phase 1 defaults)
     config.folio_cache_headers_enabled = false
-    config.folio_cache_headers_default_ttl = 60 # seconds
-    config.folio_cache_headers_include_etag = true
-    config.folio_cache_headers_include_last_modified = true
+    config.folio_cache_headers_default_ttl = 15 # seconds
+    config.folio_cache_headers_include_etag = false
+    config.folio_cache_headers_include_last_modified = false
     config.folio_cache_headers_include_cache_tags = false
 
     config.folio_console_react_modal_types = config.folio_file_types_for_routes

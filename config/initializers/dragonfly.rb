@@ -24,6 +24,46 @@ end
 Dragonfly.app.configure do
   plugin :libvips
 
+  # Override image_properties analyser to handle misnamed files
+  # (e.g., WebP files with .jpg extension that fail with autorotate)
+  analyser :image_properties do |content|
+    next {} unless content.ext
+    next {} unless DragonflyLibvips::SUPPORTED_FORMATS.include?(content.ext.downcase)
+
+    input_options = { access: :sequential }
+    input_options[:autorotate] = true if content.mime_type == "image/jpeg"
+    input_options[:dpi] = 300 if content.mime_type == "application/pdf"
+
+    img = begin
+      Vips::Image.new_from_file(content.path, **input_options)
+    rescue Vips::Error => e
+      # If autorotate fails (e.g., file has wrong extension), retry without it
+      if input_options[:autorotate] && e.message.include?("autorotate")
+        input_options.delete(:autorotate)
+        Vips::Image.new_from_file(content.path, **input_options)
+      else
+        raise
+      end
+    end
+
+    progressive = begin
+      img.get_typeof("jpeg-multiscan") != 0 && img.get("jpeg-multiscan") != 0
+    rescue Vips::Error
+      false
+    end
+
+    {
+      "format" => content.ext.to_s,
+      "width" => img.width,
+      "height" => img.height,
+      "xres" => img.xres,
+      "yres" => img.yres,
+      "progressive" => progressive
+    }
+  rescue Vips::Error
+    {}
+  end
+
   analyser :mime_type do |content|
     content.shell_eval do |path|
       "file --brief --mime-type #{path}"
@@ -70,14 +110,6 @@ Dragonfly.app.configure do
       content.shell_update do |old_path, new_path|
         "jpegtran -optimize -outfile #{new_path} #{old_path}"
       end
-    end
-  end
-
-  processor :animated_gif_resize do |content, raw_size, *args|
-    fail "Missing gifsicle binary." if shell("which", "gifsicle").blank?
-    size = raw_size.match(/\d+x\d+/)[0] # get rid of resize options which gifsicle doesn't understand
-    content.shell_update do |old_path, new_path|
-      "gifsicle --resize-fit #{size} #{old_path} --output #{new_path}"
     end
   end
 
