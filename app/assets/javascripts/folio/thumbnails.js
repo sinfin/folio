@@ -14,7 +14,7 @@
     window.Folio.Thumbnails.state = 'idle'
     window.Folio.Thumbnails.timeout = null
     window.Folio.Thumbnails.scheduled = new Map() // Map of element -> data
-    window.Folio.Thumbnails.LOAD_INTERVAL = 8100 // 8 seconds and a bit - cache is set to 8s
+    window.Folio.Thumbnails.LOAD_INTERVAL = 8100 // 8 seconds and a bit - cache TTL is dynamically calculated (typically 8s with default config)
 
     window.Folio.Thumbnails.schedule = ({ data, element }) => {
       // Add element and its data to scheduled collection
