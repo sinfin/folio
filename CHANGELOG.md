@@ -28,8 +28,19 @@ All notable changes to this project will be documented in this file.
 - added `thumbnail_configuration` to `Folio::File` to store crop data per-ratio, set via a new `Folio::Console::Files::Show::Thumbnails::CropEditComponent` and `update_thumbnails_crop` API
 - added `Folio::File.correct_site(current_site)` return corect site for files depending on `Rails.application.config.folio_shared_files_between_sites`
 - support for MOV (video/quicktime) files
+- added troubleshooting documentation for parallel test hangs caused by stale database connections
+- added TIFF file support for thumbnail generation
+- added fallback image handling for missing or corrupted files
+- added image dimension validation to `Folio::Thumbnails` concern
+- thumbnail loading now restricted to console, tiptap editor, and unpublished previews
 
 ### Changed
+
+- refactored thumbnail JavaScript to use native `fetch` API instead of jQuery
+- updated default cache header TTL from 10s to 15s (`folio_cache_headers_default_ttl`)
+- thumbnail generation now uses dynamic cache TTL (5-10 seconds) based on config
+- removed broken `animated_gif_resize` processor (GIFs now converted to JPG)
+- improved video screenshot time calculation to prevent seeking beyond video duration
 
 - update rails to 8.0.1
 - default console `update` for `format: :json` now returns a JSON with changes instead of an empty hash
@@ -46,6 +57,10 @@ All notable changes to this project will be documented in this file.
 
 - file_list/file_component info-file-name doesn't break on long names
 - instagram embeds from url loading with small width
+- fixed file handle leak in thumbnail generation job
+- fixed Dragonfly image analyser to handle misnamed files (e.g., WebP files with .jpg extension)
+- fixed dimension validation to only run when file is assigned
+- fixed video screenshot generation to prevent seeking beyond video duration
 
 ## [6.5.1] - 2025-06-18
 
