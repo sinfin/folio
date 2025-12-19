@@ -40,6 +40,8 @@ class Folio::Console::SitesController < Folio::Console::BaseController
 
       ary << :domain if Rails.application.config.folio_site_is_a_singleton
 
+      ary += @site.class.boutique_additional_params if Module.const_defined?(:Boutique)
+
       params.require(:site)
             .permit(*ary,
                     *@site.class.additional_params,
