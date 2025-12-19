@@ -4,11 +4,12 @@ class Folio::File < Folio::ApplicationRecord
   include Folio::DragonflyFormatValidation
   include Folio::FriendlyId
   include Folio::SanitizeFilename
-  include Folio::Taggable
   include Folio::Thumbnails
   include Folio::StiPreload
+  include Folio::Taggable
   include Folio::HasAasmStates
   include Folio::BelongsToSite
+  include Folio::FilesSharedAccrossSites if Rails.application.config.folio_shared_files_between_sites
 
   READY_STATE = :ready
 
@@ -64,6 +65,15 @@ class Folio::File < Folio::ApplicationRecord
     ]
   }
 
+  scope :by_tags, -> (tags) do
+    if tags.is_a?(String)
+      tagged_with(tags.split(","))
+    else
+      tagged_with(tags)
+    end
+  end
+
+
   dragonfly_accessor :file do
     after_assign :sanitize_filename
   end
@@ -95,14 +105,6 @@ class Folio::File < Folio::ApplicationRecord
       where(Folio::FilePlacement::Base.where(Folio::FilePlacement::Base.arel_table[:file_id].eq(arel_table[:id])).arel.exists.not)
     else
       none
-    end
-  end
-
-  scope :by_tags, -> (tags) do
-    if tags.is_a?(String)
-      tagged_with(tags.split(","))
-    else
-      tagged_with(tags)
     end
   end
 
@@ -180,6 +182,9 @@ class Folio::File < Folio::ApplicationRecord
     end
   end
 
+  def self.correct_site(site)
+    Rails.application.config.folio_shared_files_between_sites ? Folio::Current.main_site : site
+  end
 
   def title
     file_name
@@ -273,23 +278,28 @@ class Folio::File < Folio::ApplicationRecord
   end
 
   def screenshot_time_in_ffmpeg_format
-    if file_track_duration
-      # For videos under 10 seconds: use 1/4 duration (current behavior)
-      # For videos 10+ seconds: use fixed 10 seconds (avoids long FFmpeg seeks)
-      screenshot_time = if file_track_duration < 10
-        file_track_duration / 4.0
-      else
-        10
-      end
-
-      seconds = screenshot_time.to_i
-      minutes = seconds / 60
-      seconds -= minutes * 60
-      hours = minutes / 60
-      minutes -= hours * 60
-
-      "#{hours.to_s.rjust(2, '0')}:#{minutes.to_s.rjust(2, '0')}:#{seconds.to_s.rjust(2, '0')}.00"
+    # For videos under 10 seconds: use 1/4 duration
+    # For videos 10+ seconds: use fixed 5 seconds (safe offset that works for most videos)
+    # Default to 1 second if duration is unknown
+    # Note: Use 5 seconds instead of 10 to avoid seeking beyond the end of short videos
+    # (e.g., a 9.94s video stored as duration=10 would fail at -ss 10)
+    screenshot_time = if file_track_duration.nil?
+      1
+    elsif file_track_duration <= 10
+      [file_track_duration / 4.0, 0.5].max
+    else
+      5
     end
+
+    seconds = screenshot_time.to_i
+    # FFmpeg uses centiseconds (hundredths of a second), not milliseconds
+    centiseconds = ((screenshot_time - seconds) * 100).to_i
+    minutes = seconds / 60
+    seconds -= minutes * 60
+    hours = minutes / 60
+    minutes -= hours * 60
+
+    "#{hours.to_s.rjust(2, '0')}:#{minutes.to_s.rjust(2, '0')}:#{seconds.to_s.rjust(2, '0')}.#{centiseconds.to_s.rjust(2, '0')}"
   end
 
   def indestructible_reason

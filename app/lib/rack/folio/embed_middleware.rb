@@ -46,7 +46,7 @@ module Rack
       def self.should_cache_embed_html?
         return @should_cache_embed_html if defined?(@should_cache_embed_html)
 
-        @should_cache_embed_html = if Rails.env.development? && ENV["FOLIO_EMBED_DEV"]
+        @should_cache_embed_html = if Rails.env.development?
           false
         else
           true

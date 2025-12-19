@@ -9,7 +9,6 @@ class Folio::MigrateThumbsToRemoteUrlJob < Folio::ApplicationJob
 
   def perform(image)
     return if image.file_mime_type.include?("svg")
-    return if image.animated_gif?
 
     # need to reload here because of parallel jobs
     image.reload

@@ -3,12 +3,6 @@
 require "test_helper"
 
 class Folio::Tiptap::ContentComponentTest < Folio::ComponentTest
-  setup do
-    if ENV["FOLIO_DEBUG_TIPTAP_NODES"].present?
-      puts "WARNING: FOLIO_DEBUG_TIPTAP_NODES is set, tests will fail!"
-    end
-  end
-
   test "render with string content" do
     tiptap_content = {
       "type" => "doc",

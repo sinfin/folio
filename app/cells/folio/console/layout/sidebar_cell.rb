@@ -158,11 +158,11 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
 
     if ::Rails.application.config.folio_shared_files_between_sites
       shared_links = [{
-        locale: Folio::Current.main_site.console_locale,
+        locale: Folio::File.correct_site(Folio::Current.site).console_locale,
         title: nil,
         collapsed: nil,
         expanded: nil,
-        links: [file_links(Folio::Current.main_site).compact]
+        links: [file_links(Folio::File.correct_site(Folio::Current.site)).compact]
       }]
       sites = Folio::Site.ordered
     end

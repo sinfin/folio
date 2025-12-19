@@ -252,8 +252,7 @@ The `Rack::Folio::EmbedMiddleware` (`app/lib/rack/folio/embed_middleware.rb`) se
 
 1. Intercepts requests to `/folio/embed`
 2. Serves a pre-built HTML file from `data/embed/dist/folio-embed-dist.html`
-3. Supports development mode with `ENV["FOLIO_EMBED_DEV"]` for dynamic reloading
-4. Provides the foundation for iframe-based embed rendering
+3. Provides the foundation for iframe-based embed rendering
 
 ## Middleware HTML File Build System
 

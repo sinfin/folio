@@ -43,6 +43,8 @@ module Folio
     config.folio_console_audited_revisions_limit = 50
     config.folio_console_preview_url_for_procs = nil
 
+    config.folio_rewriter_lambda_for_has_console_url = nil
+
     config.folio_newsletter_subscription_service = :mailchimp
     config.folio_server_names = []
     config.folio_image_spacer_background_fallback = nil
@@ -130,9 +132,9 @@ module Folio
 
     # Cache headers configuration (Phase 1 defaults)
     config.folio_cache_headers_enabled = false
-    config.folio_cache_headers_default_ttl = 60 # seconds
-    config.folio_cache_headers_include_etag = true
-    config.folio_cache_headers_include_last_modified = true
+    config.folio_cache_headers_default_ttl = 15 # seconds
+    config.folio_cache_headers_include_etag = false
+    config.folio_cache_headers_include_last_modified = false
     config.folio_cache_headers_include_cache_tags = false
 
     config.folio_console_react_modal_types = config.folio_file_types_for_routes
@@ -238,6 +240,11 @@ module Folio
         require "rack/folio/maintenance_middleware"
         app.config.middleware.use(Rack::Folio::MaintenanceMiddleware)
       end
+    end
+
+    initializer :env_flags_warning do |app|
+      load Folio::Engine.root.join("lib/folio/env_flags.rb")
+      Folio::EnvFlags.warn_if_present
     end
 
     config.to_prepare do

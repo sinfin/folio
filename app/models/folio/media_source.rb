@@ -2,6 +2,7 @@
 
 class Folio::MediaSource < Folio::ApplicationRecord
   include Folio::BelongsToSite
+  # TODO: include Folio::FilesSharedAccrossSites if Rails.application.config.folio_shared_files_between_sites
 
   has_many :media_source_site_links, class_name: "Folio::MediaSourceSiteLink", dependent: :destroy
   has_many :allowed_sites, through: :media_source_site_links, source: :site, class_name: "Folio::Site"

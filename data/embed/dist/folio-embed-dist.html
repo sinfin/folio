@@ -281,12 +281,14 @@
       case 'twitter': {
         const statusMatch = url.match(/\/status\/(\d+)/)
         const statusId = statusMatch?.[1]
+        // Normalize x.com URLs to twitter.com for widget compatibility
+        const twitterUrl = url.replace(/^https?:\/\/(www\.)?x\.com\//, 'https://twitter.com/')
 
         if (statusId) {
           container.innerHTML = `
             <blockquote class="twitter-tweet" data-conversation="none" data-dnt="true" data-theme="light">
               <p lang="en" dir="ltr"></p>
-              <a target="_blank" href="${url}">View this Tweet</a>
+              <a target="_blank" href="${twitterUrl}">View this Tweet</a>
             </blockquote>
             <span class="f-embed__loader f-embed__loader--twitter"></span>
           `

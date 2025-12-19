@@ -35,6 +35,12 @@ module Folio::Thumbnails
 
     after_save :run_set_additional_data_job
     after_destroy :delete_thumbnails
+
+    # Validate image dimensions for thumbnailable files (images)
+    validates :file_width, :file_height,
+              presence: true,
+              numericality: { greater_than: 0 },
+              if: :should_validate_image_dimensions?
   end
 
   def thumbs_hash_with_rewritten_urls(hash)
@@ -161,19 +167,6 @@ module Folio::Thumbnails
     file_mime_type.present? && file_mime_type.include?("gif")
   end
 
-  def animated_gif?
-    return false unless gif?
-    return false unless self.respond_to?(:additional_data)
-
-    if additional_data.present?
-      additional_data["animated"].present?
-    else
-      Folio::Files::SetAdditionalDataJob.perform_now(self)
-      reload
-      additional_data.present? && additional_data["animated"].present?
-    end
-  end
-
   def largest_thumb_key
     keys = thumbnail_sizes.keys
     largest_key = nil; largest_value = 0
@@ -264,6 +257,10 @@ module Folio::Thumbnails
   end
 
   private
+    def should_validate_image_dimensions?
+      thumbnailable? && file_uid.present?
+    end
+
     def reset_thumbnails
       delete_thumbnails if file_uid_changed? && has_attribute?("thumbnail_sizes")
     end
