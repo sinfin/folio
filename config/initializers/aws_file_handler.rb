@@ -223,7 +223,7 @@ AwsFileHandler.configure do |config|
   #     # JSON attribute for your custom data.
   #     #
   #     # optional (any data as hash)
-  #     aws_file.custom_data = { type: "image", class: Folio::File::Image }
+  #     aws_file.custom_data = { "type" => "image", "class_name" => "Folio::File::Image" }
   #
   #     next true
   #   end
@@ -247,7 +247,7 @@ AwsFileHandler.configure do |config|
       end
 
       aws_file.s3_type_directory = file_klass.name.underscore
-      aws_file.custom_data = { class: file_klass }
+      aws_file.custom_data = { "class_name" => file_klass.to_s }
 
       next true
     end
@@ -279,7 +279,7 @@ AwsFileHandler.configure do |config|
   #     # This is an association to your model. It's the opposite of the `aws_file` association in the
   #     # `AwsFileHandler::FileTypeable` concern. Do it here and in `controller_uploaded_file` if you didn't set it in the
   #     # `/file/new` action already!
-  #     aws_file.typeable = aws_file.custom_data[:class].constantize.new
+  #     aws_file.typeable = aws_file.custom_data["class_name"].constantize.new
   #
   #     next true
   #   end
@@ -320,12 +320,12 @@ AwsFileHandler.configure do |config|
   #   # This is an association to your model. It's the opposite of the `aws_file` association in the
   #   # `AwsFileHandler::FileTypeable` concern. Do it here and in `controller_sent_file` if you didn't set it in the
   #   # `/file/new` action already!
-  #   aws_file.typeable = aws_file.custom_data[:class].constantize.new
+  #   aws_file.typeable = aws_file.custom_data["class_name"].constantize.new
   # end
   # config.controller_sent_file = nil # default
   config.controller_uploaded_file = proc do |controller, params, aws_file|
     # TODO: fill data required for typeable instance
-    aws_file.typeable = aws_file.custom_data[:class].constantize.new
+    aws_file.typeable = aws_file.custom_data["class_name"].constantize.new
   end
 
   # This block is called in the `/file/uploaded` action. It's for setting up the file before processing it as uploaded.
@@ -344,7 +344,7 @@ AwsFileHandler.configure do |config|
   #   # This is an association to your model. It's the opposite of the `aws_file` association in the
   #   # `AwsFileHandler::FileTypeable` concern. Do it here and in `controller_sent_file` if you didn't set it in the
   #   # `/file/new` action already!
-  #   aws_file.typeable = aws_file.custom_data[:class].constantize.new
+  #   aws_file.typeable = aws_file.custom_data["class_name"].constantize.new
   # end
   # config.controller_sent_file = nil # default
 
