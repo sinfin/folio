@@ -2,6 +2,7 @@ import * as React from "react";
 
 import { debounce } from "@/lib/debounce";
 import { ArrowSplitVerticalIcon } from "@/components/tiptap-icons";
+import { useDragAutoScroll } from "@/hooks/use-drag-auto-scroll";
 
 import "./folio-editor-responsive-preview.scss";
 
@@ -23,6 +24,9 @@ export function FolioEditorResponsivePreview({
   const [responsivePreviewWidth, setResponsivePreviewWidth] =
     React.useState<number>(MINIMUM_WIDTH);
   const scrollRef = React.useRef<HTMLDivElement>(null);
+
+  // Enable auto-scroll during drag operations
+  useDragAutoScroll({ scrollContainerRef: scrollRef });
 
   const onMouseDown = React.useCallback(
     (event: React.MouseEvent<HTMLDivElement>) => {
