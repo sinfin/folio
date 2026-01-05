@@ -19,7 +19,7 @@ window.Folio.Stimulus.register('f-file-list', class extends window.Stimulus.Cont
       preview: file.preview
     })
 
-    fileElement.dataset.fFileListFileJwtValue = file.jwt
+    fileElement.dataset.fFileListFileAwsFileHandlerIdValue = file.id
     fileElement.dataset.fFileListFileS3PathValue = file.s3_path
     fileElement.dataset.fFileListFileFileTypeValue = this.fileTypeValue
     fileElement.querySelector('.f-file-list-file__info-file-name').innerText = file.name

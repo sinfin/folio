@@ -8,7 +8,7 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
     id: { type: String, default: '' },
     loadFromId: { type: Boolean, default: false },
     templateData: { type: String, default: '' },
-    jwt: { type: String, default: '' },
+    awsFileHandlerId: { type: String, default: '' },
     s3Path: { type: String, default: '' },
     fileType: String,
     fileName: String,
@@ -44,7 +44,7 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
       this.fillTemplate()
     }
 
-    if ((this.s3PathValue || this.jwtValue) && this.fileTypeValue) {
+    if (this.awsFileHandlerIdValue && this.fileTypeValue) {
       this.pingApi()
       this.boundMessageBusCallback = this.messageBusCallbackForCreate.bind(this)
       this.element.addEventListener('f-file-list-file/message', this.boundMessageBusCallback)
@@ -79,17 +79,17 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
   }
 
   pingApi () {
-    if (!this.s3PathValue && !this.jwtValue) return
+    if (!this.awsFileHandlerIdValue) return
     if (!this.fileTypeValue) return
 
-    const data = {
-      jwt: this.jwtValue,
-      s3_path: this.s3PathValue,
-      type: this.fileTypeValue,
-      message_bus_client_id: window.MessageBus.clientId
-    }
+    // const data = {
+    //   aws_file_handler_id: this.awsFileHandlerIdValue,
+    //   s3_path: this.s3PathValue,
+    //   type: this.fileTypeValue,
+    //   message_bus_client_id: window.MessageBus.clientId
+    // }
 
-    window.Folio.Api.apiPost('/folio/api/s3/after', data).catch((error) => {
+    window.Folio.Api.apiPost(`/aws_file_handler/api/file/sent/${this.awsFileHandlerIdValue}`).catch((error) => {
       this.catchCounter = this.catchCounter || 0
       this.catchCounter += 1
 

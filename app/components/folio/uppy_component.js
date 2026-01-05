@@ -116,9 +116,8 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
         getUploadParameters: (file) => {
           return window.Folio.Api.apiPost('/aws_file_handler/api/file/new', { filename: file.name, type: this.fileTypeValue })
             .then((response) => {
-              file.name = response.file_name
-              file.s3_path = response.s3_path
-              file.jwt = response.jwt
+              file.name = response.name
+              file.s3_url = response.s3_url
               file.id = response.id
 
               return {
