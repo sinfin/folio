@@ -308,7 +308,17 @@ module Folio::HasAttachments
   def soft_warnings_for_file_placements
     grouped = {}
 
-    collect_all_placements
+    all_placements = collect_all_placements
+
+    # Also include atom file placements for models with atoms that don't use tiptap
+    if respond_to?(:atoms) && (!self.class.respond_to?(:has_folio_tiptap?) || !self.class.has_folio_tiptap?)
+      atoms.each do |atom|
+        next if atom.marked_for_destruction?
+        all_placements += atom.collect_all_placements
+      end
+    end
+
+    all_placements
       .reject(&:marked_for_destruction?)
       .each do |placement|
         next if placement.file.blank?
@@ -351,6 +361,17 @@ module Folio::HasAttachments
           keys.each do |association|
             placement = send(association)
             all_placements_ary << placement if placement
+          end
+        end
+      end
+
+      # Also validate atom file placements for models with atoms that don't use tiptap
+      if respond_to?(:atoms) && (!self.class.respond_to?(:has_folio_tiptap?) || !self.class.has_folio_tiptap?)
+        atoms.each do |atom|
+          next if atom.marked_for_destruction?
+          atom.collect_all_placements.each do |placement|
+            next if placement.marked_for_destruction?
+            all_placements_ary << placement
           end
         end
       end
