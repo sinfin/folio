@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- bumped tiptap to `3.14.0`
+
 ## [7.0.0] - 2026-01-05
 
 ### Added
