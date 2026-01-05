@@ -56,6 +56,10 @@ export const FolioTiptapStyledWrap = Node.create({
   },
 
   addNodeView() {
-    return ReactNodeViewRenderer(FolioTiptapStyledWrapView);
+    return ReactNodeViewRenderer(FolioTiptapStyledWrapView, {
+      // Allow all events to propagate to ProseMirror.
+      // This fixes drop events not working when cursor is over this node.
+      stopEvent: () => false,
+    });
   },
 });
