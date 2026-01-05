@@ -1,0 +1,88 @@
+$gray: #C9CBCC !default
+$medium-gray: #E8E8E8 !default
+
+.f-c-files-picker
+  &__inner
+    position: relative
+
+  &__loader
+    --folio-loader-background: transparent
+
+  &__btn
+    position: static
+    flex: 0 0 auto
+
+    &::before
+      content: ''
+      display: block
+      position: absolute
+      top: 0
+      right: 0
+      bottom: 0
+      left: 0
+
+  &__btn-wrap
+    background: $medium-gray
+    border-radius: $border-radius
+    padding: 24px
+    position: relative
+    min-height: 84px
+    text-align: center
+
+  &__in-place-inputs
+    display: flex
+    flex-direction: column
+    gap: px-to-rem(6px)
+    margin-top: px-to-rem(8px)
+    align-items: stretch
+
+  &__alt-row
+    display: flex
+    align-items: center
+    gap: px-to-rem(6px)
+
+    // Hide the warning icon when the in-place content has a value
+    .f-c-ui-in-place-input:has(.f-c-ui-in-place-input__content:not(:empty)) + .f-c-files-picker__alt-ico
+      display: none
+
+  &--darker &__btn-wrap
+    background: $gray
+
+  &[data-f-c-files-picker-state-value="empty"] &__content,
+  &[data-f-c-files-picker-state-value="marked-for-destruction"] &__content,
+  &[data-f-c-files-picker-state-value="selected-and-loading"] &__content,
+  &[data-f-c-files-picker-state-value="filled"] &__btn-wrap,
+  &[data-f-c-files-picker-state-value="selected-and-loading"] &__btn
+    display: none
+    transition: none
+
+  &--as-image
+    width: 168px
+
+    &.f-c-files-picker--size-138
+      width: 138px
+
+  &--as-image &__btn-wrap
+    height: 168px
+    display: flex
+    align-items: center
+    justify-content: center
+
+  &--as-image.f-c-files-picker--size-138 &__btn-wrap
+    height: 138px
+
+  &--as-video &__btn-wrap
+    max-width: 555px
+
+  &__alt-ico
+    cursor: pointer
+    position: relative
+    top: -1px
+
+    &:hover
+      color: $black
+
+  &[data-f-c-files-picker-state-value="empty"] &__alt-ico,
+  &[data-f-c-files-picker-state-value="marked-for-destruction"] &__alt-ico
+  &:not([data-f-c-files-picker-state-value="selected-and-loading"]) &__loader
+    display: none

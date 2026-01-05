@@ -29,6 +29,7 @@ $transparent-b300: rgba(0, 0, 0, 0.15) !default
     position: absolute
     top: 0
     right: 0
+    z-index: 2
 
   &__control
     flex: 0 0 auto
@@ -42,6 +43,9 @@ $transparent-b300: rgba(0, 0, 0, 0.15) !default
   &__control--destroy
     color: $danger
 
+  &__control--sortable-handle
+    cursor: grabbing
+
   &__position
     position: absolute
     right: 0
@@ -54,3 +58,20 @@ $transparent-b300: rgba(0, 0, 0, 0.15) !default
     background: $transparent-b300
     height: calc(4 * var(--f-nested-fields-gap))
     border-radius: $border-radius
+
+  &__fields-content
+    position: relative
+    z-index: 2
+
+  &__sortable-backdrop
+    position: absolute
+    inset: 0
+    z-index: 1
+    cursor: grabbing
+
+  &--fully-draggable &__controls
+    pointer-events: none
+
+  &--fully-draggable &__control--destroy,
+  &--fully-draggable &__control--arrow
+    pointer-events: auto

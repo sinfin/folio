@@ -78,5 +78,32 @@ class Folio::Api::S3ControllerTest < Folio::BaseControllerTest
         end
       end
     end
+
+    test "#{klass} - file_list_file" do
+      file = create(klass.model_name.singular)
+
+      get file_list_file_folio_api_s3_path(file_id: file.id,
+                                           file_type: file.class.to_s,
+                                           format: :json)
+      assert_response :success
+
+      json = response.parsed_body
+      assert json["data"].include?("f-file-list-file")
+    end
+
+    test "#{klass} - file_list_file with wrong file_type" do
+      file = create(klass.model_name.singular)
+
+      get file_list_file_folio_api_s3_path(file_id: file.id, file_type: "Folio::File::Wrong", format: :json)
+      assert_response 404
+    end
+
+    test "#{klass} - file_list_file cancancan" do
+      file = create(klass.model_name.singular)
+      sign_out @superadmin
+
+      get file_list_file_folio_api_s3_path(file_id: file.id, file_type: file.class.to_s, format: :json)
+      assert_response :unauthorized
+    end
   end
 end

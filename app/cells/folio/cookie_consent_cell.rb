@@ -126,6 +126,7 @@ class Folio::CookieConsentCell < Folio::ApplicationCell
       autoclear_cookies: true,
       page_scripts: true,
       languages: { I18n.locale => languages_hash },
+      keep_attached_after_accept: config[:keep_attached_after_accept] || false,
       gui_options: {
         consent_modal: {
           layout: "cloud",
@@ -261,7 +262,6 @@ class Folio::CookieConsentCell < Folio::ApplicationCell
   end
 
   def log_error(msg, extra: nil)
-    Raven.capture_message(msg, extra:) if defined?(Raven)
     Sentry.capture_message(msg, extra:) if defined?(Sentry)
   rescue StandardError
   end

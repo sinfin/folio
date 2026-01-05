@@ -6,7 +6,7 @@ window.Dummy.Ui.Icon.SVG_NS = 'http://www.w3.org/2000/svg'
 window.Dummy.Ui.Icon.SVG_XLINK = 'http://www.w3.org/1999/xlink'
 
 window.Dummy.Ui.Icon.data = (name, options = {}) => {
-  if (!window.Dummy.Ui.Icon.svgSpritePath) throw new Error("Missing svgSpritePath. Add render(Dummy::Ui::IconComponent.new(head_html: true)) to <head>.")
+  if (!window.Dummy.Ui.Icon.svgSpritePath) throw new Error('Missing svgSpritePath. Add render(Dummy::Ui::IconComponent.new(head_html: true)) to <head>.')
 
   const data = { name }
 

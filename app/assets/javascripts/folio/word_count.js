@@ -1,6 +1,6 @@
 window.Folio = window.Folio || {}
 
-window.Folio.wordCount = ({ text }) => {
+window.Folio.wordCount = ({ text, words, characters }) => {
   const hash = {
     text,
     cleanText: '',
@@ -20,13 +20,19 @@ window.Folio.wordCount = ({ text }) => {
     hash.charactersWithSpaces = hash.cleanText.length
     hash.characters = textWithoutSpaces.length
     hash.words = hash.cleanText.split(' ').length
-
-    const formatter = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0, useGrouping: true })
-
-    hash.formattedCharacters = formatter.format(hash.characters).replace(/,/g, ' ')
-    hash.formattedCharactersWithSpaces = formatter.format(hash.charactersWithSpaces).replace(/,/g, ' ')
-    hash.formattedWords = formatter.format(hash.words).replace(/,/g, ' ')
+  } else if (typeof words === 'number' && typeof characters === 'number') {
+    hash.words = words
+    hash.characters = characters
   }
+
+  const formatter = new Intl.NumberFormat('en-US', {
+    maximumFractionDigits: 0,
+    useGrouping: true
+  })
+
+  hash.formattedCharacters = formatter.format(hash.characters).replace(/,/g, ' ')
+  hash.formattedCharactersWithSpaces = formatter.format(hash.charactersWithSpaces).replace(/,/g, ' ')
+  hash.formattedWords = formatter.format(hash.words).replace(/,/g, ' ')
 
   return hash
 }

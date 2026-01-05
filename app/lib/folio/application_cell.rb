@@ -94,16 +94,16 @@ class Folio::ApplicationCell < Cell::ViewModel
   end
   alias_method :get_from_options_or_controller, :get_from_options_or_current_or_controller
 
-  def render_view_component(component, rescue_lambda: nil)
+  def render_view_component(component, rescue_lambda: nil, &block)
     if view = context[:view] || context[:controller].try(:view_context)
       if rescue_lambda
         begin
-          view.render(component)
+          view.render(component, &block)
         rescue StandardError => e
           rescue_lambda.call(e)
         end
       else
-        view.render(component)
+        view.render(component, &block)
       end
     else
       fail "Missing both context[:view] and context[:controller] - cannot render_view_component"

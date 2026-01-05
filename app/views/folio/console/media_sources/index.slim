@@ -1,0 +1,25 @@
+= index_header
+
+= catalogue(@media_sources)
+  ruby:
+    text_or_edit_link :to_label
+
+    attribute(:licence)
+
+    attribute(:max_usage_count) { record.max_usage_count || "-" }
+
+    attribute(:copyright_text)
+
+    if Rails.application.config.folio_shared_files_between_sites
+      attribute(:allowed_sites) do |record|
+        if record.allowed_sites.any?
+          record.allowed_sites.map(&:to_label).join("<br />")
+        else
+          "-"
+        end
+      end
+    end
+
+    attribute(:assigned_media_count)
+
+    actions(:edit, :destroy)

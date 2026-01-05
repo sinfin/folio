@@ -9,9 +9,13 @@ class Folio::NewsletterSubscriptions::FormComponent < Folio::ApplicationComponen
                             submit_text
                             submit_icon
                             submit_icon_height
+                            submit_variant
+                            submit_size
                             message
                             button_class
-                            input_label]
+                            input_label
+                            input_show_at_button
+                            turnstile_appearance]
 
   bem_class_name :persisted, :invalid
 
@@ -24,7 +28,7 @@ class Folio::NewsletterSubscriptions::FormComponent < Folio::ApplicationComponen
 
   def form(&block)
     opts = {
-      url: controller.folio.folio_api_newsletter_subscriptions_path,
+      url: controller.folio.folio_api_newsletter_subscriptions_url(only_path: false),
       html: {
         class: "f-newsletter-subscriptions-form__form",
         id: nil,
@@ -52,7 +56,8 @@ class Folio::NewsletterSubscriptions::FormComponent < Folio::ApplicationComponen
     if klass
       render(klass.new(tag: :button,
                        label: submit_text,
-                       variant: :primary,
+                       variant: @view_options[:submit_variant].presence || :primary,
+                       size: @view_options[:submit_size].presence || :md,
                        type: :submit,
                        class_name: "f-newsletter-subscriptions-form__btn",
                        right_icon: @view_options[:submit_icon]&.to_sym.presence,
@@ -82,7 +87,9 @@ class Folio::NewsletterSubscriptions::FormComponent < Folio::ApplicationComponen
             as: :email,
             label: false,
             placeholder:,
-            input_html: { class: "f-newsletter-subscriptions-form__input", id: nil },
+            input_html: { class: "f-newsletter-subscriptions-form__input",
+                          id: nil,
+                          data: stimulus_target("input") },
             wrapper_html: { class: "f-newsletter-subscriptions-form__group" }
   end
 
@@ -93,5 +100,9 @@ class Folio::NewsletterSubscriptions::FormComponent < Folio::ApplicationComponen
 
   def remember_option_keys
     REMEMBER_OPTION_KEYS
+  end
+
+  def turnstile_appearance
+    @view_options[:turnstile_appearance].presence || "interaction-only"
   end
 end

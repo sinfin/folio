@@ -2,7 +2,8 @@ window.Folio.Stimulus.register('f-c-ui-boolean-toggle', class extends window.Sti
   static values = {
     url: { type: String, default: '' },
     confirmation: { type: String, default: '' },
-    static: { type: Boolean, default: false }
+    static: { type: Boolean, default: false },
+    flash: { type: Boolean, default: false }
   }
 
   static classes = ['loading']
@@ -46,6 +47,10 @@ window.Folio.Stimulus.register('f-c-ui-boolean-toggle', class extends window.Sti
       data = { [parts[i]]: data }
     }
 
+    if (this.flashValue === false) {
+      data._flash = false
+    }
+
     data._trigger = 'f-c-ui-boolean-toggle'
 
     window.Folio.Api.apiPatch(this.urlValue, data).then((res) => {
@@ -63,7 +68,7 @@ window.Folio.Stimulus.register('f-c-ui-boolean-toggle', class extends window.Sti
         }
       }
     }).catch((res) => {
-      window.FolioConsole.Flash.alert(res.message)
+      window.FolioConsole.Ui.Flash.alert(res.message)
 
       this.element.classList.remove(this.loadingClass)
       input.checked = !input.checked

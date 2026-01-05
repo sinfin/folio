@@ -2,6 +2,7 @@ doctype html
 html[
   lang=I18n.locale
   class=(cookies[:image_sensitive_content] && "f-html--show-sensitive-content")
+  class=(@folio_tiptap ? "f-tiptap-application-html" : nil)
 ]
   head
     = render partial: 'layouts/folio/head'
@@ -15,32 +16,38 @@ html[
       = preload_link_tag '/fonts/Figtree-Bold.woff2'
       = preload_link_tag '/fonts/SpaceGrotesk-Bold.woff2'
 
-  body
-    = render(Folio::StructuredData::BodyComponent.new(record: @record_for_meta_variables,
-                                                      breadcrumbs: @breadcrumbs_on_rails))
+      - if @folio_tiptap || (params[Folio::Publishable::PREVIEW_PARAM_NAME].present? && @record_for_meta_variables.try(:published?) == false)
+        = javascript_include_tag('folio/thumbnails', defer: true)
 
-    = render(Folio::Users::ImpersonatingBarComponent.new)
-
-    = render(Dummy::Ui::HeaderComponent.new)
-
-    = render(Dummy::Ui::HeaderMessageComponent.new)
-
-    - unless @hide_flash_messages
-      = render(Dummy::Ui::FlashComponent.new(flash:))
-
-    = yield :publishable_hint
-
-    - unless @hide_breadcrumbs
-      == render(Dummy::Ui::BreadcrumbsComponent.new(breadcrumbs: @breadcrumbs_on_rails,
-                                                    share: @breadcrumbs_share_bar))
-
-    .d-layout-main
+  body class=(@folio_tiptap ? "f-tiptap-application-body" : nil)
+    - if @folio_tiptap
       = yield
+    - else
+      = render(Folio::StructuredData::BodyComponent.new(record: @record_for_meta_variables,
+                                                        breadcrumbs: @breadcrumbs_on_rails))
 
-    = render(Dummy::Ui::FooterComponent.new)
+      = render(Folio::Users::ImpersonatingBarComponent.new)
 
-    = yield :modals
-    == cell('folio/devise/modal')
-    == cell('folio/devise/omniauth/forms')
+      = render(Dummy::Ui::HeaderComponent.new)
 
-    = render(Dummy::Ui::RecordBarComponent.new(record: @record_for_meta_variables))
+      = render(Dummy::Ui::HeaderMessageComponent.new)
+
+      - unless @hide_flash_messages
+        = render(Dummy::Ui::FlashComponent.new(flash:))
+
+      = yield :publishable_hint
+
+      - unless @hide_breadcrumbs
+        == render(Dummy::Ui::BreadcrumbsComponent.new(breadcrumbs: @breadcrumbs_on_rails,
+                                                      share: @breadcrumbs_share_bar))
+
+      .d-layout-main
+        = yield
+
+      = render(Dummy::Ui::FooterComponent.new)
+
+      = yield :modals
+      == cell('folio/devise/modal')
+      == cell('folio/devise/omniauth/forms')
+
+      = render(Dummy::Ui::RecordBarComponent.new(record: @record_for_meta_variables))

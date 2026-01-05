@@ -3,7 +3,7 @@ window.Folio.Stimulus.register('f-c-current-users-preference-toggle', class exte
     enabled: { type: Number, default: -1 },
     apiUrl: String,
     key: String,
-    javascriptKey: String,
+    javascriptKey: String
   }
 
   connect () {

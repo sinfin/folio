@@ -5,7 +5,8 @@ window.Dummy.Ui.Flash = {}
 window.Dummy.Ui.Flash.flash = (data) => {
   const alert = window.Dummy.Ui.Alert.create({
     ...data,
-    flash: true,
+    variant: data.variant || 'info',
+    flash: true
   })
 
   document.querySelector('.d-ui-flash').appendChild(alert)
@@ -15,7 +16,7 @@ window.Dummy.Ui.Flash.success = (content, data = {}) => {
   return window.Dummy.Ui.Flash.flash({
     ...data,
     content,
-    variant: 'success',
+    variant: 'success'
   })
 }
 
@@ -23,7 +24,7 @@ window.Dummy.Ui.Flash.alert = (content, data = {}) => {
   return window.Dummy.Ui.Flash.flash({
     ...data,
     content,
-    variant: 'danger',
+    variant: 'danger'
   })
 }
 
@@ -31,12 +32,12 @@ window.Dummy.Ui.Flash.loader = (content, data = {}) => {
   return window.Dummy.Ui.Flash.flash({
     ...data,
     content,
-    variant: 'loader',
+    variant: 'loader'
   })
 }
 
 window.Dummy.Ui.Flash.clearFlashes = () => {
-  document.querySelector('.d-ui-flash').innerHTML = ""
+  document.querySelector('.d-ui-flash').innerHTML = ''
 }
 
 window.Dummy.Ui.Flash.flashMessageFromMeta = (response) => {
@@ -55,3 +56,20 @@ window.Dummy.Ui.Flash.flashMessageFromApiErrors = (response) => {
     window.Dummy.Ui.Flash.alert(flash)
   }
 }
+
+document.addEventListener('folio:flash', (event) => {
+  event.stopImmediatePropagation()
+
+  if (event.detail && event.detail.flash) {
+    const flashData = event.detail.flash
+
+    if (flashData.content) {
+      window.Dummy.Ui.Flash.flash({
+        content: flashData.content,
+        variant: flashData.variant || 'info'
+      })
+    } else {
+      console.error('Flash: Missing content in flash event:', { flashData })
+    }
+  }
+})

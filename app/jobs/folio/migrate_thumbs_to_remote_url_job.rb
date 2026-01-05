@@ -3,9 +3,12 @@
 class Folio::MigrateThumbsToRemoteUrlJob < Folio::ApplicationJob
   queue_as :slow
 
+  discard_on ActiveJob::DeserializationError
+
+  unique :until_and_while_executing
+
   def perform(image)
     return if image.file_mime_type.include?("svg")
-    return if image.animated_gif?
 
     # need to reload here because of parallel jobs
     image.reload
@@ -24,7 +27,8 @@ class Folio::MigrateThumbsToRemoteUrlJob < Folio::ApplicationJob
       end
 
       if changed
-        image.update!(thumbnail_sizes:)
+        image.thumbnail_sizes = thumbnail_sizes
+        image.save!(validate: false)
       end
     end
   end

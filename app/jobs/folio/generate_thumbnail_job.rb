@@ -3,10 +3,9 @@
 class Folio::GenerateThumbnailJob < Folio::ApplicationJob
   queue_as :slow
 
-  discard_on(ActiveJob::DeserializationError) do |job, e|
-    Raven.capture_exception(e) if defined?(Raven)
-    Sentry.capture_exception(e) if defined?(Sentry)
-  end
+  discard_on(ActiveJob::DeserializationError)
+
+  unique :until_and_while_executing
 
   def perform(image, size, quality, x: nil, y: nil, force: false)
     return if image.file_mime_type.include?("svg")
@@ -26,7 +25,8 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
     image.reload.with_lock do
       thumbnail_sizes = image.thumbnail_sizes || {}
       image.dont_run_after_save_jobs = true
-      image.update!(thumbnail_sizes: thumbnail_sizes.merge(size => new_thumb))
+      image.thumbnail_sizes = thumbnail_sizes.merge(size => new_thumb)
+      image.save!(validate: false)
     end
 
     MessageBus.publish Folio::MESSAGE_BUS_CHANNEL,
@@ -34,10 +34,12 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
                          type: "Folio::GenerateThumbnailJob",
                          data: {
                            id: image.id,
+                           size: size,
                            temporary_url: image.temporary_url(size),
                            url: new_thumb[:url],
                            webp_url: new_thumb[:webp_url],
-                           thumb_key: size,
+                           width: new_thumb[:width],
+                           height: new_thumb[:height],
                            thumb: new_thumb,
                          }
                        }.to_json
@@ -45,6 +47,24 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
     broadcast_file_update(image)
 
     image
+  end
+
+  # Define what makes a job unique - only image ID and size matter for deduplication
+  # This prevents duplicate jobs for same thumbnail with different quality/force/x/y values
+  def lock_key_arguments
+    # For ActiveJob, arguments are: [image, size, quality, { x: nil, y: nil, force: false }]
+    # We only want to use image and size for uniqueness
+    image, size = arguments[0], arguments[1]
+
+    # Handle both direct objects and GlobalID serialized objects
+    if image.respond_to?(:to_global_id)
+      [image.to_global_id.to_s, size]
+    elsif image.is_a?(Hash) && image["_aj_globalid"]
+      [image["_aj_globalid"], size]
+    else
+      # Fallback - use first two arguments
+      [image, size]
+    end
   end
 
   private
@@ -71,71 +91,99 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
       end
 
       make_webp = true
+      add_white_background = false
+      format = :jpg
 
-      if image.animated_gif?
-        thumbnail = image_file(image).animated_gif_resize(size)
-        make_webp = false
-        format = :gif
-      else
-        add_white_background = false
-        format = :jpg
-
-        if image.try(:file_mime_type) == "image/png"
-          if Rails.application.config.folio_dragonfly_keep_png
-            format = :png
-            add_white_background = false
-          else
-            add_white_background = true
-          end
-        elsif image.try(:file_mime_type) == "application/pdf"
-          # TODO frame
+      if image.try(:file_mime_type) == "image/png"
+        if Rails.application.config.folio_dragonfly_keep_png
+          format = :png
+          add_white_background = false
+        else
           add_white_background = true
         end
-
-        thumbnail = image_file(image)
-        geometry = size
-
-        if size.include?("#")
-          _m, crop_width_f, crop_height_f = size.match(/(\d+)x(\d+)/).to_a.map(&:to_f)
-
-          if crop_width_f > image.file_width || crop_height_f > image.file_height || !x.nil? || !y.nil?
-            thumbnail = thumbnail.thumb("#{crop_width_f.to_i}x#{crop_height_f.to_i}^", format:)
-          end
-
-          if !x.nil? || !y.nil?
-            image_width_f = image.file_width.to_f
-            image_height_f = image.file_height.to_f
-
-            fill_width_f = if image_width_f / image_height_f > crop_width_f / crop_height_f
-              # original is wider than the required thumb rectangle -> reduce height
-              image_width_f * crop_height_f / image_height_f
-            else
-              # original is narrower than the required crop rectangle -> reduce width
-              crop_width_f
-            end
-
-            fill_height_f = fill_width_f * image_height_f / image_width_f
-
-            x_px = [((x || 0) * fill_width_f.ceil).floor, fill_width_f.floor - crop_width_f].min
-            y_px = [((y || 0) * fill_height_f.ceil).floor, fill_height_f.floor - crop_height_f].min
-
-            geometry = "#{crop_width_f.to_i}x#{crop_height_f.to_i}+#{x_px.floor}+#{y_px.floor}"
-          end
-        end
-
-        if add_white_background
-          format = :jpg
-          thumbnail = thumbnail.encode("jpg", output_options: { background: 255 })
-          thumbnail.meta["mime_type"] = "image/jpeg"
-        end
-
-        thumbnail = thumbnail.thumb(geometry, format:)
-        thumbnail = thumbnail.convert_grayscale_to_srgb(format:) if image.jpg? && format == :jpg
-        thumbnail = thumbnail.normalize_profiles_via_liblcms2 if image.jpg? && format == :jpg
-        thumbnail = thumbnail.jpegoptim if format == :jpg
-
-        thumbnail
+      elsif image.try(:file_mime_type) == "image/gif"
+        format = :jpg
+        add_white_background = true
+      elsif image.try(:file_mime_type)&.include?("tiff")
+        # TIFF files can have multiple pages/layers that cause extract_area errors
+        format = :jpg
+        add_white_background = true
+      elsif image.try(:file_mime_type) == "application/pdf"
+        # TODO frame
+        add_white_background = true
       end
+
+      thumbnail = image_file(image)
+      geometry = size
+
+      # Force center gravity for fallback images
+      if thumbnail.meta["fallback_image"] && size.include?("#")
+        geometry = size.sub(/#\w*\z/, "#c")
+      end
+
+      if size.include?("#")
+        _m, crop_width_f, crop_height_f = size.match(/(\d+)x(\d+)/).to_a.map(&:to_f)
+
+        # Check for stored thumbnail configuration if x and y are nil (skip for fallback images)
+        if x.nil? && y.nil? && !thumbnail.meta["fallback_image"] && image.respond_to?(:thumbnail_configuration) && image.thumbnail_configuration.present?
+          # Simplify the ratio (e.g., 16:9, 4:3, 1:1)
+          gcd = crop_width_f.to_i.gcd(crop_height_f.to_i)
+          ratio = "#{(crop_width_f.to_i / gcd)}:#{(crop_height_f.to_i / gcd)}"
+
+          if image.thumbnail_configuration["ratios"].present? &&
+             image.thumbnail_configuration["ratios"][ratio].present? &&
+             image.thumbnail_configuration["ratios"][ratio]["crop"].present?
+            crop_config = image.thumbnail_configuration["ratios"][ratio]["crop"]
+            x = crop_config["x"].to_f if crop_config["x"].is_a?(Numeric)
+            y = crop_config["y"].to_f if crop_config["y"].is_a?(Numeric)
+          end
+        end
+
+        # Use thumbnail dimensions instead of stored dimensions to handle fallback images
+        thumbnail_width = thumbnail.width || image.file_width || 0
+        thumbnail_height = thumbnail.height || image.file_height || 0
+
+        if crop_width_f > thumbnail_width || crop_height_f > thumbnail_height || !x.nil? || !y.nil?
+          thumbnail = thumbnail.thumb("#{crop_width_f.to_i}x#{crop_height_f.to_i}^", format:)
+        end
+
+        if !x.nil? || !y.nil?
+          # Use thumbnail dimensions if image was resized, otherwise use original dimensions
+          current_width_f = thumbnail.width.to_f
+          current_height_f = thumbnail.height.to_f
+
+          fill_width_f = if current_width_f / current_height_f > crop_width_f / crop_height_f
+            # current is wider than the required thumb rectangle -> reduce height
+            current_width_f * crop_height_f / current_height_f
+          else
+            # current is narrower than the required crop rectangle -> reduce width
+            crop_width_f
+          end
+
+          fill_height_f = fill_width_f * current_height_f / current_width_f
+
+          x_px = [((x || 0) * fill_width_f.ceil).floor, fill_width_f.floor - crop_width_f].min
+          y_px = [((y || 0) * fill_height_f.ceil).floor, fill_height_f.floor - crop_height_f].min
+
+          safe_x_px = [x_px.floor, 0].max
+          safe_y_px = [y_px.floor, 0].max
+
+          geometry = "#{crop_width_f.to_i}x#{crop_height_f.to_i}+#{safe_x_px}+#{safe_y_px}"
+        end
+      end
+
+      if add_white_background
+        format = :jpg
+        thumbnail = thumbnail.encode("jpg", output_options: { background: 255 })
+        thumbnail.meta["mime_type"] = "image/jpeg"
+      end
+
+      thumbnail = thumbnail.thumb(geometry, format:)
+      thumbnail = thumbnail.convert_grayscale_to_srgb(format:) if image.jpg? && format == :jpg
+      thumbnail = thumbnail.normalize_profiles_via_liblcms2 if image.jpg? && format == :jpg
+      thumbnail = thumbnail.jpegoptim if format == :jpg
+
+      thumbnail
 
       if image.file_name
         case format.to_sym
@@ -214,12 +262,19 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
       if image.class.human_type == "video"
         thumbnail = thumbnail.ffmpeg_screenshot_to_jpg(image.screenshot_time_in_ffmpeg_format)
         thumbnail.name = Pathname.new(image.file_name).sub_ext(".jpg")
+        thumbnail.meta["mime_type"] = "image/jpeg"
       else
         thumbnail.name = image.file_name
+        thumbnail.meta["mime_type"] = image.file_mime_type
       end
 
-      thumbnail.meta["mime_type"] = image.file_mime_type
-
+      thumbnail
+    rescue Dragonfly::Job::Fetch::NotFound
+      missing_image_path = Folio::Engine.root.join("data/images/missing-image.png")
+      thumbnail = Dragonfly.app.create(File.binread(missing_image_path))
+      thumbnail.name = image.file_name || "missing-image.png"
+      thumbnail.meta["mime_type"] = "image/png"
+      thumbnail.meta["fallback_image"] = true
       thumbnail
     end
 

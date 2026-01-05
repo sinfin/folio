@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
-class Folio::File::GetVideoDimensionsJob < ApplicationJob
+class Folio::File::GetVideoDimensionsJob < Folio::ApplicationJob
   include Folio::Shell
 
   queue_as :default
+
+  unique :until_and_while_executing
 
   def perform(file_path, human_type)
     if %w[video].include?(human_type)

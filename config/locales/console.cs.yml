@@ -21,15 +21,9 @@ cs:
         undiscard: Odarchivovat
       alt_prompt: Alternativní popisek obrázku
       api:
-        file:
-          documents:
-            mass_destroy:
-              success: Dokumenty smazány
-              failure: Dokumenty se nepodařilo smazat - %{msg}
-          images:
-            mass_destroy:
-              success: Obrázky smazány
-              failure: Obrázky se nepodařilo smazat - %{msg}
+        tiptap_revisions:
+          takeover_revision:
+            no_revision_found: "Nenalezena rozpracovaná verze pro uživatele %{user_id} u %{record_type}#%{record_id}"
         aasm:
           failure_title: Neúspěch
           failure_detail: Nepodařilo se změnit stav záznamu.
@@ -108,9 +102,17 @@ cs:
       create: Vytvořit
       delete: Smazat
       current_users:
-        console_url_bar:
+        console_url_bar_component:
           title: Tuto stránku nyní upravuje
           text: Vyčkejte, až dokončí úpravy. Při současné úpravě by mohlo dojít ke ztrátě rozpracovaného obsahu.
+          autosave:
+            title: Tuto stránku nyní upravuje %{edited_by} (od %{edited_at})
+            text: Úpravou článku můžete smazat neuložené změny. Chcete přesto převzít úpravu?
+            takeover: Převzít úpravu
+            back: Zpět
+            outdated_title: Stránka byla upravena uživatelem %{edited_by} na novější verzi (%{edited_at})
+            outdated_text: Pracujete s neaktuální verzí. Pro další editaci je potřeba pokračovat v aktualní verzi.
+            outdated_continue: Zahodit změny a pokračovat v aktuální verzi
         show_component:
           title: Můj profil
           title/sign_in: Přihlašovací jméno
@@ -261,6 +263,10 @@ cs:
         form_tabs:
           header_message:
             header_message: Text oznámení
+          settings:
+            subtitle_settings: Nastavení titulků
+            subtitle_languages_hint: Zadejte kódy jazyků oddělené čárkami (např. cs, en, de, es). Pořadí jazyků ovlivňuje pořadí titulků v přehrávači.
+            subtitle_auto_generation_enabled_hint: Povolit automatické generování titulků pro nová videa
       users:
         index:
           index_tabs/locked: Zablokovaní
@@ -278,6 +284,15 @@ cs:
         invite_and_copy:
           button: Pozvat znovu a zkopírovat adresu
           failure: Pozvánka se nezdařila. Chyba byla reportována.
+      help_documents:
+        index:
+          title: Nápověda
+          no_documents: Nejsou k dispozici žádné dokumenty nápovědy. Pro konfiguraci nápovědy vytvořte soubor doc/help/index.yml.
+        show:
+          back_to_list: Zpět na seznam
+          last_updated: "Poslední aktualizace:"
+          not_found: Dokument nápovědy nebyl nalezen.
+        access_denied: Nemáte oprávnění k přístupu k dokumentaci nápovědy.
       email_templates:
         form:
           keywords:
@@ -289,8 +304,6 @@ cs:
         add_image: Přidat obrázek
         add_video: Přidat video
         remove_video: Odebrat video
-      lazy_dom:
-        error: "Nepodařilo se načíst data:"
       publishable_inputs:
         item:
           from: od (nepovinné)
@@ -312,6 +325,7 @@ cs:
       layout:
         sidebar:
           homepage: Úvodní stránka
+          help: Nápověda
           audio: Audiobanka
           video: Videobanka
         header_component:
@@ -336,8 +350,6 @@ cs:
           in: Nahradit z YAML
           out: Uložit do YAML
           in_new: Vytvořit nový z YAML
-      clipboard_copy:
-        copy: Kopírovat
       catalogue_sort_arrows:
         sort_asc: Řadit vzestupně
         sort_desc: Řadit sestupně
@@ -376,6 +388,7 @@ cs:
           title/image: Zvolte obrázek
           title/video: Zvolte video
           title/audio: Zvolte audio
+          title/document: Zvolte soubor
 
       with_aside:
         hide: Skrýt
@@ -427,25 +440,90 @@ cs:
           label: Automatické ukládání
 
       files:
-        has_subtitles_form_component:
+        subtitle_form_component:
+          enabled_label: Povolit titulky
+          validation_errors_title: "Chyby validace:"
+          text_label: Text titulků
+          text_hint: Zadejte titulky ve formátu VTT
+          save: Uložit
+          cancel: Zrušit
+          delete_subtitle: Smazat
+          delete_confirm: Opravdu chcete smazat tyto titulky?
+          remove_new: Odebrat
+          last_manual_edit: "Ručně upraveno před %{time}"
+          last_transcription: "Vygenerováno před %{time}"
+          no_activity: "Zatím žádná aktivita"
+          status:
+            processing: Zpracovává se
+            enabled: Zapnuto
+            disabled: Vypnuto
+            disabled_with_errors: "Vypnuto (chyby: %{count})"
+            empty: Prázdné
+
+        subtitles_form_component:
           title: Titulky
-          subtitles_ready: Titulky připraveny
-          subtitles_processing: Probíhá generování titulků
-          subtitles_failed: Chyba generování titulků. Titulky lze zadat ručně.
-          retranscribe_subtitles: Vygenerovat znovu
-          submit: Uložit titulky
+          retranscribe_subtitles: "Spustit automatický přepis"
+          retranscribe_confirm: "Opravdu chcete znovu spustit automatický přepis? Tato akce přepíše existující titulky."
+          reload_player: "Znovu načíst přehrávač"
+          reload_player_tooltip: "Obnovit stránku pro restart video přehrávače"
+          transcription_in_progress: "Probíhá přepis..."
+          transcription_failed: Přepis selhal
+          started_time_ago: Začal před %{time}
+          enabled_label: Povolit titulky
+          add_missing_languages: Přidat ruční překlad
+          select_language: Vyberte jazyk...
+          add_language: Přidat překlad
+          delete_subtitle: Smazat
+          delete_subtitle_confirm: Opravdu chcete smazat tyto titulky?
+          delete_confirm: Opravdu chcete smazat tyto titulky?
+          remove_new: Odebrat
+
+          text_label: Text titulků
+          text_hint: Zadejte titulky ve formátu VTT
+          validation_errors_title: "Chyby validace:"
+          save: Uložit
+          cancel: Zrušit
+          never_processed: Nikdy nezpracováno
+          status:
+            processing: Zpracovává se
+            enabled: Zapnuto
+            disabled: Vypnuto
+            disabled_with_errors: "Vypnuto (chyby: %{count})"
+            empty: Prázdné
+          last_activity:
+            transcribed: "Vygenerováno před %{time}"
+            edited: "Upraveno před %{time}"
+            generic: "Aktivita před %{time}"
+          last_manual_edit: "Ručně upraveno před %{time}"
+          last_transcription: "Vygenerováno před %{time}"
+          no_activity: "Zatím žádná aktivita"
+          metadata:
+            transcription_service: "Služba: %{service}"
+            attempts: "%{count} pokusů"
+            validation_errors: "%{count} chyb validace"
+
+        usage_constraints_component:
+          max_usage_count: "Maximální počet použití:"
+          allowed_sites_blank: Nevyplněno
+
+      eleven_labs:
+        transcribe_subtitles_job:
+          errors:
+            file_too_large: "Soubor je větší než je limit ElevenLabs, nelze provést automatický přepis"
+            no_audio_detected: "Ve video souboru nebylo detekováno žádné audio"
+            cloud_storage_read_failed: "ElevenLabs nemohl načíst soubor z našeho cloudového úložiště"
 
   date:
     formats:
-      console_short: "%d. %m. %Y"
+      console_short: "%-d. %-m. %Y"
       console_group_by_day: "%a %-d. %B. %Y"
-      console_short_date: "%d. %m. %Y"
+      console_short_date: "%-d. %-m. %Y"
 
   time:
     formats:
-      console_short: "%d. %m. %Y, %H:%M"
-      console_short_with_seconds: "%d. %m. %Y, %H:%M:%S"
+      console_short: "%-d. %-m. %Y, %-H:%M"
+      console_short_with_seconds: "%-d. %-m. %Y, %-H:%M:%S"
       console_group_by_day: "%a %-d. %B. %Y"
-      console_short_date: "%d. %m. %Y"
-      console_short_time: "%H:%M"
+      console_short_date: "%-d. %-m. %Y"
+      console_short_time: "%-H:%M"
       console_html_datetime: "%Y-%m-%dT%H:%M:%S%z"

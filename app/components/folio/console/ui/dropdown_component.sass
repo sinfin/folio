@@ -2,6 +2,10 @@
   .dropdown-menu
     --#{$prefix}dropdown-min-width: 95px
 
+  .dropdown-item[data-action],
+  .dropdown-item[href]
+    cursor: pointer
+
   &__trigger
     cursor: pointer
 
@@ -10,5 +14,9 @@
     width: 24px
     height: 24px
 
+    &::after
+      display: none
+
+  &__trigger--with-button
     &::after
       display: none

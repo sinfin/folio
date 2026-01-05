@@ -3,6 +3,8 @@
 class Folio::Files::RestartProcessingMediaJob < Folio::ApplicationJob
   queue_as :slow
 
+  unique :until_and_while_executing
+
   def perform
     Folio::File.processing.find_each do |file|
       if file.remote_services_data.blank?

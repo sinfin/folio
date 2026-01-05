@@ -35,7 +35,7 @@ function * updateFiltersPerform (action) {
     }
     yield put(getFiles(action.fileType, action.filesUrl, query))
   } catch (e) {
-    window.FolioConsole.Flash.alert(e.message)
+    window.FolioConsole.Ui.Flash.alert(e.message)
   }
 }
 

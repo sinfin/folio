@@ -10,10 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_04_28_074018) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_31_141402) do
   # These are extensions that must be enabled in order to support this database
+  enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
-  enable_extension "plpgsql"
   enable_extension "unaccent"
 
   create_folio_unaccent
@@ -162,6 +162,16 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_28_074018) do
     t.index ["slug"], name: "index_dummy_blog_topics_on_slug"
   end
 
+  create_table "dummy_test_records", force: :cascade do |t|
+    t.string "title"
+    t.boolean "published"
+    t.datetime "published_at"
+    t.datetime "published_from"
+    t.datetime "published_until"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "folio_addresses", force: :cascade do |t|
     t.string "name"
     t.string "company_name"
@@ -284,11 +294,23 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_28_074018) do
     t.string "alt"
     t.string "placement_title"
     t.string "placement_title_type"
+    t.jsonb "folio_embed_data"
+    t.text "description"
     t.index ["file_id"], name: "index_folio_file_placements_on_file_id"
     t.index ["placement_title"], name: "index_folio_file_placements_on_placement_title"
     t.index ["placement_title_type"], name: "index_folio_file_placements_on_placement_title_type"
     t.index ["placement_type", "placement_id"], name: "index_folio_file_placements_on_placement_type_and_placement_id"
     t.index ["type"], name: "index_folio_file_placements_on_type"
+  end
+
+  create_table "folio_file_site_links", force: :cascade do |t|
+    t.bigint "file_id", null: false
+    t.bigint "site_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["file_id", "site_id"], name: "index_folio_file_site_links_unique", unique: true
+    t.index ["file_id"], name: "index_folio_file_site_links_on_file_id"
+    t.index ["site_id"], name: "index_folio_file_site_links_on_site_id"
   end
 
   create_table "folio_files", force: :cascade do |t|
@@ -303,10 +325,10 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_28_074018) do
     t.bigint "file_size"
     t.json "additional_data"
     t.json "file_metadata"
-    t.string "hash_id"
+    t.string "slug"
     t.string "author"
     t.text "description"
-    t.integer "file_placements_size"
+    t.integer "file_placements_count", default: 0, null: false
     t.string "file_name_for_search"
     t.boolean "sensitive_content", default: false
     t.string "file_mime_type"
@@ -321,13 +343,24 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_28_074018) do
     t.string "attribution_source_url"
     t.string "attribution_copyright"
     t.string "attribution_licence"
+    t.string "headline"
+    t.datetime "capture_date"
+    t.decimal "gps_latitude", precision: 10, scale: 6
+    t.decimal "gps_longitude", precision: 10, scale: 6
+    t.datetime "file_metadata_extracted_at"
+    t.bigint "media_source_id"
+    t.integer "attribution_max_usage_count"
+    t.integer "published_usage_count", default: 0, null: false
+    t.jsonb "thumbnail_configuration"
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((author)::text, ''::text)))", name: "index_folio_files_on_by_author", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name)::text, ''::text)))", name: "index_folio_files_on_by_file_name", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text)))", name: "index_folio_files_on_by_file_name_for_search", using: :gin
     t.index ["created_at"], name: "index_folio_files_on_created_at"
     t.index ["file_name"], name: "index_folio_files_on_file_name"
-    t.index ["hash_id"], name: "index_folio_files_on_hash_id"
+    t.index ["media_source_id"], name: "index_folio_files_on_media_source_id"
+    t.index ["published_usage_count"], name: "index_folio_files_on_published_usage_count"
     t.index ["site_id"], name: "index_folio_files_on_site_id"
+    t.index ["slug"], name: "index_folio_files_on_slug"
     t.index ["type"], name: "index_folio_files_on_type"
     t.index ["updated_at"], name: "index_folio_files_on_updated_at"
   end
@@ -344,6 +377,28 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_28_074018) do
     t.string "aasm_state", default: "submitted"
     t.bigint "site_id"
     t.index ["site_id"], name: "index_folio_leads_on_site_id"
+  end
+
+  create_table "folio_media_source_site_links", force: :cascade do |t|
+    t.bigint "media_source_id", null: false
+    t.bigint "site_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["media_source_id", "site_id"], name: "index_folio_media_source_site_links_unique", unique: true
+    t.index ["media_source_id"], name: "index_folio_media_source_site_links_on_media_source_id"
+    t.index ["site_id"], name: "index_folio_media_source_site_links_on_site_id"
+  end
+
+  create_table "folio_media_sources", force: :cascade do |t|
+    t.string "title", null: false
+    t.string "licence"
+    t.string "copyright_text"
+    t.integer "max_usage_count", default: 1
+    t.bigint "site_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["site_id"], name: "index_folio_media_sources_on_site_id"
+    t.index ["title"], name: "index_folio_media_sources_on_title", unique: true
   end
 
   create_table "folio_menu_items", force: :cascade do |t|
@@ -424,6 +479,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_28_074018) do
     t.bigint "site_id"
     t.text "atoms_data_for_search"
     t.string "preview_token"
+    t.jsonb "tiptap_content"
     t.index "(((setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((title)::text, ''::text))), 'A'::\"char\") || setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE(perex, ''::text))), 'B'::\"char\")) || setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE(atoms_data_for_search, ''::text))), 'C'::\"char\")))", name: "index_folio_pages_on_by_query", using: :gin
     t.index ["ancestry"], name: "index_folio_pages_on_ancestry"
     t.index ["locale"], name: "index_folio_pages_on_locale"
@@ -519,10 +575,26 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_28_074018) do
     t.jsonb "available_user_roles", default: ["administrator", "manager"]
     t.string "phone_secondary"
     t.text "address_secondary"
+    t.jsonb "subtitle_languages", default: ["cs"]
+    t.boolean "subtitle_auto_generation_enabled", default: false
     t.index ["domain"], name: "index_folio_sites_on_domain"
     t.index ["position"], name: "index_folio_sites_on_position"
     t.index ["slug"], name: "index_folio_sites_on_slug"
+    t.index ["subtitle_languages"], name: "index_folio_sites_on_subtitle_languages", using: :gin
     t.index ["type"], name: "index_folio_sites_on_type"
+  end
+
+  create_table "folio_tiptap_revisions", force: :cascade do |t|
+    t.string "placement_type", null: false
+    t.bigint "placement_id", null: false
+    t.bigint "user_id"
+    t.bigint "superseded_by_user_id"
+    t.jsonb "content", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["placement_type", "placement_id"], name: "index_folio_tiptap_revisions_on_placement"
+    t.index ["superseded_by_user_id"], name: "index_folio_tiptap_revisions_on_superseded_by_user_id"
+    t.index ["user_id"], name: "index_folio_tiptap_revisions_on_user_id"
   end
 
   create_table "folio_users", force: :cascade do |t|
@@ -593,6 +665,22 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_28_074018) do
     t.index ["source_site_id"], name: "index_folio_users_on_source_site_id"
   end
 
+  create_table "folio_video_subtitles", force: :cascade do |t|
+    t.bigint "video_id", null: false
+    t.string "language", null: false
+    t.string "format", default: "vtt"
+    t.text "text"
+    t.boolean "enabled", default: false
+    t.jsonb "metadata", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["enabled"], name: "index_folio_video_subtitles_on_enabled"
+    t.index ["language"], name: "index_folio_video_subtitles_on_language"
+    t.index ["metadata"], name: "index_folio_video_subtitles_on_metadata", using: :gin
+    t.index ["video_id", "language"], name: "index_folio_video_subtitles_on_video_id_and_language", unique: true
+    t.index ["video_id"], name: "index_folio_video_subtitles_on_video_id"
+  end
+
   create_table "friendly_id_slugs", force: :cascade do |t|
     t.string "slug", null: false
     t.integer "sluggable_id", null: false
@@ -645,8 +733,17 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_28_074018) do
 
   add_foreign_key "folio_console_notes", "folio_sites", column: "site_id"
   add_foreign_key "folio_content_templates", "folio_sites", column: "site_id"
+  add_foreign_key "folio_file_site_links", "folio_files", column: "file_id"
+  add_foreign_key "folio_file_site_links", "folio_sites", column: "site_id"
+  add_foreign_key "folio_files", "folio_media_sources", column: "media_source_id"
   add_foreign_key "folio_files", "folio_sites", column: "site_id"
+  add_foreign_key "folio_media_source_site_links", "folio_media_sources", column: "media_source_id"
+  add_foreign_key "folio_media_source_site_links", "folio_sites", column: "site_id"
+  add_foreign_key "folio_media_sources", "folio_sites", column: "site_id"
   add_foreign_key "folio_site_user_links", "folio_sites", column: "site_id"
   add_foreign_key "folio_site_user_links", "folio_users", column: "user_id"
+  add_foreign_key "folio_tiptap_revisions", "folio_users", column: "superseded_by_user_id"
+  add_foreign_key "folio_tiptap_revisions", "folio_users", column: "user_id"
   add_foreign_key "folio_users", "folio_sites", column: "auth_site_id"
+  add_foreign_key "folio_video_subtitles", "folio_files", column: "video_id"
 end

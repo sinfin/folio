@@ -15,6 +15,7 @@ class Folio::Ui::IconCell < ApplicationCell
   def class_names
     str = "f-ui-icon f-ui-icon--#{model}"
     str += " #{options[:class]}" if options[:class]
+    str += " #{options[:class_name]}" if options[:class_name]
     str
   end
 

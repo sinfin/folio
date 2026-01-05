@@ -10,6 +10,7 @@ require "webmock/minitest"
 require Folio::Engine.root.join("test/support/omniauth_helper")
 require Folio::Engine.root.join("test/support/action_mailer_test_helper")
 require Folio::Engine.root.join("test/support/capybara_helper")
+require Folio::Engine.root.join("test/support/tiptap_helper")
 
 Rails.application.config.active_job.queue_adapter = :test
 
@@ -31,16 +32,36 @@ end
 class ActiveSupport::TestCase
   require Folio::Engine.root.join("test/support/sites_helper")
   require Folio::Engine.root.join("test/support/method_invoking_matchers_helper")
+  require Folio::Engine.root.join("test/support/metadata_test_helpers")
 
   parallelize
 
   include FactoryBot::Syntax::Methods
   include MethodInvokingMatchersHelper
   include SitesHelper
+  include TiptapHelper
+  include MetadataTestHelpers
 
   def setup
     super
     Folio::Current.reset
+  end
+
+  def with_config(**config_overrides)
+    original_values = {}
+
+    # Store original values
+    config_overrides.each do |key, value|
+      original_values[key] = Rails.application.config.send(key)
+      Rails.application.config.send("#{key}=", value) # TODO: Refactor to use stub, this vesion is not thread safe
+    end
+
+    yield
+  ensure
+    # Restore original values
+    original_values.each do |key, value|
+      Rails.application.config.send("#{key}=", value)
+    end
   end
 
   def reset_folio_current(site_user_link)
@@ -58,6 +79,7 @@ class Cell::TestCase # do not inherit from ActiveSupport::TestCase
   include SitesHelper
 
   require Folio::Engine.root.join("test/support/create_atom_helper")
+  require Folio::Engine.root.join("test/support/create_test_tiptap_node_helper")
   require Folio::Engine.root.join("test/support/create_page_singleton_helper")
 
   attr_reader :site
@@ -143,8 +165,23 @@ end
 
 class Folio::ComponentTest < ViewComponent::TestCase
   require Folio::Engine.root.join("test/support/create_atom_helper")
+  require Folio::Engine.root.join("test/support/create_test_tiptap_node_helper")
   require Folio::Engine.root.join("test/support/create_page_singleton_helper")
+end
+
+class Folio::Tiptap::NodeComponentTest < Folio::ComponentTest
+  def tiptap_content_information(record: nil, attribute: :tiptap_content, depth: 0, root_node_count: 0, editor_preview: false, **options)
+    {
+      record:,
+      attribute:,
+      depth:,
+      root_node_count:,
+      editor_preview:,
+    }.merge(options)
+  end
 end
 
 class Folio::Console::ComponentTest < Folio::ComponentTest
 end
+
+ActiveJob::Uniqueness.test_mode!

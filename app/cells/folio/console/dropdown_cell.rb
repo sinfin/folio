@@ -16,10 +16,9 @@ class Folio::Console::DropdownCell < Folio::ConsoleCell
   def button_model
     base = model[:button_model] || {}
 
-    base.merge("aria-expanded" => "false",
-               "aria-haspopup" => "true",
-               "data-bs-toggle" => "dropdown",
-               class: base[:class] ? "#{base[:class]} dropdown-toggle" : "dropdown-toggle",
+    base.merge(aria: { expanded: "false", haspopup: "true" },
+               data: (base[:data] || {}).merge(bs_toggle: "dropdown"),
+               class_name: base[:class_name] ? "#{base[:class_name]} dropdown-toggle" : "dropdown-toggle",
                label: model[:title])
   end
 end

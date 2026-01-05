@@ -1,0 +1,25 @@
+---
+cs:
+  folio:
+    console:
+      tiptap:
+        simple_form_wrap_component:
+          editor_title: Editor
+
+        simple_form_wrap:
+          word_count_component:
+            words: Slov
+            characters: Znaků
+          autosave_info_component:
+            new_record_alert: Rozepsané změny v editoru se neukládají, dokud %{model} poprvé neuložíte.
+            title: Editor obsahuje neuložené rozepsané změny.
+            continue: Použít moji verzi
+            discard: Použít verzi jiného uživatele
+            failed_to_save: Chyba připojení k serveru. Prosíme zkontrolujte připojení k internetu.
+
+        overlay:
+          form_component:
+            submit: Hotovo
+
+        html_modal_component:
+          title: HTML kód

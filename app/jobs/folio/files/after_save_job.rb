@@ -6,6 +6,8 @@ class Folio::Files::AfterSaveJob < Folio::ApplicationJob
   # Discard if file no longer exists
   discard_on ActiveJob::DeserializationError
 
+  unique :until_and_while_executing
+
   # use SQL commands only!
   # save/update would cause an infinite loop as this is hooked in after_save
   def perform(file)
@@ -13,7 +15,7 @@ class Folio::Files::AfterSaveJob < Folio::ApplicationJob
 
     placements = file.file_placements
 
-    file.update_column(:file_placements_size, placements.size)
+    file.update_column(:file_placements_count, placements.size)
 
     # touch placements to bust cache
     placements.find_each do |placement|

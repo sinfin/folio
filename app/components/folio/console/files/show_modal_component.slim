@@ -1,0 +1,22 @@
+= render(Folio::Console::Ui::ModalComponent.new(class_name: CLASS_NAME,
+                                                size: :xl,
+                                                data:)) do |c|
+  - c.with_header
+    .modal-title.f-c-ui-modal__title
+      .f-c-ui-modal__title[
+        class="f-c-files-show-modal__title-custom"
+        data=stimulus_target("customTitle")
+      ]
+
+      .f-c-ui-modal__title[
+        class="f-c-files-show-modal__title-default"
+      ]
+        = Folio::File.model_name.human
+
+    .f-c-files-show-modal__header-navigation data=stimulus_target("navigation")
+      = render(Folio::Console::Ui::ButtonsComponent.new(buttons: navigation_buttons_model))
+
+  = render(Folio::Console::Ui::TurboFrameWithLoaderComponent.new(id: Folio::Console::Files::ShowComponent::TURBO_FRAME_ID,
+                                                                 min_height: "525px"))
+    - if @file
+      = render(Folio::Console::Files::ShowComponent.new(file: @file))

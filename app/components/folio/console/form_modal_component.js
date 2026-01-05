@@ -51,7 +51,7 @@ window.Folio.Stimulus.register('f-c-form-modal', class extends window.Stimulus.C
       }
     }).catch((err, a, b) => {
       window.Folio.Modal.close(this.element)
-      window.FolioConsole.Flash.alert(err.message)
+      window.FolioConsole.Ui.Flash.alert(err.message)
     })
   }
 

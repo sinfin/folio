@@ -126,7 +126,7 @@ class Folio::Devise::SessionsControllerTest < ActionDispatch::IntegrationTest
         if user_site.present? # already registered
           if user_site.invitation_accepted?
             assert_response :unprocessable_entity
-            assert response.body.include?('<div class="invalid-feedback">E-mail již databáze obsahuje</div>')
+            assert response.body.include?('<div class="invalid-feedback">E-mail již je v databázi</div>')
           else
             assert_redirected_to user_invitation_url(only_path: false, host: xdomain_site.env_aware_domain)
             follow_redirect!

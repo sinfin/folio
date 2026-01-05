@@ -31,7 +31,7 @@ class Folio::Console::LeadsControllerTest < Folio::Console::BaseControllerTest
     end
 
     assert_response :success
-    assert_select ".f-c-pagination__info", text: "Zobrazuji 3 záznamy"
+    assert_select ".f-c-ui-pagy__info", text: "Zobrazuji 3 záznamy"
     assert_select ".f-c-catalogue__row", count: 3
     assert_select ".f-c-catalogue__row .f-c-catalogue__cell-value", text: our_site_lead1.email, count: 1
     assert_select ".f-c-catalogue__row .f-c-catalogue__cell-value", text: our_site_lead2.email, count: 1
@@ -48,7 +48,7 @@ class Folio::Console::LeadsControllerTest < Folio::Console::BaseControllerTest
 
     assert_response :success
     # manager can not see lead with email "manager_cant@see.me" (see dummy ability override)
-    assert_select ".f-c-pagination__info", text: "Zobrazuji 2 záznamy"
+    assert_select ".f-c-ui-pagy__info", text: "Zobrazuji 2 záznamy"
     assert_select ".f-c-catalogue__row", count: 2
     assert_select ".f-c-catalogue__row .f-c-catalogue__cell-value", text: our_site_lead1.email, count: 1
     assert_select ".f-c-catalogue__row .f-c-catalogue__cell-value", text: our_site_lead2.email, count: 0

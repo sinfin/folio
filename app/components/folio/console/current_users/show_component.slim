@@ -18,14 +18,14 @@
         = @user.email_changed? ? @user.email_was : @user.email
 
         .f-c-current-users-show__edit-btn-wrap.mt-3
-          == cell('folio/console/ui/button', edit_button_model)
+          = render(Folio::Console::Ui::ButtonComponent.new(**edit_button_model))
 
       .f-c-current-users-show__box-form-wrap
         = helpers.simple_form_for @user, url: controller.folio.update_email_console_current_user_path, method: :patch do |f|
           .f-devise__narrow
             == cell('folio/devise/email_input', f)
 
-          == cell('folio/console/ui/buttons', form_buttons_model)
+          = render(Folio::Console::Ui::ButtonsComponent.new(buttons: form_buttons_model))
 
   - if can_now?(:update_password, @user)
     .f-c-current-users-show__box[
@@ -35,7 +35,7 @@
 
       .f-c-current-users-show__box-value-wrap
         .f-c-current-users-show__edit-btn-wrap
-          == cell('folio/console/ui/button', edit_button_model(label: t('.edit_password')))
+          = render(Folio::Console::Ui::ButtonComponent.new(**edit_button_model(label: t('.edit_password'))))
 
       .f-c-current-users-show__box-form-wrap
         = helpers.simple_form_for @user, url: controller.folio.update_password_console_current_user_path, method: :patch do |f|
@@ -58,13 +58,12 @@
                     label: t(".label/password_confirmation"),
                     autocomplete: "new-password")
 
-          == cell('folio/console/ui/buttons', form_buttons_model)
+          = render(Folio::Console::Ui::ButtonsComponent.new(buttons: form_buttons_model))
 
   - if can_now?(:update, @user)
     h2.h3 = t('.title/others')
 
-    == cell('folio/console/ui/button',
-            href: url_for([:edit, :console, @user]),
-            label: t('.edit_others'),
-            variant: :gray,
-            right_icon: :open_in_new)
+    = render(Folio::Console::Ui::ButtonComponent.new(href: url_for([:edit, :console, @user]),
+                                                      label: t('.edit_others'),
+                                                      variant: :gray,
+                                                      right_icon: :open_in_new))

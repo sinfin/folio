@@ -1,0 +1,98 @@
+.f-c-ui-in-place-input
+  &[data-f-c-ui-in-place-input-editing-value="true"] &__content-wrap,
+  &[data-f-c-ui-in-place-input-editing-value="false"] &__input-wrap
+    display: none
+
+  &__content-wrap
+    display: flex
+    align-items: center
+    gap: px-to-rem(4px)
+
+  &:not(&--compact) &__content-wrap
+    min-height: $input-height
+
+  &__content-flex
+    display: inline-flex
+    align-items: center
+    max-width: 100%
+    position: relative
+    gap: px-to-rem(4px)
+    cursor: pointer
+
+    &::after
+      background: $gray-200
+      border-radius: $border-radius
+      content: ''
+      display: block
+      inset: px-to-rem(-4px) px-to-rem(-8px)
+      opacity: 0
+      pointer-events: none
+      position: absolute
+      transition: $transition-base
+      z-index: 1
+
+    &:hover::after
+      opacity: 1
+
+  &__content:not(:empty) + &__content-blank
+    display: none
+
+  &__content,
+  &__content-blank,
+  &__content-prefix,
+  &__toggle-ico,
+  &__success-ico,
+  &__warning
+    position: relative
+    z-index: 2
+
+  &__content
+    overflow-wrap: break-word
+
+    &:empty
+      display: none
+
+  &__toggle-ico,
+  &__success-ico,
+  &__warning
+    flex: 0 0 auto
+
+  &__success-ico
+    color: $success
+
+  &__warning
+    color: $warning
+    cursor: help
+
+  &:not(&--success) &__success-ico,
+  &--success &__toggle-ico
+    display: none
+
+  &--value-line-clamp-2 &__content-inner,
+  &--value-line-clamp-3 &__content-inner
+    -webkit-box-orient: vertical
+    display: -webkit-box
+    max-height: 32px
+    overflow: hidden
+    text-overflow: ellipsis
+    word-break: break-word
+
+  &--value-line-clamp-2 &__content-inner
+    -webkit-line-clamp: 2
+    line-clamp: 2
+
+  &--value-line-clamp-3 &__content-inner
+    -webkit-line-clamp: 3
+    line-clamp: 3
+
+  &--disabled &__content-flex
+    cursor: text
+
+    &::after
+      display: none
+
+    &:hover::after
+      opacity: 0
+
+  &--multiple
+    width: 100%

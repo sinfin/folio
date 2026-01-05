@@ -36,24 +36,24 @@ window.Folio.Stimulus.register('d-ui-mini-select', class extends window.Stimulus
   }
 
   close () {
-    this.element.classList.remove("d-ui-mini-select--expanded")
+    this.element.classList.remove('d-ui-mini-select--expanded')
     this.unbindOutsideClick()
   }
 
   open () {
-    this.element.classList.add("d-ui-mini-select--expanded")
+    this.element.classList.add('d-ui-mini-select--expanded')
     this.bindOutsideClick()
   }
 
   selectedValueClick () {
     if (!this.toggleSelectValue) {
-      if (this.element.classList.contains("d-ui-mini-select--expanded")) {
+      if (this.element.classList.contains('d-ui-mini-select--expanded')) {
         this.close()
       } else {
         this.open()
       }
     } else {
-      this.setOptionAsSelectedValue("toggle")
+      this.setOptionAsSelectedValue('toggle')
     }
   }
 
@@ -62,34 +62,34 @@ window.Folio.Stimulus.register('d-ui-mini-select', class extends window.Stimulus
     if (option.classList.contains('.d-ui-mini-select__option--href')) return
 
     const optionValue = option.innerText
-    this.setOptionAsSelectedValue("select", optionValue)
+    this.setOptionAsSelectedValue('select', optionValue)
   }
 
   setOptionAsSelectedValue (functionality, option) {
-    if (functionality === "toggle") {
+    if (functionality === 'toggle') {
       const options = this.optionsValue
 
       const currentSelected = this.selectedValueTextTarget.innerText
       const index = options.indexOf(currentSelected)
-      const nextIndex = index == 0 ? 1 : 0
+      const nextIndex = index === 0 ? 1 : 0
       const nextSelected = options[nextIndex]
 
       this.selectedValueTextTarget.innerText = nextSelected
-    } else if (functionality === "select") {
+    } else if (functionality === 'select') {
       this.selectedValueTextTarget.innerText = option
       this.close()
       this.refreshOptions(option)
     }
 
-    console.log("In " + this.typeValue + " select was selected: " + this.selectedValueTextTarget.innerText)
+    console.log('In ' + this.typeValue + ' select was selected: ' + this.selectedValueTextTarget.innerText)
   }
-  
+
   refreshOptions (clickedOption) {
     this.optionTargets.forEach((option) => {
-      if (option.innerText != clickedOption) {
-        option.classList.remove("d-ui-mini-select__option--selected")
+      if (option.innerText !== clickedOption) {
+        option.classList.remove('d-ui-mini-select__option--selected')
       } else {
-        option.classList.add("d-ui-mini-select__option--selected")
+        option.classList.add('d-ui-mini-select__option--selected')
       }
     })
 
@@ -105,8 +105,8 @@ window.Folio.Stimulus.register('d-ui-mini-select', class extends window.Stimulus
     const secondElement = this.optionTargets[1]
 
     this.optionTargets.forEach((option) => {
-      option.classList.remove("d-ui-mini-select__option--last-visible")
-      option.classList.remove("d-ui-mini-select__option--first-visible")
+      option.classList.remove('d-ui-mini-select__option--last-visible')
+      option.classList.remove('d-ui-mini-select__option--first-visible')
     })
 
     if (!lastElement.classList.contains('d-ui-mini-select__option--selected')) {

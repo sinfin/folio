@@ -3,9 +3,67 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [7.0.0] - 2026-01-05
+
 ### Added
 
+- **Console URL Rewriter**: Extract console URL tracking into `Folio::HasConsoleUrl` concern with configurable URL rewriting via `folio_rewriter_lambda_for_has_console_url` lambda, enabling multiple related URLs (e.g. `/homepages/future` and `/homepages/current`) to be treated as equivalent for concurrent editing detection
+- **Embed System**: Complete rewrite of embed functionality with new input and display components. See [docs/embed.md](docs/embed.md) for details
+- **Help Documents**: New feature for displaying Markdown documentation within the console interface. See [docs/help_documents.md](docs/help_documents.md) for details
+- **TipTap Editor**: Complete rich text editing system with advanced features including collapsible pages, table cell rowspan/colspan, toolbar slots, and file picker integration. See [docs/tiptap.md](docs/tiptap.md) for details
+- **Turbo Integration**: Added Turbo.js to console with Turbo frames for files index and modals, improved page transitions, and turbo frame loader component
+- **Uppy File Uploader**: New file upload system replacing legacy upload components with drag-and-drop support, format hints, and message bus integration
+- **Media Sources**: New `Folio::MediaSource` model and management system for media attribution with usage limits and automatic attribution field population
 - added `rel` and `target` to allowed rich text attributes
+- actions `destroy`, `discard` and `undiscard` are now by default collapsed in console index pages
+- `Folio::ElevenLabs::TranscribeSubtitlesJob` for automatic subtitles transcription using ElevenLabs (disabled by default)
+- default `devise_modules` moved to folio config, so each app can set their own set. Default are `%i[database_authenticatable recoverable rememberable trackable invitable timeoutable lockable]
+- added option `Rails.application.config.folio_cookie_consent_configuration[:keep_attached_after_accept]` (default false). Set it `true` if app allways display link to open cookies settings.
+- added `disabled_modifications` option to `form_footer`
+- added `calendar_filter` icon
+- added `thumbnail_configuration` to `Folio::File` to store crop data per-ratio, set via a new `Folio::Console::Files::Show::Thumbnails::CropEditComponent` and `update_thumbnails_crop` API
+- added `Folio::File.correct_site(current_site)` return corect site for files depending on `Rails.application.config.folio_shared_files_between_sites`
+- support for MOV (video/quicktime) files
+- added troubleshooting documentation for parallel test hangs caused by stale database connections
+- added TIFF file support for thumbnail generation
+- added fallback image handling for missing or corrupted files
+- added image dimension validation to `Folio::Thumbnails` concern
+- thumbnail loading now restricted to console, tiptap editor, and unpublished previews
+- `Folio::Console::Ui::StepsComponent` for step-by-step UI workflows
+- pagination support for all remote selects with `ordered_for_folio_console_selects` scope
+- `Folio::EnvFlags` module with startup warnings for configuration issues
+- `Folio::Console::Files::ValidationBoxComponent` for file attribution validation UI
+
+### Changed
+
+- refactored thumbnail JavaScript to use native `fetch` API instead of jQuery
+- updated default cache header TTL from 10s to 15s (`folio_cache_headers_default_ttl`)
+- thumbnail generation now uses dynamic cache TTL (5-10 seconds) based on config
+- removed broken `animated_gif_resize` processor (GIFs now converted to JPG)
+- improved video screenshot time calculation to prevent seeking beyond video duration
+- file list improvements: table view, batch actions, grid view for videos, improved checkbox clickability, and mobile table styling
+
+- update rails to 8.0.1
+- default console `update` for `format: :json` now returns a JSON with changes instead of an empty hash
+- `Folio::Console::Ui::AjaxInputComponent` now expects API to return `{ name => new_value }` instead of `{ value: new_value }`
+- redid input autocomplete without jQuery UI
+- default console `show` action now redirects to `edit` - make sure you have your `show` actions explicitely defined on controllers and are not using `super`
+- `Folio::File` now uses a `slug` instead of `hash_id`
+- Cells -> ViewComponents refactoring:
+  - Folio::Console::Form::HeaderCell -> Folio::Console::Form::HeaderComponent
+  - Folio::PublishableHintCell -> Folio::Publishable::HintComponent
+- generalized tiptap_config.use_as_single_image_in_toolbar -> tiptap_config.toolbar with icon and slot names
+
+### Fixed
+
+- file_list/file_component info-file-name doesn't break on long names
+- instagram embeds from url loading with small width
+- fixed file handle leak in thumbnail generation job
+- fixed Dragonfly image analyser to handle misnamed files (e.g., WebP files with .jpg extension)
+- fixed dimension validation to only run when file is assigned
+- fixed video screenshot generation to prevent seeking beyond video duration
+- normalized x.com URLs to twitter.com for embed widget compatibility
+- set text/plain content type for robots.txt responses
 
 ## [6.5.1] - 2025-06-18
 
@@ -60,7 +118,8 @@ All notable changes to this project will be documented in this file.
 ### Added
 - `Folio::File::Video::HasSubtitles` concern to Video files
 - `Rails.application.config.folio_files_video_enabled_subtitle_languages` to set subtitle languages
-- `Folio::OpenAi::TranscribeSubtitlesJob` for automatic subtitles transcription (disabled by default)
+- `Folio::OpenAi::TranscribeSubtitlesJob` for automatic subtitles transcription using OpenAI Whisper (disabled by default)
+
 - `file_modal_additional_fields` method to files for custom fields in console file modal
 
 ### Changed
@@ -115,49 +174,6 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 - `:scope_name` option to `folio_console_links_mapping` config
-
-### Changed
-- include `id` and `slug` (when possible) in `by_label_query`
-- option to hide "subscribe to newsleter" input in  resource form
-- pass `:placeholder` to email input
-
-### Fixed
-- built react version to include "folio links" changes
-
-## [6.2.3] - 2025-03-17
-
-### Changed
-- set default timeouts for Devise actions and display such information in corresponding emails.
-   ```
-   config.reset_password_within = 6.hours # see as Folio::User.reset_password_within
-   config.invite_for = 30.days
-   config.confirm_within = 7.days
-   ```
-- the way we work with links - added a modal for `as: :url` inputs, added `as: :url_json` and switched some atoms to it
-
-## [6.2.2] - 2025-03-11
-
-### Fixed
-- added default `folio_pages_autosave` config
-
-## [6.2.1] - 2025-03-10
-
-### Changed
-- moved `Folio::Audited` concern module to `Folio::Audited::Model`
-
-## [6.2.0] - 2025-03-10
-
-### Added
-- autosave to console - add `Folio::Autosave::Model` to your model
-- autoformat for rich text inputs
-- `console_preferences` jsonb column to `Folio::User` to store autosave/autoformat preferences
-- divider to `Folio::Console::DropdownCell` with optional title
-- href to confirm button in `Folio::Console::Ui::NotificationModalComponent`
-
-## [6.1.3] - 2025-02-20
-
-### Fixed
-- fixed initial project configuration when project is freshly cloned and set up
 
 ## [6.1.2] - 2025-02-18
 

@@ -2,13 +2,14 @@
 
 class Folio::File < Folio::ApplicationRecord
   include Folio::DragonflyFormatValidation
-  include Folio::HasHashId
+  include Folio::FriendlyId
   include Folio::SanitizeFilename
-  include Folio::Taggable
   include Folio::Thumbnails
   include Folio::StiPreload
+  include Folio::Taggable
   include Folio::HasAasmStates
   include Folio::BelongsToSite
+  include Folio::FilesSharedAccrossSites if Rails.application.config.folio_shared_files_between_sites
 
   READY_STATE = :ready
 
@@ -19,6 +20,59 @@ class Folio::File < Folio::ApplicationRecord
     south
     west
   ]
+
+  CANCAN_MAPPINGS = {
+    create: %i[
+      create
+      new
+    ],
+    update: %i[
+      batch_update
+      close_batch_form
+      create_subtitle
+      delete_subtitle
+      destroy_file_thumbnail
+      edit
+      extract_metadata
+      open_batch_form
+      retranscribe_subtitles
+      update
+      update_file_thumbnail
+      update_subtitle
+      update_thumbnails_crop
+    ],
+    read: %i[
+      batch_bar
+      batch_download
+      batch_download_failure
+      batch_download_success
+      cancel_batch_download
+      file_picker_file_hash
+      file_placements
+      handle_batch_queue
+      index
+      index_for_modal
+      index_for_picker
+      new_subtitle_html
+      pagination
+      show
+      subtitle_html
+      subtitles_html
+    ],
+    destroy: %i[
+      batch_delete
+      destroy
+    ]
+  }
+
+  scope :by_tags, -> (tags) do
+    if tags.is_a?(String)
+      tagged_with(tags.split(","))
+    else
+      tagged_with(tags)
+    end
+  end
+
 
   dragonfly_accessor :file do
     after_assign :sanitize_filename
@@ -40,27 +94,30 @@ class Folio::File < Folio::ApplicationRecord
 
   # Scopes
   scope :ordered, -> { order(created_at: :desc) }
+
   scope :by_placement, -> (placement_title) { order(created_at: :desc) }
+
   scope :by_used, -> (used) do
-    if used == "used"
-      joins(:file_placements)
-    elsif used == "unused"
-      left_joins(:file_placements).where(folio_file_placements: { id: nil })
+    case used
+    when true, "true"
+      where(Folio::FilePlacement::Base.where(Folio::FilePlacement::Base.arel_table[:file_id].eq(arel_table[:id])).arel.exists)
+    when false, "false"
+      where(Folio::FilePlacement::Base.where(Folio::FilePlacement::Base.arel_table[:file_id].eq(arel_table[:id])).arel.exists.not)
     else
-      all
+      none
     end
   end
-  scope :by_tags, -> (tags) do
-    if tags.is_a?(String)
-      tagged_with(tags.split(","))
-    else
-      tagged_with(tags)
-    end
-  end
-  # workaround for filenames with dashes & underscores
+
   scope :by_file_name, -> (query) do
     by_file_name_for_search(sanitize_filename_for_search(query))
   end
+
+  pg_search_scope :by_query,
+                  against: [:file_name, :headline, :description],
+                  ignoring: :accents,
+                  using: {
+                    tsearch: { prefix: true }
+                  }
 
   pg_search_scope :by_file_name_for_search,
                   against: [:file_name_for_search],
@@ -92,6 +149,7 @@ class Folio::File < Folio::ApplicationRecord
   after_save :run_after_save_job
   after_commit :process!, if: :attached_file_changed?
   after_destroy :destroy_attached_file
+  after_destroy :dispatch_destroyed_message
 
   attr_accessor :dont_run_after_save_jobs
 
@@ -124,6 +182,9 @@ class Folio::File < Folio::ApplicationRecord
     end
   end
 
+  def self.correct_site(site)
+    Rails.application.config.folio_shared_files_between_sites ? Folio::Current.main_site : site
+  end
 
   def title
     file_name
@@ -145,15 +206,6 @@ class Folio::File < Folio::ApplicationRecord
       type:,
       id:,
     }
-  end
-
-  def update_file_placements_size!
-    update_columns(file_placements_size: file_placements.count,
-                   updated_at: current_time_from_proper_timezone)
-  end
-
-  def self.hash_id_additional_classes
-    [Folio::PrivateAttachment]
   end
 
   def self.human_type
@@ -226,48 +278,187 @@ class Folio::File < Folio::ApplicationRecord
   end
 
   def screenshot_time_in_ffmpeg_format
-    if file_track_duration
-      quarter = file_track_duration / 4  # take screenshot at 1/4 of the video
+    # For videos under 10 seconds: use 1/4 duration
+    # For videos 10+ seconds: use fixed 5 seconds (safe offset that works for most videos)
+    # Default to 1 second if duration is unknown
+    # Note: Use 5 seconds instead of 10 to avoid seeking beyond the end of short videos
+    # (e.g., a 9.94s video stored as duration=10 would fail at -ss 10)
+    screenshot_time = if file_track_duration.nil?
+      1
+    elsif file_track_duration <= 10
+      [file_track_duration / 4.0, 0.5].max
+    else
+      5
+    end
 
-      seconds = quarter
-      minutes = seconds / 60
-      seconds -= minutes * 60
-      hours = minutes / 60
-      minutes -= hours * 60
+    seconds = screenshot_time.to_i
+    # FFmpeg uses centiseconds (hundredths of a second), not milliseconds
+    centiseconds = ((screenshot_time - seconds) * 100).to_i
+    minutes = seconds / 60
+    seconds -= minutes * 60
+    hours = minutes / 60
+    minutes -= hours * 60
 
-      "#{hours.to_s.rjust(2, '0')}:#{minutes.to_s.rjust(2, '0')}:#{seconds.to_s.rjust(2, '0')}.00"
+    "#{hours.to_s.rjust(2, '0')}:#{minutes.to_s.rjust(2, '0')}:#{seconds.to_s.rjust(2, '0')}.#{centiseconds.to_s.rjust(2, '0')}"
+  end
+
+  def indestructible_reason
+    return nil if file_placements_count == 0
+    return nil if file_placements_count.nil?
+    I18n.t("folio.file.cannot_destroy_file_with_placements")
+  end
+
+  def file_list_count
+    file_placements_count
+  end
+
+  def file_list_source
+    if attribution_source.present?
+      attribution_source
+    elsif attribution_source_url.present?
+      begin
+        uri = URI.parse(attribution_source_url.gsub("www.", ""))
+
+        if uri.host.present?
+          uri.host.split(".", 2)[0]
+        end
+      rescue StandardError
+      end
     end
   end
 
-  def file_modal_additional_fields
-    {}
+  def to_label
+    file_name.presence || self.class.model_name.human
+  end
+
+  def console_show_additional_buttons_props(controller:)
+    []
+  end
+
+  def console_show_additional_fields
+    fields = {}
+
+    if respond_to?(:preview_duration) && respond_to?(:preview_duration=)
+      fields[:preview_duration] = { as: :integer }
+    end
+
+    fields
+  end
+
+  def self.console_turbo_frame_id(modal: false, picker: false)
+    base = "folio-console-file-#{model_name.route_key}"
+
+    if modal
+      "#{base}-index_for_modal"
+    elsif picker
+      "#{base}-index_for_picker"
+    else
+      "#{base}-index"
+    end
+  end
+
+  def console_show_additional_preview_component
+    # to be overriden in main_app should be needed
+  end
+
+  def calculate_published_usage_count
+    placement_types = file_placements.distinct.pluck(:placement_type)
+    return 0 if placement_types.empty?
+
+    published_conditions = placement_types.map do |type|
+      klass = type.constantize
+      table_name = klass.table_name
+
+      if klass.column_names.include?("published")
+        "(folio_file_placements.placement_type = '#{type}' AND EXISTS (SELECT 1 FROM #{table_name} WHERE #{table_name}.id = folio_file_placements.placement_id AND #{table_name}.published = true))"
+      else
+        # For classes without published, assume published
+        "folio_file_placements.placement_type = '#{type}'"
+      end
+    rescue NameError
+      # If class doesn't exist, assume published
+      "folio_file_placements.placement_type = '#{type}'"
+    end
+
+    file_placements
+      .where(published_conditions.join(" OR "))
+      .distinct
+      .count("CONCAT(placement_type, ':', placement_id)")
+  end
+
+  def update_file_placements_counts!
+    published_count = calculate_published_usage_count
+    placements_count = file_placements.count
+
+    updates = {}
+    updates[:published_usage_count] = published_count if published_usage_count != published_count
+    updates[:file_placements_count] = placements_count if file_placements_count != placements_count
+
+    update_columns(updates) if updates.any?
   end
 
   private
+    def slug_candidates
+      %i[slug headline hash_id_for_slug to_label]
+    end
+
+    def hash_id_for_slug
+      new_slug = nil
+      hash = nil
+
+      loop do
+        # Parameterize filename base to match strip_and_downcase_slug behavior
+        new_slug_base = if file_name.present?
+          file_name.split(".", 2)[0].parameterize
+        else
+          "file"
+        end
+        new_slug = hash ? "#{new_slug_base}-#{hash}" : new_slug_base
+
+        exists = self.class.base_class.exists?(slug: new_slug)
+
+        break unless exists
+
+        # Generate lowercase hash to match strip_and_downcase_slug formatting
+        hash = SecureRandom.urlsafe_base64(8)
+                           .downcase
+                           .gsub(/-|_/, ("a".."z").to_a[rand(26)])
+      end
+
+      new_slug
+    end
+
     def set_file_name_for_search
       self.file_name_for_search = self.class.sanitize_filename_for_search(file_name)
     end
 
     def check_usage_before_destroy
+      throw(:abort) if indestructible_reason.present?
       throw(:abort) if file_placements.exists?
     end
 
     def set_file_track_duration
       if %w[audio video].include?(self.class.human_type)
-        self.file_track_duration = Folio::File::GetFileTrackDurationJob.perform_now(file.path, self.class.human_type) # in seconds
+        self.file_track_duration = Folio::File::GetFileTrackDurationJob.perform_now(file.path.to_s, self.class.human_type) # in seconds
         self.preview_track_duration_in_seconds = self.respond_to?(:preview_duration_in_seconds) ? preview_duration_in_seconds : 0
       end
     end
 
     def set_video_file_dimensions
       if %w[video].include?(self.class.human_type)
-        self.file_width, self.file_height = Folio::File::GetVideoDimensionsJob.perform_now(file.path, self.class.human_type)
+        self.file_width, self.file_height = Folio::File::GetVideoDimensionsJob.perform_now(file.path.to_s, self.class.human_type)
       end
     end
 
     def validate_attribution_and_texts_if_needed
+      # Skip validations for unused files (no placements)
+      # This allows clearing metadata fields for EXIF re-extraction
+      return if file_placements.empty?
+
       if Rails.application.config.folio_files_require_attribution
-        if author_changed? || attribution_source_changed? || attribution_source_url_changed?
+        if author_changed? ||
+           attribution_source_changed? ||
+           attribution_source_url_changed?
           if author.blank? && attribution_source.blank? && attribution_source_url.blank?
             errors.add(:author, :missing_file_attribution)
           end
@@ -285,6 +476,21 @@ class Folio::File < Folio::ApplicationRecord
           errors.add(:description, :blank)
         end
       end
+    end
+
+    def dispatch_destroyed_message
+      message_bus_user_ids = Folio::User.where.not(console_url: nil)
+                                        .where(console_url_updated_at: 1.hour.ago..)
+                                        .pluck(:id)
+
+      return if message_bus_user_ids.blank?
+
+      MessageBus.publish Folio::MESSAGE_BUS_CHANNEL,
+                         {
+                           type: "Folio::File/destroyed",
+                           data: { id: },
+                         }.to_json,
+                         user_ids: message_bus_user_ids
     end
 end
 
@@ -304,10 +510,10 @@ end
 #  file_size                         :bigint(8)
 #  additional_data                   :json
 #  file_metadata                     :json
-#  hash_id                           :string
+#  slug                              :string
 #  author                            :string
 #  description                       :text
-#  file_placements_size              :integer
+#  file_placements_count             :integer          default(0), not null
 #  file_name_for_search              :string
 #  sensitive_content                 :boolean          default(FALSE)
 #  file_mime_type                    :string
@@ -322,6 +528,15 @@ end
 #  attribution_source_url            :string
 #  attribution_copyright             :string
 #  attribution_licence               :string
+#  headline                          :string
+#  capture_date                      :datetime
+#  gps_latitude                      :decimal(10, 6)
+#  gps_longitude                     :decimal(10, 6)
+#  file_metadata_extracted_at        :datetime
+#  media_source_id                   :bigint(8)
+#  attribution_max_usage_count       :integer
+#  published_usage_count             :integer          default(0), not null
+#  thumbnail_configuration           :jsonb
 #
 # Indexes
 #
@@ -330,12 +545,15 @@ end
 #  index_folio_files_on_by_file_name_for_search  (to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text)))) USING gin
 #  index_folio_files_on_created_at               (created_at)
 #  index_folio_files_on_file_name                (file_name)
-#  index_folio_files_on_hash_id                  (hash_id)
+#  index_folio_files_on_media_source_id          (media_source_id)
+#  index_folio_files_on_published_usage_count    (published_usage_count)
 #  index_folio_files_on_site_id                  (site_id)
+#  index_folio_files_on_slug                     (slug)
 #  index_folio_files_on_type                     (type)
 #  index_folio_files_on_updated_at               (updated_at)
 #
 # Foreign Keys
 #
+#  fk_rails_...  (media_source_id => folio_media_sources.id)
 #  fk_rails_...  (site_id => folio_sites.id)
 #

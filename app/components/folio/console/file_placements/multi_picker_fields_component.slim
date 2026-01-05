@@ -1,0 +1,28 @@
+.f-c-file-placements-multi-picker-fields data=data
+  .f-c-file-placements-multi-picker-fields__outer
+    .f-c-file-placements-multi-picker-fields__flex data=stimulus_target("flex")
+      .f-c-file-placements-multi-picker-fields__fields
+        = content
+
+        .f-c-file-placements-multi-picker-fields__empty = t('.empty')
+
+        = folio_nested_fields(@f,
+                              @placement_key,
+                              fully_draggable: true,
+                              add: :hidden) do |g|
+          = placement_component(g)
+
+      .f-c-file-placements-multi-picker-fields__source[
+        data=stimulus_target('source')
+      ]
+        - if @placement_klass.folio_file_placement_supports_embed?
+          .f-c-file-placements-multi-picker-fields__source-header
+            = render(Folio::Console::Ui::TabsComponent.new(tabs:,
+                                                           no_margin: true))
+
+        .f-c-file-placements-multi-picker-fields__source-frame-wrap
+          = render(Folio::Console::Ui::TurboFrameWithLoaderComponent.new(id: @turbo_frame_id,
+                                                                         src: @turbo_frame_src,
+                                                                         min_height: '300px',
+                                                                         loader_offset: false,
+                                                                         lazy: true))

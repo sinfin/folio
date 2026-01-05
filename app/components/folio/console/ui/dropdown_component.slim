@@ -1,15 +1,24 @@
 .f-c-ui-dropdown.dropdown
-  .f-c-ui-dropdown__trigger[
-    class="dropdown-toggle"
-    class=(content? ? "f-c-ui-dropdown__trigger--with-content" : "f-c-ui-dropdown__trigger--without-content")
-    aria-expanded="false"
-    aria-haspopup="true"
-    data-bs-toggle="dropdown"
-  ]
-    - if content?
+  - if content?
+    .f-c-ui-dropdown__trigger[
+      class="dropdown-toggle"
+      class=trigger_class_name
+      aria-expanded="false"
+      aria-haspopup="true"
+      data-bs-toggle="dropdown"
+    ]
       span.f-c-ui-dropdown__content
         = content
-    - else
+  - elsif @button
+    = trigger_button
+  - else
+    .f-c-ui-dropdown__trigger[
+      class="dropdown-toggle"
+      class=trigger_class_name
+      aria-expanded="false"
+      aria-haspopup="true"
+      data-bs-toggle="dropdown"
+    ]
       span.f-c-ui-dropdown__dots
         = folio_icon(:dots_vertical)
 

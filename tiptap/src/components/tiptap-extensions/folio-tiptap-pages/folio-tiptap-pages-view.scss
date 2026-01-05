@@ -1,0 +1,12 @@
+.f-tiptap-pages {
+  margin: var(--f-tiptap-pages__gap-in-editor-only) 0;
+  counter-reset: f-tiptap-page-number 0;
+}
+
+.f-tiptap-pages__content > div[data-node-view-content-react] {
+  align-items: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: var(--f-tiptap-pages__gap-in-editor-only);
+  position: relative;
+}

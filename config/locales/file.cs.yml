@@ -1,0 +1,5 @@
+---
+cs:
+  folio:
+    file:
+      cannot_destroy_file_with_placements: Nelze smazat soubor, který je použit v obsahu.

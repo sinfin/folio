@@ -61,6 +61,16 @@ module Folio::Publishable
       self.preview_token
     end
 
+    def publish!(**kwargs)
+      publish(**kwargs)
+      save!
+    end
+
+    def unpublish!(**kwargs)
+      unpublish(**kwargs)
+      save!
+    end
+
     private
       def generate_preview_token
         return unless self.class.use_preview_tokens?
@@ -88,6 +98,14 @@ module Folio::Publishable
 
     def folio_published?
       published.present?
+    end
+
+    def publish(**kwargs)
+      self.published = true
+    end
+
+    def unpublish(**kwargs)
+      self.published = false
     end
   end
 
@@ -162,6 +180,16 @@ module Folio::Publishable
       end
     end
 
+    def publish(published_at: Time.current)
+      self.published = true
+      self.published_at = published_at
+    end
+
+    def unpublish(**kwargs)
+      self.published = false
+      # self.published_at = nil
+    end
+
     private
       def set_published_date_automatically_if_needed
         return unless self.class.set_published_date_automatically?
@@ -211,6 +239,57 @@ module Folio::Publishable
                 Time.current)
         end
       }
+
+      scope :by_published_within_dates, -> (date_range_str) {
+        if require_published_date_for_publishing?
+          if date_range_str.present?
+            from, to = date_range_str.split(/ ?- ?/)
+
+            begin
+              from_date_time = DateTime.parse(from)
+
+              to_date_time = if to
+                DateTime.parse(to)
+              else
+                Time.current
+              end
+
+              if from_date_time > to_date_time
+                none
+              else
+                where_sql = <<~SQL
+                  #{table_name}.published = :published_boolean AND
+                  (
+                    #{table_name}.published_from IS NOT NULL
+                    AND
+                    #{table_name}.published_from <= :to_date_time_eod
+                  ) AND (
+                    #{table_name}.published_until IS NULL
+                    OR
+                    (
+                      #{table_name}.published_until >= :from_date_time_bod
+                    )
+                  )
+                SQL
+
+                where(where_sql, {
+                  published_boolean: true,
+                  from_date_time_bod: from_date_time.beginning_of_day,
+                  from_date_time_eod: from_date_time.end_of_day,
+                  to_date_time_bod: to_date_time.beginning_of_day,
+                  to_date_time_eod: to_date_time.end_of_day,
+                })
+              end
+            rescue StandardError
+              none
+            end
+          else
+            none
+          end
+        else
+          where(published: true)
+        end
+      }
     end
 
     class_methods do
@@ -256,6 +335,18 @@ module Folio::Publishable
       else
         false
       end
+    end
+
+    def publish(published_from: nil, published_until: nil)
+      self.published = true
+      self.published_from = published_from
+      self.published_until = published_until
+    end
+
+    def unpublish(**kwargs)
+      self.published = false
+      # self.published_from = nil
+      # self.published_until = nil
     end
 
     private

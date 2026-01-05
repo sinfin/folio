@@ -10,10 +10,8 @@
 
 - if @importer && @importer.record && !@importer.record.valid?
   .mb-4
-    == cell('folio/console/form/errors',
-            nil,
-            errors: @importer.record.errors,
-            buttons: false)
+    = render(Folio::Console::Ui::ValidationBoxComponent.new(errors: @importer.record.errors,
+                                                            record: @importer.record))
 
 = simple_form_for "",
                   url: transport_console_transport_path(class_name: @class_name,

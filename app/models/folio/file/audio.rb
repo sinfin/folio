@@ -24,10 +24,10 @@ end
 #  file_size                         :bigint(8)
 #  additional_data                   :json
 #  file_metadata                     :json
-#  hash_id                           :string
+#  slug                              :string
 #  author                            :string
 #  description                       :text
-#  file_placements_size              :integer
+#  file_placements_count             :integer          default(0), not null
 #  file_name_for_search              :string
 #  sensitive_content                 :boolean          default(FALSE)
 #  file_mime_type                    :string
@@ -42,6 +42,15 @@ end
 #  attribution_source_url            :string
 #  attribution_copyright             :string
 #  attribution_licence               :string
+#  headline                          :string
+#  capture_date                      :datetime
+#  gps_latitude                      :decimal(10, 6)
+#  gps_longitude                     :decimal(10, 6)
+#  file_metadata_extracted_at        :datetime
+#  media_source_id                   :bigint(8)
+#  attribution_max_usage_count       :integer
+#  published_usage_count             :integer          default(0), not null
+#  thumbnail_configuration           :jsonb
 #
 # Indexes
 #
@@ -50,12 +59,15 @@ end
 #  index_folio_files_on_by_file_name_for_search  (to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text)))) USING gin
 #  index_folio_files_on_created_at               (created_at)
 #  index_folio_files_on_file_name                (file_name)
-#  index_folio_files_on_hash_id                  (hash_id)
+#  index_folio_files_on_media_source_id          (media_source_id)
+#  index_folio_files_on_published_usage_count    (published_usage_count)
 #  index_folio_files_on_site_id                  (site_id)
+#  index_folio_files_on_slug                     (slug)
 #  index_folio_files_on_type                     (type)
 #  index_folio_files_on_updated_at               (updated_at)
 #
 # Foreign Keys
 #
+#  fk_rails_...  (media_source_id => folio_media_sources.id)
 #  fk_rails_...  (site_id => folio_sites.id)
 #

@@ -38,13 +38,18 @@ window.Folio.RemoteScripts.onLoaded = (key, url) => {
 
   if (data.loadedCount === data.urls.length) {
     data.loaded = true
-    window.Folio.RemoteScripts.runSuccessCallbacks(key)
+    if (data.error) {
+      window.Folio.RemoteScripts.runErrorCallbacks(key)
+    } else {
+      window.Folio.RemoteScripts.runSuccessCallbacks(key)
+    }
   }
 }
 
 window.Folio.RemoteScripts.onError = (key, url) => {
   const data = window.Folio.RemoteScripts.Data[key]
   data.error = true
+  data.loadedCount = (data.loadedCount || 0) + 1
 
   if (data.loadedCount === data.urls.length) {
     data.loaded = true
@@ -54,11 +59,27 @@ window.Folio.RemoteScripts.onError = (key, url) => {
 
 window.Folio.RemoteScripts.load = (key) => {
   const data = window.Folio.RemoteScripts.Data[key]
+
   if (data.loaded) {
     return window.Folio.RemoteScripts.runSuccessCallbacks(key)
   }
 
   data.loading = true
+
+  if (data.meta) {
+    const meta = document.querySelector(`meta[name="${data.meta}"]`)
+
+    if (meta && meta.content) {
+      const metaData = JSON.parse(meta.content)
+      if (metaData.cssUrls) {
+        data.cssUrls = metaData.cssUrls
+      }
+
+      if (metaData.urls) {
+        data.urls = metaData.urls
+      }
+    }
+  }
 
   data.stylesheets = (data.cssUrls || []).map((url) => {
     const link = document.createElement('link')
@@ -80,7 +101,7 @@ window.Folio.RemoteScripts.load = (key) => {
       window.Folio.RemoteScripts.onLoaded(key, url)
     }
 
-    script.onError = () => {
+    script.onerror = () => {
       window.Folio.RemoteScripts.onError(key, url)
     }
 

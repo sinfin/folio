@@ -27,7 +27,7 @@ window.Folio.Tooltip.removeStimulusFromElement = ({ element }) => {
   }
 
   if (element.dataset.action) {
-    if (element.dataset.action == 'mouseenter->f-tooltip#mouseenter mouseleave->f-tooltip#mouseleave') {
+    if (element.dataset.action === 'mouseenter->f-tooltip#mouseenter mouseleave->f-tooltip#mouseleave') {
       delete element.dataset.action
     } else {
       element.dataset.action = element.dataset.action.replace(/ *mouseenter->f-tooltip#mouseenter mouseleave->f-tooltip#mouseleave */, '')
@@ -51,9 +51,9 @@ window.Folio.Tooltip.initStimulusForElement = ({ element, title, placement }) =>
   }
 
   if (element.dataset.controller) {
-    element.dataset.controller += " f-tooltip"
+    element.dataset.controller += ' f-tooltip'
   } else {
-    element.dataset.controller = "f-tooltip"
+    element.dataset.controller = 'f-tooltip'
   }
 
   if (element.dataset.action) {
@@ -230,9 +230,11 @@ window.Folio.Stimulus.register('f-tooltip', class extends window.Stimulus.Contro
       variant: this.variantValue,
       tooltipClassName: this.tooltipClassNameValue,
       staticTooltip: this.staticValue,
-      clickCallback: this.staticValue ? () => {
-        this.dispatch('tooltipClick', { detail: { close: () => { this.openValue = false } } })
-      } : null,
+      clickCallback: this.staticValue
+        ? () => {
+            this.dispatch('tooltipClick', { detail: { close: () => { this.openValue = false } } })
+          }
+        : null
     })
   }
 

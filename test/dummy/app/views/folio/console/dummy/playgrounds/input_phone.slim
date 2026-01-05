@@ -9,16 +9,14 @@ h1 Input - phone
 
   = f.input :phone, as: :phone, input_html: { value: params[:phone].presence }
 
-  == cell('folio/console/ui/button',
-          type: :submit,
-          label: t('folio.console.actions.submit'))
+  = render_view_component(Folio::Console::Ui::ButtonComponent.new(type: :submit,
+                                                                  label: t('folio.console.actions.submit'))
 
 .mt-5
-  == cell('folio/console/ui/button',
-          type: :button,
-          variant: :warning,
-          label: 'replace form html',
-          onclick: "window.fcdPlaygroundsInputPhoneFormReplace()")
+  = render_view_component(Folio::Console::Ui::ButtonComponent.new(type: :button,
+                                                                  variant: :warning,
+                                                                  label: 'replace form html',
+                                                                  onclick: "window.fcdPlaygroundsInputPhoneFormReplace()"))
 
 javascript:
   window.fcdPlaygroundsInputPhoneFormHtml = document.querySelector('.f-c-d-playgrounds-input-phone-form').innerHTML

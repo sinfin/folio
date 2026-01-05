@@ -1,0 +1,40 @@
+.f-tiptap-link-popover {
+  &__input {
+    display: block;
+    width: 100%;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    padding: 0.375rem 0.75rem;
+    border-radius: 0.375rem;
+    background: none;
+    min-width: 12rem;
+    padding-right: 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    &:focus {
+      outline: none;
+      text-overflow: clip;
+      overflow: visible;
+    }
+  }
+
+  .tiptap-popover &__settings-button {
+    flex: 0 0 auto;
+    width: auto;
+  }
+
+  &__checkbox-label {
+    margin: 0 0 0 auto;
+    flex: 0 0 auto;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.875rem;
+  }
+
+  &__checkbox {
+    margin: 0;
+  }
+}

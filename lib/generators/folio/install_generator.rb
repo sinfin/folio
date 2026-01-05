@@ -32,7 +32,6 @@ module Folio
 
         gem "view_component"
         gem "cells-rails", "~> 0.1.5"
-        gem "cells-slim", "~> 0.0.6" # version 0.1.0 drops Rails support and I was not able to make it work
 
         gem_group :development do
           gem "rubocop"
@@ -76,6 +75,7 @@ module Folio
 
       def copy_templates
         [
+          "AGENTS.md",
           ".env.sample",
           "app/assets/config/manifest.js",
           "app/controllers/application_controller.rb",
@@ -102,7 +102,6 @@ module Folio
           "config/initializers/assets.rb",
           "config/initializers/folio.rb",
           "config/initializers/namespace.rb",
-          "config/initializers/raven.rb",
           "config/initializers/sentry.rb",
           "config/initializers/smtp.rb",
           "config/locales/application_namespace_path/menu.cs.yml",

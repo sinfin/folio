@@ -1,0 +1,68 @@
+---
+cs:
+  folio:
+    console:
+      files:
+        show_component:
+          created_at: Nahráno
+          id: ID
+          download: Stáhnout originál
+          replace: Nahradit
+          destroy: Smazat
+          title/metadata: EXIF a IPTC data (%{count})
+          title/usage: Použití (%{count})
+
+        picker_component:
+          alt: Alt
+          description: Popisek
+
+        show_modal_component:
+          navigation_next: Další
+          navigation_previous: Předchozí
+
+        show:
+          metadata_component:
+            no_metadata: Žádná metadata
+            extract_metadata: Znovu extrahovat metadata
+
+          file_placements_component:
+            no_file_placements: Žádné použití
+            th/type: Typ použití
+            th/placement_type: Typ záznamu
+            th/placement_label: Záznam
+            th/created_at: Vytvořeno
+            in_atom: kapitola obsahu
+
+          thumbnails_component:
+            title: Verze a velikosti
+            type/regular: Verze bez ořezu
+            type/crop: Verze s ořezem (#)
+            type/shrink: Verze pouze se zmenšením (>)
+            type/cover: Verze s přizpůsobením (^)
+            no_thumbnails_yet: Zatím nebyly vygenerovány žádné verze
+
+          thumbnails:
+            ratio_component:
+              all_versions: "Všechny vygenerované verze:"
+
+            crop_edit_component:
+              edit: Upravit ořez
+
+        batch:
+          bar_component:
+            delete: Smazat
+            download: Stáhnout
+            settings: Hromadné úpravy
+            download_label: Soubory připraveny ke stažení
+            download_pending: Probíhá příprava souborů ke stažení
+            cancel_download: Zrušit stahování
+            cancel: Zavřít hromadné akce
+            download_failure: Nepodařilo se přípravit soubory ke stažení
+            add_to_picker/default: Vybrat
+            add_to_picker/image: Vybrat do galerie
+
+          form_component:
+            title: Hromadné úpravy souborů
+            selected_files: Vybrané soubory
+            has_values_placeholder: Různé hodnoty
+            has_values_hint: Různé hodnoty. Při změně se aktualizují všechny. Pro zachování hodnot ponechte prázdné.

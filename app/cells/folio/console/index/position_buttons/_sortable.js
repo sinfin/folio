@@ -14,7 +14,7 @@ window.FolioConsole.Index.PositionButtons.Sortable.makeSortableUpdate = ($sortab
     const $positions = $sortable.find('.f-c-index-position-buttons')
 
     $positions.addClass('folio-console-loading')
-    $positions.each((i, el) => { positions.push(parseInt($(el).find('.f-c-index-position-buttons__input').val())) })
+    $positions.each((i, el) => { positions.push(parseInt(window.jQuery(el).find('.f-c-index-position-buttons__input').val())) })
 
     if ($sortable.find('.f-c-index-position-buttons--descending').length) {
       positions.sort(function (a, b) {
@@ -30,7 +30,7 @@ window.FolioConsole.Index.PositionButtons.Sortable.makeSortableUpdate = ($sortab
 
     $positions.each((i, el) => {
       const position = positions[i]
-      const $position = $(el)
+      const $position = window.jQuery(el)
       const $id = $position.find('.f-c-index-position-buttons__id')
       const $input = $position.find('.f-c-index-position-buttons__input')
       const id = $id.val()
@@ -41,7 +41,7 @@ window.FolioConsole.Index.PositionButtons.Sortable.makeSortableUpdate = ($sortab
       return $input.val(position)
     })
 
-    const ajax = $.ajax({
+    const ajax = window.jQuery.ajax({
       url: $positions.first().data('url'),
       type: 'POST',
       data: {
@@ -61,7 +61,7 @@ window.FolioConsole.Index.PositionButtons.Sortable.makeSortableUpdate = ($sortab
 }
 
 window.FolioConsole.Index.PositionButtons.Sortable.bind = function () {
-  const $sortable = $('.f-c-catalogue__table')
+  const $sortable = window.jQuery('.f-c-catalogue__table')
 
   if ($sortable.closest('.f-c-catalogue--ancestry').length) return
   if ($sortable.find('.f-c-index-position-buttons__button--handle').length < 2) return
@@ -77,7 +77,7 @@ window.FolioConsole.Index.PositionButtons.Sortable.bind = function () {
       const $cells = $another.find('.f-c-catalogue__cell')
 
       ui.item.find('.f-c-catalogue__cell').each((i, cell) => {
-        $(cell).width($cells.eq(i).width())
+        window.jQuery(cell).width($cells.eq(i).width())
       })
     },
     stop: (e, ui) => {
@@ -89,10 +89,10 @@ window.FolioConsole.Index.PositionButtons.Sortable.bind = function () {
 }
 
 window.FolioConsole.Index.PositionButtons.Sortable.unbind = function () {
-  const $sortable = $('.f-c-catalogue__table')
+  const $sortable = window.jQuery('.f-c-catalogue__table')
   if ($sortable.length && $sortable.sortable('instance')) {
     $sortable.sortable('destroy')
   }
 }
 
-$(window.FolioConsole.Index.PositionButtons.Sortable.bind)
+window.jQuery(window.FolioConsole.Index.PositionButtons.Sortable.bind)

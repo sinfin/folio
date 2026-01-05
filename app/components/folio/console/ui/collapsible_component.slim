@@ -1,0 +1,9 @@
+.f-c-ui-collapsible data=data
+  .f-c-ui-collapsible__toggle data=stimulus_action(click: 'onToggleClick')
+    .f-c-ui-collapsible__title
+      = @title
+
+    = folio_icon(:chevron_down, class: 'f-c-ui-collapsible__chevron')
+
+  .f-c-ui-collapsible__content
+    = content

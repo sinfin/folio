@@ -1,0 +1,65 @@
+.f-c-files-subtitles-form data=data
+  .f-c-files-subtitles-form__loader.text-center.py-3 data-f-c-files-subtitles-form-target="loader" hidden=true
+    .spinner-border role="status"
+      span.visually-hidden Loading...
+
+  .f-c-files-subtitles-form__header
+    h2.h3.m-0.f-c-files-subtitles-form__title = t('.title')
+
+    .f-c-files-subtitles-form__actions
+      - if transcription_enabled?
+        button.btn.btn-warning.btn-sm(
+          data-action="click->f-c-files-subtitles-form#retranscribe"
+          data-confirm=t('.retranscribe_confirm')
+
+        ) = t('.retranscribe_subtitles')
+
+      button.btn.btn-secondary.btn-sm.ms-2(
+        data-action="click->f-c-files-subtitles-form#reloadPlayer"
+        title=t('.reload_player_tooltip')
+      ) = t('.reload_player')
+
+  / Show transcription progress when job is running
+  - if show_transcription_progress?
+    .f-c-files-subtitles-form__progress.alert.alert-info.mb-3
+      .d-flex.align-items-center
+        span.f-c-files-subtitles-form__loader_wrap
+          span.folio-loader.folio-loader--tiny
+        span = t('.transcription_in_progress')
+        .ms-auto.small.text-muted
+          = t('.started_time_ago', time: time_ago_in_words(@file.subtitles_transcription_started_at)) if @file.subtitles_transcription_started_at
+
+  / Show transcription error if failed
+  - if video_transcription_status == 'failed' && video_transcription_error.present?
+    .f-c-files-subtitles-form__error.alert.alert-danger.alert-dismissible.fade.show.mb-3
+      strong = t('.transcription_failed')
+      | :
+      = video_transcription_error
+      button.btn-close type="button" data-bs-dismiss="alert" aria-label="Close"
+
+  .f-c-files-subtitles-form__languages.accordion data-f-c-files-subtitles-form-target="languagesContainer"
+    - existing_subtitles.each do |subtitle|
+      = render subtitle_form_component_for(subtitle, expanded: false)
+
+  / Add missing languages section
+  - if available_languages_for_addition.any?
+    .f-c-files-subtitles-form__add-language.mt-4
+      h4.h5.mb-3 = t('.add_missing_languages')
+      = helpers.simple_form_for @file.video_subtitles.build, \
+                                url: "#", \
+                                html: { \
+                                  data: { \
+                                    "f-c-files-subtitles-form-target" => "addLanguageForm" \
+                                  } \
+                                } do |f|
+        .row
+          .col-md-6
+            = f.select :language,
+                       options_for_select(available_languages_for_addition.map { |lang| [t("folio.locale.languages.#{lang}", default: lang.upcase), lang] }),
+                       { prompt: t('.select_language') },
+                       { class: "form-select", required: true }
+          .col-md-6
+            button.btn.btn-primary.btn-sm(
+              type="button"
+              data-action="click->f-c-files-subtitles-form#addLanguage"
+            ) = t('.add_language')

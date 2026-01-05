@@ -42,17 +42,19 @@ def unsplash_pic(square = false)
   image
 end
 
+Rake::Task["developer_tools:idp_seed_all"].invoke
+
 if Rails.env.development?
   puts "Creating test@test.test superadmin user"
 
-  Folio::User.create!(email: "test@test.test",
-                      password: "test@test.test",
-                      superadmin: true,
-                      first_name: "Test",
-                      last_name: "Dummy",
-                      confirmed_at: Time.current)
+  user = Folio::User.create!(email: "test@test.test",
+                             password: "Complex@Password.123",
+                             superadmin: true,
+                             first_name: "Test",
+                             last_name: "Dummy",
+                             auth_site: Folio::Site.first,
+                             confirmed_at: Time.current)
+  user.update_column(:encrypted_password, Devise::Encryptor.digest(Folio::User, "test@test.test"))
 
   puts "Created test@test.test superadmin user"
 end
-
-Rake::Task["developer_tools:idp_seed_all"].invoke

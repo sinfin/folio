@@ -1,8 +1,18 @@
 .dropdown-menu
   box-shadow: $dropdown-box-shadow
+  font-weight: $dropdown-font-weight
+
+  > li:first-child .dropdown-item
+    border-top-left-radius: $dropdown-border-radius
+    border-top-right-radius: $dropdown-border-radius
+
+  > li:last-child .dropdown-item
+    border-bottom-left-radius: $dropdown-border-radius
+    border-bottom-right-radius: $dropdown-border-radius
 
 .dropdown-item
-  font-weight: $font-weight-bold
+  font-weight: $dropdown-font-weight
+  min-height: $dropdown-item-min-height
 
 .dropdown-divider
   display: flex

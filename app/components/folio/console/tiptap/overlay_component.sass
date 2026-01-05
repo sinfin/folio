@@ -1,0 +1,46 @@
+.f-c-tiptap-overlay
+  position: absolute
+  inset: 0
+  z-index: $zindex-dropdown - 1
+  overflow: hidden
+
+  &__backdrop
+    position: absolute
+    inset: 0
+    z-index: 1
+    background: rgba(0, 0, 0, 0.15)
+    transition: $transition-base
+
+  &__inner
+    background: $white
+    box-shadow: 0 0 10px 0 rgba(0,0,0,0.29)
+    height: 100%
+    margin-left: auto
+    max-width: 75%
+    position: relative
+    width: 840px
+    z-index: 2
+    transition: $transition-base
+
+  &__form-wrap
+    display: none
+    height: 100%
+
+  &__loader
+    position: absolute
+    inset: 0
+
+  &[data-f-c-tiptap-overlay-state-value="closed"]
+    pointer-events: none
+
+  &[data-f-c-tiptap-overlay-state-value="closed"] &__backdrop
+    opacity: 0
+
+  &[data-f-c-tiptap-overlay-state-value="closed"] &__inner
+    transform: translate(100%, 0)
+
+  &[data-f-c-tiptap-overlay-state-value="loaded"] &__form-wrap
+    display: block
+
+  &[data-f-c-tiptap-overlay-state-value="loaded"] &__loader
+    display: none

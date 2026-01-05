@@ -3,7 +3,7 @@
     window.Dummy = window.Dummy || {};
     window.Dummy.Ui = window.Dummy.Ui || {};
     window.Dummy.Ui.Icon = window.Dummy.Ui.Icon || {};
-    window.Dummy.Ui.Icon.svgSpritePath = "#{image_path('ui_icons_sprite.svg')}";
+    window.Dummy.Ui.Icon.svgSpritePath = "#{helpers.image_path('ui_icons_sprite.svg')}";
     window.Dummy.Ui.Icon.defaultSizes = #{ICONS.to_json.html_safe};
 
 - else
@@ -14,4 +14,4 @@
     data=@data
     title=@title
   ]
-    use xlink:href="#{image_path('ui_icons_sprite.svg')}##{@name}"
+    use xlink:href="#{helpers.image_path('ui_icons_sprite.svg')}##{@name}"

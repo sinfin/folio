@@ -43,7 +43,7 @@ class Folio::Console::UsersController < Folio::Console::BaseController
   def new
     @user.creating_in_console = 1
     @user.time_zone = Time.zone.name
-    @user.auth_site = Folio::Current.main_site
+    @user.auth_site = Folio::Current.site
   end
 
   def create
@@ -54,7 +54,13 @@ class Folio::Console::UsersController < Folio::Console::BaseController
     @user = @klass.new(create_params)
 
     if @user.valid?
-      @user = @klass.invite!(create_params, Folio::Current.user)
+      if @user.devise_modules.include?(:invitable)
+        @user = @klass.invite!(create_params, Folio::Current.user)
+      else
+        @user.password = Devise.friendly_token[0, 20] + "aB1@" # to obey password validation
+        @user.password_confirmation = @user.password  # user will need to reset password
+        @user.save!
+      end
     end
 
     respond_with @user, location: respond_with_location
@@ -67,6 +73,9 @@ class Folio::Console::UsersController < Folio::Console::BaseController
     else
       head 422
     end
+  end
+
+  def show
   end
 
   private
@@ -152,10 +161,6 @@ class Folio::Console::UsersController < Folio::Console::BaseController
     end
 
     def folio_console_collection_includes
-      []
-    end
-
-    def folio_console_record_includes
       []
     end
 

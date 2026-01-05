@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 class Folio::Console::Links::Modal::UrlPickerComponent < Folio::Console::ApplicationComponent
-  include Folio::Console::Cell::IndexFilters
+  include Folio::Console::Component::IndexFilters
 
-  def initialize(url_json:, absolute_urls: false)
+  def initialize(url_json:, absolute_urls: false, default_custom_url: false)
     @url_json = url_json
     @absolute_urls = absolute_urls
+    @default_custom_url = default_custom_url
   end
 
   def before_render
@@ -24,7 +25,11 @@ class Folio::Console::Links::Modal::UrlPickerComponent < Folio::Console::Applica
 
   def tabs
     @tabs ||= begin
-      first_active = @record.present? || @url_json[:href].blank?
+      if @default_custom_url
+        first_active = false
+      else
+        first_active = @record.present? || @url_json[:href].blank?
+      end
 
       [
         { label: t(".tab/pick"), key: :pick, active: first_active },
@@ -49,6 +54,7 @@ class Folio::Console::Links::Modal::UrlPickerComponent < Folio::Console::Applica
                           filtering: false,
                           autofocus_input: tabs[1][:active],
                           absolute_urls: @absolute_urls,
+                          default_custom_url: @default_custom_url,
                         })
   end
 
@@ -57,7 +63,7 @@ class Folio::Console::Links::Modal::UrlPickerComponent < Folio::Console::Applica
       data: stimulus_data(action: { click: "cancelFilters" }, target: "cancelButton"),
       variant: :danger,
       icon: :close,
-      class: "f-c-links-modal-url-picker__list-filters-cancel-button"
+      class_name: "f-c-links-modal-url-picker__list-filters-cancel-button"
     }
   end
 
@@ -75,7 +81,7 @@ class Folio::Console::Links::Modal::UrlPickerComponent < Folio::Console::Applica
       },
     }
 
-    simple_form_for("", opts, &block)
+    helpers.simple_form_for("", opts, &block)
   end
 
   def class_names_collection

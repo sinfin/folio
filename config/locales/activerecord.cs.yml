@@ -24,19 +24,28 @@ cs:
       folio/content_template:
         content: Obsah
       folio/file:
+        allowed_site: Titul
         author: Autor
         attribution_copyright: Copyright
         attribution_source: Zdroj
         attribution_source_url: Zdroj URL
         attribution_licence: Licence
+        attribution_max_usage_count: Maximální počet použití
         default_gravity/center: Uprostřed
         default_gravity/east: Vpravo
         default_gravity/north: Nahoře
         default_gravity/south: Dole
         default_gravity/west: Vlevo
         default_gravity: Výchozí ořez
-        description: Popis
+        file_mime_type: Typ souboru
+        file_size: Velikost souboru
+        media_source: Zdroj
         preview_duration: Kolik vteřin je zdarma?
+        slug: Slug
+        used: Použitý
+        usage_constraints: Omezení použití
+        usage_constraints/usable: Použitelné
+        usage_constraints/unusable: Nepoužitelné
         subtitles_cs_enabled: Zobrazit titulky
         subtitles_cs_text: Titulky (CZ)
         subtitles_en_text: Titulky (EN)
@@ -46,6 +55,13 @@ cs:
       folio/lead:
         created_at: Odesláno
         note: Zpráva
+      folio/media_source:
+        licence: Licence
+        max_usage_count: Max. použití
+        copyright_text: Copyright text
+        allowed_site: Titul
+        allowed_sites: Titul
+        assigned_media_count: Přiřazeno obrázků
       folio/menu:
         type: Druh menu
         menu_items: Odkazy
@@ -187,6 +203,7 @@ cs:
           attributes:
             roles:
               not_available_for_site: "Role %{roles} nejsou všechny dostupné pro web '%{site}'."
+
       clonable:
         association_not_found: "Asociace '%{association}' neexistuje pro %{model}"
         attribute_not_found: "Atribut '%{attribute}' neexistuje pro %{model}"
@@ -214,13 +231,13 @@ cs:
         one: Soubor
         other: Souborů
       folio/file/audio:
-        one: Audio stopa
-        few: Audio stopy
-        other: Audio stop
+        one: Audio
+        few: Audia
+        other: Audio souborů
       folio/file/video:
-        one: Video stopa
-        few: Video stopy
-        other: Video stop
+        one: Video
+        few: Videa
+        other: Video souborů
       folio/file/image:
         few: Obrázky
         one: Obrázek
@@ -229,6 +246,10 @@ cs:
         few: Formuláře
         one: Formulář
         other: Formulářů
+      folio/media_source:
+        few: Zdroje médií
+        one: Zdroj médií
+        other: Zdrojů médií
       folio/menu:
         few: Menu
         one: Menu
@@ -292,6 +313,16 @@ cs:
         one: Atribut
         other: Atributů
 
+      folio/file_placement/audio_cover: Audio stopa
+      folio/file_placement/cover: Obrázek
+      folio/file_placement/document: Soubor
+      folio/file_placement/image: Obrázek galerie
+      folio/file_placement/image_or_embed: Obrázek galerie
+      folio/file_placement/og_image: OG obrázek
+      folio/file_placement/single_document: Soubor
+      folio/file_placement/tiptap: Obsah
+      folio/file_placement/video_cover: Video stopa
+
     state_machines:
       folio/lead:
         state:
@@ -304,8 +335,6 @@ cs:
     address_secondary: Druhá adresa
     article: Článek
     atoms: Kapitoly
-    cs_atoms: Kapitoly (CZ)
-    en_atoms: Kapitoly (EN)
     audio_cover_placement: Audio stopa
     button_label: Text tlačítka
     button_url: Odkaz tlačítka
@@ -315,16 +344,24 @@ cs:
     count: Počet
     cover: Obrázek
     cover_placement: Obrázek
+    cs_atoms: Kapitoly (CZ)
     current_password: Aktuální heslo pro kontrolu
     description: Popisek
     document_placement: Dokument
     document_placements: Dokumenty
+    documents: Dokumenty
     email: E-mail
+    en_atoms: Kapitoly (EN)
     featured: Zvýrazněno
     figcaption: Popisek
     file: Soubor
     file_mime_type: Typ souboru
+    file_width: Šířka obrázku
+    file_height: Výška obrázku
     first_name: Jméno
+    folio_embed_data: HTML kód nebo URL odkaz
+    headline: Titulek
+    image_or_embed_placements: Obrázky galerie
     image_placements: Obrázky
     is_active: Aktivní
     last_name: Příjmení
@@ -352,19 +389,21 @@ cs:
     published: Zveřejněno
     published_at: Zveřejněno k datu
     published_dates: Datum
+    published_within: Zveřejněno v období
+    published_within_dates: Zveřejněno v období
     secondary_address: Adresa - doplňková
     secondary_button_label: Text druhého tlačítka
     secondary_button_url: Odkaz druhého tlačítka
     secondary_button_url_json: Druhé tlačítko
-    sensitive_content: Obsahuje citlivý obsah
+    sensitive_content: Citlivý obsah
     sign_in_count: Počet přihlášení
     slug: Varianta názvu pro odkazy
     social_links/appstore: Appstore
     social_links/facebook: Facebook
     social_links/google_play: Google play
-    social_links/linktree: Linktree
     social_links/instagram: Instagram
     social_links/linkedin: LinkedIn
+    social_links/linktree: Linktree
     social_links/messenger: Messenger
     social_links/pinterest: Pinterest
     social_links/tiktok: TikTok
@@ -373,7 +412,10 @@ cs:
     social_links: Odkazy
     state: Stav
     subtitle: Podtitulek
+    tag: Klíčové slovo
     tag_list: Klíčová slova
+    tiptap_content: Obsah
+    tiptap_placements: Soubory v obsahu
     title: Název
     to_label: Název
     url: URL
@@ -384,16 +426,32 @@ cs:
   errors:
     messages:
       at_least_one: Vyplňte alespoň jedno políčko.
-      invalid_count: musí být přesně %{count}
       color_mode_without_wrapper: nelze nastavit na tmavý bez zvolení obalu
-      missing_file_attribution: nemá vyplněného autora nebo zdroj
-      missing_file_alt: nemá vyplněný alt
-      missing_file_description: nemá vyplněný popisek
+      has_invalid_file_placements: Některé soubory nesplňují požadavky
+      invalid_count: musí být přesně %{count}
+      cannot_publish_with_files_over_usage_limit: "%{name} má vyčerpaný limit použití (%{limit})"
+      cannot_publish_with_files_restricted_to_site: "%{name} není určen pro tuto stránku (povolený jen na: %{allowed_sites})"
+      cannot_publish_with_files_without_media_source: "%{name} nemá vyplněný zdroj médií"
       invalid_file_placement: nesplňuje požadavky
-      slug_not_unique_across_classes: je již použita u záznamu "%{sluggable_name}" (%{sluggable_type})
+      invalid_file_placements: nesplňují požadavky
       invalid_subtitle_block: má nevalidní text na řádku %{line}
+      file_published_usage_limit_exceeded: "maximální počet použití: %{count}"
+      missing_file_alt: nemá vyplněný alt
+      missing_file_attribution: nemá vyplněného autora nebo zdroj
+      missing_file_attribution_with_file_details: '"%{file_name}" (#%{file_id}) využitý pro "%{placement_type}" nemá vyplněného autora nebo zdroj'
+      alt_blank_with_file_details: 'pro "%{file_name}" (#%{file_id}) je pro "%{placement_type}" povinný'
+      description_blank_with_file_details: 'pro "%{file_name}" (#%{file_id}) je pro "%{placement_type}" povinný'
+      missing_file_description: nemá vyplněný popisek
+      slug_not_unique_across_classes: je již použita u záznamu "%{sluggable_name}" (%{sluggable_type})
+      tiptap_invalid_json: není platný JSON řetězec
+      tiptap_multiple_folio_tiptap_pages: "obsahuje více než jednu stránkovanou část (%{count})"
+      tiptap_must_be_hash_or_json: musí být Hash nebo platný JSON řetězec
+      tiptap_must_have_content_key: "musí obsahovat klíč '%{content_key}' s Hash hodnotou"
+      tiptap_root_node_must_be_doc: kořenový uzel musí být typu 'doc'
 
     attributes:
+      documents:
+        blank: jsou povinné
       verified_captcha:
         invalid: Potvrďte prosím, že nejste robot 🤖
       type:
@@ -408,3 +466,38 @@ cs:
         missing_lowercase: musí obsahovat malé písmeno
         missing_digit: musí obsahovat číslo
         missing_special: musí obsahovat speciální znak
+      folio_embed_data:
+        invalid: nemá platnou hodnotu
+      _invalid_file_placements: &invalid_file_placements
+        invalid_file_placements: nesplňují požadavky
+      image_placements: *invalid_file_placements
+      image_or_embed_placements: *invalid_file_placements
+      # Masculine attributes (mužský rod)
+      _masculine_errors: &masculine_errors
+        too_long: je příliš dlouhý (max. %{count} znaků)
+        too_short: je příliš krátký (min. %{count} znaků)
+        empty: nesmí být prázdný
+        blank: je povinná položka
+      # Feminine attributes (ženský rod)
+      _feminine_errors: &feminine_errors
+        too_long: je příliš dlouhá (max. %{count} znaků)
+        too_short: je příliš krátká (min. %{count} znaků)
+        empty: nesmí být prázdná
+        blank: je povinná položka
+      # Neuter attributes (střední rod)
+      _neuter_errors: &neuter_errors
+        too_long: je příliš dlouhé (max. %{count} znaků)
+        too_short: je příliš krátké (min. %{count} znaků)
+        empty: nesmí být prázdné
+        blank: je povinná položka
+      title: *masculine_errors
+      description: *masculine_errors
+      email: *masculine_errors
+      content: *masculine_errors
+      perex: *masculine_errors
+      slug: *feminine_errors
+      meta_title: *masculine_errors
+      meta_description: *masculine_errors
+      subtitle: *masculine_errors
+      headline: *masculine_errors
+      name: *neuter_errors

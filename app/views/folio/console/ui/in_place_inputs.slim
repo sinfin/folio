@@ -1,0 +1,29 @@
+h1 Folio Console UI
+
+h2 In-place inputs
+
+h3 Regular text input
+
+= render(Folio::Console::Ui::InPlaceInputComponent.new(attribute: :meta_title,
+                                                       record: @page))
+
+h3 Cleave numeric input
+
+= render(Folio::Console::Ui::InPlaceInputComponent.new(attribute: :meta_title,
+                                                       record: @page,
+                                                       cleave: true))
+
+h3 Textarea
+
+= render(Folio::Console::Ui::InPlaceInputComponent.new(attribute: :meta_description,
+                                                       record: @page))
+
+h3 Autocomplete
+
+p Page titles: #{Folio::Page.by_site(Folio::Current.site).pluck(:title).join(", ")}
+
+- @page.title = ""
+
+= render(Folio::Console::Ui::InPlaceInputComponent.new(attribute: :title,
+                                                       autocomplete: @autocomplete_url,
+                                                       record: @page))

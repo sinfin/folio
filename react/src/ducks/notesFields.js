@@ -137,7 +137,7 @@ function * triggerDirtyFormOrSubmit (action) {
       }
     } catch (e) {
       yield put(setSubmitting(false))
-      window.FolioConsole.Flash.alert(e.message)
+      window.FolioConsole.Ui.Flash.alert(e.message)
     }
   } else {
     const $wrap = window.jQuery('.folio-react-wrap--notes-fields').eq(0)

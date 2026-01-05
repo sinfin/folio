@@ -1,0 +1,5 @@
+---
+en:
+  folio:
+    file:
+      cannot_destroy_file_with_placements: Cannot destroy file that is used in content.

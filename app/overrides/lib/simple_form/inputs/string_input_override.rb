@@ -2,6 +2,8 @@
 
 SimpleForm::Inputs::StringInput.class_eval do
   def input(wrapper_options = nil)
+    add_clear_button(options:)
+
     if input_type == :url
       register_url_input(json: false, wrapper_options:, options:)
     else
@@ -26,13 +28,11 @@ SimpleForm::Inputs::StringInput.class_eval do
           end
 
           if collection
-            input_html_options["data-autocomplete"] = collection
-            input_html_classes << "f-input" if input_html_classes.exclude?("f-input")
-            input_html_classes << "f-input--autocomplete"
+            input_html_options[:autocomplete] = "off"
+            register_stimulus("f-input-autocomplete", values: { collection: })
           elsif remote_autocomplete
-            input_html_options["data-remote-autocomplete"] = remote_autocomplete
-            input_html_classes << "f-input" if input_html_classes.exclude?("f-input")
-            input_html_classes << "f-input--remote-autocomplete"
+            input_html_options[:autocomplete] = "off"
+            register_stimulus("f-input-autocomplete", values: { url: remote_autocomplete })
           end
         end
       elsif options[:numeral]

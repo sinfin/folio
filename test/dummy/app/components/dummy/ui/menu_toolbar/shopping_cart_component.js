@@ -11,7 +11,7 @@ window.Folio.Stimulus.register('d-ui-menu-toolbar-shopping-cart', class extends 
 
     e.preventDefault()
 
-    if (e.type === "keydown" && e.key === "Escape" && !this.activeValue) return
+    if (e.type === 'keydown' && e.key === 'Escape' && !this.activeValue) return
 
     if (!this.activeValue) {
       this.activate()
@@ -19,7 +19,7 @@ window.Folio.Stimulus.register('d-ui-menu-toolbar-shopping-cart', class extends 
       this.deactivate()
     }
 
-    this.dispatch("clicked")
+    this.dispatch('clicked')
   }
 
   activate () {

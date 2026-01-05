@@ -3,12 +3,15 @@
 class Folio::NestedFieldsComponent < Folio::ApplicationComponent
   attr_reader :g
 
+  bem_class_name :fully_draggable
+
   def initialize(f:,
                  key:,
                  collection: nil,
                  add: true,
                  destroy: true,
                  position: true,
+                 fully_draggable: false,
                  class_name: nil,
                  application_namespace: nil,
                  add_icon: nil,
@@ -28,6 +31,7 @@ class Folio::NestedFieldsComponent < Folio::ApplicationComponent
     @add = add
     @destroy = destroy
     @position = position
+    @fully_draggable = fully_draggable
     @class_name = class_name
     @application_namespace = application_namespace
     @add_icon = add_icon
@@ -42,6 +46,10 @@ class Folio::NestedFieldsComponent < Folio::ApplicationComponent
                         values: {
                           key: @key,
                           sortableBound: false,
+                        },
+                        action: {
+                          "f-nested-fields:addMultipleWithAttributes" => "onAddMultipleWithAttributesTrigger",
+                          "f-nested-fields:removeFields" => "onRemoveFieldsTrigger",
                         })
   end
 

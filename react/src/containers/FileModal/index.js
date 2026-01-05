@@ -15,7 +15,8 @@ import {
   uploadNewFileInsteadFailure,
   updatedFileModalFile,
   markModalFileAsUpdating,
-  changeFilePlacementsPage
+  changeFilePlacementsPage,
+  extractMetadata
 } from 'ducks/fileModal'
 
 import FileModalFile from './FileModalFile'
@@ -40,7 +41,8 @@ class FileModal extends Component {
         description: props.fileModal.file.attributes.description,
         preview_duration: props.fileModal.file.attributes.preview_duration,
         sensitive_content: props.fileModal.file.attributes.sensitive_content,
-        tags: props.fileModal.file.attributes.tags
+        tags: props.fileModal.file.attributes.tags,
+        headline: props.fileModal.file.attributes.headline
       }
 
       props.fileModal.file.attributes.file_modal_additional_fields.forEach((field) => {
@@ -75,7 +77,16 @@ class FileModal extends Component {
 
   componentDidUpdate (prevProps) {
     if (this.props.fileModal.file) {
-      if (!prevProps.fileModal.file || (prevProps.fileModal.updating && this.props.fileModal.updating === false)) {
+      // Update state when: no previous file, update finished, OR file ID changed
+      const fileChanged = prevProps.fileModal.file &&
+                          this.props.fileModal.file.id !== prevProps.fileModal.file.id
+      const attrsChanged = prevProps.fileModal.file && prevProps.fileModal.file.attributes &&
+                           this.props.fileModal.file && this.props.fileModal.file.attributes &&
+                           prevProps.fileModal.file.attributes !== this.props.fileModal.file.attributes
+
+      if (!prevProps.fileModal.file ||
+          (prevProps.fileModal.updating && this.props.fileModal.updating === false) ||
+          fileChanged || attrsChanged) {
         const newState = {
           author: this.props.fileModal.file.attributes.author,
           attribution_source: this.props.fileModal.file.attributes.attribution_source,
@@ -85,6 +96,7 @@ class FileModal extends Component {
           alt: this.props.fileModal.file.attributes.alt,
           default_gravity: this.props.fileModal.file.attributes.default_gravity,
           description: this.props.fileModal.file.attributes.description,
+          headline: this.props.fileModal.file.attributes.headline,
           preview_duration: this.props.fileModal.file.attributes.preview_duration,
           sensitive_content: this.props.fileModal.file.attributes.sensitive_content,
           tags: this.props.fileModal.file.attributes.tags
@@ -118,8 +130,33 @@ class FileModal extends Component {
             this.props.dispatch(updatedFiles(this.props.fileModal.fileType, [msg.data.file]))
             this.props.dispatch(uploadNewFileInsteadSuccess(msg.data.file))
           } else if (msg.data.type === 'replace-failure') {
-            window.FolioConsole.Flash.alert(msg.data.errors.join('<br>'))
+            window.FolioConsole.Ui.Flash.alert(msg.data.errors.join('<br>'))
             this.props.dispatch(uploadNewFileInsteadFailure(this.props.fileModal.file))
+          }
+        }
+      }
+
+      // Handle metadata extraction completion
+      if (msg.type === 'Folio::File::MetadataExtracted' && msg.file) {
+        if (Number(msg.file.id) === Number(this.props.fileModal.file.id)) {
+          // Create updated file object with new metadata
+          const updatedFile = {
+            ...this.props.fileModal.file,
+            attributes: {
+              ...this.props.fileModal.file.attributes,
+              ...msg.file.attributes
+            }
+          }
+
+          console.log('Metadata extraction completed, updating UI for file:', msg.file.id)
+
+          // Update Redux store and component state
+          this.props.dispatch(updatedFileModalFile(updatedFile))
+          this.props.dispatch(updatedFiles(this.props.fileModal.fileType, [updatedFile]))
+
+          // Show success notification
+          if (window.FolioConsole && window.FolioConsole.flash) {
+            window.FolioConsole.flash('success', 'Metadata successfully extracted and populated')
           }
         }
       }
@@ -181,6 +218,10 @@ class FileModal extends Component {
     this.setState({ ...this.state, [key]: value })
   }
 
+  extractMetadata = () => {
+    this.props.dispatch(extractMetadata(this.props.fileModal.fileType, this.props.fileModal.filesUrl, this.props.fileModal.file))
+  }
+
   render () {
     const { fileModal, readOnly, canDestroyFiles, taggable } = this.props
     const isOpen = fileModal.file !== null
@@ -193,6 +234,7 @@ class FileModal extends Component {
       >
         {fileModal.file && (
           <FileModalFile
+            key={fileModal.file.id}
             fileModal={fileModal}
             taggable={taggable}
             onTagsChange={this.onTagsChange}
@@ -208,6 +250,8 @@ class FileModal extends Component {
             changeFilePlacementsPage={this.changeFilePlacementsPage}
             readOnly={readOnly}
             autoFocusField={fileModal.autoFocusField}
+            extractMetadata={this.extractMetadata}
+            isExtractingMetadata={fileModal.extractingMetadata}
           />
         )}
       </ReactModal>

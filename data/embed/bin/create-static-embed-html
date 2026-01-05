@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby
+
+require 'fileutils'
+
+# Read the template HTML file
+html_content = File.read('data/embed/source/embed.html')
+
+# Read the CSS content
+css_content = File.read('data/embed/source/embed.css')
+
+# Read the JavaScript content
+js_content = File.read('data/embed/source/embed.js')
+
+# Replace the placeholders
+html_content.gsub!('<style type="text/css">/*! folio-embed-css */</style>', "<style type=\"text/css\">\n#{css_content}     </style>")
+html_content.gsub!('<script type="text/javascript">// folio-embed-javascript //</script>', "<script type=\"text/javascript\">\n#{js_content}    </script>")
+
+# Write the final HTML file
+File.write('data/embed/dist/folio-embed-dist.html', html_content)
+
+puts "Generated data/embed/dist/folio-embed-dist.html"

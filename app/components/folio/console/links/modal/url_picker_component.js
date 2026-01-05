@@ -20,7 +20,7 @@ window.Folio.Stimulus.register('f-c-links-modal-url-picker', class extends windo
       this.inputTarget.setSelectionRange(length, length)
     }
 
-    this.onQueryInput = Folio.debounce(() => {
+    this.onQueryInput = window.Folio.debounce(() => {
       this.loadList()
     })
   }
@@ -86,7 +86,7 @@ window.Folio.Stimulus.register('f-c-links-modal-url-picker', class extends windo
   }
 
   remove () {
-    this.inputTarget.value = ""
+    this.inputTarget.value = ''
     this.valuePresentValue = false
     this.dispatch('changed', { detail: { urlJson: { href: '', label: '' } } })
   }
@@ -127,7 +127,7 @@ window.Folio.Stimulus.register('f-c-links-modal-url-picker', class extends windo
 
     const json = JSON.stringify(rawData)
 
-    if (json === "{}" && !this.lastLoadListJson) return
+    if (json === '{}' && !this.lastLoadListJson) return
     if (json === this.lastLoadListJson) return
 
     this.lastLoadListJson = json

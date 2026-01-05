@@ -4,7 +4,8 @@ module Folio::ErrorsControllerBase
   extend ActiveSupport::Concern
 
   included do
-    before_action :set_cache_control_no_store
+    # Use standard cache headers, but skip for non-404 errors
+    after_action :skip_cache_for_non_404_errors
   end
 
   def page400
@@ -47,5 +48,14 @@ module Folio::ErrorsControllerBase
 
     def set_cache_control_no_store
       no_store
+    end
+
+    def skip_cache_for_non_404_errors
+      # For non-404 errors, override cache headers to no-store
+      unless response.status.to_i == 404
+        no_store
+      end
+      # For 404 errors, let the standard cache headers concern handle it
+      # (it will use shorter TTL automatically for error pages)
     end
 end

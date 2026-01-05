@@ -41,7 +41,7 @@ window.Folio.Stimulus.register('f-c-layout-sidebar', class extends window.Stimul
   onTitleClick (e) {
     e.preventDefault()
 
-    const $group = $(e.currentTarget).closest('.f-c-layout-sidebar__group')
+    const $group = window.jQuery(e.currentTarget).closest('.f-c-layout-sidebar__group')
 
     $group
       .siblings('.f-c-layout-sidebar__group--expanded')

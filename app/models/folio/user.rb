@@ -4,6 +4,7 @@ class Folio::User < Folio::ApplicationRecord
   include Folio::Audited::Model
   include Folio::Devise::DeliverLater
   include Folio::HasAddresses
+  include Folio::HasConsoleUrl
   include Folio::HasNewsletterSubscriptions
   include Folio::HasSiteRoles
 
@@ -18,15 +19,7 @@ class Folio::User < Folio::ApplicationRecord
   belongs_to :auth_site, class_name: "Folio::Site",
                          required: true
 
-  selected_device_modules = %i[
-    database_authenticatable
-    recoverable
-    rememberable
-    trackable
-    invitable
-    timeoutable
-    lockable
-  ]
+  selected_device_modules = Rails.application.config.folio_users_device_modules
 
   if Rails.application.config.folio_users_confirmable
     selected_device_modules << :confirmable
@@ -51,6 +44,11 @@ class Folio::User < Folio::ApplicationRecord
   has_many :authentications, class_name: "Folio::Omniauth::Authentication",
                              foreign_key: :folio_user_id,
                              inverse_of: :user,
+                             dependent: :destroy
+
+  has_many :conflicting_authentications, class_name: "Folio::Omniauth::Authentication",
+                             foreign_key: :conflict_user_id,
+                             inverse_of: :conflict_user,
                              dependent: :destroy
 
   has_many :created_console_notes, class_name: "Folio::ConsoleNote",
@@ -85,7 +83,9 @@ class Folio::User < Folio::ApplicationRecord
 
   validate :validate_password_complexity
 
-  after_invitation_accepted :create_newsletter_subscriptions
+  if selected_device_modules.include?(:invitable)
+    after_invitation_accepted :create_newsletter_subscriptions
+  end
 
   before_update :update_has_generated_password
 
@@ -109,10 +109,6 @@ class Folio::User < Folio::ApplicationRecord
     subselect = Folio::Address::Base.where("identification_number LIKE ?", "%#{q}%").select(:id)
     where(primary_address_id: subselect).or(where(secondary_address_id: subselect))
   }
-
-  scope :currently_editing_url, -> (url) do
-    where(console_url: url).where("console_url_updated_at > ?", 5.minutes.ago)
-  end
 
   scope :locked_for, -> (site) {
     joins(:site_user_links).merge(Folio::SiteUserLink.by_site(site).locked)
@@ -261,19 +257,6 @@ class Folio::User < Folio::ApplicationRecord
   end
 
   def self.controller_strong_params_for_create
-    address_strong_params = %i[
-      id
-      _destroy
-      name
-      company_name
-      address_line_1
-      address_line_2
-      zip
-      city
-      country_code
-      phone
-    ]
-
     [
       :first_name,
       :last_name,
@@ -282,8 +265,8 @@ class Folio::User < Folio::ApplicationRecord
       :phone,
       :subscribed_to_newsletter,
       :use_secondary_address,
-      primary_address_attributes: address_strong_params,
-      secondary_address_attributes: address_strong_params,
+      primary_address_attributes: Folio::Address::Primary.strong_params,
+      secondary_address_attributes: Folio::Address::Secondary.strong_params,
     ] + additional_controller_strong_params_for_create
   end
 
@@ -307,11 +290,6 @@ class Folio::User < Folio::ApplicationRecord
       su_links = site_user_links.by_site(site)
       su_links.create!(roles: []) if su_links.blank?
     end
-  end
-
-  def update_console_url!(console_url)
-    update_columns(console_url:,
-                   console_url_updated_at: Time.current)
   end
 
   def can_manage_sidekiq?
@@ -419,6 +397,11 @@ class Folio::User < Folio::ApplicationRecord
         else
           user = Folio::User.superadmins.find_by(email:)
         end
+      end
+
+      # Store the auth site on the user instance for use in Folio::IsSiteLockable#active_for_authentication?
+      if user
+        user.instance_variable_set(:@authentication_site, site)
       end
 
       user

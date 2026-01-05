@@ -1,0 +1,243 @@
+# frozen_string_literal: true
+
+class Folio::FileList::FileComponent < Folio::ApplicationComponent
+  bem_class_name :thead
+
+  def initialize(file:,
+                 file_klass: nil,
+                 template: false,
+                 thead: false,
+                 editable: false,
+                 destroyable: false,
+                 selectable: false,
+                 batch_actions: false,
+                 serialize: false,
+                 primary_action: nil)
+    @file = file
+    throw ArgumentError, "File is nil" if @file.nil?
+    @file_klass = file_klass || file.class
+    @template = template
+    @thead = thead
+    @editable = editable
+    @destroyable = destroyable
+    @selectable = selectable
+    @batch_actions = batch_actions
+    @primary_action = primary_action
+    @serialize = serialize
+  end
+
+  def data
+    stimulus_controller("f-file-list-file",
+                        values: {
+                          file_type: @file_klass.to_s,
+                          file_name: @file ? @file.file_name : "",
+                          id: @file ? @file.id : "",
+                          loaded: true,
+                          primary_action: @primary_action,
+                          selectable: @selectable && allow_selection_for_site?,
+                          editable: @editable,
+                          destroyable: @destroyable,
+                          batch_actions: @batch_actions,
+                          serialized_file_json:,
+                        },
+                        action: @editable ? {
+                          "f-file-list-file:updated": "fileUpdated",
+                          "f-file-list-file:deleted": "fileDestroyed",
+                        } : nil)
+  end
+
+  def image_bg_style
+    return if @file.blank?
+    return if @file.additional_data.blank?
+    return if @file.additional_data["dominant_color"].blank?
+
+    "background-color: #{@file.additional_data["dominant_color"]}"
+  end
+
+  def destroy_url
+    return @destroy_url unless @destroy_url.nil?
+
+    @destroy_url = if @file.present? && @destroyable
+      if @file_klass <= Folio::File
+        url_for([:console, :api, @file])
+      else
+        # TODO handle private/session attachments
+        false
+      end
+    else
+      false
+    end
+  end
+
+  def template_url
+    return nil unless @template
+
+    controller.folio.file_list_file_folio_api_s3_path(file_type: @file_klass.to_s,
+                                                      editable: @editable,
+                                                      destroyable: @destroyable,
+                                                      selectable: @selectable,
+                                                      primary_action: @primary_action)
+  end
+
+  def indestructible_reason
+    return @indestructible_reason unless @indestructible_reason.nil?
+
+    @indestructible_reason = if @file.present? && @file.try(:indestructible_reason).present?
+      @file.indestructible_reason
+    else
+      false
+    end
+  end
+
+  def unmet_requirements
+    return unless @file
+    return if @thead
+    return if @template
+    return if @unmet_requirements == false
+
+    ary = []
+
+    if @file.is_a?(Folio::File)
+      if Rails.application.config.folio_files_require_attribution
+        if @file.author.blank? && @file.attribution_source.blank? && @file.attribution_source_url.blank?
+          ary << I18n.t("errors.messages.missing_file_attribution").capitalize
+        end
+      end
+
+      if Rails.application.config.folio_files_require_alt
+        if @file.alt.blank?
+          ary << I18n.t("errors.messages.missing_file_alt").capitalize
+        end
+      end
+
+      if Rails.application.config.folio_files_require_description
+        if @file.description.blank?
+          ary << I18n.t("errors.messages.missing_file_description").capitalize
+        end
+      end
+    end
+
+    if @file.class.included_modules.include?(Folio::File::HasUsageConstraints)
+      if @file.usage_limit_exceeded?
+        ary << usage_limit_exceeded_html
+      end
+
+      unless @file.can_be_used_on_site?(Folio::Current.site)
+        ary << site_restriction_html
+      end
+    end
+
+
+    @unmet_requirements = ary.presence || false
+  end
+
+  def unmet_requirements_html
+    unmet_requirements.map do |str|
+      content_tag(:p, str, class: "mb-0 text-danger")
+    end.join(" ")
+  end
+
+  def usage_limit_exceeded_html
+    icon_html = folio_icon(:speedometer, height: 12, class: "text-danger")
+    text_html = content_tag(:span, I18n.t("errors.messages.file_published_usage_limit_exceeded", count: @file.attribution_max_usage_count).capitalize)
+
+    content_tag(:span, class: "d-flex align-items-center gap-2") do
+      icon_html + text_html
+    end
+  end
+
+  def site_restriction_html
+    icon_html = folio_icon(:form_select, height: 12, class: "text-danger")
+    text_html = content_tag(:span, @file.allowed_sites.map(&:title).join(", "))
+
+    content_tag(:span, class: "d-flex align-items-center gap-2") do
+      icon_html + text_html
+    end
+  end
+
+  def file_information_rows
+    return [] if @file.blank?
+
+    ary = []
+
+    if description = @file.try(:description).presence
+      ary << description
+    end
+
+    %i[
+      alt
+      author
+    ].each do |key|
+      if value = @file.try(key).presence
+        ary << "#{@file_klass.human_attribute_name(key)}: #{value}"
+      end
+    end
+
+    if value = @file.try(:file_list_source).presence
+      ary << "#{@file_klass.human_attribute_name(:attribution_source)}: #{value}"
+    end
+
+    ary
+  end
+
+  def show_url
+    @show_url ||= @file.is_a?(Folio::File) ? controller.folio.url_for([:console, @file]) : nil
+  end
+
+  def allow_selection_for_site?
+    return false if @file.blank?
+
+    if @file.class.included_modules.include?(Folio::File::HasUsageConstraints)
+      @file.can_be_used_on_site?(Folio::Current.site) && !@file.usage_limit_exceeded?
+    else
+      true
+    end
+  end
+
+  def primary_action_data
+    return nil unless @primary_action
+    return @primary_action_data if defined?(@primary_action_data)
+
+    @primary_action_data = if @primary_action.to_s.in?(%w[edit index])
+      if @editable
+        stimulus_action({ click: "primaryAction" }, { url: show_url })
+      end
+    else
+      if @primary_action.to_s != "index" && !allow_selection_for_site?
+        nil
+      else
+        stimulus_action({ click: "primaryAction" })
+      end
+    end
+  end
+
+  def download_href
+    if @file.try(:private?)
+      Folio::S3.url_rewrite(@file.file.remote_url(expires: 1.hour.from_now))
+    else
+      Folio::S3.cdn_url_rewrite(@file.file.remote_url)
+    end
+  end
+
+  FILE_ICON_KEYS = {
+    "audio" => :microphone,
+    "default" => :file_document,
+    "video" => :video,
+  }
+
+  def file_icon_key
+    if human_type = @file_klass.try(:human_type)
+      FILE_ICON_KEYS[human_type] || FILE_ICON_KEYS["default"]
+    else
+      FILE_ICON_KEYS["default"]
+    end
+  end
+
+  def serialized_file_json
+    if @serialize && @file && @file.id
+      Folio::Console::FileSerializer.new(@file).serializable_hash[:data].to_json
+    else
+      ""
+    end
+  end
+end

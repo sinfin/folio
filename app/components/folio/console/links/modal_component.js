@@ -4,7 +4,8 @@ window.Folio.Stimulus.register('f-c-links-modal', class extends window.Stimulus.
     loading: Boolean,
     apiUrl: String,
     preferredLabel: String,
-    absoluteUrls: { type: Boolean, default: false },
+    disableLabel: { type: Boolean, default: false },
+    absoluteUrls: { type: Boolean, default: false }
   }
 
   static targets = ['formWrap']
@@ -23,11 +24,13 @@ window.Folio.Stimulus.register('f-c-links-modal', class extends window.Stimulus.
     }
   }
 
-  openWithUrlJson ({ urlJson, trigger, json, absoluteUrls, preferredLabel }) {
+  openWithUrlJson ({ urlJson, trigger, json, absoluteUrls, preferredLabel, disableLabel, defaultCustomUrl }) {
     this.trigger = trigger
     this.preferredLabelValue = preferredLabel
+    this.disableLabelValue = disableLabel === true
     this.jsonValue = json !== false
     this.absoluteUrlsValue = absoluteUrls === true
+    this.defaultCustomUrl = defaultCustomUrl === true
 
     this.loadForm(urlJson)
 
@@ -48,7 +51,9 @@ window.Folio.Stimulus.register('f-c-links-modal', class extends window.Stimulus.
       url_json: JSON.stringify(urlJson),
       json: this.jsonValue,
       absolute_urls: this.absoluteUrlsValue,
+      default_custom_url: this.defaultCustomUrl,
       preferred_label: this.preferredLabelValue,
+      disable_label: this.disableLabelValue
     })
 
     window.Folio.Api.apiGet(url, null, this.abortController.signal).then((res) => {
@@ -74,12 +79,25 @@ window.Folio.Stimulus.register('f-c-links-modal', class extends window.Stimulus.
 
   submit (e) {
     if (this.trigger) {
-      this.trigger.saveUrlJson(e.detail.data)
+      // eslint-disable-next-line
+      this.trigger.saveUrlJson.call(this.trigger, e.detail.data)
       this.trigger = null
     }
 
     window.Folio.Modal.close(this.element)
     this.formWrapTarget.innerHTML = ''
+  }
+
+  onModalClosed () {
+    // not present if submited as we clear this.trigger in submit callback
+    if (this.trigger) {
+      if (this.trigger.linkModalClosed) {
+        // eslint-disable-next-line
+        this.trigger.linkModalClosed.call(this.trigger)
+      }
+
+      this.trigger = null
+    }
   }
 
   onOpen (e) {
@@ -89,7 +107,9 @@ window.Folio.Stimulus.register('f-c-links-modal', class extends window.Stimulus.
         trigger: e.detail.trigger,
         absoluteUrls: e.detail.absoluteUrls,
         json: e.detail.json,
+        disableLabel: e.detail.disableLabel,
         preferredLabel: e.detail.preferredLabel,
+        defaultCustomUrl: e.detail.defaultCustomUrl
       })
     }
   }

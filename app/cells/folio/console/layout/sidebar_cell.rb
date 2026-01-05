@@ -21,7 +21,11 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
         next unless group[:links].present?
 
         links = process_links(group[:links])
-        group.merge(links:) if links.present?
+        if links.present?
+          group.merge(links:)
+        else
+          nil
+        end
       end
     end
   end
@@ -39,13 +43,14 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
 
   def process_link_item(item)
     if item.is_a?(Array)
-      item.filter_map { |l| link_from(l) }
+      item.compact.filter_map { |l| link_from(l) }
     else
       link_from(item)
     end
   end
 
   def link_from(link_source)
+    return nil if link_source.nil?
     return if skip_link_class_names.include?(link_source)
 
     if link_source == :homepage
@@ -56,6 +61,10 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
     elsif link_source.is_a?(Hash) && (link_source[:klass] || link_source[:label]) && (link_source[:path] || link_source[:url_name])
       if link_source[:klass]
         return unless can_now?(:index, link_source[:klass].constantize)
+      end
+
+      if link_source[:required_ability]
+        return unless can_now?(link_source[:required_ability], Folio::Current.site)
       end
 
       label = if link_source[:label]
@@ -149,11 +158,11 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
 
     if ::Rails.application.config.folio_shared_files_between_sites
       shared_links = [{
-        locale: Folio::Current.main_site.console_locale,
+        locale: Folio::File.correct_site(Folio::Current.site).console_locale,
         title: nil,
         collapsed: nil,
         expanded: nil,
-        links: [file_links(Folio::Current.main_site).compact]
+        links: [file_links(Folio::File.correct_site(Folio::Current.site)).compact]
       }]
       sites = Folio::Site.ordered
     end
@@ -165,7 +174,11 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
 
   def secondary_class_names
     links = []
-    links << link_for_site_class(Folio::Current.main_site, Folio::User) if show_users? && Folio::Current.user.superadmin?
+
+    if show_users? && Folio::Current.user.superadmin?
+      links << link_for_site_class(Folio::Current.enabled_site_for_crossdomain_devise || Folio::Current.site,
+                                   Folio::User)
+    end
 
     [
       {
@@ -257,7 +270,8 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
         link_for_site_class(site, Folio::File::Image, only_path:),
         link_for_site_class(site, Folio::File::Video, only_path:),
         link_for_site_class(site, Folio::File::Audio, only_path:),
-        link_for_site_class(site, Folio::File::Document, only_path:)
+        link_for_site_class(site, Folio::File::Document, only_path:),
+        link_for_site_class(site, Folio::MediaSource, only_path:)
       ]
     end
 

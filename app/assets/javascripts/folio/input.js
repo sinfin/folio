@@ -5,10 +5,11 @@
 //= require folio/input/content_templates
 //= require folio/input/date_range
 //= require folio/input/date_time
+//= require folio/input/embed
 //= require folio/input/multiselect
 //= require folio/input/numeral
 //= require folio/input/phone
 //= require folio/input/redactor
-//= require folio/input/remote_autocomplete
 //= require folio/input/tags
+//= require folio/input/tiptap
 //= require folio/input/url

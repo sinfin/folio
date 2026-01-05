@@ -4,7 +4,6 @@
 
 //= require folio/api
 //= require folio/stimulus
-//= require folio/message_bus
 //= require folio/remote_scripts
 
 //= require folio/confirm
@@ -12,7 +11,6 @@
 //= require folio/devise
 //= require folio/i18n
 //= require folio/form_to_hash
-//= require folio/lazyload
 //= require folio/lightbox
 //= require folio/modal
 //= require folio/nested_fields_component
@@ -21,6 +19,8 @@
 //= require folio/recaptcha_field_component
 //= require folio/dropzone_component
 //= require folio/tooltip
+//= require folio/uppy_component
+//= require folio/embed/box_component
 
 //= require folio/image/image
 

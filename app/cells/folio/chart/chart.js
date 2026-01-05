@@ -2,18 +2,18 @@ window.Folio = window.Folio || {}
 
 window.Folio.Chart = {}
 
-window.Folio.Chart.CDN_URL = "https://cdn.jsdelivr.net/npm/chart.js"
+window.Folio.Chart.CDN_URL = 'https://cdn.jsdelivr.net/npm/chart.js'
 
 window.Folio.Chart.innerBind = (el) => {
-  el.innerHTML = ""
+  el.innerHTML = ''
 
   const canvas = document.createElement('canvas')
-  canvas.style.width = "100%"
-  canvas.style.height = "100%"
+  canvas.style.width = '100%'
+  canvas.style.height = '100%'
   canvas.className = 'f-chart__canvas'
   el.appendChild(canvas)
 
-  el.folioChart = new Chart(canvas, JSON.parse(el.dataset.chart))
+  el.folioChart = new window.Chart(canvas, JSON.parse(el.dataset.chart))
 }
 
 window.Folio.Chart.bind = (el) => {

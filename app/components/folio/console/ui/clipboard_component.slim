@@ -1,0 +1,25 @@
+span.f-c-ui-clipboard data=data class=@class_name
+  - if @as_button
+    = render(Folio::Console::Ui::ButtonComponent.new(label: @button_label || t('.copy'),
+                                                     variant: @button_variant || :primary,
+                                                     class_name: "f-c-ui-clipboard__btn")) do |c|
+      - c.with_left
+        .f-c-ui-clipboard__icons
+          = folio_icon(@icon || :content_copy, height: @icon_height || 16, class: "f-c-ui-clipboard__ico")
+          = folio_icon(:check, height: @icon_height || 16, class: "f-c-ui-clipboard__done")
+
+  - else
+    span.f-c-ui-clipboard__span[
+      class="f-c-ui-clipboard__span--height-#{@icon_height || 16}"
+    ]
+      = folio_icon(@icon || :content_copy,
+                   height: @icon_height || 16,
+                   class: "f-c-ui-clipboard__ico")
+
+      = folio_icon(:check,
+                   height: @icon_height || 16,
+                   class: "f-c-ui-clipboard__done")
+
+    - if @label
+      span.f-c-ui-clipboard__label
+        = @label

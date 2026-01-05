@@ -17,7 +17,8 @@ class Folio::Console::Ui::BooleanToggleComponent < Folio::Console::ApplicationCo
                  class_name: nil,
                  static: false,
                  small_label: false,
-                 test_id: nil)
+                 test_id: nil,
+                 flash: true)
     @record = record
     @attribute = attribute
     @disabled = disabled
@@ -33,6 +34,7 @@ class Folio::Console::Ui::BooleanToggleComponent < Folio::Console::ApplicationCo
     @static = static || @f.present?
     @checked = checked || attribute_checked?
     @test_id = test_id
+    @flash = flash
   end
 
   def attribute_checked?
@@ -75,6 +77,7 @@ class Folio::Console::Ui::BooleanToggleComponent < Folio::Console::ApplicationCo
     stimulus_controller("f-c-ui-boolean-toggle", values: {
       url: url_with_default,
       confirmation:,
+      flash: @flash,
       static: @static
     }, classes: %w[loading], action: @static ? { change: "stopPropagation" } : nil).merge(test_id: @test_id.presence)
   end

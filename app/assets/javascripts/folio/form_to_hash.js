@@ -1,17 +1,26 @@
 window.Folio = window.Folio || {}
 
-window.Folio.formToHash = (form) => {
-  const formData = new window.FormData(form)
+window.Folio.formToHash = (formOrHash) => {
+  if (formOrHash instanceof window.HTMLFormElement) {
+    const formData = new FormData(formOrHash)
+    const hash = {}
+
+    formData.forEach((value, key) => { hash[key] = value })
+
+    return window.Folio.formToHash(hash)
+  }
+
   const hash = {}
 
-  formData.forEach((value, key) => {
+  Object.keys(formOrHash).forEach((key) => {
+    const value = formOrHash[key]
     const parts = key.split('[')
 
     if (parts.length === 1) {
       hash[key] = value
     } else {
       const cleanParts = parts.map((part) => part.replace(']', ''))
-      const isArray = cleanParts[cleanParts.length - 1] === ""
+      const isArray = cleanParts[cleanParts.length - 1] === ''
 
       if (isArray) cleanParts.pop()
 
@@ -24,7 +33,7 @@ window.Folio.formToHash = (form) => {
           if (isArray) {
             if (!runner[cleanParts[i]]) runner[cleanParts[i]] = []
 
-            if (value !== "") {
+            if (value !== '') {
               runner[cleanParts[i]].push(value)
             }
           } else {

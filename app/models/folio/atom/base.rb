@@ -147,7 +147,24 @@ class Folio::Atom::Base < Folio::ApplicationRecord
     klass::ASSOCIATIONS.keys.each do |key|
       record = send(key)
       if record
-        h[key] = Folio::Atom.association_to_h(record)
+        # Check if any class in the association definition forces showing model names
+        # This way, if the definition allows MyProject::List (base class), model names
+        # will be shown even if a subclass like MyProject::List::Category is selected
+        association_def = klass::ASSOCIATIONS[key]
+        class_names = if association_def.is_a?(Hash)
+          association_def[:klasses] || []
+        elsif association_def.is_a?(Array)
+          association_def
+        else
+          []
+        end
+
+        show_model_names = class_names.is_a?(Array) && class_names.any? do |class_name|
+          klass = class_name.safe_constantize
+          klass && klass.try(:folio_console_force_show_model_names_in_react_select?)
+        end
+
+        h[key] = Folio::Atom.association_to_h(record, show_model_names: show_model_names)
       else
         h[key] = nil
       end

@@ -1,0 +1,346 @@
+@function strip-unit($number) {
+  @if type-of($number) == "number" and not unitless($number) {
+    @return $number / ($number * 0 + 1);
+  }
+  @return $number;
+}
+
+@function px-to-rem($px) {
+  @return 1rem * strip-unit($px) / 16;
+}
+
+:root {
+  --f-tiptap-editor__transition: box-shadow 0.15s ease-in-out;
+  --f-tiptap-editor__border-color: #c9cbcc;
+  --f-tiptap-editor__border-color--focused: #3b4548;
+  --f-tiptap-editor__border-radius: 4px;
+  --f-tiptap-editor-content-wrap__padding-x: 6rem;
+  --f-tiptap-editor-content-wrap__padding-x-rich-text: 1rem;
+  --f-tiptap-editor-content-wrap__padding-y: 1rem;
+  --f-tiptap-editor-content-wrap__padding-x-mobile: 1rem;
+  --f-tiptap-editor-content-wrap__padding-y-mobile: 1rem;
+
+  // so that <hr> shows up
+  --bs-border-color: #c9cbcc;
+}
+
+.f-tiptap-application-html,
+.f-tiptap-application-body {
+  overflow: hidden;
+  min-width: 320px;
+  margin: 0;
+}
+
+.f-tiptap-application-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.f-tiptap-application-html,
+.f-tiptap-application-body,
+#folio-tiptap-dev-root,
+.f-tiptap-iframe-content {
+  height: 100vh;
+}
+
+.f-tiptap-editor {
+  display: flex;
+  flex-direction: column;
+
+  &--block {
+    min-height: 500px;
+    height: 100vh;
+  }
+
+  &--rich-text {
+    --f-tiptap-editor-content-wrap__padding-x: var(
+      --f-tiptap-editor-content-wrap__padding-x-rich-text
+    );
+
+    border: 1px solid var(--f-tiptap-editor__border-color);
+    border-radius: var(--f-tiptap-editor__border-radius);
+    transition: var(--f-tiptap-editor__transition);
+    min-height: 140px + 2px;
+
+    &.f-tiptap-editor--focused {
+      border-color: var(--f-tiptap-editor__border-color--focused);
+    }
+  }
+}
+
+.f-tiptap-editor-toolbar {
+  flex: 0 0 auto;
+}
+
+.f-tiptap-editor__content-wrap {
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  padding: var(--f-tiptap-editor-content-wrap__padding-y)
+    var(--f-tiptap-editor-content-wrap__padding-x);
+  position: relative;
+}
+
+.f-tiptap-editor__content {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  width: 100%;
+
+  &--readonly {
+    user-select: none;
+    pointer-events: none;
+  }
+}
+
+.f-tiptap-editor__tiptap-editor {
+  flex: 1 0 auto;
+}
+
+@container (max-width: 700px) {
+  .f-tiptap-editor__content-wrap {
+    padding-left: var(--f-tiptap-editor-content-wrap__padding-x-mobile);
+    padding-right: var(--f-tiptap-editor-content-wrap__padding-x-mobile);
+  }
+}
+
+@container (max-width: 468px) {
+  .f-tiptap-editor--block {
+    .f-tiptap-editor-toolbar {
+      order: 2;
+    }
+  }
+
+  .f-tiptap-editor__content-wrap {
+    padding: var(--f-tiptap-editor-content-wrap__padding-y-mobile)
+      var(--f-tiptap-editor-content-wrap__padding-x-mobile);
+  }
+}
+
+// fix bubble menu z-index
+.f-tiptap-editor__content {
+  > .tiptap {
+    position: relative;
+    z-index: 1;
+
+    & ~ div {
+      z-index: 2;
+
+      &[tabindex="0"] {
+        z-index: 3;
+      }
+    }
+  }
+}
+
+.f-tiptap-editor p.is-empty,
+.f-tiptap-editor h2.is-empty,
+.f-tiptap-editor h3.is-empty,
+.f-tiptap-editor h4.is-empty,
+.f-tiptap-editor .f-tiptap-page--invalid h2:first-of-type {
+  position: relative;
+
+  &::before {
+    color: #adb5bd;
+    content: attr(data-placeholder);
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    text-align: left;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    overflow: hidden;
+    height: 100%;
+  }
+}
+
+// In float aside, force empty paragraphs to use webkit clamp for placeholder text
+.f-tiptap-editor .f-tiptap-float__aside p.is-empty {
+  &::before {
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: auto;
+    max-height: 100%;
+    line-height: inherit;
+  }
+}
+
+// In float main, force empty paragraphs to use webkit clamp for placeholder text when narrow
+.f-tiptap-editor .f-tiptap-float__main p.is-empty {
+  &::before {
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: auto;
+    max-height: 100%;
+    line-height: inherit;
+  }
+}
+
+// Offset placeholder in float main to account for aside width
+// Uses CSS custom properties set on .f-tiptap-float based on data attributes
+// Only applies to first child paragraphs
+// Below 576px, CSS custom properties default to 0, so calc() evaluates to 0 (no offset)
+// When aside is on the left, offset placeholder left by aside width + margin + offset
+.f-tiptap-editor
+  .f-tiptap-float[data-f-tiptap-float-side="left"]
+  .f-tiptap-float__main
+  p.is-empty:first-child {
+  &::before {
+    left: calc(
+      var(--f-tiptap-float__aside-width) +
+        var(--f-tiptap-float__aside-margin-x) +
+        var(--f-tiptap-float__aside-offset)
+    );
+    right: 0;
+  }
+}
+
+// When aside is on the right, cap placeholder width by constraining right edge (aside width + margin + offset)
+// Placeholder always aligns left, but width is constrained
+.f-tiptap-editor
+  .f-tiptap-float[data-f-tiptap-float-side="right"]
+  .f-tiptap-float__main
+  p.is-empty:first-child {
+  &::before {
+    left: 0;
+    right: calc(
+      var(--f-tiptap-float__aside-width) +
+        var(--f-tiptap-float__aside-margin-x) +
+        var(--f-tiptap-float__aside-offset)
+    );
+  }
+}
+
+.f-tiptap-editor .node-folioTiptapNode,
+.f-tiptap-editor .node-folioTiptapInvalidNode {
+  position: relative;
+  z-index: 2;
+
+  &::after,
+  &::before {
+    content: "";
+    position: absolute;
+    inset: -0.5rem;
+    background: var(--tt-selection-color);
+    border-radius: var(--f-tiptap-editor__border-radius);
+    z-index: 3;
+    opacity: 0.5;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  &::before {
+    opacity: 1;
+    z-index: 1;
+  }
+
+  &.ProseMirror-selectednode {
+    &::before,
+    &::after {
+      visibility: visible;
+    }
+  }
+}
+
+.f-c-tiptap-invalid-node {
+  align-items: center;
+  background: #f0655d;
+  border-radius: 4px;
+  box-shadow:
+    0px 5px 3px 0px rgba(0, 0, 0, 0.15),
+    2px 2px 15px 2px rgba(0, 0, 0, 0.15);
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 24px;
+  text-align: center;
+
+  &__title {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 120%;
+  }
+
+  &__name {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 140%;
+  }
+
+  &__small {
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 140%;
+  }
+}
+
+.tiptap.ProseMirror {
+  outline: none;
+  caret-color: var(--tt-cursor-color);
+
+  // Selection styles
+  &:not(.readonly):not(.ProseMirror-hideselection) {
+    ::selection {
+      background-color: var(--tt-selection-color);
+    }
+
+    .selection::selection {
+      background: transparent;
+    }
+  }
+
+  .selection {
+    display: inline;
+    background-color: var(--tt-selection-color);
+  }
+
+  .ProseMirror-hideselection {
+    caret-color: transparent;
+  }
+}
+
+.f-tiptap-editor__content-handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  padding-top: px-to-rem(20px);
+  left: 50%;
+  z-index: 4;
+  display: none;
+  font-size: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.f-tiptap-editor__content-handle-flex {
+  display: flex;
+  align-items: center;
+  gap: px-to-rem(8px);
+}
+
+.f-tiptap-editor__content-handle-icon-wrap {
+  align-items: center;
+  background: #ffffff;
+  border-radius: 4px;
+  box-shadow:
+    0 5px 3px 0 rgba(0, 0, 0, 0.15),
+    2px 2px 15px 2px rgba(0, 0, 0, 0.15);
+  display: flex;
+  height: 36px;
+  justify-content: center;
+  width: 36px;
+}

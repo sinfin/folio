@@ -26,8 +26,8 @@ window.Folio.Input.Tags.bind = (input, opts) => {
     }
   }
 
-  if (!input.closest(".modal-body")) {
-    config.dropdownParent = "body"
+  if (!input.closest('.modal-body')) {
+    config.dropdownParent = 'body'
   }
 
   if (opts.url) {
@@ -62,7 +62,7 @@ window.Folio.Stimulus.register('f-input-tags', class extends window.Stimulus.Con
     tagsContext: { type: String, default: 'tags' },
     url: String,
     collectionJson: String,
-    delimiter: String,
+    delimiter: String
   }
 
   connect () {
@@ -73,7 +73,7 @@ window.Folio.Stimulus.register('f-input-tags', class extends window.Stimulus.Con
         url: this.urlValue,
         tagsContext: this.tagsContextValue,
         collectionJson: this.collectionJsonValue,
-        delimiter: this.delimiterValue,
+        delimiter: this.delimiterValue
       })
     }
   }

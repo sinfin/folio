@@ -25,6 +25,29 @@ module Folio
         @record
       end
 
+      def self.sanitize_href(string)
+        if string.is_a?(String)
+          return nil if string.blank?
+
+          # Use Rails' sanitizer to check if href is safe
+          test_link = "<a href=\"#{string}\">test</a>"
+          sanitized_link = ActionController::Base.helpers.sanitize(test_link)
+
+          # If href was stripped, it's unsafe
+          if sanitized_link == "<a>test</a>"
+            Rails.logger.warn "Removed unsafe href from tiptap link: #{string}"
+            return nil
+          end
+
+          # Extract href from sanitized result
+          if match = sanitized_link.match(/href="([^"]*)"/)
+            return match[1]
+          end
+
+          string
+        end
+      end
+
       private
         def attributes_config
           @attributes_config ||= @record.folio_html_sanitization_config[:attributes]
@@ -47,6 +70,8 @@ module Folio
               sanitize_attribute_as_rich_text(attribute:, value:)
             when :string
               sanitize_attribute_as_string(attribute:, value:)
+            when :tiptap_content
+              # No sanitization here - handled in tiptap content setter
             else
               raise ArgumentError, "Unknown attribute config: #{attribute_config.inspect}"
             end

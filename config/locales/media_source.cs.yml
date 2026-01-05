@@ -1,0 +1,5 @@
+---
+cs:
+  folio:
+    media_source:
+      cannot_destroy_with_assigned_media: "Nelze smazat zdroj s přiřazenými obrázky (%{count})."

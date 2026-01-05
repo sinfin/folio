@@ -100,6 +100,102 @@ module Folio
         assert_equal "tag1alert('xss'), tag2", taggable.reload.tag_list.to_s, "#{taggable.class} should have the tag_list sanitized"
       end
 
+      test "sanitizes tiptap_content" do
+        Folio::Page.stub(:has_folio_tiptap?, true) do
+          page = create(:folio_page, tiptap_content: { Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content] => {
+            "type" => "doc",
+            "content" => [
+              {
+                "type" => "paragraph",
+                "content" => [{ "type" => "text", "text" => "<p>html!</p><script>alert('foo')</script>" }]
+              },
+              {
+                "type" => "folioTiptapNode",
+                "attrs" => {
+                  "type" => "Dummy::Tiptap::Node::Embed",
+                  "data" => {
+                    "folio_embed_data" => {
+                      "active" => unsafe_input,
+                      "url" => unsafe_input,
+                      "type" => unsafe_input,
+                      "foo" => unsafe_input,
+                    }
+                  },
+                }
+              },
+              {
+                "type" => "folioTiptapNode",
+                "attrs" => {
+                  "type" => "Dummy::Tiptap::Node::Embed",
+                  "data" => {
+                    "folio_embed_data" => {
+                      "active" => true,
+                      "url" => "https://www.youtube.com/watch?v={id}",
+                      "foo" => unsafe_input,
+                      "type" => "youtube",
+                    }
+                  },
+                }
+              },
+              {
+                "type" => "folioTiptapNode",
+                "attrs" => {
+                  "type" => "Dummy::Tiptap::Node::Embed",
+                  "data" => {
+                    "folio_embed_data" => {
+                      "active" => true,
+                      "html" => unsafe_input,
+                    }
+                  },
+                }
+              },
+              {
+                "type" => "folioTiptapNode",
+                "attrs" => {
+                  "type" => "Dummy::Tiptap::Node::Embed",
+                  "data" => {
+                    "folio_embed_data" => {
+                      "active" => true,
+                      "url" => "https://www.youtube.com/watch?v={id}",
+                      "foo" => unsafe_input,
+                      "type" => "unsupported",
+                    }
+                  },
+                }
+              },
+            ]
+          } })
+
+          content = page.tiptap_content[Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content]]["content"]
+
+          assert_equal("paragraph", content[0]["type"])
+          assert_equal([{ "type" => "text", "text" => "html!alert('foo')" }], content[0]["content"])
+
+          assert_equal("folioTiptapNode", content[1]["type"])
+          assert_equal("Dummy::Tiptap::Node::Embed", content[1]["attrs"]["type"])
+          assert_nil(content[1]["attrs"]["data"]["folio_embed_data"])
+
+          assert_equal("folioTiptapNode", content[2]["type"])
+          assert_equal("Dummy::Tiptap::Node::Embed", content[2]["attrs"]["type"])
+          assert_equal(true, content[2]["attrs"]["data"]["folio_embed_data"]["active"])
+          assert_equal("https://www.youtube.com/watch?v={id}", content[2]["attrs"]["data"]["folio_embed_data"]["url"])
+          assert_nil(content[2]["attrs"]["data"]["folio_embed_data"]["foo"])
+          assert_equal("youtube", content[2]["attrs"]["data"]["folio_embed_data"]["type"])
+
+          assert_equal("folioTiptapNode", content[3]["type"])
+          assert_equal("Dummy::Tiptap::Node::Embed", content[3]["attrs"]["type"])
+          assert_equal(true, content[3]["attrs"]["data"]["folio_embed_data"]["active"])
+          assert_equal(unsafe_input, content[3]["attrs"]["data"]["folio_embed_data"]["html"])
+
+          assert_equal("folioTiptapNode", content[4]["type"])
+          assert_equal("Dummy::Tiptap::Node::Embed", content[4]["attrs"]["type"])
+          assert_equal(true, content[4]["attrs"]["data"]["folio_embed_data"]["active"])
+          assert_nil(content[4]["attrs"]["data"]["folio_embed_data"]["url"])
+          assert_nil(content[4]["attrs"]["data"]["folio_embed_data"]["foo"])
+          assert_nil(content[4]["attrs"]["data"]["folio_embed_data"]["type"])
+        end
+      end
+
       private
         def unsafe_input
           "<p>fixed&nbsp;space script-<script>alert('xss')</script> absolute-a-<a href=\"https://www.google.com/\" target=\"_blank\" rel=\"noopener noreferrer\">a</a> relative-a-<a href=\"/foo\" target=\"_self\" rel=\"nofollow\">a</a> hash-a-<a href=\"#foo\" target=\"_parent\" rel=\"bookmark\">a</a> xss-a-<a href=\"javascript:alert('xss')\" target=\"_blank\" rel=\"noopener\">a</a> img-<img onerror=\"alert('xss')\"> input-<input onfocus=\"alert('xss')\"> bar & baz lt< gt></p>"
@@ -114,7 +210,7 @@ module Folio
         end
 
         def input_sanitized_as_rich_text
-          "<p>fixed#{utf_nbsp}space script-alert('xss') absolute-a-<a href=\"https://www.google.com/\" target=\"_blank\" rel=\"noopener noreferrer\">a</a> relative-a-<a href=\"/foo\" target=\"_self\" rel=\"nofollow\">a</a> hash-a-<a href=\"#foo\" target=\"_parent\" rel=\"bookmark\">a</a> xss-a-<a target=\"_blank\" rel=\"noopener\">a</a> img-<img> input- bar &amp; baz lt&lt; gt&gt;</p>"
+          "<p>fixed&nbsp;space script-alert('xss') absolute-a-<a href=\"https://www.google.com/\" target=\"_blank\" rel=\"noopener noreferrer\">a</a> relative-a-<a href=\"/foo\" target=\"_self\" rel=\"nofollow\">a</a> hash-a-<a href=\"#foo\" target=\"_parent\" rel=\"bookmark\">a</a> xss-a-<a target=\"_blank\" rel=\"noopener\">a</a> img-<img> input- bar &amp; baz lt&lt; gt&gt;</p>"
         end
     end
   end

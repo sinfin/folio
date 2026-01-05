@@ -203,6 +203,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
       commons = %i[id
                    title
                    alt
+                   description
                    tag_list
                    file_id
                    position
@@ -223,6 +224,13 @@ class Folio::Console::BaseController < Folio::ApplicationController
       ]).each do |key|
         hash[key] = commons
       end
+
+      hash[:image_or_embed_placements_attributes] = commons + [
+        :folio_embed_data,
+        {
+          folio_embed_data: Folio::Embed.hash_strong_params_keys
+        }
+      ]
 
       [hash]
     end
@@ -416,7 +424,11 @@ class Folio::Console::BaseController < Folio::ApplicationController
         if folio_console_record.new_record?
           add_breadcrumb I18n.t("folio.console.breadcrumbs.actions.new")
         else
-          record_url = console_show_or_edit_path(folio_console_record)
+          record_url = if did_override_default_show_method?
+            console_show_or_edit_path(folio_console_record)
+          else
+            through_aware_console_url_for(folio_console_record, action: :edit)
+          end
           add_breadcrumb(folio_console_record.to_label, record_url)
         end
       end
@@ -443,11 +455,12 @@ class Folio::Console::BaseController < Folio::ApplicationController
     def console_show_or_edit_path(record, other_params: {}, include_through_record: true)
       return nil if record.nil?
 
+      # sometimes domains matters in routing, so wee need full url here
       begin
         url = if include_through_record
-          through_aware_console_url_for(record, hash: other_params)
+          through_aware_console_url_for(record, hash: other_params.merge(only_path: false))
         else
-          url_for([:console, record, other_params])
+          url_for([:console, record, other_params.merge(only_path: false)])
         end
       rescue NoMethodError, ActionController::RoutingError
         return nil
@@ -510,6 +523,8 @@ class Folio::Console::BaseController < Folio::ApplicationController
       return unless params[:id].present?
 
       name = folio_console_record_variable_name(plural: false)
+      return if instance_variable_get(name).present?
+
       if @klass.respond_to?(:friendly)
         instance_variable_set(name, @klass.by_site(allowed_record_sites).friendly.find(params[:id]))
       else
@@ -524,6 +539,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
       return unless param.present?
 
       name = "@#{through_record_name}"
+      return if instance_variable_get(name).present?
 
       through_klass = folio_console_controller_for_through.constantize
 

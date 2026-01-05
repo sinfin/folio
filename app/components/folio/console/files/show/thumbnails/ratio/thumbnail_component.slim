@@ -1,0 +1,20 @@
+.f-c-files-show-thumbnails-ratio-thumbnail
+  - variants.each do |extension, url|
+    .f-c-files-show-thumbnails-ratio-thumbnail__variant
+      .f-c-files-show-thumbnails-ratio-thumbnail__title
+        = @thumbnail_size_key
+        .text-uppercase = extension
+
+      - if url
+        a.f-c-files-show-thumbnails-ratio-thumbnail__img-wrap[
+          href=url
+          target="_blank"
+        ]
+          img.f-c-files-show-thumbnails-ratio-thumbnail__img[
+            loading="lazy"
+            src=url
+            data=stimulus_thumbnail
+          ]
+      - else
+        .f-c-files-show-thumbnails-ratio-thumbnail__img-wrap
+          = folio_icon(:close)

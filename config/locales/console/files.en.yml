@@ -1,0 +1,68 @@
+---
+en:
+  folio:
+    console:
+      files:
+        show_component:
+          created_at: Uploaded
+          id: ID
+          download: Download original
+          replace: Replace
+          destroy: Delete
+          title/metadata: EXIF and IPTC data (%{count})
+          title/usage: Usage (%{count})
+
+        picker_component:
+          alt: Alt
+          description: Description
+
+        show_modal_component:
+          navigation_next: Next
+          navigation_previous: Previous
+
+        show:
+          metadata_component:
+            no_metadata: No metadata
+            extract_metadata: Extract metadata again
+
+          file_placements_component:
+            no_file_placements: No usage
+            th/type: Usage type
+            th/placement_type: Record type
+            th/placement_label: Record
+            th/created_at: Created at
+            in_atom: content chapter
+            no_thumbnails_yet: No versions generated yet
+
+          thumbnails_component:
+            title: Versions and sizes
+            type/regular: Versions without crop
+            type/crop: Versions with crop (#)
+            type/shrink: Versions with shrink only (>)
+            type/cover: Versions with fit (^)
+
+          thumbnails:
+            ratio_component:
+              all_versions: "All generated versions:"
+
+            crop_edit_component:
+              edit: Edit crop
+
+        batch:
+          bar_component:
+            delete: Delete
+            download: Download
+            settings: Batch Settings
+            download_label: Files ready to download
+            download_pending: Preparing files for download
+            cancel_download: Cancel download
+            cancel: Close batch actions
+            download_failure: Failed to prepare files for download
+            add_to_picker/default: Select
+            add_to_picker/image: Select to gallery
+
+          form_component:
+            title: Batch settings of files
+            selected_files: Selected files
+            has_values_placeholder: Multiple values
+            has_values_hint: Multiple values set. Change the field to update all, or leave it to keep them.

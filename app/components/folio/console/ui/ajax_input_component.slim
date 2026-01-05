@@ -1,6 +1,7 @@
 .f-c-ui-ajax-input[
   class=(@width ? "f-c-ui-ajax-input--#{@width}" : nil)
   class=(@disabled ? "f-c-ui-ajax-input--disabled" : nil)
+  class=(@force_cancel ? "f-c-ui-ajax-input--force-cancel" : nil)
   title=(@disabled.is_a?(String) ? @disabled : nil)
   data=data
 ]
@@ -9,23 +10,36 @@
       = "#{@label}:"
 
   .f-c-ui-ajax-input__inner
-    *input_tag
-      - if @collection
-        - if @placeholder && !@disabled
-          option value=""
-            = @placeholder
+    - if @f
+      = f_input
+    - else
+      *input_tag
+        - if @collection
+          - if @placeholder && !@disabled
+            option value=""
+              = @placeholder
 
-        - if @disabled && @value
-          option value=@value selected=true
-            = @formatted_value || @value
-        - else
-          - @collection.each do |label, value|
-            - value ||= label
-            option value=value selected=(value == @value)
-              = label
+          - if @disabled && @value
+            - if @multiple && @value.is_a?(Array)
+              - @value.each do |v|
+                option value=v selected=true
+                  = v
+            - else
+              option value=@value selected=true
+                = @formatted_value || @value
+          - else
+            - @collection.each do |label, value|
+              - value ||= label
+              - if @multiple && @value.is_a?(Array)
+                - selected = @value.include?(value.to_s) || @value.include?(value.to_i)
+              - else
+                - selected = value == @value
 
-      - elsif @textarea
-        = @value
+              option value=value selected=selected
+                = label
+
+        - elsif @textarea
+          = @value
 
     .f-c-ui-ajax-input__right
       span.text-success[

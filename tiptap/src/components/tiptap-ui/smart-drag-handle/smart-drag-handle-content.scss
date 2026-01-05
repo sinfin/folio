@@ -1,0 +1,42 @@
+.f-tiptap-smart-drag-handle-content {
+  --f-tiptap-smart-drag-handle-content__background-color: var(
+    --f-tiptap-root__background-color
+  );
+  padding-right: 1rem;
+
+  &__flex {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.125rem;
+    position: relative;
+
+    &::after {
+      content: "";
+      display: block;
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background: var(--f-tiptap-smart-drag-handle-content__background-color);
+      opacity: 0.9;
+      border-radius: var(--tt-radius-lg, 0.75rem);
+    }
+  }
+
+  .f-tiptap-editor--responsive-preview & {
+    padding-right: 1.5rem;
+
+    &__flex::after {
+      background: none;
+    }
+  }
+}
+
+.f-tiptap-smart-drag-handle__button,
+.f-tiptap-smart-drag-handle__dropdown-button {
+  cursor: pointer;
+}
+
+.f-tiptap-smart-drag-handle__dropdown-button.tiptap-button {
+  justify-content: flex-start;
+  gap: 0.5rem;
+}

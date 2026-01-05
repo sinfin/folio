@@ -4,7 +4,7 @@ window.Folio.Input = window.Folio.Input || {}
 window.Folio.Input.CollectionRemoteSelect = {}
 
 window.Folio.Input.CollectionRemoteSelect.setValue = (input, value) => {
-  const $input = $(input)
+  const $input = window.jQuery(input)
   $input.val(value).trigger('change')
 }
 
@@ -13,7 +13,7 @@ window.Folio.Input.CollectionRemoteSelect.clearValue = (input) => {
 }
 
 window.Folio.Input.CollectionRemoteSelect.bind = (input, { includeBlank, url }) => {
-  const $input = $(input)
+  const $input = window.jQuery(input)
 
   $input.select2({
     width: '100%',
@@ -24,6 +24,7 @@ window.Folio.Input.CollectionRemoteSelect.bind = (input, { includeBlank, url }) 
     ajax: {
       url: url || $input.data('url'),
       dataType: 'JSON',
+      delay: 250,
       minimumInputLength: 0,
       cache: false,
       data: (params) => {
@@ -32,11 +33,11 @@ window.Folio.Input.CollectionRemoteSelect.bind = (input, { includeBlank, url }) 
           page: params.page || 1
         }
 
-        $('.f-c-js-atoms-placement-setting').each((i, el) => {
+        window.jQuery('.f-c-js-atoms-placement-setting').each((i, el) => {
           if (el.type === 'checkbox' || el.type === 'radio') {
             data[`by_atom_setting_${el.dataset.atomSetting}`] = el.checked
           } else {
-            const $el = $(el)
+            const $el = window.jQuery(el)
             data[`by_atom_setting_${$el.data('atom-setting')}`] = $el.val()
           }
         })
@@ -53,7 +54,7 @@ window.Folio.Input.CollectionRemoteSelect.bind = (input, { includeBlank, url }) 
       }
     },
     templateSelection: (data, container) => {
-      const $el = $(data.element)
+      const $el = window.jQuery(data.element)
 
       Object.keys(data).forEach((key) => {
         if (key.indexOf('data-') === 0) {
@@ -68,7 +69,7 @@ window.Folio.Input.CollectionRemoteSelect.bind = (input, { includeBlank, url }) 
         return data.text
       }
 
-      const $result = $(
+      const $result = window.jQuery(
         `<div class="select2-results__option-inner-wrap">
            <div class="select2-results__option-img-container">
               <img src="${data.imageUrl}"/>
@@ -90,7 +91,7 @@ window.Folio.Input.CollectionRemoteSelect.bind = (input, { includeBlank, url }) 
 }
 
 window.Folio.Input.CollectionRemoteSelect.unbind = (input) => {
-  $(input).select2('destroy').off('change.select2').off('select2:open').off('select2:close')
+  window.jQuery(input).select2('destroy').off('change.select2').off('select2:open').off('select2:close')
 }
 
 window.Folio.Stimulus.register('f-input-collection-remote-select', class extends window.Stimulus.Controller {

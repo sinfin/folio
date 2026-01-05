@@ -60,12 +60,14 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
         variant: :danger,
         method: :delete,
         confirm: true,
+        collapsed: true,
         url: -> (record) { through_aware_console_url_for(record, action: :discard, safe: true) },
       },
       undiscard: {
         name: :undiscard,
         icon: :arrow_u_left_top,
         method: :post,
+        collapsed: true,
         url: -> (record) { through_aware_console_url_for(record, action: :undiscard, safe: true) },
       },
       edit: {

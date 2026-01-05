@@ -6,6 +6,7 @@ class Folio::FileSerializer
   attributes :file_name,
              :file_width,
              :file_height,
+             :file_mime_type,
              :author,
              :attribution_source,
              :attribution_source_url,
@@ -24,5 +25,17 @@ class Folio::FileSerializer
 
   attribute :extension do |object|
     Mime::Type.lookup(object.file_mime_type).symbol.to_s.upcase
+  end
+
+  attribute :player_source_mime_type do |object|
+    if object.try(:processing_service) == "mux" && object.ready?
+      "application/x-mpegurl"
+    elsif object.file_mime_type
+      if object.file_mime_type.match?(%r{audio/.+-aac-.+})
+        "audio/aac"
+      else
+        object.file_mime_type
+      end
+    end
   end
 end

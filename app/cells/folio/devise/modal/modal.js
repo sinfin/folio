@@ -5,7 +5,7 @@ window.Folio.Stimulus.register('f-devise-modal-form', class extends window.Stimu
     const form = this.element.querySelector('.f-devise-modal__form')
 
     if (form) {
-      form.dataset.action = "f-devise-modal-form#onSubmit"
+      form.dataset.action = 'f-devise-modal-form#onSubmit'
     }
   }
 
@@ -16,7 +16,7 @@ window.Folio.Stimulus.register('f-devise-modal-form', class extends window.Stimu
     form.classList.add('f-devise-modal__form--loading')
 
     const errors = form.querySelector('.f-devise__errors')
-    errors.innerHTML = ""
+    errors.innerHTML = ''
 
     const data = window.Folio.formToHash(form)
     const reenable = () => {
@@ -31,7 +31,7 @@ window.Folio.Stimulus.register('f-devise-modal-form', class extends window.Stimu
     window.Folio.Api.apiPost(form.action, data)
       .then((res) => {
         if (res.errors) {
-          errors.innerHTML = res.errors.map((h) => h.detail).join("<br>")
+          errors.innerHTML = res.errors.map((h) => h.detail).join('<br>')
           reenable()
         } else {
           if (res.data && res.data.url) {
@@ -41,7 +41,7 @@ window.Folio.Stimulus.register('f-devise-modal-form', class extends window.Stimu
           }
         }
       })
-      .catch((err) => {
+      .catch((_err) => {
         window.alert(form.dataset.failure)
         reenable()
       })

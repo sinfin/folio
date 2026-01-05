@@ -1,0 +1,23 @@
+marks:
+  bold:
+    tag: strong
+  code:
+    tag: code
+  italic:
+    tag: em
+  link:
+    tag: a
+    has_attrs: true
+    attrs:
+      - href
+      - target
+      - title
+      - rel
+  strike:
+    tag: strike
+  subscript:
+    tag: sub
+  superscript:
+    tag: sup
+  underline:
+    tag: u

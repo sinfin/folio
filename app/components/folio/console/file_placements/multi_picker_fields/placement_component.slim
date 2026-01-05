@@ -1,0 +1,58 @@
+div[
+  class=bem_class_name
+  data=data
+]
+  .f-c-file-placements-multi-picker-fields-placement__flex
+    - unless embed?
+      .f-c-file-placements-multi-picker-fields-placement__picker[
+        data=stimulus_target('pickerWrap')
+      ]
+        = render(Folio::Console::Files::PickerComponent.new(f: @g,
+                                                            file_placement: @g.object,
+                                                            file_klass: @g.object.class.folio_file_placement_file_klass,
+                                                            darker: true,
+                                                            size: 138))
+
+    .f-c-file-placements-multi-picker-fields-placement__fields
+      .f-c-file-placements-multi-picker-fields-placement__non-unique[
+        class="small text-danger"
+      ]
+        span.f-c-file-placements-multi-picker-fields-placement__non-unique-span[
+          data=stimulus_action(click: "onNonUniqueClick")
+        ]
+          = folio_icon(:alert)
+          = t('.non_unique_file_id')
+
+      - if @g.object.errors.where(:file).present?
+        .invalid-feedback.d-block.m-0 data-name=@placement_key
+          = @g.object.errors.where(:file).map(&:full_message).join(" ")
+
+      div[
+        class="f-c-file-placements-multi-picker-fields-placement__field"
+        class="f-c-file-placements-multi-picker-fields-placement__field--description"
+      ]
+        = @g.input :description,
+                   autosize: true,
+                   input_html: { rows: 1, data: stimulus_target("description") }
+
+      - unless embed?
+        div[
+          class="f-c-file-placements-multi-picker-fields-placement__field"
+          class="f-c-file-placements-multi-picker-fields-placement__field--alt"
+          data=stimulus_target('altWrap')
+        ]
+          = @g.input :alt,
+                     input_html: { data: stimulus_target("alt") }
+
+      - if @g.object.class.folio_file_placement_supports_embed?
+        div[
+          class="f-c-file-placements-multi-picker-fields-placement__field"
+          class="f-c-file-placements-multi-picker-fields-placement__field--folio_embed_data"
+          data=stimulus_target("embedFieldsWrap")
+        ]
+          = folio_embed_data_input(@g)
+
+  span.f-c-file-placements-multi-picker-fields-placement__loader[
+    class="folio-loader"
+    class="folio-loader--transparent"
+  ]
