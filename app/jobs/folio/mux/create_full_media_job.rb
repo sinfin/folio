@@ -6,6 +6,8 @@ class Folio::Mux::CreateFullMediaJob < Folio::ApplicationJob
 
   queue_as :default
 
+  unique :until_and_while_executing
+
   def perform(media_file)
     response = Folio::Mux::Api.new(media_file).create_media
 

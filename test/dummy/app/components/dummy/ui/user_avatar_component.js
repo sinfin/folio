@@ -9,19 +9,19 @@ window.Folio.Stimulus.register('d-ui-user-avatar', class extends window.Stimulus
     e.target.blur()
 
     const isDesktop = window.Folio.isVisible(this.mqTarget)
-    
+
     if (isDesktop) {
-      if (e.type === "keydown" && e.key === "Escape" && !this.activeValue) return
+      if (e.type === 'keydown' && e.key === 'Escape' && !this.activeValue) return
 
       if (!this.activeValue) {
         this.activate()
       } else {
         this.deactivate()
       }
-  
-      this.dispatch("clicked")
-    }else {
-      window.location.href = "/"
+
+      this.dispatch('clicked')
+    } else {
+      window.location.href = '/'
     }
   }
 

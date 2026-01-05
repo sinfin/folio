@@ -1,0 +1,24 @@
+.f-c-tiptap-overlay-form data=data
+  = form do |f|
+    input type="hidden" name="tiptap_node_attrs[type]" value=@node.class.to_s
+
+    header.f-c-tiptap-overlay-form__form-header
+      h3.f-c-tiptap-overlay-form__form-title.m-0
+        = @node.class.model_name.human
+
+      .f-c-tiptap-overlay-form__form-buttons
+        = render(Folio::Console::Ui::ButtonsComponent.new(buttons: buttons_model))
+
+    .f-c-tiptap-overlay-form__form-body
+      = render(Folio::Console::Ui::ValidationBoxComponent.new(errors: f.object.errors,
+                                                              record: f.object,
+                                                              class_name: "mb-4"))
+
+      - form_rows.each do |row|
+        .f-c-tiptap-overlay-form__form-row
+          - row[:columns].each do |column|
+            .f-c-tiptap-overlay-form__form-col[
+              class=(column[:bem_modifier] ? "f-c-tiptap-overlay-form__form-col--#{column[:bem_modifier]}" : nil)
+            ]
+              - column[:structure].each do |key, attr_config|
+                = render_input(f:, key:, attr_config:)

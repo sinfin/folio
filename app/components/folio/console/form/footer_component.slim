@@ -1,23 +1,32 @@
-.f-c-form-footer-spacer class=(@audit ? "f-c-form-footer-spacer--with-audit" : nil)
+- unless @static
+  .f-c-form-footer-spacer[
+    class=(@audit ? "f-c-form-footer-spacer--with-audit" : nil)
+  ]
 
-.f-c-form-footer data=(@audit ? nil : data) class=(@audit ? "f-c-form-footer--with-audit" : nil)
+div[
+  data=(read_only? ? nil : data)
+  class=bem_class_name
+  class=(@audit ? "f-c-form-footer--with-audit" : nil)
+]
   - if @audit && @record
     = render(Folio::Console::Audited::BarComponent.new(audit: @audit,
                                                        record: @record))
 
   .f-c-form-footer__inner
     .container-fluid.f-c-form-footer__container
-      - unless @audit
+      - unless read_only?
         .f-c-form-footer__left
           - if @f
-            == cell('folio/console/ui/button',
-                    type: :submit,
-                    class: 'f-c-form-footer__btn f-c-form-footer__btn--submit',
-                    variant: :primary,
-                    label: @submit_label || t("folio.console.actions.submit"),
-                    icon: :check,
-                    data: stimulus_target('submitButton').merge(test_id: "submit-button"),
-                    html_left: content_tag(:span, nil, class: "f-c-form-footer__submit-btn-indicator", data: stimulus_target('submitButtonIndicator')))
+            = render(Folio::Console::Ui::ButtonComponent.new(type: :submit,
+                                                             class_name: 'f-c-form-footer__btn f-c-form-footer__btn--submit',
+                                                             variant: :primary,
+                                                             label: t("folio.console.actions.submit"),
+                                                             icon: :check,
+                                                             data: stimulus_target('submitButton').merge(test_id: "submit-button"))) do |c|
+              - c.with_left
+                span.f-c-form-footer__submit-btn-indicator[
+                  data=stimulus_target('submitButtonIndicator')
+                ]
 
             .f-c-form-footer__status
               - if @record && @record.persisted?
@@ -37,17 +46,17 @@
 
       .f-c-form-footer__right
         - if preview_path_with_default
-          == cell('folio/console/ui/button',
-                  href: preview_path_with_default,
-                  class: 'f-c-form-footer__btn f-c-form-footer__btn--preview',
-                  variant: :gray,
-                  label: t('folio.console.actions.preview'),
-                  icon: :open_in_new,
-                  target: "_blank",
-                  data: { test_id: "preview-button" })
+          = render(Folio::Console::Ui::ButtonComponent.new(href: preview_path_with_default,
+                                                           class_name: 'f-c-form-footer__btn f-c-form-footer__btn--preview',
+                                                           variant: :gray,
+                                                           label: t('folio.console.actions.preview'),
+                                                           icon: :open_in_new,
+                                                           target: "_blank",
+                                                           data: { test_id: "preview-button" }))
+
         - if @show_settings
           .f-c-form-footer__collapsible
-            .f-c-form-footer__collapsible-backdrop data=stimulus_action_unless_audit(click: "toggleCollapsed")
+            .f-c-form-footer__collapsible-backdrop data=stimulus_action_unless_readonly(click: "toggleCollapsed")
             .f-c-form-footer__collapsible-content
               - if @record
                 - unless @audit
@@ -59,7 +68,7 @@
 
               .f-c-form-footer__settings
                 .f-c-form-footer__settings-toggle.small.text-muted[
-                  data=stimulus_action_unless_audit(click: "toggleSettings")
+                  data=stimulus_action_unless_readonly(click: "toggleSettings")
                 ]
                   == cell('folio/console/ui/with_icon',
                           t('.settings'),
@@ -68,7 +77,7 @@
                           icon_options: { height: 16 })
 
                 .f-c-form-footer__settings-backdrop[
-                  data=stimulus_action_unless_audit(click: "toggleSettings")
+                  data=stimulus_action_unless_readonly(click: "toggleSettings")
                 ]
 
                 .f-c-form-footer__settings-content
@@ -82,11 +91,10 @@
                           icon: :link,
                           icon_options: { height: 16 })
 
-            == cell('folio/console/ui/button',
-                    class: 'f-c-form-footer__btn f-c-form-footer__btn--collapsible',
-                    variant: :gray,
-                    icon: :dots_vertical,
-                    data: (stimulus_action_unless_audit(click: "toggleCollapsed") || {}).merge(test_id: "dropdown-button"))
+            = render(Folio::Console::Ui::ButtonComponent.new(class_name: 'f-c-form-footer__btn f-c-form-footer__btn--collapsible',
+                                                             variant: :gray,
+                                                             icon: :dots_vertical,
+                                                             data: (stimulus_action_unless_readonly(click: "toggleCollapsed") || {}).merge(test_id: "dropdown-button")))
 
 javascript:
   if (window.sessionStorage.getItem('fCAutosaveUiState')) {
@@ -103,13 +111,26 @@ javascript:
       w.document.addEventListener("readystatechange", (event) => {
         callback()
       }, { once: true })
+
+      const receiveMessage = (e) => {
+        if (e.origin !== window.origin) return;
+        if (e.data.type !== 'atomsListeningToMessages') return
+
+        window.FolioConsole.Autosave.atomsListeningToMessages = true
+        window.removeEventListener('message', receiveMessage)
+        callback()
+      };
+
+      window.addEventListener('message', receiveMessage, false);
     }
 
     window.FolioConsole.Autosave.restoreUiState = ({ clear }) => {
       const string = window.sessionStorage.getItem('fCAutosaveUiState')
       if (!string) return
 
-      if (clear) window.sessionStorage.removeItem('fCAutosaveUiState')
+      if (clear && window.FolioConsole.Autosave.atomsListeningToMessages) {
+        window.sessionStorage.removeItem('fCAutosaveUiState')
+      }
 
       const data = JSON.parse(string)
 
@@ -117,7 +138,7 @@ javascript:
         return
       }
 
-      const flash = document.querySelector('.f-c-flash-wrap')
+      const flash = document.querySelector('.f-c-ui-flash')
       const flashOffset = flash ? flash.offsetHeight : 0
 
       if (data.atomsFormExpanded) {

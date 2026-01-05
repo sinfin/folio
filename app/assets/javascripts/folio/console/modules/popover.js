@@ -6,8 +6,6 @@ window.Folio.Stimulus.register('f-c-popover', class extends window.Stimulus.Cont
   }
 
   connect () {
-    console.log(this.placementValue)
-
     this.element.dataset.bsPlacement = this.placementValue
 
     this.popover = new window.bootstrap.Popover(this.element, {

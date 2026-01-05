@@ -1,0 +1,60 @@
+.small[
+  class=bem_class_name
+  class=(@options[:middle_component] ? "f-c-ui-pagy--with-middle" : nil)
+  hidden=(@pagy.count == 0)
+  data=data
+]
+  .f-c-ui-pagy__flex
+    .f-c-ui-pagy__info
+      == pagy_info(@pagy)
+
+    - if @options[:middle_component]
+      .f-c-ui-pagy__middle
+        = render(@options[:middle_component])
+
+    - if @pagy.pages > 1
+      .f-c-ui-pagy__nav
+        - if @pagy.prev
+          span.f-c-ui-pagy__page[
+            class="f-c-ui-pagy__page--with-ico"
+            class="f-c-ui-pagy__page--prev"
+          ]
+            == link.call(@pagy.prev, icon(:chevron_left))
+
+        - else
+          span.f-c-ui-pagy__page[
+            class="f-c-ui-pagy__page--with-ico"
+            class="f-c-ui-pagy__page--prev f-c-ui-pagy__page--disabled"
+          ]
+            = icon(:chevron_left)
+
+        .f-c-ui-pagy__pages
+          / series example: [1, :gap, 7, 8, "9", 10, 11, :gap, 36]
+          - @pagy.series.each_with_index do |item, index|
+            - if item.is_a?(Integer)          # page link
+              span.f-c-ui-pagy__page.f-c-ui-pagy__page--page[
+                class=page_class(item)
+              ]
+                == link.call(item)
+
+            - elsif item.is_a?(String)        # current page
+              span.f-c-ui-pagy__page.f-c-ui-pagy__page--page[
+                class="f-c-ui-pagy__page--current"
+              ]
+                span.f-c-ui-pagy__page-current = item
+
+            - elsif item == :gap              # page gap
+              span.f-c-ui-pagy__page.f-c-ui-pagy__page--page[
+                class="f-c-ui-pagy__page--gap"
+              ] &hellip;
+
+        - if @pagy.next
+          span.f-c-ui-pagy__page[
+            class="f-c-ui-pagy__page--with-ico"
+            class="f-c-ui-pagy__page--next"
+          ] == link.call(@pagy.next, icon(:chevron_right))
+        - else
+          span.f-c-ui-pagy__page[
+            class="f-c-ui-pagy__page--with-ico"
+            class="f-c-ui-pagy__page--next f-c-ui-pagy__page--disabled"
+          ] = icon(:chevron_right)

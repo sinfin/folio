@@ -59,7 +59,7 @@ class MergeFolioAccountsToFolioUsersAndDropAccountsTable < ActiveRecord::Migrati
       drop_table :folio_accounts
       puts("Table folio_accounts dropped")
     end
-    ActiveRecord::Base.clear_active_connections!
+    ActiveRecord::Base.connection_pool.disconnect!
     ActiveRecord::Base.connection.close
   end
 

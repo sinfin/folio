@@ -65,5 +65,123 @@ namespace :folio do
         end
       end
     end
+
+    desc "update tiptap nodes from legacy key_id syntax to the key_placement_attributes one"
+    task idp_correct_tiptap_node_attachments: :environment do
+      class_name = ENV["CLASS_NAME"]
+      fail "Please provide CLASS_NAME env variable, e.g. CLASS_NAME=Folio::Page" if class_name.blank?
+      scope = class_name.constantize.where.not(tiptap_content: nil)
+      count = scope.count
+
+      if count.zero?
+        puts "[folio:developer_tools:idp_correct_tiptap_node_attachments] Nothing to do, exiting."
+        next
+      end
+
+      count_length = count.to_s.length
+      dots_page_by = 100
+
+      i = 0
+      scope.find_each do |record|
+        i += 1
+
+        # find any folioTiptapNode nodes
+        # change cover_id: num to cover_placement_attributes: { file_id: num }
+        # change video_cover_id: num to video_cover_placement_attributes: { file_id: num }
+        # no others should be needed
+        content = record.tiptap_content[Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content]]
+        changed = false
+
+        loop_content_and_replace = ->(node) {
+          if node && node["content"].present?
+            node["content"].each do |child|
+              loop_content_and_replace.call(child)
+            end
+          end
+
+          if node["type"] == "folioTiptapNode"
+            if node["attrs"] && node["attrs"]["data"]
+              if file_id = node["attrs"]["data"].delete("cover_id")
+                node["attrs"]["data"]["cover_placement_attributes"] = { "file_id" => file_id }
+                changed = true
+              end
+              if file_id = node["attrs"]["data"].delete("video_cover_id")
+                node["attrs"]["data"]["video_cover_placement_attributes"] = { "file_id" => file_id }
+                changed = true
+              end
+            end
+          end
+
+          node
+        }
+
+        new_content = loop_content_and_replace.call(content)
+
+        if changed
+          record.update_column(:tiptap_content, { Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content] => new_content })
+          # to trigger tiptap file placements creation
+          record.save
+          print(".")
+        else
+          print("s")
+        end
+
+        if i % dots_page_by == 0
+          print " #{i.to_s.rjust(count_length)} / #{count} (#{(i.to_f / count * 100).round(2)}%)"
+          puts ""
+        end
+      end
+
+      puts "\n[folio:developer_tools:idp_correct_tiptap_node_attachments] Done."
+    end
+
+    desc "Calculate and cache published usage counts for all files"
+    task calculate_file_published_usage_counts: :environment do
+      puts "Calculating published usage counts for all Folio::File records..."
+
+      total_count = Folio::File.count
+      processed = 0
+      batch_size = 500
+
+      Folio::File.find_in_batches(batch_size: batch_size) do |files|
+        files.each do |file|
+          file.update_file_placements_counts!
+        end
+
+        processed += files.size
+        percentage = (processed.to_f / total_count * 100).round(2)
+
+        puts "Processed #{processed}/#{total_count} files (#{percentage}%)"
+      end
+    end
+
+    desc "Set correct site for files and theirs tags accorfing to Rails.application.config.folio_shared_files_between_sites setting"
+    task idp_set_correct_site_for_files_and_tags: :environment do
+      Rails.logger.silence do
+        puts "[folio:developer_tools:idp_set_correct_site_for_files_and_tags] Setting correct site for files."
+
+        if Rails.application.config.folio_shared_files_between_sites
+          correct_site = Folio::File.correct_site(nil)
+          raise "correct_site is nil" if correct_site.blank?
+          puts "correct_site for all files: #{correct_site.domain}"
+
+          wrong_files_scope = Folio::File.where.not(site: correct_site)
+          puts "Updating #{wrong_files_scope.count} files"
+          Folio::File.where(id: wrong_files_scope).update_all(site_id: correct_site.id)
+          puts "Files updated"
+
+          file_types = ["Folio::File", "Folio::File::Audio", "Folio::File::Video", "Folio::File::Image", "Folio::File::Document"]
+          puts("Updating taggigs for file types: #{file_types.join(", ")}")
+          wrong_taggings_scope = ActsAsTaggableOn::Tagging.where(taggable_type: file_types)
+                                                          .where(id: ActsAsTaggableOn::Tagging.where.not(tenant: correct_site.id)
+                                                                                              .or(ActsAsTaggableOn::Tagging.where(tenant: nil)))
+          puts "Updating #{wrong_taggings_scope.count} taggings"
+          ActsAsTaggableOn::Tagging.where(id: wrong_taggings_scope).update_all(tenant: correct_site.id)
+          puts "Taggings updated"
+        else
+          puts "no sharing files is set, do nothing"
+        end
+      end
+    end
   end
 end

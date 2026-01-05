@@ -1,20 +1,2 @@
-inherit_from: ./lib/rubocop_config.yml
-
-AllCops:
-  TargetRubyVersion: 3.2.2
-  NewCops: enable
-  Exclude:
-    - 'app/assets/**/*'
-    - 'bin/*'
-    - 'data/**/*'
-    - 'db/schema.rb'
-    - 'lib/generators/folio/install_generator.rb'
-    - 'lib/tasks/auto_annotate_models.rake'
-    - 'lib/templates/lib/tasks/auto_annotate_models.rake'
-    - 'node_modules/**/*'
-    - 'public/**/*'
-    - 'react/**/*'
-    - 'test/dummy/db/schema.rb'
-    - 'test/dummy/public/**/*'
-    - 'tmp/**/*'
-    - 'vendor/**/*'
+inherit_gem:
+  folio: lib/rubocop_config.yml

@@ -7,6 +7,8 @@ module Folio::ApplicationControllerBase
   include Folio::RenderComponentJson
   include Folio::SetCurrentRequestDetails
   include Folio::SetMetaVariables
+  include Folio::HttpCache::Headers
+  include Folio::ComponentSessionRequirements
 
   included do
     include Pagy::Backend
@@ -26,6 +28,9 @@ module Folio::ApplicationControllerBase
     add_flash_types :success, :warning, :info
 
     rescue_from CanCan::AccessDenied, with: :handle_can_can_access_denied
+
+    # Apply basic HTTP cache headers after each action when enabled
+    after_action :set_cache_control_headers
   end
 
   def set_i18n_locale
@@ -101,6 +106,11 @@ module Folio::ApplicationControllerBase
     end
 
     def set_cookies_for_log
+      # Skip log cookies for cache-friendly anonymous requests (prevents Cloudflare BYPASS)
+      if should_skip_cookies_for_cache?
+        return
+      end
+
       if session_id = session.id.try(:public_id)
         cookies.signed[:s_for_log] = session_id unless cookies.signed[:s_for_log] == session_id
       else
@@ -115,6 +125,22 @@ module Folio::ApplicationControllerBase
         end
       end
     end
+
+    def should_skip_cookies_for_cache?
+      # Skip cookies if cache optimization is enabled and this is a cache-friendly request
+      return false unless Rails.application.config.respond_to?(:folio_cache_skip_session_for_public) &&
+                          Rails.application.config.folio_cache_skip_session_for_public
+
+      # If any component requires session, don't skip cookies (handled by ComponentSessionRequirements)
+      return false if respond_to?(:component_requires_session?) && component_requires_session?
+
+      # Same logic as in cache headers - only skip for anonymous GET requests to non-admin paths
+      request.get? &&
+        !Folio::Current.user.present? &&
+        !controller_path.include?("console") &&
+        !controller_path.include?("admin") &&
+        !controller_path.include?("api")
+      end
 
     def current_site_based_layout
       Folio::Current.site ? Folio::Current.site.layout_name : "folio/application"
@@ -141,7 +167,6 @@ module Folio::ApplicationControllerBase
         raise e
       end
 
-      Raven.capture_exception(e) if defined?(Raven)
       Sentry.capture_exception(e) if defined?(Sentry)
 
       if request.path.starts_with?("/console") && !can_now?(:access_console)
@@ -149,12 +174,6 @@ module Folio::ApplicationControllerBase
       else
         @error_code = 403
         render "folio/errors/show", status: @error_code
-      end
-    end
-
-    def set_cache_control_headers(record: nil)
-      if record && record.respond_to?(:published?) && !record.published?
-        no_store
       end
     end
 end

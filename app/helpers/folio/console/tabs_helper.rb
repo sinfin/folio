@@ -42,7 +42,8 @@ module Folio::Console::TabsHelper
         end
       end
 
-      render(Folio::Console::Ui::TabsComponent.new(tabs: ary))
+      render(Folio::Console::Ui::TabsComponent.new(tabs: ary,
+                                                   use_cookies_for_active: true))
     end
   end
 
@@ -53,8 +54,6 @@ module Folio::Console::TabsHelper
 
     active = @folio_active_tab == key
 
-    content_tag(:div, class: "tab-pane #{active ? 'active' : ''}",
-                      id: "tab-#{key}",
-                      &block)
+    render(Folio::Console::Ui::Tabs::TabPaneComponent.new(active:, key:), &block)
   end
 end

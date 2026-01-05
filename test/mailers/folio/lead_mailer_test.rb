@@ -6,9 +6,8 @@ class Folio::LeadMailerTest < ActionMailer::TestCase
   def setup
     super
     create_and_host_site
-    Rails.application.load_tasks
-    Rake::Task["folio:email_templates:idp_seed"].reenable
-    Rake::Task["folio:email_templates:idp_seed"].invoke
+
+    Folio::EmailTemplate.idp_seed
   end
 
   test "notification_email" do

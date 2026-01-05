@@ -1,57 +1,6 @@
 # frozen_string_literal: true
 
 module Folio::Console::ReactHelper
-  def file_picker(f:, placement_key:, file_type:, hint: nil, darker: false, required: nil)
-    raw cell("folio/console/file/picker",
-             f:,
-             placement_key:,
-             file_type:,
-             hint:,
-             darker:,
-             required:)
-  end
-
-  def file_picker_for_cover(f, hint: nil, darker: false, required: nil)
-    file_picker(f:,
-                placement_key: :cover_placement,
-                file_type: "Folio::File::Image",
-                hint:,
-                darker:,
-                required:)
-  end
-
-  def file_picker_for_og_image(f, hint: nil, required: nil)
-    file_picker(f:,
-                placement_key: :og_image_placement,
-                file_type: "Folio::File::Image",
-                hint:,
-                required:)
-  end
-
-  def file_picker_for_document(f, hint: nil, required: nil)
-    file_picker(f:,
-                placement_key: :document_placement,
-                file_type: "Folio::File::Document",
-                hint:,
-                required:)
-  end
-
-  def file_picker_for_audio_cover(f, hint: nil, required: nil)
-    file_picker(f:,
-                placement_key: :audio_cover_placement,
-                file_type: "Folio::File::Audio",
-                hint:,
-                required:)
-  end
-
-  def file_picker_for_video_cover(f, hint: nil, required: nil)
-    file_picker(f:,
-                placement_key: :video_cover_placement,
-                file_type: "Folio::File::Video",
-                hint:,
-                required:)
-  end
-
   def react_images(selected_placements = nil,
                    attachmentable: "page",
                    type: :image_placements,
@@ -138,15 +87,24 @@ module Folio::Console::ReactHelper
 
   def react_files(file_type, selected_placements, attachmentable:, type:, atom_setting: nil)
     placements = if selected_placements.present?
-      selected_placements.ordered.map do |fp|
+      ordered = if selected_placements.is_a?(ActiveRecord::Relation)
+        selected_placements.ordered
+      else
+        selected_placements
+      end
+
+      selected_index = 0
+
+      ordered.map do |fp|
         {
           id: fp.id,
+          selectedAt: fp.id.nil? ? (selected_index += 1) : nil,
           file_id: fp.file.id,
           alt: fp.alt,
           title: fp.title,
           file: Folio::Console::FileSerializer.new(fp.file)
                                               .serializable_hash[:data],
-        }
+        }.compact
       end.to_json
     end
 
@@ -203,29 +161,33 @@ module Folio::Console::ReactHelper
     param_base = "#{f.object_name}[#{through}_attributes]"
 
     items = []
-    removed_ids = []
+    removed_items = []
 
     f.object.send(through).each do |record|
-      if record.marked_for_destruction?
-        removed_ids << record.id if record.id
+      through_record = through_klass.find(record.send(reflection.foreign_key))
+      hash = {
+        id: record.id,
+        label: through_record.to_console_label,
+        value: through_record.id,
+        _destroy: record.marked_for_destruction?,
+      }
+
+      if hash[:_destroy]
+        if hash[:id]
+          removed_items << hash
+        end
       else
-        through_record = through_klass.find(record.send(reflection.foreign_key))
-        items << {
-          id: record.id,
-          label: through_record.to_console_label,
-          value: through_record.id,
-          _destroy: record.marked_for_destruction?,
-        }
+        items << hash
       end
     end
 
     url = Folio::Engine.routes.url_helpers.url_for([
-                                                     :selectize,
+                                                     :react_select,
                                                      :console,
                                                      :api,
                                                      :autocomplete,
                                                      {
-                                                       klass: through_klass.to_s,
+                                                       class_names: through_klass.to_s,
                                                        scope: scope,
                                                        order_scope: order_scope,
                                                        only_path: true
@@ -248,7 +210,7 @@ module Folio::Console::ReactHelper
           "data-name" => "#{f.object_name}[#{relation_name}]",
           "data-param-base" => param_base,
           "data-foreign-key" => reflection.foreign_key,
-          "data-removed-ids" => removed_ids.to_json,
+          "data-removed-items" => removed_items.to_json,
           "data-items" => items.to_json,
           "data-url" => url,
           "data-sortable" => sortable ? "1" : "0",

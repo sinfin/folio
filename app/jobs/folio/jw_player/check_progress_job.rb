@@ -6,6 +6,8 @@ class Folio::JwPlayer::CheckProgressJob < Folio::ApplicationJob
 
   queue_as :default
 
+  unique :until_and_while_executing
+
   attr_reader :media_file, :preview
 
   def perform(media_file, preview: false)

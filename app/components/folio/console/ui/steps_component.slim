@@ -1,0 +1,15 @@
+.f-c-ui-steps
+  - steps_with_marks.each_with_index do |step_with_marks, i|
+    *step_with_marks[:tag]
+      span.f-c-ui-steps__step-number
+        - if step_with_marks[:state] == :done
+          = folio_icon(:check, height: 16)
+        - else
+          = step_with_marks[:number]
+
+      span.f-c-ui-steps__step-label
+        = step_with_marks[:label]
+
+      - if i + 1 < steps_with_marks.size
+          = folio_icon(:chevron_right,
+                       class_name: "f-c-ui-steps__step-chevron")

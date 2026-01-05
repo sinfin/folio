@@ -1,3 +1,15 @@
+## Development 2025 update
+
+Use `yarn` instead of `npm`. If you get an openssl error, add `NODE_OPTIONS=--openssl-legacy-provider`
+
+- `NODE_OPTIONS=--openssl-legacy-provider yarn install` - install
+- `NODE_OPTIONS=--openssl-legacy-provider yarn start` - dev server
+- `NODE_OPTIONS=--openssl-legacy-provider yarn standard` - lint
+- `NODE_OPTIONS=--openssl-legacy-provider yarn test` - tests
+- `NODE_OPTIONS=--openssl-legacy-provider yarn build` - build
+
+## Info
+
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
 Below you will find some information on how to perform common tasks.<br>

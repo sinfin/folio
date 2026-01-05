@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
 class Folio::LeadsController < Folio::ApplicationController
+  include Folio::RequiresSession
   include Folio::RenderComponentJson
   include Folio::Captcha::HasTurnstileValidation
+
+  requires_session_for :form_functionality, only: [:create]
 
   def create
     lead = Folio::Lead.new(lead_params.merge(url: request.referrer))

@@ -6,6 +6,8 @@ class Folio::FilePlacements::AfterSaveJob < Folio::ApplicationJob
   # Discard if file_placement no longer exists
   discard_on ActiveJob::DeserializationError
 
+  unique :until_and_while_executing
+
   # use SQL commands only!
   # save/update would cause an infinite loop as this is hooked in after_save
   def perform(file_placement)

@@ -22,7 +22,7 @@ class Folio::VideoSubtitleTest < ActiveSupport::TestCase
     duplicate = Folio::VideoSubtitle.new(video: @video, language: "cs", format: "vtt")
     I18n.with_locale(:cs) do
       assert_not duplicate.valid?
-      assert_includes duplicate.errors[:language], "již databáze obsahuje"
+      assert_includes duplicate.errors[:language], "již je v databázi"
     end
   end
 

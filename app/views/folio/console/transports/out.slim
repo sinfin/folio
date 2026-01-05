@@ -4,14 +4,14 @@ h2 = @record.to_label
 
 .my-4.d-flex
   .me-g
-    == cell('folio/console/clipboard_copy', h(@yaml), as_button: true)
+    = render(Folio::Console::Ui::ClipboardComponent.new(text: h(@yaml),
+                                                        as_button: true))
 
-  == cell('folio/console/ui/button',
-          label: t('.download'),
-          icon: :download,
-          href: download_console_transport_path,
-          target: "_blank",
-          variant: :secondary)
+  = render(Folio::Console::Ui::ButtonComponent.new(label: t('.download'),
+                                                   icon: :download,
+                                                   href: download_console_transport_path,
+                                                   target: "_blank",
+                                                   variant: :secondary))
 
 pre
   code

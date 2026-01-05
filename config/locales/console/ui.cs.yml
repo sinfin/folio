@@ -1,0 +1,33 @@
+---
+cs:
+  folio:
+    console:
+      ui:
+        in_place_input_component:
+          blank: Nevyplněno
+
+        index:
+          filters_component:
+            cancel: Zrušit filtry
+            numeric_range:
+              from: Od
+              to: Do
+            collapsible_toggle: Podrobný filtr
+
+          header_component:
+            csv: CSV
+
+        turbo_frame_with_loader_component:
+          error_title: Při načítání obsahu došlo k chybě
+          error_message: Zkuste to prosím znovu přenačtením stránky.
+
+        clipboard_component:
+          copy: Kopírovat
+
+        validation_box_component:
+          fix: Opravit
+          errors: Doplňte chybějící povinné údaje, prosím.
+          warnings: "Varování: následující kritéria nejsou splněna"
+          missing_alt: nemá vyplněný alt
+          missing_description: nemá vyplněný popisek
+          missing_attribution: nemá vyplněného autora nebo zdroj

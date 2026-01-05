@@ -2,31 +2,70 @@
 
 class Folio::File::Image < Folio::File
   include Folio::Sitemap::Image
+  include Folio::File::HasUsageConstraints
 
-  validate_file_format
+  validate_file_format(%w[jpeg png gif svg tiff webp avif heic heif])
+
+  # Metadata extraction after image creation
+  after_commit :extract_metadata_async, if: :should_extract_metadata?
 
   dragonfly_accessor :file do
     after_assign :sanitize_filename
     after_assign { |file| file.metadata }
   end
 
-  # Get from metadata
+  # Unified metadata accessor via IptcFieldMapper
+  def mapped_metadata
+    @mapped_metadata ||= if file_metadata.present?
+      Folio::Metadata::IptcFieldMapper.map_metadata(file_metadata)
+    else
+      {}
+    end
+  end
+
+  # Shorthand for common fields (backward compatibility)
   def title
-    metadata_compose(["Headline", "Title"])
+    headline.presence || mapped_metadata[:headline]
   end
 
   def caption
-    metadata_compose(["Caption", "Description", "Abstract"])
+    description.presence || mapped_metadata[:description]
   end
 
   def keywords
-    metadata_compose(["Keywords"])
+    mapped_metadata[:keywords] || []
   end
 
-  def geo_location
-    # Geographic location, e.g.: Limerick, Ireland
-    metadata_compose(["LocationName", "SubLocation", "City", "ProvinceState", "CountryName"])
+  # GPS coordinates helper
+  def location_coordinates
+    return nil unless gps_latitude.present? && gps_longitude.present?
+    [gps_latitude, gps_longitude]
   end
+
+  # Human-friendly geo location for sitemaps and displays
+  # Prefers descriptive place fields, falls back to GPS coordinates
+  def geo_location
+    parts = []
+
+    # Prefer mapped descriptive fields when available
+    if mapped_metadata.present?
+      parts << mapped_metadata[:sublocation]
+      parts << mapped_metadata[:city]
+      parts << mapped_metadata[:state_province]
+      parts << mapped_metadata[:country]
+    end
+
+    human_location = parts.compact.reject(&:blank?).join(", ")
+    return human_location if human_location.present?
+
+    # Fallback to numeric coordinates
+    if gps_latitude.present? && gps_longitude.present?
+      return "#{gps_latitude},#{gps_longitude}"
+    end
+
+    nil
+  end
+
 
   def thumbnailable?
     true
@@ -36,12 +75,19 @@ class Folio::File::Image < Folio::File
     "image"
   end
 
-  private
-    def metadata_compose(tags)
-      string_arr = tags.filter_map { |tag| file_metadata.try("[]", tag) }.uniq
-      return nil if string_arr.size == 0
-      string_arr.join(", ")
-    end
+  # Manual metadata extraction (for existing images)
+  def extract_metadata!(force: false, user_id: nil, save: true)
+    Folio::Metadata::ExtractionService.new(self).extract!(force: force, user_id: user_id, save: save)
+  end
+
+  # Metadata extraction callbacks (delegate to service)
+  def should_extract_metadata?
+    Folio::Metadata::ExtractionService.should_extract?(self)
+  end
+
+  def extract_metadata_async
+    Folio::Metadata::ExtractionService.extract_async(self)
+  end
 end
 
 # == Schema Information
@@ -60,10 +106,10 @@ end
 #  file_size                         :bigint(8)
 #  additional_data                   :json
 #  file_metadata                     :json
-#  hash_id                           :string
+#  slug                              :string
 #  author                            :string
 #  description                       :text
-#  file_placements_size              :integer
+#  file_placements_count             :integer          default(0), not null
 #  file_name_for_search              :string
 #  sensitive_content                 :boolean          default(FALSE)
 #  file_mime_type                    :string
@@ -78,6 +124,15 @@ end
 #  attribution_source_url            :string
 #  attribution_copyright             :string
 #  attribution_licence               :string
+#  headline                          :string
+#  capture_date                      :datetime
+#  gps_latitude                      :decimal(10, 6)
+#  gps_longitude                     :decimal(10, 6)
+#  file_metadata_extracted_at        :datetime
+#  media_source_id                   :bigint(8)
+#  attribution_max_usage_count       :integer
+#  published_usage_count             :integer          default(0), not null
+#  thumbnail_configuration           :jsonb
 #
 # Indexes
 #
@@ -86,12 +141,15 @@ end
 #  index_folio_files_on_by_file_name_for_search  (to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text)))) USING gin
 #  index_folio_files_on_created_at               (created_at)
 #  index_folio_files_on_file_name                (file_name)
-#  index_folio_files_on_hash_id                  (hash_id)
+#  index_folio_files_on_media_source_id          (media_source_id)
+#  index_folio_files_on_published_usage_count    (published_usage_count)
 #  index_folio_files_on_site_id                  (site_id)
+#  index_folio_files_on_slug                     (slug)
 #  index_folio_files_on_type                     (type)
 #  index_folio_files_on_updated_at               (updated_at)
 #
 # Foreign Keys
 #
+#  fk_rails_...  (media_source_id => folio_media_sources.id)
 #  fk_rails_...  (site_id => folio_sites.id)
 #

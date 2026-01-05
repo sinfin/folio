@@ -54,8 +54,22 @@ class Dummy::Ui::ImageComponent < ApplicationComponent
     if placement.is_a?(Hash)
       use_webp = placement[:webp_normal].present?
 
-      if placement[:webp_normal].present?
-        if placement[:webp_retina].present?
+      # Check if URLs are ready (not placeholder URLs)
+      normal_ready = placement[:normal].present? && !placement[:normal].include?("doader.com")
+      retina_ready = placement[:retina].present? && !placement[:retina].include?("doader.com")
+      webp_normal_ready = placement[:webp_normal].present? && !placement[:webp_normal].include?("doader.com")
+      webp_retina_ready = placement[:webp_retina].present? && !placement[:webp_retina].include?("doader.com")
+
+      # Only set srcset if both normal and retina URLs are ready
+      srcset = if placement[:retina] && normal_ready && retina_ready
+        "#{placement[:normal]} 1x, #{placement[:retina]} #{RETINA_MULTIPLIER}x"
+      else
+        nil
+      end
+
+      # Only set webp_srcset if webp URLs are ready
+      if webp_normal_ready
+        if placement[:webp_retina] && webp_retina_ready
           webp_srcset = "#{placement[:webp_normal]} 1x, #{placement[:webp_retina]} #{RETINA_MULTIPLIER}x"
         else
           webp_srcset = placement[:webp_normal]
@@ -68,16 +82,20 @@ class Dummy::Ui::ImageComponent < ApplicationComponent
         alt: @alt || "",
         title: @title || "",
         src: placement[:normal],
-        srcset: placement[:retina] ? "#{placement[:normal]} 1x, #{placement[:retina]} #{RETINA_MULTIPLIER}x" : nil,
+        srcset: srcset,
         webp_src: placement[:webp_normal],
-        webp_srcset:,
-        use_webp:,
+        webp_srcset: webp_srcset,
+        use_webp: use_webp,
       }
     else
       if placement.is_a?(Folio::FilePlacement::Base)
         file = placement.file
+        alt_fallback = placement.alt_with_fallback
+        description_fallback = placement.description_with_fallback
       else
         file = placement
+        alt_fallback = file.alt
+        description_fallback = file.description
       end
 
       normal = file.thumb(@size)
@@ -86,7 +104,8 @@ class Dummy::Ui::ImageComponent < ApplicationComponent
         file:,
         normal:,
         src: normal.url,
-        alt: @alt || file.try(:alt) || file.try(:description) || "",
+        alt: @alt || alt_fallback || "",
+        description: (@description || description_fallback).presence,
         title: @title,
         width: normal[:width],
         height: normal[:height],
@@ -98,13 +117,24 @@ class Dummy::Ui::ImageComponent < ApplicationComponent
 
         retina = file.thumb(retina_size)
 
-        use_webp = normal[:webp_url] && retina[:webp_url]
+        # Check if URLs are ready (not placeholder URLs)
+        normal_ready = normal.url.present? && !normal.url.include?("doader.com")
+        retina_ready = retina.url.present? && !retina.url.include?("doader.com")
+        webp_normal_ready = normal[:webp_url].present? && !normal[:webp_url].include?("doader.com")
+        webp_retina_ready = retina[:webp_url].present? && !retina[:webp_url].include?("doader.com")
+
+        use_webp = webp_normal_ready && webp_retina_ready
 
         h[:retina] = retina
         h[:use_webp] = use_webp
-        h[:srcset] = "#{normal.url} 1x, #{retina.url} #{RETINA_MULTIPLIER}x"
 
-        if use_webp
+        # Only set srcset if both normal and retina URLs are ready
+        if normal_ready && retina_ready
+          h[:srcset] = "#{normal.url} 1x, #{retina.url} #{RETINA_MULTIPLIER}x"
+        end
+
+        # Only set webp_srcset if both webp URLs are ready
+        if webp_normal_ready && webp_retina_ready
           h[:webp_src] = normal.webp_src
           h[:webp_srcset] = "#{normal.webp_url} 1x, #{retina.webp_url} #{RETINA_MULTIPLIER}x"
         end
@@ -112,6 +142,14 @@ class Dummy::Ui::ImageComponent < ApplicationComponent
 
       @data = h
     end
+
+    if @data
+      if @data[:src] && @data[:src].include?("doader.com")
+        @data[:image_data] = stimulus_thumbnail
+      end
+    end
+
+    @data
   end
 
   def wrap_style

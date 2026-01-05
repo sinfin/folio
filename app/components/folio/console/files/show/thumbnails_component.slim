@@ -1,0 +1,14 @@
+.f-c-files-show-thumbnails
+  h2.mt-0 = t('.title')
+
+  - if @file.thumbnail_sizes.present?
+    - self.class.group_thumbnail_size_keys(@file.thumbnail_sizes.keys).each do |type, ratios|
+      h3 = t(".type/#{type}")
+
+      - ratios.each do |ratio, thumbnail_size_keys|
+        = render(Folio::Console::Files::Show::Thumbnails::RatioComponent.new(file: @file,
+                                                                             ratio:,
+                                                                             thumbnail_size_keys:))
+
+  - else
+    p = t('.no_thumbnails_yet')

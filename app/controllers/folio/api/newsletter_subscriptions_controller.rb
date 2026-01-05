@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
 class Folio::Api::NewsletterSubscriptionsController < Folio::Api::BaseController
+  include Folio::RequiresSession
   include Folio::Captcha::HasTurnstileValidation
+
+  skip_before_action :verify_authenticity_token, only: [:create]
+  requires_session_for :newsletter_subscription, only: [:create]
 
   def create
     newsletter_subscription = Folio::NewsletterSubscription.new(newsletter_subscription_params.merge(site: Folio::Current.site))

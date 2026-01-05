@@ -18,6 +18,18 @@ class Folio::EmailTemplate < Folio::ApplicationRecord
 
   translates :subject, :body
 
+  def self.idp_seed
+    Rails.logger.silence do
+      load_templates_from_yaml(Rails.root.join("data/email_templates_data.yml"))
+
+      Dir[Rails.root.join("data/email_templates/*.yml")].each do |path|
+        load_templates_from_yaml(path)
+      end
+
+      load_templates_from_yaml(Folio::Engine.root.join("data/email_templates_data.yml"))
+    end
+  end
+
   def self.load_templates_from_yaml(file_path)
     return false unless File.exist?(file_path)
 

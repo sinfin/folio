@@ -5,8 +5,10 @@ class Folio::Console::Api::TagsController < Folio::Console::Api::BaseController
     q = params[:q]
     context = params[:context].presence || "tags"
 
+    tenant_site_ids = [Folio::File.correct_site(Folio::Current.site), Folio::Current.site].uniq.collect(&:id)
+
     scope = ActsAsTaggableOn::Tag.joins(:taggings)
-                                 .where(taggings: { context:, tenant: Folio::Current.site.id })
+                                 .where(taggings: { context:, tenant: tenant_site_ids })
 
     if q.present?
       scope = scope.by_label_query(q)

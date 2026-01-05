@@ -4,4 +4,4 @@
   - elsif "#{application_namespace}::FlashCell".safe_constantize
     == cell("#{application_namespace.underscore}/flash", model)
   - else
-    == cell('folio/console/flash', model)
+    = render_view_component(Folio::Console::Ui::FlashComponent.new(flash: model))

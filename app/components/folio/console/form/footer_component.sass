@@ -32,6 +32,9 @@
   pointer-events: all
   cursor: default
 
+  &--static
+    position: relative
+
   &__inner
     padding-top: $grid-gutter-width / 2
     padding-bottom: $grid-gutter-width / 2
@@ -124,11 +127,8 @@
 
   &__collapsible-backdrop,
   &__settings-backdrop
-    position: absolute
-    top: -100vh
-    left: -100vw
-    width: 200vw
-    height: 200vh
+    position: fixed
+    inset: 0
     z-index: 2
     display: none
 
@@ -213,6 +213,10 @@
     &,
     .f-c-simple-form-with-atoms &
       width: calc(100% - 220px)
+
+    &--static
+      left: 0
+      width: auto
 
 .f-c-form-footer-spacer
   .modal &

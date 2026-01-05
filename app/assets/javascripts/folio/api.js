@@ -82,10 +82,10 @@ function responseToHtml (response) {
     if (response.url) {
       const urlObj = new URL(response.url)
       const queryParams = urlObj.searchParams
-      const anchor = queryParams.get("_anchor")
+      const anchor = queryParams.get('_anchor')
 
       if (anchor) {
-        queryParams.delete("_anchor")
+        queryParams.delete('_anchor')
         urlObj.search = queryParams.toString()
         return Promise.resolve(`{ "data": { "redirected": "${urlObj}#${anchor}" }}`)
       }
@@ -99,13 +99,26 @@ function responseToHtml (response) {
 }
 
 window.Folio.Api.flashMessageFromMeta = (response) => {
-  if (window.FolioConsole && window.FolioConsole.Flash) {
-    if (typeof response === 'object' && response.meta && response.meta.flash) {
-      if (response.meta.flash.success) {
-        window.FolioConsole.Flash.success(response.meta.flash.success)
-      } else if (response.meta.flash.alert) {
-        window.FolioConsole.Flash.alert(response.meta.flash.alert)
+  if (typeof response === 'object' && response.meta && response.meta.flash) {
+    let flash
+
+    if (response.meta.flash.success) {
+      flash = {
+        content: response.meta.flash.success,
+        variant: 'success'
       }
+    } else if (response.meta.flash.alert) {
+      flash = {
+        content: response.meta.flash.alert,
+        variant: 'danger'
+      }
+    }
+
+    if (flash) {
+      document.dispatchEvent(new CustomEvent('folio:flash', {
+        bubbles: true,
+        detail: { flash }
+      }))
     }
   }
 

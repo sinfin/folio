@@ -48,6 +48,21 @@ legend
     .redactor-box
       box-shadow: 0 0 12px 2px $red !important
 
+  &:has(&__input-controls)
+    position: relative
+
+  &__input-controls
+    display: inline-flex
+    align-items: center
+    position: absolute
+    right: 1px
+    top: 1px
+    height: calc(100% - 2px)
+    padding-right: 6px
+    border-radius: $border-radius
+    z-index: 99999
+    background-color: $form-select-bg
+
 .form-control,
 .form-select,
 .form-check-input
@@ -59,6 +74,20 @@ legend
 
 .form-control.select
   @extend .form-select
+
+  .input-group--filled:has(.form-group__input-controls) &
+    background-position: right 34px center
+    padding-right: $form-clear-button-gradient-right--filled
+
+  .input-group.select:has(&)::before
+    +form-clear-button-gradient
+
+  .input-group--filled.select:has(&)::before
+    right: $form-clear-button-gradient-right--filled
+
+.form-control.date_range
+  border-top-right-radius: $border-radius !important
+  border-bottom-right-radius: $border-radius !important
 
 .form-text
   display: block
@@ -78,3 +107,9 @@ legend
       display: inline-block
       font-weight: $font-weight-bold
       color: $orange
+
+.input-group--filled:has(.form-group__input-controls)
+  .form-control
+    border-top-right-radius: $border-radius !important
+    border-bottom-right-radius: $border-radius !important
+    padding-right: $form-select-indicator-padding

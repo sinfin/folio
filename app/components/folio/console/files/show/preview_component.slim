@@ -1,0 +1,24 @@
+.f-c-files-show-preview
+  - if @human_type == "image"
+    figure.f-c-files-show-preview__figure.mb-0
+      a.f-c-files-show-preview__image-wrap[
+        href=file_url
+        target="_blank"
+      ]
+        img.f-c-files-show-preview__image[
+          src=file_url
+          alt=""
+          width=@file.file_width
+          height=@file.file_height
+          loading="lazy"
+        ]
+
+      - if @file.file_width && @file.file_height
+        figcaption.mt-2.small
+          = @file.file_width
+          | ×
+          = @file.file_height
+          | px
+
+  - elsif @human_type == "video" || @human_type == "audio"
+    = render(Folio::PlayerComponent.new(file: @file))

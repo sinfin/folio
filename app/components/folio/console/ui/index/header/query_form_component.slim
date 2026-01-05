@@ -1,0 +1,11 @@
+.f-c-ui-index-header-query-form[
+  data=data
+]
+  = helpers.simple_fields_for "f-c-ui-index-header-query-form" do |f|
+    = render(Folio::Console::Ui::InputWithButtonsComponent.new(input: by_label_query_input(f),
+                                                               buttons_kwargs: query_buttons_kwargs))
+
+    - if controller.send(:index_filters_keys).present?
+      - controller.send(:index_filters_keys).each do |key|
+        - if controller.params[key].present?
+          = f.hidden_field key, value: controller.params[key], id: nil

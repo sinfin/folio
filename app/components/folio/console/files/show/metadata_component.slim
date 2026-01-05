@@ -1,0 +1,35 @@
+.f-c-files-show-metadata
+  - if table_groups.present?
+    table.f-c-files-show-metadata__table.table
+      - table_groups.each do |label, rows|
+        tbody.f-c-files-show-metadata__tbody
+          tr.f-c-files-show-metadata__tr
+            th.f-c-files-show-metadata__td[
+              class="f-c-files-show-metadata__td--th"
+              class="f-c-files-show-metadata__td--colspan"
+              colspan="2"
+            ]
+              = label
+
+          - rows.each do |label, value|
+            tr.f-c-files-show-metadata__tr.small
+              th.f-c-files-show-metadata__td[
+                class="f-c-files-show-metadata__td--th"
+              ]
+                = label
+
+              td.f-c-files-show-metadata__td
+                = value
+
+  - else
+    p.small.mb-2 = t('.no_metadata')
+
+  - if @file.respond_to?(:extract_metadata!) && can_now?(:extract_metadata, @file)
+    = helpers.simple_form_for([:console, @file],
+                              url: url_for([:extract_metadata, :console, @file]),
+                              method: :post) do |f|
+      = render(Folio::Console::Ui::ButtonComponent.new(variant: :warning,
+                                                       size: :sm,
+                                                       icon: :reload,
+                                                       type: :submit,
+                                                       label: t('.extract_metadata')))

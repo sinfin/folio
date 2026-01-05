@@ -90,7 +90,7 @@ window.Folio.Stimulus.register('f-input-character-counter', class extends window
 
     this.bindChangeEventListener(input)
 
-    wrap.appendChild(document.createTextNode(` ${Folio.i18n(window.Folio.Input.CharacterCounter.i18n, 'shortForCharacter')}`))
+    wrap.appendChild(document.createTextNode(` ${window.Folio.i18n(window.Folio.Input.CharacterCounter.i18n, 'shortForCharacter')}`))
 
     this.element.insertAdjacentElement('afterend', wrap)
   }

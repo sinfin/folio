@@ -1,0 +1,501 @@
+import React from "react";
+import { useEditorState } from "@tiptap/react";
+import { type Editor } from "@tiptap/react";
+
+import { Spacer } from "@/components/tiptap-ui-primitive/spacer";
+import {
+  Toolbar,
+  ToolbarGroup,
+  ToolbarSeparator,
+} from "@/components/tiptap-ui-primitive/toolbar";
+import { FolioTiptapNodeButton } from "@/components/tiptap-ui/folio-tiptap-node-button";
+import { LinkPopover } from "@/components/tiptap-ui/link-popover";
+import { MarkButton } from "@/components/tiptap-ui/mark-button";
+import { UndoRedoButton } from "@/components/tiptap-ui/undo-redo-button";
+import { FolioTiptapShowHtmlButton } from "@/components/tiptap-extensions/folio-tiptap-show-html/folio-tiptap-show-html-button";
+import { FolioTiptapEraseMarksButton } from "@/components/tiptap-extensions/folio-tiptap-erase-marks/folio-tiptap-erase-marks-button";
+import { FolioEditorToolbarDropdown } from "./folio-editor-toolbar-dropdown";
+import { FolioEditorToolbarSlot } from "./folio-editor-toolbar-slot";
+import {
+  ListsCommandGroup,
+  TextAlignCommandGroup,
+  TextDecorationCommandGroup,
+} from "@/components/tiptap-command-groups";
+import { ResponsivePreviewButtons } from "@/components/tiptap-ui/responsive-preview-buttons";
+import { HorizontalRuleCommand } from "@/components/tiptap-commands";
+import { FolioEditorToolbarCommandButton } from "./folio-editor-toolbar-command-button";
+import FolioTiptapAutosaveIndicator from "@/components/tiptap-extensions/folio-tiptap-autosave/folio-tiptap-autosave-indicator";
+
+interface FolioEditorToolbarButtonStateMapping {
+  enabled: (params: { editor: Editor }) => boolean;
+  active: (params: { editor: Editor }) => boolean;
+  values?: (params: { editor: Editor }) => string[] | undefined;
+  onlyInBlockEditor?: true;
+  multiselect?: true;
+}
+
+interface FolioEditorToolbarStateMapping {
+  undo: FolioEditorToolbarButtonStateMapping;
+  redo: FolioEditorToolbarButtonStateMapping;
+  bold: FolioEditorToolbarButtonStateMapping;
+  italic: FolioEditorToolbarButtonStateMapping;
+  strike: FolioEditorToolbarButtonStateMapping;
+  underline: FolioEditorToolbarButtonStateMapping;
+  superscript: FolioEditorToolbarButtonStateMapping;
+  subscript: FolioEditorToolbarButtonStateMapping;
+  link: FolioEditorToolbarButtonStateMapping;
+  lists: FolioEditorToolbarButtonStateMapping;
+  erase: FolioEditorToolbarButtonStateMapping;
+  textStyles: FolioEditorToolbarButtonStateMapping;
+  textAlign: FolioEditorToolbarButtonStateMapping;
+  layouts: FolioEditorToolbarButtonStateMapping;
+  textDecorations: FolioEditorToolbarButtonStateMapping;
+}
+
+export interface FolioEditorToolbarButtonState {
+  enabled: boolean;
+  active: boolean;
+  values?: string[];
+  multiselect?: boolean;
+}
+
+type FolioEditorToolbarKey = keyof FolioEditorToolbarStateMapping;
+
+type FolioEditorToolbarState = {
+  [K in FolioEditorToolbarKey]: FolioEditorToolbarButtonState;
+};
+
+interface FolioEditorToolbarProps {
+  editor: Editor;
+  blockEditor: boolean;
+  folioTiptapConfig?: FolioTiptapConfig;
+  textStylesCommandGroup: FolioEditorCommandGroup;
+  layoutsCommandGroup?: FolioEditorCommandGroup;
+  setResponsivePreviewEnabled?: (enabled: boolean) => void;
+  autosaveIndicatorInfo?: FolioTiptapAutosaveIndicatorInfo;
+}
+
+const makeMarkEnabled =
+  (type: keyof FolioEditorToolbarStateMapping) =>
+  ({ editor }: { editor: Editor }) =>
+    editor!.isActive("codeBlock") && editor!.can().toggleMark(type);
+
+const makeMarkActive =
+  (type: keyof FolioEditorToolbarStateMapping) =>
+  ({ editor }: { editor: Editor }) =>
+    editor!.isActive(type);
+
+const toolbarStateMapping: FolioEditorToolbarStateMapping = {
+  undo: {
+    enabled: ({ editor }) => editor!.can().undo(),
+    active: () => false,
+  },
+  redo: {
+    enabled: ({ editor }) => editor!.can().redo(),
+    active: () => false,
+  },
+  bold: { enabled: makeMarkEnabled("bold"), active: makeMarkActive("bold") },
+  italic: {
+    enabled: makeMarkEnabled("italic"),
+    active: makeMarkActive("italic"),
+  },
+  strike: {
+    enabled: makeMarkEnabled("strike"),
+    active: makeMarkActive("strike"),
+  },
+  underline: {
+    enabled: makeMarkEnabled("underline"),
+    active: makeMarkActive("underline"),
+  },
+  superscript: {
+    enabled: makeMarkEnabled("superscript"),
+    active: makeMarkActive("superscript"),
+  },
+  subscript: {
+    enabled: makeMarkEnabled("subscript"),
+    active: makeMarkActive("subscript"),
+  },
+  link: {
+    enabled: ({ editor }) => editor.can().setLink?.({ href: "" }),
+    active: makeMarkActive("link"),
+  },
+  textAlign: {
+    enabled: ({ editor }) =>
+      editor.can().setTextAlign("left") || editor.can().setTextAlign("center"),
+    active: ({ editor }) =>
+      editor.isActive({ textAlign: "center" }) ||
+      editor.isActive({ textAlign: "right" }),
+    values: ({ editor }) => {
+      if (editor.isActive({ textAlign: "left" })) {
+        return ["align-left"];
+      } else if (editor.isActive({ textAlign: "center" })) {
+        return ["align-center"];
+      } else if (editor.isActive({ textAlign: "right" })) {
+        return ["align-right"];
+      }
+
+      return undefined;
+    },
+  },
+  erase: {
+    enabled: ({ editor }) => {
+      let hasAnyMarks = false;
+      const selection = editor.view.state.selection;
+
+      if (selection.empty) {
+        // If the selection is empty, we check if the current node has any marks
+        const node = editor.view.state.doc.nodeAt(selection.from);
+
+        if (node && node.marks && node.marks.length > 0) {
+          hasAnyMarks = true;
+        }
+      } else {
+        editor.view.state.doc.nodesBetween(
+          selection.from,
+          selection.to,
+          (node) => {
+            if (node.marks && node.marks.length > 0) {
+              hasAnyMarks = true;
+              return false;
+            }
+          },
+        );
+      }
+
+      return hasAnyMarks;
+    },
+    active: () => false,
+  },
+  textStyles: {
+    enabled: ({ editor }) => editor.can().toggleNode("heading", "paragraph"),
+    active: ({ editor }) =>
+      editor!.isActive("heading") ||
+      editor!.isActive("folioTiptapStyledParagraph"),
+    values: ({ editor }) => {
+      if (editor!.isActive("heading")) {
+        const attr = editor!.getAttributes("heading");
+
+        if (attr && attr.level) {
+          return [`heading-${attr.level}`];
+        }
+      } else if (editor!.isActive("folioTiptapStyledParagraph")) {
+        const attr = editor!.getAttributes("folioTiptapStyledParagraph");
+
+        if (attr && attr.variant) {
+          return [`folioTiptapStyledParagraph-${attr.variant}`];
+        }
+      } else if (editor!.isActive("paragraph")) {
+        return ["paragraph"];
+      }
+
+      return undefined;
+    },
+  },
+  lists: {
+    enabled: ({ editor }) =>
+      editor.can().toggleBulletList() || editor.can().toggleOrderedList(),
+    active: ({ editor }) =>
+      editor.isActive("bulletList") || editor.isActive("orderedList"),
+    values: ({ editor }) => {
+      if (editor.isActive("bulletList")) {
+        return ["bulletList"];
+      } else if (editor.isActive("orderedList")) {
+        return ["orderedList"];
+      }
+
+      return undefined;
+    },
+  },
+  layouts: {
+    onlyInBlockEditor: true,
+    enabled: ({ editor }) =>
+      editor.can().insertFolioTiptapColumns() || editor.can().insertTable(),
+    active: () => false,
+    values: ({ editor }) => {
+      if (editor.isActive("folioTiptapColumns")) {
+        return ["folioTiptapColumns"];
+      } else if (editor.isActive("table")) {
+        return ["table"];
+      }
+
+      return undefined;
+    },
+  },
+  textDecorations: {
+    multiselect: true,
+    enabled: () => true,
+    active: ({ editor }) =>
+      editor.isActive("italic") ||
+      editor.isActive("underline") ||
+      editor.isActive("strike") ||
+      editor.isActive("superscript") ||
+      editor.isActive("subscript"),
+    values: ({ editor }) => {
+      const values: string[] = [];
+
+      if (editor.isActive("italic")) values.push("italic");
+      if (editor.isActive("underline")) values.push("underline");
+      if (editor.isActive("strike")) values.push("strike");
+      if (editor.isActive("superscript")) values.push("superscript");
+      if (editor.isActive("subscript")) values.push("subscript");
+
+      return values;
+    },
+  },
+};
+
+const getToolbarState = ({
+  editor,
+  blockEditor,
+}: {
+  editor: Editor;
+  blockEditor: boolean;
+}): FolioEditorToolbarState => {
+  const state: Partial<
+    Record<keyof FolioEditorToolbarStateMapping, FolioEditorToolbarButtonState>
+  > = {};
+  let keys = Object.keys(
+    toolbarStateMapping,
+  ) as (keyof FolioEditorToolbarStateMapping)[];
+
+  if (!blockEditor) {
+    keys = keys.filter((key) => !toolbarStateMapping[key].onlyInBlockEditor);
+  }
+
+  if (editor && editor.isEditable) {
+    keys.forEach((key: keyof FolioEditorToolbarStateMapping) => {
+      state[key] = {
+        multiselect: toolbarStateMapping[key].multiselect,
+        enabled: toolbarStateMapping[key].enabled({ editor }),
+        active: toolbarStateMapping[key].active({ editor }),
+        values: toolbarStateMapping[key].values
+          ? toolbarStateMapping[key].values({ editor })
+          : undefined,
+      };
+    });
+  } else {
+    keys.forEach((key: keyof FolioEditorToolbarStateMapping) => {
+      state[key] = {
+        enabled: false,
+        active: false,
+      };
+    });
+  }
+
+  return state as FolioEditorToolbarState;
+};
+
+const MainToolbarContent = ({
+  blockEditor,
+  editor,
+  folioTiptapConfig,
+  textStylesCommandGroup,
+  layoutsCommandGroup,
+  setResponsivePreviewEnabled,
+  autosaveIndicatorInfo,
+}: {
+  blockEditor: boolean;
+  editor: Editor;
+  folioTiptapConfig?: FolioTiptapConfig;
+  textStylesCommandGroup: FolioEditorCommandGroup;
+  layoutsCommandGroup?: FolioEditorCommandGroup;
+  setResponsivePreviewEnabled?: (enabled: boolean) => void;
+  autosaveIndicatorInfo?: FolioTiptapAutosaveIndicatorInfo;
+}) => {
+  const editorState: FolioEditorToolbarState = useEditorState({
+    editor,
+
+    // the selector function is used to select the state you want to react to
+    selector: ({ editor }) => {
+      return getToolbarState({ editor, blockEditor });
+    },
+  });
+
+  const nodesForSlots = React.useMemo(() => {
+    const nodes: Record<string, FolioTiptapNodeFromInput[]> = {};
+
+    if (blockEditor && folioTiptapConfig?.nodes) {
+      folioTiptapConfig.nodes.forEach((node) => {
+        const slot = node.config?.toolbar?.slot;
+
+        if (slot) {
+          if (!nodes[slot]) {
+            nodes[slot] = [];
+          }
+
+          nodes[slot].push(node);
+        }
+      });
+    }
+
+    return nodes;
+  }, [blockEditor, folioTiptapConfig]);
+
+  return (
+    <>
+      {blockEditor ? (
+        <>
+          <ToolbarGroup>
+            <FolioTiptapNodeButton editor={editor} />
+          </ToolbarGroup>
+
+          <ToolbarSeparator />
+        </>
+      ) : null}
+
+      <ToolbarGroup>
+        <UndoRedoButton
+          action="undo"
+          active={editorState["undo"].active}
+          enabled={editorState["undo"].enabled}
+        />
+        <UndoRedoButton
+          action="redo"
+          active={editorState["redo"].active}
+          enabled={editorState["redo"].enabled}
+        />
+      </ToolbarGroup>
+
+      <ToolbarSeparator />
+
+      <ToolbarGroup>
+        <FolioEditorToolbarDropdown
+          editorState={editorState["textStyles"]}
+          commandGroup={textStylesCommandGroup}
+          editor={editor}
+        />
+
+        <FolioEditorToolbarDropdown
+          editorState={editorState["lists"]}
+          commandGroup={ListsCommandGroup}
+          editor={editor}
+        />
+      </ToolbarGroup>
+
+      <ToolbarSeparator />
+
+      <ToolbarGroup>
+        <MarkButton editor={editor} type="bold" />
+
+        <FolioEditorToolbarDropdown
+          editorState={editorState["textDecorations"]}
+          commandGroup={TextDecorationCommandGroup}
+          editor={editor}
+        />
+      </ToolbarGroup>
+
+      <ToolbarSeparator />
+
+      <ToolbarGroup>
+        <FolioTiptapEraseMarksButton
+          editor={editor}
+          enabled={editorState["erase"].enabled}
+        />
+      </ToolbarGroup>
+
+      <ToolbarSeparator />
+
+      <ToolbarGroup>
+        <LinkPopover editor={editor} editorState={editorState["link"]} />
+
+        <FolioEditorToolbarSlot
+          editor={editor}
+          nodes={nodesForSlots["after_link"]}
+        />
+      </ToolbarGroup>
+
+      <ToolbarSeparator />
+
+      <ToolbarGroup>
+        <FolioEditorToolbarDropdown
+          editorState={editorState["textAlign"]}
+          commandGroup={TextAlignCommandGroup}
+          editor={editor}
+        />
+      </ToolbarGroup>
+
+      {blockEditor ? (
+        <>
+          <ToolbarSeparator />
+
+          {layoutsCommandGroup && (
+            <ToolbarGroup>
+              <FolioEditorToolbarDropdown
+                editorState={editorState["layouts"]}
+                commandGroup={layoutsCommandGroup}
+                editor={editor}
+              />
+            </ToolbarGroup>
+          )}
+
+          <ToolbarSeparator />
+
+          <FolioEditorToolbarSlot
+            editor={editor}
+            nodes={nodesForSlots["after_layouts"]}
+          />
+
+          <FolioEditorToolbarCommandButton
+            editor={editor}
+            command={HorizontalRuleCommand}
+          />
+        </>
+      ) : null}
+
+      <ToolbarSeparator />
+
+      <ToolbarGroup>
+        <FolioTiptapShowHtmlButton editor={editor} />
+      </ToolbarGroup>
+
+      <Spacer />
+
+      {setResponsivePreviewEnabled && (
+        <ToolbarGroup>
+          <ResponsivePreviewButtons
+            setResponsivePreviewEnabled={setResponsivePreviewEnabled}
+          />
+        </ToolbarGroup>
+      )}
+
+      {folioTiptapConfig?.autosave && blockEditor && (
+        <>
+          <ToolbarSeparator />
+
+          <ToolbarGroup>
+            <FolioTiptapAutosaveIndicator
+              editor={editor}
+              autosaveIndicatorInfo={autosaveIndicatorInfo}
+            />
+          </ToolbarGroup>
+        </>
+      )}
+    </>
+  );
+};
+
+export function FolioEditorToolbar({
+  editor,
+  blockEditor,
+  folioTiptapConfig,
+  textStylesCommandGroup,
+  layoutsCommandGroup,
+  setResponsivePreviewEnabled,
+  autosaveIndicatorInfo,
+}: FolioEditorToolbarProps) {
+  if (!editor) return null;
+
+  return (
+    <Toolbar>
+      <MainToolbarContent
+        blockEditor={blockEditor}
+        editor={editor}
+        folioTiptapConfig={folioTiptapConfig}
+        textStylesCommandGroup={textStylesCommandGroup}
+        layoutsCommandGroup={layoutsCommandGroup}
+        setResponsivePreviewEnabled={setResponsivePreviewEnabled}
+        autosaveIndicatorInfo={autosaveIndicatorInfo}
+      />
+    </Toolbar>
+  );
+}

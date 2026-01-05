@@ -3,7 +3,8 @@
 class Folio::FilePlacement::Cover < Folio::FilePlacement::Base
   include Folio::Sitemap::FilePlacement::Image
 
-  folio_image_placement :cover_placement
+  folio_image_placement :cover_placement,
+                        has_many: false
 end
 
 # == Schema Information
@@ -22,6 +23,8 @@ end
 #  alt                  :string
 #  placement_title      :string
 #  placement_title_type :string
+#  folio_embed_data     :jsonb
+#  description          :text
 #
 # Indexes
 #

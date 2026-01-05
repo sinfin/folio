@@ -19,7 +19,7 @@ window.Redactor.modules.link.prototype._setLinkData = function (nodes, data, typ
   this.selection.save()
 
   for (let i = 0; i < nodes.length; i++) {
-    const $link = $R.create('link.component', this.app, nodes[i])
+    const $link = window.$R.create('link.component', this.app, nodes[i])
     const linkData = {}
 
     if (data.text && isTextChanged) linkData.text = data.text
@@ -71,7 +71,7 @@ window.Redactor.modules.link.prototype.open = function () {
     urlJson,
     trigger: this,
     json: true,
-    preferredLabel: urlJson.label,
+    preferredLabel: urlJson.label
   }
 
   document.querySelector('.f-c-links-modal').dispatchEvent(new window.CustomEvent('f-c-links-modal:open', { detail }))

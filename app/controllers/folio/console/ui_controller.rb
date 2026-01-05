@@ -10,22 +10,41 @@ class Folio::Console::UiController < Folio::Console::BaseController
       badges
       boolean_toggles
       buttons
+      clipboard
       dropdowns
+      file_placements_multi_picker_fields
+      in_place_inputs
       modals
+      steps
       tabs
       tooltips
       warning_ribbons
     ].sort
 
     @inputs = %i[
+      autocomplete
       date_time
-      url
+      embed
       rich_text
+      tiptap
+      url
     ].sort
   end
 
+  def in_place_inputs
+    @page = Folio::Page.first
+
+    @autocomplete_url = folio.url_for([:field,
+                                       :console,
+                                       :api,
+                                       :autocomplete,
+                                       klass: @page.class.to_s,
+                                       field: :title,
+                                       only_path: true])
+  end
+
   def ajax_inputs
-    @page = Folio::Page.last
+    @page = Folio::Page.first
   end
 
   def update_ajax_inputs
@@ -33,18 +52,21 @@ class Folio::Console::UiController < Folio::Console::BaseController
       raise ActionController::BadRequest.new("Can only do this in development")
     end
 
-    name = params.require(:name)
+    @page = Folio::Page.first
 
-    if %w[title meta_title meta_description].exclude?(name)
-      raise ActionController::BadRequest.new("Invalid name #{name}")
+    permitted = params.permit(:title,
+                              :meta_title,
+                              :meta_description)
+
+    @page.update!(permitted)
+
+    h = {}
+
+    permitted.keys.each do |k|
+      h[k] = @page.send(k)
     end
 
-    value = params.require(:value)
-
-    @page = Folio::Page.last
-    @page.update!(name => value)
-
-    render json: { data: { value: } }
+    render json: { data: h }
   end
 
   def tabs
@@ -88,7 +110,7 @@ class Folio::Console::UiController < Folio::Console::BaseController
       }
     }
 
-    @button_model_for_notifications_form = [
+    @buttons_model_for_notifications_form = [
       {
         variant: :info,
         label: "Modal with submit",
@@ -106,7 +128,7 @@ class Folio::Console::UiController < Folio::Console::BaseController
       }
     ]
 
-    @button_model_for_form_modals = [
+    @buttons_model_for_form_modals = [
       {
         variant: :info,
         label: "Folio::Current.user edit",
@@ -132,15 +154,15 @@ class Folio::Console::UiController < Folio::Console::BaseController
       error
       loader
     ].each do |variant|
-      flash.now[variant] = "#{variant.to_s.capitalize} #{@lorem_ipsum[0..15]} <a href=\"#{request.path}\">#{@lorem_ipsum[16..21]}</a> #{@lorem_ipsum[22..44]}."
+      flash.now[variant] = "#{variant.to_s.capitalize} #{@lorem_ipsum[0..15]} <a href=\"#{request.path}\">#{@lorem_ipsum[16..21]}</a> #{@lorem_ipsum[22..44]}.".html_safe
     end
 
     @buttons_model = [
-      { variant: :success, label: "Add success flash", onclick: "window.FolioConsole.Flash.flash({ content: 'New success message!', variant: 'success' })" },
-      { variant: :info, label: "Add info flash", onclick: "window.FolioConsole.Flash.flash({ content: 'New info message!', variant: 'info' })" },
-      { variant: :warning, label: "Add warning flash", onclick: "window.FolioConsole.Flash.flash({ content: 'New warning message!', variant: 'warning' })" },
-      { variant: :danger, label: "Add danger flash", onclick: "window.FolioConsole.Flash.flash({ content: 'New danger message!', variant: 'danger' })" },
-      { variant: :info, loader: true, label: "Add loader flash", onclick: "window.FolioConsole.Flash.flash({ content: 'New loader message!', variant: 'loader' })" },
+      { variant: :success, label: "Add success flash", onclick: "window.FolioConsole.Ui.Flash.flash({ content: 'New success message!', variant: 'success' })" },
+      { variant: :info, label: "Add info flash", onclick: "window.FolioConsole.Ui.Flash.flash({ content: 'New info message!', variant: 'info' })" },
+      { variant: :warning, label: "Add warning flash", onclick: "window.FolioConsole.Ui.Flash.flash({ content: 'New warning message!', variant: 'warning' })" },
+      { variant: :danger, label: "Add danger flash", onclick: "window.FolioConsole.Ui.Flash.flash({ content: 'New danger message!', variant: 'danger' })" },
+      { variant: :info, loader: true, label: "Add loader flash", onclick: "window.FolioConsole.Ui.Flash.flash({ content: 'New loader message!', variant: 'loader' })" },
     ]
   end
 
@@ -150,11 +172,49 @@ class Folio::Console::UiController < Folio::Console::BaseController
   def input_url
   end
 
+  def input_autocomplete
+    @page = Folio::Page.first
+    @autocomplete_collection = %w[dog cat mouse rat horse cow pig sheep goat chicken duck turkey]
+  end
+
   def dropdowns
     @links = [
       { label: "First", href: dropdowns_console_ui_path, icon: :plus_circle_multiple_outline },
       { label: "Second", href: dropdowns_console_ui_path, icon: :alert },
       { label: "Third", href: dropdowns_console_ui_path, icon: :archive, icon_options: { class: "text-danger" } },
+    ]
+  end
+
+  def file_placements_multi_picker_fields
+    @page = Folio::Page.first
+  end
+
+  def update_file_placements_multi_picker_fields
+    if Rails.env.production?
+      redirect_to file_placements_multi_picker_fields_console_ui_path, alert: "Don't do that in production"
+      return
+    end
+
+    @page = Folio::Page.first
+
+    if @page.update(params.require(:page).permit(*file_placements_strong_params))
+      redirect_to file_placements_multi_picker_fields_console_ui_path, success: "Updated placements"
+    else
+      render :file_placements_multi_picker_fields
+    end
+  end
+
+  def steps
+    steps = [
+      { label: "First step", href: "#{request.path}" },
+      { label: "Second step", href: "#{request.path}?step=2" },
+      { label: "Third step", href: "#{request.path}?step=3" },
+    ]
+
+    @steps_kwargs = [
+      { steps:, current_index: 0 },
+      { steps:, current_index: 1 },
+      { steps:, current_index: 2 },
     ]
   end
 

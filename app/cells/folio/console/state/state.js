@@ -42,7 +42,7 @@ window.Folio.Stimulus.register('f-c-state', class extends window.Stimulus.Contro
         this.element.outerHTML = res.data
       }
     }).catch((error) => {
-      window.FolioConsole.Flash.alert(error.message)
+      window.FolioConsole.Ui.Flash.alert(error.message)
       this.element.classList.remove('f-c-state--loading')
     })
   }

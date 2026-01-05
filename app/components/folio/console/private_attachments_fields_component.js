@@ -14,7 +14,7 @@ window.Folio.Stimulus.register('f-c-private-attachments-fields', class extends w
     fileType: String,
     fileHumanType: String,
     baseKey: String,
-    single: { type: Boolean, default: false },
+    single: { type: Boolean, default: false }
   }
 
   connect () {
@@ -84,9 +84,9 @@ window.Folio.Stimulus.register('f-c-private-attachments-fields', class extends w
 
   updateAttachmentInput (attachment, hash, key) {
     const input = attachment.querySelector(`.f-c-private-attachments-fields__input--${key}`)
-    input.disabled = input.type === "text" ? false : (hash.id ? false : true)
+    input.disabled = input.type === 'text' ? false : (!hash.id)
     input.name = `${this.baseKeyValue}[${hash.id}][${key}]`
-    input.value = hash.attributes[key] || ""
+    input.value = hash.attributes[key] || ''
   }
 
   createTemplateNodeIfNeeded () {
@@ -111,14 +111,14 @@ window.Folio.Stimulus.register('f-c-private-attachments-fields', class extends w
         const hash = {
           s3Path,
           id: null,
-          type: "private_attachment",
+          type: 'private_attachment',
           attributes: {
             id: null,
             file_size: fileAttributes.file_size,
             file_name: fileAttributes.file_name,
             title: fileAttributes.file_name,
             type: null,
-            expiring_url: null,
+            expiring_url: null
           }
         }
 
@@ -168,7 +168,7 @@ window.Folio.Stimulus.register('f-c-private-attachments-fields', class extends w
 
     attachment
       .querySelector('.f-c-private-attachments-fields__input--_destroy')
-      .value = "1"
+      .value = '1'
 
     this.afterCountUpdate()
     this.triggerChange()

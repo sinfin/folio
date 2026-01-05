@@ -1,0 +1,106 @@
+nodes:
+  doc:
+    tag: div
+    static_attrs:
+      class: "f-tiptap-content__root f-tiptap-styles"
+
+  text:
+    component_name: Folio::Tiptap::Content::TextComponent
+
+  folioTiptapNode:
+    component_name: Folio::Tiptap::Content::FolioTiptapNodeComponent
+
+  blockquote:
+    tag: blockquote
+  bulletList:
+    tag: ul
+  codeBlock:
+    tag: [pre, code]
+  folioTiptapColumn:
+    tag: div
+    static_attrs:
+      class: "f-tiptap-column"
+  folioTiptapColumns:
+    tag: div
+    static_attrs:
+      class: "f-tiptap-columns f-tiptap-avoid-external-layout"
+  folioTiptapFloat:
+    tag: div
+    attrs:
+      side:
+        data_attribute: "data-f-tiptap-float-side"
+        default_value: "left"
+      size:
+        data_attribute: "data-f-tiptap-float-size"
+        default_value: "medium"
+    static_attrs:
+      class: "f-tiptap-float f-tiptap-avoid-external-layout"
+  folioTiptapFloatAside:
+    tag: aside
+    static_attrs:
+      class: "f-tiptap-float__aside"
+  folioTiptapFloatMain:
+    tag: div
+    static_attrs:
+      class: "f-tiptap-float__main"
+  folioTiptapStyledParagraph:
+    tag: p
+    static_attrs:
+      class: "f-tiptap-styled-paragraph"
+    attrs:
+      variant:
+        data_attribute: "data-f-tiptap-styled-paragraph-variant"
+  folioTiptapStyledWrap:
+    tag: div
+    static_attrs:
+      class: "f-tiptap-styled-wrap f-tiptap-avoid-external-layout"
+    attrs:
+      variant:
+        data_attribute: "data-f-tiptap-styled-wrap-variant"
+  hardBreak:
+    tag: br
+    self_closing: true
+  heading:
+    tag: h2
+    level_based_tag: true
+    attrs:
+      textAlign:
+        style_property: "text-align"
+        available_values: ["left", "center", "right"]
+  horizontalRule:
+    tag: hr
+    self_closing: true
+  listItem:
+    tag: li
+  orderedList:
+    tag: ol
+    has_attrs: true
+  paragraph:
+    tag: p
+    trailing_break_when_empty: true
+    attrs:
+      textAlign:
+        style_property: "text-align"
+        available_values: ["left", "center", "right"]
+  table:
+    tag: [div, table, tbody]
+    static_attrs:
+      class: "f-tiptap-table-wrapper"
+  tableCell:
+    tag: td
+    has_attrs: true
+    attrs:
+      colspan:
+        html_attribute: "colspan"
+      rowspan:
+        html_attribute: "rowspan"
+  tableHeader:
+    tag: th
+    has_attrs: true
+    attrs:
+      colspan:
+        html_attribute: "colspan"
+      rowspan:
+        html_attribute: "rowspan"
+  tableRow:
+    tag: tr

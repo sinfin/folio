@@ -1,0 +1,7 @@
+h1: a.f-c-unlink href=console_ui_path Folio Console UI
+
+h2 Steps
+
+- @steps_kwargs.each do |kwargs|
+  .my-g
+    = render(Folio::Console::Ui::StepsComponent.new(**kwargs))

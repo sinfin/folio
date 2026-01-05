@@ -3,7 +3,7 @@ window.Folio.Stimulus.register('f-recaptcha-field', class extends window.Stimulu
     if (window.grecaptcha && window.grecaptcha.render) {
       const target = this.element.querySelector('.g-recaptcha')
 
-      if (target && target.innerHTML === "") {
+      if (target && target.innerHTML === '') {
         window.grecaptcha.render(target)
       }
     }

@@ -4,7 +4,7 @@ require "test_helper"
 
 class Folio::Console::Api::FilePlacementsControllerTest < Folio::Console::BaseControllerTest
   test "index" do
-    get url_for([:console, :api, Folio::File::Image])
+    get console_api_file_placements_path(file_id: create(:folio_file_image).id, format: :json)
     assert_response :success
   end
 end

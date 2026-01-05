@@ -1,7 +1,7 @@
 window.Folio.Stimulus.register('d-ui-header-message', class extends window.Stimulus.Controller {
   static values = {
     cookie: String,
-    loaded: { type: Boolean, default: false },
+    loaded: { type: Boolean, default: false }
   }
 
   connect () {

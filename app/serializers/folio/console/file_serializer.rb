@@ -9,9 +9,11 @@ class Folio::Console::FileSerializer
   attributes :id,
              :file_size,
              :file_name,
+             :file_mime_type,
              :file_width,
              :file_height,
              :type,
+             :created_at,
              :thumbnail_sizes,
              :author,
              :attribution_source,
@@ -19,12 +21,22 @@ class Folio::Console::FileSerializer
              :attribution_copyright,
              :attribution_licence,
              :description,
-             :file_placements_size,
+             :file_placements_count,
              :sensitive_content,
              :default_gravity,
              :default_gravities_for_select,
              :aasm_state,
-             :alt
+             :alt,
+             :headline,
+             :capture_date,
+             :gps_latitude,
+             :gps_longitude,
+             :file_metadata_extracted_at
+
+  # Mapped metadata using IptcFieldMapper
+  attribute :mapped_metadata do |object|
+    object.respond_to?(:mapped_metadata) ? object.mapped_metadata : {}
+  end
 
   attribute :human_type do |object|
     object.class.human_type
@@ -122,40 +134,9 @@ class Folio::Console::FileSerializer
     object.try(:preview_duration)
   end
 
-  attribute :additional_html_api_url do |object|
-    Rails.application.config.folio_console_files_additional_html_api_url_lambda.call(object)
-  end
-
-  attribute :subtitles_html_api_url do |object|
-    if object.is_a?(Folio::File::Video) && object.try(:subtitles_enabled?)
-      Folio::Engine.routes
-                   .url_helpers
-                   .subtitles_html_console_api_file_video_path(object)
-    end
-  end
-
   attribute :file_modal_additional_fields do |object|
-    object.file_modal_additional_fields.map do |name, hash|
-      h = {
-        name:,
-        type: hash[:type],
-        label: hash[:label] || object.class.human_attribute_name(name),
-        value: object.send(name),
-      }
-
-      if hash[:collection]
-        if hash[:include_blank] != false
-          h[:collection] = [["", ""]]
-        else
-          h[:value] ||= hash[:collection][0][1]
-          h[:collection] = []
-        end
-
-        h[:collection] += hash[:collection]
-      end
-
-      h
-    end
+    # obsolete
+    []
   end
 
   attribute :imported_from_photo_archive do |object|

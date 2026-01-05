@@ -11,7 +11,9 @@ class AddTenantToTaggings < ActiveRecord::Migration[6.0]
     ActsAsTaggableOn::Tagging.reset_column_information
     ActsAsTaggableOn::Tagging.find_each do |tagging|
       if tagging.taggable.respond_to?(:site_id)
-        tagging.update_column(:tenant, tagging.taggable.site_id)
+        unless Rails.application.config.folio_shared_files_between_sites && tagging.taggable.is_a?(Folio::File)
+          tagging.update_column(:tenant, tagging.taggable.site_id)
+        end
       end
     end
   end

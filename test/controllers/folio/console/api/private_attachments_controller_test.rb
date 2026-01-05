@@ -20,7 +20,7 @@ class Folio::Console::Api::PrivateAttachmentsControllerTest < Folio::Console::Ba
     sign_out user
 
     assert_difference("Folio::PrivateAttachment.count", 0) do
-      post url_for([:console, :api, Folio::PrivateAttachment]), params: {
+      post url_for([:console, :api, Folio::PrivateAttachment, format: :json]), params: {
         private_attachment: {
           file: fixture_file_upload(Folio::Engine.root.join("test/fixtures/folio/test.gif")),
           attachmentable_id: attachmentable.id,
@@ -36,7 +36,7 @@ class Folio::Console::Api::PrivateAttachmentsControllerTest < Folio::Console::Ba
     sign_in user
 
     assert_difference("Folio::PrivateAttachment.count", 1) do
-      post url_for([:console, :api, Folio::PrivateAttachment]), params: {
+      post url_for([:console, :api, Folio::PrivateAttachment, format: :json]), params: {
         private_attachment: {
           file: fixture_file_upload(Folio::Engine.root.join("test/fixtures/folio/test.gif")),
           attachmentable_id: attachmentable.id,
@@ -60,7 +60,7 @@ class Folio::Console::Api::PrivateAttachmentsControllerTest < Folio::Console::Ba
     sign_out user
 
     assert_difference("Folio::PrivateAttachment.count", 0) do
-      delete url_for([:console, :api, private_attachment]), params: {
+      delete url_for([:console, :api, private_attachment, format: :json]), params: {
         name: "private_attachment",
         type: "Folio::PrivateAttachment",
         minimal: "1",
@@ -72,7 +72,7 @@ class Folio::Console::Api::PrivateAttachmentsControllerTest < Folio::Console::Ba
     sign_in user
 
     assert_difference("Folio::PrivateAttachment.count", -1) do
-      delete url_for([:console, :api, private_attachment]), params: {
+      delete url_for([:console, :api, private_attachment, format: :json]), params: {
         name: "private_attachment",
         type: "Folio::PrivateAttachment",
         minimal: "1",

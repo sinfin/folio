@@ -17,7 +17,7 @@ class Folio::Console::TransportsControllerTest < Folio::Console::BaseControllerT
       get out_console_transport_path(class_name: "Folio::Menu", id: menu.id)
     end
 
-    assert_equal "param is missing or the value is empty: Non-transportable record", ex.message
+    assert_equal "param is missing or the value is empty or invalid: Non-transportable record", ex.message
 
     page = create(:folio_page)
     sign_in superadmin

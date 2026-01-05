@@ -8,14 +8,14 @@ export default styled.div`
   flex-wrap: wrap;
   min-height: 18px;
 
-  .f-c-pagination {
+  .f-c-ui-pagy {
     margin: 0;
   }
 
   @media screen and (max-width: 779px) {
     display: block;
 
-    .f-c-pagination__nav {
+    .f-c-ui-pagy__nav {
       margin-left: auto;
     }
   }
@@ -25,7 +25,7 @@ export default styled.div`
     justify-content: center;
     ${(props) => props.single ? '' : 'min-height: 36px;'}
 
-    .f-c-pagination__info {
+    .f-c-ui-pagy__info {
       position: absolute;
       top: 50%;
       left: 0;

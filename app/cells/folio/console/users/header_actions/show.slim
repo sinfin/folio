@@ -1,2 +1,2 @@
 .f-c-users-header-actions
-  == cell('folio/console/ui/buttons', buttons_model)
+  = render_view_component(Folio::Console::Ui::ButtonsComponent.new(buttons: buttons_model))

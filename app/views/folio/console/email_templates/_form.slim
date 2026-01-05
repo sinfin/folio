@@ -27,7 +27,7 @@
               th style="width: 33%;"
                 .d-flex.align-items-center
                   = "{#{keyword}}"
-                  == cell('folio/console/clipboard_copy', "{#{keyword}}")
+                  = render(Folio::Console::Ui::ClipboardComponent.new(text: "{#{keyword}}"))
               td = label
 
 = form_footer f

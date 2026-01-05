@@ -1,0 +1,15 @@
+.f-c-tiptap-simple-form-wrap-word-count data=controller_data
+  .f-c-tiptap-simple-form-wrap-word-count__flex.small
+    .f-c-tiptap-simple-form-wrap-word-count__item
+      span.f-c-tiptap-simple-form-wrap-word-count__item-label<>
+        = "#{t('.characters')}:"
+
+      span.f-c-tiptap-simple-form-wrap-word-count__item-value data=stimulus_target("charactersCount")
+        ' &hellip;
+
+    .f-c-tiptap-simple-form-wrap-word-count__item
+      span.f-c-tiptap-simple-form-wrap-word-count__item-label<>
+        = "#{t('.words')}:"
+
+      span.f-c-tiptap-simple-form-wrap-word-count__item-value data=stimulus_target("wordsCount")
+        ' &hellip;

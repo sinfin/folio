@@ -34,12 +34,12 @@ class Folio::CraMediaCloud::CreateMediaJob < Folio::ApplicationJob
 
   private
     def generate_reference_id(media_file)
-      # Combine video hash_id with S3 ETag (actual file content MD5) for stable, unique reference
-      # Format: {hash_id}-{s3_etag}
+      # Combine video slug with S3 ETag (actual file content MD5) for stable, unique reference
+      # Format: {slug}-{s3_etag}
       # This ensures uniqueness across environments and file versions
       s3_etag = get_s3_etag(media_file)
 
-      "#{media_file.hash_id}-#{s3_etag[0..7]}"
+      "#{media_file.slug}-#{s3_etag[0..7]}"
     end
 
     def get_s3_etag(media_file)

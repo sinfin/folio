@@ -1,0 +1,23 @@
+.f-c-files-display-toggle
+  &__btn
+    &:not(:first-child)
+      border-top-left-radius: 0
+      border-bottom-left-radius: 0
+
+    &:not(:last-child)
+      border-top-right-radius: 0
+      border-bottom-right-radius: 0
+
+    .f-ui-icon
+      transform: scale(0.8)
+      transform-origin: center center
+
+  &[data-f-c-files-display-toggle-enabled-value="false"] &__btn--enabled-false,
+  &[data-f-c-files-display-toggle-enabled-value="true"] &__btn--enabled-true
+    &:hover, &:focus
+      opacity: 1
+
+  &[data-f-c-files-display-toggle-enabled-value="true"] &__btn--enabled-false,
+  &[data-f-c-files-display-toggle-enabled-value="false"] &__btn--enabled-true
+    --#{$prefix}btn-bg: #{$gray-300}
+    --#{$prefix}btn-color: #{$gray-500}

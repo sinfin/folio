@@ -1,13 +1,24 @@
-= index_header react_new: true
+= render(Folio::Console::Ui::TurboFrameWithLoaderComponent.new(id: @turbo_frame_id,
+                                                               turbo_action: "advance"))
+  - if action_name == "index_for_picker"
+    = render(Folio::Console::Ui::Index::FiltersComponent.new(klass: @klass))
 
-.folio-react-wrap[
-  data-file-type=@klass.to_s
-  data-index-url=url_for([:console, @klass])
-  data-files-url=url_for([:console, :api, @klass])
-  data-react-type=@klass.human_type
-  data-file-for-modal=@file_for_modal
-  data-mode='index'
-  data-taggable='1'
-  data-can-destroy-files=(can_now?(:destroy, @klass) ? "1" : nil)
-  data-photo-archive-enabled=((Rails.application.config.folio_photo_archive_enabled && @klass <= Folio::File::Image) ? "1" : nil)
-]
+    - if @pagy
+      = render(Folio::Console::Ui::PagyComponent.new(pagy: @pagy,
+                                                     options: @pagy_options || {}))
+  - else
+    = index_header file_list_uppy: true
+
+  = render(Folio::FileListComponent.new(file_klass: @klass,
+                                        files: controller.instance_variable_get(controller.send(:folio_console_record_variable_name, plural: true)),
+                                        editable: true,
+                                        destroyable: true,
+                                        uploadable: true,
+                                        batch_actions: action_name != "index_for_modal",
+                                        primary_action: action_name,
+                                        batch_actions_multi_picker: action_name == "index_for_picker",
+                                        serialize_files: action_name == "index_for_modal" || action_name == "index_for_picker",
+                                        reload_pagy: true))
+
+  = render(Folio::Console::Ui::PagyComponent.new(pagy: @pagy,
+                                                 options: @pagy_options || {}))

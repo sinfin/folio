@@ -1,0 +1,108 @@
+.f-tiptap-page {
+  position: relative;
+  flex: 0 0 auto;
+  counter-increment: f-tiptap-page-number 1;
+}
+
+.f-tiptap-page__toggle-wrap {
+  display: flex;
+  justify-content: flex-end;
+  cursor: pointer;
+  position: relative;
+  z-index: 3;
+}
+
+.f-tiptap-page__toggle-ico {
+  width: 16px;
+  height: 16px;
+}
+
+.f-tiptap-page__toggle {
+  background: var(--f-tiptap-page__primary-color-in-editor-only);
+  border-radius: 4px 4px 0 0;
+  bottom: 100%;
+  color: #ffffff;
+  display: block;
+  font-size: 12px;
+  line-height: 1.4;
+  margin-bottom: -2px;
+  padding: 2px 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  &::before {
+    display: inline;
+    content: "Page " counter(f-tiptap-page-number);
+  }
+
+  html[lang="cs"] &::before {
+    content: "Stránka " counter(f-tiptap-page-number);
+  }
+}
+
+.f-tiptap-page--invalid .f-tiptap-page__toggle {
+  background: var(--f-tiptap-page__error-color-in-editor-only);
+}
+
+.f-tiptap-page__content {
+  position: relative;
+  min-height: 1rem;
+  z-index: 2;
+
+  &::before {
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    display: block;
+    inset: 0;
+    border: var(--f-tiptap-page__border-in-editor-only);
+  }
+
+  .ProseMirror-gapcursor:last-child {
+    position: relative;
+
+    &::before {
+      content: " ";
+      display: block;
+    }
+  }
+}
+
+.f-tiptap-page__content-click-trigger {
+  position: absolute;
+  top: calc(-1 * var(--f-tiptap-pages__gap-in-editor-only));
+  bottom: calc(-1 * var(--f-tiptap-pages__gap-in-editor-only));
+  left: -100vw;
+  right: -100vw;
+  z-index: 1;
+  display: block;
+}
+
+.f-tiptap-page--invalid h2:first-of-type::before,
+.f-tiptap-page__title-placeholder.is-empty::before {
+  color: #f4dedd;
+  content: "Missing page heading" !important;
+
+  html[lang="cs"] & {
+    content: "Chybí titulek stránky" !important;
+  }
+}
+
+.f-tiptap-page--invalid .f-tiptap-page__content::before {
+  border: var(--f-tiptap-page__error-border-in-editor-only);
+}
+
+.f-tiptap-page--collapsed
+  .f-tiptap-page__content
+  div[data-node-view-content-react] {
+  > * {
+    display: none;
+  }
+
+  > h2:first-of-type {
+    display: block;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}

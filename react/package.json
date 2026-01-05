@@ -13,6 +13,7 @@
     "react-redux": "^5.0.7",
     "react-scripts": "3.4.1",
     "react-select": "^3.1.0",
+    "react-select-async-paginate": "0.4.1",
     "react-sortable-hoc": "^0.8.3",
     "react-sortable-tree": "^2.6.2",
     "reactstrap": "^8.0.1",
@@ -23,7 +24,7 @@
   },
   "scripts": {
     "start": "BROWSER=none react-app-rewired start",
-    "build": "react-app-rewired build && bin/copy_to_rails",
+    "build": "NODE_OPTIONS=--openssl-legacy-provider react-app-rewired build && bin/copy_to_rails",
     "test": "react-app-rewired test --env=jsdom",
     "eject": "react-app-rewired eject",
     "standard": "./node_modules/.bin/watch 'clear; echo \"Standard JS:\n\"; ./node_modules/.bin/standard --fix' src"

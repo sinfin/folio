@@ -1,5 +1,6 @@
 window.Folio.Stimulus.register('f-newsletter-subscriptions-form', class extends window.Stimulus.Controller {
-  static classes = ["submitting", "persisted", "invalid"]
+  static classes = ['submitting', 'persisted', 'invalid']
+  static targets = ['input']
 
   connect () {
     if (this.element.classList.contains(this.persistedClass)) {
@@ -33,5 +34,11 @@ window.Folio.Stimulus.register('f-newsletter-subscriptions-form', class extends 
       }
       this.element.classList.remove(this.submittingClass)
     })
+  }
+
+  onAtButtonClick () {
+    const input = this.inputTarget
+    input.value += '@'
+    input.focus()
   }
 })

@@ -1,0 +1,52 @@
+.f-c-ui-index-header
+  display: flex
+  flex-direction: column
+  gap: $f-c-ui-index-header-gap
+  margin: 0 0 $grid-gutter-width
+  position: relative
+
+  &--subtitle
+    align-items: flex-start
+
+  &__top
+    display: flex
+    gap: $grid-gutter-half
+    align-items: center
+    flex-wrap: wrap
+
+  &__btn
+    margin-left: $grid-gutter-half
+
+  &__new-dropdown
+    margin-left: $grid-gutter-half
+
+    .dropdown-toggle:after
+      display: none
+
+  &__titles
+    margin: 0 auto 0 0
+
+  &__h1
+    margin: 0
+
+  &__h2
+    margin: $grid-gutter-base 0 0
+
+  .modal-body &
+    padding-right: 48px
+
+  &__titles
+    flex: 1 1 40%
+
+    &--short
+      flex: 1 1 30%
+
+    &--long
+      flex: 1 1 50%
+
+  &__right
+    align-items: center
+    display: flex
+    flex-wrap: wrap
+    flex: 0 1 auto
+    gap: $f-c-ui-index-header-gap

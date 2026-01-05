@@ -1,0 +1,12 @@
+.tooltip--popover
+  --#{$prefix}tooltip-padding-y: #{px-to-rem(8px)}
+  --#{$prefix}tooltip-padding-x: #{px-to-rem(8px)}
+  --#{$prefix}tooltip-color: #{$gray-600}
+  --#{$prefix}tooltip-bg: #ffffff
+  box-shadow: $box-shadow
+
+  &.show
+    --#{$prefix}tooltip-opacity: 1
+
+  .tooltip-arrow
+    display: none

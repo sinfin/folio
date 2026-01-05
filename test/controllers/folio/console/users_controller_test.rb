@@ -4,13 +4,60 @@ require "test_helper"
 
 class Folio::Console::UsersControllerTest < Folio::Console::BaseControllerTest
   test "index" do
-    get url_for([:console, Folio::User])
-    assert_response :success
-
-    create(:folio_user)
+    site.update(available_user_roles: [:administrator, :author])
 
     get url_for([:console, Folio::User])
     assert_response :success
+
+    # superadmin is created in setup
+
+    site_admin = create(:folio_user, first_name: "Admin", email: "admin@#{site.domain}")
+    site_admin.set_roles_for(site:, roles: [:administrator])
+    site_admin.save!
+
+    user_author = create(:folio_user, first_name: "Author",  email: "author@#{site.domain}")
+    superadmin.stub(:can_now?, true) do # hack around ability to :set_author
+      user_author.set_roles_for(site:, roles: [:author])
+      user_author.save!
+    end
+
+    user_with_site = create(:folio_user, first_name: "User",  email: "user@#{site.domain}")
+    user_with_site.set_roles_for(site:, roles: [])
+    user_with_site.save!
+
+    user_without_site_link = create(:folio_user)
+
+    other_site = create(:dummy_site, domain: "other.cz")
+    user_with_other_site = create(:folio_user, email: "user_with_other_site@dd.cz")
+    user_with_other_site.set_roles_for(site: other_site, roles: [:administrator])
+    user_with_other_site.save!
+
+    sign_in superadmin
+
+    get url_for([:console, Folio::User])
+
+    assert_response :success
+
+    cell_selector = ".f-c-catalogue__cell--email .f-c-catalogue__cell-value"
+    assert_select cell_selector, text: superadmin.email
+    assert_select cell_selector, text: site_admin.email
+    assert_select cell_selector, text: user_with_site.email
+    assert_select cell_selector, text: user_author.email
+    assert_select cell_selector, text: user_without_site_link.email
+    assert_select cell_selector, text: user_with_other_site.email
+
+    sign_in site_admin
+
+    get url_for([:console, Folio::User])
+
+    assert_response :success
+
+    assert_select cell_selector, text: superadmin.email, count: 0
+    assert_select cell_selector, text: site_admin.email
+    assert_select cell_selector, text: user_with_site.email
+    assert_select cell_selector, text: user_author.email
+    assert_select cell_selector, text: user_without_site_link.email, count: 0
+    assert_select cell_selector, text: user_with_other_site.email, count: 0
   end
 
   test "new" do

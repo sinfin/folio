@@ -49,7 +49,8 @@ Rails.application.routes.draw do
           get :private_attachments
           get :report
           get :required_inputs
-          get :additional_html_for_video_files_modal
+          get :uppy
+          get :tiptap_form
 
           patch :update_attributes
           patch :update_console_notes
@@ -57,11 +58,11 @@ Rails.application.routes.draw do
         end
 
         namespace :blog do
-          resources :articles, except: %i[show]
-          resources :authors, except: %i[show] do
+          resources :articles
+          resources :authors do
             post :set_positions, on: :collection
           end
-          resources :topics, except: %i[show] do
+          resources :topics do
             post :set_positions, on: :collection
           end
         end

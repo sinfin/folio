@@ -3,27 +3,27 @@
 require "test_helper"
 
 class Folio::HelpDocumentTest < ActiveSupport::TestCase
-  attr_reader :test_config_file
-  attr_reader :test_markdown_file
-  attr_reader :test_config_dir
+  attr_reader :x_test_config_file
+  attr_reader :x_test_markdown_file
+  attr_reader :x_test_config_dir
 
   def setup
-    @test_config_dir = Pathname.new(Dir.mktmpdir("test_help", Rails.root.join("tmp"))) # each test gets its own tmpdir
-    @test_config_file = @test_config_dir.join("index.yml")
-    @test_markdown_file = @test_config_dir.join("test-doc.md")
+    @x_test_config_dir = Pathname.new(Dir.mktmpdir("test_help", Rails.root.join("tmp"))) # each test gets its own tmpdir
+    @x_test_config_file = @x_test_config_dir.join("index.yml")
+    @x_test_markdown_file = @x_test_config_dir.join("test-doc.md")
 
     # Folio::HelpDocument.singleton_class.class_eval do
     #   alias_method :original_config_path, :config_path
     #   alias_method :original_help_directory, :help_directory
 
-    #   define_method(:config_path) { test_config_file }
-    #   define_method(:help_directory) { test_config_dir }
+    #   define_method(:config_path) { x_test_config_file }
+    #   define_method(:help_directory) { x_test_config_dir }
     # end
   end
 
   def teardown
     # Clean up test files
-    FileUtils.remove_entry test_config_dir
+    FileUtils.remove_entry x_test_config_dir
 
     # Reset any cached data
     Folio::HelpDocument.reload!
@@ -36,7 +36,7 @@ class Folio::HelpDocumentTest < ActiveSupport::TestCase
   end
 
   test "config_exists? returns true when config file exists" do
-    create_test_config_file({
+    create_x_test_config_file({
       "documents" => []
     })
 
@@ -52,7 +52,7 @@ class Folio::HelpDocumentTest < ActiveSupport::TestCase
   end
 
   test "all returns documents from valid config" do
-    create_test_config_file({
+    create_x_test_config_file({
       "documents" => [
         {
           "slug" => "test-doc",
@@ -64,7 +64,7 @@ class Folio::HelpDocumentTest < ActiveSupport::TestCase
       ]
     })
 
-    create_test_markdown_file("# Test Content")
+    create_x_test_markdown_file("# Test Content")
     documents = stub_configs do
       Folio::HelpDocument.all
     end
@@ -79,7 +79,7 @@ class Folio::HelpDocumentTest < ActiveSupport::TestCase
   end
 
   test "all sorts documents by order" do
-    create_test_config_file({
+    create_x_test_config_file({
       "documents" => [
         {
           "slug" => "second-doc",
@@ -102,7 +102,7 @@ class Folio::HelpDocumentTest < ActiveSupport::TestCase
   end
 
   test "find returns correct document" do
-    create_test_config_file({
+    create_x_test_config_file({
       "documents" => [
         {
           "slug" => "test-doc",
@@ -121,7 +121,7 @@ class Folio::HelpDocumentTest < ActiveSupport::TestCase
   end
 
   test "content returns file contents when file exists" do
-    create_test_config_file({
+    create_x_test_config_file({
       "documents" => [
         {
           "slug" => "test-doc",
@@ -131,7 +131,7 @@ class Folio::HelpDocumentTest < ActiveSupport::TestCase
     })
 
     content = "# Test Markdown\n\nThis is test content."
-    create_test_markdown_file(content)
+    create_x_test_markdown_file(content)
 
     stub_configs do
       doc = Folio::HelpDocument.find("test-doc")
@@ -140,7 +140,7 @@ class Folio::HelpDocumentTest < ActiveSupport::TestCase
   end
 
   test "content returns empty string when file does not exist" do
-    create_test_config_file({
+    create_x_test_config_file({
       "documents" => [
         {
           "slug" => "test-doc",
@@ -156,7 +156,7 @@ class Folio::HelpDocumentTest < ActiveSupport::TestCase
   end
 
   test "exists? returns correct boolean" do
-    create_test_config_file({
+    create_x_test_config_file({
       "documents" => [
         {
           "slug" => "existing-doc",
@@ -170,7 +170,7 @@ class Folio::HelpDocumentTest < ActiveSupport::TestCase
     })
 
     # Create only one markdown file
-    File.write(@test_config_dir.join("existing-doc.md"), "Content")
+    File.write(@x_test_config_dir.join("existing-doc.md"), "Content")
 
     stub_configs do
       existing_doc = Folio::HelpDocument.find("existing-doc")
@@ -182,7 +182,7 @@ class Folio::HelpDocumentTest < ActiveSupport::TestCase
   end
 
   test "updated_at returns file modification time" do
-    create_test_config_file({
+    create_x_test_config_file({
       "documents" => [
         {
           "slug" => "test-doc",
@@ -191,7 +191,7 @@ class Folio::HelpDocumentTest < ActiveSupport::TestCase
       ]
     })
 
-    create_test_markdown_file("Content")
+    create_x_test_markdown_file("Content")
 
     stub_configs do
       doc = Folio::HelpDocument.find("test-doc")
@@ -201,7 +201,7 @@ class Folio::HelpDocumentTest < ActiveSupport::TestCase
   end
 
   test "handles invalid YAML gracefully" do
-    File.write(@test_config_file, "invalid: yaml: content: [")
+    File.write(@x_test_config_file, "invalid: yaml: content: [")
 
     # Should not raise an error
     stub_configs do
@@ -211,7 +211,7 @@ class Folio::HelpDocumentTest < ActiveSupport::TestCase
   end
 
   test "skips documents without slug" do
-    create_test_config_file({
+    create_x_test_config_file({
       "documents" => [
         {
           "title" => "Document without slug"
@@ -231,17 +231,17 @@ class Folio::HelpDocumentTest < ActiveSupport::TestCase
   end
 
   test "updated_at gracefully handles git unavailability" do
-    create_test_config_file({
+    create_x_test_config_file({
       "documents" => [
         {
           "slug" => "test-doc",
           "title" => "Test Doc",
-          "path" => @test_markdown_file.to_s
+          "path" => @x_test_markdown_file.to_s
         }
       ]
     })
 
-    create_test_markdown_file("# Test content")
+    create_x_test_markdown_file("# Test content")
 
     document = stub_configs do
       Folio::HelpDocument.find("test-doc")
@@ -252,24 +252,24 @@ class Folio::HelpDocumentTest < ActiveSupport::TestCase
 
     # Should be close to file modification time
     # Allow for small time differences (git vs filesystem time)
-    assert_in_delta(::File.mtime(@test_markdown_file),
+    assert_in_delta(::File.mtime(@x_test_markdown_file),
                     document.updated_at,
                     300,
                     "Updated time should be close to filesystem time")
   end
 
   private
-    def create_test_config_file(config)
-      File.write(@test_config_file, config.to_yaml)
+    def create_x_test_config_file(config)
+      File.write(@x_test_config_file, config.to_yaml)
     end
 
-    def create_test_markdown_file(content)
-      File.write(@test_markdown_file, content)
+    def create_x_test_markdown_file(content)
+      File.write(@x_test_markdown_file, content)
     end
 
     def stub_configs(&block)
-      Folio::HelpDocument.stub(:config_path, test_config_file) do
-        Folio::HelpDocument.stub(:help_directory, test_config_dir, &block)
+      Folio::HelpDocument.stub(:config_path, x_test_config_file) do
+        Folio::HelpDocument.stub(:help_directory, x_test_config_dir, &block)
       end
     end
 end

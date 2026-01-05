@@ -49,12 +49,11 @@ class Folio::Console::PrivateAttachmentsFieldsComponent < Folio::Console::Applic
   end
 
   def add_button
-    cell("folio/console/ui/button",
-         variant: :success,
-         icon: :plus,
-         label: t("folio.console.actions.add"),
-         data: stimulus_target("addButton"),
-         dropzone: true)
+    render(Folio::Console::Ui::ButtonComponent.new(variant: :success,
+                                                   icon: :plus,
+                                                   label: t("folio.console.actions.add"),
+                                                   data: stimulus_target("addButton"),
+                                                   dropzone: true))
   end
 
   def loader_data

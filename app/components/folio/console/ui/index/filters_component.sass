@@ -1,0 +1,165 @@
+.f-c-ui-index-filters
+  background: $light-gray
+
+  .input-group
+    margin-bottom: $spacer
+
+  .modal-body &
+    margin-left: calc(-1 * var(--bs-modal-padding))
+    margin-right: calc(-1 * var(--bs-modal-padding))
+    padding-left: var(--bs-modal-padding)
+    padding-right: var(--bs-modal-padding)
+
+  .f-c-ui-index-header__tabs-wrap ~ &
+    margin-top: -1 * $f-c-ui-index-header-gap
+
+  &__numeric-range
+    background: #DBDBDB
+    border-radius: $border-radius
+    flex-wrap: nowrap      
+
+  &__numeric-range > .input-group > &__numeric-range-input
+    width: 65px
+    flex: 0 0 auto
+    appearance: textfield
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button
+      appearance: none
+      margin: 0
+
+  &__numeric-range > .input-group:nth-last-child(2) > &__numeric-range-input
+    border-top-right-radius: 0
+    border-bottom-right-radius: 0
+
+  &__numeric-range > .input-group:last-child > &__numeric-range-input
+    border-top-left-radius: 0
+    border-bottom-left-radius: 0
+    border-top-right-radius: $border-radius !important
+    border-bottom-right-radius: $border-radius !important
+
+  &__numeric-range > .input-group:has(.form-group__input-controls) > &__numeric-range-input
+    padding-right: $form-select-indicator-padding
+    width: 100px
+
+  &__numeric-range .input-group-prepend
+    display: flex
+    align-items: center
+    flex: 1 1 auto
+    white-space: nowrap
+
+    label
+      margin: 0
+      padding: 0 10px
+      line-height: $input-height
+
+  &__filters
+    flex: 1 1 auto
+
+  &__cancel
+    min-height: 35px
+    display: flex
+
+  &__toggle
+    cursor: pointer
+    display: flex
+
+    svg
+      transition: transform 0.2s ease
+
+  &--expanded &__toggle svg
+    transform: rotate(180deg)
+
+  &:not(&--expanded) &__filter--collapsible
+    display: none
+
+  &__autocomplete-input
+    position: relative
+    z-index: 1
+    padding-right: $input-height
+
+    &:not(:focus)
+      cursor: pointer
+
+  &__wrap
+    padding: $grid-gutter-width / 2 0
+
+  .form-group,
+  .input-group
+    width: 100%
+    margin: 0
+
+  +media-breakpoint-up(sm)
+    &__wrap,
+    &__actions
+      display: flex
+      align-items: flex-start
+      gap: $grid-gutter-base
+
+    &__filters
+      display: flex
+      align-items: flex-start
+      flex-wrap: wrap
+      gap: $grid-gutter-width / 3
+      flex: 1 1 auto
+
+    &__actions
+      align-self: stretch
+      flex-wrap: wrap
+      flex: 0 1 auto
+      justify-content: flex-end
+
+    &__cancel-wrap,
+    &__toggle-wrap
+      align-items: center
+      display: flex
+      flex: 0 0 auto
+      line-height: 1
+      min-height: $input-height
+
+    &__toggle-wrap + &__cancel-wrap
+      margin-top: auto
+
+    &__cancel-wrap--hidden
+      visibility: hidden
+
+    &__toggle-wrap + &__cancel-wrap--hidden,
+    &--hide-cancel-wrap &__cancel-wrap--hidden
+      display: none
+
+    &__filter
+      flex: 0 0 auto
+      width: 235px
+
+  +media-breakpoint-down(sm)
+    &__filter
+      width: 100% !important
+
+      & + &
+        margin-top: $grid-gutter-half / 2
+
+    &__cancel-wrap,
+    &__toggle-wrap
+      margin-top: $grid-gutter-half / 2
+
+    &__cancel-wrap
+      flex: 0 0 100%
+      width: 100% !important
+      text-align: center
+
+      &--hidden
+        display: none
+
+    &__toggle-wrap,
+    &__toggle-wrap + &__cancel-wrap
+      flex: 0 0 50%
+      width: 50% !important
+      text-align: left
+      display: inline-flex
+
+    &__toggle-wrap + &__cancel-wrap
+      text-align: right
+      justify-content: flex-end
+
+    &__numeric-range > .input-group:has(.form-group__input-controls) > &__numeric-range-input
+      width: 100%

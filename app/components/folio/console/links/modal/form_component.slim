@@ -1,12 +1,13 @@
 .f-c-links-modal-form data=data
   = render(Folio::Console::Links::Modal::UrlPickerComponent.new(url_json: @url_json,
-                                                                absolute_urls: @absolute_urls))
+                                                                absolute_urls: @absolute_urls,
+                                                                default_custom_url: @default_custom_url))
 
-  = simple_form_for "",
-                    url: "#",
-                    method: :get,
-                    html: { class: "f-c-links-modal-form__form" },
-                    data: stimulus_action(submit: "onSubmit") do |f|
+  = helpers.simple_form_for("",
+                            url: "#",
+                            method: :get,
+                            html: { class: "f-c-links-modal-form__form" },
+                            data: stimulus_action(submit: "onSubmit")) do |f|
     = f.hidden_field :href, value: @url_json[:href] || "",
                             data: stimulus_target("hrefInput")
 
@@ -17,9 +18,10 @@
       = f.hidden_field :record_type, value: @url_json[:record_type] || "",
                                      data: stimulus_target("recordTypeInput")
 
-      = f.input :label, label: t('.label/label'),
-                        required: false,
-                        input_html: { id: false, value: @url_json[:label] || "", data: stimulus_target("labelInput") }
+      - unless @disable_label
+        = f.input :label, label: t('.label/label'),
+                          required: false,
+                          input_html: { id: false, value: @url_json[:label] || "", data: stimulus_target("labelInput") }
 
       = f.input :rel, hint: t(".hint/rel"),
                       required: false,
@@ -34,4 +36,5 @@
                          legend_tag: false,
                          checked: @url_json[:target]
 
-    == cell('folio/console/ui/buttons', buttons_model, class: "mt-auto")
+    = render(Folio::Console::Ui::ButtonsComponent.new(buttons: buttons_model,
+                                                      class_name: "mt-auto"))

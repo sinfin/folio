@@ -20,7 +20,7 @@
   min-height: 100%
 
 .f-c-layout-main-container
-  padding: $grid-gutter-width
+  padding: $f-c-layout-main-container__padding
   position: relative
   z-index: 1
   flex: 1 1 auto
@@ -37,7 +37,7 @@
 
 +mq-desktop-menu
   .f-c-layout-body
-    &:not(&--devise)
+    &:not(&--devise):not(&--barebone-for-turbo-frame)
       padding-left: 220px
       height: 100%
 
@@ -59,12 +59,12 @@
     flex: 0 0 auto
     z-index: 4
 
-  .f-c-flash-wrap,
+  .f-c-ui-flash,
   .f-c-audited-revision-bar
     flex: 0 0 auto
     z-index: 2
 
-  .f-c-flash-wrap
+  .f-c-ui-flash
     .f-c-layout-body--devise &
       position: fixed
       top: 0
@@ -73,7 +73,7 @@
 
 +mq-mobile-menu
   .f-c-layout-main-container
-    padding: $grid-gutter-width / 2
+    padding: $f-c-layout-main-container__padding--mobile
 
   .f-c-anti-container-fluid
     .container-fluid &

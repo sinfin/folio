@@ -8,10 +8,6 @@ module Folio::Console::Includes
       []
     end
 
-    def folio_console_record_includes
-      []
-    end
-
     def folio_console_cover_includes
       [
         cover_placement: :file,

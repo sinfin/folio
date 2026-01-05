@@ -5,7 +5,10 @@
         strong<> = t('.version')
         = l(@audit.created_at, format: :console_short_with_seconds)
 
-      = restore_link
+      - if @record.audited_console_restorable?
+          = render(Folio::Console::Ui::ButtonComponent.new(label: t(".restore"),
+                                                           href: restore_url,
+                                                           data: { confirm: t("folio.console.confirmation"), method: :post }))
 
       == cell('folio/console/ui/with_icon',
               t('.show_current'),

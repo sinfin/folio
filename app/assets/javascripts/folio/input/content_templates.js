@@ -5,7 +5,7 @@ window.Folio.Input.ContentTemplates = {}
 
 window.Folio.Input.ContentTemplates.I18n = {
   cs: {
-    title: 'Šablony',
+    title: 'Šablony'
   },
   en: {
     remove: 'Templates'
@@ -15,7 +15,7 @@ window.Folio.Input.ContentTemplates.I18n = {
 window.Folio.Input.ContentTemplates.bind = (input, { templates, editUrl, title }) => {
   if (templates.length === 0) return
 
-  let wrap = input.closest('.f-c-translated-inputs') || input.closest('.form-group')
+  const wrap = input.closest('.f-c-translated-inputs') || input.closest('.form-group')
 
   if (wrap.classList.contains('f-input-content-templates-bound')) return
 
@@ -30,10 +30,10 @@ window.Folio.Input.ContentTemplates.bind = (input, { templates, editUrl, title }
     input.insertAdjacentElement('beforebegin', label)
   }
 
-  let menuHtml = ""
+  let menuHtml = ''
 
   if (editUrl && title) {
-    const iconHtml = window.Folio.Ui.Icon.create('edit', { class: "f-input-content-templates-dropdown__header-ico ms-2" }).outerHTML
+    const iconHtml = window.Folio.Ui.Icon.create('edit', { class: 'f-input-content-templates-dropdown__header-ico ms-2' }).outerHTML
 
     menuHtml += `<a class="dropdown-header f-input-content-templates-dropdown__header" href="${editUrl}">
       <span class="f-input-content-templates-dropdown__header-text">${title}</span>${iconHtml}</a>`
@@ -63,13 +63,13 @@ window.Folio.Stimulus.register('f-input-content-templates-menu', class extends w
     e.preventDefault()
     const values = JSON.parse(window.decodeURIComponent(e.params.contents))
     const wrap = this.element.closest('.f-input-content-templates-bound')
-    const inputs = wrap.querySelectorAll('input[data-controller*="f-input-content-templates"], textarea[data-controller*="f-input-content-templates"]');
+    const inputs = wrap.querySelectorAll('input[data-controller*="f-input-content-templates"], textarea[data-controller*="f-input-content-templates"]')
 
     inputs.forEach((input, i) => {
       if (values[i]) {
         if (input.classList.contains('redactor-source')) {
           try {
-            const R = $R(input)
+            const R = window.$R(input)
             if (R && R.source) {
               R.source.setCode(values[i])
             }
@@ -92,7 +92,7 @@ window.Folio.Stimulus.register('f-input-content-templates', class extends window
   static values = {
     templates: String,
     editUrl: String,
-    title: String,
+    title: String
   }
 
   connect () {
@@ -102,7 +102,7 @@ window.Folio.Stimulus.register('f-input-content-templates', class extends window
       window.Folio.Input.ContentTemplates.bind(this.element, {
         templates,
         editUrl: this.editUrlValue,
-        title: this.titleValue,
+        title: this.titleValue
       })
     }
   }

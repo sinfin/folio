@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 class Folio::FilePlacement::AudioCover < Folio::FilePlacement::Base
-  folio_file_placement("Folio::File::Audio", :audio_cover_placement)
+  folio_file_placement("Folio::File::Audio",
+                       :audio_cover_placement,
+                       has_many: false)
 end
 
 # == Schema Information
@@ -20,6 +22,8 @@ end
 #  alt                  :string
 #  placement_title      :string
 #  placement_title_type :string
+#  folio_embed_data     :jsonb
+#  description          :text
 #
 # Indexes
 #

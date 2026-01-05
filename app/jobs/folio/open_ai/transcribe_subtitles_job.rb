@@ -5,6 +5,8 @@ class Folio::OpenAi::TranscribeSubtitlesJob < Folio::ApplicationJob
 
   queue_as :default
 
+  unique :until_and_while_executing
+
   def perform(video_file)
     raise "only video files can be transcribed" unless video_file.is_a?(Folio::File::Video)
 
@@ -48,7 +50,6 @@ class Folio::OpenAi::TranscribeSubtitlesJob < Folio::ApplicationJob
         subtitle.mark_transcription_failed!(e.message)
       end
 
-      Raven.capture_exception(e) if defined?(Raven)
       Sentry.capture_exception(e) if defined?(Sentry)
     ensure
       if audio_tempfile

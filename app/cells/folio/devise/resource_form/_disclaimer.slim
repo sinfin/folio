@@ -1,2 +1,7 @@
 / overridable in main_app
-== cell("#{application_namespace_path}/ui/disclaimer")
+- component = "#{::Rails.application.class.name.deconstantize}::Ui::DisclaimerComponent".safe_constantize
+
+- if component
+  = render_view_component(component.new)
+- else
+  == cell("#{application_namespace_path}/ui/disclaimer")

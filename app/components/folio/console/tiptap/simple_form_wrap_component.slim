@@ -1,0 +1,35 @@
+.f-c-tiptap-simple-form-wrap data=data
+  = helpers.simple_form_for(@simple_form_model, @simple_form_options) do |form|
+    .f-c-tiptap-simple-form-wrap__scroller[
+      data=stimulus_data(action: { scroll: 'onScroll' }, target: "scroller")
+    ]
+      .f-c-tiptap-simple-form-wrap__fields data=stimulus_target("fields")
+        - if content?
+          - @f = form
+          = content
+        - else
+          = render 'form', f: form
+
+      .f-c-tiptap-simple-form-wrap__editors-bar
+        .f-c-tiptap-simple-form-wrap__editors-bar-title
+          = t('.editor_title')
+
+        = render(Folio::Console::Tiptap::SimpleFormWrap::WordCountComponent.new(data: stimulus_target("wordCount")))
+
+        span.f-c-tiptap-simple-form-wrap__editors-bar-scroll-trigger[
+          data=stimulus_action(click: "onScrollTriggerClick")
+        ]
+          span.f-c-tiptap-simple-form-wrap__editors-bar-scroll-ico
+            = folio_icon(:chevron_down, height: 16)
+
+      .f-c-tiptap-simple-form-wrap__editors
+        - if form.object.tiptap_autosave_enabled?
+          .f-c-tiptap-simple-form-wrap__editors-autosave
+            = render(Folio::Console::Tiptap::SimpleFormWrap::AutosaveInfoComponent.new(object: form.object))
+
+        .f-c-tiptap-simple-form-wrap__editors-input-wrap
+          - form.object.class.folio_tiptap_fields.each do |field|
+            = form.input field, as: :tiptap, block: true, error: false
+
+    .f-c-tiptap-simple-form-wrap__form-footer
+      = helpers.form_footer form, static: true

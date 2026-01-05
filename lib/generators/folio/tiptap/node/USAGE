@@ -1,0 +1,11 @@
+Description:
+    Explain the generator
+
+Example:
+    rails generate folio:tiptap:node SomeThing
+
+    This will create:
+        app/models/tiptap/node/some_thing.rb
+        app/cells/tiptap/node/some_thing_cell.rb
+        app/cells/tiptap/node/some_thing/show.slim
+        test/cells/tiptap/node/some_thing_cell_test.rb

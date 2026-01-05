@@ -2,10 +2,10 @@ window.Folio.Stimulus.register('f-captcha-turnstile', class extends window.Stimu
   static values = {
     siteKey: String,
     appearance: String,
-    submitButtonClassName: String,
+    submitButtonClassName: String
   }
 
-  connect() {
+  connect () {
     this.loadTurnstileScript()
 
     if (this.submitButtonClassNameValue) {
@@ -13,7 +13,7 @@ window.Folio.Stimulus.register('f-captcha-turnstile', class extends window.Stimu
     }
   }
 
-  disconnect() {
+  disconnect () {
     this.removeTurnstile()
 
     if (this.submitButtonClassNameValue) {
@@ -21,14 +21,14 @@ window.Folio.Stimulus.register('f-captcha-turnstile', class extends window.Stimu
     }
   }
 
-  loadTurnstileScript() {
+  loadTurnstileScript () {
     window.Folio.RemoteScripts.run({
-      key: "turnstile",
-      urls: ["https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"]
+      key: 'turnstile',
+      urls: ['https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit']
     }, () => {
       this.renderTurnstile()
     }, () => {
-      console.error("Failed to load Cloudflare Turnstile script")
+      console.error('Failed to load Cloudflare Turnstile script')
 
       if (this.submitButtonClassNameValue) {
         this.enableSubmitButton()
@@ -36,8 +36,8 @@ window.Folio.Stimulus.register('f-captcha-turnstile', class extends window.Stimu
     })
   }
 
-  renderTurnstile() {
-    if (!this.siteKeyValue || typeof turnstile === 'undefined') return
+  renderTurnstile () {
+    if (!this.siteKeyValue || typeof window.turnstile === 'undefined') return
 
     const turnstileContainer = this.element
 
@@ -46,45 +46,45 @@ window.Folio.Stimulus.register('f-captcha-turnstile', class extends window.Stimu
         sitekey: this.siteKeyValue,
         language: document.documentElement.lang,
         appearance: this.appearanceValue,
-        'before-interactive-callback': () => { turnstileContainer.style.display = "block" },
+        'before-interactive-callback': () => { turnstileContainer.style.display = 'block' }
       }
 
       // Only add callbacks if we need to disable submit button
       if (this.submitButtonClassNameValue) {
-        turnstileOptions['callback'] = (token) => { this.onTurnstileSuccess(token) }
+        turnstileOptions.callback = (token) => { this.onTurnstileSuccess(token) }
         turnstileOptions['error-callback'] = () => { this.onTurnstileError() }
         turnstileOptions['expired-callback'] = () => { this.onTurnstileExpired() }
       }
 
-      turnstile.render(turnstileContainer, turnstileOptions)
+      window.turnstile.render(turnstileContainer, turnstileOptions)
 
       // Control the visibility of the turnstileContainer because even when the iframe is hidden,
       // it's wrapper takes up unnecessary space and causes layout shifts
-      if (this.appearanceValue === "interaction-only") {
-        turnstileContainer.style.display = "none"
+      if (this.appearanceValue === 'interaction-only') {
+        turnstileContainer.style.display = 'none'
       }
     }
   }
 
-  removeTurnstile() {
-    if (typeof turnstile === 'undefined' || !this.element.innerHTML) return
+  removeTurnstile () {
+    if (typeof window.turnstile === 'undefined' || !this.element.innerHTML) return
 
-    turnstile.remove()
+    window.turnstile.remove()
   }
 
-  onTurnstileSuccess(token) {
+  onTurnstileSuccess (token) {
     this.enableSubmitButton()
   }
 
-  onTurnstileError() {
+  onTurnstileError () {
     this.disableSubmitButton()
   }
 
-  onTurnstileExpired() {
+  onTurnstileExpired () {
     this.disableSubmitButton()
   }
 
-  findSubmitButton() {
+  findSubmitButton () {
     const form = this.element.closest('form')
     if (form) {
       return form.querySelector(`.${this.submitButtonClassNameValue}`)
@@ -92,7 +92,7 @@ window.Folio.Stimulus.register('f-captcha-turnstile', class extends window.Stimu
     return null
   }
 
-  disableSubmitButton() {
+  disableSubmitButton () {
     const submitButton = this.findSubmitButton()
     if (submitButton) {
       submitButton.disabled = true
@@ -100,7 +100,7 @@ window.Folio.Stimulus.register('f-captcha-turnstile', class extends window.Stimu
     }
   }
 
-  enableSubmitButton() {
+  enableSubmitButton () {
     const submitButton = this.findSubmitButton()
     if (submitButton) {
       submitButton.disabled = false

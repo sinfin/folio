@@ -1,0 +1,11 @@
+.f-file-list-file-batch-checkbox data=data
+  label[
+    class="f-file-list-file-batch-checkbox__label"
+  ]
+    input[
+      type="checkbox"
+      class="f-file-list-file-batch-checkbox__input"
+      checked=selected_for_batch_actions?
+      value=(@thead ? "all" : @file.id)
+      data=input_data
+    ]

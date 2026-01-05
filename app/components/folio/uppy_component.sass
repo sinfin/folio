@@ -1,0 +1,25 @@
+.f-uppy
+  $f-file-list-file-item-size: 168px !default
+
+  position: relative
+  min-height: 100%
+
+  .f-file-list--view-table &
+    min-height: 75px
+
+  &--custom-trigger,
+  .f-file-list--view-table &--custom-trigger
+    min-height: 0
+
+  &--inline,
+  .f-file-list--view-table &--inline
+    min-height: 400px
+
+.uppy-Dashboard--modal
+  $zindex-modal: 1055 !default
+
+  .uppy-Dashboard-overlay
+    z-index: $zindex-modal + 1 !important
+
+  .uppy-Dashboard-inner
+    z-index: $zindex-modal + 2 !important

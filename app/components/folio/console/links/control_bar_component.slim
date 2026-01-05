@@ -5,14 +5,16 @@
   ]
     - if @url_json.present?
       = render(Folio::Console::Links::ValueComponent.new(url_json: @url_json,
-                                                         json: @json))
+                                                         json: @json,
+                                                         absolute_urls: @absolute_urls,
+                                                         disabled: @disabled))
 
   .f-c-links-control-bar__button-wrap[
     data=stimulus_target("buttonWrap")
     hidden=@url_json[:href].present?
   ]
-    == cell('folio/console/ui/button',
-            variant: :success,
-            label: t('.add_link'),
-            icon: :link,
-            data: stimulus_action(click: "onAddClick"))
+    = render(Folio::Console::Ui::ButtonComponent.new(variant: :success,
+                                                     label: t('.add_link'),
+                                                     icon: :link,
+                                                     disabled: @disabled,
+                                                     data: stimulus_action(click: "onAddClick")))

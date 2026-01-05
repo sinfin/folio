@@ -29,7 +29,7 @@ class TagsInput < SimpleForm::Inputs::StringInput
 
       register_stimulus("f-input-tags", values:)
 
-      value = object.send(attribute_name)
+      value = input_html_options[:value] || object.send(attribute_name)
 
       if value.is_a?(Array)
         input_html_options[:value] = value.join(", ")

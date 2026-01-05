@@ -27,6 +27,7 @@ module Folio
 
     config.folio_console_locale = :cs
     config.folio_console_report_redirect = :console_pages_path
+    config.folio_console_current_user_profile_enabled = true
     config.folio_console_sidebar_link_class_names = nil
     config.folio_console_sidebar_prepended_link_class_names = []
     config.folio_console_sidebar_appended_link_class_names = []
@@ -38,10 +39,11 @@ module Folio
     config.folio_console_sidebar_title_image_path = nil
     config.folio_console_default_routes_contstraints = {}
     config.folio_console_add_locale_to_preview_links = false
-    config.folio_console_files_additional_html_api_url_lambda = -> (file) { nil }
     config.folio_console_clonable_enabled = true
     config.folio_console_audited_revisions_limit = 50
     config.folio_console_preview_url_for_procs = nil
+
+    config.folio_rewriter_lambda_for_has_console_url = nil
 
     config.folio_newsletter_subscription_service = :mailchimp
     config.folio_server_names = []
@@ -80,7 +82,7 @@ module Folio
     config.folio_direct_s3_upload_allow_for_users = false
     config.folio_direct_s3_upload_allow_public = false
     config.folio_direct_s3_upload_attributes_for_job_proc = -> (controller) {
-      { site_id: controller.site_for_new_files.id }
+      { site_id: controller.send(:site_for_new_files).id }
     }
 
     config.folio_photo_archive_enabled = false
@@ -92,6 +94,8 @@ module Folio
 
     config.folio_leads_from_component_class_name = nil
     config.folio_newsletter_subscriptions = false
+
+    config.folio_tiptap_use_for_pages = false
 
     config.folio_users_use_phone = false
     config.folio_users_require_phone = false
@@ -126,11 +130,20 @@ module Folio
 
     config.folio_users_non_get_referrer_rewrite_proc = -> (referrer) { }
 
+    # Cache headers configuration (Phase 1 defaults)
+    config.folio_cache_headers_enabled = false
+    config.folio_cache_headers_default_ttl = 15 # seconds
+    config.folio_cache_headers_include_etag = false
+    config.folio_cache_headers_include_last_modified = false
+    config.folio_cache_headers_include_cache_tags = false
+
     config.folio_console_react_modal_types = config.folio_file_types_for_routes
 
+    # folio_files_require_attribution = requires either author or source/source url
     config.folio_files_require_attribution = false
     config.folio_files_require_alt = false
     config.folio_files_require_description = false
+
     config.folio_files_video_enabled_subtitle_languages = %w[cs]
 
     config.folio_component_generator_parent_component_class_name_proc = -> (class_name) do
@@ -168,12 +181,19 @@ module Folio
       }
     }
 
+    initializer :append_folio_autoload_paths do |app|
+      # Add component concerns to autoload paths so they can be included properly
+      app.config.autoload_paths += [self.root.join("app/components/concerns")]
+      app.config.eager_load_paths += [self.root.join("app/components/concerns")]
+    end
+
     initializer :append_folio_assets_paths do |app|
       app.config.assets.paths << self.root.join("app/cells")
       app.config.assets.paths << self.root.join("app/components")
       app.config.assets.paths << self.root.join("node_modules")
       app.config.assets.paths << self.root.join("vendor/assets/javascripts")
       app.config.assets.paths << self.root.join("vendor/assets/bower_components")
+      app.config.assets.paths << self.root.join("tiptap/dist/assets")
       app.config.assets.precompile += %w[
         folio/console/base.css
         folio/console/base.js
@@ -210,11 +230,21 @@ module Folio
       end
     end
 
+    initializer :add_folio_embed_middleware do |app|
+      load Folio::Engine.root.join("app/lib/rack/folio/embed_middleware.rb")
+      app.config.middleware.use(Rack::Folio::EmbedMiddleware)
+    end
+
     initializer :add_folio_maintenance_middleware do |app|
       if ENV["FOLIO_MAINTENANCE"]
         require "rack/folio/maintenance_middleware"
         app.config.middleware.use(Rack::Folio::MaintenanceMiddleware)
       end
+    end
+
+    initializer :env_flags_warning do |app|
+      load Folio::Engine.root.join("lib/folio/env_flags.rb")
+      Folio::EnvFlags.warn_if_present
     end
 
     config.to_prepare do
@@ -308,10 +338,6 @@ module Folio
             deprecations << "There are no email templates present. Seed them via rake folio:email_templates:idp_seed"
           end
         rescue ActiveRecord::NoDatabaseError, ActiveRecord::ConnectionNotEstablished, ActiveRecord::StatementInvalid
-        end
-
-        if %w[js coffee].any? { |ext| File.exist?(Rails.root.join("app/cells/folio/console/atoms/previews/main_app.#{ext}")) }
-          deprecations << "The main_app js/coffee file has moved from app/cells/folio/console/atoms/previews to app/assets/javascripts/folio/console/atoms/previews"
         end
 
         unless Rails.env.production?

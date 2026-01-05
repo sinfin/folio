@@ -21,6 +21,8 @@ aside#f-c-layout-sidebar.f-c-layout-sidebar data-controller="f-c-layout-sidebar"
 
             ul.f-c-layout-sidebar__ul
               - group[:links].each do |link_group|
+                - next if link_group.blank?
+
                 li.f-c-layout-sidebar__subgroup
                   ul
                     - link_group.each do |link|

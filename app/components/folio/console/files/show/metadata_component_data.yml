@@ -1,0 +1,251 @@
+- type: 'descriptive'
+  label:
+    cs: 'Popisná metadata'
+    en: 'Descriptive Metadata'
+  fields:
+    - key: 'headline'
+      label:
+        cs: 'Titulek'
+        en: 'Headline'
+      type: 'text'
+    - key: 'description'
+      label:
+        cs: 'Popis'
+        en: 'Description'
+      type: 'text'
+    - key: 'creator'
+      label:
+        cs: 'Autor'
+        en: 'Creator'
+      type: 'array'
+    - key: 'credit_line'
+      label:
+        cs: 'Credit Line'
+        en: 'Credit Line'
+      type: 'text'
+    - key: 'source'
+      label:
+        cs: 'Zdroj'
+        en: 'Source'
+      type: 'text'
+    - key: 'caption_writer'
+      label:
+        cs: 'Autor popisku'
+        en: 'Caption Writer'
+      type: 'text'
+    - key: 'keywords'
+      label:
+        cs: 'Klíčová slova'
+        en: 'Keywords'
+      type: 'array'
+    - key: 'intellectual_genre'
+      label:
+        cs: 'Intelektuální žánr'
+        en: 'Intellectual Genre'
+      type: 'text'
+    - key: 'subject_codes'
+      label:
+        cs: 'Kódy předmětu'
+        en: 'Subject Codes'
+      type: 'array'
+    - key: 'event'
+      label:
+        cs: 'Událost'
+        en: 'Event'
+      type: 'text'
+    - key: 'category'
+      label:
+        cs: 'Kategorie'
+        en: 'Category'
+      type: 'text'
+    - key: 'persons_shown'
+      label:
+        cs: 'Zobrazené osoby'
+        en: 'Persons Shown'
+      type: 'array'
+    - key: 'organizations_shown'
+      label:
+        cs: 'Zobrazené organizace'
+        en: 'Organizations Shown'
+      type: 'array'
+
+- type: 'technical'
+  label:
+    cs: 'Technická metadata'
+    en: 'Technical Metadata'
+  fields:
+    - key: 'camera_make'
+      label:
+        cs: 'Výrobce fotoaparátu'
+        en: 'Camera Make'
+      type: 'text'
+    - key: 'camera_model'
+      label:
+        cs: 'Model fotoaparátu'
+        en: 'Camera Model'
+      type: 'text'
+    - key: 'lens_info'
+      label:
+        cs: 'Objektiv'
+        en: 'Lens Info'
+      type: 'text'
+    - key: 'capture_date'
+      label:
+        cs: 'Datum pořízení'
+        en: 'Capture Date'
+      type: 'date'
+      include_time: true
+    - key: 'software'
+      label:
+        cs: 'Software'
+        en: 'Software'
+      type: 'text'
+    - key: 'iso_speed'
+      label:
+        cs: 'ISO'
+        en: 'ISO Speed'
+      type: 'text'
+    - key: 'aperture'
+      label:
+        cs: 'Clona'
+        en: 'Aperture'
+      type: 'text'
+    - key: 'shutter_speed'
+      label:
+        cs: 'Rychlost závěrky'
+        en: 'Shutter Speed'
+      type: 'text'
+    - key: 'focal_length'
+      label:
+        cs: 'Ohnisková vzdálenost'
+        en: 'Focal Length'
+      type: 'text'
+    - key: 'flash'
+      label:
+        cs: 'Blesk'
+        en: 'Flash'
+      type: 'text'
+    - key: 'white_balance'
+      label:
+        cs: 'Vyvážení bílé'
+        en: 'White Balance'
+      type: 'text'
+    - key: 'exposure_mode'
+      label:
+        cs: 'Režim expozice'
+        en: 'Exposure Mode'
+      type: 'text'
+    - key: 'exposure_compensation'
+      label:
+        cs: 'Kompenzace expozice'
+        en: 'Exposure Compensation'
+      type: 'text'
+    - key: 'metering_mode'
+      label:
+        cs: 'Režim měření'
+        en: 'Metering Mode'
+      type: 'text'
+    - key: 'orientation'
+      label:
+        cs: 'Orientace'
+        en: 'Orientation'
+      type: 'text'
+    - key: 'color_space'
+      label:
+        cs: 'Barevný prostor'
+        en: 'Color Space'
+      type: 'text'
+    - key: 'file_width'
+      label:
+        cs: 'Šířka'
+        en: 'Width'
+      type: 'text'
+    - key: 'file_height'
+      label:
+        cs: 'Výška'
+        en: 'Height'
+      type: 'text'
+    - key: 'file_size'
+      label:
+        cs: 'Velikost souboru'
+        en: 'File Size'
+      type: 'filesize'
+    - key: 'gps_latitude'
+      label:
+        cs: 'GPS šířka'
+        en: 'GPS Latitude'
+      type: 'number'
+      decimals: 6
+    - key: 'gps_longitude'
+      label:
+        cs: 'GPS délka'
+        en: 'GPS Longitude'
+      type: 'number'
+      decimals: 6
+
+- type: 'rights'
+  label:
+    cs: 'Práva a autorství'
+    en: 'Rights and Copyright'
+  fields:
+    - key: 'copyright_notice'
+      label:
+        cs: 'Copyright'
+        en: 'Copyright Notice'
+      type: 'text'
+    - key: 'copyright_marked'
+      label:
+        cs: 'Copyright označen'
+        en: 'Copyright Marked'
+      type: 'text'
+    - key: 'usage_terms'
+      label:
+        cs: 'Podmínky užití'
+        en: 'Usage Terms'
+      type: 'text'
+    - key: 'rights_url'
+      label:
+        cs: 'URL práv'
+        en: 'Rights URL'
+      type: 'text'
+
+- type: 'location'
+  label:
+    cs: 'Lokalita'
+    en: 'Location'
+  fields:
+    - key: 'location_created'
+      label:
+        cs: 'Místo vytvoření'
+        en: 'Location Created'
+      type: 'text'
+    - key: 'location_shown'
+      label:
+        cs: 'Zobrazené místo'
+        en: 'Location Shown'
+      type: 'text'
+    - key: 'city'
+      label:
+        cs: 'Město'
+        en: 'City'
+      type: 'text'
+    - key: 'state_province'
+      label:
+        cs: 'Stát/Kraj'
+        en: 'State/Province'
+      type: 'text'
+    - key: 'country'
+      label:
+        cs: 'Země'
+        en: 'Country'
+      type: 'text'
+    - key: 'country_code'
+      label:
+        cs: 'Kód země'
+        en: 'Country Code'
+      type: 'text'
+    - key: 'sublocation'
+      label:
+        cs: 'Místo'
+        en: 'Sublocation'
+      type: 'text'

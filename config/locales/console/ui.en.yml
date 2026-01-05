@@ -1,0 +1,33 @@
+---
+en:
+  folio:
+    console:
+      ui:
+        in_place_input_component:
+          blank: Blank
+
+        index:
+          filters_component:
+            cancel: Cancel filters
+            numeric_range:
+              from: From
+              to: To
+            collapsible_toggle: Detailed filter
+
+          header_component:
+            csv: CSV
+
+        turbo_frame_with_loader_component:
+          error_title: There was an error loading the content
+          error_message: Please try again by reloading the page.
+
+        clipboard_component:
+          copy: Copy
+
+        validation_box_component:
+          fix: Fix
+          errors: Please fill in the missing required fields.
+          warnings: "Warning: the following criteria are not met"
+          missing_alt: is missing alt
+          missing_description: is missing description
+          missing_attribution: is missing author or source

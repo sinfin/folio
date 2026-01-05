@@ -8,10 +8,9 @@ h2 Regular
   = render(Folio::Console::PrivateAttachmentsFieldsComponent.new(f:))
 
   .mt-5
-    == cell('folio/console/ui/button',
-            type: :submit,
-            label: "Save",
-            icon: :check)
+    = render_view_component(Folio::Console::Ui::ButtonComponent.new(type: :submit,
+                                                                    label: "Save",
+                                                                    icon: :check)
 
 hr.my-5
 
@@ -23,7 +22,6 @@ h2 Single
   = render(Folio::Console::PrivateAttachmentsFieldsComponent.new(f:, single: true))
 
   .mt-5
-    == cell('folio/console/ui/button',
-            type: :submit,
-            label: "Save",
-            icon: :check)
+    = render_view_component(Folio::Console::Ui::ButtonComponent.new(type: :submit,
+                                                                    label: "Save",
+                                                                    icon: :check)

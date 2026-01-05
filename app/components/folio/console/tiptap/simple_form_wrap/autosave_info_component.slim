@@ -1,0 +1,34 @@
+.f-c-tiptap-simple-form-wrap-autosave-info data=data
+  - if object.new_record?
+    .f-c-tiptap-simple-form-wrap-autosave-info__new-record
+      = render(Folio::Console::Ui::AlertComponent.new(variant: :warning,
+                                                      class_name: "m-0",
+                                                      closable: false))
+        = t('.new_record_alert', model: object.class.model_name.human.downcase)
+  - elsif has_unsaved_changes?
+    .f-c-tiptap-simple-form-wrap-autosave-info__unsaved_changes data=stimulus_target("unsavedChanges")
+      .f-c-tiptap-simple-form-wrap-autosave-info__top
+        = folio_icon(:alert,
+                      class: 'f-c-tiptap-simple-form-wrap-autosave-info__top-ico')
+        h3.f-c-tiptap-simple-form-wrap-autosave-info__top-label
+          = t('.title')
+
+      .f-c-tiptap-simple-form-wrap-autosave-info__middle
+        = latest_revision_info
+
+      .f-c-tiptap-simple-form-wrap-autosave-info__bottom
+        .f-c-tiptap-simple-form-wrap-autosave-info__buttons
+          = render(Folio::Console::Ui::ButtonComponent.new(variant: :primary,
+                                                            label: t('.continue'),
+                                                            data: stimulus_action(click: "onContinueButtonClick")))
+          = render(Folio::Console::Ui::ButtonComponent.new(variant: :tertiary,
+                                                           label: t('.discard'),
+                                                           data: stimulus_action(click: "onDiscardButtonClick")))
+
+  .f-c-tiptap-simple-form-wrap-autosave-info__failed-to-save[
+    class="f-c-tiptap-simple-form-wrap-autosave-info__failed-to-save--hidden"
+    data=stimulus_target("failedToSave")
+  ]
+    = render(Folio::Console::Ui::AlertComponent.new(variant: :danger,
+                                                    class_name: "m-0"))
+      = t('.failed_to_save')

@@ -1,0 +1,112 @@
+# frozen_string_literal: true
+
+module Folio
+  module Embed
+    SUPPORTED_TYPES = JSON.load_file(Folio::Engine.root.join("data", "embed", "source", "types.json"))
+                          .transform_values { |pattern| Regexp.new(pattern) }
+
+    TYPE_REGEX = Regexp.new(
+      "^(" +
+      SUPPORTED_TYPES.map do |type, regex|
+        "(?<#{type}>#{regex.source})"
+      end.join("|") +
+      ")",
+      Regexp::EXTENDED
+    )
+
+    def self.validate_record(record:, attribute_name: :folio_embed_data)
+      embed_data = record.send(attribute_name)
+
+      if embed_data.blank?
+        record.errors.add(attribute_name, :blank)
+        return
+      end
+
+      if invalid_reason = invalid_reason_for(embed_data)
+        record.errors.add(attribute_name, invalid_reason)
+      end
+    end
+
+    def self.invalid_reason_for(embed_data)
+      return :blank if embed_data.blank?
+      return :invalid unless embed_data.is_a?(Hash)
+      return :blank unless embed_data["active"] == true
+
+      return nil if embed_data["html"].present?
+
+      type = embed_data["type"].presence
+      if type.in?(SUPPORTED_TYPES.keys)
+        if SUPPORTED_TYPES[type].match?(embed_data["url"])
+          return nil
+        else
+          return :invalid
+        end
+      end
+
+      :blank
+    end
+
+    def self.url_type(url)
+      match = TYPE_REGEX.match(url)
+      return nil unless match
+
+      # Find which named capture group matched
+      match.named_captures.find { |name, value| value&.present? }&.first
+    end
+
+    def self.hash_strong_params_keys
+      %i[
+        active
+        html
+        type
+        url
+      ]
+    end
+
+    def self.normalize_value(value)
+      hash = if value.is_a?(Hash)
+        value.stringify_keys
+      elsif value.is_a?(String)
+        (JSON.parse(value) rescue {}) || {}
+      else
+        {}
+      end
+
+      active = hash["active"].in?([true, "true"])
+
+      if active
+        {
+          "active" => active,
+          "html" => hash["html"].presence,
+          "type" => hash["type"].presence,
+          "url" => hash["url"].presence,
+        }.compact
+      else
+        nil
+      end
+    end
+
+    def self.sanitize_value(raw_value)
+      normalized_value = normalize_value(raw_value)
+
+      if normalized_value
+        type = if normalized_value["type"].in?(SUPPORTED_TYPES.keys)
+          normalized_value["type"]
+        end
+
+        {
+          "active" => normalized_value["active"],
+          "html" => if normalized_value["html"].is_a?(String)
+                      normalized_value["html"]
+                    end,
+          "type" => type,
+          "url" => if type && normalized_value["url"].is_a?(String)
+                     Loofah.fragment(normalized_value["url"]).text(encode_special_chars: false)
+                   end
+        }.compact
+      else
+        nil
+      end
+    end
+  end
+end

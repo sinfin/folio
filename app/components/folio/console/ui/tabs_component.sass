@@ -1,4 +1,7 @@
 .f-c-ui-tabs
+  &--no-margin &__nav
+    margin-bottom: 0
+
   &__count
     font-size: $font-size-sm
     background: $f-c-state-colors-default
@@ -25,11 +28,22 @@
       &--#{$name}
         background: $color
 
+    &--yellow
+      color: #000000
+
   &__nav-link
     display: flex
     align-items: center
     gap: $grid-gutter-base
+    cursor: pointer
 
     @each $name, $color in $f-c-state-colors
       &--color-#{$name}
         color: $color !important
+
+    &--no-toggle:hover,
+    &--no-toggle:focus
+      border-color: transparent !important
+
+  &__icon
+    margin-right: -0.5 * $grid-gutter-base

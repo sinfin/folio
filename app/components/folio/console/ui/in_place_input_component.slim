@@ -1,0 +1,52 @@
+div[
+  class=bem_class_name
+  class=(@value_line_clamp ? "f-c-ui-in-place-input--value-line-clamp-#{@value_line_clamp}" : nil)
+  class=(@disabled ? "f-c-ui-in-place-input--disabled" : nil)
+  class=(@multiple ? "f-c-ui-in-place-input--multiple" : nil)
+  data=wrap_data
+]
+  .f-c-ui-in-place-input__content-wrap data=stimulus_target("contentWrap")
+    .f-c-ui-in-place-input__content-flex data=(@disabled ? {} : stimulus_action(click: "toggle"))
+      .f-c-ui-in-place-input__content-inner[
+        data=stimulus_target("contentInner")
+        title=value_or_label_from_collection
+      ]
+        - if @value_prefix.present?
+          span.f-c-ui-in-place-input__content-prefix<>
+            = @value_prefix
+
+        span.f-c-ui-in-place-input__content[
+          class="flex-grow-0 flex-shrink-1"
+          data=stimulus_target("content")
+        ]
+          = value_or_label_from_collection
+
+        span.f-c-ui-in-place-input__content-blank.text-muted
+          = t('.blank')
+
+      = folio_icon(:check,
+                   height: 12,
+                   class: "flex-grow-0 flex-shrink-0 f-c-ui-in-place-input__success-ico")
+
+      - if @warning.present?
+        .f-c-ui-in-place-input__warning data=stimulus_tooltip(@warning, variant: :popover).merge(stimulus_target("warning"))
+          = folio_icon(:alert, width: 24, height: 24)
+
+      - unless @disabled
+        = folio_icon(:edit,
+                     height: 12,
+                     class: "flex-grow-0 flex-shrink-0 f-c-ui-in-place-input__toggle-ico")
+
+  - unless @disabled
+    .f-c-ui-in-place-input__input-wrap data=stimulus_target("inputWrap")
+      = render(Folio::Console::Ui::AjaxInputComponent.new(name:,
+                                                          url:,
+                                                          value: @value,
+                                                          cleave: @cleave,
+                                                          textarea: @textarea,
+                                                          collection: @collection,
+                                                          force_cancel: true,
+                                                          autocomplete: @autocomplete,
+                                                          multiple: @multiple,
+                                                          use_saved_indicator: false,
+                                                          f: @f))
