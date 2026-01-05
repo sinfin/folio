@@ -33,6 +33,7 @@ All notable changes to this project will be documented in this file.
 - added fallback image handling for missing or corrupted files
 - added image dimension validation to `Folio::Thumbnails` concern
 - thumbnail loading now restricted to console, tiptap editor, and unpublished previews
+- atom file placements now delegate validation methods (`should_validate_file_placements_*_if_needed?`) to their placement, enabling placement-specific validation rules (e.g., stricter rules for published articles)
 
 ### Changed
 

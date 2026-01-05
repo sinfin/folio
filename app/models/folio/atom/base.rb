@@ -305,6 +305,30 @@ class Folio::Atom::Base < Folio::ApplicationRecord
     data.try(:values).try(:join, "\n").presence
   end
 
+  # @param for_console_form_warning [Boolean] When true, shows validation warnings in console form
+  #   even if placement is unpublished. When false, only validates for published placements.
+  def should_validate_file_placements_attribution_if_needed?(for_console_form_warning: false)
+    return false if placement.blank?
+    return false unless placement.respond_to?(:should_validate_file_placements_attribution_if_needed?)
+    placement.should_validate_file_placements_attribution_if_needed?(for_console_form_warning:)
+  end
+
+  # @param for_console_form_warning [Boolean] When true, shows validation warnings in console form
+  #   even if placement is unpublished. When false, only validates for published placements.
+  def should_validate_file_placements_alt_if_needed?(for_console_form_warning: false)
+    return false if placement.blank?
+    return false unless placement.respond_to?(:should_validate_file_placements_alt_if_needed?)
+    placement.should_validate_file_placements_alt_if_needed?(for_console_form_warning:)
+  end
+
+  # @param for_console_form_warning [Boolean] When true, shows validation warnings in console form
+  #   even if placement is unpublished. When false, only validates for published placements.
+  def should_validate_file_placements_description_if_needed?(for_console_form_warning: false)
+    return false if placement.blank?
+    return false unless placement.respond_to?(:should_validate_file_placements_description_if_needed?)
+    placement.should_validate_file_placements_description_if_needed?(for_console_form_warning:)
+  end
+
   def from_audited_data(audited_data)
     klass = audited_data["type"].safe_constantize
 

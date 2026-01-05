@@ -115,4 +115,42 @@ class Folio::Atom::BaseTest < ActiveSupport::TestCase
     assert_nil(atom.url)
     assert_nil(atom.url_json)
   end
+
+  class AtomWithCover < Folio::Atom::Base
+    ATTACHMENTS = %i[cover]
+  end
+
+  test "should_validate_file_placements methods delegate to placement" do
+    page = create(:folio_page, published: true)
+    atom = create_atom(AtomWithCover, :cover, placement: page)
+
+    Rails.application.config.stub(:folio_files_require_alt, true) do
+      assert atom.should_validate_file_placements_alt_if_needed?
+      assert_equal page.should_validate_file_placements_alt_if_needed?, atom.should_validate_file_placements_alt_if_needed?
+
+      page.update_column(:published, false)
+      atom.reload
+      assert_not atom.should_validate_file_placements_alt_if_needed?
+
+      # Test for_console_form_warning parameter
+      assert atom.should_validate_file_placements_alt_if_needed?(for_console_form_warning: true)
+    end
+  end
+
+  test "should_validate_file_placements methods return false when placement is blank" do
+    atom = AtomWithCover.new
+    assert_not atom.should_validate_file_placements_alt_if_needed?
+  end
+
+  test "atom file placements are validated according to placement rules" do
+    page = create(:folio_page, published: true)
+    file = create(:folio_file_image, alt: nil)
+    atom = create_atom(AtomWithCover, placement: page)
+    atom.update!(cover: file)
+
+    Rails.application.config.stub(:folio_files_require_alt, true) do
+      assert_not atom.cover_placement.valid?
+      assert atom.cover_placement.errors[:alt].present?
+    end
+  end
 end
