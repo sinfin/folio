@@ -3,21 +3,17 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [7.0.0] - 2026-01-05
+
 ### Added
 
 - **Console URL Rewriter**: Extract console URL tracking into `Folio::HasConsoleUrl` concern with configurable URL rewriting via `folio_rewriter_lambda_for_has_console_url` lambda, enabling multiple related URLs (e.g. `/homepages/future` and `/homepages/current`) to be treated as equivalent for concurrent editing detection
-- **Embed System**: Complete rewrite of embed functionality with new input and display components
-  - `EmbedInput` for form integration with real-time validation and preview
-  - `Folio::Embed::BoxComponent` for iframe-based display with lazy loading
-  - Support for YouTube, Instagram, Pinterest, and Twitter/X embeds via URL
-  - `Folio::Embed::Validation` concern for model validation
-  - Middleware serving pre-built HTML at `/folio/embed` for iframe content
-  - TipTap integration with embed node support
-- **Help Documents**: New feature for displaying Markdown documentation within the console interface
-  - Configurable via `doc/help/index.yml` with support for categories, ordering, and custom paths
-  - Full Markdown support including code highlighting, tables, and Mermaid diagrams
-  - Automatic sidebar integration when configuration is detected
-  - Secure external library loading via `Folio.RemoteScripts` system
+- **Embed System**: Complete rewrite of embed functionality with new input and display components. See [docs/embed.md](docs/embed.md) for details
+- **Help Documents**: New feature for displaying Markdown documentation within the console interface. See [docs/help_documents.md](docs/help_documents.md) for details
+- **TipTap Editor**: Complete rich text editing system with advanced features including collapsible pages, table cell rowspan/colspan, toolbar slots, and file picker integration. See [docs/tiptap.md](docs/tiptap.md) for details
+- **Turbo Integration**: Added Turbo.js to console with Turbo frames for files index and modals, improved page transitions, and turbo frame loader component
+- **Uppy File Uploader**: New file upload system replacing legacy upload components with drag-and-drop support, format hints, and message bus integration
+- **Media Sources**: New `Folio::MediaSource` model and management system for media attribution with usage limits and automatic attribution field population
 - added `rel` and `target` to allowed rich text attributes
 - actions `destroy`, `discard` and `undiscard` are now by default collapsed in console index pages
 - `Folio::ElevenLabs::TranscribeSubtitlesJob` for automatic subtitles transcription using ElevenLabs (disabled by default)
@@ -33,6 +29,10 @@ All notable changes to this project will be documented in this file.
 - added fallback image handling for missing or corrupted files
 - added image dimension validation to `Folio::Thumbnails` concern
 - thumbnail loading now restricted to console, tiptap editor, and unpublished previews
+- `Folio::Console::Ui::StepsComponent` for step-by-step UI workflows
+- pagination support for all remote selects with `ordered_for_folio_console_selects` scope
+- `Folio::EnvFlags` module with startup warnings for configuration issues
+- `Folio::Console::Files::ValidationBoxComponent` for file attribution validation UI
 
 ### Changed
 
@@ -41,6 +41,7 @@ All notable changes to this project will be documented in this file.
 - thumbnail generation now uses dynamic cache TTL (5-10 seconds) based on config
 - removed broken `animated_gif_resize` processor (GIFs now converted to JPG)
 - improved video screenshot time calculation to prevent seeking beyond video duration
+- file list improvements: table view, batch actions, grid view for videos, improved checkbox clickability, and mobile table styling
 
 - update rails to 8.0.1
 - default console `update` for `format: :json` now returns a JSON with changes instead of an empty hash
@@ -61,6 +62,8 @@ All notable changes to this project will be documented in this file.
 - fixed Dragonfly image analyser to handle misnamed files (e.g., WebP files with .jpg extension)
 - fixed dimension validation to only run when file is assigned
 - fixed video screenshot generation to prevent seeking beyond video duration
+- normalized x.com URLs to twitter.com for embed widget compatibility
+- set text/plain content type for robots.txt responses
 
 ## [6.5.1] - 2025-06-18
 
