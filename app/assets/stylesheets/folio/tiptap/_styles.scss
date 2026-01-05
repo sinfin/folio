@@ -523,11 +523,10 @@ $f-tiptap-table-td__min-width: 5rem !default;
 
   // Force two-line placeholder for empty paragraphs that are only child of [data-node-view-content-react]
   // Get numeric line-height value for multiline placeholder - use variable if numeric, otherwise default to 1.5
-  $multiline-placeholder-line-height: if(
-    type-of($f-tiptap-root__line-height) == "number",
-    $f-tiptap-root__line-height,
-    1.5
-  );
+  $multiline-placeholder-line-height: 1.5;
+  @if type-of($f-tiptap-root__line-height) == "number" {
+    $multiline-placeholder-line-height: $f-tiptap-root__line-height;
+  }
 
   .f-tiptap-float__aside,
   .f-tiptap-float__main {
