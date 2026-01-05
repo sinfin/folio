@@ -325,7 +325,20 @@ AwsFileHandler.configure do |config|
   # config.controller_sent_file = nil # default
   config.controller_uploaded_file = proc do |controller, params, aws_file|
     # TODO: fill data required for typeable instance
-    aws_file.typeable = aws_file.custom_data["class_name"].constantize.new
+    if aws_file.typeable.nil?
+      # TODO: set current site properly
+      site = Folio::Current.site
+      # TODO: set file_mime_type properly - it's nil on aws_file
+      file_mime_type = 'image/jpeg'
+
+      aws_file.typeable = aws_file.custom_data["class_name"].constantize.new(site:,
+                                                                             file_mime_type:,
+                                                                             type: aws_file.custom_data["class_name"])
+
+      aws_file.typeable.save!
+    end
+
+    aws_file
   end
 
   # This block is called in the `/file/uploaded` action. It's for setting up the file before processing it as uploaded.

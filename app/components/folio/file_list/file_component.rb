@@ -210,6 +210,8 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
   end
 
   def download_href
+    return tmp_aws_file_handler_url
+
     if @file.try(:private?)
       Folio::S3.url_rewrite(@file.file.remote_url(expires: 1.hour.from_now))
     else
@@ -236,6 +238,14 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
       Folio::Console::FileSerializer.new(@file).serializable_hash[:data].to_json
     else
       ""
+    end
+  end
+
+  def tmp_aws_file_handler_url
+    if @file && @file.id
+      "https://doader.s3.amazonaws.com/1000x1000.gif?aws-file-handler=1&id=#{@file.id}"
+    else
+      "https://doader.s3.amazonaws.com/1000x1000.gif?aws-file-handler=1"
     end
   end
 end

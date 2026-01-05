@@ -74,7 +74,7 @@ class Folio::File < Folio::ApplicationRecord
   has_many :placements, through: :file_placements
 
   # Validations
-  validates :file, :type,
+  validates :type,
             presence: true
 
   validates :default_gravity,
