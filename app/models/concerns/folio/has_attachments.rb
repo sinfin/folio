@@ -382,27 +382,21 @@ module Folio::HasAttachments
       if should_validate_file_placements_attribution_if_needed?
         placements_to_validate.each do |placement|
           placement.validate_attribution_if_needed
-          if placement.errors[:file].present?
-            has_invalid_file_placements = true
-          end
+          has_invalid_file_placements = true if placement.errors.any?
         end
       end
 
       if should_validate_file_placements_alt_if_needed?
         placements_to_validate.each do |placement|
           placement.validate_alt_if_needed
-          if placement.errors[:file].present?
-            has_invalid_file_placements = true
-          end
+          has_invalid_file_placements = true if placement.errors.any?
         end
       end
 
       if should_validate_file_placements_description_if_needed?
         placements_to_validate.each do |placement|
           placement.validate_description_if_needed
-          if placement.errors[:file].present?
-            has_invalid_file_placements = true
-          end
+          has_invalid_file_placements = true if placement.errors.any?
         end
       end
 
