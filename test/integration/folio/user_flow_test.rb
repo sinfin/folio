@@ -157,7 +157,9 @@ class Folio::UserFlowTest < Folio::CapybaraTest
 
           assert page.has_css?("h1", text: "Přihlášení")
 
-          Folio::Current.reset
+          # Reset site_record to test caching behavior - site will be retrieved from request.host
+          # when the form is submitted via set_up_current_from_request
+          Folio::Current.site_record = nil
 
           within ".d-layout-main" do
             fill_in "E-mail", with: email
@@ -188,7 +190,9 @@ class Folio::UserFlowTest < Folio::CapybaraTest
 
           assert page.has_css?("h1", text: "Přihlášení")
 
-          Folio::Current.reset
+          # Reset site_record to test caching behavior - site will be retrieved from request.host
+          # when the form is submitted via set_up_current_from_request
+          Folio::Current.site_record = nil
 
           within ".d-layout-main" do
             fill_in "E-mail", with: email
