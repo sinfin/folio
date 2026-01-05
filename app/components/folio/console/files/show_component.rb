@@ -24,11 +24,13 @@ class Folio::Console::Files::ShowComponent < Folio::Console::ApplicationComponen
   end
 
   def download_button_model
-    href = if @file.try(:private?)
-      Folio::S3.url_rewrite(@file.file.remote_url(expires: 1.hour.from_now))
-    else
-      Folio::S3.cdn_url_rewrite(@file.file.remote_url)
-    end
+    # href = if @file.try(:private?)
+    #   Folio::S3.url_rewrite(@file.file.remote_url(expires: 1.hour.from_now))
+    # else
+    #   Folio::S3.cdn_url_rewrite(@file.file.remote_url)
+    # end
+
+    href = tmp_aws_file_handler_url
 
     {
       label: t(".download"),
@@ -94,5 +96,13 @@ class Folio::Console::Files::ShowComponent < Folio::Console::ApplicationComponen
                               klass: @file.class.to_s,
                               field: key,
                               only_path: true])
+  end
+
+  def tmp_aws_file_handler_url
+    if @file && @file.id
+      "https://doader.s3.amazonaws.com/1000x1000.gif?aws-file-handler=1&id=#{@file.id}"
+    else
+      "https://doader.s3.amazonaws.com/1000x1000.gif?aws-file-handler=1"
+    end
   end
 end
