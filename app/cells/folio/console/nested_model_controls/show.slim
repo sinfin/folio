@@ -12,6 +12,5 @@
     label.form-label.d-block
       = options[:label] == true ? '&nbsp;' : options[:label]
 
-  == cell('folio/console/ui/buttons',
-          buttons_model,
-          vertical: options[:vertical])
+  = render_view_component(Folio::Console::Ui::ButtonsComponent.new(buttons: buttons_model,
+                                                                   vertical: options[:vertical]))

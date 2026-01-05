@@ -1,0 +1,40 @@
+.f-c-files-show-thumbnails-crop-edit[
+  data=data
+  class="f-c-files-show-thumbnails-crop-edit--mode-#{mode}"
+]
+  .f-c-files-show-thumbnails-crop-edit__top
+    h4.f-c-files-show-thumbnails-crop-edit__title.m-0
+      = @ratio
+
+    - if @can_update
+      = buttons
+      = buttons_while_editing
+
+  .f-c-files-show-thumbnails-crop-edit__editor.mt-3[
+    data=stimulus_target("editor")
+  ]
+    .f-c-files-show-thumbnails-crop-edit__editor-inner[
+      style=editor_inner_style
+      data=stimulus_target("editorInner")
+    ]
+      img.f-c-files-show-thumbnails-crop-edit__editor-img[
+        src=Folio::S3.url_rewrite(@file.file.remote_url)
+        data=stimulus_target("editorImage")
+        width=image_width
+        height=image_height
+      ]
+
+    span.f-c-files-show-thumbnails-crop-edit__editor-loader[
+      class="folio-loader"
+      class="folio-loader--transparent"
+    ]
+
+  .f-c-files-show-thumbnails-crop-edit__img-wrap.mt-3
+    - if image_url
+      img.f-c-files-show-thumbnails-crop-edit__img[
+        loading="lazy"
+        src=image_url
+        data=image_data
+      ]
+    - else
+      = folio_icon(:close)

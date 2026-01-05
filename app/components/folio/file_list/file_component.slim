@@ -1,0 +1,210 @@
+div[
+  data=data
+  class=bem_class_name
+  class=(unmet_requirements.present? ? "f-file-list-file--unmet-requirements" : nil)
+]
+  - if @batch_actions
+    div[
+      class="f-file-list-file__part"
+      class="f-file-list-file__part--batch-actions"
+    ]
+      - unless @template
+        = render(Folio::FileList::File::BatchCheckboxComponent.new(file: @file,
+                                                                   file_klass: @file_klass,
+                                                                   thead: @thead))
+
+  div[
+    class="f-file-list-file__part"
+    class="f-file-list-file__part--image"
+    data=stimulus_target("imageWrap")
+  ]
+    - unless @thead
+      .f-file-list-file__image-wrap
+        - if @template
+          = render(Folio::FileList::LoaderComponent.new(data: stimulus_target("loader")))
+
+        - elsif @file.present?
+          - if @file.try(:thumbnailable?) && @file.respond_to?(:base_thumb)
+            .f-file-list-file__image-bg style=image_bg_style
+
+            img.f-file-list-file__image[
+              src=@file.base_thumb.url
+              loading="lazy"
+              alt=@file.file_name
+              width=@file.base_thumb.width
+              height=@file.base_thumb.height
+              data=primary_action_data
+            ]
+          - else
+            = folio_icon(file_icon_key, height: 40)
+
+  div[
+    class="f-file-list-file__part"
+    class="f-file-list-file__part--extension"
+  ]
+    - if !@thead && !@template
+      .f-file-list-file__extension
+        = @file.try(:file_extension).try(:upcase)
+
+  div[
+    class="f-file-list-file__part"
+    class="f-file-list-file__part--info"
+  ]
+    - if @thead
+      .f-file-list-file__thead-label-wrap.small.text-muted
+        span.f-file-list-file__thead-label = t('.thead/info')
+    - else
+      - if primary_action_data
+        .f-file-list-file__info-file-name.f-file-list-file__info-file-name--interactive[
+          data=primary_action_data
+        ]
+          = @file.file_name
+      - else
+        .f-file-list-file__info-file-name
+          = @file.file_name
+
+      - if !@template
+        - file_information_rows.each do |row|
+          .f-file-list-file__info-item.small.text-muted
+            = row
+
+  div[
+    class="f-file-list-file__part"
+    class="f-file-list-file__part--mobile-divider"
+    class="f-file-list-file__part--mobile-divider-one"
+    hidden=@template
+  ]
+
+  div[
+    class="f-file-list-file__part"
+    class="f-file-list-file__part--count"
+  ]
+    - if @thead
+      .f-file-list-file__thead-label-wrap.small.text-muted
+        span.f-file-list-file__thead-label = t('.thead/count')
+    - elsif !@template && @file.try(:file_list_count).is_a?(Numeric) && @file.file_list_count > 0
+      span.f-file-list-file__count
+        = @file.file_list_count
+
+  - if unmet_requirements.present?
+    div[
+      class="f-file-list-file__part"
+      class="f-file-list-file__part--warning"
+      data=stimulus_tooltip(unmet_requirements_html, variant: :popover)
+    ]
+      = folio_icon(:alert)
+  - else
+    div[
+      class="f-file-list-file__part"
+      class="f-file-list-file__part--warning"
+      class="f-file-list-file__part--warning-blank"
+    ]
+
+  - if @thead || @template || @file.try(:file_size)
+    div[
+      class="f-file-list-file__part"
+      class="f-file-list-file__part--size"
+      class="small text-muted text-nowrap text-end"
+    ]
+      - if @thead
+        .f-file-list-file__thead-label-wrap.small.text-muted
+          span.f-file-list-file__thead-label = t('.thead/size')
+      - elsif !@template && @file.file_size.present?
+        = helpers.number_to_human_size(@file.file_size, precision: 0)
+
+  - if @file.respond_to?(:tags)
+    div[
+      class="f-file-list-file__part"
+      class="f-file-list-file__part--tags"
+      class="small text-muted"
+    ]
+      - if @thead
+        .f-file-list-file__thead-label-wrap.small.text-muted
+          span.f-file-list-file__thead-label = t('.thead/tags')
+      - elsif @file.tags.present?
+        .f-file-list-file__tags
+          - if @file.tags.size > 6
+            - @file.tags.first(5).each do |file_tag|
+              span.f-file-list-file__tag = file_tag
+
+            span.f-file-list-file__tag title=t('.tags_count',
+                                               count: @file.tags.size)
+              ' &hellip;
+          - else
+            - @file.tags.each do |file_tag|
+              span.f-file-list-file__tag = file_tag
+
+  - if !@thead && !@template && @file.try(:file_list_source).present?
+    div[
+      class="f-file-list-file__part"
+      class="f-file-list-file__part--source"
+    ]
+      span.f-file-list-file__source
+        = @file.file_list_source
+
+  div[
+    class="f-file-list-file__part"
+    class="f-file-list-file__part--mobile-divider"
+    class="f-file-list-file__part--mobile-divider-two"
+    hidden=@template
+  ]
+
+  div[
+    class="f-file-list-file__part"
+    class="f-file-list-file__part--controls"
+  ]
+    .f-file-list-file__controls
+      - if !@thead && !@template
+        - if primary_action_data
+          div[
+            class="f-file-list-file__control"
+            class="f-file-list-file__control--primary"
+            class="f-file-list-file__control--primary-#{@primary_action}"
+            data=primary_action_data
+          ]
+            - if @primary_action === "index_for_modal"
+              div[
+                class="f-file-list-file__control-primary-icon-wrap"
+                class="f-file-list-file__control-primary-icon-wrap--index_for_modal"
+              ]
+                = folio_icon(:check_circle_outline)
+            - elsif @primary_action === "index_for_picker"
+              div[
+                class="f-file-list-file__control-primary-icon-wrap"
+                class="f-file-list-file__control-primary-icon-wrap--index_for_picker"
+              ]
+                = folio_icon(:arrow_up)
+
+        a[
+          class="f-file-list-file__control"
+          class="f-file-list-file__control--download"
+          href=download_href
+          target="_blank"
+        ]
+          = folio_icon(:download)
+
+        - if @editable
+          button[
+            class="f-file-list-file__control"
+            class="f-file-list-file__control--edit"
+            type="button"
+            data=stimulus_action({ click: "edit" }, { url: show_url })
+          ]
+            = folio_icon(:edit_box)
+
+        - if destroy_url
+          button[
+            class="f-file-list-file__control"
+            class="f-file-list-file__control--destroy"
+            class="text-danger"
+            class=(indestructible_reason ? "f-file-list-file__control--disabled" : nil)
+            type="button"
+            data=(indestructible_reason ? stimulus_tooltip(indestructible_reason) : stimulus_action("destroy", { url: destroy_url }))
+          ]
+            = folio_icon(:delete)
+
+        - if @primary_action.to_s == "index_for_modal"
+          .f-file-list-file__select-btn-wrap
+            = render(Folio::Console::Ui::ButtonComponent.new(variant: :success,
+                                                             label: t('.select'),
+                                                             data: primary_action_data))

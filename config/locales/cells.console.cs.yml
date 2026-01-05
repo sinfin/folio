@@ -3,26 +3,12 @@ cs:
   folio:
     console:
       index:
-        filters:
-          cancel: Zrušit filtry
-          numeric_range:
-            from: Od
-            to: Do
-          collapsible_toggle: Podrobný filtr
-
         new_button:
           add: Přidat
-
-        header:
-          csv: CSV
 
         no_records:
           filtered: Zadaným filtrům neodpovídají žádné záznamy.
           none: Zde zatím nejsou žádné záznamy.
-
-      form:
-        errors:
-          fix: Opravit
 
       layout:
         sidebar:

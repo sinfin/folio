@@ -1,0 +1,20 @@
+h1 Folio Console UI
+
+h2 Input autocomplete
+
+= simple_form_for @page, method: :get, url: request.path do |f|
+  h3 Collection
+
+  p = @autocomplete_collection.join(", ")
+
+  = f.input :meta_title,
+            autocomplete: @autocomplete_collection,
+            input_html: { value: "" }
+
+  h3 Remote - page titles
+
+  p = Folio::Page.by_site(Folio::Current.site).pluck(:title).join(", ")
+
+  = f.input :title,
+            autocomplete: true,
+            input_html: { value: "" }

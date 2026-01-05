@@ -32,14 +32,16 @@
 //= require folio/modal
 //= require folio/remote_scripts
 //= require folio/word_count
+//= require folio/mermaid
 
-//= require folio/lazyload
 //= require folio/lightbox
 //= require folio/confirm
 //= require folio/debounce
 //= require folio/throttle
+//= require folio/thumbnails
 //= require folio/input
-//= require folio/player/player
+//= require folio/form_auto_submit
+//= require folio/player_component
 //= require folio/image/image
 //= require folio/chart/chart
 //= require folio/ui/icon/icon
@@ -47,12 +49,18 @@
 //= require folio/nested_fields_component
 //= require folio/form_to_hash
 //= require folio/tooltip
+//= require folio/uppy_component
+//= require folio/file_list_component
+//= require folio/file_list/file_component
+//= require folio/file_list/file/batch_checkbox_component
+//= require folio/embed/box_component
 
 // must be under folio/input
 //= require daterangepicker.min
 
+//= require folio/console/turbo
+
 //= require folio/console/_cocoon-set-position
-//= require folio/console/_data-auto-submit
 //= require folio/console/_data-change-value
 //= require folio/console/_data-cocoon-single-nested
 //= require folio/console/_data-destroy-association
@@ -62,16 +70,25 @@
 //= require folio/console/modules/with_aside
 //= require folio/console/modules/input/url
 //= require folio/console/modules/html_auto_format
+//= require folio/console/tagsinput/tagsinput
 
 //= require folio/console/ui/ajax_input_component
-//= require folio/console/ui/alert/alert
+//= require folio/console/ui/alert_component
 //= require folio/console/ui/boolean_toggle_component
-//= require folio/console/ui/button/button
-//= require folio/console/ui/buttons/buttons
+//= require folio/console/ui/button_component
+//= require folio/console/ui/buttons_component
+//= require folio/console/ui/clear_button_component
+//= require folio/console/ui/clipboard_component
+//= require folio/console/ui/collapsible_component
+//= require folio/console/ui/flash_component
+//= require folio/console/ui/in_place_input_component
+//= require folio/console/ui/index/filters_component
+//= require folio/console/ui/index/header/query_form_component
 //= require folio/console/ui/notification_modal_component
+//= require folio/console/ui/pagy_component
 //= require folio/console/ui/tabs_component
-
-//= require folio/mermaid
+//= require folio/console/ui/turbo_frame_with_loader_component
+//= require folio/console/ui/validation_box_component
 
 //= require folio/console/addresses/fields/fields
 //= require folio/console/atoms/layout_switch/layout_switch
@@ -79,30 +96,34 @@
 //= require folio/console/atoms/previews/error_component
 //= require folio/console/atoms/word_count_component
 //= require folio/console/catalogue/catalogue
-//= require folio/console/clipboard_copy/clipboard_copy
 //= require folio/console/console_notes/catalogue_tooltip/catalogue_tooltip
-//= require folio/console/current_users/console_url_bar/console_url_bar
+//= require folio/console/current_users/console_url_bar_component
 //= require folio/console/current_users/preference_toggle_component
 //= require folio/console/current_users/show_component
-//= require folio/console/file/picker/document/document
-//= require folio/console/file/picker/picker
-//= require folio/console/file/picker/thumb/thumb
 //= require folio/console/file/preview_reloader/preview_reloader
 //= require folio/console/file/processing_notifier/processing_notifier
-//= require folio/console/files/subtitles_form_component
+//= require folio/console/file_placements/multi_picker_fields/placement_component
+//= require folio/console/file_placements/multi_picker_fields_component
+//= require folio/console/files/batch/bar_component
+//= require folio/console/files/batch/form_component
+//= require folio/console/files/display_toggle_component
+//= require folio/console/files/index_modal_component
+//= require folio/console/files/picker/document_component
+//= require folio/console/files/picker/image_component
+//= require folio/console/files/picker_component
+//= require folio/console/files/show/thumbnails/crop_edit_component
+//= require folio/console/files/show_component
+//= require folio/console/files/show_modal_component
 //= require folio/console/files/subtitle_form_component
-//= require folio/console/flash/flash
+//= require folio/console/files/subtitles_form_component
 //= require folio/console/folio_attributes_fields_component
-//= require folio/console/form/errors/errors
 //= require folio/console/form/footer_component
 //= require folio/console/form_modal_component
-//= require folio/console/index/filters/filters
 //= require folio/console/index/images/images
 //= require folio/console/index/position_buttons/position_buttons
 //= require folio/console/layout/sidebar/search/search
 //= require folio/console/layout/sidebar/sidebar
 //= require folio/console/layout/sidebar/title/title
-//= require folio/console/lazy_dom/lazy_dom
 //= require folio/console/links/control_bar_component
 //= require folio/console/links/modal/form_component
 //= require folio/console/links/modal/list_component
@@ -121,11 +142,16 @@
 //= require folio/console/single_file_select/single_file_select
 //= require folio/console/site_user_links/fields_component
 //= require folio/console/state/state
+//= require folio/console/tiptap/overlay/form_component
+//= require folio/console/tiptap/overlay_component
+//= require folio/console/tiptap/simple_form_wrap/autosave_info_component
+//= require folio/console/tiptap/simple_form_wrap/word_count_component
+//= require folio/console/tiptap/simple_form_wrap_component
 //= require folio/console/users/invite_and_copy/invite_and_copy
 
 //= require folio/console/main_app
 
 // So that we can use frontend turbolinks-bound scripts
-$(document).on('ready', function () {
-  $(document).trigger('turbolinks:load')
+window.jQuery(document).on('ready', function () {
+  window.jQuery(document).trigger('turbolinks:load')
 })

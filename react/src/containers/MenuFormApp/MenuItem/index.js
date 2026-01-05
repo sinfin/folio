@@ -83,7 +83,6 @@ function MenuItem ({ node, path, onChange, linkOptions, styleOptions, remove }) 
           rawOptions={linkOptions}
           createable={false}
           isClearable={false}
-          selectize
         />
       </div>
 

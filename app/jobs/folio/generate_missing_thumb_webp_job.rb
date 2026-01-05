@@ -3,9 +3,12 @@
 class Folio::GenerateMissingThumbWebpJob < Folio::ApplicationJob
   queue_as :slow
 
+  discard_on ActiveJob::DeserializationError
+
+  unique :until_and_while_executing
+
   def perform(image)
     return if image.file_mime_type.include?("svg")
-    return if image.animated_gif?
 
     # need to reload here because of parallel jobs
     image.reload
@@ -23,10 +26,14 @@ class Folio::GenerateMissingThumbWebpJob < Folio::ApplicationJob
       end
 
       if changed
-        image.update!(thumbnail_sizes:)
+        image.thumbnail_sizes = thumbnail_sizes
+        image.dont_run_after_save_jobs = true
+        image.save!(validate: false)
       end
     end
   end
+
+
 
   private
     def add_webp_thumb(image, size, data)

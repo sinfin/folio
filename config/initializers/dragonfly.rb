@@ -24,6 +24,46 @@ end
 Dragonfly.app.configure do
   plugin :libvips
 
+  # Override image_properties analyser to handle misnamed files
+  # (e.g., WebP files with .jpg extension that fail with autorotate)
+  analyser :image_properties do |content|
+    next {} unless content.ext
+    next {} unless DragonflyLibvips::SUPPORTED_FORMATS.include?(content.ext.downcase)
+
+    input_options = { access: :sequential }
+    input_options[:autorotate] = true if content.mime_type == "image/jpeg"
+    input_options[:dpi] = 300 if content.mime_type == "application/pdf"
+
+    img = begin
+      Vips::Image.new_from_file(content.path, **input_options)
+    rescue Vips::Error => e
+      # If autorotate fails (e.g., file has wrong extension), retry without it
+      if input_options[:autorotate] && e.message.include?("autorotate")
+        input_options.delete(:autorotate)
+        Vips::Image.new_from_file(content.path, **input_options)
+      else
+        raise
+      end
+    end
+
+    progressive = begin
+      img.get_typeof("jpeg-multiscan") != 0 && img.get("jpeg-multiscan") != 0
+    rescue Vips::Error
+      false
+    end
+
+    {
+      "format" => content.ext.to_s,
+      "width" => img.width,
+      "height" => img.height,
+      "xres" => img.xres,
+      "yres" => img.yres,
+      "progressive" => progressive
+    }
+  rescue Vips::Error
+    {}
+  end
+
   analyser :mime_type do |content|
     content.shell_eval do |path|
       "file --brief --mime-type #{path}"
@@ -44,7 +84,6 @@ Dragonfly.app.configure do
   processor :normalize_profiles_via_liblcms2 do |content, *args|
     if shell("which", "jpgicc").blank?
       msg = "Missing jpgicc binary. Profiles not normalized."
-      Raven.capture_message msg if defined?(Raven)
       Sentry.capture_message msg if defined?(Sentry)
       logger.error msg if defined?(logger)
       content
@@ -64,7 +103,6 @@ Dragonfly.app.configure do
   processor :jpegoptim do |content, *args|
     if shell("which", "jpegtran").blank?
       msg = "Missing jpegtran binary. Thumbnail not optimized."
-      Raven.capture_message msg if defined?(Raven)
       Sentry.capture_message msg if defined?(Sentry)
       logger.error msg if defined?(logger)
       content
@@ -72,14 +110,6 @@ Dragonfly.app.configure do
       content.shell_update do |old_path, new_path|
         "jpegtran -optimize -outfile #{new_path} #{old_path}"
       end
-    end
-  end
-
-  processor :animated_gif_resize do |content, raw_size, *args|
-    fail "Missing gifsicle binary." if shell("which", "gifsicle").blank?
-    size = raw_size.match(/\d+x\d+/)[0] # get rid of resize options which gifsicle doesn't understand
-    content.shell_update do |old_path, new_path|
-      "gifsicle --resize-fit #{size} #{old_path} --output #{new_path}"
     end
   end
 
@@ -99,17 +129,31 @@ Dragonfly.app.configure do
   analyser :metadata do |content|
     if shell("which", "exiftool").blank?
       msg = "Missing ExifTool binary. Metadata not processed."
-      Raven.capture_message msg if defined?(Raven)
       Sentry.capture_message msg if defined?(Sentry)
       logger.error msg if defined?(logger)
       # content
       {}
     else
       begin
-        reader = MultiExiftool::Reader.new
-        reader.filenames = [content.file.path]
-        reader.read.try(:first).try(:to_hash)
-      rescue MultiExiftool::Error
+        # Use direct ExifTool call with proper UTF-8 charset handling for IPTC
+        require "open3"
+
+        exiftool_options = Rails.application.config.folio_image_metadata_exiftool_options || ["-G1", "-struct", "-n", "-charset", "iptc=utf8"]
+        command = ["exiftool", "-j"] + exiftool_options + [content.file.path]
+        stdout, stderr, status = Open3.capture3(*command)
+
+        if status.success?
+          parsed = JSON.parse(stdout)
+          parsed.first || {}
+        else
+          Rails.logger.warn "ExifTool error: #{stderr}" if defined?(Rails)
+          {}
+        end
+      rescue JSON::ParserError => e
+        Rails.logger.error "Failed to parse ExifTool JSON output: #{e.message}" if defined?(Rails)
+        {}
+      rescue => e
+        Rails.logger.error "ExifTool extraction failed: #{e.message}" if defined?(Rails)
         {}
       end
     end

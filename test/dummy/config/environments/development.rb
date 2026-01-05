@@ -15,16 +15,29 @@ Rails.application.configure do
   config.consider_all_requests_local = true
 
   # Enable/disable caching. By default caching is disabled.
+  # Run `rails dev:cache` to toggle caching.
   if Rails.root.join("tmp/caching-dev.txt").exist?
     config.action_controller.perform_caching = true
+    config.action_controller.enable_fragment_cache_logging = true
 
     config.cache_store = :memory_store
     config.public_file_server.headers = {
       "Cache-Control" => "public, max-age=#{2.days.seconds.to_i}"
     }
+
+    # Cache enabled banner
+    puts "\n" + "=" * 80
+    puts "✅ FOLIO DEVELOPMENT CACHE: ENABLED"
+    puts "=" * 80
+    puts "Store: Memory Store"
+    puts "Fragment cache logging: ON"
+    puts "Public file headers: #{2.days.seconds.to_i}s TTL"
+    puts "MiniProfiler: Auto-disabled (prevents interference)"
+    puts "To disable: rails dev:cache"
+    puts "Documentation: docs/cache.md"
+    puts "=" * 80 + "\n"
   else
     config.action_controller.perform_caching = false
-
     config.cache_store = :null_store
   end
 

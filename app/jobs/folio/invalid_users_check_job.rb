@@ -3,6 +3,8 @@
 class Folio::InvalidUsersCheckJob < Folio::ApplicationJob
   queue_as :slow
 
+  unique :until_and_while_executing
+
   class InvalidUsersError < StandardError
   end
 

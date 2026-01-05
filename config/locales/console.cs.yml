@@ -21,15 +21,9 @@ cs:
         undiscard: Odarchivovat
       alt_prompt: Alternativní popisek obrázku
       api:
-        file:
-          documents:
-            mass_destroy:
-              success: Dokumenty smazány
-              failure: Dokumenty se nepodařilo smazat - %{msg}
-          images:
-            mass_destroy:
-              success: Obrázky smazány
-              failure: Obrázky se nepodařilo smazat - %{msg}
+        tiptap_revisions:
+          takeover_revision:
+            no_revision_found: "Nenalezena rozpracovaná verze pro uživatele %{user_id} u %{record_type}#%{record_id}"
         aasm:
           failure_title: Neúspěch
           failure_detail: Nepodařilo se změnit stav záznamu.
@@ -108,9 +102,17 @@ cs:
       create: Vytvořit
       delete: Smazat
       current_users:
-        console_url_bar:
+        console_url_bar_component:
           title: Tuto stránku nyní upravuje
           text: Vyčkejte, až dokončí úpravy. Při současné úpravě by mohlo dojít ke ztrátě rozpracovaného obsahu.
+          autosave:
+            title: Tuto stránku nyní upravuje %{edited_by} (od %{edited_at})
+            text: Úpravou článku můžete smazat neuložené změny. Chcete přesto převzít úpravu?
+            takeover: Převzít úpravu
+            back: Zpět
+            outdated_title: Stránka byla upravena uživatelem %{edited_by} na novější verzi (%{edited_at})
+            outdated_text: Pracujete s neaktuální verzí. Pro další editaci je potřeba pokračovat v aktualní verzi.
+            outdated_continue: Zahodit změny a pokračovat v aktuální verzi
         show_component:
           title: Můj profil
           title/sign_in: Přihlašovací jméno
@@ -302,8 +304,6 @@ cs:
         add_image: Přidat obrázek
         add_video: Přidat video
         remove_video: Odebrat video
-      lazy_dom:
-        error: "Nepodařilo se načíst data:"
       publishable_inputs:
         item:
           from: od (nepovinné)
@@ -350,8 +350,6 @@ cs:
           in: Nahradit z YAML
           out: Uložit do YAML
           in_new: Vytvořit nový z YAML
-      clipboard_copy:
-        copy: Kopírovat
       catalogue_sort_arrows:
         sort_asc: Řadit vzestupně
         sort_desc: Řadit sestupně
@@ -442,7 +440,6 @@ cs:
           label: Automatické ukládání
 
       files:
-
         subtitle_form_component:
           enabled_label: Povolit titulky
           validation_errors_title: "Chyby validace:"
@@ -505,6 +502,10 @@ cs:
             attempts: "%{count} pokusů"
             validation_errors: "%{count} chyb validace"
 
+        usage_constraints_component:
+          max_usage_count: "Maximální počet použití:"
+          allowed_sites_blank: Nevyplněno
+
       eleven_labs:
         transcribe_subtitles_job:
           errors:
@@ -512,19 +513,17 @@ cs:
             no_audio_detected: "Ve video souboru nebylo detekováno žádné audio"
             cloud_storage_read_failed: "ElevenLabs nemohl načíst soubor z našeho cloudového úložiště"
 
-
-
   date:
     formats:
-      console_short: "%d. %m. %Y"
+      console_short: "%-d. %-m. %Y"
       console_group_by_day: "%a %-d. %B. %Y"
-      console_short_date: "%d. %m. %Y"
+      console_short_date: "%-d. %-m. %Y"
 
   time:
     formats:
-      console_short: "%d. %m. %Y, %H:%M"
-      console_short_with_seconds: "%d. %m. %Y, %H:%M:%S"
+      console_short: "%-d. %-m. %Y, %-H:%M"
+      console_short_with_seconds: "%-d. %-m. %Y, %-H:%M:%S"
       console_group_by_day: "%a %-d. %B. %Y"
-      console_short_date: "%d. %m. %Y"
-      console_short_time: "%H:%M"
+      console_short_date: "%-d. %-m. %Y"
+      console_short_time: "%-H:%M"
       console_html_datetime: "%Y-%m-%dT%H:%M:%S%z"

@@ -25,7 +25,7 @@ window.Folio.Stimulus.register('d-ui-menu-toolbar-header-search', class extends 
   }
 
   connect () {
-    this.debouncedOnInput = Folio.debounce(this.onInput)
+    this.debouncedOnInput = window.Folio.debounce(this.onInput)
   }
 
   disconnect () {
@@ -38,8 +38,8 @@ window.Folio.Stimulus.register('d-ui-menu-toolbar-header-search', class extends 
   }
 
   aClick (e) {
-    //const isMobile = window.Folio.isVisible(this.mqTarget)
-    //if (isMobile) return
+    // const isMobile = window.Folio.isVisible(this.mqTarget)
+    // if (isMobile) return
 
     e.preventDefault()
 
@@ -54,14 +54,14 @@ window.Folio.Stimulus.register('d-ui-menu-toolbar-header-search', class extends 
   open () {
     this.openValue = true
     this.inputTarget.focus()
-    this.dispatch("opened", { detail: { value: true }})
+    this.dispatch('opened', { detail: { value: true } })
   }
 
   close () {
     if (this.openValue) {
       this.openValue = false
     }
-    this.dispatch("opened", { detail: { value: false }})
+    this.dispatch('opened', { detail: { value: false } })
   }
 
   onInput (e) {
@@ -84,14 +84,14 @@ window.Folio.Stimulus.register('d-ui-menu-toolbar-header-search', class extends 
           if (res && res.data) {
             this.autocompleteResultsTarget.innerHTML = res.data
           } else {
-            throw 'Missing search results data'
+            throw new Error('Missing search results data')
           }
         })
         .catch((error) => {
           if (error.name === 'AbortError') {
             this.autocompleteResultsTarget.innerHTML = ''
           } else {
-            this.autocompleteResultsTarget.innerHTML = `<div class="d-searches-autocomplete small"><div class="d-searches-autocomplete__no-results">${Folio.i18n(window.Dummy.Ui.MenuToolbar.HeaderSearch.i18n, 'error')}</div></div>`
+            this.autocompleteResultsTarget.innerHTML = `<div class="d-searches-autocomplete small"><div class="d-searches-autocomplete__no-results">${window.Folio.i18n(window.Dummy.Ui.MenuToolbar.HeaderSearch.i18n, 'error')}</div></div>`
           }
         })
     } else {
@@ -103,7 +103,6 @@ window.Folio.Stimulus.register('d-ui-menu-toolbar-header-search', class extends 
     window.setTimeout(() => {
       this.close()
     }, 300)
-
   }
 
   overlayClick (e) {

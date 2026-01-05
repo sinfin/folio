@@ -26,34 +26,45 @@ Folio::Engine.routes.draw do
         get :ajax_inputs
         patch :update_ajax_inputs
 
+        get :file_placements_multi_picker_fields
+        patch :update_file_placements_multi_picker_fields
+
         get :alerts
         get :badges
         get :boolean_toggles
         get :buttons
+        get :clipboard
         get :dropdowns
+        get :in_place_inputs
         get :modals
+        get :steps
         get :tabs
         get :tooltips
         get :warning_ribbons
 
-        get :input_rich_text
+        get :input_autocomplete
         get :input_date_time
-        get :input_url
+        get :input_embed
+        get :input_rich_text
         get :input_tags
+        get :input_tiptap
+        get :input_url
       end
 
-      resource :current_user, only: %i[show] do
-        patch :update_email
-        patch :update_password
+      if ::Rails.application.config.folio_console_current_user_profile_enabled
+        resource :current_user, only: %i[show] do
+          patch :update_email
+          patch :update_password
+        end
       end
 
-      resources :attribute_types, except: %i[show] do
+      resources :attribute_types do
         collection do
           post :set_positions
         end
       end
 
-      resources :pages, except: %i[show] do
+      resources :pages do
         collection do
           post :set_positions
           get :merge
@@ -77,14 +88,24 @@ Folio::Engine.routes.draw do
         end
       end
 
-      resources :menus, except: %i[show]
+      resources :menus
+
+      resources :media_sources, except: %i[show]
 
       resources :help_documents, only: %i[index show]
 
       namespace :file do
         Rails.application.config.folio_file_types_for_routes.each do |type|
-          resources type.constantize.model_name.element.pluralize.to_sym, only: %i[index show] do
+          resources type.constantize.model_name.element.pluralize.to_sym, only: %i[index show update] do
+            collection do
+              get :index_for_modal
+              get :index_for_picker
+            end
+
             member do
+              get :file_placements
+              post :extract_metadata
+
               if type == "Folio::File::Video"
                 post :retranscribe_subtitles
               end
@@ -135,8 +156,15 @@ Folio::Engine.routes.draw do
         post :transport, path: "transport(/:class_name/:id)"
       end
 
-      namespace :api do
+      namespace :api, constraints: -> (req) { req.format == :json } do
         resources :private_attachments, only: %i[create destroy]
+        resources :tiptap_revisions, only: [] do
+          collection do
+            post :save_revision
+            delete :delete_revision
+            post :takeover_revision
+          end
+        end
 
         resource :links, only: [] do
           get :control_bar
@@ -165,22 +193,52 @@ Folio::Engine.routes.draw do
             post :react_update_target
           end
         end
+      end
+
+      resource :merge, only: [:new, :create],
+                       path: "merge/:klass/:original_id/:duplicate_id"
+
+      namespace :api, constraints: -> (req) { req.format == :json } do
+        resource :tiptap, controller: :tiptap, only: [] do
+          post :edit_node
+          post :save_node
+          post :render_nodes
+        end
 
         namespace :file do
           Rails.application.config.folio_file_types_for_routes.each do |type|
             klass = type.constantize
             key = type.constantize.model_name.element.pluralize.to_sym
 
-            resources key, only: %i[index update destroy] do
+            resources key, only: %i[index show update destroy] do
               collection do
-                post :tag
-                delete :mass_destroy
-                get :mass_download
+                get :pagination
+
+                get :batch_bar
+
+                post :handle_batch_queue
+
+                post :open_batch_form
+                post :close_batch_form
+
+                post :batch_download
+                post :batch_download_success
+                post :batch_download_failure
+                post :cancel_batch_download
+
+                patch :batch_update
+                delete :batch_delete
               end
+
               member do
+                get :file_picker_file_hash
+
                 if klass.human_type == "image"
                   post :update_file_thumbnail
                   post :destroy_file_thumbnail
+                  post :extract_metadata
+
+                  patch :update_thumbnails_crop
                 end
 
                 if klass.human_type == "video"
@@ -197,9 +255,6 @@ Folio::Engine.routes.draw do
           end
         end
       end
-
-      resource :merge, only: [:new, :create],
-                       path: "merge/:klass/:original_id/:duplicate_id"
     end
 
     # these are outside of constraint by design
@@ -234,6 +289,11 @@ Folio::Engine.routes.draw do
     end
   end
 
+  resource :tiptap, path: "folio-tiptap", controller: :tiptap, only: [] do
+    get :block_editor, path: "block-editor"
+    get :rich_text_editor, path: "rich-text-editor"
+  end
+
   resource :csrf, only: %i[show], controller: :csrf
 
   if ::Rails.application.config.folio_leads_from_component_class_name
@@ -252,11 +312,14 @@ Folio::Engine.routes.draw do
       resource :s3, only: [], controller: "s3" do
         post :before
         post :after
+        get :file_list_file
       end
 
       resource :ares, only: [], controller: "ares" do
         post :subject
       end
+
+      resource :thumbnails, only: %i[show]
 
       namespace :file do
         resources :videos, only: [] do
@@ -269,9 +332,9 @@ Folio::Engine.routes.draw do
   get "/folio/ui", to: "ui#ui"
   get "/folio/ui/mobile_typo", to: "ui#mobile_typo"
 
-  get "/download/:hash_id(/*name)", to: "downloads#show",
-                                    as: :download,
-                                    constraints: { name: /.*/ }
+  get "/download/:slug(/*name)", to: "downloads#show",
+                                 as: :download,
+                                 constraints: { name: /.*/ }
 
   get "/robots.txt" => "robots#index"
 

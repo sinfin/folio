@@ -21,15 +21,9 @@ en:
         undiscard: Unarchive
       alt_prompt: Alternative image caption
       api:
-        file:
-          documents:
-            mass_destroy:
-              success: Documents destroyed
-              failure: Failed to destroy documents - %{msg}
-          images:
-            mass_destroy:
-              success: Images destroyed
-              failure: Failed to destroy images - %{msg}
+        tiptap_revisions:
+          takeover_revision:
+            no_revision_found: "No revision found for user %{user_id} on %{record_type}#%{record_id}"
         aasm:
           failure_title: Failure
           failure_detail: Failed to change the state.
@@ -107,9 +101,17 @@ en:
       create: Create
       delete: Remove
       current_users:
-        console_url_bar:
+        console_url_bar_component:
           title: This page is being edited by
           text: Wait for them to finish. If you edit now, you might lose the content you are working on.
+          autosave:
+            title: This page is currently being edited by %{edited_by} (since %{edited_at})
+            text: By editing this article, you may delete unsaved changes. Do you still want to take over editing?
+            takeover: Take over editing
+            back: Back
+            outdated_title: The page was edited by %{edited_by} to a newer version (%{edited_at})
+            outdated_text: You are working with an outdated version. To continue editing, you need to proceed with the current version.
+            outdated_continue: Discard changes and continue with the current version
         show_component:
           title: My profile
           title/sign_in: Login
@@ -298,8 +300,6 @@ en:
         add_image: Add image
         add_video: Add video
         remove_video: Remove video
-      lazy_dom:
-        error: "Failed to load data:"
       publishable_inputs:
         item:
           from: from (optional)
@@ -346,8 +346,6 @@ en:
           in: Replace from YAML
           out: Save to YAML
           in_new: Create new from YAML
-      clipboard_copy:
-        copy: Copy
       catalogue_sort_arrows:
         sort_asc: Ascending sort
         sort_desc: Descending sort
@@ -496,6 +494,10 @@ en:
             attempts: "%{count} attempts"
             validation_errors: "%{count} validation errors"
 
+        usage_constraints_component:
+          max_usage_count: "Max usage count:"
+          allowed_sites_blank: Blank
+
       eleven_labs:
         transcribe_subtitles_job:
           errors:
@@ -507,15 +509,15 @@ en:
 
   date:
     formats:
-      console_short: "%d. %m. %Y"
+      console_short: "%-d. %-m. %Y"
       console_group_by_day: "%a %-d. %B. %Y"
-      console_short_date: "%d. %m. %Y"
+      console_short_date: "%-d. %-m. %Y"
 
   time:
     formats:
-      console_short: "%d. %m. %Y, %H:%M"
-      console_short_with_seconds: "%d. %m. %Y, %H:%M:%S"
+      console_short: "%-d. %-m. %Y, %-H:%M"
+      console_short_with_seconds: "%-d. %-m. %Y, %-H:%M:%S"
       console_group_by_day: "%a %-d. %B. %Y"
-      console_short_date: "%d. %m. %Y"
-      console_short_time: "%H:%M"
+      console_short_date: "%-d. %-m. %Y"
+      console_short_time: "%-H:%M"
       console_html_datetime: "%Y-%m-%dT%H:%M:%S%z"

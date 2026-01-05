@@ -1,0 +1,5 @@
+---
+en:
+  folio:
+    media_source:
+      cannot_destroy_with_assigned_media: "Cannot destroy media source with assigned media (%{count})."

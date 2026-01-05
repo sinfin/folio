@@ -54,6 +54,7 @@ window.Folio.Stimulus.register('f-c-input-url', class extends window.Stimulus.Co
       ajax: {
         url: '/console/api/links',
         dataType: 'JSON',
+        delay: 250,
         minimumInputLength: 0,
         cache: false,
         data: (params) => ({ q: params.term }),

@@ -1,0 +1,11 @@
+.f-c-ui-input-with-buttons[
+  class="f-c-ui-input-with-buttons--#{@buttons_kwargs.size}"
+]
+  .f-c-ui-input-with-buttons__input
+    = @input
+
+  - @buttons_kwargs.reverse.each_with_index do |btn, index|
+    .f-c-ui-input-with-buttons__button[
+      class="f-c-ui-input-with-buttons__button--#{index}"
+    ]
+      = render(Folio::Console::Ui::ButtonComponent.new(**btn))

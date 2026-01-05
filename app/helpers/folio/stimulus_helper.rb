@@ -16,7 +16,7 @@ module Folio::StimulusHelper
 
     values.each do |key, value|
       value = value.to_s if value.is_a?(TrueClass) || value.is_a?(FalseClass)
-      h["#{controller}-#{key}-value"] = value
+      h["#{controller}-#{key.to_s.dasherize}-value"] = value
     end
 
     h.merge(stimulus_data(controller:, action:, outlets:, classes:, params:))
@@ -74,8 +74,8 @@ module Folio::StimulusHelper
     h
   end
 
-  def stimulus_action(action)
-    stimulus_data(action:)
+  def stimulus_action(action, params = nil)
+    stimulus_data(action:, params:)
   end
 
   def stimulus_target(target)
@@ -124,8 +124,9 @@ module Folio::StimulusHelper
                         inline: true)
   end
 
-  def stimulus_modal
+  def stimulus_modal(open: false)
     stimulus_controller("f-modal",
+                        values: { open: },
                         action: {
                           "f-modal-toggle:toggle" => "onToggleClick",
                         })
@@ -142,6 +143,12 @@ module Folio::StimulusHelper
     stimulus_controller("f-modal-close",
                         values: { target: },
                         action: { click: "click" },
+                        inline: true)
+  end
+
+  def stimulus_click_trigger(target)
+    stimulus_controller("f-click-trigger",
+                        values: { target: },
                         inline: true)
   end
 
@@ -190,6 +197,11 @@ module Folio::StimulusHelper
                         inline: true)
   end
 
+  def stimulus_form_auto_submit
+    stimulus_controller("f-form-auto-submit",
+                        inline: true)
+  end
+
   def stimulus_turbolinks_form
     stimulus_controller("f-turbolinks-form",
                         action: { submit: "onSubmit" },
@@ -210,6 +222,12 @@ module Folio::StimulusHelper
     end
 
     runner
+  end
+
+  def stimulus_thumbnail(src: nil)
+    return if src && !src.include?("doader.com")
+
+    stimulus_controller("f-thumbnail", inline: true)
   end
 
   def stimulus_cookie_consent_link

@@ -27,15 +27,5 @@ module Folio
     def show_header(model, opts = {})
       cell("folio/console/show/header", model, opts).show.html_safe
     end
-
-    def form_header(f, opts = {}, &block)
-      if block_given?
-        opts[:right] = capture(&block)
-      end
-
-      opts[:form_errors_shown] = @form_errors_shown
-
-      cell("folio/console/form/header", f, opts).show.html_safe
-    end
   end
 end

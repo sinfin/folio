@@ -8,7 +8,7 @@ class Folio::FriendlyIdAndSimpleFormTest < Folio::CapybaraTest
     create(:folio_page, slug: "changing-slug-should-not-change-form-url")
 
     visit "/console/pages/changing-slug-should-not-change-form-url/edit"
-    form = find(".f-c-simple-form-with-atoms")
+    form = find('.simple_form[action*="/console/pages"]')
     assert_equal "/console/pages/changing-slug-should-not-change-form-url", form[:action], "form action points to the slug saved in the database"
 
     fill_in "Název stránky", with: ""
@@ -17,7 +17,7 @@ class Folio::FriendlyIdAndSimpleFormTest < Folio::CapybaraTest
 
     assert_current_path("/console/pages/changing-slug-should-not-change-form-url")
     assert page.has_css?(".invalid-feedback", text: "Název stránky je povinná položka")
-    form = find(".f-c-simple-form-with-atoms")
+    form = find('.simple_form[action*="/console/pages"]')
     assert_equal "/console/pages/changing-slug-should-not-change-form-url", form[:action], "form action points to the slug saved in the database"
 
     fill_in "Název stránky", with: "should not break now"

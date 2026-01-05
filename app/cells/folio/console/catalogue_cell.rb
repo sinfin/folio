@@ -43,6 +43,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
   end
 
   def collection_actions
+    return nil # TODO components
     return @collection_actions unless @collection_actions.nil?
 
     @collection_actions = if !model[:merge] && model[:collection_actions].present?
@@ -537,7 +538,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
 
     def collection_action_for(action)
       opts = {
-        class: "f-c-catalogue__collection-actions-bar-button f-c-catalogue__collection-actions-bar-button--#{action}}",
+        class_name: "f-c-catalogue__collection-actions-bar-button f-c-catalogue__collection-actions-bar-button--#{action}}",
         label: t(".actions.#{action}"),
         variant: :secondary,
       }
@@ -557,21 +558,21 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
           method = :post
         end
 
-        opts["data-confirm"] = t("folio.console.confirmation")
+        opts[:data] = { confirm: t("folio.console.confirmation") }
 
         simple_form_for("",
                         url: url_for(["collection_#{action}".to_sym, :console, model[:klass]]),
                         method:,
                         html: { class: "f-c-catalogue__collection-actions-bar-form" }) do |f|
-          cell("folio/console/ui/button", opts)
+          render_view_component(Folio::Console::Ui::ButtonComponent.new(**opts))
         end
       elsif action == :csv
         opts[:icon] = :download
         opts[:href] = url_for([:collection_csv, :console, model[:klass]])
         opts[:target] = "_blank"
-        opts["data-url-base"] = opts[:href]
+        opts[:data][:url_base] = opts[:href]
 
-        cell("folio/console/ui/button", opts)
+        render_view_component(Folio::Console::Ui::ButtonComponent.new(**opts))
       else
         nil
       end

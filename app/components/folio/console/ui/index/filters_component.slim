@@ -1,0 +1,53 @@
+div[
+  class=bem_class_name
+  class=form_expanded_class_name
+  class="f-c-anti-container-fluid f-c-anti-container-fluid--padded"
+  data=data
+]
+  = helpers.simple_fields_for "f-c-ui-index-filters" do |f|
+    .f-c-ui-index-filters__wrap
+      .f-c-ui-index-filters__filters
+        - index_filters_hash.each do |key, config|
+          - if config[:as] == :hidden
+            = hidden_input(f, key, config)
+          - else
+            - filtered = filtered_by?(key)
+
+            .f-c-ui-index-filters__filter[
+              class=collapsible_class_name(config)
+              class="f-c-ui-index-filters__filter--#{key}"
+              style=filter_style(config, filtered:)
+            ]
+              - if config[:as] == :numeric_range
+                .f-c-ui-index-filters__numeric-range.input-group
+                  .input-group-prepend
+                    = f.label "#{key}_from", label_for_key(key)
+
+                  = numeric_range_input(f, key, type: "from")
+
+                  = numeric_range_input(f, key, type: "to")
+
+              - else
+                = input(f, key)
+
+      .f-c-ui-index-filters__actions
+        - if @collapsible
+          .f-c-ui-index-filters__toggle-wrap
+            == cell('folio/console/ui/with_icon',
+                    t('.collapsible_toggle'),
+                    class: 'f-c-ui-index-filters__toggle small',
+                    data: stimulus_action(click: 'onToggleClick'),
+                    right_icon: :menu_down,
+                    icon_options: { height: 16 })
+
+        .f-c-ui-index-filters__cancel-wrap[
+          class=(filtered? ? nil : "f-c-ui-index-filters__cancel-wrap--hidden")
+        ]
+          == cell('folio/console/ui/with_icon',
+                  t('.cancel'),
+                  href: cancel_url,
+                  icon: :close,
+                  icon_options: { height: 16 },
+                  class: "text-danger f-c-ui-index-filters__cancel small")
+
+      = hidden_input(f, :by_label_query, { value: controller.params[:by_label_query] })

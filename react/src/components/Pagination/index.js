@@ -53,26 +53,26 @@ function PaginationComponent ({ changePage, pagination, setCardsDisplay, setThum
 
   return (
     <PaginationWrap single={max === 1} className='my-g'>
-      <div className='f-c-pagination small'>
+      <div className='f-c-ui-pagy small'>
         <div
-          className='f-c-pagination__info'
+          className='f-c-ui-pagy__info'
           dangerouslySetInnerHTML={{ __html: paginationInfo(pagination) }}
         />
 
         {max !== 1 && (
-          <div className='f-c-pagination__nav'>
-            <div className={`f-c-pagination__page f-c-pagination__page--with-ico ${prevActive ? 'f-c-pagination__page--disabled' : ''}`}>
+          <div className='f-c-ui-pagy__nav'>
+            <div className={`f-c-ui-pagy__page f-c-ui-pagy__page--with-ico ${prevActive ? 'f-c-ui-pagy__page--disabled' : ''}`}>
               {prevActive ? (
                 <a href={`#${prev}`} onClick={makeOnClick(prev, changePage)}>
-                  <FolioUiIcon class='f-c-pagination__ico' name='chevron_left' />
+                  <FolioUiIcon class='f-c-ui-pagy__ico' name='chevron_left' />
                 </a>
               ) : (
-                <FolioUiIcon class='f-c-pagination__ico' name='chevron_left' />
+                <FolioUiIcon class='f-c-ui-pagy__ico' name='chevron_left' />
               )}
             </div>
 
             {numbers.map((number) => (
-              <div className={`f-c-pagination__page f-c-pagination__page--page ${number === active ? 'f-c-pagination__page--current' : ''} ${(number === 'a' || number === 'b') ? 'f-c-pagination__page--gap' : ''}`} key={number}>
+              <div className={`f-c-ui-pagy__page f-c-ui-pagy__page--page ${number === active ? 'f-c-ui-pagy__page--current' : ''} ${(number === 'a' || number === 'b') ? 'f-c-ui-pagy__page--gap' : ''}`} key={number}>
                 {number === 'a' || number === 'b' ? (
                   <span>&hellip;</span>
                 ) : (
@@ -85,13 +85,13 @@ function PaginationComponent ({ changePage, pagination, setCardsDisplay, setThum
               </div>
             ))}
 
-            <div className={`f-c-pagination__page f-c-pagination__page--with-ico ${nextActive ? 'f-c-pagination__page--disabled' : ''}`}>
+            <div className={`f-c-ui-pagy__page f-c-ui-pagy__page--with-ico ${nextActive ? 'f-c-ui-pagy__page--disabled' : ''}`}>
               {nextActive ? (
                 <a href={`#${next}`} onClick={makeOnClick(next, changePage)}>
-                  <FolioUiIcon class='f-c-pagination__ico' name='chevron_right' />
+                  <FolioUiIcon class='f-c-ui-pagy__ico' name='chevron_right' />
                 </a>
               ) : (
-                <FolioUiIcon class='f-c-pagination__ico' name='chevron_right' />
+                <FolioUiIcon class='f-c-ui-pagy__ico' name='chevron_right' />
               )}
             </div>
           </div>

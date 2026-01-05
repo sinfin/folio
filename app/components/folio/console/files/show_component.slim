@@ -1,0 +1,103 @@
+.f-c-files-show data=data
+  .f-c-files-show__row.row
+    - if Folio::Console::Files::Show::PreviewComponent.should_render?(@file.class.human_type) || @file.console_show_additional_preview_component
+      .col-lg-6.f-c-files-show__preview-col
+        = render(Folio::Console::Files::Show::PreviewComponent.new(file: @file))
+
+        - if @file.console_show_additional_preview_component
+          .f-c-files-show__additional-preview-wrap
+            = render(@file.console_show_additional_preview_component)
+
+    .col-lg
+      .f-c-files-show__buttons-outer.mb-h
+        .f-c-files-show__buttons
+          - @file.console_show_additional_buttons_props(controller:).each do |props|
+            = render(Folio::Console::Ui::ButtonComponent.new(**props))
+
+          = render(Folio::Console::Ui::ButtonComponent.new(**download_button_model))
+
+          - if can_now?(:update, @file)
+            = render(Folio::UppyComponent.new(file_type: @file.class.to_s,
+                                              max_number_of_files: 1,
+                                              existing_id: @file.id))
+              = render(Folio::Console::Ui::ButtonComponent.new(**replace_button_model))
+
+          - if can_now?(:destroy, @file)
+            - if @file.indestructible_reason
+              .f-c-files-show__button-tooltip data=stimulus_tooltip(@file.indestructible_reason)
+                = render(Folio::Console::Ui::ButtonComponent.new(**destroy_button_model))
+            - else
+              = render(Folio::Console::Ui::ButtonComponent.new(**destroy_button_model))
+
+        - if @file.class.human_type == "image"
+          = render(Folio::Console::Ui::BooleanToggleComponent.new(record: @file,
+                                                                  attribute: :sensitive_content,
+                                                                  as: :file,
+                                                                  label: true,
+                                                                  flash: false))
+
+      .f-c-files-show__meta.small.text-muted.mb-h
+        a.f-c-files-show__meta-item[
+          href=url_for([:console, @file])
+          class="f-c-unlink"
+          target="_blank"
+        ]
+          ' #{t(".id")}: #{@file.id}
+
+        - if @file.file_mime_type.present?
+          .f-c-files-show__meta-item
+            = @file.file_mime_type
+
+        - if @file.created_at.present?
+          .f-c-files-show__meta-item.me-auto
+            ' #{t(".created_at")}: #{l(@file.created_at.to_date, format: :console_short)}
+
+        .f-c-files-show__meta-item
+          == cell("folio/console/state", @file, active: false)
+
+      .f-c-files-show__table
+        - table_rows.each do |key, config|
+          .f-c-files-show__tr
+            .f-c-files-show__th
+              = @file.class.human_attribute_name(key)
+
+            .f-c-files-show__td
+              - if key == :usage_constraints
+                = render(Folio::Console::Files::UsageConstraintsComponent.new(file: @file))
+              - else
+                = render(Folio::Console::Ui::InPlaceInputComponent.new(attribute: key,
+                                                                       record: @file,
+                                                                       collection: config && config[:collection],
+                                                                       cleave: config && config[:as] == :integer,
+                                                                       as: :file,
+                                                                       autocomplete: autocomplete_for(key:, config:),
+                                                                       warning: warning_for(key)))
+
+      .f-c-files-show__collapsibles
+        = render(Folio::Console::Ui::CollapsibleComponent.new(title: @file.class.human_attribute_name(:tag_list)))
+          = helpers.simple_form_for [:console, @file], as: :file do |f|
+            = f.input :tag_list,
+                      as: :tags,
+                      label: false,
+                      input_html: { class: Folio::Console::Ui::CollapsibleComponent::FOCUS_INPUT_CLASS_NAME }
+
+            = render(Folio::Console::Ui::ButtonComponent.new(type: :submit,
+                                                             label: t('folio.console.actions.save')))
+
+        - if @file.respond_to?(:mapped_metadata)
+          = render(Folio::Console::Ui::CollapsibleComponent.new(title: t('.title/metadata', count: @file.mapped_metadata.size),
+                                                                collapsed: controller.params[:uncollapse] != "metadata"))
+            = render(Folio::Console::Files::Show::MetadataComponent.new(file: @file))
+
+        = render(Folio::Console::Ui::CollapsibleComponent.new(title: t('.title/usage', count: @file.file_placements_count),
+                                                              collapsed: controller.action_name != "file_placements"))
+          = render(Folio::Console::Files::Show::FilePlacementsComponent.new(file: @file))
+
+  - if @file.class.human_type == "image"
+    .f-c-files-show__thumbnails-wrap
+      = render(Folio::Console::Files::Show::ThumbnailsComponent.new(file: @file))
+  - elsif @file.class.human_type == "video" && @file.try(:subtitles_enabled?)
+    .f-c-files-show__subtitles-wrap
+      = render(Folio::Console::Files::SubtitlesFormComponent.new(file: @file))
+
+  span.folio-loader.folio-loader--outset-8.f-c-files-show__loader

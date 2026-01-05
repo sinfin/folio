@@ -10,8 +10,8 @@ class Folio::DownloadsController < ActionController::Base
 
   private
     def find_file
-      @file = Folio::File.friendly.find(params[:hash_id])
+      @file = Folio::File.friendly.find(params[:slug])
     rescue ActiveRecord::RecordNotFound
-      @file = Folio::PrivateAttachment.friendly.find(params[:hash_id])
+      @file = Folio::PrivateAttachment.friendly.find(params[:slug])
     end
 end

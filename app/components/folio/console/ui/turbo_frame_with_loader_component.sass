@@ -1,0 +1,41 @@
+.f-c-ui-turbo-frame-with-loader
+  position: relative
+
+  &__loader
+    opacity: 0
+    pointer-events: none
+    z-index: 2
+    transition: opacity $f-c-transition-duration ease-in-out
+    inset: 0
+
+  &--loader-offset &__loader
+    inset: px-to-rem(-8px)
+
+  &__frame
+    position: relative
+    z-index: 1
+
+  turbo-frame:empty ~ &__loader,
+  turbo-frame[busy] ~ &__loader
+    opacity: 1
+    pointer-events: all
+
+  &__error
+    align-items: center
+    color: $danger
+    flex-direction: column
+    gap: $grid-gutter-base
+    justify-content: center
+    min-height: 100%
+    text-align: center
+
+  &__error,
+  &--error &__frame
+    display: none
+
+  &--error &__error
+    display: flex
+
+  &__error-status
+    &:empty
+      display: none

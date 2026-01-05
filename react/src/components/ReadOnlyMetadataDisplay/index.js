@@ -1,0 +1,245 @@
+import React from 'react'
+
+export default ({ file }) => {
+  // Read-only metadata display as unified Folio-styled table
+  const isImage = file?.attributes?.human_type === 'image'
+
+  const extractFirstPresent = (obj, keys) => {
+    for (const k of keys) {
+      const v = obj?.[k]
+      if (v !== undefined && v !== null && String(v).trim() !== '') return v
+    }
+    return null
+  }
+
+  const formatLocationStruct = (obj) => {
+    if (!obj || typeof obj !== 'object') return null
+    const parts = []
+    const sublocation = extractFirstPresent(obj, ['Sublocation', 'SubLocation'])
+    const city = extractFirstPresent(obj, ['City'])
+    const state = extractFirstPresent(obj, ['StateProvince', 'ProvinceState', 'State'])
+    const country = extractFirstPresent(obj, ['CountryName', 'Country'])
+    const countryCode = extractFirstPresent(obj, ['CountryCode'])
+    const name = extractFirstPresent(obj, ['LocationName', 'Name'])
+
+    if (sublocation) parts.push(sublocation)
+    if (city) parts.push(city)
+    if (state) parts.push(state)
+    if (country) parts.push(countryCode ? `${country} (${countryCode})` : country)
+    if (!parts.length && name) parts.push(name)
+
+    return parts.length ? parts.join(', ') : null
+  }
+
+  const formatLocationValue = (value) => {
+    if (Array.isArray(value)) {
+      const arr = value.map((v) => {
+        if (v && typeof v === 'object') return formatLocationStruct(v)
+        if (v === undefined || v === null) return null
+        return String(v)
+      }).filter((v) => v && String(v).trim() !== '')
+      return arr.join('; ')
+    }
+    if (value && typeof value === 'object') return formatLocationStruct(value)
+    return value
+  }
+
+  const hasLatLon = () => {
+    const lat = file.attributes.gps_latitude
+    const lon = file.attributes.gps_longitude
+    return (lat || lat === 0) && (lon || lon === 0)
+  }
+
+  const renderGpsRow = () => {
+    const lat = Number(file.attributes.gps_latitude)
+    const lon = Number(file.attributes.gps_longitude)
+    if (!hasLatLon()) return null
+
+    const latStr = isFinite(lat) ? lat.toFixed(6) : String(lat)
+    const lonStr = isFinite(lon) ? lon.toFixed(6) : String(lon)
+    const googleUrl = `https://www.google.com/maps/search/?api=1&query=${latStr},${lonStr}`
+    const mapyUrl = `https://mapy.cz/zakladni?q=${encodeURIComponent(latStr + ', ' + lonStr)}`
+
+    return (
+      <tr>
+        <td className='text-muted fw-medium' style={{ width: '30%' }}>
+          {window.FolioConsole.translations['file/metadata/gps_coordinates'] || 'GPS'}
+        </td>
+        <td className='text-break'>
+          <span>{latStr}, {lonStr}</span>
+          {' '}
+          <a href={googleUrl} target='_blank' rel='noopener noreferrer'>Google Maps</a>
+          {' · '}
+          <a href={mapyUrl} target='_blank' rel='noopener noreferrer'>Mapy.cz</a>
+        </td>
+      </tr>
+    )
+  }
+
+  const renderSectionHeader = (title, icon = 'info') => (
+    <tr className='table-secondary'>
+      <td colSpan='2' className='fw-bold text-uppercase small py-2'>
+        <i className={`fas fa-${icon} me-2`} />
+        {title}
+      </td>
+    </tr>
+  )
+
+  const renderMetadataRow = (field) => {
+    // Read from mapped_metadata first, then fall back to direct attributes
+    let value = file.attributes.mapped_metadata?.[field.key] || file.attributes[field.key]
+
+    // Pretty-print structured IPTC location arrays (IPTC Extension)
+    if (field.key === 'location_created' || field.key === 'location_shown') {
+      value = formatLocationValue(value)
+    }
+
+    // Hide individual GPS rows if we have a combined GPS row
+    if ((field.key === 'gps_latitude' || field.key === 'gps_longitude') && hasLatLon()) {
+      return null
+    }
+
+    // Skip empty values
+    if (!value || value === '' || (Array.isArray(value) && value.length === 0)) {
+      return null
+    }
+
+    // Format different value types
+    if (Array.isArray(value)) {
+      value = value.join(', ')
+    } else if (field.type === 'date' && value) {
+      value = new Date(value).toLocaleDateString('cs-CZ', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        ...(field.includeTime ? { hour: '2-digit', minute: '2-digit' } : {})
+      })
+    } else if (field.type === 'number' && value) {
+      value = parseFloat(value).toFixed(field.decimals || 0)
+    } else if (field.type === 'filesize' && value) {
+      value = `${(value / 1024 / 1024).toFixed(1)} MB`
+    }
+
+    return (
+      <tr key={field.key}>
+        <td className='text-muted fw-medium' style={{ width: '30%' }}>
+          {field.label}
+        </td>
+        <td className='text-break'>
+          {value}
+        </td>
+      </tr>
+    )
+  }
+
+  // Descriptive Metadata Fields (using mapped_metadata keys)
+  const descriptiveFields = [
+    { key: 'headline', label: window.FolioConsole.translations['file/metadata/headline'] || 'Headline', type: 'text' },
+    { key: 'description', label: window.FolioConsole.translations['file/metadata/description'] || 'Description', type: 'text' },
+    { key: 'creator', label: window.FolioConsole.translations['file/metadata/creator'] || 'Creator', type: 'array' },
+    { key: 'credit_line', label: window.FolioConsole.translations['file/metadata/credit_line'] || 'Credit Line', type: 'text' },
+    { key: 'source', label: window.FolioConsole.translations['file/metadata/source'] || 'Source', type: 'text' },
+    { key: 'caption_writer', label: window.FolioConsole.translations['file/metadata/caption_writer'] || 'Caption Writer', type: 'text' },
+    { key: 'keywords', label: window.FolioConsole.translations['file/metadata/keywords'] || 'Keywords', type: 'array' },
+    { key: 'intellectual_genre', label: window.FolioConsole.translations['file/metadata/intellectual_genre'] || 'Intellectual Genre', type: 'text' },
+    { key: 'subject_codes', label: window.FolioConsole.translations['file/metadata/subject_codes'] || 'Subject Codes', type: 'array' },
+    { key: 'event', label: window.FolioConsole.translations['file/metadata/event'] || 'Event', type: 'text' },
+    { key: 'category', label: window.FolioConsole.translations['file/metadata/category'] || 'Category', type: 'text' },
+    { key: 'persons_shown', label: window.FolioConsole.translations['file/metadata/persons_shown'] || 'Persons Shown', type: 'array' },
+    { key: 'organizations_shown', label: window.FolioConsole.translations['file/metadata/organizations_shown'] || 'Organizations Shown', type: 'array' }
+  ]
+
+  // Technical Metadata Fields (using mapped_metadata keys)
+  const technicalFields = [
+    { key: 'camera_make', label: window.FolioConsole.translations['file/metadata/camera_make'] || 'Camera Make', type: 'text' },
+    { key: 'camera_model', label: window.FolioConsole.translations['file/metadata/camera_model'] || 'Camera Model', type: 'text' },
+    { key: 'lens_info', label: window.FolioConsole.translations['file/metadata/lens_info'] || 'Lens Info', type: 'text' },
+    { key: 'capture_date', label: window.FolioConsole.translations['file/metadata/capture_date'] || 'Capture Date', type: 'date', includeTime: true },
+    { key: 'software', label: window.FolioConsole.translations['file/metadata/software'] || 'Software', type: 'text' },
+    { key: 'iso_speed', label: window.FolioConsole.translations['file/metadata/iso_speed'] || 'ISO Speed', type: 'text' },
+    { key: 'aperture', label: window.FolioConsole.translations['file/metadata/aperture'] || 'Aperture', type: 'text' },
+    { key: 'shutter_speed', label: window.FolioConsole.translations['file/metadata/shutter_speed'] || 'Shutter Speed', type: 'text' },
+    { key: 'focal_length', label: window.FolioConsole.translations['file/metadata/focal_length'] || 'Focal Length', type: 'text' },
+    { key: 'flash', label: window.FolioConsole.translations['file/metadata/flash'] || 'Flash', type: 'text' },
+    { key: 'white_balance', label: window.FolioConsole.translations['file/metadata/white_balance'] || 'White Balance', type: 'text' },
+    { key: 'exposure_mode', label: window.FolioConsole.translations['file/metadata/exposure_mode'] || 'Exposure Mode', type: 'text' },
+    { key: 'exposure_compensation', label: window.FolioConsole.translations['file/metadata/exposure_compensation'] || 'Exposure Compensation', type: 'text' },
+    { key: 'metering_mode', label: window.FolioConsole.translations['file/metadata/metering_mode'] || 'Metering Mode', type: 'text' },
+    { key: 'orientation', label: window.FolioConsole.translations['file/metadata/orientation'] || 'Orientation', type: 'text' },
+    { key: 'color_space', label: window.FolioConsole.translations['file/metadata/color_space'] || 'Color Space', type: 'text' },
+    { key: 'file_width', label: window.FolioConsole.translations['fileWidth'] || 'Width', type: 'text' },
+    { key: 'file_height', label: window.FolioConsole.translations['fileHeight'] || 'Height', type: 'text' },
+    { key: 'file_size', label: window.FolioConsole.translations['fileSize'] || 'File Size', type: 'filesize' },
+    { key: 'gps_latitude', label: window.FolioConsole.translations['file/metadata/gps_latitude'] || 'GPS Latitude', type: 'number', decimals: 6 },
+    { key: 'gps_longitude', label: window.FolioConsole.translations['file/metadata/gps_longitude'] || 'GPS Longitude', type: 'number', decimals: 6 }
+  ]
+
+  // Rights Metadata Fields (using mapped_metadata keys)
+  const rightsFields = [
+    { key: 'copyright_notice', label: window.FolioConsole.translations['file/metadata/copyright_notice'] || 'Copyright Notice', type: 'text' },
+    { key: 'copyright_marked', label: window.FolioConsole.translations['file/metadata/copyright_marked'] || 'Copyright Marked', type: 'text' },
+    { key: 'usage_terms', label: window.FolioConsole.translations['file/metadata/usage_terms'] || 'Usage Terms', type: 'text' },
+    { key: 'rights_url', label: window.FolioConsole.translations['file/metadata/rights_url'] || 'Rights URL', type: 'text' }
+  ]
+
+  // Location Metadata Fields (using mapped_metadata keys)
+  const locationFields = [
+    { key: 'location_created', label: window.FolioConsole.translations['file/metadata/location_created'] || 'Location Created', type: 'text' },
+    { key: 'location_shown', label: window.FolioConsole.translations['file/metadata/location_shown'] || 'Location Shown', type: 'text' },
+    { key: 'city', label: window.FolioConsole.translations['file/metadata/city'] || 'City', type: 'text' },
+    { key: 'state_province', label: window.FolioConsole.translations['file/metadata/state_province'] || 'State/Province', type: 'text' },
+    { key: 'country', label: window.FolioConsole.translations['file/metadata/country'] || 'Country', type: 'text' },
+    { key: 'country_code', label: window.FolioConsole.translations['file/metadata/country_code'] || 'Country Code', type: 'text' },
+    { key: 'sublocation', label: window.FolioConsole.translations['file/metadata/sublocation'] || 'Sublocation', type: 'text' }
+  ]
+
+  // Filter sections with data
+  const sectionsWithData = [
+    { title: window.FolioConsole.translations['file/descriptive_metadata'] || 'Descriptive Information', fields: descriptiveFields, icon: 'file-alt' },
+    { title: window.FolioConsole.translations['file/technical_metadata'] || 'Technical Information', fields: technicalFields, icon: 'camera' },
+    { title: window.FolioConsole.translations['file/rights_metadata'] || 'Rights & Attribution', fields: rightsFields, icon: 'copyright' },
+    { title: window.FolioConsole.translations['file/location_metadata'] || 'Location Information', fields: locationFields, icon: 'map-marker-alt' }
+  ].filter(section => {
+    return section.fields.some(field => {
+      // Check mapped_metadata first, then direct attributes
+      const value = file.attributes.mapped_metadata?.[field.key] || file.attributes[field.key]
+      return value && value !== '' && (!Array.isArray(value) || value.length > 0)
+    })
+  })
+
+  if (sectionsWithData.length === 0) {
+    return (
+      <div className='text-center text-muted py-4'>
+        <i className='fas fa-info-circle fa-2x mb-2' />
+        <p className='mb-0'>
+          {window.FolioConsole.translations['file/no_metadata_description'] || 'Try extracting metadata to populate these fields.'}
+        </p>
+      </div>
+    )
+  }
+
+  return (
+    <div className='folio-console-metadata-table'>
+      <h4 className='mb-3'>
+        {isImage
+          ? (window.FolioConsole.translations['file/advanced_metadata'] || 'Image Metadata (IPTC/XMP/EXIF)')
+          : (window.FolioConsole.translations['file/advanced_metadata_generic'] || 'Metadata')}
+      </h4>
+
+      <div className='table-responsive'>
+        <table className='table table-striped table-hover'>
+          <tbody>
+            {sectionsWithData.map((section, sectionIndex) => (
+              <React.Fragment key={`section-${sectionIndex}`}>
+                {renderSectionHeader(section.title, section.icon)}
+                {section.fields.some(f => f.key === 'gps_latitude' || f.key === 'gps_longitude') && renderGpsRow()}
+                {section.fields.map(field => renderMetadataRow(field))}
+              </React.Fragment>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  )
+}

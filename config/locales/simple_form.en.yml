@@ -8,13 +8,11 @@ en:
         edit_password: New password
     hints:
       defaults:
-        alt: Image alternative text. Displayed on image loading failure.
         copyright_info_source: The text {YEAR} will be replaced by the current year.
         featured: Used to display a page on the homepage or other selections.
         meta_description: SEO, Optional. This description appears on a search engine page.
         meta_title: SEO, Optional. This title may appear on a search engine page.
         slug: Filled automatically. Only <strong>a-z</strong>, <strong>0-9</strong> and <strong>dash</strong> characters are accepted. Changing this doesn't break old URLs.
-        tag_list: Used for faster searching/categorization and content display.
       account:
         edit_password: Leave blank if you don't want to change
     'no': 'No'
@@ -27,7 +25,6 @@ en:
         meta_title: 'e.g.: Our team'
         perex: One or more paragraphs of unformatted text, sepearated by a blank line.
         slug: 'e.g.: our-team'
-        tag_list: 'e.g.: services, offer'
         title: 'e.g.: Our team'
         q: Search...
       attribute_type:

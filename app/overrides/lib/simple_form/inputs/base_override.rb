@@ -118,7 +118,9 @@ SimpleForm::Inputs::Base.class_eval do
                       values: {
                         loaded: false,
                         json:,
+                        disabled: !!(options && options[:disabled]),
                         absolute_urls: (options && options[:absolute_urls]) || false,
+                        default_custom_url: (options && options[:default_custom_url]) || false,
                       },
                       action: {
                         "f-c-input-form-group-url:edit" => "edit",
@@ -127,7 +129,15 @@ SimpleForm::Inputs::Base.class_eval do
                       wrapper: true)
 
     if json
-      options[:value] ||= (object.try(attribute_name) || {}).to_json
+      value = input_html_options[:value] || object.try(attribute_name) || {}
+
+      input_html_options[:value] = if value.is_a?(Hash)
+        value.to_json
+      elsif value.is_a?(String)
+        value
+      else
+        fail "Expected a Hash or String for URL input, got #{value.class.name}"
+      end
     end
 
     options[:custom_html] = <<~HTML.html_safe
@@ -141,5 +151,11 @@ SimpleForm::Inputs::Base.class_eval do
 
     merged_input_options = merge_wrapper_options(input_html_options, wrapper_options)
     @builder.text_field(attribute_name, merged_input_options)
+  end
+
+  def add_clear_button(wrapper_options: nil, options: nil)
+    if options && options[:clear_button].present?
+      options[:input_controls] = @builder.template.render(Folio::Console::Ui::ClearButtonComponent.new)
+    end
   end
 end

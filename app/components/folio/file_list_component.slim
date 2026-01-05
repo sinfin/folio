@@ -1,0 +1,31 @@
+.f-file-list[
+  class=view_class_names
+  class=primary_action_class_name
+  data=data
+]
+  - if @batch_actions
+    = render(Folio::Console::Files::Batch::BarComponent.new(file_klass: @file_klass,
+                                                            multi_picker: @batch_actions_multi_picker))
+
+  .f-file-list__blank data=stimulus_target("blank") hidden=@files.present?
+    = blank_message
+
+  .f-file-list__container
+    .f-file-list__flex
+      - if @uploadable
+        .f-file-list__flex-item.f-file-list__flex-item--uppy data=stimulus_target("uppy")
+          = render(Folio::UppyComponent.new(file_type: @file_klass.to_s))
+
+      .f-file-list__flex-item.f-file-list__flex-item--thead data=stimulus_target("thead")
+        - if @thead
+          = render(Folio::FileList::FileComponent.new(**file_args(thead: true,
+                                                                  file: new_file)))
+
+      - if @files.present?
+        - @files.each do |file|
+          .f-file-list__flex-item data=stimulus_target("flexItem")
+            = render(Folio::FileList::FileComponent.new(**file_args(file:)))
+
+  template.f-file-list__file-template data=stimulus_target("fileTemplate")
+    = render(Folio::FileList::FileComponent.new(**file_args(template: true,
+                                                            file: new_file)))

@@ -47,6 +47,8 @@ class Folio::Ability
       can :set_administrator, Folio::Site
       can :set_manager, Folio::Site
 
+      can :display_miniprofiler, Folio::Site
+
       return
     end
 
@@ -85,6 +87,7 @@ class Folio::Ability
     can :multisearch_console, site
     can :display_ui, site
     can [:new], Folio::User # new user do not belong to site yet
+    can :read, ActsAsTaggableOn::Tag
 
     # Help documents access - excluded for ghost role
     unless user.roles_for(site: site) == [:ghost]
@@ -92,7 +95,9 @@ class Folio::Ability
     end
 
     can :do_anything, Folio::SiteUserLink, { site: }
-    can :do_anything, Folio::File, { site: Rails.application.config.folio_shared_files_between_sites ? [Folio::Current.main_site, site] : site }
+    can :do_anything, Folio::File, { site: [Folio::File.correct_site(site), site].uniq }
+    can :edit_usage_constraints, Folio::File, { site: [Folio::File.correct_site(site), site].uniq }
+    can :do_anything, Folio::MediaSource, { site: [Folio::File.correct_site(site), site].uniq }
     can :do_anything, Folio::Page, { site: }
     can :do_anything, Folio::Menu, { site: }
     can :do_anything, Folio::Lead, { site: }

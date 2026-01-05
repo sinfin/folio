@@ -7,18 +7,18 @@ window.FolioConsole.NotesCatalogueTooltip.onSuccess = ($tooltip, res) => {
 }
 
 window.FolioConsole.NotesCatalogueTooltip.onChange = (e) => {
-  const $input = $(e.target)
+  const $input = window.jQuery(e.target)
   const $tooltip = $input.closest('.f-c-console-notes-catalogue-tooltip')
 
   if ($tooltip.hasClass('f-c-console-notes-catalogue-tooltip--submitting')) return
 
   $tooltip.addClass('f-c-console-notes-catalogue-tooltip--submitting')
 
-  $.ajax({
+  window.jQuery.ajax({
     url: $input.data('url'),
-    method: "POST",
+    method: 'POST',
     data: {
-      closed: $input.prop('checked'),
+      closed: $input.prop('checked')
     },
     success: (res) => {
       if (res && res.data) {
@@ -26,7 +26,7 @@ window.FolioConsole.NotesCatalogueTooltip.onChange = (e) => {
         $parent.trigger('folioConsole:success', res)
 
         if (res.data.catalogue_tooltip) {
-          $tooltip.replaceWith($(res.data.catalogue_tooltip))
+          $tooltip.replaceWith(window.jQuery(res.data.catalogue_tooltip))
         } else {
           $tooltip.remove()
         }
@@ -50,12 +50,12 @@ window.FolioConsole.NotesCatalogueTooltip.onChange = (e) => {
 
       $tooltip.removeClass('f-c-console-notes-catalogue-tooltip--submitting')
 
-      window.FolioConsole.Flash.flashMessageFromMeta(res)
+      window.FolioConsole.Ui.Flash.flashMessageFromMeta(res)
     },
     error: (jxHr) => {
       if (jxHr.responseText) {
         try {
-          window.FolioConsole.Flash.flashMessageFromApiErrors(JSON.parse(jxHr.responseText))
+          window.FolioConsole.Ui.Flash.flashMessageFromApiErrors(JSON.parse(jxHr.responseText))
         } catch (_e) {}
       }
 
@@ -65,6 +65,6 @@ window.FolioConsole.NotesCatalogueTooltip.onChange = (e) => {
   })
 }
 
-$(document).on('change',
-               '.f-c-console-notes-catalogue-tooltip__note-input',
-               window.FolioConsole.NotesCatalogueTooltip.onChange)
+window.jQuery(document).on('change',
+  '.f-c-console-notes-catalogue-tooltip__note-input',
+  window.FolioConsole.NotesCatalogueTooltip.onChange)

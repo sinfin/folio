@@ -1,4 +1,4 @@
-.f-c-ui-tabs data=data
+div class=bem_class_name data=data
   .f-c-ui-tabs__inner
     ul.f-c-ui-tabs__nav[
       class="nav nav-tabs"
@@ -12,6 +12,11 @@
           data-key=tab[:key]
         ]
           *link_tag(tab)
+            - if tab[:icon]
+              = folio_icon(tab[:icon],
+                           height: 16,
+                           class_name: "f-c-ui-tabs__icon")
+
             = tab[:label]
 
             - if tab[:count]

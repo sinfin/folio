@@ -3,13 +3,14 @@
 class Folio::Api::S3Controller < Folio::Api::BaseController
   include Folio::S3::Client
 
-  before_action :authenticate_s3!
+  before_action :authenticate_s3!, except: %i[file_list_file]
   before_action :get_file_name_and_s3_path, only: %i[before]
 
   def before # return settings for S3 file upload
-    presigned_url = test_aware_presign_url(@s3_path)
+    presigned_url = test_aware_presign_url(s3_path: @s3_path, method_name: :put_object)
 
     render json: {
+      jwt: "TODO",
       s3_url: presigned_url,
       file_name: @file_name,
       s3_path: @s3_path,
@@ -22,8 +23,50 @@ class Folio::Api::S3Controller < Folio::Api::BaseController
     handle_after(Folio::S3::CreateFileJob)
   end
 
-  def site_for_new_files
-    Rails.application.config.folio_shared_files_between_sites ? Folio::Current.main_site : Folio::Current.site
+  # Folio::FileList::FileComponent created from a template waits for a message from the S3 job. Once it gets it, it will ping this endpoint to get the render component with the file
+  def file_list_file
+    fail CanCan::AccessDenied unless can_now?(:access_console)
+
+    file_type = params.require(:file_type)
+    file_klass = file_type.safe_constantize
+
+    if file_klass && allowed_klass?(file_klass)
+      @file = file_klass.accessible_by(Folio::Current.ability).find(params.require(:file_id))
+
+      props = { file: @file }
+
+      %i[
+        editable
+        destroyable
+        selectable
+        batch_actions
+      ].each do |param|
+        if params[param]
+          props[param] = params[param].in? ["true", true]
+        end
+      end
+
+      add_to_batch = file_klass < Folio::File && params[:add_to_batch].in?(["true", true])
+
+      meta = if add_to_batch
+        { reload_batch_bar: true }
+      end
+
+      if add_to_batch
+        batch_service = Folio::Console::Files::BatchService.new(session_id: session.id.public_id,
+                                                                file_class_name: file_klass.to_s)
+        batch_service.add_file(@file.id)
+        batch_service.set_form_open(true)
+      end
+
+      if params[:primary_action].is_a?(String)
+        props[:primary_action] = params[:primary_action].to_sym
+      end
+
+      render_component_json(Folio::FileList::FileComponent.new(**props), meta:)
+    else
+      render json: {}, status: 404
+    end
   end
 
   private
@@ -61,7 +104,7 @@ class Folio::Api::S3Controller < Folio::Api::BaseController
       message_bus_client_id = params.require(:message_bus_client_id)
       file_klass = type.safe_constantize
 
-      if file_klass && allowed_klass?(file_klass) && test_aware_s3_exists?(@s3_path)
+      if file_klass && allowed_klass?(file_klass) && test_aware_s3_exists?(s3_path: @s3_path)
         job_klass.perform_later(s3_path: @s3_path,
                                 type:,
                                 message_bus_client_id:,
@@ -73,5 +116,9 @@ class Folio::Api::S3Controller < Folio::Api::BaseController
       else
         render json: {}, status: 422
       end
+    end
+
+    def site_for_new_files
+      Folio::File.correct_site(Folio::Current.site)
     end
 end

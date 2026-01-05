@@ -1,0 +1,56 @@
+.f-c-files-batch-form.p-g data=data
+  .d-flex.align-items-center.gap-g.mb-h
+    .h3.m-0.flex-shrink-1.flex-grow-1
+      = t('.title')
+
+    = render(Folio::Console::Ui::ButtonComponent.new(icon: :close,
+                                                     data: stimulus_action(click: "cancel"),
+                                                     variant: :icon))
+
+  = form do |f|
+    .row
+      .col-sm-6.col-lg-3
+        = input f, :author
+
+      .col-sm-6.col-lg-3
+        = input f, :attribution_source
+
+      .col-sm-6.col-lg-3
+        = input f, :attribution_source_url, as: :string
+
+      .col-sm-6.col-lg-3
+        = input f, :attribution_copyright
+
+    .row
+      .col-sm-6.col-lg-3
+        = input f, :headline
+
+      .col-sm-6.col-lg-3
+        = input f, :alt
+
+      .col-sm-6.col-lg-3
+        = input f, :attribution_licence
+
+      .col-sm-6.col-lg-3
+        = input f, :tag_list, as: :tags
+
+    .row
+      .col-12
+        = input f, :description, autosize: true, input_html: { rows: 1 }
+
+    = render(Folio::Console::Ui::ButtonsComponent.new(buttons: form_buttons_model))
+
+    - if @files.present?
+      p.mt-g
+        ' #{t('.selected_files')} (#{@files.size})
+
+      .border-top
+        = render(Folio::FileListComponent.new(file_klass: @file_klass,
+                                              files: @files,
+                                              editable: true,
+                                              destroyable: true,
+                                              batch_actions: false,
+                                              removable_from_batch: true,
+                                              allow_thumbnail_view: false,
+                                              thead: false,
+                                              primary_action: :edit))

@@ -59,17 +59,22 @@ FactoryBot.define do
 
   factory :folio_page_cookies, parent: :folio_page, class: "Folio::Page::Cookies"
 
-  factory :folio_document_placement, class: "Folio::FilePlacement::Document" do
-    association :file, factory: :folio_file_document
-    association :placement, factory: :folio_page
-  end
-
-  factory :folio_image_placement, class: "Folio::FilePlacement::Image" do
+  factory :folio_file_placement_cover, class: "Folio::FilePlacement::Cover" do
     association :file, factory: :folio_file_image
     association :placement, factory: :folio_page
   end
 
-  factory :folio_cover_placement, class: "Folio::FilePlacement::Cover" do
+  factory :folio_file_placement_document, class: "Folio::FilePlacement::Document" do
+    association :file, factory: :folio_file_document
+    association :placement, factory: :folio_page
+  end
+
+  factory :folio_file_placement_image, class: "Folio::FilePlacement::Image" do
+    association :file, factory: :folio_file_image
+    association :placement, factory: :folio_page
+  end
+
+  factory :folio_file_placement_image_or_embed, class: "Folio::FilePlacement::ImageOrEmbed" do
     association :file, factory: :folio_file_image
     association :placement, factory: :folio_page
   end
@@ -84,6 +89,7 @@ FactoryBot.define do
   factory :folio_file_image, parent: :folio_file, class: "Folio::File::Image" do
     file { Folio::Engine.root.join("test/fixtures/folio/test.gif") }
     site { get_current_or_existing_site_or_create_from_factory }
+    association :media_source, factory: :folio_media_source
 
     trait :black do
       file { Folio::Engine.root.join("test/fixtures/folio/test-black.gif") }
@@ -113,6 +119,14 @@ FactoryBot.define do
     email { "folio@folio.folio" }
     phone { "+420 123456789" }
     note { "Officiis perferendis commodi." }
+    site { get_current_or_existing_site_or_create_from_factory }
+  end
+
+  factory :folio_media_source, class: "Folio::MediaSource" do
+    sequence(:title) { |n| "Media Source #{n}" }
+    licence { "CC BY 4.0" }
+    copyright_text { "Copyright" }
+    max_usage_count { 5 }
     site { get_current_or_existing_site_or_create_from_factory }
   end
 
@@ -172,6 +186,13 @@ FactoryBot.define do
 
     trait :superadmin do
       superadmin { true }
+    end
+
+    trait :manager do
+      after(:create) do |user|
+        safely_set_roles_for(user, ["manager"], user.auth_site)
+        user.reload
+      end
     end
   end
 

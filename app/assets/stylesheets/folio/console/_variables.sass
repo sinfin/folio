@@ -22,8 +22,11 @@ $copper: #C1852C
 $gold: #D3AF51
 $antracite: #212529
 
-$gray-100: #f8f9fa
-$gray-600: #6c757d
+$gray-100: #f5f5f5
+$gray-200: #E8E8E8
+$gray-300: #C9CBCC
+$gray-500: $gray-medium-dark
+$gray-600: #3B4548
 $gray-900: $antracite
 
 $cyan: #0dcaf0 !default
@@ -38,6 +41,11 @@ $danger: $red !default
 $light: $gray-100 !default
 $dark: $gray-900 !default
 
+$overlays-black-100: rgba(0, 0, 0, 0.08)
+$overlays-black-300: rgba(0, 0, 0, 0.24)
+
+$accent-orange: #FF9A52
+
 $text-muted: $gray-medium-dark
 
 $theme-colors: ( "primary": $primary, "secondary": $secondary, "success": $success, "info": $info, "warning": $warning, "danger": $danger, "light": $light, "dark": $dark, "light-gray": $light-gray, "medium-gray": $medium-gray, "gray-medium-dark": $gray-medium-dark, "tertiary": $tertiary )
@@ -49,6 +57,7 @@ $link-hover-decoration: underline
 
 $green-background: #C7EBE4
 $red-background: #F4DEDD
+$yellow-background: #FAF4E0
 $blue-background: #E4F0FC
 
 $f-c-transition-duration: .15s
@@ -56,6 +65,13 @@ $f-c-transition-base: all $f-c-transition-duration ease-in-out
 
 $f-c-form-group-spacer: 2 * $grid-gutter-width / 3
 $form-group-spacer: $f-c-form-group-spacer
+
+$form-clear-button-gradient-right--filled: 52px
+
+$form-select-bg-position: right 10px center
+$form-select-bg-size: 14px 14px
+$form-select-indicator-color: $gray-500
+$form-select-indicator-padding: px-to-rem(36px)
 
 $f-c-box-shadow-card: 0px 1px 3px rgba(0, 0, 0, 0.15), 2px 2px 15px 2px rgba(0, 0, 0, 0.15)
 $f-c-box-shadow-card-hover: 0px 1px 3px rgba(0, 0, 0, 0.15), 2px 2px 10px 2px rgba(0, 0, 0, 0.1)
@@ -132,20 +148,20 @@ $box-shadow: $f-c-box-shadow-overlay
 
 $dropdown-border-width: 0
 $dropdown-box-shadow: $f-c-box-shadow-overlay
-$dropdown-color: $gray-medium-dark
-$dropdown-link-color: inherit
-$dropdown-link-hover-color: inherit
-$dropdown-link-hover-bg: $medium-gray
+$dropdown-color: $gray-600
+$dropdown-divider-color: inherit
+$dropdown-item-padding-x: px-to-rem(12px)
+$dropdown-item-padding-y: px-to-rem(6px)
+$dropdown-item-min-height: px-to-rem(36px)
+$dropdown-link-active-bg: $blue-background
 $dropdown-link-active-color: inherit
-$dropdown-link-active-bg: $gray
-
+$dropdown-link-color: inherit
+$dropdown-link-hover-bg: $gray-100
+$dropdown-link-hover-color: inherit
 $dropdown-min-width: px-to-rem(100px)
 $dropdown-padding-x: 0
-$dropdown-padding-y: 0.5rem
-$dropdown-item-padding-y: 2 / 3 * 1rem
-$dropdown-item-padding-x: 1rem
-$dropdown-box-shadow:               $box-shadow !default;
-$dropdown-divider-color: $gray-medium-dark
+$dropdown-padding-y: px-to-rem(6px)
+$dropdown-font-weight: $font-weight-bold
 
 $tooltip-max-width: px-to-rem(320px) - $grid-gutter-width
 
@@ -162,6 +178,7 @@ $card-spacer-x: $grid-gutter-width
 $modal-content-box-shadow-xs: $f-c-box-shadow-overlay
 $modal-content-box-shadow-sm-up: $f-c-box-shadow-overlay
 $modal-md: 640px
+$modal-xl: 1172px
 $modal-inner-padding: $grid-gutter-width
 $modal-inner-padding-mobile: $grid-gutter-half
 $modal-header-padding-y: 2 * $grid-gutter-width / 3
@@ -197,3 +214,9 @@ $popover-inner-border-radius:       subtract($popover-border-radius, $popover-bo
 $popover-box-shadow: $f-c-box-shadow-overlay
 
 $f-togglable-fields-input-top: 3px
+$f-file-list-file-item-size: 168px
+
+$f-c-layout-main-container__padding: $grid-gutter-width
+$f-c-layout-main-container__padding--mobile: $grid-gutter-width / 2
+
+$f-c-ui-index-header-gap: $grid-gutter-half

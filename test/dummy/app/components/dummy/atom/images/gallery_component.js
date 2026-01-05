@@ -2,16 +2,16 @@
 //= require folio/debounce
 
 window.Folio.Stimulus.register('d-atom-images-gallery', class extends window.Stimulus.Controller {
-  static targets = ["loaderWrap", "item", "wrap"]
+  static targets = ['loaderWrap', 'item', 'wrap']
 
   static values = {
-    targetHeightDesktop: Number,
+    targetHeightDesktop: Number
   }
 
   connect () {
     this.align()
 
-    this.debouncedAlign = Folio.debounce(this.align.bind(this))
+    this.debouncedAlign = window.Folio.debounce(this.align.bind(this))
     window.addEventListener('resize', this.debouncedAlign)
     window.addEventListener('orientationchange', this.debouncedAlign)
   }
@@ -58,7 +58,6 @@ window.Folio.Stimulus.register('d-atom-images-gallery', class extends window.Sti
     })
 
     this.wrapTarget.style.height = `${Math.ceil(result.containerHeight)}px`
-
 
     for (let i = 0; i < this.itemTargets.length; i += 1) {
       const r = result.boxes[i]

@@ -1,0 +1,7 @@
+---
+cs:
+  activemodel:
+    attributes:
+      dummy/tiptap/node/embed:
+    models:
+      dummy/tiptap/node/embed: Embed

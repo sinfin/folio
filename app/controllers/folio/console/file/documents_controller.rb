@@ -3,6 +3,5 @@
 class Folio::Console::File::DocumentsController < Folio::Console::BaseController
   include Folio::Console::FileControllerBase
 
-  folio_console_controller_for "Folio::File::Document", except: %w[index]
-  authorize_resource class: "Folio::File::Document", only: %i[index]
+  folio_console_controller_for "Folio::File::Document"
 end

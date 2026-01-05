@@ -10,8 +10,10 @@ class AddFileHashId < ActiveRecord::Migration[5.2]
       Folio::File,
     ].each do |klass|
       klass.find_each do |file|
-        file.set_hash_id
-        file.update_column(:hash_id, file.hash_id)
+        if file.respond_to?(:hash_id)
+          file.set_hash_id
+          file.update_column(:hash_id, file.hash_id)
+        end
       end
     end
   end

@@ -28,4 +28,4 @@
           = footer
       - elsif @buttons_model
         .modal-footer.f-c-ui-modal__footer
-          == cell('folio/console/ui/buttons', @buttons_model)
+          = render(Folio::Console::Ui::ButtonsComponent.new(buttons: @buttons_model))

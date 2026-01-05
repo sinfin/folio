@@ -4,18 +4,17 @@ h2 Badges
 
 - %w[primary secondary success info warning danger].each do |key|
   .mt-3
-    == cell('folio/console/ui/badge', key, variant: key)
+    = render(Folio::Console::Ui::BadgeComponent.new(variant: key))
+      = key
 
 h2 Icons
 
 - %i[text microphone video].each do |icon|
   .mt-3
-    == cell('folio/console/ui/badge',
-            icon.to_s.capitalize,
-            variant: 'medium-gray',
-            icon:)
+    = render(Folio::Console::Ui::BadgeComponent.new(variant: "medium-gray", icon:))
+      = icon.to_s.capitalize
 
 h2 STI badge
 
 .mt-3
-  == cell('folio/console/ui/sti_badge', Folio::Page.last)
+  = render(Folio::Console::Ui::StiBadgeComponent.new(record: Folio::Page.last))

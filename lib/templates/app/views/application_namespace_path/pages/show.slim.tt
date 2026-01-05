@@ -1,4 +1,4 @@
-== cell('folio/publishable_hint', @ancestry_any_unpublished || @page)
+= render(Folio::Publishable::HintComponent.new(record: @page, force: @ancestry_any_unpublished))
 
 .container-fluid
   h1 = @page.title

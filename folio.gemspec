@@ -19,18 +19,16 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
 
   s.add_dependency "aasm"
-  s.add_dependency "activemodel", "~> 7.1.0" # freeze ActiveModel from updating to 7.2 https://github.com/rails/rails/issues/52607#issuecomment-2303015514
   s.add_dependency "acts-as-taggable-on"
   s.add_dependency "after_commit_everywhere"
   s.add_dependency "ancestry"
-  s.add_dependency "annotate" # required from task copied from Folio to main_app
+  s.add_dependency "annot8" # Rails 8 compatible fork of annotate
   s.add_dependency "audited"
   s.add_dependency "aws-sdk-s3"
   s.add_dependency "babel-transpiler"
   s.add_dependency "breadcrumbs_on_rails"
   s.add_dependency "cancancan"
   s.add_dependency "cocoon"
-  s.add_dependency "coffee-rails", "~> 5.0"
   s.add_dependency "countries"
   s.add_dependency "country_select"
   s.add_dependency "deepl-rb"
@@ -42,6 +40,7 @@ Gem::Specification.new do |s|
   s.add_dependency "dotenv-rails"
   s.add_dependency "dragonfly"
   s.add_dependency "dragonfly-s3_data_store"
+  s.add_dependency "charlock_holmes"
   # s.add_dependency "dragonfly_libvips" # we have our version in Gemfile
   s.add_dependency "dropzonejs-rails"
   s.add_dependency "fast_jsonapi"
@@ -67,8 +66,8 @@ Gem::Specification.new do |s|
   s.add_dependency "pg"
   s.add_dependency "phonelib"
   s.add_dependency "premailer-rails"
-  s.add_dependency "rails-i18n", "~> 7"
-  s.add_dependency "rails", "~> 7.1"
+  s.add_dependency "rails-i18n", "~> 8.0"
+  s.add_dependency "rails", "~> 8.0"
   s.add_dependency "recaptcha", "4.13.1"
   s.add_dependency "redcarpet"
   s.add_dependency "responders"
@@ -78,11 +77,12 @@ Gem::Specification.new do |s|
   s.add_dependency "httpparty"
   s.add_dependency "sidekiq-cron", "~> 1.10.1"
   s.add_dependency "sidekiq", "~> 6.5"
+  s.add_dependency "activejob-uniqueness"
   s.add_dependency "simple_form"
   s.add_dependency "sitemap_generator"
-  # s.add_dependency "cells-slim", "~> 0.1.1" # need to be in Gemfile
-  # s.add_dependency "cells-rails", "~> 0.1.5" # need to be in Gemfile
-  s.add_dependency "slim-rails" # need to be in Gemfile
+  s.add_dependency "cells-slim"
+  s.add_dependency "cells-rails"
+  s.add_dependency "slim-rails"
   s.add_dependency "slim"
   s.add_dependency "traco"
   s.add_dependency "turbolinks"
@@ -90,7 +90,8 @@ Gem::Specification.new do |s|
   s.add_dependency "whenever"
   s.add_dependency "redis"
   s.add_dependency "terser"
-  s.add_dependency "view_component", "~> 3.0" # 4.0 Remove dependency on ActionView::Base
+  s.add_dependency "view_component", "~> 4.0"
+  s.add_dependency "turbo-rails"
 
   s.add_development_dependency "better_errors"
   s.add_development_dependency "binding_of_caller" # used by BetterErrors
@@ -107,6 +108,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rubocop-performance"
   s.add_development_dependency "rubocop-rails"
   s.add_development_dependency "rubocop-rake"
+  s.add_development_dependency "rubocop-rails_config"
   s.add_development_dependency "rubocop"
   s.add_development_dependency "vcr"
   s.add_development_dependency "webmock"

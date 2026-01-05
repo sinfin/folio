@@ -9,9 +9,7 @@ class Folio::DeviseMailerTest < ActionMailer::TestCase
 
     @superadmin = create(:folio_user, :superadmin)
 
-    Rails.application.load_tasks
-    Rake::Task["folio:email_templates:idp_seed"].reenable
-    Rake::Task["folio:email_templates:idp_seed"].invoke
+    Folio::EmailTemplate.idp_seed
   end
 
   test "reset_password_instructions" do

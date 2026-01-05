@@ -1,0 +1,38 @@
+.f-c-ui-clipboard
+  display: inline-flex
+  align-items: center
+  gap: $f-c-ui-with-icon-gap
+  cursor: pointer
+
+  &__span
+    font-size: inherit
+    display: inline-flex
+    align-items: center
+    justify-content: center
+    width: 1rem
+    cursor: pointer
+    position: relative
+    flex: 0 0 auto
+
+  &__done
+    opacity: 0
+    transition: opacity .5s
+    position: absolute !important
+    top: 50%
+    left: 50%
+    transform: translate(-50%, -50%)
+
+  &__icons
+    position: relative
+
+  &__ico
+    opacity: 1
+    transition: opacity .5s
+
+  &--copied &__ico
+    opacity: 0
+    transition: none
+
+  &--copied &__done
+    opacity: 1
+    transition: none

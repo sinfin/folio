@@ -1,5 +1,5 @@
 window.Folio.Stimulus.register('f-c-files-subtitles-form', class extends window.Stimulus.Controller {
-  static targets = ["loader", "languagesContainer", "addLanguageForm"]
+  static targets = ['loader', 'languagesContainer', 'addLanguageForm']
 
   static values = {
     fileId: Number,
@@ -7,7 +7,7 @@ window.Folio.Stimulus.register('f-c-files-subtitles-form', class extends window.
     retranscribeUrl: String
   }
 
-  connect() {
+  connect () {
     this.setupMessageBusListener()
     this.addedLanguages = new Set()
     this.initializeAddedLanguages()
@@ -15,19 +15,19 @@ window.Folio.Stimulus.register('f-c-files-subtitles-form', class extends window.
     this.initializeAccordionState()
   }
 
-  disconnect() {
+  disconnect () {
     this.abortAjax()
     this.cleanupMessageBusListener()
     this.cleanupAccordionListeners()
   }
 
-  abortAjax() {
+  abortAjax () {
     if (!this.abortController) return
     this.abortController.abort()
     delete this.abortController
   }
 
-  ajax({ url, data, apiMethod = 'apiGet' }) {
+  ajax ({ url, data, apiMethod = 'apiGet' }) {
     this.abortAjax()
     this.abortController = new AbortController()
     this.showLoader()
@@ -50,83 +50,83 @@ window.Folio.Stimulus.register('f-c-files-subtitles-form', class extends window.
     })
   }
 
-  showLoader() {
+  showLoader () {
     if (this.hasLoaderTarget) {
       this.loaderTarget.hidden = false
     }
   }
 
-  hideLoader() {
+  hideLoader () {
     if (this.hasLoaderTarget) {
       this.loaderTarget.hidden = true
     }
   }
 
-  retranscribe(e) {
+  retranscribe (e) {
     e.preventDefault()
-    
+
     this.ajax({
       url: this.retranscribeUrlValue,
-      apiMethod: "apiPost"
+      apiMethod: 'apiPost'
     })
   }
 
-  reloadPlayer() {
+  reloadPlayer () {
     window.location.reload()
   }
 
   // Handle events from child subtitle form components
-  subtitleDeleted(e) {
+  subtitleDeleted (e) {
     const language = e.detail.language
     this.addedLanguages.delete(language)
     this.updateAddLanguageOptions()
   }
 
-  newSubtitleRemoved(e) {
+  newSubtitleRemoved (e) {
     const language = e.detail.language
     this.addedLanguages.delete(language)
     this.updateAddLanguageOptions()
   }
 
-  addLanguage(e) {
+  addLanguage (e) {
     e.preventDefault()
-    
+
     if (!this.hasAddLanguageFormTarget) {
       console.error('Add language form not found')
       return
     }
-    
+
     const select = this.addLanguageFormTarget.querySelector('select')
     const language = select?.value
-    
+
     if (!language || language === '') {
       window.alert(window.FolioConsole.translations.pleaseSelectLanguage)
       return
     }
-    
+
     if (this.addedLanguages.has(language)) {
       window.alert(window.FolioConsole.translations.languageAlreadyAdded)
       return
     }
-    
+
     // Get the new subtitle form component HTML from server
     const url = `/console/api/file/videos/${this.fileIdValue}/subtitles/${language}/new.json`
-    
+
     this.showLoader()
-    
+
     window.Folio.Api.apiGet(url).then((res) => {
       if (res && res.data) {
         // Add the new component to the languages container
         if (this.hasLanguagesContainerTarget) {
           this.languagesContainerTarget.insertAdjacentHTML('beforeend', res.data)
-          
+
           // Track this language as added
           this.addedLanguages.add(language)
-          
+
           // Reset the form and update options
           this.addLanguageFormTarget.reset()
           this.updateAddLanguageOptions()
-          
+
           // Reinitialize accordion state for the newly added language
           setTimeout(() => {
             this.cleanupAccordionListeners()
@@ -136,17 +136,17 @@ window.Folio.Stimulus.register('f-c-files-subtitles-form', class extends window.
             this.saveAccordionState(language, true)
           }, 100)
         }
-              } else {
-          window.alert(window.FolioConsole.translations.failedToAddLanguage)
-        }
-      }).catch((e) => {
-        window.alert(window.FolioConsole.translations.errorGeneric.replace('%{message}', e.message))
-      }).finally(() => {
+      } else {
+        window.alert(window.FolioConsole.translations.failedToAddLanguage)
+      }
+    }).catch((e) => {
+      window.alert(window.FolioConsole.translations.errorGeneric.replace('%{message}', e.message))
+    }).finally(() => {
       this.hideLoader()
     })
   }
 
-  initializeAddedLanguages() {
+  initializeAddedLanguages () {
     // Track existing persisted subtitles
     if (this.hasLanguagesContainerTarget) {
       const existingComponents = this.languagesContainerTarget.querySelectorAll('[data-controller*="f-c-files-subtitle-form"]')
@@ -159,21 +159,21 @@ window.Folio.Stimulus.register('f-c-files-subtitles-form', class extends window.
     }
   }
 
-  updateAddLanguageOptions() {
+  updateAddLanguageOptions () {
     if (!this.hasAddLanguageFormTarget) return
-    
+
     const select = this.addLanguageFormTarget.querySelector('select')
     if (!select) return
-    
+
     let availableOptionsCount = 0
-    
+
     // Hide options for languages that have been added and count available options
     Array.from(select.options).forEach(option => {
       if (option.value === '') {
         // Skip the prompt option
         return
       }
-      
+
       if (option.value && this.addedLanguages.has(option.value)) {
         option.style.display = 'none'
       } else {
@@ -181,7 +181,7 @@ window.Folio.Stimulus.register('f-c-files-subtitles-form', class extends window.
         availableOptionsCount++
       }
     })
-    
+
     // Hide the entire add language section if no languages are available
     const addLanguageSection = this.addLanguageFormTarget.closest('.f-c-files-subtitles-form__add-language')
     if (addLanguageSection) {
@@ -193,7 +193,7 @@ window.Folio.Stimulus.register('f-c-files-subtitles-form', class extends window.
     }
   }
 
-  initializeAccordionState() {
+  initializeAccordionState () {
     // Wait for DOM to be ready
     setTimeout(() => {
       this.setupAccordionListeners()
@@ -201,7 +201,7 @@ window.Folio.Stimulus.register('f-c-files-subtitles-form', class extends window.
     }, 100)
   }
 
-  setupAccordionListeners() {
+  setupAccordionListeners () {
     if (!this.hasLanguagesContainerTarget) return
 
     this.accordionListeners = []
@@ -226,14 +226,14 @@ window.Folio.Stimulus.register('f-c-files-subtitles-form', class extends window.
       element.addEventListener('hidden.bs.collapse', hideListener)
 
       this.accordionListeners.push({
-        element: element,
-        showListener: showListener,
-        hideListener: hideListener
+        element,
+        showListener,
+        hideListener
       })
     })
   }
 
-  cleanupAccordionListeners() {
+  cleanupAccordionListeners () {
     if (this.accordionListeners) {
       this.accordionListeners.forEach(({ element, showListener, hideListener }) => {
         element.removeEventListener('shown.bs.collapse', showListener)
@@ -243,7 +243,7 @@ window.Folio.Stimulus.register('f-c-files-subtitles-form', class extends window.
     }
   }
 
-  getLanguageFromAccordionElement(element) {
+  getLanguageFromAccordionElement (element) {
     const subtitleFormElement = element.closest('[data-controller*="f-c-files-subtitle-form"]')
     if (subtitleFormElement) {
       return subtitleFormElement.getAttribute('data-f-c-files-subtitle-form-language-value')
@@ -251,32 +251,32 @@ window.Folio.Stimulus.register('f-c-files-subtitles-form', class extends window.
     return null
   }
 
-  getAccordionStorageKey() {
+  getAccordionStorageKey () {
     return `subtitles-accordion-state-${this.fileIdValue}`
   }
 
-  saveAccordionState(language, isOpen) {
+  saveAccordionState (language, isOpen) {
     try {
       const storageKey = this.getAccordionStorageKey()
-      const currentState = JSON.parse(sessionStorage.getItem(storageKey) || '{}')
-      
+      const currentState = JSON.parse(window.sessionStorage.getItem(storageKey) || '{}')
+
       if (isOpen) {
         currentState[language] = true
       } else {
         delete currentState[language]
       }
-      
-      sessionStorage.setItem(storageKey, JSON.stringify(currentState))
+
+      window.sessionStorage.setItem(storageKey, JSON.stringify(currentState))
     } catch (error) {
       console.warn('Failed to save accordion state:', error)
     }
   }
 
-  restoreAccordionState() {
+  restoreAccordionState () {
     try {
       const storageKey = this.getAccordionStorageKey()
-      const savedState = JSON.parse(sessionStorage.getItem(storageKey) || '{}')
-      
+      const savedState = JSON.parse(window.sessionStorage.getItem(storageKey) || '{}')
+
       Object.keys(savedState).forEach(language => {
         if (savedState[language]) {
           this.openAccordionForLanguage(language)
@@ -287,20 +287,21 @@ window.Folio.Stimulus.register('f-c-files-subtitles-form', class extends window.
     }
   }
 
-  openAccordionForLanguage(language) {
+  openAccordionForLanguage (language) {
     if (!this.hasLanguagesContainerTarget) return
 
     const subtitleFormElement = this.languagesContainerTarget.querySelector(`[data-f-c-files-subtitle-form-language-value="${language}"]`)
     if (subtitleFormElement) {
       const accordionCollapse = subtitleFormElement.querySelector('.accordion-collapse')
       const accordionButton = subtitleFormElement.querySelector('.accordion-button')
-      
+
       if (accordionCollapse && accordionButton) {
         // Use Bootstrap's collapse API to open the accordion
-        const collapseInstance = new bootstrap.Collapse(accordionCollapse, {
+        const collapseInstance = new window.bootstrap.Collapse(accordionCollapse, {
           show: true
         })
-        
+        console.log('TODO: cleanup collapseInstance on disconnect', collapseInstance)
+
         // Update button state
         accordionButton.classList.remove('collapsed')
         accordionButton.setAttribute('aria-expanded', 'true')
@@ -308,7 +309,7 @@ window.Folio.Stimulus.register('f-c-files-subtitles-form', class extends window.
     }
   }
 
-  reload() {
+  reload () {
     this.ajax({
       url: this.reloadUrlValue
     }).then(() => {
@@ -317,10 +318,10 @@ window.Folio.Stimulus.register('f-c-files-subtitles-form', class extends window.
     })
   }
 
-  buildPayload(formData) {
+  buildPayload (formData) {
     const payload = {}
-    
-    for (let [key, value] of formData.entries()) {
+
+    for (const [key, value] of formData.entries()) {
       if (key.includes('[') && key.includes(']')) {
         const matches = key.match(/^([^[]+)\[([^\]]+)\]$/)
         if (matches) {
@@ -338,11 +339,11 @@ window.Folio.Stimulus.register('f-c-files-subtitles-form', class extends window.
         payload[key] = value
       }
     }
-    
+
     return payload
   }
 
-  setupMessageBusListener() {
+  setupMessageBusListener () {
     if (!window.Folio.MessageBus.callbacks) return
 
     this.messageBusCallbackKey = `f-c-files-subtitles-form--${this.fileIdValue}`
@@ -354,16 +355,15 @@ window.Folio.Stimulus.register('f-c-files-subtitles-form', class extends window.
       if ((message.type === 'Folio::ElevenLabs::TranscribeSubtitlesJob/updated' ||
            message.type === 'Folio::OpenAi::TranscribeSubtitlesJob/updated') &&
           message.data && Number(message.data.id) === Number(this.fileIdValue)) {
-        
         // Reload the component to show updated subtitle status
         this.reload()
       }
     }
   }
 
-  cleanupMessageBusListener() {
+  cleanupMessageBusListener () {
     if (this.messageBusCallbackKey && window.Folio.MessageBus.callbacks) {
       delete window.Folio.MessageBus.callbacks[this.messageBusCallbackKey]
     }
   }
-}) 
+})

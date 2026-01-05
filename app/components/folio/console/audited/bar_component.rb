@@ -10,15 +10,8 @@ class Folio::Console::Audited::BarComponent < Folio::Console::ApplicationCompone
     @audit.present? && @record.present? && @record.should_audit_changes?
   end
 
-  def restore_link
-    return unless @record.audited_console_restorable?
-
-    href = url_for([:restore, :console, @record, version: @audit.version])
-
-    folio_console_ui_button(label: t(".restore"),
-                            href:,
-                            method: :post,
-                            data: { confirm: t("folio.console.confirmation") })
+  def restore_url
+    url_for([:restore, :console, @record, version: @audit.version])
   end
 
   def show_url

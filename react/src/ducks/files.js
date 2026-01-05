@@ -96,7 +96,7 @@ function * getFilesPerform (action) {
     const response = yield call(apiGet, filesUrl)
     yield put(getFilesSuccess(action.fileType, response.data, response.meta))
   } catch (e) {
-    window.FolioConsole.Flash.alert(e.message)
+    window.FolioConsole.Ui.Flash.alert(e.message)
   }
 }
 
@@ -118,7 +118,7 @@ function * updateFilePerform (action) {
     const response = yield call(apiPut, fullUrl, data)
     yield put(updateFileSuccess(action.fileType, action.file, response.data))
   } catch (e) {
-    window.FolioConsole.Flash.alert(e.message)
+    window.FolioConsole.Ui.Flash.alert(e.message)
     yield put(updateFileFailure(action.fileType, action.file))
   }
 }
@@ -136,7 +136,7 @@ function * changeFilesPagePerform (action) {
     }
     yield put(getFiles(action.fileType, action.filesUrl, query))
   } catch (e) {
-    window.FolioConsole.Flash.alert(e.message)
+    window.FolioConsole.Ui.Flash.alert(e.message)
   }
 }
 
@@ -151,14 +151,14 @@ function * massDeletePerform (action) {
     const fullUrl = urlWithAffix(filesUrl, `/mass_destroy?ids=${massSelectedIds.join(',')}`)
     const res = yield call(apiDelete, fullUrl)
     if (res.error) {
-      window.FolioConsole.Flash.alert(res.error)
+      window.FolioConsole.Ui.Flash.alert(res.error)
     } else {
-      window.FolioConsole.Flash.success(res.data.message)
+      window.FolioConsole.Ui.Flash.success(res.data.message)
       yield put(removedFiles(action.fileType, massSelectedIds))
       yield put(massCancel(action.fileType))
     }
   } catch (e) {
-    window.FolioConsole.Flash.alert(e.message)
+    window.FolioConsole.Ui.Flash.alert(e.message)
   }
 }
 
@@ -170,12 +170,12 @@ function * deleteFilePerform (action) {
   try {
     const res = yield call(apiDelete, urlWithAffix(action.filesUrl, `/${action.file.id}`))
     if (res.error) {
-      window.FolioConsole.Flash.alert(res.error)
+      window.FolioConsole.Ui.Flash.alert(res.error)
     } else {
       yield put(removedFiles(action.fileType, [action.file.id]))
     }
   } catch (e) {
-    window.FolioConsole.Flash.alert(e.message)
+    window.FolioConsole.Ui.Flash.alert(e.message)
   }
 }
 
@@ -454,13 +454,13 @@ function filesReducer (rawState = initialState, action) {
       if (action.select) {
         massSelectedIds = [...massSelectedIds, action.file.id]
 
-        if (action.file.attributes.file_placements_size) {
+        if (action.file.attributes.file_placements_count) {
           massSelectedIndestructibleIds = [...massSelectedIndestructibleIds, action.file.id]
         }
       } else {
         massSelectedIds = without(massSelectedIds, action.file.id)
 
-        if (action.file.attributes.file_placements_size) {
+        if (action.file.attributes.file_placements_count) {
           massSelectedIndestructibleIds = without(massSelectedIndestructibleIds, action.file.id)
         }
       }

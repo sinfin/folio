@@ -10,7 +10,7 @@ require "folio"
 module Dummy
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 7.0
+    config.load_defaults 8.0
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
@@ -20,8 +20,13 @@ module Dummy
     config.folio_newsletter_subscriptions = true
     config.folio_site_default_test_factory = :dummy_site
 
+    config.folio_tiptap_use_for_pages = true
+
     I18n.available_locales = [:cs, :en]
     I18n.default_locale = :cs
+
+    # Load Folio gem locale files
+    config.i18n.load_path += Dir[Folio::Engine.root.join("config", "locales", "**", "*.yml")]
 
     # Custom error pages
     config.exceptions_app = self.routes

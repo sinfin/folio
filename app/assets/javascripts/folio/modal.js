@@ -2,18 +2,24 @@ window.Folio = window.Folio || {}
 window.Folio.Modal = window.Folio.Modal || {}
 
 window.Folio.Modal.open = (modal) => {
-  modal.dataset.fModalOpenValue = 'true'
+  if (modal && modal.dataset.fModalOpenValue !== 'true') {
+    modal.dataset.fModalOpenValue = 'true'
+  }
+
   return true
 }
 
 window.Folio.Modal.close = (modal) => {
-  modal.dataset.fModalOpenValue = 'false'
+  if (modal && modal.dataset.fModalOpenValue !== 'false') {
+    modal.dataset.fModalOpenValue = 'false'
+  }
+
   return true
 }
 
 window.Folio.Stimulus.register('f-modal', class extends window.Stimulus.Controller {
   static values = {
-    open: Boolean
+    open: { type: Boolean, default: false }
   }
 
   disconnect () {
@@ -147,7 +153,7 @@ window.Folio.Stimulus.register('f-modal-toggle', class extends window.Stimulus.C
 
 window.Folio.Stimulus.register('f-modal-close', class extends window.Stimulus.Controller {
   static values = {
-    target: { type: String, default: "" }
+    target: { type: String, default: '' }
   }
 
   click (e) {
@@ -162,6 +168,13 @@ window.Folio.Stimulus.register('f-modal-close', class extends window.Stimulus.Co
 
       window.Folio.Modal.close(modal)
     } else {
+      const modal = this.element.closest('[data-f-modal-open-value="true"]')
+
+      if (modal) {
+        window.Folio.Modal.close(modal)
+        return
+      }
+
       const modals = document.querySelectorAll('[data-f-modal-open-value="true"]')
 
       for (const modal of modals) {

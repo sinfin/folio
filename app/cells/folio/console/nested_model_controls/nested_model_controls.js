@@ -3,12 +3,12 @@ window.FolioConsole.NestedModelControls = {}
 
 window.FolioConsole.NestedModelControls.setPositionsIn = ($wrap) => {
   $wrap.find('.f-c-nested-model-controls__position-input').each((i, el) => {
-    $(el).val(i + 1)
+    window.jQuery(el).val(i + 1)
   })
 }
 
 window.FolioConsole.NestedModelControls.onPositionClick = (e) => {
-  const $button = $(e.target)
+  const $button = window.jQuery(e.target)
   const $fields = $button.closest('.nested-fields')
   const moveUp = $button.data('direction') === 'up'
   let $target
@@ -27,12 +27,12 @@ window.FolioConsole.NestedModelControls.onPositionClick = (e) => {
     $target.after($fields)
   }
   return $fields.parent().find('.f-c-nested-model-controls__position-input').each(function (i) {
-    return $(this).val(i + 1).trigger('change')[0].dispatchEvent(new window.Event('change', { bubbles: true }))
+    return window.jQuery(this).val(i + 1).trigger('change')[0].dispatchEvent(new window.Event('change', { bubbles: true }))
   })
 }
 
 window.FolioConsole.NestedModelControls.onDestroyClick = (e) => {
-  const $button = $(e.target)
+  const $button = window.jQuery(e.target)
 
   if (window.confirm(window.FolioConsole.translations.removePrompt)) {
     const $nestedFields = $button.closest('.nested-fields')
@@ -60,16 +60,16 @@ window.FolioConsole.NestedModelControls.onDestroyClick = (e) => {
 }
 
 window.FolioConsole.NestedModelControls.afterInsert = (e, insertedItem) => {
-  window.FolioConsole.NestedModelControls.setPositionsIn($(insertedItem).closest('.nested-fields').parent())
+  window.FolioConsole.NestedModelControls.setPositionsIn(window.jQuery(insertedItem).closest('.nested-fields').parent())
 }
 
 window.FolioConsole.NestedModelControls.beforeRemove = (e, item) => {
-  const $item = $(item)
+  const $item = window.jQuery(item)
   $item.find('.f-c-nested-model-controls__position-input').remove()
   window.FolioConsole.NestedModelControls.setPositionsIn($item.closest('.nested-fields').parent())
 }
 
-$(document)
+window.jQuery(document)
   .on('click', '.f-c-nested-model-controls__position-button', window.FolioConsole.NestedModelControls.onPositionClick)
   .on('click', '.f-c-nested-model-controls__destroy-button', window.FolioConsole.NestedModelControls.onDestroyClick)
   .on('cocoon:after-insert', window.FolioConsole.NestedModelControls.afterInsert)

@@ -15,7 +15,11 @@ class Folio::Console::Dummy::PlaygroundsController < Folio::Console::BaseControl
       players
       private_attachments
       report
+      uppy
     ]
+  end
+
+  def uppy
   end
 
   def players
@@ -79,14 +83,6 @@ class Folio::Console::Dummy::PlaygroundsController < Folio::Console::BaseControl
     @page.update!(permitted)
 
     redirect_to main_app.private_attachments_console_dummy_playground_path
-  end
-
-  def force_use_react_modals?
-    true
-  end
-
-  def additional_html_for_video_files_modal
-    render json: { data: "<p>This is additional html for video files modal</p>" }
   end
 
   private

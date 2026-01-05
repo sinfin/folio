@@ -1,0 +1,22 @@
+# frozen_string_literal: true
+
+# HTTP Cache Headers Configuration
+# This configuration enables automatic HTTP cache headers for your application
+
+# Enable cache headers system
+Rails.application.config.folio_cache_headers_enabled = true
+
+# Default TTL for public cache (in seconds)
+# This affects how long CDNs and browsers will cache your pages
+Rails.application.config.folio_cache_headers_default_ttl = 15
+
+# Include ETag headers for conditional requests (recommended)
+Rails.application.config.folio_cache_headers_include_etag = false
+
+# Include Last-Modified headers for conditional requests (recommended)
+Rails.application.config.folio_cache_headers_include_last_modified = false
+
+# Emergency cache control via environment variable
+# Set FOLIO_CACHE_TTL_MULTIPLIER=0 to disable all caching
+# Set FOLIO_CACHE_TTL_MULTIPLIER=0.5 to halve all cache times
+# Set FOLIO_CACHE_TTL_MULTIPLIER=2.0 to double all cache times

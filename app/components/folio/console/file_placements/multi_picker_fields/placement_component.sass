@@ -1,0 +1,90 @@
+.f-c-file-placements-multi-picker-fields-placement
+  --f-c-file-placements-multi-picker-fields-placement__spacer: #{px-to-rem(16px)}
+
+  background: $medium-gray
+  border-radius: $border-radius
+  min-height: 145px
+  padding: var(--f-c-file-placements-multi-picker-fields-placement__spacer)
+  position: relative
+  transition: box-shadow $transition-duration ease-in-out
+  pointer-events: none
+
+  &__picker,
+  .form-control,
+  .form-label__tooltip,
+  .invalid-feedback,
+  &__non-unique-span,
+  &__file-errors,
+  &__field--folio_embed_data .form-label,
+  .f-embed-box__iframe
+    pointer-events: auto
+
+  &--non-unique-file-id
+    background: #f4dedd
+
+  &--highlighted
+    box-shadow: 0 0 12px 2px $red !important
+
+  &:not(&--non-unique-file-id) &__non-unique
+    display: none
+
+  &__non-unique
+    flex: 0 0 auto
+
+  &__non-unique-span
+    align-items: center
+    cursor: pointer
+    display: inline-flex
+    gap: px-to-rem(8px)
+
+  .form-group
+    margin: 0
+
+  &__flex
+    align-items: flex-start
+    display: flex
+    gap: var(--f-c-file-placements-multi-picker-fields-placement__spacer)
+    min-height: 138px
+
+  &__picker
+    flex: 0 0 auto
+
+  &__fields
+    align-items: stretch
+    display: flex
+    flex-direction: column
+    flex: 1 1 auto
+    gap: calc(0.5 * var(--f-c-file-placements-multi-picker-fields-placement__spacer))
+
+  &__field
+    flex: 0 0 auto
+
+  &__field--description
+    flex: 1 0 auto
+    display: flex
+    flex-direction: column
+
+    .form-group
+      flex: 1 0 auto
+      display: flex
+      flex-direction: column
+
+    .form-control
+      flex: 1 0 auto
+
+  &[data-f-c-file-placements-multi-picker-fields-placement-state-value="loading"] &__flex
+    visibility: hidden
+    pointer-events: none
+
+  &:not([data-f-c-file-placements-multi-picker-fields-placement-state-value="loading"]) &__loader
+    display: none
+
+  &[data-f-c-file-placements-multi-picker-fields-placement-embed-value="false"] &__field--folio_embed_data,
+  &[data-f-c-file-placements-multi-picker-fields-placement-embed-value="true"] &__picker,
+  &[data-f-c-file-placements-multi-picker-fields-placement-embed-value="true"] &__field--alt
+    display: none
+
+  @container (max-width: 450px)
+    &__flex
+      flex-direction: column
+      align-items: stretch

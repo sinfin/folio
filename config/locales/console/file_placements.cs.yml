@@ -1,0 +1,15 @@
+---
+cs:
+  folio:
+    console:
+      file_placements:
+        multi_picker_fields_component:
+          add_embed: Přidat Embed (HTML kód)
+          select/image: Vybrat obrázek
+          select/default: Vybrat soubor
+          empty: Žádné vybrané soubory. Pro výběr klikněte na soubor ze seznamu.
+
+        multi_picker_fields:
+          placement_component:
+            embed_html_label: HTML kód
+            non_unique_file_id: "Duplicita: Obrázek je již přiřazen do galerie"

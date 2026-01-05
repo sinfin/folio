@@ -4,10 +4,11 @@
 module Folio::Thumbnails
   extend ActiveSupport::Concern
 
+  DEFAULT_QUALITY = 82
+
   IMAGE_MIME_TYPES = %w[image/png
                         image/jpeg
                         image/gif
-                        image/bmp
                         image/svg
                         image/svg+xml]
 
@@ -33,7 +34,13 @@ module Folio::Thumbnails
     before_validation :reset_thumbnails
 
     after_save :run_set_additional_data_job
-    before_destroy :delete_thumbnails
+    after_destroy :delete_thumbnails
+
+    # Validate image dimensions for thumbnailable files (images)
+    validates :file_width, :file_height,
+              presence: true,
+              numericality: { greater_than: 0 },
+              if: :should_validate_image_dimensions?
   end
 
   def thumbs_hash_with_rewritten_urls(hash)
@@ -63,7 +70,8 @@ module Folio::Thumbnails
 
   # Use w_x_h = 400x250# or similar
   #
-  def thumb(w_x_h, quality: 82, immediate: false, force: false, x: nil, y: nil)
+  def thumb(w_x_h, quality: nil, immediate: false, force: false, x: nil, y: nil)
+    quality ||= DEFAULT_QUALITY
     fail_for_non_images
 
     if Rails.env.test? && !try(:additional_data).try(:[], "generate_thumbnails_in_test")
@@ -78,44 +86,16 @@ module Folio::Thumbnails
         url = Folio::S3.cdn_url_rewrite(file.remote_url)
         width, height = get_svg_dimensions(w_x_h)
       else
-        width, height = w_x_h.split("x").map(&:to_i)
+        width, height = get_thumbnail_dimensions(w_x_h)
 
         if immediate || self.class.immediate_thumbnails
           image = Folio::GenerateThumbnailJob.perform_now(self, w_x_h, quality, force:, x:, y:)
 
           return OpenStruct.new(thumbs_hash_with_rewritten_urls(image.thumbnail_sizes[w_x_h]))
         else
-          if thumbnail_sizes && thumbnail_sizes[w_x_h] && thumbnail_sizes[w_x_h][:started_generating_at] && thumbnail_sizes[w_x_h][:started_generating_at] > 5.minutes.ago
-            return OpenStruct.new(thumbnail_sizes[w_x_h])
-          else
-            url = temporary_url(w_x_h)
-
-            response = self.reload.with_lock do
-              if !force && thumbnail_sizes && thumbnail_sizes[w_x_h] && thumbnail_sizes[w_x_h][:uid]
-                # already added via a parallel process
-                OpenStruct.new(thumbs_hash_with_rewritten_urls(thumbnail_sizes[w_x_h]))
-              else
-                update(thumbnail_sizes: (thumbnail_sizes || {}).merge(w_x_h => {
-                  uid: nil,
-                  signature: nil,
-                  x: nil,
-                  y: nil,
-                  url:,
-                  width:,
-                  height:,
-                  quality:,
-                  started_generating_at: Time.current,
-                  temporary_url: url,
-                }))
-
-                nil
-              end
-            end
-
-            return response if response
-
-            Folio::GenerateThumbnailJob.perform_later(self, w_x_h, quality, force:, x:, y:)
-          end
+          # With activejob-uniqueness, we can simply queue the job without complex database coordination
+          url = temporary_url(w_x_h)
+          Folio::GenerateThumbnailJob.perform_later(self, w_x_h, quality, force:, x:, y:)
         end
       end
 
@@ -132,6 +112,10 @@ module Folio::Thumbnails
     end
   end
 
+  def base_thumb(immediate: false, force: false)
+    admin_thumb(immediate:, force:)
+  end
+
   def admin_thumb(immediate: false, force: false)
     thumb(Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE,
           immediate:,
@@ -145,7 +129,7 @@ module Folio::Thumbnails
   end
 
   def thumb_in_test_env(w_x_h, quality: 90)
-    width, height = w_x_h.split("x").map(&:to_i)
+    width, height = get_thumbnail_dimensions(w_x_h)
 
     OpenStruct.new(
       uid: nil,
@@ -161,12 +145,9 @@ module Folio::Thumbnails
 
   def temporary_url(w_x_h)
     size = w_x_h.match(/\d+x?\d+/)[0]
-    "https://doader.com/#{size}?image=#{id}"
-  end
-
-  def temporary_s3_url(w_x_h)
-    size = w_x_h.match(/\d+x?\d+/)[0]
-    "https://doader.s3.amazonaws.com/#{size}?image=#{id}"
+    # URL encode the size parameter to handle special characters like #
+    encoded_size = ERB::Util.url_encode(w_x_h)
+    "https://doader.com/#{size}?image=#{id}&size=#{encoded_size}"
   end
 
   def landscape?
@@ -184,19 +165,6 @@ module Folio::Thumbnails
 
   def gif?
     file_mime_type.present? && file_mime_type.include?("gif")
-  end
-
-  def animated_gif?
-    return false unless gif?
-    return false unless self.respond_to?(:additional_data)
-
-    if additional_data.present?
-      additional_data["animated"].present?
-    else
-      Folio::Files::SetAdditionalDataJob.perform_now(self)
-      reload
-      additional_data.present? && additional_data["animated"].present?
-    end
   end
 
   def largest_thumb_key
@@ -289,6 +257,10 @@ module Folio::Thumbnails
   end
 
   private
+    def should_validate_image_dimensions?
+      thumbnailable? && file_uid.present?
+    end
+
     def reset_thumbnails
       delete_thumbnails if file_uid_changed? && has_attribute?("thumbnail_sizes")
     end
@@ -296,7 +268,11 @@ module Folio::Thumbnails
     def delete_thumbnails
       if self.try(:thumbnail_sizes).present?
         Folio::DeleteThumbnailsJob.perform_later(self.thumbnail_sizes)
-        self.thumbnail_sizes = {}
+
+        # Destroying freezes the record and setting here would throw a FrozenError
+        unless destroyed?
+          self.thumbnail_sizes = {}
+        end
       end
     end
 
@@ -324,6 +300,42 @@ module Folio::Thumbnails
       logger.tagged(self.class.to_s, "development_safe_file", self.id) do
         logger.info(msg)
       end
+    end
+
+    def get_thumbnail_dimensions(w_x_h)
+      original_width = file.width.to_f
+      original_height = file.height.to_f
+      return [0, 0] if !original_width || !original_height
+
+      if w_x_h.include?("#")
+        # Cropping mode - return exact dimensions
+        return w_x_h.split("x", 2).map { |p| p.to_i }
+      elsif w_x_h.match?(/\d+x\d+/)
+        max_width, max_height = w_x_h.split("x", 2).map { |p| p.to_f }
+      elsif matches = w_x_h.match(/(\d+)x/)
+        max_width = matches[1].to_f
+        max_height = 9999.0
+      elsif matches = w_x_h.match(/x(\d+)/)
+        max_width = 9999.0
+        max_height = matches[1].to_f
+      else
+        return [0, 0]
+      end
+
+      return [0, 0] if original_width == 0 || original_height == 0
+
+      max_ratio = max_width / max_height
+      original_ratio = original_width / original_height
+
+      if original_ratio > max_ratio
+        target_width = max_width.to_i
+        target_height = (max_width / original_width * original_height).ceil.to_i
+      else
+        target_height = max_height.to_i
+        target_width = (max_height / original_height * original_width).ceil.to_i
+      end
+
+      [target_width, target_height]
     end
 
     def get_svg_dimensions(w_x_h)

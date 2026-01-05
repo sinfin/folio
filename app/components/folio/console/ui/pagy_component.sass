@@ -1,0 +1,121 @@
+.f-c-ui-pagy
+  margin: $grid-gutter-width 0
+  color: $gray-medium-dark
+  container-type: inline-size
+
+  &--no-margin
+    margin: 0
+
+  &--index-header
+    margin-top: $grid-gutter-width - $f-c-ui-index-header-gap
+
+  &__flex
+    align-items: center
+    display: flex
+    flex-wrap: wrap
+    gap: $grid-gutter-half $grid-gutter-width
+
+  &__info
+    max-width: 100%
+    flex: 0 0 auto
+
+  .card-body &:first-child,
+  .f-c-r-modal &:first-child
+    margin-top: 0
+
+  &__nav
+    align-items: center
+    container-type: inline-size
+    display: flex
+    flex: 1 1 auto
+    justify-content: flex-end
+    margin: -5px 0 -5px auto
+    position: relative
+    top: -1px
+
+  &__pages
+    display: flex
+    align-items: center
+
+  &__page
+    position: relative
+    flex: 0 1 auto
+
+  &__page,
+  &__page a
+    color: $dark-gray
+    text-decoration: none
+
+  &__page--with-ico,
+  &__page--with-ico a
+    color: $gray
+
+  &__page--page,
+  &__page--page a
+    display: block
+    line-height: 24px
+    min-width: 24px
+    height: 24px
+    border-radius: 12px
+    text-align: center
+
+  &__page--page a,
+  &__page-current
+    padding: 0 $spacer / 2
+
+  &__page--current:before,
+  &__page--current + &__page--page:before
+    display: none
+
+  &__page--current
+    background: $dark-gray
+    color: $white
+    flex: 0 0 auto
+
+  &__ico
+    line-height: 24px
+    width: 24px
+    text-align: center
+
+  &--with-middle
+    align-items: center
+
+  @container (min-width: 700px)
+    &--with-middle &__info,
+    &--with-middle &__nav
+      margin: 0
+      flex: 0 0 calc(((100% - #{2 * $grid-gutter-width}) - 72px) / 2)
+
+    &--with-middle &__nav
+      justify-content: flex-end
+
+    &--with-middle &__middle
+      flex: 0 0 72px
+      display: flex
+      align-items: center
+      justify-content: center
+
+  @container (max-width: 580px)
+    &__flex
+      flex-direction: column
+      align-items: center
+
+    &__nav
+      align-self: stretch
+      width: 100%
+      justify-content: center
+      margin: 0
+
+  @container (max-width: 360px)
+    &__page--page-minus-2,
+    &__page--page-plus-2
+      display: none
+
+  @container (max-width: 280px)
+    &__page
+      display: none
+
+    &__page--prev,
+    &__page--current,
+    &__page--next,
+      display: block

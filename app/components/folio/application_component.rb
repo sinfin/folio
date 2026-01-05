@@ -6,12 +6,6 @@ class Folio::ApplicationComponent < ViewComponent::Base
   include Folio::IconHelper
   include Folio::StimulusHelper
 
-  def initialize(**kwargs)
-    kwargs.each do |key, value|
-      instance_variable_set("@#{key}", value)
-    end
-  end
-
   def original_bem_class_name
     base = self.class.name.delete_suffix("Component")
 
@@ -130,5 +124,9 @@ class Folio::ApplicationComponent < ViewComponent::Base
     else
       "fs-adaptive fs-adaptive--small"
     end
+  end
+
+  def cell(*args)
+    helpers.cell(*args)
   end
 end

@@ -1,0 +1,46 @@
+$f-c-ui-steps__margin-y: $grid-gutter-width !default
+
+.f-c-ui-steps
+  $upcoming-opacity: 0.33
+  $chevron-opacity: 0.5
+
+  display: flex
+  align-items: center
+  justify-content: flex-start
+  gap: $grid-gutter-half
+  flex-wrap: wrap
+  margin: $f-c-ui-steps__margin-y 0
+
+  &__step
+    display: flex
+    align-items: center
+    gap: px-to-rem(8px)
+    color: inherit
+    text-decoration: none
+
+  &__step-number
+    align-items: center
+    border-radius: 100%
+    border: 1px solid $gray-600
+    display: flex
+    flex: 0 0 32px
+    font-weight: $font-weight-bold
+    height: 32px
+    justify-content: center
+    width: 32px
+
+  &__step-chevron
+    opacity: $chevron-opacity
+
+  &__step--state-upcoming
+    opacity: $upcoming-opacity
+
+  &__step--state-done &__step-number
+    background: $gray-600
+    color: $white
+
+  &__step--state-done[href]:hover &__step-label
+    text-decoration: underline
+
+  &__step--state-current &__step-chevron
+    opacity: $upcoming-opacity * $chevron-opacity

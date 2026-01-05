@@ -35,7 +35,26 @@ class OrderedMultiselectApp extends React.Component {
     this.onSelect(e.detail.entry)
   }
 
-  onSelect = (item) => {
+  onSelect = (option) => {
+    // option is {value, label, id} from react-select
+    // value is the STI string like "MyProject::List::Category -=- 310"
+    // id is the numeric ID like 310
+    // Use id for the item ID, fallback to extracting from value if id not available
+    let itemId = option.id
+    if (itemId === undefined && typeof option.value === 'string' && option.value.includes(' -=- ')) {
+      // Extract numeric ID from STI format: "Class -=- 48" -> 48
+      const parts = option.value.split(' -=- ')
+      itemId = parts.length > 1 ? parts[1] : option.value
+    } else if (itemId === undefined) {
+      // Fallback to value if no id available
+      itemId = option.value
+    }
+
+    // Transform to {id, label} format expected by Redux
+    const item = {
+      id: itemId,
+      label: option.label
+    }
     document.querySelector('.f-c-r-ordered-multiselect-app').dispatchEvent(new window.Event('change', { bubbles: true }))
     this.props.dispatch(addItem(item))
   }
@@ -109,7 +128,6 @@ class OrderedMultiselectApp extends React.Component {
           defaultOptions
           addAtomSettings
           menuPlacement={orderedMultiselect.menuPlacement}
-          selectize
         />
 
         <Serialized orderedMultiselect={orderedMultiselect} />

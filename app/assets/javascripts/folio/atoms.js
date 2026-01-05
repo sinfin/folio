@@ -4,14 +4,14 @@
   let loadEvent = 'turbolinks:load'
   let unloadEvent = 'turbolinks:before-render'
 
-  if (typeof Turbolinks === 'undefined' || Turbolinks === null) {
+  if (typeof window.Turbolinks === 'undefined' || window.Turbolinks === null) {
     loadEvent = 'folioConsoleReplacedHtml'
     unloadEvent = 'folioConsoleWillReplaceHtml'
   }
 
-  $(document).on(loadEvent, () => {
-    $(document).trigger('folioAtomsLoad')
+  window.jQuery(document).on(loadEvent, () => {
+    window.jQuery(document).trigger('folioAtomsLoad')
   }).on(unloadEvent, () => {
-    $(document).trigger('folioAtomsUnload')
+    window.jQuery(document).trigger('folioAtomsUnload')
   })
 })()

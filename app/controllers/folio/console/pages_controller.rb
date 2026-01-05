@@ -41,13 +41,10 @@ class Folio::Console::PagesController < Folio::Console::BaseController
                     :locale,
                     :tag_list,
                     :parent_id,
+                    :tiptap_content,
                     *atoms_strong_params,
                     *file_placements_strong_params,
                     *console_notes_strong_params,
                     *additional_page_params)
-    end
-
-    def folio_console_record_includes
-      [cover_placement: :file]
     end
 end

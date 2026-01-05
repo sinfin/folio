@@ -6,7 +6,7 @@ window.Folio.Stimulus.register('d-molecule-cards-full-width', class extends wind
   setCurrentSlide () {
     this.slideTargets.forEach((slide, index) => {
       slide.classList.toggle('d-molecule-cards-full-width__slide--active',
-                             index === this.currentSlideIndexValue)
+        index === this.currentSlideIndexValue)
     })
   }
 
@@ -15,7 +15,7 @@ window.Folio.Stimulus.register('d-molecule-cards-full-width', class extends wind
       const index = parseInt(dot.dataset.index)
 
       dot.classList.toggle('d-molecule-cards-full-width__controls-dot--active',
-                           index === this.currentSlideIndexValue)
+        index === this.currentSlideIndexValue)
     })
   }
 

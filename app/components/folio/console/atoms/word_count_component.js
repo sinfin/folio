@@ -3,7 +3,7 @@ window.Folio.Stimulus.register('f-c-atoms-word-count', class extends window.Stim
 
   static values = {
     locale: String,
-    visible: Boolean,
+    visible: Boolean
   }
 
   connect () {
@@ -15,7 +15,7 @@ window.Folio.Stimulus.register('f-c-atoms-word-count', class extends window.Stim
   }
 
   updateCounts () {
-    let text = ""
+    let text = ''
 
     const hash = window.Folio.formToHash(this.element.closest('form'))
     const attributesKey = this.localeValue ? `${this.localeValue}_atoms_attributes` : 'atoms_attributes'

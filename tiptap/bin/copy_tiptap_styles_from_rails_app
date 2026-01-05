@@ -1,0 +1,9 @@
+#!/bin/bash
+
+rootDir="$( dirname "$0" )/../.."
+
+(
+  cd "$rootDir/tiptap" || exit
+  mkdir -p "tmp"
+  cp "../app/assets/stylesheets/folio/tiptap/_styles.scss" "tmp/tiptap-styles-from-app.scss"
+)

@@ -43,7 +43,7 @@ class Folio::Console::UsersController < Folio::Console::BaseController
   def new
     @user.creating_in_console = 1
     @user.time_zone = Time.zone.name
-    @user.auth_site = Folio::Current.main_site
+    @user.auth_site = Folio::Current.site
   end
 
   def create
@@ -73,6 +73,9 @@ class Folio::Console::UsersController < Folio::Console::BaseController
     else
       head 422
     end
+  end
+
+  def show
   end
 
   private
@@ -158,10 +161,6 @@ class Folio::Console::UsersController < Folio::Console::BaseController
     end
 
     def folio_console_collection_includes
-      []
-    end
-
-    def folio_console_record_includes
       []
     end
 

@@ -3,6 +3,6 @@
   "private": true,
   "dependencies": {},
   "devDependencies": {
-    "svg-sprite": "^1.5.0"
+    "svg-sprite": "^2.0.4"
   }
 }

@@ -1,0 +1,8 @@
+---
+cs:
+  folio:
+    console:
+      api:
+        file_controller_base:
+          batch_delete_success: Soubory byly odstraněny.
+          batch_update_success: Soubory byly upraveny.

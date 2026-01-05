@@ -1,0 +1,75 @@
+.f-file-list
+  --f-file-list__flex-gap: #{$grid-gutter-base}
+
+  $accent-blue: #4C84FD !default
+  user-select: none
+
+  &__container
+    container-type: inline-size
+
+  &__flex
+    display: flex
+    gap: var(--f-file-list__flex-gap)
+    flex-wrap: wrap
+
+  &__flex-item
+    flex: 0 0 auto
+    width: 21 * $grid-gutter-base
+    aspect-ratio: 1 / 1
+    position: relative
+
+  &__flex-item--thead
+    display: none
+
+  &--view-table &__flex
+    display: block
+
+  &--view-table &__flex-item
+    width: 100%
+    aspect-ratio: auto
+
+    &--uppy
+      display: none
+
+  &__blank-trigger
+    color: $accent-blue
+    cursor: pointer
+
+    &:hover
+      text-decoration: underline
+
+  &__blank:not([hidden]) + &__container
+    margin-top: 2 * $grid-gutter-base
+
+  @for $i from 13 through 3
+    @container (max-width: #{($i * 168px) + (($i - 1) * 8px) + 1})
+      &__flex-item
+        width: calc((100% - (#{$i - 1} * var(--f-file-list__flex-gap))) / #{$i})
+
+  @container (max-width: 599px)
+    &__flex-item
+      width: calc((100% - 2 * var(--f-file-list__flex-gap)) / 3)
+
+    &--view-table &__flex
+      border-top: 1px solid #000000
+
+  @container (max-width: 375px)
+    &__flex-item
+      width: calc((100% - var(--f-file-list__flex-gap)) / 2)
+
+  @container (min-width: 600px)
+    &--view-table &__flex
+      display: table
+      width: 100%
+
+    &--view-table &__flex-item
+      display: table-row-group
+
+      &--uppy
+        display: none
+
+      &--thead
+        display: table-row-group
+
+        &:last-child
+          display: none

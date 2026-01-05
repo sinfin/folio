@@ -8,21 +8,24 @@
 @import 'modules/atoms'
 @import 'modules/rich-text'
 @import 'modules/with-icon'
+@import 'modules/tiptap'
 
 @import 'folio/cookie_consent/cookie_consent'
 @import 'folio/devise'
 @import 'folio/loader'
-@import 'folio/lazyload'
 @import 'folio/lightbox'
 @import 'folio/togglable_fields_component'
 @import 'folio/dropzone_component'
 @import 'folio/image/image'
 @import 'folio/input/phone'
 @import 'folio/leads/form_component'
-@import 'folio/newsletter_subscriptions/form_component'
-@import 'folio/publishable_hint/publishable_hint'
-@import 'folio/ui/ui'
+@import 'folio/lightbox'
+@import 'folio/loader'
 @import 'folio/nested_fields_component'
+@import 'folio/newsletter_subscriptions/form_component'
+@import 'folio/publishable/hint_component'
+@import 'folio/togglable_fields_component'
+@import 'folio/ui/ui'
 
 html
   height: 100%

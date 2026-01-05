@@ -10,6 +10,9 @@ class Folio::Console::LeadsController < Folio::Console::BaseController
     respond_with @leads
   end
 
+  def show
+  end
+
   private
     def index_filters
       {

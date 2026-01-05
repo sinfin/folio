@@ -1,0 +1,8 @@
+# frozen_string_literal: true
+
+class <%= base_component_name %> < ApplicationComponent
+  def initialize(node:, tiptap_content_information:)
+    @node = node
+    @tiptap_content_information = tiptap_content_information
+  end
+end

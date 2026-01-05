@@ -1,0 +1,15 @@
+---
+cs:
+  folio:
+    file_list_component:
+      blank: Zatím nebyly nahrány žádné soubory. Přetáhněte sem nebo %{blank_prompt} první.
+      blank_prompt: vyberte
+
+    file_list:
+      file_component:
+        thead/info: Informace
+        thead/count: Použití
+        thead/size: Velikost
+        thead/tags: Klíčová slova
+        tags_count: 'Celkem %{count} klíčových slov'
+        select: Vybrat

@@ -1,0 +1,30 @@
+- begin
+  - if @node_type_blacklist && @node_type_blacklist.include?(@prose_mirror_node["type"])
+    - if @lambda_for_blacklisted
+      = @lambda_for_blacklisted.call(@prose_mirror_node)
+  - elsif @node_definition["component_name"]
+    = custom_component_render
+  - elsif @node_definition["tag"]
+    - if @node_definition["self_closing"] && @node_definition["tag"].is_a?(String)
+      = tag(resolve_tag_name(@node_definition["tag"]), resolve_tag_attributes)
+    - elsif @node_definition["tag"]
+      = render_nested_tags(@node_definition["tag"]) do
+        - if @prose_mirror_node["content"].present?
+          - @prose_mirror_node["content"].each_with_index do |child_node, index|
+            - tiptap_content_information = tiptap_content_information_for_child(child_node:, index:)
+
+            = call_lambda_if_present(tiptap_content_information:, after: false)
+
+            = render(Folio::Tiptap::Content::ProseMirrorNodeComponent.new(record: @record,
+                                                                          prose_mirror_node: child_node,
+                                                                          tiptap_content_information:,
+                                                                          node_type_blacklist: @node_type_blacklist,
+                                                                          lambda_for_blacklisted: @lambda_for_blacklisted))
+
+            = call_lambda_if_present(tiptap_content_information:, after: true)
+
+        - elsif @node_definition["trailing_break_when_empty"]
+          br.ProseMirror-trailingBreak
+
+- rescue StandardError => e
+  - rescue_component_error(e)

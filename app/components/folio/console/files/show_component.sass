@@ -1,0 +1,83 @@
+.f-c-files-show
+  position: relative
+
+  &__row
+    row-gap: $grid-gutter-width
+
+  &__meta
+    align-items: flex-start
+    background: $gray-100
+    display: flex
+    flex-wrap: wrap
+    gap: $grid-gutter-base $grid-gutter-width
+    padding: $grid-gutter-base
+
+  &__buttons-outer,
+  &__buttons
+    align-items: center
+    display: flex
+    flex-wrap: wrap
+    gap: $f-c-ui-buttons-gap
+
+  &__buttons-outer
+    gap: map-get($spacers, 3) map-get($spacers, 5)
+
+  &[data-f-c-files-show-loading-value="false"] &__loader
+    display: none
+
+  .form-control
+    max-width: 100%
+
+  &__th
+    color: $gray-500
+    font-size: 12px
+    line-height: 1.2
+    text-transform: uppercase
+
+  &__thumbnails-wrap,
+  &__subtitles-wrap
+    border-top: 1px solid $border-color
+    margin-top: $grid-gutter-width
+    padding-top: $grid-gutter-width
+
+  &__additional-preview-wrap
+    margin-top: $grid-gutter-width
+
+    &:first-child
+      margin-top: 0
+
+  +media-breakpoint-up(sm)
+    &__table
+      display: table
+      width: 100%
+
+    &__tr
+      display: table-row
+
+    &__th,
+    &__td
+      display: table-cell
+      padding: px-to-rem(8px) 0
+      border-bottom: 1px solid $border-color
+      vertical-align: middle
+
+    &__tr:first-child &__th,
+    &__tr:first-child &__td
+      border-top: 1px solid $border-color
+
+    &__th
+      padding-right: $grid-gutter-width
+      width: 120px
+
+  +media-breakpoint-up(lg)
+    &__preview-col
+      max-width: calc(500px + var(--bs-gutter-x))
+
+  +media-breakpoint-down(sm)
+    &__th
+      border-top: 1px solid $border-color
+      padding: px-to-rem(16px) 0 0
+
+    &__td
+      border-bottom: 1px solid $border-color
+      padding: px-to-rem(8px) 0

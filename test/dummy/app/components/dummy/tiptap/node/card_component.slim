@@ -1,0 +1,39 @@
+.d-tiptap-node-card[
+  class="p-4 rounded border"
+  style="background: #{@node.background === 'blue' ? '#d7e9ff' : '#e8e8e8'}; overflow-wrap: break-word;"
+]
+  div class="d-flex gap-4 align-items-start"
+    - if @node.cover
+      div style="flex: 0 0 125px; max-width: 50%;"
+        = render(Dummy::Ui::ImageComponent.new(placement: @node.cover_placement,
+                                               size: '300x300#'))
+
+    div class="d-flex flex-column gap-3 align-items-start flex-grow-1" style="min-width: 100px;"
+      h2.m-0 Dummy Card Component from API
+
+      - if @node.title
+        h3.m-0 = @node.title
+
+      - if @node.content.present?
+        = render(Folio::Tiptap::ContentComponent.new(record: @node,
+                                                     attribute: :content,
+                                                     class_name: "w-100"))
+
+      - if @node.text.present?
+        = simple_format @node.text
+
+      - if @node.reports.present?
+        ol.m-0
+          - @node.reports.each_with_index do |report, i|
+            li
+              ' Report file
+              a<> href=report.file.url target="_blank"
+                = report.file_name
+
+      - if @node.button_url_json.present?
+        a.btn.btn-primary href=@node.button_url_json["href"]
+          = @node.button_url_json["label"] || "Button"
+
+  pre.bg-white.mt-4
+    code style="white-space: break-spaces;"
+      = @node.attributes.to_json

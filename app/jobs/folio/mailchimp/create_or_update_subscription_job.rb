@@ -3,6 +3,8 @@
 class Folio::Mailchimp::CreateOrUpdateSubscriptionJob < ApplicationJob
   queue_as :default
 
+  unique :until_and_while_executing
+
   def perform(email)
     return unless mailchimp_api.ready_to_use?
 

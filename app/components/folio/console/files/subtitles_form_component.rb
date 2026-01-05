@@ -18,7 +18,8 @@ class Folio::Console::Files::SubtitlesFormComponent < Folio::Console::Applicatio
                         },
                         action: {
                           "f-c-files-subtitle-form:subtitleDeleted" => "subtitleDeleted",
-                          "f-c-files-subtitle-form:newSubtitleRemoved" => "newSubtitleRemoved"
+                          "f-c-files-subtitle-form:newSubtitleRemoved" => "newSubtitleRemoved",
+                          "f-c-files-subtitle-form:reload" => "reload"
                         })
   end
 

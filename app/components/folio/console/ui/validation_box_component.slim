@@ -1,0 +1,42 @@
+.f-c-ui-validation-box[
+  class="f-c-ui-validation-box--variant-#{@variant}"
+  class=@class_name
+  data=data
+]
+  - if @errors.present?
+    div: strong = t('.errors')
+
+    ul.f-c-ui-validation-box__ul
+      - @errors.each_with_index do |error, i|
+        li class="f-c-ui-validation-box__li"
+          span
+            = dig_error_message(error)
+
+          - if show_fix_button?(error)
+            = render(Folio::Console::Ui::ButtonComponent.new(variant: 'white',
+                                                             size: :sm,
+                                                             hidden: true,
+                                                             class_name: "f-c-ui-validation-box__button",
+                                                             data: button_data(error),
+                                                             label: t('.fix')))
+
+  - elsif @warnings.present?
+    div: strong = t('.warnings')
+
+    ul.f-c-ui-validation-box__ul
+      - @warnings.each_with_index do |group, group_index|
+        - file = group[:file]
+        - warnings = group[:warnings]
+
+        li class="f-c-ui-validation-box__li"
+          span
+            - if file.present?
+              = file_label(file)
+            '  #{warnings_text(warnings)}
+
+          - if file.present? && can_now?(:edit, file)
+            = render(Folio::Console::Ui::ButtonComponent.new(variant: 'white',
+                                                             size: :sm,
+                                                             class_name: "f-c-ui-validation-box__button",
+                                                             data: file_button_data(file),
+                                                             label: t('.fix')))

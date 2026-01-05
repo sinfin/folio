@@ -3,18 +3,17 @@
 require "test_helper"
 
 class Folio::Console::HelpDocumentsControllerTest < Folio::Console::BaseControllerTest
-  attr_reader :test_config_file
-  attr_reader :test_config_dir
-  attr_reader :test_files_to_delete
+  attr_reader :x_test_config_file
+  attr_reader :x_test_config_dir
 
   def setup
     super
 
-    @test_config_dir = Pathname.new(Dir.mktmpdir("test_help", Rails.root.join("tmp"))) # each test gets its own tmpdir
-    @test_config_file = @test_config_dir.join("index.yml")
+    @x_test_config_dir = Pathname.new(Dir.mktmpdir("test_help", Rails.root.join("tmp"))) # each test gets its own tmpdir
+    @x_test_config_file = @x_test_config_dir.join("index.yml")
 
     # Create test configuration
-    create_test_config_file({
+    create_x_test_config_file({
       "documents" => [
         {
           "slug" => "test-guide",
@@ -34,15 +33,15 @@ class Folio::Console::HelpDocumentsControllerTest < Folio::Console::BaseControll
     })
 
     # Create test markdown files
-    File.write(@test_config_dir.join("test-guide.md"), "# Test Guide\n\nThis is a test guide.")
-    File.write(@test_config_dir.join("troubleshooting.md"), "# Troubleshooting\n\nCommon issues.")
+    File.write(@x_test_config_dir.join("test-guide.md"), "# Test Guide\n\nThis is a test guide.")
+    File.write(@x_test_config_dir.join("troubleshooting.md"), "# Troubleshooting\n\nCommon issues.")
   end
 
   def teardown
     super
 
     # Clean up test files
-    FileUtils.remove_entry test_config_dir
+    FileUtils.remove_entry x_test_config_dir
 
     # Reset any cached data
     Folio::HelpDocument.reload!
@@ -80,7 +79,7 @@ class Folio::Console::HelpDocumentsControllerTest < Folio::Console::BaseControll
 
   test "index shows no documents message when empty" do
     # Create empty configuration
-    create_test_config_file({ "documents" => [] })
+    create_x_test_config_file({ "documents" => [] })
     stub_configs do
       get console_help_documents_path
       assert_response :success
@@ -143,7 +142,7 @@ class Folio::Console::HelpDocumentsControllerTest < Folio::Console::BaseControll
 
   test "index works when no configuration exists" do
     # Remove configuration file
-    File.delete(@test_config_file) if File.exist?(@test_config_file)
+    File.delete(@x_test_config_file) if File.exist?(@x_test_config_file)
 
     stub_configs do
       get console_help_documents_path
@@ -175,7 +174,7 @@ class Folio::Console::HelpDocumentsControllerTest < Folio::Console::BaseControll
       | Value 1  | Value 2  |
     MARKDOWN
 
-    File.write(@test_config_dir.join("test-guide.md"), markdown_content)
+    File.write(@x_test_config_dir.join("test-guide.md"), markdown_content)
 
     stub_configs do
       get console_help_document_path("test-guide")
@@ -193,13 +192,13 @@ class Folio::Console::HelpDocumentsControllerTest < Folio::Console::BaseControll
   end
 
   private
-    def create_test_config_file(config)
-      File.write(@test_config_file, config.to_yaml)
+    def create_x_test_config_file(config)
+      File.write(@x_test_config_file, config.to_yaml)
     end
 
     def stub_configs(&block)
-      Folio::HelpDocument.stub(:config_path, test_config_file) do
-        Folio::HelpDocument.stub(:help_directory, test_config_dir, &block)
+      Folio::HelpDocument.stub(:config_path, x_test_config_file) do
+        Folio::HelpDocument.stub(:help_directory, x_test_config_dir, &block)
       end
     end
 end

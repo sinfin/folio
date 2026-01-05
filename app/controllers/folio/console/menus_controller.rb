@@ -89,10 +89,6 @@ class Folio::Console::MenusController < Folio::Console::BaseController
       []
     end
 
-    def folio_console_record_includes
-      []
-    end
-
     def serialize_menu_items
       @serialized_menu_items = @menu.menu_items
                                     .arrange_serializable do |p, ch|

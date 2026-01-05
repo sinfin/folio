@@ -75,8 +75,8 @@ window.Folio.Stimulus.register('f-dropzone', class extends window.Stimulus.Contr
   }
 
   onCountChange () {
-    let persistedFiles = []
-    let pendingFiles = []
+    const persistedFiles = []
+    const pendingFiles = []
 
     if (this.dropzone && this.dropzone.files) {
       this.dropzone.files.forEach((file) => {

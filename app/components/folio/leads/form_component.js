@@ -5,7 +5,7 @@ window.Folio.Stimulus.register('f-leads-form', class extends window.Stimulus.Con
 
   static values = {
     loading: Boolean,
-    failureMessage: String,
+    failureMessage: String
   }
 
   submit () {

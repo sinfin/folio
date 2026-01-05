@@ -17,26 +17,27 @@ module Folio::Console::DefaultActions
     if self.folio_console_controller_for_handle_csv
       respond_with(records) do |format|
         format.html do
-          pagy, records = pagy(records)
-          instance_variable_set("@pagy", pagy)
+          pagy_data, records = pagy(records, items: index_pagy_items_per_page)
+          instance_variable_set("@pagy", pagy_data)
           instance_variable_set(folio_console_record_variable_name(plural: true),
                                 records)
-          render :index
+          render index_view_name
         end
         format.csv do
           render_csv(records)
         end
       end
     else
-      pagy, records = pagy(records)
-      instance_variable_set("@pagy", pagy)
+      pagy_data, records = pagy(records, items: index_pagy_items_per_page)
+      instance_variable_set("@pagy", pagy_data)
       instance_variable_set(folio_console_record_variable_name(plural: true),
                             records)
-      render :index
+      render index_view_name
     end
   end
 
   def show
+    redirect_to through_aware_console_url_for(folio_console_record, action: :edit)
   end
 
   def edit
@@ -281,7 +282,7 @@ module Folio::Console::DefaultActions
       else
         if folio_console_record.persisted?
           begin
-            if action_name == "create"
+            if action_name == "create" && did_override_default_show_method?
               console_show_or_edit_path(folio_console_record,
                                         other_params: { prevalidate: prevalidate ? 1 : nil })
             else
@@ -309,14 +310,36 @@ module Folio::Console::DefaultActions
             console_ui_boolean_toggle_data: folio_console_record.try(:console_ui_boolean_toggle_data),
             f_c_catalogue_published_dates: cell("folio/console/catalogue/published_dates", folio_console_record).show,
           },
-          meta: {
+          meta: params[:_flash] == false ? {} : {
             flash: {
               success: t("flash.actions.update.success", resource_name: @klass.model_name.human)
             },
           }
         }, status: 200
       else
-        render json: {}, status: 200
+        data = {}
+
+        folio_console_params.keys.each do |key|
+          change = folio_console_record.saved_changes[key]
+
+          if change && change[1]
+            data[key] = change[1]
+          end
+        end
+
+        render json: { data: }, status: 200
       end
+    end
+
+    def index_view_name
+      :index
+    end
+
+    def index_pagy_items_per_page
+      Pagy::DEFAULT[:items]
+    end
+
+    def did_override_default_show_method?
+      self.method(:show).owner == self.class
     end
 end
