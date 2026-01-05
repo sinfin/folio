@@ -157,7 +157,11 @@ export const FolioTiptapNodeExtension = Node.create<FolioTiptapNodeOptions>({
   },
 
   addNodeView() {
-    return ReactNodeViewRenderer(FolioTiptapNode);
+    return ReactNodeViewRenderer(FolioTiptapNode, {
+      // Allow all events to propagate to ProseMirror.
+      // This fixes drop events not working when cursor is over this atomic node.
+      stopEvent: () => false,
+    });
   },
 
   addProseMirrorPlugins() {

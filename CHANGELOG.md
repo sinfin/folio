@@ -7,6 +7,10 @@ All notable changes to this project will be documented in this file.
 
 - bumped tiptap to `3.14.0`
 
+### Fixed
+
+- tiptap node drag&drop
+
 ## [7.0.0] - 2026-01-05
 
 ### Added
