@@ -2,6 +2,7 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+- when user sign out, his `console_url` atribute is erased (so second user do not have, after page refresh, warnig bar at same page in console)
 
 ## [7.0.0] - 2026-01-05
 
