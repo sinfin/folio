@@ -203,76 +203,123 @@ export const FolioTiptapNodeExtension = Node.create<FolioTiptapNodeOptions>({
       },
     };
 
-    // Only add handlePaste if embedNodeClassName is configured
-    if (this.options.embedNodeClassName) {
+    // Build array of nodes with paste config
+    const nodesWithPasteConfig: Array<{
+      type: string;
+      pattern: RegExp;
+    }> = [];
+
+    if (this.options.nodes) {
+      this.options.nodes.forEach((node) => {
+        if (node.config?.paste?.pattern) {
+          try {
+            // Convert Ruby regex pattern string to JavaScript RegExp
+            // Ruby serializes regex as "(?i-mx:pattern)" format, we need to extract the pattern
+            const patternStr = node.config.paste.pattern;
+            const regex = new RegExp(patternStr);
+            nodesWithPasteConfig.push({
+              type: node.type,
+              pattern: regex,
+            });
+          } catch (error) {
+            console.error(
+              `Failed to create RegExp for node ${node.type}:`,
+              error,
+            );
+          }
+        }
+      });
+    }
+
+    // Add handlePaste if we have paste configs or embedNodeClassName
+    if (nodesWithPasteConfig.length > 0 || this.options.embedNodeClassName) {
       pluginProps.handlePaste = (view, event, _slice) => {
         const clipboardText = event.clipboardData?.getData("text/plain");
         const clipboardHTML = event.clipboardData?.getData("text/html");
 
-        if (clipboardText) {
-          const trimmedText = clipboardText.trim();
-          const embedType = detectEmbedUrlType(trimmedText);
-          if (embedType) {
-            // Create an embed node for URL embeds
-            view.dispatch(
-              view.state.tr.replaceSelectionWith(
-                this.type.create({
-                  type: this.options.embedNodeClassName,
-                  version: 1,
-                  uniqueId: makeUniqueId(),
-                  data: {
-                    folio_embed_data: {
-                      active: true,
-                      type: embedType,
-                      url: trimmedText,
-                    },
-                  },
-                }),
-              ),
-            );
-            return true;
-          }
+        // First check paste patterns (before embed detection)
+        if (nodesWithPasteConfig.length > 0) {
+          const textToCheck = clipboardText?.trim() || clipboardHTML?.trim();
 
-          // Check if plain text contains Facebook iframe HTML
-          if (detectFacebookIframe(trimmedText)) {
-            // Create an embed node for Facebook HTML embeds pasted as text
-            view.dispatch(
-              view.state.tr.replaceSelectionWith(
-                this.type.create({
-                  type: this.options.embedNodeClassName,
-                  version: 1,
-                  uniqueId: makeUniqueId(),
-                  data: {
-                    folio_embed_data: {
-                      active: true,
-                      html: trimmedText,
-                    },
-                  },
-                }),
-              ),
-            );
-            return true;
+          if (textToCheck) {
+            for (const nodeConfig of nodesWithPasteConfig) {
+              if (nodeConfig.pattern.test(textToCheck)) {
+                console.log(
+                  `Paste match found for node type: ${nodeConfig.type}, pasted string: ${textToCheck}`,
+                );
+                return true; // Prevent default paste handling
+              }
+            }
           }
         }
 
-        if (clipboardHTML && detectFacebookIframe(clipboardHTML)) {
-          // Create an embed node for Facebook HTML embeds
-          view.dispatch(
-            view.state.tr.replaceSelectionWith(
-              this.type.create({
-                type: this.options.embedNodeClassName,
-                version: 1,
-                uniqueId: makeUniqueId(),
-                data: {
-                  folio_embed_data: {
-                    active: true,
-                    html: clipboardHTML,
+        // Then check embed patterns (existing logic)
+        if (this.options.embedNodeClassName) {
+          if (clipboardText) {
+            const trimmedText = clipboardText.trim();
+            const embedType = detectEmbedUrlType(trimmedText);
+            if (embedType) {
+              // Create an embed node for URL embeds
+              view.dispatch(
+                view.state.tr.replaceSelectionWith(
+                  this.type.create({
+                    type: this.options.embedNodeClassName,
+                    version: 1,
+                    uniqueId: makeUniqueId(),
+                    data: {
+                      folio_embed_data: {
+                        active: true,
+                        type: embedType,
+                        url: trimmedText,
+                      },
+                    },
+                  }),
+                ),
+              );
+              return true;
+            }
+
+            // Check if plain text contains Facebook iframe HTML
+            if (detectFacebookIframe(trimmedText)) {
+              // Create an embed node for Facebook HTML embeds pasted as text
+              view.dispatch(
+                view.state.tr.replaceSelectionWith(
+                  this.type.create({
+                    type: this.options.embedNodeClassName,
+                    version: 1,
+                    uniqueId: makeUniqueId(),
+                    data: {
+                      folio_embed_data: {
+                        active: true,
+                        html: trimmedText,
+                      },
+                    },
+                  }),
+                ),
+              );
+              return true;
+            }
+          }
+
+          if (clipboardHTML && detectFacebookIframe(clipboardHTML)) {
+            // Create an embed node for Facebook HTML embeds
+            view.dispatch(
+              view.state.tr.replaceSelectionWith(
+                this.type.create({
+                  type: this.options.embedNodeClassName,
+                  version: 1,
+                  uniqueId: makeUniqueId(),
+                  data: {
+                    folio_embed_data: {
+                      active: true,
+                      html: clipboardHTML,
+                    },
                   },
-                },
-              }),
-            ),
-          );
-          return true;
+                }),
+              ),
+            );
+            return true;
+          }
         }
 
         return false; // Let other handlers process the paste

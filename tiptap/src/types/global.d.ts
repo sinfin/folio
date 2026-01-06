@@ -64,6 +64,9 @@ declare global {
         slot: string;
       };
       autoclick_cover?: boolean;
+      paste?: {
+        pattern: string;
+      };
     };
   }
 

@@ -78,9 +78,22 @@ module Folio
                 en: node_name_in_locale(model_name, :en),
               },
               type: node_name,
-              config: node_klass.tiptap_config,
+              config: serialize_tiptap_config(node_klass.tiptap_config),
             }
           end
+        end
+
+        def serialize_tiptap_config(config)
+          return config unless config.is_a?(Hash)
+
+          serialized = config.dup
+
+          if serialized[:paste] && serialized[:paste][:pattern].is_a?(Regexp)
+            serialized[:paste] = serialized[:paste].dup
+            serialized[:paste][:pattern] = serialized[:paste][:pattern].source
+          end
+
+          serialized
         end
 
         def default_styled_paragraph_variants
