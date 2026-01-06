@@ -14,6 +14,23 @@ class Folio::Console::Api::TiptapControllerTest < Folio::Console::BaseController
               presence: true
   end
 
+  class PasteableNode < Folio::Tiptap::Node
+    tiptap_node structure: {
+      title: :string,
+      content: :text,
+    }, tiptap_config: {
+      paste: {
+        pattern: %r{https?://example\.com/.*},
+        lambda: ->(string) {
+          PasteableNode.new(title: "Pasted from #{string}", content: "Content: #{string}")
+        },
+      },
+    }
+
+    validates :title,
+              presence: true
+  end
+
   test "edit_node" do
     post edit_node_console_api_tiptap_path(format: :json), params: {
       tiptap_node_attrs: { type: "Folio::Console::Api::TiptapControllerTest::Node" },
@@ -132,5 +149,73 @@ class Folio::Console::Api::TiptapControllerTest < Folio::Console::BaseController
     assert_nil hash["data"][0]["html"]
     assert_equal true, hash["data"][0]["invalid"]
     assert_equal "Invalid Tiptap node type: unknown", hash["data"][0]["error_message"]
+  end
+
+  test "paste - successful match" do
+    post paste_console_api_tiptap_path(format: :json), params: {
+      pasted_string: "https://example.com/some-path",
+      tiptap_node_type: "Folio::Console::Api::TiptapControllerTest::PasteableNode",
+    }
+    assert_response :ok
+
+    hash = response.parsed_body
+
+    assert_equal({ "tiptap_node" => {
+      "type" => "folioTiptapNode",
+      "attrs" => {
+        "version" => 1,
+        "type" => "Folio::Console::Api::TiptapControllerTest::PasteableNode",
+        "data" => {
+          "title" => "Pasted from https://example.com/some-path",
+          "content" => "Content: https://example.com/some-path",
+        },
+      },
+    } }, hash["data"])
+  end
+
+  test "paste - no match" do
+    post paste_console_api_tiptap_path(format: :json), params: {
+      pasted_string: "https://other-site.com/path",
+      tiptap_node_type: "Folio::Console::Api::TiptapControllerTest::PasteableNode",
+    }
+    assert_response :unprocessable_entity
+
+    hash = response.parsed_body
+
+    assert_equal({ "error" => "Paste string does not match pattern" }, hash)
+  end
+
+  test "paste - missing pasted_string" do
+    post paste_console_api_tiptap_path(format: :json), params: {
+      tiptap_node_type: "Folio::Console::Api::TiptapControllerTest::PasteableNode",
+    }
+    assert_response :bad_request
+  end
+
+  test "paste - missing tiptap_node_type" do
+    post paste_console_api_tiptap_path(format: :json), params: {
+      pasted_string: "https://example.com/some-path",
+    }
+    assert_response :bad_request
+  end
+
+  test "paste - node type without paste config" do
+    post paste_console_api_tiptap_path(format: :json), params: {
+      pasted_string: "https://example.com/some-path",
+      tiptap_node_type: "Folio::Console::Api::TiptapControllerTest::Node",
+    }
+    assert_response :unprocessable_entity
+
+    hash = response.parsed_body
+
+    assert_equal({ "error" => "Node type does not have paste configuration" }, hash)
+  end
+
+  test "paste - invalid node type" do
+    post paste_console_api_tiptap_path(format: :json), params: {
+      pasted_string: "https://example.com/some-path",
+      tiptap_node_type: "Invalid::Node::Type",
+    }
+    assert_response :bad_request
   end
 end

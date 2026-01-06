@@ -203,6 +203,7 @@ Folio::Engine.routes.draw do
           post :edit_node
           post :save_node
           post :render_nodes
+          post :paste
         end
 
         namespace :file do

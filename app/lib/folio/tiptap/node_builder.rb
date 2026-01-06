@@ -517,6 +517,7 @@ class Folio::Tiptap::NodeBuilder
     TIPTAP_CONFIG_HASH_WHITELIST = {
       toolbar: { icon: String, slot: String },
       autoclick_cover: [TrueClass, FalseClass],
+      paste: { pattern: Regexp, lambda: Proc },
     }
 
     def get_tiptap_config(tiptap_config_hash_or_nil)
@@ -533,6 +534,13 @@ class Folio::Tiptap::NodeBuilder
           if TIPTAP_CONFIG_HASH_WHITELIST[key].is_a?(Hash)
             unless TIPTAP_CONFIG_HASH_WHITELIST[key].all? { |k, klass| value[k].is_a?(klass) }
               raise ArgumentError, "Expected value for `#{key}` in tiptap_config to be a Hash with keys #{TIPTAP_CONFIG_HASH_WHITELIST[key].map { |k, v| "#{k}: #{v}" }.join(', ')}, got #{value.inspect}"
+            end
+
+            # Special validation for paste config: lambda must have arity 1
+            if key == :paste && value[:lambda]
+              unless value[:lambda].arity == 1
+                raise ArgumentError, "Expected `paste.lambda` in tiptap_config to accept exactly 1 argument, got arity #{value[:lambda].arity}"
+              end
             end
           else
             unless TIPTAP_CONFIG_HASH_WHITELIST[key].any? { |klass| value.is_a?(klass) }

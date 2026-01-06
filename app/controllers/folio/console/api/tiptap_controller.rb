@@ -30,6 +30,40 @@ class Folio::Console::Api::TiptapController < Folio::Console::Api::BaseControlle
     render layout: false
   end
 
+  def paste
+    pasted_string = params.require(:pasted_string)
+    node_type = params.require(:tiptap_node_type)
+
+    node_klass = node_type.safe_constantize
+
+    unless node_klass && node_klass < Folio::Tiptap::Node
+      return render json: { error: "Invalid node type" }, status: :bad_request
+    end
+
+    paste_config = node_klass.tiptap_config[:paste]
+
+    unless paste_config
+      return render json: { error: "Node type does not have paste configuration" }, status: :unprocessable_entity
+    end
+
+    pattern = paste_config[:pattern]
+    lambda_proc = paste_config[:lambda]
+
+    unless pattern.match?(pasted_string)
+      return render json: { error: "Paste string does not match pattern" }, status: :unprocessable_entity
+    end
+
+    node = lambda_proc.call(pasted_string)
+
+    unless node
+      return render json: { error: "Failed to create node from pasted string" }, status: :unprocessable_entity
+    end
+
+    render json: {
+      data: { tiptap_node: node.to_tiptap_node_hash },
+    }
+  end
+
   private
     def initialize_node
       tiptap_node_attrs = params.require(:tiptap_node_attrs)
