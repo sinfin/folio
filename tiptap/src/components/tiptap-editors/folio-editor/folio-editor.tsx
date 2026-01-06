@@ -20,7 +20,10 @@ import { Placeholder } from "@tiptap/extensions";
 import { TableKit, Table } from "@tiptap/extension-table";
 
 // --- Tiptap Node ---
-import { FolioTiptapNodeExtension } from "@/components/tiptap-extensions/folio-tiptap-node";
+import {
+  FolioTiptapNodeExtension,
+  FolioTiptapNodePastePlaceholderNode,
+} from "@/components/tiptap-extensions/folio-tiptap-node";
 import {
   FolioTiptapColumnsExtension,
   FolioTiptapColumnNode,
@@ -271,6 +274,7 @@ export function FolioEditor({
               nodes: folioTiptapConfig.nodes || [],
               embedNodeClassName: folioTiptapConfig["embed_node_class_name"],
             }),
+            FolioTiptapNodePastePlaceholderNode,
             FolioTiptapColumnsExtension,
             FolioTiptapColumnsNode,
             FolioTiptapColumnNode,

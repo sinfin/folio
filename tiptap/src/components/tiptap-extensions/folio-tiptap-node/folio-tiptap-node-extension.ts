@@ -244,8 +244,18 @@ export const FolioTiptapNodeExtension = Node.create<FolioTiptapNodeOptions>({
           if (textToCheck) {
             for (const nodeConfig of nodesWithPasteConfig) {
               if (nodeConfig.pattern.test(textToCheck)) {
-                console.log(
-                  `Paste match found for node type: ${nodeConfig.type}, pasted string: ${textToCheck}`,
+                // Create paste placeholder node
+                const placeholderNode =
+                  view.state.schema.nodes.folioTiptapNodePastePlaceholder.create(
+                    {
+                      pasted_string: textToCheck,
+                      target_node_type: nodeConfig.type,
+                      uniqueId: makeUniqueId(),
+                    },
+                  );
+
+                view.dispatch(
+                  view.state.tr.replaceSelectionWith(placeholderNode),
                 );
                 return true; // Prevent default paste handling
               }

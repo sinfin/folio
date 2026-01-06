@@ -14,6 +14,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     origin: String,
     type: String,
     renderUrl: String,
+    pasteUrl: String,
     autosaveUrl: String,
     tiptapConfigJson: String,
     tiptapContentJsonStructureJson: String,
@@ -94,6 +95,9 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
         break
       case 'f-tiptap-node:render':
         this.onRenderNodeMessage(e)
+        break
+      case 'f-tiptap-node:paste':
+        this.onPasteNodeMessage(e)
         break
       case 'f-tiptap:javascript-evaluated':
         this.sendStartMessage()
@@ -279,6 +283,34 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     }
 
     this.sendMessageToIframe(data)
+  }
+
+  onPasteNodeMessage (e) {
+    const { pasted_string: pastedString, tiptap_node_type: tiptapNodeType, uniqueId } = e.data
+
+    if (!pastedString || !tiptapNodeType || !uniqueId) return
+
+    window.Folio.Api.apiPost(this.pasteUrlValue, {
+      pasted_string: pastedString,
+      tiptap_node_type: tiptapNodeType
+    }).then((res) => {
+      if (res && res.data && res.data.tiptap_node) {
+        this.sendMessageToIframe({
+          type: 'f-input-tiptap:paste-node',
+          unique_id: uniqueId,
+          tiptap_node: res.data.tiptap_node
+        })
+        return
+      }
+
+      throw new Error('No tiptap_node returned from API')
+    }).catch((e) => {
+      this.sendMessageToIframe({
+        type: 'f-input-tiptap:paste-node',
+        unique_id: uniqueId,
+        error: e.message || 'Failed to create node from pasted string'
+      })
+    })
   }
 
   openLinkPopover (urlJson) {
