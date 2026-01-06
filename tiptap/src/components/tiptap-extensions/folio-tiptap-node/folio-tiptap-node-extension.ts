@@ -214,8 +214,10 @@ export const FolioTiptapNodeExtension = Node.create<FolioTiptapNodeOptions>({
         if (node.config?.paste?.pattern) {
           try {
             // Convert Ruby regex pattern string to JavaScript RegExp
-            // Ruby serializes regex as "(?i-mx:pattern)" format, we need to extract the pattern
-            const patternStr = node.config.paste.pattern;
+            // Ruby uses \A and \z for start/end anchors, JavaScript uses ^ and $
+            let patternStr = node.config.paste.pattern;
+            // Convert Ruby anchors to JavaScript anchors
+            patternStr = patternStr.replace(/\\A/g, "^").replace(/\\z/g, "$");
             const regex = new RegExp(patternStr);
             nodesWithPasteConfig.push({
               type: node.type,
