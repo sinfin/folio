@@ -513,11 +513,19 @@ class Folio::Tiptap::NodeBuilder
       result
     end
 
-    # Whitelist of allowed keys and their value types in tiptap_config hash, hashes cannot include keys not listed here.
-    TIPTAP_CONFIG_HASH_WHITELIST = {
-      toolbar: { icon: String, slot: String },
-      autoclick_cover: [TrueClass, FalseClass],
-      paste: { pattern: Regexp, lambda: Proc },
+    # Structure of allowed keys and their value types in tiptap_config hash, hashes cannot include keys not listed here.
+    # For hash values, each key specifies types: [] and optionally optional: true
+    TIPTAP_CONFIG_HASH_STRUCTURE = {
+      toolbar: {
+        icon: { types: [String] },
+        slot: { types: [String] },
+      },
+      autoclick_cover: { types: [TrueClass, FalseClass] },
+      paste: {
+        pattern: { types: [Regexp] },
+        lambda: { types: [Proc] },
+        error_message_lambda: { types: [Proc], optional: true },
+      },
     }
 
     def get_tiptap_config(tiptap_config_hash_or_nil)
@@ -527,13 +535,39 @@ class Folio::Tiptap::NodeBuilder
             fail ArgumentError, "Expected value for `#{key}` in tiptap_config to be present, got nil"
           end
 
-          if TIPTAP_CONFIG_HASH_WHITELIST[key].nil?
-            fail ArgumentError, "Unknown key `#{key}` in tiptap_config. Allowed keys are: #{TIPTAP_CONFIG_HASH_WHITELIST.keys.join(', ')}"
+          if TIPTAP_CONFIG_HASH_STRUCTURE[key].nil?
+            fail ArgumentError, "Unknown key `#{key}` in tiptap_config. Allowed keys are: #{TIPTAP_CONFIG_HASH_STRUCTURE.keys.join(', ')}"
           end
 
-          if TIPTAP_CONFIG_HASH_WHITELIST[key].is_a?(Hash)
-            unless TIPTAP_CONFIG_HASH_WHITELIST[key].all? { |k, klass| value[k].is_a?(klass) }
-              raise ArgumentError, "Expected value for `#{key}` in tiptap_config to be a Hash with keys #{TIPTAP_CONFIG_HASH_WHITELIST[key].map { |k, v| "#{k}: #{v}" }.join(', ')}, got #{value.inspect}"
+          config_spec = TIPTAP_CONFIG_HASH_STRUCTURE[key]
+
+          if config_spec.key?(:types)
+            # Simple value type check (like autoclick_cover)
+            unless config_spec[:types].any? { |type| value.is_a?(type) }
+              raise ArgumentError, "Expected value for `#{key}` in tiptap_config to be of type #{config_spec[:types].join(' or ')}, got #{value.class.name}"
+            end
+          else
+            # Hash config (like toolbar, paste)
+            # Check that all keys in value are in whitelist and match their types
+            value.each do |k, v|
+              unless config_spec.key?(k)
+                raise ArgumentError, "Unknown key `#{k}` in `#{key}` config. Allowed keys are: #{config_spec.keys.join(', ')}"
+              end
+
+              key_config = config_spec[k]
+              unless key_config[:types].any? { |type| v.is_a?(type) }
+                raise ArgumentError, "Expected `#{key}.#{k}` in tiptap_config to be of type #{key_config[:types].join(' or ')}, got #{v.class.name}"
+              end
+            end
+
+            # Check required keys (keys without optional: true)
+            required_keys = config_spec.select do |k, key_config|
+              !key_config[:optional]
+            end.keys.map(&:to_sym)
+
+            missing_keys = required_keys - value.keys.map(&:to_sym)
+            if missing_keys.any?
+              raise ArgumentError, "Missing required keys in `#{key}` config: #{missing_keys.join(', ')}"
             end
 
             # Special validation for paste config: lambda must have arity 1
@@ -541,10 +575,6 @@ class Folio::Tiptap::NodeBuilder
               unless value[:lambda].arity == 1
                 raise ArgumentError, "Expected `paste.lambda` in tiptap_config to accept exactly 1 argument, got arity #{value[:lambda].arity}"
               end
-            end
-          else
-            unless TIPTAP_CONFIG_HASH_WHITELIST[key].any? { |klass| value.is_a?(klass) }
-              raise ArgumentError, "Expected value for `#{key}` in tiptap_config to be of type #{TIPTAP_CONFIG_HASH_WHITELIST[key]}, got #{value.class.name}"
             end
           end
         end

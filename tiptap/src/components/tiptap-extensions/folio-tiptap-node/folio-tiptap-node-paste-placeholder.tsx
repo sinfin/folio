@@ -76,7 +76,7 @@ export const FolioTiptapNodePastePlaceholderComponent: React.FC<
           const { tr } = state;
           tr.delete(pos, pos + 1);
           editor.view.dispatch(tr);
-          window.alert(`Error: ${event.data.error}`);
+          window.alert(event.data.error);
         }
 
         window.removeEventListener("message", handleMessage);

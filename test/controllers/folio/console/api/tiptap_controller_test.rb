@@ -233,7 +233,13 @@ class Folio::Console::Api::TiptapControllerTest < Folio::Console::BaseController
 
     hash = response.parsed_body
 
-    assert_equal({ "error" => "Paste string does not match pattern" }, hash)
+    assert_equal({
+      "errors" => [{
+        "status" => 422,
+        "title" => "Folio::Tiptap::PasteError",
+        "detail" => "Paste string does not match pattern",
+      }]
+    }, hash)
   end
 
   test "paste - missing pasted_string" do
@@ -262,7 +268,13 @@ class Folio::Console::Api::TiptapControllerTest < Folio::Console::BaseController
 
     hash = response.parsed_body
 
-    assert_equal({ "error" => "Node type does not have paste configuration" }, hash)
+    assert_equal({
+      "errors" => [{
+        "status" => 422,
+        "title" => "Folio::Tiptap::PasteError",
+        "detail" => "Node type does not have paste configuration",
+      }]
+    }, hash)
   end
 
   test "paste - invalid node type" do
@@ -272,6 +284,16 @@ class Folio::Console::Api::TiptapControllerTest < Folio::Console::BaseController
       unique_id: "test-unique-id-123",
     }
     assert_response :bad_request
+
+    hash = response.parsed_body
+
+    assert_equal({
+      "errors" => [{
+        "status" => 400,
+        "title" => "Folio::Tiptap::PasteError",
+        "detail" => "Invalid node type",
+      }]
+    }, hash)
   end
 
   class InvalidPasteableNode < Folio::Tiptap::Node
@@ -287,6 +309,20 @@ class Folio::Console::Api::TiptapControllerTest < Folio::Console::BaseController
     }
 
     validates :title, presence: true
+  end
+
+  class NilReturningPasteableNode < Folio::Tiptap::Node
+    tiptap_node structure: {
+      title: :string,
+    }, tiptap_config: {
+      paste: {
+        pattern: %r{https?://nil\.com/.*},
+        lambda: ->(string) {
+          nil # Returns nil to simulate not finding a resource
+        },
+        error_message_lambda: -> { "Custom error: Resource not found" },
+      },
+    }
   end
 
   test "paste - invalid node (html is nil)" do
@@ -314,5 +350,56 @@ class Folio::Console::Api::TiptapControllerTest < Folio::Console::BaseController
 
     # HTML should be nil when node is invalid
     assert_nil node_data["html"]
+  end
+
+  test "paste - lambda returns nil with custom error message" do
+    post paste_console_api_tiptap_path(format: :json), params: {
+      pasted_string: "https://nil.com/some-path",
+      tiptap_node_type: "Folio::Console::Api::TiptapControllerTest::NilReturningPasteableNode",
+      unique_id: "test-unique-id-123",
+    }
+    assert_response :unprocessable_entity
+
+    hash = response.parsed_body
+
+    assert_equal({
+      "errors" => [{
+        "status" => 422,
+        "title" => "Folio::Tiptap::PasteError",
+        "detail" => "Custom error: Resource not found",
+      }]
+    }, hash)
+  end
+
+  class DefaultErrorNode < Folio::Tiptap::Node
+    tiptap_node structure: {
+      title: :string,
+    }, tiptap_config: {
+      paste: {
+        pattern: %r{https?://default\.com/.*},
+        lambda: ->(string) {
+          nil
+        },
+      },
+    }
+  end
+
+  test "paste - lambda returns nil without custom error message" do
+    post paste_console_api_tiptap_path(format: :json), params: {
+      pasted_string: "https://default.com/some-path",
+      tiptap_node_type: "Folio::Console::Api::TiptapControllerTest::DefaultErrorNode",
+      unique_id: "test-unique-id-123",
+    }
+    assert_response :unprocessable_entity
+
+    hash = response.parsed_body
+
+    assert_equal({
+      "errors" => [{
+        "status" => 422,
+        "title" => "Folio::Tiptap::PasteError",
+        "detail" => "Failed to create node from pasted string",
+      }]
+    }, hash)
   end
 end

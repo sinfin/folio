@@ -38,26 +38,60 @@ class Folio::Console::Api::TiptapController < Folio::Console::Api::BaseControlle
     node_klass = node_type.safe_constantize
 
     unless node_klass && node_klass < Folio::Tiptap::Node
-      return render json: { error: "Invalid node type" }, status: :bad_request
+      errors = [
+        {
+          status: 400,
+          title: "Folio::Tiptap::PasteError",
+          detail: "Invalid node type",
+        }
+      ]
+      return render json: { errors: }, status: :bad_request
     end
 
     paste_config = node_klass.tiptap_config[:paste]
 
     unless paste_config
-      return render json: { error: "Node type does not have paste configuration" }, status: :unprocessable_entity
+      errors = [
+        {
+          status: 422,
+          title: "Folio::Tiptap::PasteError",
+          detail: "Node type does not have paste configuration",
+        }
+      ]
+      return render json: { errors: }, status: :unprocessable_entity
     end
 
     pattern = paste_config[:pattern]
     lambda_proc = paste_config[:lambda]
 
     unless pattern.match?(pasted_string)
-      return render json: { error: "Paste string does not match pattern" }, status: :unprocessable_entity
+      errors = [
+        {
+          status: 422,
+          title: "Folio::Tiptap::PasteError",
+          detail: "Paste string does not match pattern",
+        }
+      ]
+      return render json: { errors: }, status: :unprocessable_entity
     end
 
     node = lambda_proc.call(pasted_string)
 
     unless node
-      return render json: { error: "Failed to create node from pasted string" }, status: :unprocessable_entity
+      error_message = if paste_config[:error_message_lambda]
+        paste_config[:error_message_lambda].call
+      else
+        "Failed to create node from pasted string"
+      end
+
+      errors = [
+        {
+          status: 422,
+          title: "Folio::Tiptap::PasteError",
+          detail: error_message,
+        }
+      ]
+      return render json: { errors: }, status: :unprocessable_entity
     end
 
     # Use render_nodes component with single-item nodes_hash
