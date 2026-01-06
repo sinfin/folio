@@ -2,14 +2,13 @@ import { Node, ReactNodeViewRenderer } from "@tiptap/react";
 import { FolioTiptapNode } from "@/components/tiptap-extensions/folio-tiptap-node";
 import { Plugin } from "@tiptap/pm/state";
 import type { CommandProps } from "@tiptap/core";
-import { TextSelection } from "@tiptap/pm/state";
-import { Fragment } from "@tiptap/pm/model";
 import type { EditorView } from "@tiptap/pm/view";
 import type { Slice } from "@tiptap/pm/model";
 
 import { makeUniqueId } from "./make-unique-id";
 import { moveFolioTiptapNode } from "./move-folio-tiptap-node";
 import { postEditMessage } from "./post-edit-message";
+import { insertFolioTiptapNodeWithParagraph } from "./insert-folio-tiptap-node-with-paragraph";
 import embedTypes from "@/../../data/embed/source/types.json";
 
 const EMBED_URL_PATTERNS = Object.entries(embedTypes).reduce(
@@ -358,41 +357,15 @@ export const FolioTiptapNodeExtension = Node.create<FolioTiptapNodeOptions>({
             editor.view.dom.focus();
 
             const selection = tr.selection;
-            const $pos = tr.doc.resolve(selection.anchor);
+            const anchor = selection.anchor;
 
-            // Check if we're at the end of a parent node (depth > 1 means we're inside something)
-            // We use depth - 1 because the max-depth is the paragraph with slash
-            const isAtEndOfParent =
-              $pos.depth > 2 && $pos.pos + 1 === $pos.end($pos.depth - 1);
+            insertFolioTiptapNodeWithParagraph({
+              node,
+              pos: anchor,
+              tr,
+              schema: editor.schema,
+            });
 
-            if (isAtEndOfParent) {
-              // Insert node + paragraph using fragment
-              const paragraphNode = editor.schema.nodes.paragraph.create();
-              const fragment = Fragment.from([node, paragraphNode]);
-
-              // Replace the whole paragraph - the -1 is the node opening
-              const start = $pos.start($pos.depth) - 1;
-
-              // The +1 is the node closing
-              const end = $pos.end($pos.depth) + 1;
-              tr.replaceWith(start, end, fragment);
-
-              // Set selection to the beginning of the paragraph (after the node)
-              // start + folioTipapNode (leaf -> 1)
-              const paragraphPos = start + 1;
-              tr.setSelection(
-                TextSelection.near(tr.doc.resolve(paragraphPos + 1)),
-              );
-            } else {
-              // Just insert the node
-              tr.replaceSelectionWith(node);
-
-              // Move after the inserted node
-              const offset = tr.selection.anchor;
-              tr.setSelection(TextSelection.near(tr.doc.resolve(offset)));
-            }
-
-            tr.scrollIntoView();
             dispatch(tr);
           }
 

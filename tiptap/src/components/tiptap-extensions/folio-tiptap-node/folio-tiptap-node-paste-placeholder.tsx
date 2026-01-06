@@ -4,6 +4,7 @@ import { NodeViewWrapper } from "@tiptap/react";
 
 import "./folio-tiptap-node-paste-placeholder.scss";
 import { storeHtmlToCache } from "./folio-tiptap-node";
+import { insertFolioTiptapNodeWithParagraph } from "./insert-folio-tiptap-node-with-paragraph";
 
 const CLASS_NAME = "f-tiptap-node-paste-placeholder";
 
@@ -68,7 +69,14 @@ export const FolioTiptapNodePastePlaceholderComponent: React.FC<
             nodeAttrs,
             null,
           );
-          tr.replaceWith(pos, pos + 1, actualNode);
+
+          insertFolioTiptapNodeWithParagraph({
+            node: actualNode,
+            pos,
+            tr,
+            schema: editor.schema,
+          });
+
           editor.view.dispatch(tr);
         } else if (event.data.error) {
           // Failure: Remove placeholder and show alert
