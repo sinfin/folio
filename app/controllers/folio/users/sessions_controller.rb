@@ -14,6 +14,8 @@ class Folio::Users::SessionsController < Devise::SessionsController
       if Rails.application.config.folio_crossdomain_devise || Rails.application.config.folio_users_sign_out_everywhere
         Folio::Current.user.sign_out_everywhere!
       end
+
+      Folio::Current.user.clear_console_url!
     end
 
     super

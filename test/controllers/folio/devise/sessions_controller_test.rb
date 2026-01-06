@@ -72,6 +72,41 @@ class Folio::Devise::SessionsControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "destroy (sign out) will erase console_url columns" do
+    site = create(:folio_site, domain: "site1.localhost", type: "Folio::Site")
+    email = "franta@kocourek.cz"
+    password = "Strong@password1"
+    user = nil
+
+    Rails.application.config.stub(:folio_crossdomain_devise, false) do
+      assert_difference("::Folio::User.count", 1) do
+        user = register_user_at_site(site, email:, first_name: "Site1", last_name: "User", password: )
+      end
+      assert_equal site, user.auth_site
+
+      # do sign in
+      host_site site
+
+      post user_session_url(only_path: false, host: site.env_aware_domain),
+           params: { user: { email:, password: } }
+
+      # check: signed in?
+      assert_not (response.redirect? && response.location.include?(new_user_session_path))
+
+      follow_redirect!
+      assert_response :success
+      # signed in!
+
+      user.update!(console_url: "foo", console_url_updated_at: Time.current)
+
+      # sign_out
+      get destroy_user_session_url(only_path: false, host: site.env_aware_domain)
+
+      assert_nil user.reload.console_url
+      assert_nil user.console_url_updated_at
+    end
+  end
+
   private
     def register_user_at_site(site, email:, first_name:, last_name:, password:)
       host_site site
