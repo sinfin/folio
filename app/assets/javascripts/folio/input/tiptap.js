@@ -292,13 +292,17 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
 
     window.Folio.Api.apiPost(this.pasteUrlValue, {
       pasted_string: pastedString,
-      tiptap_node_type: tiptapNodeType
+      tiptap_node_type: tiptapNodeType,
+      unique_id: uniqueId
     }).then((res) => {
-      if (res && res.data && res.data.tiptap_node) {
+      // Response format is same as render_nodes: { data: [{ unique_id, html, tiptap_node }] }
+      if (res && res.data && Array.isArray(res.data) && res.data.length > 0) {
+        const nodeData = res.data[0]
         this.sendMessageToIframe({
           type: 'f-input-tiptap:paste-node',
           unique_id: uniqueId,
-          tiptap_node: res.data.tiptap_node
+          tiptap_node: nodeData.tiptap_node,
+          html: nodeData.html
         })
         return
       }

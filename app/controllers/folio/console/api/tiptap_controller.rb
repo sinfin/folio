@@ -33,6 +33,7 @@ class Folio::Console::Api::TiptapController < Folio::Console::Api::BaseControlle
   def paste
     pasted_string = params.require(:pasted_string)
     node_type = params.require(:tiptap_node_type)
+    unique_id = params.require(:unique_id)
 
     node_klass = node_type.safe_constantize
 
@@ -59,9 +60,10 @@ class Folio::Console::Api::TiptapController < Folio::Console::Api::BaseControlle
       return render json: { error: "Failed to create node from pasted string" }, status: :unprocessable_entity
     end
 
-    render json: {
-      data: { tiptap_node: node.to_tiptap_node_hash },
-    }
+    # Use render_nodes component with single-item nodes_hash
+    @nodes_hash = { unique_id => { node: node } }
+
+    render layout: false
   end
 
   private

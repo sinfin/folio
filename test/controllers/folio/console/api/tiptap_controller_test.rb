@@ -29,6 +29,44 @@ class Folio::Console::Api::TiptapControllerTest < Folio::Console::BaseController
 
     validates :title,
               presence: true
+
+    def self.view_component_class
+      PasteableNodeComponent
+    end
+  end
+
+  # Inline component for PasteableNode
+  class PasteableNodeComponent < ViewComponent::Base
+    def initialize(node:, tiptap_content_information:)
+      @node = node
+      @tiptap_content_information = tiptap_content_information
+    end
+
+    def call
+      content_tag(:div, class: "f-tiptap-node-pasteable") do
+        content_tag(:h3, @node.title) +
+          content_tag(:p, @node.content)
+      end
+    end
+
+    private
+      attr_reader :node, :tiptap_content_information
+  end
+
+  class InvalidPasteableNode < Folio::Tiptap::Node
+    tiptap_node structure: {
+      title: :string,
+    }, tiptap_config: {
+      paste: {
+        pattern: %r{https?://invalid\.com/.*},
+        lambda: ->(string) {
+          InvalidPasteableNode.new(title: "") # Invalid - missing required title
+        },
+      },
+    }
+
+    validates :title,
+              presence: true
   end
 
   test "edit_node" do
@@ -155,10 +193,15 @@ class Folio::Console::Api::TiptapControllerTest < Folio::Console::BaseController
     post paste_console_api_tiptap_path(format: :json), params: {
       pasted_string: "https://example.com/some-path",
       tiptap_node_type: "Folio::Console::Api::TiptapControllerTest::PasteableNode",
+      unique_id: "test-unique-id-123",
     }
     assert_response :ok
 
     hash = response.parsed_body
+
+    # Response format is same as render_nodes: { data: [{ unique_id, html, tiptap_node }] }
+    assert_equal 1, hash["data"].size
+    node_data = hash["data"].first
 
     assert_equal({ "tiptap_node" => {
       "type" => "folioTiptapNode",
@@ -170,13 +213,21 @@ class Folio::Console::Api::TiptapControllerTest < Folio::Console::BaseController
           "content" => "Content: https://example.com/some-path",
         },
       },
-    } }, hash["data"])
+    } }, node_data.except("html", "unique_id"))
+
+    # HTML should be rendered and included in the response
+    assert node_data["html"].present?
+    page = Capybara.string(node_data["html"])
+    assert page.has_css?(".f-tiptap-node-pasteable")
+    assert page.has_text?("Pasted from https://example.com/some-path")
+    assert page.has_text?("Content: https://example.com/some-path")
   end
 
   test "paste - no match" do
     post paste_console_api_tiptap_path(format: :json), params: {
       pasted_string: "https://other-site.com/path",
       tiptap_node_type: "Folio::Console::Api::TiptapControllerTest::PasteableNode",
+      unique_id: "test-unique-id-123",
     }
     assert_response :unprocessable_entity
 
@@ -188,6 +239,7 @@ class Folio::Console::Api::TiptapControllerTest < Folio::Console::BaseController
   test "paste - missing pasted_string" do
     post paste_console_api_tiptap_path(format: :json), params: {
       tiptap_node_type: "Folio::Console::Api::TiptapControllerTest::PasteableNode",
+      unique_id: "test-unique-id-123",
     }
     assert_response :bad_request
   end
@@ -195,6 +247,7 @@ class Folio::Console::Api::TiptapControllerTest < Folio::Console::BaseController
   test "paste - missing tiptap_node_type" do
     post paste_console_api_tiptap_path(format: :json), params: {
       pasted_string: "https://example.com/some-path",
+      unique_id: "test-unique-id-123",
     }
     assert_response :bad_request
   end
@@ -203,6 +256,7 @@ class Folio::Console::Api::TiptapControllerTest < Folio::Console::BaseController
     post paste_console_api_tiptap_path(format: :json), params: {
       pasted_string: "https://example.com/some-path",
       tiptap_node_type: "Folio::Console::Api::TiptapControllerTest::Node",
+      unique_id: "test-unique-id-123",
     }
     assert_response :unprocessable_entity
 
@@ -215,7 +269,50 @@ class Folio::Console::Api::TiptapControllerTest < Folio::Console::BaseController
     post paste_console_api_tiptap_path(format: :json), params: {
       pasted_string: "https://example.com/some-path",
       tiptap_node_type: "Invalid::Node::Type",
+      unique_id: "test-unique-id-123",
     }
     assert_response :bad_request
+  end
+
+  class InvalidPasteableNode < Folio::Tiptap::Node
+    tiptap_node structure: {
+      title: :string,
+    }, tiptap_config: {
+      paste: {
+        pattern: %r{https?://invalid\.com/.*},
+        lambda: ->(string) {
+          InvalidPasteableNode.new(title: "") # Invalid - missing required title
+        },
+      },
+    }
+
+    validates :title, presence: true
+  end
+
+  test "paste - invalid node (html is nil)" do
+    post paste_console_api_tiptap_path(format: :json), params: {
+      pasted_string: "https://invalid.com/some-path",
+      tiptap_node_type: "Folio::Console::Api::TiptapControllerTest::InvalidPasteableNode",
+      unique_id: "test-unique-id-123",
+    }
+    assert_response :ok
+
+    hash = response.parsed_body
+
+    # Response format is same as render_nodes: { data: [{ unique_id, html, tiptap_node }] }
+    assert_equal 1, hash["data"].size
+    node_data = hash["data"].first
+
+    assert_equal({ "tiptap_node" => {
+      "type" => "folioTiptapNode",
+      "attrs" => {
+        "version" => 1,
+        "type" => "Folio::Console::Api::TiptapControllerTest::InvalidPasteableNode",
+        "data" => {},
+      },
+    } }, node_data.slice("tiptap_node"))
+
+    # HTML should be nil when node is invalid
+    assert_nil node_data["html"]
   end
 end

@@ -37,8 +37,17 @@ interface StoredHtml {
 
 let htmlCache: StoredHtml[] = [];
 
-const storeHtmlToCache = ({ html, serializedAttrs }: StoredHtml) => {
+export const storeHtmlToCache = ({ html, serializedAttrs }: StoredHtml) => {
   htmlCache = [{ html, serializedAttrs }, ...htmlCache.slice(0, 9)];
+};
+
+export const getHtmlFromCache = (
+  serializedAttrs: string,
+): string | undefined => {
+  const cachedEntry = htmlCache.find(
+    (entry) => entry.serializedAttrs === serializedAttrs,
+  );
+  return cachedEntry?.html;
 };
 
 // Height storage functions
@@ -128,13 +137,11 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
       const serializedAttrs = JSON.stringify(attrsWithoutUniqueId);
 
       // Check if we have cached HTML for these attributes
-      const cachedEntry = htmlCache.find(
-        (entry) => entry.serializedAttrs === serializedAttrs,
-      );
+      const cachedHtml = getHtmlFromCache(serializedAttrs);
 
-      if (cachedEntry) {
+      if (cachedHtml) {
         setStatus("loaded");
-        setResponseFromApi({ html: cachedEntry.html });
+        setResponseFromApi({ html: cachedHtml });
         return;
       } else {
         setStatus("loading");

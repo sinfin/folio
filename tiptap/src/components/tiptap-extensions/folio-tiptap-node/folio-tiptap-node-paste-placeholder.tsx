@@ -3,6 +3,7 @@ import type { NodeViewProps } from "@tiptap/react";
 import { NodeViewWrapper } from "@tiptap/react";
 
 import "./folio-tiptap-node-paste-placeholder.scss";
+import { storeHtmlToCache } from "./folio-tiptap-node";
 
 const CLASS_NAME = "f-tiptap-node-paste-placeholder";
 
@@ -45,11 +46,26 @@ export const FolioTiptapNodePastePlaceholderComponent: React.FC<
         if (typeof pos !== "number") return;
 
         if (event.data.tiptap_node) {
-          // Success: Replace placeholder with actual node
+          // Success: Cache HTML if provided, then replace placeholder with actual node
           const { state } = editor.view;
           const { tr } = state;
+          const nodeAttrs = {
+            ...event.data.tiptap_node.attrs,
+            uniqueId, // Preserve the uniqueId from the placeholder
+          };
+
+          // Store HTML in cache if provided, so the new node can use it immediately
+          if (event.data.html) {
+            const { uniqueId: _, ...attrsWithoutUniqueId } = nodeAttrs;
+            const serializedAttrs = JSON.stringify(attrsWithoutUniqueId);
+            storeHtmlToCache({
+              html: event.data.html,
+              serializedAttrs,
+            });
+          }
+
           const actualNode = editor.schema.nodes.folioTiptapNode.createChecked(
-            event.data.tiptap_node.attrs,
+            nodeAttrs,
             null,
           );
           tr.replaceWith(pos, pos + 1, actualNode);
