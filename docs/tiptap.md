@@ -690,6 +690,212 @@ You can add custom form fields by passing a block. That makes the component skip
   / Block editors are still automatically added
 ```
 
+## Toolbar Icons and Groups
+
+The TipTap toolbar supports custom icons and dropdown groups for organizing nodes. This feature is fully optional and backwards compatible.
+
+### Overview
+
+- **Icons**: Each node can have a custom icon from the built-in lucide-react icon set
+- **Groups**: Nodes can be organized into dropdown groups to reduce toolbar clutter
+- **Configuration**: Done entirely in Rails, no JavaScript required
+
+### Available Icons
+
+Folio includes a comprehensive set of icons mapped to lucide-react components:
+
+| Icon Name | Description | Preview |
+|-----------|-------------|---------|
+| `image` | Single image | <img src="https://lucide.dev/api/icons/image?stroke=%23333" width="20" height="20"/> |
+| `video` | Video content | <img src="https://lucide.dev/api/icons/video?stroke=%23333" width="20" height="20"/> |
+| `newspaper` | News/articles | <img src="https://lucide.dev/api/icons/newspaper?stroke=%23333" width="20" height="20"/> |
+| `content_text` / `file_text` | Text content | <img src="https://lucide.dev/api/icons/file-text?stroke=%23333" width="20" height="20"/> |
+| `content_title` | Heading/title | <img src="https://lucide.dev/api/icons/heading?stroke=%23333" width="20" height="20"/> |
+| `content_lead` | Lead paragraph | <img src="https://lucide.dev/api/icons/align-left?stroke=%23333" width="20" height="20"/> |
+| `quote` | Quotation | <img src="https://lucide.dev/api/icons/quote?stroke=%23333" width="20" height="20"/> |
+| `content_divider` | Horizontal rule | <img src="https://lucide.dev/api/icons/minus?stroke=%23333" width="20" height="20"/> |
+| `content_documents` | Documents/files | <img src="https://lucide.dev/api/icons/file-down?stroke=%23333" width="20" height="20"/> |
+| `image_gallery` | Image gallery | <img src="https://lucide.dev/api/icons/images?stroke=%23333" width="20" height="20"/> |
+| `image_grid` | Grid layout | <img src="https://lucide.dev/api/icons/layout-grid?stroke=%23333" width="20" height="20"/> |
+| `image_masonry` | Masonry layout | <img src="https://lucide.dev/api/icons/grid-3x3?stroke=%23333" width="20" height="20"/> |
+| `image_one_two` | 1+2 layout | <img src="https://lucide.dev/api/icons/gallery-vertical?stroke=%23333" width="20" height="20"/> |
+| `image_with_text` / `image_wrapping` | Image with text | <img src="https://lucide.dev/api/icons/image-plus?stroke=%23333" width="20" height="20"/> |
+| `user` | Person/user | <img src="https://lucide.dev/api/icons/user?stroke=%23333" width="20" height="20"/> |
+| `rectangle_horizontal` | Card/rectangle | <img src="https://lucide.dev/api/icons/rectangle-horizontal?stroke=%23333" width="20" height="20"/> |
+| `card_visual` | Visual card | <img src="https://lucide.dev/api/icons/credit-card?stroke=%23333" width="20" height="20"/> |
+| `card_size` | Size card | <img src="https://lucide.dev/api/icons/square?stroke=%23333" width="20" height="20"/> |
+| `card_full` | Full-width card | <img src="https://lucide.dev/api/icons/square-stack?stroke=%23333" width="20" height="20"/> |
+| `card_padded` | Padded card | <img src="https://lucide.dev/api/icons/layers?stroke=%23333" width="20" height="20"/> |
+| `list` | List | <img src="https://lucide.dev/api/icons/list?stroke=%23333" width="20" height="20"/> |
+| `listing_news` | News listing | <img src="https://lucide.dev/api/icons/newspaper?stroke=%23333" width="20" height="20"/> |
+| `listing_projects` | Project listing | <img src="https://lucide.dev/api/icons/folder-open?stroke=%23333" width="20" height="20"/> |
+| `listing_project_card` | Project card | <img src="https://lucide.dev/api/icons/layout-list?stroke=%23333" width="20" height="20"/> |
+| `arrow_right` | Arrow/link | <img src="https://lucide.dev/api/icons/arrow-right?stroke=%23333" width="20" height="20"/> |
+| `hero_banner` | Hero/banner | <img src="https://lucide.dev/api/icons/monitor?stroke=%23333" width="20" height="20"/> |
+| `home` | Home | <img src="https://lucide.dev/api/icons/home?stroke=%23333" width="20" height="20"/> |
+| `tag` | Tag | <img src="https://lucide.dev/api/icons/tag?stroke=%23333" width="20" height="20"/> |
+| `contact_form` / `form` | Form | <img src="https://lucide.dev/api/icons/mail?stroke=%23333" width="20" height="20"/> |
+| `link` | Embed/link | <img src="https://lucide.dev/api/icons/link?stroke=%23333" width="20" height="20"/> |
+| `play` | Play/video | <img src="https://lucide.dev/api/icons/play?stroke=%23333" width="20" height="20"/> |
+| `send` | Send | <img src="https://lucide.dev/api/icons/send?stroke=%23333" width="20" height="20"/> |
+
+### Configuring Node Groups
+
+To organize nodes into dropdown groups, define `node_groups` in your `default_tiptap_config`:
+
+```ruby
+# app/models/my_app.rb
+def self.default_tiptap_config
+  ::Folio::Tiptap::Config.new(
+    node_names: [...],
+    node_groups: [
+      {
+        key: "content",
+        title: { cs: "Obsah", en: "Content" },
+        icon: "content",              # Group icon (uses GROUP_ICONS map)
+        toolbar_slot: "after_layouts", # Optional: position in toolbar
+      },
+      {
+        key: "images",
+        title: { cs: "Obrázky", en: "Images" },
+        icon: "images",
+        toolbar_slot: "after_layouts",
+      },
+      {
+        key: "cards",
+        title: { cs: "Karty", en: "Cards" },
+        icon: "cards",
+        toolbar_slot: "after_layouts",
+      },
+      {
+        key: "listings",
+        title: { cs: "Výpisy", en: "Listings" },
+        icon: "listings",
+        # Groups without toolbar_slot appear only in slash command menu
+      },
+      {
+        key: "special",
+        title: { cs: "Speciální", en: "Special" },
+        icon: "special",
+      },
+    ],
+  )
+end
+```
+
+### Assigning Nodes to Groups
+
+In each node class, use the `group` attribute to assign it to a group. Note that `group` and `toolbar_slot` are independent:
+
+```ruby
+# app/models/my_app/tiptap/node/contents/text.rb
+class MyApp::Tiptap::Node::Contents::Text < Folio::Tiptap::Node
+  tiptap_node structure: {
+    content: :rich_text,
+  }, tiptap_config: {
+    icon: "content_text",          # Icon from NODE_ICONS
+    toolbar_slot: "after_layouts", # Position in toolbar (appears as individual button)
+    group: "content",              # Group key from node_groups (also appears in dropdown)
+  }
+end
+
+# This node will appear in BOTH places:
+# 1. As an individual button in the toolbar at "after_layouts" position
+# 2. In the "content" group dropdown menu
+```
+
+### How It Works
+
+**Important:** `group` and `toolbar_slot` are **independent** properties. A node can have both, appearing in both places:
+
+1. **With `node_groups` configured:**
+   - Nodes with `group` are organized into dropdown menus (in toolbar and slash command menu)
+   - Nodes with `toolbar_slot` appear as individual buttons in the toolbar at that position
+   - Nodes with **both** `group` and `toolbar_slot` appear in **both** places:
+     - In the group dropdown menu (for organization)
+     - As an individual button in the toolbar (for quick access)
+   - Nodes without `group` but with `toolbar_slot` appear only as individual buttons
+   - Groups with `toolbar_slot` appear in the toolbar at that position
+   - Groups without `toolbar_slot` appear only in the slash command menu
+
+2. **Without `node_groups` (backwards compatible):**
+   - All nodes appear in a single "Blocks" group
+   - Original behavior is preserved
+
+### Where Icons and Groups Appear
+
+| Location | Icons | Groups |
+|----------|-------|--------|
+| **Toolbar** (top) | ✅ Yes | ✅ Dropdown menus |
+| **Slash command** (`/`) | ✅ Yes | ✅ Separate sections |
+| **Drag handle menu** | ✅ Yes | ❌ Flat list |
+
+### Custom Icons (Advanced)
+
+If you need icons not included in the default set, you can add custom React icons via JavaScript:
+
+```javascript
+// app/assets/javascripts/folio/console/main_app.js
+window.Folio = window.Folio || {};
+window.Folio.Tiptap = window.Folio.Tiptap || {};
+window.Folio.Tiptap.customIcons = {
+  my_custom_icon: MyCustomReactIconComponent,
+};
+```
+
+Then use `icon: "my_custom_icon"` in your node's `tiptap_config` (flattened, not nested in `toolbar`).
+
+### Example: Complete Configuration
+
+```ruby
+# app/models/my_app.rb
+def self.default_tiptap_config
+  ::Folio::Tiptap::Config.new(
+    node_names: %w[
+      MyApp::Tiptap::Node::Contents::Text
+      MyApp::Tiptap::Node::Contents::Title
+      MyApp::Tiptap::Node::Images::Gallery
+      MyApp::Tiptap::Node::Cards::Person
+    ],
+    node_groups: [
+      { key: "content", title: { cs: "Obsah", en: "Content" }, icon: "content", toolbar_slot: "after_layouts" },
+      { key: "images", title: { cs: "Obrázky", en: "Images" }, icon: "images", toolbar_slot: "after_layouts" },
+      { key: "cards", title: { cs: "Karty", en: "Cards" }, icon: "cards", toolbar_slot: "after_layouts" },
+    ],
+  )
+end
+
+# app/models/my_app/tiptap/node/contents/text.rb
+class MyApp::Tiptap::Node::Contents::Text < Folio::Tiptap::Node
+  tiptap_node structure: { content: :rich_text }, tiptap_config: {
+    icon: "content_text", toolbar_slot: "after_layouts", group: "content",
+  }
+end
+
+# app/models/my_app/tiptap/node/contents/title.rb
+class MyApp::Tiptap::Node::Contents::Title < Folio::Tiptap::Node
+  tiptap_node structure: { title: :string }, tiptap_config: {
+    icon: "content_title", toolbar_slot: "after_layouts", group: "content",
+  }
+end
+
+# app/models/my_app/tiptap/node/images/gallery.rb
+class MyApp::Tiptap::Node::Images::Gallery < Folio::Tiptap::Node
+  tiptap_node structure: { images: :images }, tiptap_config: {
+    icon: "image_gallery", toolbar_slot: "after_layouts", group: "images",
+  }
+end
+
+# app/models/my_app/tiptap/node/cards/person.rb
+class MyApp::Tiptap::Node::Cards::Person < Folio::Tiptap::Node
+  tiptap_node structure: { name: :string, photo: :image }, tiptap_config: {
+    icon: "user", toolbar_slot: "after_layouts", group: "cards",
+  }
+end
+```
+
+---
+
 ## Development
 
 Tiptap development happens in the `tiptap` directory. It's developed as a separate Vite app that is built using `npm run build`. That produces `folio-tiptap.css` and `folio-tiptap.js` in `tiptap/dist/assets` which are in the assets pipeline path.
