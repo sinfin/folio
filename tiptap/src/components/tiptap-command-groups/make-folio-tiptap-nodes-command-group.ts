@@ -3,16 +3,16 @@ import { getNodeIcon, getGroupIcon } from "@/lib/node-icons";
 
 export const makeFolioTiptapNodesCommandGroup = (
   folioTiptapNodes: FolioTiptapNodeFromInput[],
-  toolbarGroups?: FolioTiptapToolbarGroup[],
+  nodeGroups?: FolioTiptapNodeGroup[],
 ): FolioEditorCommandGroup | FolioEditorCommandGroup[] => {
-  // If we have toolbar groups config, create multiple groups
-  if (toolbarGroups && toolbarGroups.length > 0) {
+  // If we have node groups config, create multiple groups
+  if (nodeGroups && nodeGroups.length > 0) {
     const groupedNodes: Record<string, FolioTiptapNodeFromInput[]> = {};
     const ungroupedNodes: FolioTiptapNodeFromInput[] = [];
 
-    // Group nodes by dropdown_group
+    // Group nodes by group
     folioTiptapNodes.forEach((node) => {
-      const group = node.config?.toolbar?.dropdown_group;
+      const group = node.config?.group;
       if (group) {
         if (!groupedNodes[group]) {
           groupedNodes[group] = [];
@@ -23,24 +23,22 @@ export const makeFolioTiptapNodesCommandGroup = (
       }
     });
 
-    // Sort groups by order
+    // Sort groups alphabetically by key
     const sortedGroupKeys = Object.keys(groupedNodes).sort((a, b) => {
-      const aConfig = toolbarGroups.find((g) => g.key === a);
-      const bConfig = toolbarGroups.find((g) => g.key === b);
-      return (aConfig?.order || 999) - (bConfig?.order || 999);
+      return a.localeCompare(b);
     });
 
     const groups: FolioEditorCommandGroup[] = [];
 
-    // Create a group for each dropdown_group
+    // Create a group for each group
     sortedGroupKeys.forEach((groupKey) => {
-      const groupConfig = toolbarGroups.find((g) => g.key === groupKey);
+      const groupConfig = nodeGroups.find((g) => g.key === groupKey);
       const lang = document.documentElement.lang as "cs" | "en";
 
       const commands = groupedNodes[groupKey].map((folioTiptapNode) => {
         const command: FolioEditorCommand = {
           title: folioTiptapNode.title,
-          icon: getNodeIcon(folioTiptapNode.config?.toolbar?.icon),
+          icon: getNodeIcon(folioTiptapNode.config?.icon),
           key: `folioTiptapNode-${folioTiptapNode.type}`,
           command: () => {
             if (document.activeElement instanceof HTMLElement) {
@@ -80,7 +78,7 @@ export const makeFolioTiptapNodesCommandGroup = (
       const commands = ungroupedNodes.map((folioTiptapNode) => {
         const command: FolioEditorCommand = {
           title: folioTiptapNode.title,
-          icon: getNodeIcon(folioTiptapNode.config?.toolbar?.icon),
+          icon: getNodeIcon(folioTiptapNode.config?.icon),
           key: `folioTiptapNode-${folioTiptapNode.type}`,
           command: () => {
             if (document.activeElement instanceof HTMLElement) {
@@ -120,7 +118,7 @@ export const makeFolioTiptapNodesCommandGroup = (
   const commands = folioTiptapNodes.map((folioTiptapNode) => {
     const command: FolioEditorCommand = {
       title: folioTiptapNode.title,
-      icon: getNodeIcon(folioTiptapNode.config?.toolbar?.icon),
+      icon: getNodeIcon(folioTiptapNode.config?.icon),
       key: `folioTiptapNode-${folioTiptapNode.type}`,
       command: () => {
         if (document.activeElement instanceof HTMLElement) {

@@ -43,7 +43,7 @@ export const FolioEditorToolbarSlotButton = ({
   };
 
   const label = translate(translations, "insert");
-  const IconComponent = getNodeIcon(node.config.toolbar?.icon);
+  const IconComponent = getNodeIcon(node.config?.icon);
 
   return (
     <Button

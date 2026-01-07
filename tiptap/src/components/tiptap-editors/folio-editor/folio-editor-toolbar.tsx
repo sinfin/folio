@@ -318,20 +318,21 @@ const MainToolbarContent = ({
 
     if (blockEditor && folioTiptapConfig?.nodes) {
       folioTiptapConfig.nodes.forEach((node) => {
-        const slot = node.config?.toolbar?.slot;
-        const dropdownGroup = node.config?.toolbar?.dropdown_group;
+        const slot = node.config?.toolbar_slot;
+        const group = node.config?.group;
 
+        // Nodes with group go to grouped array (for dropdown menu)
+        if (group) {
+          grouped.push(node);
+        }
+
+        // Nodes with toolbar_slot go to slot-based rendering (for toolbar buttons)
+        // Note: nodes can have both group and toolbar_slot, appearing in both places
         if (slot) {
-          // Nodes with dropdown_group go to grouped array
-          if (dropdownGroup) {
-            grouped.push(node);
-          } else {
-            // Nodes without dropdown_group go to slot-based rendering
-            if (!slotNodes[slot]) {
-              slotNodes[slot] = [];
-            }
-            slotNodes[slot].push(node);
+          if (!slotNodes[slot]) {
+            slotNodes[slot] = [];
           }
+          slotNodes[slot].push(node);
         }
       });
     }
@@ -448,7 +449,7 @@ const MainToolbarContent = ({
           <FolioEditorToolbarNodeGroups
             editor={editor}
             nodes={groupedNodes}
-            toolbarGroupsConfig={folioTiptapConfig?.toolbar_groups}
+            nodeGroupsConfig={folioTiptapConfig?.node_groups}
           />
 
           <FolioEditorToolbarCommandButton

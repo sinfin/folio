@@ -739,45 +739,44 @@ Folio includes a comprehensive set of icons mapped to lucide-react components:
 | `play` | Play/video | <img src="https://lucide.dev/api/icons/play?stroke=%23333" width="20" height="20"/> |
 | `send` | Send | <img src="https://lucide.dev/api/icons/send?stroke=%23333" width="20" height="20"/> |
 
-### Configuring Toolbar Groups
+### Configuring Node Groups
 
-To organize nodes into dropdown groups, define `toolbar_groups` in your `default_tiptap_config`:
+To organize nodes into dropdown groups, define `node_groups` in your `default_tiptap_config`:
 
 ```ruby
 # app/models/my_app.rb
 def self.default_tiptap_config
   ::Folio::Tiptap::Config.new(
     node_names: [...],
-    toolbar_groups: [
+    node_groups: [
       {
         key: "content",
         title: { cs: "Obsah", en: "Content" },
-        icon: "content",   # Group icon (uses GROUP_ICONS map)
-        order: 1,          # Display order in toolbar
+        icon: "content",              # Group icon (uses GROUP_ICONS map)
+        toolbar_slot: "after_layouts", # Optional: position in toolbar
       },
       {
         key: "images",
         title: { cs: "Obrázky", en: "Images" },
         icon: "images",
-        order: 2,
+        toolbar_slot: "after_layouts",
       },
       {
         key: "cards",
         title: { cs: "Karty", en: "Cards" },
         icon: "cards",
-        order: 3,
+        toolbar_slot: "after_layouts",
       },
       {
         key: "listings",
         title: { cs: "Výpisy", en: "Listings" },
         icon: "listings",
-        order: 4,
+        # Groups without toolbar_slot appear only in slash command menu
       },
       {
         key: "special",
         title: { cs: "Speciální", en: "Special" },
         icon: "special",
-        order: 5,
       },
     ],
   )
@@ -786,7 +785,7 @@ end
 
 ### Assigning Nodes to Groups
 
-In each node class, use the `dropdown_group` attribute to assign it to a group:
+In each node class, use the `group` attribute to assign it to a group. Note that `group` and `toolbar_slot` are independent:
 
 ```ruby
 # app/models/my_app/tiptap/node/contents/text.rb
@@ -794,23 +793,32 @@ class MyApp::Tiptap::Node::Contents::Text < Folio::Tiptap::Node
   tiptap_node structure: {
     content: :rich_text,
   }, tiptap_config: {
-    toolbar: {
-      icon: "content_text",      # Icon from NODE_ICONS
-      slot: "after_layouts",     # Position in toolbar
-      dropdown_group: "content", # Group key from toolbar_groups
-    },
+    icon: "content_text",          # Icon from NODE_ICONS
+    toolbar_slot: "after_layouts", # Position in toolbar (appears as individual button)
+    group: "content",              # Group key from node_groups (also appears in dropdown)
   }
 end
+
+# This node will appear in BOTH places:
+# 1. As an individual button in the toolbar at "after_layouts" position
+# 2. In the "content" group dropdown menu
 ```
 
 ### How It Works
 
-1. **With `toolbar_groups` configured:**
-   - Nodes with `dropdown_group` are organized into dropdown menus
-   - Each dropdown shows the group title and contains all nodes in that group
-   - Nodes without `dropdown_group` appear as individual buttons
+**Important:** `group` and `toolbar_slot` are **independent** properties. A node can have both, appearing in both places:
 
-2. **Without `toolbar_groups` (backwards compatible):**
+1. **With `node_groups` configured:**
+   - Nodes with `group` are organized into dropdown menus (in toolbar and slash command menu)
+   - Nodes with `toolbar_slot` appear as individual buttons in the toolbar at that position
+   - Nodes with **both** `group` and `toolbar_slot` appear in **both** places:
+     - In the group dropdown menu (for organization)
+     - As an individual button in the toolbar (for quick access)
+   - Nodes without `group` but with `toolbar_slot` appear only as individual buttons
+   - Groups with `toolbar_slot` appear in the toolbar at that position
+   - Groups without `toolbar_slot` appear only in the slash command menu
+
+2. **Without `node_groups` (backwards compatible):**
    - All nodes appear in a single "Blocks" group
    - Original behavior is preserved
 
@@ -835,7 +843,7 @@ window.Folio.Tiptap.customIcons = {
 };
 ```
 
-Then use `icon: "my_custom_icon"` in your node's `tiptap_config`.
+Then use `icon: "my_custom_icon"` in your node's `tiptap_config` (flattened, not nested in `toolbar`).
 
 ### Example: Complete Configuration
 
@@ -849,10 +857,10 @@ def self.default_tiptap_config
       MyApp::Tiptap::Node::Images::Gallery
       MyApp::Tiptap::Node::Cards::Person
     ],
-    toolbar_groups: [
-      { key: "content", title: { cs: "Obsah", en: "Content" }, icon: "content", order: 1 },
-      { key: "images", title: { cs: "Obrázky", en: "Images" }, icon: "images", order: 2 },
-      { key: "cards", title: { cs: "Karty", en: "Cards" }, icon: "cards", order: 3 },
+    node_groups: [
+      { key: "content", title: { cs: "Obsah", en: "Content" }, icon: "content", toolbar_slot: "after_layouts" },
+      { key: "images", title: { cs: "Obrázky", en: "Images" }, icon: "images", toolbar_slot: "after_layouts" },
+      { key: "cards", title: { cs: "Karty", en: "Cards" }, icon: "cards", toolbar_slot: "after_layouts" },
     ],
   )
 end
@@ -860,28 +868,28 @@ end
 # app/models/my_app/tiptap/node/contents/text.rb
 class MyApp::Tiptap::Node::Contents::Text < Folio::Tiptap::Node
   tiptap_node structure: { content: :rich_text }, tiptap_config: {
-    toolbar: { icon: "content_text", slot: "after_layouts", dropdown_group: "content" },
+    icon: "content_text", toolbar_slot: "after_layouts", group: "content",
   }
 end
 
 # app/models/my_app/tiptap/node/contents/title.rb
 class MyApp::Tiptap::Node::Contents::Title < Folio::Tiptap::Node
   tiptap_node structure: { title: :string }, tiptap_config: {
-    toolbar: { icon: "content_title", slot: "after_layouts", dropdown_group: "content" },
+    icon: "content_title", toolbar_slot: "after_layouts", group: "content",
   }
 end
 
 # app/models/my_app/tiptap/node/images/gallery.rb
 class MyApp::Tiptap::Node::Images::Gallery < Folio::Tiptap::Node
   tiptap_node structure: { images: :images }, tiptap_config: {
-    toolbar: { icon: "image_gallery", slot: "after_layouts", dropdown_group: "images" },
+    icon: "image_gallery", toolbar_slot: "after_layouts", group: "images",
   }
 end
 
 # app/models/my_app/tiptap/node/cards/person.rb
 class MyApp::Tiptap::Node::Cards::Person < Folio::Tiptap::Node
   tiptap_node structure: { name: :string, photo: :image }, tiptap_config: {
-    toolbar: { icon: "user", slot: "after_layouts", dropdown_group: "cards" },
+    icon: "user", toolbar_slot: "after_layouts", group: "cards",
   }
 end
 ```

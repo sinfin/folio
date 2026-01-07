@@ -317,7 +317,7 @@ export function FolioEditor({
                         ? (() => {
                             const nodeGroups = makeFolioTiptapNodesCommandGroup(
                               folioTiptapConfig.nodes,
-                              folioTiptapConfig.toolbar_groups,
+                              folioTiptapConfig.node_groups,
                             );
                             // Handle both single group and array of groups
                             return Array.isArray(nodeGroups)

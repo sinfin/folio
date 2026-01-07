@@ -513,9 +513,11 @@ class Folio::Tiptap::NodeBuilder
       result
     end
 
-    # Whitelist of allowed keys and their value types in tiptap_config hash, hashes cannot include keys not listed here.
+    # Whitelist of allowed keys and their value types in tiptap_config hash
     TIPTAP_CONFIG_HASH_WHITELIST = {
-      toolbar: { icon: String, slot: String, dropdown_group: String },
+      icon: String,
+      toolbar_slot: String,
+      group: String,
       autoclick_cover: [TrueClass, FalseClass],
     }
 
@@ -530,20 +532,14 @@ class Folio::Tiptap::NodeBuilder
             fail ArgumentError, "Unknown key `#{key}` in tiptap_config. Allowed keys are: #{TIPTAP_CONFIG_HASH_WHITELIST.keys.join(', ')}"
           end
 
-          if TIPTAP_CONFIG_HASH_WHITELIST[key].is_a?(Hash)
-            # Validate each provided key, but allow optional keys to be missing
-            value.each do |k, v|
-              expected_klass = TIPTAP_CONFIG_HASH_WHITELIST[key][k]
-              if expected_klass.nil?
-                raise ArgumentError, "Unknown key `#{k}` in tiptap_config[:#{key}]. Allowed keys are: #{TIPTAP_CONFIG_HASH_WHITELIST[key].keys.join(', ')}"
-              end
-              unless v.is_a?(expected_klass)
-                raise ArgumentError, "Expected value for `#{key}[:#{k}]` in tiptap_config to be of type #{expected_klass}, got #{v.class.name}"
-              end
+          expected = TIPTAP_CONFIG_HASH_WHITELIST[key]
+          if expected.is_a?(Array)
+            unless expected.any? { |klass| value.is_a?(klass) }
+              raise ArgumentError, "Expected value for `#{key}` in tiptap_config to be of type #{expected}, got #{value.class.name}"
             end
           else
-            unless TIPTAP_CONFIG_HASH_WHITELIST[key].any? { |klass| value.is_a?(klass) }
-              raise ArgumentError, "Expected value for `#{key}` in tiptap_config to be of type #{TIPTAP_CONFIG_HASH_WHITELIST[key]}, got #{value.class.name}"
+            unless value.is_a?(expected)
+              raise ArgumentError, "Expected value for `#{key}` in tiptap_config to be of type #{expected}, got #{value.class.name}"
             end
           end
         end

@@ -58,21 +58,19 @@ declare global {
   interface FolioTiptapNodeFromInput {
     title: { cs: string; en: string };
     type: string;
-    config: {
-      toolbar?: {
-        icon: string;
-        slot: string;
-        dropdown_group?: string;
-      };
+    config?: {
+      icon?: string;
+      toolbar_slot?: string;
+      group?: string;
       autoclick_cover?: boolean;
     };
   }
 
-  interface FolioTiptapToolbarGroup {
+  interface FolioTiptapNodeGroup {
     key: string;
     title: { cs: string; en: string };
-    icon: string;
-    order?: number;
+    icon?: string;
+    toolbar_slot?: string;
   }
 
   interface StyledParagraphVariantFromInput {
@@ -93,7 +91,7 @@ declare global {
     heading_levels?: import("@tiptap/extension-heading").Level[];
     autosave?: boolean;
     embed_node_class_name?: string;
-    toolbar_groups?: FolioTiptapToolbarGroup[];
+    node_groups?: FolioTiptapNodeGroup[];
   }
 
   interface FolioTiptapAutosaveIndicatorInfo {

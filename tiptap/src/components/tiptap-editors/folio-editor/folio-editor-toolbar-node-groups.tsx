@@ -13,23 +13,23 @@ import { FolioEditorToolbarDropdownButton } from "./folio-editor-toolbar-dropdow
 import { ToolbarGroup } from "@/components/tiptap-ui-primitive/toolbar";
 import { getIcon } from "@/lib/node-icons";
 
-// Get toolbar groups configuration - check config prop first, then window fallback
-const getToolbarGroups = (
-  configGroups?: FolioTiptapToolbarGroup[],
-): FolioTiptapToolbarGroup[] => {
+// Get node groups configuration - check config prop first, then window fallback
+const getNodeGroups = (
+  configGroups?: FolioTiptapNodeGroup[],
+): FolioTiptapNodeGroup[] => {
   if (configGroups && configGroups.length > 0) {
     return configGroups;
   }
-  // Fallback to window.Folio.Tiptap.toolbarGroups for backwards compatibility
+  // Fallback to window.Folio.Tiptap.nodeGroups for backwards compatibility
   const w = window as unknown as {
-    Folio?: { Tiptap?: { toolbarGroups?: FolioTiptapToolbarGroup[] } };
+    Folio?: { Tiptap?: { nodeGroups?: FolioTiptapNodeGroup[] } };
   };
-  return w.Folio?.Tiptap?.toolbarGroups || [];
+  return w.Folio?.Tiptap?.nodeGroups || [];
 };
 
 interface NodeDropdownProps {
   groupKey: string;
-  groupConfig: FolioTiptapToolbarGroup;
+  groupConfig: FolioTiptapNodeGroup;
   nodes: FolioTiptapNodeFromInput[];
 }
 
@@ -78,7 +78,7 @@ function NodeDropdown({ groupKey, groupConfig, nodes }: NodeDropdownProps) {
       <DropdownMenuContent>
         <DropdownMenuGroup>
           {nodes.map((node) => {
-            const NodeIcon = getIcon(node.config?.toolbar?.icon);
+            const NodeIcon = getIcon(node.config?.icon);
             const nodeTitle = node.title[lang] || node.title.en;
 
             return (
@@ -103,47 +103,52 @@ function NodeDropdown({ groupKey, groupConfig, nodes }: NodeDropdownProps) {
 export interface FolioEditorToolbarNodeGroupsProps {
   editor: Editor | null;
   nodes: FolioTiptapNodeFromInput[] | undefined;
-  toolbarGroupsConfig?: FolioTiptapToolbarGroup[];
+  nodeGroupsConfig?: FolioTiptapNodeGroup[];
 }
 
 export function FolioEditorToolbarNodeGroups({
   editor,
   nodes,
-  toolbarGroupsConfig,
+  nodeGroupsConfig,
 }: FolioEditorToolbarNodeGroupsProps) {
   if (!editor || !editor.isEditable || !nodes || nodes.length === 0) {
     return null;
   }
 
-  // Get toolbar groups configuration from config prop or window fallback
-  const toolbarGroups = getToolbarGroups(toolbarGroupsConfig);
+  // Get node groups configuration from config prop or window fallback
+  const nodeGroups = getNodeGroups(nodeGroupsConfig);
 
-  // Group nodes by dropdown_group
+  // Group nodes by group
   const groupedNodes: Record<string, FolioTiptapNodeFromInput[]> = {};
-  const ungroupedNodes: FolioTiptapNodeFromInput[] = [];
 
   nodes.forEach((node) => {
-    const group = node.config?.toolbar?.dropdown_group;
+    const group = node.config?.group;
     if (group) {
       if (!groupedNodes[group]) {
         groupedNodes[group] = [];
       }
       groupedNodes[group].push(node);
-    } else {
-      ungroupedNodes.push(node);
     }
   });
 
-  // Sort groups by order
+  // Sort groups by toolbar_slot (groups with toolbar_slot come first, then by key)
   const sortedGroupKeys = Object.keys(groupedNodes).sort((a, b) => {
-    const aConfig = toolbarGroups.find((g) => g.key === a);
-    const bConfig = toolbarGroups.find((g) => g.key === b);
-    return (aConfig?.order || 999) - (bConfig?.order || 999);
+    const aConfig = nodeGroups.find((g) => g.key === a);
+    const bConfig = nodeGroups.find((g) => g.key === b);
+    const aHasSlot = !!aConfig?.toolbar_slot;
+    const bHasSlot = !!bConfig?.toolbar_slot;
+
+    // Groups with toolbar_slot come first
+    if (aHasSlot && !bHasSlot) return -1;
+    if (!aHasSlot && bHasSlot) return 1;
+
+    // If both have or don't have toolbar_slot, sort by key
+    return a.localeCompare(b);
   });
 
-  // Build default group configs for groups not defined in toolbarGroups
-  const getGroupConfig = (groupKey: string): FolioTiptapToolbarGroup => {
-    const defined = toolbarGroups.find((g) => g.key === groupKey);
+  // Build default group configs for groups not defined in nodeGroups
+  const getGroupConfig = (groupKey: string): FolioTiptapNodeGroup => {
+    const defined = nodeGroups.find((g) => g.key === groupKey);
     if (defined) return defined;
 
     // Default config
