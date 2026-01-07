@@ -34,6 +34,25 @@ After editing any code files, automatically format and lint them using the appro
 - Keep methods focused and under ~20 lines
 - Use namespaces for entire functionality (all related models, controllers, components together)
 
+## Generators (IMPORTANT)
+
+**Always use Rails/Folio generators** to create new files for components covered by generators. Never create these files manually.
+
+This includes but is not limited to:
+- **Migrations:** `rails generate migration AddFieldToTable`
+- **Models:** `rails generate model ModelName`
+- **Controllers:** `rails generate controller ControllerName`
+- **View Components:** `rails generate folio:component namespace/name`
+- **Atoms:** `rails generate folio:atom namespace/atom_name`
+- **Cells:** `rails generate folio:cell namespace/cell_name`
+- **Console (admin) resources:** Check available Folio generators with `rails generate --help | grep folio`
+
+Generators ensure:
+- Correct file naming conventions and paths
+- Proper namespacing and class inheritance
+- Required boilerplate and structure
+- Consistency across the codebase
+
 ## View Components
 
 - Always use the component generator: `rails generate folio:component blog/post` generates `MyApp::Blog::PostComponent`
