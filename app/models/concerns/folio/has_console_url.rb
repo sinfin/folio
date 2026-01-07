@@ -24,4 +24,8 @@ module Folio::HasConsoleUrl
     update_columns(console_url: rewritten_url,
                    console_url_updated_at: Time.current)
   end
+
+  def clear_console_url!
+    update_columns(console_url: nil, console_url_updated_at: nil)
+  end
 end

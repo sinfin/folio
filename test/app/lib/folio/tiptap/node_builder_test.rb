@@ -163,13 +163,14 @@ class Folio::Tiptap::NodeBuilderTest < ActiveSupport::TestCase
     assert_equal :unsafe_html, config[:attributes][:folio_embed_data]
   end
 
-  test "tiptap_config validates toolbar hash structure successfully" do
-      # Define a node class with valid toolbar configuration
+  test "tiptap_config validates flattened toolbar structure successfully" do
+      # Define a node class with valid flattened toolbar configuration
       valid_node_class = Class.new(Folio::Tiptap::Node) do
         tiptap_node structure: {
           title: :string,
         }, tiptap_config: {
-          toolbar: { icon: "image", slot: "after_layouts" },
+          icon: "image",
+          toolbar_slot: "after_layouts",
         }
       end
 
@@ -178,36 +179,39 @@ class Folio::Tiptap::NodeBuilderTest < ActiveSupport::TestCase
       assert_not_nil node
     end
 
-  test "tiptap_config fails with invalid toolbar hash structure" do
+  test "tiptap_config fails with invalid flattened toolbar structure" do
     # Test with non-String icon value
     assert_raises(ArgumentError) do
       Class.new(Folio::Tiptap::Node) do
         tiptap_node structure: {
           title: :string,
         }, tiptap_config: {
-          toolbar: { icon: 123, slot: "after_layouts" },
+          icon: 123,
+          toolbar_slot: "after_layouts",
         }
       end
     end
 
-    # Test with non-String slot value
+    # Test with non-String toolbar_slot value
     assert_raises(ArgumentError) do
       Class.new(Folio::Tiptap::Node) do
         tiptap_node structure: {
           title: :string,
         }, tiptap_config: {
-          toolbar: { icon: "image", slot: true },
+          icon: "image",
+          toolbar_slot: true,
         }
       end
     end
 
-    # Test with missing required keys
+    # Test with non-String group value
     assert_raises(ArgumentError) do
       Class.new(Folio::Tiptap::Node) do
         tiptap_node structure: {
           title: :string,
         }, tiptap_config: {
-          toolbar: { icon: "image" },
+          icon: "image",
+          group: 123,
         }
       end
     end

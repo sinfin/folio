@@ -516,10 +516,9 @@ class Folio::Tiptap::NodeBuilder
     # Structure of allowed keys and their value types in tiptap_config hash, hashes cannot include keys not listed here.
     # For hash values, each key specifies types: [] and optionally optional: true
     TIPTAP_CONFIG_HASH_STRUCTURE = {
-      toolbar: {
-        icon: { types: [String] },
-        slot: { types: [String] },
-      },
+      icon: { types: [String] },
+      toolbar_slot: { types: [String] },
+      group: { types: [String] },
       autoclick_cover: { types: [TrueClass, FalseClass] },
       paste: {
         pattern: { types: [Regexp] },
@@ -542,12 +541,12 @@ class Folio::Tiptap::NodeBuilder
           config_spec = TIPTAP_CONFIG_HASH_STRUCTURE[key]
 
           if config_spec.key?(:types)
-            # Simple value type check (like autoclick_cover)
+            # Simple value type check (like icon, toolbar_slot, group, autoclick_cover)
             unless config_spec[:types].any? { |type| value.is_a?(type) }
               raise ArgumentError, "Expected value for `#{key}` in tiptap_config to be of type #{config_spec[:types].join(' or ')}, got #{value.class.name}"
             end
           else
-            # Hash config (like toolbar, paste)
+            # Hash config (like paste)
             # Check that all keys in value are in whitelist and match their types
             value.each do |k, v|
               unless config_spec.key?(k)
