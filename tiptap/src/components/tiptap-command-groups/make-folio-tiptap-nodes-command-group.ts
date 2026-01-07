@@ -1,19 +1,130 @@
 import { Cuboid } from "lucide-react";
+import { getNodeIcon, getGroupIcon } from "@/lib/node-icons";
 
 export const makeFolioTiptapNodesCommandGroup = (
   folioTiptapNodes: FolioTiptapNodeFromInput[],
-): FolioEditorCommandGroup => {
+  nodeGroups?: FolioTiptapNodeGroup[],
+): FolioEditorCommandGroup | FolioEditorCommandGroup[] => {
+  // If we have node groups config, create multiple groups
+  if (nodeGroups && nodeGroups.length > 0) {
+    const groupedNodes: Record<string, FolioTiptapNodeFromInput[]> = {};
+    const ungroupedNodes: FolioTiptapNodeFromInput[] = [];
+
+    // Group nodes by group
+    folioTiptapNodes.forEach((node) => {
+      const group = node.config?.group;
+      if (group) {
+        if (!groupedNodes[group]) {
+          groupedNodes[group] = [];
+        }
+        groupedNodes[group].push(node);
+      } else {
+        ungroupedNodes.push(node);
+      }
+    });
+
+    // Sort groups alphabetically by key
+    const sortedGroupKeys = Object.keys(groupedNodes).sort((a, b) => {
+      return a.localeCompare(b);
+    });
+
+    const groups: FolioEditorCommandGroup[] = [];
+
+    // Create a group for each group
+    sortedGroupKeys.forEach((groupKey) => {
+      const groupConfig = nodeGroups.find((g) => g.key === groupKey);
+      const lang = document.documentElement.lang as "cs" | "en";
+
+      const commands = groupedNodes[groupKey].map((folioTiptapNode) => {
+        const command: FolioEditorCommand = {
+          title: folioTiptapNode.title,
+          icon: getNodeIcon(folioTiptapNode.config?.icon),
+          key: `folioTiptapNode-${folioTiptapNode.type}`,
+          command: () => {
+            if (document.activeElement instanceof HTMLElement) {
+              document.activeElement.blur();
+            }
+            // Intentional use of "*" origin for parent iframe communication
+            window.parent!.postMessage(
+              {
+                type: "f-tiptap-slash-command:selected",
+                attrs: { type: folioTiptapNode.type },
+              },
+              "*",
+            );
+          },
+        };
+        return command;
+      });
+
+      // Sort commands by title
+      commands.sort((a, b) => {
+        const aTitle = a.title[lang] || a.title["en"];
+        const bTitle = b.title[lang] || b.title["en"];
+        return aTitle.localeCompare(bTitle);
+      });
+
+      groups.push({
+        title: groupConfig?.title || { cs: groupKey, en: groupKey },
+        key: `folioTiptapNodes-${groupKey}`,
+        icon: getGroupIcon(groupKey),
+        commands,
+      });
+    });
+
+    // Add ungrouped nodes as "Ostatní" / "Other"
+    if (ungroupedNodes.length > 0) {
+      const lang = document.documentElement.lang as "cs" | "en";
+      const commands = ungroupedNodes.map((folioTiptapNode) => {
+        const command: FolioEditorCommand = {
+          title: folioTiptapNode.title,
+          icon: getNodeIcon(folioTiptapNode.config?.icon),
+          key: `folioTiptapNode-${folioTiptapNode.type}`,
+          command: () => {
+            if (document.activeElement instanceof HTMLElement) {
+              document.activeElement.blur();
+            }
+            // Intentional use of "*" origin for parent iframe communication
+            window.parent!.postMessage(
+              {
+                type: "f-tiptap-slash-command:selected",
+                attrs: { type: folioTiptapNode.type },
+              },
+              "*",
+            );
+          },
+        };
+        return command;
+      });
+
+      commands.sort((a, b) => {
+        const aTitle = a.title[lang] || a.title["en"];
+        const bTitle = b.title[lang] || b.title["en"];
+        return aTitle.localeCompare(bTitle);
+      });
+
+      groups.push({
+        title: { cs: "Ostatní", en: "Other" },
+        key: "folioTiptapNodes-other",
+        icon: Cuboid,
+        commands,
+      });
+    }
+
+    return groups;
+  }
+
+  // Fallback: single group with all nodes (original behavior but with icons)
   const commands = folioTiptapNodes.map((folioTiptapNode) => {
     const command: FolioEditorCommand = {
       title: folioTiptapNode.title,
-      icon: Cuboid,
+      icon: getNodeIcon(folioTiptapNode.config?.icon),
       key: `folioTiptapNode-${folioTiptapNode.type}`,
       command: () => {
-        // blur editor to prevent input
         if (document.activeElement instanceof HTMLElement) {
           document.activeElement.blur();
         }
-
+        // Intentional use of "*" origin for parent iframe communication
         window.parent!.postMessage(
           {
             type: "f-tiptap-slash-command:selected",

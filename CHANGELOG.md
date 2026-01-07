@@ -2,7 +2,17 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+
+## [7.1.0] - 2026-01-07
+
+### Changed
+
+- **TipTap Node Configuration**: Flattened `tiptap_config.toolbar` structure - `toolbar: { icon:, slot: }` → `icon:, toolbar_slot:` (BREAKING: update all node definitions)
 - when user sign out, his `console_url` atribute is erased (so second user do not have, after page refresh, warnig bar at same page in console)
+
+### Added
+
+- **TipTap Node Groups**: Added `node_groups` config and `group` property for organizing nodes into dropdown menus in toolbar and slash command menu
 
 ## [7.0.0] - 2026-01-05
 

@@ -10,7 +10,7 @@ GIT
 PATH
   remote: .
   specs:
-    folio (7.0.0)
+    folio (7.1.0)
       aasm
       activejob-uniqueness (>= 0.3.0)
       acts-as-taggable-on

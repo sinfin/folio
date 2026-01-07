@@ -16,6 +16,7 @@ import { FolioTiptapShowHtmlButton } from "@/components/tiptap-extensions/folio-
 import { FolioTiptapEraseMarksButton } from "@/components/tiptap-extensions/folio-tiptap-erase-marks/folio-tiptap-erase-marks-button";
 import { FolioEditorToolbarDropdown } from "./folio-editor-toolbar-dropdown";
 import { FolioEditorToolbarSlot } from "./folio-editor-toolbar-slot";
+import { FolioEditorToolbarNodeGroups } from "./folio-editor-toolbar-node-groups";
 import {
   ListsCommandGroup,
   TextAlignCommandGroup,
@@ -311,24 +312,32 @@ const MainToolbarContent = ({
     },
   });
 
-  const nodesForSlots = React.useMemo(() => {
-    const nodes: Record<string, FolioTiptapNodeFromInput[]> = {};
+  const { nodesForSlots, groupedNodes } = React.useMemo(() => {
+    const slotNodes: Record<string, FolioTiptapNodeFromInput[]> = {};
+    const grouped: FolioTiptapNodeFromInput[] = [];
 
     if (blockEditor && folioTiptapConfig?.nodes) {
       folioTiptapConfig.nodes.forEach((node) => {
-        const slot = node.config?.toolbar?.slot;
+        const slot = node.config?.toolbar_slot;
+        const group = node.config?.group;
 
+        // Nodes with group go to grouped array (for dropdown menu)
+        if (group) {
+          grouped.push(node);
+        }
+
+        // Nodes with toolbar_slot go to slot-based rendering (for toolbar buttons)
+        // Note: nodes can have both group and toolbar_slot, appearing in both places
         if (slot) {
-          if (!nodes[slot]) {
-            nodes[slot] = [];
+          if (!slotNodes[slot]) {
+            slotNodes[slot] = [];
           }
-
-          nodes[slot].push(node);
+          slotNodes[slot].push(node);
         }
       });
     }
 
-    return nodes;
+    return { nodesForSlots: slotNodes, groupedNodes: grouped };
   }, [blockEditor, folioTiptapConfig]);
 
   return (
@@ -430,9 +439,17 @@ const MainToolbarContent = ({
 
           <ToolbarSeparator />
 
+          {/* Nodes with toolbar_slot as individual buttons */}
           <FolioEditorToolbarSlot
             editor={editor}
             nodes={nodesForSlots["after_layouts"]}
+          />
+
+          {/* Grouped nodes as dropdowns */}
+          <FolioEditorToolbarNodeGroups
+            editor={editor}
+            nodes={groupedNodes}
+            nodeGroupsConfig={folioTiptapConfig?.node_groups}
           />
 
           <FolioEditorToolbarCommandButton

@@ -1,5 +1,95 @@
 # Upgrading
 
+## 7.0.0 to 7.1.0
+
+### TipTap Node Configuration Changes
+
+**BREAKING CHANGE**: TipTap node configuration structure has been flattened. You must update all node class definitions.
+
+#### Node Config Flattening
+
+**Before (7.0.0):**
+
+```ruby
+# app/models/my_app/tiptap/node/contents/text.rb
+tiptap_node structure: {
+  content: :rich_text,
+}, tiptap_config: {
+  toolbar: {
+    icon: "content_text",
+    slot: "after_layouts",
+  },
+}
+```
+
+**After (7.1.0):**
+
+```ruby
+# app/models/my_app/tiptap/node/contents/text.rb
+tiptap_node structure: {
+  content: :rich_text,
+}, tiptap_config: {
+  icon: "content_text",              # Flattened from toolbar.icon
+  toolbar_slot: "after_layouts",     # Flattened from toolbar.slot
+}
+```
+
+#### Node Groups (New Feature)
+
+Node groups allow organizing nodes into dropdown menus. This is an **optional** feature:
+
+**1. Add `node_groups` to config (optional):**
+
+```ruby
+# app/models/my_app.rb
+def self.default_tiptap_config
+  ::Folio::Tiptap::Config.new(
+    node_names: [...],
+    node_groups: [  # Optional - new feature
+      {
+        key: "content",
+        title: { cs: "Obsah", en: "Content" },
+        icon: "content",
+        toolbar_slot: "after_layouts",  # Optional - controls toolbar position
+      },
+    ],
+  )
+end
+```
+
+**2. Assign nodes to groups:**
+
+```ruby
+# app/models/my_app/tiptap/node/contents/text.rb
+tiptap_node structure: {
+  content: :rich_text,
+}, tiptap_config: {
+  icon: "content_text",
+  toolbar_slot: "after_layouts",  # Optional - for individual button
+  group: "content",                # Optional - for dropdown menu
+}
+```
+
+**3. Independent `group` and `toolbar_slot`:**
+
+- `group` and `toolbar_slot` are **independent** properties
+- Nodes can have both and will appear in both places:
+  - In the group dropdown menu (if they have `group`)
+  - As individual toolbar buttons (if they have `toolbar_slot`)
+
+**Action required:**
+
+1. Search your codebase for `tiptap_config: { toolbar: {` and flatten to direct properties
+2. Update all node class definitions:
+   - `toolbar: { icon: "..." }` → `icon: "..."`
+   - `toolbar: { slot: "..." }` → `toolbar_slot: "..."`
+3. If using node groups, add `group: "..."` to node configs
+4. Update TypeScript types if you have custom TipTap extensions:
+   - Update property access from `node.config.toolbar.icon` to `node.config.icon`
+   - Update property access from `node.config.toolbar.slot` to `node.config.toolbar_slot`
+
+See [docs/tiptap.md](docs/tiptap.md) for complete documentation and examples.
+
 ## 6.5.* to 7.0.0
 
 ### Rails 8.0.1 Upgrade
