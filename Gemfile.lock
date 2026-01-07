@@ -12,7 +12,7 @@ PATH
   specs:
     folio (7.0.0)
       aasm
-      activejob-uniqueness
+      activejob-uniqueness (>= 0.3.0)
       acts-as-taggable-on
       after_commit_everywhere
       ancestry
