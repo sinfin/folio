@@ -22,25 +22,48 @@ module Folio::StiPreload
         super
       end
 
+      # Handles nested STI hierarchies with intermediate base classes.
+      # Retries failed loads until all dependencies are resolved or no progress is made.
+      # This is more robust than relying on file ordering or naming conventions.
       def preload_sti
-        preload_path = -> (path) do
-          relative_path = path.sub(/.*\/app\/models\//, "").delete_suffix(".rb")
-          classified = "#{relative_path}/X".classify.delete_suffix("::X")
-          if classified.safe_constantize
-            logger.debug("Preloading STI type #{classified}")
-          else
-            logger.error("Failed to preload STI file: #{path}")
-          end
-        end
+        files_to_load = []
 
         sti_paths.each do |sti_path|
-          Dir["#{sti_path}/**/*.rb"].each do |path|
-            preload_path.call(path)
-          end
+          files_to_load.concat(Dir["#{sti_path}/**/*.rb"])
         end
 
-        sti_file_paths.each do |sti_file_path|
-          preload_path.call(sti_file_path)
+        sti_file_paths.each do |path|
+          files_to_load << path.to_s
+        end
+
+        remaining = files_to_load
+        loop do
+          failed = []
+
+          remaining.each do |path|
+            relative_path = path.sub(/.*\/app\/models\//, "").delete_suffix(".rb")
+            classified = "#{relative_path}/X".classify.delete_suffix("::X")
+
+            begin
+              classified.constantize
+              logger.debug("Preloading STI type #{classified}")
+            rescue NameError
+              # Dependency not yet loaded, retry later
+              failed << path
+            end
+          end
+
+          # Stop if all loaded or no progress made (prevents infinite loop)
+          break if failed.empty? || failed.size == remaining.size
+
+          remaining = failed
+        end
+
+        # Log any files that couldn't be loaded after all retries
+        remaining.each do |path|
+          relative_path = path.sub(/.*\/app\/models\//, "").delete_suffix(".rb")
+          classified = "#{relative_path}/X".classify.delete_suffix("::X")
+          logger.error("Failed to preload STI file: #{path} (#{classified})")
         end
 
         self.sti_preloaded = true
