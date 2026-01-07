@@ -80,7 +80,7 @@ class Folio::Devise::SessionsControllerTest < ActionDispatch::IntegrationTest
 
     Rails.application.config.stub(:folio_crossdomain_devise, false) do
       assert_difference("::Folio::User.count", 1) do
-        user = register_user_at_site(site, email:, first_name: "Site1", last_name: "User", password: )
+        user = register_user_at_site(site, email:, first_name: "Site1", last_name: "User", password:)
       end
       assert_equal site, user.auth_site
 

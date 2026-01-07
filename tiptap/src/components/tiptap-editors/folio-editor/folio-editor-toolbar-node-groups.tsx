@@ -11,113 +11,7 @@ import { ChevronDownIcon } from "@/components/tiptap-icons/chevron-down-icon";
 import { Button } from "@/components/tiptap-ui-primitive/button";
 import { FolioEditorToolbarDropdownButton } from "./folio-editor-toolbar-dropdown";
 import { ToolbarGroup } from "@/components/tiptap-ui-primitive/toolbar";
-import {
-  Plus,
-  FileText,
-  Images,
-  RectangleHorizontal,
-  List,
-  Star,
-  Video,
-  Image,
-  Newspaper,
-  Heading,
-  AlignLeft,
-  Quote,
-  Minus,
-  FileDown,
-  LayoutGrid,
-  Grid3x3,
-  GalleryVertical,
-  ImagePlus,
-  User,
-  CreditCard,
-  Square,
-  SquareStack,
-  Layers,
-  FolderOpen,
-  LayoutList,
-  ArrowRight,
-  Home,
-  Tag,
-  Mail,
-  Link,
-  Play,
-  Monitor,
-  FormInput,
-  Send,
-  type LucideIcon,
-} from "lucide-react";
-
-// Built-in group icons (fallback)
-const GROUP_ICONS: Record<string, LucideIcon> = {
-  content: FileText,
-  images: Images,
-  cards: RectangleHorizontal,
-  listings: List,
-  special: Star,
-};
-
-// Built-in node icons (same as in folio-editor-toolbar-slot-button.tsx)
-const NODE_ICONS: Record<string, LucideIcon> = {
-  // Standard icons
-  image: Image,
-  video: Video,
-  newspaper: Newspaper,
-  plus: Plus,
-
-  // Content icons
-  content_text: FileText,
-  content_title: Heading,
-  content_lead: AlignLeft,
-  quote: Quote,
-  content_divider: Minus,
-  content_documents: FileDown,
-  file_text: FileText,
-
-  // Image icons
-  image_gallery: Images,
-  image_grid: LayoutGrid,
-  image_masonry: Grid3x3,
-  image_one_two: GalleryVertical,
-  image_with_text: ImagePlus,
-  image_wrapping: ImagePlus,
-
-  // Card icons
-  user: User,
-  rectangle_horizontal: RectangleHorizontal,
-  card_visual: CreditCard,
-  card_size: Square,
-  card_full: SquareStack,
-  card_padded: Layers,
-
-  // Listing icons
-  list: List,
-  listing_news: Newspaper,
-  listing_projects: FolderOpen,
-  listing_project_card: LayoutList,
-  arrow_right: ArrowRight,
-
-  // Special icons
-  hero_banner: Monitor,
-  home: Home,
-  tag: Tag,
-  contact_form: Mail,
-  link: Link,
-  play: Play,
-
-  // Form icons
-  form: FormInput,
-  send: Send,
-};
-
-// Get custom icons from window.Folio.Tiptap.customIcons
-const getCustomIcons = (): Record<string, React.ComponentType> => {
-  const w = window as unknown as {
-    Folio?: { Tiptap?: { customIcons?: Record<string, React.ComponentType> } };
-  };
-  return w.Folio?.Tiptap?.customIcons || {};
-};
+import { getIcon } from "@/lib/node-icons";
 
 // Get toolbar groups configuration - check config prop first, then window fallback
 const getToolbarGroups = (
@@ -133,52 +27,20 @@ const getToolbarGroups = (
   return w.Folio?.Tiptap?.toolbarGroups || [];
 };
 
-const getIcon = (
-  iconString: string | undefined,
-): React.ComponentType<{ size?: number; className?: string }> => {
-  if (!iconString) return Plus;
-
-  // Check custom icons first
-  const customIcons = getCustomIcons();
-  if (customIcons[iconString]) {
-    return customIcons[iconString] as React.ComponentType<{
-      size?: number;
-      className?: string;
-    }>;
-  }
-
-  // Check built-in node icons
-  if (NODE_ICONS[iconString]) {
-    return NODE_ICONS[iconString];
-  }
-
-  // Check built-in group icons
-  if (GROUP_ICONS[iconString]) {
-    return GROUP_ICONS[iconString];
-  }
-
-  return Plus;
-};
-
 interface NodeDropdownProps {
-  editor: Editor;
   groupKey: string;
   groupConfig: FolioTiptapToolbarGroup;
   nodes: FolioTiptapNodeFromInput[];
 }
 
-function NodeDropdown({
-  editor: _editor,
-  groupKey,
-  groupConfig,
-  nodes,
-}: NodeDropdownProps) {
+function NodeDropdown({ groupKey, groupConfig, nodes }: NodeDropdownProps) {
   const [isOpen, setIsOpen] = React.useState(false);
 
   const handleOnOpenChange = React.useCallback((open: boolean) => {
     setIsOpen(open);
   }, []);
 
+  // Intentional use of "*" origin for parent iframe communication
   const handleNodeClick = React.useCallback(
     (node: FolioTiptapNodeFromInput) => () => {
       window.parent!.postMessage(
@@ -300,7 +162,6 @@ export function FolioEditorToolbarNodeGroups({
         return (
           <ToolbarGroup key={groupKey}>
             <NodeDropdown
-              editor={editor}
               groupKey={groupKey}
               groupConfig={groupConfig}
               nodes={groupedNodes[groupKey]}
@@ -308,8 +169,6 @@ export function FolioEditorToolbarNodeGroups({
           </ToolbarGroup>
         );
       })}
-
-      {/* Render ungrouped nodes as individual buttons (handled by FolioEditorToolbarSlot) */}
     </>
   );
 }
