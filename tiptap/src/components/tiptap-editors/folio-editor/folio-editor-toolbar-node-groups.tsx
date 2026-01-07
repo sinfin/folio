@@ -168,7 +168,7 @@ interface NodeDropdownProps {
 }
 
 function NodeDropdown({
-  editor,
+  editor: _editor,
   groupKey,
   groupConfig,
   nodes,
@@ -315,4 +315,3 @@ export function FolioEditorToolbarNodeGroups({
 }
 
 export default FolioEditorToolbarNodeGroups;
-

@@ -29,7 +29,6 @@ import {
   Square,
   SquareStack,
   Layers,
-  ImageOff,
   // Listing icons
   List,
   FolderOpen,

@@ -11,8 +11,7 @@ import "@/components/tiptap-ui-primitive/button/button.scss";
 
 type PlatformShortcuts = Record<string, string>;
 
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string;
   showTooltip?: boolean;
   tooltip?: React.ReactNode;

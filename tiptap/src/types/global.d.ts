@@ -149,8 +149,7 @@ declare global {
     normalizedTitle: string;
   }
 
-  interface FolioEditorCommandGroupForSuggestion
-    extends FolioEditorCommandGroup {
+  interface FolioEditorCommandGroupForSuggestion extends FolioEditorCommandGroup {
     title: string;
     key: string;
     commandsForSuggestion: FolioEditorCommandForSuggestion[];
