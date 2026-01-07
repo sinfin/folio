@@ -7,7 +7,7 @@ module Folio
 
       def flag(wrapper_options = nil)
         @flag ||= if options[:flag].present?
-          Folio::Console::Ui::FlagCell.new(options[:flag]).show.html_safe
+          template.render(Folio::Console::Ui::FlagComponent.new(code: options[:flag]))
         end
       end
     end
