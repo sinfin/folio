@@ -439,7 +439,7 @@ const MainToolbarContent = ({
 
           <ToolbarSeparator />
 
-          {/* Ungrouped nodes as individual buttons */}
+          {/* Nodes with toolbar_slot as individual buttons */}
           <FolioEditorToolbarSlot
             editor={editor}
             nodes={nodesForSlots["after_layouts"]}
