@@ -10,6 +10,10 @@ class ModalSelect extends Component {
     if (!$) return
 
     $(document).on('click', this.selector(), (e) => {
+      if (e.target.closest('.folio-console-thumbnail__alt')) {
+        return
+      }
+
       this.setState({ el: e.target })
       this.props.loadFiles(this.props.fileType, this.props.filesUrl)
       this.onOpen(e.target)
