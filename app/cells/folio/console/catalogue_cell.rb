@@ -489,13 +489,16 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
 
           return if day == prev_day
 
-          cell("folio/console/group_by_day_header",
-               scope: model[:records],
-               date:,
-               attribute: model[:group_by_day],
-               before_label: @before_lambda_label,
-               label_lambda: @before_lambda_label_lambda,
-               klass:).show.try(:html_safe)
+          capture do
+            render_view_component(Folio::Console::GroupByDayHeaderComponent.new(
+              scope: model[:records],
+              date:,
+              attribute: model[:group_by_day],
+              before_label: @before_lambda_label,
+              label_lambda: @before_lambda_label_lambda,
+              klass:,
+            ))
+          end
         end
       else
         @before_lambda = false
