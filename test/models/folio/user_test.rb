@@ -173,6 +173,8 @@ class Folio::UserTest < ActiveSupport::TestCase
 
     user.password = "Short, but 2 complex!"
     assert user.valid?
+  end
+
   test "find_for_authentication with uppercase email" do
     site = create(:folio_site, type: "Folio::Site")
     user = create(:folio_user, email: "test@example.com", auth_site: site)
