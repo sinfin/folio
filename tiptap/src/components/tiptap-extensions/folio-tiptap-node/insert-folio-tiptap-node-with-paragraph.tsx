@@ -78,8 +78,9 @@ export const insertFolioTiptapNodeWithParagraph = ({
   const $pos = tr.doc.resolve(pos);
 
   // Check if we're at a block-level position (paste placeholder) or text-level (command)
-  const paragraphStart = $pos.start($pos.depth) - 1;
-  const isBlockLevelPosition = paragraphStart < 0;
+  // Check if there's a block node at the position (works for nested structures too)
+  const nodeAtPos = tr.doc.nodeAt(pos);
+  const isBlockLevelPosition = nodeAtPos?.isBlock === true;
 
   if (isBlockLevelPosition) {
     // Block-level position (paste placeholder) - replace placeholder
@@ -88,6 +89,7 @@ export const insertFolioTiptapNodeWithParagraph = ({
     setCursorAfterNode(tr, schema, afterNodePos);
   } else {
     // Text-level position (command) - get the paragraph boundaries
+    const paragraphStart = $pos.start($pos.depth) - 1;
     const paragraphEnd = $pos.end($pos.depth) + 1;
     const paragraphNode = $pos.parent;
 
