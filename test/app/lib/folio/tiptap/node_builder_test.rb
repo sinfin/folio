@@ -164,19 +164,20 @@ class Folio::Tiptap::NodeBuilderTest < ActiveSupport::TestCase
   end
 
   test "tiptap_config validates toolbar hash structure successfully" do
-      # Define a node class with valid toolbar configuration
-      valid_node_class = Class.new(Folio::Tiptap::Node) do
-        tiptap_node structure: {
-          title: :string,
-        }, tiptap_config: {
-          toolbar: { icon: "image", slot: "after_layouts" },
-        }
-      end
-
-      # Should initialize without error
-      node = valid_node_class.new
-      assert_not_nil node
+    # Define a node class with valid toolbar configuration
+    valid_node_class = Class.new(Folio::Tiptap::Node) do
+      tiptap_node structure: {
+        title: :string,
+      }, tiptap_config: {
+        icon: "image",
+        toolbar_slot: "after_layouts",
+      }
     end
+
+    # Should initialize without error
+    node = valid_node_class.new
+    assert_not_nil node
+  end
 
   test "tiptap_config fails with invalid toolbar hash structure" do
     # Test with non-String icon value
@@ -185,29 +186,20 @@ class Folio::Tiptap::NodeBuilderTest < ActiveSupport::TestCase
         tiptap_node structure: {
           title: :string,
         }, tiptap_config: {
-          toolbar: { icon: 123, slot: "after_layouts" },
+          icon: 123,
+          toolbar_slot: "after_layouts",
         }
       end
     end
 
-    # Test with non-String slot value
+    # Test with non-String toolbar_slot value
     assert_raises(ArgumentError) do
       Class.new(Folio::Tiptap::Node) do
         tiptap_node structure: {
           title: :string,
         }, tiptap_config: {
-          toolbar: { icon: "image", slot: true },
-        }
-      end
-    end
-
-    # Test with missing required keys
-    assert_raises(ArgumentError) do
-      Class.new(Folio::Tiptap::Node) do
-        tiptap_node structure: {
-          title: :string,
-        }, tiptap_config: {
-          toolbar: { icon: "image" },
+          icon: "image",
+          toolbar_slot: true,
         }
       end
     end
