@@ -42,8 +42,25 @@ window.Folio.Stimulus.register('f-c-state', class extends window.Stimulus.Contro
         this.element.outerHTML = res.data
       }
     }).catch((error) => {
-      window.FolioConsole.Ui.Flash.alert(error.message)
       this.element.classList.remove('f-c-state--loading')
+
+      // Check if error has responseData with meta.validation_box_html
+      if (error.responseData && error.responseData.meta && error.responseData.meta.validation_box_html) {
+        const form = this.element.closest('form')
+        if (form) {
+          const validationBoxes = form.querySelector('.f-c-form-header__validation-boxes')
+          if (validationBoxes) {
+            const existingDangerBox = validationBoxes.querySelector('.f-c-ui-validation-box--variant-danger')
+            if (existingDangerBox) {
+              existingDangerBox.outerHTML = error.responseData.meta.validation_box_html
+            } else {
+              validationBoxes.insertAdjacentHTML('afterbegin', error.responseData.meta.validation_box_html)
+            }
+          }
+        }
+      }
+
+      window.FolioConsole.Ui.Flash.alert(error.message)
     })
   }
 

@@ -15,6 +15,13 @@ All notable changes to this project will be documented in this file.
 
 - tiptap node drag&drop
 
+## [7.1.1] - 2026-01-08
+
+### Added
+
+- atom file placements now delegate validation methods (`should_validate_file_placements_*_if_needed?`) to their placement, enabling placement-specific validation rules (e.g., stricter rules for published articles)
+- `validation_box_html` to AASM api response based on `reload_form` param
+
 ## [7.1.0] - 2026-01-07
 
 ### Changed
