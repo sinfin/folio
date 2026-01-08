@@ -73,7 +73,11 @@ window.Folio.Stimulus.register('f-c-private-attachments-fields', class extends w
       this.updateAttachmentInput(attachment, hash, key)
     })
 
-    attachment.querySelector('.f-c-private-attachments-fields__attachment-link').href = hash.attributes.expiring_url
+    // Use download_url (stable path) which redirects to a fresh presigned URL
+    const downloadUrl = hash.attributes.download_url || hash.attributes.expiring_url
+    if (downloadUrl) {
+      attachment.querySelector('.f-c-private-attachments-fields__attachment-link').href = downloadUrl
+    }
 
     if (hash.s3Path) {
       attachment.dataset.s3Path = hash.s3Path
@@ -118,7 +122,7 @@ window.Folio.Stimulus.register('f-c-private-attachments-fields', class extends w
             file_name: fileAttributes.file_name,
             title: fileAttributes.file_name,
             type: null,
-            expiring_url: null,
+            download_url: null,
           }
         }
 
