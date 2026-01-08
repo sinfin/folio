@@ -4,13 +4,38 @@ module Folio::Tiptap::Model
   extend ActiveSupport::Concern
 
   class_methods do
-    def has_folio_tiptap_content(field = :tiptap_content)
-      define_method("#{field}=") do |value|
-        ftc = Folio::Tiptap::Content.new(record: self)
-        result = ftc.convert_and_sanitize_value(value)
+    def has_folio_tiptap_content(field = :tiptap_content, locales: nil)
+      if locales.present?
+        locales.each do |locale|
+          localized_field = "#{field}_#{locale}".to_sym
+          field_name = localized_field.to_s
+          (@folio_tiptap_fields ||= []) << field_name unless @folio_tiptap_fields&.include?(field_name)
 
-        if result[:ok]
-          super(result[:value])
+          define_method("#{localized_field}=") do |value|
+            ftc = Folio::Tiptap::Content.new(record: self)
+            result = ftc.convert_and_sanitize_value(value)
+
+            if result[:ok] && result[:value].is_a?(Hash)
+              locale_key = Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:locale]
+              result[:value][locale_key] = locale.to_s
+            end
+
+            if result[:ok]
+              super(result[:value])
+            end
+          end
+        end
+      else
+        field_name = field.to_s
+        (@folio_tiptap_fields ||= []) << field_name unless @folio_tiptap_fields&.include?(field_name)
+
+        define_method("#{field}=") do |value|
+          ftc = Folio::Tiptap::Content.new(record: self)
+          result = ftc.convert_and_sanitize_value(value)
+
+          if result[:ok]
+            super(result[:value])
+          end
         end
       end
     end
@@ -20,7 +45,7 @@ module Folio::Tiptap::Model
     end
 
     def folio_tiptap_fields
-      %w[tiptap_content]
+      @folio_tiptap_fields || []
     end
   end
 
