@@ -1,4 +1,5 @@
 .f-c-tiptap-simple-form-wrap data=data
+  - grouped_fields = grouped_tiptap_fields
   = helpers.simple_form_for(@simple_form_model, @simple_form_options) do |form|
     .f-c-tiptap-simple-form-wrap__scroller[
       data=stimulus_data(action: { scroll: 'onScroll' }, target: "scroller")
@@ -16,6 +17,10 @@
 
         = render(Folio::Console::Tiptap::SimpleFormWrap::WordCountComponent.new(data: stimulus_target("wordCount")))
 
+        - if grouped_fields.present?
+          - grouped_fields.each do |group|
+            = render(Folio::Console::Tiptap::SimpleFormWrap::LocaleSwitchComponent.new(base_field: group[:base_field], locales: group[:locales]))
+
         span.f-c-tiptap-simple-form-wrap__editors-bar-scroll-trigger[
           data=stimulus_action(click: "onScrollTriggerClick")
         ]
@@ -28,7 +33,17 @@
             = render(Folio::Console::Tiptap::SimpleFormWrap::AutosaveInfoComponent.new(object: form.object))
 
         .f-c-tiptap-simple-form-wrap__editors-input-wrap
-          - form.object.class.folio_tiptap_fields.each do |field|
+          - if grouped_fields.present?
+            - grouped_fields.each do |group|
+              - group[:fields].each_with_index do |field, i|
+                .f-c-tiptap-simple-form-wrap__editor-locale[
+                  data-locale=group[:locales][i]
+                  data-base-field=group[:base_field]
+                  hidden=(i > 0)
+                ]
+                  = form.input field.to_sym, as: :tiptap, block: true, error: false
+
+          - non_localized_tiptap_fields.each do |field|
             = form.input field, as: :tiptap, block: true, error: false
 
     .f-c-tiptap-simple-form-wrap__form-footer

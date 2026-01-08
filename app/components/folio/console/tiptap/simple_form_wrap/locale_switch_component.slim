@@ -1,0 +1,11 @@
+.f-c-tiptap-simple-form-wrap-locale-switch data=controller_data
+  - @locales.each_with_index do |locale, i|
+    button.f-c-tiptap-simple-form-wrap-locale-switch__btn[
+      type="button"
+      class=(i == 0 ? "f-c-tiptap-simple-form-wrap-locale-switch__btn--active" : nil)
+      data-locale=locale
+      data-base-field=@base_field
+      data=stimulus_target("button")
+      data=stimulus_action(click: "onLocaleClick")
+    ]
+      = cell("folio/console/ui/flag", locale)

@@ -5,11 +5,37 @@ module Folio::Tiptap::Model
 
   class_methods do
     def has_folio_tiptap_content(field = :tiptap_content, locales: nil)
+      @folio_tiptap_fields ||= []
+      @folio_tiptap_locales ||= {}
+
+      field_name = field.to_s
+      existing_locales = @folio_tiptap_locales[field_name]
+      new_locales = locales.present? ? locales.map(&:to_sym).sort : nil
+
+      # If already configured the same way, return early (idempotent)
+      return if existing_locales == new_locales
+
+      # Clean up old configuration
+      if existing_locales.present?
+        # Remove old locale-suffixed fields
+        existing_locales.each do |locale|
+          old_field_name = "#{field_name}_#{locale}"
+          @folio_tiptap_fields.delete(old_field_name)
+        end
+        @folio_tiptap_locales.delete(field_name)
+      elsif existing_locales.nil? && @folio_tiptap_fields.include?(field_name)
+        # Remove old non-localized field
+        @folio_tiptap_fields.delete(field_name)
+      end
+
+      # Set up new configuration
       if locales.present?
+        @folio_tiptap_locales[field_name] = new_locales
+
         locales.each do |locale|
           localized_field = "#{field}_#{locale}".to_sym
-          field_name = localized_field.to_s
-          (@folio_tiptap_fields ||= []) << field_name unless @folio_tiptap_fields&.include?(field_name)
+          localized_field_name = localized_field.to_s
+          @folio_tiptap_fields << localized_field_name unless @folio_tiptap_fields.include?(localized_field_name)
 
           define_method("#{localized_field}=") do |value|
             ftc = Folio::Tiptap::Content.new(record: self)
@@ -26,8 +52,7 @@ module Folio::Tiptap::Model
           end
         end
       else
-        field_name = field.to_s
-        (@folio_tiptap_fields ||= []) << field_name unless @folio_tiptap_fields&.include?(field_name)
+        @folio_tiptap_fields << field_name unless @folio_tiptap_fields.include?(field_name)
 
         define_method("#{field}=") do |value|
           ftc = Folio::Tiptap::Content.new(record: self)
@@ -45,7 +70,11 @@ module Folio::Tiptap::Model
     end
 
     def folio_tiptap_fields
-      @folio_tiptap_fields || []
+      base_class.instance_variable_get(:@folio_tiptap_fields) || []
+    end
+
+    def folio_tiptap_locales
+      base_class.instance_variable_get(:@folio_tiptap_locales) || {}
     end
   end
 

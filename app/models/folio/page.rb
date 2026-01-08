@@ -34,7 +34,12 @@ class Folio::Page < Folio::ApplicationRecord
   include Folio::Autosave::Model
 
   include Folio::Tiptap::Model
-  has_folio_tiptap_content
+
+  if Rails.application.config.folio_using_traco
+    has_folio_tiptap_content(locales: I18n.available_locales.map(&:to_sym))
+  else
+    has_folio_tiptap_content
+  end
 
   if Rails.application.config.folio_pages_audited
     include Folio::Audited::Model

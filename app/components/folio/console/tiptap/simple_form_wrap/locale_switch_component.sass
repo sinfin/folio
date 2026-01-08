@@ -1,0 +1,26 @@
+.f-c-tiptap-simple-form-wrap-locale-switch
+  display: flex
+  align-items: center
+  gap: 4px
+  margin-left: auto
+
+  &__btn
+    background: transparent
+    border: 1px solid $border-color
+    border-radius: 4px
+    padding: 4px
+    cursor: pointer
+    display: flex
+    align-items: center
+    justify-content: center
+    transition: $transition-base
+    opacity: 0.6
+
+    &:hover
+      opacity: 1
+      border-color: $gray-medium-dark
+
+    &--active
+      opacity: 1
+      border-color: $primary
+      background: rgba($primary, 0.1)

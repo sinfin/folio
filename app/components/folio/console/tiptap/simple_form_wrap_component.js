@@ -114,4 +114,32 @@ window.Folio.Stimulus.register('f-c-tiptap-simple-form-wrap', class extends wind
     const visible = activeLink.classList.contains('f-c-file-placements-multi-picker-fields-nav-link')
     this.element.classList.toggle('f-c-tiptap-simple-form-wrap--multi-picker-visible', visible)
   }
+
+  onLocaleChanged (e) {
+    const { baseField, locale } = e.detail
+
+    // Hide all editors for this base field
+    const editors = this.element.querySelectorAll(`.f-c-tiptap-simple-form-wrap__editor-locale[data-base-field="${baseField}"]`)
+    editors.forEach(editor => {
+      editor.hidden = editor.dataset.locale !== locale
+    })
+
+    // Trigger resize on the visible iframe
+    const visibleEditor = this.element.querySelector(`.f-c-tiptap-simple-form-wrap__editor-locale[data-base-field="${baseField}"][data-locale="${locale}"]`)
+    if (visibleEditor) {
+      const iframe = visibleEditor.querySelector('.f-input-tiptap__iframe')
+      if (iframe && iframe.contentWindow) {
+        // Dispatch resize event to iframe
+        iframe.contentWindow.postMessage({
+          type: 'f-input-tiptap:window-resize',
+          windowWidth: window.innerWidth
+        }, window.origin)
+
+        // Also trigger a resize event on the window
+        setTimeout(() => {
+          window.dispatchEvent(new Event('resize'))
+        }, 100)
+      }
+    }
+  }
 })
