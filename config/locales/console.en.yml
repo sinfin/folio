@@ -31,6 +31,7 @@ en:
           invalid_event_detail: Such a change cannot be done
           invalid_record_title: Invalid record
           invalid_record_detail: Record cannot be saved. Correct it before changing state.
+          invalid_record_form_detail: Record state cannot be changed. Please fix errors in the form first.
         site_user_links:
           set_locked:
             success/locked: User blocked.

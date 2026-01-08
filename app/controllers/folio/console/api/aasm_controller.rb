@@ -33,15 +33,20 @@ class Folio::Console::Api::AasmController < Folio::Console::Api::BaseController
           end
 
           if record.errors.any?
-            return render json: {
-                      errors: record.errors.full_messages.map { |message|
-                        {
-                          status: 422,
-                          title: t(".invalid_record_title"),
-                          detail: message
-                        }
-                      }
-                    }, status: 422
+            if params[:reload_form].present?
+              return render_failure("invalid_record", record:)
+            else
+              error_response = {
+                errors: record.errors.full_messages.map { |message|
+                  {
+                    status: 422,
+                    title: t(".invalid_record_title"),
+                    detail: message
+                  }
+                }
+              }
+              return render json: error_response, status: 422
+            end
           end
 
           render json: {
@@ -55,7 +60,7 @@ class Folio::Console::Api::AasmController < Folio::Console::Api::BaseController
           render_failure("invalid_event")
         end
       else
-        render_failure("invalid_record")
+        render_failure("invalid_record", record:)
       end
     else
       render_failure
@@ -63,16 +68,36 @@ class Folio::Console::Api::AasmController < Folio::Console::Api::BaseController
   end
 
   private
-    def render_failure(base = "failure")
-      render json: {
-        errors: [
-          {
-            status: 422,
-            title: t(".#{base}_title"),
-            detail: t(".#{base}_detail")
-          }
-        ]
-      }, status: 422
+    def render_failure(base = "failure", record: nil)
+      if params[:reload_form].present? && record.present? && record.errors.any?
+        validation_box = Folio::Console::Ui::ValidationBoxComponent.new(
+          errors: record.errors,
+          record:
+        )
+        validation_box_html = render_to_string(validation_box, layout: false)
+        detail_key = "#{base}_form_detail"
+        error_response = {
+          errors: [
+            {
+              status: 422,
+              title: t(".#{detail_key}", default: t(".#{base}_detail")),
+            }
+          ],
+          meta: { validation_box_html: }
+        }
+      else
+        error_response = {
+          errors: [
+            {
+              status: 422,
+              title: t(".#{base}_title"),
+              detail: t(".#{base}_detail")
+            }
+          ]
+        }
+      end
+
+      render json: error_response, status: 422
     end
 
     def handle_record_before_event(record)

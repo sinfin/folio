@@ -29,13 +29,21 @@ const jsonError = (json) => {
   if (json.error) {
     return json.error
   } else if (json.errors) {
-    return json.errors.map((err) => {
-      if (err.title && err.title.indexOf('::') === -1) {
-        return `${err.title}: ${err.detail}`
-      }
+    const errorMessages = json.errors
+      .filter((err) => err.title || err.detail)
+      .map((err) => {
+        if (err.title && err.title.indexOf('::') === -1 && err.detail) {
+          return `${err.title}: ${err.detail}`
+        }
 
-      return err.detail
-    }).join('<br>')
+        if (err.title && !err.detail) {
+          return err.title
+        }
+
+        return err.detail
+      })
+
+    return errorMessages.length > 0 ? errorMessages.join('<br>') : null
   }
 
   return null
@@ -56,12 +64,12 @@ const makeCheckResponse = (asHtml) => (response) => {
       }
 
       const err = jsonError(json)
+      const error = err ? new Error(err) : new Error(fallbackMessage(response))
 
-      if (err) {
-        return Promise.reject(new Error(err))
-      } else {
-        return Promise.reject(new Error(fallbackMessage(response)))
-      }
+      // Attach the JSON response to the error so it can be accessed in catch blocks
+      error.responseData = json
+
+      return Promise.reject(error)
     })
 }
 

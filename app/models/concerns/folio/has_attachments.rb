@@ -308,7 +308,17 @@ module Folio::HasAttachments
   def soft_warnings_for_file_placements
     grouped = {}
 
-    collect_all_placements
+    all_placements = collect_all_placements
+
+    # Also include atom file placements for models with atoms that don't use tiptap
+    if respond_to?(:atoms) && (!self.class.respond_to?(:has_folio_tiptap?) || !self.class.has_folio_tiptap?)
+      atoms.each do |atom|
+        next if atom.marked_for_destruction?
+        all_placements += atom.collect_all_placements
+      end
+    end
+
+    all_placements
       .reject(&:marked_for_destruction?)
       .each do |placement|
         next if placement.file.blank?
@@ -355,33 +365,38 @@ module Folio::HasAttachments
         end
       end
 
+      # Also validate atom file placements for models with atoms that don't use tiptap
+      if respond_to?(:atoms) && (!self.class.respond_to?(:has_folio_tiptap?) || !self.class.has_folio_tiptap?)
+        atoms.each do |atom|
+          next if atom.marked_for_destruction?
+          atom.collect_all_placements.each do |placement|
+            next if placement.marked_for_destruction?
+            all_placements_ary << placement
+          end
+        end
+      end
+
       # Filter out placements marked for destruction - they will be removed anyway
       placements_to_validate = all_placements_ary.reject(&:marked_for_destruction?)
 
       if should_validate_file_placements_attribution_if_needed?
         placements_to_validate.each do |placement|
           placement.validate_attribution_if_needed
-          if placement.errors[:file].present?
-            has_invalid_file_placements = true
-          end
+          has_invalid_file_placements = true if placement.errors.any?
         end
       end
 
       if should_validate_file_placements_alt_if_needed?
         placements_to_validate.each do |placement|
           placement.validate_alt_if_needed
-          if placement.errors[:file].present?
-            has_invalid_file_placements = true
-          end
+          has_invalid_file_placements = true if placement.errors.any?
         end
       end
 
       if should_validate_file_placements_description_if_needed?
         placements_to_validate.each do |placement|
           placement.validate_description_if_needed
-          if placement.errors[:file].present?
-            has_invalid_file_placements = true
-          end
+          has_invalid_file_placements = true if placement.errors.any?
         end
       end
 
