@@ -3,8 +3,7 @@ import { type Editor } from "@tiptap/react";
 
 import { Button } from "@/components/tiptap-ui-primitive/button";
 import translate from "@/lib/i18n";
-
-import { Video, Image, Newspaper, Plus } from "lucide-react";
+import { getNodeIcon } from "@/lib/node-icons";
 
 export interface FolioEditorToolbarSlotButton {
   editor: Editor;
@@ -20,6 +19,7 @@ export const FolioEditorToolbarSlotButton = ({
   editor,
   node,
 }: FolioEditorToolbarSlotButton) => {
+  // Intentional use of "*" origin for parent iframe communication
   const handleClick = React.useCallback(() => {
     window.parent!.postMessage(
       {
@@ -29,20 +29,6 @@ export const FolioEditorToolbarSlotButton = ({
       "*",
     );
   }, [node]);
-
-  const icon = (iconString: string | undefined) => {
-    switch (iconString) {
-      case "image":
-        return Image;
-      case "video":
-        return Video;
-      case "newspaper":
-        return Newspaper;
-      default:
-        console.warn(`Unknown icon string: ${iconString}`);
-        return Plus;
-    }
-  };
 
   if (!node) return;
   if (!editor || !editor.isEditable) return null;
@@ -57,7 +43,7 @@ export const FolioEditorToolbarSlotButton = ({
   };
 
   const label = translate(translations, "insert");
-  const IconComponent = icon(node.config.toolbar?.icon);
+  const IconComponent = getNodeIcon(node.config?.icon);
 
   return (
     <Button

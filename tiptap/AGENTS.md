@@ -5,11 +5,13 @@
 After editing any code files, automatically format and lint them using the appropriate tools for that language.
 
 ### JavaScript
+
 - Format: `npm run format:file <file_path>`
 - Lint: `npx eslint --fix <file_path>`
 - Note: This overrides the standard JavaScript formatting/linting from the root AGENTS.md. Use eslint and prettier instead of `npx standard --fix`.
 
 ### TypeScript
+
 - Format: `npm run format:file <file_path>`
 - Lint: `npx eslint --fix <file_path>`
 - Type Check: `npm run build:check` - Verify TypeScript compilation after making changes

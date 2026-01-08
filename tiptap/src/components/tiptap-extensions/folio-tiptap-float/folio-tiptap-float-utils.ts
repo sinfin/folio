@@ -44,8 +44,7 @@ export interface SetFloatLayoutAttributesAttrs {
   size?: "small" | "medium" | "large";
 }
 
-export interface SetFloatLayoutAttributesArgs
-  extends InsertFolioTiptapFloatArgs {
+export interface SetFloatLayoutAttributesArgs extends InsertFolioTiptapFloatArgs {
   attrs: SetFloatLayoutAttributesAttrs;
   state: EditorState;
 }
