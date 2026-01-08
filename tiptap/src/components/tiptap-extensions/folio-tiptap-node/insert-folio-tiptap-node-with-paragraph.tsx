@@ -1,6 +1,5 @@
 import type { Transaction } from "@tiptap/pm/state";
 import type { Node as ProseMirrorNode, Schema } from "@tiptap/pm/model";
-import { Fragment } from "@tiptap/pm/model";
 import { TextSelection } from "@tiptap/pm/state";
 
 interface InsertFolioTiptapNodeWithParagraphProps {
@@ -36,6 +35,31 @@ function insertParagraphAndSetCursor(
 }
 
 /**
+ * Sets cursor after inserting a node. Only inserts a paragraph if:
+ * - There's no node after, OR
+ * - The next node is also a folioTiptapNode
+ * Otherwise, sets cursor at the start of the next node's content.
+ */
+function setCursorAfterNode(
+  tr: Transaction,
+  schema: Schema,
+  afterNodePos: number,
+): void {
+  const $afterPos = tr.doc.resolve(afterNodePos);
+  const nodeAfter = $afterPos.nodeAfter;
+
+  const shouldInsertParagraph =
+    !nodeAfter || nodeAfter.type.name === "folioTiptapNode";
+
+  if (shouldInsertParagraph) {
+    insertParagraphAndSetCursor(tr, schema, afterNodePos);
+  } else {
+    // Set cursor at start of next node's content
+    setCursorAtPosition(tr, afterNodePos + 1);
+  }
+}
+
+/**
  * Inserts a folioTiptapNode at the given position, adding a paragraph after it
  * if we're at the end of a parent node (mimicking the behavior of insertFolioTiptapNode command).
  *
@@ -58,10 +82,10 @@ export const insertFolioTiptapNodeWithParagraph = ({
   const isBlockLevelPosition = paragraphStart < 0;
 
   if (isBlockLevelPosition) {
-    // Block-level position (paste placeholder) - replace placeholder, then add paragraph after
+    // Block-level position (paste placeholder) - replace placeholder
     tr.replaceWith(pos, pos + 1, node);
     const afterNodePos = pos + node.nodeSize;
-    insertParagraphAndSetCursor(tr, schema, afterNodePos);
+    setCursorAfterNode(tr, schema, afterNodePos);
   } else {
     // Text-level position (command) - get the paragraph boundaries
     const paragraphEnd = $pos.end($pos.depth) + 1;
@@ -73,17 +97,15 @@ export const insertFolioTiptapNodeWithParagraph = ({
       paragraphNode.textContent.trim().length === 0;
 
     if (isParagraphEmpty) {
-      // Empty or whitespace-only paragraph - replace it with node + paragraph
-      const paragraphAfterNode = schema.nodes.paragraph.create();
-      const fragment = Fragment.from([node, paragraphAfterNode]);
-      tr.replaceWith(paragraphStart, paragraphEnd, fragment);
-      // Set cursor at the start of the new paragraph (after the node)
-      setCursorAtPosition(tr, paragraphStart + node.nodeSize + 1);
+      // Empty or whitespace-only paragraph - replace it with node
+      tr.replaceWith(paragraphStart, paragraphEnd, node);
+      const afterNodePos = paragraphStart + node.nodeSize;
+      setCursorAfterNode(tr, schema, afterNodePos);
     } else {
-      // Paragraph has content - insert node after it, then add paragraph
+      // Paragraph has content - insert node after it
       tr.insert(paragraphEnd, node);
       const afterNodePos = paragraphEnd + node.nodeSize;
-      insertParagraphAndSetCursor(tr, schema, afterNodePos);
+      setCursorAfterNode(tr, schema, afterNodePos);
     }
   }
 
