@@ -420,6 +420,9 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
     end
 
     def another_monitor_job_running?
+      # Skip lock in test environment for deterministic behavior
+      return false if Rails.env.test?
+
       # Use Redis-based locking to prevent multiple instances
       redis_key = "folio:cra_monitor:job_lock"
 
