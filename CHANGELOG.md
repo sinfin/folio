@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [7.1.1] - 2026-01-08
+
 ### Added
 
 - atom file placements now delegate validation methods (`should_validate_file_placements_*_if_needed?`) to their placement, enabling placement-specific validation rules (e.g., stricter rules for published articles)
