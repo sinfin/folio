@@ -3,6 +3,9 @@
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
+  # Set secret_key_base directly instead of using deprecated secrets.yml
+  config.secret_key_base = "test_secret_key_base_for_dummy_app_only_do_not_use_in_production"
+
   # The test environment is used exclusively to run your application's
   # test suite. You never need to work with it otherwise. Remember that
   # your test database is "scratch space" for the test suite and is wiped

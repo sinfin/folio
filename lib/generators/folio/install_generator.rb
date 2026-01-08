@@ -134,7 +134,6 @@ module Folio
           ".slim-lint.yml",
           "app/views/devise/invitations/edit.slim",
           "bin/bower",
-          "config/secrets.yml",
           "data/email_templates_data.yml",
           "Guardfile",
           "lib/tasks/auto_annotate_models.rake",

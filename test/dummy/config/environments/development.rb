@@ -3,6 +3,9 @@
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
+  # Set secret_key_base directly instead of using deprecated secrets.yml
+  config.secret_key_base = "dev_secret_key_base_for_dummy_app_only_do_not_use_in_production"
+
   # In the development environment your application's code is reloaded on
   # every request. This slows down response time but is perfect for development
   # since you don't have to restart the web server when you make code changes.

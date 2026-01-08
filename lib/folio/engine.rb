@@ -279,6 +279,16 @@ module Folio
           deprecations << "The main_app js/coffee file has moved from app/cells/folio/console/atoms/previews to app/assets/javascripts/folio/console/atoms/previews"
         end
 
+        # Check for deprecated secrets.yml - will be removed in Rails 7.2
+        secrets_yml_path = Rails.root.join("config/secrets.yml")
+        if File.exist?(secrets_yml_path)
+          deprecations << "config/secrets.yml is deprecated and will stop working in Rails 7.2. " \
+                          "Migration: 1) Copy your secret_key_base value from secrets.yml, " \
+                          "2) Set SECRET_KEY_BASE environment variable with that value (to preserve sessions), " \
+                          "3) Delete config/secrets.yml. " \
+                          "For development/test, you can set config.secret_key_base directly in environment configs."
+        end
+
         unless Rails.env.production?
           deprecations += self.atoms_deprecations
         end
