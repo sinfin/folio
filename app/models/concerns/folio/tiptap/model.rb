@@ -13,7 +13,9 @@ module Folio::Tiptap::Model
       new_locales = locales.present? ? locales.map(&:to_sym).sort : nil
 
       # If already configured the same way, return early (idempotent)
-      return if existing_locales == new_locales
+      # Check if field is already configured (either in locales hash or in fields array)
+      field_already_configured = existing_locales.present? || @folio_tiptap_fields.include?(field_name)
+      return if field_already_configured && existing_locales == new_locales
 
       # Clean up old configuration
       if existing_locales.present?
