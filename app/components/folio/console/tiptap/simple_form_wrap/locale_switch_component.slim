@@ -8,4 +8,4 @@
       data=stimulus_target("button")
       data=stimulus_action(click: "onLocaleClick")
     ]
-      = cell("folio/console/ui/flag", locale)
+      = render(Folio::Console::Ui::FlagComponent.new(locale:))
