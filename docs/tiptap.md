@@ -896,6 +896,56 @@ end
 
 ---
 
+## Locale Support
+
+Folio Tiptap supports localized content. When enabled, separate editors are created for each locale with a locale switcher UI in the console.
+
+### Enabling Locale Support
+
+Pass the `locales:` option to `has_folio_tiptap_content`:
+
+```rb
+class MyApp::Article < Folio::ApplicationRecord
+  include Folio::Tiptap::Model
+
+  has_folio_tiptap_content(locales: %i[cs en de])
+end
+```
+
+This creates locale-suffixed fields: `tiptap_content_cs`, `tiptap_content_en`, `tiptap_content_de`.
+
+For Traco integration:
+
+```rb
+if Rails.application.config.folio_using_traco
+  has_folio_tiptap_content(locales: I18n.available_locales.map(&:to_sym))
+  translates :title, :perex, :tiptap_content
+else
+  has_folio_tiptap_content
+end
+```
+
+### Class Methods
+
+- **`folio_tiptap_fields`**: Returns all Tiptap field names (e.g., `["tiptap_content_cs", "tiptap_content_en"]`)
+- **`folio_tiptap_locales`**: Returns locale configuration (e.g., `{ "tiptap_content" => [:cs, :en] }`)
+
+### Console UI
+
+When locales are configured, `simple_form_for_with_block_tiptap` automatically renders a locale switcher with flag icons. Each locale has independent word count tracking and autosave revisions.
+
+### Rendering Localized Content
+
+```slim
+/ Render for current locale
+= render Folio::Tiptap::ContentComponent.new(record: @article, attribute: :"tiptap_content_#{I18n.locale}")
+
+/ Or explicitly
+= render Folio::Tiptap::ContentComponent.new(record: @article, attribute: :tiptap_content_cs)
+```
+
+---
+
 ## Development
 
 Tiptap development happens in the `tiptap` directory. It's developed as a separate Vite app that is built using `npm run build`. That produces `folio-tiptap.css` and `folio-tiptap.js` in `tiptap/dist/assets` which are in the assets pipeline path.
