@@ -38,10 +38,15 @@ window.Folio.Stimulus.register('f-c-tiptap-simple-form-wrap', class extends wind
   }
 
   updateWordCount (e) {
-    const wordCount = e.detail && e.detail.wordCount
+    const { wordCount, attributeName } = e.detail || {}
     if (!wordCount) return
     if (!this.hasWordCountTarget) return
-    this.wordCountTarget.dispatchEvent(new CustomEvent('f-c-tiptap-simple-form-wrap:updateWordCount', { detail: { wordCount } }))
+    this.wordCountTargets.forEach(target => {
+      const wrap = target.closest('.f-c-tiptap-simple-form-wrap__attribute-wrap')
+      if (wrap?.dataset.attributeName === attributeName) {
+        target.dispatchEvent(new CustomEvent('f-c-tiptap-simple-form-wrap:updateWordCount', { detail: { wordCount, attributeName } }))
+      }
+    })
   }
 
   onContinueUnsavedChanges (e) {

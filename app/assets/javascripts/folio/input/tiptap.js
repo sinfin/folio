@@ -150,7 +150,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
       this.inputTarget.value = ''
     }
 
-    this.dispatch('updateWordCount', { detail: { wordCount } })
+    this.dispatch('updateWordCount', { detail: { wordCount, attributeName: this.attributeNameValue } })
 
     if (!this.ignoreValueChangesValue) {
       this.inputTarget.dispatchEvent(new window.Event('change', { bubbles: true }))
@@ -197,7 +197,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
         words: value[valueKeys.word_count],
         characters: value[valueKeys.character_count]
       })
-      this.dispatch('updateWordCount', { detail: { wordCount } })
+      this.dispatch('updateWordCount', { detail: { wordCount, attributeName: this.attributeNameValue } })
     }
 
     const data = {
