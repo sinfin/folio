@@ -11,11 +11,6 @@ window.Folio.Stimulus.register('f-c-tiptap-simple-form-wrap-locale-switch', clas
     })
 
     // Dispatch event to parent SimpleFormWrap component
-    this.element.dispatchEvent(new CustomEvent('f-c-tiptap-simple-form-wrap-locale-switch:attributeChanged', {
-      detail: {
-        attributeName
-      },
-      bubbles: true
-    }))
+    this.dispatch('attributeChanged', { detail: { attributeName } })
   }
 })
