@@ -21,6 +21,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     newRecord: { type: Boolean, default: false },
     placementType: String,
     placementId: Number,
+    attributeName: String,
     latestRevisionAt: String,
     hasUnsavedChanges: { type: Boolean, default: false }
   }
@@ -372,7 +373,8 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
 
     const data = {
       tiptap_revision: {
-        content: this.latestContent
+        content: this.latestContent,
+        attribute_name: this.attributeNameValue || 'tiptap_content'
       },
       placement: {
         type: this.placementTypeValue,

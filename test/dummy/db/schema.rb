@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_31_141402) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_09_083325) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -592,6 +592,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_31_141402) do
     t.jsonb "content", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "attribute_name", default: "tiptap_content", null: false
     t.index ["placement_type", "placement_id"], name: "index_folio_tiptap_revisions_on_placement"
     t.index ["superseded_by_user_id"], name: "index_folio_tiptap_revisions_on_superseded_by_user_id"
     t.index ["user_id"], name: "index_folio_tiptap_revisions_on_user_id"

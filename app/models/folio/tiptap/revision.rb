@@ -8,7 +8,7 @@ class Folio::Tiptap::Revision < Folio::ApplicationRecord
   belongs_to :superseded_by_user, class_name: "Folio::User", optional: true
 
   # content validation is intentionally minimal for auto-save
-  validates :user_id, uniqueness: { scope: [:placement_type, :placement_id] }
+  validates :user_id, uniqueness: { scope: [:placement_type, :placement_id, :attribute_name] }
 
   def superseded?
     superseded_by_user_id.present?
@@ -27,6 +27,7 @@ end
 #  content               :jsonb            not null
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
+#  attribute_name        :string           default("tiptap_content"), not null
 #
 # Indexes
 #
