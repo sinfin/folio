@@ -28,23 +28,20 @@ class Folio::Console::Tiptap::SimpleFormWrapComponent < Folio::Console::Applicat
     model_class.folio_tiptap_locales
   end
 
-  def grouped_tiptap_fields
+  def all_tiptap_fields
+    model_class.folio_tiptap_fields
+  end
+
+  def grouped_tiptap_fields_for_locale_switcher
     locales = folio_tiptap_locales
     return [] if locales.empty?
 
     locales.map do |base_field, locale_array|
       {
-        base_field: base_field,
-        locales: locale_array,
-        fields: locale_array.map { |locale| "#{base_field}_#{locale}" }
+        attribute_names: locale_array.map { |locale| "#{base_field}_#{locale}" },
+        locales: locale_array
       }
     end
-  end
-
-  def non_localized_tiptap_fields
-    all_fields = model_class.folio_tiptap_fields
-    localized_fields = grouped_tiptap_fields.flat_map { |group| group[:fields] }
-    all_fields - localized_fields
   end
 
   def data
@@ -61,7 +58,7 @@ class Folio::Console::Tiptap::SimpleFormWrapComponent < Folio::Console::Applicat
                           "f-c-file-placements-multi-picker-fields:addToPicker" => "onAddToMultiPicker",
                           "f-c-file-placements-multi-picker-fields:hookOntoFormWrap" => "onMultiPickerHookOntoFormWrap",
                           "f-c-ui-tabs:shown" => "onTabsChange",
-                          "f-c-tiptap-simple-form-wrap-locale-switch:localeChanged" => "onLocaleChanged",
+                          "f-c-tiptap-simple-form-wrap-locale-switch:attributeChanged" => "onAttributeChanged",
                         })
   end
 end

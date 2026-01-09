@@ -1,5 +1,5 @@
 window.Folio.Stimulus.register('f-c-tiptap-simple-form-wrap', class extends window.Stimulus.Controller {
-  static targets = ['scrollIco', 'scroller', 'wordCount', 'fields']
+  static targets = ['scrollIco', 'scroller', 'wordCount', 'fields', 'attributeWrap']
 
   static values = {
     scrolledToBottom: Boolean
@@ -115,19 +115,18 @@ window.Folio.Stimulus.register('f-c-tiptap-simple-form-wrap', class extends wind
     this.element.classList.toggle('f-c-tiptap-simple-form-wrap--multi-picker-visible', visible)
   }
 
-  onLocaleChanged (e) {
-    const { baseField, locale } = e.detail
+  onAttributeChanged (e) {
+    const { attributeName } = e.detail
 
-    // Hide all editors for this base field
-    const editors = this.element.querySelectorAll(`.f-c-tiptap-simple-form-wrap__editor-locale[data-base-field="${baseField}"]`)
-    editors.forEach(editor => {
-      editor.hidden = editor.dataset.locale !== locale
+    // Hide all attribute wraps (editors and autosave components)
+    this.attributeWrapTargets.forEach(wrap => {
+      wrap.hidden = wrap.dataset.attributeName !== attributeName
     })
 
     // Trigger resize on the visible iframe
-    const visibleEditor = this.element.querySelector(`.f-c-tiptap-simple-form-wrap__editor-locale[data-base-field="${baseField}"][data-locale="${locale}"]`)
-    if (visibleEditor) {
-      const iframe = visibleEditor.querySelector('.f-input-tiptap__iframe')
+    const visibleWrap = this.attributeWrapTargets.find(wrap => wrap.dataset.attributeName === attributeName)
+    if (visibleWrap) {
+      const iframe = visibleWrap.querySelector('.f-input-tiptap__iframe')
       if (iframe && iframe.contentWindow) {
         // Dispatch resize event to iframe
         iframe.contentWindow.postMessage({

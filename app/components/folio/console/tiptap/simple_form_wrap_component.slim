@@ -1,5 +1,5 @@
 .f-c-tiptap-simple-form-wrap data=data
-  - grouped_fields = grouped_tiptap_fields
+  - locale_switcher_groups = grouped_tiptap_fields_for_locale_switcher
   = helpers.simple_form_for(@simple_form_model, @simple_form_options) do |form|
     .f-c-tiptap-simple-form-wrap__scroller[
       data=stimulus_data(action: { scroll: 'onScroll' }, target: "scroller")
@@ -17,9 +17,9 @@
 
         = render(Folio::Console::Tiptap::SimpleFormWrap::WordCountComponent.new(data: stimulus_target("wordCount")))
 
-        - if grouped_fields.present?
-          - grouped_fields.each do |group|
-            = render(Folio::Console::Tiptap::SimpleFormWrap::LocaleSwitchComponent.new(base_field: group[:base_field], locales: group[:locales]))
+        - if locale_switcher_groups.present?
+          - locale_switcher_groups.each do |group|
+            = render(Folio::Console::Tiptap::SimpleFormWrap::LocaleSwitchComponent.new(attribute_names: group[:attribute_names], locales: group[:locales]))
 
         span.f-c-tiptap-simple-form-wrap__editors-bar-scroll-trigger[
           data=stimulus_action(click: "onScrollTriggerClick")
@@ -30,21 +30,22 @@
       .f-c-tiptap-simple-form-wrap__editors
         - if form.object.tiptap_autosave_enabled?
           .f-c-tiptap-simple-form-wrap__editors-autosave
-            = render(Folio::Console::Tiptap::SimpleFormWrap::AutosaveInfoComponent.new(object: form.object))
+            - all_tiptap_fields.each_with_index do |field, i|
+              .f-c-tiptap-simple-form-wrap__attribute-wrap[
+                data-attribute-name=field
+                hidden=(i > 0)
+                data=stimulus_target("attributeWrap")
+              ]
+                = render(Folio::Console::Tiptap::SimpleFormWrap::AutosaveInfoComponent.new(object: form.object, attribute_name: field))
 
         .f-c-tiptap-simple-form-wrap__editors-input-wrap
-          - if grouped_fields.present?
-            - grouped_fields.each do |group|
-              - group[:fields].each_with_index do |field, i|
-                .f-c-tiptap-simple-form-wrap__editor-locale[
-                  data-locale=group[:locales][i]
-                  data-base-field=group[:base_field]
-                  hidden=(i > 0)
-                ]
-                  = form.input field.to_sym, as: :tiptap, block: true, error: false
-
-          - non_localized_tiptap_fields.each do |field|
-            = form.input field, as: :tiptap, block: true, error: false
+          - all_tiptap_fields.each_with_index do |field, i|
+            .f-c-tiptap-simple-form-wrap__attribute-wrap[
+              data-attribute-name=field
+              hidden=(i > 0)
+              data=stimulus_target("attributeWrap")
+            ]
+              = form.input field.to_sym, as: :tiptap, block: true, error: false
 
     .f-c-tiptap-simple-form-wrap__form-footer
       = helpers.form_footer form, static: true

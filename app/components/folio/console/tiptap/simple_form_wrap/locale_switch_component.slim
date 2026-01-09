@@ -1,11 +1,10 @@
 .f-c-tiptap-simple-form-wrap-locale-switch data=controller_data
-  - @locales.each_with_index do |locale, i|
+  - attribute_names_with_locales.each_with_index do |item, i|
     button.f-c-tiptap-simple-form-wrap-locale-switch__btn[
       type="button"
       class=(i == 0 ? "f-c-tiptap-simple-form-wrap-locale-switch__btn--active" : nil)
-      data-locale=locale
-      data-base-field=@base_field
+      data-attribute-name=item[:attribute_name]
       data=stimulus_target("button")
-      data=stimulus_action(click: "onLocaleClick")
+      data=stimulus_action(click: "onAttributeClick")
     ]
-      = render(Folio::Console::Ui::FlagComponent.new(locale:))
+      = render(Folio::Console::Ui::FlagComponent.new(locale: item[:locale]))

@@ -1,14 +1,9 @@
 window.Folio.Stimulus.register('f-c-tiptap-simple-form-wrap-locale-switch', class extends window.Stimulus.Controller {
   static targets = ['button']
 
-  static values = {
-    baseField: String
-  }
-
-  onLocaleClick (e) {
+  onAttributeClick (e) {
     const button = e.currentTarget
-    const locale = button.dataset.locale
-    const baseField = this.baseFieldValue
+    const attributeName = button.dataset.attributeName
 
     // Update active state on buttons
     this.buttonTargets.forEach(btn => {
@@ -16,10 +11,9 @@ window.Folio.Stimulus.register('f-c-tiptap-simple-form-wrap-locale-switch', clas
     })
 
     // Dispatch event to parent SimpleFormWrap component
-    this.element.dispatchEvent(new CustomEvent('f-c-tiptap-simple-form-wrap-locale-switch:localeChanged', {
+    this.element.dispatchEvent(new CustomEvent('f-c-tiptap-simple-form-wrap-locale-switch:attributeChanged', {
       detail: {
-        baseField,
-        locale
+        attributeName
       },
       bubbles: true
     }))
