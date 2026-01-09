@@ -5,22 +5,15 @@
   margin-left: auto
 
   &__btn
-    background: transparent
-    border: 1px solid $border-color
-    border-radius: 4px
-    padding: 4px
-    cursor: pointer
+    +unbutton
+    width: 30px
+    height: 24px
     display: flex
     align-items: center
     justify-content: center
+    background-color: transparent
     transition: $transition-base
-    opacity: 0.6
 
-    &:hover
-      opacity: 1
-      border-color: $gray-medium-dark
-
+    &:hover,
     &--active
-      opacity: 1
-      border-color: $primary
-      background: rgba($primary, 0.1)
+      background-color: $medium-gray
