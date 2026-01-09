@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- **TipTap Locale Support**: Added locale support to Tiptap editor via `has_folio_tiptap_content(locales: [...])` option, enabling separate content fields per locale with locale switcher UI in console
+
 ## [7.1.1] - 2026-01-08
 
 ### Added

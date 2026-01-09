@@ -34,13 +34,18 @@ class Folio::Page < Folio::ApplicationRecord
   include Folio::Autosave::Model
 
   include Folio::Tiptap::Model
-  has_folio_tiptap_content
+
+  if Rails.application.config.folio_using_traco
+    has_folio_tiptap_content(locales: I18n.available_locales.map(&:to_sym))
+  else
+    has_folio_tiptap_content
+  end
 
   if Rails.application.config.folio_pages_audited
     include Folio::Audited::Model
 
     translated = %i[
-      title perex slug meta_title meta_description
+      title perex slug meta_title meta_description tiptap_content
     ]
     other = %i[type published published_at featured folio_audited_data]
 
@@ -58,7 +63,7 @@ class Folio::Page < Folio::ApplicationRecord
   if Rails.application.config.folio_using_traco
     include Folio::HasAtoms::Localized
 
-    translates :title, :perex, :slug, :meta_title, :meta_description
+    translates :title, :perex, :slug, :meta_title, :meta_description, :tiptap_content
 
     validate :validate_title_for_site_locales
   else

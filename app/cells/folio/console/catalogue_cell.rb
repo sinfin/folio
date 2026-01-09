@@ -179,7 +179,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
   def locale_flag(locale_attr = :locale)
     attribute(locale_attr, compact: true, aligned: true, skip_desktop_header: true) do
       if record.send(locale_attr)
-        cell("folio/console/ui/flag", record.send(locale_attr))
+        render_view_component(Folio::Console::Ui::FlagComponent.new(locale: record.send(locale_attr)))
       end
     end
   end

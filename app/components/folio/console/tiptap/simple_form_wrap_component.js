@@ -1,8 +1,9 @@
 window.Folio.Stimulus.register('f-c-tiptap-simple-form-wrap', class extends window.Stimulus.Controller {
-  static targets = ['scrollIco', 'scroller', 'wordCount', 'fields']
+  static targets = ['scrollIco', 'scroller', 'wordCount', 'fields', 'attributeWrap']
 
   static values = {
-    scrolledToBottom: Boolean
+    scrolledToBottom: Boolean,
+    cookieKey: String
   }
 
   connect () {
@@ -37,10 +38,15 @@ window.Folio.Stimulus.register('f-c-tiptap-simple-form-wrap', class extends wind
   }
 
   updateWordCount (e) {
-    const wordCount = e.detail && e.detail.wordCount
+    const { wordCount, attributeName } = e.detail || {}
     if (!wordCount) return
     if (!this.hasWordCountTarget) return
-    this.wordCountTarget.dispatchEvent(new CustomEvent('f-c-tiptap-simple-form-wrap:updateWordCount', { detail: { wordCount } }))
+    this.wordCountTargets.forEach(target => {
+      const wrap = target.closest('.f-c-tiptap-simple-form-wrap__attribute-wrap')
+      if (wrap?.dataset.attributeName === attributeName) {
+        target.dispatchEvent(new CustomEvent('f-c-tiptap-simple-form-wrap:updateWordCount', { detail: { wordCount, attributeName } }))
+      }
+    })
   }
 
   onContinueUnsavedChanges (e) {
@@ -113,5 +119,38 @@ window.Folio.Stimulus.register('f-c-tiptap-simple-form-wrap', class extends wind
     const activeLink = this.element.querySelector('.f-c-ui-tabs__nav-link.active')
     const visible = activeLink.classList.contains('f-c-file-placements-multi-picker-fields-nav-link')
     this.element.classList.toggle('f-c-tiptap-simple-form-wrap--multi-picker-visible', visible)
+  }
+
+  onAttributeChanged (e) {
+    const { attributeName } = e.detail
+
+    // Save to cookie if cookie key is available
+    if (this.cookieKeyValue) {
+      const inOneDay = new Date(new Date().getTime() + 24 * 60 * 60 * 1000)
+      window.Cookies.set(this.cookieKeyValue, attributeName, { expires: inOneDay, path: '' })
+    }
+
+    // Hide all attribute wraps (editors and autosave components)
+    this.attributeWrapTargets.forEach(wrap => {
+      wrap.hidden = wrap.dataset.attributeName !== attributeName
+    })
+
+    // Trigger resize on the visible iframe
+    const visibleWrap = this.attributeWrapTargets.find(wrap => wrap.dataset.attributeName === attributeName)
+    if (visibleWrap) {
+      const iframe = visibleWrap.querySelector('.f-input-tiptap__iframe')
+      if (iframe && iframe.contentWindow) {
+        // Dispatch resize event to iframe
+        iframe.contentWindow.postMessage({
+          type: 'f-input-tiptap:window-resize',
+          windowWidth: window.innerWidth
+        }, window.origin)
+
+        // Also trigger a resize event on the window
+        setTimeout(() => {
+          window.dispatchEvent(new Event('resize'))
+        }, 100)
+      }
+    }
   }
 })
