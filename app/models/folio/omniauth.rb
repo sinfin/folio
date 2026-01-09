@@ -7,9 +7,9 @@ module Folio
     end
 
     def self.setup_providers(provider_keys)
-      return if Rails.env.development? && !defined?(OmniAuth)
+      return if (Rails.env.development? || Rails.env.test?) && !defined?(::OmniAuth)
 
-      Rails.application.config.middleware.use OmniAuth::Builder do
+      Rails.application.config.middleware.use ::OmniAuth::Builder do
         provider_keys.each do |provider_key|
            if provider_key == :apple && ENV["OMNIAUTH_APPLE_SERVICE_BUNDLE_ID"]
              provider :apple,
