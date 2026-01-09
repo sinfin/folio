@@ -32,6 +32,30 @@ class Folio::Console::Tiptap::SimpleFormWrapComponent < Folio::Console::Applicat
     model_class.folio_tiptap_fields
   end
 
+  def model
+    @model ||= @simple_form_model.is_a?(Array) ? @simple_form_model.last : @simple_form_model
+  end
+
+  def cookie_key
+    return nil unless model.respond_to?(:id) && model.id.present?
+
+    "tiptap_attr_#{model.class.table_name}_#{model.id}"
+  end
+
+  def selected_attribute
+    return all_tiptap_fields.first if cookie_key.blank?
+
+    cookie_value = controller.send(:cookies)[cookie_key.to_sym]
+    return all_tiptap_fields.first if cookie_value.blank?
+
+    # Validate cookie value is a valid attribute name, fallback to first if invalid
+    if all_tiptap_fields.include?(cookie_value)
+      cookie_value
+    else
+      all_tiptap_fields.first
+    end
+  end
+
   def grouped_tiptap_fields_for_locale_switcher
     locales = folio_tiptap_locales
     return [] if locales.empty?
@@ -48,6 +72,7 @@ class Folio::Console::Tiptap::SimpleFormWrapComponent < Folio::Console::Applicat
     stimulus_controller("f-c-tiptap-simple-form-wrap",
                         values: {
                           scrolled_to_bottom: false,
+                          cookie_key: cookie_key,
                         },
                         action: {
                           "f-input-tiptap:updateWordCount" => "updateWordCount",

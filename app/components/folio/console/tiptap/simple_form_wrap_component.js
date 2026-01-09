@@ -2,7 +2,8 @@ window.Folio.Stimulus.register('f-c-tiptap-simple-form-wrap', class extends wind
   static targets = ['scrollIco', 'scroller', 'wordCount', 'fields', 'attributeWrap']
 
   static values = {
-    scrolledToBottom: Boolean
+    scrolledToBottom: Boolean,
+    cookieKey: String
   }
 
   connect () {
@@ -117,6 +118,12 @@ window.Folio.Stimulus.register('f-c-tiptap-simple-form-wrap', class extends wind
 
   onAttributeChanged (e) {
     const { attributeName } = e.detail
+
+    // Save to cookie if cookie key is available
+    if (this.cookieKeyValue) {
+      const inOneDay = new Date(new Date().getTime() + 24 * 60 * 60 * 1000)
+      window.Cookies.set(this.cookieKeyValue, attributeName, { expires: inOneDay, path: '' })
+    }
 
     // Hide all attribute wraps (editors and autosave components)
     this.attributeWrapTargets.forEach(wrap => {
