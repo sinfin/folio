@@ -1,11 +1,9 @@
 # copied from https://github.com/toshimaru/rubocop-rails_config/blob/main/config/rails.yml
 # and removed broken rubocop-md
 
-# require:
-#   - rubocop-minitest
-#   - rubocop-packaging
-#   - rubocop-performance
-#   - rubocop-rails
+require:
+  - rubocop-performance
+  - rubocop-rails
 
 AllCops:
   # RuboCop has a bunch of cops enabled by default. This setting tells RuboCop

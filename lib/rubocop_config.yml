@@ -1,9 +1,7 @@
 inherit_from: ./rubocop-rails_config-without-md.yml
 
-plugins:
+require:
   - rubocop-minitest
-  - rubocop-performance
-  - rubocop-rails
   - rubocop-rake
 
 AllCops:
