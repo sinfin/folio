@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 class Folio::Console::Tiptap::RenderNodesJsonComponent < Folio::Console::ApplicationComponent
-  def initialize(nodes_hash:)
+  def initialize(nodes_hash:, include_tiptap_node_hash: false)
     @nodes_hash = nodes_hash
+    @include_tiptap_node_hash = include_tiptap_node_hash
   end
 
   def components_array
@@ -34,15 +35,23 @@ class Folio::Console::Tiptap::RenderNodesJsonComponent < Folio::Console::Applica
       component = node.class.view_component_class.new(node:,
                                                       tiptap_content_information:)
 
-      {
+      result = {
         "unique_id" => unique_id,
         "html" => capture { render(component) },
       }
+
+      result["tiptap_node"] = node.to_tiptap_node_hash if @include_tiptap_node_hash
+
+      result
     else
-      render_invalid_or_error(unique_id:, node: node)
+      result = render_invalid_or_error(unique_id:, node: node)
+      result["tiptap_node"] = node.to_tiptap_node_hash if @include_tiptap_node_hash && node
+      result
     end
   rescue StandardError => error
-    render_invalid_or_error(unique_id:, node: node, error: error)
+    result = render_invalid_or_error(unique_id:, node: node, error: error)
+    result["tiptap_node"] = node.to_tiptap_node_hash if @include_tiptap_node_hash && node
+    result
   end
 
   def call
