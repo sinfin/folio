@@ -108,6 +108,8 @@ module Folio::Tiptap::Model
   end
 
   def update_tiptap_file_placements
+    return unless self.class.try(:has_folio_attachments?)
+
     new_file_placements = []
 
     self.class.folio_tiptap_fields.each do |field|
