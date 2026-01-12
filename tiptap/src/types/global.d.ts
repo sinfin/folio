@@ -63,6 +63,9 @@ declare global {
       toolbar_slot?: string;
       group?: string;
       autoclick_cover?: boolean;
+      paste?: {
+        pattern: string;
+      };
     };
   }
 

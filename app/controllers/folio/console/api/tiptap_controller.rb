@@ -30,6 +30,76 @@ class Folio::Console::Api::TiptapController < Folio::Console::Api::BaseControlle
     render layout: false
   end
 
+  def paste
+    pasted_string = params.require(:pasted_string)
+    node_type = params.require(:tiptap_node_type)
+    unique_id = params.require(:unique_id)
+
+    node_klass = node_type.safe_constantize
+
+    unless node_klass && node_klass < Folio::Tiptap::Node
+      errors = [
+        {
+          status: 400,
+          title: "Folio::Tiptap::PasteError",
+          detail: "Invalid node type",
+        }
+      ]
+      return render json: { errors: }, status: :bad_request
+    end
+
+    paste_config = node_klass.tiptap_config[:paste]
+
+    unless paste_config
+      errors = [
+        {
+          status: 422,
+          title: "Folio::Tiptap::PasteError",
+          detail: "Node type does not have paste configuration",
+        }
+      ]
+      return render json: { errors: }, status: :unprocessable_entity
+    end
+
+    pattern = paste_config[:pattern]
+    lambda_proc = paste_config[:lambda]
+
+    unless pattern.match?(pasted_string)
+      errors = [
+        {
+          status: 422,
+          title: "Folio::Tiptap::PasteError",
+          detail: "Paste string does not match pattern",
+        }
+      ]
+      return render json: { errors: }, status: :unprocessable_entity
+    end
+
+    node = lambda_proc.call(pasted_string)
+
+    unless node
+      error_message = if paste_config[:error_message_lambda]
+        paste_config[:error_message_lambda].call
+      else
+        "Failed to create node from pasted string"
+      end
+
+      errors = [
+        {
+          status: 422,
+          title: "Folio::Tiptap::PasteError",
+          detail: error_message,
+        }
+      ]
+      return render json: { errors: }, status: :unprocessable_entity
+    end
+
+    # Use render_nodes component with single-item nodes_hash
+    @nodes_hash = { unique_id => { node: node } }
+
+    render layout: false
+  end
+
   private
     def initialize_node
       tiptap_node_attrs = params.require(:tiptap_node_attrs)

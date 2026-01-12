@@ -3,6 +3,18 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- **Tiptap Node Paste Configuration**: Custom Tiptap nodes can now define a `paste` configuration in `tiptap_config` with a regex `pattern` and a `lambda` proc. When a user pastes text matching the pattern, the lambda is called to create a new node instance, which is automatically inserted into the editor. The paste detection runs before embed detection, allowing nodes to handle specific URL patterns or text formats.
+
+### Changed
+
+- bumped tiptap to `3.14.0`
+
+### Fixed
+
+- tiptap node drag&drop
+
 ## [7.1.1] - 2026-01-08
 
 ### Added
