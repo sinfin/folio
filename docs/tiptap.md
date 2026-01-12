@@ -4,6 +4,20 @@ This chapter describes the Tiptap editor implementation in Folio. The aim is to 
 
 ## Usage
 
+### Model Setup
+
+**Important:** You must include the concern and call `has_folio_tiptap_content` in your model before using Tiptap inputs.
+
+```rb
+class MyApp::Article < Folio::ApplicationRecord
+  include Folio::Tiptap::Model
+
+  has_folio_tiptap_content
+end
+```
+
+### Form Inputs
+
 Simple rich text editor:
 
 ```rb
