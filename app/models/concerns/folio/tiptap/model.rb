@@ -15,10 +15,6 @@ module Folio::Tiptap::Model
       end
     end
 
-    def has_folio_tiptap?
-      folio_tiptap_fields.present?
-    end
-
     def folio_tiptap_fields
       %w[tiptap_content]
     end
@@ -30,6 +26,10 @@ module Folio::Tiptap::Model
     before_validation :update_tiptap_file_placements
     validate :validate_tiptap_fields
     after_save :cleanup_tiptap_revisions, if: :tiptap_autosave_enabled?
+  end
+
+  def has_folio_tiptap?
+    self.class.folio_tiptap_fields.present?
   end
 
   def convert_titap_fields_to_hashes_and_sanitize

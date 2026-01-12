@@ -20,7 +20,7 @@ class Folio::Console::CurrentUsers::ConsoleUrlBarComponent < Folio::Console::App
     def has_tiptap_with_autosave?
       return false if @record.blank?
 
-      @record.class.try(:has_folio_tiptap?) && @record.tiptap_autosave_enabled?
+      @record.try(:has_folio_tiptap?) && @record.tiptap_autosave_enabled?
     end
 
     def other_user_has_revision?

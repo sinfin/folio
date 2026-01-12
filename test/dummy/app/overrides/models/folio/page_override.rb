@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Folio::Page.class_eval do
-  def self.has_folio_tiptap?
+  def has_folio_tiptap?
     true
   end
 

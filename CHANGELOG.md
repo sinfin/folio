@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- **has_folio_tiptap? method**: Changed from class method to instance method (BREAKING: update all calls and test stubs). See [UPGRADING.md](UPGRADING.md#711-to-720) for migration details.
+
 ## [7.1.2] - 2026-01-12
 
 ### Added

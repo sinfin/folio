@@ -1,5 +1,27 @@
 # Upgrading
 
+## 7.1.* to 7.2.0
+
+### has_folio_tiptap? Method Change
+
+**BREAKING CHANGE**: `has_folio_tiptap?` has been changed from a class method to an instance method.
+
+**Before (7.1.*):**
+```ruby
+Folio::Page.has_folio_tiptap?  # class method
+```
+
+**After (7.2.0):**
+```ruby
+page.has_folio_tiptap?  # instance method
+```
+
+**Action required:**
+
+1. Update all code that calls `has_folio_tiptap?` as a class method to use it as an instance method
+2. Update test stubs from `Folio::Page.stub(:has_folio_tiptap?, true)` to `page.stub(:has_folio_tiptap?, true)`
+3. Search your codebase for `\.has_folio_tiptap\?` and `has_folio_tiptap\?` to find all usages
+
 ## 7.0.0 to 7.1.0
 
 ### TipTap Node Configuration Changes

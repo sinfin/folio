@@ -1,4 +1,4 @@
-- if @page.class.try(:has_folio_tiptap?)
+- if @page.try(:has_folio_tiptap?)
   = simple_form_for_with_block_tiptap([:console, @page])
 - else
   = simple_form_for_with_atoms([:console, @page]) do |f|
