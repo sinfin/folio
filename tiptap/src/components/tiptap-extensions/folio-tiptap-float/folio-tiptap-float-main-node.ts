@@ -41,6 +41,9 @@ export const FolioTiptapFloatMainNode = Node.create({
     return ReactNodeViewRenderer(FolioTiptapFloatMainView, {
       as: "main",
       className: "node-folioTiptapFloatMain f-tiptap-float__main",
+      // Allow all events to propagate to ProseMirror.
+      // This fixes drop events not working when cursor is over this node.
+      stopEvent: () => false,
     });
   },
 });

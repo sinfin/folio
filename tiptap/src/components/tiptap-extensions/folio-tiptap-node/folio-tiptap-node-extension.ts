@@ -2,14 +2,13 @@ import { Node, ReactNodeViewRenderer } from "@tiptap/react";
 import { FolioTiptapNode } from "@/components/tiptap-extensions/folio-tiptap-node";
 import { Plugin } from "@tiptap/pm/state";
 import type { CommandProps } from "@tiptap/core";
-import { TextSelection } from "@tiptap/pm/state";
-import { Fragment } from "@tiptap/pm/model";
 import type { EditorView } from "@tiptap/pm/view";
 import type { Slice } from "@tiptap/pm/model";
 
 import { makeUniqueId } from "./make-unique-id";
 import { moveFolioTiptapNode } from "./move-folio-tiptap-node";
 import { postEditMessage } from "./post-edit-message";
+import { insertFolioTiptapNodeWithParagraph } from "./insert-folio-tiptap-node-with-paragraph";
 import embedTypes from "@/../../data/embed/source/types.json";
 
 const EMBED_URL_PATTERNS = Object.entries(embedTypes).reduce(
@@ -157,7 +156,11 @@ export const FolioTiptapNodeExtension = Node.create<FolioTiptapNodeOptions>({
   },
 
   addNodeView() {
-    return ReactNodeViewRenderer(FolioTiptapNode);
+    return ReactNodeViewRenderer(FolioTiptapNode, {
+      // Allow all events to propagate to ProseMirror.
+      // This fixes drop events not working when cursor is over this atomic node.
+      stopEvent: () => false,
+    });
   },
 
   addProseMirrorPlugins() {
@@ -199,76 +202,135 @@ export const FolioTiptapNodeExtension = Node.create<FolioTiptapNodeOptions>({
       },
     };
 
-    // Only add handlePaste if embedNodeClassName is configured
-    if (this.options.embedNodeClassName) {
+    // Build array of nodes with paste config
+    const nodesWithPasteConfig: Array<{
+      type: string;
+      pattern: RegExp;
+    }> = [];
+
+    if (this.options.nodes) {
+      this.options.nodes.forEach((node) => {
+        if (node.config?.paste?.pattern) {
+          try {
+            // Convert Ruby regex pattern string to JavaScript RegExp
+            // Ruby uses \A and \z for start/end anchors, JavaScript uses ^ and $
+            let patternStr = node.config.paste.pattern;
+            // Convert Ruby anchors to JavaScript anchors
+            patternStr = patternStr.replace(/\\A/g, "^").replace(/\\z/g, "$");
+            const regex = new RegExp(patternStr);
+            nodesWithPasteConfig.push({
+              type: node.type,
+              pattern: regex,
+            });
+          } catch (error) {
+            console.error(
+              `Failed to create RegExp for node ${node.type}:`,
+              error,
+            );
+          }
+        }
+      });
+    }
+
+    // Add handlePaste if we have paste configs or embedNodeClassName
+    if (nodesWithPasteConfig.length > 0 || this.options.embedNodeClassName) {
       pluginProps.handlePaste = (view, event, _slice) => {
         const clipboardText = event.clipboardData?.getData("text/plain");
         const clipboardHTML = event.clipboardData?.getData("text/html");
 
-        if (clipboardText) {
-          const trimmedText = clipboardText.trim();
-          const embedType = detectEmbedUrlType(trimmedText);
-          if (embedType) {
-            // Create an embed node for URL embeds
-            view.dispatch(
-              view.state.tr.replaceSelectionWith(
-                this.type.create({
-                  type: this.options.embedNodeClassName,
-                  version: 1,
-                  uniqueId: makeUniqueId(),
-                  data: {
-                    folio_embed_data: {
-                      active: true,
-                      type: embedType,
-                      url: trimmedText,
-                    },
-                  },
-                }),
-              ),
-            );
-            return true;
-          }
+        // First check paste patterns (before embed detection)
+        if (nodesWithPasteConfig.length > 0) {
+          const textToCheck = clipboardText?.trim() || clipboardHTML?.trim();
 
-          // Check if plain text contains Facebook iframe HTML
-          if (detectFacebookIframe(trimmedText)) {
-            // Create an embed node for Facebook HTML embeds pasted as text
-            view.dispatch(
-              view.state.tr.replaceSelectionWith(
-                this.type.create({
-                  type: this.options.embedNodeClassName,
-                  version: 1,
-                  uniqueId: makeUniqueId(),
-                  data: {
-                    folio_embed_data: {
-                      active: true,
-                      html: trimmedText,
+          if (textToCheck) {
+            for (const nodeConfig of nodesWithPasteConfig) {
+              if (nodeConfig.pattern.test(textToCheck)) {
+                // Create paste placeholder node
+                const placeholderNode =
+                  view.state.schema.nodes.folioTiptapNodePastePlaceholder.create(
+                    {
+                      pasted_string: textToCheck,
+                      target_node_type: nodeConfig.type,
+                      uniqueId: makeUniqueId(),
                     },
-                  },
-                }),
-              ),
-            );
-            return true;
+                  );
+
+                view.dispatch(
+                  view.state.tr.replaceSelectionWith(placeholderNode),
+                );
+                return true; // Prevent default paste handling
+              }
+            }
           }
         }
 
-        if (clipboardHTML && detectFacebookIframe(clipboardHTML)) {
-          // Create an embed node for Facebook HTML embeds
-          view.dispatch(
-            view.state.tr.replaceSelectionWith(
-              this.type.create({
-                type: this.options.embedNodeClassName,
-                version: 1,
-                uniqueId: makeUniqueId(),
-                data: {
-                  folio_embed_data: {
-                    active: true,
-                    html: clipboardHTML,
+        // Then check embed patterns (existing logic)
+        if (this.options.embedNodeClassName) {
+          if (clipboardText) {
+            const trimmedText = clipboardText.trim();
+            const embedType = detectEmbedUrlType(trimmedText);
+            if (embedType) {
+              // Create an embed node for URL embeds
+              view.dispatch(
+                view.state.tr.replaceSelectionWith(
+                  this.type.create({
+                    type: this.options.embedNodeClassName,
+                    version: 1,
+                    uniqueId: makeUniqueId(),
+                    data: {
+                      folio_embed_data: {
+                        active: true,
+                        type: embedType,
+                        url: trimmedText,
+                      },
+                    },
+                  }),
+                ),
+              );
+              return true;
+            }
+
+            // Check if plain text contains Facebook iframe HTML
+            if (detectFacebookIframe(trimmedText)) {
+              // Create an embed node for Facebook HTML embeds pasted as text
+              view.dispatch(
+                view.state.tr.replaceSelectionWith(
+                  this.type.create({
+                    type: this.options.embedNodeClassName,
+                    version: 1,
+                    uniqueId: makeUniqueId(),
+                    data: {
+                      folio_embed_data: {
+                        active: true,
+                        html: trimmedText,
+                      },
+                    },
+                  }),
+                ),
+              );
+              return true;
+            }
+          }
+
+          if (clipboardHTML && detectFacebookIframe(clipboardHTML)) {
+            // Create an embed node for Facebook HTML embeds
+            view.dispatch(
+              view.state.tr.replaceSelectionWith(
+                this.type.create({
+                  type: this.options.embedNodeClassName,
+                  version: 1,
+                  uniqueId: makeUniqueId(),
+                  data: {
+                    folio_embed_data: {
+                      active: true,
+                      html: clipboardHTML,
+                    },
                   },
-                },
-              }),
-            ),
-          );
-          return true;
+                }),
+              ),
+            );
+            return true;
+          }
         }
 
         return false; // Let other handlers process the paste
@@ -295,41 +357,15 @@ export const FolioTiptapNodeExtension = Node.create<FolioTiptapNodeOptions>({
             editor.view.dom.focus();
 
             const selection = tr.selection;
-            const $pos = tr.doc.resolve(selection.anchor);
+            const anchor = selection.anchor;
 
-            // Check if we're at the end of a parent node (depth > 1 means we're inside something)
-            // We use depth - 1 because the max-depth is the paragraph with slash
-            const isAtEndOfParent =
-              $pos.depth > 2 && $pos.pos + 1 === $pos.end($pos.depth - 1);
+            insertFolioTiptapNodeWithParagraph({
+              node,
+              pos: anchor,
+              tr,
+              schema: editor.schema,
+            });
 
-            if (isAtEndOfParent) {
-              // Insert node + paragraph using fragment
-              const paragraphNode = editor.schema.nodes.paragraph.create();
-              const fragment = Fragment.from([node, paragraphNode]);
-
-              // Replace the whole paragraph - the -1 is the node opening
-              const start = $pos.start($pos.depth) - 1;
-
-              // The +1 is the node closing
-              const end = $pos.end($pos.depth) + 1;
-              tr.replaceWith(start, end, fragment);
-
-              // Set selection to the beginning of the paragraph (after the node)
-              // start + folioTipapNode (leaf -> 1)
-              const paragraphPos = start + 1;
-              tr.setSelection(
-                TextSelection.near(tr.doc.resolve(paragraphPos + 1)),
-              );
-            } else {
-              // Just insert the node
-              tr.replaceSelectionWith(node);
-
-              // Move after the inserted node
-              const offset = tr.selection.anchor;
-              tr.setSelection(TextSelection.near(tr.doc.resolve(offset)));
-            }
-
-            tr.scrollIntoView();
             dispatch(tr);
           }
 

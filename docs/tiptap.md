@@ -141,6 +141,13 @@ class MyApp::CustomNode < Folio::Tiptap::Node
     documents: :documents,
     category: { class_name: "Category" },
     reports: { class_name: "Report", has_many: true }
+  }, tiptap_config: {
+    paste: {
+      pattern: %r{https?://example\.com/.*},
+      lambda: ->(string) {
+        MyApp::CustomNode.new(title: "Pasted from #{string}", description: string)
+      }
+    }
   }
 end
 ```
@@ -368,6 +375,44 @@ The method handles:
 - **Type casting**: Converts string IDs to integers, parses JSON strings
 - **File attachments**: Handles placement attributes for file relationships
 - **URL validation**: Filters URL JSON to only allowed keys and/or parses JSON strings
+
+### Paste Configuration
+
+Custom nodes can define a `paste` configuration in `tiptap_config` to automatically create node instances when users paste matching text:
+
+```rb
+class MyApp::CustomNode < Folio::Tiptap::Node
+  tiptap_node structure: {
+    title: :string,
+    url: :string,
+  }, tiptap_config: {
+    paste: {
+      pattern: %r{https?://example\.com/.*},
+      lambda: ->(string) {
+        MyApp::CustomNode.new(title: "Pasted Link", url: string)
+      }
+    }
+  }
+end
+```
+
+**Configuration Options:**
+- **`pattern`**: A Ruby `Regexp` that matches the text to trigger node creation. The regex pattern is serialized to its source string for the frontend.
+- **`lambda`**: A `Proc` that accepts exactly one argument (the pasted string) and returns a new node instance. The lambda is called only if the pattern matches.
+
+**How It Works:**
+1. When a user pastes text into the Tiptap editor, the paste handler checks all nodes with `paste` configuration
+2. If the pasted text matches a node's pattern, a placeholder node is inserted
+3. The placeholder makes an API call to `/console/api/tiptap/paste` with the pasted string and node type
+4. The backend validates the pattern match and calls the lambda to create a new node instance
+5. The node is rendered server-side and returned with HTML, which is cached for immediate display
+6. The placeholder is replaced with the actual node
+
+**Important Notes:**
+- Paste detection runs **before** embed detection, allowing nodes to handle specific URL patterns
+- The lambda can return `nil` if node creation fails (e.g., validation errors), which will show an error message
+- The `uniqueId` from the placeholder is preserved in the created node to ensure proper rendering
+- HTML is pre-rendered server-side and cached client-side for immediate display
 
 ### View Components
 

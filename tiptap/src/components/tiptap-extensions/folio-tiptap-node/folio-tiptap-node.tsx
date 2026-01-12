@@ -1,6 +1,7 @@
 import * as React from "react";
 import type { NodeViewProps } from "@tiptap/react";
 import { NodeViewWrapper } from "@tiptap/react";
+import { NodeSelection } from "@tiptap/pm/state";
 import { makeUniqueId } from "./make-unique-id";
 import { postEditMessage } from "./post-edit-message";
 
@@ -36,8 +37,17 @@ interface StoredHtml {
 
 let htmlCache: StoredHtml[] = [];
 
-const storeHtmlToCache = ({ html, serializedAttrs }: StoredHtml) => {
+export const storeHtmlToCache = ({ html, serializedAttrs }: StoredHtml) => {
   htmlCache = [{ html, serializedAttrs }, ...htmlCache.slice(0, 9)];
+};
+
+export const getHtmlFromCache = (
+  serializedAttrs: string,
+): string | undefined => {
+  const cachedEntry = htmlCache.find(
+    (entry) => entry.serializedAttrs === serializedAttrs,
+  );
+  return cachedEntry?.html;
 };
 
 // Height storage functions
@@ -96,6 +106,20 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
     [attrsWithoutUniqueId, uniqueId],
   );
 
+  // Handle click to select this node.
+  // This explicit selection is needed because Link extension's enableClickSelection
+  // causes extendMarkRange("link") to return true even on atomic nodes without links,
+  // which prevents ProseMirror's default selectClickedLeaf from running.
+  // See: Tiptap 3.14 regression with Link extension handleClick intercepting all clicks.
+  const handleClick = React.useCallback(() => {
+    const pos = props.getPos();
+    if (typeof pos !== "number") return;
+
+    const { state, dispatch } = props.editor.view;
+    const selection = NodeSelection.create(state.doc, pos);
+    dispatch(state.tr.setSelection(selection));
+  }, [props]);
+
   const handleDomEditEvent = React.useCallback(() => {
     postEditMessage(attrsWithoutUniqueId, uniqueId);
   }, [attrsWithoutUniqueId, uniqueId]);
@@ -113,13 +137,11 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
       const serializedAttrs = JSON.stringify(attrsWithoutUniqueId);
 
       // Check if we have cached HTML for these attributes
-      const cachedEntry = htmlCache.find(
-        (entry) => entry.serializedAttrs === serializedAttrs,
-      );
+      const cachedHtml = getHtmlFromCache(serializedAttrs);
 
-      if (cachedEntry) {
+      if (cachedHtml) {
         setStatus("loaded");
-        setResponseFromApi({ html: cachedEntry.html });
+        setResponseFromApi({ html: cachedHtml });
         return;
       } else {
         setStatus("loading");
@@ -234,6 +256,7 @@ export const FolioTiptapNode: React.FC<NodeViewProps> = (props) => {
       data-folio-tiptap-node-type={props.node.attrs.type}
       data-folio-tiptap-node-data={JSON.stringify(props.node.attrs.data)}
       data-folio-tiptap-node-unique-id={props.node.attrs.uniqueId}
+      onClick={handleClick}
       onDoubleClick={handleEditClick}
       ref={wrapperRef}
     >

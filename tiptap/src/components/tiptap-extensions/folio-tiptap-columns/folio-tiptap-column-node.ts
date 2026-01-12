@@ -34,6 +34,9 @@ export const FolioTiptapColumnNode = Node.create({
   addNodeView() {
     return ReactNodeViewRenderer(FolioTiptapColumnView, {
       className: "node-folioTiptapColumn f-tiptap-column",
+      // Allow all events to propagate to ProseMirror.
+      // This fixes drop events not working when cursor is over this node.
+      stopEvent: () => false,
     });
   },
 });

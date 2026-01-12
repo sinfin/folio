@@ -12,6 +12,7 @@ class TiptapInput < SimpleForm::Inputs::StringInput
                         origin: ENV["FOLIO_TIPTAP_DEV"] ? "*" : "",
                         type: tiptap_type,
                         render_url: @builder.template.render_nodes_console_api_tiptap_path,
+                        paste_url: @builder.template.paste_console_api_tiptap_path,
                         autosave: options[:block] ? tiptap_autosave_enabled? : false,
                         autosave_url: @builder.template.save_revision_console_api_tiptap_revisions_path,
                         new_record: safe_new_record?,

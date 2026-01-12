@@ -121,6 +121,9 @@ export const FolioTiptapPagesNode = Node.create({
   addNodeView() {
     return ReactNodeViewRenderer(FolioTiptapPagesView, {
       className: "node-folioTiptapPages f-tiptap-pages",
+      // Allow all events to propagate to ProseMirror.
+      // This fixes drop events not working when cursor is over this node.
+      stopEvent: () => false,
     });
   },
 

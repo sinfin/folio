@@ -69,7 +69,11 @@ export const FolioTiptapInvalidNode = Node.create<Record<string, never>>({
   },
 
   addNodeView() {
-    return ReactNodeViewRenderer(FolioTiptapInvalidNodeComponent);
+    return ReactNodeViewRenderer(FolioTiptapInvalidNodeComponent, {
+      // Allow all events to propagate to ProseMirror.
+      // This fixes drop events not working when cursor is over this node.
+      stopEvent: () => false,
+    });
   },
 
   parseHTML() {

@@ -44,6 +44,9 @@ export const FolioTiptapFloatAsideNode = Node.create({
     return ReactNodeViewRenderer(FolioTiptapFloatAsideView, {
       as: "aside",
       className: "node-folioTiptapFloatAside f-tiptap-float__aside",
+      // Allow all events to propagate to ProseMirror.
+      // This fixes drop events not working when cursor is over this node.
+      stopEvent: () => false,
     });
   },
 });
