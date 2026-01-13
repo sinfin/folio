@@ -53,6 +53,13 @@ $f-tiptap__media-min-width--desktop: 708px !default;
 
   --f-tiptap-columns__gap: var(--f-tiptap__spacer);
   --f-tiptap-float__aside-margin-y: var(--f-tiptap__spacer);
+  --f-tiptap-float__aside-width: 0;
+  --f-tiptap-float__aside-margin-x: 0;
+  --f-tiptap-float__aside-offset: 0;
+  --f-tiptap-float__aside-offset--tablet: 0;
+  --f-tiptap-float__aside-margin-x--tablet: 1rem;
+  --f-tiptap-float__aside-offset--desktop: 0;
+  --f-tiptap-float__aside-margin-x--desktop: 1rem;
 
   --f-tiptap-li__margin-top: 0.5rem;
   --f-tiptap-li__margin-bottom: 0.5rem;
@@ -400,10 +407,6 @@ $f-tiptap__media-min-width--desktop: 708px !default;
   }
 
   .f-tiptap-float {
-    // Default values for CSS custom properties (below 576px, float layout is not active)
-    --f-tiptap-float__aside-width: 0;
-    --f-tiptap-float__aside-margin-x: 0;
-    --f-tiptap-float__aside-offset: 0;
     position: relative;
   }
 
@@ -559,8 +562,8 @@ $f-tiptap__media-min-width--desktop: 708px !default;
       // Default aside width (medium)
       --f-tiptap-float__aside-width: 240px;
       --f-tiptap-float__aside-side: left;
-      --f-tiptap-float__aside-margin-x: 1rem;
-      --f-tiptap-float__aside-offset: 0;
+      --f-tiptap-float__aside-margin-x: var(--f-tiptap-float__aside-margin-x--tablet);
+      --f-tiptap-float__aside-offset: var(--f-tiptap-float__aside-offset--tablet);
 
       &::after {
         content: "";
@@ -651,8 +654,8 @@ $f-tiptap__media-min-width--desktop: 708px !default;
     }
 
     .f-tiptap-float {
-      --f-tiptap-float__aside-margin-x: 1rem;
-      --f-tiptap-float__aside-offset: 0;
+      --f-tiptap-float__aside-margin-x: var(--f-tiptap-float__aside-margin-x--desktop);
+      --f-tiptap-float__aside-offset: var(--f-tiptap-float__aside-offset--desktop);
     }
 
     .f-tiptap-float__aside {
