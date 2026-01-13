@@ -420,6 +420,9 @@ export function FolioEditor({
   );
 
   let contentClassName = "f-tiptap-editor__content f-tiptap-styles";
+  if (folioTiptapConfig.theme) {
+    contentClassName += ` f-tiptap-styles--theme-${folioTiptapConfig.theme}`;
+  }
   if (readonly) contentClassName += " f-tiptap-editor__content--readonly";
   if (!editorCreated || !initializedContent) return null;
 
