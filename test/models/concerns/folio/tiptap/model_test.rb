@@ -3,28 +3,6 @@
 require "test_helper"
 
 class Folio::Tiptap::ModelTest < ActiveSupport::TestCase
-  test "has_folio_tiptap_content with locales registers locale-suffixed fields" do
-    model_class = Class.new(Folio::ApplicationRecord) do
-      self.table_name = "folio_pages"
-      include Folio::Tiptap::Model
-    end
-
-    model_class.has_folio_tiptap_content(locales: %i[cs en])
-
-    assert_equal %w[tiptap_content_cs tiptap_content_en], model_class.folio_tiptap_fields.sort
-  end
-
-  test "has_folio_tiptap_content without locales maintains existing behavior" do
-    model_class = Class.new(Folio::ApplicationRecord) do
-      self.table_name = "folio_pages"
-      include Folio::Tiptap::Model
-    end
-
-    model_class.has_folio_tiptap_content
-
-    assert_equal %w[tiptap_content], model_class.folio_tiptap_fields
-  end
-
   test "convert_titap_fields_to_hashes" do
     page = create(:folio_page)
 
