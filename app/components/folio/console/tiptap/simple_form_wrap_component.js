@@ -3,11 +3,18 @@ window.Folio.Stimulus.register('f-c-tiptap-simple-form-wrap', class extends wind
 
   static values = {
     scrolledToBottom: Boolean,
-    cookieKey: String
+    cookieKey: String,
+    newRecordCookieKey: String
   }
 
   connect () {
     this.onScroll = window.Folio.throttle(this.onScrollRaw.bind(this))
+
+    // Initialize current attribute name from visible attribute wrap
+    const visibleWrap = this.attributeWrapTargets.find(wrap => !wrap.hidden)
+    if (visibleWrap) {
+      this.currentAttributeName = visibleWrap.dataset.attributeName
+    }
   }
 
   disconnect () {
@@ -124,6 +131,9 @@ window.Folio.Stimulus.register('f-c-tiptap-simple-form-wrap', class extends wind
   onAttributeChanged (e) {
     const { attributeName } = e.detail
 
+    // Track current attribute name for new records
+    this.currentAttributeName = attributeName
+
     // Save to cookie if cookie key is available
     if (this.cookieKeyValue) {
       const inOneDay = new Date(new Date().getTime() + 24 * 60 * 60 * 1000)
@@ -151,6 +161,14 @@ window.Folio.Stimulus.register('f-c-tiptap-simple-form-wrap', class extends wind
           window.dispatchEvent(new Event('resize'))
         }, 100)
       }
+    }
+  }
+
+  onFormSubmit (e) {
+    // Set short-lived generic cookie for new records on form submit
+    if (this.newRecordCookieKeyValue && this.currentAttributeName) {
+      const inFifteenSeconds = new Date(new Date().getTime() + 15 * 1000)
+      window.Cookies.set(this.newRecordCookieKeyValue, this.currentAttributeName, { expires: inFifteenSeconds, path: '' })
     }
   }
 })

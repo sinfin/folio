@@ -42,18 +42,27 @@ class Folio::Console::Tiptap::SimpleFormWrapComponent < Folio::Console::Applicat
     "tiptap_attr_#{model.class.table_name}_#{model.id}"
   end
 
+  def new_record_cookie_key
+    "tiptap_attr_new_#{model.class.table_name}"
+  end
+
   def selected_attribute
-    return all_tiptap_fields.first if cookie_key.blank?
-
-    cookie_value = controller.send(:cookies)[cookie_key.to_sym]
-    return all_tiptap_fields.first if cookie_value.blank?
-
-    # Validate cookie value is a valid attribute name, fallback to first if invalid
-    if all_tiptap_fields.include?(cookie_value)
-      cookie_value
-    else
-      all_tiptap_fields.first
+    # Check record-specific cookie first
+    if cookie_key.present?
+      cookie_value = controller.send(:cookies)[cookie_key.to_sym]
+      if cookie_value.present? && all_tiptap_fields.include?(cookie_value)
+        return cookie_value
+      end
     end
+
+    # Fallback to generic cookie for new records
+    generic_cookie_value = controller.send(:cookies)[new_record_cookie_key.to_sym]
+    if generic_cookie_value.present? && all_tiptap_fields.include?(generic_cookie_value)
+      return generic_cookie_value
+    end
+
+    # Default to first field
+    all_tiptap_fields.first
   end
 
   def grouped_tiptap_fields_for_locale_switcher
@@ -69,21 +78,29 @@ class Folio::Console::Tiptap::SimpleFormWrapComponent < Folio::Console::Applicat
   end
 
   def data
+    actions = {
+      "f-input-tiptap:updateWordCount" => "updateWordCount",
+      "f-c-tiptap-simple-form-wrap-autosave-info:continueUnsavedChanges" => "onContinueUnsavedChanges",
+      "f-input-tiptap:tiptapContinueUnsavedChanges" => "onTiptapContinueUnsavedChanges",
+      "f-input-tiptap:tiptapAutosaveFailed" => "onTiptapAutosaveFailed",
+      "f-input-tiptap:tiptapAutosaveSucceeded" => "onTiptapAutosaveSucceeded",
+      "f-c-file-placements-multi-picker-fields:addToPicker" => "onAddToMultiPicker",
+      "f-c-file-placements-multi-picker-fields:hookOntoFormWrap" => "onMultiPickerHookOntoFormWrap",
+      "f-c-ui-tabs:shown" => "onTabsChange",
+      "f-c-tiptap-simple-form-wrap-locale-switch:attributeChanged" => "onAttributeChanged",
+    }
+
+    # Add form submit handler for new records
+    if model.respond_to?(:new_record?) && model.new_record?
+      actions["submit"] = "onFormSubmit"
+    end
+
     stimulus_controller("f-c-tiptap-simple-form-wrap",
                         values: {
                           scrolled_to_bottom: false,
                           cookie_key: cookie_key,
+                          new_record_cookie_key: new_record_cookie_key,
                         },
-                        action: {
-                          "f-input-tiptap:updateWordCount" => "updateWordCount",
-                          "f-c-tiptap-simple-form-wrap-autosave-info:continueUnsavedChanges" => "onContinueUnsavedChanges",
-                          "f-input-tiptap:tiptapContinueUnsavedChanges" => "onTiptapContinueUnsavedChanges",
-                          "f-input-tiptap:tiptapAutosaveFailed" => "onTiptapAutosaveFailed",
-                          "f-input-tiptap:tiptapAutosaveSucceeded" => "onTiptapAutosaveSucceeded",
-                          "f-c-file-placements-multi-picker-fields:addToPicker" => "onAddToMultiPicker",
-                          "f-c-file-placements-multi-picker-fields:hookOntoFormWrap" => "onMultiPickerHookOntoFormWrap",
-                          "f-c-ui-tabs:shown" => "onTabsChange",
-                          "f-c-tiptap-simple-form-wrap-locale-switch:attributeChanged" => "onAttributeChanged",
-                        })
+                        action: actions)
   end
 end
