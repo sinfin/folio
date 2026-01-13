@@ -71,7 +71,7 @@ class TiptapInput < SimpleForm::Inputs::StringInput
     def tiptap_autosave_enabled?
       return false if @builder.object.respond_to?(:new_record?) && @builder.object.new_record?
 
-      @builder.object.respond_to?(:tiptap_autosave_enabled?) && @builder.object.tiptap_autosave_enabled?
+      @builder.object.try(:tiptap_autosave_enabled?)
     end
 
     def current_user_latest_revision

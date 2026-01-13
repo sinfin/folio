@@ -23,7 +23,7 @@
             = folio_icon(:chevron_down, height: 16)
 
       .f-c-tiptap-simple-form-wrap__editors
-        - if form.object.tiptap_autosave_enabled?
+        - if form.object.try(:tiptap_autosave_enabled?)
           .f-c-tiptap-simple-form-wrap__editors-autosave
             = render(Folio::Console::Tiptap::SimpleFormWrap::AutosaveInfoComponent.new(object: form.object))
 
