@@ -1,0 +1,17 @@
+.git
+.gitignore
+README.md
+log/*
+tmp/*
+.env
+.env.*
+node_modules
+coverage
+.byebug_history
+.DS_Store
+*.swp
+*.swo
+*.log
+public/assets
+public/packs
+public/packs-test

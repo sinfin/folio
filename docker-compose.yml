@@ -1,0 +1,47 @@
+services:
+  db:
+    image: postgres:13
+    network_mode: host
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: folio_development
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:6-alpine
+    network_mode: host
+    volumes:
+      - redis_data:/data
+
+  web:
+    image: folio-web
+    network_mode: host
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails server -b 0.0.0.0"
+    volumes:
+      - .:/app
+      - bundle_cache:/usr/local/bundle
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/folio_development
+      REDIS_URL: redis://localhost:6379/0
+      RAILS_ENV: development
+    stdin_open: true
+    tty: true
+
+  sidekiq:
+    image: folio-sidekiq
+    network_mode: host
+    command: bundle exec sidekiq
+    volumes:
+      - .:/app
+      - bundle_cache:/usr/local/bundle
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/folio_development
+      REDIS_URL: redis://localhost:6379/0
+      RAILS_ENV: development
+
+volumes:
+  postgres_data:
+  redis_data:
+  bundle_cache:
