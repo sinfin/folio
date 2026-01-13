@@ -1,4 +1,8 @@
-.f-tiptap-content class=@class_name
+.f-tiptap-content[
+  class=@class_name
+  class=(@record.tiptap_config.theme ? "f-tiptap-content--theme-#{@record.tiptap_config.theme}" : nil)
+  data-theme=@record.tiptap_config.theme
+]
   .container-fluid
     = render(node_component)
 
