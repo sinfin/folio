@@ -33,9 +33,6 @@ class ModalSingleSelect extends ModalSelect {
             <button class="f-c-file-list__file-btn f-c-file-list__file-btn--destroy btn btn-danger fa fa-times" data-destroy-association="" type="button"></button>
           </div>
         </div>
-
-        <input type="hidden" name="${prefix}[alt]" value="" />
-        <small class="folio-console-thumbnail__alt">alt:</small>
       `
     } else {
       return `

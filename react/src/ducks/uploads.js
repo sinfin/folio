@@ -133,7 +133,8 @@ const defaultUploadsKeyState = {
   uploadAttributes: {
     tags: [defaultTag],
     author: null,
-    description: null
+    description: null,
+    alt: null
   },
   uploadedIds: []
 }
@@ -169,6 +170,7 @@ function uploadsReducer (rawState = initialState, action) {
                 tags: state[action.fileType].uploadAttributes.tags,
                 author: state[action.fileType].uploadAttributes.author,
                 description: state[action.fileType].uploadAttributes.description,
+                alt: state[action.fileType].uploadAttributes.alt,
                 thumb: null,
                 progress: 0
               }

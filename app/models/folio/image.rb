@@ -65,6 +65,7 @@ end
 #  file_placements_size :integer
 #  file_name_for_search :string
 #  sensitive_content    :boolean          default(FALSE)
+#  alt                  :string
 #
 # Indexes
 #

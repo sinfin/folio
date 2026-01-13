@@ -26,11 +26,12 @@ class FileModal extends Component {
       this.state = {
         author: props.fileModal.file.attributes.author,
         description: props.fileModal.file.attributes.description,
+        alt: props.fileModal.file.attributes.alt,
         sensitive_content: props.fileModal.file.attributes.sensitive_content,
         tags: props.fileModal.file.attributes.tags
       }
     } else {
-      this.state = { author: null, description: null, sensitive_content: false, tags: [] }
+      this.state = { author: null, description: null, alt: null, sensitive_content: false, tags: [] }
     }
   }
 
@@ -41,6 +42,7 @@ class FileModal extends Component {
           ...this.state,
           author: this.props.fileModal.file.attributes.author,
           description: this.props.fileModal.file.attributes.description,
+          alt: this.props.fileModal.file.attributes.alt,
           sensitive_content: this.props.fileModal.file.attributes.sensitive_content,
           tags: this.props.fileModal.file.attributes.tags
         })

@@ -14,6 +14,7 @@ module Folio::Console::FileControllerBase
                         :file,
                         :author,
                         :description,
+                        :alt,
                         tags: [])
 
       if p[:tags].present? && p[:tag_list].blank?

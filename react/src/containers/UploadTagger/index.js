@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { FormGroup } from 'reactstrap'
+import { FormGroup, Input } from 'reactstrap'
 import TextareaAutosize from 'react-autosize-textarea'
 
 import {
@@ -17,7 +17,8 @@ import { AUTHOR_AUTOCOMPLETE_URL } from 'constants/urls'
 const DEFAULT_STATE = {
   tags: [],
   author: null,
-  description: null
+  description: null,
+  alt: null
 }
 
 class UploadTagger extends React.PureComponent {
@@ -88,6 +89,16 @@ class UploadTagger extends React.PureComponent {
             rows={2}
             placeholder={window.FolioConsole.translations.fileDescription}
             async
+          />
+        </FormGroup>
+
+        <FormGroup>
+          <Input
+            name='alt'
+            placeholder={window.FolioConsole.translations.alt}
+            value={this.state.alt || ''}
+            onChange={this.onInputChange}
+            className='form-control'
           />
         </FormGroup>
 

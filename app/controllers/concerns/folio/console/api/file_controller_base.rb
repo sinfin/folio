@@ -50,13 +50,14 @@ module Folio::Console::Api::FileControllerBase
   end
 
   def tag
-    tag_params = params.permit(:author, :description, file_ids: [], tags: [])
+    tag_params = params.permit(:author, :description, :alt, file_ids: [], tags: [])
 
     files = Folio::File.where(id: tag_params[:file_ids])
 
     Folio::File.transaction do
       files.each { |f| f.update!(tag_list: tag_params[:tags],
                                  author: tag_params[:author],
+                                 alt: tag_params[:alt],
                                  description: tag_params[:description]) }
     end
 
@@ -137,6 +138,7 @@ module Folio::Console::Api::FileControllerBase
                         :file,
                         :author,
                         :description,
+                        :alt,
                         :sensitive_content,
                         tags: [])
 

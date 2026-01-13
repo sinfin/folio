@@ -94,6 +94,24 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
               )}
             </div>
 
+            {
+              isImage && (
+                <FormGroup>
+                  <Label className='form-label'>{window.FolioConsole.translations.alt}</Label>
+                  {readOnly ? (
+                    formState.alt ? <p className='m-0'>{formState.alt}</p> : <p className='m-0 text-muted'>{window.FolioConsole.translations.blank}</p>
+                  ) : (
+                    <Input
+                      name='alt'
+                      value={formState.alt || ''}
+                      onChange={(e) => onValueChange('alt', e.currentTarget.value)}
+                      className='form-control'
+                    />
+                  )}
+                </FormGroup>
+              )
+            }
+
             <FormGroup>
               <Label>{window.FolioConsole.translations.fileAuthor}</Label>
               {readOnly ? (
