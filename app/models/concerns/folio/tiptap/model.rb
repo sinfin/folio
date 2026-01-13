@@ -4,13 +4,65 @@ module Folio::Tiptap::Model
   extend ActiveSupport::Concern
 
   class_methods do
-    def has_folio_tiptap_content(field = :tiptap_content)
-      define_method("#{field}=") do |value|
-        ftc = Folio::Tiptap::Content.new(record: self)
-        result = ftc.convert_and_sanitize_value(value)
+    def has_folio_tiptap_content(field = :tiptap_content, locales: nil)
+      @folio_tiptap_fields ||= []
+      @folio_tiptap_locales ||= {}
 
-        if result[:ok]
-          super(result[:value])
+      field_name = field.to_s
+      existing_locales = @folio_tiptap_locales[field_name]
+      new_locales = locales.present? ? locales.map(&:to_sym).sort : nil
+
+      # If already configured the same way, return early (idempotent)
+      # Check if field is already configured (either in locales hash or in fields array)
+      field_already_configured = existing_locales.present? || @folio_tiptap_fields.include?(field_name)
+      return if field_already_configured && existing_locales == new_locales
+
+      # Clean up old configuration
+      if existing_locales.present?
+        # Remove old locale-suffixed fields
+        existing_locales.each do |locale|
+          old_field_name = "#{field_name}_#{locale}"
+          @folio_tiptap_fields.delete(old_field_name)
+        end
+        @folio_tiptap_locales.delete(field_name)
+      elsif existing_locales.nil? && @folio_tiptap_fields.include?(field_name)
+        # Remove old non-localized field
+        @folio_tiptap_fields.delete(field_name)
+      end
+
+      # Set up new configuration
+      if locales.present?
+        @folio_tiptap_locales[field_name] = new_locales
+
+        locales.each do |locale|
+          localized_field = "#{field}_#{locale}".to_sym
+          localized_field_name = localized_field.to_s
+          @folio_tiptap_fields << localized_field_name unless @folio_tiptap_fields.include?(localized_field_name)
+
+          define_method("#{localized_field}=") do |value|
+            ftc = Folio::Tiptap::Content.new(record: self)
+            result = ftc.convert_and_sanitize_value(value)
+
+            if result[:ok] && result[:value].is_a?(Hash)
+              locale_key = Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:locale]
+              result[:value][locale_key] = locale.to_s
+            end
+
+            if result[:ok]
+              super(result[:value])
+            end
+          end
+        end
+      else
+        @folio_tiptap_fields << field_name unless @folio_tiptap_fields.include?(field_name)
+
+        define_method("#{field}=") do |value|
+          ftc = Folio::Tiptap::Content.new(record: self)
+          result = ftc.convert_and_sanitize_value(value)
+
+          if result[:ok]
+            super(result[:value])
+          end
         end
       end
     end
@@ -20,7 +72,11 @@ module Folio::Tiptap::Model
     end
 
     def folio_tiptap_fields
-      %w[tiptap_content]
+      base_class.instance_variable_get(:@folio_tiptap_fields) || []
+    end
+
+    def folio_tiptap_locales
+      base_class.instance_variable_get(:@folio_tiptap_locales) || {}
     end
   end
 
@@ -52,6 +108,8 @@ module Folio::Tiptap::Model
   end
 
   def update_tiptap_file_placements
+    return unless self.class.try(:has_folio_attachments?)
+
     new_file_placements = []
 
     self.class.folio_tiptap_fields.each do |field|
@@ -154,22 +212,26 @@ module Folio::Tiptap::Model
     config
   end
 
-  def latest_tiptap_revision(user: nil)
+  def latest_tiptap_revision(user: nil, attribute_name: nil)
     return nil unless tiptap_autosave_enabled?
 
     target_user = user || Folio::Current.user
     return nil unless target_user
 
-    tiptap_revisions.find_by(user: target_user)
+    scope = tiptap_revisions.where(user: target_user)
+    scope = scope.where(attribute_name: attribute_name) if attribute_name.present?
+    scope.first
   end
 
-  def has_tiptap_revision?(user: nil)
+  def has_tiptap_revision?(user: nil, attribute_name: nil)
     return false unless tiptap_autosave_enabled?
 
     target_user = user || Folio::Current.user
     return false unless target_user
 
-    tiptap_revisions.exists?(user: target_user)
+    scope = tiptap_revisions.where(user: target_user)
+    scope = scope.where(attribute_name: attribute_name) if attribute_name.present?
+    scope.exists?
   end
 
   private
@@ -191,20 +253,21 @@ module Folio::Tiptap::Model
     def cleanup_tiptap_revisions
       # After saving the main model:
       # 1. Mark all other users' revisions as superseded by current user
-      # 2. Delete current user's revision (since content is now in main model)
+      # 2. Delete current user's revisions (since content is now in main model)
       return unless Folio::Current.user
 
       superseded_count = tiptap_revisions.where.not(user_id: Folio::Current.user.id)
                                          .update_all(superseded_by_user_id: Folio::Current.user.id)
 
-      current_user_revision = tiptap_revisions.find_by(user: Folio::Current.user)
-      if current_user_revision
-        current_user_revision.destroy
-        Rails.logger.info "Deleted tiptap revision for user #{Folio::Current.user.id} after saving #{self.class.name}##{id}"
+      current_user_revisions = tiptap_revisions.where(user: Folio::Current.user)
+      if current_user_revisions.any?
+        deleted_count = current_user_revisions.count
+        current_user_revisions.destroy_all
+        Rails.logger.info "Deleted #{deleted_count} tiptap revision(s) for user #{Folio::Current.user.id} after saving #{self.class.name}##{id}"
       end
 
       if superseded_count > 0
-        Rails.logger.info "Marked #{superseded_count} tiptap revisions as superseded by user #{Folio::Current.user.id} after saving #{self.class.name}##{id}"
+        Rails.logger.info "Marked #{superseded_count} tiptap revision(s) as superseded by user #{Folio::Current.user.id} after saving #{self.class.name}##{id}"
       end
     end
 end

@@ -43,6 +43,7 @@ This includes but is not limited to:
 - **Models:** `rails generate model ModelName`
 - **Controllers:** `rails generate controller ControllerName`
 - **View Components:** `rails generate folio:component namespace/name`
+  - **Note:** For Folio components (in the `Folio::` namespace), use a leading slash: `rails generate folio:component /folio/console/ui/flag` generates `Folio::Console::Ui::FlagComponent`
 - **Atoms:** `rails generate folio:atom namespace/atom_name`
 - **Cells:** `rails generate folio:cell namespace/cell_name`
 - **Console (admin) resources:** Check available Folio generators with `rails generate --help | grep folio`

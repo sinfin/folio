@@ -18,6 +18,7 @@ class TiptapInput < SimpleForm::Inputs::StringInput
                         new_record: safe_new_record?,
                         placement_type: safe_placement_type,
                         placement_id: safe_placement_id,
+                        attribute_name: attribute_name.to_s,
                         latest_revision_at: latest_revision_at&.iso8601,
                         has_unsaved_changes: has_unsaved_changes?,
                         readonly: @builder.template.instance_variable_get(:@audited_audit).present?,
@@ -75,7 +76,8 @@ class TiptapInput < SimpleForm::Inputs::StringInput
     end
 
     def current_user_latest_revision
-      @current_user_latest_revision ||= @builder.object.try(:latest_tiptap_revision)
+      field_name = attribute_name.to_s
+      @current_user_latest_revision ||= @builder.object.try(:latest_tiptap_revision, attribute_name: field_name)
     end
 
     def has_unsaved_changes?

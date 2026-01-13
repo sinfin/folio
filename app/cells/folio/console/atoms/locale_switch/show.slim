@@ -7,4 +7,4 @@
         class=active_class(locale)
         data-locale=locale
       ]
-        == cell('folio/console/ui/flag', locale)
+        == render_view_component(Folio::Console::Ui::FlagComponent.new(locale:))
