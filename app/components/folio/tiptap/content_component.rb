@@ -25,6 +25,7 @@ class Folio::Tiptap::ContentComponent < ApplicationComponent
       node: prose_mirror_node,
       root_node: nil,
       editor_preview: false,
+      theme: @record.try(:tiptap_config)&.try(:theme),
       root_node_count: if prose_mirror_node && prose_mirror_node["content"].present?
                          prose_mirror_node["content"].length
                        else

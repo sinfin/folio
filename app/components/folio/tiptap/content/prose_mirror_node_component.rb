@@ -59,6 +59,15 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponent < ApplicationComponent
         end
       end
 
+      if @prose_mirror_node["type"] == "doc" && @tiptap_content_information[:theme].present?
+        theme_class = "f-tiptap-styles--theme-#{@tiptap_content_information[:theme]}"
+        if attrs["class"].present?
+          attrs["class"] += " #{theme_class}"
+        else
+          attrs["class"] = theme_class
+        end
+      end
+
       if @node_definition["attrs"].present?
         @node_definition["attrs"].each do |attr_name, attr_config|
           value = (@prose_mirror_node["attrs"].present? ? @prose_mirror_node["attrs"][attr_name] : nil) || attr_config["default_value"]

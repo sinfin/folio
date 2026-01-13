@@ -1,188 +1,5 @@
-$f-tiptap__spacer: 1rem !default;
-
 $f-tiptap__media-min-width--tablet: 576px !default;
 $f-tiptap__media-min-width--desktop: 708px !default;
-
-$f-tiptap-root__background-color: var(--bs-body-bg, #ffffff) !default;
-$f-tiptap-root__color: inherit !default;
-$f-tiptap-root__font-family: inherit !default;
-$f-tiptap-root__font-size: inherit !default;
-$f-tiptap-root__line-height: inherit !default;
-$f-tiptap-root__padding-x: 0 !default;
-$f-tiptap-root__padding-x--tablet: 0 !default;
-$f-tiptap-root__padding-x--desktop: 0 !default;
-$f-tiptap-root__margin-x: auto !default;
-$f-tiptap-root__max-width: 750px !default;
-$f-tiptap-root__white-space: pre-wrap !default;
-$f-tiptap-root__word-break: break-word !default;
-
-$f-tiptap-node__margin-top: $f-tiptap__spacer !default;
-$f-tiptap-node__margin-top--tablet: $f-tiptap-node__margin-top !default;
-$f-tiptap-node__margin-top--desktop: $f-tiptap-node__margin-top--tablet !default;
-$f-tiptap-node__margin-bottom: $f-tiptap__spacer !default;
-$f-tiptap-node__margin-bottom--tablet: $f-tiptap-node__margin-bottom !default;
-$f-tiptap-node__margin-bottom--desktop: $f-tiptap-node__margin-bottom--tablet !default;
-
-$f-tiptap-blockquote__padding: 0.375em 0 0.375em 1em !default;
-$f-tiptap-blockquote__background: rgba(34, 35, 37, 1) !default;
-
-$f-tiptap-hr__margin: 2rem !default;
-$f-tiptap-hr__margin--tablet: $f-tiptap-hr__margin !default;
-$f-tiptap-hr__margin--desktop: $f-tiptap-hr__margin--tablet !default;
-$f-tiptap-hr__background: var(--bs-border-color) !default;
-$f-tiptap-hr__height: 1px !default;
-
-$f-tiptap-headings__margin-top: 2rem !default;
-$f-tiptap-headings__margin-top--tablet: $f-tiptap-headings__margin-top !default;
-$f-tiptap-headings__margin-top--desktop: $f-tiptap-headings__margin-top--tablet !default;
-$f-tiptap-headings__margin-bottom: $f-tiptap-node__margin-bottom !default;
-$f-tiptap-headings__margin-bottom--tablet: $f-tiptap-headings__margin-bottom !default;
-$f-tiptap-headings__margin-bottom--desktop: $f-tiptap-headings__margin-bottom--tablet !default;
-$f-tiptap-headings__color: $f-tiptap-root__color !default;
-$f-tiptap-headings__font-weight: bold !default;
-$f-tiptap-headings__font-family: inherit !default;
-$f-tiptap-headings__font-size: 3em !default;
-$f-tiptap-headings__line-height: 1.2 !default;
-$f-tiptap-headings__letter-spacing: normal !default;
-
-$f-tiptap-headings__levels: (
-  "h1": (
-    // you can override any of these
-    "margin-top": null,
-    "margin-bottom": null,
-    "color": null,
-    "font-weight": null,
-    "font-family": null,
-    "font-size": null,
-    "font-size--tablet": null,
-    "font-size--desktop": null,
-    "line-height": null,
-    "letter-spacing": null,
-  ),
-  "h2": (
-    "font-size": $f-tiptap-headings__font-size * 0.8,
-    "font-size--tablet": $f-tiptap-headings__font-size * 0.8,
-    "font-size--desktop": $f-tiptap-headings__font-size * 0.8,
-  ),
-  "h3": (
-    "font-size": $f-tiptap-headings__font-size * 0.6,
-    "font-size--tablet": $f-tiptap-headings__font-size * 0.6,
-    "font-size--desktop": $f-tiptap-headings__font-size * 0.6,
-  ),
-  "h4": (
-    "font-size": $f-tiptap-headings__font-size * 0.4,
-    "font-size--tablet": $f-tiptap-headings__font-size * 0.4,
-    "font-size--desktop": $f-tiptap-headings__font-size * 0.4,
-  ),
-  "h5": (
-    "font-size": $f-tiptap-headings__font-size * 0.4,
-    "font-size--tablet": $f-tiptap-headings__font-size * 0.4,
-    "font-size--desktop": $f-tiptap-headings__font-size * 0.4,
-  ),
-) !default;
-
-$f-tiptap-ul__padding-left: 1.5em !default;
-$f-tiptap-li__spacer: 0.5rem !default;
-$f-tiptap-li__margin-top: $f-tiptap-li__spacer !default;
-$f-tiptap-li__margin-bottom: $f-tiptap-li__margin-top !default;
-
-$f-tiptap-codeblock__background-color: var(--tt-gray-light-a-50) !default;
-$f-tiptap-codeblock__border-color: var(--tt-gray-light-a-200) !default;
-$f-tiptap-codeblock__border-radius: var(--bs-border-radius) !default;
-$f-tiptap-codeblock__border-width: var(--bs-border-width) !default;
-$f-tiptap-codeblock__color: var(--tt-gray-light-a-800) !default;
-$f-tiptap-codeblock__font-size: 1rem !default;
-$f-tiptap-codeblock__padding: 1em !default;
-
-$f-tiptap-code__background-color: var(--tt-gray-light-a-100) !default;
-$f-tiptap-code__border-color: $f-tiptap-codeblock__border-color !default;
-$f-tiptap-code__border-radius: $f-tiptap-codeblock__border-radius !default;
-$f-tiptap-code__border-width: $f-tiptap-codeblock__border-width !default;
-$f-tiptap-code__color: var(--bs-code-color) !default;
-$f-tiptap-code__font-family: var(--bs-font-monospace) !default;
-$f-tiptap-code__font-size: 0.875em !default;
-$f-tiptap-code__line-height: 1.4 !default;
-$f-tiptap-code__padding: 0.1em 0.2em !default;
-
-$f-tiptap-a__color: #0a58ca !default;
-$f-tiptap-a__color-hover: $f-tiptap-a__color !default;
-$f-tiptap-a__text-decoration: underline !default;
-$f-tiptap-a__text-decoration-hover: none !default;
-
-$f-tiptap__styled-paragraph-variants: (
-  "small": (
-    "color": inherit,
-    "font-family": inherit,
-    "font-size": 0.8rem,
-    "font-size--tablet": 0.8rem,
-    "font-size--desktop": 0.8rem,
-    "font-weight": inherit,
-    "line-height": inherit,
-  ),
-  "large": (
-    "color": inherit,
-    "font-family": inherit,
-    "font-size": 1.2rem,
-    "font-size--tablet": 1.2rem,
-    "font-size--desktop": 1.2rem,
-    "font-weight": inherit,
-    "line-height": inherit,
-  )
-) !default;
-
-$f-tiptap__styled-wrap-variants: () !default;
-
-$f-tiptap-columns__min-horizontal-width: 550px !default;
-$f-tiptap-columns__gap: $f-tiptap__spacer !default;
-$f-tiptap-columns__gap--tablet: $f-tiptap-columns__gap !default;
-$f-tiptap-columns__gap--desktop: $f-tiptap-columns__gap--tablet !default;
-$f-tiptap-column__border-in-editor-only: 1px dashed #ccc !default;
-
-$f-tiptap-float__aside-background-color-in-editor-only: var(--bs-body-bg) !default;
-$f-tiptap-float__aside-margin-x: 0 !default;
-$f-tiptap-float__aside-margin-y: $f-tiptap__spacer !default;
-$f-tiptap-float__aside-margin-x--tablet: $f-tiptap__spacer !default;
-$f-tiptap-float__aside-margin-y--tablet: $f-tiptap-float__aside-margin-y !default;
-$f-tiptap-float__aside-margin-x--desktop: $f-tiptap-float__aside-margin-x--tablet !default;
-$f-tiptap-float__aside-margin-y--desktop: $f-tiptap-float__aside-margin-y--tablet !default;
-$f-tiptap-float__aside-width-small: 180px !default;
-$f-tiptap-float__aside-width-medium: 240px !default;
-$f-tiptap-float__aside-width-large: 300px !default;
-$f-tiptap-float__aside-offset: 0 !default;
-$f-tiptap-float__aside-offset--tablet: 0 !default;
-$f-tiptap-float__aside-offset--desktop: $f-tiptap-float__aside-offset--tablet !default;
-
-$f-tiptap-pages__gap-in-editor-only: 0.5rem !default;
-$f-tiptap-pages__margin-in-editor-only: $f-tiptap-pages__gap-in-editor-only 0 !default;
-
-$f-tiptap-page__primary-color-in-editor-only: #00B594 !default;
-$f-tiptap-page__border-in-editor-only: 2px dashed #{$f-tiptap-page__primary-color-in-editor-only} !default;
-$f-tiptap-page__error-color-in-editor-only: #F0655D !default;
-$f-tiptap-page__error-border-in-editor-only: 2px dashed #{$f-tiptap-page__error-color-in-editor-only} !default;
-
-$f-tiptap-table__background: transparent !default;
-$f-tiptap-table__border: 1px solid var(--tt-gray-light-a-200) !default;
-$f-tiptap-table__cell-padding: 1rem !default;
-$f-tiptap-table__even-row-background: inherit !default;
-$f-tiptap-table__font-family: inherit !default;
-$f-tiptap-table__font-size: inherit !default;
-$f-tiptap-table__line-height: inherit !default;
-$f-tiptap-table__odd-row-background: inherit !default;
-$f-tiptap-table__selected-background: var(--tt-brand-color-50) !default;
-$f-tiptap-table__selected-border: 1px solid var(--tt-brand-color-100) !default;
-$f-tiptap-table__vertical-align: top !default;
-
-$f-tiptap-table-td__border-bottom: $f-tiptap-table__border !default;
-$f-tiptap-table-td__border-left: $f-tiptap-table__border !default;
-$f-tiptap-table-td__border-right: $f-tiptap-table__border !default;
-$f-tiptap-table-td__border-top: $f-tiptap-table__border !default;
-$f-tiptap-table-td__first-column-border-left: $f-tiptap-table-td__border-left !default;
-$f-tiptap-table-td__first-row-border-bottom: $f-tiptap-table-td__border-bottom !default;
-$f-tiptap-table-td__first-row-border-top: $f-tiptap-table-td__border-top !default;
-$f-tiptap-table-td__last-column-border-right: $f-tiptap-table-td__border-right !default;
-$f-tiptap-table-td__last-row-border-bottom: $f-tiptap-table-td__border-bottom !default;
-$f-tiptap-table-td__last-row-border-top: $f-tiptap-table-td__border-top !default;
-$f-tiptap-table-td__min-width: 5rem !default;
 
 :root {
   // TODO replace these --tt- defaults
@@ -207,42 +24,143 @@ $f-tiptap-table-td__min-width: 5rem !default;
 
   --white: rgb(255, 255, 255);
   --black: rgb(0, 0, 0);
-
-  --f-tiptap-root__background-color: #{$f-tiptap-root__background-color};
-  --f-tiptap-root__padding-x: #{$f-tiptap-root__padding-x};
-
-  --f-tiptap-node__margin-top: #{$f-tiptap-node__margin-top};
-  --f-tiptap-node__margin-bottom: #{$f-tiptap-node__margin-bottom};
-
-  --f-tiptap-headings__margin-top: #{$f-tiptap-headings__margin-top};
-  --f-tiptap-headings__margin-bottom: #{$f-tiptap-headings__margin-bottom};
-
-  --f-tiptap-hr__margin: #{$f-tiptap-hr__margin};
-
-  --f-tiptap-code__border-radius: #{$f-tiptap-code__border-radius};
-
-  --f-tiptap-pages__gap-in-editor-only: #{$f-tiptap-pages__gap-in-editor-only};
-  --f-tiptap-pages__margin-in-editor-only: #{$f-tiptap-pages__margin-in-editor-only};
-  --f-tiptap-page__primary-color-in-editor-only: #{$f-tiptap-page__primary-color-in-editor-only};
-  --f-tiptap-page__border-in-editor-only: #{$f-tiptap-page__border-in-editor-only};
-  --f-tiptap-page__error-color-in-editor-only: #{$f-tiptap-page__error-color-in-editor-only};
-  --f-tiptap-page__error-border-in-editor-only: #{$f-tiptap-page__error-border-in-editor-only};
 }
 
 .f-tiptap-styles {
+  --f-tiptap__spacer: 1rem;
+  --f-tiptap-root__background-color: var(--bs-body-bg, #ffffff);
+  --f-tiptap-root__color: inherit;
+  --f-tiptap-root__font-family: inherit;
+  --f-tiptap-root__font-size: inherit;
+  --f-tiptap-root__line-height: inherit;
+  --f-tiptap-root__padding-x: 0;
+  --f-tiptap-root__margin-x: auto;
+  --f-tiptap-root__max-width: 750px;
+  --f-tiptap-root__white-space: pre-wrap;
+  --f-tiptap-root__word-break: break-word;
+
+  --f-tiptap-node__margin-top: var(--f-tiptap__spacer);
+  --f-tiptap-node__margin-bottom: var(--f-tiptap__spacer);
+
+  --f-tiptap-headings__margin-top: 2rem;
+  --f-tiptap-headings__margin-bottom: var(--f-tiptap-node__margin-bottom);
+  --f-tiptap-headings__color: var(--f-tiptap-root__color);
+  --f-tiptap-headings__font-family: inherit;
+  --f-tiptap-headings__font-size: 3em;
+  --f-tiptap-headings__font-weight: bold;
+  --f-tiptap-headings__line-height: 1.2;
+  --f-tiptap-headings__letter-spacing: normal;
+
+  --f-tiptap-columns__gap: var(--f-tiptap__spacer);
+  --f-tiptap-float__aside-margin-y: var(--f-tiptap__spacer);
+
+  --f-tiptap-li__margin-top: 0.5rem;
+  --f-tiptap-li__margin-bottom: 0.5rem;
+
+  @each $h in (h1, h2, h3, h4, h5) {
+    --f-tiptap-headings-#{$h}__margin-top: var(--f-tiptap-headings__margin-top);
+    --f-tiptap-headings-#{$h}__margin-bottom: var(--f-tiptap-headings__margin-bottom);
+    --f-tiptap-headings-#{$h}__color: var(--f-tiptap-headings__color);
+    --f-tiptap-headings-#{$h}__font-weight: var(--f-tiptap-headings__font-weight);
+    --f-tiptap-headings-#{$h}__font-family: var(--f-tiptap-headings__font-family);
+    --f-tiptap-headings-#{$h}__font-size: var(--f-tiptap-headings__font-size);
+    --f-tiptap-headings-#{$h}__font-size--tablet: var(--f-tiptap-headings-#{$h}__font-size);
+    --f-tiptap-headings-#{$h}__font-size--desktop: var(--f-tiptap-headings-#{$h}__font-size--tablet);
+    --f-tiptap-headings-#{$h}__line-height: var(--f-tiptap-headings__line-height);
+    --f-tiptap-headings-#{$h}__letter-spacing: var(--f-tiptap-headings__letter-spacing);
+  }
+
+  --f-tiptap-headings-h2__font-size: 2.4em;
+  --f-tiptap-headings-h3__font-size: 1.8em;
+  --f-tiptap-headings-h4__font-size: 1.2em;
+  --f-tiptap-headings-h5__font-size: 1.2em;
+
+  @each $variant in (small, large) {
+    --f-tiptap-styled-paragraph-#{$variant}__background-color: transparent;
+    --f-tiptap-styled-paragraph-#{$variant}__border-radius: 0;
+    --f-tiptap-styled-paragraph-#{$variant}__color: inherit;
+    --f-tiptap-styled-paragraph-#{$variant}__font-family: inherit;
+    --f-tiptap-styled-paragraph-#{$variant}__font-size: inherit;
+    --f-tiptap-styled-paragraph-#{$variant}__font-size--tablet: var(--f-tiptap-styled-paragraph-#{$variant}__font-size);
+    --f-tiptap-styled-paragraph-#{$variant}__font-size--desktop: var(--f-tiptap-styled-paragraph-#{$variant}__font-size--tablet);
+    --f-tiptap-styled-paragraph-#{$variant}__font-weight: inherit;
+    --f-tiptap-styled-paragraph-#{$variant}__line-height: inherit;
+    --f-tiptap-styled-paragraph-#{$variant}__margin-top: var(--f-tiptap-node__margin-top);
+    --f-tiptap-styled-paragraph-#{$variant}__margin-bottom: var(--f-tiptap-node__margin-bottom);
+    --f-tiptap-styled-paragraph-#{$variant}__padding: 0;
+  }
+
+  --f-tiptap-styled-paragraph-small__font-size: 0.8rem;
+  --f-tiptap-styled-paragraph-large__font-size: 1.2rem;
+
+  --f-tiptap-a__color: #0a58ca;
+  --f-tiptap-a__color-hover: #0a58ca;
+  --f-tiptap-a__text-decoration: underline;
+  --f-tiptap-a__text-decoration-hover: none;
+
+  --f-tiptap-hr__margin: 2rem;
+  --f-tiptap-hr__background: var(--bs-border-color);
+  --f-tiptap-hr__height: 1px;
+
+  --f-tiptap-code__border-radius: var(--bs-border-radius);
+
+  --f-tiptap-pages__gap-in-editor-only: 0.5rem;
+  --f-tiptap-pages__margin-in-editor-only: 0.5rem 0;
+  --f-tiptap-page__primary-color-in-editor-only: #00B594;
+  --f-tiptap-page__border-in-editor-only: 2px dashed #00B594;
+  --f-tiptap-page__error-color-in-editor-only: #F0655D;
+  --f-tiptap-page__error-border-in-editor-only: 2px dashed #F0655D;
+
+  --f-tiptap-table__background: transparent;
+  --f-tiptap-table__border: 1px solid var(--tt-gray-light-a-200);
+  --f-tiptap-table__cell-padding: 1rem;
+  --f-tiptap-table__even-row-background: inherit;
+  --f-tiptap-table__font-family: inherit;
+  --f-tiptap-table__font-size: inherit;
+  --f-tiptap-table__line-height: inherit;
+  --f-tiptap-table__odd-row-background: inherit;
+  --f-tiptap-table__selected-background: var(--tt-brand-color-50);
+  --f-tiptap-table__selected-border: 1px solid var(--tt-brand-color-100);
+  --f-tiptap-table__vertical-align: top;
+
+  --f-tiptap-table-td__border-bottom: var(--f-tiptap-table__border);
+  --f-tiptap-table-td__border-left: var(--f-tiptap-table__border);
+  --f-tiptap-table-td__border-right: var(--f-tiptap-table__border);
+  --f-tiptap-table-td__border-top: var(--f-tiptap-table__border);
+  --f-tiptap-table-td__min-width: 5rem;
+
+  --f-tiptap-blockquote__padding: 0.375em 0 0.375em 1em;
+
+  --f-tiptap-codeblock__background-color: var(--tt-gray-light-a-50);
+  --f-tiptap-codeblock__border-color: var(--tt-gray-light-a-200);
+  --f-tiptap-codeblock__border-radius: var(--bs-border-radius);
+  --f-tiptap-codeblock__border-width: var(--bs-border-width);
+  --f-tiptap-codeblock__color: var(--tt-gray-light-a-800);
+  --f-tiptap-codeblock__font-size: 1rem;
+  --f-tiptap-codeblock__padding: 1em;
+
+  --f-tiptap-code__background-color: var(--tt-gray-light-a-100);
+  --f-tiptap-code__border-color: var(--f-tiptap-codeblock__border-color);
+  --f-tiptap-code__border-width: var(--f-tiptap-codeblock__border-width);
+  --f-tiptap-code__color: var(--bs-code-color);
+  --f-tiptap-code__font-family: var(--bs-font-monospace);
+  --f-tiptap-code__font-size: 0.875em;
+  --f-tiptap-code__line-height: 1.4;
+  --f-tiptap-code__padding: 0.1em 0.2em;
+
   background: var(--f-tiptap-root__background-color);
-  color: $f-tiptap-root__color;
+  color: var(--f-tiptap-root__color);
   container-type: inline-size;
-  font-family: $f-tiptap-root__font-family;
-  font-size: $f-tiptap-root__font-size;
-  line-height: $f-tiptap-root__line-height;
-  margin-left: $f-tiptap-root__margin-x;
-  margin-right: $f-tiptap-root__margin-x;
-  max-width: $f-tiptap-root__max-width;
+  font-family: var(--f-tiptap-root__font-family);
+  font-size: var(--f-tiptap-root__font-size);
+  line-height: var(--f-tiptap-root__line-height);
+  margin-left: var(--f-tiptap-root__margin-x);
+  margin-right: var(--f-tiptap-root__margin-x);
+  max-width: var(--f-tiptap-root__max-width);
   padding-left: var(--f-tiptap-root__padding-x);
   padding-right: var(--f-tiptap-root__padding-x);
-  white-space: $f-tiptap-root__white-space;
-  word-break: $f-tiptap-root__word-break;
+  white-space: var(--f-tiptap-root__white-space);
+  word-break: var(--f-tiptap-root__word-break);
 
   .f-tiptap-styles {
     padding-left: 0;
@@ -299,13 +217,13 @@ $f-tiptap-table-td__min-width: 5rem !default;
   }
 
   a:not([class]) {
-    color: $f-tiptap-a__color;
+    color: var(--f-tiptap-a__color);
     cursor: pointer;
-    text-decoration: $f-tiptap-a__text-decoration;
+    text-decoration: var(--f-tiptap-a__text-decoration);
 
     &:hover {
-      color: $f-tiptap-a__color-hover;
-      text-decoration: $f-tiptap-a__text-decoration-hover;
+      color: var(--f-tiptap-a__color-hover);
+      text-decoration: var(--f-tiptap-a__text-decoration-hover);
     }
   }
 
@@ -324,7 +242,7 @@ $f-tiptap-table-td__min-width: 5rem !default;
 
   blockquote {
     position: relative;
-    padding: $f-tiptap-blockquote__padding;
+    padding: var(--f-tiptap-blockquote__padding);
 
     &::before,
     &.is-empty::before {
@@ -343,16 +261,10 @@ $f-tiptap-table-td__min-width: 5rem !default;
   h1,
   h2,
   h3,
-  h4 {
-    color: $f-tiptap-headings__color;
-    font-family: $f-tiptap-headings__font-family;
-    font-size: $f-tiptap-headings__font-size;
+  h4,
+  h5 {
     font-style: inherit;
-    font-weight: $f-tiptap-headings__font-weight;
-    letter-spacing: $f-tiptap-headings__letter-spacing;
     position: relative;
-    margin-top: var(--f-tiptap-headings__margin-top);
-    margin-bottom: var(--f-tiptap-headings__margin-bottom);
 
     strong {
       font-weight: inherit;
@@ -367,32 +279,33 @@ $f-tiptap-table-td__min-width: 5rem !default;
     }
   }
 
-  @each $tag, $map in $f-tiptap-headings__levels {
-    #{$tag} {
-      color: map-get($map, "color");
-      font-family: map-get($map, "font-family");
-      font-size: map-get($map, "font-size");
-      font-weight: map-get($map, "font-weight");
-      letter-spacing: map-get($map, "letter-spacing");
-      margin-top: map-get($map, "margin-top");
-      margin-bottom: map-get($map, "margin-bottom");
+  @each $h in (h1, h2, h3, h4, h5) {
+    #{$h} {
+      color: var(--f-tiptap-headings-#{$h}__color);
+      font-family: var(--f-tiptap-headings-#{$h}__font-family);
+      font-size: var(--f-tiptap-headings-#{$h}__font-size);
+      font-weight: var(--f-tiptap-headings-#{$h}__font-weight);
+      letter-spacing: var(--f-tiptap-headings-#{$h}__letter-spacing);
+      line-height: var(--f-tiptap-headings-#{$h}__line-height);
+      margin-top: var(--f-tiptap-headings-#{$h}__margin-top);
+      margin-bottom: var(--f-tiptap-headings-#{$h}__margin-bottom);
     }
   }
 
   ol,
   ul {
-    padding-left: $f-tiptap-ul__padding-left;
+    padding-left: 1.5em;
   }
 
   li {
     // // reduce spacings inside list
-    // --f-tiptap__spacer: $f-tiptap-li__spacer;
-    // --f-tiptap-node__margin-top: $f-tiptap-li__spacer;
-    // --f-tiptap-node__margin-bottom: $f-tiptap-li__spacer;
+    // --f-tiptap__spacer: 0.5rem;
+    // --f-tiptap-node__margin-top: 0.5rem;
+    // --f-tiptap-node__margin-bottom: 0.5rem;
 
     list-style-type: inherit;
-    margin-top: $f-tiptap-li__margin-top;
-    margin-bottom: $f-tiptap-li__margin-bottom;
+    margin-top: var(--f-tiptap-li__margin-top);
+    margin-bottom: var(--f-tiptap-li__margin-bottom);
 
     &:first-child {
       margin-top: 0;
@@ -417,26 +330,26 @@ $f-tiptap-table-td__min-width: 5rem !default;
 
   // Inline code
   code {
-    background-color: $f-tiptap-code__background-color;
+    background-color: var(--f-tiptap-code__background-color);
     border-radius: var(--f-tiptap-code__border-radius);
-    border: $f-tiptap-code__border-width solid
-      $f-tiptap-code__border-color;
-    color: $f-tiptap-code__color;
-    font-family: $f-tiptap-code__font-family;
-    font-size: $f-tiptap-code__font-size;
-    line-height: $f-tiptap-code__line-height;
-    padding: $f-tiptap-code__padding;
+    border: var(--f-tiptap-code__border-width) solid
+      var(--f-tiptap-code__border-color);
+    color: var(--f-tiptap-code__color);
+    font-family: var(--f-tiptap-code__font-family);
+    font-size: var(--f-tiptap-code__font-size);
+    line-height: var(--f-tiptap-code__line-height);
+    padding: var(--f-tiptap-code__padding);
   }
 
   // Code blocks
   pre {
-    background-color: $f-tiptap-codeblock__background-color;
-    color: $f-tiptap-codeblock__color;
-    border: $f-tiptap-codeblock__border-width solid
-      $f-tiptap-codeblock__border-color;
-    padding: $f-tiptap-codeblock__padding;
-    font-size: $f-tiptap-codeblock__font-size;
-    border-radius: $f-tiptap-codeblock__border-radius;
+    background-color: var(--f-tiptap-codeblock__background-color);
+    color: var(--f-tiptap-codeblock__color);
+    border: var(--f-tiptap-codeblock__border-width) solid
+      var(--f-tiptap-codeblock__border-color);
+    padding: var(--f-tiptap-codeblock__padding);
+    font-size: var(--f-tiptap-codeblock__font-size);
+    border-radius: var(--f-tiptap-codeblock__border-radius);
 
     code {
       background-color: transparent;
@@ -448,9 +361,9 @@ $f-tiptap-table-td__min-width: 5rem !default;
   }
 
   hr {
-    background: $f-tiptap-hr__background;
+    background: var(--f-tiptap-hr__background);
     border: none;
-    height: $f-tiptap-hr__height;
+    height: var(--f-tiptap-hr__height);
     margin: var(--f-tiptap-hr__margin) 0;
 
     .f-tiptap-editor & {
@@ -460,8 +373,8 @@ $f-tiptap-table-td__min-width: 5rem !default;
       &::before {
         content: "";
         position: absolute;
-        top: calc(-1 * var(--f-tiptap-hr__margin) + #{$f-tiptap__spacer});
-        bottom: calc(-1 * var(--f-tiptap-hr__margin) + #{$f-tiptap__spacer});
+        top: calc(-1 * var(--f-tiptap-hr__margin) + var(--f-tiptap__spacer));
+        bottom: calc(-1 * var(--f-tiptap-hr__margin) + var(--f-tiptap__spacer));
         left: 0;
         right: 0;
         display: block;
@@ -476,7 +389,7 @@ $f-tiptap-table-td__min-width: 5rem !default;
   .f-tiptap-columns {
     display: flex;
     flex-direction: column;
-    gap: $f-tiptap-columns__gap;
+    gap: var(--f-tiptap-columns__gap);
   }
 
   .f-tiptap-column {
@@ -500,7 +413,7 @@ $f-tiptap-table-td__min-width: 5rem !default;
   }
 
   .f-tiptap-float__aside {
-    margin-bottom: $f-tiptap-float__aside-margin-y;
+    margin-bottom: var(--f-tiptap-float__aside-margin-y);
     position: relative;
     z-index: 2;
   }
@@ -513,61 +426,45 @@ $f-tiptap-table-td__min-width: 5rem !default;
     position: absolute;
     display: block;
     inset: 0;
-    border: $f-tiptap-column__border-in-editor-only;
+    border: 1px dashed #ccc;
     border-radius: var(--f-tiptap-editor__border-radius);
   }
 
   .f-tiptap-editor & .f-tiptap-float__aside {
-    background-color: $f-tiptap-float__aside-background-color-in-editor-only;
+    background-color: var(--bs-body-bg);
   }
 
   // Force two-line placeholder for empty paragraphs that are only child of [data-node-view-content-react]
   // Get numeric line-height value for multiline placeholder - use variable if numeric, otherwise default to 1.5
-  $multiline-placeholder-line-height: 1.5;
-  @if type-of($f-tiptap-root__line-height) == "number" {
-    $multiline-placeholder-line-height: $f-tiptap-root__line-height;
-  }
-
   .f-tiptap-float__aside,
   .f-tiptap-float__main {
     [data-node-view-content-react] > p.is-empty:only-child,
     [data-node-view-content-react] > p:has(.ProseMirror-trailingBreak):only-child {
       // Use 2lh (line-height unit) - represents 2 line-heights of the element
       // Fallback for browsers that don't support lh unit, using calculated numeric value
-      min-height: calc(2 * 1em * #{$multiline-placeholder-line-height});
+      min-height: calc(2 * 1em * 1.5);
       min-height: 2lh; // Modern browsers: 2 line-heights
     }
   }
 
   .f-tiptap-styled-paragraph {
-    @each $variant, $map in $f-tiptap__styled-paragraph-variants {
+    @each $variant in (small, large) {
       &[data-f-tiptap-styled-paragraph-variant="#{$variant}"] {
-        background-color: map-get($map, "background-color");
-        border-radius: map-get($map, "border-radius");
-        color: map-get($map, "color");
-        font-family: map-get($map, "font-family");
-        font-size: map-get($map, "font-size");
-        font-weight: map-get($map, "font-weight");
-        line-height: map-get($map, "line-height");
-        padding: map-get($map, "padding");
+        background-color: var(--f-tiptap-styled-paragraph-#{$variant}__background-color);
+        border-radius: var(--f-tiptap-styled-paragraph-#{$variant}__border-radius);
+        color: var(--f-tiptap-styled-paragraph-#{$variant}__color);
+        font-family: var(--f-tiptap-styled-paragraph-#{$variant}__font-family);
+        font-size: var(--f-tiptap-styled-paragraph-#{$variant}__font-size);
+        font-weight: var(--f-tiptap-styled-paragraph-#{$variant}__font-weight);
+        line-height: var(--f-tiptap-styled-paragraph-#{$variant}__line-height);
+        margin-top: var(--f-tiptap-styled-paragraph-#{$variant}__margin-top);
+        margin-bottom: var(--f-tiptap-styled-paragraph-#{$variant}__margin-bottom);
+        padding: var(--f-tiptap-styled-paragraph-#{$variant}__padding);
       }
     }
   }
 
-  .f-tiptap-styled-wrap {
-    @each $variant, $map in $f-tiptap__styled-wrap-variants {
-      &[data-f-tiptap-styled-wrap-variant="#{$variant}"] {
-        background-color: map-get($map, "background-color");
-        border-radius: map-get($map, "border-radius");
-        color: map-get($map, "color");
-        font-family: map-get($map, "font-family");
-        font-size: map-get($map, "font-size");
-        font-weight: map-get($map, "font-weight");
-        line-height: map-get($map, "line-height");
-        padding: map-get($map, "padding");
-      }
-    }
-  }
+  // .f-tiptap-styled-wrap variants are app-specific, define them in your app's stylesheet
 
   .f-tiptap-table-wrapper {
     max-width: 100%;
@@ -579,12 +476,12 @@ $f-tiptap-table-td__min-width: 5rem !default;
   }
 
   table {
-    background: $f-tiptap-table__background;
+    background: var(--f-tiptap-table__background);
     border: 0;
     border-collapse: collapse;
-    font-family: $f-tiptap-table__font-family;
-    font-size: $f-tiptap-table__font-size;
-    line-height: $f-tiptap-table__line-height;
+    font-family: var(--f-tiptap-table__font-family);
+    font-size: var(--f-tiptap-table__font-size);
+    line-height: var(--f-tiptap-table__line-height);
     max-width: 100%;
     overflow: hidden;
     table-layout: auto;
@@ -592,18 +489,18 @@ $f-tiptap-table-td__min-width: 5rem !default;
 
     td,
     th {
-      border-bottom: $f-tiptap-table-td__border-bottom;
-      border-left: $f-tiptap-table-td__border-left;
-      border-right: $f-tiptap-table-td__border-right;
-      border-top: $f-tiptap-table-td__border-top;
+      border-bottom: var(--f-tiptap-table-td__border-bottom);
+      border-left: var(--f-tiptap-table-td__border-left);
+      border-right: var(--f-tiptap-table-td__border-right);
+      border-top: var(--f-tiptap-table-td__border-top);
       min-width: 1rem;
-      padding: $f-tiptap-table__cell-padding;
+      padding: var(--f-tiptap-table__cell-padding);
       position: relative;
-      vertical-align: $f-tiptap-table__vertical-align;
+      vertical-align: var(--f-tiptap-table__vertical-align);
     }
 
     td {
-      background: $f-tiptap-table__background;
+      background: var(--f-tiptap-table__background);
     }
 
     th {
@@ -612,65 +509,58 @@ $f-tiptap-table-td__min-width: 5rem !default;
     }
 
     td, th {
-      min-width: $f-tiptap-table-td__min-width;
+      min-width: var(--f-tiptap-table-td__min-width);
 
       &:first-child {
-        border-left: $f-tiptap-table-td__first-column-border-left;
+        border-left: var(--f-tiptap-table-td__border-left);
       }
 
       &:last-child {
-        border-right: $f-tiptap-table-td__last-column-border-right;
+        border-right: var(--f-tiptap-table-td__border-right);
       }
     }
 
     tr:first-child {
       td, th {
-        border-top: $f-tiptap-table-td__first-row-border-top;
-        border-bottom: $f-tiptap-table-td__first-row-border-bottom;
+        border-top: var(--f-tiptap-table-td__border-top);
+        border-bottom: var(--f-tiptap-table-td__border-bottom);
       }
     }
 
     tr:last-child {
       td, th {
-        border-top: $f-tiptap-table-td__last-row-border-top;
-        border-bottom: $f-tiptap-table-td__last-row-border-bottom;
+        border-top: var(--f-tiptap-table-td__border-top);
+        border-bottom: var(--f-tiptap-table-td__border-bottom);
       }
     }
 
     tr:nth-child(odd) {
       td, th {
-        background: $f-tiptap-table__odd-row-background;
+        background: var(--f-tiptap-table__odd-row-background);
       }
     }
 
     tr:nth-child(even) {
       td, th {
-        background: $f-tiptap-table__even-row-background;
+        background: var(--f-tiptap-table__even-row-background);
       }
     }
 
     .selectedCell {
-      background: $f-tiptap-table__selected-background;
-      border: $f-tiptap-table__selected-border;
+      background: var(--f-tiptap-table__selected-background);
+      border: var(--f-tiptap-table__selected-border);
     }
   }
 
 
 
   @container (min-width: #{$f-tiptap__media-min-width--tablet}) {
-    --f-tiptap-root__padding-x: #{$f-tiptap-root__padding-x--tablet};
-    --f-tiptap-node__margin-top: #{$f-tiptap-node__margin-top--tablet};
-    --f-tiptap-node__margin-bottom: #{$f-tiptap-node__margin-bottom--tablet};
-    --f-tiptap-headings__margin-top: #{$f-tiptap-headings__margin-top--tablet};
-    --f-tiptap-headings__margin-bottom: #{$f-tiptap-headings__margin-bottom--tablet};
-    --f-tiptap-hr__margin: #{$f-tiptap-hr__margin--tablet};
-
     .f-tiptap-float {
       // Default aside width (medium)
-      --f-tiptap-float__aside-width: #{$f-tiptap-float__aside-width-medium};
+      --f-tiptap-float__aside-width: 240px;
       --f-tiptap-float__aside-side: left;
-      --f-tiptap-float__aside-margin-x: #{$f-tiptap-float__aside-margin-x--tablet};
-      --f-tiptap-float__aside-offset: #{$f-tiptap-float__aside-offset--tablet};
+      --f-tiptap-float__aside-margin-x: 1rem;
+      --f-tiptap-float__aside-offset: 0;
 
       &::after {
         content: "";
@@ -680,11 +570,11 @@ $f-tiptap-table-td__min-width: 5rem !default;
     }
 
     .f-tiptap-float[data-f-tiptap-float-size="small"] {
-      --f-tiptap-float__aside-width: #{$f-tiptap-float__aside-width-small};
+      --f-tiptap-float__aside-width: 180px;
     }
 
     .f-tiptap-float[data-f-tiptap-float-size="large"] {
-      --f-tiptap-float__aside-width: #{$f-tiptap-float__aside-width-large};
+      --f-tiptap-float__aside-width: 300px;
     }
 
     .f-tiptap-float[data-f-tiptap-float-side="right"] {
@@ -693,10 +583,10 @@ $f-tiptap-table-td__min-width: 5rem !default;
 
     .f-tiptap-float__aside {
       float: left;
-      margin-right: $f-tiptap-float__aside-margin-x--tablet;
-      margin-bottom: $f-tiptap-float__aside-margin-y--tablet;
-      margin-left: $f-tiptap-float__aside-offset--tablet;
-      width: $f-tiptap-float__aside-width-medium;
+      margin-right: var(--f-tiptap-float__aside-margin-x);
+      margin-bottom: var(--f-tiptap__spacer);
+      margin-left: var(--f-tiptap-float__aside-offset);
+      width: var(--f-tiptap-float__aside-width);
       position: relative;
       container-type: inline-size;
       box-sizing: border-box;
@@ -705,23 +595,23 @@ $f-tiptap-table-td__min-width: 5rem !default;
 
     .f-tiptap-float[data-f-tiptap-float-side="right"] .f-tiptap-float__aside {
       float: right;
-      margin-right: $f-tiptap-float__aside-offset--tablet;
-      margin-left: $f-tiptap-float__aside-margin-x--tablet;
+      margin-right: var(--f-tiptap-float__aside-offset);
+      margin-left: var(--f-tiptap-float__aside-margin-x);
     }
 
     .f-tiptap-float[data-f-tiptap-float-size="small"] .f-tiptap-float__aside {
-      width: $f-tiptap-float__aside-width-small;
+      width: var(--f-tiptap-float__aside-width);
     }
 
     .f-tiptap-float[data-f-tiptap-float-size="large"] .f-tiptap-float__aside {
-      width: $f-tiptap-float__aside-width-large;
+      width: var(--f-tiptap-float__aside-width);
     }
 
     .f-tiptap-columns {
       display: grid;
       grid-auto-columns: 1fr;
       grid-auto-flow: column;
-      gap: $f-tiptap-columns__gap--tablet;
+      gap: var(--f-tiptap-columns__gap);
     }
 
     .f-tiptap-editor
@@ -741,59 +631,52 @@ $f-tiptap-table-td__min-width: 5rem !default;
     }
 
     .f-tiptap-styled-paragraph {
-      @each $variant, $map in $f-tiptap__styled-paragraph-variants {
+      @each $variant in (small, large) {
         &[data-f-tiptap-styled-paragraph-variant="#{$variant}"] {
-          font-size: map-get($map, "font-size--tablet");
+          font-size: var(--f-tiptap-styled-paragraph-#{$variant}__font-size--tablet);
         }
       }
     }
 
-    @each $tag, $map in $f-tiptap-headings__levels {
-      #{$tag} {
-        font-size: map-get($map, "font-size--tablet");
+    @each $h in (h1, h2, h3, h4, h5) {
+      #{$h} {
+        font-size: var(--f-tiptap-headings-#{$h}__font-size--tablet);
       }
     }
   }
 
   @container (min-width: #{$f-tiptap__media-min-width--desktop}) {
-    --f-tiptap-root__padding-x: #{$f-tiptap-root__padding-x--desktop};
-    --f-tiptap-node__margin-top: #{$f-tiptap-node__margin-top--desktop};
-    --f-tiptap-node__margin-bottom: #{$f-tiptap-node__margin-bottom--desktop};
-    --f-tiptap-headings__margin-top: #{$f-tiptap-headings__margin-top--desktop};
-    --f-tiptap-headings__margin-bottom: #{$f-tiptap-headings__margin-bottom--desktop};
-    --f-tiptap-hr__margin: #{$f-tiptap-hr__margin--desktop};
-
     .f-tiptap-columns {
-      gap: $f-tiptap-columns__gap--desktop;
+      gap: var(--f-tiptap-columns__gap);
     }
 
     .f-tiptap-float {
-      --f-tiptap-float__aside-margin-x: #{$f-tiptap-float__aside-margin-x--desktop};
-      --f-tiptap-float__aside-offset: #{$f-tiptap-float__aside-offset--desktop};
+      --f-tiptap-float__aside-margin-x: 1rem;
+      --f-tiptap-float__aside-offset: 0;
     }
 
     .f-tiptap-float__aside {
-      margin-right: $f-tiptap-float__aside-margin-x--desktop;
-      margin-bottom: $f-tiptap-float__aside-margin-y--desktop;
-      margin-left: $f-tiptap-float__aside-offset--desktop;
+      margin-right: var(--f-tiptap-float__aside-margin-x);
+      margin-bottom: var(--f-tiptap__spacer);
+      margin-left: var(--f-tiptap-float__aside-offset);
     }
 
     .f-tiptap-float[data-f-tiptap-float-side="right"] .f-tiptap-float__aside {
-      margin-right: $f-tiptap-float__aside-offset--desktop;
-      margin-left: $f-tiptap-float__aside-margin-x--desktop;
+      margin-right: var(--f-tiptap-float__aside-offset);
+      margin-left: var(--f-tiptap-float__aside-margin-x);
     }
 
     .f-tiptap-styled-paragraph {
-      @each $variant, $map in $f-tiptap__styled-paragraph-variants {
+      @each $variant in (small, large) {
         &[data-f-tiptap-styled-paragraph-variant="#{$variant}"] {
-          font-size: map-get($map, "font-size--desktop");
+          font-size: var(--f-tiptap-styled-paragraph-#{$variant}__font-size--desktop);
         }
       }
     }
 
-    @each $tag, $map in $f-tiptap-headings__levels {
-      #{$tag} {
-        font-size: map-get($map, "font-size--desktop");
+    @each $h in (h1, h2, h3, h4, h5) {
+      #{$h} {
+        font-size: var(--f-tiptap-headings-#{$h}__font-size--desktop);
       }
     }
   }
