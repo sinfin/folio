@@ -7,6 +7,10 @@ All notable changes to this project will be documented in this file.
 
 - support for `video/x-m4v` files (mapped to `video/mp4` for browser compatibility)
 
+### Fixed
+
+- date_time input time format to match backend HH:mm -> H:mm
+
 ## [7.1.2] - 2026-01-12
 
 ### Added
