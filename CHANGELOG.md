@@ -7,6 +7,16 @@ All notable changes to this project will be documented in this file.
 
 - **has_folio_tiptap? method**: Changed from class method to instance method (BREAKING: update all calls and test stubs). See [UPGRADING.md](UPGRADING.md#711-to-720) for migration details.
 
+### Added
+
+- support for `video/x-m4v` files (mapped to `video/mp4` for browser compatibility)
+- `has_folio_positionable?` class method to `Folio::Positionable` and `Folio::PositionableDescending` concerns
+
+### Fixed
+
+- date_time input time format to match backend HH:mm -> H:mm
+- position controls in paginated catalogues now work across page boundaries - items can be moved to adjacent pages and the view automatically scrolls to show the moved item
+
 ## [7.1.2] - 2026-01-12
 
 ### Added

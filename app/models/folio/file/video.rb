@@ -3,7 +3,7 @@
 class Folio::File::Video < Folio::File
   include Folio::File::Video::HasSubtitles
 
-  validate_file_format %w[video/mp4 video/webm video/quicktime]
+  validate_file_format %w[video/mp4 video/webm video/quicktime video/x-m4v]
 
   def console_show_additional_fields
     additional_fields = {}
