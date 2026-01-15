@@ -17,6 +17,7 @@ module Folio::Console::Ui::IndexHelper
       block:,
       klass: @klass,
       merge: @folio_console_merge,
+      pagy: @pagy,
     }.merge(options)
 
     model[:collection_actions] ||= controller.try(:folio_console_controller_for_catalogue_collection_actions) unless options[:no_collection_actions]
