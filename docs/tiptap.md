@@ -157,7 +157,7 @@ end
 The `Node` models are defined by calling `tiptap_node` method which uses the `Folio::Tiptap::NodeBuilder` and supports various attribute types. Attributes can be defined using either the compact syntax (symbols, arrays, hashes) or the explicit hash format with a `:type` property. Under the hood, all compact definitions are converted to the hash format.
 
 #### Compact Syntax (recommended for simple cases):
-- `:string`, `:text`: Basic text attributes
+- `:string`, `:text`: Basic text attributes (supports `default` option, see below)
 - `:integer`: Integer attributes with automatic type conversion and validation
 - `:rich_text`: JSON-stored rich text content (nested Tiptap structure)
 - `:url_json`: URL with metadata (href, title, target, etc.)
@@ -170,7 +170,7 @@ The `Node` models are defined by calling `tiptap_node` method which uses the `Fo
 
 #### Hash Format with :type property:
 All compact definitions are internally converted to hash format:
-- `{ type: :string }`, `{ type: :text }`: Basic text attributes
+- `{ type: :string }`, `{ type: :text }`: Basic text attributes (supports `default` option)
 - `{ type: :integer }`: Integer attributes with automatic type conversion and validation
 - `{ type: :rich_text }`: JSON-stored rich text content
 - `{ type: :url_json }`: URL with metadata
@@ -273,6 +273,44 @@ node.priority = 3.14     # Float -> 3 (integer)
 node.priority = 100      # Integer -> 100 (unchanged)
 node.priority = nil      # nil -> nil (unchanged)
 node.priority = []       # Raises ArgumentError
+```
+
+#### Default Values for String Attributes
+
+String (and text) attributes support a `default` option that provides a dynamic default value via a proc. When specified, the default is used as a placeholder in the form input:
+
+```rb
+class MyApp::Tiptap::Node::Listings::CategoryArticles < Folio::Tiptap::Node
+  tiptap_node structure: {
+    # Basic default using proc (recommended for translations)
+    title: { type: :string, default: proc { human_attribute_name("title/default") } },
+    
+    # Default with access to node instance (optional argument)
+    subtitle: { type: :string, default: proc { |node| "#{node.title} - Subtitle" } }
+  }
+end
+```
+
+**How it works:**
+- The `default` must be a `Proc` (use `proc { }` syntax, not `-> { }`)
+- The proc is called when rendering the form, with the node instance passed as an optional argument
+- Using `proc { }` allows flexible arity - you can ignore the node argument if not needed
+- The result is displayed as a placeholder in the input field
+
+**Translation example:**
+
+```yaml
+# config/locales/en.yml
+en:
+  activemodel:
+    attributes:
+      my_app/tiptap/node/listings/category_articles:
+        title/default: "Latest Articles"
+```
+
+```rb
+# The proc will return "Latest Articles" in English locale
+title: { type: :string, default: proc { human_attribute_name("title/default") } }
 ```
 
 ### File Attachments
