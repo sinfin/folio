@@ -9,12 +9,13 @@ module Folio::DeeplForTraco
 
       @deepl_configured = ENV["DEEPL_API_KEY"].present? && begin
         require "deepl"
+        require "deepl/version" # Explicitly require version to avoid NameError in some gem versions
         DeepL.configure do |config|
           config.auth_key = ENV["DEEPL_API_KEY"]
           config.host = ENV.fetch("DEEPL_API_HOST", "https://api-free.deepl.com")
         end
         true
-      rescue LoadError
+      rescue LoadError, NameError
         false
       end
     end
