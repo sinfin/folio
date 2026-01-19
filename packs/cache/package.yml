@@ -1,0 +1,7 @@
+# Cache pack configuration
+# Provides cache versioning functionality for tracking cache invalidation
+
+enforce_dependencies: true
+
+dependencies:
+  - "../.."  # depends on core Folio (Folio::ApplicationRecord, Folio::BelongsToSite, etc.)

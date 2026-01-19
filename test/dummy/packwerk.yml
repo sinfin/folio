@@ -1,0 +1,29 @@
+# Packwerk configuration for Folio engine development
+# Run: rake app:packwerk:check (from engine root)
+# Or:  bundle exec packwerk check (from test/dummy)
+#
+# Note: Engine load paths are added via config/initializers/packwerk.rb
+# because packwerk by default only includes paths under Rails.root.
+
+include:
+  - "**/*.rb"
+  - "../../app/**/*.rb"
+  - "../../lib/**/*.rb"
+  - "../../packs/**/*.rb"
+
+exclude:
+  - "{bin,node_modules,tmp,vendor}/**/*"
+  - "config/**/*"
+  - "db/**/*"
+
+# Package structure:
+# - "." = host app (test/dummy)
+# - "../.." = core Folio engine
+# - "../../packs/*" = optional Folio packs
+package_paths:
+  - "."
+  - "../.."
+  - "../../packs/*"
+
+cache: true
+cache_directory: tmp/cache/packwerk
