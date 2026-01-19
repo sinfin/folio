@@ -235,6 +235,11 @@ FactoryBot.define do
     site { get_current_or_existing_site_or_create_from_factory }
   end
 
+  factory :folio_cache_version, class: "Folio::Cache::Version" do
+    sequence(:key) { |i| "cache-key-#{i}" }
+    site { get_current_or_existing_site_or_create_from_factory }
+  end
+
   factory :folio_console_note, class: "Folio::ConsoleNote" do
     content { "content" }
     association(:target, factory: :folio_page)

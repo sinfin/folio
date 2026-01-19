@@ -230,6 +230,15 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_02_084244) do
     t.index ["placement_type", "placement_id"], name: "index_folio_attributes_on_placement"
   end
 
+  create_table "folio_cache_versions", force: :cascade do |t|
+    t.bigint "site_id", null: false
+    t.string "key", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["site_id", "key"], name: "index_folio_cache_versions_on_site_id_and_key", unique: true
+    t.index ["site_id"], name: "index_folio_cache_versions_on_site_id"
+  end
+
   create_table "folio_console_notes", force: :cascade do |t|
     t.text "content"
     t.string "target_type"
