@@ -79,4 +79,15 @@ module Folio
   def self.expires_in
     1.hour
   end
+
+  mattr_accessor :enabled_packs
+  self.enabled_packs = [:cache]
+
+  def self.configure
+    yield self
+  end
+
+  def self.pack_enabled?(name)
+    enabled_packs.include?(name.to_sym)
+  end
 end

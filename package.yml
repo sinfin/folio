@@ -1,0 +1,7 @@
+# Core Folio engine package
+# Contains all models, components, controllers, etc.
+
+enforce_dependencies: true
+
+dependencies:
+  - "."  # Host app (ApplicationController, ApplicationComponent, etc.)

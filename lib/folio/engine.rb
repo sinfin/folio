@@ -181,6 +181,56 @@ module Folio
       }
     }
 
+    initializer "folio.load_packs", before: :set_autoload_paths do |app|
+      Folio.enabled_packs.each do |pack_name|
+        pack_root = root.join("packs", pack_name.to_s)
+        next unless pack_root.exist?
+
+        # Autoload paths for all app subdirectories
+        %w[
+          app/models
+          app/models/concerns
+          app/components
+          app/components/concerns
+          app/controllers
+          app/controllers/concerns
+          app/helpers
+          app/jobs
+          app/lib
+          app/mailers
+        ].each do |subdir|
+          path = pack_root.join(subdir)
+          if path.exist?
+            app.config.autoload_paths << path
+            app.config.eager_load_paths << path
+          end
+        end
+
+        # View paths
+        views_path = pack_root.join("app/views")
+        app.config.paths["app/views"] << views_path if views_path.exist?
+
+        # Migrations
+        migrate_path = pack_root.join("db/migrate")
+        app.config.paths["db/migrate"] << migrate_path if migrate_path.exist?
+
+        # Load pack railtie
+        railtie_path = pack_root.join("lib/folio/#{pack_name}.rb")
+        require railtie_path if railtie_path.exist?
+      end
+    end
+
+    initializer :append_folio_pack_assets_paths do |app|
+      Folio.enabled_packs.each do |pack_name|
+        pack_root = root.join("packs", pack_name.to_s)
+        next unless pack_root.exist?
+
+        # Asset paths for components (sidecar JS/CSS)
+        components_path = pack_root.join("app/components")
+        app.config.assets.paths << components_path if components_path.exist?
+      end
+    end
+
     initializer :append_folio_autoload_paths do |app|
       # Add component concerns to autoload paths so they can be included properly
       app.config.autoload_paths += [self.root.join("app/components/concerns")]

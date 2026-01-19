@@ -25,6 +25,12 @@ end
 
 FactoryBot.definition_file_paths << Folio::Engine.root.join("test/factories")
 
+# Load factories from enabled packs
+Folio.enabled_packs.each do |pack_name|
+  factory_path = Folio::Engine.root.join("packs", pack_name.to_s, "test/factories")
+  FactoryBot.definition_file_paths << factory_path if factory_path.exist?
+end
+
 module ActiveJob::TestHelper
   include ActionMailerTestHelper
 end

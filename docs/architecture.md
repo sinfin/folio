@@ -12,6 +12,7 @@ Folio is a modular CMS engine for Ruby on Rails, designed for extensibility and 
 - File and media management
 - User and site management
 - Extensible ViewComponent-based UI
+- Optional feature packs for additional functionality
 
 ---
 
@@ -63,11 +64,36 @@ classDiagram
 
 ---
 
+## Packs Architecture
+
+Folio uses a **packs** system to organize optional features into self-contained modules. This architecture is inspired by Shopify's modular monolith approach and uses **Packwerk** for enforcing boundaries between packs.
+
+Packs allow you to:
+
+- Keep feature code organized in a single directory (`packs/<name>/`)
+- Enable or disable features per application via configuration
+- Easily remove features by deleting the pack directory
+- Co-locate models, migrations, tests, and factories
+- Enforce dependency boundaries via Packwerk static analysis
+
+Packs are loaded automatically based on the `Folio.enabled_packs` configuration. Each pack can include:
+
+- **Models** - ActiveRecord models and concerns
+- **Migrations** - Database migrations
+- **Tests** - Test files
+- **Factories** - FactoryBot definitions
+- **Railtie** - Rails integration code
+- **package.yml** - Packwerk configuration for dependencies
+
+For more details, see the [Packs documentation](packs.md).
+
+---
+
 ## Navigation
 
 - [← Back to Overview](overview.md)
 - [Next: Components →](components.md)
-- [Atoms](atoms.md) | [Admin Console](admin.md) | [Files & Media](files.md) | [Concerns](concerns.md) | [Jobs](jobs.md)
+- [Atoms](atoms.md) | [Admin Console](admin.md) | [Files & Media](files.md) | [Concerns](concerns.md) | [Jobs](jobs.md) | [Packs](packs.md)
 
 ---
 
