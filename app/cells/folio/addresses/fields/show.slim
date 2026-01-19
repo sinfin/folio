@@ -48,7 +48,7 @@
                       as: :phone,
                       default_country_code: data_country_code(:primary_address),
                       required: required && required_phone?(g),
-                      input_html: default_input_html(id: nil)
+                      input_html: default_input_html(id: nil, autocomplete: "phone")
 
   - if show_secondary_address_fields?
     .f-addresses-fields__nested

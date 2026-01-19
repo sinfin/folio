@@ -48,7 +48,7 @@ class Folio::Addresses::FieldsCell < Folio::ApplicationCell
     end
   end
 
-  def country_code_input(g, disabled: false, countries_whitelist: nil)
+  def country_code_input(g, disabled: false, autocomplete: nil, countries_whitelist: nil)
     only = countries_whitelist || g.object.class.countries_whitelist
     priority = g.object.class.priority_countries(locale: I18n.locale)
     priority = nil if only.try(:any?) && (only - priority).empty?
@@ -58,26 +58,26 @@ class Folio::Addresses::FieldsCell < Folio::ApplicationCell
             only:,
             priority:,
             input_html: {
-              **default_input_html(id: nil),
+              **default_input_html(id: nil, autocomplete:),
               class: "f-addresses-fields__country-code-input",
             },
             include_blank: false
   end
 
-  def address_line_input(g, key, disabled: false, required: false)
+  def address_line_input(g, key, disabled: false, required: false, autocomplete: nil)
     g.input key,
             disabled:,
             required:,
-            input_html: default_input_html(id: nil),
+            input_html: default_input_html(id: nil, autocomplete:),
             label: "<span class=\"f-addresses-fields__address-line-label f-addresses-fields__address-line-label--regular\">#{t(".#{key}_regular")}</span> \
                     <span class=\"f-addresses-fields__address-line-label f-addresses-fields__address-line-label--inline\">#{t(".#{key}_inline")}</span>".html_safe
   end
 
-  def default_input_html(id: false)
+  def default_input_html(id: false, autocomplete: nil)
     h = {}
 
     h[:id] = id unless id == false
-    h[:autocomplete] = "no" if options[:disable_autocomplete]
+    h[:autocomplete] = autocomplete
 
     h
   end
