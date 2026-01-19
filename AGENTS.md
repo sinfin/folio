@@ -34,6 +34,21 @@ After editing any code files, automatically format and lint them using the appro
 - Keep methods focused and under ~20 lines
 - Use namespaces for entire functionality (all related models, controllers, components together)
 
+### Testing Validation Errors
+
+When testing Rails model validations, test error types (symbols) rather than error messages to avoid locale-dependent test failures:
+
+```ruby
+# Good: Tests error type
+assert_includes version.errors.details[:key].map { |e| e[:error] }, :blank
+assert_includes version.errors.details[:key].map { |e| e[:error] }, :taken
+
+# Avoid: Tests localized message (fails in different locales)
+assert_includes version.errors[:key], "can't be blank"
+```
+
+Use `errors.details[:attribute]` to access error details with their types (`:blank`, `:taken`, `:invalid`, etc.).
+
 ## Generators (IMPORTANT)
 
 **Always use Rails/Folio generators** to create new files for components covered by generators. Never create these files manually.

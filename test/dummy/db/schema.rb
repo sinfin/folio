@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_09_083325) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_19_095958) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -228,6 +228,15 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_09_083325) do
     t.datetime "updated_at", null: false
     t.index ["folio_attribute_type_id"], name: "index_folio_attributes_on_folio_attribute_type_id"
     t.index ["placement_type", "placement_id"], name: "index_folio_attributes_on_placement"
+  end
+
+  create_table "folio_cache_versions", force: :cascade do |t|
+    t.bigint "site_id", null: false
+    t.string "key", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["site_id", "key"], name: "index_folio_cache_versions_on_site_id_and_key", unique: true
+    t.index ["site_id"], name: "index_folio_cache_versions_on_site_id"
   end
 
   create_table "folio_console_notes", force: :cascade do |t|
