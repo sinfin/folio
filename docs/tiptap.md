@@ -4,6 +4,20 @@ This chapter describes the Tiptap editor implementation in Folio. The aim is to 
 
 ## Usage
 
+### Model Setup
+
+**Important:** You must include the concern and call `has_folio_tiptap_content` in your model before using Tiptap inputs.
+
+```rb
+class MyApp::Article < Folio::ApplicationRecord
+  include Folio::Tiptap::Model
+
+  has_folio_tiptap_content
+end
+```
+
+### Form Inputs
+
 Simple rich text editor:
 
 ```rb
@@ -975,6 +989,56 @@ class MyApp::Tiptap::Node::Cards::Person < Folio::Tiptap::Node
     icon: "user", toolbar_slot: "after_layouts", group: "cards",
   }
 end
+```
+
+---
+
+## Locale Support
+
+Folio Tiptap supports localized content. When enabled, separate editors are created for each locale with a locale switcher UI in the console.
+
+### Enabling Locale Support
+
+Pass the `locales:` option to `has_folio_tiptap_content`:
+
+```rb
+class MyApp::Article < Folio::ApplicationRecord
+  include Folio::Tiptap::Model
+
+  has_folio_tiptap_content(locales: %i[cs en de])
+end
+```
+
+This creates locale-suffixed fields: `tiptap_content_cs`, `tiptap_content_en`, `tiptap_content_de`.
+
+For Traco integration:
+
+```rb
+if Rails.application.config.folio_using_traco
+  has_folio_tiptap_content(locales: I18n.available_locales.map(&:to_sym))
+  translates :title, :perex, :tiptap_content
+else
+  has_folio_tiptap_content
+end
+```
+
+### Class Methods
+
+- **`folio_tiptap_fields`**: Returns all Tiptap field names (e.g., `["tiptap_content_cs", "tiptap_content_en"]`)
+- **`folio_tiptap_locales`**: Returns locale configuration (e.g., `{ "tiptap_content" => [:cs, :en] }`)
+
+### Console UI
+
+When locales are configured, `simple_form_for_with_block_tiptap` automatically renders a locale switcher with flag icons. Each locale has independent word count tracking and autosave revisions.
+
+### Rendering Localized Content
+
+```slim
+/ Render for current locale
+= render Folio::Tiptap::ContentComponent.new(record: @article, attribute: :"tiptap_content_#{I18n.locale}")
+
+/ Or explicitly
+= render Folio::Tiptap::ContentComponent.new(record: @article, attribute: :tiptap_content_cs)
 ```
 
 ---

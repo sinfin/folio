@@ -2,6 +2,7 @@ window.Folio.Stimulus.register('f-c-tiptap-simple-form-wrap-autosave-info', clas
   static values = {
     placementType: String,
     placementId: Number,
+    attributeName: String,
     deleteUrl: String
   }
 
@@ -16,7 +17,8 @@ window.Folio.Stimulus.register('f-c-tiptap-simple-form-wrap-autosave-info', clas
     const data = {
       placement: {
         type: this.placementTypeValue,
-        id: this.placementIdValue
+        id: this.placementIdValue,
+        attribute_name: this.attributeNameValue || 'tiptap_content'
       }
     }
 

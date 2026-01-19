@@ -22,6 +22,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     newRecord: { type: Boolean, default: false },
     placementType: String,
     placementId: Number,
+    attributeName: String,
     latestRevisionAt: String,
     hasUnsavedChanges: { type: Boolean, default: false }
   }
@@ -153,7 +154,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
       this.inputTarget.value = ''
     }
 
-    this.dispatch('updateWordCount', { detail: { wordCount } })
+    this.dispatch('updateWordCount', { detail: { wordCount, attributeName: this.attributeNameValue } })
 
     if (!this.ignoreValueChangesValue) {
       this.inputTarget.dispatchEvent(new window.Event('change', { bubbles: true }))
@@ -200,7 +201,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
         words: value[valueKeys.word_count],
         characters: value[valueKeys.character_count]
       })
-      this.dispatch('updateWordCount', { detail: { wordCount } })
+      this.dispatch('updateWordCount', { detail: { wordCount, attributeName: this.attributeNameValue } })
     }
 
     const data = {
@@ -369,13 +370,15 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
       iframe: this.tiptapScrollTop
     }
 
-    window.sessionStorage.setItem('f-input-tiptap-scroll', JSON.stringify({ at: Date.now(), scroll }))
+    const storageKey = `f-input-tiptap-scroll:${this.attributeNameValue}`
+    window.sessionStorage.setItem(storageKey, JSON.stringify({ at: Date.now(), scroll }))
   }
 
   restoreScrollPositions () {
     if (this.typeValue !== 'block') return
 
-    const stored = window.sessionStorage.getItem('f-input-tiptap-scroll')
+    const storageKey = `f-input-tiptap-scroll:${this.attributeNameValue}`
+    const stored = window.sessionStorage.getItem(storageKey)
 
     if (!stored) return
 
@@ -396,7 +399,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
         }
       }
 
-      window.sessionStorage.removeItem('f-input-tiptap-scroll')
+      window.sessionStorage.removeItem(storageKey)
     } catch (e) {
       console.error('Failed to restore scroll positions:', e)
     }
@@ -408,7 +411,8 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
 
     const data = {
       tiptap_revision: {
-        content: this.latestContent
+        content: this.latestContent,
+        attribute_name: this.attributeNameValue || 'tiptap_content'
       },
       placement: {
         type: this.placementTypeValue,

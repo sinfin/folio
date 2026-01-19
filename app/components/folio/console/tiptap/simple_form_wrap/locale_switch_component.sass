@@ -1,0 +1,19 @@
+.f-c-tiptap-simple-form-wrap-locale-switch
+  display: flex
+  align-items: center
+  gap: 4px
+  margin-left: auto
+
+  &__btn
+    +unbutton
+    width: 30px
+    height: 24px
+    display: flex
+    align-items: center
+    justify-content: center
+    background-color: transparent
+    transition: $transition-base
+
+    &:hover,
+    &--active
+      background-color: $medium-gray

@@ -33,12 +33,13 @@ class Folio::Console::Api::TiptapRevisionsControllerTest < Folio::Console::BaseC
     revision = Folio::Tiptap::Revision.find(response_data["revision_id"])
     assert_equal @page, revision.placement
     assert_equal @superadmin, revision.user
+    assert_equal "tiptap_content", revision.attribute_name
     assert_equal content.stringify_keys, revision.content
   end
 
   test "save_revision - updates existing revision" do
     content = { content: "Initial content" }
-    revision = @page.tiptap_revisions.create!(user: @superadmin, content:)
+    revision = @page.tiptap_revisions.create!(user: @superadmin, attribute_name: "tiptap_content", content:)
 
     updated_content = { content: "Updated content" }
 
@@ -56,7 +57,7 @@ class Folio::Console::Api::TiptapRevisionsControllerTest < Folio::Console::BaseC
   end
 
   test "delete_revision - deletes existing revision" do
-    @page.tiptap_revisions.create!(user: @superadmin, content: { content: "To delete" })
+    @page.tiptap_revisions.create!(user: @superadmin, attribute_name: "tiptap_content", content: { content: "To delete" })
 
     assert_difference "Folio::Tiptap::Revision.count", -1 do
       delete delete_revision_console_api_tiptap_revisions_path(format: :json), params: {
@@ -81,7 +82,7 @@ class Folio::Console::Api::TiptapRevisionsControllerTest < Folio::Console::BaseC
 
   test "takeover_revision - takes over another user's revision" do
     from_content = { content: "Another user's content" }
-    _from_revision = @page.tiptap_revisions.create!(user: @another_user, content: from_content)
+    _from_revision = @page.tiptap_revisions.create!(user: @another_user, attribute_name: "tiptap_content", content: from_content)
 
     assert_difference "Folio::Tiptap::Revision.count", 1 do
       post takeover_revision_console_api_tiptap_revisions_path(format: :json), params: {
@@ -94,7 +95,7 @@ class Folio::Console::Api::TiptapRevisionsControllerTest < Folio::Console::BaseC
     assert_response :ok
     assert response.parsed_body["success"]
 
-    my_revision = @page.tiptap_revisions.find_by(user: @superadmin)
+    my_revision = @page.tiptap_revisions.find_by(user: @superadmin, attribute_name: "tiptap_content")
     assert_not_nil my_revision
     assert_equal from_content.stringify_keys, my_revision.content
 
@@ -136,5 +137,80 @@ class Folio::Console::Api::TiptapRevisionsControllerTest < Folio::Console::BaseC
     }
 
     assert_response :not_found
+  end
+
+  test "save_revision - with attribute_name creates separate revision" do
+    content1 = { content: "Content for tiptap_content" }
+    content2 = { content: "Content for tiptap_content_cs" }
+
+    assert_difference "Folio::Tiptap::Revision.count", 1 do
+      post save_revision_console_api_tiptap_revisions_path(format: :json), params: {
+        placement: { type: "Folio::Page", id: @page.id },
+        tiptap_revision: { attribute_name: "tiptap_content", content: content1 }
+      }
+    end
+
+    assert_response :ok
+
+    assert_difference "Folio::Tiptap::Revision.count", 1 do
+      post save_revision_console_api_tiptap_revisions_path(format: :json), params: {
+        placement: { type: "Folio::Page", id: @page.id },
+        tiptap_revision: { attribute_name: "tiptap_content_cs", content: content2 }
+      }
+    end
+
+    assert_response :ok
+
+    revision1 = @page.tiptap_revisions.find_by(user: @superadmin, attribute_name: "tiptap_content")
+    revision2 = @page.tiptap_revisions.find_by(user: @superadmin, attribute_name: "tiptap_content_cs")
+
+    assert_not_nil revision1
+    assert_not_nil revision2
+    assert_not_equal revision1.id, revision2.id
+    assert_equal content1.stringify_keys, revision1.content
+    assert_equal content2.stringify_keys, revision2.content
+  end
+
+  test "delete_revision - with attribute_name deletes specific revision" do
+    @page.tiptap_revisions.create!(user: @superadmin, attribute_name: "tiptap_content", content: { content: "To delete" })
+    @page.tiptap_revisions.create!(user: @superadmin, attribute_name: "tiptap_content_cs", content: { content: "Keep this" })
+
+    assert_difference "Folio::Tiptap::Revision.count", -1 do
+      delete delete_revision_console_api_tiptap_revisions_path(format: :json), params: {
+        placement: { type: "Folio::Page", id: @page.id, attribute_name: "tiptap_content" }
+      }
+    end
+
+    assert_response :ok
+    assert response.parsed_body["success"]
+
+    assert_nil @page.tiptap_revisions.find_by(user: @superadmin, attribute_name: "tiptap_content")
+    assert_not_nil @page.tiptap_revisions.find_by(user: @superadmin, attribute_name: "tiptap_content_cs")
+  end
+
+  test "takeover_revision - takes over multiple revisions for different attribute_names" do
+    content1 = { content: "Content 1" }
+    content2 = { content: "Content 2" }
+    @page.tiptap_revisions.create!(user: @another_user, attribute_name: "tiptap_content", content: content1)
+    @page.tiptap_revisions.create!(user: @another_user, attribute_name: "tiptap_content_cs", content: content2)
+
+    assert_difference "Folio::Tiptap::Revision.count", 2 do
+      post takeover_revision_console_api_tiptap_revisions_path(format: :json), params: {
+        from_user_id: @another_user.id,
+        record_type: "Folio::Page",
+        record_id: @page.id
+      }
+    end
+
+    assert_response :ok
+    assert response.parsed_body["success"]
+
+    my_revision1 = @page.tiptap_revisions.find_by(user: @superadmin, attribute_name: "tiptap_content")
+    my_revision2 = @page.tiptap_revisions.find_by(user: @superadmin, attribute_name: "tiptap_content_cs")
+
+    assert_not_nil my_revision1
+    assert_not_nil my_revision2
+    assert_equal content1.stringify_keys, my_revision1.content
+    assert_equal content2.stringify_keys, my_revision2.content
   end
 end

@@ -14,7 +14,8 @@
           = t('.title')
 
       .f-c-tiptap-simple-form-wrap-autosave-info__middle
-        = latest_revision_info
+        - if latest_revision_info.present?
+          = latest_revision_info
 
       .f-c-tiptap-simple-form-wrap-autosave-info__bottom
         .f-c-tiptap-simple-form-wrap-autosave-info__buttons

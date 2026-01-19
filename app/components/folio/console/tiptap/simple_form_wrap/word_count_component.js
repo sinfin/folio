@@ -1,8 +1,12 @@
 window.Folio.Stimulus.register('f-c-tiptap-simple-form-wrap-word-count', class extends window.Stimulus.Controller {
   static targets = ['wordsCount', 'charactersCount']
 
+  static values = {
+    attributeName: String
+  }
+
   updateWordCount (e) {
-    if (!e || !e.detail || !e.detail.wordCount) return
+    if (!e?.detail?.wordCount) return
     this.updateCounts(e.detail.wordCount)
   }
 
