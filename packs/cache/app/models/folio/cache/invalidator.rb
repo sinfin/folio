@@ -12,30 +12,24 @@ module Folio
           return if keys.blank?
 
           now = Time.current
+          site = Folio::Site.find(site_id) if Folio::Cache.expires_at_for_key
 
-          # Find which keys don't exist yet and create them
-          existing_keys = Folio::Cache::Version
-                          .where(site_id:, key: keys)
-                          .pluck(:key)
-          missing_keys = keys - existing_keys
-
-          if missing_keys.present?
-            Folio::Cache::Version.insert_all(
-              missing_keys.map do |key|
-                {
-                  site_id:,
-                  key:,
-                  created_at: now,
-                  updated_at: now
-                }
-              end
-            )
+          data_to_upsert = keys.map do |key|
+            expires_at = Folio::Cache.expires_at_for_key&.call(key:, site:)
+            {
+              site_id:,
+              key:,
+              created_at: now,
+              updated_at: now,
+              expires_at:
+            }
           end
 
-          # Update timestamps for all versions (including newly created ones)
-          Folio::Cache::Version
-            .where(site_id:, key: keys)
-            .update_all(updated_at: now)
+          Folio::Cache::Version.upsert_all(
+            data_to_upsert,
+            unique_by: [:site_id, :key],
+            on_duplicate: Arel.sql("updated_at = EXCLUDED.updated_at, expires_at = EXCLUDED.expires_at")
+          )
         end
       end
     end
