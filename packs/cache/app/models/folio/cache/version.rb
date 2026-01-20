@@ -8,6 +8,23 @@ class Folio::Cache::Version < Folio::ApplicationRecord
   validates :key,
             presence: true,
             uniqueness: { scope: :site_id }
+
+  class << self
+    # Build cache key string from version keys and timestamps
+    # @param keys [Array<String>] Cache version keys
+    # @param site [Folio::Site] Site to scope lookup
+    # @return [String, nil] Keys with timestamps (e.g., "published-1705678901/navigation-1705678902"), or nil if keys blank or no site
+    def cache_key_for(keys:, site:)
+      return nil if keys.blank?
+      return nil unless site
+
+      versions = where(site_id: site.id, key: keys)
+                   .pluck(:key, :updated_at)
+                   .to_h
+
+      keys.map { |k| "#{k}-#{versions[k]&.to_i || 0}" }.join("/")
+    end
+  end
 end
 
 # == Schema Information
