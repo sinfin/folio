@@ -10,19 +10,26 @@ class Folio::Cache::Version < Folio::ApplicationRecord
             uniqueness: { scope: :site_id }
 
   class << self
+    # Load all cache versions for a site as a hash
+    # @param site [Folio::Site] Site to scope lookup
+    # @return [Hash<String, Time>] Hash of key => updated_at timestamp
+    def versions_hash_for_site(site)
+      return {} unless site
+
+      where(site_id: site.id).pluck(:key, :updated_at).to_h
+    end
+
     # Build cache key string from version keys and timestamps
     # @param keys [Array<String>] Cache version keys
     # @param site [Folio::Site] Site to scope lookup
+    # @param versions_hash [Hash<String, Time>] Optional pre-loaded versions hash (defaults to Folio::Current.cache_versions_hash)
     # @return [String, nil] Keys with timestamps (e.g., "published-1705678901/navigation-1705678902"), or nil if keys blank or no site
-    def cache_key_for(keys:, site:)
+    def cache_key_for(keys:, site:, versions_hash: nil)
       return nil if keys.blank?
       return nil unless site
 
-      versions = where(site_id: site.id, key: keys)
-                   .pluck(:key, :updated_at)
-                   .to_h
-
-      keys.map { |k| "#{k}-#{versions[k]&.to_i || 0}" }.join("/")
+      versions_hash ||= Folio::Current.cache_versions_hash
+      keys.map { |k| "#{k}-#{versions_hash[k]&.to_i || 0}" }.join("/")
     end
   end
 end

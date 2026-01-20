@@ -6,6 +6,7 @@ module Folio
 
     class Railtie < ::Rails::Railtie
       config.to_prepare do
+        Folio::Current.include(Folio::Cache::CurrentConcern)
         Folio::ApplicationRecord.include(Folio::Cache::ModelConcern)
         Folio::ApplicationComponent.include(Folio::Cache::Helper)
       end
