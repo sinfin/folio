@@ -76,3 +76,47 @@ Folio::Cache::Invalidator.invalidate!(
 ```
 
 Missing version records are created automatically.
+
+## Scheduled Expiration
+
+For time-sensitive content (e.g., scheduled article publishing), configure automatic cache expiration:
+
+### Configuration
+
+```ruby
+# config/initializers/folio_cache.rb
+Folio::Cache.configure do |config|
+  config.expires_at_for_key = ->(key:, site:) do
+    case key
+    when "published_articles"
+      Dummy::Blog::Article.folio_cache_expires_at(site:)
+    end
+  end
+end
+```
+
+For temporary configuration in tests, use the block form (automatically reverts after block):
+
+```ruby
+Folio::Cache.configure do
+  Folio::Cache.expires_at_for_key = ->(key:, site:) { 1.day.from_now }
+  # ... test code ...
+end
+# expires_at_for_key is automatically reset to previous value
+```
+
+### Publishable Models
+
+Models using `Folio::Publishable::WithDate` or `Folio::Publishable::Within` automatically get the `folio_cache_expires_at(site:)` class method, which returns the next datetime when any record's published status will change.
+
+```ruby
+# Returns next scheduled publish/unpublish time
+Article.folio_cache_expires_at(site: current_site)
+```
+
+### How It Works
+
+1. When `expires_at` is configured, it's stored on `Folio::Cache::Version`
+2. Cache keys include an expired flag (0/1) based on current time vs `expires_at`
+3. When expiration is detected, a background job invalidates the version
+4. The lambda is called again to calculate the next `expires_at`

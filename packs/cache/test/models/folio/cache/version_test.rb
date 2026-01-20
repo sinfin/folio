@@ -3,6 +3,7 @@
 require "test_helper"
 
 class Folio::Cache::VersionTest < ActiveSupport::TestCase
+  include ActiveJob::TestHelper
   test "validates key presence and uniqueness per site" do
     version = build(:folio_cache_version, key: nil)
     assert_not version.valid?
@@ -35,6 +36,7 @@ class Folio::Cache::VersionTest < ActiveSupport::TestCase
     assert version_key.present?
     assert_includes version_key, "published"
     assert_includes version_key, version.updated_at.to_i.to_s
+    assert_match(/published-\d+-\d/, version_key) # Should include expired flag
   end
 
   test "cache_key_for handles empty keys" do
@@ -56,6 +58,7 @@ class Folio::Cache::VersionTest < ActiveSupport::TestCase
     assert_includes version_key, "/"
     assert_includes version_key, v1.updated_at.to_i.to_s
     assert_includes version_key, v2.updated_at.to_i.to_s
+    assert_match(/published-\d+-\d\/navigation-\d+-\d/, version_key) # Both should have expired flags
   end
 
   test "cache_key_for handles missing versions" do
@@ -66,7 +69,7 @@ class Folio::Cache::VersionTest < ActiveSupport::TestCase
     version_key = Folio::Cache::Version.cache_key_for(keys: ["published", "missing"], site:)
     assert version_key.present?
     assert_includes version_key, "published"
-    assert_includes version_key, "missing-0" # Missing version gets 0 timestamp
+    assert_match(/missing-0-0/, version_key) # Missing version gets 0 timestamp and 0 expired flag
   end
 
   test "cache_key_for returns nil when no site" do
@@ -81,8 +84,20 @@ class Folio::Cache::VersionTest < ActiveSupport::TestCase
 
     hash = Folio::Cache::Version.versions_hash_for_site(site)
     assert_equal 2, hash.size
-    assert_equal v1.updated_at, hash["published"]
-    assert_equal v2.updated_at, hash["navigation"]
+    assert_equal v1.updated_at, hash["published"][:updated_at]
+    assert_equal v2.updated_at, hash["navigation"][:updated_at]
+    assert_nil hash["published"][:expires_at]
+    assert_nil hash["navigation"][:expires_at]
+  end
+
+  test "versions_hash_for_site includes expires_at when present" do
+    site = create_and_host_site
+    expires_at = 1.day.from_now
+    version = create(:folio_cache_version, site:, key: "published", expires_at:)
+
+    hash = Folio::Cache::Version.versions_hash_for_site(site)
+    assert_equal expires_at.to_i, hash["published"][:expires_at].to_i
+    assert_equal version.updated_at.to_i, hash["published"][:updated_at].to_i
   end
 
   test "versions_hash_for_site returns empty hash for nil site" do
@@ -116,8 +131,8 @@ class Folio::Cache::VersionTest < ActiveSupport::TestCase
     # Pre-load versions into Current
     cached_hash = Folio::Current.cache_versions_hash
     assert cached_hash.present?
-    assert_equal v1.updated_at, cached_hash["published"]
-    assert_equal v2.updated_at, cached_hash["navigation"]
+    assert_equal v1.updated_at, cached_hash["published"][:updated_at]
+    assert_equal v2.updated_at, cached_hash["navigation"][:updated_at]
 
     # Verify cache_key_for uses the cached hash
     version_key = Folio::Cache::Version.cache_key_for(keys: ["published", "navigation"], site:)
@@ -129,5 +144,36 @@ class Folio::Cache::VersionTest < ActiveSupport::TestCase
 
     # Verify subsequent call to cache_versions_hash returns same cached hash
     assert_same cached_hash, Folio::Current.cache_versions_hash
+  end
+
+  test "cache_key_for includes expired flag" do
+    site = create_and_host_site
+    create(:folio_cache_version, site:, key: "published", expires_at: 1.day.from_now)
+
+    version_key = Folio::Cache::Version.cache_key_for(keys: ["published"], site:)
+    assert version_key.present?
+    assert_match(/published-\d+-0/, version_key) # expired flag should be 0
+  end
+
+  test "cache_key_for sets expired flag to 1 when expires_at passed" do
+    site = create_and_host_site
+    create(:folio_cache_version, site:, key: "published", expires_at: 1.day.ago)
+
+    assert_enqueued_with(job: Folio::Cache::ExpireJob, args: [{ site_id: site.id, key: "published" }]) do
+      version_key = Folio::Cache::Version.cache_key_for(keys: ["published"], site:)
+      assert version_key.present?
+      assert_match(/published-\d+-1/, version_key) # expired flag should be 1
+    end
+  end
+
+  test "cache_key_for does not schedule job when not expired" do
+    site = create_and_host_site
+    create(:folio_cache_version, site:, key: "published", expires_at: 1.day.from_now)
+
+    assert_no_enqueued_jobs(only: Folio::Cache::ExpireJob) do
+      version_key = Folio::Cache::Version.cache_key_for(keys: ["published"], site:)
+      assert version_key.present?
+      assert_match(/published-\d+-0/, version_key) # expired flag should be 0
+    end
   end
 end
