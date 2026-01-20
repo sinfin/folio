@@ -24,6 +24,8 @@ rails db:migrate
 3. Views use `folio_cache` helper with version keys
 4. On model commit, version timestamps update, invalidating caches
 
+**Performance:** Cache versions are loaded once per request into `Folio::Current.cache_versions_hash` on first `folio_cache` usage, then filtered from memory for subsequent calls.
+
 ## Model Setup
 
 Override `folio_cache_version_keys` to declare which cache keys a model invalidates:
