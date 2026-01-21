@@ -9,6 +9,10 @@ class Folio::Cache::Version < Folio::ApplicationRecord
             presence: true,
             uniqueness: { scope: :site_id }
 
+  def to_label
+    key
+  end
+
   class << self
     # Load all cache versions for a site as a hash
     # @param site [Folio::Site] Site to scope lookup
