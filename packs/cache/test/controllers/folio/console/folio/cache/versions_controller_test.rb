@@ -66,16 +66,14 @@ class Folio::Console::Folio::Cache::VersionsControllerTest < Folio::Console::Bas
   end
 
   test "clear_rails_cache" do
-    test_key = "cache_versions_test_#{SecureRandom.hex}"
-    Rails.cache.write(test_key, "test_value")
-    assert_equal "test_value", Rails.cache.read(test_key)
+    clear_called = []
 
-    post url_for([:clear_rails_cache, :console, Folio::Cache::Version])
+    Rails.cache.stub(:clear, -> { clear_called << true }) do
+      post url_for([:clear_rails_cache, :console, Folio::Cache::Version])
+    end
 
     assert_redirected_to url_for([:console, Folio::Cache::Version])
     assert_not_nil flash[:notice]
-
-    # Verify cache was cleared by checking the key is gone
-    assert_nil Rails.cache.read(test_key), "Cache should be cleared after clear_rails_cache action"
+    assert clear_called.any?, "Rails.cache.clear should be called"
   end
 end

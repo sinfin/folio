@@ -8,7 +8,8 @@ module Folio
         # Creates missing versions if they don't exist
         # @param site_id [Integer] the site ID
         # @param keys [Array<String>] array of cache version keys
-        def invalidate!(site_id:, keys:)
+        # @param invalidation_metadata [Hash, nil] optional metadata about what triggered the invalidation
+        def invalidate!(site_id:, keys:, invalidation_metadata: nil)
           return if keys.blank?
 
           now = Time.current
@@ -21,14 +22,15 @@ module Folio
               key:,
               created_at: now,
               updated_at: now,
-              expires_at:
+              expires_at:,
+              invalidation_metadata:
             }
           end
 
           Folio::Cache::Version.upsert_all(
             data_to_upsert,
             unique_by: [:site_id, :key],
-            on_duplicate: Arel.sql("updated_at = EXCLUDED.updated_at, expires_at = EXCLUDED.expires_at")
+            on_duplicate: Arel.sql("updated_at = EXCLUDED.updated_at, expires_at = EXCLUDED.expires_at, invalidation_metadata = EXCLUDED.invalidation_metadata")
           )
         end
       end

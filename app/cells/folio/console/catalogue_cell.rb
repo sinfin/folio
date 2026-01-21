@@ -2,6 +2,7 @@
 
 class Folio::Console::CatalogueCell < Folio::ConsoleCell
   include SimpleForm::ActionViewExtensions::FormHelper
+  include ActionView::Helpers::DateHelper
 
   attr_reader :record
 

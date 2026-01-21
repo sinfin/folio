@@ -96,4 +96,15 @@ class Folio::Cache::InvalidatorTest < ActiveSupport::TestCase
     assert version.created_at.present?
     assert version.updated_at.present?
   end
+
+  test "invalidate! sets invalidation_metadata when provided" do
+    site = create_site
+    metadata = { type: "model", class: "Folio::Page", id: 123 }
+
+    Folio::Cache::Invalidator.invalidate!(site_id: site.id, keys: ["published"], invalidation_metadata: metadata)
+
+    version = Folio::Cache::Version.find_by(site:, key: "published")
+    # JSONB stores keys as strings, so compare with string keys
+    assert_equal metadata.stringify_keys, version.invalidation_metadata
+  end
 end

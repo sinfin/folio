@@ -6,6 +6,7 @@ class CreateFolioCacheVersions < ActiveRecord::Migration[8.0]
       t.belongs_to :site, null: false
       t.string :key, null: false
       t.datetime :expires_at
+      t.jsonb :invalidation_metadata
 
       t.index [:site_id, :key], unique: true
 

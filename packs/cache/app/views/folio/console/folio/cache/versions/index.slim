@@ -20,7 +20,13 @@
     attribute :key
 
     attribute :updated_at do
-      l(record.updated_at, format: "%-d. %-m. %Y, %-H:%M:%S")
+      date_time = l(record.updated_at, format: "%-d. %-m. %Y, %-H:%M:%S")
+      time_ago = time_ago_in_words(record.updated_at)
+      safe_join([date_time, content_tag(:span, t('folio.console.folio.cache.versions.updated_at_ago', time: time_ago), class: 'small text-muted')], " ")
+    end
+
+    attribute :invalidation_metadata do
+      render_view_component(Folio::Cache::ConsoleInvalidationMetadataComponent.new(metadata: record.invalidation_metadata))
     end
 
     actions({ invalidate: {

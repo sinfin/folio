@@ -16,7 +16,13 @@ module Folio
         keys = folio_cache_version_keys
         return if keys.empty?
 
-        Folio::Cache::Invalidator.invalidate!(site_id:, keys:)
+        invalidation_metadata = {
+          type: "model",
+          class: self.class.base_class.name,
+          id: id
+        }
+
+        Folio::Cache::Invalidator.invalidate!(site_id:, keys:, invalidation_metadata:)
       rescue StandardError => e
         Rails.logger.error "Folio::Cache::ModelConcern#folio_cache_invalidate_versions! failed for #{self.class.name}##{id}: #{e.message}"
         Rails.logger.error e.backtrace.join("\n") if Rails.env.development?

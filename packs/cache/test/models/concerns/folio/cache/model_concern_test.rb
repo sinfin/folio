@@ -64,4 +64,25 @@ class Folio::Cache::ModelConcernTest < ActiveSupport::TestCase
     # Version should not be updated again since site_id is nil
     assert_equal updated_at_after_create, version.reload.updated_at
   end
+
+  test "after_commit sets invalidation_metadata with model information" do
+    site = create_site
+    page = PageWithCacheKeys.create!(site:, title: "Test", slug: "test-#{SecureRandom.hex(4)}", locale: site.locale)
+
+    travel 1.second do
+      page.update!(title: "Updated")
+    end
+
+    v1 = Folio::Cache::Version.find_by(site:, key: "published")
+    v2 = Folio::Cache::Version.find_by(site:, key: "navigation")
+
+    expected_metadata = {
+      "type" => "model",
+      "class" => "Folio::Page",
+      "id" => page.id
+    }
+
+    assert_equal expected_metadata, v1.invalidation_metadata
+    assert_equal expected_metadata, v2.invalidation_metadata
+  end
 end
