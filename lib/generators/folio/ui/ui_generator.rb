@@ -39,22 +39,22 @@ class Folio::UiGenerator < Rails::Generators::NamedBase
 
       Dir["#{base}#{key}/#{key}_cell.rb.tt"].each do |path|
         relative_path = path.to_s.delete_prefix(base)
-        template relative_path, "app/cells/#{application_namespace_path}/ui/#{relative_path.delete_suffix('.tt').delete_prefix("#{key}/")}"
+        template relative_path, "#{pack_path_prefix}app/cells/#{application_namespace_path}/ui/#{relative_path.delete_suffix('.tt').delete_prefix("#{key}/")}"
       end
 
       Dir["#{base}#{key}/#{key}_cell_test.rb.tt"].each do |path|
         relative_path = path.to_s.delete_prefix(base)
-        template relative_path, "test/cells/#{application_namespace_path}/ui/#{relative_path.delete_suffix('.tt').delete_prefix("#{key}/")}"
+        template relative_path, "#{pack_path_prefix}test/cells/#{application_namespace_path}/ui/#{relative_path.delete_suffix('.tt').delete_prefix("#{key}/")}"
       end
 
       Dir["#{base}#{key}/#{key}/**/*.tt"].each do |path|
         relative_path = path.to_s.delete_prefix(base)
-        template relative_path, "app/cells/#{application_namespace_path}/ui/#{relative_path.delete_suffix('.tt').delete_prefix("#{key}/")}"
+        template relative_path, "#{pack_path_prefix}app/cells/#{application_namespace_path}/ui/#{relative_path.delete_suffix('.tt').delete_prefix("#{key}/")}"
       end
 
       Dir["#{base}#{key}/models/**/*.tt"].each do |path|
         relative_path = path.to_s.delete_prefix(base)
-        template relative_path, relative_path.delete_prefix("#{key}/models/").gsub("application_namespace_path", application_namespace_path).delete_suffix(".tt")
+        template relative_path, "#{pack_path_prefix}#{relative_path.delete_prefix("#{key}/models/").gsub("application_namespace_path", application_namespace_path).delete_suffix(".tt")}"
       end
 
       Dir["#{base}#{key}/#{File.basename(key)}_component.*.tt"].each do |path|
@@ -67,7 +67,7 @@ class Folio::UiGenerator < Rails::Generators::NamedBase
           relative_path.delete_suffix(".tt").delete_prefix("#{File.basename(key)}/")
         end
 
-        template relative_path, "app/components/#{application_namespace_path}/ui/#{target}"
+        template relative_path, "#{pack_path_prefix}app/components/#{application_namespace_path}/ui/#{target}"
       end
 
       Dir["#{base}#{key}/#{File.basename(key)}_component_test.rb.tt"].each do |path|
@@ -79,13 +79,13 @@ class Folio::UiGenerator < Rails::Generators::NamedBase
           relative_path.delete_suffix(".tt").delete_prefix("#{File.basename(key)}/")
         end
 
-        template relative_path, "test/components/#{application_namespace_path}/ui/#{target}"
+        template relative_path, "#{pack_path_prefix}test/components/#{application_namespace_path}/ui/#{target}"
       end
     end
   end
 
   def update_controller
-    template "ui_controller.rb.tt", "app/controllers/#{application_namespace_path}/ui_controller.rb"
+    template "ui_controller.rb.tt", "#{pack_path_prefix}app/controllers/#{application_namespace_path}/ui_controller.rb"
 
     routes_s = File.read(folio_generators_root.join("config/routes.rb"))
 
@@ -102,12 +102,12 @@ class Folio::UiGenerator < Rails::Generators::NamedBase
     Dir["#{views_base}views/*.slim.tt"].each do |path|
       relative_path = path.to_s.delete_prefix(views_base)
 
-      template relative_path, "app/views/#{application_namespace_path}/ui/#{File.basename(path).delete_suffix('.tt')}"
+      template relative_path, "#{pack_path_prefix}app/views/#{application_namespace_path}/ui/#{File.basename(path).delete_suffix('.tt')}"
     end
   end
 
   def update_helper
-    template "ui_helper.rb.tt", "app/helpers/#{application_namespace_path}/ui_helper.rb"
+    template "ui_helper.rb.tt", "#{pack_path_prefix}app/helpers/#{application_namespace_path}/ui_helper.rb"
   end
 
   def update_i18n_ymls

@@ -8,17 +8,17 @@ class Folio::Tiptap::NodeGenerator < Rails::Generators::NamedBase
   source_root File.expand_path("templates", __dir__)
 
   def node_model
-    template "node_model.rb.tt", "app/models/#{node_name}.rb"
+    template "node_model.rb.tt", "#{pack_path_prefix}app/models/#{node_name}.rb"
   end
 
   def component
-    unless File.exist?(Rails.root.join("app/components/#{application_namespace_path}/tiptap/node/base_component.rb"))
-      template "base_component.rb.tt", "app/components/#{application_namespace_path}/tiptap/node/base_component.rb"
+    unless File.exist?(Rails.root.join("#{pack_path_prefix}app/components/#{application_namespace_path}/tiptap/node/base_component.rb"))
+      template "base_component.rb.tt", "#{pack_path_prefix}app/components/#{application_namespace_path}/tiptap/node/base_component.rb"
     end
 
-    template "component.rb.tt", "app/components/#{component_name}.rb"
-    template "component.slim.tt", "app/components/#{component_name}.slim"
-    template "component_test.rb.tt", "test/components/#{component_name}_test.rb"
+    template "component.rb.tt", "#{pack_path_prefix}app/components/#{component_name}.rb"
+    template "component.slim.tt", "#{pack_path_prefix}app/components/#{component_name}.slim"
+    template "component_test.rb.tt", "#{pack_path_prefix}test/components/#{component_name}_test.rb"
   end
 
   def node_css_class_name

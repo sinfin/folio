@@ -35,7 +35,7 @@ class Folio::PreparedAtomGenerator < Rails::Generators::NamedBase
 
       Dir["#{base}#{key}/#{File.basename(key)}.rb.tt"].each do |path|
         relative_path = path.to_s.delete_prefix(base)
-        template relative_path, "app/models/#{application_namespace_path}/atom/#{File.dirname(relative_path.delete_suffix('.tt'))}.rb"
+        template relative_path, "#{pack_path_prefix}app/models/#{application_namespace_path}/atom/#{File.dirname(relative_path.delete_suffix('.tt'))}.rb"
       end
 
       content = File.read("#{base}#{key}/#{File.basename(key)}.rb.tt")
@@ -45,12 +45,12 @@ class Folio::PreparedAtomGenerator < Rails::Generators::NamedBase
       Dir["#{base}#{key}/component/#{File.basename(key)}_component.*.tt"].each do |path|
         relative_path = path.to_s.delete_prefix(base)
 
-        template relative_path, "app/components/#{application_namespace_path}/#{component_directory}/#{relative_path.gsub(/\/component\/.+/, "_component#{File.extname(relative_path.delete_suffix('.tt'))}")}"
+        template relative_path, "#{pack_path_prefix}app/components/#{application_namespace_path}/#{component_directory}/#{relative_path.gsub(/\/component\/.+/, "_component#{File.extname(relative_path.delete_suffix('.tt'))}")}"
       end
 
       Dir["#{base}#{key}/component/#{File.basename(key)}_component_test.rb.tt"].each do |path|
         relative_path = path.to_s.delete_prefix(base)
-        template relative_path, "test/components/#{application_namespace_path}/#{component_directory}/#{relative_path.gsub(/\/component\/.+/, "_component_test#{File.extname(relative_path.delete_suffix('.tt'))}")}"
+        template relative_path, "#{pack_path_prefix}test/components/#{application_namespace_path}/#{component_directory}/#{relative_path.gsub(/\/component\/.+/, "_component_test#{File.extname(relative_path.delete_suffix('.tt'))}")}"
       end
 
       i18n_path = "#{base}#{key}/i18n.yml"
@@ -62,7 +62,7 @@ class Folio::PreparedAtomGenerator < Rails::Generators::NamedBase
   end
 
   def update_controller
-    template "atoms_controller.rb.tt", "app/controllers/#{application_namespace_path}/atoms_controller.rb"
+    template "atoms_controller.rb.tt", "#{pack_path_prefix}app/controllers/#{application_namespace_path}/atoms_controller.rb"
 
     template "data/atoms_showcase.yml.tt", "data/atoms_showcase.yml"
 
@@ -81,7 +81,7 @@ class Folio::PreparedAtomGenerator < Rails::Generators::NamedBase
     Dir["#{views_base}*.slim.tt"].each do |path|
       relative_path = path.to_s.delete_prefix(views_base)
 
-      template relative_path, "app/views/#{application_namespace_path}/atoms/#{File.basename(path).delete_suffix('.tt')}"
+      template relative_path, "#{pack_path_prefix}app/views/#{application_namespace_path}/atoms/#{File.basename(path).delete_suffix('.tt')}"
     end
   end
 

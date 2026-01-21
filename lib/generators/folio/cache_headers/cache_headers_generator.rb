@@ -10,6 +10,7 @@ class Folio::CacheHeadersGenerator < Rails::Generators::Base
   source_root File.expand_path("templates", __dir__)
 
   def create_cache_headers_initializer
+    # Config files don't go into packs
     template "cache_headers_initializer.rb.tt", "config/initializers/cache_headers.rb"
   end
 end
