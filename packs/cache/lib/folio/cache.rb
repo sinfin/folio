@@ -31,6 +31,16 @@ module Folio
           end
         end
 
+        Folio::Site.class_eval do
+          def self.console_sidebar_before_site_packs_links(pack_name)
+            if pack_name == :cache
+              ["Folio::Cache::Version"]
+            else
+              super
+            end
+          end
+        end
+
         Folio::Publishable::Basic.include(Folio::Cache::PublishableExtension)
         Folio::Publishable::WithDate.include(Folio::Cache::PublishableWithDateExtension)
         Folio::Publishable::Within.include(Folio::Cache::PublishableWithinExtension)
