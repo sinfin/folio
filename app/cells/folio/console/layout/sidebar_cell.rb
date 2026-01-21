@@ -343,6 +343,16 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
             site_links[links_group_key] << link_from_definitions(site, link_or_hash)
           end
         end
+
+        # Collect pack links
+        Folio.enabled_packs.each do |pack_name|
+          pack_links = site.class.try(:console_sidebar_before_site_packs_links, pack_name)
+          next if pack_links.blank?
+
+          pack_links.each do |link_or_hash|
+            site_links[:console_sidebar_before_site_links] << link_from_definitions(site, link_or_hash)
+          end
+        end
       end
       site_links
     end
