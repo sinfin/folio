@@ -9,3 +9,8 @@ cs:
           versions:
             invalidate:
               flash: "Verze cache byla úspěšně invalidována."
+            invalidate_all_flash: "Všechny verze cache byly úspěšně invalidovány."
+            invalidate_all_flash_empty: "Žádné verze cache k invalidaci."
+            invalidate_all_button: "Invalidovat vše"
+            clear_rails_cache_flash: "Cache byla úspěšně vymazána."
+            clear_rails_cache_button: "Vymazat cache"
