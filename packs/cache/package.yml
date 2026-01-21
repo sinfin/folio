@@ -5,3 +5,4 @@ enforce_dependencies: true
 
 dependencies:
   - "../.."  # depends on core Folio (Folio::ApplicationRecord, Folio::BelongsToSite, etc.)
+  - "."  # depends on main app for test models (Dummy::Blog::Article, etc.)

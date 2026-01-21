@@ -23,6 +23,14 @@ module Folio
 
     class Railtie < ::Rails::Railtie
       config.to_prepare do
+        Folio::Ability.class_eval do
+          def folio_cache_pack_rules
+            if user&.superadmin?
+              can :manage, Folio::Cache::Version
+            end
+          end
+        end
+
         Folio::Publishable::Basic.include(Folio::Cache::PublishableExtension)
         Folio::Publishable::WithDate.include(Folio::Cache::PublishableWithDateExtension)
         Folio::Publishable::Within.include(Folio::Cache::PublishableWithinExtension)

@@ -1,0 +1,12 @@
+---
+cs:
+  activerecord:
+    attributes:
+      folio/cache/version:
+        key: Klíč
+        updated_at: Verze
+    models:
+      folio/cache/version:
+        few: Cache verze
+        one: Cache verze
+        other: Cache verzí

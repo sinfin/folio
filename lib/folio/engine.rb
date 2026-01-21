@@ -214,6 +214,12 @@ module Folio
         migrate_path = pack_root.join("db/migrate")
         app.config.paths["db/migrate"] << migrate_path if migrate_path.exist?
 
+        # Locales
+        locales_path = pack_root.join("config/locales")
+        if locales_path.exist?
+          app.config.i18n.load_path += Dir[locales_path.join("**", "*.yml")]
+        end
+
         # Load pack railtie
         railtie_path = pack_root.join("lib/folio/#{pack_name}.rb")
         require railtie_path if railtie_path.exist?

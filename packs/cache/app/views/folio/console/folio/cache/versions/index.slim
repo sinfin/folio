@@ -1,0 +1,11 @@
+= index_header
+
+= catalogue(@versions)
+  ruby:
+    attribute :key
+
+    attribute :updated_at do
+      l(record.updated_at, format: "%-d. %-m. %Y, %-H:%M:%S")
+    end
+
+    actions :destroy

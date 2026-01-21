@@ -1,5 +1,14 @@
 # frozen_string_literal: true
 
+module Folio
+  mattr_accessor :enabled_packs
+  self.enabled_packs = [:cache]
+
+  def self.pack_enabled?(name)
+    enabled_packs.include?(name.to_sym)
+  end
+end
+
 require "folio/engine"
 
 require "dotenv-rails"
@@ -80,14 +89,7 @@ module Folio
     1.hour
   end
 
-  mattr_accessor :enabled_packs
-  self.enabled_packs = [:cache]
-
   def self.configure
     yield self
-  end
-
-  def self.pack_enabled?(name)
-    enabled_packs.include?(name.to_sym)
   end
 end
