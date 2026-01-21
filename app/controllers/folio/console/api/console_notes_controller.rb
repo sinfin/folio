@@ -15,7 +15,7 @@ class Folio::Console::Api::ConsoleNotesController < Folio::Console::Api::BaseCon
     if @console_note.valid?
       render json: modify_valid_hash_to_render({
         data: {
-          catalogue_tooltip: cell("folio/console/console_notes/catalogue_tooltip", @console_note.target).show,
+          catalogue_tooltip: view_context.render(Folio::Console::ConsoleNotes::CatalogueTooltipComponent.new(record: @console_note.target)),
           form: helpers.react_notes_form(@console_note.target),
         },
       }).compact
@@ -37,7 +37,7 @@ class Folio::Console::Api::ConsoleNotesController < Folio::Console::Api::BaseCon
               removed_ids: [],
               notes: @target.console_notes.map { |note| Folio::Console::ConsoleNoteSerializer.new(note).serializable_hash[:data] },
             },
-            catalogue_tooltip: cell("folio/console/console_notes/catalogue_tooltip", @target).show,
+            catalogue_tooltip: view_context.render(Folio::Console::ConsoleNotes::CatalogueTooltipComponent.new(record: @target)),
           }
         })
       else
