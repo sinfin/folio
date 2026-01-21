@@ -5,6 +5,7 @@ cs:
       folio/cache/version:
         key: Klíč
         updated_at: Verze
+        expires_at: Expirace
         invalidation_metadata: Invalidace
     models:
       folio/cache/version:

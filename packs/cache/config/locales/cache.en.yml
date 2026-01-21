@@ -20,3 +20,5 @@ en:
               job: "Job"
               job_with_class: "Job: %{class}"
             updated_at_ago: "(%{time} ago)"
+            expires_at_never: "Never"
+            expires_at_expired: "Expired"

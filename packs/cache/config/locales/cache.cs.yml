@@ -20,3 +20,5 @@ cs:
               job: "Úloha"
               job_with_class: "Úloha: %{class}"
             updated_at_ago: "(před %{time})"
+            expires_at_never: "Nikdy"
+            expires_at_expired: "Expirovalo"

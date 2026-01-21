@@ -5,6 +5,7 @@ en:
       folio/cache/version:
         key: Key
         updated_at: Version
+        expires_at: Expires
         invalidation_metadata: Invalidation
     models:
       folio/cache/version:
