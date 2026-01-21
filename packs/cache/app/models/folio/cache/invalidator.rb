@@ -17,6 +17,7 @@ module Folio
 
           data_to_upsert = keys.map do |key|
             expires_at = Folio::Cache.expires_at_for_key&.call(key:, site:)
+
             {
               site_id:,
               key:,

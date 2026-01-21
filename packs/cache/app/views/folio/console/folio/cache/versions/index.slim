@@ -22,7 +22,29 @@
     attribute :updated_at do
       date_time = l(record.updated_at, format: "%-d. %-m. %Y, %-H:%M:%S")
       time_ago = time_ago_in_words(record.updated_at)
-      safe_join([date_time, content_tag(:span, t('folio.console.folio.cache.versions.updated_at_ago', time: time_ago), class: 'small text-muted')], " ")
+      safe_join([
+        date_time,
+        content_tag(:span,
+                    t('folio.console.folio.cache.versions.updated_at_ago',
+                      time: time_ago),
+                    class: 'small text-muted d-block mt-1')
+      ], " ")
+    end
+
+    attribute :expires_at do
+      if record.expires_at.present?
+        if record.expires_at < Time.current
+          content_tag(:span,
+                      t('folio.console.folio.cache.versions.expires_at_expired'),
+                      class: 'text-danger')
+        else
+          l(record.expires_at, format: "%-d. %-m. %Y, %-H:%M:%S")
+        end
+      else
+        content_tag(:span,
+                    t('folio.console.folio.cache.versions.expires_at_never'),
+                    class: 'text-muted')
+      end
     end
 
     attribute :invalidation_metadata do
