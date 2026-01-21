@@ -37,6 +37,5 @@ div class=class_name data=data
                   atom_setting: model[:atom_setting] == false ? nil : "#{field}_until"
 
   - if field == :published
-    == cell('folio/console/ui/warning_ribbon',
-            t('.unpublished'),
-            class: "f-c-publishable-inputs-item__warning-ribbon")
+    == render_view_component(Folio::Console::Ui::WarningRibbonComponent.new(message: t('.unpublished'),
+                                                                            class_name: "f-c-publishable-inputs-item__warning-ribbon"))
