@@ -120,7 +120,12 @@ module Folio
           "test/factories.rb",
           "test/test_helper.rb",
           "vendor/assets/bower.json",
-        ].each { |f| template "#{f}.tt", f.gsub("application_namespace_path", application_namespace_path) }
+        ].each do |f|
+          target = f.gsub("application_namespace_path", application_namespace_path)
+          # Only apply pack prefix to app/ paths, not config/, db/, etc.
+          final_target = target.start_with?("app/") ? "#{pack_path_prefix}#{target}" : target
+          template "#{f}.tt", final_target
+        end
 
         template ".env.sample.tt", ".env"
       end
@@ -145,8 +150,9 @@ module Folio
         [
           "app/cells/#{application_namespace_path}/.keep",
         ].each do |f|
-          FileUtils.mkdir_p(::File.dirname(f))
-          FileUtils.touch(f)
+          final_path = f.start_with?("app/") ? "#{pack_path_prefix}#{f}" : f
+          FileUtils.mkdir_p(::File.dirname(final_path))
+          FileUtils.touch(final_path)
         end
 
         copy_file Folio::Engine.root.join(".ruby-version"), ".ruby-version"

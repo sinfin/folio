@@ -184,7 +184,44 @@ To create a new pack:
    mkdir -p packs/my_pack/{app/models/folio/my_pack,db/migrate,lib/folio,test/{factories/folio/my_pack,models/folio/my_pack}}
    ```
 
-2. **Create the `package.yml` (required for Packwerk):**
+2. **Use generators with `--pack` flag (recommended):**
+   
+   All Folio generators support a `--pack=<pack_name>` flag that automatically generates files into the pack directory structure:
+   
+   ```bash
+   # Generate a component in a pack
+   rails g folio:component my_pack/widget --pack=my_pack
+   # -> packs/my_pack/app/components/dummy/my_pack/widget_component.rb
+   
+   # Generate an atom model and component
+   rails g folio:atom my_pack/featured_content --pack=my_pack
+   # -> packs/my_pack/app/models/dummy/atom/my_pack/featured_content.rb
+   # -> packs/my_pack/app/components/dummy/atom/my_pack/featured_content_component.rb
+   
+   # Generate a console scaffold
+   rails g folio:console:scaffold my_pack/item --pack=my_pack
+   # -> packs/my_pack/app/controllers/folio/console/my_pack/items_controller.rb
+   # -> packs/my_pack/app/views/folio/console/my_pack/items/
+   ```
+   
+   Available generators with `--pack` support:
+   - `folio:component` - ViewComponent classes
+   - `folio:atom` - Atom models and components
+   - `folio:console:scaffold` - Console controllers, views, tests
+   - `folio:console:catalogue` - Catalogue views
+   - `folio:scaffold` - Public scaffold
+   - `folio:mailer` - Mailer classes
+   - `folio:search` - Search functionality
+   - `folio:page_singleton` - Singleton pages
+   - `folio:prepared_atom` - Prepared atoms
+   - `folio:blog` - Blog functionality
+   - `folio:tiptap:node` - Tiptap nodes
+   - `folio:ui` - UI components
+   - `folio:devise` - Devise setup
+   - `folio:assets` - Assets
+   - `folio:cache_headers` - Cache headers
+
+3. **Create the `package.yml` (required for Packwerk):**
    ```yaml
    # packs/my_pack/package.yml
    enforce_dependencies: true

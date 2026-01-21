@@ -23,7 +23,7 @@ class Folio::ScaffoldGenerator < Rails::Generators::NamedBase
         target_path = target_path.gsub(key, send(key))
       end
 
-      template template_path, target_path
+      template template_path, "#{pack_path_prefix}#{target_path}"
     end
   end
 

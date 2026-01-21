@@ -18,16 +18,16 @@ class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
   def copy_view_files
     available_views.each do |view|
       filename = filename_with_extensions(view).gsub(".html", "")
-      template "#{view}.slim", File.join("app/views/folio/console", controller_file_path, filename)
+      template "#{view}.slim", File.join("#{pack_path_prefix}app/views/folio/console", controller_file_path, filename)
     end
   end
 
   def copy_controller
-    template "controller.rb.tt", File.join("app/controllers/folio/console", "#{controller_file_path}_controller.rb")
+    template "controller.rb.tt", File.join("#{pack_path_prefix}app/controllers/folio/console", "#{controller_file_path}_controller.rb")
   end
 
   def copy_controller_test
-    template "controller_test.rb.tt", File.join("test/controllers/folio/console", "#{controller_file_path}_controller_test.rb")
+    template "controller_test.rb.tt", File.join("#{pack_path_prefix}test/controllers/folio/console", "#{controller_file_path}_controller_test.rb")
   end
 
   def positionable?
@@ -141,11 +141,12 @@ class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
     end
 
     def controller_file_path
-      if options[:through]
+      path = if options[:through]
         super.gsub(/\A#{base_module_path}/, "#{base_module_path}/#{options[:through].demodulize.tableize}")
       else
         super
       end
+      path.gsub("folio/folio/", "folio/")
     end
 
     def controller_class_name

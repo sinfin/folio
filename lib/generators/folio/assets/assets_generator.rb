@@ -60,7 +60,11 @@ class Folio::AssetsGenerator < Rails::Generators::Base
   end
 
   def copy_templates
-    TEMPLATES.each { |f| template "#{f}.tt", f }
+    TEMPLATES.each do |f|
+      # Only apply pack prefix to app/ paths, not config/ or root paths
+      target = f.start_with?("app/") ? "#{pack_path_prefix}#{f}" : f
+      template "#{f}.tt", target
+    end
   end
 
   def copy_bootstrap_overrides
@@ -78,14 +82,19 @@ class Folio::AssetsGenerator < Rails::Generators::Base
         next if File.directory?(full_path)
 
         path = full_path.to_s.gsub(base, "")
-        copy_file path, path
+        # Only apply pack prefix to app/ paths, not data/ or public/ paths
+        target = path.start_with?("app/") ? "#{pack_path_prefix}#{path}" : path
+        copy_file path, target
       end
     end
   end
 
   def add_keep_files
     KEEP_FILES.each do |key|
-      full_path = Rails.root.join(key.gsub("application_namespace_path", application_namespace_path)).to_s
+      target_key = key.gsub("application_namespace_path", application_namespace_path)
+      # Only apply pack prefix to app/ paths
+      final_key = target_key.start_with?("app/") ? "#{pack_path_prefix}#{target_key}" : target_key
+      full_path = Rails.root.join(final_key).to_s
       FileUtils.mkdir_p(File.dirname(full_path))
       FileUtils.touch(full_path)
     end

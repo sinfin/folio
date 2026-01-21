@@ -14,7 +14,8 @@ class Folio::PageSingletonGenerator < Rails::Generators::NamedBase
       "app/models/application_namespace_path/page/file_name.rb",
       "data/seed/pages/file_name.yml",
     ].each do |f|
-      template "#{f}.tt", f.gsub("file_name", file_name).gsub("application_namespace_path", application_namespace_path)
+      target = f.gsub("file_name", file_name).gsub("application_namespace_path", application_namespace_path)
+      template "#{f}.tt", "#{pack_path_prefix}#{target}"
     end
   end
 
