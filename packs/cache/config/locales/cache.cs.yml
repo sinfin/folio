@@ -14,3 +14,9 @@ cs:
             invalidate_all_button: "Invalidovat vše"
             clear_rails_cache_flash: "Cache byla úspěšně vymazána."
             clear_rails_cache_button: "Vymazat cache"
+            invalidation_metadata:
+              manual: "Ručně"
+              manual_with_user: "Ručně uživatelem %{user}"
+              job: "Úloha"
+              job_with_class: "Úloha: %{class}"
+            updated_at_ago: "(před %{time})"

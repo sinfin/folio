@@ -14,3 +14,9 @@ en:
             invalidate_all_button: "Invalidate All"
             clear_rails_cache_flash: "Cache was successfully cleared."
             clear_rails_cache_button: "Clear cache"
+            invalidation_metadata:
+              manual: "Manual"
+              manual_with_user: "Manual by %{user}"
+              job: "Job"
+              job_with_class: "Job: %{class}"
+            updated_at_ago: "(%{time} ago)"

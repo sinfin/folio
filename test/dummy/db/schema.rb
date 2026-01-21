@@ -234,6 +234,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_19_095958) do
     t.bigint "site_id", null: false
     t.string "key", null: false
     t.datetime "expires_at"
+    t.jsonb "invalidation_metadata"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["site_id", "key"], name: "index_folio_cache_versions_on_site_id_and_key", unique: true

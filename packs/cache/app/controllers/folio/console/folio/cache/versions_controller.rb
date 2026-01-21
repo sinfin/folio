@@ -5,7 +5,15 @@ class Folio::Console::Folio::Cache::VersionsController < Folio::Console::BaseCon
 
   def invalidate
     @version = Folio::Cache::Version.find(params[:id])
-    Folio::Cache::Invalidator.invalidate!(site_id: @version.site_id, keys: [@version.key])
+    user = Folio::Current.user
+    invalidation_metadata = {
+      type: "manual",
+      action: "invalidate",
+      user_id: user&.id,
+      user_name: user&.to_label
+    }
+
+    Folio::Cache::Invalidator.invalidate!(site_id: @version.site_id, keys: [@version.key], invalidation_metadata:)
     flash[:notice] = t(".flash")
     redirect_to url_for([:console, Folio::Cache::Version])
   end
@@ -15,7 +23,15 @@ class Folio::Console::Folio::Cache::VersionsController < Folio::Console::BaseCon
     keys = Folio::Cache::Version.where(site_id: site.id).pluck(:key)
 
     if keys.any?
-      Folio::Cache::Invalidator.invalidate!(site_id: site.id, keys:)
+      user = Folio::Current.user
+      invalidation_metadata = {
+        type: "manual",
+        action: "invalidate_all",
+        user_id: user&.id,
+        user_name: user&.to_label
+      }
+
+      Folio::Cache::Invalidator.invalidate!(site_id: site.id, keys:, invalidation_metadata:)
       flash[:notice] = t(".invalidate_all_flash")
     else
       flash[:notice] = t(".invalidate_all_flash_empty")
