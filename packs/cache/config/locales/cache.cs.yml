@@ -1,0 +1,11 @@
+---
+cs:
+  folio:
+    console:
+      actions:
+        invalidate: "Invalidovat"
+      folio:
+        cache:
+          versions:
+            invalidate:
+              flash: "Verze cache byla úspěšně invalidována."

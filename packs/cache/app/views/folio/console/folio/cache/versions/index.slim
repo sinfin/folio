@@ -8,4 +8,10 @@
       l(record.updated_at, format: "%-d. %-m. %Y, %-H:%M:%S")
     end
 
-    actions :destroy
+    actions({ invalidate: {
+      name: :invalidate,
+      icon: :reload,
+      method: :post,
+      confirm: true,
+      url: -> (record) { url_for([:invalidate, :console, record]) }
+    } }, :destroy)
