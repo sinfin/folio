@@ -34,6 +34,8 @@ class Folio::Ability
     can :update_email, @user
     can :update_password, @user
 
+    folio_packs_rules
+
     if user.superadmin?
       console_common_admin_rules
       can :do_anything, Folio::User
@@ -109,5 +111,12 @@ class Folio::Ability
 
     can %i[read update publish_header_message], Folio::Site, { id: site.id }
     can :read_managers, Folio::User
+  end
+
+  def folio_packs_rules
+    folio_cache_pack_rules
+  end
+
+  def folio_cache_pack_rules
   end
 end
