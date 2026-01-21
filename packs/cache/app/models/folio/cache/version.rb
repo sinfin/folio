@@ -9,6 +9,13 @@ class Folio::Cache::Version < Folio::ApplicationRecord
             presence: true,
             uniqueness: { scope: :site_id }
 
+  pg_search_scope :by_query,
+                  against: [:key],
+                  ignoring: :accents,
+                  using: {
+                    tsearch: { prefix: true }
+                  }
+
   def to_label
     key
   end

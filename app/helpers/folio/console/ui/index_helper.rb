@@ -1,14 +1,20 @@
 # frozen_string_literal: true
 
 module Folio::Console::Ui::IndexHelper
-  def index_header(opts = {})
+  def index_header(opts = {}, &block)
     kwargs = opts.merge(pagy: opts[:pagy] || @pagy,
                         pagy_options: opts[:pagy_options] || @pagy_options,
                         tabs: opts[:tabs] || try(:index_tabs),
                         csv: opts[:csv] || controller.try(:folio_console_controller_for_handle_csv))
 
-    render(Folio::Console::Ui::Index::HeaderComponent.new(klass: @klass,
-                                                          **kwargs))
+    component = Folio::Console::Ui::Index::HeaderComponent.new(klass: @klass,
+                                                                **kwargs)
+
+    if block_given?
+      yield component
+    end
+
+    render(component)
   end
 
   def catalogue(records, options = {}, &block)

@@ -9,3 +9,8 @@ en:
           versions:
             invalidate:
               flash: "Cache version was successfully invalidated."
+            invalidate_all_flash: "All cache versions were successfully invalidated."
+            invalidate_all_flash_empty: "No cache versions to invalidate."
+            invalidate_all_button: "Invalidate All"
+            clear_rails_cache_flash: "Cache was successfully cleared."
+            clear_rails_cache_button: "Clear cache"

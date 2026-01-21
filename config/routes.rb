@@ -296,6 +296,10 @@ Folio::Engine.routes.draw do
           member do
             post :invalidate
           end
+          collection do
+            post :invalidate_all
+            post :clear_rails_cache
+          end
         end
       end
     end
