@@ -21,8 +21,14 @@ cs:
         instructions: "pro dokončení %{provider} přihlášení klikněte na odkaz níže:"
         button: Dokončit přihlášení
         footer: Pokud jste si toto nevyžádali, ignorujte tento e-mail. Váš účet se nezmění dokud neotevřete výše uvedený odkaz.
+      magic_link:
+        subject: Ověření přihlášení
     failure:
       user_locked: Váš účet byl zablokován. Prosím kontaktujte správce.
+      magic_link_invalid: Neplatný nebo expirovaný přihlašovací odkaz.
+    passwordless:
+      not_found_in_database: Uživatel s tímto emailem nebyl nalezen.
+      magic_link_sent: Přihlašovací odkaz byl odeslán na váš email. Pro přihlášení následujte odkaz v emailu.
 
   folio:
     devise:
@@ -141,3 +147,10 @@ cs:
 
         resolve_conflict:
           invalid_conflict_token_flash: Odkaz již není platný. Zkuste se přihlásit znovu.
+
+      sessions:
+        login_confirmation:
+          title: Ověření přihlášení
+          message: Prosím potvrďte přihlášení kliknutím na odkaz, který jsme zaslali na zadaný e-mail %{email}. Potvrzující e-mail by měl přijít během několika minut.
+          resend_button: Znovu zaslat ověřovací email
+          resent: Ověřovací e-mail byl znovu zaslán.
