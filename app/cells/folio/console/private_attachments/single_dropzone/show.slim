@@ -9,9 +9,8 @@ div class=class_name
     - else
       .d-flex.align-items-center
         a.me-3.btn.btn-outline-secondary href=href target="_blank"
-          == cell('folio/console/ui/with_icon',
-                  t('.download'),
-                  icon: :file_document)
+          == render_view_component(Folio::Console::Ui::WithIconComponent.new(t('.download'),
+                                                                              icon: :file_document))
 
         .f-c-private-attachments-single-dropzone__upload.me-3 data=upload_data
           = folio_icon(:edit,
@@ -31,8 +30,7 @@ div class=class_name
           data=upload_data
           class="btn btn-outline-secondary"
         ]
-          == cell('folio/console/ui/with_icon',
-                  t('.upload'),
-                  icon: :file_document)
+          == render_view_component(Folio::Console::Ui::WithIconComponent.new(t('.upload'),
+                                                                              icon: :file_document))
 
   span.folio-loader.f-c-private-attachments-single-dropzone__loader

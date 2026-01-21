@@ -39,10 +39,9 @@ div[
                 span.folio-loader.folio-loader--tiny
 
               .f-c-form-footer__status-unsaved.small.text-danger
-                == cell('folio/console/ui/with_icon',
-                        t('.unsaved_changes'),
-                        icon: :alert,
-                        icon_options: { height: 16 })
+                = render(Folio::Console::Ui::WithIconComponent.new(t('.unsaved_changes'),
+                                                                    icon: :alert,
+                                                                    icon_options: { height: 16 }))
 
       .f-c-form-footer__right
         - if preview_path_with_default
@@ -70,11 +69,10 @@ div[
                 .f-c-form-footer__settings-toggle.small.text-muted[
                   data=stimulus_action_unless_readonly(click: "toggleSettings")
                 ]
-                  == cell('folio/console/ui/with_icon',
-                          t('.settings'),
-                          hover: :underline,
-                          icon: :cog,
-                          icon_options: { height: 16 })
+                  = render(Folio::Console::Ui::WithIconComponent.new(t('.settings'),
+                                                                      hover: :underline,
+                                                                      icon: :cog,
+                                                                      icon_options: { height: 16 }))
 
                 .f-c-form-footer__settings-backdrop[
                   data=stimulus_action_unless_readonly(click: "toggleSettings")
@@ -85,11 +83,10 @@ div[
 
               - if @share_preview
                 .f-c-form-footer__share.small.text-muted data=stimulus_modal_toggle(Folio::Console::SharePreviewModalComponent::CLASS_NAME)
-                  == cell('folio/console/ui/with_icon',
-                          t('.share'),
-                          hover: :underline,
-                          icon: :link,
-                          icon_options: { height: 16 })
+                  = render(Folio::Console::Ui::WithIconComponent.new(t('.share'),
+                                                                      hover: :underline,
+                                                                      icon: :link,
+                                                                      icon_options: { height: 16 }))
 
             = render(Folio::Console::Ui::ButtonComponent.new(class_name: 'f-c-form-footer__btn f-c-form-footer__btn--collapsible',
                                                              variant: :gray,
