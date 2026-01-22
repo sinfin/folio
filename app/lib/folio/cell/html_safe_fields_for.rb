@@ -9,7 +9,9 @@ module Folio::Cell::HtmlSafeFieldsFor
     end
 
     f.simple_fields_for key, obj do |subfields|
-      (yield subfields).html_safe
+      result = yield subfields
+      # In Cells, result is a String. In ViewComponents, it might be something else
+      result.respond_to?(:html_safe) ? result.html_safe : result
     end
   end
 end

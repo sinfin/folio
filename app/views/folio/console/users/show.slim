@@ -8,6 +8,6 @@
 = render partial: "folio/console/users/show_middle"
 
 - if ::Rails.application.config.folio_users_use_address
-  == cell('folio/console/addresses/show_for_model', @user)
+  == render(Folio::Console::Addresses::ShowForModelComponent.new(model: @user))
 
 = render partial: "folio/console/users/show_bottom"
