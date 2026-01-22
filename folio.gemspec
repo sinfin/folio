@@ -75,6 +75,7 @@ Gem::Specification.new do |s|
   s.add_dependency "sass-rails"
   s.add_dependency "show_for"
   s.add_dependency "httpparty"
+  s.add_dependency "connection_pool", "~> 2.5" # Pin to 2.x - connection_pool 3.0.x has breaking changes
   s.add_dependency "sidekiq-cron", "~> 2.0"
   s.add_dependency "sidekiq", "~> 7.0"
   s.add_dependency "activejob-uniqueness", ">= 0.3.0"
