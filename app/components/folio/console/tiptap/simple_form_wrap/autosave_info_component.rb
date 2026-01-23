@@ -24,6 +24,14 @@ class Folio::Console::Tiptap::SimpleFormWrap::AutosaveInfoComponent < Folio::Con
     object.has_tiptap_revision?
   end
 
+  def changer_name
+    if object.respond_to?(:audits)
+      object.audits.last.user.full_name
+    else
+      ""
+    end
+  end
+
   private
     def latest_revision_info
       latest_revision = object.latest_tiptap_revision(user: Folio::Current.user)
