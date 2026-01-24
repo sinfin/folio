@@ -5,6 +5,7 @@ class Folio::User < Folio::ApplicationRecord
   include Folio::Devise::DeliverLater
   include Folio::HasAddresses
   include Folio::HasConsoleUrl
+  include Folio::HasMcpToken
   include Folio::HasNewsletterSubscriptions
   include Folio::HasSiteRoles
 

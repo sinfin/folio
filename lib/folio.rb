@@ -43,6 +43,8 @@ module Folio
   end
 end
 
+require "folio/mcp"
+
 require "folio/engine"
 
 # Load pack Railties early so their initializers are registered before Rails processes them

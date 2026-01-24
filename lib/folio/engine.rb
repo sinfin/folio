@@ -263,6 +263,9 @@ module Folio
       # Add component concerns to autoload paths so they can be included properly
       app.config.autoload_paths += [self.root.join("app/components/concerns")]
       app.config.eager_load_paths += [self.root.join("app/components/concerns")]
+      # Add app/lib for MCP tools, serializers, etc.
+      app.config.autoload_paths += [self.root.join("app/lib")]
+      app.config.eager_load_paths += [self.root.join("app/lib")]
     end
 
     initializer :append_folio_assets_paths do |app|

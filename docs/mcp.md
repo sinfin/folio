@@ -1,0 +1,216 @@
+# Folio MCP Server
+
+Folio includes an integrated MCP (Model Context Protocol) server that allows AI agents to interact with your CMS content.
+
+## Quick Start
+
+### 1. Install MCP
+
+Run the generator:
+
+```bash
+rails generate folio:mcp:install
+rails db:migrate
+```
+
+### 2. Configure Resources
+
+Edit `config/initializers/folio_mcp.rb`:
+
+```ruby
+Folio::Mcp.configure do |config|
+  config.enabled = true
+
+  config.resources = {
+    pages: {
+      model: "Folio::Page",
+      fields: %i[title slug perex meta_title meta_description published locale],
+      tiptap_fields: %i[tiptap_content],
+      cover_field: :cover
+    },
+    # Add your custom resources here
+    articles: {
+      model: "YourApp::Article",
+      fields: %i[title subtitle slug published],
+      tiptap_fields: %i[tiptap_content]
+    },
+    files: {
+      model: "Folio::File::Image",
+      searchable: true,
+      uploadable: true
+    }
+  }
+
+  config.locales = %i[cs en]
+end
+```
+
+### 3. Generate API Token
+
+```bash
+rails folio:mcp:generate_token[admin@example.com]
+```
+
+Save the generated token - it won't be shown again!
+
+### 4. Configure Cursor
+
+Copy the sample configuration:
+
+```bash
+cp .cursor/mcp.json.sample .cursor/mcp.json
+```
+
+Edit `.cursor/mcp.json` and add your token:
+
+```json
+{
+  "mcpServers": {
+    "folio-local": {
+      "type": "http",
+      "url": "http://localhost:3000/folio/api/mcp",
+      "headers": {
+        "Authorization": "Bearer mcp_live_your_token_here"
+      }
+    }
+  }
+}
+```
+
+## Available Tools
+
+### Content CRUD
+
+- `get_page(id)` - Get page by ID
+- `list_pages(limit, offset, locale, published)` - List pages with filters
+- `create_page(title, slug, ...)` - Create new page
+- `update_page(id, title, ...)` - Update existing page
+
+Same tools are available for all configured resources (articles, projects, etc.).
+
+### Translation
+
+- `extract_translatable_texts(tiptap)` - Extract text fields for translation
+- `apply_translations(original_tiptap, translations)` - Apply translated texts back
+
+### Files
+
+- `upload_file(url, alt, title, tags)` - Upload file from URL
+
+## Available Resources
+
+Resources can be read via the MCP resources protocol:
+
+- `folio://pages` - List of pages
+- `folio://pages/{id}` - Single page detail
+- `folio://files?query=search` - Search files
+- `folio://tiptap/schema` - Tiptap nodes schema
+
+## Available Prompts
+
+- `translate_page(page_id, source_locale, target_locale)` - Translation workflow guide
+- `create_content(content_type)` - Content creation guide
+- `edit_metadata(resource_type, id)` - Metadata editing guide
+
+## Security
+
+### Token Management
+
+Tokens are hashed using BCrypt before storage. The plain token is only shown once when generated.
+
+Rake tasks:
+- `rails folio:mcp:generate_token[email]` - Generate new token
+- `rails folio:mcp:list_enabled` - List users with MCP enabled
+- `rails folio:mcp:disable[email]` - Disable MCP for user
+
+### Authorization
+
+MCP uses the same authorization rules as Folio Console:
+
+- Uses `Folio::Ability` for permission checks
+- Respects site boundaries (users only see their site's content)
+- Same ActiveRecord validations apply
+
+### Rate Limiting
+
+Configure rate limiting in the initializer:
+
+```ruby
+config.rate_limit = 100 # requests per minute
+```
+
+### Audit Logging
+
+Enable audit logging:
+
+```ruby
+config.audit_logger = ->(event) {
+  Rails.logger.tagged("MCP") { Rails.logger.info(event.to_json) }
+  # Or save to database:
+  # YourApp::McpAuditLog.create!(event)
+}
+```
+
+## Testing
+
+Test the connection:
+
+```bash
+curl -X POST http://localhost:3000/folio/api/mcp \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"ping"}'
+```
+
+## Troubleshooting
+
+### 404 Not Found
+
+MCP endpoint is not enabled. Check:
+- `Folio::Mcp.enabled?` returns `true`
+- Routes are properly mounted
+- Rails server was restarted after configuration change
+
+### 401 Unauthorized
+
+Token issue:
+- Check token is correct
+- User has `mcp_enabled: true`
+- Token hasn't been regenerated
+
+### Validation Errors
+
+MCP uses the same validations as Console. Check model validations and ensure all required fields are provided.
+
+## Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│  AI Agent (Cursor/Claude Desktop)                                   │
+│                                                                     │
+│  .cursor/mcp.json → Bearer token auth                               │
+└───────────────────────────────┬─────────────────────────────────────┘
+                                │
+                                │ Streamable HTTP (JSON-RPC 2.0)
+                                │
+                                ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│  Folio Rails App                                                    │
+│                                                                     │
+│  POST /folio/api/mcp                                                │
+│    ↓                                                                │
+│  Folio::Api::McpController                                          │
+│    - Token authentication                                           │
+│    - Rate limiting                                                  │
+│    - Audit logging                                                  │
+│    ↓                                                                │
+│  Folio::Mcp::ServerFactory                                          │
+│    - Builds MCP::Server instance                                    │
+│    - Registers tools, resources, prompts                            │
+│    ↓                                                                │
+│  MCP Tools / Resources                                              │
+│    - Same authorization as Console (Folio::Ability)                 │
+│    - Same validations (ActiveRecord)                                │
+│    - Same callbacks (before_save, after_save, etc.)                 │
+└─────────────────────────────────────────────────────────────────────┘
+```
