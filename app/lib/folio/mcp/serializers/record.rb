@@ -18,12 +18,12 @@ module Folio
           }
 
           # Add configured fields
-          @config[:fields].each do |field|
+          @config[:fields]&.each do |field|
             hash[field] = @record.try(field)
           end
 
           # Add tiptap fields
-          @config[:tiptap_fields].each do |field|
+          @config[:tiptap_fields]&.each do |field|
             hash[field] = @record.try(field)
           end
 
@@ -41,19 +41,6 @@ module Folio
           end
 
           hash
-        end
-      end
-
-      class RecordList
-        def initialize(records, config)
-          @records = records
-          @config = config
-        end
-
-        def as_json
-          @records.map do |record|
-            Record.new(record, @config).as_json
-          end
         end
       end
     end

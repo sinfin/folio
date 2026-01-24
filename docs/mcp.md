@@ -118,6 +118,20 @@ Tiptap is the rich text editor used in Folio. When creating or updating content 
 
 ### Basic Structure
 
+You can pass tiptap content in two formats. The MCP server automatically wraps the simple format:
+
+**Simple format (recommended for MCP):**
+```json
+{
+  "type": "doc",
+  "content": [
+    { "type": "paragraph", "content": [{ "type": "text", "text": "Hello" }] },
+    { "type": "folioTiptapNode", "attrs": { ... } }
+  ]
+}
+```
+
+**Full wrapper format (as stored in database):**
 ```json
 {
   "tiptap_content": {
@@ -129,6 +143,8 @@ Tiptap is the rich text editor used in Folio. When creating or updating content 
   }
 }
 ```
+
+> **Note:** The simple format is automatically wrapped by MCP before saving. Both formats are accepted.
 
 ### Folio Custom Nodes
 

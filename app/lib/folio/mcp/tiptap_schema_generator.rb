@@ -31,11 +31,32 @@ module Folio
 
       private
         def tiptap_node_classes
+          # Eager load all tiptap node classes to ensure descendants are populated
+          eager_load_tiptap_nodes
+
           if defined?(Folio::Tiptap::Node)
             Folio::Tiptap::Node.descendants.reject { |k| k.name&.include?("Test") }
           else
             []
           end
+        end
+
+        def eager_load_tiptap_nodes
+          # Load Folio tiptap nodes
+          folio_tiptap_path = Folio::Engine.root.join("app/models/folio/tiptap/node")
+          eager_load_path(folio_tiptap_path) if folio_tiptap_path.exist?
+
+          # Load application tiptap nodes
+          app_tiptap_paths = Dir[Rails.root.join("app/models/**/tiptap/node")]
+          app_tiptap_paths.each { |path| eager_load_path(Pathname.new(path)) }
+        end
+
+        def eager_load_path(path)
+          Dir[path.join("**/*.rb")].each do |file|
+            require_dependency file
+          end
+        rescue StandardError => e
+          Rails.logger.warn "Failed to eager load tiptap nodes from #{path}: #{e.message}"
         end
 
         def extract_node_name(klass)

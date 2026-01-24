@@ -297,7 +297,10 @@ module Folio
             end
 
             (resource_config[:tiptap_fields] || []).each do |field|
-              properties[field] = { type: "object", description: "Tiptap JSON content for #{field}" }
+              properties[field] = {
+                type: "object",
+                description: tiptap_field_description(field)
+              }
             end
 
             # Add cover_id if cover_field is configured
@@ -309,6 +312,12 @@ module Folio
             end
 
             properties
+          end
+
+          def tiptap_field_description(field)
+            <<~DESC.strip
+              Tiptap JSON content. Pass either simple format {"type":"doc","content":[...]} or full wrapper {"tiptap_content":{"type":"doc","content":[...]}}. Use 'folioTiptapNode' for custom blocks. See folio://tiptap/schema resource for available node types.
+            DESC
           end
 
           def field_to_json_schema(field)

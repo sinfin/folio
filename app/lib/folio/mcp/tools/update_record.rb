@@ -26,10 +26,13 @@ module Folio
             # Filter allowed attributes
             allowed_attrs = filter_allowed_attrs(attrs, config)
 
-            # Validate tiptap content if present
+            # Validate and normalize tiptap content if present
             tiptap_fields = config[:tiptap_fields] || []
             tiptap_fields.each do |field|
               if allowed_attrs[field.to_sym].present?
+                # Auto-wrap content if needed (convert {"type":"doc",...} to {"tiptap_content":{"type":"doc",...}})
+                allowed_attrs[field.to_sym] = normalize_tiptap_content(allowed_attrs[field.to_sym])
+
                 validation_errors = validate_tiptap_content(allowed_attrs[field.to_sym])
                 if validation_errors.present?
                   return error_response("Invalid tiptap content in #{field}: #{validation_errors.join('; ')}")
@@ -68,7 +71,9 @@ module Folio
           private
             def filter_allowed_attrs(attrs, config)
               allowed_fields = (config[:fields] || []) + (config[:tiptap_fields] || [])
-              attrs.slice(*allowed_fields.map(&:to_sym)).compact
+              # MCP sends JSON with string keys, so we need to handle both string and symbol keys
+              symbolized_attrs = attrs.transform_keys(&:to_sym)
+              symbolized_attrs.slice(*allowed_fields.map(&:to_sym)).compact
             end
 
             def assign_cover(record, file_id, cover_field, site)
@@ -86,19 +91,48 @@ module Folio
               record.send("build_#{placement_name}", file_id: file.id)
             end
 
+            def normalize_tiptap_content(content)
+              return content unless content.is_a?(Hash)
+
+              # Deep stringify keys for consistent handling
+              content = deep_stringify_keys(content)
+              content_key = Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content]
+
+              # If already has the wrapper structure, return as is
+              if content[content_key].present?
+                return content
+              end
+
+              # If content looks like a raw tiptap doc (has "type": "doc"), wrap it
+              if content["type"] == "doc"
+                { content_key => content }
+              else
+                content
+              end
+            end
+
             def validate_tiptap_content(content)
               errors = []
 
-              # Handle wrapped structure { locale: "cs", tiptap_content: { type: "doc", ... } }
-              actual_content = if content.is_a?(Hash) && content[:tiptap_content].present?
-                content[:tiptap_content]
-              elsif content.is_a?(Hash) && content["tiptap_content"].present?
-                content["tiptap_content"]
+              # Deep stringify keys for consistent handling
+              content = deep_stringify_keys(content) if content.is_a?(Hash)
+              content_key = Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content]
+
+              # Get the actual doc content from wrapper
+              actual_content = if content.is_a?(Hash) && content[content_key].present?
+                content[content_key]
               else
                 content
               end
 
               return errors unless actual_content.is_a?(Hash)
+
+              # Validate root node type
+              root_type = actual_content["type"]
+              unless root_type == "doc"
+                errors << "Root node must be 'doc', got '#{root_type}'"
+                return errors
+              end
 
               # Extract and validate all tiptap nodes
               nodes = Folio::Tiptap::Node.instances_from_tiptap_content(actual_content)
@@ -113,6 +147,19 @@ module Folio
               end
 
               errors
+            end
+
+            def deep_stringify_keys(obj)
+              case obj
+              when Hash
+                obj.each_with_object({}) do |(k, v), result|
+                  result[k.to_s] = deep_stringify_keys(v)
+                end
+              when Array
+                obj.map { |item| deep_stringify_keys(item) }
+              else
+                obj
+              end
             end
         end
       end

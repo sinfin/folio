@@ -19,7 +19,12 @@ module Folio
 
             # Apply type filtering
             if config[:allowed_types].present?
-              scope = scope.where(type: config[:allowed_types])
+              types_to_check = config[:allowed_types].dup
+              # Handle base class types stored as NULL in database (STI convention)
+              if types_to_check.include?(model_class.name)
+                types_to_check << nil
+              end
+              scope = scope.where(type: types_to_check)
             end
 
             # Apply filters

@@ -37,20 +37,45 @@ module Folio
 
               ## Tiptap JSON Structure
 
+              You can pass tiptap_content in two formats (the system auto-wraps if needed):
+
+              **Simple format (auto-wrapped):**
               ```json
               {
                 "type": "doc",
                 "content": [
-                  {
-                    "type": "paragraph",
-                    "content": [{ "type": "text", "text": "Introduction..." }]
-                  },
-                  {
-                    "type": "heading",
-                    "attrs": { "level": 2 },
-                    "content": [{ "type": "text", "text": "Section Title" }]
-                  }
+                  { "type": "paragraph", "content": [{ "type": "text", "text": "Hello" }] }
                 ]
+              }
+              ```
+
+              **Full wrapper format:**
+              ```json
+              {
+                "tiptap_content": {
+                  "type": "doc",
+                  "content": [
+                    { "type": "paragraph", "content": [{ "type": "text", "text": "Hello" }] }
+                  ]
+                }
+              }
+              ```
+
+              ## Custom Folio Nodes
+
+              Custom nodes use `folioTiptapNode` wrapper:
+              ```json
+              {
+                "type": "folioTiptapNode",
+                "attrs": {
+                  "type": "YourApp::Tiptap::Node::Cards::Large",
+                  "version": 1,
+                  "data": {
+                    "title": "Card Title",
+                    "content": "{\"type\":\"doc\",\"content\":[...]}",
+                    "cover_placement_attributes": { "file_id": 123 }
+                  }
+                }
               }
               ```
 
@@ -58,6 +83,8 @@ module Folio
               - Use standard `paragraph`, `heading`, `bulletList` for basic content
               - Use custom nodes for structured components (cards, galleries)
               - Reference images by ID from file search
+              - For images: use `cover_placement_attributes: { file_id: ID }` (singular)
+              - For multiple images: use `image_placements_attributes: [{ file_id: ID }, ...]` (plural)
             INSTRUCTIONS
 
             MCP::Prompt::Result.new(

@@ -50,7 +50,9 @@ module Folio
           private
             def filter_allowed_attrs(attrs, config)
               allowed_fields = (config[:fields] || []) + (config[:tiptap_fields] || [])
-              attrs.slice(*allowed_fields.map(&:to_sym)).compact
+              # MCP sends JSON with string keys, so we need to handle both string and symbol keys
+              symbolized_attrs = attrs.transform_keys(&:to_sym)
+              symbolized_attrs.slice(*allowed_fields.map(&:to_sym)).compact
             end
         end
       end
