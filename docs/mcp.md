@@ -112,6 +112,149 @@ Resources can be read via the MCP resources protocol:
 - `create_content(content_type)` - Content creation guide
 - `edit_metadata(resource_type, id)` - Metadata editing guide
 
+## Working with Tiptap Content
+
+Tiptap is the rich text editor used in Folio. When creating or updating content via MCP, you need to understand the JSON structure.
+
+### Basic Structure
+
+```json
+{
+  "tiptap_content": {
+    "type": "doc",
+    "content": [
+      { "type": "paragraph", "content": [{ "type": "text", "text": "Hello" }] },
+      { "type": "folioTiptapNode", "attrs": { ... } }
+    ]
+  }
+}
+```
+
+### Folio Custom Nodes
+
+Custom nodes use the `folioTiptapNode` wrapper:
+
+```json
+{
+  "type": "folioTiptapNode",
+  "attrs": {
+    "type": "SinfinDigital::Tiptap::Node::Cards::Large",
+    "version": 1,
+    "data": {
+      "title": "Card Title",
+      "content": "{\"type\":\"doc\",\"content\":[...]}",
+      "cover_placement_attributes": { "file_id": 123 }
+    }
+  }
+}
+```
+
+### Image Attachment Naming Convention
+
+**This is critical!** The attribute name depends on whether it's a single image or multiple:
+
+| Node Definition | Attribute Name | Example |
+|-----------------|----------------|---------|
+| `cover: :image` | `cover_placement_attributes` | `{ "file_id": 123 }` |
+| `images: :images` | `image_placements_attributes` | `[{ "file_id": 123 }, { "file_id": 124 }]` |
+
+**Rule:** Singularize the key name, then append:
+- `_placement_attributes` for single image (Hash)
+- `_placements_attributes` for multiple images (Array)
+
+**Common mistake:**
+```json
+// WRONG - will silently fail validation
+"images_placement_attributes": [{ "file_id": 123 }]
+
+// CORRECT
+"image_placements_attributes": [{ "file_id": 123 }]
+```
+
+### Example: Gallery with Multiple Images
+
+```json
+{
+  "type": "folioTiptapNode",
+  "attrs": {
+    "type": "SinfinDigital::Tiptap::Node::Images::MasonryGallery",
+    "version": 1,
+    "data": {
+      "title": "Photo Gallery",
+      "subtitle": "Our work",
+      "image_placements_attributes": [
+        { "file_id": 209 },
+        { "file_id": 210 },
+        { "file_id": 211 }
+      ]
+    }
+  }
+}
+```
+
+### Example: Card with Single Cover Image
+
+```json
+{
+  "type": "folioTiptapNode",
+  "attrs": {
+    "type": "SinfinDigital::Tiptap::Node::Cards::Large",
+    "version": 1,
+    "data": {
+      "title": "Featured Article",
+      "content": "{\"type\":\"doc\",\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"Description here.\"}]}]}",
+      "button_url": "/read-more",
+      "button_label": "Read More",
+      "cover_placement_attributes": { "file_id": 207 }
+    }
+  }
+}
+```
+
+### Rich Text Fields
+
+Some node attributes contain nested tiptap content as a JSON string:
+
+```json
+{
+  "content": "{\"type\":\"doc\",\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"Nested content\"}]}]}"
+}
+```
+
+### Columns Layout
+
+```json
+{
+  "type": "folioTiptapColumns",
+  "content": [
+    {
+      "type": "folioTiptapColumn",
+      "content": [
+        { "type": "folioTiptapNode", "attrs": { ... } }
+      ]
+    },
+    {
+      "type": "folioTiptapColumn", 
+      "content": [
+        { "type": "folioTiptapNode", "attrs": { ... } }
+      ]
+    }
+  ]
+}
+```
+
+### Discovering Available Nodes
+
+Use the `folio://tiptap/schema` resource to see all available node types and their required attributes for your application.
+
+### Validation
+
+MCP validates tiptap nodes before saving. If a node is invalid (e.g., missing required images), you'll receive an error like:
+
+```
+Invalid tiptap content: Node #1 (MasonryGallery): Images can't be blank
+```
+
 ## Security
 
 ### Token Management

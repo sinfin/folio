@@ -14,9 +14,12 @@ module Folio
 
             return error_response("Record not found: #{resource_name}##{id}") unless record
 
-            # Check allowed types
-            if config[:allowed_types].present? && !record.type.in?(config[:allowed_types])
-              return error_response("Record type not allowed: #{record.type}")
+            # Check allowed types (handle nil type for base classes without STI)
+            if config[:allowed_types].present?
+              record_type = record.type || record.class.name
+              unless record_type.in?(config[:allowed_types])
+                return error_response("Record type not allowed: #{record_type}")
+              end
             end
 
             # Authorization

@@ -300,6 +300,14 @@ module Folio
               properties[field] = { type: "object", description: "Tiptap JSON content for #{field}" }
             end
 
+            # Add cover_id if cover_field is configured
+            if resource_config[:cover_field].present?
+              properties[:cover_id] = {
+                type: "integer",
+                description: "ID of uploaded image file to use as cover (from upload_file tool)"
+              }
+            end
+
             properties
           end
 
