@@ -26,7 +26,8 @@ Folio::Mcp.configure do |config|
       model: "Folio::Page",
       fields: %i[title slug perex meta_title meta_description published locale],
       tiptap_fields: %i[tiptap_content],
-      cover_field: :cover
+      cover_field: :cover,
+      versioned: true  # Enable version history tools
     },
     # Add your custom resources here
     articles: {
@@ -44,6 +45,12 @@ Folio::Mcp.configure do |config|
   config.locales = %i[cs en]
 end
 ```
+
+> **Note:** To enable `versioned: true`, you must also enable Folio page auditing:
+> ```ruby
+> # config/initializers/folio.rb
+> Rails.application.config.folio_pages_audited = true
+> ```
 
 ### 3. Generate API Token
 
@@ -96,6 +103,30 @@ Same tools are available for all configured resources (articles, projects, etc.)
 ### Files
 
 - `upload_file(url, alt, title, tags)` - Upload file from URL
+
+### Version History
+
+When `versioned: true` is set for a resource, these tools become available:
+
+- `list_page_versions(id, limit, offset)` - List all versions with timestamps, authors, and preview URLs
+- `get_page_version(id, version)` - Get specific historical version content with preview URL
+- `restore_page_version(id, version)` - Restore record to a previous version
+
+Same tools are available for all versioned resources (e.g., `list_project_versions`, etc.).
+
+**Example workflow:**
+```
+1. list_page_versions(id: 123)
+   → Returns versions with preview_url for each
+
+2. Open preview_url in browser to review old version visually
+
+3. get_page_version(id: 123, version: 5)
+   → Returns full content at version 5 for comparison
+
+4. restore_page_version(id: 123, version: 5)
+   → Restores content, creates new version in history
+```
 
 ## Available Resources
 

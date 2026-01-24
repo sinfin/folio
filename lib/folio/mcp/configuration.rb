@@ -29,6 +29,7 @@ module Folio
         @cover_field = nil
         @searchable = false
         @uploadable = false
+        @versioned = false
         @allowed_actions = %i[read create update destroy]
         @authorize_with = :console_ability
       end
@@ -75,6 +76,12 @@ module Folio
         @uploadable = value
       end
 
+      def versioned(value = nil)
+        return @versioned if value.nil?
+
+        @versioned = value
+      end
+
       def allowed_actions(value = nil)
         return @allowed_actions if value.nil?
 
@@ -96,6 +103,7 @@ module Folio
           cover_field: @cover_field,
           searchable: @searchable,
           uploadable: @uploadable,
+          versioned: @versioned,
           allowed_actions: @allowed_actions,
           authorize_with: @authorize_with
         }

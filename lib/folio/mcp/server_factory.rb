@@ -150,6 +150,82 @@ module Folio
               end
             end
 
+            # Version tools (only if versioned and read action allowed)
+            if resource_config[:versioned] && resource_config[:allowed_actions]&.include?(:read)
+              tools.concat(build_version_tools(server_context, resource_name, resource_config))
+            end
+
+            tools
+          end
+
+          def build_version_tools(server_context, resource_name, resource_config)
+            tools = []
+            singular_name = resource_name.to_s.singularize
+
+            # List versions tool
+            tools << MCP::Tool.define(
+              name: "list_#{singular_name}_versions",
+              description: "List all versions (revision history) of a #{singular_name}. Returns version numbers, timestamps, authors, and preview URLs.",
+              input_schema: {
+                properties: {
+                  id: { type: "integer", description: "#{singular_name.titleize} ID" },
+                  limit: { type: "integer", description: "Maximum number of versions (default: 20)" },
+                  offset: { type: "integer", description: "Offset for pagination" }
+                },
+                required: ["id"]
+              }
+            ) do |server_context:, **kwargs|
+              Folio::Mcp::Tools::ListRecordVersions.call(
+                resource_name: resource_name,
+                id: kwargs[:id],
+                limit: kwargs[:limit] || 20,
+                offset: kwargs[:offset] || 0,
+                server_context: server_context
+              )
+            end
+
+            # Get specific version tool
+            tools << MCP::Tool.define(
+              name: "get_#{singular_name}_version",
+              description: "Get a specific historical version of a #{singular_name}. Returns the full record as it was at that version, plus preview URL.",
+              input_schema: {
+                properties: {
+                  id: { type: "integer", description: "#{singular_name.titleize} ID" },
+                  version: { type: "integer", description: "Version number to retrieve" }
+                },
+                required: ["id", "version"]
+              }
+            ) do |server_context:, **kwargs|
+              Folio::Mcp::Tools::GetRecordVersion.call(
+                resource_name: resource_name,
+                id: kwargs[:id],
+                version: kwargs[:version],
+                server_context: server_context
+              )
+            end
+
+            # Restore version tool (only if update action allowed)
+            if resource_config[:allowed_actions]&.include?(:update)
+              tools << MCP::Tool.define(
+                name: "restore_#{singular_name}_version",
+                description: "Restore a #{singular_name} to a previous version. Creates a new version in history with the restored content.",
+                input_schema: {
+                  properties: {
+                    id: { type: "integer", description: "#{singular_name.titleize} ID" },
+                    version: { type: "integer", description: "Version number to restore to" }
+                  },
+                  required: ["id", "version"]
+                }
+              ) do |server_context:, **kwargs|
+                Folio::Mcp::Tools::RestoreRecordVersion.call(
+                  resource_name: resource_name,
+                  id: kwargs[:id],
+                  version: kwargs[:version],
+                  server_context: server_context
+                )
+              end
+            end
+
             tools
           end
 

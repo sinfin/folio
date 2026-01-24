@@ -24,6 +24,21 @@ module Folio
 
             # Filter allowed attributes
             allowed_attrs = filter_allowed_attrs(attrs, config)
+
+            # Validate and normalize tiptap content if present
+            tiptap_fields = config[:tiptap_fields] || []
+            tiptap_fields.each do |field|
+              if allowed_attrs[field.to_sym].present?
+                # Auto-wrap content if needed
+                allowed_attrs[field.to_sym] = normalize_tiptap_content(allowed_attrs[field.to_sym])
+
+                validation_errors = validate_tiptap_content(allowed_attrs[field.to_sym])
+                if validation_errors.present?
+                  return error_response("Invalid tiptap content in #{field}: #{validation_errors.join('; ')}")
+                end
+              end
+            end
+
             record.assign_attributes(allowed_attrs)
 
             # Save
