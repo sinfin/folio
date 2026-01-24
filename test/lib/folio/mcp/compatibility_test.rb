@@ -67,17 +67,16 @@ module Folio
       end
 
       private
-
-      def extract_type(type_def)
-        case type_def
-        when Symbol
-          type_def
-        when Array
-          :enum
-        when Hash
-          type_def[:type]
+        def extract_type(type_def)
+          case type_def
+          when Symbol
+            type_def
+          when Array
+            :enum
+          when Hash
+            type_def[:type]
+          end
         end
-      end
     end
   end
 end
