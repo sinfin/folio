@@ -7,20 +7,40 @@ module Folio
     DEFAULT_EXPIRES_IN = 1.hour
 
     mattr_accessor :expires_at_for_key, default: nil
+    mattr_accessor :default_key_parts, default: -> { [ENV["CURRENT_RELEASE_COMMIT_HASH"], Folio::Current.host].compact }
 
     def self.configure(&block)
       if block.arity == 0
         # Block form for temporary configuration (useful in tests)
         previous_expires_at_for_key = expires_at_for_key
+        previous_default_key_parts = default_key_parts
+
         begin
           yield
         ensure
           self.expires_at_for_key = previous_expires_at_for_key
+          self.default_key_parts = previous_default_key_parts
         end
       else
         # Config form for permanent configuration (initializers)
         yield self
       end
+    end
+
+    # Build full cache key with version support
+    #
+    # @param name [Object] Regular cache key (record, string, array, etc.)
+    # @param keys [Array<String>] Cache version keys to include (default: [])
+    # @return [Array] Composed cache key array
+    def self.full_key(name = {}, keys: [])
+      # Build version key from Folio::Cache::Version timestamps
+      version_key = Folio::Cache::Version.cache_key_for(keys:, site: Folio::Current.site)
+
+      # Get default key parts
+      default_parts = default_key_parts.call
+
+      # Compose the full cache key
+      [name, *default_parts, version_key].compact
     end
 
     # Cache fetch with Folio::Cache::Version support
@@ -32,11 +52,7 @@ module Folio
       return yield unless block_given?
       return yield unless ::Rails.application.config.action_controller.perform_caching
 
-      # Build version key from Folio::Cache::Version timestamps
-      version_key = Folio::Cache::Version.cache_key_for(keys:, site: Folio::Current.site)
-
-      # Compose the full cache key
-      full_key = [name, version_key].compact
+      full_key = self.full_key(name:, keys:)
 
       # Set default expires_in
       options[:expires_in] ||= DEFAULT_EXPIRES_IN

@@ -11,11 +11,7 @@ module Folio
       def folio_cache(name = {}, keys: [], **options, &block)
         return yield unless block_given?
 
-        # Build version key from Folio::Cache::Version timestamps
-        version_key = Folio::Cache::Version.cache_key_for(keys:, site: Folio::Current.site)
-
-        # Compose the full cache key
-        full_key = [name, version_key].compact
+        full_key = Folio::Cache.full_key(name:, keys:)
 
         # Set default expires_in
         options[:expires_in] ||= Folio::Cache::DEFAULT_EXPIRES_IN
