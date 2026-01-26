@@ -182,6 +182,8 @@ module Folio
     }
 
     initializer "folio.load_packs", before: :set_autoload_paths do |app|
+      pack_override_paths = []
+
       Folio.enabled_packs.each do |pack_name|
         pack_root = root.join("packs", pack_name.to_s)
         next unless pack_root.exist?
@@ -223,6 +225,26 @@ module Folio
         # Load pack railtie
         railtie_path = pack_root.join("lib/folio/#{pack_name}.rb")
         require railtie_path if railtie_path.exist?
+      end
+
+      # Collect pack override paths (needs extra loading via to_prepare)
+      Folio.enabled_packs.each do |pack_name|
+        pack_root = root.join("packs", pack_name.to_s)
+        next unless pack_root.exist?
+
+        override_path = pack_root.join("app/overrides")
+        pack_override_paths << override_path.to_s if override_path.exist?
+      end
+
+      # Load pack override files
+      unless pack_override_paths.empty?
+        app.config.to_prepare do
+          pack_override_paths.each do |override_path|
+            Dir.glob("#{override_path}/**/*_override.rb").each do |file|
+              load file
+            end
+          end
+        end
       end
     end
 
