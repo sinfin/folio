@@ -37,13 +37,21 @@ module Folio
       end
 
       # Helper for publishable models - returns true if currently published
-      # OR if publishing status just changed (handles unpublishing case where
-      # we need to invalidate caches that previously showed this record)
+      # OR if record was just unpublished (to remove it from caches that showed it)
+      # Does NOT return true for newly created unpublished records
       def folio_cache_affects_published?
         return false unless respond_to?(:published?)
         return true if published?
 
-        (previous_changes.keys & %w[published published_at published_from published_until]).any?
+        # Check if record was previously published (handles unpublishing case)
+        # For new records, previous value is nil, so this won't trigger
+        folio_cache_was_previously_published?
+      end
+
+      def folio_cache_was_previously_published?
+        %w[published published_at published_from published_until].any? do |attr|
+          previous_changes[attr]&.first.present?
+        end
       end
     end
   end
