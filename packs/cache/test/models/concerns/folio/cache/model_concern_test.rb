@@ -101,4 +101,24 @@ class Folio::Cache::ModelConcernTest < ActiveSupport::TestCase
     assert_equal updated_at_after_create, v1.reload.updated_at
     assert_equal updated_at_after_create, v2.reload.updated_at
   end
+
+  test "folio_cache_affects_published? returns false for newly created unpublished records" do
+    site = create_site
+    page = PageWithCacheKeys.new(site:, title: "Test", slug: "test-#{SecureRandom.hex(4)}", locale: site.locale, published: false)
+    page.save!
+
+    # After creation, previous_changes includes 'published', but since the record
+    # was never published (previous value was nil), it should return false
+    assert_not page.folio_cache_affects_published?
+  end
+
+  test "folio_cache_affects_published? returns true when unpublishing" do
+    site = create_site
+    page = PageWithCacheKeys.create!(site:, title: "Test", slug: "test-#{SecureRandom.hex(4)}", locale: site.locale, published: true)
+
+    page.update!(published: false)
+
+    # After unpublishing, previous_changes['published'] is [true, false], so it should return true
+    assert page.folio_cache_affects_published?
+  end
 end
