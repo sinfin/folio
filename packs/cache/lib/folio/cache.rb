@@ -22,5 +22,27 @@ module Folio
         yield self
       end
     end
+
+    # Cache fetch with Folio::Cache::Version support
+    #
+    # @param name [Object] Regular cache key (record, string, array, etc.)
+    # @param keys [Array<String>] Cache version keys to include (default: [])
+    # @param options [Hash] Options passed to Rails.cache.fetch (expires_in:, force:, etc.)
+    def self.fetch(name = {}, keys: [], **options, &block)
+      return yield unless block_given?
+      return yield unless ::Rails.application.config.action_controller.perform_caching
+
+      # Build version key from Folio::Cache::Version timestamps
+      version_key = Folio::Cache::Version.cache_key_for(keys:, site: Folio::Current.site)
+
+      # Compose the full cache key
+      full_key = [name, version_key].compact
+
+      # Set default expires_in
+      options[:expires_in] ||= DEFAULT_EXPIRES_IN
+
+      # Delegate to Rails.cache.fetch
+      Rails.cache.fetch(full_key, **options, &block)
+    end
   end
 end
