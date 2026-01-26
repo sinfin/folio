@@ -32,12 +32,11 @@ Override `folio_cache_version_keys` to declare which cache keys a model invalida
 
 ```ruby
 class Article < Folio::ApplicationRecord
-  private
-    def folio_cache_version_keys
-      keys = %w[articles]
-      keys << "published" if published?
-      keys
-    end
+  def folio_cache_version_keys
+    keys = %w[articles]
+    keys << "published" if published?
+    keys
+  end
 end
 ```
 

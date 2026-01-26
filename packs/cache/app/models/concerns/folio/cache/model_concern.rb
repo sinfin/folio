@@ -28,12 +28,11 @@ module Folio
         Rails.logger.error e.backtrace.join("\n") if Rails.env.development?
       end
 
-      private
-        # Override in models to specify which cache keys to invalidate
-        # Returns array of strings, e.g., ["published", "navigation"]
-        def folio_cache_version_keys
-          []
-        end
+      # Override in models to specify which cache keys to invalidate
+      # Returns array of strings, e.g., ["published", "navigation"]
+      def folio_cache_version_keys
+        []
+      end
     end
   end
 end

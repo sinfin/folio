@@ -4,10 +4,9 @@ require "test_helper"
 
 class Folio::Cache::ModelConcernTest < ActiveSupport::TestCase
   class PageWithCacheKeys < Folio::Page
-    private
-      def folio_cache_version_keys
-        ["published", "navigation"]
-      end
+    def folio_cache_version_keys
+      ["published", "navigation"]
+    end
   end
 
   test "includes concern in Folio::ApplicationRecord" do
