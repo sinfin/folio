@@ -8,7 +8,21 @@ module Folio::DeeplForTraco
       return @deepl_configured if defined?(@deepl_configured)
 
       @deepl_configured = ENV["DEEPL_API_KEY"].present? && begin
-        require "deepl"
+        # Workaround for deepl-rb 3.6.1 VERSION loading bug
+        # https://github.com/DeepLcom/deepl-rb/issues/17
+        begin
+          require "deepl"
+        rescue NameError => e
+          if e.message.include?("DeepL::VERSION")
+            # Force load the version file correctly
+            spec = Gem::Specification.find_by_name("deepl-rb")
+            require File.join(spec.gem_dir, "lib", "version")
+            require "deepl"
+          else
+            raise
+          end
+        end
+
         DeepL.configure do |config|
           config.auth_key = ENV["DEEPL_API_KEY"]
           config.host = ENV.fetch("DEEPL_API_HOST", "https://api-free.deepl.com")
