@@ -33,6 +33,16 @@ module Folio
       def folio_cache_version_keys
         []
       end
+
+      # Helper for publishable models - returns true if currently published
+      # OR if publishing status just changed (handles unpublishing case where
+      # we need to invalidate caches that previously showed this record)
+      def folio_cache_affects_published?
+        return false unless respond_to?(:published?)
+        return true if published?
+
+        (previous_changes.keys & %w[published published_at published_from published_until]).any?
+      end
     end
   end
 end
