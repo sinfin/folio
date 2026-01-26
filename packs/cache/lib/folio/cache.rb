@@ -47,18 +47,48 @@ module Folio
     #
     # @param name [Object] Regular cache key (record, string, array, etc.)
     # @param keys [Array<String>] Cache version keys to include (default: [])
-    # @param options [Hash] Options passed to Rails.cache.fetch (expires_in:, force:, etc.)
+    # @param options [Hash] Options passed to Rails.cache.fetch (expires_in:, force:, if:, unless:, etc.)
     def self.fetch(name = {}, keys: [], **options, &block)
       return yield unless block_given?
       return yield unless ::Rails.application.config.action_controller.perform_caching
+
+      # Handle if: and unless: options with early return
+      # Evaluate the condition (supports boolean, proc)
+      if options.key?(:if)
+        condition = options[:if]
+        condition_result = condition.is_a?(Proc) ? condition.call : condition
+        return yield unless condition_result
+      end
+
+      if options.key?(:unless)
+        condition = options[:unless]
+        condition_result = condition.is_a?(Proc) ? condition.call : condition
+        return yield if condition_result
+      end
 
       full_key = self.full_key(name:, keys:)
 
       # Set default expires_in
       options[:expires_in] ||= DEFAULT_EXPIRES_IN
 
+      # Remove if: and unless: from options since we've already handled them
+      options = options.except(:if, :unless)
+
       # Delegate to Rails.cache.fetch
       Rails.cache.fetch(full_key, **options, &block)
+    end
+
+    # Check if cache key exists with Folio::Cache::Version support
+    #
+    # @param name [Object] Regular cache key (record, string, array, etc.)
+    # @param keys [Array<String>] Cache version keys to include (default: [])
+    # @param options [Hash] Options passed to Rails.cache.exist? (namespace:, etc.)
+    # @return [Boolean] Whether the cache key exists
+    def self.exist?(name = {}, keys: [], **options)
+      return false unless ::Rails.application.config.action_controller.perform_caching
+
+      full_key = self.full_key(name:, keys:)
+      Rails.cache.exist?(full_key, **options)
     end
   end
 end
