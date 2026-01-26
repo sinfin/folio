@@ -6,11 +6,13 @@ module Folio
       extend ActiveSupport::Concern
 
       included do
+        attr_accessor :folio_cache_skip_invalidation
         after_commit :folio_cache_invalidate_versions!
       end
 
       # Public method called by after_commit
       def folio_cache_invalidate_versions!
+        return if folio_cache_skip_invalidation
         return unless respond_to?(:site_id) && site_id.present?
 
         keys = folio_cache_version_keys

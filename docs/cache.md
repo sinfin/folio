@@ -42,6 +42,19 @@ end
 
 The `after_commit` callback automatically calls `Folio::Cache::Invalidator` with the model's `site_id` and declared keys.
 
+## Skipping Invalidation
+
+When updating related records (e.g., parent touching child), you may want to skip cache invalidation to avoid unnecessary cache busting. Set the `folio_cache_skip_invalidation` attribute:
+
+```ruby
+article.folio_cache_skip_invalidation = true
+article.touch  # won't trigger cache invalidation
+```
+
+This is useful when:
+- A child record updates a parent's timestamp without meaningful content change
+- Batch operations where you'll manually invalidate once at the end
+
 ## View Helper
 
 Use `folio_cache` in views and components:

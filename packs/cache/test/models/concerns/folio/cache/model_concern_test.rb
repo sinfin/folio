@@ -84,4 +84,21 @@ class Folio::Cache::ModelConcernTest < ActiveSupport::TestCase
     assert_equal expected_metadata, v1.invalidation_metadata
     assert_equal expected_metadata, v2.invalidation_metadata
   end
+
+  test "does not call invalidator when folio_cache_skip_invalidation is set" do
+    site = create_site
+    v1 = create(:folio_cache_version, site:, key: "published")
+    v2 = create(:folio_cache_version, site:, key: "navigation")
+
+    page = PageWithCacheKeys.create!(site:, title: "Test", slug: "test-#{SecureRandom.hex(4)}", locale: site.locale)
+    updated_at_after_create = v1.reload.updated_at
+
+    travel 1.second do
+      page.folio_cache_skip_invalidation = true
+      page.update!(title: "Updated")
+    end
+
+    assert_equal updated_at_after_create, v1.reload.updated_at
+    assert_equal updated_at_after_create, v2.reload.updated_at
+  end
 end
