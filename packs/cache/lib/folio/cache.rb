@@ -32,7 +32,7 @@ module Folio
     # @param name [Object] Regular cache key (record, string, array, etc.)
     # @param keys [Array<String>] Cache version keys to include (default: [])
     # @return [Array] Composed cache key array
-    def self.full_key(name = {}, keys: [])
+    def self.full_key(name: {}, keys: [])
       # Build version key from Folio::Cache::Version timestamps
       version_key = Folio::Cache::Version.cache_key_for(keys:, site: Folio::Current.site)
 
