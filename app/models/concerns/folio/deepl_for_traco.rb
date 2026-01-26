@@ -42,7 +42,7 @@ module Folio::DeeplForTraco
             if self.class.deepl_configured?
               translated = ::DeepL.translate(val, I18n.locale, l).text
             else
-              translated = "#{val}(#{l.upcase})"
+              translated = val
             end
             send("#{attribute}_#{l}=", translated)
 
