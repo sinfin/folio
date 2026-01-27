@@ -57,9 +57,16 @@ class Folio::Console::Tiptap::Overlay::FormComponent < Folio::Console::Applicati
     end
 
     def render_input_string(f:, key:)
+      default = if default_proc = @node.class.structure.dig(key, :default)
+        if default_proc.is_a?(Proc)
+          default_proc.call(@node)
+        end
+      end
+
       f.input key,
               as: :string,
-              character_counter: true
+              character_counter: true,
+              placeholder: default
     end
 
     def render_input_integer(f:, key:)

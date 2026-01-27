@@ -1,0 +1,47 @@
+# frozen_string_literal: true
+
+Folio::Mcp.configure do |config|
+  # Enable MCP API endpoint
+  config.enabled = true
+
+  # Define accessible resources
+  config.resources = {
+    pages: {
+      model: "Folio::Page",
+      fields: %i[title slug perex meta_title meta_description published locale],
+      tiptap_fields: %i[tiptap_content],
+      # Uncomment to restrict to specific page types:
+      # allowed_types: %w[Folio::Page],
+      cover_field: :cover
+    },
+    # Uncomment and customize for your application:
+    # articles: {
+    #   model: "YourApp::Article",
+    #   fields: %i[title subtitle slug published featured locale],
+    #   tiptap_fields: %i[tiptap_content],
+    #   cover_field: :cover
+    # },
+    # projects: {
+    #   model: "YourApp::Project",
+    #   fields: %i[title slug perex published locale],
+    #   tiptap_fields: %i[tiptap_content],
+    #   cover_field: :cover
+    # },
+    files: {
+      model: "Folio::File::Image",
+      searchable: true,
+      uploadable: true
+    }
+  }
+
+  # Supported locales for translations
+  config.locales = %i[cs en]
+
+  # Rate limiting (requests per minute)
+  config.rate_limit = 100
+
+  # Optional: custom audit logging
+  # config.audit_logger = ->(event) {
+  #   Rails.logger.tagged("MCP") { Rails.logger.info(event.to_json) }
+  # }
+end

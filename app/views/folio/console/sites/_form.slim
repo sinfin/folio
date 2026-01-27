@@ -1,8 +1,10 @@
 ruby:
-  cache_clear_button = link_to(t('.clear_cache'),
-                               clear_cache_console_site_path,
-                               method: :post,
-                               class: 'btn btn-warning')
+  cache_clear_button = unless Folio.pack_enabled?(:cache)
+    link_to(t('.clear_cache'),
+            clear_cache_console_site_path,
+            method: :post,
+            class: 'btn btn-warning')
+  end
 
 = form_header f, right: cache_clear_button
 

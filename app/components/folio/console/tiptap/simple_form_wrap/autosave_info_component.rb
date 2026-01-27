@@ -19,7 +19,7 @@ class Folio::Console::Tiptap::SimpleFormWrap::AutosaveInfoComponent < Folio::Con
   end
 
   def render?
-    object.tiptap_autosave_enabled?
+    object.try(:tiptap_autosave_enabled?)
   end
 
   def has_unsaved_changes?

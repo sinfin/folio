@@ -2,6 +2,7 @@
 
 class Folio::Console::CatalogueCell < Folio::ConsoleCell
   include SimpleForm::ActionViewExtensions::FormHelper
+  include ActionView::Helpers::DateHelper
 
   attr_reader :record
 
@@ -534,6 +535,39 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
       end
 
       html
+    end
+
+    def boundary_positions
+      return @boundary_positions if defined?(@boundary_positions)
+
+      @boundary_positions = {}
+
+      return @boundary_positions unless klass.try(:has_folio_positionable?)
+      return @boundary_positions unless model[:pagy].present?
+      return @boundary_positions if model[:records].blank?
+
+      first_record = model[:records].first
+      last_record = model[:records].last
+      descending = klass.try(:positionable_descending?)
+
+      scope = klass.ordered
+      scope = scope.by_site(first_record.site) if klass.try(:has_belongs_to_site?) && first_record.try(:site)
+
+      # Find adjacent records outside visible page
+      if descending
+        prev = scope.where("position > ?", first_record.position).first
+        nxt = scope.where("position < ?", last_record.position).last
+      else
+        prev = scope.where("position < ?", first_record.position).last
+        nxt = scope.where("position > ?", last_record.position).first
+      end
+
+      @boundary_positions[:prev_id] = prev.id if prev
+      @boundary_positions[:prev_position] = prev.position if prev
+      @boundary_positions[:next_id] = nxt.id if nxt
+      @boundary_positions[:next_position] = nxt.position if nxt
+
+      @boundary_positions
     end
 
     def collection_action_for(action)

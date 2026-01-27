@@ -1,0 +1,60 @@
+= index_header do |header|
+  - header.with_right_content do
+    .d-flex.gap-2
+      = simple_form_for "", url: url_for([:invalidate_all, :console, Folio::Cache::Version]), method: :post, html: { class: "d-inline" } do |f|
+        = render(Folio::Console::Ui::ButtonComponent.new(type: :submit,
+                                                         variant: :warning,
+                                                         icon: :reload,
+                                                         label: t("folio.console.folio.cache.versions.invalidate_all_button"),
+                                                         confirm: true))
+
+      = simple_form_for "", url: url_for([:clear_rails_cache, :console, Folio::Cache::Version]), method: :post, html: { class: "d-inline" } do |f|
+        = render(Folio::Console::Ui::ButtonComponent.new(type: :submit,
+                                                         variant: :danger,
+                                                         icon: :delete,
+                                                         label: t("folio.console.folio.cache.versions.clear_rails_cache_button"),
+                                                         confirm: true))
+
+= catalogue(@versions)
+  ruby:
+    attribute :key
+
+    attribute :updated_at do
+      date_time = l(record.updated_at, format: "%-d. %-m. %Y, %-H:%M:%S")
+      time_ago = time_ago_in_words(record.updated_at)
+      safe_join([
+        date_time,
+        content_tag(:span,
+                    t('folio.console.folio.cache.versions.updated_at_ago',
+                      time: time_ago),
+                    class: 'small text-muted d-block mt-1')
+      ], " ")
+    end
+
+    attribute :expires_at do
+      if record.expires_at.present?
+        if record.expires_at < Time.current
+          content_tag(:span,
+                      t('folio.console.folio.cache.versions.expires_at_expired'),
+                      class: 'text-danger')
+        else
+          l(record.expires_at, format: "%-d. %-m. %Y, %-H:%M:%S")
+        end
+      else
+        content_tag(:span,
+                    t('folio.console.folio.cache.versions.expires_at_never'),
+                    class: 'text-muted')
+      end
+    end
+
+    attribute :invalidation_metadata do
+      render_view_component(Folio::Cache::ConsoleInvalidationMetadataComponent.new(metadata: record.invalidation_metadata))
+    end
+
+    actions({ invalidate: {
+      name: :invalidate,
+      icon: :reload,
+      method: :post,
+      confirm: true,
+      url: -> (record) { url_for([:invalidate, :console, record]) }
+    } }, :destroy)

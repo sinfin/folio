@@ -1,4 +1,11 @@
-div class=wrap_class_name data=stimulus_lightbox
+div[
+  class=wrap_class_name
+  data=stimulus_lightbox
+  data-f-c-catalogue-prev-boundary-id=boundary_positions[:prev_id]
+  data-f-c-catalogue-prev-boundary-position=boundary_positions[:prev_position]
+  data-f-c-catalogue-next-boundary-id=boundary_positions[:next_id]
+  data-f-c-catalogue-next-boundary-position=boundary_positions[:next_position]
+]
   - if model[:merge]
     == cell('folio/console/merges/index/header')
 

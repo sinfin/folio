@@ -288,6 +288,21 @@ Folio::Engine.routes.draw do
         post :validate
       end
     end
+
+    # Pack routes
+    if Folio.pack_enabled?(:cache)
+      namespace :cache, module: "folio/cache" do
+        resources :versions, only: [:index, :destroy] do
+          member do
+            post :invalidate
+          end
+          collection do
+            post :invalidate_all
+            post :clear_rails_cache
+          end
+        end
+      end
+    end
   end
 
   resource :tiptap, path: "folio-tiptap", controller: :tiptap, only: [] do

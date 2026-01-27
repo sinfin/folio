@@ -1,0 +1,13 @@
+---
+en:
+  activerecord:
+    attributes:
+      folio/cache/version:
+        key: Key
+        updated_at: Version
+        expires_at: Expires
+        invalidation_metadata: Invalidation
+    models:
+      folio/cache/version:
+        one: Cache version
+        other: Cache versions

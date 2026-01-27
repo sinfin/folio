@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "test_helper"
+require Folio::Engine.root.join("test/test_helper")
 
 class Dummy::Atom::Images::SingleImageComponentTest < Folio::ComponentTest
   def test_render

@@ -181,10 +181,91 @@ module Folio
       }
     }
 
+    initializer "folio.load_packs", before: :set_autoload_paths do |app|
+      pack_override_paths = []
+
+      Folio.enabled_packs.each do |pack_name|
+        pack_root = root.join("packs", pack_name.to_s)
+        next unless pack_root.exist?
+
+        # Autoload paths for all app subdirectories
+        %w[
+          app/models
+          app/models/concerns
+          app/components
+          app/components/concerns
+          app/controllers
+          app/controllers/concerns
+          app/helpers
+          app/jobs
+          app/lib
+          app/mailers
+        ].each do |subdir|
+          path = pack_root.join(subdir)
+          if path.exist?
+            app.config.autoload_paths << path
+            app.config.eager_load_paths << path
+          end
+        end
+
+        # View paths
+        views_path = pack_root.join("app/views")
+        app.config.paths["app/views"] << views_path if views_path.exist?
+
+        # Migrations
+        migrate_path = pack_root.join("db/migrate")
+        app.config.paths["db/migrate"] << migrate_path if migrate_path.exist?
+
+        # Locales
+        locales_path = pack_root.join("config/locales")
+        if locales_path.exist?
+          app.config.i18n.load_path += Dir[locales_path.join("**", "*.yml")]
+        end
+
+        # Load pack railtie
+        railtie_path = pack_root.join("lib/folio/#{pack_name}.rb")
+        require railtie_path if railtie_path.exist?
+      end
+
+      # Collect pack override paths (needs extra loading via to_prepare)
+      Folio.enabled_packs.each do |pack_name|
+        pack_root = root.join("packs", pack_name.to_s)
+        next unless pack_root.exist?
+
+        override_path = pack_root.join("app/overrides")
+        pack_override_paths << override_path.to_s if override_path.exist?
+      end
+
+      # Load pack override files
+      unless pack_override_paths.empty?
+        app.config.to_prepare do
+          pack_override_paths.each do |override_path|
+            Dir.glob("#{override_path}/**/*_override.rb").each do |file|
+              load file
+            end
+          end
+        end
+      end
+    end
+
+    initializer :append_folio_pack_assets_paths do |app|
+      Folio.enabled_packs.each do |pack_name|
+        pack_root = root.join("packs", pack_name.to_s)
+        next unless pack_root.exist?
+
+        # Asset paths for components (sidecar JS/CSS)
+        components_path = pack_root.join("app/components")
+        app.config.assets.paths << components_path if components_path.exist?
+      end
+    end
+
     initializer :append_folio_autoload_paths do |app|
       # Add component concerns to autoload paths so they can be included properly
       app.config.autoload_paths += [self.root.join("app/components/concerns")]
       app.config.eager_load_paths += [self.root.join("app/components/concerns")]
+      # Add app/lib for MCP tools, serializers, etc.
+      app.config.autoload_paths += [self.root.join("app/lib")]
+      app.config.eager_load_paths += [self.root.join("app/lib")]
     end
 
     initializer :append_folio_assets_paths do |app|

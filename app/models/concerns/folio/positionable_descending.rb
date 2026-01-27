@@ -18,6 +18,10 @@ module Folio::PositionableDescending
     def positionable_descending?
       true
     end
+
+    def has_folio_positionable?
+      true
+    end
   end
 
   def positionable_sql_update(new_position)

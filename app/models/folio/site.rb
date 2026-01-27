@@ -60,6 +60,10 @@ class Folio::Site < Folio::ApplicationRecord
     []
   end
 
+  def self.console_sidebar_before_site_packs_links(pack_name)
+    []
+  end
+
   def self.social_link_sites
     # class method is better than a constant as one might want to override it
     %i[facebook

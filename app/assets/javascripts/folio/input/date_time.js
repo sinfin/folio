@@ -36,7 +36,7 @@ window.Folio.Input.DateTime.DATE_TIME_CONFIG = {
   },
   localization: {
     locale: document.documentElement.lang,
-    format: 'd. M. yyyy, HH:mm',
+    format: 'd. M. yyyy, H:mm',
     hourCycle: 'h23',
     startOfTheWeek: 1
   },

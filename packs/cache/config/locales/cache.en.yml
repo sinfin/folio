@@ -1,0 +1,24 @@
+---
+en:
+  folio:
+    console:
+      actions:
+        invalidate: "Invalidate"
+      folio:
+        cache:
+          versions:
+            invalidate:
+              flash: "Cache version was successfully invalidated."
+            invalidate_all_flash: "All cache versions were successfully invalidated."
+            invalidate_all_flash_empty: "No cache versions to invalidate."
+            invalidate_all_button: "Invalidate All"
+            clear_rails_cache_flash: "Cache was successfully cleared."
+            clear_rails_cache_button: "Clear cache"
+            invalidation_metadata:
+              manual: "Manual"
+              manual_with_user: "Manual by %{user}"
+              job: "Job"
+              job_with_class: "Job: %{class}"
+            updated_at_ago: "(%{time} ago)"
+            expires_at_never: "Never"
+            expires_at_expired: "Expired"

@@ -1,0 +1,14 @@
+---
+cs:
+  activerecord:
+    attributes:
+      folio/cache/version:
+        key: Klíč
+        updated_at: Verze
+        expires_at: Expirace
+        invalidation_metadata: Invalidace
+    models:
+      folio/cache/version:
+        few: Cache verze
+        one: Cache verze
+        other: Cache verzí

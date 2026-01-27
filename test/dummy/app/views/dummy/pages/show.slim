@@ -7,7 +7,7 @@
     - if @page.perex.present?
       p.lead.mb-atom = cstypo @page.perex
 
-  - if @page.class.try(:has_folio_tiptap?) && @page.tiptap_content.present?
+  - if @page.try(:has_folio_tiptap?) && @page.tiptap_content.present?
     = render(Folio::Tiptap::ContentComponent.new(record: @page))
   - else
     = render_atoms_in_molecules @page.atoms_in_molecules

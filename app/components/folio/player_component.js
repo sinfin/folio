@@ -164,9 +164,11 @@ window.Folio.Player.innerBind = (el, opts, file) => {
   child.muted = false
 
   const source = document.createElement('source')
-  // Map video/quicktime to video/mp4 for browser compatibility
+  // Map video/quicktime and video/x-m4v to video/mp4 for browser compatibility
   // MOV files often contain H.264 codec which browsers can play as MP4
-  const mimeType = fileAttributes.player_source_mime_type === 'video/quicktime'
+  // M4V files are MP4 containers which browsers can play as MP4
+  const mimeType = (fileAttributes.player_source_mime_type === 'video/quicktime' ||
+                     fileAttributes.player_source_mime_type === 'video/x-m4v')
     ? 'video/mp4'
     : fileAttributes.player_source_mime_type
   source.type = mimeType
