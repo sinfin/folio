@@ -134,3 +134,9 @@
   width: -webkit-calc(100% - 2px);
   width: calc(100% - 2px);
 }
+
+.f-embed__youtube-iframe {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: 560 / 315;
+}
