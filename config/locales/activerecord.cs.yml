@@ -50,8 +50,15 @@ cs:
         subtitles_cs_text: Titulky (CZ)
         subtitles_en_text: Titulky (EN)
       folio/file/image:
+        created_by_current_user: Mé obrázky
         file_placements: Použití
         thumbnail_sizes: Vygenerované verze
+      folio/file/audio:
+        created_by_current_user: Má audia
+      folio/file/video:
+        created_by_current_user: Má videa
+      folio/file/document:
+        created_by_current_user: Mé dokumenty
       folio/lead:
         created_at: Odesláno
         note: Zpráva

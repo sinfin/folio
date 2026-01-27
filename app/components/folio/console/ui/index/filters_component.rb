@@ -77,6 +77,8 @@ class Folio::Console::Ui::Index::FiltersComponent < Folio::Console::ApplicationC
 
       if data[:as] == :collection
         collection_input(f, key)
+      elsif data[:as] == :boolean
+        boolean_input(f, key)
       elsif data[:as] == :date_range
         date_range_input(f, key)
       elsif data[:as] == :hidden
@@ -203,6 +205,18 @@ class Folio::Console::Ui::Index::FiltersComponent < Folio::Console::ApplicationC
       end
     end
 
+    def boolean_input(f, key)
+      f.input key, label: false,
+                   as: :boolean,
+                   label: label_for_key(key),
+                   input_html: {
+                     class: "f-c-ui-index-filters__boolean-input",
+                     value: "1",
+                     checked: controller.params[key] == "1",
+                   },
+                   wrapper_html: { class: "f-c-ui-index-filters__boolean-input-wrap" }
+    end
+
     def filter_style(config, filtered: false)
       width = if config[:width]
         if config[:width].is_a?(Numeric)
@@ -214,6 +228,8 @@ class Folio::Console::Ui::Index::FiltersComponent < Folio::Console::ApplicationC
         "auto"
       elsif filtered && config[:as] == :date_range
         "250px"
+      elsif config[:as] == :boolean
+        "auto"
       else
         "235px"
       end
