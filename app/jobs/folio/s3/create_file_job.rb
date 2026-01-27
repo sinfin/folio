@@ -90,6 +90,10 @@ class Folio::S3::CreateFileJob < Folio::S3::BaseJob
       @file.web_session_id = web_session_id if @file.respond_to?("web_session_id=")
       @file.user = Folio::User.find(user_id) if user_id && @file.respond_to?("user=")
 
+      if user_id && @file.respond_to?("created_by_folio_user_id=")
+        @file.created_by_folio_user_id = Folio::User.find(user_id).id
+      end
+
       if attributes.present?
         if attributes[:site_id].present? && @file.respond_to?("site_id=")
           @file.assign_attributes(attributes)

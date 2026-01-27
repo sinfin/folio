@@ -18,6 +18,10 @@ class Folio::User < Folio::ApplicationRecord
                            required: false
   belongs_to :auth_site, class_name: "Folio::Site",
                          required: true
+  has_many :created_files, class_name: "Folio::File",
+                           foreign_key: :created_by_folio_user_id,
+                           inverse_of: :created_by_folio_user,
+                           dependent: :nullify
 
   selected_device_modules = Rails.application.config.folio_users_device_modules
 

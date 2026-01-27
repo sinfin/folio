@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 
 - support for `video/x-m4v` files (mapped to `video/mp4` for browser compatibility)
 - `has_folio_positionable?` class method to `Folio::Positionable` and `Folio::PositionableDescending` concerns
+- `created_by_folio_user` relation to `Folio::File` and "my files" filter to console
 
 ### Fixed
 
