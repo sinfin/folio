@@ -100,6 +100,14 @@ class Folio::File < Folio::ApplicationRecord
 
   scope :by_placement, -> (placement_title) { order(created_at: :desc) }
 
+  scope :created_by_current_user, Proc.new {
+    if Folio::Current.user.present?
+      where(created_by_folio_user_id: Folio::Current.user.id)
+    else
+      none
+    end
+  }
+
   scope :by_used, -> (used) do
     case used
     when true, "true"
