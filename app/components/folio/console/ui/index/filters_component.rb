@@ -99,7 +99,7 @@ class Folio::Console::Ui::Index::FiltersComponent < Folio::Console::ApplicationC
 
           text_autocomplete_input(f, key, url:)
         else
-          text_input(f, key)
+          text_input(f, key, icon: data[:icon])
         end
       elsif data[:autocomplete]
         url = data[:url] || controller.folio.console_api_autocomplete_path(klass: data[:klass],
@@ -148,16 +148,26 @@ class Folio::Console::Ui::Index::FiltersComponent < Folio::Console::ApplicationC
                         clear_button: controller.params[full_key].present?
     end
 
-    def text_input(f, key)
-      f.input key, label: false,
-                   input_html: {
-                     class: "f-c-ui-index-filters__text-input",
-                     placeholder: blank_label(key),
-                     value: controller.params[key]
-                   },
-                   wrapper_html: { class: "f-c-ui-index-filters__text-input-wrap input-group--#{controller.params[key].present? ? "filled" : "empty"}" },
-                   wrapper: :input_group,
-                   clear_button: controller.params[key].present?
+    def text_input(f, key, icon: nil)
+      captured_input = capture do
+        f.input key, label: false,
+                 input_html: {
+                   class: "f-c-ui-index-filters__text-input",
+                   placeholder: blank_label(key),
+                   value: controller.params[key]
+                 },
+                 wrapper_html: { class: "f-c-ui-index-filters__text-input-wrap input-group--#{controller.params[key].present? ? "filled" : "empty"}" },
+                 wrapper: :input_group,
+                 clear_button: controller.params[key].present?
+      end
+
+      if icon
+        buttons_kwargs = [{ variant: :icon, icon: icon, type: :submit }]
+
+        render(Folio::Console::Ui::InputWithButtonsComponent.new(input: captured_input, buttons_kwargs:))
+      else
+        captured_input
+      end
     end
 
     def text_autocomplete_input(f, key, url:)
@@ -206,8 +216,7 @@ class Folio::Console::Ui::Index::FiltersComponent < Folio::Console::ApplicationC
     end
 
     def boolean_input(f, key)
-      f.input key, label: false,
-                   as: :boolean,
+      f.input key, as: :boolean,
                    label: label_for_key(key),
                    input_html: {
                      class: "f-c-ui-index-filters__boolean-input",
@@ -230,6 +239,8 @@ class Folio::Console::Ui::Index::FiltersComponent < Folio::Console::ApplicationC
         "250px"
       elsif config[:as] == :boolean
         "auto"
+      elsif config[:as] == :text && config[:icon]
+        "290px"
       else
         "235px"
       end

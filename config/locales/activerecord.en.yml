@@ -43,6 +43,7 @@ en:
         usage_constraints/unusable: Nepoužitelné
         subtitles_cs_text: Subtitles (CZ)
         subtitles_en_text: Subtitles (EN)
+        query: File name or description
       folio/file/image:
         created_by_current_user: My images
         file_placements: Placements

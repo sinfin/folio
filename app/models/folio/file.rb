@@ -123,12 +123,16 @@ class Folio::File < Folio::ApplicationRecord
     by_file_name_for_search(sanitize_filename_for_search(query))
   end
 
-  pg_search_scope :by_query,
-                  against: [:file_name, :headline, :description],
+  pg_search_scope :by_query_raw,
+                  against: [:file_name_for_search, :headline, :description],
                   ignoring: :accents,
                   using: {
                     tsearch: { prefix: true }
                   }
+
+  scope :by_query, -> (query) do
+    by_query_raw(sanitize_filename_for_search(query))
+  end
 
   pg_search_scope :by_file_name_for_search,
                   against: [:file_name_for_search],

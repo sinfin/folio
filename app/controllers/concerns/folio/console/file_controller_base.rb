@@ -161,7 +161,8 @@ module Folio::Console::FileControllerBase
 
     def index_filters
       filters = {
-        # by_query: { as: :string, icon: :search },
+        # TODO: enable with the rest of the filtering changes
+        # by_query: { as: :text, icon: :magnify },
         created_by_current_user: { as: :boolean },
         by_used: [true, false],
         by_tag_id: {
