@@ -27,6 +27,7 @@ All notable changes to this project will be documented in this file.
 - date_time input time format to match backend HH:mm -> H:mm
 - position controls in paginated catalogues now work across page boundaries - items can be moved to adjacent pages and the view automatically scrolls to show the moved item
 - fix youtube embed overflow
+- removed tiptap editor min-height as it creates additional scroll field which hides the toolbar
 
 ### Changed
 
