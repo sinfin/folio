@@ -20,21 +20,30 @@ class Folio::Console::Tiptap::SimpleFormWrap::AutosaveInfoComponent < Folio::Con
     object.tiptap_autosave_enabled?
   end
 
-  def has_unsaved_changes?
-    object.has_tiptap_revision?
+  def has_own_unsaved_changes?
+    object.has_tiptap_revision?(user: current_user)
+  end
+
+  def is_colliding_with_other_user?
+    has_own_unsaved_changes? && latest_update_revision.user_id != current_user.id
   end
 
   def changer_name
-    if object.respond_to?(:audits)
-      object.audits.last.user.full_name
-    else
-      ""
-    end
+    object.latest_tiptap_revision&.user&.to_label
   end
 
-  private
-    def latest_revision_info
-      latest_revision = object.latest_tiptap_revision(user: Folio::Current.user)
-      l(latest_revision.created_at, format: :short)
-    end
+  def latest_update_revision
+    @latest_update_revision ||= object.latest_tiptap_revision
+  end
+
+  def current_user
+    Folio::Current.user
+  end
+
+  def change_times
+    {
+      current: object.latest_tiptap_revision(user: current_user).updated_at,
+      other: latest_update_revision.updated_at
+    }
+  end
 end

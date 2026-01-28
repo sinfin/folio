@@ -75,7 +75,7 @@ class TiptapInput < SimpleForm::Inputs::StringInput
     end
 
     def current_user_latest_revision
-      @current_user_latest_revision ||= @builder.object.try(:latest_tiptap_revision)
+      @current_user_latest_revision ||= @builder.object.try(:latest_tiptap_revision, user: Folio::Current.user)
     end
 
     def has_unsaved_changes?
