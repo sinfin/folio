@@ -58,6 +58,8 @@ end
 rails folio:mcp:generate_token[admin@example.com]
 ```
 
+> **Note:** Folio::User with the given email must exist.
+
 Save the generated token - it won't be shown again!
 
 ### 4. Configure Cursor
