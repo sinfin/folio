@@ -2,15 +2,16 @@
 
 require "test_helper"
 
-class Folio::FileOverrideTest < ActiveSupport::TestCase
+class Folio::Cache::FileConcernTest < ActiveSupport::TestCase
   test "updating image placed on page invalidates folio_pages cache" do
     site = create_site
     page = create(:folio_page, site:)
     image = create(:folio_file_image, site:)
     create(:folio_file_placement_image, file: image, placement: page)
+    image.reload
 
-    v_pages = Folio::Cache::Version.find_or_create_by!(site:, key: "folio_pages")
-    v_files = Folio::Cache::Version.find_or_create_by!(site:, key: "folio_files")
+    v_pages = Folio::Cache::Version.find_or_create_by!(site:, key: Folio::Cache::CACHE_KEYS[:pages])
+    v_files = Folio::Cache::Version.find_or_create_by!(site:, key: Folio::Cache::CACHE_KEYS[:files])
     v_other = Folio::Cache::Version.find_or_create_by!(site:, key: "other")
 
     original_pages_updated_at = v_pages.updated_at

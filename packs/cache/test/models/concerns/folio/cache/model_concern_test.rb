@@ -9,8 +9,9 @@ class Folio::Cache::ModelConcernTest < ActiveSupport::TestCase
     end
   end
 
-  test "includes concern in Folio::ApplicationRecord" do
-    assert_includes Folio::ApplicationRecord.ancestors, Folio::Cache::ModelConcern
+  test "includes concern in Folio::Page through PageConcern" do
+    assert_includes Folio::Page.ancestors, Folio::Cache::PageConcern
+    assert_includes Folio::Page.ancestors, Folio::Cache::ModelConcern
   end
 
   test "after_commit calls invalidator with correct keys" do

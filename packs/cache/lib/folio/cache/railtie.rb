@@ -28,7 +28,10 @@ module Folio
         Folio::Publishable::WithDate.include(Folio::Cache::PublishableWithDateExtension)
         Folio::Publishable::Within.include(Folio::Cache::PublishableWithinExtension)
         Folio::Current.include(Folio::Cache::CurrentConcern)
-        Folio::ApplicationRecord.include(Folio::Cache::ModelConcern)
+        Folio::File.include(Folio::Cache::FileConcern)
+        Folio::Menu.include(Folio::Cache::MenuConcern)
+        Folio::Site.include(Folio::Cache::SiteConcern)
+        Folio::Page.include(Folio::Cache::PageConcern)
         Folio::ApplicationComponent.include(Folio::Cache::Helper)
       end
 
