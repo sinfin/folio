@@ -23,12 +23,14 @@ module Folio
           # Build resources list
           resources = build_resources(server_context)
 
-          server = MCP::Server.new(
+          MCP::Server.new(
             name: "folio-mcp",
             version: Folio::VERSION,
             tools: tools,
             resources: resources,
-            server_context: server_context
+            server_context: server_context,
+            # NOTE: Cursor CLI seems to only support up to this version for now
+            protocol_version: "2025-06-18"
           )
 
           # Register resource read handler
