@@ -12,9 +12,7 @@ en:
             characters: Characters
           autosave_info_component:
             new_record_alert: Draft changes in the editor are not saved until you first save the %{model}.
-            title: The editor contains your unsaved changes.
-            colliding_with_user: User %{name} made inbetween unsave changes to this %{model} too.
-            changes_times_info: "Latest unsaved changes: You %{user_time}, Her/His %{other_user_time}."
+            title: The editor contains unsaved draft changes. This article was changed by %{name} inbetween.
             continue: Continue editing draft
             discard: Discard draft changes
             failed_to_save: Connection error. Please check your internet connection.

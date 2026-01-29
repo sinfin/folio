@@ -157,17 +157,19 @@ module Folio::Tiptap::Model
   def latest_tiptap_revision(user: nil)
     return nil unless tiptap_autosave_enabled?
 
-    revs = tiptap_revisions.order(updated_at: :asc)
-    revs = revs.where(user: user) if user.present?
-    revs.last
+    target_user = user || Folio::Current.user
+    return nil unless target_user
+
+    tiptap_revisions.find_by(user: target_user)
   end
 
   def has_tiptap_revision?(user: nil)
     return false unless tiptap_autosave_enabled?
 
-    revs = tiptap_revisions
-    revs = revs.where(user: user) if user.present?
-    revs.exists?
+    target_user = user || Folio::Current.user
+    return false unless target_user
+
+    tiptap_revisions.exists?(user: target_user)
   end
 
   private

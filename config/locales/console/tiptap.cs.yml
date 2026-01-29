@@ -12,9 +12,7 @@ cs:
             characters: Znaků
           autosave_info_component:
             new_record_alert: Rozepsané změny v editoru se neukládají, dokud %{model} poprvé neuložíte.
-            title: Editor obsahuje vaše neuložené změny.
-            colliding_with_user: Uživatel %{name} mezitím také %{model} měnil bez uložení.
-            changes_times_info: "Poslední neuložené změny: %{user_time} (Vy) <> %{other_user_time} (Ona/On)."
+            title: Editor obsahuje neuložené rozepsané změny. Tento článek mezitím upravil uživatel %{name}.
             continue: Použít moji verzi
             discard: Použít verzi jiného uživatele
             failed_to_save: Chyba připojení k serveru. Prosíme zkontrolujte připojení k internetu.
