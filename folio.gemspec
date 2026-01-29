@@ -93,10 +93,10 @@ Gem::Specification.new do |s|
   s.add_dependency "terser"
   s.add_dependency "view_component", "~> 4.0"
   s.add_dependency "turbo-rails"
-
-  s.add_development_dependency "packwerk"
   # MCP (Model Context Protocol) server for AI integration
   s.add_dependency "mcp"
+
+  s.add_development_dependency "packwerk"
 
   s.add_development_dependency "better_errors"
   s.add_development_dependency "binding_of_caller" # used by BetterErrors

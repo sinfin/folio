@@ -45,26 +45,26 @@ module Folio
       def load_components!
         return if @components_loaded
 
-        engine_root = Folio::Engine.root
-        app_lib = engine_root.join("app/lib")
+        pack_root = File.expand_path("../../..", __dir__)
+        app_lib = File.join(pack_root, "app/lib")
 
         # Load base classes first
-        require app_lib.join("folio/mcp/tools/base.rb")
+        require File.join(app_lib, "folio/mcp/tools/base.rb")
 
         # Load serializers
-        Dir[app_lib.join("folio/mcp/serializers/**/*.rb")].each { |f| require f }
+        Dir[File.join(app_lib, "folio/mcp/serializers/**/*.rb")].each { |f| require f }
 
         # Load tools
-        Dir[app_lib.join("folio/mcp/tools/**/*.rb")].each { |f| require f }
+        Dir[File.join(app_lib, "folio/mcp/tools/**/*.rb")].each { |f| require f }
 
         # Load resources
-        Dir[app_lib.join("folio/mcp/resources/**/*.rb")].each { |f| require f }
+        Dir[File.join(app_lib, "folio/mcp/resources/**/*.rb")].each { |f| require f }
 
         # Load prompts
-        Dir[app_lib.join("folio/mcp/prompts/**/*.rb")].each { |f| require f }
+        Dir[File.join(app_lib, "folio/mcp/prompts/**/*.rb")].each { |f| require f }
 
         # Load other components
-        Dir[app_lib.join("folio/mcp/*.rb")].each { |f| require f }
+        Dir[File.join(app_lib, "folio/mcp/*.rb")].each { |f| require f }
 
         @components_loaded = true
       end
