@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-# Temporary stored unsaved user content in TipTap editor, should be deleted on placement.save
-# other users revision on same placement are marked as `superseeded`
 class Folio::Tiptap::Revision < Folio::ApplicationRecord
   self.table_name = "folio_tiptap_revisions"
 
