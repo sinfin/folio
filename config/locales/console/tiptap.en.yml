@@ -12,7 +12,7 @@ en:
             characters: Characters
           autosave_info_component:
             new_record_alert: Draft changes in the editor are not saved until you first save the %{model}.
-            title: The editor contains unsaved draft changes. This article was changed by %{name} inbetween.
+            title: The editor contains unsaved draft changes.
             continue: Continue editing draft
             discard: Discard draft changes
             failed_to_save: Connection error. Please check your internet connection.
