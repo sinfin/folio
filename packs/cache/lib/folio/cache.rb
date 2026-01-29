@@ -6,6 +6,13 @@ module Folio
   module Cache
     DEFAULT_EXPIRES_IN = 1.hour
 
+    CACHE_KEYS = {
+      files: "folio_files",
+      menus: "folio_menus",
+      pages: "folio_pages",
+      sites: "folio_sites",
+    }
+
     mattr_accessor :expires_at_for_key, default: nil
     mattr_accessor :default_key_parts, default: -> { [ENV["CURRENT_RELEASE_COMMIT_HASH"], Folio::Current.host].compact }
 

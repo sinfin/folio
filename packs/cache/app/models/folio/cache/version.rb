@@ -5,6 +5,8 @@ class Folio::Cache::Version < Folio::ApplicationRecord
 
   include Folio::BelongsToSite
 
+  scope :ordered, -> { order(key: :asc) }
+
   validates :key,
             presence: true,
             uniqueness: { scope: :site_id }
@@ -49,7 +51,9 @@ class Folio::Cache::Version < Folio::ApplicationRecord
         expires_at = data[:expires_at]
         expired = expires_at && Time.current > expires_at
 
-        Folio::Cache::ExpireJob.perform_later(site_id: site.id, key: k) if expired
+        if data.blank? || expired
+          Folio::Cache::ExpireJob.perform_later(site_id: site.id, key: k)
+        end
 
         "#{k}-#{updated_at}-#{expired ? 1 : 0}"
       end.join("/")
