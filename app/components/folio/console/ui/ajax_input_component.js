@@ -153,6 +153,12 @@ window.Folio.Stimulus.register('f-c-ui-ajax-input', class extends window.Stimulu
       }
     }
 
+    // Input is not dirty - clear any pending timeout and close the editor
+    if (this.blurTimeout) {
+      window.clearTimeout(this.blurTimeout)
+      delete this.blurTimeout
+    }
+
     const failure = this.element.classList.contains('f-c-ui-ajax-input--failure')
 
     this.dispatch('blur', { detail: { dirty, failure } })

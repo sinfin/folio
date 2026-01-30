@@ -13,13 +13,38 @@ window.Folio.Stimulus.register('f-c-ui-in-place-input', class extends window.Sti
   onBlur (e) {
     if (e.detail && !e.detail.dirty && !e.detail.failure) {
       if (this.hasAutocompleteValue) {
-        const input = this.element.querySelector('.f-c-ui-ajax-input__input')
+        const input = this.inputWrapTarget.querySelector('.f-c-ui-ajax-input__input')
+        if (input) {
+          const hasActiveDropdown = input.getAttribute('data-f-input-autocomplete-has-active-dropdown-value') === 'true'
+          if (hasActiveDropdown) {
+            // Delay closing to allow click on dropdown item to complete first
+            // When clicking an autocomplete item, blur fires before the click completes.
+            window.setTimeout(() => {
+              const stillOpen = input.getAttribute('data-f-input-autocomplete-has-active-dropdown-value') === 'true'
+              const ajaxInput = input.closest('.f-c-ui-ajax-input')
+              const isLoading = ajaxInput && ajaxInput.classList.contains('f-c-ui-ajax-input--loading')
 
-        if (input && input.getAttribute('data-f-input-autocomplete-has-active-dropdown-value') === 'true') {
-          return
+              if (stillOpen) {
+                // Dropdown still open - user clicked elsewhere, close it and the editor
+                input.dispatchEvent(new CustomEvent('f-input-autocomplete:closeDropdown', { bubbles: true }))
+                this.editingValue = false
+              } else if (!isLoading) {
+                // Dropdown closed and not loading - item was clicked but no save triggered
+                // (e.g., selected same value), close the editor
+                this.editingValue = false
+              }
+              // If isLoading, save is in progress - let onSuccess handle closing
+            }, 150)
+            return
+          } else {
+            // No active dropdown - close immediately
+            input.dispatchEvent(new CustomEvent('f-input-autocomplete:closeDropdown', { bubbles: true }))
+          }
         }
       }
 
+      // When input is not dirty, close immediately regardless of dropdown state
+      // The dropdown check is only relevant when there are changes to save
       this.editingValue = false
     }
   }
@@ -51,7 +76,7 @@ window.Folio.Stimulus.register('f-c-ui-in-place-input', class extends window.Sti
 
   editingValueChanged (to, from) {
     if (to && typeof from !== 'undefined' && to !== from) {
-      const input = this.element.querySelector('.f-c-ui-ajax-input__input')
+      const input = this.inputWrapTarget.querySelector('.f-c-ui-ajax-input__input')
       if (!input) return
 
       input.focus()
