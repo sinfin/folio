@@ -142,10 +142,12 @@ window.Folio.Stimulus.register('f-input-autocomplete', class extends window.Stim
     }
   }
 
-  setValue (value) {
+  setValue (value, triggerSave = false) {
     this.element.value = value
     this.dispatch('selected')
-    this.element.dispatchEvent(new Event('change'))
+    if (triggerSave) {
+      this.element.dispatchEvent(new CustomEvent('f-input-autocomplete:value-selected', { bubbles: true }))
+    }
     this.removeDropdown()
   }
 
@@ -164,7 +166,7 @@ window.Folio.Stimulus.register('f-input-autocomplete', class extends window.Stim
         targetLi = active.parentNode.nextElementSibling
         if (!targetLi) targetLi = menu.children[0]
       } else if (action === 'select') {
-        return this.setValue(active.innerText)
+        return this.setValue(active.innerText, false)
       }
     } else {
       if (action === 'previous') {
@@ -245,7 +247,7 @@ window.Folio.Stimulus.register('f-input-autocomplete', class extends window.Stim
     const validTarget = e.target.closest('.f-input-autocomplete-dropdown .dropdown-item')
 
     if (validTarget && validTarget.closest('.f-input-autocomplete-dropdown') === this.autocompleteDropdown) {
-      this.setValue(e.target.innerText)
+      this.setValue(e.target.innerText, true)
     } else if (this.hasActiveDropdownValue) {
       if (e.target !== this.element) {
         const closest = e.target.closest('.f-c-ui-in-place-input')
