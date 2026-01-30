@@ -2,7 +2,7 @@
 
 require "openai"
 
-DEFAULT_GPT_MODELS = %w(gpt-3.5-turbo-0613 gpt-3.5-turbo-0301 gpt-3.5-turbo-16k-0613 gpt-4-0613 gpt-4-0314).freeze
+DEFAULT_GPT_MODELS = %w(gpt-4o gpt-4o-mini gpt-4-turbo gpt-3.5-turbo).freeze
 
 class Folio::ChatGptClient
   def initialize(model)
