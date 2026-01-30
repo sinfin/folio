@@ -332,10 +332,10 @@ en:
           alert: 'Chat GPT is unavailable at the moment. Error message:'
           progress: Chat GPT is generating a response..
           hint_content_character_count: (%{count} char.)
-          gpt_model/gpt-4o: GPT-4o - 128K tokens (latest)
-          gpt_model/gpt-4o-mini: GPT-4o mini - 128K tokens (fast & affordable)
-          gpt_model/gpt-4-turbo: GPT-4 Turbo - 128K tokens
-          gpt_model/gpt-3-5-turbo: GPT-3.5 Turbo - 16K tokens
+          gpt_model/gpt-5-2: GPT-5.2 - best for coding and agentic tasks
+          gpt_model/gpt-5-mini: GPT-5 mini - fast and affordable
+          gpt_model/gpt-5-nano: GPT-5 nano - fastest and most cost-efficient
+          gpt_model/gpt-4-1: GPT-4.1 - smartest non-reasoning model
           token_counter: Used tokens
           use_response_text: Use this response
 

@@ -339,10 +339,10 @@ cs:
           alert: 'Chat GPT je nyní nedostupný. Chybová hláška:'
           progress: Chat GPT generuje odpověď...
           hint_content_character_count: (%{count} zn.)
-          gpt_model/gpt-4o: GPT-4o - 128K tokenů (nejnovější)
-          gpt_model/gpt-4o-mini: GPT-4o mini - 128K tokenů (rychlý a levný)
-          gpt_model/gpt-4-turbo: GPT-4 Turbo - 128K tokenů
-          gpt_model/gpt-3-5-turbo: GPT-3.5 Turbo - 16K tokenů
+          gpt_model/gpt-5-2: GPT-5.2 - nejlepší pro kódování a agentní úlohy
+          gpt_model/gpt-5-mini: GPT-5 mini - rychlý a levný
+          gpt_model/gpt-5-nano: GPT-5 nano - nejrychlejší a nejlevnější
+          gpt_model/gpt-4-1: GPT-4.1 - nejchytřejší non-reasoning model
           token_counter: Použité tokeny
           use_response_text: Použít tuto odpověď
 

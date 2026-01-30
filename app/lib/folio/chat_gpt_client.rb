@@ -2,7 +2,7 @@
 
 require "openai"
 
-DEFAULT_GPT_MODELS = %w(gpt-4o gpt-4o-mini gpt-4-turbo gpt-3.5-turbo).freeze
+DEFAULT_GPT_MODELS = %w(gpt-5.2 gpt-5-mini gpt-5-nano gpt-4.1).freeze
 
 class Folio::ChatGptClient
   def initialize(model)
@@ -21,12 +21,19 @@ class Folio::ChatGptClient
 
   def generate_response(prompt, length)
     start_time = Time.now
+
+    # GPT-5+ models use max_completion_tokens instead of max_tokens
+    # and need a minimum of 100 tokens to work reliably
+    is_gpt5 = @model.start_with?("gpt-5")
+    token_param = is_gpt5 ? :max_completion_tokens : :max_tokens
+    token_value = is_gpt5 ? [length, 100].max : length
+
     response = client.chat(
       parameters: {
         model: @model,
         messages: [{ role: "user", content: prompt }],
         n: 1,
-        max_tokens: length,
+        token_param => token_value,
       }
     )
 
