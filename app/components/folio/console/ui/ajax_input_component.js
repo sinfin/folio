@@ -58,9 +58,7 @@ window.Folio.Stimulus.register('f-c-ui-ajax-input', class extends window.Stimulu
         }
       }
     } else if (e.key === 'Escape') {
-      if (value === this.originalValueValue) {
-        return this.cancel()
-      }
+      return this.cancel()
     }
 
     if (this.element.classList.contains('f-c-ui-ajax-input--loading')) {
@@ -93,12 +91,20 @@ window.Folio.Stimulus.register('f-c-ui-ajax-input', class extends window.Stimulu
     this.element.classList.remove('f-c-ui-ajax-input--success')
     this.element.classList.remove('f-c-ui-ajax-input--failure')
 
-    this.dispatch('blur', { detail: { dirty: false } })
+    this.inputTarget.blur()
     this.inputTarget.dispatchEvent(new CustomEvent('f-c-ui-ajax-input:cancel', { bubbles: true }))
   }
 
   onBlur () {
-    this.dispatch('blur', { detail: { dirty: this.element.classList.contains('f-c-ui-ajax-input--dirty') } })
+    const dirty = this.element.classList.contains('f-c-ui-ajax-input--dirty')
+
+    if (dirty) {
+      return this.save()
+    }
+
+    const failure = this.element.classList.contains('f-c-ui-ajax-input--failure')
+
+    this.dispatch('blur', { detail: { dirty, failure } })
   }
 
   save (e) {
@@ -124,15 +130,6 @@ window.Folio.Stimulus.register('f-c-ui-ajax-input', class extends window.Stimulu
         const rawData = { [name]: this.cleave ? this.cleave.getRawValue() : this.inputTarget.value }
         data = window.Folio.formToHash(rawData)
       }
-      const rawData = {}
-      rawData[name] = this.cleave ? this.cleave.getRawValue() : this.inputTarget.value
-
-      // replace new lines if it's a string
-      if (typeof rawData[name] === 'string') {
-        rawData[name] = rawData[name].replace(/\r?\n/g, ' ')
-      }
-
-      // const data = window.Folio.formToHash(rawData)
 
       apiFn(this.urlValue, data).then((res) => {
         const key = name.replace(/^.+\[(.+)\]$/, '$1')

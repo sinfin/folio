@@ -14,6 +14,10 @@ All notable changes to this project will be documented in this file.
 - position controls in paginated catalogues now work across page boundaries - items can be moved to adjacent pages and the view automatically scrolls to show the moved item
 - fix youtube embed overflow
 
+### Changed
+
+- *console ui* ajax and in place inputs - submit on blur and cancel on escape
+
 ## [7.1.2] - 2026-01-12
 
 ### Added
