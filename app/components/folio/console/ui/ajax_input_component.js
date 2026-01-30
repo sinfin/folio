@@ -48,7 +48,8 @@ window.Folio.Stimulus.register('f-c-ui-ajax-input', class extends window.Stimulu
         e.stopPropagation()
 
         if (this.inputTarget.getAttribute('data-f-input-autocomplete-has-active-dropdown-value') === 'true') {
-          return
+          const active = document.querySelector('.f-input-autocomplete-dropdown .active')
+          if (active) return
         }
 
         if (value === this.originalValueValue) {

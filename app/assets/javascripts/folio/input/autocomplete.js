@@ -47,8 +47,11 @@ window.Folio.Stimulus.register('f-input-autocomplete', class extends window.Stim
 
     this.preventEnterSubmit = (e) => {
       if (e.key === 'Enter' && this.hasActiveDropdownValue) {
-        e.preventDefault()
-        e.stopImmediatePropagation()
+        const active = this.autocompleteDropdown?.querySelector('.active')
+        if (active) {
+          e.preventDefault()
+          e.stopImmediatePropagation()
+        }
       }
     }
     this.element.addEventListener('keydown', this.preventEnterSubmit)
@@ -125,10 +128,17 @@ window.Folio.Stimulus.register('f-input-autocomplete', class extends window.Stim
       case 'Escape':
         this.removeDropdown()
         break
-      case 'Enter':
-        e.preventDefault()
-        this.handleAutocompleteActive('select')
+      case 'Enter': {
+        const active = this.autocompleteDropdown?.querySelector('.active')
+        if (active) {
+          e.preventDefault()
+          this.handleAutocompleteActive('select')
+        } else {
+          // No item selected - close dropdown and let Enter propagate to save the input value
+          this.removeDropdown()
+        }
         break
+      }
     }
   }
 
@@ -319,7 +329,7 @@ window.Folio.Stimulus.register('f-input-autocomplete', class extends window.Stim
 
       items.forEach((item, index) => {
         if (index > 9) return
-        html += `<li><span class="dropdown-item ${index === 0 ? ' active' : ''}" style="cursor: pointer; overflow-wrap: break-word; white-space: normal;">${item}</span></li>`
+        html += `<li><span class="dropdown-item" style="cursor: pointer; overflow-wrap: break-word; white-space: normal;">${item}</span></li>`
       })
 
       this.addDropdown(html)

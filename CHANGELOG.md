@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - *console ui* ajax and in place inputs - submit on blur and cancel on escape
+- *input autocomplete* don't autoselect items, let Enter propagate
 
 ## [7.1.2] - 2026-01-12
 
