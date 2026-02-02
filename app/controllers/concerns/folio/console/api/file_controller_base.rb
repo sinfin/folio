@@ -5,6 +5,7 @@ require "zip"
 
 module Folio::Console::Api::FileControllerBase
   extend ActiveSupport::Concern
+  include Folio::Console::FileControllerIndexFilters
 
   S3_PATH_DOWNLOAD_BASE = "tmp/folio-files-batch-download"
 
@@ -78,8 +79,10 @@ module Folio::Console::Api::FileControllerBase
   def pagination
     @pagy, _records = pagy(folio_console_records, items: Folio::Console::FileControllerBase::PAGY_ITEMS)
 
+    pagination_params = filter_params.to_h.merge("page" => params[:page])
+
     @pagy_options = {
-      reload_url: url_for([:pagination, :console, :api, @klass, page: params[:page]]),
+      reload_url: url_for([:pagination, :console, :api, @klass, pagination_params]),
       request_path: pagination_request_path
     }
 
@@ -349,17 +352,6 @@ module Folio::Console::Api::FileControllerBase
       end
 
       includes
-    end
-
-    def filter_params
-      params.permit(:by_file_name,
-                    :by_placement,
-                    :by_tags,
-                    :by_used,
-                    :by_photo_archive,
-                    :by_usage_constraints,
-                    :by_allowed_site_slug,
-                    :by_media_source)
     end
 
     def file_params_whitelist

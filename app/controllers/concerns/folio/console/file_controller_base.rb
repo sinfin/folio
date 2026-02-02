@@ -2,6 +2,7 @@
 
 module Folio::Console::FileControllerBase
   extend ActiveSupport::Concern
+  include Folio::Console::FileControllerIndexFilters
 
   PAGY_ITEMS = 64
 
@@ -126,8 +127,10 @@ module Folio::Console::FileControllerBase
     end
 
     def set_pagy_options
+      pagination_params = filter_params.to_h.merge("page" => params[:page])
+
       @pagy_options = {
-        reload_url: url_for([:pagination, :console, :api, @klass, page: params[:page]]),
+        reload_url: url_for([:pagination, :console, :api, @klass, pagination_params]),
         skip_default_layout_pagination: true,
       }
 
@@ -157,29 +160,6 @@ module Folio::Console::FileControllerBase
                            data: { id: folio_console_record.id },
                          }.to_json,
                          user_ids:
-    end
-
-    def index_filters
-      filters = {
-        # TODO: enable with the rest of the filtering changes
-        # by_query: { as: :text, icon: :magnify },
-        created_by_current_user: { as: :boolean },
-        by_used: [true, false],
-        by_tag_id: {
-          klass: "ActsAsTaggableOn::Tag",
-        },
-      }
-
-      if @klass.included_modules.include?(Folio::File::HasUsageConstraints)
-        filters[:by_usage_constraints] = @klass.usage_constraints_for_select
-        filters[:by_media_source] = { klass: "Folio::MediaSource", order_scope: :ordered }
-
-        if Rails.application.config.folio_shared_files_between_sites
-          filters[:by_allowed_site_slug] = Folio::Site.ordered.map { |site| [site.to_label, site.slug] }
-        end
-      end
-
-      filters
     end
 
     def allowed_record_sites
