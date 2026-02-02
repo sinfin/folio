@@ -59,7 +59,7 @@ cs:
       folio/file/video:
         created_by_current_user: Má videa
       folio/file/document:
-        created_by_current_user: Mé dokumenty
+        created_by_current_user: Mé soubory
       folio/lead:
         created_at: Odesláno
         note: Zpráva
