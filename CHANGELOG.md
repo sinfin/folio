@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 - support for `video/x-m4v` files (mapped to `video/mp4` for browser compatibility)
 - `has_folio_positionable?` class method to `Folio::Positionable` and `Folio::PositionableDescending` concerns
 - **TipTap Locale Support**: Added locale support to Tiptap editor via `has_folio_tiptap_content(locales: [...])` option, enabling separate content fields per locale with locale switcher UI in console
+- console favicon via site `layout_console_favicon_path`
 
 ### Fixed
 
