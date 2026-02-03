@@ -1,6 +1,6 @@
 {
   "mcpServers": {
-    "folio-<%= application_name %>-local": {
+    "folio-<%= application_namespace_path.dasherize %>-local": {
       "type": "http",
       "url": "http://localhost:3000/folio/api/mcp",
       "headers": {

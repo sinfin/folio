@@ -2,9 +2,9 @@ Description:
     Install Folio MCP (Model Context Protocol) server for AI integration.
 
     This generator will:
-    - Create config/initializers/folio_mcp.rb with default configuration
+    - Create packs/mcp/lib/{application}/mcp.rb to require railtie
+    - Create packs/mcp/lib/{application}/mcp/railtie.rb with default configuration
     - Create .cursor/mcp.json.sample for Cursor IDE configuration
-    - Add MCP route to config/routes.rb
     - Create migration to add MCP token columns to folio_users table
 
 Example:

@@ -1,45 +1,34 @@
 # frozen_string_literal: true
 
-require "rails/generators"
-require "rails/generators/active_record"
+require "rails/generators/active_record/migration"
+
+require Folio::Engine.root.join("lib/generators/folio/generator_base")
 
 module Folio
   module Mcp
     class InstallGenerator < Rails::Generators::Base
+      include Folio::GeneratorBase
       include ActiveRecord::Generators::Migration
 
-      source_root File.expand_path("templates", __dir__)
+      source_root ::File.expand_path("templates", __dir__)
 
       desc "Install Folio MCP server"
 
-      def create_initializer
-        template "folio_mcp.rb.tt", "config/initializers/folio_mcp.rb"
+      def create_mcp
+        template "mcp.rb.tt", "packs/mcp/lib/#{application_namespace_path}/mcp.rb"
+      end
+
+      def create_railtie
+        template "railtie.rb.tt", "packs/mcp/lib/#{application_namespace_path}/mcp/railtie.rb"
       end
 
       def create_cursor_config_sample
         template "mcp.json.tt", ".cursor/mcp.json.sample"
       end
 
-      def create_migration
+      def create_mcp_migration
         migration_template "migration.rb.tt",
-                           "db/migrate/add_mcp_to_folio_users.rb",
-                           migration_version: migration_version
-      end
-
-      def add_route
-        route_content = <<~ROUTE
-
-          # MCP API endpoint
-          scope :folio, as: :folio do
-            namespace :api do
-              post "mcp", to: "mcp#handle"
-            end
-          end
-        ROUTE
-
-        inject_into_file "config/routes.rb",
-                         route_content,
-                         after: "Rails.application.routes.draw do"
+                           "db/migrate/add_mcp_to_folio_users.rb"
       end
 
       def show_instructions
@@ -53,7 +42,7 @@ module Folio
         say "1. Run migrations:"
         say "   rails db:migrate", :cyan
         say ""
-        say "2. Edit config/initializers/folio_mcp.rb to configure resources"
+        say "2. Edit packs/mcp/lib/#{application_namespace_path}/mcp/railtie.rb to set up your resources.", :cyan
         say ""
         say "3. Generate API token for a user:"
         say "   rails folio:mcp:generate_token[admin@example.com]", :cyan
@@ -73,10 +62,6 @@ module Folio
       private
         def migration_version
           "[#{Rails::VERSION::MAJOR}.#{Rails::VERSION::MINOR}]"
-        end
-
-        def application_name
-          Rails.application.class.module_parent_name.underscore.dasherize
         end
     end
   end
