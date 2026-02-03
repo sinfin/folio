@@ -61,6 +61,9 @@ class Folio::User < Folio::ApplicationRecord
                                   foreign_key: :closed_by_id,
                                   dependent: :nullify
 
+  has_many :tiptap_revisions, class_name: "Folio::Tiptap::Revision", dependent: :destroy, inverse_of: :user
+  has_many :superseeded_tiptap_revisions, class_name: "Folio::Tiptap::Revision", dependent: :nullify, inverse_of: :superseded_by_user
+
   validate :validate_one_of_names
   validates :time_zone, inclusion: { in: ActiveSupport::TimeZone.all.map(&:name) }
 
