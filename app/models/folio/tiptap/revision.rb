@@ -27,6 +27,7 @@ end
 #  content               :jsonb            not null
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
+#  attribute_name        :string           default("tiptap_content"), not null
 #
 # Indexes
 #

@@ -86,6 +86,23 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
       assert_match("f-c-ui-pagy", response.parsed_body["data"])
     end
 
+    test "#{klass} - pagination renders reload_url with filter params" do
+      get url_for([:pagination, :console, :api, klass, format: :json]), params: {
+        page: 2,
+        created_by_current_user: "1",
+      }
+      assert_response(:ok)
+
+      html = Nokogiri::HTML(response.parsed_body["data"])
+      pagy_el = html.at_css(".f-c-ui-pagy")
+      assert pagy_el, "Pagy component should be present"
+
+      reload_url = pagy_el["data-f-c-ui-pagy-reload-url-value"]
+      assert reload_url.present?, "reload_url should be set"
+      assert_includes reload_url, "created_by_current_user=1", "reload_url should preserve filter"
+      assert_includes reload_url, "page=2", "reload_url should preserve page"
+    end
+
     test "#{klass} - batch_bar" do
       get url_for([:batch_bar, :console, :api, klass, format: :json])
       assert_response(:ok)

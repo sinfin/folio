@@ -77,6 +77,8 @@ class Folio::Console::Ui::Index::FiltersComponent < Folio::Console::ApplicationC
 
       if data[:as] == :collection
         collection_input(f, key)
+      elsif data[:as] == :boolean
+        boolean_input(f, key)
       elsif data[:as] == :date_range
         date_range_input(f, key)
       elsif data[:as] == :hidden
@@ -97,7 +99,7 @@ class Folio::Console::Ui::Index::FiltersComponent < Folio::Console::ApplicationC
 
           text_autocomplete_input(f, key, url:)
         else
-          text_input(f, key)
+          text_input(f, key, icon: data[:icon])
         end
       elsif data[:autocomplete]
         url = data[:url] || controller.folio.console_api_autocomplete_path(klass: data[:klass],
@@ -146,16 +148,26 @@ class Folio::Console::Ui::Index::FiltersComponent < Folio::Console::ApplicationC
                         clear_button: controller.params[full_key].present?
     end
 
-    def text_input(f, key)
-      f.input key, label: false,
-                   input_html: {
-                     class: "f-c-ui-index-filters__text-input",
-                     placeholder: blank_label(key),
-                     value: controller.params[key]
-                   },
-                   wrapper_html: { class: "f-c-ui-index-filters__text-input-wrap input-group--#{controller.params[key].present? ? "filled" : "empty"}" },
-                   wrapper: :input_group,
-                   clear_button: controller.params[key].present?
+    def text_input(f, key, icon: nil)
+      captured_input = capture do
+        f.input key, label: false,
+                 input_html: {
+                   class: "f-c-ui-index-filters__text-input",
+                   placeholder: blank_label(key),
+                   value: controller.params[key]
+                 },
+                 wrapper_html: { class: "f-c-ui-index-filters__text-input-wrap input-group--#{controller.params[key].present? ? "filled" : "empty"}" },
+                 wrapper: :input_group,
+                 clear_button: controller.params[key].present?
+      end
+
+      if icon
+        buttons_kwargs = [{ variant: :icon, icon: icon, type: :submit }]
+
+        render(Folio::Console::Ui::InputWithButtonsComponent.new(input: captured_input, buttons_kwargs:))
+      else
+        captured_input
+      end
     end
 
     def text_autocomplete_input(f, key, url:)
@@ -203,6 +215,17 @@ class Folio::Console::Ui::Index::FiltersComponent < Folio::Console::ApplicationC
       end
     end
 
+    def boolean_input(f, key)
+      f.input key, as: :boolean,
+                   label: label_for_key(key),
+                   input_html: {
+                     class: "f-c-ui-index-filters__boolean-input",
+                     value: "1",
+                     checked: controller.params[key] == "1",
+                   },
+                   wrapper_html: { class: "f-c-ui-index-filters__boolean-input-wrap" }
+    end
+
     def filter_style(config, filtered: false)
       width = if config[:width]
         if config[:width].is_a?(Numeric)
@@ -214,6 +237,10 @@ class Folio::Console::Ui::Index::FiltersComponent < Folio::Console::ApplicationC
         "auto"
       elsif filtered && config[:as] == :date_range
         "250px"
+      elsif config[:as] == :boolean
+        "auto"
+      elsif config[:as] == :text && config[:icon]
+        "290px"
       else
         "235px"
       end
