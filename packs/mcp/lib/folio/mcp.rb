@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+require_relative "mcp/railtie"
+require_relative "mcp/configuration"
+require_relative "mcp/server_factory"
+
 module Folio
   module Mcp
     KNOWN_FIELD_TYPES = %i[
@@ -67,6 +71,3 @@ module Folio
     end
   end
 end
-
-require_relative "mcp/configuration"
-require_relative "mcp/server_factory"
