@@ -29,12 +29,10 @@ module Folio
       def add_route
         route_content = <<~ROUTE
 
-          # MCP API endpoint (only if enabled)
-          if Folio::Mcp.enabled?
-            scope :folio, as: :folio do
-              namespace :api do
-                post "mcp", to: "mcp#handle"
-              end
+          # MCP API endpoint
+          scope :folio, as: :folio do
+            namespace :api do
+              post "mcp", to: "mcp#handle"
             end
           end
         ROUTE

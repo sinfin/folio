@@ -14,7 +14,6 @@ class Folio::Mcp::ConfigurationTest < ActiveSupport::TestCase
   test "default configuration" do
     config = Folio::Mcp.configuration
 
-    assert_equal false, config.enabled
     assert_equal({}, config.resources)
     assert_equal [:en], config.locales
     assert_equal 100, config.rate_limit
@@ -23,7 +22,6 @@ class Folio::Mcp::ConfigurationTest < ActiveSupport::TestCase
 
   test "configure with hash resources" do
     Folio::Mcp.configure do |config|
-      config.enabled = true
       config.resources = {
         pages: {
           model: "Folio::Page",
@@ -34,14 +32,12 @@ class Folio::Mcp::ConfigurationTest < ActiveSupport::TestCase
       config.locales = %i[cs en]
     end
 
-    assert Folio::Mcp.enabled?
     assert_equal "Folio::Page", Folio::Mcp.configuration.resources[:pages][:model]
     assert_equal %i[title slug], Folio::Mcp.configuration.resources[:pages][:fields]
   end
 
   test "configure with block resources" do
     Folio::Mcp.configure do |config|
-      config.enabled = true
       config.resource :pages do
         model "Folio::Page"
         fields %i[title slug perex]
@@ -51,7 +47,6 @@ class Folio::Mcp::ConfigurationTest < ActiveSupport::TestCase
       end
     end
 
-    assert Folio::Mcp.enabled?
     config = Folio::Mcp.configuration.resources[:pages]
 
     assert_equal "Folio::Page", config[:model]
@@ -59,18 +54,6 @@ class Folio::Mcp::ConfigurationTest < ActiveSupport::TestCase
     assert_equal %i[tiptap_content], config[:tiptap_fields]
     assert_equal :cover, config[:cover_field]
     assert_equal %w[Folio::Page], config[:allowed_types]
-  end
-
-  test "enabled? returns false by default" do
-    assert_not Folio::Mcp.enabled?
-  end
-
-  test "enabled? returns true when configured" do
-    Folio::Mcp.configure do |config|
-      config.enabled = true
-    end
-
-    assert Folio::Mcp.enabled?
   end
 
   test "configured? returns false without resources" do

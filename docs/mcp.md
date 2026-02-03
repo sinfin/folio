@@ -19,8 +19,6 @@ Edit `config/initializers/folio_mcp.rb`:
 
 ```ruby
 Folio::Mcp.configure do |config|
-  config.enabled = true
-
   config.resources = {
     pages: {
       model: "Folio::Page",
@@ -358,8 +356,8 @@ curl -X POST http://localhost:3000/folio/api/mcp \
 
 ### 404 Not Found
 
-MCP endpoint is not enabled. Check:
-- `Folio::Mcp.enabled?` returns `true`
+MCP endpoint is not accessible. Check:
+- MCP pack is enabled in `Folio.enabled_packs`
 - Routes are properly mounted
 - Rails server was restarted after configuration change
 

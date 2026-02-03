@@ -15,7 +15,6 @@ class Folio::Mcp::Tools::VersionToolsTest < ActiveSupport::TestCase
     # Configure MCP with versioned resource
     Folio::Mcp.reset_configuration!
     Folio::Mcp.configure do |config|
-      config.enabled = true
       config.resources = {
         pages: {
           model: "Folio::Mcp::Tools::VersionToolsTest::AuditedTestPage",
@@ -52,7 +51,6 @@ class Folio::Mcp::Tools::VersionToolsTest < ActiveSupport::TestCase
 
   test "list_record_versions returns error for non-versioned resource" do
     Folio::Mcp.configure do |config|
-      config.enabled = true
       config.resources = {
         pages: {
           model: "Folio::Page",
@@ -248,7 +246,6 @@ class Folio::Mcp::Tools::VersionToolsTest < ActiveSupport::TestCase
 
   test "restore_record_version requires update permission" do
     Folio::Mcp.configure do |config|
-      config.enabled = true
       config.resources = {
         pages: {
           model: "Folio::Mcp::Tools::VersionToolsTest::AuditedTestPage",

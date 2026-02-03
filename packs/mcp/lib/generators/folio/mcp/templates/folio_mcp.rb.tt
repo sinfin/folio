@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 Folio::Mcp.configure do |config|
-  # Enable MCP API endpoint
-  # Note: Setting enabled = true automatically adds :mcp to Folio.enabled_packs
-  config.enabled = true
-
   # Define accessible resources
   config.resources = {
     pages: {

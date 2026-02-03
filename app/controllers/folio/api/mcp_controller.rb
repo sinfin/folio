@@ -4,7 +4,6 @@ module Folio
   module Api
     class McpController < ActionController::API
       before_action :authenticate_mcp_token!
-      before_action :check_mcp_enabled!
 
       def handle
         server = Folio::Mcp::ServerFactory.build(
@@ -59,10 +58,6 @@ module Folio
           BCrypt::Password.new(digest) == token
         rescue BCrypt::Errors::InvalidHash
           false
-        end
-
-        def check_mcp_enabled!
-          head :not_found unless Folio::Mcp.enabled?
         end
 
         def current_site

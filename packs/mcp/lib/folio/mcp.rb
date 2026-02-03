@@ -34,10 +34,6 @@ module Folio
         @configuration = nil
       end
 
-      def enabled?
-        configuration&.enabled == true
-      end
-
       def configured?
         configuration.present? && configuration.resources.present?
       end
