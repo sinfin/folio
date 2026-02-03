@@ -74,4 +74,3 @@ end
 
 require_relative "mcp/configuration"
 require_relative "mcp/server_factory"
-require_relative "mcp/railtie"
