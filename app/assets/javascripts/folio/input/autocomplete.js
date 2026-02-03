@@ -47,8 +47,11 @@ window.Folio.Stimulus.register('f-input-autocomplete', class extends window.Stim
 
     this.preventEnterSubmit = (e) => {
       if (e.key === 'Enter' && this.hasActiveDropdownValue) {
-        e.preventDefault()
-        e.stopImmediatePropagation()
+        const active = this.autocompleteDropdown?.querySelector('.active')
+        if (active) {
+          e.preventDefault()
+          e.stopImmediatePropagation()
+        }
       }
     }
     this.element.addEventListener('keydown', this.preventEnterSubmit)
@@ -63,6 +66,9 @@ window.Folio.Stimulus.register('f-input-autocomplete', class extends window.Stim
     this.boundOnCancel = () => { this.removeDropdown() }
     this.element.addEventListener('f-c-ui-ajax-input:success', this.boundOnCancel)
     this.element.addEventListener('f-c-ui-ajax-input:cancel', this.boundOnCancel)
+
+    this.boundOnCloseDropdown = () => { this.removeDropdown() }
+    this.element.addEventListener('f-input-autocomplete:closeDropdown', this.boundOnCloseDropdown)
   }
 
   disconnect () {
@@ -99,6 +105,11 @@ window.Folio.Stimulus.register('f-input-autocomplete', class extends window.Stim
       delete this.preventEnterSubmit
     }
 
+    if (this.boundOnCloseDropdown) {
+      this.element.removeEventListener('f-input-autocomplete:closeDropdown', this.boundOnCloseDropdown)
+      delete this.boundOnCloseDropdown
+    }
+
     this.removeDropdown()
   }
 
@@ -125,17 +136,26 @@ window.Folio.Stimulus.register('f-input-autocomplete', class extends window.Stim
       case 'Escape':
         this.removeDropdown()
         break
-      case 'Enter':
-        e.preventDefault()
-        this.handleAutocompleteActive('select')
+      case 'Enter': {
+        const active = this.autocompleteDropdown?.querySelector('.active')
+        if (active) {
+          e.preventDefault()
+          this.handleAutocompleteActive('select')
+        } else {
+          // No item selected - close dropdown and let Enter propagate to save the input value
+          this.removeDropdown()
+        }
         break
+      }
     }
   }
 
-  setValue (value) {
+  setValue (value, triggerSave = false) {
     this.element.value = value
     this.dispatch('selected')
-    this.element.dispatchEvent(new Event('change'))
+    if (triggerSave) {
+      this.element.dispatchEvent(new CustomEvent('f-input-autocomplete:value-selected', { bubbles: true }))
+    }
     this.removeDropdown()
   }
 
@@ -154,7 +174,7 @@ window.Folio.Stimulus.register('f-input-autocomplete', class extends window.Stim
         targetLi = active.parentNode.nextElementSibling
         if (!targetLi) targetLi = menu.children[0]
       } else if (action === 'select') {
-        return this.setValue(active.innerText)
+        return this.setValue(active.innerText, false)
       }
     } else {
       if (action === 'previous') {
@@ -235,7 +255,7 @@ window.Folio.Stimulus.register('f-input-autocomplete', class extends window.Stim
     const validTarget = e.target.closest('.f-input-autocomplete-dropdown .dropdown-item')
 
     if (validTarget && validTarget.closest('.f-input-autocomplete-dropdown') === this.autocompleteDropdown) {
-      this.setValue(e.target.innerText)
+      this.setValue(e.target.innerText, true)
     } else if (this.hasActiveDropdownValue) {
       if (e.target !== this.element) {
         const closest = e.target.closest('.f-c-ui-in-place-input')
@@ -319,7 +339,7 @@ window.Folio.Stimulus.register('f-input-autocomplete', class extends window.Stim
 
       items.forEach((item, index) => {
         if (index > 9) return
-        html += `<li><span class="dropdown-item ${index === 0 ? ' active' : ''}" style="cursor: pointer; overflow-wrap: break-word; white-space: normal;">${item}</span></li>`
+        html += `<li><span class="dropdown-item" style="cursor: pointer; overflow-wrap: break-word; white-space: normal;">${item}</span></li>`
       })
 
       this.addDropdown(html)
