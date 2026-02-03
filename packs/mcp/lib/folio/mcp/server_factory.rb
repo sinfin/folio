@@ -22,14 +22,16 @@ module Folio
           # Build resources list
           resources = build_resources(server_context)
 
-          MCP::Server.new(
+          # NOTE: Stable MCP protocol version, supported by the latest cursor-agent cli
+          configuration = MCP::Configuration.new(protocol_version: "2025-06-18")
+
+          server = MCP::Server.new(
             name: "folio-mcp",
             version: Folio::VERSION,
             tools: tools,
             resources: resources,
             server_context: server_context,
-            # NOTE: Cursor CLI seems to only support up to this version for now
-            protocol_version: "2025-06-18"
+            configuration: configuration
           )
 
           # Register resource read handler
@@ -376,7 +378,10 @@ module Folio
 
             (resource_config[:tiptap_fields] || []).each do |field|
               properties[field] = {
-                type: "object",
+                oneOf: [
+                  { type: "object" },
+                  { type: "string" }
+                ],
                 description: tiptap_field_description(field)
               }
             end

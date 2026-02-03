@@ -45,6 +45,16 @@ module Folio
           # Tiptap content helpers - shared by CreateRecord and UpdateRecord
 
           def normalize_tiptap_content(content)
+            # Handle string-encoded JSON (workaround for MCP clients that serialize objects as strings)
+            if content.is_a?(String) && content.start_with?("{")
+              begin
+                content = JSON.parse(content)
+              rescue JSON::ParserError
+                # If parsing fails, return as-is and let validation handle it
+                return content
+              end
+            end
+
             return content unless content.is_a?(Hash)
 
             # Deep stringify keys for consistent handling

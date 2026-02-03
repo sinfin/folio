@@ -3,7 +3,8 @@
 module Folio
   module Mcp
     class Configuration
-      attr_accessor :enabled, :resources, :locales, :audit_logger, :rate_limit
+      attr_accessor :resources, :locales, :audit_logger, :rate_limit
+      attr_reader :enabled
 
       def initialize
         @enabled = false
@@ -11,6 +12,14 @@ module Folio
         @locales = [:en]
         @rate_limit = 100 # requests per minute
         @audit_logger = nil
+      end
+
+      def enabled=(value)
+        @enabled = value
+        # Automatically add :mcp to enabled_packs when enabled
+        if value && !Folio.enabled_packs.include?(:mcp)
+          Folio.enabled_packs << :mcp
+        end
       end
 
       def resource(name, &block)
