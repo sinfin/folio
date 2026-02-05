@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [7.2.0] - 2026-02-05
+
 ### Added
 
 - encoding generation tracking for media files — stale `CheckProgressJob`s are skipped when a newer encoding has started
