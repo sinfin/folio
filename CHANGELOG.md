@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [7.2.0] - 2026-02-05
+
 ### Added
 
 - support for `video/x-m4v` files (mapped to `video/mp4` for browser compatibility)
