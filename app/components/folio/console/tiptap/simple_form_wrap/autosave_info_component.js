@@ -2,7 +2,8 @@ window.Folio.Stimulus.register('f-c-tiptap-simple-form-wrap-autosave-info', clas
   static values = {
     placementType: String,
     placementId: Number,
-    deleteUrl: String
+    takeoverUrl: String,
+    fromUserId: Number,
   }
 
   static targets = ['unsavedChanges', 'failedToSave']
@@ -14,13 +15,21 @@ window.Folio.Stimulus.register('f-c-tiptap-simple-form-wrap-autosave-info', clas
 
   onDiscardButtonClick () {
     const data = {
+      from_user_id: this.fromUserIdValue,
       placement: {
         type: this.placementTypeValue,
         id: this.placementIdValue
       }
     }
 
-    window.Folio.Api.apiDelete(this.deleteUrlValue, data)
+    window.Folio.Api.apiPost(this.takeoverApiUrlValue, data).then(() => {
+      window.location.reload()
+    }).catch((err) => {
+      console.error('Takeover failed:', err)
+    })
+
+
+    window.Folio.Api.apiPost(this.takeoverUrlValue, data)
       .then((response) => {
         if (response && response.success) {
           window.location.reload()

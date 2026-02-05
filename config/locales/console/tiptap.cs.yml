@@ -13,6 +13,11 @@ cs:
           autosave_info_component:
             new_record_alert: Rozepsané změny v editoru se neukládají, dokud %{model} poprvé neuložíte.
             title: Editor obsahuje neuložené rozepsané změny.
+            unsaved_newest_changes_from: "Uživatel %{name} mezitím také přidal neuložené změny."
+            not_exists: není
+            your_revision: "%{time} (Vy)"
+            other_user_revision: "%{time} (%{name})"
+            latest_revisions: "Poslední neuložené změny: %{current_user_rev} < %{other_user_rev}"
             continue: Použít moji verzi
             discard: Použít verzi jiného uživatele
             failed_to_save: Chyba připojení k serveru. Prosíme zkontrolujte připojení k internetu.

@@ -13,17 +13,21 @@
         h3.f-c-tiptap-simple-form-wrap-autosave-info__top-label
           = t('.title')
 
-      .f-c-tiptap-simple-form-wrap-autosave-info__middle
-        = latest_revision_info
+      - if conflicted_revisions?
+        h3.f-c-tiptap-simple-form-wrap-autosave-info__top-label
+          = t('.unsaved_newest_changes_from', name: other_user.to_label)
 
-      .f-c-tiptap-simple-form-wrap-autosave-info__bottom
-        .f-c-tiptap-simple-form-wrap-autosave-info__buttons
-          = render(Folio::Console::Ui::ButtonComponent.new(variant: :primary,
-                                                            label: t('.continue'),
-                                                            data: stimulus_action(click: "onContinueButtonClick")))
-          = render(Folio::Console::Ui::ButtonComponent.new(variant: :tertiary,
-                                                           label: t('.discard'),
-                                                           data: stimulus_action(click: "onDiscardButtonClick")))
+        .f-c-tiptap-simple-form-wrap-autosave-info__middle
+          = latest_revisions_info
+
+        .f-c-tiptap-simple-form-wrap-autosave-info__bottom
+          .f-c-tiptap-simple-form-wrap-autosave-info__buttons
+            = render(Folio::Console::Ui::ButtonComponent.new(variant: :primary,
+                                                              label: t('.continue'),
+                                                              data: stimulus_action(click: "onContinueButtonClick")))
+            = render(Folio::Console::Ui::ButtonComponent.new(variant: :tertiary,
+                                                            label: t('.discard'),
+                                                            data: stimulus_action(click: "onDiscardButtonClick")))
 
   .f-c-tiptap-simple-form-wrap-autosave-info__failed-to-save[
     class="f-c-tiptap-simple-form-wrap-autosave-info__failed-to-save--hidden"

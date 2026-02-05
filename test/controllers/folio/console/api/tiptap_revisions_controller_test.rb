@@ -79,15 +79,14 @@ class Folio::Console::Api::TiptapRevisionsControllerTest < Folio::Console::BaseC
     assert_equal false, response.parsed_body["success"]
   end
 
-  test "takeover_revision - takes over another user's revision" do
+  test "takeover_revision - takes over another user's revision (creating mine if needed)" do
     from_content = { content: "Another user's content" }
-    _from_revision = @page.tiptap_revisions.create!(user: @another_user, content: from_content)
+    from_revision = @page.tiptap_revisions.create!(user: @another_user, content: from_content)
 
     assert_difference "Folio::Tiptap::Revision.count", 1 do
       post takeover_revision_console_api_tiptap_revisions_path(format: :json), params: {
         from_user_id: @another_user.id,
-        record_type: "Folio::Page",
-        record_id: @page.id
+        placement: { type: "Folio::Page", id: @page.id }
       }
     end
 
@@ -100,13 +99,25 @@ class Folio::Console::Api::TiptapRevisionsControllerTest < Folio::Console::BaseC
 
     @another_user.reload
     assert_nil @another_user.console_url
+
+    from_content2 = { content: "Another user's content 2" }
+    from_revision.update!(content: from_content2)
+
+    assert_no_difference "Folio::Tiptap::Revision.count" do
+      post takeover_revision_console_api_tiptap_revisions_path(format: :json), params: {
+        from_user_id: @another_user.id,
+        placement: { type: "Folio::Page", id: @page.id }
+      }
+    end
+
+    my_revision.reload
+    assert_equal from_content2.stringify_keys, my_revision.content
   end
 
   test "takeover_revision - returns error when no revision found" do
     post takeover_revision_console_api_tiptap_revisions_path(format: :json), params: {
       from_user_id: @another_user.id,
-      record_type: "Folio::Page",
-      record_id: @page.id
+      placement: { type: "Folio::Page", id: @page.id }
     }
 
     assert_response :not_found
