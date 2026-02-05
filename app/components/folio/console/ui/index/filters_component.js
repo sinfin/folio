@@ -12,6 +12,16 @@ window.Folio.Stimulus.register('f-c-ui-index-filters', class extends window.Stim
 
     // Only add non-empty values
     for (const formControl of this.element.querySelectorAll('input, .form-control')) {
+      if (formControl.type === 'checkbox') {
+        if (!formControl.checked) {
+          continue
+        }
+      } else if (formControl.type === 'hidden') {
+        if (formControl.closest('.form-check')) {
+          continue
+        }
+      }
+
       const value = formControl.value
 
       if (value && value.toString().trim() !== '') {

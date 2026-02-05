@@ -59,6 +59,7 @@ class Folio::Console::Ui::AjaxInputComponent < Folio::Console::ApplicationCompon
       use_saved_indicator: @use_saved_indicator,
     }, action: {
       "f-c-ui-ajax-input:setValue" => "setValueFromEvent",
+      "f-input-autocomplete:value-selected" => "onAutocompleteSelected",
     })
   end
 
@@ -67,7 +68,6 @@ class Folio::Console::Ui::AjaxInputComponent < Folio::Console::ApplicationCompon
                         "keyup" => "onKeyUp",
                         "keydown" => "onKeyDownAndPress",
                         "keypress" => "onKeyDownAndPress",
-                        "change" => "onKeyUp",
                         "blur" => "onBlur",
                       },
                       target: "input")

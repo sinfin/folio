@@ -7,12 +7,19 @@ All notable changes to this project will be documented in this file.
 
 - support for `video/x-m4v` files (mapped to `video/mp4` for browser compatibility)
 - `has_folio_positionable?` class method to `Folio::Positionable` and `Folio::PositionableDescending` concerns
+- `created_by_folio_user` relation to `Folio::File` and "my files" filter to console
 
 ### Fixed
 
 - date_time input time format to match backend HH:mm -> H:mm
 - position controls in paginated catalogues now work across page boundaries - items can be moved to adjacent pages and the view automatically scrolls to show the moved item
 - fix youtube embed overflow
+- removed tiptap editor min-height as it creates additional scroll field which hides the toolbar
+
+### Changed
+
+- *console ui* ajax and in place inputs - submit on blur and cancel on escape
+- *input autocomplete* don't autoselect items, let Enter propagate
 
 ## [7.1.2] - 2026-01-12
 

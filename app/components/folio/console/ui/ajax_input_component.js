@@ -13,6 +13,11 @@ window.Folio.Stimulus.register('f-c-ui-ajax-input', class extends window.Stimulu
     useSavedIndicator: Boolean
   }
 
+  // Delay for blur save when autocomplete dropdown is active
+  // This allows click events on dropdown items to complete before saving.
+  // 150ms is sufficient for most browsers to process the click event.
+  static BLUR_SAVE_DELAY_MS = 150
+
   connect () {
     if (this.cleaveValue) {
       this.cleave = new window.Cleave(this.inputTarget, {
@@ -24,6 +29,12 @@ window.Folio.Stimulus.register('f-c-ui-ajax-input', class extends window.Stimulu
   }
 
   disconnect () {
+    // Clean up any pending blur timeout to prevent memory leaks
+    if (this.blurTimeout) {
+      window.clearTimeout(this.blurTimeout)
+      delete this.blurTimeout
+    }
+
     if (this.cleave) {
       this.cleave.destroy()
       delete this.cleave
@@ -48,7 +59,8 @@ window.Folio.Stimulus.register('f-c-ui-ajax-input', class extends window.Stimulu
         e.stopPropagation()
 
         if (this.inputTarget.getAttribute('data-f-input-autocomplete-has-active-dropdown-value') === 'true') {
-          return
+          const active = document.querySelector('.f-input-autocomplete-dropdown .active')
+          if (active) return
         }
 
         if (value === this.originalValueValue) {
@@ -58,9 +70,7 @@ window.Folio.Stimulus.register('f-c-ui-ajax-input', class extends window.Stimulu
         }
       }
     } else if (e.key === 'Escape') {
-      if (value === this.originalValueValue) {
-        return this.cancel()
-      }
+      return this.cancel()
     }
 
     if (this.element.classList.contains('f-c-ui-ajax-input--loading')) {
@@ -79,9 +89,36 @@ window.Folio.Stimulus.register('f-c-ui-ajax-input', class extends window.Stimulu
     }
   }
 
+  onAutocompleteSelected (e) {
+    const value = this.cleave ? this.cleave.getRawValue() : this.inputTarget.value
+    const dirty = this.element.classList.contains('f-c-ui-ajax-input--dirty')
+
+    if (this.element.classList.contains('f-c-ui-ajax-input--loading')) {
+      return false
+    }
+
+    // Save if value changed OR if input was dirty (user made changes before selecting)
+    if (value !== this.originalValueValue || dirty) {
+      this.element.classList.add('f-c-ui-ajax-input--dirty')
+      // Cancel any pending blur timeout since we're saving now
+      if (this.blurTimeout) {
+        window.clearTimeout(this.blurTimeout)
+        delete this.blurTimeout
+      }
+      // Mark that autocomplete triggered save to prevent blur from saving again
+      this.autocompleteTriggeredSave = true
+      this.save()
+    }
+  }
+
   cancel (e) {
     if (e) e.preventDefault()
     if (this.element.classList.contains('f-c-ui-ajax-input--loading')) return false
+
+    if (this.blurTimeout) {
+      window.clearTimeout(this.blurTimeout)
+      delete this.blurTimeout
+    }
 
     if (this.cleave) {
       this.cleave.setRawValue(this.originalValueValue)
@@ -93,12 +130,57 @@ window.Folio.Stimulus.register('f-c-ui-ajax-input', class extends window.Stimulu
     this.element.classList.remove('f-c-ui-ajax-input--success')
     this.element.classList.remove('f-c-ui-ajax-input--failure')
 
-    this.dispatch('blur', { detail: { dirty: false } })
+    this.inputTarget.blur()
     this.inputTarget.dispatchEvent(new CustomEvent('f-c-ui-ajax-input:cancel', { bubbles: true }))
   }
 
   onBlur () {
-    this.dispatch('blur', { detail: { dirty: this.element.classList.contains('f-c-ui-ajax-input--dirty') } })
+    // Skip blur save if autocomplete already triggered a save
+    if (this.autocompleteTriggeredSave) {
+      const failure = this.element.classList.contains('f-c-ui-ajax-input--failure')
+      this.dispatch('blur', { detail: { dirty: false, failure } })
+      return
+    }
+
+    const dirty = this.element.classList.contains('f-c-ui-ajax-input--dirty')
+    const hasActiveDropdown = this.inputTarget.getAttribute('data-f-input-autocomplete-has-active-dropdown-value') === 'true'
+
+    if (dirty) {
+      if (hasActiveDropdown) {
+        return this.handleDelayedBlurSave()
+      } else {
+        return this.save()
+      }
+    }
+
+    // Input is not dirty - clear any pending timeout and close the editor
+    if (this.blurTimeout) {
+      window.clearTimeout(this.blurTimeout)
+      delete this.blurTimeout
+    }
+
+    const failure = this.element.classList.contains('f-c-ui-ajax-input--failure')
+
+    this.dispatch('blur', { detail: { dirty, failure } })
+  }
+
+  handleDelayedBlurSave () {
+    // Delay save to allow click on dropdown item to complete first
+    // When clicking an autocomplete item, blur fires before the click completes.
+    // This delay ensures the click can finish and select the item before we save.
+    const valueBeforeBlur = this.cleave ? this.cleave.getRawValue() : this.inputTarget.value
+    this.blurTimeout = window.setTimeout(() => {
+      // Check if dropdown closed and value changed (autocomplete selected an item)
+      const stillOpen = this.inputTarget.getAttribute('data-f-input-autocomplete-has-active-dropdown-value') === 'true'
+      const valueAfterBlur = this.cleave ? this.cleave.getRawValue() : this.inputTarget.value
+      const valueChanged = valueBeforeBlur !== valueAfterBlur
+
+      // Only save if dropdown is still open (user clicked elsewhere) or value didn't change
+      if (stillOpen || !valueChanged) {
+        this.save()
+      }
+      delete this.blurTimeout
+    }, this.constructor.BLUR_SAVE_DELAY_MS)
   }
 
   save (e) {
@@ -124,15 +206,8 @@ window.Folio.Stimulus.register('f-c-ui-ajax-input', class extends window.Stimulu
         const rawData = { [name]: this.cleave ? this.cleave.getRawValue() : this.inputTarget.value }
         data = window.Folio.formToHash(rawData)
       }
-      const rawData = {}
-      rawData[name] = this.cleave ? this.cleave.getRawValue() : this.inputTarget.value
 
-      // replace new lines if it's a string
-      if (typeof rawData[name] === 'string') {
-        rawData[name] = rawData[name].replace(/\r?\n/g, ' ')
-      }
-
-      // const data = window.Folio.formToHash(rawData)
+      data._trigger = 'f-c-ui-ajax-input'
 
       apiFn(this.urlValue, data).then((res) => {
         const key = name.replace(/^.+\[(.+)\]$/, '$1')
@@ -170,6 +245,12 @@ window.Folio.Stimulus.register('f-c-ui-ajax-input', class extends window.Stimulu
     }
 
     this.originalValueValue = newValue
+
+    // Clear autocomplete flag after save completes (more reliable than setTimeout)
+    if (this.autocompleteTriggeredSave) {
+      delete this.autocompleteTriggeredSave
+    }
+
     this.inputTarget.blur()
     this.inputTarget.dispatchEvent(new CustomEvent('f-c-ui-ajax-input:success', { bubbles: true, detail: { value: newValue, label: newLabel } }))
 
@@ -185,6 +266,11 @@ window.Folio.Stimulus.register('f-c-ui-ajax-input', class extends window.Stimulu
 
   setValueFromEvent (e) {
     if (!e.detail || typeof e.detail.value !== 'string') return
+
+    if (this.blurTimeout) {
+      window.clearTimeout(this.blurTimeout)
+      delete this.blurTimeout
+    }
 
     this.element.classList.remove('f-c-ui-ajax-input--dirty')
     this.element.classList.remove('f-c-ui-ajax-input--success')

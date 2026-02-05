@@ -2,6 +2,7 @@
 
 module Folio::Console::FileControllerBase
   extend ActiveSupport::Concern
+  include Folio::Console::FileControllerIndexFilters
 
   PAGY_ITEMS = 64
 
@@ -126,8 +127,10 @@ module Folio::Console::FileControllerBase
     end
 
     def set_pagy_options
+      pagination_params = filter_params.to_h.merge("page" => params[:page])
+
       @pagy_options = {
-        reload_url: url_for([:pagination, :console, :api, @klass, page: params[:page]]),
+        reload_url: url_for([:pagination, :console, :api, @klass, pagination_params]),
         skip_default_layout_pagination: true,
       }
 
@@ -159,26 +162,6 @@ module Folio::Console::FileControllerBase
                          user_ids:
     end
 
-    def index_filters
-      filters = {
-        by_used: [true, false],
-        by_tag_id: {
-          klass: "ActsAsTaggableOn::Tag",
-        },
-      }
-
-      if @klass.included_modules.include?(Folio::File::HasUsageConstraints)
-        filters[:by_usage_constraints] = @klass.usage_constraints_for_select
-        filters[:by_media_source] = { klass: "Folio::MediaSource", order_scope: :ordered }
-
-        if Rails.application.config.folio_shared_files_between_sites
-          filters[:by_allowed_site_slug] = Folio::Site.ordered.map { |site| [site.to_label, site.slug] }
-        end
-      end
-
-      filters
-    end
-
     def allowed_record_sites
       if Rails.application.config.folio_shared_files_between_sites
         [Folio::File.correct_site(Folio::Current.site), Folio::Current.site]
@@ -190,6 +173,7 @@ module Folio::Console::FileControllerBase
     def response_with_json_for_valid_update
       data = {}
       meta = {}
+      is_ajax_input = params[:_trigger] == "f-c-ui-ajax-input"
 
       folio_console_params.keys.each do |key|
         change = folio_console_record.saved_changes[key]
@@ -205,6 +189,9 @@ module Folio::Console::FileControllerBase
           data[key] = change[1]
         elsif key == "preview_duration"
           data[key] = folio_console_record.preview_duration
+        elsif is_ajax_input
+          # Include current value even if it didn't change (needed for ajax inputs)
+          data[key] = folio_console_record.send(key)
         end
       end
 

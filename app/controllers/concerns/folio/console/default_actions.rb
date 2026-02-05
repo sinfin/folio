@@ -318,12 +318,16 @@ module Folio::Console::DefaultActions
         }, status: 200
       else
         data = {}
+        is_ajax_input = params[:_trigger] == "f-c-ui-ajax-input"
 
         folio_console_params.keys.each do |key|
           change = folio_console_record.saved_changes[key]
 
           if change && change[1]
             data[key] = change[1]
+          elsif is_ajax_input
+            # Include current value even if it didn't change (needed for ajax inputs)
+            data[key] = folio_console_record.send(key)
           end
         end
 

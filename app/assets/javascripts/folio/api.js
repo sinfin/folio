@@ -33,6 +33,14 @@ const jsonError = (json) => {
       .filter((err) => err.title || err.detail)
       .map((err) => {
         if (err.title && err.title.indexOf('::') === -1 && err.detail) {
+          if (err.title.endsWith('.')) {
+            if (err.detail.endsWith('.')) {
+              return `${err.title} ${err.detail}`
+            }
+
+            return `${err.title} ${err.detail}.`
+          }
+
           return `${err.title}: ${err.detail}`
         }
 

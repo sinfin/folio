@@ -2,11 +2,17 @@ h1: a.f-c-unlink href=console_ui_path Folio Console UI
 
 h2 Ajax inputs
 
-h3 Regular text input
+h3 Regular text input - title
 
 = render(Folio::Console::Ui::AjaxInputComponent.new(name: :title,
                                                     url: update_ajax_inputs_console_ui_path(format: :json),
                                                     value: @page.title))
+
+h3 Regular text input - optional meta_title
+
+= render(Folio::Console::Ui::AjaxInputComponent.new(name: :meta_title,
+                                                    url: update_ajax_inputs_console_ui_path(format: :json),
+                                                    value: @page.meta_title))
 
 h3 Cleave numeric input
 

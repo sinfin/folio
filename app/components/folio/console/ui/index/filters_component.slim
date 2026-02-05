@@ -16,6 +16,7 @@ div[
             .f-c-ui-index-filters__filter[
               class=collapsible_class_name(config)
               class="f-c-ui-index-filters__filter--#{key}"
+              class="f-c-ui-index-filters__filter--as-#{config[:as]}"
               style=filter_style(config, filtered:)
             ]
               - if config[:as] == :numeric_range
