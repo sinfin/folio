@@ -7,9 +7,18 @@ class Folio::CraMediaCloud::CheckProgressJob < Folio::ApplicationJob
 
   attr_reader :media_file
 
-  def perform(media_file, preview: false)
+  def perform(media_file, preview: false, encoding_generation: nil)
     @media_file = media_file
+    @encoding_generation = encoding_generation
     # CraMediaCloud doesn't use preview parameter, but we accept it for consistency
+
+    # If encoding_generation is provided, check if it matches current generation
+    # This prevents stale jobs from interfering with newer encodings
+    if @encoding_generation.present? && media_file.encoding_generation != @encoding_generation
+      Rails.logger.info "[CraMediaCloud::CheckProgressJob] Skipping stale job for #{media_file.class.name}##{media_file.id} " \
+                        "(job generation: #{@encoding_generation}, current: #{media_file.encoding_generation})"
+      return
+    end
 
     # Early return if video doesn't need progress checking
     if media_file.ready?
@@ -129,7 +138,11 @@ class Folio::CraMediaCloud::CheckProgressJob < Folio::ApplicationJob
     end
 
     def check_again_later
-      Folio::CraMediaCloud::CheckProgressJob.set(wait: 15.seconds).perform_later(media_file)
+      # Pass encoding_generation to ensure stale jobs don't interfere
+      Folio::CraMediaCloud::CheckProgressJob.set(wait: 15.seconds).perform_later(
+        media_file,
+        encoding_generation: @encoding_generation || media_file.encoding_generation
+      )
     end
 
     def api
