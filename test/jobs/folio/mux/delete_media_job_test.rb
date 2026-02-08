@@ -13,7 +13,6 @@ class Folio::Mux::DeleteMediaJobTest < ActiveJob::TestCase
 
     api_mock = Minitest::Mock.new
     api_mock.expect(:delete_media, response, [])
-    api_mock.expect(:==, false, [:not_passed])
 
     expect_method_called_on(object: Folio::Mux::Api,
       method: :new,

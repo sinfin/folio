@@ -135,7 +135,8 @@ function * uploadNewFileInsteadPerform (action) {
       existingId: action.file.id
     })
   } catch (e) {
-    window.FolioConsole.Ui.Flash.alert(`${e.status}: ${e.statusText}`)
+    window.FolioConsole.Ui.Flash.alert(e.status ? `${e.status}: ${e.statusText}` : e.message)
+    yield put(uploadNewFileInsteadFailure(action.file))
   }
 }
 
