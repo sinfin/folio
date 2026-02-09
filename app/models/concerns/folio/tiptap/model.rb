@@ -4,42 +4,33 @@ module Folio::Tiptap::Model
   extend ActiveSupport::Concern
 
   class_methods do
-    def has_folio_tiptap_content(field = :tiptap_content, locales: nil)
-      @folio_tiptap_fields ||= []
-      @folio_tiptap_locales ||= {}
+    def has_folio_tiptap_content(fields: [:tiptap_content], locales: nil)
+      old_field_names = @folio_tiptap_fields || []
 
-      field_name = field.to_s
-      existing_locales = @folio_tiptap_locales[field_name]
-      new_locales = locales.present? ? locales.map(&:to_sym).sort : nil
+      base_fields = Array(fields).map(&:to_s)
 
-      # If already configured the same way, return early (idempotent)
-      # Check if field is already configured (either in locales hash or in fields array)
-      field_already_configured = existing_locales.present? || @folio_tiptap_fields.include?(field_name)
-      return if field_already_configured && existing_locales == new_locales
-
-      # Clean up old configuration
-      if existing_locales.present?
-        # Remove old locale-suffixed fields
-        existing_locales.each do |locale|
-          old_field_name = "#{field_name}_#{locale}"
-          @folio_tiptap_fields.delete(old_field_name)
-        end
-        @folio_tiptap_locales.delete(field_name)
-      elsif existing_locales.nil? && @folio_tiptap_fields.include?(field_name)
-        # Remove old non-localized field
-        @folio_tiptap_fields.delete(field_name)
+      if locales.present?
+        sorted_locales = locales.map(&:to_sym).sort
+        effective_field_names = base_fields.flat_map { |f| sorted_locales.map { |l| "#{f}_#{l}" } }
+        new_locale_map = base_fields.index_with { |f| sorted_locales }
+      else
+        effective_field_names = base_fields
+        new_locale_map = {}
       end
 
-      # Set up new configuration
-      if locales.present?
-        @folio_tiptap_locales[field_name] = new_locales
+      @folio_tiptap_fields = effective_field_names
+      @folio_tiptap_locales = new_locale_map
 
-        locales.each do |locale|
-          localized_field = "#{field}_#{locale}".to_sym
-          localized_field_name = localized_field.to_s
-          @folio_tiptap_fields << localized_field_name unless @folio_tiptap_fields.include?(localized_field_name)
+      (old_field_names - effective_field_names).each do |name|
+        remove_method("#{name}=") if method_defined?("#{name}=")
+      end
 
-          define_method("#{localized_field}=") do |value|
+      effective_field_names.each do |name|
+        base_field = base_fields.find { |b| name == b || name.start_with?("#{b}_") }
+        locale = (base_field && name != base_field) ? name.sub(/\A#{Regexp.escape(base_field)}_/, "").to_sym : nil
+
+        if locale
+          define_method("#{name}=") do |value|
             ftc = Folio::Tiptap::Content.new(record: self)
             result = ftc.convert_and_sanitize_value(value)
 
@@ -52,16 +43,14 @@ module Folio::Tiptap::Model
               super(result[:value])
             end
           end
-        end
-      else
-        @folio_tiptap_fields << field_name unless @folio_tiptap_fields.include?(field_name)
+        else
+          define_method("#{name}=") do |value|
+            ftc = Folio::Tiptap::Content.new(record: self)
+            result = ftc.convert_and_sanitize_value(value)
 
-        define_method("#{field}=") do |value|
-          ftc = Folio::Tiptap::Content.new(record: self)
-          result = ftc.convert_and_sanitize_value(value)
-
-          if result[:ok]
-            super(result[:value])
+            if result[:ok]
+              super(result[:value])
+            end
           end
         end
       end
