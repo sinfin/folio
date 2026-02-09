@@ -63,7 +63,7 @@ class Folio::NestedFieldsComponent < Folio::ApplicationComponent
 
   def add_button
     label = @add_label || t(".add")
-    klass = "#{application_namespace}::Ui::ButtonComponent".safe_constantize
+    klass = in_console? ? nil : "#{application_namespace}::Ui::ButtonComponent".safe_constantize
 
     if klass
       render(klass.new(tag: :button,
@@ -80,7 +80,7 @@ class Folio::NestedFieldsComponent < Folio::ApplicationComponent
   end
 
   def destroy_icon
-    klass = "#{application_namespace}::Ui::IconComponent".safe_constantize
+    klass = in_console? ? nil : "#{application_namespace}::Ui::IconComponent".safe_constantize
 
     if klass
       render(klass.new(name: @destroy_icon,
@@ -90,6 +90,18 @@ class Folio::NestedFieldsComponent < Folio::ApplicationComponent
       folio_icon(@destroy_icon,
                  height: @destroy_icon_height,
                  class: "f-nested-fields__destroy-ico")
+    end
+  end
+
+  def in_console?
+    return @in_console if defined?(@in_console)
+
+    @in_console = if controller.is_a?(Folio::Console::BaseController)
+      true
+    elsif controller.request.path.start_with?("/console")
+      true
+    else
+      false
     end
   end
 end
