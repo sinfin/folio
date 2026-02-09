@@ -77,6 +77,10 @@ class Folio::Console::Tiptap::SimpleFormWrapComponent < Folio::Console::Applicat
     end
   end
 
+  def attribute_tabs
+    @attribute_tabs ||= build_attribute_tabs
+  end
+
   def data
     actions = {
       "f-input-tiptap:updateWordCount" => "updateWordCount",
@@ -88,6 +92,7 @@ class Folio::Console::Tiptap::SimpleFormWrapComponent < Folio::Console::Applicat
       "f-c-file-placements-multi-picker-fields:hookOntoFormWrap" => "onMultiPickerHookOntoFormWrap",
       "f-c-ui-tabs:shown" => "onTabsChange",
       "f-c-tiptap-simple-form-wrap-locale-switch:attributeChanged" => "onAttributeChanged",
+      "click" => "onAttributeTabClick",
     }
 
     # Add form submit handler for new records
@@ -103,4 +108,21 @@ class Folio::Console::Tiptap::SimpleFormWrapComponent < Folio::Console::Applicat
                         },
                         action: actions)
   end
+
+  private
+    def build_attribute_tabs
+      return [] if grouped_tiptap_fields_for_locale_switcher.present?
+      return [] if all_tiptap_fields.size <= 1
+
+      sel = selected_attribute
+      all_tiptap_fields.map do |field|
+        {
+          key: field,
+          label: model_class.human_attribute_name(field),
+          active: field == sel,
+          dont_bind_tab_toggle: true,
+          data: { attribute_name: field }
+        }
+      end
+    end
 end

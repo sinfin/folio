@@ -355,9 +355,9 @@ cs:
     featured: Zvýrazněno
     figcaption: Popisek
     file: Soubor
+    file_height: Výška obrázku
     file_mime_type: Typ souboru
     file_width: Šířka obrázku
-    file_height: Výška obrázku
     first_name: Jméno
     folio_embed_data: HTML kód nebo URL odkaz
     headline: Titulek
@@ -396,6 +396,7 @@ cs:
     secondary_button_url: Odkaz druhého tlačítka
     secondary_button_url_json: Druhé tlačítko
     sensitive_content: Citlivý obsah
+    sidebar_tiptap_content: Sidebar
     sign_in_count: Počet přihlášení
     slug: Varianta názvu pro odkazy
     social_links/appstore: Appstore

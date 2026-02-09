@@ -57,14 +57,21 @@
   &__editors-input-wrap &__attribute-wrap
     flex: 1 1 100%
 
-  &__editors-bar
+  &__editors-bar,
+  &__tabs-bar
     z-index: 2
     padding: 0 var(--f-c-tiptap-simple-form-wrap-inner-padding)
     background: $body-bg
     position: relative
+
+  &__editors-bar
     display: flex
     align-items: center
     gap: $grid-gutter-half
+
+  &__tabs-bar
+    border-top: 1px solid rgba(37, 39, 45, .1)
+    padding-top: 4px
 
   &__editors-bar-title
     font-weight: $font-weight-bold
@@ -157,7 +164,7 @@
     &__scroller
       display: grid
       grid-template-columns: 1fr 1fr
-      grid-template-rows: auto 1fr
+      grid-template-rows: auto auto 1fr
       grid-gap: 0
 
     &__editors-bar-scroll-trigger
@@ -166,16 +173,24 @@
     &__fields
       overflow-y: scroll
       grid-column: 1
-      grid-row: span 2 / span 2
+      grid-row: span 3 / span 3
       border-right: 1px solid $border-color
 
     &__editors-bar
       grid-column: 2
       grid-row: 1
 
+    &__tabs-bar
+      grid-column: 2
+      grid-row: 2
+
     &__editors
       grid-column-start: 2
       grid-row-start: 2
+      grid-row-end: 4
+
+    &__tabs-bar + &__editors
+      grid-row-start: 3
 
     &__multi-picker-wrap
       --folio-loader-background: rgba(255, 255, 255, 0.8)
