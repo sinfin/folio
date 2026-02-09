@@ -20,7 +20,7 @@ class Folio::Console::Tiptap::Overlay::FormComponent < Folio::Console::Applicati
     def render_input(f:, key:, attr_config:)
       case attr_config[:type]
       when :string, :text, :integer, :url_json, :rich_text
-        send("render_input_#{attr_config[:type]}", f:, key:)
+        send("render_input_#{attr_config[:type]}", f:, key:, attr_config:)
       when :folio_attachment
         if attr_config[:has_many]
           render_react_files(f:, key:, attr_config:)
@@ -56,7 +56,16 @@ class Folio::Console::Tiptap::Overlay::FormComponent < Folio::Console::Applicati
       helpers.simple_form_for(@node, opts, &block)
     end
 
-    def render_input_string(f:, key:)
+    def hint_for(attr_config)
+      return if attr_config.blank?
+
+      raw = attr_config[:hint]
+      return if raw.blank?
+
+      raw.is_a?(Proc) ? raw.call(@node) : raw
+    end
+
+    def render_input_string(f:, key:, attr_config:)
       default = if default_proc = @node.class.structure.dig(key, :default)
         if default_proc.is_a?(Proc)
           default_proc.call(@node)
@@ -66,12 +75,14 @@ class Folio::Console::Tiptap::Overlay::FormComponent < Folio::Console::Applicati
       f.input key,
               as: :string,
               character_counter: true,
-              placeholder: default
+              placeholder: default,
+              hint: hint_for(attr_config)
     end
 
-    def render_input_integer(f:, key:)
+    def render_input_integer(f:, key:, attr_config:)
       f.input key,
               as: :integer,
+              hint: hint_for(attr_config),
               input_html: {
                 step: 1,
                 value: f.object.send(key) || f.object.class.structure[key][:default],
@@ -80,21 +91,24 @@ class Folio::Console::Tiptap::Overlay::FormComponent < Folio::Console::Applicati
               }
     end
 
-    def render_input_text(f:, key:)
+    def render_input_text(f:, key:, attr_config:)
       f.input key,
               as: :text,
               autosize: true,
-              character_counter: true
+              character_counter: true,
+              hint: hint_for(attr_config)
     end
 
-    def render_input_url_json(f:, key:)
+    def render_input_url_json(f:, key:, attr_config:)
       f.input key,
-              as: :url_json
+              as: :url_json,
+              hint: hint_for(attr_config)
     end
 
-    def render_input_rich_text(f:, key:)
+    def render_input_rich_text(f:, key:, attr_config:)
       f.input key,
-              as: :tiptap
+              as: :tiptap,
+              hint: hint_for(attr_config)
     end
 
     def render_file_picker(f:, key:, attr_config:)
@@ -132,9 +146,9 @@ class Folio::Console::Tiptap::Overlay::FormComponent < Folio::Console::Applicati
       end
 
       if attr_config[:has_many]
-        render_relation_select_for_has_many(f:, key:, class_name:)
+        render_relation_select_for_has_many(f:, key:, class_name:, attr_config:)
       else
-        render_relation_select_for_single(f:, key:, class_name:)
+        render_relation_select_for_single(f:, key:, class_name:, attr_config:)
       end
     end
 
@@ -145,10 +159,11 @@ class Folio::Console::Tiptap::Overlay::FormComponent < Folio::Console::Applicati
 
       f.input key,
               collection: collection,
-              include_blank: false
+              include_blank: false,
+              hint: hint_for(attr_config)
     end
 
-    def render_relation_select_for_has_many(f:, key:, class_name:)
+    def render_relation_select_for_has_many(f:, key:, class_name:, attr_config: nil)
       input_name = "#{key}_ids"
 
       collection = @node.send(key).map do |record|
@@ -157,10 +172,10 @@ class Folio::Console::Tiptap::Overlay::FormComponent < Folio::Console::Applicati
 
       f.input input_name,
               input_html: { value: collection.map(&:first).join(", ") },
-              hint: "TODO with a better remote multi-select"
+              hint: hint_for(attr_config).presence || "TODO with a better remote multi-select"
     end
 
-    def render_relation_select_for_single(f:, key:, class_name:)
+    def render_relation_select_for_single(f:, key:, class_name:, attr_config: nil)
       input_name = "#{key}_id"
       collection = []
       record = @node.send(key)
@@ -170,12 +185,15 @@ class Folio::Console::Tiptap::Overlay::FormComponent < Folio::Console::Applicati
               collection:,
               remote: true,
               label: @node.class.human_attribute_name(key),
-              reflection_class_name: class_name
+              reflection_class_name: class_name,
+              hint: hint_for(attr_config)
     end
 
     def render_embed_input(f:, key:, attr_config:)
-      f.input key, as: :embed,
-                   centered: true
+      f.input key,
+              as: :embed,
+              centered: true,
+              hint: hint_for(attr_config)
     end
 
     def buttons_model

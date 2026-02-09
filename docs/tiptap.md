@@ -176,7 +176,7 @@ end
 The `Node` models are defined by calling `tiptap_node` method which uses the `Folio::Tiptap::NodeBuilder` and supports various attribute types. Attributes can be defined using either the compact syntax (symbols, arrays, hashes) or the explicit hash format with a `:type` property. Under the hood, all compact definitions are converted to the hash format.
 
 #### Compact Syntax (recommended for simple cases):
-- `:string`, `:text`: Basic text attributes (supports `default` option, see below)
+- `:string`, `:text`: Basic text attributes (support `default` and `hint` in hash format, see [Placeholder and hint](#placeholder-and-hint-console-overlay-form))
 - `:integer`: Integer attributes with automatic type conversion and validation
 - `:rich_text`: JSON-stored rich text content (nested Tiptap structure)
 - `:url_json`: URL with metadata (href, title, target, etc.)
@@ -189,7 +189,7 @@ The `Node` models are defined by calling `tiptap_node` method which uses the `Fo
 
 #### Hash Format with :type property:
 All compact definitions are internally converted to hash format:
-- `{ type: :string }`, `{ type: :text }`: Basic text attributes (supports `default` option)
+- `{ type: :string }`, `{ type: :text }`: Basic text attributes (support `default` and `hint`, see [Placeholder and hint](#placeholder-and-hint-console-overlay-form))
 - `{ type: :integer }`: Integer attributes with automatic type conversion and validation
 - `{ type: :rich_text }`: JSON-stored rich text content
 - `{ type: :url_json }`: URL with metadata
@@ -294,27 +294,42 @@ node.priority = nil      # nil -> nil (unchanged)
 node.priority = []       # Raises ArgumentError
 ```
 
-#### Default Values for String Attributes
+#### Placeholder and hint (console overlay form)
 
-String (and text) attributes support a `default` option that provides a dynamic default value via a proc. When specified, the default is used as a placeholder in the form input:
+In the hash format, string and text attributes (and other input types in the console overlay) support **`default`** and **`hint`**:
+
+- **`default`**: A proc whose return value is shown as the **placeholder** in the input (for string/text). Also used as the initial value when the attribute is blank.
+- **`hint`**: A proc or string shown as **helper text** below the field in the console overlay form.
+
+Both can use a proc; the proc is called when rendering the form, with the node instance as an optional argument.
 
 ```rb
 class MyApp::Tiptap::Node::Listings::CategoryArticles < Folio::Tiptap::Node
   tiptap_node structure: {
-    # Basic default using proc (recommended for translations)
-    title: { type: :string, default: proc { human_attribute_name("title/default") } },
-    
+    title: {
+      type: :string,
+      default: proc { human_attribute_name("title/default") },
+      hint: proc { human_attribute_name("title/hint") },
+    },
     # Default with access to node instance (optional argument)
-    subtitle: { type: :string, default: proc { |node| "#{node.title} - Subtitle" } }
+    subtitle: {
+      type: :string,
+      default: proc { |node| "#{node.title} - Subtitle" },
+      hint: "Optional subtitle shown below the main title.",
+    },
   }
 end
 ```
 
-**How it works:**
-- The `default` must be a `Proc` (use `proc { }` syntax, not `-> { }`)
-- The proc is called when rendering the form, with the node instance passed as an optional argument
-- Using `proc { }` allows flexible arity - you can ignore the node argument if not needed
-- The result is displayed as a placeholder in the input field
+**Placeholder (`default`):**
+- Must be a `Proc` (use `proc { }` syntax, not `-> { }`)
+- The result is displayed as the input placeholder (and used as initial value when blank)
+- Recommended: use `human_attribute_name("key/default")` for translations
+
+**Hint:**
+- Can be a `Proc` (evaluated with the node instance) or a plain string
+- Rendered as helper text under the field in the console overlay
+- Recommended: use `human_attribute_name("key/hint")` for translations
 
 **Translation example:**
 
@@ -325,11 +340,15 @@ en:
     attributes:
       my_app/tiptap/node/listings/category_articles:
         title/default: "Latest Articles"
+        title/hint: "Short heading shown in the block and in listings."
 ```
 
 ```rb
-# The proc will return "Latest Articles" in English locale
-title: { type: :string, default: proc { human_attribute_name("title/default") } }
+title: {
+  type: :string,
+  default: proc { human_attribute_name("title/default") },
+  hint: proc { human_attribute_name("title/hint") },
+}
 ```
 
 ### File Attachments
