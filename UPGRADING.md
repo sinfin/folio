@@ -1,6 +1,6 @@
 # Upgrading
 
-## 7.1.* to 7.2.0
+## 7.2.* to 7.3.0
 
 ### has_folio_tiptap? Method Change
 

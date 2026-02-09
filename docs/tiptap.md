@@ -8,6 +8,11 @@ This chapter describes the Tiptap editor implementation in Folio. The aim is to 
 
 **Important:** You must include the concern and call `has_folio_tiptap_content` in your model before using Tiptap inputs.
 
+Options (all keyword arguments):
+
+- **`fields`**: Array of attribute names for Tiptap content (default: `[:tiptap_content]`). Use multiple names for several rich-text fields on the same model.
+- **`locales`**: Optional array of locale symbols. When set, each field gets locale-suffixed attributes (e.g. `tiptap_content_cs`, `tiptap_content_en`). See [Locale Support](#locale-support).
+
 ```rb
 class MyApp::Article < Folio::ApplicationRecord
   include Folio::Tiptap::Model
@@ -1009,7 +1014,7 @@ class MyApp::Article < Folio::ApplicationRecord
 end
 ```
 
-This creates locale-suffixed fields: `tiptap_content_cs`, `tiptap_content_en`, `tiptap_content_de`.
+This creates locale-suffixed fields for the default field: `tiptap_content_cs`, `tiptap_content_en`, `tiptap_content_de`. With custom `fields: [:intro, :body]`, you get `intro_cs`, `intro_en`, `intro_de`, `body_cs`, `body_en`, `body_de`.
 
 For Traco integration:
 
@@ -1024,8 +1029,8 @@ end
 
 ### Class Methods
 
-- **`folio_tiptap_fields`**: Returns all Tiptap field names (e.g., `["tiptap_content_cs", "tiptap_content_en"]`)
-- **`folio_tiptap_locales`**: Returns locale configuration (e.g., `{ "tiptap_content" => [:cs, :en] }`)
+- **`folio_tiptap_fields`**: Returns the list of Tiptap attribute names (e.g. `["tiptap_content_cs", "tiptap_content_en"]` with locales, or `["tiptap_content"]` without). Each call to `has_folio_tiptap_content` replaces the previous configuration.
+- **`folio_tiptap_locales`**: Returns the locale map for base field names (e.g. `{ "tiptap_content" => [:cs, :en] }`). Empty when locales are not used.
 
 ### Console UI
 
