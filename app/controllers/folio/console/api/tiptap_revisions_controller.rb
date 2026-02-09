@@ -7,7 +7,7 @@ class Folio::Console::Api::TiptapRevisionsController < Folio::Console::Api::Base
     user = Folio::Current.user
     attribute_name = revision_params[:attribute_name] || "tiptap_content"
 
-    revision = placement.tiptap_revisions.find_or_initialize_by(user: user, attribute_name: attribute_name)
+    revision = placement.tiptap_revisions.find_or_initialize_by(user: user, attribute_name:)
     revision.content = revision_params[:content]
     revision.save!
 
@@ -25,7 +25,7 @@ class Folio::Console::Api::TiptapRevisionsController < Folio::Console::Api::Base
     user = Folio::Current.user
     attribute_name = placement_params[:attribute_name] || "tiptap_content"
 
-    revision = placement.tiptap_revisions.find_by(user: user, attribute_name: attribute_name)
+    revision = placement.tiptap_revisions.find_by(user: user, attribute_name:)
     if revision
       revision.destroy!
       render json: { success: true }

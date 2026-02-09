@@ -336,7 +336,7 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponentTest < Folio::Tiptap::Node
     record = build_mock_record
 
     # Mock the tiptap_config to exclude all node types
-    def record.tiptap_config
+    def record.tiptap_config(attribute_name: nil)
       @config ||= Folio::Tiptap::Config.new(node_names: [])
     end
 

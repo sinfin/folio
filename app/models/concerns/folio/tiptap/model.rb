@@ -179,12 +179,12 @@ module Folio::Tiptap::Model
     end
   end
 
-  def tiptap_config
+  def tiptap_config(attribute_name: nil)
     Folio::Tiptap.config
   end
 
-  def tiptap_autosave_enabled?
-    tiptap_config&.autosave == true
+  def tiptap_autosave_enabled?(attribute_name: nil)
+    tiptap_config(attribute_name:)&.autosave == true
   end
 
   def folio_html_sanitization_config
@@ -202,24 +202,24 @@ module Folio::Tiptap::Model
   end
 
   def latest_tiptap_revision(user: nil, attribute_name: nil)
-    return nil unless tiptap_autosave_enabled?
+    return nil unless tiptap_autosave_enabled?(attribute_name:)
 
     target_user = user || Folio::Current.user
     return nil unless target_user
 
     scope = tiptap_revisions.where(user: target_user)
-    scope = scope.where(attribute_name: attribute_name) if attribute_name.present?
+    scope = scope.where(attribute_name:) if attribute_name.present?
     scope.first
   end
 
   def has_tiptap_revision?(user: nil, attribute_name: nil)
-    return false unless tiptap_autosave_enabled?
+    return false unless tiptap_autosave_enabled?(attribute_name:)
 
     target_user = user || Folio::Current.user
     return false unless target_user
 
     scope = tiptap_revisions.where(user: target_user)
-    scope = scope.where(attribute_name: attribute_name) if attribute_name.present?
+    scope = scope.where(attribute_name:) if attribute_name.present?
     scope.exists?
   end
 

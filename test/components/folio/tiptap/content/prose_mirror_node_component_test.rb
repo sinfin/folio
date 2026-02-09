@@ -557,7 +557,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::Tiptap::Node
     record = Folio::Page.new
 
     # Mock the tiptap_config to include styled paragraph variants
-    def record.tiptap_config
+    def record.tiptap_config(attribute_name: nil)
       @config ||= Folio::Tiptap::Config.new(
         styled_paragraph_variants: [
           {
@@ -600,7 +600,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::Tiptap::Node
     record = Folio::Page.new
 
     # Mock the tiptap_config with only one variant
-    def record.tiptap_config
+    def record.tiptap_config(attribute_name: nil)
       @config ||= Folio::Tiptap::Config.new(
         styled_paragraph_variants: [
           {
@@ -636,7 +636,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::Tiptap::Node
     record = Folio::Page.new
 
     # Mock the tiptap_config with empty styled paragraph variants
-    def record.tiptap_config
+    def record.tiptap_config(attribute_name: nil)
       @config ||= Folio::Tiptap::Config.new(styled_paragraph_variants: [])
     end
 
@@ -1053,7 +1053,7 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponentTest < Folio::Tiptap::Node
     record = Folio::Page.new
 
     # Mock the tiptap_config to exclude all node types
-    def record.tiptap_config
+    def record.tiptap_config(attribute_name: nil)
       @config ||= Folio::Tiptap::Config.new(node_names: [])
     end
 

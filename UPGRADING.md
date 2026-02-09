@@ -22,6 +22,60 @@ page.has_folio_tiptap?  # instance method
 2. Update test stubs from `Folio::Page.stub(:has_folio_tiptap?, true)` to `page.stub(:has_folio_tiptap?, true)`
 3. Search your codebase for `\.has_folio_tiptap\?` and `has_folio_tiptap\?` to find all usages
 
+### tiptap_config Method Signature Change
+
+**BREAKING CHANGE**: `tiptap_config` and `tiptap_autosave_enabled?` methods on models now accept an optional `attribute_name:` keyword argument to scope configuration per Tiptap attribute.
+
+**Before (7.2.*):**
+```ruby
+class MyApp::Page < Folio::ApplicationRecord
+  include Folio::Tiptap::Model
+
+  def tiptap_config
+    Folio::Tiptap::Config.new(...)
+  end
+end
+```
+
+**After (7.3.0):**
+```ruby
+class MyApp::Page < Folio::ApplicationRecord
+  include Folio::Tiptap::Model
+
+  def tiptap_config(attribute_name: nil)
+    # attribute_name can be used to return different configs per field
+    # When nil, return default/global config
+    Folio::Tiptap::Config.new(...)
+  end
+end
+```
+
+**Action required:**
+
+1. Update all model overrides that define `tiptap_config` to accept `attribute_name: nil` parameter:
+   ```ruby
+   # Old
+   def tiptap_config
+     ...
+   end
+
+   # New
+   def tiptap_config(attribute_name: nil)
+     ...
+   end
+   ```
+
+2. If you have custom `tiptap_autosave_enabled?` overrides, update them similarly:
+   ```ruby
+   def tiptap_autosave_enabled?(attribute_name: nil)
+     tiptap_config(attribute_name: attribute_name)&.autosave == true
+   end
+   ```
+
+3. Search your codebase for `def tiptap_config` and `def tiptap_autosave_enabled?` to find all overrides
+
+**Note**: The default implementation in `Folio::Tiptap::Model` already handles the new signature. This change only affects models that override these methods.
+
 ## 7.0.0 to 7.1.0
 
 ### TipTap Node Configuration Changes

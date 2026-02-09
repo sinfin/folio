@@ -5,7 +5,7 @@ Folio::Page.class_eval do
     true
   end
 
-  def tiptap_config
+  def tiptap_config(attribute_name: nil)
     Folio::Tiptap::Config.new(embed_node_class_name: "Dummy::Tiptap::Node::Embed",
                               pages_component_class_name: "UnusedDummyClassNameToEnableInTiptap",
                               styled_paragraph_variants: [

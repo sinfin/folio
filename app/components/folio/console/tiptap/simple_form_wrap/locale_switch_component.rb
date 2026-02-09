@@ -14,7 +14,7 @@ class Folio::Console::Tiptap::SimpleFormWrap::LocaleSwitchComponent < Folio::Con
   def attribute_names_with_locales
     @attribute_names.zip(@locales).map do |attribute_name, locale|
       {
-        attribute_name: attribute_name,
+        attribute_name:,
         locale: locale,
         active: attribute_name == @selected_attribute
       }

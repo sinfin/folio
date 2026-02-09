@@ -66,18 +66,17 @@ class TiptapInput < SimpleForm::Inputs::StringInput
 
   private
     def tiptap_config_json
-      (@builder.object.try(:tiptap_config) || Folio::Tiptap.config).to_input_json
+      (@builder.object.try(:tiptap_config, attribute_name: attribute_name) || Folio::Tiptap.config).to_input_json
     end
 
     def tiptap_autosave_enabled?
       return false if @builder.object.respond_to?(:new_record?) && @builder.object.new_record?
 
-      @builder.object.try(:tiptap_autosave_enabled?)
+      @builder.object.try(:tiptap_autosave_enabled?, attribute_name: attribute_name)
     end
 
     def current_user_latest_revision
-      field_name = attribute_name.to_s
-      @current_user_latest_revision ||= @builder.object.try(:latest_tiptap_revision, attribute_name: field_name)
+      @current_user_latest_revision ||= @builder.object.try(:latest_tiptap_revision, attribute_name: attribute_name)
     end
 
     def has_unsaved_changes?

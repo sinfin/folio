@@ -19,8 +19,9 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponent < ApplicationComponent
     @tiptap_content_information = tiptap_content_information
 
     if @prose_mirror_node["type"] == "folioTiptapPages"
-      if record.tiptap_config.pages_component_class_name
-        @node_definition = { "component_name" => record.tiptap_config.pages_component_class_name }
+      config = record.tiptap_config(attribute_name: tiptap_content_information[:attribute])
+      if config.pages_component_class_name
+        @node_definition = { "component_name" => config.pages_component_class_name }
       end
     elsif @prose_mirror_node["type"] == "folioTiptapStyledParagraph"
       @node_definition = build_styled_paragraph_definition
@@ -209,9 +210,11 @@ class Folio::Tiptap::Content::ProseMirrorNodeComponent < ApplicationComponent
     def find_variant_config(variant)
       return nil unless variant.present?
       return nil unless @record.respond_to?(:tiptap_config)
-      return nil unless @record.tiptap_config.respond_to?(:styled_paragraph_variants)
+      attribute = @tiptap_content_information[:attribute]
+      config = @record.tiptap_config(attribute_name: attribute)
+      return nil unless config.respond_to?(:styled_paragraph_variants)
 
-      variants = @record.tiptap_config.styled_paragraph_variants
+      variants = config.styled_paragraph_variants
       return nil unless variants.is_a?(Array)
 
       variants.find { |v| v[:variant] == variant || v["variant"] == variant }
