@@ -34,6 +34,12 @@
           span.f-c-tiptap-simple-form-wrap__editors-bar-scroll-ico
             = folio_icon(:chevron_down, height: 16)
 
+      - if attribute_tabs.present?
+        .f-c-tiptap-simple-form-wrap__tabs-bar
+          = render(Folio::Console::Ui::TabsComponent.new(tabs: attribute_tabs,
+                                                         no_margin: true,
+                                                         no_border: true))
+
       .f-c-tiptap-simple-form-wrap__editors
         - if form.object.try(:tiptap_autosave_enabled?)
           .f-c-tiptap-simple-form-wrap__editors-autosave

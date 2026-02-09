@@ -120,6 +120,22 @@ window.Folio.Stimulus.register('f-c-tiptap-simple-form-wrap', class extends wind
     this.checkTabsForMultiPicker()
   }
 
+  onAttributeTabClick (e) {
+    const tabBar = e.target.closest('.f-c-tiptap-simple-form-wrap__tabs-bar')
+    if (!tabBar) return
+
+    const link = e.target.closest('[data-attribute-name]')
+    if (!link?.dataset.attributeName) return
+
+    const attributeName = link.dataset.attributeName
+    if (!this.attributeWrapTargets.some(wrap => wrap.dataset.attributeName === attributeName)) return
+
+    this.element.dispatchEvent(new CustomEvent('f-c-tiptap-simple-form-wrap-locale-switch:attributeChanged', {
+      bubbles: true,
+      detail: { attributeName }
+    }))
+  }
+
   checkTabsForMultiPicker () {
     if (!this.multiPickerHooked) return
 
@@ -138,6 +154,15 @@ window.Folio.Stimulus.register('f-c-tiptap-simple-form-wrap', class extends wind
     if (this.cookieKeyValue) {
       const inOneDay = new Date(new Date().getTime() + 24 * 60 * 60 * 1000)
       window.Cookies.set(this.cookieKeyValue, attributeName, { expires: inOneDay, path: '' })
+    }
+
+    // Update active state on attribute tabs
+    const tabBar = this.element.querySelector('.f-c-tiptap-simple-form-wrap__tabs-bar')
+    if (tabBar) {
+      tabBar.querySelectorAll('.f-c-ui-tabs__nav-link[data-attribute-name]').forEach(link => {
+        link.classList.toggle('active', link.dataset.attributeName === attributeName)
+        link.setAttribute('aria-selected', link.dataset.attributeName === attributeName ? 'true' : 'false')
+      })
     }
 
     // Hide all attribute wraps (editors and autosave components)
