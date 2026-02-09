@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "mcp"
+require "folio/version"
 
 module Folio
   module Mcp
