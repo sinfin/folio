@@ -470,7 +470,10 @@ module Folio::Metadata
       # Technical metadata with formatting
       focal_length: ->(value, metadata = {}) {
         return nil unless value
-        "#{value.to_f.round}mm"
+        float_value = value.to_f
+        return nil if float_value.infinite? || float_value.nan?
+
+        "#{float_value.round}mm"
       },
 
       aperture: ->(value, metadata = {}) {
@@ -481,6 +484,8 @@ module Folio::Metadata
       shutter_speed: ->(value, metadata = {}) {
         return nil unless value
         speed = value.to_f
+        return nil if speed.zero? || speed.infinite? || speed.nan?
+
         if speed < 1
           "1/#{(1 / speed).round}s"
         else
@@ -540,7 +545,10 @@ module Folio::Metadata
       exposure_compensation: ->(value, metadata = {}) {
         return nil unless value
         comp = value.to_f
+
+        return nil if comp.infinite? || comp.nan?
         return "0" if comp == 0
+
         "#{comp > 0 ? '+' : ''}#{comp.round(1)} EV"
       },
 

@@ -239,6 +239,106 @@ end
     assert_equal [], result[:keywords]
   end
 
+  test "handles shutter speed with zero value gracefully" do
+    metadata = {
+      "ExifIFD:ExposureTime" => "0"
+    }
+
+    result = @mapper.map_metadata(metadata)
+
+    assert_nil result[:shutter_speed]
+  end
+
+  test "handles shutter speed with infinity value gracefully" do
+    metadata = {
+      "ExifIFD:ExposureTime" => Float::INFINITY
+    }
+
+    result = @mapper.map_metadata(metadata)
+
+    assert_nil result[:shutter_speed]
+  end
+
+  test "handles shutter speed with NaN value gracefully" do
+    metadata = {
+      "ExifIFD:ExposureTime" => Float::NAN
+    }
+
+    result = @mapper.map_metadata(metadata)
+
+    assert_nil result[:shutter_speed]
+  end
+
+  test "handles focal length with infinity value gracefully" do
+    metadata = {
+      "FocalLength" => Float::INFINITY
+    }
+
+    result = @mapper.map_metadata(metadata)
+
+    assert_nil result[:focal_length]
+  end
+
+  test "handles focal length with NaN value gracefully" do
+    metadata = {
+      "FocalLength" => Float::NAN
+    }
+
+    result = @mapper.map_metadata(metadata)
+
+    assert_nil result[:focal_length]
+  end
+
+  test "handles exposure compensation with infinity value gracefully" do
+    metadata = {
+      "ExposureCompensation" => Float::INFINITY
+    }
+
+    result = @mapper.map_metadata(metadata)
+
+    assert_nil result[:exposure_compensation]
+  end
+
+  test "handles exposure compensation with NaN value gracefully" do
+    metadata = {
+      "ExposureCompensation" => Float::NAN
+    }
+
+    result = @mapper.map_metadata(metadata)
+
+    assert_nil result[:exposure_compensation]
+  end
+
+  test "processes valid shutter speed correctly" do
+    metadata = { "ExifIFD:ExposureTime" => "0.004" }
+    result = @mapper.map_metadata(metadata)
+    assert_equal "1/250s", result[:shutter_speed]
+
+    metadata = { "ExifIFD:ExposureTime" => "2.5" }
+    result = @mapper.map_metadata(metadata)
+    assert_equal "2.5s", result[:shutter_speed]
+  end
+
+  test "processes valid focal length correctly" do
+    metadata = { "FocalLength" => "50.2" }
+    result = @mapper.map_metadata(metadata)
+    assert_equal "50mm", result[:focal_length]
+  end
+
+  test "processes valid exposure compensation correctly" do
+    metadata = { "ExposureCompensation" => "1.5" }
+    result = @mapper.map_metadata(metadata)
+    assert_equal "+1.5 EV", result[:exposure_compensation]
+
+    metadata = { "ExposureCompensation" => "-2.3" }
+    result = @mapper.map_metadata(metadata)
+    assert_equal "-2.3 EV", result[:exposure_compensation]
+
+    metadata = { "ExposureCompensation" => "0" }
+    result = @mapper.map_metadata(metadata)
+    assert_equal "0", result[:exposure_compensation]
+  end
+
   # Integration test with real metadata structure
   test "processes complete metadata structure correctly" do
     metadata = {
