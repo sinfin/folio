@@ -24,14 +24,14 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
       image.update!(thumbnail_sizes: thumbnail_sizes.merge(size => new_thumb))
     end
 
-    ActionCable.server.broadcast(FolioThumbnailsChannel::STREAM,
+    ActionCable.server.broadcast(FolioThumbnailsChannel::STREAM, {
       temporary_url: image.temporary_url(size),
       temporary_s3_url: image.temporary_s3_url(size),
       url: new_thumb[:url],
       webp_url: new_thumb[:webp_url],
       width: new_thumb[:width],
       height: new_thumb[:height],
-    )
+    })
 
     image
   end
