@@ -329,13 +329,19 @@ const LinkMain: React.FC<LinkMainProps> = ({
 export interface LinkPopoverProps extends Omit<ButtonProps, "type"> {
   editor: Editor;
   editorState: FolioEditorToolbarButtonState;
+  onClose?: () => void;
 }
 
-export function LinkPopover({ editor, editorState }: LinkPopoverProps) {
+export function LinkPopover({
+  editor,
+  editorState,
+  onClose,
+}: LinkPopoverProps) {
   const [isOpen, setIsOpen] = React.useState(false);
 
   const onSetLink = () => {
     setIsOpen(false);
+    onClose?.();
   };
 
   const onLinkActive = () => setIsOpen(true);

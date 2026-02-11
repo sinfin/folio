@@ -303,6 +303,10 @@ const MainToolbarContent = ({
   setResponsivePreviewEnabled?: (enabled: boolean) => void;
   autosaveIndicatorInfo?: FolioTiptapAutosaveIndicatorInfo;
 }) => {
+  const [linkActiveOverride, setLinkActiveOverride] = React.useState<
+    boolean | null
+  >(null);
+
   const editorState: FolioEditorToolbarState = useEditorState({
     editor,
 
@@ -311,6 +315,31 @@ const MainToolbarContent = ({
       return getToolbarState({ editor, blockEditor });
     },
   });
+
+  // Reset override when editor selection changes
+  React.useEffect(() => {
+    const resetOverride = () => {
+      setLinkActiveOverride(null);
+    };
+
+    editor.on("selectionUpdate", resetOverride);
+    return () => {
+      editor.off("selectionUpdate", resetOverride);
+    };
+  }, [editor]);
+
+  const linkEditorState = React.useMemo(() => {
+    if (linkActiveOverride === null) return editorState.link;
+
+    return {
+      ...editorState.link,
+      active: linkActiveOverride,
+    };
+  }, [editorState.link, linkActiveOverride]);
+
+  const closeLinkPopover = React.useCallback(() => {
+    setLinkActiveOverride(false);
+  }, []);
 
   const { nodesForSlots, groupedNodes } = React.useMemo(() => {
     const slotNodes: Record<string, FolioTiptapNodeFromInput[]> = {};
@@ -405,7 +434,11 @@ const MainToolbarContent = ({
       <ToolbarSeparator />
 
       <ToolbarGroup>
-        <LinkPopover editor={editor} editorState={editorState["link"]} />
+        <LinkPopover
+          editor={editor}
+          editorState={linkEditorState}
+          onClose={closeLinkPopover}
+        />
 
         <FolioEditorToolbarSlot
           editor={editor}
