@@ -306,6 +306,7 @@ const MainToolbarContent = ({
   const [linkActiveOverride, setLinkActiveOverride] = React.useState<
     boolean | null
   >(null);
+  const hasSelectionUpdatedRef = React.useRef(false);
 
   const editorState: FolioEditorToolbarState = useEditorState({
     editor,
@@ -316,19 +317,28 @@ const MainToolbarContent = ({
     },
   });
 
-  // Reset override when editor selection changes
+  // Reset override when editor selection changes and track first selection
   React.useEffect(() => {
-    const resetOverride = () => {
+    const handleSelectionUpdate = () => {
+      hasSelectionUpdatedRef.current = true;
       setLinkActiveOverride(null);
     };
 
-    editor.on("selectionUpdate", resetOverride);
+    editor.on("selectionUpdate", handleSelectionUpdate);
     return () => {
-      editor.off("selectionUpdate", resetOverride);
+      editor.off("selectionUpdate", handleSelectionUpdate);
     };
   }, [editor]);
 
   const linkEditorState = React.useMemo(() => {
+    // Don't show as active until first selection update (prevents auto-open on load)
+    if (!hasSelectionUpdatedRef.current) {
+      return {
+        ...editorState.link,
+        active: false,
+      };
+    }
+
     if (linkActiveOverride === null) return editorState.link;
 
     return {
