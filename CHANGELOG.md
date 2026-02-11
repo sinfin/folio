@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- Uppy file uploads no longer lose preview data — use `setFileMeta` instead of mutating file properties directly, preventing premature uploads when previews are still loading
+
 ## [7.2.0] - 2026-02-05
 
 ### Added
