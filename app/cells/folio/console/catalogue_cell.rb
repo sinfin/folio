@@ -336,7 +336,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
   def console_notes
     # TODO: restrict - only for can_now?(:update, record)
     attribute(:console_notes, compact: true, skip_desktop_header: true) do
-      cell("folio/console/console_notes/catalogue_tooltip", record)
+      render_view_component(Folio::Console::ConsoleNotes::CatalogueTooltipComponent.new(record: record))
     end
   end
 

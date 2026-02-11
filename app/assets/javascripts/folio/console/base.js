@@ -96,7 +96,7 @@
 //= require folio/console/atoms/previews/error_component
 //= require folio/console/atoms/word_count_component
 //= require folio/console/catalogue/catalogue
-//= require folio/console/console_notes/catalogue_tooltip/catalogue_tooltip
+//= require folio/console/console_notes/catalogue_tooltip_component
 //= require folio/console/current_users/console_url_bar_component
 //= require folio/console/current_users/preference_toggle_component
 //= require folio/console/current_users/show_component
