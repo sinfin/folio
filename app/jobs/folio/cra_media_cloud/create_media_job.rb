@@ -101,6 +101,9 @@ class Folio::CraMediaCloud::CreateMediaJob < Folio::ApplicationJob
       if current_remote_id != successful_job_id
         Rails.logger.info "[CraMediaCloud::CreateMediaJob] Updating local state: remote_id #{current_remote_id} -> #{successful_job_id} for video #{media_file.id}"
 
+        # Capture encoding_generation before updating state
+        current_generation = media_file.encoding_generation
+
         # Update local state to point to the successful job
         media_file.remote_services_data.merge!({
           "service" => "cra_media_cloud",
@@ -112,7 +115,11 @@ class Folio::CraMediaCloud::CreateMediaJob < Folio::ApplicationJob
         media_file.save!
 
         # Schedule CheckProgressJob to update final state based on the successful job
-        Folio::CraMediaCloud::CheckProgressJob.perform_later(media_file)
+        # Pass encoding_generation so it can detect if it becomes stale
+        Folio::CraMediaCloud::CheckProgressJob.perform_later(
+          media_file,
+          encoding_generation: current_generation
+        )
 
         broadcast_file_update(media_file)
 
@@ -123,6 +130,9 @@ class Folio::CraMediaCloud::CreateMediaJob < Folio::ApplicationJob
     end
 
     def process_media_upload(media_file, reference_id)
+      # Capture encoding_generation before any state updates
+      current_generation = media_file.encoding_generation
+
       # Set state to creating_media_job before starting upload
       rs_data = media_file.remote_services_data || {}
       media_file.remote_services_data = rs_data.merge({
@@ -151,7 +161,11 @@ class Folio::CraMediaCloud::CreateMediaJob < Folio::ApplicationJob
         media_file.remote_services_data.delete("remote_id")
         media_file.save!
 
-        Folio::CraMediaCloud::CheckProgressJob.set(wait: 30.seconds).perform_later(media_file)
+        # Pass encoding_generation so CheckProgressJob can detect stale jobs
+        Folio::CraMediaCloud::CheckProgressJob.set(wait: 30.seconds).perform_later(
+          media_file,
+          encoding_generation: current_generation
+        )
 
         broadcast_file_update(media_file)
 
