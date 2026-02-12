@@ -30,6 +30,7 @@ type PopoverContextValue = ReturnType<typeof usePopover> & {
 
 interface PopoverOptions {
   initialOpen?: boolean;
+  initialFocus?: number;
   modal?: boolean;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
@@ -55,6 +56,7 @@ function usePopoverContext() {
 
 function usePopover({
   initialOpen = false,
+  initialFocus = 0,
   modal,
   open: controlledOpen,
   onOpenChange: setControlledOpen,
@@ -129,6 +131,7 @@ function usePopover({
       setOpen,
       ...interactions,
       ...floating,
+      initialFocus,
       modal,
       labelId,
       descriptionId,
@@ -141,6 +144,7 @@ function usePopover({
       setOpen,
       interactions,
       floating,
+      initialFocus,
       modal,
       labelId,
       descriptionId,
@@ -271,7 +275,11 @@ const PopoverContent = React.forwardRef<HTMLDivElement, PopoverContentProps>(
       );
 
     const wrappedContent = (
-      <FloatingFocusManager context={context.context} modal={context.modal}>
+      <FloatingFocusManager
+        context={context.context}
+        modal={context.modal}
+        initialFocus={context.initialFocus}
+      >
         {content}
       </FloatingFocusManager>
     );

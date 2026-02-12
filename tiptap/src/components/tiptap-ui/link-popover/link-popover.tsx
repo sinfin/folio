@@ -390,7 +390,7 @@ export function LinkPopover({
   }, [isOpen, linkHandler]);
 
   return (
-    <Popover open={isOpen} onOpenChange={handleOnOpenChange}>
+    <Popover open={isOpen} onOpenChange={handleOnOpenChange} initialFocus={-1}>
       <PopoverTrigger asChild>
         <LinkButton
           disabled={!editorState.enabled}
