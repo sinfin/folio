@@ -17,10 +17,14 @@
           = render(Folio::Console::Ui::ButtonComponent.new(**download_button_model))
 
           - if can_now?(:update, @file)
-            = render(Folio::UppyComponent.new(file_type: @file.class.to_s,
-                                              max_number_of_files: 1,
-                                              existing_id: @file.id))
-              = render(Folio::Console::Ui::ButtonComponent.new(**replace_button_model))
+            - if @file.processing?
+              .f-c-files-show__button-tooltip data=stimulus_tooltip(t(".replace_disabled_processing"))
+                = render(Folio::Console::Ui::ButtonComponent.new(**replace_button_model))
+            - else
+              = render(Folio::UppyComponent.new(file_type: @file.class.to_s,
+                                                max_number_of_files: 1,
+                                                existing_id: @file.id))
+                = render(Folio::Console::Ui::ButtonComponent.new(**replace_button_model))
 
           - if can_now?(:destroy, @file)
             - if @file.indestructible_reason

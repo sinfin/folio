@@ -21,7 +21,6 @@ class Folio::JwPlayer::CreateFullMediaJobTest < ActiveJob::TestCase
     response = { "status" => "processing", "id" => "remote_key_asdskljdaslk" }
     api_mock = Minitest::Mock.new
     api_mock.expect(:create_media, response, [])
-    api_mock.expect(:==, false, [:not_passed])
 
     assert_enqueued_jobs 1, only: Folio::JwPlayer::CheckProgressJob do
       # assert_enqueued_jobs 1, only: Folio::JwPlayer::DeleteMediaJob

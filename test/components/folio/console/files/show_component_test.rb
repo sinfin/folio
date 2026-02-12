@@ -147,4 +147,41 @@ class Folio::Console::Files::ShowComponentTest < Folio::Console::ComponentTest
       assert_nil component.warning_for(:alt)
     end
   end
+
+  def test_render_shows_uppy_replace_button_for_non_processing_file
+    Folio::Current.user = create(:folio_user, :superadmin)
+    Folio::Current.reset_ability!
+
+    with_controller_class(Folio::Console::File::ImagesController) do
+      with_request_url "/console/file/images" do
+        file = create(:folio_file_image)
+
+        render_inline(Folio::Console::Files::ShowComponent.new(file:))
+
+        assert_selector(".f-uppy")
+        assert_no_selector(".f-c-files-show__button-tooltip button[disabled]")
+      end
+    end
+  ensure
+    Folio::Current.user = nil
+  end
+
+  def test_render_disables_replace_button_for_processing_file
+    Folio::Current.user = create(:folio_user, :superadmin)
+    Folio::Current.reset_ability!
+
+    with_controller_class(Folio::Console::File::VideosController) do
+      with_request_url "/console/file/videos" do
+        video = create(:folio_file_video)
+        video.update!(aasm_state: :processing)
+
+        render_inline(Folio::Console::Files::ShowComponent.new(file: video))
+
+        assert_no_selector(".f-uppy")
+        assert_selector(".f-c-files-show__button-tooltip button[disabled]")
+      end
+    end
+  ensure
+    Folio::Current.user = nil
+  end
 end

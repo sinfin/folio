@@ -8,6 +8,7 @@ en:
           id: ID
           download: Download original
           replace: Replace
+          replace_disabled_processing: File is being processed, replacement is not available at this time
           destroy: Delete
           title/metadata: EXIF and IPTC data (%{count})
           title/usage: Usage (%{count})

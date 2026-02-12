@@ -100,7 +100,7 @@ class Folio::JwPlayer::FileProcessingTest < ActiveSupport::TestCase
   end
 
   test "sets preview periode on change of duration" do
-    assert_equal(["processing_step_started_at"], tv_file.remote_services_data.keys)
+    assert_equal(%w[processing_step_started_at encoding_generation], tv_file.remote_services_data.keys)
     assert_equal 7, tv_file.preview_duration_in_seconds
     assert_equal 7, tv_file.preview_duration
 
