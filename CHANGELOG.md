@@ -18,32 +18,6 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-- encoding generation tracking for media files — stale `CheckProgressJob`s are skipped when a newer encoding has started
-- disable replace button with tooltip when a media file is still processing
-
-### Fixed
-
-- Uppy file uploads no longer lose preview data — use `setFileMeta` instead of mutating file properties directly, preventing premature uploads when previews are still loading
-- S3 `BaseJob` now broadcasts an error to the frontend when the file is missing on S3 (instead of silently returning)
-- safe navigation in S3 broadcast error methods to handle nil file
-
-## [7.2.0] - 2026-02-05
-
-### Added
-
-- encoding generation tracking for media files — stale `CheckProgressJob`s are skipped when a newer encoding has started
-- disable replace button with tooltip when a media file is still processing
-
-### Fixed
-
-- Uppy file uploads no longer lose preview data — use `setFileMeta` instead of mutating file properties directly, preventing premature uploads when previews are still loading
-- S3 `BaseJob` now broadcasts an error to the frontend when the file is missing on S3 (instead of silently returning)
-- safe navigation in S3 broadcast error methods to handle nil file
-
-## [7.2.0] - 2026-02-05
-
-### Added
-
 - support for `video/x-m4v` files (mapped to `video/mp4` for browser compatibility)
 - `has_folio_positionable?` class method to `Folio::Positionable` and `Folio::PositionableDescending` concerns
 - `created_by_folio_user` relation to `Folio::File` and "my files" filter to console
@@ -53,12 +27,12 @@ All notable changes to this project will be documented in this file.
 - date_time input time format to match backend HH:mm -> H:mm
 - position controls in paginated catalogues now work across page boundaries - items can be moved to adjacent pages and the view automatically scrolls to show the moved item
 - fix youtube embed overflow
+- removed tiptap editor min-height as it creates additional scroll field which hides the toolbar
 
 ### Changed
 
 - *console ui* ajax and in place inputs - submit on blur and cancel on escape
 - *input autocomplete* don't autoselect items, let Enter propagate
-- fix youtube embed overflow
 
 ## [7.1.2] - 2026-01-12
 
