@@ -237,7 +237,10 @@ class Folio::File < Folio::ApplicationRecord
     # updating placements
     return if ENV["SKIP_FOLIO_FILE_AFTER_SAVE_JOB"]
     return if Rails.env.test? && !Rails.application.config.try(:folio_testing_after_save_job)
-    Folio::Files::AfterSaveJob.perform_later(self)
+
+    changed_attrs = saved_changes.slice("description", "alt", "headline")
+
+    Folio::Files::AfterSaveJob.perform_later(self, changed_attrs)
   end
 
   def process_attached_file
