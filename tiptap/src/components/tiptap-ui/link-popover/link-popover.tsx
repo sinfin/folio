@@ -171,7 +171,8 @@ export const useLinkHandler = (props: LinkHandlerProps) => {
       .run();
 
     setLinkData({ ...DEFAULT_STATE });
-  }, [editor]);
+    onSetLink?.();
+  }, [editor, onSetLink]);
 
   return {
     linkData,
