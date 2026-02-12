@@ -40,6 +40,7 @@ class Folio::Console::Ui::Index::HeaderComponent < Folio::Console::ApplicationCo
 
   private
     def title
+      return nil if @title == false
       @title || @klass.model_name.human(count: 2)
     end
 

@@ -18,6 +18,10 @@ class Folio::User < Folio::ApplicationRecord
                            required: false
   belongs_to :auth_site, class_name: "Folio::Site",
                          required: true
+  has_many :created_files, class_name: "Folio::File",
+                           foreign_key: :created_by_folio_user_id,
+                           inverse_of: :created_by_folio_user,
+                           dependent: :nullify
 
   selected_device_modules = Rails.application.config.folio_users_device_modules
 
@@ -60,6 +64,9 @@ class Folio::User < Folio::ApplicationRecord
                                   inverse_of: :closed_by,
                                   foreign_key: :closed_by_id,
                                   dependent: :nullify
+
+  has_many :tiptap_revisions, class_name: "Folio::Tiptap::Revision", dependent: :destroy, inverse_of: :user
+  has_many :superseeded_tiptap_revisions, class_name: "Folio::Tiptap::Revision", dependent: :nullify, inverse_of: :superseded_by_user
 
   validate :validate_one_of_names
   validates :time_zone, inclusion: { in: ActiveSupport::TimeZone.all.map(&:name) }

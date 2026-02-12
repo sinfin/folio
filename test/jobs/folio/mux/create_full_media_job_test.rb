@@ -30,7 +30,6 @@ class Folio::Mux::CreateFullMediaJobTest < ActiveJob::TestCase
     response = ResponseStruct.new(ResponseDataStruct.new(12, "preparing", 35))
     api_mock = Minitest::Mock.new
     api_mock.expect(:create_media, response, [])
-    api_mock.expect(:==, false, [:not_passed])
 
     assert_enqueued_jobs 1, only: Folio::Mux::CheckProgressJob do
       # assert_enqueued_jobs 1, only: Folio::Mux::DeleteMediaJob

@@ -5,9 +5,6 @@
   margin: 0 0 $grid-gutter-width
   position: relative
 
-  &--subtitle
-    align-items: flex-start
-
   &__top
     display: flex
     gap: $grid-gutter-half
@@ -31,6 +28,9 @@
 
   &__h2
     margin: $grid-gutter-base 0 0
+
+    &:first-child
+      margin-top: 0
 
   .modal-body &
     padding-right: 48px

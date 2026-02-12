@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_09_083325) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_27_081153) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -352,10 +352,12 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_09_083325) do
     t.integer "attribution_max_usage_count"
     t.integer "published_usage_count", default: 0, null: false
     t.jsonb "thumbnail_configuration"
+    t.bigint "created_by_folio_user_id"
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((author)::text, ''::text)))", name: "index_folio_files_on_by_author", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name)::text, ''::text)))", name: "index_folio_files_on_by_file_name", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text)))", name: "index_folio_files_on_by_file_name_for_search", using: :gin
     t.index ["created_at"], name: "index_folio_files_on_created_at"
+    t.index ["created_by_folio_user_id"], name: "index_folio_files_on_created_by_folio_user_id"
     t.index ["file_name"], name: "index_folio_files_on_file_name"
     t.index ["media_source_id"], name: "index_folio_files_on_media_source_id"
     t.index ["published_usage_count"], name: "index_folio_files_on_published_usage_count"
@@ -738,6 +740,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_09_083325) do
   add_foreign_key "folio_file_site_links", "folio_sites", column: "site_id"
   add_foreign_key "folio_files", "folio_media_sources", column: "media_source_id"
   add_foreign_key "folio_files", "folio_sites", column: "site_id"
+  add_foreign_key "folio_files", "folio_users", column: "created_by_folio_user_id", on_delete: :nullify
   add_foreign_key "folio_media_source_site_links", "folio_media_sources", column: "media_source_id"
   add_foreign_key "folio_media_source_site_links", "folio_sites", column: "site_id"
   add_foreign_key "folio_media_sources", "folio_sites", column: "site_id"
