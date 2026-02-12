@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- tiptap link handling - close on confirm/delete, don't autofocus link popover input
+
 ## [7.2.0] - 2026-02-05
 
 ### Added
