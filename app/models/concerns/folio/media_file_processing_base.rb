@@ -19,8 +19,16 @@ module Folio::MediaFileProcessingBase
 
   def process_attached_file
     regenerate_thumbnails if try(:thumbnailable?)
-    self.update(remote_services_data: { "processing_step_started_at" => Time.current })
+    # Set new encoding generation to invalidate any old CheckProgressJobs
+    self.update(remote_services_data: {
+      "processing_step_started_at" => Time.current,
+      "encoding_generation" => Time.current.to_i
+    })
     create_full_media # ensure call processing_done! after all processing is complete
+  end
+
+  def encoding_generation
+    remote_services_data["encoding_generation"]
   end
 
   def destroy_attached_file

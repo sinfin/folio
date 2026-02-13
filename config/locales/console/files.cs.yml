@@ -8,6 +8,7 @@ cs:
           id: ID
           download: Stáhnout originál
           replace: Nahradit
+          replace_disabled_processing: Soubor se zpracovává, nahrazení není momentálně možné
           destroy: Smazat
           title/metadata: EXIF a IPTC data (%{count})
           title/usage: Použití (%{count})
