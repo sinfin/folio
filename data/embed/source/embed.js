@@ -95,12 +95,20 @@
           videoId = url.match(/youtu\.be\/([a-zA-Z0-9\-_]+)/)?.[1]
         }
 
+        const isShorts = !videoId && /\/shorts\//.test(url)
+        if (!videoId) {
+          videoId = url.match(/\/shorts\/([a-zA-Z0-9\-_]+)/)?.[1]
+        }
+
         if (videoId) {
+          const width = isShorts ? 315 : 560
+          const height = isShorts ? 560 : 315
+
           container.innerHTML = `
             <iframe
               class="f-embed__youtube-iframe"
-              width="560"
-              height="315"
+              width="${width}"
+              height="${height}"
               src="https://www.youtube.com/embed/${videoId}"
               frameborder="0"
               allowfullscreen>
