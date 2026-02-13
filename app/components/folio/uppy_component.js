@@ -130,9 +130,11 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
         getUploadParameters: (file) => {
           return window.Folio.Api.apiPost('/folio/api/s3/before', { ...args, file_name: file.name })
             .then((response) => {
-              file.name = response.file_name
-              file.s3_path = response.s3_path
-              file.jwt = response.jwt
+              this.uppy.setFileMeta(file.id, {
+                s3_path: response.s3_path,
+                jwt: response.jwt,
+                sanitized_name: response.file_name
+              })
 
               return {
                 method: 'PUT',
@@ -147,7 +149,12 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
       })
 
       this.uppy.on('upload-success', (file) => {
-        this.uppyUploadSuccess(file)
+        this.uppyUploadSuccess({
+          name: file.meta.sanitized_name || file.name,
+          s3_path: file.meta.s3_path,
+          jwt: file.meta.jwt,
+          preview: file.preview
+        })
       })
 
       this.uppy.on('complete', (result) => {

@@ -5,7 +5,7 @@ require "minitest/mock"
 module MethodInvokingMatchersHelper
   private
     def expect_method_called_on(object:, method:, args: [], kwargs: {}, return_value: :not_passed, &block)
-      if return_value == :not_passed
+      if :not_passed.equal?(return_value)
         return_value = (object.instance_of?(::Class) ? "call to #{object}.#{method}" : "call to #{object.class}##{method}") # rubocop:disable Layout/LineLength
       end
 

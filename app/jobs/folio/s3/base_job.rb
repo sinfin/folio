@@ -16,7 +16,12 @@ class Folio::S3::BaseJob < Folio::ApplicationJob
     @message_bus_client_id = message_bus_client_id
 
     if !self.class.multipart? && !test_aware_s3_exists?(s3_path:)
-      # probably handled it already in another job
+      # S3 file doesn't exist - broadcast failure so frontend can update UI
+      if existing_id.present?
+        broadcast_replace_error(s3_path:, file: nil, error: StandardError.new("File not found on S3"), file_type: type)
+      else
+        broadcast_error(file: nil, s3_path:, error: StandardError.new("File not found on S3"), file_type: type)
+      end
       return
     end
 
@@ -51,7 +56,7 @@ class Folio::S3::BaseJob < Folio::ApplicationJob
         errors = nil
       end
 
-      broadcast({ s3_path:, type: "failure", errors:, file_id: file.id, file_type: })
+      broadcast({ s3_path:, type: "failure", errors:, file_id: file&.id, file_type: })
     end
 
     def broadcast_replace_success(s3_path:, file:, file_type:)
@@ -67,7 +72,7 @@ class Folio::S3::BaseJob < Folio::ApplicationJob
         errors = nil
       end
 
-      broadcast({ type: "replace-failure", file_id: file.id, errors:, file_type: })
+      broadcast({ type: "replace-failure", file_id: file&.id, errors:, file_type: })
     end
 
     def broadcast(hash)

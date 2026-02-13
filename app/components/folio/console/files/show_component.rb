@@ -56,11 +56,17 @@ class Folio::Console::Files::ShowComponent < Folio::Console::ApplicationComponen
   end
 
   def replace_button_model
-    {
+    h = {
       label: t(".replace"),
       icon: :swap_horizontal,
       variant: :warning,
     }
+
+    if @file.processing?
+      h[:disabled] = true
+    end
+
+    h
   end
 
   def table_rows
