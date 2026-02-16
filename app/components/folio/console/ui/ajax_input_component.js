@@ -48,6 +48,21 @@ window.Folio.Stimulus.register('f-c-ui-ajax-input', class extends window.Stimulu
     }
   }
 
+  onChange () {
+    if (this.element.classList.contains('f-c-ui-ajax-input--loading')) return false
+
+    const value = this.inputTarget.value
+
+    this.element.classList.remove('f-c-ui-ajax-input--success')
+    this.element.classList.remove('f-c-ui-ajax-input--failure')
+
+    if (value !== this.originalValueValue) {
+      this.element.classList.add('f-c-ui-ajax-input--dirty')
+    } else {
+      this.element.classList.remove('f-c-ui-ajax-input--dirty')
+    }
+  }
+
   onKeyUp (e) {
     const value = this.cleave ? this.cleave.getRawValue() : this.inputTarget.value
 
