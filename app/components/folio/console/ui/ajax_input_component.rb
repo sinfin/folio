@@ -69,6 +69,7 @@ class Folio::Console::Ui::AjaxInputComponent < Folio::Console::ApplicationCompon
                         "keydown" => "onKeyDownAndPress",
                         "keypress" => "onKeyDownAndPress",
                         "blur" => "onBlur",
+                        "change" => "onChange",
                       },
                       target: "input")
 
