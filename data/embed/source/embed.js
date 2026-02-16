@@ -101,12 +101,13 @@
         }
 
         if (videoId) {
-          const width = isShorts ? 315 : 560
-          const height = isShorts ? 560 : 315
+          const width = isShorts ? 360 : 560
+          const height = isShorts ? 640 : 315
+          const iframeClass = isShorts ? 'f-embed__youtube-iframe f-embed__youtube-iframe--shorts' : 'f-embed__youtube-iframe'
 
           container.innerHTML = `
             <iframe
-              class="f-embed__youtube-iframe"
+              class="${iframeClass}"
               width="${width}"
               height="${height}"
               src="https://www.youtube.com/embed/${videoId}"
