@@ -11,6 +11,7 @@ class Folio::Tiptap::NodeTest < ActiveSupport::TestCase
       button_url_json: :url_json,
       position: :integer,
       background: %w[gray blue],
+      boolean_collection: [true, false],
       cover: :image,
       reports: :documents,
       page: { class_name: "Folio::Page" },
@@ -130,6 +131,24 @@ class Folio::Tiptap::NodeTest < ActiveSupport::TestCase
     assert_equal reports.map(&:id).sort, hash["attrs"]["data"]["report_placements_attributes"].map { |attrs| attrs["file_id"] }.sort
     assert_equal page.id, hash["attrs"]["data"]["page_id"]
     assert_equal related_pages.map(&:id).sort, hash["attrs"]["data"]["related_page_ids"].sort
+  end
+
+  test "collection [true, false] allows assigning true and false and serializes both in to_tiptap_node_hash" do
+    node_false = Node.new(title: "test", boolean_collection: false)
+    assert_equal false, node_false.boolean_collection, "assigning false to collection [true, false] should work"
+    hash_false = node_false.to_tiptap_node_hash
+    assert hash_false["attrs"]["data"].key?("boolean_collection"),
+           "boolean_collection should be present in serialized data (false must not be omitted by present?)"
+    assert_equal false, hash_false["attrs"]["data"]["boolean_collection"],
+                 "serialized data should contain false"
+
+    node_true = Node.new(title: "test", boolean_collection: true)
+    assert_equal true, node_true.boolean_collection, "assigning true to collection [true, false] should work"
+    hash_true = node_true.to_tiptap_node_hash
+    assert hash_true["attrs"]["data"].key?("boolean_collection"),
+           "boolean_collection should be present in serialized data"
+    assert_equal true, hash_true["attrs"]["data"]["boolean_collection"],
+                 "serialized data should contain true"
   end
 
   test "assign_attributes_from_param_attrs" do
