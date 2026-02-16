@@ -35,6 +35,7 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
   static targets = ['autosaveInput', 'submitButton', 'submitButtonIndicator']
 
   connect () {
+    this.skipBeforeUnload = false
     this.restoreUiState()
   }
 
@@ -48,6 +49,8 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
     if (this.onBeforeUnload) return
 
     this.onBeforeUnload = (e) => {
+      if (this.skipBeforeUnload) return
+
       e.preventDefault()
       e.returnValue = 'Changes you made may not be saved.'
       return 'Changes you made may not be saved.'
@@ -231,6 +234,12 @@ window.Folio.Stimulus.register('f-c-form-footer', class extends window.Stimulus.
 
     this.storeUiState()
     this.statusValue = 'saving'
+  }
+
+  onSubmitButtonClick () {
+    // Save is an intentional navigation; suppress beforeunload for this transition.
+    this.skipBeforeUnload = true
+    this.unbindUnload()
   }
 
   toggleSettings (e) {
