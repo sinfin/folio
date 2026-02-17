@@ -96,6 +96,7 @@ window.Folio.Stimulus.register('f-file-list-file', class extends window.Stimulus
       if (this.catchCounter > 10) {
         this.errorFlashMessage(`${window.Folio.i18n(this.constructor.ERROR_MESSAGES, 'failedToProcessFile')}: ${error.message}`)
         this.removeParentOrElement()
+        return
       }
 
       if (this.timeout) window.clearTimeout(this.timeout)
