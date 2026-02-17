@@ -23,6 +23,7 @@ import { TableKit, Table } from "@tiptap/extension-table";
 import {
   FolioTiptapNodeExtension,
   FolioTiptapNodePastePlaceholderNode,
+  removeUniqueIdsFromFolioTiptapNodes,
 } from "@/components/tiptap-extensions/folio-tiptap-node";
 import {
   FolioTiptapColumnsExtension,
@@ -74,6 +75,7 @@ import { SmartDragHandle } from "@/components/tiptap-ui/smart-drag-handle";
 // --- Hooks ---
 import translate from "@/lib/i18n";
 import clearContent from "@/lib/clear-content";
+import { removeTrailingEmptyParagraph } from "@/lib/remove-trailing-empty-paragraph";
 
 import TRANSLATIONS from "./folio-editor-i18n.json";
 import { FolioEditorBubbleMenus } from "./folio-editor-bubble-menus";
@@ -104,6 +106,8 @@ export function FolioEditor({
   autosaveIndicatorInfo,
 }: FolioEditorProps) {
   const editorRef = React.useRef<HTMLDivElement>(null);
+  const createdMessageSentRef = React.useRef(false);
+  const createdHeightRef = React.useRef<number>(0);
   const blockEditor = type === "block";
   const [responsivePreviewEnabled, setResponsivePreviewEnabled] =
     React.useState<boolean>(false);
@@ -368,6 +372,46 @@ export function FolioEditor({
       resizeObserver.disconnect();
     };
   }, []);
+
+  React.useEffect(() => {
+    if (!editor || !editorCreated || !initializedContent || !editorRef.current)
+      return;
+    if (createdMessageSentRef.current) return;
+
+    createdMessageSentRef.current = true;
+    const content = removeTrailingEmptyParagraph(
+      removeUniqueIdsFromFolioTiptapNodes(editor.getJSON()),
+    );
+    const height = Math.max(editorRef.current.clientHeight, 150);
+    createdHeightRef.current = height;
+
+    window.parent!.postMessage(
+      {
+        type: "f-tiptap:created",
+        content,
+        height,
+      },
+      "*",
+    );
+
+    const correctHeightAfterLayout = () => {
+      if (!editorRef.current) return;
+      const currentHeight = Math.max(editorRef.current.clientHeight, 150);
+      if (currentHeight !== createdHeightRef.current) {
+        createdHeightRef.current = currentHeight;
+
+        window.parent!.postMessage(
+          { type: "f-tiptap-editor:resized", height: currentHeight },
+          "*",
+        );
+      }
+    };
+
+    const delays = [0, 50, 100, 150];
+    delays.forEach((delay) => {
+      window.setTimeout(correctHeightAfterLayout, delay);
+    });
+  }, [editor, editorCreated, initializedContent]);
 
   React.useEffect(() => {
     if (!editorCreated) return;
