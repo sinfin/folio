@@ -77,7 +77,10 @@ window.Folio.Stimulus.register('f-c-files-show', class extends window.Stimulus.C
       this.pingCatchCounter += 1
 
       if (this.pingCatchCounter > 10) {
-        window.alert(`Failed to process file: ${error.message}`)
+        this.loadingValue = false
+        delete this.replacingFileData
+        window.FolioConsole.Ui.Flash.alert(`Failed to process file: ${error.message}`)
+        return
       }
 
       if (this.pingTimeout) window.clearTimeout(this.pingTimeout)
