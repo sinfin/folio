@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- S3 ping retry loop no longer runs infinitely after 10 failures — stops retrying, shows a non-blocking flash instead of a blocking `window.alert()`, and resets the loading state
 - Uppy file uploads no longer lose preview data — use `setFileMeta` instead of mutating file properties directly, preventing premature uploads when previews are still loading
 - S3 `BaseJob` now broadcasts an error to the frontend when the file is missing on S3 (instead of silently returning)
 - safe navigation in S3 broadcast error methods to handle nil file
