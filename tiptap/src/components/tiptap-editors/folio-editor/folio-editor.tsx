@@ -155,11 +155,7 @@ export function FolioEditor({
   }, [folioTiptapConfig]);
 
   const folioTiptapHeadingLevels = React.useMemo(() => {
-    if (
-      folioTiptapConfig &&
-      folioTiptapConfig["heading_levels"] &&
-      folioTiptapConfig["heading_levels"].length
-    ) {
+    if (folioTiptapConfig && folioTiptapConfig["heading_levels"]) {
       return folioTiptapConfig["heading_levels"];
     }
 
