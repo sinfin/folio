@@ -35,6 +35,9 @@ class Folio::EmbedTest < ActiveSupport::TestCase
     assert_equal "youtube", Folio::Embed.url_type("https://www.youtube.com/watch?v=test_video&foo=bar")
     assert_equal "youtube", Folio::Embed.url_type("https://www.youtube.com/watch?v=testvideo/")
     assert_equal "youtube", Folio::Embed.url_type("https://www.youtube.com/watch?v=testvideo&foo=bar/")
+    assert_equal "youtube", Folio::Embed.url_type("https://www.youtube.com/shorts/testvideo")
+    assert_equal "youtube", Folio::Embed.url_type("https://www.youtube.com/shorts/testvideo/")
+    assert_equal "youtube", Folio::Embed.url_type("https://www.youtube.com/shorts/ljlGdO0CUIM")
   end
 
   test "url_type returns nil for invalid URLs" do
