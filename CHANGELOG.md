@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- add support YouTube shorts embeds links
 - encoding generation tracking for media files — stale `CheckProgressJob`s are skipped when a newer encoding has started
 - disable replace button with tooltip when a media file is still processing
 
