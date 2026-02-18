@@ -98,13 +98,15 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
         if size.include?("#")
           _m, crop_width_f, crop_height_f = size.match(/(\d+)x(\d+)/).to_a.map(&:to_f)
 
-          if crop_width_f > image.file_width || crop_height_f > image.file_height || !x.nil? || !y.nil?
+          if image.file_width.nil? || image.file_height.nil?
+            thumbnail = thumbnail.thumb("#{crop_width_f.to_i}x#{crop_height_f.to_i}^", format:)
+          elsif crop_width_f > image.file_width || crop_height_f > image.file_height || !x.nil? || !y.nil?
             thumbnail = thumbnail.thumb("#{crop_width_f.to_i}x#{crop_height_f.to_i}^", format:)
           end
 
           if !x.nil? || !y.nil?
-            image_width_f = image.file_width.to_f
-            image_height_f = image.file_height.to_f
+            image_width_f = (image.file_width || crop_width_f).to_f
+            image_height_f = (image.file_height || crop_height_f).to_f
 
             fill_width_f = if image_width_f / image_height_f > crop_width_f / crop_height_f
               # original is wider than the required thumb rectangle -> reduce height
