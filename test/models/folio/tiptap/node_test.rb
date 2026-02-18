@@ -11,7 +11,7 @@ class Folio::Tiptap::NodeTest < ActiveSupport::TestCase
       button_url_json: :url_json,
       position: :integer,
       background: %w[gray blue],
-      boolean_collection: [true, false],
+      boolean_from_collection: [true, false],
       cover: :image,
       reports: :documents,
       page: { class_name: "Folio::Page" },
@@ -134,20 +134,20 @@ class Folio::Tiptap::NodeTest < ActiveSupport::TestCase
   end
 
   test "collection [true, false] allows assigning true and false and serializes both in to_tiptap_node_hash" do
-    node_false = Node.new(title: "test", boolean_collection: false)
-    assert_equal false, node_false.boolean_collection, "assigning false to collection [true, false] should work"
+    node_false = Node.new(title: "test", boolean_from_collection: false)
+    assert_equal false, node_false.boolean_from_collection, "assigning false to collection [true, false] should work"
     hash_false = node_false.to_tiptap_node_hash
-    assert hash_false["attrs"]["data"].key?("boolean_collection"),
-           "boolean_collection should be present in serialized data (false must not be omitted by present?)"
-    assert_equal false, hash_false["attrs"]["data"]["boolean_collection"],
+    assert hash_false["attrs"]["data"].key?("boolean_from_collection"),
+           "boolean_from_collection should be present in serialized data (false must not be omitted by present?)"
+    assert_equal false, hash_false["attrs"]["data"]["boolean_from_collection"],
                  "serialized data should contain false"
 
-    node_true = Node.new(title: "test", boolean_collection: true)
-    assert_equal true, node_true.boolean_collection, "assigning true to collection [true, false] should work"
+    node_true = Node.new(title: "test", boolean_from_collection: true)
+    assert_equal true, node_true.boolean_from_collection, "assigning true to collection [true, false] should work"
     hash_true = node_true.to_tiptap_node_hash
-    assert hash_true["attrs"]["data"].key?("boolean_collection"),
-           "boolean_collection should be present in serialized data"
-    assert_equal true, hash_true["attrs"]["data"]["boolean_collection"],
+    assert hash_true["attrs"]["data"].key?("boolean_from_collection"),
+           "boolean_from_collection should be present in serialized data"
+    assert_equal true, hash_true["attrs"]["data"]["boolean_from_collection"],
                  "serialized data should contain true"
   end
 

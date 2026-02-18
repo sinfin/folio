@@ -28,8 +28,9 @@ class Folio::Tiptap::NodeBuilder
           setup_structure_for_url_json(key:)
         when :folio_attachment
           setup_structure_for_folio_attachment(key:, attr_config:)
-        when :collection,
-             :string,
+        when :collection
+          setup_structure_for_collection(key:, attr_config:)
+        when :string,
              :text
           setup_structure_default(key:)
         when :rich_text
@@ -76,6 +77,53 @@ class Folio::Tiptap::NodeBuilder
 
     def setup_structure_default(key:)
       @klass.attribute key, type: :text
+    end
+
+    def setup_structure_for_collection(key:, attr_config:)
+      if attr_config[:collection].nil?
+        fail ArgumentError, "Expected :collection in attr_config for #{key}, got nil"
+      end
+
+      collection_types = attr_config[:collection].map { |item| item.class }.uniq
+
+      if collection_types.all? { |type| type == TrueClass || type == FalseClass }
+        @klass.attribute key, type: :boolean
+
+        @klass.define_method "#{key}=" do |value|
+          transformed_value = if value.nil?
+            nil
+          elsif value == true || value == false
+            value
+          elsif value.is_a?(String)
+            case value
+            when "true", "1" then true
+            when "false", "0", "" then false
+            else
+              nil
+            end
+          else
+            nil
+          end
+
+          super(transformed_value)
+        end
+      elsif collection_types.all? { |type| type == Integer }
+        @klass.attribute key, type: :integer
+
+        @klass.define_method "#{key}=" do |value|
+          transformed_value = if value.nil?
+            nil
+          elsif value.is_a?(String) || value.is_a?(Numeric)
+            value.to_i
+          else
+            nil
+          end
+
+          super(transformed_value)
+        end
+      else
+        @klass.attribute key, type: :text
+      end
     end
 
     def setup_structure_for_rich_text(key:)

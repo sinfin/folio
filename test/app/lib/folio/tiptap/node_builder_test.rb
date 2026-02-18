@@ -12,6 +12,8 @@ class Folio::Tiptap::NodeBuilderTest < ActiveSupport::TestCase
       position: :integer,
       folio_embed_data: :embed,
       background: %w[gray blue],
+      boolean_from_collection: [true, false],
+      number_from_collection: [1, 2, 3],
       cover: :image,
       reports: :documents,
       page: { class_name: "Folio::Page" },
@@ -52,6 +54,16 @@ class Folio::Tiptap::NodeBuilderTest < ActiveSupport::TestCase
     }, Node.structure[:background])
 
     assert_equal({
+      type: :collection,
+      collection: [true, false],
+    }, Node.structure[:boolean_from_collection])
+
+    assert_equal({
+      type: :collection,
+      collection: [1, 2, 3],
+    }, Node.structure[:number_from_collection])
+
+    assert_equal({
       type: :relation,
       class_name: "Folio::Page",
       has_many: false
@@ -64,6 +76,75 @@ class Folio::Tiptap::NodeBuilderTest < ActiveSupport::TestCase
     }, Node.structure[:related_pages])
 
     assert_equal({ type: :embed }, Node.structure[:folio_embed_data])
+  end
+
+  test "boolean_from_collection uses boolean type and stores true/false not strings" do
+    # NodeBuilder sets type: :boolean for collection [true, false], so values are booleans not strings
+    node_true = Node.new(title: "test", boolean_from_collection: true)
+    assert_equal true, node_true.boolean_from_collection
+    assert node_true.boolean_from_collection == true, "should be boolean true"
+    assert_not_equal "true", node_true.boolean_from_collection, "should not be string"
+
+    node_false = Node.new(title: "test", boolean_from_collection: false)
+    assert_equal false, node_false.boolean_from_collection
+    assert node_false.boolean_from_collection == false, "should be boolean false"
+    assert_not_equal "false", node_false.boolean_from_collection, "should not be string"
+  end
+
+  test "boolean_from_collection coerces string params to boolean" do
+    # From request params, values often come as strings; boolean type should coerce them
+    node = Node.new(title: "test", boolean_from_collection: "true")
+    assert_equal true, node.boolean_from_collection
+    assert node.boolean_from_collection.is_a?(TrueClass)
+
+    node.boolean_from_collection = "false"
+    assert_equal false, node.boolean_from_collection
+    assert node.boolean_from_collection.is_a?(FalseClass)
+
+    node.boolean_from_collection = "1"
+    assert_equal true, node.boolean_from_collection
+
+    node.boolean_from_collection = "0"
+    assert_equal false, node.boolean_from_collection
+  end
+
+  test "integer_collection coerces string params to integer" do
+    # From request params, values often come as strings; integer collection should coerce them
+    node = Node.new(title: "test", number_from_collection: "42")
+    assert_equal 42, node.number_from_collection
+    assert node.number_from_collection.is_a?(Integer)
+
+    node.number_from_collection = "7"
+    assert_equal 7, node.number_from_collection
+    assert node.number_from_collection.is_a?(Integer)
+  end
+
+  test "collection setters use nil for invalid values instead of raising" do
+    node = Node.new(title: "test")
+
+    node.boolean_from_collection = "nope"
+    assert_nil node.boolean_from_collection
+
+    node.boolean_from_collection = {}
+    assert_nil node.boolean_from_collection
+
+    node.number_from_collection = {}
+    assert_nil node.number_from_collection
+  end
+
+  test "boolean_from_collection serializes as boolean in to_tiptap_node_hash not string" do
+    node = Node.new(title: "test", boolean_from_collection: false)
+    hash = node.to_tiptap_node_hash
+    assert hash["attrs"]["data"].key?("boolean_from_collection")
+    assert_equal false, hash["attrs"]["data"]["boolean_from_collection"],
+                 "serialized value must be boolean false, not string \"false\""
+    assert hash["attrs"]["data"]["boolean_from_collection"].is_a?(FalseClass)
+
+    node.boolean_from_collection = true
+    hash = node.to_tiptap_node_hash
+    assert_equal true, hash["attrs"]["data"]["boolean_from_collection"],
+                 "serialized value must be boolean true, not string \"true\""
+    assert hash["attrs"]["data"]["boolean_from_collection"].is_a?(TrueClass)
   end
 
   test "url_json sanitizes href values" do
