@@ -212,7 +212,7 @@ class Folio::Site < Folio::ApplicationRecord
   def mailer_logo_data
     {
       png_src: "https://sinfin-folio.s3.eu-central-1.amazonaws.com/mailer/logos/folio_logo.png",
-      light_png_src: "https://sinfin-folio.s3.eu-central-1.amazonaws.com/mailer/logos/folio_logo_white.png",
+      light_png_src: "https://sinfin-folio.s3.eu-central-1.amazonaws.com/mailer/logos/folio_logo_light.png",
       width: 119,
       height: 60,
     }
