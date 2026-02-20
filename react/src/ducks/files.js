@@ -409,7 +409,7 @@ function filesReducer (rawState = initialState, action) {
         [action.fileType]: {
           ...state[action.fileType],
           records: state[action.fileType].records.map((record) => {
-            if (record.id === action.response.id) {
+            if (record.id === action.file.id) {
               return action.response
             } else {
               return record
