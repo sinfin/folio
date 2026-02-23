@@ -9,8 +9,9 @@
     position: relative
     height: 44px
     width: 44px
+    overflow: hidden
 
   .form-control,
   &[data-f-c-input-form-group-url-loaded-value="false"] &__control-bar-wrap,
-  &[data-f-c-input-form-group-url-loaded-value="true"] &__loader-wrap
+  &:not([data-f-c-input-form-group-url-loaded-value="false"]) &__loader-wrap
     display: none
