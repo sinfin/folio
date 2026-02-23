@@ -22,6 +22,8 @@ window.Folio.Input.Url.disposeFormGroup = (formGroup) => {
 }
 
 window.Folio.Input.Url.initFormGroup = (formGroup, opts = {}) => {
+  if (formGroup.classList.contains('f-c-input-form-group-url')) return
+
   const input = formGroup.querySelector('.form-control')
 
   input.setAttribute('data-f-c-input-form-group-url-target', 'input')
