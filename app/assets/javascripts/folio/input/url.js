@@ -12,7 +12,13 @@ window.Folio.Input.Url.disposeFormGroup = (formGroup) => {
   input.removeAttribute('data-f-c-input-form-group-url-target')
 
   const customHtml = formGroup.querySelector('.form-group__custom-html')
-  if (customHtml) customHtml.remove()
+  if (customHtml) {
+    customHtml.remove()
+    // Restore the raw input only when cleanup completed successfully.
+    // If customHtml is missing (partial cleanup), leave the input hidden so the
+    // orphaned control-bar UI does not appear alongside an active raw input.
+    input.style.display = ''
+  }
 
   formGroup.removeAttribute('data-f-c-input-form-group-url-loaded-value')
   formGroup.removeAttribute('data-f-c-input-form-group-url-json-value')
@@ -25,6 +31,10 @@ window.Folio.Input.Url.initFormGroup = (formGroup, opts = {}) => {
   if (formGroup.classList.contains('f-c-input-form-group-url')) return
 
   const input = formGroup.querySelector('.form-control')
+
+  // Hide the raw input immediately via inline style so it stays hidden regardless
+  // of whether the parent f-c-input-form-group-url CSS class is present or not.
+  input.style.display = 'none'
 
   input.setAttribute('data-f-c-input-form-group-url-target', 'input')
 
