@@ -6,12 +6,12 @@
 
 **BREAKING CHANGE**: `has_folio_tiptap?` has been changed from a class method to an instance method.
 
-**Before (7.1.*):**
+**Before (7.2.*):**
 ```ruby
 Folio::Page.has_folio_tiptap?  # class method
 ```
 
-**After (7.2.0):**
+**After (7.3.0):**
 ```ruby
 page.has_folio_tiptap?  # instance method
 ```
