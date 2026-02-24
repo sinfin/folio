@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - allow override console catalogue sorting boundaries from main_app
+- **TipTap attributes support**: Multiple Tiptap content fields via `has_folio_tiptap_content(fields: [...])`; console tabs to switch between attributes when using multiple fields (without locales). Revisions and autosave are per-attribute; selected attribute persisted in a cookie per record. Use `attribute_name` in `tiptap_config`, `latest_tiptap_revision`, and `has_tiptap_revision?` for a specific field.
 
 ## [7.2.1] - 2026-02-12
 

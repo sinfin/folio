@@ -10,7 +10,7 @@ This chapter describes the Tiptap editor implementation in Folio. The aim is to 
 
 Options (all keyword arguments):
 
-- **`fields`**: Array of attribute names for Tiptap content (default: `[:tiptap_content]`). Use multiple names for several rich-text fields on the same model.
+- **`fields`**: Array of attribute names for Tiptap content (default: `[:tiptap_content]`). Use multiple names for several rich-text fields on the same model. With multiple fields and no locales, the console block editor shows **attribute tabs** to switch between fields. See [Multiple attributes (fields)](#multiple-attributes-fields).
 - **`locales`**: Optional array of locale symbols. When set, each field gets locale-suffixed attributes (e.g. `tiptap_content_cs`, `tiptap_content_en`). See [Locale Support](#locale-support).
 
 ```rb
@@ -1048,8 +1048,19 @@ end
 
 ### Class Methods
 
-- **`folio_tiptap_fields`**: Returns the list of Tiptap attribute names (e.g. `["tiptap_content_cs", "tiptap_content_en"]` with locales, or `["tiptap_content"]` without). Each call to `has_folio_tiptap_content` replaces the previous configuration.
+- **`folio_tiptap_fields`**: Returns the list of Tiptap attribute names (e.g. `["tiptap_content_cs", "tiptap_content_en"]` with locales, or `["tiptap_content"]` without). With multiple base fields and no locales (e.g. `fields: [:intro, :body]`), returns `["intro", "body"]`. Each call to `has_folio_tiptap_content` replaces the previous configuration.
 - **`folio_tiptap_locales`**: Returns the locale map for base field names (e.g. `{ "tiptap_content" => [:cs, :en] }`). Empty when locales are not used.
+
+### Instance methods and attribute_name
+
+When a model has multiple Tiptap fields (or locale-suffixed fields), several methods accept an optional **`attribute_name`** to target a specific field:
+
+- **`tiptap_config(attribute_name: nil)`**: Returns Tiptap config (currently global; `attribute_name` reserved for future per-field config).
+- **`tiptap_autosave_enabled?(attribute_name: nil)`**: Whether autosave is enabled for that config.
+- **`latest_tiptap_revision(user: nil, attribute_name: nil)`**: Latest autosave revision for the current user and optional attribute.
+- **`has_tiptap_revision?(user: nil, attribute_name: nil)`**: Whether the current user has an autosave revision for the optional attribute.
+
+Revisions are stored per attribute; the selected attribute in the console is persisted in a cookie per record.
 
 ### Console UI
 
@@ -1064,6 +1075,23 @@ When locales are configured, `simple_form_for_with_block_tiptap` automatically r
 / Or explicitly
 = render Folio::Tiptap::ContentComponent.new(record: @article, attribute: :tiptap_content_cs)
 ```
+
+---
+
+## Multiple attributes (fields)
+
+You can define several Tiptap content attributes on one model using the **`fields`** option:
+
+```rb
+has_folio_tiptap_content(fields: [:intro, :body])
+```
+
+This creates `intro` and `body` (or, with `locales: %i[cs en]`, `intro_cs`, `intro_en`, `body_cs`, `body_en`). In the console, when using `simple_form_for_with_block_tiptap`:
+
+- **With locales**: The locale switcher shows flags and switches between locale-suffixed attributes (e.g. `tiptap_content_cs`, `tiptap_content_en`).
+- **With multiple fields and no locales**: Tabs are shown to switch between the base field names (e.g. "Intro", "Body"). The selected attribute is stored in a cookie per record.
+
+Revisions and autosave are stored per attribute. Use the `attribute_name` parameter in `latest_tiptap_revision`, `has_tiptap_revision?`, and related methods when you need to work with a specific field.
 
 ---
 
