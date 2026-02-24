@@ -396,22 +396,15 @@ function * hideAtomsFormSaga () {
 }
 
 function * validateAndSaveFormAtomPerform (action) {
-  try {
-    const serializedForm = yield select(serializedFormAtomsSelector)
-    const response = yield (call(apiPost, '/console/atoms/validate', { atoms: serializedForm }))
-    let valid = true
-    response.forEach((res) => { valid = valid && res.valid })
+  const serializedForm = yield select(serializedFormAtomsSelector)
+  const response = yield (call(apiPost, '/console/atoms/validate', { atoms: serializedForm }))
+  let valid = true
+  response.forEach((res) => { valid = valid && res.valid })
 
-    if (valid) {
-      yield put(saveFormAtoms())
-    } else {
-      yield put(setFormValidationErrors(response))
-    }
-  } catch (e) {
-    const serializedForm = yield select(serializedFormAtomsSelector)
-    yield put(setFormValidationErrors(
-      serializedForm.map(() => ({ valid: false, errors: {}, messages: [] }))
-    ))
+  if (valid) {
+    yield put(saveFormAtoms())
+  } else {
+    yield put(setFormValidationErrors(response))
   }
 }
 
