@@ -3,16 +3,17 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-### Changed
-
-- **has_folio_tiptap? method**: Changed from class method to instance method (BREAKING: update all calls and test stubs). See [UPGRADING.md](UPGRADING.md#711-to-720) for migration details.
-- **TipTap Locale Support**: Added locale support to Tiptap editor via `has_folio_tiptap_content(locales: [...])` option, enabling separate content fields per locale with locale switcher UI in console
-- console favicon via site `layout_console_favicon_path`
+## [7.3.0] - 2026-02-24
 
 ### Added
 
 - allow override console catalogue sorting boundaries from main_app
 - **TipTap attributes support**: Multiple Tiptap content fields via `has_folio_tiptap_content(fields: [...])`; console tabs to switch between attributes when using multiple fields (without locales). Revisions and autosave are per-attribute; selected attribute persisted in a cookie per record. Use `attribute_name` in `tiptap_config`, `latest_tiptap_revision`, and `has_tiptap_revision?` for a specific field.
+
+### Changed
+
+- **has_folio_tiptap? method**: Changed from class method to instance method (BREAKING: update all calls and test stubs). See [UPGRADING.md](UPGRADING.md#711-to-720) for migration details.
+- console favicon via site `layout_console_favicon_path`
 
 ## [7.2.1] - 2026-02-12
 
