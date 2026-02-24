@@ -42,6 +42,11 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
     !@header_html.nil?
   end
 
+  def catalogue_data
+    stimulus_lightbox.merge(boundaries_hash)
+                     .merge(model[:js_data] || {})
+  end
+
   def collection_actions
     return nil # TODO components
     return @collection_actions unless @collection_actions.nil?
@@ -534,6 +539,16 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
       end
 
       html
+    end
+
+    def boundaries_hash
+      return {} if boundary_positions.blank?
+      {
+        "f-c-catalogue-prev-boundary-id" => boundary_positions[:prev_id],
+        "f-c-catalogue-prev-boundary-position" => boundary_positions[:prev_position],
+        "f-c-catalogue-next-boundary-id" => boundary_positions[:next_id],
+        "f-c-catalogue-next-boundary-position" => boundary_positions[:next_position],
+      }
     end
 
     def boundary_positions

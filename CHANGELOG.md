@@ -11,6 +11,12 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- allow override console catalogue sorting boundaries from main_app
+
+## [7.2.1] - 2026-02-12
+
+### Added
+
 - encoding generation tracking for media files — stale `CheckProgressJob`s are skipped when a newer encoding has started
 - disable replace button with tooltip when a media file is still processing
 
