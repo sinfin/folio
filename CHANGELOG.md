@@ -7,11 +7,14 @@ All notable changes to this project will be documented in this file.
 
 - add support YouTube shorts embeds links
 
+### Fixed
+
+- S3 ping retry loop no longer runs infinitely after 10 failures — stops retrying, shows a non-blocking flash instead of a blocking `window.alert()`, and resets the loading state
+
 ## [7.3.0] - 2026-02-24
 
 ### Added
 
-- add support YouTube shorts embeds links
 - allow override console catalogue sorting boundaries from main_app
 - **TipTap attributes support**: Multiple Tiptap content fields via `has_folio_tiptap_content(fields: [...])`; console tabs to switch between attributes when using multiple fields (without locales). Revisions and autosave are per-attribute; selected attribute persisted in a cookie per record. Use `attribute_name` in `tiptap_config`, `latest_tiptap_revision`, and `has_tiptap_revision?` for a specific field.
 
@@ -29,7 +32,6 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
-- S3 ping retry loop no longer runs infinitely after 10 failures — stops retrying, shows a non-blocking flash instead of a blocking `window.alert()`, and resets the loading state
 - Uppy file uploads no longer lose preview data — use `setFileMeta` instead of mutating file properties directly, preventing premature uploads when previews are still loading
 - S3 `BaseJob` now broadcasts an error to the frontend when the file is missing on S3 (instead of silently returning)
 - safe navigation in S3 broadcast error methods to handle nil file
