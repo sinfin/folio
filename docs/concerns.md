@@ -62,13 +62,14 @@ TipTap WYSIWYG editor integration. Provides rich text content management with JS
 - Automatically manages file placements from editor content
 - Supports revision history (autosave)
 - Sanitizes HTML content
+- `has_folio_tiptap_content` accepts `fields:` (default `[:tiptap_content]`) and optional `locales:` (see [Tiptap](tiptap.md#locale-support))
 
 **Usage:**
 ```ruby
 class Page < ApplicationRecord
   include Folio::Tiptap::Model
   
-  has_folio_tiptap_content(:tiptap_content)
+  has_folio_tiptap_content
 end
 
 page.tiptap_content = { "type": "doc", "content": [...] }  # TipTap JSON

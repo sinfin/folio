@@ -6,7 +6,24 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - add support YouTube shorts embeds links
+
+## [7.3.0] - 2026-02-24
+
+### Added
+
+- add support YouTube shorts embeds links
 - allow override console catalogue sorting boundaries from main_app
+- **TipTap attributes support**: Multiple Tiptap content fields via `has_folio_tiptap_content(fields: [...])`; console tabs to switch between attributes when using multiple fields (without locales). Revisions and autosave are per-attribute; selected attribute persisted in a cookie per record. Use `attribute_name` in `tiptap_config`, `latest_tiptap_revision`, and `has_tiptap_revision?` for a specific field.
+
+### Changed
+
+- **has_folio_tiptap? method**: Changed from class method to instance method (BREAKING: update all calls and test stubs). See [UPGRADING.md](UPGRADING.md#711-to-720) for migration details.
+- console favicon via site `layout_console_favicon_path`
+
+## [7.2.1] - 2026-02-12
+
+### Added
+
 - encoding generation tracking for media files — stale `CheckProgressJob`s are skipped when a newer encoding has started
 - disable replace button with tooltip when a media file is still processing
 

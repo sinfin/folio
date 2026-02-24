@@ -20,7 +20,7 @@ class Folio::Tiptap::Node
     data = {}
 
     attributes.each do |key, value|
-      if value.present?
+      if value.present? || value == false
         attr_type = self.class.structure.dig(key.to_sym, :type)
 
         if attr_type && attr_type.in?(%i[rich_text url_json]) && value.is_a?(Hash)

@@ -4,6 +4,25 @@ This chapter describes the Tiptap editor implementation in Folio. The aim is to 
 
 ## Usage
 
+### Model Setup
+
+**Important:** You must include the concern and call `has_folio_tiptap_content` in your model before using Tiptap inputs.
+
+Options (all keyword arguments):
+
+- **`fields`**: Array of attribute names for Tiptap content (default: `[:tiptap_content]`). Use multiple names for several rich-text fields on the same model. With multiple fields and no locales, the console block editor shows **attribute tabs** to switch between fields. See [Multiple attributes (fields)](#multiple-attributes-fields).
+- **`locales`**: Optional array of locale symbols. When set, each field gets locale-suffixed attributes (e.g. `tiptap_content_cs`, `tiptap_content_en`). See [Locale Support](#locale-support).
+
+```rb
+class MyApp::Article < Folio::ApplicationRecord
+  include Folio::Tiptap::Model
+
+  has_folio_tiptap_content
+end
+```
+
+### Form Inputs
+
 Simple rich text editor:
 
 ```rb
@@ -157,7 +176,7 @@ end
 The `Node` models are defined by calling `tiptap_node` method which uses the `Folio::Tiptap::NodeBuilder` and supports various attribute types. Attributes can be defined using either the compact syntax (symbols, arrays, hashes) or the explicit hash format with a `:type` property. Under the hood, all compact definitions are converted to the hash format.
 
 #### Compact Syntax (recommended for simple cases):
-- `:string`, `:text`: Basic text attributes
+- `:string`, `:text`: Basic text attributes (support `default` and `hint` in hash format, see [Placeholder and hint](#placeholder-and-hint-console-overlay-form))
 - `:integer`: Integer attributes with automatic type conversion and validation
 - `:rich_text`: JSON-stored rich text content (nested Tiptap structure)
 - `:url_json`: URL with metadata (href, title, target, etc.)
@@ -170,7 +189,7 @@ The `Node` models are defined by calling `tiptap_node` method which uses the `Fo
 
 #### Hash Format with :type property:
 All compact definitions are internally converted to hash format:
-- `{ type: :string }`, `{ type: :text }`: Basic text attributes
+- `{ type: :string }`, `{ type: :text }`: Basic text attributes (support `default` and `hint`, see [Placeholder and hint](#placeholder-and-hint-console-overlay-form))
 - `{ type: :integer }`: Integer attributes with automatic type conversion and validation
 - `{ type: :rich_text }`: JSON-stored rich text content
 - `{ type: :url_json }`: URL with metadata
@@ -273,6 +292,63 @@ node.priority = 3.14     # Float -> 3 (integer)
 node.priority = 100      # Integer -> 100 (unchanged)
 node.priority = nil      # nil -> nil (unchanged)
 node.priority = []       # Raises ArgumentError
+```
+
+#### Placeholder and hint (console overlay form)
+
+In the hash format, string and text attributes (and other input types in the console overlay) support **`default`** and **`hint`**:
+
+- **`default`**: A proc whose return value is shown as the **placeholder** in the input (for string/text). Also used as the initial value when the attribute is blank.
+- **`hint`**: A proc or string shown as **helper text** below the field in the console overlay form.
+
+Both can use a proc; the proc is called when rendering the form, with the node instance as an optional argument.
+
+```rb
+class MyApp::Tiptap::Node::Listings::CategoryArticles < Folio::Tiptap::Node
+  tiptap_node structure: {
+    title: {
+      type: :string,
+      default: proc { human_attribute_name("title/default") },
+      hint: proc { human_attribute_name("title/hint") },
+    },
+    # Default with access to node instance (optional argument)
+    subtitle: {
+      type: :string,
+      default: proc { |node| "#{node.title} - Subtitle" },
+      hint: "Optional subtitle shown below the main title.",
+    },
+  }
+end
+```
+
+**Placeholder (`default`):**
+- Must be a `Proc` (use `proc { }` syntax, not `-> { }`)
+- The result is displayed as the input placeholder (and used as initial value when blank)
+- Recommended: use `human_attribute_name("key/default")` for translations
+
+**Hint:**
+- Can be a `Proc` (evaluated with the node instance) or a plain string
+- Rendered as helper text under the field in the console overlay
+- Recommended: use `human_attribute_name("key/hint")` for translations
+
+**Translation example:**
+
+```yaml
+# config/locales/en.yml
+en:
+  activemodel:
+    attributes:
+      my_app/tiptap/node/listings/category_articles:
+        title/default: "Latest Articles"
+        title/hint: "Short heading shown in the block and in listings."
+```
+
+```rb
+title: {
+  type: :string,
+  default: proc { human_attribute_name("title/default") },
+  hint: proc { human_attribute_name("title/hint") },
+}
 ```
 
 ### File Attachments
@@ -938,6 +1014,84 @@ class MyApp::Tiptap::Node::Cards::Person < Folio::Tiptap::Node
   }
 end
 ```
+
+---
+
+## Locale Support
+
+Folio Tiptap supports localized content. When enabled, separate editors are created for each locale with a locale switcher UI in the console.
+
+### Enabling Locale Support
+
+Pass the `locales:` option to `has_folio_tiptap_content`:
+
+```rb
+class MyApp::Article < Folio::ApplicationRecord
+  include Folio::Tiptap::Model
+
+  has_folio_tiptap_content(locales: %i[cs en de])
+end
+```
+
+This creates locale-suffixed fields for the default field: `tiptap_content_cs`, `tiptap_content_en`, `tiptap_content_de`. With custom `fields: [:intro, :body]`, you get `intro_cs`, `intro_en`, `intro_de`, `body_cs`, `body_en`, `body_de`.
+
+For Traco integration:
+
+```rb
+if Rails.application.config.folio_using_traco
+  has_folio_tiptap_content(locales: I18n.available_locales.map(&:to_sym))
+  translates :title, :perex, :tiptap_content
+else
+  has_folio_tiptap_content
+end
+```
+
+### Class Methods
+
+- **`folio_tiptap_fields`**: Returns the list of Tiptap attribute names (e.g. `["tiptap_content_cs", "tiptap_content_en"]` with locales, or `["tiptap_content"]` without). With multiple base fields and no locales (e.g. `fields: [:intro, :body]`), returns `["intro", "body"]`. Each call to `has_folio_tiptap_content` replaces the previous configuration.
+- **`folio_tiptap_locales`**: Returns the locale map for base field names (e.g. `{ "tiptap_content" => [:cs, :en] }`). Empty when locales are not used.
+
+### Instance methods and attribute_name
+
+When a model has multiple Tiptap fields (or locale-suffixed fields), several methods accept an optional **`attribute_name`** to target a specific field:
+
+- **`tiptap_config(attribute_name: nil)`**: Returns Tiptap config (currently global; `attribute_name` reserved for future per-field config).
+- **`tiptap_autosave_enabled?(attribute_name: nil)`**: Whether autosave is enabled for that config.
+- **`latest_tiptap_revision(user: nil, attribute_name: nil)`**: Latest autosave revision for the current user and optional attribute.
+- **`has_tiptap_revision?(user: nil, attribute_name: nil)`**: Whether the current user has an autosave revision for the optional attribute.
+
+Revisions are stored per attribute; the selected attribute in the console is persisted in a cookie per record.
+
+### Console UI
+
+When locales are configured, `simple_form_for_with_block_tiptap` automatically renders a locale switcher with flag icons. Each locale has independent word count tracking and autosave revisions.
+
+### Rendering Localized Content
+
+```slim
+/ Render for current locale
+= render Folio::Tiptap::ContentComponent.new(record: @article, attribute: :"tiptap_content_#{I18n.locale}")
+
+/ Or explicitly
+= render Folio::Tiptap::ContentComponent.new(record: @article, attribute: :tiptap_content_cs)
+```
+
+---
+
+## Multiple attributes (fields)
+
+You can define several Tiptap content attributes on one model using the **`fields`** option:
+
+```rb
+has_folio_tiptap_content(fields: [:intro, :body])
+```
+
+This creates `intro` and `body` (or, with `locales: %i[cs en]`, `intro_cs`, `intro_en`, `body_cs`, `body_en`). In the console, when using `simple_form_for_with_block_tiptap`:
+
+- **With locales**: The locale switcher shows flags and switches between locale-suffixed attributes (e.g. `tiptap_content_cs`, `tiptap_content_en`).
+- **With multiple fields and no locales**: Tabs are shown to switch between the base field names (e.g. "Intro", "Body"). The selected attribute is stored in a cookie per record.
+
+Revisions and autosave are stored per attribute. Use the `attribute_name` parameter in `latest_tiptap_revision`, `has_tiptap_revision?`, and related methods when you need to work with a specific field.
 
 ---
 
