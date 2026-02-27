@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- tiptap blank documents now get saved as nil - previously a doc with an empty paragraph was saved instead
+
 ## [7.3.0] - 2026-02-24
 
 ### Added
