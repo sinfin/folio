@@ -8,4 +8,8 @@ class Folio::Console::PrivateAttachmentSerializer
              :file_name,
              :type,
              :title
+
+  attribute :expiring_url do |object|
+    object.file&.url
+  end
 end

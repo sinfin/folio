@@ -44,7 +44,15 @@ class Folio::S3::BaseJob < Folio::ApplicationJob
     end
 
     def broadcast_success(s3_path:, file:, file_type:)
-      broadcast({ s3_path:, type: "success", file_id: file.id, file_type: })
+      broadcast({ s3_path:, type: "success", file_id: file.id, file: serialize_file_for_broadcast(file), file_type: })
+    end
+
+    def serialize_file_for_broadcast(file)
+      if file.is_a?(Folio::PrivateAttachment)
+        Folio::Console::PrivateAttachmentSerializer.new(file).serializable_hash[:data]
+      else
+        Folio::Console::FileSerializer.new(file).serializable_hash[:data]
+      end
     end
 
     def broadcast_error(s3_path:, file: nil, error: nil, file_type:)
