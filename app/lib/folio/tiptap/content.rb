@@ -6,7 +6,7 @@ class Folio::Tiptap::Content
   end
 
   def convert_and_sanitize_value(value)
-    return { ok: true, value: nil } if value.nil?
+    return { ok: true, value: nil } if value.blank?
 
     hash_value = nil
 
