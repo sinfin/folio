@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 - add change event handler for select inline edits
 - prevent long filenames from overflowing dropdown
 - S3 ping retry loop no longer runs infinitely after 10 failures — stops retrying, shows a non-blocking flash instead of a blocking `window.alert()`, and resets the loading state
+- tiptap blank documents now get saved as nil - previously a doc with an empty paragraph was saved instead
 
 ## [7.3.0] - 2026-02-24
 
