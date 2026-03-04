@@ -416,9 +416,13 @@ $f-tiptap__media-min-width--desktop: 708px !default;
   }
 
   .f-tiptap-float__aside {
-    margin-bottom: var(--f-tiptap-float__aside-margin-y);
     position: relative;
     z-index: 2;
+    margin-bottom: var(--f-tiptap-float__aside-margin-y);
+    margin-right: var(--f-tiptap-float__aside-margin-x);
+    margin-left: var(--f-tiptap-float__aside-offset);
+    width: var(--f-tiptap-float__aside-width);
+    float: var(--f-tiptap-float__aside-side);
   }
 
   .f-tiptap-editor & .f-tiptap-column::before,
@@ -555,14 +559,6 @@ $f-tiptap__media-min-width--desktop: 708px !default;
     }
   }
 
-  .f-tiptap-float__aside {
-    margin-right: var(--f-tiptap-float__aside-margin-x);
-    margin-bottom: var(--f-tiptap__spacer);
-    margin-left: var(--f-tiptap-float__aside-offset);
-    width: var(--f-tiptap-float__aside-width);
-    float: var(--f-tiptap-float__aside-side);
-  }
-
   .f-tiptap-float[data-f-tiptap-float-side="right"] .f-tiptap-float__aside {
     margin-right: var(--f-tiptap-float__aside-offset);
     margin-left: var(--f-tiptap-float__aside-margin-x);
@@ -580,6 +576,12 @@ $f-tiptap__media-min-width--desktop: 708px !default;
     float: var(--f-tiptap-float__aside-side);
   }
 
+  /* Mobile first - Aside width and spacing */
+  .f-tiptap-float {
+    --f-tiptap-float__aside-side: left;
+    --f-tiptap-float__aside-width: 100%;
+  }
+
   @container (min-width: #{$f-tiptap__media-min-width--tablet}) {
     .f-tiptap-float {
       // Default aside width (medium)
@@ -587,6 +589,7 @@ $f-tiptap__media-min-width--desktop: 708px !default;
       --f-tiptap-float__aside-side: left;
       --f-tiptap-float__aside-margin-x: var(--f-tiptap-float__aside-margin-x--tablet);
       --f-tiptap-float__aside-offset: var(--f-tiptap-float__aside-offset--tablet);
+      --f-tiptap-float__aside-margin-y: var(--f-tiptap__spacer);
 
       &::after {
         content: "";
