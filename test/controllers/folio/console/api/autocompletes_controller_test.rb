@@ -133,6 +133,38 @@ class Folio::Console::Api::AutocompletesControllerTest < Folio::Console::BaseCon
     assert json["meta"].present? || json["data"].present?
   end
 
+  test "show ignores short queries below minimum length" do
+    create(:folio_page, title: "Foo bar baz")
+
+    # 1-char query should return empty (below min length of 3)
+    get console_api_autocomplete_path(klass: "Folio::Page", q: "f")
+    json = JSON.parse(response.body)
+    assert_equal([], json["data"])
+
+    # 2-char query should return empty (below min length of 3)
+    get console_api_autocomplete_path(klass: "Folio::Page", q: "fo")
+    json = JSON.parse(response.body)
+    assert_equal([], json["data"])
+
+    # 3-char query should trigger search and return results
+    get console_api_autocomplete_path(klass: "Folio::Page", q: "foo")
+    json = JSON.parse(response.body)
+    assert_equal(["Foo bar baz"], json["data"])
+  end
+
+  test "show returns all records when query is blank" do
+    create(:folio_page, title: "Alpha page")
+    create(:folio_page, title: "Beta page")
+
+    get console_api_autocomplete_path(klass: "Folio::Page", q: "")
+    json = JSON.parse(response.body)
+    assert_equal 2, json["data"].size
+  end
+
+  test "show min length constant is 3" do
+    assert_equal 3, Folio::Console::Api::AutocompletesController::AUTOCOMPLETE_QUERY_MIN_LENGTH
+  end
+
   test "react_select pagination" do
     # Create 30 pages matching query to test pagination
     30.times { |i| create(:folio_page, title: "Foo page #{i + 1}") }
