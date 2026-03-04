@@ -13,6 +13,13 @@ All notable changes to this project will be documented in this file.
 - prevent long filenames from overflowing dropdown
 - S3 ping retry loop no longer runs infinitely after 10 failures — stops retrying, shows a non-blocking flash instead of a blocking `window.alert()`, and resets the loading state
 
+## [7.4.0] - 2026-03-04
+
+### Fixed
+
+- **Autocomplete performance**: Added minimum query length guard (`AUTOCOMPLETE_QUERY_MIN_LENGTH = 3`) to `AutocompletesController#show` — queries shorter than 3 characters no longer trigger expensive fulltext DB scans. Increased debounce delay in `f-input-autocomplete` Stimulus controller from 150ms to 500ms to reduce concurrent parallel requests during typing. Added combined GIN index `index_folio_files_on_by_label_query` on `folio_files` covering `(file_name_for_search, headline, description)` — resolves cascade PostgreSQL overload from unindexed fulltext scans.
+- tiptap blank documents now get saved as nil - previously a doc with an empty paragraph was saved instead
+
 ## [7.3.0] - 2026-02-24
 
 ### Added

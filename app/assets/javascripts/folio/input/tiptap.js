@@ -78,6 +78,17 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     this.iframeTarget.contentWindow.postMessage(data, this.originValue || window.origin)
   }
 
+  isSingleEmptyParagraphDoc (content) {
+    if (!content || content.type !== 'doc') return false
+    const children = content.content
+    if (!Array.isArray(children) || children.length !== 1) return false
+    const node = children[0]
+    if (node.type !== 'paragraph') return false
+    if (!node.content) return true
+    if (!Array.isArray(node.content) || node.content.length === 0) return true
+    return node.content.every((n) => n.type === 'text' && (n.text === '' || n.text == null))
+  }
+
   onWindowMessage (e) {
     if (this.originValue !== '*' && e.origin !== window.origin) return
     if (e.source !== this.iframeTarget.contentWindow) return
@@ -141,7 +152,10 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     const wordCount = window.Folio.wordCount({ text })
     const valueKeys = this.valueKeys()
 
-    if (content) {
+    const isEmptyDocument = this.isSingleEmptyParagraphDoc(content)
+    console.log('isEmptyDocument', { isEmptyDocument, content })
+
+    if (content && !isEmptyDocument) {
       const value = {
         [valueKeys.content]: content,
         [valueKeys.text]: text,
@@ -159,7 +173,7 @@ window.Folio.Stimulus.register('f-input-tiptap', class extends window.Stimulus.C
     if (!this.ignoreValueChangesValue) {
       this.inputTarget.dispatchEvent(new window.Event('change', { bubbles: true }))
 
-      if (this.autosaveValue && content && !options.isInitialization) {
+      if (this.autosaveValue && content && !isEmptyDocument && !options.isInitialization) {
         this.latestContent = content
         this.debouncedAutoSave()
 

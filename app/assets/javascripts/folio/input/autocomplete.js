@@ -228,7 +228,7 @@ window.Folio.Stimulus.register('f-input-autocomplete', class extends window.Stim
       }
 
       if (!this.debouncedApiLoad) {
-        this.debouncedApiLoad = window.Folio.debounce(this.apiLoad.bind(this))
+        this.debouncedApiLoad = window.Folio.debounce(this.apiLoad.bind(this), 500)
       }
 
       this.debouncedApiLoad(value)
