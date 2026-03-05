@@ -11,8 +11,8 @@ window.Folio.Input = window.Folio.Input || {}
 window.Folio.Input.Autocomplete = {}
 
 window.Folio.Input.Autocomplete.TEMPLATE_HTML = window.Folio.Input.Autocomplete.TEMPLATE_HTML || `
-  <div class="f-input-autocomplete-dropdown" style="position: absolute; z-index: 2000;">
-    <ul class="f-input-autocomplete-dropdown__menu dropdown-menu show" role="tooltip" style="position: static;">
+  <div class="f-input-autocomplete-dropdown" style="position: absolute; z-index: 2000; overflow: hidden;">
+    <ul class="f-input-autocomplete-dropdown__menu dropdown-menu show" role="tooltip" style="position: static; max-width: 100%;">
     </ul>
   </div>
 `
@@ -339,7 +339,7 @@ window.Folio.Stimulus.register('f-input-autocomplete', class extends window.Stim
 
       items.forEach((item, index) => {
         if (index > 9) return
-        html += `<li><span class="dropdown-item" style="cursor: pointer; overflow-wrap: break-word; white-space: normal;">${item}</span></li>`
+        html += `<li><span class="dropdown-item" style="cursor: pointer; overflow-wrap: break-word; word-break: break-all; white-space: normal;">${item}</span></li>`
       })
 
       this.addDropdown(html)
