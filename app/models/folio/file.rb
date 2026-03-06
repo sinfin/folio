@@ -42,6 +42,7 @@ class Folio::File < Folio::ApplicationRecord
       update_thumbnails_crop
     ],
     read: %i[
+      additional_html
       batch_bar
       batch_download
       batch_download_failure
