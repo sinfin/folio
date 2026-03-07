@@ -88,6 +88,8 @@ class Folio::CraMediaCloud::CheckProgressJob < Folio::ApplicationJob
           save_intermediate_phase_data(response)
           media_file.remote_services_data.delete("remote_id")
           media_file.save!
+          broadcast_encoding_progress
+          broadcast_file_update(media_file)
           Rails.logger.info "[CraMediaCloud::CheckProgressJob] Phase #{response['phase']} done, cleared remote_id to discover next phase"
           return nil
         end
