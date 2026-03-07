@@ -24,8 +24,11 @@ en:
         show:
           encoding_info_component:
             phase_waiting: "Waiting in queue"
+            phase_waiting_multi: "Waiting in queue (phase %{phase}/%{total})"
             phase_encoding: "Encoding video"
+            phase_encoding_multi: "Encoding video (%{phase}/%{total})"
             phase_packaging: "Packaging"
+            phase_packaging_multi: "Packaging (%{phase}/%{total})"
             phase_failed_retrying: "Processing failed, retrying automatically"
             phase_failed: "Processing failed. Delete the video and upload again."
 

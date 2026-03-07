@@ -24,8 +24,11 @@ cs:
         show:
           encoding_info_component:
             phase_waiting: "Čekání ve frontě"
+            phase_waiting_multi: "Čekání ve frontě (fáze %{phase}/%{total})"
             phase_encoding: "Kódování videa"
+            phase_encoding_multi: "Kódování videa (%{phase}/%{total})"
             phase_packaging: "Balení"
+            phase_packaging_multi: "Balení (%{phase}/%{total})"
             phase_failed_retrying: "Zpracování selhalo, pokusíme se znovu"
             phase_failed: "Zpracování selhalo. Smažte video a nahrajte znovu."
 

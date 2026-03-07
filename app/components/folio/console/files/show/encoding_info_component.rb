@@ -26,6 +26,22 @@ class Folio::Console::Files::Show::EncodingInfoComponent < Folio::Console::Appli
     @rsd["current_phase"]
   end
 
+  def current_phase_label
+    return current_phase&.humanize if current_phase.blank?
+
+    encoding_phase = @rsd["current_encoding_phase"]
+    processing_phases = @rsd["processing_phases"].to_i
+
+    if processing_phases > 1 && encoding_phase.present?
+      t(".phase_#{current_phase}_multi",
+        phase: encoding_phase,
+        total: processing_phases,
+        default: t(".phase_#{current_phase}", default: current_phase.humanize))
+    else
+      t(".phase_#{current_phase}", default: current_phase.humanize)
+    end
+  end
+
   def encoding_progress
     @rsd["progress_percentage"]
   end

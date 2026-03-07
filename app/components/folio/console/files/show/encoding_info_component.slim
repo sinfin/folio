@@ -7,7 +7,7 @@ span.f-c-files-show-encoding-info data=data
         = t(".phase_failed")
   - elsif processing?
     span.f-c-files-show-encoding-info__phase
-      = t(".phase_#{current_phase}", default: current_phase&.humanize)
+      = current_phase_label
     span.f-c-files-show-encoding-info__progress
       - if encoding_progress.present?
         = "#{encoding_progress}%"

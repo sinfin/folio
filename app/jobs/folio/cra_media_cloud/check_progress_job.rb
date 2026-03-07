@@ -190,16 +190,11 @@ class Folio::CraMediaCloud::CheckProgressJob < Folio::ApplicationJob
       phase = current_phase(response)
       media_file.remote_services_data["current_phase"] = phase
 
-      # Multi-phase progress mapping: distribute progress across encoding phases
-      if multi_phase? && phase == "encoding" && response["phase"].to_i > 0
-        encoding_phase = response["phase"].to_i
-        phase_weight = 1.0 / expected_phases
-        mapped = ((encoding_phase - 1) * phase_weight + raw_progress * phase_weight) * 100.0
-        media_file.remote_services_data["progress_percentage"] = mapped.round(0)
-        media_file.remote_services_data["current_encoding_phase"] = encoding_phase
-      else
-        media_file.remote_services_data["progress_percentage"] = phase == "encoding" ? (raw_progress * 100).round(0) : nil
+      if multi_phase? && response["phase"].to_i > 0
+        media_file.remote_services_data["current_encoding_phase"] = response["phase"].to_i
       end
+
+      media_file.remote_services_data["progress_percentage"] = phase == "encoding" ? (raw_progress * 100).round(0) : nil
     end
 
     # Derive current phase from CRA status and completed message phases.
@@ -314,6 +309,18 @@ class Folio::CraMediaCloud::CheckProgressJob < Folio::ApplicationJob
         end
       end
 
+      phase_label = if phase.present?
+        encoding_phase = media_file.remote_services_data["current_encoding_phase"]
+        if multi_phase? && encoding_phase.present?
+          I18n.t("folio.console.files.show.encoding_info_component.phase_#{phase}_multi",
+                 phase: encoding_phase,
+                 total: expected_phases,
+                 default: I18n.t("folio.console.files.show.encoding_info_component.phase_#{phase}", default: phase.humanize))
+        else
+          I18n.t("folio.console.files.show.encoding_info_component.phase_#{phase}", default: phase.humanize)
+        end
+      end
+
       MessageBus.publish Folio::MESSAGE_BUS_CHANNEL,
                          {
                            type: "Folio::CraMediaCloud::CheckProgressJob/encoding_progress",
@@ -323,7 +330,7 @@ class Folio::CraMediaCloud::CheckProgressJob < Folio::ApplicationJob
                              aasm_state_human: serialized_file(media_file).dig(:data, :attributes, :aasm_state_human),
                              progress_percentage: media_file.remote_services_data["progress_percentage"],
                              current_phase: phase,
-                             current_phase_label: phase.present? ? I18n.t("folio.console.files.show.encoding_info_component.phase_#{phase}", default: phase.humanize) : nil,
+                             current_phase_label: phase_label,
                              failed_label: failed_label,
                              cra_status: media_file.remote_services_data["cra_status"],
                            },
