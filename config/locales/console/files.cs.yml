@@ -22,6 +22,13 @@ cs:
           navigation_previous: Předchozí
 
         show:
+          encoding_info_component:
+            phase_waiting: "Čekání ve frontě"
+            phase_encoding: "Kódování videa"
+            phase_packaging: "Balení"
+            phase_failed_retrying: "Zpracování selhalo, pokusíme se znovu"
+            phase_failed: "Zpracování selhalo. Smažte video a nahrajte znovu."
+
           metadata_component:
             no_metadata: Žádná metadata
             extract_metadata: Znovu extrahovat metadata

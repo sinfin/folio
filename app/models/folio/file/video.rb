@@ -74,6 +74,7 @@ end
 #  index_folio_files_on_by_author                 (to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((author)::text, ''::text)))) USING gin
 #  index_folio_files_on_by_file_name              (to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name)::text, ''::text)))) USING gin
 #  index_folio_files_on_by_file_name_for_search   (to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text)))) USING gin
+#  index_folio_files_on_by_label_query            ((((to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text))) || to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((headline)::text, ''::text)))) || to_tsvector('simple'::regconfig, folio_unaccent(COALESCE(description, ''::text)))))) USING gin
 #  index_folio_files_on_created_at                (created_at)
 #  index_folio_files_on_created_by_folio_user_id  (created_by_folio_user_id)
 #  index_folio_files_on_file_name                 (file_name)

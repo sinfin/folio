@@ -4,6 +4,11 @@ class Folio::CraMediaCloud::DeleteMediaJob < Folio::ApplicationJob
   queue_as :slow
 
   def perform(id, reference_id: nil)
+    if id.blank? && reference_id.blank?
+      Rails.logger.warn "[CraMediaCloud::DeleteMediaJob] Skipping — no remote_id or reference_id (file was never processed by CRA)"
+      return
+    end
+
     if id.present?
       api.delete_job_content(id)
     elsif reference_id.present?
@@ -18,8 +23,6 @@ class Folio::CraMediaCloud::DeleteMediaJob < Folio::ApplicationJob
         end
         Rails.logger.info "[CraMediaCloud::DeleteMediaJob] Deleted content for #{jobs.size} job(s) with reference_id #{reference_id}"
       end
-    else
-      raise "Missing remote_key and remote_reference_id"
     end
   end
 
