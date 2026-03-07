@@ -312,10 +312,17 @@ class Folio::CraMediaCloud::CheckProgressJob < Folio::ApplicationJob
       phase_label = if phase.present?
         encoding_phase = media_file.remote_services_data["current_encoding_phase"]
         if multi_phase? && encoding_phase.present?
-          I18n.t("folio.console.files.show.encoding_info_component.phase_#{phase}_multi",
-                 phase: encoding_phase,
-                 total: expected_phases,
-                 default: I18n.t("folio.console.files.show.encoding_info_component.phase_#{phase}", default: phase.humanize))
+          phase_name = media_file.encoder_phase_name(encoding_phase)
+          if phase_name
+            I18n.t("folio.console.files.show.encoding_info_component.phase_#{phase}_named",
+                   name: phase_name,
+                   default: I18n.t("folio.console.files.show.encoding_info_component.phase_#{phase}", default: phase.humanize))
+          else
+            I18n.t("folio.console.files.show.encoding_info_component.phase_#{phase}_multi",
+                   phase: encoding_phase,
+                   total: expected_phases,
+                   default: I18n.t("folio.console.files.show.encoding_info_component.phase_#{phase}", default: phase.humanize))
+          end
         else
           I18n.t("folio.console.files.show.encoding_info_component.phase_#{phase}", default: phase.humanize)
         end

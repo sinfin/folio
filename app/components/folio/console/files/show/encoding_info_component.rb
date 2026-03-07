@@ -33,10 +33,17 @@ class Folio::Console::Files::Show::EncodingInfoComponent < Folio::Console::Appli
     processing_phases = @rsd["processing_phases"].to_i
 
     if processing_phases > 1 && encoding_phase.present?
-      t(".phase_#{current_phase}_multi",
-        phase: encoding_phase,
-        total: processing_phases,
-        default: t(".phase_#{current_phase}", default: current_phase.humanize))
+      phase_name = @file.try(:encoder_phase_name, encoding_phase)
+      if phase_name
+        t(".phase_#{current_phase}_named",
+          name: phase_name,
+          default: t(".phase_#{current_phase}", default: current_phase.humanize))
+      else
+        t(".phase_#{current_phase}_multi",
+          phase: encoding_phase,
+          total: processing_phases,
+          default: t(".phase_#{current_phase}", default: current_phase.humanize))
+      end
     else
       t(".phase_#{current_phase}", default: current_phase.humanize)
     end
