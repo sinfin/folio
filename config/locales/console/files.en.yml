@@ -22,6 +22,13 @@ en:
           navigation_previous: Previous
 
         show:
+          encoding_info_component:
+            phase_waiting: "Waiting in queue"
+            phase_encoding: "Encoding video"
+            phase_packaging: "Packaging"
+            phase_failed_retrying: "Processing failed, retrying automatically"
+            phase_failed: "Processing failed. Delete the video and upload again."
+
           metadata_component:
             no_metadata: No metadata
             extract_metadata: Extract metadata again

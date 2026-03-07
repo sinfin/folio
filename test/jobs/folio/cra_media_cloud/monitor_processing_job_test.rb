@@ -66,7 +66,7 @@ class Folio::CraMediaCloud::MonitorProcessingJobTest < ActiveJob::TestCase
       remote_services_data: {
         "service" => "cra_media_cloud",
         "processing_state" => "upload_completed",
-        "processing_step_started_at" => 7.hours.ago.iso8601
+        "processing_step_started_at" => 3.hours.ago.iso8601
       }
     )
 
@@ -76,6 +76,41 @@ class Folio::CraMediaCloud::MonitorProcessingJobTest < ActiveJob::TestCase
 
     video.reload
     assert_equal "processing_failed", video.aasm_state
+  end
+
+  test "rescues failed video awaiting retry when retry job is lost" do
+    video = create(:folio_file_video)
+    video.update!(
+      aasm_state: :processing_failed,
+      remote_services_data: {
+        "service" => "cra_media_cloud",
+        "retry_count" => 1,
+        "retry_scheduled_at" => 10.minutes.ago.iso8601,
+      }
+    )
+
+    with_unlocked_monitor_job do
+      assert_enqueued_jobs 1, only: Folio::CraMediaCloud::CreateMediaJob do
+        Folio::CraMediaCloud::MonitorProcessingJob.perform_now
+      end
+    end
+  end
+
+  test "does not rescue finally failed video (retry_count >= 2)" do
+    video = create(:folio_file_video)
+    video.update!(
+      aasm_state: :processing_failed,
+      remote_services_data: {
+        "service" => "cra_media_cloud",
+        "retry_count" => 2,
+      }
+    )
+
+    with_unlocked_monitor_job do
+      assert_no_enqueued_jobs only: Folio::CraMediaCloud::CreateMediaJob do
+        Folio::CraMediaCloud::MonitorProcessingJob.perform_now
+      end
+    end
   end
 
   test "upload_is_stuck? returns false for small file within timeout" do

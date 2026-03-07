@@ -5,6 +5,8 @@ require "net/sftp"
 module Folio
   module CraMediaCloud
     class Encoder
+      include Folio::S3::Client
+
       DEFAULT_PROFILE_GROUP = "VoD"
 
       # SFTP connection configuration
@@ -16,63 +18,33 @@ module Folio
       # SFTP upload configuration
       CHUNK_SIZE = 1.megabyte # Standard chunk size for file operations
 
-      def upload_file(file, priority: "regular", profile_group: nil, reference_id: nil, media_file: nil)
+      def upload_file(file, priority: "regular", profile_group: nil, reference_id: nil, media_file: nil, processing_phases: nil)
         ref_id = reference_id || [file.id, Time.current.to_i].join("-")
-        Rails.logger.info("[CraMediaCloud::Encoder] Starting upload for file ID: #{file.id}, ref_id: #{ref_id}")
+        Rails.logger.info("[CraMediaCloud::Encoder] Starting manifest upload for file ID: #{file.id}, ref_id: #{ref_id}")
 
-        # Get metadata without downloading the file
+        # Get S3 metadata for MD5 checksum
         s3_metadata = get_s3_metadata(file)
         md5 = extract_etag(s3_metadata).delete_prefix('"').delete_suffix('"')
 
-        xml_manifest = build_ingest_manifest(file, md5:, ref_id:, profile_group:)
+        # Generate presigned URL for CRA to download directly from S3
+        presigned_url = generate_presigned_url(file)
+        Rails.logger.info("[CraMediaCloud::Encoder] Generated presigned S3 URL for CRA (expires in 7 days)")
+
+        xml_manifest = build_ingest_manifest(file, md5:, ref_id:, profile_group:, presigned_url:, processing_phases:)
 
         folder_path = "/ingest/#{priority}"
-        file_path = "#{folder_path}/#{file.file_name}"
-        xml_manifest_path = "#{folder_path}/#{file.file_name.split(".").first}_manifest.xml"
+        xml_manifest_path = "#{folder_path}/#{ref_id}_manifest.xml"
 
-        # Use plain temp file path to avoid Ruby memory buffering
-        temp_file_path = ::File.join(Dir.tmpdir, "cra_upload_#{ref_id}_#{Process.pid}_#{Time.current.to_i}.tmp")
-
-        begin
-          # Download using system tools (no Ruby file handles involved)
-          download_to_file_path(file, temp_file_path)
-
-          # Verify file size
-          actual_size = ::File.size(temp_file_path)
-          if actual_size != file.file_size
-            Rails.logger.error("[CraMediaCloud::Encoder] Downloaded file size mismatch: got #{actual_size}, expected #{file.file_size}")
-            raise "Downloaded file size mismatch: got #{actual_size}, expected #{file.file_size}"
-          end
-
-          # Upload to SFTP with robust session management
-          with_robust_sftp_session do |sftp|
-            # Use standard upload for better performance
-            upload_with_retry(sftp, temp_file_path, file_path)
-            Rails.logger.info("[CraMediaCloud::Encoder] File uploaded to SFTP: #{file_path}")
-
-            # Upload manifest
-            upload_with_retry(sftp, StringIO.new(xml_manifest), xml_manifest_path)
-            Rails.logger.info("[CraMediaCloud::Encoder] Manifest uploaded to SFTP: #{xml_manifest_path}")
-          end
-
-        rescue => e
-          Rails.logger.error("[CraMediaCloud::Encoder] Error during upload process: #{e.class}: #{e.message}")
-          raise
-        ensure
-          # Clean up temp file
-          if ::File.exist?(temp_file_path)
-            begin
-              ::File.delete(temp_file_path)
-            rescue => e
-              Rails.logger.warn("[CraMediaCloud::Encoder] Could not delete temp file #{temp_file_path}: #{e.message}")
-            end
-          end
+        # Upload only the manifest via SFTP (CRA downloads the video itself)
+        with_robust_sftp_session do |sftp|
+          upload_with_retry(sftp, StringIO.new(xml_manifest), xml_manifest_path)
+          Rails.logger.info("[CraMediaCloud::Encoder] Manifest uploaded to SFTP: #{xml_manifest_path}")
         end
 
         {
           ref_id:,
-          file_path:,
           xml_manifest_path:,
+          presigned_url: presigned_url.present?,
         }
       end
 
@@ -95,109 +67,31 @@ module Folio
           end
         end
 
-        def download_to_file_path(file, file_path)
+        def generate_presigned_url(file)
           s3_datastore = Dragonfly.app.datastore
-          s3_object_key = [s3_datastore.root_path, file.file_uid].join("/")
-
-          download_success = false
-
-          # Try AWS CLI first (if available)
-          if system("which aws > /dev/null 2>&1")
-            s3_url = "s3://#{ENV['S3_BUCKET_NAME']}/#{s3_object_key}"
-            aws_command = "aws s3 cp #{s3_url} #{file_path} --no-progress"
-
-            if system(aws_command)
-              download_success = true
-            end
-          end
-
-          # Fallback to curl with S3 presigned URL
-          unless download_success
-            begin
-              s3_client = s3_datastore.storage
-              presigned_url = s3_client.presigned_url(
-                :get_object,
-                bucket: ENV["S3_BUCKET_NAME"],
-                key: s3_object_key,
-                expires_in: 3600
-              )
-
-              curl_command = [
-                "curl", "-L", "-s", "-S",
-                "-o", file_path,
-                "--max-time", "1800",
-                "--connect-timeout", "30",
-                presigned_url
-              ]
-
-              if system(*curl_command)
-                download_success = true
-              end
-
-            rescue => e
-              Rails.logger.error("[CraMediaCloud::Encoder] Error generating presigned URL: #{e.message}")
-            end
-          end
-
-          # Final fallback to Ruby download
-          unless download_success
-            Rails.logger.warn("[CraMediaCloud::Encoder] System download failed, using Ruby fallback")
-
-            downloaded_bytes = 0
-
-            ::File.open(file_path, "wb") do |output_file|
-              loop do
-                range_start = downloaded_bytes
-                range_end = [downloaded_bytes + CHUNK_SIZE - 1, file.file_size - 1].min
-
-                break if range_start >= file.file_size
-
-                begin
-                  s3_response = s3_datastore.storage.get_object(
-                    ENV["S3_BUCKET_NAME"],
-                    s3_object_key,
-                    range: "bytes=#{range_start}-#{range_end}"
-                  )
-
-                  chunk_data = s3_response.body
-                  output_file.write(chunk_data)
-                  output_file.flush
-
-                  downloaded_bytes += chunk_data.length
-
-                  # Clear references
-                  nil
-                  nil
-
-                rescue => e
-                  Rails.logger.error("[CraMediaCloud::Encoder] Error downloading chunk #{range_start}-#{range_end}: #{e.message}")
-                  raise "Failed to download chunk from S3: #{e.message}"
-                end
-              end
-            end
-
-            download_success = true
-          end
-
-          unless download_success
-            raise "All download methods failed"
-          end
-
-          actual_size = ::File.size(file_path)
-          if actual_size != file.file_size
-            raise "Downloaded size mismatch: got #{actual_size}, expected #{file.file_size}"
-          end
+          s3_object_key = [s3_datastore.root_path, file.file_uid].compact_blank.join("/")
+          s3_presigner.presigned_url(
+            :get_object,
+            bucket: ENV["S3_BUCKET_NAME"],
+            key: s3_object_key,
+            expires_in: 7.days.to_i  # 604800 seconds
+          )
         end
 
-        def build_ingest_manifest(file, md5:, ref_id:, profile_group:)
+        def build_ingest_manifest(file, md5:, ref_id:, profile_group:, presigned_url: nil, processing_phases: nil)
           xml = Builder::XmlMarkup.new; nil
           xml.instruct!(:xml, version: "1.0", encoding: "utf-8")
 
-          xml.vod_encoder_job do
-            xml.input(type: "VIDEO",
-                      file: file.file_name,
-                      size: file.file_size.to_s,
-                      md5: md5) do
+          root_attrs = processing_phases.to_i > 1 ? { processingPhases: processing_phases } : {}
+          xml.vod_encoder_job(root_attrs) do
+            input_attrs = { type: "VIDEO", size: file.file_size.to_s, md5: md5 }
+            if presigned_url.present?
+              input_attrs[:src] = presigned_url
+            else
+              input_attrs[:file] = file.file_name
+            end
+
+            xml.input(input_attrs) do
               xml.audioTrack(language: "cze", channels: "auto")
             end
             xml.profileGroup(profile_group || DEFAULT_PROFILE_GROUP)
