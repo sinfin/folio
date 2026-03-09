@@ -4,9 +4,8 @@
       = folio_icon(:link)
 
     span.f-c-atoms-previews__insert-hint-big-btn
-      == cell('folio/console/ui/with_icon',
-              t('.add_atom'),
-              icon: :plus)
+      == render_view_component(Folio::Console::Ui::WithIconComponent.new(t('.add_atom'),
+                                                                          icon: :plus))
 
     span.f-c-atoms-previews__insert-hint-btn
       = folio_icon(:plus)
