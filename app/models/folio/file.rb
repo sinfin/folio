@@ -267,6 +267,17 @@ class Folio::File < Folio::ApplicationRecord
     end
   end
 
+  # Returns a path or URL suitable for ffprobe/ffmpeg.
+  # For S3 storage: presigned URL (streams headers only, no full download).
+  # For local storage: file system path.
+  def file_url_or_path
+    if Dragonfly.app.datastore.is_a?(Dragonfly::FileDataStore)
+      file.path.to_s
+    else
+      file_presigned_url
+    end
+  end
+
   def thumbnailable?
     false
   end
@@ -417,6 +428,26 @@ class Folio::File < Folio::ApplicationRecord
   end
 
   private
+    def file_presigned_url(expires_in: 1.hour.to_i)
+      s3_datastore = Dragonfly.app.datastore
+      s3_object_key = [s3_datastore.root_path, file_uid].compact_blank.join("/")
+
+      presigner = Aws::S3::Presigner.new(client: Aws::S3::Client.new(
+        region: ENV.fetch("S3_REGION"),
+        credentials: Aws::Credentials.new(
+          ENV.fetch("AWS_ACCESS_KEY_ID"),
+          ENV.fetch("AWS_SECRET_ACCESS_KEY"),
+          ENV.fetch("AWS_SESSION_TOKEN", nil)
+        )
+      ))
+
+      presigner.presigned_url(:get_object,
+        bucket: ENV.fetch("S3_BUCKET_NAME"),
+        key: s3_object_key,
+        expires_in: expires_in
+      )
+    end
+
     def slug_candidates
       %i[slug headline hash_id_for_slug to_label]
     end
