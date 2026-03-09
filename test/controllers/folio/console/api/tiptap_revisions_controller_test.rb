@@ -205,23 +205,22 @@ class Folio::Console::Api::TiptapRevisionsControllerTest < Folio::Console::BaseC
     @page.tiptap_revisions.create!(user: @another_user, attribute_name: "tiptap_content", content: content1)
     @page.tiptap_revisions.create!(user: @another_user, attribute_name: "tiptap_content_cs", content: content2)
 
-    assert_difference "Folio::Tiptap::Revision.count", 2 do
+    assert_nil @page.tiptap_revisions.find_by(user: @superadmin, attribute_name: "tiptap_content")
+    assert_nil @page.tiptap_revisions.find_by(user: @superadmin, attribute_name: "tiptap_content_cs")
+
+    assert_difference "Folio::Tiptap::Revision.count", 1 do
       post takeover_revision_console_api_tiptap_revisions_path(format: :json), params: {
         from_user_id: @another_user.id,
-        record_type: "Folio::Page",
-        record_id: @page.id
+        placement: { type: "Folio::Page", id: @page.id, attribute_name: "tiptap_content_cs" }
       }
     end
 
     assert_response :ok
     assert response.parsed_body["success"]
 
-    my_revision1 = @page.tiptap_revisions.find_by(user: @superadmin, attribute_name: "tiptap_content")
-    my_revision2 = @page.tiptap_revisions.find_by(user: @superadmin, attribute_name: "tiptap_content_cs")
-
-    assert_not_nil my_revision1
-    assert_not_nil my_revision2
-    assert_equal content1.stringify_keys, my_revision1.content
-    assert_equal content2.stringify_keys, my_revision2.content
+    assert_nil @page.tiptap_revisions.find_by(user: @superadmin, attribute_name: "tiptap_content")
+    my_revision = @page.tiptap_revisions.find_by(user: @superadmin, attribute_name: "tiptap_content_cs")
+    assert_not_nil my_revision
+    assert_equal content2.stringify_keys, my_revision.content
   end
 end
