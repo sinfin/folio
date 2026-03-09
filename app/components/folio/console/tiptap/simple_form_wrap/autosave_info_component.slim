@@ -4,7 +4,7 @@
       = render(Folio::Console::Ui::AlertComponent.new(variant: :warning,
                                                       class_name: "m-0",
                                                       closable: false))
-        = t('.new_record_alert', model: object.class.model_name.human.downcase)
+        = t('.new_record_alert')
   - elsif has_unsaved_changes?
     .f-c-tiptap-simple-form-wrap-autosave-info__unsaved_changes data=stimulus_target("unsavedChanges")
       .f-c-tiptap-simple-form-wrap-autosave-info__top
