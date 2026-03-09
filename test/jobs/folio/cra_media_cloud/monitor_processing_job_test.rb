@@ -113,6 +113,54 @@ class Folio::CraMediaCloud::MonitorProcessingJobTest < ActiveJob::TestCase
     end
   end
 
+  test "triggers process! for stuck unprocessed video with file_uid" do
+    video = create(:folio_file_video)
+    video.update_columns(
+      aasm_state: "unprocessed",
+      file_uid: "2026/03/09/13/20/26/test-uuid/test.mp4",
+      created_at: 10.minutes.ago
+    )
+
+    with_unlocked_monitor_job do
+      Folio::CraMediaCloud::MonitorProcessingJob.perform_now
+    end
+
+    video.reload
+    assert_not_equal "unprocessed", video.aasm_state, "Video should no longer be unprocessed after safety net"
+  end
+
+  test "does not trigger process! for recently created unprocessed video" do
+    video = create(:folio_file_video)
+    video.update_columns(
+      aasm_state: "unprocessed",
+      file_uid: "2026/03/09/13/20/26/test-uuid/test.mp4",
+      created_at: 2.minutes.ago
+    )
+
+    with_unlocked_monitor_job do
+      Folio::CraMediaCloud::MonitorProcessingJob.perform_now
+    end
+
+    video.reload
+    assert_equal "unprocessed", video.aasm_state
+  end
+
+  test "does not trigger process! for unprocessed video without file_uid" do
+    video = create(:folio_file_video)
+    video.update_columns(
+      aasm_state: "unprocessed",
+      file_uid: nil,
+      created_at: 10.minutes.ago
+    )
+
+    with_unlocked_monitor_job do
+      Folio::CraMediaCloud::MonitorProcessingJob.perform_now
+    end
+
+    video.reload
+    assert_equal "unprocessed", video.aasm_state
+  end
+
   test "upload_is_stuck? returns false for small file within timeout" do
     video = create(:folio_file_video, file_size: 10.megabytes)
     upload_started_at = 2.minutes.ago

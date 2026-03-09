@@ -8,6 +8,9 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
     return if another_monitor_job_running?
 
     begin
+      # Handle videos stuck in unprocessed state with existing files
+      handle_stuck_unprocessed_videos
+
       # Handle videos with orphaned or inconsistent states first
       handle_orphaned_videos
 
@@ -29,6 +32,26 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
   end
 
   private
+    def handle_stuck_unprocessed_videos
+      stuck = Folio::File::Video
+        .where(aasm_state: :unprocessed)
+        .where("file_uid IS NOT NULL AND file_uid != ''")
+        .where("created_at < ?", 5.minutes.ago)
+
+      return if stuck.empty?
+
+      Rails.logger.info("MonitorProcessingJob: Found #{stuck.count} stuck unprocessed video(s) with files")
+
+      stuck.each do |video|
+        Rails.logger.info("MonitorProcessingJob: Triggering process! for stuck video ##{video.id} (created #{video.created_at})")
+        begin
+          video.process!
+        rescue => e
+          Rails.logger.error("MonitorProcessingJob: Failed to process stuck video ##{video.id}: #{e.message}")
+        end
+      end
+    end
+
     def find_processing_videos
       Folio::File::Video
         .where(aasm_state: :processing)
