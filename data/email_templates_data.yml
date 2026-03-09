@@ -253,6 +253,83 @@
 
     If you don't want to sign in, ignore this e-mail. Your account will not be updated unless you click the link.
 
+- mailer: Devise::Mailer
+  action: magic_link
+  optional_keywords:
+    - USER_EMAIL
+    - ROOT_URL
+    - DOMAIN
+    - SITE_TITLE
+  required_keywords:
+    - USER_MAGIC_LINK_URL
+    - VALID_UNTIL_TIME
+  title_cs: Uživatelské účty - přihlašovací odkaz
+  title_en: Users - magic login link
+  subject_cs: Ověření přihlášení
+  subject_en: Login confirmation
+  body_html_cs: |
+    <p>Dobrý den,</p>
+
+    <p>zjistili jsme přihlášení z nového zařízení nebo po delší době neaktivity.</p>
+
+    <p>Pro přihlášení klikněte na tlačítko:</p>
+
+    <p class="redactor-component folio-redactor-button"><a class="btn btn-redactor btn-redactor--fill" href="{USER_MAGIC_LINK_URL}">Přihlásit se</a></p>
+
+    <p>Odkaz je platný do {VALID_UNTIL_TIME}.</p>
+
+    <p>Pokud jste se nepřihlašovali, ignorujte tento email.</p>
+
+    <p>S přátelským pozdravem</p>
+
+    <p>{SITE_TITLE}</p>
+  body_html_en: |
+    <p>Hello,</p>
+
+    <p>we detected a login from a new device or after a period of inactivity.</p>
+
+    <p>To log in, click the button below:</p>
+
+    <p class="redactor-component folio-redactor-button"><a class="btn btn-redactor btn-redactor--fill" href="{USER_MAGIC_LINK_URL}">Log in</a></p>
+
+    <p>The link is valid until {VALID_UNTIL_TIME}.</p>
+
+    <p>If you did not attempt to log in, please ignore this email.</p>
+
+    <p>With kind regards,</p>
+
+    <p>{SITE_TITLE}</p>
+  body_text_cs: |
+    Dobrý den,
+
+    zjistili jsme přihlášení z nového zařízení nebo po delší době neaktivity.
+
+    Pro přihlášení klikněte na odkaz:
+
+    {USER_MAGIC_LINK_URL}
+
+    Odkaz je platný do {VALID_UNTIL_TIME}.
+
+    Pokud jste se nepřihlašovali, ignorujte tento email.
+
+    S přátelským pozdravem
+    {SITE_TITLE}
+  body_text_en: |
+    Hello,
+
+    we detected a login from a new device or after a period of inactivity.
+
+    To log in, click the link below:
+
+    {USER_MAGIC_LINK_URL}
+
+    The link is valid until {VALID_UNTIL_TIME}.
+
+    If you did not attempt to log in, please ignore this email.
+
+    With kind regards,
+    {SITE_TITLE}
+
 - mailer: Folio::LeadMailer
   action: notification_email
   optional_keywords:

@@ -92,11 +92,44 @@ class Folio::DeviseMailer < Devise::Mailer
     end
   end
 
+  def magic_link(record, token, remember_me = nil, opts = {})
+    @token = token
+    @resource = record
+    @scope_name = Devise::Mapping.find_scope!(record)
+
+    @site = record.auth_site
+    opts = { site: @site }.merge(opts)
+
+    initialize_from_record(record)
+
+    with_user_locale(record, locale: opts[:locale]) do |locale|
+      template_data = {
+        LOCALE: locale,
+        VALID_UNTIL_TIME: I18n.l(Time.now + Devise.passwordless_login_within, format: :short),
+        USER_MAGIC_LINK_URL: scoped_url_method(record,
+                                               :magic_link_url,
+                                               token: @token,
+                                               user: {
+                                                 email: record.email,
+                                                 auth_site_id: @site.id,
+                                               },
+                                               host: @site.env_aware_domain,
+                                               locale: locale)
+      }
+
+      email_template_mail template_data,
+                          headers_for(:magic_link, opts).merge(
+                            subject: t("devise.mailer.magic_link.subject"),
+                            mailer: "Devise::Mailer"
+                          )
+    end
+  end
+
   private
     def scoped_url_method(record, method, *args)
       scoped = "user"
 
-      method_name = if method.to_s.include?("confirmation")
+      method_name = if method.to_s.include?("confirmation") || method.to_s.include?("magic_link")
         "#{scoped}_#{method}"
       else
         method.to_s.gsub(/\A([a-z]+)_/, "\\1_#{scoped}_")

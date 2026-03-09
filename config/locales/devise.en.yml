@@ -8,13 +8,18 @@ en:
         instructions: "to finish signing in via %{provider} click the link bellow:"
         button: Sign in
         footer: If you don't want to sign in, ignore this e-mail. Your account will not be updated unless you click the link.
-
+      magic_link:
+        subject: Login confirmation
     omniauth_callbacks:
       signed_in: Signed in successfully.
       signed_up: Signed up successfully.
       signed_up_but_locked: Signed up successfully. Unfortunately, you cannot sign in because your account is blocked.
     failure:
       user_locked: Your account was blocked. Please contact the site administrator.
+      magic_link_invalid: Invalid or expired login link.
+    passwordless:
+      not_found_in_database: Could not find a user for that email address
+      magic_link_sent: A login link has been sent to your email address. Please follow the link to log in to your account.
 
   folio:
     devise:
@@ -132,3 +137,10 @@ en:
 
         resolve_conflict:
           invalid_conflict_token_flash: Link is no longer valid. Try to sign in again.
+
+      sessions:
+        login_confirmation:
+          title: Login verification
+          message: Please confirm your login by clicking the link we have sent to the provided email %{email}. The confirmation email should arrive within a few minutes.
+          resend_button: Resend verification email
+          resent: Verification email was resent.

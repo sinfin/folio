@@ -30,6 +30,7 @@ PATH
       devise
       devise-bootstrap-views
       devise-i18n
+      devise-passwordless
       devise_invitable
       dotenv-rails
       dragonfly
@@ -279,6 +280,9 @@ GEM
     devise-i18n (1.13.0)
       devise (>= 4.9.0)
       rails-i18n
+    devise-passwordless (1.1.0)
+      devise
+      globalid
     devise_invitable (2.0.10)
       actionmailer (>= 5.0)
       devise (>= 4.6)
@@ -758,6 +762,7 @@ GEM
 PLATFORMS
   arm64-darwin-22
   arm64-darwin-23
+  arm64-darwin-24
   x86_64-linux
 
 DEPENDENCIES
