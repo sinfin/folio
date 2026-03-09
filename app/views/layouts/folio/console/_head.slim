@@ -21,6 +21,9 @@ meta[
 
 = csrf_meta_tags
 
+= render partial: 'layouts/folio/favicon',
+         locals: { favicon_method: :layout_console_favicon_path }
+
 - unless barebone_layout_for_turbo_frame?
   == cell('folio/ui/icon').render(:_head)
 

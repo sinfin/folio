@@ -2,6 +2,7 @@
 
 class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseController
   AUTOCOMPLETE_PAGY_ITEMS = 25
+  AUTOCOMPLETE_QUERY_MIN_LENGTH = 3
 
   def show
     klass = params.require(:klass).safe_constantize
@@ -31,7 +32,14 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
         end
       end
 
-      scope = scope.by_label_query(q) if q.present?
+      if q.present?
+        if q.length >= AUTOCOMPLETE_QUERY_MIN_LENGTH
+          scope = scope.by_label_query(q)
+        else
+          render json: { data: [], meta: { page: 1, pages: 1, from: nil, to: nil, count: 0, next: nil } }
+          return
+        end
+      end
 
       scope, has_type_ordering = apply_ordered_for_folio_console_selects(scope, klass)
 

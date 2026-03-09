@@ -8,7 +8,7 @@ class Folio::Tiptap::NodeGenerator < Rails::Generators::NamedBase
   source_root File.expand_path("templates", __dir__)
 
   def node_model
-    template "node_model.rb.tt", "app/models/#{application_namespace_path}/tiptap/node/#{name}.rb"
+    template "node_model.rb.tt", "app/models/#{node_name}.rb"
   end
 
   def component
@@ -16,9 +16,9 @@ class Folio::Tiptap::NodeGenerator < Rails::Generators::NamedBase
       template "base_component.rb.tt", "app/components/#{application_namespace_path}/tiptap/node/base_component.rb"
     end
 
-    template "component.rb.tt", "app/components/#{application_namespace_path}/tiptap/node/#{name}_component.rb"
-    template "component.slim.tt", "app/components/#{application_namespace_path}/tiptap/node/#{name}_component.slim"
-    template "component_test.rb.tt", "test/components/#{application_namespace_path}/tiptap/node/#{name}_component_test.rb"
+    template "component.rb.tt", "app/components/#{component_name}.rb"
+    template "component.slim.tt", "app/components/#{component_name}.slim"
+    template "component_test.rb.tt", "test/components/#{component_name}_test.rb"
   end
 
   def node_css_class_name
@@ -34,7 +34,11 @@ class Folio::Tiptap::NodeGenerator < Rails::Generators::NamedBase
   end
 
   def node_model_name
-    "#{application_namespace}::Tiptap::Node::#{class_name}"
+    if name.start_with?("/")
+      class_name
+    else
+      "#{application_namespace}::Tiptap::Node::#{class_name}"
+    end
   end
 
   def node_component_name
@@ -42,6 +46,18 @@ class Folio::Tiptap::NodeGenerator < Rails::Generators::NamedBase
   end
 
   private
+    def node_name
+      if name.start_with?("/")
+        name
+      else
+        "#{application_namespace_path}/tiptap/node/#{name}"
+      end
+    end
+
+    def component_name
+      "#{node_name}_component"
+    end
+
     def add_tiptap_node_to_i18n_ymls
       I18n.available_locales.each do |locale|
         locale_s = locale.to_s
@@ -63,7 +79,7 @@ class Folio::Tiptap::NodeGenerator < Rails::Generators::NamedBase
           File.write(file_path, yaml_hash.to_yaml(line_width: -1))
         end
 
-        i18n_key = "#{application_namespace_path}/tiptap/node/#{name}"
+        i18n_key = node_name.sub(%r{^/}, "")
 
         yaml_hash[locale_s]["activemodel"]["attributes"][i18n_key] ||= nil
         yaml_hash[locale_s]["activemodel"]["models"][i18n_key] ||= name.split("/").pop.capitalize
@@ -81,5 +97,9 @@ class Folio::Tiptap::NodeGenerator < Rails::Generators::NamedBase
 
         File.write(file_path, sorted_yaml_hash.to_yaml(line_width: -1))
       end
+    end
+
+    def classname_prefix
+      application_class.name[0].downcase
     end
 end

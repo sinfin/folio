@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 class Folio::Console::Tiptap::SimpleFormWrap::AutosaveInfoComponent < Folio::Console::ApplicationComponent
-  attr_reader :object
+  attr_reader :object, :attribute_name
 
-  def initialize(object:)
+  def initialize(object:, attribute_name: nil)
     @object = object
+    @attribute_name = attribute_name || "tiptap_content"
   end
 
   def data
@@ -13,16 +14,17 @@ class Folio::Console::Tiptap::SimpleFormWrap::AutosaveInfoComponent < Folio::Con
                           placement_type: object.class.base_class.name,
                           placement_id: object.id,
                           takeover_url: controller.takeover_revision_console_api_tiptap_revisions_path,
-                          from_user_id: other_user.present? ? other_user.id : nil
+                          from_user_id: other_user.present? ? other_user.id : nil,
+                          attribute_name:,
                         })
   end
 
   def render?
-    object.tiptap_autosave_enabled?
+    object.try(:tiptap_autosave_enabled?, attribute_name:)
   end
 
   def has_unsaved_changes?
-    object.has_tiptap_revision?
+    object.has_tiptap_revision?(attribute_name:)
   end
 
   private

@@ -4,6 +4,7 @@ window.Folio.Stimulus.register('f-c-tiptap-simple-form-wrap-autosave-info', clas
     placementId: Number,
     takeoverUrl: String,
     fromUserId: Number,
+    attributeName: String
   }
 
   static targets = ['unsavedChanges', 'failedToSave']
@@ -18,7 +19,8 @@ window.Folio.Stimulus.register('f-c-tiptap-simple-form-wrap-autosave-info', clas
       from_user_id: this.fromUserIdValue,
       placement: {
         type: this.placementTypeValue,
-        id: this.placementIdValue
+        id: this.placementIdValue,
+        attribute_name: this.attributeNameValue || 'tiptap_content'
       }
     }
 

@@ -8,7 +8,8 @@ module Folio
       content: "tiptap_content",
       text: "text",
       word_count: "word_count",
-      character_count: "character_count"
+      character_count: "character_count",
+      locale: "locale"
     }
 
     def self.config

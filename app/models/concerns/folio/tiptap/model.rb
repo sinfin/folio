@@ -4,23 +4,64 @@ module Folio::Tiptap::Model
   extend ActiveSupport::Concern
 
   class_methods do
-    def has_folio_tiptap_content(field = :tiptap_content)
-      define_method("#{field}=") do |value|
-        ftc = Folio::Tiptap::Content.new(record: self)
-        result = ftc.convert_and_sanitize_value(value)
+    def has_folio_tiptap_content(fields: [:tiptap_content], locales: nil)
+      old_field_names = @folio_tiptap_fields || []
 
-        if result[:ok]
-          super(result[:value])
+      base_fields = Array(fields).map(&:to_s)
+
+      if locales.present?
+        sorted_locales = locales.map(&:to_sym).sort
+        effective_field_names = base_fields.flat_map { |f| sorted_locales.map { |l| "#{f}_#{l}" } }
+        new_locale_map = base_fields.index_with { |f| sorted_locales }
+      else
+        effective_field_names = base_fields
+        new_locale_map = {}
+      end
+
+      @folio_tiptap_fields = effective_field_names
+      @folio_tiptap_locales = new_locale_map
+
+      (old_field_names - effective_field_names).each do |name|
+        remove_method("#{name}=") if method_defined?("#{name}=")
+      end
+
+      effective_field_names.each do |name|
+        base_field = base_fields.find { |b| name == b || name.start_with?("#{b}_") }
+        locale = (base_field && name != base_field) ? name.sub(/\A#{Regexp.escape(base_field)}_/, "").to_sym : nil
+
+        if locale
+          define_method("#{name}=") do |value|
+            ftc = Folio::Tiptap::Content.new(record: self)
+            result = ftc.convert_and_sanitize_value(value)
+
+            if result[:ok] && result[:value].is_a?(Hash)
+              locale_key = Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:locale]
+              result[:value][locale_key] = locale.to_s
+            end
+
+            if result[:ok]
+              super(result[:value])
+            end
+          end
+        else
+          define_method("#{name}=") do |value|
+            ftc = Folio::Tiptap::Content.new(record: self)
+            result = ftc.convert_and_sanitize_value(value)
+
+            if result[:ok]
+              super(result[:value])
+            end
+          end
         end
       end
     end
 
-    def has_folio_tiptap?
-      folio_tiptap_fields.present?
+    def folio_tiptap_fields
+      base_class.instance_variable_get(:@folio_tiptap_fields) || []
     end
 
-    def folio_tiptap_fields
-      %w[tiptap_content]
+    def folio_tiptap_locales
+      base_class.instance_variable_get(:@folio_tiptap_locales) || {}
     end
   end
 
@@ -30,6 +71,10 @@ module Folio::Tiptap::Model
     before_validation :update_tiptap_file_placements
     validate :validate_tiptap_fields
     after_save :cleanup_tiptap_revisions, if: :tiptap_autosave_enabled?
+  end
+
+  def has_folio_tiptap?
+    self.class.folio_tiptap_fields.present?
   end
 
   def convert_titap_fields_to_hashes_and_sanitize
@@ -52,6 +97,8 @@ module Folio::Tiptap::Model
   end
 
   def update_tiptap_file_placements
+    return unless self.class.try(:has_folio_attachments?)
+
     new_file_placements = []
 
     self.class.folio_tiptap_fields.each do |field|
@@ -132,12 +179,12 @@ module Folio::Tiptap::Model
     end
   end
 
-  def tiptap_config
+  def tiptap_config(attribute_name: nil)
     Folio::Tiptap.config
   end
 
-  def tiptap_autosave_enabled?
-    tiptap_config&.autosave == true
+  def tiptap_autosave_enabled?(attribute_name: nil)
+    tiptap_config(attribute_name:)&.autosave == true
   end
 
   def folio_html_sanitization_config
@@ -154,16 +201,17 @@ module Folio::Tiptap::Model
     config
   end
 
-  def latest_tiptap_revision(user: nil)
-    return nil unless tiptap_autosave_enabled?
+  def latest_tiptap_revision(user: nil, attribute_name: nil)
+    return nil unless tiptap_autosave_enabled?(attribute_name:)
 
-    revs = tiptap_revisions.order(updated_at: :asc)
-    revs = revs.where(user: user) if user
-    revs.last
+    scope = tiptap_revisions.ordered
+    scope = scope.where(attribute_name:) if attribute_name.present?
+    scope = scope.where(user: user) if user
+    scope.last
   end
 
-  def has_tiptap_revision?(user: nil)
-    latest_tiptap_revision(user:).present?
+  def has_tiptap_revision?(user: nil, attribute_name: nil)
+    latest_tiptap_revision(user:, attribute_name:).present?
   end
 
   private
@@ -185,20 +233,21 @@ module Folio::Tiptap::Model
     def cleanup_tiptap_revisions
       # After saving the main model:
       # 1. Mark all other users' revisions as superseded by current user
-      # 2. Delete current user's revision (since content is now in main model)
+      # 2. Delete current user's revisions (since content is now in main model)
       return unless Folio::Current.user
 
       superseded_count = tiptap_revisions.where.not(user_id: Folio::Current.user.id)
                                          .update_all(superseded_by_user_id: Folio::Current.user.id)
 
-      current_user_revision = tiptap_revisions.find_by(user: Folio::Current.user)
-      if current_user_revision
-        current_user_revision.destroy
-        Rails.logger.info "Deleted tiptap revision for user #{Folio::Current.user.id} after saving #{self.class.name}##{id}"
+      current_user_revisions = tiptap_revisions.where(user: Folio::Current.user)
+      if current_user_revisions.any?
+        deleted_count = current_user_revisions.count
+        current_user_revisions.destroy_all
+        Rails.logger.info "Deleted #{deleted_count} tiptap revision(s) for user #{Folio::Current.user.id} after saving #{self.class.name}##{id}"
       end
 
       if superseded_count > 0
-        Rails.logger.info "Marked #{superseded_count} tiptap revisions as superseded by user #{Folio::Current.user.id} after saving #{self.class.name}##{id}"
+        Rails.logger.info "Marked #{superseded_count} tiptap revision(s) as superseded by user #{Folio::Current.user.id} after saving #{self.class.name}##{id}"
       end
     end
 end

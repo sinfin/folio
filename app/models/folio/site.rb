@@ -134,6 +134,10 @@ class Folio::Site < Folio::ApplicationRecord
     "/"
   end
 
+  def layout_console_favicon_path
+    layout_favicon_path
+  end
+
   def i18n_key_base
     @i18n_key_base ||= self.class.to_s.deconstantize.underscore
   end
@@ -212,7 +216,7 @@ class Folio::Site < Folio::ApplicationRecord
   def mailer_logo_data
     {
       png_src: "https://sinfin-folio.s3.eu-central-1.amazonaws.com/mailer/logos/folio_logo.png",
-      light_png_src: "https://sinfin-folio.s3.eu-central-1.amazonaws.com/mailer/logos/folio_logo_white.png",
+      light_png_src: "https://sinfin-folio.s3.eu-central-1.amazonaws.com/mailer/logos/folio_logo_light.png",
       width: 119,
       height: 60,
     }

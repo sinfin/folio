@@ -6,6 +6,9 @@ account:
 alert:
   width: 24
   height: 24
+alert_circle:
+  width: 24
+  height: 24
 archive:
   width: 24
   height: 24

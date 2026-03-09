@@ -3,6 +3,28 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+
+## [7.4.0] - 2026-03-04
+
+### Fixed
+
+- **Autocomplete performance**: Added minimum query length guard (`AUTOCOMPLETE_QUERY_MIN_LENGTH = 3`) to `AutocompletesController#show` — queries shorter than 3 characters no longer trigger expensive fulltext DB scans. Increased debounce delay in `f-input-autocomplete` Stimulus controller from 150ms to 500ms to reduce concurrent parallel requests during typing. Added combined GIN index `index_folio_files_on_by_label_query` on `folio_files` covering `(file_name_for_search, headline, description)` — resolves cascade PostgreSQL overload from unindexed fulltext scans.
+- tiptap blank documents now get saved as nil - previously a doc with an empty paragraph was saved instead
+
+## [7.3.0] - 2026-02-24
+
+### Added
+
+- allow override console catalogue sorting boundaries from main_app
+- **TipTap attributes support**: Multiple Tiptap content fields via `has_folio_tiptap_content(fields: [...])`; console tabs to switch between attributes when using multiple fields (without locales). Revisions and autosave are per-attribute; selected attribute persisted in a cookie per record. Use `attribute_name` in `tiptap_config`, `latest_tiptap_revision`, and `has_tiptap_revision?` for a specific field.
+
+### Changed
+
+- **has_folio_tiptap? method**: Changed from class method to instance method (BREAKING: update all calls and test stubs). See [UPGRADING.md](UPGRADING.md#711-to-720) for migration details.
+- console favicon via site `layout_console_favicon_path`
+
+## [7.2.1] - 2026-02-12
+
 ### Added
 
 - encoding generation tracking for media files — stale `CheckProgressJob`s are skipped when a newer encoding has started

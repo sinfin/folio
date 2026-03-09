@@ -56,6 +56,8 @@ window.Folio.Stimulus.register('f-c-ui-tabs', class extends window.Stimulus.Cont
   }
 
   onClick (e) {
+    this.dispatch('click', { detail: { originalEvent: e, key: e.currentTarget.dataset.key } })
+
     if (!e.target.href) {
       e.preventDefault()
       e.target.blur()

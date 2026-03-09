@@ -101,8 +101,7 @@ module Folio
       end
 
       test "sanitizes tiptap_content" do
-        Folio::Page.stub(:has_folio_tiptap?, true) do
-          page = create(:folio_page, tiptap_content: { Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content] => {
+        page = build(:folio_page, tiptap_content: { Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content] => {
             "type" => "doc",
             "content" => [
               {
@@ -165,6 +164,9 @@ module Folio
               },
             ]
           } })
+
+        page.stub(:has_folio_tiptap?, true) do
+          page.save!
 
           content = page.tiptap_content[Folio::Tiptap::TIPTAP_CONTENT_JSON_STRUCTURE[:content]]["content"]
 

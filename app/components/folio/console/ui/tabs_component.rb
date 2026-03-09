@@ -3,11 +3,12 @@
 class Folio::Console::Ui::TabsComponent < Folio::Console::ApplicationComponent
   ID_PREFIX = "tab-"
 
-  bem_class_name :no_margin
+  bem_class_name :no_margin, :no_border
 
-  def initialize(tabs:, no_margin: false, use_cookies_for_active: false)
+  def initialize(tabs:, no_margin: false, use_cookies_for_active: false, no_border: false)
     @tabs = tabs
     @no_margin = no_margin
+    @no_border = no_border
     @use_cookies_for_active = use_cookies_for_active
   end
 

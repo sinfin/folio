@@ -18,7 +18,8 @@ class Folio::Tiptap::Content::FolioTiptapNodeComponent < ApplicationComponent
         raise ArgumentError, "Node type is required but was not provided"
       end
 
-      allowed_node_names = @record.tiptap_config.node_names
+      attribute = @tiptap_content_information[:attribute]
+      allowed_node_names = @record.tiptap_config(attribute_name: attribute).node_names
       return if allowed_node_names.include?(node_type)
 
       raise ArgumentError, "Node type '#{node_type}' is not supported. Allowed types: #{allowed_node_names.join(', ')}"

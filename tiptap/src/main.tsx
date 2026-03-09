@@ -35,17 +35,6 @@ window.Folio.Tiptap.init = (props) => {
   }
 
   const onCreate = ({ editor }: { editor: TiptapEditor }) => {
-    window.parent!.postMessage(
-      {
-        type: "f-tiptap:created",
-        content: removeTrailingEmptyParagraph(
-          removeUniqueIdsFromFolioTiptapNodes(editor.getJSON()),
-        ),
-        height: window.Folio.Tiptap.getHeight(),
-      },
-      "*",
-    );
-
     if (props.onCreate) {
       props.onCreate({ editor });
     }

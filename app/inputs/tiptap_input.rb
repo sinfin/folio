@@ -18,6 +18,7 @@ class TiptapInput < SimpleForm::Inputs::StringInput
                         new_record: safe_new_record?,
                         placement_type: safe_placement_type,
                         placement_id: safe_placement_id,
+                        attribute_name: attribute_name.to_s,
                         latest_revision_at: latest_revision_at&.iso8601,
                         has_unsaved_changes: has_unsaved_changes?,
                         readonly: @builder.template.instance_variable_get(:@audited_audit).present?,
@@ -65,17 +66,17 @@ class TiptapInput < SimpleForm::Inputs::StringInput
 
   private
     def tiptap_config_json
-      (@builder.object.try(:tiptap_config) || Folio::Tiptap.config).to_input_json
+      (@builder.object.try(:tiptap_config, attribute_name: attribute_name) || Folio::Tiptap.config).to_input_json
     end
 
     def tiptap_autosave_enabled?
       return false if @builder.object.respond_to?(:new_record?) && @builder.object.new_record?
 
-      @builder.object.respond_to?(:tiptap_autosave_enabled?) && @builder.object.tiptap_autosave_enabled?
+      @builder.object.try(:tiptap_autosave_enabled?, attribute_name: attribute_name)
     end
 
     def current_user_latest_revision
-      @current_user_latest_revision ||= @builder.object.try(:latest_tiptap_revision, user: Folio::Current.user)
+      @current_user_latest_revision ||= @builder.object.try(:latest_tiptap_revision, user: Folio::Current.user, attribute_name: attribute_name)
     end
 
     def has_unsaved_changes?
