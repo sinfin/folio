@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- **Autocomplete performance**: Extended minimum query length guard to `select2`, `selectize`, and `react_select` actions in `AutocompletesController`. All autocomplete endpoints now reject queries shorter than 3 characters without hitting the database, preventing cascade PostgreSQL connection pool exhaustion. Completes the fix from 7.4.0 which only covered the `show` action.
 - add change event handler for select inline edits
 - prevent long filenames from overflowing dropdown
 - S3 ping retry loop no longer runs infinitely after 10 failures — stops retrying, shows a non-blocking flash instead of a blocking `window.alert()`, and resets the loading state
