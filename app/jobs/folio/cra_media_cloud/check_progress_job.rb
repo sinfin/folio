@@ -38,6 +38,7 @@ class Folio::CraMediaCloud::CheckProgressJob < Folio::ApplicationJob
 
     def check_progress
       response = fetch_job_response
+      return if response == :finalized # already handled by finalize_from_completed_phases!
       return check_again_later if response.nil?
 
       # Terminal state: CRA has cleaned up this job.
@@ -100,6 +101,15 @@ class Folio::CraMediaCloud::CheckProgressJob < Folio::ApplicationJob
         # Filter out REMOVED jobs — these are old completed jobs cleaned up by CRA
         jobs = all_jobs.reject { |j| j["status"] == "REMOVED" }
         if jobs.empty?
+          # If we already have completed phase data and all jobs are REMOVED,
+          # CRA has cleaned up and no further phases are coming — mark as done.
+          if multi_phase? && all_jobs.present? && has_any_completed_phase?
+            Rails.logger.info "[CraMediaCloud::CheckProgressJob] All CRA jobs REMOVED for video #{media_file.id} " \
+                              "with completed phase data. Finalizing from stored phase output."
+            finalize_from_completed_phases!
+            return :finalized
+          end
+
           Rails.logger.info "[CraMediaCloud::CheckProgressJob] No active jobs found for reference_id #{media_file.remote_reference_id} " \
                             "(video #{media_file.id}, #{all_jobs.size} removed) — CRA may still be downloading the file"
           return nil
@@ -127,15 +137,60 @@ class Folio::CraMediaCloud::CheckProgressJob < Folio::ApplicationJob
       Rails.logger.debug "[CraMediaCloud::CheckProgressJob] Multi-phase: found #{jobs.size} job(s), highest phase=#{phase}/#{expected_phases}, status=#{job['status']}"
 
       # If the highest-phase job is DONE but we haven't reached the final phase,
-      # we're in the gap between phases — save intermediate data (once) and wait
+      # check if CRA created a next phase job. CRA creates all phase jobs upfront —
+      # if no higher phase exists by now, CRA decided this is the final output.
       if job["status"] == "DONE" && phase < expected_phases
-        unless media_file.remote_services_data["phase_#{phase}_completed_at"].present?
-          save_intermediate_phase_data(job)
+        next_phase_exists = jobs.any? { |j| j["phase"].to_i > phase }
+
+        if next_phase_exists
+          # Next phase job exists but hasn't surpassed the current one yet — wait
+          unless media_file.remote_services_data["phase_#{phase}_completed_at"].present?
+            save_intermediate_phase_data(job)
+          end
+          return nil
+        else
+          # CRA did not create further phases — treat this as the final output
+          Rails.logger.info "[CraMediaCloud::CheckProgressJob] CRA created no phase #{phase + 1} job for video #{media_file.id}. " \
+                            "Treating phase #{phase} output as final."
+          return job
         end
-        return nil
       end
 
       job
+    end
+
+    def has_any_completed_phase?
+      (1..expected_phases).any? { |p| media_file.remote_services_data["phase_#{p}_completed_at"].present? }
+    end
+
+    # When all CRA jobs are REMOVED but we have stored phase output data,
+    # finalize the video using the last completed phase's output.
+    def finalize_from_completed_phases!
+      last_phase = (1..expected_phases).reverse_each.find { |p|
+        media_file.remote_services_data["phase_#{p}_completed_at"].present?
+      }
+
+      media_file.with_lock do
+        # Build content_mp4_paths from all completed phases
+        content_mp4_paths = {}
+        (1..last_phase).each do |p|
+          phase_paths = media_file.remote_services_data["phase_#{p}_content_mp4_paths"]
+          content_mp4_paths.merge!(phase_paths) if phase_paths.present?
+        end
+
+        media_file.remote_services_data.merge!(
+          "content_mp4_paths" => content_mp4_paths,
+          "processing_state" => "full_media_processed",
+          "progress_percentage" => 100.0,
+          "encoding_completed_at" => Time.current.iso8601,
+        )
+
+        media_file.processing_done!
+        broadcast_file_update(media_file)
+        broadcast_encoding_progress
+      end
+
+      Rails.logger.info "[CraMediaCloud::CheckProgressJob] Video #{media_file.id} finalized from #{last_phase} completed phase(s)"
     end
 
     def save_intermediate_phase_data(phase_job)
