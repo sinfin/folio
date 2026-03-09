@@ -127,9 +127,11 @@ class Folio::CraMediaCloud::CheckProgressJob < Folio::ApplicationJob
       Rails.logger.debug "[CraMediaCloud::CheckProgressJob] Multi-phase: found #{jobs.size} job(s), highest phase=#{phase}/#{expected_phases}, status=#{job['status']}"
 
       # If the highest-phase job is DONE but we haven't reached the final phase,
-      # we're in the gap between phases — save intermediate data and wait
+      # we're in the gap between phases — save intermediate data (once) and wait
       if job["status"] == "DONE" && phase < expected_phases
-        save_intermediate_phase_data(job)
+        unless media_file.remote_services_data["phase_#{phase}_completed_at"].present?
+          save_intermediate_phase_data(job)
+        end
         return nil
       end
 
