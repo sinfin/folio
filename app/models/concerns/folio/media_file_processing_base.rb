@@ -130,7 +130,7 @@ module Folio::MediaFileProcessingBase
     if (remote_services_data || {}).dig("preview_interval").present?
       preview_ends_at_second - preview_starts_at_second
     else
-      [file_track_duration_in_seconds, DEFAULT_PREVIEW_DURATION].min
+      file_track_duration_in_seconds.present? ? [file_track_duration_in_seconds, DEFAULT_PREVIEW_DURATION].min : DEFAULT_PREVIEW_DURATION
     end
   end
 

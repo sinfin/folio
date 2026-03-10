@@ -268,13 +268,13 @@ class Folio::File < Folio::ApplicationRecord
   end
 
   # Returns a path or URL suitable for ffprobe/ffmpeg.
-  # For S3 storage: presigned URL (streams headers only, no full download).
-  # For local storage: file system path.
+  # For S3 storage with stored file: presigned URL (streams headers only, no full download).
+  # For pending uploads (file= assigned but not yet saved) or local storage: file system path.
   def file_url_or_path
-    if Dragonfly.app.datastore.is_a?(Dragonfly::FileDataStore)
-      file.path.to_s
-    else
+    if file_uid.present? && !Dragonfly.app.datastore.is_a?(Dragonfly::FileDataStore)
       file_presigned_url
+    else
+      file&.path.to_s
     end
   end
 
