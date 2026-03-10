@@ -15,8 +15,16 @@ class Folio::CraMediaCloud::CreateMediaJob < Folio::ApplicationJob
       Rails.logger.info "[CraMediaCloud::CreateMediaJob] Video #{media_file.id} retrying after failure"
     end
 
-    # Generate reference_id based on current file content
-    current_reference_id = generate_reference_id(media_file)
+    # Generate reference_id based on current file content.
+    # If the source file no longer exists on S3, mark as permanently failed
+    # and don't retry — the file cannot be re-uploaded without the original.
+    begin
+      current_reference_id = generate_reference_id(media_file)
+    rescue Excon::Error::NotFound => e
+      Rails.logger.error "[CraMediaCloud::CreateMediaJob] Source file not found on S3 for video #{media_file.id}: #{e.message}"
+      mark_source_file_missing!(media_file)
+      return
+    end
 
     # Check API for existing job with this reference_id
     existing_job_result = check_existing_job(current_reference_id, media_file)
@@ -186,5 +194,25 @@ class Folio::CraMediaCloud::CreateMediaJob < Folio::ApplicationJob
         broadcast_file_update(media_file)
         raise e
       end
+    end
+
+    def mark_source_file_missing!(media_file)
+      rs_data = media_file.remote_services_data || {}
+      rs_data.merge!({
+        "service" => "cra_media_cloud",
+        "processing_state" => "source_file_missing",
+        "error_message" => "Source file not found on S3 (file_uid: #{media_file.file_uid})",
+        "processing_step_started_at" => Time.current.iso8601,
+      })
+      media_file.remote_services_data = rs_data
+
+      begin
+        media_file.processing_failed!
+      rescue => e
+        Rails.logger.warn "[CraMediaCloud::CreateMediaJob] AASM transition failed for video #{media_file.id} (#{e.message}), forcing state"
+        media_file.update_columns(aasm_state: "processing_failed", remote_services_data: rs_data, updated_at: Time.current)
+      end
+
+      broadcast_file_update(media_file)
     end
 end

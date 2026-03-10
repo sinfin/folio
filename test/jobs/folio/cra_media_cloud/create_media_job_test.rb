@@ -117,6 +117,30 @@ class Folio::CraMediaCloud::CreateMediaJobTest < ActiveJob::TestCase
     end
   end
 
+  test "marks video as permanently failed when S3 source file is missing" do
+    video = create_test_video_in_processing_state
+
+    # Mock S3 datastore to raise NotFound (simulates missing source file)
+    s3_datastore_mock = Minitest::Mock.new
+    storage_mock = Minitest::Mock.new
+    storage_mock.expect(:head_object, nil) do |*_args|
+      raise Excon::Error::NotFound.new("Expected(200) <=> Actual(404 Not Found)")
+    end
+    s3_datastore_mock.expect(:root_path, "uploads")
+    s3_datastore_mock.expect(:storage, storage_mock)
+
+    Dragonfly.app.stub(:datastore, s3_datastore_mock) do
+      assert_no_enqueued_jobs only: Folio::CraMediaCloud::CheckProgressJob do
+        Folio::CraMediaCloud::CreateMediaJob.perform_now(video)
+      end
+    end
+
+    video.reload
+    assert_equal "processing_failed", video.aasm_state
+    assert_equal "source_file_missing", video.remote_services_data["processing_state"]
+    assert_includes video.remote_services_data["error_message"], "Source file not found"
+  end
+
   test "retries from processing_failed state via retry_processing!" do
     video = create_test_video_in_processing_state
     video.update_column(:aasm_state, "processing_failed")
