@@ -270,11 +270,19 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
       fallback_image(image)
     end
 
-    # Extract a single frame from a video using ffmpeg directly with the
-    # presigned URL (S3) or local path. This avoids downloading the entire
-    # video file through Dragonfly, which OOMKills pods for large videos
-    # (2-3 GB). Placing -ss before -i enables fast HTTP range-based seeking.
+    # Get a screenshot frame for video thumbnail generation.
+    # Priority: 1) CRA cover image (small JPEG, no decoding)
+    #           2) ffmpeg frame extraction from source video
+    #           3) fallback placeholder image
     def video_screenshot(image)
+      # Prefer CRA cover when available — avoids decoding the source video
+      # entirely. Critical for high-res (4K/8K) HEVC content where decoding
+      # a single frame can require 800+ MB for reference frame buffers.
+      if image.respond_to?(:remote_cover_url) && (cover_url = image.remote_cover_url).present?
+        thumbnail = download_remote_image(image, cover_url)
+        return thumbnail if thumbnail
+      end
+
       input = image.file_url_or_path
       return fallback_image(image) if input.blank?
 
@@ -282,10 +290,14 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
 
       tmpfile = Tempfile.new(["video_thumb", ".jpg"])
       begin
+        # Place -ss before -i for fast HTTP range-based seeking (avoids
+        # downloading entire file). Use -threads 1 to limit memory usage
+        # for high-resolution video decoding.
         success = system(
           "ffmpeg", "-y", "-ss", screenshot_time,
           "-i", input,
-          "-frames:v", "1", "-q:v", "2", tmpfile.path,
+          "-frames:v", "1", "-q:v", "2", "-threads", "1",
+          tmpfile.path,
           out: File::NULL, err: File::NULL
         )
 
@@ -305,6 +317,18 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
     rescue => e
       Rails.logger.error("GenerateThumbnailJob: Video screenshot error for file ##{image.id}: #{e.message}")
       fallback_image(image)
+    end
+
+    def download_remote_image(image, url)
+      require "open-uri"
+      data = URI.parse(url).open(read_timeout: 15).read
+      thumbnail = Dragonfly.app.create(data)
+      thumbnail.name = Pathname.new(image.file_name).sub_ext(".jpg").to_s
+      thumbnail.meta["mime_type"] = "image/jpeg"
+      thumbnail
+    rescue => e
+      Rails.logger.warn("GenerateThumbnailJob: CRA cover download failed for file ##{image.id}: #{e.message}")
+      nil
     end
 
     def fallback_image(image)
