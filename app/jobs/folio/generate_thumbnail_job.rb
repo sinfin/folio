@@ -272,7 +272,7 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
 
     # Get a screenshot frame for video thumbnail generation.
     # Priority: 1) CRA cover image (small JPEG, no decoding)
-    #           2) ffmpeg frame extraction from source video
+    #           2) ffmpeg frame extraction (only for ≤4K — safe memory)
     #           3) fallback placeholder image
     def video_screenshot(image)
       # Prefer CRA cover when available — avoids decoding the source video
@@ -285,6 +285,16 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
 
       input = image.file_url_or_path
       return fallback_image(image) if input.blank?
+
+      # Check resolution via ffprobe before attempting decode. Decoding
+      # video above 4K can require 800+ MB for codec reference frame
+      # buffers (DPB), which OOMKills pods with typical memory limits.
+      # For >4K videos without a CRA cover, use fallback and wait for
+      # CRA to provide the cover image after encoding.
+      if video_resolution_too_high?(input)
+        Rails.logger.info("GenerateThumbnailJob: Skipping ffmpeg for high-res video ##{image.id}, using fallback")
+        return fallback_image(image)
+      end
 
       screenshot_time = image.screenshot_time_in_ffmpeg_format
 
@@ -317,6 +327,19 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
     rescue => e
       Rails.logger.error("GenerateThumbnailJob: Video screenshot error for file ##{image.id}: #{e.message}")
       fallback_image(image)
+    end
+
+    MAX_FFMPEG_DECODE_HEIGHT = 2160 # 4K
+
+    def video_resolution_too_high?(input)
+      output = `ffprobe -v error -select_streams v:0 -show_entries stream=height -of csv=p=0 #{Shellwords.escape(input)} 2>/dev/null`.strip
+      height = output.to_i
+      return false if height == 0 # ffprobe failed — let ffmpeg try
+
+      height > MAX_FFMPEG_DECODE_HEIGHT
+    rescue => e
+      Rails.logger.warn("GenerateThumbnailJob: ffprobe resolution check failed: #{e.message}")
+      false # On error, let ffmpeg attempt it
     end
 
     def download_remote_image(image, url)
