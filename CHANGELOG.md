@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- audited dropdown css layout
+
 ## [7.4.0] - 2026-03-04
 
 ### Added
