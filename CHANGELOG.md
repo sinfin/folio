@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - audited dropdown css layout
+- tiptap link handling - close on confirm/delete, don't autofocus link popover input
 
 ## [7.4.0] - 2026-03-04
 
