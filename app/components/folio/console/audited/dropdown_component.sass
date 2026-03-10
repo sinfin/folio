@@ -23,6 +23,7 @@
     overflow-y: auto
 
   &__item
+    flex-wrap: wrap
     font-weight: $font-weight-normal
     color: #495057
     white-space: normal
@@ -33,6 +34,9 @@
     &--active
       &, &:hover, &:focus
         background: #E6F4FA
+
+  &__label, &__small
+    width: 100%
 
   &__small
     color: #212529
