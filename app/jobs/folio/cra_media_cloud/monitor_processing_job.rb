@@ -62,17 +62,23 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
 
     def find_videos_needing_upload
       # Find videos that need initial upload (no remote references).
-      # Exclude videos with processing_state "enqueued" — those already have a CreateMediaJob queued
-      # but haven't started yet (window between process! and CreateMediaJob execution).
+      # Freshly enqueued videos (< 10 min) are excluded — they already have a
+      # CreateMediaJob queued. But enqueued videos older than 10 min are included
+      # because the job was likely lost (e.g., pod OOMKill). The Ruby handler
+      # checks for running/scheduled jobs before re-scheduling.
       Folio::File::Video
         .where(aasm_state: :processing)
         .where(
           "(remote_services_data ->> 'service' IS NULL OR remote_services_data ->> 'service' = ?) AND " \
           "(remote_services_data ->> 'remote_id' IS NULL) AND " \
           "(remote_services_data ->> 'reference_id' IS NULL) AND " \
-          "(remote_services_data ->> 'processing_state' IS DISTINCT FROM ?)",
+          "(remote_services_data ->> 'processing_state' IS DISTINCT FROM ? OR " \
+          " (remote_services_data ->> 'processing_state' = ? AND " \
+          "  (remote_services_data ->> 'processing_step_started_at')::timestamptz < ?))",
           "cra_media_cloud",
-          "enqueued"
+          "enqueued",
+          "enqueued",
+          10.minutes.ago
         )
     end
 
@@ -82,7 +88,7 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
         .where(aasm_state: :processing)
         .where("remote_services_data ->> 'service' = ?", "cra_media_cloud")
         .where("remote_services_data ->> 'processing_state' = ?", "upload_failed")
-        .where("(remote_services_data ->> 'processing_step_started_at')::timestamp < ?", 5.minutes.ago)
+        .where("(remote_services_data ->> 'processing_step_started_at')::timestamptz < ?", 5.minutes.ago)
     end
 
     def handle_videos_needing_upload
@@ -245,7 +251,7 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
           # in creating_media_job state for a very long time
           "(remote_services_data ->> 'reference_id' IS NOT NULL AND remote_services_data ->> 'remote_id' IS NULL) OR " \
           "(remote_services_data ->> 'processing_state' = 'creating_media_job' AND " \
-          "(remote_services_data ->> 'processing_step_started_at')::timestamp < ?)",
+          "(remote_services_data ->> 'processing_step_started_at')::timestamptz < ?)",
           30.minutes.ago
         )
     end

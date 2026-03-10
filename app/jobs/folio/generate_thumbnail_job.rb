@@ -253,23 +253,61 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
     end
 
     def image_file(image)
+      if image.class.human_type == "video"
+        return video_screenshot(image)
+      end
+
       if Rails.env.development? && ENV["DRAGONFLY_PRODUCTION_S3_URL_BASE"] && image.respond_to?(:development_safe_file)
         thumbnail = image.development_safe_file(logger)
       else
         thumbnail = image.file
       end
 
-      if image.class.human_type == "video"
-        thumbnail = thumbnail.ffmpeg_screenshot_to_jpg(image.screenshot_time_in_ffmpeg_format)
-        thumbnail.name = Pathname.new(image.file_name).sub_ext(".jpg")
-        thumbnail.meta["mime_type"] = "image/jpeg"
-      else
-        thumbnail.name = image.file_name
-        thumbnail.meta["mime_type"] = image.file_mime_type
-      end
-
+      thumbnail.name = image.file_name
+      thumbnail.meta["mime_type"] = image.file_mime_type
       thumbnail
     rescue Dragonfly::Job::Fetch::NotFound
+      fallback_image(image)
+    end
+
+    # Extract a single frame from a video using ffmpeg directly with the
+    # presigned URL (S3) or local path. This avoids downloading the entire
+    # video file through Dragonfly, which OOMKills pods for large videos
+    # (2-3 GB). Placing -ss before -i enables fast HTTP range-based seeking.
+    def video_screenshot(image)
+      input = image.file_url_or_path
+      return fallback_image(image) if input.blank?
+
+      screenshot_time = image.screenshot_time_in_ffmpeg_format
+
+      tmpfile = Tempfile.new(["video_thumb", ".jpg"])
+      begin
+        success = system(
+          "ffmpeg", "-y", "-ss", screenshot_time,
+          "-i", input,
+          "-frames:v", "1", "-q:v", "2", tmpfile.path,
+          out: File::NULL, err: File::NULL
+        )
+
+        unless success && File.size?(tmpfile.path)
+          Rails.logger.warn("GenerateThumbnailJob: ffmpeg screenshot failed for file ##{image.id}")
+          return fallback_image(image)
+        end
+
+        thumbnail = Dragonfly.app.create(File.binread(tmpfile.path))
+      ensure
+        tmpfile.close!
+      end
+
+      thumbnail.name = Pathname.new(image.file_name).sub_ext(".jpg").to_s
+      thumbnail.meta["mime_type"] = "image/jpeg"
+      thumbnail
+    rescue => e
+      Rails.logger.error("GenerateThumbnailJob: Video screenshot error for file ##{image.id}: #{e.message}")
+      fallback_image(image)
+    end
+
+    def fallback_image(image)
       missing_image_path = Folio::Engine.root.join("data/images/missing-image.png")
       thumbnail = Dragonfly.app.create(File.binread(missing_image_path))
       thumbnail.name = image.file_name || "missing-image.png"
