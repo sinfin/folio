@@ -25,19 +25,23 @@ class OrderedMultiselectApp extends React.Component {
     this.wrapRef = React.createRef()
     this.state = {
       selectKey: 0,
-      menuIsOpen: undefined
+      menuIsOpen: undefined,
+      inlineEditing: false
     }
   }
 
   onEditingChange = (isEditing) => {
-    // When editing starts: force menu open.
-    // When editing ends: keep menu open — user closes it naturally via onMenuClose.
     if (isEditing) {
-      this.setState({ menuIsOpen: true })
+      this.setState({ menuIsOpen: true, inlineEditing: true })
+    } else {
+      // Keep menu open after rename — user closes it naturally
+      this.setState({ inlineEditing: false })
     }
   }
 
   onMenuClose = () => {
+    // Ignore react-select's close request while rename input has focus
+    if (this.state.inlineEditing) return
     this.setState({ menuIsOpen: undefined })
   }
 
@@ -224,7 +228,7 @@ class OrderedMultiselectApp extends React.Component {
           onRenameSubmit={orderedMultiselect.createable ? this.onRenameSubmit : undefined}
           onDeleteOption={orderedMultiselect.createable ? this.onDeleteOption : undefined}
           onEditingChange={orderedMultiselect.createable ? this.onEditingChange : undefined}
-          onMenuClose={menuIsOpen !== undefined ? this.onMenuClose : undefined}
+          onMenuClose={this.onMenuClose}
           menuIsOpen={menuIsOpen}
           isClearable={false}
           async={url}
