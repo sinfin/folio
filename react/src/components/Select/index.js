@@ -56,10 +56,13 @@ class Select extends React.Component {
   onKeyDown = (e) => {
     if (e.key === 'Enter') {
       if (this.props.createable) {
-        // stopPropagation prevents form submission bubbling, but unlike preventDefault
-        // it does NOT set event.defaultPrevented, so react-select still processes Enter
-        // (react-select v5 skips its handler when defaultPrevented is true)
-        e.stopPropagation()
+        // For creatable selects, form submission prevention is handled by the
+        // parent container's onKeyDown (fired after react-select processes Enter).
+        // We must NOT call preventDefault here — react-select v3 checks defaultPrevented
+        // and skips its own Enter handling (selectOption / onCreateOption) if set.
+        // We also must NOT call stopPropagation — we need the event to bubble up
+        // so the parent wrapper can call preventDefault to block form submission.
+        return
       } else if (this.props.innerRef && this.props.innerRef.current) {
         const ref = this.props.innerRef.current
         if (!ref.select.state.menuIsOpen) {

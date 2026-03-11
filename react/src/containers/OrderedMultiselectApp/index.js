@@ -214,6 +214,7 @@ class OrderedMultiselectApp extends React.Component {
         className={`f-c-r-ordered-multiselect-app`}
         ref={this.wrapRef}
         data-atom-setting-value={this.settingValue()}
+        onKeyDown={orderedMultiselect.createable ? (e) => { if (e.key === 'Enter') e.preventDefault() } : undefined}
       >
         {orderedMultiselect.atomSetting ? (
           <div
