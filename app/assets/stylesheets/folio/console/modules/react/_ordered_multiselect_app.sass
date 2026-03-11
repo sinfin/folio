@@ -141,15 +141,28 @@
 
   &__edit
     flex: 1
+    display: flex
+    align-items: center
+    gap: 4px
 
   &__edit-input
-    width: 100%
+    flex: 1
     border: 1px solid $primary
     border-radius: $border-radius-sm
     padding: 1px 6px
     font-size: inherit
     outline: none
     background: $white
+
+  &__edit-confirm
+    flex-shrink: 0
+    cursor: pointer
+    color: var(--bs-success)
+    opacity: 0.7
+    line-height: 1
+
+    &:hover
+      opacity: 1
 
 .f-c-r-select-create-option
   font-weight: 500

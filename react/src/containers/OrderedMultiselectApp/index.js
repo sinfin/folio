@@ -30,7 +30,15 @@ class OrderedMultiselectApp extends React.Component {
   }
 
   onEditingChange = (isEditing) => {
-    this.setState({ menuIsOpen: isEditing ? true : undefined })
+    // When editing starts: force menu open.
+    // When editing ends: keep menu open — user closes it naturally via onMenuClose.
+    if (isEditing) {
+      this.setState({ menuIsOpen: true })
+    }
+  }
+
+  onMenuClose = () => {
+    this.setState({ menuIsOpen: undefined })
   }
 
   componentDidMount () {
@@ -98,7 +106,8 @@ class OrderedMultiselectApp extends React.Component {
     apiPatch(orderedMultiselect.updateUrl, { id: recordId, label: newLabel })
       .then((res) => {
         if (res && res.data) {
-          document.querySelector('.f-c-r-ordered-multiselect-app').dispatchEvent(new window.Event('change', { bubbles: true }))
+          // No change event dispatch — rename is saved immediately via API,
+          // no need to mark the form as dirty.
           this.props.dispatch(renameItem(recordId, res.data.label))
           this.forceSelectRefresh()
         }
@@ -215,6 +224,7 @@ class OrderedMultiselectApp extends React.Component {
           onRenameSubmit={orderedMultiselect.createable ? this.onRenameSubmit : undefined}
           onDeleteOption={orderedMultiselect.createable ? this.onDeleteOption : undefined}
           onEditingChange={orderedMultiselect.createable ? this.onEditingChange : undefined}
+          onMenuClose={menuIsOpen !== undefined ? this.onMenuClose : undefined}
           menuIsOpen={menuIsOpen}
           isClearable={false}
           async={url}

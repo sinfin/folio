@@ -24,6 +24,7 @@ const Input = (props) => {
 
 class Select extends React.Component {
   state = { key: 0 }
+  _createableLoadTimer = null
 
   // changing key force the select to reload options based on atom settings
   componentDidMount () {
@@ -106,60 +107,63 @@ class Select extends React.Component {
         SelectComponent = AsyncCreatableSelect
 
         loadOptions = (inputValue, handle) => {
-          let data = ''
-          const params = new URLSearchParams()
+          if (this._createableLoadTimer) clearTimeout(this._createableLoadTimer)
+          this._createableLoadTimer = setTimeout(() => {
+            let data = ''
+            const params = new URLSearchParams()
 
-          if (asyncData) {
-            Object.keys(asyncData).forEach((key) => {
-              params.set(`atom_form_fields[${key}]`, asyncData[key])
-            })
-          }
+            if (asyncData) {
+              Object.keys(asyncData).forEach((key) => {
+                params.set(`atom_form_fields[${key}]`, asyncData[key])
+              })
+            }
 
-          if (addAtomSettings) {
-            const settingsUrlData = {}
-            const settingsHash = settingsToHash()
+            if (addAtomSettings) {
+              const settingsUrlData = {}
+              const settingsHash = settingsToHash()
 
-            Object.keys(settingsHash).forEach((key) => {
-              if (key !== 'loading') {
-                Object.keys(settingsHash[key]).forEach((locale) => {
-                  let fullKey
+              Object.keys(settingsHash).forEach((key) => {
+                if (key !== 'loading') {
+                  Object.keys(settingsHash[key]).forEach((locale) => {
+                    let fullKey
 
-                  if (locale && locale !== 'null') {
-                    fullKey = `by_atom_setting_${key}_${locale}`
-                  } else {
-                    fullKey = `by_atom_setting_${key}`
-                  }
+                    if (locale && locale !== 'null') {
+                      fullKey = `by_atom_setting_${key}_${locale}`
+                    } else {
+                      fullKey = `by_atom_setting_${key}`
+                    }
 
-                  settingsUrlData[fullKey] = settingsHash[key][locale]
-                })
-              }
-            })
+                    settingsUrlData[fullKey] = settingsHash[key][locale]
+                  })
+                }
+              })
 
-            Object.keys(settingsUrlData).forEach((key) => {
-              params.set(key, settingsUrlData[key])
-            })
-          }
+              Object.keys(settingsUrlData).forEach((key) => {
+                params.set(key, settingsUrlData[key])
+              })
+            }
 
-          data = params.toString()
-          if (data !== '') data = `&${data}`
+            data = params.toString()
+            if (data !== '') data = `&${data}`
 
-          const join = async.indexOf('?') === -1 ? '?' : '&'
-          apiGet(`${async}${join}q=${inputValue}${data}`)
-            .then((res) => {
-              if (res && res.data) {
-                const formattedOptions = res.data.map((item) => ({
-                  ...item,
-                  value: item.value || item.id,
-                  label: item.label || item.text || ''
-                }))
-                handle(formattedOptions)
-              } else {
+            const join = async.indexOf('?') === -1 ? '?' : '&'
+            apiGet(`${async}${join}q=${inputValue}${data}`)
+              .then((res) => {
+                if (res && res.data) {
+                  const formattedOptions = res.data.map((item) => ({
+                    ...item,
+                    value: item.value || item.id,
+                    label: item.label || item.text || ''
+                  }))
+                  handle(formattedOptions)
+                } else {
+                  handle([])
+                }
+              })
+              .catch(() => {
                 handle([])
-              }
-            })
-            .catch(() => {
-              handle([])
-            })
+              })
+          }, 250)
         }
       } else {
         // Use AsyncPaginate for pagination support

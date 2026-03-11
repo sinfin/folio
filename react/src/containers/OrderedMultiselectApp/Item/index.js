@@ -38,14 +38,22 @@ function Item ({ path, node, remove, onRename }) {
   return (
     <div className='f-c-r-ordered-multiselect-app__item'>
       {isEditing ? (
-        <input
-          ref={inputRef}
-          className='f-c-r-ordered-multiselect-app__item-rename-input'
-          value={editValue}
-          onChange={(e) => setEditValue(e.target.value)}
-          onKeyDown={onKeyDown}
-          onBlur={onSubmit}
-        />
+        <>
+          <input
+            ref={inputRef}
+            className='f-c-r-ordered-multiselect-app__item-rename-input'
+            value={editValue}
+            onChange={(e) => setEditValue(e.target.value)}
+            onKeyDown={onKeyDown}
+            onBlur={onSubmit}
+          />
+          <FolioUiIcon
+            class='f-c-r-ordered-multiselect-app__item-action'
+            name='check'
+            height={16}
+            onClick={onSubmit}
+          />
+        </>
       ) : (
         <>
           <span className='f-c-r-ordered-multiselect-app__item-label'>{node.label}</span>

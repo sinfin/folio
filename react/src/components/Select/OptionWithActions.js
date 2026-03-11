@@ -110,9 +110,15 @@ function OptionWithActions (props) {
               value={editValue}
               onChange={(e) => setEditValue(e.target.value)}
               onKeyDown={onInputKeyDown}
-              onBlur={onRenameSubmit}
               onMouseDown={(e) => e.stopPropagation()}
             />
+            <span
+              className='f-c-r-select-option-with-actions__edit-confirm'
+              onMouseDown={(e) => { e.preventDefault(); onRenameSubmit() }}
+              title={window.FolioConsole.translations.rename || 'Confirm'}
+            >
+              <FolioUiIcon name='check' height={16} />
+            </span>
           </div>
         ) : (
           <>
