@@ -24,8 +24,13 @@ class OrderedMultiselectApp extends React.Component {
     super(props)
     this.wrapRef = React.createRef()
     this.state = {
-      selectKey: 0
+      selectKey: 0,
+      menuIsOpen: undefined
     }
+  }
+
+  onEditingChange = (isEditing) => {
+    this.setState({ menuIsOpen: isEditing ? true : undefined })
   }
 
   componentDidMount () {
@@ -166,6 +171,7 @@ class OrderedMultiselectApp extends React.Component {
     const without = orderedMultiselect.items.map((item) => item.value).join(',')
     const url = `${orderedMultiselect.url}&without=${without}`
     const selectKey = `${without}-${this.state.selectKey}`
+    const { menuIsOpen } = this.state
 
     return (
       <div
@@ -195,6 +201,7 @@ class OrderedMultiselectApp extends React.Component {
                   node={node}
                   path={path}
                   remove={this.removeItem}
+                  onRename={orderedMultiselect.createable ? this.onRenameSubmit : undefined}
                 />
               )
             })}
@@ -207,6 +214,8 @@ class OrderedMultiselectApp extends React.Component {
           onCreateOption={orderedMultiselect.createable ? this.onCreateOption : undefined}
           onRenameSubmit={orderedMultiselect.createable ? this.onRenameSubmit : undefined}
           onDeleteOption={orderedMultiselect.createable ? this.onDeleteOption : undefined}
+          onEditingChange={orderedMultiselect.createable ? this.onEditingChange : undefined}
+          menuIsOpen={menuIsOpen}
           isClearable={false}
           async={url}
           placeholder={window.FolioConsole.translations.addPlaceholder}

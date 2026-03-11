@@ -26,9 +26,10 @@ function OptionWithActions (props) {
   const onRenameClick = useCallback((e) => {
     e.preventDefault()
     e.stopPropagation()
+    if (selectProps.onEditingChange) selectProps.onEditingChange(true)
     setEditValue(data.label || '')
     setIsEditing(true)
-  }, [data])
+  }, [data, selectProps])
 
   const onDeleteClick = useCallback((e) => {
     e.preventDefault()
@@ -36,17 +37,22 @@ function OptionWithActions (props) {
     selectProps.onDeleteOption && selectProps.onDeleteOption(data)
   }, [selectProps, data])
 
+  const finishEditing = useCallback(() => {
+    setIsEditing(false)
+    if (selectProps.onEditingChange) selectProps.onEditingChange(false)
+  }, [selectProps])
+
   const onRenameSubmit = useCallback(() => {
     const trimmed = editValue.trim()
     if (trimmed && trimmed !== data.label) {
       selectProps.onRenameSubmit && selectProps.onRenameSubmit(data, trimmed)
     }
-    setIsEditing(false)
-  }, [editValue, data, selectProps])
+    finishEditing()
+  }, [editValue, data, selectProps, finishEditing])
 
   const onRenameCancel = useCallback(() => {
-    setIsEditing(false)
-  }, [])
+    finishEditing()
+  }, [finishEditing])
 
   const onInputKeyDown = useCallback((e) => {
     e.stopPropagation()
