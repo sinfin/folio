@@ -53,13 +53,14 @@ $f-tiptap__media-min-width--desktop: 708px !default;
 
   --f-tiptap-columns__gap: var(--f-tiptap__spacer);
   --f-tiptap-float__aside-margin-y: var(--f-tiptap__spacer);
-  --f-tiptap-float__aside-width: 0;
   --f-tiptap-float__aside-margin-x: 0;
   --f-tiptap-float__aside-offset: 0;
   --f-tiptap-float__aside-offset--tablet: 0;
   --f-tiptap-float__aside-margin-x--tablet: 1rem;
   --f-tiptap-float__aside-offset--desktop: 0;
   --f-tiptap-float__aside-margin-x--desktop: 1rem;
+  --f-tiptap-float__aside-side: left;
+  --f-tiptap-float__aside-width: 100%;
 
   --f-tiptap-li__margin-top: 0.5rem;
   --f-tiptap-li__margin-bottom: 0.5rem;
@@ -574,12 +575,6 @@ $f-tiptap__media-min-width--desktop: 708px !default;
 
   .f-tiptap-float[data-f-tiptap-float-side="right"] .f-tiptap-float__aside {
     float: var(--f-tiptap-float__aside-side);
-  }
-
-  /* Mobile first - Aside width and spacing */
-  .f-tiptap-float {
-    --f-tiptap-float__aside-side: left;
-    --f-tiptap-float__aside-width: 100%;
   }
 
   @container (min-width: #{$f-tiptap__media-min-width--tablet}) {
