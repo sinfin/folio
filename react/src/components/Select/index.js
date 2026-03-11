@@ -145,8 +145,13 @@ class Select extends React.Component {
           const join = async.indexOf('?') === -1 ? '?' : '&'
           apiGet(`${async}${join}q=${inputValue}${data}`)
             .then((res) => {
-              if (res) {
-                handle(formatOptions(res.data))
+              if (res && res.data) {
+                const formattedOptions = res.data.map((item) => ({
+                  ...item,
+                  value: item.value || item.id,
+                  label: item.label || item.text || ''
+                }))
+                handle(formattedOptions)
               } else {
                 handle([])
               }
