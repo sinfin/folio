@@ -23,11 +23,8 @@ class OrderedMultiselectApp extends React.Component {
   constructor (props) {
     super(props)
     this.wrapRef = React.createRef()
-    this.renameInputRef = React.createRef()
     this.state = {
-      selectKey: 0,
-      renamingOption: null,
-      renameValue: ''
+      selectKey: 0
     }
   }
 
@@ -37,13 +34,6 @@ class OrderedMultiselectApp extends React.Component {
 
   componentWillUnmount () {
     this.wrapRef.current.removeEventListener('f-c-r-ordered-multiselect-app:add-entry', this.onAddEntryEvent)
-  }
-
-  componentDidUpdate (prevProps, prevState) {
-    if (this.state.renamingOption && !prevState.renamingOption && this.renameInputRef.current) {
-      this.renameInputRef.current.focus()
-      this.renameInputRef.current.select()
-    }
   }
 
   onAddEntryEvent = (e) => {
@@ -94,28 +84,13 @@ class OrderedMultiselectApp extends React.Component {
       })
   }
 
-  // Called from OptionWithActions when user clicks Rename in the sub-menu
-  onStartRename = (option) => {
-    this.setState({
-      renamingOption: option,
-      renameValue: option.label || ''
-    })
-  }
-
-  onRenameSubmit = () => {
-    const { renamingOption, renameValue } = this.state
+  onRenameSubmit = (option, newLabel) => {
     const { orderedMultiselect } = this.props
-    if (!renamingOption || !orderedMultiselect.updateUrl) return
+    if (!orderedMultiselect.updateUrl) return
 
-    const trimmed = renameValue.trim()
-    if (!trimmed || trimmed === renamingOption.label) {
-      this.setState({ renamingOption: null, renameValue: '' })
-      return
-    }
+    const recordId = option.id || this.extractIdFromValue(option.value)
 
-    const recordId = renamingOption.id || this.extractIdFromValue(renamingOption.value)
-
-    apiPatch(orderedMultiselect.updateUrl, { id: recordId, label: trimmed })
+    apiPatch(orderedMultiselect.updateUrl, { id: recordId, label: newLabel })
       .then((res) => {
         if (res && res.data) {
           document.querySelector('.f-c-r-ordered-multiselect-app').dispatchEvent(new window.Event('change', { bubbles: true }))
@@ -126,23 +101,6 @@ class OrderedMultiselectApp extends React.Component {
       .catch((err) => {
         window.alert(err.message || 'Failed to rename record')
       })
-
-    this.setState({ renamingOption: null, renameValue: '' })
-  }
-
-  onRenameCancel = () => {
-    this.setState({ renamingOption: null, renameValue: '' })
-  }
-
-  onRenameKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault()
-      this.onRenameSubmit()
-    }
-    if (e.key === 'Escape') {
-      e.preventDefault()
-      this.onRenameCancel()
-    }
   }
 
   onDeleteOption = (option) => {
@@ -205,7 +163,6 @@ class OrderedMultiselectApp extends React.Component {
 
   render () {
     const { orderedMultiselect } = this.props
-    const { renamingOption, renameValue } = this.state
     const without = orderedMultiselect.items.map((item) => item.value).join(',')
     const url = `${orderedMultiselect.url}&without=${without}`
     const selectKey = `${without}-${this.state.selectKey}`
@@ -244,34 +201,20 @@ class OrderedMultiselectApp extends React.Component {
           />
         ) : null}
 
-        {renamingOption ? (
-          <div className='f-c-r-ordered-multiselect-app__rename'>
-            <input
-              ref={this.renameInputRef}
-              className='f-c-r-ordered-multiselect-app__rename-input'
-              value={renameValue}
-              onChange={(e) => this.setState({ renameValue: e.target.value })}
-              onKeyDown={this.onRenameKeyDown}
-              onBlur={this.onRenameSubmit}
-              placeholder={renamingOption.label}
-            />
-          </div>
-        ) : (
-          <Select
-            onChange={this.onSelect}
-            createable={orderedMultiselect.createable}
-            onCreateOption={orderedMultiselect.createable ? this.onCreateOption : undefined}
-            onStartRename={orderedMultiselect.createable ? this.onStartRename : undefined}
-            onDeleteOption={orderedMultiselect.createable ? this.onDeleteOption : undefined}
-            isClearable={false}
-            async={url}
-            placeholder={window.FolioConsole.translations.addPlaceholder}
-            key={selectKey}
-            defaultOptions
-            addAtomSettings
-            menuPlacement={orderedMultiselect.menuPlacement}
-          />
-        )}
+        <Select
+          onChange={this.onSelect}
+          createable={orderedMultiselect.createable}
+          onCreateOption={orderedMultiselect.createable ? this.onCreateOption : undefined}
+          onRenameSubmit={orderedMultiselect.createable ? this.onRenameSubmit : undefined}
+          onDeleteOption={orderedMultiselect.createable ? this.onDeleteOption : undefined}
+          isClearable={false}
+          async={url}
+          placeholder={window.FolioConsole.translations.addPlaceholder}
+          key={selectKey}
+          defaultOptions
+          addAtomSettings
+          menuPlacement={orderedMultiselect.menuPlacement}
+        />
 
         <Serialized orderedMultiselect={orderedMultiselect} />
       </div>

@@ -10,46 +10,55 @@ function isActionAreaClick (e) {
 
 function OptionWithActions (props) {
   const { data, selectProps, innerProps } = props
-  const [menuOpen, setMenuOpen] = useState(false)
-  const menuRef = useRef(null)
-  const dotsRef = useRef(null)
+  const [isEditing, setIsEditing] = useState(false)
+  const [editValue, setEditValue] = useState('')
+  const inputRef = useRef(null)
 
   const isNew = data.__isNew__
 
   useEffect(() => {
-    if (!menuOpen) return
-
-    const handleClickOutside = (e) => {
-      if (menuRef.current && !menuRef.current.contains(e.target) &&
-          dotsRef.current && !dotsRef.current.contains(e.target)) {
-        setMenuOpen(false)
-      }
+    if (isEditing && inputRef.current) {
+      inputRef.current.focus()
+      inputRef.current.select()
     }
-
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [menuOpen])
-
-  const onDotsClick = useCallback((e) => {
-    e.preventDefault()
-    e.stopPropagation()
-    setMenuOpen((prev) => !prev)
-  }, [])
+  }, [isEditing])
 
   const onRenameClick = useCallback((e) => {
     e.preventDefault()
     e.stopPropagation()
-    setMenuOpen(false)
-    // Delegate rename to parent — dropdown will close, rename input renders outside
-    selectProps.onStartRename && selectProps.onStartRename(data)
-  }, [data, selectProps])
+    setEditValue(data.label || '')
+    setIsEditing(true)
+  }, [data])
 
   const onDeleteClick = useCallback((e) => {
     e.preventDefault()
     e.stopPropagation()
-    setMenuOpen(false)
     selectProps.onDeleteOption && selectProps.onDeleteOption(data)
   }, [selectProps, data])
+
+  const onRenameSubmit = useCallback(() => {
+    const trimmed = editValue.trim()
+    if (trimmed && trimmed !== data.label) {
+      selectProps.onRenameSubmit && selectProps.onRenameSubmit(data, trimmed)
+    }
+    setIsEditing(false)
+  }, [editValue, data, selectProps])
+
+  const onRenameCancel = useCallback(() => {
+    setIsEditing(false)
+  }, [])
+
+  const onInputKeyDown = useCallback((e) => {
+    e.stopPropagation()
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      onRenameSubmit()
+    }
+    if (e.key === 'Escape') {
+      e.preventDefault()
+      onRenameCancel()
+    }
+  }, [onRenameSubmit, onRenameCancel])
 
   // Create option — green + icon style
   if (isNew) {
@@ -64,7 +73,7 @@ function OptionWithActions (props) {
   }
 
   // Override innerProps to prevent react-select from selecting/closing
-  // when clicking on the action area (dots button, sub-menu)
+  // when clicking on the action area (icon buttons, rename input)
   const wrappedInnerProps = {
     ...innerProps,
     onClick: (e) => {
@@ -84,39 +93,39 @@ function OptionWithActions (props) {
   return (
     <components.Option {...props} innerProps={wrappedInnerProps}>
       <div className='f-c-r-select-option-with-actions'>
-        <span className='f-c-r-select-option-with-actions__label'>
-          {props.children}
-        </span>
-        <span
-          className='f-c-r-select-option-with-actions__dots'
-          ref={dotsRef}
-          onClick={onDotsClick}
-          data-owa-action='true'
-        >
-          <FolioUiIcon name='dots_vertical' height={16} />
-        </span>
-
-        {menuOpen && (
-          <div
-            className='f-c-r-select-option-with-actions__menu'
-            ref={menuRef}
-            data-owa-action='true'
-          >
-            <div
-              className='f-c-r-select-option-with-actions__menu-item'
+        {isEditing ? (
+          <div className='f-c-r-select-option-with-actions__edit' data-owa-action='true'>
+            <input
+              ref={inputRef}
+              className='f-c-r-select-option-with-actions__edit-input'
+              value={editValue}
+              onChange={(e) => setEditValue(e.target.value)}
+              onKeyDown={onInputKeyDown}
+              onBlur={onRenameSubmit}
+            />
+          </div>
+        ) : (
+          <>
+            <span className='f-c-r-select-option-with-actions__label'>
+              {props.children}
+            </span>
+            <span
+              className='f-c-r-select-option-with-actions__action'
               onClick={onRenameClick}
+              data-owa-action='true'
+              title={window.FolioConsole.translations.rename || 'Rename'}
             >
               <FolioUiIcon name='edit_box' height={14} />
-              <span>{window.FolioConsole.translations.rename || 'Rename'}</span>
-            </div>
-            <div
-              className='f-c-r-select-option-with-actions__menu-item f-c-r-select-option-with-actions__menu-item--danger'
+            </span>
+            <span
+              className='f-c-r-select-option-with-actions__action f-c-r-select-option-with-actions__action--danger'
               onClick={onDeleteClick}
+              data-owa-action='true'
+              title={window.FolioConsole.translations.deleteFromDb || 'Delete'}
             >
               <FolioUiIcon name='delete' height={14} />
-              <span>{window.FolioConsole.translations.deleteFromDb || 'Delete'}</span>
-            </div>
-          </div>
+            </span>
+          </>
         )}
       </div>
     </components.Option>
