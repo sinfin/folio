@@ -82,6 +82,7 @@ class Folio::CraMediaCloud::CheckProgressJobTest < ActiveJob::TestCase
     video = create_test_video_in_processing_state
     video.update!(remote_services_data: video.remote_services_data.merge(
       "processing_phases" => 2,
+      "remote_id" => "JOB_PHASE1",
       "reference_id" => "REF123"
     ))
 
@@ -96,11 +97,15 @@ class Folio::CraMediaCloud::CheckProgressJobTest < ActiveJob::TestCase
         { "type" => "MP4", "profiles" => ["sd0"], "path" => "/video/sd0.mp4" },
         { "type" => "MP4", "profiles" => ["sd1"], "path" => "/video/sd1.mp4" },
         { "type" => "MP4", "profiles" => ["sd2"], "path" => "/video/sd2.mp4" },
+        { "type" => "HLS", "profiles" => ["sd0", "sd1", "sd2"], "path" => "/video/sd_master.m3u8" },
+        { "type" => "DASH", "profiles" => ["sd0", "sd1", "sd2"], "path" => "/video/sd_manifest.mpd" },
+        { "type" => "THUMBNAILS", "profiles" => ["cover"], "path" => "/video/cover.jpg" },
+        { "type" => "THUMBNAILS", "profiles" => ["thumb"], "path" => "/video/thumb.vtt" },
       ]
     }
 
     api_mock = Minitest::Mock.new
-    api_mock.expect(:get_jobs, [phase1_job], [], ref_id: "REF123")
+    api_mock.expect(:get_job, phase1_job, ["JOB_PHASE1"])
 
     # Should reschedule (phase 1 done, waiting for phase 2)
     assert_enqueued_jobs 1, only: Folio::CraMediaCloud::CheckProgressJob do
@@ -125,6 +130,12 @@ class Folio::CraMediaCloud::CheckProgressJobTest < ActiveJob::TestCase
                  video.remote_services_data["phase_1_content_mp4_paths"])
     assert_equal "JOB_PHASE1", video.remote_services_data["phase_1_remote_id"]
     assert video.remote_services_data["phase_1_completed_at"].present?
+
+    # Manifest/cover/thumbnails paths populated for immediate playability
+    assert_equal "/video/sd_master.m3u8", video.remote_services_data["manifest_hls_path"]
+    assert_equal "/video/sd_manifest.mpd", video.remote_services_data["manifest_dash_path"]
+    assert_equal "/video/cover.jpg", video.remote_services_data["cover_path"]
+    assert_equal "/video/thumb.vtt", video.remote_services_data["thumbnails_path"]
   end
 
   test "phase 2 DONE triggers processing_done" do

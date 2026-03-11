@@ -196,19 +196,37 @@ class Folio::CraMediaCloud::CheckProgressJob < Folio::ApplicationJob
     def save_intermediate_phase_data(phase_job)
       phase_num = phase_job["phase"].to_i
       mp4_paths = {}
+      manifest_hls = nil
+      manifest_dash = nil
+
       phase_job["output"]&.each do |output_file|
-        mp4_paths[output_file["profiles"].first] = output_file["path"] if output_file["type"] == "MP4"
+        case output_file["type"]
+        when "MP4"
+          mp4_paths[output_file["profiles"].first] = output_file["path"]
+        when "HLS"
+          manifest_hls = select_output_file(manifest_hls, output_file)
+        when "DASH"
+          manifest_dash = select_output_file(manifest_dash, output_file)
+        when "THUMBNAILS"
+          update_thumbnail_path(output_file)
+        end
       end
 
-      media_file.remote_services_data.merge!(
+      updates = {
         "phase_#{phase_num}_content_mp4_paths" => mp4_paths,
         "phase_#{phase_num}_completed_at" => Time.current.iso8601,
         "phase_#{phase_num}_remote_id" => phase_job["id"],
-      )
+      }
+      updates["manifest_hls_path"] = manifest_hls["path"] if manifest_hls
+      updates["manifest_dash_path"] = manifest_dash["path"] if manifest_dash
+
+      media_file.remote_services_data.merge!(updates)
       media_file.save!
 
       Rails.logger.info "[CraMediaCloud::CheckProgressJob] Phase #{phase_num}/#{expected_phases} complete for video #{media_file.id}, " \
-                        "saved #{mp4_paths.size} MP4 paths. Waiting for next phase."
+                        "saved #{mp4_paths.size} MP4 paths" \
+                        "#{manifest_hls ? ', HLS manifest' : ''}" \
+                        "#{manifest_dash ? ', DASH manifest' : ''}."
     end
 
     def update_remote_service_data(response)
