@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- `react_ordered_multiselect` helper now supports `createable: true` option for inline creation of new records
 
 ## [7.4.1] - 2026-03-11
 

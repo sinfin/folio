@@ -11,6 +11,7 @@ import {
   removeItem
 } from 'ducks/orderedMultiselect'
 
+import { apiPost } from 'utils/api'
 import Select from 'components/Select'
 
 import Item from './Item'
@@ -69,6 +70,21 @@ class OrderedMultiselectApp extends React.Component {
     this.props.dispatch(removeItem(item))
   }
 
+  onCreateOption = (inputValue) => {
+    const { orderedMultiselect } = this.props
+    if (!orderedMultiselect.createUrl) return
+
+    apiPost(orderedMultiselect.createUrl, { label: inputValue })
+      .then((res) => {
+        if (res && res.data) {
+          this.onSelect(res.data)
+        }
+      })
+      .catch((err) => {
+        window.alert(err.message || 'Failed to create record')
+      })
+  }
+
   settingValue () {
     if (this.props.orderedMultiselect.atomSetting) {
       return JSON.stringify(this.props.orderedMultiselect.items.map((item) => item.value))
@@ -120,7 +136,8 @@ class OrderedMultiselectApp extends React.Component {
 
         <Select
           onChange={this.onSelect}
-          createable={false}
+          createable={orderedMultiselect.createable}
+          onCreateOption={orderedMultiselect.createable ? this.onCreateOption : undefined}
           isClearable={false}
           async={url}
           placeholder={window.FolioConsole.translations.addPlaceholder}

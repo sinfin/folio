@@ -275,6 +275,7 @@ Folio::Engine.routes.draw do
         get :selectize
         get :select2
         get :react_select
+        post :react_select_create
       end
 
       resources :file_placements, only: %i[index],

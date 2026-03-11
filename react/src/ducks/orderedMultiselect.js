@@ -62,7 +62,9 @@ const initialState = {
   foreignKey: null,
   url: null,
   sortable: true,
-  atomSetting: false
+  atomSetting: false,
+  createable: false,
+  createUrl: null
 }
 
 // Reducer

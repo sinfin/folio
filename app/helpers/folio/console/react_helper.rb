@@ -142,7 +142,8 @@ module Folio::Console::ReactHelper
                                 order_scope: :ordered,
                                 sortable: true,
                                 required: nil,
-                                menu_placement: :bottom)
+                                menu_placement: :bottom,
+                                createable: false)
     class_name = "folio-react-wrap folio-react-wrap--ordered-multiselect"
 
     unless sortable
@@ -200,6 +201,19 @@ module Folio::Console::ReactHelper
       "form-group"
     end
 
+    create_url = if createable
+      Folio::Engine.routes.url_helpers.url_for([
+        :react_select_create,
+        :console,
+        :api,
+        :autocomplete,
+        {
+          class_name: through_klass.to_s,
+          only_path: true
+        }
+      ])
+    end
+
     content_tag(:div, class: form_group_class_name) do
       concat(f.label(relation_name, required: required))
       concat(
@@ -215,7 +229,9 @@ module Folio::Console::ReactHelper
           "data-url" => url,
           "data-sortable" => sortable ? "1" : "0",
           "data-menu-placement" => menu_placement,
-          "data-atom-setting" => atom_setting
+          "data-atom-setting" => atom_setting,
+          "data-createable" => createable ? "1" : nil,
+          "data-create-url" => create_url
         )
       )
 
