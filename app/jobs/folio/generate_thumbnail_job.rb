@@ -355,9 +355,15 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
     end
 
     def fallback_image(image)
-      missing_image_path = Folio::Engine.root.join("data/images/missing-image.png")
-      thumbnail = Dragonfly.app.create(File.binread(missing_image_path))
-      thumbnail.name = image.file_name || "missing-image.png"
+      filename = if image.class.human_type == "video"
+        "missing-video.png"
+      else
+        "missing-image.png"
+      end
+
+      path = Folio::Engine.root.join("data/images/#{filename}")
+      thumbnail = Dragonfly.app.create(File.binread(path))
+      thumbnail.name = filename
       thumbnail.meta["mime_type"] = "image/png"
       thumbnail.meta["fallback_image"] = true
       thumbnail
