@@ -217,7 +217,7 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
         end
 
         Rails.logger.debug("MonitorProcessingJob: Scheduling CheckProgressJob for video ##{video.id}")
-        Folio::CraMediaCloud::CheckProgressJob.perform_later(video)
+        Folio::CraMediaCloud::CheckProgressJob.perform_later(video, encoding_generation: video.encoding_generation)
       end
     end
 
@@ -300,7 +300,7 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
           rs_data["processing_state"] = "full_media_processing"
           video.update_column(:remote_services_data, rs_data)
         end
-        Folio::CraMediaCloud::CheckProgressJob.perform_later(video)
+        Folio::CraMediaCloud::CheckProgressJob.perform_later(video, encoding_generation: video.encoding_generation)
       when :processing
         if current_remote_id != latest_job["id"]
           Rails.logger.info("MonitorProcessingJob: Updating video ##{video.id} to point to processing job #{latest_job['id']}")
@@ -308,7 +308,7 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
           rs_data["processing_state"] = "full_media_processing"
           video.update_column(:remote_services_data, rs_data)
         end
-        Folio::CraMediaCloud::CheckProgressJob.perform_later(video)
+        Folio::CraMediaCloud::CheckProgressJob.perform_later(video, encoding_generation: video.encoding_generation)
       when :failed
         Rails.logger.warn("MonitorProcessingJob: Latest job for video ##{video.id} failed, marking for retry")
         rs_data.merge!({

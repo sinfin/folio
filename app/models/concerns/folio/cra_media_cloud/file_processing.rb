@@ -87,6 +87,10 @@ module Folio::CraMediaCloud::FileProcessing
     "cra_media_cloud"
   end
 
+  def check_media_processing(preview: false)
+    check_media_processing_job_class.perform_later(self, preview:, encoding_generation:)
+  end
+
   def upload_failed?
     processing_state == "upload_failed"
   end
