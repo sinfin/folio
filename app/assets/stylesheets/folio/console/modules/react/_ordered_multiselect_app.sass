@@ -28,8 +28,12 @@
     text-overflow: ellipsis
     white-space: nowrap
 
-  &__item-rename-input
+  &__item-edit
     flex: 1
+    min-width: 0
+
+  &__item-rename-input
+    width: 100%
     border: 1px solid $primary
     border-radius: $border-radius-sm
     padding: 0 6px
@@ -38,6 +42,13 @@
     outline: none
     background: $white
     height: 22px
+
+    &.is-invalid
+      border-color: var(--bs-danger)
+
+  &__item-rename-error
+    font-size: 0.75em
+    margin-top: 2px
 
   &__item-action
     flex-shrink: 0
@@ -141,6 +152,8 @@
 
   &__edit
     flex: 1
+
+  &__edit-row
     display: flex
     align-items: center
     gap: 4px
@@ -153,6 +166,13 @@
     font-size: inherit
     outline: none
     background: $white
+
+    &.is-invalid
+      border-color: var(--bs-danger)
+
+  &__edit-error
+    font-size: 0.75em
+    margin-top: 2px
 
   &__edit-confirm
     flex-shrink: 0

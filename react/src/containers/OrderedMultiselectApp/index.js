@@ -223,6 +223,7 @@ class OrderedMultiselectApp extends React.Component {
                   path={path}
                   remove={this.removeItem}
                   onRename={orderedMultiselect.createable ? this.onRenameSubmit : undefined}
+                  existingLabels={orderedMultiselect.createable ? existingLabels : undefined}
                 />
               )
             })}

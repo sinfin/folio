@@ -55,7 +55,9 @@ class Select extends React.Component {
 
   onKeyDown = (e) => {
     if (e.key === 'Enter') {
-      if (this.props.innerRef && this.props.innerRef.current) {
+      if (this.props.createable) {
+        e.preventDefault() // prevent form submission; react-select handles Enter internally
+      } else if (this.props.innerRef && this.props.innerRef.current) {
         const ref = this.props.innerRef.current
         if (!ref.select.state.menuIsOpen) {
           e.preventDefault()
@@ -82,7 +84,7 @@ class Select extends React.Component {
   }
 
   render () {
-    const { isClearable, createable, value, options, rawOptions, onChange, innerRef, async, asyncData, addAtomSettings, defaultOptions, placeholder, dataTestId, menuPlacement, ...rest } = this.props
+    const { isClearable, createable, value, options, rawOptions, onChange, innerRef, async, asyncData, addAtomSettings, defaultOptions, placeholder, dataTestId, menuPlacement, existingLabels, ...rest } = this.props
 
     // Format value early so we can use it in loadOptions
     let formattedValue = null
@@ -320,7 +322,15 @@ class Select extends React.Component {
         defaultOptions={handledDefaultOptions}
         formatCreateLabel={formatCreateLabel}
         onChange={this.onChange}
-        noOptionsMessage={makeNoOptionsMessage(options)}
+        noOptionsMessage={({ inputValue }) => {
+            if (createable && inputValue && existingLabels) {
+              const normalized = inputValue.toLowerCase().trim()
+              if (existingLabels.some((l) => l.toLowerCase().trim() === normalized)) {
+                return window.FolioConsole.translations.alreadyExists || 'Already exists'
+              }
+            }
+            return makeNoOptionsMessage(options)({ inputValue })
+          }}
         ref={innerRef}
         styles={selectStyles}
         loadOptions={loadOptions}
@@ -330,6 +340,7 @@ class Select extends React.Component {
         placeholder={placeholder || window.FolioConsole.translations.selectPlaceholder}
         loadingMessage={() => window.FolioConsole.translations.loading}
         isValidNewOption={this.isValidNewOption}
+        existingLabels={existingLabels}
         components={createable ? { Option: OptionWithActions, Input } : { Input }}
         dataTestId={dataTestId}
         menuPlacement={menuPlacement}

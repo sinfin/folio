@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react'
+import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react'
 import { components } from 'react-select'
 import FolioUiIcon from 'components/FolioUiIcon'
 
@@ -24,6 +24,14 @@ function OptionWithActions (props) {
     }
   }, [isEditing])
 
+  const isDuplicate = useMemo(() => {
+    if (!isEditing || !editValue.trim() || !selectProps.existingLabels) return false
+    const normalized = editValue.trim().toLowerCase()
+    const currentLabel = (renamedLabel || data.label || '').toLowerCase()
+    if (normalized === currentLabel) return false
+    return selectProps.existingLabels.some((label) => label.toLowerCase().trim() === normalized)
+  }, [isEditing, editValue, data.label, renamedLabel, selectProps.existingLabels])
+
   const onRenameClick = useCallback((e) => {
     e.preventDefault()
     e.stopPropagation()
@@ -46,7 +54,15 @@ function OptionWithActions (props) {
   const onRenameSubmit = useCallback(() => {
     const trimmed = editValue.trim()
     const currentLabel = renamedLabel || data.label
-    if (trimmed && trimmed !== currentLabel) {
+    if (!trimmed) { finishEditing(); return }
+    const normalized = trimmed.toLowerCase()
+    const currentNormalized = (currentLabel || '').toLowerCase()
+    if (selectProps.existingLabels &&
+        normalized !== currentNormalized &&
+        selectProps.existingLabels.some((l) => l.toLowerCase().trim() === normalized)) {
+      return // duplicate — stay in edit mode, is-invalid class shows the error
+    }
+    if (trimmed !== currentLabel) {
       setRenamedLabel(trimmed)
       selectProps.onRenameSubmit && selectProps.onRenameSubmit(data, trimmed)
     }
@@ -104,22 +120,29 @@ function OptionWithActions (props) {
       <div className='f-c-r-select-option-with-actions'>
         {isEditing ? (
           <div className='f-c-r-select-option-with-actions__edit' data-owa-action='true'>
-            <input
-              ref={inputRef}
-              className='f-c-r-select-option-with-actions__edit-input'
-              value={editValue}
-              onChange={(e) => setEditValue(e.target.value)}
-              onKeyDown={onInputKeyDown}
-              onBlur={onRenameSubmit}
-              onMouseDown={(e) => e.stopPropagation()}
-            />
-            <span
-              className='f-c-r-select-option-with-actions__edit-confirm'
-              onMouseDown={(e) => { e.preventDefault(); onRenameSubmit() }}
-              title={window.FolioConsole.translations.rename || 'Confirm'}
-            >
-              <FolioUiIcon name='check' height={16} />
-            </span>
+            <div className='f-c-r-select-option-with-actions__edit-row'>
+              <input
+                ref={inputRef}
+                className={`f-c-r-select-option-with-actions__edit-input${isDuplicate ? ' is-invalid' : ''}`}
+                value={editValue}
+                onChange={(e) => setEditValue(e.target.value)}
+                onKeyDown={onInputKeyDown}
+                onBlur={onRenameSubmit}
+                onMouseDown={(e) => e.stopPropagation()}
+              />
+              <span
+                className='f-c-r-select-option-with-actions__edit-confirm'
+                onMouseDown={(e) => { e.preventDefault(); onRenameSubmit() }}
+                title={window.FolioConsole.translations.rename || 'Confirm'}
+              >
+                <FolioUiIcon name='check' height={16} />
+              </span>
+            </div>
+            {isDuplicate && (
+              <div className='f-c-r-select-option-with-actions__edit-error invalid-feedback d-block'>
+                {window.FolioConsole.translations.alreadyExists || 'Already exists'}
+              </div>
+            )}
           </div>
         ) : (
           <>
