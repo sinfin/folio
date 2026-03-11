@@ -7,6 +7,10 @@ class Folio::CraMediaCloud::CheckProgressJob < Folio::ApplicationJob
 
   unique :until_and_while_executing
 
+  # Maximum time to poll CRA before giving up (4 hours).
+  # Long videos can take 2+ hours for HD encoding across multiple phases.
+  MAX_PROCESSING_DURATION = 4.hours
+
   attr_reader :media_file
 
   def perform(media_file, preview: false, encoding_generation: nil)
@@ -21,6 +25,13 @@ class Folio::CraMediaCloud::CheckProgressJob < Folio::ApplicationJob
 
     if media_file.ready?
       Rails.logger.info "[CraMediaCloud::CheckProgressJob] Video #{media_file.id} is already in ready state"
+      return
+    end
+
+    if processing_timed_out?
+      Rails.logger.error "[CraMediaCloud::CheckProgressJob] Timed out after #{MAX_PROCESSING_DURATION.inspect} " \
+                         "for video #{media_file.id}. Marking as processing_failed."
+      media_file.processing_failed! if media_file.may_processing_failed?
       return
     end
 
@@ -425,6 +436,13 @@ class Folio::CraMediaCloud::CheckProgressJob < Folio::ApplicationJob
         media_file,
         encoding_generation: @encoding_generation || media_file.encoding_generation
       )
+    end
+
+    def processing_timed_out?
+      started_at = media_file.remote_services_data["processing_step_started_at"]
+      return false if started_at.blank?
+
+      Time.parse(started_at.to_s) < MAX_PROCESSING_DURATION.ago
     end
 
     def api

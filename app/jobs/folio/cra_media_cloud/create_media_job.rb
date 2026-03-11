@@ -51,11 +51,16 @@ class Folio::CraMediaCloud::CreateMediaJob < Folio::ApplicationJob
       # Combine environment, video slug, S3 ETag, and encoding_generation for unique reference.
       # encoding_generation changes on each re-encode, ensuring CRA gets a fresh refId.
       # Format: {env}-{slug}-{s3_etag}-{generation}
+      # Total length is capped at 128 chars to avoid CRA lookup failures with long slugs.
       s3_etag = get_s3_etag(media_file)
       env_prefix = ENV.fetch("DRAGONFLY_RAILS_ENV", Rails.env)
       generation = media_file.encoding_generation
 
-      "#{env_prefix}-#{media_file.slug}-#{s3_etag[0..7]}-#{generation}"
+      suffix = "-#{s3_etag[0..7]}-#{generation}"
+      max_slug_length = 128 - env_prefix.length - 1 - suffix.length
+      slug = media_file.slug.to_s[0, [max_slug_length, 1].max]
+
+      "#{env_prefix}-#{slug}#{suffix}"
     end
 
     def get_s3_etag(media_file)
