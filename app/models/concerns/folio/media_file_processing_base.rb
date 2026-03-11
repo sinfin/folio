@@ -20,7 +20,7 @@ module Folio::MediaFileProcessingBase
   def process_attached_file
     regenerate_thumbnails if try(:thumbnailable?)
     # Set new encoding generation to invalidate any old CheckProgressJobs
-    self.update(remote_services_data: {
+    self.update!(remote_services_data: {
       "processing_step_started_at" => Time.current,
       "encoding_generation" => Time.current.to_i
     })
@@ -91,8 +91,8 @@ module Folio::MediaFileProcessingBase
 
   def create_full_media
     full_media_job_class.perform_later(self)
-    rsd = remote_services_data || {}
-    self.update(remote_services_data: rsd.merge!({ "service" => processed_by, "processing_state" => "enqueued", "processing_step_started_at" => Time.current }))
+    rsd = (remote_services_data || {}).merge("service" => processed_by, "processing_state" => "enqueued", "processing_step_started_at" => Time.current)
+    self.update!(remote_services_data: rsd)
   end
 
   def create_preview_media
@@ -100,7 +100,8 @@ module Folio::MediaFileProcessingBase
       preview_media_processed!
     else
       preview_media_job_class.perform_later(self)
-      self.update(remote_services_data: self.remote_services_data.merge!({ "processing_step_started_at" => Time.current }))
+      rsd = (remote_services_data || {}).merge("processing_step_started_at" => Time.current)
+      self.update!(remote_services_data: rsd)
     end
   end
 
