@@ -66,19 +66,19 @@ class Select extends React.Component {
 
   isValidNewOption = (inputValue, selectValue, selectOptions) => {
     if (!inputValue) return false
-    let isValid = true
+    const normalized = inputValue.toLowerCase().trim()
 
-    selectValue.forEach((opt) => {
-      if (opt.value === inputValue) isValid = false
-    })
-
-    if (isValid) {
-      selectOptions.forEach((opt) => {
-        if (opt.value === inputValue) isValid = false
-      })
+    if (this.props.existingLabels) {
+      for (const label of this.props.existingLabels) {
+        if (label.toLowerCase().trim() === normalized) return false
+      }
     }
 
-    return isValid
+    for (const opt of selectOptions) {
+      if (opt.label && opt.label.toLowerCase().trim() === normalized) return false
+    }
+
+    return true
   }
 
   render () {

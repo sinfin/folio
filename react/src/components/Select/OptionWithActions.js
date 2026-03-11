@@ -12,6 +12,7 @@ function OptionWithActions (props) {
   const { data, selectProps, innerProps } = props
   const [isEditing, setIsEditing] = useState(false)
   const [editValue, setEditValue] = useState('')
+  const [renamedLabel, setRenamedLabel] = useState(null)
   const inputRef = useRef(null)
 
   const isNew = data.__isNew__
@@ -27,9 +28,9 @@ function OptionWithActions (props) {
     e.preventDefault()
     e.stopPropagation()
     if (selectProps.onEditingChange) selectProps.onEditingChange(true)
-    setEditValue(data.label || '')
+    setEditValue(renamedLabel || data.label || '')
     setIsEditing(true)
-  }, [data, selectProps])
+  }, [data, selectProps, renamedLabel])
 
   const onDeleteClick = useCallback((e) => {
     e.preventDefault()
@@ -44,11 +45,13 @@ function OptionWithActions (props) {
 
   const onRenameSubmit = useCallback(() => {
     const trimmed = editValue.trim()
-    if (trimmed && trimmed !== data.label) {
+    const currentLabel = renamedLabel || data.label
+    if (trimmed && trimmed !== currentLabel) {
+      setRenamedLabel(trimmed)
       selectProps.onRenameSubmit && selectProps.onRenameSubmit(data, trimmed)
     }
     finishEditing()
-  }, [editValue, data, selectProps, finishEditing])
+  }, [editValue, data, renamedLabel, selectProps, finishEditing])
 
   const onRenameCancel = useCallback(() => {
     finishEditing()
@@ -66,7 +69,6 @@ function OptionWithActions (props) {
     }
   }, [onRenameSubmit, onRenameCancel])
 
-  // Create option — green + icon style
   if (isNew) {
     return (
       <components.Option {...props}>
@@ -78,8 +80,6 @@ function OptionWithActions (props) {
     )
   }
 
-  // Override innerProps to prevent react-select from selecting/closing
-  // when clicking on the action area (icon buttons, rename input)
   const wrappedInnerProps = {
     ...innerProps,
     onClick: (e) => {
@@ -110,6 +110,7 @@ function OptionWithActions (props) {
               value={editValue}
               onChange={(e) => setEditValue(e.target.value)}
               onKeyDown={onInputKeyDown}
+              onBlur={onRenameSubmit}
               onMouseDown={(e) => e.stopPropagation()}
             />
             <span
@@ -123,7 +124,7 @@ function OptionWithActions (props) {
         ) : (
           <>
             <span className='f-c-r-select-option-with-actions__label'>
-              {props.children}
+              {renamedLabel || props.children}
             </span>
             <span
               className='f-c-r-select-option-with-actions__action'

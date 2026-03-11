@@ -22,6 +22,7 @@ en:
         deleteWarning: "This item is assigned to %{count} other records. Deleting it will remove it from all of them. Continue?"
         destroy: Destroy
         rename: Rename
+        alreadyExists: An item with this name already exists.
         deleteSubtitleConfirm: Are you sure you want to delete this subtitle?
         details: Details
         errorGeneric: 'Error: %{message}'

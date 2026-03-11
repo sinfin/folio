@@ -34,13 +34,11 @@ class OrderedMultiselectApp extends React.Component {
     if (isEditing) {
       this.setState({ menuIsOpen: true, inlineEditing: true })
     } else {
-      // Keep menu open after rename — user closes it naturally
       this.setState({ inlineEditing: false })
     }
   }
 
   onMenuClose = () => {
-    // Ignore react-select's close request while rename input has focus
     if (this.state.inlineEditing) return
     this.setState({ menuIsOpen: undefined })
   }
@@ -89,6 +87,14 @@ class OrderedMultiselectApp extends React.Component {
     const { orderedMultiselect } = this.props
     if (!orderedMultiselect.createUrl) return
 
+    const duplicate = orderedMultiselect.items.find(
+      (item) => item.label.toLowerCase().trim() === inputValue.toLowerCase().trim()
+    )
+    if (duplicate) {
+      window.alert(window.FolioConsole.translations.alreadyExists || 'An item with this name already exists.')
+      return
+    }
+
     apiPost(orderedMultiselect.createUrl, { label: inputValue })
       .then((res) => {
         if (res && res.data) {
@@ -105,15 +111,14 @@ class OrderedMultiselectApp extends React.Component {
     const { orderedMultiselect } = this.props
     if (!orderedMultiselect.updateUrl) return
 
-    const recordId = option.id || this.extractIdFromValue(option.value)
+    // Always use option.value (the record's own ID), not option.id
+    // which may be a join-table ID for server-loaded items.
+    const recordId = this.extractIdFromValue(option.value)
 
     apiPatch(orderedMultiselect.updateUrl, { id: recordId, label: newLabel })
       .then((res) => {
         if (res && res.data) {
-          // No change event dispatch — rename is saved immediately via API,
-          // no need to mark the form as dirty.
           this.props.dispatch(renameItem(recordId, res.data.label))
-          this.forceSelectRefresh()
         }
       })
       .catch((err) => {
@@ -125,7 +130,7 @@ class OrderedMultiselectApp extends React.Component {
     const { orderedMultiselect } = this.props
     if (!orderedMultiselect.deleteUrl) return
 
-    const recordId = option.id || this.extractIdFromValue(option.value)
+    const recordId = this.extractIdFromValue(option.value)
 
     apiDelete(orderedMultiselect.deleteUrl, { id: recordId })
       .then((res) => {
@@ -185,6 +190,9 @@ class OrderedMultiselectApp extends React.Component {
     const url = `${orderedMultiselect.url}&without=${without}`
     const selectKey = `${without}-${this.state.selectKey}`
     const { menuIsOpen } = this.state
+    const existingLabels = orderedMultiselect.createable
+      ? orderedMultiselect.items.map((item) => item.label)
+      : undefined
 
     return (
       <div
@@ -228,8 +236,9 @@ class OrderedMultiselectApp extends React.Component {
           onRenameSubmit={orderedMultiselect.createable ? this.onRenameSubmit : undefined}
           onDeleteOption={orderedMultiselect.createable ? this.onDeleteOption : undefined}
           onEditingChange={orderedMultiselect.createable ? this.onEditingChange : undefined}
-          onMenuClose={this.onMenuClose}
+          onMenuClose={orderedMultiselect.createable ? this.onMenuClose : undefined}
           menuIsOpen={menuIsOpen}
+          existingLabels={existingLabels}
           isClearable={false}
           async={url}
           placeholder={window.FolioConsole.translations.addPlaceholder}
