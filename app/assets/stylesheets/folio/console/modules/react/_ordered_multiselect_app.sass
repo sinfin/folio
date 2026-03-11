@@ -90,25 +90,21 @@
 
   &__action
     flex-shrink: 0
-    padding: 2px 4px
+    padding: 2px
     cursor: pointer
     opacity: 0
-    border-radius: $border-radius-sm
-    margin-left: 2px
-    transition: opacity 0.15s
+    margin-left: $spacer / 4
+    transition: $transition-base
 
     &:hover
       opacity: 1 !important
-      background: rgba(0, 0, 0, 0.08)
 
     &--danger
-      &:hover
-        color: var(--bs-danger)
-        background: rgba(var(--bs-danger-rgb), 0.08)
+      color: var(--bs-danger)
 
   .react-select__option:hover &__action,
   .react-select__option--is-focused &__action
-    opacity: 0.4
+    opacity: 0.35
 
   &__edit
     flex: 1

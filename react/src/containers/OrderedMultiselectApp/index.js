@@ -120,7 +120,7 @@ class OrderedMultiselectApp extends React.Component {
               .replace('%{count}', count)
             shouldDelete = window.confirm(msg)
           } else {
-            shouldDelete = window.confirm(window.FolioConsole.translations.removePrompt)
+            shouldDelete = window.confirm(window.FolioConsole.translations.deleteFromDbConfirm || 'Delete this record from database?')
           }
 
           if (shouldDelete) {

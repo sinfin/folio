@@ -18,6 +18,7 @@ en:
         close: Close
         create: Create
         deleteFromDb: Delete
+        deleteFromDbConfirm: "Delete this record from database?"
         deleteWarning: "This item is assigned to %{count} other records. Deleting it will remove it from all of them. Continue?"
         destroy: Destroy
         rename: Rename

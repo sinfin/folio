@@ -81,7 +81,10 @@ function OptionWithActions (props) {
       innerProps.onClick && innerProps.onClick(e)
     },
     onMouseDown: (e) => {
-      if (isActionAreaClick(e)) return
+      if (isActionAreaClick(e)) {
+        e.preventDefault()
+        return
+      }
       innerProps.onMouseDown && innerProps.onMouseDown(e)
     },
     onMouseUp: (e) => {
@@ -102,6 +105,7 @@ function OptionWithActions (props) {
               onChange={(e) => setEditValue(e.target.value)}
               onKeyDown={onInputKeyDown}
               onBlur={onRenameSubmit}
+              onMouseDown={(e) => e.stopPropagation()}
             />
           </div>
         ) : (
@@ -115,7 +119,7 @@ function OptionWithActions (props) {
               data-owa-action='true'
               title={window.FolioConsole.translations.rename || 'Rename'}
             >
-              <FolioUiIcon name='edit_box' height={14} />
+              <FolioUiIcon name='edit_box' height={16} />
             </span>
             <span
               className='f-c-r-select-option-with-actions__action f-c-r-select-option-with-actions__action--danger'
@@ -123,7 +127,7 @@ function OptionWithActions (props) {
               data-owa-action='true'
               title={window.FolioConsole.translations.deleteFromDb || 'Delete'}
             >
-              <FolioUiIcon name='delete' height={14} />
+              <FolioUiIcon name='delete' height={16} />
             </span>
           </>
         )}
