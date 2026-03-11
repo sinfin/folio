@@ -23,7 +23,12 @@ class OrderedMultiselectApp extends React.Component {
   constructor (props) {
     super(props)
     this.wrapRef = React.createRef()
-    this.state = { selectKey: 0 }
+    this.renameInputRef = React.createRef()
+    this.state = {
+      selectKey: 0,
+      renamingOption: null,
+      renameValue: ''
+    }
   }
 
   componentDidMount () {
@@ -34,27 +39,27 @@ class OrderedMultiselectApp extends React.Component {
     this.wrapRef.current.removeEventListener('f-c-r-ordered-multiselect-app:add-entry', this.onAddEntryEvent)
   }
 
+  componentDidUpdate (prevProps, prevState) {
+    if (this.state.renamingOption && !prevState.renamingOption && this.renameInputRef.current) {
+      this.renameInputRef.current.focus()
+      this.renameInputRef.current.select()
+    }
+  }
+
   onAddEntryEvent = (e) => {
     if (!e || !e.detail || !e.detail.entry) return
     this.onSelect(e.detail.entry)
   }
 
   onSelect = (option) => {
-    // option is {value, label, id} from react-select
-    // value is the STI string like "MyProject::List::Category -=- 310"
-    // id is the numeric ID like 310
-    // Use id for the item ID, fallback to extracting from value if id not available
     let itemId = option.id
     if (itemId === undefined && typeof option.value === 'string' && option.value.includes(' -=- ')) {
-      // Extract numeric ID from STI format: "Class -=- 48" -> 48
       const parts = option.value.split(' -=- ')
       itemId = parts.length > 1 ? parts[1] : option.value
     } else if (itemId === undefined) {
-      // Fallback to value if no id available
       itemId = option.value
     }
 
-    // Transform to {id, label} format expected by Redux
     const item = {
       id: itemId,
       label: option.label
@@ -89,14 +94,28 @@ class OrderedMultiselectApp extends React.Component {
       })
   }
 
-  onRenameOption = (option, newLabel) => {
+  // Called from OptionWithActions when user clicks Rename in the sub-menu
+  onStartRename = (option) => {
+    this.setState({
+      renamingOption: option,
+      renameValue: option.label || ''
+    })
+  }
+
+  onRenameSubmit = () => {
+    const { renamingOption, renameValue } = this.state
     const { orderedMultiselect } = this.props
-    if (!orderedMultiselect.updateUrl) return
+    if (!renamingOption || !orderedMultiselect.updateUrl) return
 
-    // Extract numeric ID from option
-    const recordId = option.id || this.extractIdFromValue(option.value)
+    const trimmed = renameValue.trim()
+    if (!trimmed || trimmed === renamingOption.label) {
+      this.setState({ renamingOption: null, renameValue: '' })
+      return
+    }
 
-    apiPatch(orderedMultiselect.updateUrl, { id: recordId, label: newLabel })
+    const recordId = renamingOption.id || this.extractIdFromValue(renamingOption.value)
+
+    apiPatch(orderedMultiselect.updateUrl, { id: recordId, label: trimmed })
       .then((res) => {
         if (res && res.data) {
           document.querySelector('.f-c-r-ordered-multiselect-app').dispatchEvent(new window.Event('change', { bubbles: true }))
@@ -107,6 +126,23 @@ class OrderedMultiselectApp extends React.Component {
       .catch((err) => {
         window.alert(err.message || 'Failed to rename record')
       })
+
+    this.setState({ renamingOption: null, renameValue: '' })
+  }
+
+  onRenameCancel = () => {
+    this.setState({ renamingOption: null, renameValue: '' })
+  }
+
+  onRenameKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      this.onRenameSubmit()
+    }
+    if (e.key === 'Escape') {
+      e.preventDefault()
+      this.onRenameCancel()
+    }
   }
 
   onDeleteOption = (option) => {
@@ -115,7 +151,6 @@ class OrderedMultiselectApp extends React.Component {
 
     const recordId = option.id || this.extractIdFromValue(option.value)
 
-    // First call without confirmed — get usage info
     apiDelete(orderedMultiselect.deleteUrl, { id: recordId })
       .then((res) => {
         if (res && res.data) {
@@ -170,10 +205,9 @@ class OrderedMultiselectApp extends React.Component {
 
   render () {
     const { orderedMultiselect } = this.props
+    const { renamingOption, renameValue } = this.state
     const without = orderedMultiselect.items.map((item) => item.value).join(',')
     const url = `${orderedMultiselect.url}&without=${without}`
-
-    // Combine without + selectKey to force Select reload on both item changes and CRUD operations
     const selectKey = `${without}-${this.state.selectKey}`
 
     return (
@@ -210,20 +244,34 @@ class OrderedMultiselectApp extends React.Component {
           />
         ) : null}
 
-        <Select
-          onChange={this.onSelect}
-          createable={orderedMultiselect.createable}
-          onCreateOption={orderedMultiselect.createable ? this.onCreateOption : undefined}
-          onRenameOption={orderedMultiselect.createable ? this.onRenameOption : undefined}
-          onDeleteOption={orderedMultiselect.createable ? this.onDeleteOption : undefined}
-          isClearable={false}
-          async={url}
-          placeholder={window.FolioConsole.translations.addPlaceholder}
-          key={selectKey}
-          defaultOptions
-          addAtomSettings
-          menuPlacement={orderedMultiselect.menuPlacement}
-        />
+        {renamingOption ? (
+          <div className='f-c-r-ordered-multiselect-app__rename'>
+            <input
+              ref={this.renameInputRef}
+              className='f-c-r-ordered-multiselect-app__rename-input'
+              value={renameValue}
+              onChange={(e) => this.setState({ renameValue: e.target.value })}
+              onKeyDown={this.onRenameKeyDown}
+              onBlur={this.onRenameSubmit}
+              placeholder={renamingOption.label}
+            />
+          </div>
+        ) : (
+          <Select
+            onChange={this.onSelect}
+            createable={orderedMultiselect.createable}
+            onCreateOption={orderedMultiselect.createable ? this.onCreateOption : undefined}
+            onStartRename={orderedMultiselect.createable ? this.onStartRename : undefined}
+            onDeleteOption={orderedMultiselect.createable ? this.onDeleteOption : undefined}
+            isClearable={false}
+            async={url}
+            placeholder={window.FolioConsole.translations.addPlaceholder}
+            key={selectKey}
+            defaultOptions
+            addAtomSettings
+            menuPlacement={orderedMultiselect.menuPlacement}
+          />
+        )}
 
         <Serialized orderedMultiselect={orderedMultiselect} />
       </div>

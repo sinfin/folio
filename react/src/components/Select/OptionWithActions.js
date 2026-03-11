@@ -11,17 +11,10 @@ function isActionAreaClick (e) {
 function OptionWithActions (props) {
   const { data, selectProps, innerProps } = props
   const [menuOpen, setMenuOpen] = useState(false)
-  const [renaming, setRenaming] = useState(false)
-  const [renameValue, setRenameValue] = useState(data.label || '')
-  const inputRef = useRef(null)
   const menuRef = useRef(null)
   const dotsRef = useRef(null)
 
   const isNew = data.__isNew__
-
-  useEffect(() => {
-    if (renaming && inputRef.current) inputRef.current.focus()
-  }, [renaming])
 
   useEffect(() => {
     if (!menuOpen) return
@@ -46,32 +39,10 @@ function OptionWithActions (props) {
   const onRenameClick = useCallback((e) => {
     e.preventDefault()
     e.stopPropagation()
-    setRenaming(true)
-    setRenameValue(data.label || '')
     setMenuOpen(false)
-  }, [data.label])
-
-  const onRenameSubmit = useCallback((e) => {
-    if (e) {
-      e.preventDefault()
-      e.stopPropagation()
-    }
-    const trimmed = renameValue.trim()
-    if (trimmed && trimmed !== data.label) {
-      selectProps.onRenameOption && selectProps.onRenameOption(data, trimmed)
-    }
-    setRenaming(false)
-  }, [renameValue, data, selectProps])
-
-  const onRenameKeyDown = useCallback((e) => {
-    e.stopPropagation()
-    if (e.key === 'Enter') onRenameSubmit(e)
-    if (e.key === 'Escape') {
-      e.preventDefault()
-      setRenaming(false)
-      setRenameValue(data.label || '')
-    }
-  }, [onRenameSubmit, data.label])
+    // Delegate rename to parent — dropdown will close, rename input renders outside
+    selectProps.onStartRename && selectProps.onStartRename(data)
+  }, [data, selectProps])
 
   const onDeleteClick = useCallback((e) => {
     e.preventDefault()
@@ -89,24 +60,6 @@ function OptionWithActions (props) {
           {props.children}
         </span>
       </components.Option>
-    )
-  }
-
-  // Rename mode — replace the entire option with an input
-  if (renaming) {
-    return (
-      <div className='f-c-r-select-option-rename'>
-        <input
-          ref={inputRef}
-          className='f-c-r-select-option-rename__input'
-          value={renameValue}
-          onChange={(e) => setRenameValue(e.target.value)}
-          onKeyDown={onRenameKeyDown}
-          onBlur={() => onRenameSubmit(null)}
-          onClick={(e) => e.stopPropagation()}
-          onMouseDown={(e) => e.stopPropagation()}
-        />
-      </div>
     )
   }
 

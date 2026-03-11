@@ -26,6 +26,18 @@
     margin-left: $spacer / 2
     cursor: pointer
 
+  &__rename
+    padding: 2px 0
+
+  &__rename-input
+    width: 100%
+    border: 1px solid $primary
+    border-radius: $border-radius-sm
+    padding: 6px 10px
+    font-size: $input-font-size
+    outline: none
+    background: $white
+
   .react-select__control
     border: 0
     box-shadow: none !important
@@ -132,17 +144,6 @@
 
       &:hover
         background: rgba(var(--bs-danger-rgb), 0.08)
-
-.f-c-r-select-option-rename
-  padding: 4px 8px
-
-  &__input
-    width: 100%
-    border: 1px solid $primary
-    border-radius: $border-radius-sm
-    padding: 4px 8px
-    font-size: $font-size-sm
-    outline: none
 
 .f-c-r-select-create-option
   font-weight: 500
