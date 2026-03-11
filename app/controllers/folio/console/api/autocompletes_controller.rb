@@ -428,6 +428,62 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
     end
   end
 
+  def react_select_update
+    klass = params.require(:class_name).safe_constantize
+
+    if klass.nil? || !(klass < ActiveRecord::Base)
+      return render json: { error: "Invalid class" }, status: :unprocessable_entity
+    end
+
+    record = klass.find(params.require(:id))
+    authorize!(:update, record)
+    record.title = params.require(:label)
+
+    if record.save
+      render json: {
+        data: {
+          id: record.id,
+          text: record.to_console_label,
+          label: record.to_console_label,
+          value: Folio::Console::StiHelper.sti_record_to_select_value(record),
+          type: record.class.to_s,
+        }
+      }
+    else
+      render json: { error: record.errors.full_messages.join(", ") }, status: :unprocessable_entity
+    end
+  end
+
+  def react_select_destroy
+    klass = params.require(:class_name).safe_constantize
+
+    if klass.nil? || !(klass < ActiveRecord::Base)
+      return render json: { error: "Invalid class" }, status: :unprocessable_entity
+    end
+
+    record = klass.find(params.require(:id))
+    authorize!(:destroy, record)
+
+    usage_count = if record.respond_to?(:usage_count_for_warning)
+      record.usage_count_for_warning
+    else
+      0
+    end
+
+    if params[:confirmed] == "true"
+      record.destroy!
+      render json: { data: { id: record.id, destroyed: true } }
+    else
+      render json: {
+        data: {
+          id: record.id,
+          usage_count: usage_count,
+          confirm_required: usage_count > 0
+        }
+      }
+    end
+  end
+
   private
     def apply_ordered_for_folio_console_selects(scope, klass)
       return [scope, false] unless klass.respond_to?(:ordered_for_folio_console_selects)

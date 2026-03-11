@@ -7,6 +7,8 @@ const SET_ORDERED_MULTISELECT_DATA = 'orderedMultiselect/SET_ORDERED_MULTISELECT
 const ADD_ITEM = 'orderedMultiselect/ADD_ITEM'
 const UPDATE_ITEMS = 'orderedMultiselect/UPDATE_ITEMS'
 const REMOVE_ITEM = 'orderedMultiselect/REMOVE_ITEM'
+const RENAME_ITEM = 'orderedMultiselect/RENAME_ITEM'
+const REMOVE_DELETED_ITEM = 'orderedMultiselect/REMOVE_DELETED_ITEM'
 
 export const MENU_ITEM_URL = 'orderedMultiselect/MENU_ITEM_URL'
 
@@ -26,6 +28,14 @@ export function updateItems (items) {
 
 export function removeItem (item) {
   return { type: REMOVE_ITEM, item }
+}
+
+export function renameItem (itemValue, newLabel) {
+  return { type: RENAME_ITEM, itemValue, newLabel }
+}
+
+export function removeDeletedItem (itemValue) {
+  return { type: REMOVE_DELETED_ITEM, itemValue }
 }
 
 // Selectors
@@ -64,7 +74,9 @@ const initialState = {
   sortable: true,
   atomSetting: false,
   createable: false,
-  createUrl: null
+  createUrl: null,
+  updateUrl: null,
+  deleteUrl: null
 }
 
 // Reducer
@@ -127,6 +139,26 @@ function orderedMultiselectReducer (state = initialState, action) {
         ...state,
         removedItems,
         items: state.items.filter((stateItem) => stateItem.uniqueId !== action.item.uniqueId)
+      }
+    }
+
+    case RENAME_ITEM: {
+      return {
+        ...state,
+        items: state.items.map((item) => {
+          if (String(item.value) === String(action.itemValue)) {
+            return { ...item, label: action.newLabel }
+          }
+          return item
+        })
+      }
+    }
+
+    case REMOVE_DELETED_ITEM: {
+      return {
+        ...state,
+        items: state.items.filter((item) => String(item.value) !== String(action.itemValue)),
+        removedItems: state.removedItems.filter((item) => String(item.value) !== String(action.itemValue))
       }
     }
 

@@ -13,6 +13,7 @@ import formatOption from './formatOption'
 import formatOptions from './formatOptions'
 import formatCreateLabel from './formatCreateLabel'
 import makeNoOptionsMessage from './makeNoOptionsMessage'
+import OptionWithActions from './OptionWithActions'
 
 const AUTOCOMPLETE_PAGY_ITEMS = 25
 
@@ -325,7 +326,7 @@ class Select extends React.Component {
         placeholder={placeholder || window.FolioConsole.translations.selectPlaceholder}
         loadingMessage={() => window.FolioConsole.translations.loading}
         isValidNewOption={this.isValidNewOption}
-        components={{ Input }}
+        components={createable ? { Option: OptionWithActions, Input } : { Input }}
         dataTestId={dataTestId}
         menuPlacement={menuPlacement}
         debounceTimeout={useDebounceTimeout ? 250 : undefined}

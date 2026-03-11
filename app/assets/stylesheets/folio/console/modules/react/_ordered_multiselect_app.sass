@@ -75,3 +75,79 @@
 
   .rst__moveHandle
     display: none
+
+// OptionWithActions — inline CRUD in dropdown
+.f-c-r-select-option-with-actions
+  display: flex
+  align-items: center
+  justify-content: space-between
+  width: 100%
+  position: relative
+
+  &__label
+    flex: 1
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
+
+  &__dots
+    flex-shrink: 0
+    padding: 2px 4px
+    cursor: pointer
+    opacity: 0.35
+    border-radius: $border-radius-sm
+    margin-left: $spacer / 2
+
+    &:hover
+      opacity: 1
+      background: rgba(0, 0, 0, 0.08)
+
+  &__menu
+    position: absolute
+    right: 0
+    top: 100%
+    background: $white
+    border: 1px solid $border-color
+    border-radius: $border-radius
+    box-shadow: $box-shadow-sm
+    z-index: 10
+    min-width: 150px
+    padding: 4px 0
+
+  &__menu-item
+    display: flex
+    align-items: center
+    gap: 8px
+    padding: 6px 12px
+    cursor: pointer
+    font-size: $font-size-sm
+    white-space: nowrap
+    color: $body-color
+
+    &:hover
+      background: $gray-100
+
+    &--danger
+      color: var(--bs-danger)
+
+      &:hover
+        background: rgba(var(--bs-danger-rgb), 0.08)
+
+.f-c-r-select-option-rename
+  padding: 4px 8px
+
+  &__input
+    width: 100%
+    border: 1px solid $primary
+    border-radius: $border-radius-sm
+    padding: 4px 8px
+    font-size: $font-size-sm
+    outline: none
+
+.f-c-r-select-create-option
+  font-weight: 500
+  color: var(--bs-success)
+
+  &__icon
+    margin-right: 6px
+    font-weight: 700

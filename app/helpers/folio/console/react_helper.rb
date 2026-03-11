@@ -214,6 +214,32 @@ module Folio::Console::ReactHelper
       ])
     end
 
+    update_url = if createable
+      Folio::Engine.routes.url_helpers.url_for([
+        :react_select_update,
+        :console,
+        :api,
+        :autocomplete,
+        {
+          class_name: through_klass.to_s,
+          only_path: true
+        }
+      ])
+    end
+
+    delete_url = if createable
+      Folio::Engine.routes.url_helpers.url_for([
+        :react_select_destroy,
+        :console,
+        :api,
+        :autocomplete,
+        {
+          class_name: through_klass.to_s,
+          only_path: true
+        }
+      ])
+    end
+
     content_tag(:div, class: form_group_class_name) do
       concat(f.label(relation_name, required: required))
       concat(
@@ -231,7 +257,9 @@ module Folio::Console::ReactHelper
           "data-menu-placement" => menu_placement,
           "data-atom-setting" => atom_setting,
           "data-createable" => createable ? "1" : nil,
-          "data-create-url" => create_url
+          "data-create-url" => create_url,
+          "data-update-url" => update_url,
+          "data-delete-url" => delete_url
         )
       )
 

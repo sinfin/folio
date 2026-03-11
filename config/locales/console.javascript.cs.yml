@@ -17,7 +17,10 @@ cs:
         clearDate: Vymazat datum
         close: Zavřít
         create: Vytvořit
+        deleteFromDb: Smazat
+        deleteWarning: "Tato položka je přiřazena ke %{count} dalším záznamům. Smazáním ji odeberete i z nich. Pokračovat?"
         destroy: Smazat
+        rename: Přejmenovat
         deleteSubtitleConfirm: Opravdu chcete smazat tyto titulky?
         details: Detaily
         errorGeneric: 'Chyba: %{message}'

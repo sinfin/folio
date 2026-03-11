@@ -80,7 +80,9 @@ window.FolioConsole.React.init = (domRoot) => {
       atomSetting: domRoot.dataset.atomSetting,
       menuPlacement: domRoot.dataset.menuPlacement,
       createable: domRoot.dataset.createable === '1',
-      createUrl: domRoot.dataset.createUrl || null
+      createUrl: domRoot.dataset.createUrl || null,
+      updateUrl: domRoot.dataset.updateUrl || null,
+      deleteUrl: domRoot.dataset.deleteUrl || null
     }))
 
     ReactDOM.render((
