@@ -3,14 +3,16 @@ import { makeConfirmed } from 'utils/confirmed'
 
 import FolioUiIcon from 'components/FolioUiIcon'
 
-function isDuplicateLabel (value, currentLabel, existingLabels) {
-  if (!existingLabels || !value.trim()) return false
+function isDuplicateLabel (value, currentLabel, existingLabels, loadedOptions) {
+  if (!value.trim()) return false
   const normalized = value.trim().toLowerCase()
   if (normalized === (currentLabel || '').toLowerCase()) return false
-  return existingLabels.some((label) => label.toLowerCase().trim() === normalized)
+  if (existingLabels && existingLabels.some((label) => label.toLowerCase().trim() === normalized)) return true
+  if (loadedOptions && loadedOptions.some((o) => o.label && o.label.toLowerCase().trim() === normalized)) return true
+  return false
 }
 
-function Item ({ path, node, remove, onRename, existingLabels }) {
+function Item ({ path, node, remove, onRename, existingLabels, loadedOptions }) {
   const [isEditing, setIsEditing] = useState(false)
   const [editValue, setEditValue] = useState('')
   const inputRef = useRef(null)
@@ -22,7 +24,7 @@ function Item ({ path, node, remove, onRename, existingLabels }) {
     }
   }, [isEditing])
 
-  const isDuplicate = isEditing && isDuplicateLabel(editValue, node.label, existingLabels)
+  const isDuplicate = isEditing && isDuplicateLabel(editValue, node.label, existingLabels, loadedOptions)
 
   const onRenameClick = (e) => {
     e.preventDefault()
@@ -35,7 +37,7 @@ function Item ({ path, node, remove, onRename, existingLabels }) {
 
   const onSubmit = () => {
     const trimmed = editValue.trim()
-    if (!trimmed || isDuplicateLabel(trimmed, node.label, existingLabels)) return
+    if (!trimmed || isDuplicateLabel(trimmed, node.label, existingLabels, loadedOptions)) return
     if (trimmed !== node.label) {
       onRename && onRename(node, trimmed)
     }
