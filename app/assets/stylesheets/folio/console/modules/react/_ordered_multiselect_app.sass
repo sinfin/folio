@@ -31,9 +31,13 @@
   &__item-edit
     flex: 1
     min-width: 0
+    display: flex
+    align-items: center
+    gap: 4px
 
   &__item-rename-input
-    width: 100%
+    flex: 1
+    min-width: 0
     border: 1px solid $primary
     border-radius: $border-radius-sm
     padding: 0 6px
@@ -45,10 +49,6 @@
 
     &.is-invalid
       border-color: var(--bs-danger)
-
-  &__item-rename-error
-    font-size: 0.75em
-    margin-top: 2px
 
   &__item-action
     flex-shrink: 0
@@ -169,10 +169,6 @@
 
     &.is-invalid
       border-color: var(--bs-danger)
-
-  &__edit-error
-    font-size: 0.75em
-    margin-top: 2px
 
   &__edit-confirm
     flex-shrink: 0

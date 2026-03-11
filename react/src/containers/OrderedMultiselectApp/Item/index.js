@@ -31,6 +31,8 @@ function Item ({ path, node, remove, onRename, existingLabels }) {
     setIsEditing(true)
   }
 
+  const onCancel = () => setIsEditing(false)
+
   const onSubmit = () => {
     const trimmed = editValue.trim()
     if (!trimmed || isDuplicateLabel(trimmed, node.label, existingLabels)) return
@@ -39,8 +41,6 @@ function Item ({ path, node, remove, onRename, existingLabels }) {
     }
     setIsEditing(false)
   }
-
-  const onCancel = () => setIsEditing(false)
 
   const onKeyDown = (e) => {
     if (e.key === 'Enter') { e.preventDefault(); onSubmit() }
@@ -57,13 +57,15 @@ function Item ({ path, node, remove, onRename, existingLabels }) {
             value={editValue}
             onChange={(e) => setEditValue(e.target.value)}
             onKeyDown={onKeyDown}
-            onBlur={onSubmit}
+            onBlur={onCancel}
+            title={isDuplicate ? (window.FolioConsole.translations.alreadyExists || 'Already exists') : undefined}
           />
-          {isDuplicate && (
-            <div className='f-c-r-ordered-multiselect-app__item-rename-error invalid-feedback d-block'>
-              {window.FolioConsole.translations.alreadyExists || 'Already exists'}
-            </div>
-          )}
+          <span
+            className='f-c-r-ordered-multiselect-app__item-action'
+            onMouseDown={(e) => { e.preventDefault(); onSubmit() }}
+          >
+            <FolioUiIcon name='check' height={16} />
+          </span>
         </div>
       ) : (
         <>

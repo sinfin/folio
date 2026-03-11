@@ -8,6 +8,15 @@ function isActionAreaClick (e) {
   return e.target.closest && e.target.closest(`[${ACTION_AREA_ATTR}]`)
 }
 
+function checkDuplicate (value, currentLabel, existingLabels, loadedOptions) {
+  if (!value.trim()) return false
+  const normalized = value.trim().toLowerCase()
+  if (normalized === (currentLabel || '').toLowerCase()) return false
+  if (existingLabels && existingLabels.some((l) => l.toLowerCase().trim() === normalized)) return true
+  if (loadedOptions && loadedOptions.some((o) => o.label && o.label.toLowerCase().trim() === normalized)) return true
+  return false
+}
+
 function OptionWithActions (props) {
   const { data, selectProps, innerProps } = props
   const [isEditing, setIsEditing] = useState(false)
@@ -24,21 +33,20 @@ function OptionWithActions (props) {
     }
   }, [isEditing])
 
+  const currentLabel = renamedLabel || data.label || ''
+
   const isDuplicate = useMemo(() => {
-    if (!isEditing || !editValue.trim() || !selectProps.existingLabels) return false
-    const normalized = editValue.trim().toLowerCase()
-    const currentLabel = (renamedLabel || data.label || '').toLowerCase()
-    if (normalized === currentLabel) return false
-    return selectProps.existingLabels.some((label) => label.toLowerCase().trim() === normalized)
-  }, [isEditing, editValue, data.label, renamedLabel, selectProps.existingLabels])
+    if (!isEditing) return false
+    return checkDuplicate(editValue, currentLabel, selectProps.existingLabels, selectProps.loadedOptions)
+  }, [isEditing, editValue, currentLabel, selectProps.existingLabels, selectProps.loadedOptions])
 
   const onRenameClick = useCallback((e) => {
     e.preventDefault()
     e.stopPropagation()
     if (selectProps.onEditingChange) selectProps.onEditingChange(true)
-    setEditValue(renamedLabel || data.label || '')
+    setEditValue(currentLabel)
     setIsEditing(true)
-  }, [data, selectProps, renamedLabel])
+  }, [currentLabel, selectProps])
 
   const onDeleteClick = useCallback((e) => {
     e.preventDefault()
@@ -53,37 +61,20 @@ function OptionWithActions (props) {
 
   const onRenameSubmit = useCallback(() => {
     const trimmed = editValue.trim()
-    const currentLabel = renamedLabel || data.label
     if (!trimmed) { finishEditing(); return }
-    const normalized = trimmed.toLowerCase()
-    const currentNormalized = (currentLabel || '').toLowerCase()
-    if (selectProps.existingLabels &&
-        normalized !== currentNormalized &&
-        selectProps.existingLabels.some((l) => l.toLowerCase().trim() === normalized)) {
-      return // duplicate — stay in edit mode, is-invalid class shows the error
-    }
+    if (checkDuplicate(trimmed, currentLabel, selectProps.existingLabels, selectProps.loadedOptions)) return
     if (trimmed !== currentLabel) {
       setRenamedLabel(trimmed)
       selectProps.onRenameSubmit && selectProps.onRenameSubmit(data, trimmed)
     }
     finishEditing()
-  }, [editValue, data, renamedLabel, selectProps, finishEditing])
-
-  const onRenameCancel = useCallback(() => {
-    finishEditing()
-  }, [finishEditing])
+  }, [editValue, currentLabel, selectProps, data, finishEditing])
 
   const onInputKeyDown = useCallback((e) => {
     e.stopPropagation()
-    if (e.key === 'Enter') {
-      e.preventDefault()
-      onRenameSubmit()
-    }
-    if (e.key === 'Escape') {
-      e.preventDefault()
-      onRenameCancel()
-    }
-  }, [onRenameSubmit, onRenameCancel])
+    if (e.key === 'Enter') { e.preventDefault(); onRenameSubmit() }
+    if (e.key === 'Escape') { e.preventDefault(); finishEditing() }
+  }, [onRenameSubmit, finishEditing])
 
   if (isNew) {
     return (
@@ -127,8 +118,9 @@ function OptionWithActions (props) {
                 value={editValue}
                 onChange={(e) => setEditValue(e.target.value)}
                 onKeyDown={onInputKeyDown}
-                onBlur={onRenameSubmit}
+                onBlur={finishEditing}
                 onMouseDown={(e) => e.stopPropagation()}
+                title={isDuplicate ? (window.FolioConsole.translations.alreadyExists || 'Already exists') : undefined}
               />
               <span
                 className='f-c-r-select-option-with-actions__edit-confirm'
@@ -138,11 +130,6 @@ function OptionWithActions (props) {
                 <FolioUiIcon name='check' height={16} />
               </span>
             </div>
-            {isDuplicate && (
-              <div className='f-c-r-select-option-with-actions__edit-error invalid-feedback d-block'>
-                {window.FolioConsole.translations.alreadyExists || 'Already exists'}
-              </div>
-            )}
           </div>
         ) : (
           <>

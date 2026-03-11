@@ -23,7 +23,7 @@ const Input = (props) => {
 }
 
 class Select extends React.Component {
-  state = { key: 0 }
+  state = { key: 0, loadedOptions: [] }
   _createableLoadTimer = null
 
   // changing key force the select to reload options based on atom settings
@@ -157,6 +157,7 @@ class Select extends React.Component {
                     value: item.value || item.id,
                     label: item.label || item.text || ''
                   }))
+                  this.setState({ loadedOptions: formattedOptions })
                   handle(formattedOptions)
                 } else {
                   handle([])
@@ -341,6 +342,7 @@ class Select extends React.Component {
         loadingMessage={() => window.FolioConsole.translations.loading}
         isValidNewOption={this.isValidNewOption}
         existingLabels={existingLabels}
+        loadedOptions={this.state.loadedOptions}
         components={createable ? { Option: OptionWithActions, Input } : { Input }}
         dataTestId={dataTestId}
         menuPlacement={menuPlacement}
