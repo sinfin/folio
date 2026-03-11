@@ -56,7 +56,10 @@ class Select extends React.Component {
   onKeyDown = (e) => {
     if (e.key === 'Enter') {
       if (this.props.createable) {
-        e.preventDefault() // prevent form submission; react-select handles Enter internally
+        // stopPropagation prevents form submission bubbling, but unlike preventDefault
+        // it does NOT set event.defaultPrevented, so react-select still processes Enter
+        // (react-select v5 skips its handler when defaultPrevented is true)
+        e.stopPropagation()
       } else if (this.props.innerRef && this.props.innerRef.current) {
         const ref = this.props.innerRef.current
         if (!ref.select.state.menuIsOpen) {
@@ -80,11 +83,17 @@ class Select extends React.Component {
       if (opt.label && opt.label.toLowerCase().trim() === normalized) return false
     }
 
+    // Also check last loaded API response — catches the debounce timing gap and
+    // items that were loaded in a previous query but aren't in current selectOptions
+    for (const opt of this.state.loadedOptions) {
+      if (opt.label && opt.label.toLowerCase().trim() === normalized) return false
+    }
+
     return true
   }
 
   render () {
-    const { isClearable, createable, value, options, rawOptions, onChange, innerRef, async, asyncData, addAtomSettings, defaultOptions, placeholder, dataTestId, menuPlacement, existingLabels, ...rest } = this.props
+    const { isClearable, createable, value, options, rawOptions, onChange, innerRef, async, asyncData, addAtomSettings, defaultOptions, placeholder, dataTestId, menuPlacement, existingLabels, onLoadedOptionsChange, ...rest } = this.props
 
     // Format value early so we can use it in loadOptions
     let formattedValue = null
@@ -158,6 +167,7 @@ class Select extends React.Component {
                     label: item.label || item.text || ''
                   }))
                   this.setState({ loadedOptions: formattedOptions })
+                  if (this.props.onLoadedOptionsChange) this.props.onLoadedOptionsChange(formattedOptions)
                   handle(formattedOptions)
                 } else {
                   handle([])
@@ -324,9 +334,12 @@ class Select extends React.Component {
         formatCreateLabel={formatCreateLabel}
         onChange={this.onChange}
         noOptionsMessage={({ inputValue }) => {
-            if (createable && inputValue && existingLabels) {
+            if (createable && inputValue) {
               const normalized = inputValue.toLowerCase().trim()
-              if (existingLabels.some((l) => l.toLowerCase().trim() === normalized)) {
+              if (existingLabels && existingLabels.some((l) => l.toLowerCase().trim() === normalized)) {
+                return window.FolioConsole.translations.alreadyExists || 'Already exists'
+              }
+              if (this.state.loadedOptions.some((o) => o.label && o.label.toLowerCase().trim() === normalized)) {
                 return window.FolioConsole.translations.alreadyExists || 'Already exists'
               }
             }

@@ -26,7 +26,8 @@ class OrderedMultiselectApp extends React.Component {
     this.state = {
       selectKey: 0,
       menuIsOpen: undefined,
-      inlineEditing: false
+      inlineEditing: false,
+      loadedOptions: []
     }
   }
 
@@ -36,6 +37,10 @@ class OrderedMultiselectApp extends React.Component {
     } else {
       this.setState({ inlineEditing: false })
     }
+  }
+
+  onLoadedOptionsChange = (options) => {
+    this.setState({ loadedOptions: options })
   }
 
   onMenuClose = () => {
@@ -87,10 +92,20 @@ class OrderedMultiselectApp extends React.Component {
     const { orderedMultiselect } = this.props
     if (!orderedMultiselect.createUrl) return
 
-    const duplicate = orderedMultiselect.items.find(
-      (item) => item.label.toLowerCase().trim() === inputValue.toLowerCase().trim()
+    const normalized = inputValue.toLowerCase().trim()
+
+    const selectedDuplicate = orderedMultiselect.items.find(
+      (item) => item.label.toLowerCase().trim() === normalized
     )
-    if (duplicate) {
+    if (selectedDuplicate) {
+      window.alert(window.FolioConsole.translations.alreadyExists || 'An item with this name already exists.')
+      return
+    }
+
+    const loadedDuplicate = this.state.loadedOptions.find(
+      (opt) => opt.label && opt.label.toLowerCase().trim() === normalized
+    )
+    if (loadedDuplicate) {
       window.alert(window.FolioConsole.translations.alreadyExists || 'An item with this name already exists.')
       return
     }
@@ -238,6 +253,7 @@ class OrderedMultiselectApp extends React.Component {
           onDeleteOption={orderedMultiselect.createable ? this.onDeleteOption : undefined}
           onEditingChange={orderedMultiselect.createable ? this.onEditingChange : undefined}
           onMenuClose={orderedMultiselect.createable ? this.onMenuClose : undefined}
+          onLoadedOptionsChange={orderedMultiselect.createable ? this.onLoadedOptionsChange : undefined}
           menuIsOpen={menuIsOpen}
           existingLabels={existingLabels}
           isClearable={false}
