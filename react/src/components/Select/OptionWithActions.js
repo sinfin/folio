@@ -8,7 +8,7 @@ function isActionAreaClick (e) {
   return e.target.closest && e.target.closest(`[${ACTION_AREA_ATTR}]`)
 }
 
-function checkDuplicate (value, currentLabel, existingLabels, loadedOptions) {
+export function checkDuplicate (value, currentLabel, existingLabels, loadedOptions) {
   if (!value.trim()) return false
   const normalized = value.trim().toLowerCase()
   if (normalized === (currentLabel || '').toLowerCase()) return false
