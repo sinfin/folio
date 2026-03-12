@@ -122,13 +122,14 @@ function OptionWithActions (props) {
                 onMouseDown={(e) => e.stopPropagation()}
                 title={isDuplicate ? (window.FolioConsole.translations.alreadyExists || 'Already exists') : undefined}
               />
-              <span
-                className='f-c-r-select-option-with-actions__edit-confirm'
+              <button
+                type='button'
+                className='btn btn-none p-0 f-c-r-select-option-with-actions__edit-confirm'
                 onMouseDown={(e) => { e.preventDefault(); onRenameSubmit() }}
                 title={window.FolioConsole.translations.rename || 'Confirm'}
               >
                 <FolioUiIcon name='check' height={16} />
-              </span>
+              </button>
             </div>
           </div>
         ) : (
@@ -136,22 +137,24 @@ function OptionWithActions (props) {
             <span className='f-c-r-select-option-with-actions__label'>
               {renamedLabel || props.children}
             </span>
-            <span
-              className='f-c-r-select-option-with-actions__action'
+            <button
+              type='button'
+              className='btn btn-none p-0 f-c-r-select-option-with-actions__action'
               onClick={onRenameClick}
               data-owa-action='true'
               title={window.FolioConsole.translations.rename || 'Rename'}
             >
               <FolioUiIcon name='edit_box' height={16} />
-            </span>
-            <span
-              className='f-c-r-select-option-with-actions__action f-c-r-select-option-with-actions__action--danger'
+            </button>
+            <button
+              type='button'
+              className='btn btn-none p-0 f-c-r-select-option-with-actions__action f-c-r-select-option-with-actions__action--danger'
               onClick={onDeleteClick}
               data-owa-action='true'
               title={window.FolioConsole.translations.deleteFromDb || 'Delete'}
             >
               <FolioUiIcon name='delete' height={16} />
-            </span>
+            </button>
           </>
         )}
       </div>

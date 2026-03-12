@@ -470,6 +470,12 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
       0
     end
 
+    usage_labels = if record.respond_to?(:usage_labels_for_warning)
+      record.usage_labels_for_warning
+    else
+      []
+    end
+
     if params[:confirmed] == "true"
       record.destroy!
       render json: { data: { id: record.id, destroyed: true } }
@@ -478,6 +484,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
         data: {
           id: record.id,
           usage_count: usage_count,
+          usage_labels: usage_labels,
           confirm_required: usage_count > 0
         }
       }

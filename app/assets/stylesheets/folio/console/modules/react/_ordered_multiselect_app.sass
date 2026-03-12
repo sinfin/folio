@@ -119,22 +119,12 @@
 
   &__action
     flex-shrink: 0
-    padding: 0 2px
-    cursor: pointer
-    opacity: 0
+    min-height: unset
     margin-left: $spacer / 4
-    transition: $transition-base
     line-height: 1
-
-    &:hover
-      opacity: 1 !important
 
     &--danger
       color: var(--bs-danger)
-
-  .react-select__option--is-focused &__action,
-  .react-select__option--is-selected &__action
-    opacity: 0.4
 
   &__edit
     flex: 1
@@ -158,13 +148,9 @@
 
   &__edit-confirm
     flex-shrink: 0
-    cursor: pointer
     color: var(--bs-success)
-    opacity: 0.7
+    min-height: unset
     line-height: 1
-
-    &:hover
-      opacity: 1
 
 .f-c-r-select-create-option
   font-weight: 500

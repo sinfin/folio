@@ -153,9 +153,17 @@ class OrderedMultiselectApp extends React.Component {
           let shouldDelete = false
 
           if (res.data.confirm_required) {
-            const count = res.data.usage_count
-            const msg = (window.FolioConsole.translations.deleteWarning || 'This item is assigned to %{count} other records. Deleting it will remove it from all of them. Continue?')
-              .replace('%{count}', count)
+            const labels = res.data.usage_labels
+            let msg
+            if (labels && labels.length > 0) {
+              const list = labels.map((l) => `- ${l}`).join('\n')
+              msg = (window.FolioConsole.translations.deleteWarningWithLabels || 'This item is assigned to %{count} records:\n%{list}\n\nDeleting it from the database will remove it from all of them.')
+                .replace('%{count}', labels.length)
+                .replace('%{list}', list)
+            } else {
+              msg = (window.FolioConsole.translations.deleteWarning || 'This item is assigned to %{count} other records. Deleting it will remove it from all of them. Continue?')
+                .replace('%{count}', res.data.usage_count)
+            }
             shouldDelete = window.confirm(msg)
           } else {
             shouldDelete = window.confirm(window.FolioConsole.translations.deleteFromDbConfirm || 'Delete this record from database?')
