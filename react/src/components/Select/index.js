@@ -56,6 +56,7 @@ class Select extends React.Component {
 
   componentWillUnmount () {
     window.jQuery(document).off('folioAtomSettingChanged.folioReactSelect')
+    if (this._createableLoadTimer) clearTimeout(this._createableLoadTimer)
   }
 
   onChange = (value) => {

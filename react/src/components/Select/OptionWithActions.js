@@ -1,7 +1,7 @@
-import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react'
+import React, { useState, useCallback } from 'react'
 import { components } from 'react-select'
 import FolioUiIcon from 'components/FolioUiIcon'
-import isDuplicateLabel from 'containers/OrderedMultiselectApp/isDuplicateLabel'
+import InlineRenameInput from 'components/InlineRenameInput'
 
 const ACTION_AREA_ATTR = 'data-owa-action'
 
@@ -12,33 +12,17 @@ function isActionAreaClick (e) {
 function OptionWithActions (props) {
   const { data, selectProps, innerProps } = props
   const [isEditing, setIsEditing] = useState(false)
-  const [editValue, setEditValue] = useState('')
-  const [renamedLabel, setRenamedLabel] = useState(null)
-  const inputRef = useRef(null)
 
   const isNew = data.__isNew__
 
-  useEffect(() => {
-    if (isEditing && inputRef.current) {
-      inputRef.current.focus()
-      inputRef.current.select()
-    }
-  }, [isEditing])
-
-  const currentLabel = renamedLabel || data.label || ''
-
-  const isDuplicate = useMemo(() => {
-    if (!isEditing) return false
-    return isDuplicateLabel(editValue, currentLabel, selectProps.existingLabels, selectProps.loadedOptions)
-  }, [isEditing, editValue, currentLabel, selectProps.existingLabels, selectProps.loadedOptions])
+  const currentLabel = data.label || ''
 
   const onRenameClick = useCallback((e) => {
     e.preventDefault()
     e.stopPropagation()
     if (selectProps.onEditingChange) selectProps.onEditingChange(true)
-    setEditValue(currentLabel)
     setIsEditing(true)
-  }, [currentLabel, selectProps])
+  }, [selectProps])
 
   const onDeleteClick = useCallback((e) => {
     e.preventDefault()
@@ -51,22 +35,9 @@ function OptionWithActions (props) {
     if (selectProps.onEditingChange) selectProps.onEditingChange(false)
   }, [selectProps])
 
-  const onRenameSubmit = useCallback(() => {
-    const trimmed = editValue.trim()
-    if (!trimmed) { finishEditing(); return }
-    if (isDuplicateLabel(trimmed, currentLabel, selectProps.existingLabels, selectProps.loadedOptions)) return
-    if (trimmed !== currentLabel) {
-      setRenamedLabel(trimmed)
-      selectProps.onRenameSubmit && selectProps.onRenameSubmit(data, trimmed)
-    }
-    finishEditing()
-  }, [editValue, currentLabel, selectProps, data, finishEditing])
-
-  const onInputKeyDown = useCallback((e) => {
-    e.stopPropagation()
-    if (e.key === 'Enter') { e.preventDefault(); onRenameSubmit() }
-    if (e.key === 'Escape') { e.preventDefault(); finishEditing() }
-  }, [onRenameSubmit, finishEditing])
+  const onRenameSubmit = useCallback((newLabel) => {
+    selectProps.onRenameSubmit && selectProps.onRenameSubmit(data, newLabel)
+  }, [selectProps, data])
 
   if (isNew) {
     return (
@@ -104,30 +75,20 @@ function OptionWithActions (props) {
         {isEditing ? (
           <div className='f-c-r-select-option-with-actions__edit' data-owa-action='true'>
             <div className='f-c-r-select-option-with-actions__edit-row'>
-              <input
-                ref={inputRef}
-                className={`f-c-r-select-option-with-actions__edit-input${isDuplicate ? ' is-invalid' : ''}`}
-                value={editValue}
-                onChange={(e) => setEditValue(e.target.value)}
-                onKeyDown={onInputKeyDown}
-                onBlur={finishEditing}
-                onMouseDown={(e) => e.stopPropagation()}
-                title={isDuplicate ? (window.FolioConsole.translations.alreadyExists || 'Already exists') : undefined}
+              <InlineRenameInput
+                currentLabel={currentLabel}
+                onSubmit={onRenameSubmit}
+                onCancel={finishEditing}
+                existingLabels={selectProps.existingLabels}
+                loadedOptions={selectProps.loadedOptions}
+                className='f-c-r-select-option-with-actions__edit-input'
               />
-              <button
-                type='button'
-                className='btn btn-none p-0 f-c-r-select-option-with-actions__edit-confirm'
-                onMouseDown={(e) => { e.preventDefault(); onRenameSubmit() }}
-                title={window.FolioConsole.translations.rename || 'Confirm'}
-              >
-                <FolioUiIcon name='check' height={16} />
-              </button>
             </div>
           </div>
         ) : (
           <>
             <span className='f-c-r-select-option-with-actions__label'>
-              {renamedLabel || props.children}
+              {props.children}
             </span>
             <button
               type='button'

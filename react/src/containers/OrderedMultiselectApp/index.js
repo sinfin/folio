@@ -14,6 +14,7 @@ import {
 } from 'ducks/orderedMultiselect'
 
 import { apiPost, apiPatch, apiDelete } from 'utils/api'
+import isDuplicateLabel from 'utils/isDuplicateLabel'
 import Select from 'components/Select'
 
 import Item from './Item'
@@ -62,13 +63,7 @@ class OrderedMultiselectApp extends React.Component {
   }
 
   onSelect = (option) => {
-    let itemId = option.id
-    if (itemId === undefined && typeof option.value === 'string' && option.value.includes(' -=- ')) {
-      const parts = option.value.split(' -=- ')
-      itemId = parts.length > 1 ? parts[1] : option.value
-    } else if (itemId === undefined) {
-      itemId = option.value
-    }
+    const itemId = option.id !== undefined ? option.id : this.extractIdFromValue(option.value)
 
     const item = {
       id: itemId,
@@ -88,41 +83,28 @@ class OrderedMultiselectApp extends React.Component {
     this.props.dispatch(removeItem(item))
   }
 
-  onCreateOption = (inputValue) => {
+  onCreateOption = async (inputValue) => {
     const { orderedMultiselect } = this.props
     if (!orderedMultiselect.createUrl) return
 
-    const normalized = inputValue.toLowerCase().trim()
-
-    const selectedDuplicate = orderedMultiselect.items.find(
-      (item) => item.label.toLowerCase().trim() === normalized
-    )
-    if (selectedDuplicate) {
-      window.alert(window.FolioConsole.translations.alreadyExists || 'An item with this name already exists.')
+    const existingLabels = orderedMultiselect.items.map((item) => item.label)
+    if (isDuplicateLabel(inputValue, null, existingLabels, this.state.loadedOptions)) {
+      window.FolioConsole.Ui.Flash.alert(window.FolioConsole.translations.alreadyExists || 'Already exists')
       return
     }
 
-    const loadedDuplicate = this.state.loadedOptions.find(
-      (opt) => opt.label && opt.label.toLowerCase().trim() === normalized
-    )
-    if (loadedDuplicate) {
-      window.alert(window.FolioConsole.translations.alreadyExists || 'An item with this name already exists.')
-      return
+    try {
+      const res = await apiPost(orderedMultiselect.createUrl, { label: inputValue })
+      if (res && res.data) {
+        this.onSelect(res.data)
+        this.forceSelectRefresh()
+      }
+    } catch (err) {
+      window.FolioConsole.Ui.Flash.alert(err.message || 'Failed to create record')
     }
-
-    apiPost(orderedMultiselect.createUrl, { label: inputValue })
-      .then((res) => {
-        if (res && res.data) {
-          this.onSelect(res.data)
-          this.forceSelectRefresh()
-        }
-      })
-      .catch((err) => {
-        window.alert(err.message || 'Failed to create record')
-      })
   }
 
-  onRenameSubmit = (option, newLabel) => {
+  onRenameSubmit = async (option, newLabel) => {
     const { orderedMultiselect } = this.props
     if (!orderedMultiselect.updateUrl) return
 
@@ -130,61 +112,54 @@ class OrderedMultiselectApp extends React.Component {
     // which may be a join-table ID for server-loaded items.
     const recordId = this.extractIdFromValue(option.value)
 
-    apiPatch(orderedMultiselect.updateUrl, { id: recordId, label: newLabel })
-      .then((res) => {
-        if (res && res.data) {
-          this.props.dispatch(renameItem(recordId, res.data.label))
-        }
-      })
-      .catch((err) => {
-        window.alert(err.message || 'Failed to rename record')
-      })
+    try {
+      const res = await apiPatch(orderedMultiselect.updateUrl, { id: recordId, label: newLabel })
+      if (res && res.data) {
+        this.props.dispatch(renameItem(recordId, res.data.label))
+      }
+    } catch (err) {
+      window.FolioConsole.Ui.Flash.alert(err.message || 'Failed to rename record')
+    }
   }
 
-  onDeleteOption = (option) => {
+  onDeleteOption = async (option) => {
     const { orderedMultiselect } = this.props
     if (!orderedMultiselect.deleteUrl) return
 
     const recordId = this.extractIdFromValue(option.value)
 
-    apiDelete(orderedMultiselect.deleteUrl, { id: recordId })
-      .then((res) => {
-        if (res && res.data) {
-          let shouldDelete = false
+    try {
+      const res = await apiDelete(orderedMultiselect.deleteUrl, { id: recordId })
+      if (!res || !res.data) return
 
-          if (res.data.confirm_required) {
-            const labels = res.data.usage_labels
-            let msg
-            if (labels && labels.length > 0) {
-              const list = labels.map((l) => `- ${l}`).join('\n')
-              msg = (window.FolioConsole.translations.deleteWarningWithLabels || 'This item is assigned to %{count} records:\n%{list}\n\nDeleting it from the database will remove it from all of them.')
-                .replace('%{count}', labels.length)
-                .replace('%{list}', list)
-            } else {
-              msg = (window.FolioConsole.translations.deleteWarning || 'This item is assigned to %{count} other records. Deleting it will remove it from all of them. Continue?')
-                .replace('%{count}', res.data.usage_count)
-            }
-            shouldDelete = window.confirm(msg)
-          } else {
-            shouldDelete = window.confirm(window.FolioConsole.translations.deleteFromDbConfirm || 'Delete this record from database?')
-          }
+      let shouldDelete = false
 
-          if (shouldDelete) {
-            apiDelete(orderedMultiselect.deleteUrl, { id: recordId, confirmed: 'true' })
-              .then(() => {
-                this.wrapRef.current.dispatchEvent(new window.Event('change', { bubbles: true }))
-                this.props.dispatch(removeDeletedItem(recordId))
-                this.forceSelectRefresh()
-              })
-              .catch((err) => {
-                window.alert(err.message || 'Failed to delete record')
-              })
-          }
+      if (res.data.confirm_required) {
+        const labels = res.data.usage_labels
+        let msg
+        if (labels && labels.length > 0) {
+          const list = labels.map((l) => `- ${l}`).join('\n')
+          msg = (window.FolioConsole.translations.deleteWarningWithLabels || 'This item is assigned to %{count} records:\n%{list}\n\nDeleting it from the database will remove it from all of them.')
+            .replace('%{count}', labels.length)
+            .replace('%{list}', list)
+        } else {
+          msg = (window.FolioConsole.translations.deleteWarning || 'This item is assigned to %{count} other records. Deleting it will remove it from all of them. Continue?')
+            .replace('%{count}', res.data.usage_count)
         }
-      })
-      .catch((err) => {
-        window.alert(err.message || 'Failed to delete record')
-      })
+        shouldDelete = window.confirm(msg)
+      } else {
+        shouldDelete = window.confirm(window.FolioConsole.translations.deleteFromDbConfirm || 'Delete this record from database?')
+      }
+
+      if (shouldDelete) {
+        await apiDelete(orderedMultiselect.deleteUrl, { id: recordId, confirmed: 'true' })
+        this.wrapRef.current.dispatchEvent(new window.Event('change', { bubbles: true }))
+        this.props.dispatch(removeDeletedItem(recordId))
+        this.forceSelectRefresh()
+      }
+    } catch (err) {
+      window.FolioConsole.Ui.Flash.alert(err.message || 'Failed to delete record')
+    }
   }
 
   extractIdFromValue (value) {

@@ -256,7 +256,7 @@ module Folio::Console::ReactHelper
           "data-sortable" => sortable ? "1" : "0",
           "data-menu-placement" => menu_placement,
           "data-atom-setting" => atom_setting,
-          "data-createable" => createable ? "1" : nil,
+          "data-createable" => createable ? "1" : "0",
           "data-create-url" => create_url,
           "data-update-url" => update_url,
           "data-delete-url" => delete_url

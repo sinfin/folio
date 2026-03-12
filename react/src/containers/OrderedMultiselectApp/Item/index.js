@@ -1,66 +1,36 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useCallback } from 'react'
 import { makeConfirmed } from 'utils/confirmed'
 
 import FolioUiIcon from 'components/FolioUiIcon'
-import isDuplicateLabel from '../isDuplicateLabel'
+import InlineRenameInput from 'components/InlineRenameInput'
 
 function Item ({ path, node, remove, onRename, existingLabels, loadedOptions }) {
   const [isEditing, setIsEditing] = useState(false)
-  const [editValue, setEditValue] = useState('')
-  const inputRef = useRef(null)
-
-  useEffect(() => {
-    if (isEditing && inputRef.current) {
-      inputRef.current.focus()
-      inputRef.current.select()
-    }
-  }, [isEditing])
-
-  const isDuplicate = isEditing && isDuplicateLabel(editValue, node.label, existingLabels, loadedOptions)
 
   const onRenameClick = (e) => {
     e.preventDefault()
     e.stopPropagation()
-    setEditValue(node.label || '')
     setIsEditing(true)
   }
 
-  const onCancel = () => setIsEditing(false)
+  const onCancel = useCallback(() => setIsEditing(false), [])
 
-  const onSubmit = () => {
-    const trimmed = editValue.trim()
-    if (!trimmed || isDuplicateLabel(trimmed, node.label, existingLabels, loadedOptions)) return
-    if (trimmed !== node.label) {
-      onRename && onRename(node, trimmed)
-    }
-    setIsEditing(false)
-  }
-
-  const onKeyDown = (e) => {
-    if (e.key === 'Enter') { e.preventDefault(); onSubmit() }
-    if (e.key === 'Escape') { e.preventDefault(); onCancel() }
-  }
+  const onSubmit = useCallback((newLabel) => {
+    onRename && onRename(node, newLabel)
+  }, [onRename, node])
 
   return (
     <div className='f-c-r-ordered-multiselect-app__item'>
       {isEditing ? (
         <div className='f-c-r-ordered-multiselect-app__item-edit'>
-          <input
-            ref={inputRef}
-            className={`f-c-r-ordered-multiselect-app__item-rename-input${isDuplicate ? ' is-invalid' : ''}`}
-            value={editValue}
-            onChange={(e) => setEditValue(e.target.value)}
-            onKeyDown={onKeyDown}
-            onBlur={onCancel}
-            title={isDuplicate ? (window.FolioConsole.translations.alreadyExists || 'Already exists') : undefined}
+          <InlineRenameInput
+            currentLabel={node.label || ''}
+            onSubmit={onSubmit}
+            onCancel={onCancel}
+            existingLabels={existingLabels}
+            loadedOptions={loadedOptions}
+            className='f-c-r-ordered-multiselect-app__item-rename-input'
           />
-          <button
-            type='button'
-            className='btn btn-none p-0'
-            onMouseDown={(e) => { e.preventDefault(); onSubmit() }}
-          >
-            <FolioUiIcon name='check' height={16} />
-          </button>
         </div>
       ) : (
         <>

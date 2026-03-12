@@ -1,64 +1,64 @@
-import { checkDuplicate } from '../OptionWithActions'
+import isDuplicateLabel from 'utils/isDuplicateLabel'
 
 // ---------------------------------------------------------------------------
-// checkDuplicate(value, currentLabel, existingLabels, loadedOptions)
+// isDuplicateLabel(value, currentLabel, existingLabels, loadedOptions)
 //
 // Returns true when `value` matches something other than currentLabel.
 // Checks: existingLabels (selected items) + loadedOptions (unselected DB items)
 // ---------------------------------------------------------------------------
 
-describe('checkDuplicate', () => {
+describe('isDuplicateLabel', () => {
   const selected = ['Foo', 'Bar']
   const loaded = [{ label: 'Baz' }, { label: 'Qux' }]
 
   test('returns false for empty input', () => {
-    expect(checkDuplicate('', 'Foo', selected, loaded)).toBe(false)
-    expect(checkDuplicate('   ', 'Foo', selected, loaded)).toBe(false)
+    expect(isDuplicateLabel('', 'Foo', selected, loaded)).toBe(false)
+    expect(isDuplicateLabel('   ', 'Foo', selected, loaded)).toBe(false)
   })
 
   test('returns false when value matches currentLabel (not a real duplicate)', () => {
-    expect(checkDuplicate('Foo', 'Foo', selected, loaded)).toBe(false)
+    expect(isDuplicateLabel('Foo', 'Foo', selected, loaded)).toBe(false)
   })
 
   test('is case-insensitive', () => {
-    expect(checkDuplicate('FOO', 'CurrentThing', selected, loaded)).toBe(true)
-    expect(checkDuplicate('foo', 'CurrentThing', selected, loaded)).toBe(true)
-    expect(checkDuplicate('BAZ', 'CurrentThing', selected, loaded)).toBe(true)
-    expect(checkDuplicate('baz', 'CurrentThing', selected, loaded)).toBe(true)
+    expect(isDuplicateLabel('FOO', 'CurrentThing', selected, loaded)).toBe(true)
+    expect(isDuplicateLabel('foo', 'CurrentThing', selected, loaded)).toBe(true)
+    expect(isDuplicateLabel('BAZ', 'CurrentThing', selected, loaded)).toBe(true)
+    expect(isDuplicateLabel('baz', 'CurrentThing', selected, loaded)).toBe(true)
   })
 
   test('trims whitespace before comparing', () => {
-    expect(checkDuplicate('  Foo  ', 'CurrentThing', selected, loaded)).toBe(true)
-    expect(checkDuplicate('  Baz  ', 'CurrentThing', selected, loaded)).toBe(true)
+    expect(isDuplicateLabel('  Foo  ', 'CurrentThing', selected, loaded)).toBe(true)
+    expect(isDuplicateLabel('  Baz  ', 'CurrentThing', selected, loaded)).toBe(true)
   })
 
   test('detects duplicates in existingLabels (already-selected items)', () => {
-    expect(checkDuplicate('Bar', 'CurrentThing', selected, loaded)).toBe(true)
+    expect(isDuplicateLabel('Bar', 'CurrentThing', selected, loaded)).toBe(true)
   })
 
   test('detects duplicates in loadedOptions (unselected DB items)', () => {
-    expect(checkDuplicate('Qux', 'CurrentThing', selected, loaded)).toBe(true)
+    expect(isDuplicateLabel('Qux', 'CurrentThing', selected, loaded)).toBe(true)
   })
 
   test('returns false for a genuinely new label', () => {
-    expect(checkDuplicate('Brand New', 'CurrentThing', selected, loaded)).toBe(false)
+    expect(isDuplicateLabel('Brand New', 'CurrentThing', selected, loaded)).toBe(false)
   })
 
   test('handles null/undefined existingLabels gracefully', () => {
-    expect(checkDuplicate('Baz', 'CurrentThing', null, loaded)).toBe(true)
-    expect(checkDuplicate('Baz', 'CurrentThing', undefined, loaded)).toBe(true)
+    expect(isDuplicateLabel('Baz', 'CurrentThing', null, loaded)).toBe(true)
+    expect(isDuplicateLabel('Baz', 'CurrentThing', undefined, loaded)).toBe(true)
   })
 
   test('handles null/undefined loadedOptions gracefully', () => {
-    expect(checkDuplicate('Foo', 'CurrentThing', selected, null)).toBe(true)
-    expect(checkDuplicate('Foo', 'CurrentThing', selected, undefined)).toBe(true)
+    expect(isDuplicateLabel('Foo', 'CurrentThing', selected, null)).toBe(true)
+    expect(isDuplicateLabel('Foo', 'CurrentThing', selected, undefined)).toBe(true)
   })
 
   test('handles loadedOptions entries without a label', () => {
     const malformed = [{ value: 5 }, { label: 'Valid' }]
-    expect(checkDuplicate('Valid', 'CurrentThing', [], malformed)).toBe(true)
+    expect(isDuplicateLabel('Valid', 'CurrentThing', [], malformed)).toBe(true)
     // entry without label should not throw
-    expect(checkDuplicate('something', 'CurrentThing', [], malformed)).toBe(false)
+    expect(isDuplicateLabel('something', 'CurrentThing', [], malformed)).toBe(false)
   })
 })
 

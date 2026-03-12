@@ -51,12 +51,11 @@ function * triggerAtomSettingUpdate (action) {
     $wrap.find('.f-c-js-atoms-placement-setting').trigger('folioCustomChange')
     const form = $wrap.closest('.f-c-simple-form-with-atoms__form, .f-c-dirty-simple-form')[0]
     if (form) form.dispatchEvent(new window.Event('change', { bubbles: true }))
-    yield $wrap
   }
 }
 
 function * triggerAtomSettingUpdateSaga () {
-  yield takeLatest([ADD_ITEM, UPDATE_ITEMS, REMOVE_ITEM], triggerAtomSettingUpdate)
+  yield takeLatest([ADD_ITEM, UPDATE_ITEMS, REMOVE_ITEM, RENAME_ITEM, REMOVE_DELETED_ITEM], triggerAtomSettingUpdate)
 }
 
 export const orderedMultiselectSagas = [
