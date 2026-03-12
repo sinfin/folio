@@ -14,6 +14,7 @@ cs:
             new_record_alert: Rozepsané změny v editoru se neukládají, dokud %{model} poprvé neuložíte.
             title: Editor obsahuje neuložené rozepsané změny.
             unsaved_newest_changes_from: "Uživatel %{name} mezitím také přidal neuložené změny."
+            object_is_meantime_updated_by: "Uživatel %{name} uložil mezitím novou verzi obsahu!"
             not_exists: není
             your_revision: "%{time} (Vy)"
             other_user_revision: "%{time} (%{name})"
@@ -21,6 +22,7 @@ cs:
             continue: Použít moji verzi
             discard: Použít verzi jiného uživatele
             failed_to_save: Chyba připojení k serveru. Prosíme zkontrolujte připojení k internetu.
+            outdated_continue: Zahodit změny a pokračovat v aktuální verzi
 
         overlay:
           form_component:

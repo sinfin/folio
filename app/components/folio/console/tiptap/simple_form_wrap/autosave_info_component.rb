@@ -23,13 +23,25 @@ class Folio::Console::Tiptap::SimpleFormWrap::AutosaveInfoComponent < Folio::Con
     object.try(:tiptap_autosave_enabled?, attribute_name:)
   end
 
-  def has_unsaved_changes?
-    object.has_tiptap_revision?(attribute_name:)
+  def has_own_unsaved_changes?
+    object.has_tiptap_revision?(attribute_name:, user: Folio::Current.user)
   end
 
   private
     def conflicted_revisions?
-      current_user_latest_revision != object_latest_revision
+      if current_user_latest_revision.nil?
+        object_latest_revision && object.updated_at < object_latest_revision.updated_at
+      else
+        current_user_latest_revision != object_latest_revision
+      end
+    end
+
+    def outdated_revision?
+      current_user_latest_revision && current_user_latest_revision.updated_at < object.updated_at
+    end
+
+    def updated_by_user
+      current_user_latest_revision&.superseded_by_user
     end
 
     def current_user_latest_revision

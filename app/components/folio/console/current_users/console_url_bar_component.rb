@@ -1,20 +1,29 @@
 # frozen_string_literal: true
 
 class Folio::Console::CurrentUsers::ConsoleUrlBarComponent < Folio::Console::ApplicationComponent
-  def initialize(show:, record: nil)
+  def initialize(show:, record: nil, console_url: request.url)
     @show = show
     @record = record
+    @console_url = console_url
   end
 
   def render?
-    @show && can_now?(:access_console) && (other_user_at_url || outdated_revision.present?)
+    @show && can_now?(:access_console)
   end
 
   private
     def other_user_at_url
       return false unless can_now?(:access_console)
       return @other_user_at_url unless @other_user_at_url.nil?
-      @other_user_at_url = Folio::User.currently_editing_url(request.url).where.not(id: Folio::Current.user.id).first || false
+      @other_user_at_url = Folio::User.currently_editing_url(@console_url).where.not(id: Folio::Current.user.id).first || false
+    end
+
+    def hidden?
+      (other_user_at_url || outdated_revision.present?)
+    end
+
+    def visibility_class
+      hidden? ? "d_none" : ""
     end
 
     def has_tiptap_with_autosave?
@@ -101,12 +110,21 @@ class Folio::Console::CurrentUsers::ConsoleUrlBarComponent < Folio::Console::App
     def data
       stimulus_controller("f-c-current-users-console-url-bar",
                           values: {
-                            api_url: controller.console_url_ping_console_api_current_user_url(format: :json),
+                            api_url: ping_console_url,
                             takeover_api_url: controller.takeover_revision_console_api_tiptap_revisions_path,
                             delete_revision_url: controller.delete_revision_console_api_tiptap_revisions_path,
                             from_user_id: other_user_at_url.present? ? other_user_at_url.id : nil,
                             record_id: @record&.id,
-                            record_type: @record&.class&.name
+                            record_type: @record&.class&.name,
+                            record_updated_at: @record&.updated_at.iso8601
                           })
+    end
+
+    def ping_console_url
+      if ["1", "true"].include?(ENV.fetch("DONT_PING_CONSOLE", "").to_s.downcase)
+        "dont_ping"
+      else
+        controller.console_url_ping_console_api_current_user_url(format: :json)
+      end
     end
 end

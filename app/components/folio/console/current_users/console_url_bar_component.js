@@ -31,8 +31,18 @@ window.Folio.Stimulus.register('f-c-current-users-console-url-bar', class extend
 
   pingUrl () {
     const currentUrl = window.location.href.split('?')[0]
-
-    window.Folio.Api.apiPost(this.apiUrlValue, { url: currentUrl })
+    if (this.apiUrlValue != "dont_ping") {
+      const data = {
+        url: currentUrl,
+        record_type: this.recordTypeValue,
+        record_id: this.recordIdValue
+      }
+      window.Folio.Api.apiPost(this.apiUrlValue, data).then((response) => {
+        console.log(response)
+      }).catch((err) => {
+        console.error('Ping failed:', err)
+      })
+    }
   }
 
   onTakeoverButtonClick () {

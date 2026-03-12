@@ -101,6 +101,41 @@ classDiagram
 
 ## Advanced Component Topics
 
+### Hidden by default (visibility)
+
+To keep an element in the HTML but not visible by default, use one of these approaches.
+
+**1. HTML `hidden` attribute (simplest, no custom CSS)**
+
+In Slim, add `hidden=true` (or `hidden=(condition)` for conditional hiding):
+
+```slim
+.f-c-catalogue__collection-actions-bar hidden=true
+  ...
+```
+
+Bootstrap reboot defines `[hidden] { display: none !important; }`, so the element stays in the DOM but does not take space or show. To reveal later from JavaScript: `element.hidden = false`.
+
+**2. BEM modifier `--hidden` (when toggling visibility from JS)**
+
+Use when you need to show/hide by adding or removing a class (e.g. from Stimulus). In Slim, give the element the modifier by default:
+
+```slim
+.foo__bar.foo__bar--hidden
+  ...
+```
+
+In the component SASS/SCSS, define the modifier:
+
+```sass
+&__bar--hidden
+  display: none
+```
+
+Use `visibility: hidden` instead of `display: none` if you need to preserve layout space. Toggle the modifier class from your Stimulus controller to show or hide the element.
+
+---
+
 ### Togglable Fields Component
 `Folio::TogglableFieldsComponent` lets you reveal/hide parts of a form based on a checkbox or select value.
 ```slim

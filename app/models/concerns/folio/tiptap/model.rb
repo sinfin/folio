@@ -207,7 +207,7 @@ module Folio::Tiptap::Model
     scope = tiptap_revisions.ordered
     scope = scope.where(attribute_name:) if attribute_name.present?
     scope = scope.where(user: user) if user
-    scope.last
+    scope.first
   end
 
   def has_tiptap_revision?(user: nil, attribute_name: nil)

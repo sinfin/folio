@@ -5,10 +5,11 @@ require "test_helper"
 class Folio::Console::Api::CurrentUsersControllerTest < Folio::Console::BaseControllerTest
   include Folio::Engine.routes.url_helpers
 
-  test "console_url_ping" do
+  test "console_url_ping returns 204 if there is no conflict" do
     assert_nil superadmin.console_url
     assert_nil superadmin.console_url_updated_at
 
+    page = create(:folio_page)
     post console_url_ping_console_api_current_user_url(format: :json), params: { url: "foo" }
     assert_response(:no_content)
 
@@ -17,6 +18,46 @@ class Folio::Console::Api::CurrentUsersControllerTest < Folio::Console::BaseCont
     assert_equal "foo", superadmin.console_url
     assert superadmin.console_url_updated_at
   end
+
+  test "console_url_ping returns ConsoleBar content on conflict" do
+    # BUT! console url must end with `/edit`
+
+    page = create(:folio_page)
+
+    assert_nil superadmin.console_url
+    assert_nil superadmin.console_url_updated_at
+
+    console_url = console_page_path(page)
+    user2 = create(:folio_user, console_url:, console_url_updated_at: Time.current - 10.seconds)
+    params = { url: console_url, record_id: page.id, record_type: page.class.name }
+
+    post console_url_ping_console_api_current_user_url(format: :json), params: params
+
+    assert_response(:no_content) # no conflict escalation!
+
+    superadmin.reload
+
+    assert_equal console_url, superadmin.console_url
+    assert superadmin.console_url_updated_at
+
+    # no let try edit page
+
+    console_url = edit_console_page_path(page)
+    user2.update!(console_url:)
+    params[:url] = console_url
+
+    post console_url_ping_console_api_current_user_url(format: :json), params: params
+
+    assert_response(:ok)
+    assert_includes response.body, "Tuto stránku nyní upravuje"
+    assert_includes response.body, user2.to_label
+
+    superadmin.reload
+
+    assert_equal console_url, superadmin.console_url
+    assert superadmin.console_url_updated_at
+  end
+
 
   test "update_console_preference" do
     assert_nil superadmin.console_preferences
