@@ -49,9 +49,8 @@ class Folio::Console::Api::TiptapRevisionsController < Folio::Console::Api::Base
     to_revision = placement.tiptap_revisions.find_or_initialize_by(user: Folio::Current.user, attribute_name:)
     to_revision.content = from_revision.content
     to_revision.superseded_by_user = nil if placement.latest_tiptap_revision == from_revision
+    to_revision.updated_at = Time.current # to force update  if existing revision have same content as from_revision
     to_revision.save!
-
-    from_user.update_console_url!(nil)
 
     render json: { success: true }
   end

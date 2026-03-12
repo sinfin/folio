@@ -7,7 +7,7 @@ class Folio::Tiptap::Revision < Folio::ApplicationRecord
   belongs_to :user, class_name: "Folio::User", optional: true
   belongs_to :superseded_by_user, class_name: "Folio::User", optional: true
 
-  scope :ordered, -> { order(updated_at: :desc) }
+  scope :ordered, -> { order(updated_at: :asc) }
   # content validation is intentionally minimal for auto-save
   validates :user_id, uniqueness: { scope: [:placement_type, :placement_id, :attribute_name] }
 

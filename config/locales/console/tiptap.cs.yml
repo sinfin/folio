@@ -21,6 +21,8 @@ cs:
             continue: Použít moji verzi
             discard: Použít verzi jiného uživatele
             failed_to_save: Chyba připojení k serveru. Prosíme zkontrolujte připojení k internetu.
+            object_is_meantime_updated_by: "Uživatel %{name} uložil mezitím novou verzi obsahu!"
+            outdated_continue: Zahodit změny a pokračovat v aktuální verzi
 
         overlay:
           form_component:
