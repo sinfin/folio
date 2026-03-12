@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+ - user ENV variable `DONT_PING_CONSOLE=1` to disable console_url_bar pinging to api. Usefull for uninterupted, debugging.
+ - after console user ping, Console bar appear if you  are editing same  object as other user.
 
 ## [7.4.0] - 2026-03-04
 
