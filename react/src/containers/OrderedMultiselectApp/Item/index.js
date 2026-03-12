@@ -62,33 +62,32 @@ function Item ({ path, node, remove, onRename, existingLabels, loadedOptions }) 
             onBlur={onCancel}
             title={isDuplicate ? (window.FolioConsole.translations.alreadyExists || 'Already exists') : undefined}
           />
-          <span
-            className='f-c-r-ordered-multiselect-app__item-action'
+          <button
+            type='button'
+            className='btn btn-none p-0'
             onMouseDown={(e) => { e.preventDefault(); onSubmit() }}
           >
             <FolioUiIcon name='check' height={16} />
-          </span>
+          </button>
         </div>
       ) : (
         <>
           <span className='f-c-r-ordered-multiselect-app__item-label'>{node.label}</span>
           {onRename && (
-            <FolioUiIcon
-              class='f-c-r-ordered-multiselect-app__item-action'
-              name='edit_box'
-              height={16}
-              onClick={onRenameClick}
-            />
+            <button type='button' className='btn btn-none p-0' onClick={onRenameClick}>
+              <FolioUiIcon name='edit_box' height={16} />
+            </button>
           )}
         </>
       )}
 
-      <FolioUiIcon
-        class='text-danger f-c-r-ordered-multiselect-app__item-action f-c-r-ordered-multiselect-app__item-destroy'
-        name='delete'
-        height={16}
+      <button
+        type='button'
+        className='btn btn-none p-0 text-danger'
         onClick={makeConfirmed(() => remove(node))}
-      />
+      >
+        <FolioUiIcon name='delete' height={16} />
+      </button>
     </div>
   )
 }
