@@ -32,9 +32,9 @@ class Folio::Console::Tiptap::SimpleFormWrap::AutosaveInfoComponent < Folio::Con
   private
     def conflicted_revisions?
       if current_user_latest_revision.nil?
-        object_latest_revision && object.updated_at < object_latest_revision.updated_at
+        object_latest_revision && !object_latest_revision.stale?
       else
-        current_user_latest_revision.content != object_latest_revision.content
+        current_user_latest_revision.conflicting_with?(object_latest_revision)
       end
     end
 

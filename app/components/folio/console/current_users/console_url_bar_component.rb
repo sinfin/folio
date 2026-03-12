@@ -37,10 +37,9 @@ class Folio::Console::CurrentUsers::ConsoleUrlBarComponent < Folio::Console::App
 
     def other_user_has_different_revision?
       return false unless has_tiptap_with_autosave?
-      return false if other_user_revision.nil?
-      return false if other_user_revision.superseded?
+      return false if current_user_revision.nil?
 
-      other_user_revision&.content != current_user_revision&.content
+      current_user_revision.conflicting_with?(other_user_revision)
     end
 
     def outdated_revision

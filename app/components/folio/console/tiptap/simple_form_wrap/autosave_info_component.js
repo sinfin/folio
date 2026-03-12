@@ -42,7 +42,7 @@ window.Folio.Stimulus.register('f-c-tiptap-simple-form-wrap-autosave-info', clas
       }
     }
 
-    window.Folio.Api.apiPost(this.deleteRevisionUrlValue, data).then(() => {
+    window.Folio.Api.apiDelete(this.deleteRevisionUrlValue, data).then(() => {
       window.location.reload()
     }).catch((err) => {
       console.error('Deleting revision failed:', err)

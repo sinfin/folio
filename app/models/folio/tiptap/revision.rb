@@ -14,6 +14,19 @@ class Folio::Tiptap::Revision < Folio::ApplicationRecord
   def superseded?
     superseded_by_user_id.present?
   end
+
+  def conflicting_with?(other_revision)
+    return false if other_revision.nil?
+    return false if other_revision.user == user
+    return false if other_revision.attribute_name != attribute_name
+    return false if superseded? || other_revision.superseded?
+
+    content != other_revision.content
+  end
+
+  def stale?
+    updated_at < placement.updated_at
+  end
 end
 
 # == Schema Information
