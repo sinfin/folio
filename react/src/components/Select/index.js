@@ -22,11 +22,32 @@ const Input = (props) => {
   return <components.Input {...props} data-test-id={dataTestId} />
 }
 
+function buildAtomSettingsParams (params, asyncData, addAtomSettings) {
+  if (asyncData) {
+    Object.keys(asyncData).forEach((key) => {
+      params.set(`atom_form_fields[${key}]`, asyncData[key])
+    })
+  }
+
+  if (addAtomSettings) {
+    const settingsHash = settingsToHash()
+    Object.keys(settingsHash).forEach((key) => {
+      if (key === 'loading') return
+      Object.keys(settingsHash[key]).forEach((locale) => {
+        const fullKey = locale && locale !== 'null'
+          ? `by_atom_setting_${key}_${locale}`
+          : `by_atom_setting_${key}`
+        params.set(fullKey, settingsHash[key][locale])
+      })
+    })
+  }
+}
+
 class Select extends React.Component {
   state = { key: 0, loadedOptions: [] }
   _createableLoadTimer = null
 
-  // changing key force the select to reload options based on atom settings
+  // Changing key forces the select to reload options based on atom settings
   componentDidMount () {
     window.jQuery(document).on('folioAtomSettingChanged.folioReactSelect', () => {
       this.setState({ key: this.state.key + 1 })
@@ -38,34 +59,17 @@ class Select extends React.Component {
   }
 
   onChange = (value) => {
-    if (this.props.isMulti) {
-      if (value) {
-        // For multi-select, pass array of option objects
-        // This allows parent components to access full option data (value, label, id, etc.)
-        return this.props.onChange(value)
-      } else {
-        return this.props.onChange([])
-      }
-    } else {
-      // For single select, pass the full option object
-      // This allows parent components to access full option data (value, label, id, etc.)
-      return this.props.onChange(value)
-    }
+    this.props.onChange(this.props.isMulti ? (value || []) : value)
   }
 
   onKeyDown = (e) => {
     if (e.key === 'Enter') {
       if (this.props.createable) {
-        // For creatable selects, form submission prevention is handled by the
-        // parent container's onKeyDown (fired after react-select processes Enter).
-        // We must NOT call preventDefault here — react-select v3 checks defaultPrevented
-        // and skips its own Enter handling (selectOption / onCreateOption) if set.
-        // We also must NOT call stopPropagation — we need the event to bubble up
-        // so the parent wrapper can call preventDefault to block form submission.
+        // Do not preventDefault here — react-select checks defaultPrevented before
+        // processing Enter (select/create). The parent wrapper handles form submission prevention.
         return
       } else if (this.props.innerRef && this.props.innerRef.current) {
-        const ref = this.props.innerRef.current
-        if (!ref.select.state.menuIsOpen) {
+        if (!this.props.innerRef.current.select.state.menuIsOpen) {
           e.preventDefault()
         }
       }
@@ -86,8 +90,7 @@ class Select extends React.Component {
       if (opt.label && opt.label.toLowerCase().trim() === normalized) return false
     }
 
-    // Also check last loaded API response — catches the debounce timing gap and
-    // items that were loaded in a previous query but aren't in current selectOptions
+    // Also check last loaded API response — catches the debounce timing gap
     for (const opt of this.state.loadedOptions) {
       if (opt.label && opt.label.toLowerCase().trim() === normalized) return false
     }
@@ -98,70 +101,32 @@ class Select extends React.Component {
   render () {
     const { isClearable, createable, value, options, rawOptions, onChange, innerRef, async, asyncData, addAtomSettings, defaultOptions, placeholder, dataTestId, menuPlacement, existingLabels, onLoadedOptionsChange, ...rest } = this.props
 
-    // Format value early so we can use it in loadOptions
     let formattedValue = null
     if (value) {
-      // Check if value is already in react-select format {value, label}
       if (typeof value === 'object' && value !== null && 'value' in value && 'label' in value) {
         formattedValue = this.props.isMulti ? [value] : value
       } else {
         formattedValue = this.props.isMulti ? formatOptions(value) : formatOption(value)
       }
     }
-    let SelectComponent = CreatableSelect
-    let loadOptions
-    let useDebounceTimeout = false
 
-    if (!createable) SelectComponent = ReactSelect
+    let SelectComponent = createable ? CreatableSelect : ReactSelect
+    let loadOptions
 
     if (async) {
       if (createable) {
-        // Creatable selects don't support pagination in react-select-async-paginate v0.4.1
-        // Use AsyncCreatableSelect without pagination
+        // AsyncCreatableSelect: react-select-async-paginate v0.4.1 does not support pagination for creatable
         SelectComponent = AsyncCreatableSelect
 
         loadOptions = (inputValue, handle) => {
           if (this._createableLoadTimer) clearTimeout(this._createableLoadTimer)
           this._createableLoadTimer = setTimeout(() => {
-            let data = ''
             const params = new URLSearchParams()
-
-            if (asyncData) {
-              Object.keys(asyncData).forEach((key) => {
-                params.set(`atom_form_fields[${key}]`, asyncData[key])
-              })
-            }
-
-            if (addAtomSettings) {
-              const settingsUrlData = {}
-              const settingsHash = settingsToHash()
-
-              Object.keys(settingsHash).forEach((key) => {
-                if (key !== 'loading') {
-                  Object.keys(settingsHash[key]).forEach((locale) => {
-                    let fullKey
-
-                    if (locale && locale !== 'null') {
-                      fullKey = `by_atom_setting_${key}_${locale}`
-                    } else {
-                      fullKey = `by_atom_setting_${key}`
-                    }
-
-                    settingsUrlData[fullKey] = settingsHash[key][locale]
-                  })
-                }
-              })
-
-              Object.keys(settingsUrlData).forEach((key) => {
-                params.set(key, settingsUrlData[key])
-              })
-            }
-
-            data = params.toString()
-            if (data !== '') data = `&${data}`
-
+            buildAtomSettingsParams(params, asyncData, addAtomSettings)
+            const qs = params.toString() ? `&${params.toString()}` : ''
             const join = async.indexOf('?') === -1 ? '?' : '&'
-            apiGet(`${async}${join}q=${inputValue}${data}`)
+
+            apiGet(`${async}${join}q=${inputValue}${qs}`)
               .then((res) => {
                 if (res && res.data) {
                   const formattedOptions = res.data.map((item) => ({
@@ -176,139 +141,60 @@ class Select extends React.Component {
                   handle([])
                 }
               })
-              .catch(() => {
-                handle([])
-              })
+              .catch(() => handle([]))
           }, 250)
         }
       } else {
-        // Use AsyncPaginate for pagination support
         SelectComponent = AsyncPaginate
-        useDebounceTimeout = true
 
-        loadOptions = async (inputValue, loadedOptions, additional) => {
-          let data = ''
+        loadOptions = async (inputValue, loadedOptions) => {
+          const selectedAsFallback = () => {
+            if (inputValue && inputValue.trim()) return { options: [], hasMore: false }
+            const vals = []
+            if (formattedValue) {
+              const arr = this.props.isMulti && Array.isArray(formattedValue) ? formattedValue : [formattedValue]
+              arr.forEach(v => { if (v && v.value) vals.push(v) })
+            }
+            return { options: vals, hasMore: false }
+          }
+
           const params = new URLSearchParams()
-
-          // Calculate page from loadedOptions length
-          const page = Math.floor(loadedOptions.length / AUTOCOMPLETE_PAGY_ITEMS) + 1
-          params.set('page', page)
-
-          if (asyncData) {
-            Object.keys(asyncData).forEach((key) => {
-              params.set(`atom_form_fields[${key}]`, asyncData[key])
-            })
-          }
-
-          if (addAtomSettings) {
-            const settingsUrlData = {}
-            const settingsHash = settingsToHash()
-
-            Object.keys(settingsHash).forEach((key) => {
-              if (key !== 'loading') {
-                Object.keys(settingsHash[key]).forEach((locale) => {
-                  let fullKey
-
-                  if (locale && locale !== 'null') {
-                    fullKey = `by_atom_setting_${key}_${locale}`
-                  } else {
-                    fullKey = `by_atom_setting_${key}`
-                  }
-
-                  settingsUrlData[fullKey] = settingsHash[key][locale]
-                })
-              }
-            })
-
-            Object.keys(settingsUrlData).forEach((key) => {
-              params.set(key, settingsUrlData[key])
-            })
-          }
-
-          data = params.toString()
-          if (data !== '') data = `&${data}`
-
+          params.set('page', Math.floor(loadedOptions.length / AUTOCOMPLETE_PAGY_ITEMS) + 1)
+          buildAtomSettingsParams(params, asyncData, addAtomSettings)
+          const qs = params.toString() ? `&${params.toString()}` : ''
           const join = async.indexOf('?') === -1 ? '?' : '&'
+
           try {
-            const res = await apiGet(`${async}${join}q=${inputValue}${data}`)
-            if (res) {
-              // Transform API response, passing through all fields
-              // Ensure value and label are always set for react-select compatibility
-              const formattedOptions = res.data.map((item) => ({
-                ...item, // Pass through all fields from API (id, text, label, value, type, etc.)
-                value: item.value || item.id, // Ensure value is set for react-select
-                label: item.label || item.text || '' // Ensure label is set for react-select
-              }))
+            const res = await apiGet(`${async}${join}q=${inputValue}${qs}`)
+            if (!res) return selectedAsFallback()
 
-              // Ensure selected value is included in options so react-select can display it
-              // This is critical for AsyncSelect/AsyncPaginate which only use options from loadOptions
-              // Use a Set to track existing values to prevent duplicates
+            const formattedOptions = res.data.map((item) => ({
+              ...item,
+              value: item.value || item.id,
+              label: item.label || item.text || ''
+            }))
+
+            const isFirstPage = loadedOptions.length === 0
+            const noQuery = !inputValue || inputValue.trim() === ''
+            const finalOptions = [...formattedOptions]
+
+            if (isFirstPage && noQuery && formattedValue) {
               const existingValues = new Set(formattedOptions.map(opt => opt.value))
-              const finalOptions = [...formattedOptions]
-
-              // Only include selected value on the first page (when loadedOptions is empty)
-              // and when there's no search query. Don't prepend on subsequent pages.
-              const isFirstPage = loadedOptions.length === 0
-              const shouldIncludeSelected = isFirstPage && (!inputValue || inputValue.trim() === '')
-
-              if (formattedValue && !this.props.isMulti && shouldIncludeSelected) {
-                const selectedValue = formattedValue
-                // Only add if not already present in the API results
-                if (selectedValue && selectedValue.value && !existingValues.has(selectedValue.value)) {
-                  // Prepend selected value so it appears first
-                  finalOptions.unshift(selectedValue)
-                  existingValues.add(selectedValue.value)
-                }
-              } else if (formattedValue && this.props.isMulti && Array.isArray(formattedValue) && shouldIncludeSelected) {
-                formattedValue.forEach(selectedVal => {
-                  if (selectedVal && selectedVal.value && !existingValues.has(selectedVal.value)) {
-                    finalOptions.push(selectedVal)
-                    existingValues.add(selectedVal.value)
-                  }
-                })
-              }
-
-              // Check if there are more pages
-              const hasMore = res.meta && res.meta.page < res.meta.pages
-              return {
-                options: finalOptions,
-                hasMore: hasMore
-              }
-            } else {
-              // Only include selected value if no search query
-              const shouldIncludeSelected = !inputValue || inputValue.trim() === ''
-              const finalOptions = []
-              if (shouldIncludeSelected) {
-                if (formattedValue && !this.props.isMulti && formattedValue.value) {
-                  finalOptions.push(formattedValue)
-                } else if (formattedValue && this.props.isMulti && Array.isArray(formattedValue)) {
-                  formattedValue.forEach(val => {
-                    if (val && val.value) finalOptions.push(val)
-                  })
-                }
-              }
-              return {
-                options: finalOptions,
-                hasMore: false
-              }
-            }
-          } catch (error) {
-            // Only include selected value if no search query
-            const shouldIncludeSelected = !inputValue || inputValue.trim() === ''
-            const finalOptions = []
-            if (shouldIncludeSelected) {
-              if (formattedValue && !this.props.isMulti && formattedValue.value) {
-                finalOptions.push(formattedValue)
-              } else if (formattedValue && this.props.isMulti && Array.isArray(formattedValue)) {
+              if (this.props.isMulti && Array.isArray(formattedValue)) {
                 formattedValue.forEach(val => {
-                  if (val && val.value) finalOptions.push(val)
+                  if (val && val.value && !existingValues.has(val.value)) finalOptions.push(val)
                 })
+              } else if (!this.props.isMulti && formattedValue.value && !existingValues.has(formattedValue.value)) {
+                finalOptions.unshift(formattedValue)
               }
             }
+
             return {
               options: finalOptions,
-              hasMore: false
+              hasMore: res.meta && res.meta.page < res.meta.pages
             }
+          } catch (_e) {
+            return selectedAsFallback()
           }
         }
       }
@@ -321,11 +207,6 @@ class Select extends React.Component {
       handledOptions = rawOptions
     }
 
-    // For async selects, loadOptions handles including the selected value
-    // So we don't need to modify defaultOptions - let react-select handle it normally
-    // The selected value will be included via loadOptions when it's called
-    const handledDefaultOptions = defaultOptions
-
     return (
       <SelectComponent
         name='form-field-name'
@@ -333,21 +214,21 @@ class Select extends React.Component {
         classNamePrefix='react-select'
         value={formattedValue}
         options={handledOptions}
-        defaultOptions={handledDefaultOptions}
+        defaultOptions={defaultOptions}
         formatCreateLabel={formatCreateLabel}
         onChange={this.onChange}
         noOptionsMessage={({ inputValue }) => {
-            if (createable && inputValue) {
-              const normalized = inputValue.toLowerCase().trim()
-              if (existingLabels && existingLabels.some((l) => l.toLowerCase().trim() === normalized)) {
-                return window.FolioConsole.translations.alreadyExists || 'Already exists'
-              }
-              if (this.state.loadedOptions.some((o) => o.label && o.label.toLowerCase().trim() === normalized)) {
-                return window.FolioConsole.translations.alreadyExists || 'Already exists'
-              }
+          if (createable && inputValue) {
+            const normalized = inputValue.toLowerCase().trim()
+            if (existingLabels && existingLabels.some((l) => l.toLowerCase().trim() === normalized)) {
+              return window.FolioConsole.translations.alreadyExists || 'Already exists'
             }
-            return makeNoOptionsMessage(options)({ inputValue })
-          }}
+            if (this.state.loadedOptions.some((o) => o.label && o.label.toLowerCase().trim() === normalized)) {
+              return window.FolioConsole.translations.alreadyExists || 'Already exists'
+            }
+          }
+          return makeNoOptionsMessage(options)({ inputValue })
+        }}
         ref={innerRef}
         styles={selectStyles}
         loadOptions={loadOptions}
@@ -362,7 +243,7 @@ class Select extends React.Component {
         components={createable ? { Option: OptionWithActions, Input } : { Input }}
         dataTestId={dataTestId}
         menuPlacement={menuPlacement}
-        debounceTimeout={useDebounceTimeout ? 250 : undefined}
+        debounceTimeout={async && !createable ? 250 : undefined}
         {...rest}
       />
     )

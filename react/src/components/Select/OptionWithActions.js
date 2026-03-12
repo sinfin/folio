@@ -1,20 +1,12 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react'
 import { components } from 'react-select'
 import FolioUiIcon from 'components/FolioUiIcon'
+import isDuplicateLabel from 'containers/OrderedMultiselectApp/isDuplicateLabel'
 
 const ACTION_AREA_ATTR = 'data-owa-action'
 
 function isActionAreaClick (e) {
   return e.target.closest && e.target.closest(`[${ACTION_AREA_ATTR}]`)
-}
-
-export function checkDuplicate (value, currentLabel, existingLabels, loadedOptions) {
-  if (!value.trim()) return false
-  const normalized = value.trim().toLowerCase()
-  if (normalized === (currentLabel || '').toLowerCase()) return false
-  if (existingLabels && existingLabels.some((l) => l.toLowerCase().trim() === normalized)) return true
-  if (loadedOptions && loadedOptions.some((o) => o.label && o.label.toLowerCase().trim() === normalized)) return true
-  return false
 }
 
 function OptionWithActions (props) {
@@ -37,7 +29,7 @@ function OptionWithActions (props) {
 
   const isDuplicate = useMemo(() => {
     if (!isEditing) return false
-    return checkDuplicate(editValue, currentLabel, selectProps.existingLabels, selectProps.loadedOptions)
+    return isDuplicateLabel(editValue, currentLabel, selectProps.existingLabels, selectProps.loadedOptions)
   }, [isEditing, editValue, currentLabel, selectProps.existingLabels, selectProps.loadedOptions])
 
   const onRenameClick = useCallback((e) => {
@@ -62,7 +54,7 @@ function OptionWithActions (props) {
   const onRenameSubmit = useCallback(() => {
     const trimmed = editValue.trim()
     if (!trimmed) { finishEditing(); return }
-    if (checkDuplicate(trimmed, currentLabel, selectProps.existingLabels, selectProps.loadedOptions)) return
+    if (isDuplicateLabel(trimmed, currentLabel, selectProps.existingLabels, selectProps.loadedOptions)) return
     if (trimmed !== currentLabel) {
       setRenamedLabel(trimmed)
       selectProps.onRenameSubmit && selectProps.onRenameSubmit(data, trimmed)

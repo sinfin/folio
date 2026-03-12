@@ -2,15 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { makeConfirmed } from 'utils/confirmed'
 
 import FolioUiIcon from 'components/FolioUiIcon'
-
-function isDuplicateLabel (value, currentLabel, existingLabels, loadedOptions) {
-  if (!value.trim()) return false
-  const normalized = value.trim().toLowerCase()
-  if (normalized === (currentLabel || '').toLowerCase()) return false
-  if (existingLabels && existingLabels.some((label) => label.toLowerCase().trim() === normalized)) return true
-  if (loadedOptions && loadedOptions.some((o) => o.label && o.label.toLowerCase().trim() === normalized)) return true
-  return false
-}
+import isDuplicateLabel from '../isDuplicateLabel'
 
 function Item ({ path, node, remove, onRename, existingLabels, loadedOptions }) {
   const [isEditing, setIsEditing] = useState(false)

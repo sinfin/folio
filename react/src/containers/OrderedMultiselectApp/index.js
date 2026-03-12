@@ -74,17 +74,17 @@ class OrderedMultiselectApp extends React.Component {
       id: itemId,
       label: option.label
     }
-    document.querySelector('.f-c-r-ordered-multiselect-app').dispatchEvent(new window.Event('change', { bubbles: true }))
+    this.wrapRef.current.dispatchEvent(new window.Event('change', { bubbles: true }))
     this.props.dispatch(addItem(item))
   }
 
   update = (items) => {
-    document.querySelector('.f-c-r-ordered-multiselect-app').dispatchEvent(new window.Event('change', { bubbles: true }))
+    this.wrapRef.current.dispatchEvent(new window.Event('change', { bubbles: true }))
     this.props.dispatch(updateItems(items))
   }
 
   removeItem = (item) => {
-    document.querySelector('.f-c-r-ordered-multiselect-app').dispatchEvent(new window.Event('change', { bubbles: true }))
+    this.wrapRef.current.dispatchEvent(new window.Event('change', { bubbles: true }))
     this.props.dispatch(removeItem(item))
   }
 
@@ -172,7 +172,7 @@ class OrderedMultiselectApp extends React.Component {
           if (shouldDelete) {
             apiDelete(orderedMultiselect.deleteUrl, { id: recordId, confirmed: 'true' })
               .then(() => {
-                document.querySelector('.f-c-r-ordered-multiselect-app').dispatchEvent(new window.Event('change', { bubbles: true }))
+                this.wrapRef.current.dispatchEvent(new window.Event('change', { bubbles: true }))
                 this.props.dispatch(removeDeletedItem(recordId))
                 this.forceSelectRefresh()
               })
@@ -219,7 +219,7 @@ class OrderedMultiselectApp extends React.Component {
 
     return (
       <div
-        className={`f-c-r-ordered-multiselect-app`}
+        className='f-c-r-ordered-multiselect-app'
         ref={this.wrapRef}
         data-atom-setting-value={this.settingValue()}
         onKeyDown={orderedMultiselect.createable ? (e) => { if (e.key === 'Enter') e.preventDefault() } : undefined}
