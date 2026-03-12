@@ -20,7 +20,7 @@ en:
         deleteFromDb: Delete
         deleteFromDbConfirm: "Delete this record from database?"
         deleteWarning: "This item is assigned to %{count} other records. Deleting it will remove it from all of them. Continue?"
-        deleteWarningWithLabels: "This item is assigned to %{count} records:\n%{list}\n\nDeleting it from the database will remove it from all of them."
+        deleteWarningWithLabels: 'This item is assigned to %{count} records:\n%{list}\n\nDeleting it from the database will remove it from all of them.'
         destroy: Destroy
         rename: Rename
         alreadyExists: An item with this name already exists.

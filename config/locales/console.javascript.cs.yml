@@ -20,7 +20,7 @@ cs:
         deleteFromDb: Smazat
         deleteFromDbConfirm: "Smazat tento záznam z databáze?"
         deleteWarning: "Tato položka je přiřazena ke %{count} dalším záznamům. Smazáním ji odeberete i z nich. Pokračovat?"
-        deleteWarningWithLabels: "Tato položka je přiřazena k %{count} záznamům:\n%{list}\n\nSmazáním ji z databáze ji odeberete ze seznamu i u těchto záznamů."
+        deleteWarningWithLabels: 'Tato položka je přiřazena k %{count} záznamům:\n%{list}\n\nSmazáním ji odeberete také ze seznamu u těchto záznamů.'
         destroy: Smazat
         rename: Přejmenovat
         alreadyExists: Položka s tímto názvem již existuje.
