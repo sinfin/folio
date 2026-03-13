@@ -172,10 +172,30 @@ window.Folio.Stimulus.register('f-input-ordered-multiselect', class extends wind
             const selectedIds = self.itemsValue.map((i) => String(i.value))
             const filtered = data.filter((d) => !selectedIds.includes(d.value))
 
-            // Accumulate loaded options for duplicate detection
-            filtered.forEach((opt) => { self.loadedOptions[opt.value] = opt })
+            // Accumulate loaded options for duplicate detection.
+            // Overlay current record label based on actual selection state —
+            // server data doesn't reflect unsaved form changes.
+            const currentLabel = self.currentRecordLabelValue
+            filtered.forEach((opt) => {
+              if (currentLabel) {
+                const isSelected = self.itemsValue.some((i) => String(i.value) === opt.value)
+                if (isSelected && !opt.usage_labels.includes(currentLabel)) {
+                  opt.usage_labels = [...opt.usage_labels, currentLabel]
+                } else if (!isSelected) {
+                  opt.usage_labels = opt.usage_labels.filter((l) => l !== currentLabel)
+                }
+              }
+              self.loadedOptions[opt.value] = opt
+            })
 
-            callback(filtered)
+            // Tom Select closes the dropdown when async load returns empty array
+            // (no_results renderer only fires for local filtering, not async load).
+            // Inject a non-selectable dummy option so the dropdown stays open.
+            if (filtered.length === 0) {
+              callback([{ value: '__no_results__', text: t('noResults'), disabled: true }])
+            } else {
+              callback(filtered)
+            }
           })
           .catch(() => {
             callback()
@@ -184,6 +204,9 @@ window.Folio.Stimulus.register('f-input-ordered-multiselect', class extends wind
 
       render: {
         option (data, escape) {
+          if (data.value === '__no_results__') {
+            return `<div class="no-results">${escape(data.text)}</div>`
+          }
           if (self.createableValue) {
             return self.renderOptionWithActions(data, escape)
           }
@@ -212,7 +235,7 @@ window.Folio.Stimulus.register('f-input-ordered-multiselect', class extends wind
       },
 
       onChange (value) {
-        if (!value) return
+        if (!value || value === '__no_results__') return
         self.onItemSelected(value)
         // Reset Tom Select — clear value, keep options so dropdown can reopen
         window.setTimeout(() => {
@@ -486,14 +509,19 @@ window.Folio.Stimulus.register('f-input-ordered-multiselect', class extends wind
       const response = await window.Folio.Api.apiDelete(url, { id })
       const data = response.data
 
+      // Prefer local usage_labels (reflects unsaved form changes) over server-side data
+      const localOpt = this.loadedOptions[String(id)]
+      const usageLabels = localOpt ? (localOpt.usage_labels || []) : (data.usage_labels || [])
+      const usageCount = usageLabels.length
+
       let message
-      if (data.usage_count > 0 && data.usage_labels && data.usage_labels.length > 0) {
-        const list = data.usage_labels.map((l) => `- ${l}`).join('\n')
+      if (usageCount > 0 && usageLabels.length > 0) {
+        const list = usageLabels.map((l) => `- ${l}`).join('\n')
         message = t('deleteWarningWithLabels')
-          .replace('%{count}', data.usage_count)
+          .replace('%{count}', usageCount)
           .replace('%{list}', list)
-      } else if (data.usage_count > 0) {
-        message = t('deleteWarning').replace('%{count}', data.usage_count)
+      } else if (usageCount > 0) {
+        message = t('deleteWarning').replace('%{count}', usageCount)
       } else {
         message = t('deleteFromDbConfirm')
       }
@@ -802,8 +830,16 @@ window.Folio.Stimulus.register('f-input-ordered-multiselect', class extends wind
         }, 400)
       }
 
-      // Restore close but keep dropdown open — user can continue browsing/deleting
-      this.restoreDropdownClose(true)
+      // Check if any real options remain after this deletion
+      const allOptions = this.tomSelect.dropdown.querySelectorAll('.option')
+      const realRemaining = Array.from(allOptions).filter((el) => el !== optionEl)
+      if (realRemaining.length === 0) {
+        // No options left — close dropdown completely
+        this.restoreDropdownClose()
+      } else {
+        // More options remain — keep dropdown open for further browsing/deleting
+        this.restoreDropdownClose(true)
+      }
     } else {
       this.restoreDropdownClose()
     }
@@ -918,6 +954,12 @@ window.Folio.Stimulus.register('f-input-ordered-multiselect', class extends wind
     if (item.id) {
       const updatedLabels = this._removeCurrentLabel(item.usage_labels)
       this.removedItemsValue = [...this.removedItemsValue, { ...item, usage_labels: updatedLabels }]
+    }
+
+    // Update loadedOptions so dropdown shows updated usage_labels
+    const valStr = String(value)
+    if (this.loadedOptions[valStr]) {
+      this.loadedOptions[valStr].usage_labels = this._removeCurrentLabel(this.loadedOptions[valStr].usage_labels)
     }
 
     // Mark dropdown for reload so the removed item appears again
