@@ -115,6 +115,7 @@ window.Folio.Stimulus.register('f-input-ordered-multiselect', class extends wind
   }
 
   disconnect () {
+    if (this._blurCancelTimer) { clearTimeout(this._blurCancelTimer); this._blurCancelTimer = null }
     if (this._onDocumentMousedown) { document.removeEventListener('mousedown', this._onDocumentMousedown, true); this._onDocumentMousedown = null }
     this.destroyTomSelect()
     this.destroySortable()
@@ -235,6 +236,21 @@ window.Folio.Stimulus.register('f-input-ordered-multiselect', class extends wind
     const noop = () => {}
     const fakeEvent = (target) => ({ currentTarget: target, preventDefault: noop, stopPropagation: noop })
     this._onDropdownMousedown = (e) => {
+      // Let clicks inside the rename input through for cursor positioning,
+      // but stop Tom Select from treating it as option selection.
+      // Block both mousedown propagation AND the subsequent click event —
+      // Tom Select selects options on click, not mousedown.
+      if (e.target.closest('.f-input-ordered-multiselect__option-edit-input')) {
+        // stopImmediatePropagation prevents Tom Select's own capture-phase handlers
+        // from calling preventDefault (which would block cursor positioning).
+        // We do NOT call preventDefault ourselves — the browser must handle cursor placement.
+        e.stopImmediatePropagation()
+        // Block the subsequent click so Tom Select doesn't select the option
+        if (this._pendingClickBlocker) dropdown.removeEventListener('click', this._pendingClickBlocker, true)
+        this._pendingClickBlocker = (ce) => { ce.stopImmediatePropagation(); this._pendingClickBlocker = null }
+        dropdown.addEventListener('click', this._pendingClickBlocker, { capture: true, once: true })
+        return
+      }
       const submitBtn = e.target.closest('.f-input-ordered-multiselect__option-confirm')
       const deleteBtn = e.target.closest('.f-input-ordered-multiselect__option-action--danger')
       const renameBtn = e.target.closest('.f-input-ordered-multiselect__option-action:not(.f-input-ordered-multiselect__option-action--danger):not(.f-input-ordered-multiselect__option-confirm)')
@@ -401,6 +417,15 @@ window.Folio.Stimulus.register('f-input-ordered-multiselect', class extends wind
   onOptionRenameClick (e) {
     e.preventDefault()
     e.stopPropagation()
+    // Cancel any active rename in the dropdown before starting a new one —
+    // just restore HTML, don't touch close/focus (we're staying in edit mode)
+    if (this.tomSelect) {
+      const activeInput = this.tomSelect.dropdown.querySelector('.f-input-ordered-multiselect__option-edit-input')
+      if (activeInput) {
+        const activeEl = activeInput.closest('.f-input-ordered-multiselect__option-with-actions')
+        if (activeEl) this.restoreOptionHtml(activeEl, activeInput.dataset.value, activeInput.dataset.originalLabel)
+      }
+    }
     const btn = e.currentTarget
     const value = btn.dataset.value
     const label = btn.dataset.label
@@ -514,6 +539,14 @@ window.Folio.Stimulus.register('f-input-ordered-multiselect', class extends wind
   async onOptionDeleteClick (e) {
     e.preventDefault()
     e.stopPropagation()
+    // Cancel any active rename in the dropdown before deleting
+    if (this.tomSelect) {
+      const activeInput = this.tomSelect.dropdown.querySelector('.f-input-ordered-multiselect__option-edit-input')
+      if (activeInput) {
+        const activeEl = activeInput.closest('.f-input-ordered-multiselect__option-with-actions')
+        if (activeEl) this.restoreOptionHtml(activeEl, activeInput.dataset.value, activeInput.dataset.originalLabel)
+      }
+    }
     const value = e.currentTarget.dataset.value
     const optionEl = e.currentTarget.closest('.option')
     this.preventDropdownClose()
@@ -568,6 +601,12 @@ window.Folio.Stimulus.register('f-input-ordered-multiselect', class extends wind
         </span>
       </div>`).join('')
     if (this.sortableValue && this._sortableInitialized) this.refreshSortable()
+    // Prevent mousedown on action buttons from stealing focus from an active rename input.
+    // Without this, blur fires before click, the 50ms timer destroys the DOM,
+    // and the click event never reaches the target button.
+    this.listTarget.querySelectorAll('.f-input-ordered-multiselect__item-action').forEach((btn) => {
+      btn.addEventListener('mousedown', (e) => e.preventDefault())
+    })
   }
 
   syncHiddenInputs () {
@@ -610,10 +649,15 @@ window.Folio.Stimulus.register('f-input-ordered-multiselect', class extends wind
 
   onItemRenameClick (e) {
     e.preventDefault()
-    const btn = e.currentTarget
-    const value = btn.dataset.value
-    const label = btn.dataset.label
-    const itemEl = btn.closest('.f-input-ordered-multiselect__item')
+    if (this._blurCancelTimer) { clearTimeout(this._blurCancelTimer); this._blurCancelTimer = null }
+    const value = e.currentTarget.dataset.value
+    const label = e.currentTarget.dataset.label
+    // Cancel any active rename by re-rendering the list, then find the target item fresh
+    this.renderList()
+    // renderList() destroys the previous rename input, triggering its blur handler
+    // which sets a new timer — clear it so it doesn't wipe out the rename we're about to set up
+    if (this._blurCancelTimer) { clearTimeout(this._blurCancelTimer); this._blurCancelTimer = null }
+    const itemEl = this.listTarget.querySelector(`.f-input-ordered-multiselect__item[data-value="${value}"]`)
     if (!itemEl) return
     const escape = window.Folio.Input.OrderedMultiselect.escapeHtml
     const labelEl = itemEl.querySelector('.f-input-ordered-multiselect__item-label')
@@ -634,7 +678,9 @@ window.Folio.Stimulus.register('f-input-ordered-multiselect', class extends wind
     })
     input.addEventListener('blur', (e) => {
       if (e.relatedTarget && e.relatedTarget.closest('.f-input-ordered-multiselect__item-confirm')) return
-      this.onItemRenameCancel(e)
+      // Delay cancel so that a click on another rename button can fire first
+      // and cancel the timer via renderList() in onItemRenameClick
+      this._blurCancelTimer = window.setTimeout(() => { this._blurCancelTimer = null; this.renderList() }, 50)
     })
     confirmBtn.addEventListener('mousedown', (e) => e.preventDefault())
     confirmBtn.addEventListener('click', (e) => {
@@ -671,8 +717,7 @@ window.Folio.Stimulus.register('f-input-ordered-multiselect', class extends wind
     }
   }
 
-  onItemRenameCancel (e) {
-    if (e.type === 'blur' && e.relatedTarget && e.relatedTarget.closest('.f-input-ordered-multiselect__item')) return
+  onItemRenameCancel () {
     this.renderList()
   }
 
