@@ -99,6 +99,7 @@ window.Folio.Stimulus.register('f-input-ordered-multiselect', class extends wind
     sortable: { type: Boolean, default: true },
     currentRecordLabel: { type: String, default: '' },
     createable: { type: Boolean, default: false },
+    showUsage: { type: Boolean, default: true },
     createUrl: String,
     updateUrl: String,
     deleteUrl: String
@@ -295,7 +296,7 @@ window.Folio.Stimulus.register('f-input-ordered-multiselect', class extends wind
     const t = window.Folio.Input.OrderedMultiselect.t
     const editIcon = window.Folio.Input.OrderedMultiselect.iconHtml('edit_box', { height: 16 })
     const deleteIcon = window.Folio.Input.OrderedMultiselect.iconHtml('delete', { height: 16 })
-    const usageHint = window.Folio.Input.OrderedMultiselect.usageHintHtml(usageLabels, 'f-input-ordered-multiselect__option-usage', true)
+    const usageHint = this.showUsageValue ? window.Folio.Input.OrderedMultiselect.usageHintHtml(usageLabels, 'f-input-ordered-multiselect__option-usage', true) : ''
     return `<span class="f-input-ordered-multiselect__option-label">${escape(label)}${usageHint}</span>
       <span class="f-input-ordered-multiselect__option-actions">
         <button type="button" class="btn btn-none f-input-ordered-multiselect__option-action" data-value="${escape(value)}" data-label="${escape(label)}" title="${t('rename')}">${editIcon}</button>
@@ -435,7 +436,7 @@ window.Folio.Stimulus.register('f-input-ordered-multiselect', class extends wind
     const escape = window.Folio.Input.OrderedMultiselect.escapeHtml
     const confirmIcon = window.Folio.Input.OrderedMultiselect.iconHtml('checkbox_marked', { height: 16 })
     const optionData = this.tomSelect ? this.tomSelect.options[value] : null
-    const usageHint = window.Folio.Input.OrderedMultiselect.usageHintHtml(optionData ? optionData.usage_labels : [], 'f-input-ordered-multiselect__option-usage', true)
+    const usageHint = this.showUsageValue ? window.Folio.Input.OrderedMultiselect.usageHintHtml(optionData ? optionData.usage_labels : [], 'f-input-ordered-multiselect__option-usage', true) : ''
     optionEl.innerHTML = `<span class="f-input-ordered-multiselect__option-label">
         <input type="text" class="f-input-ordered-multiselect__option-edit-input" value="${escape(label)}" data-value="${escape(value)}" data-original-label="${escape(label)}">
         ${usageHint}
@@ -594,7 +595,7 @@ window.Folio.Stimulus.register('f-input-ordered-multiselect', class extends wind
     this.listTarget.innerHTML = this.itemsValue.map((item) => `
       <div class="f-input-ordered-multiselect__item" data-value="${item.value}">
         ${dragIcon}
-        <span class="f-input-ordered-multiselect__item-label">${escape(item.label)}${usageHint(item.usage_labels, 'f-input-ordered-multiselect__item-usage')}</span>
+        <span class="f-input-ordered-multiselect__item-label">${escape(item.label)}${this.showUsageValue ? usageHint(item.usage_labels, 'f-input-ordered-multiselect__item-usage') : ''}</span>
         <span class="f-input-ordered-multiselect__item-actions">
           ${this.createableValue ? `<button type="button" class="btn btn-none f-input-ordered-multiselect__item-action" data-action="click->f-input-ordered-multiselect#onItemRenameClick" data-value="${item.value}" data-label="${escape(item.label)}" title="${t('rename')}">${editIcon}</button>` : ''}
           <button type="button" class="btn btn-none f-input-ordered-multiselect__item-action f-input-ordered-multiselect__item-action--danger" data-action="click->f-input-ordered-multiselect#onItemRemoveClick" data-value="${item.value}" title="${t('remove')}">${closeIcon}</button>
@@ -664,7 +665,7 @@ window.Folio.Stimulus.register('f-input-ordered-multiselect', class extends wind
     const actionsEl = itemEl.querySelector('.f-input-ordered-multiselect__item-actions')
     const confirmIcon = window.Folio.Input.OrderedMultiselect.iconHtml('checkbox_marked', { height: 16 })
     const item = this.itemsValue.find((i) => String(i.value) === String(value))
-    const usageHintStr = window.Folio.Input.OrderedMultiselect.usageHintHtml(item && item.usage_labels, 'f-input-ordered-multiselect__item-usage')
+    const usageHintStr = this.showUsageValue ? window.Folio.Input.OrderedMultiselect.usageHintHtml(item && item.usage_labels, 'f-input-ordered-multiselect__item-usage') : ''
     labelEl.innerHTML = `<div class="f-input-ordered-multiselect__field-wrap">
         <input type="text" class="f-input-ordered-multiselect__item-rename-input" value="${escape(label)}" data-value="${escape(value)}" data-original-label="${escape(label)}">
       </div>${usageHintStr}`

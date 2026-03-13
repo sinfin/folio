@@ -229,12 +229,14 @@ module Folio::Console::ReactHelper
                                    order_scope: :ordered,
                                    sortable: true,
                                    createable: false,
+                                   show_usage: true,
                                    required: nil,
                                    create_url: nil,
                                    update_url: nil,
                                    delete_url: nil)
     class_name = "f-input-ordered-multiselect"
     class_name += " f-input-ordered-multiselect--not-sortable" unless sortable
+    class_name += " f-input-ordered-multiselect--no-usage" unless show_usage
 
     klass = f.object.class
     reflection = klass.reflections[relation_name.to_s]
@@ -291,6 +293,7 @@ module Folio::Console::ReactHelper
       "f-input-ordered-multiselect-foreign-key-value" => reflection.foreign_key,
       "f-input-ordered-multiselect-sortable-value" => sortable ? "true" : "false",
       "f-input-ordered-multiselect-createable-value" => createable ? "true" : "false",
+      "f-input-ordered-multiselect-show-usage-value" => show_usage ? "true" : "false",
       "f-input-ordered-multiselect-current-record-label-value" => current_record_label,
     }
 
