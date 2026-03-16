@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- add `try` to `dont_run_after_save_jobs` to enable thumbnail generation for `private_attachments`
 
 ## [7.4.1] - 2026-03-11
 
