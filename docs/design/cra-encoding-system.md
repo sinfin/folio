@@ -280,8 +280,8 @@ Videos imported from old Wowza/CDN77 system have `legacy_data["skip_cra_encoding
 | `app/overrides/jobs/folio/cra_media_cloud/create_media_job_override.rb` | Sets queue to `:video` |
 | `app/components/economia/cra_media_cloud/player_component.rb` | OTT player rendering with manifest-based gate, subtitles, Gemius analytics |
 | `app/components/economia/cra_media_cloud/player_component.js` | Stimulus controller: player lifecycle, viewport awareness, multi-instance coordination |
-| `app/components/folio/console/economia/files/additional_html_component.rb` | Console video detail: iframe player, SD preview with progress, manifest links |
-| `app/components/folio/console/economia/files/additional_html_component.slim` | Template with manifest gate + SD preview fallback |
+| `app/components/folio/console/economia/files/additional_html_component.rb` | Console video detail: iframe player (manifest gate) + manifest URL links |
+| `app/components/folio/console/economia/files/additional_html_component.slim` | Template with manifest gate — shows player iframe or "not ready" |
 | `app/jobs/economia/import_video_from_url_job.rb` | Legacy video import from article URLs |
 | `app/lib/economia/article_storage/video_creator.rb` | Creates video records from Article Storage API |
 | `lib/tasks/cra_audit.rake` | CRA audit rake task (330 lines) |

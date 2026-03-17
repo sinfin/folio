@@ -164,7 +164,7 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
       videos = Folio::File::Video
         .where(aasm_state: :processing_failed)
         .where("remote_services_data ->> 'service' = ?", "cra_media_cloud")
-        .where("(remote_services_data ->> 'retry_count')::int < 2")
+        .where("COALESCE((remote_services_data ->> 'retry_count')::int, 0) < 2")
         .where("(remote_services_data ->> 'retry_scheduled_at')::timestamptz < ?", 5.minutes.ago)
 
       return if videos.empty?
@@ -289,7 +289,20 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
     # remote_services_data. Safe because MonitorProcessingJob uses a Redis lock
     # (another_monitor_job_running?) to prevent concurrent instances.
     def reconcile_with_remote_jobs(video, rs_data, jobs)
-      result = Folio::CraMediaCloud::JobResolver.resolve(jobs)
+      # Filter out REMOVED jobs before resolution: for multi-phase encodings, a
+      # REMOVED phase-1 job may have a later lastModified than an active phase-2
+      # job, causing JobResolver to select it and return :not_found — silently
+      # skipping the active job. If all remaining jobs are REMOVED, schedule
+      # CheckProgressJob which handles the finalize_from_completed_phases! path.
+      active_jobs = jobs.reject { |j| j["status"] == "REMOVED" }
+
+      if active_jobs.empty?
+        Rails.logger.info("MonitorProcessingJob: All CRA jobs REMOVED for video ##{video.id} — scheduling CheckProgressJob to finalize")
+        Folio::CraMediaCloud::CheckProgressJob.perform_later(video, encoding_generation: rs_data["encoding_generation"])
+        return
+      end
+
+      result = Folio::CraMediaCloud::JobResolver.resolve(active_jobs)
       latest_job = result[:job]
       return unless latest_job
 

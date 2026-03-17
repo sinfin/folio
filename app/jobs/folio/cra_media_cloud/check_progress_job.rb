@@ -71,23 +71,30 @@ class Folio::CraMediaCloud::CheckProgressJob < Folio::ApplicationJob
         end
       end
 
+      # Broadcasts are emitted after the lock is released to avoid holding
+      # the Postgres row lock while doing Redis I/O.
+      should_broadcast = false
+
       media_file.with_lock do
         update_remote_service_data(response)
 
         if media_file.full_media_processed?
           media_file.processing_done!
-          broadcast_file_update(media_file)
-          broadcast_encoding_progress
+          should_broadcast = true
         elsif media_file.processing_failed?
-          # handled by handle_job_failure — no additional action needed
+          should_broadcast = true # state set by handle_job_failure; broadcast below
         elsif media_file.changed?
           media_file.save!
-          broadcast_file_update(media_file)
-          broadcast_encoding_progress
+          should_broadcast = true
           check_again_later
         else
           check_again_later
         end
+      end
+
+      if should_broadcast
+        broadcast_file_update(media_file)
+        broadcast_encoding_progress
       end
     end
 
@@ -99,11 +106,15 @@ class Folio::CraMediaCloud::CheckProgressJob < Folio::ApplicationJob
                           "profileGroup=#{response&.dig('profileGroup')}, phase=#{response&.dig('phase')}"
 
         # Multi-phase: if the tracked job is DONE but not the final phase,
-        # save intermediate data, clear remote_id, and look up by reference_id
+        # save intermediate data, clear remote_id, and look up by reference_id.
+        # Intermediate save is wrapped in with_lock to protect against concurrent
+        # MonitorProcessingJob or retry CreateMediaJob runs.
         if multi_phase? && response&.dig("status") == "DONE" && response&.dig("phase").to_i < expected_phases
-          save_intermediate_phase_data(response)
-          media_file.remote_services_data.delete("remote_id")
-          media_file.save!
+          media_file.with_lock do
+            save_intermediate_phase_data(response)
+            media_file.remote_services_data.delete("remote_id")
+            media_file.save!
+          end
           broadcast_encoding_progress
           broadcast_file_update(media_file)
           Rails.logger.info "[CraMediaCloud::CheckProgressJob] Phase #{response['phase']} done, cleared remote_id to discover next phase"
@@ -158,9 +169,12 @@ class Folio::CraMediaCloud::CheckProgressJob < Folio::ApplicationJob
         next_phase_exists = jobs.any? { |j| j["phase"].to_i > phase }
 
         if next_phase_exists
-          # Next phase job exists but hasn't surpassed the current one yet — wait
-          unless media_file.remote_services_data["phase_#{phase}_completed_at"].present?
-            save_intermediate_phase_data(job)
+          # Next phase job exists but hasn't surpassed the current one yet — wait.
+          # Lock to guard against concurrent MonitorProcessingJob runs.
+          media_file.with_lock do
+            unless media_file.remote_services_data["phase_#{phase}_completed_at"].present?
+              save_intermediate_phase_data(job)
+            end
           end
           return nil
         else
@@ -318,10 +332,9 @@ class Folio::CraMediaCloud::CheckProgressJob < Folio::ApplicationJob
         media_file.remote_services_data.delete("retry_scheduled_at")
       end
 
-      # Single save via processing_failed! — all data merged above
+      # Single save via processing_failed! — all data merged above.
+      # Broadcasts are emitted by check_progress after with_lock returns.
       media_file.processing_failed!
-      broadcast_file_update(media_file)
-      broadcast_encoding_progress
 
       if will_retry
         Folio::CraMediaCloud::CreateMediaJob.set(wait: 2.minutes).perform_later(media_file)

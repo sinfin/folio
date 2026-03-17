@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "open3"
+require "open-uri"
 
 class Folio::GenerateThumbnailJob < Folio::ApplicationJob
   queue_as :slow
@@ -348,12 +349,13 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
 
       height > MAX_FFMPEG_DECODE_HEIGHT
     rescue => e
-      Rails.logger.warn("GenerateThumbnailJob: ffprobe resolution check failed: #{e.message}")
-      false
+      # Fail safe: if ffprobe cannot determine resolution, skip ffmpeg to avoid
+      # OOMKilling the pod on a potentially high-resolution video.
+      Rails.logger.warn("GenerateThumbnailJob: ffprobe resolution check failed, skipping ffmpeg: #{e.message}")
+      true
     end
 
     def download_remote_image(image, url)
-      require "open-uri"
       data = URI.parse(url).open(read_timeout: 15).read
       thumbnail = Dragonfly.app.create(data)
       thumbnail.name = Pathname.new(image.file_name).sub_ext(".jpg").to_s
