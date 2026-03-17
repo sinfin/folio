@@ -11,7 +11,7 @@ class RichTextEditor extends React.PureComponent {
     if (window.folioConsoleInitRedactor) {
       window.folioConsoleInitRedactor(this.editorRef.current, {}, {
         callbacks: {
-          changed: this.props.onChange
+          changed: (html) => this.props.onChange(html)
         },
         scrollTarget: this.props.scrollTarget
       })
