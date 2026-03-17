@@ -87,7 +87,7 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
       Folio::File::Video
         .where(aasm_state: :processing)
         .where("remote_services_data ->> 'service' = ?", "cra_media_cloud")
-        .where("remote_services_data ->> 'processing_state' = ?", "upload_failed")
+        .where("remote_services_data ->> 'processing_state' IN (?)", %w[upload_failed encoding_failed])
         .where("(remote_services_data ->> 'processing_step_started_at')::timestamptz < ?", 5.minutes.ago)
     end
 
@@ -217,7 +217,7 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
         end
 
         Rails.logger.debug("MonitorProcessingJob: Scheduling CheckProgressJob for video ##{video.id}")
-        Folio::CraMediaCloud::CheckProgressJob.perform_later(video, encoding_generation: video.encoding_generation)
+        Folio::CraMediaCloud::CheckProgressJob.perform_later(video, encoding_generation: video.remote_services_data&.dig("encoding_generation"))
       end
     end
 
@@ -285,6 +285,9 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
       end
     end
 
+    # NOTE: update_column calls below are non-atomic read-modify-write on
+    # remote_services_data. Safe because MonitorProcessingJob uses a Redis lock
+    # (another_monitor_job_running?) to prevent concurrent instances.
     def reconcile_with_remote_jobs(video, rs_data, jobs)
       result = Folio::CraMediaCloud::JobResolver.resolve(jobs)
       latest_job = result[:job]
@@ -300,7 +303,7 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
           rs_data["processing_state"] = "full_media_processing"
           video.update_column(:remote_services_data, rs_data)
         end
-        Folio::CraMediaCloud::CheckProgressJob.perform_later(video, encoding_generation: video.encoding_generation)
+        Folio::CraMediaCloud::CheckProgressJob.perform_later(video, encoding_generation: video.remote_services_data&.dig("encoding_generation"))
       when :processing
         if current_remote_id != latest_job["id"]
           Rails.logger.info("MonitorProcessingJob: Updating video ##{video.id} to point to processing job #{latest_job['id']}")
@@ -308,11 +311,11 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
           rs_data["processing_state"] = "full_media_processing"
           video.update_column(:remote_services_data, rs_data)
         end
-        Folio::CraMediaCloud::CheckProgressJob.perform_later(video, encoding_generation: video.encoding_generation)
+        Folio::CraMediaCloud::CheckProgressJob.perform_later(video, encoding_generation: video.remote_services_data&.dig("encoding_generation"))
       when :failed
         Rails.logger.warn("MonitorProcessingJob: Latest job for video ##{video.id} failed, marking for retry")
         rs_data.merge!({
-          "processing_state" => "upload_failed",
+          "processing_state" => "encoding_failed",
           "error_message" => "Remote job failed: #{latest_job['status']}",
           "processing_step_started_at" => Time.current.iso8601
         })
@@ -415,10 +418,12 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
 
         begin
           video.processing_failed!
+          broadcast_file_update(video)
         rescue => e
           Rails.logger.warn("MonitorProcessingJob: AASM transition failed (#{e.message}), forcing state via update_columns")
           video.update_columns(aasm_state: "processing_failed", updated_at: Time.current)
           video.reload
+          broadcast_file_update(video)
         end
 
         return true
@@ -434,9 +439,6 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
     end
 
     def upload_is_stuck?(video, upload_started_at)
-      rs_data = video.remote_services_data || {}
-      rs_data["upload_progress"]
-
       # Calculate appropriate timeout based on file size
       file_size = video.file_size || 0
       base_timeout = 5.minutes # Base timeout for small files

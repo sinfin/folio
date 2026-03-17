@@ -31,7 +31,11 @@ class Folio::CraMediaCloud::CheckProgressJob < Folio::ApplicationJob
     if processing_timed_out?
       Rails.logger.error "[CraMediaCloud::CheckProgressJob] Timed out after #{MAX_PROCESSING_DURATION.inspect} " \
                          "for video #{media_file.id}. Marking as processing_failed."
-      media_file.processing_failed! if media_file.may_processing_failed?
+      if media_file.may_processing_failed?
+        media_file.processing_failed!
+        broadcast_file_update(media_file)
+        broadcast_encoding_progress
+      end
       return
     end
 
@@ -297,9 +301,10 @@ class Folio::CraMediaCloud::CheckProgressJob < Folio::ApplicationJob
     def handle_job_failure(response)
       error_messages = response["messages"]&.filter_map { |msg| msg["message"] if msg["type"] == "ERROR" }&.join("; ")
       retry_count = (media_file.remote_services_data["retry_count"] || 0) + 1
+      will_retry = retry_count <= 1
 
       media_file.remote_services_data.merge!(
-        "processing_state" => "upload_failed",
+        "processing_state" => "encoding_failed",
         "error_message" => error_messages || "Encoding failed",
         "failed_at" => Time.current.iso8601,
         "progress_percentage" => nil,
@@ -307,18 +312,21 @@ class Folio::CraMediaCloud::CheckProgressJob < Folio::ApplicationJob
         "retry_count" => retry_count,
       )
 
+      if will_retry
+        media_file.remote_services_data["retry_scheduled_at"] = (Time.current + 2.minutes).iso8601
+      else
+        media_file.remote_services_data.delete("retry_scheduled_at")
+      end
+
+      # Single save via processing_failed! — all data merged above
       media_file.processing_failed!
       broadcast_file_update(media_file)
       broadcast_encoding_progress
 
-      if retry_count <= 1
-        media_file.remote_services_data["retry_scheduled_at"] = (Time.current + 2.minutes).iso8601
-        media_file.save!
+      if will_retry
         Folio::CraMediaCloud::CreateMediaJob.set(wait: 2.minutes).perform_later(media_file)
         Rails.logger.warn "[CraMediaCloud::CheckProgressJob] Video #{media_file.id} failed (attempt #{retry_count}), scheduling retry in 2 minutes: #{error_messages}"
       else
-        media_file.remote_services_data.delete("retry_scheduled_at")
-        media_file.save!
         Rails.logger.error "[CraMediaCloud::CheckProgressJob] Video #{media_file.id} failed permanently (attempt #{retry_count}): #{error_messages}"
       end
     end

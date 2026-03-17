@@ -23,8 +23,8 @@ module Folio
         Rails.logger.info("[CraMediaCloud::Encoder] Starting manifest upload for file ID: #{file.id}, ref_id: #{ref_id}")
 
         # Get S3 metadata for MD5 checksum
-        s3_metadata = get_s3_metadata(file)
-        md5 = extract_etag(s3_metadata).delete_prefix('"').delete_suffix('"')
+        s3_metadata = s3_dragonfly_head_object(file.file_uid)
+        md5 = extract_s3_etag(s3_metadata).delete_prefix('"').delete_suffix('"')
 
         # Generate presigned URL for CRA to download directly from S3
         presigned_url = generate_presigned_url(file)
@@ -49,24 +49,6 @@ module Folio
       end
 
       private
-        def get_s3_metadata(file)
-          s3_datastore = Dragonfly.app.datastore
-          s3_object_key = [s3_datastore.root_path, file.file_uid].join("/")
-          Rails.logger.info("[CraMediaCloud::Encoder] Fetching S3 metadata for key: #{s3_object_key}")
-          s3_datastore.storage.head_object(ENV["S3_BUCKET_NAME"], s3_object_key)
-        end
-
-        def extract_etag(response)
-          # Handle different response types (AWS SDK, Excon, etc.)
-          if response.respond_to?(:etag)
-            response.etag
-          elsif response.respond_to?(:headers)
-            response.headers["ETag"] || response.headers["etag"] || response.headers["Etag"]
-          else
-            raise "Cannot extract ETag from response type: #{response.class}"
-          end
-        end
-
         def generate_presigned_url(file)
           s3_datastore = Dragonfly.app.datastore
           s3_object_key = [s3_datastore.root_path, file.file_uid].compact_blank.join("/")

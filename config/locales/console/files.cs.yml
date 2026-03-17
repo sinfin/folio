@@ -33,7 +33,7 @@ cs:
             phase_packaging_multi: "Balení (%{phase}/%{total})"
             phase_packaging_named: "Balení – %{name}"
             phase_failed_retrying: "Zpracování selhalo, pokusíme se znovu"
-            phase_failed: "Zpracování selhalo. Smažte video a nahrajte znovu."
+            phase_failed: "Zpracování selhalo. Zkuste video nahrát znovu, nebo kontaktujte podporu."
 
           metadata_component:
             no_metadata: Žádná metadata

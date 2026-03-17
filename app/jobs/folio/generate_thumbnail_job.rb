@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "open3"
+
 class Folio::GenerateThumbnailJob < Folio::ApplicationJob
   queue_as :slow
 
@@ -332,14 +334,22 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
     MAX_FFMPEG_DECODE_HEIGHT = 2160 # 4K
 
     def video_resolution_too_high?(input)
-      output = `ffprobe -v error -select_streams v:0 -show_entries stream=height -of csv=p=0 #{Shellwords.escape(input)} 2>/dev/null`.strip
-      height = output.to_i
-      return false if height == 0 # ffprobe failed — let ffmpeg try
+      stdout, _stderr, status = Open3.capture3(
+        "ffprobe", "-v", "error",
+        "-select_streams", "v:0",
+        "-show_entries", "stream=height",
+        "-of", "csv=p=0",
+        input
+      )
+      return false unless status.success?
+
+      height = stdout.strip.to_i
+      return false if height == 0
 
       height > MAX_FFMPEG_DECODE_HEIGHT
     rescue => e
       Rails.logger.warn("GenerateThumbnailJob: ffprobe resolution check failed: #{e.message}")
-      false # On error, let ffmpeg attempt it
+      false
     end
 
     def download_remote_image(image, url)

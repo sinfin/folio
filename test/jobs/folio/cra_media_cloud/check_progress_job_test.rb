@@ -235,8 +235,8 @@ class Folio::CraMediaCloud::CheckProgressJobTest < ActiveJob::TestCase
     api_mock.verify
     video.reload
 
-    # Progress: 50% (phase 1 done) + 0.6 * 50% = 80%
-    assert_equal 80.0, video.remote_services_data["progress_percentage"]
+    # Raw CRA progress for current phase: 0.6 * 100 = 60
+    assert_equal 60, video.remote_services_data["progress_percentage"]
     assert_equal "processing", video.aasm_state
   end
 
@@ -324,7 +324,7 @@ class Folio::CraMediaCloud::CheckProgressJobTest < ActiveJob::TestCase
     api_mock.verify
     video.reload
 
-    assert_equal "upload_failed", video.remote_services_data["processing_state"]
+    assert_equal "encoding_failed", video.remote_services_data["processing_state"]
     assert_equal "HD encoding failed", video.remote_services_data["error_message"]
   end
 
@@ -492,6 +492,95 @@ class Folio::CraMediaCloud::CheckProgressJobTest < ActiveJob::TestCase
     assert_equal "processing_failed", video.aasm_state
     assert_equal 2, video.remote_services_data["retry_count"]
     assert_nil video.remote_services_data["retry_scheduled_at"]
+  end
+
+  # --- Timeout tests ---
+
+  test "processing_timed_out? marks video as failed after 4 hours" do
+    video = create_test_video_in_processing_state
+    video.update!(remote_services_data: video.remote_services_data.merge(
+      "processing_step_started_at" => 5.hours.ago.iso8601,
+      "reference_id" => "REF123"
+    ))
+
+    assert_no_enqueued_jobs only: Folio::CraMediaCloud::CheckProgressJob do
+      Folio::CraMediaCloud::CheckProgressJob.perform_now(video)
+    end
+
+    video.reload
+    assert_equal "processing_failed", video.aasm_state
+  end
+
+  test "processing_timed_out? does not fire within 4 hours" do
+    video = create_test_video_in_processing_state
+    video.update!(remote_services_data: video.remote_services_data.merge(
+      "processing_step_started_at" => 3.hours.ago.iso8601,
+      "reference_id" => "REF123"
+    ))
+
+    api_response = { "id" => "JOB123", "status" => "PROCESSING", "progress" => 0.5,
+                     "lastModified" => Time.current.iso8601 }
+    api_mock = Minitest::Mock.new
+    api_mock.expect(:get_jobs, [api_response], [], ref_id: "REF123")
+
+    assert_enqueued_jobs 1, only: Folio::CraMediaCloud::CheckProgressJob do
+      expect_method_called_on(
+        object: Folio::CraMediaCloud::Api,
+        method: :new,
+        return_value: api_mock
+      ) do
+        Folio::CraMediaCloud::CheckProgressJob.perform_now(video)
+      end
+    end
+
+    video.reload
+    assert_equal "processing", video.aasm_state
+  end
+
+  # --- Finalize from completed phases test ---
+
+  test "finalizes from stored phase data when all CRA jobs are REMOVED" do
+    video = create_test_video_in_processing_state
+    video.update!(remote_services_data: video.remote_services_data.merge(
+      "processing_phases" => 2,
+      "reference_id" => "REF123",
+      "phase_1_content_mp4_paths" => { "sd0" => "/video/sd0.mp4", "sd1" => "/video/sd1.mp4" },
+      "phase_1_completed_at" => 5.minutes.ago.iso8601,
+      "phase_1_remote_id" => "JOB_PHASE1",
+      "phase_2_content_mp4_paths" => { "hd1" => "/video/hd1.mp4", "hd2" => "/video/hd2.mp4" },
+      "phase_2_completed_at" => 1.minute.ago.iso8601,
+      "phase_2_remote_id" => "JOB_PHASE2",
+      "manifest_hls_path" => "/video/master.m3u8",
+      "manifest_dash_path" => "/video/manifest.mpd",
+    ))
+
+    removed_jobs = [
+      { "id" => "JOB_PHASE1", "status" => "REMOVED", "phase" => 1, "lastModified" => 2.minutes.ago.iso8601 },
+      { "id" => "JOB_PHASE2", "status" => "REMOVED", "phase" => 2, "lastModified" => 1.minute.ago.iso8601 },
+    ]
+
+    api_mock = Minitest::Mock.new
+    api_mock.expect(:get_jobs, removed_jobs, [], ref_id: "REF123")
+
+    assert_no_enqueued_jobs only: Folio::CraMediaCloud::CheckProgressJob do
+      expect_method_called_on(
+        object: Folio::CraMediaCloud::Api,
+        method: :new,
+        return_value: api_mock
+      ) do
+        Folio::CraMediaCloud::CheckProgressJob.perform_now(video)
+      end
+    end
+
+    api_mock.verify
+    video.reload
+
+    assert_equal "ready", video.aasm_state
+    assert_equal "full_media_processed", video.remote_services_data["processing_state"]
+    assert_equal 100.0, video.remote_services_data["progress_percentage"]
+    expected_mp4 = { "sd0" => "/video/sd0.mp4", "sd1" => "/video/sd1.mp4",
+                     "hd1" => "/video/hd1.mp4", "hd2" => "/video/hd2.mp4" }
+    assert_equal expected_mp4, video.remote_services_data["content_mp4_paths"]
   end
 
   private

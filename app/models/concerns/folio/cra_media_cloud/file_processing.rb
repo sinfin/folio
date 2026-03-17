@@ -92,6 +92,6 @@ module Folio::CraMediaCloud::FileProcessing
   end
 
   def upload_failed?
-    processing_state == "upload_failed"
+    processing_state.in?(%w[upload_failed encoding_failed])
   end
 end

@@ -156,6 +156,12 @@ module Folio::MediaFileProcessingBase
     # bypassing model validations and callbacks. This is necessary because
     # remote_services_data is processing metadata that must not be blocked
     # by unrelated validation failures on the model.
+    #
+    # NOTE: Non-atomic read-modify-write — if another process updates
+    # remote_services_data between read and write, changes will be lost.
+    # Acceptable at current call sites (process_attached_file, create_full_media)
+    # where the video is being initially processed and no concurrent job
+    # is modifying remote_services_data yet.
     def update_remote_services_data(new_data)
       merged = (remote_services_data || {}).merge(new_data)
       update_columns(remote_services_data: merged)

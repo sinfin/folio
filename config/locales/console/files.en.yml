@@ -33,7 +33,7 @@ en:
             phase_packaging_multi: "Packaging (%{phase}/%{total})"
             phase_packaging_named: "Packaging – %{name}"
             phase_failed_retrying: "Processing failed, retrying automatically"
-            phase_failed: "Processing failed. Delete the video and upload again."
+            phase_failed: "Processing failed. Try re-uploading or contact support."
 
           metadata_component:
             no_metadata: No metadata

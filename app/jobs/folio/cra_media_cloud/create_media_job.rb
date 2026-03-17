@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Folio::CraMediaCloud::CreateMediaJob < Folio::ApplicationJob
+  include Folio::S3::Client
+
   # Discard if file no longer exists
   discard_on ActiveJob::DeserializationError
 
@@ -64,27 +66,8 @@ class Folio::CraMediaCloud::CreateMediaJob < Folio::ApplicationJob
     end
 
     def get_s3_etag(media_file)
-      # Get S3 ETag (MD5 hash) without downloading the file
-      s3_metadata = get_s3_metadata(media_file)
-      extract_etag(s3_metadata).delete_prefix('"').delete_suffix('"')
-    end
-
-    def get_s3_metadata(media_file)
-      s3_datastore = Dragonfly.app.datastore
-      s3_object_key = [s3_datastore.root_path, media_file.file_uid].join("/")
-      Rails.logger.debug("[CraMediaCloud::CreateMediaJob] Fetching S3 metadata for key: #{s3_object_key}")
-      s3_datastore.storage.head_object(ENV["S3_BUCKET_NAME"], s3_object_key)
-    end
-
-    def extract_etag(response)
-      # Handle different response types (AWS SDK, Excon, etc.)
-      if response.respond_to?(:etag)
-        response.etag
-      elsif response.respond_to?(:headers)
-        response.headers["ETag"] || response.headers["etag"] || response.headers["Etag"]
-      else
-        raise "Cannot extract ETag from response type: #{response.class}"
-      end
+      s3_metadata = s3_dragonfly_head_object(media_file.file_uid)
+      extract_s3_etag(s3_metadata).delete_prefix('"').delete_suffix('"')
     end
 
     def check_existing_job(reference_id, media_file)

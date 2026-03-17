@@ -9,6 +9,7 @@ class Folio::File < Folio::ApplicationRecord
   include Folio::Taggable
   include Folio::HasAasmStates
   include Folio::BelongsToSite
+  include Folio::S3::Client
   include Folio::FilesSharedAccrossSites if Rails.application.config.folio_shared_files_between_sites
 
   READY_STATE = :ready
@@ -433,20 +434,9 @@ class Folio::File < Folio::ApplicationRecord
 
   private
     def file_presigned_url(expires_in: 1.hour.to_i)
-      s3_datastore = Dragonfly.app.datastore
-      s3_object_key = [s3_datastore.root_path, file_uid].compact_blank.join("/")
-
-      presigner = Aws::S3::Presigner.new(client: Aws::S3::Client.new(
-        region: ENV.fetch("S3_REGION"),
-        credentials: Aws::Credentials.new(
-          ENV.fetch("AWS_ACCESS_KEY_ID"),
-          ENV.fetch("AWS_SECRET_ACCESS_KEY"),
-          ENV.fetch("AWS_SESSION_TOKEN", nil)
-        )
-      ))
-
-      presigner.presigned_url(:get_object,
-        bucket: ENV.fetch("S3_BUCKET_NAME"),
+      s3_object_key = [dragonfly_s3_root_path, file_uid].compact_blank.join("/")
+      s3_presigner.presigned_url(:get_object,
+        bucket: s3_bucket,
         key: s3_object_key,
         expires_in: expires_in
       )

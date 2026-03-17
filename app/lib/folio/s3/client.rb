@@ -114,6 +114,24 @@ module Folio::S3::Client
     Dragonfly.app.datastore.root_path
   end
 
+  # Fetch S3 HEAD metadata via Dragonfly's Fog storage layer.
+  # Returns Excon response (use extract_s3_etag to read ETag).
+  def s3_dragonfly_head_object(file_uid)
+    s3_object_key = [dragonfly_s3_root_path, file_uid].compact_blank.join("/")
+    Dragonfly.app.datastore.storage.head_object(s3_bucket, s3_object_key)
+  end
+
+  # Extract ETag from either Fog/Excon or AWS SDK response.
+  def extract_s3_etag(response)
+    if response.respond_to?(:etag)
+      response.etag
+    elsif response.respond_to?(:headers)
+      response.headers["ETag"] || response.headers["etag"] || response.headers["Etag"]
+    else
+      raise "Cannot extract ETag from response type: #{response.class}"
+    end
+  end
+
   private
     def use_local_file_system?
       @use_local_file_system ||= Dragonfly.app.datastore.is_a?(Dragonfly::FileDataStore)
