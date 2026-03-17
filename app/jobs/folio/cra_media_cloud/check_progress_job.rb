@@ -32,6 +32,9 @@ class Folio::CraMediaCloud::CheckProgressJob < Folio::ApplicationJob
       Rails.logger.error "[CraMediaCloud::CheckProgressJob] Timed out after #{MAX_PROCESSING_DURATION.inspect} " \
                          "for video #{media_file.id}. Marking as processing_failed."
       if media_file.may_processing_failed?
+        # No with_lock here: timeout is a one-time terminal state written only by
+        # this code path. CheckProgressJob is unique-constrained so no concurrent
+        # instance runs. Broadcasts immediately follow the DB write intentionally.
         media_file.processing_failed!
         broadcast_file_update(media_file)
         broadcast_encoding_progress
@@ -215,9 +218,11 @@ class Folio::CraMediaCloud::CheckProgressJob < Folio::ApplicationJob
         )
 
         media_file.processing_done!
-        broadcast_file_update(media_file)
-        broadcast_encoding_progress
       end
+
+      # Broadcasts after lock release to avoid Redis I/O while holding a Postgres row lock.
+      broadcast_file_update(media_file)
+      broadcast_encoding_progress
 
       Rails.logger.info "[CraMediaCloud::CheckProgressJob] Video #{media_file.id} finalized from #{last_phase} completed phase(s)"
     end

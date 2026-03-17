@@ -271,4 +271,34 @@ class Folio::CraMediaCloud::MonitorProcessingJobTest < ActiveJob::TestCase
     # Should use base timeout of 5 minutes
     assert_equal false, result
   end
+
+  # --- reconcile_with_remote_jobs: all-REMOVED path ---
+
+  test "reconcile_with_remote_jobs schedules CheckProgressJob when all CRA jobs are REMOVED" do
+    video = create(:folio_file_video)
+    rs_data = {
+      "service" => "cra_media_cloud",
+      "processing_state" => "full_media_processing",
+      "reference_id" => "REF123",
+      "encoding_generation" => 42,
+      "phase_1_completed_at" => 5.minutes.ago.iso8601,
+      "phase_1_content_mp4_paths" => { "sd0" => "/video/sd0.mp4" },
+    }
+    video.update_column(:remote_services_data, rs_data)
+
+    removed_jobs = [
+      { "id" => "JOB1", "status" => "REMOVED", "phase" => 1, "lastModified" => 2.minutes.ago.iso8601 },
+      { "id" => "JOB2", "status" => "REMOVED", "phase" => 2, "lastModified" => 1.minute.ago.iso8601 },
+    ]
+
+    job = Folio::CraMediaCloud::MonitorProcessingJob.new
+
+    assert_enqueued_jobs 1, only: Folio::CraMediaCloud::CheckProgressJob do
+      job.send(:reconcile_with_remote_jobs, video, rs_data, removed_jobs)
+    end
+
+    # Should NOT update processing_state — CheckProgressJob handles finalization
+    video.reload
+    assert_equal "full_media_processing", video.remote_services_data["processing_state"]
+  end
 end
