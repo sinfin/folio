@@ -196,6 +196,10 @@ class Folio::File < Folio::ApplicationRecord
     event :reprocess do
       transitions from: READY_STATE, to: :processing
     end
+
+    event :retry_processing do
+      transitions from: :processing_failed, to: :processing
+    end
   end
 
   def self.correct_site(site)
@@ -264,6 +268,17 @@ class Folio::File < Folio::ApplicationRecord
     try(:admin_thumb, immediate: true)
     if try(:thumbnail_sizes).is_a?(Hash)
       thumbnail_sizes.keys.each { |t_key| file.thumb(t_key) }
+    end
+  end
+
+  # Returns a path or URL suitable for ffprobe/ffmpeg.
+  # For S3 storage with stored file: presigned URL (streams headers only, no full download).
+  # For pending uploads (file= assigned but not yet saved) or local storage: file system path.
+  def file_url_or_path
+    if file_uid.present? && !Dragonfly.app.datastore.is_a?(Dragonfly::FileDataStore)
+      file_presigned_url
+    else
+      file&.path.to_s
     end
   end
 
@@ -417,6 +432,26 @@ class Folio::File < Folio::ApplicationRecord
   end
 
   private
+    def file_presigned_url(expires_in: 1.hour.to_i)
+      s3_datastore = Dragonfly.app.datastore
+      s3_object_key = [s3_datastore.root_path, file_uid].compact_blank.join("/")
+
+      presigner = Aws::S3::Presigner.new(client: Aws::S3::Client.new(
+        region: ENV.fetch("S3_REGION"),
+        credentials: Aws::Credentials.new(
+          ENV.fetch("AWS_ACCESS_KEY_ID"),
+          ENV.fetch("AWS_SECRET_ACCESS_KEY"),
+          ENV.fetch("AWS_SESSION_TOKEN", nil)
+        )
+      ))
+
+      presigner.presigned_url(:get_object,
+        bucket: ENV.fetch("S3_BUCKET_NAME"),
+        key: s3_object_key,
+        expires_in: expires_in
+      )
+    end
+
     def slug_candidates
       %i[slug headline hash_id_for_slug to_label]
     end
@@ -457,16 +492,24 @@ class Folio::File < Folio::ApplicationRecord
     end
 
     def set_file_track_duration
-      if %w[audio video].include?(self.class.human_type)
-        self.file_track_duration = Folio::File::GetFileTrackDurationJob.perform_now(file.path.to_s, self.class.human_type) # in seconds
+      if self.class.human_type == "video"
+        # For video: handled together with dimensions in set_video_file_dimensions
+        return
+      elsif self.class.human_type == "audio"
+        self.file_track_duration = Folio::File::GetFileTrackDurationJob.perform_now(file_url_or_path, "audio")
         self.preview_track_duration_in_seconds = self.respond_to?(:preview_duration_in_seconds) ? preview_duration_in_seconds : 0
       end
     end
 
     def set_video_file_dimensions
-      if %w[video].include?(self.class.human_type)
-        self.file_width, self.file_height = Folio::File::GetVideoDimensionsJob.perform_now(file.path.to_s, self.class.human_type)
-      end
+      return unless self.class.human_type == "video"
+
+      metadata = Folio::File::GetVideoMetadataJob.perform_now(file_url_or_path)
+
+      self.file_width = metadata[:width]
+      self.file_height = metadata[:height]
+      self.file_track_duration = metadata[:duration]
+      self.preview_track_duration_in_seconds = self.respond_to?(:preview_duration_in_seconds) ? preview_duration_in_seconds : 0
     end
 
     def validate_attribution_and_texts_if_needed

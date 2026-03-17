@@ -78,6 +78,125 @@ class Folio::CraMediaCloud::MonitorProcessingJobTest < ActiveJob::TestCase
     assert_equal "processing_failed", video.aasm_state
   end
 
+  test "rescues failed video awaiting retry when retry job is lost" do
+    video = create(:folio_file_video)
+    video.update!(
+      aasm_state: :processing_failed,
+      remote_services_data: {
+        "service" => "cra_media_cloud",
+        "retry_count" => 1,
+        "retry_scheduled_at" => 10.minutes.ago.iso8601,
+      }
+    )
+
+    with_unlocked_monitor_job do
+      assert_enqueued_jobs 1, only: Folio::CraMediaCloud::CreateMediaJob do
+        Folio::CraMediaCloud::MonitorProcessingJob.perform_now
+      end
+    end
+  end
+
+  test "does not rescue finally failed video (retry_count >= 2)" do
+    video = create(:folio_file_video)
+    video.update!(
+      aasm_state: :processing_failed,
+      remote_services_data: {
+        "service" => "cra_media_cloud",
+        "retry_count" => 2,
+      }
+    )
+
+    with_unlocked_monitor_job do
+      assert_no_enqueued_jobs only: Folio::CraMediaCloud::CreateMediaJob do
+        Folio::CraMediaCloud::MonitorProcessingJob.perform_now
+      end
+    end
+  end
+
+  test "triggers process! for stuck unprocessed video with file_uid" do
+    video = create(:folio_file_video)
+    video.update_columns(
+      aasm_state: "unprocessed",
+      file_uid: "2026/03/09/13/20/26/test-uuid/test.mp4",
+      created_at: 10.minutes.ago
+    )
+
+    with_unlocked_monitor_job do
+      Folio::CraMediaCloud::MonitorProcessingJob.perform_now
+    end
+
+    video.reload
+    assert_not_equal "unprocessed", video.aasm_state, "Video should no longer be unprocessed after safety net"
+  end
+
+  test "does not trigger process! for recently created unprocessed video" do
+    video = create(:folio_file_video)
+    video.update_columns(
+      aasm_state: "unprocessed",
+      file_uid: "2026/03/09/13/20/26/test-uuid/test.mp4",
+      created_at: 2.minutes.ago
+    )
+
+    with_unlocked_monitor_job do
+      Folio::CraMediaCloud::MonitorProcessingJob.perform_now
+    end
+
+    video.reload
+    assert_equal "unprocessed", video.aasm_state
+  end
+
+  test "does not trigger process! for unprocessed video without file_uid" do
+    video = create(:folio_file_video)
+    video.update_columns(
+      aasm_state: "unprocessed",
+      file_uid: nil,
+      created_at: 10.minutes.ago
+    )
+
+    with_unlocked_monitor_job do
+      Folio::CraMediaCloud::MonitorProcessingJob.perform_now
+    end
+
+    video.reload
+    assert_equal "unprocessed", video.aasm_state
+  end
+
+  test "rescues video stuck in enqueued state for over 10 minutes" do
+    video = create(:folio_file_video)
+    video.update!(
+      aasm_state: :processing,
+      remote_services_data: {
+        "service" => "cra_media_cloud",
+        "processing_state" => "enqueued",
+        "processing_step_started_at" => 15.minutes.ago.iso8601
+      }
+    )
+
+    with_unlocked_monitor_job do
+      assert_enqueued_jobs 1, only: Folio::CraMediaCloud::CreateMediaJob do
+        Folio::CraMediaCloud::MonitorProcessingJob.perform_now
+      end
+    end
+  end
+
+  test "does not rescue freshly enqueued video" do
+    video = create(:folio_file_video)
+    video.update!(
+      aasm_state: :processing,
+      remote_services_data: {
+        "service" => "cra_media_cloud",
+        "processing_state" => "enqueued",
+        "processing_step_started_at" => 3.minutes.ago.iso8601
+      }
+    )
+
+    with_unlocked_monitor_job do
+      assert_no_enqueued_jobs only: Folio::CraMediaCloud::CreateMediaJob do
+        Folio::CraMediaCloud::MonitorProcessingJob.perform_now
+      end
+    end
+  end
+
   test "upload_is_stuck? returns false for small file within timeout" do
     video = create(:folio_file_video, file_size: 10.megabytes)
     upload_started_at = 2.minutes.ago

@@ -53,11 +53,13 @@
             = @file.file_mime_type
 
         - if @file.created_at.present?
-          .f-c-files-show__meta-item.me-auto
+          .f-c-files-show__meta-item
             ' #{t(".created_at")}: #{l(@file.created_at.to_date, format: :console_short)}
 
-        .f-c-files-show__meta-item
+        .f-c-files-show__meta-item.ms-auto
           == cell("folio/console/state", @file, active: false)
+
+        = render(Folio::Console::Files::Show::EncodingInfoComponent.new(file: @file))
 
       .f-c-files-show__table
         - table_rows.each do |key, config|

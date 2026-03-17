@@ -8,6 +8,14 @@ module Folio::CraMediaCloud::FileProcessing
     nil # use encoder's default
   end
 
+  def encoder_processing_phases
+    1 # default: single phase; override in app for multi-phase
+  end
+
+  def encoder_phase_name(phase_number)
+    nil # override in app to return e.g. "SD", "HD"
+  end
+
   def remote_content_mp4_url_for(profile)
     path = remote_services_data.dig("content_mp4_paths", profile.to_s)
     remote_content_url_base + path if path
@@ -58,6 +66,8 @@ module Folio::CraMediaCloud::FileProcessing
   end
 
   def destroy_attached_file
+    return if remote_id.blank? && remote_reference_id.blank?
+
     delete_media_job_class.perform_later(remote_id, reference_id: remote_reference_id)
   end
 
@@ -75,6 +85,10 @@ module Folio::CraMediaCloud::FileProcessing
 
   def processed_by
     "cra_media_cloud"
+  end
+
+  def check_media_processing(preview: false)
+    check_media_processing_job_class.perform_later(self, preview:, encoding_generation:)
   end
 
   def upload_failed?

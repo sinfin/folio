@@ -94,6 +94,26 @@ module Folio::S3::Client
     end
   end
 
+  def s3_copy_object(source_key:, dest_key:)
+    s3_client.copy_object(
+      bucket: s3_bucket,
+      copy_source: "#{s3_bucket}/#{source_key}",
+      key: dest_key
+    )
+  end
+
+  def s3_head_object(key:)
+    s3_client.head_object(bucket: s3_bucket, key: key)
+  end
+
+  def generate_dragonfly_uid(file_name)
+    "#{Time.now.strftime '%Y/%m/%d/%H/%M/%S'}/#{SecureRandom.uuid}/#{file_name}"
+  end
+
+  def dragonfly_s3_root_path
+    Dragonfly.app.datastore.root_path
+  end
+
   private
     def use_local_file_system?
       @use_local_file_system ||= Dragonfly.app.datastore.is_a?(Dragonfly::FileDataStore)
