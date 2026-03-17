@@ -65,7 +65,7 @@ class Folio::Console::FilePlacements::MultiPickerFields::PlacementComponent < Fo
       when :alt
         { input_html: { data: stimulus_target("alt") } }
       when :title
-        {}
+        { as: :string }
       when :folio_embed_data
         nil
       else
