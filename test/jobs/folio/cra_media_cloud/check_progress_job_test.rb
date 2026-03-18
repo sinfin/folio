@@ -583,6 +583,39 @@ class Folio::CraMediaCloud::CheckProgressJobTest < ActiveJob::TestCase
     assert_equal expected_mp4, video.remote_services_data["content_mp4_paths"]
   end
 
+  # --- REMOVED remote_id handling ---
+
+  test "clears remote_id and reschedules when tracked job becomes REMOVED" do
+    video = create_test_video_in_processing_state
+    video.update!(remote_services_data: video.remote_services_data.merge(
+      "remote_id" => "JOB_GONE",
+      "reference_id" => "REF123"
+    ))
+
+    removed_job = { "id" => "JOB_GONE", "status" => "REMOVED", "lastModified" => Time.current.iso8601 }
+
+    api_mock = Minitest::Mock.new
+    api_mock.expect(:get_job, removed_job, ["JOB_GONE"])
+
+    assert_enqueued_jobs 1, only: Folio::CraMediaCloud::CheckProgressJob do
+      expect_method_called_on(
+        object: Folio::CraMediaCloud::Api,
+        method: :new,
+        return_value: api_mock
+      ) do
+        Folio::CraMediaCloud::CheckProgressJob.perform_now(video)
+      end
+    end
+
+    api_mock.verify
+    video.reload
+
+    # remote_id cleared so next poll falls back to reference_id path
+    assert_nil video.remote_services_data["remote_id"]
+    # AASM stays in processing — not marked failed
+    assert_equal "processing", video.aasm_state
+  end
+
   private
     def create_test_video_in_processing_state
       video = TestVideoFile.new(site: get_any_site)

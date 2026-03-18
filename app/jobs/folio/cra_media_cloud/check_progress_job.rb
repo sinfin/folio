@@ -59,24 +59,25 @@ class Folio::CraMediaCloud::CheckProgressJob < Folio::ApplicationJob
       return if response == :finalized # already handled by finalize_from_completed_phases!
       return check_again_later if response.nil?
 
-      # Terminal state: CRA has cleaned up this job.
-      # Only stop polling if we were tracking a specific job (remote_id present).
-      # If we don't have remote_id yet, this is a stale job from a previous run — keep waiting.
+      # REMOVED means job content was explicitly deleted via DeleteMediaJob.
+      # CRA does NOT auto-purge jobs — production data confirms DONE jobs persist
+      # indefinitely. Clear remote_id so the next poll uses the reference_id path,
+      # which can finalize from stored phase data or eventually time out cleanly.
       if response["status"] == "REMOVED"
-        if media_file.remote_id.present?
-          Rails.logger.warn "[CraMediaCloud::CheckProgressJob] Job #{response['id']} for video #{media_file.id} " \
-                            "has been REMOVED by CRA. Stopping progress check."
-          return
-        else
-          Rails.logger.info "[CraMediaCloud::CheckProgressJob] Found REMOVED job #{response['id']} for video #{media_file.id} " \
-                            "but no remote_id tracked yet — waiting for new job"
-          return check_again_later
+        Rails.logger.warn "[CraMediaCloud::CheckProgressJob] Job #{response['id']} for video #{media_file.id} " \
+                          "has been REMOVED. Clearing remote_id to fall back to reference_id polling."
+        media_file.with_lock do
+          media_file.remote_services_data.delete("remote_id")
+          media_file.save!
         end
+        return check_again_later
       end
 
-      # Broadcasts are emitted after the lock is released to avoid holding
-      # the Postgres row lock while doing Redis I/O.
+      # All Redis I/O (check_again_later, CreateMediaJob.perform_later, broadcasts)
+      # is deferred until AFTER the Postgres row lock is released.
       should_broadcast = false
+      should_reschedule = false
+      @pending_retry = false
 
       media_file.with_lock do
         update_remote_service_data(response)
@@ -85,15 +86,18 @@ class Folio::CraMediaCloud::CheckProgressJob < Folio::ApplicationJob
           media_file.processing_done!
           should_broadcast = true
         elsif media_file.processing_failed?
-          should_broadcast = true # state set by handle_job_failure; broadcast below
+          should_broadcast = true # state set by handle_job_failure; @pending_retry set there too
         elsif media_file.changed?
           media_file.save!
           should_broadcast = true
-          check_again_later
+          should_reschedule = true
         else
-          check_again_later
+          should_reschedule = true
         end
       end
+
+      check_again_later if should_reschedule
+      Folio::CraMediaCloud::CreateMediaJob.set(wait: 2.minutes).perform_later(media_file) if @pending_retry
 
       if should_broadcast
         broadcast_file_update(media_file)
@@ -177,10 +181,17 @@ class Folio::CraMediaCloud::CheckProgressJob < Folio::ApplicationJob
         if next_phase_exists
           # Next phase job exists but hasn't surpassed the current one yet — wait.
           # Lock to guard against concurrent MonitorProcessingJob runs.
+          phase_data_saved = false
           media_file.with_lock do
             unless media_file.remote_services_data["phase_#{phase}_completed_at"].present?
               save_intermediate_phase_data(job)
+              phase_data_saved = true
             end
+          end
+          # Broadcast after lock so the UI reflects SD playback availability.
+          if phase_data_saved
+            broadcast_encoding_progress
+            broadcast_file_update(media_file)
           end
           return nil
         else
@@ -345,7 +356,7 @@ class Folio::CraMediaCloud::CheckProgressJob < Folio::ApplicationJob
       media_file.processing_failed!
 
       if will_retry
-        Folio::CraMediaCloud::CreateMediaJob.set(wait: 2.minutes).perform_later(media_file)
+        @pending_retry = true
         Rails.logger.warn "[CraMediaCloud::CheckProgressJob] Video #{media_file.id} failed (attempt #{retry_count}), scheduling retry in 2 minutes: #{error_messages}"
       else
         Rails.logger.error "[CraMediaCloud::CheckProgressJob] Video #{media_file.id} failed permanently (attempt #{retry_count}): #{error_messages}"

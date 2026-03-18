@@ -74,6 +74,11 @@ class Folio::CraMediaCloud::CreateMediaJob < Folio::ApplicationJob
       api = Folio::CraMediaCloud::Api.new
       jobs = api.get_jobs(ref_id: reference_id)
 
+      # No need to pre-filter REMOVED jobs: JobResolver maps REMOVED → :not_found,
+      # so CreateMediaJob will proceed with a fresh upload. (MonitorProcessingJob
+      # pre-filters REMOVED before passing to reconcile_with_remote_jobs because it
+      # needs to distinguish "all REMOVED with stored phase data → finalize" from
+      # "no jobs at all → clear state". CreateMediaJob has no such distinction to make.)
       result = Folio::CraMediaCloud::JobResolver.resolve(jobs)
 
       Rails.logger.debug "[CraMediaCloud::CreateMediaJob] Job check for #{reference_id}: " \

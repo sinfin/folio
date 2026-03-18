@@ -43,17 +43,7 @@ When a video is uploaded, the encoder generates a **presigned S3 URL** (7-day ex
 
 ## 2. Two-Phase Encoding
 
-When `encoder_processing_phases` returns `> 1` (economia overrides to `2`), a **single manifest** is submitted with the `processingPhases="2"` XML attribute. The profile group is always `VoDHDAuto` — CRA handles phasing internally.
-
-```xml
-<vod_encoder_job processingPhases="2">
-  <input type="VIDEO" src="https://s3...?X-Amz-..." size="123456" md5="abc123">
-    <audioTrack language="cze" channels="auto"/>
-  </input>
-  <profileGroup>VoDHDAuto</profileGroup>
-  <refId>prod-video-slug-a1b2c3d4-1710000000</refId>
-</vod_encoder_job>
-```
+When `encoder_processing_phases` returns `> 1` (economia overrides to `2`), a **single manifest** is submitted with the `processingPhases="2"` XML attribute (same format as shown in §1). The profile group is always `VoDHDAuto` — CRA handles phasing internally.
 
 CRA creates multiple internal jobs (one per phase), each with a `phase` field in API responses:
 
@@ -190,8 +180,10 @@ On CRA `FAILED`/`ERROR`, `CheckProgressJob`:
 
 ### Timeout
 
-- **CheckProgressJob**: 4-hour `MAX_PROCESSING_DURATION` — marks as `processing_failed` if `processing_step_started_at` is older
-- **MonitorProcessingJob**: 6-hour hard timeout (× phase multiplier), 2-hour warning threshold
+- **CheckProgressJob**: 4-hour `MAX_PROCESSING_DURATION` (flat, per video) — marks as `processing_failed` if `processing_step_started_at` is older. The unique-job constraint means one instance runs per video; if the worker is restarted the next `CheckProgressJob` re-checks this on each run.
+- **MonitorProcessingJob**: 6-hour hard timeout (flat, not phase-multiplied in current code) — marks as `processing_failed` for any video that has been in `processing` AASM state for over 6 hours. Effectively a backstop for videos whose `CheckProgressJob` was lost or never fired.
+
+> **Note:** The two timeouts are intentionally overlapping rather than sequential. `CheckProgressJob` handles the common case (actively polling video); `MonitorProcessingJob` is the safety net for stuck/orphaned videos. A video that times out in `CheckProgressJob` at 4 hours will also be caught by `MonitorProcessingJob` at 6 hours if it somehow transitions back to `processing`.
 
 ### Safety nets (MonitorProcessingJob)
 

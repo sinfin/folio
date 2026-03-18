@@ -15,9 +15,6 @@ module Folio
       SFTP_MAX_RETRIES = 3
       SFTP_RETRY_DELAY = 5.seconds
 
-      # SFTP upload configuration
-      CHUNK_SIZE = 1.megabyte # Standard chunk size for file operations
-
       def upload_file(file, priority: "regular", profile_group: nil, reference_id: nil, media_file: nil, processing_phases: nil)
         ref_id = reference_id || [file.id, Time.current.to_i].join("-")
         Rails.logger.info("[CraMediaCloud::Encoder] Starting manifest upload for file ID: #{file.id}, ref_id: #{ref_id}")
@@ -54,7 +51,7 @@ module Folio
           s3_object_key = [s3_datastore.root_path, file.file_uid].compact_blank.join("/")
           s3_presigner.presigned_url(
             :get_object,
-            bucket: ENV["S3_BUCKET_NAME"],
+            bucket: s3_bucket,
             key: s3_object_key,
             expires_in: 7.days.to_i  # 604800 seconds
           )
