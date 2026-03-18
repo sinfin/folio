@@ -122,7 +122,26 @@ class Folio::CraMediaCloud::CreateMediaJob < Folio::ApplicationJob
 
         Rails.logger.info "[CraMediaCloud::CreateMediaJob] Successfully updated local state for video #{media_file.id} to point to successful job #{successful_job_id}"
       else
-        Rails.logger.debug "[CraMediaCloud::CreateMediaJob] Local state already points to correct job #{successful_job_id} for video #{media_file.id}"
+        # remote_id already matches, but if local processing_state is stale (e.g. upload_failed
+        # or encoding_failed set before CRA recovered), schedule CheckProgressJob to finalize.
+        # This handles videos that got stuck with a failed state while the CRA job eventually
+        # completed successfully on CRA's side.
+        if media_file.remote_services_data["processing_state"] != "full_media_processed"
+          media_file.remote_services_data.merge!(
+            "processing_state" => "full_media_processing",
+            "processing_step_started_at" => Time.current.iso8601
+          )
+          media_file.save!
+          Folio::CraMediaCloud::CheckProgressJob.perform_later(
+            media_file,
+            encoding_generation: media_file.encoding_generation
+          )
+          Rails.logger.info "[CraMediaCloud::CreateMediaJob] Remote ID #{successful_job_id} matches but state " \
+                            "was stale (#{media_file.remote_services_data['processing_state']}), " \
+                            "scheduling CheckProgressJob for video #{media_file.id}"
+        else
+          Rails.logger.debug "[CraMediaCloud::CreateMediaJob] Local state already points to correct job #{successful_job_id} for video #{media_file.id}"
+        end
       end
     end
 
