@@ -201,6 +201,22 @@ Runs periodically with Redis lock to prevent concurrent instances. Catches:
 
 **Note on `REMOVED` status:** Production data confirms CRA does **not** auto-purge completed jobs — DONE jobs remain accessible indefinitely (verified 4+ months). `REMOVED` appears only when job content is explicitly deleted via `DeleteMediaJob` (`DELETE /jobs/{id}/content`). The all-REMOVED handler therefore covers the edge case where both phase job contents were deleted while the video was still in `processing` AASM state.
 
+### Tracked job becomes REMOVED (CheckProgressJob)
+
+When `CheckProgressJob` is polling via `remote_id` and that specific job returns `REMOVED`, it:
+1. Clears `remote_id` from `remote_services_data`
+2. Calls `check_again_later` to resume polling by `reference_id`
+
+This handles the edge case where a single phase job is deleted while encoding is still in progress. Polling falls back to `reference_id` lookup to discover any replacement or remaining jobs.
+
+### Stale processing state after CRA recovery (CreateMediaJob)
+
+When `CreateMediaJob` finds an existing CRA job with `remote_id` matching the stored value but `processing_state` is stale (e.g. `upload_failed` or `encoding_failed` set while CRA eventually completed), it:
+1. Resets `processing_state` to `"full_media_processing"`
+2. Schedules `CheckProgressJob` to finalize
+
+Without this, videos could loop forever: `MonitorProcessingJob` re-enqueues `CreateMediaJob` every 5 min, `CreateMediaJob` finds matching `remote_id` and does nothing, state never advances. Root cause confirmed in production (video stuck 25+ hours while CRA job was `DONE`).
+
 ### Missing S3 source file
 
 If S3 returns 404 during `CreateMediaJob`, video is marked `source_file_missing` + `processing_failed` permanently (no retry).
@@ -314,6 +330,9 @@ S3_BUCKET_NAME / S3_REGION / AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY
 ### Test coverage gaps (folio)
 
 - [x] MonitorProcessingJob handler integration tests (`handle_failed_uploads_needing_retry`, `reconcile_video_state`, `reconcile_with_remote_jobs`)
+- [x] CheckProgressJob: `processing_timed_out?` — video >4h old marks as `processing_failed`; video <4h continues polling
+- [x] CheckProgressJob: `finalize_from_completed_phases!` — all jobs REMOVED + stored phase data → `ready` with merged MP4 paths
+- [x] CheckProgressJob: tracked job becomes REMOVED → clears `remote_id`, reschedules
 - [ ] Encoder: `upload_file` method, SFTP session management, retry logic
 - [ ] CreateFileJob: S3 server-side copy path for videos
 - [ ] AASM state transition integration tests with CRA concern
