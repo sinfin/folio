@@ -333,9 +333,9 @@ S3_BUCKET_NAME / S3_REGION / AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY
 - [x] CheckProgressJob: `processing_timed_out?` — video >4h old marks as `processing_failed`; video <4h continues polling
 - [x] CheckProgressJob: `finalize_from_completed_phases!` — all jobs REMOVED + stored phase data → `ready` with merged MP4 paths
 - [x] CheckProgressJob: tracked job becomes REMOVED → clears `remote_id`, reschedules
-- [ ] Encoder: `upload_file` method, SFTP session management, retry logic
-- [ ] CreateFileJob: S3 server-side copy path for videos
-- [ ] AASM state transition integration tests with CRA concern
+- [x] Encoder: `upload_file` method, SFTP session management, retry logic
+- [x] CreateFileJob: S3 server-side copy path for videos
+- [x] AASM state transition integration tests with CRA concern
 
 ### Test coverage gaps (economia)
 

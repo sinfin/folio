@@ -30,4 +30,44 @@ class Folio::S3::CreateFileJobTest < ActiveJob::TestCase
   ensure
     FileUtils.rm_f(source_path) if source_path
   end
+
+  test "video upload uses S3 server-side copy when on real S3 storage" do
+    site = get_any_site
+    s3_path = "uploads/test_video.mp4"
+
+    fake_head = Struct.new(:content_length, :content_type).new(5_000_000, "video/mp4")
+    copy_source_key = nil
+
+    job = Folio::S3::CreateFileJob.new
+    job.define_singleton_method(:use_local_file_system?) { false }
+
+    # Stub before_validation :set_video_file_dimensions — it calls file_url_or_path which tries
+    # to fetch the Dragonfly-generated UID from FileDataStore (no actual file exists there).
+    # Provide fake dimensions so file_width/file_height validations pass.
+    Folio::File::Video.define_method(:set_video_file_dimensions) do
+      self.file_width = 1280
+      self.file_height = 720
+      self.file_track_duration = 0
+    end
+
+    job.stub(:test_aware_s3_exists?, true) do
+      job.stub(:s3_copy_object, ->(source_key:, dest_key:) { copy_source_key = source_key }) do
+        job.stub(:s3_head_object, fake_head) do
+          job.stub(:test_aware_s3_delete, nil) do
+            job.perform(s3_path: s3_path, type: "Folio::File::Video", attributes: { site_id: site.id })
+          end
+        end
+      end
+    end
+
+    created_video = Folio::File::Video.last
+    assert created_video.present?, "Video should be created"
+    assert created_video.file_uid.present?, "Video should have a Dragonfly UID"
+    assert_equal "test_video.mp4", created_video.file_name
+    assert_equal 5_000_000, created_video.file_size
+    assert_equal "video/mp4", created_video.file_mime_type
+    assert_includes copy_source_key, s3_path, "s3_copy_object should have been called with the source path"
+  ensure
+    Folio::File::Video.remove_method(:set_video_file_dimensions)
+  end
 end
