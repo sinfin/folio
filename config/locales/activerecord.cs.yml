@@ -177,6 +177,10 @@ cs:
         state: Stát
         vat_identification_number: DIČ
         zip: PSČ
+      folio/file_placement/base:
+        alt: Alternativní text
+        description: Popisek
+        title: Titulek
 
     errors:
       messages:

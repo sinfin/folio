@@ -61,15 +61,15 @@ class Folio::Console::FilePlacements::MultiPickerFields::PlacementComponent < Fo
     def placement_attribute_input_options(attr)
       case attr
       when :description
-        { autosize: true, input_html: { rows: 1, data: stimulus_target("description") } }
+        { hint: false, autosize: true, input_html: { rows: 1, placeholder: "", data: stimulus_target("description") } }
       when :alt
-        { input_html: { data: stimulus_target("alt") } }
+        { hint: false, input_html: { placeholder: "", data: stimulus_target("alt") } }
       when :title
-        { as: :string }
+        { hint: false, as: :string, input_html: { placeholder: "", data: stimulus_target("title") } }
       when :folio_embed_data
         nil
       else
-        {}
+        { hint: false, input_html: { placeholder: "" } }
       end
     end
 
