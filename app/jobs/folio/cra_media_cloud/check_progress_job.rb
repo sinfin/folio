@@ -127,11 +127,14 @@ class Folio::CraMediaCloud::CheckProgressJob < Folio::ApplicationJob
         response
       elsif media_file.remote_reference_id.present?
         all_jobs = api.get_jobs(ref_id: media_file.remote_reference_id)
-        # Filter out REMOVED jobs — these are old completed jobs cleaned up by CRA
+        # Filter out REMOVED jobs. REMOVED appears when job content has been
+        # explicitly deleted via DeleteMediaJob (DELETE /jobs/{id}/content) —
+        # production data confirms CRA does NOT auto-purge completed jobs.
         jobs = all_jobs.reject { |j| j["status"] == "REMOVED" }
         if jobs.empty?
-          # If we already have completed phase data and all jobs are REMOVED,
-          # CRA has cleaned up and no further phases are coming — mark as done.
+          # All jobs REMOVED with stored phase data: job content was deleted
+          # (e.g. via DeleteMediaJob) after encoding completed. Finalize from
+          # the phase output we already saved locally rather than hitting CRA.
           if multi_phase? && all_jobs.present? && has_any_completed_phase?
             Rails.logger.info "[CraMediaCloud::CheckProgressJob] All CRA jobs REMOVED for video #{media_file.id} " \
                               "with completed phase data. Finalizing from stored phase output."

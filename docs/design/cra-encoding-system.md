@@ -205,6 +205,9 @@ Runs periodically with Redis lock to prevent concurrent instances. Catches:
 | `processing_failed` with `retry_count < 2` and lost retry job | Re-enqueues `CreateMediaJob` |
 | Processing > 6 hours | Marks as `processing_failed` |
 | Orphaned (has `reference_id` but no `remote_id`, or stuck in `creating_media_job` > 30 min) | Reconciles via API |
+| All CRA jobs `REMOVED` with stored phase data | `finalize_from_completed_phases!` merges stored output and transitions to `ready` |
+
+**Note on `REMOVED` status:** Production data confirms CRA does **not** auto-purge completed jobs — DONE jobs remain accessible indefinitely (verified 4+ months). `REMOVED` appears only when job content is explicitly deleted via `DeleteMediaJob` (`DELETE /jobs/{id}/content`). The all-REMOVED handler therefore covers the edge case where both phase job contents were deleted while the video was still in `processing` AASM state.
 
 ### Missing S3 source file
 
@@ -318,11 +321,11 @@ S3_BUCKET_NAME / S3_REGION / AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY
 
 ### Test coverage gaps (folio)
 
-- [ ] MonitorProcessingJob handler integration tests (`handle_videos_needing_upload`, `handle_orphaned_videos`, `reconcile_video_state`)
+- [x] MonitorProcessingJob handler integration tests (`handle_failed_uploads_needing_retry`, `reconcile_video_state`, `reconcile_with_remote_jobs`)
 - [ ] Encoder: `upload_file` method, SFTP session management, retry logic
 - [ ] CreateFileJob: S3 server-side copy path for videos
 - [ ] AASM state transition integration tests with CRA concern
 
 ### Test coverage gaps (economia)
 
-- [ ] `AdditionalHtmlComponent` — additional state coverage (legacy video, unprocessed video)
+- [x] `AdditionalHtmlComponent` — additional state coverage (legacy video, unprocessed video, ready video)
