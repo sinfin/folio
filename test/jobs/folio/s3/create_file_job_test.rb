@@ -3,8 +3,6 @@
 require "test_helper"
 
 class Folio::S3::CreateFileJobTest < ActiveJob::TestCase
-  include Folio::S3::Client
-
   test "video upload falls back to download flow for local file system" do
     # In test env with FileDataStore, video upload should use the standard download path
     # (S3 copy path is only for actual S3 storage)
