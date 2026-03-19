@@ -117,6 +117,40 @@ class Folio::CraMediaCloud::CreateMediaJobTest < ActiveJob::TestCase
     end
   end
 
+  test "raises when encoding_generation is nil to prevent stale CRA job matching" do
+    video = create_test_video_in_processing_state
+    video.update!(remote_services_data: video.remote_services_data.merge(
+      "encoding_generation" => nil
+    ))
+
+    with_mocked_s3_and_encoder(video) do |encoder_mock, api_mock|
+      assert_raises(RuntimeError, /encoding_generation not set/) do
+        perform_job(video, encoder_mock, api_mock)
+      end
+    end
+  end
+
+  test "reference_id includes video ID to prevent cross-contamination between records" do
+    video = create_test_video_in_processing_state
+
+    with_mocked_s3_and_encoder(video) do |encoder_mock, api_mock|
+      captured_reference_id = nil
+      encoder_mock.expect(:upload_file, nil) do |_file, **kwargs|
+        captured_reference_id = kwargs[:reference_id]
+        true
+      end
+      api_mock.expect(:get_jobs, []) do |**_kwargs|
+        true
+      end
+
+      perform_job(video, encoder_mock, api_mock)
+
+      assert_not_nil captured_reference_id
+      assert_includes captured_reference_id, "-#{video.id}-",
+        "reference_id must contain video ID for per-record uniqueness"
+    end
+  end
+
   test "marks video as permanently failed when S3 source file is missing" do
     video = create_test_video_in_processing_state
 
@@ -180,7 +214,8 @@ class Folio::CraMediaCloud::CreateMediaJobTest < ActiveJob::TestCase
 
       video.update!(remote_services_data: video.remote_services_data.merge(
         "service" => "cra_media_cloud",
-        "processing_state" => "full_media_processing"
+        "processing_state" => "full_media_processing",
+        "encoding_generation" => Time.current.to_i
       ))
       video
     end

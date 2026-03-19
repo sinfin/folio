@@ -50,15 +50,20 @@ class Folio::CraMediaCloud::CreateMediaJob < Folio::ApplicationJob
 
   private
     def generate_reference_id(media_file)
-      # Combine environment, video slug, S3 ETag, and encoding_generation for unique reference.
+      # Combine environment, video slug, ID, S3 ETag, and encoding_generation for unique reference.
+      # ID guarantees uniqueness per video record (slug alone is derived from filename and can collide).
       # encoding_generation changes on each re-encode, ensuring CRA gets a fresh refId.
-      # Format: {env}-{slug}-{s3_etag}-{generation}
+      # Format: {env}-{slug}-{id}-{s3_etag}-{generation}
       # Total length is capped at 128 chars to avoid CRA lookup failures with long slugs.
       s3_etag = get_s3_etag(media_file)
       env_prefix = ENV.fetch("DRAGONFLY_RAILS_ENV", Rails.env)
       generation = media_file.encoding_generation
 
-      suffix = "-#{s3_etag[0..7]}-#{generation}"
+      if generation.nil?
+        fail "encoding_generation not set for video #{media_file.id} — cannot generate unique reference_id (would match stale CRA jobs)"
+      end
+
+      suffix = "-#{media_file.id}-#{s3_etag[0..7]}-#{generation}"
       max_slug_length = 128 - env_prefix.length - 1 - suffix.length
       slug = media_file.slug.to_s[0, [max_slug_length, 1].max]
 
