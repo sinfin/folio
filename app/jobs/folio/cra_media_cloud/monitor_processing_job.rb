@@ -242,17 +242,19 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
     end
 
     def find_orphaned_videos
-      # Find videos that are processing but might have lost track of their remote jobs
+      # Find videos that are processing but might have lost track of their remote jobs.
+      # Both conditions require a time threshold to avoid racing with just-uploaded videos
+      # (CRA needs time to ingest the manifest before a remote_id appears).
       Folio::File::Video
         .where(aasm_state: :processing)
         .where("remote_services_data ->> 'service' = ?", "cra_media_cloud")
         .where(
-          # Videos with reference_id but no remote_id, or videos that have been
-          # in creating_media_job state for a very long time
-          "(remote_services_data ->> 'reference_id' IS NOT NULL AND remote_services_data ->> 'remote_id' IS NULL) OR " \
+          "(remote_services_data ->> 'reference_id' IS NOT NULL AND " \
+          "remote_services_data ->> 'remote_id' IS NULL AND " \
+          "(remote_services_data ->> 'processing_step_started_at')::timestamptz < ?) OR " \
           "(remote_services_data ->> 'processing_state' = 'creating_media_job' AND " \
           "(remote_services_data ->> 'processing_step_started_at')::timestamptz < ?)",
-          30.minutes.ago
+          10.minutes.ago, 30.minutes.ago
         )
     end
 

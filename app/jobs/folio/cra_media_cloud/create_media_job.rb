@@ -60,6 +60,13 @@ class Folio::CraMediaCloud::CreateMediaJob < Folio::ApplicationJob
       generation = media_file.encoding_generation
 
       if generation.nil?
+        # encoding_generation may not be visible yet if the enclosing transaction
+        # (e.g. S3::CreateFileJob save) hasn't committed. Reload to get committed data.
+        media_file.reload
+        generation = media_file.encoding_generation
+      end
+
+      if generation.nil?
         fail "encoding_generation not set for video #{media_file.id} — cannot generate unique reference_id (would match stale CRA jobs)"
       end
 
