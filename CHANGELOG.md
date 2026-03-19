@@ -3,6 +3,22 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [7.5.0] - 2026-03-19
+
+### Added
+
+- **CRA presigned S3 URLs**: Encoder no longer downloads video to local disk or uploads via SFTP. CRA fetches video directly from S3 via presigned URL (7-day expiry). Only the XML manifest is uploaded via SFTP.
+- **Two-phase encoding**: When `encoder_processing_phases` > 1, CreateMediaJob submits two manifests with the same `refId` — SD first, then HD. Backward compatible: single-phase when `encoder_processing_phases` is nil/1.
+- **Encoding progress tracking**: CheckProgressJob parses CRA `messages` array for per-phase milestones, extracts video duration, and estimates completion time. New processing states: `sd_processing → sd_processed → hd_processing → full_media_processed`.
+- **Console encoding info component**: `EncodingInfoComponent` shows current encoding phase and progress percentage on video file detail page, with real-time updates via MessageBus.
+- **S3 client and jobs**: `Folio::S3::Client` for presigned URL generation, `Folio::S3::CreateFileJob` for S3-based file creation, `Folio::File::GetVideoMetadataJob` for video metadata extraction.
+- **Video thumbnail generation**: `GenerateThumbnailJob` reworked for reliable thumbnail generation from video files.
+
+### Changed
+
+- `ShowComponent` now exposes `aasmState` as a Stimulus value and reloads via Turbo on state transitions (encoding progress, file updates)
+- `ShowComponent` layout: state badge moved to right side (`ms-auto`), encoding info rendered inline after state
+
 ### Fixed
 
 - add `try` to `dont_run_after_save_jobs` to enable thumbnail generation for `private_attachments`
