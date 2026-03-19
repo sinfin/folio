@@ -107,7 +107,11 @@ module Folio::S3::Client
   end
 
   def generate_dragonfly_uid(file_name)
-    "#{Time.now.strftime '%Y/%m/%d/%H/%M/%S'}/#{SecureRandom.uuid}/#{file_name}"
+    if Dragonfly.app.datastore.respond_to?(:generate_uid)
+      Dragonfly.app.datastore.generate_uid(file_name)
+    else
+      "#{Time.now.strftime '%Y/%m/%d/%H/%M/%S'}/#{SecureRandom.uuid}/#{file_name}"
+    end
   end
 
   def dragonfly_s3_root_path
