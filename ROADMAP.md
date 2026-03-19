@@ -48,7 +48,7 @@ Introduce a provider-based image transformation layer with a stable Folio contra
 
 - Built-in Sidekiq provider for small projects.
 - Remote transformer service running on Kubernetes, either per app or per cluster.
-- AWS-oriented provider using Thumbor and S3-compatible storage.
+- AWS-oriented provider using Thumbor and S3-compatible storage, with [`sinfin/aws-file-handler`](https://github.com/sinfin/aws-file-handler) as an existing reference point.
 - Optional future serverless provider for low-traffic or bursty workloads.
 
 **Success Criteria**
