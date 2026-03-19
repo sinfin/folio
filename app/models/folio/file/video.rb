@@ -19,6 +19,10 @@ class Folio::File::Video < Folio::File
     true
   end
 
+  def video_poster_url
+    nil # override in provider concerns to return a static thumbnail image URL
+  end
+
   def self.human_type
     "video"
   end

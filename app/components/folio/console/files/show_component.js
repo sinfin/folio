@@ -6,7 +6,8 @@ window.Folio.Stimulus.register('f-c-files-show', class extends window.Stimulus.C
     fileType: String,
     id: String,
     showUrl: String,
-    indexUrl: String
+    indexUrl: String,
+    aasmState: String
   }
 
   disconnect () {
@@ -93,6 +94,15 @@ window.Folio.Stimulus.register('f-c-files-show', class extends window.Stimulus.C
 
   messageBusCallback (event) {
     const message = event.detail.message
+
+    if (message.type === 'Folio::CraMediaCloud::CheckProgressJob/encoding_progress') {
+      return this.handleEncodingProgress(message.data)
+    }
+
+    if (message.type === 'Folio::ApplicationJob/file_update') {
+      return this.handleFileUpdate(message.data)
+    }
+
     if (message.type !== 'Folio::S3::CreateFileJob') return
     switch (message.data.type) {
       case 'replace-success':
@@ -104,8 +114,32 @@ window.Folio.Stimulus.register('f-c-files-show', class extends window.Stimulus.C
     }
   }
 
-  messageBusSuccess (data) {
+  handleEncodingProgress (data) {
+    if (data.aasm_state === 'processing') {
+      // Update state badge label
+      const stateLabel = this.element.querySelector('.f-c-state__state-label')
+      if (stateLabel) stateLabel.textContent = data.aasm_state_human
+    } else {
+      // Encoding finished or failed — reload to show final state
+      this.reloadFrame()
+    }
+  }
+
+  handleFileUpdate (data) {
+    if (!data || !data.attributes) return
+
+    const newState = data.attributes.aasm_state
+    if (newState && newState !== this.aasmStateValue) {
+      this.reloadFrame()
+    }
+  }
+
+  reloadFrame () {
     window.Turbo.visit(this.showUrlValue, { frame: this.element.closest('turbo-frame').id })
+  }
+
+  messageBusSuccess (data) {
+    this.reloadFrame()
   }
 
   messageBusFailure (data) {
@@ -121,6 +155,24 @@ if (window.Folio && window.Folio.MessageBus && window.Folio.MessageBus.callbacks
 
     if (message.type === 'Folio::S3::CreateFileJob') {
       const selector = `.f-c-files-show[data-f-c-files-show-id-value="${message.data.file_id}"]`
+      const targets = document.querySelectorAll(selector)
+
+      for (const target of targets) {
+        target.dispatchEvent(new CustomEvent('f-c-files-show/message', { detail: { message } }))
+      }
+    }
+
+    if (message.type === 'Folio::CraMediaCloud::CheckProgressJob/encoding_progress') {
+      const selector = `.f-c-files-show[data-f-c-files-show-id-value="${message.data.id}"]`
+      const targets = document.querySelectorAll(selector)
+
+      for (const target of targets) {
+        target.dispatchEvent(new CustomEvent('f-c-files-show/message', { detail: { message } }))
+      }
+    }
+
+    if (message.type === 'Folio::ApplicationJob/file_update') {
+      const selector = `.f-c-files-show[data-f-c-files-show-id-value="${message.data.id}"]`
       const targets = document.querySelectorAll(selector)
 
       for (const target of targets) {
