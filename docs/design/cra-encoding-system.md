@@ -20,13 +20,13 @@ When a video is uploaded, the encoder generates a **presigned S3 URL** (7-day ex
     <audioTrack language="cze" channels="auto"/>
   </input>
   <profileGroup>VoDHDAuto</profileGroup>
-  <refId>prod-video-slug-a1b2c3d4-1710000000</refId>
+  <refId>prod-video-slug-123-a1b2c3d4-1710000000</refId>
 </vod_encoder_job>
 ```
 
 ### Reference ID format
 
-`{env}-{slug(truncated)}-{s3_etag[0..7]}-{encoding_generation}`
+`{env}-{slug(truncated)}-{id}-{s3_etag[0..7]}-{encoding_generation}`
 
 - Total capped at **128 chars** (CRA lookup fails with longer IDs)
 - `encoding_generation` changes on each re-encode, ensuring CRA gets a fresh refId
@@ -135,7 +135,7 @@ Multi-phase adds intermediate data (`phase_N_content_mp4_paths`, `phase_N_comple
 {
   "service": "cra_media_cloud",
   "processing_state": "full_media_processing",
-  "reference_id": "prod-video-slug-a1b2c3d4-1710000000",
+  "reference_id": "prod-video-slug-123-a1b2c3d4-1710000000",
   "remote_id": "JOB123",
   "encoding_generation": 1710000000,
   "processing_step_started_at": "2026-03-17T10:30:00Z",
