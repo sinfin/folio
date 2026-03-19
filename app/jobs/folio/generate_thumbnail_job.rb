@@ -274,14 +274,14 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
     end
 
     # Get a screenshot frame for video thumbnail generation.
-    # Priority: 1) CRA cover image (small JPEG, no decoding)
+    # Priority: 1) Provider-supplied poster image (no decoding needed)
     #           2) ffmpeg frame extraction (only for ≤4K — safe memory)
     #           3) fallback placeholder image
     def video_screenshot(image)
-      # Prefer CRA cover when available — avoids decoding the source video
-      # entirely. Critical for high-res (4K/8K) HEVC content where decoding
-      # a single frame can require 800+ MB for reference frame buffers.
-      if image.respond_to?(:remote_cover_url) && (cover_url = image.remote_cover_url).present?
+      # Prefer a provider-supplied poster image when available — avoids decoding
+      # the source video entirely. Critical for high-res (4K/8K) HEVC content
+      # where decoding a single frame can require 800+ MB for reference frame buffers.
+      if (cover_url = image.video_poster_url).present?
         thumbnail = download_remote_image(image, cover_url)
         return thumbnail if thumbnail
       end
@@ -292,8 +292,8 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
       # Check resolution via ffprobe before attempting decode. Decoding
       # video above 4K can require 800+ MB for codec reference frame
       # buffers (DPB), which OOMKills pods with typical memory limits.
-      # For >4K videos without a CRA cover, use fallback and wait for
-      # CRA to provide the cover image after encoding.
+      # For >4K videos without a poster image, use fallback. The provider
+      # may supply one asynchronously after encoding completes.
       if video_resolution_too_high?(input)
         Rails.logger.info("GenerateThumbnailJob: Skipping ffmpeg for high-res video ##{image.id}, using fallback")
         return fallback_image(image)
@@ -362,7 +362,7 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
       thumbnail.meta["mime_type"] = "image/jpeg"
       thumbnail
     rescue => e
-      Rails.logger.warn("GenerateThumbnailJob: CRA cover download failed for file ##{image.id}: #{e.message}")
+      Rails.logger.warn("GenerateThumbnailJob: remote poster download failed for file ##{image.id}: #{e.message}")
       nil
     end
 
