@@ -98,6 +98,20 @@ class Folio::File::CraMediaCloudFileProcessingTest < ActiveJob::TestCase
     end
   end
 
+  # --- video_poster_url interface ---
+
+  test "video_poster_url returns nil for Folio::File::Video with no provider concern" do
+    plain_video_class = Class.new(Folio::File::Video)
+    assert_nil plain_video_class.new.video_poster_url
+  end
+
+  test "video_poster_url delegates to remote_cover_url in CRA concern" do
+    video = build_saved_video
+    video.stub(:remote_cover_url, "https://cdn.example.com/cover.jpg") do
+      assert_equal "https://cdn.example.com/cover.jpg", video.video_poster_url
+    end
+  end
+
   private
     def build_saved_video
       video = TestVideoFile.new(site: get_any_site)

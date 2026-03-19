@@ -47,6 +47,10 @@ module Folio::CraMediaCloud::FileProcessing
     end
   end
 
+  def video_poster_url
+    remote_cover_url
+  end
+
   def remote_thumbnails_url
     if remote_services_data["thumbnails_path"]
       remote_content_url_base + remote_services_data["thumbnails_path"]
