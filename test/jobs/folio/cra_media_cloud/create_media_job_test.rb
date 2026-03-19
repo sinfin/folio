@@ -129,10 +129,15 @@ class Folio::CraMediaCloud::CreateMediaJobTest < ActiveJob::TestCase
     s3_datastore_mock.expect(:root_path, "uploads")
     s3_datastore_mock.expect(:storage, storage_mock)
 
-    Dragonfly.app.stub(:datastore, s3_datastore_mock) do
-      assert_no_enqueued_jobs only: Folio::CraMediaCloud::CheckProgressJob do
-        Folio::CraMediaCloud::CreateMediaJob.perform_now(video)
+    ENV["S3_BUCKET_NAME"] = "test-bucket"
+    begin
+      Dragonfly.app.stub(:datastore, s3_datastore_mock) do
+        assert_no_enqueued_jobs only: Folio::CraMediaCloud::CheckProgressJob do
+          Folio::CraMediaCloud::CreateMediaJob.perform_now(video)
+        end
       end
+    ensure
+      ENV.delete("S3_BUCKET_NAME")
     end
 
     video.reload
@@ -195,9 +200,12 @@ class Folio::CraMediaCloud::CreateMediaJobTest < ActiveJob::TestCase
       encoder_mock = Minitest::Mock.new
       api_mock = Minitest::Mock.new
 
+      ENV["S3_BUCKET_NAME"] = "test-bucket"
       Dragonfly.app.stub(:datastore, s3_datastore_mock) do
         yield encoder_mock, api_mock
       end
+    ensure
+      ENV.delete("S3_BUCKET_NAME")
     end
 
     def perform_job(video, encoder_mock, api_mock)
