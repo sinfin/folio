@@ -8,6 +8,9 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
     return if another_monitor_job_running?
 
     begin
+      # Handle videos stuck in unprocessed state with existing files
+      handle_stuck_unprocessed_videos
+
       # Handle videos with orphaned or inconsistent states first
       handle_orphaned_videos
 
@@ -16,6 +19,9 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
 
       # Handle videos with failed uploads that need retry
       handle_failed_uploads_needing_retry
+
+      # Safety net: retry failed videos whose retry job was lost
+      handle_failed_videos_awaiting_retry
 
       # Handle videos that are already processing and need progress checking
       handle_videos_needing_progress_check
@@ -26,22 +32,53 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
   end
 
   private
+    def handle_stuck_unprocessed_videos
+      stuck = Folio::File::Video
+        .where(aasm_state: :unprocessed)
+        .where("file_uid IS NOT NULL AND file_uid != ''")
+        .where("created_at < ?", 5.minutes.ago)
+
+      return if stuck.empty?
+
+      Rails.logger.info("MonitorProcessingJob: Found #{stuck.count} stuck unprocessed video(s) with files")
+
+      stuck.each do |video|
+        Rails.logger.info("MonitorProcessingJob: Triggering process! for stuck video ##{video.id} (created #{video.created_at})")
+        begin
+          video.process!
+        rescue => e
+          Rails.logger.error("MonitorProcessingJob: Failed to process stuck video ##{video.id}: #{e.message}")
+        end
+      end
+    end
+
     def find_processing_videos
       Folio::File::Video
         .where(aasm_state: :processing)
         .where("remote_services_data ->> 'service' = ?", "cra_media_cloud")
-        .where("remote_services_data ->> 'processing_state' IN (?)", ["full_media_processing", "upload_completed"])
+        .where("remote_services_data ->> 'processing_state' IN (?)",
+          %w[full_media_processing upload_completed])
     end
 
     def find_videos_needing_upload
-      # Find videos that need initial upload (no remote references)
+      # Find videos that need initial upload (no remote references).
+      # Freshly enqueued videos (< 10 min) are excluded — they already have a
+      # CreateMediaJob queued. But enqueued videos older than 10 min are included
+      # because the job was likely lost (e.g., pod OOMKill). The Ruby handler
+      # checks for running/scheduled jobs before re-scheduling.
       Folio::File::Video
         .where(aasm_state: :processing)
         .where(
           "(remote_services_data ->> 'service' IS NULL OR remote_services_data ->> 'service' = ?) AND " \
           "(remote_services_data ->> 'remote_id' IS NULL) AND " \
-          "(remote_services_data ->> 'reference_id' IS NULL)",
-          "cra_media_cloud"
+          "(remote_services_data ->> 'reference_id' IS NULL) AND " \
+          "(remote_services_data ->> 'processing_state' IS DISTINCT FROM ? OR " \
+          " (remote_services_data ->> 'processing_state' = ? AND " \
+          "  (remote_services_data ->> 'processing_step_started_at')::timestamptz < ?))",
+          "cra_media_cloud",
+          "enqueued",
+          "enqueued",
+          10.minutes.ago
         )
     end
 
@@ -50,8 +87,8 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
       Folio::File::Video
         .where(aasm_state: :processing)
         .where("remote_services_data ->> 'service' = ?", "cra_media_cloud")
-        .where("remote_services_data ->> 'processing_state' = ?", "upload_failed")
-        .where("(remote_services_data ->> 'processing_step_started_at')::timestamp < ?", 5.minutes.ago)
+        .where("remote_services_data ->> 'processing_state' IN (?)", %w[upload_failed encoding_failed])
+        .where("(remote_services_data ->> 'processing_step_started_at')::timestamptz < ?", 5.minutes.ago)
     end
 
     def handle_videos_needing_upload
@@ -72,13 +109,13 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
           next
         end
 
-        # Check if video is stuck in creating state
+        # Check if video is stuck in creating/enqueued state
         rs_data = video.remote_services_data || {}
         Rails.logger.info("MonitorProcessingJob: Video ##{video.id} remote_services_data: #{rs_data}")
 
-        if rs_data["processing_state"] == "creating_media_job"
+        if rs_data["processing_state"].in?(%w[creating_media_job enqueued])
           started_at = rs_data["processing_step_started_at"]
-          Rails.logger.info("MonitorProcessingJob: Video ##{video.id} is in creating_media_job state, started_at: #{started_at}")
+          Rails.logger.info("MonitorProcessingJob: Video ##{video.id} is in #{rs_data['processing_state']} state, started_at: #{started_at}")
 
           # Check if upload is genuinely stuck vs. just taking a long time
           if started_at && !upload_is_stuck?(video, Time.parse(started_at))
@@ -122,6 +159,31 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
       end
     end
 
+    def handle_failed_videos_awaiting_retry
+      # Safety net: find videos that were scheduled for retry but the retry job was lost
+      videos = Folio::File::Video
+        .where(aasm_state: :processing_failed)
+        .where("remote_services_data ->> 'service' = ?", "cra_media_cloud")
+        .where("COALESCE((remote_services_data ->> 'retry_count')::int, 0) < 2")
+        .where("(remote_services_data ->> 'retry_scheduled_at')::timestamptz < ?", 5.minutes.ago)
+
+      return if videos.empty?
+
+      Rails.logger.info("MonitorProcessingJob: Found #{videos.count} failed videos awaiting retry (safety net)")
+
+      scheduled_create_jobs = find_scheduled_create_media_job_ids
+
+      videos.each do |video|
+        if scheduled_create_jobs.include?(video.id)
+          Rails.logger.debug("MonitorProcessingJob: Failed video ##{video.id} already has scheduled CreateMediaJob")
+          next
+        end
+
+        Rails.logger.info("MonitorProcessingJob: Re-scheduling retry for failed video ##{video.id}")
+        Folio::CraMediaCloud::CreateMediaJob.perform_later(video)
+      end
+    end
+
     def handle_videos_needing_progress_check
       processing_videos = find_processing_videos
 
@@ -155,7 +217,7 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
         end
 
         Rails.logger.debug("MonitorProcessingJob: Scheduling CheckProgressJob for video ##{video.id}")
-        Folio::CraMediaCloud::CheckProgressJob.perform_later(video)
+        Folio::CraMediaCloud::CheckProgressJob.perform_later(video, encoding_generation: video.remote_services_data&.dig("encoding_generation"))
       end
     end
 
@@ -189,8 +251,8 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
           # in creating_media_job state for a very long time
           "(remote_services_data ->> 'reference_id' IS NOT NULL AND remote_services_data ->> 'remote_id' IS NULL) OR " \
           "(remote_services_data ->> 'processing_state' = 'creating_media_job' AND " \
-          "(remote_services_data ->> 'processing_step_started_at')::timestamp < ?)",
-          3.hours.ago
+          "(remote_services_data ->> 'processing_step_started_at')::timestamptz < ?)",
+          30.minutes.ago
         )
     end
 
@@ -208,7 +270,6 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
 
         if jobs.empty?
           Rails.logger.warn("MonitorProcessingJob: No remote jobs found for video ##{video.id} reference_id: #{reference_id}")
-          # Video has reference_id but no remote jobs - needs re-upload
           rs_data.delete("reference_id")
           rs_data.delete("remote_id")
           rs_data.delete("processing_state")
@@ -217,42 +278,61 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
           return
         end
 
-        latest_job = jobs.max_by { |j| Time.parse(j["lastModified"]) }
-        current_remote_id = rs_data["remote_id"]
-
-        case latest_job["status"]
-        when "DONE"
-          if current_remote_id != latest_job["id"]
-            Rails.logger.info("MonitorProcessingJob: Updating video ##{video.id} to point to successful job #{latest_job['id']}")
-            rs_data["remote_id"] = latest_job["id"]
-            rs_data["processing_state"] = "full_media_processing"
-            video.update_column(:remote_services_data, rs_data)
-
-            # Schedule progress check to update final state
-            Folio::CraMediaCloud::CheckProgressJob.perform_later(video)
-          end
-        when "PROCESSING", "CREATED"
-          if current_remote_id != latest_job["id"]
-            Rails.logger.info("MonitorProcessingJob: Updating video ##{video.id} to point to processing job #{latest_job['id']}")
-            rs_data["remote_id"] = latest_job["id"]
-            rs_data["processing_state"] = "full_media_processing"
-            video.update_column(:remote_services_data, rs_data)
-          end
-
-          # Schedule progress check
-          Folio::CraMediaCloud::CheckProgressJob.perform_later(video)
-        when "FAILED", "ERROR"
-          Rails.logger.warn("MonitorProcessingJob: Latest job for video ##{video.id} failed, marking for retry")
-          rs_data.merge!({
-            "processing_state" => "upload_failed",
-            "error_message" => "Remote job failed: #{latest_job['status']}",
-            "processing_step_started_at" => Time.current.iso8601
-          })
-          video.update_column(:remote_services_data, rs_data)
-        end
+        reconcile_with_remote_jobs(video, rs_data, jobs)
 
       rescue => e
         Rails.logger.error("MonitorProcessingJob: Error reconciling video ##{video.id}: #{e.message}")
+      end
+    end
+
+    # NOTE: update_column calls below are non-atomic read-modify-write on
+    # remote_services_data. Safe because MonitorProcessingJob uses a Redis lock
+    # (another_monitor_job_running?) to prevent concurrent instances.
+    def reconcile_with_remote_jobs(video, rs_data, jobs)
+      # Filter out REMOVED jobs before resolution: for multi-phase encodings, a
+      # REMOVED phase-1 job may have a later lastModified than an active phase-2
+      # job, causing JobResolver to select it and return :not_found — silently
+      # skipping the active job. If all remaining jobs are REMOVED, schedule
+      # CheckProgressJob which handles the finalize_from_completed_phases! path.
+      active_jobs = jobs.reject { |j| j["status"] == "REMOVED" }
+
+      if active_jobs.empty?
+        Rails.logger.info("MonitorProcessingJob: All CRA jobs REMOVED for video ##{video.id} — scheduling CheckProgressJob to finalize")
+        Folio::CraMediaCloud::CheckProgressJob.perform_later(video, encoding_generation: rs_data["encoding_generation"])
+        return
+      end
+
+      result = Folio::CraMediaCloud::JobResolver.resolve(active_jobs)
+      latest_job = result[:job]
+      return unless latest_job
+
+      current_remote_id = rs_data["remote_id"]
+
+      case result[:status]
+      when :done
+        if current_remote_id != latest_job["id"]
+          Rails.logger.info("MonitorProcessingJob: Updating video ##{video.id} to point to successful job #{latest_job['id']}")
+          rs_data["remote_id"] = latest_job["id"]
+          rs_data["processing_state"] = "full_media_processing"
+          video.update_column(:remote_services_data, rs_data)
+        end
+        Folio::CraMediaCloud::CheckProgressJob.perform_later(video, encoding_generation: video.remote_services_data&.dig("encoding_generation"))
+      when :processing
+        if current_remote_id != latest_job["id"]
+          Rails.logger.info("MonitorProcessingJob: Updating video ##{video.id} to point to processing job #{latest_job['id']}")
+          rs_data["remote_id"] = latest_job["id"]
+          rs_data["processing_state"] = "full_media_processing"
+          video.update_column(:remote_services_data, rs_data)
+        end
+        Folio::CraMediaCloud::CheckProgressJob.perform_later(video, encoding_generation: video.remote_services_data&.dig("encoding_generation"))
+      when :failed
+        Rails.logger.warn("MonitorProcessingJob: Latest job for video ##{video.id} failed, marking for retry")
+        rs_data.merge!({
+          "processing_state" => "encoding_failed",
+          "error_message" => "Remote job failed: #{latest_job['status']}",
+          "processing_step_started_at" => Time.current.iso8601
+        })
+        video.update_column(:remote_services_data, rs_data)
       end
     end
 
@@ -334,42 +414,44 @@ class Folio::CraMediaCloud::MonitorProcessingJob < Folio::ApplicationJob
     end
 
     def processing_too_long?(video)
-      # Consider a video stuck if it's been processing for more than 2 hours
       started_at = video.remote_services_data["processing_step_started_at"]
       return false unless started_at
 
+      # Multi-phase encoding can legitimately take longer — scale timeouts by phase count
+      phases = video.remote_services_data["processing_phases"].to_i
+      phase_multiplier = [phases, 1].max
+
       elapsed_hours = (Time.current - Time.parse(started_at)) / 1.hour
+      hard_timeout = 6 * phase_multiplier
+      warn_timeout = 2 * phase_multiplier
 
-      # Mark as failed after very long processing (6+ hours)
-      if elapsed_hours > 6
-        Rails.logger.error("MonitorProcessingJob: Marking video ##{video.id} as failed after #{elapsed_hours.round(1)} hours")
+      # Mark as failed after very long processing
+      if elapsed_hours > hard_timeout
+        Rails.logger.error("MonitorProcessingJob: Marking video ##{video.id} as failed after #{elapsed_hours.round(1)} hours (timeout: #{hard_timeout}h)")
 
-        # Persist failure state even if validations fail
         begin
           video.processing_failed!
+          broadcast_file_update(video)
         rescue => e
           Rails.logger.warn("MonitorProcessingJob: AASM transition failed (#{e.message}), forcing state via update_columns")
-          # Use update_columns to update in DB and then reload to sync memory
           video.update_columns(aasm_state: "processing_failed", updated_at: Time.current)
           video.reload
+          broadcast_file_update(video)
         end
 
         return true
-      elsif elapsed_hours > 2
-        Rails.logger.warn("MonitorProcessingJob: Video ##{video.id} has been processing for #{elapsed_hours.round(1)} hours")
+      elsif elapsed_hours > warn_timeout
+        Rails.logger.warn("MonitorProcessingJob: Video ##{video.id} has been processing for #{elapsed_hours.round(1)} hours (warning: #{warn_timeout}h)")
       end
 
-      # Return whether it's been processing too long (>2 hours) but without marking as failed
-      elapsed_hours > 2
+      # Return whether it's been processing too long but without marking as failed
+      elapsed_hours > warn_timeout
     rescue => e
       Rails.logger.error("MonitorProcessingJob: Error checking processing time for video ##{video.id}: #{e.message}")
       false
     end
 
     def upload_is_stuck?(video, upload_started_at)
-      rs_data = video.remote_services_data || {}
-      rs_data["upload_progress"]
-
       # Calculate appropriate timeout based on file size
       file_size = video.file_size || 0
       base_timeout = 5.minutes # Base timeout for small files

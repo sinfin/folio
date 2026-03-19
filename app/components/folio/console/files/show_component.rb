@@ -14,7 +14,8 @@ class Folio::Console::Files::ShowComponent < Folio::Console::ApplicationComponen
                           id: @file.id,
                           file_type: @file.class.to_s,
                           show_url: controller.folio.url_for([:console, @file]),
-                          index_url: controller.folio.url_for([:console, @file.class])
+                          index_url: controller.folio.url_for([:console, @file.class]),
+                          aasm_state: @file.aasm_state
                         },
                         action: {
                           "f-uppy:upload-success": "uppyUploadSuccess",

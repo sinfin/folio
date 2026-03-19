@@ -1,0 +1,13 @@
+span.f-c-files-show-encoding-info data=data
+  - if failed?
+    span.f-c-files-show-encoding-info__phase.f-c-files-show-encoding-info__phase--failed
+      - if retrying?
+        = t(".phase_failed_retrying")
+      - else
+        = t(".phase_failed")
+  - elsif processing?
+    span.f-c-files-show-encoding-info__phase
+      = current_phase_label
+    span.f-c-files-show-encoding-info__progress
+      - if encoding_progress.present?
+        = "#{encoding_progress}%"
