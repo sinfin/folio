@@ -22,7 +22,7 @@ class Folio::CraMediaCloud::EncoderTest < ActiveSupport::TestCase
     )
 
     assert_includes manifest_xml, 'src="https://s3.amazonaws.com/bucket/uploads/video.mp4'
-    assert_not_includes manifest_xml, 'file='
+    assert_not_includes manifest_xml, "file="
     assert_includes manifest_xml, 'size="123456"'
     assert_includes manifest_xml, 'md5="abc123def456"'
     assert_includes manifest_xml, "<profileGroup>VoDSD</profileGroup>"
@@ -46,7 +46,7 @@ class Folio::CraMediaCloud::EncoderTest < ActiveSupport::TestCase
     )
 
     assert_includes manifest_xml, 'file="video.mp4"'
-    assert_not_includes manifest_xml, 'src='
+    assert_not_includes manifest_xml, "src="
   end
 
   # --- upload_file ---

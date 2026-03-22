@@ -484,7 +484,7 @@ class Folio::File < Folio::ApplicationRecord
     def set_file_track_duration
       if self.class.human_type == "video"
         # For video: handled together with dimensions in set_video_file_dimensions
-        return
+        nil
       elsif self.class.human_type == "audio"
         self.file_track_duration = Folio::File::GetFileTrackDurationJob.perform_now(file_url_or_path, "audio")
         self.preview_track_duration_in_seconds = self.respond_to?(:preview_duration_in_seconds) ? preview_duration_in_seconds : 0
