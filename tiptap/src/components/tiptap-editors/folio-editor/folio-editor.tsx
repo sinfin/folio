@@ -213,6 +213,7 @@ export function FolioEditor({
         link: {
           openOnClick: false,
           enableClickSelection: true,
+          autolink: false,
           HTMLAttributes: {
             rel: null,
             target: null,
