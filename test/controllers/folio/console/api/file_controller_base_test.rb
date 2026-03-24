@@ -108,6 +108,34 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
       assert_response(:ok)
     end
 
+    test "#{klass} - open_batch_form merges file_attributes into form" do
+      files = create_list(klass.model_name.singular, 2, author: "from_db")
+      file_ids = files.map(&:id)
+
+      get url_for([:batch_bar, :console, :api, klass, format: :json])
+      assert_response(:ok)
+
+      post url_for([:handle_batch_queue, :console, :api, klass, format: :json]), params: {
+        queue: {
+          add: file_ids,
+        }
+      }
+      assert_response(:ok)
+
+      post url_for([:open_batch_form, :console, :api, klass, format: :json]), params: {
+        file_attributes: {
+          author: "override_from_request",
+        }
+      }
+      assert_response(:ok)
+
+      parsed = Nokogiri::HTML(response.parsed_body["data"])
+      author_input = parsed.at_css('input[name="file_attributes[author]"]')
+
+      assert author_input.present?
+      assert_equal "override_from_request", author_input["value"]
+    end
+
     test "#{klass} - handle_batch_queue" do
       # cannot test session[*] sadly
       file = create(klass.model_name.singular)

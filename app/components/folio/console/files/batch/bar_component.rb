@@ -4,11 +4,13 @@ class Folio::Console::Files::Batch::BarComponent < Folio::Console::ApplicationCo
   def initialize(file_klass:,
                  change_to_propagate: nil,
                  multi_picker: false,
-                 updated_at: nil)
+                 updated_at: nil,
+                 attribute_overrides: nil)
     @file_klass = file_klass
     @change_to_propagate = change_to_propagate
     @multi_picker = multi_picker
     @updated_at = updated_at || Time.current
+    @attribute_overrides = attribute_overrides
   end
 
   def data
