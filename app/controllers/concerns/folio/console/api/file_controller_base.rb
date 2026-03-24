@@ -314,7 +314,8 @@ module Folio::Console::Api::FileControllerBase
       }
     end
 
-    @file.dont_run_after_save_jobs = true
+    @file.try(:dont_run_after_save_jobs=, true)
+
 
     @file.update!(thumbnail_configuration:,
                   thumbnail_sizes:,

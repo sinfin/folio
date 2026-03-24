@@ -345,6 +345,15 @@ class Folio::FileTest < ActiveSupport::TestCase
   end
 end
 
+class Folio::FileUrlOrPathTest < ActiveSupport::TestCase
+  test "file_url_or_path returns local path for FileDataStore" do
+    video = create(:folio_file_video)
+    result = video.file_url_or_path
+    assert result.is_a?(String)
+    assert_not result.start_with?("http"), "Expected local path, got URL: #{result}"
+  end
+end
+
 class Folio::FileImageMetadataKeywordsTest < ActiveSupport::TestCase
   include ActiveJob::TestHelper
 

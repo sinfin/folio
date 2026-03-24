@@ -3,6 +3,33 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [7.5.1] - 2026-03-19
+
+### Fixed
+
+- **CRA reference_id uniqueness**: Added video ID to reference_id format (`{env}-{slug}-{id}-{s3_etag}-{generation}`) to prevent cross-contamination between videos with identical slugs
+- **CRA encoding_generation race condition**: Added reload fallback in CreateMediaJob when encoding_generation is nil due to uncommitted transaction from S3::CreateFileJob
+- **CRA MonitorProcessingJob orphan detection**: Added 10-minute threshold to orphan detection for videos with reference_id but no remote_id, preventing false positives on just-uploaded videos
+
+## [7.5.0] - 2026-03-19
+
+### Added
+
+- **CRA presigned S3 URLs**: Encoder no longer downloads video to local disk or uploads via SFTP. CRA fetches video directly from S3 via presigned URL (7-day expiry). Only the XML manifest is uploaded via SFTP.
+- **Two-phase encoding**: When `encoder_processing_phases` > 1, CreateMediaJob submits two manifests with the same `refId` — SD first, then HD. Backward compatible: single-phase when `encoder_processing_phases` is nil/1.
+- **Encoding progress tracking**: CheckProgressJob parses CRA `messages` array for per-phase milestones, extracts video duration, and estimates completion time. New processing states: `sd_processing → sd_processed → hd_processing → full_media_processed`.
+- **Console encoding info component**: `EncodingInfoComponent` shows current encoding phase and progress percentage on video file detail page, with real-time updates via MessageBus.
+- **S3 client and jobs**: `Folio::S3::Client` for presigned URL generation, `Folio::S3::CreateFileJob` for S3-based file creation, `Folio::File::GetVideoMetadataJob` for video metadata extraction.
+- **Video thumbnail generation**: `GenerateThumbnailJob` reworked for reliable thumbnail generation from video files.
+
+### Changed
+
+- `ShowComponent` now exposes `aasmState` as a Stimulus value and reloads via Turbo on state transitions (encoding progress, file updates)
+- `ShowComponent` layout: state badge moved to right side (`ms-auto`), encoding info rendered inline after state
+
+### Fixed
+
+- add `try` to `dont_run_after_save_jobs` to enable thumbnail generation for `private_attachments`
 
 ## [7.4.1] - 2026-03-11
 

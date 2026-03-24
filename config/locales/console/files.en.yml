@@ -22,6 +22,19 @@ en:
           navigation_previous: Previous
 
         show:
+          encoding_info_component:
+            phase_waiting: "Waiting in queue"
+            phase_waiting_multi: "Waiting in queue (phase %{phase}/%{total})"
+            phase_waiting_named: "Waiting in queue – %{name}"
+            phase_encoding: "Encoding video"
+            phase_encoding_multi: "Encoding video (%{phase}/%{total})"
+            phase_encoding_named: "Encoding %{name}"
+            phase_packaging: "Packaging"
+            phase_packaging_multi: "Packaging (%{phase}/%{total})"
+            phase_packaging_named: "Packaging – %{name}"
+            phase_failed_retrying: "Processing failed, retrying automatically"
+            phase_failed: "Processing failed. Try re-uploading or contact support."
+
           metadata_component:
             no_metadata: No metadata
             extract_metadata: Extract metadata again

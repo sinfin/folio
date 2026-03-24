@@ -19,8 +19,11 @@ module Folio::MediaFileProcessingBase
 
   def process_attached_file
     regenerate_thumbnails if try(:thumbnailable?)
-    # Set new encoding generation to invalidate any old CheckProgressJobs
-    self.update(remote_services_data: {
+    # Set new encoding generation to invalidate any old CheckProgressJobs.
+    # Use update_columns to bypass validations — remote_services_data is processing
+    # metadata and must not be blocked by unrelated validation failures (e.g. missing
+    # file dimensions when ffprobe fails).
+    update_remote_services_data({
       "processing_step_started_at" => Time.current,
       "encoding_generation" => Time.current.to_i
     })
@@ -91,8 +94,7 @@ module Folio::MediaFileProcessingBase
 
   def create_full_media
     full_media_job_class.perform_later(self)
-    rsd = remote_services_data || {}
-    self.update(remote_services_data: rsd.merge!({ "service" => processed_by, "processing_state" => "enqueued", "processing_step_started_at" => Time.current }))
+    update_remote_services_data("service" => processed_by, "processing_state" => "enqueued", "processing_step_started_at" => Time.current)
   end
 
   def create_preview_media
@@ -100,7 +102,7 @@ module Folio::MediaFileProcessingBase
       preview_media_processed!
     else
       preview_media_job_class.perform_later(self)
-      self.update(remote_services_data: self.remote_services_data.merge!({ "processing_step_started_at" => Time.current }))
+      update_remote_services_data("processing_step_started_at" => Time.current)
     end
   end
 
@@ -130,7 +132,7 @@ module Folio::MediaFileProcessingBase
     if (remote_services_data || {}).dig("preview_interval").present?
       preview_ends_at_second - preview_starts_at_second
     else
-      [file_track_duration_in_seconds, DEFAULT_PREVIEW_DURATION].min
+      file_track_duration_in_seconds.present? ? [file_track_duration_in_seconds, DEFAULT_PREVIEW_DURATION].min : DEFAULT_PREVIEW_DURATION
     end
   end
 
@@ -148,4 +150,21 @@ module Folio::MediaFileProcessingBase
   def preview_duration
     @preview_duration ||= ActiveSupport::Duration.build(preview_duration_in_seconds)
   end
+
+  private
+    # Merge new data into remote_services_data and persist directly to DB,
+    # bypassing model validations and callbacks. This is necessary because
+    # remote_services_data is processing metadata that must not be blocked
+    # by unrelated validation failures on the model.
+    #
+    # NOTE: Non-atomic read-modify-write — if another process updates
+    # remote_services_data between read and write, changes will be lost.
+    # Acceptable at current call sites (process_attached_file, create_full_media)
+    # where the video is being initially processed and no concurrent job
+    # is modifying remote_services_data yet.
+    def update_remote_services_data(new_data)
+      merged = (remote_services_data || {}).merge(new_data)
+      update_columns(remote_services_data: merged)
+      write_attribute(:remote_services_data, merged)
+    end
 end
