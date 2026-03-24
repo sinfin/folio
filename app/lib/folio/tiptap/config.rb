@@ -12,7 +12,8 @@ module Folio
                     :autosave,
                     :embed_node_class_name,
                     :node_groups,
-                    :theme
+                    :theme,
+                    :autolink
 
       def initialize(node_names: nil,
                      styled_paragraph_variants: nil,
@@ -23,7 +24,8 @@ module Folio
                      autosave: true,
                      embed_node_class_name: nil,
                      node_groups: nil,
-                     theme: nil)
+                     theme: nil,
+                     autolink: nil)
         @node_names = node_names || get_all_tiptap_node_names
         @styled_paragraph_variants = styled_paragraph_variants || default_styled_paragraph_variants
         @styled_wrap_variants = styled_wrap_variants || default_styled_wrap_variants
@@ -33,6 +35,7 @@ module Folio
         @embed_node_class_name = embed_node_class_name
         @node_groups = node_groups || []
         @theme = theme
+        @autolink = autolink
 
         @schema = schema || build_default_schema
       end
@@ -47,7 +50,8 @@ module Folio
           autosave: @autosave,
           embed_node_class_name: @embed_node_class_name,
           node_groups: @node_groups,
-          theme: @theme
+          theme: @theme,
+          autolink: @autolink
         }
       end
 
