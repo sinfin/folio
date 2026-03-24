@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 ### Fixed
-- **hyperlinks in tiptap editor**: Setting should be configurable to allow user full control
+- **hyperlinks in tiptap editor**: Added autolink to config file to allow override
 ## [7.5.1] - 2026-03-19
 
 ### Fixed
