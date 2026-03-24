@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- tiptap float css - allow floating on mobile as well
+
 ## [7.5.1] - 2026-03-19
 
 ### Fixed
