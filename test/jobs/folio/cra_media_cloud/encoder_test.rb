@@ -149,9 +149,10 @@ class Folio::CraMediaCloud::EncoderTest < ActiveSupport::TestCase
       raise "persistent error"
     end
 
-    assert_raises(RuntimeError, /persistent error/) do
+    error = assert_raises(RuntimeError) do
       encoder.send(:upload_with_retry, always_fail_sftp, StringIO.new("data"), "/dest/manifest.xml", max_retries: 2)
     end
+    assert_match(/persistent error/, error.message)
 
     assert_equal 3, attempts  # 1 initial + 2 retries
   end
