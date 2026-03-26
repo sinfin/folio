@@ -142,6 +142,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
 
     hash ||= {}
     hash[:action] = action
+    hash[:only_path] = true
 
     opts = [:console]
     opts << through_record if through_record
