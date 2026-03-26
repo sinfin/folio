@@ -19,10 +19,8 @@ module Folio::FriendlyId
     else
       friendly_id :slug_candidates, use: %i[slugged history]
 
-      validates :slug,
-                presence: true,
-                uniqueness: true,
-                format: { with: /[0-9a-z-]+/ }
+      validates :slug, presence: true, format: { with: /[0-9a-z-]+/ }
+      validates :slug, uniqueness: true, if: -> { slug_changed? || new_record? }
     end
 
     before_validation :strip_and_downcase_slug

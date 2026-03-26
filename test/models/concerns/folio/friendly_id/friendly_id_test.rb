@@ -60,6 +60,15 @@ class Folio::FriendlyIdTest < ActiveSupport::TestCase
     assert article.update(slug: "test-slug")
   end
 
+  test "uniqueness validation is skipped for existing records when slug is unchanged" do
+    file = create(:folio_file_image)
+    other_file = create(:folio_file_image)
+    other_file.update_column(:slug, file.slug)
+    other_file.reload
+
+    assert other_file.valid?
+  end
+
   test "should validate slug uniqueness across multiple classes" do
     site = get_any_site
     page = create(:folio_page, slug: "test", site:)
