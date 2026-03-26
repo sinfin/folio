@@ -96,6 +96,7 @@ declare global {
     embed_node_class_name?: string;
     node_groups?: FolioTiptapNodeGroup[];
     theme?: string;
+    autolink?: boolean;
   }
 
   interface FolioTiptapAutosaveIndicatorInfo {
