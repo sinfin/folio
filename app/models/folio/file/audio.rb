@@ -1,10 +1,110 @@
 # frozen_string_literal: true
 
 class Folio::File::Audio < Folio::File
-  validate_file_format %w[audio/mpeg audio/aac audio/x-hx-aac-adts]
+  include Folio::S3::Client
+
+  ACCEPTED_FILE_FORMATS = %w[
+    audio/mpeg
+    audio/mp3
+    audio/aac
+    audio/x-hx-aac-adts
+    audio/mp4
+    audio/x-m4a
+    audio/wav
+    audio/x-wav
+    audio/vnd.wave
+    audio/flac
+    audio/x-flac
+    audio/ogg
+    application/ogg
+  ].freeze
+
+  validate_file_format ACCEPTED_FILE_FORMATS
+
+  def mapped_metadata
+    metadata = file_metadata.to_h
+
+    {
+      title: metadata["title"],
+      artist: metadata["artist"],
+      album: metadata["album"],
+      track: metadata["track"],
+      codec_name: metadata["codec_name"],
+      bitrate_kbps: metadata["bitrate_kbps"],
+      sample_rate_hz: metadata["sample_rate_hz"],
+      channels: metadata["channels"],
+      duration_seconds: metadata["duration_seconds"],
+      artwork_present: metadata["artwork_present"],
+    }.compact
+  end
+
+  def artwork_image
+    @artwork_image ||= begin
+      image_id = remote_services_data.to_h["artwork_image_id"]
+      return if image_id.blank?
+
+      Folio::File::Image.find_by(id: image_id)
+    end
+  end
+
+  def artwork_image_placement
+    return unless artwork_image.present?
+
+    Folio::FilePlacement::Cover.new(file: artwork_image)
+  end
+
+  def playable_storage_data
+    remote_services_data.to_h["playable"].to_h
+  end
+
+  def playable_file_path
+    playable_storage_data["path"]
+  end
+
+  def playable_content_type
+    playable_storage_data["content_type"].presence || file_mime_type
+  end
+
+  def playable_extension
+    playable_storage_data["extension"].presence || file_extension.to_s
+  end
+
+  def playable_download_url(expires_in: 15.minutes.to_i)
+    return unless playable_file_path.present?
+    return if playable_storage_data["storage"] != "s3"
+
+    test_aware_presign_url(s3_path: playable_file_path,
+                           method_name: :get_object)
+  end
+
+  def low_quality_source?
+    remote_services_data.to_h["quality_warning"] == "low_bitrate"
+  end
+
+  def private?
+    true
+  end
 
   def self.human_type
     "audio"
+  end
+
+  def extract_metadata!(force: false, user_id: nil, save: true)
+    Folio::File::AudioProcessingService.new(self).extract_metadata!(force:, save:)
+  end
+
+  def should_extract_metadata?
+    return false unless file.present?
+
+    if is_a?(Folio::File)
+      return false if file_metadata_extracted_at.present? && !attached_file_changed?
+    end
+
+    true
+  end
+
+  def process_attached_file
+    Folio::File::ProcessAudioJob.perform_later(self)
   end
 end
 

@@ -51,7 +51,11 @@ class Folio::Console::FileSerializer
   end
 
   attribute :source_url do |object|
-    unless object.try(:private?)
+    if object.try(:private?)
+      if object.is_a?(Folio::File::Audio)
+        object.playable_download_url
+      end
+    else
       Folio::S3.cdn_url_rewrite(object.file.remote_url)
     end
   end
@@ -111,11 +115,15 @@ class Folio::Console::FileSerializer
   attribute :player_source_mime_type do |object|
     if object.try(:processing_service) == "mux" && object.ready?
       "application/x-mpegurl"
-    elsif object.file_mime_type
-      if object.file_mime_type.match?(%r{audio/.+-aac-.+})
+    elsif (source_mime_type = if object.is_a?(Folio::File::Audio) && object.try(:private?)
+      object.playable_content_type.presence || object.file_mime_type
+    else
+      object.file_mime_type
+    end)
+      if source_mime_type.match?(%r{audio/.+-aac-.+})
         "audio/aac"
       else
-        object.file_mime_type
+        source_mime_type
       end
     end
   end
