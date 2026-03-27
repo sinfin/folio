@@ -1,0 +1,26 @@
+.f-c-files-show-encoding-info
+  display: inline
+  color: $gray-600
+  font-size: $font-size-sm
+  white-space: nowrap
+
+  &:empty
+    display: none
+
+  &__progress
+    &:not(:empty)::before
+      content: " · "
+
+  &__phase--failed
+    color: $danger
+
+// Pulse the yellow state dot when encoding info component follows the state cell
+.f-c-files-show__meta-item:has(+ .f-c-files-show-encoding-info:not(:empty))
+  .f-c-state__state-square--state-processing
+    animation: f-c-files-show-encoding-info-pulse 2s ease-in-out infinite
+
+@keyframes f-c-files-show-encoding-info-pulse
+  0%, 100%
+    opacity: 1
+  50%
+    opacity: 0.35
