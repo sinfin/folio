@@ -232,7 +232,7 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
 
     this.ajax({
       url: `${this.baseApiUrlValue}/handle_batch_queue`,
-      data: this.dataWithFormInputs({ queue: this.queue }),
+      data: { queue: this.queue },
       status: 'reloading'
     })
   }

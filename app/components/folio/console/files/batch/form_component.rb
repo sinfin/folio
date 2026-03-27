@@ -45,23 +45,20 @@ class Folio::Console::Files::Batch::FormComponent < Folio::Console::ApplicationC
     opts[:wrapper_html] = { class: "f-c-files-batch-form__form-group" }
     opts[:input_html] ||= {}
 
-    if @attribute_overrides[attribute].present?
-      opts[:input_html][:value] = @attribute_overrides[attribute]
-    else
-      values = @files.filter_map { |file| file.public_send(attribute).presence }.uniq
+    values = @files.filter_map { |file| file.public_send(attribute).presence }.uniq
+    values << @attribute_overrides[attribute] if @attribute_overrides[attribute].present?
 
-      if values.blank?
-        opts.delete(:input_html)
+    if values.blank?
+      opts.delete(:input_html)
+    else
+      if values.size == 1
+        opts[:input_html][:value] = values.first
       else
-        if values.size == 1
-          opts[:input_html][:value] = values.first
-        else
-          Rails.logger.error("More values for #{attribute}: #{values}")
-          opts[:wrapper_html][:class] += " f-c-files-batch-form__form-group--has-values form-group-invalid"
-          opts[:input_html][:class] = "is-invalid"
-          opts[:hint] = t(".has_values_hint")
-          opts[:placeholder] = t(".has_values_placeholder")
-        end
+        Rails.logger.error("More values for #{attribute}: #{values}")
+        opts[:wrapper_html][:class] += " f-c-files-batch-form__form-group--has-values form-group-invalid"
+        opts[:input_html][:class] = "is-invalid"
+        opts[:hint] = t(".has_values_hint")
+        opts[:placeholder] = t(".has_values_placeholder")
       end
     end
 

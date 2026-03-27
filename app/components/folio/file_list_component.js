@@ -27,6 +27,14 @@ window.Folio.Stimulus.register('f-file-list', class extends window.Stimulus.Cont
     this.prependFileElement(fileElement)
   }
 
+  folioUploadsStarted (e) {
+    const bar = document.querySelector('.f-c-files-batch-bar')
+
+    if (bar) {
+      bar.dispatchEvent(new CustomEvent("f-c-files-batch-bar:cancel"))
+    }
+  }
+
   tableViewChange (e) {
     if (!this.element.classList.contains('f-file-list--view-changeable')) return
 
