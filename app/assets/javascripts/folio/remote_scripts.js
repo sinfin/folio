@@ -107,6 +107,11 @@ window.Folio.RemoteScripts.load = (key) => {
 
     script.src = url
 
+    if (data.integrity) {
+      script.integrity = data.integrity
+      script.crossOrigin = 'anonymous'
+    }
+
     document.head.appendChild(script)
 
     return script
