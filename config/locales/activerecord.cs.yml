@@ -178,7 +178,7 @@ cs:
         vat_identification_number: DIČ
         zip: PSČ
       folio/file_placement/base:
-        alt: Alternativní text
+        alt: Alternativní popisek
         description: Popisek
         title: Titulek
 
