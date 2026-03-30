@@ -115,16 +115,8 @@ class Folio::Console::FileSerializer
   attribute :player_source_mime_type do |object|
     if object.try(:processing_service) == "mux" && object.ready?
       "application/x-mpegurl"
-    elsif (source_mime_type = if object.is_a?(Folio::File::Audio) && object.try(:private?)
-      object.playable_content_type.presence || object.file_mime_type
-    else
-      object.file_mime_type
-    end)
-      if source_mime_type.match?(%r{audio/.+-aac-.+})
-        "audio/aac"
-      else
-        source_mime_type
-      end
+    elsif (source_mime_type = source_mime_type_for(object))
+      source_mime_type.match?(%r{audio/.+-aac-.+}) ? "audio/aac" : source_mime_type
     end
   end
 
@@ -149,5 +141,16 @@ class Folio::Console::FileSerializer
         object.imported_from_photo_archive?
       end
     end
+  end
+
+  class << self
+    private
+      def source_mime_type_for(object)
+        if object.is_a?(Folio::File::Audio) && object.try(:private?)
+          object.playable_content_type.presence || object.file_mime_type
+        else
+          object.file_mime_type
+        end
+      end
   end
 end

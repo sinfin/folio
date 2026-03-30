@@ -71,7 +71,6 @@ class Folio::File::Audio < Folio::File
 
   def playable_download_url(expires_in: 15.minutes.to_i)
     return unless playable_file_path.present?
-    return if playable_storage_data["storage"] != "s3"
 
     test_aware_presign_url(s3_path: playable_file_path,
                            method_name: :get_object)
@@ -89,16 +88,13 @@ class Folio::File::Audio < Folio::File
     "audio"
   end
 
-  def extract_metadata!(force: false, user_id: nil, save: true)
+  def extract_metadata!(force: false, save: true)
     Folio::File::AudioProcessingService.new(self).extract_metadata!(force:, save:)
   end
 
   def should_extract_metadata?
     return false unless file.present?
-
-    if is_a?(Folio::File)
-      return false if file_metadata_extracted_at.present? && !attached_file_changed?
-    end
+    return false if file_metadata_extracted_at.present? && !attached_file_changed?
 
     true
   end

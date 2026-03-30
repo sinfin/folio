@@ -16,4 +16,16 @@ class Folio::Console::FileSerializerTest < ActiveSupport::TestCase
     assert_equal playable_url, data[:source_url]
     assert_equal "audio/mpeg", data[:player_source_mime_type]
   end
+
+  test "non-private file uses cdn url as source_url and file_mime_type for player_source_mime_type" do
+    image = create(:folio_file_image)
+    cdn_url = "https://cdn.example.com/image.jpg"
+
+    Folio::S3.stub(:cdn_url_rewrite, cdn_url) do
+      data = Folio::Console::FileSerializer.new(image).serializable_hash.dig(:data, :attributes)
+
+      assert_equal cdn_url, data[:source_url]
+      assert_equal image.file_mime_type, data[:player_source_mime_type]
+    end
+  end
 end

@@ -102,10 +102,7 @@ class Folio::File::AudioProcessingService
       updates[:remote_services_data] = remote_services_data if remote_services_data
 
       audio_file.update_columns(updates)
-
-      updates.each do |key, value|
-        audio_file.send(:write_attribute, key, value)
-      end
+      audio_file.assign_attributes(updates)
     end
 
     def build_mapped_metadata(metadata)
@@ -192,29 +189,27 @@ class Folio::File::AudioProcessingService
     def store_derivative(tempfile:, extension:, content_type:)
       relative_path = derivative_relative_path(extension)
 
-      if Dragonfly.app.datastore.is_a?(Dragonfly::FileDataStore)
-        absolute_path = Rails.root.join("tmp", "folio_audio_derivatives", relative_path)
-        FileUtils.mkdir_p(absolute_path.dirname)
-        FileUtils.cp(tempfile.path, absolute_path)
+      cleanup_old_derivative!(new_path: relative_path)
 
-        {
-          "storage" => "local",
-          "path" => absolute_path.to_s,
-          "extension" => extension,
-          "content_type" => content_type,
-        }
-      else
-        test_aware_s3_upload(s3_path: relative_path,
-                             file: tempfile,
-                             acl: "private")
+      test_aware_s3_upload(s3_path: relative_path,
+                           file: tempfile,
+                           acl: "private")
 
-        {
-          "storage" => "s3",
-          "path" => relative_path,
-          "extension" => extension,
-          "content_type" => content_type,
-        }
-      end
+      {
+        "storage" => "s3",
+        "path" => relative_path,
+        "extension" => extension,
+        "content_type" => content_type,
+      }
+    end
+
+    def cleanup_old_derivative!(new_path:)
+      old_path = audio_file.playable_file_path
+      return unless old_path.present?
+      return unless audio_file.playable_storage_data["storage"] == "s3"
+      return if old_path == new_path
+
+      test_aware_s3_delete(s3_path: old_path)
     end
 
     def derivative_relative_path(extension)
@@ -243,7 +238,8 @@ class Folio::File::AudioProcessingService
 
         persist_artwork_image(tempfile)
       end
-    rescue StandardError
+    rescue StandardError => e
+      Rails.logger.warn("[AudioProcessingService] artwork extraction failed for file ##{audio_file.id}: #{e.message}")
       cleanup_missing_artwork_image!
     end
 
@@ -282,7 +278,7 @@ class Folio::File::AudioProcessingService
     end
 
     def duration_seconds(format_data:)
-      format_data["duration"]&.to_f&.ceil || audio_file.file_track_duration
+      format_data["duration"]&.to_f&.round || audio_file.file_track_duration
     end
 
     def bitrate_kbps(format_data:)
