@@ -10,7 +10,7 @@ All notable changes to this project will be documented in this file.
 - **CRA reference_id uniqueness**: Added video ID to reference_id format (`{env}-{slug}-{id}-{s3_etag}-{generation}`) to prevent cross-contamination between videos with identical slugs
 - **CRA encoding_generation race condition**: Added reload fallback in CreateMediaJob when encoding_generation is nil due to uncommitted transaction from S3::CreateFileJob
 - **CRA MonitorProcessingJob orphan detection**: Added 10-minute threshold to orphan detection for videos with reference_id but no remote_id, preventing false positives on just-uploaded videos
-
+- **Uniqueness validation on friendly_id slug**: Validate slug uniqueness only on new record or slug change to avoid issues with record saving
 ## [7.5.0] - 2026-03-19
 
 ### Added
