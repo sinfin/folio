@@ -2,7 +2,7 @@
 
 class Folio::Console::Api::JwPlayerController < Folio::Console::Api::BaseController
   def video_url
-    file = Folio::File.find(params.require(:file_id))
+    file = Folio::File.find_or_fetch(params.require(:file_id))
 
     if can_now?(:show, file)
       if file.try(:processing_service) == "jw_player" && file.remote_key

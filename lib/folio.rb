@@ -2,7 +2,7 @@
 
 module Folio
   mattr_accessor :enabled_packs
-  self.enabled_packs = [:cache]
+  self.enabled_packs = %i[cache record_cache]
 
   LANGUAGES = {
     cs: "CZ",

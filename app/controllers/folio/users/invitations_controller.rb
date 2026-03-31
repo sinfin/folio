@@ -136,7 +136,7 @@ class Folio::Users::InvitationsController < Devise::InvitationsController
 
     def source_site_for_user
       if site_slug = session&.dig(Folio::Devise::CrossdomainHandler::SESSION_KEY, :target_site_slug)
-        return Folio::Site.find(site_slug)
+        return Folio::Site.find_or_fetch(site_slug)
       end
 
       Folio::Current.site

@@ -15,7 +15,7 @@ class Folio::File::BatchDownloadJob < Folio::ApplicationJob
     file_klass = file_class_name.constantize
     raise "Unknown file_klass - #{file_class_name}" unless file_klass < Folio::File
 
-    site = Folio::Site.find(site_id)
+    site = Folio::Site.find_or_fetch(site_id)
     user = Folio::User.find(user_id)
     ability = Folio::Ability.new(user, site)
 

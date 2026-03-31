@@ -1,0 +1,7 @@
+# Record cache pack — Identity Cache for hot model reads (complements fragment cache versioning)
+
+enforce_dependencies: true
+
+dependencies:
+  - "../.." # core Folio (Folio::ApplicationRecord, Folio::FindOrFetch, etc.)
+  - "." # test/dummy app for integration tests

@@ -46,7 +46,7 @@ module Folio::HasSiteRoles
 
   def site_user_links_attributes=(attributes)
     attributes.each_value do |link_attributes|
-      next if (site = Folio::Site.find(link_attributes["site_id"].to_i.abs)).nil?
+      next if (site = Folio::Site.find_or_fetch(link_attributes["site_id"].to_i.abs)).nil?
 
       if link_attributes["site_id"].to_i < 0
         destroy_site_link(site:)
@@ -125,7 +125,7 @@ module Folio::HasSiteRoles
 
       sets.each_pair do |site_id, links|
         if links.size > 1
-          errors.add :site_roles, "Duplicitní přiřazení webu '#{Folio::Site.find(site_id).domain}'."
+          errors.add :site_roles, "Duplicitní přiřazení webu '#{Folio::Site.find_or_fetch(site_id).domain}'."
         end
       end
     end

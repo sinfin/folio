@@ -115,7 +115,7 @@ class Folio::Transportable::Importer
 
     def find_site
       if @hash[:attributes][:site_id].present?
-        Folio::Site.find(@hash[:attributes][:site_id])
+        Folio::Site.find_or_fetch(@hash[:attributes][:site_id])
       elsif @hash[:attributes][:site_domain].present?
         Folio::Site.find_by(domain: @hash[:attributes][:site_domain])
       elsif @record.site.present?

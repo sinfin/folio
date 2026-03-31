@@ -41,6 +41,7 @@ PATH
       friendly_id
       gibbon
       httpparty
+      identity_cache
       invisible_captcha
       iso-639
       jquery-rails
@@ -177,6 +178,8 @@ GEM
     annot8 (1.0.1)
       activerecord (>= 8.0.0, < 9)
       rake (>= 10.4, < 14.0)
+    ar_transaction_changes (1.1.11)
+      activerecord (>= 7.0.0)
     ast (2.4.3)
     audited (5.8.0)
       activerecord (>= 5.2, < 8.2)
@@ -399,6 +402,9 @@ GEM
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.8, >= 1.8.1)
       terminal-table (>= 1.5.1)
+    identity_cache (1.6.4)
+      activerecord (>= 7.0)
+      ar_transaction_changes (~> 1.1)
     invisible_captcha (2.3.0)
       rails (>= 5.2)
     io-console (0.8.1)

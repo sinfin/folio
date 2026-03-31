@@ -56,6 +56,16 @@ class Folio::Site < Folio::ApplicationRecord
 
   after_commit :nillify_folio_current_site_records
 
+  def self.find_or_fetch_by_domain(domain)
+    find_by(domain:)
+  end
+
+  def self.find_or_fetch_by_slug(slug)
+    friendly.find(slug)
+  rescue ActiveRecord::RecordNotFound
+    raise "Could not find site with '#{slug}' slug. Available are #{pluck(:slug)}"
+  end
+
   def self.additional_params
     []
   end

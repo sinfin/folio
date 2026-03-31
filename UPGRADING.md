@@ -1,5 +1,29 @@
 # Upgrading
 
+## Unreleased
+
+### Record cache pack and `Folio::FindOrFetch`
+
+Folio adds **`Folio::FindOrFetch`** (included on `Folio::ApplicationRecord`) and an optional **`record_cache`** pack that integrates [Shopify Identity Cache](https://github.com/Shopify/identity_cache) for hot reads on selected Folio models. See [docs/record_cache.md](docs/record_cache.md).
+
+**Gem / configuration**
+
+- The **`identity_cache`** gem is a runtime dependency of Folio.
+- **`Folio.enabled_packs`** now includes **`record_cache`** by default alongside **`cache`**. To disable Identity Cache integration, set `Folio.enabled_packs` in `config/initializers/folio.rb` (omit `record_cache` if you only want the DB-backed `find_or_fetch`).
+
+**Host applications**
+
+- If your models inherit from **`ApplicationRecord`** instead of **`Folio::ApplicationRecord`**, add `include Folio::FindOrFetch` to your base `ApplicationRecord` so `find_or_fetch` is available on app models.
+
+**API notes**
+
+- Use **`Model.find_or_fetch(...)`** instead of raw `find` where Folio suggests it (same call sites work with or without the pack).
+- **`Folio::Site`** exposes **`find_or_fetch_by_domain`** and **`find_or_fetch_by_slug`** for resolving the current site from the host; these are separate from `find_or_fetch`’s `site:` / `with:` keywords (sites do not belong to a site). Passing **`site:`** or **`published: true`** to `find_or_fetch` on a model that has no **`by_site`** or **`published_or_preview_token`** scope raises **`ArgumentError`**.
+
+**Production**
+
+- Use a **shared** cache store (e.g. Redis) for Identity Cache in multi-process deployments; see the record cache doc for CAS/backend notes.
+
 ## 7.2.* to 7.3.0
 
 ### has_folio_tiptap? Method Change

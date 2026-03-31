@@ -84,14 +84,9 @@ class Folio::Current < ActiveSupport::CurrentAttributes
     else
       if Rails.env.development?
         slug = host.delete_suffix(".localhost")
-
-        begin
-          Folio::Site.friendly.find(slug)
-        rescue ActiveRecord::RecordNotFound
-          raise "Could not find site with '#{slug}' slug. Available are #{Folio::Site.pluck(:slug)}"
-        end
+        Folio::Site.find_or_fetch_by_slug(slug)
       else
-        Folio::Site.find_by(domain: host) || Folio::Current.main_site
+        Folio::Site.find_or_fetch_by_domain(host) || Folio::Current.main_site
       end
     end
   end

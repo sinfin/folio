@@ -19,7 +19,7 @@ module Folio
             if pack_name == :cache
               ["Folio::Cache::Version"]
             else
-              super
+              []
             end
           end
         end

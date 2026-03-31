@@ -11,7 +11,7 @@ class Folio::Api::File::VideosController < Folio::Api::BaseController
 
   private
     def find_video
-      @video = Folio::File::Video.find(params[:id])
+      @video = Folio::File::Video.find_or_fetch(params[:id])
     end
 
     def vtt_subtitles_for(video, lang)
