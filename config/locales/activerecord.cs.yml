@@ -39,6 +39,7 @@ cs:
         default_gravity: Výchozí ořez
         file_mime_type: Typ souboru
         file_size: Velikost souboru
+        file_track_duration: Délka
         media_source: Zdroj
         preview_duration: Kolik vteřin je zdarma?
         slug: Slug

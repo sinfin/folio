@@ -52,6 +52,37 @@ class Folio::File::AudioTest < ActiveSupport::TestCase
     end
   end
 
+  test "formatted_duration returns nil when file_track_duration is nil" do
+    audio = build(:folio_file_audio, file_track_duration: nil)
+    assert_nil audio.formatted_duration
+  end
+
+  test "formatted_duration returns M:SS for durations under one hour" do
+    audio = build(:folio_file_audio)
+
+    audio.file_track_duration = 0
+    assert_equal "0:00", audio.formatted_duration
+
+    audio.file_track_duration = 35
+    assert_equal "0:35", audio.formatted_duration
+
+    audio.file_track_duration = 90
+    assert_equal "1:30", audio.formatted_duration
+
+    audio.file_track_duration = 3599
+    assert_equal "59:59", audio.formatted_duration
+  end
+
+  test "formatted_duration returns H:MM:SS for durations of one hour or more" do
+    audio = build(:folio_file_audio)
+
+    audio.file_track_duration = 3600
+    assert_equal "1:00:00", audio.formatted_duration
+
+    audio.file_track_duration = 7384
+    assert_equal "2:03:04", audio.formatted_duration
+  end
+
   test "artwork image placement wraps derived image" do
     artwork = create(:folio_file_image)
     audio = create(:folio_file_audio, remote_services_data: { "artwork_image_id" => artwork.id })

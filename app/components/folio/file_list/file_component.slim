@@ -112,6 +112,18 @@ div[
       - elsif !@template && @file.file_size.present?
         = helpers.number_to_human_size(@file.file_size, precision: 0)
 
+  - if audio_file_klass? && (@thead || @template || @file.try(:file_track_duration))
+    div[
+      class="f-file-list-file__part"
+      class="f-file-list-file__part--duration"
+      class="small text-muted text-nowrap text-end"
+    ]
+      - if @thead
+        .f-file-list-file__thead-label-wrap.small.text-muted
+          span.f-file-list-file__thead-label = t('.thead/duration')
+      - elsif !@template && (duration = @file.formatted_duration)
+        = duration
+
   - if @file.respond_to?(:tags)
     div[
       class="f-file-list-file__part"

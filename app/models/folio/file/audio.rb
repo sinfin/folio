@@ -102,6 +102,21 @@ class Folio::File::Audio < Folio::File
   def process_attached_file
     Folio::File::ProcessAudioJob.perform_later(self)
   end
+
+  def formatted_duration
+    return nil if file_track_duration.nil?
+
+    total = file_track_duration.to_i
+    h = total / 3600
+    m = (total % 3600) / 60
+    s = total % 60
+
+    if h > 0
+      format("%d:%02d:%02d", h, m, s)
+    else
+      format("%d:%02d", m, s)
+    end
+  end
 end
 
 # == Schema Information

@@ -233,6 +233,10 @@ class Folio::FileList::FileComponent < Folio::ApplicationComponent
     end
   end
 
+  def audio_file_klass?
+    @file_klass.try(:human_type) == "audio"
+  end
+
   def serialized_file_json
     if @serialize && @file && @file.id
       Folio::Console::FileSerializer.new(@file).serializable_hash[:data].to_json
