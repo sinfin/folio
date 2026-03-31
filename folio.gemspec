@@ -76,6 +76,7 @@ Gem::Specification.new do |s|
   s.add_dependency "show_for"
   s.add_dependency "httpparty"
   s.add_dependency "identity_cache"
+  s.add_dependency "cityhash" # faster identity_cache
   s.add_dependency "sidekiq-cron", "~> 1.10.1"
   s.add_dependency "sidekiq", "~> 6.5"
   s.add_dependency "activejob-uniqueness", ">= 0.3.0"

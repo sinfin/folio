@@ -25,6 +25,7 @@ PATH
       cells-rails
       cells-slim
       charlock_holmes
+      cityhash
       cocoon
       countries
       country_select
@@ -254,6 +255,7 @@ GEM
     childprocess (5.1.0)
       logger (~> 1.5)
     chronic (0.10.2)
+    cityhash (0.9.0)
     cocoon (1.2.15)
     coderay (1.1.3)
     colorize (0.8.1)
