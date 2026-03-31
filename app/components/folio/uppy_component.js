@@ -1,6 +1,8 @@
 //= require folio/i18n
 //= require folio/remote_scripts
 
+
+//triggers `f-uppy:xxxx` events through stimulus_controller.dispatch() (eg. `f-uppy:upload-success`)
 window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controller {
   static values = {
     fileType: String,
@@ -146,6 +148,11 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
               throw new Error(window.Folio.i18n(this.constructor.ERROR_MESSAGES, 'failedToPrepareUpload'))
             })
         }
+      })
+
+      this.uppy.on('upload', (data) => {
+        console.log("triggering f-uppy:upload")
+        this.dispatch('upload', data)
       })
 
       this.uppy.on('upload-success', (file) => {

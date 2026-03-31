@@ -28,6 +28,7 @@ window.Folio.Stimulus.register('f-file-list', class extends window.Stimulus.Cont
   }
 
   folioUploadsStarted (e) {
+    console.log("folioUploadsStarted")
     const bar = document.querySelector('.f-c-files-batch-bar')
 
     if (bar) {
