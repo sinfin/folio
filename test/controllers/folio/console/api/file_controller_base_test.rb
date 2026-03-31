@@ -109,7 +109,7 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
     end
 
     test "#{klass} - open_batch_form merges file_attributes into form" do
-      files = create_list(klass.model_name.singular, 2, author: "from_db")
+      files = create_list(klass.model_name.singular, 2, author: "author_from_db")
       file_ids = files.map(&:id)
 
       get url_for([:batch_bar, :console, :api, klass, format: :json])
@@ -118,21 +118,55 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
       post url_for([:handle_batch_queue, :console, :api, klass, format: :json]), params: {
         queue: {
           add: file_ids,
+
         }
       }
       assert_response(:ok)
 
       post url_for([:open_batch_form, :console, :api, klass, format: :json]), params: {
         file_attributes: {
+          author: "",
+        }
+      }
+
+      assert_response(:ok)
+      author_input = Nokogiri::HTML(response.parsed_body["data"]).at_css('input[name="file_attributes[author]"]')
+      assert_equal "author_from_db", author_input["value"]
+
+      post url_for([:open_batch_form, :console, :api, klass, format: :json]), params: {
+        file_attributes: {
+          author: "author_from_request",
+        }
+      }
+
+      assert_response(:ok)
+
+      author_input = Nokogiri::HTML(response.parsed_body["data"]).at_css('input[name="file_attributes[author]"]')
+      assert_equal nil, author_input["value"]
+      assert_equal "Různé hodnoty", author_input["placeholder"]
+
+      post url_for([:open_batch_form, :console, :api, klass, format: :json]), params: {
+        file_attributes: {
+          author: "author_from_db", # override is same as data from files
+        }
+      }
+
+      assert_response(:ok)
+
+      author_input = Nokogiri::HTML(response.parsed_body["data"]).at_css('input[name="file_attributes[author]"]')
+      assert_equal "author_from_db", author_input["value"]
+
+      files.each { |file| file.update!(author: "") }
+
+      post url_for([:open_batch_form, :console, :api, klass, format: :json]), params: {
+        file_attributes: {
           author: "override_from_request",
         }
       }
+
       assert_response(:ok)
 
-      parsed = Nokogiri::HTML(response.parsed_body["data"])
-      author_input = parsed.at_css('input[name="file_attributes[author]"]')
-
-      assert author_input.present?
+      author_input = Nokogiri::HTML(response.parsed_body["data"]).at_css('input[name="file_attributes[author]"]')
       assert_equal "override_from_request", author_input["value"]
     end
 

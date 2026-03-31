@@ -5,6 +5,7 @@ class Folio::Console::Files::Batch::FormComponent < Folio::Console::ApplicationC
     @file_klass = file_klass
     @files = files
     @attribute_overrides = attribute_overrides&.symbolize_keys || {}
+    Rails.logger.info("Batch::FormComponent.init -> attribute_overrides: #{attribute_overrides}")
   end
 
   def data
@@ -46,7 +47,10 @@ class Folio::Console::Files::Batch::FormComponent < Folio::Console::ApplicationC
     opts[:input_html] ||= {}
 
     values = @files.filter_map { |file| file.public_send(attribute).presence }.uniq
+    Rails.logger.info("Batch::FormComponent.input(#{attribute}) values from files ->  #{values}")
     values << @attribute_overrides[attribute] if @attribute_overrides[attribute].present?
+    values.uniq!
+    Rails.logger.info("Batch::FormComponent.input(#{attribute}) values from files + override ->  #{values}")
 
     if values.blank?
       opts.delete(:input_html)
