@@ -42,7 +42,7 @@ require "terser"
 require "premailer"
 require "premailer/rails"
 require "cells-rails"
-require "cells-slim"
+require "cell/slim"
 require "turbo-rails"
 
 require "dragonfly"

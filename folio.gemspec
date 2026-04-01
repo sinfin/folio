@@ -80,7 +80,6 @@ Gem::Specification.new do |s|
   s.add_dependency "activejob-uniqueness", ">= 0.3.0"
   s.add_dependency "simple_form"
   s.add_dependency "sitemap_generator"
-  s.add_dependency "cells-slim"
   s.add_dependency "cells-rails"
   s.add_dependency "slim-rails"
   s.add_dependency "slim"
@@ -92,6 +91,9 @@ Gem::Specification.new do |s|
   s.add_dependency "terser"
   s.add_dependency "view_component", "~> 4.0"
   s.add_dependency "turbo-rails"
+  s.add_dependency "readline"
+  s.add_dependency "ostruct"
+  s.add_dependency "logger"
 
   s.add_development_dependency "better_errors"
   s.add_development_dependency "binding_of_caller" # used by BetterErrors
@@ -101,6 +103,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "guard-slimlint"
   s.add_development_dependency "letter_opener"
   s.add_development_dependency "minitest"
+  s.add_development_dependency "minitest-mock"
   s.add_development_dependency "pry-byebug"
   s.add_development_dependency "pry-rails"
   s.add_development_dependency "rubocop-minitest"
