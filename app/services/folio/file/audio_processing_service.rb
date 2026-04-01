@@ -103,6 +103,11 @@ class Folio::File::AudioProcessingService
 
       audio_file.update_columns(updates)
       audio_file.assign_attributes(updates)
+
+      if file_metadata
+        mapped = Folio::Metadata::AudioFieldMapper.map_metadata(file_metadata)
+        Folio::Metadata::AudioFieldMapper.update_database_fields(audio_file, mapped)
+      end
     end
 
     def build_mapped_metadata(metadata)

@@ -18,7 +18,9 @@ class Folio::FileSerializer
   end
 
   attribute :source_url do |object|
-    unless object.try(:private?)
+    if object.try(:private?)
+      object.playable_download_url if object.is_a?(Folio::File::Audio)
+    else
       Folio::S3.cdn_url_rewrite(object.file.remote_url)
     end
   end

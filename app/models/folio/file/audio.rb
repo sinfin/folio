@@ -22,20 +22,11 @@ class Folio::File::Audio < Folio::File
   validate_file_format ACCEPTED_FILE_FORMATS
 
   def mapped_metadata
-    metadata = file_metadata.to_h
-
-    {
-      title: metadata["title"],
-      artist: metadata["artist"],
-      album: metadata["album"],
-      track: metadata["track"],
-      codec_name: metadata["codec_name"],
-      bitrate_kbps: metadata["bitrate_kbps"],
-      sample_rate_hz: metadata["sample_rate_hz"],
-      channels: metadata["channels"],
-      duration_seconds: metadata["duration_seconds"],
-      artwork_present: metadata["artwork_present"],
-    }.compact
+    @mapped_metadata ||= if file_metadata.present?
+      Folio::Metadata::AudioFieldMapper.map_metadata(file_metadata)
+    else
+      {}
+    end
   end
 
   def artwork_image
@@ -88,7 +79,7 @@ class Folio::File::Audio < Folio::File
     "audio"
   end
 
-  def extract_metadata!(force: false, save: true)
+  def extract_metadata!(force: false, user_id: nil, save: true)
     Folio::File::AudioProcessingService.new(self).extract_metadata!(force:, save:)
   end
 
