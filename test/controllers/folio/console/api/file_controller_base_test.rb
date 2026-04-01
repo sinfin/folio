@@ -314,34 +314,6 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
         assert_equal 180, file.thumbnail_sizes["320x180#"][:height]
         assert file.thumbnail_sizes["320x180#"][:url].present?
       end
-
-      test "#{klass} - update_thumbnails_crop succeeds even when a duplicate slug exists in the database" do
-        file = create(klass.model_name.singular)
-
-        # Simulate a duplicate slug that could exist due to imports, migrations, or race conditions
-        other_file = create(klass.model_name.singular)
-        other_file.update_column(:slug, file.slug)
-
-        patch url_for([:update_thumbnails_crop, :console, :api, file, format: :json]), params: {
-          crop: {
-            x: 0.1,
-            y: 0.2,
-          },
-          ratio: "16:9",
-          thumbnail_size_keys: ["160x90#"]
-        }
-
-        assert_response(:success)
-
-        # friendly.find may return either record when slugs are duplicated;
-        # assert that the crop was persisted on whichever file was found
-        file.reload
-        other_file.reload
-        updated_file = [file, other_file].find { |f| f.thumbnail_configuration&.dig("ratios", "16:9", "crop") }
-        assert_not_nil updated_file, "Expected crop to be saved on one of the files with the duplicate slug"
-        assert_equal 0.1, updated_file.thumbnail_configuration["ratios"]["16:9"]["crop"]["x"]
-        assert_equal 0.2, updated_file.thumbnail_configuration["ratios"]["16:9"]["crop"]["y"]
-      end
     end
   end
 end

@@ -3,6 +3,40 @@
 require "test_helper"
 
 class Folio::S3::CreateFileJobTest < ActiveJob::TestCase
+  class FakeRecord
+    attr_accessor :slug, :save_calls
+
+    def initialize(sequence)
+      @sequence = sequence.dup
+      @save_calls = 0
+      @slug_errors = []
+    end
+
+    def save
+      @save_calls += 1
+      outcome = @sequence.shift || :ok
+
+      case outcome
+      when :ok
+        true
+      when :validation_conflict
+        @slug_errors = ["has already been taken"]
+        false
+      when :db_conflict
+        raise ActiveRecord::RecordNotUnique.new("duplicate key value violates unique constraint")
+      when :other_error
+        @slug_errors = []
+        false
+      else
+        false
+      end
+    end
+
+    def errors
+      { slug: @slug_errors }
+    end
+  end
+
   test "video upload falls back to download flow for local file system" do
     # In test env with FileDataStore, video upload should use the standard download path
     # (S3 copy path is only for actual S3 storage)
@@ -69,5 +103,32 @@ class Folio::S3::CreateFileJobTest < ActiveJob::TestCase
     assert_includes copy_source_key, s3_path, "s3_copy_object should have been called with the source path"
   ensure
     Folio::File::Video.remove_method(:set_video_file_dimensions)
+  end
+
+  test "save_file_with_slug_retry succeeds after validation slug conflict" do
+    job = Folio::S3::CreateFileJob.new
+    fake = FakeRecord.new([:validation_conflict, :ok])
+    job.instance_variable_set(:@file, fake)
+
+    assert job.send(:save_file_with_slug_retry)
+    assert_equal 2, fake.save_calls
+  end
+
+  test "save_file_with_slug_retry succeeds after DB unique violation" do
+    job = Folio::S3::CreateFileJob.new
+    fake = FakeRecord.new([:db_conflict, :ok])
+    job.instance_variable_set(:@file, fake)
+
+    assert job.send(:save_file_with_slug_retry)
+    assert_equal 2, fake.save_calls
+  end
+
+  test "save_file_with_slug_retry returns false on non-slug errors" do
+    job = Folio::S3::CreateFileJob.new
+    fake = FakeRecord.new([:other_error])
+    job.instance_variable_set(:@file, fake)
+
+    assert_not job.send(:save_file_with_slug_retry)
+    assert_equal 1, fake.save_calls
   end
 end

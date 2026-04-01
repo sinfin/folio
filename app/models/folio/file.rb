@@ -443,33 +443,17 @@ class Folio::File < Folio::ApplicationRecord
     end
 
     def slug_candidates
-      %i[slug headline hash_id_for_slug to_label]
+      # Prefer explicit slug or headline; fall back to a neutral identifier
+      %i[slug headline neutral_slug]
     end
 
+    def neutral_slug
+      "#{Time.current.to_i}-#{SecureRandom.hex(5)}"
+    end
+
+    # Kept for backward compatibility if referenced elsewhere; not used in slug_candidates
     def hash_id_for_slug
-      new_slug = nil
-      hash = nil
-
-      loop do
-        # Parameterize filename base to match strip_and_downcase_slug behavior
-        new_slug_base = if file_name.present?
-          file_name.split(".", 2)[0].parameterize
-        else
-          "file"
-        end
-        new_slug = hash ? "#{new_slug_base}-#{hash}" : new_slug_base
-
-        exists = self.class.base_class.exists?(slug: new_slug)
-
-        break unless exists
-
-        # Generate lowercase hash to match strip_and_downcase_slug formatting
-        hash = SecureRandom.urlsafe_base64(8)
-                           .downcase
-                           .gsub(/-|_/, ("a".."z").to_a[rand(26)])
-      end
-
-      new_slug
+      neutral_slug
     end
 
     def set_file_name_for_search
@@ -603,7 +587,7 @@ end
 #  index_folio_files_on_media_source_id           (media_source_id)
 #  index_folio_files_on_published_usage_count     (published_usage_count)
 #  index_folio_files_on_site_id                   (site_id)
-#  index_folio_files_on_slug                      (slug)
+#  index_folio_files_on_slug_unique               (slug) UNIQUE
 #  index_folio_files_on_type                      (type)
 #  index_folio_files_on_updated_at                (updated_at)
 #

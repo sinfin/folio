@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+### Added
+- **Unique index on file slugs**: Added unique index on `folio_files.slug` with deduplication + null backfill migration.
+
+### Changed
+- **Folio::File slug generation**: Slugs now use a neutral `timestamp-hex` fallback (`Time.current`) instead of filename-derived candidates.
+
 ### Fixed
 - **hyperlinks in tiptap editor**: Added autolink to config file to allow override
 ## [7.5.1] - 2026-03-19
