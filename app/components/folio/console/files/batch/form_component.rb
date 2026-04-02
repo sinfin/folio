@@ -46,7 +46,7 @@ class Folio::Console::Files::Batch::FormComponent < Folio::Console::ApplicationC
     opts[:wrapper_html] = { class: "f-c-files-batch-form__form-group" }
     opts[:input_html] ||= {}
 
-    values = @files.filter_map { |file| file.public_send(attribute).presence }.uniq
+    values = @files.filter_map { |file| file.public_send(attribute).presence }
     Rails.logger.info("Batch::FormComponent.input(#{attribute}) values from files ->  #{values}")
     values << @attribute_overrides[attribute] if @attribute_overrides[attribute].present?
     values.uniq!
@@ -67,5 +67,9 @@ class Folio::Console::Files::Batch::FormComponent < Folio::Console::ApplicationC
     end
 
     f.input(attribute, opts)
+  end
+
+  def files_in_processing_count
+    @files_in_processing_count ||= (@files.select { |f| f.processing? || f.unprocessed? }).size
   end
 end
