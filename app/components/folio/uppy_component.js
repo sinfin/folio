@@ -151,7 +151,6 @@ window.Folio.Stimulus.register('f-uppy', class extends window.Stimulus.Controlle
       })
 
       this.uppy.on('upload', (data) => {
-        console.log("triggering f-uppy:upload")
         this.dispatch('upload', data)
       })
 
