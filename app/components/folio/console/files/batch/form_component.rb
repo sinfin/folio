@@ -46,11 +46,13 @@ class Folio::Console::Files::Batch::FormComponent < Folio::Console::ApplicationC
     opts[:wrapper_html] = { class: "f-c-files-batch-form__form-group" }
     opts[:input_html] ||= {}
 
-    values = @files.filter_map { |file| file.public_send(attribute).presence }
-    Rails.logger.info("Batch::FormComponent.input(#{attribute}) values from files ->  #{values}")
-    values << @attribute_overrides[attribute] if @attribute_overrides[attribute].present?
-    values.uniq!
-    Rails.logger.info("Batch::FormComponent.input(#{attribute}) values from files + override ->  #{values}")
+    values = if @attribute_overrides[attribute].present?
+      Rails.logger.info("Batch::FormComponent.input(#{attribute}) value from override")
+      @attribute_overrides[attribute]
+    else
+      @files.filter_map { |file| file.public_send(attribute).presence }.uniq
+    end
+    Rails.logger.info("Batch::FormComponent.input(#{attribute}) values -> #{values}")
 
     if values.blank?
       opts.delete(:input_html)
