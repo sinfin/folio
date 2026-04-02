@@ -90,7 +90,7 @@ div[
     class="f-file-list-file__part"
     class="f-file-list-file__part--processing-state"
   ]
-    - unless @thead
+    - if !@thead && @file.respond_to?(:aasm)
       == cell("folio/console/state", @file, active: false)
 
 

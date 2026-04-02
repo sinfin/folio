@@ -113,12 +113,13 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
     this.abortAjax()
 
     this.queue = this.queue || { add: [], remove: [] }
-
+    let withFormInputs = true
     const url = this.baseApiUrlValue
 
     switch (action) {
       case 'add':
         this.queue.add = [...this.queue.add, ...ids]
+        withFormInputs = false
         break
       case 'remove':
         this.queue.remove = [...this.queue.remove, ...ids]
@@ -133,6 +134,7 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
             }
           }
         }
+        withFormInputs = false
 
         break
       case 'remove-all':
@@ -145,6 +147,7 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
             }
           }
         }
+        withFormInputs = false
 
         break
     }
@@ -153,7 +156,7 @@ window.Folio.Stimulus.register('f-c-files-batch-bar', class extends window.Stimu
 
     this.ajax({
       url: `${url}/handle_batch_queue`,
-      data: this.dataWithFormInputs({ queue: this.queue }),
+      data: withFormInputs ? this.dataWithFormInputs({ queue: this.queue }) : { queue: this.queue },
       status: 'reloading'
     })
   }
