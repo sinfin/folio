@@ -124,9 +124,10 @@ class Folio::CraMediaCloud::CreateMediaJobTest < ActiveJob::TestCase
     ))
 
     with_mocked_s3_and_encoder(video) do |encoder_mock, api_mock|
-      assert_raises(RuntimeError, /encoding_generation not set/) do
+      error = assert_raises(RuntimeError) do
         perform_job(video, encoder_mock, api_mock)
       end
+      assert_match(/encoding_generation not set/, error.message)
     end
   end
 

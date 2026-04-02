@@ -31,7 +31,6 @@ class Folio::Files::AfterSaveJob < Folio::ApplicationJob
   end
 
   private
-
     def sync_metadata_to_placements(file, placements, changed_attrs)
       if changed_attrs.key?("description")
         old_desc, new_desc = changed_attrs["description"]

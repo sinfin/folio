@@ -22,7 +22,7 @@ class Folio::CraMediaCloud::EncoderTest < ActiveSupport::TestCase
     )
 
     assert_includes manifest_xml, 'src="https://s3.amazonaws.com/bucket/uploads/video.mp4'
-    assert_not_includes manifest_xml, 'file='
+    assert_not_includes manifest_xml, "file="
     assert_includes manifest_xml, 'size="123456"'
     assert_includes manifest_xml, 'md5="abc123def456"'
     assert_includes manifest_xml, "<profileGroup>VoDSD</profileGroup>"
@@ -46,7 +46,7 @@ class Folio::CraMediaCloud::EncoderTest < ActiveSupport::TestCase
     )
 
     assert_includes manifest_xml, 'file="video.mp4"'
-    assert_not_includes manifest_xml, 'src='
+    assert_not_includes manifest_xml, "src="
   end
 
   # --- upload_file ---
@@ -149,9 +149,10 @@ class Folio::CraMediaCloud::EncoderTest < ActiveSupport::TestCase
       raise "persistent error"
     end
 
-    assert_raises(RuntimeError, /persistent error/) do
+    error = assert_raises(RuntimeError) do
       encoder.send(:upload_with_retry, always_fail_sftp, StringIO.new("data"), "/dest/manifest.xml", max_retries: 2)
     end
+    assert_match(/persistent error/, error.message)
 
     assert_equal 3, attempts  # 1 initial + 2 retries
   end
