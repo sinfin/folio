@@ -74,4 +74,8 @@ class Folio::Console::Files::Batch::FormComponent < Folio::Console::ApplicationC
   def files_in_processing_count
     @files_in_processing_count ||= (@files.select { |f| f.processing? || f.unprocessed? }).size
   end
+
+  def title
+    (1 < @files.size) ? t(".title.multiple") : t(".title.single")
+  end
 end

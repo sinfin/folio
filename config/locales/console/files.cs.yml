@@ -76,7 +76,9 @@ cs:
             add_to_picker/image: Vybrat do galerie
 
           form_component:
-            title: Hromadné úpravy souborů
+            title:
+              single: Úprava souboru
+              multiple: Hromadné úpravy souborů
             unprocessed_files_count: Zbývá zpracovat %{count} soubory
             selected_files: Vybrané soubory
             has_values_placeholder: Různé hodnoty
