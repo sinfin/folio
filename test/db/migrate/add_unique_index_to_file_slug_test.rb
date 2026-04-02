@@ -11,20 +11,19 @@ class AddUniqueIndexToFileSlugTest < ActiveSupport::TestCase
   OLD_INDEX = "index_folio_files_on_slug"
 
   setup do
+    @pre_existing_site_ids = Folio::Site.pluck(:id)
     @files_to_cleanup = []
-    # Reuse an existing media_source to avoid uniqueness conflicts across tests
-    # (use_transactional_tests = false means factory records persist between tests)
-    @shared_media_source = Folio::MediaSource.first || create(:folio_media_source)
     swap_to_non_unique_index
   end
 
   teardown do
     Folio::File.where(id: @files_to_cleanup.map(&:id)).destroy_all
+    Folio::Site.where.not(id: @pre_existing_site_ids).destroy_all
     swap_to_unique_index
   end
 
   test "backfills null slugs with neutral timestamp-hex format" do
-    file = track(create(:folio_file_image, media_source: @shared_media_source))
+    file = track(create(:folio_file_image, media_source: nil))
     file.update_column(:slug, nil)
 
     run_data_steps
@@ -73,9 +72,9 @@ class AddUniqueIndexToFileSlugTest < ActiveSupport::TestCase
   end
 
   test "handles three-way duplicates correctly" do
-    base = track(create(:folio_file_image, media_source: @shared_media_source))
-    mid  = track(create(:folio_file_image, media_source: @shared_media_source))
-    late = track(create(:folio_file_image, media_source: @shared_media_source))
+    base = track(create(:folio_file_image, media_source: nil))
+    mid  = track(create(:folio_file_image, media_source: nil))
+    late = track(create(:folio_file_image, media_source: nil))
 
     mid.update_column(:created_at, base.created_at + 1.second)
     late.update_column(:created_at, base.created_at + 2.seconds)
@@ -97,8 +96,8 @@ class AddUniqueIndexToFileSlugTest < ActiveSupport::TestCase
     end
 
     def create_duplicate_pair
-      older = track(create(:folio_file_image, media_source: @shared_media_source))
-      newer = track(create(:folio_file_image, media_source: @shared_media_source))
+      older = track(create(:folio_file_image, media_source: nil))
+      newer = track(create(:folio_file_image, media_source: nil))
       newer.update_column(:created_at, older.created_at + 1.second)
       newer.update_column(:slug, older.slug)
       [older, newer]

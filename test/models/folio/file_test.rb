@@ -57,6 +57,16 @@ class Folio::FileTest < ActiveSupport::TestCase
     assert_not image.destroy
   end
 
+  test "by_query searches by slug" do
+    other = create(:folio_file_image, slug: "some-other-file")
+    target = create(:folio_file_image, slug: "unique-search-slug")
+
+    results = Folio::File.by_query("unique-search-slug")
+
+    assert_includes results, target
+    assert_not_includes results, other
+  end
+
   test "by_file_name pg scope" do
     create(:folio_file_image, file_name: "foo.jpg")
     file1 = create(:folio_file_image, file_name: "foo_bar.jpg")

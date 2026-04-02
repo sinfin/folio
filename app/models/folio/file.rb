@@ -133,7 +133,9 @@ class Folio::File < Folio::ApplicationRecord
                   }
 
   scope :by_query, -> (query) do
-    by_query_raw(sanitize_filename_for_search(query))
+    sanitized = sanitize_filename_for_search(query)
+    slug_match = where("slug ILIKE ?", "%#{sanitize_sql_like(query.to_s.downcase)}%")
+    where(id: by_query_raw(sanitized)).or(slug_match)
   end
 
   pg_search_scope :by_file_name_for_search,
