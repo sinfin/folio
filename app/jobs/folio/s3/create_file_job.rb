@@ -169,7 +169,11 @@ class Folio::S3::CreateFileJob < Folio::S3::BaseJob
     rescue ActiveRecord::RecordNotUnique => e
       Rails.logger.warn("[Folio] DB unique violation on slug for #{file_ident_for_log}: #{e.message}. Regenerating slug.")
       @file.slug = nil
-      @file.save
+      begin
+        @file.save
+      rescue ActiveRecord::RecordNotUnique
+        false
+      end
     end
 
     def slug_conflict?(record)
