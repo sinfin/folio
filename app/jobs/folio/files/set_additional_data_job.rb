@@ -7,7 +7,7 @@ class Folio::Files::SetAdditionalDataJob < Folio::ApplicationJob
     additional_data = file.additional_data || {}
 
     if file.gif?
-      identify = MiniMagick::Tool::Identify.new do |i|
+      identify = MiniMagick::Tool.new("convert") do |i|
         i << file.file.path
       end
       animated = identify.split("\n").size > 1
