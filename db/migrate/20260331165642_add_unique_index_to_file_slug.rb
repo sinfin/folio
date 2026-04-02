@@ -7,8 +7,8 @@ class AddUniqueIndexToFileSlug < ActiveRecord::Migration[8.0]
   NEW_INDEX_NAME = "index_folio_files_on_slug_unique"
 
   def up
-    backfill_null_slugs
-    deduplicate_slugs
+    transaction { backfill_null_slugs }
+    transaction { deduplicate_slugs }
 
     remove_index :folio_files, name: OLD_INDEX_NAME, algorithm: :concurrently
 
@@ -30,7 +30,7 @@ class AddUniqueIndexToFileSlug < ActiveRecord::Migration[8.0]
       raise unless is_unique_error
 
       say "Unique index creation failed due to duplicates. Re-deduplicating and retrying once..."
-      deduplicate_slugs
+      transaction { deduplicate_slugs }
       add_index :folio_files, :slug, unique: true, name: NEW_INDEX_NAME, algorithm: :concurrently
     end
 

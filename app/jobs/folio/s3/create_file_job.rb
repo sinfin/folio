@@ -180,10 +180,7 @@ class Folio::S3::CreateFileJob < Folio::S3::BaseJob
       errs = record.errors[:slug]
       return false if errs.blank?
 
-      errs.any? do |e|
-        type = e.respond_to?(:type) ? e.type : nil
-        type.nil? || type == :taken || type == :slug_not_unique_across_classes
-      end
+      errs.any? { |e| e.type == :taken || e.type == :slug_not_unique_across_classes }
     end
 
     def file_ident_for_log

@@ -4,6 +4,8 @@ require "test_helper"
 
 class Folio::S3::CreateFileJobTest < ActiveJob::TestCase
   class FakeRecord
+    FakeError = Struct.new(:type)
+
     attr_accessor :slug, :save_calls
 
     def initialize(sequence)
@@ -20,12 +22,12 @@ class Folio::S3::CreateFileJobTest < ActiveJob::TestCase
       when :ok
         true
       when :validation_conflict
-        @slug_errors = ["has already been taken"]
+        @slug_errors = [FakeError.new(:taken)]
         false
       when :db_conflict
         raise ActiveRecord::RecordNotUnique.new("duplicate key value violates unique constraint")
       when :other_error
-        @slug_errors = []
+        @slug_errors = [FakeError.new(:other)]
         false
       else
         false
