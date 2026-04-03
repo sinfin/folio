@@ -60,6 +60,7 @@ end
 #  index_folio_files_on_created_at                (created_at)
 #  index_folio_files_on_created_by_folio_user_id  (created_by_folio_user_id)
 #  index_folio_files_on_file_name                 (file_name)
+#  index_folio_files_on_keywords_for_search       (to_tsvector('simple'::regconfig, folio_unaccent(COALESCE(keywords_for_search, ''::text)))) USING gin
 #  index_folio_files_on_media_source_id           (media_source_id)
 #  index_folio_files_on_published_usage_count     (published_usage_count)
 #  index_folio_files_on_site_id                   (site_id)

@@ -100,7 +100,7 @@ class Folio::File < Folio::ApplicationRecord
   # Scopes
   scope :ordered, -> { order(created_at: :desc) }
 
-  scope :by_placement, -> (placement_title) { order(created_at: :desc) }
+  # scope :by_placement, -> (placement_title) { order(created_at: :desc) }
 
   scope :created_by_current_user, Proc.new {
     if Folio::Current.user.present?
@@ -126,16 +126,20 @@ class Folio::File < Folio::ApplicationRecord
   end
 
   pg_search_scope :by_query_raw,
-                  against: [:file_name_for_search, :headline, :description],
+                  against: [:file_name_for_search, :headline, :description, :keywords_for_search],
                   ignoring: :accents,
                   using: {
                     tsearch: { prefix: true }
                   }
 
   scope :by_query, -> (query) do
+    return none if query.blank?
+
     sanitized = sanitize_filename_for_search(query)
-    slug_match = where("slug ILIKE ?", "%#{sanitize_sql_like(query.to_s.downcase)}%")
-    where(id: by_query_raw(sanitized)).or(slug_match)
+    slug_match = where("slug ILIKE ?", "%#{sanitize_sql_like(query.to_s)}%")
+
+    ids = where(id: by_query_raw(sanitized)).or(slug_match).select(:id)
+    where(id: ids)
   end
 
   pg_search_scope :by_file_name_for_search,
@@ -164,6 +168,7 @@ class Folio::File < Folio::ApplicationRecord
   before_validation :set_file_track_duration, if: :file_uid_changed?
   before_validation :set_video_file_dimensions, if: :file_uid_changed?
   before_save :set_file_name_for_search, if: :file_name_changed?
+  before_save :set_keywords_for_search, if: :file_metadata_changed?
   before_destroy :check_usage_before_destroy
   after_save :run_after_save_job
   after_commit :process!, if: :attached_file_changed?
@@ -462,6 +467,14 @@ class Folio::File < Folio::ApplicationRecord
       self.file_name_for_search = self.class.sanitize_filename_for_search(file_name)
     end
 
+    def set_keywords_for_search
+      keywords = file_metadata&.dig("keywords")
+      self.keywords_for_search = case keywords
+      when Array then keywords.join(" ")
+      when String then keywords
+      end
+    end
+
     def check_usage_before_destroy
       throw(:abort) if indestructible_reason.present?
       throw(:abort) if file_placements.exists?
@@ -586,6 +599,7 @@ end
 #  index_folio_files_on_created_at                (created_at)
 #  index_folio_files_on_created_by_folio_user_id  (created_by_folio_user_id)
 #  index_folio_files_on_file_name                 (file_name)
+#  index_folio_files_on_keywords_for_search       (to_tsvector('simple'::regconfig, folio_unaccent(COALESCE(keywords_for_search, ''::text)))) USING gin
 #  index_folio_files_on_media_source_id           (media_source_id)
 #  index_folio_files_on_published_usage_count     (published_usage_count)
 #  index_folio_files_on_site_id                   (site_id)
