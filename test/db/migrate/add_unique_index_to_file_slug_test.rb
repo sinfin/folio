@@ -42,7 +42,7 @@ class AddUniqueIndexToFileSlugTest < ActiveSupport::TestCase
   end
 
   test "renamed file gets a unique valid slug" do
-    older, newer = create_duplicate_pair
+    _older, newer = create_duplicate_pair
 
     run_data_steps
 
@@ -90,7 +90,6 @@ class AddUniqueIndexToFileSlugTest < ActiveSupport::TestCase
   end
 
   private
-
     def track(file)
       @files_to_cleanup << file
       file
