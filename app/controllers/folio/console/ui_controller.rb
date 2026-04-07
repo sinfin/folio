@@ -187,6 +187,7 @@ class Folio::Console::UiController < Folio::Console::BaseController
 
   def file_placements_multi_picker_fields
     @page = Folio::Page.first
+    @placement_attributes = (params[:variant] == "no_title" ? %i[description alt folio_embed_data] : nil)
   end
 
   def update_file_placements_multi_picker_fields
