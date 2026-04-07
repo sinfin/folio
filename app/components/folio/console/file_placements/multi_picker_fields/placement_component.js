@@ -59,6 +59,11 @@ window.Folio.Stimulus.register('f-c-file-placements-multi-picker-fields-placemen
           console.error('Failed to parse JSON from parent dataset', error)
         }
       } else if (parent.dataset.embed === 'true') {
+        if (!this.hasEmbedFieldsWrapTarget) {
+          console.error('f-c-file-placements-multi-picker-fields-placement: data-embed row without embedFieldsWrap target')
+          return false
+        }
+
         for (const disabled of this.embedFieldsWrapTarget.querySelectorAll('[disabled]')) {
           disabled.disabled = false
         }

@@ -124,7 +124,7 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
 
   def title_with_fallback
     if title.blank?
-      file.try(:headline)
+      file.try(:title)
     else
       title
     end

@@ -32,21 +32,26 @@ class Folio::Console::FilePlacements::MultiPickerFieldsComponent < Folio::Consol
     end
 
     def tabs
-      [
+      tab_items = [
         {
           label: t(".select/#{@file_klass.human_type}", default: t(".select/default")),
           active: true,
         },
-        {
+      ]
+
+      if @placement_attributes.include?(:folio_embed_data)
+        tab_items << {
           icon: :plus_circle,
           label: t(".add_embed"),
           dont_bind_tab_toggle: true,
           text_color: "green",
           data: stimulus_controller("f-c-file-placements-multi-picker-fields-add-embed",
                                     inline: true,
-                                    action: { click: "onAddEmbedClick" })
+                                    action: { click: "onAddEmbedClick" }),
         }
-      ]
+      end
+
+      tab_items
     end
 
     def non_unique_file_ids
