@@ -80,13 +80,10 @@ class AddUniqueIndexToFileSlug < ActiveRecord::Migration[8.0]
     end
 
     def generate_neutral_unique_slug
-      candidate = nil
-
-      loop do
+      100.times do
         candidate = "#{Time.current.to_i}-#{SecureRandom.hex(5)}"
-        break unless Folio::File.exists?(slug: candidate)
+        return candidate unless Folio::File.exists?(slug: candidate)
       end
-
-      candidate
+      raise "Could not generate a unique slug after 100 attempts"
     end
 end
