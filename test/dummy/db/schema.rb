@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_03_02_084244) do
+ActiveRecord::Schema[8.0].define(version: 2026_03_31_165642) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -363,7 +363,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_02_084244) do
     t.index ["media_source_id"], name: "index_folio_files_on_media_source_id"
     t.index ["published_usage_count"], name: "index_folio_files_on_published_usage_count"
     t.index ["site_id"], name: "index_folio_files_on_site_id"
-    t.index ["slug"], name: "index_folio_files_on_slug"
+    t.index ["slug"], name: "index_folio_files_on_slug_unique", unique: true
     t.index ["type"], name: "index_folio_files_on_type"
     t.index ["updated_at"], name: "index_folio_files_on_updated_at"
   end

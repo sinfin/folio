@@ -2,11 +2,13 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
-
 ### Added
-
+- **Unique index on file slugs**: Added unique index on `folio_files.slug` with deduplication + null backfill migration.
 - remote scripts: optional `integrity` on script data (Subresource Integrity; sets `crossOrigin` when used)
 - console file placements multi picker: `placement_attributes` to choose which placement fields are shown; title field with prefilled title and hints/placeholders hidden when appropriate; updated alt label i18n
+
+### Changed
+- **Folio::File slug generation**: Slugs now use a neutral `timestamp-hex` fallback (`Time.current`) instead of filename-derived candidates.
 
 ### Fixed
 
@@ -19,7 +21,7 @@ All notable changes to this project will be documented in this file.
 - **CRA reference_id uniqueness**: Added video ID to reference_id format (`{env}-{slug}-{id}-{s3_etag}-{generation}`) to prevent cross-contamination between videos with identical slugs
 - **CRA encoding_generation race condition**: Added reload fallback in CreateMediaJob when encoding_generation is nil due to uncommitted transaction from S3::CreateFileJob
 - **CRA MonitorProcessingJob orphan detection**: Added 10-minute threshold to orphan detection for videos with reference_id but no remote_id, preventing false positives on just-uploaded videos
-
+- **Uniqueness validation on friendly_id slug**: Validate slug uniqueness only on new record or slug change to avoid issues with record saving
 ## [7.5.0] - 2026-03-19
 
 ### Added
