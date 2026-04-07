@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "rails/test_help"
+require "view_component/test_case"
 require "capybara/rails"
 require "capybara/minitest"
 require "factory_bot"

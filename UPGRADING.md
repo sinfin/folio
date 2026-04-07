@@ -16,6 +16,15 @@ console layout with `cell("folio/console/aasm/email_modal")`), switch to the
 component. I18n keys moved from `folio.console.aasm.email_modal` to
 `folio.console.aasm.email_modal_component`.
 
+### activejob-uniqueness is now activejob-unique
+
+Folio now depends on `activejob-unique`, the Rails 8.1-compatible maintained
+fork of `activejob-uniqueness`.
+
+**Action required:** If your app explicitly depends on
+`activejob-uniqueness`, replace it with `activejob-unique`. The
+`ActiveJob::Uniqueness` API is unchanged.
+
 ## 7.2.* to 7.3.0
 
 ### has_folio_tiptap? Method Change
