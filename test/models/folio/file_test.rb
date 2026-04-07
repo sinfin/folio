@@ -57,6 +57,16 @@ class Folio::FileTest < ActiveSupport::TestCase
     assert_not image.destroy
   end
 
+  test "by_query searches by slug" do
+    other = create(:folio_file_image, slug: "some-other-file")
+    target = create(:folio_file_image, slug: "unique-search-slug")
+
+    results = Folio::File.by_query("unique-search-slug")
+
+    assert_includes results, target
+    assert_not_includes results, other
+  end
+
   test "by_file_name pg scope" do
     create(:folio_file_image, file_name: "foo.jpg")
     file1 = create(:folio_file_image, file_name: "foo_bar.jpg")
@@ -342,6 +352,20 @@ class Folio::FileTest < ActiveSupport::TestCase
         assert_equal expected_slug, file.reload.slug, "Slug should be generated from extracted headline"
       end
     end
+  end
+
+  test "neutral slug format is used when no headline is present" do
+    with_config(folio_image_metadata_extraction_enabled: false) do
+      image = create(:folio_file_image, headline: nil, slug: nil)
+      assert_match(/\A\d{10}-[0-9a-f]{10}\z/, image.slug)
+    end
+  end
+
+  test "DB has a unique index on folio_files.slug" do
+    indexes = ActiveRecord::Base.connection.indexes(:folio_files)
+    slug_idx = indexes.find { |i| i.columns == ["slug"] }
+    assert slug_idx, "Expected an index on folio_files.slug"
+    assert slug_idx.unique, "Expected slug index to be unique"
   end
 end
 
