@@ -39,7 +39,7 @@ class Folio::Console::FilePlacements::MultiPickerFieldsComponent < Folio::Consol
         },
       ]
 
-      if @placement_attributes.include?(:folio_embed_data)
+      if @placement_klass.folio_file_placement_supports_embed? && @placement_attributes.include?(:folio_embed_data)
         tab_items << {
           icon: :plus_circle,
           label: t(".add_embed"),
