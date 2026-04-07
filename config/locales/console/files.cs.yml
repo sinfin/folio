@@ -79,7 +79,7 @@ cs:
             title:
               single: Úprava souboru
               multiple: Hromadné úpravy souborů
-            unprocessed_files_count: Zbývá zpracovat %{count} soubory
+            unprocessed_files_count: "Zbývá zpracovat souborů: %{count}"
             selected_files: Vybrané soubory
             has_values_placeholder: Různé hodnoty
             has_values_hint: Různé hodnoty. Při změně se aktualizují všechny. Pro zachování hodnot ponechte prázdné.
