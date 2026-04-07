@@ -4,7 +4,7 @@ window.Folio.Stimulus.register('f-c-file-placements-multi-picker-fields-placemen
     embed: { type: Boolean, default: false }
   }
 
-  static targets = ['alt', 'description', 'pickerWrap', 'altWrap', 'embedFieldsWrap']
+  static targets = ['alt', 'description', 'title', 'pickerWrap', 'altWrap', 'embedFieldsWrap']
 
   connect () {
     if (this.stateValue !== 'filled') {
@@ -33,8 +33,17 @@ window.Folio.Stimulus.register('f-c-file-placements-multi-picker-fields-placemen
         try {
           const fileJson = parent.dataset.file
           const file = JSON.parse(fileJson)
-          this.altTarget.value = file.attributes.alt
-          this.descriptionTarget.value = file.attributes.description
+          const attrs = file.attributes || {}
+
+          if (this.hasTitleTarget) {
+            this.titleTarget.value = attrs.headline ?? attrs.title ?? ''
+          }
+          if (this.hasAltTarget) {
+            this.altTarget.value = attrs.alt ?? ''
+          }
+          if (this.hasDescriptionTarget) {
+            this.descriptionTarget.value = attrs.description ?? ''
+          }
 
           const picker = this.element.querySelector('.f-c-files-picker')
 
@@ -50,6 +59,11 @@ window.Folio.Stimulus.register('f-c-file-placements-multi-picker-fields-placemen
           console.error('Failed to parse JSON from parent dataset', error)
         }
       } else if (parent.dataset.embed === 'true') {
+        if (!this.hasEmbedFieldsWrapTarget) {
+          console.error('f-c-file-placements-multi-picker-fields-placement: data-embed row without embedFieldsWrap target')
+          return false
+        }
+
         for (const disabled of this.embedFieldsWrapTarget.querySelectorAll('[disabled]')) {
           disabled.disabled = false
         }
