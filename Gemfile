@@ -17,6 +17,7 @@ gem "sprockets", "~> 4.0"
 gem "sprockets-rails"
 
 gem "dragonfly_libvips", github: "sinfin/dragonfly_libvips", branch: "more_geometry" # could not be in gemspec, because of GITHUB
+gem "activejob-unique", github: "nordinvestments/activejob-uniqueness", ref: "80f2feaff44f7711e2da6c9b527b21d24649b1d4" # Rails 8.1 support - new maintainer, PR#4 merged
 # gem "dragonfly_libvips", path: "../dragonfly_libvips"
 
 gem "cells-rails", "~> 0.1.5"

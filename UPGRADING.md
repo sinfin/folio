@@ -1,5 +1,17 @@
 # Upgrading
 
+## Unreleased
+
+### activejob-uniqueness gem moved to app Gemfile
+
+The `activejob-uniqueness` gem can no longer be specified in the folio gemspec because it requires a GitHub source (for Rails 8.1 support). Add it to your app's Gemfile:
+
+```ruby
+gem "activejob-unique", github: "nordinvestments/activejob-uniqueness", ref: "80f2feaff44f7711e2da6c9b527b21d24649b1d4"
+```
+
+This will be moved back to the gemspec once a compatible version is released on RubyGems.
+
 ## 7.2.* to 7.3.0
 
 ### has_folio_tiptap? Method Change

@@ -33,12 +33,13 @@ class Folio::S3::ClientTest < ActiveSupport::TestCase
       assert_equal "https://dummy-s3-bucket.com/#{s3_path}", url
     end
 
+    fake_presigner_class = Class.new do
+      def initialize(url); @url = url; end
+      def presigned_url(*); @url; end
+    end
+
     @instance.stub(:use_local_file_system?, false) do
-      # Stub AWS presigner to avoid real AWS credential chain (SSO) during tests
-      fake_presigner = Class.new do
-        def initialize(url); @url = url; end
-        def presigned_url(*); @url; end
-      end.new(s3_url_without_path + "test_files/" + s3_path)
+      fake_presigner = fake_presigner_class.new(s3_url_without_path + "test_files/" + s3_path)
 
       @instance.stub(:s3_presigner, fake_presigner) do
         url = @instance.test_aware_presign_url(s3_path:)
@@ -48,11 +49,7 @@ class Folio::S3::ClientTest < ActiveSupport::TestCase
     end
 
     @instance.stub(:use_local_file_system?, false) do
-      # Non-test env branch: also stub presigner to keep test deterministic
-      fake_presigner = Class.new do
-        def initialize(url); @url = url; end
-        def presigned_url(*); @url; end
-      end.new(s3_url_without_path + s3_path)
+      fake_presigner = fake_presigner_class.new(s3_url_without_path + s3_path)
 
       url = Rails.env.stub(:test?, false) do
         @instance.stub(:s3_presigner, fake_presigner) do

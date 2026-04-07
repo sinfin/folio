@@ -67,7 +67,7 @@ Gem::Specification.new do |s|
   s.add_dependency "phonelib"
   s.add_dependency "premailer-rails"
   s.add_dependency "rails-i18n", "~> 8.0"
-  s.add_dependency "rails", "~> 8.0"
+  s.add_dependency "rails", "~> 8.1"
   s.add_dependency "recaptcha", "4.13.1"
   s.add_dependency "redcarpet"
   s.add_dependency "responders"
@@ -77,7 +77,7 @@ Gem::Specification.new do |s|
   s.add_dependency "httpparty"
   s.add_dependency "sidekiq-cron", "~> 1.10.1"
   s.add_dependency "sidekiq", "~> 6.5"
-  s.add_dependency "activejob-uniqueness", ">= 0.3.0"
+  # s.add_dependency "activejob-uniqueness", ">= 0.3.0" # moved to Gemfile with github fork for Rails 8.1 support
   s.add_dependency "simple_form"
   s.add_dependency "sitemap_generator"
   s.add_dependency "cells-rails"

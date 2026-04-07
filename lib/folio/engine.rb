@@ -11,7 +11,9 @@ module Folio
     end
 
     # can remove this once we get rid of "serialize" in app/models/concerns/folio/thumbnails.rb and app/models/folio/newsletter_subscription.rb
-    config.active_record.yaml_column_permitted_classes = [Symbol, ActiveSupport::TimeWithZone, Time, ActiveSupport::TimeZone]
+    initializer :folio_yaml_column_permitted_classes do |app|
+      app.config.active_record.yaml_column_permitted_classes = [Symbol, ActiveSupport::TimeWithZone, Time, ActiveSupport::TimeZone]
+    end
 
     config.folio_crossdomain_devise = false
     config.folio_shared_files_between_sites = true
