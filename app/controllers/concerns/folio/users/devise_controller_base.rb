@@ -50,7 +50,7 @@ module Folio::Users::DeviseControllerBase
 
   def email_belongs_to_invited_pending_user?(email)
     user = Folio::User.find_by(email:)
-    !user.accepted_or_not_invited?
+    user.present? && !user.accepted_or_not_invited?
   end
 
   protected
